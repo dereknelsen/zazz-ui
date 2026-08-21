@@ -1,0 +1,72 @@
+---
+title: Effects
+description: "Shadow elevation, element opacity, scale transforms, and transition utilities: the visual-effect and motion helpers."
+---
+
+Effect utilities cover elevation, element opacity, scale, and transitions. For dimming a single
+color channel (rather than the whole element) see [Color opacity](/docs/base/utilities/color-opacity).
+
+## Box shadow
+
+Soft, multi-layer shadows from the elevation scale. Surfaces are flat by default. Apply
+elevation intentionally (`md` ≈ popovers and modals).
+
+| Class         | Token              |
+| ------------- | ------------------ |
+| `shadow-none` | `none`             |
+| `shadow-xs`   | `var(--shadow-xs)` |
+| `shadow-sm`   | `var(--shadow-sm)` |
+| `shadow-md`   | `var(--shadow-md)` |
+| `shadow-lg`   | `var(--shadow-lg)` |
+| `shadow-xl`   | `var(--shadow-xl)` |
+
+## Opacity
+
+Sets the whole element's `opacity`, so **children fade too**. To dim only a color channel and leave
+content fully opaque, use [Color opacity](/docs/base/utilities/color-opacity) instead.
+
+| Class         | Value  |
+| ------------- | ------ |
+| `opacity-0`   | `0`    |
+| `opacity-25`  | `0.25` |
+| `opacity-50`  | `0.5`  |
+| `opacity-75`  | `0.75` |
+| `opacity-100` | `1`    |
+
+`opacity-*` also has `hover:` variants ([Hover states](/docs/base/utilities/hover)). `hover:opacity-75`
+is a common image-hover treatment.
+
+## Scale
+
+Transform an element's size. Most useful paired with a transition and a hover variant.
+
+| Class                                           | Transform           |
+| ----------------------------------------------- | ------------------- |
+| `scale-0`                                       | `scale(0)`          |
+| `scale-50` `scale-75` `scale-90` `scale-95`     | `scale(0.5 … 0.95)` |
+| `scale-100`                                     | `scale(1)`          |
+| `scale-105` `scale-110` `scale-125` `scale-150` | `scale(1.05 … 1.5)` |
+
+The full set also exists as `hover:scale-*`.
+
+## Transitions
+
+Animate property changes using the system's motion tokens (`--default-transition-*`, which respect
+`prefers-reduced-motion`).
+
+| Class                  | Animates                                           |
+| ---------------------- | -------------------------------------------------- |
+| `transition`           | the default bundle of commonly animated properties |
+| `transition-all`       | `all`                                              |
+| `transition-opacity`   | `opacity`                                          |
+| `transition-transform` | `transform`                                        |
+
+```html
+<img class="rounded-md transition hover:scale-102 hover:opacity-75" src="…" alt="…" />
+```
+
+<Callout type="info">
+  `prefers-reduced-motion: reduce` zeroes the transition duration globally, so you don't need to
+  guard hover effects yourself. See the [motion tokens](/docs/getting-started/overview) for the
+  easing and duration values.
+</Callout>

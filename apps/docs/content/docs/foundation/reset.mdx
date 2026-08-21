@@ -1,0 +1,79 @@
+---
+title: _reset.css
+description: The baseline layer of native-element resets and re-skinned controls that live in @layer reset, so your components and utilities always win over them.
+---
+
+`_reset.css` normalizes the browser's defaults and gives native controls a Zazz look. The whole file sits in `@layer reset`, the second-lowest [layer](/docs/base/layers), so every component and utility you write overrides it without effort.
+
+## Zero specificity by design
+
+Almost every selector is wrapped in `:where()`, which contributes **zero specificity**. A reset rule for `:where(a)` is trivially overridden by your `.text-link` class or a component rule, so you never have to out-specify the reset.
+
+```css
+:where(a) {
+  color: unset;
+  text-decoration: inherit;
+}
+```
+
+## What it sets up
+
+### Box model and layout
+
+A universal reset zeroes margins, padding, and borders and sets `box-sizing: border-box` on every element (and the relevant pseudo-elements):
+
+```css
+:where(*, ::before, ::after, ::backdrop, ::file-selector-button) {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0 solid;
+}
+```
+
+`<body>` becomes a flex column that fills the viewport (`100svh`), reserves the scrollbar gutter (`scrollbar-gutter: stable`, so page width doesn't jump between scrolling and non-scrolling pages), and opens a container context. `<main>` and the section landmarks each get their own container context too, which is what makes [container-query responsiveness](/docs/core-concepts/responsive-design) work with no setup.
+
+### Theme-aware from the start
+
+The reset reads role tokens, so the baseline itself is correct in light and dark mode:
+
+```css
+:where(html) {
+  background-color: var(--background);
+}
+:where(body) {
+  color: var(--foreground);
+  background-color: var(--background);
+}
+```
+
+You get [dark mode](/docs/core-concepts/dark-mode) at the reset level, with no `.dark` overrides needed for the page chrome.
+
+### Typography
+
+Headings inherit their size and weight rather than carrying the browser's defaults, so the [`text-*` classes](/docs/core-concepts/utility-classes) drive type entirely:
+
+```css
+:where(h1, h2, h3, h4, h5, h6) {
+  font-size: inherit;
+  font-weight: inherit;
+}
+```
+
+Lists drop their markers and indentation, tables collapse their borders, and `text-wrap: pretty` is on by default for nicer line breaks.
+
+### Native controls, re-skinned with tokens
+
+Inline `<code>`, `<kbd>`, the search-field clear button, date/time pickers, and `<select>` internals are normalized and styled through their own token hooks (`--code-*`, `--kbd-*`, `--search-cancel-*`, `--placeholder-color`). Form controls inherit your font and color instead of the browser's. Text selection picks up a primary-tinted highlight via `::selection`.
+
+### Focus, logical properties, and forced colors
+
+A global `:focus-visible` rule paints the [focus ring](/docs/core-concepts/states) on every focusable element. Sizing uses logical properties (`inline-size`, `block-size`, `padding-inline`) so layouts mirror correctly in RTL. The reset never does `outline: none` without a replacement.
+
+## Where some resets live instead
+
+To keep styling modular, a few controls are reset alongside their component rather than here: checkbox (`_checkbox.css`), range slider (`_slider.css`), switch (`_switch.css`), and the `<select>` picker panel (`_select.css`). They still write into `@layer reset`; they just live next to the component they redraw, an [allowed variation](/docs/base/file-anatomy#allowed-variations) on the standard file shape.
+
+## Overriding the reset
+
+Because the reset is a _layer_ and not a pile of high-specificity global rules, you override it the same way you override anything else in Zazz: a utility class, a component rule, or a token. There's no `!important`, and nothing to undo.

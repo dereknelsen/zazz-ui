@@ -1,0 +1,139 @@
+/**
+ * reveal.css — Scroll reveals ([data-reveal])
+ *
+ * @layer      variables, utilities
+ * @requires   layers.css, _variables.css
+ * @uses       prefers-reduced-motion — native media feature
+ * @uses       Behaviour requires zazz/scripts/reveal.js (IntersectionObserver)
+ * @tokens     --reveal-global-* (@layer variables);
+ *             per-instance --reveal-* set from data-* attributes by reveal.js
+ * @version    0.1.0
+ * @since      0.1.0
+ *
+ * A lightweight, configurable animation system for scroll-based reveals. Focuses
+ * on viewport entry animations for single elements and direct children of stagger
+ * groups. Available animations: slide-up, slide-down, slide-left, slide-right,
+ * fade, grow, shrink.
+ *
+ * @example  Single element
+ *   <div data-reveal="slide-up">Content</div>
+ *
+ * @example  Staggered children — animation applied to each direct child
+ *   <div data-reveal-each="fade" data-reveal-step="100">
+ *     <div>Item 1</div>
+ *     <p>Item 2</p>
+ *   </div>
+ *
+ * Data attributes (on the element with data-reveal or data-reveal-each):
+ *   data-reveal="animation-name"        single elements
+ *   data-reveal-each="animation-name"   groups; applied to children
+ *   data-reveal-duration="300"          ms
+ *   data-reveal-wait="0"                ms, base delay
+ *   data-reveal-step="80"               ms, stagger delay for groups
+ *   data-reveal-ease="ease-in-out"
+ *   data-reveal-distance="2rem"         translation distance
+ *   data-reveal-order="reversed"        stagger order for groups
+ *   data-reveal-margin="0px"            IntersectionObserver rootMargin
+ *   data-reveal-threshold="0.2"         IntersectionObserver threshold
+ *   data-reveal-scale="0.5"             optional initial scale (requires JS mod)
+ */
+
+@layer variables {
+  :root {
+    --reveal-global-duration: var(--default-transition-duration);
+    --reveal-global-ease: var(--default-transition-timing-function);
+    --reveal-global-wait: 0ms;
+    --reveal-global-distance: 1rem;
+    --reveal-global-grow: 0.97;
+    --reveal-global-shrink: 1.03;
+  }
+}
+
+@layer zazz.utilities {
+  /* --- Animation Styles --- */
+  @media screen and (prefers-reduced-motion: no-preference) {
+    /* Effective values + hidden state. Kept at :where() (0,0,0) so the
+       .in-viewport final state overrides opacity with minimal specificity. */
+    :where(
+      [data-reveal]:not([data-gjs-type]),
+      [data-reveal-each]:not([data-gjs-type]) > *:not([data-gjs-type])
+    ) {
+      --reveal-effective-duration: var(--reveal-duration, var(--reveal-global-duration));
+      --reveal-effective-ease: var(--reveal-ease, var(--reveal-global-ease));
+      --reveal-effective-wait: var(--reveal-wait, var(--reveal-global-wait));
+      --reveal-effective-distance: var(--reveal-distance, var(--reveal-global-distance));
+      will-change: opacity, transform;
+      opacity: 0;
+    }
+
+    /* Transition config — deliberately NOT wrapped in :where(), so its (0,1,0)
+       beats bare transition utilities (e.g. .transition is :where(.transition)
+       = 0,0,0) that share this layer and would otherwise reset transition-delay,
+       wiping out the per-child stagger. The gjs exclusion uses :not(:where())
+       to add no specificity, so the fade override below still wins on order. */
+    [data-reveal]:not(:where([data-gjs-type])),
+    [data-reveal-each]:not(:where([data-gjs-type])) > *:not(:where([data-gjs-type])) {
+      transition-timing-function: var(--reveal-effective-ease);
+      transition-duration: var(--reveal-effective-duration);
+      transition-delay: var(--reveal-effective-wait);
+      transition-property: opacity, transform;
+    }
+
+    /* Slide animations */
+    [data-reveal="slide-up"]:not(:where(.in-viewport, [data-gjs-type])),
+    [data-reveal-each="slide-up"] > *:not(:where(.in-viewport, [data-gjs-type])) {
+      transform: translateY(var(--reveal-effective-distance));
+    }
+
+    [data-reveal="slide-down"]:not(:where(.in-viewport, [data-gjs-type])),
+    [data-reveal-each="slide-down"] > *:not(:where(.in-viewport, [data-gjs-type])) {
+      transform: translateY(calc(-1 * var(--reveal-effective-distance)));
+    }
+
+    [data-reveal="slide-left"]:not(:where(.in-viewport, [data-gjs-type])),
+    [data-reveal-each="slide-left"] > *:not(:where(.in-viewport, [data-gjs-type])) {
+      transform: translateX(var(--reveal-effective-distance));
+    }
+
+    [data-reveal="slide-right"]:not(:where(.in-viewport, [data-gjs-type])),
+    [data-reveal-each="slide-right"] > *:not(:where(.in-viewport, [data-gjs-type])) {
+      transform: translateX(calc(-1 * var(--reveal-effective-distance)));
+    }
+
+    /* Fade animation */
+    [data-reveal="fade"]:not(:where(.in-viewport, [data-gjs-type])),
+    [data-reveal-each="fade"] > *:not(:where(.in-viewport, [data-gjs-type])) {
+      transition-property: opacity;
+      transform: none;
+    }
+
+    /* Scale animations */
+    [data-reveal="grow"]:not(:where(.in-viewport, [data-gjs-type])),
+    [data-reveal-each="grow"] > *:not(:where(.in-viewport, [data-gjs-type])) {
+      transform: scale(var(--reveal-scale, var(--reveal-global-grow)));
+    }
+
+    [data-reveal="shrink"]:not(:where(.in-viewport, [data-gjs-type])),
+    [data-reveal-each="shrink"] > *:not(:where(.in-viewport, [data-gjs-type])) {
+      transform: scale(var(--reveal-scale, var(--reveal-global-shrink)));
+    }
+
+    /* Final state */
+    [data-reveal]:where(.in-viewport, [data-gjs-type]),
+    [data-reveal-each] > *:where(.in-viewport, [data-gjs-type]) {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* --- Accessibility: Reduced Motion --- */
+  @media (prefers-reduced-motion: reduce) {
+    /* Immediately show elements without transition */
+    :where([data-reveal], [data-reveal-each] > *) {
+      transition: none !important;
+      transform: none !important;
+      opacity: 1 !important;
+      will-change: auto !important;
+    }
+  }
+}

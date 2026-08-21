@@ -1,0 +1,71 @@
+---
+title: Flexbox
+description: "Flex container, direction, grow/shrink, and alignment utilities: items-*, justify-*, self-*, and the flex shorthands."
+---
+
+Turn on a flex container with `flex` or `inline-flex`, then set direction, item sizing, and
+alignment. For flex-basis fractions and gaps see [Gap & basis](/docs/base/utilities/gap-and-basis);
+for reordering see [order](/docs/base/utilities/layout#order).
+
+## Container & direction
+
+<Preview src="utilities/flex-direction" />
+
+| Class              | Declaration                      |
+| ------------------ | -------------------------------- |
+| `flex`             | `display: flex`                  |
+| `inline-flex`      | `display: inline-flex`           |
+| `flex-row`         | `flex-direction: row`            |
+| `flex-row-reverse` | `flex-direction: row-reverse`    |
+| `flex-col`         | `flex-direction: column`         |
+| `flex-col-reverse` | `flex-direction: column-reverse` |
+
+`flex`, `inline-flex`, `flex-row`, and `flex-col` have responsive variants. `flex-col @md:flex-row`
+is the canonical stack-then-row pattern ([Responsive design](/docs/base/utilities/responsive-design)).
+
+## Grow & shrink
+
+The `flex` shorthands cover the common grow/shrink intents.
+
+<Preview src="utilities/flex-grow" />
+
+| Class          | Declaration     | Meaning                              |
+| -------------- | --------------- | ------------------------------------ |
+| `flex-1`       | `flex: 1`       | grow and shrink, ignore initial size |
+| `flex-auto`    | `flex: auto`    | grow and shrink from content size    |
+| `flex-initial` | `flex: initial` | shrink but don't grow                |
+| `flex-none`    | `flex: none`    | neither grow nor shrink              |
+
+## Align & justify
+
+<Preview src="utilities/flex-align" />
+
+`items-*` aligns on the cross axis, `justify-*` distributes on the main axis. Values use the
+modern CSS Box Alignment keywords (`start`/`end`, not `flex-start`/`flex-end`).
+
+| Cross axis — `align-items` | Main axis — `justify-content` |
+| -------------------------- | ----------------------------- |
+| `items-start`              | `justify-start`               |
+| `items-center`             | `justify-center`              |
+| `items-end`                | `justify-end`                 |
+| `items-stretch`            | `justify-stretch`             |
+|                            | `justify-between`             |
+|                            | `justify-around`              |
+
+`items-*` and `justify-*` both have responsive variants.
+
+### Per-item alignment
+
+Override the container's cross-axis alignment on a single child with `self-*`. (These are
+base-only, with no responsive variants.)
+
+| Class          | Declaration           |
+| -------------- | --------------------- |
+| `self-auto`    | `align-self: auto`    |
+| `self-start`   | `align-self: start`   |
+| `self-center`  | `align-self: center`  |
+| `self-end`     | `align-self: end`     |
+| `self-stretch` | `align-self: stretch` |
+
+`justify-self-auto`, `justify-self-start`, `justify-self-center`, `justify-self-end`, and
+`justify-self-stretch` are also available (most relevant inside grid).

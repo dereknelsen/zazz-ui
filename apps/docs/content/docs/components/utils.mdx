@@ -1,0 +1,40 @@
+---
+title: Utils
+description: Shared DOM and data-attribute parsing utilities used by other Zazz scripts.
+---
+
+`utils.js` provides two parsing helpers that other scripts depend on. It converts HTML data-attribute strings into typed JavaScript values, eliminating repetitive parsing logic across component scripts.
+
+## Setup
+
+`utils.js` ships inside the single [`index.js`](/docs/getting-started/head#script-load-order) module and loads automatically — `embla.js` `import`s it directly, so there's no load order to manage by hand:
+
+```html
+<script type="module" src="./zazz/index.js"></script>
+```
+
+Exposes `window.Utils` with two functions.
+
+## `parseValue(value)`
+
+Converts a string attribute value to its appropriate JavaScript type:
+
+```js
+Utils.parseValue("true"); // true (boolean)
+Utils.parseValue("false"); // false (boolean)
+Utils.parseValue("42"); // 42 (number)
+Utils.parseValue("[1,2,3]"); // [1, 2, 3] (array)
+Utils.parseValue("hello"); // "hello" (string)
+```
+
+## `parseDataAttributes(node, prefix)`
+
+Extracts all data attributes matching a prefix from a DOM element, converts kebab-case names to camelCase keys, and parses values with `parseValue`:
+
+```js
+// <div data-embla-auto-play="true" data-embla-slide-count="5">
+Utils.parseDataAttributes(element, "data-embla-");
+// { autoPlay: true, slideCount: 5 }
+```
+
+This is how `embla.js` reads all carousel configuration from HTML: no inline scripts or JSON blobs needed.

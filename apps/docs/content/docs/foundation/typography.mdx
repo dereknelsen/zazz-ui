@@ -1,0 +1,66 @@
+---
+title: Typography
+description: "What _typography.css ships: the .prose container for long-form HTML, plus the .text-* and .font-* utilities that read Zazz's type tokens."
+---
+
+`_typography.css` turns the type tokens in [`_variables.css`](/docs/base/variables) into something you can use. It does two jobs. It styles raw HTML inside a `.prose` container, and it exposes the `.text-*` and `.font-*` utility classes you reach for everywhere else.
+
+The tokens themselves (font families, sizes, weights, line-heights, letter-spacing) live in `_variables.css`. This file consumes them.
+
+## Font stacks
+
+Zazz ships three raw stacks and two semantic aliases. The aliases are the ones you override:
+
+```css
+--font-family-body: var(--font-body);
+--font-family-heading: var(--font-body);
+```
+
+Point `--font-family-heading` at `--font-heading` and every heading switches, with no other change. The raw `--font-body`, `--font-heading`, and `--font-mono` stacks back the `.font-sans` / `.font-serif` / `.font-mono` utilities when you want a one-off.
+
+Zazz defaults to Geist. See [Structuring your head tag](/docs/getting-started/head#loading-geist-default-typeface) for how to load it.
+
+## The type scale
+
+Every size in the scale is a fluid `clamp()` value, so text grows with the viewport instead of jumping at breakpoints. The scale runs from `--font-size-eyebrow` up through the body sizes (`xs` to `xl`), the heading steps (`h6` to `h1`), and `--font-size-display` at the top.
+
+Each step pairs a size token with matching weight, line-height, and letter-spacing tokens (`--font-weight-*`, `--leading-*`, `--tracking-*`). Larger steps get tighter tracking and shorter leading so headings read as dense and deliberate. Body sizes get looser tracking and taller leading for comfortable reading. The exact values live in `_variables.css`; the [variables reference](/docs/base/variables) lists the tiers.
+
+## The `.text-*` and `.font-*` utilities
+
+`.text-{step}` applies a full scale step at once. The class sets the font-size, line-height, letter-spacing, and weight together, so you get the whole treatment from one class:
+
+```html
+<span class="text-display">Big launch headline</span>
+<p class="text-sm text-muted-foreground">Caption text</p>
+```
+
+`.font-*` covers weight on its own. You get the Tailwind-style numeric weights (`.font-thin` through `.font-black`) plus three semantic ones that track the tokens: `.font-body`, `.font-heading`, and `.font-strong`. For the full catalog, with text alignment, transform, wrapping, and line-clamp, see [Text and font](/docs/base/utilities/text-and-font). For color, see [Text color](/docs/base/utilities/text-color).
+
+## The `.prose` container
+
+Most utilities expect you to class each element. `.prose` is the exception. Wrap a block of HTML you do not control (markdown output, a CMS body, an article) and the descendants pick up the type system on their own:
+
+```html
+<article class="prose">
+  <h1>Page title</h1>
+  <p>Body text gets proper measure and spacing.</p>
+</article>
+```
+
+Inside `.prose`, headings take their matching `--font-size-h*`, `--leading-h*`, and `--tracking-h*`. Paragraphs, lists, definition lists, blockquotes, and figures all get sensible spacing and rhythm. Links use `--prose-link-color` (the primary role by default), and images round to `--prose-img-radius`.
+
+A few `--prose-*` hooks let you retune it without editing the file:
+
+| Token                       | Default               | Controls                          |
+| --------------------------- | --------------------- | --------------------------------- |
+| `--prose-link-color`        | `var(--primary)`      | Link color inside prose           |
+| `--prose-img-radius`        | `var(--radius-md)`    | Corner radius on images and video |
+| `--prose-img-border`        | `none`                | Border on images and video        |
+| `--prose-figcaption-margin` | `var(--gap-xs) 0 0 0` | Spacing above a figure caption    |
+
+Vertical rhythm between blocks runs off the `--paragraph-spacing-*` tokens, so you can tighten or loosen a whole document from one place.
+
+## Where this sits
+
+`_typography.css` writes into four layers: `variables` (the `--prose-*` hooks), `reset` (the figcaption baseline it shares with `_reset.css`), `components` (`.prose`), and `utilities` (`.text-*`, `.font-*`). For why a single file spans that many layers, see [File anatomy](/docs/base/file-anatomy).

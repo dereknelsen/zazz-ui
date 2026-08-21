@@ -1,0 +1,41 @@
+---
+title: Button
+description: Clickable actions and links with shadcn-style data-variant and data-size options.
+---
+
+Buttons use the `.button` class on a `<button>` or `<a>`. Choose a variant with
+`data-variant` and a size with `data-size`. The **default** variant is the absence
+of the attribute. Colors come from theme role tokens, so light/dark modes work automatically.
+
+## Variants
+
+<Preview src="button/default" />
+
+## With icons
+
+Drop an inline `<svg>` beside the label; the button sizes the icon automatically.
+
+<Preview src="button/with-icons" />
+
+## Icon-only
+
+Use `data-size="icon"` (or `icon-sm`) for square, label-free buttons.
+
+<Preview src="button/icon-only" align="center" />
+
+## With a keyboard shortcut
+
+Drop a `<kbd>` child to show a shortcut hint, e.g. `<button class="button">Search <kbd>⌘K</kbd></button>`.
+The button trims its trailing (or leading) padding so the key sits flush, with the inset tuned
+per `data-size`.
+
+## API
+
+| Attribute      | Values                                                              |
+| -------------- | ------------------------------------------------------------------- |
+| `data-variant` | `primary`, `muted`, `ghost`, `destructive`, `link` (omit = default) |
+| `data-size`    | `sm`, `icon`, `icon-sm`                                             |
+
+Restyle every button by overriding its tokens (`--button-background`, `--button-radius`,
+`--button-height`, ...) at `:root`, or on a single instance inline. You never need to touch
+Zazz's own stylesheets.

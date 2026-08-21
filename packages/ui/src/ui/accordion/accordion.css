@@ -1,0 +1,104 @@
+/**
+ * accordion.css — Accordion (.accordion on <details>/<summary>)
+ *
+ * @layer      variables, reset, components
+ * @requires   layers.css, _variables.css
+ * @uses       ::details-content — native open/close block-size transition (reset layer)
+ * @uses       interpolate-size: allow-keywords — from _variables.css; required for
+ *             block-size: 0 → auto transitions
+ * @tokens     --accordion-* (@layer variables)
+ */
+
+@layer variables {
+  :root {
+    --accordion-icon-size: var(--step-4);
+    --accordion-icon-transform-open: rotate(-180deg);
+  }
+}
+
+@layer reset {
+  /* ===========================================================================
+  DETAILS & SUMMARY — native open/close transition + summary marker reset
+  - In the reset layer so the .accordion component styling below wins.
+  =========================================================================== */
+
+  :where(details)::details-content {
+    --details-content-transition:
+      opacity var(--default-transition-duration) var(--default-transition-timing-function),
+      transform var(--default-transition-duration) var(--default-transition-timing-function),
+      block-size var(--default-transition-duration) var(--default-transition-timing-function),
+      content-visibility var(--default-transition-duration)
+        var(--default-transition-timing-function) allow-discrete;
+
+    block-size: 0;
+    overflow: hidden;
+    transition: var(--details-content-transition);
+    will-change: opacity, transform, block-size, content-visibility;
+  }
+
+  :where(details[open])::details-content {
+    block-size: auto;
+  }
+
+  :where(summary) {
+    display: flex;
+    text-decoration: none;
+    user-select: none;
+    list-style: none;
+  }
+}
+
+@layer zazz.components {
+  .accordion {
+    display: grid;
+    inline-size: 100%;
+    flex: 1;
+  }
+
+  .accordion > details {
+    display: grid;
+    flex: 1 0 auto;
+  }
+
+  .accordion > details > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    /* ring renders as box-shadow; the ring widths animate from 0 so the ring
+      grows in smoothly on focus */
+    --_ring-offset-width: 0px;
+    --_ring-width: 0px;
+    box-shadow:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--ring);
+
+    /* transparent twin of the ring for forced-colors / high-contrast modes */
+    outline: var(--outline-width) var(--outline-style) transparent;
+    outline-offset: var(--outline-offset);
+
+    transition: var(--default-transition);
+  }
+
+  .accordion > details > summary:focus-visible {
+    --_ring-offset-width: var(--ring-offset-width);
+    --_ring-width: var(--ring-width);
+
+    outline-color: transparent;
+  }
+
+  .accordion summary > svg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--accordion-icon-size);
+    block-size: var(--accordion-icon-size);
+    pointer-events: none;
+    transition: transform var(--default-transition-duration)
+      var(--default-transition-timing-function);
+  }
+
+  .accordion > details[open] > summary > svg {
+    transform: var(--accordion-icon-transform-open);
+  }
+}

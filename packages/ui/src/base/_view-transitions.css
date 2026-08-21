@@ -1,0 +1,103 @@
+/**
+ * _view-transitions.css — Cross-document view transitions
+ *
+ * @layer      variables, utilities
+ * @requires   layers.css, _variables.css, _reset.css ([data-transition-layer] names)
+ * @uses       ::view-transition-old/new — cross-document page transitions
+ * @uses       @view-transition { navigation: auto } — enabled here, behind @supports
+ * @uses       ::view-transition-group(toaster) — frozen group; excludes the toast
+ *             stack (named in _toaster.css) from transition repaints
+ * @tokens     --view-transition-* (@layer variables)
+ */
+
+@layer variables {
+  @supports at-rule(@view-transition) and (navigation: auto) {
+    @view-transition {
+      navigation: auto;
+    }
+  }
+
+  :root {
+    --view-transition-duration: 0ms;
+    --view-transition-ease: var(--bezier-easing);
+    --view-transition-wait: 0ms;
+    --view-transition-origin: center top;
+    --view-transition-scale--new: 1;
+    --view-transition-scale--old: 1;
+    --view-transition-translate--new: 0, 0, 0;
+    --view-transition-translate--old: 0, 0, 0;
+    --view-transition-opacity--new: 0;
+    --view-transition-opacity--old: 0;
+  }
+}
+
+@layer zazz.utilities {
+  /* View transitions — main is isolated from header/footer (see _reset.css view-transition-name) */
+  @media screen and (prefers-reduced-motion: no-preference) {
+    ::view-transition-old(main-content) {
+      animation: global-view-transition--old var(--view-transition-duration)
+        var(--view-transition-ease) both;
+    }
+
+    ::view-transition-new(main-content) {
+      animation: global-view-transition--new var(--view-transition-duration)
+        var(--view-transition-ease) both;
+      animation-delay: var(--view-transition-wait);
+    }
+
+    /* Persist shared chrome without cross-fading */
+    ::view-transition-old(global-header),
+    ::view-transition-new(global-footer) {
+      z-index: 2;
+      animation: none;
+    }
+  }
+
+  /* Stacking: keep header/footer snapshots above main so a taller main snapshot
+      (when page heights differ) can't paint over the chrome during the crossfade.
+      Group z-index applies regardless of motion preference. */
+  ::view-transition-group(main-content) {
+    z-index: 1;
+    overflow: clip;
+    transform-origin: var(--view-transition-origin);
+  }
+
+  /* Toasts are ephemeral chrome, not page content. The toaster region names its
+      own snapshot group (view-transition-name: toaster in _toaster.css); pin it
+      above everything and never animate it, so same-document swaps and
+      cross-document navigations can't cross-fade or repaint an active stack.
+      Applies regardless of motion preference. */
+  ::view-transition-group(toaster) {
+    z-index: 3;
+    animation: none;
+  }
+
+  ::view-transition-old(toaster),
+  ::view-transition-new(toaster) {
+    animation: none;
+  }
+
+  @keyframes global-view-transition--old {
+    to {
+      opacity: var(--view-transition-opacity--new);
+      transform: scale(var(--view-transition-scale--old))
+        translate3d(var(--view-transition-translate--old));
+    }
+  }
+
+  @keyframes global-view-transition--new {
+    from {
+      opacity: var(--view-transition-opacity--new);
+      transform: scale(var(--view-transition-scale--new))
+        translate3d(var(--view-transition-translate--new));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation: none !important;
+    }
+  }
+}

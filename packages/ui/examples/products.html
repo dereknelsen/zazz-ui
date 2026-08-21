@@ -1,0 +1,886 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <!-- Paint the right theme (bg, form controls, scrollbars) before CSS loads. -->
+    <meta name="color-scheme" content="light dark" />
+    <title>Zazz tests | Overview</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Preload latin Geist woff2 (Google Fonts v5) so it is ready before first paint. -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwcGFWNOITd.woff2"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:ital,wght@0,100..900;1,100..900&family=Geist:ital,wght@0,100..900;1,100..900&display=optional"
+      rel="stylesheet"
+    />
+
+    <!-- Zazz styles: one bundle — index.css @imports the base layers (layers,
+       variables, reset) and every component in cascade order. -->
+    <link rel="stylesheet" href="../src/index.css" />
+
+    <!-- Preload critical js -->
+    <link rel="modulepreload" href="../src/index.js" />
+
+    <!-- Prefetching related pages -->
+    <link rel="prefetch" href="layout.html" />
+
+    <!-- WARNING: CDN scripts not recommended for production.
+     If you need to use a CDN, create a new SRI hash (@see: https://srihash.org/)
+     and update the integrity attribute. -->
+
+    <!-- [Polyfill] Popover API (June 2026) - -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@oddbird/popover-polyfill@latest"
+      integrity="sha384-Gl/j23IcIIiDfqcDI5gpHCxd5EuslCYvs07HAw3KHGx5UcbxizoF/deDnkeEcFXW"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- [Polyfill] Invokers/tooltip (June 2026) - -->
+    <script
+      type="module"
+      src="https://esm.sh/invokers/compatible"
+      integrity="sha384-fzLqSi8WSEqp/tW3neqEgzl53fvLw4u32RAvoNQSSSAfKGsOrfA2B49xhrObWFnr"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Embla Carousel -->
+    <script
+      src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"
+      integrity="sha384-XGqLM9+dJ+PFOMZn6IuZgRRIoxcAT5fx4eIZCx7K3O2Dj5RA7EOlJ3yOS8Jd+kiY"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Embla Carousel Plugins -->
+    <script
+      src="https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js"
+      integrity="sha384-rs7pDLCh+QtEjJg2VChAoKZHaaz7apuon6rM57E3FdzC83xaJH4n9mQZn4E2s3f4"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-auto-scroll/embla-carousel-auto-scroll.umd.js"
+      integrity="sha384-5x3y2MLuLA5c1LQceYM+lo59GGkQmLzQGzbuHhDUDbnOJkFeTl5jUSdBy3JehMcM"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-class-names/embla-carousel-class-names.umd.js"
+      integrity="sha384-nZNIZhV6WSQVCeWMj8JFfOgQZyzPoGSTh0eohtAOu5aluevIpIblZcupMSdl/EEH"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-ssr/embla-carousel-ssr.umd.js"
+      integrity="sha384-apu0WDHR0c+4Z5qNk7egPNoCxXkYq80e+Qh6xJ6f67S53mSyYdKE6tIeXxvKJ6x9"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Zazz scripts: one ES module bundles every component script. -->
+    <script type="module" src="../src/index.js"></script>
+    <script>
+      /**
+       * Synchronizes the preview theme with the user's preference.
+       * - Reads "theme" from localStorage.
+       * - Falls back to "prefers-color-scheme: dark" media query if unset.
+       * - Applies the "dark" class to document.documentElement if theme is "dark".
+       * - Saves the resolved theme to localStorage for consistency.
+       * This block runs synchronously before dom load to prevent theme flash on load.
+       */
+      (() => {
+        try {
+          const storedTheme = localStorage.getItem("theme");
+          const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches;
+          const theme = storedTheme ?? (prefersDark ? "dark" : "light");
+          document.documentElement.classList.toggle("dark", theme === "dark");
+        } catch {
+          document.documentElement.classList.toggle(
+            "dark",
+            matchMedia("(prefers-color-scheme: dark)").matches,
+          );
+        }
+      })();
+    </script>
+  </head>
+
+  <body class="bg-background">
+    <header class="py-md border-b" data-transition-layer="global-header">
+      <div class="container">
+        <div class="flex items-center justify-between">
+          <a href="index.html" class="text-h6 font-black">Zazz tests</a>
+          <nav>
+            <menu class="flex gap-xs">
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="index.html">Overview</a>
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="about.html">About</a>
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="products.html"
+                  >Products</a
+                >
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="layout.html">Layout</a>
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="responsive.html"
+                  >Responsive</a
+                >
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="components.html"
+                  >Components</a
+                >
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="forms.html">Forms</a>
+              </li>
+            </menu>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main data-layout="main">
+      <section class="pb-xl">
+        <div class="container py-lg">
+          <nav class="flex items-center gap-xs">
+            <menu class="flex items-center gap-xs">
+              <li><a class="button" data-variant="link" href="index.html">Home</a></li>
+              <li><span class="text-muted-foreground opacity-50">/</span></li>
+              <li>
+                <div class="button" data-variant="link" aria-disabled="true">Product name</div>
+              </li>
+            </menu>
+          </nav>
+        </div>
+        <div class="container">
+          <div class="grid grid-cols-2 gap-lg @max-md:container">
+            <div class="lightbox" data-container="xs">
+              <div class="lightbox__gallery">
+                <div
+                  class="lightbox__stage"
+                  data-embla="root"
+                  data-embla-loop="true"
+                  data-embla-classnames
+                >
+                  <div data-embla="viewport">
+                    <div data-embla="container">
+                      <button
+                        class="lightbox__slide"
+                        data-embla="slide"
+                        type="button"
+                        command="show-modal"
+                        commandfor="lightbox-example-1"
+                      >
+                        <figure class="lightbox__content">
+                          <img
+                            sizes="(max-width: 40rem) 100vw, 800px"
+                            src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop"
+                            srcset="
+                              https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=456&h=342&fit=crop 456w,
+                              https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop 800w
+                            "
+                            alt="Mountain landscape"
+                            loading="lazy"
+                            width="800"
+                            height="600"
+                          />
+                        </figure>
+                      </button>
+                      <button
+                        class="lightbox__slide"
+                        data-embla="slide"
+                        type="button"
+                        command="show-modal"
+                        commandfor="lightbox-example-1"
+                      >
+                        <figure class="lightbox__content">
+                          <img
+                            sizes="(max-width: 40rem) 100vw, 800px"
+                            src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop"
+                            srcset="
+                              https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=456&h=342&fit=crop 456w,
+                              https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop 800w
+                            "
+                            alt="Valley with sunlight"
+                            loading="lazy"
+                            width="800"
+                            height="600"
+                          />
+                        </figure>
+                      </button>
+                      <button
+                        class="lightbox__slide"
+                        data-embla="slide"
+                        type="button"
+                        command="show-modal"
+                        commandfor="lightbox-example-1"
+                      >
+                        <figure class="lightbox__content">
+                          <img
+                            sizes="(max-width: 40rem) 100vw, 800px"
+                            src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=800&h=600&fit=crop"
+                            srcset="
+                              https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=456&h=342&fit=crop 456w,
+                              https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=800&h=600&fit=crop 800w
+                            "
+                            alt="Forest path"
+                            loading="lazy"
+                            width="800"
+                            height="600"
+                          />
+                        </figure>
+                      </button>
+                      <button
+                        class="lightbox__slide"
+                        data-embla="slide"
+                        type="button"
+                        command="show-modal"
+                        commandfor="lightbox-example-1"
+                      >
+                        <figure class="lightbox__content">
+                          <img
+                            sizes="(max-width: 40rem) 100vw, 800px"
+                            src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=800&h=600&fit=crop"
+                            srcset="
+                              https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=456&h=342&fit=crop 456w,
+                              https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=800&h=600&fit=crop 800w
+                            "
+                            alt="Waterfall in forest"
+                            loading="lazy"
+                            width="800"
+                            height="600"
+                          />
+                        </figure>
+                      </button>
+                      <button
+                        class="lightbox__slide"
+                        data-embla="slide"
+                        type="button"
+                        command="show-modal"
+                        commandfor="lightbox-example-1"
+                      >
+                        <figure class="lightbox__content">
+                          <img
+                            sizes="(max-width: 40rem) 100vw, 800px"
+                            src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&h=600&fit=crop"
+                            srcset="
+                              https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=456&h=342&fit=crop 456w,
+                              https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&h=600&fit=crop 800w
+                            "
+                            alt="Lake at sunset"
+                            loading="lazy"
+                            width="800"
+                            height="600"
+                          />
+                        </figure>
+                      </button>
+                      <button
+                        class="lightbox__slide"
+                        data-embla="slide"
+                        type="button"
+                        command="show-modal"
+                        commandfor="lightbox-example-1"
+                      >
+                        <figure class="lightbox__content">
+                          <img
+                            sizes="(max-width: 40rem) 100vw, 800px"
+                            src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=600&fit=crop"
+                            srcset="
+                              https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=456&h=342&fit=crop 456w,
+                              https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=600&fit=crop 800w
+                            "
+                            alt="Foggy forest"
+                            loading="lazy"
+                            width="800"
+                            height="600"
+                          />
+                        </figure>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="lightbox__thumbs" data-embla="thumbs" data-embla-loop="true">
+                    <button
+                      class="lightbox__thumbs-prev button text-muted-foreground hover:text-foreground"
+                      data-size="icon-sm"
+                      data-variant="ghost"
+                      data-embla="prev"
+                      type="button"
+                      aria-label="Previous image"
+                    >
+                      <svg
+                        class="size-sm"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 256 256"
+                        aria-hidden="true"
+                      >
+                        <rect width="256" height="256" fill="none" />
+                        <polyline
+                          points="160 208 80 128 160 48"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="14"
+                        />
+                      </svg>
+                    </button>
+                    <div data-embla="viewport">
+                      <div data-embla="container">
+                        <button
+                          type="button"
+                          class="lightbox__thumb"
+                          data-embla="slide"
+                          aria-label="Show image 1"
+                        >
+                          <figure class="lightbox__thumb-content">
+                            <img
+                              sizes="auto"
+                              loading="lazy"
+                              width="228"
+                              height="171"
+                              src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=228&h=171&fit=crop"
+                              srcset="
+                                https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=228&h=171&fit=crop 228w,
+                                https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=456&h=342&fit=crop 456w
+                              "
+                              alt="Mountain landscape"
+                              loading="lazy"
+                              width="800"
+                              height="600"
+                            />
+                          </figure>
+                        </button>
+                        <button
+                          type="button"
+                          class="lightbox__thumb"
+                          data-embla="slide"
+                          aria-label="Show image 2"
+                        >
+                          <figure class="lightbox__thumb-content">
+                            <img
+                              sizes="auto"
+                              loading="lazy"
+                              width="228"
+                              height="171"
+                              src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=228&h=171&fit=crop"
+                              srcset="
+                                https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=228&h=171&fit=crop 228w,
+                                https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=456&h=342&fit=crop 456w
+                              "
+                              alt="Valley with sunlight"
+                              loading="lazy"
+                              width="800"
+                              height="600"
+                            />
+                          </figure>
+                        </button>
+                        <button
+                          type="button"
+                          class="lightbox__thumb"
+                          data-embla="slide"
+                          aria-label="Show image 3"
+                        >
+                          <figure class="lightbox__thumb-content">
+                            <img
+                              sizes="auto"
+                              loading="lazy"
+                              width="228"
+                              height="171"
+                              src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=228&h=171&fit=crop"
+                              srcset="
+                                https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=228&h=171&fit=crop 228w,
+                                https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=456&h=342&fit=crop 456w
+                              "
+                              alt="Forest path"
+                              loading="lazy"
+                              width="800"
+                              height="600"
+                            />
+                          </figure>
+                        </button>
+                        <button
+                          type="button"
+                          class="lightbox__thumb"
+                          data-embla="slide"
+                          aria-label="Show image 4"
+                        >
+                          <figure class="lightbox__thumb-content">
+                            <img
+                              sizes="auto"
+                              loading="lazy"
+                              width="228"
+                              height="171"
+                              src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=228&h=171&fit=crop"
+                              srcset="
+                                https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=228&h=171&fit=crop 228w,
+                                https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=456&h=342&fit=crop 456w
+                              "
+                              alt="Waterfall in forest"
+                              loading="lazy"
+                              width="800"
+                              height="600"
+                            />
+                          </figure>
+                        </button>
+                        <button
+                          type="button"
+                          class="lightbox__thumb"
+                          data-embla="slide"
+                          aria-label="Show image 5"
+                        >
+                          <figure class="lightbox__thumb-content">
+                            <img
+                              sizes="auto"
+                              loading="lazy"
+                              width="228"
+                              height="171"
+                              src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=228&h=171&fit=crop"
+                              srcset="
+                                https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=228&h=171&fit=crop 228w,
+                                https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=456&h=342&fit=crop 456w
+                              "
+                              alt="Lake at sunset"
+                              loading="lazy"
+                              width="800"
+                              height="600"
+                            />
+                          </figure>
+                        </button>
+                        <button
+                          type="button"
+                          class="lightbox__thumb"
+                          data-embla="slide"
+                          aria-label="Show image 6"
+                        >
+                          <figure class="lightbox__thumb-content">
+                            <img
+                              sizes="auto"
+                              loading="lazy"
+                              width="228"
+                              height="171"
+                              src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=228&h=171&fit=crop"
+                              srcset="
+                                https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=228&h=171&fit=crop 228w,
+                                https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=456&h=342&fit=crop 456w
+                              "
+                              alt="Foggy forest"
+                              loading="lazy"
+                              width="800"
+                              height="600"
+                            />
+                          </figure>
+                        </button>
+                      </div>
+                    </div>
+                    <button
+                      class="lightbox__thumbs-next button text-muted-foreground hover:text-foreground"
+                      data-size="icon-sm"
+                      data-variant="ghost"
+                      data-embla="next"
+                      type="button"
+                      aria-label="Next image"
+                    >
+                      <svg
+                        class="size-sm"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 256 256"
+                        aria-hidden="true"
+                      >
+                        <rect width="256" height="256" fill="none" />
+                        <polyline
+                          points="96 48 176 128 96 208"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="14"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <dialog
+                id="lightbox-example-1"
+                class="lightbox__dialog dialog dark"
+                data-size="screen"
+                closedby="any"
+              >
+                <div class="dialog__content">
+                  <div data-embla="root" data-embla-loop="true" data-embla-classnames>
+                    <div data-embla="viewport">
+                      <div data-embla="container">
+                        <div class="lightbox__slide" data-embla="slide">
+                          <figure class="lightbox__content">
+                            <img
+                              sizes="(max-width: 40rem) 100vw, 800px"
+                              src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop"
+                              srcset="
+                                https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=456&h=342&fit=crop 456w,
+                                https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop 800w
+                              "
+                              alt="Mountain landscape"
+                              loading="lazy"
+                              width="800"
+                              height="600"
+                            />
+                          </figure>
+                        </div>
+                        <div class="lightbox__slide" data-embla="slide">
+                          <figure class="lightbox__content">
+                            <img
+                              sizes="(max-width: 40rem) 100vw, 800px"
+                              src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop"
+                              srcset="
+                                https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=456&h=342&fit=crop 456w,
+                                https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop 800w
+                              "
+                              alt="Valley with sunlight"
+                              loading="lazy"
+                              width="800"
+                              height="600"
+                            />
+                          </figure>
+                        </div>
+                        <div class="lightbox__slide" data-embla="slide">
+                          <figure class="lightbox__content">
+                            <img
+                              sizes="(max-width: 40rem) 100vw, 800px"
+                              src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=800&h=600&fit=crop"
+                              srcset="
+                                https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=456&h=342&fit=crop 456w,
+                                https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=800&h=600&fit=crop 800w
+                              "
+                              alt="Forest path"
+                              loading="lazy"
+                              width="800"
+                              height="600"
+                            />
+                          </figure>
+                        </div>
+                        <div class="lightbox__slide" data-embla="slide">
+                          <figure class="lightbox__content">
+                            <img
+                              sizes="(max-width: 40rem) 100vw, 800px"
+                              src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=800&h=600&fit=crop"
+                              srcset="
+                                https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=456&h=342&fit=crop 456w,
+                                https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=800&h=600&fit=crop 800w
+                              "
+                              alt="Waterfall in forest"
+                              loading="lazy"
+                              width="800"
+                              height="600"
+                            />
+                          </figure>
+                        </div>
+                        <div class="lightbox__slide" data-embla="slide">
+                          <figure class="lightbox__content">
+                            <img
+                              sizes="(max-width: 40rem) 100vw, 800px"
+                              src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&h=600&fit=crop"
+                              srcset="
+                                https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=456&h=342&fit=crop 456w,
+                                https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&h=600&fit=crop 800w
+                              "
+                              alt="Lake at sunset"
+                              loading="lazy"
+                              width="800"
+                              height="600"
+                            />
+                          </figure>
+                        </div>
+                        <div class="lightbox__slide" data-embla="slide">
+                          <figure class="lightbox__content">
+                            <img
+                              sizes="(max-width: 40rem) 100vw, 800px"
+                              src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=600&fit=crop"
+                              srcset="
+                                https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=456&h=342&fit=crop 456w,
+                                https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=600&fit=crop 800w
+                              "
+                              alt="Foggy forest"
+                              loading="lazy"
+                              width="800"
+                              height="600"
+                            />
+                          </figure>
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      class="lightbox__prev button size-auto text-muted-foreground hover:text-foreground"
+                      data-size="icon"
+                      data-variant="ghost"
+                      data-embla="prev"
+                      type="button"
+                      aria-label="Previous image"
+                    >
+                      <svg class="size-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                        <rect width="256" height="256" fill="none" />
+                        <polyline
+                          points="160 208 80 128 160 48"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="14"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      class="lightbox__next button size-auto text-muted-foreground hover:text-foreground"
+                      data-size="icon"
+                      data-variant="ghost"
+                      data-embla="next"
+                      type="button"
+                      aria-label="Next image"
+                    >
+                      <svg class="size-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                        <rect width="256" height="256" fill="none" />
+                        <polyline
+                          points="96 48 176 128 96 208"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="14"
+                        />
+                      </svg>
+                    </button>
+                    <div class="lightbox__thumbs" data-embla="thumbs">
+                      <div data-embla="viewport">
+                        <div data-embla="container">
+                          <button
+                            type="button"
+                            class="lightbox__thumb"
+                            data-embla="slide"
+                            aria-label="Show image 1"
+                          >
+                            <figure class="lightbox__thumb-content">
+                              <img
+                                sizes="auto"
+                                loading="lazy"
+                                width="228"
+                                height="171"
+                                src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=228&h=171&fit=crop"
+                                srcset="
+                                  https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=228&h=171&fit=crop 228w,
+                                  https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=456&h=342&fit=crop 456w
+                                "
+                                alt="Mountain landscape"
+                                loading="lazy"
+                                width="800"
+                                height="600"
+                              />
+                            </figure>
+                          </button>
+                          <button
+                            type="button"
+                            class="lightbox__thumb"
+                            data-embla="slide"
+                            aria-label="Show image 2"
+                          >
+                            <figure class="lightbox__thumb-content">
+                              <img
+                                sizes="auto"
+                                loading="lazy"
+                                width="228"
+                                height="171"
+                                src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=228&h=171&fit=crop"
+                                srcset="
+                                  https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=228&h=171&fit=crop 228w,
+                                  https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=456&h=342&fit=crop 456w
+                                "
+                                alt="Valley with sunlight"
+                                loading="lazy"
+                                width="800"
+                                height="600"
+                              />
+                            </figure>
+                          </button>
+                          <button
+                            type="button"
+                            class="lightbox__thumb"
+                            data-embla="slide"
+                            aria-label="Show image 3"
+                          >
+                            <figure class="lightbox__thumb-content">
+                              <img
+                                sizes="auto"
+                                loading="lazy"
+                                width="228"
+                                height="171"
+                                src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=228&h=171&fit=crop"
+                                srcset="
+                                  https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=228&h=171&fit=crop 228w,
+                                  https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=456&h=342&fit=crop 456w
+                                "
+                                alt="Forest path"
+                                loading="lazy"
+                                width="800"
+                                height="600"
+                              />
+                            </figure>
+                          </button>
+                          <button
+                            type="button"
+                            class="lightbox__thumb"
+                            data-embla="slide"
+                            aria-label="Show image 4"
+                          >
+                            <figure class="lightbox__thumb-content">
+                              <img
+                                sizes="auto"
+                                loading="lazy"
+                                width="228"
+                                height="171"
+                                src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=228&h=171&fit=crop"
+                                srcset="
+                                  https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=228&h=171&fit=crop 228w,
+                                  https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=456&h=342&fit=crop 456w
+                                "
+                                alt="Waterfall in forest"
+                                loading="lazy"
+                                width="800"
+                                height="600"
+                              />
+                            </figure>
+                          </button>
+                          <button
+                            type="button"
+                            class="lightbox__thumb"
+                            data-embla="slide"
+                            aria-label="Show image 5"
+                          >
+                            <figure class="lightbox__thumb-content">
+                              <img
+                                sizes="auto"
+                                loading="lazy"
+                                width="228"
+                                height="171"
+                                src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=228&h=171&fit=crop"
+                                srcset="
+                                  https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=228&h=171&fit=crop 228w,
+                                  https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=456&h=342&fit=crop 456w
+                                "
+                                alt="Lake at sunset"
+                                loading="lazy"
+                                width="800"
+                                height="600"
+                              />
+                            </figure>
+                          </button>
+                          <button
+                            type="button"
+                            class="lightbox__thumb"
+                            data-embla="slide"
+                            aria-label="Show image 6"
+                          >
+                            <figure class="lightbox__thumb-content">
+                              <img
+                                sizes="auto"
+                                loading="lazy"
+                                width="228"
+                                height="171"
+                                src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=228&h=171&fit=crop"
+                                srcset="
+                                  https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=228&h=171&fit=crop 228w,
+                                  https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=456&h=342&fit=crop 456w
+                                "
+                                alt="Foggy forest"
+                                loading="lazy"
+                                width="800"
+                                height="600"
+                              />
+                            </figure>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  class="lightbox__close button"
+                  data-size="icon"
+                  data-variant="ghost"
+                  type="button"
+                  commandfor="lightbox-example-1"
+                  command="close"
+                  aria-label="Close lightbox"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                    <rect width="256" height="256" fill="none" />
+                    <line
+                      x1="200"
+                      y1="56"
+                      x2="56"
+                      y2="200"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    />
+                    <line
+                      x1="200"
+                      y1="200"
+                      x2="56"
+                      y2="56"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    />
+                  </svg>
+                </button>
+              </dialog>
+            </div>
+
+            <hgroup class="flex flex-col gap-xs prose">
+              <h2 class="text-h4">Product name</h2>
+              <p>Product description</p>
+              <ul>
+                <li>Feature 1</li>
+                <li>Feature 2</li>
+                <li>Feature 3</li>
+              </ul>
+            </hgroup>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t" data-transition-layer="global-footer">
+      <div class="container py-xl">
+        <div class="flex items-center justify-between gap-md">
+          <div class="text-h6 font-black">Zazz tests</div>
+          <menu class="flex gap-sm">
+            <li><a class="button" data-variant="link" href="about.html">About</a></li>
+            <li><a class="button" data-variant="link" href="layout.html">Layout</a></li>
+            <li><a class="button" data-variant="link" href="responsive.html">Responsive</a></li>
+            <li><a class="button" data-variant="link" href="products.html">Products</a></li>
+            <li><a class="button" data-variant="link" href="components.html">Components</a></li>
+            <li><a class="button" data-variant="link" href="forms.html">Forms</a></li>
+          </menu>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

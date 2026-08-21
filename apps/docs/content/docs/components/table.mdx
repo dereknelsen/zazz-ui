@@ -1,0 +1,45 @@
+---
+title: Table
+description: Styled semantic HTML tables with striped, grid, and compact variants.
+---
+
+Tables use the `.table` class on a plain `<table>` element — every other part is just semantic
+HTML (`<caption>`, `<thead>`, `<tbody>`, `<tfoot>`, `<tr>`, `<th>`, `<td>`). Rows get a subtle
+hover tint by default; mark a row with `data-state="selected"` for a persistent highlight.
+Right-align numeric columns with the `text-right` utility on the cells. For wide tables, wrap
+the `<table>` in a `<div class="overflow-x-auto">`.
+
+<Preview src="table/default" />
+
+## Alternating
+
+`data-variant="alternating"` stripes even body rows and drops the row dividers. The stripe
+color comes from `--table-alternating-background`.
+
+<Preview src="table/alternating" />
+
+## Grid
+
+`data-variant="grid"` adds an outer border and column dividers for a fully ruled table.
+
+<Preview src="table/grid" />
+
+## Small
+
+`data-size="sm"` tightens cell padding and the header height for dense reference tables.
+
+<Preview src="table/size-sm" />
+
+## API
+
+| Attribute      | Values                                    |
+| -------------- | ----------------------------------------- |
+| `data-variant` | `alternating`, `grid` (omit = default)    |
+| `data-size`    | `sm`                                      |
+| `data-layout`  | `fixed` (omit = `table-layout: auto`)     |
+| `data-state`   | `selected` (on a `<tbody>` row)           |
+| `data-side`    | `top` (on the `<caption>`; omit = bottom) |
+
+Every style setting is a `--table-*` token — override globally on `:root`, or per instance,
+e.g. `style="--table-row-background--hover: transparent"` to turn off the hover tint, or
+`style="--table-alternating-background: var(--accent)"` to recolor the stripes.

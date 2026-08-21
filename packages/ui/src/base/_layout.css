@@ -1,0 +1,568 @@
+@layer variables {
+  @property --_container {
+    syntax: "*";
+    inherits: false;
+  }
+
+  :root {
+    /* Inline space left for the band columns once the two gutters are removed.
+      Percentages resolve against the layout region (the grid container), so this
+      tracks the region's own width — no container-query units needed. */
+    --_layout-available: calc(100% - var(--gutters) * 2);
+
+    /* Fluid layout grid. Each side band is a clamp() that stays at 0 until the
+      inner content has reached its breakpoint width, then grows in up to its
+      fixed step. Result: a container caps + centers while there's room beyond it
+      and fluidly fills (minus gutters) once there isn't — continuously, with no
+      breakpoint snap. xs–xl cap at their matching --breakpoint-* width; --full
+      has no cap — its outer minmax(0, 1fr) slack stretches it out to the gutters;
+      --bleed spans edge to edge. That 1fr slack is also the first column to
+      collapse to 0 as the grid scales down, so bands give up space outer-first. */
+    --layout-template-columns: [container-bleed-start] var(--gutters) [container-full-start]
+      minmax(0, 1fr) [container-xl-start]
+      clamp(
+        0rem,
+        calc((var(--_layout-available) - var(--breakpoint-lg)) / 2),
+        calc((var(--breakpoint-xl) - var(--breakpoint-lg)) / 2)
+      )
+      [container-lg-start]
+      clamp(
+        0rem,
+        calc((var(--_layout-available) - var(--breakpoint-md)) / 2),
+        calc((var(--breakpoint-lg) - var(--breakpoint-md)) / 2)
+      )
+      [container-md-start]
+      clamp(
+        0rem,
+        calc((var(--_layout-available) - var(--breakpoint-sm)) / 2),
+        calc((var(--breakpoint-md) - var(--breakpoint-sm)) / 2)
+      )
+      [container-sm-start]
+      clamp(
+        0rem,
+        calc((var(--_layout-available) - var(--breakpoint-xs)) / 2),
+        calc((var(--breakpoint-sm) - var(--breakpoint-xs)) / 2)
+      )
+      [container-xs-start] clamp(0rem, var(--_layout-available), var(--breakpoint-xs))
+      [container-xs-end]
+      clamp(
+        0rem,
+        calc((var(--_layout-available) - var(--breakpoint-xs)) / 2),
+        calc((var(--breakpoint-sm) - var(--breakpoint-xs)) / 2)
+      )
+      [container-sm-end]
+      clamp(
+        0rem,
+        calc((var(--_layout-available) - var(--breakpoint-sm)) / 2),
+        calc((var(--breakpoint-md) - var(--breakpoint-sm)) / 2)
+      )
+      [container-md-end]
+      clamp(
+        0rem,
+        calc((var(--_layout-available) - var(--breakpoint-md)) / 2),
+        calc((var(--breakpoint-lg) - var(--breakpoint-md)) / 2)
+      )
+      [container-lg-end]
+      clamp(
+        0rem,
+        calc((var(--_layout-available) - var(--breakpoint-lg)) / 2),
+        calc((var(--breakpoint-xl) - var(--breakpoint-lg)) / 2)
+      )
+      [container-xl-end] minmax(0, 1fr) [container-full-end] var(--gutters) [container-bleed-end];
+  }
+}
+
+@layer zazz.utilities {
+  /* ---------------------------------------------------------------------------
+    The "container set" = the base .container plus its responsive variants
+    (.\@md\:container, .\@lg\:container, …). [class*=":container"] matches the escaped
+    variant classes (@xs:container … @xl:container) in one shot; .container is named
+    explicitly because it carries no colon. The variable wiring and child
+    placement below are shared by every variant and stay inert until the grid is
+    actually established (grid-column is ignored on a non-grid item), so only the
+    subgrid switch itself is gated per breakpoint — see the @container blocks at
+    the end of this layer. A responsive variant therefore renders as a plain,
+    full-width block below its breakpoint and snaps to a band-aligned subgrid at
+    or above it. */
+
+  /* Named line ranges — published on any region holding a container variant. */
+  :where(main, header, footer, section, article):has(
+    > :is(.container, [class*=":container"]):not([data-variant="article"])
+  ) {
+    --container-xs: container-xs-start / container-xs-end;
+    --container-sm: container-sm-start / container-sm-end;
+    --container-md: container-md-start / container-md-end;
+    --container-lg: container-lg-start / container-lg-end;
+    --container-xl: container-xl-start / container-xl-end;
+    --container-full: container-full-start / container-full-end;
+    --container-bleed: container-bleed-start / container-bleed-end;
+  }
+
+  /* The region is the layout grid whenever it holds a container variant. This is
+    ungated: the container itself always spans the full region (grid-column below),
+    so below a variant's breakpoint it reads as a full-bleed block, and the gated
+    subgrid switch aligns its children to the bands at/above it. */
+  :where(main, header, footer, section, article):has(
+    > :is(.container, [class*=":container"]):not([data-variant="article"])
+  ) {
+    display: grid;
+    grid-template-columns: var(--layout-template-columns);
+  }
+
+  :where(:is(.container, [class*=":container"]):not([data-variant="article"])) {
+    /* default container sizes */
+    --default-container-grid-column: var(--container-md);
+    --default-article-inline-size: var(--article-lg);
+
+    /* Always span every region column. As a subgrid this re-exposes all bands; as
+      a plain block (a responsive variant below its breakpoint) it fills the full
+      region width. */
+    grid-column: 1 / -1;
+  }
+
+  /* The base .container is a subgrid at every width; responsive variants get the
+    same treatment from their breakpoint up (the @container blocks below). */
+  :where(.container:not([data-variant="article"])) {
+    display: grid;
+    place-items: start stretch;
+    /* span all of parent's columns */
+    grid-template-columns: subgrid;
+
+    /* The bands are positioned exactly by --layout-template-columns, so an active
+      container ignores the gap utilities (--_gap / .gap-*): a column gap would
+      push every band off the template, and a row gap isn't part of the band
+      system. The gap still applies when the element is NOT an active container —
+      e.g. a @max-* variant above its breakpoint, where it's a plain grid-cols-N. */
+    column-gap: 0;
+
+    /* Setting a container context breaks subgrid */
+    container-name: none;
+    container-type: normal;
+  }
+
+  /* Every container child inherits the container's default band (a harmless
+    variable — it only takes effect through the grid-column placement below). */
+  :where(:is(.container, [class*=":container"]):not([data-variant="article"])) > * {
+    --_default-container: var(--default-container-grid-column);
+  }
+
+  /*
+    * Place each child into its band, resolving via the fallback chain:
+    *   explicit --_container  ->  the container's default  ->  global default
+    * Base + min variants do this at every width; grid-column is ignored while the
+    * parent is a plain block, so it's harmless below a min variant's breakpoint.
+    * Max variants are EXCLUDED here: above their breakpoint they become a real grid
+    * (e.g. grid-cols-2), and band line names that don't exist there would leak in as
+    * phantom implicit tracks. They place their children in the gated blocks below,
+    * only while the subgrid is actually live (under their breakpoint).
+    */
+  :where(:is(.container, [class*=":container"]):not([data-variant="article"]):not([class*="@max-"]))
+    > * {
+    grid-column: var(--_container, var(--_default-container));
+  }
+
+  /* Per-container default size (set on the container element) */
+  :where(:is(.container, [class*=":container"]):not([data-variant="article"]))[data-container="xs"]
+    > * {
+    --_default-container: var(--container-xs);
+  }
+
+  :where(:is(.container, [class*=":container"]):not([data-variant="article"]))[data-container="sm"]
+    > * {
+    --_default-container: var(--container-sm);
+  }
+
+  :where(:is(.container, [class*=":container"]):not([data-variant="article"]))[data-container="md"]
+    > * {
+    --_default-container: var(--container-md);
+  }
+
+  :where(:is(.container, [class*=":container"]):not([data-variant="article"]))[data-container="lg"]
+    > * {
+    --_default-container: var(--container-lg);
+  }
+
+  :where(:is(.container, [class*=":container"]):not([data-variant="article"]))[data-container="xl"]
+    > * {
+    --_default-container: var(--container-xl);
+  }
+
+  :where(
+      :is(.container, [class*=":container"]):not([data-variant="article"])
+    )[data-container="full"]
+    > * {
+    --_default-container: var(--container-full);
+  }
+
+  :where(
+      :is(.container, [class*=":container"]):not([data-variant="article"])
+    )[data-container="bleed"]
+    > * {
+    --_default-container: var(--container-bleed);
+  }
+
+  /* Per-child override (set on the direct child element) */
+  :where(:is(.container, [class*=":container"]):not([data-variant="article"]))
+    > *[data-container="xs"] {
+    --_container: var(--container-xs);
+  }
+
+  :where(:is(.container, [class*=":container"]):not([data-variant="article"]))
+    > *[data-container="sm"] {
+    --_container: var(--container-sm);
+  }
+
+  :where(:is(.container, [class*=":container"]):not([data-variant="article"]))
+    > *[data-container="md"] {
+    --_container: var(--container-md);
+  }
+
+  :where(:is(.container, [class*=":container"]):not([data-variant="article"]))
+    > *[data-container="lg"] {
+    --_container: var(--container-lg);
+  }
+
+  :where(:is(.container, [class*=":container"]):not([data-variant="article"]))
+    > *[data-container="xl"] {
+    --_container: var(--container-xl);
+  }
+
+  :where(:is(.container, [class*=":container"]):not([data-variant="article"]))
+    > *[data-container="full"] {
+    --_container: var(--container-full);
+  }
+
+  :where(:is(.container, [class*=":container"]):not([data-variant="article"]))
+    > *[data-container="bleed"] {
+    --_container: var(--container-bleed);
+  }
+
+  /* ---------------------------------------------------------------------------
+    Responsive container variants — switch the variant into a subgrid from its
+    breakpoint up. Mobile-first, gated on the global --is-breakpoint-* flags
+    (sourced from the body container in _variables.css). The flag is read from the
+    variant's container ancestor — the region — which carries it like every body
+    descendant, so the variant element gates correctly (the region itself can't:
+    its own container ancestor is the body element, which holds no flag). The
+    region grid + 1 / -1 span above already apply at every width, so each block
+    only flips display + subgrid; below the breakpoint the variant stays a block. */
+  @container style(--is-breakpoint-xs: true) {
+    :where(.\@xs\:container:not([data-variant="article"])) {
+      display: grid;
+      grid-template-columns: subgrid;
+      column-gap: 0;
+      container-name: unset;
+      container-type: unset;
+    }
+  }
+
+  @container style(--is-breakpoint-sm: true) {
+    :where(.\@sm\:container:not([data-variant="article"])) {
+      display: grid;
+      grid-template-columns: subgrid;
+      column-gap: 0;
+      container-name: none;
+      container-type: normal;
+    }
+  }
+
+  @container style(--is-breakpoint-md: true) {
+    :where(.\@md\:container:not([data-variant="article"])) {
+      display: grid;
+      grid-template-columns: subgrid;
+      column-gap: 0;
+      container-name: none;
+      container-type: normal;
+    }
+  }
+
+  @container style(--is-breakpoint-lg: true) {
+    :where(.\@lg\:container:not([data-variant="article"])) {
+      display: grid;
+      grid-template-columns: subgrid;
+      column-gap: 0;
+      container-name: none;
+      container-type: normal;
+    }
+  }
+
+  @container style(--is-breakpoint-xl: true) {
+    :where(.\@xl\:container:not([data-variant="article"])) {
+      display: grid;
+      grid-template-columns: subgrid;
+      column-gap: 0;
+      container-name: none;
+      container-type: normal;
+    }
+  }
+
+  /* Max-breakpoint variants — the inverse of the min variants: a container only
+    BELOW its breakpoint, gated on the false state of the flag. Above it the
+    element falls back to whatever else it carries (e.g. grid grid-cols-2). Each
+    active block also places its children (the global placement rule excludes
+    @max-* to keep band line names out of the plain grid it becomes above). */
+
+  @container style(--is-breakpoint-xs: false) {
+    :where(.\@max-xs\:container:not([data-variant="article"])) {
+      display: grid;
+      grid-template-columns: subgrid;
+      column-gap: 0;
+      container-name: unset;
+      container-type: unset;
+    }
+  }
+
+  @container style(--is-breakpoint-sm: false) {
+    :where(.\@max-sm\:container:not([data-variant="article"])) {
+      display: grid;
+      grid-template-columns: subgrid;
+      column-gap: 0;
+      container-name: none;
+      container-type: normal;
+    }
+
+    :where(.\@max-sm\:container:not([data-variant="article"])) > * {
+      grid-column: var(--_container, var(--_default-container));
+    }
+  }
+
+  @container style(--is-breakpoint-md: false) {
+    :where(.\@max-md\:container:not([data-variant="article"])) {
+      display: grid;
+      grid-template-columns: subgrid;
+      column-gap: 0;
+      container-name: none;
+      container-type: normal;
+    }
+
+    :where(.\@max-md\:container:not([data-variant="article"])) > * {
+      grid-column: var(--_container, var(--_default-container));
+    }
+  }
+
+  @container style(--is-breakpoint-lg: false) {
+    :where(.\@max-lg\:container:not([data-variant="article"])) {
+      display: grid;
+      grid-template-columns: subgrid;
+      column-gap: 0;
+      container-name: none;
+      container-type: normal;
+    }
+
+    :where(.\@max-lg\:container:not([data-variant="article"])) > * {
+      grid-column: var(--_container, var(--_default-container));
+    }
+  }
+
+  @container style(--is-breakpoint-xl: false) {
+    :where(.\@max-xl\:container:not([data-variant="article"])) {
+      display: grid;
+      grid-template-columns: subgrid;
+      column-gap: 0;
+      container-name: none;
+      container-type: normal;
+    }
+
+    :where(.\@max-xl\:container:not([data-variant="article"])) > * {
+      grid-column: var(--_container, var(--_default-container));
+    }
+  }
+
+  /* ===========================================================================
+    CONTAINER VARIANTS
+    =========================================================================== */
+
+  :where(:is(.container, [class*=":container"])[data-variant="article"]) {
+    --default-article-inline-size: var(--article-lg);
+  }
+
+  /* Base .container — article width at every width; responsive variants gate below. */
+  :where(.container[data-variant="article"]) {
+    --_article: var(--default-article-inline-size);
+    --_container-name: article;
+    --_container-type: inline-size;
+
+    inline-size: min(var(--_article), 100% - var(--gutters) * 2);
+    margin-inline: auto;
+    container-name: var(--_container-name);
+    container-type: var(--_container-type);
+  }
+
+  :where(:is(.container, [class*=":container"])[data-variant="article"])[data-container="xs"] {
+    --_article: var(--article-xs);
+  }
+
+  :where(:is(.container, [class*=":container"])[data-variant="article"])[data-container="sm"] {
+    --_article: var(--article-sm);
+  }
+
+  :where(:is(.container, [class*=":container"])[data-variant="article"])[data-container="md"] {
+    --_article: var(--article-md);
+  }
+
+  :where(:is(.container, [class*=":container"])[data-variant="article"])[data-container="lg"] {
+    --_article: var(--article-lg);
+  }
+
+  :where(:is(.container, [class*=":container"])[data-variant="article"])[data-container="xl"] {
+    --_article: var(--article-xl);
+  }
+
+  :where(:is(.container, [class*=":container"])[data-variant="article"])[data-container="full"] {
+    --_article: var(--article-full);
+  }
+
+  :where(:is(.container, [class*=":container"])[data-variant="article"])[data-container="bleed"] {
+    --_article: var(--article-bleed);
+  }
+
+  /* Responsive article variants — reading width from the breakpoint up (min) or only
+    below it (max). Below a min variant's breakpoint the element is a plain block;
+    above a max variant's breakpoint it falls back to whatever else it carries. */
+  @container style(--is-breakpoint-xs: true) {
+    :where(.\@xs\:container[data-variant="article"]) {
+      inline-size: unset;
+      margin-inline: unset;
+      container-name: unset;
+      container-type: unset;
+      --_article: unset;
+      --_container-name: unset;
+      --_container-type: unset;
+    }
+  }
+
+  @container style(--is-breakpoint-sm: true) {
+    :where(.\@sm\:container[data-variant="article"]) {
+      --_container-name: article;
+      --_container-type: inline-size;
+
+      inline-size: min(
+        var(--_article, var(--default-article-inline-size)),
+        100% - var(--gutters) * 2
+      );
+      margin-inline: auto;
+      container-name: var(--_container-name);
+      container-type: var(--_container-type);
+    }
+  }
+
+  @container style(--is-breakpoint-md: true) {
+    :where(.\@md\:container[data-variant="article"]) {
+      --_container-name: article;
+      --_container-type: inline-size;
+
+      inline-size: min(
+        var(--_article, var(--default-article-inline-size)),
+        100% - var(--gutters) * 2
+      );
+      margin-inline: auto;
+      container-name: var(--_container-name);
+      container-type: var(--_container-type);
+    }
+  }
+
+  @container style(--is-breakpoint-lg: true) {
+    :where(.\@lg\:container[data-variant="article"]) {
+      --_container-name: article;
+      --_container-type: inline-size;
+
+      inline-size: min(
+        var(--_article, var(--default-article-inline-size)),
+        100% - var(--gutters) * 2
+      );
+      margin-inline: auto;
+      container-name: var(--_container-name);
+      container-type: var(--_container-type);
+    }
+  }
+
+  @container style(--is-breakpoint-xl: true) {
+    :where(.\@xl\:container[data-variant="article"]) {
+      --_container-name: article;
+      --_container-type: inline-size;
+
+      inline-size: min(
+        var(--_article, var(--default-article-inline-size)),
+        100% - var(--gutters) * 2
+      );
+      margin-inline: auto;
+      container-name: var(--_container-name);
+      container-type: var(--_container-type);
+    }
+  }
+
+  @container style(--is-breakpoint-xs: false) {
+    :where(.\@max-xs\:container[data-variant="article"]) {
+      --_container-name: article;
+      --_container-type: inline-size;
+
+      inline-size: min(
+        var(--_article, var(--default-article-inline-size)),
+        100% - var(--gutters) * 2
+      );
+      margin-inline: auto;
+      container-name: var(--_container-name);
+      container-type: var(--_container-type);
+    }
+  }
+
+  @container style(--is-breakpoint-sm: false) {
+    :where(.\@max-sm\:container[data-variant="article"]) {
+      --_container-name: article;
+      --_container-type: inline-size;
+
+      inline-size: min(
+        var(--_article, var(--default-article-inline-size)),
+        100% - var(--gutters) * 2
+      );
+      margin-inline: auto;
+      container-name: var(--_container-name);
+      container-type: var(--_container-type);
+    }
+  }
+
+  @container style(--is-breakpoint-md: false) {
+    :where(.\@max-md\:container[data-variant="article"]) {
+      --_container-name: article;
+      --_container-type: inline-size;
+
+      inline-size: min(
+        var(--_article, var(--default-article-inline-size)),
+        100% - var(--gutters) * 2
+      );
+      margin-inline: auto;
+      container-name: var(--_container-name);
+      container-type: var(--_container-type);
+    }
+  }
+
+  @container style(--is-breakpoint-lg: false) {
+    :where(.\@max-lg\:container[data-variant="article"]) {
+      --_container-name: article;
+      --_container-type: inline-size;
+
+      inline-size: min(
+        var(--_article, var(--default-article-inline-size)),
+        100% - var(--gutters) * 2
+      );
+      margin-inline: auto;
+      container-name: var(--_container-name);
+      container-type: var(--_container-type);
+    }
+  }
+
+  @container style(--is-breakpoint-xl: false) {
+    :where(.\@max-xl\:container[data-variant="article"]) {
+      --_container-name: article;
+      --_container-type: inline-size;
+
+      inline-size: min(
+        var(--_article, var(--default-article-inline-size)),
+        100% - var(--gutters) * 2
+      );
+      margin-inline: auto;
+      container-name: var(--_container-name);
+      container-type: var(--_container-type);
+    }
+  }
+}

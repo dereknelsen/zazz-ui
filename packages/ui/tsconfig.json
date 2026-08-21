@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    // Emit contract: readable, unminified JS next to each .ts source (in-place emit,
+    // no outDir), with comments preserved and .d.ts + maps for editor types.
+    // erasableSyntaxOnly keeps the emitted JS line-for-line close to the source.
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "rewriteRelativeImportExtensions": true,
+    "declaration": true,
+    "declarationMap": true,
+    "removeComments": false,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*.ts"]
+}

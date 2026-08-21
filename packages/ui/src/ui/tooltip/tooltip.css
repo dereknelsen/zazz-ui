@@ -1,0 +1,233 @@
+/**
+ * tooltip.css — Tooltip (.tooltip, .tooltip__content)
+ *
+ * @layer      variables, reset, components
+ * @requires   layers.css, _variables.css, popover.css
+ * @uses       interestfor — Interest Invokers API (Chromium 142+; polyfill via invokers)
+ * @uses       .tooltip__content — hint popover (light dismiss, auto-hides sibling hints)
+ * @uses       anchor-name, position-anchor, position-area, position-try-fallbacks —
+ *             explicit anchors for polyfill; data-side maps to --popover-position-*
+ * @tokens     --tooltip-* (@layer variables)
+ */
+
+@layer variables {
+  :root {
+    --tooltip-background: var(--foreground);
+    --tooltip-foreground: var(--background);
+    --tooltip-border: transparent;
+    --tooltip-radius: var(--radius-sm);
+    --tooltip-shadow: var(--shadow-sm);
+    --tooltip-padding-inline: var(--gap-xs);
+    --tooltip-padding-block: var(--step-1);
+    --tooltip-gap: var(--step-1);
+    --tooltip-font-family: var(--font-family-mono);
+    --tooltip-font-size: var(--font-size-xs);
+    --tooltip-line-height: var(--leading-xs);
+    --tooltip-font-weight: var(--font-weight-body);
+    --tooltip-max-inline-size: 16ch;
+
+    /* Arrow */
+    --tooltip-arrow-size: var(--step-2);
+    --tooltip-arrow-color: var(--tooltip-background);
+    --tooltip-arrow-radius: var(--step-0_5);
+
+    /* Reveal transitions — lighter than popover */
+    --tooltip-transition-duration: calc(var(--default-transition-duration) / 2);
+    --tooltip-transition-timing-function: var(--default-transition-timing-function);
+    --tooltip-transition-delay: 0ms;
+    --tooltip-transition:
+      opacity var(--tooltip-transition-duration) var(--tooltip-transition-timing-function)
+        var(--tooltip-transition-delay),
+      transform var(--tooltip-transition-duration) var(--tooltip-transition-timing-function)
+        var(--tooltip-transition-delay),
+      overlay var(--tooltip-transition-duration) var(--tooltip-transition-timing-function)
+        var(--tooltip-transition-delay) allow-discrete,
+      display var(--tooltip-transition-duration) var(--tooltip-transition-timing-function)
+        var(--tooltip-transition-delay) allow-discrete;
+    --tooltip-scale--start: 0.94;
+    --tooltip-translate--start: 0, 0.25em, 0;
+    --tooltip-opacity--start: 0;
+    --tooltip-scale--end: 1;
+    --tooltip-translate--end: 0, 0, 0;
+    --tooltip-opacity--end: 1;
+
+    /* Positioning — smaller offset than popover menus */
+    --tooltip-margin-block: var(--step-1);
+    --tooltip-margin-inline: 0;
+
+    /* Popover overrides */
+    --popover-shadow: var(--shadow-xs);
+    --popover-min-inline-size: fit-content;
+    --popover-position-area: block-start span-all;
+    --popover-origin: bottom center;
+  }
+}
+
+@layer reset {
+  /* ===========================================================================
+  HINT POPOVER OVERRIDES
+  - [popover] defaults in popover.css target menus; hint tooltips need a compact
+    surface and must not inherit min-inline-size or backdrop blur.
+  =========================================================================== */
+
+  :where(.tooltip__content) {
+    color: var(--tooltip-foreground);
+    background-color: var(--tooltip-background);
+    min-inline-size: unset;
+    max-inline-size: var(--tooltip-max-inline-size);
+    backdrop-filter: none;
+
+    transform-origin: var(--popover-origin);
+    opacity: var(--tooltip-opacity--start);
+    transform: scale(var(--tooltip-scale--start)) translate3d(var(--tooltip-translate--start));
+    transition: var(--tooltip-transition);
+  }
+
+  @supports (anchor-name: --zazz) {
+    :where(.tooltip__content) {
+      margin-block: var(--tooltip-margin-block);
+      margin-inline: var(--tooltip-margin-inline);
+    }
+  }
+
+  .tooltip__content:where(:popover-open, .\:popover-open) {
+    display: flex;
+    opacity: var(--tooltip-opacity--end);
+    transform: scale(var(--tooltip-scale--end)) translate3d(var(--tooltip-translate--end));
+
+    @starting-style {
+      opacity: var(--tooltip-opacity--start);
+      transform: scale(var(--tooltip-scale--start)) translate3d(var(--tooltip-translate--start));
+    }
+  }
+}
+
+@layer zazz.components {
+  /* ===========================================================================
+  TOOLTIP — interestfor trigger + anchored hint popover
+  - interestfor wires hover/focus/long-press to the hint popover and sets ARIA
+    (aria-describedby / aria-details). Do not add role="tooltip" or manual ARIA.
+  - Explicit anchor-name supports the invokers/anchor polyfills (implicit anchors
+    from interestfor are not polyfilled).
+  =========================================================================== */
+
+  .tooltip {
+    anchor-scope: --tooltip-trigger;
+    display: inline-block;
+  }
+
+  .tooltip > :where([interestfor], .tooltip__trigger) {
+    anchor-name: --tooltip-trigger;
+  }
+
+  .tooltip__trigger {
+    display: inline-flex;
+  }
+
+  .tooltip__content {
+    position-anchor: --tooltip-trigger;
+
+    display: flex;
+    align-items: center;
+    gap: var(--tooltip-gap);
+    inline-size: max-content;
+
+    padding-inline: var(--tooltip-padding-inline);
+    padding-block: var(--tooltip-padding-block);
+
+    border: 1px solid var(--tooltip-border);
+    border-radius: var(--tooltip-radius);
+    box-shadow: var(--tooltip-shadow);
+
+    font-family: var(--tooltip-font-family);
+    font-size: var(--tooltip-font-size);
+    line-height: var(--tooltip-line-height);
+    font-weight: var(--tooltip-font-weight);
+    text-wrap: balance;
+  }
+
+  .tooltip__content > kbd {
+    --kbd-background: color-mix(in oklch, var(--tooltip-foreground) 15%, transparent);
+    --kbd-color: var(--tooltip-foreground);
+    --kbd-inline-size: var(--step-4);
+    --kbd-block-size: var(--step-4);
+    --kbd-font-size: var(--font-size-xs);
+  }
+
+  .tooltip__content:has(.tooltip__arrow) {
+    overflow: visible;
+  }
+
+  /* Positioning — reuse --popover-position-* hooks from popover.css via data-side */
+
+  .tooltip__content[data-side="top"]:not([data-align]),
+  .tooltip__content[data-side="top"][data-align="center"] {
+    --tooltip-translate--start: 0, 0.25em, 0;
+    --popover-position-area: block-start span-all;
+    --popover-origin: bottom center;
+    --tooltip-margin-block: var(--step-1);
+  }
+
+  .tooltip__content[data-side="bottom"]:not([data-align]),
+  .tooltip__content[data-side="bottom"][data-align="center"] {
+    --tooltip-translate--start: 0, 0.25em, 0;
+    --popover-position-area: block-end span-all;
+    --popover-origin: top center;
+    --tooltip-margin-block: var(--step-1);
+  }
+
+  .tooltip__content[data-side="left"]:not([data-align]),
+  .tooltip__content[data-side="left"][data-align="center"] {
+    --tooltip-translate--start: 0.25em, 0, 0;
+    --popover-position-area: inline-start span-all;
+    --popover-origin: center right;
+    --tooltip-margin-inline: var(--step-1);
+    --tooltip-margin-block: 0;
+  }
+
+  .tooltip__content[data-side="right"]:not([data-align]),
+  .tooltip__content[data-side="right"][data-align="center"] {
+    --tooltip-translate--start: 0.25em, 0, 0;
+    --popover-position-area: inline-end span-all;
+    --popover-origin: center left;
+    --tooltip-margin-inline: var(--step-1);
+    --tooltip-margin-block: 0;
+  }
+
+  /* Tooltip arrow */
+  .tooltip__arrow {
+    position: absolute;
+    top: calc(100% - var(--tooltip-arrow-size) / 2);
+    left: 50%;
+    transform: translate(-50%, 0%) rotate(45deg);
+    width: var(--tooltip-arrow-size);
+    block-size: var(--tooltip-arrow-size);
+    background-color: var(--tooltip-arrow-color);
+    border-radius: var(--tooltip-arrow-radius);
+    pointer-events: none;
+  }
+
+  /* Tooltip arrow position */
+  .tooltip__content[data-side="top"] .tooltip__arrow {
+    bottom: calc((var(--tooltip-arrow-size) / 2) * -1);
+    left: 50%;
+  }
+
+  .tooltip__content[data-side="bottom"] .tooltip__arrow {
+    top: calc((var(--tooltip-arrow-size) / 2) * -1);
+    left: 50%;
+  }
+
+  .tooltip__content[data-side="left"] .tooltip__arrow {
+    left: calc(100% - var(--tooltip-arrow-size) / 2);
+    top: 50%;
+    transform: translate(0%, -50%) rotate(45deg);
+  }
+
+  .tooltip__content[data-side="right"] .tooltip__arrow {
+    right: calc(100% - var(--tooltip-arrow-size) / 2);
+    left: auto;
+    top: 50%;
+    transform: translate(0%, -50%) rotate(45deg);
+  }
+}

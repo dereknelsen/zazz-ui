@@ -1,0 +1,190 @@
+---
+title: Reveal
+description: "Scroll-based reveal animations: lightweight, configurable viewport entry effects for elements and staggered groups."
+---
+
+Reveal is a lightweight animation system for scroll-based viewport entry effects. It uses `IntersectionObserver` to trigger CSS transitions when elements scroll into view.
+
+## How it works
+
+1. Add `data-reveal` or `data-reveal-each` to your HTML.
+2. The `Reveal` class discovers those elements, sets CSS custom properties, and observes them.
+3. When an element enters the viewport, it receives the `.in-viewport` class.
+4. CSS transitions (defined in `reveal.css`) animate from the hidden state to visible.
+
+No keyframes, no JavaScript animation loops, just CSS transitions triggered by a class toggle.
+
+## Setup
+
+`reveal.js` ships inside the single [`index.js`](/docs/getting-started/head#script-load-order) module; its styles are part of `index.css`, which `@import`s `ui/reveal/reveal.css`. The normal setup is one link to `index.css` plus the module:
+
+```html
+<link rel="stylesheet" href="./zazz/index.css" />
+<script type="module" src="./zazz/index.js"></script>
+```
+
+If you link files individually, the reveal styles live at `./zazz/ui/reveal/reveal.css`.
+
+Reveal auto-initializes once the DOM is parsed. No manual setup needed for standard pages.
+
+## Single elements
+
+Animate individual elements with `data-reveal`:
+
+```html
+<div data-reveal="slide-up">Slides up into view</div>
+<div data-reveal="fade">Fades in</div>
+<div data-reveal="slide-left">Slides in from the right</div>
+```
+
+### Available animations
+
+| Value         | Effect                        |
+| ------------- | ----------------------------- |
+| `slide-up`    | Translate up from below       |
+| `slide-down`  | Translate down from above     |
+| `slide-left`  | Translate left from the right |
+| `slide-right` | Translate right from the left |
+| `fade`        | Opacity only                  |
+| `grow`        | Scale up from smaller         |
+| `shrink`      | Scale down from larger        |
+
+## Stagger groups
+
+Animate direct children with sequential delays using `data-reveal-each`:
+
+```html
+<div data-reveal-each="fade" data-reveal-step="100">
+  <div>Item 1 — appears first</div>
+  <div>Item 2 — 100ms later</div>
+  <div>Item 3 — 200ms later</div>
+</div>
+```
+
+Each child gets an incrementing delay calculated as `baseWait + (step × index)`.
+
+### Reversed order
+
+Animate children from last to first:
+
+```html
+<div data-reveal-each="slide-up" data-reveal-order="reversed">
+  <div>Appears last</div>
+  <div>Appears second</div>
+  <div>Appears first</div>
+</div>
+```
+
+## Combining with hover and other transitions
+
+Reveal animates by controlling the element's CSS transition: the duration, the stagger delay, the timing function, and which properties move (`opacity` and `transform`). That means it owns `transition-*` on whatever element it's set on.
+
+So don't add a `transition` (or `transition-all`) utility to the same element you put `data-reveal` on. Both want to set `transition-*`, and the utility resets the delay reveal calculated, so the stagger collapses and everything fires at once.
+
+When an element needs its own transition too — a `hover:` border, say — wrap it. Put the reveal on an outer `div` and keep the `transition` on the inner element. Each one controls its own transitions, and they stop stepping on each other:
+
+```html
+<!-- The wrapper handles the reveal; the card keeps its hover transition -->
+<div data-reveal-each="slide-up">
+  <a class="card transition hover:border-primary">First card</a>
+  <a class="card transition hover:border-primary">Second card</a>
+</div>
+```
+
+```html
+<!-- Avoid: one element doing both. The `transition` utility wipes the stagger. -->
+<a class="card transition hover:border-primary" data-reveal="slide-up">Card</a>
+```
+
+## Configuration attributes
+
+All attributes are optional. Set them on the element with `data-reveal` or `data-reveal-each`:
+
+| Attribute               | Default                    | Description                                                                                                           |
+| ----------------------- | -------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `data-reveal-duration`  | `--reveal-global-duration` | Animation duration. Defaults to the global transition duration (`--default-transition-duration`); JS fallback `400ms` |
+| `data-reveal-wait`      | `0`                        | Base delay before animation starts (ms)                                                                               |
+| `data-reveal-step`      | `80`                       | Delay between staggered children (ms)                                                                                 |
+| `data-reveal-ease`      | `--reveal-global-ease`     | Timing function. Defaults to `--default-transition-timing-function`; JS fallback `cubic-bezier(0.4, 0, 0.2, 1)`       |
+| `data-reveal-distance`  | `1rem`                     | Translation distance for slide animations                                                                             |
+| `data-reveal-scale`     | —                          | Custom scale value for grow/shrink                                                                                    |
+| `data-reveal-margin`    | `0px`                      | IntersectionObserver `rootMargin`                                                                                     |
+| `data-reveal-threshold` | `0.2`                      | Visibility threshold (0–1) to trigger                                                                                 |
+| `data-reveal-order`     | —                          | Set to `"reversed"` for reverse stagger                                                                               |
+
+## Global configuration
+
+Override defaults by passing a config object:
+
+```js
+const reveal = new Reveal({
+  config: {
+    duration: 600,
+    ease: "ease-in-out",
+    threshold: 0.3,
+    margin: "100px",
+    step: 100,
+  },
+});
+```
+
+Or set global CSS custom properties on `:root`:
+
+```css
+:root {
+  --reveal-global-duration: 600ms;
+  --reveal-global-ease: ease-in-out;
+  --reveal-global-distance: 2rem;
+  --reveal-global-grow: 0.97; /* scale for grow */
+  --reveal-global-shrink: 1.03; /* scale for shrink */
+}
+```
+
+| Token                      | Default                                     | Description                 |
+| -------------------------- | ------------------------------------------- | --------------------------- |
+| `--reveal-global-duration` | `var(--default-transition-duration)`        | Animation duration          |
+| `--reveal-global-ease`     | `var(--default-transition-timing-function)` | Timing function             |
+| `--reveal-global-wait`     | `0ms`                                       | Base delay before animation |
+| `--reveal-global-distance` | `1rem`                                      | Slide translation distance  |
+| `--reveal-global-grow`     | `0.97`                                      | Scale for `grow`            |
+| `--reveal-global-shrink`   | `1.03`                                      | Scale for `shrink`          |
+
+## Manual control
+
+### Disable auto-initialization
+
+```js
+Reveal.disableAutoInit();
+const reveal = new Reveal({
+  config: {
+    /* custom */
+  },
+});
+```
+
+### Refresh after DOM changes
+
+After dynamically inserting content, rescan for new `[data-reveal]` elements:
+
+```js
+container.innerHTML = newContent;
+Reveal.getAutoInstance()?.refresh();
+```
+
+The SPA navigation script (`navigation.js`) calls `refresh()` automatically after swapping `<main>` content.
+
+## Reduced motion
+
+Reveal respects `prefers-reduced-motion`. The CSS uses the standard `@media (prefers-reduced-motion: reduce)` query: when reduced motion is preferred, elements appear immediately with transitions and transforms disabled.
+
+## CSS custom properties
+
+The script sets these properties per-element for the CSS transitions to consume:
+
+| Property            | Set by                                     |
+| ------------------- | ------------------------------------------ |
+| `--reveal-duration` | `data-reveal-duration`                     |
+| `--reveal-ease`     | `data-reveal-ease`                         |
+| `--reveal-wait`     | `data-reveal-wait` (+ stagger calculation) |
+| `--reveal-distance` | `data-reveal-distance`                     |
+| `--reveal-scale`    | `data-reveal-scale`                        |

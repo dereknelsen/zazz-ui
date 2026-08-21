@@ -1,0 +1,77 @@
+/**
+ * textarea.css — Textarea (.textarea)
+ *
+ * @layer      variables, components
+ * @requires   layers.css, _variables.css, fields.css
+ * @uses       field-sizing: content — auto-grow with text (modern browsers;
+ *             falls back to fixed min/max block-size where unsupported)
+ * @tokens     --textarea-* (@layer variables)
+ */
+
+@layer variables {
+  :root {
+    --textarea-inline-size: 100%;
+    --textarea-min-inline-size: 0;
+    --textarea-min-block-size: 5lh;
+    --textarea-max-block-size: 12lh;
+    --textarea-padding: var(--field-padding);
+    --textarea-font-size: var(--font-size-sm);
+    --textarea-line-height: var(--leading-sm);
+    --textarea-border: 1px solid var(--field-border);
+    --textarea-border-radius: var(--field-radius);
+    --textarea-resize: vertical;
+  }
+}
+
+@layer zazz.components {
+  /* ===========================================================================
+  TEXTAREA — .textarea (auto-sizing)
+  - field-sizing: content grows the box with the text; height clamps between
+    min/max block-size, then scrolls.
+  - Shares the --field-* tokens defined in fields.css so it matches .input /
+    .select / .button.
+  =========================================================================== */
+
+  .textarea {
+    field-sizing: content;
+    inline-size: var(--textarea-inline-size);
+    min-inline-size: var(--textarea-min-inline-size);
+    min-block-size: var(--textarea-min-block-size);
+    max-block-size: var(--textarea-max-block-size);
+    padding: var(--textarea-padding);
+
+    font-size: var(--textarea-font-size);
+    line-height: var(--textarea-line-height);
+    color: var(--field-foreground);
+    background-color: var(--field-background);
+
+    border: var(--textarea-border);
+    border-radius: var(--textarea-border-radius);
+    resize: var(--textarea-resize);
+
+    /* ring renders as box-shadow; transparent outline twin keeps focus visible
+       in forced-colors / high-contrast modes */
+    --_ring-offset-width: 0px;
+    --_ring-width: 0px;
+    box-shadow:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--ring);
+    outline: var(--outline-width) var(--outline-style) transparent;
+    outline-offset: var(--outline-offset);
+
+    transition: var(--default-transition);
+  }
+
+  .textarea:hover {
+    border-color: var(--field-border--hover);
+    background-color: var(--field-background--hover);
+  }
+
+  .textarea:focus-visible {
+    background-color: var(--field-background--focus);
+    border-color: var(--field-border--focus);
+    --_ring-offset-width: var(--ring-offset-width);
+    --_ring-width: var(--ring-width);
+    outline-color: transparent;
+  }
+}

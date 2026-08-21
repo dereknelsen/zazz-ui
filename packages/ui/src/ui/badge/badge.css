@@ -1,0 +1,250 @@
+/**
+ * badge.css — Badge (.badge)
+ *
+ * @layer      variables, components
+ * @requires   layers.css, _variables.css, _reset.css
+ * @uses       color-mix(), oklch(from …) — variant hover/active tints
+ * @uses       text-box — vertical trim (patchy browser support)
+ * @tokens     --badge-* (@layer variables)
+ */
+
+@layer variables {
+  :root {
+    --badge-ring-color: var(--ring-color);
+
+    --badge-font-family: var(--font-family-body);
+    --badge-font-size: var(--font-size-xs);
+    --badge-font-weight: var(--font-weight-strong);
+    --badge-line-height: 1;
+
+    --badge-background: var(--background);
+    --badge-background--hover: var(--muted);
+    --badge-background--active: oklch(from var(--muted) l c h / calc(alpha - 0.02));
+
+    --badge-foreground: var(--foreground);
+    --badge-foreground--hover: var(--foreground);
+    --badge-foreground--active: var(--foreground);
+
+    --badge-border: 1px solid var(--border);
+    --badge-border--hover: 1px solid var(--border);
+    --badge-border--active: 1px solid var(--border);
+
+    --badge-gap: var(--step-1);
+    --badge-padding: var(--step-1_5);
+    --badge-height: var(--step-5_5);
+    --badge-radius: var(--radius-sm);
+
+    --badge-icon-size: var(--step-3);
+
+    /* composes into the badge's box-shadow list — use a transparent shadow,
+       never `none`, so the focus ring layers stay valid */
+    --badge-shadow: 0 0 transparent;
+  }
+}
+
+@layer zazz.components {
+  /* ===========================================================================
+  BADGE
+  =========================================================================== */
+
+  .badge {
+    font-family: var(--badge-font-family);
+    font-size: var(--badge-font-size);
+    font-weight: var(--badge-font-weight);
+    line-height: var(--badge-line-height);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--badge-gap);
+    flex-shrink: 0;
+
+    block-size: var(--badge-height);
+    min-width: max-content;
+    padding-inline: var(--badge-padding);
+
+    border: var(--badge-border);
+    border-radius: var(--badge-radius);
+
+    color: var(--badge-foreground);
+    background-color: var(--badge-background);
+
+    /* ring renders as box-shadow so it composes with --badge-shadow; the
+       ring widths animate from 0 so the ring grows in smoothly on focus */
+    --_ring-offset-width: 0px;
+    --_ring-width: 0px;
+    --_ring: color-mix(in oklch, var(--badge-ring-color) var(--ring-opacity), transparent);
+    box-shadow:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring),
+      var(--badge-shadow);
+
+    cursor: default;
+    text-decoration: none;
+
+    /* transparent twin of the ring for forced-colors / high-contrast modes */
+    outline: var(--outline-width) var(--outline-style) transparent;
+    outline-offset: var(--outline-offset);
+
+    transition: var(--default-transition);
+
+    user-select: none;
+    text-box: trim-both ex alphabetic;
+  }
+
+  a[href] .badge:not(:disabled, [aria-disabled="true"]),
+  a[href].badge:not(:disabled, [aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  /* ===========================================================================
+  BADGE STATES
+  =========================================================================== */
+
+  button.badge:hover:not(:disabled, [aria-disabled="true"]),
+  a[href].badge:hover:not(:disabled, [aria-disabled="true"]) {
+    color: var(--badge-foreground--hover);
+    background-color: var(--badge-background--hover);
+    border: var(--badge-border--hover);
+  }
+
+  button.badge:active:not(:disabled, [aria-disabled="true"]),
+  a[href].badge:active:not(:disabled, [aria-disabled="true"]) {
+    color: var(--badge-foreground--active);
+    background-color: var(--badge-background--active);
+    border: var(--badge-border--active);
+  }
+
+  button.badge:focus-visible:hover:not(:disabled, [aria-disabled="true"]),
+  a[href].badge:focus-visible:hover:not(:disabled, [aria-disabled="true"]) {
+    --_ring-offset-width: var(--ring-offset-width);
+    --_ring-width: var(--ring-width);
+
+    outline-color: transparent;
+  }
+
+  :is(button.badge:disabled, a[href].badge:disabled),
+  :is(button.badge[aria-disabled="true"], a[href].badge[aria-disabled="true"]) {
+    --badge-foreground: var(--muted-foreground);
+    --badge-background: var(--muted);
+    --badge-shadow: 0 0 transparent;
+
+    cursor: default;
+    opacity: 0.5;
+    outline: none;
+  }
+
+  button.badge[aria-busy="true"],
+  a[href].badge[aria-busy="true"] {
+    cursor: progress;
+  }
+
+  /* ===========================================================================
+  BADGE ICONS
+  =========================================================================== */
+
+  .badge > svg {
+    inline-size: var(--badge-icon-size);
+    block-size: var(--badge-icon-size);
+    pointer-events: none;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    padding: 0;
+  }
+
+  /* ===========================================================================
+  BADGE VARIANTS
+  =========================================================================== */
+
+  .badge[data-variant="primary"] {
+    --badge-background: var(--primary);
+    --badge-background--hover: oklch(from var(--primary) l c h / 0.9);
+    --badge-background--active: oklch(from var(--primary) l c h / 0.8);
+
+    --badge-foreground: var(--primary-foreground);
+    --badge-foreground--hover: var(--primary-foreground);
+    --badge-foreground--active: var(--primary-foreground);
+
+    --badge-border: 1px solid transparent;
+    --badge-border--hover: 1px solid transparent;
+    --badge-border--active: 1px solid transparent;
+  }
+
+  .badge[data-variant="muted"] {
+    --badge-background: var(--muted);
+    --badge-background--hover: oklch(from var(--muted) l c h / calc(alpha - 0.02));
+    --badge-background--active: var(--muted);
+
+    --badge-foreground: var(--foreground);
+    --badge-foreground--hover: var(--foreground);
+    --badge-foreground--active: var(--foreground);
+
+    --badge-border: 1px solid transparent;
+    --badge-border--hover: 1px solid transparent;
+    --badge-border--active: 1px solid transparent;
+  }
+
+  .badge[data-variant="ghost"] {
+    --badge-background: transparent;
+    --badge-background--hover: var(--muted);
+    --badge-background--active: oklch(from var(--muted) l c h / calc(alpha - 0.02));
+
+    --badge-foreground: var(--foreground);
+    --badge-foreground--hover: var(--foreground);
+    --badge-foreground--active: var(--foreground);
+
+    --badge-border: 1px solid transparent;
+    --badge-border--hover: 1px solid transparent;
+    --badge-border--active: 1px solid transparent;
+  }
+
+  .badge[data-variant="link"] {
+    --badge-background: transparent;
+    --badge-background--hover: transparent;
+    --badge-background--active: transparent;
+
+    --badge-foreground: var(--foreground);
+    --badge-foreground--hover: var(--primary);
+    --badge-foreground--active: oklch(from var(--primary) l c h / 0.8);
+
+    --badge-border: none;
+    --badge-border--hover: none;
+    --badge-border--active: none;
+
+    --badge-height: fit-content;
+    --badge-padding: 0;
+    --badge-radius: 0;
+
+    --badge-shadow: 0 0 transparent;
+
+    text-decoration-line: var(--decoration-line);
+    text-decoration-style: var(--decoration-style);
+    text-decoration-color: var(--decoration-color);
+    text-underline-offset: var(--decoration-offset);
+    text-decoration-thickness: var(--decoration-thickness);
+  }
+
+  button.badge[data-variant="link"]:hover:not(:disabled, [aria-disabled="true"]),
+  a[href].badge[data-variant="link"]:hover:not(:disabled, [aria-disabled="true"]) {
+    text-decoration-color: var(--decoration-color--hover);
+    text-underline-offset: var(--decoration-offset--hover);
+  }
+
+  button.badge[data-variant="link"]:active:not(:disabled, [aria-disabled="true"]),
+  a[href].badge[data-variant="link"]:active:not(:disabled, [aria-disabled="true"]) {
+    text-decoration-color: var(--decoration-color--active);
+    text-underline-offset: var(--decoration-offset--active);
+  }
+
+  /* ===========================================================================
+  BADGE SIZES
+  =========================================================================== */
+
+  .badge[data-size="icon"] {
+    block-size: var(--badge-height);
+    inline-size: var(--badge-height);
+    padding: 0;
+    aspect-ratio: 1 / 1;
+  }
+}

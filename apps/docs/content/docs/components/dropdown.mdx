@@ -1,0 +1,20 @@
+---
+title: Dropdown
+description: A button-triggered menu on the Popover API with anchor positioning and native light-dismiss.
+---
+
+A dropdown is a `.dropdown__popover` (`popover="auto"`) opened by a trigger with
+`popovertarget`. Menu items are ghost buttons. Place the panel with `data-side` and
+`data-align`; it light-dismisses natively.
+
+## Default
+
+<Preview src="dropdown/default" />
+
+## API
+
+| Attribute       | Where                | Values                           |
+| --------------- | -------------------- | -------------------------------- |
+| `popovertarget` | trigger              | id of the `.dropdown__popover`   |
+| `data-side`     | `.dropdown__popover` | `top`, `bottom`, `left`, `right` |
+| `data-align`    | `.dropdown__popover` | `start`, `center`, `end`         |

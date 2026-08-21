@@ -1,0 +1,66 @@
+---
+title: Responsive design
+description: Zazz is responsive by default. Fluid type and spacing scale on their own, and responsive prefixes read one centralized set of breakpoints that the body container publishes off the page width.
+---
+
+Zazz is responsive before you write a single breakpoint: type and spacing already scale fluidly. When you _do_ reach for breakpoints, they read one centralized set of widths that the page publishes to every component, so your layouts cross them together and predictably.
+
+## Fluid by default
+
+Before you reach for a single breakpoint, two systems are already responding to the viewport:
+
+- **Type:** every `text-*` class is a `clamp()` that grows smoothly between a min and max size. `text-h1` is large on a desktop and proportionally smaller on a phone, with no breakpoint in between.
+- **Spacing:** the `--step-*` scale derives from a fluid interval, so `gap-md`, `p-lg`, and the rest tighten on small screens and open up on large ones.
+
+A lot of layouts need no breakpoints at all because of this.
+
+## Responsive prefixes read centralized breakpoints
+
+When you need a layout to change shape, prefix a utility with a breakpoint: `@xs:` `@sm:` `@md:` `@lg:` `@xl:`. The `@` marks them as container style queries. Each one reads a shared breakpoint flag that the page **body** publishes off its own width, so the prefixes are centralized: a width is defined once, and every component crosses it at the same moment.
+
+```html
+<div class="grid grid-cols-1 @md:grid-cols-3 gap-md">
+  <article class="card">…</article>
+  <article class="card">…</article>
+  <article class="card">…</article>
+</div>
+```
+
+Thresholds line up with the `--breakpoint-*` tokens. Each prefix is min-width: it activates at or above its width, so you write the small layout as the base and override upward.
+
+| Prefix | Page width | Token             |
+| ------ | ---------- | ----------------- |
+| `@xs:` | ≥ 40rem    | `--breakpoint-xs` |
+| `@sm:` | ≥ 48rem    | `--breakpoint-sm` |
+| `@md:` | ≥ 64rem    | `--breakpoint-md` |
+| `@lg:` | ≥ 80rem    | `--breakpoint-lg` |
+| `@xl:` | ≥ 96rem    | `--breakpoint-xl` |
+
+## Smallest first
+
+Base utilities apply at every size; a prefixed utility layers on at its breakpoint and up. So you write the small-screen layout as the default and add overrides for wider pages:
+
+```html
+<!-- stacked by default, row from md up -->
+<div class="flex flex-col @md:flex-row gap-md">…</div>
+```
+
+The families available at each breakpoint: the page `container`, `display`, `grid-cols` / `grid-rows`, `flex-direction`, `text-align`, `align-items`, `justify-content`, `col-span`, `row-span`, `basis`, `table-layout`, and `caption-side`. Less-toggled families (self-alignment, place-items, visibility) ship as base classes only, so apply them outside the responsive layer. The [utilities reference](/docs/utilities/responsive-design) has the full breakpoint table and the exact family list.
+
+## Layouts that respond without breakpoints
+
+Some Zazz utilities adapt on their own, so you can often skip prefixes entirely:
+
+- **Auto-fitting grids:** `grid-flow-row` with `grid-cols-N` (N > 1) wraps items responsively using a smart `auto-fill` formula. Items flow into as many columns as fit.
+- **Gap-aware basis:** `basis-1/2`, `basis-1/3`, and friends subtract the gap automatically, so flex children wrap cleanly with no manual math.
+
+```html
+<!-- wraps from 1 to N columns based on available width, no prefixes -->
+<div class="grid grid-flow-row grid-cols-3 gap-md">…</div>
+```
+
+## Browser support
+
+Zazz's responsive model is built on [container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries), which are [Baseline](https://web.dev/baseline) and widely available. The style-query form it uses to read the breakpoint flags is newer but supported across current Chrome, Safari, and Firefox. In a browser without it, components fall back to their base (smallest) layout: usable, just not adaptive.
+
+The breakpoints already track the page width, so you rarely need `@media` at all. When you want one piece to respond to the size of its own box instead of the page, write a scoped `@container` query in [your own stylesheet](/docs/core-concepts/custom-styles).

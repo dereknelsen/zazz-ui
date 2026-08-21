@@ -1,0 +1,73 @@
+---
+title: Text color
+description: Set text color from the semantic role tokens so light and dark modes swap automatically, plus hover variants and per-channel alpha.
+---
+
+`text-*` color utilities read the **theme role tokens**, which resolve through `light-dark()`. Use
+a role (not a literal scale step) and both light and dark modes stay correct with no extra
+classes. Every value is computed as `oklch(from var(--role) l c h / calc(alpha × --_text-alpha))`,
+so the [color-opacity](/docs/base/utilities/color-opacity) utilities can dim just the text channel.
+
+## Surfaces & text
+
+Paired surface/`-foreground` roles. Use the foreground on top of its matching surface.
+
+| Class                                    | Token                              |
+| ---------------------------------------- | ---------------------------------- |
+| `text-background`                        | `--background`                     |
+| `text-foreground`                        | `--foreground`                     |
+| `text-card` / `text-card-foreground`     | `--card` / `--card-foreground`     |
+| `text-input` / `text-input-foreground`   | `--input` / `--input-foreground`   |
+| `text-border` / `text-border-foreground` | `--border` / `--border-foreground` |
+
+## Dim & fade
+
+| Class                                  | Token                            | Use                                              |
+| -------------------------------------- | -------------------------------- | ------------------------------------------------ |
+| `text-muted` / `text-muted-foreground` | `--muted` / `--muted-foreground` | secondary, lower-emphasis text (captions, hints) |
+| `text-faded` / `text-faded-foreground` | `--faded` / `--faded-foreground` | the lightest readable text                       |
+
+`text-muted-foreground` is the everyday choice for captions and secondary copy.
+
+## Brand
+
+| Class                                          | Token                                    |
+| ---------------------------------------------- | ---------------------------------------- |
+| `text-primary` / `text-primary-foreground`     | `--primary` / `--primary-foreground`     |
+| `text-secondary` / `text-secondary-foreground` | `--secondary` / `--secondary-foreground` |
+| `text-tertiary` / `text-tertiary-foreground`   | `--tertiary` / `--tertiary-foreground`   |
+
+## Status
+
+| Class                                              | Token                                        |
+| -------------------------------------------------- | -------------------------------------------- |
+| `text-info` / `text-info-foreground`               | `--info` / `--info-foreground`               |
+| `text-success` / `text-success-foreground`         | `--success` / `--success-foreground`         |
+| `text-warning` / `text-warning-foreground`         | `--warning` / `--warning-foreground`         |
+| `text-destructive` / `text-destructive-foreground` | `--destructive` / `--destructive-foreground` |
+
+## Absolute
+
+| Class        | Token     | Note                           |
+| ------------ | --------- | ------------------------------ |
+| `text-white` | `--white` | does **not** flip in dark mode |
+| `text-black` | `--black` | does **not** flip in dark mode |
+
+```html
+<p class="text-foreground">Primary copy.</p>
+<p class="text-sm text-muted-foreground">Secondary, lower-emphasis copy.</p>
+<p class="text-destructive">Something went wrong.</p>
+```
+
+## Variants
+
+- **Hover:** every role above has a `hover:text-*` counterpart. See [Hover states](/docs/base/utilities/hover).
+- **Opacity:** dim just the text channel (not the whole element) with `text-opacity-*`. See
+  [Color opacity](/docs/base/utilities/color-opacity).
+
+<Callout type="info">
+  The fluid **type scale** (`text-display`, `text-h1`–`text-h6`, `text-xl`–`text-xs`,
+  `text-eyebrow`) and **font-weight** utilities live in the type system, not the utilities layer.
+  See [Typography in the overview](/docs/getting-started/overview#typography). For alignment,
+  transform, wrapping, and family, see [Text & font](/docs/base/utilities/text-and-font).
+</Callout>

@@ -1,0 +1,158 @@
+/**
+ * table.css — Table (.table)
+ *
+ * @layer      variables, components
+ * @requires   layers.css, _variables.css, _reset.css
+ * @uses       oklch(from …) — translucent hover/footer tints
+ * @tokens     --table-* (@layer variables)
+ */
+
+@layer variables {
+  :root {
+    --table-font-family: var(--font-family-body);
+    --table-font-size: var(--font-size-sm);
+
+    --table-foreground: var(--foreground);
+    --table-background: transparent;
+
+    /* structural borders — the outer/footer rule, the header separator,
+       the tbody row dividers, and the column dividers (grid variant) */
+    --table-border: 1px solid var(--border);
+    --table-head-border: var(--table-border);
+    --table-row-border: var(--table-border);
+    --table-column-border: none;
+
+    --table-cell-padding-block: var(--step-2);
+    --table-cell-padding-inline: var(--step-2);
+
+    --table-head-height: var(--step-10);
+    --table-head-foreground: var(--foreground);
+    --table-head-font-weight: var(--font-weight-strong);
+
+    --table-foot-background: oklch(from var(--muted) l c h / calc(alpha / 2));
+    --table-foot-font-weight: var(--font-weight-strong);
+
+    --table-row-background--hover: oklch(from var(--muted) l c h / calc(alpha / 2));
+    --table-row-background--selected: var(--muted);
+
+    --table-alternating-background: var(--muted);
+
+    --table-caption-foreground: var(--muted-foreground);
+    --table-caption-padding-block: var(--gap-xs);
+    --table-caption-padding-inline: var(--gap-xs);
+  }
+}
+
+@layer zazz.components {
+  /* ===========================================================================
+  TABLE
+  =========================================================================== */
+
+  .table {
+    font-family: var(--table-font-family);
+    font-size: var(--table-font-size);
+    font-variant-numeric: tabular-nums;
+
+    inline-size: 100%;
+
+    color: var(--table-foreground);
+    background-color: var(--table-background);
+
+    caption-side: bottom;
+    text-align: start;
+  }
+
+  .table :is(th, td) {
+    padding-block: var(--table-cell-padding-block);
+    padding-inline: var(--table-cell-padding-inline);
+    vertical-align: middle;
+    text-align: start;
+    border-inline: var(--table-column-border);
+  }
+
+  .table th {
+    color: var(--table-head-foreground);
+    font-weight: var(--table-head-font-weight);
+  }
+
+  .table thead th {
+    block-size: var(--table-head-height);
+    padding-block: 0;
+  }
+
+  .table thead tr {
+    border-block-end: var(--table-head-border);
+  }
+
+  .table tbody tr:not(:last-child) {
+    border-block-end: var(--table-row-border);
+  }
+
+  .table tfoot {
+    background-color: var(--table-foot-background);
+    font-weight: var(--table-foot-font-weight);
+    border-block-start: var(--table-border);
+  }
+
+  .table caption {
+    color: var(--table-caption-foreground);
+    padding-block: var(--table-caption-padding-block);
+    padding-inline: var(--table-caption-padding-inline);
+  }
+
+  /* ===========================================================================
+  TABLE LAYOUT & CAPTION SIDE
+  =========================================================================== */
+
+  /* omit = table-layout: auto */
+  .table[data-layout="fixed"] {
+    table-layout: fixed;
+  }
+
+  /* omit = caption-side: bottom (set on .table) */
+  .table caption[data-side="top"] {
+    caption-side: top;
+  }
+
+  /* ===========================================================================
+  TABLE STATES
+  =========================================================================== */
+
+  /* hover/selected paint on the cells so they layer above any row stripe;
+     disable hover with --table-row-background--hover: transparent */
+  .table tbody tr:hover > :is(th, td) {
+    background-color: var(--table-row-background--hover);
+  }
+
+  .table tbody tr[data-state="selected"] > :is(th, td) {
+    background-color: var(--table-row-background--selected);
+  }
+
+  /* ===========================================================================
+  TABLE VARIANTS
+  =========================================================================== */
+
+  .table[data-variant="alternating"] {
+    --table-row-border: none;
+  }
+
+  .table[data-variant="alternating"] tbody tr:nth-child(even) {
+    background-color: var(--table-alternating-background);
+  }
+
+  .table[data-variant="grid"] {
+    --table-column-border: var(--table-border);
+
+    border: var(--table-border);
+  }
+
+  /* ===========================================================================
+  TABLE SIZES
+  =========================================================================== */
+
+  .table[data-size="sm"] {
+    --table-cell-padding-block: var(--step-1);
+    --table-cell-padding-inline: var(--step-1_5);
+    --table-head-height: var(--step-8);
+  }
+}

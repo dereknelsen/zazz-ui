@@ -1,0 +1,155 @@
+---
+title: Scripting
+description: "How Zazz scripts are structured, documented, and initialized: the vanilla-JavaScript conventions behind every browser-native behavior."
+---
+
+Scripts ship co-located with their components in `@zazzdesign/ui` — shared runtime in `src/base/`, component scripts in `src/ui/<name>/`. They are authored as TypeScript, compiled to readable, unminified `.js` files that sit next to the `.ts` source; consumers load the `.js` files, which are native ES modules and run as-is in modern browsers, with no bundler. A single entry module, `index.js`, `import`s every component script, so a page loads behavior with one `<script type="module" src="./zazz/index.js">` tag (see [Structuring your head tag](/docs/getting-started/head#script-load-order)).
+
+## Philosophy
+
+- **Vanilla JS in the browser.** No framework, no npm runtime deps, no bundler — the shipped `.js` files are plain native ES modules. Cross-script dependencies use `import`; external libraries Zazz doesn't ship (the Embla CDN UMD bundles) are still read as globals loaded by prior `<script>` tags.
+- **HTML-first.** Markup and data attributes drive behavior. Authors configure components in HTML; scripts discover and enhance the DOM.
+- **Progressive enhancement.** Feature-detect APIs before use. When unsupported, degrade gracefully.
+- **Minimal surface area.** Export a small public API. Keep helpers private.
+
+## File structure
+
+Every script follows this layout:
+
+```js
+"use strict";
+
+/**
+ * @fileoverview Module title.
+ * @description What this module does.
+ */
+
+import { Dependency } from "./dependency.js"; // only when this module needs another
+
+// Implementation
+
+// Auto-initialize when DOM is ready (only in browser environment)
+if (typeof window !== "undefined" && typeof document !== "undefined") {
+  // ...
+}
+
+// Attach to window for the documented public API, then export for module consumers
+// (the index.js entry and any sibling script that imports this one).
+if (typeof window !== "undefined") {
+  window.MyExport = MyExport;
+}
+
+export { MyExport };
+```
+
+## Module exports
+
+Each script attaches its public API to `window` (the documented surface) **and** provides a matching named `export` that the `index.js` bundle and sibling modules `import`:
+
+| File            | Global             | Export shape                                     |
+| --------------- | ------------------ | ------------------------------------------------ |
+| `utils.js`      | `window.Utils`     | `{ parseValue, parseDataAttributes }`            |
+| `reveal.js`     | `window.Reveal`    | `Reveal` class                                   |
+| `embla.js`      | `window.EmblaInit` | `{ init, initRoot, addDotBtnsAndClickHandlers }` |
+| `navigation.js` | _(none)_           | Side-effect only; no export                      |
+
+The web-component scripts (`carousel.js`, `lightbox.js`, `password-group.js`, `tabs.js`) export their element class and register the custom element as a side effect.
+
+## Auto-initialization
+
+Scripts that enhance the page on load use a guarded auto-init block:
+
+```js
+if (typeof window !== "undefined" && typeof document !== "undefined") {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+}
+```
+
+Initialization is **idempotent**: guarded with attributes (`data-embla-init`), flags, or instance checks so re-running is safe.
+
+## Data-attribute configuration
+
+Component scripts read configuration from HTML data attributes rather than JS options objects:
+
+- Use a consistent prefix per component: `data-embla-*`, `data-reveal-*`.
+- Parse attributes with `Utils.parseDataAttributes(node, "data-embla-")`.
+- Boolean flags can be bare attributes (`data-embla-autoplay`) or explicit values (`data-embla-keyboard="false"`).
+
+## Dependencies and load order
+
+Cross-script dependencies are real ES `import`s, so the module graph resolves order — you load `index.js` and nothing else needs sequencing:
+
+| Script              | Imports       | Notes                                            |
+| ------------------- | ------------- | ------------------------------------------------ |
+| `utils.js`          | —             | Provides `window.Utils`                          |
+| `reveal.js`         | —             | Standalone                                       |
+| `embla.js`          | `utils.js`    | Also needs the Embla CDN globals (see below)     |
+| `carousel.js`       | `embla.js`    | `<embla-carousel>` calls `EmblaInit.initRoot`    |
+| `lightbox.js`       | `carousel.js` | `<media-lightbox>` coordinates carousel elements |
+| `password-group.js` | —             | Standalone (`<input-password>`)                  |
+| `tabs.js`           | —             | Standalone (`<tab-group>`)                       |
+| `navigation.js`     | —             | App-level; inert in component preview iframes    |
+
+The one ordering the module graph can't enforce is the **Embla CDN UMD bundles**: `embla.js` reads them as globals, so their `<script defer>` tags must precede the `index.js` module in the document. Where these tags go is covered in [Structuring your head tag](/docs/getting-started/head#script-load-order).
+
+## DOM interaction patterns
+
+- **Query within scope.** Accept an optional root element so init can target a subtree.
+- **Early returns for guards.** Check required elements and skip gracefully.
+- **Store instances on DOM nodes** when external access is needed: `emblaNode._emblaApi = emblaApi`.
+- **Observe DOM changes** with `MutationObserver` for elements hidden at init time (closed dialogs).
+- **Delegate events** at `document` level when triggers can appear anywhere.
+- **Respect focus and input context.** Skip keyboard handlers in form fields or contenteditable.
+
+## Classes vs functions
+
+- Use a **class** when the module manages persistent instance state (`Reveal` with observers and config).
+- Use **functions** for stateless init and helpers (`initEmblaCarousels`, `parseValue`).
+- Use **private class fields** (`#observers`, `#getObserver`) for encapsulation.
+
+## JSDoc conventions
+
+Every JSDoc block must include `@description`. Tag order:
+
+```
+@description
+@param
+@returns
+@private
+@see
+@example
+```
+
+### Required tags
+
+| Tag             | Required on                           |
+| --------------- | ------------------------------------- |
+| `@fileoverview` | Every file                            |
+| `@description`  | Every JSDoc block                     |
+| `@param`        | Functions with parameters             |
+| `@returns`      | Functions that return a value         |
+| `@private`      | Non-exported helpers                  |
+| `@typedef`      | Config/option objects                 |
+| `@namespace`    | Export objects (`Utils`, `EmblaInit`) |
+
+### Section dividers
+
+Use thin single-line markers to group related code:
+
+```js
+// --- Dot navigation ---
+```
+
+Do not use banner block comments (`/* ==== ... ==== */`).
+
+## Syntax and style
+
+- Double quotes for strings.
+- Semicolons required.
+- Optional chaining (`?.`) and nullish coalescing where they simplify guards.
+- Authored in TypeScript (`.ts`); each script compiles to a readable, unminified `.js` shipped alongside its source. Consumers load the `.js`.
+- Ambient globals live in `globals.d.ts`.

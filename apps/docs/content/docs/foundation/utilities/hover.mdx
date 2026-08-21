@@ -1,0 +1,68 @@
+---
+title: Hover states
+description: "The hover variant utilities for color, opacity, scale, and shadow: pure-CSS interactive states with no JavaScript."
+---
+
+Color, opacity, scale, and shadow utilities ship `hover:` variants that apply on `:hover`, with no JavaScript
+and no component code. Pair them with a [transition](/docs/base/utilities/effects#transitions) for a smooth
+change.
+
+```html
+<a href="#" class="text-muted-foreground hover:text-primary transition">Hover me</a>
+<img class="rounded-md transition hover:scale-102 hover:opacity-75" src="…" alt="…" />
+```
+
+<Callout type="info">
+  In HTML the class name literally contains a colon, so write `class="hover:bg-primary"`. The
+  stylesheet escapes it as `.hover\:bg-primary` in the selector; you never type the backslash.
+</Callout>
+
+## Hover text color
+
+`hover:text-{role}` for every [text color role](/docs/base/utilities/text-color): `background`,
+`foreground`, `card`, `input`, `muted`, `faded`, `primary`, `secondary`, `tertiary`, `info`,
+`success`, `warning`, `destructive`, and each `-foreground` pair.
+
+```html
+<a class="text-foreground hover:text-primary transition">Link</a>
+```
+
+## Hover background
+
+`hover:bg-{role}` for every [background role](/docs/base/utilities/backgrounds), plus
+`hover:bg-transparent` and `hover:bg-none`.
+
+```html
+<button class="bg-card hover:bg-muted rounded-md p-sm transition">Row</button>
+```
+
+## Hover border
+
+`hover:border-{color}`: `primary`, `secondary`, `tertiary`, `muted`, `faded`, `info`, `success`,
+`warning`, `destructive`. Pair with a `border` class so there's a line to recolor.
+
+```html
+<div class="border hover:border-primary rounded-md p-md transition">Card</div>
+```
+
+## Hover opacity & scale
+
+| Family  | Classes                                                                                                                                                                       |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Opacity | `hover:opacity-0` `hover:opacity-25` `hover:opacity-50` `hover:opacity-75` `hover:opacity-100`                                                                                |
+| Scale   | `hover:scale-0` `hover:scale-50` `hover:scale-75` `hover:scale-90` `hover:scale-95` `hover:scale-100` `hover:scale-102` `hover:scale-110` `hover:scale-125` `hover:scale-150` |
+
+## Hover shadow
+
+`hover:shadow-{size}` raises an element's [elevation](/docs/base/utilities/effects#box-shadow) on hover:
+`hover:shadow-none`, `hover:shadow-xs`, `hover:shadow-sm`, `hover:shadow-md`, `hover:shadow-lg`,
+`hover:shadow-xl`. A common lift pairs a resting shadow with a larger one on hover.
+
+```html
+<div class="shadow-sm hover:shadow-lg rounded-md p-md transition">Lifts on hover</div>
+```
+
+<Callout type="warn">
+  There are no `active:` (pressed) variants. Express `:active` / pressed feedback in the component's
+  own CSS, not via utilities. See [Hover, focus, and other states](/docs/core-concepts/states).
+</Callout>

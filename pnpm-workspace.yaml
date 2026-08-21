@@ -6,8 +6,8 @@ packages:
 catalogMode: prefer
 
 catalog:
-  "@types/node": ^24
-  typescript: ^5
+  "@types/node": ^26.2.0
+  typescript: ^7.0.2
   vite: npm:@voidzero-dev/vite-plus-core@0.2.4
   vite-plus: 0.2.4
 overrides:
@@ -17,3 +17,9 @@ peerDependencyRules:
     - vite
   allowedVersions:
     vite: "*"
+allowBuilds:
+  esbuild: true
+  sharp: true
+minimumReleaseAgeExclude:
+  - "@ai-sdk/gateway@4.0.57"
+  - ai@7.0.71

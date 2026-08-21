@@ -1,0 +1,113 @@
+/**
+ * input.css — Text input (.input)
+ *
+ * @layer      variables, components
+ * @requires   layers.css, _variables.css, fields.css, _reset.css
+ * @uses       ::-webkit-calendar-picker-indicator — date/time picker chrome (WebKit)
+ * @uses       mask — calendar icon (not background-image, for color: currentColor)
+ * @tokens     --input-* (@layer variables)
+ */
+
+@layer variables {
+  :root {
+    --input-inline-size: 100%;
+    --input-min-inline-size: 16ch;
+    --input-padding-inline-start: var(--field-padding);
+    --input-padding-inline-end: var(--field-padding);
+    --input-font-size: var(--field-font-size);
+    --input-line-height: var(--field-line-height);
+    --input-border: 1px solid var(--field-border);
+    --input-border-radius: var(--field-radius);
+
+    --input-calendar-picker-color: currentColor;
+    --input-calendar-picker-icon-size: var(--step-4);
+    --input-calendar-picker-size: var(--step-6);
+    --input-calendar-picker-radius: var(--radius-sm);
+    --input-calendar-picker-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Crect x='40' y='40' width='176' height='176' rx='8' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='176' y1='24' x2='176' y2='56' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='80' y1='24' x2='80' y2='56' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='40' y1='88' x2='216' y2='88' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3C/svg%3E");
+  }
+}
+
+@layer zazz.components {
+  /* ===========================================================================
+  TEXT INPUTS — .input
+  - One class for every text-like type (text, search, email, number, date, …);
+    the type only changes the picker/keyboard, not the box.
+  - Shares the --field-* tokens defined in fields.css so it aligns with .select,
+    .textarea, and .button.
+  =========================================================================== */
+
+  .input {
+    inline-size: var(--input-inline-size);
+    min-inline-size: var(--input-min-inline-size);
+    block-size: var(--field-height);
+    padding-inline-start: var(--input-padding-inline-start);
+    padding-inline-end: var(--input-padding-inline-end);
+
+    font-size: var(--input-font-size);
+    line-height: var(--input-line-height);
+    color: var(--field-foreground);
+    background-color: var(--field-background);
+
+    border: var(--input-border);
+    border-radius: var(--input-border-radius);
+
+    /* ring renders as box-shadow; transparent outline twin keeps focus visible
+       in forced-colors / high-contrast modes */
+    --_ring-offset-width: 0px;
+    --_ring-width: 0px;
+    box-shadow:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--ring);
+    outline: var(--outline-width) var(--outline-style) transparent;
+    outline-offset: var(--outline-offset);
+
+    transition: var(--default-transition);
+  }
+
+  .input:hover {
+    border-color: var(--field-border--hover);
+    background-color: var(--field-background--hover);
+  }
+
+  .input:focus-within {
+    background-color: var(--field-background--focus);
+    border-color: var(--field-border--focus);
+    --_ring-offset-width: var(--ring-offset-width);
+    --_ring-width: var(--ring-width);
+    outline-color: transparent;
+  }
+
+  .input[type="date"],
+  .input[type="time"],
+  .input[type="datetime-local"] {
+    --input-padding-inline-end: var(--step-1_5);
+  }
+
+  /* Native date/time controls keep their picker indicator tinted to the text */
+  .input::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    -webkit-appearance: none;
+
+    margin: 0;
+    padding: 0;
+    inline-size: var(--input-calendar-picker-size);
+    block-size: var(--input-calendar-picker-size);
+    border-radius: var(--input-calendar-picker-radius);
+
+    transition:
+      opacity var(--default-transition-duration) var(--default-transition-timing-function),
+      display var(--default-transition-duration) var(--default-transition-timing-function)
+        allow-discrete;
+
+    mask: var(--input-calendar-picker-mask) no-repeat center /
+      var(--input-calendar-picker-icon-size);
+    background-size: var(--input-calendar-picker-icon-size);
+    background-color: var(--input-calendar-picker-color);
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .input::-webkit-calendar-picker-indicator:is(:hover) {
+    opacity: 0.5;
+  }
+}

@@ -1,0 +1,313 @@
+/**
+ * button.css — Button (.button)
+ *
+ * @layer      variables, components
+ * @requires   layers.css, _variables.css, _reset.css
+ * @uses       color-mix(), oklch(from …) — variant hover/active tints
+ * @uses       text-box — vertical trim (patchy browser support)
+ * @tokens     --button-* (@layer variables)
+ * @consumedby toggle.css (reads the --button-* token family)
+ */
+
+@layer variables {
+  :root {
+    --button-ring-color: var(--ring-color);
+
+    --button-font-family: var(--font-family-body);
+    --button-font-size: var(--font-size-sm);
+    --button-font-weight: var(--font-weight-strong);
+    --button-line-height: 1;
+
+    --button-background: var(--card);
+    --button-background--hover: var(--muted);
+    --button-background--active: oklch(from var(--muted) l c h / calc(alpha - 0.02));
+
+    --button-foreground: var(--foreground);
+    --button-foreground--hover: var(--foreground);
+    --button-foreground--active: var(--foreground);
+
+    --button-border: 1px solid var(--border);
+    --button-border--hover: 1px solid var(--border);
+    --button-border--active: 1px solid var(--border);
+
+    --button-gap: var(--step-1);
+    --button-padding: var(--step-2_5);
+    --button-height: var(--step-8);
+    --button-radius: var(--radius-md);
+
+    --button-icon-size: var(--step-4);
+
+    /* composes into the button's box-shadow list — use a transparent shadow,
+       never `none`, so the focus ring layers stay valid */
+    --button-shadow: 0 0 transparent;
+  }
+}
+
+@layer zazz.components {
+  /* ===========================================================================
+  BUTTON
+  =========================================================================== */
+
+  .button {
+    font-family: var(--button-font-family);
+    font-size: var(--button-font-size);
+    font-weight: var(--button-font-weight);
+    line-height: var(--button-line-height);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: var(--button-gap);
+    flex-shrink: 0;
+
+    min-block-size: var(--button-height);
+    min-inline-size: max-content;
+    padding-inline: var(--button-padding);
+
+    border: var(--button-border);
+    border-radius: var(--button-radius);
+
+    color: var(--button-foreground);
+    background-color: var(--button-background);
+
+    /* ring renders as box-shadow so it composes with --button-shadow; the
+       ring widths animate from 0 so the ring grows in smoothly on focus */
+    --_ring-offset-width: 0px;
+    --_ring-width: 0px;
+    --_ring: color-mix(in oklch, var(--button-ring-color) var(--ring-opacity), transparent);
+    box-shadow:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring),
+      var(--button-shadow);
+
+    cursor: default;
+    text-decoration: none;
+
+    /* transparent twin of the ring for forced-colors / high-contrast modes */
+    outline: var(--outline-width) var(--outline-style) transparent;
+    outline-offset: var(--outline-offset);
+
+    transition: var(--default-transition);
+
+    user-select: none;
+    text-box: trim-both ex alphabetic;
+  }
+
+  a[href] .button:not(:disabled, [aria-disabled="true"]),
+  a[href].button:not(:disabled, [aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  /* ===========================================================================
+  BUTTON STATES
+  =========================================================================== */
+
+  .button:hover:not(:disabled, [aria-disabled="true"]) {
+    color: var(--button-foreground--hover);
+    background-color: var(--button-background--hover);
+    border: var(--button-border--hover);
+  }
+
+  .button:active:not(:disabled, [aria-disabled="true"]) {
+    color: var(--button-foreground--active);
+    background-color: var(--button-background--active);
+    border: var(--button-border--active);
+  }
+
+  .button:focus-visible:not(:disabled, [aria-disabled="true"]) {
+    --_ring-offset-width: var(--ring-offset-width);
+    --_ring-width: var(--ring-width);
+
+    outline-color: transparent;
+  }
+
+  :is(.button:disabled, .button[aria-disabled="true"]) {
+    --button-foreground: var(--muted-foreground);
+    --button-background: var(--muted);
+    --button-shadow: 0 0 transparent;
+    --decoration-line: none;
+
+    cursor: default;
+    opacity: 0.5;
+    outline: none;
+  }
+
+  .button[aria-busy="true"] {
+    cursor: progress;
+  }
+
+  /* ===========================================================================
+  BUTTON ICONS
+  =========================================================================== */
+
+  .button > svg {
+    inline-size: var(--button-icon-size);
+    block-size: var(--button-icon-size);
+    pointer-events: none;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    padding: 0;
+  }
+
+  /* ===========================================================================
+  BUTTON VARIANTS
+  =========================================================================== */
+
+  .button[data-variant="primary"] {
+    --button-background: var(--primary);
+    --button-background--hover: oklch(from var(--primary) l c h / 0.9);
+    --button-background--active: oklch(from var(--primary) l c h / 0.8);
+
+    --button-foreground: var(--primary-foreground);
+    --button-foreground--hover: var(--primary-foreground);
+    --button-foreground--active: var(--primary-foreground);
+
+    --button-border: 1px solid transparent;
+    --button-border--hover: 1px solid transparent;
+    --button-border--active: 1px solid transparent;
+
+    --button-shadow: 0 0 transparent;
+  }
+
+  .button[data-variant="muted"] {
+    --button-background: var(--muted);
+    --button-background--hover: oklch(from var(--muted) l c h / calc(alpha - 0.02));
+    --button-background--active: var(--muted);
+
+    --button-foreground: var(--foreground);
+    --button-foreground--hover: var(--foreground);
+    --button-foreground--active: var(--foreground);
+
+    --button-border: 1px solid transparent;
+    --button-border--hover: 1px solid transparent;
+    --button-border--active: 1px solid transparent;
+
+    --button-shadow: 0 0 transparent;
+  }
+
+  .button[data-variant="ghost"] {
+    --button-background: transparent;
+    --button-background--hover: var(--muted);
+    --button-background--active: oklch(from var(--muted) l c h / calc(alpha - 0.02));
+
+    --button-foreground: var(--foreground);
+    --button-foreground--hover: var(--foreground);
+    --button-foreground--active: var(--foreground);
+
+    --button-border: 1px solid transparent;
+    --button-border--hover: 1px solid transparent;
+    --button-border--active: 1px solid transparent;
+
+    --button-shadow: 0 0 transparent;
+  }
+
+  .button[data-variant="destructive"] {
+    --button-ring-color: var(--destructive);
+
+    --button-background: var(--destructive);
+    --button-background--hover: oklch(from var(--destructive) l c h / 0.9);
+    --button-background--active: oklch(from var(--destructive) l c h / 0.8);
+
+    --button-foreground: var(--destructive-foreground);
+    --button-foreground--hover: var(--destructive-foreground);
+    --button-foreground--active: var(--destructive-foreground);
+
+    --button-border: 1px solid var(--destructive);
+    --button-border--hover: 1px solid var(--destructive);
+    --button-border--active: 1px solid var(--destructive);
+
+    --button-shadow: 0 0 transparent;
+  }
+
+  .button[data-variant="link"] {
+    --button-background: transparent;
+    --button-background--hover: transparent;
+    --button-background--active: transparent;
+
+    --button-foreground: var(--foreground);
+    --button-foreground--hover: var(--primary);
+    --button-foreground--active: oklch(from var(--primary) l c h / 0.8);
+
+    --button-border: none;
+    --button-border--hover: none;
+    --button-border--active: none;
+
+    --button-height: fit-content;
+    --button-padding: 0;
+    --button-radius: 0;
+
+    --button-shadow: 0 0 transparent;
+
+    text-decoration-line: var(--decoration-line);
+    text-decoration-style: var(--decoration-style);
+    text-decoration-color: var(--decoration-color);
+    text-underline-offset: var(--decoration-offset);
+    text-decoration-thickness: var(--decoration-thickness);
+  }
+
+  .button[data-variant="link"]:hover:not(:disabled, [aria-disabled="true"]) {
+    text-decoration-color: var(--decoration-color--hover);
+    text-underline-offset: var(--decoration-offset--hover);
+  }
+
+  .button[data-variant="link"]:active:not(:disabled, [aria-disabled="true"]) {
+    text-decoration-color: var(--decoration-color--active);
+    text-underline-offset: var(--decoration-offset--active);
+  }
+
+  /* ===========================================================================
+  BUTTON SIZES
+  =========================================================================== */
+
+  .button[data-size="sm"] {
+    --button-height: var(--step-6);
+    --button-padding: var(--step-2);
+    --button-radius: var(--radius-sm);
+  }
+
+  .button[data-size="icon"] {
+    block-size: var(--button-height);
+    inline-size: var(--button-height);
+    padding: 0;
+    aspect-ratio: 1 / 1;
+  }
+
+  .button[data-size="icon-sm"] {
+    --button-height: var(--step-6);
+    --button-padding: var(--step-2);
+    --button-radius: var(--radius-sm);
+    --button-icon-size: var(--step-3_5);
+
+    block-size: var(--button-height);
+    inline-size: var(--button-height);
+    padding: 0;
+    aspect-ratio: 1 / 1;
+  }
+
+  /* ===========================================================================
+  BUTTON KBD
+  =========================================================================== */
+
+  .button > kbd {
+    --kbd-inline-size: var(--step-4_5);
+    --kbd-block-size: var(--step-4_5);
+    --kbd-icon-size: var(--step-3);
+  }
+
+  .button:has(> kbd:last-child:not(:only-child)) {
+    padding-inline-end: var(--step-1_5);
+  }
+
+  .button:has(> kbd:first-child:not(:only-child)) {
+    padding-inline-start: var(--step-1_5);
+  }
+
+  .button[data-size="sm"]:has(> kbd:last-child:not(:only-child)) {
+    padding-inline-end: var(--step-0_5);
+  }
+
+  .button[data-size="sm"]:has(> kbd:first-child:not(:only-child)) {
+    padding-inline-start: var(--step-0_5);
+  }
+}

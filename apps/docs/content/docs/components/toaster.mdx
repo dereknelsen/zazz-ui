@@ -1,0 +1,68 @@
+---
+title: Toaster
+description: Stacked toast notifications on the top layer — fired declaratively with invoker commands or imperatively with window.Toaster.
+---
+
+Toasts live in a `<toast-region class="toaster" popover="manual">` — a light-DOM web
+component that enters the top layer via the Popover API while any toast is visible.
+Fire one from any button with `commandfor="<region id>"` and the custom
+`command="--toast"`, or from JavaScript with `window.Toaster`.
+
+Toasts auto-dismiss after ~4 seconds; timers pause while you hover the stack or the
+tab is hidden. The newest toast sits in front with up to three visible — hover to
+expand the stack into a full list. The stacking model is adapted from
+[Sonner](https://sonner.emilkowal.ski) by Emil Kowalski.
+
+Place the region once per page, **outside `<main>`** (e.g. at the end of `<body>`):
+the SPA navigation swap replaces `<main>` wholesale, and a region outside it rides
+through untouched. The stack is also excluded from page view transitions — it names
+its own frozen snapshot group (`view-transition-name: toaster`), so neither
+same-document swaps nor cross-document navigations cross-fade or repaint it.
+
+## Default
+
+<Preview src="toaster/default" />
+
+The preview loads the required scripts automatically; open the JS tab to inspect.
+
+## API
+
+| Attribute           | Where            | Values                                                                                        |
+| ------------------- | ---------------- | --------------------------------------------------------------------------------------------- |
+| `command`           | trigger          | `--toast`, `--toast-success`, `--toast-info`, `--toast-warning`, `--toast-destructive`        |
+| `commandfor`        | trigger          | id of the `<toast-region>`                                                                    |
+| `data-title`        | trigger          | toast heading                                                                                 |
+| `data-description`  | trigger          | supporting copy                                                                               |
+| `data-variant`      | trigger          | `success`, `info`, `warning`, `destructive` (alternative to command suffix)                   |
+| `data-duration`     | trigger          | lifetime in ms; `Infinity` persists until dismissed                                           |
+| `data-close-button` | trigger          | `false` hides the close button                                                                |
+| `data-position`     | `<toast-region>` | `top-start`, `top-center`, `top-end`, `bottom-start`, `bottom-center`, `bottom-end` (default) |
+| `popover`           | `<toast-region>` | `manual` — required; keeps the region on the top layer without light dismiss                  |
+
+## JavaScript
+
+```js
+// Show a toast (returns an id)
+const id = Toaster.toast({
+  title: "Event created",
+  description: "Monday, July 13 at 9:00 AM",
+  variant: "success", // "success" | "info" | "warning" | "destructive"
+  duration: 4000, // ms; Infinity persists
+  action: { label: "Undo", onClick: (event) => {} },
+  closeButton: true,
+  region: "my-toaster", // region id or element; default: first <toast-region>
+});
+
+// Shorthands
+Toaster.success("Changes saved");
+Toaster.info("Update available");
+Toaster.warning("Storage almost full");
+Toaster.error("Something went wrong");
+
+// Dismiss one toast, or all
+Toaster.dismiss(id);
+Toaster.dismiss();
+```
+
+An action's `onClick` may call `event.preventDefault()` to keep the toast open.
+The region is required in markup — it is never auto-created.

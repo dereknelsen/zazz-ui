@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <!-- Paint the right theme (bg, form controls, scrollbars) before CSS loads. -->
+    <meta name="color-scheme" content="light dark" />
+    <title>Zazz tests | Overview</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Preload latin Geist woff2 (Google Fonts v5) so it is ready before first paint. -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwcGFWNOITd.woff2"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:ital,wght@0,100..900;1,100..900&family=Geist:ital,wght@0,100..900;1,100..900&display=optional"
+      rel="stylesheet"
+    />
+
+    <!-- Zazz styles: one bundle — index.css @imports the base layers (layers,
+       variables, reset) and every component in cascade order. -->
+    <link rel="stylesheet" href="../src/index.css" />
+
+    <!-- Preload critical js -->
+    <link rel="modulepreload" href="../src/index.js" />
+
+    <!-- Prefetching related pages -->
+    <link rel="prefetch" href="layout.html" />
+
+    <!-- WARNING: CDN scripts not recommended for production.
+     If you need to use a CDN, create a new SRI hash (@see: https://srihash.org/)
+     and update the integrity attribute. -->
+
+    <!-- [Polyfill] Popover API (June 2026) - -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@oddbird/popover-polyfill@latest"
+      integrity="sha384-Gl/j23IcIIiDfqcDI5gpHCxd5EuslCYvs07HAw3KHGx5UcbxizoF/deDnkeEcFXW"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- [Polyfill] Invokers/tooltip (June 2026) - -->
+    <script
+      type="module"
+      src="https://esm.sh/invokers/compatible"
+      integrity="sha384-fzLqSi8WSEqp/tW3neqEgzl53fvLw4u32RAvoNQSSSAfKGsOrfA2B49xhrObWFnr"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Embla Carousel -->
+    <script
+      src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"
+      integrity="sha384-XGqLM9+dJ+PFOMZn6IuZgRRIoxcAT5fx4eIZCx7K3O2Dj5RA7EOlJ3yOS8Jd+kiY"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Embla Carousel Plugins -->
+    <script
+      src="https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js"
+      integrity="sha384-rs7pDLCh+QtEjJg2VChAoKZHaaz7apuon6rM57E3FdzC83xaJH4n9mQZn4E2s3f4"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-auto-scroll/embla-carousel-auto-scroll.umd.js"
+      integrity="sha384-5x3y2MLuLA5c1LQceYM+lo59GGkQmLzQGzbuHhDUDbnOJkFeTl5jUSdBy3JehMcM"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-class-names/embla-carousel-class-names.umd.js"
+      integrity="sha384-nZNIZhV6WSQVCeWMj8JFfOgQZyzPoGSTh0eohtAOu5aluevIpIblZcupMSdl/EEH"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-ssr/embla-carousel-ssr.umd.js"
+      integrity="sha384-apu0WDHR0c+4Z5qNk7egPNoCxXkYq80e+Qh6xJ6f67S53mSyYdKE6tIeXxvKJ6x9"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Zazz scripts: one ES module bundles every component script. -->
+    <script type="module" src="../src/index.js"></script>
+    <script>
+      /**
+       * Synchronizes the preview theme with the user's preference.
+       * - Reads "theme" from localStorage.
+       * - Falls back to "prefers-color-scheme: dark" media query if unset.
+       * - Applies the "dark" class to document.documentElement if theme is "dark".
+       * - Saves the resolved theme to localStorage for consistency.
+       * This block runs synchronously before dom load to prevent theme flash on load.
+       */
+      (() => {
+        try {
+          const storedTheme = localStorage.getItem("theme");
+          const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches;
+          const theme = storedTheme ?? (prefersDark ? "dark" : "light");
+          document.documentElement.classList.toggle("dark", theme === "dark");
+        } catch {
+          document.documentElement.classList.toggle(
+            "dark",
+            matchMedia("(prefers-color-scheme: dark)").matches,
+          );
+        }
+      })();
+    </script>
+  </head>
+
+  <body class="bg-background">
+    <header class="py-md border-b" data-transition-layer="global-header">
+      <div class="container">
+        <div class="flex items-center justify-between">
+          <a href="index.html" class="text-h6 font-black">Zazz tests</a>
+          <nav>
+            <menu class="flex gap-xs">
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="index.html">Overview</a>
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="about.html">About</a>
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="products.html"
+                  >Products</a
+                >
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="layout.html">Layout</a>
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="responsive.html"
+                  >Responsive</a
+                >
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="components.html"
+                  >Components</a
+                >
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="forms.html">Forms</a>
+              </li>
+            </menu>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main data-layout="main">
+      <section class="py-xl">
+        <div class="container" data-container="md">
+          <hgroup class="flex flex-col gap-sm pb-md">
+            <span class="text-eyebrow">Forms</span>
+            <h1 class="text-h1">Fields and validation</h1>
+            <p class="text-lg text-muted-foreground">
+              Every control shares the <code>--field-*</code> tokens and the
+              <code>.field</code> layout. Validation surfaces through <code>:user-invalid</code>, so
+              errors appear only after you blur or submit. This form sits in the md band and
+              collapses to one column below md.
+            </p>
+          </hgroup>
+
+          <form class="grid gap-lg">
+            <div class="grid grid-cols-3 grid-flow-row gap-md">
+              <!-- Column one: text inputs, select, textarea -->
+              <div class="flex flex-col gap-md">
+                <div class="field">
+                  <label class="field__label" for="f-name">Name</label>
+                  <input
+                    class="input"
+                    id="f-name"
+                    name="name"
+                    type="text"
+                    inputmode="text"
+                    placeholder="Ada Lovelace"
+                    autocomplete="name"
+                    autocapitalize="words"
+                    enterkeyhint="next"
+                  />
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="f-email">Email</label>
+                  <input
+                    class="input"
+                    id="f-email"
+                    name="email"
+                    type="email"
+                    inputmode="email"
+                    required
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    enterkeyhint="next"
+                    aria-describedby="f-email-hint"
+                  />
+                  <div class="field__description">
+                    <span class="field__hint" id="f-email-hint"
+                      >We'll never sell or share your email address.</span
+                    >
+                    <span class="field__error" role="alert"
+                      >Please enter a valid email address.</span
+                    >
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="f-phone">Phone</label>
+                  <input
+                    class="input"
+                    id="f-phone"
+                    name="phone"
+                    type="tel"
+                    inputmode="tel"
+                    placeholder="+1 (555) 012-3456"
+                    autocomplete="tel"
+                    enterkeyhint="next"
+                  />
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="f-sort">Sort by</label>
+                  <select class="select" id="f-sort" name="sort">
+                    <button>
+                      <selectedcontent></selectedcontent>
+                    </button>
+                    <optgroup class="grid gap-px" label="Sort by">
+                      <legend class="text-eyebrow text-muted-foreground p-xs">Sort by</legend>
+                      <option value="recent" selected>Most recent</option>
+                      <option value="popular">Most popular</option>
+                      <option value="price-asc">Price: low to high</option>
+                      <option value="price-desc">Price: high to low</option>
+                    </optgroup>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="f-message">Message</label>
+                  <textarea
+                    class="textarea"
+                    id="f-message"
+                    name="message"
+                    inputmode="text"
+                    placeholder="Your message"
+                  ></textarea>
+                </div>
+              </div>
+
+              <!-- Column two: input groups, password, choice groups, slider -->
+              <div class="flex flex-col gap-md">
+                <div class="field">
+                  <label class="field__label" for="f-search">Search</label>
+                  <label class="input-group">
+                    <input
+                      class="input"
+                      id="f-search"
+                      type="search"
+                      name="q"
+                      inputmode="search"
+                      placeholder="Search…"
+                      autocomplete="off"
+                      spellcheck="false"
+                      enterkeyhint="search"
+                    />
+                    <span class="input-group__addon">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                        <rect width="256" height="256" fill="none" />
+                        <circle
+                          cx="112"
+                          cy="112"
+                          r="80"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="16"
+                        />
+                        <line
+                          x1="168.57"
+                          y1="168.57"
+                          x2="224"
+                          y2="224"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="16"
+                        />
+                      </svg>
+                    </span>
+                  </label>
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="f-url">Website</label>
+                  <label class="input-group">
+                    <input
+                      class="input"
+                      id="f-url"
+                      type="url"
+                      name="url"
+                      inputmode="url"
+                      required
+                      placeholder="zazz.design"
+                      autocomplete="url"
+                      autocapitalize="off"
+                      spellcheck="false"
+                      enterkeyhint="go"
+                      aria-describedby="f-url-hint"
+                    />
+                    <span class="input-group__addon">
+                      <span class="input-group__text">https://</span>
+                    </span>
+                    <span class="input-group__addon" data-align="inline-end">
+                      <button class="button" data-variant="primary" data-size="sm" type="submit">
+                        Apply
+                      </button>
+                    </span>
+                  </label>
+                  <div class="field__description">
+                    <span class="field__hint" id="f-url-hint"
+                      >Where people can find you online.</span
+                    >
+                    <span class="field__error" role="alert"
+                      >Enter a valid URL, e.g. zazz.design.</span
+                    >
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="f-password">Password</label>
+                  <input-password>
+                    <label class="password-group">
+                      <input
+                        class="input"
+                        id="f-password"
+                        name="password"
+                        type="password"
+                        autocomplete="new-password"
+                        minlength="8"
+                        required
+                        placeholder="••••••••"
+                        aria-describedby="f-password-hint f-password-warning"
+                      />
+                      <span class="password-group__addon" data-align="inline-end">
+                        <button
+                          class="button password-group__toggle"
+                          type="button"
+                          data-variant="ghost"
+                          data-size="icon-sm"
+                          aria-pressed="false"
+                          aria-label="Show password"
+                          aria-describedby="f-password-warning"
+                        >
+                          <svg
+                            class="password-group__icon password-group__icon--show"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 256 256"
+                            aria-hidden="true"
+                          >
+                            <rect width="256" height="256" fill="none" />
+                            <path
+                              d="M128,56C48,56,16,128,16,128s32,72,112,72,112-72,112-72S208,56,128,56Z"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="16"
+                            />
+                            <circle
+                              cx="128"
+                              cy="128"
+                              r="40"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="16"
+                            />
+                          </svg>
+                          <svg
+                            class="password-group__icon password-group__icon--hide"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 256 256"
+                            aria-hidden="true"
+                          >
+                            <rect width="256" height="256" fill="none" />
+                            <line
+                              x1="48"
+                              y1="40"
+                              x2="208"
+                              y2="216"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="16"
+                            />
+                            <path
+                              d="M154.9,157.6A40,40,0,0,1,101,98.4"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="16"
+                            />
+                            <path
+                              d="M73.8,69.7C33.6,90.6,16,128,16,128s32,72,112,72a118.1,118.1,0,0,0,54.1-12.8"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="16"
+                            />
+                            <path
+                              d="M208.6,169.1C229.8,149.1,240,128,240,128S208,56,128,56a126,126,0,0,0-20.5,1.6"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="16"
+                            />
+                          </svg>
+                        </button>
+                      </span>
+                    </label>
+                  </input-password>
+                  <div class="field__description">
+                    <span class="field__hint" id="f-password-hint"
+                      >Use eight or more characters.</span
+                    >
+                    <span class="field__error" role="alert"
+                      >Password must be at least 8 characters.</span
+                    >
+                  </div>
+                  <span class="sr-only" id="f-password-warning">
+                    Warning: showing the password makes it visible to anyone near your screen.
+                  </span>
+                </div>
+
+                <fieldset class="field-group">
+                  <legend>Preferences</legend>
+                  <div class="flex flex-col gap-xs">
+                    <label class="field" data-orientation="horizontal">
+                      <input type="checkbox" name="preferences-newsletter" />
+                      <span class="field__label">Subscribe to the newsletter</span>
+                    </label>
+                    <label class="field" data-orientation="horizontal">
+                      <input type="checkbox" name="preferences-terms" checked />
+                      <span class="field__label">Accept terms &amp; conditions</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <fieldset class="radio-group">
+                  <legend>Plan</legend>
+                  <div class="flex flex-col gap-xs">
+                    <label class="field" data-orientation="horizontal">
+                      <input class="radio" type="radio" name="plan" value="starter" />
+                      <span class="field__label">Starter</span>
+                    </label>
+                    <label class="field" data-orientation="horizontal">
+                      <input class="radio" type="radio" name="plan" value="pro" checked />
+                      <span class="field__label">Pro</span>
+                    </label>
+                    <label class="field" data-orientation="horizontal">
+                      <input class="radio" type="radio" name="plan" value="team" />
+                      <span class="field__label">Team</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <fieldset class="field-group">
+                  <legend>Notifications</legend>
+                  <div class="flex flex-col gap-xs">
+                    <label class="field" data-orientation="horizontal">
+                      <input type="checkbox" role="switch" name="notifications-email" />
+                      <span class="field__label">Email notifications</span>
+                    </label>
+                    <label class="field" data-orientation="horizontal">
+                      <input type="checkbox" role="switch" name="notifications-2fa" checked />
+                      <span class="field__label">Two-factor authentication</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <div class="field">
+                  <label class="field__label" for="f-volume">Volume</label>
+                  <input
+                    class="max-w-full"
+                    id="f-volume"
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="10"
+                    value="50"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Actions span both columns -->
+            <div class="flex items-center justify-end gap-xs">
+              <button class="button" type="reset">Reset</button>
+              <button class="button" data-variant="primary" type="submit">Create account</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t" data-transition-layer="global-footer">
+      <div class="container py-xl">
+        <div class="flex items-center justify-between gap-md">
+          <div class="text-h6 font-black">Zazz tests</div>
+          <menu class="flex gap-sm">
+            <li><a class="button" data-variant="link" href="about.html">About</a></li>
+            <li><a class="button" data-variant="link" href="layout.html">Layout</a></li>
+            <li><a class="button" data-variant="link" href="responsive.html">Responsive</a></li>
+            <li><a class="button" data-variant="link" href="products.html">Products</a></li>
+            <li><a class="button" data-variant="link" href="components.html">Components</a></li>
+            <li><a class="button" data-variant="link" href="forms.html">Forms</a></li>
+          </menu>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

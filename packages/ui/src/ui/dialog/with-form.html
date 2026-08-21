@@ -1,0 +1,199 @@
+<button class="button" type="button" command="show-modal" commandfor="form-dialog-1">
+  New project
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+    <rect width="256" height="256" fill="none" />
+    <line
+      x1="40"
+      y1="128"
+      x2="216"
+      y2="128"
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="16"
+    />
+    <line
+      x1="128"
+      y1="40"
+      x2="128"
+      y2="216"
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="16"
+    />
+  </svg>
+</button>
+<dialog id="form-dialog-1" class="dialog" closedby="any" data-size="article">
+  <div class="dialog__content">
+    <header class="dialog__header">
+      <h2 class="text-lg font-heading font-strong">New project</h2>
+      <p class="text-muted-foreground">
+        Add a project to your workspace. You can change these settings later.
+      </p>
+    </header>
+    <form id="f-new-project-1" class="dialog__body flex flex-col gap-md" method="dialog">
+      <fieldset class="field-group">
+        <legend class="sr-only">Contact</legend>
+        <div class="grid grid-cols-2 gap-sm">
+          <div class="field">
+            <label class="field__label" for="fd-name">Name</label>
+            <input
+              class="input"
+              id="fd-name"
+              name="name"
+              type="text"
+              inputmode="text"
+              placeholder="Ada Lovelace"
+              required
+            />
+          </div>
+          <div class="field">
+            <label class="field__label" for="fd-email">Email</label>
+            <input
+              class="input"
+              id="fd-email"
+              name="email"
+              type="email"
+              inputmode="email"
+              required
+              placeholder="you@example.com"
+              autocomplete="email"
+              aria-describedby="fd-email-hint"
+            />
+            <div class="field__description">
+              <span class="field__hint" id="fd-email-hint"
+                >We'll only use this to send receipts.</span
+              >
+              <span class="field__error" role="alert">Please enter a valid email address.</span>
+            </div>
+          </div>
+          <label class="field-group col-span-2">
+            <span class="field__label">Repository</span>
+            <div class="input-group">
+              <input
+                class="input"
+                type="search"
+                name="repo"
+                id="fd-repo"
+                inputmode="search"
+                placeholder="Search repositories…"
+              />
+              <span class="input-group__addon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                  <rect width="256" height="256" fill="none" />
+                  <circle
+                    cx="112"
+                    cy="112"
+                    r="80"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                  <line
+                    x1="168.57"
+                    y1="168.57"
+                    x2="224"
+                    y2="224"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                </svg>
+              </span>
+            </div>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="field-group">
+        <div class="field">
+          <label class="field__label" for="fd-message">Description</label>
+          <textarea
+            class="textarea"
+            id="fd-message"
+            name="description"
+            inputmode="text"
+            placeholder="What is this project for?"
+          ></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset class="radio-group">
+        <legend>Billing</legend>
+        <label class="field" data-orientation="horizontal">
+          <input class="radio" type="radio" name="billing" value="monthly" />
+          <span class="field__label">Monthly billing</span>
+        </label>
+        <label class="field" data-orientation="horizontal">
+          <input class="radio" type="radio" name="billing" value="annual" checked />
+          <span class="field__label">Annual billing</span>
+        </label>
+      </fieldset>
+
+      <label class="field" data-orientation="horizontal">
+        <input type="checkbox" name="terms" required />
+        <span class="field__label">Accept terms &amp; conditions</span>
+      </label>
+    </form>
+    <footer class="dialog__footer">
+      <button
+        class="button"
+        type="button"
+        value="cancel"
+        commandfor="form-dialog-1"
+        command="close"
+      >
+        Cancel
+      </button>
+      <button
+        class="button"
+        data-variant="primary"
+        type="submit"
+        form="f-new-project-1"
+        value="save"
+      >
+        Create project
+      </button>
+    </footer>
+    <button
+      class="button dialog__close"
+      data-size="icon"
+      data-variant="ghost"
+      type="button"
+      commandfor="form-dialog-1"
+      command="close"
+      aria-label="Close dialog"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+        <rect width="256" height="256" fill="none" />
+        <line
+          x1="200"
+          y1="56"
+          x2="56"
+          y2="200"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="16"
+        />
+        <line
+          x1="200"
+          y1="200"
+          x2="56"
+          y2="56"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="16"
+        />
+      </svg>
+    </button>
+  </div>
+</dialog>

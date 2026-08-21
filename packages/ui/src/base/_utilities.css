@@ -1,0 +1,6628 @@
+/**
+ * _utilities.css — Atomic layout, spacing, and typography utility classes.
+ *
+ * @layer      utilities
+ * @requires   layers.css, _variables.css
+ * @uses       :where() — zero specificity so utilities stay overridable
+ * @uses       container-type / @container — responsive layout utilities
+ * @uses       style() queries — read typed @property tokens from _properties.css
+ */
+
+@layer variables {
+  /* ===========================================================================
+    INTERNAL UTILITY VARIABLES — `--_` prefix
+    System-level variables that utilities compose into a single declaration.
+    Not part of the public token API (those live in _variables.css). Two kinds:
+
+      1. Composition vars (padding / margin / radius / color-alpha) are registered
+         below with `inherits: false`, so a value set on one element never bleeds
+         onto its descendants through a shared composing rule. The registration's
+         `initial-value` also serves as the default — no `:root` fallback needed.
+
+      2. Coordination vars (--_gap*, --_grid-*) stay inheriting on purpose: they're
+         set on a container and read by descendants (basis, col-span). Left
+         unregistered so default inheritance applies.
+    =========================================================================== */
+
+  :root {
+    --_gap: 0px;
+  }
+}
+
+/* Composition vars — registered so they default without inheriting.
+   @property is layer-independent. */
+
+/* padding (length only) */
+@property --_padding-inline-start {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --_padding-inline-end {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --_padding-block-start {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --_padding-block-end {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0;
+}
+
+/* margin (length or auto) */
+@property --_margin-inline-start {
+  syntax: "<length-percentage> | auto";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --_margin-inline-end {
+  syntax: "<length-percentage> | auto";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --_margin-block-start {
+  syntax: "<length-percentage> | auto";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --_margin-block-end {
+  syntax: "<length-percentage> | auto";
+  inherits: false;
+  initial-value: 0;
+}
+
+/* border-radius (physical corners, shorthand order TL TR BR BL) */
+@property --_radius-top-left {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --_radius-top-right {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --_radius-bottom-right {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --_radius-bottom-left {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0;
+}
+
+/* color alpha — multiplied into each color token (default 1 = unchanged) */
+@property --_text-alpha {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+@property --_background-alpha {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+@property --_border-alpha {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+/* ===========================================================================
+  SCROLL-FADE — registered animated fade depths + keyframes (ported from shadcn)
+  Layer-independent, like the composition vars above. The per-edge depths are
+  registered <length-percentage> so the scroll-driven animation can interpolate
+  them; --scroll-fade-mask is the public override slot (edge utils / -none).
+  =========================================================================== */
+
+/* animated per-edge fade depths (start edges t/s reveal in, end edges b/e out) */
+@property --scroll-fade-t {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --scroll-fade-b {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --scroll-fade-s {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --scroll-fade-e {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+/* public override slot for the whole mask (edge utilities / scroll-fade-none) */
+@property --scroll-fade-mask {
+  syntax: "*";
+  inherits: false;
+}
+
+/* Keyframes drive each edge's depth from the scroll timeline. The 1ms duration
+   is a placeholder — animation-range maps progress onto the scroll position. */
+@keyframes scroll-fade-reveal-t {
+  from {
+    --scroll-fade-t: 0px;
+  }
+
+  to {
+    --scroll-fade-t: var(
+      --_scroll-fade-size-t,
+      var(--scroll-fade-size, min(12%, calc(var(--spacing-interval) * 10)))
+    );
+  }
+}
+
+@keyframes scroll-fade-reveal-b {
+  from {
+    --scroll-fade-b: var(
+      --_scroll-fade-size-b,
+      var(--scroll-fade-size, min(12%, calc(var(--spacing-interval) * 10)))
+    );
+  }
+
+  to {
+    --scroll-fade-b: 0px;
+  }
+}
+
+@keyframes scroll-fade-reveal-s {
+  from {
+    --scroll-fade-s: 0px;
+  }
+
+  to {
+    --scroll-fade-s: var(
+      --_scroll-fade-size-s,
+      var(--scroll-fade-size, min(12%, calc(var(--spacing-interval) * 10)))
+    );
+  }
+}
+
+@keyframes scroll-fade-reveal-e {
+  from {
+    --scroll-fade-e: var(
+      --_scroll-fade-size-e,
+      var(--scroll-fade-size, min(12%, calc(var(--spacing-interval) * 10)))
+    );
+  }
+
+  to {
+    --scroll-fade-e: 0px;
+  }
+}
+
+@layer zazz.utilities {
+  /* ===========================================================================
+    FONT FAMILY UTILITIES
+    =========================================================================== */
+
+  :where(.font-sans) {
+    font-family: var(--font-body);
+  }
+
+  :where(.font-serif) {
+    font-family: var(--font-heading);
+  }
+
+  :where(.font-mono) {
+    font-family: var(--font-family-mono);
+  }
+
+  /* ===========================================================================
+  TEXT COLOR UTILITIES
+  =========================================================================== */
+
+  :where(.text-background) {
+    color: oklch(from var(--background) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-foreground) {
+    color: oklch(from var(--foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-card) {
+    color: oklch(from var(--card) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-card-foreground) {
+    color: oklch(from var(--card-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-border) {
+    color: oklch(from var(--border) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-border-foreground) {
+    color: oklch(from var(--border-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-input) {
+    color: oklch(from var(--input) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-input-foreground) {
+    color: oklch(from var(--input-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-muted) {
+    color: oklch(from var(--muted) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-muted-foreground) {
+    color: oklch(from var(--muted-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-faded) {
+    color: oklch(from var(--faded) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-faded-foreground) {
+    color: oklch(from var(--faded-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-primary) {
+    color: oklch(from var(--primary) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-primary-foreground) {
+    color: oklch(from var(--primary-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-secondary) {
+    color: oklch(from var(--secondary) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-secondary-foreground) {
+    color: oklch(from var(--secondary-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-tertiary) {
+    color: oklch(from var(--tertiary) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-tertiary-foreground) {
+    color: oklch(from var(--tertiary-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-info) {
+    color: oklch(from var(--info) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-info-foreground) {
+    color: oklch(from var(--info-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-success) {
+    color: oklch(from var(--success) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-success-foreground) {
+    color: oklch(from var(--success-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-warning) {
+    color: oklch(from var(--warning) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-warning-foreground) {
+    color: oklch(from var(--warning-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-destructive) {
+    color: oklch(from var(--destructive) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-destructive-foreground) {
+    color: oklch(from var(--destructive-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-white) {
+    color: oklch(from var(--white) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.text-black) {
+    color: oklch(from var(--black) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  /* ===========================================================================
+  TEXT FORMAT UTILITIES
+  =========================================================================== */
+
+  :where(.text-center) {
+    text-align: center;
+  }
+
+  :where(.text-left) {
+    text-align: left;
+  }
+
+  :where(.text-right) {
+    text-align: right;
+  }
+
+  :where(.text-justify) {
+    text-align: justify;
+  }
+
+  :where(.uppercase) {
+    text-transform: uppercase;
+  }
+
+  :where(.lowercase) {
+    text-transform: lowercase;
+  }
+
+  :where(.capitalize) {
+    text-transform: capitalize;
+  }
+
+  :where(.normal-case) {
+    text-transform: none;
+  }
+
+  /* ===========================================================================
+  BACKGROUND COLOR UTILITIES
+  =========================================================================== */
+
+  :where(.bg-background) {
+    background-color: oklch(
+      from var(--background) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-foreground) {
+    background-color: oklch(
+      from var(--foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-card) {
+    background-color: oklch(from var(--card) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-card-foreground) {
+    background-color: oklch(
+      from var(--card-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-border) {
+    background-color: oklch(from var(--border) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-border-foreground) {
+    background-color: oklch(
+      from var(--border-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-input) {
+    background-color: oklch(from var(--input) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-input-foreground) {
+    background-color: oklch(
+      from var(--input-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-muted) {
+    background-color: oklch(from var(--muted) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-muted-foreground) {
+    background-color: oklch(
+      from var(--muted-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-faded) {
+    background-color: oklch(from var(--faded) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-faded-foreground) {
+    background-color: oklch(
+      from var(--faded-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-primary) {
+    background-color: oklch(from var(--primary) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-primary-foreground) {
+    background-color: oklch(
+      from var(--primary-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-secondary) {
+    background-color: oklch(
+      from var(--secondary) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-secondary-foreground) {
+    background-color: oklch(
+      from var(--secondary-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-tertiary) {
+    background-color: oklch(from var(--tertiary) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-tertiary-foreground) {
+    background-color: oklch(
+      from var(--tertiary-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-info) {
+    background-color: oklch(from var(--info) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-info-foreground) {
+    background-color: oklch(
+      from var(--info-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-success) {
+    background-color: oklch(from var(--success) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-success-foreground) {
+    background-color: oklch(
+      from var(--success-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-warning) {
+    background-color: oklch(from var(--warning) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-warning-foreground) {
+    background-color: oklch(
+      from var(--warning-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-destructive) {
+    background-color: oklch(
+      from var(--destructive) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-destructive-foreground) {
+    background-color: oklch(
+      from var(--destructive-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-white) {
+    background-color: oklch(from var(--white) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-black) {
+    background-color: oklch(from var(--black) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-shade-none) {
+    background-color: oklch(
+      from var(--shade-none) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-shade-50) {
+    background-color: oklch(from var(--shade-50) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-shade-100) {
+    background-color: oklch(
+      from var(--shade-100) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-shade-200) {
+    background-color: oklch(
+      from var(--shade-200) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-shade-300) {
+    background-color: oklch(
+      from var(--shade-300) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-shade-400) {
+    background-color: oklch(
+      from var(--shade-400) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-shade-500) {
+    background-color: oklch(
+      from var(--shade-500) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-shade-600) {
+    background-color: oklch(
+      from var(--shade-600) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-shade-700) {
+    background-color: oklch(
+      from var(--shade-700) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-shade-800) {
+    background-color: oklch(
+      from var(--shade-800) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-shade-900) {
+    background-color: oklch(
+      from var(--shade-900) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-shade-950) {
+    background-color: oklch(
+      from var(--shade-950) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-shade-full) {
+    background-color: oklch(
+      from var(--shade-full) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-tint-none) {
+    background-color: oklch(
+      from var(--tint-none) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-tint-50) {
+    background-color: oklch(from var(--tint-50) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-tint-100) {
+    background-color: oklch(from var(--tint-100) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-tint-200) {
+    background-color: oklch(from var(--tint-200) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-tint-300) {
+    background-color: oklch(from var(--tint-300) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-tint-400) {
+    background-color: oklch(from var(--tint-400) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-tint-500) {
+    background-color: oklch(from var(--tint-500) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-tint-600) {
+    background-color: oklch(from var(--tint-600) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-tint-700) {
+    background-color: oklch(from var(--tint-700) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-tint-800) {
+    background-color: oklch(from var(--tint-800) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-tint-900) {
+    background-color: oklch(from var(--tint-900) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-tint-950) {
+    background-color: oklch(from var(--tint-950) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.bg-tint-full) {
+    background-color: oklch(
+      from var(--tint-full) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.bg-transparent) {
+    background-color: transparent;
+  }
+
+  :where(.bg-none) {
+    background: none;
+  }
+
+  /* ===========================================================================
+  DISPLAY & LAYOUT UTILITIES
+  =========================================================================== */
+
+  /* Basic display utilities */
+  :where(.hidden) {
+    display: none;
+  }
+
+  :where(.visible) {
+    visibility: visible;
+  }
+
+  :where(.invisible) {
+    visibility: hidden;
+  }
+
+  :where(.block) {
+    display: block;
+  }
+
+  :where(.inline-block) {
+    display: inline-block;
+  }
+
+  :where(.inline) {
+    display: inline;
+  }
+
+  /* Flexbox utilities */
+  :where(.flex) {
+    display: flex;
+  }
+
+  :where(.inline-flex) {
+    display: inline-flex;
+  }
+
+  :where(.flex-row) {
+    flex-direction: row;
+  }
+
+  :where(.flex-row-reverse) {
+    flex-direction: row-reverse;
+  }
+
+  :where(.flex-col) {
+    flex-direction: column;
+  }
+
+  :where(.flex-col-reverse) {
+    flex-direction: column-reverse;
+  }
+
+  :where(.flex-wrap) {
+    flex-wrap: wrap;
+  }
+
+  :where(.flex-wrap-reverse) {
+    flex-wrap: wrap-reverse;
+  }
+
+  :where(.flex-nowrap) {
+    flex-wrap: nowrap;
+  }
+
+  /* Flex grow/shrink utilities */
+  :where(.flex-1) {
+    flex: 1;
+  }
+
+  :where(.grow-0) {
+    flex-grow: 0;
+  }
+
+  :where(.grow-1) {
+    flex-grow: 1;
+  }
+
+  :where(.shrink-0) {
+    flex-shrink: 0;
+  }
+
+  :where(.shrink-1) {
+    flex-shrink: 1;
+  }
+
+  :where(.flex-auto) {
+    flex: auto;
+  }
+
+  :where(.flex-initial) {
+    flex: initial;
+  }
+
+  :where(.flex-none) {
+    flex: none;
+  }
+
+  /* Flexbox alignment utilities */
+  :where(.items-start) {
+    align-items: start;
+  }
+
+  :where(.items-center) {
+    align-items: center;
+  }
+
+  :where(.items-end) {
+    align-items: end;
+  }
+
+  :where(.items-stretch) {
+    align-items: stretch;
+  }
+
+  :where(.justify-start) {
+    justify-content: start;
+  }
+
+  :where(.justify-center) {
+    justify-content: center;
+  }
+
+  :where(.justify-end) {
+    justify-content: end;
+  }
+
+  :where(.justify-stretch) {
+    justify-content: stretch;
+  }
+
+  :where(.justify-around) {
+    justify-content: space-around;
+  }
+
+  :where(.justify-between) {
+    justify-content: space-between;
+  }
+
+  :where(.self-auto) {
+    align-self: auto;
+  }
+
+  :where(.self-start) {
+    align-self: start;
+  }
+
+  :where(.self-end) {
+    align-self: end;
+  }
+
+  :where(.self-center) {
+    align-self: center;
+  }
+
+  :where(.self-stretch) {
+    align-self: stretch;
+  }
+
+  :where(.justify-self-auto) {
+    justify-self: auto;
+  }
+
+  :where(.justify-self-start) {
+    justify-self: start;
+  }
+
+  :where(.justify-self-end) {
+    justify-self: end;
+  }
+
+  :where(.justify-self-center) {
+    justify-self: center;
+  }
+
+  :where(.justify-self-stretch) {
+    justify-self: stretch;
+  }
+
+  /* Grid utilities */
+  :where(.grid) {
+    --_grid-col-min: min(100%, 25ch);
+    display: grid;
+  }
+
+  :where(.grid-cols-subgrid) {
+    /* span all of parent's columns */
+    grid-template-columns: subgrid;
+
+    /* Setting a container context breaks subgrid */
+    container-name: none;
+    container-type: normal;
+  }
+
+  :where(.grid-rows-subgrid) {
+    grid-template-rows: subgrid;
+    grid-row: 1 / -1;
+
+    /* span all of parent's columns */
+    grid-template-columns: subgrid;
+
+    /* Setting a container context breaks subgrid */
+    container-name: none;
+    container-type: normal;
+  }
+
+  /* Allows for stacking items on top of each other */
+  :where(.grid-area-pile) {
+    grid-template-areas: "pile";
+    place-items: center;
+
+    > * {
+      grid-area: pile;
+    }
+  }
+
+  :where(.grid > *) {
+    min-inline-size: 0;
+  }
+
+  :where(.grid-cols-1) {
+    --_grid-cols: 1;
+    grid-template-columns: repeat(var(--_grid-cols, 1), minmax(0, 1fr));
+  }
+
+  :where(.grid-cols-2) {
+    --_grid-cols: 2;
+    grid-template-columns: repeat(var(--_grid-cols, 2), minmax(0, 1fr));
+  }
+
+  :where(.grid-cols-3) {
+    --_grid-cols: 3;
+    grid-template-columns: repeat(var(--_grid-cols, 3), minmax(0, 1fr));
+  }
+
+  :where(.grid-cols-4) {
+    --_grid-cols: 4;
+    grid-template-columns: repeat(var(--_grid-cols, 4), minmax(0, 1fr));
+  }
+
+  :where(.grid-cols-5) {
+    --_grid-cols: 5;
+    grid-template-columns: repeat(var(--_grid-cols, 5), minmax(0, 1fr));
+  }
+
+  :where(.grid-cols-6) {
+    --_grid-cols: 6;
+    grid-template-columns: repeat(var(--_grid-cols, 6), minmax(0, 1fr));
+  }
+
+  :where(.grid-cols-7) {
+    --_grid-cols: 7;
+    grid-template-columns: repeat(var(--_grid-cols, 7), minmax(0, 1fr));
+  }
+
+  :where(.grid-cols-8) {
+    --_grid-cols: 8;
+    grid-template-columns: repeat(var(--_grid-cols, 8), minmax(0, 1fr));
+  }
+
+  :where(.grid-cols-9) {
+    --_grid-cols: 9;
+    grid-template-columns: repeat(var(--_grid-cols, 9), minmax(0, 1fr));
+  }
+
+  :where(.grid-cols-10) {
+    --_grid-cols: 10;
+    grid-template-columns: repeat(var(--_grid-cols, 10), minmax(0, 1fr));
+  }
+
+  :where(.grid-cols-11) {
+    --_grid-cols: 11;
+    grid-template-columns: repeat(var(--_grid-cols, 11), minmax(0, 1fr));
+  }
+
+  :where(.grid-cols-12) {
+    --_grid-cols: 12;
+    grid-template-columns: repeat(var(--_grid-cols, 12), minmax(0, 1fr));
+  }
+
+  :where(.grid-rows-1) {
+    --_grid-rows: 1;
+    grid-template-rows: repeat(var(--_grid-rows, 1), auto);
+  }
+
+  :where(.grid-rows-2) {
+    --_grid-rows: 2;
+    grid-template-rows: repeat(var(--_grid-rows, 2), auto);
+  }
+
+  :where(.grid-rows-3) {
+    --_grid-rows: 3;
+    grid-template-rows: repeat(var(--_grid-rows, 3), auto);
+  }
+
+  :where(.grid-rows-4) {
+    --_grid-rows: 4;
+    grid-template-rows: repeat(var(--_grid-rows, 4), auto);
+  }
+
+  :where(.grid-rows-5) {
+    --_grid-rows: 5;
+    grid-template-rows: repeat(var(--_grid-rows, 5), auto);
+  }
+
+  :where(.grid-rows-6) {
+    --_grid-rows: 6;
+    grid-template-rows: repeat(var(--_grid-rows, 6), auto);
+  }
+
+  :where(.grid-rows-7) {
+    --_grid-rows: 7;
+    grid-template-rows: repeat(var(--_grid-rows, 7), auto);
+  }
+
+  :where(.grid-rows-8) {
+    --_grid-rows: 8;
+    grid-template-rows: repeat(var(--_grid-rows, 8), auto);
+  }
+
+  :where(.grid-rows-9) {
+    --_grid-rows: 9;
+    grid-template-rows: repeat(var(--_grid-rows, 9), auto);
+  }
+
+  :where(.grid-rows-10) {
+    --_grid-rows: 10;
+    grid-template-rows: repeat(var(--_grid-rows, 10), auto);
+  }
+
+  :where(.grid-rows-11) {
+    --_grid-rows: 11;
+    grid-template-rows: repeat(var(--_grid-rows, 11), auto);
+  }
+
+  :where(.grid-rows-12) {
+    --_grid-rows: 12;
+    grid-template-rows: repeat(var(--_grid-rows, 12), auto);
+  }
+
+  :where(.grid-flow-row) {
+    grid-auto-flow: row;
+  }
+
+  :where(.grid-flow-col) {
+    grid-auto-flow: column;
+  }
+
+  /*
+   * Equal columns; items fill across, then wrap to the next row.
+   * auto-fill: track min is max(--_grid-col-min, (100% - (N - 1) * column-gap) / N).
+   */
+  :where(.grid-flow-row.grid-cols-1) {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(var(--_grid-cols, 1), minmax(0, 1fr));
+  }
+
+  :where(
+    .grid-flow-row.grid-cols-2,
+    .grid-flow-row.grid-cols-3,
+    .grid-flow-row.grid-cols-4,
+    .grid-flow-row.grid-cols-5,
+    .grid-flow-row.grid-cols-6,
+    .grid-flow-row.grid-cols-7,
+    .grid-flow-row.grid-cols-8,
+    .grid-flow-row.grid-cols-9,
+    .grid-flow-row.grid-cols-10,
+    .grid-flow-row.grid-cols-11,
+    .grid-flow-row.grid-cols-12
+  ) {
+    --_grid-track-min: min(
+      100%,
+      max(
+        var(--_grid-col-min),
+        max(0%, calc((100% - (var(--_grid-cols, 1) - 1) * var(--_gap, 0px)) / var(--_grid-cols, 1)))
+      )
+    );
+    grid-auto-flow: row;
+    grid-template-columns: repeat(auto-fill, minmax(var(--_grid-track-min), 1fr));
+  }
+
+  :where(.col-span-1) {
+    --_col-span: 1;
+  }
+
+  :where(.col-span-2) {
+    --_col-span: 2;
+  }
+
+  :where(.col-span-3) {
+    --_col-span: 3;
+  }
+
+  :where(.col-span-4) {
+    --_col-span: 4;
+  }
+
+  :where(.col-span-5) {
+    --_col-span: 5;
+  }
+
+  :where(.col-span-6) {
+    --_col-span: 6;
+  }
+
+  :where(.col-span-7) {
+    --_col-span: 7;
+  }
+
+  :where(.col-span-8) {
+    --_col-span: 8;
+  }
+
+  :where(.col-span-9) {
+    --_col-span: 9;
+  }
+
+  :where(.col-span-10) {
+    --_col-span: 10;
+  }
+
+  :where(.col-span-11) {
+    --_col-span: 11;
+  }
+
+  :where(.col-span-12) {
+    --_col-span: 12;
+  }
+
+  :where(.row-span-1) {
+    grid-row: span min(1, var(--_grid-rows, 1));
+  }
+
+  :where(.row-span-2) {
+    grid-row: span min(2, var(--_grid-rows, 2));
+  }
+
+  :where(.row-span-3) {
+    grid-row: span min(3, var(--_grid-rows, 3));
+  }
+
+  :where(.row-span-4) {
+    grid-row: span min(4, var(--_grid-rows, 4));
+  }
+
+  :where(.row-span-5) {
+    grid-row: span min(5, var(--_grid-rows, 5));
+  }
+
+  :where(.row-span-6) {
+    grid-row: span min(6, var(--_grid-rows, 6));
+  }
+
+  :where(.row-span-7) {
+    grid-row: span min(7, var(--_grid-rows, 7));
+  }
+
+  :where(.row-span-8) {
+    grid-row: span min(8, var(--_grid-rows, 8));
+  }
+
+  :where(.row-span-9) {
+    grid-row: span min(9, var(--_grid-rows, 9));
+  }
+
+  :where(.row-span-10) {
+    grid-row: span min(10, var(--_grid-rows, 10));
+  }
+
+  :where(.row-span-11) {
+    grid-row: span min(11, var(--_grid-rows, 11));
+  }
+
+  :where(.row-span-12) {
+    grid-row: span min(12, var(--_grid-rows, 12));
+  }
+
+  /* base before @container breakpoints so @sm:/@md: variants win */
+  :where(.basis-0) {
+    flex-basis: 0;
+  }
+
+  :where(.basis-auto) {
+    flex-basis: auto;
+  }
+
+  :where(.basis-full) {
+    flex-basis: 100%;
+  }
+
+  :where(.basis-1\/6) {
+    flex-basis: calc((100% - (var(--_gap, 0px) * 5)) / 6);
+  }
+
+  :where(.basis-1\/5) {
+    flex-basis: calc((100% - (var(--_gap, 0px) * 4)) / 5);
+  }
+
+  :where(.basis-1\/4) {
+    flex-basis: calc((100% - (var(--_gap, 0px) * 3)) / 4);
+  }
+
+  :where(.basis-1\/3) {
+    flex-basis: calc((100% - (var(--_gap, 0px) * 2)) / 3);
+  }
+
+  :where(.basis-1\/2) {
+    flex-basis: calc((100% - (var(--_gap, 0px) * 1)) / 2);
+  }
+
+  /* ===========================================================================
+  CONTAINER RESPONSIVE UTILITIES — mobile-first, gated on the global breakpoint
+  state flags (--is-breakpoint-*, sourced from the body container in _variables.css).
+  Each prefix applies at or above its breakpoint: style(--is-breakpoint-X: true).
+  =========================================================================== */
+
+  @container style(--is-breakpoint-xs: true) {
+    /* --breakpoint-xs and up */
+    /* display */
+    :where(.\@xs\:hidden) {
+      display: none;
+    }
+
+    :where(.\@xs\:block) {
+      display: block;
+    }
+
+    :where(.\@xs\:flex) {
+      display: flex;
+    }
+
+    :where(.\@xs\:inline-flex) {
+      display: inline-flex;
+    }
+
+    :where(.\@xs\:grid) {
+      display: grid;
+    }
+
+    :where(.\@xs\:grid-cols-subgrid) {
+      grid-template-columns: subgrid;
+    }
+
+    :where(.\@xs\:grid-rows-subgrid) {
+      grid-template-rows: subgrid;
+    }
+
+    /* grid-cols */
+    :where(.\@xs\:grid-cols-1) {
+      --_grid-cols: 1;
+      grid-template-columns: repeat(var(--_grid-cols, 1), minmax(0, 1fr));
+    }
+
+    :where(.\@xs\:grid-cols-2) {
+      --_grid-cols: 2;
+      grid-template-columns: repeat(var(--_grid-cols, 2), minmax(0, 1fr));
+    }
+
+    :where(.\@xs\:grid-cols-3) {
+      --_grid-cols: 3;
+      grid-template-columns: repeat(var(--_grid-cols, 3), minmax(0, 1fr));
+    }
+
+    :where(.\@xs\:grid-cols-4) {
+      --_grid-cols: 4;
+      grid-template-columns: repeat(var(--_grid-cols, 4), minmax(0, 1fr));
+    }
+
+    :where(.\@xs\:grid-cols-5) {
+      --_grid-cols: 5;
+      grid-template-columns: repeat(var(--_grid-cols, 5), minmax(0, 1fr));
+    }
+
+    :where(.\@xs\:grid-cols-6) {
+      --_grid-cols: 6;
+      grid-template-columns: repeat(var(--_grid-cols, 6), minmax(0, 1fr));
+    }
+
+    :where(.\@xs\:grid-cols-7) {
+      --_grid-cols: 7;
+      grid-template-columns: repeat(var(--_grid-cols, 7), minmax(0, 1fr));
+    }
+
+    :where(.\@xs\:grid-cols-8) {
+      --_grid-cols: 8;
+      grid-template-columns: repeat(var(--_grid-cols, 8), minmax(0, 1fr));
+    }
+
+    :where(.\@xs\:grid-cols-9) {
+      --_grid-cols: 9;
+      grid-template-columns: repeat(var(--_grid-cols, 9), minmax(0, 1fr));
+    }
+
+    :where(.\@xs\:grid-cols-10) {
+      --_grid-cols: 10;
+      grid-template-columns: repeat(var(--_grid-cols, 10), minmax(0, 1fr));
+    }
+
+    :where(.\@xs\:grid-cols-11) {
+      --_grid-cols: 11;
+      grid-template-columns: repeat(var(--_grid-cols, 11), minmax(0, 1fr));
+    }
+
+    :where(.\@xs\:grid-cols-12) {
+      --_grid-cols: 12;
+      grid-template-columns: repeat(var(--_grid-cols, 12), minmax(0, 1fr));
+    }
+
+    /* grid-rows */
+    :where(.\@xs\:grid-rows-1) {
+      --_grid-rows: 1;
+      grid-template-rows: repeat(var(--_grid-rows, 1), auto);
+    }
+
+    :where(.\@xs\:grid-rows-2) {
+      --_grid-rows: 2;
+      grid-template-rows: repeat(var(--_grid-rows, 2), auto);
+    }
+
+    :where(.\@xs\:grid-rows-3) {
+      --_grid-rows: 3;
+      grid-template-rows: repeat(var(--_grid-rows, 3), auto);
+    }
+
+    :where(.\@xs\:grid-rows-4) {
+      --_grid-rows: 4;
+      grid-template-rows: repeat(var(--_grid-rows, 4), auto);
+    }
+
+    :where(.\@xs\:grid-rows-5) {
+      --_grid-rows: 5;
+      grid-template-rows: repeat(var(--_grid-rows, 5), auto);
+    }
+
+    :where(.\@xs\:grid-rows-6) {
+      --_grid-rows: 6;
+      grid-template-rows: repeat(var(--_grid-rows, 6), auto);
+    }
+
+    :where(.\@xs\:grid-rows-7) {
+      --_grid-rows: 7;
+      grid-template-rows: repeat(var(--_grid-rows, 7), auto);
+    }
+
+    :where(.\@xs\:grid-rows-8) {
+      --_grid-rows: 8;
+      grid-template-rows: repeat(var(--_grid-rows, 8), auto);
+    }
+
+    :where(.\@xs\:grid-rows-9) {
+      --_grid-rows: 9;
+      grid-template-rows: repeat(var(--_grid-rows, 9), auto);
+    }
+
+    :where(.\@xs\:grid-rows-10) {
+      --_grid-rows: 10;
+      grid-template-rows: repeat(var(--_grid-rows, 10), auto);
+    }
+
+    :where(.\@xs\:grid-rows-11) {
+      --_grid-rows: 11;
+      grid-template-rows: repeat(var(--_grid-rows, 11), auto);
+    }
+
+    :where(.\@xs\:grid-rows-12) {
+      --_grid-rows: 12;
+      grid-template-rows: repeat(var(--_grid-rows, 12), auto);
+    }
+
+    /* flex-direction */
+    :where(.\@xs\:flex-row) {
+      flex-direction: row;
+    }
+
+    :where(.\@xs\:flex-col) {
+      flex-direction: column;
+    }
+
+    /* text-align */
+    :where(.\@xs\:text-center) {
+      text-align: center;
+    }
+
+    :where(.\@xs\:text-left) {
+      text-align: left;
+    }
+
+    :where(.\@xs\:text-right) {
+      text-align: right;
+    }
+
+    :where(.\@xs\:text-justify) {
+      text-align: justify;
+    }
+
+    /* align-items */
+    :where(.\@xs\:items-start) {
+      align-items: start;
+    }
+
+    :where(.\@xs\:items-center) {
+      align-items: center;
+    }
+
+    :where(.\@xs\:items-end) {
+      align-items: end;
+    }
+
+    :where(.\@xs\:items-stretch) {
+      align-items: stretch;
+    }
+
+    /* justify-content */
+    :where(.\@xs\:justify-start) {
+      justify-content: start;
+    }
+
+    :where(.\@xs\:justify-center) {
+      justify-content: center;
+    }
+
+    :where(.\@xs\:justify-end) {
+      justify-content: end;
+    }
+
+    :where(.\@xs\:justify-stretch) {
+      justify-content: stretch;
+    }
+
+    :where(.\@xs\:justify-around) {
+      justify-content: space-around;
+    }
+
+    :where(.\@xs\:justify-between) {
+      justify-content: space-between;
+    }
+
+    /* col-span */
+    :where(.\@xs\:col-span-1) {
+      --_col-span: 1;
+      --_col-span-responsive: 1;
+    }
+
+    :where(.\@xs\:col-span-2) {
+      --_col-span: 2;
+      --_col-span-responsive: 2;
+    }
+
+    :where(.\@xs\:col-span-3) {
+      --_col-span: 3;
+      --_col-span-responsive: 3;
+    }
+
+    :where(.\@xs\:col-span-4) {
+      --_col-span: 4;
+      --_col-span-responsive: 4;
+    }
+
+    :where(.\@xs\:col-span-5) {
+      --_col-span: 5;
+      --_col-span-responsive: 5;
+    }
+
+    :where(.\@xs\:col-span-6) {
+      --_col-span: 6;
+      --_col-span-responsive: 6;
+    }
+
+    :where(.\@xs\:col-span-7) {
+      --_col-span: 7;
+      --_col-span-responsive: 7;
+    }
+
+    :where(.\@xs\:col-span-8) {
+      --_col-span: 8;
+      --_col-span-responsive: 8;
+    }
+
+    :where(.\@xs\:col-span-9) {
+      --_col-span: 9;
+      --_col-span-responsive: 9;
+    }
+
+    :where(.\@xs\:col-span-10) {
+      --_col-span: 10;
+      --_col-span-responsive: 10;
+    }
+
+    :where(.\@xs\:col-span-11) {
+      --_col-span: 11;
+      --_col-span-responsive: 11;
+    }
+
+    :where(.\@xs\:col-span-12) {
+      --_col-span: 12;
+      --_col-span-responsive: 12;
+    }
+
+    /* row-span */
+    :where(.\@xs\:row-span-1) {
+      grid-row: span min(1, var(--_grid-rows, 1));
+    }
+
+    :where(.\@xs\:row-span-2) {
+      grid-row: span min(2, var(--_grid-rows, 2));
+    }
+
+    :where(.\@xs\:row-span-3) {
+      grid-row: span min(3, var(--_grid-rows, 3));
+    }
+
+    :where(.\@xs\:row-span-4) {
+      grid-row: span min(4, var(--_grid-rows, 4));
+    }
+
+    :where(.\@xs\:row-span-5) {
+      grid-row: span min(5, var(--_grid-rows, 5));
+    }
+
+    :where(.\@xs\:row-span-6) {
+      grid-row: span min(6, var(--_grid-rows, 6));
+    }
+
+    :where(.\@xs\:row-span-7) {
+      grid-row: span min(7, var(--_grid-rows, 7));
+    }
+
+    :where(.\@xs\:row-span-8) {
+      grid-row: span min(8, var(--_grid-rows, 8));
+    }
+
+    :where(.\@xs\:row-span-9) {
+      grid-row: span min(9, var(--_grid-rows, 9));
+    }
+
+    :where(.\@xs\:row-span-10) {
+      grid-row: span min(10, var(--_grid-rows, 10));
+    }
+
+    :where(.\@xs\:row-span-11) {
+      grid-row: span min(11, var(--_grid-rows, 11));
+    }
+
+    :where(.\@xs\:row-span-12) {
+      grid-row: span min(12, var(--_grid-rows, 12));
+    }
+
+    /* basis */
+    :where(.\@xs\:basis-0) {
+      flex-basis: 0;
+    }
+
+    :where(.\@xs\:basis-auto) {
+      flex-basis: auto;
+    }
+
+    :where(.\@xs\:basis-full) {
+      flex-basis: 100%;
+    }
+
+    :where(.\@xs\:basis-1\/6) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 5)) / 6);
+    }
+
+    :where(.\@xs\:basis-1\/5) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 4)) / 5);
+    }
+
+    :where(.\@xs\:basis-1\/4) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 3)) / 4);
+    }
+
+    :where(.\@xs\:basis-1\/3) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 2)) / 3);
+    }
+
+    :where(.\@xs\:basis-1\/2) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 1)) / 2);
+    }
+  }
+
+  @container style(--is-breakpoint-sm: true) {
+    /* --breakpoint-sm */
+    /* display */
+    :where(.\@sm\:hidden) {
+      display: none;
+    }
+
+    :where(.\@sm\:block) {
+      display: block;
+    }
+
+    :where(.\@sm\:flex) {
+      display: flex;
+    }
+
+    :where(.\@sm\:inline-flex) {
+      display: inline-flex;
+    }
+
+    :where(.\@sm\:grid) {
+      display: grid;
+    }
+
+    :where(.\@sm\:grid-cols-subgrid) {
+      grid-template-columns: subgrid;
+    }
+
+    :where(.\@sm\:grid-rows-subgrid) {
+      grid-template-rows: subgrid;
+    }
+
+    /* grid-cols */
+    :where(.\@sm\:grid-cols-1) {
+      --_grid-cols: 1;
+      grid-template-columns: repeat(var(--_grid-cols, 1), minmax(0, 1fr));
+    }
+
+    :where(.\@sm\:grid-cols-2) {
+      --_grid-cols: 2;
+      grid-template-columns: repeat(var(--_grid-cols, 2), minmax(0, 1fr));
+    }
+
+    :where(.\@sm\:grid-cols-3) {
+      --_grid-cols: 3;
+      grid-template-columns: repeat(var(--_grid-cols, 3), minmax(0, 1fr));
+    }
+
+    :where(.\@sm\:grid-cols-4) {
+      --_grid-cols: 4;
+      grid-template-columns: repeat(var(--_grid-cols, 4), minmax(0, 1fr));
+    }
+
+    :where(.\@sm\:grid-cols-5) {
+      --_grid-cols: 5;
+      grid-template-columns: repeat(var(--_grid-cols, 5), minmax(0, 1fr));
+    }
+
+    :where(.\@sm\:grid-cols-6) {
+      --_grid-cols: 6;
+      grid-template-columns: repeat(var(--_grid-cols, 6), minmax(0, 1fr));
+    }
+
+    :where(.\@sm\:grid-cols-7) {
+      --_grid-cols: 7;
+      grid-template-columns: repeat(var(--_grid-cols, 7), minmax(0, 1fr));
+    }
+
+    :where(.\@sm\:grid-cols-8) {
+      --_grid-cols: 8;
+      grid-template-columns: repeat(var(--_grid-cols, 8), minmax(0, 1fr));
+    }
+
+    :where(.\@sm\:grid-cols-9) {
+      --_grid-cols: 9;
+      grid-template-columns: repeat(var(--_grid-cols, 9), minmax(0, 1fr));
+    }
+
+    :where(.\@sm\:grid-cols-10) {
+      --_grid-cols: 10;
+      grid-template-columns: repeat(var(--_grid-cols, 10), minmax(0, 1fr));
+    }
+
+    :where(.\@sm\:grid-cols-11) {
+      --_grid-cols: 11;
+      grid-template-columns: repeat(var(--_grid-cols, 11), minmax(0, 1fr));
+    }
+
+    :where(.\@sm\:grid-cols-12) {
+      --_grid-cols: 12;
+      grid-template-columns: repeat(var(--_grid-cols, 12), minmax(0, 1fr));
+    }
+
+    /* grid-rows */
+    :where(.\@sm\:grid-rows-1) {
+      --_grid-rows: 1;
+      grid-template-rows: repeat(var(--_grid-rows, 1), auto);
+    }
+
+    :where(.\@sm\:grid-rows-2) {
+      --_grid-rows: 2;
+      grid-template-rows: repeat(var(--_grid-rows, 2), auto);
+    }
+
+    :where(.\@sm\:grid-rows-3) {
+      --_grid-rows: 3;
+      grid-template-rows: repeat(var(--_grid-rows, 3), auto);
+    }
+
+    :where(.\@sm\:grid-rows-4) {
+      --_grid-rows: 4;
+      grid-template-rows: repeat(var(--_grid-rows, 4), auto);
+    }
+
+    :where(.\@sm\:grid-rows-5) {
+      --_grid-rows: 5;
+      grid-template-rows: repeat(var(--_grid-rows, 5), auto);
+    }
+
+    :where(.\@sm\:grid-rows-6) {
+      --_grid-rows: 6;
+      grid-template-rows: repeat(var(--_grid-rows, 6), auto);
+    }
+
+    :where(.\@sm\:grid-rows-7) {
+      --_grid-rows: 7;
+      grid-template-rows: repeat(var(--_grid-rows, 7), auto);
+    }
+
+    :where(.\@sm\:grid-rows-8) {
+      --_grid-rows: 8;
+      grid-template-rows: repeat(var(--_grid-rows, 8), auto);
+    }
+
+    :where(.\@sm\:grid-rows-9) {
+      --_grid-rows: 9;
+      grid-template-rows: repeat(var(--_grid-rows, 9), auto);
+    }
+
+    :where(.\@sm\:grid-rows-10) {
+      --_grid-rows: 10;
+      grid-template-rows: repeat(var(--_grid-rows, 10), auto);
+    }
+
+    :where(.\@sm\:grid-rows-11) {
+      --_grid-rows: 11;
+      grid-template-rows: repeat(var(--_grid-rows, 11), auto);
+    }
+
+    :where(.\@sm\:grid-rows-12) {
+      --_grid-rows: 12;
+      grid-template-rows: repeat(var(--_grid-rows, 12), auto);
+    }
+
+    /* flex-direction */
+    :where(.\@sm\:flex-row) {
+      flex-direction: row;
+    }
+
+    :where(.\@sm\:flex-col) {
+      flex-direction: column;
+    }
+
+    /* text-align */
+    :where(.\@sm\:text-center) {
+      text-align: center;
+    }
+
+    :where(.\@sm\:text-left) {
+      text-align: left;
+    }
+
+    :where(.\@sm\:text-right) {
+      text-align: right;
+    }
+
+    :where(.\@sm\:text-justify) {
+      text-align: justify;
+    }
+
+    /* align-items */
+    :where(.\@sm\:items-start) {
+      align-items: start;
+    }
+
+    :where(.\@sm\:items-center) {
+      align-items: center;
+    }
+
+    :where(.\@sm\:items-end) {
+      align-items: end;
+    }
+
+    :where(.\@sm\:items-stretch) {
+      align-items: stretch;
+    }
+
+    /* justify-content */
+    :where(.\@sm\:justify-start) {
+      justify-content: start;
+    }
+
+    :where(.\@sm\:justify-center) {
+      justify-content: center;
+    }
+
+    :where(.\@sm\:justify-end) {
+      justify-content: end;
+    }
+
+    :where(.\@sm\:justify-stretch) {
+      justify-content: stretch;
+    }
+
+    :where(.\@sm\:justify-around) {
+      justify-content: space-around;
+    }
+
+    :where(.\@sm\:justify-between) {
+      justify-content: space-between;
+    }
+
+    /* col-span */
+    :where(.\@sm\:col-span-1) {
+      --_col-span: 1;
+      --_col-span-responsive: 1;
+    }
+
+    :where(.\@sm\:col-span-2) {
+      --_col-span: 2;
+      --_col-span-responsive: 2;
+    }
+
+    :where(.\@sm\:col-span-3) {
+      --_col-span: 3;
+      --_col-span-responsive: 3;
+    }
+
+    :where(.\@sm\:col-span-4) {
+      --_col-span: 4;
+      --_col-span-responsive: 4;
+    }
+
+    :where(.\@sm\:col-span-5) {
+      --_col-span: 5;
+      --_col-span-responsive: 5;
+    }
+
+    :where(.\@sm\:col-span-6) {
+      --_col-span: 6;
+      --_col-span-responsive: 6;
+    }
+
+    :where(.\@sm\:col-span-7) {
+      --_col-span: 7;
+      --_col-span-responsive: 7;
+    }
+
+    :where(.\@sm\:col-span-8) {
+      --_col-span: 8;
+      --_col-span-responsive: 8;
+    }
+
+    :where(.\@sm\:col-span-9) {
+      --_col-span: 9;
+      --_col-span-responsive: 9;
+    }
+
+    :where(.\@sm\:col-span-10) {
+      --_col-span: 10;
+      --_col-span-responsive: 10;
+    }
+
+    :where(.\@sm\:col-span-11) {
+      --_col-span: 11;
+      --_col-span-responsive: 11;
+    }
+
+    :where(.\@sm\:col-span-12) {
+      --_col-span: 12;
+      --_col-span-responsive: 12;
+    }
+
+    /* row-span */
+    :where(.\@sm\:row-span-1) {
+      grid-row: span min(1, var(--_grid-rows, 1));
+    }
+
+    :where(.\@sm\:row-span-2) {
+      grid-row: span min(2, var(--_grid-rows, 2));
+    }
+
+    :where(.\@sm\:row-span-3) {
+      grid-row: span min(3, var(--_grid-rows, 3));
+    }
+
+    :where(.\@sm\:row-span-4) {
+      grid-row: span min(4, var(--_grid-rows, 4));
+    }
+
+    :where(.\@sm\:row-span-5) {
+      grid-row: span min(5, var(--_grid-rows, 5));
+    }
+
+    :where(.\@sm\:row-span-6) {
+      grid-row: span min(6, var(--_grid-rows, 6));
+    }
+
+    :where(.\@sm\:row-span-7) {
+      grid-row: span min(7, var(--_grid-rows, 7));
+    }
+
+    :where(.\@sm\:row-span-8) {
+      grid-row: span min(8, var(--_grid-rows, 8));
+    }
+
+    :where(.\@sm\:row-span-9) {
+      grid-row: span min(9, var(--_grid-rows, 9));
+    }
+
+    :where(.\@sm\:row-span-10) {
+      grid-row: span min(10, var(--_grid-rows, 10));
+    }
+
+    :where(.\@sm\:row-span-11) {
+      grid-row: span min(11, var(--_grid-rows, 11));
+    }
+
+    :where(.\@sm\:row-span-12) {
+      grid-row: span min(12, var(--_grid-rows, 12));
+    }
+
+    /* basis */
+    :where(.\@sm\:basis-0) {
+      flex-basis: 0;
+    }
+
+    :where(.\@sm\:basis-auto) {
+      flex-basis: auto;
+    }
+
+    :where(.\@sm\:basis-full) {
+      flex-basis: 100%;
+    }
+
+    :where(.\@sm\:basis-1\/6) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 5)) / 6);
+    }
+
+    :where(.\@sm\:basis-1\/5) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 4)) / 5);
+    }
+
+    :where(.\@sm\:basis-1\/4) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 3)) / 4);
+    }
+
+    :where(.\@sm\:basis-1\/3) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 2)) / 3);
+    }
+
+    :where(.\@sm\:basis-1\/2) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 1)) / 2);
+    }
+  }
+
+  @container style(--is-breakpoint-md: true) {
+    /* --breakpoint-md */
+    /* display */
+    :where(.\@md\:hidden) {
+      display: none;
+    }
+
+    :where(.\@md\:block) {
+      display: block;
+    }
+
+    :where(.\@md\:flex) {
+      display: flex;
+    }
+
+    :where(.\@md\:inline-flex) {
+      display: inline-flex;
+    }
+
+    :where(.\@md\:grid) {
+      display: grid;
+    }
+
+    :where(.\@md\:grid-cols-subgrid) {
+      grid-template-columns: subgrid;
+    }
+
+    :where(.\@md\:grid-rows-subgrid) {
+      grid-template-rows: subgrid;
+    }
+
+    /* grid-cols */
+    :where(.\@md\:grid-cols-1) {
+      --_grid-cols: 1;
+      grid-template-columns: repeat(var(--_grid-cols, 1), minmax(0, 1fr));
+    }
+
+    :where(.\@md\:grid-cols-2) {
+      --_grid-cols: 2;
+      grid-template-columns: repeat(var(--_grid-cols, 2), minmax(0, 1fr));
+    }
+
+    :where(.\@md\:grid-cols-3) {
+      --_grid-cols: 3;
+      grid-template-columns: repeat(var(--_grid-cols, 3), minmax(0, 1fr));
+    }
+
+    :where(.\@md\:grid-cols-4) {
+      --_grid-cols: 4;
+      grid-template-columns: repeat(var(--_grid-cols, 4), minmax(0, 1fr));
+    }
+
+    :where(.\@md\:grid-cols-5) {
+      --_grid-cols: 5;
+      grid-template-columns: repeat(var(--_grid-cols, 5), minmax(0, 1fr));
+    }
+
+    :where(.\@md\:grid-cols-6) {
+      --_grid-cols: 6;
+      grid-template-columns: repeat(var(--_grid-cols, 6), minmax(0, 1fr));
+    }
+
+    :where(.\@md\:grid-cols-7) {
+      --_grid-cols: 7;
+      grid-template-columns: repeat(var(--_grid-cols, 7), minmax(0, 1fr));
+    }
+
+    :where(.\@md\:grid-cols-8) {
+      --_grid-cols: 8;
+      grid-template-columns: repeat(var(--_grid-cols, 8), minmax(0, 1fr));
+    }
+
+    :where(.\@md\:grid-cols-9) {
+      --_grid-cols: 9;
+      grid-template-columns: repeat(var(--_grid-cols, 9), minmax(0, 1fr));
+    }
+
+    :where(.\@md\:grid-cols-10) {
+      --_grid-cols: 10;
+      grid-template-columns: repeat(var(--_grid-cols, 10), minmax(0, 1fr));
+    }
+
+    :where(.\@md\:grid-cols-11) {
+      --_grid-cols: 11;
+      grid-template-columns: repeat(var(--_grid-cols, 11), minmax(0, 1fr));
+    }
+
+    :where(.\@md\:grid-cols-12) {
+      --_grid-cols: 12;
+      grid-template-columns: repeat(var(--_grid-cols, 12), minmax(0, 1fr));
+    }
+
+    /* grid-rows */
+    :where(.\@md\:grid-rows-1) {
+      --_grid-rows: 1;
+      grid-template-rows: repeat(var(--_grid-rows, 1), auto);
+    }
+
+    :where(.\@md\:grid-rows-2) {
+      --_grid-rows: 2;
+      grid-template-rows: repeat(var(--_grid-rows, 2), auto);
+    }
+
+    :where(.\@md\:grid-rows-3) {
+      --_grid-rows: 3;
+      grid-template-rows: repeat(var(--_grid-rows, 3), auto);
+    }
+
+    :where(.\@md\:grid-rows-4) {
+      --_grid-rows: 4;
+      grid-template-rows: repeat(var(--_grid-rows, 4), auto);
+    }
+
+    :where(.\@md\:grid-rows-5) {
+      --_grid-rows: 5;
+      grid-template-rows: repeat(var(--_grid-rows, 5), auto);
+    }
+
+    :where(.\@md\:grid-rows-6) {
+      --_grid-rows: 6;
+      grid-template-rows: repeat(var(--_grid-rows, 6), auto);
+    }
+
+    :where(.\@md\:grid-rows-7) {
+      --_grid-rows: 7;
+      grid-template-rows: repeat(var(--_grid-rows, 7), auto);
+    }
+
+    :where(.\@md\:grid-rows-8) {
+      --_grid-rows: 8;
+      grid-template-rows: repeat(var(--_grid-rows, 8), auto);
+    }
+
+    :where(.\@md\:grid-rows-9) {
+      --_grid-rows: 9;
+      grid-template-rows: repeat(var(--_grid-rows, 9), auto);
+    }
+
+    :where(.\@md\:grid-rows-10) {
+      --_grid-rows: 10;
+      grid-template-rows: repeat(var(--_grid-rows, 10), auto);
+    }
+
+    :where(.\@md\:grid-rows-11) {
+      --_grid-rows: 11;
+      grid-template-rows: repeat(var(--_grid-rows, 11), auto);
+    }
+
+    :where(.\@md\:grid-rows-12) {
+      --_grid-rows: 12;
+      grid-template-rows: repeat(var(--_grid-rows, 12), auto);
+    }
+
+    /* flex-direction */
+    :where(.\@md\:flex-row) {
+      flex-direction: row;
+    }
+
+    :where(.\@md\:flex-col) {
+      flex-direction: column;
+    }
+
+    /* text-align */
+    :where(.\@md\:text-center) {
+      text-align: center;
+    }
+
+    :where(.\@md\:text-left) {
+      text-align: left;
+    }
+
+    :where(.\@md\:text-right) {
+      text-align: right;
+    }
+
+    :where(.\@md\:text-justify) {
+      text-align: justify;
+    }
+
+    /* align-items */
+    :where(.\@md\:items-start) {
+      align-items: start;
+    }
+
+    :where(.\@md\:items-center) {
+      align-items: center;
+    }
+
+    :where(.\@md\:items-end) {
+      align-items: end;
+    }
+
+    :where(.\@md\:items-stretch) {
+      align-items: stretch;
+    }
+
+    /* justify-content */
+    :where(.\@md\:justify-start) {
+      justify-content: start;
+    }
+
+    :where(.\@md\:justify-center) {
+      justify-content: center;
+    }
+
+    :where(.\@md\:justify-end) {
+      justify-content: end;
+    }
+
+    :where(.\@md\:justify-stretch) {
+      justify-content: stretch;
+    }
+
+    :where(.\@md\:justify-around) {
+      justify-content: space-around;
+    }
+
+    :where(.\@md\:justify-between) {
+      justify-content: space-between;
+    }
+
+    /* col-span */
+    :where(.\@md\:col-span-1) {
+      --_col-span: 1;
+      --_col-span-responsive: 1;
+    }
+
+    :where(.\@md\:col-span-2) {
+      --_col-span: 2;
+      --_col-span-responsive: 2;
+    }
+
+    :where(.\@md\:col-span-3) {
+      --_col-span: 3;
+      --_col-span-responsive: 3;
+    }
+
+    :where(.\@md\:col-span-4) {
+      --_col-span: 4;
+      --_col-span-responsive: 4;
+    }
+
+    :where(.\@md\:col-span-5) {
+      --_col-span: 5;
+      --_col-span-responsive: 5;
+    }
+
+    :where(.\@md\:col-span-6) {
+      --_col-span: 6;
+      --_col-span-responsive: 6;
+    }
+
+    :where(.\@md\:col-span-7) {
+      --_col-span: 7;
+      --_col-span-responsive: 7;
+    }
+
+    :where(.\@md\:col-span-8) {
+      --_col-span: 8;
+      --_col-span-responsive: 8;
+    }
+
+    :where(.\@md\:col-span-9) {
+      --_col-span: 9;
+      --_col-span-responsive: 9;
+    }
+
+    :where(.\@md\:col-span-10) {
+      --_col-span: 10;
+      --_col-span-responsive: 10;
+    }
+
+    :where(.\@md\:col-span-11) {
+      --_col-span: 11;
+      --_col-span-responsive: 11;
+    }
+
+    :where(.\@md\:col-span-12) {
+      --_col-span: 12;
+      --_col-span-responsive: 12;
+    }
+
+    /* row-span */
+    :where(.\@md\:row-span-1) {
+      grid-row: span min(1, var(--_grid-rows, 1));
+    }
+
+    :where(.\@md\:row-span-2) {
+      grid-row: span min(2, var(--_grid-rows, 2));
+    }
+
+    :where(.\@md\:row-span-3) {
+      grid-row: span min(3, var(--_grid-rows, 3));
+    }
+
+    :where(.\@md\:row-span-4) {
+      grid-row: span min(4, var(--_grid-rows, 4));
+    }
+
+    :where(.\@md\:row-span-5) {
+      grid-row: span min(5, var(--_grid-rows, 5));
+    }
+
+    :where(.\@md\:row-span-6) {
+      grid-row: span min(6, var(--_grid-rows, 6));
+    }
+
+    :where(.\@md\:row-span-7) {
+      grid-row: span min(7, var(--_grid-rows, 7));
+    }
+
+    :where(.\@md\:row-span-8) {
+      grid-row: span min(8, var(--_grid-rows, 8));
+    }
+
+    :where(.\@md\:row-span-9) {
+      grid-row: span min(9, var(--_grid-rows, 9));
+    }
+
+    :where(.\@md\:row-span-10) {
+      grid-row: span min(10, var(--_grid-rows, 10));
+    }
+
+    :where(.\@md\:row-span-11) {
+      grid-row: span min(11, var(--_grid-rows, 11));
+    }
+
+    :where(.\@md\:row-span-12) {
+      grid-row: span min(12, var(--_grid-rows, 12));
+    }
+
+    /* basis */
+    :where(.\@md\:basis-0) {
+      flex-basis: 0;
+    }
+
+    :where(.\@md\:basis-auto) {
+      flex-basis: auto;
+    }
+
+    :where(.\@md\:basis-full) {
+      flex-basis: 100%;
+    }
+
+    :where(.\@md\:basis-1\/6) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 5)) / 6);
+    }
+
+    :where(.\@md\:basis-1\/5) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 4)) / 5);
+    }
+
+    :where(.\@md\:basis-1\/4) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 3)) / 4);
+    }
+
+    :where(.\@md\:basis-1\/3) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 2)) / 3);
+    }
+
+    :where(.\@md\:basis-1\/2) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 1)) / 2);
+    }
+  }
+
+  @container style(--is-breakpoint-lg: true) {
+    /* --breakpoint-lg */
+    /* display */
+    :where(.\@lg\:hidden) {
+      display: none;
+    }
+
+    :where(.\@lg\:block) {
+      display: block;
+    }
+
+    :where(.\@lg\:flex) {
+      display: flex;
+    }
+
+    :where(.\@lg\:inline-flex) {
+      display: inline-flex;
+    }
+
+    :where(.\@lg\:grid) {
+      display: grid;
+    }
+
+    :where(.\@lg\:grid-cols-subgrid) {
+      grid-template-columns: subgrid;
+    }
+
+    :where(.\@lg\:grid-rows-subgrid) {
+      grid-template-rows: subgrid;
+    }
+
+    /* grid-cols */
+    :where(.\@lg\:grid-cols-1) {
+      --_grid-cols: 1;
+      grid-template-columns: repeat(var(--_grid-cols, 1), minmax(0, 1fr));
+    }
+
+    :where(.\@lg\:grid-cols-2) {
+      --_grid-cols: 2;
+      grid-template-columns: repeat(var(--_grid-cols, 2), minmax(0, 1fr));
+    }
+
+    :where(.\@lg\:grid-cols-3) {
+      --_grid-cols: 3;
+      grid-template-columns: repeat(var(--_grid-cols, 3), minmax(0, 1fr));
+    }
+
+    :where(.\@lg\:grid-cols-4) {
+      --_grid-cols: 4;
+      grid-template-columns: repeat(var(--_grid-cols, 4), minmax(0, 1fr));
+    }
+
+    :where(.\@lg\:grid-cols-5) {
+      --_grid-cols: 5;
+      grid-template-columns: repeat(var(--_grid-cols, 5), minmax(0, 1fr));
+    }
+
+    :where(.\@lg\:grid-cols-6) {
+      --_grid-cols: 6;
+      grid-template-columns: repeat(var(--_grid-cols, 6), minmax(0, 1fr));
+    }
+
+    :where(.\@lg\:grid-cols-7) {
+      --_grid-cols: 7;
+      grid-template-columns: repeat(var(--_grid-cols, 7), minmax(0, 1fr));
+    }
+
+    :where(.\@lg\:grid-cols-8) {
+      --_grid-cols: 8;
+      grid-template-columns: repeat(var(--_grid-cols, 8), minmax(0, 1fr));
+    }
+
+    :where(.\@lg\:grid-cols-9) {
+      --_grid-cols: 9;
+      grid-template-columns: repeat(var(--_grid-cols, 9), minmax(0, 1fr));
+    }
+
+    :where(.\@lg\:grid-cols-10) {
+      --_grid-cols: 10;
+      grid-template-columns: repeat(var(--_grid-cols, 10), minmax(0, 1fr));
+    }
+
+    :where(.\@lg\:grid-cols-11) {
+      --_grid-cols: 11;
+      grid-template-columns: repeat(var(--_grid-cols, 11), minmax(0, 1fr));
+    }
+
+    :where(.\@lg\:grid-cols-12) {
+      --_grid-cols: 12;
+      grid-template-columns: repeat(var(--_grid-cols, 12), minmax(0, 1fr));
+    }
+
+    /* grid-rows */
+    :where(.\@lg\:grid-rows-1) {
+      --_grid-rows: 1;
+      grid-template-rows: repeat(var(--_grid-rows, 1), auto);
+    }
+
+    :where(.\@lg\:grid-rows-2) {
+      --_grid-rows: 2;
+      grid-template-rows: repeat(var(--_grid-rows, 2), auto);
+    }
+
+    :where(.\@lg\:grid-rows-3) {
+      --_grid-rows: 3;
+      grid-template-rows: repeat(var(--_grid-rows, 3), auto);
+    }
+
+    :where(.\@lg\:grid-rows-4) {
+      --_grid-rows: 4;
+      grid-template-rows: repeat(var(--_grid-rows, 4), auto);
+    }
+
+    :where(.\@lg\:grid-rows-5) {
+      --_grid-rows: 5;
+      grid-template-rows: repeat(var(--_grid-rows, 5), auto);
+    }
+
+    :where(.\@lg\:grid-rows-6) {
+      --_grid-rows: 6;
+      grid-template-rows: repeat(var(--_grid-rows, 6), auto);
+    }
+
+    :where(.\@lg\:grid-rows-7) {
+      --_grid-rows: 7;
+      grid-template-rows: repeat(var(--_grid-rows, 7), auto);
+    }
+
+    :where(.\@lg\:grid-rows-8) {
+      --_grid-rows: 8;
+      grid-template-rows: repeat(var(--_grid-rows, 8), auto);
+    }
+
+    :where(.\@lg\:grid-rows-9) {
+      --_grid-rows: 9;
+      grid-template-rows: repeat(var(--_grid-rows, 9), auto);
+    }
+
+    :where(.\@lg\:grid-rows-10) {
+      --_grid-rows: 10;
+      grid-template-rows: repeat(var(--_grid-rows, 10), auto);
+    }
+
+    :where(.\@lg\:grid-rows-11) {
+      --_grid-rows: 11;
+      grid-template-rows: repeat(var(--_grid-rows, 11), auto);
+    }
+
+    :where(.\@lg\:grid-rows-12) {
+      --_grid-rows: 12;
+      grid-template-rows: repeat(var(--_grid-rows, 12), auto);
+    }
+
+    /* flex-direction */
+    :where(.\@lg\:flex-row) {
+      flex-direction: row;
+    }
+
+    :where(.\@lg\:flex-col) {
+      flex-direction: column;
+    }
+
+    /* text-align */
+    :where(.\@lg\:text-center) {
+      text-align: center;
+    }
+
+    :where(.\@lg\:text-left) {
+      text-align: left;
+    }
+
+    :where(.\@lg\:text-right) {
+      text-align: right;
+    }
+
+    :where(.\@lg\:text-justify) {
+      text-align: justify;
+    }
+
+    /* align-items */
+    :where(.\@lg\:items-start) {
+      align-items: start;
+    }
+
+    :where(.\@lg\:items-center) {
+      align-items: center;
+    }
+
+    :where(.\@lg\:items-end) {
+      align-items: end;
+    }
+
+    :where(.\@lg\:items-stretch) {
+      align-items: stretch;
+    }
+
+    /* justify-content */
+    :where(.\@lg\:justify-start) {
+      justify-content: start;
+    }
+
+    :where(.\@lg\:justify-center) {
+      justify-content: center;
+    }
+
+    :where(.\@lg\:justify-end) {
+      justify-content: end;
+    }
+
+    :where(.\@lg\:justify-stretch) {
+      justify-content: stretch;
+    }
+
+    :where(.\@lg\:justify-around) {
+      justify-content: space-around;
+    }
+
+    :where(.\@lg\:justify-between) {
+      justify-content: space-between;
+    }
+
+    /* col-span */
+    :where(.\@lg\:col-span-1) {
+      --_col-span: 1;
+      --_col-span-responsive: 1;
+    }
+
+    :where(.\@lg\:col-span-2) {
+      --_col-span: 2;
+      --_col-span-responsive: 2;
+    }
+
+    :where(.\@lg\:col-span-3) {
+      --_col-span: 3;
+      --_col-span-responsive: 3;
+    }
+
+    :where(.\@lg\:col-span-4) {
+      --_col-span: 4;
+      --_col-span-responsive: 4;
+    }
+
+    :where(.\@lg\:col-span-5) {
+      --_col-span: 5;
+      --_col-span-responsive: 5;
+    }
+
+    :where(.\@lg\:col-span-6) {
+      --_col-span: 6;
+      --_col-span-responsive: 6;
+    }
+
+    :where(.\@lg\:col-span-7) {
+      --_col-span: 7;
+      --_col-span-responsive: 7;
+    }
+
+    :where(.\@lg\:col-span-8) {
+      --_col-span: 8;
+      --_col-span-responsive: 8;
+    }
+
+    :where(.\@lg\:col-span-9) {
+      --_col-span: 9;
+      --_col-span-responsive: 9;
+    }
+
+    :where(.\@lg\:col-span-10) {
+      --_col-span: 10;
+      --_col-span-responsive: 10;
+    }
+
+    :where(.\@lg\:col-span-11) {
+      --_col-span: 11;
+      --_col-span-responsive: 11;
+    }
+
+    :where(.\@lg\:col-span-12) {
+      --_col-span: 12;
+      --_col-span-responsive: 12;
+    }
+
+    /* row-span */
+    :where(.\@lg\:row-span-1) {
+      grid-row: span min(1, var(--_grid-rows, 1));
+    }
+
+    :where(.\@lg\:row-span-2) {
+      grid-row: span min(2, var(--_grid-rows, 2));
+    }
+
+    :where(.\@lg\:row-span-3) {
+      grid-row: span min(3, var(--_grid-rows, 3));
+    }
+
+    :where(.\@lg\:row-span-4) {
+      grid-row: span min(4, var(--_grid-rows, 4));
+    }
+
+    :where(.\@lg\:row-span-5) {
+      grid-row: span min(5, var(--_grid-rows, 5));
+    }
+
+    :where(.\@lg\:row-span-6) {
+      grid-row: span min(6, var(--_grid-rows, 6));
+    }
+
+    :where(.\@lg\:row-span-7) {
+      grid-row: span min(7, var(--_grid-rows, 7));
+    }
+
+    :where(.\@lg\:row-span-8) {
+      grid-row: span min(8, var(--_grid-rows, 8));
+    }
+
+    :where(.\@lg\:row-span-9) {
+      grid-row: span min(9, var(--_grid-rows, 9));
+    }
+
+    :where(.\@lg\:row-span-10) {
+      grid-row: span min(10, var(--_grid-rows, 10));
+    }
+
+    :where(.\@lg\:row-span-11) {
+      grid-row: span min(11, var(--_grid-rows, 11));
+    }
+
+    :where(.\@lg\:row-span-12) {
+      grid-row: span min(12, var(--_grid-rows, 12));
+    }
+
+    /* basis */
+    :where(.\@lg\:basis-0) {
+      flex-basis: 0;
+    }
+
+    :where(.\@lg\:basis-auto) {
+      flex-basis: auto;
+    }
+
+    :where(.\@lg\:basis-full) {
+      flex-basis: 100%;
+    }
+
+    :where(.\@lg\:basis-1\/6) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 5)) / 6);
+    }
+
+    :where(.\@lg\:basis-1\/5) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 4)) / 5);
+    }
+
+    :where(.\@lg\:basis-1\/4) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 3)) / 4);
+    }
+
+    :where(.\@lg\:basis-1\/3) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 2)) / 3);
+    }
+
+    :where(.\@lg\:basis-1\/2) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 1)) / 2);
+    }
+  }
+
+  @container style(--is-breakpoint-xl: true) {
+    /* --breakpoint-xl */
+    /* display */
+    :where(.\@xl\:hidden) {
+      display: none;
+    }
+
+    :where(.\@xl\:block) {
+      display: block;
+    }
+
+    :where(.\@xl\:flex) {
+      display: flex;
+    }
+
+    :where(.\@xl\:inline-flex) {
+      display: inline-flex;
+    }
+
+    :where(.\@xl\:grid) {
+      display: grid;
+    }
+
+    :where(.\@xl\:grid-cols-subgrid) {
+      grid-template-columns: subgrid;
+    }
+
+    :where(.\@xl\:grid-rows-subgrid) {
+      grid-template-rows: subgrid;
+    }
+
+    /* grid-cols */
+    :where(.\@xl\:grid-cols-1) {
+      --_grid-cols: 1;
+      grid-template-columns: repeat(var(--_grid-cols, 1), minmax(0, 1fr));
+    }
+
+    :where(.\@xl\:grid-cols-2) {
+      --_grid-cols: 2;
+      grid-template-columns: repeat(var(--_grid-cols, 2), minmax(0, 1fr));
+    }
+
+    :where(.\@xl\:grid-cols-3) {
+      --_grid-cols: 3;
+      grid-template-columns: repeat(var(--_grid-cols, 3), minmax(0, 1fr));
+    }
+
+    :where(.\@xl\:grid-cols-4) {
+      --_grid-cols: 4;
+      grid-template-columns: repeat(var(--_grid-cols, 4), minmax(0, 1fr));
+    }
+
+    :where(.\@xl\:grid-cols-5) {
+      --_grid-cols: 5;
+      grid-template-columns: repeat(var(--_grid-cols, 5), minmax(0, 1fr));
+    }
+
+    :where(.\@xl\:grid-cols-6) {
+      --_grid-cols: 6;
+      grid-template-columns: repeat(var(--_grid-cols, 6), minmax(0, 1fr));
+    }
+
+    :where(.\@xl\:grid-cols-7) {
+      --_grid-cols: 7;
+      grid-template-columns: repeat(var(--_grid-cols, 7), minmax(0, 1fr));
+    }
+
+    :where(.\@xl\:grid-cols-8) {
+      --_grid-cols: 8;
+      grid-template-columns: repeat(var(--_grid-cols, 8), minmax(0, 1fr));
+    }
+
+    :where(.\@xl\:grid-cols-9) {
+      --_grid-cols: 9;
+      grid-template-columns: repeat(var(--_grid-cols, 9), minmax(0, 1fr));
+    }
+
+    :where(.\@xl\:grid-cols-10) {
+      --_grid-cols: 10;
+      grid-template-columns: repeat(var(--_grid-cols, 10), minmax(0, 1fr));
+    }
+
+    :where(.\@xl\:grid-cols-11) {
+      --_grid-cols: 11;
+      grid-template-columns: repeat(var(--_grid-cols, 11), minmax(0, 1fr));
+    }
+
+    :where(.\@xl\:grid-cols-12) {
+      --_grid-cols: 12;
+      grid-template-columns: repeat(var(--_grid-cols, 12), minmax(0, 1fr));
+    }
+
+    /* grid-rows */
+    :where(.\@xl\:grid-rows-1) {
+      --_grid-rows: 1;
+      grid-template-rows: repeat(var(--_grid-rows, 1), auto);
+    }
+
+    :where(.\@xl\:grid-rows-2) {
+      --_grid-rows: 2;
+      grid-template-rows: repeat(var(--_grid-rows, 2), auto);
+    }
+
+    :where(.\@xl\:grid-rows-3) {
+      --_grid-rows: 3;
+      grid-template-rows: repeat(var(--_grid-rows, 3), auto);
+    }
+
+    :where(.\@xl\:grid-rows-4) {
+      --_grid-rows: 4;
+      grid-template-rows: repeat(var(--_grid-rows, 4), auto);
+    }
+
+    :where(.\@xl\:grid-rows-5) {
+      --_grid-rows: 5;
+      grid-template-rows: repeat(var(--_grid-rows, 5), auto);
+    }
+
+    :where(.\@xl\:grid-rows-6) {
+      --_grid-rows: 6;
+      grid-template-rows: repeat(var(--_grid-rows, 6), auto);
+    }
+
+    :where(.\@xl\:grid-rows-7) {
+      --_grid-rows: 7;
+      grid-template-rows: repeat(var(--_grid-rows, 7), auto);
+    }
+
+    :where(.\@xl\:grid-rows-8) {
+      --_grid-rows: 8;
+      grid-template-rows: repeat(var(--_grid-rows, 8), auto);
+    }
+
+    :where(.\@xl\:grid-rows-9) {
+      --_grid-rows: 9;
+      grid-template-rows: repeat(var(--_grid-rows, 9), auto);
+    }
+
+    :where(.\@xl\:grid-rows-10) {
+      --_grid-rows: 10;
+      grid-template-rows: repeat(var(--_grid-rows, 10), auto);
+    }
+
+    :where(.\@xl\:grid-rows-11) {
+      --_grid-rows: 11;
+      grid-template-rows: repeat(var(--_grid-rows, 11), auto);
+    }
+
+    :where(.\@xl\:grid-rows-12) {
+      --_grid-rows: 12;
+      grid-template-rows: repeat(var(--_grid-rows, 12), auto);
+    }
+
+    /* flex-direction */
+    :where(.\@xl\:flex-row) {
+      flex-direction: row;
+    }
+
+    :where(.\@xl\:flex-col) {
+      flex-direction: column;
+    }
+
+    /* text-align */
+    :where(.\@xl\:text-center) {
+      text-align: center;
+    }
+
+    :where(.\@xl\:text-left) {
+      text-align: left;
+    }
+
+    :where(.\@xl\:text-right) {
+      text-align: right;
+    }
+
+    :where(.\@xl\:text-justify) {
+      text-align: justify;
+    }
+
+    /* align-items */
+    :where(.\@xl\:items-start) {
+      align-items: start;
+    }
+
+    :where(.\@xl\:items-center) {
+      align-items: center;
+    }
+
+    :where(.\@xl\:items-end) {
+      align-items: end;
+    }
+
+    :where(.\@xl\:items-stretch) {
+      align-items: stretch;
+    }
+
+    /* justify-content */
+    :where(.\@xl\:justify-start) {
+      justify-content: start;
+    }
+
+    :where(.\@xl\:justify-center) {
+      justify-content: center;
+    }
+
+    :where(.\@xl\:justify-end) {
+      justify-content: end;
+    }
+
+    :where(.\@xl\:justify-stretch) {
+      justify-content: stretch;
+    }
+
+    :where(.\@xl\:justify-around) {
+      justify-content: space-around;
+    }
+
+    :where(.\@xl\:justify-between) {
+      justify-content: space-between;
+    }
+
+    /* col-span */
+    :where(.\@xl\:col-span-1) {
+      --_col-span: 1;
+      --_col-span-responsive: 1;
+    }
+
+    :where(.\@xl\:col-span-2) {
+      --_col-span: 2;
+      --_col-span-responsive: 2;
+    }
+
+    :where(.\@xl\:col-span-3) {
+      --_col-span: 3;
+      --_col-span-responsive: 3;
+    }
+
+    :where(.\@xl\:col-span-4) {
+      --_col-span: 4;
+      --_col-span-responsive: 4;
+    }
+
+    :where(.\@xl\:col-span-5) {
+      --_col-span: 5;
+      --_col-span-responsive: 5;
+    }
+
+    :where(.\@xl\:col-span-6) {
+      --_col-span: 6;
+      --_col-span-responsive: 6;
+    }
+
+    :where(.\@xl\:col-span-7) {
+      --_col-span: 7;
+      --_col-span-responsive: 7;
+    }
+
+    :where(.\@xl\:col-span-8) {
+      --_col-span: 8;
+      --_col-span-responsive: 8;
+    }
+
+    :where(.\@xl\:col-span-9) {
+      --_col-span: 9;
+      --_col-span-responsive: 9;
+    }
+
+    :where(.\@xl\:col-span-10) {
+      --_col-span: 10;
+      --_col-span-responsive: 10;
+    }
+
+    :where(.\@xl\:col-span-11) {
+      --_col-span: 11;
+      --_col-span-responsive: 11;
+    }
+
+    :where(.\@xl\:col-span-12) {
+      --_col-span: 12;
+      --_col-span-responsive: 12;
+    }
+
+    /* row-span */
+    :where(.\@xl\:row-span-1) {
+      grid-row: span min(1, var(--_grid-rows, 1));
+    }
+
+    :where(.\@xl\:row-span-2) {
+      grid-row: span min(2, var(--_grid-rows, 2));
+    }
+
+    :where(.\@xl\:row-span-3) {
+      grid-row: span min(3, var(--_grid-rows, 3));
+    }
+
+    :where(.\@xl\:row-span-4) {
+      grid-row: span min(4, var(--_grid-rows, 4));
+    }
+
+    :where(.\@xl\:row-span-5) {
+      grid-row: span min(5, var(--_grid-rows, 5));
+    }
+
+    :where(.\@xl\:row-span-6) {
+      grid-row: span min(6, var(--_grid-rows, 6));
+    }
+
+    :where(.\@xl\:row-span-7) {
+      grid-row: span min(7, var(--_grid-rows, 7));
+    }
+
+    :where(.\@xl\:row-span-8) {
+      grid-row: span min(8, var(--_grid-rows, 8));
+    }
+
+    :where(.\@xl\:row-span-9) {
+      grid-row: span min(9, var(--_grid-rows, 9));
+    }
+
+    :where(.\@xl\:row-span-10) {
+      grid-row: span min(10, var(--_grid-rows, 10));
+    }
+
+    :where(.\@xl\:row-span-11) {
+      grid-row: span min(11, var(--_grid-rows, 11));
+    }
+
+    :where(.\@xl\:row-span-12) {
+      grid-row: span min(12, var(--_grid-rows, 12));
+    }
+
+    /* basis */
+    :where(.\@xl\:basis-0) {
+      flex-basis: 0;
+    }
+
+    :where(.\@xl\:basis-auto) {
+      flex-basis: auto;
+    }
+
+    :where(.\@xl\:basis-full) {
+      flex-basis: 100%;
+    }
+
+    :where(.\@xl\:basis-1\/6) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 5)) / 6);
+    }
+
+    :where(.\@xl\:basis-1\/5) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 4)) / 5);
+    }
+
+    :where(.\@xl\:basis-1\/4) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 3)) / 4);
+    }
+
+    :where(.\@xl\:basis-1\/3) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 2)) / 3);
+    }
+
+    :where(.\@xl\:basis-1\/2) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 1)) / 2);
+    }
+  }
+
+  /*
+   * col-span grid-column — applied after all --_col-span setters (including @container variants).
+   * Fixed grids: clamp to --_grid-cols; col-span-full spans all tracks.
+   * grid-flow-row auto-fill: base col-spans stay single-column; use @sm:/@md:/etc. to span wider.
+   */
+  :where([class*="col-span-"]:not([class*="col-span-full"])) {
+    grid-column: span min(var(--_col-span, 1), var(--_grid-cols, 1));
+  }
+
+  :where([class*="col-span-full"]) {
+    grid-column: 1 / -1;
+  }
+
+  :where(
+      .grid-flow-row.grid-cols-2,
+      .grid-flow-row.grid-cols-3,
+      .grid-flow-row.grid-cols-4,
+      .grid-flow-row.grid-cols-5,
+      .grid-flow-row.grid-cols-6,
+      .grid-flow-row.grid-cols-7,
+      .grid-flow-row.grid-cols-8,
+      .grid-flow-row.grid-cols-9,
+      .grid-flow-row.grid-cols-10,
+      .grid-flow-row.grid-cols-11,
+      .grid-flow-row.grid-cols-12
+    )
+    :where([class*="col-span-"]:not([class*="col-span-full"])) {
+    grid-column: span min(var(--_col-span-responsive, 1), var(--_grid-cols, 1));
+  }
+
+  :where(
+      .grid-flow-row.grid-cols-2,
+      .grid-flow-row.grid-cols-3,
+      .grid-flow-row.grid-cols-4,
+      .grid-flow-row.grid-cols-5,
+      .grid-flow-row.grid-cols-6,
+      .grid-flow-row.grid-cols-7,
+      .grid-flow-row.grid-cols-8,
+      .grid-flow-row.grid-cols-9,
+      .grid-flow-row.grid-cols-10,
+      .grid-flow-row.grid-cols-11,
+      .grid-flow-row.grid-cols-12
+    )
+    :where([class*="col-span-full"]) {
+    grid-column: span 1;
+  }
+
+  @container style(--is-breakpoint-xs: true) {
+    :where(
+        .grid-flow-row.grid-cols-2,
+        .grid-flow-row.grid-cols-3,
+        .grid-flow-row.grid-cols-4,
+        .grid-flow-row.grid-cols-5,
+        .grid-flow-row.grid-cols-6,
+        .grid-flow-row.grid-cols-7,
+        .grid-flow-row.grid-cols-8,
+        .grid-flow-row.grid-cols-9,
+        .grid-flow-row.grid-cols-10,
+        .grid-flow-row.grid-cols-11,
+        .grid-flow-row.grid-cols-12
+      )
+      :where(.\@xs\:col-span-full) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @container style(--is-breakpoint-sm: true) {
+    :where(
+        .grid-flow-row.grid-cols-2,
+        .grid-flow-row.grid-cols-3,
+        .grid-flow-row.grid-cols-4,
+        .grid-flow-row.grid-cols-5,
+        .grid-flow-row.grid-cols-6,
+        .grid-flow-row.grid-cols-7,
+        .grid-flow-row.grid-cols-8,
+        .grid-flow-row.grid-cols-9,
+        .grid-flow-row.grid-cols-10,
+        .grid-flow-row.grid-cols-11,
+        .grid-flow-row.grid-cols-12
+      )
+      :where(.\@sm\:col-span-full) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @container style(--is-breakpoint-md: true) {
+    :where(
+        .grid-flow-row.grid-cols-2,
+        .grid-flow-row.grid-cols-3,
+        .grid-flow-row.grid-cols-4,
+        .grid-flow-row.grid-cols-5,
+        .grid-flow-row.grid-cols-6,
+        .grid-flow-row.grid-cols-7,
+        .grid-flow-row.grid-cols-8,
+        .grid-flow-row.grid-cols-9,
+        .grid-flow-row.grid-cols-10,
+        .grid-flow-row.grid-cols-11,
+        .grid-flow-row.grid-cols-12
+      )
+      :where(.\@md\:col-span-full) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @container style(--is-breakpoint-lg: true) {
+    :where(
+        .grid-flow-row.grid-cols-2,
+        .grid-flow-row.grid-cols-3,
+        .grid-flow-row.grid-cols-4,
+        .grid-flow-row.grid-cols-5,
+        .grid-flow-row.grid-cols-6,
+        .grid-flow-row.grid-cols-7,
+        .grid-flow-row.grid-cols-8,
+        .grid-flow-row.grid-cols-9,
+        .grid-flow-row.grid-cols-10,
+        .grid-flow-row.grid-cols-11,
+        .grid-flow-row.grid-cols-12
+      )
+      :where(.\@lg\:col-span-full) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @container style(--is-breakpoint-xl: true) {
+    :where(
+        .grid-flow-row.grid-cols-2,
+        .grid-flow-row.grid-cols-3,
+        .grid-flow-row.grid-cols-4,
+        .grid-flow-row.grid-cols-5,
+        .grid-flow-row.grid-cols-6,
+        .grid-flow-row.grid-cols-7,
+        .grid-flow-row.grid-cols-8,
+        .grid-flow-row.grid-cols-9,
+        .grid-flow-row.grid-cols-10,
+        .grid-flow-row.grid-cols-11,
+        .grid-flow-row.grid-cols-12
+      )
+      :where(.\@xl\:col-span-full) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* Grid placement utilities */
+  :where(.place-items-start) {
+    place-items: start;
+  }
+
+  :where(.place-items-center) {
+    place-items: center;
+  }
+
+  :where(.place-items-end) {
+    place-items: end;
+  }
+
+  :where(.place-content-start) {
+    place-content: start;
+  }
+
+  :where(.place-content-center) {
+    place-content: center;
+  }
+
+  :where(.place-content-end) {
+    place-content: end;
+  }
+
+  /* Order utilities */
+  :where(.order-first) {
+    order: -9999;
+  }
+
+  :where(.order-last) {
+    order: 9999;
+  }
+
+  :where(.order-none) {
+    order: 0;
+  }
+
+  /* ===========================================================================
+  POSITIONING UTILITIES
+  =========================================================================== */
+
+  :where(.static) {
+    position: static;
+  }
+
+  :where(.relative) {
+    position: relative;
+  }
+
+  :where(.absolute) {
+    position: absolute;
+  }
+
+  :where(.fixed) {
+    position: fixed;
+  }
+
+  :where(.sticky) {
+    position: sticky;
+  }
+
+  :where(.inset-0) {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  :where(.inset-xs) {
+    top: var(--gap-xs);
+    right: var(--gap-xs);
+    bottom: var(--gap-xs);
+    left: var(--gap-xs);
+  }
+
+  :where(.inset-sm) {
+    top: var(--gap-sm);
+    right: var(--gap-sm);
+    bottom: var(--gap-sm);
+    left: var(--gap-sm);
+  }
+
+  :where(.inset-md) {
+    top: var(--gap-md);
+    right: var(--gap-md);
+    bottom: var(--gap-md);
+    left: var(--gap-md);
+  }
+
+  :where(.inset-lg) {
+    top: var(--gap-lg);
+    right: var(--gap-lg);
+    bottom: var(--gap-lg);
+    left: var(--gap-lg);
+  }
+
+  :where(.inset-xl) {
+    top: var(--gap-xl);
+    right: var(--gap-xl);
+    bottom: var(--gap-xl);
+    left: var(--gap-xl);
+  }
+
+  :where(.left-0) {
+    left: 0rem;
+  }
+
+  :where(.left-xs) {
+    left: var(--gap-xs);
+  }
+
+  :where(.left-sm) {
+    left: var(--gap-sm);
+  }
+
+  :where(.left-md) {
+    left: var(--gap-md);
+  }
+
+  :where(.left-lg) {
+    left: var(--gap-lg);
+  }
+
+  :where(.left-xl) {
+    left: var(--gap-xl);
+  }
+
+  :where(.top-0) {
+    top: 0rem;
+  }
+
+  :where(.top-xs) {
+    top: var(--gap-xs);
+  }
+
+  :where(.top-sm) {
+    top: var(--gap-sm);
+  }
+
+  :where(.top-md) {
+    top: var(--gap-md);
+  }
+
+  :where(.top-lg) {
+    top: var(--gap-lg);
+  }
+
+  :where(.top-xl) {
+    top: var(--gap-xl);
+  }
+
+  :where(.right-0) {
+    right: 0rem;
+  }
+
+  :where(.right-xs) {
+    right: var(--gap-xs);
+  }
+
+  :where(.right-sm) {
+    right: var(--gap-sm);
+  }
+
+  :where(.right-md) {
+    right: var(--gap-md);
+  }
+
+  :where(.right-lg) {
+    right: var(--gap-lg);
+  }
+
+  :where(.right-xl) {
+    right: var(--gap-xl);
+  }
+
+  :where(.bottom-0) {
+    bottom: 0rem;
+  }
+
+  :where(.bottom-xs) {
+    bottom: var(--gap-xs);
+  }
+
+  :where(.bottom-sm) {
+    bottom: var(--gap-sm);
+  }
+
+  :where(.bottom-md) {
+    bottom: var(--gap-md);
+  }
+
+  :where(.bottom-lg) {
+    bottom: var(--gap-lg);
+  }
+
+  :where(.bottom-xl) {
+    bottom: var(--gap-xl);
+  }
+
+  /* ===========================================================================
+  INTERACTION & VISIBILITY UTILITIES
+  =========================================================================== */
+
+  :where(.pointer-events-none) {
+    pointer-events: none;
+  }
+
+  :where(.pointer-cursor) {
+    cursor: pointer;
+  }
+
+  :where(.pointer-default) {
+    cursor: default;
+  }
+
+  :where(.pointer-text) {
+    cursor: text;
+  }
+
+  :where(.pointer-wait) {
+    cursor: wait;
+  }
+
+  :where(.pointer-help) {
+    cursor: help;
+  }
+
+  :where(.pointer-progress) {
+    cursor: progress;
+  }
+
+  /* Screen reader only - visually hidden but accessible to assistive technology */
+  :where(.sr-only) {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* ===========================================================================
+  OVERFLOW UTILITIES
+  =========================================================================== */
+
+  :where(.overflow-visible) {
+    overflow: visible;
+  }
+
+  :where(.overflow-hidden) {
+    overflow: hidden;
+  }
+
+  :where(.overflow-clip) {
+    overflow: clip;
+  }
+
+  :where(.overflow-auto) {
+    overflow: auto;
+  }
+
+  :where(.overflow-y-auto) {
+    overflow-x: clip;
+    overflow-y: auto;
+  }
+
+  :where(.overflow-x-auto) {
+    overflow-x: auto;
+    overflow-y: clip;
+  }
+
+  /* Hide scrollbars while maintaining scroll functionality */
+  :where(.scrollbar-none) {
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  :where(.scrollbar-none)::-webkit-scrollbar {
+    display: none;
+    /* Safari and Chrome */
+  }
+
+  /* ===========================================================================
+  TEXT & TYPOGRAPHY UTILITIES
+  =========================================================================== */
+
+  :where(.leading-none) {
+    line-height: 1;
+  }
+
+  /* Text wrapping utilities for better typography */
+  :where(.text-pretty) {
+    text-wrap: pretty;
+    /* Prevents orphans and improves line breaks */
+  }
+
+  :where(.text-balance) {
+    text-wrap: balance;
+    /* Balances text across multiple lines */
+  }
+
+  :where(.tabular-nums) {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Line clamping utilities - truncate text after specified number of lines */
+  [class*="line-clamp"] {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  :where(.line-clamp-1) {
+    line-clamp: 1;
+    -webkit-line-clamp: 1;
+  }
+
+  :where(.line-clamp-2) {
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+  }
+
+  :where(.line-clamp-3) {
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+  }
+
+  :where(.line-clamp-4) {
+    line-clamp: 4;
+    -webkit-line-clamp: 4;
+  }
+
+  :where(.line-clamp-5) {
+    line-clamp: 5;
+    -webkit-line-clamp: 5;
+  }
+
+  :where(.line-clamp-6) {
+    line-clamp: 6;
+    -webkit-line-clamp: 6;
+  }
+
+  /* ===========================================================================
+  Z-INDEX UTILITIES
+  =========================================================================== */
+
+  :where(.z-isolate) {
+    z-index: isolate;
+    /* Creates new stacking context */
+  }
+
+  :where(.z-0) {
+    z-index: 0;
+  }
+
+  :where(.z-10) {
+    z-index: 10;
+  }
+
+  :where(.z-20) {
+    z-index: 20;
+  }
+
+  :where(.z-30) {
+    z-index: 30;
+  }
+
+  :where(.z-40) {
+    z-index: 40;
+  }
+
+  :where(.z-50) {
+    z-index: 50;
+  }
+
+  /* ===========================================================================
+  OPACITY UTILITIES
+  =========================================================================== */
+
+  :where(.opacity-0) {
+    opacity: 0;
+  }
+
+  :where(.opacity-25) {
+    opacity: 0.25;
+  }
+
+  :where(.opacity-50) {
+    opacity: 0.5;
+  }
+
+  :where(.opacity-75) {
+    opacity: 0.75;
+  }
+
+  :where(.opacity-100) {
+    opacity: 1;
+  }
+
+  /* ===========================================================================
+  SCALE UTILITIES
+  =========================================================================== */
+
+  :where(.scale-0) {
+    transform: scale(0);
+  }
+
+  :where(.scale-25) {
+    transform: scale(0.25);
+  }
+
+  :where(.scale-50) {
+    transform: scale(0.5);
+  }
+
+  :where(.scale-75) {
+    transform: scale(0.75);
+  }
+
+  :where(.scale-90) {
+    transform: scale(0.9);
+  }
+
+  :where(.scale-98) {
+    transform: scale(0.98);
+  }
+
+  :where(.scale-99) {
+    transform: scale(0.99);
+  }
+
+  :where(.scale-100) {
+    transform: scale(1);
+  }
+
+  :where(.scale-101) {
+    transform: scale(1.01);
+  }
+
+  :where(.scale-102) {
+    transform: scale(1.02);
+  }
+
+  :where(.scale-110) {
+    transform: scale(1.1);
+  }
+
+  :where(.scale-125) {
+    transform: scale(1.25);
+  }
+
+  :where(.scale-150) {
+    transform: scale(1.5);
+  }
+
+  /* ===========================================================================
+  COLOR OPACITY (ALPHA) UTILITIES
+  - Dim a color token's alpha without touching element `opacity` or children.
+  - Multiplied into the token's own alpha, so muted/faded/shade/tint keep their
+    built-in translucency. Compose with any text-/bg-/border- color class.
+  =========================================================================== */
+
+  :where(.bg-opacity-0) {
+    --_background-alpha: 0;
+  }
+
+  :where(.bg-opacity-25) {
+    --_background-alpha: 0.25;
+  }
+
+  :where(.bg-opacity-50) {
+    --_background-alpha: 0.5;
+  }
+
+  :where(.bg-opacity-75) {
+    --_background-alpha: 0.75;
+  }
+
+  :where(.bg-opacity-100) {
+    --_background-alpha: 1;
+  }
+
+  :where(.text-opacity-0) {
+    --_text-alpha: 0;
+  }
+
+  :where(.text-opacity-25) {
+    --_text-alpha: 0.25;
+  }
+
+  :where(.text-opacity-50) {
+    --_text-alpha: 0.5;
+  }
+
+  :where(.text-opacity-75) {
+    --_text-alpha: 0.75;
+  }
+
+  :where(.text-opacity-100) {
+    --_text-alpha: 1;
+  }
+
+  :where(.border-opacity-0) {
+    --_border-alpha: 0;
+  }
+
+  :where(.border-opacity-25) {
+    --_border-alpha: 0.25;
+  }
+
+  :where(.border-opacity-50) {
+    --_border-alpha: 0.5;
+  }
+
+  :where(.border-opacity-75) {
+    --_border-alpha: 0.75;
+  }
+
+  :where(.border-opacity-100) {
+    --_border-alpha: 1;
+  }
+
+  /* ===========================================================================
+  IMAGE & MEDIA UTILITIES
+  =========================================================================== */
+
+  /* Aspect ratio utilities for common media formats */
+  :where(.aspect-anamorphic) {
+    aspect-ratio: 2.39 / 1;
+    /* Ultra-widescreen cinema format */
+  }
+
+  :where(.aspect-univisium) {
+    aspect-ratio: 2 / 1;
+    /* Univisium cinema format */
+  }
+
+  :where(.aspect-widescreen) {
+    aspect-ratio: 16 / 9;
+    /* Standard widescreen */
+  }
+
+  :where(.aspect-landscape) {
+    aspect-ratio: 3 / 2;
+    /* Traditional landscape photography */
+  }
+
+  :where(.aspect-portrait) {
+    aspect-ratio: 2 / 3;
+    /* Portrait orientation */
+  }
+
+  :where(.aspect-square) {
+    aspect-ratio: 1 / 1;
+    /* Perfect square */
+  }
+
+  /* Object fit utilities for controlling how images/videos fit their containers */
+  :where(.object-contain) {
+    object-fit: contain;
+    /* Scale to fit while maintaining aspect ratio */
+  }
+
+  :where(.object-cover) {
+    object-fit: cover;
+    /* Scale to fill container, may crop content */
+  }
+
+  :where(.object-fill) {
+    object-fit: fill;
+    /* Stretch to fill container, may distort */
+  }
+
+  :where(.object-none) {
+    object-fit: none;
+    /* Keep original size */
+  }
+
+  :where(.object-scale-down) {
+    object-fit: scale-down;
+    /* Scale down if needed, otherwise keep original */
+  }
+
+  /* ===========================================================================
+  SHADOW UTILITIES
+  =========================================================================== */
+
+  :where(.shadow-none) {
+    --_ring-shadow: 0 0 #0000;
+    box-shadow: var(--_ring-shadow, var(--shadow-none));
+  }
+
+  :where(.shadow-xs) {
+    --_ring-shadow: var(--shadow-xs);
+    box-shadow: var(--_ring-shadow, var(--shadow-xs));
+  }
+
+  :where(.shadow-sm) {
+    --_ring-shadow: var(--shadow-sm);
+    box-shadow: var(--_ring-shadow, var(--shadow-sm));
+  }
+
+  :where(.shadow-md) {
+    --_ring-shadow: var(--shadow-md);
+    box-shadow: var(--_ring-shadow, var(--shadow-md));
+  }
+
+  :where(.shadow-lg) {
+    --_ring-shadow: var(--shadow-lg);
+    box-shadow: var(--_ring-shadow, var(--shadow-lg));
+  }
+
+  :where(.shadow-xl) {
+    --_ring-shadow: var(--shadow-xl);
+    box-shadow: var(--_ring-shadow, var(--shadow-xl));
+  }
+
+  /* ===========================================================================
+  SIZE UTILITIES
+  =========================================================================== */
+
+  :where(.w-0) {
+    inline-size: 0;
+  }
+
+  :where(.w-px) {
+    inline-size: 1px;
+  }
+
+  :where(.w-auto) {
+    inline-size: auto;
+  }
+
+  :where(.w-full) {
+    inline-size: 100%;
+  }
+
+  :where(.w-xs) {
+    inline-size: var(--step-3);
+  }
+
+  :where(.w-sm) {
+    inline-size: var(--gap-sm);
+  }
+
+  :where(.w-md) {
+    inline-size: var(--gap-md);
+  }
+
+  :where(.w-lg) {
+    inline-size: var(--gap-lg);
+  }
+
+  :where(.w-xl) {
+    inline-size: var(--gap-xl);
+  }
+
+  :where(.w-screen) {
+    inline-size: 100vi;
+  }
+
+  :where(.w-screen-xs) {
+    inline-size: var(--breakpoint-xs);
+  }
+
+  :where(.w-screen-sm) {
+    inline-size: var(--breakpoint-sm);
+  }
+
+  :where(.w-screen-md) {
+    inline-size: var(--breakpoint-md);
+  }
+
+  :where(.w-screen-lg) {
+    inline-size: var(--breakpoint-lg);
+  }
+
+  :where(.w-screen-xl) {
+    inline-size: var(--breakpoint-xl);
+  }
+
+  :where(.h-0) {
+    block-size: 0;
+  }
+
+  :where(.h-px) {
+    block-size: 1px;
+  }
+
+  :where(.h-auto) {
+    block-size: auto;
+  }
+
+  :where(.h-full) {
+    block-size: 100%;
+  }
+
+  :where(.h-xs) {
+    block-size: var(--step-3);
+  }
+
+  :where(.h-sm) {
+    block-size: var(--gap-sm);
+  }
+
+  :where(.h-md) {
+    block-size: var(--gap-md);
+  }
+
+  :where(.h-lg) {
+    block-size: var(--gap-lg);
+  }
+
+  :where(.h-xl) {
+    block-size: var(--gap-xl);
+  }
+
+  :where(.h-screen) {
+    block-size: 100svh;
+  }
+
+  :where(.h-screen-xs) {
+    block-size: var(--breakpoint-xs);
+  }
+
+  :where(.h-screen-sm) {
+    block-size: var(--breakpoint-sm);
+  }
+
+  :where(.h-screen-md) {
+    block-size: var(--breakpoint-md);
+  }
+
+  :where(.h-screen-lg) {
+    block-size: var(--breakpoint-lg);
+  }
+
+  :where(.h-screen-xl) {
+    block-size: var(--breakpoint-xl);
+  }
+
+  :where(.size-0) {
+    inline-size: 0;
+    block-size: 0;
+  }
+
+  :where(.size-auto) {
+    inline-size: auto;
+    block-size: auto;
+  }
+
+  :where(.size-full) {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  :where(.size-xs) {
+    inline-size: var(--step-3);
+    block-size: var(--step-3);
+  }
+
+  :where(.size-sm) {
+    inline-size: var(--gap-sm);
+    block-size: var(--gap-sm);
+  }
+
+  :where(.size-md) {
+    inline-size: var(--gap-md);
+    block-size: var(--gap-md);
+  }
+
+  :where(.size-lg) {
+    inline-size: var(--gap-lg);
+    block-size: var(--gap-lg);
+  }
+
+  :where(.size-xl) {
+    inline-size: var(--gap-xl);
+    block-size: var(--gap-xl);
+  }
+
+  :where(.size-screen) {
+    inline-size: 100vi;
+    block-size: 100svh;
+  }
+
+  :where(.size-screen-xs) {
+    inline-size: var(--breakpoint-xs);
+    block-size: var(--breakpoint-xs);
+  }
+
+  :where(.size-screen-sm) {
+    inline-size: var(--breakpoint-sm);
+    block-size: var(--breakpoint-sm);
+  }
+
+  :where(.size-screen-md) {
+    inline-size: var(--breakpoint-md);
+    block-size: var(--breakpoint-md);
+  }
+
+  :where(.size-screen-lg) {
+    inline-size: var(--breakpoint-lg);
+    block-size: var(--breakpoint-lg);
+  }
+
+  :where(.size-screen-xl) {
+    inline-size: var(--breakpoint-xl);
+    block-size: var(--breakpoint-xl);
+  }
+
+  :where(.max-w-0) {
+    max-inline-size: 0;
+  }
+
+  :where(.max-w-auto) {
+    max-inline-size: auto;
+  }
+
+  :where(.max-w-full) {
+    max-inline-size: 100%;
+  }
+
+  :where(.max-w-xs) {
+    max-inline-size: var(--step-8);
+  }
+
+  :where(.max-w-sm) {
+    max-inline-size: var(--step-24);
+  }
+
+  :where(.max-w-md) {
+    max-inline-size: var(--step-36);
+  }
+
+  :where(.max-w-lg) {
+    max-inline-size: var(--step-80);
+  }
+
+  :where(.max-w-xl) {
+    max-inline-size: var(--step-96);
+  }
+
+  :where(.max-w-screen) {
+    max-inline-size: 100vi;
+  }
+
+  :where(.max-w-screen-xs) {
+    max-inline-size: var(--breakpoint-xs);
+  }
+
+  :where(.max-w-screen-sm) {
+    max-inline-size: var(--breakpoint-sm);
+  }
+
+  :where(.max-w-screen-md) {
+    max-inline-size: var(--breakpoint-md);
+  }
+
+  :where(.max-w-screen-lg) {
+    max-inline-size: var(--breakpoint-lg);
+  }
+
+  :where(.max-w-screen-xl) {
+    max-inline-size: var(--breakpoint-xl);
+  }
+
+  :where(.max-h-0) {
+    max-block-size: 0;
+  }
+
+  :where(.max-h-auto) {
+    max-block-size: auto;
+  }
+
+  :where(.max-h-full) {
+    max-block-size: 100%;
+  }
+
+  :where(.max-h-xs) {
+    max-block-size: var(--step-8);
+  }
+
+  :where(.max-h-sm) {
+    max-block-size: var(--step-24);
+  }
+
+  :where(.max-h-md) {
+    max-block-size: var(--step-56);
+  }
+
+  :where(.max-h-lg) {
+    max-block-size: var(--step-72);
+  }
+
+  :where(.max-h-xl) {
+    max-block-size: var(--step-96);
+  }
+
+  :where(.max-h-screen) {
+    max-block-size: 100svh;
+  }
+
+  :where(.max-h-screen-xs) {
+    max-block-size: var(--breakpoint-xs);
+  }
+
+  :where(.max-h-screen-sm) {
+    max-block-size: var(--breakpoint-sm);
+  }
+
+  :where(.max-h-screen-md) {
+    max-block-size: var(--breakpoint-md);
+  }
+
+  :where(.max-h-screen-lg) {
+    max-block-size: var(--breakpoint-lg);
+  }
+
+  :where(.max-h-screen-xl) {
+    max-block-size: var(--breakpoint-xl);
+  }
+
+  :where(.min-w-0) {
+    min-inline-size: 0;
+  }
+
+  :where(.min-w-auto) {
+    min-inline-size: auto;
+  }
+
+  :where(.min-w-full) {
+    min-inline-size: 100%;
+  }
+
+  :where(.min-w-screen) {
+    min-inline-size: 100vi;
+  }
+
+  :where(.min-w-screen-xs) {
+    min-inline-size: var(--breakpoint-xs);
+  }
+
+  :where(.min-w-screen-sm) {
+    min-inline-size: var(--breakpoint-sm);
+  }
+
+  :where(.min-w-screen-md) {
+    min-inline-size: var(--breakpoint-md);
+  }
+
+  :where(.min-w-screen-lg) {
+    min-inline-size: var(--breakpoint-lg);
+  }
+
+  :where(.min-w-screen-xl) {
+    min-inline-size: var(--breakpoint-xl);
+  }
+
+  :where(.min-h-0) {
+    min-block-size: 0;
+  }
+
+  :where(.min-h-auto) {
+    min-block-size: auto;
+  }
+
+  :where(.min-h-full) {
+    min-block-size: 100%;
+  }
+
+  :where(.min-h-screen) {
+    min-block-size: 100svh;
+  }
+
+  :where(.min-h-screen-xs) {
+    min-block-size: var(--breakpoint-xs);
+  }
+
+  :where(.min-h-screen-sm) {
+    min-block-size: var(--breakpoint-sm);
+  }
+
+  :where(.min-h-screen-md) {
+    min-block-size: var(--breakpoint-md);
+  }
+
+  :where(.min-h-screen-lg) {
+    min-block-size: var(--breakpoint-lg);
+  }
+
+  :where(.min-h-screen-xl) {
+    min-block-size: var(--breakpoint-xl);
+  }
+
+  /* ===========================================================================
+  GAP UTILITIES
+  =========================================================================== */
+
+  :where(.gap-0) {
+    --_gap: 0;
+    gap: var(--_gap);
+  }
+
+  :where(.gap-0\.5px) {
+    --_gap: 0.5px;
+    gap: var(--_gap);
+  }
+
+  :where(.gap-px) {
+    --_gap: 1px;
+    gap: var(--_gap);
+  }
+
+  :where(.gap-xs) {
+    --_gap: var(--gap-xs);
+    gap: var(--_gap);
+  }
+
+  :where(.gap-sm) {
+    --_gap: var(--gap-sm);
+    gap: var(--_gap);
+  }
+
+  :where(.gap-md) {
+    --_gap: var(--gap-md);
+    gap: var(--_gap);
+  }
+
+  :where(.gap-lg) {
+    --_gap: var(--gap-lg);
+    gap: var(--_gap);
+  }
+
+  :where(.gap-xl) {
+    --_gap: var(--gap-xl);
+    gap: var(--_gap);
+  }
+
+  :where(.gap-x-0) {
+    --_gap-x: 0;
+    column-gap: var(--_gap-x);
+  }
+
+  :where(.gap-x-0\.5px) {
+    --_gap-x: 0.5px;
+    column-gap: var(--_gap-x);
+  }
+
+  :where(.gap-x-px) {
+    --_gap-x: 1px;
+    column-gap: var(--_gap-x);
+  }
+
+  :where(.gap-x-xs) {
+    --_gap-x: var(--gap-xs);
+    column-gap: var(--_gap-x);
+  }
+
+  :where(.gap-x-sm) {
+    --_gap-x: var(--gap-sm);
+    column-gap: var(--_gap-x);
+  }
+
+  :where(.gap-x-md) {
+    --_gap-x: var(--gap-md);
+    column-gap: var(--_gap-x);
+  }
+
+  :where(.gap-x-lg) {
+    --_gap-x: var(--gap-lg);
+    column-gap: var(--_gap-x);
+  }
+
+  :where(.gap-x-xl) {
+    --_gap-x: var(--gap-xl);
+    column-gap: var(--_gap-x);
+  }
+
+  :where(.gap-y-0) {
+    --_gap-y: 0;
+    row-gap: var(--_gap-y);
+  }
+
+  :where(.gap-y-0\.5px) {
+    --_gap-y: 0.5px;
+    row-gap: var(--_gap-y);
+  }
+
+  :where(.gap-y-px) {
+    --_gap-y: 1px;
+    row-gap: var(--_gap-y);
+  }
+
+  :where(.gap-y-xs) {
+    --_gap-y: var(--gap-xs);
+    row-gap: var(--_gap-y);
+  }
+
+  :where(.gap-y-sm) {
+    --_gap-y: var(--gap-sm);
+    row-gap: var(--_gap-y);
+  }
+
+  :where(.gap-y-md) {
+    --_gap-y: var(--gap-md);
+    row-gap: var(--_gap-y);
+  }
+
+  :where(.gap-y-lg) {
+    --_gap-y: var(--gap-lg);
+    row-gap: var(--_gap-y);
+  }
+
+  :where(.gap-y-xl) {
+    --_gap-y: var(--gap-xl);
+    row-gap: var(--_gap-y);
+  }
+
+  /* ===========================================================================
+  PADDING UTILITIES — physical sides, logical axes (px/py)
+  =========================================================================== */
+
+  /* Composing rules — emitted once per axis, only for elements that use a
+     padding utility on that axis. Touching one axis leaves the other intact,
+     so a side utility won't zero out a component's padding on the other axis. */
+  :where(.p-0, .p-xs, .p-sm, .p-md, .p-lg, .p-xl, [class*="px-"]) {
+    padding-inline: var(--_padding-inline-start) var(--_padding-inline-end);
+  }
+
+  :where([class*="pl-"]) {
+    padding-inline-start: var(--_padding-inline-start);
+  }
+
+  :where([class*="pr-"]) {
+    padding-inline-end: var(--_padding-inline-end);
+  }
+
+  :where(.p-0, .p-xs, .p-sm, .p-md, .p-lg, .p-xl, [class*="py-"]) {
+    padding-block: var(--_padding-block-start) var(--_padding-block-end);
+  }
+
+  :where([class*="pt-"]) {
+    padding-block-start: var(--_padding-block-start);
+  }
+
+  :where([class*="pb-"]) {
+    padding-block-end: var(--_padding-block-end);
+  }
+
+  /* Setters — all-sides → axes → sides, so the more specific utility wins via
+     source order (e.g. `p-md pl-0` → inline-start 0, rest md). pt/pr/pb/pl map
+     to logical edges (block-start/inline-end/block-end/inline-start). */
+  :where(.p-0) {
+    --_padding-inline-start: 0;
+    --_padding-inline-end: 0;
+    --_padding-block-start: 0;
+    --_padding-block-end: 0;
+  }
+
+  :where(.p-xs) {
+    --_padding-inline-start: var(--gap-xs);
+    --_padding-inline-end: var(--gap-xs);
+    --_padding-block-start: var(--gap-xs);
+    --_padding-block-end: var(--gap-xs);
+  }
+
+  :where(.p-sm) {
+    --_padding-inline-start: var(--gap-sm);
+    --_padding-inline-end: var(--gap-sm);
+    --_padding-block-start: var(--gap-sm);
+    --_padding-block-end: var(--gap-sm);
+  }
+
+  :where(.p-md) {
+    --_padding-inline-start: var(--gap-md);
+    --_padding-inline-end: var(--gap-md);
+    --_padding-block-start: var(--gap-md);
+    --_padding-block-end: var(--gap-md);
+  }
+
+  :where(.p-lg) {
+    --_padding-inline-start: var(--gap-lg);
+    --_padding-inline-end: var(--gap-lg);
+    --_padding-block-start: var(--gap-lg);
+    --_padding-block-end: var(--gap-lg);
+  }
+
+  :where(.p-xl) {
+    --_padding-inline-start: var(--gap-xl);
+    --_padding-inline-end: var(--gap-xl);
+    --_padding-block-start: var(--gap-xl);
+    --_padding-block-end: var(--gap-xl);
+  }
+
+  :where(.px-0) {
+    --_padding-inline-start: 0;
+    --_padding-inline-end: 0;
+  }
+
+  :where(.px-xs) {
+    --_padding-inline-start: var(--gap-xs);
+    --_padding-inline-end: var(--gap-xs);
+  }
+
+  :where(.px-sm) {
+    --_padding-inline-start: var(--gap-sm);
+    --_padding-inline-end: var(--gap-sm);
+  }
+
+  :where(.px-md) {
+    --_padding-inline-start: var(--gap-md);
+    --_padding-inline-end: var(--gap-md);
+  }
+
+  :where(.px-lg) {
+    --_padding-inline-start: var(--gap-lg);
+    --_padding-inline-end: var(--gap-lg);
+  }
+
+  :where(.px-xl) {
+    --_padding-inline-start: var(--gap-xl);
+    --_padding-inline-end: var(--gap-xl);
+  }
+
+  :where(.py-0) {
+    --_padding-block-start: 0;
+    --_padding-block-end: 0;
+  }
+
+  :where(.py-xs) {
+    --_padding-block-start: var(--gap-xs);
+    --_padding-block-end: var(--gap-xs);
+  }
+
+  :where(.py-sm) {
+    --_padding-block-start: var(--gap-sm);
+    --_padding-block-end: var(--gap-sm);
+  }
+
+  :where(.py-md) {
+    --_padding-block-start: var(--gap-md);
+    --_padding-block-end: var(--gap-md);
+  }
+
+  :where(.py-lg) {
+    --_padding-block-start: var(--gap-lg);
+    --_padding-block-end: var(--gap-lg);
+  }
+
+  :where(.py-xl) {
+    --_padding-block-start: var(--gap-xl);
+    --_padding-block-end: var(--gap-xl);
+  }
+
+  :where(.pt-0) {
+    --_padding-block-start: 0;
+  }
+
+  :where(.pt-xs) {
+    --_padding-block-start: var(--gap-xs);
+  }
+
+  :where(.pt-sm) {
+    --_padding-block-start: var(--gap-sm);
+  }
+
+  :where(.pt-md) {
+    --_padding-block-start: var(--gap-md);
+  }
+
+  :where(.pt-lg) {
+    --_padding-block-start: var(--gap-lg);
+  }
+
+  :where(.pt-xl) {
+    --_padding-block-start: var(--gap-xl);
+  }
+
+  :where(.pr-0) {
+    --_padding-inline-end: 0;
+  }
+
+  :where(.pr-xs) {
+    --_padding-inline-end: var(--gap-xs);
+  }
+
+  :where(.pr-sm) {
+    --_padding-inline-end: var(--gap-sm);
+  }
+
+  :where(.pr-md) {
+    --_padding-inline-end: var(--gap-md);
+  }
+
+  :where(.pr-lg) {
+    --_padding-inline-end: var(--gap-lg);
+  }
+
+  :where(.pr-xl) {
+    --_padding-inline-end: var(--gap-xl);
+  }
+
+  :where(.pb-0) {
+    --_padding-block-end: 0;
+  }
+
+  :where(.pb-xs) {
+    --_padding-block-end: var(--gap-xs);
+  }
+
+  :where(.pb-sm) {
+    --_padding-block-end: var(--gap-sm);
+  }
+
+  :where(.pb-md) {
+    --_padding-block-end: var(--gap-md);
+  }
+
+  :where(.pb-lg) {
+    --_padding-block-end: var(--gap-lg);
+  }
+
+  :where(.pb-xl) {
+    --_padding-block-end: var(--gap-xl);
+  }
+
+  :where(.pl-0) {
+    --_padding-inline-start: 0;
+  }
+
+  :where(.pl-xs) {
+    --_padding-inline-start: var(--gap-xs);
+  }
+
+  :where(.pl-sm) {
+    --_padding-inline-start: var(--gap-sm);
+  }
+
+  :where(.pl-md) {
+    --_padding-inline-start: var(--gap-md);
+  }
+
+  :where(.pl-lg) {
+    --_padding-inline-start: var(--gap-lg);
+  }
+
+  :where(.pl-xl) {
+    --_padding-inline-start: var(--gap-xl);
+  }
+
+  /* ===========================================================================
+  MARGIN UTILITIES — physical sides, logical axes (mx/my)
+  =========================================================================== */
+
+  /* Composing rules — one per axis. The substring triggers also catch negative
+     (`-mx-…`) and responsive (`@xs:-m-…`) margin classes, so those sections only
+     need to set vars. `m-<size>` substrings are safe here (unlike `p-<size>`,
+     they don't collide with `gap-<size>`). */
+  :where(
+    [class*="m-0"],
+    [class*="m-xs"],
+    [class*="m-sm"],
+    [class*="m-md"],
+    [class*="m-lg"],
+    [class*="m-xl"],
+    [class*="mx-"],
+    [class*="ml-"],
+    [class*="mr-"]
+  ) {
+    margin-inline: var(--_margin-inline-start) var(--_margin-inline-end);
+  }
+
+  :where([class*="ml-"]) {
+    margin-inline-start: var(--_margin-inline-start);
+  }
+
+  :where([class*="mr-"]) {
+    margin-inline-end: var(--_margin-inline-end);
+  }
+
+  :where(
+    [class*="m-0"],
+    [class*="m-xs"],
+    [class*="m-sm"],
+    [class*="m-md"],
+    [class*="m-lg"],
+    [class*="m-xl"],
+    [class*="my-"]
+  ) {
+    margin-block: var(--_margin-block-start) var(--_margin-block-end);
+  }
+
+  :where([class*="mt-"]) {
+    margin-block-start: var(--_margin-block-start);
+  }
+
+  :where([class*="mb-"]) {
+    margin-block-end: var(--_margin-block-end);
+  }
+
+  /* Setters — all-sides → axes → sides. mt/mr/mb/ml map to logical edges. */
+  :where(.m-0) {
+    --_margin-inline-start: 0;
+    --_margin-inline-end: 0;
+    --_margin-block-start: 0;
+    --_margin-block-end: 0;
+  }
+
+  :where(.m-xs) {
+    --_margin-inline-start: var(--gap-xs);
+    --_margin-inline-end: var(--gap-xs);
+    --_margin-block-start: var(--gap-xs);
+    --_margin-block-end: var(--gap-xs);
+  }
+
+  :where(.m-sm) {
+    --_margin-inline-start: var(--gap-sm);
+    --_margin-inline-end: var(--gap-sm);
+    --_margin-block-start: var(--gap-sm);
+    --_margin-block-end: var(--gap-sm);
+  }
+
+  :where(.m-md) {
+    --_margin-inline-start: var(--gap-md);
+    --_margin-inline-end: var(--gap-md);
+    --_margin-block-start: var(--gap-md);
+    --_margin-block-end: var(--gap-md);
+  }
+
+  :where(.m-lg) {
+    --_margin-inline-start: var(--gap-lg);
+    --_margin-inline-end: var(--gap-lg);
+    --_margin-block-start: var(--gap-lg);
+    --_margin-block-end: var(--gap-lg);
+  }
+
+  :where(.m-xl) {
+    --_margin-inline-start: var(--gap-xl);
+    --_margin-inline-end: var(--gap-xl);
+    --_margin-block-start: var(--gap-xl);
+    --_margin-block-end: var(--gap-xl);
+  }
+
+  :where(.mx-0) {
+    --_margin-inline-start: 0;
+    --_margin-inline-end: 0;
+  }
+
+  :where(.mx-xs) {
+    --_margin-inline-start: var(--gap-xs);
+    --_margin-inline-end: var(--gap-xs);
+  }
+
+  :where(.mx-sm) {
+    --_margin-inline-start: var(--gap-sm);
+    --_margin-inline-end: var(--gap-sm);
+  }
+
+  :where(.mx-md) {
+    --_margin-inline-start: var(--gap-md);
+    --_margin-inline-end: var(--gap-md);
+  }
+
+  :where(.mx-lg) {
+    --_margin-inline-start: var(--gap-lg);
+    --_margin-inline-end: var(--gap-lg);
+  }
+
+  :where(.mx-xl) {
+    --_margin-inline-start: var(--gap-xl);
+    --_margin-inline-end: var(--gap-xl);
+  }
+
+  :where(.mx-auto) {
+    --_margin-inline-start: auto;
+    --_margin-inline-end: auto;
+  }
+
+  :where(.my-0) {
+    --_margin-block-start: 0;
+    --_margin-block-end: 0;
+  }
+
+  :where(.my-xs) {
+    --_margin-block-start: var(--gap-xs);
+    --_margin-block-end: var(--gap-xs);
+  }
+
+  :where(.my-sm) {
+    --_margin-block-start: var(--gap-sm);
+    --_margin-block-end: var(--gap-sm);
+  }
+
+  :where(.my-md) {
+    --_margin-block-start: var(--gap-md);
+    --_margin-block-end: var(--gap-md);
+  }
+
+  :where(.my-lg) {
+    --_margin-block-start: var(--gap-lg);
+    --_margin-block-end: var(--gap-lg);
+  }
+
+  :where(.my-xl) {
+    --_margin-block-start: var(--gap-xl);
+    --_margin-block-end: var(--gap-xl);
+  }
+
+  :where(.my-auto) {
+    --_margin-block-start: auto;
+    --_margin-block-end: auto;
+  }
+
+  :where(.mt-0) {
+    --_margin-block-start: 0;
+  }
+
+  :where(.mt-xs) {
+    --_margin-block-start: var(--gap-xs);
+  }
+
+  :where(.mt-sm) {
+    --_margin-block-start: var(--gap-sm);
+  }
+
+  :where(.mt-md) {
+    --_margin-block-start: var(--gap-md);
+  }
+
+  :where(.mt-lg) {
+    --_margin-block-start: var(--gap-lg);
+  }
+
+  :where(.mt-xl) {
+    --_margin-block-start: var(--gap-xl);
+  }
+
+  :where(.mt-auto) {
+    --_margin-block-start: auto;
+  }
+
+  :where(.mr-0) {
+    --_margin-inline-end: 0;
+  }
+
+  :where(.mr-xs) {
+    --_margin-inline-end: var(--gap-xs);
+  }
+
+  :where(.mr-sm) {
+    --_margin-inline-end: var(--gap-sm);
+  }
+
+  :where(.mr-md) {
+    --_margin-inline-end: var(--gap-md);
+  }
+
+  :where(.mr-lg) {
+    --_margin-inline-end: var(--gap-lg);
+  }
+
+  :where(.mr-xl) {
+    --_margin-inline-end: var(--gap-xl);
+  }
+
+  :where(.mr-auto) {
+    --_margin-inline-end: auto;
+  }
+
+  :where(.mb-0) {
+    --_margin-block-end: 0;
+  }
+
+  :where(.mb-xs) {
+    --_margin-block-end: var(--gap-xs);
+  }
+
+  :where(.mb-sm) {
+    --_margin-block-end: var(--gap-sm);
+  }
+
+  :where(.mb-md) {
+    --_margin-block-end: var(--gap-md);
+  }
+
+  :where(.mb-lg) {
+    --_margin-block-end: var(--gap-lg);
+  }
+
+  :where(.mb-xl) {
+    --_margin-block-end: var(--gap-xl);
+  }
+
+  :where(.mb-auto) {
+    --_margin-block-end: auto;
+  }
+
+  :where(.ml-0) {
+    --_margin-inline-start: 0;
+  }
+
+  :where(.ml-xs) {
+    --_margin-inline-start: var(--gap-xs);
+  }
+
+  :where(.ml-sm) {
+    --_margin-inline-start: var(--gap-sm);
+  }
+
+  :where(.ml-md) {
+    --_margin-inline-start: var(--gap-md);
+  }
+
+  :where(.ml-lg) {
+    --_margin-inline-start: var(--gap-lg);
+  }
+
+  :where(.ml-xl) {
+    --_margin-inline-start: var(--gap-xl);
+  }
+
+  :where(.ml-auto) {
+    --_margin-inline-start: auto;
+  }
+
+  /* ===========================================================================
+  NEGATIVE MARGIN UTILITIES
+  =========================================================================== */
+
+  :where(.-m-xs) {
+    --_margin-inline-start: calc(var(--gap-xs) * -1);
+    --_margin-inline-end: calc(var(--gap-xs) * -1);
+    --_margin-block-start: calc(var(--gap-xs) * -1);
+    --_margin-block-end: calc(var(--gap-xs) * -1);
+  }
+
+  :where(.-mx-xs) {
+    --_margin-inline-start: calc(var(--gap-xs) * -1);
+    --_margin-inline-end: calc(var(--gap-xs) * -1);
+  }
+
+  :where(.-my-xs) {
+    --_margin-block-start: calc(var(--gap-xs) * -1);
+    --_margin-block-end: calc(var(--gap-xs) * -1);
+  }
+
+  :where(.-mt-xs) {
+    --_margin-block-start: calc(var(--gap-xs) * -1);
+  }
+
+  :where(.-mr-xs) {
+    --_margin-inline-end: calc(var(--gap-xs) * -1);
+  }
+
+  :where(.-mb-xs) {
+    --_margin-block-end: calc(var(--gap-xs) * -1);
+  }
+
+  :where(.-ml-xs) {
+    --_margin-inline-start: calc(var(--gap-xs) * -1);
+  }
+
+  :where(.-m-sm) {
+    --_margin-inline-start: calc(var(--gap-sm) * -1);
+    --_margin-inline-end: calc(var(--gap-sm) * -1);
+    --_margin-block-start: calc(var(--gap-sm) * -1);
+    --_margin-block-end: calc(var(--gap-sm) * -1);
+  }
+
+  :where(.-mx-sm) {
+    --_margin-inline-start: calc(var(--gap-sm) * -1);
+    --_margin-inline-end: calc(var(--gap-sm) * -1);
+  }
+
+  :where(.-my-sm) {
+    --_margin-block-start: calc(var(--gap-sm) * -1);
+    --_margin-block-end: calc(var(--gap-sm) * -1);
+  }
+
+  :where(.-mt-sm) {
+    --_margin-block-start: calc(var(--gap-sm) * -1);
+  }
+
+  :where(.-mr-sm) {
+    --_margin-inline-end: calc(var(--gap-sm) * -1);
+  }
+
+  :where(.-mb-sm) {
+    --_margin-block-end: calc(var(--gap-sm) * -1);
+  }
+
+  :where(.-ml-sm) {
+    --_margin-inline-start: calc(var(--gap-sm) * -1);
+  }
+
+  :where(.-m-md) {
+    --_margin-inline-start: calc(var(--gap-md) * -1);
+    --_margin-inline-end: calc(var(--gap-md) * -1);
+    --_margin-block-start: calc(var(--gap-md) * -1);
+    --_margin-block-end: calc(var(--gap-md) * -1);
+  }
+
+  :where(.-mx-md) {
+    --_margin-inline-start: calc(var(--gap-md) * -1);
+    --_margin-inline-end: calc(var(--gap-md) * -1);
+  }
+
+  :where(.-my-md) {
+    --_margin-block-start: calc(var(--gap-md) * -1);
+    --_margin-block-end: calc(var(--gap-md) * -1);
+  }
+
+  :where(.-mt-md) {
+    --_margin-block-start: calc(var(--gap-md) * -1);
+  }
+
+  :where(.-mr-md) {
+    --_margin-inline-end: calc(var(--gap-md) * -1);
+  }
+
+  :where(.-mb-md) {
+    --_margin-block-end: calc(var(--gap-md) * -1);
+  }
+
+  :where(.-ml-md) {
+    --_margin-inline-start: calc(var(--gap-md) * -1);
+  }
+
+  :where(.-m-lg) {
+    --_margin-inline-start: calc(var(--gap-lg) * -1);
+    --_margin-inline-end: calc(var(--gap-lg) * -1);
+    --_margin-block-start: calc(var(--gap-lg) * -1);
+    --_margin-block-end: calc(var(--gap-lg) * -1);
+  }
+
+  :where(.-mx-lg) {
+    --_margin-inline-start: calc(var(--gap-lg) * -1);
+    --_margin-inline-end: calc(var(--gap-lg) * -1);
+  }
+
+  :where(.-my-lg) {
+    --_margin-block-start: calc(var(--gap-lg) * -1);
+    --_margin-block-end: calc(var(--gap-lg) * -1);
+  }
+
+  :where(.-mt-lg) {
+    --_margin-block-start: calc(var(--gap-lg) * -1);
+  }
+
+  :where(.-mr-lg) {
+    --_margin-inline-end: calc(var(--gap-lg) * -1);
+  }
+
+  :where(.-mb-lg) {
+    --_margin-block-end: calc(var(--gap-lg) * -1);
+  }
+
+  :where(.-ml-lg) {
+    --_margin-inline-start: calc(var(--gap-lg) * -1);
+  }
+
+  :where(.-m-xl) {
+    --_margin-inline-start: calc(var(--gap-xl) * -1);
+    --_margin-inline-end: calc(var(--gap-xl) * -1);
+    --_margin-block-start: calc(var(--gap-xl) * -1);
+    --_margin-block-end: calc(var(--gap-xl) * -1);
+  }
+
+  :where(.-mx-xl) {
+    --_margin-inline-start: calc(var(--gap-xl) * -1);
+    --_margin-inline-end: calc(var(--gap-xl) * -1);
+  }
+
+  :where(.-my-xl) {
+    --_margin-block-start: calc(var(--gap-xl) * -1);
+    --_margin-block-end: calc(var(--gap-xl) * -1);
+  }
+
+  :where(.-mt-xl) {
+    --_margin-block-start: calc(var(--gap-xl) * -1);
+  }
+
+  :where(.-mr-xl) {
+    --_margin-inline-end: calc(var(--gap-xl) * -1);
+  }
+
+  :where(.-mb-xl) {
+    --_margin-block-end: calc(var(--gap-xl) * -1);
+  }
+
+  :where(.-ml-xl) {
+    --_margin-inline-start: calc(var(--gap-xl) * -1);
+  }
+
+  /* ===========================================================================
+  BORDER RADIUS UTILITIES
+  =========================================================================== */
+
+  /* Composing rules — one per physical corner, triggered only by classes that
+     affect that corner. A corner you don't touch is left intact (e.g.
+     `rounded-b-0` flattens the bottom and keeps a component's top radius). */
+  :where(
+    .rounded-0,
+    .rounded-xs,
+    .rounded-sm,
+    .rounded-md,
+    .rounded-lg,
+    .rounded-xl,
+    .rounded-full,
+    [class*="rounded-t-"],
+    [class*="rounded-l-"],
+    [class*="rounded-tl-"]
+  ) {
+    border-top-left-radius: var(--_radius-top-left);
+  }
+
+  :where(
+    .rounded-0,
+    .rounded-xs,
+    .rounded-sm,
+    .rounded-md,
+    .rounded-lg,
+    .rounded-xl,
+    .rounded-full,
+    [class*="rounded-t-"],
+    [class*="rounded-r-"],
+    [class*="rounded-tr-"]
+  ) {
+    border-top-right-radius: var(--_radius-top-right);
+  }
+
+  :where(
+    .rounded-0,
+    .rounded-xs,
+    .rounded-sm,
+    .rounded-md,
+    .rounded-lg,
+    .rounded-xl,
+    .rounded-full,
+    [class*="rounded-b-"],
+    [class*="rounded-r-"],
+    [class*="rounded-br-"]
+  ) {
+    border-bottom-right-radius: var(--_radius-bottom-right);
+  }
+
+  :where(
+    .rounded-0,
+    .rounded-xs,
+    .rounded-sm,
+    .rounded-md,
+    .rounded-lg,
+    .rounded-xl,
+    .rounded-full,
+    [class*="rounded-b-"],
+    [class*="rounded-l-"],
+    [class*="rounded-bl-"]
+  ) {
+    border-bottom-left-radius: var(--_radius-bottom-left);
+  }
+
+  :where(.rounded-0) {
+    --_radius-top-left: 0px;
+    --_radius-top-right: 0px;
+    --_radius-bottom-right: 0px;
+    --_radius-bottom-left: 0px;
+  }
+
+  :where(.rounded-xs) {
+    --_radius-top-left: var(--radius-xs);
+    --_radius-top-right: var(--radius-xs);
+    --_radius-bottom-right: var(--radius-xs);
+    --_radius-bottom-left: var(--radius-xs);
+  }
+
+  :where(.rounded-sm) {
+    --_radius-top-left: var(--radius-sm);
+    --_radius-top-right: var(--radius-sm);
+    --_radius-bottom-right: var(--radius-sm);
+    --_radius-bottom-left: var(--radius-sm);
+  }
+
+  :where(.rounded-md) {
+    --_radius-top-left: var(--radius-md);
+    --_radius-top-right: var(--radius-md);
+    --_radius-bottom-right: var(--radius-md);
+    --_radius-bottom-left: var(--radius-md);
+  }
+
+  :where(.rounded-lg) {
+    --_radius-top-left: var(--radius-lg);
+    --_radius-top-right: var(--radius-lg);
+    --_radius-bottom-right: var(--radius-lg);
+    --_radius-bottom-left: var(--radius-lg);
+  }
+
+  :where(.rounded-xl) {
+    --_radius-top-left: var(--radius-xl);
+    --_radius-top-right: var(--radius-xl);
+    --_radius-bottom-right: var(--radius-xl);
+    --_radius-bottom-left: var(--radius-xl);
+  }
+
+  :where(.rounded-full) {
+    --_radius-top-left: var(--radius-full);
+    --_radius-top-right: var(--radius-full);
+    --_radius-bottom-right: var(--radius-full);
+    --_radius-bottom-left: var(--radius-full);
+  }
+
+  :where(.rounded-tl-0) {
+    --_radius-top-left: 0px;
+  }
+
+  :where(.rounded-tl-xs) {
+    --_radius-top-left: var(--radius-xs);
+  }
+
+  :where(.rounded-tl-sm) {
+    --_radius-top-left: var(--radius-sm);
+  }
+
+  :where(.rounded-tl-md) {
+    --_radius-top-left: var(--radius-md);
+  }
+
+  :where(.rounded-tl-lg) {
+    --_radius-top-left: var(--radius-lg);
+  }
+
+  :where(.rounded-tl-xl) {
+    --_radius-top-left: var(--radius-xl);
+  }
+
+  :where(.rounded-tl-full) {
+    --_radius-top-left: var(--radius-full);
+  }
+
+  :where(.rounded-tr-0) {
+    --_radius-top-right: 0;
+  }
+
+  :where(.rounded-tr-xs) {
+    --_radius-top-right: var(--radius-xs);
+  }
+
+  :where(.rounded-tr-sm) {
+    --_radius-top-right: var(--radius-sm);
+  }
+
+  :where(.rounded-tr-md) {
+    --_radius-top-right: var(--radius-md);
+  }
+
+  :where(.rounded-tr-lg) {
+    --_radius-top-right: var(--radius-lg);
+  }
+
+  :where(.rounded-tr-xl) {
+    --_radius-top-right: var(--radius-xl);
+  }
+
+  :where(.rounded-tr-full) {
+    --_radius-top-right: var(--radius-full);
+  }
+
+  :where(.rounded-bl-0) {
+    --_radius-bottom-left: 0;
+  }
+
+  :where(.rounded-bl-xs) {
+    --_radius-bottom-left: var(--radius-xs);
+  }
+
+  :where(.rounded-bl-sm) {
+    --_radius-bottom-left: var(--radius-sm);
+  }
+
+  :where(.rounded-bl-md) {
+    --_radius-bottom-left: var(--radius-md);
+  }
+
+  :where(.rounded-bl-lg) {
+    --_radius-bottom-left: var(--radius-lg);
+  }
+
+  :where(.rounded-bl-xl) {
+    --_radius-bottom-left: var(--radius-xl);
+  }
+
+  :where(.rounded-bl-full) {
+    --_radius-bottom-left: var(--radius-full);
+  }
+
+  :where(.rounded-br-0) {
+    --_radius-bottom-right: 0;
+  }
+
+  :where(.rounded-br-xs) {
+    --_radius-bottom-right: var(--radius-xs);
+  }
+
+  :where(.rounded-br-sm) {
+    --_radius-bottom-right: var(--radius-sm);
+  }
+
+  :where(.rounded-br-md) {
+    --_radius-bottom-right: var(--radius-md);
+  }
+
+  :where(.rounded-br-lg) {
+    --_radius-bottom-right: var(--radius-lg);
+  }
+
+  :where(.rounded-br-xl) {
+    --_radius-bottom-right: var(--radius-xl);
+  }
+
+  :where(.rounded-br-full) {
+    --_radius-bottom-right: var(--radius-full);
+  }
+
+  :where(.rounded-l-0) {
+    --_radius-top-left: 0px;
+    --_radius-bottom-left: 0px;
+  }
+
+  :where(.rounded-l-xs) {
+    --_radius-top-left: var(--radius-xs);
+    --_radius-bottom-left: var(--radius-xs);
+  }
+
+  :where(.rounded-l-sm) {
+    --_radius-top-left: var(--radius-sm);
+    --_radius-bottom-left: var(--radius-sm);
+  }
+
+  :where(.rounded-l-md) {
+    --_radius-top-left: var(--radius-md);
+    --_radius-bottom-left: var(--radius-md);
+  }
+
+  :where(.rounded-l-lg) {
+    --_radius-top-left: var(--radius-lg);
+    --_radius-bottom-left: var(--radius-lg);
+  }
+
+  :where(.rounded-l-xl) {
+    --_radius-top-left: var(--radius-xl);
+    --_radius-bottom-left: var(--radius-xl);
+  }
+
+  :where(.rounded-l-full) {
+    --_radius-top-left: var(--radius-full);
+    --_radius-bottom-left: var(--radius-full);
+  }
+
+  :where(.rounded-r-0) {
+    --_radius-top-right: 0px;
+    --_radius-bottom-right: 0px;
+  }
+
+  :where(.rounded-r-xs) {
+    --_radius-top-right: var(--radius-xs);
+    --_radius-bottom-right: var(--radius-xs);
+  }
+
+  :where(.rounded-r-sm) {
+    --_radius-top-right: var(--radius-sm);
+    --_radius-bottom-right: var(--radius-sm);
+  }
+
+  :where(.rounded-r-md) {
+    --_radius-top-right: var(--radius-md);
+    --_radius-bottom-right: var(--radius-md);
+  }
+
+  :where(.rounded-r-lg) {
+    --_radius-top-right: var(--radius-lg);
+    --_radius-bottom-right: var(--radius-lg);
+  }
+
+  :where(.rounded-r-xl) {
+    --_radius-top-right: var(--radius-xl);
+    --_radius-bottom-right: var(--radius-xl);
+  }
+
+  :where(.rounded-r-full) {
+    --_radius-top-right: var(--radius-full);
+    --_radius-bottom-right: var(--radius-full);
+  }
+
+  :where(.rounded-t-0) {
+    --_radius-top-left: 0px;
+    --_radius-top-right: 0px;
+  }
+
+  :where(.rounded-t-xs) {
+    --_radius-top-left: var(--radius-xs);
+    --_radius-top-right: var(--radius-xs);
+  }
+
+  :where(.rounded-t-sm) {
+    --_radius-top-left: var(--radius-sm);
+    --_radius-top-right: var(--radius-sm);
+  }
+
+  :where(.rounded-t-md) {
+    --_radius-top-left: var(--radius-md);
+    --_radius-top-right: var(--radius-md);
+  }
+
+  :where(.rounded-t-lg) {
+    --_radius-top-left: var(--radius-lg);
+    --_radius-top-right: var(--radius-lg);
+  }
+
+  :where(.rounded-t-xl) {
+    --_radius-top-left: var(--radius-xl);
+    --_radius-top-right: var(--radius-xl);
+  }
+
+  :where(.rounded-t-full) {
+    --_radius-top-left: var(--radius-full);
+    --_radius-top-right: var(--radius-full);
+  }
+
+  :where(.rounded-b-0) {
+    --_radius-bottom-left: 0px;
+    --_radius-bottom-right: 0px;
+  }
+
+  :where(.rounded-b-xs) {
+    --_radius-bottom-left: var(--radius-xs);
+    --_radius-bottom-right: var(--radius-xs);
+  }
+
+  :where(.rounded-b-sm) {
+    --_radius-bottom-left: var(--radius-sm);
+    --_radius-bottom-right: var(--radius-sm);
+  }
+
+  :where(.rounded-b-md) {
+    --_radius-bottom-left: var(--radius-md);
+    --_radius-bottom-right: var(--radius-md);
+  }
+
+  :where(.rounded-b-lg) {
+    --_radius-bottom-left: var(--radius-lg);
+    --_radius-bottom-right: var(--radius-lg);
+  }
+
+  :where(.rounded-b-xl) {
+    --_radius-bottom-left: var(--radius-xl);
+    --_radius-bottom-right: var(--radius-xl);
+  }
+
+  :where(.rounded-b-full) {
+    --_radius-bottom-left: var(--radius-full);
+    --_radius-bottom-right: var(--radius-full);
+  }
+
+  /* ===========================================================================
+  BORDER UTILITIES
+  =========================================================================== */
+
+  /* Color indirection — `border-*` color classes set --_border-color; the
+     border-drawing classes below read it through the alpha-multiply pattern
+     (default --_border-alpha 1 = unchanged; `border-opacity-*` dims it). The
+     `.border` class has no trailing `-`, so it's named explicitly here. */
+  :where([class*="border-"], .border) {
+    --_border-color: var(--border);
+  }
+
+  :where(.border-primary) {
+    --_border-color: var(--primary);
+  }
+
+  :where(.border-secondary) {
+    --_border-color: var(--secondary);
+  }
+
+  :where(.border-tertiary) {
+    --_border-color: var(--tertiary);
+  }
+
+  :where(.border-muted) {
+    --_border-color: var(--muted);
+  }
+
+  :where(.border-faded) {
+    --_border-color: var(--faded);
+  }
+
+  :where(.border-info) {
+    --_border-color: var(--info);
+  }
+
+  :where(.border-success) {
+    --_border-color: var(--success);
+  }
+
+  :where(.border-warning) {
+    --_border-color: var(--warning);
+  }
+
+  :where(.border-destructive) {
+    --_border-color: var(--destructive);
+  }
+
+  :where(.border-none) {
+    border: none;
+  }
+
+  :where(.border) {
+    border: 1px solid oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-l-none) {
+    border-left: none;
+  }
+
+  :where(.border-t-none) {
+    border-top: none;
+  }
+
+  :where(.border-r-none) {
+    border-right: none;
+  }
+
+  :where(.border-b-none) {
+    border-bottom: none;
+  }
+
+  :where(.border-l) {
+    border-left: 1px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-t) {
+    border-top: 1px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-r) {
+    border-right: 1px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-b) {
+    border-bottom: 1px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-dashed) {
+    border-style: dashed;
+  }
+
+  :where(.border-dotted) {
+    border-style: dotted;
+  }
+
+  :where(.border-double) {
+    border-style: double;
+  }
+
+  /* ===========================================================================
+  FOCUS RING UTILITY
+  =========================================================================== */
+
+  :where(.outline-none) {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+
+  :where(.ring) {
+    --_ring-offset-width: 0px;
+    --_ring-width: 0px;
+
+    box-shadow:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--primary),
+      var(--_ring-shadow, 0 0 #0000);
+
+    /* transparent twin of the ring for forced-colors / high-contrast modes */
+    outline: var(--outline-width) var(--outline-style) transparent;
+    outline-offset: var(--outline-offset);
+  }
+
+  :where(.ring:focus-visible) {
+    --_ring-offset-width: var(--ring-offset-width);
+    --_ring-width: var(--ring-width);
+
+    outline-color: transparent;
+  }
+
+  :where(.transition-opacity) {
+    transition: opacity var(--default-transition-duration) var(--default-transition-timing-function);
+  }
+
+  :where(.transition-transform) {
+    transition: transform var(--default-transition-duration)
+      var(--default-transition-timing-function);
+  }
+
+  :where(.transition-all) {
+    transition: all var(--default-transition-duration) var(--default-transition-timing-function);
+  }
+
+  :where(.transition) {
+    transition: var(--default-transition);
+  }
+
+  :where(.will-change-transform) {
+    will-change: transform;
+  }
+
+  :where(.will-change-opacity) {
+    will-change: opacity;
+  }
+
+  /* ===========================================================================
+  GROUP HOVER STATE UTILITIES
+  Mark an ancestor with `.group`; its descendants use `.group-hover:*` to react
+  to the ancestor's hover state (mirrors Tailwind's `group` / `group-hover:*`).
+  =========================================================================== */
+
+  /* `.group` needs no declarations — it exists only as the `.group:hover`
+     ancestor selector that the group-hover:* rules below key off of. */
+
+  /* -- group-hover: text color (theme) -- */
+
+  :where(.group:hover .group-hover\:text-background) {
+    color: oklch(from var(--background) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-foreground) {
+    color: oklch(from var(--foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-card) {
+    color: oklch(from var(--card) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-card-foreground) {
+    color: oklch(from var(--card-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-input) {
+    color: oklch(from var(--input) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-input-foreground) {
+    color: oklch(from var(--input-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-muted) {
+    color: oklch(from var(--muted) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-muted-foreground) {
+    color: oklch(from var(--muted-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-faded) {
+    color: oklch(from var(--faded) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-faded-foreground) {
+    color: oklch(from var(--faded-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-primary) {
+    color: oklch(from var(--primary) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-primary-foreground) {
+    color: oklch(from var(--primary-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-secondary) {
+    color: oklch(from var(--secondary) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-secondary-foreground) {
+    color: oklch(from var(--secondary-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-tertiary) {
+    color: oklch(from var(--tertiary) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-tertiary-foreground) {
+    color: oklch(from var(--tertiary-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-info) {
+    color: oklch(from var(--info) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-info-foreground) {
+    color: oklch(from var(--info-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-success) {
+    color: oklch(from var(--success) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-success-foreground) {
+    color: oklch(from var(--success-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-warning) {
+    color: oklch(from var(--warning) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-warning-foreground) {
+    color: oklch(from var(--warning-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-destructive) {
+    color: oklch(from var(--destructive) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:text-destructive-foreground) {
+    color: oklch(from var(--destructive-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  /* -- group-hover: background color (theme) -- */
+
+  :where(.group:hover .group-hover\:bg-background) {
+    background-color: oklch(
+      from var(--background) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.group:hover .group-hover\:bg-foreground) {
+    background-color: oklch(
+      from var(--foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.group:hover .group-hover\:bg-card) {
+    background-color: oklch(from var(--card) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:bg-card-foreground) {
+    background-color: oklch(
+      from var(--card-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.group:hover .group-hover\:bg-input) {
+    background-color: oklch(from var(--input) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:bg-input-foreground) {
+    background-color: oklch(
+      from var(--input-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.group:hover .group-hover\:bg-muted) {
+    background-color: oklch(from var(--muted) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:bg-muted-foreground) {
+    background-color: oklch(
+      from var(--muted-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.group:hover .group-hover\:bg-faded) {
+    background-color: oklch(from var(--faded) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:bg-faded-foreground) {
+    background-color: oklch(
+      from var(--faded-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.group:hover .group-hover\:bg-primary) {
+    background-color: oklch(from var(--primary) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:bg-primary-foreground) {
+    background-color: oklch(
+      from var(--primary-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.group:hover .group-hover\:bg-secondary) {
+    background-color: oklch(
+      from var(--secondary) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.group:hover .group-hover\:bg-secondary-foreground) {
+    background-color: oklch(
+      from var(--secondary-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.group:hover .group-hover\:bg-tertiary) {
+    background-color: oklch(from var(--tertiary) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:bg-tertiary-foreground) {
+    background-color: oklch(
+      from var(--tertiary-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.group:hover .group-hover\:bg-info) {
+    background-color: oklch(from var(--info) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:bg-info-foreground) {
+    background-color: oklch(
+      from var(--info-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.group:hover .group-hover\:bg-success) {
+    background-color: oklch(from var(--success) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:bg-success-foreground) {
+    background-color: oklch(
+      from var(--success-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.group:hover .group-hover\:bg-warning) {
+    background-color: oklch(from var(--warning) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.group:hover .group-hover\:bg-warning-foreground) {
+    background-color: oklch(
+      from var(--warning-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.group:hover .group-hover\:bg-destructive) {
+    background-color: oklch(
+      from var(--destructive) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.group:hover .group-hover\:bg-destructive-foreground) {
+    background-color: oklch(
+      from var(--destructive-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.group:hover .group-hover\:bg-transparent) {
+    background-color: transparent;
+  }
+
+  :where(.group:hover .group-hover\:bg-none) {
+    background: none;
+  }
+
+  /* -- group-hover: border color (theme) -- */
+
+  :where(.group:hover .group-hover\:border-primary) {
+    --_border-color: var(--primary);
+  }
+
+  :where(.group:hover .group-hover\:border-secondary) {
+    --_border-color: var(--secondary);
+  }
+
+  :where(.group:hover .group-hover\:border-tertiary) {
+    --_border-color: var(--tertiary);
+  }
+
+  :where(.group:hover .group-hover\:border-muted) {
+    --_border-color: var(--muted);
+  }
+
+  :where(.group:hover .group-hover\:border-faded) {
+    --_border-color: var(--faded);
+  }
+
+  :where(.group:hover .group-hover\:border-info) {
+    --_border-color: var(--info);
+  }
+
+  :where(.group:hover .group-hover\:border-success) {
+    --_border-color: var(--success);
+  }
+
+  :where(.group:hover .group-hover\:border-warning) {
+    --_border-color: var(--warning);
+  }
+
+  :where(.group:hover .group-hover\:border-destructive) {
+    --_border-color: var(--destructive);
+  }
+
+  /* -- group-hover: opacity -- */
+
+  :where(.group:hover .group-hover\:opacity-0) {
+    opacity: 0;
+  }
+
+  :where(.group:hover .group-hover\:opacity-25) {
+    opacity: 0.25;
+  }
+
+  :where(.group:hover .group-hover\:opacity-50) {
+    opacity: 0.5;
+  }
+
+  :where(.group:hover .group-hover\:opacity-75) {
+    opacity: 0.75;
+  }
+
+  :where(.group:hover .group-hover\:opacity-100) {
+    opacity: 1;
+  }
+
+  /* -- group-hover: scale -- */
+
+  :where(.group:hover .group-hover\:scale-0) {
+    transform: scale(0);
+  }
+
+  :where(.group:hover .group-hover\:scale-50) {
+    transform: scale(0.5);
+  }
+
+  :where(.group:hover .group-hover\:scale-75) {
+    transform: scale(0.75);
+  }
+
+  :where(.group:hover .group-hover\:scale-90) {
+    transform: scale(0.9);
+  }
+
+  :where(.group:hover .group-hover\:scale-95) {
+    transform: scale(0.95);
+  }
+
+  :where(.group:hover .group-hover\:scale-100) {
+    transform: scale(1);
+  }
+
+  :where(.group:hover .group-hover\:scale-105) {
+    transform: scale(1.05);
+  }
+
+  :where(.group:hover .group-hover\:scale-110) {
+    transform: scale(1.1);
+  }
+
+  :where(.group:hover .group-hover\:scale-125) {
+    transform: scale(1.25);
+  }
+
+  :where(.group:hover .group-hover\:scale-150) {
+    transform: scale(1.5);
+  }
+
+  /* ===========================================================================
+  HOVER STATE UTILITIES
+  =========================================================================== */
+
+  /* -- hover: text color (theme) -- */
+
+  :where(.hover\:text-background:hover) {
+    color: oklch(from var(--background) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-foreground:hover) {
+    color: oklch(from var(--foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-card:hover) {
+    color: oklch(from var(--card) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-card-foreground:hover) {
+    color: oklch(from var(--card-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-input:hover) {
+    color: oklch(from var(--input) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-input-foreground:hover) {
+    color: oklch(from var(--input-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-muted:hover) {
+    color: oklch(from var(--muted) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-muted-foreground:hover) {
+    color: oklch(from var(--muted-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-faded:hover) {
+    color: oklch(from var(--faded) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-faded-foreground:hover) {
+    color: oklch(from var(--faded-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-primary:hover) {
+    color: oklch(from var(--primary) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-primary-foreground:hover) {
+    color: oklch(from var(--primary-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-secondary:hover) {
+    color: oklch(from var(--secondary) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-secondary-foreground:hover) {
+    color: oklch(from var(--secondary-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-tertiary:hover) {
+    color: oklch(from var(--tertiary) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-tertiary-foreground:hover) {
+    color: oklch(from var(--tertiary-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-info:hover) {
+    color: oklch(from var(--info) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-info-foreground:hover) {
+    color: oklch(from var(--info-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-success:hover) {
+    color: oklch(from var(--success) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-success-foreground:hover) {
+    color: oklch(from var(--success-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-warning:hover) {
+    color: oklch(from var(--warning) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-warning-foreground:hover) {
+    color: oklch(from var(--warning-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-destructive:hover) {
+    color: oklch(from var(--destructive) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  :where(.hover\:text-destructive-foreground:hover) {
+    color: oklch(from var(--destructive-foreground) l c h / calc(alpha * var(--_text-alpha, 1)));
+  }
+
+  /* -- hover: background color (theme) -- */
+
+  :where(.hover\:bg-background:hover) {
+    background-color: oklch(
+      from var(--background) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.hover\:bg-foreground:hover) {
+    background-color: oklch(
+      from var(--foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.hover\:bg-card:hover) {
+    background-color: oklch(from var(--card) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.hover\:bg-card-foreground:hover) {
+    background-color: oklch(
+      from var(--card-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.hover\:bg-input:hover) {
+    background-color: oklch(from var(--input) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.hover\:bg-input-foreground:hover) {
+    background-color: oklch(
+      from var(--input-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.hover\:bg-muted:hover) {
+    background-color: oklch(from var(--muted) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.hover\:bg-muted-foreground:hover) {
+    background-color: oklch(
+      from var(--muted-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.hover\:bg-faded:hover) {
+    background-color: oklch(from var(--faded) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.hover\:bg-faded-foreground:hover) {
+    background-color: oklch(
+      from var(--faded-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.hover\:bg-primary:hover) {
+    background-color: oklch(from var(--primary) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.hover\:bg-primary-foreground:hover) {
+    background-color: oklch(
+      from var(--primary-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.hover\:bg-secondary:hover) {
+    background-color: oklch(
+      from var(--secondary) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.hover\:bg-secondary-foreground:hover) {
+    background-color: oklch(
+      from var(--secondary-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.hover\:bg-tertiary:hover) {
+    background-color: oklch(from var(--tertiary) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.hover\:bg-tertiary-foreground:hover) {
+    background-color: oklch(
+      from var(--tertiary-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.hover\:bg-info:hover) {
+    background-color: oklch(from var(--info) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.hover\:bg-info-foreground:hover) {
+    background-color: oklch(
+      from var(--info-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.hover\:bg-success:hover) {
+    background-color: oklch(from var(--success) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.hover\:bg-success-foreground:hover) {
+    background-color: oklch(
+      from var(--success-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.hover\:bg-warning:hover) {
+    background-color: oklch(from var(--warning) l c h / calc(alpha * var(--_background-alpha, 1)));
+  }
+
+  :where(.hover\:bg-warning-foreground:hover) {
+    background-color: oklch(
+      from var(--warning-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.hover\:bg-destructive:hover) {
+    background-color: oklch(
+      from var(--destructive) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.hover\:bg-destructive-foreground:hover) {
+    background-color: oklch(
+      from var(--destructive-foreground) l c h / calc(alpha * var(--_background-alpha, 1))
+    );
+  }
+
+  :where(.hover\:bg-transparent:hover) {
+    background-color: transparent;
+  }
+
+  :where(.hover\:bg-none:hover) {
+    background: none;
+  }
+
+  /* -- hover: border color (theme) -- */
+
+  :where(.hover\:border-primary:hover) {
+    border-color: var(--primary);
+  }
+
+  :where(.hover\:border-secondary:hover) {
+    border-color: var(--secondary);
+  }
+
+  :where(.hover\:border-tertiary:hover) {
+    border-color: var(--tertiary);
+  }
+
+  :where(.hover\:border-muted:hover) {
+    border-color: var(--muted);
+  }
+
+  :where(.hover\:border-faded:hover) {
+    border-color: var(--faded);
+  }
+
+  :where(.hover\:border-info:hover) {
+    border-color: var(--info);
+  }
+
+  :where(.hover\:border-success:hover) {
+    border-color: var(--success);
+  }
+
+  :where(.hover\:border-warning:hover) {
+    border-color: var(--warning);
+  }
+
+  :where(.hover\:border-destructive:hover) {
+    border-color: var(--destructive);
+  }
+
+  /* -- hover: opacity -- */
+
+  :where(.hover\:opacity-0:hover) {
+    opacity: 0;
+  }
+
+  :where(.hover\:opacity-25:hover) {
+    opacity: 0.25;
+  }
+
+  :where(.hover\:opacity-50:hover) {
+    opacity: 0.5;
+  }
+
+  :where(.hover\:opacity-75:hover) {
+    opacity: 0.75;
+  }
+
+  :where(.hover\:opacity-100:hover) {
+    opacity: 1;
+  }
+
+  /* -- hover: scale -- */
+
+  :where(.hover\:scale-0:hover) {
+    transform: scale(0);
+  }
+
+  :where(.hover\:scale-25:hover) {
+    transform: scale(0.25);
+  }
+
+  :where(.hover\:scale-50:hover) {
+    transform: scale(0.5);
+  }
+
+  :where(.hover\:scale-75:hover) {
+    transform: scale(0.75);
+  }
+
+  :where(.hover\:scale-90:hover) {
+    transform: scale(0.9);
+  }
+
+  :where(.hover\:scale-98:hover) {
+    transform: scale(0.98);
+  }
+
+  :where(.hover\:scale-99:hover) {
+    transform: scale(0.99);
+  }
+
+  :where(.hover\:scale-100:hover) {
+    transform: scale(1);
+  }
+
+  :where(.hover\:scale-101:hover) {
+    transform: scale(1.01);
+  }
+
+  :where(.hover\:scale-102:hover) {
+    transform: scale(1.02);
+  }
+
+  :where(.hover\:scale-110:hover) {
+    transform: scale(1.1);
+  }
+
+  :where(.hover\:scale-125:hover) {
+    transform: scale(1.25);
+  }
+
+  :where(.hover\:scale-150:hover) {
+    transform: scale(1.5);
+  }
+
+  /* -- hover: shadow (elevation) -- */
+
+  :where(.hover\:shadow-none:hover) {
+    --_ring-shadow: 0 0 #0000;
+  }
+
+  :where(.hover\:shadow-xs:hover) {
+    --_ring-shadow: var(--shadow-xs);
+  }
+
+  :where(.hover\:shadow-sm:hover) {
+    --_ring-shadow: var(--shadow-sm);
+  }
+
+  :where(.hover\:shadow-md:hover) {
+    --_ring-shadow: var(--shadow-md);
+  }
+
+  :where(.hover\:shadow-lg:hover) {
+    --_ring-shadow: var(--shadow-lg);
+  }
+
+  :where(.hover\:shadow-xl:hover) {
+    --_ring-shadow: var(--shadow-xl);
+  }
+
+  /* ===========================================================================
+  SCROLL-FADE UTILITIES — scroll-aware mask fades on the scroll container itself.
+  Ported from shadcn. Built on CSS scroll-driven animations: mask-image plus a
+  scroll(self) timeline eases each edge crisp<->faded as you scroll, with a
+  static both-edge fade as the no-JS fallback. Because the mask is on the scroller,
+  a visible scrollbar fades too — pair with scrollbar-none to hide it.
+
+  Sizing uses Zazz's semantic spacing scale (scroll-fade-{xs..xl} and per-edge
+  scroll-fade-{t,b,s,e}-{xs..xl}). For arbitrary values set --scroll-fade-size,
+  the per-edge --scroll-fade-{t,b,s,e}-size, or the ease distance
+  --scroll-fade-reveal inline. See modern-web-guidance: soft-edge-content-fade.
+  =========================================================================== */
+
+  /* Vertical, both edges. scroll-fade and its explicit alias scroll-fade-y. */
+  :where(.scroll-fade, .scroll-fade-y) {
+    --_scroll-fade-size-t: var(
+      --scroll-fade-t-size,
+      var(--scroll-fade-size, min(12%, calc(var(--spacing-interval) * 10)))
+    );
+    --_scroll-fade-size-b: var(
+      --scroll-fade-b-size,
+      var(--scroll-fade-size, min(12%, calc(var(--spacing-interval) * 10)))
+    );
+    --scroll-fade-block: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--scroll-fade-t, 0px),
+      #000 calc(100% - var(--scroll-fade-b, 0px)),
+      transparent 100%
+    );
+    -webkit-mask-image: var(--scroll-fade-mask, var(--scroll-fade-block));
+    mask-image: var(--scroll-fade-mask, var(--scroll-fade-block));
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    @supports (animation-timeline: scroll()) {
+      animation:
+        scroll-fade-reveal-t 1ms ease-in-out,
+        scroll-fade-reveal-b 1ms ease-in-out;
+      animation-timeline: scroll(self y), scroll(self y);
+      animation-range:
+        0 var(--scroll-fade-reveal, calc(var(--spacing-interval) * 24)),
+        calc(100% - var(--scroll-fade-reveal, calc(var(--spacing-interval) * 24))) 100%;
+      animation-fill-mode: both;
+    }
+
+    @supports not (animation-timeline: scroll()) {
+      --scroll-fade-t: var(--_scroll-fade-size-t);
+      --scroll-fade-b: var(--_scroll-fade-size-b);
+    }
+  }
+
+  /* Horizontal, both inline edges. Fade follows the reading direction in RTL. */
+  :where(.scroll-fade-x) {
+    --_scroll-fade-size-s: var(
+      --scroll-fade-s-size,
+      var(--scroll-fade-size, min(12%, calc(var(--spacing-interval) * 10)))
+    );
+    --_scroll-fade-size-e: var(
+      --scroll-fade-e-size,
+      var(--scroll-fade-size, min(12%, calc(var(--spacing-interval) * 10)))
+    );
+    --scroll-fade-inline: linear-gradient(
+      to right,
+      transparent 0,
+      #000 var(--scroll-fade-s, 0px),
+      #000 calc(100% - var(--scroll-fade-e, 0px)),
+      transparent 100%
+    );
+    -webkit-mask-image: var(--scroll-fade-mask, var(--scroll-fade-inline));
+    mask-image: var(--scroll-fade-mask, var(--scroll-fade-inline));
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    &:where([dir="rtl"], [dir="rtl"] *) {
+      --scroll-fade-inline: linear-gradient(
+        to left,
+        transparent 0,
+        #000 var(--scroll-fade-s, 0px),
+        #000 calc(100% - var(--scroll-fade-e, 0px)),
+        transparent 100%
+      );
+    }
+
+    @supports (animation-timeline: scroll()) {
+      animation:
+        scroll-fade-reveal-s 1ms ease-in-out,
+        scroll-fade-reveal-e 1ms ease-in-out;
+      animation-timeline: scroll(self inline), scroll(self inline);
+      animation-range:
+        0 var(--scroll-fade-reveal, calc(var(--spacing-interval) * 24)),
+        calc(100% - var(--scroll-fade-reveal, calc(var(--spacing-interval) * 24))) 100%;
+      animation-fill-mode: both;
+    }
+
+    @supports not (animation-timeline: scroll()) {
+      --scroll-fade-s: var(--_scroll-fade-size-s);
+      --scroll-fade-e: var(--_scroll-fade-size-e);
+    }
+  }
+
+  /* Single-edge fades — each drives one edge only. Physical: t/b/l/r. */
+  :where(.scroll-fade-t) {
+    --_scroll-fade-size-t: var(
+      --scroll-fade-t-size,
+      var(--scroll-fade-size, min(12%, calc(var(--spacing-interval) * 10)))
+    );
+    --scroll-fade-mask: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--scroll-fade-t, 0px),
+      #000 100%
+    );
+    -webkit-mask-image: var(--scroll-fade-mask);
+    mask-image: var(--scroll-fade-mask);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    @supports (animation-timeline: scroll()) {
+      animation: scroll-fade-reveal-t 1ms ease-in-out;
+      animation-timeline: scroll(self y);
+      animation-range: 0 var(--scroll-fade-reveal, calc(var(--spacing-interval) * 24));
+      animation-fill-mode: both;
+    }
+
+    @supports not (animation-timeline: scroll()) {
+      --scroll-fade-t: var(--_scroll-fade-size-t);
+    }
+  }
+
+  :where(.scroll-fade-b) {
+    --_scroll-fade-size-b: var(
+      --scroll-fade-b-size,
+      var(--scroll-fade-size, min(12%, calc(var(--spacing-interval) * 10)))
+    );
+    --scroll-fade-mask: linear-gradient(
+      to bottom,
+      #000 0,
+      #000 calc(100% - var(--scroll-fade-b, 0px)),
+      transparent 100%
+    );
+    -webkit-mask-image: var(--scroll-fade-mask);
+    mask-image: var(--scroll-fade-mask);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    @supports (animation-timeline: scroll()) {
+      animation: scroll-fade-reveal-b 1ms ease-in-out;
+      animation-timeline: scroll(self y);
+      animation-range: calc(100% - var(--scroll-fade-reveal, calc(var(--spacing-interval) * 24)))
+        100%;
+      animation-fill-mode: both;
+    }
+
+    @supports not (animation-timeline: scroll()) {
+      --scroll-fade-b: var(--_scroll-fade-size-b);
+    }
+  }
+
+  :where(.scroll-fade-l) {
+    --_scroll-fade-size-s: var(
+      --scroll-fade-s-size,
+      var(--scroll-fade-size, min(12%, calc(var(--spacing-interval) * 10)))
+    );
+    --scroll-fade-mask: linear-gradient(
+      to right,
+      transparent 0,
+      #000 var(--scroll-fade-s, 0px),
+      #000 100%
+    );
+    -webkit-mask-image: var(--scroll-fade-mask);
+    mask-image: var(--scroll-fade-mask);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    @supports (animation-timeline: scroll()) {
+      animation: scroll-fade-reveal-s 1ms ease-in-out;
+      animation-timeline: scroll(self x);
+      animation-range: 0 var(--scroll-fade-reveal, calc(var(--spacing-interval) * 24));
+      animation-fill-mode: both;
+    }
+
+    @supports not (animation-timeline: scroll()) {
+      --scroll-fade-s: var(--_scroll-fade-size-s);
+    }
+  }
+
+  :where(.scroll-fade-r) {
+    --_scroll-fade-size-e: var(
+      --scroll-fade-e-size,
+      var(--scroll-fade-size, min(12%, calc(var(--spacing-interval) * 10)))
+    );
+    --scroll-fade-mask: linear-gradient(
+      to right,
+      #000 0,
+      #000 calc(100% - var(--scroll-fade-e, 0px)),
+      transparent 100%
+    );
+    -webkit-mask-image: var(--scroll-fade-mask);
+    mask-image: var(--scroll-fade-mask);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    @supports (animation-timeline: scroll()) {
+      animation: scroll-fade-reveal-e 1ms ease-in-out;
+      animation-timeline: scroll(self x);
+      animation-range: calc(100% - var(--scroll-fade-reveal, calc(var(--spacing-interval) * 24)))
+        100%;
+      animation-fill-mode: both;
+    }
+
+    @supports not (animation-timeline: scroll()) {
+      --scroll-fade-e: var(--_scroll-fade-size-e);
+    }
+  }
+
+  /* Logical inline edges — s/e mirror in RTL. */
+  :where(.scroll-fade-s) {
+    --_scroll-fade-size-s: var(
+      --scroll-fade-s-size,
+      var(--scroll-fade-size, min(12%, calc(var(--spacing-interval) * 10)))
+    );
+    --scroll-fade-mask: linear-gradient(
+      to right,
+      transparent 0,
+      #000 var(--scroll-fade-s, 0px),
+      #000 100%
+    );
+    -webkit-mask-image: var(--scroll-fade-mask);
+    mask-image: var(--scroll-fade-mask);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    &:where([dir="rtl"], [dir="rtl"] *) {
+      --scroll-fade-mask: linear-gradient(
+        to left,
+        transparent 0,
+        #000 var(--scroll-fade-s, 0px),
+        #000 100%
+      );
+    }
+
+    @supports (animation-timeline: scroll()) {
+      animation: scroll-fade-reveal-s 1ms ease-in-out;
+      animation-timeline: scroll(self inline);
+      animation-range: 0 var(--scroll-fade-reveal, calc(var(--spacing-interval) * 24));
+      animation-fill-mode: both;
+    }
+
+    @supports not (animation-timeline: scroll()) {
+      --scroll-fade-s: var(--_scroll-fade-size-s);
+    }
+  }
+
+  :where(.scroll-fade-e) {
+    --_scroll-fade-size-e: var(
+      --scroll-fade-e-size,
+      var(--scroll-fade-size, min(12%, calc(var(--spacing-interval) * 10)))
+    );
+    --scroll-fade-mask: linear-gradient(
+      to right,
+      #000 0,
+      #000 calc(100% - var(--scroll-fade-e, 0px)),
+      transparent 100%
+    );
+    -webkit-mask-image: var(--scroll-fade-mask);
+    mask-image: var(--scroll-fade-mask);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    &:where([dir="rtl"], [dir="rtl"] *) {
+      --scroll-fade-mask: linear-gradient(
+        to left,
+        #000 0,
+        #000 calc(100% - var(--scroll-fade-e, 0px)),
+        transparent 100%
+      );
+    }
+
+    @supports (animation-timeline: scroll()) {
+      animation: scroll-fade-reveal-e 1ms ease-in-out;
+      animation-timeline: scroll(self inline);
+      animation-range: calc(100% - var(--scroll-fade-reveal, calc(var(--spacing-interval) * 24)))
+        100%;
+      animation-fill-mode: both;
+    }
+
+    @supports not (animation-timeline: scroll()) {
+      --scroll-fade-e: var(--_scroll-fade-size-e);
+    }
+  }
+
+  /* Fade depth on Zazz's semantic spacing scale (default is min(12%, ~40px)). */
+  :where(.scroll-fade-xs) {
+    --scroll-fade-size: var(--gap-xs);
+  }
+
+  :where(.scroll-fade-sm) {
+    --scroll-fade-size: var(--gap-sm);
+  }
+
+  :where(.scroll-fade-md) {
+    --scroll-fade-size: var(--gap-md);
+  }
+
+  :where(.scroll-fade-lg) {
+    --scroll-fade-size: var(--gap-lg);
+  }
+
+  :where(.scroll-fade-xl) {
+    --scroll-fade-size: var(--gap-xl);
+  }
+
+  /* Per-edge depth — overrides scroll-fade-<size> on the edge it targets.
+     Use s/e on horizontal scrollers so the sizes mirror in RTL. */
+  :where(.scroll-fade-t-xs) {
+    --scroll-fade-t-size: var(--gap-xs);
+  }
+
+  :where(.scroll-fade-t-sm) {
+    --scroll-fade-t-size: var(--gap-sm);
+  }
+
+  :where(.scroll-fade-t-md) {
+    --scroll-fade-t-size: var(--gap-md);
+  }
+
+  :where(.scroll-fade-t-lg) {
+    --scroll-fade-t-size: var(--gap-lg);
+  }
+
+  :where(.scroll-fade-t-xl) {
+    --scroll-fade-t-size: var(--gap-xl);
+  }
+
+  :where(.scroll-fade-b-xs) {
+    --scroll-fade-b-size: var(--gap-xs);
+  }
+
+  :where(.scroll-fade-b-sm) {
+    --scroll-fade-b-size: var(--gap-sm);
+  }
+
+  :where(.scroll-fade-b-md) {
+    --scroll-fade-b-size: var(--gap-md);
+  }
+
+  :where(.scroll-fade-b-lg) {
+    --scroll-fade-b-size: var(--gap-lg);
+  }
+
+  :where(.scroll-fade-b-xl) {
+    --scroll-fade-b-size: var(--gap-xl);
+  }
+
+  :where(.scroll-fade-s-xs) {
+    --scroll-fade-s-size: var(--gap-xs);
+  }
+
+  :where(.scroll-fade-s-sm) {
+    --scroll-fade-s-size: var(--gap-sm);
+  }
+
+  :where(.scroll-fade-s-md) {
+    --scroll-fade-s-size: var(--gap-md);
+  }
+
+  :where(.scroll-fade-s-lg) {
+    --scroll-fade-s-size: var(--gap-lg);
+  }
+
+  :where(.scroll-fade-s-xl) {
+    --scroll-fade-s-size: var(--gap-xl);
+  }
+
+  :where(.scroll-fade-e-xs) {
+    --scroll-fade-e-size: var(--gap-xs);
+  }
+
+  :where(.scroll-fade-e-sm) {
+    --scroll-fade-e-size: var(--gap-sm);
+  }
+
+  :where(.scroll-fade-e-md) {
+    --scroll-fade-e-size: var(--gap-md);
+  }
+
+  :where(.scroll-fade-e-lg) {
+    --scroll-fade-e-size: var(--gap-lg);
+  }
+
+  :where(.scroll-fade-e-xl) {
+    --scroll-fade-e-size: var(--gap-xl);
+  }
+
+  /* Remove the fade. Last so it wins over any edge mask regardless of order. */
+  :where(.scroll-fade-none) {
+    --scroll-fade-mask: none;
+  }
+}

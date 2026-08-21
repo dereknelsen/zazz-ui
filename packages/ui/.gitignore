@@ -1,0 +1,9 @@
+# Emitted by tsc (in-place, next to each .ts source) — published to npm, not committed.
+src/**/*.js
+src/**/*.js.map
+src/**/*.d.ts
+src/**/*.d.ts.map
+# Hand-written ambient types are source, not emit.
+!src/globals.d.ts
+
+dist/

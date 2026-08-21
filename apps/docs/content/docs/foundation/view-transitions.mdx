@@ -1,0 +1,113 @@
+---
+title: View transitions
+description: "SPA-like navigation with animated view transitions: instant content swaps that keep your site feeling like a native app."
+---
+
+Zazz includes built-in view transitions that make multi-page sites feel like single-page apps. When a
+visitor clicks a same-origin link, only the `<main>` content swaps. The header and footer stay in
+place, and a view transition fades the old content into the new.
+
+Two web platform features do the work, with no framework involved:
+
+1. **The Navigation API** intercepts the link click and replaces `<main>` with a `fetch()`, so the
+   browser never tears down and rebuilds the whole page.
+2. **The View Transitions API** wraps that swap in an animation, so the change reads as deliberate
+   instead of abrupt.
+
+## What visitors get
+
+- The header and footer hold still, with no flicker or repaint.
+- Page content fades (and, if you ask for it, scales or slides) between states.
+- Back and forward buttons work normally, with the same animation.
+- Scroll position is restored.
+- Focus moves to the new page's heading, so screen reader users hear that the page changed.
+
+## Setup
+
+Include the stylesheet and the `index.js` module (it bundles `navigation.js`). The transition styles
+live in `base/_view-transitions.css`, which `index.css` already `@import`s, so the single link covers
+them:
+
+```html
+<link rel="stylesheet" href="./zazz/index.css" />
+<script type="module" src="./zazz/index.js"></script>
+```
+
+Mark your header and footer. `<main>` gets its view-transition name automatically — it needs no
+attribute:
+
+```html
+<header data-transition-layer="global-header">…</header>
+<main>…</main>
+<footer data-transition-layer="global-footer">…</footer>
+```
+
+Every same-origin link now swaps `<main>` in place. The header and footer carry their own
+view-transition names, so they persist across the swap without animating.
+
+## Turning on the animation
+
+The crossfade ships **off**: `--view-transition-duration` defaults to `0ms`, so content swaps
+instantly until you give it a duration. Set one on `:root`, and optionally scale or slide the content
+as it moves:
+
+```css
+:root {
+  --view-transition-duration: 400ms;
+  --view-transition-scale--old: 0.98;
+}
+```
+
+| Token                              | Default                | Effect                                        |
+| ---------------------------------- | ---------------------- | --------------------------------------------- |
+| `--view-transition-duration`       | `0ms`                  | Length of the animation; set it to turn it on |
+| `--view-transition-ease`           | `var(--bezier-easing)` | Easing curve                                  |
+| `--view-transition-wait`           | `0ms`                  | Delay before the incoming content animates in |
+| `--view-transition-origin`         | `center top`           | Transform origin for scale and translate      |
+| `--view-transition-scale--old`     | `1`                    | Scale of the outgoing content                 |
+| `--view-transition-scale--new`     | `1`                    | Scale of the incoming content                 |
+| `--view-transition-translate--old` | `0, 0, 0`              | `translate3d` of the outgoing content         |
+| `--view-transition-translate--new` | `0, 0, 0`              | `translate3d` of the incoming content         |
+| `--view-transition-opacity--old`   | `0`                    | Opacity the outgoing content fades to         |
+| `--view-transition-opacity--new`   | `0`                    | Opacity the incoming content fades from       |
+
+## What gets transitioned
+
+| View-transition name | Behavior                                                  |
+| -------------------- | --------------------------------------------------------- |
+| `main-content`       | Animated: the old content fades out, the new one fades in |
+| `global-header`      | Persists without animating                                |
+| `global-footer`      | Persists without animating                                |
+
+Keeping the chrome named and static is what makes navigation feel stable while the body changes.
+
+## Under the hood
+
+The `navigation.js` script drives the swap:
+
+1. It listens for the browser's [`navigate`](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API)
+   event.
+2. For a qualifying navigation, it fetches the destination, pulls out its `<main>`, and replaces the
+   current one. When the browser supports
+   [view transitions](https://developer.mozilla.org/en-US/docs/Web/API/Document/startViewTransition),
+   the swap is animated.
+3. After the swap it updates `document.title`, restores scroll position, refreshes
+   [Reveal](/docs/components/reveal) so new `[data-reveal]` elements animate, re-initializes any
+   [carousels](/docs/components/carousel) in the new content, and moves focus to the new `<h1>`.
+
+A navigation qualifies when it is same-origin, not a hash-only change, not a download, not a form
+submission, and interceptable. Everything else (external links, `target="_blank"`, downloads, form
+posts) behaves normally.
+
+## Graceful degradation
+
+Page transitions are an enhancement, and every page still works as a standalone document.
+
+- **No Navigation API** (Firefox, as of 2025): links do standard full-page loads.
+- **No View Transitions:** the content still swaps instantly, just without the animation.
+- **Fetch failure:** the script falls back to `location.assign()` for a normal navigation.
+- **Missing `<main>`** on either page: it falls back to a full page load.
+- **JavaScript off:** links behave normally.
+
+Motion respects `prefers-reduced-motion`. When a visitor prefers reduced motion, content swaps
+instantly with no animation.

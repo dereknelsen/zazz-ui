@@ -1,0 +1,114 @@
+---
+title: Borders
+description: Border color, sides, and style utilities plus the per-corner border-radius system, including the @property composition variables behind both.
+---
+
+Borders and radius are both **token-driven and composable**. Border color flows through a
+`--_border-color` indirection (so `border-opacity-*` can dim it), and radius uses the same
+composing-rule pattern as padding: touch one corner, leave the rest intact.
+
+## Border
+
+Add a border, then optionally recolor or restyle it. The default color is `--border`.
+
+### Sides
+
+| Class                                                           | Result                 |
+| --------------------------------------------------------------- | ---------------------- |
+| `border`                                                        | 1px solid on all sides |
+| `border-t` `border-r` `border-b` `border-l`                     | 1px solid on that side |
+| `border-none`                                                   | removes all borders    |
+| `border-t-none` `border-r-none` `border-b-none` `border-l-none` | removes that side      |
+
+### Color
+
+Color utilities set `--_border-color`; the border-drawing classes read it. Set both, e.g.
+`border border-primary`.
+
+| Class                                                                | Token        |
+| -------------------------------------------------------------------- | ------------ |
+| _(default)_                                                          | `--border`   |
+| `border-primary` `border-secondary` `border-tertiary`                | brand roles  |
+| `border-muted` `border-faded`                                        | dim / fade   |
+| `border-info` `border-success` `border-warning` `border-destructive` | status roles |
+
+### Style
+
+| Class           | Declaration            |
+| --------------- | ---------------------- |
+| `border-dashed` | `border-style: dashed` |
+| `border-dotted` | `border-style: dotted` |
+| `border-double` | `border-style: double` |
+
+```html
+<div class="border border-dashed border-muted rounded-md p-md">Dashed, muted, rounded.</div>
+```
+
+The drawn color is `oklch(from var(--_border-color) l c h / calc(alpha × --_border-alpha))`, so
+`border-opacity-*` ([Color opacity](/docs/base/utilities/color-opacity)) dims the line, and
+`hover:border-*` ([Hover states](/docs/base/utilities/hover)) recolors it on hover.
+
+## Border radius
+
+Radius uses the **radius scale** (`--radius-xs` … `--radius-full`, scaled by
+`--radius-multiplier`). Conventions: `md` for buttons/inputs, `lg` for cards/dialogs, `sm` for
+badges, `full` for pills and circles.
+
+### All corners
+
+| Class          | Value                |
+| -------------- | -------------------- |
+| `rounded-0`    | `0`                  |
+| `rounded-xs`   | `var(--radius-xs)`   |
+| `rounded-sm`   | `var(--radius-sm)`   |
+| `rounded-md`   | `var(--radius-md)`   |
+| `rounded-lg`   | `var(--radius-lg)`   |
+| `rounded-xl`   | `var(--radius-xl)`   |
+| `rounded-full` | `var(--radius-full)` |
+
+### Per edge & per corner
+
+Each of these takes the full size range (`0`, `xs`–`xl`, `full`):
+
+| Scope             | Classes                                                     |
+| ----------------- | ----------------------------------------------------------- |
+| Top / bottom edge | `rounded-t-*` · `rounded-b-*`                               |
+| Left / right edge | `rounded-l-*` · `rounded-r-*`                               |
+| Single corner     | `rounded-tl-*` `rounded-tr-*` `rounded-br-*` `rounded-bl-*` |
+
+## Composition variables
+
+Like padding, radius is built from four `@property`-registered, **non-inheriting** corner
+variables. A composing rule draws each corner from its variable, and each utility sets only the
+corner(s) it owns, so a per-edge class flattens just that edge and leaves a component's other
+corners untouched.
+
+```css
+@property --_radius-top-left {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0;
+}
+
+/* rounded-b-0 sets only the two bottom corners → top corners keep their value */
+:where(.rounded-b-0) {
+  --_radius-bottom-left: 0px;
+  --_radius-bottom-right: 0px;
+}
+```
+
+| Variable                 | Syntax                | Initial | Set by                                           |
+| ------------------------ | --------------------- | ------- | ------------------------------------------------ |
+| `--_radius-top-left`     | `<length-percentage>` | `0`     | `rounded-* rounded-t-* rounded-l-* rounded-tl-*` |
+| `--_radius-top-right`    | `<length-percentage>` | `0`     | `rounded-* rounded-t-* rounded-r-* rounded-tr-*` |
+| `--_radius-bottom-right` | `<length-percentage>` | `0`     | `rounded-* rounded-b-* rounded-r-* rounded-br-*` |
+| `--_radius-bottom-left`  | `<length-percentage>` | `0`     | `rounded-* rounded-b-* rounded-l-* rounded-bl-*` |
+
+```html
+<!-- flatten where a card meets a flush element, keep the outer corners round -->
+<div class="rounded-lg rounded-b-0">…</div>
+```
+
+`--_border-color` is a related, single-purpose indirection (not `@property`-registered): the
+color classes set it, the drawing classes read it through the alpha-multiply pattern. See the
+[overview](/docs/base/utilities#composition-variables-registered-non-inheriting) for the full model.

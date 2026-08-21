@@ -1,0 +1,62 @@
+/**
+ * index.css — Plain-CSS entry point; @import bundle in cascade order.
+ *
+ * Bundles the base layers (layers → variables → reset) followed by every
+ * component, so a page only needs a single stylesheet link. Order matters:
+ * layers.css declares the cascade layers and must load first.
+ *
+ * Legacy support: import your legacy stylesheets into the legacy layer at the slot
+ * below (between the reset baseline and the components). Projects that prefer to
+ * compose the layers by hand can import the base files individually in the
+ * same order instead of using this bundle — see CONVENTIONS.md.
+ *
+ * @layer      none
+ * @see        CONVENTIONS.md — file anatomy & layer architecture
+ */
+
+/* base — order matters; _layers.css declares the cascade layers first. */
+@import "./base/_layers.css";
+@import "./base/_variables.css";
+@import "./base/_reset.css";
+@import "./base/_typography.css";
+@import "./base/_view-transitions.css";
+
+/* Legacy layer — import legacy stylesheets here, into the legacy layer */
+/* @import "./your-legacy.css" layer(legacy); */
+
+/* Zazz primitives - UI omponents. */
+@import "./ui/badge/badge.css";
+@import "./ui/button/button.css";
+@import "./ui/button-group/button-group.css";
+@import "./ui/toggle/toggle.css";
+@import "./ui/toggle-group/toggle-group.css";
+@import "./ui/accordion/accordion.css";
+@import "./ui/table/table.css";
+@import "./ui/popover/popover.css";
+@import "./ui/tooltip/tooltip.css";
+@import "./ui/dialog/dialog.css";
+@import "./ui/dropdown/dropdown.css";
+@import "./ui/navigation-menu/navigation-menu.css";
+@import "./ui/mobile-menu/mobile-menu.css";
+@import "./ui/fields/fields.css";
+@import "./ui/input/input.css";
+@import "./ui/textarea/textarea.css";
+@import "./ui/select/select.css";
+@import "./ui/checkbox/checkbox.css";
+@import "./ui/slider/slider.css";
+@import "./ui/switch/switch.css";
+@import "./ui/input-group/input-group.css";
+@import "./ui/password-group/password-group.css";
+@import "./ui/radio/radio.css";
+@import "./ui/tabs/tabs.css";
+@import "./ui/carousel/carousel.css";
+@import "./ui/lightbox/lightbox.css";
+@import "./ui/toaster/toaster.css";
+@import "./ui/reveal/reveal.css";
+
+/* Utilities and layout remain the final normal Zazz override layer. */
+@import "./base/_utilities.css";
+@import "./base/_layout.css";
+
+/* Migrations layer - for legacy css overrides */
+/* @import "./migrations.css"; */

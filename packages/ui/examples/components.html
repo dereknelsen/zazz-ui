@@ -1,0 +1,1063 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <!-- Paint the right theme (bg, form controls, scrollbars) before CSS loads. -->
+    <meta name="color-scheme" content="light dark" />
+    <title>Zazz tests | Overview</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Preload latin Geist woff2 (Google Fonts v5) so it is ready before first paint. -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwcGFWNOITd.woff2"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:ital,wght@0,100..900;1,100..900&family=Geist:ital,wght@0,100..900;1,100..900&display=optional"
+      rel="stylesheet"
+    />
+
+    <!-- Zazz styles: one bundle — index.css @imports the base layers (layers,
+       variables, reset) and every component in cascade order. -->
+    <link rel="stylesheet" href="../src/index.css" />
+
+    <!-- Preload critical js -->
+    <link rel="modulepreload" href="../src/index.js" />
+
+    <!-- Prefetching related pages -->
+    <link rel="prefetch" href="layout.html" />
+
+    <!-- WARNING: CDN scripts not recommended for production.
+     If you need to use a CDN, create a new SRI hash (@see: https://srihash.org/)
+     and update the integrity attribute. -->
+
+    <!-- [Polyfill] Popover API (June 2026) - -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@oddbird/popover-polyfill@latest"
+      integrity="sha384-Gl/j23IcIIiDfqcDI5gpHCxd5EuslCYvs07HAw3KHGx5UcbxizoF/deDnkeEcFXW"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- [Polyfill] Invokers/tooltip (June 2026) - -->
+    <script
+      type="module"
+      src="https://esm.sh/invokers/compatible"
+      integrity="sha384-fzLqSi8WSEqp/tW3neqEgzl53fvLw4u32RAvoNQSSSAfKGsOrfA2B49xhrObWFnr"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Embla Carousel -->
+    <script
+      src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"
+      integrity="sha384-XGqLM9+dJ+PFOMZn6IuZgRRIoxcAT5fx4eIZCx7K3O2Dj5RA7EOlJ3yOS8Jd+kiY"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Embla Carousel Plugins -->
+    <script
+      src="https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js"
+      integrity="sha384-rs7pDLCh+QtEjJg2VChAoKZHaaz7apuon6rM57E3FdzC83xaJH4n9mQZn4E2s3f4"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-auto-scroll/embla-carousel-auto-scroll.umd.js"
+      integrity="sha384-5x3y2MLuLA5c1LQceYM+lo59GGkQmLzQGzbuHhDUDbnOJkFeTl5jUSdBy3JehMcM"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-class-names/embla-carousel-class-names.umd.js"
+      integrity="sha384-nZNIZhV6WSQVCeWMj8JFfOgQZyzPoGSTh0eohtAOu5aluevIpIblZcupMSdl/EEH"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-ssr/embla-carousel-ssr.umd.js"
+      integrity="sha384-apu0WDHR0c+4Z5qNk7egPNoCxXkYq80e+Qh6xJ6f67S53mSyYdKE6tIeXxvKJ6x9"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Zazz scripts: one ES module bundles every component script. -->
+    <script type="module" src="../src/index.js"></script>
+    <script>
+      /**
+       * Synchronizes the preview theme with the user's preference.
+       * - Reads "theme" from localStorage.
+       * - Falls back to "prefers-color-scheme: dark" media query if unset.
+       * - Applies the "dark" class to document.documentElement if theme is "dark".
+       * - Saves the resolved theme to localStorage for consistency.
+       * This block runs synchronously before dom load to prevent theme flash on load.
+       */
+      (() => {
+        try {
+          const storedTheme = localStorage.getItem("theme");
+          const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches;
+          const theme = storedTheme ?? (prefersDark ? "dark" : "light");
+          document.documentElement.classList.toggle("dark", theme === "dark");
+        } catch {
+          document.documentElement.classList.toggle(
+            "dark",
+            matchMedia("(prefers-color-scheme: dark)").matches,
+          );
+        }
+      })();
+    </script>
+  </head>
+
+  <body class="bg-background">
+    <header class="py-md border-b" data-transition-layer="global-header">
+      <div class="container">
+        <div class="flex items-center justify-between">
+          <a href="index.html" class="text-h6 font-black">Zazz tests</a>
+          <nav>
+            <menu class="flex gap-xs">
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="index.html">Overview</a>
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="about.html">About</a>
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="products.html"
+                  >Products</a
+                >
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="layout.html">Layout</a>
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="responsive.html"
+                  >Responsive</a
+                >
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="components.html"
+                  >Components</a
+                >
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="forms.html">Forms</a>
+              </li>
+            </menu>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main data-layout="main">
+      <section class="py-xl">
+        <div class="container">
+          <hgroup class="flex flex-col gap-sm">
+            <span class="text-eyebrow">Components</span>
+            <h1 class="text-h1">Component kitchen sink</h1>
+            <p class="text-lg text-muted-foreground max-w-screen-sm">
+              Each block is adapted from the component's single-source example. Tooltips, dropdowns,
+              and the dialog use the native Popover and Invoker Commands APIs; tabs are a light-DOM
+              custom element. Try them with mouse and keyboard.
+            </p>
+          </hgroup>
+        </div>
+      </section>
+
+      <section class="pb-xl">
+        <div class="container">
+          <!-- Buttons -->
+          <div class="mb-lg">
+            <h2 class="text-h6 font-heading pb-sm">Buttons</h2>
+            <div class="flex items-center gap-xs pb-sm">
+              <button class="button" type="button">Default</button>
+              <button class="button" data-variant="primary" type="button">Primary</button>
+              <button class="button" data-variant="muted" type="button">Muted</button>
+              <button class="button" data-variant="ghost" type="button">Ghost</button>
+              <button class="button" data-variant="destructive" type="button">Destructive</button>
+              <button class="button" data-variant="link" type="button">Link</button>
+            </div>
+            <div class="flex items-center gap-xs">
+              <button class="button" data-variant="primary" type="button">
+                Start free trial
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                  <rect width="256" height="256" fill="none" />
+                  <line
+                    x1="40"
+                    y1="128"
+                    x2="216"
+                    y2="128"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                  <polyline
+                    points="144 56 216 128 144 200"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                </svg>
+              </button>
+              <button class="button" data-variant="primary" data-size="sm" type="button">
+                Small
+              </button>
+              <button
+                class="button"
+                data-variant="primary"
+                data-size="icon"
+                type="button"
+                aria-label="Add"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                  <rect width="256" height="256" fill="none" />
+                  <line
+                    x1="40"
+                    y1="128"
+                    x2="216"
+                    y2="128"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                  <line
+                    x1="128"
+                    y1="40"
+                    x2="128"
+                    y2="216"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                </svg>
+              </button>
+              <button
+                class="button"
+                data-variant="muted"
+                data-size="icon-sm"
+                type="button"
+                aria-label="Add"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                  <rect width="256" height="256" fill="none" />
+                  <line
+                    x1="40"
+                    y1="128"
+                    x2="216"
+                    y2="128"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                  <line
+                    x1="128"
+                    y1="40"
+                    x2="128"
+                    y2="216"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Button Group -->
+          <div class="mb-lg">
+            <div class="flex flex-col items-start gap-md">
+              <div class="button-group" role="group" aria-label="Text alignment">
+                <button class="button" type="button">Left</button>
+                <button class="button" type="button">Center</button>
+                <button class="button" type="button">Right</button>
+              </div>
+
+              <div class="button-group" role="group" aria-label="Pagination">
+                <button class="button" data-variant="muted" type="button">Previous</button>
+                <button class="button" data-variant="muted" data-size="icon" type="button">
+                  1
+                </button>
+                <button class="button" data-variant="muted" data-size="icon" type="button">
+                  2
+                </button>
+                <button class="button" data-variant="muted" data-size="icon" type="button">
+                  3
+                </button>
+                <button class="button" data-variant="muted" type="button">Next</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Toggle Group -->
+          <div class="mb-lg">
+            <h2 class="text-h6 font-heading pb-sm">Toggle Group</h2>
+            <div class="toggle-group" role="group" aria-label="Text formatting">
+              <label class="toggle">
+                <input type="checkbox" name="format" value="bold" />
+                <span>Bold</span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" name="format" value="italic" />
+                <span>Italic</span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" name="format" value="underline" />
+                <span>Underline</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="mb-lg">
+            <h2 class="text-h6 font-heading pb-sm">Buttons</h2>
+            <div class="flex items-center gap-xs pb-sm">
+              <button class="button" type="button">Default</button>
+              <button class="button" data-variant="primary" type="button">Primary</button>
+              <button class="button" data-variant="muted" type="button">Muted</button>
+              <button class="button" data-variant="ghost" type="button">Ghost</button>
+              <button class="button" data-variant="destructive" type="button">Destructive</button>
+              <button class="button" data-variant="link" type="button">Link</button>
+            </div>
+            <div class="flex items-center gap-xs">
+              <button class="button" data-variant="primary" type="button">
+                Start free trial
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                  <rect width="256" height="256" fill="none" />
+                  <line
+                    x1="40"
+                    y1="128"
+                    x2="216"
+                    y2="128"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                  <polyline
+                    points="144 56 216 128 144 200"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                </svg>
+              </button>
+              <button class="button" data-variant="primary" data-size="sm" type="button">
+                Small
+              </button>
+              <button
+                class="button"
+                data-variant="primary"
+                data-size="icon"
+                type="button"
+                aria-label="Add"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                  <rect width="256" height="256" fill="none" />
+                  <line
+                    x1="40"
+                    y1="128"
+                    x2="216"
+                    y2="128"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                  <line
+                    x1="128"
+                    y1="40"
+                    x2="128"
+                    y2="216"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                </svg>
+              </button>
+              <button
+                class="button"
+                data-variant="muted"
+                data-size="icon-sm"
+                type="button"
+                aria-label="Add"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                  <rect width="256" height="256" fill="none" />
+                  <line
+                    x1="40"
+                    y1="128"
+                    x2="216"
+                    y2="128"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                  <line
+                    x1="128"
+                    y1="40"
+                    x2="128"
+                    y2="216"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Badges -->
+          <div class="mb-lg">
+            <h2 class="text-h6 font-heading pb-sm">Badges</h2>
+            <div class="flex items-center gap-xs">
+              <button type="button" class="badge">Category</button>
+              <button type="button" class="badge" data-variant="primary">New</button>
+              <button type="button" class="badge" data-variant="muted">Draft</button>
+              <button type="button" class="badge" data-variant="ghost">Inline</button>
+              <button type="button" class="badge" data-variant="link">Posts</button>
+            </div>
+          </div>
+
+          <!-- Breadcrumbs -->
+          <div class="mb-lg">
+            <h2 class="text-h6 font-heading pb-sm">Breadcrumbs</h2>
+            <nav class="flex items-center gap-xs">
+              <menu class="flex items-center gap-xs">
+                <li><a class="button" data-variant="link" href="#">Home</a></li>
+                <li><span class="text-muted-foreground opacity-50">/</span></li>
+                <li><a class="button" data-variant="link" href="#">Products</a></li>
+                <li><span class="text-muted-foreground opacity-50">/</span></li>
+                <li>
+                  <div class="button" data-variant="link" aria-disabled="true">Product name</div>
+                </li>
+              </menu>
+            </nav>
+          </div>
+
+          <!-- Tooltip and dropdown -->
+          <div class="mb-lg">
+            <h2 class="text-h6 font-heading pb-sm">Tooltip and dropdown</h2>
+            <div class="flex items-center gap-xs">
+              <div class="tooltip">
+                <button type="button" class="button" interestfor="tooltip-components-1">
+                  Hover or focus
+                </button>
+                <div
+                  class="tooltip__content"
+                  id="tooltip-components-1"
+                  popover="hint"
+                  data-use-inverted-menu="false"
+                >
+                  Add to library
+                  <span class="tooltip__arrow" aria-hidden="true"></span>
+                </div>
+              </div>
+
+              <div class="dropdown">
+                <button class="button" type="button" popovertarget="dropdown-components-1">
+                  Open menu
+                </button>
+                <div
+                  id="dropdown-components-1"
+                  class="dropdown__popover"
+                  data-side="bottom"
+                  data-align="start"
+                  popover="auto"
+                >
+                  <menu>
+                    <li class="font-strong text-eyebrow text-muted-foreground p-xs">Account</li>
+                    <li>
+                      <a href="#" class="button justify-start" data-variant="ghost">Profile</a>
+                    </li>
+                    <li>
+                      <a href="#" class="button justify-start" data-variant="ghost">Billing</a>
+                    </li>
+                    <hr class="my-xs" />
+                    <li class="font-strong text-eyebrow text-muted-foreground p-xs">Session</li>
+                    <li>
+                      <a href="#" class="button justify-start" data-variant="ghost">Sign out</a>
+                    </li>
+                  </menu>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dialog -->
+          <div class="mb-lg">
+            <h2 class="text-h6 font-heading pb-sm">Dialog</h2>
+            <button
+              class="button"
+              type="button"
+              command="show-modal"
+              commandfor="dialog-components-1"
+            >
+              Open dialog
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                <rect width="256" height="256" fill="none" />
+                <line
+                  x1="64"
+                  y1="192"
+                  x2="192"
+                  y2="64"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="16"
+                />
+                <polyline
+                  points="88 64 192 64 192 168"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="16"
+                />
+              </svg>
+            </button>
+            <dialog id="dialog-components-1" class="dialog" closedby="any">
+              <div class="dialog__content">
+                <header class="dialog__header">
+                  <h2 class="text-lg font-heading font-strong">Dialog title</h2>
+                  <p class="text-muted-foreground">
+                    Opened with an invoker command. Closes on backdrop click, Escape, or either
+                    button.
+                  </p>
+                </header>
+                <div class="dialog__body">
+                  <p>Set the size of the dialog with the <code>data-size</code> attribute.</p>
+                </div>
+                <footer class="dialog__footer">
+                  <button
+                    class="button"
+                    type="button"
+                    commandfor="dialog-components-1"
+                    command="close"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    class="button"
+                    data-variant="primary"
+                    commandfor="dialog-components-1"
+                    command="close"
+                  >
+                    Accept
+                  </button>
+                </footer>
+              </div>
+              <button
+                class="button dialog__close"
+                data-size="icon"
+                data-variant="ghost"
+                type="button"
+                commandfor="dialog-components-1"
+                command="close"
+                aria-label="Close dialog"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                  <rect width="256" height="256" fill="none" />
+                  <line
+                    x1="200"
+                    y1="56"
+                    x2="56"
+                    y2="200"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                  <line
+                    x1="200"
+                    y1="200"
+                    x2="56"
+                    y2="56"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                </svg>
+              </button>
+            </dialog>
+          </div>
+
+          <!-- Accordion -->
+          <div class="mb-lg">
+            <h2 class="text-h6 font-heading pb-sm">Accordion</h2>
+            <div class="accordion">
+              <details class="border-b">
+                <summary class="font-strong hover:text-muted-foreground">
+                  What is an accordion?
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                    <rect width="256" height="256" fill="none" />
+                    <polyline
+                      points="208 96 128 176 48 96"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    />
+                  </svg>
+                </summary>
+                <div class="pb-sm">
+                  <p>
+                    A disclosure widget built from the native <code>&lt;details&gt;</code> and
+                    <code>&lt;summary&gt;</code> elements. The open and close animation uses the
+                    <code>::details-content</code> pseudo-element, with no JavaScript.
+                  </p>
+                </div>
+              </details>
+              <details class="border-b">
+                <summary class="font-strong hover:text-muted-foreground">
+                  How does it work?
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                    <rect width="256" height="256" fill="none" />
+                    <polyline
+                      points="208 96 128 176 48 96"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    />
+                  </svg>
+                </summary>
+                <div class="pb-sm">
+                  <p>
+                    Each item is a separate <code>&lt;details&gt;</code>, so several can stay open
+                    at once. Click a summary or focus it and press Enter to toggle.
+                  </p>
+                </div>
+              </details>
+              <details class="border-b">
+                <summary class="font-strong hover:text-muted-foreground">
+                  Why use it?
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                    <rect width="256" height="256" fill="none" />
+                    <polyline
+                      points="208 96 128 176 48 96"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    />
+                  </svg>
+                </summary>
+                <div class="pb-sm">
+                  <p>
+                    Keyboard support, state, and accessibility come from the platform. Zazz only
+                    styles the chrome through theme tokens.
+                  </p>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="mb-lg">
+            <h2 class="text-h6 font-heading pb-sm">Tabs</h2>
+            <tab-group class="tabs w-full">
+              <div class="tabs__list" role="tablist">
+                <div class="tabs__indicator" aria-hidden="true"></div>
+                <input type="radio" role="tab" name="components-tabs" id="ctab-1" checked />
+                <label for="ctab-1" class="tabs__label"
+                  ><span class="tabs__label-text">Account</span></label
+                >
+                <input type="radio" role="tab" name="components-tabs" id="ctab-2" />
+                <label for="ctab-2" class="tabs__label"
+                  ><span class="tabs__label-text">Billing</span></label
+                >
+                <input type="radio" role="tab" name="components-tabs" id="ctab-3" />
+                <label for="ctab-3" class="tabs__label"
+                  ><span class="tabs__label-text">Notifications</span></label
+                >
+              </div>
+              <div class="tabs__panel border rounded-md p-md w-full" role="tabpanel">
+                <h3 class="text-lg font-strong">Account</h3>
+                <p class="text-muted-foreground mt-xs">Manage your profile, email, and password.</p>
+              </div>
+              <div class="tabs__panel border rounded-md p-md w-full" role="tabpanel">
+                <h3 class="text-lg font-strong">Billing</h3>
+                <p class="text-muted-foreground mt-xs">
+                  Review invoices and update your payment method.
+                </p>
+              </div>
+              <div class="tabs__panel border rounded-md p-md w-full" role="tabpanel">
+                <h3 class="text-lg font-strong">Notifications</h3>
+                <p class="text-muted-foreground mt-xs">
+                  Choose what we email you about and how often.
+                </p>
+              </div>
+            </tab-group>
+          </div>
+
+          <!-- Cards -->
+          <div class="mb-lg">
+            <h2 class="text-h6 font-heading pb-sm">Cards</h2>
+            <div class="grid grid-cols-1 @sm:grid-cols-2 @lg:grid-cols-3 gap-md">
+              <a class="grid cursor-pointer" href="#">
+                <div
+                  class="grid gap-sm bg-card text-card-foreground rounded-md shadow-sm overflow-clip"
+                >
+                  <figure class="grid aspect-landscape rounded-t-md overflow-clip">
+                    <img
+                      class="size-full object-cover hover:scale-102 hover:opacity-75 transition"
+                      width="300"
+                      height="200"
+                      loading="lazy"
+                      src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=300&h=200&q=60"
+                      alt="Zebras grazing at dawn on the savanna"
+                    />
+                  </figure>
+                  <div class="grid gap-sm px-sm pb-sm">
+                    <header class="grid gap-xs">
+                      <div class="flex items-center gap-xs">
+                        <span class="badge" data-variant="muted">Field notes</span>
+                      </div>
+                      <hgroup class="grid gap-xs">
+                        <h3 class="text-lg font-heading">How quickly zebras jump</h3>
+                        <p class="text-sm text-muted-foreground line-clamp-2">
+                          Striped coats and sudden bursts of speed help herds evade predators when
+                          the grasslands go quiet at dusk.
+                        </p>
+                      </hgroup>
+                    </header>
+                    <footer class="grid justify-start gap-sm pt-sm border-t">
+                      <div class="text-link">Read article</div>
+                    </footer>
+                  </div>
+                </div>
+              </a>
+
+              <a class="grid cursor-pointer" href="#">
+                <div
+                  class="grid gap-sm bg-card text-card-foreground rounded-md shadow-sm overflow-clip"
+                >
+                  <figure class="grid aspect-landscape rounded-t-md overflow-clip">
+                    <img
+                      class="size-full object-cover hover:scale-102 hover:opacity-75 transition"
+                      width="300"
+                      height="200"
+                      loading="lazy"
+                      src="https://images.unsplash.com/photo-1564760055775-d63b17a55c44?auto=format&fit=crop&w=300&h=200&q=60"
+                      alt="A lion resting in tall golden grass"
+                    />
+                  </figure>
+                  <div class="grid gap-sm px-sm pb-sm">
+                    <header class="grid gap-xs">
+                      <div class="flex items-center gap-xs">
+                        <span class="badge" data-variant="muted">Wildlife</span>
+                      </div>
+                      <hgroup class="grid gap-xs">
+                        <h3 class="text-lg font-heading">Lions at golden hour</h3>
+                        <p class="text-sm text-muted-foreground line-clamp-2">
+                          Warm light and long shadows make dawn patrols the best time to photograph
+                          big cats on the open plain.
+                        </p>
+                      </hgroup>
+                    </header>
+                    <footer class="grid justify-start gap-sm pt-sm border-t">
+                      <div class="text-link">View gallery</div>
+                    </footer>
+                  </div>
+                </div>
+              </a>
+
+              <a class="grid cursor-pointer" href="#">
+                <div
+                  class="grid gap-sm bg-card text-card-foreground rounded-md shadow-sm overflow-clip"
+                >
+                  <figure class="grid aspect-landscape rounded-t-md overflow-clip">
+                    <img
+                      class="size-full object-cover hover:scale-102 hover:opacity-75 transition"
+                      width="300"
+                      height="200"
+                      loading="lazy"
+                      src="https://images.unsplash.com/photo-1511735111819-9a3f7709049c?auto=format&fit=crop&w=300&h=200&q=60"
+                      alt="Elephants crossing a dusty riverbed"
+                    />
+                  </figure>
+                  <div class="grid gap-sm px-sm pb-sm">
+                    <header class="grid gap-xs">
+                      <div class="flex items-center gap-xs">
+                        <span class="badge" data-variant="muted">Research</span>
+                      </div>
+                      <hgroup class="grid gap-xs">
+                        <h3 class="text-lg font-heading">Migration patterns decoded</h3>
+                        <p class="text-sm text-muted-foreground line-clamp-2">
+                          Satellite collars reveal ancient routes herds still follow each dry season
+                          across the floodplain.
+                        </p>
+                      </hgroup>
+                    </header>
+                    <footer class="grid justify-start gap-sm pt-sm border-t">
+                      <div class="text-link">See the data</div>
+                    </footer>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Avatars -->
+          <div>
+            <h2 class="text-h6 font-heading pb-sm">Avatars</h2>
+            <div class="flex items-center gap-md">
+              <div class="flex items-center gap-xs">
+                <figure
+                  class="grid grid-area-pile size-lg bg-background border rounded-full overflow-clip"
+                  role="img"
+                >
+                  <img
+                    class="size-full object-cover order-last bg-transparent"
+                    width="64"
+                    height="64"
+                    loading="lazy"
+                    src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=facearea&facepad=2&w=64&h=64&q=90"
+                    alt="John Doe"
+                    aria-hidden="true"
+                  />
+                  <figcaption
+                    class="order-first bg-muted size-full text-muted-foreground flex items-center justify-center text-center text-md font-strong"
+                  >
+                    <span class="sr-only">John Doe</span>
+                    <span aria-hidden="true">JD</span>
+                  </figcaption>
+                </figure>
+                <div class="flex flex-col">
+                  <span class="text-sm font-strong leading-none">John Doe</span>
+                  <span class="text-xs text-muted-foreground">Founder, ACME Inc.</span>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-xs">
+                <figure
+                  class="grid grid-area-pile size-lg bg-background border rounded-full overflow-clip"
+                  role="img"
+                >
+                  <figcaption
+                    class="order-first bg-muted size-full text-muted-foreground flex items-center justify-center text-center text-md font-strong"
+                  >
+                    <span class="sr-only">Ada Lovelace</span>
+                    <span aria-hidden="true">AL</span>
+                  </figcaption>
+                </figure>
+                <div class="flex flex-col">
+                  <span class="text-sm font-strong leading-none">Ada Lovelace</span>
+                  <span class="text-xs text-muted-foreground">Initials fallback</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Prose, in an article reading column -->
+      <article class="py-xl border-t">
+        <div class="container prose" data-variant="article" data-container="sm">
+          <hgroup>
+            <span class="text-eyebrow">Prose</span>
+            <h2>Long-form content</h2>
+            <p class="text-lg text-muted-foreground">
+              Wrap rich text in <code>.prose</code> for tuned typography. Body and paragraphs
+              default to <code>.text-md</code>; override size with <code>.text-xs</code> through
+              <code>.text-xl</code>.
+            </p>
+          </hgroup>
+
+          <hgroup>
+            <h1>How vexingly quick daft zebras jump.</h1>
+            <p>
+              Default paragraph — no class needed; matches body size. Lorem ipsum dolor sit amet,
+              consectetur adipiscing elit.
+            </p>
+
+            <h2>How vexingly quick daft zebras jump.</h2>
+            <p>
+              Default paragraph — no class needed; matches body size. Lorem ipsum dolor sit amet,
+              consectetur adipiscing elit.
+            </p>
+
+            <h3>How vexingly quick daft zebras jump.</h3>
+            <p>
+              Default paragraph — no class needed; matches body size. Lorem ipsum dolor sit amet,
+              consectetur adipiscing elit.
+            </p>
+
+            <h4>How vexingly quick daft zebras jump.</h4>
+            <p>
+              Default paragraph — no class needed; matches body size. Lorem ipsum dolor sit amet,
+              consectetur adipiscing elit.
+            </p>
+
+            <h5>How vexingly quick daft zebras jump.</h5>
+            <p>
+              Default paragraph — no class needed; matches body size. Lorem ipsum dolor sit amet,
+              consectetur adipiscing elit.
+            </p>
+
+            <h6>How vexingly quick daft zebras jump.</h6>
+            <p>
+              Default paragraph — no class needed; matches body size. Lorem ipsum dolor sit amet,
+              consectetur adipiscing elit.
+            </p>
+          </hgroup>
+
+          <hr />
+
+          <span class="text-eyebrow">text-xl</span>
+          <p class="text-xl">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit
+            amet ipsum mauris.
+          </p>
+
+          <span class="text-eyebrow">text-lg</span>
+          <p class="text-lg">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit
+            amet ipsum mauris.
+          </p>
+
+          <span class="text-eyebrow">text-md</span>
+          <p>
+            Default paragraph — no class needed; matches body size. Lorem ipsum dolor sit amet,
+            consectetur adipiscing elit.
+          </p>
+
+          <span class="text-eyebrow">text-sm</span>
+          <p class="text-sm">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit
+            amet ipsum mauris.
+          </p>
+
+          <span class="text-eyebrow">text-xs</span>
+          <p class="text-xs">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit
+            amet ipsum mauris.
+          </p>
+
+          <hr />
+
+          <hgroup>
+            <span class="text-eyebrow">Prose</span>
+            <h2>Paragraph spacing</h2>
+            <p class="text-lg text-muted-foreground">
+              Wrap rich text in <code>.prose</code> for tuned typography. Body and paragraphs
+              default to <code>.text-md</code>; override size with <code>.text-xs</code> through
+              <code>.text-xl</code>.
+            </p>
+          </hgroup>
+
+          <p>
+            Inline semantics: <strong>strong emphasis</strong>, <em>italic emphasis</em>,
+            <a href="#">a prose link</a>, and <code>inline code</code>.
+          </p>
+
+          <blockquote>
+            <p>Typography is the craft of endowing human language with a durable visual form.</p>
+            <cite>— Robert Bringhurst</cite>
+          </blockquote>
+
+          <figure>
+            <figcaption>Unordered list</figcaption>
+            <ul>
+              <li>Unordered list item with disc markers.</li>
+              <li>Sentence case headings and labels throughout.</li>
+              <li>Semantic role tokens, so dark mode swaps for free.</li>
+            </ul>
+          </figure>
+
+          <figure>
+            <figcaption>Ordered list</figcaption>
+            <ol>
+              <li>Ordered list item one.</li>
+              <li>Ordered list item two.</li>
+              <li>Ordered list item three.</li>
+            </ol>
+          </figure>
+
+          <dl>
+            <dt>Soliloquy</dt>
+            <dd>
+              In drama, where a character speaks to themselves, representing their inner thoughts or
+              feelings and in the process relaying them to the audience (but not to other
+              characters.)
+            </dd>
+            <dt>Monologue</dt>
+            <dd>
+              In drama, where a character speaks their thoughts out loud to share them with the
+              audience and any other characters present.
+            </dd>
+            <dt>Aside</dt>
+            <dd>
+              In drama, where a character shares a comment only with the audience for humorous or
+              dramatic effect. This is usually a feeling, thought, or piece of additional background
+              information.
+            </dd>
+          </dl>
+
+          <figure>
+            <img
+              sizes="auto"
+              loading="lazy"
+              width="800"
+              height="400"
+              src="https://placehold.co/800x400"
+              alt="Placeholder demonstrating figure and image styling within prose"
+            />
+            <figcaption>
+              Figure with caption — images pick up radius and border from prose tokens.
+            </figcaption>
+          </figure>
+        </div>
+      </article>
+    </main>
+
+    <footer class="border-t" data-transition-layer="global-footer">
+      <div class="container py-xl">
+        <div class="flex items-center justify-between gap-md">
+          <div class="text-h6 font-black">Zazz tests</div>
+          <menu class="flex gap-sm">
+            <li><a class="button" data-variant="link" href="about.html">About</a></li>
+            <li><a class="button" data-variant="link" href="layout.html">Layout</a></li>
+            <li><a class="button" data-variant="link" href="responsive.html">Responsive</a></li>
+            <li><a class="button" data-variant="link" href="products.html">Products</a></li>
+            <li><a class="button" data-variant="link" href="components.html">Components</a></li>
+            <li><a class="button" data-variant="link" href="forms.html">Forms</a></li>
+          </menu>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

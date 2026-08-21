@@ -1,0 +1,84 @@
+<button class="button" type="button" command="show-modal" commandfor="dialog-example-1">
+  Dialog
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+    <rect width="256" height="256" fill="none" />
+    <line
+      x1="64"
+      y1="192"
+      x2="192"
+      y2="64"
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="16"
+    />
+    <polyline
+      points="88 64 192 64 192 168"
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="16"
+    />
+  </svg>
+</button>
+<dialog id="dialog-example-1" class="dialog" closedby="any">
+  <div class="dialog__content">
+    <header class="dialog__header">
+      <h2 class="text-lg font-heading font-strong">Dialog title</h2>
+      <p class="text-muted-foreground">
+        This dialog was opened using an
+        <a
+          href="https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API"
+          target="_blank"
+          class="text-link"
+          >invoker command</a
+        >.
+      </p>
+    </header>
+    <div class="dialog__body">
+      <p>Set the size of the dialog with the <code>data-size</code> attribute.</p>
+    </div>
+    <footer class="dialog__footer">
+      <button class="button" type="button" commandfor="dialog-example-1" command="close">
+        Cancel
+      </button>
+      <button class="button" data-variant="primary" commandfor="dialog-example-1" command="close">
+        Accept
+      </button>
+    </footer>
+  </div>
+  <button
+    class="button dialog__close"
+    data-size="icon"
+    data-variant="ghost"
+    type="button"
+    commandfor="dialog-example-1"
+    command="close"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+      <rect width="256" height="256" fill="none" />
+      <line
+        x1="200"
+        y1="56"
+        x2="56"
+        y2="200"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="16"
+      />
+      <line
+        x1="200"
+        y1="200"
+        x2="56"
+        y2="56"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="16"
+      />
+    </svg>
+  </button>
+</dialog>
