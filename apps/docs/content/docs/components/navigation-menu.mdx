@@ -1,0 +1,29 @@
+---
+title: Navigation menu
+description: Mega-menu navigation with popover panels, submenus, and anchor positioning.
+---
+
+The navigation menu pairs triggers (`popovertarget`) with `.navigation-menu__popover` panels.
+A `.navigation-menu__list` holds each `.navigation-menu__item`, whose `.navigation-menu__trigger`
+opens a panel. Panels wrap a `.navigation-menu__viewport` grid of `.navigation-menu__link` rows
+(title + description, filling with muted on hover), can nest flyout submenus via
+`.navigation-menu__submenu` / `.navigation-menu__submenu-trigger`, and animate in. A "Featured"
+callout is not a dedicated part — it is plain utilities, e.g.
+`bg-muted hover:opacity-75 rounded-sm p-sm` with a `.text-eyebrow` label.
+
+## Default
+
+<Preview src="navigation-menu/default" />
+
+The sign-in dialog in this example uses `<input-password>` for the password field's
+show/hide toggle; open the JS tab to inspect that enhancement.
+
+## API
+
+| Attribute        | Where                       | Values                        |
+| ---------------- | --------------------------- | ----------------------------- |
+| `popovertarget`  | trigger                     | id of the panel               |
+| `data-align`     | `.navigation-menu__popover` | `center`, `end`               |
+| `data-variant`   | `.navigation-menu__popover` | `submenu`                     |
+| `data-size`      | `.navigation-menu__popover` | `root`, `container`, `screen` |
+| `data-animation` | `.navigation-menu__popover` | `slide-down`                  |

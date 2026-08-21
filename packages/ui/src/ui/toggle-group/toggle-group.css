@@ -1,0 +1,72 @@
+/**
+ * toggle-group.css — Toggle group (.toggle-group)
+ *
+ * The .button-group structure applied to .toggle children: a single-select set
+ * (radios sharing a `name`) or a multi-select set (checkboxes) fused into one
+ * segmented control. Inner corners are squared and the doubled border collapses to
+ * one seam; the checked/focused/hovered toggle floats above its neighbours.
+ *
+ * @layer      components
+ * @requires   layers.css, _variables.css, toggle.css
+ * @uses       :has() — float the checked/focused toggle above its neighbours
+ * @uses       :not() — first/last edge selection for shared-border collapse
+ * @uses       logical border-radius longhands — RTL-safe corner rounding per orientation
+ * @see        https://ui.shadcn.com/docs/components/base/toggle-group
+ */
+
+@layer zazz.components {
+  /* ===========================================================================
+  TOGGLE GROUP
+
+  Joins adjacent .toggle children into one segmented unit. Children keep their own
+  --toggle-radius, so the outer corners follow the toggles' size variant
+  automatically — only the *inner* corners are squared and the doubled border is
+  collapsed with a -1px overlap.
+  =========================================================================== */
+
+  .toggle-group {
+    display: flex;
+    inline-size: fit-content;
+    /* stretch so mixed-height children share one edge */
+    align-items: stretch;
+  }
+
+  /* ===========================================================================
+  TOGGLE GROUP — HORIZONTAL (default)
+  =========================================================================== */
+
+  .toggle-group:not([data-orientation="vertical"]) {
+    flex-direction: row;
+  }
+
+  .toggle-group:not([data-orientation="vertical"]) > :not(:last-child) {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  .toggle-group:not([data-orientation="vertical"]) > :not(:first-child) {
+    /* pull onto the previous control's border so the seam is one line, not two */
+    margin-inline-start: -1px;
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+
+  /* ===========================================================================
+  TOGGLE GROUP — VERTICAL
+  =========================================================================== */
+
+  .toggle-group[data-orientation="vertical"] {
+    flex-direction: column;
+  }
+
+  .toggle-group[data-orientation="vertical"] > :not(:last-child) {
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  .toggle-group[data-orientation="vertical"] > :not(:first-child) {
+    margin-block-start: -1px;
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
+  }
+}

@@ -1,0 +1,113 @@
+---
+title: Utilities
+description: Zazz's atomic utility classes, the override layer that wins by cascade, not specificity. How they're grouped, how the private composition variables work, and how responsive prefixes behave.
+---
+
+Utilities are Zazz's atomic classes: one job each, applied in markup. They live in the **last**
+cascade layer (`@layer zazz.utilities`), so a utility always wins over a component rule. No
+`!important`, no specificity tricks. Every utility is wrapped in `:where()` for zero specificity,
+which means your own selectors can still override them when you need to.
+
+<Preview src="utilities/compose" />
+
+Reach for utilities to compose layout and one-off overrides on top of components. They read the
+same semantic tokens (`--gap-md`, `--primary`, `--radius-lg`) the rest of the system does, so a
+utility-built panel stays on-brand and theme-aware for free.
+
+## The rules that govern every utility
+
+The [why, and the everyday subset](/docs/core-concepts/utility-classes), live in Core concepts; this
+page is the reference. Two mechanics set up everything below:
+
+1. **Cascade, not specificity.** Inside Zazz the sublayers run `variables, components, utilities`.
+   A plain `.button` rule lives in `components`; a `.rounded-full` utility lives in `utilities`
+   and wins. See [`_layers.css`](/docs/core-files/layers) for the full layer model.
+2. **Zero specificity.** Each rule is `:where(.utility) { … }`, specificity `(0,0,0)`. Utilities
+   override components by layer position, and _your_ rules override utilities by ordinary
+   specificity. No arms race.
+
+## How these pages are grouped
+
+The atomic classes in `src/base/_utilities.css` are organized here into the same families
+Tailwind uses, so you can scan by intent:
+
+| Group                                                                                                                           | Covers                                                                                            |
+| ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| [Layout](/docs/base/utilities/layout)                                                                                           | display, table-layout, caption-side, position, overflow, z-index, aspect-ratio, object-fit, order |
+| [Flexbox](/docs/base/utilities/flexbox) · [Grid](/docs/base/utilities/grid) · [Gap & basis](/docs/base/utilities/gap-and-basis) | flex/grid containers, alignment, spans, gaps, flex-basis                                          |
+| [Spacing](/docs/base/utilities/spacing) · [Sizing](/docs/base/utilities/sizing)                                                 | padding, margin · width, height, size, min/max                                                    |
+| [Text color](/docs/base/utilities/text-color) · [Text & font](/docs/base/utilities/text-and-font)                               | color roles · alignment, transform, wrap, clamp, family                                           |
+| [Backgrounds](/docs/base/utilities/backgrounds) · [Borders](/docs/base/utilities/borders)                                       | surface colors, overlays · border, radius                                                         |
+| [Effects](/docs/base/utilities/effects) · [Color opacity](/docs/base/utilities/color-opacity)                                   | shadow, opacity, scale, transition · channel alpha                                                |
+| [Interactivity](/docs/base/utilities/interactivity) · [Hover states](/docs/base/utilities/hover)                                | cursor, focus ring, screen readers · `hover:` variants                                            |
+| [Responsive design](/docs/base/utilities/responsive-design)                                                                     | the `@xs: @sm: @md: @lg: @xl:` container-query prefixes                                           |
+
+## Private composition and coordination variables
+
+Several utilities don't set a CSS property directly; instead they set an internal `--_`-prefixed
+variable that a shared rule reads. This is what lets you touch one edge, axis, or channel without
+disturbing the others. There are two kinds, and they behave differently on purpose.
+
+### Composition variables (registered, non-inheriting)
+
+Padding, margin, radius, and color-alpha utilities are built from `@property`-registered
+variables declared with `inherits: false`. A value set on one element therefore **never bleeds
+onto its descendants** through the shared composing rule, and the registration's `initial-value`
+doubles as the default (no `:root` fallback needed).
+
+```css
+/* One composing rule reads the vars… */
+:where(.p-0, .p-xs, .p-sm, .p-md, .p-lg, .p-xl, [class*="px-"], [class*="pl-"], [class*="pr-"]) {
+  padding-inline: var(--_padding-inline-start) var(--_padding-inline-end);
+}
+
+/* …and each utility only sets the var it owns. */
+:where(.pl-0) {
+  --_padding-inline-start: 0;
+}
+```
+
+Because `p-md` sets all four edges and `pl-0` sets only the inline-start, `class="p-md pl-0"`
+resolves to _medium padding everywhere except a zeroed left_: the other three edges are
+untouched. The same pattern powers per-edge `rounded-*` and per-channel color opacity.
+
+| Variable                                                    | Registered syntax             | Initial | Set by                                         | Documented in                                       |
+| ----------------------------------------------------------- | ----------------------------- | ------- | ---------------------------------------------- | --------------------------------------------------- |
+| `--_padding-{inline,block}-{start,end}`                     | `<length-percentage>`         | `0`     | `p-* px-* py-* pt-* pr-* pb-* pl-*`            | [Spacing](/docs/base/utilities/spacing)             |
+| `--_margin-{inline,block}-{start,end}`                      | `<length-percentage> \| auto` | `0`     | `m-* mx-* my-* mt-* … -m-* mx-auto`            | [Spacing](/docs/base/utilities/spacing)             |
+| `--_radius-{top-left,top-right,bottom-right,bottom-left}`   | `<length-percentage>`         | `0`     | `rounded-* rounded-t-* rounded-tl-* …`         | [Borders](/docs/base/utilities/borders)             |
+| `--_text-alpha` · `--_background-alpha` · `--_border-alpha` | `<number>`                    | `1`     | `text-opacity-* bg-opacity-* border-opacity-*` | [Color opacity](/docs/base/utilities/color-opacity) |
+
+### Coordination variables (inheriting on purpose)
+
+A second set stays _inheriting_ (left unregistered, so default inheritance applies). These are
+set on a container and **read by descendants**: the gap variable feeds the gap-aware `basis-*`
+fractions and the responsive auto-fill grid, and the column/row counts let `col-span-*` clamp
+themselves so a span never exceeds the track count.
+
+| Variable                        | Default                        | Set by                        | Read by                                    |
+| ------------------------------- | ------------------------------ | ----------------------------- | ------------------------------------------ |
+| `--_gap`                        | `0px` (on `:root`)             | `gap-*`                       | `basis-1/2…1/6`, `grid-flow-row` auto-fill |
+| `--_gap-x` · `--_gap-y`         | —                              | `gap-x-*` · `gap-y-*`         | `column-gap` · `row-gap`                   |
+| `--_grid-cols` · `--_grid-rows` | `1`                            | `grid-cols-N` · `grid-rows-N` | `col-span-*` · `row-span-*`, auto-fill     |
+| `--_grid-col-min`               | `min(100%, 25ch)` (on `.grid`) | `.grid`                       | `grid-flow-row` auto-fill track floor      |
+
+These are covered alongside their classes in [Gap & basis](/docs/base/utilities/gap-and-basis) and
+[Grid](/docs/base/utilities/grid).
+
+## Responsive & state variants
+
+Every layout-related utility has container-query-prefixed variants (`@xs: @sm: @md: @lg: @xl:`) gated
+on centralized breakpoint flags the **body** publishes off the page width. Color, opacity, and scale
+utilities also ship `hover:` variants that need no JavaScript.
+
+```html
+<div class="flex flex-col @md:flex-row gap-md">
+  <aside class="@md:basis-1/3">Sidebar</aside>
+  <main class="flex-1 hover:bg-muted transition">Content</main>
+</div>
+```
+
+See [Responsive design](/docs/base/utilities/responsive-design) for the breakpoint table and exactly
+which families are available per breakpoint, and [Hover states](/docs/base/utilities/hover) for the
+full `hover:` catalog.

@@ -1,0 +1,84 @@
+/**
+ * radio.css — Radio (.radio, .radio-group)
+ *
+ * @layer      variables, components
+ * @requires   layers.css, _variables.css, fields.css (.field-group layout)
+ * @uses       appearance: none — custom circle + radial-gradient dot when :checked
+ * @tokens     --radio-* (@layer variables)
+ */
+
+@layer variables {
+  :root {
+    --radio-size: var(--step-4_5);
+    --radio-background: var(--input);
+    --radio-background--checked: var(--primary);
+    --radio-border: var(--border);
+    --radio-border--hover: var(--primary);
+    --radio-border--checked: var(--primary);
+    --radio-radius: var(--radius-full);
+    --radio-background-size: 90%;
+    --radio-dot-foreground: var(--primary-foreground);
+    --radio-dot-inner-stop: 28%;
+    --radio-dot-outer-stop: 30%;
+    --radio-dot-gradient: radial-gradient(
+      circle,
+      var(--radio-dot-foreground) 0 var(--radio-dot-inner-stop),
+      transparent var(--radio-dot-outer-stop)
+    );
+  }
+}
+
+@layer zazz.components {
+  /* ===========================================================================
+  RADIO — .radio (+ .radio-group)
+  - appearance: none redraws the circle from theme tokens; the checked dot is a
+    radial-gradient so it tracks --radio-dot-foreground, not colour alone.
+  - Group by shared `name`; wrap in a <fieldset>/<legend> or .radio-group for an
+    accessible labelled set.
+  =========================================================================== */
+
+  .radio {
+    appearance: none;
+    flex-shrink: 0;
+    inline-size: var(--radio-size);
+    block-size: var(--radio-size);
+
+    background-color: var(--radio-background);
+    border: 1px solid var(--radio-border);
+    border-radius: var(--radio-radius);
+
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: var(--radio-background-size);
+
+    cursor: pointer;
+
+    /* ring renders as box-shadow; transparent outline twin keeps focus visible
+       in forced-colors / high-contrast modes */
+    --_ring-offset-width: 0px;
+    --_ring-width: 0px;
+    box-shadow:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--ring);
+    outline: var(--outline-width) var(--outline-style) transparent;
+    outline-offset: var(--outline-offset);
+
+    transition: var(--default-transition);
+  }
+
+  .radio:hover {
+    border-color: var(--radio-border--hover);
+  }
+
+  .radio:focus-visible {
+    --_ring-offset-width: var(--ring-offset-width);
+    --_ring-width: var(--ring-width);
+    outline-color: transparent;
+  }
+
+  .radio:checked {
+    background-color: var(--radio-background--checked);
+    border-color: var(--radio-border--checked);
+    background-image: var(--radio-dot-gradient);
+  }
+}

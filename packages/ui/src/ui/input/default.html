@@ -1,0 +1,59 @@
+<div class="field">
+  <label class="field__label" for="f-name">Name</label>
+  <input
+    class="input"
+    id="f-name"
+    name="name"
+    type="text"
+    inputmode="text"
+    placeholder="Ada Lovelace"
+    autocomplete="name"
+    autocapitalize="words"
+    enterkeyhint="next"
+  />
+</div>
+<div class="field">
+  <label class="field__label" for="f-email">Email</label>
+  <input
+    class="input"
+    id="f-email"
+    name="email"
+    type="email"
+    inputmode="email"
+    required
+    placeholder="you@example.com"
+    autocomplete="email"
+    autocapitalize="off"
+    spellcheck="false"
+    enterkeyhint="next"
+    aria-describedby="f-email-hint"
+  />
+  <div class="field__description">
+    <span class="field__hint" id="f-email-hint">We'll never sell or share your email address.</span>
+    <span class="field__error" role="alert">Please enter a valid email address.</span>
+  </div>
+</div>
+<div class="field">
+  <label class="field__label" for="f-phone">Phone</label>
+  <input
+    class="input"
+    id="f-phone"
+    name="phone"
+    type="tel"
+    inputmode="tel"
+    placeholder="+1 (555) 012-3456"
+    autocomplete="tel"
+    enterkeyhint="next"
+  />
+</div>
+<div class="field">
+  <label class="field__label" for="f-date">Datetime</label>
+  <input
+    class="input"
+    id="f-date"
+    name="date"
+    type="datetime-local"
+    inputmode="none"
+    autocomplete="off"
+  />
+</div>

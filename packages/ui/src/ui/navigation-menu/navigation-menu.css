@@ -1,0 +1,276 @@
+/**
+ * navigation-menu.css — Navigation menu (.navigation-menu)
+ *
+ * @layer      variables, components
+ * @requires   layers.css, _variables.css, popover.css, button.css
+ * @uses       [popover] + nested popovers — megamenu panels and flyout submenus
+ * @uses       anchor-name, anchor-scope, position-anchor, anchor-size() — panel
+ *             sizing and positioning (Chromium 125+ for anchor-size)
+ * @uses       :has(:popover-open) — chevron rotation without JS
+ * @uses       view-transition-name — stable header across navigations
+ * @uses       @starting-style — slide-down viewport reveal
+ * @tokens     --navigation-* (@layer variables)
+ */
+
+@layer variables {
+  :root {
+    --navigation-icon-transition: transform var(--default-transition-duration)
+      var(--default-transition-timing-function);
+    --navigation-icon-transform: rotate(-180deg);
+
+    --navigation-popover-shadow: var(--shadow-md);
+    --navigation-popover-child-radius: var(--radius-sm);
+    --navigation-popover-gap: var(--step-1_5);
+    --navigation-popover-inline-size: min(var(--breakpoint-xs), 100% - var(--gap-md));
+    --navigation-popover-viewport-display: grid;
+    --navigation-popover-viewport-align-items: stretch;
+    --navigation-popover-viewport-justify-items: stretch;
+    --navigation-popover-viewport-template-columns: 1fr;
+    --navigation-popover-viewport-gap: var(--step-1_5);
+    --navigation-popover-viewport-min-inline-size: var(--step-52);
+  }
+}
+
+@layer zazz.components {
+  .navigation-menu {
+    /* View transitions - keeps the header stable when navigating between pages */
+    --popover-shadow: var(--navigation-popover-shadow);
+    --popover-child-radius: var(--navigation-popover-child-radius);
+    --popover-gap: var(--navigation-popover-gap);
+    --popover-inline-size: var(--navigation-popover-inline-size);
+    --popover-viewport-display: var(--navigation-popover-viewport-display);
+    --popover-viewport-align-items: var(--navigation-popover-viewport-align-items);
+    --popover-viewport-justify-items: var(--navigation-popover-viewport-justify-items);
+    --popover-viewport-template-columns: var(--navigation-popover-viewport-template-columns);
+    --popover-viewport-gap: var(--navigation-popover-viewport-gap);
+    --popover-viewport-min-inline-size: var(--navigation-popover-viewport-min-inline-size);
+
+    display: inline-flex;
+    position: relative;
+    anchor-name: --navigation-menu-root;
+    isolation: isolate;
+  }
+
+  .navigation-menu__list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--popover-gap);
+    anchor-name: --navigation-menu-list;
+  }
+
+  /* Each item scopes its own anchor name so triggers can share one name */
+  .navigation-menu__item {
+    anchor-scope: --navigation-menu-trigger;
+    position: relative;
+  }
+
+  .navigation-menu__trigger {
+    anchor-name: --navigation-menu-trigger;
+  }
+
+  /* Chevron points down by default, flips up while its popover is open (no JS) */
+  .navigation-menu__trigger > svg {
+    inline-size: var(--gap-sm);
+    block-size: var(--gap-sm);
+    transition: var(--navigation-icon-transition);
+  }
+
+  .navigation-menu__item:has(.navigation-menu__popover:where(:popover-open, .\:popover-open))
+    .navigation-menu__trigger
+    > svg {
+    transform: var(--navigation-icon-transform);
+  }
+
+  /* ===========================================================================
+  POPOVER — inherits --popover-* from popover.css; panel layout overrides here
+  =========================================================================== */
+
+  .navigation-menu__popover {
+    position-anchor: --navigation-menu-trigger;
+    max-inline-size: var(--popover-inline-size);
+
+    --popover-padding: 0;
+    --popover-min-inline-size: auto;
+
+    /* Default: open below the trigger, aligned to its start edge */
+    --popover-position-area: block-end span-inline-end;
+    --popover-origin: top center;
+    --popover-margin-block: var(--step-1_5);
+  }
+
+  .navigation-menu__popover .button {
+    --button-radius: var(--radius-xs);
+  }
+
+  /* ===========================================================================
+  ALIGNMENT — nav menus only open downward, so just align along the inline axis
+  =========================================================================== */
+
+  .navigation-menu__popover[data-align="center"] {
+    --popover-position-area: block-end span-all;
+    --popover-origin: top center;
+  }
+
+  .navigation-menu__popover[data-align="end"] {
+    --popover-position-area: block-end span-inline-start;
+    --popover-origin: top right;
+  }
+
+  /* ===========================================================================
+  SUBMENU — categories inside a panel whose product lists fly out to the right.
+  Native nested popovers: each sub-trigger's popovertarget lives inside the parent
+  panel, so opening a submenu keeps the panel open (ancestor chain, no JS).
+  =========================================================================== */
+
+  /* Each category scopes its own anchor so every sub-trigger reuses one name */
+  .navigation-menu__submenu {
+    anchor-scope: --navigation-menu-subtrigger;
+    position: relative;
+  }
+
+  /* Category row — a full-width link row with a trailing caret */
+  .navigation-menu__submenu-trigger {
+    anchor-name: --navigation-menu-subtrigger;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-sm);
+    inline-size: 100%;
+    padding: var(--popover-gap);
+    border: 0;
+    border-radius: var(--popover-child-radius);
+    color: inherit;
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
+
+  /* Highlight the row on hover and while its submenu is open */
+  .navigation-menu__submenu-trigger:hover,
+  .navigation-menu__submenu:has(
+      .navigation-menu__popover[data-variant="submenu"]:where(:popover-open, .\:popover-open)
+    )
+    .navigation-menu__submenu-trigger {
+    background-color: var(--muted);
+  }
+
+  /* Caret points right — the direction the submenu opens */
+  .navigation-menu__submenu-trigger > svg {
+    inline-size: var(--gap-sm);
+    block-size: var(--gap-sm);
+    flex: 0 0 auto;
+    color: var(--muted-foreground);
+  }
+
+  /* Submenu (data-variant="submenu") inherits all base .navigation-menu__popover
+     styling; only the anchor and open direction differ — it flies out to the
+     inline-end edge, top-aligned, flipping leftward near the viewport's edge. */
+  .navigation-menu__popover[data-variant="submenu"] {
+    position-anchor: --navigation-menu-subtrigger;
+
+    --popover-position-area: inline-end span-block-start;
+    --popover-origin: left top;
+    --popover-margin-block: 0;
+    --popover-margin-inline: var(--step-1_5);
+    --popover-position-try-fallbacks: flip-inline, flip-block, flip-inline flip-block;
+  }
+
+  /* ===========================================================================
+  PANEL CONTENT
+  =========================================================================== */
+
+  .navigation-menu__viewport {
+    display: var(--popover-viewport-display);
+    grid-template-columns: var(--popover-viewport-template-columns);
+    align-items: var(--popover-viewport-align-items);
+    justify-items: var(--popover-viewport-justify-items);
+    gap: var(--popover-viewport-gap);
+    min-inline-size: var(--popover-viewport-min-inline-size);
+  }
+
+  /* Rich link row: title + description, hover fills with muted */
+  .navigation-menu__link {
+    display: flex;
+    flex-direction: column;
+    padding: var(--popover-gap);
+    border-radius: var(--popover-child-radius);
+    text-decoration: none;
+    transition: background-color var(--default-transition-duration)
+      var(--default-transition-timing-function);
+  }
+
+  .navigation-menu__link:hover {
+    background-color: var(--muted);
+  }
+
+  /* ===========================================================================
+  MEGAMENU ANIMATION
+  =========================================================================== */
+
+  /* Slide-down: accordion-style block-size reveal on the viewport (not scaleY). */
+  .navigation-menu__popover[data-size="screen"][data-animation="slide-down"] {
+    --popover-scale--start: 1;
+  }
+
+  .navigation-menu__popover[data-animation="slide-down"] > .navigation-menu__viewport {
+    overflow: clip;
+    block-size: 0;
+    transform: translateY(0.5rem);
+    transform-origin: top center;
+    transition:
+      block-size var(--default-transition-duration) var(--default-transition-timing-function),
+      transform var(--default-transition-duration) var(--default-transition-timing-function),
+      padding var(--default-transition-duration) var(--default-transition-timing-function);
+  }
+
+  .navigation-menu__popover[data-animation="slide-down"]:where(:popover-open, .\:popover-open) {
+    opacity: var(--popover-opacity--end);
+    transform: scale(var(--popover-scale--end)) translate3d(var(--popover-translate--end));
+
+    @starting-style {
+      opacity: var(--popover-opacity--start);
+      transform: scale(var(--popover-scale--start)) translate3d(var(--popover-translate--start));
+    }
+  }
+
+  .navigation-menu__popover[data-animation="slide-down"]:where(:popover-open, .\:popover-open)
+    .navigation-menu__viewport {
+    block-size: auto;
+    transform: scale(1) translateY(0);
+
+    @starting-style {
+      block-size: 0;
+      transform: translateY(0.5rem);
+    }
+  }
+
+  /* ===========================================================================
+  SIZING VARIANTS
+  =========================================================================== */
+
+  .navigation-menu__popover[data-size="container"] {
+    position-anchor: --navigation-menu-list;
+    --popover-inline-size: anchor-size();
+    --popover-position-area: block-end span-all;
+
+    inline-size: var(--popover-inline-size);
+  }
+
+  .navigation-menu__popover[data-size="root"] {
+    position-anchor: --navigation-menu-root;
+    --popover-inline-size: anchor-size();
+    --popover-position-area: block-end span-all;
+
+    inline-size: var(--popover-inline-size);
+  }
+
+  .navigation-menu__popover[data-size="screen"] {
+    position-anchor: --navigation-menu-root;
+    --popover-inline-size: 100vi;
+    --popover-position-area: block-end span-all;
+
+    inline-size: var(--popover-inline-size);
+  }
+}

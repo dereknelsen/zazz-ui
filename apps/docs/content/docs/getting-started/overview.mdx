@@ -1,0 +1,90 @@
+---
+title: Overview
+description: "How Zazz controls the cascade with layers, tokens, and conventions: no specificity wars, no build step."
+---
+
+Zazz replaces specificity-based CSS architecture with a layered cascade. Once you see how the layers, tokens, and conventions fit together, you can customize and extend the system without fighting it. This page is the map; each section links to the page that covers it in full.
+
+## The cascade layers
+
+Every stylesheet in Zazz slots into a cascade layer, declared once, in order, in `_layers.css`:
+
+```css
+@layer variables, reset, legacy, zazz, migrations;
+
+@layer zazz {
+  @layer components, utilities;
+}
+```
+
+Later layers override earlier ones regardless of selector specificity, so you never need `!important`, BEM modifiers, or naming hacks:
+
+| Layer             | Purpose                                              | Example                                        |
+| ----------------- | ---------------------------------------------------- | ---------------------------------------------- |
+| `variables`       | Token declarations only (lowest)                     | `:root { --button-radius: var(--radius-md); }` |
+| `reset`           | Native element baselines                             | `html`, `body`, `input`, `select` defaults     |
+| `legacy`          | Your pre-Zazz CSS during a migration                 | `@import "old.css" layer(legacy)`              |
+| `zazz.components` | Component rules                                      | `.button`, `.dialog`, `.field`                 |
+| `zazz.utilities`  | Atomic override classes                              | `.text-primary`, `.gap-md`, `.rounded-full`    |
+| `migrations`      | Class-translation shims during a migration (highest) | `.btn-primary { --button-background: … }`      |
+
+A plain `.button` rule in `components` is overridden by a utility in `utilities`, with no `!important`. The outer `legacy` and `migrations` layers bracket the stack for [incremental adoption](/docs/getting-started/migrating); day to day you work in the two Zazz sublayers. For the full model, see [`_layers.css`](/docs/base/layers).
+
+## base files
+
+Four files form the foundation, and every other file depends on them:
+
+- [`_layers.css`](/docs/base/layers) declares the cascade order and must load first.
+- [`_variables.css`](/docs/core-concepts/theme-variables) holds every global token: brand scales, semantic roles, and the metric systems for spacing, type, radius, and shadow.
+- [`_reset.css`](/docs/base/reset) sets native-element defaults, all wrapped in `:where()` for zero specificity so component rules always win.
+- [`_utilities.css`](/docs/base/utilities) is the atomic override layer, also zero-specificity.
+
+## Tokens and theming
+
+Nothing in Zazz is hardcoded. Components read `var(--token)`, so you restyle by reassigning variables rather than rewriting rules. Tokens run from raw scales up to per-component hooks, and you override at the narrowest scope that fits:
+
+```css
+:root {
+  --primary: oklch(0.6 0.2 145); /* global: re-skin the brand */
+  --button-radius: var(--radius-full); /* component: all buttons go pill-shaped */
+}
+```
+
+```html
+<button class="button" style="--button-background: var(--secondary)">
+  Instance: this button only
+</button>
+```
+
+The token tiers and the three override scopes are covered in full on [Theme variables](/docs/core-concepts/theme-variables).
+
+## Typography
+
+Zazz ships a fluid type system: every size is a `clamp()` that scales smoothly from phone to desktop with no breakpoints. A single `text-*` class bundles the right size, weight, line-height, and letter-spacing for its step, and `.prose` applies the whole rhythm to long-form content automatically.
+
+```html
+<span class="text-display">Big launch headline</span>
+<p class="text-sm text-muted-foreground">Caption text</p>
+```
+
+See [Text & font](/docs/base/utilities/text-and-font) for the type utilities and [Prose](/docs/components/prose) for long-form content.
+
+## Variants and sizes
+
+Components expose their styles through `data-*` attributes instead of BEM modifier classes. The default variant is always the absence of the attribute:
+
+```html
+<button class="button" data-variant="primary" data-size="sm">Save</button>
+```
+
+Each component documents its own `data-variant` and `data-size` values; see [Button](/docs/components/button) for a worked example.
+
+## Dark mode
+
+Dark mode is on from the first line. `:root` sets `color-scheme: light dark`, and every role token resolves through `light-dark()`, so a role-based design is correct in both themes with no parallel styles. See [Dark mode](/docs/core-concepts/dark-mode) for the system toggle, the `.dark` override, and inverted surfaces.
+
+## Next steps
+
+- Read [Core concepts](/docs/core-concepts/utility-classes) for utilities, states, responsive design, and theming.
+- Read [base](/docs/base/file-anatomy) for file anatomy, token naming, and selector rules.
+- Browse [Components](/docs/components), including [scroll reveals](/docs/components/reveal) and [carousels](/docs/components/carousel).

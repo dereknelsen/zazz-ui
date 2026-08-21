@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <!-- Paint the right theme (bg, form controls, scrollbars) before CSS loads. -->
+    <meta name="color-scheme" content="light dark" />
+    <title>Zazz tests | Overview</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Preload latin Geist woff2 (Google Fonts v5) so it is ready before first paint. -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwcGFWNOITd.woff2"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:ital,wght@0,100..900;1,100..900&family=Geist:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Preload critical js -->
+    <link rel="modulepreload" href="../src/index.js" />
+
+    <!-- Zazz styles: one bundle — index.css @imports the base layers (layers,
+       variables, reset) and every component in cascade order. -->
+    <link rel="stylesheet" href="../src/index.css" />
+
+    <!-- Prefetching related pages -->
+    <link rel="prefetch" href="layout.html" />
+
+    <!-- WARNING: CDN scripts not recommended for production.
+     If you need to use a CDN, create a new SRI hash (@see: https://srihash.org/)
+     and update the integrity attribute. -->
+
+    <!-- [Polyfill] Popover API (June 2026) - -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@oddbird/popover-polyfill@latest"
+      integrity="sha384-Gl/j23IcIIiDfqcDI5gpHCxd5EuslCYvs07HAw3KHGx5UcbxizoF/deDnkeEcFXW"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- [Polyfill] Invokers/tooltip (June 2026) - -->
+    <script
+      type="module"
+      src="https://esm.sh/invokers/compatible"
+      integrity="sha384-fzLqSi8WSEqp/tW3neqEgzl53fvLw4u32RAvoNQSSSAfKGsOrfA2B49xhrObWFnr"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Embla Carousel -->
+    <script
+      src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"
+      integrity="sha384-XGqLM9+dJ+PFOMZn6IuZgRRIoxcAT5fx4eIZCx7K3O2Dj5RA7EOlJ3yOS8Jd+kiY"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Embla Carousel Plugins -->
+    <script
+      src="https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js"
+      integrity="sha384-rs7pDLCh+QtEjJg2VChAoKZHaaz7apuon6rM57E3FdzC83xaJH4n9mQZn4E2s3f4"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-auto-scroll/embla-carousel-auto-scroll.umd.js"
+      integrity="sha384-5x3y2MLuLA5c1LQceYM+lo59GGkQmLzQGzbuHhDUDbnOJkFeTl5jUSdBy3JehMcM"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-class-names/embla-carousel-class-names.umd.js"
+      integrity="sha384-nZNIZhV6WSQVCeWMj8JFfOgQZyzPoGSTh0eohtAOu5aluevIpIblZcupMSdl/EEH"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-ssr/embla-carousel-ssr.umd.js"
+      integrity="sha384-apu0WDHR0c+4Z5qNk7egPNoCxXkYq80e+Qh6xJ6f67S53mSyYdKE6tIeXxvKJ6x9"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Zazz scripts: one ES module bundles every component script. -->
+    <script type="module" src="../src/index.js" defer></script>
+    <script>
+      /**
+       * Synchronizes the preview theme with the user's preference.
+       * - Reads "theme" from localStorage.
+       * - Falls back to "prefers-color-scheme: dark" media query if unset.
+       * - Applies the "dark" class to document.documentElement if theme is "dark".
+       * - Saves the resolved theme to localStorage for consistency.
+       * This block runs synchronously before dom load to prevent theme flash on load.
+       */
+      (() => {
+        try {
+          const storedTheme = localStorage.getItem("theme");
+          const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches;
+          const theme = storedTheme ?? (prefersDark ? "dark" : "light");
+          document.documentElement.classList.toggle("dark", theme === "dark");
+        } catch {
+          document.documentElement.classList.toggle(
+            "dark",
+            matchMedia("(prefers-color-scheme: dark)").matches,
+          );
+        }
+      })();
+    </script>
+  </head>
+
+  <body class="bg-background">
+    <header class="py-md border-b" data-transition-layer="global-header">
+      <div class="container">
+        <div class="flex items-center justify-between">
+          <a href="index.html" class="text-h6 font-black">Zazz tests</a>
+          <nav>
+            <menu class="flex gap-xs">
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="index.html">Overview</a>
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="about.html">About</a>
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="products.html"
+                  >Products</a
+                >
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="layout.html">Layout</a>
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="responsive.html"
+                  >Responsive</a
+                >
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="components.html"
+                  >Components</a
+                >
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="forms.html">Forms</a>
+              </li>
+            </menu>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main data-layout="main">
+      <section class="container py-xl">
+        <hgroup class="flex flex-col gap-sm">
+          <span class="text-eyebrow">Zazz framework</span>
+          <h1 class="text-display">Test pages</h1>
+          <p class="text-lg text-muted-foreground max-w-screen-sm">
+            Standalone pages exercising the container band system, responsive utilities, components,
+            and form fields. Built with nothing but Zazz classes. Resize to watch them respond.
+          </p>
+        </hgroup>
+      </section>
+
+      <section class="container py-xl">
+        <div class="flex flex-col gap-sm border rounded-md overflow-auto bg-card">
+          <table class="table">
+            <caption>
+              Table caption
+            </caption>
+            <thead>
+              <tr>
+                <th>Header 1</th>
+                <th>Header 2</th>
+                <th>Header 3</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Data 1</td>
+                <td>Data 2</td>
+                <td>Data 3</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td>Footer 1</td>
+                <td>Footer 2</td>
+                <td>Footer 3</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </section>
+
+      <section class="container pb-xl">
+        <div
+          class="grid grid-cols-1 @sm:grid-cols-2 @lg:grid-cols-3 gap-md"
+          data-reveal-each="slide-up"
+        >
+          <div class="flex flex-col">
+            <a
+              class="flex-1 flex flex-col gap-sm bg-card text-card-foreground border rounded-lg p-md hover:border-primary transition"
+              href="layout.html"
+            >
+              <span class="badge self-start" data-variant="muted">Layout</span>
+              <h2 class="text-h6 font-heading">Container bands</h2>
+              <p class="text-sm text-muted-foreground flex-1">
+                The subgrid band system: bands from xs to bleed, per-child
+                <code>data-container</code>, a <code>data-container</code> default, the responsive
+                <code>@md:container</code>
+                variants, and the article reading width.
+              </p>
+              <span class="text-link">View page</span>
+            </a>
+          </div>
+
+          <div class="flex flex-col">
+            <a
+              class="flex-1 flex flex-col gap-sm bg-card text-card-foreground border rounded-lg p-md hover:border-primary transition"
+              href="responsive.html"
+            >
+              <span class="badge self-start" data-variant="muted">Utilities</span>
+              <h2 class="text-h6 font-heading">Responsive utilities</h2>
+              <p class="text-sm text-muted-foreground flex-1">
+                The <code>@xs:</code> through <code>@xl:</code> prefixes across grid columns, flex
+                direction, display toggles, column spans, basis, and alignment.
+              </p>
+              <span class="text-link">View page</span>
+            </a>
+          </div>
+
+          <div class="flex flex-col">
+            <a
+              class="flex-1 flex flex-col gap-sm bg-card text-card-foreground border rounded-lg p-md hover:border-primary transition"
+              href="components.html"
+            >
+              <span class="badge self-start" data-variant="muted">Components</span>
+              <h2 class="text-h6 font-heading">Component kitchen sink</h2>
+              <p class="text-sm text-muted-foreground flex-1">
+                Buttons, badges, breadcrumbs, cards, avatars, accordion, tabs, tooltip, dropdown,
+                dialog, and prose, adapted from each component's source.
+              </p>
+              <span class="text-link">View page</span>
+            </a>
+          </div>
+
+          <div class="flex flex-col">
+            <a
+              class="flex-1 flex flex-col gap-sm bg-card text-card-foreground border rounded-lg p-md hover:border-primary transition"
+              href="forms.html"
+            >
+              <span class="badge self-start" data-variant="muted">Forms</span>
+              <h2 class="text-h6 font-heading">Fields and validation</h2>
+              <p class="text-sm text-muted-foreground flex-1">
+                Inputs, input groups, the password toggle, textarea, select, checkboxes, radios,
+                switches, and the slider, with <code>:user-invalid</code> validation.
+              </p>
+              <span class="text-link">View page</span>
+            </a>
+          </div>
+
+          <div class="flex flex-col gap-sm bg-muted text-muted-foreground border rounded-lg p-md">
+            <span class="badge self-start">Tip</span>
+            <h2 class="text-h6 font-heading text-foreground">No build step</h2>
+            <p class="text-sm flex-1">
+              These pages load <code>index.css</code> directly and are served raw at
+              <code>/zazz/examples/</code>. Plain HTML plus Zazz tokens, utilities, and components.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t" data-transition-layer="global-footer">
+      <div class="container py-xl">
+        <div class="flex items-center justify-between gap-md">
+          <div class="text-h6 font-black">Zazz tests</div>
+          <menu class="flex gap-sm">
+            <li><a class="button" data-variant="link" href="about.html">About</a></li>
+            <li><a class="button" data-variant="link" href="layout.html">Layout</a></li>
+            <li><a class="button" data-variant="link" href="responsive.html">Responsive</a></li>
+            <li><a class="button" data-variant="link" href="products.html">Products</a></li>
+            <li><a class="button" data-variant="link" href="components.html">Components</a></li>
+            <li><a class="button" data-variant="link" href="forms.html">Forms</a></li>
+          </menu>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

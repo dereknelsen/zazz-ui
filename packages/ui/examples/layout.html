@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <!-- Paint the right theme (bg, form controls, scrollbars) before CSS loads. -->
+    <meta name="color-scheme" content="light dark" />
+    <title>Zazz tests | Overview</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Preload latin Geist woff2 (Google Fonts v5) so it is ready before first paint. -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwcGFWNOITd.woff2"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:ital,wght@0,100..900;1,100..900&family=Geist:ital,wght@0,100..900;1,100..900&display=optional"
+      rel="stylesheet"
+    />
+
+    <!-- Zazz styles: one bundle — index.css @imports the base layers (layers,
+       variables, reset) and every component in cascade order. -->
+    <link rel="stylesheet" href="../src/index.css" />
+
+    <!-- Preload critical js -->
+    <link rel="modulepreload" href="../src/index.js" />
+
+    <!-- Prefetching related pages -->
+    <link rel="prefetch" href="layout.html" />
+
+    <!-- WARNING: CDN scripts not recommended for production.
+     If you need to use a CDN, create a new SRI hash (@see: https://srihash.org/)
+     and update the integrity attribute. -->
+
+    <!-- [Polyfill] Popover API (June 2026) - -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@oddbird/popover-polyfill@latest"
+      integrity="sha384-Gl/j23IcIIiDfqcDI5gpHCxd5EuslCYvs07HAw3KHGx5UcbxizoF/deDnkeEcFXW"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- [Polyfill] Invokers/tooltip (June 2026) - -->
+    <script
+      type="module"
+      src="https://esm.sh/invokers/compatible"
+      integrity="sha384-fzLqSi8WSEqp/tW3neqEgzl53fvLw4u32RAvoNQSSSAfKGsOrfA2B49xhrObWFnr"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Embla Carousel -->
+    <script
+      src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"
+      integrity="sha384-XGqLM9+dJ+PFOMZn6IuZgRRIoxcAT5fx4eIZCx7K3O2Dj5RA7EOlJ3yOS8Jd+kiY"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Embla Carousel Plugins -->
+    <script
+      src="https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js"
+      integrity="sha384-rs7pDLCh+QtEjJg2VChAoKZHaaz7apuon6rM57E3FdzC83xaJH4n9mQZn4E2s3f4"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-auto-scroll/embla-carousel-auto-scroll.umd.js"
+      integrity="sha384-5x3y2MLuLA5c1LQceYM+lo59GGkQmLzQGzbuHhDUDbnOJkFeTl5jUSdBy3JehMcM"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-class-names/embla-carousel-class-names.umd.js"
+      integrity="sha384-nZNIZhV6WSQVCeWMj8JFfOgQZyzPoGSTh0eohtAOu5aluevIpIblZcupMSdl/EEH"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-ssr/embla-carousel-ssr.umd.js"
+      integrity="sha384-apu0WDHR0c+4Z5qNk7egPNoCxXkYq80e+Qh6xJ6f67S53mSyYdKE6tIeXxvKJ6x9"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Zazz scripts: one ES module bundles every component script. -->
+    <script type="module" src="../src/index.js"></script>
+    <script>
+      /**
+       * Synchronizes the preview theme with the user's preference.
+       * - Reads "theme" from localStorage.
+       * - Falls back to "prefers-color-scheme: dark" media query if unset.
+       * - Applies the "dark" class to document.documentElement if theme is "dark".
+       * - Saves the resolved theme to localStorage for consistency.
+       * This block runs synchronously before dom load to prevent theme flash on load.
+       */
+      (() => {
+        try {
+          const storedTheme = localStorage.getItem("theme");
+          const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches;
+          const theme = storedTheme ?? (prefersDark ? "dark" : "light");
+          document.documentElement.classList.toggle("dark", theme === "dark");
+        } catch {
+          document.documentElement.classList.toggle(
+            "dark",
+            matchMedia("(prefers-color-scheme: dark)").matches,
+          );
+        }
+      })();
+    </script>
+  </head>
+
+  <body class="bg-background">
+    <header class="py-md border-b" data-transition-layer="global-header">
+      <div class="container">
+        <div class="flex items-center justify-between">
+          <a href="index.html" class="text-h6 font-black">Zazz tests</a>
+          <nav>
+            <menu class="flex gap-xs">
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="index.html">Overview</a>
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="about.html">About</a>
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="products.html"
+                  >Products</a
+                >
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="layout.html">Layout</a>
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="responsive.html"
+                  >Responsive</a
+                >
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="components.html"
+                  >Components</a
+                >
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="forms.html">Forms</a>
+              </li>
+            </menu>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main data-layout="main">
+      <!-- Intro -->
+      <section class="py-xl">
+        <div class="container">
+          <hgroup class="flex flex-col gap-sm">
+            <span class="text-eyebrow">Layout</span>
+            <h1 class="text-h1">Container bands</h1>
+            <p class="text-lg text-muted-foreground max-w-screen-sm">
+              A <code>.container</code> turns its region into a band grid and spans every column as
+              a subgrid. Each child drops into a band: <code>xs</code> through <code>xl</code> cap
+              and center at the matching breakpoint, <code>full</code> fills minus the gutters, and
+              <code>bleed</code> runs edge to edge. Children default to <code>lg</code>.
+            </p>
+          </hgroup>
+        </div>
+      </section>
+
+      <!-- Every band -->
+      <section class="pb-xl">
+        <div class="container">
+          <p class="text-sm text-muted-foreground font-strong pb-sm" data-container="full">
+            Seven children of one container, each placed with <code>data-container</code>. The
+            widths nest from bleed down to xs.
+          </p>
+
+          <div
+            data-container="bleed"
+            class="bg-foreground text-background p-sm mb-xs text-center text-sm font-strong"
+          >
+            data-container="bleed" · edge to edge, through the gutters
+          </div>
+          <div
+            data-container="full"
+            class="bg-primary text-primary-foreground rounded-md p-sm mb-xs text-center text-sm font-strong"
+          >
+            data-container="full" · full region width minus the gutters
+          </div>
+          <div
+            data-container="xl"
+            class="bg-secondary text-secondary-foreground rounded-md p-sm mb-xs text-center text-sm font-strong"
+          >
+            data-container="xl" · caps at 96rem
+          </div>
+          <div
+            data-container="lg"
+            class="bg-tertiary text-tertiary-foreground rounded-md p-sm mb-xs text-center text-sm font-strong"
+          >
+            data-container="lg" · caps at 80rem · the default band
+          </div>
+          <div
+            data-container="md"
+            class="bg-info text-info-foreground rounded-md p-sm mb-xs text-center text-sm font-strong"
+          >
+            data-container="md" · caps at 64rem
+          </div>
+          <div
+            data-container="sm"
+            class="bg-success text-success-foreground rounded-md p-sm mb-xs text-center text-sm font-strong"
+          >
+            data-container="sm" · caps at 48rem
+          </div>
+          <div
+            data-container="xs"
+            class="bg-warning text-warning-foreground rounded-md p-sm text-center text-sm font-strong"
+          >
+            data-container="xs" · caps at 40rem
+          </div>
+        </div>
+      </section>
+
+      <!-- Default band for the whole container -->
+      <section class="py-xl border-t">
+        <div class="container" data-container="md">
+          <hgroup class="flex flex-col gap-sm pb-md">
+            <span class="text-eyebrow">data-container="md"</span>
+            <h2 class="text-h5 font-heading">One default for every child</h2>
+            <p class="text-muted-foreground">
+              Set <code>data-container</code> on the container and every child lands in that band
+              unless it sets its own <code>data-container</code>. This section defaults to
+              <code>md</code>, so the heading and this paragraph sit at 64rem.
+            </p>
+          </hgroup>
+
+          <div
+            class="bg-muted text-muted-foreground rounded-md p-md mb-xs text-center text-sm font-strong"
+          >
+            no data-container · inherits the md default
+          </div>
+          <div
+            data-container="bleed"
+            class="bg-foreground text-background p-md text-center text-sm font-strong"
+          >
+            data-container="bleed" · one child opting out to full bleed
+          </div>
+        </div>
+      </section>
+
+      <!-- Responsive container variants -->
+      <section class="py-xl border-t">
+        <div class="container">
+          <hgroup class="flex flex-col gap-sm pb-md">
+            <span class="text-eyebrow">Responsive variants</span>
+            <h2 class="text-h5 font-heading">@md:container and @max-md:container</h2>
+            <p class="text-muted-foreground">
+              A responsive container is a band subgrid for only part of the range and a plain block
+              the rest. <code>@md:container</code> aligns to the bands at md and up;
+              <code>@max-md:container</code> aligns below md and falls back to a normal grid above
+              it. Resize to watch each switch.
+            </p>
+          </hgroup>
+
+          <!-- @md:container — plain block below md, band subgrid at md+ -->
+          <p class="text-sm text-muted-foreground font-strong pb-sm">
+            @md:container · stacks full width below md; at md and up the second child moves into the
+            sm band.
+          </p>
+          <div class="@md:container mb-lg">
+            <div
+              class="bg-card text-card-foreground border rounded-md p-md mb-xs text-center text-sm font-strong"
+            >
+              no data-container · lg default at md+
+            </div>
+            <div
+              data-container="sm"
+              class="bg-primary text-primary-foreground rounded-md p-md text-center text-sm font-strong"
+            >
+              data-container="sm" · only narrows at md+
+            </div>
+          </div>
+
+          <!-- @max-md:container — band subgrid below md, two-col grid at md+ -->
+          <p class="text-sm text-muted-foreground font-strong pb-sm">
+            @max-md:container · a two column grid at md and up; below md it becomes a band container
+            so its first child drops into the xs band.
+          </p>
+          <div class="grid grid-cols-2 gap-md @max-md:container">
+            <div
+              data-container="xs"
+              class="bg-secondary text-secondary-foreground rounded-md p-md text-center text-sm font-strong"
+            >
+              data-container="xs"
+            </div>
+            <div
+              class="bg-tertiary text-tertiary-foreground rounded-md p-md text-center text-sm font-strong"
+            >
+              sibling child
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Article reading width -->
+      <section class="py-xl border-t">
+        <div class="container prose" data-variant="article">
+          <hgroup>
+            <span class="text-eyebrow">data-variant="article"</span>
+            <h2>Article reading width</h2>
+            <p class="text-lg text-muted-foreground">A measure tuned for long-form text.</p>
+          </hgroup>
+          <p>
+            Add <code>data-variant="article"</code> to a container and it becomes a centered,
+            character-based reading column instead of a band subgrid. The width comes from the
+            <code>--article-*</code> tokens, defaulting to <code>lg</code> at roughly 70 characters.
+          </p>
+          <p>
+            Pick a different measure with <code>data-container</code>: <code>xs</code> is 45ch,
+            <code>sm</code> 50ch, <code>md</code> 65ch, <code>lg</code> 70ch, <code>xl</code> 75ch.
+            For full or bleed widths, use a plain band container instead, since the article variant
+            only defines the reading sizes.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t" data-transition-layer="global-footer">
+      <div class="container py-xl">
+        <div class="flex items-center justify-between gap-md">
+          <div class="text-h6 font-black">Zazz tests</div>
+          <menu class="flex gap-sm">
+            <li><a class="button" data-variant="link" href="about.html">About</a></li>
+            <li><a class="button" data-variant="link" href="layout.html">Layout</a></li>
+            <li><a class="button" data-variant="link" href="responsive.html">Responsive</a></li>
+            <li><a class="button" data-variant="link" href="products.html">Products</a></li>
+            <li><a class="button" data-variant="link" href="components.html">Components</a></li>
+            <li><a class="button" data-variant="link" href="forms.html">Forms</a></li>
+          </menu>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

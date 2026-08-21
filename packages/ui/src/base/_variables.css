@@ -1,0 +1,651 @@
+/**
+ * _variables.css — Global design tokens (Tier 1).
+ *
+ * @layer      variables
+ * @requires   layers.css, _properties.css
+ * @uses       light-dark() — theme roles follow color-scheme / .dark overrides
+ * @uses       oklch(from …) — shade/tint scales and shadow alphas
+ * @uses       color-mix() — focus ring (--ring)
+ * @uses       interpolate-size: allow-keywords — discrete block-size animations (details, etc.)
+ * @tokens     Global token tiers (the root override hooks) — Theme roles, brand
+ *             scales (50–950), grayscale/shade/tint, typography, spacing, radius,
+ *             layout, effects, animations. Re-declare any of these to re-skin the
+ *             whole system; see CONVENTIONS.md.
+ */
+
+/* Inverted menu */
+
+@property --use-inverted-popovers {
+  syntax: "*";
+  inherits: false;
+  initial-value: false;
+}
+
+/* Animations */
+
+@property --default-transition-duration {
+  syntax: "<time>";
+  inherits: true;
+  initial-value: 0s;
+}
+
+/* NOTE: --reveal-duration / --reveal-wait are intentionally NOT registered.
+ * reveal.js sets them per-element, and _reveal.css resolves them with
+ * var(--reveal-*, var(--reveal-global-*)). A registered property is never
+ * guaranteed-invalid, so registering them would make that var() fallback
+ * dead — the global/config defaults could never apply. They are not used in
+ * any style() query, so typing buys nothing here. */
+
+@property --spring-duration {
+  syntax: "<time>";
+  inherits: true;
+  initial-value: 0s;
+}
+
+/* Layout breakpoint state — boolean flags read by container style() queries.
+ * Typed enum + false default so style(--is-breakpoint-X: false) resolves before
+ * any min-width query matches. Sourced from the body container in _variables.css. */
+
+@property --is-breakpoint-xs {
+  syntax: "true | false";
+  inherits: true;
+  initial-value: false;
+}
+
+@property --is-breakpoint-sm {
+  syntax: "true | false";
+  inherits: true;
+  initial-value: false;
+}
+
+@property --is-breakpoint-md {
+  syntax: "true | false";
+  inherits: true;
+  initial-value: false;
+}
+
+@property --is-breakpoint-lg {
+  syntax: "true | false";
+  inherits: true;
+  initial-value: false;
+}
+
+@property --is-breakpoint-xl {
+  syntax: "true | false";
+  inherits: true;
+  initial-value: false;
+}
+
+/* Token values — @property registrations live in _properties.css (style() queries). */
+@layer variables {
+  :root {
+    /* Enable light/dark mode - make sure to redeclare dark mode tokens on .dark at the bottom of the file */
+    color-scheme: light dark;
+
+    /* Enable discrete value animations, e.g. block-size: auto; */
+    interpolate-size: allow-keywords;
+
+    /* ==========================================================================
+    * 1. Theme — light/dark via light-dark(); follows color-scheme (system + .dark)
+    * ========================================================================== */
+
+    /* base */
+    --background: light-dark(var(--white), var(--neutral-900));
+    --foreground: light-dark(var(--neutral-900), var(--white));
+    --border: light-dark(var(--neutral-100), var(--tint-100));
+    --border-foreground: light-dark(var(--tint-950), var(--shade-500));
+    --card: light-dark(var(--white), var(--neutral-950));
+    --card-foreground: light-dark(var(--neutral-900), var(--white));
+    --popover: light-dark(var(--white), var(--neutral-950));
+    --popover-foreground: light-dark(var(--neutral-900), var(--white));
+    --input: light-dark(var(--neutral-50), var(--tint-50));
+    --input-foreground: light-dark(var(--neutral-900), var(--white));
+
+    /* overlay */
+    --muted: light-dark(var(--shade-50), var(--tint-50));
+    --muted-foreground: light-dark(var(--shade-600), var(--tint-600));
+    --faded: light-dark(var(--tint-400), var(--shade-100));
+    --faded-foreground: light-dark(var(--tint-600), var(--shade-600));
+
+    /* brand */
+    --primary: light-dark(var(--primary-600), var(--primary-500));
+    --primary-foreground: light-dark(var(--white), var(--white));
+    --secondary: light-dark(var(--secondary-600), var(--secondary-500));
+    --secondary-foreground: light-dark(var(--white), var(--white));
+    --tertiary: light-dark(var(--tertiary-500), var(--tertiary-400));
+    --tertiary-foreground: light-dark(var(--white), var(--white));
+
+    /* status */
+    --info: light-dark(oklch(0.5876 0.1389 241.97), oklch(0.5 0.1193 242.75));
+    --info-foreground: light-dark(var(--white), var(--white));
+    --success: light-dark(oklch(0.596 0.1274 163.23), oklch(0.5081 0.1049 165.61));
+    --success-foreground: light-dark(var(--white), var(--white));
+    --warning: light-dark(oklch(0.6658 0.1574 58.32), oklch(0.5553 0.1455 49));
+    --warning-foreground: light-dark(var(--white), var(--white));
+    --destructive: light-dark(oklch(0.5771 0.2152 27.33), oklch(0.5054 0.1905 27.52));
+    --destructive-foreground: light-dark(var(--white), var(--white));
+
+    /* ==========================================================================
+    * 2. Corporate — brand color scales (50–950)
+    * @see https://www.tints.dev/palette/v1:cHJpbWFyeXw0RjQ2RTV8NjAwfHB8MHwwfC0yfDEwM3xtfnNlY29uZGFyeXxERTQ5MTd8NjAwfHB8MHwwfDJ8MTAyfG1-dGVydGlhcnl8RTUzNzVCfDUwMHxwfDB8MHwxfDEwM3xtfm5ldXRyYWx8ODg4ODkwfDUwMHxwfDB8MHwxfDEwM3xt
+    * ========================================================================== */
+
+    /* primary */
+    --primary-50: oklch(0.984 0.007 286.46);
+    --primary-100: oklch(0.94 0.025 288.37);
+    --primary-200: oklch(0.85 0.068 285.81);
+    --primary-300: oklch(0.765 0.108 284.76);
+    --primary-400: oklch(0.674 0.154 283.18);
+    --primary-500: oklch(0.593 0.193 280.79);
+    --primary-600: oklch(0.511 0.23 276.97);
+    --primary-700: oklch(0.421 0.234 273.27);
+    --primary-800: oklch(0.32 0.179 273.06);
+    --primary-900: oklch(0.229 0.127 273.39);
+    --primary-950: oklch(0.158 0.088 274.05);
+
+    /* secondary */
+    --secondary-50: oklch(0.984 0.008 27.43);
+    --secondary-100: oklch(0.95 0.023 24.19);
+    --secondary-200: oklch(0.878 0.061 25.87);
+    --secondary-300: oklch(0.814 0.101 27.69);
+    --secondary-400: oklch(0.749 0.146 30.02);
+    --secondary-500: oklch(0.687 0.198 34.85);
+    --secondary-600: oklch(0.61 0.194 36.8);
+    --secondary-700: oklch(0.5 0.159 36.84);
+    --secondary-800: oklch(0.383 0.121 36.98);
+    --secondary-900: oklch(0.276 0.088 36.22);
+    --secondary-950: oklch(0.215 0.068 37.62);
+
+    /* tertiary */
+    --tertiary-50: oklch(0.984 0.006 17.54);
+    --tertiary-100: oklch(0.942 0.023 11.04);
+    --tertiary-200: oklch(0.861 0.062 11.02);
+    --tertiary-300: oklch(0.772 0.11 12.13);
+    --tertiary-400: oklch(0.693 0.163 13.04);
+    --tertiary-500: oklch(0.613 0.208 14.68);
+    --tertiary-600: oklch(0.523 0.177 14.77);
+    --tertiary-700: oklch(0.432 0.147 14.69);
+    --tertiary-800: oklch(0.334 0.114 14.76);
+    --tertiary-900: oklch(0.244 0.083 14.99);
+    --tertiary-950: oklch(0.197 0.068 15.17);
+
+    /* ==========================================================================
+    * 3. Grayscale — neutrals, shade (dim), tint (fade)
+    * @see https://www.tints.dev/palette/v1:cHJpbWFyeXw0RjQ2RTV8NjAwfHB8MHwwfC0yfDEwM3xtfnNlY29uZGFyeXxERTQ5MTd8NjAwfHB8MHwwfDJ8MTAyfG1-dGVydGlhcnl8RTUzNzVCfDUwMHxwfDB8MHwxfDEwM3xtfm5ldXRyYWx8ODg4ODkwfDUwMHxwfDB8MHwxfDEwM3xt
+    * ========================================================================== */
+
+    /* neutral */
+    --white: oklch(1 0 0);
+    --neutral-50: oklch(0.973 0.001 287.31);
+    --neutral-100: oklch(0.949 0.001 287.28);
+    --neutral-200: oklch(0.871 0.004 286.58);
+    --neutral-300: oklch(0.784 0.007 286.38);
+    --neutral-400: oklch(0.708 0.009 286.28);
+    --neutral-500: oklch(0.629 0.012 286.12);
+    --neutral-600: oklch(0.535 0.015 285.91);
+    --neutral-700: oklch(0.442 0.015 285.82);
+    --neutral-800: oklch(0.336 0.014 285.66);
+    --neutral-900: oklch(0.241 0.009 285.7);
+    --neutral-950: oklch(0.198 0.008 285.68);
+    --black: oklch(0 0 0);
+
+    /* shade — darkened overlays (derived from neutral-950) */
+    --shade-none: oklch(from var(--neutral-950) l c h / 0);
+    --shade-50: oklch(from var(--neutral-950) l c h / 0.05);
+    --shade-100: oklch(from var(--neutral-950) l c h / 0.1);
+    --shade-200: oklch(from var(--neutral-950) l c h / 0.2);
+    --shade-300: oklch(from var(--neutral-950) l c h / 0.3);
+    --shade-400: oklch(from var(--neutral-950) l c h / 0.4);
+    --shade-500: oklch(from var(--neutral-950) l c h / 0.5);
+    --shade-600: oklch(from var(--neutral-950) l c h / 0.6);
+    --shade-700: oklch(from var(--neutral-950) l c h / 0.7);
+    --shade-800: oklch(from var(--neutral-950) l c h / 0.8);
+    --shade-900: oklch(from var(--neutral-950) l c h / 0.9);
+    --shade-950: oklch(from var(--neutral-950) l c h / 0.95);
+    --shade-full: oklch(from var(--neutral-950) l c h / 1);
+
+    /* tint — faded overlays (derived from white) */
+    --tint-none: oklch(from var(--white) l c h / 0);
+    --tint-50: oklch(from var(--white) l c h / 0.05);
+    --tint-100: oklch(from var(--white) l c h / 0.1);
+    --tint-200: oklch(from var(--white) l c h / 0.2);
+    --tint-300: oklch(from var(--white) l c h / 0.3);
+    --tint-400: oklch(from var(--white) l c h / 0.4);
+    --tint-500: oklch(from var(--white) l c h / 0.5);
+    --tint-600: oklch(from var(--white) l c h / 0.6);
+    --tint-700: oklch(from var(--white) l c h / 0.7);
+    --tint-800: oklch(from var(--white) l c h / 0.8);
+    --tint-900: oklch(from var(--white) l c h / 0.9);
+    --tint-950: oklch(from var(--white) l c h / 0.95);
+    --tint-full: oklch(from var(--white) l c h / 1);
+
+    /* ==========================================================================
+    * 4. Typography — typefaces, sizes, weights, tracking, leading
+    * ========================================================================== */
+
+    /* font-family */
+    --font-body:
+      "Geist", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+      "Segoe UI Symbol", "Noto Color Emoji";
+    --font-heading:
+      "Geist", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+      "Segoe UI Symbol", "Noto Color Emoji";
+    --font-mono:
+      "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+      "Courier New", monospace;
+
+    /* semantic font-families */
+    --font-family-body: var(--font-body);
+    --font-family-heading: var(--font-heading);
+    --font-family-mono: var(--font-mono);
+
+    /* font-size — fluid clamp() */
+    --font-size-eyebrow: clamp(0.512rem, 0.609rem + 0.1213vi, 0.5787rem);
+    --font-size-xs: clamp(0.5787rem, 0.8584rem + 0.273vi, 0.64rem);
+    --font-size-sm: clamp(0.7901rem, 0.9293rem + 0.1616vi, 0.8rem);
+    --font-size-md: clamp(1rem, 1rem + 0vi, 1rem);
+    --font-size-lg: clamp(1.125rem, 1.0682rem + 0.2273vi, 1.25rem);
+    --font-size-xl: clamp(1.2656rem, 1.1307rem + 0.5398vi, 1.5625rem);
+    --font-size-h6: clamp(1.2656rem, 1.1307rem + 0.5398vi, 1.5625rem);
+    --font-size-h5: clamp(1.4238rem, 1.1832rem + 0.9624vi, 1.9531rem);
+    --font-size-h4: clamp(1.6018rem, 1.2202rem + 1.5265vi, 2.4414rem);
+    --font-size-h3: clamp(1.802rem, 1.234rem + 2.2722vi, 3.0518rem);
+    --font-size-h2: clamp(2.0273rem, 1.2148rem + 3.2498vi, 3.8147rem);
+    --font-size-h1: clamp(2.2807rem, 1.1499rem + 4.523vi, 4.7684rem);
+    --font-size-display: clamp(2.5658rem, 1.0227rem + 6.1721vi, 5.9605rem);
+
+    /* font-weight */
+    --font-weight-body: 400;
+    --font-weight-heading: 600;
+    --font-weight-strong: 500;
+    --font-weight-mono: 400;
+    --font-weight-eyebrow: 600;
+
+    /* letter-spacing */
+    --tracking-display: -0.05em;
+    --tracking-h1: -0.05em;
+    --tracking-h2: -0.025em;
+    --tracking-h3: -0.025em;
+    --tracking-h4: -0.015em;
+    --tracking-h5: -0.01em;
+    --tracking-h6: -0.005em;
+    --tracking-xl: 0em;
+    --tracking-lg: 0em;
+    --tracking-md: 0em;
+    --tracking-sm: 0em;
+    --tracking-xs: 0em;
+    --tracking-eyebrow: 0.1em;
+
+    /* line-height — not in Figma (variable limits) */
+    --leading-display: 0.95;
+    --leading-h1: 0.95;
+    --leading-h2: 0.95;
+    --leading-h3: 1;
+    --leading-h4: 1;
+    --leading-h5: 1;
+    --leading-h6: 1;
+    --leading-xl: 1.5;
+    --leading-lg: 1.5;
+    --leading-md: 1.6;
+    --leading-sm: 1.5;
+    --leading-xs: 1.5;
+    --leading-eyebrow: 1.2;
+
+    /* paragraph-spacing */
+    --paragraph-spacing-multiplier: 1;
+
+    --paragraph-spacing-display: calc(1.75rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-h1: calc(1.75rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-h2: calc(1.5rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-h3: calc(1.5rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-h4: calc(1.25rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-h5: calc(1.25rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-h6: calc(1.25rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-xl: calc(0.75rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-lg: calc(0.75rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-md: calc(0.75rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-sm: calc(0.5rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-xs: calc(0.5rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-eyebrow: calc(1rlh * var(--paragraph-spacing-multiplier));
+
+    /* ==========================================================================
+    * 5. Spacing — interval modifier, semantic gaps, step scale
+    * ========================================================================== */
+
+    /* modifiers */
+    /* @link https://utopia.fyi/clamp/calculator?a=400,1280,3.6—4 */
+    --spacing-interval: clamp(0.225rem, 0.2136rem + 0.0455vw, 0.25rem);
+
+    /* scale */
+    --step-0_5px: 0.5px;
+    --step-px: 1px;
+    --step-0_5: calc(var(--spacing-interval) / 2);
+    --step-1: var(--spacing-interval);
+    --step-1_5: calc(var(--spacing-interval) * 1.5);
+    --step-2: calc(var(--spacing-interval) * 2);
+    --step-2_5: calc(var(--spacing-interval) * 2.5);
+    --step-3: calc(var(--spacing-interval) * 3);
+    --step-3_5: calc(var(--spacing-interval) * 3.5);
+    --step-4: calc(var(--spacing-interval) * 4);
+    --step-4_5: calc(var(--spacing-interval) * 4.5);
+    --step-5: calc(var(--spacing-interval) * 5);
+    --step-5_5: calc(var(--spacing-interval) * 5.5);
+    --step-6: calc(var(--spacing-interval) * 6);
+    --step-7: calc(var(--spacing-interval) * 7);
+    --step-8: calc(var(--spacing-interval) * 8);
+    --step-9: calc(var(--spacing-interval) * 9);
+    --step-10: calc(var(--spacing-interval) * 10);
+    --step-11: calc(var(--spacing-interval) * 11);
+    --step-12: calc(var(--spacing-interval) * 12);
+    --step-14: calc(var(--spacing-interval) * 14);
+    --step-16: calc(var(--spacing-interval) * 16);
+    --step-20: calc(var(--spacing-interval) * 20);
+    --step-24: calc(var(--spacing-interval) * 24);
+    --step-28: calc(var(--spacing-interval) * 28);
+    --step-32: calc(var(--spacing-interval) * 32);
+    --step-36: calc(var(--spacing-interval) * 36);
+    --step-40: calc(var(--spacing-interval) * 40);
+    --step-44: calc(var(--spacing-interval) * 44);
+    --step-48: calc(var(--spacing-interval) * 48);
+    --step-52: calc(var(--spacing-interval) * 52);
+    --step-56: calc(var(--spacing-interval) * 56);
+    --step-60: calc(var(--spacing-interval) * 60);
+    --step-64: calc(var(--spacing-interval) * 64);
+    --step-72: calc(var(--spacing-interval) * 72);
+    --step-80: calc(var(--spacing-interval) * 80);
+    --step-96: calc(var(--spacing-interval) * 96);
+    --step-full: 100%;
+
+    /* semantic */
+    --gap-xs: var(--step-2);
+    --gap-sm: var(--step-4);
+    --gap-md: var(--step-6);
+    --gap-lg: var(--step-11);
+    --gap-xl: var(--step-24);
+
+    /* ==========================================================================
+    * 6. Radius — multiplier, semantic scale, component primitives
+    * ========================================================================== */
+
+    /* modifiers */
+    --radius-multiplier: 1;
+
+    /* semantic */
+    --radius-none: 0rem;
+    --radius-xs: calc(var(--step-1) * var(--radius-multiplier));
+    --radius-sm: calc(var(--step-1_5) * var(--radius-multiplier));
+    --radius-md: calc(var(--step-2_5) * var(--radius-multiplier));
+    --radius-lg: calc(var(--step-5) * var(--radius-multiplier));
+    --radius-xl: calc(var(--step-7) * var(--radius-multiplier));
+    --radius-full: 9999rem;
+
+    /* ==========================================================================
+    * 7. Layout — container widths and breakpoints
+    * ========================================================================== */
+
+    /* semantic */
+    --gutters: var(--gap-md);
+
+    /* breakpoints — length tokens for calcs and container queries.
+       The matching --is-breakpoint-* state flags are sourced from the body
+       container after this :root block (the size-query subject must be a body
+       descendant, so it cannot live in :root). */
+    --breakpoint-xs: 40rem;
+    --breakpoint-sm: 48rem;
+    --breakpoint-md: 64rem;
+    --breakpoint-lg: 80rem;
+    --breakpoint-xl: 96rem;
+
+    /* article container widths */
+    --article-xs: 45ch;
+    --article-sm: 50ch;
+    --article-md: 65ch;
+    --article-lg: 70ch;
+    --article-xl: 75ch;
+
+    /* ==========================================================================
+    * 8. Effects — shadows, focus rings
+    * ========================================================================== */
+
+    /* states - focus rings
+     * Tailwind/shadcn-compatible ring tokens. The ring renders as a box-shadow:
+     * --ring-offset-shadow (a --ring-offset-width gap in --ring-offset-color) +
+     * --ring-shadow (a --ring-width band of --ring) — the same composition
+     * Tailwind's ring utilities use (--tw-ring-*), so values port 1:1.
+     * Override --ring-color (not --ring) per variant/context; --ring recomputes via color-mix. */
+    --ring-color: var(--primary);
+    --ring-opacity: 70%;
+    --ring: color-mix(in oklch, var(--ring-color) var(--ring-opacity), transparent);
+    --ring-width: 2px;
+    --ring-offset-width: 1px;
+    --ring-offset-color: var(--background);
+
+    /* outline twin — transparent outline matching the ring's geometry.
+     * Shadow-ringed elements keep it because forced-colors / high-contrast
+     * modes drop box-shadows but force outline-color, so focus stays visible. */
+    --outline-width: var(--ring-width);
+    --outline-style: solid;
+    --outline-offset: var(--ring-offset-width);
+
+    /* shadows */
+    --ring-offset-shadow: 0 0 0 var(--ring-offset-width) var(--ring-offset-color);
+    --ring-shadow: 0 0 0 calc(var(--ring-offset-width) + var(--ring-width)) var(--ring);
+    /* the composed focus ring (offset gap + ring band) for box-shadow lists */
+    --shadow-ring: var(--ring-offset-shadow), var(--ring-shadow);
+
+    --shadow-xs:
+      0 8px 2px 0 oklch(from var(--black) l c h / 0),
+      0 5px 2px 0 oklch(from var(--black) l c h / 0.01),
+      0 3px 2px 0 oklch(from var(--black) l c h / 0.03),
+      0 1px 1px 0 oklch(from var(--black) l c h / 0.04),
+      0 0 1px 0 oklch(from var(--black) l c h / 0.05);
+    --shadow-sm:
+      0 25px 7px 0 oklch(from var(--black) l c h / 0),
+      0 16px 6px 0 oklch(from var(--black) l c h / 0.01),
+      0 9px 5px 0 oklch(from var(--black) l c h / 0.03),
+      0 4px 4px 0 oklch(from var(--black) l c h / 0.04),
+      0 1px 2px 0 oklch(from var(--black) l c h / 0.05);
+    --shadow-md:
+      0 66px 18px 0 oklch(from var(--black) l c h / 0),
+      0 42px 17px 0 oklch(from var(--black) l c h / 0.01),
+      0 24px 14px 0 oklch(from var(--black) l c h / 0.03),
+      0 11px 11px 0 oklch(from var(--black) l c h / 0.04),
+      0 3px 6px 0 oklch(from var(--black) l c h / 0.05);
+    --shadow-lg:
+      0 247px 69px 0 oklch(from var(--black) l c h / 0),
+      0 158px 63px 0 oklch(from var(--black) l c h / 0.01),
+      0 89px 53px 0 oklch(from var(--black) l c h / 0.03),
+      0 39px 39px 0 oklch(from var(--black) l c h / 0.05),
+      0 10px 22px 0 oklch(from var(--black) l c h / 0.06);
+    --shadow-xl:
+      0 370px 104px 0 oklch(from var(--black) l c h / 0),
+      0 237px 95px 0 oklch(from var(--black) l c h / 0.01),
+      0 133px 80px 0 oklch(from var(--black) l c h / 0.04),
+      0 59px 59px 0 oklch(from var(--black) l c h / 0.06),
+      0 15px 33px 0 oklch(from var(--black) l c h / 0.07);
+
+    /* ==========================================================================
+    * 9. Animations — spring easing, duration
+    * ========================================================================== */
+
+    /* Spring easing curve for smooth, natural animations */
+    --spring-easing: linear(
+      0,
+      0.012 0.9%,
+      0.049 2%,
+      0.409 9.3%,
+      0.513 11.9%,
+      0.606 14.7%,
+      0.691 17.9%,
+      0.762 21.3%,
+      0.82 25%,
+      0.868 29.1%,
+      0.907 33.6%,
+      0.937 38.7%,
+      0.976 51.3%,
+      0.994 68.8%,
+      1
+    );
+    --bezier-easing: cubic-bezier(0.17, 0.84, 0.44, 1);
+    --spring-duration: 0.333s;
+
+    /* Fallback to easeOutQuart for browsers that don't support spring easing */
+    --default-transition-property:
+      text-underline-offset, text-decoration-color, box-shadow, background-color, border-color,
+      opacity, color, fill, stroke, transform, translate, scale, rotate, filter,
+      -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events;
+    --default-transition-timing-function: var(--spring-easing, var(--bezier-easing));
+    --default-transition-duration: var(--spring-duration, 0.333s);
+    --default-transition:
+      text-underline-offset var(--default-transition-duration)
+        var(--default-transition-timing-function),
+      text-decoration-color var(--default-transition-duration)
+        var(--default-transition-timing-function),
+      box-shadow var(--default-transition-duration) var(--default-transition-timing-function),
+      background-color var(--default-transition-duration) var(--default-transition-timing-function),
+      border-color var(--default-transition-duration) var(--default-transition-timing-function),
+      opacity var(--default-transition-duration) var(--default-transition-timing-function),
+      color var(--default-transition-duration) var(--default-transition-timing-function),
+      fill var(--default-transition-duration) var(--default-transition-timing-function),
+      stroke var(--default-transition-duration) var(--default-transition-timing-function),
+      transform var(--default-transition-duration) var(--default-transition-timing-function),
+      translate var(--default-transition-duration) var(--default-transition-timing-function),
+      scale var(--default-transition-duration) var(--default-transition-timing-function),
+      rotate var(--default-transition-duration) var(--default-transition-timing-function),
+      filter var(--default-transition-duration) var(--default-transition-timing-function),
+      -webkit-backdrop-filter var(--default-transition-duration)
+        var(--default-transition-timing-function),
+      backdrop-filter var(--default-transition-duration) var(--default-transition-timing-function),
+      display var(--default-transition-duration) var(--default-transition-timing-function),
+      content-visibility var(--default-transition-duration)
+        var(--default-transition-timing-function),
+      overlay var(--default-transition-duration) var(--default-transition-timing-function),
+      pointer-events var(--default-transition-duration) var(--default-transition-timing-function);
+
+    --decoration-line: underline;
+    --decoration-color: currentColor;
+    --decoration-color--hover: currentColor;
+    --decoration-color--active: currentColor;
+    --decoration-style: solid;
+    --decoration-thickness: 1px;
+    --decoration-offset: 2px;
+    --decoration-offset--hover: 3px;
+    --decoration-offset--active: 2px;
+  }
+
+  /* ==========================================================================
+   * Breakpoint state flags — global, sourced from the body container.
+   * Set the same value on every body descendant so any style() consumer
+   * resolves it identically, no matter which container it reads from (the
+   * .container element is intentionally container-type: normal).
+   * Mobile-first: --is-breakpoint-X becomes true once width reaches X.
+   * Registered as typed @property (false default) in _properties.css.
+   * Literal rem required — var() is invalid in a container-query prelude.
+   * ========================================================================== */
+  @container (width >= 40rem) {
+    :where(body *) {
+      --is-breakpoint-xs: true;
+    }
+  }
+  @container (width >= 48rem) {
+    :where(body *) {
+      --is-breakpoint-sm: true;
+    }
+  }
+  @container (width >= 64rem) {
+    :where(body *) {
+      --is-breakpoint-md: true;
+    }
+  }
+  @container (width >= 80rem) {
+    :where(body *) {
+      --is-breakpoint-lg: true;
+    }
+  }
+  @container (width >= 96rem) {
+    :where(body *) {
+      --is-breakpoint-xl: true;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --default-transition-duration: 0s;
+      --default-transition-timing-function: ease-in-out;
+    }
+  }
+
+  /*
+   * Manual dark mode — re-declare dark theme tokens so light-dark() resolves
+   * with color-scheme: dark. Tokens defined only on :root inherit as computed
+   * light values; setting color-scheme on descendants alone does not flip them.
+   */
+
+  @container style(--use-inverted-popovers: true) {
+    :where([popover]:not([data-use-inverted-menu="false"])) {
+      color-scheme: dark;
+
+      --background: var(--neutral-900);
+      --foreground: var(--white);
+      --border: var(--tint-200);
+      --border-foreground: var(--shade-500);
+      --card: var(--neutral-950);
+      --card-foreground: var(--white);
+      --input: var(--tint-50);
+      --input-foreground: var(--white);
+      --popover: var(--shade-950);
+      --popover-foreground: var(--white);
+      --muted: var(--tint-50);
+      --muted-foreground: var(--tint-600);
+      --faded: var(--shade-100);
+      --faded-foreground: var(--shade-600);
+      --primary: var(--primary-500);
+      --primary-foreground: var(--white);
+      --secondary: var(--secondary-500);
+      --secondary-foreground: var(--white);
+      --tertiary: var(--tertiary-400);
+      --tertiary-foreground: var(--white);
+      --info: oklch(0.5 0.1193 242.75);
+      --info-foreground: var(--white);
+      --success: oklch(0.5081 0.1049 165.61);
+      --success-foreground: var(--white);
+      --warning: oklch(0.5553 0.1455 49);
+      --warning-foreground: var(--white);
+      --destructive: oklch(0.5054 0.1905 27.52);
+      --destructive-foreground: var(--white);
+    }
+  }
+
+  .dark {
+    color-scheme: dark;
+
+    --background: var(--neutral-900);
+    --foreground: var(--white);
+    --border: var(--tint-200);
+    --border-foreground: var(--shade-500);
+    --card: var(--neutral-950);
+    --card-foreground: var(--white);
+    --input: var(--tint-50);
+    --input-foreground: var(--white);
+    --popover: var(--shade-950);
+    --popover-foreground: var(--white);
+    --muted: var(--tint-50);
+    --muted-foreground: var(--tint-600);
+    --faded: var(--shade-100);
+    --faded-foreground: var(--shade-600);
+    --primary: var(--primary-500);
+    --primary-foreground: var(--white);
+    --secondary: var(--secondary-500);
+    --secondary-foreground: var(--white);
+    --tertiary: var(--tertiary-400);
+    --tertiary-foreground: var(--white);
+    --info: oklch(0.5 0.1193 242.75);
+    --info-foreground: var(--white);
+    --success: oklch(0.5081 0.1049 165.61);
+    --success-foreground: var(--white);
+    --warning: oklch(0.5553 0.1455 49);
+    --warning-foreground: var(--white);
+    --destructive: oklch(0.5054 0.1905 27.52);
+    --destructive-foreground: var(--white);
+  }
+}

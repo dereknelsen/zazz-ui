@@ -1,0 +1,93 @@
+---
+title: Styling with utility classes
+description: Build interfaces by composing small, single-purpose classes in your markup, each one wired to a design token, so what you build stays on-system.
+---
+
+You style a Zazz interface by adding utility classes to your HTML (`flex`, `gap-md`, `text-h2`, `bg-primary`, `rounded-lg`) instead of writing CSS. Each class does one thing and maps to a [design token](/docs/base/variables), so a layout assembled from utilities is consistent by construction and adapts to your theme for free.
+
+```html
+<article class="card p-lg flex flex-col gap-md rounded-lg shadow-sm">
+  <h3 class="text-h4">Quarterly report</h3>
+  <p class="text-muted-foreground">Revenue is up 12% over last quarter.</p>
+  <a class="button mt-sm" data-variant="primary" href="/report">View report</a>
+</article>
+```
+
+No new CSS file, no class to name, no stylesheet to keep in sync with the markup, and nothing left behind when you delete the element.
+
+## Why utilities
+
+- **Stay on-system.** Every utility resolves to a token, so spacing, color, and type come from the same shared vocabulary across the whole site. You compose from a palette instead of inventing values.
+- **No naming, no dead CSS.** You never invent `.card-inner-wrapper`, and removing markup removes its styling, so there's no orphaned rule to track down later.
+- **They win the cascade cleanly.** Utilities live in `@layer zazz.utilities`, the last [cascade layer](/docs/base/layers), so a utility overrides a component's own rule with no `!important` and no specificity battle.
+
+## Semantic first, specific as the escape hatch
+
+Reach for the most semantic option that fits, and only get specific when nothing semantic works. This is what keeps a project coherent: you spend the shared design language instead of writing one-off values.
+
+- **Spacing** → `gap-md`, `p-lg`, `py-sm` first; the `--step-*` scale only when no semantic gap fits. Never a raw pixel value.
+- **Color** → role classes like `bg-card`, `text-muted-foreground`, `border-primary`, so [light and dark](/docs/core-concepts/dark-mode) swap automatically. Numeric [color scales](/docs/core-concepts/colors) are the last resort.
+- **Type** → a single `text-*` class (`text-h1`…`text-xs`, `text-eyebrow`) that bundles size, weight, leading, and tracking. Never compose type from separate utilities.
+
+If you find yourself wanting a brand-new rule, that's the signal to browse the [Utilities](/docs/base/utilities) reference first. There's usually a class for it.
+
+## The families you'll use most
+
+| Family        | Examples                                                                                  |
+| ------------- | ----------------------------------------------------------------------------------------- |
+| Layout        | `flex`, `grid`, `grid-cols-3`, `flex-col`, `items-center`, `justify-between`, `basis-1/2` |
+| Spacing       | `gap-md`, `p-lg`, `px-md`, `py-sm`, `mt-sm`, `mx-auto`                                    |
+| Type          | `text-h2`, `text-sm`, `text-eyebrow`, `text-center`, `text-balance`, `font-heading`       |
+| Color         | `bg-primary`, `text-foreground`, `text-muted-foreground`, `border-border`                 |
+| Shape & depth | `rounded-lg`, `rounded-b-0`, `shadow-md`, `ring`                                          |
+| Sizing        | `w-full`, `max-w-screen-md`, `size-8`, `aspect-square`                                    |
+
+The full catalog, organized by family, lives in the [Utilities](/docs/base/utilities) reference; this is the everyday subset.
+
+## One scale, everywhere
+
+Look closely at those class names and the same five rungs keep reappearing: `xs sm md lg xl`. That t-shirt scale isn't a spacing quirk; it's the measuring stick for the whole system. `lg` means "the large step" whether you're setting a gap, a corner, a shadow, a width, or a breakpoint:
+
+| Property   | Class                         |
+| ---------- | ----------------------------- |
+| Spacing    | `gap-lg` · `p-lg` · `mt-lg`   |
+| Radius     | `rounded-lg`                  |
+| Shadow     | `shadow-lg`                   |
+| Sizing     | `size-lg` · `max-w-screen-lg` |
+| Breakpoint | `@lg:grid-cols-3`             |
+
+Repeating one scale instead of inventing a new set of values per property buys two things:
+
+- **Predictability.** Learn the rungs once and you can guess a class you've never typed. If `gap-md` exists, so do `p-md`, `rounded-md`, and `shadow-md`; the steps line up across every family, so you compose from memory instead of searching the docs.
+- **A slim system.** Every property draws from the same five steps rather than shipping its own bespoke list, so the utility layer stays small. The bonus is visual rhythm: sizes relate to each other because they come off one ladder, not from values picked in isolation.
+
+The escape-hatch scales follow the same idea: a single, predictable ladder you reach into only when a named rung won't do, `--step-0_5`…`--step-96` for spacing and `50`…`950` for [color](/docs/core-concepts/colors). Same instinct, finer resolution.
+
+## Touch one thing, leave the rest
+
+Padding, margin, and radius utilities use a composition system: each class sets one axis or edge without disturbing the others. So you can stack a broad value and then carve out an exception.
+
+```html
+<!-- md padding all around, but flush on the left -->
+<div class="p-md pl-0">…</div>
+
+<!-- rounded card with a squared-off bottom edge -->
+<div class="rounded-lg rounded-b-0">…</div>
+```
+
+## Utilities and components work together
+
+Components carry their own look and expose variants through [`data-*` attributes](/docs/components/button); utilities handle placement, spacing, and one-off color. Combine them freely; the utility always has the final say:
+
+```html
+<button class="button mt-md w-full" data-variant="primary" data-size="lg">Continue</button>
+```
+
+## Beyond the base state
+
+Utilities also cover interaction and layout that responds to space:
+
+- **State variants:** `hover:bg-primary`, `hover:scale-102`, plus the automatic focus ring. See [Hover, focus, and other states](/docs/core-concepts/states).
+- **Responsive variants:** `@md:grid-cols-3`, `@lg:flex-row`, driven by container style queries rather than viewport media queries. See [Responsive design](/docs/core-concepts/responsive-design).
+
+When utilities genuinely can't express something, you extend the system without editing source. See [Adding custom styles](/docs/core-concepts/custom-styles).

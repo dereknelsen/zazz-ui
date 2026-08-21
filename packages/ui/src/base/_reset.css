@@ -1,0 +1,536 @@
+/**
+ * reset.css — Native element baselines and shared control primitives.
+ *
+ * @layer      reset
+ * @requires   layers.css, _properties.css, _variables.css
+ * @uses       appearance: none — select chevron reset
+ * @uses       ::details-content — accordion open/close (see _accordion.css for .accordion)
+ * @uses       container-type — layout containers on main, article, section
+ * @uses       view-transition-name via the <main> tag - main-content and [data-transition-layer] —
+ *             global (animated in _view-transitions.css)
+ * @uses       text-box — vertical trim on headings
+ * @uses       color-mix(), oklch(from …), contrast-color() — mark/highlight tints
+ * @tokens     Native-control hooks declared per element — --code-*, --kbd-*,
+ *             --search-cancel-*, --placeholder-color
+ *
+ * Note: Checkbox lives in _checkbox.css; range/slider in _slider.css;
+ *   switch in _switch.css.
+ *
+ * Note: <select> picker internals live in _select.css; popover in _popover.css;
+ *   dialog in _dialog.css.
+ */
+@layer reset {
+  /* ===========================================================================
+  UNIVERSAL RESET — box model, margins, padding, borders
+  =========================================================================== */
+
+  :where(*, ::before, ::after, ::backdrop, ::file-selector-button) {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0 solid;
+  }
+
+  /* ===========================================================================
+  BASE ELEMENT RESETS
+  =========================================================================== */
+
+  :where(html) {
+    font-family: var(--font-family-body, sans-serif);
+    font-size: 16px;
+    line-height: 1.5;
+    tab-size: 4;
+    -webkit-text-size-adjust: 100%;
+    background-color: var(--background);
+    -webkit-tap-highlight-color: transparent;
+    overflow: clip;
+
+    /* Enable container queries by default */
+    container-type: normal;
+    container-name: html;
+  }
+
+  :where(:host) {
+    line-height: 1.5;
+    tab-size: 4;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  :where(body) {
+    display: flex;
+    flex-direction: column;
+    font-optical-sizing: auto;
+    position: relative;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    text-wrap: pretty;
+    color: var(--foreground);
+    background-color: var(--background);
+    block-size: 100svh;
+    scroll-behavior: smooth;
+    scrollbar-gutter: stable;
+    overflow-y: auto;
+    overflow-x: clip;
+    font-size: var(--font-size-md);
+    line-height: var(--leading-md);
+    letter-spacing: var(--tracking-md);
+
+    /* Enable container queries by default */
+    container-type: inline-size;
+    container-name: body;
+  }
+
+  :where(:focus-visible) {
+    outline: var(--outline-width) var(--outline-style) var(--ring);
+    outline-offset: var(--outline-offset);
+  }
+
+  :where(b, strong) {
+    font-weight: var(--font-weight-strong);
+  }
+
+  :where(main) {
+    --_container-type: inline-size;
+    --_container-name: main;
+    --_view-transition-name: main-content;
+
+    /* Allow for more predictable z-indexing and spacing */
+    isolation: isolate;
+    position: relative;
+
+    /* Fill the flex body so the footer stays pinned to the bottom on short pages.
+       Keeps main's box consistent between pages so view-transition snapshots align. */
+    flex: 1 0 auto;
+    overflow: clip;
+
+    /* Enable container queries for main content */
+    container-type: var(--_container-type);
+    container-name: var(--_container-name);
+
+    /* View transitions - Main content is isolated from the rest of the page and can be animated independently of, for example, the header or footer */
+    view-transition-name: var(--_view-transition-name);
+  }
+
+  :where([data-transition-layer="global-header"]) {
+    view-transition-name: global-header;
+  }
+
+  :where([data-transition-layer="global-footer"]) {
+    view-transition-name: global-footer;
+  }
+
+  :where(header) {
+    --_container-name: header;
+    --_container-type: inline-size;
+  }
+
+  :where(footer) {
+    --_container-name: footer;
+    --_container-type: inline-size;
+  }
+
+  :where(section) {
+    --_container-name: section;
+    --_container-type: inline-size;
+  }
+
+  :where(article) {
+    --_container-name: article;
+    --_container-type: inline-size;
+  }
+
+  :where(header, footer, section, article) {
+    /* Allow for more predictable z-indexing */
+    position: relative;
+
+    /* Enable container queries for main content sections */
+    container-type: var(--_container-type);
+    container-name: var(--_container-name, layout);
+  }
+
+  :where(pre) {
+    margin: unset;
+  }
+
+  :where(a) {
+    color: unset;
+    background-color: unset;
+    -webkit-text-decoration: inherit;
+    text-decoration: inherit;
+  }
+
+  /* ===========================================================================
+  TYPOGRAPHY & SEMANTIC ELEMENTS
+  =========================================================================== */
+
+  /* Headings inherit by default — utility classes (.text-h1, etc.) drive size/weight */
+  :where(h1, h2, h3, h4, h5, h6) {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  :where(small) {
+    font-size: 80%;
+  }
+
+  :where(sub, sup) {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+  }
+
+  :where(sub) {
+    bottom: -0.25em;
+  }
+
+  :where(sup) {
+    top: -0.5em;
+  }
+
+  :where(abbr[title]) {
+    -webkit-text-decoration: underline dotted;
+    text-decoration: underline dotted;
+  }
+
+  :where(hr) {
+    block-size: 1px;
+    color: var(--border);
+    background-color: var(--border);
+    border: 0;
+    flex-shrink: 0;
+  }
+
+  :where(hr[data-orientation="vertical"]) {
+    inline-size: 1px;
+    color: var(--border);
+    background-color: var(--border);
+    border: 0;
+  }
+
+  :where(code, samp, pre) {
+    font-family: var(--font-family-mono);
+    font-size: 1em;
+  }
+
+  :where(code) {
+    --code-display: inline;
+    --code-background: var(--muted);
+    --code-border: 1px solid var(--muted);
+    --code-padding-inline: var(--step-1);
+    --code-padding-block: 0em;
+    --code-radius: var(--radius-xs);
+    --code-color: var(--foreground);
+
+    display: var(--code-display);
+    background-color: var(--code-background);
+    padding-inline: var(--code-padding-inline);
+    padding-block: var(--code-padding-block);
+    border: var(--code-border);
+    border-radius: var(--code-radius);
+    color: var(--code-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-inline-size: 100%;
+  }
+
+  :where(kbd) {
+    --kbd-font-family: var(--font-family-mono);
+    --kbd-font-size: var(--font-size-xs);
+    --kbd-line-height: 1;
+    --kbd-display: inline-flex;
+    --kbd-align-items: center;
+    --kbd-justify-content: center;
+    --kbd-background: var(--muted);
+    --kbd-border: 1px solid transparent;
+    --kbd-padding-inline: var(--step-1);
+    --kbd-padding-block: 0;
+    --kbd-radius: var(--radius-xs);
+    --kbd-color: var(--muted-foreground);
+    --kbd-min-inline-size: var(--step-5);
+    --kbd-min-block-size: var(--step-5);
+    --kbd-icon-size: var(--step-3_5);
+    --kbd-gap: var(--step-1);
+
+    font-family: var(--kbd-font-family);
+    font-size: var(--kbd-font-size);
+    line-height: var(--kbd-line-height);
+    display: var(--kbd-display);
+    align-items: var(--kbd-align-items);
+    justify-content: var(--kbd-justify-content);
+    gap: var(--kbd-gap);
+    background-color: var(--kbd-background);
+    padding-inline: var(--kbd-padding-inline);
+    padding-block: var(--kbd-padding-block);
+    border: var(--kbd-border);
+    border-radius: var(--kbd-radius);
+    color: var(--kbd-color);
+    overflow: hidden;
+    min-block-size: var(--kbd-min-block-size);
+    min-inline-size: var(--kbd-min-inline-size);
+    inline-size: fit-content;
+    text-box: trim-both ex alphabetic;
+  }
+
+  :where(kbd > svg) {
+    inline-size: var(--kbd-icon-size);
+    block-size: var(--kbd-icon-size);
+  }
+
+  /* ===========================================================================
+  LIST RESETS
+  =========================================================================== */
+
+  :where(ol, ul, menu) {
+    list-style: none;
+  }
+
+  /* ===========================================================================
+  TABLE RESETS
+  =========================================================================== */
+
+  :where(table) {
+    text-indent: 0;
+    border-color: inherit;
+    border-collapse: collapse;
+  }
+
+  /* ===========================================================================
+  MEDIA RESETS
+  =========================================================================== */
+
+  :where(img, svg, video, canvas, audio, iframe, embed, object) {
+    display: block;
+  }
+
+  :where(img, svg, video, canvas, audio, iframe, embed, object) {
+    vertical-align: middle;
+  }
+
+  :where(img, video) {
+    /* Ensure the image is responsive */
+    max-inline-size: 100%;
+    block-size: auto;
+  }
+
+  :where(figure) {
+    display: flex;
+    flex-direction: column;
+
+    > img {
+      inline-size: 100%;
+    }
+  }
+
+  /* Custom text selection styling — the tinted background is safe everywhere
+     (relative oklch is Baseline). contrast-color() is Chromium-only, so it is
+     gated: without it the selection keeps its inherited text color, which stays
+     legible against a 30%-opacity tint in both light and dark modes. */
+  ::selection {
+    background-color: oklch(from var(--primary) calc(l + 0.1) c h / 0.3);
+  }
+
+  @supports (color: contrast-color(white)) {
+    ::selection {
+      /* Ensure text is always legible on the primary color at 30% opacity + the background color */
+      color: contrast-color(
+        color-mix(
+          in oklch,
+          var(--background) 50%,
+          oklch(from var(--primary) calc(l + 0.1) c h / 0.3)
+        )
+      );
+    }
+  }
+
+  /* ===========================================================================
+  FORM ELEMENT RESETS
+  =========================================================================== */
+
+  /* Inherit font and color across all form controls */
+  :where(button, input, optgroup, select, textarea),
+  ::file-selector-button {
+    font: inherit;
+    font-feature-settings: inherit;
+    font-variation-settings: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    padding: unset;
+  }
+
+  /* Preflight compatibility — cross-browser form baselines */
+  :where(button, input, select, textarea),
+  ::file-selector-button {
+    border-radius: 0;
+    background-color: transparent;
+    opacity: 1;
+  }
+
+  :where(button, input[type="button"], input[type="reset"], input[type="submit"]),
+  ::file-selector-button {
+    appearance: button;
+  }
+
+  ::file-selector-button {
+    margin-inline-end: 4px;
+  }
+
+  :where(select:is([multiple], [size])) optgroup {
+    font-weight: var(--font-weight-strong);
+  }
+
+  :where(select:is([multiple], [size])) optgroup option {
+    padding-inline-start: var(--gap-sm);
+  }
+
+  :-moz-ui-invalid {
+    box-shadow: none;
+  }
+
+  ::-webkit-inner-spin-button,
+  ::-webkit-outer-spin-button {
+    height: auto;
+  }
+
+  ::-webkit-search-decoration {
+    -webkit-appearance: none;
+  }
+
+  ::-webkit-details-marker {
+    display: none;
+  }
+
+  ::-webkit-search-cancel-button {
+    --search-cancel-display: block;
+    --search-cancel-color: currentColor;
+    --search-cancel-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cline x1='200' y1='56' x2='56' y2='200' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='200' y1='200' x2='56' y2='56' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3C/svg%3E");
+    --search-cancel-icon-size: var(--step-4);
+    --search-cancel-size: var(--step-6);
+    --search-cancel-radius: var(--radius-sm);
+
+    -webkit-appearance: none;
+
+    margin: 0;
+    padding: 0;
+    inline-size: var(--search-cancel-size);
+    block-size: var(--search-cancel-size);
+    border-radius: var(--search-cancel-radius);
+
+    transition:
+      opacity var(--default-transition-duration) var(--default-transition-timing-function),
+      display var(--default-transition-duration) var(--default-transition-timing-function)
+        allow-discrete;
+
+    mask: var(--search-cancel-mask) no-repeat center / var(--search-cancel-icon-size);
+    background-size: var(--search-cancel-icon-size);
+    background-color: var(--search-cancel-color);
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  ::-webkit-search-cancel-button:is(:hover) {
+    opacity: 0.5;
+  }
+
+  /* Suppress the browser's built-in password reveal / clear glyphs (Edge/IE) so
+     they never double up with the Zazz .password__toggle button. */
+  ::-ms-reveal,
+  ::-ms-clear {
+    display: none;
+  }
+
+  ::-webkit-date-and-time-value {
+    min-height: 1lh;
+    text-align: inherit;
+  }
+
+  ::-webkit-datetime-edit {
+    display: inline-flex;
+  }
+
+  ::-webkit-datetime-edit-fields-wrapper {
+    padding: 0;
+  }
+
+  ::-webkit-datetime-edit,
+  ::-webkit-datetime-edit-year-field,
+  ::-webkit-datetime-edit-month-field,
+  ::-webkit-datetime-edit-day-field,
+  ::-webkit-datetime-edit-hour-field,
+  ::-webkit-datetime-edit-minute-field,
+  ::-webkit-datetime-edit-second-field,
+  ::-webkit-datetime-edit-millisecond-field,
+  ::-webkit-datetime-edit-meridiem-field {
+    padding-block: 0;
+  }
+
+  ::-webkit-calendar-picker-indicator {
+    line-height: 1;
+  }
+
+  /* Input field resets */
+  :where(textarea, input) {
+    font-size: unset;
+    block-size: unset;
+    padding: unset;
+    margin-bottom: unset;
+    line-height: unset;
+    background-color: unset;
+    border: unset;
+  }
+
+  :where(textarea) {
+    resize: vertical;
+  }
+
+  ::placeholder {
+    --placeholder-color: var(--muted-foreground);
+    color: var(--placeholder-color);
+  }
+
+  :where(select) {
+    font-size: unset;
+    padding: unset;
+    margin: unset;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background-repeat: no-repeat;
+    background-position: right center;
+  }
+
+  ::picker(select) {
+    padding: unset;
+    margin: unset;
+  }
+
+  /* Native <select> internals (::picker panel, <option>, ::picker-icon) live in
+     _select.css under @layer reset to keep the select styling modular. */
+
+  /* Button resets */
+  :where(button) {
+    color: unset;
+    padding: unset;
+    text-align: inherit;
+    background-color: unset;
+  }
+
+  /* ===========================================================================
+  BROWSER NORMALIZATION
+  =========================================================================== */
+
+  :where(progress) {
+    vertical-align: baseline;
+  }
+
+  /* ===========================================================================
+  MISCELLANEOUS RESETS
+  =========================================================================== */
+
+  :where([hidden]:not([hidden="until-found"])) {
+    display: none !important;
+  }
+}

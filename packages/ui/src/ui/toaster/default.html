@@ -1,0 +1,77 @@
+<div class="flex flex-wrap items-center gap-sm">
+  <button
+    class="button"
+    type="button"
+    commandfor="toaster-example"
+    command="--toast"
+    data-title="Event created"
+    data-description="Monday, July 13 at 9:00 AM"
+  >
+    Show toast
+  </button>
+  <button
+    class="button"
+    type="button"
+    commandfor="toaster-example"
+    command="--toast-success"
+    data-title="Changes saved"
+  >
+    Success
+  </button>
+  <button
+    class="button"
+    type="button"
+    commandfor="toaster-example"
+    command="--toast-info"
+    data-title="Update available"
+  >
+    Info
+  </button>
+  <button
+    class="button"
+    type="button"
+    commandfor="toaster-example"
+    command="--toast-warning"
+    data-title="Storage almost full"
+  >
+    Warning
+  </button>
+  <button
+    class="button"
+    type="button"
+    commandfor="toaster-example"
+    command="--toast-destructive"
+    data-title="Something went wrong"
+    data-description="The request could not be completed."
+  >
+    Error
+  </button>
+  <button class="button" data-variant="primary" type="button" id="toaster-action-example">
+    With action
+  </button>
+</div>
+
+<toast-region class="toaster" id="toaster-example" popover="manual"></toast-region>
+
+<script type="module">
+  // Toasts with an action button need the imperative API (a callback can't live
+  // in a data attribute). Everything else above is wired declaratively.
+  await customElements.whenDefined("toast-region");
+
+  const toastTrigger = document.getElementById("toaster-action-example");
+  const handler = () => {
+    window.Toaster.toast({
+      title: "Email archived",
+      description: "The conversation was moved to the archive.",
+      action: { label: "Undo", onClick: () => window.Toaster.success("Email restored") },
+    });
+  };
+
+  toastTrigger.addEventListener("click", handler);
+
+  // Optional: If you need to clean up immediately after the event or on some app shutdown:
+  // Example cleanup on page unload for demo purposes:
+  window.addEventListener("unload", () => {
+    toastTrigger.removeEventListener("click", handler);
+  });
+</script>

@@ -1,0 +1,86 @@
+---
+title: Adding custom styles
+description: When tokens and utilities don't cover it, extend Zazz without touching its source. Override a token, drop a rule into the right layer, or write a one-off inline.
+---
+
+Zazz's tokens and utilities cover most of what you'll build, but every project has a one-off. When you hit one, you extend the system from the _outside_, and you never edit Zazz's own stylesheets. Keep your additions in your own stylesheet, loaded after `index.css`, and they land in the [cascade](/docs/base/layers) after Zazz's own layers.
+
+```html
+<link rel="stylesheet" href="./zazz/index.css" /> <link rel="stylesheet" href="./your-styles.css" />
+```
+
+## Start with a token override
+
+Most customizations aren't new CSS at all; they're a different value for an existing token. Reach for this first, at the [narrowest scope that works](/docs/base/variables):
+
+```css
+/* your-styles.css */
+:root {
+  --primary: oklch(0.6 0.2 145); /* global: re-skin the brand */
+  --button-radius: var(--radius-full); /* component default: pill buttons */
+}
+```
+
+```html
+<!-- instance: this element only -->
+<div class="card" style="--card: var(--muted)">…</div>
+```
+
+A token override is the most durable kind of custom style: it composes with dark mode, stays consistent with the rest of the system, and never fights a component rule.
+
+## Add your own utilities
+
+When you want a reusable class that isn't in the set, add it to `@layer zazz.utilities` so it lands in the right layer, winning over components like every other utility. Wrap the selector in `:where()` to keep it zero-specificity and overridable:
+
+```css
+@layer zazz.utilities {
+  :where(.text-gradient) {
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    background-clip: text;
+    color: transparent;
+  }
+}
+```
+
+Compose from tokens (`var(--primary)`, `var(--gap-md)`) rather than literals, and your utility inherits the theme and dark-mode behavior automatically.
+
+## Add your own components
+
+For a larger pattern with variants, write it in `@layer zazz.components` and give it token hooks, mirroring how Zazz components are built. See [File anatomy](/docs/base/file-anatomy):
+
+```css
+@layer zazz.components {
+  :where(.callout) {
+    --callout-background: var(--muted);
+    background: var(--callout-background);
+    border-inline-start: var(--step-1) solid var(--primary);
+    padding: var(--gap-md);
+    border-radius: var(--radius-md);
+  }
+}
+```
+
+Because it's in `components`, your utilities still override it, so a `.callout p-xl` works as expected.
+
+## The escape hatch: unlayered CSS
+
+A rule written **outside any layer** beats everything in Zazz (every component and every utility) regardless of specificity:
+
+```css
+/* No @layer wrapper. This wins over all layered styles. */
+.button {
+  border-radius: 0;
+}
+```
+
+That makes it powerful and easy to misuse. It's the right tool when you deliberately need to trump the system; the rest of the time, a token override or a properly layered rule keeps you inside it. See [`layers.css`](/docs/base/layers) for why unlayered styles win.
+
+## Pick the smallest tool
+
+In order of preference:
+
+1. **Token override:** a different value for an existing variable. Composes with everything.
+2. **Layered rule:** a new utility or component in `@layer zazz.utilities` / `@layer zazz.components`.
+3. **Unlayered rule:** only when you intend to override all of Zazz.
+
+The one rule that doesn't bend: don't edit Zazz's own stylesheets. Every customization above lives in your own files, so updating Zazz never clobbers your work.

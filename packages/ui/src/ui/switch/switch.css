@@ -1,0 +1,121 @@
+/**
+ * switch.css — Switch (input[type="checkbox"][role="switch"])
+ *
+ * @layer      variables, reset
+ * @requires   layers.css, _variables.css
+ * @uses       appearance: none on input[role="switch"]
+ * @uses       label:has(> input[role="switch"])::after — thumb drawn on label (no JS)
+ * @uses       oklch(from …) — checked/hover track tints
+ * @tokens     --switch-* (@layer variables; consumed in @layer reset)
+ */
+
+@layer variables {
+  :root {
+    --switch-track-width: var(--step-7);
+    --switch-track-padding: var(--step-0_5);
+    --switch-track-height: calc(var(--switch-track-width) / 2 + var(--switch-track-padding));
+    --switch-thumb: var(--white);
+    --switch-thumb-size: calc((var(--switch-track-width) / 2) - var(--switch-track-padding));
+    --switch-thumb-shadow: var(--shadow-xs);
+    --switch-thumb-translate: var(--switch-track-padding), -50%;
+    --switch-thumb-scale: 1;
+    --switch-track-background: var(--muted);
+    --switch-track-background--hover: oklch(from var(--muted) l c h / calc(alpha + 0.04));
+    --switch-track-background--checked: var(--primary);
+    --switch-track-background--checked-hover: oklch(from var(--primary) l c h / 0.9);
+    --switch-radius: var(--radius-full);
+  }
+}
+
+@layer reset {
+  /* ===========================================================================
+    SWITCH — native <input type="checkbox" role="switch"> internals
+    - In the reset layer so component overrides win.
+    =========================================================================== */
+
+  :where(label:has(> input[role="switch"])) {
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset-block-start: 50%;
+      inset-inline-start: 0;
+      inline-size: var(--switch-thumb-size);
+      block-size: var(--switch-thumb-size);
+      border-radius: var(--radius-full);
+      background-color: var(--switch-thumb);
+      box-shadow: var(--switch-thumb-shadow);
+      pointer-events: none;
+      transform: translate(var(--switch-thumb-translate)) scale(var(--switch-thumb-scale));
+      transition:
+        box-shadow var(--default-transition-duration) var(--default-transition-timing-function),
+        transform var(--default-transition-duration) var(--default-transition-timing-function);
+      z-index: 1;
+    }
+
+    &:has(> input[role="switch"]:checked)::after {
+      --switch-thumb-translate: calc(var(--switch-track-padding) + var(--switch-thumb-size)), -50%;
+    }
+
+    &:has(> input[role="switch"]:hover):after {
+      --switch-thumb-scale: 1.1;
+    }
+
+    &:has(> input[role="switch"]:active):after {
+      --switch-thumb-shadow: none;
+      --switch-thumb-scale: 0.98;
+    }
+  }
+
+  :where(label:has(> input[role="switch"]:disabled)) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  :where(label:has(> input[role="switch"]:disabled) > input[role="switch"]) {
+    opacity: 1;
+  }
+
+  :where(input[role="switch"]) {
+    appearance: none;
+    flex-shrink: 0;
+    inline-size: var(--switch-track-width);
+    block-size: var(--switch-track-height);
+
+    background-color: var(--switch-track-background);
+
+    border-radius: var(--switch-radius);
+    cursor: pointer;
+
+    /* ring renders as box-shadow; transparent outline twin keeps focus visible
+       in forced-colors / high-contrast modes */
+    --_ring-offset-width: 0px;
+    --_ring-width: 0px;
+    box-shadow:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--ring);
+    outline: var(--outline-width) var(--outline-style) transparent;
+    outline-offset: var(--outline-offset);
+
+    transition: var(--default-transition);
+  }
+
+  :where(input[role="switch"]:hover) {
+    background-color: var(--switch-track-background--hover);
+  }
+
+  :where(input[role="switch"]:checked) {
+    background-color: var(--switch-track-background--checked);
+  }
+
+  :where(input[role="switch"]:hover:checked) {
+    background-color: var(--switch-track-background--checked-hover);
+  }
+
+  :where(input[role="switch"]:focus-visible) {
+    --_ring-offset-width: var(--ring-offset-width);
+    --_ring-width: var(--ring-width);
+    outline-color: transparent;
+  }
+}

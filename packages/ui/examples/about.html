@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <!-- Paint the right theme (bg, form controls, scrollbars) before CSS loads. -->
+    <meta name="color-scheme" content="light dark" />
+    <title>Zazz tests | Overview</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Preload latin Geist woff2 (Google Fonts v5) so it is ready before first paint. -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwcGFWNOITd.woff2"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:ital,wght@0,100..900;1,100..900&family=Geist:ital,wght@0,100..900;1,100..900&display=optional"
+      rel="stylesheet"
+    />
+
+    <!-- Zazz styles: one bundle — index.css @imports the base layers (layers,
+       variables, reset) and every component in cascade order. -->
+    <link rel="stylesheet" href="../src/index.css" />
+
+    <!-- Preload critical js -->
+    <link rel="modulepreload" href="../src/index.js" />
+
+    <!-- Prefetching related pages -->
+    <link rel="prefetch" href="layout.html" />
+
+    <!-- WARNING: CDN scripts not recommended for production.
+     If you need to use a CDN, create a new SRI hash (@see: https://srihash.org/)
+     and update the integrity attribute. -->
+
+    <!-- [Polyfill] Popover API (June 2026) - -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@oddbird/popover-polyfill@latest"
+      integrity="sha384-Gl/j23IcIIiDfqcDI5gpHCxd5EuslCYvs07HAw3KHGx5UcbxizoF/deDnkeEcFXW"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- [Polyfill] Invokers/tooltip (June 2026) - -->
+    <script
+      type="module"
+      src="https://esm.sh/invokers/compatible"
+      integrity="sha384-fzLqSi8WSEqp/tW3neqEgzl53fvLw4u32RAvoNQSSSAfKGsOrfA2B49xhrObWFnr"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Embla Carousel -->
+    <script
+      src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"
+      integrity="sha384-XGqLM9+dJ+PFOMZn6IuZgRRIoxcAT5fx4eIZCx7K3O2Dj5RA7EOlJ3yOS8Jd+kiY"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Embla Carousel Plugins -->
+    <script
+      src="https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js"
+      integrity="sha384-rs7pDLCh+QtEjJg2VChAoKZHaaz7apuon6rM57E3FdzC83xaJH4n9mQZn4E2s3f4"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-auto-scroll/embla-carousel-auto-scroll.umd.js"
+      integrity="sha384-5x3y2MLuLA5c1LQceYM+lo59GGkQmLzQGzbuHhDUDbnOJkFeTl5jUSdBy3JehMcM"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-class-names/embla-carousel-class-names.umd.js"
+      integrity="sha384-nZNIZhV6WSQVCeWMj8JFfOgQZyzPoGSTh0eohtAOu5aluevIpIblZcupMSdl/EEH"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-ssr/embla-carousel-ssr.umd.js"
+      integrity="sha384-apu0WDHR0c+4Z5qNk7egPNoCxXkYq80e+Qh6xJ6f67S53mSyYdKE6tIeXxvKJ6x9"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Zazz scripts: one ES module bundles every component script. -->
+    <script type="module" src="../src/index.js"></script>
+    <script>
+      /**
+       * Synchronizes the preview theme with the user's preference.
+       * - Reads "theme" from localStorage.
+       * - Falls back to "prefers-color-scheme: dark" media query if unset.
+       * - Applies the "dark" class to document.documentElement if theme is "dark".
+       * - Saves the resolved theme to localStorage for consistency.
+       * This block runs synchronously before dom load to prevent theme flash on load.
+       */
+      (() => {
+        try {
+          const storedTheme = localStorage.getItem("theme");
+          const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches;
+          const theme = storedTheme ?? (prefersDark ? "dark" : "light");
+          document.documentElement.classList.toggle("dark", theme === "dark");
+        } catch {
+          document.documentElement.classList.toggle(
+            "dark",
+            matchMedia("(prefers-color-scheme: dark)").matches,
+          );
+        }
+      })();
+    </script>
+  </head>
+
+  <body class="bg-background">
+    <header class="py-md border-b" data-transition-layer="global-header">
+      <div class="container">
+        <div class="flex items-center justify-between">
+          <a href="index.html" class="text-h6 font-black">Zazz tests</a>
+          <nav>
+            <menu class="flex gap-xs">
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="index.html">Overview</a>
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="about.html">About</a>
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="products.html"
+                  >Products</a
+                >
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="layout.html">Layout</a>
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="responsive.html"
+                  >Responsive</a
+                >
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="components.html"
+                  >Components</a
+                >
+              </li>
+              <li>
+                <a class="button" data-variant="ghost" data-size="sm" href="forms.html">Forms</a>
+              </li>
+            </menu>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main data-layout="main">
+      <section class="container py-xl">
+        <div class="grid grid-cols-2 grid-flow-row gap-lg items-center">
+          <hgroup
+            class="flex flex-col items-center @md:items-start gap-sm text-center @md:text-left"
+          >
+            <!-- Eyebrow (optional) -->
+            <span class="text-eyebrow">Featured</span>
+
+            <!-- Heading -->
+            <h1 class="text-display">The art of typography</h1>
+
+            <!-- Subheading -->
+            <p class="text-xl text-muted-foreground">How vexingly quick daft zebras jump.</p>
+
+            <!-- CTA buttons -->
+            <div class="flex items-center mt-md gap-xs justify-center @md:justify-start">
+              <a class="button" data-variant="primary" href="products.html">Products</a>
+              <button
+                class="button"
+                type="button"
+                data-variant="ghost"
+                command="show-modal"
+                commandfor="dialog-example-1"
+              >
+                Contact us
+              </button>
+              <dialog id="dialog-example-1" class="dialog" closedby="any">
+                <div class="dialog__content">
+                  <header class="dialog__header">
+                    <h2 class="text-lg font-heading font-strong">Dialog title</h2>
+                    <p class="text-muted-foreground">
+                      This dialog was opened using an
+                      <a
+                        href="https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API"
+                        target="_blank"
+                        class="text-link"
+                        >invoker command</a
+                      >.
+                    </p>
+                  </header>
+                  <div class="dialog__body">
+                    <p>Set the size of the dialog with the <code>data-size</code> attribute.</p>
+                  </div>
+                  <footer class="dialog__footer">
+                    <button
+                      class="button"
+                      type="button"
+                      commandfor="dialog-example-1"
+                      command="close"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      class="button"
+                      data-variant="primary"
+                      commandfor="dialog-example-1"
+                      command="close"
+                    >
+                      Accept
+                    </button>
+                  </footer>
+                </div>
+                <button
+                  class="button dialog__close"
+                  data-size="icon"
+                  data-variant="ghost"
+                  type="button"
+                  commandfor="dialog-example-1"
+                  command="close"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                    <rect width="256" height="256" fill="none" />
+                    <line
+                      x1="200"
+                      y1="56"
+                      x2="56"
+                      y2="200"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    />
+                    <line
+                      x1="200"
+                      y1="200"
+                      x2="56"
+                      y2="56"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    />
+                  </svg>
+                </button>
+              </dialog>
+            </div>
+          </hgroup>
+
+          <figure class="grid gap-xs rounded-lg overflow-clip">
+            <img
+              sizes="(max-width: 40rem) 100vw, 800px"
+              src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop"
+              srcset="
+                https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=456&h=342&fit=crop 456w,
+                https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop 800w
+              "
+              alt="Mountain landscape"
+              loading="eager"
+              width="800"
+              height="600"
+            />
+          </figure>
+        </div>
+      </section>
+      <section class="container py-xl">
+        <embla-carousel data-embla-classnames data-container="lg">
+          <div class="flex items-end justify-between gap-md flex-wrap pb-lg">
+            <h2 class="text-h5 font-heading">Featured Articles</h2>
+            <div class="flex @md:hidden gap-xs">
+              <button
+                type="button"
+                class="button"
+                data-size="icon"
+                data-variant="muted"
+                data-embla="prev"
+              >
+                <svg
+                  class="size-sm"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 256 256"
+                  aria-hidden="true"
+                >
+                  <rect width="256" height="256" fill="none" />
+                  <polyline
+                    points="160 208 80 128 160 48"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="14"
+                  />
+                </svg>
+              </button>
+              <button
+                type="button"
+                class="button"
+                data-size="icon"
+                data-variant="muted"
+                data-embla="next"
+              >
+                <svg
+                  class="size-sm"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 256 256"
+                  aria-hidden="true"
+                >
+                  <rect width="256" height="256" fill="none" />
+                  <polyline
+                    points="96 48 176 128 96 208"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="14"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div data-embla="viewport" class="overflow-visible">
+            <div data-embla="container" class="-ml-md">
+              <!-- Card START -->
+              <a
+                data-embla="slide"
+                class="basis-full @xs:basis-1/2 @sm:basis-1/3 @md:basis-1/4 cursor-pointer"
+                href="#"
+              >
+                <div class="pl-md">
+                  <div
+                    class="grid gap-sm bg-card text-card-foreground rounded-md shadow-sm overflow-clip"
+                  >
+                    <figure class="aspect-landscape rounded-t-md overflow-clip">
+                      <img
+                        class="size-full object-cover hover:scale-102 hover:opacity-75 transition"
+                        width="300"
+                        height="200"
+                        loading="lazy"
+                        src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=300&h=200&q=60"
+                        alt="Zebras grazing at dawn on the savanna"
+                      />
+                    </figure>
+                    <div class="grid gap-sm px-sm pb-sm">
+                      <header class="grid gap-xs">
+                        <div class="flex items-center gap-xs">
+                          <span class="badge" data-variant="muted">Field notes</span>
+                        </div>
+                        <hgroup class="grid gap-xs">
+                          <h3 class="text-lg font-heading line-clamp-1">How quickly zebras jump</h3>
+                          <p class="text-sm text-muted-foreground line-clamp-2">
+                            Striped coats and sudden bursts of speed help herds evade predators when
+                            the grasslands go quiet at dusk.
+                          </p>
+                        </hgroup>
+                      </header>
+                      <footer class="grid justify-end gap-sm pb-xs pt-sm border-t">
+                        <div class="button" data-variant="link">
+                          Read article
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none" />
+                            <line
+                              x1="40"
+                              y1="128"
+                              x2="216"
+                              y2="128"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="16"
+                            />
+                            <polyline
+                              points="144 56 216 128 144 200"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="16"
+                            />
+                          </svg>
+                        </div>
+                      </footer>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              <!-- Card END -->
+
+              <!-- Card START -->
+              <a
+                data-embla="slide"
+                class="basis-full @xs:basis-1/2 @sm:basis-1/3 @md:basis-1/4 cursor-pointer"
+                href="#"
+              >
+                <div class="pl-md">
+                  <div
+                    class="grid gap-sm bg-card text-card-foreground rounded-md shadow-sm overflow-clip"
+                  >
+                    <figure class="aspect-landscape rounded-t-md overflow-clip">
+                      <img
+                        class="size-full object-cover hover:scale-102 hover:opacity-75 transition"
+                        width="300"
+                        height="200"
+                        loading="lazy"
+                        src="https://images.unsplash.com/photo-1564760055775-d63b17a55c44?auto=format&fit=crop&w=300&h=200&q=60"
+                        alt="A lion resting in tall golden grass"
+                      />
+                    </figure>
+                    <div class="grid gap-sm px-sm pb-sm">
+                      <header class="grid gap-xs">
+                        <div class="flex items-center gap-xs">
+                          <span class="badge" data-variant="muted">Wildlife</span>
+                        </div>
+                        <hgroup class="grid gap-xs">
+                          <h3 class="text-lg font-heading line-clamp-1">Lions at golden hour</h3>
+                          <p class="text-sm text-muted-foreground line-clamp-2">
+                            Warm light and long shadows make dawn patrols the best time to
+                            photograph big cats on the open plain.
+                          </p>
+                        </hgroup>
+                      </header>
+                      <footer class="grid justify-end gap-sm pb-xs pt-sm border-t">
+                        <div class="button" data-variant="link">
+                          View gallery
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none" />
+                            <line
+                              x1="40"
+                              y1="128"
+                              x2="216"
+                              y2="128"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="16"
+                            />
+                            <polyline
+                              points="144 56 216 128 144 200"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="16"
+                            />
+                          </svg>
+                        </div>
+                      </footer>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              <!-- Card END -->
+
+              <!-- Card START -->
+              <a
+                data-embla="slide"
+                class="basis-full @xs:basis-1/2 @sm:basis-1/3 @md:basis-1/4 cursor-pointer"
+                href="#"
+              >
+                <div class="pl-md">
+                  <div
+                    class="grid gap-sm bg-card text-card-foreground rounded-md shadow-sm overflow-clip"
+                  >
+                    <figure class="aspect-landscape rounded-t-md overflow-clip">
+                      <img
+                        class="size-full object-cover hover:scale-102 hover:opacity-75 transition"
+                        width="300"
+                        height="200"
+                        loading="lazy"
+                        src="https://images.unsplash.com/photo-1511735111819-9a3f7709049c?auto=format&fit=crop&w=300&h=200&q=60"
+                        alt="Elephants crossing a dusty riverbed"
+                      />
+                    </figure>
+                    <div class="grid gap-sm px-sm pb-sm">
+                      <header class="grid gap-xs">
+                        <div class="flex items-center gap-xs">
+                          <span class="badge" data-variant="muted">Research</span>
+                        </div>
+                        <hgroup class="grid gap-xs">
+                          <h3 class="text-lg font-heading line-clamp-1">
+                            Migration patterns decoded
+                          </h3>
+                          <p class="text-sm text-muted-foreground line-clamp-2">
+                            Satellite collars reveal ancient routes herds still follow each dry
+                            season across the floodplain.
+                          </p>
+                        </hgroup>
+                      </header>
+                      <footer class="grid justify-end gap-sm pb-xs pt-sm border-t">
+                        <div class="button" data-variant="link">
+                          See the data
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none" />
+                            <line
+                              x1="40"
+                              y1="128"
+                              x2="216"
+                              y2="128"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="16"
+                            />
+                            <polyline
+                              points="144 56 216 128 144 200"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="16"
+                            />
+                          </svg>
+                        </div>
+                      </footer>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              <!-- Card END -->
+
+              <!-- Card START -->
+              <a
+                data-embla="slide"
+                class="basis-full @xs:basis-1/2 @sm:basis-1/3 @md:basis-1/4 cursor-pointer"
+                href="#"
+              >
+                <div class="pl-md">
+                  <div
+                    class="grid gap-sm bg-card text-card-foreground rounded-md shadow-sm overflow-clip"
+                  >
+                    <figure class="aspect-landscape rounded-t-md overflow-clip">
+                      <img
+                        class="size-full object-cover hover:scale-102 hover:opacity-75 transition"
+                        width="300"
+                        height="200"
+                        loading="lazy"
+                        src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=300&h=200&q=60"
+                        alt="Misty highland valley at sunrise"
+                      />
+                    </figure>
+                    <div class="grid gap-sm px-sm pb-sm">
+                      <header class="grid gap-xs">
+                        <div class="flex items-center gap-xs">
+                          <span class="badge" data-variant="muted">Conservation</span>
+                        </div>
+                        <hgroup class="grid gap-xs">
+                          <h3 class="text-lg font-heading line-clamp-1">Rewilding the highlands</h3>
+                          <p class="text-sm text-muted-foreground line-clamp-2">
+                            Community nurseries are planting native grasses and bringing endemic
+                            songbirds back to the ridgeline.
+                          </p>
+                        </hgroup>
+                      </header>
+                      <footer class="grid justify-end gap-sm pb-xs pt-sm border-t">
+                        <div class="button" data-variant="link">
+                          Get started
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none" />
+                            <line
+                              x1="40"
+                              y1="128"
+                              x2="216"
+                              y2="128"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="16"
+                            />
+                            <polyline
+                              points="144 56 216 128 144 200"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="16"
+                            />
+                          </svg>
+                        </div>
+                      </footer>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              <!-- Card END -->
+            </div>
+          </div>
+        </embla-carousel>
+      </section>
+    </main>
+    <footer class="border-t" data-transition-layer="global-footer">
+      <div class="container py-xl">
+        <div class="flex items-center justify-between gap-md">
+          <div class="text-h6 font-black">Zazz tests</div>
+          <menu class="flex gap-sm">
+            <li><a class="button" data-variant="link" href="about.html">About</a></li>
+            <li><a class="button" data-variant="link" href="layout.html">Layout</a></li>
+            <li><a class="button" data-variant="link" href="responsive.html">Responsive</a></li>
+            <li><a class="button" data-variant="link" href="products.html">Products</a></li>
+            <li><a class="button" data-variant="link" href="components.html">Components</a></li>
+            <li><a class="button" data-variant="link" href="forms.html">Forms</a></li>
+          </menu>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

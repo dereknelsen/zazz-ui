@@ -1,0 +1,272 @@
+/**
+ * tabs.css — Tabs (.tabs) — CSS-only radio tab panels
+ *
+ * @layer      variables, components
+ * @requires   layers.css, _variables.css
+ * @uses       input[type="radio"] + :checked — panel visibility via :has() (no JS)
+ * @uses       anchor-name, position-anchor, anchor() — sliding indicator pill
+ *             (@supports gated; checked-label fallback paints card fill without pill)
+ * @uses       anchor-scope — isolates --active-tab inside nested menus
+ * @uses       text-box, color-mix() — label trim and focus ring
+ * @tokens     --tabs-* (@layer variables)
+ */
+
+@layer variables {
+  :root {
+    --tabs-gap: var(--gap-xs);
+    --tabs-track-padding: var(--step-0_5);
+    --tabs-track-radius: var(--radius-md);
+    --tabs-track-gap: var(--step-0_5);
+    --tabs-track-background: var(--muted);
+
+    --tabs-indicator-background: var(--card);
+    --tabs-indicator-radius: var(--radius-sm);
+    --tabs-indicator-shadow: var(--shadow-xs);
+    --tabs-indicator-inset: var(--tabs-track-padding);
+
+    --tabs-label-font-family: var(--font-family-body);
+    --tabs-label-font-size: var(--font-size-sm);
+    --tabs-label-font-weight: var(--font-weight-strong);
+    --tabs-label-line-height: 1;
+
+    --tabs-label-background: transparent;
+    --tabs-label-background--hover: transparent;
+    --tabs-label-background--active: transparent;
+
+    --tabs-label-foreground: var(--muted-foreground);
+    --tabs-label-foreground--hover: var(--foreground);
+    --tabs-label-foreground--active: var(--foreground);
+
+    --tabs-label-padding: var(--step-2_5);
+    --tabs-label-min-height: var(--step-7);
+    --tabs-label-ring-color: var(--ring-color);
+  }
+}
+
+@layer zazz.components {
+  /* ===========================================================================
+  TABS — .tabs
+  .tabs__list — inline-flex muted track (fits tab row only; panels live outside).
+  .tabs__indicator — card pill anchored to checked label.
+  Panels — direct .tabs children after .tabs__list; order must match tab order.
+  Panel N is shown when the Nth radio in .tabs__list is checked (see rules below).
+  =========================================================================== */
+
+  .tabs {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: var(--tabs-gap);
+  }
+
+  .tabs__list {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--tabs-track-gap);
+    padding: var(--tabs-track-padding);
+    border-radius: var(--tabs-track-radius);
+    background-color: var(--tabs-track-background);
+
+    /* Scoped so .tabs__indicator can resolve --active-tab even when an ancestor
+       (e.g. .navigation-menu__item) sets anchor-scope to its own trigger name. */
+    anchor-scope: --active-tab;
+  }
+
+  .tabs__indicator {
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: var(--tabs-indicator-radius);
+    background-color: var(--tabs-indicator-background);
+    box-shadow: var(--tabs-indicator-shadow);
+    transition-property: left, right, top, bottom;
+    transition-duration: var(--default-transition-duration);
+    transition-timing-function: var(--default-transition-timing-function);
+    will-change: left, right, top, bottom;
+  }
+
+  .tabs__list input[type="radio"] {
+    position: absolute;
+    clip-path: inset(50%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .tabs__list .tabs__label {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: var(--tabs-label-font-family);
+    font-size: var(--tabs-label-font-size);
+    font-weight: var(--tabs-label-font-weight);
+    line-height: var(--tabs-label-line-height);
+
+    min-block-size: var(--tabs-label-min-height);
+    padding-inline: var(--tabs-label-padding);
+
+    color: var(--tabs-label-foreground);
+    background-color: var(--tabs-label-background);
+    text-wrap: balance;
+
+    cursor: pointer;
+    user-select: none;
+    text-box: trim-both ex alphabetic;
+
+    border-radius: var(--tabs-indicator-radius);
+
+    /* ring renders as box-shadow so it composes with the indicator shadow in
+       the no-anchor fallback below; the ring widths animate from 0 so the
+       ring grows in smoothly on focus */
+    --_ring-offset-width: 0px;
+    --_ring-width: 0px;
+    --_ring: color-mix(in oklch, var(--tabs-label-ring-color) var(--ring-opacity), transparent);
+    box-shadow:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring);
+
+    /* transparent twin of the ring for forced-colors / high-contrast modes */
+    outline: var(--outline-width) var(--outline-style) transparent;
+    outline-offset: var(--outline-offset);
+    transition: var(--default-transition);
+  }
+
+  .tabs__list .tabs__label:hover {
+    color: var(--tabs-label-foreground--hover);
+    background-color: var(--tabs-label-background--hover);
+  }
+
+  .tabs__list .tabs__label:active {
+    color: var(--tabs-label-foreground--active);
+    background-color: var(--tabs-label-background--active);
+  }
+
+  .tabs__list input[type="radio"]:checked + .tabs__label {
+    color: var(--tabs-label-foreground--active);
+    anchor-name: --active-tab;
+  }
+
+  .tabs__list input[type="radio"]:focus-visible + .tabs__label {
+    --_ring-offset-width: var(--ring-offset-width);
+    --_ring-width: var(--ring-width);
+
+    outline-color: transparent;
+  }
+
+  /* ===========================================================================
+  INDICATOR POSITIONING — anchor positioning (Chromium 125+) with a paint
+  fallback. The pill sizes itself from the checked label via anchor() insets;
+  the checked label exposes itself as --active-tab. .tabs__list sets
+  anchor-scope: --active-tab so the pill still resolves inside scoped ancestors
+  (navigation menu items scope their trigger name). Where anchor positioning is
+  unavailable (Firefox, Safari) the anchor() insets would be invalid and the
+  pill would collapse to nothing — leaving the active tab with no affordance, as
+  its label background is transparent by design. So in the fallback we hide the
+  floating pill and paint the checked label (card fill + shadow) directly. The
+  trade-off is the loss of the slide animation, not the active-state indication.
+  =========================================================================== */
+
+  @supports (anchor-name: --active-tab) {
+    .tabs__indicator {
+      position-anchor: --active-tab;
+      top: calc(anchor(--active-tab top) + var(--tabs-indicator-inset));
+      left: calc(anchor(--active-tab left) + var(--tabs-indicator-inset));
+      right: calc(anchor(--active-tab right) + var(--tabs-indicator-inset));
+      bottom: calc(anchor(--active-tab bottom) + var(--tabs-indicator-inset));
+    }
+
+    .tabs__list input[type="radio"]:checked + .tabs__label {
+      background-color: var(--tabs-label-background--active);
+    }
+  }
+
+  @supports not (anchor-name: --active-tab) {
+    .tabs__indicator {
+      display: none;
+    }
+
+    .tabs__list input[type="radio"]:checked + .tabs__label {
+      border-radius: var(--tabs-indicator-radius);
+      background-color: var(--tabs-indicator-background);
+      box-shadow:
+        0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
+        0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring),
+        var(--tabs-indicator-shadow);
+    }
+  }
+
+  /* Nth radio in .tabs__list → (N + 1)th child of .tabs (after .tabs__list)
+  */
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(1):not(:checked))
+    > .tabs__panel:nth-child(2),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(2):not(:checked))
+    > .tabs__panel:nth-child(3),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(3):not(:checked))
+    > .tabs__panel:nth-child(4),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(4):not(:checked))
+    > .tabs__panel:nth-child(5),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(5):not(:checked))
+    > .tabs__panel:nth-child(6),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(6):not(:checked))
+    > .tabs__panel:nth-child(7),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(7):not(:checked))
+    > .tabs__panel:nth-child(8),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(8):not(:checked))
+    > .tabs__panel:nth-child(9),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(9):not(:checked))
+    > .tabs__panel:nth-child(10),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(10):not(:checked))
+    > .tabs__panel:nth-child(11),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(11):not(:checked))
+    > .tabs__panel:nth-child(12),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(12):not(:checked))
+    > .tabs__panel:nth-child(13),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(13):not(:checked))
+    > .tabs__panel:nth-child(14),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(14):not(:checked))
+    > .tabs__panel:nth-child(15),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(15):not(:checked))
+    > .tabs__panel:nth-child(16),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(16):not(:checked))
+    > .tabs__panel:nth-child(17),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(17):not(:checked))
+    > .tabs__panel:nth-child(18),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(18):not(:checked))
+    > .tabs__panel:nth-child(19),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(19):not(:checked))
+    > .tabs__panel:nth-child(20),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(20):not(:checked))
+    > .tabs__panel:nth-child(21),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(21):not(:checked))
+    > .tabs__panel:nth-child(22),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(22):not(:checked))
+    > .tabs__panel:nth-child(23),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(23):not(:checked))
+    > .tabs__panel:nth-child(24),
+  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(24):not(:checked))
+    > .tabs__panel:nth-child(25) {
+    display: none !important;
+  }
+
+  /* ===========================================================================
+  DIRECTIONAL VARIANTS
+  =========================================================================== */
+
+  .tabs[data-orientation="vertical"] {
+    flex-direction: row;
+  }
+
+  .tabs[data-orientation="vertical"] .tabs__list {
+    flex-direction: column;
+    align-items: stretch;
+    min-inline-size: var(--step-44);
+  }
+
+  .tabs[data-orientation="vertical"] .tabs__label {
+    text-align: start;
+    justify-content: start;
+  }
+}

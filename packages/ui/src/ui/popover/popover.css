@@ -1,0 +1,218 @@
+/**
+ * popover.css — Shared [popover] primitive (Tier 3 owner for --popover-*)
+ *
+ * @layer      variables, reset, components
+ * @requires   layers.css, _variables.css (--popover, --popover-foreground)
+ * @uses       [popover], popovertarget, :popover-open — Popover API
+ *             (Chromium-first; polyfill may use .\:popover-open class)
+ * @uses       @starting-style + allow-discrete — enter/exit opacity/transform
+ * @uses       anchor-name, position-anchor, position-area, position-try-fallbacks —
+ *             anchor positioning (gated behind @supports; Firefox/Safari fall
+ *             back to UA-centered popover)
+ * @uses       backdrop-filter — popover surface blur
+ * @tokens     --popover-* (Tier 3 owner; @layer variables)
+ * @consumedby dropdown.css, navigation-menu.css, tooltip.css, toaster.css
+ */
+
+@layer variables {
+  :root {
+    /* Styles */
+    --popover-border: var(--border);
+    --popover-radius: var(--radius-md);
+    --popover-button-radius: var(--radius-sm);
+    --popover-shadow: var(--shadow-md);
+    --popover-padding: var(--step-1_5);
+    --popover-min-inline-size: var(--article-xs);
+    --popover-max-inline-size: 100vi;
+
+    /* Reveal transitions/animations */
+    --popover-scale--start: 0.98;
+    --popover-translate--start: 0, 0, 0;
+    --popover-opacity--start: 0;
+    --popover-scale--end: 1;
+    --popover-translate--end: 0, 0, 0;
+    --popover-opacity--end: 1;
+
+    /* Positioning */
+    --popover-origin: top center;
+    --popover-margin-block: var(--step-1_5);
+    --popover-margin-inline: 0;
+    --popover-position-area: block-end inline-start;
+    --popover-position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+    --popover-backdrop-filter: blur(4px);
+  }
+}
+
+@layer reset {
+  /* ===========================================================================
+  POPOVER ELEMENT ENHANCEMENTS
+  - [popover] is a shared primitive (dropdown, navigation-menu, …). Token
+    defaults live in @layer variables above; this block wires native open/close
+    motion and anchor positioning. Surface chrome is in @layer zazz.components below.
+  =========================================================================== */
+
+  :where([popover]) {
+    color: var(--popover-foreground);
+    background-color: var(--popover);
+
+    align-content: start;
+    transform-origin: var(--popover-origin);
+    border-radius: var(--popover-radius);
+    box-shadow: var(--popover-shadow);
+    opacity: var(--popover-opacity--start);
+    backdrop-filter: var(--popover-backdrop-filter);
+    transform: scale(var(--popover-scale--start)) translate3d(var(--popover-translate--start));
+    transition:
+      opacity var(--default-transition-duration) var(--default-transition-timing-function),
+      transform var(--default-transition-duration) var(--default-transition-timing-function),
+      padding var(--default-transition-duration) var(--default-transition-timing-function),
+      block-size var(--default-transition-duration) var(--default-transition-timing-function),
+      inline-size var(--default-transition-duration) var(--default-transition-timing-function),
+      overlay var(--default-transition-duration) var(--default-transition-timing-function)
+        allow-discrete,
+      display var(--default-transition-duration) var(--default-transition-timing-function)
+        allow-discrete;
+  }
+
+  /* Anchor positioning tethers the popover to its trigger and lets the browser
+     flip it away from viewport edges (Chromium 125+ today). It is gated behind
+     @supports so browsers without anchor positioning (Firefox, Safari) keep the
+     UA-centered popover (inset: 0 + margin: auto) instead of a mispositioned
+     top-left box. Detection key is anchor-name — the entry property of the API. */
+  @supports (anchor-name: --zazz) {
+    :where([popover]) {
+      position: fixed;
+      inset: auto;
+      margin-block: var(--popover-margin-block);
+      margin-inline: var(--popover-margin-inline);
+      position-area: var(--popover-position-area);
+      position-try-fallbacks: var(--popover-position-try-fallbacks);
+    }
+  }
+
+  /* .\:popover-open must be set for the polyfill to work with discrete animations */
+  [popover]:where(:popover-open, .\:popover-open) {
+    display: grid;
+    align-content: start;
+    opacity: var(--popover-opacity--end);
+    transform: scale(var(--popover-scale--end)) translate3d(var(--popover-translate--end));
+
+    @starting-style {
+      opacity: var(--popover-opacity--start);
+      transform: scale(var(--popover-scale--start)) translate3d(var(--popover-translate--start));
+    }
+  }
+}
+
+@layer zazz.components {
+  /* ===========================================================================
+  POPOVER SURFACE — shared chrome for every [popover] consumer
+  =========================================================================== */
+
+  [popover] {
+    border: 1px solid var(--popover-border);
+    padding: var(--popover-padding);
+    min-inline-size: var(--popover-min-inline-size);
+    max-inline-size: var(--popover-max-inline-size);
+  }
+
+  [popover] .button {
+    --button-radius: var(--popover-button-radius);
+  }
+
+  /* ===========================================================================
+  POSITIONING — side × align (row/block first, column/inline second per MDN)
+  =========================================================================== */
+
+  /* bottom */
+  [popover][data-side="bottom"]:not([data-align]),
+  [popover][data-side="bottom"][data-align="start"] {
+    --popover-position-area: block-end span-inline-end;
+    --popover-origin: top center;
+    --popover-margin-block: var(--step-1_5);
+    --popover-margin-inline: 0;
+  }
+
+  [popover][data-side="bottom"][data-align="center"] {
+    --popover-position-area: block-end span-all;
+    --popover-origin: top center;
+    --popover-margin-block: var(--step-1_5);
+    --popover-margin-inline: 0;
+  }
+
+  [popover][data-side="bottom"][data-align="end"] {
+    --popover-position-area: block-end span-inline-start;
+    --popover-origin: top center;
+    --popover-margin-block: var(--step-1_5);
+    --popover-margin-inline: 0;
+  }
+
+  /* top */
+  [popover][data-side="top"]:not([data-align]),
+  [popover][data-side="top"][data-align="start"] {
+    --popover-position-area: block-start span-inline-end;
+    --popover-origin: bottom center;
+    --popover-margin-block: var(--step-1_5);
+    --popover-margin-inline: 0;
+  }
+
+  [popover][data-side="top"][data-align="center"] {
+    --popover-position-area: block-start span-all;
+    --popover-origin: bottom center;
+    --popover-margin-block: var(--step-1_5);
+    --popover-margin-inline: 0;
+  }
+
+  [popover][data-side="top"][data-align="end"] {
+    --popover-position-area: block-start span-inline-start;
+    --popover-origin: bottom center;
+    --popover-margin-block: var(--step-1_5);
+    --popover-margin-inline: 0;
+  }
+
+  /* right */
+  [popover][data-side="right"]:not([data-align]),
+  [popover][data-side="right"][data-align="start"] {
+    --popover-position-area: inline-end span-block-end;
+    --popover-origin: bottom left;
+    --popover-margin-block: 0;
+    --popover-margin-inline: var(--step-1_5);
+  }
+
+  [popover][data-side="right"][data-align="center"] {
+    --popover-position-area: inline-end span-all;
+    --popover-origin: center left;
+    --popover-margin-block: 0;
+    --popover-margin-inline: var(--step-1_5);
+  }
+
+  [popover][data-side="right"][data-align="end"] {
+    --popover-position-area: inline-end span-block-start;
+    --popover-origin: top left;
+    --popover-margin-block: 0;
+    --popover-margin-inline: var(--step-1_5);
+  }
+
+  /* left */
+  [popover][data-side="left"]:not([data-align]),
+  [popover][data-side="left"][data-align="start"] {
+    --popover-position-area: inline-start span-block-end;
+    --popover-origin: bottom right;
+    --popover-margin-block: 0;
+    --popover-margin-inline: var(--step-1_5);
+  }
+
+  [popover][data-side="left"][data-align="center"] {
+    --popover-position-area: inline-start span-all;
+    --popover-origin: center right;
+    --popover-margin-block: 0;
+    --popover-margin-inline: var(--step-1_5);
+  }
+
+  [popover][data-side="left"][data-align="end"] {
+    --popover-position-area: inline-start span-block-start;
+    --popover-origin: top right;
+    --popover-margin-block: 0;
+    --popover-margin-inline: var(--step-1_5);
+  }
+}

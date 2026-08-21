@@ -1,0 +1,55 @@
+---
+title: Introduction
+description: A variables-driven design framework that runs in any design tool and development framework with or without a build step.
+---
+
+**A variables-driven design framework that survives real projects.**
+
+Most UI libraries look right until a client asks for something custom. Then you're fighting overrides, wrapping components in wrappers, or bolting on a second system that doesn't match the first.
+
+Zazz works differently. It's built on native web standards: tokens, cascade layers, and modern browser APIs. No build step, no framework lock-in, no specificity wars, just markup that works wherever you ship code.
+
+It's built around four commitments:
+
+- **Professionalism:** Works across changing tools and frameworks without breaking.
+- **Precision:** Variables control everything, so consistency doesn't depend on discipline.
+- **Polish:** Looks great by default, ready to present without extra design passes.
+- **Portability:** Built on standards that map cleanly to any stack.
+
+## Professionalism
+
+Zazz is designed for teams that switch between design tools, frameworks, and client requirements constantly. The system works in Figma, translates to any development framework, and doesn't require you to rebuild when your toolchain changes next quarter.
+
+- **Tool-agnostic:** The same tokens and patterns work whether you're in Figma, code, or both.
+- **Framework-agnostic:** No React dependency, no Vue plugin, no build step. It runs on CSS and native HTML APIs.
+- **Complete:** Every component handles light mode, dark mode, accessibility, and keyboard interaction without extra work.
+
+## Precision
+
+Every spacing value, color, radius, and type size in Zazz resolves from a variable. You never hardcode a pixel value or hex color. This means changing one token updates every component that references it, and consistency happens automatically instead of through code review.
+
+- **Semantic tokens first:** Reach for role tokens (`--primary`, `--muted-foreground`, `--gap-md`) before anything specific.
+- **Scoped overrides:** Customize globally on `:root`, per-component, or per-instance inline. No source editing needed.
+- **Predictable variants:** `data-variant`, `data-size`, `data-side`. The default is always the absence of the attribute.
+
+_If you need every button in your project to be pill-shaped, set `--button-radius: var(--radius-full)` once. Done._
+
+## Polish
+
+Zazz ships with carefully chosen defaults so your UI looks finished before you've made a single design decision. Components work well together as a system because they share the same token vocabulary and spacing scale.
+
+- **Presentable by default:** Clean, modern defaults that hold up in client presentations.
+- **Unified system:** Components built from the same tokens naturally look like they belong together.
+- **Dark mode included:** Role tokens handle light/dark automatically. No manual `.dark` overrides.
+
+_You can hand a Zazz prototype to a stakeholder without apologizing for the styling._
+
+## Portability
+
+Zazz doesn't bet on a framework that might not exist in two years. It uses CSS custom properties, native HTML APIs (Popover, `<dialog>`, Invoker Commands, anchor positioning), and cascade layers. The result is a system that works today in plain HTML and adapts to whatever framework you adopt next.
+
+- **Zero build step:** Load the styles, write the markup, ship.
+- **Standards-based:** If the browser supports it natively, Zazz uses that instead of JavaScript.
+- **Figma parity:** Variables in the Figma library map 1:1 to CSS tokens in code.
+
+_Switch from Next.js to Astro? From Wordpress to Webflow? Your components still work. The markup is the same._

@@ -1,0 +1,268 @@
+---
+title: Structuring your head tag
+description: "The document skeleton a Zazz page expects: what goes in the head, the one stylesheet link, where scripts load, and the landmarks that make page transitions work."
+---
+
+A Zazz page is plain HTML. No app shell, no build output. What you put in `<head>` and how you mark up landmarks affects how styles and scripts load.
+
+## The minimum head
+
+This is all most pages need:
+
+```html
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Paint the right theme (background, form controls, scrollbars) before CSS loads -->
+  <meta name="color-scheme" content="light dark" />
+
+  <!-- One stylesheet: @imports every layer in cascade order -->
+  <link rel="stylesheet" href="./zazz/index.css" />
+
+  <title>Page title</title>
+</head>
+```
+
+### Declare your color scheme first
+
+The `<meta name="color-scheme" content="light dark">` tag tells the browser you support both themes _before it starts rendering_. The canvas background, scrollbars, and form controls paint in the right mode right away. No white flash while CSS loads.
+
+<Callout type="warn">
+  Keep the meta tag and the CSS `color-scheme` on `:root` in agreement: both declare `light dark`.
+  The meta tag handles the pre-render paint; the CSS property drives
+  [`light-dark()`](/docs/core-concepts/dark-mode) once styles load.
+</Callout>
+
+`color-scheme` is [Baseline](https://web.dev/baseline) and widely available (since 2022). Older browsers ignore the tag and render light mode.
+
+### Link one stylesheet
+
+Point a single `<link>` at `index.css`. It `@import`s every Zazz file in the correct [cascade order](/docs/base/layers). One link, every token, component, and utility:
+
+```html
+<link rel="stylesheet" href="./zazz/index.css" />
+```
+
+<Callout>
+A separate `<link rel="preload" as="style">` for `index.css` is **not** needed. A same-document stylesheet link is already the highest-priority, render-blocking fetch. `preload` is for *late-discovered* resources (web fonts, CSS pulled in by JS), not the stylesheet you link in `<head>`.
+</Callout>
+
+For production, keep the single link and turn on **brotli or gzip** at your host. CSS this regular compresses to roughly 10–15% of its raw size. Better than splitting files by hand, and nothing to keep in sync.
+
+### Add your overrides after Zazz
+
+Your own stylesheet loads _after_ `index.css` so it can reassign any token. See [Adding custom styles](/docs/core-concepts/custom-styles) for what to put in it.
+
+```html
+<link rel="stylesheet" href="./zazz/index.css" /> <link rel="stylesheet" href="./your-styles.css" />
+```
+
+### Loading Geist (default typeface)
+
+Zazz defaults to **Geist** through `--font-family-body` and `--font-family-heading`. Load it from Google Fonts with `preconnect` so the CSS request starts early:
+
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Geist+Mono:ital,wght@0,100..900;1,100..900&family=Geist:ital,wght@0,100..900;1,100..900&display=swap"
+  rel="stylesheet"
+/>
+```
+
+Self-hosting instead? `preload` the `.woff2` file. That's when `preload` actually helps for fonts.
+
+### Inline theme script
+
+If you persist a user's theme choice (see [Dark mode](/docs/core-concepts/dark-mode)), add a small inline script in `<head>`. No `defer`. It runs while the parser is still in `<head>`, toggles `.dark` on `<html>`, and beats the first paint.
+
+```html
+<script>
+  /**
+   * Synchronizes the preview theme with the user's preference.
+   * - Reads "theme" from localStorage.
+   * - Falls back to "prefers-color-scheme: dark" media query if unset.
+   * - Applies the "dark" class to document.documentElement if theme is "dark".
+   * - Saves the resolved theme to localStorage for consistency.
+   * This block runs synchronously before dom load to prevent theme flash on load.
+   */
+  (() => {
+    try {
+      const storedTheme = localStorage.getItem("theme");
+      const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches;
+      const theme = storedTheme ?? (prefersDark ? "dark" : "light");
+      document.documentElement.classList.toggle("dark", theme === "dark");
+    } catch {
+      document.documentElement.classList.toggle(
+        "dark",
+        matchMedia("(prefers-color-scheme: dark)").matches,
+      );
+    }
+  })();
+</script>
+```
+
+Put this block last in `<head>`, after stylesheets and deferred `<script src>` tags.
+
+### Optional head hints
+
+Preload the script bundle so the browser fetches it alongside CSS. `index.js` is an ES module, so use `modulepreload` — it primes the module **and** its imports:
+
+```html
+<link rel="modulepreload" href="./zazz/index.js" />
+```
+
+Prefetch pages visitors are likely to open next. Low priority, won't block render:
+
+```html
+<link rel="prefetch" href="./products.html" />
+```
+
+## The full document skeleton
+
+Put styles, scripts, and the theme block in `<head>`. Deferred scripts keep their order. Wrap page content in three landmarks:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Page title</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:ital,wght@0,100..900;1,100..900&family=Geist:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./zazz/index.css" />
+    <link rel="stylesheet" href="./your-styles.css" />
+
+    <link rel="modulepreload" href="./zazz/index.js" />
+    <link rel="prefetch" href="./products.html" />
+
+    <!-- CDN scripts: demos only. Pin SRI hashes if you use them. -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@oddbird/popover-polyfill@latest"
+      integrity="sha384-Gl/j23IcIIiDfqcDI5gpHCxd5EuslCYvs07HAw3KHGx5UcbxizoF/deDnkeEcFXW"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      type="module"
+      src="https://esm.sh/invokers/compatible"
+      integrity="sha384-fzLqSi8WSEqp/tW3neqEgzl53fvLw4u32RAvoNQSSSAfKGsOrfA2B49xhrObWFnr"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"
+      integrity="sha384-XGqLM9+dJ+PFOMZn6IuZgRRIoxcAT5fx4eIZCx7K3O2Dj5RA7EOlJ3yOS8Jd+kiY"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js"
+      integrity="sha384-rs7pDLCh+QtEjJg2VChAoKZHaaz7apuon6rM57E3FdzC83xaJH4n9mQZn4E2s3f4"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-auto-scroll/embla-carousel-auto-scroll.umd.js"
+      integrity="sha384-5x3y2MLuLA5c1LQceYM+lo59GGkQmLzQGzbuHhDUDbnOJkFeTl5jUSdBy3JehMcM"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-class-names/embla-carousel-class-names.umd.js"
+      integrity="sha384-nZNIZhV6WSQVCeWMj8JFfOgQZyzPoGSTh0eohtAOu5aluevIpIblZcupMSdl/EEH"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/embla-carousel-ssr/embla-carousel-ssr.umd.js"
+      integrity="sha384-apu0WDHR0c+4Z5qNk7egPNoCxXkYq80e+Qh6xJ6f67S53mSyYdKE6tIeXxvKJ6x9"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Zazz scripts: one ES module bundles every component script -->
+    <script type="module" src="./zazz/index.js"></script>
+
+    <script>
+      (() => {
+        const storedTheme = localStorage.getItem("theme");
+        const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = storedTheme ?? (prefersDark ? "dark" : "light");
+        document.documentElement.classList.toggle("dark", theme === "dark");
+      })();
+    </script>
+  </head>
+  <body>
+    <header data-transition-layer="global-header">
+      <!-- Navigation -->
+    </header>
+
+    <main>
+      <!-- Page content -->
+    </main>
+
+    <footer data-transition-layer="global-footer">
+      <!-- Footer -->
+    </footer>
+  </body>
+</html>
+```
+
+<Callout type="warn">
+  CDN scripts are fine for demos. For production, vendor locally or pin exact versions with
+  [SRI](https://srihash.org/) `integrity` hashes. Update the hashes when you bump versions.
+</Callout>
+
+The reset gives `<body>`, `<main>`, and section landmarks their own layout and container context. See [`_reset.css`](/docs/base/reset).
+
+## Stylesheet load order
+
+`index.css` handles this for you. If you link files individually, keep this order:
+
+1. `base/_layers.css`: declares `@layer variables, reset, legacy, zazz, migrations;` ([why this comes first](/docs/base/layers))
+2. `base/_variables.css`: global design tokens (and the inline `@property` registrations)
+3. `base/_reset.css`: element baselines
+4. `base/_typography.css`: type system and `.prose`
+5. `base/_view-transitions.css`: cross-document page transitions
+6. `ui/<name>/<name>.css` component files, in any order
+7. `base/_utilities.css`, then `base/_layout.css`: atomic overrides and the container/layout grid (load last)
+
+With HTTP/2–3 multiplexing and server compression, the single `index.css` link is usually enough. No manual ordering to maintain.
+
+## Script load order
+
+Every Zazz behavior ships in one ES module, `index.js`, which `import`s the rest in the right internal order. You load it once. A module is deferred automatically, so it runs after the document is parsed but before `DOMContentLoaded` — no `defer` attribute needed.
+
+What still has to come _before_ the module, in document order:
+
+1. **Polyfills** (optional): Popover API (`@oddbird/popover-polyfill`), Invokers/tooltip (`invokers/compatible`)
+2. **Embla CDN bundles** (only if a page has carousels): core UMD build, then plugins (`autoplay`, `auto-scroll`, `class-names`, `ssr`). `embla.js` reads these as globals.
+3. **`index.js`** (`<script type="module">`): utils, reveal, embla, carousel, lightbox, password, tabs, and navigation, in dependency order.
+4. **Inline theme script** (last, no `type="module"`): applies `.dark` before first paint.
+
+Classic `defer` scripts and module scripts share one execution queue and run in document order, so placing the Embla CDN `<script defer>` tags ahead of the module guarantees its globals exist first.
+
+Everything auto-initializes once the DOM is parsed. No manual init on a normal page. See [Scripting](/docs/scripts/scripting) for how these files work.
+
+## View transition layers
+
+For page transitions (cross-document or SPA-style via `navigation.js`), mark the header and footer with `data-transition-layer`. `<main>` gets its view-transition name automatically and needs no attribute:
+
+```html
+<header data-transition-layer="global-header">...</header>
+<main>...</main>
+<footer data-transition-layer="global-footer">...</footer>
+```
+
+These map to `view-transition-name` values in `base/_view-transitions.css`. The `<main>` content animates on navigation; header and footer stay put.

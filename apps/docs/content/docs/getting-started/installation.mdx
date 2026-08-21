@@ -1,0 +1,184 @@
+---
+title: Installation
+description: Add Zazz to any project in under a minute — npm, CDN, or copy the files. No build step required.
+---
+
+Zazz runs on plain CSS and native HTML APIs. No bundler and no framework required. Install the package (or just link the CDN files), write markup.
+
+Pick the track that fits your project:
+
+- **npm** — you have a `package.json` and want versioned updates.
+- **CDN** — you want two `<link>`/`<script>` tags and nothing else.
+- **Copy the files** — you want the source in your repo, shadcn-style, and full ownership.
+
+## npm
+
+```bash
+pnpm add @zazzdesign/ui
+# or: npm install @zazzdesign/ui
+```
+
+Everything ships in the package: the stylesheet tree, the component scripts (readable, unminified JS with types alongside), and every component's canonical HTML example.
+
+Link the stylesheet and, if you use JS-driven components, the entry module — either by serving `node_modules` paths through your tooling or importing them with a bundler:
+
+```js
+import "@zazzdesign/ui/index.css";
+import "@zazzdesign/ui"; // component scripts (custom elements, reveal, toaster…)
+```
+
+The `@import` statements in `index.css` resolve at build time. No additional configuration needed.
+
+Prefer single-file bundles? The package also ships flattened builds at `@zazzdesign/ui/zazz.css` and `@zazzdesign/ui/zazz.js`.
+
+## CDN
+
+jsDelivr serves the npm package. Two tags, no install:
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazzdesign/ui/dist/zazz.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/@zazzdesign/ui/dist/zazz.js"></script>
+```
+
+The `dist/` files are single-request, minified bundles. You can also load any individual source file — say, one component's stylesheet:
+
+```html
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@zazzdesign/ui/src/ui/dialog/dialog.css"
+/>
+```
+
+<Callout type="warn">
+  Pin a version in production (`@zazzdesign/ui@0.x.y`) so a release never changes your page out from
+  under you.
+</Callout>
+
+## Copy the files
+
+Every component lives in one folder — `src/ui/<name>/` holds its stylesheet, its script (when it has one), and its example markup — so copying a component means copying a folder. The base layer (tokens, reset, typography, utilities, layout) lives in `src/base/`.
+
+Use degit to copy without cloning:
+
+```bash
+# the whole kit
+pnpm dlx degit dereknelsen/zazz-monorepo/packages/ui/src ./zazz
+
+# one component's folder
+pnpm dlx degit dereknelsen/zazz-monorepo/packages/ui/src/ui/dialog ./zazz/ui/dialog
+```
+
+<Callout type="warn">
+  The repository's component scripts are TypeScript source. If you copy from the repo and don't
+  compile TS, take the scripts from the published npm package instead — `npm pack @zazzdesign/ui` or
+  the per-file CDN URLs above — where each `.ts` sits next to its compiled, readable `.js`.
+</Callout>
+
+<Callout>
+  If you copy individual component styles, update your local `index.css` imports to include them in
+  the right order.
+</Callout>
+
+## Link the stylesheet
+
+However you got the files, add a single `<link>` to your HTML. Point it at `index.css`; it imports everything in the correct cascade order:
+
+```html
+<link rel="stylesheet" href="./zazz/index.css" />
+```
+
+That's it. Every component, token, and utility is now available.
+
+### Production: keep `index.css`, compress on the server
+
+Stick with the single `index.css` link. CSS this regular compresses extremely well. Turn on **brotli or gzip** at your host and the whole bundle ships at roughly 10–15% of its raw size, with zero source changes. That's a far bigger win than hand-splitting files, and there's nothing to keep in sync. (Or use the pre-flattened `dist/zazz.css` from npm/CDN — one request, no `@import` chain.)
+
+<Callout>
+A separate `<link rel="preload" as="style">` for `index.css` is **not** needed. A same-document stylesheet link is already the highest-priority, render-blocking fetch. `preload` is for *late-discovered* resources (web fonts, CSS pulled in by JS), not the stylesheet you link in `<head>`.
+</Callout>
+
+You _can_ instead link each component's CSS file individually to avoid `index.css`'s `@import` chain, but with HTTP/2-3 multiplexing and server compression it's rarely worth the upkeep. If you do, keep the cascade order: `base/_layers.css` first, then `base/_variables.css`, `base/_reset.css`, `base/_typography.css`, `base/_view-transitions.css`; the `ui/<name>/<name>.css` component files in any order; then `base/_utilities.css` and `base/_layout.css` last.
+
+## Verify it works
+
+Create an HTML file and add a button:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Paint the right theme before CSS loads -->
+    <meta name="color-scheme" content="light dark" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazzdesign/ui/dist/zazz.css" />
+    <title>Zazz Test</title>
+  </head>
+  <body>
+    <button class="button" data-variant="primary">It works</button>
+  </body>
+</html>
+```
+
+Open it in a browser. If you see a styled button, you're ready.
+
+## Package structure
+
+Inside `@zazzdesign/ui` (and your copy of it), each component is one self-contained folder:
+
+```
+@zazzdesign/ui/
+├── src/
+│   ├── index.css                   ← stylesheet entry (@imports everything)
+│   ├── index.js                    ← script entry (imports all behaviors)
+│   ├── base/
+│   │   ├── _layers.css             ← cascade order (loads first)
+│   │   ├── _variables.css          ← global design tokens
+│   │   ├── _reset.css              ← element baselines
+│   │   ├── _typography.css         ← type system + .prose
+│   │   ├── _view-transitions.css   ← cross-document page transitions
+│   │   ├── _utilities.css          ← atomic helper classes
+│   │   ├── _layout.css             ← container + layout grid
+│   │   └── utils.js  reveal.js  …  ← shared runtime
+│   └── ui/
+│       ├── button/
+│       │   ├── button.css          ← component styles
+│       │   └── default.html …      ← canonical examples
+│       ├── toaster/
+│       │   ├── toaster.css
+│       │   ├── toaster.js          ← its custom element
+│       │   └── default.html
+│       └── ...
+├── dist/
+│   ├── zazz.css                    ← flattened single-file bundle (CDN)
+│   └── zazz.js
+└── examples/                       ← full standalone demo pages
+```
+
+## Customizing
+
+Override any token on `:root` in your own stylesheet. Load it after Zazz:
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazzdesign/ui/dist/zazz.css" />
+<link rel="stylesheet" href="./your-styles.css" />
+```
+
+```css
+/* your-styles.css */
+:root {
+  --primary: oklch(0.6 0.2 145);
+  --radius-md: 0;
+}
+```
+
+Every component that references `--primary` or `--radius-md` updates automatically.
+
+## CLI
+
+A `zazz add <component>` CLI — copy a component's folder into your project with one command — is planned. Until then, the degit one-liners above do the same job.
+
+## Next steps
+
+- Read [Overview](/docs/getting-started/overview) to understand how the layer system works.
+- Browse [Components](/docs/components) to see what's available.

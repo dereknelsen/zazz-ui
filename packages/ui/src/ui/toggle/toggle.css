@@ -1,0 +1,295 @@
+/**
+ * toggle.css — Toggle (.toggle) — a button-styled checkbox/radio
+ *
+ * Same look as .button (tokens default to the --button-* family), but it wraps a
+ * native checkbox or radio inside a <label>. State is driven from the nested input
+ * via :has(): the checked state reuses the button's *active* token values, so an
+ * "on" toggle reads like a pressed button.
+ *
+ * @layer      variables, components
+ * @requires   layers.css, _variables.css, button.css
+ * @uses       :has() — drive label state from the nested input (checked/focus/disabled)
+ * @uses       oklch(from …) — variant hover/active tints (inherited from --button-*)
+ * @uses       text-box — vertical trim (patchy browser support)
+ * @tokens     --toggle-* (@layer variables; default to the --button-* family)
+ * @consumedby toggle-group.css
+ * @see        https://ui.shadcn.com/docs/components/base/toggle
+ */
+
+@layer variables {
+  :root {
+    --toggle-ring-color: var(--button-ring-color);
+
+    --toggle-font-family: var(--button-font-family);
+    --toggle-font-size: var(--button-font-size);
+    --toggle-font-weight: var(--button-font-weight);
+    --toggle-line-height: var(--button-line-height);
+
+    --toggle-background: var(--button-background);
+    --toggle-background--hover: var(--button-background--hover);
+    --toggle-background--active: var(--button-background--active);
+
+    --toggle-background--checked: var(--primary);
+    --toggle-background--checked-hover: oklch(from var(--primary) l c h / 0.9);
+    --toggle-background--checked-active: oklch(from var(--primary) l c h / 0.8);
+
+    --toggle-foreground: var(--button-foreground);
+    --toggle-foreground--hover: var(--button-foreground--hover);
+    --toggle-foreground--active: var(--button-foreground--active);
+
+    --toggle-foreground--checked: var(--primary-foreground);
+    --toggle-foreground--checked-hover: var(--primary-foreground);
+    --toggle-foreground--checked-active: var(--primary-foreground);
+
+    --toggle-border: var(--button-border);
+    --toggle-border--hover: var(--button-border--hover);
+    --toggle-border--active: var(--button-border--active);
+
+    --toggle-border--checked: 1px solid var(--primary);
+    --toggle-border--checked-hover: 1px solid var(--primary);
+    --toggle-border--checked-active: 1px solid var(--primary);
+
+    --toggle-gap: var(--button-gap);
+    --toggle-padding: var(--button-padding);
+    --toggle-height: var(--button-height);
+    --toggle-radius: var(--button-radius);
+
+    --toggle-icon-size: var(--button-icon-size);
+
+    /* composes into the toggle's box-shadow list — use a transparent shadow,
+       never `none`, so the focus ring layers stay valid */
+    --toggle-shadow: var(--button-shadow);
+  }
+}
+
+@layer zazz.components {
+  /* ===========================================================================
+  TOGGLE
+
+  Markup: a <label class="toggle"> wrapping a visually-hidden
+  <input type="checkbox"> (or "radio") and the visible content. Clicking the
+  label flips the input; the input stays keyboard-focusable so :focus-visible
+  still drives the ring.
+  =========================================================================== */
+
+  .toggle {
+    font-family: var(--toggle-font-family);
+    font-size: var(--toggle-font-size);
+    font-weight: var(--toggle-font-weight);
+    line-height: var(--toggle-line-height);
+
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: var(--toggle-gap);
+    flex-shrink: 0;
+
+    min-block-size: var(--toggle-height);
+    min-inline-size: max-content;
+    padding-inline: var(--toggle-padding);
+
+    border: var(--toggle-border);
+    border-radius: var(--toggle-radius);
+
+    color: var(--toggle-foreground);
+    background-color: var(--toggle-background);
+
+    /* ring renders as box-shadow so it composes with --toggle-shadow; the
+       ring widths animate from 0 so the ring grows in smoothly on focus */
+    --_ring-offset-width: 0px;
+    --_ring-width: 0px;
+    --_ring: color-mix(in oklch, var(--toggle-ring-color) var(--ring-opacity), transparent);
+    box-shadow:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring),
+      var(--toggle-shadow);
+
+    cursor: pointer;
+    text-decoration: none;
+
+    /* transparent twin of the ring for forced-colors / high-contrast modes */
+    outline: var(--outline-width) var(--outline-style) transparent;
+    outline-offset: var(--outline-offset);
+
+    transition: var(--default-transition);
+
+    user-select: none;
+    text-box: trim-both ex alphabetic;
+  }
+
+  /* visually hidden but still in the tab order and focusable */
+  .toggle > input[type="checkbox"],
+  .toggle > input[type="radio"] {
+    position: absolute;
+    clip-path: inset(50%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ===========================================================================
+  TOGGLE STATES
+  =========================================================================== */
+
+  .toggle:hover:not(:has(> input:disabled)) {
+    color: var(--toggle-foreground--hover);
+    background-color: var(--toggle-background--hover);
+    border: var(--toggle-border--hover);
+  }
+
+  .toggle:active:not(:has(> input:disabled)) {
+    color: var(--toggle-foreground--active);
+    background-color: var(--toggle-background--active);
+    border: var(--toggle-border--active);
+  }
+
+  /* the "on" state reuses the button's active look */
+  .toggle:has(> input:checked) {
+    color: var(--toggle-foreground--checked);
+    background-color: var(--toggle-background--checked);
+    border: var(--toggle-border--checked);
+  }
+
+  .toggle:has(> input:checked:hover) {
+    color: var(--toggle-foreground--checked-hover);
+    background-color: var(--toggle-background--checked-hover);
+    border: var(--toggle-border--checked-hover);
+  }
+
+  .toggle:has(> input:checked:active) {
+    color: var(--toggle-foreground--checked-active);
+    background-color: var(--toggle-background--checked-active);
+    border: var(--toggle-border--checked-active);
+  }
+
+  .toggle:has(> input:focus-visible) {
+    --_ring-offset-width: var(--ring-offset-width);
+    --_ring-width: var(--ring-width);
+
+    outline-color: transparent;
+  }
+
+  .toggle:has(> input:disabled) {
+    --toggle-foreground: var(--muted-foreground);
+    --toggle-background: var(--muted);
+    --toggle-shadow: 0 0 transparent;
+
+    cursor: default;
+    opacity: 0.5;
+    outline: none;
+  }
+
+  /* ===========================================================================
+  TOGGLE ICONS
+  =========================================================================== */
+
+  .toggle > svg {
+    inline-size: var(--toggle-icon-size);
+    block-size: var(--toggle-icon-size);
+    pointer-events: none;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    padding: 0;
+  }
+
+  /* ===========================================================================
+  TOGGLE VARIANTS
+  =========================================================================== */
+
+  .toggle[data-variant="primary"] {
+    --toggle-background: var(--primary);
+    --toggle-background--hover: oklch(from var(--primary) l c h / 0.9);
+    --toggle-background--active: oklch(from var(--primary) l c h / 0.8);
+
+    --toggle-foreground: var(--primary-foreground);
+    --toggle-foreground--hover: var(--primary-foreground);
+    --toggle-foreground--active: var(--primary-foreground);
+
+    --toggle-border: 1px solid transparent;
+    --toggle-border--hover: 1px solid transparent;
+    --toggle-border--active: 1px solid transparent;
+
+    --toggle-shadow: 0 0 transparent;
+  }
+
+  .toggle[data-variant="muted"] {
+    --toggle-background: var(--muted);
+    --toggle-background--hover: oklch(from var(--muted) l c h / calc(alpha - 0.02));
+    --toggle-background--active: var(--muted);
+
+    --toggle-foreground: var(--foreground);
+    --toggle-foreground--hover: var(--foreground);
+    --toggle-foreground--active: var(--foreground);
+
+    --toggle-border: 1px solid transparent;
+    --toggle-border--hover: 1px solid transparent;
+    --toggle-border--active: 1px solid transparent;
+
+    --toggle-shadow: 0 0 transparent;
+  }
+
+  /* the default "ghost" toggle reads as bare until on/hovered — the shadcn look */
+  .toggle[data-variant="ghost"] {
+    --toggle-background: transparent;
+    --toggle-background--hover: var(--muted);
+    --toggle-background--active: oklch(from var(--muted) l c h / calc(alpha - 0.02));
+
+    --toggle-foreground: var(--foreground);
+    --toggle-foreground--hover: var(--foreground);
+    --toggle-foreground--active: var(--foreground);
+
+    --toggle-border: 1px solid transparent;
+    --toggle-border--hover: 1px solid transparent;
+    --toggle-border--active: 1px solid transparent;
+
+    --toggle-shadow: 0 0 transparent;
+  }
+
+  .toggle[data-variant="destructive"] {
+    --toggle-ring-color: var(--destructive);
+
+    --toggle-background: var(--destructive);
+    --toggle-background--hover: oklch(from var(--destructive) l c h / 0.9);
+    --toggle-background--active: oklch(from var(--destructive) l c h / 0.8);
+
+    --toggle-foreground: var(--destructive-foreground);
+    --toggle-foreground--hover: var(--destructive-foreground);
+    --toggle-foreground--active: var(--destructive-foreground);
+
+    --toggle-border: 1px solid var(--destructive);
+    --toggle-border--hover: 1px solid var(--destructive);
+    --toggle-border--active: 1px solid var(--destructive);
+
+    --toggle-shadow: 0 0 transparent;
+  }
+
+  /* ===========================================================================
+  TOGGLE SIZES
+  =========================================================================== */
+
+  .toggle[data-size="sm"] {
+    --toggle-height: var(--step-6);
+    --toggle-padding: var(--step-2);
+    --toggle-radius: var(--radius-sm);
+  }
+
+  .toggle[data-size="icon"] {
+    block-size: var(--toggle-height);
+    inline-size: var(--toggle-height);
+    padding: 0;
+    aspect-ratio: 1 / 1;
+  }
+
+  .toggle[data-size="icon-sm"] {
+    --toggle-height: var(--step-6);
+    --toggle-padding: var(--step-2);
+    --toggle-radius: var(--radius-sm);
+    --toggle-icon-size: var(--step-3_5);
+
+    block-size: var(--toggle-height);
+    inline-size: var(--toggle-height);
+    padding: 0;
+    aspect-ratio: 1 / 1;
+  }
+}

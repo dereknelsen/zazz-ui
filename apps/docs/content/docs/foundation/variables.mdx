@@ -1,0 +1,75 @@
+---
+title: Theme variables
+description: Every value in Zazz is a token. Components read var(--token) and never hardcode, so you restyle the whole system by reassigning variables, not editing rules.
+---
+
+Zazz has no hardcoded values. Spacing, color, type, radius, shadow: all of it is a CSS custom property on `:root`, and every component reads `var(--token)` rather than a literal. That single decision is what makes the system themeable: to restyle, you reassign tokens, you never rewrite rules.
+
+```css
+/* Re-skin every button on the site by changing one variable. */
+:root {
+  --primary: oklch(0.6 0.2 145);
+}
+```
+
+Tokens resolve lazily, so an override on `:root` cascades to everything that references it. No rebuild, no find-and-replace.
+
+## The token tiers
+
+Tokens are organized from raw values up to component hooks. Reach for the most semantic tier that fits.
+
+| Tier                       | What it is                   | Examples                                                                                         |
+| -------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------ |
+| **Brand & literal scales** | Fixed color ramps            | `--primary-50`…`--primary-950`, `--neutral-*`, `--shade-*`, `--tint-*`                           |
+| **Semantic roles**         | Theme-aware meaning          | `--background`, `--foreground`, `--primary`, `--muted`, `--border`, `--destructive`              |
+| **Metrics & systems**      | Spacing, type, shape, layout | `--gap-*`, `--step-*`, `--font-size-*`, `--radius-*`, `--shadow-*`, `--breakpoint-*`, `--ring-*` |
+| **Component tokens**       | Per-component hooks          | `--button-background`, `--field-border`, `--dialog-radius`                                       |
+
+Roles resolve through [`light-dark()`](/docs/core-concepts/dark-mode), so choosing a role instead of a scale step keeps both themes correct. Component tokens default to a global token, so they inherit your theme until you deliberately override one.
+
+## Override at the narrowest scope that works
+
+There are three places to set a token. Pick the most local one that solves the problem.
+
+### Global: re-skin the whole system
+
+Redefine a token on `:root` and every consumer updates:
+
+```css
+:root {
+  --radius-md: 0; /* square every medium-radius corner */
+  --primary: oklch(0.55 0.18 264);
+}
+```
+
+### Component default: restyle one component everywhere
+
+Reassign a component token to change every instance of it:
+
+```css
+:root {
+  --button-radius: var(--radius-full); /* all buttons go pill-shaped */
+}
+```
+
+### Instance: one element only
+
+Set the token inline, or let a `data-*` variant do it:
+
+```html
+<button class="button" style="--button-background: var(--secondary)">One-off secondary</button>
+```
+
+## The token families
+
+- **Spacing:** semantic `--gap-xs…xl` first; the `--step-*` scale (`--step-0_5` … `--step-96`, fluid) as the escape hatch. Both feed the `gap-*`, `p-*`, and `m-*` [utilities](/docs/core-concepts/utility-classes).
+- **Type:** `text-*` classes bundle `--font-size-*`, `--font-weight-*`, `--leading-*`, and `--tracking-*`. Sizes are fluid `clamp()` values that scale with the viewport.
+- **Color:** roles and scales, covered in depth on the [Colors](/docs/core-concepts/colors) page.
+- **Radius:** `--radius-none…full`, scaled by `--radius-multiplier`. `md` for buttons/inputs, `lg` for cards/dialogs.
+- **Shadow:** `--shadow-xs…xl`, soft multi-layer elevations. Surfaces are flat by default; add depth intentionally.
+- **Layout:** `--breakpoint-xs…xl` for the responsive [breakpoints](/docs/core-concepts/responsive-design), `--gutters` for the page margin, and `--article-xs…xl` (in `ch`) for reading-column widths. The container [bands](/docs/base/utilities/layout#containers) are carved from the breakpoint tokens.
+- **Motion:** `--spring-easing`, `--spring-duration`, and the `--default-transition*` bundle. Everything zeroes under `prefers-reduced-motion`.
+
+## Where the real values live
+
+The authoritative values live in `src/base/_variables.css` inside `@zazzdesign/ui` (global tiers) and each component's own file (component tokens). Read those when you need an exact number. For how those files are organized, see [File anatomy](/docs/base/file-anatomy); for putting your overrides somewhere sensible, see [Adding custom styles](/docs/core-concepts/custom-styles).

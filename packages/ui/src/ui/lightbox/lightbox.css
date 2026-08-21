@@ -1,0 +1,451 @@
+/**
+ * lightbox.css — Lightbox gallery (.lightbox)
+ *
+ * @layer      variables, components
+ * @requires   layers.css, _variables.css, dialog.css, carousel.css, button.css
+ * @uses       command="show-modal" — Invoker Commands open fullscreen dialog (no JS)
+ * @uses       @container — thumb column count at narrow widths
+ * @uses       @starting-style — dialog slide scale/opacity on snap
+ * @uses       Embla sync — requires zazz/scripts/embla.js for carousel behaviour
+ * @tokens     --lightbox-* (@layer variables)
+ */
+
+@layer variables {
+  :root {
+    --lightbox-aspect-ratio: 3 / 2;
+    --lightbox-object-fit: cover;
+    --lightbox-radius: var(--radius-md);
+    --lightbox-slide-radius: var(--radius-lg);
+    --lightbox-thumb-radius: var(--radius-md);
+    --lightbox-thumb-size: var(--step-16);
+    --lightbox-thumb-border: var(--border);
+    --lightbox-thumb-border--active: var(--primary);
+    --lightbox-thumb-opacity: 0.5;
+    --lightbox-thumb-opacity--active: 1;
+    --lightbox-thumb-columns: 6;
+    --lightbox-thumb-gap: var(--step-1_5);
+    --lightbox-thumb-aspect-ratio: 1 / 1;
+    --lightbox-img-border: 1px solid var(--faded);
+
+    /* Reveal transitions/animations */
+    --lightbox-slide-opacity--start: 0;
+    --lightbox-slide-opacity--end: 1;
+    --lightbox-slide-scale--start: 0.9;
+    --lightbox-slide-scale--end: 1;
+    --lightbox-img-scale--hover: 1.03;
+    --lightbox-img-filter--hover: brightness(0.8);
+    --lightbox-img-scale--active: 1;
+    --lightbox-img-filter--active: brightness(0.5);
+    --lightbox-img-transition-property: transform, filter;
+    --lightbox-img-transition-duration: calc(var(--default-transition-duration) * 3);
+    --lightbox-img-transition-timing-function: var(--default-transition-timing-function);
+    --lightbox-img-transition-delay: 0ms;
+  }
+}
+
+@layer zazz.components {
+  /* ===========================================================================
+  LIGHTBOX — image gallery with fullscreen dialog slideshow
+  - Inline gallery: main Embla carousel + linked thumb strip.
+  - Gallery slides are <button command="show-modal"> — opens dialog at current index.
+  - Dialog repeats main carousel + thumbs with prev/next navigation.
+  - No JavaScript required for open/close — uses Invoker Commands API.
+  =========================================================================== */
+
+  /* ---------------------------------------------------------------------------
+  GALLERY — .lightbox
+  --------------------------------------------------------------------------- */
+
+  .lightbox {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @container section (width <= 40rem) {
+    .lightbox {
+      --lightbox-thumb-columns: 4;
+    }
+  }
+
+  /* ---------------------------------------------------------------------------
+  INLINE GALLERY — .lightbox__gallery / .lightbox__stage
+  --------------------------------------------------------------------------- */
+
+  .lightbox__gallery {
+    inline-size: 100%;
+  }
+
+  .lightbox__stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--lightbox-thumb-gap) * 2);
+  }
+
+  .lightbox__stage > [data-embla="viewport"] {
+    border-radius: var(--lightbox-slide-radius);
+    background: var(--card);
+  }
+
+  .lightbox__stage > [data-embla="viewport"] > [data-embla="container"] {
+    border-radius: var(--lightbox-slide-radius);
+    margin-inline-start: calc(var(--gap-sm) * -1);
+  }
+
+  .lightbox__stage .lightbox__slide {
+    appearance: none;
+    border: none;
+    background: none;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    block-size: 100%;
+    cursor: zoom-in;
+    overflow: clip;
+    padding-inline-start: var(--gap-sm);
+  }
+
+  .lightbox__stage .lightbox__content {
+    --_ring-width: 0px;
+
+    aspect-ratio: var(--lightbox-aspect-ratio);
+    inline-size: 100%;
+    block-size: 100%;
+    overflow: clip;
+    position: relative;
+    border-radius: var(--lightbox-slide-radius);
+    border: var(--lightbox-img-border);
+
+    /* transparent twin of the inset ring for forced-colors / high-contrast modes */
+    outline: var(--outline-width) var(--outline-style) transparent;
+    outline-offset: calc(var(--outline-width) * -1);
+  }
+
+  /* The inset ring paints on an overlay so it sits above the slide image (an
+     inset box-shadow on the figure itself would hide behind the img); the
+     ring width animates from 0 so the ring grows in smoothly on focus. */
+  .lightbox__stage .lightbox__content::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 var(--_ring-width) var(--ring-color);
+    transition: box-shadow var(--default-transition-duration)
+      var(--default-transition-timing-function);
+  }
+
+  .lightbox__stage .lightbox__slide:focus-visible {
+    outline: none;
+  }
+
+  .lightbox__stage .lightbox__slide:focus-visible .lightbox__content {
+    --_ring-width: var(--ring-width);
+
+    outline-color: transparent;
+  }
+
+  .lightbox__stage .lightbox__slide img {
+    aspect-ratio: var(--lightbox-aspect-ratio);
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: var(--lightbox-object-fit);
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+    transition-property: var(--lightbox-img-transition-property);
+    transition-duration: var(--lightbox-img-transition-duration);
+    transition-timing-function: var(--lightbox-img-transition-timing-function);
+    transition-delay: var(--lightbox-img-transition-delay);
+    transform: scale(var(--lightbox-img-scale));
+    opacity: var(--lightbox-img-opacity);
+  }
+
+  .lightbox__stage .lightbox__slide:hover img {
+    transform: scale(var(--lightbox-img-scale--hover));
+    filter: var(--lightbox-img-filter--hover);
+  }
+
+  .lightbox__stage .lightbox__slide:active img {
+    transform: scale(var(--lightbox-img-scale--active));
+    filter: var(--lightbox-img-filter--active);
+  }
+
+  /* ---------------------------------------------------------------------------
+  thumbs — .lightbox__thumbs / .lightbox__thumb
+  --------------------------------------------------------------------------- */
+
+  .lightbox__thumbs {
+    position: relative;
+    z-index: 2;
+  }
+
+  .lightbox__stage .lightbox__thumbs {
+    display: flex;
+    align-items: center;
+    gap: var(--lightbox-thumb-gap);
+  }
+
+  .lightbox__stage .lightbox__thumbs [data-embla="viewport"] {
+    flex: 1;
+    min-inline-size: 0;
+    border-radius: var(--lightbox-thumb-radius);
+  }
+
+  .lightbox__thumbs-prev,
+  .lightbox__thumbs-next {
+    flex-shrink: 0;
+  }
+
+  .lightbox__thumbs [data-embla="container"] {
+    gap: var(--lightbox-thumb-gap);
+  }
+
+  /* Gallery thumbs: fill track evenly, centered, max 6 columns */
+  .lightbox__stage .lightbox__thumbs [data-embla="container"] {
+    justify-content: start;
+  }
+
+  .lightbox__stage .lightbox__thumb {
+    max-inline-size: calc(
+      (100% - (var(--lightbox-thumb-gap) * (var(--lightbox-thumb-columns) - 1))) /
+        var(--lightbox-thumb-columns)
+    );
+  }
+
+  .lightbox__thumb-content {
+    --_ring-width: 0px;
+    --_ring: var(--ring-color);
+
+    appearance: none;
+    cursor: pointer;
+    position: relative;
+    border: var(--lightbox-img-border);
+    border-radius: var(--lightbox-thumb-radius);
+    overflow: clip;
+
+    /* transparent twin of the inset ring for forced-colors / high-contrast modes */
+    outline: var(--outline-width) var(--outline-style) transparent;
+    outline-offset: calc(var(--outline-width) * -1);
+  }
+
+  /* The inset ring paints on an overlay so it sits above the thumb image (an
+     inset box-shadow on the button itself would hide behind the img). */
+  .lightbox__thumb-content::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 var(--_ring-width) var(--_ring);
+    transition: box-shadow var(--default-transition-duration)
+      var(--default-transition-timing-function);
+  }
+
+  .lightbox__thumb img {
+    opacity: var(--lightbox-thumb-opacity);
+    transition:
+      opacity var(--default-transition-duration) var(--default-transition-timing-function),
+      border-color var(--default-transition-duration) var(--default-transition-timing-function),
+      transform var(--default-transition-duration) var(--default-transition-timing-function);
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .lightbox__thumb:hover img {
+    opacity: var(--lightbox-thumb-opacity--active);
+  }
+
+  .lightbox__thumb.is-active img {
+    transform: scale(1.1);
+    opacity: var(--lightbox-thumb-opacity--active);
+  }
+
+  .lightbox__thumb:focus-visible {
+    outline: none;
+  }
+
+  .lightbox__thumb:focus-visible .lightbox__thumb-content {
+    --_ring-width: var(--ring-width);
+
+    outline-color: transparent;
+  }
+
+  .lightbox__thumb:focus-visible img {
+    transform: scale(1);
+  }
+
+  /* ---------------------------------------------------------------------------
+  DIALOG — .lightbox__dialog (fullscreen dark overlay)
+  --------------------------------------------------------------------------- */
+
+  .lightbox__dialog {
+    --lightbox-thumb-radius: var(--radius-sm);
+    --dialog-background: transparent;
+    --dialog-border: none;
+
+    overflow: clip;
+    pointer-events: none;
+    outline: none;
+  }
+
+  .lightbox__dialog .lightbox__thumb img {
+    border-radius: var(--lightbox-thumb-radius);
+  }
+
+  .lightbox__dialog .dialog__content {
+    grid-template-rows: 1fr;
+    max-block-size: 100svh;
+    block-size: 100svh;
+    overflow: clip;
+  }
+
+  .lightbox__dialog [data-embla="root"] {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    block-size: 100%;
+    max-block-size: 100svh;
+  }
+
+  .lightbox__dialog [data-embla="container"] {
+    block-size: 100%;
+  }
+
+  .lightbox__dialog [data-embla="viewport"] {
+    outline: none;
+  }
+
+  .lightbox__dialog [data-embla="root"] > [data-embla="viewport"]:first-of-type {
+    min-block-size: 0;
+  }
+
+  .lightbox__dialog .lightbox__thumbs {
+    padding-block: var(--gap-sm);
+    pointer-events: auto;
+  }
+
+  .lightbox__dialog .lightbox__thumbs [data-embla="container"] {
+    justify-content: center;
+    padding-block: var(--gap-xs);
+  }
+
+  .lightbox__dialog .lightbox__thumb {
+    --lightbox-thumb-border: var(--tint-200);
+    --lightbox-thumb-border--active: var(--ring);
+    flex: 0 0 var(--lightbox-thumb-size);
+    inline-size: var(--lightbox-thumb-size);
+  }
+
+  .lightbox__dialog .lightbox__thumb:focus-visible .lightbox__thumb-content {
+    --_ring: var(--foreground);
+  }
+
+  /* ---------------------------------------------------------------------------
+  SLIDE — .lightbox__slide (dialog full-size slides)
+  --------------------------------------------------------------------------- */
+
+  .lightbox__dialog .lightbox__slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: 0;
+    min-inline-size: 0;
+    padding: clamp(var(--gap-sm), 4vi, var(--gap-lg));
+  }
+
+  .lightbox__dialog .lightbox__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    block-size: 100%;
+    inline-size: 100%;
+    min-block-size: 0;
+    min-inline-size: 0;
+    max-block-size: 100%;
+    max-inline-size: 100%;
+  }
+
+  .lightbox__dialog .lightbox__slide img {
+    --lightbox-thumb-radius: var(--radius-xs);
+
+    border-radius: var(--lightbox-slide-radius);
+    border: var(--lightbox-img-border);
+    overflow: clip;
+    inline-size: 100%;
+    block-size: 100%;
+    max-block-size: fit-content;
+    max-inline-size: fit-content;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+    transition:
+      opacity var(--default-transition-duration) var(--default-transition-timing-function),
+      transform var(--default-transition-duration) var(--default-transition-timing-function);
+    opacity: var(--lightbox-slide-opacity--start);
+    transform: scale(var(--lightbox-slide-scale--start));
+    pointer-events: auto;
+  }
+
+  .lightbox__dialog .lightbox__slide.is-in-view.is-snapped img {
+    opacity: var(--lightbox-slide-opacity--end);
+    transform: scale(var(--lightbox-slide-scale--end));
+
+    @starting-style {
+      opacity: 0;
+      transform: scale(var(--lightbox-slide-scale--start));
+    }
+  }
+
+  /* ---------------------------------------------------------------------------
+  NAV BUTTONS — .lightbox__prev / .lightbox__next (icon-size .button)
+  --------------------------------------------------------------------------- */
+
+  .lightbox__prev,
+  .lightbox__next {
+    --button-ring-color: var(--foreground);
+    --ring-opacity: 80%;
+
+    pointer-events: auto;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 50;
+  }
+
+  .lightbox__prev {
+    left: var(--gap-md);
+  }
+
+  .lightbox__next {
+    right: var(--gap-md);
+  }
+
+  /* ---------------------------------------------------------------------------
+  CLOSE BUTTON — top-right
+  --------------------------------------------------------------------------- */
+
+  .lightbox__close {
+    pointer-events: auto;
+    position: absolute;
+    top: var(--gap-sm);
+    right: var(--gap-sm);
+    z-index: 10;
+  }
+
+  /* ---------------------------------------------------------------------------
+  COUNTER — slide count indicator (optional)
+  --------------------------------------------------------------------------- */
+
+  .lightbox__counter {
+    position: absolute;
+    bottom: var(--gap-sm);
+    left: 50%;
+    translate: -50% 0;
+    opacity: 0.7;
+    font-size: var(--font-size-sm);
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+  }
+}

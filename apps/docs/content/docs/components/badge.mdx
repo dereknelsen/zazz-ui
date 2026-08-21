@@ -1,0 +1,31 @@
+---
+title: Badge
+description: Compact status and category chips that share the button's data-variant vocabulary.
+---
+
+Badges use the `.badge` class. Pick a color with `data-variant`; the **default** variant is
+the absence of the attribute. Use `data-size="icon"` for a square, icon-only chip. A badge is
+often a static `<span>`, but put it on a `<button type="button">` or `<a href>` when it is
+interactive — those get hover/active tints, a `:disabled` / `[aria-disabled="true"]` muted state
+at opacity 0.5, and a `progress` cursor under `[aria-busy="true"]`.
+
+## Variants
+
+<Preview src="badge/default" />
+
+## Icon
+
+An icon-only badge needs an accessible name: include a `<span class="sr-only">` label alongside
+the `<svg>`.
+
+<Preview src="badge/icon" />
+
+## API
+
+| Attribute      | Values                                               |
+| -------------- | ---------------------------------------------------- |
+| `data-variant` | `primary`, `muted`, `ghost`, `link` (omit = default) |
+| `data-size`    | `icon`                                               |
+
+Need a status badge (info / success / warning / destructive)? Override the tokens on an
+instance, e.g. `style="--badge-background: var(--success); --badge-foreground: var(--success-foreground)"`.

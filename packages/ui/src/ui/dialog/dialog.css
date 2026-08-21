@@ -1,0 +1,228 @@
+/**
+ * dialog.css — Dialog (.dialog on native <dialog>)
+ *
+ * @layer      variables, reset, components
+ * @requires   layers.css, _variables.css
+ * @uses       <dialog>, ::backdrop — native modal + backdrop
+ * @uses       @starting-style + allow-discrete — open/close opacity, transform, overlay
+ * @uses       anchor-name, container-type — layout hooks for sized variants
+ * @tokens     --dialog-* (@layer variables; sizing tokens in a second variables block)
+ */
+
+@layer variables {
+  :root {
+    --dialog-display: grid;
+    --dialog-backdrop-color: var(--shade-900);
+    --dialog-transition-duration: var(--default-transition-duration);
+    --dialog-transition-timing-function: var(--default-transition-timing-function);
+    --dialog-backdrop-transition-duration: calc(var(--dialog-transition-duration) - 100ms);
+    --dialog-backdrop-transition-timing-function: ease;
+    --dialog-backdrop-blur: blur(5px);
+    --dialog-shadow: var(--shadow-lg);
+    --dialog-border: 1px solid var(--border);
+    --dialog-width: min(var(--breakpoint-md), 100% - var(--gutters) * 2);
+
+    /* Reveal transitions/animations */
+    --dialog-opacity--start: 0;
+    --dialog-opacity--end: 1;
+    --dialog-scale--start: 0.98;
+    --dialog-scale--end: 1;
+    --dialog-translate--start: 0, 0, 0;
+    --dialog-translate--end: 0, 0, 0;
+    --dialog-transition-delay--start: 0ms;
+    --dialog-transition-delay--end: 150ms;
+  }
+}
+
+/* Sizing tokens — second variables block (overrides --dialog-width above). */
+@layer variables {
+  :root {
+    --dialog-width: min(50ch, 100% - var(--gap-md) * 2);
+    --dialog-height: fit-content;
+    --dialog-background: var(--card);
+    --dialog-foreground: var(--card-foreground);
+    --dialog-radius: var(--radius-lg);
+  }
+}
+
+@layer reset {
+  /* ===========================================================================
+  DIALOG — native <dialog> open/close animation, sizing, backdrop fade
+  - In the reset layer so the .dialog component styling below wins.
+  =========================================================================== */
+
+  /* Prevent body scroll when a dialog inside the preview is open */
+
+  /* Dialog animations with spring easing */
+  :where(dialog) {
+    margin: auto;
+    max-inline-size: calc(100% - var(--gap-md));
+    max-block-size: calc(100% - var(--gap-md));
+    border: var(--dialog-border);
+    contain: layout style;
+    opacity: var(--dialog-opacity--start);
+    box-shadow: var(--dialog-shadow);
+    overscroll-behavior: contain;
+    overflow: auto;
+    transform: translate3d(var(--dialog-translate--start)) scale(var(--dialog-scale--start));
+    transition:
+      opacity var(--dialog-transition-duration) var(--dialog-transition-timing-function),
+      transform var(--dialog-transition-duration) var(--dialog-transition-timing-function),
+      padding var(--dialog-transition-duration) var(--dialog-transition-timing-function),
+      block-size var(--dialog-transition-duration) var(--dialog-transition-timing-function),
+      inline-size var(--dialog-transition-duration) var(--dialog-transition-timing-function),
+      overlay var(--dialog-transition-duration) var(--dialog-transition-timing-function)
+        allow-discrete,
+      display var(--dialog-transition-duration) var(--dialog-transition-timing-function)
+        allow-discrete;
+    transition-delay: var(--dialog-transition-delay--start);
+  }
+
+  :where(dialog[open]) {
+    transform: translate3d(var(--dialog-translate--end)) scale(var(--dialog-scale--end));
+    opacity: var(--dialog-opacity--end);
+    transition-delay: var(--dialog-transition-delay--end);
+
+    @starting-style {
+      transition-delay: var(--dialog-transition-delay--start);
+      transform: translate3d(var(--dialog-translate--start)) scale(var(--dialog-scale--start));
+      opacity: var(--dialog-opacity--start);
+    }
+  }
+
+  /* Dialog backdrop with smooth fade transition */
+  :where(dialog)::backdrop {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    opacity: 0;
+    overscroll-behavior: contain;
+    overflow: auto;
+    background-color: var(--dialog-backdrop-color);
+    backdrop-filter: var(--dialog-backdrop-blur);
+    transition: opacity var(--dialog-backdrop-transition-duration)
+      var(--dialog-backdrop-transition-timing-function);
+  }
+
+  :where(dialog[open])::backdrop {
+    opacity: 1;
+
+    @starting-style {
+      opacity: 0;
+    }
+  }
+}
+
+@layer zazz.components {
+  .dialog {
+    /* Overrides reset-layer --dialog-shadow (reset > variables) */
+    --dialog-shadow: var(--shadow-md);
+
+    inline-size: var(--dialog-width);
+    block-size: var(--dialog-height);
+    background-color: var(--dialog-background);
+    color: var(--dialog-foreground);
+    box-shadow: var(--dialog-shadow);
+    border-radius: var(--dialog-radius);
+
+    anchor-name: --dialog-root;
+    container-type: inline-size;
+    container-name: dialog;
+    font-size: var(--font-size-md);
+    isolation: isolate;
+  }
+
+  .dialog[open] {
+    grid-template-rows: minmax(0, 1fr);
+    min-block-size: 0;
+  }
+
+  .dialog__close {
+    position: absolute;
+    top: var(--gap-xs);
+    right: var(--gap-xs);
+    z-index: 50;
+  }
+
+  .dialog__close > svg {
+    inline-size: var(--step-4);
+    block-size: var(--step-4);
+    pointer-events: none;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    padding: 0;
+  }
+
+  .dialog__content {
+    display: grid;
+    align-self: center;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    position: relative;
+    min-block-size: 0;
+    overflow: clip;
+  }
+
+  .dialog__header {
+    display: flex;
+    flex-direction: column;
+    padding-inline: var(--gap-sm);
+    padding-block-start: var(--gap-sm);
+  }
+
+  /* Sticky top edge */
+  .dialog__header::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 100%;
+    inline-size: 100%;
+    block-size: var(--gap-md);
+    background: linear-gradient(to top, transparent, var(--dialog-background));
+  }
+
+  .dialog__body {
+    display: grid;
+    padding-inline: var(--gap-sm);
+    padding-block: var(--gap-md);
+    min-block-size: 0;
+    min-block-size: var(--gap-xl);
+    overflow-x: clip;
+    overflow-y: auto;
+    scrollbar-gutter: stable both-edges;
+  }
+
+  .dialog__footer {
+    block-size: fit-content;
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-self: end;
+    flex-shrink: 0;
+    gap: var(--gap-xs);
+    padding: var(--gap-sm);
+    border-top: 1px solid var(--border);
+    background-color: var(--dialog-background);
+  }
+
+  .dialog[data-size="article"] {
+    --dialog-width: var(--article-md);
+  }
+
+  .dialog[data-size="container"] {
+    --dialog-width: var(--breakpoint-md);
+  }
+
+  .dialog[data-size="screen"] {
+    --dialog-width: 100vi;
+    --dialog-height: 100svh;
+    --dialog-radius: 0;
+    --dialog-shadow: none;
+    max-inline-size: 100vi;
+    max-block-size: 100svh;
+  }
+}
