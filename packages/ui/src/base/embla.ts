@@ -2,18 +2,18 @@
 
 /**
  * @fileoverview Embla Carousel initialization and controls.
- * @description Discovers carousel markup via `data-carousel` attributes, initializes
- * Embla instances with optional plugins, and wires navigation, keyboard, dialog,
- * and lightbox behaviors.
+ * @description Discovers carousel roots (`<ui-carousel>` or `.ui-carousel`),
+ * initializes Embla instances with optional plugins, and wires navigation,
+ * keyboard, dialog, and lightbox behaviors.
  *
- * Structure (`data-carousel="<role>"`):
- * - `root` — Carousel container; holds all config attributes
- * - `viewport` — Visible window (required)
- * - `container` — Slides flex track
- * - `slide` — Individual slide
- * - `prev` / `next` — Navigation buttons (optional)
- * - `dots` / `dot` — Dot pagination container and template dot (optional)
- * - `thumbs` — Linked thumb carousel container (optional)
+ * Structure — root is the element/class itself; parts are slots (`data-slot="carousel-<part>"`):
+ * - root (`<ui-carousel>` | `.ui-carousel`) — Carousel container; holds all config attributes
+ * - `carousel-viewport` — Visible window (required)
+ * - `carousel-container` — Slides flex track
+ * - `carousel-slide` — Individual slide
+ * - `carousel-prev` / `carousel-next` — Navigation buttons (optional)
+ * - `carousel-dots` / `carousel-dot` — Dot pagination container and template dot (optional)
+ * - `carousel-thumbs` — Linked thumb carousel container (optional)
  *
  * thumb navigation (on `data-slot="carousel-thumbs"`):
  * - `data-carousel-thumbs-*` — thumb carousel options (defaults: containScroll keepSnaps, dragFree true)

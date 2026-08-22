@@ -265,10 +265,10 @@ Naming convention:
 A component file declares two kinds of custom property, and the distinction is
 load-bearing — don't blur them:
 
-| Kind                    | Looks like                                                      | Lives in                                     | Declared on | Apps override?    |
-| ----------------------- | --------------------------------------------------------------- | -------------------------------------------- | ----------- | ----------------- |
-| **Public theming hook** | `--ui-accordion-summary-padding-block` (unprefixed, namespaced) | `@layer variables`                           | `:root`     | **yes** — the API |
-| **Private internal**    | `--_ring-width`, `--_ring` (leading `--_`)                      | the rule that uses it (`components`/`reset`) | the element | **no** — plumbing |
+| Kind                    | Looks like                                                             | Lives in                                     | Declared on | Apps override?    |
+| ----------------------- | ---------------------------------------------------------------------- | -------------------------------------------- | ----------- | ----------------- |
+| **Public theming hook** | `--ui-accordion-summary-padding-block` (`--ui-` + component namespace) | `@layer variables`                           | `:root`     | **yes** — the API |
+| **Private internal**    | `--_ring-width`, `--_ring` (leading `--_`)                             | the rule that uses it (`components`/`reset`) | the element | **no** — plumbing |
 
 **Public hooks** are the override API. They default to a global token, are read by the
 component (often on a descendant), and apps re-skin by reassigning them. Two rules keep
@@ -282,10 +282,13 @@ them overridable:
   the "component default" override surface (redefine the token on `:root` to re-skin every
   instance — see below). Locality is already covered: each component declares its hooks at
   the top of its own file.
-- **Leave them unprefixed.** `--_` means _private_ (below); a hook is the opposite. It's
-  also a footgun — hooks are usually read on a descendant, so a hook registered
-  `@property … inherits: false` never reaches its consumer, and the `--_` family trends
-  toward non-inheriting registration.
+- **Prefix them `--ui-{component}-`.** Component hooks carry the `ui-` brand prefix and
+  are derivable from the root class (`.ui-button` → `--ui-button-*`); semantic roles,
+  metrics, and brand scales stay unprefixed as the Tailwind/shadcn-compatible theming
+  surface (see `docs/adr/0001-dual-form-primitives.md`). `--_` still means _private_
+  (below) — and it's a footgun for hooks: hooks are usually read on a descendant, so a
+  hook registered `@property … inherits: false` never reaches its consumer, and the
+  `--_` family trends toward non-inheriting registration.
 
 **Private internals** are transient plumbing — the ring widths flipped on `:focus-visible`
 (`--_ring-width`, `--_ring-offset-width`, `--_ring`), or a value composed and reused within
@@ -295,9 +298,9 @@ _inside the rule that consumes them_, in `@layer zazz.components` or `reset` —
 (or `:where(el)`) is correct precisely _because_ they aren't meant to be overridden from
 `:root`.
 
-Rule of thumb: if an app should be able to override it, it's an unprefixed `:root` hook in
-the variables layer; if it's plumbing the component sets for itself, it's a `--_` var next
-to the rule that reads it.
+Rule of thumb: if an app should be able to override it, it's a `--ui-{component}-*`
+`:root` hook in the variables layer; if it's plumbing the component sets for itself, it's
+a `--_` var next to the rule that reads it.
 
 ### Rules reference a token once; variants swap the token
 
@@ -371,8 +374,20 @@ the variables layer.
 
 ## 6. Naming & selector conventions
 
-- **Blocks & elements**: `.component` and `.component__part`
-  (`.ui-input-group`, `[data-slot="input-group-addon"]`). No BEM modifier classes — use attributes.
+- **Roots are dual-form**: every primitive has a `ui-`-prefixed class form
+  (`.ui-button`, `.ui-input-group`); primitives whose root would otherwise be a
+  meaningless `<div>`/`<span>` also have a tag form (`<ui-tooltip>`). The two are kept
+  equivalent by spelling every root selector `:where(ui-x, .ui-x)` — never one form
+  alone. Primitives rooted on semantic native elements (`<button>`, `<dialog>`,
+  `<select>`, …) are class-form only ("the most semantic tag wins"; see
+  `docs/adr/0001-dual-form-primitives.md`).
+- **Interior parts are slots, not classes**: `data-slot="{primitive}-{part}"`
+  (`data-slot="input-group-addon"`, `data-slot="dialog-header"`). The attribute is a
+  space-separated token list, like `class` — one element may serve two primitives
+  (`data-slot="lightbox-slide carousel-slide"`) — so selectors always use the token
+  matcher `[data-slot~="…"]`, never exact `=`. Classes never name parts, roots are
+  never stamped with `data-slot`, and there are no BEM `__` or modifier classes — use
+  attributes for state (see `docs/adr/0002-data-slot-parts.md`).
 - **Variants & sizes**: data attributes — `[data-variant="primary"]`, `[data-size="sm"]`,
   `[data-side]`, `[data-align]`, `[data-animation]`. They read as state and double as
   token-override hooks.
@@ -451,34 +466,46 @@ These deviate from the canonical shape on purpose — document the reason in-fil
 1. Create `src/ui/<component>/<component>.css` (alongside the component's example
    `default.html`) and register it in load order (after anything it
    `@requires`) — add the `@import` to [`index.css`](./src/index.css).
-2. Start with the CSSDoc header skeleton:
+2. **Decide the root form** (ADR-0001): root is a semantic native element
+   (`<button>`, `<dialog>`, `<select>`, …) → **class-form only** (`.ui-<component>`);
+   root would otherwise be a meaningless `<div>`/`<span>` → **dual-form**
+   (`<ui-<component>>` + `.ui-<component>`).
+3. Start with the CSSDoc header skeleton:
 
    ```css
    /**
-    * <component>.css — <Component> (.<selector>)
+    * <component>.css — <Component> (ui-<component> | .ui-<component>)
     *
     * @layer      variables, components
     * @requires   layers.css, _variables.css
     * @uses       <feature> — <note / support caveat>
-    * @tokens     --<component>-* (@layer variables)
+    * @tokens     --ui-<component>-* (@layer variables)
     */
    ```
 
-3. Declare the token hooks, each defaulting to a global token:
+4. Declare the token hooks, each defaulting to a global token:
 
    ```css
    @layer variables {
      :root {
        /* surface */
-       --<component>-background: var(--card);
-       --<component>-background--hover: var(--muted);
+       --ui-<component>-background: var(--card);
+       --ui-<component>-background--hover: var(--muted);
        /* metrics */
-       --<component>-radius: var(--radius-md);
+       --ui-<component>-radius: var(--radius-md);
      }
    }
    ```
 
-4. Write the rules in `@layer zazz.components`, referencing each token once.
-5. Add variants/sizes as `[data-*]` selectors that **only reassign tokens**.
-6. If you read another component's tokens, add this file to that file's `@consumedby`.
-7. If you redraw native UI, put those rules in `@layer reset` and say why.
+5. Write the rules in `@layer zazz.components`, referencing each token once. For a
+   dual-form component, spell every root selector `:where(ui-<component>, .ui-<component>)`
+   — never one form alone — and give the root rule an explicit `display` (an
+   unregistered custom tag is `display: inline` by default; skip the declaration only
+   when something else governs display, e.g. a `popover` root).
+6. Name interior parts with `data-slot="<component>-<part>"` and match them with
+   `[data-slot~="…"]` — never part classes. Roots are never stamped with `data-slot`.
+7. Add variants/sizes as `[data-*]` selectors that **only reassign tokens**. Config
+   and state attribute keys stay bare (`data-variant`, `data-<component>-loop`); never
+   mint bare non-`data` attributes, even on tag-form elements.
+8. If you read another component's tokens, add this file to that file's `@consumedby`.
+9. If you redraw native UI, put those rules in `@layer reset` and say why.

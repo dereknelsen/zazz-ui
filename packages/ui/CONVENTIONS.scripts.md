@@ -22,7 +22,7 @@ Component scripts are co-located with their CSS and example HTML in `src/ui/<nam
 
 Scripts are authored in **TypeScript** but ship as browser-native **ES modules** — no bundler, no framework. `tsc -p tsconfig.json` emits a readable, unminified `<name>.js` (plus `.d.ts` and maps) next to each `.ts`, comments preserved; the emitted files are gitignored but published to npm and served raw — the docs site serves the tree at `/zazz/src/**` (e.g. `/zazz/src/ui/toaster/toaster.js`). Consumers load or copy the emitted `.js`. `src/index.ts` is the entry module: it `import`s every component script so a page loads behavior with one `<script type="module" src="…/index.js">` tag. When you add a script, add an `import "./ui/<name>/<name>.ts";` line to `src/index.ts`.
 
-The compiler is configured in `tsconfig.json`: strict, `erasableSyntaxOnly`, `verbatimModuleSyntax`, `rewriteRelativeImportExtensions`, declaration + declarationMap, in-place emit. Type check and run unit tests with `pnpm --filter @zazzdesign/ui test` (`tsc -p tsconfig.test.json` + `vp test run`; `*.test.ts` files are excluded from the build emit and the npm tarball); build with `pnpm --filter @zazzdesign/ui build` (tsc emit + `vp pack` single-file dist bundles). Ambient types for CDN and cross-script globals live in `src/globals.d.ts`.
+The compiler is configured in `tsconfig.json`: strict, `erasableSyntaxOnly`, `verbatimModuleSyntax`, `rewriteRelativeImportExtensions`, declaration + declarationMap, in-place emit. Type check and run unit tests with `pnpm --filter @zazzdesign/ui test` (`tsc -p tsconfig.test.json` + `vp test run`; `*.test.ts` files are excluded from the build emit and the npm tarball); build with `pnpm --filter @zazzdesign/ui build` (tsc emit + `vp pack` single-file dist bundles). Ambient types for cross-script globals live in `src/globals.d.ts`.
 
 ---
 
@@ -30,7 +30,7 @@ The compiler is configured in `tsconfig.json`: strict, `erasableSyntaxOnly`, `ve
 
 ### Philosophy
 
-- **Browser-native modules.** No framework, no bundler — TypeScript in, native ES modules out. `erasableSyntaxOnly` keeps the emitted JS line-for-line close to the source: types erase, nothing else is transformed (one deliberate exception: `using` declarations — see [Scoped resources](#scoped-resources-using)). Cross-script dependencies use `import`; the kit's one npm runtime dependency (`signal-polyfill`) is imported by bare specifier and resolved by the page's import map in browsers (pinned jsDelivr URL) and by `node_modules` in tests/bundlers. External libraries Zazz doesn't ship (the Embla CDN UMD bundles) are still read as globals loaded by prior `<script>` tags.
+- **Browser-native modules.** No framework, no bundler — TypeScript in, native ES modules out. `erasableSyntaxOnly` keeps the emitted JS line-for-line close to the source: types erase, nothing else is transformed (one deliberate exception: `using` declarations — see [Scoped resources](#scoped-resources-using)). Cross-script dependencies use `import`; npm runtime dependencies (`signal-polyfill`, the Embla packages) are imported by bare specifier and resolved by the page's import map in browsers (pinned, SRI-checked jsDelivr URLs from `head.ts`) and by `node_modules` in tests/bundlers. No UMD globals, no script-tag-order contracts.
 - **HTML-first.** Markup and data attributes drive behavior. Authors configure components in HTML; scripts discover and enhance the DOM.
 - **Progressive enhancement.** Feature-detect APIs before use. When unsupported, degrade gracefully (e.g. `navigation.ts` falls back to full page loads).
 - **Minimal surface area.** Export a small public API. Keep helpers private with `@private` JSDoc or class private fields (`#method`).
@@ -117,12 +117,13 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
 Interactive components ship as **light-DOM custom elements** that augment existing markup (carousel.ts, lightbox.ts, password-group.ts, tabs.ts). They follow the [HTML web components](https://adactio.com/journal/20618) approach — wrap or replace the component's root element, never replace its content.
 
 - **No shadow DOM, no templates.** Children are regular markup; all Zazz CSS applies unchanged.
-- **Element names describe the pattern, not the brand:** `ui-carousel`, `ui-lightbox`, `ui-password`, `ui-tabs`.
+- **Element names carry the `ui-` prefix** (`ui-carousel`, `ui-lightbox`, `ui-password`, `ui-tabs`, `ui-toaster`), matching the kit-wide dual-form naming (ADR-0001). A tag form exists only where the root would otherwise be a meaningless `<div>`/`<span>` — never wrap or replace a semantic native element ("the most semantic tag wins").
 - **Lifecycle, not load events.** Set up in `connectedCallback()`, tear down in `disconnectedCallback()`. Elements work when inserted dynamically — no auto-init block needed.
 - **Clean up with `AbortController`.** Bind listeners with `{ signal }` and abort on disconnect; disconnect `MutationObserver`s.
 - **Guard registration:** `if (!customElements.get("tag-name")) customElements.define(...)` so double script loads are safe.
 - **Custom elements are `display: inline` by default** — add a `display` rule in the component's stylesheet.
 - **Degrade gracefully.** Without JS the markup must still render sensibly (a password field stays masked; tabs keep native radio behavior).
+- **Element props are `data-*` attributes** (`data-label-show`, `data-label-hide`) — never bare attributes, even though the tag is its own namespace. One prop system across the kit.
 - Attach the element class to `window` and `export` it like any other script.
 
 ### Reactive state (signals)
@@ -142,6 +143,7 @@ Component scripts read configuration from HTML data attributes rather than JS op
 - Parse attributes with `Utils.parseDataAttributes(node, "data-carousel-")`, which converts kebab-case to camelCase and coerces types via `Utils.parseValue`.
 - Document the full attribute reference in the file's `@fileoverview` block.
 - Set lifecycle attributes on the DOM (`data-carousel-init`) so scripts can detect already-initialized elements.
+- Keep the three attribute families straight (ADR-0002): **config props** (`data-carousel-*`, `data-reveal-*`) and **variant/state props** (`data-variant`, `data-size`, `data-side`, `data-align`, `data-orientation`, `data-position`) are bare-keyed and unprefixed; **interior parts** are `data-slot="{primitive}-{part}"` — a space-separated token list, always matched with `[data-slot~="…"]`. `ui-` prefixes things that _name_ Zazz (tags, classes, component tokens); attribute keys that carry values stay bare.
 
 Boolean flags can be bare attributes (`data-carousel-autoplay`) or explicit values (`data-carousel-keyboard="false"`).
 
@@ -149,20 +151,20 @@ Boolean flags can be bare attributes (`data-carousel-autoplay`) or explicit valu
 
 Scripts declare dependencies with ES `import`s, so the module graph resolves order — the entry module (`index.ts`, loaded as the emitted `index.js`) is the only tag a page loads.
 
-| Script                                | Imports                            | Notes                                            |
-| ------------------------------------- | ---------------------------------- | ------------------------------------------------ |
-| `base/utils.ts`                       | —                                  | Provides `window.Utils`                          |
-| `base/signals.ts`                     | `signal-polyfill` (npm)            | The **only** file allowed to import the polyfill |
-| `base/reveal.ts`                      | —                                  | Standalone                                       |
-| `base/embla.ts`                       | `base/utils.ts`                    | Also needs the Embla CDN globals (see below)     |
-| `ui/carousel/carousel.ts`             | `base/embla.ts`                    | `<ui-carousel>` calls `EmblaInit.initRoot`       |
-| `ui/lightbox/lightbox.ts`             | `ui/carousel/carousel.ts`          | `<ui-lightbox>` coordinates carousel elements    |
-| `ui/password-group/password-group.ts` | `base/signals.ts`                  | Standalone (`<ui-password>`)                     |
-| `ui/tabs/tabs.ts`                     | —                                  | Standalone (`<ui-tabs>`)                         |
-| `ui/toaster/toaster.ts`               | `base/utils.ts`, `base/signals.ts` | `<ui-toaster>` + `window.Toaster` toast API      |
-| `base/navigation.ts`                  | —                                  | App-level; inert in component preview iframes    |
+| Script                                | Imports                                      | Notes                                            |
+| ------------------------------------- | -------------------------------------------- | ------------------------------------------------ |
+| `base/utils.ts`                       | —                                            | Provides `window.Utils`                          |
+| `base/signals.ts`                     | `signal-polyfill` (npm)                      | The **only** file allowed to import the polyfill |
+| `base/reveal.ts`                      | —                                            | Standalone                                       |
+| `base/embla.ts`                       | `base/utils.ts`, Embla (npm, via import map) | Imports the Embla packages as ES modules         |
+| `ui/carousel/carousel.ts`             | `base/embla.ts`                              | `<ui-carousel>` calls `EmblaInit.initRoot`       |
+| `ui/lightbox/lightbox.ts`             | `ui/carousel/carousel.ts`                    | `<ui-lightbox>` coordinates carousel elements    |
+| `ui/password-group/password-group.ts` | `base/signals.ts`                            | Standalone (`<ui-password>`)                     |
+| `ui/tabs/tabs.ts`                     | —                                            | Standalone (`<ui-tabs>`)                         |
+| `ui/toaster/toaster.ts`               | `base/utils.ts`, `base/signals.ts`           | `<ui-toaster>` + `window.Toaster` toast API      |
+| `base/navigation.ts`                  | —                                            | App-level; inert in component preview iframes    |
 
-When a script needs `Utils`, `import { Utils } from "../../base/utils.ts"` (from a `src/ui/<name>/` folder) — do not duplicate parsing logic. The one thing the module graph can't order is the **Embla CDN UMD bundles**: `embla.ts` reads them as globals, so their `<script defer>` tags must precede the `index.js` module in the document.
+When a script needs `Utils`, `import { Utils } from "../../base/utils.ts"` (from a `src/ui/<name>/` folder) — do not duplicate parsing logic. Embla ships as real ES modules imported by bare specifier; the page's import map (generated by `head.ts`, pinned + SRI-checked) resolves them, so the module graph orders everything and pages load exactly one script tag.
 
 ### DOM interaction patterns
 
