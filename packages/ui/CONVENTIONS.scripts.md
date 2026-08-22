@@ -77,18 +77,18 @@ export { MyExport };
 
 Attach a named export object or class to `window` for the documented public API, then `export` it for module consumers (the `index.ts` entry and any sibling script that imports it).
 
-| File                                  | Global                        | Export shape                          |
-| ------------------------------------- | ----------------------------- | ------------------------------------- |
-| `base/utils.ts`                       | `window.Utils`                | `{ parseValue, parseDataAttributes }` |
-| `base/signals.ts`                     | `window.Signals`              | `{ state, computed, effect }`         |
-| `base/reveal.ts`                      | `window.Reveal`               | `Reveal` class                        |
-| `base/embla.ts`                       | `window.EmblaInit`            | `{ init, initRoot, ... }`             |
-| `ui/carousel/carousel.ts`             | `window.SlideCarouselElement` | `<slide-carousel>` element class      |
-| `ui/lightbox/lightbox.ts`             | `window.MediaLightbox`        | `<media-lightbox>` element class      |
-| `ui/password-group/password-group.ts` | `window.InputPassword`        | `<input-password>` element class      |
-| `ui/tabs/tabs.ts`                     | `window.TabGroup`             | `<tab-group>` element class           |
-| `ui/toaster/toaster.ts`               | `window.Toaster`              | `Toaster` API + `<toast-region>`      |
-| `base/navigation.ts`                  | _(none)_                      | Side-effect only; no export           |
+| File                                  | Global                     | Export shape                          |
+| ------------------------------------- | -------------------------- | ------------------------------------- |
+| `base/utils.ts`                       | `window.Utils`             | `{ parseValue, parseDataAttributes }` |
+| `base/signals.ts`                     | `window.Signals`           | `{ state, computed, effect }`         |
+| `base/reveal.ts`                      | `window.Reveal`            | `Reveal` class                        |
+| `base/embla.ts`                       | `window.EmblaInit`         | `{ init, initRoot, ... }`             |
+| `ui/carousel/carousel.ts`             | `window.UiCarouselElement` | `<ui-carousel>` element class         |
+| `ui/lightbox/lightbox.ts`             | `window.UiLightbox`        | `<ui-lightbox>` element class         |
+| `ui/password-group/password-group.ts` | `window.UiPassword`        | `<ui-password>` element class         |
+| `ui/tabs/tabs.ts`                     | `window.UiTabs`            | `<ui-tabs>` element class             |
+| `ui/toaster/toaster.ts`               | `window.Toaster`           | `Toaster` API + `<ui-toaster>`        |
+| `base/navigation.ts`                  | _(none)_                   | Side-effect only; no export           |
 
 Document export objects with `@namespace` JSDoc and `@property` for each key.
 
@@ -117,7 +117,7 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
 Interactive components ship as **light-DOM custom elements** that augment existing markup (carousel.ts, lightbox.ts, password-group.ts, tabs.ts). They follow the [HTML web components](https://adactio.com/journal/20618) approach — wrap or replace the component's root element, never replace its content.
 
 - **No shadow DOM, no templates.** Children are regular markup; all Zazz CSS applies unchanged.
-- **Element names describe the pattern, not the brand:** `slide-carousel`, `media-lightbox`, `input-password`, `tab-group`.
+- **Element names describe the pattern, not the brand:** `ui-carousel`, `ui-lightbox`, `ui-password`, `ui-tabs`.
 - **Lifecycle, not load events.** Set up in `connectedCallback()`, tear down in `disconnectedCallback()`. Elements work when inserted dynamically — no auto-init block needed.
 - **Clean up with `AbortController`.** Bind listeners with `{ signal }` and abort on disconnect; disconnect `MutationObserver`s.
 - **Guard registration:** `if (!customElements.get("tag-name")) customElements.define(...)` so double script loads are safe.
@@ -155,11 +155,11 @@ Scripts declare dependencies with ES `import`s, so the module graph resolves ord
 | `base/signals.ts`                     | `signal-polyfill` (npm)            | The **only** file allowed to import the polyfill |
 | `base/reveal.ts`                      | —                                  | Standalone                                       |
 | `base/embla.ts`                       | `base/utils.ts`                    | Also needs the Embla CDN globals (see below)     |
-| `ui/carousel/carousel.ts`             | `base/embla.ts`                    | `<slide-carousel>` calls `EmblaInit.initRoot`    |
-| `ui/lightbox/lightbox.ts`             | `ui/carousel/carousel.ts`          | `<media-lightbox>` coordinates carousel elements |
-| `ui/password-group/password-group.ts` | `base/signals.ts`                  | Standalone (`<input-password>`)                  |
-| `ui/tabs/tabs.ts`                     | —                                  | Standalone (`<tab-group>`)                       |
-| `ui/toaster/toaster.ts`               | `base/utils.ts`, `base/signals.ts` | `<toast-region>` + `window.Toaster` toast API    |
+| `ui/carousel/carousel.ts`             | `base/embla.ts`                    | `<ui-carousel>` calls `EmblaInit.initRoot`       |
+| `ui/lightbox/lightbox.ts`             | `ui/carousel/carousel.ts`          | `<ui-lightbox>` coordinates carousel elements    |
+| `ui/password-group/password-group.ts` | `base/signals.ts`                  | Standalone (`<ui-password>`)                     |
+| `ui/tabs/tabs.ts`                     | —                                  | Standalone (`<ui-tabs>`)                         |
+| `ui/toaster/toaster.ts`               | `base/utils.ts`, `base/signals.ts` | `<ui-toaster>` + `window.Toaster` toast API      |
 | `base/navigation.ts`                  | —                                  | App-level; inert in component preview iframes    |
 
 When a script needs `Utils`, `import { Utils } from "../../base/utils.ts"` (from a `src/ui/<name>/` folder) — do not duplicate parsing logic. The one thing the module graph can't order is the **Embla CDN UMD bundles**: `embla.ts` reads them as globals, so their `<script defer>` tags must precede the `index.js` module in the document.

@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * @fileoverview `<slide-carousel>` — HTML web component for carousels.
+ * @fileoverview `<ui-carousel>` — HTML web component for carousels.
  * @description Light-DOM custom element that wraps standard carousel markup
  * and owns the Embla lifecycle: it initializes on connect (via
  * `EmblaInit.initRoot`) and destroys its instances on disconnect, so
@@ -20,7 +20,7 @@
  * (which imports the Embla packages via the page's import map) before this file.
  *
  * @example
- * <slide-carousel data-carousel-loop="true">
+ * <ui-carousel data-carousel-loop="true">
  *   <div data-slot="carousel-viewport">
  *     <div data-slot="carousel-container">
  *       <div data-slot="carousel-slide">Slide 1</div>
@@ -29,12 +29,12 @@
  *   </div>
  *   <button type="button" data-slot="carousel-prev">Prev</button>
  *   <button type="button" data-slot="carousel-next">Next</button>
- * </slide-carousel>
+ * </ui-carousel>
  */
 
 import { EmblaInit } from "../../base/embla.ts";
 
-class SlideCarouselElement extends HTMLElement {
+class UiCarouselElement extends HTMLElement {
   #dialogObserver: MutationObserver | null = null;
 
   connectedCallback() {
@@ -90,14 +90,14 @@ class SlideCarouselElement extends HTMLElement {
 }
 
 // Register the element (guarded against double script loads)
-if (typeof window !== "undefined" && !customElements.get("slide-carousel")) {
-  customElements.define("slide-carousel", SlideCarouselElement);
+if (typeof window !== "undefined" && !customElements.get("ui-carousel")) {
+  customElements.define("ui-carousel", UiCarouselElement);
 }
 
 // Attach to window so embla.js's lightbox sync can feature-detect the element type,
 // and export for module consumers (lightbox.js imports it via the main.js bundle).
 if (typeof window !== "undefined") {
-  window.SlideCarouselElement = SlideCarouselElement;
+  window.UiCarouselElement = UiCarouselElement;
 }
 
-export { SlideCarouselElement };
+export { UiCarouselElement };

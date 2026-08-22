@@ -4,8 +4,8 @@
  * `<script type="module" src=".../index.js">` instead of eight separate tags.
  * Each module runs for its side effects: global/utility setup, scroll-reveal
  * and carousel auto-initialization, SPA navigation, and the custom-element
- * registrations (`<slide-carousel>`, `<media-lightbox>`, `<input-password>`,
- * `<tab-group>`, `<toast-region>`).
+ * registrations (`<ui-carousel>`, `<ui-lightbox>`, `<ui-password>`,
+ * `<ui-tabs>`, `<ui-toaster>`).
  *
  * Internal dependencies are resolved by the module graph — utils loads
  * before embla, embla before carousel, carousel before lightbox — so the

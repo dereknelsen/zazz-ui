@@ -134,9 +134,9 @@ every setting is a `--table-*` token.
 ## Modern APIs & JS behaviors
 
 Author behavior in **HTML**; scripts enhance markup with light-DOM custom elements and
-data-attribute hooks. Use `<slide-carousel>` for component carousels, `<media-lightbox>` for
-lightboxes, `<input-password>` for password visibility toggles, `<tab-group>` for
-orientation-aware tab keyboard navigation, and `<toast-region>` for toast notifications
+data-attribute hooks. Use `<ui-carousel>` for component carousels, `<ui-lightbox>` for
+lightboxes, `<ui-password>` for password visibility toggles, `<ui-tabs>` for
+orientation-aware tab keyboard navigation, and `<ui-toaster>` for toast notifications
 (fired via `command="--toast"` or `window.Toaster`). Legacy lower-level Embla markup still uses
 `data-carousel="root"`; scroll reveals use `data-reveal-*`. Tooltips (`interestfor`), dialogs
 (`command`/`commandfor`), and popovers (`popovertarget`) use native invoker/popover APIs with

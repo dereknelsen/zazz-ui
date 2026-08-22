@@ -1,12 +1,12 @@
 "use strict";
 
 /**
- * @fileoverview `<media-lightbox>` — HTML web component for lightbox galleries.
+ * @fileoverview `<ui-lightbox>` — HTML web component for lightbox galleries.
  * @description Light-DOM custom element that coordinates the two carousels in
  * a lightbox: the inline gallery and the fullscreen `<dialog>` slideshow.
  *
  * Responsibilities:
- * - On dialog open: initializes the dialog's `<slide-carousel>` (deferred
+ * - On dialog open: initializes the dialog's `<ui-carousel>` (deferred
  *   while the dialog was closed), jumps it to the gallery's current slide,
  *   and focuses the viewport so keyboard navigation works immediately.
  * - On dialog close: scrolls the inline gallery to the last viewed slide.
@@ -20,19 +20,19 @@
  * carousel.js before this file; Embla itself resolves via the page's import map.
  *
  * @example
- * <media-lightbox class="lightbox">
+ * <ui-lightbox class="lightbox">
  *   <div data-slot="lightbox-gallery">
- *     <slide-carousel data-slot="lightbox-stage" data-carousel-loop="true">…</slide-carousel>
+ *     <ui-carousel data-slot="lightbox-stage" data-carousel-loop="true">…</ui-carousel>
  *   </div>
  *   <dialog class="dialog" data-slot="lightbox-dialog" closedby="any">
- *     <slide-carousel data-carousel-loop="true">…</slide-carousel>
+ *     <ui-carousel data-carousel-loop="true">…</ui-carousel>
  *   </dialog>
- * </media-lightbox>
+ * </ui-lightbox>
  */
 
-import { SlideCarouselElement } from "../carousel/carousel.ts";
+import { UiCarouselElement } from "../carousel/carousel.ts";
 
-class MediaLightbox extends HTMLElement {
+class UiLightbox extends HTMLElement {
   #controller: AbortController | null = null;
 
   #dialogObserver: MutationObserver | null = null;
@@ -79,9 +79,9 @@ class MediaLightbox extends HTMLElement {
     const dialogRoot = dialog.querySelector('[data-carousel="root"]');
     if (!dialogRoot) return;
 
-    // <slide-carousel> defers init while its dialog is closed — init now.
+    // <ui-carousel> defers init while its dialog is closed — init now.
     // (This element connects before its children, so its observer fires first.)
-    if (dialogRoot instanceof SlideCarouselElement) {
+    if (dialogRoot instanceof UiCarouselElement) {
       dialogRoot.init();
     }
 
@@ -111,14 +111,14 @@ class MediaLightbox extends HTMLElement {
 }
 
 // Register the element (guarded against double script loads)
-if (typeof window !== "undefined" && !customElements.get("media-lightbox")) {
-  customElements.define("media-lightbox", MediaLightbox);
+if (typeof window !== "undefined" && !customElements.get("ui-lightbox")) {
+  customElements.define("ui-lightbox", UiLightbox);
 }
 
 // Attach to window for parity with the other component scripts, and export for
 // module consumers (loaded for its side effect — the custom-element registration).
 if (typeof window !== "undefined") {
-  window.MediaLightbox = MediaLightbox;
+  window.UiLightbox = UiLightbox;
 }
 
-export { MediaLightbox };
+export { UiLightbox };

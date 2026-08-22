@@ -14,7 +14,7 @@
  * we hand the navigation back to the browser for a full load instead of
  * swapping `<main>` in isolation (which would leave the wrong chrome behind).
  *
- * Persistent overlays — e.g. the `<toast-region>` toaster — must live outside
+ * Persistent overlays — e.g. the `<ui-toaster>` toaster — must live outside
  * `<main>` (end of `<body>`): the swap replaces `<main>` wholesale, so anything
  * inside it is destroyed mid-navigation. Placed outside, an active toast stack
  * rides through the swap untouched; its exclusion from the view-transition

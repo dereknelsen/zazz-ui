@@ -75,10 +75,10 @@ The module graph resolves loading order automatically via `index.js`:
 | `signals.js`        | `signal-polyfill`          | Reactive state (`window.Signals`)              |
 | `reveal.js`         | None                       | Standalone viewport observer                   |
 | `embla.js`          | `utils.js`, Embla packages | Embla packages resolve through the import map  |
-| `carousel.js`       | `embla.js`                 | `<slide-carousel>` custom element              |
-| `lightbox.js`       | `carousel.js`              | `<media-lightbox>` custom element              |
-| `password-group.js` | None                       | `<input-password>` custom element              |
-| `tabs.js`           | None                       | `<tab-group>` custom element                   |
+| `carousel.js`       | `embla.js`                 | `<ui-carousel>` custom element                 |
+| `lightbox.js`       | `carousel.js`              | `<ui-lightbox>` custom element                 |
+| `password-group.js` | None                       | `<ui-password>` custom element                 |
+| `tabs.js`           | None                       | `<ui-tabs>` custom element                     |
 | `navigation.js`     | None                       | Page transitions; inert inside preview iframes |
 
 Ensure the import map appears in the DOM before `index.js`.
