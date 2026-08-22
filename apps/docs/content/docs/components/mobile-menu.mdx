@@ -23,9 +23,9 @@ The mobile menu combines a native `<dialog>` with nested `<details>` accordions.
   data-animation="slide-right"
   closedby="any"
 >
-  <div class="mobile-menu__viewport">
-    <div class="mobile-menu__header">...</div>
-    <div class="mobile-menu__body">
+  <div data-slot="mobile-menu-viewport">
+    <div data-slot="mobile-menu-header">...</div>
+    <div data-slot="mobile-menu-body">
       <div class="accordion">
         <details>
           <summary class="button" data-variant="ghost">Section</summary>
@@ -35,7 +35,7 @@ The mobile menu combines a native `<dialog>` with nested `<details>` accordions.
         </details>
       </div>
     </div>
-    <div class="mobile-menu__footer">...</div>
+    <div data-slot="mobile-menu-footer">...</div>
   </div>
 </dialog>
 ```

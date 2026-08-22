@@ -115,13 +115,13 @@
     inline-size: var(--field-inline-size);
   }
 
-  .field > :not(.field__label):not(.field__description) {
+  .field > :not([data-slot="field-label"]):not([data-slot="field-description"]) {
     grid-row: 2;
     grid-column: 1;
   }
 
   /* Label sits top-left above the control by default */
-  .field__label {
+  [data-slot="field-label"] {
     grid-row: 1;
     grid-column: 1;
     align-self: start;
@@ -133,12 +133,12 @@
   }
 
   /* ---------------------------------------------------------------------------
-  FIELD DESCRIPTION — .field__description (wrapper for hint + error)
+  FIELD DESCRIPTION — [data-slot="field-description"] (wrapper for hint + error)
   - Occupies a stable grid slot so hint↔error swaps never cause layout shift.
     The wrapper keeps a fixed block-size while the children crossfade inside it.
   --------------------------------------------------------------------------- */
 
-  .field__description {
+  [data-slot="field-description"] {
     grid-row: 3;
     grid-column: 1;
     display: grid;
@@ -147,8 +147,8 @@
   }
 
   /* Hint and error stack in the same grid area — only one is visible at a time */
-  .field__hint,
-  .field__error {
+  [data-slot="field-hint"],
+  [data-slot="field-error"] {
     grid-area: msg;
     display: inline-flex;
     transition:
@@ -158,14 +158,14 @@
         allow-discrete;
   }
 
-  .field__hint {
+  [data-slot="field-hint"] {
     color: var(--muted-foreground);
     opacity: 1;
     translate: var(--field-hint-translate--end);
     visibility: visible;
   }
 
-  .field__error {
+  [data-slot="field-error"] {
     color: var(--destructive);
     opacity: 0;
     translate: var(--field-hint-translate--start);
@@ -173,7 +173,7 @@
   }
 
   /* After interaction: invalid controls turn destructive, reveal the error */
-  :where(.field:has(:user-invalid)) .field__hint {
+  :where(.field:has(:user-invalid)) [data-slot="field-hint"] {
     opacity: 0;
     translate: var(--field-hint-translate--start);
     visibility: hidden;
@@ -185,7 +185,7 @@
     }
   }
 
-  :where(.field:has(:user-invalid)) .field__error {
+  :where(.field:has(:user-invalid)) [data-slot="field-error"] {
     opacity: 1;
     translate: var(--field-hint-translate--end);
     visibility: visible;
@@ -213,7 +213,7 @@
     border-color: var(--destructive);
   }
 
-  :where(.field:has(:user-invalid)) .field__label {
+  :where(.field:has(:user-invalid)) [data-slot="field-label"] {
     --field-label-color: var(--destructive);
   }
 
@@ -228,7 +228,7 @@
     children; the <legend> names the whole set.
   - Use a fieldset/legend ONLY when the legend labels a genuine group. A single
     control — or several independently-labelled fields — should carry its own
-    .field__label instead, never lean on the legend as a stand-in label.
+    [data-slot="field-label"] instead, never lean on the legend as a stand-in label.
   --------------------------------------------------------------------------- */
 
   .field-group,
@@ -242,7 +242,7 @@
     margin: var(--field-group-margin);
   }
 
-  /* Legend reads as the group's label — same weight/size as a .field__label */
+  /* Legend reads as the group's label — same weight/size as a [data-slot="field-label"] */
   .field-group > legend,
   .radio-group > legend {
     padding: 0;
@@ -271,7 +271,7 @@
     gap: var(--field-horizontal-gap);
   }
 
-  .field[data-orientation="horizontal"] .field__label {
+  .field[data-orientation="horizontal"] [data-slot="field-label"] {
     align-self: center;
   }
 }

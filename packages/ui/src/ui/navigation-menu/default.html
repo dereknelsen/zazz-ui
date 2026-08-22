@@ -1,10 +1,11 @@
 <header class="w-full">
   <nav class="navigation-menu container">
-    <menu class="navigation-menu__list">
+    <menu data-slot="navigation-menu-list">
       <!-- Rich panel — featured callout + link grid -->
-      <li class="navigation-menu__item">
+      <li data-slot="navigation-menu-item">
         <button
-          class="button navigation-menu__trigger"
+          class="button"
+          data-slot="navigation-menu-trigger"
           data-variant="ghost"
           type="button"
           popovertarget="nav-dropdown-1"
@@ -25,11 +26,11 @@
 
         <div
           id="nav-dropdown-1"
-          class="navigation-menu__popover"
+          data-slot="navigation-menu-popover"
           popover="auto"
           data-animation="slide-down"
         >
-          <div class="navigation-menu__viewport grid grid-cols-3">
+          <div class="grid grid-cols-3" data-slot="navigation-menu-viewport">
             <div class="grid py-xs pl-xs">
               <a
                 href="#"
@@ -43,23 +44,23 @@
               </a>
             </div>
             <div class="flex flex-col gap-px py-xs pr-xs col-span-2">
-              <a href="#" class="navigation-menu__link">
+              <a href="#" data-slot="navigation-menu-link">
                 <span class="text-sm font-strong">Analytics</span>
                 <span class="text-sm text-muted-foreground"
                   >Real-time insights into product usage.</span
                 >
               </a>
-              <a href="#" class="navigation-menu__link">
+              <a href="#" data-slot="navigation-menu-link">
                 <span class="text-sm font-strong">Automation</span>
                 <span class="text-sm text-muted-foreground">Workflows that run themselves.</span>
               </a>
-              <a href="#" class="navigation-menu__link">
+              <a href="#" data-slot="navigation-menu-link">
                 <span class="text-sm font-strong">Integrations</span>
                 <span class="text-sm text-muted-foreground"
                   >Connect the tools your team already uses.</span
                 >
               </a>
-              <a href="#" class="navigation-menu__link">
+              <a href="#" data-slot="navigation-menu-link">
                 <span class="text-sm font-strong">Features</span>
                 <span class="text-sm text-muted-foreground"
                   >Everything you need to design, build, and ship.</span
@@ -71,9 +72,10 @@
       </li>
 
       <!-- Simple panel — single-column link list -->
-      <li class="navigation-menu__item">
+      <li data-slot="navigation-menu-item">
         <button
-          class="button navigation-menu__trigger"
+          class="button"
+          data-slot="navigation-menu-trigger"
           data-variant="ghost"
           type="button"
           popovertarget="nav-dropdown-2"
@@ -94,24 +96,24 @@
 
         <div
           id="nav-dropdown-2"
-          class="navigation-menu__popover"
+          data-slot="navigation-menu-popover"
           data-align="start"
           popover="auto"
           data-animation="slide-down"
         >
-          <div class="navigation-menu__viewport">
+          <div data-slot="navigation-menu-viewport">
             <div class="flex flex-col gap-px p-xs">
-              <a href="#" class="navigation-menu__link">
+              <a href="#" data-slot="navigation-menu-link">
                 <span class="text-sm font-strong">Documentation</span>
                 <span class="text-sm text-muted-foreground">Guides and API references.</span>
               </a>
-              <a href="#" class="navigation-menu__link">
+              <a href="#" data-slot="navigation-menu-link">
                 <span class="text-sm font-strong">Blog</span>
                 <span class="text-sm text-muted-foreground"
                   >Product news and engineering notes.</span
                 >
               </a>
-              <a href="#" class="navigation-menu__link">
+              <a href="#" data-slot="navigation-menu-link">
                 <span class="text-sm font-strong">Community</span>
                 <span class="text-sm text-muted-foreground"
                   >Join the conversation and get help.</span
@@ -123,9 +125,10 @@
       </li>
 
       <!-- Submenu panel — categories whose products fly out to the right -->
-      <li class="navigation-menu__item">
+      <li data-slot="navigation-menu-item">
         <button
-          class="button navigation-menu__trigger"
+          class="button"
+          data-slot="navigation-menu-trigger"
           data-variant="ghost"
           type="button"
           popovertarget="nav-dropdown-3"
@@ -146,16 +149,16 @@
 
         <div
           id="nav-dropdown-3"
-          class="navigation-menu__popover"
+          data-slot="navigation-menu-popover"
           popover="auto"
           data-animation="slide-down"
         >
-          <div class="navigation-menu__viewport">
+          <div data-slot="navigation-menu-viewport">
             <div class="flex flex-col gap-px p-xs">
               <!-- Category — opens its product list to the right -->
-              <div class="navigation-menu__submenu">
+              <div data-slot="navigation-menu-submenu">
                 <button
-                  class="navigation-menu__submenu-trigger"
+                  data-slot="navigation-menu-submenu-trigger"
                   type="button"
                   popovertarget="nav-submenu-1"
                 >
@@ -175,31 +178,31 @@
 
                 <div
                   id="nav-submenu-1"
-                  class="navigation-menu__popover"
+                  data-slot="navigation-menu-popover"
                   data-variant="submenu"
                   popover="auto"
                 >
-                  <div class="navigation-menu__viewport">
+                  <div data-slot="navigation-menu-viewport">
                     <div class="flex flex-col gap-px p-xs">
-                      <a href="#" class="navigation-menu__link">
+                      <a href="#" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Figma Kit</span>
                         <span class="text-sm text-muted-foreground"
                           >Variables, styles, and components.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link">
+                      <a href="#" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Color Generator</span>
                         <span class="text-sm text-muted-foreground"
                           >OKLCH scales from a single brand hex.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link">
+                      <a href="#" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Type Scale</span>
                         <span class="text-sm text-muted-foreground"
                           >Fluid sizes tuned with Utopia.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link">
+                      <a href="#" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Icon Set</span>
                         <span class="text-sm text-muted-foreground"
                           >A consistent, lightweight icon library.</span
@@ -211,9 +214,9 @@
               </div>
 
               <!-- Category — opens its product list to the right -->
-              <div class="navigation-menu__submenu">
+              <div data-slot="navigation-menu-submenu">
                 <button
-                  class="navigation-menu__submenu-trigger"
+                  data-slot="navigation-menu-submenu-trigger"
                   type="button"
                   popovertarget="nav-submenu-2"
                 >
@@ -233,31 +236,31 @@
 
                 <div
                   id="nav-submenu-2"
-                  class="navigation-menu__popover"
+                  data-slot="navigation-menu-popover"
                   data-variant="submenu"
                   popover="auto"
                 >
-                  <div class="navigation-menu__viewport">
+                  <div data-slot="navigation-menu-viewport">
                     <div class="flex flex-col gap-px p-xs">
-                      <a href="#" class="navigation-menu__link">
+                      <a href="#" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">CLI</span>
                         <span class="text-sm text-muted-foreground"
                           >Scaffold and ship from the terminal.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link">
+                      <a href="#" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">React Components</span>
                         <span class="text-sm text-muted-foreground"
                           >Token-driven primitives for your app.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link">
+                      <a href="#" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">REST API</span>
                         <span class="text-sm text-muted-foreground"
                           >Programmatic access to your design data.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link">
+                      <a href="#" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Webhooks</span>
                         <span class="text-sm text-muted-foreground"
                           >React to changes in real time.</span
@@ -269,9 +272,9 @@
               </div>
 
               <!-- Category — opens its product list to the right -->
-              <div class="navigation-menu__submenu">
+              <div data-slot="navigation-menu-submenu">
                 <button
-                  class="navigation-menu__submenu-trigger"
+                  data-slot="navigation-menu-submenu-trigger"
                   type="button"
                   popovertarget="nav-submenu-3"
                 >
@@ -291,25 +294,25 @@
 
                 <div
                   id="nav-submenu-3"
-                  class="navigation-menu__popover"
+                  data-slot="navigation-menu-popover"
                   data-variant="submenu"
                   popover="auto"
                 >
-                  <div class="navigation-menu__viewport">
+                  <div data-slot="navigation-menu-viewport">
                     <div class="flex flex-col gap-px p-xs">
-                      <a href="#" class="navigation-menu__link">
+                      <a href="#" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">CMS</span>
                         <span class="text-sm text-muted-foreground"
                           >Structured content for any surface.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link">
+                      <a href="#" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Localization</span>
                         <span class="text-sm text-muted-foreground"
                           >Ship in every language your users speak.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link">
+                      <a href="#" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Media Library</span>
                         <span class="text-sm text-muted-foreground"
                           >Optimized assets, delivered fast.</span
@@ -324,9 +327,10 @@
         </div>
       </li>
 
-      <li class="navigation-menu__item">
+      <li data-slot="navigation-menu-item">
         <button
-          class="button navigation-menu__trigger"
+          class="button"
+          data-slot="navigation-menu-trigger"
           data-variant="ghost"
           type="button"
           popovertarget="nav-megamenu-1"
@@ -347,12 +351,12 @@
 
         <div
           id="nav-megamenu-1"
-          class="navigation-menu__popover"
+          data-slot="navigation-menu-popover"
           popover="auto"
           data-size="container"
           data-animation="slide-down"
         >
-          <div class="navigation-menu__viewport">
+          <div data-slot="navigation-menu-viewport">
             <div class="grid" style="min-block-size: 16rem">
               <div class="flex flex-col gap-px p-xs">
                 <!-- Tabs vertical START -->
@@ -361,10 +365,11 @@
                   data-orientation="vertical"
                 >
                   <div
-                    class="tabs__list rounded-sm w-full @xs:w-auto @xs:col-span-2 @md:col-span-1 @md:h-full grid @sm:flex flex-col"
+                    class="rounded-sm w-full @xs:w-auto @xs:col-span-2 @md:col-span-1 @md:h-full grid @sm:flex flex-col"
+                    data-slot="tabs-list"
                     role="tablist"
                   >
-                    <div class="tabs__indicator rounded-xs" aria-hidden="true"></div>
+                    <div class="rounded-xs" data-slot="tabs-indicator" aria-hidden="true"></div>
 
                     <input
                       type="radio"
@@ -373,7 +378,11 @@
                       id="tab-megamenu-1"
                       checked
                     />
-                    <label for="tab-megamenu-1" class="tabs__label grid justify-start p-sm flex-1">
+                    <label
+                      for="tab-megamenu-1"
+                      class="grid justify-start p-sm flex-1"
+                      data-slot="tabs-label"
+                    >
                       <span class="text-md font-strong">Women</span>
                       <span class="text-sm font-weight-body text-muted-foreground"
                         >Dresses, tops, bottoms, and shoes.</span
@@ -386,7 +395,11 @@
                       name="tabs-megamenu-group-1"
                       id="tab-megamenu-2"
                     />
-                    <label for="tab-megamenu-2" class="tabs__label grid justify-start p-sm flex-1">
+                    <label
+                      for="tab-megamenu-2"
+                      class="grid justify-start p-sm flex-1"
+                      data-slot="tabs-label"
+                    >
                       <span class="text-md font-strong">Men</span>
                       <span class="text-sm font-weight-body text-muted-foreground"
                         >Shirts, pants, outerwear, and shoes.</span
@@ -399,7 +412,11 @@
                       name="tabs-megamenu-group-1"
                       id="tab-megamenu-3"
                     />
-                    <label for="tab-megamenu-3" class="tabs__label grid justify-start p-sm flex-1">
+                    <label
+                      for="tab-megamenu-3"
+                      class="grid justify-start p-sm flex-1"
+                      data-slot="tabs-label"
+                    >
                       <span class="text-md font-strong">Home</span>
                       <span class="text-sm font-weight-body text-muted-foreground"
                         >Bedding, kitchen, dining, and decor.</span
@@ -408,30 +425,31 @@
                   </div>
 
                   <div
-                    class="tabs__panel flex flex-col @xs:grid @xs:grid-cols-subgrid @xs:col-span-2 @md:col-span-3 gap-sm"
+                    class="flex flex-col @xs:grid @xs:grid-cols-subgrid @xs:col-span-2 @md:col-span-3 gap-sm"
+                    data-slot="tabs-panel"
                     role="tabpanel"
                   >
                     <div class="grid gap-px">
                       <span class="text-eyebrow text-muted-foreground pt-xs pb-xs">Dresses</span>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Mini &amp; Midi</span>
                         <span class="text-sm text-muted-foreground"
                           >Everyday lengths for work and weekends.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Maxi Dresses</span>
                         <span class="text-sm text-muted-foreground"
                           >Flowing silhouettes in linen and cotton.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Jumpsuits</span>
                         <span class="text-sm text-muted-foreground"
                           >One-piece outfits, easy to style.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Shop all dresses</span>
                         <span class="text-sm text-muted-foreground"
                           >Browse the full collection.</span
@@ -441,25 +459,25 @@
 
                     <div class="grid gap-px">
                       <span class="text-eyebrow text-muted-foreground pt-xs pb-xs">Tops</span>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">T-shirts &amp; Tanks</span>
                         <span class="text-sm text-muted-foreground"
                           >Basics in organic cotton blends.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Blouses &amp; Shirts</span>
                         <span class="text-sm text-muted-foreground"
                           >Office-ready and off-duty styles.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Sweaters &amp; Cardigans</span>
                         <span class="text-sm text-muted-foreground"
                           >Layering pieces for cooler days.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Activewear</span>
                         <span class="text-sm text-muted-foreground"
                           >Leggings, sports bras, and sets.</span
@@ -471,25 +489,25 @@
                       <span class="text-eyebrow text-muted-foreground pt-xs pb-xs"
                         >Bottoms &amp; Shoes</span
                       >
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Jeans &amp; Denim</span>
                         <span class="text-sm text-muted-foreground"
                           >Straight, wide-leg, and high-rise fits.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Trousers &amp; Skirts</span>
                         <span class="text-sm text-muted-foreground"
                           >Tailored pants and A-line skirts.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Sneakers &amp; Flats</span>
                         <span class="text-sm text-muted-foreground"
                           >Comfort-first everyday footwear.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Boots &amp; Heels</span>
                         <span class="text-sm text-muted-foreground"
                           >Seasonal styles for dress-up moments.</span
@@ -499,30 +517,31 @@
                   </div>
 
                   <div
-                    class="tabs__panel flex flex-col @xs:grid @xs:grid-cols-subgrid @xs:col-span-2 @md:col-span-3 gap-sm"
+                    class="flex flex-col @xs:grid @xs:grid-cols-subgrid @xs:col-span-2 @md:col-span-3 gap-sm"
+                    data-slot="tabs-panel"
                     role="tabpanel"
                   >
                     <div class="grid gap-px">
                       <span class="text-eyebrow text-muted-foreground pt-xs pb-xs">Shirts</span>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">T-shirts &amp; Polos</span>
                         <span class="text-sm text-muted-foreground"
                           >Classic fits in breathable fabrics.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Oxford &amp; Dress Shirts</span>
                         <span class="text-sm text-muted-foreground"
                           >Collared styles for work and events.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Henleys &amp; Sweaters</span>
                         <span class="text-sm text-muted-foreground"
                           >Casual layers for transitional weather.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Shop all shirts</span>
                         <span class="text-sm text-muted-foreground">See every cut and color.</span>
                       </a>
@@ -532,25 +551,25 @@
                       <span class="text-eyebrow text-muted-foreground pt-xs pb-xs"
                         >Pants &amp; Shorts</span
                       >
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Chinos &amp; Trousers</span>
                         <span class="text-sm text-muted-foreground"
                           >Smart casual staples in neutral tones.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Jeans</span>
                         <span class="text-sm text-muted-foreground"
                           >Slim, relaxed, and straight-leg denim.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Joggers &amp; Sweatpants</span>
                         <span class="text-sm text-muted-foreground"
                           >Loungewear you can wear out.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Shorts</span>
                         <span class="text-sm text-muted-foreground"
                           >Chino, cargo, and athletic cuts.</span
@@ -562,25 +581,25 @@
                       <span class="text-eyebrow text-muted-foreground pt-xs pb-xs"
                         >Outerwear &amp; Shoes</span
                       >
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Jackets &amp; Coats</span>
                         <span class="text-sm text-muted-foreground"
                           >Bombers, parkas, and wool overcoats.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Sneakers</span>
                         <span class="text-sm text-muted-foreground"
                           >Low-top and high-top everyday pairs.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Boots &amp; Loafers</span>
                         <span class="text-sm text-muted-foreground"
                           >Leather and suede dress-casual options.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Accessories</span>
                         <span class="text-sm text-muted-foreground"
                           >Belts, wallets, and winter essentials.</span
@@ -590,30 +609,31 @@
                   </div>
 
                   <div
-                    class="tabs__panel flex flex-col @xs:grid @xs:grid-cols-subgrid @xs:col-span-2 @md:col-span-3 gap-sm"
+                    class="flex flex-col @xs:grid @xs:grid-cols-subgrid @xs:col-span-2 @md:col-span-3 gap-sm"
+                    data-slot="tabs-panel"
                     role="tabpanel"
                   >
                     <div class="grid gap-px">
                       <span class="text-eyebrow text-muted-foreground pt-xs pb-xs">Bedding</span>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Sheet Sets</span>
                         <span class="text-sm text-muted-foreground"
                           >Percale, sateen, and linen weaves.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Duvets &amp; Comforters</span>
                         <span class="text-sm text-muted-foreground"
                           >All-season weights and down alternatives.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Pillows &amp; Throws</span>
                         <span class="text-sm text-muted-foreground"
                           >Accent layers for beds and sofas.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Shop all bedding</span>
                         <span class="text-sm text-muted-foreground"
                           >Build a complete sleep setup.</span
@@ -625,25 +645,25 @@
                       <span class="text-eyebrow text-muted-foreground pt-xs pb-xs"
                         >Kitchen &amp; Dining</span
                       >
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Cookware</span>
                         <span class="text-sm text-muted-foreground"
                           >Pots, pans, and non-stick sets.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Tableware</span>
                         <span class="text-sm text-muted-foreground"
                           >Plates, bowls, and flatware collections.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Glassware &amp; Bar</span>
                         <span class="text-sm text-muted-foreground"
                           >Tumblers, wine glasses, and decanters.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Storage &amp; Organization</span>
                         <span class="text-sm text-muted-foreground"
                           >Pantry jars, bins, and drawer inserts.</span
@@ -655,25 +675,25 @@
                       <span class="text-eyebrow text-muted-foreground pt-xs pb-xs"
                         >Decor &amp; Furniture</span
                       >
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Lighting</span>
                         <span class="text-sm text-muted-foreground"
                           >Floor lamps, pendants, and table lights.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Rugs &amp; Curtains</span>
                         <span class="text-sm text-muted-foreground"
                           >Textiles to anchor and soften a room.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Seating &amp; Tables</span>
                         <span class="text-sm text-muted-foreground"
                           >Chairs, side tables, and accent pieces.</span
                         >
                       </a>
-                      <a href="#" class="navigation-menu__link flex-1">
+                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
                         <span class="text-sm font-strong">Wall Art &amp; Mirrors</span>
                         <span class="text-sm text-muted-foreground"
                           >Prints, frames, and statement mirrors.</span
@@ -689,7 +709,7 @@
         </div>
       </li>
 
-      <li class="navigation-menu__item ml-auto mr-xs">
+      <li class="ml-auto mr-xs" data-slot="navigation-menu-item">
         <!-- Form dialog START -->
         <button
           class="button"
@@ -731,17 +751,17 @@
           </svg>
         </button>
         <dialog id="form-sign-in-1" class="dialog" closedby="any">
-          <form method="dialog" class="dialog__content">
-            <header class="dialog__header">
+          <form method="dialog" data-slot="dialog-content">
+            <header data-slot="dialog-header">
               <h2 class="text-lg font-heading font-strong">Sign in</h2>
               <p class="text-muted-foreground">Enter your email and password to sign in.</p>
             </header>
-            <div class="dialog__body flex flex-col gap-md">
+            <div class="flex flex-col gap-md" data-slot="dialog-body">
               <fieldset class="field-group">
                 <legend class="sr-only">Sign in</legend>
                 <div class="grid gap-xs">
                   <div class="field">
-                    <label class="field__label" for="fd-email">Email</label>
+                    <label data-slot="field-label" for="fd-email">Email</label>
                     <input
                       class="input"
                       id="fd-email"
@@ -753,11 +773,11 @@
                       autocomplete="email"
                       aria-describedby="fd-email-hint"
                     />
-                    <div class="field__description">
-                      <span class="field__hint" id="fd-email-hint"
+                    <div data-slot="field-description">
+                      <span data-slot="field-hint" id="fd-email-hint"
                         >We'll only use this to send receipts.</span
                       >
-                      <span class="field__error" role="alert"
+                      <span data-slot="field-error" role="alert"
                         >Please enter a valid email address.</span
                       >
                     </div>
@@ -765,7 +785,7 @@
 
                   <!-- Password START -->
                   <div class="field">
-                    <label class="field__label" for="f-login-password">Password</label>
+                    <label data-slot="field-label" for="f-login-password">Password</label>
                     <input-password>
                       <label class="password-group">
                         <input
@@ -779,9 +799,10 @@
                           placeholder="••••••••"
                           aria-describedby="f-login-password-hint f-login-password-warning"
                         />
-                        <span class="password-group__addon" data-align="inline-end">
+                        <span data-slot="password-group-addon" data-align="inline-end">
                           <button
-                            class="button password-group__toggle"
+                            class="button"
+                            data-slot="password-group-toggle"
                             id="f-login-password-toggle"
                             data-variant="ghost"
                             data-size="icon-sm"
@@ -791,7 +812,8 @@
                             aria-describedby="f-login-password-warning"
                           >
                             <svg
-                              class="password-group__icon password-group__icon--show"
+                              data-slot="password-group-icon"
+                              data-slot="password-group-icon-show"
                               xmlns="http://www.w3.org/2000/svg"
                               viewBox="0 0 256 256"
                               aria-hidden="true"
@@ -817,7 +839,8 @@
                               />
                             </svg>
                             <svg
-                              class="password-group__icon password-group__icon--hide"
+                              data-slot="password-group-icon"
+                              data-slot="password-group-icon-hide"
                               xmlns="http://www.w3.org/2000/svg"
                               viewBox="0 0 256 256"
                               aria-hidden="true"
@@ -863,8 +886,8 @@
                         </span>
                       </label>
                     </input-password>
-                    <div class="field__description">
-                      <span class="field__error" role="alert">Incorrect email or password.</span>
+                    <div data-slot="field-description">
+                      <span data-slot="field-error" role="alert">Incorrect email or password.</span>
                     </div>
                     <span class="sr-only" id="f-login-password-warning"
                       >Warning: showing the password makes it visible to anyone near your
@@ -875,7 +898,7 @@
                 </div>
               </fieldset>
             </div>
-            <footer class="dialog__footer">
+            <footer data-slot="dialog-footer">
               <button
                 class="button"
                 type="button"
@@ -891,7 +914,8 @@
             </footer>
           </form>
           <button
-            class="button dialog__close"
+            class="button"
+            data-slot="dialog-close"
             data-size="icon"
             data-variant="ghost"
             type="button"
@@ -928,7 +952,7 @@
       </li>
 
       <!-- Plain CTA — no popover -->
-      <li class="navigation-menu__item">
+      <li data-slot="navigation-menu-item">
         <a href="#" class="button" data-variant="primary">Get started</a>
       </li>
     </menu>

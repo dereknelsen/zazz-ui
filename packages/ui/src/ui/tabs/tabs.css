@@ -46,10 +46,10 @@
 @layer zazz.components {
   /* ===========================================================================
   TABS — .tabs
-  .tabs__list — inline-flex muted track (fits tab row only; panels live outside).
-  .tabs__indicator — card pill anchored to checked label.
-  Panels — direct .tabs children after .tabs__list; order must match tab order.
-  Panel N is shown when the Nth radio in .tabs__list is checked (see rules below).
+  [data-slot="tabs-list"] — inline-flex muted track (fits tab row only; panels live outside).
+  [data-slot="tabs-indicator"] — card pill anchored to checked label.
+  Panels — direct .tabs children after [data-slot="tabs-list"]; order must match tab order.
+  Panel N is shown when the Nth radio in [data-slot="tabs-list"] is checked (see rules below).
   =========================================================================== */
 
   .tabs {
@@ -59,7 +59,7 @@
     gap: var(--tabs-gap);
   }
 
-  .tabs__list {
+  [data-slot="tabs-list"] {
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -68,12 +68,12 @@
     border-radius: var(--tabs-track-radius);
     background-color: var(--tabs-track-background);
 
-    /* Scoped so .tabs__indicator can resolve --active-tab even when an ancestor
-       (e.g. .navigation-menu__item) sets anchor-scope to its own trigger name. */
+    /* Scoped so [data-slot="tabs-indicator"] can resolve --active-tab even when an ancestor
+       (e.g. [data-slot="navigation-menu-item"]) sets anchor-scope to its own trigger name. */
     anchor-scope: --active-tab;
   }
 
-  .tabs__indicator {
+  [data-slot="tabs-indicator"] {
     position: absolute;
     z-index: 0;
     pointer-events: none;
@@ -86,14 +86,14 @@
     will-change: left, right, top, bottom;
   }
 
-  .tabs__list input[type="radio"] {
+  [data-slot="tabs-list"] input[type="radio"] {
     position: absolute;
     clip-path: inset(50%);
     opacity: 0;
     pointer-events: none;
   }
 
-  .tabs__list .tabs__label {
+  [data-slot="tabs-list"] [data-slot="tabs-label"] {
     position: relative;
     z-index: 1;
     display: flex;
@@ -134,22 +134,22 @@
     transition: var(--default-transition);
   }
 
-  .tabs__list .tabs__label:hover {
+  [data-slot="tabs-list"] [data-slot="tabs-label"]:hover {
     color: var(--tabs-label-foreground--hover);
     background-color: var(--tabs-label-background--hover);
   }
 
-  .tabs__list .tabs__label:active {
+  [data-slot="tabs-list"] [data-slot="tabs-label"]:active {
     color: var(--tabs-label-foreground--active);
     background-color: var(--tabs-label-background--active);
   }
 
-  .tabs__list input[type="radio"]:checked + .tabs__label {
+  [data-slot="tabs-list"] input[type="radio"]:checked + [data-slot="tabs-label"] {
     color: var(--tabs-label-foreground--active);
     anchor-name: --active-tab;
   }
 
-  .tabs__list input[type="radio"]:focus-visible + .tabs__label {
+  [data-slot="tabs-list"] input[type="radio"]:focus-visible + [data-slot="tabs-label"] {
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
 
@@ -159,7 +159,7 @@
   /* ===========================================================================
   INDICATOR POSITIONING — anchor positioning (Chromium 125+) with a paint
   fallback. The pill sizes itself from the checked label via anchor() insets;
-  the checked label exposes itself as --active-tab. .tabs__list sets
+  the checked label exposes itself as --active-tab. [data-slot="tabs-list"] sets
   anchor-scope: --active-tab so the pill still resolves inside scoped ancestors
   (navigation menu items scope their trigger name). Where anchor positioning is
   unavailable (Firefox, Safari) the anchor() insets would be invalid and the
@@ -170,7 +170,7 @@
   =========================================================================== */
 
   @supports (anchor-name: --active-tab) {
-    .tabs__indicator {
+    [data-slot="tabs-indicator"] {
       position-anchor: --active-tab;
       top: calc(anchor(--active-tab top) + var(--tabs-indicator-inset));
       left: calc(anchor(--active-tab left) + var(--tabs-indicator-inset));
@@ -178,17 +178,17 @@
       bottom: calc(anchor(--active-tab bottom) + var(--tabs-indicator-inset));
     }
 
-    .tabs__list input[type="radio"]:checked + .tabs__label {
+    [data-slot="tabs-list"] input[type="radio"]:checked + [data-slot="tabs-label"] {
       background-color: var(--tabs-label-background--active);
     }
   }
 
   @supports not (anchor-name: --active-tab) {
-    .tabs__indicator {
+    [data-slot="tabs-indicator"] {
       display: none;
     }
 
-    .tabs__list input[type="radio"]:checked + .tabs__label {
+    [data-slot="tabs-list"] input[type="radio"]:checked + [data-slot="tabs-label"] {
       border-radius: var(--tabs-indicator-radius);
       background-color: var(--tabs-indicator-background);
       box-shadow:
@@ -198,7 +198,7 @@
     }
   }
 
-  /* Nth radio in .tabs__list → (N + 1)th child of .tabs (after .tabs__list).
+  /* Nth radio in [data-slot="tabs-list"] → (N + 1)th child of .tabs (after [data-slot="tabs-list"]).
      The per-index enumeration below (capped at 24 tabs) is irreducible in pure
      CSS: it correlates the checked radio's position with a panel's position,
      and selectors cannot do index arithmetic. sibling-index()/sibling-count()
@@ -208,54 +208,54 @@
      properties only inherit down; only :has() looks up, and it can't count).
      Hiding must stay display:none (accessibility: opacity/size tricks leave
      panels focusable), so a value-level rewrite has nowhere to land. */
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(1):not(:checked))
-    > .tabs__panel:nth-child(2),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(2):not(:checked))
-    > .tabs__panel:nth-child(3),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(3):not(:checked))
-    > .tabs__panel:nth-child(4),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(4):not(:checked))
-    > .tabs__panel:nth-child(5),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(5):not(:checked))
-    > .tabs__panel:nth-child(6),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(6):not(:checked))
-    > .tabs__panel:nth-child(7),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(7):not(:checked))
-    > .tabs__panel:nth-child(8),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(8):not(:checked))
-    > .tabs__panel:nth-child(9),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(9):not(:checked))
-    > .tabs__panel:nth-child(10),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(10):not(:checked))
-    > .tabs__panel:nth-child(11),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(11):not(:checked))
-    > .tabs__panel:nth-child(12),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(12):not(:checked))
-    > .tabs__panel:nth-child(13),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(13):not(:checked))
-    > .tabs__panel:nth-child(14),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(14):not(:checked))
-    > .tabs__panel:nth-child(15),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(15):not(:checked))
-    > .tabs__panel:nth-child(16),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(16):not(:checked))
-    > .tabs__panel:nth-child(17),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(17):not(:checked))
-    > .tabs__panel:nth-child(18),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(18):not(:checked))
-    > .tabs__panel:nth-child(19),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(19):not(:checked))
-    > .tabs__panel:nth-child(20),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(20):not(:checked))
-    > .tabs__panel:nth-child(21),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(21):not(:checked))
-    > .tabs__panel:nth-child(22),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(22):not(:checked))
-    > .tabs__panel:nth-child(23),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(23):not(:checked))
-    > .tabs__panel:nth-child(24),
-  .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(24):not(:checked))
-    > .tabs__panel:nth-child(25) {
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(1):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(2),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(2):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(3),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(3):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(4),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(4):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(5),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(5):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(6),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(6):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(7),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(7):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(8),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(8):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(9),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(9):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(10),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(10):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(11),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(11):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(12),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(12):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(13),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(13):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(14),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(14):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(15),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(15):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(16),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(16):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(17),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(17):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(18),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(18):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(19),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(19):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(20),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(20):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(21),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(21):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(22),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(22):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(23),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(23):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(24),
+  .tabs:has([data-slot="tabs-list"] > input[type="radio"]:nth-of-type(24):not(:checked))
+    > [data-slot="tabs-panel"]:nth-child(25) {
     display: none !important;
   }
 
@@ -267,13 +267,13 @@
     flex-direction: row;
   }
 
-  .tabs[data-orientation="vertical"] .tabs__list {
+  .tabs[data-orientation="vertical"] [data-slot="tabs-list"] {
     flex-direction: column;
     align-items: stretch;
     min-inline-size: var(--step-44);
   }
 
-  .tabs[data-orientation="vertical"] .tabs__label {
+  .tabs[data-orientation="vertical"] [data-slot="tabs-label"] {
     text-align: start;
     justify-content: start;
   }

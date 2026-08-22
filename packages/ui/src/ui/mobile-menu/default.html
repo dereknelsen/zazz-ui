@@ -51,8 +51,8 @@
   data-animation="slide-right"
   closedby="any"
 >
-  <div class="mobile-menu__viewport">
-    <div class="mobile-menu__header">
+  <div data-slot="mobile-menu-viewport">
+    <div data-slot="mobile-menu-header">
       <span class="text-md weight-strong">Menu</span>
       <button
         class="button"
@@ -89,7 +89,7 @@
       </button>
     </div>
 
-    <div class="mobile-menu__body">
+    <div data-slot="mobile-menu-body">
       <div class="accordion">
         <!-- Platform -->
         <details>
@@ -574,7 +574,7 @@
       </div>
     </div>
 
-    <div class="mobile-menu__footer">
+    <div data-slot="mobile-menu-footer">
       <button class="button flex-1" type="button">
         Sign in
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">

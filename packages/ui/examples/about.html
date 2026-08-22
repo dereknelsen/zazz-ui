@@ -151,8 +151,8 @@
                 Contact us
               </button>
               <dialog id="dialog-example-1" class="dialog" closedby="any">
-                <div class="dialog__content">
-                  <header class="dialog__header">
+                <div data-slot="dialog-content">
+                  <header data-slot="dialog-header">
                     <h2 class="text-lg font-heading font-strong">Dialog title</h2>
                     <p class="text-muted-foreground">
                       This dialog was opened using an
@@ -164,10 +164,10 @@
                       >.
                     </p>
                   </header>
-                  <div class="dialog__body">
+                  <div data-slot="dialog-body">
                     <p>Set the size of the dialog with the <code>data-size</code> attribute.</p>
                   </div>
-                  <footer class="dialog__footer">
+                  <footer data-slot="dialog-footer">
                     <button
                       class="button"
                       type="button"
@@ -187,7 +187,8 @@
                   </footer>
                 </div>
                 <button
-                  class="button dialog__close"
+                  class="button"
+                  data-slot="dialog-close"
                   data-size="icon"
                   data-variant="ghost"
                   type="button"
@@ -248,7 +249,7 @@
                 class="button"
                 data-size="icon"
                 data-variant="muted"
-                data-carousel="prev"
+                data-slot="carousel-prev"
               >
                 <svg
                   class="size-sm"
@@ -272,7 +273,7 @@
                 class="button"
                 data-size="icon"
                 data-variant="muted"
-                data-carousel="next"
+                data-slot="carousel-next"
               >
                 <svg
                   class="size-sm"
@@ -294,11 +295,11 @@
             </div>
           </div>
 
-          <div data-carousel="viewport" class="overflow-visible">
-            <div data-carousel="container" class="-ml-md">
+          <div data-slot="carousel-viewport" class="overflow-visible">
+            <div data-slot="carousel-container" class="-ml-md">
               <!-- Card START -->
               <a
-                data-carousel="slide"
+                data-slot="carousel-slide"
                 class="basis-full @xs:basis-1/2 @sm:basis-1/3 @md:basis-1/4 cursor-pointer"
                 href="#"
               >
@@ -364,7 +365,7 @@
 
               <!-- Card START -->
               <a
-                data-carousel="slide"
+                data-slot="carousel-slide"
                 class="basis-full @xs:basis-1/2 @sm:basis-1/3 @md:basis-1/4 cursor-pointer"
                 href="#"
               >
@@ -430,7 +431,7 @@
 
               <!-- Card START -->
               <a
-                data-carousel="slide"
+                data-slot="carousel-slide"
                 class="basis-full @xs:basis-1/2 @sm:basis-1/3 @md:basis-1/4 cursor-pointer"
                 href="#"
               >
@@ -498,7 +499,7 @@
 
               <!-- Card START -->
               <a
-                data-carousel="slide"
+                data-slot="carousel-slide"
                 class="basis-full @xs:basis-1/2 @sm:basis-1/3 @md:basis-1/4 cursor-pointer"
                 href="#"
               >

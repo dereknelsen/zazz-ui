@@ -140,14 +140,14 @@
     min-block-size: 0;
   }
 
-  .dialog__close {
+  [data-slot="dialog-close"] {
     position: absolute;
     top: var(--gap-xs);
     right: var(--gap-xs);
     z-index: 50;
   }
 
-  .dialog__close > svg {
+  [data-slot="dialog-close"] > svg {
     inline-size: var(--step-4);
     block-size: var(--step-4);
     pointer-events: none;
@@ -157,7 +157,7 @@
     padding: 0;
   }
 
-  .dialog__content {
+  [data-slot="dialog-content"] {
     display: grid;
     align-self: center;
     grid-template-rows: auto minmax(0, 1fr) auto;
@@ -166,7 +166,7 @@
     overflow: clip;
   }
 
-  .dialog__header {
+  [data-slot="dialog-header"] {
     display: flex;
     flex-direction: column;
     padding-inline: var(--gap-sm);
@@ -174,7 +174,7 @@
   }
 
   /* Sticky top edge */
-  .dialog__header::after {
+  [data-slot="dialog-header"]::after {
     content: "";
     display: block;
     position: absolute;
@@ -184,7 +184,7 @@
     background: linear-gradient(to top, transparent, var(--dialog-background));
   }
 
-  .dialog__body {
+  [data-slot="dialog-body"] {
     display: grid;
     padding-inline: var(--gap-sm);
     padding-block: var(--gap-md);
@@ -195,7 +195,7 @@
     scrollbar-gutter: stable both-edges;
   }
 
-  .dialog__footer {
+  [data-slot="dialog-footer"] {
     block-size: fit-content;
     position: sticky;
     bottom: 0;

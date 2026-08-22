@@ -436,7 +436,7 @@
   }
 
   /* Suppress the browser's built-in password reveal / clear glyphs (Edge/IE) so
-     they never double up with the Zazz .password__toggle button. */
+     they never double up with the Zazz [data-slot="password-group-toggle"] button. */
   ::-ms-reveal,
   ::-ms-clear {
     display: none;

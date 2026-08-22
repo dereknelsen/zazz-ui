@@ -15,7 +15,7 @@
  * - `dots` / `dot` — Dot pagination container and template dot (optional)
  * - `thumbs` — Linked thumb carousel container (optional)
  *
- * thumb navigation (on `data-carousel="thumbs"`):
+ * thumb navigation (on `data-slot="carousel-thumbs"`):
  * - `data-carousel-thumbs-*` — thumb carousel options (defaults: containScroll keepSnaps, dragFree true)
  * - Syncs with the main carousel in the same root
  *
@@ -54,16 +54,16 @@
  *
  * @example Barebones carousel (4 text slides; auto-inits on DOMContentLoaded):
  * <div data-carousel="root">
- *   <div data-carousel="viewport">
- *     <div data-carousel="container">
- *       <div data-carousel="slide">Slide 1</div>
- *       <div data-carousel="slide">Slide 2</div>
- *       <div data-carousel="slide">Slide 3</div>
- *       <div data-carousel="slide">Slide 4</div>
+ *   <div data-slot="carousel-viewport">
+ *     <div data-slot="carousel-container">
+ *       <div data-slot="carousel-slide">Slide 1</div>
+ *       <div data-slot="carousel-slide">Slide 2</div>
+ *       <div data-slot="carousel-slide">Slide 3</div>
+ *       <div data-slot="carousel-slide">Slide 4</div>
  *     </div>
  *   </div>
- *   <button type="button" data-carousel="prev">Prev</button>
- *   <button type="button" data-carousel="next">Next</button>
+ *   <button type="button" data-slot="carousel-prev">Prev</button>
+ *   <button type="button" data-slot="carousel-next">Next</button>
  * </div>
  */
 
@@ -129,7 +129,7 @@ const addDotBtnsAndClickHandlers = (
 ): (() => void) | undefined => {
   if (!dotsNode) return;
 
-  const templateDot = dotsNode.querySelector('[data-carousel="dot"]');
+  const templateDot = dotsNode.querySelector('[data-slot="carousel-dot"]');
   if (!templateDot) return;
 
   let dotNodes: HTMLElement[] = [];
@@ -395,13 +395,15 @@ function initEmblaRoot(emblaNode: Element): void {
 
   emblaNode.setAttribute("data-carousel-init", "");
 
-  const emblathumbsNode = emblaNode.querySelector('[data-carousel="thumbs"]');
+  const emblathumbsNode = emblaNode.querySelector('[data-slot="carousel-thumbs"]');
   const emblaViewportNode = emblathumbsNode
-    ? emblaNode.querySelector('[data-carousel="viewport"]:not([data-carousel="thumbs"] *)')
-    : emblaNode.querySelector('[data-carousel="viewport"]');
-  const emblaPrevButtonNode = emblaNode.querySelector('[data-carousel="prev"]');
-  const emblaNextButtonNode = emblaNode.querySelector('[data-carousel="next"]');
-  const emblaDotsNode = emblaNode.querySelector('[data-carousel="dots"]');
+    ? emblaNode.querySelector(
+        '[data-slot="carousel-viewport"]:not([data-slot="carousel-thumbs"] *)',
+      )
+    : emblaNode.querySelector('[data-slot="carousel-viewport"]');
+  const emblaPrevButtonNode = emblaNode.querySelector('[data-slot="carousel-prev"]');
+  const emblaNextButtonNode = emblaNode.querySelector('[data-slot="carousel-next"]');
+  const emblaDotsNode = emblaNode.querySelector('[data-slot="carousel-dots"]');
 
   if (!emblaViewportNode) return;
 
@@ -488,18 +490,20 @@ function initEmblaRoot(emblaNode: Element): void {
     addDotBtnsAndClickHandlers(emblaApi, emblaDotsNode, signal);
   }
 
-  if (emblaNode.classList.contains("lightbox__stage")) {
+  if (emblaNode.matches('[data-slot="lightbox-stage"]')) {
     bindDragClickSuppression(
       emblaNode,
       emblaApi,
-      ".lightbox__slide[commandfor]",
+      '[data-slot="lightbox-slide"][commandfor]',
       { dragThresholdPx: 14 },
       signal,
     );
   }
 
   if (emblathumbsNode) {
-    const emblathumbsViewportNode = emblathumbsNode.querySelector('[data-carousel="viewport"]');
+    const emblathumbsViewportNode = emblathumbsNode.querySelector(
+      '[data-slot="carousel-viewport"]',
+    );
     if (emblathumbsViewportNode) {
       const thumbDefaults = { containScroll: "keepSnaps", dragFree: true };
       const thumbOptions = Utils.parseDataAttributes(emblathumbsNode, "data-carousel-thumbs-");
@@ -515,7 +519,13 @@ function initEmblaRoot(emblaNode: Element): void {
       addThumbClickHandlers(emblaApi, emblaApiThumb, signal);
       addTogglethumbsActive(emblaApi, emblaApiThumb);
 
-      bindDragClickSuppression(emblathumbsNode, emblaApiThumb, ".lightbox__thumb", {}, signal);
+      bindDragClickSuppression(
+        emblathumbsNode,
+        emblaApiThumb,
+        '[data-slot="lightbox-thumb"]',
+        {},
+        signal,
+      );
     }
   }
 }
@@ -571,7 +581,7 @@ function observeDialogOpen(): void {
             root.removeAttribute("data-carousel-start-index");
           }
 
-          const viewport = root.querySelector('[data-carousel="viewport"]');
+          const viewport = root.querySelector('[data-slot="carousel-viewport"]');
           if (viewport instanceof HTMLElement) {
             viewport.focus({ preventScroll: true });
           }
@@ -681,7 +691,9 @@ function initEmblaStartLinks(): void {
   document.addEventListener("click", function (e) {
     if (!(e.target instanceof HTMLElement)) return;
 
-    const trigger = e.target.closest("[data-carousel-start], [data-carousel='slide'][commandfor]");
+    const trigger = e.target.closest(
+      "[data-carousel-start], [data-slot='carousel-slide'][commandfor]",
+    );
     if (!trigger) return;
 
     let index = trigger.getAttribute("data-carousel-start");
@@ -720,13 +732,15 @@ function initLightboxCloseSync(): void {
     function (e) {
       const dialog = e.target;
       if (!(dialog instanceof HTMLDialogElement)) return;
-      if (!dialog.classList.contains("lightbox__dialog")) return;
+      if (!dialog.matches('[data-slot="lightbox-dialog"]')) return;
 
       const lightbox = dialog.closest(".lightbox");
       if (!lightbox) return;
 
       const dialogRoot = dialog.querySelector('[data-carousel="root"]');
-      const galleryRoot = lightbox.querySelector('.lightbox__gallery [data-carousel="root"]');
+      const galleryRoot = lightbox.querySelector(
+        '[data-slot="lightbox-gallery"] [data-carousel="root"]',
+      );
       if (!dialogRoot?._emblaApi || !galleryRoot?._emblaApi) return;
 
       galleryRoot._emblaApi.scrollTo(dialogRoot._emblaApi.selectedScrollSnap());

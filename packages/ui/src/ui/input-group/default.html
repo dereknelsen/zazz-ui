@@ -1,5 +1,5 @@
 <div class="field">
-  <label class="field__label" for="f-search">Search</label>
+  <label data-slot="field-label" for="f-search">Search</label>
   <label class="input-group">
     <input
       class="input"
@@ -13,7 +13,7 @@
       enterkeyhint="search"
       aria-describedby="f-search-hint"
     />
-    <span class="input-group__addon">
+    <span data-slot="input-group-addon">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
         <rect width="256" height="256" fill="none" />
         <circle
@@ -39,7 +39,7 @@
         />
       </svg>
     </span>
-    <span class="input-group__addon" data-align="inline-end">
+    <span data-slot="input-group-addon" data-align="inline-end">
       <button
         class="button"
         data-variant="ghost"
@@ -72,13 +72,13 @@
       </button>
     </span>
   </label>
-  <div class="field__description">
-    <span class="field__hint" id="f-search-hint">Search across every page in the docs.</span>
+  <div data-slot="field-description">
+    <span data-slot="field-hint" id="f-search-hint">Search across every page in the docs.</span>
   </div>
 </div>
 
 <div class="field">
-  <label class="field__label" for="f-url">Website</label>
+  <label data-slot="field-label" for="f-url">Website</label>
   <label class="input-group">
     <input
       class="input"
@@ -94,21 +94,21 @@
       enterkeyhint="go"
       aria-describedby="f-url-hint"
     />
-    <span class="input-group__addon">
-      <span class="input-group__text">https://</span>
+    <span data-slot="input-group-addon">
+      <span data-slot="input-group-text">https://</span>
     </span>
-    <span class="input-group__addon" data-align="inline-end">
+    <span data-slot="input-group-addon" data-align="inline-end">
       <button class="button" data-variant="primary" data-size="sm" type="submit">Apply</button>
     </span>
   </label>
-  <div class="field__description">
-    <span class="field__hint" id="f-url-hint">Where people can find you online.</span>
-    <span class="field__error" role="alert">Enter a valid URL, e.g. zazz.design.</span>
+  <div data-slot="field-description">
+    <span data-slot="field-hint" id="f-url-hint">Where people can find you online.</span>
+    <span data-slot="field-error" role="alert">Enter a valid URL, e.g. zazz.design.</span>
   </div>
 </div>
 
 <div class="field">
-  <label class="field__label" for="f-prompt">Prompt</label>
+  <label data-slot="field-label" for="f-prompt">Prompt</label>
   <label class="input-group">
     <textarea
       id="f-prompt"
@@ -118,14 +118,14 @@
       placeholder="Ask anything…"
       aria-describedby="f-prompt-hint"
     ></textarea>
-    <span class="input-group__addon" data-align="block-end">
+    <span data-slot="input-group-addon" data-align="block-end">
       <button class="button bg-background ml-auto" data-size="sm" type="submit">
         <span>Send</span> <kbd>↵</kbd>
       </button>
     </span>
   </label>
-  <div class="field__description">
-    <span class="field__hint" id="f-prompt-hint"
+  <div data-slot="field-description">
+    <span data-slot="field-hint" id="f-prompt-hint"
       >Enter to send · Shift + Enter for a new line.</span
     >
   </div>

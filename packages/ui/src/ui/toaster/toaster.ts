@@ -230,9 +230,9 @@ class ToastRegion extends HTMLElement {
     if (!this.hasAttribute("tabindex")) this.setAttribute("tabindex", "-1");
 
     // The live region must exist before toasts are inserted so additions announce.
-    if (!this.querySelector(".toaster__list")) {
+    if (!this.querySelector('[data-slot="toaster-list"]')) {
       const list = document.createElement("ol");
-      list.className = "toaster__list";
+      list.setAttribute("data-slot", "toaster-list");
       list.setAttribute("aria-live", "polite");
       list.setAttribute("aria-relevant", "additions text");
       list.setAttribute("aria-atomic", "false");
@@ -454,30 +454,30 @@ class ToastRegion extends HTMLElement {
    */
   #buildToast(options: ToastOptions, id: string): HTMLLIElement {
     const toast = document.createElement("li");
-    toast.className = "toaster__toast";
+    toast.setAttribute("data-slot", "toaster-toast");
     toast.dataset.toastId = id;
     toast.tabIndex = 0;
     if (options.variant) toast.dataset.variant = options.variant;
 
     if (options.variant) {
       const icon = document.createElement("span");
-      icon.className = "toaster__icon";
+      icon.setAttribute("data-slot", "toaster-icon");
       icon.setAttribute("aria-hidden", "true");
       icon.innerHTML = ICONS[options.variant];
       toast.append(icon);
     }
 
     const content = document.createElement("div");
-    content.className = "toaster__content";
+    content.setAttribute("data-slot", "toaster-content");
     if (options.title) {
       const title = document.createElement("div");
-      title.className = "toaster__title";
+      title.setAttribute("data-slot", "toaster-title");
       title.textContent = options.title;
       content.append(title);
     }
     if (options.description) {
       const description = document.createElement("div");
-      description.className = "toaster__description";
+      description.setAttribute("data-slot", "toaster-description");
       description.textContent = options.description;
       content.append(description);
     }
@@ -487,7 +487,8 @@ class ToastRegion extends HTMLElement {
     if (action) {
       const button = document.createElement("button");
       button.type = "button";
-      button.className = "button toaster__action";
+      button.className = "button";
+      button.setAttribute("data-slot", "toaster-action");
       button.dataset.size = "sm";
       button.textContent = action.label;
       button.addEventListener("click", (event) => {
@@ -500,7 +501,8 @@ class ToastRegion extends HTMLElement {
     if (options.closeButton !== false) {
       const close = document.createElement("button");
       close.type = "button";
-      close.className = "button toaster__close";
+      close.className = "button";
+      close.setAttribute("data-slot", "toaster-close");
       close.dataset.variant = "ghost";
       close.dataset.size = "icon-sm";
       close.setAttribute("aria-label", "Close notification");
@@ -540,10 +542,10 @@ class ToastRegion extends HTMLElement {
    * @returns The toast list (created in `connectedCallback`).
    */
   #list(): HTMLOListElement {
-    let list = this.querySelector(".toaster__list");
+    let list = this.querySelector('[data-slot="toaster-list"]');
     if (!(list instanceof HTMLOListElement)) {
       list = document.createElement("ol");
-      list.className = "toaster__list";
+      list.setAttribute("data-slot", "toaster-list");
       this.append(list);
     }
     return list as HTMLOListElement;
@@ -555,7 +557,7 @@ class ToastRegion extends HTMLElement {
   #toasts(): HTMLElement[] {
     return Array.from(this.#list().children)
       .filter((child): child is HTMLElement => child instanceof HTMLElement)
-      .filter((child) => child.classList.contains("toaster__toast"));
+      .filter((child) => child.matches('[data-slot="toaster-toast"]'));
   }
 
   // --- Expand / collapse ---

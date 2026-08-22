@@ -1,5 +1,5 @@
 <div class="field">
-  <label class="field__label" for="f-name">Name</label>
+  <label data-slot="field-label" for="f-name">Name</label>
   <input
     class="input"
     id="f-name"
@@ -13,7 +13,7 @@
   />
 </div>
 <div class="field">
-  <label class="field__label" for="f-email">Email</label>
+  <label data-slot="field-label" for="f-email">Email</label>
   <input
     class="input"
     id="f-email"
@@ -28,13 +28,15 @@
     enterkeyhint="next"
     aria-describedby="f-email-hint"
   />
-  <div class="field__description">
-    <span class="field__hint" id="f-email-hint">We'll never sell or share your email address.</span>
-    <span class="field__error" role="alert">Please enter a valid email address.</span>
+  <div data-slot="field-description">
+    <span data-slot="field-hint" id="f-email-hint"
+      >We'll never sell or share your email address.</span
+    >
+    <span data-slot="field-error" role="alert">Please enter a valid email address.</span>
   </div>
 </div>
 <div class="field">
-  <label class="field__label" for="f-phone">Phone</label>
+  <label data-slot="field-label" for="f-phone">Phone</label>
   <input
     class="input"
     id="f-phone"
@@ -47,7 +49,7 @@
   />
 </div>
 <div class="field">
-  <label class="field__label" for="f-date">Datetime</label>
+  <label data-slot="field-label" for="f-date">Datetime</label>
   <input
     class="input"
     id="f-date"

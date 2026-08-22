@@ -439,13 +439,13 @@
                   Hover or focus
                 </button>
                 <div
-                  class="tooltip__content"
+                  data-slot="tooltip-content"
                   id="tooltip-components-1"
                   popover="hint"
                   data-use-inverted-menu="false"
                 >
                   Add to library
-                  <span class="tooltip__arrow" aria-hidden="true"></span>
+                  <span data-slot="tooltip-arrow" aria-hidden="true"></span>
                 </div>
               </div>
 
@@ -455,7 +455,7 @@
                 </button>
                 <div
                   id="dropdown-components-1"
-                  class="dropdown__popover"
+                  data-slot="dropdown-popover"
                   data-side="bottom"
                   data-align="start"
                   popover="auto"
@@ -513,18 +513,18 @@
               </svg>
             </button>
             <dialog id="dialog-components-1" class="dialog" closedby="any">
-              <div class="dialog__content">
-                <header class="dialog__header">
+              <div data-slot="dialog-content">
+                <header data-slot="dialog-header">
                   <h2 class="text-lg font-heading font-strong">Dialog title</h2>
                   <p class="text-muted-foreground">
                     Opened with an invoker command. Closes on backdrop click, Escape, or either
                     button.
                   </p>
                 </header>
-                <div class="dialog__body">
+                <div data-slot="dialog-body">
                   <p>Set the size of the dialog with the <code>data-size</code> attribute.</p>
                 </div>
-                <footer class="dialog__footer">
+                <footer data-slot="dialog-footer">
                   <button
                     class="button"
                     type="button"
@@ -544,7 +544,8 @@
                 </footer>
               </div>
               <button
-                class="button dialog__close"
+                class="button"
+                data-slot="dialog-close"
                 data-size="icon"
                 data-variant="ghost"
                 type="button"
@@ -657,32 +658,32 @@
           <div class="mb-lg">
             <h2 class="text-h6 font-heading pb-sm">Tabs</h2>
             <tab-group class="tabs w-full">
-              <div class="tabs__list" role="tablist">
-                <div class="tabs__indicator" aria-hidden="true"></div>
+              <div data-slot="tabs-list" role="tablist">
+                <div data-slot="tabs-indicator" aria-hidden="true"></div>
                 <input type="radio" role="tab" name="components-tabs" id="ctab-1" checked />
-                <label for="ctab-1" class="tabs__label"
-                  ><span class="tabs__label-text">Account</span></label
+                <label for="ctab-1" data-slot="tabs-label"
+                  ><span data-slot="tabs-label-text">Account</span></label
                 >
                 <input type="radio" role="tab" name="components-tabs" id="ctab-2" />
-                <label for="ctab-2" class="tabs__label"
-                  ><span class="tabs__label-text">Billing</span></label
+                <label for="ctab-2" data-slot="tabs-label"
+                  ><span data-slot="tabs-label-text">Billing</span></label
                 >
                 <input type="radio" role="tab" name="components-tabs" id="ctab-3" />
-                <label for="ctab-3" class="tabs__label"
-                  ><span class="tabs__label-text">Notifications</span></label
+                <label for="ctab-3" data-slot="tabs-label"
+                  ><span data-slot="tabs-label-text">Notifications</span></label
                 >
               </div>
-              <div class="tabs__panel border rounded-md p-md w-full" role="tabpanel">
+              <div class="border rounded-md p-md w-full" data-slot="tabs-panel" role="tabpanel">
                 <h3 class="text-lg font-strong">Account</h3>
                 <p class="text-muted-foreground mt-xs">Manage your profile, email, and password.</p>
               </div>
-              <div class="tabs__panel border rounded-md p-md w-full" role="tabpanel">
+              <div class="border rounded-md p-md w-full" data-slot="tabs-panel" role="tabpanel">
                 <h3 class="text-lg font-strong">Billing</h3>
                 <p class="text-muted-foreground mt-xs">
                   Review invoices and update your payment method.
                 </p>
               </div>
-              <div class="tabs__panel border rounded-md p-md w-full" role="tabpanel">
+              <div class="border rounded-md p-md w-full" data-slot="tabs-panel" role="tabpanel">
                 <h3 class="text-lg font-strong">Notifications</h3>
                 <p class="text-muted-foreground mt-xs">
                   Choose what we email you about and how often.

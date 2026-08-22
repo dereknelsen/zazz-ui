@@ -1,5 +1,5 @@
 /**
- * toaster.css — Toaster (<toast-region class="toaster">, .toaster__toast)
+ * toaster.css — Toaster (<toast-region class="toaster">, [data-slot="toaster-toast"])
  *
  * Stacked toast notifications. Collapsed-stack presentation (newest toast in
  * front, older toasts peeking behind, expand on hover) adapted from Sonner by
@@ -118,7 +118,7 @@
     inset-inline-end: auto;
   }
 
-  .toaster__list {
+  [data-slot="toaster-list"] {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -131,7 +131,7 @@
   --initial-height, data-front, data-visible, data-removed, and inline z-index.
   =========================================================================== */
 
-  .toaster__toast {
+  [data-slot="toaster-toast"] {
     position: absolute;
     inset-inline: 0;
     inset-block-end: 0;
@@ -165,13 +165,13 @@
     }
   }
 
-  .toaster[data-position^="top"] .toaster__toast {
+  .toaster[data-position^="top"] [data-slot="toaster-toast"] {
     inset-block-end: auto;
     inset-block-start: 0;
   }
 
   /* Content crossfades when the stack collapses/expands. */
-  .toaster__toast > * {
+  [data-slot="toaster-toast"] > * {
     transition: opacity var(--toaster-transition-duration) var(--toaster-transition-timing-function);
   }
 
@@ -182,14 +182,14 @@
   =========================================================================== */
 
   .toaster:not([data-expanded="true"])
-    .toaster__toast:not([data-front="true"], [data-removed="true"]) {
+    [data-slot="toaster-toast"]:not([data-front="true"], [data-removed="true"]) {
     --_y: translateY(calc(var(--_lift) * var(--toaster-gap) * var(--toasts-before, 0)))
       scale(calc(1 - var(--toaster-scale-step) * var(--toasts-before, 0)));
     block-size: var(--front-toast-height);
   }
 
   .toaster:not([data-expanded="true"])
-    .toaster__toast:not([data-front="true"], [data-removed="true"])
+    [data-slot="toaster-toast"]:not([data-front="true"], [data-removed="true"])
     > * {
     opacity: 0;
   }
@@ -200,11 +200,11 @@
   while moving between toasts (which would collapse it).
   =========================================================================== */
 
-  .toaster[data-expanded="true"] .toaster__toast {
+  .toaster[data-expanded="true"] [data-slot="toaster-toast"] {
     block-size: var(--initial-height, auto);
   }
 
-  .toaster[data-expanded="true"] .toaster__toast::after {
+  .toaster[data-expanded="true"] [data-slot="toaster-toast"]::after {
     content: "";
     position: absolute;
     inset-inline: 0;
@@ -212,13 +212,13 @@
     block-size: calc(var(--toaster-gap) + 1px);
   }
 
-  .toaster[data-position^="top"][data-expanded="true"] .toaster__toast::after {
+  .toaster[data-position^="top"][data-expanded="true"] [data-slot="toaster-toast"]::after {
     inset-block-end: auto;
     inset-block-start: 100%;
   }
 
   /* Beyond the visible limit — kept in the DOM until dismissed, but hidden. */
-  .toaster__toast[data-visible="false"] {
+  [data-slot="toaster-toast"][data-visible="false"] {
     opacity: 0;
     pointer-events: none;
   }
@@ -232,13 +232,13 @@
   /* Keep the dying toast pointer-active: hiding it from hit-testing would fire
      mouseleave on the region and collapse an expanded stack mid-dismiss.
      toaster.js already ignores interactions with removed toasts. */
-  .toaster__toast[data-removed="true"] {
+  [data-slot="toaster-toast"][data-removed="true"] {
     opacity: var(--toaster-opacity--start);
     --_y: translateY(calc(var(--_lift) * var(--offset, 0px) + var(--_lift) * -100%));
   }
 
   .toaster:not([data-expanded="true"])
-    .toaster__toast[data-removed="true"]:not([data-front="true"]) {
+    [data-slot="toaster-toast"][data-removed="true"]:not([data-front="true"]) {
     --_y: translateY(calc(var(--_lift) * var(--toaster-gap) * var(--toasts-before, 0)))
       scale(calc(1 - var(--toaster-scale-step) * var(--toasts-before, 0)));
   }
@@ -247,20 +247,20 @@
   TOAST PARTS
   =========================================================================== */
 
-  .toaster__icon {
+  [data-slot="toaster-icon"] {
     flex-shrink: 0;
     inline-size: var(--toaster-icon-size);
     block-size: var(--toaster-icon-size);
     color: var(--toaster-accent);
   }
 
-  .toaster__icon > svg {
+  [data-slot="toaster-icon"] > svg {
     display: block;
     inline-size: 100%;
     block-size: 100%;
   }
 
-  .toaster__content {
+  [data-slot="toaster-content"] {
     flex: 1;
     min-inline-size: 0;
     display: flex;
@@ -268,20 +268,20 @@
     gap: var(--step-1);
   }
 
-  .toaster__title {
+  [data-slot="toaster-title"] {
     font-size: var(--toaster-title-font-size);
     font-weight: var(--toaster-title-font-weight);
     line-height: var(--leading-sm);
   }
 
-  .toaster__description {
+  [data-slot="toaster-description"] {
     font-size: var(--toaster-description-font-size);
     line-height: var(--leading-sm);
     color: var(--toaster-description-color);
   }
 
-  .toaster__action,
-  .toaster__close {
+  [data-slot="toaster-action"],
+  [data-slot="toaster-close"] {
     flex-shrink: 0;
   }
 
@@ -289,19 +289,19 @@
   VARIANTS — reassign the accent token only
   =========================================================================== */
 
-  .toaster__toast[data-variant="success"] {
+  [data-slot="toaster-toast"][data-variant="success"] {
     --toaster-accent: var(--success);
   }
 
-  .toaster__toast[data-variant="info"] {
+  [data-slot="toaster-toast"][data-variant="info"] {
     --toaster-accent: var(--info);
   }
 
-  .toaster__toast[data-variant="warning"] {
+  [data-slot="toaster-toast"][data-variant="warning"] {
     --toaster-accent: var(--warning);
   }
 
-  .toaster__toast[data-variant="destructive"] {
+  [data-slot="toaster-toast"][data-variant="destructive"] {
     --toaster-accent: var(--destructive);
   }
 }

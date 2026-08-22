@@ -3,7 +3,7 @@ title: Navigation menu
 description: Mega-menu navigation using popover panels, nested submenus, and anchor positioning.
 ---
 
-The navigation menu combines button triggers (`popovertarget`) with `.navigation-menu__popover` panels. `.navigation-menu__list` contains items and triggers. Panels contain a `.navigation-menu__viewport` grid of `.navigation-menu__link` items and optional `.navigation-menu__submenu` flyouts.
+The navigation menu combines button triggers (`popovertarget`) with `[data-slot="navigation-menu-popover"]` panels. `[data-slot="navigation-menu-list"]` contains items and triggers. Panels contain a `[data-slot="navigation-menu-viewport"]` grid of `[data-slot="navigation-menu-link"]` items and optional `[data-slot="navigation-menu-submenu"]` flyouts.
 
 ## Default
 
@@ -11,10 +11,10 @@ The navigation menu combines button triggers (`popovertarget`) with `.navigation
 
 ## API
 
-| Attribute        | Target                      | Values                        |
-| ---------------- | --------------------------- | ----------------------------- |
-| `popovertarget`  | Trigger                     | ID of target panel            |
-| `data-align`     | `.navigation-menu__popover` | `center`, `end`               |
-| `data-variant`   | `.navigation-menu__popover` | `submenu`                     |
-| `data-size`      | `.navigation-menu__popover` | `root`, `container`, `screen` |
-| `data-animation` | `.navigation-menu__popover` | `slide-down`                  |
+| Attribute        | Target                                  | Values                        |
+| ---------------- | --------------------------------------- | ----------------------------- |
+| `popovertarget`  | Trigger                                 | ID of target panel            |
+| `data-align`     | `[data-slot="navigation-menu-popover"]` | `center`, `end`               |
+| `data-variant`   | `[data-slot="navigation-menu-popover"]` | `submenu`                     |
+| `data-size`      | `[data-slot="navigation-menu-popover"]` | `root`, `container`, `screen` |
+| `data-animation` | `[data-slot="navigation-menu-popover"]` | `slide-down`                  |

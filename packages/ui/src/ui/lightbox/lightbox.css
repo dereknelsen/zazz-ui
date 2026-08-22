@@ -68,31 +68,33 @@
   }
 
   /* ---------------------------------------------------------------------------
-  INLINE GALLERY — .lightbox__gallery / .lightbox__stage
+  INLINE GALLERY — [data-slot="lightbox-gallery"] / [data-slot="lightbox-stage"]
   --------------------------------------------------------------------------- */
 
-  .lightbox__gallery {
+  [data-slot="lightbox-gallery"] {
     inline-size: 100%;
   }
 
-  .lightbox__stage {
+  [data-slot="lightbox-stage"] {
     position: relative;
     display: flex;
     flex-direction: column;
     gap: calc(var(--lightbox-thumb-gap) * 2);
   }
 
-  .lightbox__stage > [data-carousel="viewport"] {
+  [data-slot="lightbox-stage"] > [data-slot="carousel-viewport"] {
     border-radius: var(--lightbox-slide-radius);
     background: var(--card);
   }
 
-  .lightbox__stage > [data-carousel="viewport"] > [data-carousel="container"] {
+  [data-slot="lightbox-stage"]
+    > [data-slot="carousel-viewport"]
+    > [data-slot="carousel-container"] {
     border-radius: var(--lightbox-slide-radius);
     margin-inline-start: calc(var(--gap-sm) * -1);
   }
 
-  .lightbox__stage .lightbox__slide {
+  [data-slot="lightbox-stage"] [data-slot="lightbox-slide"] {
     appearance: none;
     border: none;
     background: none;
@@ -106,7 +108,7 @@
     padding-inline-start: var(--gap-sm);
   }
 
-  .lightbox__stage .lightbox__content {
+  [data-slot="lightbox-stage"] [data-slot="lightbox-content"] {
     --_ring-width: 0px;
 
     aspect-ratio: var(--lightbox-aspect-ratio);
@@ -125,7 +127,7 @@
   /* The inset ring paints on an overlay so it sits above the slide image (an
      inset box-shadow on the figure itself would hide behind the img); the
      ring width animates from 0 so the ring grows in smoothly on focus. */
-  .lightbox__stage .lightbox__content::after {
+  [data-slot="lightbox-stage"] [data-slot="lightbox-content"]::after {
     content: "";
     position: absolute;
     inset: 0;
@@ -136,17 +138,19 @@
       var(--default-transition-timing-function);
   }
 
-  .lightbox__stage .lightbox__slide:focus-visible {
+  [data-slot="lightbox-stage"] [data-slot="lightbox-slide"]:focus-visible {
     outline: none;
   }
 
-  .lightbox__stage .lightbox__slide:focus-visible .lightbox__content {
+  [data-slot="lightbox-stage"]
+    [data-slot="lightbox-slide"]:focus-visible
+    [data-slot="lightbox-content"] {
     --_ring-width: var(--ring-width);
 
     outline-color: transparent;
   }
 
-  .lightbox__stage .lightbox__slide img {
+  [data-slot="lightbox-stage"] [data-slot="lightbox-slide"] img {
     aspect-ratio: var(--lightbox-aspect-ratio);
     inline-size: 100%;
     block-size: 100%;
@@ -162,59 +166,59 @@
     opacity: var(--lightbox-img-opacity);
   }
 
-  .lightbox__stage .lightbox__slide:hover img {
+  [data-slot="lightbox-stage"] [data-slot="lightbox-slide"]:hover img {
     transform: scale(var(--lightbox-img-scale--hover));
     filter: var(--lightbox-img-filter--hover);
   }
 
-  .lightbox__stage .lightbox__slide:active img {
+  [data-slot="lightbox-stage"] [data-slot="lightbox-slide"]:active img {
     transform: scale(var(--lightbox-img-scale--active));
     filter: var(--lightbox-img-filter--active);
   }
 
   /* ---------------------------------------------------------------------------
-  thumbs — .lightbox__thumbs / .lightbox__thumb
+  thumbs — [data-slot="lightbox-thumbs"] / [data-slot="lightbox-thumb"]
   --------------------------------------------------------------------------- */
 
-  .lightbox__thumbs {
+  [data-slot="lightbox-thumbs"] {
     position: relative;
     z-index: 2;
   }
 
-  .lightbox__stage .lightbox__thumbs {
+  [data-slot="lightbox-stage"] [data-slot="lightbox-thumbs"] {
     display: flex;
     align-items: center;
     gap: var(--lightbox-thumb-gap);
   }
 
-  .lightbox__stage .lightbox__thumbs [data-carousel="viewport"] {
+  [data-slot="lightbox-stage"] [data-slot="lightbox-thumbs"] [data-slot="carousel-viewport"] {
     flex: 1;
     min-inline-size: 0;
     border-radius: var(--lightbox-thumb-radius);
   }
 
-  .lightbox__thumbs-prev,
-  .lightbox__thumbs-next {
+  [data-slot="lightbox-thumbs-prev"],
+  [data-slot="lightbox-thumbs-next"] {
     flex-shrink: 0;
   }
 
-  .lightbox__thumbs [data-carousel="container"] {
+  [data-slot="lightbox-thumbs"] [data-slot="carousel-container"] {
     gap: var(--lightbox-thumb-gap);
   }
 
   /* Gallery thumbs: fill track evenly, centered, max 6 columns */
-  .lightbox__stage .lightbox__thumbs [data-carousel="container"] {
+  [data-slot="lightbox-stage"] [data-slot="lightbox-thumbs"] [data-slot="carousel-container"] {
     justify-content: start;
   }
 
-  .lightbox__stage .lightbox__thumb {
+  [data-slot="lightbox-stage"] [data-slot="lightbox-thumb"] {
     max-inline-size: calc(
       (100% - (var(--lightbox-thumb-gap) * (var(--lightbox-thumb-columns) - 1))) /
         var(--lightbox-thumb-columns)
     );
   }
 
-  .lightbox__thumb-content {
+  [data-slot="lightbox-thumb-content"] {
     --_ring-width: 0px;
     --_ring: var(--ring-color);
 
@@ -232,7 +236,7 @@
 
   /* The inset ring paints on an overlay so it sits above the thumb image (an
      inset box-shadow on the button itself would hide behind the img). */
-  .lightbox__thumb-content::after {
+  [data-slot="lightbox-thumb-content"]::after {
     content: "";
     position: absolute;
     inset: 0;
@@ -243,7 +247,7 @@
       var(--default-transition-timing-function);
   }
 
-  .lightbox__thumb img {
+  [data-slot="lightbox-thumb"] img {
     opacity: var(--lightbox-thumb-opacity);
     transition:
       opacity var(--default-transition-duration) var(--default-transition-timing-function),
@@ -254,34 +258,34 @@
     object-fit: cover;
   }
 
-  .lightbox__thumb:hover img {
+  [data-slot="lightbox-thumb"]:hover img {
     opacity: var(--lightbox-thumb-opacity--active);
   }
 
-  .lightbox__thumb.is-active img {
+  [data-slot="lightbox-thumb"].is-active img {
     transform: scale(1.1);
     opacity: var(--lightbox-thumb-opacity--active);
   }
 
-  .lightbox__thumb:focus-visible {
+  [data-slot="lightbox-thumb"]:focus-visible {
     outline: none;
   }
 
-  .lightbox__thumb:focus-visible .lightbox__thumb-content {
+  [data-slot="lightbox-thumb"]:focus-visible [data-slot="lightbox-thumb-content"] {
     --_ring-width: var(--ring-width);
 
     outline-color: transparent;
   }
 
-  .lightbox__thumb:focus-visible img {
+  [data-slot="lightbox-thumb"]:focus-visible img {
     transform: scale(1);
   }
 
   /* ---------------------------------------------------------------------------
-  DIALOG — .lightbox__dialog (fullscreen dark overlay)
+  DIALOG — [data-slot="lightbox-dialog"] (fullscreen dark overlay)
   --------------------------------------------------------------------------- */
 
-  .lightbox__dialog {
+  [data-slot="lightbox-dialog"] {
     --lightbox-thumb-radius: var(--radius-sm);
     --dialog-background: transparent;
     --dialog-border: none;
@@ -291,62 +295,66 @@
     outline: none;
   }
 
-  .lightbox__dialog .lightbox__thumb img {
+  [data-slot="lightbox-dialog"] [data-slot="lightbox-thumb"] img {
     border-radius: var(--lightbox-thumb-radius);
   }
 
-  .lightbox__dialog .dialog__content {
+  [data-slot="lightbox-dialog"] [data-slot="dialog-content"] {
     grid-template-rows: 1fr;
     max-block-size: 100svh;
     block-size: 100svh;
     overflow: clip;
   }
 
-  .lightbox__dialog [data-carousel="root"] {
+  [data-slot="lightbox-dialog"] [data-carousel="root"] {
     display: grid;
     grid-template-rows: 1fr auto;
     block-size: 100%;
     max-block-size: 100svh;
   }
 
-  .lightbox__dialog [data-carousel="container"] {
+  [data-slot="lightbox-dialog"] [data-slot="carousel-container"] {
     block-size: 100%;
   }
 
-  .lightbox__dialog [data-carousel="viewport"] {
+  [data-slot="lightbox-dialog"] [data-slot="carousel-viewport"] {
     outline: none;
   }
 
-  .lightbox__dialog [data-carousel="root"] > [data-carousel="viewport"]:first-of-type {
+  [data-slot="lightbox-dialog"]
+    [data-carousel="root"]
+    > [data-slot="carousel-viewport"]:first-of-type {
     min-block-size: 0;
   }
 
-  .lightbox__dialog .lightbox__thumbs {
+  [data-slot="lightbox-dialog"] [data-slot="lightbox-thumbs"] {
     padding-block: var(--gap-sm);
     pointer-events: auto;
   }
 
-  .lightbox__dialog .lightbox__thumbs [data-carousel="container"] {
+  [data-slot="lightbox-dialog"] [data-slot="lightbox-thumbs"] [data-slot="carousel-container"] {
     justify-content: center;
     padding-block: var(--gap-xs);
   }
 
-  .lightbox__dialog .lightbox__thumb {
+  [data-slot="lightbox-dialog"] [data-slot="lightbox-thumb"] {
     --lightbox-thumb-border: var(--tint-200);
     --lightbox-thumb-border--active: var(--ring);
     flex: 0 0 var(--lightbox-thumb-size);
     inline-size: var(--lightbox-thumb-size);
   }
 
-  .lightbox__dialog .lightbox__thumb:focus-visible .lightbox__thumb-content {
+  [data-slot="lightbox-dialog"]
+    [data-slot="lightbox-thumb"]:focus-visible
+    [data-slot="lightbox-thumb-content"] {
     --_ring: var(--foreground);
   }
 
   /* ---------------------------------------------------------------------------
-  SLIDE — .lightbox__slide (dialog full-size slides)
+  SLIDE — [data-slot="lightbox-slide"] (dialog full-size slides)
   --------------------------------------------------------------------------- */
 
-  .lightbox__dialog .lightbox__slide {
+  [data-slot="lightbox-dialog"] [data-slot="lightbox-slide"] {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -355,7 +363,7 @@
     padding: clamp(var(--gap-sm), 4vi, var(--gap-lg));
   }
 
-  .lightbox__dialog .lightbox__content {
+  [data-slot="lightbox-dialog"] [data-slot="lightbox-content"] {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -367,7 +375,7 @@
     max-inline-size: 100%;
   }
 
-  .lightbox__dialog .lightbox__slide img {
+  [data-slot="lightbox-dialog"] [data-slot="lightbox-slide"] img {
     --lightbox-thumb-radius: var(--radius-xs);
 
     border-radius: var(--lightbox-slide-radius);
@@ -388,7 +396,7 @@
     pointer-events: auto;
   }
 
-  .lightbox__dialog .lightbox__slide.is-in-view.is-snapped img {
+  [data-slot="lightbox-dialog"] [data-slot="lightbox-slide"].is-in-view.is-snapped img {
     opacity: var(--lightbox-slide-opacity--end);
     transform: scale(var(--lightbox-slide-scale--end));
 
@@ -399,11 +407,11 @@
   }
 
   /* ---------------------------------------------------------------------------
-  NAV BUTTONS — .lightbox__prev / .lightbox__next (icon-size .button)
+  NAV BUTTONS — [data-slot="lightbox-prev"] / [data-slot="lightbox-next"] (icon-size .button)
   --------------------------------------------------------------------------- */
 
-  .lightbox__prev,
-  .lightbox__next {
+  [data-slot="lightbox-prev"],
+  [data-slot="lightbox-next"] {
     --button-ring-color: var(--foreground);
     --ring-opacity: 80%;
 
@@ -414,11 +422,11 @@
     z-index: 50;
   }
 
-  .lightbox__prev {
+  [data-slot="lightbox-prev"] {
     left: var(--gap-md);
   }
 
-  .lightbox__next {
+  [data-slot="lightbox-next"] {
     right: var(--gap-md);
   }
 
@@ -426,7 +434,7 @@
   CLOSE BUTTON — top-right
   --------------------------------------------------------------------------- */
 
-  .lightbox__close {
+  [data-slot="lightbox-close"] {
     pointer-events: auto;
     position: absolute;
     top: var(--gap-sm);
@@ -438,7 +446,7 @@
   COUNTER — slide count indicator (optional)
   --------------------------------------------------------------------------- */
 
-  .lightbox__counter {
+  [data-slot="lightbox-counter"] {
     position: absolute;
     bottom: var(--gap-sm);
     left: 50%;

@@ -1,5 +1,5 @@
 /**
- * dropdown.css — Dropdown (.dropdown, .dropdown__popover)
+ * dropdown.css — Dropdown (.dropdown, [data-slot="dropdown-popover"])
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, popover.css, button.css
@@ -33,13 +33,13 @@
     anchor-name: --dropdown-trigger;
   }
 
-  .dropdown__popover {
+  [data-slot="dropdown-popover"] {
     position-anchor: --dropdown-trigger;
     min-inline-size: var(--dropdown-min-inline-size);
     box-shadow: var(--dropdown-shadow);
   }
 
-  .dropdown__popover .button {
+  [data-slot="dropdown-popover"] .button {
     --button-radius: var(--dropdown-button-radius);
   }
 }

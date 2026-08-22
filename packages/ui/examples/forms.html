@@ -142,7 +142,7 @@
               <!-- Column one: text inputs, select, textarea -->
               <div class="flex flex-col gap-md">
                 <div class="field">
-                  <label class="field__label" for="f-name">Name</label>
+                  <label data-slot="field-label" for="f-name">Name</label>
                   <input
                     class="input"
                     id="f-name"
@@ -157,7 +157,7 @@
                 </div>
 
                 <div class="field">
-                  <label class="field__label" for="f-email">Email</label>
+                  <label data-slot="field-label" for="f-email">Email</label>
                   <input
                     class="input"
                     id="f-email"
@@ -172,18 +172,18 @@
                     enterkeyhint="next"
                     aria-describedby="f-email-hint"
                   />
-                  <div class="field__description">
-                    <span class="field__hint" id="f-email-hint"
+                  <div data-slot="field-description">
+                    <span data-slot="field-hint" id="f-email-hint"
                       >We'll never sell or share your email address.</span
                     >
-                    <span class="field__error" role="alert"
+                    <span data-slot="field-error" role="alert"
                       >Please enter a valid email address.</span
                     >
                   </div>
                 </div>
 
                 <div class="field">
-                  <label class="field__label" for="f-phone">Phone</label>
+                  <label data-slot="field-label" for="f-phone">Phone</label>
                   <input
                     class="input"
                     id="f-phone"
@@ -197,7 +197,7 @@
                 </div>
 
                 <div class="field">
-                  <label class="field__label" for="f-sort">Sort by</label>
+                  <label data-slot="field-label" for="f-sort">Sort by</label>
                   <select class="select" id="f-sort" name="sort">
                     <button>
                       <selectedcontent></selectedcontent>
@@ -213,7 +213,7 @@
                 </div>
 
                 <div class="field">
-                  <label class="field__label" for="f-message">Message</label>
+                  <label data-slot="field-label" for="f-message">Message</label>
                   <textarea
                     class="textarea"
                     id="f-message"
@@ -227,7 +227,7 @@
               <!-- Column two: input groups, password, choice groups, slider -->
               <div class="flex flex-col gap-md">
                 <div class="field">
-                  <label class="field__label" for="f-search">Search</label>
+                  <label data-slot="field-label" for="f-search">Search</label>
                   <label class="input-group">
                     <input
                       class="input"
@@ -240,7 +240,7 @@
                       spellcheck="false"
                       enterkeyhint="search"
                     />
-                    <span class="input-group__addon">
+                    <span data-slot="input-group-addon">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                         <rect width="256" height="256" fill="none" />
                         <circle
@@ -270,7 +270,7 @@
                 </div>
 
                 <div class="field">
-                  <label class="field__label" for="f-url">Website</label>
+                  <label data-slot="field-label" for="f-url">Website</label>
                   <label class="input-group">
                     <input
                       class="input"
@@ -286,27 +286,27 @@
                       enterkeyhint="go"
                       aria-describedby="f-url-hint"
                     />
-                    <span class="input-group__addon">
-                      <span class="input-group__text">https://</span>
+                    <span data-slot="input-group-addon">
+                      <span data-slot="input-group-text">https://</span>
                     </span>
-                    <span class="input-group__addon" data-align="inline-end">
+                    <span data-slot="input-group-addon" data-align="inline-end">
                       <button class="button" data-variant="primary" data-size="sm" type="submit">
                         Apply
                       </button>
                     </span>
                   </label>
-                  <div class="field__description">
-                    <span class="field__hint" id="f-url-hint"
+                  <div data-slot="field-description">
+                    <span data-slot="field-hint" id="f-url-hint"
                       >Where people can find you online.</span
                     >
-                    <span class="field__error" role="alert"
+                    <span data-slot="field-error" role="alert"
                       >Enter a valid URL, e.g. zazz.design.</span
                     >
                   </div>
                 </div>
 
                 <div class="field">
-                  <label class="field__label" for="f-password">Password</label>
+                  <label data-slot="field-label" for="f-password">Password</label>
                   <input-password>
                     <label class="password-group">
                       <input
@@ -320,9 +320,10 @@
                         placeholder="••••••••"
                         aria-describedby="f-password-hint f-password-warning"
                       />
-                      <span class="password-group__addon" data-align="inline-end">
+                      <span data-slot="password-group-addon" data-align="inline-end">
                         <button
-                          class="button password-group__toggle"
+                          class="button"
+                          data-slot="password-group-toggle"
                           type="button"
                           data-variant="ghost"
                           data-size="icon-sm"
@@ -331,7 +332,8 @@
                           aria-describedby="f-password-warning"
                         >
                           <svg
-                            class="password-group__icon password-group__icon--show"
+                            data-slot="password-group-icon"
+                            data-slot="password-group-icon-show"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 256 256"
                             aria-hidden="true"
@@ -357,7 +359,8 @@
                             />
                           </svg>
                           <svg
-                            class="password-group__icon password-group__icon--hide"
+                            data-slot="password-group-icon"
+                            data-slot="password-group-icon-hide"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 256 256"
                             aria-hidden="true"
@@ -403,11 +406,11 @@
                       </span>
                     </label>
                   </input-password>
-                  <div class="field__description">
-                    <span class="field__hint" id="f-password-hint"
+                  <div data-slot="field-description">
+                    <span data-slot="field-hint" id="f-password-hint"
                       >Use eight or more characters.</span
                     >
-                    <span class="field__error" role="alert"
+                    <span data-slot="field-error" role="alert"
                       >Password must be at least 8 characters.</span
                     >
                   </div>
@@ -421,11 +424,11 @@
                   <div class="flex flex-col gap-xs">
                     <label class="field" data-orientation="horizontal">
                       <input type="checkbox" name="preferences-newsletter" />
-                      <span class="field__label">Subscribe to the newsletter</span>
+                      <span data-slot="field-label">Subscribe to the newsletter</span>
                     </label>
                     <label class="field" data-orientation="horizontal">
                       <input type="checkbox" name="preferences-terms" checked />
-                      <span class="field__label">Accept terms &amp; conditions</span>
+                      <span data-slot="field-label">Accept terms &amp; conditions</span>
                     </label>
                   </div>
                 </fieldset>
@@ -435,15 +438,15 @@
                   <div class="flex flex-col gap-xs">
                     <label class="field" data-orientation="horizontal">
                       <input class="radio" type="radio" name="plan" value="starter" />
-                      <span class="field__label">Starter</span>
+                      <span data-slot="field-label">Starter</span>
                     </label>
                     <label class="field" data-orientation="horizontal">
                       <input class="radio" type="radio" name="plan" value="pro" checked />
-                      <span class="field__label">Pro</span>
+                      <span data-slot="field-label">Pro</span>
                     </label>
                     <label class="field" data-orientation="horizontal">
                       <input class="radio" type="radio" name="plan" value="team" />
-                      <span class="field__label">Team</span>
+                      <span data-slot="field-label">Team</span>
                     </label>
                   </div>
                 </fieldset>
@@ -453,17 +456,17 @@
                   <div class="flex flex-col gap-xs">
                     <label class="field" data-orientation="horizontal">
                       <input type="checkbox" role="switch" name="notifications-email" />
-                      <span class="field__label">Email notifications</span>
+                      <span data-slot="field-label">Email notifications</span>
                     </label>
                     <label class="field" data-orientation="horizontal">
                       <input type="checkbox" role="switch" name="notifications-2fa" checked />
-                      <span class="field__label">Two-factor authentication</span>
+                      <span data-slot="field-label">Two-factor authentication</span>
                     </label>
                   </div>
                 </fieldset>
 
                 <div class="field">
-                  <label class="field__label" for="f-volume">Volume</label>
+                  <label data-slot="field-label" for="f-volume">Volume</label>
                   <input
                     class="max-w-full"
                     id="f-volume"
