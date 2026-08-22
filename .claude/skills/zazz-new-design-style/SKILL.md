@@ -137,7 +137,7 @@ motifs), plus a reminder of the sentence-case house rule.>
 - **Semantic tokens only** — role tokens (`--primary`, `--muted`, `--border`…), `--gap-*`, `text-*`,
   `--radius-*`. Never hardcode hex, px, or rem in guidance; never name a raw scale step unless a role
   token can't express it.
-- **`data-variant`, not `.button-primary`.** Reference components by their real selector + `data-*` API.
+- **`data-variant`, not `.ui-button-primary`.** Reference components by their real selector + `data-*` API.
 - **No net-new CSS or tokens** in a style file — it composes the existing system, it doesn't extend it.
 - **Dark mode is free** — role tokens auto-swap; never tell a style to hand-write `.dark` overrides.
 - **Don't restate DESIGN.md/SKILL.md** — point to them. A style adds _direction_, not documentation.

@@ -11,7 +11,7 @@ description: Draggable, looping carousels built with Embla and the ui-carousel c
 
 ## Anatomy
 
-Define carousel structure with `data-carousel` roles. Set slide widths with `basis-*` utilities:
+The root is the `<ui-carousel>` element itself; interior parts are marked with `data-slot="carousel-{part}"`. Set slide widths with `basis-*` utilities:
 
 ```html
 <ui-carousel data-carousel-loop="true">
@@ -27,14 +27,16 @@ Define carousel structure with `data-carousel` roles. Set slide widths with `bas
 </ui-carousel>
 ```
 
-| `data-carousel` | Role                                             |
-| --------------- | ------------------------------------------------ |
-| `viewport`      | Visible window (required)                        |
-| `container`     | Flex track for slides                            |
-| `slide`         | Individual slide item                            |
-| `prev` / `next` | Navigation buttons (optional)                    |
-| `dots` / `dot`  | Pagination container and template dot (optional) |
-| `thumbs`        | Synchronized thumbnail container (optional)      |
+| `data-slot` value                 | Purpose                                          |
+| --------------------------------- | ------------------------------------------------ |
+| `carousel-viewport`               | Visible window (required)                        |
+| `carousel-container`              | Flex track for slides                            |
+| `carousel-slide`                  | Individual slide item                            |
+| `carousel-prev` / `carousel-next` | Navigation buttons (optional)                    |
+| `carousel-dots` / `carousel-dot`  | Pagination container and template dot (optional) |
+| `carousel-thumbs`                 | Synchronized thumbnail container (optional)      |
+
+`data-slot` is a space-separated token list, so an element can serve two primitives at once — a lightbox slide is also a carousel slide (`data-slot="lightbox-slide carousel-slide"`). Selectors match slots with `[data-slot~="carousel-slide"]`.
 
 ## Setup
 

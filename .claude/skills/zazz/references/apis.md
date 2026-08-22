@@ -38,13 +38,13 @@ The only external ordering: Embla-backed components need the Embla CDN UMD bundl
 These custom elements augment regular child markup; they do not use shadow DOM or templates,
 so existing Zazz classes and `data-*` hooks keep working.
 
-| Element         | Script              | Use for                                     | Notes                                                                                                                          |
-| --------------- | ------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `<ui-carousel>` | `carousel.js`       | Component carousels and carousel roots      | The element is the Embla root; put `data-carousel-*` options on it                                                             |
-| `<ui-lightbox>` | `lightbox.js`       | Inline gallery + fullscreen dialog lightbox | Coordinates gallery/dialog slide state; opening/closing still uses Invoker Commands                                            |
-| `<ui-password>` | `password-group.js` | Password show/hide toggle                   | Wrap `.ui-password-group`; optional `data-label-show` / `data-label-hide`; CSS swaps icons via ARIA                            |
-| `<ui-tabs>`     | `tabs.js`           | Radio-driven tabs with richer keyboard nav  | Carries `.ui-tabs`; adds orientation-aware arrows, Home/End, and wrap-around                                                   |
-| `<ui-toaster>`  | `toaster.js`        | Stacked toast notifications (top layer)     | Carries `.ui-toaster` + `popover="manual"`; fire via `command="--toast"` on any button or `window.Toaster.toast()/success()/…` |
+| Element         | Script              | Use for                                     | Notes                                                                                                        |
+| --------------- | ------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `<ui-carousel>` | `carousel.js`       | Component carousels and carousel roots      | The element is the Embla root; put `data-carousel-*` options on it                                           |
+| `<ui-lightbox>` | `lightbox.js`       | Inline gallery + fullscreen dialog lightbox | Coordinates gallery/dialog slide state; opening/closing still uses Invoker Commands                          |
+| `<ui-password>` | `password-group.js` | Password show/hide toggle                   | Wrap `.ui-password-group`; optional `data-label-show` / `data-label-hide`; CSS swaps icons via ARIA          |
+| `<ui-tabs>`     | `tabs.js`           | Radio-driven tabs with richer keyboard nav  | Enhances the CSS-only radio tabs with orientation-aware arrows, Home/End, and wrap-around                    |
+| `<ui-toaster>`  | `toaster.js`        | Stacked toast notifications (top layer)     | Needs `popover="manual"`; fire via `command="--toast"` on any button or `window.Toaster.toast()/success()/…` |
 
 Component preview iframes use `packages/ui/src/manifest.ts` to load scripts and expose a JS
 tab for these files. Custom elements are `display: inline` by default, so their component
@@ -79,24 +79,26 @@ inner element.
 ```html
 <!-- ✅ outer div reveals; inner card keeps its own hover transition -->
 <div data-reveal-each="slide-up">
-  <a class="card transition hover:border-primary">…</a>
-  <a class="card transition hover:border-primary">…</a>
+  <a class="bg-card border rounded-lg transition hover:border-primary">…</a>
+  <a class="bg-card border rounded-lg transition hover:border-primary">…</a>
 </div>
 
 <!-- ❌ same element does both — `transition` wipes out reveal's stagger delay -->
-<a class="card transition hover:border-primary" data-reveal="slide-up">…</a>
+<a class="bg-card border rounded-lg transition hover:border-primary" data-reveal="slide-up">…</a>
 ```
 
 ### Embla carousel — `embla.js` (`window.EmblaInit`) — requires the Embla CDN UMD bundles
 
-For component markup, use `<ui-carousel>` as the root and put config on that element.
-Lower-level/legacy markup may still use `data-carousel="root"`. In both cases, mark up child
-roles with `data-carousel="<role>"`.
+The root is `<ui-carousel>` (class form `.ui-carousel`); put config on that element. Mark up
+child roles as slots: `data-slot="carousel-<role>"`. `data-slot` is a space-separated token
+list, so a lightbox element can double as a carousel role
+(`data-slot="lightbox-slide carousel-slide"`).
 
-**Roles:** `root` (config holder) · `viewport` (required) · `container` · `slide` · `prev` ·
-`next` · `dots` · `dot` (template, cloned per snap) · `thumbs` (linked thumb carousel).
+**Role slots:** `carousel-viewport` (required) · `carousel-container` · `carousel-slide` ·
+`carousel-prev` · `carousel-next` · `carousel-dots` · `carousel-dot` (template, cloned per
+snap) · `carousel-thumbs` (linked thumb carousel).
 
-**Config on `<ui-carousel>` or `data-carousel="root"`** (kebab-case → Embla options via
+**Config on the carousel root** (kebab-case → Embla options via
 `Utils.parseDataAttributes`):
 
 | Attribute                                                 | Example                                                    | Purpose                                                                   |
@@ -106,11 +108,11 @@ roles with `data-carousel="<role>"`.
 | `data-carousel-autoplay` / `data-carousel-autoplay-*`     | `data-carousel-autoplay-delay="3000"`                      | Autoplay plugin                                                           |
 | `data-carousel-autoscroll` / `data-carousel-autoscroll-*` | `data-carousel-autoscroll-speed="2"`                       | AutoScroll plugin                                                         |
 | `data-carousel-classnames` / `data-carousel-classnames-*` | `data-carousel-classnames-snapped="is-snapped"`            | ClassNames plugin                                                         |
-| `data-carousel-thumbs-*` (on `thumbs`)                    | `data-carousel-thumbs-contain-scroll="keepSnaps"`          | thumb carousel options (defaults: containScroll keepSnaps, dragFree true) |
+| `data-carousel-thumbs-*` (on the `carousel-thumbs` slot)  | `data-carousel-thumbs-contain-scroll="keepSnaps"`          | thumb carousel options (defaults: containScroll keepSnaps, dragFree true) |
 | `data-carousel-start` (on a trigger w/ `commandfor`)      | `data-carousel-start="2"`                                  | open a dialog carousel at slide N                                         |
 
-Script-managed (don't set by hand): `data-carousel="root"` on `<ui-carousel>`,
-`data-carousel-init`, `data-carousel-start-index`. The script adds `.is-active` to the current
+Script-managed (don't set by hand): `data-carousel-init`,
+`data-carousel-start-index`. The script adds `.is-active` to the current
 dot/thumb and stores `_emblaApi` on the root. `<ui-carousel>` initializes on connect,
 defers while inside a closed `<dialog>`, and destroys its Embla instances on disconnect.
 

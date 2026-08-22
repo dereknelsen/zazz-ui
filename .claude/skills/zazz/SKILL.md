@@ -33,7 +33,7 @@ previews also expose the matching CSS and, for web components, the matching JS t
 - **`data-*` for variants** (shadcn-familiar): `data-variant`, `data-size`, `data-side`,
   `data-align`, `data-orientation`, `data-animation`, `data-layout`, `data-state`. The
   **default** variant is the _absence_ of the attribute. Write
-  `class="ui-button" data-variant="primary"` — never `.button-primary`.
+  `class="ui-button" data-variant="primary"` — never `.ui-button-primary`.
 - **Modern APIs do the work** (Popover, native `<dialog>`, Invoker Commands, anchor
   positioning, View Transitions, `<details>`). Polyfills are already loaded — preserve them.
 - **Composition variables** (`--_` prefix, `@property`-registered with `inherits: false`).
@@ -137,10 +137,11 @@ Author behavior in **HTML**; scripts enhance markup with light-DOM custom elemen
 data-attribute hooks. Use `<ui-carousel>` for component carousels, `<ui-lightbox>` for
 lightboxes, `<ui-password>` for password visibility toggles, `<ui-tabs>` for
 orientation-aware tab keyboard navigation, and `<ui-toaster>` for toast notifications
-(fired via `command="--toast"` or `window.Toaster`). Legacy lower-level Embla markup still uses
-`data-carousel="root"`; scroll reveals use `data-reveal-*`. Tooltips (`interestfor`), dialogs
-(`command`/`commandfor`), and popovers (`popovertarget`) use native invoker/popover APIs with
-polyfills already loaded.
+(fired via `command="--toast"` or `window.Toaster`). Every tag has an equivalent class form
+(`<ui-carousel>` ≡ `.ui-carousel`); interior parts are `data-slot="{component}-{part}"` hooks
+(e.g. `data-slot="carousel-viewport"`); scroll reveals use `data-reveal-*`. Tooltips
+(`interestfor`), dialogs (`command`/`commandfor`), and popovers (`popovertarget`) use native
+invoker/popover APIs with polyfills already loaded.
 
 - Zazz hooks, custom elements, and the `data-carousel-*` / `data-reveal-*` catalogs →
   **`references/apis.md`**.
@@ -165,7 +166,7 @@ patterns live in `PATTERNS.md`.
   **Don't** Title-Case or UPPERCASE unless asked (the eyebrow's caps come from `.text-eyebrow`).
 - **Do** use `var(--token)` and semantic utilities. **Don't** hardcode colors, spacing, radii,
   or type.
-- **Do** write `data-variant="primary"`. **Don't** invent `.button-primary` classes.
+- **Do** write `data-variant="primary"`. **Don't** invent `.ui-button-primary` classes.
 - **Do** let role tokens handle dark mode. **Don't** hand-write `.dark` overrides for
   token-handled values.
 - **Do** reuse utilities/primitives. **Don't** add net-new CSS until you've ruled out a

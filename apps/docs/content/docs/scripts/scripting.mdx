@@ -10,7 +10,7 @@ Scripts in `@zazzdesign/ui` live alongside their components: shared runtime in `
 ## Principles
 
 - **Vanilla JS:** Shipped `.js` files are standard ES modules. External dependencies (signals polyfill, Embla) resolve through the page's import map.
-- **HTML-driven:** Components read configuration from data attributes (`data-carousel-*`, `data-reveal-*`).
+- **HTML-driven:** Components read configuration from data attributes (`data-carousel-*`, `data-reveal-*`). Custom element props are `data-*` attributes too (e.g. `data-label-show` / `data-label-hide` on `<ui-password>`) — never bare attributes.
 - **Progressive enhancement:** Components fall back to native HTML behaviors if JavaScript is disabled.
 
 ## File template
@@ -45,11 +45,13 @@ Scripts expose an API on `window` and provide named exports for ES module consum
 | File            | Global             | Exports                                          |
 | --------------- | ------------------ | ------------------------------------------------ |
 | `utils.js`      | `window.Utils`     | `{ parseValue, parseDataAttributes }`            |
+| `signals.js`    | `window.Signals`   | `{ state, computed, effect }`                    |
 | `reveal.js`     | `window.Reveal`    | `Reveal` class                                   |
 | `embla.js`      | `window.EmblaInit` | `{ init, initRoot, addDotBtnsAndClickHandlers }` |
+| `toaster.js`    | `window.Toaster`   | `Toaster` imperative API                         |
 | `navigation.js` | None               | Side-effect only                                 |
 
-Web component scripts (`carousel.js`, `lightbox.js`, `password-group.js`, `tabs.js`) register custom elements automatically.
+Web component scripts (`carousel.js`, `lightbox.js`, `password-group.js`, `tabs.js`, `toaster.js`) register custom elements automatically.
 
 ## Auto-initialization
 
@@ -77,8 +79,9 @@ The module graph resolves loading order automatically via `index.js`:
 | `embla.js`          | `utils.js`, Embla packages | Embla packages resolve through the import map  |
 | `carousel.js`       | `embla.js`                 | `<ui-carousel>` custom element                 |
 | `lightbox.js`       | `carousel.js`              | `<ui-lightbox>` custom element                 |
-| `password-group.js` | None                       | `<ui-password>` custom element                 |
+| `password-group.js` | `signals.js`               | `<ui-password>` custom element                 |
 | `tabs.js`           | None                       | `<ui-tabs>` custom element                     |
+| `toaster.js`        | `signals.js`               | `<ui-toaster>` custom element                  |
 | `navigation.js`     | None                       | Page transitions; inert inside preview iframes |
 
 Ensure the import map appears in the DOM before `index.js`.

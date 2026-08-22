@@ -63,8 +63,8 @@ Reveal controls `transition-*` properties to handle delays and durations. To app
 
 ```html
 <div data-reveal-each="slide-up">
-  <a class="card transition hover:border-primary">Card 1</a>
-  <a class="card transition hover:border-primary">Card 2</a>
+  <a class="bg-card border rounded-md transition hover:border-primary">Card 1</a>
+  <a class="bg-card border rounded-md transition hover:border-primary">Card 2</a>
 </div>
 ```
 
@@ -86,9 +86,10 @@ Reveal controls `transition-*` properties to handle delays and durations. To app
 
 ```css
 :root {
-  --ui-reveal-global-duration: 600ms;
-  --ui-reveal-global-ease: ease-in-out;
-  --ui-reveal-global-distance: 2rem;
+  --ui-reveal-global-duration: var(--default-transition-duration);
+  --ui-reveal-global-ease: var(--default-transition-timing-function);
+  --ui-reveal-global-wait: 0ms;
+  --ui-reveal-global-distance: 1rem;
   --ui-reveal-global-grow: 0.97;
   --ui-reveal-global-shrink: 1.03;
 }

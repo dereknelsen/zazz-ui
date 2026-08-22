@@ -172,7 +172,7 @@ components:
     rounded: "{rounded.lg}"
     padding: 24px
   input:
-    backgroundColor: "{colors.ui-input}"
+    backgroundColor: "{colors.input}"
     textColor: "{colors.input-foreground}"
     rounded: "{rounded.md}"
     padding: 10px
@@ -390,7 +390,7 @@ Headings use `text-wrap: balance`. Body uses `text-wrap: pretty`. Tight-leading 
 
 **Two conventions:**
 
-- **Variants are data attributes:** `class="ui-button" data-variant="primary"` — never `button-primary`.
+- **Variants are data attributes:** `class="ui-button" data-variant="primary"` — never `.ui-button-primary`.
 - **Theming via local custom properties:** Components declare `--ui-button-background`, `--ui-button-radius`, etc. off theme roles. Variants re-point those locals.
 
 ### Buttons
@@ -407,7 +407,7 @@ Native `<dialog>` via Invoker Commands API. `--card` surface, `--shadow-md`, `--
 
 ### Dropdown & Navigation Menu
 
-Popover API + CSS anchor positioning. Native light-dismiss. Dropdown items are `.ui-button[data-variant="ghost"]`. Navigation menu supports mega-panels with a `__viewport` grid and rich `__link` rows (title + description); callouts are built from utilities (e.g. `bg-muted rounded-sm p-sm` + `.text-eyebrow`).
+Popover API + CSS anchor positioning. Native light-dismiss. Dropdown items are `.ui-button[data-variant="ghost"]`. Navigation menu supports mega-panels with a `data-slot="navigation-menu-viewport"` grid and rich `data-slot="navigation-menu-link"` rows (title + description); callouts are built from utilities (e.g. `bg-muted rounded-sm p-sm` + `.text-eyebrow`).
 
 ### Tabs
 
