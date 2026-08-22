@@ -1,5 +1,5 @@
 /**
- * tooltip.css — Tooltip (.ui-tooltip, [data-slot~="tooltip-content"])
+ * tooltip.css — Tooltip (ui-tooltip | .ui-tooltip, [data-slot~="tooltip-content"])
  *
  * @layer      variables, reset, components
  * @requires   layers.css, _variables.css, popover.css
@@ -112,12 +112,12 @@
     from interestfor are not polyfilled).
   =========================================================================== */
 
-  .ui-tooltip {
+  :where(ui-tooltip, .ui-tooltip) {
     anchor-scope: --ui-tooltip-trigger;
     display: inline-block;
   }
 
-  .ui-tooltip > :where([interestfor], [data-slot~="tooltip-trigger"]) {
+  :where(ui-tooltip, .ui-tooltip) > :where([interestfor], [data-slot~="tooltip-trigger"]) {
     anchor-name: --ui-tooltip-trigger;
   }
 

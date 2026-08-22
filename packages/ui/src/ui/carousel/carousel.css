@@ -33,7 +33,7 @@
     cursor: var(--ui-carousel-cursor--grabbing);
   }
 
-  :is(ui-carousel, .ui-carousel) {
+  :where(ui-carousel, .ui-carousel) {
     position: relative;
     isolation: isolate;
   }

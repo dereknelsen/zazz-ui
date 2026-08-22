@@ -1,5 +1,5 @@
 /**
- * dropdown.css — Dropdown (.ui-dropdown, [data-slot~="dropdown-popover"])
+ * dropdown.css — Dropdown (ui-dropdown | .ui-dropdown, [data-slot~="dropdown-popover"])
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, popover.css, button.css
@@ -24,12 +24,12 @@
   - Only dropdown-specific wiring lives here: anchor scope/name and nested buttons.
   =========================================================================== */
 
-  .ui-dropdown {
+  :where(ui-dropdown, .ui-dropdown) {
     anchor-scope: --ui-dropdown-trigger;
     display: inline-block;
   }
 
-  .ui-dropdown > [popovertarget] {
+  :where(ui-dropdown, .ui-dropdown) > [popovertarget] {
     anchor-name: --ui-dropdown-trigger;
   }
 

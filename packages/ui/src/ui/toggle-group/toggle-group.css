@@ -1,7 +1,7 @@
 /**
- * toggle-group.css — Toggle group (.ui-toggle-group)
+ * toggle-group.css — Toggle group (ui-toggle-group | .ui-toggle-group)
  *
- * The .ui-button-group structure applied to .ui-toggle children: a single-select set
+ * The :where(ui-button-group, .ui-button-group) structure applied to .ui-toggle children: a single-select set
  * (radios sharing a `name`) or a multi-select set (checkboxes) fused into one
  * segmented control. Inner corners are squared and the doubled border collapses to
  * one seam; the checked/focused/hovered toggle floats above its neighbours.
@@ -24,7 +24,7 @@
   collapsed with a -1px overlap.
   =========================================================================== */
 
-  .ui-toggle-group {
+  :where(ui-toggle-group, .ui-toggle-group) {
     display: flex;
     inline-size: fit-content;
     /* stretch so mixed-height children share one edge */
@@ -35,16 +35,17 @@
   TOGGLE GROUP — HORIZONTAL (default)
   =========================================================================== */
 
-  .ui-toggle-group:not([data-orientation="vertical"]) {
+  :where(ui-toggle-group, .ui-toggle-group):not([data-orientation="vertical"]) {
     flex-direction: row;
   }
 
-  .ui-toggle-group:not([data-orientation="vertical"]) > :not(:last-child) {
+  :where(ui-toggle-group, .ui-toggle-group):not([data-orientation="vertical"]) > :not(:last-child) {
     border-start-end-radius: 0;
     border-end-end-radius: 0;
   }
 
-  .ui-toggle-group:not([data-orientation="vertical"]) > :not(:first-child) {
+  :where(ui-toggle-group, .ui-toggle-group):not([data-orientation="vertical"])
+    > :not(:first-child) {
     /* pull onto the previous control's border so the seam is one line, not two */
     margin-inline-start: -1px;
     border-start-start-radius: 0;
@@ -55,16 +56,16 @@
   TOGGLE GROUP — VERTICAL
   =========================================================================== */
 
-  .ui-toggle-group[data-orientation="vertical"] {
+  :where(ui-toggle-group, .ui-toggle-group)[data-orientation="vertical"] {
     flex-direction: column;
   }
 
-  .ui-toggle-group[data-orientation="vertical"] > :not(:last-child) {
+  :where(ui-toggle-group, .ui-toggle-group)[data-orientation="vertical"] > :not(:last-child) {
     border-end-start-radius: 0;
     border-end-end-radius: 0;
   }
 
-  .ui-toggle-group[data-orientation="vertical"] > :not(:first-child) {
+  :where(ui-toggle-group, .ui-toggle-group)[data-orientation="vertical"] > :not(:first-child) {
     margin-block-start: -1px;
     border-start-start-radius: 0;
     border-start-end-radius: 0;
