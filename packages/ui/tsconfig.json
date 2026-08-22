@@ -4,7 +4,10 @@
     // no outDir), with comments preserved and .d.ts + maps for editor types.
     // erasableSyntaxOnly keeps the emitted JS line-for-line close to the source.
     "target": "ES2022",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    // ESNext.Disposable types `using` declarations (Explicit Resource Management).
+    // With target ES2022, tsc compiles `using` to try/finally — see
+    // CONVENTIONS.scripts.md ("Scoped resources").
+    "lib": ["ES2022", "DOM", "DOM.Iterable", "ESNext.Disposable"],
     "module": "esnext",
     "moduleResolution": "bundler",
     "moduleDetection": "force",
@@ -20,5 +23,8 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts"],
+  // Tests are type-checked via tsconfig.test.json and run by `vp test`; they
+  // must never be emitted next to the sources (src/ is published raw).
+  "exclude": ["src/**/*.test.ts"]
 }

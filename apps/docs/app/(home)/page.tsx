@@ -1,7 +1,7 @@
 import { cn } from "@/lib/cn";
 import Link from "next/link";
 import ZazzLineartBg from "@/components/zazz-lineart-bg";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "fumadocs-ui/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
 import { Logo } from "@/components/logo";
 

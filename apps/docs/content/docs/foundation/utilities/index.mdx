@@ -1,105 +1,69 @@
 ---
 title: Utilities
-description: Zazz's atomic utility classes, the override layer that wins by cascade, not specificity. How they're grouped, how the private composition variables work, and how responsive prefixes behave.
+description: Atomic utility classes in @layer zazz.utilities, zero-specificity architecture, and composition variables.
 ---
 
-Utilities are Zazz's atomic classes: one job each, applied in markup. They live in the **last**
-cascade layer (`@layer zazz.utilities`), so a utility always wins over a component rule. No
-`!important`, no specificity tricks. Every utility is wrapped in `:where()` for zero specificity,
-which means your own selectors can still override them when you need to.
+Utilities in Zazz are atomic classes declared in `@layer zazz.utilities`. They override component styles by layer position and are wrapped in `:where()` for zero specificity.
 
 <Preview src="utilities/compose" />
 
-Reach for utilities to compose layout and one-off overrides on top of components. They read the
-same semantic tokens (`--gap-md`, `--primary`, `--radius-lg`) the rest of the system does, so a
-utility-built panel stays on-brand and theme-aware for free.
+## Rules
 
-## The rules that govern every utility
+1. **Layer precedence:** Layer order is `variables`, `reset`, `legacy`, `zazz.components`, `zazz.utilities`, `migrations`. Utilities override component styles without `!important`.
+2. **Zero specificity:** Each rule uses `:where(.utility) { ... }` with `(0,0,0)` specificity so custom selectors can override them easily.
 
-The [why, and the everyday subset](/docs/core-concepts/utility-classes), live in Core concepts; this
-page is the reference. Two mechanics set up everything below:
+## Utility families
 
-1. **Cascade, not specificity.** Inside Zazz the sublayers run `variables, components, utilities`.
-   A plain `.button` rule lives in `components`; a `.rounded-full` utility lives in `utilities`
-   and wins. See [`_layers.css`](/docs/core-files/layers) for the full layer model.
-2. **Zero specificity.** Each rule is `:where(.utility) { … }`, specificity `(0,0,0)`. Utilities
-   override components by layer position, and _your_ rules override utilities by ordinary
-   specificity. No arms race.
+| Group                                                                                                                                           | Coverage                                                                               |
+| ----------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| [Layout](/docs/foundation/utilities/layout)                                                                                                     | display, position, overflow, z-index, aspect-ratio, object-fit, order, container bands |
+| [Flexbox](/docs/foundation/utilities/flexbox), [Grid](/docs/foundation/utilities/grid), [Gap & basis](/docs/foundation/utilities/gap-and-basis) | containers, alignment, spans, subgrid, gaps, basis fractions                           |
+| [Spacing](/docs/foundation/utilities/spacing), [Sizing](/docs/foundation/utilities/sizing)                                                      | padding, margin, negative margins, width, height, size, min/max constraints            |
+| [Text color](/docs/foundation/utilities/text-color), [Text & font](/docs/foundation/utilities/text-and-font)                                    | role colors, text alignment, transform, wrap, clamp, font families                     |
+| [Backgrounds](/docs/foundation/utilities/backgrounds), [Borders](/docs/foundation/utilities/borders)                                            | surface colors, overlays, borders, border-radius                                       |
+| [Effects](/docs/foundation/utilities/effects), [Color opacity](/docs/foundation/utilities/color-opacity)                                        | shadows, opacity, scale, transitions, channel-specific alpha                           |
+| [Interactivity](/docs/foundation/utilities/interactivity), [Hover states](/docs/foundation/utilities/hover)                                     | cursor, focus ring, screen readers, `hover:` variant prefixes                          |
+| [Responsive design](/docs/foundation/utilities/responsive-design)                                                                               | `@xs:`, `@sm:`, `@md:`, `@lg:`, `@xl:` container query prefixes                        |
 
-## How these pages are grouped
+## Internal composition and coordination variables
 
-The atomic classes in `src/base/_utilities.css` are organized here into the same families
-Tailwind uses, so you can scan by intent:
+### Non-inheriting composition variables
 
-| Group                                                                                                                           | Covers                                                                                            |
-| ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| [Layout](/docs/base/utilities/layout)                                                                                           | display, table-layout, caption-side, position, overflow, z-index, aspect-ratio, object-fit, order |
-| [Flexbox](/docs/base/utilities/flexbox) · [Grid](/docs/base/utilities/grid) · [Gap & basis](/docs/base/utilities/gap-and-basis) | flex/grid containers, alignment, spans, gaps, flex-basis                                          |
-| [Spacing](/docs/base/utilities/spacing) · [Sizing](/docs/base/utilities/sizing)                                                 | padding, margin · width, height, size, min/max                                                    |
-| [Text color](/docs/base/utilities/text-color) · [Text & font](/docs/base/utilities/text-and-font)                               | color roles · alignment, transform, wrap, clamp, family                                           |
-| [Backgrounds](/docs/base/utilities/backgrounds) · [Borders](/docs/base/utilities/borders)                                       | surface colors, overlays · border, radius                                                         |
-| [Effects](/docs/base/utilities/effects) · [Color opacity](/docs/base/utilities/color-opacity)                                   | shadow, opacity, scale, transition · channel alpha                                                |
-| [Interactivity](/docs/base/utilities/interactivity) · [Hover states](/docs/base/utilities/hover)                                | cursor, focus ring, screen readers · `hover:` variants                                            |
-| [Responsive design](/docs/base/utilities/responsive-design)                                                                     | the `@xs: @sm: @md: @lg: @xl:` container-query prefixes                                           |
-
-## Private composition and coordination variables
-
-Several utilities don't set a CSS property directly; instead they set an internal `--_`-prefixed
-variable that a shared rule reads. This is what lets you touch one edge, axis, or channel without
-disturbing the others. There are two kinds, and they behave differently on purpose.
-
-### Composition variables (registered, non-inheriting)
-
-Padding, margin, radius, and color-alpha utilities are built from `@property`-registered
-variables declared with `inherits: false`. A value set on one element therefore **never bleeds
-onto its descendants** through the shared composing rule, and the registration's `initial-value`
-doubles as the default (no `:root` fallback needed).
+Padding, margin, radius, and color-alpha utilities use `@property`-registered variables with `inherits: false`. Setting an edge or channel on an element does not leak into child elements:
 
 ```css
-/* One composing rule reads the vars… */
+/* Shared composing rule */
 :where(.p-0, .p-xs, .p-sm, .p-md, .p-lg, .p-xl, [class*="px-"], [class*="pl-"], [class*="pr-"]) {
   padding-inline: var(--_padding-inline-start) var(--_padding-inline-end);
 }
 
-/* …and each utility only sets the var it owns. */
+/* Side utility sets only its target variable */
 :where(.pl-0) {
   --_padding-inline-start: 0;
 }
 ```
 
-Because `p-md` sets all four edges and `pl-0` sets only the inline-start, `class="p-md pl-0"`
-resolves to _medium padding everywhere except a zeroed left_: the other three edges are
-untouched. The same pattern powers per-edge `rounded-*` and per-channel color opacity.
+| Variable                                                  | Syntax                        | Initial | Managed by                                            |
+| --------------------------------------------------------- | ----------------------------- | ------- | ----------------------------------------------------- |
+| `--_padding-{inline,block}-{start,end}`                   | `<length-percentage>`         | `0`     | `p-*`, `px-*`, `py-*`, `pt-*`, `pr-*`, `pb-*`, `pl-*` |
+| `--_margin-{inline,block}-{start,end}`                    | `<length-percentage> \| auto` | `0`     | `m-*`, `mx-*`, `my-*`, `mt-*`, `-m-*`, `mx-auto`      |
+| `--_radius-{top-left,top-right,bottom-right,bottom-left}` | `<length-percentage>`         | `0`     | `rounded-*`, `rounded-t-*`, `rounded-tl-*`            |
+| `--_text-alpha`, `--_background-alpha`, `--_border-alpha` | `<number>`                    | `1`     | `text-opacity-*`, `bg-opacity-*`, `border-opacity-*`  |
 
-| Variable                                                    | Registered syntax             | Initial | Set by                                         | Documented in                                       |
-| ----------------------------------------------------------- | ----------------------------- | ------- | ---------------------------------------------- | --------------------------------------------------- |
-| `--_padding-{inline,block}-{start,end}`                     | `<length-percentage>`         | `0`     | `p-* px-* py-* pt-* pr-* pb-* pl-*`            | [Spacing](/docs/base/utilities/spacing)             |
-| `--_margin-{inline,block}-{start,end}`                      | `<length-percentage> \| auto` | `0`     | `m-* mx-* my-* mt-* … -m-* mx-auto`            | [Spacing](/docs/base/utilities/spacing)             |
-| `--_radius-{top-left,top-right,bottom-right,bottom-left}`   | `<length-percentage>`         | `0`     | `rounded-* rounded-t-* rounded-tl-* …`         | [Borders](/docs/base/utilities/borders)             |
-| `--_text-alpha` · `--_background-alpha` · `--_border-alpha` | `<number>`                    | `1`     | `text-opacity-* bg-opacity-* border-opacity-*` | [Color opacity](/docs/base/utilities/color-opacity) |
+### Inheriting coordination variables
 
-### Coordination variables (inheriting on purpose)
+Unregistered variables that pass layout settings from container to children:
 
-A second set stays _inheriting_ (left unregistered, so default inheritance applies). These are
-set on a container and **read by descendants**: the gap variable feeds the gap-aware `basis-*`
-fractions and the responsive auto-fill grid, and the column/row counts let `col-span-*` clamp
-themselves so a span never exceeds the track count.
+| Variable                       | Default           | Set by                       | Consumed by                                |
+| ------------------------------ | ----------------- | ---------------------------- | ------------------------------------------ |
+| `--_gap`                       | `0px`             | `gap-*`                      | `basis-1/2` to `basis-1/6`, auto-fill grid |
+| `--_gap-x`, `--_gap-y`         | None              | `gap-x-*`, `gap-y-*`         | `column-gap`, `row-gap`                    |
+| `--_grid-cols`, `--_grid-rows` | `1`               | `grid-cols-N`, `grid-rows-N` | `col-span-*`, `row-span-*`, auto-fill grid |
+| `--_grid-col-min`              | `min(100%, 25ch)` | `.grid`                      | `grid-flow-row` auto-fill floor            |
 
-| Variable                        | Default                        | Set by                        | Read by                                    |
-| ------------------------------- | ------------------------------ | ----------------------------- | ------------------------------------------ |
-| `--_gap`                        | `0px` (on `:root`)             | `gap-*`                       | `basis-1/2…1/6`, `grid-flow-row` auto-fill |
-| `--_gap-x` · `--_gap-y`         | —                              | `gap-x-*` · `gap-y-*`         | `column-gap` · `row-gap`                   |
-| `--_grid-cols` · `--_grid-rows` | `1`                            | `grid-cols-N` · `grid-rows-N` | `col-span-*` · `row-span-*`, auto-fill     |
-| `--_grid-col-min`               | `min(100%, 25ch)` (on `.grid`) | `.grid`                       | `grid-flow-row` auto-fill track floor      |
+## Responsive and state prefixes
 
-These are covered alongside their classes in [Gap & basis](/docs/base/utilities/gap-and-basis) and
-[Grid](/docs/base/utilities/grid).
-
-## Responsive & state variants
-
-Every layout-related utility has container-query-prefixed variants (`@xs: @sm: @md: @lg: @xl:`) gated
-on centralized breakpoint flags the **body** publishes off the page width. Color, opacity, and scale
-utilities also ship `hover:` variants that need no JavaScript.
+Layout utilities support `@xs:` to `@xl:` container query prefixes. Color, opacity, and scale utilities support `hover:` prefixes.
 
 ```html
 <div class="flex flex-col @md:flex-row gap-md">
@@ -107,7 +71,3 @@ utilities also ship `hover:` variants that need no JavaScript.
   <main class="flex-1 hover:bg-muted transition">Content</main>
 </div>
 ```
-
-See [Responsive design](/docs/base/utilities/responsive-design) for the breakpoint table and exactly
-which families are available per breakpoint, and [Hover states](/docs/base/utilities/hover) for the
-full `hover:` catalog.

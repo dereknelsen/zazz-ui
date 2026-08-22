@@ -1,20 +1,15 @@
 ---
 title: Mobile menu
-description: Full-screen slide-in navigation dialog with nested accordion sections, using native HTML APIs.
+description: Fullscreen slide-in navigation dialog with nested accordion sections.
 ---
 
-The mobile menu composes a native `<dialog>` with nested `<details>` accordions. Open it with
-`command="show-modal"` and `commandfor="<id>"`, close with `command="close"` or light-dismiss
-via `closedby="any"`. No JavaScript needed.
-
-Internally it uses `.dialog[data-size="screen"]` for full-viewport coverage and
-`data-animation="slide-right"` for the entrance transition.
+The mobile menu combines a native `<dialog>` with nested `<details>` accordions. Trigger with `command="show-modal"` and `commandfor="<id>"`. Close with `command="close"` or backdrop light-dismiss via `closedby="any"`.
 
 ## Default
 
 <Preview src="mobile-menu/default" />
 
-## Structure
+## Markup template
 
 ```html
 <!-- Trigger -->
@@ -29,18 +24,18 @@ Internally it uses `.dialog[data-size="screen"]` for full-viewport coverage and
   closedby="any"
 >
   <div class="mobile-menu__viewport">
-    <div class="mobile-menu__header">…</div>
+    <div class="mobile-menu__header">...</div>
     <div class="mobile-menu__body">
       <div class="accordion">
         <details>
           <summary class="button" data-variant="ghost">Section</summary>
           <div class="flex flex-col pb-sm">
-            <!-- Links / nested accordions -->
+            <!-- Nav links -->
           </div>
         </details>
       </div>
     </div>
-    <div class="mobile-menu__footer">…</div>
+    <div class="mobile-menu__footer">...</div>
   </div>
 </dialog>
 ```
@@ -62,18 +57,10 @@ Internally it uses `.dialog[data-size="screen"]` for full-viewport coverage and
 
 ## API
 
-| Attribute        | Where          | Values                        |
+| Attribute        | Target         | Values                        |
 | ---------------- | -------------- | ----------------------------- |
-| `command`        | trigger        | `show-modal`, `close`         |
-| `commandfor`     | trigger        | id of the `<dialog>`          |
+| `command`        | Trigger        | `show-modal`, `close`         |
+| `commandfor`     | Trigger        | Target dialog ID              |
 | `data-size`      | `.mobile-menu` | `screen`                      |
 | `data-animation` | `.mobile-menu` | `slide-right`                 |
 | `closedby`       | `<dialog>`     | `any`, `closerequest`, `none` |
-
-## Composition notes
-
-- Add `.dark` to the dialog for a dark-themed menu regardless of page theme.
-- The body uses a nested `.accordion` with native `<details>` for expand/collapse sections.
-- Nested accordions (accordion inside accordion) automatically indent via `--mobile-menu-nested-accordion-padding-inline-start`.
-- The header and footer are `position: sticky` so they remain visible while the body scrolls.
-- Use `.button[data-variant="ghost"]` for nav links inside accordion panels.

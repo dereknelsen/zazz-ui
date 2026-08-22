@@ -13,7 +13,7 @@ import {
 } from "react";
 import { Loader2, MessageCircleIcon, RefreshCw, SearchIcon, Send, X } from "lucide-react";
 import { cn } from "../../lib/cn";
-import { buttonVariants } from "../ui/button";
+import { buttonVariants } from "fumadocs-ui/components/ui/button";
 import { useChat, type UseChatHelpers } from "@ai-sdk/react";
 import { DefaultChatTransport, type Tool, type UIToolInvocation } from "ai";
 import { Markdown } from "../markdown";

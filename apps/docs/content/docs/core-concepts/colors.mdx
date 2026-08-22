@@ -1,9 +1,9 @@
 ---
 title: Colors
-description: Color in Zazz is role-first. Pick a role like primary or muted-foreground and light/dark swap for free; drop to a numeric scale only when a role can't express it.
+description: Color in Zazz is role-first. Semantic roles adapt across light/dark themes; numeric scales serve as escape hatches.
 ---
 
-Color in Zazz is chosen by **role**, not by shade. Instead of "neutral-600," you reach for `muted-foreground`; instead of "indigo-600," you reach for `primary`. Because roles resolve through [`light-dark()`](/docs/core-concepts/dark-mode), a role-based design is correct in both themes with no extra work, and recoloring the brand is a one-line change.
+Zazz structures color around **roles** (`primary`, `muted-foreground`, `card`) rather than static color values. Roles resolve through [`light-dark()`](/docs/core-concepts/dark-mode), making them theme-ready by default.
 
 ```html
 <div class="bg-card text-card-foreground border border-border p-md rounded-lg">
@@ -13,67 +13,66 @@ Color in Zazz is chosen by **role**, not by shade. Instead of "neutral-600," you
 
 Every role ships `text-{role}`, `bg-{role}`, and `border-{role}` utilities.
 
-## The roles
+## Role reference
 
-### Surfaces and text, paired
+### Surface and text pairs
 
-Each surface has a matching foreground tuned for contrast on it:
+Each surface pairs with a high-contrast foreground:
 
-| Surface      | Foreground          | Use for                            |
+| Surface      | Foreground          | Use                                |
 | ------------ | ------------------- | ---------------------------------- |
-| `background` | `foreground`        | The page itself                    |
-| `card`       | `card-foreground`   | Cards, raised panels               |
-| `input`      | `input-foreground`  | Form control fills                 |
-| `muted`      | `muted-foreground`  | Dimmed surfaces and secondary text |
-| `faded`      | `faded-foreground`  | Faded surfaces and tertiary text   |
-| `border`     | `border-foreground` | Hairlines and dividers             |
+| `background` | `foreground`        | Page background                    |
+| `card`       | `card-foreground`   | Cards and raised containers        |
+| `input`      | `input-foreground`  | Form input controls                |
+| `muted`      | `muted-foreground`  | Dimmed surfaces and secondary copy |
+| `faded`      | `faded-foreground`  | Faded surfaces and tertiary copy   |
+| `border`     | `border-foreground` | Dividers and borders               |
 
-`muted` dims (it's darker than its surface in light mode); `faded` lightens. Pair a surface with its foreground and contrast takes care of itself.
+The `popover` role (`--popover`, `--popover-foreground`) is consumed directly by popover and dialog components without separate `bg-` utilities.
 
-The `popover` surface (`--popover` / `--popover-foreground`) is the one exception. It's a token that menu, tooltip, and dialog components read directly, with no `text-`/`bg-` utility of its own.
+### Brand roles
 
-### Brand
+- `primary`, `primary-foreground`
+- `secondary`, `secondary-foreground`
+- `tertiary`, `tertiary-foreground`
 
-`primary`, `secondary`, `tertiary`, each with a `-foreground` for text and icons placed on it.
+### Status roles
 
-### Status
+- `info`, `info-foreground`
+- `success`, `success-foreground`
+- `warning`, `warning-foreground`
+- `destructive`, `destructive-foreground`
 
-`info`, `success`, `warning`, `destructive`, same `-foreground` pairing. Use `destructive` for dangerous actions and error states.
+## Numeric scales and overlays
 
-## When a role won't do: scales and overlays
+Use numeric scales when you need a fixed color that does not switch with the theme:
 
-Reach past roles only when you need a specific shade: a fixed tint, a backdrop, a precise accent.
+- **Scales:** `--primary-50` to `--primary-950` (along with `secondary`, `tertiary`, `neutral`), `--white`, and `--black`. These exist as tokens only, without generated utility classes.
+- **Overlays:** `--shade-*` (darken, derived from neutral-950) and `--tint-*` (lighten, derived from white). These include `bg-shade-*` and `bg-tint-*` utility classes for modal backdrops and image scrims.
+- **Static colors:** `text-white`, `text-black`, `bg-white`, `bg-black`, `bg-transparent`.
 
-- **Brand & neutral scales:** `--primary-50`…`--primary-950` (and `--secondary-*`, `--tertiary-*`, `--neutral-*`), plus `--white` and `--black`. These are **tokens only, no utility classes**. Reach them in custom CSS or inline: `style="color: var(--primary-600)"`.
-- **Overlays:** `--shade-*` darkens (from neutral-950, ideal for modal backdrops like `--shade-800`) and `--tint-*` lightens (from white). `*-none` is transparent. Overlays _do_ ship `bg-shade-*` and `bg-tint-*` utilities, since dimming a surface is common.
-- **Absolute:** `text-white`, `text-black`, `bg-white`, `bg-black`, `bg-transparent`.
+## OKLCH color space
 
-A fixed scale step stays the same in both themes, which is exactly why roles, not scales, are the default.
+Zazz defines colors in [`oklch()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch). Relative colors (`oklch(from ...)`) and `color-mix()` generate hover tints and translucent overlays with perceptual uniformity.
 
-## Built on oklch
+## Element opacity vs color opacity
 
-Zazz colors are authored in [`oklch()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch), a perceptually uniform color space. That's what lets the system derive consistent variant tints and overlays with `oklch(from … )` and `color-mix()`: equal lightness steps actually look equal, and a single hue shift re-skins a whole ramp cleanly. `oklch()` is [Baseline](https://web.dev/baseline) and widely available.
-
-## Color alpha vs element opacity
-
-Two different fades, and it's worth not confusing them:
-
-- **Element opacity** (`opacity-{0,25,50,75,100}`) fades the whole element _and its children_.
-- **Color alpha** (`bg-opacity-*`, `text-opacity-*`, `border-opacity-*`) dims only that color channel, leaving children untouched. It's backed by `@property`-registered variables that don't inherit, so a faded background never bleeds into the text on top of it.
+- **Element opacity (`opacity-*`):** Sets CSS `opacity` on the element and all descendants.
+- **Color opacity (`bg-opacity-*`, `text-opacity-*`, `border-opacity-*`):** Sets `--_background-alpha` (or text/border alpha) without fading child elements.
 
 ```html
-<!-- the surface is translucent; the text stays fully opaque -->
-<div class="bg-primary bg-opacity-25 text-foreground">…</div>
+<!-- surface is translucent, text remains 100% opaque -->
+<div class="bg-primary bg-opacity-25 text-foreground">...</div>
 ```
 
-## Recoloring the brand
+## Changing brand colors
 
-Because everything reads tokens, changing your brand color is a single override. See [Theme variables](/docs/base/variables) for the three scopes:
+Update the `--primary` token on `:root`:
 
 ```css
 :root {
-  --primary: oklch(0.6 0.2 145); /* every primary surface, ring, and accent follows */
+  --primary: oklch(0.6 0.2 145);
 }
 ```
 
-To shift the entire ramp (so derived tints match), override the numeric scale instead, then point the role at it. For where to put these overrides, see [Adding custom styles](/docs/core-concepts/custom-styles).
+See [Theme variables](/docs/foundation/variables) and [Adding custom styles](/docs/core-concepts/custom-styles).

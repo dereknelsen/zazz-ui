@@ -1,109 +1,71 @@
 ---
 title: Layout
-description: "Display, table-layout, caption-side, position, overflow, z-index, aspect-ratio, object-fit, and order utilities: the box-level controls for how an element renders and sits in the flow."
+description: Display, positioning, overflow, z-index, aspect-ratio, object-fit, order, and container band utilities.
 ---
 
-Layout utilities control how a box renders and where it sits: its display mode, positioning,
-overflow, stacking, intrinsic ratio, and paint order, plus the page-level container wrappers
-below. For the responsive breakpoint system, see [Responsive design](/docs/base/utilities/responsive-design).
+Layout utilities control display mode, positioning, overflow, stacking, and page-level container bands.
 
 ## Containers
 
-`.container` is the page's width system. Put it on (or directly inside) a region (`main`, `section`,
-`header`, `footer`, `article`) and the region turns into a shared column grid. The container spans
-that grid and drops each of its children into a centered **band**, so one class handles page width,
-gutters, and which children sit wider or narrower, with no extra wrapper divs.
+Apply `.container` to `main`, `section`, `header`, `footer`, or `article` to create a centered layout grid with gutters:
 
 ```html
 <section class="container">
-  <h1>Centered in the large band, with page gutters.</h1>
-  <p>Body copy lines up to the same width.</p>
+  <h1>Large band title with gutters</h1>
+  <p>Body copy aligned to the container band.</p>
 </section>
 ```
 
-### The bands
+### Container bands
 
-Every container exposes the same set of bands. A band caps and centers its content while the region
-is wider than the cap, then fills to the gutters once it isn't, with no breakpoint snap in between.
-Children land in the `md` band unless you say otherwise.
+| Band           | Max width                  | Use                                      |
+| -------------- | -------------------------- | ---------------------------------------- |
+| `xs`           | `--breakpoint-xs` (40rem)  | Narrow column                            |
+| `sm`           | `--breakpoint-sm` (48rem)  | Forms, card layouts                      |
+| `md` (default) | `--breakpoint-md` (64rem)  | Standard content width                   |
+| `lg`           | `--breakpoint-lg` (80rem)  | Wide sections                            |
+| `xl`           | `--breakpoint-xl` (96rem)  | Dashboards and galleries                 |
+| `full`         | Region width minus gutters | Edge-aligned rows retaining page gutters |
+| `bleed`        | 100% viewport/region width | Full-bleed media and color bands         |
 
-| Band             | Caps at                     | Use                                       |
-| ---------------- | --------------------------- | ----------------------------------------- |
-| `xs`             | `--breakpoint-xs` (40rem)   | a very narrow column                      |
-| `sm`             | `--breakpoint-sm` (48rem)   | forms, sign-in cards                      |
-| `md` _(default)_ | `--breakpoint-md` (64rem)   | standard page width                       |
-| `lg`             | `--breakpoint-lg` (80rem)   | wide sections                             |
-| `xl`             | `--breakpoint-xl` (96rem)   | wide dashboards and galleries             |
-| `full`           | region width, minus gutters | edge-aligned rows that still keep gutters |
-| `bleed`          | edge to edge, no gutter     | full-bleed media and color bands          |
-
-### Set the default band
-
-`data-container` on the container changes the band every child lands in:
+### Default band
 
 ```html
-<!-- the whole section caps at the medium width -->
 <section class="container" data-container="md">
-  <h2>A narrower section</h2>
-  <p>Everything here lines up to the md band.</p>
+  <h2>Medium width section</h2>
+  <p>Children align to the md band.</p>
 </section>
 ```
 
-### Break a child out
-
-`data-container` on a direct child overrides that one child's band, so it can run wider (or tuck
-narrower) than its siblings without leaving the container:
+### Child band overrides
 
 ```html
 <section class="container">
-  <h1>Title in the large band</h1>
-  <p>Reading-width copy.</p>
-
-  <!-- this figure runs edge to edge -->
+  <h1>Title in default band</h1>
   <figure data-container="bleed">
     <img src="/wide.jpg" alt="" />
   </figure>
 </section>
 ```
 
-The default and the override draw from the same band names, so an `md` section can hold one `full`
-row and an `lg` section can hold one `sm` form. Every band is a pair of named grid lines in a single
-shared column template, which is what lets a child jump to any of them by name.
+### Article reading measure
 
-### The article variant
-
-For long-form reading, add `data-variant="article"`. Instead of a band, the container becomes a
-centered column measured in `ch` for a comfortable line length. This replaces the old `.article`
-class.
+Add `data-variant="article"` to center content constrained by `ch` units:
 
 ```html
-<article class="container" data-variant="article">
-  <h1>A reading column</h1>
-  <p>Measured for a comfortable line length and centered with page gutters.</p>
+<article class="container" data-variant="article" data-container="md">
+  <h1>Reading column</h1>
+  <p>Constrained to 65ch line length with gutters.</p>
 </article>
 ```
 
-`data-container` picks the measure:
-
-| Value            | Width |
-| ---------------- | ----- |
-| `xs`             | 45ch  |
-| `sm`             | 50ch  |
-| `md`             | 65ch  |
-| `lg` _(default)_ | 70ch  |
-| `xl`             | 75ch  |
-
-### Responsive containers
-
-The container takes the same breakpoint variants as the other layout utilities (see
-[Responsive design](/docs/base/utilities/responsive-design)). A `@md:container` is a plain block below
-its breakpoint and becomes a banded grid from `md` up; `@max-md:container` does the reverse, banding
-only below `md`. Both forms work with `data-variant="article"` too.
-
-```html
-<!-- a banded grid from md up, a plain block below it -->
-<section class="@md:container">…</section>
-```
+| Value          | Measure |
+| -------------- | ------- |
+| `xs`           | 45ch    |
+| `sm`           | 50ch    |
+| `md`           | 65ch    |
+| `lg` (default) | 70ch    |
+| `xl`           | 75ch    |
 
 ## Display
 
@@ -117,25 +79,12 @@ only below `md`. Both forms work with `data-variant="article"` too.
 | `grid`         | `display: grid`         |
 | `hidden`       | `display: none`         |
 
-`flex` and `grid` are covered in depth in [Flexbox](/docs/base/utilities/flexbox) and
-[Grid](/docs/base/utilities/grid). `block`, `flex`, `inline-flex`, `grid`, and `hidden` are the
-display values that also have responsive variants ([Responsive design](/docs/base/utilities/responsive-design)).
-
 ### Visibility
-
-`visibility` keeps an element's box (and its space) but toggles its paint, distinct from
-`hidden`, which removes the box entirely.
 
 | Class       | Declaration           |
 | ----------- | --------------------- |
 | `visible`   | `visibility: visible` |
 | `invisible` | `visibility: hidden`  |
-
-## Tables
-
-Table layout and caption placement are handled by the [Table component](/docs/components/table),
-not utilities: `data-layout="fixed"` on the `.table` sets `table-layout: fixed` (omit for
-`auto`), and `data-side="top"` on the `<caption>` moves it above the table (omit for bottom).
 
 ## Position
 
@@ -149,19 +98,16 @@ not utilities: `data-layout="fixed"` on the `.table` sets `table-layout: fixed` 
 | `fixed`    | `position: fixed`    |
 | `sticky`   | `position: sticky`   |
 
-### Inset & edge offsets
+### Insets and offsets
 
-Offsets use the **semantic gap scale** (`--gap-xs` … `--gap-xl`), so a positioned element's
-offset matches the spacing rhythm of the rest of the page. `inset-*` sets all four edges at once.
-
-| Class                   | Declaration                          |
-| ----------------------- | ------------------------------------ |
-| `inset-0`               | `top/right/bottom/left: 0`           |
-| `inset-xs … inset-xl`   | all four edges `= var(--gap-{size})` |
-| `top-xs … top-xl`       | `top: var(--gap-{size})`             |
-| `right-xs … right-xl`   | `right: var(--gap-{size})`           |
-| `bottom-xs … bottom-xl` | `bottom: var(--gap-{size})`          |
-| `left-xs … left-xl`     | `left: var(--gap-{size})`            |
+| Class                      | Declaration                          |
+| -------------------------- | ------------------------------------ |
+| `inset-0`                  | `top/right/bottom/left: 0`           |
+| `inset-xs` to `inset-xl`   | all four edges = `var(--gap-{size})` |
+| `top-xs` to `top-xl`       | `top: var(--gap-{size})`             |
+| `right-xs` to `right-xl`   | `right: var(--gap-{size})`           |
+| `bottom-xs` to `bottom-xl` | `bottom: var(--gap-{size})`          |
+| `left-xs` to `left-xl`     | `left: var(--gap-{size})`            |
 
 ```html
 <div class="relative">
@@ -173,65 +119,52 @@ offset matches the spacing rhythm of the rest of the page. `inset-*` sets all fo
 
 <Preview src="utilities/overflow" />
 
-| Class              | Declaration                                                                       |
-| ------------------ | --------------------------------------------------------------------------------- |
-| `overflow-visible` | `overflow: visible`                                                               |
-| `overflow-hidden`  | `overflow: hidden`                                                                |
-| `overflow-clip`    | `overflow: clip`                                                                  |
-| `overflow-auto`    | `overflow: auto`                                                                  |
-| `overflow-x-auto`  | `overflow-x: auto; overflow-y: clip`                                              |
-| `overflow-y-auto`  | `overflow-y: auto; overflow-x: clip`                                              |
-| `no-scrollbar`     | hides the scrollbar while keeping scroll (Firefox, IE, and `::-webkit-scrollbar`) |
+| Class              | Declaration                                                    |
+| ------------------ | -------------------------------------------------------------- |
+| `overflow-visible` | `overflow: visible`                                            |
+| `overflow-hidden`  | `overflow: hidden`                                             |
+| `overflow-clip`    | `overflow: clip`                                               |
+| `overflow-auto`    | `overflow: auto`                                               |
+| `overflow-x-auto`  | `overflow-x: auto; overflow-y: clip`                           |
+| `overflow-y-auto`  | `overflow-y: auto; overflow-x: clip`                           |
+| `no-scrollbar`     | Hides scrollbar display while keeping scrollable functionality |
 
-`no-scrollbar` is a modifier. Pair it with one of the scrolling classes (e.g.
-`overflow-y-auto no-scrollbar`) when you want scroll without the visible track.
+## Stacking (z-index)
 
-## Z-index
-
-A small, intentional stacking scale plus an isolation helper. `z-isolate` creates a new stacking
-context (`isolation: isolate`) so a subtree's z-indexes can't escape it.
-
-| Class                              | Declaration          |
-| ---------------------------------- | -------------------- |
-| `z-isolate`                        | `isolation: isolate` |
-| `z-0`                              | `z-index: 0`         |
-| `z-10` `z-20` `z-30` `z-40` `z-50` | `z-index: 10 … 50`   |
+| Class                                  | Declaration          |
+| -------------------------------------- | -------------------- |
+| `z-isolate`                            | `isolation: isolate` |
+| `z-0`                                  | `z-index: 0`         |
+| `z-10`, `z-20`, `z-30`, `z-40`, `z-50` | `z-index: 10 ... 50` |
 
 ## Aspect ratio
 
 <Preview src="utilities/aspect-ratio" />
 
-Named ratios for media boxes, with no custom values to remember.
-
-| Class               | Ratio      | Use                 |
+| Class               | Ratio      | Typical use         |
 | ------------------- | ---------- | ------------------- |
-| `aspect-square`     | `1 / 1`    | avatars, thumbnails |
-| `aspect-landscape`  | `3 / 2`    | photography         |
-| `aspect-portrait`   | `2 / 3`    | portrait media      |
-| `aspect-widescreen` | `16 / 9`   | video               |
-| `aspect-univisium`  | `2 / 1`    | wide editorial      |
-| `aspect-anamorphic` | `2.39 / 1` | cinematic           |
+| `aspect-square`     | `1 / 1`    | Avatars, thumbnails |
+| `aspect-landscape`  | `3 / 2`    | Photography         |
+| `aspect-portrait`   | `2 / 3`    | Portrait media      |
+| `aspect-widescreen` | `16 / 9`   | Video               |
+| `aspect-univisium`  | `2 / 1`    | Editorial media     |
+| `aspect-anamorphic` | `2.39 / 1` | Cinematic video     |
 
 ## Object fit
 
 <Preview src="utilities/object-fit" />
 
-Controls how a replaced element (`<img>`, `<video>`) fills its box. Pair with an
-[aspect ratio](#aspect-ratio) or explicit [size](/docs/base/utilities/sizing).
-
-| Class               | Declaration                                   |
-| ------------------- | --------------------------------------------- |
-| `object-contain`    | `object-fit: contain` (fit inside, letterbox) |
-| `object-cover`      | `object-fit: cover` (fill, crop)              |
-| `object-fill`       | `object-fit: fill` (stretch)                  |
-| `object-none`       | `object-fit: none` (intrinsic size)           |
-| `object-scale-down` | `object-fit: scale-down`                      |
+| Class               | Declaration              |
+| ------------------- | ------------------------ |
+| `object-contain`    | `object-fit: contain`    |
+| `object-cover`      | `object-fit: cover`      |
+| `object-fill`       | `object-fit: fill`       |
+| `object-none`       | `object-fit: none`       |
+| `object-scale-down` | `object-fit: scale-down` |
 
 ## Order
 
 <Preview src="utilities/order" />
-
-Reorder a flex or grid child visually without touching source order.
 
 | Class         | Declaration    |
 | ------------- | -------------- |

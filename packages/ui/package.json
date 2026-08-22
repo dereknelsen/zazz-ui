@@ -17,7 +17,8 @@
   "files": [
     "dist",
     "src",
-    "examples"
+    "examples",
+    "!src/**/*.test.ts"
   ],
   "type": "module",
   "sideEffects": true,
@@ -31,6 +32,10 @@
     "./index.css": "./src/index.css",
     "./zazz.css": "./dist/zazz.css",
     "./zazz.js": "./dist/zazz.js",
+    "./head": {
+      "types": "./src/head.d.ts",
+      "default": "./src/head.js"
+    },
     "./manifest": {
       "types": "./src/manifest.d.ts",
       "default": "./src/manifest.js"
@@ -43,15 +48,24 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json && vp pack",
+    "build": "tsc -p tsconfig.json && vp pack && node scripts/generate-heads.mjs",
     "dev": "tsc -p tsconfig.json --watch",
-    "test": "tsc -p tsconfig.json --noEmit",
+    "heads": "node scripts/generate-heads.mjs",
+    "test": "tsc -p tsconfig.test.json && vp test run",
     "check": "vp check",
     "prepublishOnly": "vp run build"
+  },
+  "dependencies": {
+    "embla-carousel": "catalog:",
+    "embla-carousel-auto-scroll": "catalog:",
+    "embla-carousel-autoplay": "catalog:",
+    "embla-carousel-class-names": "catalog:",
+    "signal-polyfill": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",
     "bumpp": "^11.1.0",
+    "happy-dom": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:"

@@ -1,13 +1,9 @@
 ---
 title: Text & font
-description: "Alignment, transform, font family, text wrapping, line clamping, leading, and tabular figures: the typographic helpers in the utilities layer."
+description: Text alignment, transform, font family, text wrapping, line clamping, and tabular figures.
 ---
 
-These are the typographic helper utilities in `_utilities.css`: alignment, casing, font family,
-and fine-grained text-flow controls. The fluid **size scale** (`text-h1`, `text-sm`, …) and
-**weight** utilities live in the type system (see
-[Typography in the overview](/docs/getting-started/overview#typography)), and [text color](/docs/base/utilities/text-color)
-covers the color roles.
+Typographic utility classes in `_utilities.css` handle text alignment, casing, font family, and line wrapping.
 
 ## Text align
 
@@ -18,7 +14,7 @@ covers the color roles.
 | `text-right`   | `text-align: right`   |
 | `text-justify` | `text-align: justify` |
 
-All four have responsive variants, e.g. `text-center @md:text-left`.
+All four classes support responsive prefixes (e.g. `text-center @md:text-left`).
 
 ## Text transform
 
@@ -29,15 +25,7 @@ All four have responsive variants, e.g. `text-center @md:text-left`.
 | `capitalize`  | `text-transform: capitalize` |
 | `normal-case` | `text-transform: none`       |
 
-<Callout type="info">
-  House style is **sentence case** for UI text: headings, buttons, links, labels, and nav. Reach for
-  `uppercase` only when a design genuinely calls for it (the eyebrow style already handles its own
-  caps).
-</Callout>
-
 ## Font family
-
-Three stacks, mapped to the family tokens.
 
 | Class        | Token                     |
 | ------------ | ------------------------- |
@@ -45,21 +33,16 @@ Three stacks, mapped to the family tokens.
 | `font-serif` | `var(--font-heading)`     |
 | `font-mono`  | `var(--font-family-mono)` |
 
-## Text wrapping & overflow
+## Text wrapping and overflow
 
-Modern text-flow controls for cleaner typesetting and truncation.
-
-| Class          | Declaration                          | Use                                     |
-| -------------- | ------------------------------------ | --------------------------------------- |
-| `text-balance` | `text-wrap: balance`                 | even line lengths in short headings     |
-| `text-pretty`  | `text-wrap: pretty`                  | avoid orphans in body copy              |
-| `leading-none` | `line-height: 1`                     | tight, single-line labels               |
-| `tabular-nums` | `font-variant-numeric: tabular-nums` | aligning figures in tables and counters |
+| Class          | Declaration                          | Purpose                                |
+| -------------- | ------------------------------------ | -------------------------------------- |
+| `text-balance` | `text-wrap: balance`                 | Balanced line breaks in short headings |
+| `text-pretty`  | `text-wrap: pretty`                  | Prevent orphan words in body text      |
+| `leading-none` | `line-height: 1`                     | Single-line labels                     |
+| `tabular-nums` | `font-variant-numeric: tabular-nums` | Align numeric columns in tables/data   |
 
 ### Line clamp
-
-Truncate to a fixed number of lines with an ellipsis. `line-clamp-1` … `line-clamp-6` set the
-line count.
 
 | Class          | Lines |
 | -------------- | ----- |
@@ -71,8 +54,8 @@ line count.
 | `line-clamp-6` | 6     |
 
 ```html
-<h3 class="text-h3 text-balance">A headline that wraps onto evenly balanced lines</h3>
+<h3 class="text-h3 text-balance">Balanced headline wrapping</h3>
 <p class="text-sm text-muted-foreground line-clamp-2">
-  A two-line teaser that truncates with an ellipsis once it runs past the second line…
+  Summary truncated with an ellipsis after two lines...
 </p>
 ```

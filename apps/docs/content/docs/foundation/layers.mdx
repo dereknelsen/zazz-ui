@@ -1,9 +1,9 @@
 ---
 title: layers.css
-description: "One line of CSS that makes the whole system predictable: the cascade-layer order that lets utilities beat components without a single !important."
+description: The cascade layer architecture that lets utility classes override components without specificity conflicts.
 ---
 
-`_layers.css` is the smallest file in Zazz and the most important. It declares the order of the [cascade layers](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer) every other stylesheet writes into, and that order, not selector specificity, decides which rule wins.
+`_layers.css` defines the [cascade layer](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer) order for the framework. Layer order determines rule precedence instead of selector specificity.
 
 ```css
 @layer variables, reset, legacy, zazz, migrations;
@@ -13,81 +13,66 @@ description: "One line of CSS that makes the whole system predictable: the casca
 }
 ```
 
-That's the entire file. Because it has to establish the order before any layer has content, it loads first; `index.css` `@import`s it ahead of everything else.
+`index.css` imports `_layers.css` first to establish this ordering before rules are defined.
 
-## Why layers instead of specificity
+## Layer precedence
 
-In ordinary CSS, the more specific selector wins. That's why you end up with `.card .button.is-primary` and the occasional `!important`: you're escalating specificity to override something.
-
-Cascade layers change the rule: **a later layer beats an earlier layer regardless of specificity.** A single-class utility in `utilities` overrides a multi-selector component rule in `components`, every time, with no specificity tricks.
+Later layers override earlier layers regardless of selector specificity:
 
 ```html
-<!-- .button sets its own background in @layer zazz.components.
-     .bg-primary sets one in @layer zazz.utilities — and wins, cleanly. -->
+<!-- .button sets background in @layer zazz.components.
+     .bg-primary sets background in @layer zazz.utilities and overrides it cleanly. -->
 <button class="button bg-primary">Save</button>
 ```
 
-This is the mechanism behind Zazz's [golden rule](/docs/core-concepts/utility-classes): compose with utilities and they always have the final say, so you rarely write custom CSS to override a component.
+## Layer definitions
 
-## The layer order
+Priority order runs from lowest to highest:
 
-Five top-level layers, reading from lowest priority to highest:
+| Layer             | Purpose                                                | File                                                                    |
+| ----------------- | ------------------------------------------------------ | ----------------------------------------------------------------------- |
+| `variables`       | Design tokens on `:root`                               | [`_variables.css`](/docs/foundation/variables) + component token blocks |
+| `reset`           | Element baselines and control resets                   | [`_reset.css`](/docs/foundation/reset)                                  |
+| `legacy`          | Existing pre-Zazz CSS in migrations                    | App entry stylesheet                                                    |
+| `zazz.components` | Component rules                                        | `ui/<name>/<name>.css`                                                  |
+| `zazz.utilities`  | Atomic utility classes                                 | [`_utilities.css`](/docs/foundation/utilities)                          |
+| `migrations`      | Temporary translation shims for legacy class migration | Custom `migrations.css`                                                 |
 
-| Layer        | Holds                                                                                                    | File                                                                                 |
-| ------------ | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| `variables`  | Design tokens, the `:root` custom properties everything reads                                            | [`_variables.css`](/docs/base/variables) + each component's `@layer variables` block |
-| `reset`      | Native-element baselines and re-skinned controls                                                         | [`_reset.css`](/docs/base/reset)                                                     |
-| `legacy`     | Your existing (pre-Zazz) CSS, imported with `layer(legacy)`. Zazz overrides it wherever the two overlap. | your app's entry stylesheet                                                          |
-| `zazz`       | Everything Zazz ships, as two sublayers: `components` then `utilities`                                   | `ui/_*.css` (components) and [`_utilities.css`](/docs/core-concepts/utility-classes) |
-| `migrations` | Temporary shims for old markup during migration. On top, so it can override anything mid-rewrite.        | optional `migrations.css` you add                                                    |
+Inside `zazz`, `utilities` follows `components`, guaranteeing utility overrides.
 
-Inside `zazz`, `utilities` comes after `components`, so a utility class always beats a component rule. The full priority order, lowest to highest, is `variables`, `reset`, `legacy`, `zazz.components`, `zazz.utilities`, `migrations`.
+## Unlayered CSS
 
-Two parts of the order are worth calling out. **`variables` and `reset` are their own top-level layers, below the rest of Zazz**, so component and utility rules always outrank both design-token defaults and native-element baselines. And **`legacy` sits above them but below `zazz`,** so the framework wins over your pre-Zazz CSS wherever they overlap, while `migrations` sits at the very top so a translation shim can win over even a utility class for old markup that hasn't been rewritten yet.
-
-`@property` registrations live inline in [`_variables.css`](/docs/base/variables). Registration is layer-independent, but the tokens it types are consumed throughout.
-
-## Unlayered styles beat everything
-
-There's one level above all five layers: **unlayered CSS.** Any rule you write outside a `@layer` block overrides every layered rule, no matter how specific the layered selector is.
+Rules declared outside of any `@layer` override all layered rules regardless of specificity:
 
 ```css
-/* No @layer wrapper — this beats Zazz's components, utilities, and migrations. */
+/* Unlayered rule overrides layered components and utilities */
 .button {
   border-radius: 0;
 }
 ```
 
-That makes unlayered CSS the ultimate escape hatch and an easy footgun. Prefer overriding a token, or adding your rule to the right layer, so you stay inside the system. See [Adding custom styles](/docs/core-concepts/custom-styles). Reach for unlayered CSS only when you deliberately want to trump everything.
-
-## Beating Zazz utilities
-
-When overriding a token isn't enough and an app rule has to win over a utility, declare your own layer **after** Zazz instead of dropping to unlayered CSS. The first `@layer` statement sets the order, so a name added at the end outranks everything Zazz ships:
+To create custom overrides that remain structured, declare an app layer after Zazz instead:
 
 ```css
 @layer variables, reset, legacy, zazz, migrations, app;
 
 @layer app {
-  /* beats Zazz utilities, without the footgun of unlayered CSS */
   .button {
     border-radius: 0;
   }
 }
 ```
 
-This keeps your overrides layered and predictable. Reach for it only when overriding a [token](/docs/base/variables) won't do.
+## Legacy CSS integration
 
-## Bringing along legacy CSS
-
-Migrating an existing project? Import your old stylesheet into the `legacy` layer. `index.css` leaves a commented slot for exactly this:
+Import legacy stylesheets into `@layer legacy`:
 
 ```css
-/* index.css — uncomment and point at your stylesheet */
-@import "./your-legacy.css" layer(legacy);
+@import "./legacy-app.css" layer(legacy);
 ```
 
-Because `legacy` sits below `zazz`, Zazz wins wherever the two overlap, and your untouched markup keeps rendering from its old rules until you convert it. For shims that have to win _over_ Zazz during the rewrite — mapping an old class name onto Zazz tokens, say — add a `migrations.css` at the top of the stack (there's a commented `@import` slot for it at the bottom of `index.css`); the `migrations` layer outranks the utilities. For surgical, per-region isolation you can also reach for [`@scope`](https://developer.mozilla.org/en-US/docs/Web/CSS/@scope) donut scoping. See [Migrating to Zazz](/docs/getting-started/migrating) for the full walkthrough.
+Zazz component and utility styles will override legacy styles where selectors overlap.
 
 ## Browser support
 
-Cascade layers are [Baseline](https://web.dev/baseline) and widely available, supported since 2022 across Chrome, Edge, Firefox, and Safari. No fallback is required.
+Cascade layers are Baseline widely available across Chrome, Edge, Firefox, and Safari.

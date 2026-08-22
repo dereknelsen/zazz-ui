@@ -1,13 +1,11 @@
 ---
 title: Avatar
-description: A circular image-with-fallback built from utility classes.
+description: Circular image with fallback composed using utility classes.
 ---
 
-Avatars are pure composition with no dedicated class. Stack an image over a text
-fallback with `grid grid-area-pile`, clip to a circle with `rounded-full overflow-clip`, and
-size with `size-*`. The image sits on top; the fallback (initials on `bg-muted` /
-`text-muted-foreground`) shows when it fails to load. For an initials-only avatar, drop the
-`<img>` and keep just the `<figcaption>`.
+Avatars are composed with utility classes. Stack an image over fallback text using `grid grid-area-pile`, clip with `rounded-full overflow-clip`, and set dimensions with `size-*`.
+
+Fallback text (`bg-muted`, `text-muted-foreground`) shows if the image fails to load. For text-only avatars, omit the `<img>` element.
 
 ## Default
 

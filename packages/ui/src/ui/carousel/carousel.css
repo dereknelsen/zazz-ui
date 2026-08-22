@@ -1,20 +1,20 @@
 /**
- * carousel.css — Embla carousel ([data-embla] hooks)
+ * carousel.css — Embla carousel ([data-carousel] hooks)
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css
- * @uses       data-embla attributes — layout hooks only; behaviour from zazz/scripts/embla.js
- * @uses       container-type on viewport — basis-* / @sm:basis-* utils query embla-viewport width
- * @tokens     --embla-* (@layer variables)
+ * @uses       data-carousel attributes — layout hooks only; behaviour from zazz/scripts/embla.js
+ * @uses       container-type on viewport — basis-* / @sm:basis-* utils query [data-carousel="viewport"] width
+ * @tokens     --carousel-* (@layer variables)
  * @consumedby lightbox.css
  */
 
 @layer variables {
   :root {
-    --embla-slide-basis: calc(100% - var(--_gap, 0px));
-    --embla-slide-min-width: 0;
-    --embla-touch-action: pan-y pinch-zoom;
-    --embla-cursor--grabbing: grabbing;
+    --carousel-slide-basis: calc(100% - var(--_gap, 0px));
+    --carousel-slide-min-width: 0;
+    --carousel-touch-action: pan-y pinch-zoom;
+    --carousel-cursor--grabbing: grabbing;
   }
 }
 
@@ -23,39 +23,39 @@
    - Documentation: https://www.embla-carousel.com/
    =========================================================================== */
 @layer zazz.components {
-  /* <embla-carousel> is a custom element (inline by default) that applies
-     data-embla="root" to itself — give it block flow like the legacy div. */
-  embla-carousel {
+  /* <slide-carousel> is a custom element (inline by default) that applies
+     data-carousel="root" to itself — give it block flow like the legacy div. */
+  slide-carousel {
     display: block;
   }
 
-  :is(body:has([data-embla="viewport"].is-dragging) *) {
-    cursor: var(--embla-cursor--grabbing);
+  :is(body:has([data-carousel="viewport"].is-dragging) *) {
+    cursor: var(--carousel-cursor--grabbing);
   }
 
-  [data-embla="root"] {
+  [data-carousel="root"] {
     position: relative;
     isolation: isolate;
   }
 
-  [data-embla="viewport"] {
+  [data-carousel="viewport"] {
     overflow: clip;
     max-block-size: 100%;
     max-inline-size: 100%;
   }
 
-  [data-embla="container"] {
+  [data-carousel="container"] {
     display: flex;
     gap: var(--_gap, 0);
-    touch-action: var(--embla-touch-action);
+    touch-action: var(--carousel-touch-action);
   }
 
-  [data-embla="slide"] {
-    flex: 0 0 var(--embla-slide-basis);
-    min-width: var(--embla-slide-min-width);
+  [data-carousel="slide"] {
+    flex: 0 0 var(--carousel-slide-basis);
+    min-width: var(--carousel-slide-min-width);
   }
 
-  [data-embla="thumbs"] [data-embla="slide"] {
+  [data-carousel="thumbs"] [data-carousel="slide"] {
     flex: 0 0 auto;
   }
 }

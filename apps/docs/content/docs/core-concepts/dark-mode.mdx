@@ -1,21 +1,20 @@
 ---
 title: Dark mode
-description: Dark mode is on from the first line. Use a role color and both themes are correct for free, with no .dark overrides and no duplicated styles.
+description: Dark mode support via light-dark() role tokens, color-scheme meta tags, and the .dark class.
 ---
 
-Zazz ships dark mode by default. `:root` declares `color-scheme: light dark`, and every theme [role](/docs/core-concepts/colors) resolves through `light-dark()`. Use a role (`bg-background`, `text-foreground`, `bg-card`, `text-muted-foreground`) and it's right in both themes automatically. There are no parallel dark styles to write or keep in sync.
+Zazz enables dark mode by default. `:root` declares `color-scheme: light dark`, and semantic role tokens resolve through `light-dark()`. Role-based styles adapt across themes without duplicated rules.
 
 ```html
-<!-- Correct in light and dark. Nothing else to do. -->
 <section class="bg-background text-foreground p-lg">
   <h2 class="text-h3">Works in both themes</h2>
-  <p class="text-muted-foreground">Because the roles swap, this does too.</p>
+  <p class="text-muted-foreground">Adapts automatically across light and dark modes.</p>
 </section>
 ```
 
-## How a role resolves
+## How roles resolve
 
-Each role is defined once with a light value and a dark value, and the browser picks based on the active `color-scheme`:
+Each semantic role specifies values for light and dark modes:
 
 ```css
 /* from _variables.css */
@@ -24,29 +23,27 @@ Each role is defined once with a light value and a dark value, and the browser p
 --muted-foreground: light-dark(var(--shade-600), var(--tint-600));
 ```
 
-That's why the rule is: **use roles, not raw scales.** A role like `--primary` swaps; a fixed scale step like `--primary-600` does not. Reach for scales only when you specifically want a color that stays put across themes.
+Use semantic roles (`--primary`, `--background`) to ensure theme compatibility. Use fixed scale steps (`--primary-600`) only when colors must remain static.
 
-## Three ways the scheme is decided
+## Theme configuration modes
 
-### 1. Follow the system (default)
+### 1. System preference (default)
 
-By default, the page follows the operating system's light/dark setting. Nothing required beyond the [`color-scheme` meta tag](/docs/getting-started/head) in your `<head>`, which paints the right canvas, scrollbars, and form controls before your CSS even loads.
+Include the `<meta name="color-scheme" content="light dark">` tag in `<head>` so native elements match OS preferences before styles load.
 
-```html
-<meta name="color-scheme" content="light dark" />
-```
+### 2. Manual toggle with `.dark`
 
-### 2. Force a theme with `.dark`
-
-To pin dark mode regardless of system preference, add the `.dark` class, usually on `<html>`. It re-declares the role tokens and sets `color-scheme: dark` so native UI follows:
+Add the `.dark` class to `<html>` to pin dark mode:
 
 ```html
-<html class="dark"></html>
+<html class="dark">
+  ...
+</html>
 ```
 
 ### 3. Inverted surfaces
 
-Popovers and menus render dark-on-light by default (a common design touch) via a container style query (`@container style(--use-inverted-popovers: true)`). To opt a subtree out, flip the flag or use the `data-use-inverted-menu="false"` attribute on the popover:
+Popovers and menus support an inverted scheme. Opt out using CSS variables or attributes:
 
 ```css
 :root {
@@ -55,32 +52,12 @@ Popovers and menus render dark-on-light by default (a common design touch) via a
 ```
 
 ```html
-<div popover data-use-inverted-menu="false">…</div>
-```
-
-## Don't hand-write dark overrides
-
-If a value is driven by a role token, dark mode is already handled. Writing `.dark .my-thing { … }` to recolor something that uses roles is redundant and will drift. Let the tokens do it.
-
-```css
-/* Don't. The role already swaps. */
-.dark .panel {
-  background: var(--neutral-900);
-}
-
-/* Do. One declaration, correct in both themes. */
-.panel {
-  background: var(--card);
-}
+<div popover data-use-inverted-menu="false">...</div>
 ```
 
 ## Building a theme toggle
 
-For a user-facing switch, keep the CSS defaulting to the system preference and override only when the user has chosen, so the page is still correct if your script never runs.
-
-- Update the `<meta name="color-scheme">` content to the chosen value (`light dark` for system, or `light` / `dark` to pin one), and toggle the `.dark` class to match.
-- Persist the choice in `localStorage`.
-- Apply it from an **inline, non-deferred** script at the top of `<head>` so there's no flash before the rest of the page loads.
+Use an inline script in `<head>` to read preferences from `localStorage` and set the `.dark` class before first render:
 
 ```html
 <meta name="color-scheme" content="light dark" />
@@ -95,15 +72,9 @@ For a user-facing switch, keep the CSS defaulting to the system preference and o
 </script>
 ```
 
-<Callout>
-  Offer two states, **system** and **its opposite**, not three. A pinned choice should stay pinned
-  even when the OS setting later changes, and a three-way "system / light / dark" control always has
-  two options that look identical, which reads as a broken toggle.
-</Callout>
+## Section-level color scheme
 
-## Forcing one section light or dark
-
-Set `color-scheme` on any element to lock it, handy for a code block or media player that should stay dark on a light page:
+Set `color-scheme` on a container to force a specific mode for a subtree (such as a code block):
 
 ```css
 pre {
@@ -113,4 +84,4 @@ pre {
 
 ## Browser support
 
-`color-scheme` is [Baseline](https://web.dev/baseline) widely available (since 2022); browsers without it simply render light mode. `light-dark()` is Baseline newly available: Chrome/Edge 123, Firefox 120, Safari 17.5 (2024). If you need to support browsers older than that, define light/dark values as separate custom properties and switch them with a `prefers-color-scheme` media query, then layer `light-dark()` on top with `@supports`.
+`color-scheme` is Baseline widely available. `light-dark()` is Baseline 2024 (Chrome/Edge 123, Firefox 120, Safari 17.5).

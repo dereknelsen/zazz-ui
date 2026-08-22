@@ -7,9 +7,16 @@ catalogMode: prefer
 
 catalog:
   "@types/node": ^26.2.0
+  embla-carousel: ^8.6.0
+  embla-carousel-auto-scroll: ^8.6.0
+  embla-carousel-autoplay: ^8.6.0
+  embla-carousel-class-names: ^8.6.0
+  happy-dom: ^20.11.6
+  signal-polyfill: 0.2.2
   typescript: ^7.0.2
   vite: npm:@voidzero-dev/vite-plus-core@0.2.4
   vite-plus: 0.2.4
+  vitest: ^4.1.11
 overrides:
   vite: "catalog:"
 peerDependencyRules:

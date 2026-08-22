@@ -21,6 +21,7 @@ discovers and enhances markup; you rarely touch it.
 | Navigation API                             | SPA-style nav                               | `navigation.js` (app-level; **not** loaded in preview iframes)                                                                                                  | falls back to full page load            |
 | `light-dark()` + container `style()` query | theming, dark mode, inverted menus          | `.dark` class, `--use-inverted-popovers: true` on `[popover]` (opt out per-popover with `data-use-inverted-menu="false"`)                                       | —                                       |
 | IntersectionObserver                       | scroll reveals                              | `[data-reveal]` / `[data-reveal-each]` (via `reveal.js`)                                                                                                        | —                                       |
+| `sibling-index()` / `sibling-count()`      | reveal stagger delays                       | `[data-reveal-each]` children compute `--reveal-wait` natively                                                                                                  | `@supports`-gated; JS fallback          |
 | `:user-invalid` / `:has()`                 | form validation                             | surfaces error state after commit, not while typing                                                                                                             | —                                       |
 
 ## 2. Zazz JS behaviors (data-attribute driven)
@@ -39,7 +40,7 @@ so existing Zazz classes and `data-*` hooks keep working.
 
 | Element            | Script              | Use for                                     | Notes                                                                                                                       |
 | ------------------ | ------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `<embla-carousel>` | `carousel.js`       | Component carousels and carousel roots      | The element is the Embla root; put `data-embla-*` options on it                                                             |
+| `<slide-carousel>` | `carousel.js`       | Component carousels and carousel roots      | The element is the Embla root; put `data-carousel-*` options on it                                                          |
 | `<media-lightbox>` | `lightbox.js`       | Inline gallery + fullscreen dialog lightbox | Coordinates gallery/dialog slide state; opening/closing still uses Invoker Commands                                         |
 | `<input-password>` | `password-group.js` | Password show/hide toggle                   | Wrap `.password-group`; optional `label-show` / `label-hide`; CSS swaps icons via ARIA                                      |
 | `<tab-group>`      | `tabs.js`           | Radio-driven tabs with richer keyboard nav  | Carries `.tabs`; adds orientation-aware arrows, Home/End, and wrap-around                                                   |
@@ -88,34 +89,34 @@ inner element.
 
 ### Embla carousel — `embla.js` (`window.EmblaInit`) — requires the Embla CDN UMD bundles
 
-For component markup, use `<embla-carousel>` as the root and put config on that element.
-Lower-level/legacy markup may still use `data-embla="root"`. In both cases, mark up child
-roles with `data-embla="<role>"`.
+For component markup, use `<slide-carousel>` as the root and put config on that element.
+Lower-level/legacy markup may still use `data-carousel="root"`. In both cases, mark up child
+roles with `data-carousel="<role>"`.
 
 **Roles:** `root` (config holder) · `viewport` (required) · `container` · `slide` · `prev` ·
 `next` · `dots` · `dot` (template, cloned per snap) · `thumbs` (linked thumb carousel).
 
-**Config on `<embla-carousel>` or `data-embla="root"`** (kebab-case → Embla options via
+**Config on `<slide-carousel>` or `data-carousel="root"`** (kebab-case → Embla options via
 `Utils.parseDataAttributes`):
 
-| Attribute                                           | Example                                              | Purpose                                                                   |
-| --------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------- |
-| any core Embla option                               | `data-embla-loop="true"`, `data-embla-align="start"` | passed straight to Embla                                                  |
-| `data-embla-keyboard`                               | `"false"`                                            | disable ArrowLeft/Right navigation                                        |
-| `data-embla-autoplay` / `data-embla-autoplay-*`     | `data-embla-autoplay-delay="3000"`                   | Autoplay plugin                                                           |
-| `data-embla-autoscroll` / `data-embla-autoscroll-*` | `data-embla-autoscroll-speed="2"`                    | AutoScroll plugin                                                         |
-| `data-embla-classnames` / `data-embla-classnames-*` | `data-embla-classnames-snapped="is-snapped"`         | ClassNames plugin                                                         |
-| `data-embla-thumbs-*` (on `thumbs`)                 | `data-embla-thumbs-contain-scroll="keepSnaps"`       | thumb carousel options (defaults: containScroll keepSnaps, dragFree true) |
-| `data-embla-start` (on a trigger w/ `commandfor`)   | `data-embla-start="2"`                               | open a dialog carousel at slide N                                         |
+| Attribute                                                 | Example                                                    | Purpose                                                                   |
+| --------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------- |
+| any core Embla option                                     | `data-carousel-loop="true"`, `data-carousel-align="start"` | passed straight to Embla                                                  |
+| `data-carousel-keyboard`                                  | `"false"`                                                  | disable ArrowLeft/Right navigation                                        |
+| `data-carousel-autoplay` / `data-carousel-autoplay-*`     | `data-carousel-autoplay-delay="3000"`                      | Autoplay plugin                                                           |
+| `data-carousel-autoscroll` / `data-carousel-autoscroll-*` | `data-carousel-autoscroll-speed="2"`                       | AutoScroll plugin                                                         |
+| `data-carousel-classnames` / `data-carousel-classnames-*` | `data-carousel-classnames-snapped="is-snapped"`            | ClassNames plugin                                                         |
+| `data-carousel-thumbs-*` (on `thumbs`)                    | `data-carousel-thumbs-contain-scroll="keepSnaps"`          | thumb carousel options (defaults: containScroll keepSnaps, dragFree true) |
+| `data-carousel-start` (on a trigger w/ `commandfor`)      | `data-carousel-start="2"`                                  | open a dialog carousel at slide N                                         |
 
-Script-managed (don't set by hand): `data-embla="root"` on `<embla-carousel>`,
-`data-embla-init`, `data-embla-start-index`. The script adds `.is-active` to the current
-dot/thumb and stores `_emblaApi` on the root. `<embla-carousel>` initializes on connect,
+Script-managed (don't set by hand): `data-carousel="root"` on `<slide-carousel>`,
+`data-carousel-init`, `data-carousel-start-index`. The script adds `.is-active` to the current
+dot/thumb and stores `_emblaApi` on the root. `<slide-carousel>` initializes on connect,
 defers while inside a closed `<dialog>`, and destroys its Embla instances on disconnect.
 
 ### Helpers and app glue
 
-- **`utils.js` (`window.Utils`)** — `parseValue` and `parseDataAttributes(node, "data-embla-")`
+- **`utils.js` (`window.Utils`)** — `parseValue` and `parseDataAttributes(node, "data-carousel-")`
   convert kebab-case `data-*` to a typed options object. This is why markup configures Embla
   with zero JS.
 - **`navigation.js`** — intercepts same-origin navigations, swaps `<main>`, runs a View

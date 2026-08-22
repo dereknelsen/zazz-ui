@@ -413,6 +413,16 @@ These deviate from the canonical shape on purpose — document the reason in-fil
   [`tabs.css`](./src/ui/tabs/tabs.css), and [`select.css`](./src/ui/select/select.css) gate anchor positioning
   / `base-select` behind `@supports` with a documented fallback. Always describe the
   fallback in the `@uses` note.
+- **Per-sibling value math** — `sibling-index()` / `sibling-count()` (Baseline 2026;
+  no Firefox yet, so `@supports (order: sibling-index())`-gate them with a fallback) fit
+  calculations that vary by position among siblings: staggered `animation-delay`/
+  `transition-delay` (implemented: the [`reveal.css`](./src/ui/reveal/reveal.css) stagger,
+  with `reveal.js` writing per-child delays as the unsupported-engine fallback), equal
+  widths (`calc(100% / sibling-count())`), hue spreads. They are
+  **value functions only — never selector logic**: they cannot replace enumerated
+  `:nth-child()`/`:nth-of-type()` chains that correlate one element's index with
+  another's (the [`tabs.css`](./src/ui/tabs/tabs.css) panel-visibility chain documents
+  why that enumeration is irreducible).
 - **Attribute-hook components** — [`carousel.css`](./src/ui/carousel/carousel.css) and
   [`lightbox.css`](./src/ui/lightbox/lightbox.css) style `[data-*]` hooks whose behaviour comes from
   the co-located `<name>.ts` script (loaded as its emitted `<name>.js`). Declare the JS

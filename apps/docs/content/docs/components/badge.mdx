@@ -1,22 +1,19 @@
 ---
 title: Badge
-description: Compact status and category chips that share the button's data-variant vocabulary.
+description: Status and category chips that use the standard data-variant system.
 ---
 
-Badges use the `.badge` class. Pick a color with `data-variant`; the **default** variant is
-the absence of the attribute. Use `data-size="icon"` for a square, icon-only chip. A badge is
-often a static `<span>`, but put it on a `<button type="button">` or `<a href>` when it is
-interactive — those get hover/active tints, a `:disabled` / `[aria-disabled="true"]` muted state
-at opacity 0.5, and a `progress` cursor under `[aria-busy="true"]`.
+Badges use the `.badge` class. Set colors with `data-variant` (default when omitted). Set `data-size="icon"` for square icon badges.
+
+Badges can be static `<span>` elements or interactive `<button>` / `<a>` elements with hover/active states and disabled styling.
 
 ## Variants
 
 <Preview src="badge/default" />
 
-## Icon
+## Icon badge
 
-An icon-only badge needs an accessible name: include a `<span class="sr-only">` label alongside
-the `<svg>`.
+Include `<span class="sr-only">` for accessible names on icon-only badges:
 
 <Preview src="badge/icon" />
 
@@ -27,5 +24,13 @@ the `<svg>`.
 | `data-variant` | `primary`, `muted`, `ghost`, `link` (omit = default) |
 | `data-size`    | `icon`                                               |
 
-Need a status badge (info / success / warning / destructive)? Override the tokens on an
-instance, e.g. `style="--badge-background: var(--success); --badge-foreground: var(--success-foreground)"`.
+To apply status colors, override component tokens:
+
+```html
+<span
+  class="badge"
+  style="--badge-background: var(--success); --badge-foreground: var(--success-foreground)"
+>
+  Active
+</span>
+```

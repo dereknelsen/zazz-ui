@@ -9,6 +9,13 @@
  * `aria-pressed` and `aria-label` in sync. The icon swap is pure CSS, driven
  * by `aria-pressed` (see _password-group.css).
  *
+ * The revealed/hidden state is a signal (`base/signals.ts`): the click handler
+ * is the input adapter, `resolveToggleState` is the pure derivation, and one
+ * effect is the output adapter that writes `type`, `aria-pressed`, and
+ * `aria-label` together. The effect also runs once on connect, so the toggle
+ * self-corrects to match the input's actual starting type even if the
+ * markup's static attributes drift from it.
+ *
  * Without JavaScript the field degrades to a regular password input; the
  * toggle button simply does nothing.
  *
@@ -28,6 +35,34 @@
  * </input-password>
  */
 
+import { effect, state } from "../../base/signals.ts";
+
+/** Derived DOM state for one toggle configuration. */
+interface ToggleState {
+  type: "password" | "text";
+  ariaPressed: "true" | "false";
+  ariaLabel: string;
+}
+
+/**
+ * @description Derives the input type, `aria-pressed`, and `aria-label` for a
+ * given reveal state. Pure — the effect in `connectedCallback` is the only
+ * place that writes it to the DOM.
+ *
+ * @param revealed - Whether the password is currently shown as plain text.
+ * @param labelShow - Toggle label while hidden.
+ * @param labelHide - Toggle label while revealed.
+ * @returns The derived DOM state.
+ * @private
+ */
+function resolveToggleState(revealed: boolean, labelShow: string, labelHide: string): ToggleState {
+  return {
+    type: revealed ? "text" : "password",
+    ariaPressed: revealed ? "true" : "false",
+    ariaLabel: revealed ? labelHide : labelShow,
+  };
+}
+
 class InputPassword extends HTMLElement {
   #controller: AbortController | null = null;
 
@@ -39,21 +74,22 @@ class InputPassword extends HTMLElement {
     if (!(input instanceof HTMLInputElement) || !(toggle instanceof HTMLElement)) return;
 
     this.#controller = new AbortController();
+    const signal = this.#controller.signal;
 
-    toggle.addEventListener(
-      "click",
+    const revealed = state(input.type === "text");
+
+    toggle.addEventListener("click", () => revealed.set(!revealed.get()), { signal });
+
+    effect(
       () => {
-        const reveal = input.type === "password";
-        input.type = reveal ? "text" : "password";
-        toggle.setAttribute("aria-pressed", String(reveal));
-        toggle.setAttribute(
-          "aria-label",
-          reveal
-            ? this.getAttribute("label-hide") || "Hide password"
-            : this.getAttribute("label-show") || "Show password",
-        );
+        const labelShow = this.getAttribute("label-show") || "Show password";
+        const labelHide = this.getAttribute("label-hide") || "Hide password";
+        const next = resolveToggleState(revealed.get(), labelShow, labelHide);
+        input.type = next.type;
+        toggle.setAttribute("aria-pressed", next.ariaPressed);
+        toggle.setAttribute("aria-label", next.ariaLabel);
       },
-      { signal: this.#controller.signal },
+      { signal },
     );
   }
 
@@ -74,4 +110,6 @@ if (typeof window !== "undefined") {
   window.InputPassword = InputPassword;
 }
 
-export { InputPassword };
+// resolveToggleState is exported for unit tests only — not part of the public API.
+export { InputPassword, resolveToggleState };
+export type { ToggleState };

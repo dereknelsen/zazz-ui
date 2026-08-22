@@ -1,22 +1,16 @@
 ---
 title: Card
-description: Product and content cards composed from theme tokens and utilities.
+description: Product and content card patterns composed using utility classes.
 ---
 
-Cards are built from utility classes. There is no `.card` primitive. Wrap a
-`bg-card text-card-foreground` surface in a `rounded-md shadow-sm overflow-clip` container, then
-compose a figure, a `.badge`, `text-*` content, and a footer with utilities and theme tokens.
+Cards are composed using utility classes. Wrap `bg-card text-card-foreground` in a `rounded-md shadow-sm overflow-clip` container, then structure header, media, text, and footer elements using utilities.
 
 ## Default
 
 <Preview src="card/default" />
 
-The default above uses a full-bleed `aspect-landscape` figure, `px-sm pb-sm` / `gap-sm` spacing,
-and an avatar in the footer. Because it reuses existing utilities,
-dark mode and theming work automatically.
+## Subgrid alignment
 
-## Subgrid
+Use `grid-rows-*` and `grid-rows-subgrid` to align card headers, content, and actions across columns:
 
 <Preview src="card/subgrid" />
-
-Use `grid-rows-*` and `grid-rows-subgrid` utilities to create perfectly aligned cards.

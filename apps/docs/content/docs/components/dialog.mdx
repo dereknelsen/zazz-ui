@@ -1,11 +1,9 @@
 ---
 title: Dialog
-description: Native dialog modals driven by the Invoker Commands API, with no JavaScript to wire up.
+description: Modal dialogs built with native dialog elements and Invoker Commands.
 ---
 
-Dialogs use a native `<dialog class="dialog">`. Open one from any button with
-`command="show-modal"` and `commandfor="<id>"`, and close with `command="close"`. Add
-`closedby="any"` for light-dismiss. Size with `data-size`.
+Dialogs use native `<dialog class="dialog">` elements. Open from buttons with `command="show-modal"` and `commandfor="<id>"`. Close with `command="close"`. Add `closedby="any"` for light-dismiss on backdrop click.
 
 ## Default
 
@@ -15,15 +13,15 @@ Dialogs use a native `<dialog class="dialog">`. Open one from any button with
 
 <Preview src="dialog/with-form" />
 
-## Alert
+## Alert dialog
 
 <Preview src="dialog/is-alert" />
 
 ## API
 
-| Attribute    | Where      | Values                           |
+| Attribute    | Target     | Values                           |
 | ------------ | ---------- | -------------------------------- |
-| `command`    | trigger    | `show-modal`, `close`            |
-| `commandfor` | trigger    | id of the `<dialog>`             |
+| `command`    | Trigger    | `show-modal`, `close`            |
+| `commandfor` | Trigger    | Target `<dialog>` id             |
 | `data-size`  | `.dialog`  | `article`, `container`, `screen` |
 | `closedby`   | `<dialog>` | `any`, `closerequest`, `none`    |

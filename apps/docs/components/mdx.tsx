@@ -1,11 +1,13 @@
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import type { MDXComponents } from "mdx/types";
+import { HeadSnippet } from "./head-snippet";
 import { Preview } from "./preview";
 
 export function getMDXComponents(components?: MDXComponents) {
   return {
     ...defaultMdxComponents,
     Preview,
+    HeadSnippet,
     ...components,
   } satisfies MDXComponents;
 }

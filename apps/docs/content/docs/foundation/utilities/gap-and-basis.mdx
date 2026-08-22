@@ -1,18 +1,13 @@
 ---
 title: Gap & basis
-description: Gap utilities for flex and grid, plus the gap-aware flex-basis fractions and the --_gap coordination variable that ties them together.
+description: Gap utilities for flex and grid containers, gap-aware flex basis fractions, and coordination variables.
 ---
 
-`gap-*` sets the space between flex or grid children; `basis-*` sets a flex item's base size. They
-share one coordination variable (`--_gap`) so fraction widths subtract the gap automatically, with no
-off-by-a-gutter math.
+`gap-*` controls spacing in flex and grid containers. `basis-*` sets flex basis fractions that automatically account for container gaps.
 
-## Gap
+## Gap utilities
 
 <Preview src="utilities/gap" />
-
-Gaps use the **semantic gap scale**, the same `--gap-*` tokens that drive padding and margin, so
-spacing stays consistent across layout primitives.
 
 | Class       | Value           |
 | ----------- | --------------- |
@@ -25,56 +20,40 @@ spacing stays consistent across layout primitives.
 | `gap-lg`    | `var(--gap-lg)` |
 | `gap-xl`    | `var(--gap-xl)` |
 
-### Axis gaps
+### Axis-specific gaps
 
-Set column and row gaps independently. `gap-x-*` maps to `column-gap`, `gap-y-*` to `row-gap`,
-using the same size keywords as `gap-*` (`0`, `0.5px`, `px`, `xs`–`xl`).
+Use `gap-x-*` for `column-gap` and `gap-y-*` for `row-gap`:
 
 ```html
-<div class="grid grid-cols-3 gap-x-lg gap-y-sm"><!-- wide columns, tight rows --></div>
+<div class="grid grid-cols-3 gap-x-lg gap-y-sm">...</div>
 ```
 
-## Flex basis
+## Flex basis fractions
 
 <Preview src="utilities/basis" />
 
-The fractions are **gap-aware**: each subtracts its share of the gap so N items per row actually
-fit on one line. `basis-1/3` resolves to `calc((100% - 2 × gap) / 3)`, reading the gap the
-container set.
+Fraction utilities subtract gap values so child elements fit on a single line:
 
-| Class        | Resolves to            |
+| Class        | Value                  |
 | ------------ | ---------------------- |
 | `basis-0`    | `flex-basis: 0`        |
 | `basis-auto` | `flex-basis: auto`     |
 | `basis-full` | `flex-basis: 100%`     |
-| `basis-1/2`  | `(100% − 1 × gap) / 2` |
-| `basis-1/3`  | `(100% − 2 × gap) / 3` |
-| `basis-1/4`  | `(100% − 3 × gap) / 4` |
-| `basis-1/5`  | `(100% − 4 × gap) / 5` |
-| `basis-1/6`  | `(100% − 5 × gap) / 6` |
-
-`basis-*` has responsive variants, so `basis-full @md:basis-1/3` gives full-width rows that become
-thirds on a wider container.
+| `basis-1/2`  | `(100% - 1 * gap) / 2` |
+| `basis-1/3`  | `(100% - 2 * gap) / 3` |
+| `basis-1/4`  | `(100% - 3 * gap) / 4` |
+| `basis-1/5`  | `(100% - 4 * gap) / 5` |
+| `basis-1/6`  | `(100% - 5 * gap) / 6` |
 
 <Callout type="info">
-  For the fractions to subtract the right gutter, set a `gap-*` class on the same flex container.
-  That's what populates `--_gap`. With no gap class, `--_gap` defaults to `0px` and the fractions
-  fall back to even splits.
+  Set a `gap-*` class on the flex container to pass the gap value into `--_gap`. With no gap class,
+  `--_gap` defaults to `0px`.
 </Callout>
 
-## The `--_gap` coordination variables
+## Gap coordination variables
 
-`gap-*` doesn't only set the `gap` property; it also publishes the value as an **inheriting**
-variable that `basis-*` and the [responsive auto-fill grid](/docs/base/utilities/grid#responsive-auto-fill-grid)
-read back.
-
-| Variable   | Default            | Set by    | Read by                                    |
-| ---------- | ------------------ | --------- | ------------------------------------------ |
-| `--_gap`   | `0px` (on `:root`) | `gap-*`   | `basis-1/2…1/6`, `grid-flow-row` auto-fill |
-| `--_gap-x` | —                  | `gap-x-*` | `column-gap`                               |
-| `--_gap-y` | —                  | `gap-y-*` | `row-gap`                                  |
-
-These are left unregistered (and therefore inheriting) on purpose: a value set on the container
-must reach the children that compute their width from it. This is the opposite of the
-non-inheriting composition variables behind padding/margin/radius; see the
-[overview](/docs/base/utilities#private-composition-and-coordination-variables) for the contrast.
+| Variable   | Default | Set by    | Consumed by                                |
+| ---------- | ------- | --------- | ------------------------------------------ |
+| `--_gap`   | `0px`   | `gap-*`   | `basis-1/2` to `basis-1/6`, auto-fill grid |
+| `--_gap-x` | None    | `gap-x-*` | `column-gap`                               |
+| `--_gap-y` | None    | `gap-y-*` | `row-gap`                                  |

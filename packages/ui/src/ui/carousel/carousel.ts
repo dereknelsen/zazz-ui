@@ -1,14 +1,14 @@
 "use strict";
 
 /**
- * @fileoverview `<embla-carousel>` — HTML web component for Embla carousels.
+ * @fileoverview `<slide-carousel>` — HTML web component for carousels.
  * @description Light-DOM custom element that wraps standard carousel markup
  * and owns the Embla lifecycle: it initializes on connect (via
  * `EmblaInit.initRoot`) and destroys its instances on disconnect, so
  * dynamically inserted or SPA-swapped carousels need no manual wiring.
  *
- * The element *is* the carousel root — it applies `data-embla="root"` to
- * itself on connect, so all existing CSS hooks and `data-embla-*`
+ * The element *is* the carousel root — it applies `data-carousel="root"` to
+ * itself on connect, so all existing CSS hooks and `data-carousel-*`
  * configuration attributes work unchanged (see embla.js for the full
  * attribute reference). No shadow DOM; children are regular markup.
  *
@@ -16,29 +16,30 @@
  * first opens (a closed dialog is `display: none`, so Embla cannot measure
  * the viewport).
  *
- * Load order: Embla CDN bundles → utils.js → embla.js → carousel.js.
+ * Load order: the module graph resolves it — `index.js` imports embla.js
+ * (which imports the Embla packages via the page's import map) before this file.
  *
  * @example
- * <embla-carousel data-embla-loop="true">
- *   <div data-embla="viewport">
- *     <div data-embla="container">
- *       <div data-embla="slide">Slide 1</div>
- *       <div data-embla="slide">Slide 2</div>
+ * <slide-carousel data-carousel-loop="true">
+ *   <div data-carousel="viewport">
+ *     <div data-carousel="container">
+ *       <div data-carousel="slide">Slide 1</div>
+ *       <div data-carousel="slide">Slide 2</div>
  *     </div>
  *   </div>
- *   <button type="button" data-embla="prev">Prev</button>
- *   <button type="button" data-embla="next">Next</button>
- * </embla-carousel>
+ *   <button type="button" data-carousel="prev">Prev</button>
+ *   <button type="button" data-carousel="next">Next</button>
+ * </slide-carousel>
  */
 
 import { EmblaInit } from "../../base/embla.ts";
 
-class EmblaCarouselElement extends HTMLElement {
+class SlideCarouselElement extends HTMLElement {
   #dialogObserver: MutationObserver | null = null;
 
   connectedCallback() {
     // The element is the carousel root — expose the CSS/config hook.
-    this.setAttribute("data-embla", "root");
+    this.setAttribute("data-carousel", "root");
 
     const dialog = this.closest("dialog");
     if (dialog && !dialog.open) {
@@ -69,7 +70,7 @@ class EmblaCarouselElement extends HTMLElement {
     delete this._emblaApiThumb;
 
     // Allow re-initialization if the element is re-inserted.
-    this.removeAttribute("data-embla-init");
+    this.removeAttribute("data-carousel-init");
   }
 
   /**
@@ -89,14 +90,14 @@ class EmblaCarouselElement extends HTMLElement {
 }
 
 // Register the element (guarded against double script loads)
-if (typeof window !== "undefined" && !customElements.get("embla-carousel")) {
-  customElements.define("embla-carousel", EmblaCarouselElement);
+if (typeof window !== "undefined" && !customElements.get("slide-carousel")) {
+  customElements.define("slide-carousel", SlideCarouselElement);
 }
 
 // Attach to window so embla.js's lightbox sync can feature-detect the element type,
 // and export for module consumers (lightbox.js imports it via the main.js bundle).
 if (typeof window !== "undefined") {
-  window.EmblaCarouselElement = EmblaCarouselElement;
+  window.SlideCarouselElement = SlideCarouselElement;
 }
 
-export { EmblaCarouselElement };
+export { SlideCarouselElement };

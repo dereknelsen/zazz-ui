@@ -6,7 +6,7 @@
  * a lightbox: the inline gallery and the fullscreen `<dialog>` slideshow.
  *
  * Responsibilities:
- * - On dialog open: initializes the dialog's `<embla-carousel>` (deferred
+ * - On dialog open: initializes the dialog's `<slide-carousel>` (deferred
  *   while the dialog was closed), jumps it to the gallery's current slide,
  *   and focuses the viewport so keyboard navigation works immediately.
  * - On dialog close: scrolls the inline gallery to the last viewed slide.
@@ -16,20 +16,21 @@
  * click suppression on the stage and thumbs is wired by `initRoot` in
  * embla.js (keyed on `.lightbox__stage` / thumbs markup).
  *
- * Load order: Embla CDN bundles → utils.js → embla.js → carousel.js → lightbox.js.
+ * Load order: the module graph resolves it — `index.js` imports embla.js and
+ * carousel.js before this file; Embla itself resolves via the page's import map.
  *
  * @example
  * <media-lightbox class="lightbox">
  *   <div class="lightbox__gallery">
- *     <embla-carousel class="lightbox__stage" data-embla-loop="true">…</embla-carousel>
+ *     <slide-carousel class="lightbox__stage" data-carousel-loop="true">…</slide-carousel>
  *   </div>
  *   <dialog class="lightbox__dialog dialog" closedby="any">
- *     <embla-carousel data-embla-loop="true">…</embla-carousel>
+ *     <slide-carousel data-carousel-loop="true">…</slide-carousel>
  *   </dialog>
  * </media-lightbox>
  */
 
-import { EmblaCarouselElement } from "../carousel/carousel.ts";
+import { SlideCarouselElement } from "../carousel/carousel.ts";
 
 class MediaLightbox extends HTMLElement {
   #controller: AbortController | null = null;
@@ -65,7 +66,7 @@ class MediaLightbox extends HTMLElement {
    * @returns The inline gallery's carousel root.
    */
   #galleryRoot(): Element | null {
-    return this.querySelector('.lightbox__gallery [data-embla="root"]');
+    return this.querySelector('.lightbox__gallery [data-carousel="root"]');
   }
 
   /**
@@ -75,12 +76,12 @@ class MediaLightbox extends HTMLElement {
    * @param dialog - The lightbox dialog.
    */
   #onDialogOpen(dialog: HTMLDialogElement): void {
-    const dialogRoot = dialog.querySelector('[data-embla="root"]');
+    const dialogRoot = dialog.querySelector('[data-carousel="root"]');
     if (!dialogRoot) return;
 
-    // <embla-carousel> defers init while its dialog is closed — init now.
+    // <slide-carousel> defers init while its dialog is closed — init now.
     // (This element connects before its children, so its observer fires first.)
-    if (dialogRoot instanceof EmblaCarouselElement) {
+    if (dialogRoot instanceof SlideCarouselElement) {
       dialogRoot.init();
     }
 
@@ -89,7 +90,7 @@ class MediaLightbox extends HTMLElement {
       dialogRoot._emblaApi.scrollTo(galleryApi.selectedScrollSnap(), true);
     }
 
-    const viewport = dialogRoot.querySelector('[data-embla="viewport"]');
+    const viewport = dialogRoot.querySelector('[data-carousel="viewport"]');
     if (viewport instanceof HTMLElement) {
       viewport.focus({ preventScroll: true });
     }
@@ -101,7 +102,7 @@ class MediaLightbox extends HTMLElement {
    * @param dialog - The lightbox dialog.
    */
   #syncGalleryToDialog(dialog: HTMLDialogElement): void {
-    const dialogApi = dialog.querySelector('[data-embla="root"]')?._emblaApi;
+    const dialogApi = dialog.querySelector('[data-carousel="root"]')?._emblaApi;
     const galleryApi = this.#galleryRoot()?._emblaApi;
     if (dialogApi && galleryApi) {
       galleryApi.scrollTo(dialogApi.selectedScrollSnap());

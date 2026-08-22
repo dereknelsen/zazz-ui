@@ -1,83 +1,62 @@
 ---
 title: Sizing
-description: Width, height, the square size shorthand, and min/max constraints, using logical properties, the step scale, the gap scale, and viewport/breakpoint units.
+description: Width, height, size shorthands, and min/max dimension constraints using logical properties.
 ---
 
-Sizing utilities use **logical properties** (`inline-size`/`block-size`) so they follow writing
-direction. Width and height share one named scale; the `size-*` shorthand sets both at once for
-squares.
+Sizing utilities use logical properties (`inline-size`, `block-size`) to match document writing mode.
 
 ## Width & height
 
 <Preview src="utilities/width" />
 
-Width (`w-*`) sets `inline-size`; height (`h-*`) sets `block-size`. The named sizes come from the
-**step scale**, so they scale fluidly with the viewport.
+| Class                          | Width / height value                             |
+| ------------------------------ | ------------------------------------------------ |
+| `w-0` / `h-0`                  | `0`                                              |
+| `w-px` / `h-px`                | `1px`                                            |
+| `w-auto` / `h-auto`            | `auto`                                           |
+| `w-full` / `h-full`            | `100%`                                           |
+| `w-xs` / `h-xs`                | `var(--step-8)`                                  |
+| `w-sm` / `h-sm`                | `var(--step-24)`                                 |
+| `w-md` / `h-md`                | `var(--step-56)`                                 |
+| `w-lg` / `h-lg`                | `var(--step-72)`                                 |
+| `w-xl` / `h-xl`                | `var(--step-96)`                                 |
+| `w-screen`                     | `100vi`                                          |
+| `h-screen`                     | `100svh`                                         |
+| `w-screen-xs` to `w-screen-xl` | `var(--breakpoint-xs)` to `var(--breakpoint-xl)` |
+| `h-screen-xs` to `h-screen-xl` | `var(--breakpoint-xs)` to `var(--breakpoint-xl)` |
 
-| Class                       | Width / height value                     |
-| --------------------------- | ---------------------------------------- |
-| `w-0` / `h-0`               | `0`                                      |
-| `w-px` / `h-px`             | `1px`                                    |
-| `w-auto` / `h-auto`         | `auto`                                   |
-| `w-full` / `h-full`         | `100%`                                   |
-| `w-xs` / `h-xs`             | `var(--step-8)`                          |
-| `w-sm` / `h-sm`             | `var(--step-24)`                         |
-| `w-md` / `h-md`             | `var(--step-56)`                         |
-| `w-lg` / `h-lg`             | `var(--step-72)`                         |
-| `w-xl` / `h-xl`             | `var(--step-96)`                         |
-| `w-screen`                  | `100vi` (viewport inline)                |
-| `h-screen`                  | `100svh` (small viewport height)         |
-| `w-screen-xs … w-screen-xl` | `var(--breakpoint-xs … --breakpoint-xl)` |
-| `h-screen-xs … h-screen-xl` | `var(--breakpoint-xs … --breakpoint-xl)` |
-
-The `screen-*` sizes resolve to the breakpoint widths (`xs` 40rem → `xl` 96rem), handy for
-capping reading or layout columns to a known breakpoint.
-
-## Size (square shorthand)
+## Square size shorthand
 
 <Preview src="utilities/size" />
 
-`size-*` sets `inline-size` and `block-size` together. Its named sizes draw from the **gap scale**
-(not the step scale), which keeps them in the small, icon-friendly range, ideal for avatars,
-dots, and square media.
+`size-*` sets `inline-size` and `block-size` simultaneously:
 
-| Class                             | Value (both axes)               |
-| --------------------------------- | ------------------------------- |
-| `size-0`                          | `0`                             |
-| `size-auto`                       | `auto`                          |
-| `size-full`                       | `100%`                          |
-| `size-xs`                         | `var(--gap-xs)`                 |
-| `size-sm`                         | `var(--gap-sm)`                 |
-| `size-md`                         | `var(--gap-md)`                 |
-| `size-lg`                         | `var(--gap-lg)`                 |
-| `size-xl`                         | `var(--gap-xl)`                 |
-| `size-screen`                     | `100vi` × `100svh`              |
-| `size-screen-xs … size-screen-xl` | `var(--breakpoint-*)` both axes |
+| Class                                | Value (both axes)               |
+| ------------------------------------ | ------------------------------- |
+| `size-0`                             | `0`                             |
+| `size-auto`                          | `auto`                          |
+| `size-full`                          | `100%`                          |
+| `size-xs`                            | `var(--gap-xs)`                 |
+| `size-sm`                            | `var(--gap-sm)`                 |
+| `size-md`                            | `var(--gap-md)`                 |
+| `size-lg`                            | `var(--gap-lg)`                 |
+| `size-xl`                            | `var(--gap-xl)`                 |
+| `size-screen`                        | `100vi` x `100svh`              |
+| `size-screen-xs` to `size-screen-xl` | `var(--breakpoint-*)` both axes |
 
-```html
-<img class="size-lg rounded-full object-cover" src="…" alt="…" />
-```
+## Min and max constraints
 
-## Min & max constraints
-
-Clamp an element's size while letting it flex otherwise. Pair `max-w-*` with `w-full` for the
-common "fluid up to a cap" pattern.
-
-| Max width              | Max height             | Min width              | Min height             |
-| ---------------------- | ---------------------- | ---------------------- | ---------------------- |
-| `max-w-0`              | `max-h-0`              | `min-w-0`              | `min-h-0`              |
-| `max-w-auto`           | `max-h-auto`           | `min-w-auto`           | `min-h-auto`           |
-| `max-w-full`           | `max-h-full`           | `min-w-full`           | `min-h-full`           |
-| `max-w-xs … max-w-xl`  | `max-h-xs … max-h-xl`  | —                      | —                      |
-| `max-w-screen`         | `max-h-screen`         | `min-w-screen`         | `min-h-screen`         |
-| `max-w-screen-xs … xl` | `max-h-screen-xs … xl` | `min-w-screen-xs … xl` | `min-h-screen-xs … xl` |
-
-`max-w-*` / `max-h-*` carry the full named scale (`xs`–`xl`, mapping to the same step values as
-`w-*`/`h-*`). `min-w-*` / `min-h-*` ship the structural values (`0`, `auto`, `full`, `screen`,
-`screen-*`), the most common min-size needs.
+| Max width                 | Max height                | Min width                 | Min height                |
+| ------------------------- | ------------------------- | ------------------------- | ------------------------- |
+| `max-w-0`                 | `max-h-0`                 | `min-w-0`                 | `min-h-0`                 |
+| `max-w-auto`              | `max-h-auto`              | `min-w-auto`              | `min-h-auto`              |
+| `max-w-full`              | `max-h-full`              | `min-w-full`              | `min-h-full`              |
+| `max-w-xs` to `max-w-xl`  | `max-h-xs` to `max-h-xl`  | None                      | None                      |
+| `max-w-screen`            | `max-h-screen`            | `min-w-screen`            | `min-h-screen`            |
+| `max-w-screen-xs` to `xl` | `max-h-screen-xs` to `xl` | `min-w-screen-xs` to `xl` | `min-h-screen-xs` to `xl` |
 
 ```html
 <article class="w-full max-w-screen-sm mx-auto">
-  Fluid, capped at the sm breakpoint, centered.
+  Fluid width constrained to sm breakpoint and centered.
 </article>
 ```

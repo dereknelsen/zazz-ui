@@ -1,15 +1,9 @@
 ---
 title: Tabs
-description: A CSS-first tab group with radio-driven panels and keyboard enhancement.
+description: CSS-driven tabs using radio buttons with keyboard enhancement via tab-group.
 ---
 
-Tabs are CSS-first: grouped `input[type="radio"][role="tab"]` inputs drive the panels and
-the sliding indicator. Wrap the pattern in `<tab-group class="tabs">` to add
-orientation-aware keyboard navigation: Left/Right for horizontal tabs, Up/Down for vertical
-tabs, plus Home/End and wrap-around. **Panel order must match the radio order.**
-
-Without JavaScript, the grouped radios still select panels natively. The preview loads the
-required script automatically; open the JS tab to inspect the custom element.
+Tabs use grouped `input[type="radio"][role="tab"]` inputs to toggle panels and sliding indicators using pure CSS. Wrap in `<tab-group class="tabs">` for keyboard navigation (arrow keys, Home/End, wrap-around). Radio button order must match tab panel order.
 
 ## Default
 
@@ -17,7 +11,7 @@ required script automatically; open the JS tab to inspect the custom element.
 
 ## API
 
-| Attribute          | Where | Values                              |
-| ------------------ | ----- | ----------------------------------- |
-| `<tab-group>`      | root  | Custom element that carries `.tabs` |
-| `data-orientation` | root  | `vertical` (horizontal is default)  |
+| Attribute / Element | Placement | Values                             |
+| ------------------- | --------- | ---------------------------------- |
+| `<tab-group>`       | Root      | Custom element hosting `.tabs`     |
+| `data-orientation`  | Root      | `vertical` (horizontal by default) |
