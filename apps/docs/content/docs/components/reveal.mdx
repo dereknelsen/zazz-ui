@@ -70,27 +70,27 @@ Reveal controls `transition-*` properties to handle delays and durations. To app
 
 ## Configuration attributes
 
-| Attribute               | Default                    | Purpose                                           |
-| ----------------------- | -------------------------- | ------------------------------------------------- |
-| `data-reveal-duration`  | `--reveal-global-duration` | Animation duration                                |
-| `data-reveal-wait`      | `0`                        | Base delay before starting (ms)                   |
-| `data-reveal-step`      | `80`                       | Delay step between children (ms)                  |
-| `data-reveal-ease`      | `--reveal-global-ease`     | Timing function                                   |
-| `data-reveal-distance`  | `1rem`                     | Slide translation distance                        |
-| `data-reveal-scale`     | None                       | Scale value for grow/shrink                       |
-| `data-reveal-margin`    | `0px`                      | Observer rootMargin                               |
-| `data-reveal-threshold` | `0.2`                      | Intersection threshold (0 to 1)                   |
-| `data-reveal-order`     | None                       | Set to `"reversed"` for reversed stagger sequence |
+| Attribute               | Default                       | Purpose                                           |
+| ----------------------- | ----------------------------- | ------------------------------------------------- |
+| `data-reveal-duration`  | `--ui-reveal-global-duration` | Animation duration                                |
+| `data-reveal-wait`      | `0`                           | Base delay before starting (ms)                   |
+| `data-reveal-step`      | `80`                          | Delay step between children (ms)                  |
+| `data-reveal-ease`      | `--ui-reveal-global-ease`     | Timing function                                   |
+| `data-reveal-distance`  | `1rem`                        | Slide translation distance                        |
+| `data-reveal-scale`     | None                          | Scale value for grow/shrink                       |
+| `data-reveal-margin`    | `0px`                         | Observer rootMargin                               |
+| `data-reveal-threshold` | `0.2`                         | Intersection threshold (0 to 1)                   |
+| `data-reveal-order`     | None                          | Set to `"reversed"` for reversed stagger sequence |
 
 ## Global tokens
 
 ```css
 :root {
-  --reveal-global-duration: 600ms;
-  --reveal-global-ease: ease-in-out;
-  --reveal-global-distance: 2rem;
-  --reveal-global-grow: 0.97;
-  --reveal-global-shrink: 1.03;
+  --ui-reveal-global-duration: 600ms;
+  --ui-reveal-global-ease: ease-in-out;
+  --ui-reveal-global-distance: 2rem;
+  --ui-reveal-global-grow: 0.97;
+  --ui-reveal-global-shrink: 1.03;
 }
 ```
 

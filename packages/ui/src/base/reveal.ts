@@ -45,7 +45,7 @@ interface RevealOptions {
 
 /**
  * @description Reads a CSS custom property from `:root` computed styles.
- * @param name - Custom property name (e.g. "--reveal-global-duration").
+ * @param name - Custom property name (e.g. "--ui-reveal-global-duration").
  * @returns Trimmed value, or "" when unset.
  */
 function getRootCssVar(name: string): string {
@@ -54,9 +54,9 @@ function getRootCssVar(name: string): string {
 
 /**
  * @description Whether the engine computes stagger delays natively — reveal.css
- * derives each child's `--reveal-wait` from `sibling-index()`. Where
+ * derives each child's `--ui-reveal-wait` from `sibling-index()`. Where
  * unsupported (Firefox), `#configureStaggerGroup` falls back to writing a
- * per-child `--reveal-wait` inline.
+ * per-child `--ui-reveal-wait` inline.
  */
 const supportsSiblingIndex =
   typeof CSS !== "undefined" && CSS.supports("top", "calc(sibling-index() * 1px)");
@@ -106,19 +106,19 @@ class Reveal {
   declare static getAutoInstance: () => Reveal | null;
 
   /**
-   * @description Default config from `--reveal-global-*` tokens in `_reveal.css`.
+   * @description Default config from `--ui-reveal-global-*` tokens in `_reveal.css`.
    */
   static #readDefaultConfig(): RevealConfig {
     return {
       margin: "0px",
       threshold: 0.2,
-      duration: getRootCssVar("--reveal-global-duration") || "400ms",
-      ease: getRootCssVar("--reveal-global-ease") || "cubic-bezier(0.4, 0, 0.2, 1)",
-      wait: parseCssTimeMs(getRootCssVar("--reveal-global-wait")),
-      distance: getRootCssVar("--reveal-global-distance") || "1rem",
+      duration: getRootCssVar("--ui-reveal-global-duration") || "400ms",
+      ease: getRootCssVar("--ui-reveal-global-ease") || "cubic-bezier(0.4, 0, 0.2, 1)",
+      wait: parseCssTimeMs(getRootCssVar("--ui-reveal-global-wait")),
+      distance: getRootCssVar("--ui-reveal-global-distance") || "1rem",
       step: 80,
-      grow: parseFloat(getRootCssVar("--reveal-global-grow")) || 0.97,
-      shrink: parseFloat(getRootCssVar("--reveal-global-shrink")) || 1.03,
+      grow: parseFloat(getRootCssVar("--ui-reveal-global-grow")) || 0.97,
+      shrink: parseFloat(getRootCssVar("--ui-reveal-global-shrink")) || 1.03,
     };
   }
 
@@ -213,11 +213,11 @@ class Reveal {
    * @description Configures stagger animation properties and observes child elements.
    *
    * The stagger delay (`base + step × position`) is computed natively where
-   * possible: the group carries `--reveal-stagger-base`/`--reveal-stagger-step`
-   * and each child derives its own `--reveal-wait` via `sibling-index()` in
+   * possible: the group carries `--ui-reveal-stagger-base`/`--ui-reveal-stagger-step`
+   * and each child derives its own `--ui-reveal-wait` via `sibling-index()` in
    * reveal.css (reversed groups count from the end via `sibling-count()`).
    * Where unsupported (Firefox), the same math runs here and lands as a
-   * per-child inline `--reveal-wait`.
+   * per-child inline `--ui-reveal-wait`.
    *
    * @param groupElement - The parent stagger container.
    */
@@ -242,8 +242,8 @@ class Reveal {
 
     if (supportsSiblingIndex) {
       this.#setRevealProperties(groupElement, {
-        "--reveal-stagger-base": `${groupProps.baseWait}ms`,
-        "--reveal-stagger-step": `${groupProps.step}ms`,
+        "--ui-reveal-stagger-base": `${groupProps.baseWait}ms`,
+        "--ui-reveal-stagger-step": `${groupProps.step}ms`,
       });
     }
 
@@ -251,14 +251,14 @@ class Reveal {
       if (!(child instanceof HTMLElement)) return;
 
       this.#setRevealProperties(child, {
-        "--reveal-duration": this.#formatTime(groupProps.duration),
-        "--reveal-ease": groupProps.ease,
+        "--ui-reveal-duration": this.#formatTime(groupProps.duration),
+        "--ui-reveal-ease": groupProps.ease,
         // Fallback only — natively each child computes this in reveal.css.
-        "--reveal-wait": supportsSiblingIndex
+        "--ui-reveal-wait": supportsSiblingIndex
           ? null
           : `${groupProps.baseWait + groupProps.step * i}ms`,
-        "--reveal-distance": groupProps.distance,
-        "--reveal-scale": dataset.revealScale || null,
+        "--ui-reveal-distance": groupProps.distance,
+        "--ui-reveal-scale": dataset.revealScale || null,
       });
 
       groupObserver.observe(child);
@@ -283,11 +283,11 @@ class Reveal {
       : null;
 
     this.#setRevealProperties(element, {
-      "--reveal-duration": elementDuration !== null ? this.#formatTime(elementDuration) : null,
-      "--reveal-wait": elementWait !== null ? this.#formatTime(elementWait) : null,
-      "--reveal-ease": dataset.revealEase || null,
-      "--reveal-distance": dataset.revealDistance || null,
-      "--reveal-scale": dataset.revealScale || null,
+      "--ui-reveal-duration": elementDuration !== null ? this.#formatTime(elementDuration) : null,
+      "--ui-reveal-wait": elementWait !== null ? this.#formatTime(elementWait) : null,
+      "--ui-reveal-ease": dataset.revealEase || null,
+      "--ui-reveal-distance": dataset.revealDistance || null,
+      "--ui-reveal-scale": dataset.revealScale || null,
     });
 
     elementObserver.observe(element);
@@ -302,12 +302,12 @@ class Reveal {
     this.#observers.clear();
 
     const rootStyle = document.documentElement.style;
-    rootStyle.setProperty("--reveal-global-duration", this.#formatTime(this.config.duration));
-    rootStyle.setProperty("--reveal-global-ease", this.config.ease);
-    rootStyle.setProperty("--reveal-global-wait", this.#formatTime(this.config.wait));
-    rootStyle.setProperty("--reveal-global-distance", this.config.distance);
-    rootStyle.setProperty("--reveal-global-grow", this.config.grow.toString());
-    rootStyle.setProperty("--reveal-global-shrink", this.config.shrink.toString());
+    rootStyle.setProperty("--ui-reveal-global-duration", this.#formatTime(this.config.duration));
+    rootStyle.setProperty("--ui-reveal-global-ease", this.config.ease);
+    rootStyle.setProperty("--ui-reveal-global-wait", this.#formatTime(this.config.wait));
+    rootStyle.setProperty("--ui-reveal-global-distance", this.config.distance);
+    rootStyle.setProperty("--ui-reveal-global-grow", this.config.grow.toString());
+    rootStyle.setProperty("--ui-reveal-global-shrink", this.config.shrink.toString());
 
     document.querySelectorAll("[data-reveal]").forEach((element) => {
       if (element instanceof HTMLElement) this.#configureSingleElement(element);

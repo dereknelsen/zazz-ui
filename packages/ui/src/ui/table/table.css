@@ -4,42 +4,42 @@
  * @layer      variables, components
  * @requires   layers.css, _variables.css, _reset.css
  * @uses       oklch(from …) — translucent hover/footer tints
- * @tokens     --table-* (@layer variables)
+ * @tokens     --ui-table-* (@layer variables)
  */
 
 @layer variables {
   :root {
-    --table-font-family: var(--font-family-body);
-    --table-font-size: var(--font-size-sm);
+    --ui-table-font-family: var(--font-family-body);
+    --ui-table-font-size: var(--font-size-sm);
 
-    --table-foreground: var(--foreground);
-    --table-background: transparent;
+    --ui-table-foreground: var(--foreground);
+    --ui-table-background: transparent;
 
     /* structural borders — the outer/footer rule, the header separator,
        the tbody row dividers, and the column dividers (grid variant) */
-    --table-border: 1px solid var(--border);
-    --table-head-border: var(--table-border);
-    --table-row-border: var(--table-border);
-    --table-column-border: none;
+    --ui-table-border: 1px solid var(--border);
+    --ui-table-head-border: var(--ui-table-border);
+    --ui-table-row-border: var(--ui-table-border);
+    --ui-table-column-border: none;
 
-    --table-cell-padding-block: var(--step-2);
-    --table-cell-padding-inline: var(--step-2);
+    --ui-table-cell-padding-block: var(--step-2);
+    --ui-table-cell-padding-inline: var(--step-2);
 
-    --table-head-height: var(--step-10);
-    --table-head-foreground: var(--foreground);
-    --table-head-font-weight: var(--font-weight-strong);
+    --ui-table-head-height: var(--step-10);
+    --ui-table-head-foreground: var(--foreground);
+    --ui-table-head-font-weight: var(--font-weight-strong);
 
-    --table-foot-background: oklch(from var(--muted) l c h / calc(alpha / 2));
-    --table-foot-font-weight: var(--font-weight-strong);
+    --ui-table-foot-background: oklch(from var(--muted) l c h / calc(alpha / 2));
+    --ui-table-foot-font-weight: var(--font-weight-strong);
 
-    --table-row-background--hover: oklch(from var(--muted) l c h / calc(alpha / 2));
-    --table-row-background--selected: var(--muted);
+    --ui-table-row-background--hover: oklch(from var(--muted) l c h / calc(alpha / 2));
+    --ui-table-row-background--selected: var(--muted);
 
-    --table-alternating-background: var(--muted);
+    --ui-table-alternating-background: var(--muted);
 
-    --table-caption-foreground: var(--muted-foreground);
-    --table-caption-padding-block: var(--gap-xs);
-    --table-caption-padding-inline: var(--gap-xs);
+    --ui-table-caption-foreground: var(--muted-foreground);
+    --ui-table-caption-padding-block: var(--gap-xs);
+    --ui-table-caption-padding-inline: var(--gap-xs);
   }
 }
 
@@ -49,55 +49,55 @@
   =========================================================================== */
 
   .ui-table {
-    font-family: var(--table-font-family);
-    font-size: var(--table-font-size);
+    font-family: var(--ui-table-font-family);
+    font-size: var(--ui-table-font-size);
     font-variant-numeric: tabular-nums;
 
     inline-size: 100%;
 
-    color: var(--table-foreground);
-    background-color: var(--table-background);
+    color: var(--ui-table-foreground);
+    background-color: var(--ui-table-background);
 
     caption-side: bottom;
     text-align: start;
   }
 
   .ui-table :is(th, td) {
-    padding-block: var(--table-cell-padding-block);
-    padding-inline: var(--table-cell-padding-inline);
+    padding-block: var(--ui-table-cell-padding-block);
+    padding-inline: var(--ui-table-cell-padding-inline);
     vertical-align: middle;
     text-align: start;
-    border-inline: var(--table-column-border);
+    border-inline: var(--ui-table-column-border);
   }
 
   .ui-table th {
-    color: var(--table-head-foreground);
-    font-weight: var(--table-head-font-weight);
+    color: var(--ui-table-head-foreground);
+    font-weight: var(--ui-table-head-font-weight);
   }
 
   .ui-table thead th {
-    block-size: var(--table-head-height);
+    block-size: var(--ui-table-head-height);
     padding-block: 0;
   }
 
   .ui-table thead tr {
-    border-block-end: var(--table-head-border);
+    border-block-end: var(--ui-table-head-border);
   }
 
   .ui-table tbody tr:not(:last-child) {
-    border-block-end: var(--table-row-border);
+    border-block-end: var(--ui-table-row-border);
   }
 
   .ui-table tfoot {
-    background-color: var(--table-foot-background);
-    font-weight: var(--table-foot-font-weight);
-    border-block-start: var(--table-border);
+    background-color: var(--ui-table-foot-background);
+    font-weight: var(--ui-table-foot-font-weight);
+    border-block-start: var(--ui-table-border);
   }
 
   .ui-table caption {
-    color: var(--table-caption-foreground);
-    padding-block: var(--table-caption-padding-block);
-    padding-inline: var(--table-caption-padding-inline);
+    color: var(--ui-table-caption-foreground);
+    padding-block: var(--ui-table-caption-padding-block);
+    padding-inline: var(--ui-table-caption-padding-inline);
   }
 
   /* ===========================================================================
@@ -119,13 +119,13 @@
   =========================================================================== */
 
   /* hover/selected paint on the cells so they layer above any row stripe;
-     disable hover with --table-row-background--hover: transparent */
+     disable hover with --ui-table-row-background--hover: transparent */
   .ui-table tbody tr:hover > :is(th, td) {
-    background-color: var(--table-row-background--hover);
+    background-color: var(--ui-table-row-background--hover);
   }
 
   .ui-table tbody tr[data-state="selected"] > :is(th, td) {
-    background-color: var(--table-row-background--selected);
+    background-color: var(--ui-table-row-background--selected);
   }
 
   /* ===========================================================================
@@ -133,17 +133,17 @@
   =========================================================================== */
 
   .ui-table[data-variant="alternating"] {
-    --table-row-border: none;
+    --ui-table-row-border: none;
   }
 
   .ui-table[data-variant="alternating"] tbody tr:nth-child(even) {
-    background-color: var(--table-alternating-background);
+    background-color: var(--ui-table-alternating-background);
   }
 
   .ui-table[data-variant="grid"] {
-    --table-column-border: var(--table-border);
+    --ui-table-column-border: var(--ui-table-border);
 
-    border: var(--table-border);
+    border: var(--ui-table-border);
   }
 
   /* ===========================================================================
@@ -151,8 +151,8 @@
   =========================================================================== */
 
   .ui-table[data-size="sm"] {
-    --table-cell-padding-block: var(--step-1);
-    --table-cell-padding-inline: var(--step-1_5);
-    --table-head-height: var(--step-8);
+    --ui-table-cell-padding-block: var(--step-1);
+    --ui-table-cell-padding-inline: var(--step-1_5);
+    --ui-table-head-height: var(--step-8);
   }
 }

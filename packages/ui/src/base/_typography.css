@@ -7,15 +7,15 @@
  *             --font-weight-*, --leading-*, --tracking-* from _variables.css;
  *             exposes .text-* (scale) and Tailwind-style .font-* (weight) utilities
  * @uses       font-optical-sizing — heading optical size
- * @tokens     --prose-* (@layer variables)
+ * @tokens     --ui-prose-* (@layer variables)
  */
 
 @layer variables {
   :root {
-    --prose-figcaption-margin: var(--gap-xs) 0 0 0;
-    --prose-img-radius: var(--radius-md);
-    --prose-img-border: none;
-    --prose-link-color: var(--primary);
+    --ui-prose-figcaption-margin: var(--gap-xs) 0 0 0;
+    --ui-prose-img-radius: var(--radius-md);
+    --ui-prose-img-border: none;
+    --ui-prose-link-color: var(--primary);
   }
 }
 
@@ -96,7 +96,7 @@
   }
 
   :where(.ui-prose a) {
-    color: var(--prose-link-color);
+    color: var(--ui-prose-link-color);
     text-decoration-line: var(--decoration-line);
     text-decoration-style: var(--decoration-style);
     text-decoration-color: var(--decoration-color);
@@ -131,17 +131,17 @@
   }
 
   :where(.ui-prose figure:has(img, video)) {
-    gap: var(--prose-figcaption-gap);
+    gap: var(--ui-prose-figcaption-gap);
   }
 
   :where(.ui-prose img, .ui-prose video) {
-    border-radius: var(--prose-img-radius);
-    border: var(--prose-img-border);
+    border-radius: var(--ui-prose-img-radius);
+    border: var(--ui-prose-img-border);
   }
 
   :where(.ui-prose figure:has(img, video) > figcaption) {
     display: flex;
-    margin: var(--prose-figcaption-margin);
+    margin: var(--ui-prose-figcaption-margin);
     font-style: italic;
     font-family: var(--font-family-body);
     font-size: var(--font-size-sm);

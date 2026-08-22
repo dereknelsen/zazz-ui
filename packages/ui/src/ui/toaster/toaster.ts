@@ -300,7 +300,7 @@ class UiToaster extends HTMLElement {
           node.style.setProperty("--initial-height", `${height}px`);
           node.style.setProperty(
             "--offset",
-            `calc(${layout.offsetPx}px + var(--toaster-gap) * ${layout.stackIndex})`,
+            `calc(${layout.offsetPx}px + var(--ui-toaster-gap) * ${layout.stackIndex})`,
           );
         }
 
@@ -686,7 +686,7 @@ class UiToaster extends HTMLElement {
     });
 
     // Safety net for when no transitionend fires (reduced motion → duration 0).
-    // Scaled to the computed duration so retuned --toaster-transition-duration
+    // Scaled to the computed duration so retuned --ui-toaster-transition-duration
     // themes aren't yanked out mid-exit.
     const duration = getComputedStyle(toast)
       .transitionDuration.split(",")

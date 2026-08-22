@@ -178,7 +178,7 @@ components:
     padding: 10px
   # Badge ships primary/muted/ghost/link only — no destructive or status variants.
   # Status badges (info/success/warning/destructive) are an instance override, e.g.
-  # style="--badge-background: var(--success); --badge-foreground: var(--success-foreground)".
+  # style="--ui-badge-background: var(--success); --ui-badge-foreground: var(--success-foreground)".
   badge:
     backgroundColor: "{colors.background}"
     textColor: "{colors.foreground}"
@@ -391,7 +391,7 @@ Headings use `text-wrap: balance`. Body uses `text-wrap: pretty`. Tight-leading 
 **Two conventions:**
 
 - **Variants are data attributes:** `class="ui-button" data-variant="primary"` — never `button-primary`.
-- **Theming via local custom properties:** Components declare `--button-background`, `--button-radius`, etc. off theme roles. Variants re-point those locals.
+- **Theming via local custom properties:** Components declare `--ui-button-background`, `--ui-button-radius`, etc. off theme roles. Variants re-point those locals.
 
 ### Buttons
 
@@ -419,7 +419,7 @@ CSS-first grouped radio inputs wrapped in `<ui-tabs>`. Segmented control with sl
 
 ### Forms
 
-Shared `--field-*` tokens unify `.ui-input`, `.ui-textarea`, `.ui-select`, `.ui-input-group`, `.ui-password-group`. Validation via `:user-invalid` (surfaces after blur/submit, never while typing). `.ui-field` wrapper for label/control/hint/error layout. Password visibility uses `<ui-password>` around `.ui-password-group`; checkbox, switch, and radio are restyled native inputs.
+Shared `--ui-field-*` tokens unify `.ui-input`, `.ui-textarea`, `.ui-select`, `.ui-input-group`, `.ui-password-group`. Validation via `:user-invalid` (surfaces after blur/submit, never while typing). `.ui-field` wrapper for label/control/hint/error layout. Password visibility uses `<ui-password>` around `.ui-password-group`; checkbox, switch, and radio are restyled native inputs.
 
 ---
 

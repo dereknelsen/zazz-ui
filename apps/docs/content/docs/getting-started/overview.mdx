@@ -19,14 +19,14 @@ Zazz defines layer order in `_layers.css`:
 
 Later layers override earlier ones regardless of selector specificity:
 
-| Layer             | Purpose                                          | Example                                        |
-| ----------------- | ------------------------------------------------ | ---------------------------------------------- |
-| `variables`       | Token declarations only                          | `:root { --button-radius: var(--radius-md); }` |
-| `reset`           | Native element baselines (zero specificity)      | `html`, `body`, `input`, `select` defaults     |
-| `legacy`          | Pre-Zazz CSS during migration                    | `@import "old.css" layer(legacy)`              |
-| `zazz.components` | Component rules                                  | `.ui-button`, `.ui-dialog`, `.ui-field`        |
-| `zazz.utilities`  | Atomic override classes                          | `.text-primary`, `.gap-md`, `.rounded-full`    |
-| `migrations`      | Temporary migration shims (highest author layer) | `.btn-primary { --button-background: ... }`    |
+| Layer             | Purpose                                          | Example                                           |
+| ----------------- | ------------------------------------------------ | ------------------------------------------------- |
+| `variables`       | Token declarations only                          | `:root { --ui-button-radius: var(--radius-md); }` |
+| `reset`           | Native element baselines (zero specificity)      | `html`, `body`, `input`, `select` defaults        |
+| `legacy`          | Pre-Zazz CSS during migration                    | `@import "old.css" layer(legacy)`                 |
+| `zazz.components` | Component rules                                  | `.ui-button`, `.ui-dialog`, `.ui-field`           |
+| `zazz.utilities`  | Atomic override classes                          | `.text-primary`, `.gap-md`, `.rounded-full`       |
+| `migrations`      | Temporary migration shims (highest author layer) | `.btn-primary { --ui-button-background: ... }`    |
 
 Utilities in `zazz.utilities` override `.ui-button` in `zazz.components` without `!important`. See [Layers](/docs/foundation/layers).
 
@@ -46,12 +46,14 @@ Components read `var(--token)`. Restyle UI by updating variables:
 ```css
 :root {
   --primary: oklch(0.6 0.2 145); /* global brand override */
-  --button-radius: var(--radius-full); /* component-level override */
+  --ui-button-radius: var(--radius-full); /* component-level override */
 }
 ```
 
 ```html
-<button class="ui-button" style="--button-background: var(--secondary)">Instance override</button>
+<button class="ui-button" style="--ui-button-background: var(--secondary)">
+  Instance override
+</button>
 ```
 
 See [Theme variables](/docs/foundation/variables).

@@ -5,41 +5,41 @@
  * @requires   layers.css, _variables.css, _reset.css
  * @uses       color-mix(), oklch(from …) — variant hover/active tints
  * @uses       text-box — vertical trim (patchy browser support)
- * @tokens     --button-* (@layer variables)
- * @consumedby toggle.css (reads the --button-* token family)
+ * @tokens     --ui-button-* (@layer variables)
+ * @consumedby toggle.css (reads the --ui-button-* token family)
  */
 
 @layer variables {
   :root {
-    --button-ring-color: var(--ring-color);
+    --ui-button-ring-color: var(--ring-color);
 
-    --button-font-family: var(--font-family-body);
-    --button-font-size: var(--font-size-sm);
-    --button-font-weight: var(--font-weight-strong);
-    --button-line-height: 1;
+    --ui-button-font-family: var(--font-family-body);
+    --ui-button-font-size: var(--font-size-sm);
+    --ui-button-font-weight: var(--font-weight-strong);
+    --ui-button-line-height: 1;
 
-    --button-background: var(--card);
-    --button-background--hover: var(--muted);
-    --button-background--active: oklch(from var(--muted) l c h / calc(alpha - 0.02));
+    --ui-button-background: var(--card);
+    --ui-button-background--hover: var(--muted);
+    --ui-button-background--active: oklch(from var(--muted) l c h / calc(alpha - 0.02));
 
-    --button-foreground: var(--foreground);
-    --button-foreground--hover: var(--foreground);
-    --button-foreground--active: var(--foreground);
+    --ui-button-foreground: var(--foreground);
+    --ui-button-foreground--hover: var(--foreground);
+    --ui-button-foreground--active: var(--foreground);
 
-    --button-border: 1px solid var(--border);
-    --button-border--hover: 1px solid var(--border);
-    --button-border--active: 1px solid var(--border);
+    --ui-button-border: 1px solid var(--border);
+    --ui-button-border--hover: 1px solid var(--border);
+    --ui-button-border--active: 1px solid var(--border);
 
-    --button-gap: var(--step-1);
-    --button-padding: var(--step-2_5);
-    --button-height: var(--step-8);
-    --button-radius: var(--radius-md);
+    --ui-button-gap: var(--step-1);
+    --ui-button-padding: var(--step-2_5);
+    --ui-button-height: var(--step-8);
+    --ui-button-radius: var(--radius-md);
 
-    --button-icon-size: var(--step-4);
+    --ui-button-icon-size: var(--step-4);
 
     /* composes into the button's box-shadow list — use a transparent shadow,
        never `none`, so the focus ring layers stay valid */
-    --button-shadow: 0 0 transparent;
+    --ui-button-shadow: 0 0 transparent;
   }
 }
 
@@ -49,36 +49,36 @@
   =========================================================================== */
 
   .ui-button {
-    font-family: var(--button-font-family);
-    font-size: var(--button-font-size);
-    font-weight: var(--button-font-weight);
-    line-height: var(--button-line-height);
+    font-family: var(--ui-button-font-family);
+    font-size: var(--ui-button-font-size);
+    font-weight: var(--ui-button-font-weight);
+    line-height: var(--ui-button-line-height);
 
     display: flex;
     align-items: center;
     justify-content: center;
-    column-gap: var(--button-gap);
+    column-gap: var(--ui-button-gap);
     flex-shrink: 0;
 
-    min-block-size: var(--button-height);
+    min-block-size: var(--ui-button-height);
     min-inline-size: max-content;
-    padding-inline: var(--button-padding);
+    padding-inline: var(--ui-button-padding);
 
-    border: var(--button-border);
-    border-radius: var(--button-radius);
+    border: var(--ui-button-border);
+    border-radius: var(--ui-button-radius);
 
-    color: var(--button-foreground);
-    background-color: var(--button-background);
+    color: var(--ui-button-foreground);
+    background-color: var(--ui-button-background);
 
-    /* ring renders as box-shadow so it composes with --button-shadow; the
+    /* ring renders as box-shadow so it composes with --ui-button-shadow; the
        ring widths animate from 0 so the ring grows in smoothly on focus */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    --_ring: color-mix(in oklch, var(--button-ring-color) var(--ring-opacity), transparent);
+    --_ring: color-mix(in oklch, var(--ui-button-ring-color) var(--ring-opacity), transparent);
     box-shadow:
       0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
       0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring),
-      var(--button-shadow);
+      var(--ui-button-shadow);
 
     cursor: default;
     text-decoration: none;
@@ -103,15 +103,15 @@
   =========================================================================== */
 
   .ui-button:hover:not(:disabled, [aria-disabled="true"]) {
-    color: var(--button-foreground--hover);
-    background-color: var(--button-background--hover);
-    border: var(--button-border--hover);
+    color: var(--ui-button-foreground--hover);
+    background-color: var(--ui-button-background--hover);
+    border: var(--ui-button-border--hover);
   }
 
   .ui-button:active:not(:disabled, [aria-disabled="true"]) {
-    color: var(--button-foreground--active);
-    background-color: var(--button-background--active);
-    border: var(--button-border--active);
+    color: var(--ui-button-foreground--active);
+    background-color: var(--ui-button-background--active);
+    border: var(--ui-button-border--active);
   }
 
   .ui-button:focus-visible:not(:disabled, [aria-disabled="true"]) {
@@ -122,9 +122,9 @@
   }
 
   :is(.ui-button:disabled, .ui-button[aria-disabled="true"]) {
-    --button-foreground: var(--muted-foreground);
-    --button-background: var(--muted);
-    --button-shadow: 0 0 transparent;
+    --ui-button-foreground: var(--muted-foreground);
+    --ui-button-background: var(--muted);
+    --ui-button-shadow: 0 0 transparent;
     --decoration-line: none;
 
     cursor: default;
@@ -141,8 +141,8 @@
   =========================================================================== */
 
   .ui-button > svg {
-    inline-size: var(--button-icon-size);
-    block-size: var(--button-icon-size);
+    inline-size: var(--ui-button-icon-size);
+    block-size: var(--ui-button-icon-size);
     pointer-events: none;
     justify-content: center;
     align-items: center;
@@ -155,89 +155,89 @@
   =========================================================================== */
 
   .ui-button[data-variant="primary"] {
-    --button-background: var(--primary);
-    --button-background--hover: oklch(from var(--primary) l c h / 0.9);
-    --button-background--active: oklch(from var(--primary) l c h / 0.8);
+    --ui-button-background: var(--primary);
+    --ui-button-background--hover: oklch(from var(--primary) l c h / 0.9);
+    --ui-button-background--active: oklch(from var(--primary) l c h / 0.8);
 
-    --button-foreground: var(--primary-foreground);
-    --button-foreground--hover: var(--primary-foreground);
-    --button-foreground--active: var(--primary-foreground);
+    --ui-button-foreground: var(--primary-foreground);
+    --ui-button-foreground--hover: var(--primary-foreground);
+    --ui-button-foreground--active: var(--primary-foreground);
 
-    --button-border: 1px solid transparent;
-    --button-border--hover: 1px solid transparent;
-    --button-border--active: 1px solid transparent;
+    --ui-button-border: 1px solid transparent;
+    --ui-button-border--hover: 1px solid transparent;
+    --ui-button-border--active: 1px solid transparent;
 
-    --button-shadow: 0 0 transparent;
+    --ui-button-shadow: 0 0 transparent;
   }
 
   .ui-button[data-variant="muted"] {
-    --button-background: var(--muted);
-    --button-background--hover: oklch(from var(--muted) l c h / calc(alpha - 0.02));
-    --button-background--active: var(--muted);
+    --ui-button-background: var(--muted);
+    --ui-button-background--hover: oklch(from var(--muted) l c h / calc(alpha - 0.02));
+    --ui-button-background--active: var(--muted);
 
-    --button-foreground: var(--foreground);
-    --button-foreground--hover: var(--foreground);
-    --button-foreground--active: var(--foreground);
+    --ui-button-foreground: var(--foreground);
+    --ui-button-foreground--hover: var(--foreground);
+    --ui-button-foreground--active: var(--foreground);
 
-    --button-border: 1px solid transparent;
-    --button-border--hover: 1px solid transparent;
-    --button-border--active: 1px solid transparent;
+    --ui-button-border: 1px solid transparent;
+    --ui-button-border--hover: 1px solid transparent;
+    --ui-button-border--active: 1px solid transparent;
 
-    --button-shadow: 0 0 transparent;
+    --ui-button-shadow: 0 0 transparent;
   }
 
   .ui-button[data-variant="ghost"] {
-    --button-background: transparent;
-    --button-background--hover: var(--muted);
-    --button-background--active: oklch(from var(--muted) l c h / calc(alpha - 0.02));
+    --ui-button-background: transparent;
+    --ui-button-background--hover: var(--muted);
+    --ui-button-background--active: oklch(from var(--muted) l c h / calc(alpha - 0.02));
 
-    --button-foreground: var(--foreground);
-    --button-foreground--hover: var(--foreground);
-    --button-foreground--active: var(--foreground);
+    --ui-button-foreground: var(--foreground);
+    --ui-button-foreground--hover: var(--foreground);
+    --ui-button-foreground--active: var(--foreground);
 
-    --button-border: 1px solid transparent;
-    --button-border--hover: 1px solid transparent;
-    --button-border--active: 1px solid transparent;
+    --ui-button-border: 1px solid transparent;
+    --ui-button-border--hover: 1px solid transparent;
+    --ui-button-border--active: 1px solid transparent;
 
-    --button-shadow: 0 0 transparent;
+    --ui-button-shadow: 0 0 transparent;
   }
 
   .ui-button[data-variant="destructive"] {
-    --button-ring-color: var(--destructive);
+    --ui-button-ring-color: var(--destructive);
 
-    --button-background: var(--destructive);
-    --button-background--hover: oklch(from var(--destructive) l c h / 0.9);
-    --button-background--active: oklch(from var(--destructive) l c h / 0.8);
+    --ui-button-background: var(--destructive);
+    --ui-button-background--hover: oklch(from var(--destructive) l c h / 0.9);
+    --ui-button-background--active: oklch(from var(--destructive) l c h / 0.8);
 
-    --button-foreground: var(--destructive-foreground);
-    --button-foreground--hover: var(--destructive-foreground);
-    --button-foreground--active: var(--destructive-foreground);
+    --ui-button-foreground: var(--destructive-foreground);
+    --ui-button-foreground--hover: var(--destructive-foreground);
+    --ui-button-foreground--active: var(--destructive-foreground);
 
-    --button-border: 1px solid var(--destructive);
-    --button-border--hover: 1px solid var(--destructive);
-    --button-border--active: 1px solid var(--destructive);
+    --ui-button-border: 1px solid var(--destructive);
+    --ui-button-border--hover: 1px solid var(--destructive);
+    --ui-button-border--active: 1px solid var(--destructive);
 
-    --button-shadow: 0 0 transparent;
+    --ui-button-shadow: 0 0 transparent;
   }
 
   .ui-button[data-variant="link"] {
-    --button-background: transparent;
-    --button-background--hover: transparent;
-    --button-background--active: transparent;
+    --ui-button-background: transparent;
+    --ui-button-background--hover: transparent;
+    --ui-button-background--active: transparent;
 
-    --button-foreground: var(--foreground);
-    --button-foreground--hover: var(--primary);
-    --button-foreground--active: oklch(from var(--primary) l c h / 0.8);
+    --ui-button-foreground: var(--foreground);
+    --ui-button-foreground--hover: var(--primary);
+    --ui-button-foreground--active: oklch(from var(--primary) l c h / 0.8);
 
-    --button-border: none;
-    --button-border--hover: none;
-    --button-border--active: none;
+    --ui-button-border: none;
+    --ui-button-border--hover: none;
+    --ui-button-border--active: none;
 
-    --button-height: fit-content;
-    --button-padding: 0;
-    --button-radius: 0;
+    --ui-button-height: fit-content;
+    --ui-button-padding: 0;
+    --ui-button-radius: 0;
 
-    --button-shadow: 0 0 transparent;
+    --ui-button-shadow: 0 0 transparent;
 
     text-decoration-line: var(--decoration-line);
     text-decoration-style: var(--decoration-style);
@@ -261,26 +261,26 @@
   =========================================================================== */
 
   .ui-button[data-size="sm"] {
-    --button-height: var(--step-6);
-    --button-padding: var(--step-2);
-    --button-radius: var(--radius-sm);
+    --ui-button-height: var(--step-6);
+    --ui-button-padding: var(--step-2);
+    --ui-button-radius: var(--radius-sm);
   }
 
   .ui-button[data-size="icon"] {
-    block-size: var(--button-height);
-    inline-size: var(--button-height);
+    block-size: var(--ui-button-height);
+    inline-size: var(--ui-button-height);
     padding: 0;
     aspect-ratio: 1 / 1;
   }
 
   .ui-button[data-size="icon-sm"] {
-    --button-height: var(--step-6);
-    --button-padding: var(--step-2);
-    --button-radius: var(--radius-sm);
-    --button-icon-size: var(--step-3_5);
+    --ui-button-height: var(--step-6);
+    --ui-button-padding: var(--step-2);
+    --ui-button-radius: var(--radius-sm);
+    --ui-button-icon-size: var(--step-3_5);
 
-    block-size: var(--button-height);
-    inline-size: var(--button-height);
+    block-size: var(--ui-button-height);
+    inline-size: var(--ui-button-height);
     padding: 0;
     aspect-ratio: 1 / 1;
   }
@@ -290,9 +290,9 @@
   =========================================================================== */
 
   .ui-button > kbd {
-    --kbd-inline-size: var(--step-4_5);
-    --kbd-block-size: var(--step-4_5);
-    --kbd-icon-size: var(--step-3);
+    --ui-kbd-inline-size: var(--step-4_5);
+    --ui-kbd-block-size: var(--step-4_5);
+    --ui-kbd-icon-size: var(--step-3);
   }
 
   .ui-button:has(> kbd:last-child:not(:only-child)) {

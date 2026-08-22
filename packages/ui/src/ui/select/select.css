@@ -2,7 +2,7 @@
  * select.css — Select (.ui-select on customizable <select>)
  *
  * @layer      variables, reset, components
- * @requires   layers.css, _variables.css, fields.css, _reset.css, popover.css (--popover-*), button.css (--button-*)
+ * @requires   layers.css, _variables.css, fields.css, _reset.css, popover.css (--ui-popover-*), button.css (--ui-button-*)
  * @uses       appearance: base-select — customizable select (Chromium 135+ / Safari 17+)
  * @uses       ::picker(select), ::picker-icon, selectedcontent, option::checkmark
  * @uses       @starting-style + allow-discrete — picker open animation
@@ -10,65 +10,65 @@
  * @uses       position-area, position-try-fallbacks — data-side × data-align picker placement (@supports gated)
  * @uses       backdrop-filter — picker surface blur (shared with [popover])
  * @uses       Degrades to native OS dropdown where base-select is unsupported
- * @tokens     --select-* (@layer variables); picker panel reuses --popover-* (owned in popover.css)
+ * @tokens     --ui-select-* (@layer variables); picker panel reuses --ui-popover-* (owned in popover.css)
  */
 
 @layer variables {
   :root {
-    /* Box treatment — alias the shared --field-* family (owned in fields.css) so
+    /* Box treatment — alias the shared --ui-field-* family (owned in fields.css) so
        a select, a text input, and a textarea read as one family. Retune a
-       --field-* token and every control follows; remap a --select-* token to
+       --ui-field-* token and every control follows; remap a --ui-select-* token to
        diverge just the select. */
-    --select-inline-size: 100%;
-    --select-min-inline-size: 16ch;
-    --select-padding-inline-start: var(--field-padding);
+    --ui-select-inline-size: 100%;
+    --ui-select-min-inline-size: 16ch;
+    --ui-select-padding-inline-start: var(--ui-field-padding);
     /* Trailing space differs from .ui-input — room for the picker icon */
-    --select-padding-inline-end: var(--step-2);
-    --select-font-size: var(--field-font-size);
-    --select-line-height: var(--field-line-height);
-    --select-border: 1px solid var(--field-border);
-    --select-border-radius: var(--field-radius);
+    --ui-select-padding-inline-end: var(--step-2);
+    --ui-select-font-size: var(--ui-field-font-size);
+    --ui-select-line-height: var(--ui-field-line-height);
+    --ui-select-border: 1px solid var(--ui-field-border);
+    --ui-select-border-radius: var(--ui-field-radius);
 
     /* Picker icon (trigger chevron)
     ** @see https://www.svgbackgrounds.com/tools/svg-to-css/
     ** Set to Legacy / URL Wrapper to update icon */
-    --select-picker-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cpolyline points='80 176 128 224 176 176' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cpolyline points='80 80 128 32 176 80' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3C/svg%3E");
-    --select-picker-icon-size: var(--field-icon-size);
-    --select-picker-icon-color: currentColor;
+    --ui-select-picker-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cpolyline points='80 176 128 224 176 176' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cpolyline points='80 80 128 32 176 80' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3C/svg%3E");
+    --ui-select-picker-icon-size: var(--ui-field-icon-size);
+    --ui-select-picker-icon-color: currentColor;
 
     /* Option (menu item) — a ghost button rendered as a native <option>. Alias
-       the --button-* family (owned in button.css) so a select's options and a
-       dropdown's ghost menu items read as one; retune a --button-* token and both
+       the --ui-button-* family (owned in button.css) so a select's options and a
+       dropdown's ghost menu items read as one; retune a --ui-button-* token and both
        follow. The ghost look is base button minus the surface fill + border, so
-       only --option-background/--option-border diverge. Radius bridges to the
-       shared --dropdown-button-radius. */
-    --option-font-family: var(--button-font-family);
-    --option-font-size: var(--button-font-size);
-    --option-font-weight: var(--button-font-weight);
-    --option-line-height: var(--button-line-height);
-    --option-gap: var(--button-gap);
-    --option-padding: var(--button-padding);
-    --option-height: var(--button-height);
-    --option-icon-size: var(--button-icon-size);
-    --option-radius: var(--dropdown-button-radius);
-    --option-shadow: none;
+       only --ui-option-background/--ui-option-border diverge. Radius bridges to the
+       shared --ui-dropdown-button-radius. */
+    --ui-option-font-family: var(--ui-button-font-family);
+    --ui-option-font-size: var(--ui-button-font-size);
+    --ui-option-font-weight: var(--ui-button-font-weight);
+    --ui-option-line-height: var(--ui-button-line-height);
+    --ui-option-gap: var(--ui-button-gap);
+    --ui-option-padding: var(--ui-button-padding);
+    --ui-option-height: var(--ui-button-height);
+    --ui-option-icon-size: var(--ui-button-icon-size);
+    --ui-option-radius: var(--ui-dropdown-button-radius);
+    --ui-option-shadow: none;
 
-    --option-background: transparent;
-    --option-background--hover: var(--button-background--hover);
-    --option-background--active: var(--button-background--active);
-    --option-foreground: var(--button-foreground);
-    --option-foreground--hover: var(--button-foreground--hover);
-    --option-foreground--active: var(--button-foreground--active);
-    --option-border: 1px solid transparent;
-    --option-border--hover: 1px solid transparent;
-    --option-border--active: 1px solid transparent;
+    --ui-option-background: transparent;
+    --ui-option-background--hover: var(--ui-button-background--hover);
+    --ui-option-background--active: var(--ui-button-background--active);
+    --ui-option-foreground: var(--ui-button-foreground);
+    --ui-option-foreground--hover: var(--ui-button-foreground--hover);
+    --ui-option-foreground--active: var(--ui-button-foreground--active);
+    --ui-option-border: 1px solid transparent;
+    --ui-option-border--hover: 1px solid transparent;
+    --ui-option-border--active: 1px solid transparent;
 
     /* Option checkmark
     ** @see https://www.svgbackgrounds.com/tools/svg-to-css/
     ** Set to Legacy / URL Wrapper to update icon */
-    --option-checkmark-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cpolyline points='40 144 96 200 224 72' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3C/svg%3E");
-    --option-checkmark-size: var(--field-icon-size);
-    --option-checkmark-color: currentColor;
+    --ui-option-checkmark-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cpolyline points='40 144 96 200 224 72' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3C/svg%3E");
+    --ui-option-checkmark-size: var(--ui-field-icon-size);
+    --ui-option-checkmark-color: currentColor;
   }
 }
 
@@ -87,10 +87,10 @@
   }
 
   :where(.ui-select)::picker(select) {
-    transform-origin: var(--popover-origin);
-    opacity: var(--popover-opacity--start);
-    backdrop-filter: var(--popover-backdrop-filter);
-    transform: scale(var(--popover-scale--start)) translate3d(var(--popover-translate--start));
+    transform-origin: var(--ui-popover-origin);
+    opacity: var(--ui-popover-opacity--start);
+    backdrop-filter: var(--ui-popover-backdrop-filter);
+    transform: scale(var(--ui-popover-scale--start)) translate3d(var(--ui-popover-translate--start));
 
     transition:
       opacity var(--default-transition-duration) var(--default-transition-timing-function),
@@ -105,32 +105,33 @@
   }
 
   :where(.ui-select:open)::picker(select) {
-    opacity: var(--popover-opacity--end);
-    transform: scale(var(--popover-scale--end)) translate3d(var(--popover-translate--end));
+    opacity: var(--ui-popover-opacity--end);
+    transform: scale(var(--ui-popover-scale--end)) translate3d(var(--ui-popover-translate--end));
     display: flex;
   }
 
   @starting-style {
     :where(.ui-select:open)::picker(select) {
-      opacity: var(--popover-opacity--start);
-      transform: scale(var(--popover-scale--start)) translate3d(var(--popover-translate--start));
+      opacity: var(--ui-popover-opacity--start);
+      transform: scale(var(--ui-popover-scale--start))
+        translate3d(var(--ui-popover-translate--start));
     }
   }
 
   :where(option)::checkmark {
     content: "";
-    inline-size: var(--option-checkmark-size);
-    block-size: var(--option-checkmark-size);
-    background-color: var(--option-checkmark-color);
-    mask: var(--option-checkmark-mask) center / contain no-repeat;
+    inline-size: var(--ui-option-checkmark-size);
+    block-size: var(--ui-option-checkmark-size);
+    background-color: var(--ui-option-checkmark-color);
+    mask: var(--ui-option-checkmark-mask) center / contain no-repeat;
   }
 
   :where(.ui-select)::picker-icon {
     content: "";
-    inline-size: var(--select-picker-icon-size);
-    block-size: var(--select-picker-icon-size);
-    background-color: var(--select-picker-icon-color);
-    mask: var(--select-picker-icon-mask) center / contain no-repeat;
+    inline-size: var(--ui-select-picker-icon-size);
+    block-size: var(--ui-select-picker-icon-size);
+    background-color: var(--ui-select-picker-icon-color);
+    mask: var(--ui-select-picker-icon-mask) center / contain no-repeat;
   }
 }
 
@@ -141,29 +142,29 @@
     the browser keeps keyboard nav, top-layer rendering, and form integration.
   - Needs a <button><selectedcontent></selectedcontent></button> child. Degrades
     to the native OS dropdown where unsupported (the _reset.css chevron covers it).
-  - Shares the --field-* tokens defined in fields.css.
+  - Shares the --ui-field-* tokens defined in fields.css.
   =========================================================================== */
 
   .ui-select {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--field-gap);
+    gap: var(--ui-field-gap);
 
-    inline-size: var(--select-inline-size);
-    min-inline-size: var(--select-min-inline-size);
-    block-size: var(--field-height);
-    padding-inline: var(--select-padding-inline-start) var(--select-padding-inline-end);
+    inline-size: var(--ui-select-inline-size);
+    min-inline-size: var(--ui-select-min-inline-size);
+    block-size: var(--ui-field-height);
+    padding-inline: var(--ui-select-padding-inline-start) var(--ui-select-padding-inline-end);
 
-    font-size: var(--select-font-size);
-    line-height: var(--select-line-height);
+    font-size: var(--ui-select-font-size);
+    line-height: var(--ui-select-line-height);
     text-align: start;
-    color: var(--field-foreground);
-    background-color: var(--field-background);
+    color: var(--ui-field-foreground);
+    background-color: var(--ui-field-background);
     background-image: none;
 
-    border: var(--select-border);
-    border-radius: var(--select-border-radius);
+    border: var(--ui-select-border);
+    border-radius: var(--ui-select-border-radius);
     cursor: pointer;
 
     /* ring renders as box-shadow; transparent outline twin keeps focus visible
@@ -180,12 +181,12 @@
   }
 
   .ui-select:hover {
-    border-color: var(--field-border--hover);
+    border-color: var(--ui-field-border--hover);
   }
 
   .ui-select:focus-visible,
   .ui-select:open {
-    border-color: var(--field-border--focus);
+    border-color: var(--ui-field-border--focus);
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
     outline-color: transparent;
@@ -197,7 +198,7 @@
     display: flex;
     flex: 1;
     align-items: center;
-    gap: var(--field-gap);
+    gap: var(--ui-field-gap);
     min-inline-size: 0;
     overflow: hidden;
   }
@@ -215,20 +216,20 @@
   .ui-select > button > svg,
   .ui-select selectedcontent > svg {
     flex-shrink: 0;
-    inline-size: var(--field-icon-size);
-    block-size: var(--field-icon-size);
+    inline-size: var(--ui-field-icon-size);
+    block-size: var(--ui-field-icon-size);
     color: var(--muted-foreground);
   }
 
   .ui-select:open {
-    background-color: var(--field-background--focus);
+    background-color: var(--ui-field-background--focus);
   }
 
   .ui-select:open::picker-icon {
     transform: rotate(-180deg);
   }
 
-  /* Dropdown panel — the shared [popover] surface (--popover-* family), anchored
+  /* Dropdown panel — the shared [popover] surface (--ui-popover-* family), anchored
      to the trigger. anchor-size() matches the panel to the trigger width; it is anchor-related,
      so it is gated. The fallback (max-content) only matters in the narrow case
      of a browser that supports customizable <select> (::picker) but not
@@ -237,16 +238,16 @@
     flex-direction: column;
     gap: var(--step-px);
     inline-size: max-content;
-    max-inline-size: var(--popover-max-inline-size);
-    padding: var(--popover-padding);
-    margin-block: var(--popover-margin-block);
+    max-inline-size: var(--ui-popover-max-inline-size);
+    padding: var(--ui-popover-padding);
+    margin-block: var(--ui-popover-margin-block);
     overflow: clip;
 
     background-color: var(--popover);
     color: var(--popover-foreground);
-    border: 1px solid var(--popover-border);
-    border-radius: var(--popover-radius);
-    box-shadow: var(--popover-shadow);
+    border: 1px solid var(--ui-popover-border);
+    border-radius: var(--ui-popover-radius);
+    box-shadow: var(--ui-popover-shadow);
   }
 
   @supports (inline-size: anchor-size(width)) {
@@ -257,7 +258,7 @@
 
   /* ===========================================================================
   PICKER PLACEMENT — data-side × data-align, mirroring [popover] (row/block first,
-  column/inline second per MDN). Set on the .ui-select; drives the --popover-* tokens
+  column/inline second per MDN). Set on the .ui-select; drives the --ui-popover-* tokens
   the surface + @supports block below consume. Defaults to bottom / start (no
   attributes) so the picker keeps dropping below the trigger.
   =========================================================================== */
@@ -267,95 +268,95 @@
   .ui-select:not([data-side])[data-align="start"]::picker(select),
   .ui-select[data-side="bottom"]:not([data-align])::picker(select),
   .ui-select[data-side="bottom"][data-align="start"]::picker(select) {
-    --popover-position-area: block-end span-inline-end;
-    --popover-origin: top center;
-    --popover-margin-block: var(--step-1_5);
-    --popover-margin-inline: 0;
+    --ui-popover-position-area: block-end span-inline-end;
+    --ui-popover-origin: top center;
+    --ui-popover-margin-block: var(--step-1_5);
+    --ui-popover-margin-inline: 0;
   }
 
   .ui-select:not([data-side])[data-align="center"]::picker(select),
   .ui-select[data-side="bottom"][data-align="center"]::picker(select) {
-    --popover-position-area: block-end span-all;
-    --popover-origin: top center;
-    --popover-margin-block: var(--step-1_5);
-    --popover-margin-inline: 0;
+    --ui-popover-position-area: block-end span-all;
+    --ui-popover-origin: top center;
+    --ui-popover-margin-block: var(--step-1_5);
+    --ui-popover-margin-inline: 0;
   }
 
   .ui-select:not([data-side])[data-align="end"]::picker(select),
   .ui-select[data-side="bottom"][data-align="end"]::picker(select) {
-    --popover-position-area: block-end span-inline-start;
-    --popover-origin: top center;
-    --popover-margin-block: var(--step-1_5);
-    --popover-margin-inline: 0;
+    --ui-popover-position-area: block-end span-inline-start;
+    --ui-popover-origin: top center;
+    --ui-popover-margin-block: var(--step-1_5);
+    --ui-popover-margin-inline: 0;
   }
 
   /* top */
   .ui-select[data-side="top"]:not([data-align])::picker(select),
   .ui-select[data-side="top"][data-align="start"]::picker(select) {
-    --popover-position-area: block-start span-inline-end;
-    --popover-origin: bottom center;
-    --popover-margin-block: var(--step-1_5);
-    --popover-margin-inline: 0;
+    --ui-popover-position-area: block-start span-inline-end;
+    --ui-popover-origin: bottom center;
+    --ui-popover-margin-block: var(--step-1_5);
+    --ui-popover-margin-inline: 0;
   }
 
   .ui-select[data-side="top"][data-align="center"]::picker(select) {
-    --popover-position-area: block-start span-all;
-    --popover-origin: bottom center;
-    --popover-margin-block: var(--step-1_5);
-    --popover-margin-inline: 0;
+    --ui-popover-position-area: block-start span-all;
+    --ui-popover-origin: bottom center;
+    --ui-popover-margin-block: var(--step-1_5);
+    --ui-popover-margin-inline: 0;
   }
 
   .ui-select[data-side="top"][data-align="end"]::picker(select) {
-    --popover-position-area: block-start span-inline-start;
-    --popover-origin: bottom center;
-    --popover-margin-block: var(--step-1_5);
-    --popover-margin-inline: 0;
+    --ui-popover-position-area: block-start span-inline-start;
+    --ui-popover-origin: bottom center;
+    --ui-popover-margin-block: var(--step-1_5);
+    --ui-popover-margin-inline: 0;
   }
 
   /* right */
   .ui-select[data-side="right"]:not([data-align])::picker(select),
   .ui-select[data-side="right"][data-align="start"]::picker(select) {
-    --popover-position-area: inline-end span-block-end;
-    --popover-origin: bottom left;
-    --popover-margin-block: 0;
-    --popover-margin-inline: var(--step-1_5);
+    --ui-popover-position-area: inline-end span-block-end;
+    --ui-popover-origin: bottom left;
+    --ui-popover-margin-block: 0;
+    --ui-popover-margin-inline: var(--step-1_5);
   }
 
   .ui-select[data-side="right"][data-align="center"]::picker(select) {
-    --popover-position-area: inline-end span-all;
-    --popover-origin: center left;
-    --popover-margin-block: 0;
-    --popover-margin-inline: var(--step-1_5);
+    --ui-popover-position-area: inline-end span-all;
+    --ui-popover-origin: center left;
+    --ui-popover-margin-block: 0;
+    --ui-popover-margin-inline: var(--step-1_5);
   }
 
   .ui-select[data-side="right"][data-align="end"]::picker(select) {
-    --popover-position-area: inline-end span-block-start;
-    --popover-origin: top left;
-    --popover-margin-block: 0;
-    --popover-margin-inline: var(--step-1_5);
+    --ui-popover-position-area: inline-end span-block-start;
+    --ui-popover-origin: top left;
+    --ui-popover-margin-block: 0;
+    --ui-popover-margin-inline: var(--step-1_5);
   }
 
   /* left */
   .ui-select[data-side="left"]:not([data-align])::picker(select),
   .ui-select[data-side="left"][data-align="start"]::picker(select) {
-    --popover-position-area: inline-start span-block-end;
-    --popover-origin: bottom right;
-    --popover-margin-block: 0;
-    --popover-margin-inline: var(--step-1_5);
+    --ui-popover-position-area: inline-start span-block-end;
+    --ui-popover-origin: bottom right;
+    --ui-popover-margin-block: 0;
+    --ui-popover-margin-inline: var(--step-1_5);
   }
 
   .ui-select[data-side="left"][data-align="center"]::picker(select) {
-    --popover-position-area: inline-start span-all;
-    --popover-origin: center right;
-    --popover-margin-block: 0;
-    --popover-margin-inline: var(--step-1_5);
+    --ui-popover-position-area: inline-start span-all;
+    --ui-popover-origin: center right;
+    --ui-popover-margin-block: 0;
+    --ui-popover-margin-inline: var(--step-1_5);
   }
 
   .ui-select[data-side="left"][data-align="end"]::picker(select) {
-    --popover-position-area: inline-start span-block-start;
-    --popover-origin: top right;
-    --popover-margin-block: 0;
-    --popover-margin-inline: var(--step-1_5);
+    --ui-popover-position-area: inline-start span-block-start;
+    --ui-popover-origin: top right;
+    --ui-popover-margin-block: 0;
+    --ui-popover-margin-inline: var(--step-1_5);
   }
 
   /* The picker is implicitly anchored to the select, so position-area needs no
@@ -364,60 +365,60 @@
      a mispositioned box. */
   @supports (anchor-name: --zazz) {
     .ui-select::picker(select) {
-      position-area: var(--popover-position-area);
-      position-try-fallbacks: var(--popover-position-try-fallbacks);
-      margin-inline: var(--popover-margin-inline);
+      position-area: var(--ui-popover-position-area);
+      position-try-fallbacks: var(--ui-popover-position-try-fallbacks);
+      margin-inline: var(--ui-popover-margin-inline);
     }
   }
 
-  /* Options render as ghost buttons — the --option-* family (set in @layer
-     variables) aliases the --button-* ghost values, so a select's menu items and
+  /* Options render as ghost buttons — the --ui-option-* family (set in @layer
+     variables) aliases the --ui-button-* ghost values, so a select's menu items and
      a dropdown's ghost menu items read identically. Like .ui-button, sizing rides on
      min-block-size + padding-inline (no block padding) so every row is uniform. */
   .ui-select option {
     display: flex;
     align-items: center;
-    gap: var(--option-gap);
-    min-block-size: var(--option-height);
-    padding-inline: var(--option-padding);
+    gap: var(--ui-option-gap);
+    min-block-size: var(--ui-option-height);
+    padding-inline: var(--ui-option-padding);
 
-    font-family: var(--option-font-family);
-    font-size: var(--option-font-size);
-    font-weight: var(--option-font-weight);
-    line-height: var(--option-line-height);
+    font-family: var(--ui-option-font-family);
+    font-size: var(--ui-option-font-size);
+    font-weight: var(--ui-option-font-weight);
+    line-height: var(--ui-option-line-height);
 
-    color: var(--option-foreground);
-    background-color: var(--option-background);
-    border: var(--option-border);
-    border-radius: var(--option-radius);
-    box-shadow: var(--option-shadow);
+    color: var(--ui-option-foreground);
+    background-color: var(--ui-option-background);
+    border: var(--ui-option-border);
+    border-radius: var(--ui-option-radius);
+    box-shadow: var(--ui-option-shadow);
     cursor: pointer;
 
     transition: var(--default-transition);
   }
 
   .ui-select option:hover {
-    color: var(--option-foreground--hover);
-    background-color: var(--option-background--hover);
-    border: var(--option-border--hover);
+    color: var(--ui-option-foreground--hover);
+    background-color: var(--ui-option-background--hover);
+    border: var(--ui-option-border--hover);
   }
 
   .ui-select option:checked {
-    color: var(--option-foreground--active);
-    background-color: var(--option-background--active);
-    border: var(--option-border--active);
+    color: var(--ui-option-foreground--active);
+    background-color: var(--ui-option-background--active);
+    border: var(--ui-option-border--active);
   }
 
   .ui-select option:disabled {
-    --option-foreground: var(--muted-foreground);
+    --ui-option-foreground: var(--muted-foreground);
     cursor: default;
     opacity: 0.5;
   }
 
   .ui-select option > svg {
     flex-shrink: 0;
-    inline-size: var(--option-icon-size);
-    block-size: var(--option-icon-size);
+    inline-size: var(--ui-option-icon-size);
+    block-size: var(--ui-option-icon-size);
     color: var(--muted-foreground);
   }
 

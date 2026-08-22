@@ -108,10 +108,10 @@ Tokens resolve lazily, so you can intervene at three scopes — pick the narrowe
 
 1. **Global** — redefine a semantic token on `:root` (`--radius-md: 0` squares every medium
    radius across the system).
-2. **Component default** — redefine a component token (`--button-radius: var(--radius-full)` →
+2. **Component default** — redefine a component token (`--ui-button-radius: var(--radius-full)` →
    all buttons go pill-shaped).
 3. **Instance** — set the token inline or via a `data-*` variant
-   (`style="--button-background: var(--secondary)"`).
+   (`style="--ui-button-background: var(--secondary)"`).
 
 ## Building with components
 
@@ -125,11 +125,11 @@ Tokens resolve lazily, so you can intervene at three scopes — pick the narrowe
    reading width) + flex/grid utilities. Responsive utilities are `@`-prefixed
    (`@md:grid-cols-2`); see `references/tokens.md` §7.
 
-Forms share `--field-*` tokens and validate via `:user-invalid` (after blur/submit, never
+Forms share `--ui-field-*` tokens and validate via `:user-invalid` (after blur/submit, never
 while typing). Cards and avatars are composition patterns (utilities + theme tokens), not
 dedicated CSS files. Tables are one `.ui-table` class on a semantic `<table>` — variants
 (`alternating`, `grid`), `data-layout="fixed"`, and caption `data-side="top"` are attributes;
-every setting is a `--table-*` token.
+every setting is a `--ui-table-*` token.
 
 ## Modern APIs & JS behaviors
 

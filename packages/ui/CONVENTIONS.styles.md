@@ -90,7 +90,7 @@ A component file is written top-to-bottom in this order:
  * @requires   layers.css, _variables.css, _reset.css
  * @uses       color-mix(), oklch(from …) — variant hover/active tints
  * @uses       text-box — vertical trim (patchy browser support)
- * @tokens     --button-* (@layer variables)
+ * @tokens     --ui-button-* (@layer variables)
  */
 @layer variables {
   :root {
@@ -128,17 +128,17 @@ column** (tag name padded to 11 chars + a space) so headers scan like a table.
 
 ### Tag reference
 
-| Tag                   | Required        | Meaning                                                                                           |
-| --------------------- | --------------- | ------------------------------------------------------------------------------------------------- |
-| _(summary)_           | yes             | First line: `<name>.css — Component (.selector)`. Kept verbatim.                                  |
-| `@layer`              | yes             | Cascade layers this file contributes to, in order: `variables, components`.                       |
-| `@requires`           | yes             | Load-order dependencies — files that must load before this one. `none` for `layers.css`.          |
-| `@uses`               | —               | One modern CSS API/feature per line, with an inline `— note`. Flag support caveats here.          |
-| `@tokens`             | when owned      | The token namespace this file exposes = its override hooks, e.g. `--button-* (@layer variables)`. |
-| `@consumedby`         | when applicable | Reverse dependency — files that build on this one.                                                |
-| `@see`                | —               | External URL or cross-file reference. (Replaces the old block `@link`.)                           |
-| `@example`            | —               | Usage markup. Used where authoring is non-obvious (`reveal.css`).                                 |
-| `@version` / `@since` | —               | Optional, for versioned subsystems (`reveal.css`).                                                |
+| Tag                   | Required        | Meaning                                                                                              |
+| --------------------- | --------------- | ---------------------------------------------------------------------------------------------------- |
+| _(summary)_           | yes             | First line: `<name>.css — Component (.selector)`. Kept verbatim.                                     |
+| `@layer`              | yes             | Cascade layers this file contributes to, in order: `variables, components`.                          |
+| `@requires`           | yes             | Load-order dependencies — files that must load before this one. `none` for `layers.css`.             |
+| `@uses`               | —               | One modern CSS API/feature per line, with an inline `— note`. Flag support caveats here.             |
+| `@tokens`             | when owned      | The token namespace this file exposes = its override hooks, e.g. `--ui-button-* (@layer variables)`. |
+| `@consumedby`         | when applicable | Reverse dependency — files that build on this one.                                                   |
+| `@see`                | —               | External URL or cross-file reference. (Replaces the old block `@link`.)                              |
+| `@example`            | —               | Usage markup. Used where authoring is non-obvious (`reveal.css`).                                    |
+| `@version` / `@since` | —               | Optional, for versioned subsystems (`reveal.css`).                                                   |
 
 ### Rules
 
@@ -152,7 +152,7 @@ column** (tag name padded to 11 chars + a space) so headers scan like a table.
   reader learns what might need a fallback.
 - **`@tokens`** names the namespace, not every token (the tokens self-document via
   naming — see §5). Note tier ownership for shared families:
-  `--field-* (Tier 3 owner; @layer variables)`.
+  `--ui-field-* (Tier 3 owner; @layer variables)`.
 - **`@consumedby`** mirrors `@requires` from the other direction. If you add a file that
   `@requires _foo.css`, add it to `_foo.css`'s `@consumedby`.
 
@@ -162,7 +162,7 @@ The header from [`fields.css`](./src/ui/fields/fields.css), showing every tag in
 
 ```css
 /**
- * fields.css — Shared form field family (Tier 3 owner for --field-*)
+ * fields.css — Shared form field family (Tier 3 owner for --ui-field-*)
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css
@@ -170,7 +170,7 @@ The header from [`fields.css`](./src/ui/fields/fields.css), showing every tag in
  * @uses       :has(:user-invalid) — label/hint/error crossfade
  * @uses       @starting-style + visibility allow-discrete — hint ↔ error swap
  * @uses       color-mix() — destructive field tint on invalid
- * @tokens     --field-*, --field-group-* (Tier 3 owner; @layer variables)
+ * @tokens     --ui-field-*, --ui-field-group-* (Tier 3 owner; @layer variables)
  * @consumedby input.css, textarea.css, select.css, input-group.css,
  *             password-group.css, radio.css (.ui-radio-group)
  */
@@ -197,10 +197,10 @@ They group related hooks; they do **not** document individual tokens (the names 
 ```css
 :root {
   /* surface */
-  --button-background: var(--card);
-  --button-background--hover: var(--muted);
+  --ui-button-background: var(--card);
+  --ui-button-background--hover: var(--muted);
   /* metrics */
-  --button-height: var(--step-8);
+  --ui-button-height: var(--step-8);
 }
 ```
 
@@ -230,7 +230,7 @@ organized in tiers (literal scales → semantic roles → component primitives):
 | Brand/literal scales | `--primary-600`, `--neutral-100`, `--shade-50`                                                           | `_variables.css`    |
 | Semantic roles       | `--background`, `--foreground`, `--primary`, `--muted`, `--border`                                       | `_variables.css`    |
 | Metrics & systems    | `--step-*`, `--radius-*`, `--gap-*`, `--font-family-*`, `--font-size-*`, `--font-weight-*`, `--shadow-*` | `_variables.css`    |
-| **Component tokens** | `--button-background`, `--field-border`, `--dialog-radius`                                               | each component file |
+| **Component tokens** | `--ui-button-background`, `--ui-field-border`, `--ui-dialog-radius`                                      | each component file |
 
 Selected tokens are also **registered as typed `@property`**, inline in
 [`_variables.css`](./src/base/_variables.css), so they can be read by container `style()`
@@ -245,30 +245,30 @@ token **defaults to a global token**:
 ```css
 @layer variables {
   :root {
-    --button-background: var(--card);
-    --button-background--hover: var(--muted);
-    --button-height: var(--step-8);
-    --button-radius: var(--radius-md);
+    --ui-button-background: var(--card);
+    --ui-button-background--hover: var(--muted);
+    --ui-button-height: var(--step-8);
+    --ui-button-radius: var(--radius-md);
   }
 }
 ```
 
 Naming convention:
 
-- `--{component}-{property}` — `--button-background`, `--dialog-radius`.
+- `--{component}-{property}` — `--ui-button-background`, `--ui-dialog-radius`.
 - `--{component}-{property}--{state}` — a **double dash** before the state:
-  `--button-background--hover`, `--field-background--focus`,
-  `--button-background--active`.
+  `--ui-button-background--hover`, `--ui-field-background--focus`,
+  `--ui-button-background--active`.
 
 ### Public hooks vs. private internals
 
 A component file declares two kinds of custom property, and the distinction is
 load-bearing — don't blur them:
 
-| Kind                    | Looks like                                                   | Lives in                                     | Declared on | Apps override?    |
-| ----------------------- | ------------------------------------------------------------ | -------------------------------------------- | ----------- | ----------------- |
-| **Public theming hook** | `--accordion-summary-padding-block` (unprefixed, namespaced) | `@layer variables`                           | `:root`     | **yes** — the API |
-| **Private internal**    | `--_ring-width`, `--_ring` (leading `--_`)                   | the rule that uses it (`components`/`reset`) | the element | **no** — plumbing |
+| Kind                    | Looks like                                                      | Lives in                                     | Declared on | Apps override?    |
+| ----------------------- | --------------------------------------------------------------- | -------------------------------------------- | ----------- | ----------------- |
+| **Public theming hook** | `--ui-accordion-summary-padding-block` (unprefixed, namespaced) | `@layer variables`                           | `:root`     | **yes** — the API |
+| **Private internal**    | `--_ring-width`, `--_ring` (leading `--_`)                      | the rule that uses it (`components`/`reset`) | the element | **no** — plumbing |
 
 **Public hooks** are the override API. They default to a global token, are read by the
 component (often on a descendant), and apps re-skin by reassigning them. Two rules keep
@@ -277,8 +277,8 @@ them overridable:
 - **Declare them on `:root`, never on the element.** A custom property declared _directly
   on_ an element — even via a zero-specificity `:where(details)` — beats a value
   _inherited_ from `:root`, because inheritance only fills in when the element has no
-  declared value of its own. So `:where(details) { --accordion-summary-padding-block: … }`
-  would shadow an app's `:root { --accordion-summary-padding-block: … }` and silently kill
+  declared value of its own. So `:where(details) { --ui-accordion-summary-padding-block: … }`
+  would shadow an app's `:root { --ui-accordion-summary-padding-block: … }` and silently kill
   the "component default" override surface (redefine the token on `:root` to re-skin every
   instance — see below). Locality is already covered: each component declares its hooks at
   the top of its own file.
@@ -307,18 +307,18 @@ token values** — they never restate the rule:
 ```css
 @layer zazz.components {
   .ui-button {
-    background-color: var(--button-background); /* referenced once */
+    background-color: var(--ui-button-background); /* referenced once */
   }
 
   /* a variant changes the value, not the rule */
   .ui-button[data-variant="primary"] {
-    --button-background: var(--primary);
-    --button-background--hover: oklch(from var(--primary) l c h / 0.9);
+    --ui-button-background: var(--primary);
+    --ui-button-background--hover: oklch(from var(--primary) l c h / 0.9);
   }
 
   .ui-button[data-size="sm"] {
-    --button-height: var(--step-6);
-    --button-radius: var(--radius-sm);
+    --ui-button-height: var(--step-6);
+    --ui-button-radius: var(--radius-sm);
   }
 }
 ```
@@ -343,14 +343,14 @@ Because rules resolve tokens lazily, an app can intervene at any of three scopes
 
    ```css
    :root {
-     --button-radius: var(--radius-full);
+     --ui-button-radius: var(--radius-full);
    } /* all buttons go pill-shaped */
    ```
 
 3. **Instance** — set the token inline or via a variant/size attribute for a one-off:
 
    ```html
-   <button class="ui-button" style="--button-background: var(--secondary)">One-off</button>
+   <button class="ui-button" style="--ui-button-background: var(--secondary)">One-off</button>
    ```
 
 Authoring an override never requires touching the package's `src/`. That is the point of

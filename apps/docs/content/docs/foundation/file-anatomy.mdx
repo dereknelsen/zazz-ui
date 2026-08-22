@@ -38,21 +38,21 @@ Component stylesheets organize rules in top-to-bottom order:
  * @layer      variables, components
  * @requires   layers.css, _variables.css, _reset.css
  * @uses       color-mix(), oklch(from ...) (hover/active tints)
- * @tokens     --button-* (@layer variables)
+ * @tokens     --ui-button-* (@layer variables)
  */
 @layer variables {
   :root {
-    --button-background: var(--card);
-    --button-height: var(--step-8);
-    --button-radius: var(--radius-md);
+    --ui-button-background: var(--card);
+    --ui-button-height: var(--step-8);
+    --ui-button-radius: var(--radius-md);
   }
 }
 
 @layer zazz.components {
   .ui-button {
-    background-color: var(--button-background);
-    height: var(--button-height);
-    border-radius: var(--button-radius);
+    background-color: var(--ui-button-background);
+    height: var(--ui-button-height);
+    border-radius: var(--ui-button-radius);
   }
 }
 ```
@@ -72,8 +72,8 @@ Component stylesheets organize rules in top-to-bottom order:
 
 ## Token naming conventions
 
-- **Default token:** `--{component}-{property}` (e.g. `--button-background`, `--dialog-radius`).
-- **State variation:** `--{component}-{property}--{state}` with double-dash (e.g. `--button-background--hover`, `--field-border--focus`).
+- **Default token:** `--{component}-{property}` (e.g. `--ui-button-background`, `--ui-dialog-radius`).
+- **State variation:** `--{component}-{property}--{state}` with double-dash (e.g. `--ui-button-background--hover`, `--ui-field-border--focus`).
 
 ## Selector conventions
 

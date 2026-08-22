@@ -14,42 +14,42 @@
  *             _view-transitions.css so page transitions never repaint the stack
  * @uses       JS-maintained props (--toasts-before, --offset, --initial-height,
  *             --front-toast-height + inline z-index) — stack math from toaster.js
- * @tokens     --toaster-* (@layer variables)
+ * @tokens     --ui-toaster-* (@layer variables)
  * @see        /docs/components/toaster
  */
 
 @layer variables {
   :root {
     /* surface */
-    --toaster-background: var(--popover);
-    --toaster-foreground: var(--popover-foreground);
-    --toaster-border: var(--border);
-    --toaster-radius: var(--radius-md);
-    --toaster-shadow: var(--shadow-md);
+    --ui-toaster-background: var(--popover);
+    --ui-toaster-foreground: var(--popover-foreground);
+    --ui-toaster-border: var(--border);
+    --ui-toaster-radius: var(--radius-md);
+    --ui-toaster-shadow: var(--shadow-md);
     /* status accent — icon color; variants reassign */
-    --toaster-accent: var(--popover-foreground);
+    --ui-toaster-accent: var(--popover-foreground);
 
     /* metrics — mobile full width falls out of the min(); no media query */
-    --toaster-width: min(356px, calc(100vi - var(--gutters) * 2));
-    --toaster-inset: var(--gutters);
-    --toaster-gap: var(--step-3_5);
-    --toaster-padding: var(--step-4);
-    --toaster-icon-size: var(--step-5);
+    --ui-toaster-width: min(356px, calc(100vi - var(--gutters) * 2));
+    --ui-toaster-inset: var(--gutters);
+    --ui-toaster-gap: var(--step-3_5);
+    --ui-toaster-padding: var(--step-4);
+    --ui-toaster-icon-size: var(--step-5);
 
     /* type */
-    --toaster-title-font-size: var(--font-size-sm);
-    --toaster-title-font-weight: var(--font-weight-strong);
-    --toaster-description-font-size: var(--font-size-sm);
-    --toaster-description-color: var(--muted-foreground);
+    --ui-toaster-title-font-size: var(--font-size-sm);
+    --ui-toaster-title-font-weight: var(--font-weight-strong);
+    --ui-toaster-description-font-size: var(--font-size-sm);
+    --ui-toaster-description-color: var(--muted-foreground);
 
     /* stack — per-depth shrink of collapsed toasts */
-    --toaster-scale-step: 0.05;
+    --ui-toaster-scale-step: 0.05;
 
     /* motion */
-    --toaster-transition-duration: calc(var(--default-transition-duration) * 1.5);
-    --toaster-transition-timing-function: var(--default-transition-timing-function);
-    --toaster-opacity--start: 0;
-    --toaster-opacity--end: 1;
+    --ui-toaster-transition-duration: calc(var(--default-transition-duration) * 1.5);
+    --ui-toaster-transition-timing-function: var(--default-transition-timing-function);
+    --ui-toaster-opacity--start: 0;
+    --ui-toaster-opacity--end: 1;
   }
 }
 
@@ -84,9 +84,9 @@
 
     position: fixed;
     inset: auto;
-    inset-block-end: var(--toaster-inset);
-    inset-inline-end: var(--toaster-inset);
-    inline-size: var(--toaster-width);
+    inset-block-end: var(--ui-toaster-inset);
+    inset-inline-end: var(--ui-toaster-inset);
+    inline-size: var(--ui-toaster-width);
     --_lift: -1;
 
     /* Own snapshot group for page view transitions — frozen (never animated)
@@ -103,18 +103,18 @@
   /* Positions — logical, so RTL flips for free. Default is bottom-end. */
 
   .ui-toaster[data-position^="top"] {
-    inset-block-start: var(--toaster-inset);
+    inset-block-start: var(--ui-toaster-inset);
     inset-block-end: auto;
     --_lift: 1;
   }
 
   .ui-toaster[data-position$="start"] {
-    inset-inline-start: var(--toaster-inset);
+    inset-inline-start: var(--ui-toaster-inset);
     inset-inline-end: auto;
   }
 
   .ui-toaster[data-position$="center"] {
-    inset-inline-start: calc(50vi - var(--toaster-width) / 2);
+    inset-inline-start: calc(50vi - var(--ui-toaster-width) / 2);
     inset-inline-end: auto;
   }
 
@@ -140,27 +140,27 @@
     align-items: center;
     gap: var(--step-2);
     inline-size: 100%;
-    padding: var(--toaster-padding);
+    padding: var(--ui-toaster-padding);
 
-    color: var(--toaster-foreground);
-    background-color: var(--toaster-background);
-    border: 1px solid var(--toaster-border);
-    border-radius: var(--toaster-radius);
-    box-shadow: var(--toaster-shadow);
+    color: var(--ui-toaster-foreground);
+    background-color: var(--ui-toaster-background);
+    border: 1px solid var(--ui-toaster-border);
+    border-radius: var(--ui-toaster-radius);
+    box-shadow: var(--ui-toaster-shadow);
     overflow-wrap: anywhere;
 
     --_y: translateY(calc(var(--_lift) * var(--offset, 0px)));
     transform: var(--_y);
-    opacity: var(--toaster-opacity--end);
+    opacity: var(--ui-toaster-opacity--end);
     transition:
-      transform var(--toaster-transition-duration) var(--toaster-transition-timing-function),
-      opacity var(--toaster-transition-duration) var(--toaster-transition-timing-function),
-      block-size var(--toaster-transition-duration) var(--toaster-transition-timing-function);
+      transform var(--ui-toaster-transition-duration) var(--ui-toaster-transition-timing-function),
+      opacity var(--ui-toaster-transition-duration) var(--ui-toaster-transition-timing-function),
+      block-size var(--ui-toaster-transition-duration) var(--ui-toaster-transition-timing-function);
 
     /* Newly inserted toasts slide in from the region's edge (the region is
        already :popover-open — JS shows it before appending). */
     @starting-style {
-      opacity: var(--toaster-opacity--start);
+      opacity: var(--ui-toaster-opacity--start);
       transform: translateY(calc(var(--_lift) * -100%));
     }
   }
@@ -172,7 +172,8 @@
 
   /* Content crossfades when the stack collapses/expands. */
   [data-slot~="toaster-toast"] > * {
-    transition: opacity var(--toaster-transition-duration) var(--toaster-transition-timing-function);
+    transition: opacity var(--ui-toaster-transition-duration)
+      var(--ui-toaster-transition-timing-function);
   }
 
   /* ===========================================================================
@@ -183,8 +184,8 @@
 
   .ui-toaster:not([data-expanded="true"])
     [data-slot~="toaster-toast"]:not([data-front="true"], [data-removed="true"]) {
-    --_y: translateY(calc(var(--_lift) * var(--toaster-gap) * var(--toasts-before, 0)))
-      scale(calc(1 - var(--toaster-scale-step) * var(--toasts-before, 0)));
+    --_y: translateY(calc(var(--_lift) * var(--ui-toaster-gap) * var(--toasts-before, 0)))
+      scale(calc(1 - var(--ui-toaster-scale-step) * var(--toasts-before, 0)));
     block-size: var(--front-toast-height);
   }
 
@@ -209,7 +210,7 @@
     position: absolute;
     inset-inline: 0;
     inset-block-end: 100%;
-    block-size: calc(var(--toaster-gap) + 1px);
+    block-size: calc(var(--ui-toaster-gap) + 1px);
   }
 
   .ui-toaster[data-position^="top"][data-expanded="true"] [data-slot~="toaster-toast"]::after {
@@ -233,14 +234,14 @@
      mouseleave on the region and collapse an expanded stack mid-dismiss.
      toaster.js already ignores interactions with removed toasts. */
   [data-slot~="toaster-toast"][data-removed="true"] {
-    opacity: var(--toaster-opacity--start);
+    opacity: var(--ui-toaster-opacity--start);
     --_y: translateY(calc(var(--_lift) * var(--offset, 0px) + var(--_lift) * -100%));
   }
 
   .ui-toaster:not([data-expanded="true"])
     [data-slot~="toaster-toast"][data-removed="true"]:not([data-front="true"]) {
-    --_y: translateY(calc(var(--_lift) * var(--toaster-gap) * var(--toasts-before, 0)))
-      scale(calc(1 - var(--toaster-scale-step) * var(--toasts-before, 0)));
+    --_y: translateY(calc(var(--_lift) * var(--ui-toaster-gap) * var(--toasts-before, 0)))
+      scale(calc(1 - var(--ui-toaster-scale-step) * var(--toasts-before, 0)));
   }
 
   /* ===========================================================================
@@ -249,9 +250,9 @@
 
   [data-slot~="toaster-icon"] {
     flex-shrink: 0;
-    inline-size: var(--toaster-icon-size);
-    block-size: var(--toaster-icon-size);
-    color: var(--toaster-accent);
+    inline-size: var(--ui-toaster-icon-size);
+    block-size: var(--ui-toaster-icon-size);
+    color: var(--ui-toaster-accent);
   }
 
   [data-slot~="toaster-icon"] > svg {
@@ -269,15 +270,15 @@
   }
 
   [data-slot~="toaster-title"] {
-    font-size: var(--toaster-title-font-size);
-    font-weight: var(--toaster-title-font-weight);
+    font-size: var(--ui-toaster-title-font-size);
+    font-weight: var(--ui-toaster-title-font-weight);
     line-height: var(--leading-sm);
   }
 
   [data-slot~="toaster-description"] {
-    font-size: var(--toaster-description-font-size);
+    font-size: var(--ui-toaster-description-font-size);
     line-height: var(--leading-sm);
-    color: var(--toaster-description-color);
+    color: var(--ui-toaster-description-color);
   }
 
   [data-slot~="toaster-action"],
@@ -290,18 +291,18 @@
   =========================================================================== */
 
   [data-slot~="toaster-toast"][data-variant="success"] {
-    --toaster-accent: var(--success);
+    --ui-toaster-accent: var(--success);
   }
 
   [data-slot~="toaster-toast"][data-variant="info"] {
-    --toaster-accent: var(--info);
+    --ui-toaster-accent: var(--info);
   }
 
   [data-slot~="toaster-toast"][data-variant="warning"] {
-    --toaster-accent: var(--warning);
+    --ui-toaster-accent: var(--warning);
   }
 
   [data-slot~="toaster-toast"][data-variant="destructive"] {
-    --toaster-accent: var(--destructive);
+    --ui-toaster-accent: var(--destructive);
   }
 }

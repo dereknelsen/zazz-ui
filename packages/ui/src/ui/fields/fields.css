@@ -1,5 +1,5 @@
 /**
- * fields.css — Shared form field family (Tier 3 owner for --field-*)
+ * fields.css — Shared form field family (Tier 3 owner for --ui-field-*)
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css
@@ -7,52 +7,52 @@
  * @uses       :has(:user-invalid) — label/hint/error crossfade
  * @uses       @starting-style + visibility allow-discrete — hint ↔ error swap
  * @uses       color-mix() — destructive field tint on invalid
- * @tokens     --field-*, --field-group-* (Tier 3 owner; @layer variables)
+ * @tokens     --ui-field-*, --ui-field-group-* (Tier 3 owner; @layer variables)
  * @consumedby input.css, textarea.css, select.css, input-group.css,
  *             password-group.css, radio.css (.ui-radio-group)
  */
 
 @layer variables {
   :root {
-    --field-background: var(--input);
-    --field-background--hover: var(--input);
-    --field-background--focus: var(--background);
+    --ui-field-background: var(--input);
+    --ui-field-background--hover: var(--input);
+    --ui-field-background--focus: var(--background);
 
-    --field-foreground: var(--input-foreground);
+    --ui-field-foreground: var(--input-foreground);
 
-    --field-border: var(--border);
-    --field-border--hover: var(--primary);
-    --field-border--focus: var(--primary);
+    --ui-field-border: var(--border);
+    --ui-field-border--hover: var(--primary);
+    --ui-field-border--focus: var(--primary);
 
-    --field-label-color: inherit;
-    --field-ring-color: var(--ring-color);
-    --ring: color-mix(in oklch, var(--field-ring-color) var(--ring-opacity), transparent);
-    --field-radius: var(--radius-md);
-    --field-button-radius: var(--radius-sm);
-    --field-height: var(--step-8);
-    --field-font-size: var(--font-size-sm);
-    --field-line-height: 1;
-    --field-padding: var(--step-2_5);
-    --field-addon-padding: var(--step-1);
-    --field-gap: var(--step-2);
-    --field-icon-size: var(--step-4);
+    --ui-field-label-color: inherit;
+    --ui-field-ring-color: var(--ring-color);
+    --ring: color-mix(in oklch, var(--ui-field-ring-color) var(--ring-opacity), transparent);
+    --ui-field-radius: var(--radius-md);
+    --ui-field-button-radius: var(--radius-sm);
+    --ui-field-height: var(--step-8);
+    --ui-field-font-size: var(--font-size-sm);
+    --ui-field-line-height: 1;
+    --ui-field-padding: var(--step-2_5);
+    --ui-field-addon-padding: var(--step-1);
+    --ui-field-gap: var(--step-2);
+    --ui-field-icon-size: var(--step-4);
 
-    --field-display: grid;
-    --field-template-columns: 1fr;
-    --field-align-self: flex-start;
-    --field-inline-size: 100%;
+    --ui-field-display: grid;
+    --ui-field-template-columns: 1fr;
+    --ui-field-align-self: flex-start;
+    --ui-field-inline-size: 100%;
 
     /* Reveal transitions/animations */
-    --field-hint-translate--start: 0 calc(var(--step-1) * -1);
-    --field-hint-translate--end: 0 0;
+    --ui-field-hint-translate--start: 0 calc(var(--step-1) * -1);
+    --ui-field-hint-translate--end: 0 0;
 
-    --field-group-display: grid;
-    --field-group-border: 1px solid transparent;
-    --field-group-background: transparent;
-    --field-group-padding: 0;
-    --field-group-margin: 0;
-    --field-group-gap: var(--gap-xs);
-    --field-group-radius: var(--radius-lg);
+    --ui-field-group-display: grid;
+    --ui-field-group-border: 1px solid transparent;
+    --ui-field-group-background: transparent;
+    --ui-field-group-padding: 0;
+    --ui-field-group-margin: 0;
+    --ui-field-group-gap: var(--gap-xs);
+    --ui-field-group-radius: var(--radius-lg);
   }
 }
 
@@ -77,7 +77,7 @@
   - .ui-input / .ui-textarea / .ui-select / .ui-input-group all share the same surface
     treatment so a text input, a dropdown, and a message box read as one family.
     Each control aliases these locals so a single override retunes the whole set.
-  - Sibling control files only remap these --field-* tokens; this is the owner.
+  - Sibling control files only remap these --ui-field-* tokens; this is the owner.
   --------------------------------------------------------------------------- */
 
   /* ---------------------------------------------------------------------------
@@ -105,14 +105,14 @@
   --------------------------------------------------------------------------- */
 
   .ui-field {
-    /* --field-gap differs from the control family default (step-2) */
-    --field-gap: var(--step-1);
+    /* --ui-field-gap differs from the control family default (step-2) */
+    --ui-field-gap: var(--step-1);
 
-    display: var(--field-display);
-    grid-template-columns: var(--field-template-columns);
-    gap: var(--field-gap);
-    align-self: var(--field-align-self);
-    inline-size: var(--field-inline-size);
+    display: var(--ui-field-display);
+    grid-template-columns: var(--ui-field-template-columns);
+    gap: var(--ui-field-gap);
+    align-self: var(--ui-field-align-self);
+    inline-size: var(--ui-field-inline-size);
   }
 
   .ui-field > :not([data-slot~="field-label"]):not([data-slot~="field-description"]) {
@@ -125,7 +125,7 @@
     grid-row: 1;
     grid-column: 1;
     align-self: start;
-    color: var(--field-label-color);
+    color: var(--ui-field-label-color);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-strong);
     text-align: start;
@@ -161,38 +161,38 @@
   [data-slot~="field-hint"] {
     color: var(--muted-foreground);
     opacity: 1;
-    translate: var(--field-hint-translate--end);
+    translate: var(--ui-field-hint-translate--end);
     visibility: visible;
   }
 
   [data-slot~="field-error"] {
     color: var(--destructive);
     opacity: 0;
-    translate: var(--field-hint-translate--start);
+    translate: var(--ui-field-hint-translate--start);
     visibility: hidden;
   }
 
   /* After interaction: invalid controls turn destructive, reveal the error */
   :where(.ui-field:has(:user-invalid)) [data-slot~="field-hint"] {
     opacity: 0;
-    translate: var(--field-hint-translate--start);
+    translate: var(--ui-field-hint-translate--start);
     visibility: hidden;
 
     @starting-style {
       opacity: 1;
-      translate: var(--field-hint-translate--end);
+      translate: var(--ui-field-hint-translate--end);
       visibility: visible;
     }
   }
 
   :where(.ui-field:has(:user-invalid)) [data-slot~="field-error"] {
     opacity: 1;
-    translate: var(--field-hint-translate--end);
+    translate: var(--ui-field-hint-translate--end);
     visibility: visible;
 
     @starting-style {
       opacity: 0;
-      translate: var(--field-hint-translate--start);
+      translate: var(--ui-field-hint-translate--start);
       visibility: hidden;
     }
   }
@@ -203,18 +203,18 @@
   .ui-input-file:user-invalid,
   .ui-input-group:has(:user-invalid),
   .ui-password-group:has(:user-invalid) {
-    --field-background: color-mix(in oklch, var(--destructive) 5%, var(--input));
-    --field-background--hover: color-mix(in oklch, var(--destructive) 10%, var(--input));
-    --field-border: var(--destructive);
-    --field-border--hover: var(--destructive);
-    --field-border--focus: var(--destructive);
-    --field-ring-color: var(--destructive);
+    --ui-field-background: color-mix(in oklch, var(--destructive) 5%, var(--input));
+    --ui-field-background--hover: color-mix(in oklch, var(--destructive) 10%, var(--input));
+    --ui-field-border: var(--destructive);
+    --ui-field-border--hover: var(--destructive);
+    --ui-field-border--focus: var(--destructive);
+    --ui-field-ring-color: var(--destructive);
 
     border-color: var(--destructive);
   }
 
   :where(.ui-field:has(:user-invalid)) [data-slot~="field-label"] {
-    --field-label-color: var(--destructive);
+    --ui-field-label-color: var(--destructive);
   }
 
   :where(.ui-field:has(:user-invalid)) ::placeholder {
@@ -233,13 +233,13 @@
 
   .ui-field-group,
   .ui-radio-group {
-    display: var(--field-group-display);
-    background-color: var(--field-group-background);
-    gap: var(--field-group-gap);
-    border: var(--field-group-border);
-    border-radius: var(--field-group-radius);
-    padding: var(--field-group-padding);
-    margin: var(--field-group-margin);
+    display: var(--ui-field-group-display);
+    background-color: var(--ui-field-group-background);
+    gap: var(--ui-field-group-gap);
+    border: var(--ui-field-group-border);
+    border-radius: var(--ui-field-group-radius);
+    padding: var(--ui-field-group-padding);
+    margin: var(--ui-field-group-margin);
   }
 
   /* Legend reads as the group's label — same weight/size as a [data-slot~="field-label"] */
@@ -247,7 +247,7 @@
   .ui-radio-group > legend {
     padding: 0;
     margin-block: 0 var(--step-1_5);
-    color: var(--field-label-color, inherit);
+    color: var(--ui-field-label-color, inherit);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-strong);
   }
@@ -258,17 +258,17 @@
 
   /* Inline layout for checkbox/radio/switch: control beside its label */
   .ui-field[data-orientation="horizontal"] {
-    --field-horizontal-display: flex;
-    --field-horizontal-flex-direction: row;
-    --field-horizontal-align-items: center;
-    --field-horizontal-justify-content: flex-start;
-    --field-horizontal-gap: var(--gap-xs);
+    --ui-field-horizontal-display: flex;
+    --ui-field-horizontal-flex-direction: row;
+    --ui-field-horizontal-align-items: center;
+    --ui-field-horizontal-justify-content: flex-start;
+    --ui-field-horizontal-gap: var(--gap-xs);
 
-    display: var(--field-horizontal-display);
-    flex-direction: var(--field-horizontal-flex-direction);
-    align-items: var(--field-horizontal-align-items);
-    justify-content: var(--field-horizontal-justify-content);
-    gap: var(--field-horizontal-gap);
+    display: var(--ui-field-horizontal-display);
+    flex-direction: var(--ui-field-horizontal-flex-direction);
+    align-items: var(--ui-field-horizontal-align-items);
+    justify-content: var(--ui-field-horizontal-justify-content);
+    gap: var(--ui-field-horizontal-gap);
   }
 
   .ui-field[data-orientation="horizontal"] [data-slot~="field-label"] {

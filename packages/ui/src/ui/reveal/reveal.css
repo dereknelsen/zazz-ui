@@ -6,11 +6,11 @@
  * @uses       prefers-reduced-motion — native media feature
  * @uses       sibling-index(), sibling-count() — native stagger delays (@supports
  *             gated — no Firefox yet; where unsupported, reveal.js writes a
- *             per-child --reveal-wait instead)
+ *             per-child --ui-reveal-wait instead)
  * @uses       Behaviour requires zazz/scripts/reveal.js (IntersectionObserver)
- * @tokens     --reveal-global-* (@layer variables);
- *             per-instance --reveal-* set from data-* attributes by reveal.js;
- *             --reveal-stagger-base / --reveal-stagger-step written on stagger
+ * @tokens     --ui-reveal-global-* (@layer variables);
+ *             per-instance --ui-reveal-* set from data-* attributes by reveal.js;
+ *             --ui-reveal-stagger-base / --ui-reveal-stagger-step written on stagger
  *             groups by reveal.js for the native sibling-index() path
  * @version    0.1.0
  * @since      0.1.0
@@ -45,12 +45,12 @@
 
 @layer variables {
   :root {
-    --reveal-global-duration: var(--default-transition-duration);
-    --reveal-global-ease: var(--default-transition-timing-function);
-    --reveal-global-wait: 0ms;
-    --reveal-global-distance: 1rem;
-    --reveal-global-grow: 0.97;
-    --reveal-global-shrink: 1.03;
+    --ui-reveal-global-duration: var(--default-transition-duration);
+    --ui-reveal-global-ease: var(--default-transition-timing-function);
+    --ui-reveal-global-wait: 0ms;
+    --ui-reveal-global-distance: 1rem;
+    --ui-reveal-global-grow: 0.97;
+    --ui-reveal-global-shrink: 1.03;
   }
 }
 
@@ -63,10 +63,10 @@
       [data-reveal]:not([data-gjs-type]),
       [data-reveal-each]:not([data-gjs-type]) > *:not([data-gjs-type])
     ) {
-      --reveal-effective-duration: var(--reveal-duration, var(--reveal-global-duration));
-      --reveal-effective-ease: var(--reveal-ease, var(--reveal-global-ease));
-      --reveal-effective-wait: var(--reveal-wait, var(--reveal-global-wait));
-      --reveal-effective-distance: var(--reveal-distance, var(--reveal-global-distance));
+      --ui-reveal-effective-duration: var(--ui-reveal-duration, var(--ui-reveal-global-duration));
+      --ui-reveal-effective-ease: var(--ui-reveal-ease, var(--ui-reveal-global-ease));
+      --ui-reveal-effective-wait: var(--ui-reveal-wait, var(--ui-reveal-global-wait));
+      --ui-reveal-effective-distance: var(--ui-reveal-distance, var(--ui-reveal-global-distance));
       will-change: opacity, transform;
       opacity: 0;
     }
@@ -78,31 +78,31 @@
        to add no specificity, so the fade override below still wins on order. */
     [data-reveal]:not(:where([data-gjs-type])),
     [data-reveal-each]:not(:where([data-gjs-type])) > *:not(:where([data-gjs-type])) {
-      transition-timing-function: var(--reveal-effective-ease);
-      transition-duration: var(--reveal-effective-duration);
-      transition-delay: var(--reveal-effective-wait);
+      transition-timing-function: var(--ui-reveal-effective-ease);
+      transition-duration: var(--ui-reveal-effective-duration);
+      transition-delay: var(--ui-reveal-effective-wait);
       transition-property: opacity, transform;
     }
 
     /* --- Stagger timing (native) --- */
     /* Each stagger child derives its own delay from its DOM position:
        wait = base + step × (index − 1); reversed groups count from the end.
-       reveal.js writes --reveal-stagger-base/-step on the group (from
+       reveal.js writes --ui-reveal-stagger-base/-step on the group (from
        data-reveal-wait / data-reveal-step, config defaults applied) and skips
-       the per-child --reveal-wait it falls back to where sibling-index() is
+       the per-child --ui-reveal-wait it falls back to where sibling-index() is
        unsupported (Firefox). The literal 80ms mirrors the JS default step. */
     @supports (top: calc(sibling-index() * 1px)) {
       [data-reveal-each] > * {
-        --reveal-wait: calc(
-          var(--reveal-stagger-base, var(--reveal-global-wait)) + var(--reveal-stagger-step, 80ms) *
-            (sibling-index() - 1)
+        --ui-reveal-wait: calc(
+          var(--ui-reveal-stagger-base, var(--ui-reveal-global-wait)) +
+            var(--ui-reveal-stagger-step, 80ms) * (sibling-index() - 1)
         );
       }
 
       [data-reveal-each][data-reveal-order="reversed"] > * {
-        --reveal-wait: calc(
-          var(--reveal-stagger-base, var(--reveal-global-wait)) + var(--reveal-stagger-step, 80ms) *
-            (sibling-count() - sibling-index())
+        --ui-reveal-wait: calc(
+          var(--ui-reveal-stagger-base, var(--ui-reveal-global-wait)) +
+            var(--ui-reveal-stagger-step, 80ms) * (sibling-count() - sibling-index())
         );
       }
     }
@@ -110,22 +110,22 @@
     /* Slide animations */
     [data-reveal="slide-up"]:not(:where(.in-viewport, [data-gjs-type])),
     [data-reveal-each="slide-up"] > *:not(:where(.in-viewport, [data-gjs-type])) {
-      transform: translateY(var(--reveal-effective-distance));
+      transform: translateY(var(--ui-reveal-effective-distance));
     }
 
     [data-reveal="slide-down"]:not(:where(.in-viewport, [data-gjs-type])),
     [data-reveal-each="slide-down"] > *:not(:where(.in-viewport, [data-gjs-type])) {
-      transform: translateY(calc(-1 * var(--reveal-effective-distance)));
+      transform: translateY(calc(-1 * var(--ui-reveal-effective-distance)));
     }
 
     [data-reveal="slide-left"]:not(:where(.in-viewport, [data-gjs-type])),
     [data-reveal-each="slide-left"] > *:not(:where(.in-viewport, [data-gjs-type])) {
-      transform: translateX(var(--reveal-effective-distance));
+      transform: translateX(var(--ui-reveal-effective-distance));
     }
 
     [data-reveal="slide-right"]:not(:where(.in-viewport, [data-gjs-type])),
     [data-reveal-each="slide-right"] > *:not(:where(.in-viewport, [data-gjs-type])) {
-      transform: translateX(calc(-1 * var(--reveal-effective-distance)));
+      transform: translateX(calc(-1 * var(--ui-reveal-effective-distance)));
     }
 
     /* Fade animation */
@@ -138,12 +138,12 @@
     /* Scale animations */
     [data-reveal="grow"]:not(:where(.in-viewport, [data-gjs-type])),
     [data-reveal-each="grow"] > *:not(:where(.in-viewport, [data-gjs-type])) {
-      transform: scale(var(--reveal-scale, var(--reveal-global-grow)));
+      transform: scale(var(--ui-reveal-scale, var(--ui-reveal-global-grow)));
     }
 
     [data-reveal="shrink"]:not(:where(.in-viewport, [data-gjs-type])),
     [data-reveal-each="shrink"] > *:not(:where(.in-viewport, [data-gjs-type])) {
-      transform: scale(var(--reveal-scale, var(--reveal-global-shrink)));
+      transform: scale(var(--ui-reveal-scale, var(--ui-reveal-global-shrink)));
     }
 
     /* Final state */

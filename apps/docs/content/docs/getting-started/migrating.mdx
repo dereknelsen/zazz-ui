@@ -64,8 +64,8 @@ Bridge legacy HTML before markup updates using translation shims in `@layer migr
 @layer migrations {
   @scope (.app) to (.legacy-widget) {
     .btn-primary {
-      --button-background: var(--primary);
-      --button-foreground: var(--primary-foreground);
+      --ui-button-background: var(--primary);
+      --ui-button-foreground: var(--primary-foreground);
     }
   }
 }

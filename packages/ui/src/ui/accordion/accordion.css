@@ -6,13 +6,13 @@
  * @uses       ::details-content — native open/close block-size transition (reset layer)
  * @uses       interpolate-size: allow-keywords — from _variables.css; required for
  *             block-size: 0 → auto transitions
- * @tokens     --accordion-* (@layer variables)
+ * @tokens     --ui-accordion-* (@layer variables)
  */
 
 @layer variables {
   :root {
-    --accordion-icon-size: var(--step-4);
-    --accordion-icon-transform-open: rotate(-180deg);
+    --ui-accordion-icon-size: var(--step-4);
+    --ui-accordion-icon-transform-open: rotate(-180deg);
   }
 }
 
@@ -91,14 +91,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    inline-size: var(--accordion-icon-size);
-    block-size: var(--accordion-icon-size);
+    inline-size: var(--ui-accordion-icon-size);
+    block-size: var(--ui-accordion-icon-size);
     pointer-events: none;
     transition: transform var(--default-transition-duration)
       var(--default-transition-timing-function);
   }
 
   .ui-accordion > details[open] > summary > svg {
-    transform: var(--accordion-icon-transform-open);
+    transform: var(--ui-accordion-icon-transform-open);
   }
 }

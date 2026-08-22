@@ -14,7 +14,7 @@
   BUTTON GROUP
 
   Joins adjacent controls (.ui-button, and any child it wraps) into a single
-  segmented unit. Children keep their own --button-radius, so the outer corners
+  segmented unit. Children keep their own --ui-button-radius, so the outer corners
   follow the buttons' size variant automatically — only the *inner* corners are
   squared off and the doubled border is collapsed with a -1px overlap.
   =========================================================================== */
@@ -24,7 +24,7 @@
     inline-size: fit-content;
     /* stretch so mixed-height children share one edge */
     align-items: stretch;
-    border-radius: var(--button-radius);
+    border-radius: var(--ui-button-radius);
     overflow: clip;
     background-color: var(--background);
     position: relative;

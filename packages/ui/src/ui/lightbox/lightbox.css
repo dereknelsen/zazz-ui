@@ -7,39 +7,39 @@
  * @uses       @container — thumb column count at narrow widths
  * @uses       @starting-style — dialog slide scale/opacity on snap
  * @uses       Embla sync — requires zazz/scripts/embla.js for carousel behaviour
- * @tokens     --lightbox-* (@layer variables)
+ * @tokens     --ui-lightbox-* (@layer variables)
  */
 
 @layer variables {
   :root {
-    --lightbox-aspect-ratio: 3 / 2;
-    --lightbox-object-fit: cover;
-    --lightbox-radius: var(--radius-md);
-    --lightbox-slide-radius: var(--radius-lg);
-    --lightbox-thumb-radius: var(--radius-md);
-    --lightbox-thumb-size: var(--step-16);
-    --lightbox-thumb-border: var(--border);
-    --lightbox-thumb-border--active: var(--primary);
-    --lightbox-thumb-opacity: 0.5;
-    --lightbox-thumb-opacity--active: 1;
-    --lightbox-thumb-columns: 6;
-    --lightbox-thumb-gap: var(--step-1_5);
-    --lightbox-thumb-aspect-ratio: 1 / 1;
-    --lightbox-img-border: 1px solid var(--faded);
+    --ui-lightbox-aspect-ratio: 3 / 2;
+    --ui-lightbox-object-fit: cover;
+    --ui-lightbox-radius: var(--radius-md);
+    --ui-lightbox-slide-radius: var(--radius-lg);
+    --ui-lightbox-thumb-radius: var(--radius-md);
+    --ui-lightbox-thumb-size: var(--step-16);
+    --ui-lightbox-thumb-border: var(--border);
+    --ui-lightbox-thumb-border--active: var(--primary);
+    --ui-lightbox-thumb-opacity: 0.5;
+    --ui-lightbox-thumb-opacity--active: 1;
+    --ui-lightbox-thumb-columns: 6;
+    --ui-lightbox-thumb-gap: var(--step-1_5);
+    --ui-lightbox-thumb-aspect-ratio: 1 / 1;
+    --ui-lightbox-img-border: 1px solid var(--faded);
 
     /* Reveal transitions/animations */
-    --lightbox-slide-opacity--start: 0;
-    --lightbox-slide-opacity--end: 1;
-    --lightbox-slide-scale--start: 0.9;
-    --lightbox-slide-scale--end: 1;
-    --lightbox-img-scale--hover: 1.03;
-    --lightbox-img-filter--hover: brightness(0.8);
-    --lightbox-img-scale--active: 1;
-    --lightbox-img-filter--active: brightness(0.5);
-    --lightbox-img-transition-property: transform, filter;
-    --lightbox-img-transition-duration: calc(var(--default-transition-duration) * 3);
-    --lightbox-img-transition-timing-function: var(--default-transition-timing-function);
-    --lightbox-img-transition-delay: 0ms;
+    --ui-lightbox-slide-opacity--start: 0;
+    --ui-lightbox-slide-opacity--end: 1;
+    --ui-lightbox-slide-scale--start: 0.9;
+    --ui-lightbox-slide-scale--end: 1;
+    --ui-lightbox-img-scale--hover: 1.03;
+    --ui-lightbox-img-filter--hover: brightness(0.8);
+    --ui-lightbox-img-scale--active: 1;
+    --ui-lightbox-img-filter--active: brightness(0.5);
+    --ui-lightbox-img-transition-property: transform, filter;
+    --ui-lightbox-img-transition-duration: calc(var(--default-transition-duration) * 3);
+    --ui-lightbox-img-transition-timing-function: var(--default-transition-timing-function);
+    --ui-lightbox-img-transition-delay: 0ms;
   }
 }
 
@@ -63,7 +63,7 @@
 
   @container section (width <= 40rem) {
     .ui-lightbox {
-      --lightbox-thumb-columns: 4;
+      --ui-lightbox-thumb-columns: 4;
     }
   }
 
@@ -79,18 +79,18 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: calc(var(--lightbox-thumb-gap) * 2);
+    gap: calc(var(--ui-lightbox-thumb-gap) * 2);
   }
 
   [data-slot~="lightbox-stage"] > [data-slot~="carousel-viewport"] {
-    border-radius: var(--lightbox-slide-radius);
+    border-radius: var(--ui-lightbox-slide-radius);
     background: var(--card);
   }
 
   [data-slot~="lightbox-stage"]
     > [data-slot~="carousel-viewport"]
     > [data-slot~="carousel-container"] {
-    border-radius: var(--lightbox-slide-radius);
+    border-radius: var(--ui-lightbox-slide-radius);
     margin-inline-start: calc(var(--gap-sm) * -1);
   }
 
@@ -111,13 +111,13 @@
   [data-slot~="lightbox-stage"] [data-slot~="lightbox-content"] {
     --_ring-width: 0px;
 
-    aspect-ratio: var(--lightbox-aspect-ratio);
+    aspect-ratio: var(--ui-lightbox-aspect-ratio);
     inline-size: 100%;
     block-size: 100%;
     overflow: clip;
     position: relative;
-    border-radius: var(--lightbox-slide-radius);
-    border: var(--lightbox-img-border);
+    border-radius: var(--ui-lightbox-slide-radius);
+    border: var(--ui-lightbox-img-border);
 
     /* transparent twin of the inset ring for forced-colors / high-contrast modes */
     outline: var(--outline-width) var(--outline-style) transparent;
@@ -151,29 +151,29 @@
   }
 
   [data-slot~="lightbox-stage"] [data-slot~="lightbox-slide"] img {
-    aspect-ratio: var(--lightbox-aspect-ratio);
+    aspect-ratio: var(--ui-lightbox-aspect-ratio);
     inline-size: 100%;
     block-size: 100%;
-    object-fit: var(--lightbox-object-fit);
+    object-fit: var(--ui-lightbox-object-fit);
     user-select: none;
     -webkit-user-drag: none;
     pointer-events: none;
-    transition-property: var(--lightbox-img-transition-property);
-    transition-duration: var(--lightbox-img-transition-duration);
-    transition-timing-function: var(--lightbox-img-transition-timing-function);
-    transition-delay: var(--lightbox-img-transition-delay);
-    transform: scale(var(--lightbox-img-scale));
-    opacity: var(--lightbox-img-opacity);
+    transition-property: var(--ui-lightbox-img-transition-property);
+    transition-duration: var(--ui-lightbox-img-transition-duration);
+    transition-timing-function: var(--ui-lightbox-img-transition-timing-function);
+    transition-delay: var(--ui-lightbox-img-transition-delay);
+    transform: scale(var(--ui-lightbox-img-scale));
+    opacity: var(--ui-lightbox-img-opacity);
   }
 
   [data-slot~="lightbox-stage"] [data-slot~="lightbox-slide"]:hover img {
-    transform: scale(var(--lightbox-img-scale--hover));
-    filter: var(--lightbox-img-filter--hover);
+    transform: scale(var(--ui-lightbox-img-scale--hover));
+    filter: var(--ui-lightbox-img-filter--hover);
   }
 
   [data-slot~="lightbox-stage"] [data-slot~="lightbox-slide"]:active img {
-    transform: scale(var(--lightbox-img-scale--active));
-    filter: var(--lightbox-img-filter--active);
+    transform: scale(var(--ui-lightbox-img-scale--active));
+    filter: var(--ui-lightbox-img-filter--active);
   }
 
   /* ---------------------------------------------------------------------------
@@ -188,13 +188,13 @@
   [data-slot~="lightbox-stage"] [data-slot~="lightbox-thumbs"] {
     display: flex;
     align-items: center;
-    gap: var(--lightbox-thumb-gap);
+    gap: var(--ui-lightbox-thumb-gap);
   }
 
   [data-slot~="lightbox-stage"] [data-slot~="lightbox-thumbs"] [data-slot~="carousel-viewport"] {
     flex: 1;
     min-inline-size: 0;
-    border-radius: var(--lightbox-thumb-radius);
+    border-radius: var(--ui-lightbox-thumb-radius);
   }
 
   [data-slot~="lightbox-thumbs-prev"],
@@ -203,7 +203,7 @@
   }
 
   [data-slot~="lightbox-thumbs"] [data-slot~="carousel-container"] {
-    gap: var(--lightbox-thumb-gap);
+    gap: var(--ui-lightbox-thumb-gap);
   }
 
   /* Gallery thumbs: fill track evenly, centered, max 6 columns */
@@ -213,8 +213,8 @@
 
   [data-slot~="lightbox-stage"] [data-slot~="lightbox-thumb"] {
     max-inline-size: calc(
-      (100% - (var(--lightbox-thumb-gap) * (var(--lightbox-thumb-columns) - 1))) /
-        var(--lightbox-thumb-columns)
+      (100% - (var(--ui-lightbox-thumb-gap) * (var(--ui-lightbox-thumb-columns) - 1))) /
+        var(--ui-lightbox-thumb-columns)
     );
   }
 
@@ -225,8 +225,8 @@
     appearance: none;
     cursor: pointer;
     position: relative;
-    border: var(--lightbox-img-border);
-    border-radius: var(--lightbox-thumb-radius);
+    border: var(--ui-lightbox-img-border);
+    border-radius: var(--ui-lightbox-thumb-radius);
     overflow: clip;
 
     /* transparent twin of the inset ring for forced-colors / high-contrast modes */
@@ -248,7 +248,7 @@
   }
 
   [data-slot~="lightbox-thumb"] img {
-    opacity: var(--lightbox-thumb-opacity);
+    opacity: var(--ui-lightbox-thumb-opacity);
     transition:
       opacity var(--default-transition-duration) var(--default-transition-timing-function),
       border-color var(--default-transition-duration) var(--default-transition-timing-function),
@@ -259,12 +259,12 @@
   }
 
   [data-slot~="lightbox-thumb"]:hover img {
-    opacity: var(--lightbox-thumb-opacity--active);
+    opacity: var(--ui-lightbox-thumb-opacity--active);
   }
 
   [data-slot~="lightbox-thumb"].is-active img {
     transform: scale(1.1);
-    opacity: var(--lightbox-thumb-opacity--active);
+    opacity: var(--ui-lightbox-thumb-opacity--active);
   }
 
   [data-slot~="lightbox-thumb"]:focus-visible {
@@ -286,9 +286,9 @@
   --------------------------------------------------------------------------- */
 
   [data-slot~="lightbox-dialog"] {
-    --lightbox-thumb-radius: var(--radius-sm);
-    --dialog-background: transparent;
-    --dialog-border: none;
+    --ui-lightbox-thumb-radius: var(--radius-sm);
+    --ui-dialog-background: transparent;
+    --ui-dialog-border: none;
 
     overflow: clip;
     pointer-events: none;
@@ -296,7 +296,7 @@
   }
 
   [data-slot~="lightbox-dialog"] [data-slot~="lightbox-thumb"] img {
-    border-radius: var(--lightbox-thumb-radius);
+    border-radius: var(--ui-lightbox-thumb-radius);
   }
 
   [data-slot~="lightbox-dialog"] [data-slot~="dialog-content"] {
@@ -338,10 +338,10 @@
   }
 
   [data-slot~="lightbox-dialog"] [data-slot~="lightbox-thumb"] {
-    --lightbox-thumb-border: var(--tint-200);
-    --lightbox-thumb-border--active: var(--ring);
-    flex: 0 0 var(--lightbox-thumb-size);
-    inline-size: var(--lightbox-thumb-size);
+    --ui-lightbox-thumb-border: var(--tint-200);
+    --ui-lightbox-thumb-border--active: var(--ring);
+    flex: 0 0 var(--ui-lightbox-thumb-size);
+    inline-size: var(--ui-lightbox-thumb-size);
   }
 
   [data-slot~="lightbox-dialog"]
@@ -376,10 +376,10 @@
   }
 
   [data-slot~="lightbox-dialog"] [data-slot~="lightbox-slide"] img {
-    --lightbox-thumb-radius: var(--radius-xs);
+    --ui-lightbox-thumb-radius: var(--radius-xs);
 
-    border-radius: var(--lightbox-slide-radius);
-    border: var(--lightbox-img-border);
+    border-radius: var(--ui-lightbox-slide-radius);
+    border: var(--ui-lightbox-img-border);
     overflow: clip;
     inline-size: 100%;
     block-size: 100%;
@@ -391,18 +391,18 @@
     transition:
       opacity var(--default-transition-duration) var(--default-transition-timing-function),
       transform var(--default-transition-duration) var(--default-transition-timing-function);
-    opacity: var(--lightbox-slide-opacity--start);
-    transform: scale(var(--lightbox-slide-scale--start));
+    opacity: var(--ui-lightbox-slide-opacity--start);
+    transform: scale(var(--ui-lightbox-slide-scale--start));
     pointer-events: auto;
   }
 
   [data-slot~="lightbox-dialog"] [data-slot~="lightbox-slide"].is-in-view.is-snapped img {
-    opacity: var(--lightbox-slide-opacity--end);
-    transform: scale(var(--lightbox-slide-scale--end));
+    opacity: var(--ui-lightbox-slide-opacity--end);
+    transform: scale(var(--ui-lightbox-slide-scale--end));
 
     @starting-style {
       opacity: 0;
-      transform: scale(var(--lightbox-slide-scale--start));
+      transform: scale(var(--ui-lightbox-slide-scale--start));
     }
   }
 
@@ -412,7 +412,7 @@
 
   [data-slot~="lightbox-prev"],
   [data-slot~="lightbox-next"] {
-    --button-ring-color: var(--foreground);
+    --ui-button-ring-color: var(--foreground);
     --ring-opacity: 80%;
 
     pointer-events: auto;
