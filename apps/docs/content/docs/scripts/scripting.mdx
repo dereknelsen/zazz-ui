@@ -42,14 +42,15 @@ export { MyExport };
 
 Scripts expose an API on `window` and provide named exports for ES module consumers:
 
-| File            | Global             | Exports                                          |
-| --------------- | ------------------ | ------------------------------------------------ |
-| `utils.js`      | `window.Utils`     | `{ parseValue, parseDataAttributes }`            |
-| `signals.js`    | `window.Signals`   | `{ state, computed, effect }`                    |
-| `reveal.js`     | `window.Reveal`    | `Reveal` class                                   |
-| `embla.js`      | `window.EmblaInit` | `{ init, initRoot, addDotBtnsAndClickHandlers }` |
-| `toaster.js`    | `window.Toaster`   | `Toaster` imperative API                         |
-| `navigation.js` | None               | Side-effect only                                 |
+| File                  | Global             | Exports                                                            |
+| --------------------- | ------------------ | ------------------------------------------------------------------ |
+| `utils.js`            | `window.Utils`     | `{ parseValue, parseDataAttributes }`                              |
+| `signals.js`          | `window.Signals`   | `{ state, computed, effect }`                                      |
+| `reveal.js`           | `window.Reveal`    | `Reveal` class                                                     |
+| `dialog-lifecycle.js` | _(none)_           | Emits `zazz:dialog-open` / `zazz:dialog-close` on every `<dialog>` |
+| `embla.js`            | `window.EmblaInit` | `{ init, initRoot, addDotBtnsAndClickHandlers }`                   |
+| `toaster.js`          | `window.Toaster`   | `Toaster` imperative API                                           |
+| `navigation.js`       | None               | Side-effect only                                                   |
 
 Web component scripts (`carousel.js`, `lightbox.js`, `password-group.js`, `tabs.js`, `toaster.js`) register custom elements automatically.
 
@@ -71,17 +72,18 @@ Initializers are idempotent and check element state (e.g. `data-carousel-init`) 
 
 The module graph resolves loading order automatically via `index.js`:
 
-| Script              | Imports                    | Notes                                          |
-| ------------------- | -------------------------- | ---------------------------------------------- |
-| `utils.js`          | None                       | Exposes `window.Utils`                         |
-| `signals.js`        | `signal-polyfill`          | Reactive state (`window.Signals`)              |
-| `reveal.js`         | None                       | Standalone viewport observer                   |
-| `embla.js`          | `utils.js`, Embla packages | Embla packages resolve through the import map  |
-| `carousel.js`       | `embla.js`                 | `<ui-carousel>` custom element                 |
-| `lightbox.js`       | `carousel.js`              | `<ui-lightbox>` custom element                 |
-| `password-group.js` | `signals.js`               | `<ui-password>` custom element                 |
-| `tabs.js`           | None                       | `<ui-tabs>` custom element                     |
-| `toaster.js`        | `signals.js`               | `<ui-toaster>` custom element                  |
-| `navigation.js`     | None                       | Page transitions; inert inside preview iframes |
+| Script                | Imports                    | Notes                                            |
+| --------------------- | -------------------------- | ------------------------------------------------ |
+| `utils.js`            | None                       | Exposes `window.Utils`                           |
+| `signals.js`          | `signal-polyfill`          | Reactive state (`window.Signals`)                |
+| `reveal.js`           | None                       | Standalone viewport observer                     |
+| `dialog-lifecycle.js` | None                       | Owns `<dialog>` visibility; components subscribe |
+| `embla.js`            | `utils.js`, Embla packages | Embla packages resolve through the import map    |
+| `carousel.js`         | `embla.js`                 | `<ui-carousel>` custom element                   |
+| `lightbox.js`         | `carousel.js`              | `<ui-lightbox>` custom element                   |
+| `password-group.js`   | `signals.js`               | `<ui-password>` custom element                   |
+| `tabs.js`             | None                       | `<ui-tabs>` custom element                       |
+| `toaster.js`          | `signals.js`               | `<ui-toaster>` custom element                    |
+| `navigation.js`       | None                       | Page transitions; inert inside preview iframes   |
 
 Ensure the import map appears in the DOM before `index.js`.
