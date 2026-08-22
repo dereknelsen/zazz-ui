@@ -3,7 +3,7 @@ title: Accordion
 description: Collapsible sections built on native details and summary elements without JavaScript.
 ---
 
-The accordion uses `.ui-accordion` wrapping native `<details>` and `<summary>` elements. Expand/collapse state, keyboard interactions, and animations (via `::details-content`) run natively in the browser.
+A `<ui-accordion>` wraps native `<details>` and `<summary>` elements; the class form `<div class="ui-accordion">` is equivalent — the tag is CSS-only, no JavaScript involved. Expand/collapse state, keyboard interactions, and animations (via `::details-content`) run natively in the browser.
 
 ## Default
 
@@ -11,4 +11,4 @@ The accordion uses `.ui-accordion` wrapping native `<details>` and `<summary>` e
 
 Structure each panel as a `<details class="border-b">` containing a `<summary class="font-strong hover:text-muted-foreground">` with an SVG chevron, followed by a body `<div>`. Multiple panels can open simultaneously. Give `<details>` items matching `name` attributes for mutual exclusion.
 
-Customize using tokens: `--ui-accordion-summary-padding-block`, `--ui-accordion-icon-size`, and `--ui-accordion-icon-transform-open`.
+Customize using tokens: `--ui-accordion-icon-size` and `--ui-accordion-icon-transform-open`.

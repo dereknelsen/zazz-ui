@@ -12,7 +12,7 @@ Prefix utilities with `hover:` to apply styles on pointer hover:
 ```html
 <a class="ui-button hover:bg-primary hover:scale-102">Hover me</a>
 
-<div class="card hover:opacity-75 transition">...</div>
+<div class="bg-card rounded-md hover:opacity-75 transition">...</div>
 ```
 
 Available `hover:` categories:
@@ -53,8 +53,8 @@ Form inputs use `:user-invalid`, styling fields only after user interaction (on 
 
 ```html
 <div class="ui-field">
-  <label for="email">Email</label>
-  <input id="email" type="email" required />
+  <label data-slot="field-label" for="email">Email</label>
+  <input class="ui-input" id="email" type="email" required />
   <p data-slot="field-error">Enter a valid email address.</p>
 </div>
 ```
