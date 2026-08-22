@@ -258,13 +258,13 @@
           <!-- Button Group -->
           <div class="mb-lg">
             <div class="flex flex-col items-start gap-md">
-              <div class="ui-button-group" role="group" aria-label="Text alignment">
+              <ui-button-group role="group" aria-label="Text alignment">
                 <button class="ui-button" type="button">Left</button>
                 <button class="ui-button" type="button">Center</button>
                 <button class="ui-button" type="button">Right</button>
-              </div>
+              </ui-button-group>
 
-              <div class="ui-button-group" role="group" aria-label="Pagination">
+              <ui-button-group role="group" aria-label="Pagination">
                 <button class="ui-button" data-variant="muted" type="button">Previous</button>
                 <button class="ui-button" data-variant="muted" data-size="icon" type="button">
                   1
@@ -276,14 +276,14 @@
                   3
                 </button>
                 <button class="ui-button" data-variant="muted" type="button">Next</button>
-              </div>
+              </ui-button-group>
             </div>
           </div>
 
           <!-- Toggle Group -->
           <div class="mb-lg">
             <h2 class="text-h6 font-heading pb-sm">Toggle Group</h2>
-            <div class="ui-toggle-group" role="group" aria-label="Text formatting">
+            <ui-toggle-group role="group" aria-label="Text formatting">
               <label class="ui-toggle">
                 <input type="checkbox" name="format" value="bold" />
                 <span>Bold</span>
@@ -296,7 +296,7 @@
                 <input type="checkbox" name="format" value="underline" />
                 <span>Underline</span>
               </label>
-            </div>
+            </ui-toggle-group>
           </div>
 
           <!-- Buttons -->
@@ -442,7 +442,7 @@
           <div class="mb-lg">
             <h2 class="text-h6 font-heading pb-sm">Tooltip and dropdown</h2>
             <div class="flex items-center gap-xs">
-              <div class="ui-tooltip">
+              <ui-tooltip>
                 <button type="button" class="ui-button" interestfor="tooltip-components-1">
                   Hover or focus
                 </button>
@@ -455,9 +455,9 @@
                   Add to library
                   <span data-slot="tooltip-arrow" aria-hidden="true"></span>
                 </div>
-              </div>
+              </ui-tooltip>
 
-              <div class="ui-dropdown">
+              <ui-dropdown>
                 <button class="ui-button" type="button" popovertarget="dropdown-components-1">
                   Open menu
                 </button>
@@ -483,7 +483,7 @@
                     </li>
                   </menu>
                 </div>
-              </div>
+              </ui-dropdown>
             </div>
           </div>
 
@@ -591,7 +591,7 @@
           <!-- Accordion -->
           <div class="mb-lg">
             <h2 class="text-h6 font-heading pb-sm">Accordion</h2>
-            <div class="ui-accordion">
+            <ui-accordion>
               <details class="border-b">
                 <summary class="font-strong hover:text-muted-foreground">
                   What is an accordion?
@@ -659,13 +659,13 @@
                   </p>
                 </div>
               </details>
-            </div>
+            </ui-accordion>
           </div>
 
           <!-- Tabs -->
           <div class="mb-lg">
             <h2 class="text-h6 font-heading pb-sm">Tabs</h2>
-            <ui-tabs class="ui-tabs w-full">
+            <ui-tabs class="w-full">
               <div data-slot="tabs-list" role="tablist">
                 <div data-slot="tabs-indicator" aria-hidden="true"></div>
                 <input type="radio" role="tab" name="components-tabs" id="ctab-1" checked />

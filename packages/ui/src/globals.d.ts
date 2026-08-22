@@ -1,7 +1,7 @@
 /**
  * Ambient types for Zazz runtime scripts.
- * CDN globals (Embla) and cross-script globals (Utils) are declared here so
- * checkJs can validate files that depend on prior `<script>` tags.
+ * Cross-script globals (Utils, element classes) are declared here so
+ * checkJs can validate files that reference them across module boundaries.
  */
 
 // Embla loads as real ES modules (see base/embla.ts imports); these aliases
