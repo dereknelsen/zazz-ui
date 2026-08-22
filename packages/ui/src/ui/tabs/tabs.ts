@@ -20,12 +20,12 @@
  *
  * @example
  * <tab-group class="tabs">
- *   <div class="tabs__list" role="tablist">
- *     <label class="tabs__tab"><input type="radio" name="tg" checked />One</label>
- *     <label class="tabs__tab"><input type="radio" name="tg" />Two</label>
+ *   <div data-slot="tabs-list" role="tablist">
+ *     <label data-slot="tabs-label"><input type="radio" name="tg" checked />One</label>
+ *     <label data-slot="tabs-label"><input type="radio" name="tg" />Two</label>
  *   </div>
- *   <div class="tabs__panel">…</div>
- *   <div class="tabs__panel">…</div>
+ *   <div data-slot="tabs-panel">…</div>
+ *   <div data-slot="tabs-panel">…</div>
  * </tab-group>
  */
 
@@ -55,7 +55,7 @@ class TabGroup extends HTMLElement {
     const target = event.target;
     if (!(target instanceof HTMLInputElement) || target.type !== "radio") return;
 
-    const list = target.closest('[role="tablist"], .tabs__list');
+    const list = target.closest('[role="tablist"], [data-slot="tabs-list"]');
     // Ignore radios that belong to a nested tab-group
     if (!list || list.closest("tab-group") !== this) return;
 

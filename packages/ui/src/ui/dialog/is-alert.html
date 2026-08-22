@@ -8,8 +8,8 @@
   Delete account
 </button>
 <dialog id="alert-dialog-example-1" class="dialog" closedby="none">
-  <div class="dialog__content">
-    <header class="dialog__header flex-row items-center gap-xs text-destructive">
+  <div data-slot="dialog-content">
+    <header class="flex-row items-center gap-xs text-destructive" data-slot="dialog-header">
       <svg class="size-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
         <rect width="256" height="256" fill="none" />
         <path
@@ -19,7 +19,7 @@
       </svg>
       <h2 class="text-lg font-heading font-strong">Are you absolutely sure?</h2>
     </header>
-    <div class="dialog__body italic">
+    <div class="italic" data-slot="dialog-body">
       <p>
         Alert dialogs must be closed by clicking the Cancel or Continue buttons. Changing
         <code>closedby="none"</code> to <code>closedby="any"</code> allows the user to close the
@@ -27,7 +27,7 @@
       </p>
     </div>
   </div>
-  <footer class="dialog__footer">
+  <footer data-slot="dialog-footer">
     <button class="button" type="button" commandfor="alert-dialog-example-1" command="close">
       Cancel
     </button>

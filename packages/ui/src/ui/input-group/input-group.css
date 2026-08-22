@@ -6,7 +6,7 @@
  *             textarea.css, button.css
  * @uses       :focus-within — lifts shell ring/border as one field
  * @uses       :has() — restore padding when addons absent; invalid text color
- * @uses       data-align on .input-group__addon — inline-start/end, block-start/end
+ * @uses       data-align on [data-slot="input-group-addon"] — inline-start/end, block-start/end
  * @tokens     --input-group-* (@layer variables)
  */
 
@@ -42,11 +42,11 @@
       inline-start (default) · inline-end · block-start · block-end
     block-* span the full width on their own row — that's how a textarea grows a
     toolbar above or below it.
-  - Composition: .input-group > [.input | .textarea] + .input-group__addon
-    where an addon may hold .input-group__text, an <svg>, <kbd>, or .button.
+  - Composition: .input-group > [.input | .textarea] + [data-slot="input-group-addon"]
+    where an addon may hold [data-slot="input-group-text"], an <svg>, <kbd>, or .button.
   - The shell is a <label> for click-to-focus, but it is NOT the field's label.
-    Wrap it in a .field with a real .field__label[for] (and optional .field__hint
-    / .field__error) so the control is named by visible text, never by a legend.
+    Wrap it in a .field with a real [data-slot="field-label"][for] (and optional [data-slot="field-hint"]
+    / [data-slot="field-error"]) so the control is named by visible text, never by a legend.
   - Shares the --field-* tokens (height, radius, surface) defined in fields.css.
   =========================================================================== */
 
@@ -121,13 +121,16 @@
      spacing on its side; block-* addons take their own row and don't count here.
      (Default/no-data-align addons are inline-start.) */
   .input-group:not(
-      :has(.input-group__addon:not([data-align]), .input-group__addon[data-align="inline-start"])
+      :has(
+        [data-slot="input-group-addon"]:not([data-align]),
+        [data-slot="input-group-addon"][data-align="inline-start"]
+      )
     )
     .input {
     padding-inline-start: var(--field-padding);
   }
 
-  .input-group:not(:has(.input-group__addon[data-align="inline-end"])) .input {
+  .input-group:not(:has([data-slot="input-group-addon"][data-align="inline-end"])) .input {
     padding-inline-end: var(--field-padding);
   }
 
@@ -141,7 +144,7 @@
   }
 
   /* Addon — groups icons, text, kbd, or buttons together */
-  .input-group__addon {
+  [data-slot="input-group-addon"] {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -154,29 +157,29 @@
     padding-inline: var(--field-addon-padding);
   }
 
-  .input-group__addon > svg {
+  [data-slot="input-group-addon"] > svg {
     inline-size: var(--field-icon-size);
     block-size: var(--field-icon-size);
   }
 
   /* Alignment — inline-start is the default (addon visually leads the control) */
-  .input-group__addon:not([data-align]),
-  .input-group__addon[data-align="inline-start"] {
+  [data-slot="input-group-addon"]:not([data-align]),
+  [data-slot="input-group-addon"][data-align="inline-start"] {
     order: -1;
   }
 
-  .input-group__addon[data-align="inline-end"] {
+  [data-slot="input-group-addon"][data-align="inline-end"] {
     order: 1;
   }
 
-  .input-group__addon[data-align="block-start"] {
+  [data-slot="input-group-addon"][data-align="block-start"] {
     order: -2;
     flex-basis: 100%;
     padding-block: var(--field-addon-padding);
     align-items: flex-start;
   }
 
-  .input-group__addon[data-align="block-end"] {
+  [data-slot="input-group-addon"][data-align="block-end"] {
     order: 2;
     flex-basis: 100%;
     padding-block: var(--field-addon-padding);
@@ -184,7 +187,7 @@
   }
 
   /* Text addon — units, protocols, @handles ("https://", "USD", "@user") */
-  .input-group__text {
+  [data-slot="input-group-text"] {
     display: inline-flex;
     align-items: center;
     gap: var(--gap-xs);
@@ -195,7 +198,7 @@
     min-inline-size: max-content;
   }
 
-  .input-group__text > svg {
+  [data-slot="input-group-text"] > svg {
     inline-size: var(--field-icon-size);
     block-size: var(--field-icon-size);
   }
@@ -206,7 +209,7 @@
     border-radius: var(--field-button-radius);
   }
 
-  :where(.field:has(:user-invalid)) .input-group__text {
+  :where(.field:has(:user-invalid)) [data-slot="input-group-text"] {
     --input-group-text-color: var(--destructive);
   }
 }

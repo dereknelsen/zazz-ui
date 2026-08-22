@@ -21,14 +21,14 @@
  *
  * @example
  * <slide-carousel data-carousel-loop="true">
- *   <div data-carousel="viewport">
- *     <div data-carousel="container">
- *       <div data-carousel="slide">Slide 1</div>
- *       <div data-carousel="slide">Slide 2</div>
+ *   <div data-slot="carousel-viewport">
+ *     <div data-slot="carousel-container">
+ *       <div data-slot="carousel-slide">Slide 1</div>
+ *       <div data-slot="carousel-slide">Slide 2</div>
  *     </div>
  *   </div>
- *   <button type="button" data-carousel="prev">Prev</button>
- *   <button type="button" data-carousel="next">Next</button>
+ *   <button type="button" data-slot="carousel-prev">Prev</button>
+ *   <button type="button" data-slot="carousel-next">Next</button>
  * </slide-carousel>
  */
 

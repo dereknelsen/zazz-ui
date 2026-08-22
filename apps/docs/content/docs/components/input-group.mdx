@@ -3,7 +3,7 @@ title: Input group
 description: Input fields with attached leading, trailing, top, or bottom addons.
 ---
 
-`.input-group` wraps an `.input` with `.input-group__addon` elements. Position addons using `data-align`.
+`.input-group` wraps an `.input` with `[data-slot="input-group-addon"]` elements. Position addons using `data-align`.
 
 ## Default
 
@@ -17,6 +17,6 @@ Wraps inputs in `<input-password>` to provide a password visibility toggle:
 
 ## API
 
-| Attribute    | Target                | Values                                                   |
-| ------------ | --------------------- | -------------------------------------------------------- |
-| `data-align` | `.input-group__addon` | `inline-start`, `inline-end`, `block-start`, `block-end` |
+| Attribute    | Target                            | Values                                                   |
+| ------------ | --------------------------------- | -------------------------------------------------------- |
+| `data-align` | `[data-slot="input-group-addon"]` | `inline-start`, `inline-end`, `block-start`, `block-end` |

@@ -15,15 +15,15 @@ Define carousel structure with `data-carousel` roles. Set slide widths with `bas
 
 ```html
 <slide-carousel data-carousel-loop="true">
-  <div data-carousel="viewport">
-    <div data-carousel="container">
-      <div data-carousel="slide" class="basis-full @sm:basis-1/2 @md:basis-1/3">Slide 1</div>
-      <div data-carousel="slide" class="basis-full @sm:basis-1/2 @md:basis-1/3">Slide 2</div>
-      <div data-carousel="slide" class="basis-full @sm:basis-1/2 @md:basis-1/3">Slide 3</div>
+  <div data-slot="carousel-viewport">
+    <div data-slot="carousel-container">
+      <div data-slot="carousel-slide" class="basis-full @sm:basis-1/2 @md:basis-1/3">Slide 1</div>
+      <div data-slot="carousel-slide" class="basis-full @sm:basis-1/2 @md:basis-1/3">Slide 2</div>
+      <div data-slot="carousel-slide" class="basis-full @sm:basis-1/2 @md:basis-1/3">Slide 3</div>
     </div>
   </div>
-  <button type="button" data-carousel="prev">Prev</button>
-  <button type="button" data-carousel="next">Next</button>
+  <button type="button" data-slot="carousel-prev">Prev</button>
+  <button type="button" data-slot="carousel-next">Next</button>
 </slide-carousel>
 ```
 
@@ -73,8 +73,8 @@ Enable plugins with boolean attributes:
 ## Dots pagination
 
 ```html
-<div data-carousel="dots">
-  <button type="button" data-carousel="dot"></button>
+<div data-slot="carousel-dots">
+  <button type="button" data-slot="carousel-dot"></button>
 </div>
 ```
 
@@ -82,7 +82,7 @@ The script clones the template button for each slide and toggles `.is-active`.
 
 ## Thumbnail navigation
 
-Nest a `data-carousel="thumbs"` container inside `<slide-carousel>` for synchronized thumbnail strips.
+Nest a `data-slot="carousel-thumbs"` container inside `<slide-carousel>` for synchronized thumbnail strips.
 
 ## Dialog integration
 

@@ -14,17 +14,17 @@
  * Opening and closing the dialog itself needs no JavaScript — slides carry
  * `command="show-modal"` / `command="close"` (Invoker Commands). Drag-aware
  * click suppression on the stage and thumbs is wired by `initRoot` in
- * embla.js (keyed on `.lightbox__stage` / thumbs markup).
+ * embla.js (keyed on `[data-slot="lightbox-stage"]` / thumbs markup).
  *
  * Load order: the module graph resolves it — `index.js` imports embla.js and
  * carousel.js before this file; Embla itself resolves via the page's import map.
  *
  * @example
  * <media-lightbox class="lightbox">
- *   <div class="lightbox__gallery">
- *     <slide-carousel class="lightbox__stage" data-carousel-loop="true">…</slide-carousel>
+ *   <div data-slot="lightbox-gallery">
+ *     <slide-carousel data-slot="lightbox-stage" data-carousel-loop="true">…</slide-carousel>
  *   </div>
- *   <dialog class="lightbox__dialog dialog" closedby="any">
+ *   <dialog class="dialog" data-slot="lightbox-dialog" closedby="any">
  *     <slide-carousel data-carousel-loop="true">…</slide-carousel>
  *   </dialog>
  * </media-lightbox>
@@ -66,7 +66,7 @@ class MediaLightbox extends HTMLElement {
    * @returns The inline gallery's carousel root.
    */
   #galleryRoot(): Element | null {
-    return this.querySelector('.lightbox__gallery [data-carousel="root"]');
+    return this.querySelector('[data-slot="lightbox-gallery"] [data-carousel="root"]');
   }
 
   /**
@@ -90,7 +90,7 @@ class MediaLightbox extends HTMLElement {
       dialogRoot._emblaApi.scrollTo(galleryApi.selectedScrollSnap(), true);
     }
 
-    const viewport = dialogRoot.querySelector('[data-carousel="viewport"]');
+    const viewport = dialogRoot.querySelector('[data-slot="carousel-viewport"]');
     if (viewport instanceof HTMLElement) {
       viewport.focus({ preventScroll: true });
     }

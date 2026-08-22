@@ -372,7 +372,7 @@ the variables layer.
 ## 6. Naming & selector conventions
 
 - **Blocks & elements**: `.component` and `.component__part`
-  (`.input-group`, `.input-group__addon`). No BEM modifier classes — use attributes.
+  (`.input-group`, `[data-slot="input-group-addon"]`). No BEM modifier classes — use attributes.
 - **Variants & sizes**: data attributes — `[data-variant="primary"]`, `[data-size="sm"]`,
   `[data-side]`, `[data-align]`, `[data-animation]`. They read as state and double as
   token-override hooks.

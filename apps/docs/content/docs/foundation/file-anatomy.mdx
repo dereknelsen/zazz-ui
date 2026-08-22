@@ -77,7 +77,7 @@ Component stylesheets organize rules in top-to-bottom order:
 
 ## Selector conventions
 
-- **Classes:** `.component` and `.component__part` (e.g. `.input-group__addon`).
+- **Classes:** `.component` and `.component__part` (e.g. `[data-slot="input-group-addon"]`).
 - **Variants:** Data attributes (e.g. `[data-variant="primary"]`, `[data-size="sm"]`, `[data-side]`).
 - **Zero specificity:** `:where()` on reset and utility selectors.
 - **Logical properties:** `inline-size`, `block-size`, `padding-inline`, `margin-block`.

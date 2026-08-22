@@ -24,8 +24,8 @@
   </svg>
 </button>
 <dialog id="dialog-example-1" class="dialog" closedby="any">
-  <div class="dialog__content">
-    <header class="dialog__header">
+  <div data-slot="dialog-content">
+    <header data-slot="dialog-header">
       <h2 class="text-lg font-heading font-strong">Dialog title</h2>
       <p class="text-muted-foreground">
         This dialog was opened using an
@@ -37,10 +37,10 @@
         >.
       </p>
     </header>
-    <div class="dialog__body">
+    <div data-slot="dialog-body">
       <p>Set the size of the dialog with the <code>data-size</code> attribute.</p>
     </div>
-    <footer class="dialog__footer">
+    <footer data-slot="dialog-footer">
       <button class="button" type="button" commandfor="dialog-example-1" command="close">
         Cancel
       </button>
@@ -50,7 +50,8 @@
     </footer>
   </div>
   <button
-    class="button dialog__close"
+    class="button"
+    data-slot="dialog-close"
     data-size="icon"
     data-variant="ghost"
     type="button"

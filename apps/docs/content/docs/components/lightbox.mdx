@@ -11,11 +11,11 @@ description: Media lightbox custom element combining an inline gallery, fullscre
 
 ## Markup structure
 
-| Markup                                                              | Placement | Purpose                                          |
-| ------------------------------------------------------------------- | --------- | ------------------------------------------------ |
-| `<media-lightbox class="lightbox">`                                 | Root      | Coordinates gallery and modal state              |
-| `<slide-carousel class="lightbox__stage">`                          | Gallery   | Inline carousel with drag and thumbnail support  |
-| `<dialog class="lightbox__dialog">`                                 | Root      | Fullscreen modal container                       |
-| `<slide-carousel>`                                                  | Dialog    | Fullscreen carousel initialized when modal opens |
-| `command="show-modal"` / `command="close"`                          | Triggers  | Opens and closes dialog using Invoker Commands   |
-| `data-carousel="viewport"` / `"container"` / `"slide"` / `"thumbs"` | Children  | Embla layout roles                               |
+| Markup                                                                   | Placement | Purpose                                          |
+| ------------------------------------------------------------------------ | --------- | ------------------------------------------------ |
+| `<media-lightbox class="lightbox">`                                      | Root      | Coordinates gallery and modal state              |
+| `<slide-carousel data-slot="lightbox-stage">`                            | Gallery   | Inline carousel with drag and thumbnail support  |
+| `<dialog data-slot="lightbox-dialog">`                                   | Root      | Fullscreen modal container                       |
+| `<slide-carousel>`                                                       | Dialog    | Fullscreen carousel initialized when modal opens |
+| `command="show-modal"` / `command="close"`                               | Triggers  | Opens and closes dialog using Invoker Commands   |
+| `data-slot="carousel-viewport"` / `"container"` / `"slide"` / `"thumbs"` | Children  | Embla layout roles                               |

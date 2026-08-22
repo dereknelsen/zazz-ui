@@ -27,19 +27,19 @@
   </svg>
 </button>
 <dialog id="form-dialog-1" class="dialog" closedby="any" data-size="article">
-  <div class="dialog__content">
-    <header class="dialog__header">
+  <div data-slot="dialog-content">
+    <header data-slot="dialog-header">
       <h2 class="text-lg font-heading font-strong">New project</h2>
       <p class="text-muted-foreground">
         Add a project to your workspace. You can change these settings later.
       </p>
     </header>
-    <form id="f-new-project-1" class="dialog__body flex flex-col gap-md" method="dialog">
+    <form id="f-new-project-1" class="flex flex-col gap-md" data-slot="dialog-body" method="dialog">
       <fieldset class="field-group">
         <legend class="sr-only">Contact</legend>
         <div class="grid grid-cols-2 gap-sm">
           <div class="field">
-            <label class="field__label" for="fd-name">Name</label>
+            <label data-slot="field-label" for="fd-name">Name</label>
             <input
               class="input"
               id="fd-name"
@@ -51,7 +51,7 @@
             />
           </div>
           <div class="field">
-            <label class="field__label" for="fd-email">Email</label>
+            <label data-slot="field-label" for="fd-email">Email</label>
             <input
               class="input"
               id="fd-email"
@@ -63,15 +63,15 @@
               autocomplete="email"
               aria-describedby="fd-email-hint"
             />
-            <div class="field__description">
-              <span class="field__hint" id="fd-email-hint"
+            <div data-slot="field-description">
+              <span data-slot="field-hint" id="fd-email-hint"
                 >We'll only use this to send receipts.</span
               >
-              <span class="field__error" role="alert">Please enter a valid email address.</span>
+              <span data-slot="field-error" role="alert">Please enter a valid email address.</span>
             </div>
           </div>
           <label class="field-group col-span-2">
-            <span class="field__label">Repository</span>
+            <span data-slot="field-label">Repository</span>
             <div class="input-group">
               <input
                 class="input"
@@ -81,7 +81,7 @@
                 inputmode="search"
                 placeholder="Search repositories…"
               />
-              <span class="input-group__addon">
+              <span data-slot="input-group-addon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                   <rect width="256" height="256" fill="none" />
                   <circle
@@ -114,7 +114,7 @@
 
       <fieldset class="field-group">
         <div class="field">
-          <label class="field__label" for="fd-message">Description</label>
+          <label data-slot="field-label" for="fd-message">Description</label>
           <textarea
             class="textarea"
             id="fd-message"
@@ -129,20 +129,20 @@
         <legend>Billing</legend>
         <label class="field" data-orientation="horizontal">
           <input class="radio" type="radio" name="billing" value="monthly" />
-          <span class="field__label">Monthly billing</span>
+          <span data-slot="field-label">Monthly billing</span>
         </label>
         <label class="field" data-orientation="horizontal">
           <input class="radio" type="radio" name="billing" value="annual" checked />
-          <span class="field__label">Annual billing</span>
+          <span data-slot="field-label">Annual billing</span>
         </label>
       </fieldset>
 
       <label class="field" data-orientation="horizontal">
         <input type="checkbox" name="terms" required />
-        <span class="field__label">Accept terms &amp; conditions</span>
+        <span data-slot="field-label">Accept terms &amp; conditions</span>
       </label>
     </form>
-    <footer class="dialog__footer">
+    <footer data-slot="dialog-footer">
       <button
         class="button"
         type="button"
@@ -163,7 +163,8 @@
       </button>
     </footer>
     <button
-      class="button dialog__close"
+      class="button"
+      data-slot="dialog-close"
       data-size="icon"
       data-variant="ghost"
       type="button"

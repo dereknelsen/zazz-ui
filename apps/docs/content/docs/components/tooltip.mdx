@@ -3,7 +3,7 @@ title: Tooltip
 description: Hover and focus hints built on the Popover API with Interest Invokers and anchor positioning.
 ---
 
-A tooltip connects a trigger button with `.tooltip__content` (`popover="hint"`) via `interestfor` on the trigger. Handles hover, focus, and long-press automatically.
+A tooltip connects a trigger button with `[data-slot="tooltip-content"]` (`popover="hint"`) via `interestfor` on the trigger. Handles hover, focus, and long-press automatically.
 
 ## Default
 
@@ -23,9 +23,9 @@ A tooltip connects a trigger button with `.tooltip__content` (`popover="hint"`) 
 
 ## API
 
-| Attribute                | Target              | Values                           |
-| ------------------------ | ------------------- | -------------------------------- |
-| `interestfor`            | Trigger             | ID of `.tooltip__content`        |
-| `data-side`              | `.tooltip__content` | `top`, `bottom`, `left`, `right` |
-| `data-align`             | `.tooltip__content` | `center`                         |
-| `data-use-inverted-menu` | `.tooltip__content` | `false`                          |
+| Attribute                | Target                          | Values                                |
+| ------------------------ | ------------------------------- | ------------------------------------- |
+| `interestfor`            | Trigger                         | ID of `[data-slot="tooltip-content"]` |
+| `data-side`              | `[data-slot="tooltip-content"]` | `top`, `bottom`, `left`, `right`      |
+| `data-align`             | `[data-slot="tooltip-content"]` | `center`                              |
+| `data-use-inverted-menu` | `[data-slot="tooltip-content"]` | `false`                               |
