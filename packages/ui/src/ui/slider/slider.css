@@ -4,7 +4,7 @@
  * @layer      reset
  * @requires   layers.css, _variables.css
  * @uses       appearance: none — redraws track + thumb from theme tokens
- * @tokens     --range-* (track height, background, border, radius; thumb size, bg, border, radius)
+ * @tokens     --ui-slider-* (track height, background, border, radius; thumb size, bg, border, radius)
  *
  * Note: The active region is NOT filled (parity across engines); add a paint
  * via JS if a filled track is needed. The thumb is centered on the track with a
@@ -13,26 +13,26 @@
 
 @layer reset {
   :where(input[type="range"]) {
-    --range-ring-color: var(--ring-color);
+    --ui-slider-ring-color: var(--ring-color);
 
-    --range-track-height: var(--step-1_5);
-    --range-track-background: var(--muted);
-    --range-track-border: 1px solid var(--muted);
-    --range-track-radius: var(--radius-full);
-    --range-thumb-size: var(--step-4);
-    --range-thumb-background: var(--background);
+    --ui-slider-track-height: var(--step-1_5);
+    --ui-slider-track-background: var(--muted);
+    --ui-slider-track-border: 1px solid var(--muted);
+    --ui-slider-track-radius: var(--radius-full);
+    --ui-slider-thumb-size: var(--step-4);
+    --ui-slider-thumb-background: var(--background);
 
-    --range-thumb-shadow: var(--shadow-xs);
-    --range-thumb-border: 1px solid var(--border);
-    --range-thumb-radius: var(--radius-full);
-    --range-thumb-offset: calc(var(--range-track-height) * -1);
+    --ui-slider-thumb-shadow: var(--shadow-xs);
+    --ui-slider-thumb-border: 1px solid var(--border);
+    --ui-slider-thumb-radius: var(--radius-full);
+    --ui-slider-thumb-offset: calc(var(--ui-slider-track-height) * -1);
 
     -webkit-appearance: none;
     appearance: none;
     inline-size: 100%;
     background: transparent;
     cursor: grab;
-    border-radius: var(--range-track-radius);
+    border-radius: var(--ui-slider-track-radius);
 
     /* transparent outline keeps focus visible in forced-colors / high-contrast
        modes; the visible focus ring lives on the thumb via --shadow-ring */
@@ -41,78 +41,78 @@
   }
 
   :where(input[type="range"])::-webkit-slider-runnable-track {
-    block-size: var(--range-track-height);
+    block-size: var(--ui-slider-track-height);
     inline-size: 100%;
-    background: var(--range-track-background);
-    border: var(--range-track-border);
-    border-radius: var(--range-track-radius);
+    background: var(--ui-slider-track-background);
+    border: var(--ui-slider-track-border);
+    border-radius: var(--ui-slider-track-radius);
   }
 
   :where(input[type="range"])::-moz-range-track {
-    block-size: var(--range-track-height);
+    block-size: var(--ui-slider-track-height);
     inline-size: 100%;
-    background: var(--range-track-background);
-    border: var(--range-track-border);
-    border-radius: var(--range-track-radius);
+    background: var(--ui-slider-track-background);
+    border: var(--ui-slider-track-border);
+    border-radius: var(--ui-slider-track-radius);
   }
 
   :where(input[type="range"])::-webkit-slider-thumb {
-    /* ring renders as box-shadow so it composes with --range-thumb-shadow; the
+    /* ring renders as box-shadow so it composes with --ui-slider-thumb-shadow; the
        ring widths animate from 0 so the ring grows in smoothly on focus */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    --_ring: color-mix(in oklch, var(--range-ring-color) var(--ring-opacity), transparent);
+    --_ring: color-mix(in oklch, var(--ui-slider-ring-color) var(--ring-opacity), transparent);
     box-shadow:
       0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
       0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring),
-      var(--range-thumb-shadow);
+      var(--ui-slider-thumb-shadow);
 
     -webkit-appearance: none;
     appearance: none;
-    margin-block-start: var(--range-thumb-offset);
-    inline-size: var(--range-thumb-size);
-    block-size: var(--range-thumb-size);
-    background-color: var(--range-thumb-background);
-    border: var(--range-thumb-border);
-    border-radius: var(--range-thumb-radius);
+    margin-block-start: var(--ui-slider-thumb-offset);
+    inline-size: var(--ui-slider-thumb-size);
+    block-size: var(--ui-slider-thumb-size);
+    background-color: var(--ui-slider-thumb-background);
+    border: var(--ui-slider-thumb-border);
+    border-radius: var(--ui-slider-thumb-radius);
 
     transition: var(--default-transition);
   }
 
   :where(input[type="range"])::-moz-range-thumb {
-    /* ring renders as box-shadow so it composes with --range-thumb-shadow; the
+    /* ring renders as box-shadow so it composes with --ui-slider-thumb-shadow; the
        ring widths animate from 0 so the ring grows in smoothly on focus */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    --_ring: color-mix(in oklch, var(--range-ring-color) var(--ring-opacity), transparent);
+    --_ring: color-mix(in oklch, var(--ui-slider-ring-color) var(--ring-opacity), transparent);
 
     appearance: none;
-    inline-size: var(--range-thumb-size);
-    block-size: var(--range-thumb-size);
-    background-color: var(--range-thumb-background);
-    border: var(--range-thumb-border);
-    border-radius: var(--range-thumb-radius);
+    inline-size: var(--ui-slider-thumb-size);
+    block-size: var(--ui-slider-thumb-size);
+    background-color: var(--ui-slider-thumb-background);
+    border: var(--ui-slider-thumb-border);
+    border-radius: var(--ui-slider-thumb-radius);
 
     box-shadow:
       0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
       0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring),
-      var(--range-thumb-shadow);
+      var(--ui-slider-thumb-shadow);
 
     transition: var(--default-transition);
   }
 
   :where(input[type="range"]:hover) {
-    --range-thumb-border: 1px solid var(--primary);
+    --ui-slider-thumb-border: 1px solid var(--primary);
   }
 
   :where(input[type="range"]:active) {
-    --range-thumb-shadow: var(--shadow-xs), var(--shadow-ring);
+    --ui-slider-thumb-shadow: var(--shadow-xs), var(--shadow-ring);
 
     cursor: grabbing;
   }
 
   :where(input[type="range"]:focus-visible) {
-    --range-thumb-shadow: var(--shadow-xs), var(--shadow-ring);
+    --ui-slider-thumb-shadow: var(--shadow-xs), var(--shadow-ring);
   }
 
   :where(input[type="range"]:disabled) {

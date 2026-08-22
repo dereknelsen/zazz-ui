@@ -5,21 +5,21 @@
  * @requires   layers.css, _variables.css, fields.css
  * @uses       field-sizing: content — auto-grow with text (modern browsers;
  *             falls back to fixed min/max block-size where unsupported)
- * @tokens     --textarea-* (@layer variables)
+ * @tokens     --ui-textarea-* (@layer variables)
  */
 
 @layer variables {
   :root {
-    --textarea-inline-size: 100%;
-    --textarea-min-inline-size: 0;
-    --textarea-min-block-size: 5lh;
-    --textarea-max-block-size: 12lh;
-    --textarea-padding: var(--field-padding);
-    --textarea-font-size: var(--font-size-sm);
-    --textarea-line-height: var(--leading-sm);
-    --textarea-border: 1px solid var(--field-border);
-    --textarea-border-radius: var(--field-radius);
-    --textarea-resize: vertical;
+    --ui-textarea-inline-size: 100%;
+    --ui-textarea-min-inline-size: 0;
+    --ui-textarea-min-block-size: 5lh;
+    --ui-textarea-max-block-size: 12lh;
+    --ui-textarea-padding: var(--ui-field-padding);
+    --ui-textarea-font-size: var(--font-size-sm);
+    --ui-textarea-line-height: var(--leading-sm);
+    --ui-textarea-border: 1px solid var(--ui-field-border);
+    --ui-textarea-border-radius: var(--ui-field-radius);
+    --ui-textarea-resize: vertical;
   }
 }
 
@@ -28,26 +28,26 @@
   TEXTAREA — .ui-textarea (auto-sizing)
   - field-sizing: content grows the box with the text; height clamps between
     min/max block-size, then scrolls.
-  - Shares the --field-* tokens defined in fields.css so it matches .ui-input /
+  - Shares the --ui-field-* tokens defined in fields.css so it matches .ui-input /
     .ui-select / .ui-button.
   =========================================================================== */
 
   .ui-textarea {
     field-sizing: content;
-    inline-size: var(--textarea-inline-size);
-    min-inline-size: var(--textarea-min-inline-size);
-    min-block-size: var(--textarea-min-block-size);
-    max-block-size: var(--textarea-max-block-size);
-    padding: var(--textarea-padding);
+    inline-size: var(--ui-textarea-inline-size);
+    min-inline-size: var(--ui-textarea-min-inline-size);
+    min-block-size: var(--ui-textarea-min-block-size);
+    max-block-size: var(--ui-textarea-max-block-size);
+    padding: var(--ui-textarea-padding);
 
-    font-size: var(--textarea-font-size);
-    line-height: var(--textarea-line-height);
-    color: var(--field-foreground);
-    background-color: var(--field-background);
+    font-size: var(--ui-textarea-font-size);
+    line-height: var(--ui-textarea-line-height);
+    color: var(--ui-field-foreground);
+    background-color: var(--ui-field-background);
 
-    border: var(--textarea-border);
-    border-radius: var(--textarea-border-radius);
-    resize: var(--textarea-resize);
+    border: var(--ui-textarea-border);
+    border-radius: var(--ui-textarea-border-radius);
+    resize: var(--ui-textarea-resize);
 
     /* ring renders as box-shadow; transparent outline twin keeps focus visible
        in forced-colors / high-contrast modes */
@@ -63,13 +63,13 @@
   }
 
   .ui-textarea:hover {
-    border-color: var(--field-border--hover);
-    background-color: var(--field-background--hover);
+    border-color: var(--ui-field-border--hover);
+    background-color: var(--ui-field-background--hover);
   }
 
   .ui-textarea:focus-visible {
-    background-color: var(--field-background--focus);
-    border-color: var(--field-border--focus);
+    background-color: var(--ui-field-background--focus);
+    border-color: var(--ui-field-border--focus);
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
     outline-color: transparent;

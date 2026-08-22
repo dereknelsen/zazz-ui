@@ -7,27 +7,27 @@
  * @uses       :focus-within — lifts shell ring/border as one field
  * @uses       :has() — restore padding when addons absent; invalid text color
  * @uses       data-align on [data-slot~="input-group-addon"] — inline-start/end, block-start/end
- * @tokens     --input-group-* (@layer variables)
+ * @tokens     --ui-input-group-* (@layer variables)
  */
 
 @layer variables {
   :root {
-    --input-group-display: flex;
-    --input-group-wrap: wrap;
-    --input-group-align: center;
-    --input-group-gap: var(--step-1);
-    --input-group-inline-size: 100%;
-    --input-group-min-block-size: var(--field-height);
-    --input-group-padding: 0;
-    --input-group-cursor: text;
-    --input-group-text-color: var(--muted-foreground);
-    --input-group-text-weight: var(--font-weight-strong);
-    --input-group-text-size: var(--font-size-sm);
-    --input-group-textarea-min-block-size: 3lh;
-    --input-group-textarea-padding-inline: var(--step-2);
-    --input-group-textarea-padding-block: var(--step-1_5);
+    --ui-input-group-display: flex;
+    --ui-input-group-wrap: wrap;
+    --ui-input-group-align: center;
+    --ui-input-group-gap: var(--step-1);
+    --ui-input-group-inline-size: 100%;
+    --ui-input-group-min-block-size: var(--ui-field-height);
+    --ui-input-group-padding: 0;
+    --ui-input-group-cursor: text;
+    --ui-input-group-text-color: var(--muted-foreground);
+    --ui-input-group-text-weight: var(--font-weight-strong);
+    --ui-input-group-text-size: var(--font-size-sm);
+    --ui-input-group-textarea-min-block-size: 3lh;
+    --ui-input-group-textarea-padding-inline: var(--step-2);
+    --ui-input-group-textarea-padding-block: var(--step-1_5);
 
-    --input-group-shadow: 0 0 transparent;
+    --ui-input-group-shadow: 0 0 transparent;
   }
 }
 
@@ -47,34 +47,34 @@
   - The shell is a <label> for click-to-focus, but it is NOT the field's label.
     Wrap it in a .ui-field with a real [data-slot~="field-label"][for] (and optional [data-slot~="field-hint"]
     / [data-slot~="field-error"]) so the control is named by visible text, never by a legend.
-  - Shares the --field-* tokens (height, radius, surface) defined in fields.css.
+  - Shares the --ui-field-* tokens (height, radius, surface) defined in fields.css.
   =========================================================================== */
 
   .ui-input-group {
-    display: var(--input-group-display);
-    flex-wrap: var(--input-group-wrap);
-    align-items: var(--input-group-align);
-    gap: var(--input-group-gap);
-    inline-size: var(--input-group-inline-size);
-    min-block-size: var(--input-group-min-block-size);
-    padding: var(--input-group-padding);
+    display: var(--ui-input-group-display);
+    flex-wrap: var(--ui-input-group-wrap);
+    align-items: var(--ui-input-group-align);
+    gap: var(--ui-input-group-gap);
+    inline-size: var(--ui-input-group-inline-size);
+    min-block-size: var(--ui-input-group-min-block-size);
+    padding: var(--ui-input-group-padding);
 
     /* The shell is a <label>: clicking a non-interactive addon focuses the
        nested control, so the whole field reads as one clickable target. */
-    cursor: var(--input-group-cursor);
+    cursor: var(--ui-input-group-cursor);
 
-    color: var(--field-foreground);
-    background-color: var(--field-background);
-    border: 1px solid var(--field-border);
-    border-radius: var(--field-radius);
+    color: var(--ui-field-foreground);
+    background-color: var(--ui-field-background);
+    border: 1px solid var(--ui-field-border);
+    border-radius: var(--ui-field-radius);
 
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    --_ring: color-mix(in oklch, var(--button-ring-color) var(--ring-opacity), transparent);
+    --_ring: color-mix(in oklch, var(--ui-button-ring-color) var(--ring-opacity), transparent);
     box-shadow:
       0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
       0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring),
-      var(--input-group-shadow);
+      var(--ui-input-group-shadow);
 
     outline: var(--outline-width) var(--outline-style) transparent;
     outline-offset: var(--outline-offset);
@@ -83,13 +83,13 @@
   }
 
   .ui-input-group:hover {
-    background-color: var(--field-background--hover);
-    border-color: var(--field-border--hover);
+    background-color: var(--ui-field-background--hover);
+    border-color: var(--ui-field-border--hover);
   }
 
   .ui-input-group:focus-within {
-    background-color: var(--field-background--focus);
-    border-color: var(--field-border--focus);
+    background-color: var(--ui-field-background--focus);
+    border-color: var(--ui-field-border--focus);
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
     outline-color: transparent;
@@ -127,19 +127,19 @@
       )
     )
     .ui-input {
-    padding-inline-start: var(--field-padding);
+    padding-inline-start: var(--ui-field-padding);
   }
 
   .ui-input-group:not(:has([data-slot~="input-group-addon"][data-align="inline-end"])) .ui-input {
-    padding-inline-end: var(--field-padding);
+    padding-inline-end: var(--ui-field-padding);
   }
 
   /* A textarea claims the full width; addons stack above/below via block-* */
   .ui-input-group .ui-textarea {
     flex-basis: 100%;
-    min-block-size: var(--input-group-textarea-min-block-size);
-    padding-inline: var(--input-group-textarea-padding-inline);
-    padding-block: var(--input-group-textarea-padding-block);
+    min-block-size: var(--ui-input-group-textarea-min-block-size);
+    padding-inline: var(--ui-input-group-textarea-padding-inline);
+    padding-block: var(--ui-input-group-textarea-padding-block);
     resize: none;
   }
 
@@ -152,14 +152,14 @@
     gap: var(--step-1);
     color: var(--muted-foreground);
     white-space: nowrap;
-    block-size: var(--field-height);
-    min-inline-size: var(--field-height);
-    padding-inline: var(--field-addon-padding);
+    block-size: var(--ui-field-height);
+    min-inline-size: var(--ui-field-height);
+    padding-inline: var(--ui-field-addon-padding);
   }
 
   [data-slot~="input-group-addon"] > svg {
-    inline-size: var(--field-icon-size);
-    block-size: var(--field-icon-size);
+    inline-size: var(--ui-field-icon-size);
+    block-size: var(--ui-field-icon-size);
   }
 
   /* Alignment — inline-start is the default (addon visually leads the control) */
@@ -175,14 +175,14 @@
   [data-slot~="input-group-addon"][data-align="block-start"] {
     order: -2;
     flex-basis: 100%;
-    padding-block: var(--field-addon-padding);
+    padding-block: var(--ui-field-addon-padding);
     align-items: flex-start;
   }
 
   [data-slot~="input-group-addon"][data-align="block-end"] {
     order: 2;
     flex-basis: 100%;
-    padding-block: var(--field-addon-padding);
+    padding-block: var(--ui-field-addon-padding);
     align-items: flex-end;
   }
 
@@ -191,25 +191,25 @@
     display: inline-flex;
     align-items: center;
     gap: var(--gap-xs);
-    padding-inline: var(--field-addon-padding);
-    font-size: var(--input-group-text-size);
-    font-weight: var(--input-group-text-weight);
-    color: var(--input-group-text-color);
+    padding-inline: var(--ui-field-addon-padding);
+    font-size: var(--ui-input-group-text-size);
+    font-weight: var(--ui-input-group-text-weight);
+    color: var(--ui-input-group-text-color);
     min-inline-size: max-content;
   }
 
   [data-slot~="input-group-text"] > svg {
-    inline-size: var(--field-icon-size);
-    block-size: var(--field-icon-size);
+    inline-size: var(--ui-field-icon-size);
+    block-size: var(--ui-field-icon-size);
   }
 
   /* Buttons embedded in a group shrink to nest cleanly inside the shell */
   .ui-input-group .ui-button {
     flex-shrink: 0;
-    border-radius: var(--field-button-radius);
+    border-radius: var(--ui-field-button-radius);
   }
 
   :where(.ui-field:has(:user-invalid)) [data-slot~="input-group-text"] {
-    --input-group-text-color: var(--destructive);
+    --ui-input-group-text-color: var(--destructive);
   }
 }

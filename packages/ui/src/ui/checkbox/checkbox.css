@@ -5,33 +5,33 @@
  * @requires   layers.css, _variables.css
  * @uses       appearance: none — redraws the native control from theme tokens
  * @uses       checked/indeterminate fill with --primary and layer a glyph (never colour alone)
- * @tokens     --checkbox-* (size, background, border, radius, checkmark-mask, indeterminate-mask)
+ * @tokens     --ui-checkbox-* (size, background, border, radius, checkmark-mask, indeterminate-mask)
  */
 
 @layer reset {
   :where(input[type="checkbox"]:not([role="switch"])) {
-    --checkbox-size: var(--step-4_5);
-    --checkbox-background: var(--input);
-    --checkbox-border: var(--border);
-    --checkbox-border--hover: var(--primary);
-    --checkbox-background--checked: var(--primary);
-    --checkbox-border--checked: var(--primary);
-    --checkbox-radius: var(--radius-xs);
+    --ui-checkbox-size: var(--step-4_5);
+    --ui-checkbox-background: var(--input);
+    --ui-checkbox-border: var(--border);
+    --ui-checkbox-border--hover: var(--primary);
+    --ui-checkbox-background--checked: var(--primary);
+    --ui-checkbox-border--checked: var(--primary);
+    --ui-checkbox-radius: var(--radius-xs);
     /* @see https://www.svgbackgrounds.com/tools/svg-to-css/
     ** Set to Legacy / URL Wrapper to update icon */
-    --checkbox-checkmark-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cpolyline points='40 144 96 200 224 72' fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='32'/%3E%3C/svg%3E");
-    --checkbox-checkmark-size: var(--step-3);
-    --checkbox-indeterminate-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cline x1='40' y1='128' x2='216' y2='128' fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='32'/%3E%3C/svg%3E");
-    --checkbox-indeterminate-size: var(--step-3);
+    --ui-checkbox-checkmark-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cpolyline points='40 144 96 200 224 72' fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='32'/%3E%3C/svg%3E");
+    --ui-checkbox-checkmark-size: var(--step-3);
+    --ui-checkbox-indeterminate-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cline x1='40' y1='128' x2='216' y2='128' fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='32'/%3E%3C/svg%3E");
+    --ui-checkbox-indeterminate-size: var(--step-3);
 
     appearance: none;
     flex-shrink: 0;
-    inline-size: var(--checkbox-size);
-    block-size: var(--checkbox-size);
+    inline-size: var(--ui-checkbox-size);
+    block-size: var(--ui-checkbox-size);
 
-    background-color: var(--checkbox-background);
-    border: 1px solid var(--checkbox-border);
-    border-radius: var(--checkbox-radius);
+    background-color: var(--ui-checkbox-background);
+    border: 1px solid var(--ui-checkbox-border);
+    border-radius: var(--ui-checkbox-radius);
 
     cursor: pointer;
 
@@ -49,7 +49,7 @@
   }
 
   :where(input[type="checkbox"]:not([role="switch"]):hover) {
-    border-color: var(--checkbox-border--hover);
+    border-color: var(--ui-checkbox-border--hover);
   }
 
   :where(input[type="checkbox"]:not([role="switch"]):focus-visible) {
@@ -62,19 +62,19 @@
     input[type="checkbox"]:not([role="switch"]):checked,
     input[type="checkbox"]:not([role="switch"]):indeterminate
   ) {
-    background-color: var(--checkbox-background--checked);
-    border-color: var(--checkbox-border--checked);
+    background-color: var(--ui-checkbox-background--checked);
+    border-color: var(--ui-checkbox-border--checked);
     background-repeat: no-repeat;
     background-position: center;
   }
 
   :where(input[type="checkbox"]:not([role="switch"]):checked) {
-    background-image: var(--checkbox-checkmark-mask);
-    background-size: var(--checkbox-checkmark-size);
+    background-image: var(--ui-checkbox-checkmark-mask);
+    background-size: var(--ui-checkbox-checkmark-size);
   }
 
   :where(input[type="checkbox"]:not([role="switch"]):indeterminate) {
-    background-image: var(--checkbox-indeterminate-mask);
-    background-size: var(--checkbox-indeterminate-size);
+    background-image: var(--ui-checkbox-indeterminate-mask);
+    background-size: var(--ui-checkbox-indeterminate-size);
   }
 }

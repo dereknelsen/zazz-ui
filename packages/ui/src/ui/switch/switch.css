@@ -6,24 +6,28 @@
  * @uses       appearance: none on input[role="switch"]
  * @uses       label:has(> input[role="switch"])::after — thumb drawn on label (no JS)
  * @uses       oklch(from …) — checked/hover track tints
- * @tokens     --switch-* (@layer variables; consumed in @layer reset)
+ * @tokens     --ui-switch-* (@layer variables; consumed in @layer reset)
  */
 
 @layer variables {
   :root {
-    --switch-track-width: var(--step-7);
-    --switch-track-padding: var(--step-0_5);
-    --switch-track-height: calc(var(--switch-track-width) / 2 + var(--switch-track-padding));
-    --switch-thumb: var(--white);
-    --switch-thumb-size: calc((var(--switch-track-width) / 2) - var(--switch-track-padding));
-    --switch-thumb-shadow: var(--shadow-xs);
-    --switch-thumb-translate: var(--switch-track-padding), -50%;
-    --switch-thumb-scale: 1;
-    --switch-track-background: var(--muted);
-    --switch-track-background--hover: oklch(from var(--muted) l c h / calc(alpha + 0.04));
-    --switch-track-background--checked: var(--primary);
-    --switch-track-background--checked-hover: oklch(from var(--primary) l c h / 0.9);
-    --switch-radius: var(--radius-full);
+    --ui-switch-track-width: var(--step-7);
+    --ui-switch-track-padding: var(--step-0_5);
+    --ui-switch-track-height: calc(
+      var(--ui-switch-track-width) / 2 + var(--ui-switch-track-padding)
+    );
+    --ui-switch-thumb: var(--white);
+    --ui-switch-thumb-size: calc(
+      (var(--ui-switch-track-width) / 2) - var(--ui-switch-track-padding)
+    );
+    --ui-switch-thumb-shadow: var(--shadow-xs);
+    --ui-switch-thumb-translate: var(--ui-switch-track-padding), -50%;
+    --ui-switch-thumb-scale: 1;
+    --ui-switch-track-background: var(--muted);
+    --ui-switch-track-background--hover: oklch(from var(--muted) l c h / calc(alpha + 0.04));
+    --ui-switch-track-background--checked: var(--primary);
+    --ui-switch-track-background--checked-hover: oklch(from var(--primary) l c h / 0.9);
+    --ui-switch-radius: var(--radius-full);
   }
 }
 
@@ -41,13 +45,13 @@
       position: absolute;
       inset-block-start: 50%;
       inset-inline-start: 0;
-      inline-size: var(--switch-thumb-size);
-      block-size: var(--switch-thumb-size);
+      inline-size: var(--ui-switch-thumb-size);
+      block-size: var(--ui-switch-thumb-size);
       border-radius: var(--radius-full);
-      background-color: var(--switch-thumb);
-      box-shadow: var(--switch-thumb-shadow);
+      background-color: var(--ui-switch-thumb);
+      box-shadow: var(--ui-switch-thumb-shadow);
       pointer-events: none;
-      transform: translate(var(--switch-thumb-translate)) scale(var(--switch-thumb-scale));
+      transform: translate(var(--ui-switch-thumb-translate)) scale(var(--ui-switch-thumb-scale));
       transition:
         box-shadow var(--default-transition-duration) var(--default-transition-timing-function),
         transform var(--default-transition-duration) var(--default-transition-timing-function);
@@ -55,16 +59,17 @@
     }
 
     &:has(> input[role="switch"]:checked)::after {
-      --switch-thumb-translate: calc(var(--switch-track-padding) + var(--switch-thumb-size)), -50%;
+      --ui-switch-thumb-translate:
+        calc(var(--ui-switch-track-padding) + var(--ui-switch-thumb-size)), -50%;
     }
 
     &:has(> input[role="switch"]:hover):after {
-      --switch-thumb-scale: 1.1;
+      --ui-switch-thumb-scale: 1.1;
     }
 
     &:has(> input[role="switch"]:active):after {
-      --switch-thumb-shadow: none;
-      --switch-thumb-scale: 0.98;
+      --ui-switch-thumb-shadow: none;
+      --ui-switch-thumb-scale: 0.98;
     }
   }
 
@@ -80,12 +85,12 @@
   :where(input[role="switch"]) {
     appearance: none;
     flex-shrink: 0;
-    inline-size: var(--switch-track-width);
-    block-size: var(--switch-track-height);
+    inline-size: var(--ui-switch-track-width);
+    block-size: var(--ui-switch-track-height);
 
-    background-color: var(--switch-track-background);
+    background-color: var(--ui-switch-track-background);
 
-    border-radius: var(--switch-radius);
+    border-radius: var(--ui-switch-radius);
     cursor: pointer;
 
     /* ring renders as box-shadow; transparent outline twin keeps focus visible
@@ -102,15 +107,15 @@
   }
 
   :where(input[role="switch"]:hover) {
-    background-color: var(--switch-track-background--hover);
+    background-color: var(--ui-switch-track-background--hover);
   }
 
   :where(input[role="switch"]:checked) {
-    background-color: var(--switch-track-background--checked);
+    background-color: var(--ui-switch-track-background--checked);
   }
 
   :where(input[role="switch"]:hover:checked) {
-    background-color: var(--switch-track-background--checked-hover);
+    background-color: var(--ui-switch-track-background--checked-hover);
   }
 
   :where(input[role="switch"]:focus-visible) {

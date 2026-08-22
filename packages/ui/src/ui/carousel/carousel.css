@@ -5,16 +5,16 @@
  * @requires   layers.css, _variables.css
  * @uses       data-carousel attributes — layout hooks only; behaviour from zazz/scripts/embla.js
  * @uses       container-type on viewport — basis-* / @sm:basis-* utils query [data-slot~="carousel-viewport"] width
- * @tokens     --carousel-* (@layer variables)
+ * @tokens     --ui-carousel-* (@layer variables)
  * @consumedby lightbox.css
  */
 
 @layer variables {
   :root {
-    --carousel-slide-basis: calc(100% - var(--_gap, 0px));
-    --carousel-slide-min-width: 0;
-    --carousel-touch-action: pan-y pinch-zoom;
-    --carousel-cursor--grabbing: grabbing;
+    --ui-carousel-slide-basis: calc(100% - var(--_gap, 0px));
+    --ui-carousel-slide-min-width: 0;
+    --ui-carousel-touch-action: pan-y pinch-zoom;
+    --ui-carousel-cursor--grabbing: grabbing;
   }
 }
 
@@ -30,7 +30,7 @@
   }
 
   :is(body:has([data-slot~="carousel-viewport"].is-dragging) *) {
-    cursor: var(--carousel-cursor--grabbing);
+    cursor: var(--ui-carousel-cursor--grabbing);
   }
 
   :is(ui-carousel, .ui-carousel) {
@@ -47,12 +47,12 @@
   [data-slot~="carousel-container"] {
     display: flex;
     gap: var(--_gap, 0);
-    touch-action: var(--carousel-touch-action);
+    touch-action: var(--ui-carousel-touch-action);
   }
 
   [data-slot~="carousel-slide"] {
-    flex: 0 0 var(--carousel-slide-basis);
-    min-width: var(--carousel-slide-min-width);
+    flex: 0 0 var(--ui-carousel-slide-basis);
+    min-width: var(--ui-carousel-slide-min-width);
   }
 
   [data-slot~="carousel-thumbs"] [data-slot~="carousel-slide"] {

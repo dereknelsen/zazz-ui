@@ -5,41 +5,41 @@
  * @requires   layers.css, _variables.css, popover.css, button.css
  * @uses       popovertarget + [popover] — inherits Popover API from popover.css
  * @uses       anchor-name, anchor-scope, position-anchor — tether menu to trigger
- * @uses       data-side / data-align — maps to --popover-position-* in popover.css
- * @tokens     --dropdown-* (@layer variables)
+ * @uses       data-side / data-align — maps to --ui-popover-position-* in popover.css
+ * @tokens     --ui-dropdown-* (@layer variables)
  */
 
 @layer variables {
   :root {
-    --dropdown-button-radius: var(--radius-sm);
-    --dropdown-min-inline-size: var(--step-52);
-    --dropdown-shadow: var(--shadow-sm);
+    --ui-dropdown-button-radius: var(--radius-sm);
+    --ui-dropdown-min-inline-size: var(--step-52);
+    --ui-dropdown-shadow: var(--shadow-sm);
   }
 }
 
 @layer zazz.components {
   /* ===========================================================================
   DROPDOWN — trigger + anchored popover menu
-  - Inherits --popover-* tokens and [popover] surface/positioning from popover.css.
+  - Inherits --ui-popover-* tokens and [popover] surface/positioning from popover.css.
   - Only dropdown-specific wiring lives here: anchor scope/name and nested buttons.
   =========================================================================== */
 
   .ui-dropdown {
-    anchor-scope: --dropdown-trigger;
+    anchor-scope: --ui-dropdown-trigger;
     display: inline-block;
   }
 
   .ui-dropdown > [popovertarget] {
-    anchor-name: --dropdown-trigger;
+    anchor-name: --ui-dropdown-trigger;
   }
 
   [data-slot~="dropdown-popover"] {
-    position-anchor: --dropdown-trigger;
-    min-inline-size: var(--dropdown-min-inline-size);
-    box-shadow: var(--dropdown-shadow);
+    position-anchor: --ui-dropdown-trigger;
+    min-inline-size: var(--ui-dropdown-min-inline-size);
+    box-shadow: var(--ui-dropdown-shadow);
   }
 
   [data-slot~="dropdown-popover"] .ui-button {
-    --button-radius: var(--dropdown-button-radius);
+    --ui-button-radius: var(--ui-dropdown-button-radius);
   }
 }

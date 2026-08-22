@@ -8,38 +8,38 @@
  *             (@supports gated; checked-label fallback paints card fill without pill)
  * @uses       anchor-scope — isolates --active-tab inside nested menus
  * @uses       text-box, color-mix() — label trim and focus ring
- * @tokens     --tabs-* (@layer variables)
+ * @tokens     --ui-tabs-* (@layer variables)
  */
 
 @layer variables {
   :root {
-    --tabs-gap: var(--gap-xs);
-    --tabs-track-padding: var(--step-0_5);
-    --tabs-track-radius: var(--radius-md);
-    --tabs-track-gap: var(--step-0_5);
-    --tabs-track-background: var(--muted);
+    --ui-tabs-gap: var(--gap-xs);
+    --ui-tabs-track-padding: var(--step-0_5);
+    --ui-tabs-track-radius: var(--radius-md);
+    --ui-tabs-track-gap: var(--step-0_5);
+    --ui-tabs-track-background: var(--muted);
 
-    --tabs-indicator-background: var(--card);
-    --tabs-indicator-radius: var(--radius-sm);
-    --tabs-indicator-shadow: var(--shadow-xs);
-    --tabs-indicator-inset: var(--tabs-track-padding);
+    --ui-tabs-indicator-background: var(--card);
+    --ui-tabs-indicator-radius: var(--radius-sm);
+    --ui-tabs-indicator-shadow: var(--shadow-xs);
+    --ui-tabs-indicator-inset: var(--ui-tabs-track-padding);
 
-    --tabs-label-font-family: var(--font-family-body);
-    --tabs-label-font-size: var(--font-size-sm);
-    --tabs-label-font-weight: var(--font-weight-strong);
-    --tabs-label-line-height: 1;
+    --ui-tabs-label-font-family: var(--font-family-body);
+    --ui-tabs-label-font-size: var(--font-size-sm);
+    --ui-tabs-label-font-weight: var(--font-weight-strong);
+    --ui-tabs-label-line-height: 1;
 
-    --tabs-label-background: transparent;
-    --tabs-label-background--hover: transparent;
-    --tabs-label-background--active: transparent;
+    --ui-tabs-label-background: transparent;
+    --ui-tabs-label-background--hover: transparent;
+    --ui-tabs-label-background--active: transparent;
 
-    --tabs-label-foreground: var(--muted-foreground);
-    --tabs-label-foreground--hover: var(--foreground);
-    --tabs-label-foreground--active: var(--foreground);
+    --ui-tabs-label-foreground: var(--muted-foreground);
+    --ui-tabs-label-foreground--hover: var(--foreground);
+    --ui-tabs-label-foreground--active: var(--foreground);
 
-    --tabs-label-padding: var(--step-2_5);
-    --tabs-label-min-height: var(--step-7);
-    --tabs-label-ring-color: var(--ring-color);
+    --ui-tabs-label-padding: var(--step-2_5);
+    --ui-tabs-label-min-height: var(--step-7);
+    --ui-tabs-label-ring-color: var(--ring-color);
   }
 }
 
@@ -56,17 +56,17 @@
     display: flex;
     flex-direction: column;
     align-items: start;
-    gap: var(--tabs-gap);
+    gap: var(--ui-tabs-gap);
   }
 
   [data-slot~="tabs-list"] {
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: var(--tabs-track-gap);
-    padding: var(--tabs-track-padding);
-    border-radius: var(--tabs-track-radius);
-    background-color: var(--tabs-track-background);
+    gap: var(--ui-tabs-track-gap);
+    padding: var(--ui-tabs-track-padding);
+    border-radius: var(--ui-tabs-track-radius);
+    background-color: var(--ui-tabs-track-background);
 
     /* Scoped so [data-slot~="tabs-indicator"] can resolve --active-tab even when an ancestor
        (e.g. [data-slot~="navigation-menu-item"]) sets anchor-scope to its own trigger name. */
@@ -77,9 +77,9 @@
     position: absolute;
     z-index: 0;
     pointer-events: none;
-    border-radius: var(--tabs-indicator-radius);
-    background-color: var(--tabs-indicator-background);
-    box-shadow: var(--tabs-indicator-shadow);
+    border-radius: var(--ui-tabs-indicator-radius);
+    background-color: var(--ui-tabs-indicator-background);
+    box-shadow: var(--ui-tabs-indicator-shadow);
     transition-property: left, right, top, bottom;
     transition-duration: var(--default-transition-duration);
     transition-timing-function: var(--default-transition-timing-function);
@@ -100,30 +100,30 @@
     align-items: center;
     justify-content: center;
 
-    font-family: var(--tabs-label-font-family);
-    font-size: var(--tabs-label-font-size);
-    font-weight: var(--tabs-label-font-weight);
-    line-height: var(--tabs-label-line-height);
+    font-family: var(--ui-tabs-label-font-family);
+    font-size: var(--ui-tabs-label-font-size);
+    font-weight: var(--ui-tabs-label-font-weight);
+    line-height: var(--ui-tabs-label-line-height);
 
-    min-block-size: var(--tabs-label-min-height);
-    padding-inline: var(--tabs-label-padding);
+    min-block-size: var(--ui-tabs-label-min-height);
+    padding-inline: var(--ui-tabs-label-padding);
 
-    color: var(--tabs-label-foreground);
-    background-color: var(--tabs-label-background);
+    color: var(--ui-tabs-label-foreground);
+    background-color: var(--ui-tabs-label-background);
     text-wrap: balance;
 
     cursor: pointer;
     user-select: none;
     text-box: trim-both ex alphabetic;
 
-    border-radius: var(--tabs-indicator-radius);
+    border-radius: var(--ui-tabs-indicator-radius);
 
     /* ring renders as box-shadow so it composes with the indicator shadow in
        the no-anchor fallback below; the ring widths animate from 0 so the
        ring grows in smoothly on focus */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    --_ring: color-mix(in oklch, var(--tabs-label-ring-color) var(--ring-opacity), transparent);
+    --_ring: color-mix(in oklch, var(--ui-tabs-label-ring-color) var(--ring-opacity), transparent);
     box-shadow:
       0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
       0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring);
@@ -135,17 +135,17 @@
   }
 
   [data-slot~="tabs-list"] [data-slot~="tabs-label"]:hover {
-    color: var(--tabs-label-foreground--hover);
-    background-color: var(--tabs-label-background--hover);
+    color: var(--ui-tabs-label-foreground--hover);
+    background-color: var(--ui-tabs-label-background--hover);
   }
 
   [data-slot~="tabs-list"] [data-slot~="tabs-label"]:active {
-    color: var(--tabs-label-foreground--active);
-    background-color: var(--tabs-label-background--active);
+    color: var(--ui-tabs-label-foreground--active);
+    background-color: var(--ui-tabs-label-background--active);
   }
 
   [data-slot~="tabs-list"] input[type="radio"]:checked + [data-slot~="tabs-label"] {
-    color: var(--tabs-label-foreground--active);
+    color: var(--ui-tabs-label-foreground--active);
     anchor-name: --active-tab;
   }
 
@@ -172,14 +172,14 @@
   @supports (anchor-name: --active-tab) {
     [data-slot~="tabs-indicator"] {
       position-anchor: --active-tab;
-      top: calc(anchor(--active-tab top) + var(--tabs-indicator-inset));
-      left: calc(anchor(--active-tab left) + var(--tabs-indicator-inset));
-      right: calc(anchor(--active-tab right) + var(--tabs-indicator-inset));
-      bottom: calc(anchor(--active-tab bottom) + var(--tabs-indicator-inset));
+      top: calc(anchor(--active-tab top) + var(--ui-tabs-indicator-inset));
+      left: calc(anchor(--active-tab left) + var(--ui-tabs-indicator-inset));
+      right: calc(anchor(--active-tab right) + var(--ui-tabs-indicator-inset));
+      bottom: calc(anchor(--active-tab bottom) + var(--ui-tabs-indicator-inset));
     }
 
     [data-slot~="tabs-list"] input[type="radio"]:checked + [data-slot~="tabs-label"] {
-      background-color: var(--tabs-label-background--active);
+      background-color: var(--ui-tabs-label-background--active);
     }
   }
 
@@ -189,12 +189,12 @@
     }
 
     [data-slot~="tabs-list"] input[type="radio"]:checked + [data-slot~="tabs-label"] {
-      border-radius: var(--tabs-indicator-radius);
-      background-color: var(--tabs-indicator-background);
+      border-radius: var(--ui-tabs-indicator-radius);
+      background-color: var(--ui-tabs-indicator-background);
       box-shadow:
         0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
         0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring),
-        var(--tabs-indicator-shadow);
+        var(--ui-tabs-indicator-shadow);
     }
   }
 

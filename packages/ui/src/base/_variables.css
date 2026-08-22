@@ -29,9 +29,9 @@
   initial-value: 0s;
 }
 
-/* NOTE: --reveal-duration / --reveal-wait are intentionally NOT registered.
+/* NOTE: --ui-reveal-duration / --ui-reveal-wait are intentionally NOT registered.
  * reveal.js sets them per-element, and _reveal.css resolves them with
- * var(--reveal-*, var(--reveal-global-*)). A registered property is never
+ * var(--ui-reveal-*, var(--ui-reveal-global-*)). A registered property is never
  * guaranteed-invalid, so registering them would make that var() fallback
  * dead — the global/config defaults could never apply. They are not used in
  * any style() query, so typing buys nothing here. */

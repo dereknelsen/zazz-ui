@@ -6,42 +6,42 @@
  * @uses       <dialog>, ::backdrop — native modal + backdrop
  * @uses       @starting-style + allow-discrete — open/close opacity, transform, overlay
  * @uses       anchor-name, container-type — layout hooks for sized variants
- * @tokens     --dialog-* (@layer variables; sizing tokens in a second variables block)
+ * @tokens     --ui-dialog-* (@layer variables; sizing tokens in a second variables block)
  */
 
 @layer variables {
   :root {
-    --dialog-display: grid;
-    --dialog-backdrop-color: var(--shade-900);
-    --dialog-transition-duration: var(--default-transition-duration);
-    --dialog-transition-timing-function: var(--default-transition-timing-function);
-    --dialog-backdrop-transition-duration: calc(var(--dialog-transition-duration) - 100ms);
-    --dialog-backdrop-transition-timing-function: ease;
-    --dialog-backdrop-blur: blur(5px);
-    --dialog-shadow: var(--shadow-lg);
-    --dialog-border: 1px solid var(--border);
-    --dialog-width: min(var(--breakpoint-md), 100% - var(--gutters) * 2);
+    --ui-dialog-display: grid;
+    --ui-dialog-backdrop-color: var(--shade-900);
+    --ui-dialog-transition-duration: var(--default-transition-duration);
+    --ui-dialog-transition-timing-function: var(--default-transition-timing-function);
+    --ui-dialog-backdrop-transition-duration: calc(var(--ui-dialog-transition-duration) - 100ms);
+    --ui-dialog-backdrop-transition-timing-function: ease;
+    --ui-dialog-backdrop-blur: blur(5px);
+    --ui-dialog-shadow: var(--shadow-lg);
+    --ui-dialog-border: 1px solid var(--border);
+    --ui-dialog-width: min(var(--breakpoint-md), 100% - var(--gutters) * 2);
 
     /* Reveal transitions/animations */
-    --dialog-opacity--start: 0;
-    --dialog-opacity--end: 1;
-    --dialog-scale--start: 0.98;
-    --dialog-scale--end: 1;
-    --dialog-translate--start: 0, 0, 0;
-    --dialog-translate--end: 0, 0, 0;
-    --dialog-transition-delay--start: 0ms;
-    --dialog-transition-delay--end: 150ms;
+    --ui-dialog-opacity--start: 0;
+    --ui-dialog-opacity--end: 1;
+    --ui-dialog-scale--start: 0.98;
+    --ui-dialog-scale--end: 1;
+    --ui-dialog-translate--start: 0, 0, 0;
+    --ui-dialog-translate--end: 0, 0, 0;
+    --ui-dialog-transition-delay--start: 0ms;
+    --ui-dialog-transition-delay--end: 150ms;
   }
 }
 
-/* Sizing tokens — second variables block (overrides --dialog-width above). */
+/* Sizing tokens — second variables block (overrides --ui-dialog-width above). */
 @layer variables {
   :root {
-    --dialog-width: min(50ch, 100% - var(--gap-md) * 2);
-    --dialog-height: fit-content;
-    --dialog-background: var(--card);
-    --dialog-foreground: var(--card-foreground);
-    --dialog-radius: var(--radius-lg);
+    --ui-dialog-width: min(50ch, 100% - var(--gap-md) * 2);
+    --ui-dialog-height: fit-content;
+    --ui-dialog-background: var(--card);
+    --ui-dialog-foreground: var(--card-foreground);
+    --ui-dialog-radius: var(--radius-lg);
   }
 }
 
@@ -58,35 +58,35 @@
     margin: auto;
     max-inline-size: calc(100% - var(--gap-md));
     max-block-size: calc(100% - var(--gap-md));
-    border: var(--dialog-border);
+    border: var(--ui-dialog-border);
     contain: layout style;
-    opacity: var(--dialog-opacity--start);
-    box-shadow: var(--dialog-shadow);
+    opacity: var(--ui-dialog-opacity--start);
+    box-shadow: var(--ui-dialog-shadow);
     overscroll-behavior: contain;
     overflow: auto;
-    transform: translate3d(var(--dialog-translate--start)) scale(var(--dialog-scale--start));
+    transform: translate3d(var(--ui-dialog-translate--start)) scale(var(--ui-dialog-scale--start));
     transition:
-      opacity var(--dialog-transition-duration) var(--dialog-transition-timing-function),
-      transform var(--dialog-transition-duration) var(--dialog-transition-timing-function),
-      padding var(--dialog-transition-duration) var(--dialog-transition-timing-function),
-      block-size var(--dialog-transition-duration) var(--dialog-transition-timing-function),
-      inline-size var(--dialog-transition-duration) var(--dialog-transition-timing-function),
-      overlay var(--dialog-transition-duration) var(--dialog-transition-timing-function)
+      opacity var(--ui-dialog-transition-duration) var(--ui-dialog-transition-timing-function),
+      transform var(--ui-dialog-transition-duration) var(--ui-dialog-transition-timing-function),
+      padding var(--ui-dialog-transition-duration) var(--ui-dialog-transition-timing-function),
+      block-size var(--ui-dialog-transition-duration) var(--ui-dialog-transition-timing-function),
+      inline-size var(--ui-dialog-transition-duration) var(--ui-dialog-transition-timing-function),
+      overlay var(--ui-dialog-transition-duration) var(--ui-dialog-transition-timing-function)
         allow-discrete,
-      display var(--dialog-transition-duration) var(--dialog-transition-timing-function)
+      display var(--ui-dialog-transition-duration) var(--ui-dialog-transition-timing-function)
         allow-discrete;
-    transition-delay: var(--dialog-transition-delay--start);
+    transition-delay: var(--ui-dialog-transition-delay--start);
   }
 
   :where(dialog[open]) {
-    transform: translate3d(var(--dialog-translate--end)) scale(var(--dialog-scale--end));
-    opacity: var(--dialog-opacity--end);
-    transition-delay: var(--dialog-transition-delay--end);
+    transform: translate3d(var(--ui-dialog-translate--end)) scale(var(--ui-dialog-scale--end));
+    opacity: var(--ui-dialog-opacity--end);
+    transition-delay: var(--ui-dialog-transition-delay--end);
 
     @starting-style {
-      transition-delay: var(--dialog-transition-delay--start);
-      transform: translate3d(var(--dialog-translate--start)) scale(var(--dialog-scale--start));
-      opacity: var(--dialog-opacity--start);
+      transition-delay: var(--ui-dialog-transition-delay--start);
+      transform: translate3d(var(--ui-dialog-translate--start)) scale(var(--ui-dialog-scale--start));
+      opacity: var(--ui-dialog-opacity--start);
     }
   }
 
@@ -101,10 +101,10 @@
     opacity: 0;
     overscroll-behavior: contain;
     overflow: auto;
-    background-color: var(--dialog-backdrop-color);
-    backdrop-filter: var(--dialog-backdrop-blur);
-    transition: opacity var(--dialog-backdrop-transition-duration)
-      var(--dialog-backdrop-transition-timing-function);
+    background-color: var(--ui-dialog-backdrop-color);
+    backdrop-filter: var(--ui-dialog-backdrop-blur);
+    transition: opacity var(--ui-dialog-backdrop-transition-duration)
+      var(--ui-dialog-backdrop-transition-timing-function);
   }
 
   :where(dialog[open])::backdrop {
@@ -118,17 +118,17 @@
 
 @layer zazz.components {
   .ui-dialog {
-    /* Overrides reset-layer --dialog-shadow (reset > variables) */
-    --dialog-shadow: var(--shadow-md);
+    /* Overrides reset-layer --ui-dialog-shadow (reset > variables) */
+    --ui-dialog-shadow: var(--shadow-md);
 
-    inline-size: var(--dialog-width);
-    block-size: var(--dialog-height);
-    background-color: var(--dialog-background);
-    color: var(--dialog-foreground);
-    box-shadow: var(--dialog-shadow);
-    border-radius: var(--dialog-radius);
+    inline-size: var(--ui-dialog-width);
+    block-size: var(--ui-dialog-height);
+    background-color: var(--ui-dialog-background);
+    color: var(--ui-dialog-foreground);
+    box-shadow: var(--ui-dialog-shadow);
+    border-radius: var(--ui-dialog-radius);
 
-    anchor-name: --dialog-root;
+    anchor-name: --ui-dialog-root;
     container-type: inline-size;
     container-name: dialog;
     font-size: var(--font-size-md);
@@ -181,7 +181,7 @@
     top: 100%;
     inline-size: 100%;
     block-size: var(--gap-md);
-    background: linear-gradient(to top, transparent, var(--dialog-background));
+    background: linear-gradient(to top, transparent, var(--ui-dialog-background));
   }
 
   [data-slot~="dialog-body"] {
@@ -206,22 +206,22 @@
     gap: var(--gap-xs);
     padding: var(--gap-sm);
     border-top: 1px solid var(--border);
-    background-color: var(--dialog-background);
+    background-color: var(--ui-dialog-background);
   }
 
   .ui-dialog[data-size="article"] {
-    --dialog-width: var(--article-md);
+    --ui-dialog-width: var(--article-md);
   }
 
   .ui-dialog[data-size="container"] {
-    --dialog-width: var(--breakpoint-md);
+    --ui-dialog-width: var(--breakpoint-md);
   }
 
   .ui-dialog[data-size="screen"] {
-    --dialog-width: 100vi;
-    --dialog-height: 100svh;
-    --dialog-radius: 0;
-    --dialog-shadow: none;
+    --ui-dialog-width: 100vi;
+    --ui-dialog-height: 100svh;
+    --ui-dialog-radius: 0;
+    --ui-dialog-shadow: none;
     max-inline-size: 100vi;
     max-block-size: 100svh;
   }

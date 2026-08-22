@@ -4,26 +4,26 @@
  * @layer      variables, components
  * @requires   layers.css, _variables.css, fields.css (.ui-field-group layout)
  * @uses       appearance: none — custom circle + radial-gradient dot when :checked
- * @tokens     --radio-* (@layer variables)
+ * @tokens     --ui-radio-* (@layer variables)
  */
 
 @layer variables {
   :root {
-    --radio-size: var(--step-4_5);
-    --radio-background: var(--input);
-    --radio-background--checked: var(--primary);
-    --radio-border: var(--border);
-    --radio-border--hover: var(--primary);
-    --radio-border--checked: var(--primary);
-    --radio-radius: var(--radius-full);
-    --radio-background-size: 90%;
-    --radio-dot-foreground: var(--primary-foreground);
-    --radio-dot-inner-stop: 28%;
-    --radio-dot-outer-stop: 30%;
-    --radio-dot-gradient: radial-gradient(
+    --ui-radio-size: var(--step-4_5);
+    --ui-radio-background: var(--input);
+    --ui-radio-background--checked: var(--primary);
+    --ui-radio-border: var(--border);
+    --ui-radio-border--hover: var(--primary);
+    --ui-radio-border--checked: var(--primary);
+    --ui-radio-radius: var(--radius-full);
+    --ui-radio-background-size: 90%;
+    --ui-radio-dot-foreground: var(--primary-foreground);
+    --ui-radio-dot-inner-stop: 28%;
+    --ui-radio-dot-outer-stop: 30%;
+    --ui-radio-dot-gradient: radial-gradient(
       circle,
-      var(--radio-dot-foreground) 0 var(--radio-dot-inner-stop),
-      transparent var(--radio-dot-outer-stop)
+      var(--ui-radio-dot-foreground) 0 var(--ui-radio-dot-inner-stop),
+      transparent var(--ui-radio-dot-outer-stop)
     );
   }
 }
@@ -32,7 +32,7 @@
   /* ===========================================================================
   RADIO — .ui-radio (+ .ui-radio-group)
   - appearance: none redraws the circle from theme tokens; the checked dot is a
-    radial-gradient so it tracks --radio-dot-foreground, not colour alone.
+    radial-gradient so it tracks --ui-radio-dot-foreground, not colour alone.
   - Group by shared `name`; wrap in a <fieldset>/<legend> or .ui-radio-group for an
     accessible labelled set.
   =========================================================================== */
@@ -40,16 +40,16 @@
   .ui-radio {
     appearance: none;
     flex-shrink: 0;
-    inline-size: var(--radio-size);
-    block-size: var(--radio-size);
+    inline-size: var(--ui-radio-size);
+    block-size: var(--ui-radio-size);
 
-    background-color: var(--radio-background);
-    border: 1px solid var(--radio-border);
-    border-radius: var(--radio-radius);
+    background-color: var(--ui-radio-background);
+    border: 1px solid var(--ui-radio-border);
+    border-radius: var(--ui-radio-radius);
 
     background-repeat: no-repeat;
     background-position: center;
-    background-size: var(--radio-background-size);
+    background-size: var(--ui-radio-background-size);
 
     cursor: pointer;
 
@@ -67,7 +67,7 @@
   }
 
   .ui-radio:hover {
-    border-color: var(--radio-border--hover);
+    border-color: var(--ui-radio-border--hover);
   }
 
   .ui-radio:focus-visible {
@@ -77,8 +77,8 @@
   }
 
   .ui-radio:checked {
-    background-color: var(--radio-background--checked);
-    border-color: var(--radio-border--checked);
-    background-image: var(--radio-dot-gradient);
+    background-color: var(--ui-radio-background--checked);
+    border-color: var(--ui-radio-border--checked);
+    background-image: var(--ui-radio-dot-gradient);
   }
 }
