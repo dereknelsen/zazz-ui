@@ -43,7 +43,7 @@ Load order lives in [`index.css`](./src/index.css): it `@import`s `_layers.css` 
 then the base partials, then every `ui/<name>/<name>.css`, with `_utilities.css` and
 `_layout.css` last. Everything slots into one of these layers.
 Layering — not selector specificity or BEM — is how we control the cascade, so a
-plain `.button` rule in `components` can still be overridden by a `utilities` class
+plain `.ui-button` rule in `components` can still be overridden by a `utilities` class
 without `!important`.
 
 The five top-level layers, lowest priority to highest:
@@ -84,7 +84,7 @@ A component file is written top-to-bottom in this order:
 
 ```css
 /**
- * button.css — Button (.button)
+ * button.css — Button (.ui-button)
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, _reset.css
@@ -99,7 +99,7 @@ A component file is written top-to-bottom in this order:
 }
 
 @layer zazz.components {
-  .button {
+  .ui-button {
     /* rules that consume the hooks above */
   }
 }
@@ -113,7 +113,7 @@ The four layers, by responsibility:
   component rules (e.g. `::details-content` in [`accordion.css`](./src/ui/accordion/accordion.css),
   the `::picker` chrome in [`select.css`](./src/ui/select/select.css), the redrawn switch in
   [`switch.css`](./src/ui/switch/switch.css)). [`_reset.css`](./src/base/_reset.css) owns the global baseline.
-- **`components`** — the actual component (`.button`, `.dialog`, `.field`).
+- **`components`** — the actual component (`.ui-button`, `.ui-dialog`, `.ui-field`).
 - **`migrations`** — temporary shims that map old class names to Zazz tokens while you rewrite markup. Delete each rule once the corresponding markup is updated. Lives in an optional `migrations.css` you add and import at the commented slot in [`index.css`](./src/index.css).
 - **`utilities`** — atomic, override-anything classes ([`_utilities.css`](./src/base/_utilities.css)),
   written with `:where()` for zero specificity.
@@ -172,7 +172,7 @@ The header from [`fields.css`](./src/ui/fields/fields.css), showing every tag in
  * @uses       color-mix() — destructive field tint on invalid
  * @tokens     --field-*, --field-group-* (Tier 3 owner; @layer variables)
  * @consumedby input.css, textarea.css, select.css, input-group.css,
- *             password-group.css, radio.css (.radio-group)
+ *             password-group.css, radio.css (.ui-radio-group)
  */
 ```
 
@@ -306,17 +306,17 @@ token values** — they never restate the rule:
 
 ```css
 @layer zazz.components {
-  .button {
+  .ui-button {
     background-color: var(--button-background); /* referenced once */
   }
 
   /* a variant changes the value, not the rule */
-  .button[data-variant="primary"] {
+  .ui-button[data-variant="primary"] {
     --button-background: var(--primary);
     --button-background--hover: oklch(from var(--primary) l c h / 0.9);
   }
 
-  .button[data-size="sm"] {
+  .ui-button[data-size="sm"] {
     --button-height: var(--step-6);
     --button-radius: var(--radius-sm);
   }
@@ -350,7 +350,7 @@ Because rules resolve tokens lazily, an app can intervene at any of three scopes
 3. **Instance** — set the token inline or via a variant/size attribute for a one-off:
 
    ```html
-   <button class="button" style="--button-background: var(--secondary)">One-off</button>
+   <button class="ui-button" style="--button-background: var(--secondary)">One-off</button>
    ```
 
 Authoring an override never requires touching the package's `src/`. That is the point of
@@ -372,7 +372,7 @@ the variables layer.
 ## 6. Naming & selector conventions
 
 - **Blocks & elements**: `.component` and `.component__part`
-  (`.input-group`, `[data-slot="input-group-addon"]`). No BEM modifier classes — use attributes.
+  (`.ui-input-group`, `[data-slot="input-group-addon"]`). No BEM modifier classes — use attributes.
 - **Variants & sizes**: data attributes — `[data-variant="primary"]`, `[data-size="sm"]`,
   `[data-side]`, `[data-align]`, `[data-animation]`. They read as state and double as
   token-override hooks.

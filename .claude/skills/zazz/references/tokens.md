@@ -92,7 +92,7 @@ Reach here only when a role can't express it (a specific tint, a backdrop, a fix
   `.font-body .font-heading .font-strong`, families `.font-sans .font-serif .font-mono`.
 - **Helpers:** `.text-center|left|right|justify`, `.uppercase .lowercase .capitalize .normal-case`,
   `.text-balance .text-pretty`, `.leading-none`, `.line-clamp-1..6`, `.tabular-nums`, `.text-link`,
-  `.text-muted-foreground`. For long-form rich content, wrap in `.prose` (`_typography.css`).
+  `.text-muted-foreground`. For long-form rich content, wrap in `.ui-prose` (`_typography.css`).
 
 ## 5. Radius
 
@@ -168,7 +168,7 @@ intentionally (**md** ≈ popovers/modals). Utilities: `.shadow-none|xs|sm|md|lg
   ease distance `--scroll-fade-reveal`. The mask sits on the scroller, so pair with
   `.scrollbar-none`.
 - **Tables:** no table utilities — `table-layout` and `caption-side` are `data-*` attributes on
-  the Table component (see `components.md`): `data-layout="fixed"` on `.table`, `data-side="top"`
+  the Table component (see `components.md`): `data-layout="fixed"` on `.ui-table`, `data-side="top"`
   on its `<caption>`.
 - **Accessibility:** `.sr-only`.
 

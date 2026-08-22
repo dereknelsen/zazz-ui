@@ -66,9 +66,9 @@ tell lean Lifestyle. Default to **Lifestyle Brand** when unclear.
 Build sections from Zazz components and the band system — don't hand-roll CSS. See
 `references/components.md` and `PATTERNS.md`.
 
-1. **Sticky header:** Logo top-left, prominent catalog/product search (`.input`, central or right),
-   primary CTA (`.button` `data-variant="primary"`, e.g. "Become a customer" / "Request a quote"),
-   plus a secondary sign-in `.button` `data-variant="link"`.
+1. **Sticky header:** Logo top-left, prominent catalog/product search (`.ui-input`, central or right),
+   primary CTA (`.ui-button` `data-variant="primary"`, e.g. "Become a customer" / "Request a quote"),
+   plus a secondary sign-in `.ui-button` `data-variant="link"`.
 2. **Hero:** Full-bleed golden-hour photo (landscape, fleet, or operations) with white text over
    the darker region. Small eyebrow states place + founding date ("EST. 1927 · Denver, Colorado").
    Serif `text-display`/`text-h1` headline with an italic emphasis word ("Colorado's most
@@ -77,13 +77,13 @@ Build sections from Zazz components and the band system — don't hand-roll CSS.
 3. **Trust bar:** Muted strip (`--muted`) with an "trusted by" eyebrow and a row of grayscale
    partner logos to establish scale.
 4. **Category / product showcase:** Section heading + `<ui-carousel>` or grid of category cards
-   (`--card`, `--radius-lg`, figure aspect 3/2). A "shop all" `.button` closes it.
+   (`--card`, `--radius-lg`, figure aspect 3/2). A "shop all" `.ui-button` closes it.
 5. **Social-proof band:** Full-width deep-brand section with a gradient wash — a large serif-italic
    pull-quote testimonial ("We have been receiving your products for almost 25 years…") with plain
    attribution, or a longevity stat, paired with a warm in-context product image and carousel
    controls. This dark band is the page's trustworthy centerpiece.
 6. **Featured products grid:** Clean row of 4–5 product cards on `--background`/`--card` with
-   concise captions and a "view all products" `.button` `data-variant="link"`.
+   concise captions and a "view all products" `.ui-button` `data-variant="link"`.
 7. **"Who we serve":** Serif heading on flexibility ("From mom & pop shops to wholesale
    distribution"), a short paragraph, a CTA, and a wide framed golden-hour landscape image
    (`--radius-lg`) of the fleet or region below it.

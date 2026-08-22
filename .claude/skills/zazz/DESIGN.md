@@ -172,7 +172,7 @@ components:
     rounded: "{rounded.lg}"
     padding: 24px
   input:
-    backgroundColor: "{colors.input}"
+    backgroundColor: "{colors.ui-input}"
     textColor: "{colors.input-foreground}"
     rounded: "{rounded.md}"
     padding: 10px
@@ -390,7 +390,7 @@ Headings use `text-wrap: balance`. Body uses `text-wrap: pretty`. Tight-leading 
 
 **Two conventions:**
 
-- **Variants are data attributes:** `class="button" data-variant="primary"` — never `button-primary`.
+- **Variants are data attributes:** `class="ui-button" data-variant="primary"` — never `button-primary`.
 - **Theming via local custom properties:** Components declare `--button-background`, `--button-radius`, etc. off theme roles. Variants re-point those locals.
 
 ### Buttons
@@ -407,7 +407,7 @@ Native `<dialog>` via Invoker Commands API. `--card` surface, `--shadow-md`, `--
 
 ### Dropdown & Navigation Menu
 
-Popover API + CSS anchor positioning. Native light-dismiss. Dropdown items are `.button[data-variant="ghost"]`. Navigation menu supports mega-panels with a `__viewport` grid and rich `__link` rows (title + description); callouts are built from utilities (e.g. `bg-muted rounded-sm p-sm` + `.text-eyebrow`).
+Popover API + CSS anchor positioning. Native light-dismiss. Dropdown items are `.ui-button[data-variant="ghost"]`. Navigation menu supports mega-panels with a `__viewport` grid and rich `__link` rows (title + description); callouts are built from utilities (e.g. `bg-muted rounded-sm p-sm` + `.text-eyebrow`).
 
 ### Tabs
 
@@ -419,7 +419,7 @@ CSS-first grouped radio inputs wrapped in `<ui-tabs>`. Segmented control with sl
 
 ### Forms
 
-Shared `--field-*` tokens unify `.input`, `.textarea`, `.select`, `.input-group`, `.password-group`. Validation via `:user-invalid` (surfaces after blur/submit, never while typing). `.field` wrapper for label/control/hint/error layout. Password visibility uses `<ui-password>` around `.password-group`; checkbox, switch, and radio are restyled native inputs.
+Shared `--field-*` tokens unify `.ui-input`, `.ui-textarea`, `.ui-select`, `.ui-input-group`, `.ui-password-group`. Validation via `:user-invalid` (surfaces after blur/submit, never while typing). `.ui-field` wrapper for label/control/hint/error layout. Password visibility uses `<ui-password>` around `.ui-password-group`; checkbox, switch, and radio are restyled native inputs.
 
 ---
 

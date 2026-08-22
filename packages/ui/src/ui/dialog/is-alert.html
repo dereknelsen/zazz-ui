@@ -1,5 +1,5 @@
 <button
-  class="button"
+  class="ui-button"
   type="button"
   data-variant="destructive"
   command="show-modal"
@@ -7,7 +7,7 @@
 >
   Delete account
 </button>
-<dialog id="alert-dialog-example-1" class="dialog" closedby="none">
+<dialog id="alert-dialog-example-1" class="ui-dialog" closedby="none">
   <div data-slot="dialog-content">
     <header class="flex-row items-center gap-xs text-destructive" data-slot="dialog-header">
       <svg class="size-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
@@ -28,11 +28,11 @@
     </div>
   </div>
   <footer data-slot="dialog-footer">
-    <button class="button" type="button" commandfor="alert-dialog-example-1" command="close">
+    <button class="ui-button" type="button" commandfor="alert-dialog-example-1" command="close">
       Cancel
     </button>
     <button
-      class="button"
+      class="ui-button"
       data-variant="destructive"
       type="button"
       commandfor="alert-dialog-example-1"

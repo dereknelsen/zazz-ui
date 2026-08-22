@@ -1,9 +1,9 @@
 ---
 title: Typography
-description: Fluid typography scale, font stacks, utility classes, and the .prose long-form container.
+description: Fluid typography scale, font stacks, utility classes, and the .ui-prose long-form container.
 ---
 
-`_typography.css` implements the typography system from `_variables.css`, providing `.prose` formatting for HTML documents and `.text-*` / `.font-*` utility classes.
+`_typography.css` implements the typography system from `_variables.css`, providing `.ui-prose` formatting for HTML documents and `.text-*` / `.font-*` utility classes.
 
 ## Font stacks
 
@@ -33,12 +33,12 @@ Each step specifies matching `--font-weight-*`, `--leading-*`, and `--tracking-*
 
 `.font-*` sets weight directly (`.font-thin` through `.font-black`), plus semantic shortcuts (`.font-body`, `.font-heading`, `.font-strong`). See [Text and font](/docs/foundation/utilities/text-and-font) and [Text color](/docs/foundation/utilities/text-color).
 
-## `.prose` container
+## `.ui-prose` container
 
-Wrap unclassed HTML (such as Markdown or CMS output) in `.prose` to format headings, paragraphs, lists, blockquotes, and figures automatically:
+Wrap unclassed HTML (such as Markdown or CMS output) in `.ui-prose` to format headings, paragraphs, lists, blockquotes, and figures automatically:
 
 ```html
-<article class="prose">
+<article class="ui-prose">
   <h1>Page title</h1>
   <p>Body copy with standard typographic rhythm and measures.</p>
 </article>

@@ -1,5 +1,5 @@
 /**
- * button-group.css — Button group (.button-group)
+ * button-group.css — Button group (.ui-button-group)
  *
  * @layer      components
  * @requires   layers.css, _variables.css, button.css
@@ -13,13 +13,13 @@
   /* ===========================================================================
   BUTTON GROUP
 
-  Joins adjacent controls (.button, and any child it wraps) into a single
+  Joins adjacent controls (.ui-button, and any child it wraps) into a single
   segmented unit. Children keep their own --button-radius, so the outer corners
   follow the buttons' size variant automatically — only the *inner* corners are
   squared off and the doubled border is collapsed with a -1px overlap.
   =========================================================================== */
 
-  .button-group {
+  .ui-button-group {
     display: flex;
     inline-size: fit-content;
     /* stretch so mixed-height children share one edge */
@@ -33,15 +33,15 @@
 
   /* flex items honour z-index without positioning, but relative keeps the
      stacking context robust across child types (inputs, selects, …) */
-  .button-group > * {
+  .ui-button-group > * {
     position: relative;
   }
 
   /* the focused/hovered/pressed control floats above its neighbours so its
      border and box-shadow ring paint over the overlapped edge */
-  .button-group > *:hover:not(:disabled, [aria-disabled="true"]),
-  .button-group > *:focus-visible,
-  .button-group > *:active:not(:disabled, [aria-disabled="true"]) {
+  .ui-button-group > *:hover:not(:disabled, [aria-disabled="true"]),
+  .ui-button-group > *:focus-visible,
+  .ui-button-group > *:active:not(:disabled, [aria-disabled="true"]) {
     z-index: 1;
   }
 
@@ -49,16 +49,16 @@
   BUTTON GROUP — HORIZONTAL (default)
   =========================================================================== */
 
-  .button-group:not([data-orientation="vertical"]) {
+  .ui-button-group:not([data-orientation="vertical"]) {
     flex-direction: row;
   }
 
-  .button-group:not([data-orientation="vertical"]) > :not(:last-child) {
+  .ui-button-group:not([data-orientation="vertical"]) > :not(:last-child) {
     border-start-end-radius: 0;
     border-end-end-radius: 0;
   }
 
-  .button-group:not([data-orientation="vertical"]) > :not(:first-child) {
+  .ui-button-group:not([data-orientation="vertical"]) > :not(:first-child) {
     /* pull onto the previous control's border so the seam is one line, not two */
     margin-inline-start: -1px;
     border-start-start-radius: 0;
@@ -69,16 +69,16 @@
   BUTTON GROUP — VERTICAL
   =========================================================================== */
 
-  .button-group[data-orientation="vertical"] {
+  .ui-button-group[data-orientation="vertical"] {
     flex-direction: column;
   }
 
-  .button-group[data-orientation="vertical"] > :not(:last-child) {
+  .ui-button-group[data-orientation="vertical"] > :not(:last-child) {
     border-end-start-radius: 0;
     border-end-end-radius: 0;
   }
 
-  .button-group[data-orientation="vertical"] > :not(:first-child) {
+  .ui-button-group[data-orientation="vertical"] > :not(:first-child) {
     margin-block-start: -1px;
     border-start-start-radius: 0;
     border-start-end-radius: 0;

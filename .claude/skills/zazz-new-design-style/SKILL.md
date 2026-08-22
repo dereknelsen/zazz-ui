@@ -122,7 +122,7 @@ noted if the content model doesn't fit).>
 ## Page structure (top to bottom)
 
 <Numbered sections a typical page of this style stacks, each naming real Zazz components/bands
-(`.button data-variant=...`, `.input`, `--card`, `<ui-carousel>`, `.container` bands). Header →
+(`.ui-button data-variant=...`, `.ui-input`, `--card`, `<ui-carousel>`, `.container` bands). Header →
 hero → … → footer. Match the reference's actual section order.>
 
 ## {Signature cues} to weave in

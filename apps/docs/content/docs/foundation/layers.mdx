@@ -20,9 +20,9 @@ description: The cascade layer architecture that lets utility classes override c
 Later layers override earlier layers regardless of selector specificity:
 
 ```html
-<!-- .button sets background in @layer zazz.components.
+<!-- .ui-button sets background in @layer zazz.components.
      .bg-primary sets background in @layer zazz.utilities and overrides it cleanly. -->
-<button class="button bg-primary">Save</button>
+<button class="ui-button bg-primary">Save</button>
 ```
 
 ## Layer definitions
@@ -46,7 +46,7 @@ Rules declared outside of any `@layer` override all layered rules regardless of 
 
 ```css
 /* Unlayered rule overrides layered components and utilities */
-.button {
+.ui-button {
   border-radius: 0;
 }
 ```
@@ -57,7 +57,7 @@ To create custom overrides that remain structured, declare an app layer after Za
 @layer variables, reset, legacy, zazz, migrations, app;
 
 @layer app {
-  .button {
+  .ui-button {
     border-radius: 0;
   }
 }

@@ -91,31 +91,35 @@
           <nav>
             <menu class="flex gap-xs">
               <li>
-                <a class="button" data-variant="ghost" data-size="sm" href="index.html">Overview</a>
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="index.html"
+                  >Overview</a
+                >
               </li>
               <li>
-                <a class="button" data-variant="ghost" data-size="sm" href="about.html">About</a>
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="about.html">About</a>
               </li>
               <li>
-                <a class="button" data-variant="ghost" data-size="sm" href="products.html"
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="products.html"
                   >Products</a
                 >
               </li>
               <li>
-                <a class="button" data-variant="ghost" data-size="sm" href="layout.html">Layout</a>
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="layout.html"
+                  >Layout</a
+                >
               </li>
               <li>
-                <a class="button" data-variant="ghost" data-size="sm" href="responsive.html"
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="responsive.html"
                   >Responsive</a
                 >
               </li>
               <li>
-                <a class="button" data-variant="ghost" data-size="sm" href="components.html"
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="components.html"
                   >Components</a
                 >
               </li>
               <li>
-                <a class="button" data-variant="ghost" data-size="sm" href="forms.html">Forms</a>
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="forms.html">Forms</a>
               </li>
             </menu>
           </nav>
@@ -131,8 +135,8 @@
             <h1 class="text-h1">Fields and validation</h1>
             <p class="text-lg text-muted-foreground">
               Every control shares the <code>--field-*</code> tokens and the
-              <code>.field</code> layout. Validation surfaces through <code>:user-invalid</code>, so
-              errors appear only after you blur or submit. This form sits in the md band and
+              <code>.ui-field</code> layout. Validation surfaces through <code>:user-invalid</code>,
+              so errors appear only after you blur or submit. This form sits in the md band and
               collapses to one column below md.
             </p>
           </hgroup>
@@ -141,10 +145,10 @@
             <div class="grid grid-cols-3 grid-flow-row gap-md">
               <!-- Column one: text inputs, select, textarea -->
               <div class="flex flex-col gap-md">
-                <div class="field">
+                <div class="ui-field">
                   <label data-slot="field-label" for="f-name">Name</label>
                   <input
-                    class="input"
+                    class="ui-input"
                     id="f-name"
                     name="name"
                     type="text"
@@ -156,10 +160,10 @@
                   />
                 </div>
 
-                <div class="field">
+                <div class="ui-field">
                   <label data-slot="field-label" for="f-email">Email</label>
                   <input
-                    class="input"
+                    class="ui-input"
                     id="f-email"
                     name="email"
                     type="email"
@@ -182,10 +186,10 @@
                   </div>
                 </div>
 
-                <div class="field">
+                <div class="ui-field">
                   <label data-slot="field-label" for="f-phone">Phone</label>
                   <input
-                    class="input"
+                    class="ui-input"
                     id="f-phone"
                     name="phone"
                     type="tel"
@@ -196,9 +200,9 @@
                   />
                 </div>
 
-                <div class="field">
+                <div class="ui-field">
                   <label data-slot="field-label" for="f-sort">Sort by</label>
-                  <select class="select" id="f-sort" name="sort">
+                  <select class="ui-select" id="f-sort" name="sort">
                     <button>
                       <selectedcontent></selectedcontent>
                     </button>
@@ -212,10 +216,10 @@
                   </select>
                 </div>
 
-                <div class="field">
+                <div class="ui-field">
                   <label data-slot="field-label" for="f-message">Message</label>
                   <textarea
-                    class="textarea"
+                    class="ui-textarea"
                     id="f-message"
                     name="message"
                     inputmode="text"
@@ -226,11 +230,11 @@
 
               <!-- Column two: input groups, password, choice groups, slider -->
               <div class="flex flex-col gap-md">
-                <div class="field">
+                <div class="ui-field">
                   <label data-slot="field-label" for="f-search">Search</label>
-                  <label class="input-group">
+                  <label class="ui-input-group">
                     <input
-                      class="input"
+                      class="ui-input"
                       id="f-search"
                       type="search"
                       name="q"
@@ -269,11 +273,11 @@
                   </label>
                 </div>
 
-                <div class="field">
+                <div class="ui-field">
                   <label data-slot="field-label" for="f-url">Website</label>
-                  <label class="input-group">
+                  <label class="ui-input-group">
                     <input
-                      class="input"
+                      class="ui-input"
                       id="f-url"
                       type="url"
                       name="url"
@@ -290,7 +294,7 @@
                       <span data-slot="input-group-text">https://</span>
                     </span>
                     <span data-slot="input-group-addon" data-align="inline-end">
-                      <button class="button" data-variant="primary" data-size="sm" type="submit">
+                      <button class="ui-button" data-variant="primary" data-size="sm" type="submit">
                         Apply
                       </button>
                     </span>
@@ -305,12 +309,12 @@
                   </div>
                 </div>
 
-                <div class="field">
+                <div class="ui-field">
                   <label data-slot="field-label" for="f-password">Password</label>
                   <ui-password>
-                    <label class="password-group">
+                    <label class="ui-password-group">
                       <input
-                        class="input"
+                        class="ui-input"
                         id="f-password"
                         name="password"
                         type="password"
@@ -322,7 +326,7 @@
                       />
                       <span data-slot="password-group-addon" data-align="inline-end">
                         <button
-                          class="button"
+                          class="ui-button"
                           data-slot="password-group-toggle"
                           type="button"
                           data-variant="ghost"
@@ -332,8 +336,7 @@
                           aria-describedby="f-password-warning"
                         >
                           <svg
-                            data-slot="password-group-icon"
-                            data-slot="password-group-icon-show"
+                            data-slot="password-group-icon password-group-icon-show"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 256 256"
                             aria-hidden="true"
@@ -359,8 +362,7 @@
                             />
                           </svg>
                           <svg
-                            data-slot="password-group-icon"
-                            data-slot="password-group-icon-hide"
+                            data-slot="password-group-icon password-group-icon-hide"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 256 256"
                             aria-hidden="true"
@@ -419,53 +421,53 @@
                   </span>
                 </div>
 
-                <fieldset class="field-group">
+                <fieldset class="ui-field-group">
                   <legend>Preferences</legend>
                   <div class="flex flex-col gap-xs">
-                    <label class="field" data-orientation="horizontal">
+                    <label class="ui-field" data-orientation="horizontal">
                       <input type="checkbox" name="preferences-newsletter" />
                       <span data-slot="field-label">Subscribe to the newsletter</span>
                     </label>
-                    <label class="field" data-orientation="horizontal">
+                    <label class="ui-field" data-orientation="horizontal">
                       <input type="checkbox" name="preferences-terms" checked />
                       <span data-slot="field-label">Accept terms &amp; conditions</span>
                     </label>
                   </div>
                 </fieldset>
 
-                <fieldset class="radio-group">
+                <fieldset class="ui-radio-group">
                   <legend>Plan</legend>
                   <div class="flex flex-col gap-xs">
-                    <label class="field" data-orientation="horizontal">
-                      <input class="radio" type="radio" name="plan" value="starter" />
+                    <label class="ui-field" data-orientation="horizontal">
+                      <input class="ui-radio" type="radio" name="plan" value="starter" />
                       <span data-slot="field-label">Starter</span>
                     </label>
-                    <label class="field" data-orientation="horizontal">
-                      <input class="radio" type="radio" name="plan" value="pro" checked />
+                    <label class="ui-field" data-orientation="horizontal">
+                      <input class="ui-radio" type="radio" name="plan" value="pro" checked />
                       <span data-slot="field-label">Pro</span>
                     </label>
-                    <label class="field" data-orientation="horizontal">
-                      <input class="radio" type="radio" name="plan" value="team" />
+                    <label class="ui-field" data-orientation="horizontal">
+                      <input class="ui-radio" type="radio" name="plan" value="team" />
                       <span data-slot="field-label">Team</span>
                     </label>
                   </div>
                 </fieldset>
 
-                <fieldset class="field-group">
+                <fieldset class="ui-field-group">
                   <legend>Notifications</legend>
                   <div class="flex flex-col gap-xs">
-                    <label class="field" data-orientation="horizontal">
+                    <label class="ui-field" data-orientation="horizontal">
                       <input type="checkbox" role="switch" name="notifications-email" />
                       <span data-slot="field-label">Email notifications</span>
                     </label>
-                    <label class="field" data-orientation="horizontal">
+                    <label class="ui-field" data-orientation="horizontal">
                       <input type="checkbox" role="switch" name="notifications-2fa" checked />
                       <span data-slot="field-label">Two-factor authentication</span>
                     </label>
                   </div>
                 </fieldset>
 
-                <div class="field">
+                <div class="ui-field">
                   <label data-slot="field-label" for="f-volume">Volume</label>
                   <input
                     class="max-w-full"
@@ -482,8 +484,8 @@
 
             <!-- Actions span both columns -->
             <div class="flex items-center justify-end gap-xs">
-              <button class="button" type="reset">Reset</button>
-              <button class="button" data-variant="primary" type="submit">Create account</button>
+              <button class="ui-button" type="reset">Reset</button>
+              <button class="ui-button" data-variant="primary" type="submit">Create account</button>
             </div>
           </form>
         </div>
@@ -495,12 +497,12 @@
         <div class="flex items-center justify-between gap-md">
           <div class="text-h6 font-black">Zazz tests</div>
           <menu class="flex gap-sm">
-            <li><a class="button" data-variant="link" href="about.html">About</a></li>
-            <li><a class="button" data-variant="link" href="layout.html">Layout</a></li>
-            <li><a class="button" data-variant="link" href="responsive.html">Responsive</a></li>
-            <li><a class="button" data-variant="link" href="products.html">Products</a></li>
-            <li><a class="button" data-variant="link" href="components.html">Components</a></li>
-            <li><a class="button" data-variant="link" href="forms.html">Forms</a></li>
+            <li><a class="ui-button" data-variant="link" href="about.html">About</a></li>
+            <li><a class="ui-button" data-variant="link" href="layout.html">Layout</a></li>
+            <li><a class="ui-button" data-variant="link" href="responsive.html">Responsive</a></li>
+            <li><a class="ui-button" data-variant="link" href="products.html">Products</a></li>
+            <li><a class="ui-button" data-variant="link" href="components.html">Components</a></li>
+            <li><a class="ui-button" data-variant="link" href="forms.html">Forms</a></li>
           </menu>
         </div>
       </div>

@@ -1,10 +1,10 @@
 <form class="flex flex-col gap-sm w-full" style="max-inline-size: 24rem">
-  <div class="field">
+  <div class="ui-field">
     <label data-slot="field-label" for="pw-preview">Password</label>
     <ui-password>
-      <label class="password-group">
+      <label class="ui-password-group">
         <input
-          class="input"
+          class="ui-input"
           id="pw-preview"
           name="password"
           type="password"
@@ -16,7 +16,7 @@
         />
         <span data-slot="password-group-addon" data-align="inline-end">
           <button
-            class="button"
+            class="ui-button"
             data-slot="password-group-toggle"
             type="button"
             data-variant="ghost"
@@ -26,8 +26,7 @@
             aria-describedby="pw-preview-warning"
           >
             <svg
-              data-slot="password-group-icon"
-              data-slot="password-group-icon-show"
+              data-slot="password-group-icon password-group-icon-show"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 256 256"
               aria-hidden="true"
@@ -53,8 +52,7 @@
               />
             </svg>
             <svg
-              data-slot="password-group-icon"
-              data-slot="password-group-icon-hide"
+              data-slot="password-group-icon password-group-icon-hide"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 256 256"
               aria-hidden="true"

@@ -1,5 +1,5 @@
 /**
- * table.css — Table (.table)
+ * table.css — Table (.ui-table)
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, _reset.css
@@ -48,7 +48,7 @@
   TABLE
   =========================================================================== */
 
-  .table {
+  .ui-table {
     font-family: var(--table-font-family);
     font-size: var(--table-font-size);
     font-variant-numeric: tabular-nums;
@@ -62,7 +62,7 @@
     text-align: start;
   }
 
-  .table :is(th, td) {
+  .ui-table :is(th, td) {
     padding-block: var(--table-cell-padding-block);
     padding-inline: var(--table-cell-padding-inline);
     vertical-align: middle;
@@ -70,31 +70,31 @@
     border-inline: var(--table-column-border);
   }
 
-  .table th {
+  .ui-table th {
     color: var(--table-head-foreground);
     font-weight: var(--table-head-font-weight);
   }
 
-  .table thead th {
+  .ui-table thead th {
     block-size: var(--table-head-height);
     padding-block: 0;
   }
 
-  .table thead tr {
+  .ui-table thead tr {
     border-block-end: var(--table-head-border);
   }
 
-  .table tbody tr:not(:last-child) {
+  .ui-table tbody tr:not(:last-child) {
     border-block-end: var(--table-row-border);
   }
 
-  .table tfoot {
+  .ui-table tfoot {
     background-color: var(--table-foot-background);
     font-weight: var(--table-foot-font-weight);
     border-block-start: var(--table-border);
   }
 
-  .table caption {
+  .ui-table caption {
     color: var(--table-caption-foreground);
     padding-block: var(--table-caption-padding-block);
     padding-inline: var(--table-caption-padding-inline);
@@ -105,12 +105,12 @@
   =========================================================================== */
 
   /* omit = table-layout: auto */
-  .table[data-layout="fixed"] {
+  .ui-table[data-layout="fixed"] {
     table-layout: fixed;
   }
 
-  /* omit = caption-side: bottom (set on .table) */
-  .table caption[data-side="top"] {
+  /* omit = caption-side: bottom (set on .ui-table) */
+  .ui-table caption[data-side="top"] {
     caption-side: top;
   }
 
@@ -120,11 +120,11 @@
 
   /* hover/selected paint on the cells so they layer above any row stripe;
      disable hover with --table-row-background--hover: transparent */
-  .table tbody tr:hover > :is(th, td) {
+  .ui-table tbody tr:hover > :is(th, td) {
     background-color: var(--table-row-background--hover);
   }
 
-  .table tbody tr[data-state="selected"] > :is(th, td) {
+  .ui-table tbody tr[data-state="selected"] > :is(th, td) {
     background-color: var(--table-row-background--selected);
   }
 
@@ -132,15 +132,15 @@
   TABLE VARIANTS
   =========================================================================== */
 
-  .table[data-variant="alternating"] {
+  .ui-table[data-variant="alternating"] {
     --table-row-border: none;
   }
 
-  .table[data-variant="alternating"] tbody tr:nth-child(even) {
+  .ui-table[data-variant="alternating"] tbody tr:nth-child(even) {
     background-color: var(--table-alternating-background);
   }
 
-  .table[data-variant="grid"] {
+  .ui-table[data-variant="grid"] {
     --table-column-border: var(--table-border);
 
     border: var(--table-border);
@@ -150,7 +150,7 @@
   TABLE SIZES
   =========================================================================== */
 
-  .table[data-size="sm"] {
+  .ui-table[data-size="sm"] {
     --table-cell-padding-block: var(--step-1);
     --table-cell-padding-inline: var(--step-1_5);
     --table-head-height: var(--step-8);

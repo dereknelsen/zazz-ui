@@ -14,7 +14,7 @@
  * Opening and closing the dialog itself needs no JavaScript — slides carry
  * `command="show-modal"` / `command="close"` (Invoker Commands). Drag-aware
  * click suppression on the stage and thumbs is wired by `initRoot` in
- * embla.js (keyed on `[data-slot="lightbox-stage"]` / thumbs markup).
+ * embla.js (keyed on `[data-slot~="lightbox-stage"]` / thumbs markup).
  *
  * Load order: the module graph resolves it — `index.js` imports embla.js and
  * carousel.js before this file; Embla itself resolves via the page's import map.
@@ -66,7 +66,7 @@ class UiLightbox extends HTMLElement {
    * @returns The inline gallery's carousel root.
    */
   #galleryRoot(): Element | null {
-    return this.querySelector('[data-slot="lightbox-gallery"] [data-carousel="root"]');
+    return this.querySelector('[data-slot~="lightbox-gallery"] :is(ui-carousel, .ui-carousel)');
   }
 
   /**
@@ -76,7 +76,7 @@ class UiLightbox extends HTMLElement {
    * @param dialog - The lightbox dialog.
    */
   #onDialogOpen(dialog: HTMLDialogElement): void {
-    const dialogRoot = dialog.querySelector('[data-carousel="root"]');
+    const dialogRoot = dialog.querySelector(":is(ui-carousel, .ui-carousel)");
     if (!dialogRoot) return;
 
     // <ui-carousel> defers init while its dialog is closed — init now.
@@ -90,7 +90,7 @@ class UiLightbox extends HTMLElement {
       dialogRoot._emblaApi.scrollTo(galleryApi.selectedScrollSnap(), true);
     }
 
-    const viewport = dialogRoot.querySelector('[data-slot="carousel-viewport"]');
+    const viewport = dialogRoot.querySelector('[data-slot~="carousel-viewport"]');
     if (viewport instanceof HTMLElement) {
       viewport.focus({ preventScroll: true });
     }
@@ -102,7 +102,7 @@ class UiLightbox extends HTMLElement {
    * @param dialog - The lightbox dialog.
    */
   #syncGalleryToDialog(dialog: HTMLDialogElement): void {
-    const dialogApi = dialog.querySelector('[data-carousel="root"]')?._emblaApi;
+    const dialogApi = dialog.querySelector(":is(ui-carousel, .ui-carousel)")?._emblaApi;
     const galleryApi = this.#galleryRoot()?._emblaApi;
     if (dialogApi && galleryApi) {
       galleryApi.scrollTo(dialogApi.selectedScrollSnap());

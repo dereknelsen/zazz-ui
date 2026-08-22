@@ -6,7 +6,7 @@ The component-prefixed value keeps selectors flat (`[data-slot="dialog-header"]`
 
 ## Decisions
 
-- Value grammar: `data-slot="{primitive}-{part}"`.
+- Value grammar: `data-slot="{primitive}-{part}"`. The attribute is a **space-separated token list** (like `class`): one element can serve parts of two primitives at once (a lightbox slide is also a carousel slide — `data-slot="lightbox-slide carousel-slide"`). Selectors therefore always use the token matcher `[data-slot~="carousel-slide"]`, never exact `=`. (Amended during migration: the single-value grammar could not express the lightbox↔carousel overlap.)
 - Primitive roots are **not** stamped: the tag form or class form is the root identity; `data-slot` is strictly interior. (`ui-carousel` stops stamping `data-carousel="root"`.)
 - Glossary term is **slot** (shadcn's word), not "part" (Base UI), "fragment", or "segment".
 - Unaffected attribute families stay bare-keyed: CSS variant/state props (`data-variant`, `data-size`, `data-side`, `data-align`, `data-orientation`, `data-position`) and JS config props (`data-carousel-*`, `data-reveal-*`) keep their existing grammar, un-prefixed. Rule of thumb: `ui-` prefixes things that _name_ Zazz (tags, classes, component tokens); attribute keys that carry _values_ stay bare.

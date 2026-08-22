@@ -1,4 +1,4 @@
-<button class="button" type="button" command="show-modal" commandfor="dialog-example-1">
+<button class="ui-button" type="button" command="show-modal" commandfor="dialog-example-1">
   Dialog
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
     <rect width="256" height="256" fill="none" />
@@ -23,7 +23,7 @@
     />
   </svg>
 </button>
-<dialog id="dialog-example-1" class="dialog" closedby="any">
+<dialog id="dialog-example-1" class="ui-dialog" closedby="any">
   <div data-slot="dialog-content">
     <header data-slot="dialog-header">
       <h2 class="text-lg font-heading font-strong">Dialog title</h2>
@@ -41,16 +41,21 @@
       <p>Set the size of the dialog with the <code>data-size</code> attribute.</p>
     </div>
     <footer data-slot="dialog-footer">
-      <button class="button" type="button" commandfor="dialog-example-1" command="close">
+      <button class="ui-button" type="button" commandfor="dialog-example-1" command="close">
         Cancel
       </button>
-      <button class="button" data-variant="primary" commandfor="dialog-example-1" command="close">
+      <button
+        class="ui-button"
+        data-variant="primary"
+        commandfor="dialog-example-1"
+        command="close"
+      >
         Accept
       </button>
     </footer>
   </div>
   <button
-    class="button"
+    class="ui-button"
     data-slot="dialog-close"
     data-size="icon"
     data-variant="ghost"

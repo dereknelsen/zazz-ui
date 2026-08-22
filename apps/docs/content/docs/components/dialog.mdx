@@ -3,7 +3,7 @@ title: Dialog
 description: Modal dialogs built with native dialog elements and Invoker Commands.
 ---
 
-Dialogs use native `<dialog class="dialog">` elements. Open from buttons with `command="show-modal"` and `commandfor="<id>"`. Close with `command="close"`. Add `closedby="any"` for light-dismiss on backdrop click.
+Dialogs use native `<dialog class="ui-dialog">` elements. Open from buttons with `command="show-modal"` and `commandfor="<id>"`. Close with `command="close"`. Add `closedby="any"` for light-dismiss on backdrop click.
 
 ## Default
 
@@ -19,9 +19,9 @@ Dialogs use native `<dialog class="dialog">` elements. Open from buttons with `c
 
 ## API
 
-| Attribute    | Target     | Values                           |
-| ------------ | ---------- | -------------------------------- |
-| `command`    | Trigger    | `show-modal`, `close`            |
-| `commandfor` | Trigger    | Target `<dialog>` id             |
-| `data-size`  | `.dialog`  | `article`, `container`, `screen` |
-| `closedby`   | `<dialog>` | `any`, `closerequest`, `none`    |
+| Attribute    | Target       | Values                           |
+| ------------ | ------------ | -------------------------------- |
+| `command`    | Trigger      | `show-modal`, `close`            |
+| `commandfor` | Trigger      | Target `<dialog>` id             |
+| `data-size`  | `.ui-dialog` | `article`, `container`, `screen` |
+| `closedby`   | `<dialog>`   | `any`, `closerequest`, `none`    |

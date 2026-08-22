@@ -1,5 +1,5 @@
 /**
- * accordion.css — Accordion (.accordion on <details>/<summary>)
+ * accordion.css — Accordion (.ui-accordion on <details>/<summary>)
  *
  * @layer      variables, reset, components
  * @requires   layers.css, _variables.css
@@ -19,7 +19,7 @@
 @layer reset {
   /* ===========================================================================
   DETAILS & SUMMARY — native open/close transition + summary marker reset
-  - In the reset layer so the .accordion component styling below wins.
+  - In the reset layer so the .ui-accordion component styling below wins.
   =========================================================================== */
 
   :where(details)::details-content {
@@ -49,18 +49,18 @@
 }
 
 @layer zazz.components {
-  .accordion {
+  .ui-accordion {
     display: grid;
     inline-size: 100%;
     flex: 1;
   }
 
-  .accordion > details {
+  .ui-accordion > details {
     display: grid;
     flex: 1 0 auto;
   }
 
-  .accordion > details > summary {
+  .ui-accordion > details > summary {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -80,14 +80,14 @@
     transition: var(--default-transition);
   }
 
-  .accordion > details > summary:focus-visible {
+  .ui-accordion > details > summary:focus-visible {
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
 
     outline-color: transparent;
   }
 
-  .accordion summary > svg {
+  .ui-accordion summary > svg {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -98,7 +98,7 @@
       var(--default-transition-timing-function);
   }
 
-  .accordion > details[open] > summary > svg {
+  .ui-accordion > details[open] > summary > svg {
     transform: var(--accordion-icon-transform-open);
   }
 }

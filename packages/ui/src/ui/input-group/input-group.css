@@ -1,12 +1,12 @@
 /**
- * input-group.css — Input group (.input-group)
+ * input-group.css — Input group (.ui-input-group)
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, fields.css, input.css,
  *             textarea.css, button.css
  * @uses       :focus-within — lifts shell ring/border as one field
  * @uses       :has() — restore padding when addons absent; invalid text color
- * @uses       data-align on [data-slot="input-group-addon"] — inline-start/end, block-start/end
+ * @uses       data-align on [data-slot~="input-group-addon"] — inline-start/end, block-start/end
  * @tokens     --input-group-* (@layer variables)
  */
 
@@ -33,7 +33,7 @@
 
 @layer zazz.components {
   /* ===========================================================================
-  INPUT GROUP — .input-group  (shadcn-style composition)
+  INPUT GROUP — .ui-input-group  (shadcn-style composition)
   - A single bordered shell that fuses a text control with addons (icons, text,
     kbd) and buttons. The nested control goes borderless/transparent so the group
     reads as one field; :focus-within lifts the whole shell.
@@ -42,15 +42,15 @@
       inline-start (default) · inline-end · block-start · block-end
     block-* span the full width on their own row — that's how a textarea grows a
     toolbar above or below it.
-  - Composition: .input-group > [.input | .textarea] + [data-slot="input-group-addon"]
-    where an addon may hold [data-slot="input-group-text"], an <svg>, <kbd>, or .button.
+  - Composition: .ui-input-group > [.ui-input | .ui-textarea] + [data-slot~="input-group-addon"]
+    where an addon may hold [data-slot~="input-group-text"], an <svg>, <kbd>, or .ui-button.
   - The shell is a <label> for click-to-focus, but it is NOT the field's label.
-    Wrap it in a .field with a real [data-slot="field-label"][for] (and optional [data-slot="field-hint"]
-    / [data-slot="field-error"]) so the control is named by visible text, never by a legend.
+    Wrap it in a .ui-field with a real [data-slot~="field-label"][for] (and optional [data-slot~="field-hint"]
+    / [data-slot~="field-error"]) so the control is named by visible text, never by a legend.
   - Shares the --field-* tokens (height, radius, surface) defined in fields.css.
   =========================================================================== */
 
-  .input-group {
+  .ui-input-group {
     display: var(--input-group-display);
     flex-wrap: var(--input-group-wrap);
     align-items: var(--input-group-align);
@@ -82,12 +82,12 @@
     transition: var(--default-transition);
   }
 
-  .input-group:hover {
+  .ui-input-group:hover {
     background-color: var(--field-background--hover);
     border-color: var(--field-border--hover);
   }
 
-  .input-group:focus-within {
+  .ui-input-group:focus-within {
     background-color: var(--field-background--focus);
     border-color: var(--field-border--focus);
     --_ring-offset-width: var(--ring-offset-width);
@@ -96,8 +96,8 @@
   }
 
   /* Nested control sheds its own chrome and fills the row */
-  .input-group .input,
-  .input-group .textarea {
+  .ui-input-group .ui-input,
+  .ui-input-group .ui-textarea {
     flex: 1;
     min-inline-size: 0;
     background-color: transparent;
@@ -107,7 +107,7 @@
     box-shadow: none;
   }
 
-  .input-group .input {
+  .ui-input-group .ui-input {
     flex: 1;
     padding-inline: 0;
 
@@ -120,22 +120,22 @@
      text never sits flush against the shell. An addon already supplies the
      spacing on its side; block-* addons take their own row and don't count here.
      (Default/no-data-align addons are inline-start.) */
-  .input-group:not(
+  .ui-input-group:not(
       :has(
-        [data-slot="input-group-addon"]:not([data-align]),
-        [data-slot="input-group-addon"][data-align="inline-start"]
+        [data-slot~="input-group-addon"]:not([data-align]),
+        [data-slot~="input-group-addon"][data-align="inline-start"]
       )
     )
-    .input {
+    .ui-input {
     padding-inline-start: var(--field-padding);
   }
 
-  .input-group:not(:has([data-slot="input-group-addon"][data-align="inline-end"])) .input {
+  .ui-input-group:not(:has([data-slot~="input-group-addon"][data-align="inline-end"])) .ui-input {
     padding-inline-end: var(--field-padding);
   }
 
   /* A textarea claims the full width; addons stack above/below via block-* */
-  .input-group .textarea {
+  .ui-input-group .ui-textarea {
     flex-basis: 100%;
     min-block-size: var(--input-group-textarea-min-block-size);
     padding-inline: var(--input-group-textarea-padding-inline);
@@ -144,7 +144,7 @@
   }
 
   /* Addon — groups icons, text, kbd, or buttons together */
-  [data-slot="input-group-addon"] {
+  [data-slot~="input-group-addon"] {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -157,29 +157,29 @@
     padding-inline: var(--field-addon-padding);
   }
 
-  [data-slot="input-group-addon"] > svg {
+  [data-slot~="input-group-addon"] > svg {
     inline-size: var(--field-icon-size);
     block-size: var(--field-icon-size);
   }
 
   /* Alignment — inline-start is the default (addon visually leads the control) */
-  [data-slot="input-group-addon"]:not([data-align]),
-  [data-slot="input-group-addon"][data-align="inline-start"] {
+  [data-slot~="input-group-addon"]:not([data-align]),
+  [data-slot~="input-group-addon"][data-align="inline-start"] {
     order: -1;
   }
 
-  [data-slot="input-group-addon"][data-align="inline-end"] {
+  [data-slot~="input-group-addon"][data-align="inline-end"] {
     order: 1;
   }
 
-  [data-slot="input-group-addon"][data-align="block-start"] {
+  [data-slot~="input-group-addon"][data-align="block-start"] {
     order: -2;
     flex-basis: 100%;
     padding-block: var(--field-addon-padding);
     align-items: flex-start;
   }
 
-  [data-slot="input-group-addon"][data-align="block-end"] {
+  [data-slot~="input-group-addon"][data-align="block-end"] {
     order: 2;
     flex-basis: 100%;
     padding-block: var(--field-addon-padding);
@@ -187,7 +187,7 @@
   }
 
   /* Text addon — units, protocols, @handles ("https://", "USD", "@user") */
-  [data-slot="input-group-text"] {
+  [data-slot~="input-group-text"] {
     display: inline-flex;
     align-items: center;
     gap: var(--gap-xs);
@@ -198,18 +198,18 @@
     min-inline-size: max-content;
   }
 
-  [data-slot="input-group-text"] > svg {
+  [data-slot~="input-group-text"] > svg {
     inline-size: var(--field-icon-size);
     block-size: var(--field-icon-size);
   }
 
   /* Buttons embedded in a group shrink to nest cleanly inside the shell */
-  .input-group .button {
+  .ui-input-group .ui-button {
     flex-shrink: 0;
     border-radius: var(--field-button-radius);
   }
 
-  :where(.field:has(:user-invalid)) [data-slot="input-group-text"] {
+  :where(.ui-field:has(:user-invalid)) [data-slot~="input-group-text"] {
     --input-group-text-color: var(--destructive);
   }
 }

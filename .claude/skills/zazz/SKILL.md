@@ -33,7 +33,7 @@ previews also expose the matching CSS and, for web components, the matching JS t
 - **`data-*` for variants** (shadcn-familiar): `data-variant`, `data-size`, `data-side`,
   `data-align`, `data-orientation`, `data-animation`, `data-layout`, `data-state`. The
   **default** variant is the _absence_ of the attribute. Write
-  `class="button" data-variant="primary"` — never `.button-primary`.
+  `class="ui-button" data-variant="primary"` — never `.button-primary`.
 - **Modern APIs do the work** (Popover, native `<dialog>`, Invoker Commands, anchor
   positioning, View Transitions, `<details>`). Polyfills are already loaded — preserve them.
 - **Composition variables** (`--_` prefix, `@property`-registered with `inherits: false`).
@@ -127,7 +127,7 @@ Tokens resolve lazily, so you can intervene at three scopes — pick the narrowe
 
 Forms share `--field-*` tokens and validate via `:user-invalid` (after blur/submit, never
 while typing). Cards and avatars are composition patterns (utilities + theme tokens), not
-dedicated CSS files. Tables are one `.table` class on a semantic `<table>` — variants
+dedicated CSS files. Tables are one `.ui-table` class on a semantic `<table>` — variants
 (`alternating`, `grid`), `data-layout="fixed"`, and caption `data-side="top"` are attributes;
 every setting is a `--table-*` token.
 

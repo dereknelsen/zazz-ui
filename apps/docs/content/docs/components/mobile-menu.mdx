@@ -13,12 +13,14 @@ The mobile menu combines a native `<dialog>` with nested `<details>` accordions.
 
 ```html
 <!-- Trigger -->
-<button class="button" data-size="icon" command="show-modal" commandfor="mobile-menu-1">☰</button>
+<button class="ui-button" data-size="icon" command="show-modal" commandfor="mobile-menu-1">
+  ☰
+</button>
 
 <!-- Menu -->
 <dialog
   id="mobile-menu-1"
-  class="dialog mobile-menu"
+  class="ui-dialog ui-mobile-menu"
   data-size="screen"
   data-animation="slide-right"
   closedby="any"
@@ -26,9 +28,9 @@ The mobile menu combines a native `<dialog>` with nested `<details>` accordions.
   <div data-slot="mobile-menu-viewport">
     <div data-slot="mobile-menu-header">...</div>
     <div data-slot="mobile-menu-body">
-      <div class="accordion">
+      <div class="ui-accordion">
         <details>
-          <summary class="button" data-variant="ghost">Section</summary>
+          <summary class="ui-button" data-variant="ghost">Section</summary>
           <div class="flex flex-col pb-sm">
             <!-- Nav links -->
           </div>
@@ -57,10 +59,10 @@ The mobile menu combines a native `<dialog>` with nested `<details>` accordions.
 
 ## API
 
-| Attribute        | Target         | Values                        |
-| ---------------- | -------------- | ----------------------------- |
-| `command`        | Trigger        | `show-modal`, `close`         |
-| `commandfor`     | Trigger        | Target dialog ID              |
-| `data-size`      | `.mobile-menu` | `screen`                      |
-| `data-animation` | `.mobile-menu` | `slide-right`                 |
-| `closedby`       | `<dialog>`     | `any`, `closerequest`, `none` |
+| Attribute        | Target            | Values                        |
+| ---------------- | ----------------- | ----------------------------- |
+| `command`        | Trigger           | `show-modal`, `close`         |
+| `commandfor`     | Trigger           | Target dialog ID              |
+| `data-size`      | `.ui-mobile-menu` | `screen`                      |
+| `data-animation` | `.ui-mobile-menu` | `slide-right`                 |
+| `closedby`       | `<dialog>`        | `any`, `closerequest`, `none` |

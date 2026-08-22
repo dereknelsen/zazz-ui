@@ -27,7 +27,7 @@ Or copy the files: every component is one self-contained folder — `src/ui/<nam
 ## Usage
 
 ```html
-<button class="button" data-variant="primary">It works</button>
+<button class="ui-button" data-variant="primary">It works</button>
 ```
 
 Components read design tokens (`var(--primary)`, `--radius-md`, `--gap-*`) and never hardcode values — restyle globally by overriding tokens on `:root`, per component via its `--button-*` tokens, or per instance inline. Variants are `data-*` attributes, not class soup. Light/dark comes free through role tokens.

@@ -4,7 +4,7 @@
  * @fileoverview `<ui-password>` — HTML web component for password visibility.
  * @description Light-DOM custom element that adds show/hide behavior to a
  * standard password field. Wrap the existing `.password-group` markup — the
- * element finds the input and the `[data-slot="password-group-toggle"]` button, flips the
+ * element finds the input and the `[data-slot~="password-group-toggle"]` button, flips the
  * input between `type="password"` and `type="text"` on click, and keeps
  * `aria-pressed` and `aria-label` in sync. The icon swap is pure CSS, driven
  * by `aria-pressed` (see _password-group.css).
@@ -70,7 +70,7 @@ class UiPassword extends HTMLElement {
     if (this.#controller) return;
 
     const input = this.querySelector('input[type="password"], input[type="text"]');
-    const toggle = this.querySelector('[data-slot="password-group-toggle"]');
+    const toggle = this.querySelector('[data-slot~="password-group-toggle"]');
     if (!(input instanceof HTMLInputElement) || !(toggle instanceof HTMLElement)) return;
 
     this.#controller = new AbortController();

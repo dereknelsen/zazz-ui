@@ -10,7 +10,7 @@ Interactive states in Zazz use `hover:` utility prefixes combined with built-in 
 Prefix utilities with `hover:` to apply styles on pointer hover:
 
 ```html
-<a class="button hover:bg-primary hover:scale-102">Hover me</a>
+<a class="ui-button hover:bg-primary hover:scale-102">Hover me</a>
 
 <div class="card hover:opacity-75 transition">...</div>
 ```
@@ -52,21 +52,21 @@ Define active states in component CSS with `:active` rather than markup utility 
 Form inputs use `:user-invalid`, styling fields only after user interaction (on blur or submit):
 
 ```html
-<div class="field">
+<div class="ui-field">
   <label for="email">Email</label>
   <input id="email" type="email" required />
   <p data-slot="field-error">Enter a valid email address.</p>
 </div>
 ```
 
-The `.field` component handles label, hint, and error visibility transitions automatically.
+The `.ui-field` component handles label, hint, and error visibility transitions automatically.
 
 ## Disabled state
 
 Components use `:not(:disabled)` styling guards. Add the `disabled` attribute to disable native controls:
 
 ```html
-<button class="button" data-variant="primary" disabled>Saving...</button>
+<button class="ui-button" data-variant="primary" disabled>Saving...</button>
 ```
 
 ## Data attributes for state

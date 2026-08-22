@@ -1,5 +1,5 @@
 /**
- * _typography.css — Prose (.prose) and figcaption reset
+ * _typography.css — Prose (.ui-prose) and figcaption reset
  *
  * @layer      variables, reset, components, utilities
  * @requires   layers.css, _variables.css, _reset.css (figcaption baseline)
@@ -24,12 +24,12 @@
   TYPOGRAPHY — prose component styles
   =========================================================================== */
 
-  :where(.prose) {
+  :where(.ui-prose) {
     flex-direction: column;
     display: flex;
   }
 
-  :where(.prose h1) {
+  :where(.ui-prose h1) {
     font-family: var(--font-family-heading);
     font-size: var(--font-size-h1);
     line-height: var(--leading-h1);
@@ -39,7 +39,7 @@
     font-optical-sizing: auto;
   }
 
-  :where(.prose h2) {
+  :where(.ui-prose h2) {
     font-family: var(--font-family-heading);
     font-size: var(--font-size-h2);
     line-height: var(--leading-h2);
@@ -49,7 +49,7 @@
     font-optical-sizing: auto;
   }
 
-  :where(.prose h3) {
+  :where(.ui-prose h3) {
     font-family: var(--font-family-heading);
     font-size: var(--font-size-h3);
     line-height: var(--leading-h3);
@@ -59,7 +59,7 @@
     font-optical-sizing: auto;
   }
 
-  :where(.prose h4) {
+  :where(.ui-prose h4) {
     font-family: var(--font-family-heading);
     font-size: var(--font-size-h4);
     line-height: var(--leading-h4);
@@ -69,7 +69,7 @@
     font-optical-sizing: auto;
   }
 
-  :where(.prose h5) {
+  :where(.ui-prose h5) {
     font-family: var(--font-family-heading);
     font-size: var(--font-size-h5);
     line-height: var(--leading-h5);
@@ -79,7 +79,7 @@
     font-optical-sizing: auto;
   }
 
-  :where(.prose h6) {
+  :where(.ui-prose h6) {
     font-family: var(--font-family-heading);
     font-size: var(--font-size-h6);
     line-height: var(--leading-h6);
@@ -89,13 +89,13 @@
     font-optical-sizing: auto;
   }
 
-  :where(.prose p) {
+  :where(.ui-prose p) {
     font-size: var(--font-size-md);
     line-height: var(--leading-md);
     letter-spacing: var(--tracking-md);
   }
 
-  :where(.prose a) {
+  :where(.ui-prose a) {
     color: var(--prose-link-color);
     text-decoration-line: var(--decoration-line);
     text-decoration-style: var(--decoration-style);
@@ -105,41 +105,41 @@
     transition: var(--default-transition);
   }
 
-  :where(.prose a:hover) {
+  :where(.ui-prose a:hover) {
     text-decoration-color: var(--decoration-color--hover);
     text-underline-offset: var(--decoration-offset--hover);
   }
 
-  :where(.prose a:active) {
+  :where(.ui-prose a:active) {
     text-decoration-color: var(--decoration-color--active);
     text-underline-offset: var(--decoration-offset--active);
   }
 
-  :where(.prose strong, .prose b) {
+  :where(.ui-prose strong, .ui-prose b) {
     font-weight: var(--font-weight-strong);
   }
 
-  :where(.prose em, .prose i) {
+  :where(.ui-prose em, .ui-prose i) {
     font-style: italic;
   }
 
-  :where(.prose figure) {
+  :where(.ui-prose figure) {
     inline-size: 100%;
     max-inline-size: 100%;
     display: flex;
     flex-direction: column;
   }
 
-  :where(.prose figure:has(img, video)) {
+  :where(.ui-prose figure:has(img, video)) {
     gap: var(--prose-figcaption-gap);
   }
 
-  :where(.prose img, .prose video) {
+  :where(.ui-prose img, .ui-prose video) {
     border-radius: var(--prose-img-radius);
     border: var(--prose-img-border);
   }
 
-  :where(.prose figure:has(img, video) > figcaption) {
+  :where(.ui-prose figure:has(img, video) > figcaption) {
     display: flex;
     margin: var(--prose-figcaption-margin);
     font-style: italic;
@@ -150,25 +150,25 @@
     letter-spacing: var(--tracking-md);
   }
 
-  :where(.prose figcaption:has(+ :where(ul, ol, dl))) {
+  :where(.ui-prose figcaption:has(+ :where(ul, ol, dl))) {
     font-weight: var(--font-weight-strong);
   }
 
-  :where(.prose ul) {
+  :where(.ui-prose ul) {
     list-style: disc;
     padding-inline-start: var(--gap-md);
   }
 
-  :where(.prose ol) {
+  :where(.ui-prose ol) {
     list-style: decimal;
     padding-inline-start: var(--gap-md);
   }
 
-  :where(.prose dl > dd) {
+  :where(.ui-prose dl > dd) {
     padding-inline-start: var(--gap-md);
   }
 
-  :where(.prose dl > dt) {
+  :where(.ui-prose dl > dt) {
     font-weight: var(--font-weight-strong);
 
     &::after {
@@ -176,13 +176,13 @@
     }
   }
 
-  :where(.prose blockquote) {
+  :where(.ui-prose blockquote) {
     padding-inline-start: var(--gap-sm);
     border-inline-start: 1px solid var(--border);
     font-style: italic;
   }
 
-  :where(.prose blockquote > cite) {
+  :where(.ui-prose blockquote > cite) {
     color: var(--muted-foreground);
     padding-inline-start: var(--gap-xs);
     font-style: normal;
@@ -193,114 +193,114 @@
   }
 
   /* ===========================================================================
-  PARAGRAPH RHYTHM — top margin on non-first blocks within .prose
+  PARAGRAPH RHYTHM — top margin on non-first blocks within .ui-prose
   =========================================================================== */
 
-  :where(.prose hgroup:not(:first-child)) {
+  :where(.ui-prose hgroup:not(:first-child)) {
     font-size: var(--font-size-xl);
     margin-block-start: var(--paragraph-spacing-xl);
   }
 
-  :where(.prose ul:not(:first-child)) {
+  :where(.ui-prose ul:not(:first-child)) {
     margin-block-start: var(--paragraph-spacing-md);
   }
 
-  :where(.prose ol:not(:first-child)) {
+  :where(.ui-prose ol:not(:first-child)) {
     margin-block-start: var(--paragraph-spacing-md);
   }
 
-  :where(.prose dl:not(:first-child)) {
+  :where(.ui-prose dl:not(:first-child)) {
     margin-block-start: var(--paragraph-spacing-md);
   }
 
   :where(
-    .prose figure :where(ul, ol, dl):first-child,
-    .prose figure > figcaption + :where(ul, ol, dl):nth-child(2)
+    .ui-prose figure :where(ul, ol, dl):first-child,
+    .ui-prose figure > figcaption + :where(ul, ol, dl):nth-child(2)
   ) {
     margin-block-start: 0rem;
   }
 
-  :where(.prose .text-display:not(:first-child)) {
+  :where(.ui-prose .text-display:not(:first-child)) {
     margin-block-start: var(--paragraph-spacing-display);
   }
 
-  :where(.prose .text-h1:not(:first-child), .prose h1:not(:first-child)) {
+  :where(.ui-prose .text-h1:not(:first-child), .ui-prose h1:not(:first-child)) {
     margin-block-start: var(--paragraph-spacing-display);
   }
 
-  :where(.prose .text-h2:not(:first-child), .prose h2:not(:first-child)) {
+  :where(.ui-prose .text-h2:not(:first-child), .ui-prose h2:not(:first-child)) {
     margin-block-start: var(--paragraph-spacing-h2);
   }
 
-  :where(.prose .text-h3:not(:first-child), .prose h3:not(:first-child)) {
+  :where(.ui-prose .text-h3:not(:first-child), .ui-prose h3:not(:first-child)) {
     margin-block-start: var(--paragraph-spacing-h3);
   }
 
-  :where(.prose .text-h4:not(:first-child), .prose h4:not(:first-child)) {
+  :where(.ui-prose .text-h4:not(:first-child), .ui-prose h4:not(:first-child)) {
     margin-block-start: var(--paragraph-spacing-h4);
   }
 
-  :where(.prose .text-h5:not(:first-child), .prose h5:not(:first-child)) {
+  :where(.ui-prose .text-h5:not(:first-child), .ui-prose h5:not(:first-child)) {
     margin-block-start: var(--paragraph-spacing-h5);
   }
 
-  :where(.prose .text-h6:not(:first-child), .prose h6:not(:first-child)) {
+  :where(.ui-prose .text-h6:not(:first-child), .ui-prose h6:not(:first-child)) {
     margin-block-start: var(--paragraph-spacing-h6);
   }
 
-  :where(.prose .text-xl:not(:first-child)) {
+  :where(.ui-prose .text-xl:not(:first-child)) {
     margin-block-start: var(--paragraph-spacing-xl);
   }
 
-  :where(.prose .text-lg:not(:first-child)) {
+  :where(.ui-prose .text-lg:not(:first-child)) {
     margin-block-start: var(--paragraph-spacing-lg);
   }
 
-  :where(.prose .text-md:not(:first-child), .prose p:not(:first-child)) {
+  :where(.ui-prose .text-md:not(:first-child), .ui-prose p:not(:first-child)) {
     margin-block-start: var(--paragraph-spacing-md);
   }
 
-  :where(.prose .text-sm:not(:first-child)) {
+  :where(.ui-prose .text-sm:not(:first-child)) {
     margin-block-start: var(--paragraph-spacing-sm);
   }
 
-  :where(.prose .text-xs:not(:first-child)) {
+  :where(.ui-prose .text-xs:not(:first-child)) {
     margin-block-start: var(--paragraph-spacing-xs);
   }
 
-  :where(.prose .text-eyebrow:not(:first-child)) {
+  :where(.ui-prose .text-eyebrow:not(:first-child)) {
     margin-block-start: var(--paragraph-spacing-eyebrow);
   }
 
-  :where(.prose hr:first-child) {
+  :where(.ui-prose hr:first-child) {
     margin-block-end: calc(var(--gap-md) * var(--paragraph-spacing-multiplier));
   }
 
-  :where(.prose hr:not(:first-child)) {
+  :where(.ui-prose hr:not(:first-child)) {
     margin-block: calc(var(--gap-lg) * var(--paragraph-spacing-multiplier));
   }
 
-  :where(.prose .text-eyebrow + *) {
+  :where(.ui-prose .text-eyebrow + *) {
     margin-block-start: var(--paragraph-spacing-xs);
   }
 
-  :where(.prose figure:not(:first-child)) {
+  :where(.ui-prose figure:not(:first-child)) {
     margin-block-start: var(--paragraph-spacing-md);
   }
 
-  :where(.prose figure:not(:first-child):has(:is(img, video))) {
+  :where(.ui-prose figure:not(:first-child):has(:is(img, video))) {
     margin-block-start: calc(var(--paragraph-spacing-md) * 2);
   }
 
-  :where(.prose dl > dt:not(:first-child)) {
+  :where(.ui-prose dl > dt:not(:first-child)) {
     margin-block-start: var(--paragraph-spacing-md);
   }
 
-  :where(.prose blockquote:not(:first-child)) {
+  :where(.ui-prose blockquote:not(:first-child)) {
     margin-block-start: var(--paragraph-spacing-lg);
   }
 
-  :where(.prose blockquote:not(:last-child)) {
+  :where(.ui-prose blockquote:not(:last-child)) {
     margin-block-end: var(--paragraph-spacing-lg);
   }
 }

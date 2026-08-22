@@ -14,7 +14,7 @@ Source files split into `base/` (core foundation) and `ui/` (co-located componen
 | `_layers.css`           | Declares cascade layer order (loads first)                   | [Layers](/docs/foundation/layers)                     |
 | `_variables.css`        | Global design tokens (colors, type, spacing, metrics)        | [Theme variables](/docs/foundation/variables)         |
 | `_reset.css`            | Native element baselines and zero-specificity control resets | [Reset](/docs/foundation/reset)                       |
-| `_typography.css`       | Type scale, `.prose`, and typography utilities               | [Typography](/docs/foundation/typography)             |
+| `_typography.css`       | Type scale, `.ui-prose`, and typography utilities            | [Typography](/docs/foundation/typography)             |
 | `_view-transitions.css` | Cross-document and SPA view transitions                      | [View transitions](/docs/foundation/view-transitions) |
 | `_utilities.css`        | Atomic utility classes                                       | [Utilities](/docs/foundation/utilities)               |
 | `_layout.css`           | Container bands and layout grid utilities                    | [Layout](/docs/foundation/utilities/layout)           |
@@ -33,7 +33,7 @@ Component stylesheets organize rules in top-to-bottom order:
 
 ```css
 /**
- * _button.css: Button (.button)
+ * _button.css: Button (.ui-button)
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, _reset.css
@@ -49,7 +49,7 @@ Component stylesheets organize rules in top-to-bottom order:
 }
 
 @layer zazz.components {
-  .button {
+  .ui-button {
     background-color: var(--button-background);
     height: var(--button-height);
     border-radius: var(--button-radius);

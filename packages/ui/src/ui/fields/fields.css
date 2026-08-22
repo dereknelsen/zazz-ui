@@ -9,7 +9,7 @@
  * @uses       color-mix() — destructive field tint on invalid
  * @tokens     --field-*, --field-group-* (Tier 3 owner; @layer variables)
  * @consumedby input.css, textarea.css, select.css, input-group.css,
- *             password-group.css, radio.css (.radio-group)
+ *             password-group.css, radio.css (.ui-radio-group)
  */
 
 @layer variables {
@@ -60,21 +60,21 @@
   /* ===========================================================================
   FORM — global form behaviour shared across every control
   - This file holds only the cross-control glue: the shared field-level tokens,
-    the disabled state, the .field layout wrapper, .field-group / .radio-group
+    the disabled state, the .ui-field layout wrapper, .ui-field-group / .ui-radio-group
     fieldsets, and validation messaging.
     Each control lives in its own file:
-      .input        → input.css
-      .textarea     → textarea.css
-      .select       → select.css
-      .input-group  → input-group.css
+      .ui-input        → input.css
+      .ui-textarea     → textarea.css
+      .ui-select       → select.css
+      .ui-input-group  → input-group.css
       checkbox       → _reset.css (input[type="checkbox"])
       switch         → _reset.css (input[role="switch"])
-      .radio        → radio.css
+      .ui-radio        → radio.css
   =========================================================================== */
 
   /* ---------------------------------------------------------------------------
   SHARED FIELD TOKENS — Tier-3 shared family, owned here.
-  - .input / .textarea / .select / .input-group all share the same surface
+  - .ui-input / .ui-textarea / .ui-select / .ui-input-group all share the same surface
     treatment so a text input, a dropdown, and a message box read as one family.
     Each control aliases these locals so a single override retunes the whole set.
   - Sibling control files only remap these --field-* tokens; this is the owner.
@@ -84,27 +84,27 @@
   SHARED DISABLED STATE
   --------------------------------------------------------------------------- */
 
-  .input:disabled,
-  .textarea:disabled,
-  .select:disabled,
-  .input-file:disabled,
-  .input-color:disabled,
-  .input-group:disabled,
-  .password-group:disabled,
+  .ui-input:disabled,
+  .ui-textarea:disabled,
+  .ui-select:disabled,
+  .ui-input-file:disabled,
+  .ui-input-color:disabled,
+  .ui-input-group:disabled,
+  .ui-password-group:disabled,
   input[type="checkbox"]:disabled,
-  .radio:disabled,
-  .input-group:has(:disabled) {
+  .ui-radio:disabled,
+  .ui-input-group:has(:disabled) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
   /* ---------------------------------------------------------------------------
-  FIELD WRAPPER — .field (label + control + hint/error)
+  FIELD WRAPPER — .ui-field (label + control + hint/error)
   - Optional layout helper. Validation messaging uses :user-invalid so errors
     surface only after the user commits a value (blur/submit), never while typing.
   --------------------------------------------------------------------------- */
 
-  .field {
+  .ui-field {
     /* --field-gap differs from the control family default (step-2) */
     --field-gap: var(--step-1);
 
@@ -115,13 +115,13 @@
     inline-size: var(--field-inline-size);
   }
 
-  .field > :not([data-slot="field-label"]):not([data-slot="field-description"]) {
+  .ui-field > :not([data-slot~="field-label"]):not([data-slot~="field-description"]) {
     grid-row: 2;
     grid-column: 1;
   }
 
   /* Label sits top-left above the control by default */
-  [data-slot="field-label"] {
+  [data-slot~="field-label"] {
     grid-row: 1;
     grid-column: 1;
     align-self: start;
@@ -133,12 +133,12 @@
   }
 
   /* ---------------------------------------------------------------------------
-  FIELD DESCRIPTION — [data-slot="field-description"] (wrapper for hint + error)
+  FIELD DESCRIPTION — [data-slot~="field-description"] (wrapper for hint + error)
   - Occupies a stable grid slot so hint↔error swaps never cause layout shift.
     The wrapper keeps a fixed block-size while the children crossfade inside it.
   --------------------------------------------------------------------------- */
 
-  [data-slot="field-description"] {
+  [data-slot~="field-description"] {
     grid-row: 3;
     grid-column: 1;
     display: grid;
@@ -147,8 +147,8 @@
   }
 
   /* Hint and error stack in the same grid area — only one is visible at a time */
-  [data-slot="field-hint"],
-  [data-slot="field-error"] {
+  [data-slot~="field-hint"],
+  [data-slot~="field-error"] {
     grid-area: msg;
     display: inline-flex;
     transition:
@@ -158,14 +158,14 @@
         allow-discrete;
   }
 
-  [data-slot="field-hint"] {
+  [data-slot~="field-hint"] {
     color: var(--muted-foreground);
     opacity: 1;
     translate: var(--field-hint-translate--end);
     visibility: visible;
   }
 
-  [data-slot="field-error"] {
+  [data-slot~="field-error"] {
     color: var(--destructive);
     opacity: 0;
     translate: var(--field-hint-translate--start);
@@ -173,7 +173,7 @@
   }
 
   /* After interaction: invalid controls turn destructive, reveal the error */
-  :where(.field:has(:user-invalid)) [data-slot="field-hint"] {
+  :where(.ui-field:has(:user-invalid)) [data-slot~="field-hint"] {
     opacity: 0;
     translate: var(--field-hint-translate--start);
     visibility: hidden;
@@ -185,7 +185,7 @@
     }
   }
 
-  :where(.field:has(:user-invalid)) [data-slot="field-error"] {
+  :where(.ui-field:has(:user-invalid)) [data-slot~="field-error"] {
     opacity: 1;
     translate: var(--field-hint-translate--end);
     visibility: visible;
@@ -197,12 +197,12 @@
     }
   }
 
-  .input:user-invalid,
-  .textarea:user-invalid,
-  .select:user-invalid,
-  .input-file:user-invalid,
-  .input-group:has(:user-invalid),
-  .password-group:has(:user-invalid) {
+  .ui-input:user-invalid,
+  .ui-textarea:user-invalid,
+  .ui-select:user-invalid,
+  .ui-input-file:user-invalid,
+  .ui-input-group:has(:user-invalid),
+  .ui-password-group:has(:user-invalid) {
     --field-background: color-mix(in oklch, var(--destructive) 5%, var(--input));
     --field-background--hover: color-mix(in oklch, var(--destructive) 10%, var(--input));
     --field-border: var(--destructive);
@@ -213,26 +213,26 @@
     border-color: var(--destructive);
   }
 
-  :where(.field:has(:user-invalid)) [data-slot="field-label"] {
+  :where(.ui-field:has(:user-invalid)) [data-slot~="field-label"] {
     --field-label-color: var(--destructive);
   }
 
-  :where(.field:has(:user-invalid)) ::placeholder {
+  :where(.ui-field:has(:user-invalid)) ::placeholder {
     --placeholder-color: var(--destructive);
   }
 
   /* ---------------------------------------------------------------------------
-  FIELD GROUP — .field-group (+ .radio-group in radio.css)
+  FIELD GROUP — .ui-field-group (+ .ui-radio-group in radio.css)
   - Semantic <fieldset> wrapper for a labelled SET of related controls (a radio
     group, a set of checkboxes/switches). Resets browser chrome and stacks
     children; the <legend> names the whole set.
   - Use a fieldset/legend ONLY when the legend labels a genuine group. A single
     control — or several independently-labelled fields — should carry its own
-    [data-slot="field-label"] instead, never lean on the legend as a stand-in label.
+    [data-slot~="field-label"] instead, never lean on the legend as a stand-in label.
   --------------------------------------------------------------------------- */
 
-  .field-group,
-  .radio-group {
+  .ui-field-group,
+  .ui-radio-group {
     display: var(--field-group-display);
     background-color: var(--field-group-background);
     gap: var(--field-group-gap);
@@ -242,9 +242,9 @@
     margin: var(--field-group-margin);
   }
 
-  /* Legend reads as the group's label — same weight/size as a [data-slot="field-label"] */
-  .field-group > legend,
-  .radio-group > legend {
+  /* Legend reads as the group's label — same weight/size as a [data-slot~="field-label"] */
+  .ui-field-group > legend,
+  .ui-radio-group > legend {
     padding: 0;
     margin-block: 0 var(--step-1_5);
     color: var(--field-label-color, inherit);
@@ -257,7 +257,7 @@
   =========================================================================== */
 
   /* Inline layout for checkbox/radio/switch: control beside its label */
-  .field[data-orientation="horizontal"] {
+  .ui-field[data-orientation="horizontal"] {
     --field-horizontal-display: flex;
     --field-horizontal-flex-direction: row;
     --field-horizontal-align-items: center;
@@ -271,7 +271,7 @@
     gap: var(--field-horizontal-gap);
   }
 
-  .field[data-orientation="horizontal"] [data-slot="field-label"] {
+  .ui-field[data-orientation="horizontal"] [data-slot~="field-label"] {
     align-self: center;
   }
 }

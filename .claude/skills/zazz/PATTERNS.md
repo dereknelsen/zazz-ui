@@ -39,7 +39,7 @@ for all children with `data-container="…"` on the `.container`. See
       <nav class="hidden @sm:flex items-center py-md">
         <menu class="flex items-center gap-sm">
           <li>
-            <a class="button" data-variant="ghost" href="/">Home</a>
+            <a class="ui-button" data-variant="ghost" href="/">Home</a>
           </li>
           <!-- navigation links and dropdowns -->
         </menu>
@@ -90,8 +90,8 @@ Group an optional eyebrow, a heading, a subheading, and the call-to-action butto
 
   <!-- CTA buttons -->
   <div class="flex mt-sm justify-center @md:justify-start">
-    <a class="button" data-variant="primary" href="/products">Products</a>
-    <a class="button" data-variant="ghost" href="/contact">Contact us</a>
+    <a class="ui-button" data-variant="primary" href="/products">Products</a>
+    <a class="ui-button" data-variant="ghost" href="/contact">Contact us</a>
   </div>
 </hgroup>
 ```
