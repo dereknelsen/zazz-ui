@@ -1,7 +1,7 @@
 /**
  * @fileoverview Zazz — single entry point for every component script.
  * @description Imports all Zazz behavior modules so a page needs only one
- * `<script type="module" src=".../index.js">` instead of nine separate tags.
+ * `<script type="module" src=".../index.js">` instead of ten separate tags.
  * Each module runs for its side effects: global/utility setup, scroll-reveal
  * and carousel auto-initialization, SPA navigation, and the custom-element
  * registrations (`<ui-carousel>`, `<ui-lightbox>`, `<ui-password>`,
@@ -18,6 +18,7 @@
 
 import "./base/utils.ts";
 import "./base/reveal.ts";
+import "./base/dialog-lifecycle.ts";
 import "./base/embla.ts";
 import "./ui/carousel/carousel.ts";
 import "./ui/lightbox/lightbox.ts";

@@ -35,17 +35,17 @@
 import { EmblaInit } from "../../base/embla.ts";
 
 class UiCarouselElement extends HTMLElement {
-  #dialogObserver: MutationObserver | null = null;
+  #controller: AbortController | null = null;
 
   connectedCallback() {
     const dialog = this.closest("dialog");
     if (dialog && !dialog.open) {
       // Closed dialogs are display:none — Embla can't measure the viewport.
-      // Initialize on the dialog's first open instead.
-      this.#dialogObserver = new MutationObserver(() => {
-        if (dialog.open) this.init();
+      // Initialize on the dialog's open instead (zazz:dialog-open, ADR-0003).
+      this.#controller ??= new AbortController();
+      dialog.addEventListener("zazz:dialog-open", () => this.init(), {
+        signal: this.#controller.signal,
       });
-      this.#dialogObserver.observe(dialog, { attributes: true, attributeFilter: ["open"] });
       return;
     }
 
@@ -53,8 +53,8 @@ class UiCarouselElement extends HTMLElement {
   }
 
   disconnectedCallback() {
-    this.#dialogObserver?.disconnect();
-    this.#dialogObserver = null;
+    this.#controller?.abort();
+    this.#controller = null;
 
     // Abort first so the per-carousel DOM listeners (prev/next, dots, thumbs,
     // drag-click suppression) are removed before the Embla instances are torn down.

@@ -4,7 +4,8 @@
  * @fileoverview Embla Carousel initialization and controls.
  * @description Discovers carousel roots (`<ui-carousel>` or `.ui-carousel`),
  * initializes Embla instances with optional plugins, and wires navigation,
- * keyboard, dialog, and lightbox behaviors.
+ * keyboard, and dialog-open behaviors (subscribing to `zazz:dialog-open`
+ * from base/dialog-lifecycle.ts — lightbox choreography lives in lightbox.ts).
  *
  * Structure — root is the element/class itself; parts are slots (`data-slot="carousel-<part>"`):
  * - root (`<ui-carousel>` | `.ui-carousel`) — Carousel container; holds all config attributes
@@ -490,11 +491,13 @@ function initEmblaRoot(emblaNode: Element): void {
     addDotBtnsAndClickHandlers(emblaApi, emblaDotsNode, signal);
   }
 
-  if (emblaNode.matches('[data-slot~="lightbox-stage"]')) {
+  // Any command-bearing slide (e.g. a lightbox stage slide that opens the
+  // dialog) needs its click suppressed when it was really a drag.
+  if (emblaNode.querySelector('[data-slot~="carousel-slide"][commandfor]')) {
     bindDragClickSuppression(
       emblaNode,
       emblaApi,
-      '[data-slot~="lightbox-slide"][commandfor]',
+      '[data-slot~="carousel-slide"][commandfor]',
       { dragThresholdPx: 14 },
       signal,
     );
@@ -522,7 +525,7 @@ function initEmblaRoot(emblaNode: Element): void {
       bindDragClickSuppression(
         emblathumbsNode,
         emblaApiThumb,
-        '[data-slot~="lightbox-thumb"]',
+        '[data-slot~="carousel-slide"]',
         {},
         signal,
       );
@@ -552,48 +555,37 @@ function initEmblaCarousels(scope?: Document | Element): void {
   });
 }
 
-// --- Dialog open observer ---
+// --- Dialog open subscription ---
 
 /**
- * @description Re-initializes Embla carousels inside dialogs when they open.
+ * @description Reacts to dialogs opening (via `zazz:dialog-open` from
+ * base/dialog-lifecycle.ts — ADR-0003) with the carousel-domain work:
+ * initializes class-form roots that deferred while the dialog was
+ * `display: none`, applies a stored `data-carousel-start-index`, and focuses
+ * the viewport for keyboard navigation.
  *
- * Dialogs are `display: none` until opened, so Embla cannot measure the viewport
- * at page load. This observer initializes any uninitialized carousels when the
- * `open` attribute is added.
+ * Listens on `document`, so it runs after any dialog- or ancestor-level
+ * subscriber (`<ui-carousel>` self-init, `<ui-lightbox>` choreography).
  */
-function observeDialogOpen(): void {
-  const observer = new MutationObserver(function (mutations) {
-    for (const mutation of mutations) {
-      if (
-        mutation.type === "attributes" &&
-        mutation.attributeName === "open" &&
-        mutation.target instanceof HTMLDialogElement &&
-        mutation.target.hasAttribute("open")
-      ) {
-        const dialog = mutation.target;
-        initEmblaCarousels(dialog);
+function initDialogOpenSubscription(): void {
+  document.addEventListener("zazz:dialog-open", function (e) {
+    if (!(e.target instanceof HTMLDialogElement)) return;
+    const dialog = e.target;
+    initEmblaCarousels(dialog);
 
-        const roots = dialog.querySelectorAll(":is(ui-carousel, .ui-carousel)");
-        roots.forEach(function (root) {
-          const startIndex = root.getAttribute("data-carousel-start-index");
-          if (startIndex != null && root._emblaApi) {
-            root._emblaApi.scrollTo(Number(startIndex), true);
-            root.removeAttribute("data-carousel-start-index");
-          }
-
-          const viewport = root.querySelector('[data-slot~="carousel-viewport"]');
-          if (viewport instanceof HTMLElement) {
-            viewport.focus({ preventScroll: true });
-          }
-        });
+    const roots = dialog.querySelectorAll(":is(ui-carousel, .ui-carousel)");
+    roots.forEach(function (root) {
+      const startIndex = root.getAttribute("data-carousel-start-index");
+      if (startIndex != null && root._emblaApi) {
+        root._emblaApi.scrollTo(Number(startIndex), true);
+        root.removeAttribute("data-carousel-start-index");
       }
-    }
-  });
 
-  observer.observe(document.body, {
-    attributes: true,
-    attributeFilter: ["open"],
-    subtree: true,
+      const viewport = root.querySelector('[data-slot~="carousel-viewport"]');
+      if (viewport instanceof HTMLElement) {
+        viewport.focus({ preventScroll: true });
+      }
+    });
   });
 }
 
@@ -696,7 +688,7 @@ function initEmblaStartLinks(): void {
     if (!(e.target instanceof HTMLElement)) return;
 
     const trigger = e.target.closest(
-      "[data-carousel-start], [data-slot='carousel-slide'][commandfor]",
+      "[data-carousel-start], [data-slot~='carousel-slide'][commandfor]",
     );
     if (!trigger) return;
 
@@ -725,51 +717,21 @@ function initEmblaStartLinks(): void {
   });
 }
 
-// --- Lightbox close sync ---
-
-/**
- * @description Syncs the inline gallery to the last viewed slide when a lightbox closes.
- */
-function initLightboxCloseSync(): void {
-  document.addEventListener(
-    "close",
-    function (e) {
-      const dialog = e.target;
-      if (!(dialog instanceof HTMLDialogElement)) return;
-      if (!dialog.matches('[data-slot~="lightbox-dialog"]')) return;
-
-      const lightbox = dialog.closest(".lightbox");
-      if (!lightbox) return;
-
-      const dialogRoot = dialog.querySelector(":is(ui-carousel, .ui-carousel)");
-      const galleryRoot = lightbox.querySelector(
-        '[data-slot~="lightbox-gallery"] :is(ui-carousel, .ui-carousel)',
-      );
-      if (!dialogRoot?._emblaApi || !galleryRoot?._emblaApi) return;
-
-      galleryRoot._emblaApi.scrollTo(dialogRoot._emblaApi.selectedScrollSnap());
-    },
-    true,
-  );
-}
-
 // Auto-initialize when DOM is ready (only in browser environment)
 if (typeof window !== "undefined" && typeof document !== "undefined") {
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
       initEmblaCarousels();
-      observeDialogOpen();
+      initDialogOpenSubscription();
       initEmblaStartLinks();
       initEmblaKeyboardNav();
-      initLightboxCloseSync();
       initCommandDragGuard();
     });
   } else {
     initEmblaCarousels();
-    observeDialogOpen();
+    initDialogOpenSubscription();
     initEmblaStartLinks();
     initEmblaKeyboardNav();
-    initLightboxCloseSync();
     initCommandDragGuard();
   }
 }
