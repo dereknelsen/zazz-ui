@@ -36,7 +36,7 @@
 @layer zazz.components {
   /* ===========================================================================
   MOBILE MENU — full-screen dialog with accordion-based nested navigation
-  - Composes .ui-dialog[data-size="screen"] + .ui-accordion for expand/collapse
+  - Composes .ui-dialog[data-size="screen"] + :where(ui-accordion, .ui-accordion) for expand/collapse
   - No JavaScript — Invoker Commands to open, native dialog close, native details
   =========================================================================== */
 
@@ -117,11 +117,13 @@
   }
 
   /* Nested accordion inside mobile menu — tighter padding for sub-levels */
-  [data-slot~="mobile-menu-body"] .ui-accordion .ui-accordion {
+  [data-slot~="mobile-menu-body"]
+    :where(ui-accordion, .ui-accordion)
+    :where(ui-accordion, .ui-accordion) {
     padding-inline-start: var(--ui-mobile-menu-nested-accordion-padding-inline-start);
   }
 
-  [data-slot~="mobile-menu-body"] .ui-accordion details:not(:last-child) {
+  [data-slot~="mobile-menu-body"] :where(ui-accordion, .ui-accordion) details:not(:last-child) {
     border-bottom-color: var(--border);
   }
 

@@ -1,5 +1,5 @@
 /**
- * lightbox.css — Lightbox gallery (.ui-lightbox)
+ * lightbox.css — Lightbox gallery (ui-lightbox | .ui-lightbox)
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, dialog.css, carousel.css, button.css
@@ -53,16 +53,16 @@
   =========================================================================== */
 
   /* ---------------------------------------------------------------------------
-  GALLERY — .ui-lightbox
+  GALLERY — :where(ui-lightbox, .ui-lightbox)
   --------------------------------------------------------------------------- */
 
-  .ui-lightbox {
+  :where(ui-lightbox, .ui-lightbox) {
     display: flex;
     flex-direction: column;
   }
 
   @container section (width <= 40rem) {
-    .ui-lightbox {
+    :where(ui-lightbox, .ui-lightbox) {
       --ui-lightbox-thumb-columns: 4;
     }
   }
@@ -306,7 +306,7 @@
     overflow: clip;
   }
 
-  [data-slot~="lightbox-dialog"] :is(ui-carousel, .ui-carousel) {
+  [data-slot~="lightbox-dialog"] :where(ui-carousel, .ui-carousel) {
     display: grid;
     grid-template-rows: 1fr auto;
     block-size: 100%;
@@ -322,7 +322,7 @@
   }
 
   [data-slot~="lightbox-dialog"]
-    :is(ui-carousel, .ui-carousel)
+    :where(ui-carousel, .ui-carousel)
     > [data-slot~="carousel-viewport"]:first-of-type {
     min-block-size: 0;
   }

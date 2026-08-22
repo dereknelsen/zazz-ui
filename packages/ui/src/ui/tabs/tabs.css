@@ -1,5 +1,5 @@
 /**
- * tabs.css — Tabs (.ui-tabs) — CSS-only radio tab panels
+ * tabs.css — Tabs (ui-tabs | .ui-tabs) — CSS-only radio tab panels
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css
@@ -45,14 +45,14 @@
 
 @layer zazz.components {
   /* ===========================================================================
-  TABS — .ui-tabs
+  TABS — :where(ui-tabs, .ui-tabs)
   [data-slot~="tabs-list"] — inline-flex muted track (fits tab row only; panels live outside).
   [data-slot~="tabs-indicator"] — card pill anchored to checked label.
-  Panels — direct .ui-tabs children after [data-slot~="tabs-list"]; order must match tab order.
+  Panels — direct :where(ui-tabs, .ui-tabs) children after [data-slot~="tabs-list"]; order must match tab order.
   Panel N is shown when the Nth radio in [data-slot~="tabs-list"] is checked (see rules below).
   =========================================================================== */
 
-  .ui-tabs {
+  :where(ui-tabs, .ui-tabs) {
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -198,7 +198,7 @@
     }
   }
 
-  /* Nth radio in [data-slot~="tabs-list"] → (N + 1)th child of .ui-tabs (after [data-slot~="tabs-list"]).
+  /* Nth radio in [data-slot~="tabs-list"] → (N + 1)th child of :where(ui-tabs, .ui-tabs) (after [data-slot~="tabs-list"]).
      The per-index enumeration below (capped at 24 tabs) is irreducible in pure
      CSS: it correlates the checked radio's position with a panel's position,
      and selectors cannot do index arithmetic. sibling-index()/sibling-count()
@@ -208,53 +208,101 @@
      properties only inherit down; only :has() looks up, and it can't count).
      Hiding must stay display:none (accessibility: opacity/size tricks leave
      panels focusable), so a value-level rewrite has nowhere to land. */
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(1):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(1):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(2),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(2):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(2):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(3),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(3):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(3):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(4),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(4):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(4):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(5),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(5):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(5):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(6),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(6):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(6):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(7),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(7):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(7):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(8),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(8):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(8):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(9),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(9):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(9):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(10),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(10):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(10):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(11),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(11):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(11):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(12),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(12):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(12):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(13),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(13):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(13):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(14),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(14):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(14):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(15),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(15):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(15):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(16),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(16):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(16):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(17),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(17):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(17):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(18),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(18):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(18):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(19),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(19):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(19):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(20),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(20):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(20):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(21),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(21):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(21):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(22),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(22):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(22):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(23),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(23):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(23):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(24),
-  .ui-tabs:has([data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(24):not(:checked))
+  :where(ui-tabs, .ui-tabs):has(
+      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(24):not(:checked)
+    )
     > [data-slot~="tabs-panel"]:nth-child(25) {
     display: none !important;
   }
@@ -263,17 +311,17 @@
   DIRECTIONAL VARIANTS
   =========================================================================== */
 
-  .ui-tabs[data-orientation="vertical"] {
+  :where(ui-tabs, .ui-tabs)[data-orientation="vertical"] {
     flex-direction: row;
   }
 
-  .ui-tabs[data-orientation="vertical"] [data-slot~="tabs-list"] {
+  :where(ui-tabs, .ui-tabs)[data-orientation="vertical"] [data-slot~="tabs-list"] {
     flex-direction: column;
     align-items: stretch;
     min-inline-size: var(--step-44);
   }
 
-  .ui-tabs[data-orientation="vertical"] [data-slot~="tabs-label"] {
+  :where(ui-tabs, .ui-tabs)[data-orientation="vertical"] [data-slot~="tabs-label"] {
     text-align: start;
     justify-content: start;
   }

@@ -1,5 +1,5 @@
 /**
- * toaster.css — Toaster (<ui-toaster class="toaster">, [data-slot~="toaster-toast"])
+ * toaster.css — Toaster (ui-toaster | .ui-toaster, [data-slot~="toaster-toast"])
  *
  * Stacked toast notifications. Collapsed-stack presentation (newest toast in
  * front, older toasts peeking behind, expand on hover) adapted from Sonner by
@@ -66,7 +66,7 @@
     direction (-1 = toasts travel up from the bottom edge, 1 = down from top).
   =========================================================================== */
 
-  .ui-toaster {
+  :where(ui-toaster, .ui-toaster) {
     /* neutralize shared [popover] chrome + UA popover styles */
     background: none;
     border: none;
@@ -96,24 +96,24 @@
     view-transition-name: toaster;
   }
 
-  .ui-toaster:where(:popover-open, .\:popover-open) {
+  :where(ui-toaster, .ui-toaster):where(:popover-open, .\:popover-open) {
     display: block;
   }
 
   /* Positions — logical, so RTL flips for free. Default is bottom-end. */
 
-  .ui-toaster[data-position^="top"] {
+  :where(ui-toaster, .ui-toaster)[data-position^="top"] {
     inset-block-start: var(--ui-toaster-inset);
     inset-block-end: auto;
     --_lift: 1;
   }
 
-  .ui-toaster[data-position$="start"] {
+  :where(ui-toaster, .ui-toaster)[data-position$="start"] {
     inset-inline-start: var(--ui-toaster-inset);
     inset-inline-end: auto;
   }
 
-  .ui-toaster[data-position$="center"] {
+  :where(ui-toaster, .ui-toaster)[data-position$="center"] {
     inset-inline-start: calc(50vi - var(--ui-toaster-width) / 2);
     inset-inline-end: auto;
   }
@@ -165,7 +165,7 @@
     }
   }
 
-  .ui-toaster[data-position^="top"] [data-slot~="toaster-toast"] {
+  :where(ui-toaster, .ui-toaster)[data-position^="top"] [data-slot~="toaster-toast"] {
     inset-block-end: auto;
     inset-block-start: 0;
   }
@@ -182,14 +182,14 @@
   their edges peek, content hidden.
   =========================================================================== */
 
-  .ui-toaster:not([data-expanded="true"])
+  :where(ui-toaster, .ui-toaster):not([data-expanded="true"])
     [data-slot~="toaster-toast"]:not([data-front="true"], [data-removed="true"]) {
     --_y: translateY(calc(var(--_lift) * var(--ui-toaster-gap) * var(--toasts-before, 0)))
       scale(calc(1 - var(--ui-toaster-scale-step) * var(--toasts-before, 0)));
     block-size: var(--front-toast-height);
   }
 
-  .ui-toaster:not([data-expanded="true"])
+  :where(ui-toaster, .ui-toaster):not([data-expanded="true"])
     [data-slot~="toaster-toast"]:not([data-front="true"], [data-removed="true"])
     > * {
     opacity: 0;
@@ -201,11 +201,11 @@
   while moving between toasts (which would collapse it).
   =========================================================================== */
 
-  .ui-toaster[data-expanded="true"] [data-slot~="toaster-toast"] {
+  :where(ui-toaster, .ui-toaster)[data-expanded="true"] [data-slot~="toaster-toast"] {
     block-size: var(--initial-height, auto);
   }
 
-  .ui-toaster[data-expanded="true"] [data-slot~="toaster-toast"]::after {
+  :where(ui-toaster, .ui-toaster)[data-expanded="true"] [data-slot~="toaster-toast"]::after {
     content: "";
     position: absolute;
     inset-inline: 0;
@@ -213,7 +213,8 @@
     block-size: calc(var(--ui-toaster-gap) + 1px);
   }
 
-  .ui-toaster[data-position^="top"][data-expanded="true"] [data-slot~="toaster-toast"]::after {
+  :where(ui-toaster, .ui-toaster)[data-position^="top"][data-expanded="true"]
+    [data-slot~="toaster-toast"]::after {
     inset-block-end: auto;
     inset-block-start: 100%;
   }
@@ -238,7 +239,7 @@
     --_y: translateY(calc(var(--_lift) * var(--offset, 0px) + var(--_lift) * -100%));
   }
 
-  .ui-toaster:not([data-expanded="true"])
+  :where(ui-toaster, .ui-toaster):not([data-expanded="true"])
     [data-slot~="toaster-toast"][data-removed="true"]:not([data-front="true"]) {
     --_y: translateY(calc(var(--_lift) * var(--ui-toaster-gap) * var(--toasts-before, 0)))
       scale(calc(1 - var(--ui-toaster-scale-step) * var(--toasts-before, 0)));

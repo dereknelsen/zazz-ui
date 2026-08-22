@@ -4,7 +4,7 @@
  * @layer      reset
  * @requires   layers.css, _properties.css, _variables.css
  * @uses       appearance: none — select chevron reset
- * @uses       ::details-content — accordion open/close (see _accordion.css for .ui-accordion)
+ * @uses       ::details-content — accordion open/close (see _accordion.css for :where(ui-accordion, .ui-accordion))
  * @uses       container-type — layout containers on main, article, section
  * @uses       view-transition-name via the <main> tag - main-content and [data-transition-layer] —
  *             global (animated in _view-transitions.css)

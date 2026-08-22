@@ -1,5 +1,5 @@
 /**
- * button-group.css — Button group (.ui-button-group)
+ * button-group.css — Button group (ui-button-group | .ui-button-group)
  *
  * @layer      components
  * @requires   layers.css, _variables.css, button.css
@@ -19,7 +19,7 @@
   squared off and the doubled border is collapsed with a -1px overlap.
   =========================================================================== */
 
-  .ui-button-group {
+  :where(ui-button-group, .ui-button-group) {
     display: flex;
     inline-size: fit-content;
     /* stretch so mixed-height children share one edge */
@@ -33,15 +33,15 @@
 
   /* flex items honour z-index without positioning, but relative keeps the
      stacking context robust across child types (inputs, selects, …) */
-  .ui-button-group > * {
+  :where(ui-button-group, .ui-button-group) > * {
     position: relative;
   }
 
   /* the focused/hovered/pressed control floats above its neighbours so its
      border and box-shadow ring paint over the overlapped edge */
-  .ui-button-group > *:hover:not(:disabled, [aria-disabled="true"]),
-  .ui-button-group > *:focus-visible,
-  .ui-button-group > *:active:not(:disabled, [aria-disabled="true"]) {
+  :where(ui-button-group, .ui-button-group) > *:hover:not(:disabled, [aria-disabled="true"]),
+  :where(ui-button-group, .ui-button-group) > *:focus-visible,
+  :where(ui-button-group, .ui-button-group) > *:active:not(:disabled, [aria-disabled="true"]) {
     z-index: 1;
   }
 
@@ -49,16 +49,17 @@
   BUTTON GROUP — HORIZONTAL (default)
   =========================================================================== */
 
-  .ui-button-group:not([data-orientation="vertical"]) {
+  :where(ui-button-group, .ui-button-group):not([data-orientation="vertical"]) {
     flex-direction: row;
   }
 
-  .ui-button-group:not([data-orientation="vertical"]) > :not(:last-child) {
+  :where(ui-button-group, .ui-button-group):not([data-orientation="vertical"]) > :not(:last-child) {
     border-start-end-radius: 0;
     border-end-end-radius: 0;
   }
 
-  .ui-button-group:not([data-orientation="vertical"]) > :not(:first-child) {
+  :where(ui-button-group, .ui-button-group):not([data-orientation="vertical"])
+    > :not(:first-child) {
     /* pull onto the previous control's border so the seam is one line, not two */
     margin-inline-start: -1px;
     border-start-start-radius: 0;
@@ -69,16 +70,16 @@
   BUTTON GROUP — VERTICAL
   =========================================================================== */
 
-  .ui-button-group[data-orientation="vertical"] {
+  :where(ui-button-group, .ui-button-group)[data-orientation="vertical"] {
     flex-direction: column;
   }
 
-  .ui-button-group[data-orientation="vertical"] > :not(:last-child) {
+  :where(ui-button-group, .ui-button-group)[data-orientation="vertical"] > :not(:last-child) {
     border-end-start-radius: 0;
     border-end-end-radius: 0;
   }
 
-  .ui-button-group[data-orientation="vertical"] > :not(:first-child) {
+  :where(ui-button-group, .ui-button-group)[data-orientation="vertical"] > :not(:first-child) {
     margin-block-start: -1px;
     border-start-start-radius: 0;
     border-start-end-radius: 0;
