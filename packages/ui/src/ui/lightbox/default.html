@@ -1,6 +1,6 @@
-<media-lightbox class="lightbox max-w-screen-xs mx-auto">
+<ui-lightbox class="lightbox max-w-screen-xs mx-auto">
   <div data-slot="lightbox-gallery">
-    <slide-carousel data-slot="lightbox-stage" data-carousel-loop="true" data-carousel-classnames>
+    <ui-carousel data-slot="lightbox-stage" data-carousel-loop="true" data-carousel-classnames>
       <div data-slot="carousel-viewport">
         <div data-slot="carousel-container">
           <button
@@ -339,7 +339,7 @@
           </svg>
         </button>
       </div>
-    </slide-carousel>
+    </ui-carousel>
   </div>
 
   <dialog
@@ -350,7 +350,7 @@
     closedby="any"
   >
     <div data-slot="dialog-content">
-      <slide-carousel data-carousel-loop="true" data-carousel-classnames>
+      <ui-carousel data-carousel-loop="true" data-carousel-classnames>
         <div data-slot="carousel-viewport">
           <div data-slot="carousel-container">
             <div data-slot="lightbox-slide" data-slot="carousel-slide">
@@ -643,7 +643,7 @@
             </div>
           </div>
         </div>
-      </slide-carousel>
+      </ui-carousel>
     </div>
     <button
       class="button"
@@ -680,4 +680,4 @@
       </svg>
     </button>
   </dialog>
-</media-lightbox>
+</ui-lightbox>

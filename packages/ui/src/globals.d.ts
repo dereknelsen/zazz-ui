@@ -77,8 +77,8 @@ interface RevealConstructor {
   defaultConfig: object;
 }
 
-/** Shape of the `<slide-carousel>` element class (defined in carousel.js). */
-declare class SlideCarouselHostElement extends HTMLElement {
+/** Shape of the `<ui-carousel>` element class (defined in carousel.js). */
+declare class UiCarouselHostElement extends HTMLElement {
   init(): void;
   readonly api: EmblaCarouselType | null;
 }
@@ -99,8 +99,8 @@ interface ToastOptions {
   region?: string | Element;
 }
 
-/** Shape of the `<toast-region>` element class (defined in toaster.js). */
-declare class ToastRegionElement extends HTMLElement {
+/** Shape of the `<ui-toaster>` element class (defined in toaster.js). */
+declare class UiToasterElement extends HTMLElement {
   addToast(options?: ToastOptions): string;
   dismiss(id?: string): void;
   dismissAll(): void;
@@ -134,18 +134,18 @@ interface Window {
   /** Set by signals.js — the TC39 signals wrapper (state/computed/effect). */
   Signals: SignalsNamespace;
   Reveal: RevealConstructor;
-  /** Set by carousel.js — the `<slide-carousel>` element class. */
-  SlideCarouselElement?: typeof SlideCarouselHostElement;
-  /** Set by lightbox.js — the `<media-lightbox>` element class. */
-  MediaLightbox?: CustomElementConstructor;
-  /** Set by password.js — the `<input-password>` element class. */
-  InputPassword?: CustomElementConstructor;
-  /** Set by tabs.js — the `<tab-group>` element class. */
-  TabGroup?: CustomElementConstructor;
+  /** Set by carousel.js — the `<ui-carousel>` element class. */
+  UiCarouselElement?: typeof UiCarouselHostElement;
+  /** Set by lightbox.js — the `<ui-lightbox>` element class. */
+  UiLightbox?: CustomElementConstructor;
+  /** Set by password.js — the `<ui-password>` element class. */
+  UiPassword?: CustomElementConstructor;
+  /** Set by tabs.js — the `<ui-tabs>` element class. */
+  UiTabs?: CustomElementConstructor;
   /** Set by toaster.js — the imperative toast API. */
   Toaster: ToasterNamespace;
-  /** Set by toaster.js — the `<toast-region>` element class. */
-  ToastRegion?: typeof ToastRegionElement;
+  /** Set by toaster.js — the `<ui-toaster>` element class. */
+  UiToaster?: typeof UiToasterElement;
   EmblaInit: {
     init: (scope?: Document | Element) => void;
     initRoot: (emblaNode: Element) => void;

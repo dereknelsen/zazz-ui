@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * @fileoverview `<tab-group>` — HTML web component for keyboard-enhanced tabs.
+ * @fileoverview `<ui-tabs>` — HTML web component for keyboard-enhanced tabs.
  * @description Light-DOM custom element that augments the CSS-only radio
  * tabs pattern with orientation-aware arrow-key navigation. The element
  * replaces the `.tabs` wrapper `<div>` and carries the same class, so all
@@ -19,17 +19,17 @@
  * orientation and adds Home/End + wrap-around.
  *
  * @example
- * <tab-group class="tabs">
+ * <ui-tabs class="tabs">
  *   <div data-slot="tabs-list" role="tablist">
  *     <label data-slot="tabs-label"><input type="radio" name="tg" checked />One</label>
  *     <label data-slot="tabs-label"><input type="radio" name="tg" />Two</label>
  *   </div>
  *   <div data-slot="tabs-panel">…</div>
  *   <div data-slot="tabs-panel">…</div>
- * </tab-group>
+ * </ui-tabs>
  */
 
-class TabGroup extends HTMLElement {
+class UiTabs extends HTMLElement {
   #controller: AbortController | null = null;
 
   connectedCallback(): void {
@@ -56,8 +56,8 @@ class TabGroup extends HTMLElement {
     if (!(target instanceof HTMLInputElement) || target.type !== "radio") return;
 
     const list = target.closest('[role="tablist"], [data-slot="tabs-list"]');
-    // Ignore radios that belong to a nested tab-group
-    if (!list || list.closest("tab-group") !== this) return;
+    // Ignore radios that belong to a nested ui-tabs
+    if (!list || list.closest("ui-tabs") !== this) return;
 
     const tabs = Array.from(list.querySelectorAll('input[type="radio"]'))
       .filter((node): node is HTMLInputElement => node instanceof HTMLInputElement)
@@ -99,14 +99,14 @@ class TabGroup extends HTMLElement {
 }
 
 // Register the element (guarded against double script loads)
-if (typeof window !== "undefined" && !customElements.get("tab-group")) {
-  customElements.define("tab-group", TabGroup);
+if (typeof window !== "undefined" && !customElements.get("ui-tabs")) {
+  customElements.define("ui-tabs", UiTabs);
 }
 
 // Attach to window for parity with the other component scripts, and export for
 // module consumers (loaded for its side effect — the custom-element registration).
 if (typeof window !== "undefined") {
-  window.TabGroup = TabGroup;
+  window.UiTabs = UiTabs;
 }
 
-export { TabGroup };
+export { UiTabs };

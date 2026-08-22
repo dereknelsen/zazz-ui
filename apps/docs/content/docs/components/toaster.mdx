@@ -3,11 +3,11 @@ title: Toaster
 description: Stacked toast notifications rendered on the top layer using the Popover API and Invoker Commands.
 ---
 
-Toasts render inside `<toast-region class="toaster" popover="manual">`, a custom element placed on the top layer via the Popover API.
+Toasts render inside `<ui-toaster class="toaster" popover="manual">`, a custom element placed on the top layer via the Popover API.
 
 Trigger toasts from buttons using `commandfor="<region id>"` and `command="--toast"`, or from JavaScript using `window.Toaster`.
 
-Toasts auto-dismiss after 4 seconds (pausing on hover or when the browser tab is hidden). Place `<toast-region>` once per page outside `<main>`.
+Toasts auto-dismiss after 4 seconds (pausing on hover or when the browser tab is hidden). Place `<ui-toaster>` once per page outside `<main>`.
 
 ## Default
 
@@ -15,17 +15,17 @@ Toasts auto-dismiss after 4 seconds (pausing on hover or when the browser tab is
 
 ## API
 
-| Attribute           | Target           | Values                                                                                        |
-| ------------------- | ---------------- | --------------------------------------------------------------------------------------------- |
-| `command`           | Trigger          | `--toast`, `--toast-success`, `--toast-info`, `--toast-warning`, `--toast-destructive`        |
-| `commandfor`        | Trigger          | ID of target `<toast-region>`                                                                 |
-| `data-title`        | Trigger          | Toast title                                                                                   |
-| `data-description`  | Trigger          | Toast body copy                                                                               |
-| `data-variant`      | Trigger          | `success`, `info`, `warning`, `destructive`                                                   |
-| `data-duration`     | Trigger          | Lifetime in ms (`Infinity` persists until dismissed)                                          |
-| `data-close-button` | Trigger          | Set to `false` to hide close button                                                           |
-| `data-position`     | `<toast-region>` | `top-start`, `top-center`, `top-end`, `bottom-start`, `bottom-center`, `bottom-end` (default) |
-| `popover`           | `<toast-region>` | `manual` (required)                                                                           |
+| Attribute           | Target         | Values                                                                                        |
+| ------------------- | -------------- | --------------------------------------------------------------------------------------------- |
+| `command`           | Trigger        | `--toast`, `--toast-success`, `--toast-info`, `--toast-warning`, `--toast-destructive`        |
+| `commandfor`        | Trigger        | ID of target `<ui-toaster>`                                                                   |
+| `data-title`        | Trigger        | Toast title                                                                                   |
+| `data-description`  | Trigger        | Toast body copy                                                                               |
+| `data-variant`      | Trigger        | `success`, `info`, `warning`, `destructive`                                                   |
+| `data-duration`     | Trigger        | Lifetime in ms (`Infinity` persists until dismissed)                                          |
+| `data-close-button` | Trigger        | Set to `false` to hide close button                                                           |
+| `data-position`     | `<ui-toaster>` | `top-start`, `top-center`, `top-end`, `bottom-start`, `bottom-center`, `bottom-end` (default) |
+| `popover`           | `<ui-toaster>` | `manual` (required)                                                                           |
 
 ## JavaScript API
 

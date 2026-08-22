@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * @fileoverview `<toast-region>` — HTML web component for stacked toast notifications.
+ * @fileoverview `<ui-toaster>` — HTML web component for stacked toast notifications.
  * @description Light-DOM custom element that hosts a top-layer toast stack, plus
  * the `window.Toaster` imperative API. The stacking model (newest toast in front,
  * older toasts peeking behind, expand on hover, timer pause on hover/hidden tab)
@@ -29,7 +29,7 @@
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API
  *
  * @example
- * <toast-region class="toaster" id="toaster" popover="manual"></toast-region>
+ * <ui-toaster class="toaster" id="toaster" popover="manual"></ui-toaster>
  * <button commandfor="toaster" command="--toast" data-title="Saved">Save</button>
  */
 
@@ -90,7 +90,7 @@ interface ToastOptions {
   action?: ToastAction;
   /** Render the explicit close button. Default `true`. */
   closeButton?: boolean;
-  /** Target region id or element (default: first `<toast-region>`). */
+  /** Target region id or element (default: first `<ui-toaster>`). */
   region?: string | Element;
 }
 
@@ -180,7 +180,7 @@ function computeStackLayout(heights: number[]): {
   return { toasts, frontToastHeightPx: count > 0 ? heights[count - 1] : null };
 }
 
-// --- <toast-region> element ---
+// --- <ui-toaster> element ---
 
 /**
  * @class
@@ -188,7 +188,7 @@ function computeStackLayout(heights: number[]): {
  * collapsed-stack CSS custom properties, runs auto-dismiss timers, and shows or
  * hides the `popover="manual"` region as toasts come and go.
  */
-class ToastRegion extends HTMLElement {
+class UiToaster extends HTMLElement {
   #controller: AbortController | null = null;
 
   #timers: Map<string, ToastTimer> = new Map();
@@ -704,18 +704,18 @@ class ToastRegion extends HTMLElement {
  * @returns The region, or `null` when none exists.
  * @private
  */
-function resolveRegion(region?: string | Element): ToastRegion | null {
+function resolveRegion(region?: string | Element): UiToaster | null {
   const node =
     region instanceof Element
       ? region
       : typeof region === "string"
         ? document.getElementById(region)
-        : document.querySelector("toast-region");
+        : document.querySelector("ui-toaster");
 
-  if (node instanceof ToastRegion) return node;
+  if (node instanceof UiToaster) return node;
 
   console.warn(
-    'Toaster: no <toast-region> found. Add `<toast-region class="toaster" popover="manual"></toast-region>` to the page.',
+    'Toaster: no <ui-toaster> found. Add `<ui-toaster class="toaster" popover="manual"></ui-toaster>` to the page.',
   );
   return null;
 }
@@ -734,7 +734,7 @@ function toOptions(options?: ToastOptions | string): ToastOptions {
 
 /**
  * @namespace Toaster
- * @description Imperative toast API. Requires a `<toast-region>` in the page —
+ * @description Imperative toast API. Requires a `<ui-toaster>` in the page —
  * the region is never auto-created (HTML-first, like every Zazz component).
  *
  * @property toast - Shows a toast; returns its id.
@@ -807,23 +807,23 @@ const Toaster = {
    * @param id - Toast id returned by `toast()`.
    */
   dismiss(id?: string): void {
-    for (const region of document.querySelectorAll("toast-region")) {
-      if (region instanceof ToastRegion) region.dismiss(id);
+    for (const region of document.querySelectorAll("ui-toaster")) {
+      if (region instanceof UiToaster) region.dismiss(id);
     }
   },
 };
 
 // Register the element (guarded against double script loads)
-if (typeof window !== "undefined" && !customElements.get("toast-region")) {
-  customElements.define("toast-region", ToastRegion);
+if (typeof window !== "undefined" && !customElements.get("ui-toaster")) {
+  customElements.define("ui-toaster", UiToaster);
 }
 
 // Attach to window for the documented public API, then export for module consumers.
 if (typeof window !== "undefined") {
   window.Toaster = Toaster;
-  window.ToastRegion = ToastRegion;
+  window.UiToaster = UiToaster;
 }
 
 // computeStackLayout is exported for unit tests only — not part of the
 // documented public API (window.Toaster is the surface app authors use).
-export { Toaster, ToastRegion, computeStackLayout };
+export { Toaster, UiToaster, computeStackLayout };

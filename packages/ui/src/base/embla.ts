@@ -383,7 +383,7 @@ function initCommandDragGuard(): void {
  * measurable viewport until open).
  *
  * Called by `initEmblaCarousels()` for legacy `data-carousel="root"` markup and by
- * the `<slide-carousel>` web component (zazz/scripts/carousel.js) on connect.
+ * the `<ui-carousel>` web component (zazz/scripts/carousel.js) on connect.
  *
  * @param emblaNode - The carousel root element.
  */
@@ -472,7 +472,7 @@ function initEmblaRoot(emblaNode: Element): void {
   emblaNode._emblaApi = emblaApi;
 
   // One controller per root scopes every carousel listener below; the owner
-  // (`<slide-carousel>` disconnectedCallback) aborts it on teardown so the DOM
+  // (`<ui-carousel>` disconnectedCallback) aborts it on teardown so the DOM
   // listeners are removed alongside the destroyed Embla instance.
   const controller = new AbortController();
   const { signal } = controller;
@@ -534,7 +534,7 @@ function initEmblaRoot(emblaNode: Element): void {
  * @description Initializes all Embla carousels within a scope.
  *
  * Discovers carousel elements via `[data-carousel="root"]` and configures them
- * based on their data attributes. Roots managed by the `<slide-carousel>` web
+ * based on their data attributes. Roots managed by the `<ui-carousel>` web
  * component are skipped — they initialize themselves via `connectedCallback()`.
  *
  * @param scope - Root element to search within. Defaults to `document`.
@@ -544,9 +544,9 @@ function initEmblaCarousels(scope?: Document | Element): void {
   const emblaRoots = root.querySelectorAll('[data-carousel="root"]');
 
   emblaRoots.forEach(function (emblaNode) {
-    // <slide-carousel> elements own their lifecycle (init on connect, destroy
+    // <ui-carousel> elements own their lifecycle (init on connect, destroy
     // on disconnect) — double-initializing would leak a second Embla instance.
-    if (emblaNode.closest("slide-carousel")) return;
+    if (emblaNode.closest("ui-carousel")) return;
 
     initEmblaRoot(emblaNode);
   });
@@ -665,7 +665,7 @@ const initEmblaKeyboardNav: InitEmblaKeyboardNavFn = function () {
  * @description Public API for Embla carousel initialization and helpers.
  *
  * @property init - Initializes all carousels within a scope.
- * @property initRoot - Initializes a single carousel root (used by `<slide-carousel>`).
+ * @property initRoot - Initializes a single carousel root (used by `<ui-carousel>`).
  * @property addDotBtnsAndClickHandlers - Wires dot pagination.
  * @property addThumbClickHandlers - Wires thumb click handlers.
  * @property addTogglethumbsActive - Syncs thumb active state.

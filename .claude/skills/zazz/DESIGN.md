@@ -411,7 +411,7 @@ Popover API + CSS anchor positioning. Native light-dismiss. Dropdown items are `
 
 ### Tabs
 
-CSS-first grouped radio inputs wrapped in `<tab-group>`. Segmented control with sliding card pill indicator. Panel order must match radio order. The element adds orientation-aware arrow keys, Home/End, and wrap-around; radios still work without JS.
+CSS-first grouped radio inputs wrapped in `<ui-tabs>`. Segmented control with sliding card pill indicator. Panel order must match radio order. The element adds orientation-aware arrow keys, Home/End, and wrap-around; radios still work without JS.
 
 ### Cards (composition pattern)
 
@@ -419,7 +419,7 @@ CSS-first grouped radio inputs wrapped in `<tab-group>`. Segmented control with 
 
 ### Forms
 
-Shared `--field-*` tokens unify `.input`, `.textarea`, `.select`, `.input-group`, `.password-group`. Validation via `:user-invalid` (surfaces after blur/submit, never while typing). `.field` wrapper for label/control/hint/error layout. Password visibility uses `<input-password>` around `.password-group`; checkbox, switch, and radio are restyled native inputs.
+Shared `--field-*` tokens unify `.input`, `.textarea`, `.select`, `.input-group`, `.password-group`. Validation via `:user-invalid` (surfaces after blur/submit, never while typing). `.field` wrapper for label/control/hint/error layout. Password visibility uses `<ui-password>` around `.password-group`; checkbox, switch, and radio are restyled native inputs.
 
 ---
 

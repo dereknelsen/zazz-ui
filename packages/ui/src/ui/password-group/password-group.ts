@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * @fileoverview `<input-password>` — HTML web component for password visibility.
+ * @fileoverview `<ui-password>` — HTML web component for password visibility.
  * @description Light-DOM custom element that adds show/hide behavior to a
  * standard password field. Wrap the existing `.password-group` markup — the
  * element finds the input and the `[data-slot="password-group-toggle"]` button, flips the
@@ -19,12 +19,12 @@
  * Without JavaScript the field degrades to a regular password input; the
  * toggle button simply does nothing.
  *
- * Configuration (attributes on `<input-password>`):
- * - `label-show`: Toggle label while the password is hidden (default "Show password").
- * - `label-hide`: Toggle label while the password is visible (default "Hide password").
+ * Configuration (attributes on `<ui-password>`):
+ * - `data-label-show`: Toggle label while the password is hidden (default "Show password").
+ * - `data-label-hide`: Toggle label while the password is visible (default "Hide password").
  *
  * @example
- * <input-password>
+ * <ui-password>
  *   <label class="password-group">
  *     <input class="input" type="password" autocomplete="current-password" />
  *     <span data-slot="password-group-addon" data-align="inline-end">
@@ -32,7 +32,7 @@
  *         aria-pressed="false" aria-label="Show password">…</button>
  *     </span>
  *   </label>
- * </input-password>
+ * </ui-password>
  */
 
 import { effect, state } from "../../base/signals.ts";
@@ -63,7 +63,7 @@ function resolveToggleState(revealed: boolean, labelShow: string, labelHide: str
   };
 }
 
-class InputPassword extends HTMLElement {
+class UiPassword extends HTMLElement {
   #controller: AbortController | null = null;
 
   connectedCallback() {
@@ -82,8 +82,8 @@ class InputPassword extends HTMLElement {
 
     effect(
       () => {
-        const labelShow = this.getAttribute("label-show") || "Show password";
-        const labelHide = this.getAttribute("label-hide") || "Hide password";
+        const labelShow = this.getAttribute("data-label-show") || "Show password";
+        const labelHide = this.getAttribute("data-label-hide") || "Hide password";
         const next = resolveToggleState(revealed.get(), labelShow, labelHide);
         input.type = next.type;
         toggle.setAttribute("aria-pressed", next.ariaPressed);
@@ -100,16 +100,16 @@ class InputPassword extends HTMLElement {
 }
 
 // Register the element (guarded against double script loads)
-if (typeof window !== "undefined" && !customElements.get("input-password")) {
-  customElements.define("input-password", InputPassword);
+if (typeof window !== "undefined" && !customElements.get("ui-password")) {
+  customElements.define("ui-password", UiPassword);
 }
 
 // Attach to window for parity with the other component scripts, and export for
 // module consumers (loaded for its side effect — the custom-element registration).
 if (typeof window !== "undefined") {
-  window.InputPassword = InputPassword;
+  window.UiPassword = UiPassword;
 }
 
 // resolveToggleState is exported for unit tests only — not part of the public API.
-export { InputPassword, resolveToggleState };
+export { UiPassword, resolveToggleState };
 export type { ToggleState };

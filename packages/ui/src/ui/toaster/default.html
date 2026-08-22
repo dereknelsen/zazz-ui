@@ -51,12 +51,12 @@
   </button>
 </div>
 
-<toast-region class="toaster" id="toaster-example" popover="manual"></toast-region>
+<ui-toaster class="toaster" id="toaster-example" popover="manual"></ui-toaster>
 
 <script type="module">
   // Toasts with an action button need the imperative API (a callback can't live
   // in a data attribute). Everything else above is wired declaratively.
-  await customElements.whenDefined("toast-region");
+  await customElements.whenDefined("ui-toaster");
 
   const toastTrigger = document.getElementById("toaster-action-example");
   const handler = () => {

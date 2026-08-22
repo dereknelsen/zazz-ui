@@ -1,5 +1,5 @@
 /**
- * toaster.css — Toaster (<toast-region class="toaster">, [data-slot="toaster-toast"])
+ * toaster.css — Toaster (<ui-toaster class="toaster">, [data-slot="toaster-toast"])
  *
  * Stacked toast notifications. Collapsed-stack presentation (newest toast in
  * front, older toasts peeking behind, expand on hover) adapted from Sonner by
@@ -55,7 +55,7 @@
 
 @layer zazz.components {
   /* ===========================================================================
-  TOASTER REGION — popover="manual" host (<toast-region class="toaster">)
+  TOASTER REGION — popover="manual" host (<ui-toaster class="toaster">)
   - Sits in the top layer while any toast is visible; toaster.js calls
     showPopover()/hidePopover(). It is a positioning shell, not a surface, so
     the shared [popover] chrome from popover.css (reset + components layers)
