@@ -91,31 +91,35 @@
           <nav>
             <menu class="flex gap-xs">
               <li>
-                <a class="button" data-variant="ghost" data-size="sm" href="index.html">Overview</a>
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="index.html"
+                  >Overview</a
+                >
               </li>
               <li>
-                <a class="button" data-variant="ghost" data-size="sm" href="about.html">About</a>
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="about.html">About</a>
               </li>
               <li>
-                <a class="button" data-variant="ghost" data-size="sm" href="products.html"
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="products.html"
                   >Products</a
                 >
               </li>
               <li>
-                <a class="button" data-variant="ghost" data-size="sm" href="layout.html">Layout</a>
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="layout.html"
+                  >Layout</a
+                >
               </li>
               <li>
-                <a class="button" data-variant="ghost" data-size="sm" href="responsive.html"
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="responsive.html"
                   >Responsive</a
                 >
               </li>
               <li>
-                <a class="button" data-variant="ghost" data-size="sm" href="components.html"
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="components.html"
                   >Components</a
                 >
               </li>
               <li>
-                <a class="button" data-variant="ghost" data-size="sm" href="forms.html">Forms</a>
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="forms.html">Forms</a>
               </li>
             </menu>
           </nav>
@@ -128,29 +132,28 @@
         <div class="container py-lg">
           <nav class="flex items-center gap-xs">
             <menu class="flex items-center gap-xs">
-              <li><a class="button" data-variant="link" href="index.html">Home</a></li>
+              <li><a class="ui-button" data-variant="link" href="index.html">Home</a></li>
               <li><span class="text-muted-foreground opacity-50">/</span></li>
               <li>
-                <div class="button" data-variant="link" aria-disabled="true">Product name</div>
+                <div class="ui-button" data-variant="link" aria-disabled="true">Product name</div>
               </li>
             </menu>
           </nav>
         </div>
         <div class="container">
           <div class="grid grid-cols-2 gap-lg @max-md:container">
-            <div class="lightbox" data-container="xs">
+            <div class="ui-lightbox" data-container="xs">
               <div data-slot="lightbox-gallery">
                 <div
+                  class="ui-carousel"
                   data-slot="lightbox-stage"
-                  data-carousel="root"
                   data-carousel-loop="true"
                   data-carousel-classnames
                 >
                   <div data-slot="carousel-viewport">
                     <div data-slot="carousel-container">
                       <button
-                        data-slot="lightbox-slide"
-                        data-slot="carousel-slide"
+                        data-slot="lightbox-slide carousel-slide"
                         type="button"
                         command="show-modal"
                         commandfor="lightbox-example-1"
@@ -171,8 +174,7 @@
                         </figure>
                       </button>
                       <button
-                        data-slot="lightbox-slide"
-                        data-slot="carousel-slide"
+                        data-slot="lightbox-slide carousel-slide"
                         type="button"
                         command="show-modal"
                         commandfor="lightbox-example-1"
@@ -193,8 +195,7 @@
                         </figure>
                       </button>
                       <button
-                        data-slot="lightbox-slide"
-                        data-slot="carousel-slide"
+                        data-slot="lightbox-slide carousel-slide"
                         type="button"
                         command="show-modal"
                         commandfor="lightbox-example-1"
@@ -215,8 +216,7 @@
                         </figure>
                       </button>
                       <button
-                        data-slot="lightbox-slide"
-                        data-slot="carousel-slide"
+                        data-slot="lightbox-slide carousel-slide"
                         type="button"
                         command="show-modal"
                         commandfor="lightbox-example-1"
@@ -237,8 +237,7 @@
                         </figure>
                       </button>
                       <button
-                        data-slot="lightbox-slide"
-                        data-slot="carousel-slide"
+                        data-slot="lightbox-slide carousel-slide"
                         type="button"
                         command="show-modal"
                         commandfor="lightbox-example-1"
@@ -259,8 +258,7 @@
                         </figure>
                       </button>
                       <button
-                        data-slot="lightbox-slide"
-                        data-slot="carousel-slide"
+                        data-slot="lightbox-slide carousel-slide"
                         type="button"
                         command="show-modal"
                         commandfor="lightbox-example-1"
@@ -282,13 +280,9 @@
                       </button>
                     </div>
                   </div>
-                  <div
-                    data-slot="lightbox-thumbs"
-                    data-slot="carousel-thumbs"
-                    data-carousel-loop="true"
-                  >
+                  <div data-slot="lightbox-thumbs carousel-thumbs" data-carousel-loop="true">
                     <button
-                      class="button text-muted-foreground hover:text-foreground"
+                      class="ui-button text-muted-foreground hover:text-foreground"
                       data-slot="lightbox-thumbs-prev"
                       data-size="icon-sm"
                       data-variant="ghost"
@@ -317,8 +311,7 @@
                       <div data-slot="carousel-container">
                         <button
                           type="button"
-                          data-slot="lightbox-thumb"
-                          data-slot="carousel-slide"
+                          data-slot="lightbox-thumb carousel-slide"
                           aria-label="Show image 1"
                         >
                           <figure data-slot="lightbox-thumb-content">
@@ -341,8 +334,7 @@
                         </button>
                         <button
                           type="button"
-                          data-slot="lightbox-thumb"
-                          data-slot="carousel-slide"
+                          data-slot="lightbox-thumb carousel-slide"
                           aria-label="Show image 2"
                         >
                           <figure data-slot="lightbox-thumb-content">
@@ -365,8 +357,7 @@
                         </button>
                         <button
                           type="button"
-                          data-slot="lightbox-thumb"
-                          data-slot="carousel-slide"
+                          data-slot="lightbox-thumb carousel-slide"
                           aria-label="Show image 3"
                         >
                           <figure data-slot="lightbox-thumb-content">
@@ -389,8 +380,7 @@
                         </button>
                         <button
                           type="button"
-                          data-slot="lightbox-thumb"
-                          data-slot="carousel-slide"
+                          data-slot="lightbox-thumb carousel-slide"
                           aria-label="Show image 4"
                         >
                           <figure data-slot="lightbox-thumb-content">
@@ -413,8 +403,7 @@
                         </button>
                         <button
                           type="button"
-                          data-slot="lightbox-thumb"
-                          data-slot="carousel-slide"
+                          data-slot="lightbox-thumb carousel-slide"
                           aria-label="Show image 5"
                         >
                           <figure data-slot="lightbox-thumb-content">
@@ -437,8 +426,7 @@
                         </button>
                         <button
                           type="button"
-                          data-slot="lightbox-thumb"
-                          data-slot="carousel-slide"
+                          data-slot="lightbox-thumb carousel-slide"
                           aria-label="Show image 6"
                         >
                           <figure data-slot="lightbox-thumb-content">
@@ -462,7 +450,7 @@
                       </div>
                     </div>
                     <button
-                      class="button text-muted-foreground hover:text-foreground"
+                      class="ui-button text-muted-foreground hover:text-foreground"
                       data-slot="lightbox-thumbs-next"
                       data-size="icon-sm"
                       data-variant="ghost"
@@ -493,16 +481,16 @@
 
               <dialog
                 id="lightbox-example-1"
-                class="dialog dark"
+                class="ui-dialog dark"
                 data-slot="lightbox-dialog"
                 data-size="screen"
                 closedby="any"
               >
                 <div data-slot="dialog-content">
-                  <div data-carousel="root" data-carousel-loop="true" data-carousel-classnames>
+                  <div class="ui-carousel" data-carousel-loop="true" data-carousel-classnames>
                     <div data-slot="carousel-viewport">
                       <div data-slot="carousel-container">
-                        <div data-slot="lightbox-slide" data-slot="carousel-slide">
+                        <div data-slot="lightbox-slide carousel-slide">
                           <figure data-slot="lightbox-content">
                             <img
                               sizes="(max-width: 40rem) 100vw, 800px"
@@ -518,7 +506,7 @@
                             />
                           </figure>
                         </div>
-                        <div data-slot="lightbox-slide" data-slot="carousel-slide">
+                        <div data-slot="lightbox-slide carousel-slide">
                           <figure data-slot="lightbox-content">
                             <img
                               sizes="(max-width: 40rem) 100vw, 800px"
@@ -534,7 +522,7 @@
                             />
                           </figure>
                         </div>
-                        <div data-slot="lightbox-slide" data-slot="carousel-slide">
+                        <div data-slot="lightbox-slide carousel-slide">
                           <figure data-slot="lightbox-content">
                             <img
                               sizes="(max-width: 40rem) 100vw, 800px"
@@ -550,7 +538,7 @@
                             />
                           </figure>
                         </div>
-                        <div data-slot="lightbox-slide" data-slot="carousel-slide">
+                        <div data-slot="lightbox-slide carousel-slide">
                           <figure data-slot="lightbox-content">
                             <img
                               sizes="(max-width: 40rem) 100vw, 800px"
@@ -566,7 +554,7 @@
                             />
                           </figure>
                         </div>
-                        <div data-slot="lightbox-slide" data-slot="carousel-slide">
+                        <div data-slot="lightbox-slide carousel-slide">
                           <figure data-slot="lightbox-content">
                             <img
                               sizes="(max-width: 40rem) 100vw, 800px"
@@ -582,7 +570,7 @@
                             />
                           </figure>
                         </div>
-                        <div data-slot="lightbox-slide" data-slot="carousel-slide">
+                        <div data-slot="lightbox-slide carousel-slide">
                           <figure data-slot="lightbox-content">
                             <img
                               sizes="(max-width: 40rem) 100vw, 800px"
@@ -601,7 +589,7 @@
                       </div>
                     </div>
                     <button
-                      class="button size-auto text-muted-foreground hover:text-foreground"
+                      class="ui-button size-auto text-muted-foreground hover:text-foreground"
                       data-slot="lightbox-prev"
                       data-size="icon"
                       data-variant="ghost"
@@ -622,7 +610,7 @@
                       </svg>
                     </button>
                     <button
-                      class="button size-auto text-muted-foreground hover:text-foreground"
+                      class="ui-button size-auto text-muted-foreground hover:text-foreground"
                       data-slot="lightbox-next"
                       data-size="icon"
                       data-variant="ghost"
@@ -642,13 +630,12 @@
                         />
                       </svg>
                     </button>
-                    <div data-slot="lightbox-thumbs" data-slot="carousel-thumbs">
+                    <div data-slot="lightbox-thumbs carousel-thumbs">
                       <div data-slot="carousel-viewport">
                         <div data-slot="carousel-container">
                           <button
                             type="button"
-                            data-slot="lightbox-thumb"
-                            data-slot="carousel-slide"
+                            data-slot="lightbox-thumb carousel-slide"
                             aria-label="Show image 1"
                           >
                             <figure data-slot="lightbox-thumb-content">
@@ -671,8 +658,7 @@
                           </button>
                           <button
                             type="button"
-                            data-slot="lightbox-thumb"
-                            data-slot="carousel-slide"
+                            data-slot="lightbox-thumb carousel-slide"
                             aria-label="Show image 2"
                           >
                             <figure data-slot="lightbox-thumb-content">
@@ -695,8 +681,7 @@
                           </button>
                           <button
                             type="button"
-                            data-slot="lightbox-thumb"
-                            data-slot="carousel-slide"
+                            data-slot="lightbox-thumb carousel-slide"
                             aria-label="Show image 3"
                           >
                             <figure data-slot="lightbox-thumb-content">
@@ -719,8 +704,7 @@
                           </button>
                           <button
                             type="button"
-                            data-slot="lightbox-thumb"
-                            data-slot="carousel-slide"
+                            data-slot="lightbox-thumb carousel-slide"
                             aria-label="Show image 4"
                           >
                             <figure data-slot="lightbox-thumb-content">
@@ -743,8 +727,7 @@
                           </button>
                           <button
                             type="button"
-                            data-slot="lightbox-thumb"
-                            data-slot="carousel-slide"
+                            data-slot="lightbox-thumb carousel-slide"
                             aria-label="Show image 5"
                           >
                             <figure data-slot="lightbox-thumb-content">
@@ -767,8 +750,7 @@
                           </button>
                           <button
                             type="button"
-                            data-slot="lightbox-thumb"
-                            data-slot="carousel-slide"
+                            data-slot="lightbox-thumb carousel-slide"
                             aria-label="Show image 6"
                           >
                             <figure data-slot="lightbox-thumb-content">
@@ -795,7 +777,7 @@
                   </div>
                 </div>
                 <button
-                  class="button"
+                  class="ui-button"
                   data-slot="lightbox-close"
                   data-size="icon"
                   data-variant="ghost"
@@ -831,7 +813,7 @@
               </dialog>
             </div>
 
-            <hgroup class="flex flex-col gap-xs prose">
+            <hgroup class="flex flex-col gap-xs ui-prose">
               <h2 class="text-h4">Product name</h2>
               <p>Product description</p>
               <ul>
@@ -850,12 +832,12 @@
         <div class="flex items-center justify-between gap-md">
           <div class="text-h6 font-black">Zazz tests</div>
           <menu class="flex gap-sm">
-            <li><a class="button" data-variant="link" href="about.html">About</a></li>
-            <li><a class="button" data-variant="link" href="layout.html">Layout</a></li>
-            <li><a class="button" data-variant="link" href="responsive.html">Responsive</a></li>
-            <li><a class="button" data-variant="link" href="products.html">Products</a></li>
-            <li><a class="button" data-variant="link" href="components.html">Components</a></li>
-            <li><a class="button" data-variant="link" href="forms.html">Forms</a></li>
+            <li><a class="ui-button" data-variant="link" href="about.html">About</a></li>
+            <li><a class="ui-button" data-variant="link" href="layout.html">Layout</a></li>
+            <li><a class="ui-button" data-variant="link" href="responsive.html">Responsive</a></li>
+            <li><a class="ui-button" data-variant="link" href="products.html">Products</a></li>
+            <li><a class="ui-button" data-variant="link" href="components.html">Components</a></li>
+            <li><a class="ui-button" data-variant="link" href="forms.html">Forms</a></li>
           </menu>
         </div>
       </div>

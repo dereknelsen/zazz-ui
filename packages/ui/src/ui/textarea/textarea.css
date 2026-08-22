@@ -1,5 +1,5 @@
 /**
- * textarea.css — Textarea (.textarea)
+ * textarea.css — Textarea (.ui-textarea)
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, fields.css
@@ -25,14 +25,14 @@
 
 @layer zazz.components {
   /* ===========================================================================
-  TEXTAREA — .textarea (auto-sizing)
+  TEXTAREA — .ui-textarea (auto-sizing)
   - field-sizing: content grows the box with the text; height clamps between
     min/max block-size, then scrolls.
-  - Shares the --field-* tokens defined in fields.css so it matches .input /
-    .select / .button.
+  - Shares the --field-* tokens defined in fields.css so it matches .ui-input /
+    .ui-select / .ui-button.
   =========================================================================== */
 
-  .textarea {
+  .ui-textarea {
     field-sizing: content;
     inline-size: var(--textarea-inline-size);
     min-inline-size: var(--textarea-min-inline-size);
@@ -62,12 +62,12 @@
     transition: var(--default-transition);
   }
 
-  .textarea:hover {
+  .ui-textarea:hover {
     border-color: var(--field-border--hover);
     background-color: var(--field-background--hover);
   }
 
-  .textarea:focus-visible {
+  .ui-textarea:focus-visible {
     background-color: var(--field-background--focus);
     border-color: var(--field-border--focus);
     --_ring-offset-width: var(--ring-offset-width);

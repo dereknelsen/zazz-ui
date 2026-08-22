@@ -29,7 +29,7 @@
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API
  *
  * @example
- * <ui-toaster class="toaster" id="toaster" popover="manual"></ui-toaster>
+ * <ui-toaster class="ui-toaster" id="toaster" popover="manual"></ui-toaster>
  * <button commandfor="toaster" command="--toast" data-title="Saved">Save</button>
  */
 
@@ -230,7 +230,7 @@ class UiToaster extends HTMLElement {
     if (!this.hasAttribute("tabindex")) this.setAttribute("tabindex", "-1");
 
     // The live region must exist before toasts are inserted so additions announce.
-    if (!this.querySelector('[data-slot="toaster-list"]')) {
+    if (!this.querySelector('[data-slot~="toaster-list"]')) {
       const list = document.createElement("ol");
       list.setAttribute("data-slot", "toaster-list");
       list.setAttribute("aria-live", "polite");
@@ -487,7 +487,7 @@ class UiToaster extends HTMLElement {
     if (action) {
       const button = document.createElement("button");
       button.type = "button";
-      button.className = "button";
+      button.className = "ui-button";
       button.setAttribute("data-slot", "toaster-action");
       button.dataset.size = "sm";
       button.textContent = action.label;
@@ -501,7 +501,7 @@ class UiToaster extends HTMLElement {
     if (options.closeButton !== false) {
       const close = document.createElement("button");
       close.type = "button";
-      close.className = "button";
+      close.className = "ui-button";
       close.setAttribute("data-slot", "toaster-close");
       close.dataset.variant = "ghost";
       close.dataset.size = "icon-sm";
@@ -542,7 +542,7 @@ class UiToaster extends HTMLElement {
    * @returns The toast list (created in `connectedCallback`).
    */
   #list(): HTMLOListElement {
-    let list = this.querySelector('[data-slot="toaster-list"]');
+    let list = this.querySelector('[data-slot~="toaster-list"]');
     if (!(list instanceof HTMLOListElement)) {
       list = document.createElement("ol");
       list.setAttribute("data-slot", "toaster-list");
@@ -557,7 +557,7 @@ class UiToaster extends HTMLElement {
   #toasts(): HTMLElement[] {
     return Array.from(this.#list().children)
       .filter((child): child is HTMLElement => child instanceof HTMLElement)
-      .filter((child) => child.matches('[data-slot="toaster-toast"]'));
+      .filter((child) => child.matches('[data-slot~="toaster-toast"]'));
   }
 
   // --- Expand / collapse ---
@@ -715,7 +715,7 @@ function resolveRegion(region?: string | Element): UiToaster | null {
   if (node instanceof UiToaster) return node;
 
   console.warn(
-    'Toaster: no <ui-toaster> found. Add `<ui-toaster class="toaster" popover="manual"></ui-toaster>` to the page.',
+    'Toaster: no <ui-toaster> found. Add `<ui-toaster class="ui-toaster" popover="manual"></ui-toaster>` to the page.',
   );
   return null;
 }

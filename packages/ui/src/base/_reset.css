@@ -4,7 +4,7 @@
  * @layer      reset
  * @requires   layers.css, _properties.css, _variables.css
  * @uses       appearance: none — select chevron reset
- * @uses       ::details-content — accordion open/close (see _accordion.css for .accordion)
+ * @uses       ::details-content — accordion open/close (see _accordion.css for .ui-accordion)
  * @uses       container-type — layout containers on main, article, section
  * @uses       view-transition-name via the <main> tag - main-content and [data-transition-layer] —
  *             global (animated in _view-transitions.css)
@@ -436,7 +436,7 @@
   }
 
   /* Suppress the browser's built-in password reveal / clear glyphs (Edge/IE) so
-     they never double up with the Zazz [data-slot="password-group-toggle"] button. */
+     they never double up with the Zazz [data-slot~="password-group-toggle"] button. */
   ::-ms-reveal,
   ::-ms-clear {
     display: none;

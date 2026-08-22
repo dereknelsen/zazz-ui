@@ -1,10 +1,10 @@
 <header class="w-full">
-  <nav class="navigation-menu container">
+  <nav class="ui-navigation-menu container">
     <menu data-slot="navigation-menu-list">
       <!-- Rich panel — featured callout + link grid -->
       <li data-slot="navigation-menu-item">
         <button
-          class="button"
+          class="ui-button"
           data-slot="navigation-menu-trigger"
           data-variant="ghost"
           type="button"
@@ -74,7 +74,7 @@
       <!-- Simple panel — single-column link list -->
       <li data-slot="navigation-menu-item">
         <button
-          class="button"
+          class="ui-button"
           data-slot="navigation-menu-trigger"
           data-variant="ghost"
           type="button"
@@ -127,7 +127,7 @@
       <!-- Submenu panel — categories whose products fly out to the right -->
       <li data-slot="navigation-menu-item">
         <button
-          class="button"
+          class="ui-button"
           data-slot="navigation-menu-trigger"
           data-variant="ghost"
           type="button"
@@ -329,7 +329,7 @@
 
       <li data-slot="navigation-menu-item">
         <button
-          class="button"
+          class="ui-button"
           data-slot="navigation-menu-trigger"
           data-variant="ghost"
           type="button"
@@ -361,7 +361,7 @@
               <div class="flex flex-col gap-px p-xs">
                 <!-- Tabs vertical START -->
                 <div
-                  class="tabs h-full flex flex-col @xs:grid @xs:grid-cols-2 @md:grid-cols-4 gap-sm"
+                  class="ui-tabs h-full flex flex-col @xs:grid @xs:grid-cols-2 @md:grid-cols-4 gap-sm"
                   data-orientation="vertical"
                 >
                   <div
@@ -712,7 +712,7 @@
       <li class="ml-auto mr-xs" data-slot="navigation-menu-item">
         <!-- Form dialog START -->
         <button
-          class="button"
+          class="ui-button"
           type="button"
           data-variant="ghost"
           command="show-modal"
@@ -750,20 +750,20 @@
             />
           </svg>
         </button>
-        <dialog id="form-sign-in-1" class="dialog" closedby="any">
+        <dialog id="form-sign-in-1" class="ui-dialog" closedby="any">
           <form method="dialog" data-slot="dialog-content">
             <header data-slot="dialog-header">
               <h2 class="text-lg font-heading font-strong">Sign in</h2>
               <p class="text-muted-foreground">Enter your email and password to sign in.</p>
             </header>
             <div class="flex flex-col gap-md" data-slot="dialog-body">
-              <fieldset class="field-group">
+              <fieldset class="ui-field-group">
                 <legend class="sr-only">Sign in</legend>
                 <div class="grid gap-xs">
-                  <div class="field">
+                  <div class="ui-field">
                     <label data-slot="field-label" for="fd-email">Email</label>
                     <input
-                      class="input"
+                      class="ui-input"
                       id="fd-email"
                       name="email"
                       type="email"
@@ -784,12 +784,12 @@
                   </div>
 
                   <!-- Password START -->
-                  <div class="field">
+                  <div class="ui-field">
                     <label data-slot="field-label" for="f-login-password">Password</label>
                     <ui-password>
-                      <label class="password-group">
+                      <label class="ui-password-group">
                         <input
-                          class="input"
+                          class="ui-input"
                           id="f-login-password"
                           name="password"
                           type="password"
@@ -801,7 +801,7 @@
                         />
                         <span data-slot="password-group-addon" data-align="inline-end">
                           <button
-                            class="button"
+                            class="ui-button"
                             data-slot="password-group-toggle"
                             id="f-login-password-toggle"
                             data-variant="ghost"
@@ -812,8 +812,7 @@
                             aria-describedby="f-login-password-warning"
                           >
                             <svg
-                              data-slot="password-group-icon"
-                              data-slot="password-group-icon-show"
+                              data-slot="password-group-icon password-group-icon-show"
                               xmlns="http://www.w3.org/2000/svg"
                               viewBox="0 0 256 256"
                               aria-hidden="true"
@@ -839,8 +838,7 @@
                               />
                             </svg>
                             <svg
-                              data-slot="password-group-icon"
-                              data-slot="password-group-icon-hide"
+                              data-slot="password-group-icon password-group-icon-hide"
                               xmlns="http://www.w3.org/2000/svg"
                               viewBox="0 0 256 256"
                               aria-hidden="true"
@@ -900,7 +898,7 @@
             </div>
             <footer data-slot="dialog-footer">
               <button
-                class="button"
+                class="ui-button"
                 type="button"
                 value="cancel"
                 commandfor="form-sign-in-1"
@@ -908,13 +906,13 @@
               >
                 Cancel
               </button>
-              <button class="button" data-variant="primary" type="submit" value="save">
+              <button class="ui-button" data-variant="primary" type="submit" value="save">
                 Sign in
               </button>
             </footer>
           </form>
           <button
-            class="button"
+            class="ui-button"
             data-slot="dialog-close"
             data-size="icon"
             data-variant="ghost"
@@ -953,7 +951,7 @@
 
       <!-- Plain CTA — no popover -->
       <li data-slot="navigation-menu-item">
-        <a href="#" class="button" data-variant="primary">Get started</a>
+        <a href="#" class="ui-button" data-variant="primary">Get started</a>
       </li>
     </menu>
   </nav>

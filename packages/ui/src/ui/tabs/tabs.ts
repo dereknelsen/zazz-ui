@@ -55,7 +55,7 @@ class UiTabs extends HTMLElement {
     const target = event.target;
     if (!(target instanceof HTMLInputElement) || target.type !== "radio") return;
 
-    const list = target.closest('[role="tablist"], [data-slot="tabs-list"]');
+    const list = target.closest('[role="tablist"], [data-slot~="tabs-list"]');
     // Ignore radios that belong to a nested ui-tabs
     if (!list || list.closest("ui-tabs") !== this) return;
 

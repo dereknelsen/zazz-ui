@@ -17,7 +17,7 @@ The class spelling of a primitive (`<div class="ui-tooltip">`, `<button class="u
 _Avoid_: expanded version, raw form
 
 **Slot**:
-An interior part of a primitive, identified by `data-slot="{primitive}-{part}"` (e.g. `data-slot="dialog-header"`). Slots replace BEM element classes; classes only ever name primitive roots.
+An interior part of a primitive, identified by `data-slot="{primitive}-{part}"` (e.g. `data-slot="dialog-header"`). The attribute is a space-separated token list (like `class`); selectors match with `[data-slot~="…"]`. Slots replace BEM element classes; classes only ever name primitive roots.
 _Avoid_: part, fragment, segment, sub-component, BEM element
 
 **HTML web component**:

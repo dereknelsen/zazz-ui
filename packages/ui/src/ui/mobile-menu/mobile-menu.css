@@ -1,9 +1,9 @@
 /**
- * mobile-menu.css — Mobile menu (.mobile-menu)
+ * mobile-menu.css — Mobile menu (.ui-mobile-menu)
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, dialog.css, accordion.css
- * @uses       Composes .dialog[data-size="screen"] — fullscreen native <dialog>
+ * @uses       Composes .ui-dialog[data-size="screen"] — fullscreen native <dialog>
  * @uses       Invoker Commands (command="show-modal") — open without JS (markup)
  * @uses       view-transition-name — stable menu across navigations
  * @uses       @starting-style — viewport enter animation
@@ -36,11 +36,11 @@
 @layer zazz.components {
   /* ===========================================================================
   MOBILE MENU — full-screen dialog with accordion-based nested navigation
-  - Composes .dialog[data-size="screen"] + .accordion for expand/collapse
+  - Composes .ui-dialog[data-size="screen"] + .ui-accordion for expand/collapse
   - No JavaScript — Invoker Commands to open, native dialog close, native details
   =========================================================================== */
 
-  .mobile-menu {
+  .ui-mobile-menu {
     /* View transitions - keeps the menu stable when navigating between pages */
     view-transition-name: global-mobile-menu;
     inline-size: 100%;
@@ -51,11 +51,11 @@
     overflow: clip;
   }
 
-  .mobile-menu::backdrop {
+  .ui-mobile-menu::backdrop {
     background-color: var(--mobile-menu-backdrop);
   }
 
-  [data-slot="mobile-menu-viewport"] {
+  [data-slot~="mobile-menu-viewport"] {
     display: grid;
     position: relative;
     grid-template-rows: auto 1fr auto;
@@ -69,7 +69,7 @@
     transition-delay: calc(var(--dialog-transition-duration) / 1.5);
   }
 
-  .mobile-menu[data-animation="slide-right"][open] [data-slot="mobile-menu-viewport"] {
+  .ui-mobile-menu[data-animation="slide-right"][open] [data-slot~="mobile-menu-viewport"] {
     opacity: var(--mobile-menu-viewport-opacity--end);
     transform: scale(var(--mobile-menu-viewport-scale--end))
       translate3d(var(--mobile-menu-viewport-translate--end));
@@ -81,7 +81,7 @@
     }
   }
 
-  [data-slot="mobile-menu-header"] {
+  [data-slot~="mobile-menu-header"] {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -94,7 +94,7 @@
     z-index: 1;
   }
 
-  [data-slot="mobile-menu-body"] {
+  [data-slot~="mobile-menu-body"] {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -105,7 +105,7 @@
     scrollbar-gutter: stable both-edges;
   }
 
-  [data-slot="mobile-menu-footer"] {
+  [data-slot~="mobile-menu-footer"] {
     display: flex;
     flex-wrap: wrap;
     gap: var(--mobile-menu-footer-gap);
@@ -117,11 +117,11 @@
   }
 
   /* Nested accordion inside mobile menu — tighter padding for sub-levels */
-  [data-slot="mobile-menu-body"] .accordion .accordion {
+  [data-slot~="mobile-menu-body"] .ui-accordion .ui-accordion {
     padding-inline-start: var(--mobile-menu-nested-accordion-padding-inline-start);
   }
 
-  [data-slot="mobile-menu-body"] .accordion details:not(:last-child) {
+  [data-slot~="mobile-menu-body"] .ui-accordion details:not(:last-child) {
     border-bottom-color: var(--border);
   }
 
@@ -130,7 +130,7 @@
   =========================================================================== */
 
   /* Slide-right: accordion-style block-size reveal on the viewport (not scaleY). */
-  .mobile-menu[data-animation="slide-right"] {
+  .ui-mobile-menu[data-animation="slide-right"] {
     --dialog-transition-duration: calc(var(--default-transition-duration) * 1.75);
     --dialog-opacity--start: 1;
     --dialog-scale--start: 1;

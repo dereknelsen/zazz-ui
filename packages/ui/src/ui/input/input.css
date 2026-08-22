@@ -1,5 +1,5 @@
 /**
- * input.css — Text input (.input)
+ * input.css — Text input (.ui-input)
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, fields.css, _reset.css
@@ -29,14 +29,14 @@
 
 @layer zazz.components {
   /* ===========================================================================
-  TEXT INPUTS — .input
+  TEXT INPUTS — .ui-input
   - One class for every text-like type (text, search, email, number, date, …);
     the type only changes the picker/keyboard, not the box.
-  - Shares the --field-* tokens defined in fields.css so it aligns with .select,
-    .textarea, and .button.
+  - Shares the --field-* tokens defined in fields.css so it aligns with .ui-select,
+    .ui-textarea, and .ui-button.
   =========================================================================== */
 
-  .input {
+  .ui-input {
     inline-size: var(--input-inline-size);
     min-inline-size: var(--input-min-inline-size);
     block-size: var(--field-height);
@@ -64,12 +64,12 @@
     transition: var(--default-transition);
   }
 
-  .input:hover {
+  .ui-input:hover {
     border-color: var(--field-border--hover);
     background-color: var(--field-background--hover);
   }
 
-  .input:focus-within {
+  .ui-input:focus-within {
     background-color: var(--field-background--focus);
     border-color: var(--field-border--focus);
     --_ring-offset-width: var(--ring-offset-width);
@@ -77,14 +77,14 @@
     outline-color: transparent;
   }
 
-  .input[type="date"],
-  .input[type="time"],
-  .input[type="datetime-local"] {
+  .ui-input[type="date"],
+  .ui-input[type="time"],
+  .ui-input[type="datetime-local"] {
     --input-padding-inline-end: var(--step-1_5);
   }
 
   /* Native date/time controls keep their picker indicator tinted to the text */
-  .input::-webkit-calendar-picker-indicator {
+  .ui-input::-webkit-calendar-picker-indicator {
     cursor: pointer;
     -webkit-appearance: none;
 
@@ -107,7 +107,7 @@
     background-position: center;
   }
 
-  .input::-webkit-calendar-picker-indicator:is(:hover) {
+  .ui-input::-webkit-calendar-picker-indicator:is(:hover) {
     opacity: 0.5;
   }
 }

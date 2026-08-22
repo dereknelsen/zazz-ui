@@ -24,11 +24,11 @@ Later layers override earlier ones regardless of selector specificity:
 | `variables`       | Token declarations only                          | `:root { --button-radius: var(--radius-md); }` |
 | `reset`           | Native element baselines (zero specificity)      | `html`, `body`, `input`, `select` defaults     |
 | `legacy`          | Pre-Zazz CSS during migration                    | `@import "old.css" layer(legacy)`              |
-| `zazz.components` | Component rules                                  | `.button`, `.dialog`, `.field`                 |
+| `zazz.components` | Component rules                                  | `.ui-button`, `.ui-dialog`, `.ui-field`        |
 | `zazz.utilities`  | Atomic override classes                          | `.text-primary`, `.gap-md`, `.rounded-full`    |
 | `migrations`      | Temporary migration shims (highest author layer) | `.btn-primary { --button-background: ... }`    |
 
-Utilities in `zazz.utilities` override `.button` in `zazz.components` without `!important`. See [Layers](/docs/foundation/layers).
+Utilities in `zazz.utilities` override `.ui-button` in `zazz.components` without `!important`. See [Layers](/docs/foundation/layers).
 
 ## Base files
 
@@ -51,14 +51,14 @@ Components read `var(--token)`. Restyle UI by updating variables:
 ```
 
 ```html
-<button class="button" style="--button-background: var(--secondary)">Instance override</button>
+<button class="ui-button" style="--button-background: var(--secondary)">Instance override</button>
 ```
 
 See [Theme variables](/docs/foundation/variables).
 
 ## Typography
 
-Zazz uses fluid `clamp()` sizing. A single `text-*` utility sets font size, line height, letter spacing, and weight. The `.prose` class formats author-controlled HTML.
+Zazz uses fluid `clamp()` sizing. A single `text-*` utility sets font size, line height, letter spacing, and weight. The `.ui-prose` class formats author-controlled HTML.
 
 ```html
 <span class="text-display">Headline</span>
@@ -72,7 +72,7 @@ See [Text and font](/docs/foundation/utilities/text-and-font) and [Prose](/docs/
 Components expose styling through `data-*` attributes. Omitting the attribute renders the default variant:
 
 ```html
-<button class="button" data-variant="primary" data-size="sm">Save</button>
+<button class="ui-button" data-variant="primary" data-size="sm">Save</button>
 ```
 
 ## Dark mode

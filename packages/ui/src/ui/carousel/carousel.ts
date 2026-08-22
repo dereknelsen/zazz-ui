@@ -7,10 +7,10 @@
  * `EmblaInit.initRoot`) and destroys its instances on disconnect, so
  * dynamically inserted or SPA-swapped carousels need no manual wiring.
  *
- * The element *is* the carousel root — it applies `data-carousel="root"` to
- * itself on connect, so all existing CSS hooks and `data-carousel-*`
- * configuration attributes work unchanged (see embla.js for the full
- * attribute reference). No shadow DOM; children are regular markup.
+ * The element *is* the carousel root — CSS and `embla.js` target
+ * `:is(ui-carousel, .ui-carousel)` directly, and `data-carousel-*`
+ * configuration attributes are read off the element (see embla.js for the
+ * full attribute reference). No shadow DOM; children are regular markup.
  *
  * Carousels inside a closed `<dialog>` defer initialization until the dialog
  * first opens (a closed dialog is `display: none`, so Embla cannot measure
@@ -38,9 +38,6 @@ class UiCarouselElement extends HTMLElement {
   #dialogObserver: MutationObserver | null = null;
 
   connectedCallback() {
-    // The element is the carousel root — expose the CSS/config hook.
-    this.setAttribute("data-carousel", "root");
-
     const dialog = this.closest("dialog");
     if (dialog && !dialog.open) {
       // Closed dialogs are display:none — Embla can't measure the viewport.

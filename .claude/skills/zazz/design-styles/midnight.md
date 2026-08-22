@@ -58,11 +58,11 @@ Borrow the confidence and negative space; skip the craft-narrative framing.
 Build sections from Zazz components and the band system — don't hand-roll CSS. See
 `references/components.md` and `PATTERNS.md`.
 
-1. **Sticky header:** Wordmark top-left, slim center/right nav, a `.button` `data-variant="link"`
-   sign-in, and a `.button` `data-variant="primary"` "sign up" in the accent.
+1. **Sticky header:** Wordmark top-left, slim center/right nav, a `.ui-button` `data-variant="link"`
+   sign-in, and a `.ui-button` `data-variant="primary"` "sign up" in the accent.
 2. **Hero:** Accent `text-eyebrow` + a heavy `text-display`/`text-h1` claim ("Transform the way your
    team works") over `--muted-foreground` subcopy, with an oversized ghost numeral/figure piled
-   behind via `grid-area-pile`. Dual CTAs — one `primary`, one bordered default (`.button` with no
+   behind via `grid-area-pile`. Dual CTAs — one `primary`, one bordered default (`.ui-button` with no
    variant, or `data-variant="ghost"`).
 3. **Stat band:** A row of 3–4 big accent numerals (`text-display`/`text-h2`, `--primary`) with
    `text-eyebrow` labels ("500k+ active users", "99.99% uptime"). Hard numbers as credibility.
@@ -73,7 +73,7 @@ Build sections from Zazz components and the band system — don't hand-roll CSS.
 6. **Features grid:** `text-eyebrow` + heading, then a bordered 3-column grid of feature cards
    (`--card`, `1px solid var(--border)`, line icon + title + `--muted-foreground` description).
 7. **Insights / blog:** A row of dark photographic cards (`--radius-lg` figures, moody imagery) with
-   date eyebrow, title, and a "view all ↗" `.button` `data-variant="link"`.
+   date eyebrow, title, and a "view all ↗" `.ui-button` `data-variant="link"`.
 8. **How it works:** Numbered steps with oversized ghost `01 / 02 / 03` numerals piled behind each
    step's title + description.
 9. **Why choose us:** A numbered accent list (`01`–`04` in `--primary`) of differentiators beside a

@@ -1,10 +1,10 @@
 /**
- * tooltip.css — Tooltip (.tooltip, [data-slot="tooltip-content"])
+ * tooltip.css — Tooltip (.ui-tooltip, [data-slot~="tooltip-content"])
  *
  * @layer      variables, reset, components
  * @requires   layers.css, _variables.css, popover.css
  * @uses       interestfor — Interest Invokers API (Chromium 142+; polyfill via invokers)
- * @uses       [data-slot="tooltip-content"] — hint popover (light dismiss, auto-hides sibling hints)
+ * @uses       [data-slot~="tooltip-content"] — hint popover (light dismiss, auto-hides sibling hints)
  * @uses       anchor-name, position-anchor, position-area, position-try-fallbacks —
  *             explicit anchors for polyfill; data-side maps to --popover-position-*
  * @tokens     --tooltip-* (@layer variables)
@@ -70,7 +70,7 @@
     surface and must not inherit min-inline-size or backdrop blur.
   =========================================================================== */
 
-  :where([data-slot="tooltip-content"]) {
+  :where([data-slot~="tooltip-content"]) {
     color: var(--tooltip-foreground);
     background-color: var(--tooltip-background);
     min-inline-size: unset;
@@ -84,13 +84,13 @@
   }
 
   @supports (anchor-name: --zazz) {
-    :where([data-slot="tooltip-content"]) {
+    :where([data-slot~="tooltip-content"]) {
       margin-block: var(--tooltip-margin-block);
       margin-inline: var(--tooltip-margin-inline);
     }
   }
 
-  [data-slot="tooltip-content"]:where(:popover-open, .\:popover-open) {
+  [data-slot~="tooltip-content"]:where(:popover-open, .\:popover-open) {
     display: flex;
     opacity: var(--tooltip-opacity--end);
     transform: scale(var(--tooltip-scale--end)) translate3d(var(--tooltip-translate--end));
@@ -111,20 +111,20 @@
     from interestfor are not polyfilled).
   =========================================================================== */
 
-  .tooltip {
+  .ui-tooltip {
     anchor-scope: --tooltip-trigger;
     display: inline-block;
   }
 
-  .tooltip > :where([interestfor], [data-slot="tooltip-trigger"]) {
+  .ui-tooltip > :where([interestfor], [data-slot~="tooltip-trigger"]) {
     anchor-name: --tooltip-trigger;
   }
 
-  [data-slot="tooltip-trigger"] {
+  [data-slot~="tooltip-trigger"] {
     display: inline-flex;
   }
 
-  [data-slot="tooltip-content"] {
+  [data-slot~="tooltip-content"] {
     position-anchor: --tooltip-trigger;
 
     display: flex;
@@ -146,7 +146,7 @@
     text-wrap: balance;
   }
 
-  [data-slot="tooltip-content"] > kbd {
+  [data-slot~="tooltip-content"] > kbd {
     --kbd-background: color-mix(in oklch, var(--tooltip-foreground) 15%, transparent);
     --kbd-color: var(--tooltip-foreground);
     --kbd-inline-size: var(--step-4);
@@ -154,30 +154,30 @@
     --kbd-font-size: var(--font-size-xs);
   }
 
-  [data-slot="tooltip-content"]:has([data-slot="tooltip-arrow"]) {
+  [data-slot~="tooltip-content"]:has([data-slot~="tooltip-arrow"]) {
     overflow: visible;
   }
 
   /* Positioning — reuse --popover-position-* hooks from popover.css via data-side */
 
-  [data-slot="tooltip-content"][data-side="top"]:not([data-align]),
-  [data-slot="tooltip-content"][data-side="top"][data-align="center"] {
+  [data-slot~="tooltip-content"][data-side="top"]:not([data-align]),
+  [data-slot~="tooltip-content"][data-side="top"][data-align="center"] {
     --tooltip-translate--start: 0, 0.25em, 0;
     --popover-position-area: block-start span-all;
     --popover-origin: bottom center;
     --tooltip-margin-block: var(--step-1);
   }
 
-  [data-slot="tooltip-content"][data-side="bottom"]:not([data-align]),
-  [data-slot="tooltip-content"][data-side="bottom"][data-align="center"] {
+  [data-slot~="tooltip-content"][data-side="bottom"]:not([data-align]),
+  [data-slot~="tooltip-content"][data-side="bottom"][data-align="center"] {
     --tooltip-translate--start: 0, 0.25em, 0;
     --popover-position-area: block-end span-all;
     --popover-origin: top center;
     --tooltip-margin-block: var(--step-1);
   }
 
-  [data-slot="tooltip-content"][data-side="left"]:not([data-align]),
-  [data-slot="tooltip-content"][data-side="left"][data-align="center"] {
+  [data-slot~="tooltip-content"][data-side="left"]:not([data-align]),
+  [data-slot~="tooltip-content"][data-side="left"][data-align="center"] {
     --tooltip-translate--start: 0.25em, 0, 0;
     --popover-position-area: inline-start span-all;
     --popover-origin: center right;
@@ -185,8 +185,8 @@
     --tooltip-margin-block: 0;
   }
 
-  [data-slot="tooltip-content"][data-side="right"]:not([data-align]),
-  [data-slot="tooltip-content"][data-side="right"][data-align="center"] {
+  [data-slot~="tooltip-content"][data-side="right"]:not([data-align]),
+  [data-slot~="tooltip-content"][data-side="right"][data-align="center"] {
     --tooltip-translate--start: 0.25em, 0, 0;
     --popover-position-area: inline-end span-all;
     --popover-origin: center left;
@@ -195,7 +195,7 @@
   }
 
   /* Tooltip arrow */
-  [data-slot="tooltip-arrow"] {
+  [data-slot~="tooltip-arrow"] {
     position: absolute;
     top: calc(100% - var(--tooltip-arrow-size) / 2);
     left: 50%;
@@ -208,23 +208,23 @@
   }
 
   /* Tooltip arrow position */
-  [data-slot="tooltip-content"][data-side="top"] [data-slot="tooltip-arrow"] {
+  [data-slot~="tooltip-content"][data-side="top"] [data-slot~="tooltip-arrow"] {
     bottom: calc((var(--tooltip-arrow-size) / 2) * -1);
     left: 50%;
   }
 
-  [data-slot="tooltip-content"][data-side="bottom"] [data-slot="tooltip-arrow"] {
+  [data-slot~="tooltip-content"][data-side="bottom"] [data-slot~="tooltip-arrow"] {
     top: calc((var(--tooltip-arrow-size) / 2) * -1);
     left: 50%;
   }
 
-  [data-slot="tooltip-content"][data-side="left"] [data-slot="tooltip-arrow"] {
+  [data-slot~="tooltip-content"][data-side="left"] [data-slot~="tooltip-arrow"] {
     left: calc(100% - var(--tooltip-arrow-size) / 2);
     top: 50%;
     transform: translate(0%, -50%) rotate(45deg);
   }
 
-  [data-slot="tooltip-content"][data-side="right"] [data-slot="tooltip-arrow"] {
+  [data-slot~="tooltip-content"][data-side="right"] [data-slot~="tooltip-arrow"] {
     right: calc(100% - var(--tooltip-arrow-size) / 2);
     left: auto;
     top: 50%;

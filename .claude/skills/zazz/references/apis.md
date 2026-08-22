@@ -38,13 +38,13 @@ The only external ordering: Embla-backed components need the Embla CDN UMD bundl
 These custom elements augment regular child markup; they do not use shadow DOM or templates,
 so existing Zazz classes and `data-*` hooks keep working.
 
-| Element         | Script              | Use for                                     | Notes                                                                                                                       |
-| --------------- | ------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `<ui-carousel>` | `carousel.js`       | Component carousels and carousel roots      | The element is the Embla root; put `data-carousel-*` options on it                                                          |
-| `<ui-lightbox>` | `lightbox.js`       | Inline gallery + fullscreen dialog lightbox | Coordinates gallery/dialog slide state; opening/closing still uses Invoker Commands                                         |
-| `<ui-password>` | `password-group.js` | Password show/hide toggle                   | Wrap `.password-group`; optional `data-label-show` / `data-label-hide`; CSS swaps icons via ARIA                            |
-| `<ui-tabs>`     | `tabs.js`           | Radio-driven tabs with richer keyboard nav  | Carries `.tabs`; adds orientation-aware arrows, Home/End, and wrap-around                                                   |
-| `<ui-toaster>`  | `toaster.js`        | Stacked toast notifications (top layer)     | Carries `.toaster` + `popover="manual"`; fire via `command="--toast"` on any button or `window.Toaster.toast()/success()/…` |
+| Element         | Script              | Use for                                     | Notes                                                                                                                          |
+| --------------- | ------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `<ui-carousel>` | `carousel.js`       | Component carousels and carousel roots      | The element is the Embla root; put `data-carousel-*` options on it                                                             |
+| `<ui-lightbox>` | `lightbox.js`       | Inline gallery + fullscreen dialog lightbox | Coordinates gallery/dialog slide state; opening/closing still uses Invoker Commands                                            |
+| `<ui-password>` | `password-group.js` | Password show/hide toggle                   | Wrap `.ui-password-group`; optional `data-label-show` / `data-label-hide`; CSS swaps icons via ARIA                            |
+| `<ui-tabs>`     | `tabs.js`           | Radio-driven tabs with richer keyboard nav  | Carries `.ui-tabs`; adds orientation-aware arrows, Home/End, and wrap-around                                                   |
+| `<ui-toaster>`  | `toaster.js`        | Stacked toast notifications (top layer)     | Carries `.ui-toaster` + `popover="manual"`; fire via `command="--toast"` on any button or `window.Toaster.toast()/success()/…` |
 
 Component preview iframes use `packages/ui/src/manifest.ts` to load scripts and expose a JS
 tab for these files. Custom elements are `display: inline` by default, so their component

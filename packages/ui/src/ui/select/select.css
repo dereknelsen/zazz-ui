@@ -1,5 +1,5 @@
 /**
- * select.css — Select (.select on customizable <select>)
+ * select.css — Select (.ui-select on customizable <select>)
  *
  * @layer      variables, reset, components
  * @requires   layers.css, _variables.css, fields.css, _reset.css, popover.css (--popover-*), button.css (--button-*)
@@ -22,7 +22,7 @@
     --select-inline-size: 100%;
     --select-min-inline-size: 16ch;
     --select-padding-inline-start: var(--field-padding);
-    /* Trailing space differs from .input — room for the picker icon */
+    /* Trailing space differs from .ui-input — room for the picker icon */
     --select-padding-inline-end: var(--step-2);
     --select-font-size: var(--field-font-size);
     --select-line-height: var(--field-line-height);
@@ -81,12 +81,12 @@
     picker pseudo styles apply (MDN customizable select).
   =========================================================================== */
 
-  :where(.select),
-  :where(.select)::picker(select) {
+  :where(.ui-select),
+  :where(.ui-select)::picker(select) {
     appearance: base-select;
   }
 
-  :where(.select)::picker(select) {
+  :where(.ui-select)::picker(select) {
     transform-origin: var(--popover-origin);
     opacity: var(--popover-opacity--start);
     backdrop-filter: var(--popover-backdrop-filter);
@@ -104,14 +104,14 @@
         allow-discrete;
   }
 
-  :where(.select:open)::picker(select) {
+  :where(.ui-select:open)::picker(select) {
     opacity: var(--popover-opacity--end);
     transform: scale(var(--popover-scale--end)) translate3d(var(--popover-translate--end));
     display: flex;
   }
 
   @starting-style {
-    :where(.select:open)::picker(select) {
+    :where(.ui-select:open)::picker(select) {
       opacity: var(--popover-opacity--start);
       transform: scale(var(--popover-scale--start)) translate3d(var(--popover-translate--start));
     }
@@ -125,7 +125,7 @@
     mask: var(--option-checkmark-mask) center / contain no-repeat;
   }
 
-  :where(.select)::picker-icon {
+  :where(.ui-select)::picker-icon {
     content: "";
     inline-size: var(--select-picker-icon-size);
     block-size: var(--select-picker-icon-size);
@@ -136,7 +136,7 @@
 
 @layer zazz.components {
   /* ===========================================================================
-  SELECT — .select (customizable <select>, no JS)
+  SELECT — .ui-select (customizable <select>, no JS)
   - appearance: base-select themes the trigger, picker, options, and arrow while
     the browser keeps keyboard nav, top-layer rendering, and form integration.
   - Needs a <button><selectedcontent></selectedcontent></button> child. Degrades
@@ -144,7 +144,7 @@
   - Shares the --field-* tokens defined in fields.css.
   =========================================================================== */
 
-  .select {
+  .ui-select {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -179,12 +179,12 @@
     transition: var(--default-transition);
   }
 
-  .select:hover {
+  .ui-select:hover {
     border-color: var(--field-border--hover);
   }
 
-  .select:focus-visible,
-  .select:open {
+  .ui-select:focus-visible,
+  .ui-select:open {
     border-color: var(--field-border--focus);
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
@@ -192,7 +192,7 @@
   }
 
   /* Trigger button child holds the (optional) leading icon + mirrored value */
-  .select > button {
+  .ui-select > button {
     block-size: 100%;
     display: flex;
     flex: 1;
@@ -202,7 +202,7 @@
     overflow: hidden;
   }
 
-  .select selectedcontent {
+  .ui-select selectedcontent {
     display: flex;
     align-items: center;
     block-size: 100%;
@@ -212,19 +212,19 @@
   }
 
   /* Trigger icons (leading glyph + mirrored value) size to the field icon */
-  .select > button > svg,
-  .select selectedcontent > svg {
+  .ui-select > button > svg,
+  .ui-select selectedcontent > svg {
     flex-shrink: 0;
     inline-size: var(--field-icon-size);
     block-size: var(--field-icon-size);
     color: var(--muted-foreground);
   }
 
-  .select:open {
+  .ui-select:open {
     background-color: var(--field-background--focus);
   }
 
-  .select:open::picker-icon {
+  .ui-select:open::picker-icon {
     transform: rotate(-180deg);
   }
 
@@ -233,7 +233,7 @@
      so it is gated. The fallback (max-content) only matters in the narrow case
      of a browser that supports customizable <select> (::picker) but not
      anchor-size — there the panel sizes to its content instead of stretching. */
-  .select::picker(select) {
+  .ui-select::picker(select) {
     flex-direction: column;
     gap: var(--step-px);
     inline-size: max-content;
@@ -250,39 +250,39 @@
   }
 
   @supports (inline-size: anchor-size(width)) {
-    .select::picker(select) {
+    .ui-select::picker(select) {
       min-inline-size: anchor-size(width);
     }
   }
 
   /* ===========================================================================
   PICKER PLACEMENT — data-side × data-align, mirroring [popover] (row/block first,
-  column/inline second per MDN). Set on the .select; drives the --popover-* tokens
+  column/inline second per MDN). Set on the .ui-select; drives the --popover-* tokens
   the surface + @supports block below consume. Defaults to bottom / start (no
   attributes) so the picker keeps dropping below the trigger.
   =========================================================================== */
 
   /* bottom (default side) */
-  .select:not([data-side]):not([data-align])::picker(select),
-  .select:not([data-side])[data-align="start"]::picker(select),
-  .select[data-side="bottom"]:not([data-align])::picker(select),
-  .select[data-side="bottom"][data-align="start"]::picker(select) {
+  .ui-select:not([data-side]):not([data-align])::picker(select),
+  .ui-select:not([data-side])[data-align="start"]::picker(select),
+  .ui-select[data-side="bottom"]:not([data-align])::picker(select),
+  .ui-select[data-side="bottom"][data-align="start"]::picker(select) {
     --popover-position-area: block-end span-inline-end;
     --popover-origin: top center;
     --popover-margin-block: var(--step-1_5);
     --popover-margin-inline: 0;
   }
 
-  .select:not([data-side])[data-align="center"]::picker(select),
-  .select[data-side="bottom"][data-align="center"]::picker(select) {
+  .ui-select:not([data-side])[data-align="center"]::picker(select),
+  .ui-select[data-side="bottom"][data-align="center"]::picker(select) {
     --popover-position-area: block-end span-all;
     --popover-origin: top center;
     --popover-margin-block: var(--step-1_5);
     --popover-margin-inline: 0;
   }
 
-  .select:not([data-side])[data-align="end"]::picker(select),
-  .select[data-side="bottom"][data-align="end"]::picker(select) {
+  .ui-select:not([data-side])[data-align="end"]::picker(select),
+  .ui-select[data-side="bottom"][data-align="end"]::picker(select) {
     --popover-position-area: block-end span-inline-start;
     --popover-origin: top center;
     --popover-margin-block: var(--step-1_5);
@@ -290,22 +290,22 @@
   }
 
   /* top */
-  .select[data-side="top"]:not([data-align])::picker(select),
-  .select[data-side="top"][data-align="start"]::picker(select) {
+  .ui-select[data-side="top"]:not([data-align])::picker(select),
+  .ui-select[data-side="top"][data-align="start"]::picker(select) {
     --popover-position-area: block-start span-inline-end;
     --popover-origin: bottom center;
     --popover-margin-block: var(--step-1_5);
     --popover-margin-inline: 0;
   }
 
-  .select[data-side="top"][data-align="center"]::picker(select) {
+  .ui-select[data-side="top"][data-align="center"]::picker(select) {
     --popover-position-area: block-start span-all;
     --popover-origin: bottom center;
     --popover-margin-block: var(--step-1_5);
     --popover-margin-inline: 0;
   }
 
-  .select[data-side="top"][data-align="end"]::picker(select) {
+  .ui-select[data-side="top"][data-align="end"]::picker(select) {
     --popover-position-area: block-start span-inline-start;
     --popover-origin: bottom center;
     --popover-margin-block: var(--step-1_5);
@@ -313,22 +313,22 @@
   }
 
   /* right */
-  .select[data-side="right"]:not([data-align])::picker(select),
-  .select[data-side="right"][data-align="start"]::picker(select) {
+  .ui-select[data-side="right"]:not([data-align])::picker(select),
+  .ui-select[data-side="right"][data-align="start"]::picker(select) {
     --popover-position-area: inline-end span-block-end;
     --popover-origin: bottom left;
     --popover-margin-block: 0;
     --popover-margin-inline: var(--step-1_5);
   }
 
-  .select[data-side="right"][data-align="center"]::picker(select) {
+  .ui-select[data-side="right"][data-align="center"]::picker(select) {
     --popover-position-area: inline-end span-all;
     --popover-origin: center left;
     --popover-margin-block: 0;
     --popover-margin-inline: var(--step-1_5);
   }
 
-  .select[data-side="right"][data-align="end"]::picker(select) {
+  .ui-select[data-side="right"][data-align="end"]::picker(select) {
     --popover-position-area: inline-end span-block-start;
     --popover-origin: top left;
     --popover-margin-block: 0;
@@ -336,22 +336,22 @@
   }
 
   /* left */
-  .select[data-side="left"]:not([data-align])::picker(select),
-  .select[data-side="left"][data-align="start"]::picker(select) {
+  .ui-select[data-side="left"]:not([data-align])::picker(select),
+  .ui-select[data-side="left"][data-align="start"]::picker(select) {
     --popover-position-area: inline-start span-block-end;
     --popover-origin: bottom right;
     --popover-margin-block: 0;
     --popover-margin-inline: var(--step-1_5);
   }
 
-  .select[data-side="left"][data-align="center"]::picker(select) {
+  .ui-select[data-side="left"][data-align="center"]::picker(select) {
     --popover-position-area: inline-start span-all;
     --popover-origin: center right;
     --popover-margin-block: 0;
     --popover-margin-inline: var(--step-1_5);
   }
 
-  .select[data-side="left"][data-align="end"]::picker(select) {
+  .ui-select[data-side="left"][data-align="end"]::picker(select) {
     --popover-position-area: inline-start span-block-start;
     --popover-origin: top right;
     --popover-margin-block: 0;
@@ -363,7 +363,7 @@
      browsers without it (Firefox/Safari) keep the UA picker placement instead of
      a mispositioned box. */
   @supports (anchor-name: --zazz) {
-    .select::picker(select) {
+    .ui-select::picker(select) {
       position-area: var(--popover-position-area);
       position-try-fallbacks: var(--popover-position-try-fallbacks);
       margin-inline: var(--popover-margin-inline);
@@ -372,9 +372,9 @@
 
   /* Options render as ghost buttons — the --option-* family (set in @layer
      variables) aliases the --button-* ghost values, so a select's menu items and
-     a dropdown's ghost menu items read identically. Like .button, sizing rides on
+     a dropdown's ghost menu items read identically. Like .ui-button, sizing rides on
      min-block-size + padding-inline (no block padding) so every row is uniform. */
-  .select option {
+  .ui-select option {
     display: flex;
     align-items: center;
     gap: var(--option-gap);
@@ -396,32 +396,32 @@
     transition: var(--default-transition);
   }
 
-  .select option:hover {
+  .ui-select option:hover {
     color: var(--option-foreground--hover);
     background-color: var(--option-background--hover);
     border: var(--option-border--hover);
   }
 
-  .select option:checked {
+  .ui-select option:checked {
     color: var(--option-foreground--active);
     background-color: var(--option-background--active);
     border: var(--option-border--active);
   }
 
-  .select option:disabled {
+  .ui-select option:disabled {
     --option-foreground: var(--muted-foreground);
     cursor: default;
     opacity: 0.5;
   }
 
-  .select option > svg {
+  .ui-select option > svg {
     flex-shrink: 0;
     inline-size: var(--option-icon-size);
     block-size: var(--option-icon-size);
     color: var(--muted-foreground);
   }
 
-  .select option::checkmark {
+  .ui-select option::checkmark {
     order: 1;
     margin-inline-start: auto;
     color: currentcolor;

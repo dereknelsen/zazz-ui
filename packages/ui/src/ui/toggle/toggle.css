@@ -1,7 +1,7 @@
 /**
- * toggle.css — Toggle (.toggle) — a button-styled checkbox/radio
+ * toggle.css — Toggle (.ui-toggle) — a button-styled checkbox/radio
  *
- * Same look as .button (tokens default to the --button-* family), but it wraps a
+ * Same look as .ui-button (tokens default to the --button-* family), but it wraps a
  * native checkbox or radio inside a <label>. State is driven from the nested input
  * via :has(): the checked state reuses the button's *active* token values, so an
  * "on" toggle reads like a pressed button.
@@ -72,7 +72,7 @@
   still drives the ring.
   =========================================================================== */
 
-  .toggle {
+  .ui-toggle {
     font-family: var(--toggle-font-family);
     font-size: var(--toggle-font-size);
     font-weight: var(--toggle-font-weight);
@@ -119,8 +119,8 @@
   }
 
   /* visually hidden but still in the tab order and focusable */
-  .toggle > input[type="checkbox"],
-  .toggle > input[type="radio"] {
+  .ui-toggle > input[type="checkbox"],
+  .ui-toggle > input[type="radio"] {
     position: absolute;
     clip-path: inset(50%);
     opacity: 0;
@@ -131,45 +131,45 @@
   TOGGLE STATES
   =========================================================================== */
 
-  .toggle:hover:not(:has(> input:disabled)) {
+  .ui-toggle:hover:not(:has(> input:disabled)) {
     color: var(--toggle-foreground--hover);
     background-color: var(--toggle-background--hover);
     border: var(--toggle-border--hover);
   }
 
-  .toggle:active:not(:has(> input:disabled)) {
+  .ui-toggle:active:not(:has(> input:disabled)) {
     color: var(--toggle-foreground--active);
     background-color: var(--toggle-background--active);
     border: var(--toggle-border--active);
   }
 
   /* the "on" state reuses the button's active look */
-  .toggle:has(> input:checked) {
+  .ui-toggle:has(> input:checked) {
     color: var(--toggle-foreground--checked);
     background-color: var(--toggle-background--checked);
     border: var(--toggle-border--checked);
   }
 
-  .toggle:has(> input:checked:hover) {
+  .ui-toggle:has(> input:checked:hover) {
     color: var(--toggle-foreground--checked-hover);
     background-color: var(--toggle-background--checked-hover);
     border: var(--toggle-border--checked-hover);
   }
 
-  .toggle:has(> input:checked:active) {
+  .ui-toggle:has(> input:checked:active) {
     color: var(--toggle-foreground--checked-active);
     background-color: var(--toggle-background--checked-active);
     border: var(--toggle-border--checked-active);
   }
 
-  .toggle:has(> input:focus-visible) {
+  .ui-toggle:has(> input:focus-visible) {
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
 
     outline-color: transparent;
   }
 
-  .toggle:has(> input:disabled) {
+  .ui-toggle:has(> input:disabled) {
     --toggle-foreground: var(--muted-foreground);
     --toggle-background: var(--muted);
     --toggle-shadow: 0 0 transparent;
@@ -183,7 +183,7 @@
   TOGGLE ICONS
   =========================================================================== */
 
-  .toggle > svg {
+  .ui-toggle > svg {
     inline-size: var(--toggle-icon-size);
     block-size: var(--toggle-icon-size);
     pointer-events: none;
@@ -197,7 +197,7 @@
   TOGGLE VARIANTS
   =========================================================================== */
 
-  .toggle[data-variant="primary"] {
+  .ui-toggle[data-variant="primary"] {
     --toggle-background: var(--primary);
     --toggle-background--hover: oklch(from var(--primary) l c h / 0.9);
     --toggle-background--active: oklch(from var(--primary) l c h / 0.8);
@@ -213,7 +213,7 @@
     --toggle-shadow: 0 0 transparent;
   }
 
-  .toggle[data-variant="muted"] {
+  .ui-toggle[data-variant="muted"] {
     --toggle-background: var(--muted);
     --toggle-background--hover: oklch(from var(--muted) l c h / calc(alpha - 0.02));
     --toggle-background--active: var(--muted);
@@ -230,7 +230,7 @@
   }
 
   /* the default "ghost" toggle reads as bare until on/hovered — the shadcn look */
-  .toggle[data-variant="ghost"] {
+  .ui-toggle[data-variant="ghost"] {
     --toggle-background: transparent;
     --toggle-background--hover: var(--muted);
     --toggle-background--active: oklch(from var(--muted) l c h / calc(alpha - 0.02));
@@ -246,7 +246,7 @@
     --toggle-shadow: 0 0 transparent;
   }
 
-  .toggle[data-variant="destructive"] {
+  .ui-toggle[data-variant="destructive"] {
     --toggle-ring-color: var(--destructive);
 
     --toggle-background: var(--destructive);
@@ -268,20 +268,20 @@
   TOGGLE SIZES
   =========================================================================== */
 
-  .toggle[data-size="sm"] {
+  .ui-toggle[data-size="sm"] {
     --toggle-height: var(--step-6);
     --toggle-padding: var(--step-2);
     --toggle-radius: var(--radius-sm);
   }
 
-  .toggle[data-size="icon"] {
+  .ui-toggle[data-size="icon"] {
     block-size: var(--toggle-height);
     inline-size: var(--toggle-height);
     padding: 0;
     aspect-ratio: 1 / 1;
   }
 
-  .toggle[data-size="icon-sm"] {
+  .ui-toggle[data-size="icon-sm"] {
     --toggle-height: var(--step-6);
     --toggle-padding: var(--step-2);
     --toggle-radius: var(--radius-sm);
