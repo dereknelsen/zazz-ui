@@ -1,65 +1,49 @@
 ---
 title: Grid
-description: Grid container, columns/rows, spans, subgrid, auto-flow, place-items, and the gap-aware responsive auto-fill grid, plus the coordination variables that span and wrap utilities read.
+description: Grid tracks, column/row spans, subgrid, auto-flow, and responsive auto-fill utilities.
 ---
 
-`grid` turns on a grid container; `grid-cols-N` / `grid-rows-N` define the tracks; `col-span-*` /
-`row-span-*` place children. A grid child also gets `min-inline-size: 0` automatically so long
-content can't blow out a track.
+CSS Grid utilities define container tracks, item spans, subgrid alignment, and responsive auto-filling columns.
 
-## Container, columns & rows
+## Container, columns, and rows
 
 <Preview src="utilities/grid-cols" />
 
-| Class                        | Declaration                                                    |
-| ---------------------------- | -------------------------------------------------------------- |
-| `grid`                       | `display: grid` (also sets `--_grid-col-min: min(100%, 25ch)`) |
-| `grid-cols-1 … grid-cols-12` | `grid-template-columns: repeat(N, minmax(0, 1fr))`             |
-| `grid-rows-1 … grid-rows-12` | `grid-template-rows: repeat(N, auto)`                          |
-| `grid-flow-row`              | `grid-auto-flow: row`                                          |
-| `grid-flow-col`              | `grid-auto-flow: column`                                       |
+| Class                           | Declaration                                               |
+| ------------------------------- | --------------------------------------------------------- |
+| `grid`                          | `display: grid` (sets `--_grid-col-min: min(100%, 25ch)`) |
+| `grid-cols-1` to `grid-cols-12` | `grid-template-columns: repeat(N, minmax(0, 1fr))`        |
+| `grid-rows-1` to `grid-rows-12` | `grid-template-rows: repeat(N, auto)`                     |
+| `grid-flow-row`                 | `grid-auto-flow: row`                                     |
+| `grid-flow-col`                 | `grid-auto-flow: column`                                  |
 
-`grid-cols-N` and `grid-rows-N` also set the coordination variables `--_grid-cols` / `--_grid-rows`
-(see [below](#coordination-variables)). Display (`grid`), `grid-cols-*`, and `grid-rows-*` all have
-responsive variants.
+`grid-cols-N` and `grid-rows-N` update `--_grid-cols` and `--_grid-rows` coordination variables.
 
 ## Spanning
 
 <Preview src="utilities/col-span" />
 
-Spans are **clamped to the track count** so a child can never span past the grid: each is
-`span min(N, var(--_grid-cols))`, reading the count the container set.
+Spans clamp to the declared track count via `span min(N, var(--_grid-cols))`:
 
-| Class                      | Declaration                                   |
-| -------------------------- | --------------------------------------------- |
-| `col-span-1 … col-span-12` | `grid-column: span min(N, var(--_grid-cols))` |
-| `row-span-1 … row-span-12` | `grid-row: span min(N, var(--_grid-rows))`    |
-
-`col-span-*` and `row-span-*` have responsive variants.
+| Class                         | Declaration                                   |
+| ----------------------------- | --------------------------------------------- |
+| `col-span-1` to `col-span-12` | `grid-column: span min(N, var(--_grid-cols))` |
+| `row-span-1` to `row-span-12` | `grid-row: span min(N, var(--_grid-rows))`    |
 
 ## Subgrid
-
-Adopt the parent grid's tracks so nested content lines up across cards or rows.
 
 | Class               | Declaration                      |
 | ------------------- | -------------------------------- |
 | `grid-cols-subgrid` | `grid-template-columns: subgrid` |
 | `grid-rows-subgrid` | `grid-template-rows: subgrid`    |
 
-Both have responsive variants. See the [Card](/docs/components/card) subgrid example for a
-real-world layout.
-
-## Stacking: grid-area-pile
+## Stacking with `grid-area-pile`
 
 <Preview src="utilities/grid-pile" />
 
-`grid-area-pile` stacks every direct child into one cell and centers them (`place-items: center`):
-the clean way to layer an overlay on media, or an avatar fallback under an image. Override an
-individual child's placement with `self-*` / `justify-self-*`.
+`grid-area-pile` stacks direct children into a single cell with `place-items: center`. Useful for media overlays and avatar fallbacks.
 
 ## Place items
-
-Shorthand for aligning all grid children in both axes at once.
 
 | Class                | Declaration           |
 | -------------------- | --------------------- |
@@ -71,30 +55,18 @@ Shorthand for aligning all grid children in both axes at once.
 
 <Preview src="utilities/grid-responsive" />
 
-Combine `grid-flow-row` with `grid-cols-N` (N > 1) and the grid switches to a **gap-aware
-`auto-fill`** track formula: items fill across, then wrap to the next row as the container
-narrows: responsive columns with no breakpoints. The track floor is the larger of
-`--_grid-col-min` (`min(100%, 25ch)`) and an even `1/N` share of the row minus gaps, so columns
-never get narrower than readable.
+Combining `grid-flow-row` with `grid-cols-N` (N > 1) activates a gap-aware `auto-fill` formula. Columns wrap automatically as the container narrows without breakpoint queries.
 
 ```html
 <div class="grid grid-flow-row grid-cols-4 gap-md">
-  <!-- up to 4 equal columns, wrapping as space runs out -->
+  <!-- up to 4 columns, wrapping automatically -->
 </div>
 ```
 
 ## Coordination variables
 
-Grid utilities expose three **inheriting** coordination variables: set on the container, read by
-descendants. They're left unregistered so normal inheritance carries them down.
-
-| Variable          | Set by        | Default           | Read by                                 |
-| ----------------- | ------------- | ----------------- | --------------------------------------- |
-| `--_grid-cols`    | `grid-cols-N` | `1`               | `col-span-*` (clamp), auto-fill formula |
-| `--_grid-rows`    | `grid-rows-N` | `1`               | `row-span-*` (clamp)                    |
-| `--_grid-col-min` | `.grid`       | `min(100%, 25ch)` | `grid-flow-row` auto-fill track floor   |
-
-Because `--_grid-cols` inherits, a `col-span-3` placed inside a `grid-cols-2` clamps to `span 2`
-instead of overflowing: the span reads the same count the container declared. See the
-[utilities overview](/docs/base/utilities#coordination-variables-inheriting-on-purpose) for how these
-differ from the non-inheriting composition variables.
+| Variable          | Set by        | Default           | Consumed by                                   |
+| ----------------- | ------------- | ----------------- | --------------------------------------------- |
+| `--_grid-cols`    | `grid-cols-N` | `1`               | `col-span-*` clamping, auto-fill grid         |
+| `--_grid-rows`    | `grid-rows-N` | `1`               | `row-span-*` clamping                         |
+| `--_grid-col-min` | `.grid`       | `min(100%, 25ch)` | `grid-flow-row` auto-fill minimum track floor |

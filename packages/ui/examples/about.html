@@ -1,16 +1,20 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-    <!-- Paint the right theme (bg, form controls, scrollbars) before CSS loads. -->
-    <meta name="color-scheme" content="light dark" />
+    <!-- Page-specific tags stay above the generated block -->
     <title>Zazz tests | Overview</title>
+    <link rel="prefetch" href="layout.html" />
 
-    <!-- Google Fonts -->
+    <!-- Shared head, generated from @zazzdesign/ui's head contract (src/head.ts). -->
+    <!-- Edit nothing between the markers; run `vp run heads` to regenerate. -->
+    <!-- zazz:head -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Paint the right theme (background, form controls, scrollbars) before CSS loads -->
+    <meta name="color-scheme" content="light dark" />
+    <!-- Google Fonts: Geist + Geist Mono (preconnect so the CSS request starts early) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Preload latin Geist woff2 (Google Fonts v5) so it is ready before first paint. -->
     <link
       rel="preload"
       as="font"
@@ -19,86 +23,49 @@
       href="https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwcGFWNOITd.woff2"
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Geist+Mono:ital,wght@0,100..900;1,100..900&family=Geist:ital,wght@0,100..900;1,100..900&display=optional"
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:ital,wght@0,100..900;1,100..900&family=Geist:ital,wght@0,100..900;1,100..900&display=swap"
       rel="stylesheet"
     />
-
-    <!-- Zazz styles: one bundle — index.css @imports the base layers (layers,
-       variables, reset) and every component in cascade order. -->
+    <!-- Zazz styles: one bundle — index.css @imports every layer in cascade order -->
     <link rel="stylesheet" href="../src/index.css" />
-
-    <!-- Preload critical js -->
+    <!-- Import map: bare specifiers in Zazz scripts resolve to pinned, SRI-checked files -->
+    <script type="importmap">
+      {
+        "imports": {
+          "signal-polyfill": "https://cdn.jsdelivr.net/npm/signal-polyfill@0.2.2/dist/index.js",
+          "embla-carousel": "https://cdn.jsdelivr.net/npm/embla-carousel@8.6.0/esm/embla-carousel.esm.js",
+          "embla-carousel-autoplay": "https://cdn.jsdelivr.net/npm/embla-carousel-autoplay@8.6.0/esm/embla-carousel-autoplay.esm.js",
+          "embla-carousel-auto-scroll": "https://cdn.jsdelivr.net/npm/embla-carousel-auto-scroll@8.6.0/esm/embla-carousel-auto-scroll.esm.js",
+          "embla-carousel-class-names": "https://cdn.jsdelivr.net/npm/embla-carousel-class-names@8.6.0/esm/embla-carousel-class-names.esm.js"
+        },
+        "integrity": {
+          "https://cdn.jsdelivr.net/npm/signal-polyfill@0.2.2/dist/index.js": "sha384-0OqM7OXGT6Oz1z98u/geiFn/FUyz4iWexkXHCvbIGXRRDXl6bp6IKc0j78AQ6DEK",
+          "https://cdn.jsdelivr.net/npm/embla-carousel@8.6.0/esm/embla-carousel.esm.js": "sha384-GXjfyU1fSHHeweoYd3rwo7OBKYtkq+JcsDoe8VDRc6znCty2ZTzyVvX1DwqCE+9t",
+          "https://cdn.jsdelivr.net/npm/embla-carousel-autoplay@8.6.0/esm/embla-carousel-autoplay.esm.js": "sha384-AX49yBc7zd/CT8ZqNMRiiqqVSV9xfxb27VwEGziPioT3wL4k4C5BW2qwefdWuN4J",
+          "https://cdn.jsdelivr.net/npm/embla-carousel-auto-scroll@8.6.0/esm/embla-carousel-auto-scroll.esm.js": "sha384-SPdnL1eic73WfM72zFEf0RJ5PdUC7TL3Yb5jOl1JC3/l4D7EsVxwO8wFnnezlMSu",
+          "https://cdn.jsdelivr.net/npm/embla-carousel-class-names@8.6.0/esm/embla-carousel-class-names.esm.js": "sha384-ZWno/FqzYeWE5Ils19GIhep1AZ5bMl0mp9wmm6baTJE4+pjMjOdTnE55SjUQAdVh"
+        }
+      }
+    </script>
     <link rel="modulepreload" href="../src/index.js" />
-
-    <!-- Prefetching related pages -->
-    <link rel="prefetch" href="layout.html" />
-
-    <!-- WARNING: CDN scripts not recommended for production.
-     If you need to use a CDN, create a new SRI hash (@see: https://srihash.org/)
-     and update the integrity attribute. -->
-
-    <!-- [Polyfill] Popover API (June 2026) - -->
+    <!-- Polyfills: Popover API + Invoker Commands (command/commandfor) -->
     <script
-      src="https://cdn.jsdelivr.net/npm/@oddbird/popover-polyfill@latest"
-      integrity="sha384-Gl/j23IcIIiDfqcDI5gpHCxd5EuslCYvs07HAw3KHGx5UcbxizoF/deDnkeEcFXW"
+      src="https://cdn.jsdelivr.net/npm/@oddbird/popover-polyfill@0.7.2/dist/popover.min.js"
+      integrity="sha384-pOVHoXRgxuaWHCRM4KSyfyfRTmdxgjVo1Ux78ZKJ+GjUz4zIzXiTa8XXuDF1R1Sd"
       crossorigin="anonymous"
       defer
     ></script>
-
-    <!-- [Polyfill] Invokers/tooltip (June 2026) - -->
     <script
       type="module"
-      src="https://esm.sh/invokers/compatible"
-      integrity="sha384-fzLqSi8WSEqp/tW3neqEgzl53fvLw4u32RAvoNQSSSAfKGsOrfA2B49xhrObWFnr"
+      src="https://cdn.jsdelivr.net/npm/invokers@2.2.2/dist/esm/production/compatible.js"
+      integrity="sha384-7vRXDaS2mcW7LheGSA/rxBwIQNEqmWj0OLEOta/+mvw+9Uf5w1vplA5qg8kLQ99u"
       crossorigin="anonymous"
       defer
     ></script>
-
-    <!-- Embla Carousel -->
-    <script
-      src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"
-      integrity="sha384-XGqLM9+dJ+PFOMZn6IuZgRRIoxcAT5fx4eIZCx7K3O2Dj5RA7EOlJ3yOS8Jd+kiY"
-      crossorigin="anonymous"
-      defer
-    ></script>
-
-    <!-- Embla Carousel Plugins -->
-    <script
-      src="https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js"
-      integrity="sha384-rs7pDLCh+QtEjJg2VChAoKZHaaz7apuon6rM57E3FdzC83xaJH4n9mQZn4E2s3f4"
-      crossorigin="anonymous"
-      defer
-    ></script>
-    <script
-      src="https://unpkg.com/embla-carousel-auto-scroll/embla-carousel-auto-scroll.umd.js"
-      integrity="sha384-5x3y2MLuLA5c1LQceYM+lo59GGkQmLzQGzbuHhDUDbnOJkFeTl5jUSdBy3JehMcM"
-      crossorigin="anonymous"
-      defer
-    ></script>
-    <script
-      src="https://unpkg.com/embla-carousel-class-names/embla-carousel-class-names.umd.js"
-      integrity="sha384-nZNIZhV6WSQVCeWMj8JFfOgQZyzPoGSTh0eohtAOu5aluevIpIblZcupMSdl/EEH"
-      crossorigin="anonymous"
-      defer
-    ></script>
-    <script
-      src="https://unpkg.com/embla-carousel-ssr/embla-carousel-ssr.umd.js"
-      integrity="sha384-apu0WDHR0c+4Z5qNk7egPNoCxXkYq80e+Qh6xJ6f67S53mSyYdKE6tIeXxvKJ6x9"
-      crossorigin="anonymous"
-      defer
-    ></script>
-
-    <!-- Zazz scripts: one ES module bundles every component script. -->
+    <!-- Zazz behavior: one ES module imports every component script in dependency order -->
     <script type="module" src="../src/index.js"></script>
+    <!-- Theme: apply the persisted (or preferred) scheme before first paint -->
     <script>
-      /**
-       * Synchronizes the preview theme with the user's preference.
-       * - Reads "theme" from localStorage.
-       * - Falls back to "prefers-color-scheme: dark" media query if unset.
-       * - Applies the "dark" class to document.documentElement if theme is "dark".
-       * - Saves the resolved theme to localStorage for consistency.
-       * This block runs synchronously before dom load to prevent theme flash on load.
-       */
       (() => {
         try {
           const storedTheme = localStorage.getItem("theme");
@@ -113,6 +80,7 @@
         }
       })();
     </script>
+    <!-- /zazz:head -->
   </head>
 
   <body class="bg-background">
@@ -271,7 +239,7 @@
         </div>
       </section>
       <section class="container py-xl">
-        <embla-carousel data-embla-classnames data-container="lg">
+        <slide-carousel data-carousel-classnames data-container="lg">
           <div class="flex items-end justify-between gap-md flex-wrap pb-lg">
             <h2 class="text-h5 font-heading">Featured Articles</h2>
             <div class="flex @md:hidden gap-xs">
@@ -280,7 +248,7 @@
                 class="button"
                 data-size="icon"
                 data-variant="muted"
-                data-embla="prev"
+                data-carousel="prev"
               >
                 <svg
                   class="size-sm"
@@ -304,7 +272,7 @@
                 class="button"
                 data-size="icon"
                 data-variant="muted"
-                data-embla="next"
+                data-carousel="next"
               >
                 <svg
                   class="size-sm"
@@ -326,11 +294,11 @@
             </div>
           </div>
 
-          <div data-embla="viewport" class="overflow-visible">
-            <div data-embla="container" class="-ml-md">
+          <div data-carousel="viewport" class="overflow-visible">
+            <div data-carousel="container" class="-ml-md">
               <!-- Card START -->
               <a
-                data-embla="slide"
+                data-carousel="slide"
                 class="basis-full @xs:basis-1/2 @sm:basis-1/3 @md:basis-1/4 cursor-pointer"
                 href="#"
               >
@@ -396,7 +364,7 @@
 
               <!-- Card START -->
               <a
-                data-embla="slide"
+                data-carousel="slide"
                 class="basis-full @xs:basis-1/2 @sm:basis-1/3 @md:basis-1/4 cursor-pointer"
                 href="#"
               >
@@ -462,7 +430,7 @@
 
               <!-- Card START -->
               <a
-                data-embla="slide"
+                data-carousel="slide"
                 class="basis-full @xs:basis-1/2 @sm:basis-1/3 @md:basis-1/4 cursor-pointer"
                 href="#"
               >
@@ -530,7 +498,7 @@
 
               <!-- Card START -->
               <a
-                data-embla="slide"
+                data-carousel="slide"
                 class="basis-full @xs:basis-1/2 @sm:basis-1/3 @md:basis-1/4 cursor-pointer"
                 href="#"
               >
@@ -595,7 +563,7 @@
               <!-- Card END -->
             </div>
           </div>
-        </embla-carousel>
+        </slide-carousel>
       </section>
     </main>
     <footer class="border-t" data-transition-layer="global-footer">

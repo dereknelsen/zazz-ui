@@ -1,53 +1,37 @@
 ---
 title: Interactivity
-description: "Cursor and pointer-event control, the opt-in focus ring, and the screen-reader-only helper: the accessibility and interaction utilities."
+description: Pointer behavior, focus ring utility, and screen-reader accessibility helpers.
 ---
 
-A small set of utilities for pointer behavior, focus, and assistive technology. For hover-driven
-color and motion, see [Hover states](/docs/base/utilities/hover).
+Interactivity utilities control pointer events, manual focus rings, and screen-reader content visibility.
 
-## Pointer & cursor
+## Pointer and cursor
 
-| Class                 | Declaration            | Use                                  |
-| --------------------- | ---------------------- | ------------------------------------ |
-| `pointer-events-none` | `pointer-events: none` | make an overlay click-through        |
-| `pointer-cursor`      | `cursor: pointer`      | signal interactivity on a non-button |
-| `pointer-default`     | `cursor: default`      | suppress the text/pointer cursor     |
+| Class                 | Declaration            | Purpose                                  |
+| --------------------- | ---------------------- | ---------------------------------------- |
+| `pointer-events-none` | `pointer-events: none` | Makes element transparent to clicks      |
+| `pointer-cursor`      | `cursor: pointer`      | Adds hand pointer to non-button elements |
+| `pointer-default`     | `cursor: default`      | Restores standard arrow cursor           |
 
 ## Focus ring
 
-`ring` opts an element into the Tailwind/shadcn-compatible focus ring. It renders as layered
-box-shadows (an **offset ring** plus the ring itself) and only appears on `:focus-visible`, so
-keyboard focus is clear while mouse clicks stay quiet.
+`ring` applies the system focus ring to custom elements. It uses box-shadow offsets and activates on `:focus-visible`:
 
 ```html
-<a href="#" class="ring rounded-md">Keyboard-focusable</a>
+<a href="#" class="ring rounded-md">Keyboard-focusable link</a>
 ```
 
-How it composes:
-
-- Transparent until focus: the ring widths (`--_ring-width`, `--_ring-offset-width`) sit at `0`
-  and expand to `--ring-width` / `--ring-offset-width` on `:focus-visible`.
-- The ring color is `--primary`; the offset gap uses `--ring-offset-color` (the page background),
-  so the ring reads as a clean halo.
-- A same-geometry **transparent `outline`** is kept as a twin for forced-colors / high-contrast
-  modes, where box-shadows don't render, so focus never silently disappears.
-
-<Callout type="info">
-  Components draw their own focus rings from the same `--ring-*` tokens; `ring` is for plain
-  elements (links, custom controls) that don't already have one. To recolor, override `--ring-color`
-  rather than `--ring`. See the [focus-ring
-  conventions](/docs/base/file-anatomy#selector-conventions).
-</Callout>
+- Inactive when unfocused: `--_ring-width` and `--_ring-offset-width` sit at `0`.
+- Ring color defaults to `--primary`; offset uses `--ring-offset-color` (page background).
+- A matching transparent `outline` ensures visibility in forced-colors mode.
 
 ## Screen-reader only
 
-`sr-only` hides content visually while keeping it in the accessibility tree: for labels an icon
-button needs but a sighted user doesn't.
+`sr-only` visually hides content while keeping it accessible to screen readers:
 
 ```html
 <button class="button" data-size="icon">
   <svg aria-hidden="true"><!-- icon --></svg>
-  <span class="sr-only">Close menu</span>
+  <span class="sr-only">Close dialog</span>
 </button>
 ```

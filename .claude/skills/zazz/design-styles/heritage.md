@@ -76,7 +76,7 @@ Build sections from Zazz components and the band system — don't hand-roll CSS.
    Dual CTAs — one `primary`, one `link` with an arrow (→ / ↗).
 3. **Trust bar:** Muted strip (`--muted`) with an "trusted by" eyebrow and a row of grayscale
    partner logos to establish scale.
-4. **Category / product showcase:** Section heading + `<embla-carousel>` or grid of category cards
+4. **Category / product showcase:** Section heading + `<slide-carousel>` or grid of category cards
    (`--card`, `--radius-lg`, figure aspect 3/2). A "shop all" `.button` closes it.
 5. **Social-proof band:** Full-width deep-brand section with a gradient wash — a large serif-italic
    pull-quote testimonial ("We have been receiving your products for almost 25 years…") with plain

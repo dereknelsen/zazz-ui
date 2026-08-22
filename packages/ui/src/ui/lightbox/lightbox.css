@@ -82,12 +82,12 @@
     gap: calc(var(--lightbox-thumb-gap) * 2);
   }
 
-  .lightbox__stage > [data-embla="viewport"] {
+  .lightbox__stage > [data-carousel="viewport"] {
     border-radius: var(--lightbox-slide-radius);
     background: var(--card);
   }
 
-  .lightbox__stage > [data-embla="viewport"] > [data-embla="container"] {
+  .lightbox__stage > [data-carousel="viewport"] > [data-carousel="container"] {
     border-radius: var(--lightbox-slide-radius);
     margin-inline-start: calc(var(--gap-sm) * -1);
   }
@@ -187,7 +187,7 @@
     gap: var(--lightbox-thumb-gap);
   }
 
-  .lightbox__stage .lightbox__thumbs [data-embla="viewport"] {
+  .lightbox__stage .lightbox__thumbs [data-carousel="viewport"] {
     flex: 1;
     min-inline-size: 0;
     border-radius: var(--lightbox-thumb-radius);
@@ -198,12 +198,12 @@
     flex-shrink: 0;
   }
 
-  .lightbox__thumbs [data-embla="container"] {
+  .lightbox__thumbs [data-carousel="container"] {
     gap: var(--lightbox-thumb-gap);
   }
 
   /* Gallery thumbs: fill track evenly, centered, max 6 columns */
-  .lightbox__stage .lightbox__thumbs [data-embla="container"] {
+  .lightbox__stage .lightbox__thumbs [data-carousel="container"] {
     justify-content: start;
   }
 
@@ -302,22 +302,22 @@
     overflow: clip;
   }
 
-  .lightbox__dialog [data-embla="root"] {
+  .lightbox__dialog [data-carousel="root"] {
     display: grid;
     grid-template-rows: 1fr auto;
     block-size: 100%;
     max-block-size: 100svh;
   }
 
-  .lightbox__dialog [data-embla="container"] {
+  .lightbox__dialog [data-carousel="container"] {
     block-size: 100%;
   }
 
-  .lightbox__dialog [data-embla="viewport"] {
+  .lightbox__dialog [data-carousel="viewport"] {
     outline: none;
   }
 
-  .lightbox__dialog [data-embla="root"] > [data-embla="viewport"]:first-of-type {
+  .lightbox__dialog [data-carousel="root"] > [data-carousel="viewport"]:first-of-type {
     min-block-size: 0;
   }
 
@@ -326,7 +326,7 @@
     pointer-events: auto;
   }
 
-  .lightbox__dialog .lightbox__thumbs [data-embla="container"] {
+  .lightbox__dialog .lightbox__thumbs [data-carousel="container"] {
     justify-content: center;
     padding-block: var(--gap-xs);
   }

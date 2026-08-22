@@ -53,6 +53,15 @@ function getRootCssVar(name: string): string {
 }
 
 /**
+ * @description Whether the engine computes stagger delays natively — reveal.css
+ * derives each child's `--reveal-wait` from `sibling-index()`. Where
+ * unsupported (Firefox), `#configureStaggerGroup` falls back to writing a
+ * per-child `--reveal-wait` inline.
+ */
+const supportsSiblingIndex =
+  typeof CSS !== "undefined" && CSS.supports("top", "calc(sibling-index() * 1px)");
+
+/**
  * @description Parses a CSS time value into milliseconds.
  * @param value - CSS time string (e.g. "300ms", "0.5s") or bare number string.
  * @returns Duration in milliseconds.
@@ -203,6 +212,13 @@ class Reveal {
   /**
    * @description Configures stagger animation properties and observes child elements.
    *
+   * The stagger delay (`base + step × position`) is computed natively where
+   * possible: the group carries `--reveal-stagger-base`/`--reveal-stagger-step`
+   * and each child derives its own `--reveal-wait` via `sibling-index()` in
+   * reveal.css (reversed groups count from the end via `sibling-count()`).
+   * Where unsupported (Firefox), the same math runs here and lands as a
+   * per-child inline `--reveal-wait`.
+   *
    * @param groupElement - The parent stagger container.
    */
   #configureStaggerGroup(groupElement: HTMLElement): void {
@@ -224,15 +240,23 @@ class Reveal {
     const childrenArray = Array.from(groupElement.children);
     const sequence = groupProps.order === "reversed" ? childrenArray.reverse() : childrenArray;
 
+    if (supportsSiblingIndex) {
+      this.#setRevealProperties(groupElement, {
+        "--reveal-stagger-base": `${groupProps.baseWait}ms`,
+        "--reveal-stagger-step": `${groupProps.step}ms`,
+      });
+    }
+
     sequence.forEach((child, i) => {
       if (!(child instanceof HTMLElement)) return;
-
-      const calculatedWait = groupProps.baseWait + groupProps.step * i;
 
       this.#setRevealProperties(child, {
         "--reveal-duration": this.#formatTime(groupProps.duration),
         "--reveal-ease": groupProps.ease,
-        "--reveal-wait": `${calculatedWait}ms`,
+        // Fallback only — natively each child computes this in reveal.css.
+        "--reveal-wait": supportsSiblingIndex
+          ? null
+          : `${groupProps.baseWait + groupProps.step * i}ms`,
         "--reveal-distance": groupProps.distance,
         "--reveal-scale": dataset.revealScale || null,
       });

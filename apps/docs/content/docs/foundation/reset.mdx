@@ -1,13 +1,13 @@
 ---
 title: _reset.css
-description: The baseline layer of native-element resets and re-skinned controls that live in @layer reset, so your components and utilities always win over them.
+description: Baseline resets and normalized native controls declared in @layer reset at zero specificity.
 ---
 
-`_reset.css` normalizes the browser's defaults and gives native controls a Zazz look. The whole file sits in `@layer reset`, the second-lowest [layer](/docs/base/layers), so every component and utility you write overrides it without effort.
+`_reset.css` normalizes browser defaults and native controls. It sits in `@layer reset`, allowing component and utility rules to override it easily.
 
-## Zero specificity by design
+## Zero specificity
 
-Almost every selector is wrapped in `:where()`, which contributes **zero specificity**. A reset rule for `:where(a)` is trivially overridden by your `.text-link` class or a component rule, so you never have to out-specify the reset.
+Reset rules wrap selectors in `:where()`, giving them `(0,0,0)` specificity:
 
 ```css
 :where(a) {
@@ -16,11 +16,11 @@ Almost every selector is wrapped in `:where()`, which contributes **zero specifi
 }
 ```
 
-## What it sets up
+## Reset scope
 
-### Box model and layout
+### Box model and container context
 
-A universal reset zeroes margins, padding, and borders and sets `box-sizing: border-box` on every element (and the relevant pseudo-elements):
+Resets margins, padding, and borders while setting `border-box` across elements:
 
 ```css
 :where(*, ::before, ::after, ::backdrop, ::file-selector-button) {
@@ -31,11 +31,11 @@ A universal reset zeroes margins, padding, and borders and sets `box-sizing: bor
 }
 ```
 
-`<body>` becomes a flex column that fills the viewport (`100svh`), reserves the scrollbar gutter (`scrollbar-gutter: stable`, so page width doesn't jump between scrolling and non-scrolling pages), and opens a container context. `<main>` and the section landmarks each get their own container context too, which is what makes [container-query responsiveness](/docs/core-concepts/responsive-design) work with no setup.
+`<body>` is configured as a flex column spanning `100svh` with `scrollbar-gutter: stable`. `<body>`, `<main>`, and section landmarks establish container query contexts.
 
-### Theme-aware from the start
+### Theme defaults
 
-The reset reads role tokens, so the baseline itself is correct in light and dark mode:
+The reset assigns semantic tokens to baseline elements:
 
 ```css
 :where(html) {
@@ -47,11 +47,9 @@ The reset reads role tokens, so the baseline itself is correct in light and dark
 }
 ```
 
-You get [dark mode](/docs/core-concepts/dark-mode) at the reset level, with no `.dark` overrides needed for the page chrome.
-
 ### Typography
 
-Headings inherit their size and weight rather than carrying the browser's defaults, so the [`text-*` classes](/docs/core-concepts/utility-classes) drive type entirely:
+Headings inherit font size and weight, allowing `text-*` utility classes to govern typography:
 
 ```css
 :where(h1, h2, h3, h4, h5, h6) {
@@ -60,20 +58,16 @@ Headings inherit their size and weight rather than carrying the browser's defaul
 }
 ```
 
-Lists drop their markers and indentation, tables collapse their borders, and `text-wrap: pretty` is on by default for nicer line breaks.
+Lists omit markers and padding by default; tables collapse borders; `text-wrap: pretty` is applied to body elements.
 
-### Native controls, re-skinned with tokens
+### Native controls
 
-Inline `<code>`, `<kbd>`, the search-field clear button, date/time pickers, and `<select>` internals are normalized and styled through their own token hooks (`--code-*`, `--kbd-*`, `--search-cancel-*`, `--placeholder-color`). Form controls inherit your font and color instead of the browser's. Text selection picks up a primary-tinted highlight via `::selection`.
+Normalizes inline `<code>`, `<kbd>`, form inputs, search cancel buttons, and date/time pickers using token hooks (`--code-*`, `--kbd-*`, `--placeholder-color`). Text selection uses primary-tinted highlights via `::selection`.
 
-### Focus, logical properties, and forced colors
+### Focus and logical properties
 
-A global `:focus-visible` rule paints the [focus ring](/docs/core-concepts/states) on every focusable element. Sizing uses logical properties (`inline-size`, `block-size`, `padding-inline`) so layouts mirror correctly in RTL. The reset never does `outline: none` without a replacement.
+A global `:focus-visible` rule applies the focus ring across focusable elements. Dimensions use logical properties (`inline-size`, `block-size`, `padding-inline`) for bidirectional layout support.
 
-## Where some resets live instead
+## Component-level resets
 
-To keep styling modular, a few controls are reset alongside their component rather than here: checkbox (`_checkbox.css`), range slider (`_slider.css`), switch (`_switch.css`), and the `<select>` picker panel (`_select.css`). They still write into `@layer reset`; they just live next to the component they redraw, an [allowed variation](/docs/base/file-anatomy#allowed-variations) on the standard file shape.
-
-## Overriding the reset
-
-Because the reset is a _layer_ and not a pile of high-specificity global rules, you override it the same way you override anything else in Zazz: a utility class, a component rule, or a token. There's no `!important`, and nothing to undo.
+Specific native resets live alongside their respective component files: checkboxes in `_checkbox.css`, range inputs in `_slider.css`, switches in `_switch.css`, and select dropdowns in `_select.css`. These write directly into `@layer reset`.

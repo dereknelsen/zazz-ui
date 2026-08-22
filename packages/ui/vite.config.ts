@@ -20,6 +20,10 @@ export default defineConfig({
       minify: true,
     },
   },
+  test: {
+    environment: "happy-dom",
+    include: ["src/**/*.test.ts"],
+  },
   lint: {
     options: {
       typeAware: true,

@@ -1,13 +1,9 @@
 ---
 title: Textarea
-description: A multi-line text field on the shared field base.
+description: Multi-line text inputs with auto-growth and shared form field tokens.
 ---
 
-The `.textarea` shares the `--field-*` tokens with the other form controls, including
-`:user-invalid` validation styling. It sets `field-sizing: content` unconditionally, so the box
-auto-grows with its text and clamps between `--textarea-min-block-size` (`5lh`) and
-`--textarea-max-block-size` (`12lh`), then scrolls — adjust those tokens to change the height
-range. `rows` is not the height lever here.
+`.textarea` shares `--field-*` tokens and `:user-invalid` validation states with the form input family. It applies `field-sizing: content` to auto-expand with text input, clamped between `--textarea-min-block-size` (`5lh`) and `--textarea-max-block-size` (`12lh`).
 
 ## Default
 

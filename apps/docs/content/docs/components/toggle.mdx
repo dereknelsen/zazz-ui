@@ -1,16 +1,11 @@
 ---
 title: Toggle
-description: A two-state button backed by a native checkbox or radio, styled like a button.
+description: Two-state button control backed by a native checkbox or radio input.
 ---
 
-A toggle is a `<label class="toggle">` wrapping a visually-hidden `<input>` and the
-visible content. It looks exactly like a [button](/docs/components/button) — same
-`data-variant` and `data-size` options — but the **on** state reuses the button's
-_active_ look, driven entirely by the native input's `:checked` state (no JS). Use a
-`checkbox` for an independent on/off control; use a `radio` (sharing a `name`) when
-exactly one of a set may be on.
+A toggle is a `<label class="toggle">` wrapping a visually hidden `<input>` and button content. It shares styling with `.button`. The checked state displays active button styles using pure CSS.
 
-Give icon-only toggles an accessible name with `aria-label` on the input.
+Use `checkbox` inputs for independent toggles; use `radio` inputs with matching `name` attributes for mutually exclusive choices.
 
 ## Variants
 
@@ -23,7 +18,4 @@ Give icon-only toggles an accessible name with `aria-label` on the input.
 | `data-variant` | `primary`, `muted`, `ghost`, `destructive` (omit = default) |
 | `data-size`    | `sm`, `icon`, `icon-sm`                                     |
 
-The toggle's tokens (`--toggle-background`, `--toggle-radius`, …) default to the
-matching `--button-*` token, so theming the button family re-skins toggles for free.
-Override a `--toggle-*` token at `:root` or inline for a one-off. To join several
-toggles into one segmented control, see [toggle group](/docs/components/toggle-group).
+Tokens (`--toggle-background`, `--toggle-radius`, etc.) map to `--button-*` tokens by default.

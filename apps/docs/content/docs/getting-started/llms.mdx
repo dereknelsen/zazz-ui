@@ -1,57 +1,52 @@
 ---
 title: LLMs
-description: Use AI coding assistants with Zazz through purpose-built skills and context files.
+description: Use AI coding assistants with Zazz through structured agent skills and context files.
 ---
 
-Zazz ships with structured context files that AI coding assistants can consume directly. These skills teach LLMs how the token system works, what modern CSS APIs are in use, and how to write components that follow Zazz conventions.
+Zazz includes structured agent skills and reference docs for AI coding assistants. These files define the token system, CSS APIs, and component authoring patterns.
 
 ## Available skills
 
-The `zazz` skill lives in the repository at [`.claude/skills/zazz/`](https://github.com/dereknelsen/zazz-monorepo/tree/main/.claude/skills/zazz) and contains:
+The `zazz` skill lives at [`.claude/skills/zazz/`](https://github.com/dereknelsen/zazz-monorepo/tree/main/.claude/skills/zazz):
 
-| File                       | What it provides                                    |
-| -------------------------- | --------------------------------------------------- |
-| `SKILL.md`                 | Entry point — when to trigger, how the system works |
-| `DESIGN.md`                | Design system principles and token architecture     |
-| `PATTERNS.md`              | Component authoring patterns and conventions        |
-| `references/tokens.md`     | Full token reference (scales, roles, metrics)       |
-| `references/components.md` | Component markup and variant API                    |
-| `references/apis.md`       | Modern CSS APIs used across the system              |
+| File                       | Purpose                                         |
+| -------------------------- | ----------------------------------------------- |
+| `SKILL.md`                 | Entry instructions and system trigger rules     |
+| `DESIGN.md`                | Design system principles and token architecture |
+| `PATTERNS.md`              | Component authoring patterns and conventions    |
+| `references/tokens.md`     | Token reference (scales, roles, metrics)        |
+| `references/components.md` | Component markup and variant API reference      |
+| `references/apis.md`       | Modern CSS APIs used across the system          |
 
-## How to use with AI assistants
+## AI assistant setup
 
-### Claude (via `.claude/skills/`)
+### Claude
 
-The skill is already installed. Any Claude-based tool that reads `.claude/skills/` will automatically pick up Zazz conventions when you ask it to build or modify UI.
+The skill is pre-configured. Claude tools reading `.claude/skills/` load Zazz conventions automatically.
 
 ### Other AI assistants
 
-Point your assistant at the skill files in the repository. The key files to feed as context:
+Provide key reference files as context:
 
-1. **`SKILL.md`** gives the assistant the full picture of when and how to apply Zazz
-2. **`references/tokens.md`** lists token names and values it can use directly in generated code
-3. **`references/components.md`** shows correct markup patterns for every component
+1. **`SKILL.md`:** Instructions for using Zazz.
+2. **`references/tokens.md`:** Valid token names and semantic roles.
+3. **`references/components.md`:** HTML markup patterns for components.
 
-### LLM-friendly docs
+### Plain-text endpoints
 
-This documentation site also exposes full-text endpoints for LLM consumption:
+- [`/llms.txt`](/llms.txt): Condensed site documentation.
+- [`/llms-full.txt`](/llms-full.txt): Complete documentation in plain text.
 
-- [`/llms.txt`](/llms.txt): condensed site overview
-- [`/llms-full.txt`](/llms-full.txt): complete documentation in plain text
+## Core rules in the skill
 
-## What the skill teaches
+- Use the four-layer cascade (`variables`, `reset`, `components`, `utilities`).
+- Use semantic tokens (`--primary`, `--gap-md`) over hardcoded pixel/hex values.
+- Apply variants through `data-*` attributes.
+- Use `light-dark()` for theme-aware colors.
+- Follow token naming conventions (`--{component}-{property}--{state}`).
+- Match existing component file structure.
 
-The `zazz` skill instructs AI assistants to:
+## Repository
 
-- Use the four-layer cascade (`variables`, `reset`, `components`, `utilities`)
-- Reach for semantic tokens (`--primary`, `--gap-md`) over hardcoded values
-- Apply variants via `data-*` attributes, not modifier classes
-- Use `light-dark()` for theme-aware colors
-- Follow component token naming (`--{component}-{property}--{state}`)
-- Write new components that match existing file anatomy
-
-## GitHub
-
-Full source and skill files:
-
-**[github.com/dereknelsen/zazz-monorepo](https://github.com/dereknelsen/zazz-monorepo)**
+Source code and skill files:
+[github.com/dereknelsen/zazz-monorepo](https://github.com/dereknelsen/zazz-monorepo)

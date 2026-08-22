@@ -1,20 +1,14 @@
 ---
 title: Accordion
-description: Collapsible sections built on native details and summary elements. No JavaScript.
+description: Collapsible sections built on native details and summary elements without JavaScript.
 ---
 
-The accordion is a `.accordion` wrapping native `<details>` and `<summary>` elements.
-Open/close state, keyboard support, and the height transition (via `::details-content`) are
-handled by the browser.
+The accordion uses `.accordion` wrapping native `<details>` and `<summary>` elements. Expand/collapse state, keyboard interactions, and animations (via `::details-content`) run natively in the browser.
 
 ## Default
 
 <Preview src="accordion/default" />
 
-There are no data-\* attributes to configure. Author each panel as a `<details class="border-b">`
-with a `<summary class="font-strong hover:text-muted-foreground">`, an inline chevron `<svg>`
-that rotates on open, and a `<div class="pb-sm">` body. Multiple panels can be open at once by
-default; give a group of `<details>` the same `name` to make them mutually exclusive.
+Structure each panel as a `<details class="border-b">` containing a `<summary class="font-strong hover:text-muted-foreground">` with an SVG chevron, followed by a body `<div>`. Multiple panels can open simultaneously. Give `<details>` items matching `name` attributes for mutual exclusion.
 
-Theming runs through tokens: `--accordion-summary-padding-block`, `--accordion-icon-size`, and
-`--accordion-icon-transform-open` (the open-state chevron rotation).
+Customize using tokens: `--accordion-summary-padding-block`, `--accordion-icon-size`, and `--accordion-icon-transform-open`.

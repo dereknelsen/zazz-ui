@@ -2,11 +2,11 @@
 
 /**
  * @fileoverview Embla Carousel initialization and controls.
- * @description Discovers carousel markup via `data-embla` attributes, initializes
+ * @description Discovers carousel markup via `data-carousel` attributes, initializes
  * Embla instances with optional plugins, and wires navigation, keyboard, dialog,
  * and lightbox behaviors.
  *
- * Structure (`data-embla="<role>"`):
+ * Structure (`data-carousel="<role>"`):
  * - `root` — Carousel container; holds all config attributes
  * - `viewport` — Visible window (required)
  * - `container` — Slides flex track
@@ -15,21 +15,21 @@
  * - `dots` / `dot` — Dot pagination container and template dot (optional)
  * - `thumbs` — Linked thumb carousel container (optional)
  *
- * thumb navigation (on `data-embla="thumbs"`):
- * - `data-embla-thumbs-*` — thumb carousel options (defaults: containScroll keepSnaps, dragFree true)
+ * thumb navigation (on `data-carousel="thumbs"`):
+ * - `data-carousel-thumbs-*` — thumb carousel options (defaults: containScroll keepSnaps, dragFree true)
  * - Syncs with the main carousel in the same root
  *
  * Lifecycle and dialog start index:
- * - `data-embla-init` — Set by script when a carousel is initialized
- * - `data-embla-start` — On a trigger; slide index to open to (pairs with commandfor)
- * - `data-embla-start-index` — Set on root by script; consumed when dialog opens
- * - `data-embla-keyboard` — Set to `"false"` to disable ArrowLeft/ArrowRight navigation
+ * - `data-carousel-init` — Set by script when a carousel is initialized
+ * - `data-carousel-start` — On a trigger; slide index to open to (pairs with commandfor)
+ * - `data-carousel-start-index` — Set on root by script; consumed when dialog opens
+ * - `data-carousel-keyboard` — Set to `"false"` to disable ArrowLeft/ArrowRight navigation
  *
- * Configuration (on `data-embla="root"`):
- * - `data-embla-*` — Core Embla options
- * - `data-embla-autoplay` / `data-embla-autoplay-*` — Autoplay plugin
- * - `data-embla-autoscroll` / `data-embla-autoscroll-*` — Auto scroll plugin
- * - `data-embla-classnames` / `data-embla-classnames-*` — Class names plugin
+ * Configuration (on `data-carousel="root"`):
+ * - `data-carousel-*` — Core Embla options
+ * - `data-carousel-autoplay` / `data-carousel-autoplay-*` — Autoplay plugin
+ * - `data-carousel-autoscroll` / `data-carousel-autoscroll-*` — Auto scroll plugin
+ * - `data-carousel-classnames` / `data-carousel-classnames-*` — Class names plugin
  *
  * @see https://www.embla-carousel.com/docs/api/options#reference
  * @see https://www.embla-carousel.com/docs/plugins/autoplay#options
@@ -38,36 +38,79 @@
  * @see https://www.embla-carousel.com/docs/plugins/ssr#options
  *
  * @example
- * data-embla-loop="true"
+ * data-carousel-loop="true"
  *
  * @example
- * data-embla-align="start"
+ * data-carousel-align="start"
  *
  * @example
- * data-embla-autoplay data-embla-autoplay-delay="3000"
+ * data-carousel-autoplay data-carousel-autoplay-delay="3000"
  *
  * @example
- * data-embla-autoscroll data-embla-autoscroll-speed="2"
+ * data-carousel-autoscroll data-carousel-autoscroll-speed="2"
  *
  * @example
- * data-embla-classnames data-embla-classnames-snapped="is-snapped"
+ * data-carousel-classnames data-carousel-classnames-snapped="is-snapped"
  *
  * @example Barebones carousel (4 text slides; auto-inits on DOMContentLoaded):
- * <div data-embla="root">
- *   <div data-embla="viewport">
- *     <div data-embla="container">
- *       <div data-embla="slide">Slide 1</div>
- *       <div data-embla="slide">Slide 2</div>
- *       <div data-embla="slide">Slide 3</div>
- *       <div data-embla="slide">Slide 4</div>
+ * <div data-carousel="root">
+ *   <div data-carousel="viewport">
+ *     <div data-carousel="container">
+ *       <div data-carousel="slide">Slide 1</div>
+ *       <div data-carousel="slide">Slide 2</div>
+ *       <div data-carousel="slide">Slide 3</div>
+ *       <div data-carousel="slide">Slide 4</div>
  *     </div>
  *   </div>
- *   <button type="button" data-embla="prev">Prev</button>
- *   <button type="button" data-embla="next">Next</button>
+ *   <button type="button" data-carousel="prev">Prev</button>
+ *   <button type="button" data-carousel="next">Next</button>
  * </div>
  */
 
 import { Utils } from "./utils.ts";
+
+// Embla ships as real ES modules: bare specifiers resolve through the page's
+// import map in browsers (pinned jsDelivr URLs — see `head.ts`) and through
+// node_modules in tests/bundlers. No more UMD globals, no tag-order contract.
+import EmblaCarousel from "embla-carousel";
+import type { EmblaOptionsType } from "embla-carousel";
+import EmblaCarouselAutoplay from "embla-carousel-autoplay";
+import type { AutoplayOptionsType } from "embla-carousel-autoplay";
+import EmblaCarouselAutoScroll from "embla-carousel-auto-scroll";
+import type { AutoScrollOptionsType } from "embla-carousel-auto-scroll";
+import EmblaCarouselClassNames from "embla-carousel-class-names";
+import type { ClassNamesOptionsType } from "embla-carousel-class-names";
+
+// --- Active-index sync ---
+
+/**
+ * @description Toggles `.is-active` on the node at `selected` and clears it
+ * from every other node — the shared "which one is current" marker used by
+ * both dot pagination and thumb navigation.
+ *
+ * @param nodes - Candidate nodes, in slide order.
+ * @param selected - The active index.
+ * @param options - Set `ariaCurrent` to also toggle `aria-current` (thumb
+ * navigation exposes the active thumb to assistive tech; dots don't need it —
+ * their `.is-active` state is purely visual pagination).
+ * @private
+ */
+function setActiveIndex(
+  nodes: readonly HTMLElement[],
+  selected: number,
+  options: { ariaCurrent?: boolean } = {},
+): void {
+  nodes.forEach((node, idx) => {
+    const active = idx === selected;
+    node.classList.toggle("is-active", active);
+    if (!options.ariaCurrent) return;
+    if (active) {
+      node.setAttribute("aria-current", "true");
+    } else {
+      node.removeAttribute("aria-current");
+    }
+  });
+}
 
 // --- Dot navigation ---
 
@@ -86,7 +129,7 @@ const addDotBtnsAndClickHandlers = (
 ): (() => void) | undefined => {
   if (!dotsNode) return;
 
-  const templateDot = dotsNode.querySelector('[data-embla="dot"]');
+  const templateDot = dotsNode.querySelector('[data-carousel="dot"]');
   if (!templateDot) return;
 
   let dotNodes: HTMLElement[] = [];
@@ -123,11 +166,7 @@ const addDotBtnsAndClickHandlers = (
    */
   const toggleDotBtnsActive = () => {
     if (!dotNodes.length) return;
-
-    const selected = emblaApi.selectedScrollSnap();
-    dotNodes.forEach((dotNode, idx) => {
-      dotNode.classList.toggle("is-active", idx === selected);
-    });
+    setActiveIndex(dotNodes, emblaApi.selectedScrollSnap());
   };
 
   emblaApi
@@ -183,16 +222,7 @@ const addTogglethumbsActive = (
   const toggleThumbBtnsActive = () => {
     const selected = emblaApiMain.selectedScrollSnap();
     emblaApiThumb.scrollTo(selected);
-
-    slidesthumbs.forEach((slideNode: HTMLElement, idx: number) => {
-      const isActive = idx === selected;
-      slideNode.classList.toggle("is-active", isActive);
-      if (isActive) {
-        slideNode.setAttribute("aria-current", "true");
-      } else {
-        slideNode.removeAttribute("aria-current");
-      }
-    });
+    setActiveIndex(slidesthumbs, selected, { ariaCurrent: true });
   };
 
   emblaApiMain.on("select", toggleThumbBtnsActive);
@@ -347,31 +377,31 @@ function initCommandDragGuard(): void {
 /**
  * @description Initializes a single Embla carousel root.
  *
- * Configures the carousel from its `data-embla-*` attributes, wires navigation
+ * Configures the carousel from its `data-carousel-*` attributes, wires navigation
  * (prev/next, dots, thumbs), and stores the API on `root._emblaApi`. Idempotent:
  * skips roots that are already initialized or inside a closed dialog (no
  * measurable viewport until open).
  *
- * Called by `initEmblaCarousels()` for legacy `data-embla="root"` markup and by
- * the `<embla-carousel>` web component (zazz/scripts/carousel.js) on connect.
+ * Called by `initEmblaCarousels()` for legacy `data-carousel="root"` markup and by
+ * the `<slide-carousel>` web component (zazz/scripts/carousel.js) on connect.
  *
  * @param emblaNode - The carousel root element.
  */
 function initEmblaRoot(emblaNode: Element): void {
-  if (emblaNode.hasAttribute("data-embla-init")) return;
+  if (emblaNode.hasAttribute("data-carousel-init")) return;
 
   // Defer init inside closed dialogs — viewport has no measurable size until open
   if (emblaNode.closest("dialog:not([open])")) return;
 
-  emblaNode.setAttribute("data-embla-init", "");
+  emblaNode.setAttribute("data-carousel-init", "");
 
-  const emblathumbsNode = emblaNode.querySelector('[data-embla="thumbs"]');
+  const emblathumbsNode = emblaNode.querySelector('[data-carousel="thumbs"]');
   const emblaViewportNode = emblathumbsNode
-    ? emblaNode.querySelector('[data-embla="viewport"]:not([data-embla="thumbs"] *)')
-    : emblaNode.querySelector('[data-embla="viewport"]');
-  const emblaPrevButtonNode = emblaNode.querySelector('[data-embla="prev"]');
-  const emblaNextButtonNode = emblaNode.querySelector('[data-embla="next"]');
-  const emblaDotsNode = emblaNode.querySelector('[data-embla="dots"]');
+    ? emblaNode.querySelector('[data-carousel="viewport"]:not([data-carousel="thumbs"] *)')
+    : emblaNode.querySelector('[data-carousel="viewport"]');
+  const emblaPrevButtonNode = emblaNode.querySelector('[data-carousel="prev"]');
+  const emblaNextButtonNode = emblaNode.querySelector('[data-carousel="next"]');
+  const emblaDotsNode = emblaNode.querySelector('[data-carousel="dots"]');
 
   if (!emblaViewportNode) return;
 
@@ -379,7 +409,7 @@ function initEmblaRoot(emblaNode: Element): void {
     emblaViewportNode.setAttribute("tabindex", "0");
   }
 
-  const apiOptions = Utils.parseDataAttributes(emblaNode, "data-embla-");
+  const apiOptions = Utils.parseDataAttributes(emblaNode, "data-carousel-");
 
   // Keep plugin keys out of core Embla options
   Object.keys(apiOptions).forEach(function (key) {
@@ -400,42 +430,47 @@ function initEmblaRoot(emblaNode: Element): void {
   // Veto drag gestures when every slide already fits in the viewport — with a
   // single snap Embla still rubber-bands on drag, which feels broken. The
   // callback re-evaluates on every pointer down, so it stays correct across
-  // resizes/reInit. Respect an explicit data-embla-watch-drag override.
+  // resizes/reInit. Respect an explicit data-carousel-watch-drag override.
   // @see https://github.com/davidjerleke/embla-carousel/issues/416
   if (!("watchDrag" in apiOptions)) {
     apiOptions.watchDrag = (api: EmblaCarouselType) => api.canScrollPrev() || api.canScrollNext();
   }
 
-  const autoplayOptions = Utils.parseDataAttributes(emblaNode, "data-embla-autoplay-");
-  const autoscrollOptions = Utils.parseDataAttributes(emblaNode, "data-embla-autoscroll-");
-  const classnamesOptions = Utils.parseDataAttributes(emblaNode, "data-embla-classnames-");
+  const autoplayOptions = Utils.parseDataAttributes(emblaNode, "data-carousel-autoplay-");
+  const autoscrollOptions = Utils.parseDataAttributes(emblaNode, "data-carousel-autoscroll-");
+  const classnamesOptions = Utils.parseDataAttributes(emblaNode, "data-carousel-classnames-");
 
   const plugins: EmblaPlugin[] = [];
 
-  if (emblaNode.hasAttribute("data-embla-autoplay") || Object.keys(autoplayOptions).length > 0) {
-    plugins.push(EmblaCarouselAutoplay(autoplayOptions));
+  if (emblaNode.hasAttribute("data-carousel-autoplay") || Object.keys(autoplayOptions).length > 0) {
+    plugins.push(EmblaCarouselAutoplay(autoplayOptions as AutoplayOptionsType));
   }
 
   if (
-    emblaNode.hasAttribute("data-embla-autoscroll") ||
+    emblaNode.hasAttribute("data-carousel-autoscroll") ||
     Object.keys(autoscrollOptions).length > 0
   ) {
-    plugins.push(EmblaCarouselAutoScroll(autoscrollOptions));
+    plugins.push(EmblaCarouselAutoScroll(autoscrollOptions as AutoScrollOptionsType));
   }
 
   if (
-    emblaNode.hasAttribute("data-embla-classnames") ||
+    emblaNode.hasAttribute("data-carousel-classnames") ||
     Object.keys(classnamesOptions).length > 0
   ) {
-    plugins.push(EmblaCarouselClassNames(classnamesOptions));
+    plugins.push(EmblaCarouselClassNames(classnamesOptions as ClassNamesOptionsType));
   }
 
-  const emblaApi = EmblaCarousel(emblaViewportNode, apiOptions, plugins);
+  // The options come from untyped data attributes; Embla validates at runtime.
+  const emblaApi = EmblaCarousel(
+    emblaViewportNode as HTMLElement,
+    apiOptions as EmblaOptionsType,
+    plugins,
+  );
 
   emblaNode._emblaApi = emblaApi;
 
   // One controller per root scopes every carousel listener below; the owner
-  // (`<embla-carousel>` disconnectedCallback) aborts it on teardown so the DOM
+  // (`<slide-carousel>` disconnectedCallback) aborts it on teardown so the DOM
   // listeners are removed alongside the destroyed Embla instance.
   const controller = new AbortController();
   const { signal } = controller;
@@ -464,14 +499,17 @@ function initEmblaRoot(emblaNode: Element): void {
   }
 
   if (emblathumbsNode) {
-    const emblathumbsViewportNode = emblathumbsNode.querySelector('[data-embla="viewport"]');
+    const emblathumbsViewportNode = emblathumbsNode.querySelector('[data-carousel="viewport"]');
     if (emblathumbsViewportNode) {
       const thumbDefaults = { containScroll: "keepSnaps", dragFree: true };
-      const thumbOptions = Utils.parseDataAttributes(emblathumbsNode, "data-embla-thumbs-");
-      const emblaApiThumb = EmblaCarousel(emblathumbsViewportNode, {
-        ...thumbDefaults,
-        ...thumbOptions,
-      });
+      const thumbOptions = Utils.parseDataAttributes(emblathumbsNode, "data-carousel-thumbs-");
+      const emblaApiThumb = EmblaCarousel(
+        emblathumbsViewportNode as HTMLElement,
+        {
+          ...thumbDefaults,
+          ...thumbOptions,
+        } as EmblaOptionsType,
+      );
 
       emblaNode._emblaApiThumb = emblaApiThumb;
       addThumbClickHandlers(emblaApi, emblaApiThumb, signal);
@@ -485,20 +523,20 @@ function initEmblaRoot(emblaNode: Element): void {
 /**
  * @description Initializes all Embla carousels within a scope.
  *
- * Discovers carousel elements via `[data-embla="root"]` and configures them
- * based on their data attributes. Roots managed by the `<embla-carousel>` web
+ * Discovers carousel elements via `[data-carousel="root"]` and configures them
+ * based on their data attributes. Roots managed by the `<slide-carousel>` web
  * component are skipped — they initialize themselves via `connectedCallback()`.
  *
  * @param scope - Root element to search within. Defaults to `document`.
  */
 function initEmblaCarousels(scope?: Document | Element): void {
   const root = scope || document;
-  const emblaRoots = root.querySelectorAll('[data-embla="root"]');
+  const emblaRoots = root.querySelectorAll('[data-carousel="root"]');
 
   emblaRoots.forEach(function (emblaNode) {
-    // <embla-carousel> elements own their lifecycle (init on connect, destroy
+    // <slide-carousel> elements own their lifecycle (init on connect, destroy
     // on disconnect) — double-initializing would leak a second Embla instance.
-    if (emblaNode.closest("embla-carousel")) return;
+    if (emblaNode.closest("slide-carousel")) return;
 
     initEmblaRoot(emblaNode);
   });
@@ -525,15 +563,15 @@ function observeDialogOpen(): void {
         const dialog = mutation.target;
         initEmblaCarousels(dialog);
 
-        const roots = dialog.querySelectorAll('[data-embla="root"]');
+        const roots = dialog.querySelectorAll('[data-carousel="root"]');
         roots.forEach(function (root) {
-          const startIndex = root.getAttribute("data-embla-start-index");
+          const startIndex = root.getAttribute("data-carousel-start-index");
           if (startIndex != null && root._emblaApi) {
             root._emblaApi.scrollTo(Number(startIndex), true);
-            root.removeAttribute("data-embla-start-index");
+            root.removeAttribute("data-carousel-start-index");
           }
 
-          const viewport = root.querySelector('[data-embla="viewport"]');
+          const viewport = root.querySelector('[data-carousel="viewport"]');
           if (viewport instanceof HTMLElement) {
             viewport.focus({ preventScroll: true });
           }
@@ -555,7 +593,7 @@ function observeDialogOpen(): void {
  * @description Returns the active Embla root for keyboard navigation.
  *
  * Prefers a carousel inside an open dialog, then the carousel containing focus.
- * Respects `data-embla-keyboard="false"`.
+ * Respects `data-carousel-keyboard="false"`.
  *
  * @returns The active carousel root, or null when none applies.
  * @private
@@ -563,14 +601,14 @@ function observeDialogOpen(): void {
 function getActiveEmblaRoot(): (Element & { _emblaApi: EmblaCarouselType }) | null {
   const openDialog = document.querySelector("dialog[open]");
   if (openDialog) {
-    const dialogRoot = openDialog.querySelector('[data-embla="root"][data-embla-init]');
-    if (dialogRoot?._emblaApi && dialogRoot.getAttribute("data-embla-keyboard") !== "false") {
+    const dialogRoot = openDialog.querySelector('[data-carousel="root"][data-carousel-init]');
+    if (dialogRoot?._emblaApi && dialogRoot.getAttribute("data-carousel-keyboard") !== "false") {
       return dialogRoot as Element & { _emblaApi: EmblaCarouselType };
     }
   }
 
-  const focusedRoot = document.activeElement?.closest('[data-embla="root"][data-embla-init]');
-  if (focusedRoot?._emblaApi && focusedRoot.getAttribute("data-embla-keyboard") !== "false") {
+  const focusedRoot = document.activeElement?.closest('[data-carousel="root"][data-carousel-init]');
+  if (focusedRoot?._emblaApi && focusedRoot.getAttribute("data-carousel-keyboard") !== "false") {
     return focusedRoot as Element & { _emblaApi: EmblaCarouselType };
   }
 
@@ -581,7 +619,7 @@ function getActiveEmblaRoot(): (Element & { _emblaApi: EmblaCarouselType }) | nu
  * @description Binds ArrowLeft/ArrowRight keyboard navigation for active carousels.
  *
  * Embla is headless — arrow keys are not built in. Opt out per carousel with
- * `data-embla-keyboard="false"`.
+ * `data-carousel-keyboard="false"`.
  */
 const initEmblaKeyboardNav: InitEmblaKeyboardNavFn = function () {
   if (initEmblaKeyboardNav._bound) return;
@@ -617,7 +655,7 @@ const initEmblaKeyboardNav: InitEmblaKeyboardNavFn = function () {
  * @description Public API for Embla carousel initialization and helpers.
  *
  * @property init - Initializes all carousels within a scope.
- * @property initRoot - Initializes a single carousel root (used by `<embla-carousel>`).
+ * @property initRoot - Initializes a single carousel root (used by `<slide-carousel>`).
  * @property addDotBtnsAndClickHandlers - Wires dot pagination.
  * @property addThumbClickHandlers - Wires thumb click handlers.
  * @property addTogglethumbsActive - Syncs thumb active state.
@@ -633,22 +671,22 @@ const EmblaInit = {
 // --- Start index control ---
 
 /**
- * @description Stores or applies a start slide index from `[data-embla-start]` triggers.
+ * @description Stores or applies a start slide index from `[data-carousel-start]` triggers.
  *
- * Clicking an element with `data-embla-start="N"` stores that index on the target
- * carousel (found via `commandfor` → dialog → `[data-embla="root"]`). The dialog
+ * Clicking an element with `data-carousel-start="N"` stores that index on the target
+ * carousel (found via `commandfor` → dialog → `[data-carousel="root"]`). The dialog
  * open observer scrolls to it on open.
  */
 function initEmblaStartLinks(): void {
   document.addEventListener("click", function (e) {
     if (!(e.target instanceof HTMLElement)) return;
 
-    const trigger = e.target.closest("[data-embla-start], [data-embla='slide'][commandfor]");
+    const trigger = e.target.closest("[data-carousel-start], [data-carousel='slide'][commandfor]");
     if (!trigger) return;
 
-    let index = trigger.getAttribute("data-embla-start");
+    let index = trigger.getAttribute("data-carousel-start");
     if (index == null && trigger.hasAttribute("commandfor")) {
-      const emblaRoot = trigger.closest('[data-embla="root"]');
+      const emblaRoot = trigger.closest('[data-carousel="root"]');
       if (emblaRoot?._emblaApi) {
         index = String(emblaRoot._emblaApi.selectedScrollSnap());
       }
@@ -660,13 +698,13 @@ function initEmblaStartLinks(): void {
     const dialog = document.getElementById(dialogId);
     if (!dialog) return;
 
-    const root = dialog.querySelector('[data-embla="root"]');
+    const root = dialog.querySelector('[data-carousel="root"]');
     if (!root) return;
 
     if (root._emblaApi) {
       root._emblaApi.scrollTo(Number(index), true);
     } else if (index != null) {
-      root.setAttribute("data-embla-start-index", index);
+      root.setAttribute("data-carousel-start-index", index);
     }
   });
 }
@@ -687,8 +725,8 @@ function initLightboxCloseSync(): void {
       const lightbox = dialog.closest(".lightbox");
       if (!lightbox) return;
 
-      const dialogRoot = dialog.querySelector('[data-embla="root"]');
-      const galleryRoot = lightbox.querySelector('.lightbox__gallery [data-embla="root"]');
+      const dialogRoot = dialog.querySelector('[data-carousel="root"]');
+      const galleryRoot = lightbox.querySelector('.lightbox__gallery [data-carousel="root"]');
       if (!dialogRoot?._emblaApi || !galleryRoot?._emblaApi) return;
 
       galleryRoot._emblaApi.scrollTo(dialogRoot._emblaApi.selectedScrollSnap());
@@ -724,4 +762,5 @@ if (typeof window !== "undefined") {
   window.EmblaInit = EmblaInit;
 }
 
-export { EmblaInit };
+// setActiveIndex is exported for unit tests only — not part of the public API.
+export { EmblaInit, setActiveIndex };

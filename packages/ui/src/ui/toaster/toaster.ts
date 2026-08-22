@@ -34,6 +34,12 @@
  */
 
 import { Utils } from "../../base/utils.ts";
+import { computed, effect, state } from "../../base/signals.ts";
+
+// `using` compiles (target ES2022) to try/finally helpers that read this
+// well-known symbol at runtime; engines without native Explicit Resource
+// Management (Safari) don't define it, so give them a local stand-in.
+(Symbol as { dispose: symbol }).dispose ??= Symbol("Symbol.dispose");
 
 // --- Constants ---
 
@@ -97,6 +103,83 @@ interface ToastTimer {
   timeoutId: number;
 }
 
+/** One measured toast in the stack (oldest first, matching DOM order). */
+interface ToastStackEntry {
+  /** The toast element. */
+  node: HTMLElement;
+  /** Measured natural height in px. */
+  height: number;
+}
+
+/** Computed placement for one toast (same index as the heights input). */
+interface ToastStackLayout {
+  /** 0 = front (newest); grows toward the back of the stack. */
+  stackIndex: number;
+  /** Sum of the heights of the toasts stacked in front, in px. */
+  offsetPx: number;
+  /** Paint order — front toast highest. */
+  zIndex: number;
+  /** Whether this is the front (newest) toast. */
+  front: boolean;
+  /** Whether the toast is within the visible collapsed stack. */
+  visible: boolean;
+}
+
+// --- Measurement ---
+
+/**
+ * @description Unclamps every toast's block-size for a batch measurement (the
+ * inline style beats the collapsed block-size rule) and returns a disposer
+ * that restores the clamp. Bind it with `using` so the restore is guaranteed
+ * at scope exit — even if a measure in between throws.
+ *
+ * @param toasts - The live toasts to unclamp.
+ * @returns A `Disposable` that removes the inline block-size again.
+ * @private
+ */
+function unclampForMeasure(toasts: readonly HTMLElement[]): Disposable {
+  for (const toast of toasts) toast.style.blockSize = "auto";
+  return {
+    [Symbol.dispose]() {
+      for (const toast of toasts) toast.style.removeProperty("block-size");
+    },
+  };
+}
+
+// --- Stack math (pure) ---
+
+/**
+ * @description Computes the collapsed-stack placement for every toast from the
+ * measured heights alone (oldest first, matching DOM order). Pure — the
+ * measure step feeds it and an effect writes the results to the DOM, so this
+ * is the unit-testable core of the stacking model.
+ *
+ * @param heights - Natural toast heights in px, oldest first.
+ * @returns Per-toast layout (same order) and the front toast's height.
+ */
+function computeStackLayout(heights: number[]): {
+  toasts: ToastStackLayout[];
+  frontToastHeightPx: number | null;
+} {
+  const count = heights.length;
+  const toasts: ToastStackLayout[] = Array.from({ length: count });
+
+  let heightsBefore = 0;
+  for (let i = count - 1; i >= 0; i--) {
+    const stackIndex = count - 1 - i; // 0 = front (newest, last in DOM)
+    toasts[i] = {
+      stackIndex,
+      offsetPx: heightsBefore,
+      zIndex: count - stackIndex,
+      front: stackIndex === 0,
+      visible: stackIndex < VISIBLE_TOASTS,
+    };
+    heightsBefore += heights[i];
+  }
+
+  return { toasts, frontToastHeightPx: count > 0 ? heights[count - 1] : null };
+}
+
 // --- <toast-region> element ---
 
 /**
@@ -117,6 +200,23 @@ class ToastRegion extends HTMLElement {
   #handledCommand: { source: Element | null; command: string } | null = null;
 
   #collapseTimer = 0;
+
+  // Signal state: DOM events and observers write in; computed holds the pure
+  // derivations; effects (bound in connectedCallback) write back to the DOM.
+  /** Whether the stack is expanded (hover/focus). */
+  #expanded = state(false);
+
+  /** Whether the tab is hidden (mirrors `document.hidden`). */
+  #hidden = state(typeof document !== "undefined" ? document.hidden : false);
+
+  /** Timers run only while neither expanded nor hidden. */
+  #paused = computed(() => this.#expanded.get() || this.#hidden.get());
+
+  /** Measured stack (oldest first) — written by `#reindex`'s measure pass. */
+  #stack = state<ToastStackEntry[]>([]);
+
+  /** Pure placement derived from the measured heights. */
+  #layout = computed(() => computeStackLayout(this.#stack.get().map((entry) => entry.height)));
 
   connectedCallback() {
     if (this.#controller) return;
@@ -150,11 +250,9 @@ class ToastRegion extends HTMLElement {
     this.addEventListener("focusin", () => this.#setExpanded(true), { signal });
     this.addEventListener("focusout", () => this.#requestCollapse(), { signal });
 
-    document.addEventListener(
-      "visibilitychange",
-      () => (document.hidden ? this.#pauseTimers() : this.#resumeTimers()),
-      { signal },
-    );
+    document.addEventListener("visibilitychange", () => this.#hidden.set(document.hidden), {
+      signal,
+    });
 
     // Viewport resizes rewrap toast text — remeasure the stack.
     window.addEventListener(
@@ -162,6 +260,53 @@ class ToastRegion extends HTMLElement {
       () => {
         cancelAnimationFrame(this.#resizeFrame);
         this.#resizeFrame = requestAnimationFrame(() => this.#reindex());
+      },
+      { signal },
+    );
+
+    // Output effects (disposed by the same controller as the listeners):
+    // one owns the expanded attribute, one owns pausing/resuming the timers,
+    // one writes the computed stack placement to the DOM.
+    effect(
+      () => {
+        this.dataset.expanded = String(this.#expanded.get());
+      },
+      { signal },
+    );
+
+    effect(
+      () => {
+        if (this.#paused.get()) {
+          this.#pauseTimers();
+        } else {
+          this.#resumeTimers();
+        }
+      },
+      { signal },
+    );
+
+    effect(
+      () => {
+        const entries = this.#stack.get();
+        const { toasts, frontToastHeightPx } = this.#layout.get();
+
+        for (let i = 0; i < entries.length; i++) {
+          const { node, height } = entries[i];
+          const layout = toasts[i];
+          node.dataset.front = String(layout.front);
+          node.dataset.visible = String(layout.visible);
+          node.style.zIndex = String(layout.zIndex);
+          node.style.setProperty("--toasts-before", String(layout.stackIndex));
+          node.style.setProperty("--initial-height", `${height}px`);
+          node.style.setProperty(
+            "--offset",
+            `calc(${layout.offsetPx}px + var(--toaster-gap) * ${layout.stackIndex})`,
+          );
+        }
+
+        if (frontToastHeightPx !== null) {
+          this.style.setProperty("--front-toast-height", `${frontToastHeightPx}px`);
+        }
       },
       { signal },
     );
@@ -370,43 +515,25 @@ class ToastRegion extends HTMLElement {
   // --- Stack math ---
 
   /**
-   * @description Recomputes the stack: measures every live toast's natural
-   * height in one batch, then writes the CSS custom properties `_toaster.css`
-   * reads (`--toasts-before`, `--offset`, `--initial-height`,
-   * `--front-toast-height`) plus `data-front`, `data-visible`, and z-index.
-   * DOM order is chronological; the last child is the front (newest) toast.
+   * @description Remeasures the stack — the measure half of the stacking
+   * model. Batch-reads every live toast's natural height and writes the
+   * result into `#stack`; `#layout` derives the placement purely
+   * (`computeStackLayout`) and the stack effect writes the CSS custom
+   * properties `_toaster.css` reads (`--toasts-before`, `--offset`,
+   * `--initial-height`, `--front-toast-height`) plus `data-front`,
+   * `data-visible`, and z-index. DOM order is chronological; the last child
+   * is the front (newest) toast.
    */
   #reindex(): void {
     const toasts = this.#toasts().filter((toast) => toast.dataset.removed !== "true");
-    const count = toasts.length;
 
-    // Batch-measure with heights unclamped (inline style beats the collapsed
-    // block-size rule), then restore — one layout pass, no visible change.
-    for (const toast of toasts) toast.style.blockSize = "auto";
-    const heights = toasts.map((toast) => toast.offsetHeight);
-    for (const toast of toasts) toast.style.removeProperty("block-size");
+    // Batch-measure with heights unclamped, restored at scope exit — one
+    // layout pass, no visible change (the stack effect is microtask-batched,
+    // so its DOM writes land after the restore).
+    using _measure = unclampForMeasure(toasts);
+    const entries = toasts.map((toast) => ({ node: toast, height: toast.offsetHeight }));
 
-    let heightsBefore = 0;
-    for (let i = count - 1; i >= 0; i--) {
-      const toast = toasts[i];
-      const stackIndex = count - 1 - i; // 0 = front (newest, last in DOM)
-
-      toast.dataset.front = String(stackIndex === 0);
-      toast.dataset.visible = String(stackIndex < VISIBLE_TOASTS);
-      toast.style.zIndex = String(count - stackIndex);
-      toast.style.setProperty("--toasts-before", String(stackIndex));
-      toast.style.setProperty("--initial-height", `${heights[i]}px`);
-      toast.style.setProperty(
-        "--offset",
-        `calc(${heightsBefore}px + var(--toaster-gap) * ${stackIndex})`,
-      );
-
-      heightsBefore += heights[i];
-    }
-
-    if (count > 0) {
-      this.style.setProperty("--front-toast-height", `${heights[count - 1]}px`);
-    }
+    this.#stack.set(entries);
   }
 
   /**
@@ -434,20 +561,15 @@ class ToastRegion extends HTMLElement {
   // --- Expand / collapse ---
 
   /**
-   * @description Expands or collapses the stack. Expanding pauses every
-   * auto-dismiss timer (matching Sonner); collapsing resumes them.
+   * @description Expands or collapses the stack by writing the signal state.
+   * The attribute write and the timer pause/resume (matching Sonner) are owned
+   * by the effects in `connectedCallback` — no caller has to remember them.
    *
    * @param expanded - Whether the stack is expanded.
    */
   #setExpanded(expanded: boolean): void {
     if (expanded) window.clearTimeout(this.#collapseTimer);
-    if ((this.dataset.expanded === "true") === expanded) return;
-    this.dataset.expanded = String(expanded);
-    if (expanded) {
-      this.#pauseTimers();
-    } else {
-      this.#resumeTimers();
-    }
+    this.#expanded.set(expanded);
   }
 
   /**
@@ -468,13 +590,6 @@ class ToastRegion extends HTMLElement {
   // --- Timers ---
 
   /**
-   * @returns Whether timers should not be running right now.
-   */
-  get #paused(): boolean {
-    return this.dataset.expanded === "true" || document.hidden;
-  }
-
-  /**
    * @description Registers a toast's auto-dismiss timer and schedules it unless
    * the stack is currently paused (expanded or hidden tab).
    *
@@ -485,7 +600,7 @@ class ToastRegion extends HTMLElement {
     if (duration === Infinity || Number.isNaN(duration)) return;
     const timer: ToastTimer = { remaining: duration, startedAt: 0, timeoutId: 0 };
     this.#timers.set(id, timer);
-    if (!this.#paused) this.#schedule(id, timer);
+    if (!this.#paused.get()) this.#schedule(id, timer);
   }
 
   /**
@@ -515,7 +630,7 @@ class ToastRegion extends HTMLElement {
    * @description Resumes paused timers (no-op while still expanded or hidden).
    */
   #resumeTimers(): void {
-    if (this.#paused) return;
+    if (this.#paused.get()) return;
     for (const [id, timer] of this.#timers) {
       if (!timer.timeoutId) this.#schedule(id, timer);
     }
@@ -559,7 +674,7 @@ class ToastRegion extends HTMLElement {
       done = true;
       toast.remove();
       if (this.#toasts().length === 0) {
-        this.dataset.expanded = "false";
+        this.#setExpanded(false);
         this.#hideRegion();
       }
     };
@@ -707,4 +822,6 @@ if (typeof window !== "undefined") {
   window.ToastRegion = ToastRegion;
 }
 
-export { Toaster, ToastRegion };
+// computeStackLayout is exported for unit tests only — not part of the
+// documented public API (window.Toaster is the surface app authors use).
+export { Toaster, ToastRegion, computeStackLayout };

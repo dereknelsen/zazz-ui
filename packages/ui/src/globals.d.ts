@@ -4,30 +4,10 @@
  * checkJs can validate files that depend on prior `<script>` tags.
  */
 
-interface EmblaCarouselType {
-  scrollSnapList(): number[];
-  selectedScrollSnap(): number;
-  scrollTo(index: number, jump?: boolean): void;
-  scrollPrev(): void;
-  scrollNext(): void;
-  canScrollPrev(): boolean;
-  canScrollNext(): boolean;
-  slideNodes(): HTMLElement[];
-  on(event: string, callback: () => void): EmblaCarouselType;
-  destroy(): void;
-}
-
-type EmblaPlugin = unknown;
-
-declare const EmblaCarousel: (
-  node: Element,
-  options?: Record<string, unknown>,
-  plugins?: EmblaPlugin[],
-) => EmblaCarouselType;
-
-declare const EmblaCarouselAutoplay: (options?: Record<string, unknown>) => EmblaPlugin;
-declare const EmblaCarouselAutoScroll: (options?: Record<string, unknown>) => EmblaPlugin;
-declare const EmblaCarouselClassNames: (options?: Record<string, unknown>) => EmblaPlugin;
+// Embla loads as real ES modules (see base/embla.ts imports); these aliases
+// keep the shared names other scripts reference pointing at the real types.
+type EmblaCarouselType = import("embla-carousel").EmblaCarouselType;
+type EmblaPlugin = import("embla-carousel").EmblaPluginType;
 
 interface UtilsNamespace {
   parseValue(value: string): boolean | number | unknown[] | string;
@@ -58,7 +38,7 @@ interface NavigationDestination {
 interface NavigateEvent extends Event {
   canIntercept: boolean;
   hashChange: boolean;
-  downloadRequest: unknown | null;
+  downloadRequest: unknown;
   formData: FormData | null;
   destination: NavigationDestination;
   intercept(options: { handler: () => Promise<void> }): void;
@@ -97,8 +77,8 @@ interface RevealConstructor {
   defaultConfig: object;
 }
 
-/** Shape of the `<embla-carousel>` element class (defined in carousel.js). */
-declare class EmblaCarouselHostElement extends HTMLElement {
+/** Shape of the `<slide-carousel>` element class (defined in carousel.js). */
+declare class SlideCarouselHostElement extends HTMLElement {
   init(): void;
   readonly api: EmblaCarouselType | null;
 }
@@ -135,12 +115,27 @@ interface ToasterNamespace {
   dismiss(id?: string): void;
 }
 
+/** Reactive-state API (see signals.js for the authoritative JSDoc). */
+interface SignalsNamespace {
+  state<T>(
+    initialValue: T,
+    options?: import("signal-polyfill").Signal.Options<T>,
+  ): import("signal-polyfill").Signal.State<T>;
+  computed<T>(
+    computation: () => T,
+    options?: import("signal-polyfill").Signal.Options<T>,
+  ): import("signal-polyfill").Signal.Computed<T>;
+  effect(callback: () => void | (() => void), options?: { signal?: AbortSignal }): () => void;
+}
+
 interface Window {
   navigation: Navigation;
   Utils: UtilsNamespace;
+  /** Set by signals.js — the TC39 signals wrapper (state/computed/effect). */
+  Signals: SignalsNamespace;
   Reveal: RevealConstructor;
-  /** Set by carousel.js — the `<embla-carousel>` element class. */
-  EmblaCarouselElement?: typeof EmblaCarouselHostElement;
+  /** Set by carousel.js — the `<slide-carousel>` element class. */
+  SlideCarouselElement?: typeof SlideCarouselHostElement;
   /** Set by lightbox.js — the `<media-lightbox>` element class. */
   MediaLightbox?: CustomElementConstructor;
   /** Set by password.js — the `<input-password>` element class. */

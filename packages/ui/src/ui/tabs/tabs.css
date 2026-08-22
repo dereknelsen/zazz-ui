@@ -198,8 +198,16 @@
     }
   }
 
-  /* Nth radio in .tabs__list → (N + 1)th child of .tabs (after .tabs__list)
-  */
+  /* Nth radio in .tabs__list → (N + 1)th child of .tabs (after .tabs__list).
+     The per-index enumeration below (capped at 24 tabs) is irreducible in pure
+     CSS: it correlates the checked radio's position with a panel's position,
+     and selectors cannot do index arithmetic. sibling-index()/sibling-count()
+     (Baseline 2026) do NOT replace it — they are value functions (<integer> in
+     calc() on the element they're used on), unusable inside selectors, and no
+     mechanism carries the checked radio's index out of its own subtree (custom
+     properties only inherit down; only :has() looks up, and it can't count).
+     Hiding must stay display:none (accessibility: opacity/size tricks leave
+     panels focusable), so a value-level rewrite has nowhere to land. */
   .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(1):not(:checked))
     > .tabs__panel:nth-child(2),
   .tabs:has(.tabs__list > input[type="radio"]:nth-of-type(2):not(:checked))

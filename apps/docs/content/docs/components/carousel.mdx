@@ -1,15 +1,9 @@
 ---
 title: Carousel
-description: "A draggable, looping carousel built on Embla and wrapped in the embla-carousel web component, with dots, thumbnails, keyboard nav, and lightbox support driven entirely by markup."
+description: Draggable, looping carousels built with Embla and the slide-carousel custom element.
 ---
 
-`<embla-carousel>` is the carousel root. Put Embla options on the element, compose the
-`viewport` → `container` → `slide` structure inside, and the script wires up dragging, looping,
-navigation, dots, and thumbnails from the markup. There's no JavaScript to configure.
-
-The element uses light DOM, so the markup you write is the markup that gets styled. It initializes
-when connected, defers while inside a closed `<dialog>`, and tears down its Embla instances when
-removed.
+`<slide-carousel>` initializes an Embla carousel with markup-driven options, drag interactions, looping, keyboard navigation, and thumbnail synchronization.
 
 ## Default
 
@@ -17,153 +11,87 @@ removed.
 
 ## Anatomy
 
-Mark the structural roles with `data-embla`. Each slide sets its own responsive width with
-[`basis-*`](/docs/utilities/gap-and-basis) utilities, so the same markup shows one slide on a phone
-and several on a wide screen.
+Define carousel structure with `data-carousel` roles. Set slide widths with `basis-*` utilities:
 
 ```html
-<embla-carousel data-embla-loop="true">
-  <div data-embla="viewport">
-    <div data-embla="container">
-      <div data-embla="slide" class="basis-full @sm:basis-1/2 @md:basis-1/3">Slide 1</div>
-      <div data-embla="slide" class="basis-full @sm:basis-1/2 @md:basis-1/3">Slide 2</div>
-      <div data-embla="slide" class="basis-full @sm:basis-1/2 @md:basis-1/3">Slide 3</div>
+<slide-carousel data-carousel-loop="true">
+  <div data-carousel="viewport">
+    <div data-carousel="container">
+      <div data-carousel="slide" class="basis-full @sm:basis-1/2 @md:basis-1/3">Slide 1</div>
+      <div data-carousel="slide" class="basis-full @sm:basis-1/2 @md:basis-1/3">Slide 2</div>
+      <div data-carousel="slide" class="basis-full @sm:basis-1/2 @md:basis-1/3">Slide 3</div>
     </div>
   </div>
-  <button type="button" data-embla="prev">Prev</button>
-  <button type="button" data-embla="next">Next</button>
-</embla-carousel>
+  <button type="button" data-carousel="prev">Prev</button>
+  <button type="button" data-carousel="next">Next</button>
+</slide-carousel>
 ```
 
-| `data-embla`    | Role                                             |
+| `data-carousel` | Role                                             |
 | --------------- | ------------------------------------------------ |
-| `viewport`      | The visible window (required)                    |
-| `container`     | The flex track of slides                         |
-| `slide`         | Each slide; set its width with `basis-*`         |
+| `viewport`      | Visible window (required)                        |
+| `container`     | Flex track for slides                            |
+| `slide`         | Individual slide item                            |
 | `prev` / `next` | Navigation buttons (optional)                    |
-| `dots` / `dot`  | Dot pagination container and template (optional) |
-| `thumbs`        | Linked thumbnail carousel container (optional)   |
+| `dots` / `dot`  | Pagination container and template dot (optional) |
+| `thumbs`        | Synchronized thumbnail container (optional)      |
 
 ## Setup
 
-The docs preview loads the scripts for you. To use a carousel in your own page, include the Embla
-CDN bundles before the single `index.js` module (it bundles the shared utilities and the init
-script):
+Load `index.js` as an ES module:
 
 ```html
-<script src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>
-<!-- Optional plugins -->
-<script src="https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js"></script>
-<script src="https://unpkg.com/embla-carousel-auto-scroll/embla-carousel-auto-scroll.umd.js"></script>
-<script src="https://unpkg.com/embla-carousel-class-names/embla-carousel-class-names.umd.js"></script>
 <script type="module" src="./zazz/index.js"></script>
 ```
 
-Carousels auto-initialize on `DOMContentLoaded`.
+Third-party dependencies (Embla core and plugins) resolve through the `<script type="importmap">` in `<head>`.
 
 ## Options
 
-Every Embla core option goes on `<embla-carousel>` as a `data-embla-*` attribute. Names convert from
-kebab-case to camelCase and values are type-coerced, so `data-embla-loop="true"` becomes
-`{ loop: true }`.
+Configure Embla options as `data-carousel-*` attributes on `<slide-carousel>`:
 
-```html
-<embla-carousel data-embla-loop="true" data-embla-align="start">…</embla-carousel>
-```
-
-| Attribute             | Effect                            |
-| --------------------- | --------------------------------- |
-| `data-embla-loop`     | `"true"` wraps around at the ends |
-| `data-embla-align`    | `start`, `center`, or `end`       |
-| `data-embla-keyboard` | `"false"` opts out of arrow keys  |
+| Attribute                | Purpose                           |
+| ------------------------ | --------------------------------- |
+| `data-carousel-loop`     | Set to `"true"` for infinite loop |
+| `data-carousel-align`    | `start`, `center`, or `end`       |
+| `data-carousel-keyboard` | Set to `"false"` to disable keys  |
 
 ### Plugins
 
-Enable a plugin with a bare attribute and configure it with prefixed options. Each plugin needs its
-CDN bundle from the setup above.
+Enable plugins with boolean attributes:
 
 ```html
-<!-- autoplay, advancing every 3 seconds -->
-<embla-carousel data-embla-autoplay data-embla-autoplay-delay="3000">…</embla-carousel>
+<slide-carousel data-carousel-autoplay data-carousel-autoplay-delay="3000">...</slide-carousel>
 ```
 
-| Plugin      | Attribute prefix          | CDN bundle                   |
-| ----------- | ------------------------- | ---------------------------- |
-| Autoplay    | `data-embla-autoplay-*`   | `embla-carousel-autoplay`    |
-| Auto Scroll | `data-embla-autoscroll-*` | `embla-carousel-auto-scroll` |
-| Class Names | `data-embla-classnames-*` | `embla-carousel-class-names` |
+| Plugin      | Attribute prefix             | Package specifier            |
+| ----------- | ---------------------------- | ---------------------------- |
+| Autoplay    | `data-carousel-autoplay-*`   | `embla-carousel-autoplay`    |
+| Auto Scroll | `data-carousel-autoscroll-*` | `embla-carousel-auto-scroll` |
+| Class Names | `data-carousel-classnames-*` | `embla-carousel-class-names` |
 
-## Dot navigation
-
-Add a `dots` container with a single template `dot`. The script clones the template once per slide
-and tracks the active one with `.is-active`.
+## Dots pagination
 
 ```html
-<div data-embla="dots">
-  <button type="button" data-embla="dot"></button>
+<div data-carousel="dots">
+  <button type="button" data-carousel="dot"></button>
 </div>
 ```
 
+The script clones the template button for each slide and toggles `.is-active`.
+
 ## Thumbnail navigation
 
-Nest a `data-embla="thumbs"` container inside the same `<embla-carousel>` to get a synced secondary
-carousel. Thumb options take the `data-embla-thumbs-*` prefix and default to
-`containScroll: "keepSnaps"` and `dragFree: true`.
+Nest a `data-carousel="thumbs"` container inside `<slide-carousel>` for synchronized thumbnail strips.
 
-```html
-<embla-carousel>
-  <div data-embla="viewport">
-    <div data-embla="container">
-      <div data-embla="slide">Full image 1</div>
-      <div data-embla="slide">Full image 2</div>
-    </div>
-  </div>
+## Dialog integration
 
-  <div data-embla="thumbs">
-    <div data-embla="viewport">
-      <div data-embla="container">
-        <div data-embla="slide">Thumb 1</div>
-        <div data-embla="slide">Thumb 2</div>
-      </div>
-    </div>
-  </div>
-</embla-carousel>
-```
+Carousels inside closed `<dialog>` elements defer initialization until the modal opens. Add `data-carousel-start="2"` to the trigger button to open at an exact slide.
 
-## Keyboard navigation
+## Dynamic re-initialization
 
-Arrow keys (`←` / `→`) scroll the active carousel: one inside an open `<dialog>`, or the one holding
-the focused element. Keys are ignored when focus sits in a form field or contenteditable region. Turn
-it off per carousel with `data-embla-keyboard="false"`.
-
-## Dialog and lightbox
-
-A carousel can't measure its viewport until its `<dialog>` is open, so Zazz defers it: a
-`MutationObserver` watches each dialog's `open` attribute and initializes any carousel inside once it
-opens. Set `data-embla-start` on the trigger to open at a specific slide.
-
-```html
-<button commandfor="gallery-dialog" data-embla-start="2">Open at slide 3</button>
-```
-
-The [lightbox](/docs/components/lightbox) builds on this: the same Embla roles plus a fullscreen
-`<dialog>` and a thumb strip.
-
-When slides are clickable (a lightbox trigger with `commandfor`, say), a drag is told apart from a
-click, and clicks are suppressed for a short window after a drag so a swipe never fires an accidental
-tap.
-
-## Re-initialization
-
-After an SPA-style navigation or any dynamic content insertion, re-scan for new carousels:
+After inserting new HTML into the page:
 
 ```js
-EmblaInit.init(newContentElement);
+EmblaInit.init(containerElement);
 ```
-
-The [navigation script](/docs/getting-started/page-transitions) calls this for you after swapping
-`<main>`. `init()` skips carousels it has already wired (`data-embla-init`) and defers any inside a
-closed dialog.
-
-The lower-level `data-embla="root"` wrapper still works for hand-built Embla markup, but prefer
-`<embla-carousel>` for components and any markup that may be inserted or removed at runtime.

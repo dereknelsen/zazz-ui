@@ -1,62 +1,55 @@
 ---
 title: Hover, focus, and other states
-description: Style hover, focus, validation, and disabled states straight from your markup, with prefixed utilities for hover and sensible defaults that handle the rest.
+description: Style hover, focus, validation, and disabled states directly in markup or component styles.
 ---
 
-Interactive states in Zazz come from two places: `hover:` utilities you add yourself, and defaults the framework already handles: focus rings, validation feedback, and disabled styling. Most of the time you write less than you'd expect.
+Interactive states in Zazz use `hover:` utility prefixes combined with built-in framework defaults for focus rings, validation, and disabled elements.
 
 ## Hover
 
-Prefix a utility with `hover:` and it applies while the pointer is over the element. The prefix works on color, opacity, and scale:
+Prefix utilities with `hover:` to apply styles on pointer hover:
 
 ```html
 <a class="button hover:bg-primary hover:scale-102">Hover me</a>
 
-<div class="card hover:opacity-75 transition">…</div>
+<div class="card hover:opacity-75 transition">...</div>
 ```
 
-<Callout>
-  In your HTML you write `hover:bg-primary`, with no backslash. The backslash you'll see in the
-  source (`.hover\:bg-primary`) is only CSS escaping the colon in the selector; the class attribute
-  uses a plain colon.
-</Callout>
+Available `hover:` categories:
 
-What `hover:` covers:
+- **Text color:** `hover:text-primary` and all semantic roles.
+- **Background:** `hover:bg-primary`, `hover:bg-transparent`, `hover:bg-none`.
+- **Border:** `hover:border-primary`, `hover:border-destructive`.
+- **Opacity:** `hover:opacity-0` to `hover:opacity-100`.
+- **Scale:** `hover:scale-50` to `hover:scale-150`.
 
-- **Text color:** `hover:text-primary` and every other theme [role](/docs/core-concepts/colors).
-- **Background:** `hover:bg-primary`, plus `hover:bg-transparent` and `hover:bg-none`.
-- **Border:** `hover:border-primary`, `hover:border-destructive`, and the other roles.
-- **Opacity:** `hover:opacity-{0,25,50,75,100}`.
-- **Scale:** `hover:scale-{50,75,90,95,100,105,110,125,150}`.
-
-Pair them with `transition` so the change eases instead of snapping. Motion respects `prefers-reduced-motion` automatically, so you don't have to guard it.
+Pair with the `transition` utility for animated state changes.
 
 ## Focus
 
-You rarely write focus styles. The [reset](/docs/base/reset) applies a `:focus-visible` ring to every focusable element, so keyboard users get a clear, consistent indicator everywhere. And `:focus-visible` means it shows for keyboard navigation without firing on every mouse click.
+Zazz configures a `:focus-visible` ring across all interactive elements in `_reset.css`:
 
 ```css
-/* Already handled globally — shown for reference, not something you write */
 :where(:focus-visible) {
   outline: var(--outline-width) var(--outline-style) var(--ring);
 }
 ```
 
-To recolor the ring in a given context, override `--ring-color` (not `--ring`, which recomputes from it):
+To recolor the focus ring in a specific context, override `--ring-color`:
 
 ```html
-<form style="--ring-color: var(--destructive)">…</form>
+<form style="--ring-color: var(--destructive)">...</form>
 ```
 
-Add the `ring` utility when you want a persistent ring on an element regardless of focus. The ring renders as a box-shadow from Tailwind/shadcn-compatible tokens, and a matching transparent outline is kept so focus stays visible in forced-colors mode.
+Add the `ring` utility to apply a persistent focus-style ring to custom elements.
 
-## Pressed and active
+## Active states
 
-There are no `active:` utilities. Express pressed feedback in a component's own CSS with `:active`. That keeps tactile, per-component motion where it belongs rather than scattering it across markup. The built-in components already do this.
+Define active states in component CSS with `:active` rather than markup utility classes. Built-in components include active styling by default.
 
 ## Validation states
 
-Form fields validate on `:user-invalid`, which only matches **after** the user has interacted, on blur or submit, never while they're still typing. That timing is the difference between helpful and nagging, and you get it for free; no `was-touched` class to toggle.
+Form inputs use `:user-invalid`, styling fields only after user interaction (on blur or submit):
 
 ```html
 <div class="field">
@@ -66,16 +59,16 @@ Form fields validate on `:user-invalid`, which only matches **after** the user h
 </div>
 ```
 
-The shared field family crossfades label, hint, and error for you. `:user-invalid` is [Baseline](https://web.dev/baseline) and widely available. See [Input](/docs/components/input) for the full form markup.
+The `.field` component handles label, hint, and error visibility transitions automatically.
 
-## Disabled
+## Disabled state
 
-Components style their disabled state through `:not(:disabled)` guards rather than order-dependent overrides, so a `disabled` attribute is all you add:
+Components use `:not(:disabled)` styling guards. Add the `disabled` attribute to disable native controls:
 
 ```html
-<button class="button" data-variant="primary" disabled>Saving…</button>
+<button class="button" data-variant="primary" disabled>Saving...</button>
 ```
 
-## Component states via data attributes
+## Data attributes for state
 
-Open/closed, selected, and side/alignment states are driven by `data-*` attributes that the framework and native APIs toggle: `data-state`, `data-side`, and friends. You set the variant; the component handles the transitions. See any [component page](/docs/components/dropdown) for its attribute API.
+Components expose state and positioning through data attributes: `data-state`, `data-side`, and `data-align`. Transitions are handled in component stylesheets.

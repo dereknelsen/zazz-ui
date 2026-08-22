@@ -1,29 +1,21 @@
 ---
 title: Toggle group
-description: Fuse several toggles into one segmented control, single- or multi-select.
+description: Segmented toggle controls for single- or multi-select options.
 ---
 
-Wrap two or more [toggles](/docs/components/toggle) in `.toggle-group` to fuse them
-into one segmented control — the same border-collapse and inner-corner squaring as a
-[button group](/docs/components/button-group). Make it **single-select** by giving
-the toggles `radio` inputs that share a `name`; make it **multi-select** with
-`checkbox` inputs. Add `role="group"` and an `aria-label` so the set is announced.
+Wrap `.toggle` elements in `.toggle-group` to combine them into a single segmented unit. Use `radio` inputs for **single-select** and `checkbox` inputs for **multi-select**. Add `role="group"` and `aria-label` for accessibility.
 
 ## Single select
-
-Radios sharing a `name` — exactly one toggle stays on.
 
 <Preview src="toggle-group/default" align="center" />
 
 ## Multi select
 
-Checkboxes — any number can be on at once.
-
 <Preview src="toggle-group/multiple" align="center" />
 
 ## Vertical
 
-Set `data-orientation="vertical"` on the wrapper to stack them.
+Add `data-orientation="vertical"` to stack items:
 
 <Preview src="toggle-group/vertical" align="center" />
 
@@ -33,6 +25,4 @@ Set `data-orientation="vertical"` on the wrapper to stack them.
 | ------------------ | -------------------------------------- |
 | `data-orientation` | `vertical` (omit = horizontal default) |
 
-The group reads each child's own `--toggle-radius`, so the outer corners follow the
-toggles' `data-size` automatically — only the inner corners are squared. You never
-need to touch Zazz's own stylesheets.
+Outer corners adapt to child `--toggle-radius` tokens automatically.

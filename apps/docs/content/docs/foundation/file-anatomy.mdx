@@ -1,198 +1,84 @@
 ---
 title: File anatomy
-description: How every Zazz stylesheet is structured, documented, and layered, with the rules that keep the cascade predictable when you read, extend, or override it.
+description: File structure, layer placement, CSSDoc headers, and naming conventions for Zazz stylesheets.
 ---
 
-Every stylesheet in `@zazzdesign/ui` follows the same anatomy. Learn it once and you can read any file, find the token you need to override, and extend a component without fighting the cascade.
+Stylesheets in `@zazzdesign/ui` follow consistent organization across base modules and components.
 
-## The base files
+## Base files
 
-The package's `src/` splits in two. The `base/` folder holds the base system, and `ui/` holds one folder per component — its stylesheet (`ui/<name>/<name>.css`) co-located with its script and example markup. This section documents the base files; the [Components](/docs/components) section covers `ui/`.
+Source files split into `base/` (core foundation) and `ui/` (co-located component stylesheets, scripts, and markup):
 
-| File                    | What it does                                                   | Docs                                            |
-| ----------------------- | -------------------------------------------------------------- | ----------------------------------------------- |
-| `_layers.css`           | Declares the cascade-layer order, loaded first                 | [Layers](/docs/base/layers)                     |
-| `_variables.css`        | Global design tokens (colors, type, spacing, and more)         | [Theme variables](/docs/base/variables)         |
-| `_reset.css`            | Native-element baselines and re-skinned controls               | [Reset](/docs/base/reset)                       |
-| `_typography.css`       | The `.prose` container and the `.text-*` / `.font-*` utilities | [Typography](/docs/base/typography)             |
-| `_view-transitions.css` | Cross-document page transitions                                | [View transitions](/docs/base/view-transitions) |
-| `_utilities.css`        | The atomic utility classes                                     | [Utilities](/docs/base/utilities)               |
-| `_layout.css`           | The container and layout-grid utilities                        | [Layout](/docs/base/utilities/layout)           |
+| File                    | Purpose                                                      | Documentation                                         |
+| ----------------------- | ------------------------------------------------------------ | ----------------------------------------------------- |
+| `_layers.css`           | Declares cascade layer order (loads first)                   | [Layers](/docs/foundation/layers)                     |
+| `_variables.css`        | Global design tokens (colors, type, spacing, metrics)        | [Theme variables](/docs/foundation/variables)         |
+| `_reset.css`            | Native element baselines and zero-specificity control resets | [Reset](/docs/foundation/reset)                       |
+| `_typography.css`       | Type scale, `.prose`, and typography utilities               | [Typography](/docs/foundation/typography)             |
+| `_view-transitions.css` | Cross-document and SPA view transitions                      | [View transitions](/docs/foundation/view-transitions) |
+| `_utilities.css`        | Atomic utility classes                                       | [Utilities](/docs/foundation/utilities)               |
+| `_layout.css`           | Container bands and layout grid utilities                    | [Layout](/docs/foundation/utilities/layout)           |
 
-`index.css` `@import`s all of them, in cascade order, so a page links one stylesheet. The rest of this page is the shape each file shares.
+## Component file structure
 
-## File anatomy
+Component stylesheets organize rules in top-to-bottom order:
 
-A component file is written top-to-bottom in this order:
-
-| #   | Section                  | Layer                    | Required?                     |
-| --- | ------------------------ | ------------------------ | ----------------------------- |
-| 1   | CSSDoc header            | —                        | always                        |
-| 2   | Component token hooks    | `@layer variables`       | when the component has tokens |
-| 3   | Native-element baselines | `@layer reset`           | only if it redraws native UI  |
-| 4   | Component rules          | `@layer zazz.components` | the component itself          |
-| 5   | Utility classes          | `@layer zazz.utilities`  | only if it ships utilities    |
+| Step | Section                  | Layer                    | Condition                     |
+| ---- | ------------------------ | ------------------------ | ----------------------------- |
+| 1    | CSSDoc header            | None                     | Always                        |
+| 2    | Component token hooks    | `@layer variables`       | When component exposes tokens |
+| 3    | Native element baselines | `@layer reset`           | When restyling native UI      |
+| 4    | Component rules          | `@layer zazz.components` | Core component rules          |
+| 5    | Utility classes          | `@layer zazz.utilities`  | When shipping utilities       |
 
 ```css
 /**
- * _button.css — Button (.button)
+ * _button.css: Button (.button)
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, _reset.css
- * @uses       color-mix(), oklch(from …) — variant hover/active tints
+ * @uses       color-mix(), oklch(from ...) (hover/active tints)
  * @tokens     --button-* (@layer variables)
  */
 @layer variables {
   :root {
-    /* the component's override hooks */
-  }
-}
-
-@layer zazz.components {
-  .button {
-    /* rules that consume the hooks above */
-  }
-}
-```
-
-## CSSDoc headers
-
-Every `.css` file opens with a JSDoc-style block comment. A summary line comes first, then block tags:
-
-```css
-/**
- * _fields.css — Shared form field family (Tier 3 owner for --field-*)
- *
- * @layer      variables, components
- * @requires   layers.css, _variables.css
- * @uses       :user-invalid — validation after commit (not while typing)
- * @uses       :has(:user-invalid) — label/hint/error crossfade
- * @uses       @starting-style + visibility allow-discrete — hint ↔ error swap
- * @tokens     --field-*, --field-group-* (Tier 3 owner; @layer variables)
- * @consumedby _input.css, _textarea.css, _select.css, _input-group.css,
- *             _password-group.css, _radio.css (.radio-group)
- */
-```
-
-### Tag reference
-
-| Tag           | Required        | Meaning                                                       |
-| ------------- | --------------- | ------------------------------------------------------------- |
-| _(summary)_   | yes             | First line: `_file.css — Component (.selector)`               |
-| `@layer`      | yes             | Cascade layers this file contributes to, in order             |
-| `@requires`   | yes             | Files that must load before this one. `none` for `layers.css` |
-| `@uses`       | —               | One modern CSS API/feature per line with support caveat       |
-| `@tokens`     | when owned      | The token namespace this file exposes                         |
-| `@consumedby` | when applicable | Files that depend on this one                                 |
-| `@see`        | —               | External URL or cross-file reference                          |
-| `@example`    | —               | Usage markup for non-obvious components                       |
-
-## Token naming
-
-Component tokens follow a strict naming convention:
-
-- `--{component}-{property}`: the default value, like `--button-background` or `--dialog-radius`
-- `--{component}-{property}--{state}`: state variation with a **double-dash** before the state, like `--button-background--hover` or `--field-border--focus`
-
-### Tiered tokens
-
-Global tokens in `_variables.css` are organized in tiers:
-
-| Tier                 | Example                                                    | Where               |
-| -------------------- | ---------------------------------------------------------- | ------------------- |
-| Brand/literal scales | `--primary-600`, `--neutral-100`                           | `_variables.css`    |
-| Semantic roles       | `--background`, `--foreground`, `--primary`, `--muted`     | `_variables.css`    |
-| Metrics & systems    | `--step-*`, `--radius-*`, `--gap-*`, `--font-size-*`       | `_variables.css`    |
-| Component tokens     | `--button-background`, `--field-border`, `--dialog-radius` | each component file |
-
-The full map of which token to reach for, and when, lives in [Theme variables](/docs/base/variables) and [Colors](/docs/core-concepts/colors).
-
-### Local component tokens
-
-Every component declares a namespace in its own `@layer variables` block, defaulting to a global token:
-
-```css
-@layer variables {
-  :root {
-    /* surface */
     --button-background: var(--card);
-    --button-background--hover: var(--muted);
-    /* metrics */
     --button-height: var(--step-8);
     --button-radius: var(--radius-md);
   }
 }
-```
 
-Rules reference a token **once**. Variants swap the token value; they never restate the rule:
-
-```css
 @layer zazz.components {
   .button {
     background-color: var(--button-background);
-  }
-
-  .button[data-variant="primary"] {
-    --button-background: var(--primary);
-    --button-background--hover: oklch(from var(--primary) l c h / 0.9);
-  }
-
-  .button[data-size="sm"] {
-    --button-height: var(--step-6);
-    --button-radius: var(--radius-sm);
+    height: var(--button-height);
+    border-radius: var(--button-radius);
   }
 }
 ```
+
+## CSSDoc header tags
+
+| Tag           | Required | Description                                       |
+| ------------- | -------- | ------------------------------------------------- |
+| Summary       | Yes      | First line: `_file.css: Component (.selector)`    |
+| `@layer`      | Yes      | Cascade layers used in the file                   |
+| `@requires`   | Yes      | Dependency files (set to `none` for `layers.css`) |
+| `@uses`       | Optional | Modern CSS features or APIs utilized              |
+| `@tokens`     | Optional | Token namespace exposed                           |
+| `@consumedby` | Optional | Dependent files                                   |
+| `@see`        | Optional | External references                               |
+| `@example`    | Optional | HTML usage example                                |
+
+## Token naming conventions
+
+- **Default token:** `--{component}-{property}` (e.g. `--button-background`, `--dialog-radius`).
+- **State variation:** `--{component}-{property}--{state}` with double-dash (e.g. `--button-background--hover`, `--field-border--focus`).
 
 ## Selector conventions
 
-- **Blocks & elements**: `.component` and `.component__part` (`.input-group__addon`). No BEM modifier classes; use attributes instead.
-- **Variants & sizes**: data attributes such as `[data-variant="primary"]`, `[data-size="sm"]`, `[data-side]`, `[data-align]`.
-- **Zero specificity**: `:where()` wraps reset and utility selectors so they stay overridable.
-- **Logical properties**: `inline-size`/`block-size`, `padding-inline`/`margin-block` for RTL support.
-- **Focus**: rings render as box-shadows from Tailwind/shadcn-compatible tokens (`--ring`, `--ring-width`, `--ring-offset-width`, `--ring-offset-color`), composed with the component's own shadow; a same-geometry transparent outline (`--outline-*`) is kept for forced-colors modes. Never `outline: none` without a replacement.
-- **State exclusion**: `:not(:disabled)` over order-dependent overrides.
-
-## Comment styles
-
-Three comment styles, each with a specific role:
-
-**Section banners** separate major regions inside a layer:
-
-```css
-/* ===========================================================================
-  BUTTON VARIANTS
-  =========================================================================== */
-```
-
-**Token group labels** group related hooks inside `@layer variables`:
-
-```css
-:root {
-  /* surface */
-  --button-background: var(--card);
-  --button-background--hover: var(--muted);
-  /* metrics */
-  --button-height: var(--step-8);
-}
-```
-
-**Inline rule comments** explain intent: the _why_, not the _what_:
-
-```css
-/* thumb centered on the track via a calc'd negative margin so retuning
-   either size keeps it aligned. */
-```
-
-## Dark mode
-
-Dark mode is a token concern, not a per-file one. Components read role tokens (`--background`, `--foreground`, `--primary`…) that resolve through `light-dark()`, so a well-written file works in both modes without a single `.dark` override. See [Dark mode](/docs/core-concepts/dark-mode) for how the roles resolve and how to force a scheme.
-
-## Allowed variations
-
-These deviate from the canonical shape on purpose, and each is documented in-file:
-
-- **Split `@layer variables` blocks:** when a component has motion tokens and sizing tokens that read better separated.
-- **Component in `@layer reset`:** when redrawing native UI (e.g. `_switch.css` redraws `input[role="switch"]`). See [`_reset.css`](/docs/base/reset).
-- **`@supports`-gated enhancement:** when anchor positioning or other newer APIs need a documented fallback.
-- **Attribute-hook components:** when styling depends on `[data-*]` attributes driven by JavaScript.
+- **Classes:** `.component` and `.component__part` (e.g. `.input-group__addon`).
+- **Variants:** Data attributes (e.g. `[data-variant="primary"]`, `[data-size="sm"]`, `[data-side]`).
+- **Zero specificity:** `:where()` on reset and utility selectors.
+- **Logical properties:** `inline-size`, `block-size`, `padding-inline`, `margin-block`.
+- **State exclusion:** `:not(:disabled)` over order-dependent overrides.

@@ -1,11 +1,11 @@
 <media-lightbox class="lightbox max-w-screen-xs mx-auto">
   <div class="lightbox__gallery">
-    <embla-carousel class="lightbox__stage" data-embla-loop="true" data-embla-classnames>
-      <div data-embla="viewport">
-        <div data-embla="container">
+    <slide-carousel class="lightbox__stage" data-carousel-loop="true" data-carousel-classnames>
+      <div data-carousel="viewport">
+        <div data-carousel="container">
           <button
             class="lightbox__slide"
-            data-embla="slide"
+            data-carousel="slide"
             type="button"
             command="show-modal"
             commandfor="lightbox-example-1"
@@ -27,7 +27,7 @@
           </button>
           <button
             class="lightbox__slide"
-            data-embla="slide"
+            data-carousel="slide"
             type="button"
             command="show-modal"
             commandfor="lightbox-example-1"
@@ -49,7 +49,7 @@
           </button>
           <button
             class="lightbox__slide"
-            data-embla="slide"
+            data-carousel="slide"
             type="button"
             command="show-modal"
             commandfor="lightbox-example-1"
@@ -71,7 +71,7 @@
           </button>
           <button
             class="lightbox__slide"
-            data-embla="slide"
+            data-carousel="slide"
             type="button"
             command="show-modal"
             commandfor="lightbox-example-1"
@@ -93,7 +93,7 @@
           </button>
           <button
             class="lightbox__slide"
-            data-embla="slide"
+            data-carousel="slide"
             type="button"
             command="show-modal"
             commandfor="lightbox-example-1"
@@ -115,7 +115,7 @@
           </button>
           <button
             class="lightbox__slide"
-            data-embla="slide"
+            data-carousel="slide"
             type="button"
             command="show-modal"
             commandfor="lightbox-example-1"
@@ -137,12 +137,12 @@
           </button>
         </div>
       </div>
-      <div class="lightbox__thumbs" data-embla="thumbs" data-embla-loop="true">
+      <div class="lightbox__thumbs" data-carousel="thumbs" data-carousel-loop="true">
         <button
           class="lightbox__thumbs-prev button text-muted-foreground hover:text-foreground"
           data-size="icon-sm"
           data-variant="ghost"
-          data-embla="prev"
+          data-carousel="prev"
           type="button"
           aria-label="Previous image"
         >
@@ -163,12 +163,12 @@
             />
           </svg>
         </button>
-        <div data-embla="viewport">
-          <div data-embla="container">
+        <div data-carousel="viewport">
+          <div data-carousel="container">
             <button
               type="button"
               class="lightbox__thumb"
-              data-embla="slide"
+              data-carousel="slide"
               aria-label="Show image 1"
             >
               <figure class="lightbox__thumb-content">
@@ -192,7 +192,7 @@
             <button
               type="button"
               class="lightbox__thumb"
-              data-embla="slide"
+              data-carousel="slide"
               aria-label="Show image 2"
             >
               <figure class="lightbox__thumb-content">
@@ -216,7 +216,7 @@
             <button
               type="button"
               class="lightbox__thumb"
-              data-embla="slide"
+              data-carousel="slide"
               aria-label="Show image 3"
             >
               <figure class="lightbox__thumb-content">
@@ -240,7 +240,7 @@
             <button
               type="button"
               class="lightbox__thumb"
-              data-embla="slide"
+              data-carousel="slide"
               aria-label="Show image 4"
             >
               <figure class="lightbox__thumb-content">
@@ -264,7 +264,7 @@
             <button
               type="button"
               class="lightbox__thumb"
-              data-embla="slide"
+              data-carousel="slide"
               aria-label="Show image 5"
             >
               <figure class="lightbox__thumb-content">
@@ -288,7 +288,7 @@
             <button
               type="button"
               class="lightbox__thumb"
-              data-embla="slide"
+              data-carousel="slide"
               aria-label="Show image 6"
             >
               <figure class="lightbox__thumb-content">
@@ -315,7 +315,7 @@
           class="lightbox__thumbs-next button text-muted-foreground hover:text-foreground"
           data-size="icon-sm"
           data-variant="ghost"
-          data-embla="next"
+          data-carousel="next"
           type="button"
           aria-label="Next image"
         >
@@ -337,7 +337,7 @@
           </svg>
         </button>
       </div>
-    </embla-carousel>
+    </slide-carousel>
   </div>
 
   <dialog
@@ -347,10 +347,10 @@
     closedby="any"
   >
     <div class="dialog__content">
-      <embla-carousel data-embla-loop="true" data-embla-classnames>
-        <div data-embla="viewport">
-          <div data-embla="container">
-            <div class="lightbox__slide" data-embla="slide">
+      <slide-carousel data-carousel-loop="true" data-carousel-classnames>
+        <div data-carousel="viewport">
+          <div data-carousel="container">
+            <div class="lightbox__slide" data-carousel="slide">
               <figure class="lightbox__content">
                 <img
                   sizes="(max-width: 40rem) 100vw, 800px"
@@ -366,7 +366,7 @@
                 />
               </figure>
             </div>
-            <div class="lightbox__slide" data-embla="slide">
+            <div class="lightbox__slide" data-carousel="slide">
               <figure class="lightbox__content">
                 <img
                   sizes="(max-width: 40rem) 100vw, 800px"
@@ -382,7 +382,7 @@
                 />
               </figure>
             </div>
-            <div class="lightbox__slide" data-embla="slide">
+            <div class="lightbox__slide" data-carousel="slide">
               <figure class="lightbox__content">
                 <img
                   sizes="(max-width: 40rem) 100vw, 800px"
@@ -398,7 +398,7 @@
                 />
               </figure>
             </div>
-            <div class="lightbox__slide" data-embla="slide">
+            <div class="lightbox__slide" data-carousel="slide">
               <figure class="lightbox__content">
                 <img
                   sizes="(max-width: 40rem) 100vw, 800px"
@@ -414,7 +414,7 @@
                 />
               </figure>
             </div>
-            <div class="lightbox__slide" data-embla="slide">
+            <div class="lightbox__slide" data-carousel="slide">
               <figure class="lightbox__content">
                 <img
                   sizes="(max-width: 40rem) 100vw, 800px"
@@ -430,7 +430,7 @@
                 />
               </figure>
             </div>
-            <div class="lightbox__slide" data-embla="slide">
+            <div class="lightbox__slide" data-carousel="slide">
               <figure class="lightbox__content">
                 <img
                   sizes="(max-width: 40rem) 100vw, 800px"
@@ -452,7 +452,7 @@
           class="lightbox__prev button size-auto text-muted-foreground hover:text-foreground"
           data-size="icon"
           data-variant="ghost"
-          data-embla="prev"
+          data-carousel="prev"
           type="button"
           aria-label="Previous image"
         >
@@ -472,7 +472,7 @@
           class="lightbox__next button size-auto text-muted-foreground hover:text-foreground"
           data-size="icon"
           data-variant="ghost"
-          data-embla="next"
+          data-carousel="next"
           type="button"
           aria-label="Next image"
         >
@@ -488,13 +488,13 @@
             />
           </svg>
         </button>
-        <div class="lightbox__thumbs" data-embla="thumbs">
-          <div data-embla="viewport">
-            <div data-embla="container">
+        <div class="lightbox__thumbs" data-carousel="thumbs">
+          <div data-carousel="viewport">
+            <div data-carousel="container">
               <button
                 type="button"
                 class="lightbox__thumb"
-                data-embla="slide"
+                data-carousel="slide"
                 aria-label="Show image 1"
               >
                 <figure class="lightbox__thumb-content">
@@ -518,7 +518,7 @@
               <button
                 type="button"
                 class="lightbox__thumb"
-                data-embla="slide"
+                data-carousel="slide"
                 aria-label="Show image 2"
               >
                 <figure class="lightbox__thumb-content">
@@ -542,7 +542,7 @@
               <button
                 type="button"
                 class="lightbox__thumb"
-                data-embla="slide"
+                data-carousel="slide"
                 aria-label="Show image 3"
               >
                 <figure class="lightbox__thumb-content">
@@ -566,7 +566,7 @@
               <button
                 type="button"
                 class="lightbox__thumb"
-                data-embla="slide"
+                data-carousel="slide"
                 aria-label="Show image 4"
               >
                 <figure class="lightbox__thumb-content">
@@ -590,7 +590,7 @@
               <button
                 type="button"
                 class="lightbox__thumb"
-                data-embla="slide"
+                data-carousel="slide"
                 aria-label="Show image 5"
               >
                 <figure class="lightbox__thumb-content">
@@ -614,7 +614,7 @@
               <button
                 type="button"
                 class="lightbox__thumb"
-                data-embla="slide"
+                data-carousel="slide"
                 aria-label="Show image 6"
               >
                 <figure class="lightbox__thumb-content">
@@ -638,7 +638,7 @@
             </div>
           </div>
         </div>
-      </embla-carousel>
+      </slide-carousel>
     </div>
     <button
       class="lightbox__close button"

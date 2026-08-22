@@ -1,17 +1,11 @@
 ---
 title: Backgrounds
-description: Background-color utilities from the semantic role tokens, plus the shade/tint overlay scales and transparent helpers. Channel alpha and hover variants included.
+description: Background color utilities from semantic role tokens, shade/tint overlay ramps, and transparency helpers.
 ---
 
-`bg-*` utilities set `background-color` from the **theme role tokens**, so surfaces swap correctly
-between light and dark. Like the text utilities, each value is
-`oklch(from var(--role) l c h / calc(alpha × --_background-alpha))`, so
-[color-opacity](/docs/base/utilities/color-opacity) can dim just the background channel.
+`bg-*` utilities set `background-color` using semantic role tokens that resolve through `light-dark()`.
 
-Background color is the one place Zazz also ships utilities for a numeric scale, the **shade**
-and **tint** overlays, because dimming or lightening a surface is so common.
-
-## Surfaces & roles
+## Surfaces and roles
 
 | Class                                | Token                              |
 | ------------------------------------ | ---------------------------------- |
@@ -22,7 +16,7 @@ and **tint** overlays, because dimming or lightening a surface is so common.
 | `bg-muted` / `bg-muted-foreground`   | `--muted` / `--muted-foreground`   |
 | `bg-faded` / `bg-faded-foreground`   | `--faded` / `--faded-foreground`   |
 
-## Brand & status
+## Brand and status
 
 | Brand                                      | Status                                         |
 | ------------------------------------------ | ---------------------------------------------- |
@@ -35,43 +29,29 @@ and **tint** overlays, because dimming or lightening a surface is so common.
 
 | Class            | Result                                    |
 | ---------------- | ----------------------------------------- |
-| `bg-white`       | `--white` (does not flip in dark mode)    |
-| `bg-black`       | `--black` (does not flip in dark mode)    |
+| `bg-white`       | `--white` (static across light/dark)      |
+| `bg-black`       | `--black` (static across light/dark)      |
 | `bg-transparent` | `background-color: transparent`           |
 | `bg-none`        | `background: none` (clears image + color) |
 
-## Overlay scales
+## Overlay ramps
 
-Two alpha-based overlay ramps for dimming and lightening any surface. `*-none` is fully
-transparent; `*-full` is the most opaque step.
+Alpha-based overlays for modal backdrops, scrims, and frosted effects:
 
-| Scale              | Classes                                                        | Built from                       | Use                                           |
-| ------------------ | -------------------------------------------------------------- | -------------------------------- | --------------------------------------------- |
-| **Shade** (darken) | `bg-shade-none`, `bg-shade-50 … bg-shade-950`, `bg-shade-full` | `--shade-*` (from `neutral-950`) | scrims, modal backdrops (e.g. `bg-shade-800`) |
-| **Tint** (lighten) | `bg-tint-none`, `bg-tint-50 … bg-tint-950`, `bg-tint-full`     | `--tint-*` (from white)          | frosted highlights over imagery               |
-
-Because they're alpha overlays, they read the underlying surface through. Layer one over media or
-a colored panel rather than painting a solid fill.
+| Scale              | Classes                                                           | Derived from                     | Typical use             |
+| ------------------ | ----------------------------------------------------------------- | -------------------------------- | ----------------------- |
+| **Shade** (darken) | `bg-shade-none`, `bg-shade-50` to `bg-shade-950`, `bg-shade-full` | `--shade-*` (from `neutral-950`) | Scrims, modal backdrops |
+| **Tint** (lighten) | `bg-tint-none`, `bg-tint-50` to `bg-tint-950`, `bg-tint-full`     | `--tint-*` (from white)          | Highlights over media   |
 
 ```html
 <div class="grid grid-area-pile">
-  <img src="…" alt="…" class="size-full object-cover" />
+  <img src="/image.jpg" alt="" class="size-full object-cover" />
   <div class="bg-shade-700"></div>
-  <h2 class="text-white self-end p-md">Readable over any photo</h2>
+  <h2 class="text-white self-end p-md">Text overlay</h2>
 </div>
 ```
 
 ## Variants
 
-- **Hover:** every role plus `transparent`/`none` has a `hover:bg-*` counterpart. See
-  [Hover states](/docs/base/utilities/hover).
-- **Opacity:** dim just the background channel with `bg-opacity-*`. See
-  [Color opacity](/docs/base/utilities/color-opacity). It multiplies into the token's own alpha, so
-  shade/tint/faded keep their built-in translucency.
-
-<Callout type="info">
-  The full numeric brand scales (`--primary-600`, `--neutral-100`, …) have **no** `bg-` utility
-  classes by design. Reach a fixed shade through the token in custom CSS or inline. The role tokens
-  above cover the everyday cases. See the [token
-  reference](/docs/getting-started/overview#core-files) for the scale model.
-</Callout>
+- **Hover:** All roles have `hover:bg-*` counterparts. See [Hover states](/docs/foundation/utilities/hover).
+- **Opacity:** Dim background channels using `bg-opacity-*`. See [Color opacity](/docs/foundation/utilities/color-opacity).

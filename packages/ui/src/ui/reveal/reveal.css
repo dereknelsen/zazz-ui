@@ -4,9 +4,14 @@
  * @layer      variables, utilities
  * @requires   layers.css, _variables.css
  * @uses       prefers-reduced-motion — native media feature
+ * @uses       sibling-index(), sibling-count() — native stagger delays (@supports
+ *             gated — no Firefox yet; where unsupported, reveal.js writes a
+ *             per-child --reveal-wait instead)
  * @uses       Behaviour requires zazz/scripts/reveal.js (IntersectionObserver)
  * @tokens     --reveal-global-* (@layer variables);
- *             per-instance --reveal-* set from data-* attributes by reveal.js
+ *             per-instance --reveal-* set from data-* attributes by reveal.js;
+ *             --reveal-stagger-base / --reveal-stagger-step written on stagger
+ *             groups by reveal.js for the native sibling-index() path
  * @version    0.1.0
  * @since      0.1.0
  *
@@ -77,6 +82,29 @@
       transition-duration: var(--reveal-effective-duration);
       transition-delay: var(--reveal-effective-wait);
       transition-property: opacity, transform;
+    }
+
+    /* --- Stagger timing (native) --- */
+    /* Each stagger child derives its own delay from its DOM position:
+       wait = base + step × (index − 1); reversed groups count from the end.
+       reveal.js writes --reveal-stagger-base/-step on the group (from
+       data-reveal-wait / data-reveal-step, config defaults applied) and skips
+       the per-child --reveal-wait it falls back to where sibling-index() is
+       unsupported (Firefox). The literal 80ms mirrors the JS default step. */
+    @supports (top: calc(sibling-index() * 1px)) {
+      [data-reveal-each] > * {
+        --reveal-wait: calc(
+          var(--reveal-stagger-base, var(--reveal-global-wait)) + var(--reveal-stagger-step, 80ms) *
+            (sibling-index() - 1)
+        );
+      }
+
+      [data-reveal-each][data-reveal-order="reversed"] > * {
+        --reveal-wait: calc(
+          var(--reveal-stagger-base, var(--reveal-global-wait)) + var(--reveal-stagger-step, 80ms) *
+            (sibling-count() - sibling-index())
+        );
+      }
     }
 
     /* Slide animations */

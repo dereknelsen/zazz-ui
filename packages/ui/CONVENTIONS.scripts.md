@@ -9,6 +9,7 @@ Applies to all script files in `src/`. Shared runtime modules live in `src/base/
 - `embla.ts`
 - `navigation.ts`
 - `reveal.ts`
+- `signals.ts`
 - `utils.ts`
 
 Component scripts are co-located with their CSS and example HTML in `src/ui/<name>/`:
@@ -21,7 +22,7 @@ Component scripts are co-located with their CSS and example HTML in `src/ui/<nam
 
 Scripts are authored in **TypeScript** but ship as browser-native **ES modules** — no bundler, no framework. `tsc -p tsconfig.json` emits a readable, unminified `<name>.js` (plus `.d.ts` and maps) next to each `.ts`, comments preserved; the emitted files are gitignored but published to npm and served raw — the docs site serves the tree at `/zazz/src/**` (e.g. `/zazz/src/ui/toaster/toaster.js`). Consumers load or copy the emitted `.js`. `src/index.ts` is the entry module: it `import`s every component script so a page loads behavior with one `<script type="module" src="…/index.js">` tag. When you add a script, add an `import "./ui/<name>/<name>.ts";` line to `src/index.ts`.
 
-The compiler is configured in `tsconfig.json`: strict, `erasableSyntaxOnly`, `verbatimModuleSyntax`, `rewriteRelativeImportExtensions`, declaration + declarationMap, in-place emit. Type check with `pnpm --filter @zazzdesign/ui test` (`tsc --noEmit`); build with `pnpm --filter @zazzdesign/ui build` (tsc emit + `vp pack` single-file dist bundles). Ambient types for CDN and cross-script globals live in `src/globals.d.ts`.
+The compiler is configured in `tsconfig.json`: strict, `erasableSyntaxOnly`, `verbatimModuleSyntax`, `rewriteRelativeImportExtensions`, declaration + declarationMap, in-place emit. Type check and run unit tests with `pnpm --filter @zazzdesign/ui test` (`tsc -p tsconfig.test.json` + `vp test run`; `*.test.ts` files are excluded from the build emit and the npm tarball); build with `pnpm --filter @zazzdesign/ui build` (tsc emit + `vp pack` single-file dist bundles). Ambient types for CDN and cross-script globals live in `src/globals.d.ts`.
 
 ---
 
@@ -29,7 +30,7 @@ The compiler is configured in `tsconfig.json`: strict, `erasableSyntaxOnly`, `ve
 
 ### Philosophy
 
-- **Browser-native modules.** No framework, no npm runtime deps, no bundler — TypeScript in, native ES modules out. `erasableSyntaxOnly` keeps the emitted JS line-for-line close to the source: types erase, nothing else is transformed. Cross-script dependencies use `import`; external libraries Zazz doesn't ship (the Embla CDN UMD bundles) are still read as globals loaded by prior `<script>` tags.
+- **Browser-native modules.** No framework, no bundler — TypeScript in, native ES modules out. `erasableSyntaxOnly` keeps the emitted JS line-for-line close to the source: types erase, nothing else is transformed (one deliberate exception: `using` declarations — see [Scoped resources](#scoped-resources-using)). Cross-script dependencies use `import`; the kit's one npm runtime dependency (`signal-polyfill`) is imported by bare specifier and resolved by the page's import map in browsers (pinned jsDelivr URL) and by `node_modules` in tests/bundlers. External libraries Zazz doesn't ship (the Embla CDN UMD bundles) are still read as globals loaded by prior `<script>` tags.
 - **HTML-first.** Markup and data attributes drive behavior. Authors configure components in HTML; scripts discover and enhance the DOM.
 - **Progressive enhancement.** Feature-detect APIs before use. When unsupported, degrade gracefully (e.g. `navigation.ts` falls back to full page loads).
 - **Minimal surface area.** Export a small public API. Keep helpers private with `@private` JSDoc or class private fields (`#method`).
@@ -79,9 +80,10 @@ Attach a named export object or class to `window` for the documented public API,
 | File                                  | Global                        | Export shape                          |
 | ------------------------------------- | ----------------------------- | ------------------------------------- |
 | `base/utils.ts`                       | `window.Utils`                | `{ parseValue, parseDataAttributes }` |
+| `base/signals.ts`                     | `window.Signals`              | `{ state, computed, effect }`         |
 | `base/reveal.ts`                      | `window.Reveal`               | `Reveal` class                        |
 | `base/embla.ts`                       | `window.EmblaInit`            | `{ init, initRoot, ... }`             |
-| `ui/carousel/carousel.ts`             | `window.EmblaCarouselElement` | `<embla-carousel>` element class      |
+| `ui/carousel/carousel.ts`             | `window.SlideCarouselElement` | `<slide-carousel>` element class      |
 | `ui/lightbox/lightbox.ts`             | `window.MediaLightbox`        | `<media-lightbox>` element class      |
 | `ui/password-group/password-group.ts` | `window.InputPassword`        | `<input-password>` element class      |
 | `ui/tabs/tabs.ts`                     | `window.TabGroup`             | `<tab-group>` element class           |
@@ -106,7 +108,7 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
 
 - Check both `window` and `document` so the file is safe to evaluate in non-browser contexts.
 - Handle `document.readyState === "complete"` by calling `init()` immediately.
-- Make initialization **idempotent** — guard with attributes (`data-embla-init`), flags (`initFn._bound`), or instance checks so re-running is safe.
+- Make initialization **idempotent** — guard with attributes (`data-carousel-init`), flags (`initFn._bound`), or instance checks so re-running is safe.
 
 `Reveal` additionally exposes `Reveal.disableAutoInit()` and `Reveal.getAutoInstance()` for manual control.
 
@@ -115,7 +117,7 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
 Interactive components ship as **light-DOM custom elements** that augment existing markup (carousel.ts, lightbox.ts, password-group.ts, tabs.ts). They follow the [HTML web components](https://adactio.com/journal/20618) approach — wrap or replace the component's root element, never replace its content.
 
 - **No shadow DOM, no templates.** Children are regular markup; all Zazz CSS applies unchanged.
-- **Element names describe the pattern, not the brand:** `embla-carousel`, `media-lightbox`, `input-password`, `tab-group`.
+- **Element names describe the pattern, not the brand:** `slide-carousel`, `media-lightbox`, `input-password`, `tab-group`.
 - **Lifecycle, not load events.** Set up in `connectedCallback()`, tear down in `disconnectedCallback()`. Elements work when inserted dynamically — no auto-init block needed.
 - **Clean up with `AbortController`.** Bind listeners with `{ signal }` and abort on disconnect; disconnect `MutationObserver`s.
 - **Guard registration:** `if (!customElements.get("tag-name")) customElements.define(...)` so double script loads are safe.
@@ -123,32 +125,42 @@ Interactive components ship as **light-DOM custom elements** that augment existi
 - **Degrade gracefully.** Without JS the markup must still render sensibly (a password field stays masked; tabs keep native radio behavior).
 - Attach the element class to `window` and `export` it like any other script.
 
+### Reactive state (signals)
+
+Zazz bets on the [TC39 Signals proposal](https://github.com/tc39/proposal-signals) for component state, via `signal-polyfill` wrapped by `base/signals.ts`.
+
+- **`base/signals.ts` is the only file allowed to import `signal-polyfill`.** Components import `state`, `computed`, and `effect` from the wrapper, so an API shift (or native signals shipping) changes one file.
+- **Division of labor:** DOM events and observers are _input adapters_ that write into `state`; `computed` holds _pure derived logic_ (the unit-testable part); `effect` is the _output adapter_ that writes back to the DOM. `effect` accepts an `AbortSignal`, so an element's existing controller tears reactive work down with everything else; its returned disposer also implements `Symbol.dispose`, so short-lived effects (tests, scoped work) can be bound with `using`.
+- **Not everything is a signal.** Timers, transition choreography, and DOM construction stay imperative; the DOM remains the source of truth for element lists (HTML-first). A component with no derived state (e.g. `tabs.ts`) needs no signals at all.
+- Tests live next to the module (`signals.test.ts`); run them with `pnpm --filter @zazzdesign/ui test`.
+
 ### Data-attribute configuration
 
 Component scripts read configuration from HTML data attributes rather than JS options objects.
 
-- Use a consistent prefix per component: `data-embla-*`, `data-reveal-*`.
-- Parse attributes with `Utils.parseDataAttributes(node, "data-embla-")`, which converts kebab-case to camelCase and coerces types via `Utils.parseValue`.
+- Use a consistent prefix per component: `data-carousel-*`, `data-reveal-*`.
+- Parse attributes with `Utils.parseDataAttributes(node, "data-carousel-")`, which converts kebab-case to camelCase and coerces types via `Utils.parseValue`.
 - Document the full attribute reference in the file's `@fileoverview` block.
-- Set lifecycle attributes on the DOM (`data-embla-init`) so scripts can detect already-initialized elements.
+- Set lifecycle attributes on the DOM (`data-carousel-init`) so scripts can detect already-initialized elements.
 
-Boolean flags can be bare attributes (`data-embla-autoplay`) or explicit values (`data-embla-keyboard="false"`).
+Boolean flags can be bare attributes (`data-carousel-autoplay`) or explicit values (`data-carousel-keyboard="false"`).
 
 ### Dependencies and load order
 
 Scripts declare dependencies with ES `import`s, so the module graph resolves order — the entry module (`index.ts`, loaded as the emitted `index.js`) is the only tag a page loads.
 
-| Script                                | Imports                   | Notes                                            |
-| ------------------------------------- | ------------------------- | ------------------------------------------------ |
-| `base/utils.ts`                       | —                         | Provides `window.Utils`                          |
-| `base/reveal.ts`                      | —                         | Standalone                                       |
-| `base/embla.ts`                       | `base/utils.ts`           | Also needs the Embla CDN globals (see below)     |
-| `ui/carousel/carousel.ts`             | `base/embla.ts`           | `<embla-carousel>` calls `EmblaInit.initRoot`    |
-| `ui/lightbox/lightbox.ts`             | `ui/carousel/carousel.ts` | `<media-lightbox>` coordinates carousel elements |
-| `ui/password-group/password-group.ts` | —                         | Standalone (`<input-password>`)                  |
-| `ui/tabs/tabs.ts`                     | —                         | Standalone (`<tab-group>`)                       |
-| `ui/toaster/toaster.ts`               | `base/utils.ts`           | `<toast-region>` + `window.Toaster` toast API    |
-| `base/navigation.ts`                  | —                         | App-level; inert in component preview iframes    |
+| Script                                | Imports                            | Notes                                            |
+| ------------------------------------- | ---------------------------------- | ------------------------------------------------ |
+| `base/utils.ts`                       | —                                  | Provides `window.Utils`                          |
+| `base/signals.ts`                     | `signal-polyfill` (npm)            | The **only** file allowed to import the polyfill |
+| `base/reveal.ts`                      | —                                  | Standalone                                       |
+| `base/embla.ts`                       | `base/utils.ts`                    | Also needs the Embla CDN globals (see below)     |
+| `ui/carousel/carousel.ts`             | `base/embla.ts`                    | `<slide-carousel>` calls `EmblaInit.initRoot`    |
+| `ui/lightbox/lightbox.ts`             | `ui/carousel/carousel.ts`          | `<media-lightbox>` coordinates carousel elements |
+| `ui/password-group/password-group.ts` | `base/signals.ts`                  | Standalone (`<input-password>`)                  |
+| `ui/tabs/tabs.ts`                     | —                                  | Standalone (`<tab-group>`)                       |
+| `ui/toaster/toaster.ts`               | `base/utils.ts`, `base/signals.ts` | `<toast-region>` + `window.Toaster` toast API    |
+| `base/navigation.ts`                  | —                                  | App-level; inert in component preview iframes    |
 
 When a script needs `Utils`, `import { Utils } from "../../base/utils.ts"` (from a `src/ui/<name>/` folder) — do not duplicate parsing logic. The one thing the module graph can't order is the **Embla CDN UMD bundles**: `embla.ts` reads them as globals, so their `<script defer>` tags must precede the `index.js` module in the document.
 
@@ -168,11 +180,34 @@ When a script needs `Utils`, `import { Utils } from "../../base/utils.ts"` (from
 - Use **private class fields** (`#observers`, `#getObserver`) for encapsulation.
 - Use **`const` arrow functions** for callbacks and short helpers; **`function` declarations** for hoisted init functions called before definition in the file.
 
+### Scoped resources (`using`)
+
+Prefer a [`using` declaration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/using) (Explicit Resource Management) for **scoped acquire/release** — a resource acquired and released within one function scope, where the release must run at scope exit even when the code in between throws or returns early. Examples in the kit: temporarily unclamping toast heights for a batch measurement (`toaster.ts` `#reindex`), or a test-scoped `effect` (the disposer `effect()` returns implements `Symbol.dispose`, so `using dispose = effect(...)` tears it down at scope end).
+
+```typescript
+using _measure = unclampForMeasure(toasts); // restore runs at scope exit, throw or not
+const entries = toasts.map((toast) => ({ node: toast, height: toast.offsetHeight }));
+```
+
+Rules:
+
+- **TypeScript sources only — never in vanilla JS.** Safari has no native Explicit Resource Management, so `using` must not appear in docs snippets, example HTML, inline `<script>`s, or anything shipped uncompiled. In `.ts` sources it is safe: tsc (target ES2022) compiles `using` to plain try/finally.
+- **Add the symbol fallback to every module that touches the protocol.** The compiled helpers (and `[Symbol.dispose]` method definitions) read `Symbol.dispose` at runtime and throw where it doesn't exist. Any file that declares `using` or creates a disposable carries this line after its imports:
+
+  ```typescript
+  (Symbol as { dispose: symbol }).dispose ??= Symbol("Symbol.dispose");
+  ```
+
+- **`using` is for same-scope cleanup only.** Cleanup that spans callbacks — element lifecycles from `connectedCallback()` to `disconnectedCallback()`, long-lived observers — stays on `AbortController` and explicit `disconnect()`; `using` cannot model it.
+- **This is the one deliberate exception to line-for-line emit.** Files containing `using` gain tsc's injected `__addDisposableResource`/`__disposeResources` helpers (~50 lines) in the published `.js`. Reach for it where guaranteed cleanup earns that; don't scatter it decoratively.
+- `erasableSyntaxOnly` permits `using` — it is JavaScript syntax, not TypeScript-only syntax. The types come from `"ESNext.Disposable"` in the tsconfig `lib`.
+
 ### Syntax and style
 
 - Double quotes for strings.
 - Semicolons required.
 - Optional chaining (`?.`) and nullish coalescing where they simplify guards.
+- `using` for scoped acquire/release in `.ts` sources — never in vanilla-JS snippets (see [Scoped resources](#scoped-resources-using)).
 - Types live in TypeScript annotations, not JSDoc braces; ambient types for CDN and cross-script globals stay in `globals.d.ts`.
 - **Erasable syntax only** — no enums, namespaces, or parameter properties; nothing that requires tsc to generate code (`erasableSyntaxOnly` enforces this). Use `import type` / `export type` for type-only imports (`verbatimModuleSyntax`).
 - Import sibling modules with explicit `.ts` extensions — `rewriteRelativeImportExtensions` emits them as `.js`.

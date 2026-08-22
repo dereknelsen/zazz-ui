@@ -1,23 +1,19 @@
 ---
 title: Button group
-description: Join adjacent buttons into a single segmented unit, horizontal or vertical.
+description: Segmented button controls in horizontal or vertical layouts.
 ---
 
-Wrap two or more `.button`s in `.button-group` to fuse them into one segmented
-control. The group squares off the inner corners and collapses the shared border so
-the buttons read as a unit, while each button keeps its own `data-variant` and
-`data-size`. Add `role="group"` and an `aria-label` so assistive tech announces the
-set.
+Wrap `.button` elements in `.button-group` to combine them into a single segmented control. The container squares inner corners and collapses borders. Add `role="group"` and `aria-label` for accessibility.
 
 ## Horizontal
 
-The default orientation lays buttons out in a row.
+Horizontal layout is the default:
 
 <Preview src="button-group/default" align="center" />
 
 ## Vertical
 
-Set `data-orientation="vertical"` on the wrapper to stack them.
+Add `data-orientation="vertical"` to stack buttons:
 
 <Preview src="button-group/vertical" align="center" />
 
@@ -27,7 +23,4 @@ Set `data-orientation="vertical"` on the wrapper to stack them.
 | ------------------ | -------------------------------------- |
 | `data-orientation` | `vertical` (omit = horizontal default) |
 
-The group reads each child's own `--button-radius`, so the outer corners follow the
-buttons' `data-size` automatically — only the inner corners are squared. Need a
-divider between segments? Drop your own separator element in as a child; it inherits
-the same border collapse. You never need to touch Zazz's own stylesheets.
+Outer corners adapt to child button `--button-radius` tokens automatically.

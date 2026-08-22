@@ -3,30 +3,27 @@ title: Table
 description: Styled semantic HTML tables with striped, grid, and compact variants.
 ---
 
-Tables use the `.table` class on a plain `<table>` element — every other part is just semantic
-HTML (`<caption>`, `<thead>`, `<tbody>`, `<tfoot>`, `<tr>`, `<th>`, `<td>`). Rows get a subtle
-hover tint by default; mark a row with `data-state="selected"` for a persistent highlight.
-Right-align numeric columns with the `text-right` utility on the cells. For wide tables, wrap
-the `<table>` in a `<div class="overflow-x-auto">`.
+Apply `.table` to a standard `<table>` element (`<caption>`, `<thead>`, `<tbody>`, `<tfoot>`, `<tr>`, `<th>`, `<td>`). Rows include hover tints by default. Set `data-state="selected"` on a `<tr>` for selected styling.
+
+Wrap wide tables in `<div class="overflow-x-auto">` for horizontal scrolling.
 
 <Preview src="table/default" />
 
-## Alternating
+## Alternating rows
 
-`data-variant="alternating"` stripes even body rows and drops the row dividers. The stripe
-color comes from `--table-alternating-background`.
+Add `data-variant="alternating"` for zebra striping:
 
 <Preview src="table/alternating" />
 
-## Grid
+## Grid format
 
-`data-variant="grid"` adds an outer border and column dividers for a fully ruled table.
+Add `data-variant="grid"` for borders around all cells:
 
 <Preview src="table/grid" />
 
-## Small
+## Compact size
 
-`data-size="sm"` tightens cell padding and the header height for dense reference tables.
+Add `data-size="sm"` to reduce cell padding:
 
 <Preview src="table/size-sm" />
 
@@ -37,9 +34,7 @@ color comes from `--table-alternating-background`.
 | `data-variant` | `alternating`, `grid` (omit = default)    |
 | `data-size`    | `sm`                                      |
 | `data-layout`  | `fixed` (omit = `table-layout: auto`)     |
-| `data-state`   | `selected` (on a `<tbody>` row)           |
+| `data-state`   | `selected` (on a `<tr>`)                  |
 | `data-side`    | `top` (on the `<caption>`; omit = bottom) |
 
-Every style setting is a `--table-*` token — override globally on `:root`, or per instance,
-e.g. `style="--table-row-background--hover: transparent"` to turn off the hover tint, or
-`style="--table-alternating-background: var(--accent)"` to recolor the stripes.
+Override styling tokens globally on `:root` or on an instance (`--table-row-background--hover`, `--table-alternating-background`).

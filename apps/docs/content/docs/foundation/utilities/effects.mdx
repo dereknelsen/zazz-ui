@@ -1,15 +1,11 @@
 ---
 title: Effects
-description: "Shadow elevation, element opacity, scale transforms, and transition utilities: the visual-effect and motion helpers."
+description: Shadow elevations, element opacity, scale transforms, and CSS transitions.
 ---
 
-Effect utilities cover elevation, element opacity, scale, and transitions. For dimming a single
-color channel (rather than the whole element) see [Color opacity](/docs/base/utilities/color-opacity).
+Effect utilities configure elevation, element opacity, scale transforms, and transitions.
 
 ## Box shadow
-
-Soft, multi-layer shadows from the elevation scale. Surfaces are flat by default. Apply
-elevation intentionally (`md` ≈ popovers and modals).
 
 | Class         | Token              |
 | ------------- | ------------------ |
@@ -22,8 +18,7 @@ elevation intentionally (`md` ≈ popovers and modals).
 
 ## Opacity
 
-Sets the whole element's `opacity`, so **children fade too**. To dim only a color channel and leave
-content fully opaque, use [Color opacity](/docs/base/utilities/color-opacity) instead.
+Sets element-level `opacity` (fading all children):
 
 | Class         | Value  |
 | ------------- | ------ |
@@ -33,40 +28,34 @@ content fully opaque, use [Color opacity](/docs/base/utilities/color-opacity) in
 | `opacity-75`  | `0.75` |
 | `opacity-100` | `1`    |
 
-`opacity-*` also has `hover:` variants ([Hover states](/docs/base/utilities/hover)). `hover:opacity-75`
-is a common image-hover treatment.
+Supports `hover:` prefixes (e.g. `hover:opacity-75`). To fade only colors without children, see [Color opacity](/docs/foundation/utilities/color-opacity).
 
 ## Scale
 
-Transform an element's size. Most useful paired with a transition and a hover variant.
+| Class                                              | Value                 |
+| -------------------------------------------------- | --------------------- |
+| `scale-0`                                          | `scale(0)`            |
+| `scale-50`, `scale-75`, `scale-90`, `scale-95`     | `scale(0.5 ... 0.95)` |
+| `scale-100`                                        | `scale(1)`            |
+| `scale-105`, `scale-110`, `scale-125`, `scale-150` | `scale(1.05 ... 1.5)` |
 
-| Class                                           | Transform           |
-| ----------------------------------------------- | ------------------- |
-| `scale-0`                                       | `scale(0)`          |
-| `scale-50` `scale-75` `scale-90` `scale-95`     | `scale(0.5 … 0.95)` |
-| `scale-100`                                     | `scale(1)`          |
-| `scale-105` `scale-110` `scale-125` `scale-150` | `scale(1.05 … 1.5)` |
-
-The full set also exists as `hover:scale-*`.
+All scale utilities support `hover:scale-*`.
 
 ## Transitions
 
-Animate property changes using the system's motion tokens (`--default-transition-*`, which respect
-`prefers-reduced-motion`).
+Transitions map to system tokens (`--default-transition-*`):
 
-| Class                  | Animates                                           |
-| ---------------------- | -------------------------------------------------- |
-| `transition`           | the default bundle of commonly animated properties |
-| `transition-all`       | `all`                                              |
-| `transition-opacity`   | `opacity`                                          |
-| `transition-transform` | `transform`                                        |
+| Class                  | Property             |
+| ---------------------- | -------------------- |
+| `transition`           | Default property set |
+| `transition-all`       | `all`                |
+| `transition-opacity`   | `opacity`            |
+| `transition-transform` | `transform`          |
 
 ```html
-<img class="rounded-md transition hover:scale-102 hover:opacity-75" src="…" alt="…" />
+<img class="rounded-md transition hover:scale-102 hover:opacity-75" src="/thumb.jpg" alt="" />
 ```
 
 <Callout type="info">
-  `prefers-reduced-motion: reduce` zeroes the transition duration globally, so you don't need to
-  guard hover effects yourself. See the [motion tokens](/docs/getting-started/overview) for the
-  easing and duration values.
+  When `prefers-reduced-motion: reduce` is active, transition duration defaults to `0ms`.
 </Callout>

@@ -1,33 +1,21 @@
 ---
 title: Lightbox
-description: A media lightbox web component with an inline gallery, fullscreen dialog, and thumbs.
+description: Media lightbox custom element combining an inline gallery, fullscreen dialog, and synchronized thumbnails.
 ---
 
-The lightbox pairs an inline `<embla-carousel>` gallery with a fullscreen `<dialog>`
-carousel and thumb strip, all wrapped in `<media-lightbox>`. Slides open the dialog via
-`command="show-modal"`, so opening and closing still comes from HTML. The web component
-only coordinates state: it opens the dialog carousel at the gallery's current slide,
-focuses the viewport for keyboard navigation, and syncs the inline gallery to the last
-viewed slide when the dialog closes.
-
-The elements use light DOM, so the `.lightbox` classes and `data-embla-*` attributes style
-and configure the same markup you author. The preview loads the required scripts
-automatically; open the JS tab to inspect the custom elements.
+`<media-lightbox>` coordinates an inline `<slide-carousel>` gallery with a fullscreen `<dialog>` carousel. Slides open the dialog using `command="show-modal"`. The component syncs slide indices between the inline and fullscreen carousels.
 
 ## Default
 
 <Preview src="lightbox/default" />
 
-## API
+## Markup structure
 
-| Markup                                                           | Where    | Purpose                                                  |
-| ---------------------------------------------------------------- | -------- | -------------------------------------------------------- |
-| `<media-lightbox class="lightbox">`                              | root     | Coordinates the inline gallery and dialog carousel       |
-| `<embla-carousel class="lightbox__stage">`                       | gallery  | Inline carousel; owns drag, thumbs, and stage navigation |
-| `<dialog class="lightbox__dialog">`                              | root     | Fullscreen modal surface                                 |
-| `<embla-carousel>`                                               | dialog   | Fullscreen carousel; initialized when the dialog opens   |
-| `command="show-modal"` / `command="close"`                       | triggers | Opens and closes the dialog through Invoker Commands     |
-| `data-embla="viewport"` / `"container"` / `"slide"` / `"thumbs"` | children | Embla roles for stage, slides, and thumb carousel        |
-
-Put Embla options (`data-embla-loop`, `data-embla-classnames`, etc.) on each
-`<embla-carousel>`.
+| Markup                                                              | Placement | Purpose                                          |
+| ------------------------------------------------------------------- | --------- | ------------------------------------------------ |
+| `<media-lightbox class="lightbox">`                                 | Root      | Coordinates gallery and modal state              |
+| `<slide-carousel class="lightbox__stage">`                          | Gallery   | Inline carousel with drag and thumbnail support  |
+| `<dialog class="lightbox__dialog">`                                 | Root      | Fullscreen modal container                       |
+| `<slide-carousel>`                                                  | Dialog    | Fullscreen carousel initialized when modal opens |
+| `command="show-modal"` / `command="close"`                          | Triggers  | Opens and closes dialog using Invoker Commands   |
+| `data-carousel="viewport"` / `"container"` / `"slide"` / `"thumbs"` | Children  | Embla layout roles                               |

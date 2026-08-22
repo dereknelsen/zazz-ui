@@ -4,7 +4,7 @@ import { cn } from "@/lib/cn";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { buildPreviewDocument } from "@/lib/zazz-iframe";
 import type { ExampleScript } from "@zazzdesign/ui/manifest";
-import { buttonVariants } from "./ui/button";
+import { buttonVariants } from "fumadocs-ui/components/ui/button";
 import { ExpandIcon, XIcon } from "lucide-react";
 
 interface PreviewFrameProps {

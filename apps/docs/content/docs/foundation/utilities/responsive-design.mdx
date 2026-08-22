@@ -1,142 +1,56 @@
 ---
 title: Responsive design
-description: Zazz's responsive prefixes are container style queries gated on one set of breakpoint flags. The body container publishes them off the page width, so every component crosses a breakpoint together. The prefixes, the families that carry them, and where the breakpoints come from.
+description: "Container style query prefixes (@xs: to @xl:) and supported utility families."
 ---
 
-Responsive utilities in Zazz wear an `@` prefix: `@xs:`, `@sm:`, `@md:`, `@lg:`, `@xl:`. Each prefix
-is a **container style query** that reads a centralized breakpoint flag, so `@md:grid-cols-3` turns
-on once the page passes the `md` width. The breakpoints are defined in one place and published to
-the whole page, so everything crosses them in step.
+Responsive utilities use container style queries with `@` prefixes: `@xs:`, `@sm:`, `@md:`, `@lg:`, `@xl:`.
 
 <Preview src="utilities/responsive-grid" />
 
-## The prefixes
+## Prefixes
 
-Five breakpoints, written like Tailwind's container variants: prefix a utility with `@xs:`, `@sm:`,
-`@md:`, `@lg:`, or `@xl:`. Each is min-width style, active **at or above** its width, so the
-unprefixed class is your base and prefixes layer on as the page grows.
+Each prefix applies min-width style rules at or above the threshold:
 
-| Prefix   | Activates at or above | Token             |
-| -------- | --------------------- | ----------------- |
-| _(none)_ | always — the base     | —                 |
-| `@xs:`   | `40rem`               | `--breakpoint-xs` |
-| `@sm:`   | `48rem`               | `--breakpoint-sm` |
-| `@md:`   | `64rem`               | `--breakpoint-md` |
-| `@lg:`   | `80rem`               | `--breakpoint-lg` |
-| `@xl:`   | `96rem`               | `--breakpoint-xl` |
+| Prefix | Threshold | Token             |
+| ------ | --------- | ----------------- |
+| (none) | Base view | None              |
+| `@xs:` | 40rem     | `--breakpoint-xs` |
+| `@sm:` | 48rem     | `--breakpoint-sm` |
+| `@md:` | 64rem     | `--breakpoint-md` |
+| `@lg:` | 80rem     | `--breakpoint-lg` |
+| `@xl:` | 96rem     | `--breakpoint-xl` |
 
 ```html
-<!-- 1 column by default, 2 from xs, 3 from sm, 4 from lg -->
-<div class="grid grid-cols-1 @xs:grid-cols-2 @sm:grid-cols-3 @lg:grid-cols-4 gap-md">…</div>
+<div class="grid grid-cols-1 @xs:grid-cols-2 @sm:grid-cols-3 @lg:grid-cols-4 gap-md">...</div>
 ```
 
-The prefixes are min-width only. To target small screens, write the small layout as the unprefixed
-base and let a prefix override it from its breakpoint up.
+## How breakpoints work
 
-## Where the breakpoints come from
+1. `_variables.css` defines `--breakpoint-*` length tokens.
+2. The `body` element acts as a container (`container-name: body`). Container size queries set boolean flags (`--is-breakpoint-md: true`) when width thresholds are reached.
+3. Responsive classes evaluate `@container style(--is-breakpoint-md: true)`.
 
-The breakpoints live in one place. `--breakpoint-xs` through `--breakpoint-xl` are length tokens in
-[`_variables.css`](/docs/base/variables), and a matching set of boolean flags,
-`--is-breakpoint-xs` through `--is-breakpoint-xl`, tracks which ones the page has passed.
+## Supported responsive families
 
-The page **body** is a container (`container-name: body`), and one block of size queries flips each
-flag to `true` once the body reaches that width:
+- **Container:** `container` (and `data-variant="article"`)
+- **Display:** `hidden`, `block`, `flex`, `inline-flex`, `grid`
+- **Subgrid:** `grid-cols-subgrid`, `grid-rows-subgrid`
+- **Grid tracks:** `grid-cols-1...12`, `grid-rows-1...12`
+- **Grid spans:** `col-span-1...12`, `row-span-1...12`
+- **Flex direction:** `flex-row`, `flex-col`
+- **Flex basis:** `basis-0`, `basis-auto`, `basis-full`, `basis-1/2...1/6`
+- **Align items:** `items-start`, `items-center`, `items-end`, `items-stretch`
+- **Justify content:** `justify-start`, `justify-center`, `justify-end`, `justify-stretch`, `justify-around`, `justify-between`
+- **Text align:** `text-left`, `text-center`, `text-right`, `text-justify`
 
-```css
-@container (width >= 64rem) {
-  :where(body *) {
-    --is-breakpoint-md: true;
-  }
-}
-```
+## Base-only families
 
-Every responsive utility then reads the flag through a **style query** instead of carrying its own
-`min-width`:
+To keep CSS size compact, the following families do not generate responsive prefixes:
 
-```css
-@container style(--is-breakpoint-md: true) {
-  :where(.\@md\:grid-cols-3) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-```
+- Self alignment (`self-*`, `justify-self-*`, `place-items-*`)
+- Spacing (`p-*`, `m-*`, `gap-*`), sizing (`w-*`, `h-*`, `size-*`), and negative margins
+- Color, borders, radius, shadow, opacity, and scale
 
-Two things follow. The breakpoints are **centralized**: change `--breakpoint-md` once and every
-`@md:` utility moves with it, with no `min-width` repeated across the stylesheet. And because the
-flags come from the body, every element crosses a breakpoint at the same page width, so a layout
-never disagrees with itself from one region to the next.
-
-<Callout type="info">
-  The size queries are authored as literal `rem` values, because `var()` isn't allowed in a
-  `@container` prelude. The tokens and the queries are kept in lockstep by hand, and you can still
-  use `--breakpoint-*` inside `calc()` everywhere else.
-</Callout>
-
-## Which utilities are responsive
-
-Responsive variants exist for the **layout** families, the ones you actually rearrange across
-breakpoints. Each is available at every prefix (`@xs:` through `@xl:`):
-
-| Family          | Responsive classes                                                                                  |
-| --------------- | --------------------------------------------------------------------------------------------------- |
-| Container       | `container` (with `data-variant="article"`)                                                         |
-| Display         | `hidden` `block` `flex` `inline-flex` `grid`                                                        |
-| Subgrid         | `grid-cols-subgrid` `grid-rows-subgrid`                                                             |
-| Grid tracks     | `grid-cols-1…12` `grid-rows-1…12`                                                                   |
-| Grid spans      | `col-span-1…12` `row-span-1…12`                                                                     |
-| Flex direction  | `flex-row` `flex-col`                                                                               |
-| Flex basis      | `basis-0` `basis-auto` `basis-full` `basis-1/2…1/6`                                                 |
-| Align items     | `items-start` `items-center` `items-end` `items-stretch`                                            |
-| Justify content | `justify-start` `justify-center` `justify-end` `justify-stretch` `justify-around` `justify-between` |
-| Text align      | `text-left` `text-center` `text-right` `text-justify`                                               |
-
-The container variants drive the page width system; see [Containers](/docs/base/utilities/layout#containers).
-
-### What is base-only (no prefix)
-
-To keep the stylesheet lean, less-toggled families ship **only** as base classes. Apply them
-outside the responsive layer:
-
-- `self-*`, `justify-self-*`, `place-items-*`
-- `visible` / `invisible`, and the `inline` / `inline-block` display values
-- spacing (`p-*`, `m-*`, `gap-*`), sizing (`w-*`, `h-*`, `size-*`), and negative margins
-- color, border, radius, shadow, opacity, and scale
-
-If you need one of these to change at a breakpoint, drive it from a parent that _does_ flip (e.g.
-restructure with `@md:flex-row`) rather than reaching for a per-breakpoint spacing class.
-
-## Ordering
-
-Source order in `_utilities.css` puts the base classes **before** the `@container` blocks, so a
-prefixed variant always wins over its base when its breakpoint is active. Write them in natural
-reading order: base first, then ascending prefixes:
-
-```html
-<div class="flex-col @sm:flex-row @lg:items-center">…</div>
-```
-
-## Style queries, not media queries
-
-These prefixes compile to container **style** queries, not `@media`. Two practical differences from
-a media-query framework:
-
-- **One source of truth.** The widths are tokens, not values scattered through `min-width` rules,
-  so you retune the whole system from `_variables.css` and every prefix follows.
-- **They live inside the cascade layers.** A style query is just another layered rule, so a
-  responsive variant overrides its base by layer order, the same way every utility does, with no
-  specificity to manage.
-
-The flags are page-wide, so these behave like classic min-width breakpoints: a layout reshapes at
-the same width everywhere on the page. When you need one piece to respond to the size of its own box
-instead of the page, write a scoped `@container` query in
-[your own stylesheet](/docs/core-concepts/custom-styles).
+Change layout structure at breakpoints (e.g. `@md:flex-row`) to adapt spacing instead of using per-breakpoint spacing classes.
 
 <Preview src="utilities/responsive-flex" />
-
-## Browser support
-
-[Container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries)
-are [Baseline](https://web.dev/baseline) and widely available. The style-query form Zazz reads the
-breakpoint flags with is newer but supported across current Chrome, Safari, and Firefox. In a
-browser without it, components fall back to their base (smallest) layout: usable, just not adaptive.
-Hit **Expand** on the previews above to widen their frame and watch the breakpoints fire.
