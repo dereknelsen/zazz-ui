@@ -144,7 +144,7 @@ Zazz bets on the [TC39 Signals proposal](https://github.com/tc39/proposal-signal
 Component scripts read configuration from HTML data attributes rather than JS options objects.
 
 - Use a consistent prefix per component: `data-carousel-*`, `data-reveal-*`.
-- Parse attributes with `Utils.parseDataAttributes(node, "data-carousel-")`, which converts kebab-case to camelCase and coerces types via `Utils.parseValue`.
+- Parse attributes with `Utils.parseDataAttributes(node, "data-carousel-")`, which converts kebab-case to camelCase and coerces types via `Utils.parseValue`. It returns `Record<string, unknown>`; when a caller needs a typed shape, wrap it once at its own boundary (see `readCarouselOptions` in `base/embla.ts`) rather than asserting at each call site. Parse for a single expected type directly instead (the toaster reads `data-duration` with `Number`).
 - Document the full attribute reference in the file's `@fileoverview` block.
 - Set lifecycle attributes on the DOM (`data-carousel-init`) so scripts can detect already-initialized elements.
 - Keep the three attribute families straight (ADR-0002): **config props** (`data-carousel-*`, `data-reveal-*`) and **variant/state props** (`data-variant`, `data-size`, `data-side`, `data-align`, `data-orientation`, `data-position`) are bare-keyed and unprefixed; **interior parts** are `data-slot="{primitive}-{part}"` — a space-separated token list, always matched with `[data-slot~="…"]`. `ui-` prefixes things that _name_ Zazz (tags, classes, component tokens); attribute keys that carry values stay bare.

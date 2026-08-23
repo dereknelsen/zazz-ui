@@ -3,7 +3,17 @@
 /**
  * @fileoverview Data attribute and value parsing utilities.
  * @description Shared helpers for converting HTML data-attribute strings into
- * typed JavaScript values. Used by component scripts such as `embla.js`.
+ * typed JavaScript values.
+ *
+ * This is a **public, consumer-facing** surface (`window.Utils`, documented at
+ * /docs/components/utils), not just kit plumbing: data-attribute configuration
+ * is the kit's documented pattern for authoring a component
+ * (CONVENTIONS.scripts.md), so anyone writing a component in the Zazz idiom
+ * needs this exact parser to match kit behaviour. Keep it here rather than
+ * folding it into a caller — see docs/adr/0004-keep-utils-public.md.
+ *
+ * Callers that need a typed result should wrap it at their own boundary (see
+ * `readCarouselOptions` in embla.ts) rather than narrowing at each call.
  */
 
 // --- Data type conversion ---
