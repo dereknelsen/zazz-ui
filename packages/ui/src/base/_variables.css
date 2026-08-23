@@ -412,7 +412,34 @@
      * --ring-offset-shadow (a --ring-offset-width gap in --ring-offset-color) +
      * --ring-shadow (a --ring-width band of --ring) — the same composition
      * Tailwind's ring utilities use (--tw-ring-*), so values port 1:1.
-     * Override --ring-color (not --ring) per variant/context; --ring recomputes via color-mix. */
+     *
+     * Override --ring-color, never --ring: a custom property resolves its own
+     * var()s on the element where it is DECLARED, then the resolved value
+     * inherits. So redeclaring --ring here (or on :root) bakes in this element's
+     * --ring-color and no descendant override can change it. To re-colour a
+     * ring, declare --_ring on the element that paints it (below).
+     *
+     * The animated recipe. Components paint the ring as a box-shadow so it
+     * composes with their own shadow and can grow from 0 on focus. Copy this
+     * verbatim — it is byte-identical in every component, and for the same
+     * reason as above it cannot be hoisted into one token here: the widths must
+     * resolve per element, and a :root-composed token would freeze them at 0.
+     *
+     *   --_ring-offset-width: 0px;
+     *   --_ring-width: 0px;
+     *   --_ring: color-mix(in oklch, var(--ui-x-ring-color) var(--ring-opacity), transparent);
+     *   box-shadow:
+     *     0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
+     *     0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring, var(--ring)),
+     *     var(--ui-x-shadow);
+     *
+     * …then grow it in the focus rule:
+     *
+     *   --_ring-offset-width: var(--ring-offset-width);
+     *   --_ring-width: var(--ring-width);
+     *   outline-color: transparent;
+     *
+     * --_ring is optional: omit it and the ring falls back to --ring. */
     --ring-color: var(--primary);
     --ring-opacity: 70%;
     --ring: color-mix(in oklch, var(--ring-color) var(--ring-opacity), transparent);

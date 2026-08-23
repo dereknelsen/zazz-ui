@@ -126,7 +126,7 @@
     --_ring: color-mix(in oklch, var(--ui-tabs-label-ring-color) var(--ring-opacity), transparent);
     box-shadow:
       0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring);
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring, var(--ring));
 
     /* transparent twin of the ring for forced-colors / high-contrast modes */
     outline: var(--outline-width) var(--outline-style) transparent;
@@ -193,7 +193,7 @@
       background-color: var(--ui-tabs-indicator-background);
       box-shadow:
         0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
-        0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring),
+        0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring, var(--ring)),
         var(--ui-tabs-indicator-shadow);
     }
   }

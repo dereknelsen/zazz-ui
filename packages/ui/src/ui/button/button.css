@@ -77,7 +77,7 @@
     --_ring: color-mix(in oklch, var(--ui-button-ring-color) var(--ring-opacity), transparent);
     box-shadow:
       0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring, var(--ring)),
       var(--ui-button-shadow);
 
     cursor: default;
