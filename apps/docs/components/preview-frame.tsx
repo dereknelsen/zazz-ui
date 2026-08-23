@@ -10,10 +10,10 @@ import { ExpandIcon, XIcon } from "lucide-react";
 interface PreviewFrameProps {
   html: string;
   scripts?: ExampleScript[];
-  /** Vertical placement of the demo. */
-  justify?: "start" | "center" | "end";
-  /** Horizontal placement of the demo. */
-  align?: "start" | "center" | "end";
+  /** Block-axis (vertical) placement of the demo — drives `align-content`. */
+  block?: "start" | "center" | "end";
+  /** Inline-axis (horizontal) placement of the demo — drives `justify-items`. */
+  inline?: "start" | "center" | "end";
   minHeight?: number;
   title?: string;
 }
@@ -27,8 +27,8 @@ interface PreviewFrameProps {
 export function PreviewFrame({
   html,
   scripts,
-  justify = "center",
-  align = "center",
+  block = "center",
+  inline = "center",
   minHeight = 0,
   title = "Preview",
 }: PreviewFrameProps) {
@@ -40,8 +40,8 @@ export function PreviewFrame({
   const toggleFullscreen = useCallback(() => setFullscreen((v) => !v), []);
 
   const srcDoc = useMemo(
-    () => buildPreviewDocument({ html, scripts, justify, align, minHeight }),
-    [html, scripts, justify, align, minHeight],
+    () => buildPreviewDocument({ html, scripts, block, inline, minHeight }),
+    [html, scripts, block, inline, minHeight],
   );
 
   // Reset loaded state when content changes.

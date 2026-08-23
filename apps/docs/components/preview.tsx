@@ -1,5 +1,5 @@
 import { readExample, readComponentCss, readComponentJs } from "@/lib/zazz-assets";
-import { getExampleMeta } from "@zazzdesign/ui/manifest";
+import { getExampleMeta } from "@/lib/preview-manifest";
 import { DynamicCodeBlock } from "fumadocs-ui/components/dynamic-codeblock";
 import { cn } from "@/lib/cn";
 import { Tab, Tabs } from "./tabs";
@@ -8,10 +8,6 @@ import { PreviewFrame } from "./preview-frame";
 interface PreviewProps {
   /** Example id like `button/variants` — reads src/ui/button/variants.html in @zazzdesign/ui. */
   src: string;
-  /** Vertical placement of the demo. */
-  justify?: "start" | "center" | "end";
-  /** Horizontal placement of the demo. */
-  align?: "start" | "center" | "end";
   className?: string;
 }
 
@@ -21,7 +17,7 @@ interface PreviewProps {
  * from that one string: a live, isolated iframe preview and the exact code
  * block. No second copy can drift.
  */
-export function Preview({ src, justify, align, className }: PreviewProps) {
+export function Preview({ src, className }: PreviewProps) {
   const html = readExample(src);
 
   if (html == null) {
@@ -44,8 +40,8 @@ export function Preview({ src, justify, align, className }: PreviewProps) {
           <PreviewFrame
             html={html}
             scripts={meta?.requiresScripts}
-            justify={justify ?? meta?.justify ?? "center"}
-            align={align ?? meta?.align ?? "center"}
+            block={meta?.block ?? "center"}
+            inline={meta?.inline ?? "center"}
             minHeight={meta?.minHeight}
             title={meta?.title ?? src}
           />
