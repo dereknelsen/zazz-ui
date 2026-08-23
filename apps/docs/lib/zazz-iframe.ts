@@ -1,5 +1,6 @@
 import { buildHead } from "@zazzdesign/ui/head";
 import type { ExampleScript } from "@zazzdesign/ui/manifest";
+import { ZAZZ_URL_BASE } from "@/lib/zazz-url";
 
 /**
  * Builds the full HTML document for a component-preview iframe. The example fragment is
@@ -8,10 +9,10 @@ import type { ExampleScript } from "@zazzdesign/ui/manifest";
  * CSS runs on the docs site — fully sandboxed from Tailwind + fumadocs.
  *
  * The head comes from the kit's own head contract (`@zazzdesign/ui/head`) with
- * `base: "/zazz/src"` — the `/zazz/*` route serves the workspace package raw (see
- * `app/zazz/[...path]/route.ts`). One implementation of the head to maintain; the
- * preview adds only its own concerns (navigation blocking, demo placement styles).
- * Pure string building — safe to run on the client.
+ * `base: ZAZZ_URL_BASE` — the `/zazz/*` route serves the workspace package's `src/`
+ * tree raw (see `app/zazz/[...path]/route.ts`). One implementation of the head to
+ * maintain; the preview adds only its own concerns (navigation blocking, demo
+ * placement styles). Pure string building — safe to run on the client.
  */
 
 export interface BuildPreviewOptions {
@@ -47,7 +48,7 @@ export function buildPreviewDocument({
   // fallback text), one stylesheet, and — only when the example needs behavior —
   // the import map, polyfills, and the single index.js module.
   const head = buildHead({
-    base: "/zazz/src",
+    base: ZAZZ_URL_BASE,
     scripts: scripts.length > 0,
     fontDisplay: "optional",
   });

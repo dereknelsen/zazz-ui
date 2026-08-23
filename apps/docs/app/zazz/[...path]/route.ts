@@ -1,23 +1,20 @@
-import { createRequire } from "node:module";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { SERVED_ROOT, resolveWithin } from "@/lib/zazz-package";
 
 /**
- * Serves the raw Zazz framework assets (`src/**.css`, emitted `src/**.js`, `examples/*.html`)
- * of the installed `@zazzdesign/ui` package over HTTP at `/zazz/*`, straight from the
- * single source on disk — no copy into `public/`, no bundling. This is what the
- * documented "served directly at `/zazz/src/*.js`" contract (see the package's
- * `CONVENTIONS.scripts.md`) relies on, and what lets the component-preview iframes load
- * `index.css` — whose internal `@import "./…"` rules then resolve relative to
- * `/zazz/src/index.css`.
+ * Serves the raw Zazz framework source (`src/**` of the installed
+ * `@zazzdesign/ui` package — stylesheets, emitted `.js`, example fragments)
+ * over HTTP at `/zazz/*`, straight from the single source on disk — no copy
+ * into `public/`, no bundling. Serving `src/` as the root means the docs'
+ * live URLs match what the prose teaches consumers: `/zazz/index.css` is the
+ * kit stylesheet, and its internal `@import "./…"` rules resolve against
+ * `/zazz/`. This is the "served directly at `/zazz/**`" contract the
+ * package's `CONVENTIONS.scripts.md` documents. Path facts come from
+ * `lib/zazz-package.ts` — the one adapter over the kit's layout.
  */
 
 export const runtime = "nodejs";
-
-// Anchor module resolution at the app directory rather than import.meta.url — the
-// bundler rewrites import.meta.url in compiled route code, which breaks createRequire.
-const require = createRequire(path.join(process.cwd(), "package.json"));
-const ZAZZ_ROOT = path.dirname(require.resolve("@zazzdesign/ui/package.json"));
 
 const CONTENT_TYPES: Record<string, string> = {
   ".css": "text/css; charset=utf-8",
@@ -41,10 +38,9 @@ export async function GET(_request: Request, { params }: { params: Promise<{ pat
     return new Response("Unsupported asset type", { status: 415 });
   }
 
-  const filePath = path.resolve(ZAZZ_ROOT, relative);
-
-  // Defend against path traversal: the resolved path must stay inside zazz/.
-  if (filePath !== ZAZZ_ROOT && !filePath.startsWith(ZAZZ_ROOT + path.sep)) {
+  // Defend against path traversal: the resolved path must stay inside src/.
+  const filePath = resolveWithin(SERVED_ROOT, relative);
+  if (!filePath) {
     return new Response("Forbidden", { status: 403 });
   }
 
