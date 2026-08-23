@@ -70,10 +70,10 @@
 
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    --_ring: color-mix(in oklch, var(--ui-button-ring-color) var(--ring-opacity), transparent);
+    --_ring: color-mix(in oklch, var(--ui-field-ring-color) var(--ring-opacity), transparent);
     box-shadow:
       0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring, var(--ring)),
       var(--ui-input-group-shadow);
 
     outline: var(--outline-width) var(--outline-style) transparent;
