@@ -1,13 +1,13 @@
 // Server-only by usage: imported solely by server components (`Preview`), which render
 // at build time. Do not import from a client component — it reads the filesystem.
 import { readFileSync } from "node:fs";
-import { WEB_COMPONENT_SCRIPT_FILES, type ExampleScript } from "@zazzdesign/ui/manifest";
+import { WEB_COMPONENT_SCRIPT_FILES, type ExampleScript } from "@zazz-ui/ui/manifest";
 import { componentCssFile, exampleFile, scriptFile } from "@/lib/zazz-package";
 
 /**
  * Reads one vanilla-HTML example fragment from the centralized Zazz component
  * source. `src` is an id like `button/variants` → `src/ui/button/variants.html`
- * inside the installed `@zazzdesign/ui` package (resolved by `lib/zazz-package.ts`).
+ * inside the installed `@zazz-ui/ui` package (resolved by `lib/zazz-package.ts`).
  *
  * This is the single read point for example markup. `<Preview>` renders both the live
  * iframe and the code block from this one string, so no second copy can drift. Runs only

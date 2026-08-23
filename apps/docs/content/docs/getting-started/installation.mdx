@@ -14,39 +14,36 @@ Choose an installation method:
 ## npm
 
 ```bash
-pnpm add @zazzdesign/ui
-# or: npm install @zazzdesign/ui
+pnpm add @zazz-ui/ui
+# or: npm install @zazz-ui/ui
 ```
 
 Import the stylesheet and optional component scripts:
 
 ```js
-import "@zazzdesign/ui/index.css";
-import "@zazzdesign/ui"; // component scripts
+import "@zazz-ui/ui/index.css";
+import "@zazz-ui/ui"; // component scripts
 ```
 
-Pre-flattened bundles are available at `@zazzdesign/ui/zazz.css` and `@zazzdesign/ui/zazz.js`.
+Pre-flattened bundles are available at `@zazz-ui/ui/zazz.css` and `@zazz-ui/ui/zazz.js`.
 
 ## CDN
 
 Load pre-bundled files via jsDelivr:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazzdesign/ui/dist/zazz.css" />
-<script type="module" src="https://cdn.jsdelivr.net/npm/@zazzdesign/ui/dist/zazz.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/ui/dist/zazz.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/ui/dist/zazz.js"></script>
 ```
 
 You can also load individual stylesheets:
 
 ```html
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@zazzdesign/ui/src/ui/dialog/dialog.css"
-/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/ui/src/ui/dialog/dialog.css" />
 ```
 
 <Callout type="warn">
-  Pin an explicit version in production (`@zazzdesign/ui@0.x.y`) to avoid unexpected changes.
+  Pin an explicit version in production (`@zazz-ui/ui@0.x.y`) to avoid unexpected changes.
 </Callout>
 
 ## Copy source files
@@ -57,10 +54,10 @@ Copy using degit:
 
 ```bash
 # entire source directory
-pnpm dlx degit dereknelsen/zazz-monorepo/packages/ui/src ./zazz
+pnpm dlx degit dereknelsen/zazz-ui/packages/ui/src ./zazz
 
 # single component folder
-pnpm dlx degit dereknelsen/zazz-monorepo/packages/ui/src/ui/dialog ./zazz/ui/dialog
+pnpm dlx degit dereknelsen/zazz-ui/packages/ui/src/ui/dialog ./zazz/ui/dialog
 ```
 
 <Callout type="warn">
@@ -87,7 +84,7 @@ Enable gzip or Brotli on your server for production compression.
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazzdesign/ui/dist/zazz.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/ui/dist/zazz.css" />
     <title>Zazz Test</title>
   </head>
   <body>
@@ -99,7 +96,7 @@ Enable gzip or Brotli on your server for production compression.
 ## Package structure
 
 ```
-@zazzdesign/ui/
+@zazz-ui/ui/
 ├── src/
 │   ├── index.css                   (stylesheet entry)
 │   ├── index.js                    (script entry)
@@ -127,7 +124,7 @@ Enable gzip or Brotli on your server for production compression.
 Override variables in your own stylesheet loaded after Zazz:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazzdesign/ui/dist/zazz.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/ui/dist/zazz.css" />
 <link rel="stylesheet" href="./your-styles.css" />
 ```
 

@@ -104,7 +104,7 @@ that feel designed for _this_ brand.
 ## Customizing without editing source
 
 Tokens resolve lazily, so you can intervene at three scopes — pick the narrowest that works.
-**Do not edit the `@zazzdesign/ui` package source (`packages/ui/src/`)** unless explicitly asked.
+**Do not edit the `@zazz-ui/ui` package source (`packages/ui/src/`)** unless explicitly asked.
 
 1. **Global** — redefine a semantic token on `:root` (`--radius-md: 0` squares every medium
    radius across the system).
@@ -172,7 +172,7 @@ patterns live in `PATTERNS.md`.
 - **Do** reuse utilities/primitives. **Don't** add net-new CSS until you've ruled out a
   semantic option.
 - **Do** preserve the loaded polyfills and modern-API markup. **Don't** edit the
-  `@zazzdesign/ui` package source (`packages/ui/src/`) unless asked.
+  `@zazz-ui/ui` package source (`packages/ui/src/`) unless asked.
 
 ## Reference index
 

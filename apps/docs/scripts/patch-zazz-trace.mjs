@@ -1,5 +1,5 @@
 /**
- * Adds @zazzdesign/ui's files to the /zazz/[...path] route's output-file-trace.
+ * Adds @zazz-ui/ui's files to the /zazz/[...path] route's output-file-trace.
  *
  * Turbopack builds (the Next 16 default) skip `collect-build-traces` — the step
  * that would apply `outputFileTracingIncludes` — so deployment bundlers that
@@ -17,7 +17,7 @@ import path from "node:path";
 
 const appDir = process.cwd();
 const require = createRequire(path.join(appDir, "package.json"));
-const pkgRoot = path.dirname(require.resolve("@zazzdesign/ui/package.json"));
+const pkgRoot = path.dirname(require.resolve("@zazz-ui/ui/package.json"));
 
 const traceFile = path.join(appDir, ".next/server/app/zazz/[...path]/route.js.nft.json");
 const traceDir = path.dirname(traceFile);
@@ -41,5 +41,5 @@ trace.files = [...merged].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
 writeFileSync(traceFile, JSON.stringify(trace));
 
 console.log(
-  `patch-zazz-trace: added ${files.length} @zazzdesign/ui files to ${path.relative(appDir, traceFile)}`,
+  `patch-zazz-trace: added ${files.length} @zazz-ui/ui files to ${path.relative(appDir, traceFile)}`,
 );

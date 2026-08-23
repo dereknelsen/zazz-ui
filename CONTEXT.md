@@ -1,6 +1,6 @@
 # Zazz Design Framework
 
-Shared language for the Zazz monorepo: the `@zazzdesign/ui` package (`packages/ui`) and its documentation site (`apps/docs`).
+Shared language for the Zazz monorepo: the `@zazz-ui/ui` package (`packages/ui`) and its documentation site (`apps/docs`).
 
 ## Language
 
