@@ -11,7 +11,7 @@
  *             back to UA-centered popover)
  * @uses       backdrop-filter — popover surface blur
  * @tokens     --ui-popover-* (Tier 3 owner; @layer variables)
- * @consumedby dropdown.css, navigation-menu.css, tooltip.css, toaster.css
+ * @consumedby select.css (picker placement), dropdown.css, navigation-menu.css, tooltip.css, toaster.css
  */
 
 @layer variables {
@@ -123,25 +123,38 @@
 
   /* ===========================================================================
   POSITIONING — side × align (row/block first, column/inline second per MDN)
+
+  The single placement matrix for every anchored surface. It assigns the
+  --ui-popover-position-* tokens; each surface applies them itself (popover
+  below, ::picker(select) in select.css) because the properties are gated on
+  anchor support. .ui-select joins by selector rather than by [popover]: a
+  <select> is not a popover, but custom properties set on it inherit into
+  ::picker(select). Zero specificity (:where) so components can override a
+  cell — see navigation-menu.css.
   =========================================================================== */
 
-  /* bottom */
-  [popover][data-side="bottom"]:not([data-align]),
-  [popover][data-side="bottom"][data-align="start"] {
+  /* bottom — and .ui-select's default side, so a select with only data-align
+     (or no attributes at all) still drops below its trigger */
+  :where([popover], .ui-select)[data-side="bottom"]:not([data-align]),
+  :where([popover], .ui-select)[data-side="bottom"][data-align="start"],
+  :where(.ui-select:not([data-side]):not([data-align])),
+  :where(.ui-select:not([data-side])[data-align="start"]) {
     --ui-popover-position-area: block-end span-inline-end;
     --ui-popover-origin: top center;
     --ui-popover-margin-block: var(--step-1_5);
     --ui-popover-margin-inline: 0;
   }
 
-  [popover][data-side="bottom"][data-align="center"] {
+  :where([popover], .ui-select)[data-side="bottom"][data-align="center"],
+  :where(.ui-select:not([data-side])[data-align="center"]) {
     --ui-popover-position-area: block-end span-all;
     --ui-popover-origin: top center;
     --ui-popover-margin-block: var(--step-1_5);
     --ui-popover-margin-inline: 0;
   }
 
-  [popover][data-side="bottom"][data-align="end"] {
+  :where([popover], .ui-select)[data-side="bottom"][data-align="end"],
+  :where(.ui-select:not([data-side])[data-align="end"]) {
     --ui-popover-position-area: block-end span-inline-start;
     --ui-popover-origin: top center;
     --ui-popover-margin-block: var(--step-1_5);
@@ -149,22 +162,22 @@
   }
 
   /* top */
-  [popover][data-side="top"]:not([data-align]),
-  [popover][data-side="top"][data-align="start"] {
+  :where([popover], .ui-select)[data-side="top"]:not([data-align]),
+  :where([popover], .ui-select)[data-side="top"][data-align="start"] {
     --ui-popover-position-area: block-start span-inline-end;
     --ui-popover-origin: bottom center;
     --ui-popover-margin-block: var(--step-1_5);
     --ui-popover-margin-inline: 0;
   }
 
-  [popover][data-side="top"][data-align="center"] {
+  :where([popover], .ui-select)[data-side="top"][data-align="center"] {
     --ui-popover-position-area: block-start span-all;
     --ui-popover-origin: bottom center;
     --ui-popover-margin-block: var(--step-1_5);
     --ui-popover-margin-inline: 0;
   }
 
-  [popover][data-side="top"][data-align="end"] {
+  :where([popover], .ui-select)[data-side="top"][data-align="end"] {
     --ui-popover-position-area: block-start span-inline-start;
     --ui-popover-origin: bottom center;
     --ui-popover-margin-block: var(--step-1_5);
@@ -172,22 +185,22 @@
   }
 
   /* right */
-  [popover][data-side="right"]:not([data-align]),
-  [popover][data-side="right"][data-align="start"] {
+  :where([popover], .ui-select)[data-side="right"]:not([data-align]),
+  :where([popover], .ui-select)[data-side="right"][data-align="start"] {
     --ui-popover-position-area: inline-end span-block-end;
     --ui-popover-origin: bottom left;
     --ui-popover-margin-block: 0;
     --ui-popover-margin-inline: var(--step-1_5);
   }
 
-  [popover][data-side="right"][data-align="center"] {
+  :where([popover], .ui-select)[data-side="right"][data-align="center"] {
     --ui-popover-position-area: inline-end span-all;
     --ui-popover-origin: center left;
     --ui-popover-margin-block: 0;
     --ui-popover-margin-inline: var(--step-1_5);
   }
 
-  [popover][data-side="right"][data-align="end"] {
+  :where([popover], .ui-select)[data-side="right"][data-align="end"] {
     --ui-popover-position-area: inline-end span-block-start;
     --ui-popover-origin: top left;
     --ui-popover-margin-block: 0;
@@ -195,22 +208,22 @@
   }
 
   /* left */
-  [popover][data-side="left"]:not([data-align]),
-  [popover][data-side="left"][data-align="start"] {
+  :where([popover], .ui-select)[data-side="left"]:not([data-align]),
+  :where([popover], .ui-select)[data-side="left"][data-align="start"] {
     --ui-popover-position-area: inline-start span-block-end;
     --ui-popover-origin: bottom right;
     --ui-popover-margin-block: 0;
     --ui-popover-margin-inline: var(--step-1_5);
   }
 
-  [popover][data-side="left"][data-align="center"] {
+  :where([popover], .ui-select)[data-side="left"][data-align="center"] {
     --ui-popover-position-area: inline-start span-all;
     --ui-popover-origin: center right;
     --ui-popover-margin-block: 0;
     --ui-popover-margin-inline: var(--step-1_5);
   }
 
-  [popover][data-side="left"][data-align="end"] {
+  :where([popover], .ui-select)[data-side="left"][data-align="end"] {
     --ui-popover-position-area: inline-start span-block-start;
     --ui-popover-origin: top right;
     --ui-popover-margin-block: 0;
