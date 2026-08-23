@@ -6,14 +6,14 @@ import { Tab, Tabs } from "./tabs";
 import { PreviewFrame } from "./preview-frame";
 
 interface PreviewProps {
-  /** Example id like `button/variants` — reads src/ui/button/variants.html in @zazzdesign/ui. */
+  /** Example id like `button/variants` — reads src/ui/button/variants.html in @zazz-ui/ui. */
   src: string;
   className?: string;
 }
 
 /**
  * The single MDX entry point for a live primitive demo. Reads one vanilla-HTML
- * example from the centralized `@zazzdesign/ui` source and renders it two ways
+ * example from the centralized `@zazz-ui/ui` source and renders it two ways
  * from that one string: a live, isolated iframe preview and the exact code
  * block. No second copy can drift.
  */
@@ -23,7 +23,7 @@ export function Preview({ src, className }: PreviewProps) {
   if (html == null) {
     return (
       <div className="not-prose rounded-md border border-fd-destructive/40 bg-fd-destructive/5 p-4 text-sm text-fd-destructive">
-        Example <code>{src}</code> not found in <code>@zazzdesign/ui</code>.
+        Example <code>{src}</code> not found in <code>@zazz-ui/ui</code>.
       </div>
     );
   }

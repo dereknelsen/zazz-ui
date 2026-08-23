@@ -1,5 +1,5 @@
-import { buildHead } from "@zazzdesign/ui/head";
-import type { ExampleScript } from "@zazzdesign/ui/manifest";
+import { buildHead } from "@zazz-ui/ui/head";
+import type { ExampleScript } from "@zazz-ui/ui/manifest";
 import { ZAZZ_URL_BASE } from "@/lib/zazz-url";
 
 /**
@@ -8,7 +8,7 @@ import { ZAZZ_URL_BASE } from "@/lib/zazz-url";
  * needs behavior) the single `index.js` module, so the iframe is the *only* place Zazz
  * CSS runs on the docs site — fully sandboxed from Tailwind + fumadocs.
  *
- * The head comes from the kit's own head contract (`@zazzdesign/ui/head`) with
+ * The head comes from the kit's own head contract (`@zazz-ui/ui/head`) with
  * `base: ZAZZ_URL_BASE` — the `/zazz/*` route serves the workspace package's `src/`
  * tree raw (see `app/zazz/[...path]/route.ts`). One implementation of the head to
  * maintain; the preview adds only its own concerns (navigation blocking, demo

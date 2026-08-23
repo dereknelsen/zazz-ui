@@ -1,4 +1,4 @@
-// Server-only: resolves the installed @zazzdesign/ui package on disk. Do not
+// Server-only: resolves the installed @zazz-ui/ui package on disk. Do not
 // import from a client component — use `ZAZZ_URL_BASE` (re-exported from
 // `zazz-url.ts`) for URL-shaped facts instead.
 import { createRequire } from "node:module";
@@ -8,7 +8,7 @@ export { ZAZZ_URL_BASE } from "./zazz-url";
 
 /**
  * The one adapter between the docs app and the kit's internal layout. Every
- * path-shaped fact about `@zazzdesign/ui` lives here — where the package is,
+ * path-shaped fact about `@zazz-ui/ui` lives here — where the package is,
  * which subtree is served over HTTP, and how ids map to files — so a rename
  * inside the kit is a one-file edit on this side of the seam, and the trace
  * script can't drift from what the route actually serves.
@@ -22,8 +22,8 @@ export { ZAZZ_URL_BASE } from "./zazz-url";
 // bundler rewrites import.meta.url in compiled server code, which breaks createRequire.
 const require = createRequire(path.join(process.cwd(), "package.json"));
 
-/** Root directory of the installed @zazzdesign/ui package. */
-export const PKG_ROOT = path.dirname(require.resolve("@zazzdesign/ui/package.json"));
+/** Root directory of the installed @zazz-ui/ui package. */
+export const PKG_ROOT = path.dirname(require.resolve("@zazz-ui/ui/package.json"));
 
 /** The kit's source tree — stylesheets, emitted scripts, example fragments. */
 export const SRC_ROOT = path.join(PKG_ROOT, "src");

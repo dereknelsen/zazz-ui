@@ -26,7 +26,7 @@ discovers and enhances markup; you rarely touch it.
 
 ## 2. Zazz JS behaviors (data-attribute driven)
 
-Configure entirely in markup. Don't edit the `@zazzdesign/ui` package source (`packages/ui/src/`)
+Configure entirely in markup. Don't edit the `@zazz-ui/ui` package source (`packages/ui/src/`)
 unless the task is explicitly about framework internals. Every behavior ships in one ES module —
 `packages/ui/src/index.js` — loaded with a single
 `<script type="module" src="…/index.js">`; its `import` graph orders the rest.
