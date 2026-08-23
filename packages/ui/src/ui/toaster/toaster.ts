@@ -35,6 +35,7 @@
 
 import { Utils } from "../../base/utils.ts";
 import { computed, effect, state } from "../../base/signals.ts";
+import { ZazzElement, defineZazzElement } from "../../base/zazz-element.ts";
 
 // `using` compiles (target ES2022) to try/finally helpers that read this
 // well-known symbol at runtime; engines without native Explicit Resource
@@ -188,9 +189,7 @@ function computeStackLayout(heights: number[]): {
  * collapsed-stack CSS custom properties, runs auto-dismiss timers, and shows or
  * hides the `popover="manual"` region as toasts come and go.
  */
-class UiToaster extends HTMLElement {
-  #controller: AbortController | null = null;
-
+class UiToaster extends ZazzElement {
   #timers: Map<string, ToastTimer> = new Map();
 
   #counter = 0;
@@ -218,11 +217,7 @@ class UiToaster extends HTMLElement {
   /** Pure placement derived from the measured heights. */
   #layout = computed(() => computeStackLayout(this.#stack.get().map((entry) => entry.height)));
 
-  connectedCallback() {
-    if (this.#controller) return;
-    this.#controller = new AbortController();
-    const signal = this.#controller.signal;
-
+  protected setup(signal: AbortSignal): void {
     // Region baseline: manual popover (no light dismiss), reachable landmark.
     if (!this.hasAttribute("popover")) this.setAttribute("popover", "manual");
     if (!this.hasAttribute("role")) this.setAttribute("role", "region");
@@ -312,9 +307,7 @@ class UiToaster extends HTMLElement {
     );
   }
 
-  disconnectedCallback() {
-    this.#controller?.abort();
-    this.#controller = null;
+  protected teardown(): void {
     cancelAnimationFrame(this.#resizeFrame);
     window.clearTimeout(this.#collapseTimer);
     for (const timer of this.#timers.values()) clearTimeout(timer.timeoutId);
@@ -813,15 +806,12 @@ const Toaster = {
   },
 };
 
-// Register the element (guarded against double script loads)
-if (typeof window !== "undefined" && !customElements.get("ui-toaster")) {
-  customElements.define("ui-toaster", UiToaster);
-}
+defineZazzElement("ui-toaster", UiToaster);
 
-// Attach to window for the documented public API, then export for module consumers.
+// Attach the imperative toast API to window (the documented public surface app
+// authors call), then export for module consumers.
 if (typeof window !== "undefined") {
   window.Toaster = Toaster;
-  window.UiToaster = UiToaster;
 }
 
 // computeStackLayout is exported for unit tests only — not part of the

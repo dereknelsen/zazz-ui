@@ -1,5 +1,7 @@
 "use strict";
 
+import { registerRefresh } from "./zazz-element.ts";
+
 interface RevealConfig {
   /** Margin around the root (viewport) for IntersectionObserver. */
   margin: string;
@@ -347,6 +349,9 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
   } else {
     autoInit();
   }
+
+  // After a SPA <main> swap, re-scan the new content for [data-reveal] targets.
+  registerRefresh(() => Reveal.getAutoInstance()?.refresh());
 
   /**
    * @description Prevents automatic initialization on DOM ready.

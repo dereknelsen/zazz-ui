@@ -69,6 +69,7 @@
  */
 
 import { Utils } from "./utils.ts";
+import { registerRefresh } from "./zazz-element.ts";
 
 // Embla ships as real ES modules: bare specifiers resolve through the page's
 // import map in browsers (pinned jsDelivr URLs — see `head.ts`) and through
@@ -719,6 +720,11 @@ function initEmblaStartLinks(): void {
 
 // Auto-initialize when DOM is ready (only in browser environment)
 if (typeof window !== "undefined" && typeof document !== "undefined") {
+  // After a SPA <main> swap, initialize class-form carousels in the new content
+  // (<ui-carousel> elements ride the swap via their own lifecycle; init() skips
+  // already-initialized roots and closed dialogs).
+  registerRefresh((scope) => initEmblaCarousels(scope));
+
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
       initEmblaCarousels();
