@@ -4,10 +4,10 @@ Monorepo for the Zazz Design Framework — a zero-build, semantic-token CSS + va
 
 ## Layout
 
-| Path          | What it is                                                                                                                                          |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `packages/ui` | [`@zazz-ui/ui`](packages/ui) — the kit itself, published to npm. CSS + HTML + TS-authored scripts, co-located per component under `src/ui/<name>/`. |
-| `apps/docs`   | The documentation site (Next.js + fumadocs). Serves the kit's files raw at `/zazz/*` for component previews.                                        |
+| Path          | What it is                                                                                                                                                                           |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `packages/ui` | [`@zazz-ui/ui`](packages/ui) — the kit itself (not yet published; see [Publishing](#publishing)). CSS + HTML + TS-authored scripts, co-located per component under `src/ui/<name>/`. |
+| `apps/docs`   | The documentation site (Next.js + fumadocs). Serves the kit's files raw at `/zazz/*` for component previews.                                                                         |
 
 ## Development
 
@@ -28,4 +28,9 @@ Tooling is [Vite+](https://viteplus.dev) (`vp`): formatting, linting, task runni
 
 ## Publishing
 
-`packages/ui` publishes to npm as `@zazz-ui/ui`. `prepublishOnly` runs the build (tsc emit + `vp pack` bundles); see [packages/ui/README.md](packages/ui/README.md).
+**Publishing is disabled for now** — a deliberate hold while the package surface settles. Two guards in `packages/ui/package.json`:
+
+1. `"private": true` — pnpm skips the package entirely (`npm publish --dry-run` does _not_ honour this, hence the second guard).
+2. `prepublishOnly` exits non-zero with an explanatory message, so `npm publish` and `pnpm publish` both abort before contacting the registry.
+
+Everything else is ready and untouched: the package name (`@zazz-ui/ui`), `exports`, `files`, and `publishConfig.access`. **To publish:** delete the `"private": true` line, restore `"prepublishOnly": "vp run build"` (tsc emit + `vp pack` bundles), then `pnpm --filter @zazz-ui/ui publish`. See [packages/ui/README.md](packages/ui/README.md).
