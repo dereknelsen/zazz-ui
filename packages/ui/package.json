@@ -1,6 +1,7 @@
 {
   "name": "@zazz-ui/ui",
   "version": "0.0.0",
+  "private": true,
   "description": "Zazz Design Framework — a zero-build, semantic-token CSS + vanilla JS UI kit built on modern web standards.",
   "homepage": "https://github.com/dereknelsen/zazz-ui#readme",
   "bugs": {
@@ -53,7 +54,7 @@
     "heads": "node scripts/generate-heads.mjs",
     "test": "tsc -p tsconfig.test.json && vp test run",
     "check": "vp check",
-    "prepublishOnly": "vp run build"
+    "prepublishOnly": "echo 'Publishing is disabled on purpose (see README > Publishing). To publish: drop \"private\": true and restore this script to `vp run build`.' && exit 1"
   },
   "dependencies": {
     "embla-carousel": "catalog:",
