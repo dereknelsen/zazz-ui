@@ -19,10 +19,10 @@ export interface BuildPreviewOptions {
   html: string;
   /** Zazz scripts the example needs; any script loads the whole `index.js` module. */
   scripts?: ExampleScript[];
-  /** Vertical placement of the demo. */
-  justify?: "start" | "center" | "end";
-  /** Horizontal placement of the demo. */
-  align?: "start" | "center" | "end";
+  /** Block-axis (vertical) placement of the demo — drives `align-content`. */
+  block?: "start" | "center" | "end";
+  /** Inline-axis (horizontal) placement of the demo — drives `justify-items`. */
+  inline?: "start" | "center" | "end";
   /** Minimum body height in px — keeps overlays (dialogs/popovers) in view. */
   minHeight?: number;
 }
@@ -40,8 +40,8 @@ export function buildPreviewDocument({
   html,
   scripts = [],
   minHeight = 0,
-  align = "center",
-  justify = "center",
+  block = "center",
+  inline = "center",
 }: BuildPreviewOptions): string {
   // The canonical head: metas, fonts (`optional` — previews should never flash
   // fallback text), one stylesheet, and — only when the example needs behavior —
@@ -63,9 +63,9 @@ ${BLOCK_NAVIGATION}
     display: grid;
     box-sizing: border-box;
     /* Fallback first: 'safe center' is dropped by engines that don't know 'safe'. */
-    align-content: ${align};
-    align-content: safe ${align};
-    justify-items: ${justify};
+    align-content: ${block};
+    align-content: safe ${block};
+    justify-items: ${inline};
     gap: var(--gap-md);
     padding: var(--gap-md);
     inline-size: 100%;
