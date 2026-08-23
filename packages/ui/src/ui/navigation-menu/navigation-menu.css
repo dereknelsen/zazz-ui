@@ -110,7 +110,9 @@
   }
 
   /* ===========================================================================
-  ALIGNMENT — nav menus only open downward, so just align along the inline axis
+  ALIGNMENT — nav menus only open downward, so they set placement directly here
+  rather than through data-side; popover.css's shared matrix keys on [data-side]
+  and so never applies to these panels.
   =========================================================================== */
 
   [data-slot~="navigation-menu-popover"][data-align="center"] {

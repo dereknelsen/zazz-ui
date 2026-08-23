@@ -7,7 +7,8 @@
  * @uses       ::picker(select), ::picker-icon, selectedcontent, option::checkmark
  * @uses       @starting-style + allow-discrete — picker open animation
  * @uses       anchor-size(width) — match picker width to trigger (@supports gated)
- * @uses       position-area, position-try-fallbacks — data-side × data-align picker placement (@supports gated)
+ * @uses       position-area, position-try-fallbacks — placement tokens come from
+ *             popover.css's shared matrix (@supports gated)
  * @uses       backdrop-filter — picker surface blur (shared with [popover])
  * @uses       Degrades to native OS dropdown where base-select is unsupported
  * @tokens     --ui-select-* (@layer variables); picker panel reuses --ui-popover-* (owned in popover.css)
@@ -258,107 +259,11 @@
   }
 
   /* ===========================================================================
-  PICKER PLACEMENT — data-side × data-align, mirroring [popover] (row/block first,
-  column/inline second per MDN). Set on the .ui-select; drives the --ui-popover-* tokens
-  the surface + @supports block below consume. Defaults to bottom / start (no
-  attributes) so the picker keeps dropping below the trigger.
+  PICKER PLACEMENT — the shared matrix in popover.css owns data-side × data-align
+  (it includes .ui-select, and custom properties set on the select inherit into
+  ::picker(select)). Only the application of those tokens lives here, because
+  position-area is gated on anchor support.
   =========================================================================== */
-
-  /* bottom (default side) */
-  .ui-select:not([data-side]):not([data-align])::picker(select),
-  .ui-select:not([data-side])[data-align="start"]::picker(select),
-  .ui-select[data-side="bottom"]:not([data-align])::picker(select),
-  .ui-select[data-side="bottom"][data-align="start"]::picker(select) {
-    --ui-popover-position-area: block-end span-inline-end;
-    --ui-popover-origin: top center;
-    --ui-popover-margin-block: var(--step-1_5);
-    --ui-popover-margin-inline: 0;
-  }
-
-  .ui-select:not([data-side])[data-align="center"]::picker(select),
-  .ui-select[data-side="bottom"][data-align="center"]::picker(select) {
-    --ui-popover-position-area: block-end span-all;
-    --ui-popover-origin: top center;
-    --ui-popover-margin-block: var(--step-1_5);
-    --ui-popover-margin-inline: 0;
-  }
-
-  .ui-select:not([data-side])[data-align="end"]::picker(select),
-  .ui-select[data-side="bottom"][data-align="end"]::picker(select) {
-    --ui-popover-position-area: block-end span-inline-start;
-    --ui-popover-origin: top center;
-    --ui-popover-margin-block: var(--step-1_5);
-    --ui-popover-margin-inline: 0;
-  }
-
-  /* top */
-  .ui-select[data-side="top"]:not([data-align])::picker(select),
-  .ui-select[data-side="top"][data-align="start"]::picker(select) {
-    --ui-popover-position-area: block-start span-inline-end;
-    --ui-popover-origin: bottom center;
-    --ui-popover-margin-block: var(--step-1_5);
-    --ui-popover-margin-inline: 0;
-  }
-
-  .ui-select[data-side="top"][data-align="center"]::picker(select) {
-    --ui-popover-position-area: block-start span-all;
-    --ui-popover-origin: bottom center;
-    --ui-popover-margin-block: var(--step-1_5);
-    --ui-popover-margin-inline: 0;
-  }
-
-  .ui-select[data-side="top"][data-align="end"]::picker(select) {
-    --ui-popover-position-area: block-start span-inline-start;
-    --ui-popover-origin: bottom center;
-    --ui-popover-margin-block: var(--step-1_5);
-    --ui-popover-margin-inline: 0;
-  }
-
-  /* right */
-  .ui-select[data-side="right"]:not([data-align])::picker(select),
-  .ui-select[data-side="right"][data-align="start"]::picker(select) {
-    --ui-popover-position-area: inline-end span-block-end;
-    --ui-popover-origin: bottom left;
-    --ui-popover-margin-block: 0;
-    --ui-popover-margin-inline: var(--step-1_5);
-  }
-
-  .ui-select[data-side="right"][data-align="center"]::picker(select) {
-    --ui-popover-position-area: inline-end span-all;
-    --ui-popover-origin: center left;
-    --ui-popover-margin-block: 0;
-    --ui-popover-margin-inline: var(--step-1_5);
-  }
-
-  .ui-select[data-side="right"][data-align="end"]::picker(select) {
-    --ui-popover-position-area: inline-end span-block-start;
-    --ui-popover-origin: top left;
-    --ui-popover-margin-block: 0;
-    --ui-popover-margin-inline: var(--step-1_5);
-  }
-
-  /* left */
-  .ui-select[data-side="left"]:not([data-align])::picker(select),
-  .ui-select[data-side="left"][data-align="start"]::picker(select) {
-    --ui-popover-position-area: inline-start span-block-end;
-    --ui-popover-origin: bottom right;
-    --ui-popover-margin-block: 0;
-    --ui-popover-margin-inline: var(--step-1_5);
-  }
-
-  .ui-select[data-side="left"][data-align="center"]::picker(select) {
-    --ui-popover-position-area: inline-start span-all;
-    --ui-popover-origin: center right;
-    --ui-popover-margin-block: 0;
-    --ui-popover-margin-inline: var(--step-1_5);
-  }
-
-  .ui-select[data-side="left"][data-align="end"]::picker(select) {
-    --ui-popover-position-area: inline-start span-block-start;
-    --ui-popover-origin: top right;
-    --ui-popover-margin-block: 0;
-    --ui-popover-margin-inline: var(--step-1_5);
-  }
 
   /* The picker is implicitly anchored to the select, so position-area needs no
      anchor-name — but it is still anchor positioning, gated like popover.css so
