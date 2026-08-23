@@ -1,5 +1,7 @@
 "use strict";
 
+import { refreshAll } from "./zazz-element.ts";
+
 /**
  * @fileoverview SPA-like navigation via the Navigation API.
  * @description Intercepts same-origin navigations and swaps `<main>` content
@@ -94,11 +96,11 @@ if ("navigation" in window) {
           updateDOM();
         }
 
-        window.Reveal?.getAutoInstance()?.refresh();
-        // Carousels in swapped-in main were never initialized — DOMContentLoaded
-        // doesn't fire on SPA navigations. (init() skips already-init'd nodes and
-        // closed dialogs, which the dialog-open observer still handles.)
-        window.EmblaInit?.init(newMain);
+        // Re-scan the swapped-in content: every module that owns page-scoped
+        // work registered a refresh hook (reveal, class-form carousels, …) —
+        // this module never names a component. Custom elements need nothing:
+        // their lifecycle callbacks ride the swap natively.
+        refreshAll(newMain);
         routeFocus(newMain);
       },
     });

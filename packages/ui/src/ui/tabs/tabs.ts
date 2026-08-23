@@ -29,21 +29,11 @@
  * </ui-tabs>
  */
 
-class UiTabs extends HTMLElement {
-  #controller: AbortController | null = null;
+import { ZazzElement, defineZazzElement } from "../../base/zazz-element.ts";
 
-  connectedCallback(): void {
-    if (this.#controller) return;
-    this.#controller = new AbortController();
-
-    this.addEventListener("keydown", (event) => this.#onKeydown(event), {
-      signal: this.#controller.signal,
-    });
-  }
-
-  disconnectedCallback(): void {
-    this.#controller?.abort();
-    this.#controller = null;
+class UiTabs extends ZazzElement {
+  protected setup(signal: AbortSignal): void {
+    this.addEventListener("keydown", (event) => this.#onKeydown(event), { signal });
   }
 
   /**
@@ -98,15 +88,6 @@ class UiTabs extends HTMLElement {
   }
 }
 
-// Register the element (guarded against double script loads)
-if (typeof window !== "undefined" && !customElements.get("ui-tabs")) {
-  customElements.define("ui-tabs", UiTabs);
-}
-
-// Attach to window for parity with the other component scripts, and export for
-// module consumers (loaded for its side effect — the custom-element registration).
-if (typeof window !== "undefined") {
-  window.UiTabs = UiTabs;
-}
+defineZazzElement("ui-tabs", UiTabs);
 
 export { UiTabs };

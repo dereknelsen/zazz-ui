@@ -47,6 +47,7 @@ Scripts expose an API on `window` and provide named exports for ES module consum
 | `utils.js`            | `window.Utils`     | `{ parseValue, parseDataAttributes }`                              |
 | `signals.js`          | `window.Signals`   | `{ state, computed, effect }`                                      |
 | `reveal.js`           | `window.Reveal`    | `Reveal` class                                                     |
+| `zazz-element.js`     | _(none)_           | `ZazzElement` base, `defineZazzElement`, refresh registry          |
 | `dialog-lifecycle.js` | _(none)_           | Emits `zazz:dialog-open` / `zazz:dialog-close` on every `<dialog>` |
 | `embla.js`            | `window.EmblaInit` | `{ init, initRoot, addDotBtnsAndClickHandlers }`                   |
 | `toaster.js`          | `window.Toaster`   | `Toaster` imperative API                                           |
@@ -84,6 +85,6 @@ The module graph resolves loading order automatically via `index.js`:
 | `password-group.js`   | `signals.js`               | `<ui-password>` custom element                   |
 | `tabs.js`             | None                       | `<ui-tabs>` custom element                       |
 | `toaster.js`          | `signals.js`               | `<ui-toaster>` custom element                    |
-| `navigation.js`       | None                       | Page transitions; inert inside preview iframes   |
+| `navigation.js`       | `zazz-element.js`          | Page transitions; refreshes swapped-in content   |
 
 Ensure the import map appears in the DOM before `index.js`.

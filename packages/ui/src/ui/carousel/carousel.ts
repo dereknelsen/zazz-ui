@@ -33,29 +33,22 @@
  */
 
 import { EmblaInit } from "../../base/embla.ts";
+import { ZazzElement, defineZazzElement } from "../../base/zazz-element.ts";
 
-class UiCarouselElement extends HTMLElement {
-  #controller: AbortController | null = null;
-
-  connectedCallback() {
+class UiCarouselElement extends ZazzElement {
+  protected setup(signal: AbortSignal): void {
     const dialog = this.closest("dialog");
     if (dialog && !dialog.open) {
       // Closed dialogs are display:none — Embla can't measure the viewport.
       // Initialize on the dialog's open instead (zazz:dialog-open, ADR-0003).
-      this.#controller ??= new AbortController();
-      dialog.addEventListener("zazz:dialog-open", () => this.init(), {
-        signal: this.#controller.signal,
-      });
+      dialog.addEventListener("zazz:dialog-open", () => this.init(), { signal });
       return;
     }
 
     this.init();
   }
 
-  disconnectedCallback() {
-    this.#controller?.abort();
-    this.#controller = null;
-
+  protected teardown(): void {
     // Abort first so the per-carousel DOM listeners (prev/next, dots, thumbs,
     // drag-click suppression) are removed before the Embla instances are torn down.
     this._emblaController?.abort();
@@ -86,15 +79,6 @@ class UiCarouselElement extends HTMLElement {
   }
 }
 
-// Register the element (guarded against double script loads)
-if (typeof window !== "undefined" && !customElements.get("ui-carousel")) {
-  customElements.define("ui-carousel", UiCarouselElement);
-}
-
-// Attach to window so embla.js's lightbox sync can feature-detect the element type,
-// and export for module consumers (lightbox.js imports it via the main.js bundle).
-if (typeof window !== "undefined") {
-  window.UiCarouselElement = UiCarouselElement;
-}
+defineZazzElement("ui-carousel", UiCarouselElement);
 
 export { UiCarouselElement };

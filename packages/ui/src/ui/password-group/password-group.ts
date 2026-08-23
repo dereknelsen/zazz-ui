@@ -36,6 +36,7 @@
  */
 
 import { effect, state } from "../../base/signals.ts";
+import { ZazzElement, defineZazzElement } from "../../base/zazz-element.ts";
 
 /** Derived DOM state for one toggle configuration. */
 interface ToggleState {
@@ -63,18 +64,11 @@ function resolveToggleState(revealed: boolean, labelShow: string, labelHide: str
   };
 }
 
-class UiPassword extends HTMLElement {
-  #controller: AbortController | null = null;
-
-  connectedCallback() {
-    if (this.#controller) return;
-
+class UiPassword extends ZazzElement {
+  protected setup(signal: AbortSignal): void {
     const input = this.querySelector('input[type="password"], input[type="text"]');
     const toggle = this.querySelector('[data-slot~="password-group-toggle"]');
     if (!(input instanceof HTMLInputElement) || !(toggle instanceof HTMLElement)) return;
-
-    this.#controller = new AbortController();
-    const signal = this.#controller.signal;
 
     const revealed = state(input.type === "text");
 
@@ -92,23 +86,9 @@ class UiPassword extends HTMLElement {
       { signal },
     );
   }
-
-  disconnectedCallback() {
-    this.#controller?.abort();
-    this.#controller = null;
-  }
 }
 
-// Register the element (guarded against double script loads)
-if (typeof window !== "undefined" && !customElements.get("ui-password")) {
-  customElements.define("ui-password", UiPassword);
-}
-
-// Attach to window for parity with the other component scripts, and export for
-// module consumers (loaded for its side effect — the custom-element registration).
-if (typeof window !== "undefined") {
-  window.UiPassword = UiPassword;
-}
+defineZazzElement("ui-password", UiPassword);
 
 // resolveToggleState is exported for unit tests only — not part of the public API.
 export { UiPassword, resolveToggleState };

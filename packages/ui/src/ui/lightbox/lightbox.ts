@@ -32,17 +32,12 @@
  */
 
 import { UiCarouselElement } from "../carousel/carousel.ts";
+import { ZazzElement, defineZazzElement } from "../../base/zazz-element.ts";
 
-class UiLightbox extends HTMLElement {
-  #controller: AbortController | null = null;
-
-  connectedCallback() {
-    if (this.#controller) return;
-
+class UiLightbox extends ZazzElement {
+  protected setup(signal: AbortSignal): void {
     const dialog = this.querySelector("dialog");
     if (!(dialog instanceof HTMLDialogElement)) return;
-
-    this.#controller = new AbortController();
 
     // The dialog is a descendant, so its lifecycle events (ADR-0003) bubble
     // through this element — subscribe here instead of observing attributes.
@@ -51,7 +46,7 @@ class UiLightbox extends HTMLElement {
       (e) => {
         if (e.target === dialog) this.#onDialogOpen(dialog);
       },
-      { signal: this.#controller.signal },
+      { signal },
     );
 
     this.addEventListener(
@@ -59,13 +54,8 @@ class UiLightbox extends HTMLElement {
       (e) => {
         if (e.target === dialog) this.#syncGalleryToDialog(dialog);
       },
-      { signal: this.#controller.signal },
+      { signal },
     );
-  }
-
-  disconnectedCallback() {
-    this.#controller?.abort();
-    this.#controller = null;
   }
 
   /**
@@ -118,15 +108,6 @@ class UiLightbox extends HTMLElement {
   }
 }
 
-// Register the element (guarded against double script loads)
-if (typeof window !== "undefined" && !customElements.get("ui-lightbox")) {
-  customElements.define("ui-lightbox", UiLightbox);
-}
-
-// Attach to window for parity with the other component scripts, and export for
-// module consumers (loaded for its side effect — the custom-element registration).
-if (typeof window !== "undefined") {
-  window.UiLightbox = UiLightbox;
-}
+defineZazzElement("ui-lightbox", UiLightbox);
 
 export { UiLightbox };

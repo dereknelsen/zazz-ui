@@ -12,6 +12,7 @@ Applies to all script files in `src/`. Shared runtime modules live in `src/base/
 - `reveal.ts`
 - `signals.ts`
 - `utils.ts`
+- `zazz-element.ts`
 
 Component scripts are co-located with their CSS and example HTML in `src/ui/<name>/`:
 
@@ -78,19 +79,20 @@ export { MyExport };
 
 Attach a named export object or class to `window` for the documented public API, then `export` it for module consumers (the `index.ts` entry and any sibling script that imports it).
 
-| File                                  | Global                     | Export shape                                                                                                  |
-| ------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `base/utils.ts`                       | `window.Utils`             | `{ parseValue, parseDataAttributes }`                                                                         |
-| `base/signals.ts`                     | `window.Signals`           | `{ state, computed, effect }`                                                                                 |
-| `base/reveal.ts`                      | `window.Reveal`            | `Reveal` class                                                                                                |
-| `base/dialog-lifecycle.ts`            | _(none)_                   | Emits `zazz:dialog-open` / `zazz:dialog-close` on every `<dialog>` (ADR-0003) — the events are the public API |
-| `base/embla.ts`                       | `window.EmblaInit`         | `{ init, initRoot, ... }`                                                                                     |
-| `ui/carousel/carousel.ts`             | `window.UiCarouselElement` | `<ui-carousel>` element class                                                                                 |
-| `ui/lightbox/lightbox.ts`             | `window.UiLightbox`        | `<ui-lightbox>` element class                                                                                 |
-| `ui/password-group/password-group.ts` | `window.UiPassword`        | `<ui-password>` element class                                                                                 |
-| `ui/tabs/tabs.ts`                     | `window.UiTabs`            | `<ui-tabs>` element class                                                                                     |
-| `ui/toaster/toaster.ts`               | `window.Toaster`           | `Toaster` API + `<ui-toaster>`                                                                                |
-| `base/navigation.ts`                  | _(none)_                   | Side-effect only; no export                                                                                   |
+| File                                  | Global             | Export shape                                                                                                  |
+| ------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------- |
+| `base/utils.ts`                       | `window.Utils`     | `{ parseValue, parseDataAttributes }`                                                                         |
+| `base/signals.ts`                     | `window.Signals`   | `{ state, computed, effect }`                                                                                 |
+| `base/reveal.ts`                      | `window.Reveal`    | `Reveal` class                                                                                                |
+| `base/dialog-lifecycle.ts`            | _(none)_           | Emits `zazz:dialog-open` / `zazz:dialog-close` on every `<dialog>` (ADR-0003) — the events are the public API |
+| `base/embla.ts`                       | `window.EmblaInit` | `{ init, initRoot, ... }`                                                                                     |
+| `base/zazz-element.ts`                | _(none)_           | `ZazzElement` base + `defineZazzElement` + refresh registry (`registerRefresh` / `refreshAll`)                |
+| `ui/carousel/carousel.ts`             | _(none)_           | `<ui-carousel>` element class (module export only)                                                            |
+| `ui/lightbox/lightbox.ts`             | _(none)_           | `<ui-lightbox>` element class (module export only)                                                            |
+| `ui/password-group/password-group.ts` | _(none)_           | `<ui-password>` element class (module export only)                                                            |
+| `ui/tabs/tabs.ts`                     | _(none)_           | `<ui-tabs>` element class (module export only)                                                                |
+| `ui/toaster/toaster.ts`               | `window.Toaster`   | Imperative toast API + `<ui-toaster>` element class                                                           |
+| `base/navigation.ts`                  | _(none)_           | Side-effect only; no export                                                                                   |
 
 Document export objects with `@namespace` JSDoc and `@property` for each key.
 
@@ -122,11 +124,11 @@ Interactive components ship as **light-DOM custom elements** that augment existi
 - **Element names carry the `ui-` prefix** (`ui-carousel`, `ui-lightbox`, `ui-password`, `ui-tabs`, `ui-toaster`), matching the kit-wide dual-form naming (ADR-0001). A tag form exists only where the root would otherwise be a meaningless `<div>`/`<span>` — never wrap or replace a semantic native element ("the most semantic tag wins").
 - **Lifecycle, not load events.** Set up in `connectedCallback()`, tear down in `disconnectedCallback()`. Elements work when inserted dynamically — no auto-init block needed.
 - **Clean up with `AbortController`.** Bind listeners with `{ signal }` and abort on disconnect; disconnect `MutationObserver`s.
-- **Guard registration:** `if (!customElements.get("tag-name")) customElements.define(...)` so double script loads are safe.
+- **Extend `ZazzElement`** (base/zazz-element.ts): implement `setup(signal)` — bind everything with `{ signal }` — and `teardown()` only for what an abort cannot release. Register with `defineZazzElement("tag-name", Cls)`, which guards double script loads. Only behavioral components register; CSS-only tag forms stay unregistered (ADR-0001).
 - **Custom elements are `display: inline` by default** — add a `display` rule in the component's stylesheet.
 - **Degrade gracefully.** Without JS the markup must still render sensibly (a password field stays masked; tabs keep native radio behavior).
 - **Element props are `data-*` attributes** (`data-label-show`, `data-label-hide`) — never bare attributes, even though the tag is its own namespace. One prop system across the kit.
-- Attach the element class to `window` and `export` it like any other script.
+- Do not attach element classes to `window` — `export` them for module consumers. `window` is reserved for genuine imperative APIs (`window.Toaster`, `window.Reveal`, `window.EmblaInit`, `window.Utils`, `window.Signals`).
 
 ### Reactive state (signals)
 
@@ -153,19 +155,20 @@ Boolean flags can be bare attributes (`data-carousel-autoplay`) or explicit valu
 
 Scripts declare dependencies with ES `import`s, so the module graph resolves order — the entry module (`index.ts`, loaded as the emitted `index.js`) is the only tag a page loads.
 
-| Script                                | Imports                                      | Notes                                                          |
-| ------------------------------------- | -------------------------------------------- | -------------------------------------------------------------- |
-| `base/utils.ts`                       | —                                            | Provides `window.Utils`                                        |
-| `base/signals.ts`                     | `signal-polyfill` (npm)                      | The **only** file allowed to import the polyfill               |
-| `base/reveal.ts`                      | —                                            | Standalone                                                     |
-| `base/dialog-lifecycle.ts`            | —                                            | Owns `<dialog>` visibility; components subscribe to its events |
-| `base/embla.ts`                       | `base/utils.ts`, Embla (npm, via import map) | Imports Embla as ES modules; subscribes to `zazz:dialog-open`  |
-| `ui/carousel/carousel.ts`             | `base/embla.ts`                              | `<ui-carousel>` calls `EmblaInit.initRoot`                     |
-| `ui/lightbox/lightbox.ts`             | `ui/carousel/carousel.ts`                    | `<ui-lightbox>` coordinates carousel elements                  |
-| `ui/password-group/password-group.ts` | `base/signals.ts`                            | Standalone (`<ui-password>`)                                   |
-| `ui/tabs/tabs.ts`                     | —                                            | Standalone (`<ui-tabs>`)                                       |
-| `ui/toaster/toaster.ts`               | `base/utils.ts`, `base/signals.ts`           | `<ui-toaster>` + `window.Toaster` toast API                    |
-| `base/navigation.ts`                  | —                                            | App-level; inert in component preview iframes                  |
+| Script                                | Imports                                              | Notes                                                                                   |
+| ------------------------------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `base/utils.ts`                       | —                                                    | Provides `window.Utils`                                                                 |
+| `base/signals.ts`                     | `signal-polyfill` (npm)                              | The **only** file allowed to import the polyfill                                        |
+| `base/zazz-element.ts`                | —                                                    | `ZazzElement` base + refresh registry                                                   |
+| `base/reveal.ts`                      | `base/zazz-element.ts`                               | Registers a refresh hook                                                                |
+| `base/dialog-lifecycle.ts`            | —                                                    | Owns `<dialog>` visibility; components subscribe to its events                          |
+| `base/embla.ts`                       | `base/utils.ts`, `base/zazz-element.ts`, Embla (npm) | Imports Embla as ES modules; subscribes to `zazz:dialog-open`; registers a refresh hook |
+| `ui/carousel/carousel.ts`             | `base/embla.ts`                                      | `<ui-carousel>` calls `EmblaInit.initRoot`                                              |
+| `ui/lightbox/lightbox.ts`             | `ui/carousel/carousel.ts`                            | `<ui-lightbox>` coordinates carousel elements                                           |
+| `ui/password-group/password-group.ts` | `base/signals.ts`                                    | Standalone (`<ui-password>`)                                                            |
+| `ui/tabs/tabs.ts`                     | —                                                    | Standalone (`<ui-tabs>`)                                                                |
+| `ui/toaster/toaster.ts`               | `base/utils.ts`, `base/signals.ts`                   | `<ui-toaster>` + `window.Toaster` toast API                                             |
+| `base/navigation.ts`                  | `base/zazz-element.ts`                               | App-level; drains the refresh registry after a <main> swap                              |
 
 When a script needs `Utils`, `import { Utils } from "../../base/utils.ts"` (from a `src/ui/<name>/` folder) — do not duplicate parsing logic. Embla ships as real ES modules imported by bare specifier; the page's import map (generated by `head.ts`, pinned + SRI-checked) resolves them, so the module graph orders everything and pages load exactly one script tag.
 
