@@ -14,8 +14,6 @@ interface UtilsNamespace {
   parseDataAttributes(node: Element, prefix: string): Record<string, unknown>;
 }
 
-declare const Utils: UtilsNamespace;
-
 interface Element {
   /** @internal Set by embla.js on carousel root elements. */
   _emblaApi?: EmblaCarouselType;

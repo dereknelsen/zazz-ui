@@ -83,6 +83,26 @@ import type { AutoScrollOptionsType } from "embla-carousel-auto-scroll";
 import EmblaCarouselClassNames from "embla-carousel-class-names";
 import type { ClassNamesOptionsType } from "embla-carousel-class-names";
 
+// --- Configuration reading ---
+
+/**
+ * @description Reads a node's prefixed `data-carousel-*` attributes as an
+ * options object of the shape Embla (or one of its plugins) expects.
+ *
+ * Attributes are strings, so the parsed values have to be asserted into Embla's
+ * option types somewhere. This is that single boundary — the assertion lives
+ * here with its justification (Embla validates its own options at runtime)
+ * instead of being repeated at every call site.
+ *
+ * @param node - Element carrying the configuration attributes.
+ * @param prefix - Attribute prefix, e.g. `"data-carousel-autoplay-"`.
+ * @returns The parsed attributes, typed as `T`.
+ * @private
+ */
+function readCarouselOptions<T>(node: Element, prefix: string): T {
+  return Utils.parseDataAttributes(node, prefix) as T;
+}
+
 // --- Active-index sync ---
 
 /**
@@ -413,7 +433,7 @@ function initEmblaRoot(emblaNode: Element): void {
     emblaViewportNode.setAttribute("tabindex", "0");
   }
 
-  const apiOptions = Utils.parseDataAttributes(emblaNode, "data-carousel-");
+  const apiOptions = readCarouselOptions<Record<string, unknown>>(emblaNode, "data-carousel-");
 
   // Keep plugin keys out of core Embla options
   Object.keys(apiOptions).forEach(function (key) {
@@ -440,28 +460,37 @@ function initEmblaRoot(emblaNode: Element): void {
     apiOptions.watchDrag = (api: EmblaCarouselType) => api.canScrollPrev() || api.canScrollNext();
   }
 
-  const autoplayOptions = Utils.parseDataAttributes(emblaNode, "data-carousel-autoplay-");
-  const autoscrollOptions = Utils.parseDataAttributes(emblaNode, "data-carousel-autoscroll-");
-  const classnamesOptions = Utils.parseDataAttributes(emblaNode, "data-carousel-classnames-");
+  const autoplayOptions = readCarouselOptions<AutoplayOptionsType>(
+    emblaNode,
+    "data-carousel-autoplay-",
+  );
+  const autoscrollOptions = readCarouselOptions<AutoScrollOptionsType>(
+    emblaNode,
+    "data-carousel-autoscroll-",
+  );
+  const classnamesOptions = readCarouselOptions<ClassNamesOptionsType>(
+    emblaNode,
+    "data-carousel-classnames-",
+  );
 
   const plugins: EmblaPlugin[] = [];
 
   if (emblaNode.hasAttribute("data-carousel-autoplay") || Object.keys(autoplayOptions).length > 0) {
-    plugins.push(EmblaCarouselAutoplay(autoplayOptions as AutoplayOptionsType));
+    plugins.push(EmblaCarouselAutoplay(autoplayOptions));
   }
 
   if (
     emblaNode.hasAttribute("data-carousel-autoscroll") ||
     Object.keys(autoscrollOptions).length > 0
   ) {
-    plugins.push(EmblaCarouselAutoScroll(autoscrollOptions as AutoScrollOptionsType));
+    plugins.push(EmblaCarouselAutoScroll(autoscrollOptions));
   }
 
   if (
     emblaNode.hasAttribute("data-carousel-classnames") ||
     Object.keys(classnamesOptions).length > 0
   ) {
-    plugins.push(EmblaCarouselClassNames(classnamesOptions as ClassNamesOptionsType));
+    plugins.push(EmblaCarouselClassNames(classnamesOptions));
   }
 
   // The options come from untyped data attributes; Embla validates at runtime.
@@ -509,15 +538,15 @@ function initEmblaRoot(emblaNode: Element): void {
       '[data-slot~="carousel-viewport"]',
     );
     if (emblathumbsViewportNode) {
-      const thumbDefaults = { containScroll: "keepSnaps", dragFree: true };
-      const thumbOptions = Utils.parseDataAttributes(emblathumbsNode, "data-carousel-thumbs-");
-      const emblaApiThumb = EmblaCarousel(
-        emblathumbsViewportNode as HTMLElement,
-        {
-          ...thumbDefaults,
-          ...thumbOptions,
-        } as EmblaOptionsType,
+      const thumbDefaults: EmblaOptionsType = { containScroll: "keepSnaps", dragFree: true };
+      const thumbOptions = readCarouselOptions<EmblaOptionsType>(
+        emblathumbsNode,
+        "data-carousel-thumbs-",
       );
+      const emblaApiThumb = EmblaCarousel(emblathumbsViewportNode as HTMLElement, {
+        ...thumbDefaults,
+        ...thumbOptions,
+      });
 
       emblaNode._emblaApiThumb = emblaApiThumb;
       addThumbClickHandlers(emblaApi, emblaApiThumb, signal);

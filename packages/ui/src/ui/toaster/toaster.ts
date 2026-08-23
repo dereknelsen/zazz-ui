@@ -33,7 +33,6 @@
  * <button commandfor="toaster" command="--toast" data-title="Saved">Save</button>
  */
 
-import { Utils } from "../../base/utils.ts";
 import { computed, effect, state } from "../../base/signals.ts";
 import { ZazzElement, defineZazzElement } from "../../base/zazz-element.ts";
 
@@ -426,8 +425,13 @@ class UiToaster extends ZazzElement {
         options.variant = variant as ToastOptions["variant"];
       }
       if (duration !== undefined) {
-        const parsed = Utils.parseValue(duration);
-        if (typeof parsed === "number") options.duration = parsed;
+        // A duration is only ever a number — parse it as one rather than running
+        // it through the polymorphic attribute parser and narrowing after.
+        // NaN-guarded rather than finite-guarded: `Infinity` is a documented
+        // value (persist until dismissed). Blank strings coerce to 0, so they
+        // are rejected before Number() sees them.
+        const parsed = duration.trim() === "" ? Number.NaN : Number(duration);
+        if (!Number.isNaN(parsed)) options.duration = parsed;
       }
       if (closeButton !== undefined) options.closeButton = closeButton !== "false";
     }
