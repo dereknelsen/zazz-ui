@@ -1,14 +1,15 @@
 /**
  * Adds @zazzdesign/ui's files to the /zazz/[...path] route's output-file-trace.
  *
- * next.config.mjs declares these via `outputFileTracingIncludes`, but Turbopack
- * builds (the Next 16 default) skip `collect-build-traces` — the step that applies
- * that option — so deployment bundlers that honor .nft.json (Vercel, `output:
- * "standalone"`) would omit the package and every /zazz/* asset would 404 in
- * production. This script replicates what collect-build-traces would have done:
- * glob the package's src/ and examples/ trees and merge them into the trace.
- * Runs as part of `pnpm build`, after `next build`. Delete it if a future Next
- * release applies outputFileTracingIncludes under Turbopack.
+ * Turbopack builds (the Next 16 default) skip `collect-build-traces` — the step
+ * that would apply `outputFileTracingIncludes` — so deployment bundlers that
+ * honor .nft.json (Vercel, `output: "standalone"`) would omit the package and
+ * every /zazz/* asset would 404 in production. This script is the ONE owner of
+ * that trace list: it globs exactly the subtree the route serves — the kit's
+ * `src/` tree, per `lib/zazz-package.ts` (SERVED_ROOT; this script can't import
+ * TS, so keep the two in sync) — and merges it into the trace. Runs as part of
+ * `pnpm build`, after `next build`. Delete it if a future Next release applies
+ * outputFileTracingIncludes under Turbopack.
  */
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -30,7 +31,6 @@ const walk = (dir) => {
   }
 };
 walk(path.join(pkgRoot, "src"));
-walk(path.join(pkgRoot, "examples"));
 
 const trace = JSON.parse(readFileSync(traceFile, "utf8"));
 const merged = new Set(trace.files);
