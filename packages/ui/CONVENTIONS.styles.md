@@ -1,6 +1,6 @@
 # Zazz CSS Conventions
 
-How the stylesheets in `@zazz-ui/ui` (`src/`) are documented and structured: base partials in `src/base/`, one co-located `src/ui/<name>/<name>.css` per component.
+How the stylesheets in `@zazz-ui/ui` (`src/`) are documented and structured: base partials in `src/base/`, one co-located `src/primitives/<name>/<name>.css` per component.
 
 This is the source of truth for two things:
 
@@ -40,7 +40,7 @@ Cascade order is declared once, in [`_layers.css`](./src/base/_layers.css), and 
 ```
 
 Load order lives in [`index.css`](./src/index.css): it `@import`s `_layers.css` first,
-then the base partials, then every `ui/<name>/<name>.css`, with `_utilities.css` and
+then the base partials, then every `primitives/<name>/<name>.css`, with `_utilities.css` and
 `_layout.css` last. Everything slots into one of these layers.
 Layering — not selector specificity or BEM — is how we control the cascade, so a
 plain `.ui-button` rule in `components` can still be overridden by a `utilities` class
@@ -110,9 +110,9 @@ The four layers, by responsibility:
 - **`variables`** — token declarations only (`:root { --x: … }`). Global tokens live in
   [`_variables.css`](./src/base/_variables.css); each component adds its own namespace here.
 - **`reset`** — native-element baselines and control internals that must _lose_ to
-  component rules (e.g. `::details-content` in [`accordion.css`](./src/ui/accordion/accordion.css),
-  the `::picker` chrome in [`select.css`](./src/ui/select/select.css), the redrawn switch in
-  [`switch.css`](./src/ui/switch/switch.css)). [`_reset.css`](./src/base/_reset.css) owns the global baseline.
+  component rules (e.g. `::details-content` in [`accordion.css`](./src/primitives/accordion/accordion.css),
+  the `::picker` chrome in [`select.css`](./src/primitives/select/select.css), the redrawn switch in
+  [`switch.css`](./src/primitives/switch/switch.css)). [`_reset.css`](./src/base/_reset.css) owns the global baseline.
 - **`components`** — the actual component (`.ui-button`, `.ui-dialog`, `.ui-field`).
 - **`migrations`** — temporary shims that map old class names to Zazz tokens while you rewrite markup. Delete each rule once the corresponding markup is updated. Lives in an optional `migrations.css` you add and import at the commented slot in [`index.css`](./src/index.css).
 - **`utilities`** — atomic, override-anything classes ([`_utilities.css`](./src/base/_utilities.css)),
@@ -158,7 +158,7 @@ column** (tag name padded to 11 chars + a space) so headers scan like a table.
 
 ### Worked example
 
-The header from [`fields.css`](./src/ui/fields/fields.css), showing every tag in use:
+The header from [`fields.css`](./src/primitives/fields/fields.css), showing every tag in use:
 
 ```css
 /**
@@ -418,31 +418,31 @@ the variables layer.
 
 These deviate from the canonical shape on purpose — document the reason in-file:
 
-- **Split `@layer variables` blocks** — [`dialog.css`](./src/ui/dialog/dialog.css) declares motion
+- **Split `@layer variables` blocks** — [`dialog.css`](./src/primitives/dialog/dialog.css) declares motion
   tokens up top and sizing tokens in a second block lower down. Fine; label the second
   block.
-- **Component living in `@layer reset`** — [`switch.css`](./src/ui/switch/switch.css) redraws the
+- **Component living in `@layer reset`** — [`switch.css`](./src/primitives/switch/switch.css) redraws the
   native `input[role="switch"]`, so it belongs in `reset` (it must lose to component
   overrides). Note it in `@tokens`.
-- **`@supports`-gated progressive enhancement** — [`popover.css`](./src/ui/popover/popover.css),
-  [`tabs.css`](./src/ui/tabs/tabs.css), and [`select.css`](./src/ui/select/select.css) gate anchor positioning
+- **`@supports`-gated progressive enhancement** — [`popover.css`](./src/primitives/popover/popover.css),
+  [`tabs.css`](./src/primitives/tabs/tabs.css), and [`select.css`](./src/primitives/select/select.css) gate anchor positioning
   / `base-select` behind `@supports` with a documented fallback. Always describe the
   fallback in the `@uses` note.
 - **Per-sibling value math** — `sibling-index()` / `sibling-count()` (Baseline 2026;
   no Firefox yet, so `@supports (order: sibling-index())`-gate them with a fallback) fit
   calculations that vary by position among siblings: staggered `animation-delay`/
-  `transition-delay` (implemented: the [`reveal.css`](./src/ui/reveal/reveal.css) stagger,
+  `transition-delay` (implemented: the [`reveal.css`](./src/primitives/reveal/reveal.css) stagger,
   with `reveal.js` writing per-child delays as the unsupported-engine fallback), equal
   widths (`calc(100% / sibling-count())`), hue spreads. They are
   **value functions only — never selector logic**: they cannot replace enumerated
   `:nth-child()`/`:nth-of-type()` chains that correlate one element's index with
-  another's (the [`tabs.css`](./src/ui/tabs/tabs.css) panel-visibility chain documents
+  another's (the [`tabs.css`](./src/primitives/tabs/tabs.css) panel-visibility chain documents
   why that enumeration is irreducible).
-- **Attribute-hook components** — [`carousel.css`](./src/ui/carousel/carousel.css) and
-  [`lightbox.css`](./src/ui/lightbox/lightbox.css) style `[data-*]` hooks whose behaviour comes from
+- **Attribute-hook components** — [`carousel.css`](./src/primitives/carousel/carousel.css) and
+  [`lightbox.css`](./src/primitives/lightbox/lightbox.css) style `[data-*]` hooks whose behaviour comes from
   the co-located `<name>.ts` script (loaded as its emitted `<name>.js`). Declare the JS
   dependency in a `@uses` line.
-- **Extended header** — [`reveal.css`](./src/ui/reveal/reveal.css) keeps `@version`/`@since`/
+- **Extended header** — [`reveal.css`](./src/primitives/reveal/reveal.css) keeps `@version`/`@since`/
   `@example` plus a data-attribute table because it is a configurable subsystem, not a
   single component.
 - **`--_` coordination var in `@layer variables`** — [`_utilities.css`](./src/base/_utilities.css)
@@ -463,9 +463,11 @@ These deviate from the canonical shape on purpose — document the reason in-fil
 
 ## 8. Adding a new component
 
-1. Create `src/ui/<component>/<component>.css` (alongside the component's example
-   `default.html`) and register it in load order (after anything it
-   `@requires`) — add the `@import` to [`index.css`](./src/index.css).
+1. Create `src/primitives/<component>/<component>.css` (alongside the component's
+   example fragments — the primary example is `<component>.html`, secondary
+   examples are `<component>-<variant>.html`) and register it in load order
+   (after anything it `@requires`) — add the `@import` to
+   [`index.css`](./src/index.css).
 2. **Decide the root form** (ADR-0001): root is a semantic native element
    (`<button>`, `<dialog>`, `<select>`, …) → **class-form only** (`.ui-<component>`);
    root would otherwise be a meaningless `<div>`/`<span>` → **dual-form**

@@ -4,8 +4,8 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "next build && node scripts/patch-zazz-trace.mjs",
-    "dev": "next dev",
+    "build": "tsc -p ../../packages/ui/tsconfig.json && next build && node scripts/patch-zazz-trace.mjs",
+    "dev": "tsc -p ../../packages/ui/tsconfig.json && next dev",
     "start": "next start",
     "types:check": "fumadocs-mdx && next typegen && tsc --noEmit",
     "postinstall": "fumadocs-mdx",

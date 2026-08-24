@@ -39,7 +39,10 @@ Load pre-bundled files via jsDelivr:
 You can also load individual stylesheets:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/ui/src/ui/dialog/dialog.css" />
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@zazz-ui/ui/src/primitives/dialog/dialog.css"
+/>
 ```
 
 <Callout type="warn">
@@ -48,7 +51,7 @@ You can also load individual stylesheets:
 
 ## Copy source files
 
-Components live in `src/ui/<name>/` with their stylesheets, scripts, and markup examples. Base layers live in `src/base/`.
+Components live in `src/primitives/<name>/` with their stylesheets, scripts, and markup examples. Base layers live in `src/base/`.
 
 Copy using degit:
 
@@ -57,7 +60,7 @@ Copy using degit:
 pnpm dlx degit dereknelsen/zazz-ui/packages/ui/src ./zazz
 
 # single component folder
-pnpm dlx degit dereknelsen/zazz-ui/packages/ui/src/ui/dialog ./zazz/ui/dialog
+pnpm dlx degit dereknelsen/zazz-ui/packages/ui/src/primitives/dialog ./zazz/primitives/dialog
 ```
 
 <Callout type="warn">
@@ -109,10 +112,10 @@ Enable gzip or Brotli on your server for production compression.
 │   │   ├── _utilities.css          (utility classes)
 │   │   ├── _layout.css             (container and layout utilities)
 │   │   └── utils.js, reveal.js...  (shared runtime)
-│   └── ui/
+│   └── primitives/
 │       ├── button/
 │       │   ├── button.css
-│       │   └── default.html
+│       │   └── button.html
 │       └── ...
 └── dist/
     ├── zazz.css                    (standalone CSS bundle)

@@ -22,7 +22,7 @@ Or from a CDN — two tags, no install:
 <script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/ui/dist/zazz.js"></script>
 ```
 
-Or copy the files: every component is one self-contained folder — `src/ui/<name>/` holds its stylesheet, script, and canonical HTML examples. Copy a folder, own the code.
+Or copy the files: every component is one self-contained folder — `src/primitives/<name>/` holds its stylesheet, script, and canonical HTML examples. Copy a folder, own the code.
 
 ## Usage
 
@@ -39,7 +39,7 @@ src/
 ├── index.css        stylesheet entry — @imports base + every component in cascade order
 ├── index.js         script entry — registers every custom element / behavior
 ├── base/            tokens, reset, typography, utilities, layout + shared runtime
-└── ui/<name>/       one folder per component: <name>.css, <name>.js, examples (.html)
+└── primitives/<name>/       one folder per component: <name>.css, <name>.js, examples (.html)
 dist/
 ├── zazz.css         flattened single-file bundle (what the CDN tags load)
 └── zazz.js

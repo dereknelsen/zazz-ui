@@ -7,7 +7,7 @@ description: Draggable, looping carousels built with Embla and the ui-carousel c
 
 ## Default
 
-<Preview src="carousel/default" />
+<Preview src="carousel/carousel" />
 
 ## Anatomy
 
@@ -63,19 +63,16 @@ Configure Embla options as `data-carousel-*` attributes on `<ui-carousel>`:
 Enable plugins with a space-separated `data-carousel-plugins` list. Configure each plugin with its option prefix — options alone do not load the plugin.
 
 ```html
-<ui-carousel
-  data-carousel-plugins="autoplay"
-  data-carousel-autoplay-delay="3000"
->
+<ui-carousel data-carousel-plugins="autoplay" data-carousel-autoplay-delay="3000">
   ...
 </ui-carousel>
 ```
 
-| Plugin      | Slug          | Options prefix                 | Package specifier            |
-| ----------- | ------------- | ------------------------------ | ---------------------------- |
-| Autoplay    | `autoplay`    | `data-carousel-autoplay-*`     | `embla-carousel-autoplay`    |
-| Auto Scroll | `auto-scroll` | `data-carousel-auto-scroll-*`  | `embla-carousel-auto-scroll` |
-| Class Names | `class-names` | `data-carousel-class-names-*`  | `embla-carousel-class-names` |
+| Plugin      | Slug          | Options prefix                | Package specifier            |
+| ----------- | ------------- | ----------------------------- | ---------------------------- |
+| Autoplay    | `autoplay`    | `data-carousel-autoplay-*`    | `embla-carousel-autoplay`    |
+| Auto Scroll | `auto-scroll` | `data-carousel-auto-scroll-*` | `embla-carousel-auto-scroll` |
+| Class Names | `class-names` | `data-carousel-class-names-*` | `embla-carousel-class-names` |
 
 ## Dots pagination
 

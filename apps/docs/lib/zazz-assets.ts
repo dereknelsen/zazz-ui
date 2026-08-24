@@ -6,7 +6,7 @@ import { componentCssFile, exampleFile, scriptFile } from "@/lib/zazz-package";
 
 /**
  * Reads one vanilla-HTML example fragment from the centralized Zazz component
- * source. `src` is an id like `button/variants` → `src/ui/button/variants.html`
+ * source. `src` is an id like `button/variants` → `src/primitives/button/variants.html`
  * inside the installed `@zazz-ui/ui` package (resolved by `lib/zazz-package.ts`).
  *
  * This is the single read point for example markup. `<Preview>` renders both the live
@@ -30,7 +30,7 @@ export function readExample(src: string): string | null {
 
 /**
  * Reads the component-specific CSS file for a given example id.
- * `src` is like `button/variants` → reads `src/ui/button/button.css`.
+ * `src` is like `button/variants` → reads `src/primitives/button/button.css`.
  *
  * The `utilities/*` namespace is intentionally skipped: a utility demo composes
  * atomic classes rather than redrawing one component, so its "source" is the

@@ -13,7 +13,7 @@ A distribution spec ([spec.md](spec.md), written by [Assemble the distribution s
 - **North stars**: shadcn CLI (https://ui.shadcn.com/docs/cli) for the CLI; Base UI (https://base-ui.com/llms.txt) for primitives.
 - **Vocabulary**: use `CONTEXT.md` terms — "primitive", never "component". The CLI's copy model is "vendor" (see CONTEXT.md).
 - **Skills**: consult the `zazz` skill for design-system details; `docs/agents/issue-tracker.md` for tracker conventions.
-- **Caveat**: an uncommitted `src/ui/` → `src/primitives/` rename is in flight in `packages/ui`; `src/index.ts`, `src/index.css`, `package.json` exports, and `src/manifest.ts` still say `ui/`. Tickets must not assume either path is final.
+- **Layout fact** (updated 2026-08-24): the `src/ui/` → `src/primitives/` rename has landed and every reference now says `primitives/` (including the `./primitives/*` export subpath). Example fragments are named `<primitive>.html` / `<primitive>-<variant>.html`. These paths are the public CDN surface once publishing turns on (ADR-0005).
 - Sessions resolve **one ticket each** (research tickets may batch).
 
 ## Decisions so far

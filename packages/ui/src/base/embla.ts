@@ -107,7 +107,9 @@ function parseCarouselPlugins(value: string | null): string[] {
  */
 const PLUGIN_BY_SLUG: Record<CarouselPluginSlug, (node: Element) => EmblaPlugin> = {
   autoplay: (node) =>
-    EmblaCarouselAutoplay(readCarouselOptions<AutoplayOptionsType>(node, "data-carousel-autoplay-")),
+    EmblaCarouselAutoplay(
+      readCarouselOptions<AutoplayOptionsType>(node, "data-carousel-autoplay-"),
+    ),
   "auto-scroll": (node) =>
     EmblaCarouselAutoScroll(
       readCarouselOptions<AutoScrollOptionsType>(node, "data-carousel-auto-scroll-"),

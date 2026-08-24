@@ -4,10 +4,10 @@ Monorepo for the Zazz Design Framework — a zero-build, semantic-token CSS + va
 
 ## Layout
 
-| Path          | What it is                                                                                                                                                                           |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `packages/ui` | [`@zazz-ui/ui`](packages/ui) — the kit itself (not yet published; see [Publishing](#publishing)). CSS + HTML + TS-authored scripts, co-located per component under `src/ui/<name>/`. |
-| `apps/docs`   | The documentation site (Next.js + fumadocs). Serves the kit's files raw at `/zazz/*` for component previews.                                                                         |
+| Path          | What it is                                                                                                                                                                                   |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `packages/ui` | [`@zazz-ui/ui`](packages/ui) — the kit itself (not yet published; see [Publishing](#publishing)). CSS + HTML + TS-authored scripts, co-located per component under `src/primitives/<name>/`. |
+| `apps/docs`   | The documentation site (Next.js + fumadocs). Serves the kit's files raw at `/zazz/*` for component previews.                                                                                 |
 
 ## Development
 
