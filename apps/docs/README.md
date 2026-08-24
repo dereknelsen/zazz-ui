@@ -5,7 +5,7 @@ The documentation site for the [Zazz Design Framework](../../packages/ui) — Ne
 The kit itself lives in [`packages/ui`](../../packages/ui) (`@zazz-ui/ui`); this app consumes it as a workspace dependency:
 
 - Component pages embed live previews via `<Preview src="button/default" />` (MDX). The preview server component reads the canonical example HTML, component CSS, and emitted JS straight from the installed package (`lib/zazz-assets.ts`), so docs can never drift from the source.
-- The `/zazz/[...path]` route serves the package's `src/` tree raw (`/zazz/index.css`, `/zazz/index.js`, `/zazz/ui/**`) for the preview iframes — no copy into `public/`, no bundling.
+- The `/zazz/[...path]` route serves the package's `src/` tree raw (`/zazz/index.css`, `/zazz/index.js`, `/zazz/primitives/**`) for the preview iframes — no copy into `public/`, no bundling.
 
 ## Development
 

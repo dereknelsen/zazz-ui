@@ -22,9 +22,9 @@ export type ExampleScript =
  * `carousel.js` loaded before `lightbox.js`).
  */
 export const WEB_COMPONENT_SCRIPT_FILES: Partial<Record<ExampleScript, string[]>> = {
-  carousel: ["ui/carousel/carousel.js"],
-  lightbox: ["ui/carousel/carousel.js", "ui/lightbox/lightbox.js"],
-  password: ["ui/password-group/password-group.js"],
-  tabs: ["ui/tabs/tabs.js"],
-  toaster: ["ui/toaster/toaster.js"],
+  carousel: ["primitives/carousel/carousel.js"],
+  lightbox: ["primitives/carousel/carousel.js", "primitives/lightbox/lightbox.js"],
+  password: ["primitives/password-group/password-group.js"],
+  tabs: ["primitives/tabs/tabs.js"],
+  toaster: ["primitives/toaster/toaster.js"],
 };

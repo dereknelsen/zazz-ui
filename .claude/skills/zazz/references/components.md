@@ -3,10 +3,10 @@
 The stable **API surface** only — selector, `data-*` attributes and their accepted values,
 what powers the component, and where the canonical example lives. **No example markup is
 copied here** (that would duplicate the single source). To author a component, fetch the real
-markup from the docs page or read `packages/ui/src/ui/{name}/*.html` in-repo, then adapt it.
+markup from the docs page or read `packages/ui/src/primitives/{name}/*.html` in-repo, then adapt it.
 
 Variants/sizes follow the shadcn-style pattern: a `data-*` attribute reassigns the
-component's local tokens (see `packages/ui/src/ui/button/button.css`). The **default** variant is the
+component's local tokens (see `packages/ui/src/primitives/button/button.css`). The **default** variant is the
 _absence_ of the attribute.
 
 Roots are the tag form (`<ui-tooltip>`) or its equivalent class form (`.ui-tooltip`) — both
@@ -65,6 +65,6 @@ layout. Validation surfaces via `:user-invalid` — **after** blur/submit, never
   behaviors. Their full attribute catalogs are in `apis.md`.
 
 > Trust this index + the variant selectors in each component's stylesheet
-> (`packages/ui/src/ui/{name}/{name}.css`) for the real API, and the real example
-> markup (`packages/ui/src/ui/{name}/*.html`) for structure. If an example ever shows an
+> (`packages/ui/src/primitives/{name}/{name}.css`) for the real API, and the real example
+> markup (`packages/ui/src/primitives/{name}/*.html`) for structure. If an example ever shows an
 > attribute with no matching stylesheet selector, the selector wins.

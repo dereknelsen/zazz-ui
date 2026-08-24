@@ -28,8 +28,8 @@ export const PKG_ROOT = path.dirname(require.resolve("@zazz-ui/ui/package.json")
 /** The kit's source tree — stylesheets, emitted scripts, example fragments. */
 export const SRC_ROOT = path.join(PKG_ROOT, "src");
 
-/** Component folders (`src/ui/<name>/`). */
-export const COMPONENTS_ROOT = path.join(SRC_ROOT, "ui");
+/** Component folders (`src/primitives/<name>/`). */
+export const COMPONENTS_ROOT = path.join(SRC_ROOT, "primitives");
 
 /**
  * The subtree the `/zazz/*` route serves. Serving `src/` (not the package

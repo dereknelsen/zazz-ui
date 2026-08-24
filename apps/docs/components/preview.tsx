@@ -6,7 +6,7 @@ import { Tab, Tabs } from "./tabs";
 import { PreviewFrame } from "./preview-frame";
 
 interface PreviewProps {
-  /** Example id like `button/variants` — reads src/ui/button/variants.html in @zazz-ui/ui. */
+  /** Example id like `button/variants` — reads src/primitives/button/variants.html in @zazz-ui/ui. */
   src: string;
   className?: string;
 }
