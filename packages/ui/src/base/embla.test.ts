@@ -2,13 +2,12 @@
 "use strict";
 
 /**
- * @fileoverview Tests for the active-index sync helper (`setActiveIndex`) —
- * the shared "which one is current" marker used by both dot pagination and
- * thumb navigation in `embla.ts`.
+ * @fileoverview Tests for Embla helpers — active-index sync (`setActiveIndex`)
+ * and plugin-slug parsing (`parseCarouselPlugins`).
  */
 
 import { describe, expect, it } from "vite-plus/test";
-import { setActiveIndex } from "./embla.ts";
+import { parseCarouselPlugins, setActiveIndex } from "./embla.ts";
 
 function makeNodes(count: number): HTMLElement[] {
   return Array.from({ length: count }, () => document.createElement("button"));
@@ -50,5 +49,35 @@ describe("setActiveIndex", () => {
 
   it("handles an empty node list", () => {
     expect(() => setActiveIndex([], 0)).not.toThrow();
+  });
+});
+
+describe("parseCarouselPlugins", () => {
+  it("returns an empty array for null", () => {
+    expect(parseCarouselPlugins(null)).toEqual([]);
+  });
+
+  it("returns an empty array for empty or whitespace-only values", () => {
+    expect(parseCarouselPlugins("")).toEqual([]);
+    expect(parseCarouselPlugins("   ")).toEqual([]);
+  });
+
+  it("splits space-separated plugin slugs", () => {
+    expect(parseCarouselPlugins("class-names autoplay")).toEqual(["class-names", "autoplay"]);
+  });
+
+  it("preserves authoring order and collapses extra whitespace", () => {
+    expect(parseCarouselPlugins("  auto-scroll   class-names  ")).toEqual([
+      "auto-scroll",
+      "class-names",
+    ]);
+  });
+
+  it("keeps unknown slugs (caller ignores them)", () => {
+    expect(parseCarouselPlugins("class-names nope autoplay")).toEqual([
+      "class-names",
+      "nope",
+      "autoplay",
+    ]);
   });
 });

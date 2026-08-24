@@ -20,6 +20,10 @@ _Avoid_: expanded version, raw form
 An interior part of a primitive, identified by `data-slot="{primitive}-{part}"` (e.g. `data-slot="dialog-header"`). The attribute is a space-separated token list (like `class`); selectors match with `[data-slot~="…"]`. Slots replace BEM element classes; classes only ever name primitive roots.
 _Avoid_: part, fragment, segment, sub-component, BEM element
 
+**Vendor**:
+The CLI's distribution model: copying kit files into a consumer's project so the consumer owns and edits them; updates are diffs against recorded provenance, not package bumps.
+_Avoid_: eject, copy-paste install, scaffold
+
 **HTML web component**:
 A light-DOM custom element that augments existing, already-styled markup with behavior. The JS-carrying subset of primitives (today: carousel, lightbox, password-group, tabs, toaster). It never uses shadow DOM and never renders its own content; without JS its markup must still render sensibly.
 _Avoid_: shadow-DOM component, "web component" as a catch-all for every primitive

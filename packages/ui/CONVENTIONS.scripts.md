@@ -149,7 +149,7 @@ Component scripts read configuration from HTML data attributes rather than JS op
 - Set lifecycle attributes on the DOM (`data-carousel-init`) so scripts can detect already-initialized elements.
 - Keep the three attribute families straight (ADR-0002): **config props** (`data-carousel-*`, `data-reveal-*`) and **variant/state props** (`data-variant`, `data-size`, `data-side`, `data-align`, `data-orientation`, `data-position`) are bare-keyed and unprefixed; **interior parts** are `data-slot="{primitive}-{part}"` — a space-separated token list, always matched with `[data-slot~="…"]`. `ui-` prefixes things that _name_ Zazz (tags, classes, component tokens); attribute keys that carry values stay bare.
 
-Boolean flags can be bare attributes (`data-carousel-autoplay`) or explicit values (`data-carousel-keyboard="false"`).
+Enable carousel plugins with a space-separated token list (`data-carousel-plugins="autoplay"`). Boolean flags can use explicit values (`data-carousel-keyboard="false"`).
 
 ### Dependencies and load order
 

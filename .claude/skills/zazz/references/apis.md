@@ -101,15 +101,16 @@ snap) · `carousel-thumbs` (linked thumb carousel).
 **Config on the carousel root** (kebab-case → Embla options via
 `Utils.parseDataAttributes`):
 
-| Attribute                                                 | Example                                                    | Purpose                                                                   |
-| --------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------- |
-| any core Embla option                                     | `data-carousel-loop="true"`, `data-carousel-align="start"` | passed straight to Embla                                                  |
-| `data-carousel-keyboard`                                  | `"false"`                                                  | disable ArrowLeft/Right navigation                                        |
-| `data-carousel-autoplay` / `data-carousel-autoplay-*`     | `data-carousel-autoplay-delay="3000"`                      | Autoplay plugin                                                           |
-| `data-carousel-autoscroll` / `data-carousel-autoscroll-*` | `data-carousel-autoscroll-speed="2"`                       | AutoScroll plugin                                                         |
-| `data-carousel-classnames` / `data-carousel-classnames-*` | `data-carousel-classnames-snapped="is-snapped"`            | ClassNames plugin                                                         |
-| `data-carousel-thumbs-*` (on the `carousel-thumbs` slot)  | `data-carousel-thumbs-contain-scroll="keepSnaps"`          | thumb carousel options (defaults: containScroll keepSnaps, dragFree true) |
-| `data-carousel-start` (on a trigger w/ `commandfor`)      | `data-carousel-start="2"`                                  | open a dialog carousel at slide N                                         |
+| Attribute                                                | Example                                                    | Purpose                                                                   |
+| -------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------- |
+| any core Embla option                                    | `data-carousel-loop="true"`, `data-carousel-align="start"` | passed straight to Embla                                                  |
+| `data-carousel-keyboard`                                 | `"false"`                                                  | disable ArrowLeft/Right navigation                                        |
+| `data-carousel-plugins`                                  | `"class-names autoplay"`                                   | space-separated plugin slugs to load                                      |
+| `data-carousel-autoplay-*`                               | `data-carousel-autoplay-delay="3000"`                      | Autoplay plugin options (requires `autoplay` in plugins)                  |
+| `data-carousel-auto-scroll-*`                            | `data-carousel-auto-scroll-speed="2"`                      | AutoScroll plugin options (requires `auto-scroll` in plugins)             |
+| `data-carousel-class-names-*`                            | `data-carousel-class-names-snapped="is-snapped"`           | ClassNames plugin options (requires `class-names` in plugins)             |
+| `data-carousel-thumbs-*` (on the `carousel-thumbs` slot) | `data-carousel-thumbs-contain-scroll="keepSnaps"`          | thumb carousel options (defaults: containScroll keepSnaps, dragFree true) |
+| `data-carousel-start` (on a trigger w/ `commandfor`)     | `data-carousel-start="2"`                                  | open a dialog carousel at slide N                                         |
 
 Script-managed (don't set by hand): `data-carousel-init`,
 `data-carousel-start-index`. The script adds `.is-active` to the current
