@@ -28,9 +28,10 @@
  *
  * Configuration (on the carousel root: `<ui-carousel>` or `.ui-carousel`):
  * - `data-carousel-*` — Core Embla options
- * - `data-carousel-autoplay` / `data-carousel-autoplay-*` — Autoplay plugin
- * - `data-carousel-autoscroll` / `data-carousel-autoscroll-*` — Auto scroll plugin
- * - `data-carousel-classnames` / `data-carousel-classnames-*` — Class names plugin
+ * - `data-carousel-plugins` — Space-separated plugin slugs (`autoplay`, `auto-scroll`, `class-names`)
+ * - `data-carousel-autoplay-*` — Autoplay plugin options (requires `autoplay` in plugins)
+ * - `data-carousel-auto-scroll-*` — Auto scroll plugin options (requires `auto-scroll` in plugins)
+ * - `data-carousel-class-names-*` — Class names plugin options (requires `class-names` in plugins)
  *
  * @see https://www.embla-carousel.com/docs/api/options#reference
  * @see https://www.embla-carousel.com/docs/plugins/autoplay#options
@@ -45,13 +46,13 @@
  * data-carousel-align="start"
  *
  * @example
- * data-carousel-autoplay data-carousel-autoplay-delay="3000"
+ * data-carousel-plugins="autoplay" data-carousel-autoplay-delay="3000"
  *
  * @example
- * data-carousel-autoscroll data-carousel-autoscroll-speed="2"
+ * data-carousel-plugins="auto-scroll" data-carousel-auto-scroll-speed="2"
  *
  * @example
- * data-carousel-classnames data-carousel-classnames-snapped="is-snapped"
+ * data-carousel-plugins="class-names" data-carousel-class-names-snapped="is-snapped"
  *
  * @example Barebones carousel (4 text slides; auto-inits on DOMContentLoaded):
  * <div class="ui-carousel">
@@ -84,6 +85,38 @@ import EmblaCarouselClassNames from "embla-carousel-class-names";
 import type { ClassNamesOptionsType } from "embla-carousel-class-names";
 
 // --- Configuration reading ---
+
+/** Known Embla plugin slugs accepted by `data-carousel-plugins`. */
+type CarouselPluginSlug = "autoplay" | "auto-scroll" | "class-names";
+
+/**
+ * @description Parses a space-separated `data-carousel-plugins` value into
+ * plugin slug tokens. Empty / null / whitespace-only values yield `[]`.
+ *
+ * @param value - Raw attribute value (or `null` when absent).
+ * @returns Plugin slug tokens in authoring order.
+ */
+function parseCarouselPlugins(value: string | null): string[] {
+  if (!value) return [];
+  return value.trim().split(/\s+/).filter(Boolean);
+}
+
+/**
+ * Map of plugin slug → Embla factory. Slugs match Embla package names
+ * (`embla-carousel-auto-scroll`, etc.).
+ */
+const PLUGIN_BY_SLUG: Record<CarouselPluginSlug, (node: Element) => EmblaPlugin> = {
+  autoplay: (node) =>
+    EmblaCarouselAutoplay(readCarouselOptions<AutoplayOptionsType>(node, "data-carousel-autoplay-")),
+  "auto-scroll": (node) =>
+    EmblaCarouselAutoScroll(
+      readCarouselOptions<AutoScrollOptionsType>(node, "data-carousel-auto-scroll-"),
+    ),
+  "class-names": (node) =>
+    EmblaCarouselClassNames(
+      readCarouselOptions<ClassNamesOptionsType>(node, "data-carousel-class-names-"),
+    ),
+};
 
 /**
  * @description Reads a node's prefixed `data-carousel-*` attributes as an
@@ -435,17 +468,15 @@ function initEmblaRoot(emblaNode: Element): void {
 
   const apiOptions = readCarouselOptions<Record<string, unknown>>(emblaNode, "data-carousel-");
 
-  // Keep plugin keys out of core Embla options
+  // Keep kit-only / plugin keys out of core Embla options
   Object.keys(apiOptions).forEach(function (key) {
     if (
       key === "name" ||
       key === "keyboard" ||
-      key === "autoplay" ||
-      key === "autoscroll" ||
-      key === "classnames" ||
+      key === "plugins" ||
       key.startsWith("autoplay") ||
-      key.startsWith("autoscroll") ||
-      key.startsWith("classnames")
+      key.startsWith("autoScroll") ||
+      key.startsWith("classNames")
     ) {
       delete apiOptions[key];
     }
@@ -460,37 +491,13 @@ function initEmblaRoot(emblaNode: Element): void {
     apiOptions.watchDrag = (api: EmblaCarouselType) => api.canScrollPrev() || api.canScrollNext();
   }
 
-  const autoplayOptions = readCarouselOptions<AutoplayOptionsType>(
-    emblaNode,
-    "data-carousel-autoplay-",
-  );
-  const autoscrollOptions = readCarouselOptions<AutoScrollOptionsType>(
-    emblaNode,
-    "data-carousel-autoscroll-",
-  );
-  const classnamesOptions = readCarouselOptions<ClassNamesOptionsType>(
-    emblaNode,
-    "data-carousel-classnames-",
-  );
-
+  // Plugins load only when listed in data-carousel-plugins — option attrs alone
+  // do not enable them. Unknown slugs are ignored.
   const plugins: EmblaPlugin[] = [];
-
-  if (emblaNode.hasAttribute("data-carousel-autoplay") || Object.keys(autoplayOptions).length > 0) {
-    plugins.push(EmblaCarouselAutoplay(autoplayOptions));
-  }
-
-  if (
-    emblaNode.hasAttribute("data-carousel-autoscroll") ||
-    Object.keys(autoscrollOptions).length > 0
-  ) {
-    plugins.push(EmblaCarouselAutoScroll(autoscrollOptions));
-  }
-
-  if (
-    emblaNode.hasAttribute("data-carousel-classnames") ||
-    Object.keys(classnamesOptions).length > 0
-  ) {
-    plugins.push(EmblaCarouselClassNames(classnamesOptions));
+  for (const slug of parseCarouselPlugins(emblaNode.getAttribute("data-carousel-plugins"))) {
+    const create = PLUGIN_BY_SLUG[slug as CarouselPluginSlug];
+    if (!create) continue;
+    plugins.push(create(emblaNode));
   }
 
   // The options come from untyped data attributes; Embla validates at runtime.
@@ -777,5 +784,6 @@ if (typeof window !== "undefined") {
   window.EmblaInit = EmblaInit;
 }
 
-// setActiveIndex is exported for unit tests only — not part of the public API.
-export { EmblaInit, setActiveIndex };
+// setActiveIndex / parseCarouselPlugins are exported for unit tests only —
+// not part of the public API.
+export { EmblaInit, setActiveIndex, parseCarouselPlugins };

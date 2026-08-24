@@ -1,6 +1,6 @@
 <ui-lightbox class="max-w-screen-xs mx-auto">
   <div data-slot="lightbox-gallery">
-    <ui-carousel data-slot="lightbox-stage" data-carousel-loop="true" data-carousel-classnames>
+    <ui-carousel data-slot="lightbox-stage" data-carousel-loop="true" data-carousel-plugins="class-names">
       <div data-slot="carousel-viewport">
         <div data-slot="carousel-container">
           <button
@@ -336,7 +336,7 @@
     closedby="any"
   >
     <div data-slot="dialog-content">
-      <ui-carousel data-carousel-loop="true" data-carousel-classnames>
+      <ui-carousel data-carousel-loop="true" data-carousel-plugins="class-names">
         <div data-slot="carousel-viewport">
           <div data-slot="carousel-container">
             <div data-slot="lightbox-slide carousel-slide">
