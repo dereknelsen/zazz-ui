@@ -276,7 +276,7 @@
     --tracking-xs: 0em;
     --tracking-eyebrow: 0.1em;
 
-    /* line-height — not in Figma (variable limits) */
+    /* line-height */
     --leading-display: 0.95;
     --leading-h1: 0.95;
     --leading-h2: 0.95;
@@ -314,7 +314,7 @@
 
     /* modifiers */
     /* @link https://utopia.fyi/clamp/calculator?a=400,1280,3.6—4 */
-    --spacing-interval: clamp(0.225rem, 0.2136rem + 0.0455vw, 0.25rem);
+    --spacing-interval: clamp(0.225rem, 0.2136rem + 0.0455vi, 0.25rem);
 
     /* scale */
     --step-0_5px: 0.5px;
@@ -375,7 +375,7 @@
     --radius-xs: calc(var(--step-1) * var(--radius-multiplier));
     --radius-sm: calc(var(--step-1_5) * var(--radius-multiplier));
     --radius-md: calc(var(--step-2_5) * var(--radius-multiplier));
-    --radius-lg: calc(var(--step-5) * var(--radius-multiplier));
+    --radius-lg: calc(var(--step-4_5) * var(--radius-multiplier));
     --radius-xl: calc(var(--step-7) * var(--radius-multiplier));
     --radius-full: 9999rem;
 

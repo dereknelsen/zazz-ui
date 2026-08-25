@@ -23,9 +23,18 @@ Use `data-side` and `data-align` on `.ui-select` to position the dropdown panel 
 
 <Preview src="select/select-align" />
 
+## Multiple
+
+`appearance: base-select` doesn't cover `<select multiple>` in any stable engine yet, so `<ui-multiselect>` progressively enhances a real multi-select into the same dropdown style: the select is hidden but stays the form value carrier, and a stamped trigger + popover of checkbox rows (with the shared option checkmark) syncs with it both ways. The trigger reads `First selection (+N more)`. Without JavaScript the native multi listbox renders — fully functional.
+
+<Preview src="select/select-multiple" />
+
 ## API
 
-| Attribute    | Target       | Values                           |
-| ------------ | ------------ | -------------------------------- |
-| `data-side`  | `.ui-select` | `top`, `bottom`, `left`, `right` |
-| `data-align` | `.ui-select` | `start`, `center`, `end`         |
+| Attribute                  | Target           | Values                                   |
+| -------------------------- | ---------------- | ---------------------------------------- |
+| `data-side`                | `.ui-select`     | `top`, `bottom`, `left`, `right`         |
+| `data-align`               | `.ui-select`     | `start`, `center`, `end`                 |
+| `data-placeholder`         | `ui-multiselect` | Trigger text when nothing is selected    |
+| `data-label-more`          | `ui-multiselect` | Overflow template, default `(+{n} more)` |
+| `data-side` / `data-align` | `ui-multiselect` | Forwarded to the stamped panel           |

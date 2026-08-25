@@ -1,0 +1,38 @@
+/**
+ * alert-dialog.css — Alert dialog (.ui-alert-dialog on .ui-dialog <dialog>)
+ *
+ * @layer      variables, components
+ * @requires   layers.css, _variables.css, dialog.css
+ * @uses       closedby="none" — the alert contract: only an explicit choice closes it
+ * @uses       command="show-modal" / command="close" — Invoker Commands (polyfill: invokers)
+ * @tokens     --ui-alert-dialog-* (@layer variables)
+ * @see        dialog.css — owns the slots, motion, and backdrop this composes
+ */
+
+@layer variables {
+  :root {
+    /* Narrower than the base dialog — an alert is a single question, not a form */
+    --ui-alert-dialog-width: min(45ch, 100% - var(--gap-md) * 2);
+    --ui-alert-dialog-accent: var(--destructive);
+    --ui-alert-dialog-shadow: var(--ui-dialog-shadow);
+  }
+}
+
+@layer zazz.components {
+  /* ===========================================================================
+  ALERT DIALOG — a dialog that requires an explicit response
+  - Composes .ui-dialog (markup carries both classes) and keeps the dialog-*
+    slots; this file only retunes dialog tokens and colors the header accent.
+  - The contract lives in the markup: role="alertdialog", closedby="none",
+    no dialog-close button — Cancel/Confirm are the only ways out.
+  =========================================================================== */
+
+  .ui-alert-dialog {
+    --ui-dialog-width: var(--ui-alert-dialog-width);
+    --ui-dialog-shadow: var(--ui-alert-dialog-shadow);
+  }
+
+  .ui-alert-dialog [data-slot~="dialog-header"] {
+    color: var(--ui-alert-dialog-accent);
+  }
+}

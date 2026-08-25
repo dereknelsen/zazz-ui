@@ -1,0 +1,21 @@
+---
+title: Alert dialog
+description: A modal dialog that requires an explicit response to proceed.
+---
+
+An alert dialog is a [Dialog](/docs/components/dialog) with a stricter contract: `<dialog class="ui-dialog ui-alert-dialog" role="alertdialog" closedby="none">`. There is no close button and no light dismiss — Cancel or Confirm are the only ways out. It composes the dialog's slots (`dialog-content`, `dialog-header`, `dialog-body`, `dialog-footer`) and stays a native `<dialog>` opened with Invoker Commands.
+
+Give the dialog `aria-labelledby` pointing at the heading and `aria-describedby` pointing at the body so the question and its consequences are announced together.
+
+## Default
+
+<Preview src="alert-dialog/alert-dialog" />
+
+## API
+
+| Attribute    | Target             | Values                                              |
+| ------------ | ------------------ | --------------------------------------------------- |
+| `command`    | Trigger            | `show-modal`; `close` on the Cancel/Confirm buttons |
+| `commandfor` | Trigger            | Target `<dialog>` id                                |
+| `role`       | `.ui-alert-dialog` | `alertdialog`                                       |
+| `closedby`   | `.ui-alert-dialog` | `none` — the alert contract                         |

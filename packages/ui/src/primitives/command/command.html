@@ -1,0 +1,119 @@
+<ui-command data-command-hotkey="mod+k" class="w-full max-w-xl">
+  <button
+    class="ui-button w-full justify-between"
+    type="button"
+    data-variant="outline"
+    popovertarget="command-example-1"
+    data-slot="command-open"
+  >
+    <span class="text-muted-foreground">Search…</span>
+    <ui-kbd-group><kbd>⌘</kbd><kbd>K</kbd></ui-kbd-group>
+  </button>
+  <div
+    id="command-example-1"
+    data-slot="command-panel"
+    data-side="bottom"
+    data-align="start"
+    popover="auto"
+  >
+    <header data-slot="command-header">
+      <input
+        data-slot="command-input"
+        type="text"
+        placeholder="Type a command or search…"
+        role="combobox"
+        aria-expanded="false"
+        aria-autocomplete="list"
+        autocomplete="off"
+        aria-label="Search commands"
+      />
+    </header>
+    <div role="listbox" data-slot="command-list" aria-label="Commands">
+      <div role="group" data-slot="command-group" aria-labelledby="command-example-1-nav">
+        <span
+          class="font-strong text-eyebrow text-muted-foreground"
+          data-slot="command-group-label"
+          id="command-example-1-nav"
+          >Navigation</span
+        >
+        <a
+          role="option"
+          data-slot="command-item"
+          class="ui-button justify-start"
+          data-variant="ghost"
+          href="#docs"
+          tabindex="-1"
+          data-keywords="documentation guides"
+          data-hotkey="mod+shift+d"
+        >
+          Go to docs
+          <ui-kbd-group><kbd>⇧</kbd><kbd>⌘</kbd><kbd>D</kbd></ui-kbd-group>
+        </a>
+        <a
+          role="option"
+          data-slot="command-item"
+          class="ui-button justify-start"
+          data-variant="ghost"
+          href="#settings"
+          tabindex="-1"
+          data-keywords="preferences options"
+          data-hotkey="mod+shift+s"
+        >
+          Go to settings
+          <ui-kbd-group><kbd>⇧</kbd><kbd>⌘</kbd><kbd>S</kbd></ui-kbd-group>
+        </a>
+      </div>
+      <div role="group" data-slot="command-group" aria-labelledby="command-example-1-actions">
+        <span
+          class="font-strong text-eyebrow text-muted-foreground"
+          data-slot="command-group-label"
+          id="command-example-1-actions"
+          >Actions</span
+        >
+        <button
+          role="option"
+          data-slot="command-item"
+          class="ui-button justify-start"
+          data-variant="ghost"
+          type="button"
+          command="show-modal"
+          commandfor="command-example-1-dialog"
+          tabindex="-1"
+          data-keywords="modal open"
+        >
+          Open example dialog
+        </button>
+      </div>
+    </div>
+    <p data-slot="command-empty" class="text-muted-foreground text-sm">No commands found.</p>
+    <footer data-slot="command-footer">
+      <span
+        ><ui-kbd-group><kbd>↑</kbd><kbd>↓</kbd></ui-kbd-group> navigate</span
+      >
+      <span><kbd>↵</kbd> select</span>
+      <span><kbd>esc</kbd> close</span>
+    </footer>
+  </div>
+</ui-command>
+
+<dialog
+  id="command-example-1-dialog"
+  class="ui-dialog"
+  closedby="any"
+  data-side="bottom"
+  data-align="center"
+>
+  <div data-slot="dialog-content">
+    <header data-slot="dialog-header">
+      <h2 class="text-lg font-heading font-strong">Opened by a command</h2>
+    </header>
+    <div data-slot="dialog-body">
+      <p>The command item is a plain invoker button — no custom wiring.</p>
+    </div>
+  </div>
+  <footer data-slot="dialog-footer">
+    <button class="ui-button" type="button" commandfor="command-example-1-dialog" command="close">
+      Close
+    </button>
+  </footer>
+</dialog>

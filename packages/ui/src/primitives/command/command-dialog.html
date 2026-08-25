@@ -1,0 +1,77 @@
+<ui-command data-command-hotkey="mod+shift+k" class="w-full max-w-xl">
+  <button
+    class="ui-button w-full justify-between"
+    type="button"
+    data-variant="outline"
+    command="show-modal"
+    commandfor="command-example-dialog-1"
+    data-slot="command-open"
+  >
+    <span class="text-muted-foreground">Command palette…</span>
+    <ui-kbd-group><kbd>⌘</kbd><kbd>⇧</kbd><kbd>K</kbd></ui-kbd-group>
+  </button>
+  <dialog id="command-example-dialog-1" class="ui-dialog" data-slot="command-panel" closedby="any">
+    <header data-slot="command-header">
+      <input
+        data-slot="command-input"
+        type="text"
+        placeholder="Type a command or search…"
+        role="combobox"
+        aria-expanded="false"
+        aria-autocomplete="list"
+        autocomplete="off"
+        aria-label="Search commands"
+      />
+    </header>
+    <div role="listbox" data-slot="command-list" aria-label="Commands">
+      <div role="group" data-slot="command-group" aria-labelledby="command-example-dialog-1-nav">
+        <span
+          class="font-strong text-eyebrow text-muted-foreground"
+          data-slot="command-group-label"
+          id="command-example-dialog-1-nav"
+          >Navigation</span
+        >
+        <a
+          role="option"
+          data-slot="command-item"
+          class="ui-button justify-start"
+          data-variant="ghost"
+          href="#home"
+          tabindex="-1"
+        >
+          Go home
+        </a>
+        <a
+          role="option"
+          data-slot="command-item"
+          class="ui-button justify-start"
+          data-variant="ghost"
+          href="#projects"
+          tabindex="-1"
+          data-keywords="work portfolio"
+        >
+          Go to projects
+        </a>
+        <a
+          role="option"
+          data-slot="command-item"
+          class="ui-button justify-start"
+          data-variant="ghost"
+          href="#team"
+          tabindex="-1"
+          data-keywords="people members"
+        >
+          Go to team
+        </a>
+      </div>
+    </div>
+    <p data-slot="command-empty" class="text-muted-foreground">No commands found.</p>
+    <footer data-slot="command-footer">
+      <span
+        ><ui-kbd-group><kbd>↑</kbd><kbd>↓</kbd></ui-kbd-group> navigate</span
+      >
+      <span><kbd>↵</kbd> select</span>
+      <span><kbd>esc</kbd> close</span>
+    </footer>
+  </dialog>
+</ui-command>

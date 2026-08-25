@@ -1,0 +1,28 @@
+---
+title: Autocomplete
+description: An input that suggests options as you type, ranked by match quality.
+---
+
+A `<ui-autocomplete>` wraps a plain `.ui-input` and an anchored suggestion panel (`popover="manual"`). The input is the form value — free text is allowed — and typing filters the panel's options, scored with the cmdk ranking algorithm. Arrow keys move the highlight without leaving the input (`aria-activedescendant`); Enter or click commits a suggestion into the input. Groups hide automatically when all their options are filtered out, and the empty slot appears when nothing matches. Without JavaScript the markup is just a working text input.
+
+Omit the `popover` attribute on the panel for an inline, always-open list (no floating surface or dismissal; filtering unchanged).
+
+## Default
+
+<Preview src="autocomplete/autocomplete" />
+
+## Groups and score ranking
+
+`data-sort="score"` re-ranks visible options by match quality (via CSS `order` — the DOM is never restructured). `data-keywords` adds extra match targets to an option.
+
+<Preview src="autocomplete/autocomplete-groups" />
+
+## API
+
+| Attribute                  | Target                             | Values                                          |
+| -------------------------- | ---------------------------------- | ----------------------------------------------- |
+| `data-sort`                | Root                               | `score` — rank by match (default: DOM order)    |
+| `data-min-length`          | Root                               | Query length before the panel opens (default 0) |
+| `data-value`               | `[data-slot="autocomplete-item"]`  | Match/commit text (default: text content)       |
+| `data-keywords`            | `[data-slot="autocomplete-item"]`  | Space-separated extra match targets             |
+| `data-side` / `data-align` | `[data-slot="autocomplete-panel"]` | Placement (popover matrix)                      |

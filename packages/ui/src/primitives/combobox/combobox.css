@@ -1,0 +1,208 @@
+/**
+ * combobox.css — Combobox (ui-combobox | .ui-combobox, [data-slot~="combobox-control"])
+ *
+ * @layer      variables, components
+ * @requires   layers.css, _variables.css, popover.css, button.css, fields.css,
+ *             select.css (--ui-option-*, --ui-select-picker-icon-*)
+ * @uses       [popover="manual"] — panel opened/closed by combobox.js
+ * @uses       anchor-name, anchor-scope, position-anchor — tether panel to the control
+ * @uses       anchor-size(width) — match panel width to the control (@supports gated)
+ * @uses       :has() — chevron rotation, group + empty-state visibility
+ * @uses       data-side / data-align — maps to --ui-popover-position-* in popover.css
+ * @tokens     --ui-combobox-* (@layer variables); control mirrors --ui-select-*,
+ *             items alias --ui-option-*
+ * @see        combobox.ts — filtering, commit/revert, and keyboard behavior
+ */
+
+@layer variables {
+  :root {
+    /* Control mirrors the select trigger so the two pickers read as one family */
+    --ui-combobox-inline-size: var(--ui-select-inline-size);
+    --ui-combobox-min-inline-size: var(--ui-select-min-inline-size);
+    --ui-combobox-padding-inline-start: var(--ui-select-padding-inline-start);
+    --ui-combobox-padding-inline-end: var(--ui-select-padding-inline-end);
+    --ui-combobox-border: var(--ui-select-border);
+    --ui-combobox-border-radius: var(--ui-select-border-radius);
+    --ui-combobox-icon-mask: var(--ui-select-picker-icon-mask);
+    --ui-combobox-icon-size: var(--ui-select-picker-icon-size);
+    --ui-combobox-icon-color: var(--ui-select-picker-icon-color);
+    --ui-combobox-panel-max-block-size: var(--step-72);
+    --ui-combobox-shadow: var(--ui-menu-shadow);
+  }
+}
+
+@layer zazz.components {
+  /* ===========================================================================
+  COMBOBOX — select-look control + anchored filterable panel
+  - The control shell carries the field surface (border, ring, chevron); the
+    inner input is bare so nothing double-borders. The panel rides
+    popover.css's surface + placement like autocomplete's.
+  =========================================================================== */
+
+  :where(ui-combobox, .ui-combobox) {
+    anchor-scope: --ui-combobox-trigger;
+    display: block;
+    inline-size: var(--ui-combobox-inline-size);
+  }
+
+  [data-slot~="combobox-control"] {
+    anchor-name: --ui-combobox-trigger;
+    display: flex;
+    align-items: center;
+    gap: var(--ui-field-gap);
+
+    inline-size: 100%;
+    min-inline-size: var(--ui-combobox-min-inline-size);
+    block-size: var(--ui-field-height);
+    padding-inline: var(--ui-combobox-padding-inline-start) var(--ui-combobox-padding-inline-end);
+
+    font-size: var(--ui-field-font-size);
+    line-height: var(--ui-field-line-height);
+    color: var(--ui-field-foreground);
+    background-color: var(--ui-field-background);
+
+    border: var(--ui-combobox-border);
+    border-radius: var(--ui-combobox-border-radius);
+
+    /* Same ring recipe as .ui-select — transparent outline twin keeps focus
+       visible in forced-colors mode */
+    --_ring-offset-width: 0px;
+    --_ring-width: 0px;
+    --_ring: color-mix(in oklch, var(--ui-field-ring-color) var(--ring-opacity), transparent);
+    box-shadow:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring, var(--ring));
+    outline: var(--outline-width) var(--outline-style) transparent;
+    outline-offset: var(--outline-offset);
+
+    transition: var(--default-transition);
+  }
+
+  [data-slot~="combobox-control"]:hover {
+    border-color: var(--ui-field-border--hover);
+  }
+
+  [data-slot~="combobox-control"]:focus-within {
+    border-color: var(--ui-field-border--focus);
+    background-color: var(--ui-field-background--focus);
+    --_ring-offset-width: var(--ring-offset-width);
+    --_ring-width: var(--ring-width);
+    outline-color: transparent;
+  }
+
+  /* The inner input is bare — the shell owns the surface */
+  [data-slot~="combobox-control"] input {
+    flex: 1;
+    min-inline-size: 0;
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    outline: none;
+  }
+
+  [data-slot~="combobox-trigger"] {
+    display: grid;
+    place-items: center;
+    inline-size: var(--ui-combobox-icon-size);
+    block-size: var(--ui-combobox-icon-size);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  [data-slot~="combobox-trigger"]::before {
+    content: "";
+    inline-size: var(--ui-combobox-icon-size);
+    block-size: var(--ui-combobox-icon-size);
+    background-color: var(--ui-combobox-icon-color);
+    mask: var(--ui-combobox-icon-mask) center / contain no-repeat;
+    transition: var(--default-transition);
+  }
+
+  [data-slot~="combobox-control"]:has(input[aria-expanded="true"])
+    [data-slot~="combobox-trigger"]::before {
+    transform: rotate(-180deg);
+  }
+
+  /* Panel — same shape as the autocomplete panel */
+  [data-slot~="combobox-panel"] {
+    position-anchor: --ui-combobox-trigger;
+    /* flex-direction stays ungated so the close fade keeps the column layout */
+    flex-direction: column;
+    max-block-size: var(--ui-combobox-panel-max-block-size);
+    overflow: auto;
+    box-shadow: var(--ui-combobox-shadow);
+  }
+
+  /* Only display is gated — see popover.css: closed popovers stay display: none */
+  [data-slot~="combobox-panel"]:where(:popover-open, .\:popover-open) {
+    display: flex;
+  }
+
+  /* Inline variant — no [popover]: the list renders in flow, always open,
+     without the floating surface chrome (combobox.js treats it as such) */
+  [data-slot~="combobox-panel"]:not([popover]) {
+    display: flex;
+    box-shadow: none;
+  }
+
+  @supports (inline-size: anchor-size(width)) {
+    [data-slot~="combobox-panel"] {
+      min-inline-size: anchor-size(width);
+    }
+  }
+
+  [data-slot~="combobox-list"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--step-px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  [data-slot~="combobox-group"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--step-px);
+  }
+
+  /* Score ranking writes order -1000..0 on sibling items — keep the label first */
+  [data-slot~="combobox-group-label"] {
+    order: -1001;
+  }
+
+  [data-slot~="combobox-item"] {
+    cursor: pointer;
+  }
+
+  [data-slot~="combobox-item"][data-highlighted] {
+    --ui-button-background: var(--ui-button-background--hover);
+    --ui-button-foreground: var(--ui-button-foreground--hover);
+  }
+
+  /* The committed item wears the shared option checkmark */
+  [data-slot~="combobox-item"][aria-selected="true"]::after {
+    content: "";
+    order: 1;
+    margin-inline-start: auto;
+    inline-size: var(--ui-option-checkmark-size);
+    block-size: var(--ui-option-checkmark-size);
+    background-color: var(--ui-option-checkmark-color);
+    mask: var(--ui-option-checkmark-mask) center / contain no-repeat;
+  }
+
+  [data-slot~="combobox-group"]:not(:has([data-slot~="combobox-item"]:not([hidden]))) {
+    display: none;
+  }
+
+  [data-slot~="combobox-empty"] {
+    display: none;
+    padding: var(--step-2);
+  }
+
+  [data-slot~="combobox-panel"]:not(:has([data-slot~="combobox-item"]:not([hidden])))
+    [data-slot~="combobox-empty"] {
+    display: block;
+  }
+}

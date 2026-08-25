@@ -1,0 +1,150 @@
+/**
+ * command.css — Command (ui-command | .ui-command, [data-slot~="command-panel"])
+ *
+ * @layer      variables, components
+ * @requires   layers.css, _variables.css, popover.css, button.css, fields.css,
+ *             dialog.css, menu.css, select.css (--ui-option-*), kbd.css (--ui-kbd-group-*)
+ * @uses       popovertarget + [popover="auto"] — dropdown surface, native light dismiss
+ * @uses       <dialog class="ui-dialog"> + command="show-modal" — focused surface
+ * @uses       anchor-name, anchor-scope, position-anchor — tether the popover form
+ * @uses       :has() — group + empty-state visibility without JavaScript
+ * @tokens     --ui-command-* (@layer variables); items alias --ui-option-*
+ * @see        command.ts — ranking, hotkeys, and activation behavior
+ */
+
+@layer variables {
+  :root {
+    --ui-command-min-inline-size: var(--step-96);
+    --ui-command-max-block-size: var(--step-96);
+    --ui-command-input-padding: var(--step-3);
+    --ui-command-input-border: 1px solid var(--border);
+    --ui-command-group-label-padding: var(--step-2) var(--step-2) var(--step-1);
+    --ui-command-footer-padding: var(--step-2);
+    --ui-command-footer-border: 1px solid var(--border);
+    --ui-command-shadow: var(--ui-menu-shadow);
+  }
+}
+
+@layer zazz.components {
+  /* ===========================================================================
+  COMMAND — palette panel (popover or dialog) with the input inside
+  - The popover form rides popover.css's surface + placement; the dialog form
+    rides dialog.css. This file shapes the interior: borderless input over a
+    hairline, scrollable list, eyebrow group labels, hint footer.
+  =========================================================================== */
+
+  :where(ui-command, .ui-command) {
+    anchor-scope: --ui-command-trigger;
+    display: inline-flex;
+  }
+
+  :where(ui-command, .ui-command) > :where([popovertarget], [command]) {
+    anchor-name: --ui-command-trigger;
+  }
+
+  [data-slot~="command-panel"] {
+    /* flex-direction stays ungated so the close fade (display held by the
+       allow-discrete transition) keeps the column layout to the last frame */
+    flex-direction: column;
+    min-inline-size: var(--ui-command-min-inline-size);
+    box-shadow: var(--ui-command-shadow);
+  }
+
+  /* Only display is gated — unconditional it would defeat the UA's
+     display: none on closed popovers and dialogs */
+  [data-slot~="command-panel"]:where(:popover-open, .\:popover-open, [open]) {
+    display: flex;
+  }
+
+  [data-slot~="command-panel"]:where([popover]) {
+    position-anchor: --ui-command-trigger;
+    padding: 0;
+  }
+
+  /* Dialog form — the palette owns its interior, edge to edge */
+  [data-slot~="command-panel"]:where(dialog) {
+    --ui-dialog-width: min(var(--breakpoint-sm), 100% - var(--gutters) * 2);
+    padding: 0;
+  }
+
+  /* Search input — borderless over a hairline; the panel is the surface */
+  [data-slot~="command-header"] {
+    display: flex;
+    align-items: center;
+    border-block-end: var(--ui-command-input-border);
+  }
+
+  [data-slot~="command-input"] {
+    flex: 1;
+    min-inline-size: 0;
+    padding: var(--ui-command-input-padding);
+    font: inherit;
+    font-size: var(--ui-field-font-size);
+    color: inherit;
+    background: none;
+    border: none;
+    outline: none;
+  }
+
+  [data-slot~="command-list"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--step-px);
+    max-block-size: var(--ui-command-max-block-size);
+    padding: var(--ui-popover-padding);
+    margin: 0;
+    overflow: auto;
+    list-style: none;
+  }
+
+  [data-slot~="command-group"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--step-px);
+  }
+
+  [data-slot~="command-group-label"] {
+    padding: var(--ui-command-group-label-padding);
+    /* Score ranking writes order -1000..0 on sibling items — keep the label first */
+    order: -1001;
+  }
+
+  [data-slot~="command-item"] {
+    cursor: pointer;
+  }
+
+  [data-slot~="command-item"][data-highlighted] {
+    --ui-button-background: var(--ui-button-background--hover);
+    --ui-button-foreground: var(--ui-button-foreground--hover);
+  }
+
+  /* Shortcut hint — a lone <kbd> or a <ui-kbd-group> run — pushes to the end;
+     spacing between keys inside a run is the group's --ui-kbd-group-gap. */
+  [data-slot~="command-item"] > :where(kbd, ui-kbd-group, .ui-kbd-group) {
+    margin-inline-start: auto;
+  }
+
+  [data-slot~="command-footer"] {
+    display: flex;
+    align-items: center;
+    gap: var(--step-2);
+    padding: var(--ui-command-footer-padding);
+    border-block-start: var(--ui-command-footer-border);
+    color: var(--muted-foreground);
+    font-size: var(--font-size-xs);
+  }
+
+  [data-slot~="command-group"]:not(:has([data-slot~="command-item"]:not([hidden]))) {
+    display: none;
+  }
+
+  [data-slot~="command-empty"] {
+    display: none;
+    padding: var(--step-2);
+  }
+
+  [data-slot~="command-panel"]:not(:has([data-slot~="command-item"]:not([hidden])))
+    [data-slot~="command-empty"] {
+    display: block;
+  }
+}

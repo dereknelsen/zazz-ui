@@ -96,7 +96,7 @@ const ESM_DEPENDENCIES: readonly CdnDependency[] = [
 
 /**
  * Feature polyfills loaded as script tags ahead of the kit module: the Popover
- * API (dropdowns, tooltips, the toaster region) and Invoker Commands
+ * API (menus, tooltips, the toaster region) and Invoker Commands
  * (`command`/`commandfor`). Native in current engines (2026); the polyfills
  * keep older browsers consistent.
  */

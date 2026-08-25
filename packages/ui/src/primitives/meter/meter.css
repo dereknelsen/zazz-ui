@@ -1,0 +1,178 @@
+/**
+ * meter.css — Meter (.ui-meter on native <meter>)
+ *
+ * @layer      variables, reset
+ * @requires   layers.css, _variables.css, _reset.css, progress.css
+ * @uses       appearance: none — element box becomes the track; only the fill
+ *             needs vendor pseudo-elements (::-webkit-meter-*-value,
+ *             ::-moz-meter-bar + :-moz-meter-* state classes) — never combine
+ *             the two vendors in one selector list
+ * @uses       attr(<attr> type(<number>)) — where typed attr() exists
+ *             (Chromium 133+) the fill is painted on the element from the
+ *             meter's own attributes, because Blink locks the shadow parts'
+ *             geometry (backgrounds apply, heights don't) — @supports gated
+ * @uses       Engines without typed attr() keep the vendor-pseudo fill;
+ *             recorded degradation in Blink pre-133: themed track + thin
+ *             centered fill (browser policy exception)
+ * @tokens     --ui-meter-* (@layer variables); geometry aliases --ui-progress-*
+ */
+
+@layer variables {
+  :root {
+    /* Geometry rides the progress family so the two bars read identically;
+       retune a --ui-progress-* token and both follow. */
+    --ui-meter-inline-size: var(--ui-progress-inline-size);
+    --ui-meter-height: var(--ui-progress-height);
+    --ui-meter-radius: var(--ui-progress-radius);
+    --ui-meter-track-background: var(--ui-progress-track-background);
+    --ui-meter-track-border: var(--ui-progress-track-border);
+
+    /* Fills are semantic — a meter communicates good/bad, not completion */
+    --ui-meter-bar-background: var(--success);
+    --ui-meter-bar-background--suboptimum: var(--warning);
+    --ui-meter-bar-background--even-less-good: var(--destructive);
+  }
+}
+
+@layer reset {
+  /* ===========================================================================
+  METER — native <meter> fill redraw
+  - Same track-on-the-element strategy as progress.css. WebKit exposes one
+    pseudo per state; Firefox exposes one fill pseudo colored by :-moz-meter-*
+    state classes. One rule per vendor pseudo, by necessity.
+  =========================================================================== */
+
+  :where(.ui-meter) {
+    inline-size: var(--ui-meter-inline-size);
+    block-size: var(--ui-meter-height);
+    overflow: hidden;
+    background-color: var(--ui-meter-track-background);
+    border: var(--ui-meter-track-border);
+    border-radius: var(--ui-meter-radius);
+  }
+
+  :where(.ui-meter)::-webkit-meter-bar {
+    background: transparent;
+    border: none;
+    block-size: 100%;
+  }
+
+  /* The value pseudos keep a UA-default height unless given one explicitly */
+  :where(.ui-meter)::-webkit-meter-optimum-value {
+    block-size: 100%;
+    background: var(--ui-meter-bar-background);
+    border-radius: inherit;
+  }
+
+  :where(.ui-meter)::-webkit-meter-suboptimum-value {
+    block-size: 100%;
+    background: var(--ui-meter-bar-background--suboptimum);
+    border-radius: inherit;
+  }
+
+  :where(.ui-meter)::-webkit-meter-even-less-good-value {
+    block-size: 100%;
+    background: var(--ui-meter-bar-background--even-less-good);
+    border-radius: inherit;
+  }
+
+  :where(.ui-meter)::-moz-meter-bar {
+    block-size: 100%;
+    border-radius: inherit;
+  }
+
+  :where(.ui-meter:-moz-meter-optimum)::-moz-meter-bar {
+    background: var(--ui-meter-bar-background);
+  }
+
+  :where(.ui-meter:-moz-meter-sub-optimum)::-moz-meter-bar {
+    background: var(--ui-meter-bar-background--suboptimum);
+  }
+
+  :where(.ui-meter:-moz-meter-sub-sub-optimum)::-moz-meter-bar {
+    background: var(--ui-meter-bar-background--even-less-good);
+  }
+
+  /* ===========================================================================
+  ATTRIBUTE-PAINTED FILL — Blink accepts backgrounds on the meter shadow parts
+  but ignores their geometry entirely (author heights, even !important, never
+  apply), leaving a thin centered fill. Where typed attr() exists, paint the
+  fill on the element itself instead: a hard-stop gradient sized from the
+  meter's own attributes, reproducing the HTML spec's region algorithm —
+  value and optimum each land in a low/between/high region, and the distance
+  between the two regions (0/1/2) picks optimal / suboptimal / even-less-good.
+  The shadow fills are blanked underneath so nothing double-paints.
+  =========================================================================== */
+
+  @supports (inline-size: calc(attr(value type(<number>), 0) * 1px)) {
+    :where(.ui-meter) {
+      /* Attribute facts, with the spec's defaults */
+      --_val: attr(value type(<number>), 0);
+      --_min: attr(min type(<number>), 0);
+      --_max: attr(max type(<number>), 1);
+      --_low: attr(low type(<number>), var(--_min));
+      --_high: attr(high type(<number>), var(--_max));
+      --_opt: attr(optimum type(<number>), calc((var(--_min) + var(--_max)) / 2));
+
+      --_pct: calc((var(--_val) - var(--_min)) / (var(--_max) - var(--_min)) * 100%);
+
+      /* Region index 0/1/2 = below low / between / above high. The ×100000
+         saturation stands in for sign(); the +1 makes the low bound inclusive.
+         Assumes attribute deltas of at least 0.00001. */
+      --_region-val: calc(
+        clamp(0, (var(--_val) - var(--_low)) * 100000 + 1, 1) +
+          clamp(0, (var(--_val) - var(--_high)) * 100000, 1)
+      );
+      --_region-opt: calc(
+        clamp(0, (var(--_opt) - var(--_low)) * 100000 + 1, 1) +
+          clamp(0, (var(--_opt) - var(--_high)) * 100000, 1)
+      );
+      --_distance: max(
+        var(--_region-val) - var(--_region-opt),
+        var(--_region-opt) - var(--_region-val)
+      );
+
+      /* distance 0 → optimal, 1 → suboptimal, 2 → even less good */
+      --_fill: color-mix(
+        in oklch,
+        var(--ui-meter-bar-background--even-less-good)
+          calc(clamp(0, var(--_distance) - 1, 1) * 100%),
+        color-mix(
+          in oklch,
+          var(--ui-meter-bar-background--suboptimum) calc(min(var(--_distance), 1) * 100%),
+          var(--ui-meter-bar-background)
+        )
+      );
+
+      background-image: linear-gradient(
+        to right,
+        var(--_fill) var(--_pct),
+        transparent var(--_pct)
+      );
+      background-origin: padding-box;
+      background-clip: padding-box;
+    }
+
+    :where(.ui-meter:dir(rtl)) {
+      background-image: linear-gradient(to left, var(--_fill) var(--_pct), transparent var(--_pct));
+    }
+
+    /* The shadow fills would double-paint under the gradient (shorthand —
+       the UA styles these parts with a bevel background-image) */
+    :where(.ui-meter)::-webkit-meter-optimum-value {
+      background: transparent;
+    }
+
+    :where(.ui-meter)::-webkit-meter-suboptimum-value {
+      background: transparent;
+    }
+
+    :where(.ui-meter)::-webkit-meter-even-less-good-value {
+      background: transparent;
+    }
+
+    :where(.ui-meter)::-moz-meter-bar {
+      background: transparent;
+    }
+  }
+}

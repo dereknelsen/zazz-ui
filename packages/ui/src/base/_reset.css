@@ -10,7 +10,7 @@
  *             global (animated in _view-transitions.css)
  * @uses       text-box — vertical trim on headings
  * @uses       color-mix(), oklch(from …), contrast-color() — mark/highlight tints
- * @tokens     Native-control hooks declared per element — --code-*, --ui-kbd-*,
+ * @tokens     Native-control hooks declared per element — --code-*,
  *             --search-cancel-*, --placeholder-color
  *
  * Note: Checkbox lives in _checkbox.css; range/slider in _slider.css;
@@ -237,48 +237,7 @@
     max-inline-size: 100%;
   }
 
-  :where(kbd) {
-    --ui-kbd-font-family: var(--font-family-mono);
-    --ui-kbd-font-size: var(--font-size-xs);
-    --ui-kbd-line-height: 1;
-    --ui-kbd-display: inline-flex;
-    --ui-kbd-align-items: center;
-    --ui-kbd-justify-content: center;
-    --ui-kbd-background: var(--muted);
-    --ui-kbd-border: 1px solid transparent;
-    --ui-kbd-padding-inline: var(--step-1);
-    --ui-kbd-padding-block: 0;
-    --ui-kbd-radius: var(--radius-xs);
-    --ui-kbd-color: var(--muted-foreground);
-    --ui-kbd-min-inline-size: var(--step-5);
-    --ui-kbd-min-block-size: var(--step-5);
-    --ui-kbd-icon-size: var(--step-3_5);
-    --ui-kbd-gap: var(--step-1);
-
-    font-family: var(--ui-kbd-font-family);
-    font-size: var(--ui-kbd-font-size);
-    line-height: var(--ui-kbd-line-height);
-    display: var(--ui-kbd-display);
-    align-items: var(--ui-kbd-align-items);
-    justify-content: var(--ui-kbd-justify-content);
-    gap: var(--ui-kbd-gap);
-    background-color: var(--ui-kbd-background);
-    padding-inline: var(--ui-kbd-padding-inline);
-    padding-block: var(--ui-kbd-padding-block);
-    border: var(--ui-kbd-border);
-    border-radius: var(--ui-kbd-radius);
-    color: var(--ui-kbd-color);
-    overflow: hidden;
-    min-block-size: var(--ui-kbd-min-block-size);
-    min-inline-size: var(--ui-kbd-min-inline-size);
-    inline-size: fit-content;
-    text-box: trim-both ex alphabetic;
-  }
-
-  :where(kbd > svg) {
-    inline-size: var(--ui-kbd-icon-size);
-    block-size: var(--ui-kbd-icon-size);
-  }
+  /* <kbd> baseline lives with the Kbd primitive — see primitives/kbd/kbd.css */
 
   /* ===========================================================================
   LIST RESETS
@@ -522,8 +481,28 @@
   BROWSER NORMALIZATION
   =========================================================================== */
 
-  :where(progress) {
+  /* Strip UA chrome from progress/meter so the component files can redraw the
+     track (the element box) and fill (vendor pseudo-elements) from theme tokens —
+     same split as select: the plain appearance strip lives here, the redraw in
+     progress.css / meter.css under @layer reset. */
+  :where(progress, meter) {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    background: none;
     vertical-align: baseline;
+  }
+
+  /* WebKit wraps both controls in an inner box that carries its own UA styles */
+  :where(progress)::-webkit-progress-inner-element {
+    display: block;
+    block-size: 100%;
+  }
+
+  :where(meter)::-webkit-meter-inner-element {
+    display: block;
+    block-size: 100%;
   }
 
   /* ===========================================================================

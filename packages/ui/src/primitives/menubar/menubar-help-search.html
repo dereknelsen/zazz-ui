@@ -1,0 +1,103 @@
+<div class="flex w-full items-center gap-px bg-card border-b p-xs" aria-label="Application menu">
+  <ui-menu>
+    <button
+      class="ui-button"
+      data-variant="ghost"
+      type="button"
+      popovertarget="menubar-search-file"
+      interestfor="menubar-search-file"
+    >
+      File
+    </button>
+    <div
+      id="menubar-search-file"
+      data-slot="menu-popover"
+      data-side="bottom"
+      data-align="start"
+      popover="auto"
+    >
+      <menu>
+        <li>
+          <button class="ui-button justify-start" data-variant="ghost" type="button">
+            New window
+          </button>
+        </li>
+        <li>
+          <button class="ui-button justify-start" data-variant="ghost" type="button">Open…</button>
+        </li>
+      </menu>
+    </div>
+  </ui-menu>
+
+  <ui-menu>
+    <button
+      class="ui-button"
+      data-variant="ghost"
+      type="button"
+      popovertarget="menubar-search-help"
+      interestfor="menubar-search-help"
+    >
+      Help
+    </button>
+    <div
+      id="menubar-search-help"
+      data-slot="menu-popover"
+      data-side="bottom"
+      data-align="start"
+      popover="auto"
+    >
+      <div class="flex flex-col gap-xs p-xs" style="min-inline-size: 20rem">
+        <label class="font-strong text-eyebrow text-muted-foreground" for="menubar-help-topic"
+          >Search help topics</label
+        >
+        <ui-combobox>
+          <input type="hidden" name="help-topic" data-slot="combobox-value" value="" />
+          <div data-slot="combobox-control">
+            <input
+              id="menubar-help-topic"
+              type="text"
+              placeholder="Find a topic…"
+              role="combobox"
+              aria-expanded="true"
+              aria-autocomplete="list"
+              autocomplete="off"
+            />
+          </div>
+          <!-- No [popover] = the inline variant: the list renders in flow, always open -->
+          <div data-slot="combobox-panel">
+            <ul role="listbox" data-slot="combobox-list" aria-label="Help topics">
+              <li
+                role="option"
+                data-slot="combobox-item"
+                class="ui-button justify-start"
+                data-variant="ghost"
+                data-value="shortcuts"
+              >
+                Keyboard shortcuts
+              </li>
+              <li
+                role="option"
+                data-slot="combobox-item"
+                class="ui-button justify-start"
+                data-variant="ghost"
+                data-value="theming"
+              >
+                Theming and dark mode
+              </li>
+              <li
+                role="option"
+                data-slot="combobox-item"
+                class="ui-button justify-start"
+                data-variant="ghost"
+                data-value="updates"
+              >
+                Checking for updates
+              </li>
+            </ul>
+            <p data-slot="combobox-empty" class="text-muted-foreground">No topics found.</p>
+          </div>
+        </ui-combobox>
+      </div>
+    </div>
+  </ui-menu>
+</div>

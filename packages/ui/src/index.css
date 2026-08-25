@@ -25,28 +25,37 @@
 /* @import "./your-legacy.css" layer(legacy); */
 
 /* Zazz primitives - UI omponents. */
+@import "./primitives/separator/separator.css";
 @import "./primitives/badge/badge.css";
+@import "./primitives/kbd/kbd.css";
 @import "./primitives/button/button.css";
 @import "./primitives/button-group/button-group.css";
 @import "./primitives/toggle/toggle.css";
 @import "./primitives/toggle-group/toggle-group.css";
 @import "./primitives/accordion/accordion.css";
 @import "./primitives/table/table.css";
+@import "./primitives/progress/progress.css";
+@import "./primitives/meter/meter.css";
 @import "./primitives/popover/popover.css";
 @import "./primitives/tooltip/tooltip.css";
 @import "./primitives/dialog/dialog.css";
-@import "./primitives/dropdown/dropdown.css";
+@import "./primitives/alert-dialog/alert-dialog.css";
+@import "./primitives/menu/menu.css";
 @import "./primitives/navigation-menu/navigation-menu.css";
 @import "./primitives/mobile-menu/mobile-menu.css";
 @import "./primitives/fields/fields.css";
 @import "./primitives/input/input.css";
 @import "./primitives/textarea/textarea.css";
 @import "./primitives/select/select.css";
+@import "./primitives/autocomplete/autocomplete.css";
+@import "./primitives/combobox/combobox.css";
+@import "./primitives/command/command.css";
 @import "./primitives/checkbox/checkbox.css";
 @import "./primitives/slider/slider.css";
 @import "./primitives/switch/switch.css";
 @import "./primitives/input-group/input-group.css";
 @import "./primitives/password-group/password-group.css";
+@import "./primitives/otp/otp.css";
 @import "./primitives/radio/radio.css";
 @import "./primitives/tabs/tabs.css";
 @import "./primitives/carousel/carousel.css";

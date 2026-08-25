@@ -1,0 +1,14 @@
+---
+title: Toolbar
+description: A row of controls composed from existing primitives and utility classes.
+---
+
+Toolbars are composed, not shipped: a flex container of button groups, toggle groups, selects, and inputs with utility classes — `flex flex-row items-center gap-xs bg-card rounded-md shadow-sm p-xs`. Groups are divided by vertical [Separators](/docs/components/separator) (`<hr class="ui-separator" data-orientation="vertical">`); `ml-auto` pushes trailing controls to the end. There is no `.ui-toolbar` class or stylesheet.
+
+## Default
+
+<Preview src="toolbar/toolbar" />
+
+## Accessibility
+
+The container deliberately does not claim `role="toolbar"`: that role promises a single tab stop with arrow-key roving focus between controls, which a static composition can't deliver. Every control stays natively tabbable instead — honest and fully usable. Give the container an `aria-label` describing the group.

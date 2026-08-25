@@ -41,7 +41,7 @@ for all children with `data-container="…"` on the `.container`. See
           <li>
             <a class="ui-button" data-variant="ghost" href="/">Home</a>
           </li>
-          <!-- navigation links and dropdowns -->
+          <!-- navigation links and menus -->
         </menu>
       </nav>
       <nav class="flex @sm:hidden">

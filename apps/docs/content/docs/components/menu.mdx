@@ -1,0 +1,31 @@
+---
+title: Menu
+description: Popover menus using the Popover API, anchor positioning, and native light dismiss — with optional hover open and arrow-key navigation.
+---
+
+A `<ui-menu>` wraps a trigger button (`popovertarget`) and its `[data-slot="menu-popover"]` panel (`popover="auto"`). The class form `<div class="ui-menu">` is equivalent and needs no JavaScript — the root names the trigger + panel assembly, while the native `<menu>` element remains the list inside the panel. Menu items use ghost buttons. Position with `data-side` and `data-align`.
+
+When the kit script is loaded, the tag form adds arrow-key navigation: ArrowDown/ArrowUp on the closed trigger open the panel and focus the first/last item; inside the panel the arrows rove between items (wrapping, skipping disabled), and Home/End jump to the ends. Escape and light dismiss are native Popover API behavior either way.
+
+## Default
+
+<Preview src="menu/menu" />
+
+## Hover open
+
+Add `interestfor` alongside `popovertarget` — pointing at the same panel id — and the menu also opens on hover, focus, or long-press (the Interest Invokers API, covered by the kit's `invokers` polyfill). Click still toggles, and `popover="auto"` keeps light dismiss.
+
+<Preview src="menu/menu-interest" />
+
+## Accessibility
+
+The menu is deliberately a disclosure of links and buttons, not an ARIA `role="menu"`: that role promises the full menu keyboard contract (menuitem roles, typeahead, close-on-activate) which suits app command menus, not navigation. `popovertarget` already conveys the expanded/collapsed state to assistive tech. If every item in your panel is an action, you can layer `role="menu"`/`role="menuitem"` on yourself along with the rest of the pattern.
+
+## API
+
+| Attribute       | Target                       | Values                                            |
+| --------------- | ---------------------------- | ------------------------------------------------- |
+| `popovertarget` | Trigger                      | ID of `[data-slot="menu-popover"]` (click toggle) |
+| `interestfor`   | Trigger                      | Same ID — adds hover/focus open (optional)        |
+| `data-side`     | `[data-slot="menu-popover"]` | `top`, `bottom`, `left`, `right`                  |
+| `data-align`    | `[data-slot="menu-popover"]` | `start`, `center`, `end`                          |

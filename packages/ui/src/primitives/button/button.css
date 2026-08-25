@@ -2,7 +2,7 @@
  * button.css — Button (.ui-button)
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css, _reset.css
+ * @requires   layers.css, _variables.css, _reset.css, kbd.css (--ui-kbd-*)
  * @uses       color-mix(), oklch(from …) — variant hover/active tints
  * @uses       text-box — vertical trim (patchy browser support)
  * @tokens     --ui-button-* (@layer variables)
@@ -289,25 +289,30 @@
   BUTTON KBD
   =========================================================================== */
 
-  .ui-button > kbd {
-    --ui-kbd-inline-size: var(--step-4_5);
-    --ui-kbd-block-size: var(--step-4_5);
+  /* Descendant (not child) so keys wrapped in a ui-kbd-group still resize */
+  .ui-button :where(kbd) {
+    --ui-kbd-min-inline-size: var(--step-4_5);
+    --ui-kbd-min-block-size: var(--step-4_5);
     --ui-kbd-icon-size: var(--step-3);
   }
 
-  .ui-button:has(> kbd:last-child:not(:only-child)) {
+  .ui-button:has(> :where(kbd, ui-kbd-group, .ui-kbd-group):last-child:not(:only-child)) {
     padding-inline-end: var(--step-1_5);
   }
 
-  .ui-button:has(> kbd:first-child:not(:only-child)) {
+  .ui-button:has(> :where(kbd, ui-kbd-group, .ui-kbd-group):first-child:not(:only-child)) {
     padding-inline-start: var(--step-1_5);
   }
 
-  .ui-button[data-size="sm"]:has(> kbd:last-child:not(:only-child)) {
+  .ui-button[data-size="sm"]:has(
+    > :where(kbd, ui-kbd-group, .ui-kbd-group):last-child:not(:only-child)
+  ) {
     padding-inline-end: var(--step-0_5);
   }
 
-  .ui-button[data-size="sm"]:has(> kbd:first-child:not(:only-child)) {
+  .ui-button[data-size="sm"]:has(
+    > :where(kbd, ui-kbd-group, .ui-kbd-group):first-child:not(:only-child)
+  ) {
     padding-inline-start: var(--step-0_5);
   }
 }

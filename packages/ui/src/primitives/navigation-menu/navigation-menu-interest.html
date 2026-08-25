@@ -1,0 +1,103 @@
+<!-- Hover-open variant: every trigger carries `interestfor` alongside
+     `popovertarget` (same id), so panels open on hover/focus and on click. -->
+<header class="w-full">
+  <nav class="ui-navigation-menu container">
+    <menu data-slot="navigation-menu-list">
+      <li data-slot="navigation-menu-item">
+        <button
+          class="ui-button"
+          data-slot="navigation-menu-trigger"
+          data-variant="ghost"
+          type="button"
+          popovertarget="nav-interest-1"
+          interestfor="nav-interest-1"
+        >
+          Platform
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+            <rect width="256" height="256" fill="none" />
+            <polyline
+              points="208 96 128 176 48 96"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="16"
+            />
+          </svg>
+        </button>
+        <div
+          id="nav-interest-1"
+          data-slot="navigation-menu-popover"
+          data-align="start"
+          popover="auto"
+          data-animation="slide-down"
+        >
+          <div data-slot="navigation-menu-viewport">
+            <div class="flex flex-col gap-px p-xs">
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Analytics</span>
+                <span class="text-sm text-muted-foreground">Real-time product insights.</span>
+              </a>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Automation</span>
+                <span class="text-sm text-muted-foreground">Workflows that run themselves.</span>
+              </a>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Integrations</span>
+                <span class="text-sm text-muted-foreground">Connect your team's tools.</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li data-slot="navigation-menu-item">
+        <button
+          class="ui-button"
+          data-slot="navigation-menu-trigger"
+          data-variant="ghost"
+          type="button"
+          popovertarget="nav-interest-2"
+          interestfor="nav-interest-2"
+        >
+          Resources
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+            <rect width="256" height="256" fill="none" />
+            <polyline
+              points="208 96 128 176 48 96"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="16"
+            />
+          </svg>
+        </button>
+        <div
+          id="nav-interest-2"
+          data-slot="navigation-menu-popover"
+          data-align="start"
+          popover="auto"
+          data-animation="slide-down"
+        >
+          <div data-slot="navigation-menu-viewport">
+            <div class="flex flex-col gap-px p-xs">
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Documentation</span>
+                <span class="text-sm text-muted-foreground">Guides and API references.</span>
+              </a>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Blog</span>
+                <span class="text-sm text-muted-foreground">Product news and notes.</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li data-slot="navigation-menu-item">
+        <a href="#" class="ui-button" data-variant="ghost">Pricing</a>
+      </li>
+    </menu>
+  </nav>
+</header>

@@ -1,0 +1,126 @@
+/**
+ * otp.css — OTP (ui-otp wrapping .ui-otp-input on one real <input>)
+ *
+ * @layer      variables, components
+ * @requires   layers.css, _variables.css, fields.css, input.css
+ * @uses       Invisible-overlay input — the real input stretches over the
+ *             stamped cell rail with transparent text/caret so autofill,
+ *             paste, and focus stay native; never display:none
+ * @uses       :focus-within — active-cell ring only while the input has focus
+ * @tokens     --ui-otp-* (@layer variables; aliases --ui-field-*)
+ * @see        otp.ts — stamps the rail and mirrors value/caret into the cells
+ */
+
+@layer variables {
+  :root {
+    --ui-otp-slot-inline-size: var(--step-10);
+    --ui-otp-slot-block-size: var(--ui-field-height);
+    --ui-otp-slot-background: var(--ui-field-background);
+    --ui-otp-slot-border: 1px solid var(--ui-field-border);
+    --ui-otp-slot-radius: var(--ui-field-radius);
+    --ui-otp-slot-font-size: var(--font-size-lg);
+    --ui-otp-gap: var(--step-1_5);
+    --ui-otp-separator-color: var(--muted-foreground);
+    --ui-otp-caret-color: var(--ui-field-border--focus);
+  }
+}
+
+@layer zazz.components {
+  /* ===========================================================================
+  OTP — one real input, presentational cells
+  - Before enhancement (.ui-otp-input alone): a handsome centered code field.
+  - After ([data-otp-ready]): the rail is the visual and the input becomes an
+    invisible overlay — focusable, autofillable, never display:none.
+  =========================================================================== */
+
+  :where(ui-otp) {
+    position: relative;
+    display: inline-grid;
+  }
+
+  /* No-JS baseline — a plain code field in the field family */
+  .ui-otp-input {
+    text-align: center;
+    letter-spacing: 0.5ch;
+    font-family: var(--font-family-mono);
+    font-size: var(--ui-otp-slot-font-size);
+  }
+
+  /* Enhanced: the input stretches invisibly over the rail. Opacity stays just
+     above zero and the element keeps its size so taps, focus, and browser
+     autofill UI keep landing on a real, visible-to-the-UA control. */
+  :where(ui-otp[data-otp-ready]) .ui-otp-input {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    opacity: 0.02;
+    color: transparent;
+    caret-color: transparent;
+    letter-spacing: normal;
+    background: none;
+    border: none;
+    box-shadow: none;
+    outline: none;
+    /* Guards iOS focus zoom */
+    font-size: max(16px, 1em);
+  }
+
+  [data-slot~="otp-rail"] {
+    display: flex;
+    align-items: center;
+    gap: var(--ui-otp-gap);
+  }
+
+  [data-slot~="otp-slot"] {
+    display: grid;
+    place-items: center;
+    inline-size: var(--ui-otp-slot-inline-size);
+    block-size: var(--ui-otp-slot-block-size);
+
+    font-family: var(--font-family-mono);
+    font-size: var(--ui-otp-slot-font-size);
+    color: var(--ui-field-foreground);
+
+    background-color: var(--ui-otp-slot-background);
+    border: var(--ui-otp-slot-border);
+    border-radius: var(--ui-otp-slot-radius);
+
+    transition: var(--default-transition);
+  }
+
+  /* Active cell — ring + focus border, only while the input has focus */
+  :where(ui-otp:focus-within) [data-slot~="otp-slot"][data-active] {
+    border-color: var(--ui-field-border--focus);
+    background-color: var(--ui-field-background--focus);
+    box-shadow:
+      0 0 0 var(--ring-offset-width) var(--ring-offset-color),
+      0 0 0 calc(var(--ring-offset-width) + var(--ring-width))
+        color-mix(in oklch, var(--ui-field-ring-color) var(--ring-opacity), transparent);
+  }
+
+  /* Fake caret in the active empty cell */
+  :where(ui-otp:focus-within) [data-slot~="otp-slot"][data-active]:empty::after {
+    content: "";
+    inline-size: 1px;
+    block-size: 1.2em;
+    background-color: var(--ui-otp-caret-color);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :where(ui-otp:focus-within) [data-slot~="otp-slot"][data-active]:empty::after {
+      animation: ui-otp-caret-blink 1.1s steps(2, start) infinite;
+    }
+  }
+
+  @keyframes ui-otp-caret-blink {
+    to {
+      visibility: hidden;
+    }
+  }
+
+  [data-slot~="otp-separator"] {
+    color: var(--ui-otp-separator-color);
+    user-select: none;
+  }
+}

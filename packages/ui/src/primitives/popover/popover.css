@@ -11,7 +11,8 @@
  *             back to UA-centered popover)
  * @uses       backdrop-filter — popover surface blur
  * @tokens     --ui-popover-* (Tier 3 owner; @layer variables)
- * @consumedby select.css (picker placement), dropdown.css, navigation-menu.css, tooltip.css, toaster.css
+ * @consumedby select.css (picker placement), menu.css, navigation-menu.css, tooltip.css, toaster.css,
+ *             autocomplete.css, combobox.css, command.css
  */
 
 @layer variables {
@@ -46,7 +47,7 @@
 @layer reset {
   /* ===========================================================================
   POPOVER ELEMENT ENHANCEMENTS
-  - [popover] is a shared primitive (dropdown, navigation-menu, …). Token
+  - [popover] is a shared primitive (menu, navigation-menu, …). Token
     defaults live in @layer variables above; this block wires native open/close
     motion and anchor positioning. Surface chrome is in @layer zazz.components below.
   =========================================================================== */

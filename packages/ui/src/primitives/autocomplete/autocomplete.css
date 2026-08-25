@@ -1,0 +1,114 @@
+/**
+ * autocomplete.css — Autocomplete (ui-autocomplete | .ui-autocomplete, [data-slot~="autocomplete-panel"])
+ *
+ * @layer      variables, components
+ * @requires   layers.css, _variables.css, popover.css, button.css, fields.css,
+ *             select.css (--ui-option-*), input.css
+ * @uses       [popover="manual"] — panel opened/closed by autocomplete.js
+ * @uses       anchor-name, anchor-scope, position-anchor — tether panel to the input
+ * @uses       anchor-size(width) — match panel width to the input (@supports gated)
+ * @uses       :has() — group + empty-state visibility without JavaScript
+ * @uses       data-side / data-align — maps to --ui-popover-position-* in popover.css
+ * @tokens     --ui-autocomplete-* (@layer variables); items alias --ui-option-*
+ * @see        autocomplete.ts — filtering, ranking, and keyboard behavior
+ */
+
+@layer variables {
+  :root {
+    --ui-autocomplete-panel-max-block-size: var(--step-72);
+    --ui-autocomplete-shadow: var(--ui-menu-shadow);
+  }
+}
+
+@layer zazz.components {
+  /* ===========================================================================
+  AUTOCOMPLETE — input + anchored suggestion panel
+  - The input is a plain .ui-input and the no-JS baseline; the panel is a
+    manual popover the script owns, riding popover.css's surface + placement.
+  - Items are ghost buttons (the --ui-option-* alias family), so a select's
+    options and an autocomplete's suggestions read identically.
+  =========================================================================== */
+
+  :where(ui-autocomplete, .ui-autocomplete) {
+    anchor-scope: --ui-autocomplete-trigger;
+    display: block;
+    inline-size: 100%;
+  }
+
+  :where(ui-autocomplete, .ui-autocomplete) input:where([role="combobox"]) {
+    anchor-name: --ui-autocomplete-trigger;
+  }
+
+  [data-slot~="autocomplete-panel"] {
+    position-anchor: --ui-autocomplete-trigger;
+    /* flex-direction stays ungated so the close fade keeps the column layout */
+    flex-direction: column;
+    max-block-size: var(--ui-autocomplete-panel-max-block-size);
+    overflow: auto;
+    box-shadow: var(--ui-autocomplete-shadow);
+  }
+
+  /* Only display is gated — see popover.css: closed popovers stay display: none */
+  [data-slot~="autocomplete-panel"]:where(:popover-open, .\:popover-open) {
+    display: flex;
+  }
+
+  /* Inline variant — no [popover]: the list renders in flow, always open,
+     without the floating surface chrome (autocomplete.js treats it as such) */
+  [data-slot~="autocomplete-panel"]:not([popover]) {
+    display: flex;
+    box-shadow: none;
+  }
+
+  @supports (inline-size: anchor-size(width)) {
+    [data-slot~="autocomplete-panel"] {
+      min-inline-size: anchor-size(width);
+    }
+  }
+
+  [data-slot~="autocomplete-list"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--step-px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  [data-slot~="autocomplete-group"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--step-px);
+  }
+
+  /* Score ranking writes order -1000..0 on sibling items — keep the label first */
+  [data-slot~="autocomplete-group-label"] {
+    order: -1001;
+  }
+
+  [data-slot~="autocomplete-item"] {
+    cursor: pointer;
+  }
+
+  /* Keyboard highlight mirrors hover — variants only reassign tokens */
+  [data-slot~="autocomplete-item"][data-highlighted] {
+    --ui-button-background: var(--ui-button-background--hover);
+    --ui-button-foreground: var(--ui-button-foreground--hover);
+  }
+
+  /* A group with no visible items disappears, label and all — no JS */
+  [data-slot~="autocomplete-group"]:not(:has([data-slot~="autocomplete-item"]:not([hidden]))) {
+    display: none;
+  }
+
+  /* Empty state appears only when nothing matches */
+  [data-slot~="autocomplete-empty"] {
+    display: none;
+    padding: var(--step-2);
+  }
+
+  [data-slot~="autocomplete-panel"]:not(:has([data-slot~="autocomplete-item"]:not([hidden])))
+    [data-slot~="autocomplete-empty"] {
+    display: block;
+  }
+}

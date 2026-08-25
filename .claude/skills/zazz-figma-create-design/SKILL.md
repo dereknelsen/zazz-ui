@@ -3,7 +3,7 @@ name: zazz-figma-create-design
 description: >-
   Design UI with the Zazz design system in Figma or any designer AI tool. Use whenever you
   create or edit frames, components, variables, or styles that should look like Zazz: buttons,
-  badges, cards, dialogs, dropdowns, tooltips, tabs, accordions, carousels, forms, navigation,
+  badges, cards, dialogs, menus, tooltips, tabs, accordions, carousels, forms, navigation,
   heroes, and sections — plus any theming, dark-mode, spacing/typography/color, or "make it
   on-brand" work. Zazz is token-driven (bind values to variables/styles), variant-driven
   (exact variant names), and sentence-case by house rule. Start here before hand-styling

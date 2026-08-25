@@ -1,0 +1,77 @@
+<div class="ui-field" style="max-inline-size: 24rem">
+  <label data-slot="field-label" for="ac-produce">Produce</label>
+  <ui-autocomplete data-sort="score">
+    <input
+      class="ui-input"
+      id="ac-produce"
+      name="produce"
+      type="text"
+      placeholder="Search produce…"
+      role="combobox"
+      aria-expanded="false"
+      aria-autocomplete="list"
+      autocomplete="off"
+    />
+    <div data-slot="autocomplete-panel" data-side="bottom" data-align="start" popover="manual">
+      <ul role="listbox" data-slot="autocomplete-list" aria-label="Produce suggestions">
+        <li role="group" data-slot="autocomplete-group" aria-labelledby="ac-group-fruit">
+          <span
+            class="font-strong text-eyebrow text-muted-foreground p-xs"
+            data-slot="autocomplete-group-label"
+            id="ac-group-fruit"
+            >Fruit</span
+          >
+          <div
+            role="option"
+            data-slot="autocomplete-item"
+            class="ui-button justify-start"
+            data-variant="ghost"
+            data-value="Apple"
+            data-keywords="fruit red"
+          >
+            Apple
+          </div>
+          <div
+            role="option"
+            data-slot="autocomplete-item"
+            class="ui-button justify-start"
+            data-variant="ghost"
+            data-value="Cherry"
+            data-keywords="fruit red"
+          >
+            Cherry
+          </div>
+        </li>
+        <li role="group" data-slot="autocomplete-group" aria-labelledby="ac-group-veg">
+          <span
+            class="font-strong text-eyebrow text-muted-foreground p-xs"
+            data-slot="autocomplete-group-label"
+            id="ac-group-veg"
+            >Vegetables</span
+          >
+          <div
+            role="option"
+            data-slot="autocomplete-item"
+            class="ui-button justify-start"
+            data-variant="ghost"
+            data-value="Carrot"
+            data-keywords="vegetable orange"
+          >
+            Carrot
+          </div>
+          <div
+            role="option"
+            data-slot="autocomplete-item"
+            class="ui-button justify-start"
+            data-variant="ghost"
+            data-value="Cauliflower"
+            data-keywords="vegetable white"
+          >
+            Cauliflower
+          </div>
+        </li>
+      </ul>
+      <p data-slot="autocomplete-empty" class="text-muted-foreground">No results.</p>
+    </div>
+  </ui-autocomplete>
+</div>

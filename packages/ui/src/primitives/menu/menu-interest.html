@@ -1,0 +1,52 @@
+<div class="flex gap-sm">
+  <ui-menu>
+    <button
+      class="ui-button"
+      type="button"
+      popovertarget="menu-interest-example-1"
+      interestfor="menu-interest-example-1"
+    >
+      Hover or click
+    </button>
+    <div
+      id="menu-interest-example-1"
+      data-slot="menu-popover"
+      data-side="bottom"
+      data-align="start"
+      popover="auto"
+    >
+      <menu>
+        <li class="font-strong text-eyebrow text-muted-foreground p-xs">Account</li>
+        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Profile</a></li>
+        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Settings</a></li>
+        <hr class="ui-separator my-xs" />
+        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Sign out</a></li>
+      </menu>
+    </div>
+  </ui-menu>
+
+  <ui-menu>
+    <button
+      class="ui-button"
+      type="button"
+      data-variant="outline"
+      popovertarget="menu-interest-example-2"
+      interestfor="menu-interest-example-2"
+    >
+      Resources
+    </button>
+    <div
+      id="menu-interest-example-2"
+      data-slot="menu-popover"
+      data-side="bottom"
+      data-align="start"
+      popover="auto"
+    >
+      <menu>
+        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Documentation</a></li>
+        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Changelog</a></li>
+        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Support</a></li>
+      </menu>
+    </div>
+  </ui-menu>
+</div>

@@ -152,7 +152,7 @@ export function PreviewFrame({
   );
 
   const loadingSkeleton = !loaded && (
-    <div className="absolute inset-0 z-[5] flex items-center justify-center bg-fd-background transition-opacity duration-300">
+    <div className="absolute inset-0 z-5 flex items-center justify-center bg-fd-background transition-opacity duration-300">
       <div className="flex flex-col items-center gap-3">
         <div className="flex gap-1.5">
           <span className="inline-block size-2 animate-pulse rounded-full bg-fd-muted-foreground/40 [animation-delay:0ms]" />
@@ -188,7 +188,7 @@ export function PreviewFrame({
   }
 
   return (
-    <div className="relative">
+    <div className="relative overflow-clip">
       {loadingSkeleton}
       <div className="absolute right-2 bottom-2 z-10">
         <button

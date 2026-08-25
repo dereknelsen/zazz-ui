@@ -134,8 +134,8 @@
             <span class="text-eyebrow">Components</span>
             <h1 class="text-h1">Component kitchen sink</h1>
             <p class="text-lg text-muted-foreground max-w-screen-sm">
-              Each block is adapted from the component's single-source example. Tooltips, dropdowns,
-              and the dialog use the native Popover and Invoker Commands APIs; tabs are a light-DOM
+              Each block is adapted from the component's single-source example. Tooltips, menus, and
+              the dialog use the native Popover and Invoker Commands APIs; tabs are a light-DOM
               custom element. Try them with mouse and keyboard.
             </p>
           </hgroup>
@@ -438,9 +438,9 @@
             </nav>
           </div>
 
-          <!-- Tooltip and dropdown -->
+          <!-- Tooltip and menu -->
           <div class="mb-lg">
-            <h2 class="text-h6 font-heading pb-sm">Tooltip and dropdown</h2>
+            <h2 class="text-h6 font-heading pb-sm">Tooltip and menu</h2>
             <div class="flex items-center gap-xs">
               <ui-tooltip>
                 <button type="button" class="ui-button" interestfor="tooltip-components-1">
@@ -457,13 +457,13 @@
                 </div>
               </ui-tooltip>
 
-              <ui-dropdown>
-                <button class="ui-button" type="button" popovertarget="dropdown-components-1">
+              <ui-menu>
+                <button class="ui-button" type="button" popovertarget="menu-components-1">
                   Open menu
                 </button>
                 <div
-                  id="dropdown-components-1"
-                  data-slot="dropdown-popover"
+                  id="menu-components-1"
+                  data-slot="menu-popover"
                   data-side="bottom"
                   data-align="start"
                   popover="auto"
@@ -476,14 +476,14 @@
                     <li>
                       <a href="#" class="ui-button justify-start" data-variant="ghost">Billing</a>
                     </li>
-                    <hr class="my-xs" />
+                    <hr class="ui-separator my-xs" />
                     <li class="font-strong text-eyebrow text-muted-foreground p-xs">Session</li>
                     <li>
                       <a href="#" class="ui-button justify-start" data-variant="ghost">Sign out</a>
                     </li>
                   </menu>
                 </div>
-              </ui-dropdown>
+              </ui-menu>
             </div>
           </div>
 
