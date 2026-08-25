@@ -8,7 +8,7 @@
           data-slot="navigation-menu-trigger"
           data-variant="ghost"
           type="button"
-          popovertarget="nav-dropdown-1"
+          popovertarget="nav-panel-1"
         >
           Platform
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
@@ -25,7 +25,7 @@
         </button>
 
         <div
-          id="nav-dropdown-1"
+          id="nav-panel-1"
           data-slot="navigation-menu-popover"
           popover="auto"
           data-animation="slide-down"
@@ -78,7 +78,7 @@
           data-slot="navigation-menu-trigger"
           data-variant="ghost"
           type="button"
-          popovertarget="nav-dropdown-2"
+          popovertarget="nav-panel-2"
         >
           Resources
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
@@ -95,7 +95,7 @@
         </button>
 
         <div
-          id="nav-dropdown-2"
+          id="nav-panel-2"
           data-slot="navigation-menu-popover"
           data-align="start"
           popover="auto"
@@ -131,7 +131,7 @@
           data-slot="navigation-menu-trigger"
           data-variant="ghost"
           type="button"
-          popovertarget="nav-dropdown-3"
+          popovertarget="nav-panel-3"
         >
           Products
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
@@ -148,7 +148,7 @@
         </button>
 
         <div
-          id="nav-dropdown-3"
+          id="nav-panel-3"
           data-slot="navigation-menu-popover"
           popover="auto"
           data-animation="slide-down"
@@ -320,388 +320,6 @@
                       </a>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </li>
-
-      <li data-slot="navigation-menu-item">
-        <button
-          class="ui-button"
-          data-slot="navigation-menu-trigger"
-          data-variant="ghost"
-          type="button"
-          popovertarget="nav-megamenu-1"
-        >
-          Megamenu
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-            <rect width="256" height="256" fill="none" />
-            <polyline
-              points="208 96 128 176 48 96"
-              fill="none"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="16"
-            />
-          </svg>
-        </button>
-
-        <div
-          id="nav-megamenu-1"
-          data-slot="navigation-menu-popover"
-          popover="auto"
-          data-size="container"
-          data-animation="slide-down"
-        >
-          <div data-slot="navigation-menu-viewport">
-            <div class="grid" style="min-block-size: 16rem">
-              <div class="flex flex-col gap-px p-xs">
-                <!-- Tabs vertical START -->
-                <div
-                  class="ui-tabs h-full flex flex-col @xs:grid @xs:grid-cols-2 @md:grid-cols-4 gap-sm"
-                  data-orientation="vertical"
-                >
-                  <div
-                    class="rounded-sm w-full @xs:w-auto @xs:col-span-2 @md:col-span-1 @md:h-full grid @sm:flex flex-col"
-                    data-slot="tabs-list"
-                    role="tablist"
-                  >
-                    <div class="rounded-xs" data-slot="tabs-indicator" aria-hidden="true"></div>
-
-                    <input
-                      type="radio"
-                      role="tab"
-                      name="tabs-megamenu-group-1"
-                      id="tab-megamenu-1"
-                      checked
-                    />
-                    <label
-                      for="tab-megamenu-1"
-                      class="grid justify-start p-sm flex-1"
-                      data-slot="tabs-label"
-                    >
-                      <span class="text-md font-strong">Women</span>
-                      <span class="text-sm font-weight-body text-muted-foreground"
-                        >Dresses, tops, bottoms, and shoes.</span
-                      >
-                    </label>
-
-                    <input
-                      type="radio"
-                      role="tab"
-                      name="tabs-megamenu-group-1"
-                      id="tab-megamenu-2"
-                    />
-                    <label
-                      for="tab-megamenu-2"
-                      class="grid justify-start p-sm flex-1"
-                      data-slot="tabs-label"
-                    >
-                      <span class="text-md font-strong">Men</span>
-                      <span class="text-sm font-weight-body text-muted-foreground"
-                        >Shirts, pants, outerwear, and shoes.</span
-                      >
-                    </label>
-
-                    <input
-                      type="radio"
-                      role="tab"
-                      name="tabs-megamenu-group-1"
-                      id="tab-megamenu-3"
-                    />
-                    <label
-                      for="tab-megamenu-3"
-                      class="grid justify-start p-sm flex-1"
-                      data-slot="tabs-label"
-                    >
-                      <span class="text-md font-strong">Home</span>
-                      <span class="text-sm font-weight-body text-muted-foreground"
-                        >Bedding, kitchen, dining, and decor.</span
-                      >
-                    </label>
-                  </div>
-
-                  <div
-                    class="flex flex-col @xs:grid @xs:grid-cols-subgrid @xs:col-span-2 @md:col-span-3 gap-sm"
-                    data-slot="tabs-panel"
-                    role="tabpanel"
-                  >
-                    <div class="grid gap-px">
-                      <span class="text-eyebrow text-muted-foreground pt-xs pb-xs">Dresses</span>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Mini &amp; Midi</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Everyday lengths for work and weekends.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Maxi Dresses</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Flowing silhouettes in linen and cotton.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Jumpsuits</span>
-                        <span class="text-sm text-muted-foreground"
-                          >One-piece outfits, easy to style.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Shop all dresses</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Browse the full collection.</span
-                        >
-                      </a>
-                    </div>
-
-                    <div class="grid gap-px">
-                      <span class="text-eyebrow text-muted-foreground pt-xs pb-xs">Tops</span>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">T-shirts &amp; Tanks</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Basics in organic cotton blends.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Blouses &amp; Shirts</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Office-ready and off-duty styles.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Sweaters &amp; Cardigans</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Layering pieces for cooler days.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Activewear</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Leggings, sports bras, and sets.</span
-                        >
-                      </a>
-                    </div>
-
-                    <div class="grid gap-px">
-                      <span class="text-eyebrow text-muted-foreground pt-xs pb-xs"
-                        >Bottoms &amp; Shoes</span
-                      >
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Jeans &amp; Denim</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Straight, wide-leg, and high-rise fits.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Trousers &amp; Skirts</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Tailored pants and A-line skirts.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Sneakers &amp; Flats</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Comfort-first everyday footwear.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Boots &amp; Heels</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Seasonal styles for dress-up moments.</span
-                        >
-                      </a>
-                    </div>
-                  </div>
-
-                  <div
-                    class="flex flex-col @xs:grid @xs:grid-cols-subgrid @xs:col-span-2 @md:col-span-3 gap-sm"
-                    data-slot="tabs-panel"
-                    role="tabpanel"
-                  >
-                    <div class="grid gap-px">
-                      <span class="text-eyebrow text-muted-foreground pt-xs pb-xs">Shirts</span>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">T-shirts &amp; Polos</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Classic fits in breathable fabrics.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Oxford &amp; Dress Shirts</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Collared styles for work and events.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Henleys &amp; Sweaters</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Casual layers for transitional weather.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Shop all shirts</span>
-                        <span class="text-sm text-muted-foreground">See every cut and color.</span>
-                      </a>
-                    </div>
-
-                    <div class="grid gap-px">
-                      <span class="text-eyebrow text-muted-foreground pt-xs pb-xs"
-                        >Pants &amp; Shorts</span
-                      >
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Chinos &amp; Trousers</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Smart casual staples in neutral tones.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Jeans</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Slim, relaxed, and straight-leg denim.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Joggers &amp; Sweatpants</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Loungewear you can wear out.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Shorts</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Chino, cargo, and athletic cuts.</span
-                        >
-                      </a>
-                    </div>
-
-                    <div class="grid gap-px">
-                      <span class="text-eyebrow text-muted-foreground pt-xs pb-xs"
-                        >Outerwear &amp; Shoes</span
-                      >
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Jackets &amp; Coats</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Bombers, parkas, and wool overcoats.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Sneakers</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Low-top and high-top everyday pairs.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Boots &amp; Loafers</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Leather and suede dress-casual options.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Accessories</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Belts, wallets, and winter essentials.</span
-                        >
-                      </a>
-                    </div>
-                  </div>
-
-                  <div
-                    class="flex flex-col @xs:grid @xs:grid-cols-subgrid @xs:col-span-2 @md:col-span-3 gap-sm"
-                    data-slot="tabs-panel"
-                    role="tabpanel"
-                  >
-                    <div class="grid gap-px">
-                      <span class="text-eyebrow text-muted-foreground pt-xs pb-xs">Bedding</span>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Sheet Sets</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Percale, sateen, and linen weaves.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Duvets &amp; Comforters</span>
-                        <span class="text-sm text-muted-foreground"
-                          >All-season weights and down alternatives.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Pillows &amp; Throws</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Accent layers for beds and sofas.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Shop all bedding</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Build a complete sleep setup.</span
-                        >
-                      </a>
-                    </div>
-
-                    <div class="grid gap-px">
-                      <span class="text-eyebrow text-muted-foreground pt-xs pb-xs"
-                        >Kitchen &amp; Dining</span
-                      >
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Cookware</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Pots, pans, and non-stick sets.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Tableware</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Plates, bowls, and flatware collections.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Glassware &amp; Bar</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Tumblers, wine glasses, and decanters.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Storage &amp; Organization</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Pantry jars, bins, and drawer inserts.</span
-                        >
-                      </a>
-                    </div>
-
-                    <div class="grid gap-px">
-                      <span class="text-eyebrow text-muted-foreground pt-xs pb-xs"
-                        >Decor &amp; Furniture</span
-                      >
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Lighting</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Floor lamps, pendants, and table lights.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Rugs &amp; Curtains</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Textiles to anchor and soften a room.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Seating &amp; Tables</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Chairs, side tables, and accent pieces.</span
-                        >
-                      </a>
-                      <a href="#" class="flex-1" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Wall Art &amp; Mirrors</span>
-                        <span class="text-sm text-muted-foreground"
-                          >Prints, frames, and statement mirrors.</span
-                        >
-                      </a>
-                    </div>
-                  </div>
-                  <!-- Tabs vertical END -->
                 </div>
               </div>
             </div>

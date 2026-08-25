@@ -11,7 +11,13 @@
  *             popover.css's shared matrix (@supports gated)
  * @uses       backdrop-filter — picker surface blur (shared with [popover])
  * @uses       Degrades to native OS dropdown where base-select is unsupported
+ * @uses       ui-multiselect (multiselect.ts) — JS-projected dropdown for
+ *             <select multiple>; base-select has no stable multi-select yet, so
+ *             this is a recorded exception like base-select itself. Degrades to
+ *             the native multi listbox without JS; retire the enhancement when
+ *             base-select-for-multiple ships stable.
  * @tokens     --ui-select-* (@layer variables); picker panel reuses --ui-popover-* (owned in popover.css)
+ * @consumedby autocomplete.css, combobox.css, command.css (--ui-option-*, --ui-select-picker-icon-*)
  */
 
 @layer variables {
@@ -39,10 +45,10 @@
 
     /* Option (menu item) — a ghost button rendered as a native <option>. Alias
        the --ui-button-* family (owned in button.css) so a select's options and a
-       dropdown's ghost menu items read as one; retune a --ui-button-* token and both
+       menu's ghost items read as one; retune a --ui-button-* token and both
        follow. The ghost look is base button minus the surface fill + border, so
        only --ui-option-background/--ui-option-border diverge. Radius bridges to the
-       shared --ui-dropdown-button-radius. */
+       shared --ui-menu-button-radius. */
     --ui-option-font-family: var(--ui-button-font-family);
     --ui-option-font-size: var(--ui-button-font-size);
     --ui-option-font-weight: var(--ui-button-font-weight);
@@ -51,7 +57,7 @@
     --ui-option-padding: var(--ui-button-padding);
     --ui-option-height: var(--ui-button-height);
     --ui-option-icon-size: var(--ui-button-icon-size);
-    --ui-option-radius: var(--ui-dropdown-button-radius);
+    --ui-option-radius: var(--ui-menu-button-radius);
     --ui-option-shadow: none;
 
     --ui-option-background: transparent;
@@ -279,7 +285,7 @@
 
   /* Options render as ghost buttons — the --ui-option-* family (set in @layer
      variables) aliases the --ui-button-* ghost values, so a select's menu items and
-     a dropdown's ghost menu items read identically. Like .ui-button, sizing rides on
+     a menu's ghost items read identically. Like .ui-button, sizing rides on
      min-block-size + padding-inline (no block padding) so every row is uniform. */
   .ui-select option {
     display: flex;
@@ -332,5 +338,143 @@
     order: 1;
     margin-inline-start: auto;
     color: currentcolor;
+  }
+
+  /* ===========================================================================
+  MULTISELECT — ui-multiselect (JS-projected dropdown over <select multiple>)
+  - The script hides the real select and stamps a .ui-select-classed trigger +
+    a popover of checkbox rows (see multiselect.ts). Rows are ghost options
+    (--ui-option-*) with the shared checkmark, so single- and multi-select
+    pickers read identically.
+  - Without JS the native multi listbox renders; it gets minimal field-family
+    dress below rather than the single-select trigger treatment.
+  =========================================================================== */
+
+  :where(ui-multiselect) {
+    anchor-scope: --ui-multiselect-trigger;
+    display: block;
+    inline-size: var(--ui-select-inline-size);
+    min-inline-size: var(--ui-select-min-inline-size);
+  }
+
+  /* Enhanced: the real select stays in the DOM as the form value carrier */
+  select[multiple][data-multiselect-enhanced] {
+    display: none;
+  }
+
+  /* No-JS baseline: the native listbox wears the field surface, sized by rows */
+  ui-multiselect select[multiple].ui-select:not([data-multiselect-enhanced]) {
+    display: block;
+    block-size: auto;
+    padding-block: var(--step-1);
+  }
+
+  [data-slot~="multiselect-trigger"] {
+    anchor-name: --ui-multiselect-trigger;
+  }
+
+  [data-slot~="multiselect-label"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Chevron — the ::picker-icon treatment, rebuilt for a plain button */
+  [data-slot~="multiselect-icon"] {
+    flex-shrink: 0;
+    inline-size: var(--ui-select-picker-icon-size);
+    block-size: var(--ui-select-picker-icon-size);
+    background-color: var(--ui-select-picker-icon-color);
+    mask: var(--ui-select-picker-icon-mask) center / contain no-repeat;
+    transition: var(--default-transition);
+  }
+
+  [data-slot~="multiselect-trigger"][aria-expanded="true"] [data-slot~="multiselect-icon"] {
+    transform: rotate(-180deg);
+  }
+
+  [data-slot~="multiselect-panel"] {
+    position-anchor: --ui-multiselect-trigger;
+    /* Layout stays ungated so the close fade keeps it; only display is gated */
+    flex-direction: column;
+    gap: var(--step-px);
+    box-shadow: var(--ui-menu-shadow);
+  }
+
+  /* Only display is gated — see popover.css: closed popovers stay display: none */
+  [data-slot~="multiselect-panel"]:where(:popover-open, .\:popover-open) {
+    display: flex;
+  }
+
+  @supports (inline-size: anchor-size(width)) {
+    [data-slot~="multiselect-panel"] {
+      min-inline-size: anchor-size(width);
+    }
+  }
+
+  /* Rows are ghost options; the checkbox is real but visually replaced by the
+     shared checkmark glyph */
+  [data-slot~="multiselect-option"] {
+    display: flex;
+    align-items: center;
+    gap: var(--ui-option-gap);
+    min-block-size: var(--ui-option-height);
+    padding-inline: var(--ui-option-padding);
+
+    font-family: var(--ui-option-font-family);
+    font-size: var(--ui-option-font-size);
+    font-weight: var(--ui-option-font-weight);
+    line-height: var(--ui-option-line-height);
+
+    color: var(--ui-option-foreground);
+    background-color: var(--ui-option-background);
+    border: var(--ui-option-border);
+    border-radius: var(--ui-option-radius);
+    cursor: pointer;
+
+    transition: var(--default-transition);
+  }
+
+  [data-slot~="multiselect-option"]:hover {
+    color: var(--ui-option-foreground--hover);
+    background-color: var(--ui-option-background--hover);
+  }
+
+  [data-slot~="multiselect-option"]:has(:checked) {
+    color: var(--ui-option-foreground--active);
+    background-color: var(--ui-option-background--active);
+  }
+
+  [data-slot~="multiselect-option"]:has(:disabled) {
+    color: var(--muted-foreground);
+    cursor: default;
+    opacity: 0.5;
+  }
+
+  /* The checkbox stays focusable and announced but invisible; keyboard focus
+     surfaces on the row via :focus-within */
+  [data-slot~="multiselect-option"] input[type="checkbox"] {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: clip;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  [data-slot~="multiselect-option"]:focus-within {
+    background-color: var(--ui-option-background--hover);
+    outline: var(--outline-width) var(--outline-style) var(--ring);
+    outline-offset: calc(var(--outline-offset) * -1);
+  }
+
+  [data-slot~="multiselect-option"]:has(:checked)::after {
+    content: "";
+    order: 1;
+    margin-inline-start: auto;
+    inline-size: var(--ui-option-checkmark-size);
+    block-size: var(--ui-option-checkmark-size);
+    background-color: var(--ui-option-checkmark-color);
+    mask: var(--ui-option-checkmark-mask) center / contain no-repeat;
   }
 }

@@ -3,7 +3,7 @@ name: zazz
 description: >-
   Build, style, and lay out web UI with the Zazz Design Framework — this repo's default design
   system. Use this skill WHENEVER you create or modify any page, component, layout, or styling
-  here: buttons, badges, cards, tables, dialogs, dropdowns, tooltips, tabs, accordions,
+  here: buttons, badges, cards, tables, dialogs, menus, tooltips, tabs, accordions,
   carousels/lightboxes, breadcrumbs, forms (inputs, selects, switches, sliders, checkboxes,
   radios), navigation, heroes, sections. Also trigger for theming, dark mode, spacing/typography/color
   decisions, "make it look good / on-brand," or anytime CSS variables, design tokens, or

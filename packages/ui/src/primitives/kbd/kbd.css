@@ -1,0 +1,87 @@
+/**
+ * kbd.css — Kbd (native <kbd>) + Kbd group (ui-kbd-group | .ui-kbd-group)
+ *
+ * @layer      variables, reset, components
+ * @requires   layers.css, _variables.css
+ * @uses       text-box — vertical trim (patchy browser support)
+ * @tokens     --ui-kbd-*, --ui-kbd-group-* (@layer variables)
+ * @consumedby button.css, tooltip.css, command.css (reassign --ui-kbd-* in scope)
+ *
+ * The key itself styles the bare native <kbd> — no class needed — so its rules
+ * live in @layer reset (browser-policy exception, like the switch redraw) and
+ * lose to component scopes. Hooks are declared on :root, not on the element,
+ * so an ancestor scope (a button, a tooltip) can reassign a --ui-kbd-* token
+ * and inheritance carries it down to the key.
+ */
+
+@layer variables {
+  :root {
+    /* type */
+    --ui-kbd-font-family: var(--font-family-mono);
+    --ui-kbd-font-size: var(--font-size-xs);
+    --ui-kbd-line-height: 1;
+
+    /* surface */
+    --ui-kbd-background: var(--muted);
+    --ui-kbd-color: var(--muted-foreground);
+    --ui-kbd-border: 1px solid transparent;
+    --ui-kbd-radius: var(--radius-xs);
+
+    /* metrics */
+    --ui-kbd-padding-inline: var(--step-1);
+    --ui-kbd-padding-block: 0;
+    --ui-kbd-min-inline-size: var(--step-5);
+    --ui-kbd-min-block-size: var(--step-5);
+    --ui-kbd-icon-size: var(--step-3_5);
+    --ui-kbd-gap: var(--step-1);
+
+    /* group — the one gap between adjacent keys, everywhere */
+    --ui-kbd-group-gap: var(--step-1);
+  }
+}
+
+@layer reset {
+  /* ===========================================================================
+  KBD — native <kbd> baseline
+  =========================================================================== */
+
+  :where(kbd) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--ui-kbd-gap);
+    font-family: var(--ui-kbd-font-family);
+    font-size: var(--ui-kbd-font-size);
+    line-height: var(--ui-kbd-line-height);
+    background-color: var(--ui-kbd-background);
+    color: var(--ui-kbd-color);
+    padding-inline: var(--ui-kbd-padding-inline);
+    padding-block: var(--ui-kbd-padding-block);
+    border: var(--ui-kbd-border);
+    border-radius: var(--ui-kbd-radius);
+    overflow: hidden;
+    min-inline-size: var(--ui-kbd-min-inline-size);
+    min-block-size: var(--ui-kbd-min-block-size);
+    inline-size: fit-content;
+    text-box: trim-both ex alphabetic;
+  }
+
+  :where(kbd > svg) {
+    inline-size: var(--ui-kbd-icon-size);
+    block-size: var(--ui-kbd-icon-size);
+  }
+}
+
+@layer zazz.components {
+  /* ===========================================================================
+  KBD GROUP — a run of keys forming one shortcut ("⌘ K")
+  - Wrap adjacent <kbd> siblings so their spacing is the shared
+    --ui-kbd-group-gap token instead of whatever gap the host happens to have.
+  =========================================================================== */
+
+  :where(ui-kbd-group, .ui-kbd-group) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ui-kbd-group-gap);
+  }
+}

@@ -1,0 +1,49 @@
+/**
+ * separator.css — Separator (.ui-separator on native <hr>)
+ *
+ * @layer      variables, components
+ * @requires   layers.css, _variables.css, _reset.css
+ * @uses       <hr> — the platform's separator (implicit role="separator");
+ *             no div reconstruction needed
+ * @uses       data-orientation="vertical" — flips to a stretching column rule
+ *             for flex/grid rows; pair with aria-orientation="vertical" when
+ *             the separator is meaningful, or role="presentation" when purely
+ *             decorative
+ * @tokens     --ui-separator-* (@layer variables)
+ */
+
+@layer variables {
+  :root {
+    --ui-separator-color: var(--border);
+    --ui-separator-thickness: var(--step-px);
+  }
+}
+
+@layer zazz.components {
+  /* ===========================================================================
+  SEPARATOR — a themed <hr>, horizontal or vertical
+  - The bare-hr baseline lives in _reset.css; this class adds the token hooks
+    and the vertical form. Spacing is composition (my-xs / mx-xs utilities),
+    like every other recipe.
+  - Meaningful separators keep hr's implicit separator role (add
+    aria-orientation="vertical" for the vertical form — AT assumes
+    horizontal); decorative ones take role="presentation".
+  =========================================================================== */
+
+  .ui-separator {
+    border: none;
+    background-color: var(--ui-separator-color);
+    block-size: var(--ui-separator-thickness);
+    inline-size: auto;
+    flex-shrink: 0;
+  }
+
+  .ui-separator[data-orientation="vertical"] {
+    inline-size: var(--ui-separator-thickness);
+    block-size: auto;
+    /* Stretches to the row height as a flex/grid item; the fallback keeps it
+       visible in plain flow, where auto block-size would collapse to zero */
+    align-self: stretch;
+    min-block-size: 1lh;
+  }
+}

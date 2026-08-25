@@ -1,0 +1,23 @@
+---
+title: OTP
+description: A one-time password field with character slots over one real input.
+---
+
+A `<ui-otp>` wraps ONE real `<input class="ui-input ui-otp-input">` carrying the standard OTP attributes — `autocomplete="one-time-code"`, `inputmode="numeric"`, `pattern`, `maxlength` — and stamps an `aria-hidden` rail of character cells behind it, stretching the input invisibly over the rail. The input stays the source of truth, so SMS autofill, paste, IME, form submission, and `:user-invalid` all work natively; the cells only mirror it. Without JavaScript the markup is a plain, fully functional code field.
+
+The code length comes from `maxlength`. Origin-bound SMS codes (`@example.com #123456`) autofill straight into the field per MDN's guidance.
+
+## Default
+
+<Preview src="otp/otp" />
+
+## API
+
+| Attribute              | Target             | Values                                                        |
+| ---------------------- | ------------------ | ------------------------------------------------------------- |
+| `maxlength`            | `.ui-otp-input`    | The code length (native)                                      |
+| `data-otp-groups`      | `ui-otp`           | Separator layout, e.g. `3-3`, `2-2-2` (must sum to maxlength) |
+| `data-otp-type`        | `ui-otp`           | `numeric` (default), `alpha`, `alphanumeric`, `none`          |
+| `data-otp-mask`        | `ui-otp`           | Render `•` instead of characters                              |
+| `data-otp-auto-submit` | `ui-otp`           | Submit the owning form once when complete                     |
+| `data-otp-complete`    | `ui-otp` (stamped) | Present when every cell is filled                             |

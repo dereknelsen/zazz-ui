@@ -1,0 +1,144 @@
+<div class="flex w-full items-center gap-px bg-card border-b p-xs" aria-label="Application menu">
+  <ui-menu>
+    <button
+      class="ui-button"
+      data-variant="ghost"
+      type="button"
+      popovertarget="menubar-example-file"
+      interestfor="menubar-example-file"
+    >
+      File
+    </button>
+    <div
+      id="menubar-example-file"
+      data-slot="menu-popover"
+      data-side="bottom"
+      data-align="start"
+      popover="auto"
+    >
+      <menu>
+        <li>
+          <button class="ui-button justify-start" data-variant="ghost" type="button">
+            New window
+          </button>
+        </li>
+        <li>
+          <button class="ui-button justify-start" data-variant="ghost" type="button">Open…</button>
+        </li>
+        <li>
+          <button class="ui-button justify-start" data-variant="ghost" type="button">Save</button>
+        </li>
+        <hr class="ui-separator my-xs" />
+        <li>
+          <button class="ui-button justify-start" data-variant="ghost" type="button">
+            Close window
+          </button>
+        </li>
+      </menu>
+    </div>
+  </ui-menu>
+
+  <ui-menu>
+    <button
+      class="ui-button"
+      data-variant="ghost"
+      type="button"
+      popovertarget="menubar-example-edit"
+      interestfor="menubar-example-edit"
+    >
+      Edit
+    </button>
+    <div
+      id="menubar-example-edit"
+      data-slot="menu-popover"
+      data-side="bottom"
+      data-align="start"
+      popover="auto"
+    >
+      <menu>
+        <li>
+          <button class="ui-button justify-start" data-variant="ghost" type="button">Undo</button>
+        </li>
+        <li>
+          <button class="ui-button justify-start" data-variant="ghost" type="button">Redo</button>
+        </li>
+        <hr class="ui-separator my-xs" />
+        <li>
+          <button class="ui-button justify-start" data-variant="ghost" type="button">Cut</button>
+        </li>
+        <li>
+          <button class="ui-button justify-start" data-variant="ghost" type="button">Copy</button>
+        </li>
+        <li>
+          <button class="ui-button justify-start" data-variant="ghost" type="button">Paste</button>
+        </li>
+      </menu>
+    </div>
+  </ui-menu>
+
+  <ui-menu>
+    <button
+      class="ui-button"
+      data-variant="ghost"
+      type="button"
+      popovertarget="menubar-example-view"
+      interestfor="menubar-example-view"
+    >
+      View
+    </button>
+    <div
+      id="menubar-example-view"
+      data-slot="menu-popover"
+      data-side="bottom"
+      data-align="start"
+      popover="auto"
+    >
+      <menu>
+        <li>
+          <button class="ui-button justify-start" data-variant="ghost" type="button">
+            Zoom in
+          </button>
+        </li>
+        <li>
+          <button class="ui-button justify-start" data-variant="ghost" type="button">
+            Zoom out
+          </button>
+        </li>
+        <li>
+          <button class="ui-button justify-start" data-variant="ghost" type="button">
+            Full screen
+          </button>
+        </li>
+      </menu>
+    </div>
+  </ui-menu>
+
+  <ui-menu>
+    <button
+      class="ui-button"
+      data-variant="ghost"
+      type="button"
+      popovertarget="menubar-example-help"
+      interestfor="menubar-example-help"
+    >
+      Help
+    </button>
+    <div
+      id="menubar-example-help"
+      data-slot="menu-popover"
+      data-side="bottom"
+      data-align="end"
+      popover="auto"
+    >
+      <menu>
+        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Documentation</a></li>
+        <li>
+          <a href="#" class="ui-button justify-start" data-variant="ghost">Keyboard shortcuts</a>
+        </li>
+        <li>
+          <a href="#" class="ui-button justify-start" data-variant="ghost">Report an issue</a>
+        </li>
+      </menu>
+    </div>
+  </ui-menu>
+</div>

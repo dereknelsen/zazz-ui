@@ -2,7 +2,7 @@
  * tooltip.css — Tooltip (ui-tooltip | .ui-tooltip, [data-slot~="tooltip-content"])
  *
  * @layer      variables, reset, components
- * @requires   layers.css, _variables.css, popover.css
+ * @requires   layers.css, _variables.css, popover.css, kbd.css (--ui-kbd-*)
  * @uses       interestfor — Interest Invokers API (Chromium 142+; polyfill via invokers)
  * @uses       [data-slot~="tooltip-content"] — hint popover (light dismiss, auto-hides sibling hints)
  * @uses       anchor-name, position-anchor, position-area, position-try-fallbacks —
@@ -147,11 +147,12 @@
     text-wrap: balance;
   }
 
-  [data-slot~="tooltip-content"] > kbd {
+  /* Descendant (not child) so keys wrapped in a ui-kbd-group still retint */
+  [data-slot~="tooltip-content"] :where(kbd) {
     --ui-kbd-background: color-mix(in oklch, var(--ui-tooltip-foreground) 15%, transparent);
     --ui-kbd-color: var(--ui-tooltip-foreground);
-    --ui-kbd-inline-size: var(--step-4);
-    --ui-kbd-block-size: var(--step-4);
+    --ui-kbd-min-inline-size: var(--step-4);
+    --ui-kbd-min-block-size: var(--step-4);
     --ui-kbd-font-size: var(--font-size-xs);
   }
 

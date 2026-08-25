@@ -4,8 +4,9 @@
  * `<script type="module" src=".../index.js">` instead of ten separate tags.
  * Each module runs for its side effects: global/utility setup, scroll-reveal
  * and carousel auto-initialization, SPA navigation, and the custom-element
- * registrations (`<ui-carousel>`, `<ui-lightbox>`, `<ui-password>`,
- * `<ui-tabs>`, `<ui-toaster>`).
+ * registrations (`<ui-autocomplete>`, `<ui-carousel>`, `<ui-combobox>`,
+ * `<ui-command>`, `<ui-lightbox>`, `<ui-menu>`, `<ui-password>`, `<ui-tabs>`,
+ * `<ui-toaster>`).
  *
  * Internal dependencies are resolved by the module graph — utils loads
  * before embla, embla before carousel, carousel before lightbox — so the
@@ -20,9 +21,15 @@ import "./base/utils.ts";
 import "./base/reveal.ts";
 import "./base/dialog-lifecycle.ts";
 import "./base/embla.ts";
+import "./primitives/autocomplete/autocomplete.ts";
+import "./primitives/combobox/combobox.ts";
+import "./primitives/command/command.ts";
 import "./primitives/carousel/carousel.ts";
 import "./primitives/lightbox/lightbox.ts";
+import "./primitives/menu/menu.ts";
+import "./primitives/otp/otp.ts";
 import "./primitives/password-group/password-group.ts";
+import "./primitives/select/multiselect.ts";
 import "./primitives/tabs/tabs.ts";
 import "./primitives/toaster/toaster.ts";
 import "./base/navigation.ts";

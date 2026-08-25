@@ -6,10 +6,17 @@
  */
 
 export type ExampleScript =
+  | "autocomplete"
+  | "combobox"
+  | "command"
+  | "command-actions"
   | "embla"
   | "reveal"
   | "carousel"
   | "lightbox"
+  | "menu"
+  | "multiselect"
+  | "otp"
   | "password"
   | "tabs"
   | "toaster";
@@ -22,8 +29,36 @@ export type ExampleScript =
  * `carousel.js` loaded before `lightbox.js`).
  */
 export const WEB_COMPONENT_SCRIPT_FILES: Partial<Record<ExampleScript, string[]>> = {
+  autocomplete: [
+    "base/command-score.js",
+    "base/hotkeys.js",
+    "base/typeahead.js",
+    "primitives/autocomplete/autocomplete.js",
+  ],
+  combobox: [
+    "base/command-score.js",
+    "base/hotkeys.js",
+    "base/typeahead.js",
+    "primitives/combobox/combobox.js",
+  ],
+  command: [
+    "base/command-score.js",
+    "base/hotkeys.js",
+    "base/typeahead.js",
+    "primitives/command/command.js",
+  ],
+  "command-actions": [
+    "base/command-score.js",
+    "base/hotkeys.js",
+    "base/typeahead.js",
+    "primitives/command/command.js",
+    "primitives/command/command-actions.js",
+  ],
   carousel: ["primitives/carousel/carousel.js"],
   lightbox: ["primitives/carousel/carousel.js", "primitives/lightbox/lightbox.js"],
+  menu: ["primitives/menu/menu.js"],
+  multiselect: ["primitives/select/multiselect.js"],
+  otp: ["primitives/otp/otp.js"],
   password: ["primitives/password-group/password-group.js"],
   tabs: ["primitives/tabs/tabs.js"],
   toaster: ["primitives/toaster/toaster.js"],

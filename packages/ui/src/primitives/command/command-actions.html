@@ -1,0 +1,89 @@
+<!-- command-actions.js (loaded with this example) shows how to register
+     custom actions: listen for your `--command` on its `commandfor` target,
+     or for `zazz:command-select` on the root. Copy it into your project as a
+     starting point. -->
+<ui-command data-command-hotkey="mod+j" id="command-actions-target" class="w-full max-w-xl">
+  <button
+    class="ui-button w-full justify-between"
+    type="button"
+    data-variant="outline"
+    popovertarget="command-example-actions-1"
+    data-slot="command-open"
+  >
+    <span class="text-muted-foreground">Quick actions…</span>
+    <ui-kbd-group><kbd>⌘</kbd><kbd>J</kbd></ui-kbd-group>
+  </button>
+  <div
+    id="command-example-actions-1"
+    data-slot="command-panel"
+    data-side="bottom"
+    data-align="start"
+    popover="auto"
+  >
+    <header data-slot="command-header">
+      <input
+        data-slot="command-input"
+        type="text"
+        placeholder="Type a command…"
+        role="combobox"
+        aria-expanded="false"
+        aria-autocomplete="list"
+        autocomplete="off"
+        aria-label="Search commands"
+      />
+    </header>
+    <div role="listbox" data-slot="command-list" aria-label="Commands">
+      <button
+        role="option"
+        data-slot="command-item"
+        class="ui-button justify-start"
+        data-variant="ghost"
+        type="button"
+        command="--theme-toggle"
+        commandfor="command-actions-target"
+        tabindex="-1"
+        data-keywords="dark light mode appearance"
+        data-stay-open
+      >
+        Toggle theme
+      </button>
+      <button
+        role="option"
+        data-slot="command-item"
+        class="ui-button justify-start"
+        data-variant="ghost"
+        type="button"
+        command="--copy-link"
+        commandfor="command-actions-target"
+        tabindex="-1"
+        data-keywords="share url clipboard"
+      >
+        Copy link
+      </button>
+      <button
+        role="option"
+        data-slot="command-item"
+        class="ui-button justify-start"
+        data-variant="ghost"
+        type="button"
+        command="--toast-success"
+        commandfor="command-actions-toaster"
+        data-title="Saved"
+        data-description="Your changes are safe."
+        tabindex="-1"
+        data-keywords="notify notification"
+      >
+        Show a toast
+      </button>
+    </div>
+    <p data-slot="command-empty" class="text-muted-foreground">No commands found.</p>
+    <footer data-slot="command-footer">
+      <span
+        ><ui-kbd-group><kbd>↑</kbd><kbd>↓</kbd></ui-kbd-group> navigate</span
+      >
+      <span><kbd>↵</kbd> select</span>
+    </footer>
+  </div>
+</ui-command>
+
+<ui-toaster id="command-actions-toaster" data-position="bottom-end"></ui-toaster>

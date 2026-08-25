@@ -1,0 +1,76 @@
+<!-- Content-site panel layout: link rows beside a featured card. -->
+<header class="w-full">
+  <nav class="ui-navigation-menu container">
+    <menu data-slot="navigation-menu-list">
+      <li data-slot="navigation-menu-item">
+        <button
+          class="ui-button"
+          data-slot="navigation-menu-trigger"
+          data-variant="ghost"
+          type="button"
+          popovertarget="nav-featured-1"
+        >
+          Magazine
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+            <rect width="256" height="256" fill="none" />
+            <polyline
+              points="208 96 128 176 48 96"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="16"
+            />
+          </svg>
+        </button>
+        <div
+          id="nav-featured-1"
+          data-slot="navigation-menu-popover"
+          data-align="start"
+          popover="auto"
+          data-animation="slide-down"
+        >
+          <div class="grid grid-cols-3" data-slot="navigation-menu-viewport">
+            <div class="flex flex-col gap-px py-xs pl-xs col-span-2">
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Latest issue</span>
+                <span class="text-sm text-muted-foreground">This month's stories.</span>
+              </a>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Interviews</span>
+                <span class="text-sm text-muted-foreground">Conversations with makers.</span>
+              </a>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Essays</span>
+                <span class="text-sm text-muted-foreground">Long reads on craft.</span>
+              </a>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Archive</span>
+                <span class="text-sm text-muted-foreground">Every issue since day one.</span>
+              </a>
+            </div>
+            <div class="grid py-xs pr-xs">
+              <a
+                href="#"
+                class="flex flex-col items-start justify-end bg-muted transition hover:opacity-75 rounded-sm p-sm"
+              >
+                <span class="text-eyebrow text-muted-foreground mb-xs">Featured</span>
+                <span class="text-md font-strong">The typography issue</span>
+                <span class="text-sm text-muted-foreground text-pretty">
+                  A whole issue on letters, grids, and rhythm.
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li data-slot="navigation-menu-item">
+        <a href="#" class="ui-button" data-variant="ghost">Newsletter</a>
+      </li>
+      <li data-slot="navigation-menu-item">
+        <a href="#" class="ui-button" data-variant="ghost">About</a>
+      </li>
+    </menu>
+  </nav>
+</header>

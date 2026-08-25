@@ -9,6 +9,13 @@
  * @see        https://ui.shadcn.com/docs/components/base/button-group
  */
 
+@layer variables {
+  :root {
+    --ui-button-group-radius: var(--ui-button-radius);
+    --ui-button-group-background: var(--card);
+  }
+}
+
 @layer zazz.components {
   /* ===========================================================================
   BUTTON GROUP
@@ -24,9 +31,9 @@
     inline-size: fit-content;
     /* stretch so mixed-height children share one edge */
     align-items: stretch;
-    border-radius: var(--ui-button-radius);
+    border-radius: var(--ui-button-group-radius);
     overflow: clip;
-    background-color: var(--background);
+    background-color: var(--ui-button-group-background);
     position: relative;
     isolation: isolate;
   }

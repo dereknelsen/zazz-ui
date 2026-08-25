@@ -1,0 +1,96 @@
+<!-- A mixed bar: plain links, one rich panel, a plain link-list as a literal
+     ui-menu item ("menu for a list of links; navigation-menu when a panel has
+     layout"), and a search input at the end. -->
+<header class="w-full">
+  <nav class="ui-navigation-menu container">
+    <menu data-slot="navigation-menu-list">
+      <li data-slot="navigation-menu-item">
+        <a href="#" class="ui-button" data-variant="ghost">Home</a>
+      </li>
+
+      <li data-slot="navigation-menu-item">
+        <button
+          class="ui-button"
+          data-slot="navigation-menu-trigger"
+          data-variant="ghost"
+          type="button"
+          popovertarget="nav-simple-1"
+        >
+          Products
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+            <rect width="256" height="256" fill="none" />
+            <polyline
+              points="208 96 128 176 48 96"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="16"
+            />
+          </svg>
+        </button>
+        <div
+          id="nav-simple-1"
+          data-slot="navigation-menu-popover"
+          data-align="start"
+          popover="auto"
+          data-animation="slide-down"
+        >
+          <div data-slot="navigation-menu-viewport">
+            <div class="flex flex-col gap-px p-xs">
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Editor</span>
+                <span class="text-sm text-muted-foreground">Write and publish faster.</span>
+              </a>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Library</span>
+                <span class="text-sm text-muted-foreground">Everything in one place.</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <!-- A plain link-list dropdown is just a menu primitive used as an item.
+           The inline token reset keeps the nav's wide panel sizing from
+           inheriting into the small menu panel. -->
+      <li data-slot="navigation-menu-item">
+        <ui-menu>
+          <button
+            class="ui-button"
+            data-variant="ghost"
+            type="button"
+            popovertarget="nav-simple-menu"
+            interestfor="nav-simple-menu"
+          >
+            Company
+          </button>
+          <div
+            id="nav-simple-menu"
+            data-slot="menu-popover"
+            data-side="bottom"
+            data-align="start"
+            popover="auto"
+            style="--ui-popover-inline-size: max-content"
+          >
+            <menu>
+              <li><a href="#" class="ui-button justify-start" data-variant="ghost">About</a></li>
+              <li><a href="#" class="ui-button justify-start" data-variant="ghost">Careers</a></li>
+              <li><a href="#" class="ui-button justify-start" data-variant="ghost">Press</a></li>
+            </menu>
+          </div>
+        </ui-menu>
+      </li>
+
+      <li data-slot="navigation-menu-item" class="ml-auto">
+        <input
+          class="ui-input"
+          type="search"
+          aria-label="Search the site"
+          placeholder="Search…"
+          style="max-inline-size: 16ch"
+        />
+      </li>
+    </menu>
+  </nav>
+</header>

@@ -1,0 +1,22 @@
+<form class="ui-field" style="max-inline-size: max-content">
+  <label data-slot="field-label" for="f-otp">Verification code</label>
+  <ui-otp data-otp-groups="3-3">
+    <input
+      class="ui-input ui-otp-input"
+      id="f-otp"
+      name="otp"
+      type="text"
+      autocomplete="one-time-code"
+      inputmode="numeric"
+      pattern="\d{6}"
+      maxlength="6"
+      required
+      spellcheck="false"
+      autocapitalize="off"
+    />
+  </ui-otp>
+  <div data-slot="field-description">
+    <span data-slot="field-hint">Enter the 6-digit code we sent you.</span>
+    <span data-slot="field-error">Enter all 6 digits.</span>
+  </div>
+</form>

@@ -1,0 +1,66 @@
+<div class="ui-field" style="max-inline-size: 24rem">
+  <label data-slot="field-label" for="ac-fruit">Fruit</label>
+  <ui-autocomplete>
+    <input
+      class="ui-input"
+      id="ac-fruit"
+      name="fruit"
+      type="text"
+      placeholder="Search fruits…"
+      role="combobox"
+      aria-expanded="false"
+      aria-autocomplete="list"
+      autocomplete="off"
+    />
+    <div data-slot="autocomplete-panel" data-side="bottom" data-align="start" popover="manual">
+      <ul role="listbox" data-slot="autocomplete-list" aria-label="Fruit suggestions">
+        <li
+          role="option"
+          data-slot="autocomplete-item"
+          class="ui-button justify-start"
+          data-variant="ghost"
+          data-value="Apple"
+        >
+          Apple
+        </li>
+        <li
+          role="option"
+          data-slot="autocomplete-item"
+          class="ui-button justify-start"
+          data-variant="ghost"
+          data-value="Banana"
+        >
+          Banana
+        </li>
+        <li
+          role="option"
+          data-slot="autocomplete-item"
+          class="ui-button justify-start"
+          data-variant="ghost"
+          data-value="Blueberry"
+        >
+          Blueberry
+        </li>
+        <li
+          role="option"
+          data-slot="autocomplete-item"
+          class="ui-button justify-start"
+          data-variant="ghost"
+          data-value="Cherry"
+        >
+          Cherry
+        </li>
+        <li
+          role="option"
+          data-slot="autocomplete-item"
+          class="ui-button justify-start"
+          data-variant="ghost"
+          data-value="Grape"
+        >
+          Grape
+        </li>
+      </ul>
+      <p data-slot="autocomplete-empty" class="text-muted-foreground">No results.</p>
+    </div>
+  </ui-autocomplete>
+</div>

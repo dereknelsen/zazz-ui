@@ -1,0 +1,141 @@
+<!-- Full-width megamenu — data-size="container" spans the menu bar; the panel
+     is a 4-column grid of eyebrow-labeled link groups. -->
+<header class="w-full">
+  <nav class="ui-navigation-menu container">
+    <menu data-slot="navigation-menu-list">
+      <li data-slot="navigation-menu-item">
+        <button
+          class="ui-button"
+          data-slot="navigation-menu-trigger"
+          data-variant="ghost"
+          type="button"
+          popovertarget="nav-megamenu-1"
+        >
+          Shop
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+            <rect width="256" height="256" fill="none" />
+            <polyline
+              points="208 96 128 176 48 96"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="16"
+            />
+          </svg>
+        </button>
+
+        <div
+          id="nav-megamenu-1"
+          data-slot="navigation-menu-popover"
+          popover="auto"
+          data-size="container"
+          data-animation="slide-down"
+        >
+          <div class="grid grid-cols-4 gap-sm p-xs" data-slot="navigation-menu-viewport">
+            <div class="grid grid-rows-subgrid row-span-5 gap-px">
+              <span class="text-eyebrow text-muted-foreground pt-xs pb-xs">Dresses</span>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Mini &amp; Midi</span>
+                <span class="text-sm text-muted-foreground"
+                  >Everyday lengths for work and weekends.</span
+                >
+              </a>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Maxi Dresses</span>
+                <span class="text-sm text-muted-foreground"
+                  >Flowing silhouettes in linen and cotton.</span
+                >
+              </a>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Jumpsuits</span>
+                <span class="text-sm text-muted-foreground">One-piece outfits, easy to style.</span>
+              </a>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Shop all dresses</span>
+                <span class="text-sm text-muted-foreground">Browse the full collection.</span>
+              </a>
+            </div>
+
+            <div class="grid grid-rows-subgrid row-span-5 gap-px">
+              <span class="text-eyebrow text-muted-foreground pt-xs pb-xs">Tops</span>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">T-shirts &amp; Tanks</span>
+                <span class="text-sm text-muted-foreground">Basics in organic cotton blends.</span>
+              </a>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Blouses &amp; Shirts</span>
+                <span class="text-sm text-muted-foreground">Office-ready and off-duty styles.</span>
+              </a>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Sweaters &amp; Cardigans</span>
+                <span class="text-sm text-muted-foreground">Layering pieces for cooler days.</span>
+              </a>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Activewear</span>
+                <span class="text-sm text-muted-foreground">Leggings, sports bras, and sets.</span>
+              </a>
+            </div>
+
+            <div class="grid grid-rows-subgrid row-span-5 gap-px">
+              <span class="text-eyebrow text-muted-foreground pt-xs pb-xs">Shirts</span>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">T-shirts &amp; Polos</span>
+                <span class="text-sm text-muted-foreground"
+                  >Classic fits in breathable fabrics.</span
+                >
+              </a>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Oxford &amp; Dress Shirts</span>
+                <span class="text-sm text-muted-foreground"
+                  >Collared styles for work and events.</span
+                >
+              </a>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Henleys &amp; Sweaters</span>
+                <span class="text-sm text-muted-foreground"
+                  >Casual layers for transitional weather.</span
+                >
+              </a>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Shop all shirts</span>
+                <span class="text-sm text-muted-foreground">See every cut and color.</span>
+              </a>
+            </div>
+
+            <div class="grid grid-rows-subgrid row-span-5 gap-px">
+              <span class="text-eyebrow text-muted-foreground pt-xs pb-xs">Bedding</span>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Sheet Sets</span>
+                <span class="text-sm text-muted-foreground"
+                  >Percale, sateen, and linen weaves.</span
+                >
+              </a>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Duvets &amp; Comforters</span>
+                <span class="text-sm text-muted-foreground"
+                  >All-season weights and down alternatives.</span
+                >
+              </a>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Pillows &amp; Throws</span>
+                <span class="text-sm text-muted-foreground">Accent layers for beds and sofas.</span>
+              </a>
+              <a href="#" data-slot="navigation-menu-link">
+                <span class="text-sm font-strong">Shop all bedding</span>
+                <span class="text-sm text-muted-foreground">Build a complete sleep setup.</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li data-slot="navigation-menu-item">
+        <a href="#" class="ui-button" data-variant="ghost">New arrivals</a>
+      </li>
+      <li data-slot="navigation-menu-item">
+        <a href="#" class="ui-button" data-variant="ghost">Sale</a>
+      </li>
+    </menu>
+  </nav>
+</header>

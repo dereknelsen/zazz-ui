@@ -1,0 +1,35 @@
+---
+title: Kbd
+description: Keyboard key hints on the native kbd element, with a group for shortcut runs.
+---
+
+The bare native `<kbd>` element renders as a key cap — no class needed. It sits in the reset layer, so component scopes restyle it by reassigning `--ui-kbd-*` tokens: keys retint inside a [Tooltip](/docs/components/tooltip) and shrink inside a [Button](/docs/components/button) without extra markup.
+
+## Default
+
+<Preview src="kbd/kbd" />
+
+## Kbd group
+
+Wrap a run of keys forming one shortcut in `<ui-kbd-group>` (or `.ui-kbd-group`). The group owns the spacing between adjacent keys — a single `--ui-kbd-group-gap` token — so shortcut hints read the same in buttons, tooltips, command palettes, and prose, instead of inheriting whatever gap the host happens to have.
+
+<Preview src="kbd/kbd-group" />
+
+Inside a [Command](/docs/components/command) item, a lone `<kbd>` or a `<ui-kbd-group>` automatically pushes to the inline end of the row.
+
+## API
+
+| Attribute | Target                            | Values                                                      |
+| --------- | --------------------------------- | ----------------------------------------------------------- |
+| Tokens    | `:root`                           | `--ui-kbd-*` (type, surface, metrics), `--ui-kbd-group-gap` |
+| Icon      | `<svg>` child of `<kbd>`          | Sized by `--ui-kbd-icon-size`                               |
+| Group     | `<ui-kbd-group>`, `.ui-kbd-group` | Wraps `<kbd>` children; gap = `--ui-kbd-group-gap`          |
+
+Scoped restyling works through inheritance — reassign a token on any ancestor:
+
+```css
+.my-toolbar {
+  --ui-kbd-background: var(--card);
+  --ui-kbd-group-gap: var(--step-0_5);
+}
+```

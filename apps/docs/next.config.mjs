@@ -14,6 +14,16 @@ const config = {
   // default) skip `outputFileTracingIncludes` entirely — so the ONE owner of the
   // trace list is `scripts/patch-zazz-trace.mjs`, which runs after every build and
   // traces exactly the subtree the route serves (see `lib/zazz-package.ts`).
+  async redirects() {
+    return [
+      // Pre-publish primitive rename (ADR-0005 window): dropdown became menu.
+      {
+        source: "/docs/components/dropdown",
+        destination: "/docs/components/menu",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default withMDX(config);

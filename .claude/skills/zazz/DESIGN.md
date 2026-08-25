@@ -405,9 +405,9 @@ Gently rounded chips (`--radius-sm`, ~6px). Height `--step-5_5`. Variants (via `
 
 Native `<dialog>` via Invoker Commands API. `--card` surface, `--shadow-md`, `--radius-lg`. Backdrop: `--shade-900`. Sizes (via `data-size`): `article` (default width), `container`, `screen`.
 
-### Dropdown & Navigation Menu
+### Menu & Navigation Menu
 
-Popover API + CSS anchor positioning. Native light-dismiss. Dropdown items are `.ui-button[data-variant="ghost"]`. Navigation menu supports mega-panels with a `data-slot="navigation-menu-viewport"` grid and rich `data-slot="navigation-menu-link"` rows (title + description); callouts are built from utilities (e.g. `bg-muted rounded-sm p-sm` + `.text-eyebrow`).
+Popover API + CSS anchor positioning. Native light-dismiss. Menu items are `.ui-button[data-variant="ghost"]`. Navigation menu supports mega-panels with a `data-slot="navigation-menu-viewport"` grid and rich `data-slot="navigation-menu-link"` rows (title + description); callouts are built from utilities (e.g. `bg-muted rounded-sm p-sm` + `.text-eyebrow`).
 
 ### Tabs
 

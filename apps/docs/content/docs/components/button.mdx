@@ -23,10 +23,13 @@ Use `data-size="icon"` or `data-size="icon-sm"` for square buttons:
 
 ## With keyboard shortcuts
 
-Add a `<kbd>` element inside the button for shortcut keys:
+Add a `<kbd>` element inside the button for shortcut keys — wrap a run of keys in a [`<ui-kbd-group>`](/docs/components/kbd) so their spacing stays standard:
 
 ```html
-<button class="ui-button">Search <kbd>Cmd+K</kbd></button>
+<button class="ui-button">
+  Search
+  <ui-kbd-group><kbd>⌘</kbd><kbd>K</kbd></ui-kbd-group>
+</button>
 ```
 
 ## API
