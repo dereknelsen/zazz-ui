@@ -13,12 +13,12 @@
 
 @layer variables {
   :root {
-    --ui-otp-slot-inline-size: var(--step-10);
+    --ui-otp-slot-inline-size: var(--ui-field-height);
     --ui-otp-slot-block-size: var(--ui-field-height);
     --ui-otp-slot-background: var(--ui-field-background);
     --ui-otp-slot-border: 1px solid var(--ui-field-border);
     --ui-otp-slot-radius: var(--ui-field-radius);
-    --ui-otp-slot-font-size: var(--font-size-lg);
+    --ui-otp-slot-font-size: var(--font-size-md);
     --ui-otp-gap: var(--step-1_5);
     --ui-otp-separator-color: var(--muted-foreground);
     --ui-otp-caret-color: var(--ui-field-border--focus);

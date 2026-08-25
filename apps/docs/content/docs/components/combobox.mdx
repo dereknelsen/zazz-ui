@@ -3,7 +3,9 @@ title: Combobox
 description: An input combined with a predefined list — a filterable relative of select.
 ---
 
-A `<ui-combobox>` looks like a select and filters like an autocomplete, but can never submit free text: the form value lives in an authored hidden input (`data-slot="combobox-value"`), synced when an option is committed. Options match against their visible label and carry their machine value in `data-value`; the committed option wears `aria-selected` and the shared option checkmark. On blur, stray text reverts to the last committed label, and cleared text clears the selection. The chevron toggles the full unfiltered list.
+A `<ui-combobox>` looks like a select and filters like an autocomplete, but can never submit free text: the form value lives in an authored hidden input (`data-slot="combobox-value"`), synced whenever the selection changes. Options match against their visible label and carry their machine value in `data-value`; selected options wear `aria-selected` and the shared option checkmark.
+
+The visible input carries a **display value, not the filter**. Committing writes the option's label into it and clears the query, so reopening — by clicking the control or the chevron — shows the full list with the committed row ticked, exactly like [Select](/docs/components/select). Opening selects that label so the first keystroke replaces it, and focus alone never opens the panel, so tabbing through a form stays quiet. On blur, stray text reverts to the committed label and cleared text clears the selection.
 
 Omit the `popover` attribute on the panel for the **inline variant**: the list renders in flow, always open — no floating surface, chevron, or dismissal — with filtering, highlight, and commit unchanged. Used inside surfaces that already float, like a [Menubar](/docs/components/menubar) help menu.
 
@@ -13,12 +15,27 @@ Without JavaScript this control is inert — where a no-JS fallback matters, use
 
 <Preview src="combobox/combobox" />
 
+## Multiselect
+
+Add `data-variant="multiselect"` and the combobox selects a set: committing toggles a row instead of replacing the selection, the panel stays open so picking can continue, and every selected value renders as a removable tag inside the control while the input keeps filtering beside them. Backspace on an empty input drops the last tag, and the control wraps onto extra rows as the tags accumulate.
+
+**A tag's markup is HTML, not script.** Author a `<template data-slot="combobox-tag-template">` and the combobox clones it once per selected value, filling in the label (`combobox-tag-label`), the value, and the remove button's accessible name (`combobox-tag-remove`) — so swapping the badge variant, adding an icon, or using a different component entirely never means touching the script. Omit the template and the muted-badge default applies.
+
+Options carrying `aria-selected="true"` are the single source of truth — the tags and the hidden inputs are both derived from them in DOM order — and the form submits repeated `name` pairs like `<select multiple>`: the authored hidden input carries the first value, stamped siblings the rest. Because the tags are stamped, a server-rendered selection is invisible without the script (the values still submit); where that matters, use [`<ui-multiselect>`](/docs/components/select) instead.
+
+<Preview src="combobox/combobox-multiselect" />
+
 ## API
 
-| Attribute                  | Target                         | Values                                       |
-| -------------------------- | ------------------------------ | -------------------------------------------- |
-| `data-value`               | `[data-slot="combobox-item"]`  | Submitted value (label is the match text)    |
-| `data-keywords`            | `[data-slot="combobox-item"]`  | Space-separated extra match targets          |
-| `data-sort`                | Root                           | `score` — rank by match (default: DOM order) |
-| `name` / `value`           | `[data-slot="combobox-value"]` | The hidden input the form submits            |
-| `data-side` / `data-align` | `[data-slot="combobox-panel"]` | Placement (popover matrix)                   |
+| Attribute                  | Target                         | Values                                                |
+| -------------------------- | ------------------------------ | ----------------------------------------------------- |
+| `data-variant`             | Root                           | `multiselect` — select a set, shown as removable tags |
+| `data-label-remove`        | Root                           | Tag remove-button label (default: `Remove {label}`)   |
+| `data-slot`                | `<template>` in the root       | `combobox-tag-template` — tag blueprint (optional)    |
+| `data-value`               | `[data-slot="combobox-item"]`  | Submitted value (label is the match text)             |
+| `data-keywords`            | `[data-slot="combobox-item"]`  | Space-separated extra match targets                   |
+| `aria-selected`            | `[data-slot="combobox-item"]`  | `true` seeds the selection from markup                |
+| `data-sort`                | Root                           | `score` — rank by match (default: DOM order)          |
+| `data-min-length`          | Root                           | Characters before typing opens the panel              |
+| `name` / `value`           | `[data-slot="combobox-value"]` | The hidden input the form submits                     |
+| `data-side` / `data-align` | `[data-slot="combobox-panel"]` | Placement (popover matrix)                            |

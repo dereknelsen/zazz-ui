@@ -35,6 +35,7 @@
     --ui-select-line-height: var(--ui-field-line-height);
     --ui-select-border: 1px solid var(--ui-field-border);
     --ui-select-border-radius: var(--ui-field-radius);
+    --ui-select-option-gap: var(--ui-field-option-gap);
 
     /* Picker icon (trigger chevron)
     ** @see https://www.svgbackgrounds.com/tools/svg-to-css/
@@ -156,7 +157,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--ui-field-gap);
+    gap: var(--ui-select-option-gap);
 
     inline-size: var(--ui-select-inline-size);
     min-inline-size: var(--ui-select-min-inline-size);

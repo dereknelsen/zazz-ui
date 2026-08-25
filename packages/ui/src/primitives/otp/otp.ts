@@ -255,6 +255,7 @@ class UiOtp extends ZazzElement {
       if (groupIndex > 0) {
         const separator = document.createElement("span");
         separator.setAttribute("data-slot", "otp-separator");
+        separator.setAttribute("aria-role", "presentation");
         separator.textContent = "–";
         rail.append(separator);
       }

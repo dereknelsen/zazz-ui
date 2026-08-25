@@ -69,6 +69,11 @@ const MANIFEST: Record<string, ExampleMeta> = {
     requiresScripts: ["autocomplete"],
   },
   "combobox/combobox": { block: "start", minHeight: 480, requiresScripts: ["combobox"] },
+  "combobox/combobox-multiselect": {
+    block: "start",
+    minHeight: 520,
+    requiresScripts: ["combobox"],
+  },
   "command/command": { block: "start", minHeight: 560, requiresScripts: ["command"] },
   "command/command-dialog": { block: "start", minHeight: 640, requiresScripts: ["command"] },
   "command/command-actions": {

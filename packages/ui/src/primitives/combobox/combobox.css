@@ -3,20 +3,29 @@
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, popover.css, button.css, fields.css,
+ *             badge.css (--ui-badge-* — the default tag template's .ui-badge),
  *             select.css (--ui-option-*, --ui-select-picker-icon-*)
  * @uses       [popover="manual"] — panel opened/closed by combobox.js
  * @uses       anchor-name, anchor-scope, position-anchor — tether panel to the control
  * @uses       anchor-size(width) — match panel width to the control (@supports gated)
  * @uses       :has() — chevron rotation, group + empty-state visibility
+ * @uses       mask — chevron and tag-remove icons; wiped in forced-colors mode,
+ *             as everywhere else in the kit (option checkmark, picker icon)
  * @uses       data-side / data-align — maps to --ui-popover-position-* in popover.css
+ * @uses       data-variant="multiselect" — tag variant; combobox.js clones a
+ *             <template data-slot="combobox-tag-template"> (or its muted-badge
+ *             default) per option carrying aria-selected="true". Tag rules key
+ *             off the slots, so a custom template keeps this styling.
  * @tokens     --ui-combobox-* (@layer variables); control mirrors --ui-select-*,
- *             items alias --ui-option-*
- * @see        combobox.ts — filtering, commit/revert, and keyboard behavior
+ *             items alias --ui-option-*, tags alias --ui-badge-*
+ * @see        combobox.ts — filtering, commit/revert, tags, and keyboard behavior
  */
 
 @layer variables {
   :root {
     /* Control mirrors the select trigger so the two pickers read as one family */
+    --ui-combobox-display: grid;
+    --ui-combobox-option-gap: var(--ui-field-option-gap);
     --ui-combobox-inline-size: var(--ui-select-inline-size);
     --ui-combobox-min-inline-size: var(--ui-select-min-inline-size);
     --ui-combobox-padding-inline-start: var(--ui-select-padding-inline-start);
@@ -28,6 +37,31 @@
     --ui-combobox-icon-color: var(--ui-select-picker-icon-color);
     --ui-combobox-panel-max-block-size: var(--step-72);
     --ui-combobox-shadow: var(--ui-menu-shadow);
+
+    /* Control box — the multiselect variant swaps these to wrap into rows */
+    --ui-combobox-control-align: center;
+    --ui-combobox-control-wrap: nowrap;
+    --ui-combobox-control-gap: var(--ui-field-gap);
+    --ui-combobox-control-block-size: var(--ui-field-height);
+    --ui-combobox-control-min-block-size: auto;
+    --ui-combobox-control-padding-block: 0;
+    --ui-combobox-input-min-inline-size: 0;
+    --ui-combobox-input-min-block-size: auto;
+
+    /* Selection tags (data-variant="multiselect")
+    ** Remove icon re-declared here: the identical --search-cancel-mask lives
+    ** inside ::-webkit-search-cancel-button in _reset.css, out of reach.
+    ** @see https://www.svgbackgrounds.com/tools/svg-to-css/
+    ** Set to Legacy / URL Wrapper to update icon */
+    --ui-combobox-tag-gap: var(--step-1);
+    --ui-combobox-tag-padding-block: var(--step-1);
+    --ui-combobox-tag-max-inline-size: 100%;
+    --ui-combobox-tag-remove-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cline x1='200' y1='56' x2='56' y2='200' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='200' y1='200' x2='56' y2='56' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3C/svg%3E");
+    --ui-combobox-tag-remove-size: var(--ui-badge-icon-size);
+    --ui-combobox-tag-remove-color: currentColor;
+    --ui-combobox-tag-remove-radius: var(--radius-sm);
+    --ui-combobox-tag-remove-opacity: 0.65;
+    --ui-combobox-tag-remove-opacity--hover: 1;
   }
 }
 
@@ -41,19 +75,24 @@
 
   :where(ui-combobox, .ui-combobox) {
     anchor-scope: --ui-combobox-trigger;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    gap: var(--step-px);
     inline-size: var(--ui-combobox-inline-size);
   }
 
   [data-slot~="combobox-control"] {
     anchor-name: --ui-combobox-trigger;
     display: flex;
-    align-items: center;
-    gap: var(--ui-field-gap);
+    flex-wrap: var(--ui-combobox-control-wrap);
+    align-items: var(--ui-combobox-control-align);
+    gap: var(--ui-combobox-control-gap);
 
     inline-size: 100%;
     min-inline-size: var(--ui-combobox-min-inline-size);
-    block-size: var(--ui-field-height);
+    block-size: var(--ui-combobox-control-block-size);
+    min-block-size: var(--ui-combobox-control-min-block-size);
+    padding-block: var(--ui-combobox-control-padding-block);
     padding-inline: var(--ui-combobox-padding-inline-start) var(--ui-combobox-padding-inline-end);
 
     font-size: var(--ui-field-font-size);
@@ -90,10 +129,17 @@
     outline-color: transparent;
   }
 
-  /* The inner input is bare — the shell owns the surface */
+  [data-slot~="combobox-control"]:has(> [data-slot~="combobox-tag"]) {
+    padding-inline-start: var(--step-1_5);
+  }
+
+  /* The inner input is bare — the shell owns the surface. It keeps a minimum
+     width so the multiselect variant wraps it onto its own row instead of
+     collapsing to nothing between the tags and the chevron. */
   [data-slot~="combobox-control"] input {
-    flex: 1;
-    min-inline-size: 0;
+    flex: 1 1 var(--ui-combobox-input-min-inline-size);
+    min-inline-size: var(--ui-combobox-input-min-inline-size);
+    min-block-size: var(--ui-combobox-input-min-block-size);
     font: inherit;
     color: inherit;
     background: none;
@@ -108,6 +154,7 @@
     block-size: var(--ui-combobox-icon-size);
     flex-shrink: 0;
     cursor: pointer;
+    margin-inline-start: auto;
   }
 
   [data-slot~="combobox-trigger"]::before {
@@ -117,11 +164,6 @@
     background-color: var(--ui-combobox-icon-color);
     mask: var(--ui-combobox-icon-mask) center / contain no-repeat;
     transition: var(--default-transition);
-  }
-
-  [data-slot~="combobox-control"]:has(input[aria-expanded="true"])
-    [data-slot~="combobox-trigger"]::before {
-    transform: rotate(-180deg);
   }
 
   /* Panel — same shape as the autocomplete panel */
@@ -155,7 +197,7 @@
   [data-slot~="combobox-list"] {
     display: flex;
     flex-direction: column;
-    gap: var(--step-px);
+    gap: var(--ui-combobox-option-gap);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -164,7 +206,7 @@
   [data-slot~="combobox-group"] {
     display: flex;
     flex-direction: column;
-    gap: var(--step-px);
+    gap: var(--ui-combobox-option-gap);
   }
 
   /* Score ranking writes order -1000..0 on sibling items — keep the label first */
@@ -204,5 +246,62 @@
   [data-slot~="combobox-panel"]:not(:has([data-slot~="combobox-item"]:not([hidden])))
     [data-slot~="combobox-empty"] {
     display: block;
+  }
+
+  /* ===========================================================================
+  COMBOBOX MULTISELECT — selected values as removable tags inside the control
+  - The variant only swaps tokens: the control wraps into rows and grows from a
+    fixed height into a minimum one. combobox.js stamps the tags from the items
+    carrying aria-selected="true", dressed as .ui-badge[data-variant="muted"]
+    so a selection tag and a badge read as one thing.
+  =========================================================================== */
+
+  :where(ui-combobox, .ui-combobox)[data-variant="multiselect"] {
+    --ui-combobox-control-wrap: wrap;
+    --ui-combobox-control-gap: var(--ui-combobox-tag-gap);
+    --ui-combobox-control-block-size: auto;
+    --ui-combobox-control-min-block-size: var(--ui-field-height);
+    --ui-combobox-control-padding-block: var(--ui-combobox-tag-padding-block);
+    --ui-combobox-input-min-inline-size: var(--step-16);
+    --ui-combobox-input-min-block-size: var(--ui-badge-height);
+  }
+
+  /* Overrides badge.css's min-width: max-content — same layer, same
+     specificity, and combobox.css imports after badge.css */
+  [data-slot~="combobox-tag"] {
+    min-inline-size: 0;
+    max-inline-size: var(--ui-combobox-tag-max-inline-size);
+  }
+
+  /* The label wears its own box because text-overflow ignores a flex
+     container's own text, and .ui-badge is display: flex */
+  [data-slot~="combobox-tag-label"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  [data-slot~="combobox-tag-remove"] {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    inline-size: var(--ui-combobox-tag-remove-size);
+    block-size: var(--ui-combobox-tag-remove-size);
+    border-radius: var(--ui-combobox-tag-remove-radius);
+    opacity: var(--ui-combobox-tag-remove-opacity);
+    cursor: pointer;
+    transition: var(--default-transition);
+  }
+
+  [data-slot~="combobox-tag-remove"]::before {
+    content: "";
+    inline-size: 100%;
+    block-size: 100%;
+    background-color: var(--ui-combobox-tag-remove-color);
+    mask: var(--ui-combobox-tag-remove-mask) center / contain no-repeat;
+  }
+
+  [data-slot~="combobox-tag-remove"]:hover {
+    opacity: var(--ui-combobox-tag-remove-opacity--hover);
   }
 }

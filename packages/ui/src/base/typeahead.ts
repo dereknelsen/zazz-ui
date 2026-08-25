@@ -99,6 +99,12 @@ abstract class TypeaheadElement extends ZazzElement {
   protected abstract readonly slotPrefix: string;
   /** Whether this element opens/closes its own `popover="manual"` panel. */
   protected readonly managesPanel: boolean = true;
+  /**
+   * Whether focusing the input opens the panel. Combobox opts out — its input
+   * holds a committed display value, so tabbing through a form must not pop
+   * the list open, any more than tabbing to a select opens its picker.
+   */
+  protected readonly openOnFocus: boolean = true;
   /** Whether ranking also re-orders visually via inline `order`. */
   protected get sortByScore(): boolean {
     return this.getAttribute("data-sort") === "score";
@@ -158,13 +164,15 @@ abstract class TypeaheadElement extends ZazzElement {
       this.open.set(true);
       input.setAttribute("aria-expanded", "true");
     } else if (this.managesPanel) {
-      input.addEventListener(
-        "focus",
-        () => {
-          if (input.value.length >= this.#minLength()) this.open.set(true);
-        },
-        { signal },
-      );
+      if (this.openOnFocus) {
+        input.addEventListener(
+          "focus",
+          () => {
+            if (input.value.length >= this.#minLength()) this.open.set(true);
+          },
+          { signal },
+        );
+      }
 
       // Outside pointerdown closes; inside the panel it must not steal focus
       document.addEventListener(
@@ -218,7 +226,28 @@ abstract class TypeaheadElement extends ZazzElement {
       );
     }
 
-    // Item click = commit (pointerdown ordering keeps focus in the input)
+    // Keep focus in the input. List rows are not focusable, so a mousedown on
+    // one blurs the input, and the resulting focusout closes the panel (and, in
+    // combobox, reverts the query) *before* the click that commits — and the
+    // commit's own input.focus() then re-fires the focus handler that reopens
+    // it. mousedown, not pointerdown: preventing pointerdown would also cancel
+    // touch panning inside the scrollable panel. Scoped to the list rather than
+    // the whole panel so native scrollbar dragging and header text selection
+    // survive. Suppressing focus transfer does not suppress the click, so link
+    // and invoker items still activate.
+    panel.addEventListener(
+      "mousedown",
+      (event) => {
+        if (!(event.target instanceof Element)) return;
+        if (event.target.closest("input, textarea, select, [contenteditable]")) return;
+        if (!event.target.closest(`[data-slot~="${prefix}-list"]`)) return;
+        event.preventDefault();
+      },
+      { signal },
+    );
+
+    // Item click = commit (the mousedown guard above keeps focus in the input,
+    // so no focusout races the click)
     panel.addEventListener(
       "click",
       (event) => {
@@ -253,20 +282,30 @@ abstract class TypeaheadElement extends ZazzElement {
       );
     }
 
-    // Output adapter 2 — ranking, visibility, highlight, activedescendant
+    // Output adapter 2 — ranking, visibility, highlight, activedescendant.
+    // All three signals are read up front so every run tracks the same set;
+    // `open` both gates and subscribes.
     effect(
       () => {
+        const open = this.open.get();
         const query = this.query.get();
         const active = this.activeIndex.get();
-        const items = this.items();
-        const ranked = rankItems(
-          query,
-          items.map((item) => ({
-            value: this.itemValue(item),
-            keywords: (item.getAttribute("data-keywords") ?? "").split(/\s+/).filter(Boolean),
-          })),
-        );
 
+        // Re-filtering the list while the popover is still fading out is the
+        // visible "flash on close": committing or reverting clears the query,
+        // and the rows collapse or re-expand mid-transition. While a
+        // self-managed panel is closed nothing is written — the rows keep their
+        // last filter state and highlight through the exit transition, and
+        // reopening re-ranks in the same microtask drain as showPopover(), so
+        // both land before one paint. The inline variant has no panel to fade,
+        // and a panel owned by a native surface (command) can become visible
+        // before its `toggle` task mirrors `open`, so neither is gated.
+        if (!open && this.managesPanel && !this.#inlinePanel()) {
+          input.removeAttribute("aria-activedescendant");
+          return;
+        }
+
+        const { items, ranked, visible } = this.#rank(query);
         const sort = this.sortByScore;
         for (const verdict of ranked) {
           const item = items[verdict.index];
@@ -275,7 +314,6 @@ abstract class TypeaheadElement extends ZazzElement {
           else if (item.style.order) item.style.removeProperty("order");
         }
 
-        const visible = this.visibleItems(items, ranked);
         visible.forEach((item, index) => {
           item.id ||= `ui-${prefix}-item-${++typeaheadIdCounter}`;
           if (index === active) item.setAttribute("data-highlighted", "");
@@ -326,6 +364,33 @@ abstract class TypeaheadElement extends ZazzElement {
   }
 
   /**
+   * @description Ranks every item against a query without touching the DOM.
+   * Keyboard navigation must not read `item.hidden`: the output effect above
+   * deliberately leaves those flags stale while the panel is closed, so a fresh
+   * ranking is the only trustworthy filter state.
+   *
+   * @param query - What the user typed.
+   * @returns The items in DOM order, their verdicts, and the visible subset in
+   * visual order.
+   * @private
+   */
+  #rank(query: string): {
+    items: HTMLElement[];
+    ranked: RankedItem[];
+    visible: HTMLElement[];
+  } {
+    const items = this.items();
+    const ranked = rankItems(
+      query,
+      items.map((item) => ({
+        value: this.itemValue(item),
+        keywords: (item.getAttribute("data-keywords") ?? "").split(/\s+/).filter(Boolean),
+      })),
+    );
+    return { items, ranked, visible: this.visibleItems(items, ranked) };
+  }
+
+  /**
    * @description The text an item matches and commits with. The text-content
    * fallback excludes `<kbd>` shortcut hints, which are presentation, not
    * value — "Go to docs ⇧⌘D" should match and announce as "Go to docs".
@@ -340,6 +405,18 @@ abstract class TypeaheadElement extends ZazzElement {
     const clone = item.cloneNode(true) as HTMLElement;
     for (const hint of clone.querySelectorAll("kbd, ui-kbd-group")) hint.remove();
     return clone.textContent?.trim() ?? "";
+  }
+
+  /**
+   * @description Escape with the panel already closed. Autocomplete and command
+   * empty the field; combobox overrides this, because its input carries a
+   * committed display value rather than the filter.
+   */
+  protected clearQuery(): void {
+    const input = this.searchInput;
+    if (!input) return;
+    input.value = "";
+    this.query.set("");
   }
 
   /**
@@ -393,8 +470,7 @@ abstract class TypeaheadElement extends ZazzElement {
         this.open.set(false);
       } else if (input.value) {
         event.preventDefault();
-        input.value = "";
-        this.query.set("");
+        this.clearQuery();
       }
       return;
     }
@@ -404,28 +480,14 @@ abstract class TypeaheadElement extends ZazzElement {
       if ((event.key === "Home" || event.key === "End") && this.activeIndex.get() < 0) return;
       event.preventDefault();
       if (this.managesPanel && !this.open.get()) this.open.set(true);
-      const count = this.items().filter((item) => !item.hidden).length;
+      const count = this.#rank(this.query.get()).visible.length;
       this.activeIndex.set(nextActiveIndex(this.activeIndex.get(), event.key, count));
       return;
     }
 
     if (event.key === "Enter") {
-      const items = this.items();
-      const visible = items.filter((item) => !item.hidden);
-      const sorted = this.sortByScore
-        ? this.visibleItems(
-            items,
-            rankItems(
-              this.query.get(),
-              items.map((item) => ({
-                value: this.itemValue(item),
-                keywords: (item.getAttribute("data-keywords") ?? "").split(/\s+/).filter(Boolean),
-              })),
-            ),
-          )
-        : visible;
       const active = this.activeIndex.get();
-      const item = active >= 0 ? sorted[active] : undefined;
+      const item = active >= 0 ? this.#rank(this.query.get()).visible[active] : undefined;
       if (item) {
         event.preventDefault();
         this.commit(item, "keyboard");

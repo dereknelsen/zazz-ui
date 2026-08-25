@@ -17,6 +17,7 @@
   :root {
     --ui-menu-button-radius: var(--radius-sm);
     --ui-menu-min-inline-size: var(--step-52);
+    --ui-menu-option-gap: var(--ui-field-option-gap);
     --ui-menu-shadow: var(--shadow-sm);
   }
 }
@@ -34,7 +35,8 @@
 
   :where(ui-menu, .ui-menu) {
     anchor-scope: --ui-menu-trigger;
-    display: inline-block;
+    display: grid;
+    gap: var(--ui-menu-option-gap);
   }
 
   :where(ui-menu, .ui-menu) > :where([popovertarget], [interestfor]) {
