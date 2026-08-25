@@ -359,6 +359,27 @@ Because rules resolve tokens lazily, an app can intervene at any of three scopes
 Authoring an override never requires touching the package's `src/`. That is the point of
 the variables layer.
 
+### Instance one-offs: the escape-hatch ladder
+
+For a value that applies to one instance only, reach for (in order):
+
+1. **A utility class**, when a scale value fits (`class="w-full max-w-xl"`).
+2. **A public `--ui-*` token set inline**, when the value lands where inline style can't
+   reach (`style="--ui-popover-inline-size: max-content"`).
+3. **Raw inline style** for a true same-element one-off (`style="max-inline-size: 16ch"`).
+   Legitimate, not a smell: inline style beats every layer in the stack, so it is
+   non-destructive by cascade definition.
+4. **A CSS file**, the moment the one-off repeats.
+
+Because of rung 3, primitives do **not** carry per-property hook variables for values
+inline style can already set. A new `--ui-*` hook is added only when all four hold:
+**(a)** inline style on the root cannot set the declaration (pseudo/vendor shadow part,
+descendant slot, or state-conditional); **(b)** it's a design value, not structural
+plumbing; **(c)** no existing token already reaches it via fan-out; **(d)** a concrete
+use case exists in an example fragment or docs page.
+
+@see `docs/adr/0008-instance-override-escape-hatch.md` for the decision record.
+
 ### Dark mode is a hook too
 
 - `color-scheme: light dark` on `:root` enables system dark mode; semantic tokens use
