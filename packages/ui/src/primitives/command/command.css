@@ -16,6 +16,7 @@
   :root {
     --ui-command-min-inline-size: var(--step-96);
     --ui-command-max-block-size: var(--step-96);
+    --ui-command-option-gap: var(--ui-field-option-gap);
     --ui-command-input-padding: var(--step-3);
     --ui-command-input-border: 1px solid var(--border);
     --ui-command-group-label-padding: var(--step-2) var(--step-2) var(--step-1);
@@ -89,7 +90,7 @@
   [data-slot~="command-list"] {
     display: flex;
     flex-direction: column;
-    gap: var(--step-px);
+    gap: var(--ui-command-option-gap);
     max-block-size: var(--ui-command-max-block-size);
     padding: var(--ui-popover-padding);
     margin: 0;
@@ -100,7 +101,7 @@
   [data-slot~="command-group"] {
     display: flex;
     flex-direction: column;
-    gap: var(--step-px);
+    gap: var(--ui-command-option-gap);
   }
 
   [data-slot~="command-group-label"] {

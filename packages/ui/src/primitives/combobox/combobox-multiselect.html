@@ -1,16 +1,29 @@
 <div class="ui-field" style="max-inline-size: 24rem">
-  <label data-slot="field-label" for="cb-country">Country</label>
-  <ui-combobox>
-    <input type="hidden" name="country" data-slot="combobox-value" value="" />
+  <label data-slot="field-label" for="cb-tags">Tags</label>
+  <ui-combobox data-variant="multiselect" data-label-remove="Remove {label}">
+    <!-- Pre-selected rows carry aria-selected="true"; the authored input holds
+         the first value and combobox.js stamps a same-name sibling per extra -->
+    <input type="hidden" name="tags" data-slot="combobox-value" value="design" />
     <div data-slot="combobox-control">
+      <!-- Optional: the tag blueprint, cloned per selection. Omit it and the
+           kit's default applies; keep it to restyle tags in HTML -->
+      <template data-slot="combobox-tag-template">
+        <span class="ui-badge" data-slot="combobox-tag">
+          <span data-slot="combobox-tag-label"></span>
+          <button type="button" tabindex="-1" data-slot="combobox-tag-remove"></button>
+        </span>
+      </template>
+
       <input
-        id="cb-country"
+        id="cb-tags"
         type="text"
-        placeholder="Select a country…"
+        placeholder="Add tags…"
         role="combobox"
         aria-expanded="false"
         aria-autocomplete="list"
         autocomplete="off"
+        hidden
+        aria-hidden="true"
       />
       <button
         type="button"
@@ -20,51 +33,56 @@
       ></button>
     </div>
     <div data-slot="combobox-panel" data-side="bottom" data-align="start" popover="manual">
-      <ul role="listbox" data-slot="combobox-list" aria-label="Countries">
+      <ul role="listbox" aria-multiselectable="true" data-slot="combobox-list" aria-label="Tags">
         <li
           role="option"
+          aria-selected="true"
           data-slot="combobox-item"
           class="ui-button justify-start"
           data-variant="ghost"
-          data-value="au"
+          data-value="design"
         >
-          Australia
+          Design
         </li>
         <li
           role="option"
+          aria-selected="true"
           data-slot="combobox-item"
           class="ui-button justify-start"
           data-variant="ghost"
-          data-value="ca"
+          data-value="engineering"
         >
-          Canada
+          Engineering
         </li>
         <li
           role="option"
+          aria-selected="false"
           data-slot="combobox-item"
           class="ui-button justify-start"
           data-variant="ghost"
-          data-value="jp"
+          data-value="marketing"
         >
-          Japan
+          Marketing
         </li>
         <li
           role="option"
+          aria-selected="false"
           data-slot="combobox-item"
           class="ui-button justify-start"
           data-variant="ghost"
-          data-value="nz"
+          data-value="research"
         >
-          New Zealand
+          Research
         </li>
         <li
           role="option"
+          aria-selected="false"
           data-slot="combobox-item"
           class="ui-button justify-start"
           data-variant="ghost"
-          data-value="us"
+          data-value="support"
         >
-          United States
+          Support
         </li>
       </ul>
       <p data-slot="combobox-empty" class="text-muted-foreground text-sm">No matches.</p>
