@@ -3,7 +3,7 @@
 
 /**
  * @fileoverview Tests for the toaster's pure stack math (`computeStackLayout`).
- * The measure step and the DOM writes are adapters around this function — the
+ * The measure step and the DOM writes are adapters around this function; the
  * stacking model itself is fully specified here.
  */
 
@@ -24,7 +24,7 @@ describe("computeStackLayout", () => {
   });
 
   it("stacks newest (last) in front and accumulates offsets backward", () => {
-    // Oldest first: heights [40, 50, 60] — the 60px toast is newest/front.
+    // Oldest first: heights [40, 50, 60] (the 60px toast is newest/front).
     const { toasts, frontToastHeightPx } = computeStackLayout([40, 50, 60]);
 
     expect(toasts[2]).toEqual({

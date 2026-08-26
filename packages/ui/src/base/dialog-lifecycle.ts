@@ -5,17 +5,17 @@
  * @description Watches every dialog on the page and re-emits its lifecycle as
  * two **bubbling** events dispatched on the dialog itself (ADR-0003):
  *
- * - `zazz:dialog-open` — the `open` attribute was added (works for both
+ * - `zazz:dialog-open`: the `open` attribute was added (works for both
  *   `showModal()` and `show()`, and for invoker commands).
- * - `zazz:dialog-close` — the dialog fired its native `close` event, which
+ * - `zazz:dialog-close`: the dialog fired its native `close` event, which
  *   does not bubble; this one does.
  *
  * Components subscribe instead of running their own observers: a carousel
  * inside a closed dialog listens on the dialog it found via `closest("dialog")`;
  * `<ui-lightbox>` listens on itself (its dialog is a descendant, so the events
  * bubble through it); embla.js listens on `document` for class-form roots.
- * Dispatch order is the DOM's — dialog listeners, then ancestors, then
- * document — so init-on-open (dialog level) always precedes scroll/focus
+ * Dispatch order is the DOM order: dialog listeners, then ancestors, then
+ * document, so init-on-open (dialog level) always precedes scroll/focus
  * choreography (ancestor and document level).
  *
  * No `detail` payload: the dialog is the event target.
@@ -32,7 +32,7 @@ interface InitDialogLifecycleFn {
 }
 
 /**
- * @description Starts the page-wide dialog watcher. Idempotent — safe to call
+ * @description Starts the page-wide dialog watcher. Idempotent and safe to call
  * from double script loads.
  */
 const initDialogLifecycle: InitDialogLifecycleFn = function () {
@@ -57,7 +57,7 @@ const initDialogLifecycle: InitDialogLifecycleFn = function () {
     subtree: true,
   });
 
-  // Native `close` does not bubble — capture it once and re-emit as a bubbling event.
+  // Native `close` does not bubble: capture it once and re-emit as a bubbling event.
   document.addEventListener(
     "close",
     function (e) {

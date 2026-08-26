@@ -1,16 +1,16 @@
 /**
- * meter.css — Meter (.ui-meter on native <meter>)
+ * meter.css: Meter (.ui-meter on native <meter>)
  *
  * @layer      variables, reset
  * @requires   layers.css, _variables.css, _reset.css, progress.css
- * @uses       appearance: none — element box becomes the track; only the fill
+ * @uses       appearance: none: element box becomes the track; only the fill
  *             needs vendor pseudo-elements (::-webkit-meter-*-value,
- *             ::-moz-meter-bar + :-moz-meter-* state classes) — never combine
+ *             ::-moz-meter-bar + :-moz-meter-* state classes); never combine
  *             the two vendors in one selector list
- * @uses       attr(<attr> type(<number>)) — where typed attr() exists
+ * @uses       attr(<attr> type(<number>)): where typed attr() exists
  *             (Chromium 133+) the fill is painted on the element from the
  *             meter's own attributes, because Blink locks the shadow parts'
- *             geometry (backgrounds apply, heights don't) — @supports gated
+ *             geometry (backgrounds apply, heights do not); @supports gated
  * @uses       Engines without typed attr() keep the vendor-pseudo fill;
  *             recorded degradation in Blink pre-133: themed track + thin
  *             centered fill (browser policy exception)
@@ -27,7 +27,7 @@
     --ui-meter-track-background: var(--ui-progress-track-background);
     --ui-meter-track-border: var(--ui-progress-track-border);
 
-    /* Fills are semantic — a meter communicates good/bad, not completion */
+    /* Fills are semantic: a meter communicates good/bad, not completion */
     --ui-meter-bar-background: var(--success);
     --ui-meter-bar-background--suboptimum: var(--warning);
     --ui-meter-bar-background--even-less-good: var(--destructive);
@@ -36,7 +36,7 @@
 
 @layer reset {
   /* ===========================================================================
-  METER — native <meter> fill redraw
+  METER: native <meter> fill redraw
   - Same track-on-the-element strategy as progress.css. WebKit exposes one
     pseudo per state; Firefox exposes one fill pseudo colored by :-moz-meter-*
     state classes. One rule per vendor pseudo, by necessity.
@@ -94,11 +94,11 @@
   }
 
   /* ===========================================================================
-  ATTRIBUTE-PAINTED FILL — Blink accepts backgrounds on the meter shadow parts
+  ATTRIBUTE-PAINTED FILL: Blink accepts backgrounds on the meter shadow parts
   but ignores their geometry entirely (author heights, even !important, never
   apply), leaving a thin centered fill. Where typed attr() exists, paint the
   fill on the element itself instead: a hard-stop gradient sized from the
-  meter's own attributes, reproducing the HTML spec's region algorithm —
+  meter's own attributes, reproducing the HTML spec's region algorithm:
   value and optimum each land in a low/between/high region, and the distance
   between the two regions (0/1/2) picks optimal / suboptimal / even-less-good.
   The shadow fills are blanked underneath so nothing double-paints.
@@ -157,8 +157,8 @@
       background-image: linear-gradient(to left, var(--_fill) var(--_pct), transparent var(--_pct));
     }
 
-    /* The shadow fills would double-paint under the gradient (shorthand —
-       the UA styles these parts with a bevel background-image) */
+    /* The shadow fills would double-paint under the gradient (the UA styles
+       these parts with a bevel background-image) */
     :where(.ui-meter)::-webkit-meter-optimum-value {
       background: transparent;
     }

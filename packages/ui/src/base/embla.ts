@@ -5,33 +5,33 @@
  * @description Discovers carousel roots (`<ui-carousel>` or `.ui-carousel`),
  * initializes Embla instances with optional plugins, and wires navigation,
  * keyboard, and dialog-open behaviors (subscribing to `zazz:dialog-open`
- * from base/dialog-lifecycle.ts — lightbox choreography lives in lightbox.ts).
+ * from base/dialog-lifecycle.ts; lightbox choreography lives in lightbox.ts).
  *
- * Structure — root is the element/class itself; parts are slots (`data-slot="carousel-<part>"`):
- * - root (`<ui-carousel>` | `.ui-carousel`) — Carousel container; holds all config attributes
- * - `carousel-viewport` — Visible window (required)
- * - `carousel-container` — Slides flex track
- * - `carousel-slide` — Individual slide
- * - `carousel-prev` / `carousel-next` — Navigation buttons (optional)
- * - `carousel-dots` / `carousel-dot` — Dot pagination container and template dot (optional)
- * - `carousel-thumbs` — Linked thumb carousel container (optional)
+ * Structure: root is the element/class itself; parts are slots (`data-slot="carousel-<part>"`):
+ * - root (`<ui-carousel>` | `.ui-carousel`): Carousel container; holds all config attributes
+ * - `carousel-viewport`: Visible window (required)
+ * - `carousel-container`: Slides flex track
+ * - `carousel-slide`: Individual slide
+ * - `carousel-prev` / `carousel-next`: Navigation buttons (optional)
+ * - `carousel-dots` / `carousel-dot`: Dot pagination container and template dot (optional)
+ * - `carousel-thumbs`: Linked thumb carousel container (optional)
  *
  * thumb navigation (on `data-slot="carousel-thumbs"`):
- * - `data-carousel-thumbs-*` — thumb carousel options (defaults: containScroll keepSnaps, dragFree true)
+ * - `data-carousel-thumbs-*`: thumb carousel options (defaults: containScroll keepSnaps, dragFree true)
  * - Syncs with the main carousel in the same root
  *
  * Lifecycle and dialog start index:
- * - `data-carousel-init` — Set by script when a carousel is initialized
- * - `data-carousel-start` — On a trigger; slide index to open to (pairs with commandfor)
- * - `data-carousel-start-index` — Set on root by script; consumed when dialog opens
- * - `data-carousel-keyboard` — Set to `"false"` to disable ArrowLeft/ArrowRight navigation
+ * - `data-carousel-init`: Set by script when a carousel is initialized
+ * - `data-carousel-start`: On a trigger; slide index to open to (pairs with commandfor)
+ * - `data-carousel-start-index`: Set on root by script; consumed when dialog opens
+ * - `data-carousel-keyboard`: Set to `"false"` to disable ArrowLeft/ArrowRight navigation
  *
  * Configuration (on the carousel root: `<ui-carousel>` or `.ui-carousel`):
- * - `data-carousel-*` — Core Embla options
- * - `data-carousel-plugins` — Space-separated plugin slugs (`autoplay`, `auto-scroll`, `class-names`)
- * - `data-carousel-autoplay-*` — Autoplay plugin options (requires `autoplay` in plugins)
- * - `data-carousel-auto-scroll-*` — Auto scroll plugin options (requires `auto-scroll` in plugins)
- * - `data-carousel-class-names-*` — Class names plugin options (requires `class-names` in plugins)
+ * - `data-carousel-*`: Core Embla options
+ * - `data-carousel-plugins`: Space-separated plugin slugs (`autoplay`, `auto-scroll`, `class-names`)
+ * - `data-carousel-autoplay-*`: Autoplay plugin options (requires `autoplay` in plugins)
+ * - `data-carousel-auto-scroll-*`: Auto scroll plugin options (requires `auto-scroll` in plugins)
+ * - `data-carousel-class-names-*`: Class names plugin options (requires `class-names` in plugins)
  *
  * @see https://www.embla-carousel.com/docs/api/options#reference
  * @see https://www.embla-carousel.com/docs/plugins/autoplay#options
@@ -73,7 +73,7 @@ import { Utils } from "./utils.ts";
 import { registerRefresh } from "./zazz-element.ts";
 
 // Embla ships as real ES modules: bare specifiers resolve through the page's
-// import map in browsers (pinned jsDelivr URLs — see `head.ts`) and through
+// import map in browsers (pinned jsDelivr URLs; see `head.ts`) and through
 // node_modules in tests/bundlers. No more UMD globals, no tag-order contract.
 import EmblaCarousel from "embla-carousel";
 import type { EmblaOptionsType } from "embla-carousel";
@@ -125,7 +125,7 @@ const PLUGIN_BY_SLUG: Record<CarouselPluginSlug, (node: Element) => EmblaPlugin>
  * options object of the shape Embla (or one of its plugins) expects.
  *
  * Attributes are strings, so the parsed values have to be asserted into Embla's
- * option types somewhere. This is that single boundary — the assertion lives
+ * option types somewhere. This is that single boundary: the assertion lives
  * here with its justification (Embla validates its own options at runtime)
  * instead of being repeated at every call site.
  *
@@ -142,14 +142,14 @@ function readCarouselOptions<T>(node: Element, prefix: string): T {
 
 /**
  * @description Toggles `.is-active` on the node at `selected` and clears it
- * from every other node — the shared "which one is current" marker used by
+ * from every other node: the shared "which one is current" marker used by
  * both dot pagination and thumb navigation.
  *
  * @param nodes - Candidate nodes, in slide order.
  * @param selected - The active index.
  * @param options - Set `ariaCurrent` to also toggle `aria-current` (thumb
- * navigation exposes the active thumb to assistive tech; dots don't need it —
- * their `.is-active` state is purely visual pagination).
+ * navigation exposes the active thumb to assistive tech; dots don't need it,
+ * as their `.is-active` state is purely visual pagination).
  * @private
  */
 function setActiveIndex(
@@ -412,7 +412,7 @@ let commandDragGuardBound = false;
  *
  * Lightbox stage slides carry `command="show-modal"`, so a drag would both scroll
  * the carousel and open the dialog. The `command` event (native or polyfill) is
- * the single point that runs the built-in command, and it is cancelable — so we
+ * the single point that runs the built-in command, and it is cancelable, so we
  * preventDefault() it within the drag-suppress window. Bound once on `document` in
  * the capture phase; `command` does not bubble, but capture still reaches it.
  */
@@ -447,7 +447,7 @@ function initCommandDragGuard(): void {
 function initEmblaRoot(emblaNode: Element): void {
   if (emblaNode.hasAttribute("data-carousel-init")) return;
 
-  // Defer init inside closed dialogs — viewport has no measurable size until open
+  // Defer init inside closed dialogs: viewport has no measurable size until open
   if (emblaNode.closest("dialog:not([open])")) return;
 
   emblaNode.setAttribute("data-carousel-init", "");
@@ -484,7 +484,7 @@ function initEmblaRoot(emblaNode: Element): void {
     }
   });
 
-  // Veto drag gestures when every slide already fits in the viewport — with a
+  // Veto drag gestures when every slide already fits in the viewport: with a
   // single snap Embla still rubber-bands on drag, which feels broken. The
   // callback re-evaluates on every pointer down, so it stays correct across
   // resizes/reInit. Respect an explicit data-carousel-watch-drag override.
@@ -493,7 +493,7 @@ function initEmblaRoot(emblaNode: Element): void {
     apiOptions.watchDrag = (api: EmblaCarouselType) => api.canScrollPrev() || api.canScrollNext();
   }
 
-  // Plugins load only when listed in data-carousel-plugins — option attrs alone
+  // Plugins load only when listed in data-carousel-plugins; option attrs alone
   // do not enable them. Unknown slugs are ignored.
   const plugins: EmblaPlugin[] = [];
   for (const slug of parseCarouselPlugins(emblaNode.getAttribute("data-carousel-plugins"))) {
@@ -577,7 +577,7 @@ function initEmblaRoot(emblaNode: Element): void {
  *
  * Discovers carousel elements via `:is(ui-carousel, .ui-carousel)` and configures them
  * based on their data attributes. Roots managed by the `<ui-carousel>` web
- * component are skipped — they initialize themselves via `connectedCallback()`.
+ * component are skipped: they initialize themselves via `connectedCallback()`.
  *
  * @param scope - Root element to search within. Defaults to `document`.
  */
@@ -587,7 +587,7 @@ function initEmblaCarousels(scope?: Document | Element): void {
 
   emblaRoots.forEach(function (emblaNode) {
     // <ui-carousel> elements own their lifecycle (init on connect, destroy
-    // on disconnect) — double-initializing would leak a second Embla instance.
+    // on disconnect); double-initializing would leak a second Embla instance.
     if (emblaNode.closest("ui-carousel")) return;
 
     initEmblaRoot(emblaNode);
@@ -598,7 +598,7 @@ function initEmblaCarousels(scope?: Document | Element): void {
 
 /**
  * @description Reacts to dialogs opening (via `zazz:dialog-open` from
- * base/dialog-lifecycle.ts — ADR-0003) with the carousel-domain work:
+ * base/dialog-lifecycle.ts; ADR-0003) with the carousel-domain work:
  * initializes class-form roots that deferred while the dialog was
  * `display: none`, applies a stored `data-carousel-start-index`, and focuses
  * the viewport for keyboard navigation.
@@ -663,7 +663,7 @@ function getActiveEmblaRoot(): (Element & { _emblaApi: EmblaCarouselType }) | nu
 /**
  * @description Binds ArrowLeft/ArrowRight keyboard navigation for active carousels.
  *
- * Embla is headless — arrow keys are not built in. Opt out per carousel with
+ * Embla is headless: arrow keys are not built in. Opt out per carousel with
  * `data-carousel-keyboard="false"`.
  */
 const initEmblaKeyboardNav: InitEmblaKeyboardNavFn = function () {
@@ -786,6 +786,6 @@ if (typeof window !== "undefined") {
   window.EmblaInit = EmblaInit;
 }
 
-// setActiveIndex / parseCarouselPlugins are exported for unit tests only —
+// setActiveIndex and parseCarouselPlugins are exported for unit tests only;
 // not part of the public API.
 export { EmblaInit, setActiveIndex, parseCarouselPlugins };

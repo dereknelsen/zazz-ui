@@ -1,9 +1,9 @@
 "use strict";
 
 /**
- * @fileoverview `<ui-password>` — HTML web component for password visibility.
+ * @fileoverview `<ui-password>`: HTML web component for password visibility.
  * @description Light-DOM custom element that adds show/hide behavior to a
- * standard password field. Wrap the existing `.password-group` markup — the
+ * standard password field. Wrap the existing `.password-group` markup: the
  * element finds the input and the `[data-slot~="password-group-toggle"]` button, flips the
  * input between `type="password"` and `type="text"` on click, and keeps
  * `aria-pressed` and `aria-label` in sync. The icon swap is pure CSS, driven
@@ -47,7 +47,7 @@ interface ToggleState {
 
 /**
  * @description Derives the input type, `aria-pressed`, and `aria-label` for a
- * given reveal state. Pure — the effect in `connectedCallback` is the only
+ * given reveal state. Pure: the effect in `connectedCallback` is the only
  * place that writes it to the DOM.
  *
  * @param revealed - Whether the password is currently shown as plain text.
@@ -90,6 +90,6 @@ class UiPassword extends ZazzElement {
 
 defineZazzElement("ui-password", UiPassword);
 
-// resolveToggleState is exported for unit tests only — not part of the public API.
+// resolveToggleState is exported for unit tests only: not part of the public API.
 export { UiPassword, resolveToggleState };
 export type { ToggleState };

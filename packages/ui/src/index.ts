@@ -22,6 +22,7 @@ import "./base/reveal.ts";
 import "./base/dialog-lifecycle.ts";
 import "./base/embla.ts";
 import "./primitives/autocomplete/autocomplete.ts";
+import "./primitives/checkbox/checkbox.ts";
 import "./primitives/combobox/combobox.ts";
 import "./primitives/command/command.ts";
 import "./primitives/carousel/carousel.ts";

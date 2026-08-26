@@ -1,14 +1,14 @@
 /**
- * otp.css — OTP (ui-otp wrapping .ui-otp-input on one real <input>)
+ * otp.css: OTP (ui-otp wrapping .ui-otp-input on one real <input>)
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, fields.css, input.css
- * @uses       Invisible-overlay input — the real input stretches over the
+ * @uses       Invisible-overlay input: the real input stretches over the
  *             stamped cell rail with transparent text/caret so autofill,
  *             paste, and focus stay native; never display:none
- * @uses       :focus-within — active-cell ring only while the input has focus
+ * @uses       :focus-within: active-cell ring only while the input has focus
  * @tokens     --ui-otp-* (@layer variables; aliases --ui-field-*)
- * @see        otp.ts — stamps the rail and mirrors value/caret into the cells
+ * @see        otp.ts: stamps the rail and mirrors value/caret into the cells
  */
 
 @layer variables {
@@ -27,10 +27,10 @@
 
 @layer zazz.components {
   /* ===========================================================================
-  OTP — one real input, presentational cells
-  - Before enhancement (.ui-otp-input alone): a handsome centered code field.
+  OTP: one real input, presentational cells
+  - Before enhancement (.ui-otp-input alone): a centered code field.
   - After ([data-otp-ready]): the rail is the visual and the input becomes an
-    invisible overlay — focusable, autofillable, never display:none.
+    invisible overlay (focusable, autofillable, never display:none).
   =========================================================================== */
 
   :where(ui-otp) {
@@ -38,7 +38,7 @@
     display: inline-grid;
   }
 
-  /* No-JS baseline — a plain code field in the field family */
+  /* No-JS baseline: a plain code field in the field family */
   .ui-otp-input {
     text-align: center;
     letter-spacing: 0.5ch;
@@ -89,7 +89,7 @@
     transition: var(--default-transition);
   }
 
-  /* Active cell — ring + focus border, only while the input has focus */
+  /* Active cell: ring + focus border, only while the input has focus */
   :where(ui-otp:focus-within) [data-slot~="otp-slot"][data-active] {
     border-color: var(--ui-field-border--focus);
     background-color: var(--ui-field-background--focus);

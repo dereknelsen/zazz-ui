@@ -8,3 +8,17 @@ Checkboxes restyle native `<input type="checkbox">` elements. Bind state using s
 ## Default
 
 <Preview src="checkbox/checkbox" />
+
+## Indeterminate
+
+The mixed state is always _derived_ — HTML has no `indeterminate` attribute, only the JS `input.indeterminate` property, styled via native `:indeterminate`. Let a select-all group derive it (below), or set the property from your own script:
+
+```js
+input.indeterminate = true; // cleared natively when the user clicks
+```
+
+## Select-all groups
+
+A controller checkbox with `data-checkbox-controls="<name>"` manages every checkbox sharing that `name` in the same form (or the document when unassociated). Checking it checks or unchecks all members; member changes roll back up as checked, unchecked, or indeterminate for a subset. Members inside a table row also reflect onto the `<tr>` as `data-state="selected"`.
+
+<Preview src="checkbox/checkbox-tasklist" />

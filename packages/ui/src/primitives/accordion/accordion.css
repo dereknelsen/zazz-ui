@@ -1,11 +1,11 @@
 /**
- * accordion.css — Accordion (ui-accordion | .ui-accordion on <details>/<summary>)
+ * accordion.css: Accordion (ui-accordion | .ui-accordion on <details>/<summary>)
  *
  * @layer      variables, reset, components
  * @requires   layers.css, _variables.css
- * @uses       ::details-content — native open/close block-size transition (reset layer)
- * @uses       interpolate-size: allow-keywords — from _variables.css; required for
- *             block-size: 0 → auto transitions
+ * @uses       ::details-content: native open/close block-size transition (reset layer)
+ * @uses       interpolate-size: allow-keywords (from _variables.css; required for
+ *             block-size: 0 -> auto transitions)
  * @tokens     --ui-accordion-* (@layer variables)
  */
 
@@ -18,7 +18,7 @@
 
 @layer reset {
   /* ===========================================================================
-  DETAILS & SUMMARY — native open/close transition + summary marker reset
+  DETAILS & SUMMARY: native open/close transition + summary marker reset
   - In the reset layer so the :where(ui-accordion, .ui-accordion) component styling below wins.
   =========================================================================== */
 

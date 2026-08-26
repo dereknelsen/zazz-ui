@@ -3,9 +3,9 @@ title: Separator
 description: A themed rule between content or controls, horizontal or vertical, on a native hr.
 ---
 
-`.ui-separator` styles the native `<hr>` — the platform's separator, with its implicit `role="separator"` — instead of rebuilding one from a div. `data-orientation="vertical"` flips it to a column rule that stretches to the row height in flex and grid layouts. Spacing is composition: add margin utilities like `my-xs` or `mx-xs`.
+`.ui-separator` styles the native `<hr>` element with its implicit `role="separator"` instead of rebuilding one from a div. `data-orientation="vertical"` turns it into a column rule that stretches to the row height in flex and grid layouts. Spacing uses composition: add margin utilities like `my-xs` or `mx-xs`.
 
-Separators come in two flavors, and the markup should say which. A **meaningful** separator marks a real boundary assistive tech should announce — keep the implicit role, and add `aria-orientation="vertical"` on the vertical form, since AT assumes separators are horizontal. A **purely decorative** one takes `role="presentation"` so it adds no noise.
+Separators come in two types. A **meaningful** separator marks a content boundary that assistive tech should announce. Keep the implicit role and add `aria-orientation="vertical"` on the vertical form, because assistive tech assumes separators are horizontal by default. A **purely decorative** separator takes `role="presentation"` to stay out of the accessibility tree.
 
 ## Default
 
@@ -13,9 +13,9 @@ Separators come in two flavors, and the markup should say which. A **meaningful*
 
 ## API
 
-| Attribute          | Target          | Values                                                            |
-| ------------------ | --------------- | ----------------------------------------------------------------- |
-| `data-orientation` | `.ui-separator` | `vertical` — column rule for flex/grid rows                       |
-| `aria-orientation` | `.ui-separator` | `vertical` — pair with the above when the separator is meaningful |
-| `role`             | `.ui-separator` | `presentation` — for purely decorative separators                 |
-| Tokens             | `:root`         | `--ui-separator-color`, `--ui-separator-thickness`                |
+| Attribute          | Target          | Values                                                           |
+| ------------------ | --------------- | ---------------------------------------------------------------- |
+| `data-orientation` | `.ui-separator` | `vertical`: column rule for flex/grid rows                       |
+| `aria-orientation` | `.ui-separator` | `vertical`: pair with the above when the separator is meaningful |
+| `role`             | `.ui-separator` | `presentation`: for purely decorative separators                 |
+| Tokens             | `:root`         | `--ui-separator-color`, `--ui-separator-thickness`               |

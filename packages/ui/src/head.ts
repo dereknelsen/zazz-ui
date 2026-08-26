@@ -7,15 +7,15 @@
  * link, the feature polyfills, the third-party **import map**, the `index.js`
  * module tag, and the theme-persistence script. The docs preview iframe, the
  * kit's example pages (via `scripts/generate-heads.mjs`), and the docs page
- * that teaches head structure all render from this module — there is no other
+ * that teaches head structure all render from this module: there is no other
  * copy to drift.
  *
  * This is a Node/server-side string builder (used at build/render time), not a
- * browser runtime module — it attaches nothing to `window`.
+ * browser runtime module; it attaches nothing to `window`.
  *
  * Third-party policy: one CDN provider (jsDelivr), exact pinned versions,
- * static package files only (never dynamically generated `/+esm` bundles —
- * jsDelivr regenerates those when its bundler toolchain updates, which would
+ * static package files only (never dynamically generated `/+esm` bundles,
+ * as jsDelivr regenerates those when its bundler toolchain updates, which would
  * silently invalidate SRI hashes), `sha384` integrity on every URL. ES modules
  * resolve through the import map; classic polyfills load as plain script tags.
  *
@@ -28,7 +28,7 @@
 
 /** One pinned third-party file served from jsDelivr. */
 interface CdnDependency {
-  /** npm package name — doubles as the import-map specifier for ESM deps. */
+  /** npm package name: doubles as the import-map specifier for ESM deps. */
   name: string;
   /** Exact pinned version. Bump deliberately; then refresh `integrity`. */
   version: string;
@@ -59,7 +59,7 @@ function cdnUrl(dep: CdnDependency): string {
  * ES-module dependencies the kit's module graph imports by bare specifier.
  * The import map points each specifier at its pinned static file; in tests and
  * bundlers the same specifiers resolve from `node_modules` instead (the
- * versions here must match the installed packages — `head.test.ts` pins that).
+ * versions here must match the installed packages: `head.test.ts` pins that).
  */
 const ESM_DEPENDENCIES: readonly CdnDependency[] = [
   {
@@ -218,7 +218,7 @@ export interface HeadOptions {
  * @description Builds the canonical Zazz `<head>` contents: meta tags, fonts,
  * the single stylesheet link, and (unless `scripts: false`) the import map,
  * polyfills, and `index.js` module tag, ending with the theme script. Page
- * specifics — `<title>`, prefetch hints, override stylesheets — belong after
+ * specifics (`<title>`, prefetch hints, override stylesheets) belong after
  * this block, outside the contract.
  *
  * @param options - See `HeadOptions`.
@@ -240,7 +240,7 @@ export function buildHead(options: HeadOptions = {}): string {
   if (fontDisplay !== false) parts.push(fontsBlock(fontDisplay));
 
   parts.push(
-    `<!-- Zazz styles: one bundle — index.css @imports every layer in cascade order -->`,
+    `<!-- Zazz styles: one bundle (index.css @imports every layer in cascade order) -->`,
     `<link rel="stylesheet" href="${base}/index.css">`,
   );
 

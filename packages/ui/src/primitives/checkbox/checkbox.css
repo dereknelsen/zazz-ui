@@ -6,6 +6,8 @@
  * @uses       appearance: none — redraws the native control from theme tokens
  * @uses       checked/indeterminate fill with --primary and layer a glyph (never colour alone)
  * @tokens     --ui-checkbox-* (size, background, border, radius, checkmark-mask, indeterminate-mask)
+ * @see        checkbox.ts: derives select-all group state (data-checkbox-controls)
+ *             into the JS-only indeterminate property; styling keys off :indeterminate
  */
 
 @layer reset {

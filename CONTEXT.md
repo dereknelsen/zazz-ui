@@ -5,7 +5,7 @@ Shared language for the Zazz monorepo: the `@zazz-ui/ui` package (`packages/ui`)
 ## Language
 
 **Primitive**:
-One folder under `packages/ui/src/primitives/` — a reusable, atomic UI element (styles + optional behavior + example fragments) used to compose layouts and UIs. A primitive is not a layout, template, or full-page pattern.
+One folder under `packages/ui/src/primitives/`: a reusable, atomic UI element (styles + optional behavior + example fragments) used to compose layouts and UIs. A primitive is not a layout, template, or full-page pattern.
 _Avoid_: component, widget
 
 **Tag form**:

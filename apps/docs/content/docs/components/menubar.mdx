@@ -1,9 +1,9 @@
 ---
 title: Menubar
-description: A bar of application menus — File, Edit, View — composed from menu primitives and utilities.
+description: A bar of application menus (File, Edit, View) composed from menu primitives and utilities.
 ---
 
-Menubars are composed, not shipped — like [Toolbar](/docs/components/toolbar), there is no `.ui-menubar` class or stylesheet. A utility container (`inline-flex items-center gap-px bg-card rounded-md shadow-sm p-xs`) holds a row of [Menu](/docs/components/menu) primitives. Each trigger carries `popovertarget` and `interestfor` pointing at its panel, so menus open on click or hover — and because only one `popover="auto"` can be open per stack, hovering an adjacent trigger closes the previous menu automatically: the classic menubar glide, with no JavaScript.
+Menubars are composed from primitives: like [Toolbar](/docs/components/toolbar), there is no separate `.ui-menubar` class or stylesheet. A utility container (`inline-flex items-center gap-px bg-card rounded-md shadow-sm p-xs`) holds a row of [Menu](/docs/components/menu) primitives. Each trigger carries `popovertarget` and `interestfor` pointing at its panel so menus open on click or hover. Because only one `popover="auto"` can be open per stack, hovering an adjacent trigger closes the previous menu automatically, giving you the classic menubar glide without JavaScript.
 
 ## Default
 
@@ -11,17 +11,17 @@ Menubars are composed, not shipped — like [Toolbar](/docs/components/toolbar),
 
 ## Help menu with search
 
-A menu panel can hold richer content than a list — here the Help menu embeds a [Combobox](/docs/components/combobox) for searching topics.
+A menu panel can hold richer content than a list: here the Help menu embeds a [Combobox](/docs/components/combobox) for searching topics.
 
 <Preview src="menubar/menubar-help-search" />
 
 ## Accessibility
 
-The container deliberately does not claim `role="menubar"` — that role promises a single tab stop with roving arrow-key focus across triggers, which a static composition can't deliver. Every trigger stays natively tabbable, and each open menu has the arrow-key navigation the menu script provides. Give the container an `aria-label`.
+The container deliberately omits `role="menubar"`. That role requires a single tab stop with roving arrow-key focus across triggers, which a static composition does not provide. Instead, every trigger remains natively tabbable, and each open menu provides arrow-key navigation through the menu script. Provide an `aria-label` describing the group on the container.
 
 ## API
 
-| Attribute                       | Target       | Values                              |
-| ------------------------------- | ------------ | ----------------------------------- |
-| (container)                     | any element  | Utility recipe — no component class |
-| `popovertarget` + `interestfor` | Each trigger | Same panel id — click + hover glide |
+| Attribute                       | Target       | Values                             |
+| ------------------------------- | ------------ | ---------------------------------- |
+| (container)                     | any element  | Utility recipe, no component class |
+| `popovertarget` + `interestfor` | Each trigger | Same panel id: click + hover glide |

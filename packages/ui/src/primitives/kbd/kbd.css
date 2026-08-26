@@ -1,13 +1,13 @@
 /**
- * kbd.css — Kbd (native <kbd>) + Kbd group (ui-kbd-group | .ui-kbd-group)
+ * kbd.css: Kbd (native <kbd>) + Kbd group (ui-kbd-group | .ui-kbd-group)
  *
  * @layer      variables, reset, components
  * @requires   layers.css, _variables.css
- * @uses       text-box — vertical trim (patchy browser support)
+ * @uses       text-box: vertical trim (patchy browser support)
  * @tokens     --ui-kbd-*, --ui-kbd-group-* (@layer variables)
  * @consumedby button.css, tooltip.css, command.css (reassign --ui-kbd-* in scope)
  *
- * The key itself styles the bare native <kbd> — no class needed — so its rules
+ * The key itself styles the bare native <kbd> (no class needed) so its rules
  * live in @layer reset (browser-policy exception, like the switch redraw) and
  * lose to component scopes. Hooks are declared on :root, not on the element,
  * so an ancestor scope (a button, a tooltip) can reassign a --ui-kbd-* token
@@ -35,7 +35,7 @@
     --ui-kbd-icon-size: var(--step-3_5);
     --ui-kbd-gap: var(--step-1);
 
-    /* group — the one gap between adjacent keys, everywhere */
+    /* group: the one gap between adjacent keys, everywhere */
     --ui-kbd-group-gap: var(--step-1);
   }
 }

@@ -1,15 +1,15 @@
 /**
- * command.css — Command (ui-command | .ui-command, [data-slot~="command-panel"])
+ * command.css: Command (ui-command | .ui-command, [data-slot~="command-panel"])
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, popover.css, button.css, fields.css,
  *             dialog.css, menu.css, select.css (--ui-option-*), kbd.css (--ui-kbd-group-*)
- * @uses       popovertarget + [popover="auto"] — dropdown surface, native light dismiss
- * @uses       <dialog class="ui-dialog"> + command="show-modal" — focused surface
- * @uses       anchor-name, anchor-scope, position-anchor — tether the popover form
- * @uses       :has() — group + empty-state visibility without JavaScript
+ * @uses       popovertarget + [popover="auto"]: dropdown surface, native light dismiss
+ * @uses       <dialog class="ui-dialog"> + command="show-modal": focused surface
+ * @uses       anchor-name, anchor-scope, position-anchor: tether the popover form
+ * @uses       :has(): group + empty-state visibility without JavaScript
  * @tokens     --ui-command-* (@layer variables); items alias --ui-option-*
- * @see        command.ts — ranking, hotkeys, and activation behavior
+ * @see        command.ts: ranking, hotkeys, and activation behavior
  */
 
 @layer variables {
@@ -28,7 +28,7 @@
 
 @layer zazz.components {
   /* ===========================================================================
-  COMMAND — palette panel (popover or dialog) with the input inside
+  COMMAND: palette panel (popover or dialog) with the input inside
   - The popover form rides popover.css's surface + placement; the dialog form
     rides dialog.css. This file shapes the interior: borderless input over a
     hairline, scrollable list, eyebrow group labels, hint footer.
@@ -51,7 +51,7 @@
     box-shadow: var(--ui-command-shadow);
   }
 
-  /* Only display is gated — unconditional it would defeat the UA's
+  /* Only display is gated; unconditional it would defeat the UA's
      display: none on closed popovers and dialogs */
   [data-slot~="command-panel"]:where(:popover-open, .\:popover-open, [open]) {
     display: flex;
@@ -62,13 +62,13 @@
     padding: 0;
   }
 
-  /* Dialog form — the palette owns its interior, edge to edge */
+  /* Dialog form: the palette owns its interior, edge to edge */
   [data-slot~="command-panel"]:where(dialog) {
     --ui-dialog-width: min(var(--breakpoint-sm), 100% - var(--gutters) * 2);
     padding: 0;
   }
 
-  /* Search input — borderless over a hairline; the panel is the surface */
+  /* Search input: borderless over a hairline; the panel is the surface */
   [data-slot~="command-header"] {
     display: flex;
     align-items: center;
@@ -106,7 +106,7 @@
 
   [data-slot~="command-group-label"] {
     padding: var(--ui-command-group-label-padding);
-    /* Score ranking writes order -1000..0 on sibling items — keep the label first */
+    /* Score ranking writes order -1000..0 on sibling items; keep the label first */
     order: -1001;
   }
 
@@ -119,7 +119,7 @@
     --ui-button-foreground: var(--ui-button-foreground--hover);
   }
 
-  /* Shortcut hint — a lone <kbd> or a <ui-kbd-group> run — pushes to the end;
+  /* Shortcut hint: a lone <kbd> or a <ui-kbd-group> run pushes to the end;
      spacing between keys inside a run is the group's --ui-kbd-group-gap. */
   [data-slot~="command-item"] > :where(kbd, ui-kbd-group, .ui-kbd-group) {
     margin-inline-start: auto;

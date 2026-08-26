@@ -1,10 +1,10 @@
 /**
- * badge.css — Badge (.ui-badge)
+ * badge.css: Badge (.ui-badge)
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, _reset.css
- * @uses       color-mix(), oklch(from …) — variant hover/active tints
- * @uses       text-box — vertical trim (patchy browser support)
+ * @uses       color-mix(), oklch(from …): variant hover/active tints
+ * @uses       text-box: vertical trim (patchy browser support)
  * @tokens     --ui-badge-* (@layer variables)
  * @consumedby combobox.css (selection tags)
  */
@@ -37,7 +37,7 @@
 
     --ui-badge-icon-size: var(--step-3);
 
-    /* composes into the badge's box-shadow list — use a transparent shadow,
+    /* composes into the badge's box-shadow list; use a transparent shadow,
        never `none`, so the focus ring layers stay valid */
     --ui-badge-shadow: 0 0 transparent;
   }

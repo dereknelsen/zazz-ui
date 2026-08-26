@@ -10,7 +10,7 @@
 import { beforeAll, describe, expect, it } from "vite-plus/test";
 import { initDialogLifecycle } from "./dialog-lifecycle.ts";
 
-/** MutationObserver callbacks are microtasks — flush them. */
+/** MutationObserver callbacks are microtasks: flush them. */
 const flush = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
 
 function mount(): { wrapper: HTMLDivElement; dialog: HTMLDialogElement } {
@@ -77,7 +77,7 @@ describe("initDialogLifecycle", () => {
     expect(target).toBe(dialog);
   });
 
-  it("is idempotent — a second init does not double-emit", async () => {
+  it("is idempotent: a second init does not double-emit", async () => {
     initDialogLifecycle();
     const { dialog } = mount();
     let count = 0;

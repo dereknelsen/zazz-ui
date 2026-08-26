@@ -5,14 +5,14 @@
  * @description The common runtime behind the filter-as-you-type family: a
  * query signal fed by the input, score-based ranking of real DOM items
  * (`commandScore`), active-item keyboard navigation with
- * `aria-activedescendant` (focus never leaves the input), and — for the form
- * controls whose panel sits outside the input — ownership of a
+ * `aria-activedescendant` (focus never leaves the input), and, for form
+ * controls whose panel sits outside the input, ownership of a
  * `popover="manual"` panel with outside-pointerdown and Escape close paths.
  *
  * Subclasses (`UiAutocomplete`, `UiCombobox`, `UiCommand`) declare their slot
  * prefix and commit semantics; everything else lives here. Filtering only
- * writes `hidden` and (when ranking) inline `order` — the DOM is never
- * restructured, so forms, focus, and progressive enhancement are untouched.
+ * writes `hidden` and (when ranking) inline `order`: the DOM is never
+ * restructured, so forms, focus, and progressive enhancement stay untouched.
  * Groups and empty states hide with CSS `:has()`, not code.
  *
  * Item facts come from the markup: the match/commit text is `data-value`
@@ -24,11 +24,11 @@ import { commandScore } from "./command-score.ts";
 import { ZazzElement } from "./zazz-element.ts";
 import { effect, state } from "./signals.ts";
 
-// --- Pure ranking + navigation ---
+// --- Pure ranking and navigation ---
 
 /** What the ranker needs to know about one item. */
 interface ItemFacts {
-  /** The text scored and committed — `data-value` ?? trimmed text content. */
+  /** The text scored and committed: `data-value` ?? trimmed text content. */
   value: string;
   /** Extra match targets from `data-keywords`. */
   keywords: string[];
@@ -38,7 +38,7 @@ interface ItemFacts {
 interface RankedItem {
   /** The item's index in the input array. */
   index: number;
-  /** `commandScore` result, 0–1; 1 for every item when the query is empty. */
+  /** `commandScore` result, 0 to 1; 1 for every item when the query is empty. */
   score: number;
   /** Whether the item should be hidden. */
   hidden: boolean;
@@ -95,12 +95,12 @@ let typeaheadIdCounter = 0;
  * navigation, ARIA wiring, and (when `managesPanel`) the manual popover.
  */
 abstract class TypeaheadElement extends ZazzElement {
-  /** Slot prefix — `"autocomplete"` finds `autocomplete-panel`, `-list`, `-item`. */
+  /** Slot prefix: `"autocomplete"` finds `autocomplete-panel`, `-list`, `-item`. */
   protected abstract readonly slotPrefix: string;
   /** Whether this element opens/closes its own `popover="manual"` panel. */
   protected readonly managesPanel: boolean = true;
   /**
-   * Whether focusing the input opens the panel. Combobox opts out — its input
+   * Whether focusing the input opens the panel. Combobox opts out: its input
    * holds a committed display value, so tabbing through a form must not pop
    * the list open, any more than tabbing to a select opens its picker.
    */
@@ -113,9 +113,9 @@ abstract class TypeaheadElement extends ZazzElement {
   protected readonly autoHighlight: boolean = false;
 
   /**
-   * Applies a committed item — fill the input, sync a value, activate.
-   * `source` says how the commit happened: a pointer commit has already run
-   * the item's native activation (link, invoker command); a keyboard commit
+   * Applies a committed item: fill the input, sync a value, activate.
+   * `source` indicates how the commit happened: a pointer commit has already run
+   * the item native activation (link, invoker command); a keyboard commit
    * has not.
    */
   protected abstract commit(item: HTMLElement, source: "keyboard" | "pointer"): void;
@@ -143,7 +143,7 @@ abstract class TypeaheadElement extends ZazzElement {
       input.setAttribute("aria-controls", list.id);
     }
 
-    // Input adapters — DOM events only write signals
+    // Input adapters: DOM events only write signals
     input.addEventListener(
       "input",
       () => {
@@ -159,7 +159,7 @@ abstract class TypeaheadElement extends ZazzElement {
     input.addEventListener("keydown", (event) => this.#onKeydown(event), { signal });
 
     if (this.#inlinePanel()) {
-      // Inline variant — a panel without [popover] renders in flow and is
+      // Inline variant: a panel without [popover] renders in flow and is
       // always open; there is nothing to show, hide, or light-dismiss
       this.open.set(true);
       input.setAttribute("aria-expanded", "true");
@@ -195,7 +195,7 @@ abstract class TypeaheadElement extends ZazzElement {
         { signal },
       );
     } else if (panel instanceof HTMLDialogElement) {
-      // Native <dialog> surface — mirror the dialog-lifecycle events
+      // Native <dialog> surface: mirror the dialog-lifecycle events
       this.addEventListener(
         "zazz:dialog-open",
         (event) => {
@@ -228,7 +228,7 @@ abstract class TypeaheadElement extends ZazzElement {
 
     // Keep focus in the input. List rows are not focusable, so a mousedown on
     // one blurs the input, and the resulting focusout closes the panel (and, in
-    // combobox, reverts the query) *before* the click that commits — and the
+    // combobox, reverts the query) *before* the click that commits, and the
     // commit's own input.focus() then re-fires the focus handler that reopens
     // it. mousedown, not pointerdown: preventing pointerdown would also cancel
     // touch panning inside the scrollable panel. Scoped to the list rather than
@@ -258,7 +258,7 @@ abstract class TypeaheadElement extends ZazzElement {
       { signal },
     );
 
-    // Output adapter 1 — panel visibility + expanded state (the inline
+    // Output adapter 1: panel visibility and expanded state (the inline
     // variant is unconditionally open, so it binds no visibility effect)
     if (this.#inlinePanel()) {
       // Nothing to drive
@@ -282,7 +282,7 @@ abstract class TypeaheadElement extends ZazzElement {
       );
     }
 
-    // Output adapter 2 — ranking, visibility, highlight, activedescendant.
+    // Output adapter 2: ranking, visibility, highlight, activedescendant.
     // All three signals are read up front so every run tracks the same set;
     // `open` both gates and subscribes.
     effect(
@@ -294,7 +294,7 @@ abstract class TypeaheadElement extends ZazzElement {
         // Re-filtering the list while the popover is still fading out is the
         // visible "flash on close": committing or reverting clears the query,
         // and the rows collapse or re-expand mid-transition. While a
-        // self-managed panel is closed nothing is written — the rows keep their
+        // self-managed panel is closed nothing is written: the rows keep their
         // last filter state and highlight through the exit transition, and
         // reopening re-ranks in the same microtask drain as showPopover(), so
         // both land before one paint. The inline variant has no panel to fade,
@@ -346,8 +346,8 @@ abstract class TypeaheadElement extends ZazzElement {
   }
 
   /**
-   * @description The visible items in visual order — score order when
-   * `data-sort="score"`, DOM order otherwise — so arrow keys always follow
+   * @description The visible items in visual order: score order when
+   * `data-sort="score"`, DOM order otherwise, so arrow keys always follow
    * what the user sees.
    *
    * @param items - All items, DOM order.
@@ -393,7 +393,7 @@ abstract class TypeaheadElement extends ZazzElement {
   /**
    * @description The text an item matches and commits with. The text-content
    * fallback excludes `<kbd>` shortcut hints, which are presentation, not
-   * value — "Go to docs ⇧⌘D" should match and announce as "Go to docs".
+   * value ("Go to docs ⇧⌘D" matches and announces as "Go to docs").
    *
    * @param item - The item element.
    * @returns `data-value` when present, trimmed hint-free text otherwise.
@@ -431,7 +431,7 @@ abstract class TypeaheadElement extends ZazzElement {
   }
 
   /**
-   * @description Whether the panel is the inline variant — rendered in flow
+   * @description Whether the panel is the inline variant: rendered in flow
    * without `[popover]`, and therefore always open.
    *
    * @returns True for an inline panel.
@@ -454,7 +454,7 @@ abstract class TypeaheadElement extends ZazzElement {
   /**
    * @description Keyboard contract on the search input: arrows/Home/End move
    * the highlight, Enter commits it, Escape closes then clears (only when the
-   * element manages its own panel — native surfaces own Escape themselves).
+   * element manages its own panel: native surfaces own Escape themselves).
    *
    * @param event - The keydown event.
    * @private
@@ -464,7 +464,7 @@ abstract class TypeaheadElement extends ZazzElement {
     if (!input) return;
 
     if (event.key === "Escape" && this.managesPanel) {
-      // The inline variant has no panel to close — Escape only clears
+      // The inline variant has no panel to close: Escape only clears
       if (this.open.get() && !this.#inlinePanel()) {
         event.preventDefault();
         this.open.set(false);

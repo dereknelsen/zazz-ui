@@ -1,11 +1,11 @@
 /**
- * tooltip.css — Tooltip (ui-tooltip | .ui-tooltip, [data-slot~="tooltip-content"])
+ * tooltip.css: Tooltip (ui-tooltip | .ui-tooltip, [data-slot~="tooltip-content"])
  *
  * @layer      variables, reset, components
  * @requires   layers.css, _variables.css, popover.css, kbd.css (--ui-kbd-*)
- * @uses       interestfor — Interest Invokers API (Chromium 142+; polyfill via invokers)
- * @uses       [data-slot~="tooltip-content"] — hint popover (light dismiss, auto-hides sibling hints)
- * @uses       anchor-name, position-anchor, position-area, position-try-fallbacks —
+ * @uses       interestfor: Interest Invokers API (Chromium 142+; polyfill via invokers)
+ * @uses       [data-slot~="tooltip-content"]: hint popover (light dismiss, auto-hides sibling hints)
+ * @uses       anchor-name, position-anchor, position-area, position-try-fallbacks:
  *             explicit anchors for polyfill; data-side maps to --ui-popover-position-*
  * @tokens     --ui-tooltip-* (@layer variables)
  */
@@ -31,7 +31,7 @@
     --ui-tooltip-arrow-color: var(--ui-tooltip-background);
     --ui-tooltip-arrow-radius: var(--step-0_5);
 
-    /* Reveal transitions — lighter than popover */
+    /* Reveal transitions: lighter than popover */
     --ui-tooltip-transition-duration: calc(var(--default-transition-duration) / 2);
     --ui-tooltip-transition-timing-function: var(--default-transition-timing-function);
     --ui-tooltip-transition-delay: 0ms;
@@ -51,7 +51,7 @@
     --ui-tooltip-translate--end: 0, 0, 0;
     --ui-tooltip-opacity--end: 1;
 
-    /* Positioning — smaller offset than popover menus */
+    /* Positioning: smaller offset than popover menus */
     --ui-tooltip-margin-block: var(--step-1);
     --ui-tooltip-margin-inline: 0;
 
@@ -105,7 +105,7 @@
 
 @layer zazz.components {
   /* ===========================================================================
-  TOOLTIP — interestfor trigger + anchored hint popover
+  TOOLTIP: interestfor trigger + anchored hint popover
   - interestfor wires hover/focus/long-press to the hint popover and sets ARIA
     (aria-describedby / aria-details). Do not add role="tooltip" or manual ARIA.
   - Explicit anchor-name supports the invokers/anchor polyfills (implicit anchors
@@ -160,7 +160,7 @@
     overflow: visible;
   }
 
-  /* Positioning — reuse --ui-popover-position-* hooks from popover.css via data-side */
+  /* Positioning: reuse --ui-popover-position-* hooks from popover.css via data-side */
 
   [data-slot~="tooltip-content"][data-side="top"]:not([data-align]),
   [data-slot~="tooltip-content"][data-side="top"][data-align="center"] {

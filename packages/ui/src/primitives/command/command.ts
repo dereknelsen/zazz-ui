@@ -1,10 +1,10 @@
 "use strict";
 
 /**
- * @fileoverview `<ui-command>` — a command menu for search and quick actions.
+ * @fileoverview `<ui-command>`: a command menu for search and quick actions.
  * @description Light-DOM custom element on the shared typeahead engine
- * (`base/typeahead.ts`), architected after cmdk. The panel — a `popover="auto"`
- * dropdown or a `<dialog class="ui-dialog">` — contains the search input;
+ * (`base/typeahead.ts`), architected after cmdk. The panel (a `popover="auto"`
+ * dropdown or a `<dialog class="ui-dialog">`) contains the search input;
  * items rank by match score and the best match auto-highlights.
  *
  * Actions are the platform's own vocabulary: navigation items are real
@@ -13,21 +13,21 @@
  * item exactly as a click would; every activation also dispatches a bubbling
  * `zazz:command-select` CustomEvent (`detail: { item, value }`) from the root.
  * Without JavaScript the trigger still opens the panel natively and every
- * item still works — only filtering, highlight, and hotkeys are lost.
+ * item still works: only filtering, highlight, and hotkeys are lost.
  *
  * Attributes:
- * - `data-command-hotkey` (root) — global toggle shortcut, e.g. `"mod+k"`.
- * - `data-hotkey` (item) — global accelerator that activates the item, active
+ * - `data-command-hotkey` (root): global toggle shortcut, e.g. `"mod+k"`.
+ * - `data-hotkey` (item): global accelerator that activates the item, active
  *   while the element is connected (even with the panel closed).
- * - `data-stay-open` (item) — keep the panel open after activation.
- * - `data-sort="document"` (root) — opt out of score ranking (default: score).
+ * - `data-stay-open` (item): keep the panel open after activation.
+ * - `data-sort="document"` (root): opt out of score ranking (default: score).
  *
  * Parts: `command-open` (trigger), `command-panel`, `command-header`,
  * `command-input`, `command-list`, `command-group` / `command-group-label`,
  * `command-item` (`data-value`, `data-keywords`), `command-kbd`,
  * `command-footer`, `command-empty`.
  *
- * For complex custom actions, see the example `command-actions.ts` — listen
+ * For complex custom actions, see the example `command-actions.ts`: listen
  * for your `--command` on its target, or for `zazz:command-select` on the root.
  */
 
@@ -57,7 +57,7 @@ class UiCommand extends TypeaheadElement {
       bindHotkey(toggleSpec, () => this.#togglePanel(), { signal });
     }
 
-    // Per-item accelerators — global while connected, panel open or not
+    // Per-item accelerators: global while connected, panel open or not
     for (const item of this.items()) {
       const spec = item.getAttribute("data-hotkey");
       if (spec) {

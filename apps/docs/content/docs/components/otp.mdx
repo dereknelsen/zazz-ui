@@ -3,9 +3,9 @@ title: OTP
 description: A one-time password field with character slots over one real input.
 ---
 
-A `<ui-otp>` wraps ONE real `<input class="ui-input ui-otp-input">` carrying the standard OTP attributes — `autocomplete="one-time-code"`, `inputmode="numeric"`, `pattern`, `maxlength` — and stamps an `aria-hidden` rail of character cells behind it, stretching the input invisibly over the rail. The input stays the source of truth, so SMS autofill, paste, IME, form submission, and `:user-invalid` all work natively; the cells only mirror it. Without JavaScript the markup is a plain, fully functional code field.
+A `<ui-otp>` wraps a real `<input class="ui-input ui-otp-input">` carrying standard OTP attributes: `autocomplete="one-time-code"`, `inputmode="numeric"`, `pattern`, and `maxlength`. It stamps an `aria-hidden` rail of character cells behind the input and stretches the input invisibly over the rail. The input remains the source of truth, so SMS autofill, clipboard paste, IME composition, form submission, and `:user-invalid` styling work natively while the visual cells mirror text entry. Without JavaScript, the element renders as a standard text input.
 
-The code length comes from `maxlength`. Origin-bound SMS codes (`@example.com #123456`) autofill straight into the field per MDN's guidance.
+The code length comes from `maxlength`. Origin-bound SMS codes (`@example.com #123456`) autofill directly into the field.
 
 ## Default
 

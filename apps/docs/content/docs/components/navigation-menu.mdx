@@ -3,7 +3,7 @@ title: Navigation menu
 description: Mega-menu navigation using popover panels, nested submenus, and anchor positioning.
 ---
 
-The navigation menu is rooted on a semantic `<nav class="ui-navigation-menu">` (class form only — the native element carries the meaning) and combines button triggers (`popovertarget`) with `[data-slot="navigation-menu-popover"]` panels. `[data-slot="navigation-menu-list"]` contains items and triggers. Panels contain a `[data-slot="navigation-menu-viewport"]` grid of `[data-slot="navigation-menu-link"]` items and optional `[data-slot="navigation-menu-submenu"]` flyouts.
+The navigation menu is rooted on a semantic `<nav class="ui-navigation-menu">` (class form only, since the native element carries the meaning) and combines button triggers (`popovertarget`) with `[data-slot="navigation-menu-popover"]` panels. `[data-slot="navigation-menu-list"]` contains items and triggers. Panels contain a `[data-slot="navigation-menu-viewport"]` grid of `[data-slot="navigation-menu-link"]` items and optional `[data-slot="navigation-menu-submenu"]` flyouts.
 
 ## Default
 
@@ -11,7 +11,7 @@ The navigation menu is rooted on a semantic `<nav class="ui-navigation-menu">` (
 
 ## Hover open
 
-Add `interestfor` alongside `popovertarget` (same panel id) on any trigger and its panel also opens on hover, focus, or long-press — the Interest Invokers API, covered by the kit's `invokers` polyfill. Click still works, and the popover auto stack closes the previous panel as the next opens.
+Add `interestfor` alongside `popovertarget` (same panel id) on any trigger to open its panel on hover, focus, or long-press. This uses the Interest Invokers API. Clicking still works, and the popover auto stack closes the previous panel as the next opens.
 
 <Preview src="navigation-menu/navigation-menu-interest" />
 
@@ -23,29 +23,29 @@ A common content-site layout: link rows beside a featured card, arranged with gr
 
 ## Icon grid
 
-Tiles of icon + title + description, each a `navigation-menu-link` laid out with flex utilities.
+Tiles of icon, title, and description, each wrapped as a `navigation-menu-link` laid out with flex utilities.
 
 <Preview src="navigation-menu/navigation-menu-icon-grid" />
 
 ## Megamenu
 
-A full-width panel — `data-size="container"` sizes the popover to the whole menu bar via `anchor-size()` — holding columns of eyebrow-labeled link groups.
+A full-width panel using `data-size="container"` to size the popover to the whole menu bar via `anchor-size()`, holding columns of link groups with eyebrow labels.
 
 <Preview src="navigation-menu/navigation-menu-megamenu" />
 
 ## Simple menus and search
 
-Rule of thumb: reach for a [Menu](/docs/components/menu) when a nav item is just a list of links, and a navigation-menu panel when it has layout. A literal `<ui-menu>` works as a nav item (reset `--ui-popover-inline-size` on its panel so the nav's wide-panel sizing doesn't inherit into it), and a `.ui-input[type="search"]` slots in at the end of the bar. The upcoming pattern for full site search is the [Command](/docs/components/command) palette.
+Rule of thumb: use a [Menu](/docs/components/menu) when a nav item is a flat list of links, and a navigation-menu panel when it requires grid or multi-column layout. A `<ui-menu>` works as a nav item (reset `--ui-popover-inline-size` on its panel so wide navigation sizing does not inherit into it), and a `.ui-input[type="search"]` fits at the end of the bar. For full site search palettes, see [Command](/docs/components/command).
 
 <Preview src="navigation-menu/navigation-menu-simple" />
 
 ## API
 
-| Attribute        | Target                                  | Values                                     |
-| ---------------- | --------------------------------------- | ------------------------------------------ |
-| `popovertarget`  | Trigger                                 | ID of target panel                         |
-| `interestfor`    | Trigger                                 | Same ID — adds hover/focus open (optional) |
-| `data-align`     | `[data-slot="navigation-menu-popover"]` | `center`, `end`                            |
-| `data-variant`   | `[data-slot="navigation-menu-popover"]` | `submenu`                                  |
-| `data-size`      | `[data-slot="navigation-menu-popover"]` | `root`, `container`, `screen`              |
-| `data-animation` | `[data-slot="navigation-menu-popover"]` | `slide-down`                               |
+| Attribute        | Target                                  | Values                                    |
+| ---------------- | --------------------------------------- | ----------------------------------------- |
+| `popovertarget`  | Trigger                                 | ID of target panel                        |
+| `interestfor`    | Trigger                                 | Same ID: adds hover/focus open (optional) |
+| `data-align`     | `[data-slot="navigation-menu-popover"]` | `center`, `end`                           |
+| `data-variant`   | `[data-slot="navigation-menu-popover"]` | `submenu`                                 |
+| `data-size`      | `[data-slot="navigation-menu-popover"]` | `root`, `container`, `screen`             |
+| `data-animation` | `[data-slot="navigation-menu-popover"]` | `slide-down`                              |

@@ -33,7 +33,7 @@ Component stylesheets organize rules in top-to-bottom order:
 
 ```css
 /**
- * button.css — Button (.ui-button)
+ * button.css: Button (.ui-button)
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, _reset.css
@@ -61,7 +61,7 @@ Component stylesheets organize rules in top-to-bottom order:
 
 | Tag           | Required | Description                                       |
 | ------------- | -------- | ------------------------------------------------- |
-| Summary       | Yes      | First line: `file.css — Component (.ui-selector)` |
+| Summary       | Yes      | First line: `file.css: Component (.ui-selector)`  |
 | `@layer`      | Yes      | Cascade layers used in the file                   |
 | `@requires`   | Yes      | Dependency files (set to `none` for `layers.css`) |
 | `@uses`       | Optional | Modern CSS features or APIs utilized              |
@@ -77,7 +77,7 @@ Component stylesheets organize rules in top-to-bottom order:
 
 ## Selector conventions
 
-- **Roots:** a single `.ui-{component}` class (e.g. `.ui-button`, `.ui-dialog`). Primitives whose root would otherwise be a meaningless `<div>` also have an equivalent tag form — `<ui-tooltip>` matches the same rules as `<div class="ui-tooltip">` via `:where(ui-tooltip, .ui-tooltip)` aliasing. Classes only ever name roots.
+- **Roots:** a single `.ui-{component}` class (e.g. `.ui-button`, `.ui-dialog`). Primitives whose root would otherwise be a generic `<div>` also have an equivalent tag form: `<ui-tooltip>` matches the same rules as `<div class="ui-tooltip">` via `:where(ui-tooltip, .ui-tooltip)` aliasing. Classes only ever name roots.
 - **Slots (interior parts):** `data-slot="{component}-{part}"` (e.g. `data-slot="dialog-header"`, `data-slot="carousel-viewport"`). The attribute is a space-separated token list like `class`, so one element can serve two primitives (`data-slot="lightbox-slide carousel-slide"`); selectors always use the token matcher `[data-slot~="carousel-slide"]`. Roots never carry `data-slot`.
 - **Variants and state:** Data attributes, never modifier classes (e.g. `[data-variant="primary"]`, `[data-size="sm"]`, `[data-side]`).
 - **Zero specificity:** `:where()` on reset and utility selectors.

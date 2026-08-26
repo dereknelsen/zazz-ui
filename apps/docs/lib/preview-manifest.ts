@@ -99,6 +99,8 @@ const MANIFEST: Record<string, ExampleMeta> = {
   "separator/separator": { minHeight: 200 },
 
   // Forms
+  "checkbox/checkbox": { requiresScripts: ["checkbox"] },
+  "checkbox/checkbox-tasklist": { requiresScripts: ["checkbox"] },
   "input/input": { block: "start", minHeight: 420 },
   "input/input-icon-leading": { block: "start" },
   "input/input-icon-trailing": { block: "start" },
