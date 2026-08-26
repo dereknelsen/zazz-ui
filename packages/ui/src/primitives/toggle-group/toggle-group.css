@@ -1,5 +1,5 @@
 /**
- * toggle-group.css — Toggle group (ui-toggle-group | .ui-toggle-group)
+ * toggle-group.css: Toggle group (ui-toggle-group | .ui-toggle-group)
  *
  * The :where(ui-button-group, .ui-button-group) structure applied to .ui-toggle children: a single-select set
  * (radios sharing a `name`) or a multi-select set (checkboxes) fused into one
@@ -8,9 +8,9 @@
  *
  * @layer      components
  * @requires   layers.css, _variables.css, toggle.css
- * @uses       :has() — float the checked/focused toggle above its neighbours
- * @uses       :not() — first/last edge selection for shared-border collapse
- * @uses       logical border-radius longhands — RTL-safe corner rounding per orientation
+ * @uses       :has(): float the checked/focused toggle above its neighbours
+ * @uses       :not(): first/last edge selection for shared-border collapse
+ * @uses       logical border-radius longhands: RTL-safe corner rounding per orientation
  * @see        https://ui.shadcn.com/docs/components/base/toggle-group
  */
 
@@ -20,7 +20,7 @@
 
   Joins adjacent .ui-toggle children into one segmented unit. Children keep their own
   --ui-toggle-radius, so the outer corners follow the toggles' size variant
-  automatically — only the *inner* corners are squared and the doubled border is
+  automatically; only the *inner* corners are squared and the doubled border is
   collapsed with a -1px overlap.
   =========================================================================== */
 
@@ -32,7 +32,7 @@
   }
 
   /* ===========================================================================
-  TOGGLE GROUP — HORIZONTAL (default)
+  TOGGLE GROUP: HORIZONTAL (default)
   =========================================================================== */
 
   :where(ui-toggle-group, .ui-toggle-group):not([data-orientation="vertical"]) {
@@ -53,7 +53,7 @@
   }
 
   /* ===========================================================================
-  TOGGLE GROUP — VERTICAL
+  TOGGLE GROUP: VERTICAL
   =========================================================================== */
 
   :where(ui-toggle-group, .ui-toggle-group)[data-orientation="vertical"] {

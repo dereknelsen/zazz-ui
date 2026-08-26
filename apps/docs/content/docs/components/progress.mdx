@@ -3,7 +3,7 @@ title: Progress
 description: Task completion on a native progress element, restyled from theme tokens.
 ---
 
-A native `<progress class="ui-progress">` element. The element box is the themed track; the fill comes from the browser's own value rendering, recolored per engine. Always include fallback text content and either a `<label>` or `aria-label`. Omit the `value` attribute for an indeterminate bar.
+A native `<progress class="ui-progress">` element. The element box forms the themed track, and the fill comes from the browser native value rendering, recolored per engine. Always include fallback text content and either a `<label>` or `aria-label`. Omit the `value` attribute for an indeterminate bar.
 
 ## Default
 
@@ -18,5 +18,5 @@ A native `<progress class="ui-progress">` element. The element box is the themed
 | Attribute       | Target         | Values                                         |
 | --------------- | -------------- | ---------------------------------------------- |
 | `value` / `max` | `.ui-progress` | Native progress semantics                      |
-| _(no `value`)_  | `.ui-progress` | Indeterminate — animated stripe                |
+| _(no `value`)_  | `.ui-progress` | Indeterminate (animated stripe)                |
 | Tokens          | `:root`        | `--ui-progress-*` (track, bar, height, radius) |

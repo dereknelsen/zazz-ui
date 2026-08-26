@@ -1,16 +1,16 @@
 /**
- * menu.css — Menu (ui-menu | .ui-menu, [data-slot~="menu-popover"])
+ * menu.css: Menu (ui-menu | .ui-menu, [data-slot~="menu-popover"])
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, popover.css, button.css
- * @uses       popovertarget + [popover] — inherits Popover API from popover.css
- * @uses       interestfor — optional hover/focus open on the same trigger
+ * @uses       popovertarget + [popover]: inherits Popover API from popover.css
+ * @uses       interestfor: optional hover/focus open on the same trigger
  *             (Interest Invokers, Chromium 142+; polyfill via invokers)
- * @uses       anchor-name, anchor-scope, position-anchor — tether panel to trigger
- * @uses       data-side / data-align — maps to --ui-popover-position-* in popover.css
+ * @uses       anchor-name, anchor-scope, position-anchor: tether panel to trigger
+ * @uses       data-side / data-align: maps to --ui-popover-position-* in popover.css
  * @tokens     --ui-menu-* (@layer variables)
  * @consumedby select.css (--ui-menu-button-radius)
- * @see        menu.ts — optional arrow-key navigation; the class form stays no-JS
+ * @see        menu.ts: optional arrow-key navigation; the class form stays no-JS
  */
 
 @layer variables {
@@ -24,13 +24,13 @@
 
 @layer zazz.components {
   /* ===========================================================================
-  MENU — trigger + anchored popover of actions/links
+  MENU: trigger + anchored popover of actions/links
   - Inherits --ui-popover-* tokens and [popover] surface/positioning from popover.css.
   - Only menu-specific wiring lives here: anchor scope/name and nested buttons.
   - The native <menu> element stays inside the panel as the list; the root names
     the trigger + panel assembly.
   - Explicit anchor-name covers both popovertarget (click) and interestfor
-    (hover/focus) triggers — implicit interest anchors are not polyfilled.
+    (hover/focus) triggers; implicit interest anchors are not polyfilled.
   =========================================================================== */
 
   :where(ui-menu, .ui-menu) {

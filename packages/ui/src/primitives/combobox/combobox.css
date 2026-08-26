@@ -1,24 +1,24 @@
 /**
- * combobox.css — Combobox (ui-combobox | .ui-combobox, [data-slot~="combobox-control"])
+ * combobox.css: Combobox (ui-combobox | .ui-combobox, [data-slot~="combobox-control"])
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, popover.css, button.css, fields.css,
- *             badge.css (--ui-badge-* — the default tag template's .ui-badge),
+ *             badge.css (--ui-badge-* for the default tag template .ui-badge),
  *             select.css (--ui-option-*, --ui-select-picker-icon-*)
- * @uses       [popover="manual"] — panel opened/closed by combobox.js
- * @uses       anchor-name, anchor-scope, position-anchor — tether panel to the control
- * @uses       anchor-size(width) — match panel width to the control (@supports gated)
- * @uses       :has() — chevron rotation, group + empty-state visibility
- * @uses       mask — chevron and tag-remove icons; wiped in forced-colors mode,
- *             as everywhere else in the kit (option checkmark, picker icon)
- * @uses       data-side / data-align — maps to --ui-popover-position-* in popover.css
- * @uses       data-variant="multiselect" — tag variant; combobox.js clones a
+ * @uses       [popover="manual"]: panel opened/closed by combobox.js
+ * @uses       anchor-name, anchor-scope, position-anchor: tether panel to the control
+ * @uses       anchor-size(width): match panel width to the control (@supports gated)
+ * @uses       :has(): chevron rotation, group + empty-state visibility
+ * @uses       mask: chevron and tag-remove icons; wiped in forced-colors mode,
+ *             matching the rest of the kit (option checkmark, picker icon)
+ * @uses       data-side / data-align: maps to --ui-popover-position-* in popover.css
+ * @uses       data-variant="multiselect": tag variant; combobox.js clones a
  *             <template data-slot="combobox-tag-template"> (or its muted-badge
  *             default) per option carrying aria-selected="true". Tag rules key
  *             off the slots, so a custom template keeps this styling.
  * @tokens     --ui-combobox-* (@layer variables); control mirrors --ui-select-*,
  *             items alias --ui-option-*, tags alias --ui-badge-*
- * @see        combobox.ts — filtering, commit/revert, tags, and keyboard behavior
+ * @see        combobox.ts: filtering, commit/revert, tags, and keyboard behavior
  */
 
 @layer variables {
@@ -38,7 +38,7 @@
     --ui-combobox-panel-max-block-size: var(--step-72);
     --ui-combobox-shadow: var(--ui-menu-shadow);
 
-    /* Control box — the multiselect variant swaps these to wrap into rows */
+    /* Control box: the multiselect variant swaps these to wrap into rows */
     --ui-combobox-control-align: center;
     --ui-combobox-control-wrap: nowrap;
     --ui-combobox-control-gap: var(--ui-field-gap);
@@ -67,7 +67,7 @@
 
 @layer zazz.components {
   /* ===========================================================================
-  COMBOBOX — select-look control + anchored filterable panel
+  COMBOBOX: select-look control + anchored filterable panel
   - The control shell carries the field surface (border, ring, chevron); the
     inner input is bare so nothing double-borders. The panel rides
     popover.css's surface + placement like autocomplete's.
@@ -103,7 +103,7 @@
     border: var(--ui-combobox-border);
     border-radius: var(--ui-combobox-border-radius);
 
-    /* Same ring recipe as .ui-select — transparent outline twin keeps focus
+    /* Same ring recipe as .ui-select: transparent outline twin keeps focus
        visible in forced-colors mode */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
@@ -133,7 +133,7 @@
     padding-inline-start: var(--step-1_5);
   }
 
-  /* The inner input is bare — the shell owns the surface. It keeps a minimum
+  /* The inner input is bare: the shell owns the surface. It keeps a minimum
      width so the multiselect variant wraps it onto its own row instead of
      collapsing to nothing between the tags and the chevron. */
   [data-slot~="combobox-control"] input {
@@ -166,7 +166,7 @@
     transition: var(--default-transition);
   }
 
-  /* Panel — same shape as the autocomplete panel */
+  /* Panel: same shape as the autocomplete panel */
   [data-slot~="combobox-panel"] {
     position-anchor: --ui-combobox-trigger;
     /* flex-direction stays ungated so the close fade keeps the column layout */
@@ -176,12 +176,12 @@
     box-shadow: var(--ui-combobox-shadow);
   }
 
-  /* Only display is gated — see popover.css: closed popovers stay display: none */
+  /* Only display is gated; see popover.css: closed popovers stay display: none */
   [data-slot~="combobox-panel"]:where(:popover-open, .\:popover-open) {
     display: flex;
   }
 
-  /* Inline variant — no [popover]: the list renders in flow, always open,
+  /* Inline variant: no [popover]: the list renders in flow, always open,
      without the floating surface chrome (combobox.js treats it as such) */
   [data-slot~="combobox-panel"]:not([popover]) {
     display: flex;
@@ -209,7 +209,7 @@
     gap: var(--ui-combobox-option-gap);
   }
 
-  /* Score ranking writes order -1000..0 on sibling items — keep the label first */
+  /* Score ranking writes order -1000..0 on sibling items: keep the label first */
   [data-slot~="combobox-group-label"] {
     order: -1001;
   }
@@ -249,7 +249,7 @@
   }
 
   /* ===========================================================================
-  COMBOBOX MULTISELECT — selected values as removable tags inside the control
+  COMBOBOX MULTISELECT: selected values as removable tags inside the control
   - The variant only swaps tokens: the control wraps into rows and grows from a
     fixed height into a minimum one. combobox.js stamps the tags from the items
     carrying aria-selected="true", dressed as .ui-badge[data-variant="muted"]
@@ -266,8 +266,8 @@
     --ui-combobox-input-min-block-size: var(--ui-badge-height);
   }
 
-  /* Overrides badge.css's min-width: max-content — same layer, same
-     specificity, and combobox.css imports after badge.css */
+  /* Overrides badge.css min-width: max-content (same layer, same
+     specificity, and combobox.css imports after badge.css) */
   [data-slot~="combobox-tag"] {
     min-inline-size: 0;
     max-inline-size: var(--ui-combobox-tag-max-inline-size);

@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * @fileoverview `<ui-tabs>` — HTML web component for keyboard-enhanced tabs.
+ * @fileoverview `<ui-tabs>`: HTML web component for keyboard-enhanced tabs.
  * @description Light-DOM custom element that augments the CSS-only radio
  * tabs pattern with orientation-aware arrow-key navigation. The element
  * replaces the `.tabs` wrapper `<div>` and carries the same class, so all

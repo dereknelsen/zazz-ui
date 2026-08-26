@@ -9,7 +9,7 @@
  *
  * This file is a deliberate seam (like `signals.ts`): the kit's needs are a
  * parser, a matcher, and an editable-target guard, so a dependency was not
- * worth the pinning contract — swap the internals here if a library ever
+ * worth the pinning contract; swap the internals here if a library ever
  * earns its keep.
  *
  * Spec grammar: `+`-separated tokens, case-insensitive. Modifiers: `mod`,
@@ -82,7 +82,7 @@ function parseHotkey(spec: string): Hotkey | null {
         hotkey.meta = true;
         break;
       default:
-        // Unknown modifier — reject rather than silently matching too much
+        // Unknown modifier: reject rather than silently matching too much
         return null;
     }
   }
@@ -107,7 +107,7 @@ function isApplePlatform(): boolean {
 
 /**
  * @description Matches a keyboard event against a parsed hotkey. Modifier
- * states must match exactly — `mod+k` does not fire on `mod+shift+k` — except
+ * states must match exactly (`mod+k` does not fire on `mod+shift+k`) except
  * that `mod` claims whichever of Meta/Control the platform assigns it.
  *
  * @param event - The keyboard event to test.

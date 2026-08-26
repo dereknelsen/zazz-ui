@@ -3,9 +3,9 @@ title: Meter
 description: A scalar value within a known range on a native meter element.
 ---
 
-A native `<meter class="ui-meter">` element, styled to read as the [Progress](/docs/components/progress) bar's sibling — geometry aliases the `--ui-progress-*` family. Where progress communicates completion, a meter communicates good/bad: the fill is `--success` in the optimal region and shifts to `--warning` / `--destructive` as the value crosses `low`/`high` relative to `optimum`. Always include fallback text content and a label.
+A native `<meter class="ui-meter">` element, styled as a visual companion to the [Progress](/docs/components/progress) bar (its geometry aliases the `--ui-progress-*` tokens). Where progress communicates completion, a meter indicates quality or capacity. The fill color is `--success` in the optimal region and shifts to `--warning` or `--destructive` as the value crosses `low` or `high` relative to `optimum`. Always include fallback text content and a label.
 
-Engines that support typed `attr()` paint the fill on the element itself from the meter's own attributes (Blink locks its shadow parts' geometry); elsewhere the vendor fill pseudos carry the colors.
+Engines supporting typed `attr()` paint the fill on the element itself from the meter attributes (Blink locks its shadow parts geometry). Other engines use vendor fill pseudo-elements to carry the colors.
 
 ## Default
 
@@ -16,5 +16,5 @@ Engines that support typed `attr()` paint the fill on the element itself from th
 | Attribute                  | Target      | Values                                             |
 | -------------------------- | ----------- | -------------------------------------------------- |
 | `value` / `min` / `max`    | `.ui-meter` | Native meter semantics                             |
-| `low` / `high` / `optimum` | `.ui-meter` | Region thresholds — drive the fill color           |
+| `low` / `high` / `optimum` | `.ui-meter` | Region thresholds that drive the fill color        |
 | Tokens                     | `:root`     | `--ui-meter-*`; geometry aliases `--ui-progress-*` |

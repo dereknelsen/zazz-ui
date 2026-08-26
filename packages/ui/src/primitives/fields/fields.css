@@ -1,12 +1,12 @@
 /**
- * fields.css — Shared form field family (Tier 3 owner for --ui-field-*)
+ * fields.css: Shared form field family (Tier 3 owner for --ui-field-*)
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css
- * @uses       :user-invalid — validation after commit (not while typing)
- * @uses       :has(:user-invalid) — label/hint/error crossfade
- * @uses       @starting-style + visibility allow-discrete — hint ↔ error swap
- * @uses       color-mix() — destructive field tint on invalid
+ * @uses       :user-invalid: validation after commit (not while typing)
+ * @uses       :has(:user-invalid): label/hint/error crossfade
+ * @uses       @starting-style + visibility allow-discrete: hint <-> error swap
+ * @uses       color-mix(): destructive field tint on invalid
  * @tokens     --ui-field-*, --ui-field-group-* (Tier 3 owner; @layer variables)
  * @consumedby input.css, textarea.css, select.css, input-group.css,
  *             password-group.css, otp.css, radio.css (.ui-radio-group),
@@ -59,22 +59,22 @@
 
 @layer zazz.components {
   /* ===========================================================================
-  FORM — global form behaviour shared across every control
+  FORM: global form behaviour shared across every control
   - This file holds only the cross-control glue: the shared field-level tokens,
     the disabled state, the .ui-field layout wrapper, .ui-field-group / .ui-radio-group
     fieldsets, and validation messaging.
     Each control lives in its own file:
-      .ui-input        → input.css
-      .ui-textarea     → textarea.css
-      .ui-select       → select.css
-      .ui-input-group  → input-group.css
-      checkbox       → _reset.css (input[type="checkbox"])
-      switch         → _reset.css (input[role="switch"])
-      .ui-radio        → radio.css
+      .ui-input        -> input.css
+      .ui-textarea     -> textarea.css
+      .ui-select       -> select.css
+      .ui-input-group  -> input-group.css
+      checkbox         -> _reset.css (input[type="checkbox"])
+      switch           -> _reset.css (input[role="switch"])
+      .ui-radio        -> radio.css
   =========================================================================== */
 
   /* ---------------------------------------------------------------------------
-  SHARED FIELD TOKENS — Tier-3 shared family, owned here.
+  SHARED FIELD TOKENS: Tier-3 shared family, owned here.
   - .ui-input / .ui-textarea / .ui-select / .ui-input-group all share the same surface
     treatment so a text input, a dropdown, and a message box read as one family.
     Each control aliases these locals so a single override retunes the whole set.
@@ -100,7 +100,7 @@
   }
 
   /* ---------------------------------------------------------------------------
-  FIELD WRAPPER — .ui-field (label + control + hint/error)
+  FIELD WRAPPER: .ui-field (label + control + hint/error)
   - Optional layout helper. Validation messaging uses :user-invalid so errors
     surface only after the user commits a value (blur/submit), never while typing.
   --------------------------------------------------------------------------- */
@@ -134,8 +134,8 @@
   }
 
   /* ---------------------------------------------------------------------------
-  FIELD DESCRIPTION — [data-slot~="field-description"] (wrapper for hint + error)
-  - Occupies a stable grid slot so hint↔error swaps never cause layout shift.
+  FIELD DESCRIPTION: [data-slot~="field-description"] (wrapper for hint + error)
+  - Occupies a stable grid slot so hint/error swaps never cause layout shift.
     The wrapper keeps a fixed block-size while the children crossfade inside it.
   --------------------------------------------------------------------------- */
 
@@ -147,7 +147,7 @@
     font-size: var(--font-size-xs);
   }
 
-  /* Hint and error stack in the same grid area — only one is visible at a time */
+  /* Hint and error stack in the same grid area: only one is visible at a time */
   [data-slot~="field-hint"],
   [data-slot~="field-error"] {
     grid-area: msg;
@@ -223,12 +223,12 @@
   }
 
   /* ---------------------------------------------------------------------------
-  FIELD GROUP — .ui-field-group (+ .ui-radio-group in radio.css)
-  - Semantic <fieldset> wrapper for a labelled SET of related controls (a radio
+  FIELD GROUP: .ui-field-group (+ .ui-radio-group in radio.css)
+  - Semantic <fieldset> wrapper for a labelled set of related controls (a radio
     group, a set of checkboxes/switches). Resets browser chrome and stacks
     children; the <legend> names the whole set.
   - Use a fieldset/legend ONLY when the legend labels a genuine group. A single
-    control — or several independently-labelled fields — should carry its own
+    control (or several independently-labelled fields) should carry its own
     [data-slot~="field-label"] instead, never lean on the legend as a stand-in label.
   --------------------------------------------------------------------------- */
 
@@ -243,7 +243,7 @@
     margin: var(--ui-field-group-margin);
   }
 
-  /* Legend reads as the group's label — same weight/size as a [data-slot~="field-label"] */
+  /* Legend reads as the group label: same weight and size as a [data-slot~="field-label"] */
   .ui-field-group > legend,
   .ui-radio-group > legend {
     padding: 0;

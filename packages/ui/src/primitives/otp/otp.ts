@@ -1,10 +1,10 @@
 "use strict";
 
 /**
- * @fileoverview `<ui-otp>` — a one-time password field with character slots.
- * @description Light-DOM custom element that augments ONE real
- * `<input class="ui-input ui-otp-input">` — the MDN-blessed OTP shape with
- * `autocomplete="one-time-code"`, `inputmode`, `pattern`, and `maxlength` —
+ * @fileoverview `<ui-otp>`: a one-time password field with character slots.
+ * @description Light-DOM custom element that augments a single
+ * `<input class="ui-input ui-otp-input">` (the standard OTP shape with
+ * `autocomplete="one-time-code"`, `inputmode`, `pattern`, and `maxlength`)
  * with a presentational slot rail. The input stays the source of truth:
  * autofill, paste, IME, undo, form submission, and `:user-invalid` are all
  * native. The script stamps an `aria-hidden` rail of character cells behind
@@ -12,17 +12,17 @@
  * character and the caret position. Without JavaScript the markup is a plain,
  * fully functional OTP input.
  *
- * The code length comes from the input's `maxlength` — there is no
+ * The code length comes from the input `maxlength`. There is no
  * `data-otp-length`.
  *
  * Attributes on `<ui-otp>`:
- * - `data-otp-groups` — separator layout, e.g. `"3-3"` or `"2-2-2"`. The
+ * - `data-otp-groups`: separator layout, e.g. `"3-3"` or `"2-2-2"`. The
  *   groups must sum to `maxlength`; otherwise one ungrouped run renders.
- * - `data-otp-type` — sanitization charset: `numeric` (default), `alpha`,
- *   `alphanumeric`, `none`. Keep it in agreement with the input's `pattern`
+ * - `data-otp-type`: sanitization charset: `numeric` (default), `alpha`,
+ *   `alphanumeric`, `none`. Keep it in agreement with the input `pattern`
  *   and `inputmode`, which carry the no-JS validation.
- * - `data-otp-mask` — render `•` in the cells instead of characters.
- * - `data-otp-auto-submit` — request the owning form's submission once when
+ * - `data-otp-mask`: render `•` in the cells instead of characters.
+ * - `data-otp-auto-submit`: request the owning form submission once when
  *   the code is complete.
  *
  * Stamped state: cells are `[data-slot~="otp-slot"]` with `data-filled` /
@@ -159,7 +159,7 @@ class UiOtp extends ZazzElement {
     const caret = state(input.selectionStart ?? 0);
     const focused = state(document.activeElement === input);
 
-    // Input adapters — sanitize in place, then mirror value + caret
+    // Input adapters: sanitize in place, then mirror value and caret
     input.addEventListener(
       "input",
       () => {
@@ -199,7 +199,7 @@ class UiOtp extends ZazzElement {
       { signal },
     );
 
-    // Output adapter — one effect writes every derived attribute together
+    // Output adapter: one effect writes all derived attributes together
     effect(
       () => {
         const slots = resolveSlots(value.get(), length, caret.get(), focused.get(), mask);

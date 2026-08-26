@@ -1,11 +1,11 @@
 "use strict";
 
 /**
- * @fileoverview `<ui-toaster>` — HTML web component for stacked toast notifications.
+ * @fileoverview `<ui-toaster>`: HTML web component for stacked toast notifications.
  * @description Light-DOM custom element that hosts a top-layer toast stack, plus
  * the `window.Toaster` imperative API. The stacking model (newest toast in front,
  * older toasts peeking behind, expand on hover, timer pause on hover/hidden tab)
- * is adapted from Sonner by Emil Kowalski — https://sonner.emilkowal.ski (MIT).
+ * is adapted from Sonner by Emil Kowalski (https://sonner.emilkowal.ski, MIT).
  *
  * The region is a `popover="manual"` element: it enters the top layer via
  * `showPopover()` when the first toast arrives and leaves it after the last
@@ -22,7 +22,7 @@
  *   and the `.success()/.info()/.warning()/.error()` shorthands.
  *
  * Region attributes:
- * - `data-position` — `top-start | top-center | top-end | bottom-start |
+ * - `data-position`: `top-start | top-center | top-end | bottom-start |
  *   bottom-center | bottom-end` (logical; default `bottom-end`).
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Popover_API
@@ -54,7 +54,7 @@ const EXIT_FALLBACK_MS = 600;
 
 const VARIANTS: ReadonlyArray<string> = ["success", "info", "warning", "destructive"];
 
-// --- Icons (adapted from Sonner's assets.tsx — MIT, Emil Kowalski) ---
+// --- Icons (adapted from Sonner's assets.tsx (MIT, Emil Kowalski)) ---
 
 const ICONS: Record<string, string> = {
   success:
@@ -117,7 +117,7 @@ interface ToastStackLayout {
   stackIndex: number;
   /** Sum of the heights of the toasts stacked in front, in px. */
   offsetPx: number;
-  /** Paint order — front toast highest. */
+  /** Paint order: front toast highest. */
   zIndex: number;
   /** Whether this is the front (newest) toast. */
   front: boolean;
@@ -131,7 +131,7 @@ interface ToastStackLayout {
  * @description Unclamps every toast's block-size for a batch measurement (the
  * inline style beats the collapsed block-size rule) and returns a disposer
  * that restores the clamp. Bind it with `using` so the restore is guaranteed
- * at scope exit — even if a measure in between throws.
+ * at scope exit, even if a measure in between throws.
  *
  * @param toasts - The live toasts to unclamp.
  * @returns A `Disposable` that removes the inline block-size again.
@@ -150,7 +150,7 @@ function unclampForMeasure(toasts: readonly HTMLElement[]): Disposable {
 
 /**
  * @description Computes the collapsed-stack placement for every toast from the
- * measured heights alone (oldest first, matching DOM order). Pure — the
+ * measured heights alone (oldest first, matching DOM order). Pure: the
  * measure step feeds it and an effect writes the results to the DOM, so this
  * is the unit-testable core of the stacking model.
  *
@@ -210,7 +210,7 @@ class UiToaster extends ZazzElement {
   /** Timers run only while neither expanded nor hidden. */
   #paused = computed(() => this.#expanded.get() || this.#hidden.get());
 
-  /** Measured stack (oldest first) — written by `#reindex`'s measure pass. */
+  /** Measured stack (oldest first): written by `#reindex`'s measure pass. */
   #stack = state<ToastStackEntry[]>([]);
 
   /** Pure placement derived from the measured heights. */
@@ -236,7 +236,7 @@ class UiToaster extends ZazzElement {
     this.addEventListener("command", (event) => this.#onCommand(event), { signal });
 
     // Hover/focus expands the stack; expanded (or hidden tab) pauses timers.
-    // Leave events only *request* a collapse — dismissal animations and node
+    // Leave events only *request* a collapse: dismissal animations and node
     // removal fire spurious mouseleave/focusout while the pointer never moved,
     // so the collapse is verified against real hover/focus state first.
     this.addEventListener("mouseenter", () => this.#setExpanded(true), { signal });
@@ -248,7 +248,7 @@ class UiToaster extends ZazzElement {
       signal,
     });
 
-    // Viewport resizes rewrap toast text — remeasure the stack.
+    // Viewport resizes rewrap toast text: remeasure the stack.
     window.addEventListener(
       "resize",
       () => {
@@ -357,7 +357,7 @@ class UiToaster extends ZazzElement {
     toast.dataset.removed = "true";
 
     // Keyboard users keep their place: hand focus to the next toast before this
-    // one goes. A mouse click's incidental focus is left to drop to <body> —
+    // one goes. A mouse click's incidental focus is left to drop to <body>;
     // holding it would pin the stack expanded after the pointer leaves, and
     // #requestCollapse's :hover check already keeps the stack open meanwhile.
     const active = document.activeElement;
@@ -425,7 +425,7 @@ class UiToaster extends ZazzElement {
         options.variant = variant as ToastOptions["variant"];
       }
       if (duration !== undefined) {
-        // A duration is only ever a number — parse it as one rather than running
+        // A duration is only ever a number: parse it as one rather than running
         // it through the polymorphic attribute parser and narrowing after.
         // NaN-guarded rather than finite-guarded: `Infinity` is a documented
         // value (persist until dismissed). Blank strings coerce to 0, so they
@@ -514,7 +514,7 @@ class UiToaster extends ZazzElement {
   // --- Stack math ---
 
   /**
-   * @description Remeasures the stack — the measure half of the stacking
+   * @description Remeasures the stack: the measure half of the stacking
    * model. Batch-reads every live toast's natural height and writes the
    * result into `#stack`; `#layout` derives the placement purely
    * (`computeStackLayout`) and the stack effect writes the CSS custom
@@ -526,7 +526,7 @@ class UiToaster extends ZazzElement {
   #reindex(): void {
     const toasts = this.#toasts().filter((toast) => toast.dataset.removed !== "true");
 
-    // Batch-measure with heights unclamped, restored at scope exit — one
+    // Batch-measure with heights unclamped, restored at scope exit: one
     // layout pass, no visible change (the stack effect is microtask-batched,
     // so its DOM writes land after the restore).
     using _measure = unclampForMeasure(toasts);
@@ -562,7 +562,7 @@ class UiToaster extends ZazzElement {
   /**
    * @description Expands or collapses the stack by writing the signal state.
    * The attribute write and the timer pause/resume (matching Sonner) are owned
-   * by the effects in `connectedCallback` — no caller has to remember them.
+   * by the effects in `connectedCallback`: no caller has to remember them.
    *
    * @param expanded - Whether the stack is expanded.
    */
@@ -573,7 +573,7 @@ class UiToaster extends ZazzElement {
 
   /**
    * @description Collapses the stack only if the user has really left it.
-   * Waits a beat, then checks actual hover and focus state — dismissals fire
+   * Waits a beat, then checks actual hover and focus state: dismissals fire
    * spurious mouseleave/focusout (exit transforms, node removal, focus drops)
    * that a raw event handler would mistake for the pointer leaving.
    */
@@ -731,7 +731,7 @@ function toOptions(options?: ToastOptions | string): ToastOptions {
 
 /**
  * @namespace Toaster
- * @description Imperative toast API. Requires a `<ui-toaster>` in the page —
+ * @description Imperative toast API. Requires a `<ui-toaster>` in the page:
  * the region is never auto-created (HTML-first, like every Zazz component).
  *
  * @property toast - Shows a toast; returns its id.
@@ -818,6 +818,6 @@ if (typeof window !== "undefined") {
   window.Toaster = Toaster;
 }
 
-// computeStackLayout is exported for unit tests only — not part of the
+// computeStackLayout is exported for unit tests only; not part of the
 // documented public API (window.Toaster is the surface app authors use).
 export { Toaster, UiToaster, computeStackLayout };

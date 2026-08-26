@@ -10,7 +10,7 @@ Scripts in `@zazz-ui/ui` live alongside their components: shared runtime in `src
 ## Principles
 
 - **Vanilla JS:** Shipped `.js` files are standard ES modules. External dependencies (signals polyfill, Embla) resolve through the page's import map.
-- **HTML-driven:** Components read configuration from data attributes (`data-carousel-*`, `data-reveal-*`). Custom element props are `data-*` attributes too (e.g. `data-label-show` / `data-label-hide` on `<ui-password>`) — never bare attributes.
+- **HTML-driven:** Components read configuration from data attributes (`data-carousel-*`, `data-reveal-*`). Custom element props are `data-*` attributes too (e.g. `data-label-show` / `data-label-hide` on `<ui-password>`), not bare attributes.
 - **Progressive enhancement:** Components fall back to native HTML behaviors if JavaScript is disabled.
 
 ## File template

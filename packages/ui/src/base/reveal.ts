@@ -55,7 +55,7 @@ function getRootCssVar(name: string): string {
 }
 
 /**
- * @description Whether the engine computes stagger delays natively — reveal.css
+ * @description Whether the engine computes stagger delays natively: reveal.css
  * derives each child's `--ui-reveal-wait` from `sibling-index()`. Where
  * unsupported (Firefox), `#configureStaggerGroup` falls back to writing a
  * per-child `--ui-reveal-wait` inline.
@@ -255,7 +255,7 @@ class Reveal {
       this.#setRevealProperties(child, {
         "--ui-reveal-duration": this.#formatTime(groupProps.duration),
         "--ui-reveal-ease": groupProps.ease,
-        // Fallback only — natively each child computes this in reveal.css.
+        // Fallback only: natively each child computes this in reveal.css.
         "--ui-reveal-wait": supportsSiblingIndex
           ? null
           : `${groupProps.baseWait + groupProps.step * i}ms`,

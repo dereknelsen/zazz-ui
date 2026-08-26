@@ -3,7 +3,7 @@ title: Autocomplete
 description: An input that suggests options as you type, ranked by match quality.
 ---
 
-A `<ui-autocomplete>` wraps a plain `.ui-input` and an anchored suggestion panel (`popover="manual"`). The input is the form value — free text is allowed — and typing filters the panel's options, scored with the cmdk ranking algorithm. Arrow keys move the highlight without leaving the input (`aria-activedescendant`); Enter or click commits a suggestion into the input. Groups hide automatically when all their options are filtered out, and the empty slot appears when nothing matches. Without JavaScript the markup is just a working text input.
+A `<ui-autocomplete>` wraps a `.ui-input` and an anchored suggestion panel (`popover="manual"`). The input holds the form value (free text allowed) and typing filters the panel options using the cmdk ranking algorithm. Arrow keys move the highlight without moving focus out of the input (`aria-activedescendant`). Pressing Enter or clicking commits a suggestion into the input. Groups hide automatically when all their options filter out, and the empty slot appears when nothing matches. Without JavaScript, the markup renders as a regular text input.
 
 Omit the `popover` attribute on the panel for an inline, always-open list (no floating surface or dismissal; filtering unchanged).
 
@@ -13,7 +13,7 @@ Omit the `popover` attribute on the panel for an inline, always-open list (no fl
 
 ## Groups and score ranking
 
-`data-sort="score"` re-ranks visible options by match quality (via CSS `order` — the DOM is never restructured). `data-keywords` adds extra match targets to an option.
+`data-sort="score"` re-ranks visible options by match quality using CSS `order` without altering the DOM tree. `data-keywords` adds extra search keywords to an option.
 
 <Preview src="autocomplete/autocomplete-groups" />
 
@@ -21,7 +21,7 @@ Omit the `popover` attribute on the panel for an inline, always-open list (no fl
 
 | Attribute                  | Target                             | Values                                          |
 | -------------------------- | ---------------------------------- | ----------------------------------------------- |
-| `data-sort`                | Root                               | `score` — rank by match (default: DOM order)    |
+| `data-sort`                | Root                               | `score`: rank by match (default: DOM order)     |
 | `data-min-length`          | Root                               | Query length before the panel opens (default 0) |
 | `data-value`               | `[data-slot="autocomplete-item"]`  | Match/commit text (default: text content)       |
 | `data-keywords`            | `[data-slot="autocomplete-item"]`  | Space-separated extra match targets             |

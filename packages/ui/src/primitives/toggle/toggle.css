@@ -1,5 +1,5 @@
 /**
- * toggle.css — Toggle (.ui-toggle) — a button-styled checkbox/radio
+ * toggle.css: Toggle (.ui-toggle), a button-styled checkbox/radio
  *
  * Same look as .ui-button (tokens default to the --ui-button-* family), but it wraps a
  * native checkbox or radio inside a <label>. State is driven from the nested input
@@ -8,9 +8,9 @@
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, button.css
- * @uses       :has() — drive label state from the nested input (checked/focus/disabled)
- * @uses       oklch(from …) — variant hover/active tints (inherited from --ui-button-*)
- * @uses       text-box — vertical trim (patchy browser support)
+ * @uses       :has(): drive label state from the nested input (checked/focus/disabled)
+ * @uses       oklch(from …): variant hover/active tints (inherited from --ui-button-*)
+ * @uses       text-box: vertical trim (patchy browser support)
  * @tokens     --ui-toggle-* (@layer variables; default to the --ui-button-* family)
  * @consumedby toggle-group.css
  * @see        https://ui.shadcn.com/docs/components/base/toggle
@@ -56,7 +56,7 @@
 
     --ui-toggle-icon-size: var(--ui-button-icon-size);
 
-    /* composes into the toggle's box-shadow list — use a transparent shadow,
+    /* composes into the toggle's box-shadow list: use a transparent shadow,
        never `none`, so the focus ring layers stay valid */
     --ui-toggle-shadow: var(--ui-button-shadow);
   }
@@ -229,7 +229,7 @@
     --ui-toggle-shadow: 0 0 transparent;
   }
 
-  /* the default "ghost" toggle reads as bare until on/hovered — the shadcn look */
+  /* the default "ghost" toggle reads as bare until on/hovered (the shadcn look) */
   .ui-toggle[data-variant="ghost"] {
     --ui-toggle-background: transparent;
     --ui-toggle-background--hover: var(--muted);

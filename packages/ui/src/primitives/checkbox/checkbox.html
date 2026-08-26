@@ -2,11 +2,15 @@
   <legend>Preferences</legend>
   <div class="flex flex-col gap-xs">
     <label class="ui-field" data-orientation="horizontal">
-      <input type="checkbox" name="preferences-newsletter" />
+      <input type="checkbox" data-checkbox-controls="preferences" />
+      <span data-slot="field-label">Select all</span>
+    </label>
+    <label class="ui-field" data-orientation="horizontal">
+      <input type="checkbox" name="preferences" value="newsletter" />
       <span data-slot="field-label">Subscribe to the newsletter</span>
     </label>
     <label class="ui-field" data-orientation="horizontal">
-      <input type="checkbox" name="preferences-terms" checked />
+      <input type="checkbox" name="preferences" value="terms" checked />
       <span data-slot="field-label">Accept terms &amp; conditions</span>
     </label>
   </div>

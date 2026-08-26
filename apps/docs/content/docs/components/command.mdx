@@ -3,9 +3,9 @@ title: Command
 description: A command menu for search and quick actions, opened as a popover or a dialog.
 ---
 
-A `<ui-command>` is a cmdk-style palette whose panel contains the search input. The panel is either a `popover="auto"` dropdown (native light dismiss, `popovertarget` trigger) or a `<dialog class="ui-dialog">` (focused style, `command="show-modal"` trigger). Items rank by match score, the best match auto-highlights, and Enter activates the highlighted item exactly as a click would.
+A `<ui-command>` is a cmdk-style palette with the search input inside its panel. The panel is either a `popover="auto"` dropdown (native light dismiss with a `popovertarget` trigger) or a `<dialog class="ui-dialog">` (modal style with a `command="show-modal"` trigger). Items rank by match score, the best match auto-highlights, and Enter activates the highlighted item just like a click.
 
-Actions are the platform's own vocabulary: navigation items are real `<a href>` links, and action items are `<button command commandfor>` invoker buttons — opening a dialog or popover needs no custom code, and custom `--commands` reach whatever target you name. Every activation also dispatches a bubbling `zazz:command-select` event (`detail: { item, value }`) from the root. Without JavaScript the trigger still opens the panel natively and every item still works; only filtering, highlight, and hotkeys are lost.
+Actions use native platform attributes. Navigation items are real `<a href>` links, and action items are `<button command commandfor>` invoker buttons. Opening a dialog or popover requires no custom glue code, and custom `--commands` dispatch directly to target elements. Every activation dispatches a bubbling `zazz:command-select` event (`detail: { item, value }`) from the root. Without JavaScript, the trigger still opens the panel natively and items remain clickable; only live filtering, ranking highlights, and hotkeys are skipped.
 
 ## Popover
 
@@ -17,18 +17,18 @@ Actions are the platform's own vocabulary: navigation items are real `<a href>` 
 
 ## Custom actions
 
-Simple actions need no script. For real logic, register a custom `--command` handler on the invoker target, or listen for `zazz:command-select` — the loaded `command-actions.js` in this example is a copyable template.
+Simple actions need no script. For custom logic, register a `--command` handler on the invoker target, or listen for `zazz:command-select`. The loaded `command-actions.js` in this example is a template you can adapt.
 
 <Preview src="command/command-actions" />
 
 ## API
 
-| Attribute                      | Target                                 | Values                                                 |
-| ------------------------------ | -------------------------------------- | ------------------------------------------------------ |
-| `data-command-hotkey`          | Root                                   | Global toggle shortcut, e.g. `mod+k`                   |
-| `data-hotkey`                  | `[data-slot="command-item"]`           | Global accelerator that activates the item             |
-| `data-stay-open`               | `[data-slot="command-item"]`           | Keep the panel open after activation                   |
-| `data-sort`                    | Root                                   | `document` — opt out of score ranking (default: score) |
-| `command` / `commandfor`       | `[data-slot="command-item"]`           | Native or custom (`--…`) invoker action                |
-| `data-value` / `data-keywords` | `[data-slot="command-item"]`           | Match text / extra match targets                       |
-| `data-side` / `data-align`     | `[data-slot="command-panel"][popover]` | Placement (popover form only)                          |
+| Attribute                      | Target                                 | Values                                                |
+| ------------------------------ | -------------------------------------- | ----------------------------------------------------- |
+| `data-command-hotkey`          | Root                                   | Global toggle shortcut, e.g. `mod+k`                  |
+| `data-hotkey`                  | `[data-slot="command-item"]`           | Global accelerator that activates the item            |
+| `data-stay-open`               | `[data-slot="command-item"]`           | Keep the panel open after activation                  |
+| `data-sort`                    | Root                                   | `document`: opt out of score ranking (default: score) |
+| `command` / `commandfor`       | `[data-slot="command-item"]`           | Native or custom (`--…`) invoker action               |
+| `data-value` / `data-keywords` | `[data-slot="command-item"]`           | Match text / extra match targets                      |
+| `data-side` / `data-align`     | `[data-slot="command-panel"][popover]` | Placement (popover form only)                         |

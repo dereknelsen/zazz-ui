@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * @fileoverview `<ui-multiselect>` — a multi-select styled as a dropdown.
+ * @fileoverview `<ui-multiselect>`: a multi-select styled as a dropdown.
  * @description Light-DOM custom element that progressively enhances a real
  * `<select multiple class="ui-select">`. `appearance: base-select` does not
  * yet apply to multi-selects in any stable engine, so the script hides the
@@ -10,16 +10,16 @@
  * checkbox rows projected from the options. Checkbox changes write back to
  * `option.selected` and re-dispatch `change` on the select; external writes
  * and form resets flow the other way. Without JavaScript the native
- * multi-select listbox renders — fully functional and accessible.
+ * multi-select listbox renders: fully functional and accessible.
  *
  * The trigger reads `<first selection> (+N more)`. When base-select grows
  * stable multi-select support this enhancement can retire (see the CSS
  * header note in select.css).
  *
  * Attributes on `<ui-multiselect>`:
- * - `data-placeholder` — trigger text when nothing is selected.
- * - `data-label-more` — overflow template, default `"(+{n} more)"`.
- * - `data-side` / `data-align` — forwarded to the stamped panel (popover
+ * - `data-placeholder`: trigger text when nothing is selected.
+ * - `data-label-more`: overflow template, default `"(+{n} more)"`.
+ * - `data-side` / `data-align`: forwarded to the stamped panel (popover
  *   placement matrix).
  *
  * Stamped parts: `multiselect-trigger` (a `.ui-select`-classed button),
@@ -95,7 +95,7 @@ class UiMultiselect extends ZazzElement {
       { signal },
     );
 
-    // The popover polyfill doesn't reflect expanded state — mirror it ourselves
+    // The popover polyfill doesn't reflect expanded state: mirror it ourselves
     panel.addEventListener(
       "toggle",
       (event) => {
@@ -104,7 +104,7 @@ class UiMultiselect extends ZazzElement {
       { signal },
     );
 
-    // Output adapter — trigger label + row checked states together
+    // Output adapter: trigger label + row checked states together
     effect(
       () => {
         selection.get();

@@ -1,17 +1,17 @@
 /**
- * select.css — Select (.ui-select on customizable <select>)
+ * select.css: Select (.ui-select on customizable <select>)
  *
  * @layer      variables, reset, components
  * @requires   layers.css, _variables.css, fields.css, _reset.css, popover.css (--ui-popover-*), button.css (--ui-button-*)
- * @uses       appearance: base-select — customizable select (Chromium 135+ / Safari 17+)
+ * @uses       appearance: base-select: customizable select (Chromium 135+ / Safari 17+)
  * @uses       ::picker(select), ::picker-icon, selectedcontent, option::checkmark
- * @uses       @starting-style + allow-discrete — picker open animation
- * @uses       anchor-size(width) — match picker width to trigger (@supports gated)
- * @uses       position-area, position-try-fallbacks — placement tokens come from
+ * @uses       @starting-style + allow-discrete: picker open animation
+ * @uses       anchor-size(width): match picker width to trigger (@supports gated)
+ * @uses       position-area, position-try-fallbacks: placement tokens come from
  *             popover.css's shared matrix (@supports gated)
- * @uses       backdrop-filter — picker surface blur (shared with [popover])
+ * @uses       backdrop-filter: picker surface blur (shared with [popover])
  * @uses       Degrades to native OS dropdown where base-select is unsupported
- * @uses       ui-multiselect (multiselect.ts) — JS-projected dropdown for
+ * @uses       ui-multiselect (multiselect.ts): JS-projected dropdown for
  *             <select multiple>; base-select has no stable multi-select yet, so
  *             this is a recorded exception like base-select itself. Degrades to
  *             the native multi listbox without JS; retire the enhancement when
@@ -22,14 +22,14 @@
 
 @layer variables {
   :root {
-    /* Box treatment — alias the shared --ui-field-* family (owned in fields.css) so
+    /* Box treatment: alias the shared --ui-field-* family (owned in fields.css) so
        a select, a text input, and a textarea read as one family. Retune a
        --ui-field-* token and every control follows; remap a --ui-select-* token to
        diverge just the select. */
     --ui-select-inline-size: 100%;
     --ui-select-min-inline-size: 16ch;
     --ui-select-padding-inline-start: var(--ui-field-padding);
-    /* Trailing space differs from .ui-input — room for the picker icon */
+    /* Trailing space differs from .ui-input: room for the picker icon */
     --ui-select-padding-inline-end: var(--step-2);
     --ui-select-font-size: var(--ui-field-font-size);
     --ui-select-line-height: var(--ui-field-line-height);
@@ -44,7 +44,7 @@
     --ui-select-picker-icon-size: var(--ui-field-icon-size);
     --ui-select-picker-icon-color: currentColor;
 
-    /* Option (menu item) — a ghost button rendered as a native <option>. Alias
+    /* Option (menu item): a ghost button rendered as a native <option>. Alias
        the --ui-button-* family (owned in button.css) so a select's options and a
        menu's ghost items read as one; retune a --ui-button-* token and both
        follow. The ghost look is base button minus the surface fill + border, so
@@ -82,7 +82,7 @@
 
 @layer reset {
   /* ===========================================================================
-  SELECT — native <select> internals (::picker, <option>, ::picker-icon)
+  SELECT: native <select> internals (::picker, <option>, ::picker-icon)
   - In the reset layer so component overrides win; the plain appearance reset
     stays in _reset.css.
   - Both the select and ::picker(select) need appearance: base-select before
@@ -145,7 +145,7 @@
 
 @layer zazz.components {
   /* ===========================================================================
-  SELECT — .ui-select (customizable <select>, no JS)
+  SELECT: .ui-select (customizable <select>, no JS)
   - appearance: base-select themes the trigger, picker, options, and arrow while
     the browser keeps keyboard nav, top-layer rendering, and form integration.
   - Needs a <button><selectedcontent></selectedcontent></button> child. Degrades
@@ -238,11 +238,11 @@
     transform: rotate(-180deg);
   }
 
-  /* Dropdown panel — the shared [popover] surface (--ui-popover-* family), anchored
+  /* Dropdown panel: the shared [popover] surface (--ui-popover-* family), anchored
      to the trigger. anchor-size() matches the panel to the trigger width; it is anchor-related,
      so it is gated. The fallback (max-content) only matters in the narrow case
      of a browser that supports customizable <select> (::picker) but not
-     anchor-size — there the panel sizes to its content instead of stretching. */
+     anchor-size, where the panel sizes to its content instead of stretching. */
   .ui-select::picker(select) {
     flex-direction: column;
     gap: var(--step-px);
@@ -266,14 +266,14 @@
   }
 
   /* ===========================================================================
-  PICKER PLACEMENT — the shared matrix in popover.css owns data-side × data-align
+  PICKER PLACEMENT: the shared matrix in popover.css owns data-side x data-align
   (it includes .ui-select, and custom properties set on the select inherit into
   ::picker(select)). Only the application of those tokens lives here, because
   position-area is gated on anchor support.
   =========================================================================== */
 
   /* The picker is implicitly anchored to the select, so position-area needs no
-     anchor-name — but it is still anchor positioning, gated like popover.css so
+     anchor-name; but it is still anchor positioning, gated like popover.css so
      browsers without it (Firefox/Safari) keep the UA picker placement instead of
      a mispositioned box. */
   @supports (anchor-name: --zazz) {
@@ -284,7 +284,7 @@
     }
   }
 
-  /* Options render as ghost buttons — the --ui-option-* family (set in @layer
+  /* Options render as ghost buttons: the --ui-option-* family (set in @layer
      variables) aliases the --ui-button-* ghost values, so a select's menu items and
      a menu's ghost items read identically. Like .ui-button, sizing rides on
      min-block-size + padding-inline (no block padding) so every row is uniform. */
@@ -342,7 +342,7 @@
   }
 
   /* ===========================================================================
-  MULTISELECT — ui-multiselect (JS-projected dropdown over <select multiple>)
+  MULTISELECT: ui-multiselect (JS-projected dropdown over <select multiple>)
   - The script hides the real select and stamps a .ui-select-classed trigger +
     a popover of checkbox rows (see multiselect.ts). Rows are ghost options
     (--ui-option-*) with the shared checkmark, so single- and multi-select
@@ -380,7 +380,7 @@
     white-space: nowrap;
   }
 
-  /* Chevron — the ::picker-icon treatment, rebuilt for a plain button */
+  /* Chevron: the ::picker-icon treatment, rebuilt for a plain button */
   [data-slot~="multiselect-icon"] {
     flex-shrink: 0;
     inline-size: var(--ui-select-picker-icon-size);
@@ -402,7 +402,7 @@
     box-shadow: var(--ui-menu-shadow);
   }
 
-  /* Only display is gated — see popover.css: closed popovers stay display: none */
+  /* Only display is gated; see popover.css: closed popovers stay display: none */
   [data-slot~="multiselect-panel"]:where(:popover-open, .\:popover-open) {
     display: flex;
   }

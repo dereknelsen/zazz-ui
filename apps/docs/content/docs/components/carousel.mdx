@@ -36,7 +36,7 @@ The root is the `<ui-carousel>` element itself; interior parts are marked with `
 | `carousel-dots` / `carousel-dot`  | Pagination container and template dot (optional) |
 | `carousel-thumbs`                 | Synchronized thumbnail container (optional)      |
 
-`data-slot` is a space-separated token list, so an element can serve two primitives at once — a lightbox slide is also a carousel slide (`data-slot="lightbox-slide carousel-slide"`). Selectors match slots with `[data-slot~="carousel-slide"]`.
+`data-slot` is a space-separated token list, so an element can serve two primitives at once: a lightbox slide is also a carousel slide (`data-slot="lightbox-slide carousel-slide"`). Selectors match slots with `[data-slot~="carousel-slide"]`.
 
 ## Setup
 
@@ -60,7 +60,7 @@ Configure Embla options as `data-carousel-*` attributes on `<ui-carousel>`:
 
 ### Plugins
 
-Enable plugins with a space-separated `data-carousel-plugins` list. Configure each plugin with its option prefix — options alone do not load the plugin.
+Enable plugins with a space-separated `data-carousel-plugins` list. Configure each plugin with its option prefix; setting options alone will not load the plugin.
 
 ```html
 <ui-carousel data-carousel-plugins="autoplay" data-carousel-autoplay-delay="3000">

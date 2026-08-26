@@ -1,14 +1,14 @@
 /**
- * navigation-menu.css — Navigation menu (.ui-navigation-menu)
+ * navigation-menu.css: Navigation menu (.ui-navigation-menu)
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, popover.css, button.css
- * @uses       [popover] + nested popovers — megamenu panels and flyout submenus
- * @uses       anchor-name, anchor-scope, position-anchor, anchor-size() — panel
+ * @uses       [popover] + nested popovers: megamenu panels and flyout submenus
+ * @uses       anchor-name, anchor-scope, position-anchor, anchor-size(): panel
  *             sizing and positioning (Chromium 125+ for anchor-size)
- * @uses       :has(:popover-open) — chevron rotation without JS
- * @uses       view-transition-name — stable header across navigations
- * @uses       @starting-style — slide-down viewport reveal
+ * @uses       :has(:popover-open): chevron rotation without JS
+ * @uses       view-transition-name: stable header across navigations
+ * @uses       @starting-style: slide-down viewport reveal
  * @tokens     --ui-navigation-menu-* (@layer variables)
  */
 

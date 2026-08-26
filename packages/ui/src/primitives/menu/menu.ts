@@ -1,11 +1,11 @@
 "use strict";
 
 /**
- * @fileoverview `<ui-menu>` — HTML web component for keyboard-enhanced menus.
+ * @fileoverview `<ui-menu>`: HTML web component for keyboard-enhanced menus.
  * @description Light-DOM custom element that augments the CSS-only menu
  * pattern (trigger + anchored `[data-slot~="menu-popover"]` panel) with
  * arrow-key navigation. The class form `.ui-menu` stays fully functional
- * without JavaScript — the Popover API provides open/close, light dismiss,
+ * without JavaScript: the Popover API provides open/close, light dismiss,
  * and focus return on its own.
  *
  * Keyboard behavior:
@@ -14,7 +14,7 @@
  * - ArrowDown / ArrowUp inside the open panel move focus between items,
  *   wrapping around and skipping disabled items.
  * - Home / End jump to the first / last item.
- * - Escape and light dismiss are native Popover API behavior — no code here.
+ * - Escape and light dismiss are native Popover API behavior (no code here).
  *
  * The menu keeps the honest disclosure posture: items are plain links and
  * buttons, and no `role="menu"` is claimed. Add the full ARIA menu contract
@@ -40,7 +40,7 @@ class UiMenu extends ZazzElement {
   }
 
   /**
-   * @description The menu's own panel — a direct child so nested menus keep
+   * @description The menu's own panel: a direct child so nested menus keep
    * their panels to themselves.
    *
    * @returns The panel element, or null when the markup is incomplete.

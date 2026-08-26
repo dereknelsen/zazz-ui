@@ -1,15 +1,15 @@
 "use strict";
 
 /**
- * @fileoverview `<ui-combobox>` — an input restricted to a predefined list.
+ * @fileoverview `<ui-combobox>`: an input restricted to a predefined list.
  * @description Light-DOM custom element on the shared typeahead engine
  * (`base/typeahead.ts`). A relative of select: the panel filters as you type,
  * but free text can never submit. The form value lives in an authored hidden
  * input (`data-slot="combobox-value"`), synced whenever the selection changes.
  *
  * The visible input carries a **display value, not the filter**. Committing
- * writes the option's label into it and clears the query, so reopening shows
- * the full list with the committed row ticked — exactly like `.ui-select`.
+ * writes the option label into it and clears the query, so reopening shows
+ * the full list with the committed row checked, matching `.ui-select`.
  * Opening selects that label so the first keystroke replaces it, and focus
  * alone never opens the panel (a click, the chevron, an arrow key or typing
  * does). On blur, stray text reverts to the committed label and cleared text
@@ -17,18 +17,17 @@
  *
  * `data-variant="multiselect"` selects a set instead: committing toggles a row
  * and keeps the panel open, and every selected value renders as a removable
- * tag stamped inside the control. The tag's markup is HTML, not script — author
+ * tag stamped inside the control. The tag markup is HTML, not script: author
  * a `<template data-slot="combobox-tag-template">` to control its classes and
  * structure, and this file fills in the label, the value, and the remove
- * button's accessible name. Without one, the ui-badge default below applies.
+ * button accessible name. Without one, the ui-badge default below applies.
  * Backspace on an empty input drops the last tag. Options carrying
- * `aria-selected="true"`
- * are the single source of truth — the tags and the hidden inputs are both
- * derived from them in DOM order, so nothing can drift. The form submits
- * repeated `name` pairs like `<select multiple>`: the authored hidden input
- * carries the first value, stamped siblings the rest.
+ * `aria-selected="true"` are the single source of truth: the tags and the
+ * hidden inputs are both derived from them in DOM order so nothing can drift.
+ * The form submits repeated `name` pairs like `<select multiple>`: the authored
+ * hidden input carries the first value, and stamped siblings carry the rest.
  *
- * Where a no-JS fallback matters, prefer `.ui-select` / `<ui-multiselect>` —
+ * Where a no-JS fallback matters, prefer `.ui-select` / `<ui-multiselect>`:
  * this control is inert without its script (the hidden input still submits a
  * server-set value, but no tags render).
  *
@@ -49,7 +48,7 @@ import { defineZazzElement } from "../../base/zazz-element.ts";
 /**
  * The default tag markup, cloned once per selected value. Authors override it
  * wholesale with a `<template data-slot="combobox-tag-template">`, so restyling
- * a tag — other classes, an extra icon, a different component entirely — never
+ * a tag (other classes, an extra icon, a different component entirely) never
  * means editing this script. Kept as markup rather than createElement calls so
  * the default reads the same way the override is written.
  */
@@ -140,15 +139,15 @@ class UiCombobox extends TypeaheadElement {
     }
 
     // Adopt a server-rendered value no row claims yet, so `value` alone is
-    // enough markup to seed the selection — and so the sync below can never
-    // silently discard it
+    // enough markup to seed the selection, ensuring the sync below never
+    // silently discards it
     const hidden = this.#valueInput();
     if (hidden !== null && hidden.value !== "" && this.#selectedItems().length === 0) {
       const match = this.items().find((item) => this.#itemFormValue(item) === hidden.value);
       match?.setAttribute("aria-selected", "true");
     }
 
-    // A multi-select listbox announces every row's state, not just the picked ones
+    // A multi-select listbox announces every row state, not just the picked ones
     if (multiselect) {
       for (const item of this.items()) {
         if (item.getAttribute("aria-selected") !== "true") {
@@ -157,7 +156,7 @@ class UiCombobox extends TypeaheadElement {
       }
     }
 
-    // Attribute state has no defaultValue — remember the markup's selection so
+    // Attribute state has no defaultValue: remember the markup selection so
     // a form reset can restore it
     this.#defaultValues = this.#selectedItems().map((item) => this.#itemFormValue(item));
     this.#committedLabel = multiselect ? "" : (this.#selectedLabel() ?? "");
@@ -173,7 +172,7 @@ class UiCombobox extends TypeaheadElement {
       "mousedown",
       (event) => {
         if (!(event.target instanceof Element) || event.target === input) return;
-        // Nothing in the shell may steal focus from the input — the chevron and
+        // Nothing in the shell may steal focus from the input: the chevron and
         // the tag remove buttons would otherwise blur it and close the panel
         event.preventDefault();
         input.focus();
@@ -184,7 +183,7 @@ class UiCombobox extends TypeaheadElement {
       { signal },
     );
 
-    // Tag removal is delegated — the tags are re-stamped on every change
+    // Tag removal is delegated: the tags are re-stamped on every change
     control?.addEventListener(
       "click",
       (event) => {
@@ -263,7 +262,7 @@ class UiCombobox extends TypeaheadElement {
   }
 
   /**
-   * @description Combobox items match against what the user sees — the label —
+   * @description Combobox items match against what the user sees (the label)
    * not the machine `data-value`.
    *
    * @param item - The item element.
@@ -275,8 +274,8 @@ class UiCombobox extends TypeaheadElement {
 
   /**
    * @description Escape with the panel already closed restores the committed
-   * label (single) or drops the filter text (multiselect) — never a half-typed
-   * value, which a later blur would read as a cleared selection.
+   * label (single) or drops the filter text (multiselect), avoiding a half-typed
+   * value that a later blur would read as a cleared selection.
    */
   protected clearQuery(): void {
     const input = this.searchInput;
@@ -311,8 +310,8 @@ class UiCombobox extends TypeaheadElement {
 
     this.#committedLabel = this.itemValue(item);
     input.value = this.#committedLabel;
-    // The label is display text, not a filter — clearing the query is what
-    // makes the reopened panel show the full list with this row ticked
+    // The label is display text, not a filter: clearing the query is what
+    // makes the reopened panel show the full list with this row checked
     this.query.set("");
     for (const other of this.items()) other.removeAttribute("aria-selected");
     item.setAttribute("aria-selected", "true");
@@ -320,7 +319,7 @@ class UiCombobox extends TypeaheadElement {
     input.focus();
     // The inline variant has no popover to close, and closing it would gate its
     // filtering off for good. It also never reopens, so commit is where it
-    // selects the label — the popover variants do that in #openPanel().
+    // selects the label (the popover variants do that in #openPanel()).
     if (this.panel?.hasAttribute("popover")) this.open.set(false);
     else input.select();
   }
@@ -338,8 +337,8 @@ class UiCombobox extends TypeaheadElement {
   /**
    * @description Opens the panel the way a select does: the full list, the
    * committed row highlighted, and its label selected so the first keystroke
-   * replaces it. `activeIndex` is written here rather than from an effect —
-   * effects are output adapters, and a write from inside one can be dropped
+   * replaces it. `activeIndex` is written here rather than from an effect
+   * because effects are output adapters, and writes from inside one can be dropped
    * until the next notification.
    * @private
    */
@@ -360,7 +359,7 @@ class UiCombobox extends TypeaheadElement {
   }
 
   /**
-   * @description The selection — items carrying `aria-selected="true"`, in DOM
+   * @description The selection: items carrying `aria-selected="true"`, in DOM
    * order. The single source of truth for tags and form values alike.
    *
    * @returns The selected items.
@@ -405,8 +404,8 @@ class UiCombobox extends TypeaheadElement {
   }
 
   /**
-   * @description The authored hidden input carrying the form value — never one
-   * of the stamped siblings.
+   * @description The authored hidden input carrying the form value (never one
+   * of the stamped siblings).
    *
    * @returns The hidden input, or null when the author omitted it.
    * @private
@@ -421,7 +420,7 @@ class UiCombobox extends TypeaheadElement {
    * tags and the hidden inputs. The authored input carries the first value and
    * stamped siblings carry the rest under the same `name`, so a multiselection
    * submits as repeated pairs exactly like `<select multiple>`. DOM
-   * construction stays imperative — the DOM is the source of truth here, not a
+   * construction stays imperative: the DOM is the source of truth here, not a
    * signal.
    *
    * @param notify - Whether to dispatch `change` (skipped while seeding).
@@ -493,16 +492,16 @@ class UiCombobox extends TypeaheadElement {
       const tag = blueprint.cloneNode(true) as HTMLElement;
       tag.setAttribute("data-value", this.#itemFormValue(item));
 
-      // The slot is the contract every other moving part keys off — the CSS, the
-      // stale sweep above, and tag removal — so add the token if the template
+      // The slot is the contract every other moving part keys off (the CSS, the
+      // stale sweep above, and tag removal), so add the token if the template
       // left it out rather than stamping an orphan
       if (!tag.matches('[data-slot~="combobox-tag"]')) {
         const slots = tag.getAttribute("data-slot");
         tag.setAttribute("data-slot", slots ? `${slots} combobox-tag` : "combobox-tag");
       }
 
-      // The label wants its own box — text-overflow ignores a flex container's
-      // own text — but a template without one still gets its text
+      // The label wants its own box: text-overflow ignores a flex container's
+      // own text, but a template without one still gets its text
       const text = tag.querySelector('[data-slot~="combobox-tag-label"]');
       if (text) text.textContent = label;
       else tag.prepend(document.createTextNode(label));

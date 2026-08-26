@@ -1,19 +1,19 @@
 /**
- * toaster.css — Toaster (ui-toaster | .ui-toaster, [data-slot~="toaster-toast"])
+ * toaster.css: Toaster (ui-toaster | .ui-toaster, [data-slot~="toaster-toast"])
  *
  * Stacked toast notifications. Collapsed-stack presentation (newest toast in
  * front, older toasts peeking behind, expand on hover) adapted from Sonner by
- * Emil Kowalski — https://sonner.emilkowal.ski (MIT).
+ * Emil Kowalski: https://sonner.emilkowal.ski (MIT).
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, popover.css, button.css
- * @uses       popover="manual" + showPopover()/hidePopover() — top-layer region,
+ * @uses       popover="manual" + showPopover()/hidePopover(): top-layer region,
  *             driven by zazz/scripts/toaster.js (no light dismiss)
- * @uses       @starting-style — enter motion for toasts inserted into the open region
- * @uses       view-transition-name: toaster — own snapshot group, frozen in
+ * @uses       @starting-style: enter motion for toasts inserted into the open region
+ * @uses       view-transition-name: toaster: own snapshot group, frozen in
  *             _view-transitions.css so page transitions never repaint the stack
  * @uses       JS-maintained props (--toasts-before, --offset, --initial-height,
- *             --front-toast-height + inline z-index) — stack math from toaster.js
+ *             --front-toast-height + inline z-index): stack math from toaster.js
  * @tokens     --ui-toaster-* (@layer variables)
  * @see        /docs/components/toaster
  */
@@ -26,10 +26,10 @@
     --ui-toaster-border: var(--border);
     --ui-toaster-radius: var(--radius-md);
     --ui-toaster-shadow: var(--shadow-md);
-    /* status accent — icon color; variants reassign */
+    /* status accent: icon color; variants reassign */
     --ui-toaster-accent: var(--popover-foreground);
 
-    /* metrics — mobile full width falls out of the min(); no media query */
+    /* metrics: mobile full width falls out of the min(); no media query */
     --ui-toaster-width: min(356px, calc(100vi - var(--gutters) * 2));
     --ui-toaster-inset: var(--gutters);
     --ui-toaster-gap: var(--step-3_5);
@@ -42,7 +42,7 @@
     --ui-toaster-description-font-size: var(--font-size-sm);
     --ui-toaster-description-color: var(--muted-foreground);
 
-    /* stack — per-depth shrink of collapsed toasts */
+    /* stack: per-depth shrink of collapsed toasts */
     --ui-toaster-scale-step: 0.05;
 
     /* motion */
@@ -55,11 +55,11 @@
 
 @layer zazz.components {
   /* ===========================================================================
-  TOASTER REGION — popover="manual" host (<ui-toaster class="toaster">)
+  TOASTER REGION: popover="manual" host (<ui-toaster class="toaster">)
   - Sits in the top layer while any toast is visible; toaster.js calls
     showPopover()/hidePopover(). It is a positioning shell, not a surface, so
     the shared [popover] chrome from popover.css (reset + components layers)
-    is neutralized here. The region does not animate — JS hides it only after
+    is neutralized here. The region does not animate: JS hides it only after
     the last toast's exit transition finishes.
   - --_lift is an inherited coordination var (like --_gap in _utilities.css):
     set per data-position on the region, read by every toast for the stack
@@ -89,8 +89,8 @@
     inline-size: var(--ui-toaster-width);
     --_lift: -1;
 
-    /* Own snapshot group for page view transitions — frozen (never animated)
-       in _view-transitions.css, so navigations can't cross-fade or repaint an
+    /* Own snapshot group for page view transitions: frozen (never animated)
+       in _view-transitions.css, so navigations cannot cross-fade or repaint an
        active stack. One region per page: duplicate view-transition-names
        would make the browser skip the whole transition. */
     view-transition-name: toaster;
@@ -100,7 +100,7 @@
     display: block;
   }
 
-  /* Positions — logical, so RTL flips for free. Default is bottom-end. */
+  /* Positions: logical, so RTL flips for free. Default is bottom-end. */
 
   :where(ui-toaster, .ui-toaster)[data-position^="top"] {
     inset-block-start: var(--ui-toaster-inset);
@@ -125,7 +125,7 @@
   }
 
   /* ===========================================================================
-  TOAST — absolutely positioned against the region's edge; all placement is
+  TOAST: absolutely positioned against the region's edge; all placement is
   transform-based so enter/exit/stack shifts share one transition.
   toaster.js maintains --toasts-before, --offset (cumulative expanded offset),
   --initial-height, data-front, data-visible, data-removed, and inline z-index.
@@ -158,7 +158,7 @@
       block-size var(--ui-toaster-transition-duration) var(--ui-toaster-transition-timing-function);
 
     /* Newly inserted toasts slide in from the region's edge (the region is
-       already :popover-open — JS shows it before appending). */
+       already :popover-open; JS shows it before appending). */
     @starting-style {
       opacity: var(--ui-toaster-opacity--start);
       transform: translateY(calc(var(--_lift) * -100%));
@@ -177,7 +177,7 @@
   }
 
   /* ===========================================================================
-  COLLAPSED STACK — behind toasts tuck under the front one: shifted by one
+  COLLAPSED STACK: behind toasts tuck under the front one: shifted by one
   gap per depth, scaled down, clamped to the front toast's height so only
   their edges peek, content hidden.
   =========================================================================== */
@@ -196,7 +196,7 @@
   }
 
   /* ===========================================================================
-  EXPANDED — real cumulative offsets and natural heights. The ::after bridge
+  EXPANDED: real cumulative offsets and natural heights. The ::after bridge
   spans the gap toward the next toast so the pointer never leaves the stack
   while moving between toasts (which would collapse it).
   =========================================================================== */
@@ -219,14 +219,14 @@
     inset-block-start: 100%;
   }
 
-  /* Beyond the visible limit — kept in the DOM until dismissed, but hidden. */
+  /* Beyond the visible limit: kept in the DOM until dismissed, but hidden. */
   [data-slot~="toaster-toast"][data-visible="false"] {
     opacity: 0;
     pointer-events: none;
   }
 
   /* ===========================================================================
-  EXIT — transition back toward the region's edge; toaster.js removes the
+  EXIT: transition back toward the region's edge; toaster.js removes the
   node on transitionend. Collapsed behind toasts keep their tucked transform
   and simply fade, so removal doesn't jump the stack.
   =========================================================================== */
@@ -288,7 +288,7 @@
   }
 
   /* ===========================================================================
-  VARIANTS — reassign the accent token only
+  VARIANTS: reassign the accent token only
   =========================================================================== */
 
   [data-slot~="toaster-toast"][data-variant="success"] {
