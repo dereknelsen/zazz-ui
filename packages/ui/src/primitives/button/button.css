@@ -69,6 +69,7 @@
 
     color: var(--ui-button-foreground);
     background-color: var(--ui-button-background);
+    background-clip: padding-box;
 
     /* ring renders as box-shadow so it composes with --ui-button-shadow; the
        ring widths animate from 0 so the ring grows in smoothly on focus */
