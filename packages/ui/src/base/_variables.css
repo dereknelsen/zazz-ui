@@ -108,11 +108,11 @@
     --faded-foreground: light-dark(var(--tint-600), var(--shade-600));
 
     /* brand */
-    --primary: light-dark(var(--primary-600), var(--primary-500));
+    --primary: light-dark(var(--primary-950), var(--primary-800));
     --primary-foreground: light-dark(var(--white), var(--white));
-    --secondary: light-dark(var(--secondary-600), var(--secondary-500));
+    --secondary: light-dark(var(--secondary-950), var(--secondary-800));
     --secondary-foreground: light-dark(var(--white), var(--white));
-    --tertiary: light-dark(var(--tertiary-500), var(--tertiary-400));
+    --tertiary: light-dark(var(--tertiary-950), var(--tertiary-800));
     --tertiary-foreground: light-dark(var(--white), var(--white));
 
     /* status */
@@ -131,43 +131,43 @@
     * ========================================================================== */
 
     /* primary */
-    --primary-50: oklch(0.984 0.007 286.46);
-    --primary-100: oklch(0.94 0.025 288.37);
-    --primary-200: oklch(0.85 0.068 285.81);
-    --primary-300: oklch(0.765 0.108 284.76);
-    --primary-400: oklch(0.674 0.154 283.18);
-    --primary-500: oklch(0.593 0.193 280.79);
-    --primary-600: oklch(0.511 0.23 276.97);
-    --primary-700: oklch(0.421 0.234 273.27);
-    --primary-800: oklch(0.32 0.179 273.06);
-    --primary-900: oklch(0.229 0.127 273.39);
-    --primary-950: oklch(0.158 0.088 274.05);
+    --primary-50: oklch(0.985 0 0);
+    --primary-100: oklch(0.967 0.001 0);
+    --primary-200: oklch(0.92 0.004 0);
+    --primary-300: oklch(0.87 0 0);
+    --primary-400: oklch(0.708 0 0);
+    --primary-500: oklch(0.556 0 0);
+    --primary-600: oklch(0.439 0 0);
+    --primary-700: oklch(0.371 0 0);
+    --primary-800: oklch(0.269 0 0);
+    --primary-900: oklch(0.205 0 0);
+    --primary-950: oklch(0.145 0 0);
 
     /* secondary */
-    --secondary-50: oklch(0.984 0.008 27.43);
-    --secondary-100: oklch(0.95 0.023 24.19);
-    --secondary-200: oklch(0.878 0.061 25.87);
-    --secondary-300: oklch(0.814 0.101 27.69);
-    --secondary-400: oklch(0.749 0.146 30.02);
-    --secondary-500: oklch(0.687 0.198 34.85);
-    --secondary-600: oklch(0.61 0.194 36.8);
-    --secondary-700: oklch(0.5 0.159 36.84);
-    --secondary-800: oklch(0.383 0.121 36.98);
-    --secondary-900: oklch(0.276 0.088 36.22);
-    --secondary-950: oklch(0.215 0.068 37.62);
+    --secondary-50: oklch(98.5% 0.002 247.839);
+    --secondary-100: oklch(96.7% 0.003 264.542);
+    --secondary-200: oklch(92.8% 0.006 264.531);
+    --secondary-300: oklch(87.2% 0.01 258.338);
+    --secondary-400: oklch(70.7% 0.022 261.325);
+    --secondary-500: oklch(55.1% 0.027 264.364);
+    --secondary-600: oklch(44.6% 0.03 256.802);
+    --secondary-700: oklch(37.3% 0.034 259.733);
+    --secondary-800: oklch(27.8% 0.033 256.848);
+    --secondary-900: oklch(21% 0.034 264.665);
+    --secondary-950: oklch(13% 0.028 261.692);
 
     /* tertiary */
-    --tertiary-50: oklch(0.984 0.006 17.54);
-    --tertiary-100: oklch(0.942 0.023 11.04);
-    --tertiary-200: oklch(0.861 0.062 11.02);
-    --tertiary-300: oklch(0.772 0.11 12.13);
-    --tertiary-400: oklch(0.693 0.163 13.04);
-    --tertiary-500: oklch(0.613 0.208 14.68);
-    --tertiary-600: oklch(0.523 0.177 14.77);
-    --tertiary-700: oklch(0.432 0.147 14.69);
-    --tertiary-800: oklch(0.334 0.114 14.76);
-    --tertiary-900: oklch(0.244 0.083 14.99);
-    --tertiary-950: oklch(0.197 0.068 15.17);
+    --tertiary-50: oklch(0.986 0.002 67.8);
+    --tertiary-100: oklch(0.96 0.002 17.2);
+    --tertiary-200: oklch(0.922 0.005 34.3);
+    --tertiary-300: oklch(0.868 0.007 39.5);
+    --tertiary-400: oklch(0.714 0.014 41.2);
+    --tertiary-500: oklch(0.547 0.021 43.1);
+    --tertiary-600: oklch(0.438 0.017 39.3);
+    --tertiary-700: oklch(0.367 0.016 35.7);
+    --tertiary-800: oklch(0.268 0.011 36.5);
+    --tertiary-900: oklch(0.214 0.009 43.1);
+    --tertiary-950: oklch(0.147 0.004 49.3);
 
     /* ==========================================================================
     * 3. Grayscale — neutrals, shade (dim), tint (fade)
@@ -569,27 +569,31 @@
    * Registered as typed @property (false default) in _properties.css.
    * Literal rem required — var() is invalid in a container-query prelude.
    * ========================================================================== */
-  @container (width >= 40rem) {
+  @container (width >=40rem) {
     :where(body *) {
       --is-breakpoint-xs: true;
     }
   }
-  @container (width >= 48rem) {
+
+  @container (width >=48rem) {
     :where(body *) {
       --is-breakpoint-sm: true;
     }
   }
-  @container (width >= 64rem) {
+
+  @container (width >=64rem) {
     :where(body *) {
       --is-breakpoint-md: true;
     }
   }
-  @container (width >= 80rem) {
+
+  @container (width >=80rem) {
     :where(body *) {
       --is-breakpoint-lg: true;
     }
   }
-  @container (width >= 96rem) {
+
+  @container (width >=96rem) {
     :where(body *) {
       --is-breakpoint-xl: true;
     }
