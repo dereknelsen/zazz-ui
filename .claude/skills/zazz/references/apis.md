@@ -26,9 +26,9 @@ discovers and enhances markup; you rarely touch it.
 
 ## 2. Zazz JS behaviors (data-attribute driven)
 
-Configure entirely in markup. Don't edit the `@zazz-ui/ui` package source (`packages/ui/src/`)
+Configure entirely in markup. Don't edit the `@zazz-ui/core` package source (`packages/core/src/`)
 unless the task is explicitly about framework internals. Every behavior ships in one ES module —
-`packages/ui/src/index.js` — loaded with a single
+`packages/core/src/index.js` — loaded with a single
 `<script type="module" src="…/index.js">`; its `import` graph orders the rest.
 The only external ordering: Embla-backed components need the Embla CDN UMD bundles loaded (as
 `defer` scripts) **before** the module, since `embla.js` reads them as globals.
@@ -46,7 +46,7 @@ so existing Zazz classes and `data-*` hooks keep working.
 | `<ui-tabs>`     | `tabs.js`           | Radio-driven tabs with richer keyboard nav  | Enhances the CSS-only radio tabs with orientation-aware arrows, Home/End, and wrap-around                    |
 | `<ui-toaster>`  | `toaster.js`        | Stacked toast notifications (top layer)     | Needs `popover="manual"`; fire via `command="--toast"` on any button or `window.Toaster.toast()/success()/…` |
 
-Component preview iframes use `packages/ui/src/manifest.ts` to load scripts and expose a JS
+Component preview iframes use `packages/core/src/manifest.ts` to load scripts and expose a JS
 tab for these files. Custom elements are `display: inline` by default, so their component
 styles define the needed block/flex display.
 
@@ -131,5 +131,5 @@ defers while inside a closed `<dialog>`, and destroys its Embla instances on dis
 
 `@oddbird/popover-polyfill` (Popover API) · `invokers/compatible` (Invoker + Interest
 Invokers, i.e. `command`/`commandfor`/`interestfor`) · the Embla Carousel CDN UMD bundles
-(core + autoplay, auto-scroll, class-names, ssr plugins). See `packages/ui/examples/index.html` for
+(core + autoplay, auto-scroll, class-names, ssr plugins). See `packages/core/examples/index.html` for
 the exact tags and SRI hashes.

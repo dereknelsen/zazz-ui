@@ -2,7 +2,7 @@
 
 Status: in progress (2026-08-25)
 
-Full sweep of `packages/ui/src/primitives/<name>/<name>.css` for missing per-instance
+Full sweep of `packages/core/src/primitives/<name>/<name>.css` for missing per-instance
 override hooks, per ADR-0008 (`docs/adr/0008-instance-override-escape-hatch.md`).
 
 ## The rule

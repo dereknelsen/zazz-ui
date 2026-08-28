@@ -4,7 +4,7 @@ import { SERVED_ROOT, resolveWithin } from "@/lib/zazz-package";
 
 /**
  * Serves the raw Zazz framework source (`src/**` of the installed
- * `@zazz-ui/ui` package — stylesheets, emitted `.js`, example fragments)
+ * `@zazz-ui/core` package — stylesheets, emitted `.js`, example fragments)
  * over HTTP at `/zazz/*`, straight from the single source on disk — no copy
  * into `public/`, no bundling. Serving `src/` as the root means the docs'
  * live URLs match what the prose teaches consumers: `/zazz/index.css` is the

@@ -3,7 +3,7 @@ title: Scripting
 description: Vanilla JavaScript architecture, web component patterns, auto-initialization, and module dependencies.
 ---
 
-Scripts in `@zazz-ui/ui` live alongside their components: shared runtime in `src/base/` and component logic in `src/primitives/<name>/`. Authored in TypeScript, they compile to readable `.js` files that run as native ES modules in modern browsers without a required bundler.
+Scripts in `@zazz-ui/core` live alongside their components: shared runtime in `src/base/` and component logic in `src/primitives/<name>/`. Authored in TypeScript, they compile to readable `.js` files that run as native ES modules in modern browsers without a required bundler.
 
 `index.js` imports all component scripts so pages can load behaviors with a single `<script type="module" src="./zazz/index.js">` tag.
 

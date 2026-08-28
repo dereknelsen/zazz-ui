@@ -18,7 +18,7 @@ lightweight shadcn + Tailwind alternative that runs with **no build step**). Bui
 before reaching for any other styling approach.
 
 **Single source of truth:** each component's markup lives once, in
-`packages/ui/src/primitives/{name}/*.html`, surfaced on the docs site at `/docs/components/{name}`. Never
+`packages/core/src/primitives/{name}/*.html`, surfaced on the docs site at `/docs/components/{name}`. Never
 invent or paste a second copy — read or fetch the real example and adapt it. Component docs
 previews also expose the matching CSS and, for web components, the matching JS tab.
 
@@ -28,7 +28,7 @@ previews also expose the matching CSS and, for web components, the matching JS t
   `zazz` is subdivided: `components, utilities`. A utility wins
   over a component rule with no `!important`. Don't fight the cascade with selector tricks.
 - **Tokens are hooks.** Components read `var(--token)` and never hardcode; variants just
-  reassign tokens (see `packages/ui/src/primitives/button/button.css`). You restyle by overriding tokens, not
+  reassign tokens (see `packages/core/src/primitives/button/button.css`). You restyle by overriding tokens, not
   editing rules.
 - **`data-*` for variants** (shadcn-familiar): `data-variant`, `data-size`, `data-side`,
   `data-align`, `data-orientation`, `data-animation`, `data-layout`, `data-state`. The
@@ -104,7 +104,7 @@ that feel designed for _this_ brand.
 ## Customizing without editing source
 
 Tokens resolve lazily, so you can intervene at three scopes — pick the narrowest that works.
-**Do not edit the `@zazz-ui/ui` package source (`packages/ui/src/`)** unless explicitly asked.
+**Do not edit the `@zazz-ui/core` package source (`packages/core/src/`)** unless explicitly asked.
 
 1. **Global** — redefine a semantic token on `:root` (`--radius-md: 0` squares every medium
    radius across the system).
@@ -118,7 +118,7 @@ Tokens resolve lazily, so you can intervene at three scopes — pick the narrowe
 1. Find the primitive in **`references/components.md`** (selector + `data-*` values + what
    powers it + docs link).
 2. Get the real markup — fetch `/docs/components/{name}` or read
-   `packages/ui/src/primitives/{name}/*.html`. Adapt it; don't reinvent.
+   `packages/core/src/primitives/{name}/*.html`. Adapt it; don't reinvent.
 3. Apply variants via `data-*`; set spacing/color/type via semantic tokens & `text-*` classes.
 4. Compose pages from the `.container` band system (`data-container` sets the band — on the
    container for its default, on a child to override that one; `data-variant="article"` for
@@ -172,16 +172,16 @@ patterns live in `PATTERNS.md`.
 - **Do** reuse utilities/primitives. **Don't** add net-new CSS until you've ruled out a
   semantic option.
 - **Do** preserve the loaded polyfills and modern-API markup. **Don't** edit the
-  `@zazz-ui/ui` package source (`packages/ui/src/`) unless asked.
+  `@zazz-ui/core` package source (`packages/core/src/`) unless asked.
 
 ## Reference index
 
-| Read                                                                    | When                                                                                                        |
-| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `references/tokens.md`                                                  | Choosing spacing, color, type, radius, shadow, or layout tokens/utilities                                   |
-| `references/components.md`                                              | Picking a component and its `data-*` API + docs link                                                        |
-| `references/apis.md`                                                    | Wiring custom elements, popovers/dialogs/tooltips, carousels (`data-carousel-*`), reveals (`data-reveal-*`) |
-| `DESIGN.md`                                                             | Brand colors, type scale, archetypes, motion, brand customization                                           |
-| `PATTERNS.md`                                                           | Page structure, the sentence-case rule, heading-group + CTA composition                                     |
-| `modern-web-guidance` skill                                             | How a modern web API works + browser-support/fallbacks                                                      |
-| `/docs/components/{name}` or `packages/ui/src/primitives/{name}/*.html` | The canonical example markup (single source)                                                                |
+| Read                                                                      | When                                                                                                        |
+| ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `references/tokens.md`                                                    | Choosing spacing, color, type, radius, shadow, or layout tokens/utilities                                   |
+| `references/components.md`                                                | Picking a component and its `data-*` API + docs link                                                        |
+| `references/apis.md`                                                      | Wiring custom elements, popovers/dialogs/tooltips, carousels (`data-carousel-*`), reveals (`data-reveal-*`) |
+| `DESIGN.md`                                                               | Brand colors, type scale, archetypes, motion, brand customization                                           |
+| `PATTERNS.md`                                                             | Page structure, the sentence-case rule, heading-group + CTA composition                                     |
+| `modern-web-guidance` skill                                               | How a modern web API works + browser-support/fallbacks                                                      |
+| `/docs/components/{name}` or `packages/core/src/primitives/{name}/*.html` | The canonical example markup (single source)                                                                |

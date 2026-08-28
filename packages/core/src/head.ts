@@ -20,7 +20,7 @@
  * resolve through the import map; classic polyfills load as plain script tags.
  *
  * @example
- * import { buildHead } from "@zazz-ui/ui/head";
+ * import { buildHead } from "@zazz-ui/core/head";
  * const head = buildHead({ base: "./zazz" });
  */
 

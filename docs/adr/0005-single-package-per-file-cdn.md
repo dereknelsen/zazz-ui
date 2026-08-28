@@ -1,6 +1,8 @@
 # One npm package; CDN granularity by URL path, not by package split
 
-`@zazz-ui/ui` stays the single published package, shipping both the bundled one-request artifacts (`dist/zazz.css`, `dist/zazz.js`) and the readable per-file source (`src/...`). CDN users pick their grain by URL: the whole kit in one request, or individual primitive files a la carte. There is no `@zazz-ui/core`/`@zazz-ui/primitives` split and there are no per-primitive packages (`@zazz-ui/button`, ...).
+`@zazz-ui/core` stays the single published package, shipping both the bundled one-request artifacts (`dist/zazz.css`, `dist/zazz.js`) and the readable per-file source (`src/...`). CDN users pick their grain by URL: the whole kit in one request, or individual primitive files a la carte. There is no base/primitives package split and there are no per-primitive packages (`@zazz-ui/button`, ...).
+
+> Naming note (2026-08-28): the package was renamed `@zazz-ui/ui` → `@zazz-ui/core` (and `packages/ui` → `packages/core`) before first publish, following the TanStack `*-core` convention and leaving room for future framework wrappers (`@zazz-ui/react`, …). This ADR's decision — one package, granularity by URL path — is unchanged: "core" names the single package; it does not reintroduce the rejected split.
 
 ## Context
 
@@ -8,7 +10,7 @@ The distribution-DX charting session (2026-08-24, `.scratch/distribution-dx/`) e
 
 ## Decision
 
-One package. jsDelivr serves any file inside a package, so a single `@zazz-ui/ui` already offers every granularity a package split would: `cdn.jsdelivr.net/npm/@zazz-ui/ui@<version>/dist/zazz.css` for the one-request drop-in, or `.../src/primitives/button/button.css` per primitive for users who want to omit or replace pieces. The package `style`/`unpkg`/`jsdelivr` fields continue pointing at `dist/`.
+One package. jsDelivr serves any file inside a package, so a single `@zazz-ui/core` already offers every granularity a package split would: `cdn.jsdelivr.net/npm/@zazz-ui/core@<version>/dist/zazz.css` for the one-request drop-in, or `.../src/primitives/button/button.css` per primitive for users who want to omit or replace pieces. The package `style`/`unpkg`/`jsdelivr` fields continue pointing at `dist/`.
 
 ## Why not split
 
