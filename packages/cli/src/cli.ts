@@ -38,9 +38,10 @@ program
   .option("--no-theme-script", "omit the theme-persistence script from head.html")
   .option("--force", "overwrite existing files without asking")
   .option("--dry-run", "print the plan without writing")
-  .action(async (versionArg: string | undefined, options: Record<string, unknown>) => {
+  .action(async (versionArg: string | undefined, options: unknown) => {
     const { runInit } = await import("./commands/init.ts");
-    await runInit(versionArg, options, program.opts());
+    type InitParams = Parameters<typeof runInit>;
+    await runInit(versionArg, options as InitParams[1], program.opts() as InitParams[2]);
   });
 
 program
@@ -50,9 +51,10 @@ program
   .option("--examples", "also copy the primitives' example html")
   .option("--force", "overwrite existing files without asking")
   .option("--dry-run", "print the closure and file plan without writing")
-  .action(async (names: string[], options: Record<string, unknown>) => {
+  .action(async (names: string[], options: unknown) => {
     const { runAdd } = await import("./commands/add.ts");
-    await runAdd(names, options, program.opts());
+    type AddParams = Parameters<typeof runAdd>;
+    await runAdd(names, options as AddParams[1], program.opts() as AddParams[2]);
   });
 
 try {

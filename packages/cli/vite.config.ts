@@ -18,6 +18,7 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["src/**/*.test.ts", "e2e/**/*.test.ts"],
+    globalSetup: ["e2e/global-setup.ts"],
   },
   lint: {
     options: {
