@@ -1,8 +1,8 @@
 # @zazz-ui/core
 
-Zazz: a zero-build UI kit for the modern web. Semantic design tokens, cascade layers, `data-*` variants, and native platform APIs (popover, `<dialog>`, invoker commands, anchor positioning, view transitions) instead of framework abstractions. A lightweight alternative to shadcn and Tailwind.
+Zazz is a CSS and vanilla JavaScript UI kit that does not require a build step. It uses semantic design tokens, cascade layers, `data-*` variants, and browser APIs such as popover, `<dialog>`, invoker commands, anchor positioning, and view transitions.
 
-**Docs:** https://zazz.design (component gallery, tokens, guides)
+Docs: https://zazz.sh (component gallery, tokens, guides)
 
 ## Install
 
@@ -11,28 +11,28 @@ pnpm add @zazz-ui/core
 ```
 
 ```js
-import "@zazz-ui/core/index.css"; // the stylesheet tree (cascade-ordered @imports)
-import "@zazz-ui/core"; // component scripts: custom elements, reveal, toaster...
+import "@zazz-ui/core/index.css"; // all styles, imported in cascade order
+import "@zazz-ui/core"; // custom elements and shared behaviors
 ```
 
-Or from a CDN with two tags and no installation step:
+From a CDN:
 
 ```html
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.1.0/dist/zazz.css" />
 <script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.1.0/dist/zazz.js"></script>
 ```
 
-Always pin an exact version in CDN URLs. Each release ships `dist/sri.json` with sha384 hashes for every published file if you want `integrity` attributes on those tags.
+Use an exact version in CDN URLs. Each release includes `dist/sri.json`, which lists the SHA-384 hash for every published file. Use those hashes in `integrity` attributes.
 
-Or copy the files directly: every component is one self-contained folder under `src/primitives/<name>/` containing its stylesheet, script, and canonical HTML examples. Copy a folder and own the code. (A `zazz-ui` CLI that vendors components and their dependencies for you is in the works.)
+You can also copy files directly. Each primitive has a folder under `src/primitives/<name>/` containing its stylesheet, script, and HTML examples. A `zazz-ui` CLI for copying primitives and their dependencies is planned.
 
 ## Usage
 
 ```html
-<button class="ui-button" data-variant="primary">It works</button>
+<button class="ui-button" data-variant="primary">It works!</button>
 ```
 
-Components read design tokens (`var(--primary)`, `--radius-md`, `--gap-*`) and never hardcode values. Restyle globally by overriding tokens on `:root`, per component via its `--ui-button-*` tokens, or per instance inline. Variants are `data-*` attributes rather than class soup. Light and dark modes work out of the box through role tokens.
+Primitives use design tokens such as `var(--primary)`, `--radius-md`, and `--gap-*`. Override tokens on `:root` to change the whole kit, use tokens such as `--ui-button-*` to change one primitive, or set them inline for one instance. Variants use `data-*` attributes. Role tokens control light and dark themes.
 
 ## Package layout
 
@@ -48,11 +48,13 @@ dist/
 └── sri.json         sha384 hashes of every published css/js file
 ```
 
-Scripts are authored in TypeScript and shipped as readable, unminified `.js` with `.d.ts` alongside: what you copy is what runs.
+The package includes readable, unminified `.js` and matching `.d.ts` files compiled from TypeScript.
 
 ## Development
 
-Part of [zazz-ui](https://github.com/dereknelsen/zazz-ui). `pnpm build` runs tsc emit (in-place, next to each `.ts`) and `vp pack` bundles; `pnpm dev` runs tsc watch. Authoring conventions: [CONVENTIONS.styles.md](./CONVENTIONS.styles.md) and [CONVENTIONS.scripts.md](./CONVENTIONS.scripts.md).
+This package is part of the [zazz-ui](https://github.com/dereknelsen/zazz-ui) monorepo. `pnpm build` compiles TypeScript beside each `.ts` file, then runs `vp pack`. `pnpm dev` runs the TypeScript compiler in watch mode.
+
+See [CONVENTIONS.styles.md](./CONVENTIONS.styles.md) and [CONVENTIONS.scripts.md](./CONVENTIONS.scripts.md) before contributing.
 
 ## License
 

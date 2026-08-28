@@ -57,7 +57,7 @@ Written to the project root. Schema (shadcn's `components.json` lesson, minus th
 
 ```jsonc
 {
-  "$schema": "https://zazz-ui.dev/schema.json", // final URL decided by ticket 08
+  "$schema": "https://zazz.sh/schema.json", // final URL decided by ticket 08
   "kit": { "version": "0.1.0", "integrity": "sha512-…" }, // resolved @zazz-ui/core at init time (pacote manifest)
   "dir": "zazz",
   "language": "js",

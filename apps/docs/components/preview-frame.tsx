@@ -16,6 +16,8 @@ interface PreviewFrameProps {
   inline?: "start" | "center" | "end";
   minHeight?: number;
   title?: string;
+  /** Show the fullscreen Expand button. Default true; the home page opts out. */
+  expandable?: boolean;
 }
 
 /**
@@ -31,6 +33,7 @@ export function PreviewFrame({
   inline = "center",
   minHeight = 0,
   title = "Preview",
+  expandable = true,
 }: PreviewFrameProps) {
   const ref = useRef<HTMLIFrameElement>(null);
   const [height, setHeight] = useState(minHeight || 400);
@@ -190,19 +193,21 @@ export function PreviewFrame({
   return (
     <div className="relative overflow-clip">
       {loadingSkeleton}
-      <div className="absolute right-2 bottom-2 z-10">
-        <button
-          className={cn(
-            buttonVariants({ variant: "outline", size: "sm" }),
-            "px-2 py-1 bg-fd-background shadow-xs",
-          )}
-          onClick={toggleFullscreen}
-          aria-label="Expand preview fullscreen"
-        >
-          <ExpandIcon className="size-3.5 mr-1" />
-          Expand
-        </button>
-      </div>
+      {expandable && (
+        <div className="absolute right-2 bottom-2 z-10">
+          <button
+            className={cn(
+              buttonVariants({ variant: "outline", size: "sm" }),
+              "px-2 py-1 bg-fd-background shadow-xs",
+            )}
+            onClick={toggleFullscreen}
+            aria-label="Expand preview fullscreen"
+          >
+            <ExpandIcon className="size-3.5 mr-1" />
+            Expand
+          </button>
+        </div>
+      )}
       {iframeEl}
     </div>
   );
