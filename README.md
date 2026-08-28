@@ -14,11 +14,11 @@ Monorepo for the Zazz Design Framework (a zero-build, semantic-token CSS and van
 ```bash
 pnpm install
 
-# docs site (builds the ui package first; previews load its emitted JS)
+# docs site (builds the core package first; previews load its emitted JS)
 pnpm dev
 
 # iterate on kit scripts in a second terminal (tsc --watch)
-vp run ui#dev
+vp run core#dev
 
 # whole-repo gate: check, test, build everything
 pnpm run ready

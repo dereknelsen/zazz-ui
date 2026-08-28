@@ -1,18 +1,18 @@
 # Changelog
 
-All notable changes to `@zazz-ui/core`, grouped per primitive/base scope under each version — this is the slice the `zazz-ui` CLI's `update`/`diff` print for the primitives an update touches. Breaking entries are flagged **BREAKING** with a one-line migration note (0.x semver: a 0.MINOR bump means at least one breaking entry; see ADR-0010).
+Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
-## 0.1.0 — unreleased
+## 0.1.0 (unreleased)
 
-Initial public release: the Zazz Design Framework as one npm package serving both grains — `dist/zazz.css` + `dist/zazz.js` bundles for one-request CDN drop-in, and the readable per-file `src/` tree for granular CDN use and CLI vendoring.
+First public release. One package, consumed three ways: the `dist/zazz.css` + `dist/zazz.js` bundles for a two-tag CDN drop-in, per-file CDN URLs into the readable `src/` tree, or copying the code into your project and owning it.
 
 ### base
 
-- Cascade-layer architecture (`_layers` → `_variables` → `_reset` → `_typography` → `_view-transitions`, primitives, then `_utilities` + `_layout`), with a `layer(legacy)` slot for migrating stylesheets.
-- Core runtime: `utils`, `signals`, `zazz-element`, `dialog-lifecycle`; opt-in page behaviors `reveal` and `navigation`; shared engines `typeahead`/`command-score`/`hotkeys` and the Embla adapter.
-- `head.ts`: the canonical `<head>` contract — fonts, stylesheet, pinned + SRI-checked import map, polyfills, theme persistence — with local (`base`) and CDN (`cdn: { version, primitives?, sri? }`) modes.
-- `manifest.ts`: the distribution manifest (`PRIMITIVES`, `CSS_CASCADE_ORDER`, `resolveClosure`, `MANIFEST_VERSION = 1`).
-- `dist/sri.json`: sha384 hashes of every published css/js file, generated per release.
+- Cascade-layer architecture: `_layers`, `_variables`, `_reset`, `_typography`, `_view-transitions`, then primitives, then `_utilities` and `_layout`. A `layer(legacy)` slot lets a migrating stylesheet ride below the kit.
+- Core runtime (`utils`, `signals`, `zazz-element`, `dialog-lifecycle`), opt-in page behaviors (`reveal`, `navigation`), and the shared engines behind the typeahead family (`typeahead`, `command-score`, `hotkeys`) and the Embla carousel adapter.
+- `head.ts`: the canonical `<head>` contract (fonts, stylesheet, pinned and SRI-checked import map, polyfills, theme persistence), in a local mode for vendored copies and a CDN mode (`cdn: { version, primitives?, sri? }`).
+- `manifest.ts`: the distribution manifest. `PRIMITIVES` (files, dependencies, and examples for every primitive), `CSS_CASCADE_ORDER`, `resolveClosure()`, and `MANIFEST_VERSION`.
+- `dist/sri.json`: sha384 hashes of every published css/js file, regenerated each release.
 
 ### primitives
 
