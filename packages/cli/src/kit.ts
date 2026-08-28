@@ -69,10 +69,14 @@ export interface ResolvedKit {
 /**
  * @description Turns a user-facing version argument into a full pacote spec.
  * The `ZAZZ_UI_KIT` environment variable overrides the whole spec (e2e tests
- * point it at a `file:…tgz`); otherwise `@zazz-ui/core@<version>`.
+ * point it at a `file:…tgz`); otherwise `@zazz-ui/core@<version>`. An
+ * override may contain `{version}`, substituted per request — the seam the
+ * update/diff e2e uses to serve different fixture tarballs per version.
  */
 export function kitSpec(version: string): string {
-  return process.env.ZAZZ_UI_KIT ?? `${KIT_PACKAGE}@${version}`;
+  const override = process.env.ZAZZ_UI_KIT;
+  if (override !== undefined) return override.replaceAll("{version}", version);
+  return `${KIT_PACKAGE}@${version}`;
 }
 
 function isFileSpec(spec: string): boolean {

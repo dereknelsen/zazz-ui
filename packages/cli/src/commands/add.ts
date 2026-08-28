@@ -13,13 +13,14 @@
 import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { filterCollisions } from "../collisions.ts";
 import { type ZazzConfig, loadConfig } from "../config.ts";
 import { ZazzError } from "../errors.ts";
 import { type ResolvedKit, kitSpec, resolveKit } from "../kit.ts";
 import { loadFetchOptions } from "../npmrc.ts";
 import { baseScriptFiles, primitiveFiles } from "../plan.ts";
 import { type Transaction, type Write, apply, describe } from "../transaction.ts";
-import { type Ui, createUi } from "../ui.ts";
+import { createUi } from "../ui.ts";
 import { sha256, vendorFiles } from "../vendor.ts";
 import {
   appendJsImports,
@@ -189,23 +190,4 @@ async function wiringWrites(
   config.base.files["head.html"] = sha256(nextHead);
 
   return writes;
-}
-
-async function filterCollisions(
-  writes: Write[],
-  context: { ui: Ui; force: boolean },
-): Promise<{ kept: Write[]; skipped: string[] }> {
-  if (context.force) return { kept: writes, skipped: [] };
-  const kept: Write[] = [];
-  const skipped: string[] = [];
-  for (const write of writes) {
-    if (!existsSync(write.dest)) {
-      kept.push(write);
-      continue;
-    }
-    const overwrite = await context.ui.confirm(`${write.dest} already exists. Overwrite?`, false);
-    if (overwrite) kept.push(write);
-    else skipped.push(write.dest);
-  }
-  return { kept, skipped };
 }

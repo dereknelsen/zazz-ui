@@ -26,6 +26,8 @@ export interface Transaction {
   /** Directory that owns zazz.json. */
   root: string;
   writes: Write[];
+  /** Absolute paths removed at commit (upstream-removed files, ADR-0009). */
+  deletes?: string[];
   config: ZazzConfig;
 }
 
@@ -36,7 +38,10 @@ export function describe(tx: Transaction): string {
   const lines = tx.writes.map(
     (write) => `  ${write.note.padEnd(7)} ${path.relative(tx.root, write.dest)}`,
   );
-  return [...lines, `  config  zazz.json`].join("\n");
+  const deletes = (tx.deletes ?? []).map(
+    (dest) => `  ${"delete".padEnd(7)} ${path.relative(tx.root, dest)}`,
+  );
+  return [...lines, ...deletes, `  config  zazz.json`].join("\n");
 }
 
 export async function apply(tx: Transaction): Promise<void> {
@@ -57,6 +62,9 @@ export async function apply(tx: Transaction): Promise<void> {
   for (const [index, write] of tx.writes.entries()) {
     const tmp = staged[index];
     if (tmp) await rename(tmp, write.dest);
+  }
+  for (const dest of tx.deletes ?? []) {
+    await rm(dest, { force: true });
   }
   await saveConfig(tx.root, tx.config);
 }

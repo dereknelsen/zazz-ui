@@ -11,7 +11,7 @@
 
 import { createRequire } from "node:module";
 import chalk from "chalk";
-import { Command } from "commander";
+import { Command, Option } from "commander";
 import { ZazzError } from "./errors.ts";
 
 const require = createRequire(import.meta.url);
@@ -42,6 +42,53 @@ program
     const { runInit } = await import("./commands/init.ts");
     type InitParams = Parameters<typeof runInit>;
     await runInit(versionArg, options as InitParams[1], program.opts() as InitParams[2]);
+  });
+
+program
+  .command("update")
+  .description("move vendored files to a new kit version with 3-way merges")
+  .argument(
+    "[args...]",
+    "target version @-prefixed (default @latest) and/or primitive names to narrow to",
+  )
+  .addOption(
+    new Option("--keep", "resolve every conflict by keeping your version").conflicts([
+      "theirs",
+      "markers",
+    ]),
+  )
+  .addOption(
+    new Option("--theirs", "resolve every conflict by taking the new version").conflicts([
+      "keep",
+      "markers",
+    ]),
+  )
+  .addOption(
+    new Option("--markers", "write diff3 conflict markers for every conflict").conflicts([
+      "keep",
+      "theirs",
+    ]),
+  )
+  .option("--force", "overwrite stray files without asking")
+  .option("--dry-run", "print the plan without writing")
+  .action(async (args: string[], options: unknown) => {
+    const { runUpdate } = await import("./commands/update.ts");
+    type UpdateParams = Parameters<typeof runUpdate>;
+    await runUpdate(args, options as UpdateParams[1], program.opts() as UpdateParams[2]);
+  });
+
+program
+  .command("diff")
+  .description("preview what an update would change (read-only)")
+  .argument(
+    "[args...]",
+    "target version @-prefixed (default @latest) and/or names to narrow to (base, button, …)",
+  )
+  .option("--upstream", "compare pristine recorded vs target instead of your files vs target")
+  .action(async (args: string[], options: unknown) => {
+    const { runDiff } = await import("./commands/diff.ts");
+    type DiffParams = Parameters<typeof runDiff>;
+    await runDiff(args, options as DiffParams[1], program.opts() as DiffParams[2]);
   });
 
 program
