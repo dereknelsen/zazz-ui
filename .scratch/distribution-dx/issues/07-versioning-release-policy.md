@@ -30,7 +30,7 @@ The kit publishes **as soon as its publishable surface exists** — the CDN stor
 2. The kit build produces the two new publish-time artifacts the contracts depend on: the **complete manifest** (ticket 05's `PRIMITIVES`, with the drift-guard test) and **`dist/sri.json`** (ticket 06). Without these, the first published version can't serve the CLI or the configurator, and 0.1.0 is immutable.
 3. `CHANGELOG.md` exists with the 0.1.0 entry (format below) and is added to `files` so it ships in the tarball.
 4. The mechanical flip in `packages/core/package.json`: remove `"private": true`, restore `prepublishOnly` to `vp run build`, set version `0.1.0`.
-5. Derek publishes (`pnpm publish` from `packages/core`; 2FA web-auth per [ticket 03](03-reserve-npm-names.md)). Manual publish is the v1 release mechanism — no CI tokens until wanted (recorded as deliberate; revisit if cadence hurts).
+5. Derek publishes (`pnpm publish` from `packages/core`; interactively confirmed per [ticket 03](03-reserve-npm-names.md)). Manual publish is the v1 release mechanism — no CI tokens until wanted (recorded as deliberate; revisit if cadence hurts).
 
 Explicitly **not** gating the kit publish: the CLI build, and the docs restructure (ticket 08) — though the docs should land close behind, since the published README/docs will start teaching CDN URLs.
 
