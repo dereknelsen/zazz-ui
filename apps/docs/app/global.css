@@ -2,6 +2,13 @@
 @import "fumadocs-ui/css/neutral.css";
 @import "fumadocs-ui/css/preset.css";
 
+/* Map Tailwind's font tokens to the Geist variables the root layout loads via
+   next/font — without this, `font-sans`/`font-mono` fall back to system stacks. */
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
 :root {
   --fd-layout-width: 1440px;
 }
