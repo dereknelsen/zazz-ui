@@ -7,12 +7,14 @@ Layout utilities control display mode, positioning, overflow, stacking, and page
 
 ## Containers
 
-Apply `.container` to `main`, `section`, `header`, `footer`, or `article` to create a centered layout grid with gutters:
+Place a `.container` as a direct child of `main`, `section`, `header`, `footer`, or `article`. The region becomes a layout grid of width bands, and each direct child of the container is placed into a band. See [Layout and containers](/docs/core-concepts/layout) for how the system works and how it differs from a fixed-width container.
 
 ```html
-<section class="container">
-  <h1>Large band title with gutters</h1>
-  <p>Body copy aligned to the container band.</p>
+<section>
+  <div class="container">
+    <h1>Title in the default md band</h1>
+    <p>Body copy aligned to the same band.</p>
+  </div>
 </section>
 ```
 
@@ -30,21 +32,39 @@ Apply `.container` to `main`, `section`, `header`, `footer`, or `article` to cre
 
 ### Default band
 
+`data-container` on the container sets the default band for all children:
+
 ```html
-<section class="container" data-container="md">
-  <h2>Medium width section</h2>
-  <p>Children align to the md band.</p>
+<section>
+  <div class="container" data-container="lg">
+    <h2>Wide section</h2>
+    <p>Children align to the lg band.</p>
+  </div>
 </section>
 ```
 
 ### Child band overrides
 
+`data-container` on a direct child overrides that child only:
+
 ```html
-<section class="container">
-  <h1>Title in default band</h1>
-  <figure data-container="bleed">
-    <img src="/wide.jpg" alt="" />
-  </figure>
+<section>
+  <div class="container">
+    <h1>Title in default band</h1>
+    <figure data-container="bleed">
+      <img src="/wide.jpg" alt="" />
+    </figure>
+  </div>
+</section>
+```
+
+### Responsive variants
+
+`@md:container` is a band container from its breakpoint up and a plain block below. `@max-md:container` is the inverse: a container only below the breakpoint, falling back to the element's other classes above it (useful for handing off to a grid).
+
+```html
+<section>
+  <div class="@max-md:container grid @md:grid-cols-2 gap-lg">...</div>
 </section>
 ```
 
@@ -53,9 +73,11 @@ Apply `.container` to `main`, `section`, `header`, `footer`, or `article` to cre
 Add `data-variant="article"` to center content constrained by `ch` units:
 
 ```html
-<article class="container" data-variant="article" data-container="md">
-  <h1>Reading column</h1>
-  <p>Constrained to 65ch line length with gutters.</p>
+<article>
+  <div class="container" data-variant="article" data-container="md">
+    <h1>Reading column</h1>
+    <p>Constrained to 65ch line length with gutters.</p>
+  </div>
 </article>
 ```
 

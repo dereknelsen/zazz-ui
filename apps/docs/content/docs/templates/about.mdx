@@ -1,0 +1,19 @@
+---
+title: About
+description: A marketing and editorial page shape, including the hero heading group, a dialog on invoker commands, and a card carousel.
+---
+
+This is the page to copy when you're building anything content-led: a landing page, an about page, an article index. It's the standard Zazz page skeleton (header, sections in `main`, footer) filled in with the patterns those pages actually need.
+
+<TemplateFrame src="/zazz/examples/about.html" title="About template" />
+
+## What to look at
+
+- **The hero heading group.** An `hgroup` holding the eyebrow, display heading, subheading, and call-to-action buttons, the house pattern for opening a page. Note that the eyebrow is authored in sentence case; the uppercasing comes from `.text-eyebrow`.
+- **A dialog with no JavaScript of yours.** The "open dialog" button uses invoker commands (`command="show-modal"` with `commandfor`) against a native `<dialog class="ui-dialog">`. Open it and close it three ways: the close button, the backdrop, and the escape key.
+- **A card carousel.** `<ui-carousel>` wrapping the article cards, configured entirely through `data-carousel-*` attributes, with the cards themselves composed from utilities over `bg-card`.
+- **View transitions.** The header and footer carry `data-transition-layer` attributes, so navigating between template pages animates `main` while the chrome holds still. Click through to Products and back with the network tab open.
+
+## Source
+
+Open [the raw page](/zazz/examples/about.html), or read [about.html on GitHub](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/examples/about.html).

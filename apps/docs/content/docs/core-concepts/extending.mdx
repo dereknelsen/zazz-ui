@@ -1,0 +1,178 @@
+---
+title: Extending Zazz
+description: When to override a token, when to add a utility, when to write a component, and how to restyle primitives system-wide without forking the kit.
+---
+
+Zazz is built to be extended from the outside. You should never need to edit the kit's files: the cascade layers leave defined places for your code to land, and the token system exposes hooks at every level. What matters is picking the right mechanism for the job, because each one has a different blast radius.
+
+Load your stylesheet after the kit and you have everything you need:
+
+```html
+<link rel="stylesheet" href="./zazz/index.css" /> <link rel="stylesheet" href="./your-styles.css" />
+```
+
+## Pick the smallest tool that works
+
+Work down this list and stop at the first entry that fits:
+
+1. You want to change how something looks everywhere: override a token on `:root`. This is most customization, and it's usually one line.
+2. You want to change one instance: add utility classes, or set a component token inline on that element.
+3. You keep writing the same declaration in `style` attributes: promote it to a utility class.
+4. You keep building the same block of markup with the same cluster of utilities: promote it to a component class.
+5. Nothing above works and you need to win against the kit unconditionally: write an unlayered rule. This is the escape hatch, not the default.
+
+The rest of this page covers each mechanism in the order you'll reach for them.
+
+## Expanding the theme
+
+### Override existing tokens
+
+Global tokens live on `:root`, and components read them with `var()`, so reassigning a token restyles everything that consumes it:
+
+```css
+:root {
+  --primary: oklch(0.6 0.2 145);
+  --radius-md: 0;
+  --gutters: var(--gap-lg);
+}
+```
+
+This is the highest-leverage move in the system. Before writing any rule, check whether a token already controls the thing you're changing. The [theme variables](/docs/foundation/variables) page lists the tiers.
+
+### Add your own tokens
+
+New tokens follow the same conventions as the kit's. Declare them in the `variables` layer, and give color roles a `light-dark()` pair plus a matching `-foreground` so they behave in both themes:
+
+```css
+@layer variables {
+  :root {
+    --highlight: light-dark(oklch(0.92 0.06 95), oklch(0.32 0.05 95));
+    --highlight-foreground: light-dark(oklch(0.28 0.05 95), oklch(0.93 0.03 95));
+  }
+}
+```
+
+One honest caveat: the kit's color utilities (`bg-*`, `text-*`, `border-*`) are written for its own roles. A new role doesn't sprout utilities automatically. If you want `bg-highlight`, add it yourself; the next section shows how.
+
+## Adding utility classes
+
+Add a utility when a single-purpose style shows up in three or more places. Below that threshold, an inline `style` attribute or an existing utility combination is less code to maintain.
+
+Put it in `@layer zazz.utilities` and wrap the selector in `:where()`:
+
+```css
+@layer zazz.utilities {
+  :where(.bg-highlight) {
+    background-color: var(--highlight);
+    color: var(--highlight-foreground);
+  }
+
+  :where(.text-gradient) {
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    background-clip: text;
+    color: transparent;
+  }
+}
+```
+
+The layer placement means your utility overrides component rules exactly like the built-in utilities do, with no `!important`. The `:where()` keeps specificity at zero, so within the layer, source order decides conflicts and any later rule can still win. Skip either part and you've created a rule that behaves differently from every other utility in the system, which someone will eventually have to debug.
+
+Two conventions worth copying from the kit: utilities do one job each, and anything with a size takes the shared `xs` through `xl` scale. If your new utility wants a size, name it `.glow-sm`, not `.glow-small`.
+
+What should not become a utility: anything with internal structure. If the style needs to reach into children, or only makes sense on a particular kind of element, it's a component.
+
+## Restyling primitives at the root
+
+Every primitive publishes `--ui-<name>-*` hooks that default to the global tokens. Reassign them on `:root` to change every instance of that primitive without touching a single rule:
+
+```css
+:root {
+  --ui-button-radius: var(--radius-full);
+  --ui-field-border: var(--border);
+  --ui-dialog-radius: var(--radius-lg);
+}
+```
+
+This works because the kit's own rules reference each hook exactly once instead of hardcoding values. Interactive states have their own hooks with a `--hover` or `--active` suffix (`--ui-button-background--hover`, `--ui-field-border--focus`), so resting and interactive appearance can be tuned independently.
+
+Each primitive's stylesheet declares its hooks in an `@layer variables` block at the top of the file, with the full list in the file's header comment. Tokens prefixed `--_` (like `--_bg`) are private internals; they can change in any release, so don't reach for them.
+
+The same hooks work at smaller scopes. On a selector, they retheme a subtree; inline, they retheme one element:
+
+```css
+/* every button inside a card */
+.bg-card {
+  --ui-button-radius: var(--radius-sm);
+}
+```
+
+```html
+<button class="ui-button" style="--ui-button-background: var(--secondary)">One-off</button>
+```
+
+### Adding a variant to a primitive
+
+Variants in Zazz swap tokens rather than writing properties, so a new variant is a token-assignment block keyed on `data-variant`:
+
+```css
+@layer zazz.components {
+  .ui-button[data-variant="highlight"] {
+    --ui-button-background: var(--highlight);
+    --ui-button-background--hover: oklch(from var(--highlight) l c h / 0.9);
+    --ui-button-background--active: oklch(from var(--highlight) l c h / 0.8);
+
+    --ui-button-foreground: var(--highlight-foreground);
+    --ui-button-foreground--hover: var(--highlight-foreground);
+    --ui-button-foreground--active: var(--highlight-foreground);
+  }
+}
+```
+
+```html
+<button class="ui-button" data-variant="highlight">Ship it</button>
+```
+
+The state tokens (`--hover`, `--active`) are part of the hook surface, and the kit's own variants set them the same way, deriving the hover shade from the base color with relative color syntax. Any state token you skip falls back to the primitive's default for that state. Keep the rule body to token assignments; the moment you write raw properties in a variant, you've forked the primitive's behavior.
+
+## Writing your own components
+
+When a repeated pattern has structure (a block with children, states, maybe a variant or two), give it a component class in `@layer zazz.components`, built on tokens:
+
+```css
+@layer zazz.components {
+  :where(.callout) {
+    --callout-background: var(--muted);
+
+    background: var(--callout-background);
+    border-inline-start: var(--step-1) solid var(--primary);
+    padding: var(--gap-md);
+    border-radius: var(--radius-md);
+  }
+
+  :where(.callout)[data-variant="warning"] {
+    --callout-background: var(--warning);
+  }
+}
+```
+
+Declaring your own local token (`--callout-background`) and swapping it per variant keeps your component overridable the same three ways the kit's primitives are: globally, per subtree, and per instance. Utilities still win over your component rules, since `zazz.utilities` comes later in the layer order.
+
+Since components read design tokens instead of raw values, they follow theme changes and dark mode without extra work.
+
+## Unlayered CSS: the last resort
+
+Rules outside any `@layer` beat every layered rule, no matter the specificity:
+
+```css
+.ui-button {
+  border-radius: 0; /* wins over everything in the kit */
+}
+```
+
+This is deliberately available and deliberately blunt. Nothing in the kit can override it, but neither can your own layered code, so each unlayered rule shrinks the system's room to move. Use it for genuine "this must be true, period" cases, and check first whether a token or a utility would do.
+
+## Changing the kit itself
+
+If an extension keeps fighting you, the primitive may just need to work differently in your project. Since every primitive ships as readable source under `src/primitives/<name>/`, you can copy that folder into your codebase and make it yours (see [installation](/docs/getting-started/installation) for the degit commands). Past that point it's your component, and updates to the kit no longer apply to it, which is sometimes exactly what you want.
+
+For contributing a change or a new primitive upstream, the authoring rules live in the repo: [CONVENTIONS.styles.md](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/CONVENTIONS.styles.md) for CSS and [CONVENTIONS.scripts.md](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/CONVENTIONS.scripts.md) for scripts, with the file layout documented in [file anatomy](/docs/foundation/file-anatomy).

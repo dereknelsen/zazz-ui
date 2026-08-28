@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { SERVED_ROOT, resolveWithin } from "@/lib/zazz-package";
+import { EXAMPLES_ROOT, SERVED_ROOT, resolveWithin } from "@/lib/zazz-package";
 
 /**
  * Serves the raw Zazz framework source (`src/**` of the installed
@@ -12,6 +12,13 @@ import { SERVED_ROOT, resolveWithin } from "@/lib/zazz-package";
  * `/zazz/`. This is the "served directly at `/zazz/**`" contract the
  * package's `CONVENTIONS.scripts.md` documents. Path facts come from
  * `lib/zazz-package.ts` — the one adapter over the kit's layout.
+ *
+ * Two prefixes step outside that root:
+ * - `/zazz/examples/*` serves the package's full-page templates from
+ *   `examples/` (a sibling of `src/`), so the docs can embed and link them.
+ * - `/zazz/src/*` aliases back onto `src/` — the templates reference their
+ *   assets as `../src/index.css`, which resolves to `/zazz/src/…` from an
+ *   example page's URL.
  */
 
 export const runtime = "nodejs";
@@ -38,8 +45,14 @@ export async function GET(_request: Request, { params }: { params: Promise<{ pat
     return new Response("Unsupported asset type", { status: 415 });
   }
 
-  // Defend against path traversal: the resolved path must stay inside src/.
-  const filePath = resolveWithin(SERVED_ROOT, relative);
+  // Defend against path traversal: the resolved path must stay inside its root.
+  const [head, ...rest] = segments;
+  const filePath =
+    head === "examples"
+      ? resolveWithin(EXAMPLES_ROOT, rest.join("/"))
+      : head === "src"
+        ? resolveWithin(SERVED_ROOT, rest.join("/"))
+        : resolveWithin(SERVED_ROOT, relative);
   if (!filePath) {
     return new Response("Forbidden", { status: 403 });
   }
