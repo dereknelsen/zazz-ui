@@ -1,6 +1,7 @@
 // Server-only: resolves the installed @zazz-ui/core package on disk. Do not
 // import from a client component — use `ZAZZ_URL_BASE` (re-exported from
 // `zazz-url.ts`) for URL-shaped facts instead.
+import { existsSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 
@@ -22,8 +23,35 @@ export { ZAZZ_URL_BASE } from "./zazz-url";
 // bundler rewrites import.meta.url in compiled server code, which breaks createRequire.
 const require = createRequire(path.join(process.cwd(), "package.json"));
 
+/**
+ * Locates the installed @zazz-ui/core package. require.resolve is the source
+ * of truth in dev and local prod, but it depends on the pnpm workspace symlink
+ * chain — which deployment bundlers that reassemble the filesystem from a
+ * trace (Vercel) don't reliably recreate. The fallbacks walk the layouts we
+ * actually deploy into, keyed off whatever cwd the server runs with; a miss
+ * throws with the full list so the function log says exactly what was tried.
+ */
+function resolvePkgRoot(): string {
+  try {
+    return path.dirname(require.resolve("@zazz-ui/core/package.json"));
+  } catch {
+    const candidates = [
+      path.join(process.cwd(), "node_modules/@zazz-ui/core"), // symlink survived, resolver didn't
+      path.join(process.cwd(), "../../packages/core"), // cwd = apps/docs in the monorepo layout
+      path.join(process.cwd(), "packages/core"), // cwd = repo root (traced bundle)
+      path.join(process.cwd(), "apps/docs/node_modules/@zazz-ui/core"),
+    ];
+    for (const dir of candidates) {
+      if (existsSync(path.join(dir, "src", "index.css"))) return dir;
+    }
+    throw new Error(
+      `@zazz-ui/core not found (cwd=${process.cwd()}); tried require.resolve and: ${candidates.join(", ")}`,
+    );
+  }
+}
+
 /** Root directory of the installed @zazz-ui/core package. */
-export const PKG_ROOT = path.dirname(require.resolve("@zazz-ui/core/package.json"));
+export const PKG_ROOT = resolvePkgRoot();
 
 /** The kit's source tree — stylesheets, emitted scripts, example fragments. */
 export const SRC_ROOT = path.join(PKG_ROOT, "src");
