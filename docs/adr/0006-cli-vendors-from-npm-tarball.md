@@ -1,6 +1,6 @@
 # The CLI vendors files, using the npm tarball as its registry
 
-`zazz-ui init`/`add` copy kit files out of the published `@zazz-ui/ui@<version>` tarball into the consumer project. The consumer owns the copies and edits them freely; updates are CLI-driven diffs against recorded provenance. There is no registry server: npm is the registry.
+`zazz-ui init`/`add` copy kit files out of the published `@zazz-ui/core@<version>` tarball into the consumer project. The consumer owns the copies and edits them freely; updates are CLI-driven diffs against recorded provenance. There is no registry server: npm is the registry.
 
 ## Context
 
@@ -8,7 +8,7 @@ The distribution-DX charting session (2026-08-24, `.scratch/distribution-dx/`) c
 
 ## Decision
 
-Vendor everything; source from npm. The CLI resolves `@zazz-ui/ui` at an exact version (the tarball already packs the readable `src/` tree), verifies integrity, and copies the requested files. CLI users never take `@zazz-ui/ui` as a package dependency.
+Vendor everything; source from npm. The CLI resolves `@zazz-ui/core` at an exact version (the tarball already packs the readable `src/` tree), verifies integrity, and copies the requested files. CLI users never take `@zazz-ui/core` as a package dependency.
 
 ## Why
 

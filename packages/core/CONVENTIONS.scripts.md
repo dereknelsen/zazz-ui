@@ -1,4 +1,4 @@
-# Script conventions for `@zazz-ui/ui`
+# Script conventions for `@zazz-ui/core`
 
 This document defines how to write and structure Zazz component scripts. Follow these rules when adding or editing `.ts` files in `src/`.
 
@@ -25,7 +25,7 @@ Component scripts are co-located with their CSS and example HTML in `src/primiti
 
 Scripts are authored in **TypeScript** but ship as browser-native **ES modules** without a bundler or framework. `tsc -p tsconfig.json` emits readable, unminified `<name>.js` files (plus `.d.ts` and maps) next to each `.ts`, with comments preserved. The emitted files are gitignored but published to npm and served raw: the docs site serves the `src/` tree at `/zazz/**` (e.g. `/zazz/primitives/toaster/toaster.js`). Consumers load or copy the emitted `.js`. `src/index.ts` is the entry module: it imports every component script so a page loads behavior with one `<script type="module" src=".../index.js">` tag. When you add a script, add an `import "./primitives/<name>/<name>.ts";` line to `src/index.ts`.
 
-The compiler is configured in `tsconfig.json`: strict, `erasableSyntaxOnly`, `verbatimModuleSyntax`, `rewriteRelativeImportExtensions`, declaration + declarationMap, in-place emit. Type check and run unit tests with `pnpm --filter @zazz-ui/ui test` (`tsc -p tsconfig.test.json` + `vp test run`; `*.test.ts` files are excluded from the build emit and the npm tarball); build with `pnpm --filter @zazz-ui/ui build` (tsc emit + `vp pack` single-file dist bundles). Ambient types for cross-script globals live in `src/globals.d.ts`.
+The compiler is configured in `tsconfig.json`: strict, `erasableSyntaxOnly`, `verbatimModuleSyntax`, `rewriteRelativeImportExtensions`, declaration + declarationMap, in-place emit. Type check and run unit tests with `pnpm --filter @zazz-ui/core test` (`tsc -p tsconfig.test.json` + `vp test run`; `*.test.ts` files are excluded from the build emit and the npm tarball); build with `pnpm --filter @zazz-ui/core build` (tsc emit + `vp pack` single-file dist bundles). Ambient types for cross-script globals live in `src/globals.d.ts`.
 
 ---
 
@@ -139,7 +139,7 @@ Zazz bets on the [TC39 Signals proposal](https://github.com/tc39/proposal-signal
 - **`base/signals.ts` is the only file allowed to import `signal-polyfill`.** Components import `state`, `computed`, and `effect` from the wrapper, so an API shift (or native signals shipping) changes one file.
 - **Division of labor:** DOM events and observers are _input adapters_ that write into `state`; `computed` holds _pure derived logic_ (the unit-testable part); `effect` is the _output adapter_ that writes back to the DOM. `effect` accepts an `AbortSignal`, so an element's existing controller tears reactive work down with everything else; its returned disposer also implements `Symbol.dispose`, so short-lived effects (tests, scoped work) can be bound with `using`.
 - **Not everything is a signal.** Timers, transition choreography, and DOM construction stay imperative; the DOM remains the source of truth for element lists (HTML-first). A component with no derived state (e.g. `tabs.ts`) needs no signals at all.
-- Tests live next to the module (`signals.test.ts`); run them with `pnpm --filter @zazz-ui/ui test`.
+- Tests live next to the module (`signals.test.ts`); run them with `pnpm --filter @zazz-ui/core test`.
 
 ### Data-attribute configuration
 
@@ -222,7 +222,7 @@ Rules:
 - Types live in TypeScript annotations, not JSDoc braces; ambient types for CDN and cross-script globals stay in `globals.d.ts`.
 - **Erasable syntax only**: no enums, namespaces, or parameter properties; nothing that requires tsc to generate code (`erasableSyntaxOnly` enforces this). Use `import type` / `export type` for type-only imports (`verbatimModuleSyntax`).
 - Import sibling modules with explicit `.ts` extensions (`rewriteRelativeImportExtensions` emits them as `.js`).
-- Run `pnpm --filter @zazz-ui/ui test` after editing to validate types.
+- Run `pnpm --filter @zazz-ui/core test` after editing to validate types.
 
 ---
 

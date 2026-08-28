@@ -1,11 +1,11 @@
-import type { ExampleScript } from "@zazz-ui/ui/manifest";
+import type { ExampleScript } from "@zazz-ui/core/manifest";
 
 /**
  * Per-example presentation metadata for the docs preview iframes. Keyed by
  * example id (`"<component>/<example>"`, matching `src/primitives/<id>.html`
  * in the kit). This is docs-site state — iframe pixels and placement — so it lives
  * beside the iframe that reads it, not in the published package (ADR: the kit
- * ships kit facts only; see `@zazz-ui/ui/manifest` for the script map).
+ * ships kit facts only; see `@zazz-ui/core/manifest` for the script map).
  *
  * Only deviations from the defaults need an entry — anything omitted renders
  * centered with no minimum height and no scripts. Set `minHeight` for

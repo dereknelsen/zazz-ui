@@ -1,6 +1,6 @@
 # Zazz CSS Conventions
 
-How the stylesheets in `@zazz-ui/ui` (`src/`) are documented and structured: base partials in `src/base/`, one co-located `src/primitives/<name>/<name>.css` per component.
+How the stylesheets in `@zazz-ui/core` (`src/`) are documented and structured: base partials in `src/base/`, one co-located `src/primitives/<name>/<name>.css` per component.
 
 This is the source of truth for two things:
 
@@ -63,7 +63,7 @@ CSS this regular compresses to about 10-15% of its raw size, which beats hand-sp
 <link rel="stylesheet" href="../src/index.css" />
 ```
 
-(Package consumers import the same bundle as `@zazz-ui/ui/index.css`.)
+(Package consumers import the same bundle as `@zazz-ui/core/index.css`.)
 
 Do not pair it with a `<link rel="preload" as="style">` for the same file: a same-document
 stylesheet link is already the highest-priority, render-blocking fetch, so the preload is

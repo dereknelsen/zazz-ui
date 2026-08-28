@@ -1,4 +1,4 @@
-# @zazz-ui/ui
+# @zazz-ui/core
 
 Zazz: a zero-build UI kit for the modern web. Semantic design tokens, cascade layers, `data-*` variants, and native platform APIs (popover, `<dialog>`, invoker commands, anchor positioning, view transitions) instead of framework abstractions. A lightweight shadcn and Tailwind alternative that runs with no build step.
 
@@ -7,19 +7,19 @@ Zazz: a zero-build UI kit for the modern web. Semantic design tokens, cascade la
 ## Install
 
 ```bash
-pnpm add @zazz-ui/ui
+pnpm add @zazz-ui/core
 ```
 
 ```js
-import "@zazz-ui/ui/index.css"; // the stylesheet tree (cascade-ordered @imports)
-import "@zazz-ui/ui"; // component scripts: custom elements, reveal, toaster...
+import "@zazz-ui/core/index.css"; // the stylesheet tree (cascade-ordered @imports)
+import "@zazz-ui/core"; // component scripts: custom elements, reveal, toaster...
 ```
 
 Or from a CDN with two tags and no installation step:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/ui/dist/zazz.css" />
-<script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/ui/dist/zazz.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core/dist/zazz.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/core/dist/zazz.js"></script>
 ```
 
 Or copy the files directly: every component is one self-contained folder under `src/primitives/<name>/` containing its stylesheet, script, and canonical HTML examples. Copy a folder and own the code.

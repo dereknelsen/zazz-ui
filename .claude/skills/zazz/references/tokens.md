@@ -1,8 +1,8 @@
 # Zazz token reference
 
 A **map** of which token to reach for and when. Authoritative _values_ live in
-`packages/ui/src/base/_variables.css` (global Tiers 1–3) and each
-`packages/ui/src/primitives/{name}/{name}.css` (component tokens, Tier 4) — read those when you need an
+`packages/core/src/base/_variables.css` (global Tiers 1–3) and each
+`packages/core/src/primitives/{name}/{name}.css` (component tokens, Tier 4) — read those when you need an
 exact number, so this file can't drift.
 
 Two rules govern every choice:

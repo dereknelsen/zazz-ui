@@ -5,7 +5,7 @@ Status: resolved
 
 ## Question
 
-How should a CLI fetch `@zazz-ui/ui@<exact version>` from npm and copy files out of it without installing it as a dependency?
+How should a CLI fetch `@zazz-ui/core@<exact version>` from npm and copy files out of it without installing it as a dependency?
 
 Cover:
 
@@ -29,9 +29,9 @@ Findings feed [Define the init contract](04-init-contract.md) and [Define the ad
 - `pacote.tarball(spec, opts)` / `pacote.tarball.file(spec, dest, opts)` — tarball as a Buffer or written to disk; result carries `{from, resolved, integrity}`.
 - `pacote.extract(spec, dest, opts)` — fetch **and** extract the package contents into `dest` (the `package/` root inside the tgz is stripped), returning `{from, resolved, integrity}`. This is the one call that covers our whole fetch→verify→extract path.
 
-Accepts "any specifier npm can install" (`@zazz-ui/ui@0.3.2`, `@zazz-ui/ui@^0.3`, `@zazz-ui/ui@latest`). Options pass straight through to `npm-registry-fetch` (network/auth/proxy) and `cacache` (cache). Trade-offs: it's a real dependency tree (registry fetch + cache + git-spec support), so it adds install weight to the CLI; in exchange we inherit npm's exact resolution, integrity, caching, retry, and proxy semantics for free.
+Accepts "any specifier npm can install" (`@zazz-ui/core@0.3.2`, `@zazz-ui/core@^0.3`, `@zazz-ui/core@latest`). Options pass straight through to `npm-registry-fetch` (network/auth/proxy) and `cacache` (cache). Trade-offs: it's a real dependency tree (registry fetch + cache + git-spec support), so it adds install weight to the CLI; in exchange we inherit npm's exact resolution, integrity, caching, retry, and proxy semantics for free.
 
-**Shelling out to `npm pack`** (https://docs.npmjs.com/cli/v11/commands/npm-pack/): `npm pack @zazz-ui/ui@0.3.2 --pack-destination <tmp> --json` fetches the tarball via npm's own machinery (so integrity and `.npmrc` are honored automatically) and the `--json` output includes `filename`, `integrity`, and `shasum`. Trade-offs: requires an `npm` binary on PATH (fine for npm users, but the CLI may be run via `pnpm dlx`/`bunx` in environments where npm's version is old or absent); spawn overhead per call; output format is CLI-owned and has changed across npm majors; we still have to untar ourselves (strip the leading `package/` path segment); no programmatic packument access for "list available versions" UX. Reasonable as a zero-dependency fallback, weak as the primary mechanism.
+**Shelling out to `npm pack`** (https://docs.npmjs.com/cli/v11/commands/npm-pack/): `npm pack @zazz-ui/core@0.3.2 --pack-destination <tmp> --json` fetches the tarball via npm's own machinery (so integrity and `.npmrc` are honored automatically) and the `--json` output includes `filename`, `integrity`, and `shasum`. Trade-offs: requires an `npm` binary on PATH (fine for npm users, but the CLI may be run via `pnpm dlx`/`bunx` in environments where npm's version is old or absent); spawn overhead per call; output format is CLI-owned and has changed across npm majors; we still have to untar ourselves (strip the leading `package/` path segment); no programmatic packument access for "list available versions" UX. Reasonable as a zero-dependency fallback, weak as the primary mechanism.
 
 **Raw registry HTTP API** (https://github.com/npm/registry/blob/main/docs/REGISTRY-API.md): `GET https://registry.npmjs.org/@zazz-ui%2Fui` (scoped names URL-encode the `/`) returns the packument; each `versions[v].dist` has `tarball`, `shasum`, `integrity`; `dist-tags` maps tags to versions. Sending `Accept: application/vnd.npm.install-v1+json` returns the abbreviated ("corgi") packument — only `name`, `modified`, `dist-tags`, `versions` with install-relevant fields including the full `dist` object (`tarball`, `shasum`, `integrity`, `fileCount`, `unpackedSize`) — much smaller than full metadata, which can exceed 10 MB for big packages (https://github.com/npm/registry/blob/main/docs/responses/package-metadata.md). Then `GET dist.tarball`, verify, untar. Trade-offs: fewest dependencies (`fetch` + `semver` + `ssri` + `tar` would do), but we'd re-implement semver/dist-tag pick order, SSRI verification, retries/429 handling, HTTP caching, offline mode, proxies, and `.npmrc` mirrors — everything pacote already does correctly.
 
@@ -45,7 +45,7 @@ Accepts "any specifier npm can install" (`@zazz-ui/ui@0.3.2`, `@zazz-ui/ui@^0.3`
 
 ### 3. Version resolution (ranges and dist-tags)
 
-Resolution is always "fetch packument, then pick": dist-tags are a flat map (`dist-tags.latest → "0.3.2"`), and ranges are matched against the `versions` keys. npm's exact pick order lives in `npm-pick-manifest` (https://www.npmjs.com/package/npm-pick-manifest), which pacote uses internally: a dist-tag selector returns that tagged manifest directly; an exact version returns exactly it; a range prefers the `defaultTag` (`latest`) version if it satisfies the range, otherwise the highest satisfying version, preferring non-deprecated versions with matching `engines`; failure throws `ETARGET` (no match) or `ENOVERSIONS`. So `zazz-ui add button@0.3` (meaning `@zazz-ui/ui@0.3.x`) and `@latest` both come free via `pacote.manifest('@zazz-ui/ui@0.3', …)` — no hand-rolled semver logic. If we go raw-HTTP anywhere, use `npm-pick-manifest` on the corgi packument rather than bare `semver.maxSatisfying`, to match npm's behavior around `latest` and deprecations.
+Resolution is always "fetch packument, then pick": dist-tags are a flat map (`dist-tags.latest → "0.3.2"`), and ranges are matched against the `versions` keys. npm's exact pick order lives in `npm-pick-manifest` (https://www.npmjs.com/package/npm-pick-manifest), which pacote uses internally: a dist-tag selector returns that tagged manifest directly; an exact version returns exactly it; a range prefers the `defaultTag` (`latest`) version if it satisfies the range, otherwise the highest satisfying version, preferring non-deprecated versions with matching `engines`; failure throws `ETARGET` (no match) or `ENOVERSIONS`. So `zazz-ui add button@0.3` (meaning `@zazz-ui/core@0.3.x`) and `@latest` both come free via `pacote.manifest('@zazz-ui/core@0.3', …)` — no hand-rolled semver logic. If we go raw-HTTP anywhere, use `npm-pick-manifest` on the corgi packument rather than bare `semver.maxSatisfying`, to match npm's behavior around `latest` and deprecations.
 
 ### 4. Caching, CI, offline
 
@@ -79,7 +79,7 @@ const opts = {
 
 // 1. Resolve: range/dist-tag/exact → one concrete version + dist info.
 //    (abbreviated "corgi" packument by default; full only with fullMetadata)
-const manifest = await pacote.manifest(`@zazz-ui/ui@${spec}`, opts);
+const manifest = await pacote.manifest(`@zazz-ui/core@${spec}`, opts);
 //    manifest.version, manifest.dist.tarball, manifest.dist.integrity
 
 // 2+3. Fetch + verify + extract in one call. Tarball is streamed through
@@ -87,7 +87,7 @@ const manifest = await pacote.manifest(`@zazz-ui/ui@${spec}`, opts);
 //    mismatch. Result: { from, resolved, integrity } for the lockfile/log.
 const tmp = await mkdtemp(join(tmpdir(), "zazz-"));
 const { integrity, resolved } = await pacote.extract(
-  `@zazz-ui/ui@${manifest.version}`, // pin the resolved exact version
+  `@zazz-ui/core@${manifest.version}`, // pin the resolved exact version
   tmp,
   { ...opts, integrity: manifest.dist.integrity },
 );
@@ -99,6 +99,6 @@ const { integrity, resolved } = await pacote.extract(
 //    project's zazz lock/config for `update` diffs later.
 ```
 
-For "what versions exist?" UX (`zazz-ui add button@0.3` disambiguation, `update` listing), call `pacote.packument('@zazz-ui/ui', opts)` and read `dist-tags` + `Object.keys(versions)`; it's the abbreviated packument unless `fullMetadata: true`. Expose `--registry`, `--offline`, and `--prefer-offline` flags that override the loaded config and map directly onto the pacote options above.
+For "what versions exist?" UX (`zazz-ui add button@0.3` disambiguation, `update` listing), call `pacote.packument('@zazz-ui/core', opts)` and read `dist-tags` + `Object.keys(versions)`; it's the abbreviated packument unless `fullMetadata: true`. Expose `--registry`, `--offline`, and `--prefer-offline` flags that override the loaded config and map directly onto the pacote options above.
 
 Sources: https://github.com/npm/pacote (README), https://github.com/npm/registry/blob/main/docs/REGISTRY-API.md, https://github.com/npm/registry/blob/main/docs/responses/package-metadata.md, https://www.npmjs.com/package/ssri, https://www.npmjs.com/package/cacache, https://www.npmjs.com/package/npm-registry-fetch, https://www.npmjs.com/package/npm-pick-manifest, https://www.npmjs.com/package/@npmcli/config, https://docs.npmjs.com/cli/v11/commands/npm-pack/, https://docs.npmjs.com/cli/v11/commands/npm-cache/, https://blog.npmjs.org/post/164799520460/api-rate-limiting-rolling-out.html, https://blog.npmjs.org/post/187698412060/acceptible-use.html, https://github.com/pnpm/pnpm/issues/8659, https://github.com/pnpm/pnpm/pull/8722.

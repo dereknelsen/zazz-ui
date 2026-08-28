@@ -1,4 +1,4 @@
-import { buildHead, type HeadOptions } from "@zazz-ui/ui/head";
+import { buildHead, type HeadOptions } from "@zazz-ui/core/head";
 import { DynamicCodeBlock } from "fumadocs-ui/components/dynamic-codeblock";
 
 interface HeadSnippetProps extends HeadOptions {
@@ -7,7 +7,7 @@ interface HeadSnippetProps extends HeadOptions {
 }
 
 /**
- * Renders the kit's real head contract (`@zazz-ui/ui/head`) as a copyable
+ * Renders the kit's real head contract (`@zazz-ui/core/head`) as a copyable
  * code block. The docs page that teaches head structure shows the exact output
  * of `buildHead()` — the same call the preview iframes and the kit's example
  * pages render from — so the teaching page can never drift from the contract.
