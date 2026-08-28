@@ -12,6 +12,7 @@
 import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { filterCollisions } from "../collisions.ts";
 import { SCHEMA_URL, type ZazzConfig, loadConfig } from "../config.ts";
 import { ZazzError } from "../errors.ts";
 import { type ResolvedKit, kitSpec, resolveKit } from "../kit.ts";
@@ -144,25 +145,6 @@ function generatedWrites(
     hashes[file] = sha256(content);
     return { dest: path.join(destRoot, file), content, note };
   });
-}
-
-async function filterCollisions(
-  writes: Write[],
-  context: { ui: Ui; force: boolean },
-): Promise<{ kept: Write[]; skipped: string[] }> {
-  if (context.force) return { kept: writes, skipped: [] };
-  const kept: Write[] = [];
-  const skipped: string[] = [];
-  for (const write of writes) {
-    if (!existsSync(write.dest)) {
-      kept.push(write);
-      continue;
-    }
-    const overwrite = await context.ui.confirm(`${write.dest} already exists. Overwrite?`, false);
-    if (overwrite) kept.push(write);
-    else skipped.push(write.dest);
-  }
-  return { kept, skipped };
 }
 
 /** Repair mode: restore missing files, report edits, keep identity decisions. */

@@ -22,6 +22,12 @@ export interface Ui {
   spinner<T>(label: string, work: () => Promise<T>, done?: (result: T) => string): Promise<T>;
   /** Asks, or returns `fallback` when not interactive. */
   confirm(message: string, fallback: boolean): Promise<boolean>;
+  /** Picks one of `choices`, or returns `fallback` when not interactive. */
+  select<T extends string>(
+    message: string,
+    choices: { value: T; label: string; hint?: string }[],
+    fallback: T,
+  ): Promise<T>;
 }
 
 export interface UiOptions {
@@ -84,6 +90,30 @@ export function createUi(options: UiOptions): Ui {
         process.exit(1);
       }
       return answer;
+    },
+    async select<T extends string>(
+      message: string,
+      choices: { value: T; label: string; hint?: string }[],
+      fallback: T,
+    ): Promise<T> {
+      if (!interactive) return fallback;
+      const options = choices.map((choice) => ({
+        value: choice.value,
+        label: choice.label,
+        ...(choice.hint !== undefined ? { hint: choice.hint } : {}),
+      }));
+      // clack's Option<T> is conditional on an unresolved generic; the shape
+      // above matches its string branch exactly.
+      const answer = (await clack.select({
+        message,
+        options,
+        initialValue: fallback,
+      } as never)) as T | symbol;
+      if (clack.isCancel(answer)) {
+        clack.cancel("Cancelled — nothing was written.");
+        process.exit(1);
+      }
+      return answer as T;
     },
   };
 }
