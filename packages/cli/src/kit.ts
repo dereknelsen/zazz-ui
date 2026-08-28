@@ -45,6 +45,10 @@ export interface KitManifest {
   cssCascadeOrder: string[];
   /** The kit's own closure resolver, imported — not reimplemented. */
   resolveClosure(names: string[]): string[];
+  /** Base stylesheet inventory, when the kit exports one (post-v1). */
+  baseCss?: string[];
+  /** Core runtime scripts, when the kit exports them (post-v1). */
+  coreRuntime?: string[];
 }
 
 /** A resolved, extracted, validated kit at one exact version. */
@@ -192,6 +196,11 @@ export async function loadKitFromDir(
     throw kitTooNew(meta.version, "its manifest shape is unrecognized");
   }
 
+  // Kits newer than manifest v1 may export their base inventory; v1 kits
+  // don't, and plan.ts falls back to the v1 list pinned to that version.
+  const baseCss = manifestModule.BASE_CSS;
+  const coreRuntime = manifestModule.CORE_RUNTIME;
+
   return {
     version: meta.version,
     integrity: meta.integrity,
@@ -201,6 +210,8 @@ export async function loadKitFromDir(
       primitives: primitives as Record<string, PrimitiveEntry>,
       cssCascadeOrder: cascade as string[],
       resolveClosure: resolveClosure as (names: string[]) => string[],
+      ...(Array.isArray(baseCss) ? { baseCss: baseCss as string[] } : {}),
+      ...(Array.isArray(coreRuntime) ? { coreRuntime: coreRuntime as string[] } : {}),
     },
     buildHead: buildHead as (options: Record<string, unknown>) => string,
     readFile: async (srcRelPath) => readFile(resolveWithin(srcDir, srcRelPath)),

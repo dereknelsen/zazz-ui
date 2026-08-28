@@ -1,10 +1,10 @@
 {
-  "name": "zazz-ui",
+  "name": "zazz-ui-monorepo",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "ready": "vp check && vp run -r test && vp run -r build",
+    "ready": "vp check && vp run -r build && vp run -r test",
     "dev": "vp run core#build && vp run docs#dev",
     "prepare": "vp config"
   },
