@@ -564,6 +564,43 @@ export const CSS_CASCADE_ORDER: string[] = [
   "reveal",
 ];
 
+// --- Dependency resolution ---
+
+/**
+ * @description Resolves a set of primitive names to its full dependency
+ * closure — every primitive the requested ones require, transitively. This is
+ * the resolution the CLI's `add` and the granular CDN head share.
+ *
+ * @param names - Primitive names to resolve (keys of `PRIMITIVES`).
+ * @returns The closure in canonical cascade order (markup-only members, which
+ * have no cascade position, sort last in name order).
+ * @throws {Error} On an unknown primitive name.
+ * @example
+ * resolveClosure(["combobox"]);
+ * // ["kbd", "button", "popover", "fields", "input", "select", "badge", "combobox"]
+ */
+export function resolveClosure(names: string[]): string[] {
+  const closure = new Set<string>();
+  const visit = (name: string): void => {
+    const entry = PRIMITIVES[name];
+    if (!entry) throw new Error(`unknown primitive "${name}"`);
+    if (closure.has(name)) return;
+    closure.add(name);
+    for (const dep of entry.primitives) visit(dep);
+  };
+  for (const name of names) visit(name);
+
+  const position = new Map(CSS_CASCADE_ORDER.map((name, index) => [name, index]));
+  return [...closure].sort((a, b) => {
+    const pa = position.get(a);
+    const pb = position.get(b);
+    if (pa !== undefined && pb !== undefined) return pa - pb;
+    if (pa !== undefined) return -1;
+    if (pb !== undefined) return 1;
+    return a.localeCompare(b);
+  });
+}
+
 // --- Web-component script map (docs previews) ---
 
 export type ExampleScript =

@@ -19,6 +19,7 @@
     "dist",
     "src",
     "examples",
+    "CHANGELOG.md",
     "!src/**/*.test.ts"
   ],
   "type": "module",
@@ -33,6 +34,7 @@
     "./index.css": "./src/index.css",
     "./zazz.css": "./dist/zazz.css",
     "./zazz.js": "./dist/zazz.js",
+    "./sri.json": "./dist/sri.json",
     "./head": {
       "types": "./src/head.d.ts",
       "default": "./src/head.js"
@@ -49,7 +51,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json && vp pack && node scripts/generate-heads.mjs",
+    "build": "tsc -p tsconfig.json && vp pack && node scripts/generate-heads.mjs && node scripts/generate-sri.mjs",
+    "sri": "node scripts/generate-sri.mjs",
     "dev": "tsc -p tsconfig.json --watch",
     "heads": "node scripts/generate-heads.mjs",
     "test": "tsc -p tsconfig.test.json && vp test run",
