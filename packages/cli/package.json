@@ -1,7 +1,6 @@
 {
   "name": "zazz-ui",
   "version": "0.1.0",
-  "private": true,
   "description": "CLI for the Zazz Design Framework — vendors primitives from @zazz-ui/core into your project, with provenance-tracked updates.",
   "keywords": [
     "cli",
@@ -36,7 +35,7 @@
     "dev": "vp pack --watch",
     "test": "tsc -p tsconfig.json && vp test run",
     "check": "vp check",
-    "prepublishOnly": "echo 'zazz-ui publishes after milestone M2 (init+add). Drop \"private\": true and restore this script to `vp run build` when ready.' && exit 1"
+    "prepublishOnly": "vp run build"
   },
   "dependencies": {
     "@clack/prompts": "^1.7.0",
