@@ -28,9 +28,6 @@ Tooling is [Vite+](https://viteplus.dev) (`vp`): formatting, linting, task runni
 
 ## Publishing
 
-**Publishing is disabled for now**, a deliberate hold while the package surface settles. Two guards in `packages/core/package.json`:
+`@zazz-ui/core` is published to npm. Releases are manual and interactively confirmed; `prepublishOnly` runs the full build so every publish ships fresh artifacts (compiled scripts, `dist/` bundles, `dist/sri.json`).
 
-1. `"private": true`: pnpm skips the package entirely (`npm publish --dry-run` does _not_ honor this, hence the second guard).
-2. `prepublishOnly` exits non-zero with an explanatory message, so `npm publish` and `pnpm publish` both abort before contacting the registry.
-
-Everything else is ready: the package name (`@zazz-ui/core`), `exports`, `files`, and `publishConfig.access`. **To publish:** delete the `"private": true` line, restore `"prepublishOnly": "vp run build"` (tsc emit + `vp pack` bundles), then run `pnpm --filter @zazz-ui/core publish`. See [packages/core/README.md](packages/core/README.md).
+Per release: get `vp run ready` green, add the version's `CHANGELOG.md` entry (grouped by primitive/base scope), bump the version, run `pnpm --filter @zazz-ui/core publish`, tag `core-v<version>`, spot-check a pinned jsDelivr URL, and write the GitHub Release. Versions are immutable: a bad release gets `npm deprecate` plus a patch, never an unpublish. The versioning policy (what counts as breaking during 0.x) is [ADR-0010](docs/adr/0010-kit-first-independent-versioning.md).

@@ -38,10 +38,10 @@ Primitives use design tokens such as `var(--primary)`, `--radius-md`, and `--gap
 
 ```
 src/
-├── index.css        stylesheet entry: @imports base + every component in cascade order
+├── index.css        stylesheet entry: @imports base + every primitive in cascade order
 ├── index.js         script entry: registers every custom element / behavior
 ├── base/            tokens, reset, typography, utilities, layout + shared runtime
-└── primitives/<name>/       one folder per component: <name>.css, <name>.js, examples (.html)
+└── primitives/<name>/       one folder per primitive: <name>.css, <name>.js, examples (.html)
 dist/
 ├── zazz.css         flattened single-file bundle (loaded by CDN tags)
 ├── zazz.js
