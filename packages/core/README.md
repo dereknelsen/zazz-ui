@@ -1,6 +1,6 @@
 # @zazz-ui/core
 
-Zazz: a zero-build UI kit for the modern web. Semantic design tokens, cascade layers, `data-*` variants, and native platform APIs (popover, `<dialog>`, invoker commands, anchor positioning, view transitions) instead of framework abstractions. A lightweight shadcn and Tailwind alternative that runs with no build step.
+Zazz: a zero-build UI kit for the modern web. Semantic design tokens, cascade layers, `data-*` variants, and native platform APIs (popover, `<dialog>`, invoker commands, anchor positioning, view transitions) instead of framework abstractions. A lightweight alternative to shadcn and Tailwind.
 
 **Docs:** https://zazz.design (component gallery, tokens, guides)
 
@@ -18,11 +18,13 @@ import "@zazz-ui/core"; // component scripts: custom elements, reveal, toaster..
 Or from a CDN with two tags and no installation step:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core/dist/zazz.css" />
-<script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/core/dist/zazz.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.1.0/dist/zazz.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.1.0/dist/zazz.js"></script>
 ```
 
-Or copy the files directly: every component is one self-contained folder under `src/primitives/<name>/` containing its stylesheet, script, and canonical HTML examples. Copy a folder and own the code.
+Always pin an exact version in CDN URLs. Each release ships `dist/sri.json` with sha384 hashes for every published file if you want `integrity` attributes on those tags.
+
+Or copy the files directly: every component is one self-contained folder under `src/primitives/<name>/` containing its stylesheet, script, and canonical HTML examples. Copy a folder and own the code. (A `zazz-ui` CLI that vendors components and their dependencies for you is in the works.)
 
 ## Usage
 
@@ -42,7 +44,8 @@ src/
 └── primitives/<name>/       one folder per component: <name>.css, <name>.js, examples (.html)
 dist/
 ├── zazz.css         flattened single-file bundle (loaded by CDN tags)
-└── zazz.js
+├── zazz.js
+└── sri.json         sha384 hashes of every published css/js file
 ```
 
 Scripts are authored in TypeScript and shipped as readable, unminified `.js` with `.d.ts` alongside: what you copy is what runs.
