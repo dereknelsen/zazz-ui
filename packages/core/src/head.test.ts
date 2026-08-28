@@ -97,3 +97,100 @@ describe("buildHead", () => {
     expect(head).not.toMatch(/unpkg\.com|esm\.sh/);
   });
 });
+
+describe("buildHead cdn mode", () => {
+  const KIT = "https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.1.0";
+
+  it("rejects anything but an exact version", () => {
+    expect(() => buildHead({ cdn: { version: "latest" } })).toThrow(/exact version/);
+    expect(() => buildHead({ cdn: { version: "0.1" } })).toThrow(/exact version/);
+    expect(() => buildHead({ cdn: { version: "^0.1.0" } })).toThrow(/exact version/);
+    expect(() => buildHead({ cdn: { version: "0.1.0" } })).not.toThrow();
+    expect(() => buildHead({ cdn: { version: "1.2.3-beta.1" } })).not.toThrow();
+  });
+
+  it("renders the bundle grain: two pinned dist requests", () => {
+    const head = buildHead({ cdn: { version: "0.1.0" } });
+    expect(head).toContain(`<link rel="stylesheet" href="${KIT}/dist/zazz.css">`);
+    expect(head).toContain(`<script type="module" src="${KIT}/dist/zazz.js"></script>`);
+    expect(head).toContain(`<link rel="modulepreload" href="${KIT}/dist/zazz.js">`);
+    // The bundle keeps bare imports, so the import map still ships.
+    expect(head).toContain(`<script type="importmap">`);
+    expect(head).not.toContain(`/src/`);
+  });
+
+  it("fills integrity + crossorigin from sri", () => {
+    const sri = {
+      "dist/zazz.css": "sha384-css",
+      "dist/zazz.js": "sha384-js",
+    };
+    const head = buildHead({ cdn: { version: "0.1.0", sri } });
+    expect(head).toContain(
+      `href="${KIT}/dist/zazz.css" integrity="sha384-css" crossorigin="anonymous"`,
+    );
+    expect(head).toContain(
+      `src="${KIT}/dist/zazz.js" integrity="sha384-js" crossorigin="anonymous"`,
+    );
+  });
+
+  it("renders the granular grain from the dependency closure in cascade order", () => {
+    const head = buildHead({ cdn: { version: "0.1.0", primitives: ["combobox"] } });
+    // Base layers first (layer declaration leads), utilities/layout last.
+    const order = [
+      `${KIT}/src/base/_layers.css`,
+      `${KIT}/src/base/_view-transitions.css`,
+      // combobox closure css, cascade order: kbd, button, popover, fields,
+      // input, select, badge... combobox.
+      `${KIT}/src/primitives/kbd/kbd.css`,
+      `${KIT}/src/primitives/button/button.css`,
+      `${KIT}/src/primitives/popover/popover.css`,
+      `${KIT}/src/primitives/fields/fields.css`,
+      `${KIT}/src/primitives/select/select.css`,
+      `${KIT}/src/primitives/combobox/combobox.css`,
+      `${KIT}/src/base/_utilities.css`,
+      `${KIT}/src/base/_layout.css`,
+      // Behavior: side-effect tags for the engine stack and the primitive.
+      `${KIT}/src/base/dialog-lifecycle.js`,
+      `${KIT}/src/base/typeahead.js`,
+      `${KIT}/src/primitives/combobox/combobox.js`,
+    ];
+    let cursor = -1;
+    for (const marker of order) {
+      const index = head.indexOf(marker);
+      expect(index, `missing or out of order: ${marker}`).toBeGreaterThan(cursor);
+      cursor = index;
+    }
+    expect(head).not.toContain("dist/zazz");
+  });
+
+  it("keeps polyfills for css-only closures and covers core imports via the import map", () => {
+    const sri = {
+      "src/base/zazz-element.js": "sha384-ze",
+      "src/base/dialog-lifecycle.js": "sha384-dl",
+    };
+    const head = buildHead({ cdn: { version: "0.1.0", primitives: ["tooltip"], sri } });
+    // tooltip's closure is css-only, but its styles ride the Popover API.
+    expect(head).toContain("popover-polyfill");
+    expect(head).toContain(
+      `src="${KIT}/src/base/dialog-lifecycle.js" integrity="sha384-dl" crossorigin="anonymous"`,
+    );
+    // Transitively imported core modules are covered by import-map integrity.
+    const match = head.match(/<script type="importmap">\n([\s\S]*?)\n<\/script>/);
+    const map = JSON.parse(match![1]) as { integrity: Record<string, string> };
+    expect(map.integrity[`${KIT}/src/base/zazz-element.js`]).toBe("sha384-ze");
+  });
+
+  it("mirrors index.css's base imports around the primitives", () => {
+    const head = buildHead({ cdn: { version: "0.1.0", primitives: ["button"] } });
+    const links = [...head.matchAll(/src\/base\/(_[a-z-]+\.css)/g)].map((m) => m[1]);
+    expect(links).toEqual([
+      "_layers.css",
+      "_variables.css",
+      "_reset.css",
+      "_typography.css",
+      "_view-transitions.css",
+      "_utilities.css",
+      "_layout.css",
+    ]);
+  });
+});

@@ -24,6 +24,8 @@
  * const head = buildHead({ base: "./zazz" });
  */
 
+import { PRIMITIVES, resolveClosure } from "./manifest.ts";
+
 // --- Third-party dependency manifest ---
 
 /** One pinned third-party file served from jsDelivr. */
@@ -43,6 +45,44 @@ interface CdnDependency {
 
 /** The one CDN provider for every third-party resource. */
 const CDN = "https://cdn.jsdelivr.net/npm";
+
+/** The kit's own published package name (CDN mode serves files out of it). */
+const PACKAGE_NAME = "@zazz-ui/core";
+
+/**
+ * Exact-version pin required in every kit CDN URL. SRI hashes are per-byte,
+ * so floating specs (`latest`, `0.3`) would break integrity on each release —
+ * and unpinned URLs defeat jsDelivr's permanent caching (ticket 06).
+ */
+const EXACT_VERSION = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/;
+
+/**
+ * Base stylesheets in the exact order `src/index.css` loads them around the
+ * primitive imports: `PRE` before (layer declaration first), `POST` after
+ * (utilities and layout stay the final normal override layer). The granular
+ * CDN head mirrors this split; `head.test.ts` guards it against `index.css`.
+ */
+const BASE_CSS_PRE = [
+  "base/_layers.css",
+  "base/_variables.css",
+  "base/_reset.css",
+  "base/_typography.css",
+  "base/_view-transitions.css",
+];
+const BASE_CSS_POST = ["base/_utilities.css", "base/_layout.css"];
+
+/**
+ * Core runtime modules reached by relative import from primitive scripts
+ * (never via their own script tag, except `dialog-lifecycle`, which is a
+ * side-effect module the granular head loads explicitly). Listed so the
+ * import map's `integrity` section can cover their transitive loads.
+ */
+const CORE_RUNTIME_JS = [
+  "base/dialog-lifecycle.js",
+  "base/utils.js",
+  "base/signals.js",
+  "base/zazz-element.js",
+];
 
 /**
  * @description Builds the pinned jsDelivr URL for a dependency.
@@ -140,9 +180,9 @@ function fontsBlock(display: "swap" | "optional"): string {
  * @returns The import-map script tag.
  * @private
  */
-function importMapBlock(): string {
+function importMapBlock(extraIntegrity: Record<string, string> = {}): string {
   const imports: Record<string, string> = {};
-  const integrity: Record<string, string> = {};
+  const integrity: Record<string, string> = { ...extraIntegrity };
   for (const dep of ESM_DEPENDENCIES) {
     const url = cdnUrl(dep);
     imports[dep.name] = url;
@@ -195,6 +235,25 @@ const THEME_SCRIPT = `<!-- Theme: apply the persisted (or preferred) scheme befo
 
 // --- Public API ---
 
+/** CDN mode for `buildHead` — kit files served from jsDelivr (ticket 06). */
+export interface CdnHeadOptions {
+  /** Exact published `@zazz-ui/core` version (`"0.1.0"`; never a dist-tag). */
+  version: string;
+  /**
+   * Granular grain: the primitives this page uses. Their dependency closure
+   * (via the kit manifest) decides which css/js files load. Omit for the
+   * bundle grain (`dist/zazz.css` + `dist/zazz.js`, whole kit, two requests).
+   */
+  primitives?: string[];
+  /**
+   * The version's `dist/sri.json` contents (package-relative path → sha384).
+   * When provided, every kit URL gets `integrity` + `crossorigin` (links and
+   * script tags directly; transitive module imports via the import map's
+   * `integrity` section). Omitted → plain pinned URLs.
+   */
+  sri?: Record<string, string>;
+}
+
 /** Options for `buildHead`. */
 export interface HeadOptions {
   /**
@@ -203,6 +262,12 @@ export interface HeadOptions {
    * location); the docs preview iframe passes `"/zazz/src"`.
    */
   base?: string;
+  /**
+   * Serve the kit from jsDelivr instead of a local copy: pinned, optionally
+   * SRI-checked URLs into the published package. Mutually exclusive with
+   * `base`.
+   */
+  cdn?: CdnHeadOptions;
   /**
    * Load component behavior: the import map, the polyfills, and the
    * `index.js` module. `false` renders a style-only head. Default `true`.
@@ -228,7 +293,7 @@ export interface HeadOptions {
  * buildHead({ base: "/zazz/src", scripts: false, fontDisplay: "optional" });
  */
 export function buildHead(options: HeadOptions = {}): string {
-  const { base = "./zazz", scripts = true, fontDisplay = "swap", theme = true } = options;
+  const { base = "./zazz", cdn, scripts = true, fontDisplay = "swap", theme = true } = options;
 
   const parts: string[] = [
     `<meta charset="utf-8">`,
@@ -239,26 +304,129 @@ export function buildHead(options: HeadOptions = {}): string {
 
   if (fontDisplay !== false) parts.push(fontsBlock(fontDisplay));
 
-  parts.push(
-    `<!-- Zazz styles: one bundle (index.css @imports every layer in cascade order) -->`,
-    `<link rel="stylesheet" href="${base}/index.css">`,
-  );
-
-  if (scripts) {
+  if (cdn) {
+    parts.push(...cdnBlocks(cdn, scripts));
+  } else {
     parts.push(
-      // The import map must precede EVERY module load — including the
-      // modulepreload hint — or the browser rejects it and bare specifiers fail.
-      importMapBlock(),
-      `<link rel="modulepreload" href="${base}/index.js">`,
-      polyfillsBlock(),
-      `<!-- Zazz behavior: one ES module imports every component script in dependency order -->`,
-      `<script type="module" src="${base}/index.js"></script>`,
+      `<!-- Zazz styles: one bundle (index.css @imports every layer in cascade order) -->`,
+      `<link rel="stylesheet" href="${base}/index.css">`,
     );
+
+    if (scripts) {
+      parts.push(
+        // The import map must precede EVERY module load — including the
+        // modulepreload hint — or the browser rejects it and bare specifiers fail.
+        importMapBlock(),
+        `<link rel="modulepreload" href="${base}/index.js">`,
+        polyfillsBlock(),
+        `<!-- Zazz behavior: one ES module imports every component script in dependency order -->`,
+        `<script type="module" src="${base}/index.js"></script>`,
+      );
+    }
   }
 
   if (theme) parts.push(THEME_SCRIPT);
 
   return parts.join("\n");
+}
+
+// --- CDN mode ---
+
+/**
+ * @description Renders the style/behavior blocks for CDN mode: the bundle
+ * grain (two `dist/` requests, whole kit) or, when `primitives` is given, the
+ * granular grain — base layers in cascade order, the dependency closure's
+ * stylesheets, and one module tag per closure script (relative imports between
+ * kit files resolve natively on jsDelivr; only bare specifiers need the map).
+ *
+ * @param cdn - The CDN options (exact version, optional primitives + sri).
+ * @param scripts - Whether behavior loads at all (`HeadOptions.scripts`).
+ * @returns The head fragments between the fonts block and the theme script.
+ * @private
+ */
+function cdnBlocks(cdn: CdnHeadOptions, scripts: boolean): string[] {
+  const { version, primitives, sri } = cdn;
+  if (!EXACT_VERSION.test(version)) {
+    throw new Error(
+      `CDN URLs must pin an exact version (got "${version}"); ` +
+        `dist-tags and ranges break SRI and permanent caching`,
+    );
+  }
+  const url = (path: string): string => `${CDN}/${PACKAGE_NAME}@${version}/${path}`;
+  const attrs = (path: string): string => {
+    const hash = sri?.[path];
+    return hash ? ` integrity="${hash}" crossorigin="anonymous"` : "";
+  };
+  const parts: string[] = [];
+
+  if (!primitives) {
+    parts.push(
+      `<!-- Zazz styles: the whole kit, one request -->`,
+      `<link rel="stylesheet" href="${url("dist/zazz.css")}"${attrs("dist/zazz.css")}>`,
+    );
+    if (scripts) {
+      parts.push(
+        importMapBlock(),
+        `<link rel="modulepreload" href="${url("dist/zazz.js")}"${attrs("dist/zazz.js")}>`,
+        polyfillsBlock(),
+        `<!-- Zazz behavior: the whole kit, one module -->`,
+        `<script type="module" src="${url("dist/zazz.js")}"${attrs("dist/zazz.js")}></script>`,
+      );
+    }
+    return parts;
+  }
+
+  const closure = resolveClosure(primitives);
+
+  const css = [
+    ...BASE_CSS_PRE,
+    ...closure.flatMap((name) => PRIMITIVES[name]?.css ?? []),
+    ...BASE_CSS_POST,
+  ];
+  parts.push(
+    `<!-- Zazz styles: base layers, then ${closure.join(", ")} in cascade order -->`,
+    ...css.map(
+      (path) => `<link rel="stylesheet" href="${url(`src/${path}`)}"${attrs(`src/${path}`)}>`,
+    ),
+  );
+
+  if (scripts) {
+    // Side-effect modules need their own tag (nothing imports them); the rest
+    // of each primitive's chain loads through native relative imports. The
+    // core dialog-lifecycle module always leads: dialogs, menus, and popovers
+    // assume its lifecycle events. Polyfills stay in even for css-only
+    // closures — tooltip/dialog/menu styles ride on the Popover API and
+    // Invoker Commands.
+    const scriptFiles = [
+      ...new Set([
+        "base/dialog-lifecycle.js",
+        ...closure.flatMap((name) => {
+          const entry = PRIMITIVES[name];
+          return entry ? [...entry.base, ...entry.js] : [];
+        }),
+      ]),
+    ];
+    // Transitively imported core modules never get a tag, so their integrity
+    // rides in the import map's integrity section instead.
+    const transitive: Record<string, string> = {};
+    if (sri) {
+      for (const path of CORE_RUNTIME_JS) {
+        const hash = sri[`src/${path}`];
+        if (hash) transitive[url(`src/${path}`)] = hash;
+      }
+    }
+    parts.push(
+      importMapBlock(transitive),
+      polyfillsBlock(),
+      `<!-- Zazz behavior: side-effect modules by tag; the rest via module imports -->`,
+      ...scriptFiles.map(
+        (path) =>
+          `<script type="module" src="${url(`src/${path}`)}"${attrs(`src/${path}`)}></script>`,
+      ),
+    );
+  }
+
+  return parts;
 }
 
 export { ESM_DEPENDENCIES, POLYFILLS, cdnUrl };
