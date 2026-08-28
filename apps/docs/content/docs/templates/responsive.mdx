@@ -1,0 +1,21 @@
+---
+title: Responsive
+description: The @xs: through @xl: utility prefixes exercised across grids, flex direction, display, spans, basis, and alignment.
+---
+
+One page that runs the [responsive prefixes](/docs/core-concepts/responsive-design) through every family that supports them. Each section is labeled with the classes it uses, so resizing the page doubles as a legend: you see the class and the behavior side by side.
+
+<TemplateFrame src="/zazz/examples/responsive.html" title="Responsive template" />
+
+## What to look at
+
+- **Grid columns** stepping from one column to four as the width grows (`grid-cols-1 @sm:grid-cols-2 @lg:grid-cols-4`).
+- **Flex direction** flipping between stacked and row layouts at a breakpoint.
+- **Display toggles**, the `hidden @md:flex` pattern that swaps mobile and desktop navigation.
+- **Column span, basis, and alignment**, the finer-grained families that also take prefixes.
+
+Remember these are container style queries against flags on `body`, not media queries, which is why they compose with the container band system on the same elements. The [layout template](/docs/templates/layout) shows that composition.
+
+## Source
+
+Open [the raw page](/zazz/examples/responsive.html), or read [responsive.html on GitHub](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/examples/responsive.html).

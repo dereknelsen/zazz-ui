@@ -31,6 +31,8 @@ const walk = (dir) => {
   }
 };
 walk(path.join(pkgRoot, "src"));
+// The route also serves the full-page templates at /zazz/examples/*.
+walk(path.join(pkgRoot, "examples"));
 
 // lib/zazz-package.ts locates the package with require.resolve at module
 // scope, which walks node_modules — so the traced bundle also needs the

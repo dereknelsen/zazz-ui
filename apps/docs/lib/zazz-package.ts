@@ -68,6 +68,14 @@ export const COMPONENTS_ROOT = path.join(SRC_ROOT, "primitives");
 export const SERVED_ROOT = SRC_ROOT;
 
 /**
+ * The kit's full-page example templates (`examples/*.html`), served at
+ * `/zazz/examples/*`. They live beside `src/` in the package, and their
+ * relative `../src/…` asset URLs resolve to `/zazz/src/…` — an alias the
+ * route maps back onto `SERVED_ROOT`.
+ */
+export const EXAMPLES_ROOT = path.join(PKG_ROOT, "examples");
+
+/**
  * Resolves `relative` inside `root`, or returns `null` when the resolved path
  * would escape it (path traversal) — the shared guard for every kit read.
  */

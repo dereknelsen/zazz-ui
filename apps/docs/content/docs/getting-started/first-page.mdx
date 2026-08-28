@@ -1,0 +1,239 @@
+---
+title: "Tutorial: your first page"
+description: Build a complete landing page in one HTML file, then retheme it with three lines of CSS. No build step, no framework, no config.
+---
+
+The fastest way to understand Zazz is to build something with it. In this tutorial you'll create a landing page (header, hero, feature cards, a full-bleed photo, a signup form, footer) in a single HTML file, then change how the whole thing looks by editing a few tokens.
+
+You need a text editor and a browser. Nothing gets installed.
+
+## 1. Start the file
+
+Create `index.html`:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Northwind Coffee</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.1.0/dist/zazz.css" />
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.1.0/dist/zazz.js"
+    ></script>
+  </head>
+  <body></body>
+</html>
+```
+
+Two lines matter here beyond the CDN tags. The `color-scheme` meta tells the browser this page supports light and dark mode, so native UI matches the user's OS preference before any CSS loads. And the viewport meta is required for the fluid type and spacing scales to behave on phones. The [head recommendations](/docs/getting-started/head) page covers the rest of a production `<head>`.
+
+Open the file in a browser. A blank page, but the fonts and background already follow your OS theme. That's the kit's reset and tokens at work.
+
+## 2. Add the header
+
+Every Zazz page has the same skeleton: a `header`, a `main` full of `section`s, and a `footer`. Inside each of those regions, a `div.container` handles horizontal placement. Add this inside `<body>`:
+
+```html
+<header>
+  <div class="container flex items-center justify-between py-md">
+    <a class="text-lg font-heading" href="/">Northwind</a>
+    <nav class="flex items-center gap-sm">
+      <a class="ui-button" data-variant="ghost" href="#story">Our story</a>
+      <a class="ui-button" data-variant="ghost" href="#menu">Menu</a>
+      <a class="ui-button" data-variant="primary" href="#signup">Join us</a>
+    </nav>
+  </div>
+</header>
+```
+
+A few things are doing work here:
+
+- `.container` centers its children in a width band (more on bands in step 4).
+- The links are styled as buttons with `.ui-button`, and `data-variant` picks the look. Variants in Zazz are `data-*` attributes, not extra classes.
+- `flex items-center justify-between` and `gap-sm` are utility classes. They map to design tokens, so the spacing here stays consistent with everything you'll add later.
+
+## 3. Add the hero
+
+Start `<main>` with a hero section:
+
+```html
+<main>
+  <section class="py-xl">
+    <div class="container">
+      <hgroup class="flex flex-col gap-sm text-center">
+        <span class="text-eyebrow">Small-batch roasting since 2019</span>
+        <h1 class="text-display text-balance">Coffee worth slowing down for</h1>
+        <p class="text-xl text-muted-foreground">
+          Beans roasted in-house every morning, shipped the same day.
+        </p>
+        <div class="flex mt-sm justify-center gap-sm">
+          <a class="ui-button" data-variant="primary" href="#signup">Get the newsletter</a>
+          <a class="ui-button" data-variant="ghost" href="#menu">See the menu</a>
+        </div>
+      </hgroup>
+    </div>
+  </section>
+</main>
+```
+
+Notice there are no font sizes or media queries. `text-display` and `text-xl` are fluid: they scale with the viewport via `clamp()`, so the headline is already the right size on a phone and on a desktop. Section spacing works the same way; `py-xl` grows and shrinks with the screen.
+
+One house rule worth adopting now: write UI text in sentence case ("Get the newsletter", not "Get The Newsletter"). The eyebrow renders uppercase, but that comes from the `.text-eyebrow` class, so you still author it in sentence case.
+
+## 4. Add feature cards and meet the bands
+
+Here is where the Zazz container stops looking like other containers. Add a second section inside `<main>`:
+
+```html
+<section id="menu" class="py-xl bg-muted">
+  <div class="container">
+    <h2 class="text-h2 text-center">What we're pouring</h2>
+    <div class="grid @md:grid-cols-3 gap-md mt-lg" data-container="lg">
+      <article class="bg-card text-card-foreground rounded-lg shadow-sm p-md flex flex-col gap-sm">
+        <span class="ui-badge" data-variant="muted">Espresso</span>
+        <h3 class="text-h4">The classic</h3>
+        <p class="text-sm text-muted-foreground">
+          A Honduran single origin with notes of dark chocolate and orange peel.
+        </p>
+      </article>
+      <article class="bg-card text-card-foreground rounded-lg shadow-sm p-md flex flex-col gap-sm">
+        <span class="ui-badge" data-variant="muted">Filter</span>
+        <h3 class="text-h4">The slow one</h3>
+        <p class="text-sm text-muted-foreground">
+          Ethiopian heirloom, washed process. Bright, floral, and worth the wait.
+        </p>
+      </article>
+      <article class="bg-card text-card-foreground rounded-lg shadow-sm p-md flex flex-col gap-sm">
+        <span class="ui-badge" data-variant="muted">Decaf</span>
+        <h3 class="text-h4">The night owl</h3>
+        <p class="text-sm text-muted-foreground">
+          Swiss water process, so it tastes like coffee instead of a compromise.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+```
+
+The container is a grid of named width bands (`xs` through `xl`, plus `full` and `bleed`), and every direct child picks one. The heading sits in the default `md` band. The card grid opts into the wider `lg` band with `data-container="lg"`. Both are centered, both are siblings, and no wrapper had to change.
+
+The cards themselves are just utilities over semantic color roles: `bg-card` and `text-card-foreground` resolve through `light-dark()`, which is why this section will look right in dark mode without any extra code.
+
+`@md:grid-cols-3` is a responsive prefix: one column on phones, three from the `md` breakpoint up. Mobile first, like everything in the kit.
+
+## 5. Go full bleed
+
+To see the band system pay off, add a photo section where the image escapes to the viewport edge while its caption stays at reading width:
+
+```html
+<section id="story" class="py-xl">
+  <div class="container">
+    <h2 class="text-h2">The roastery</h2>
+    <figure class="flex flex-col gap-sm mt-lg" data-container="bleed">
+      <img
+        class="w-full aspect-univisium object-cover"
+        src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&w=2000&q=60"
+        alt="Bags of green coffee stacked beside a drum roaster"
+      />
+      <figcaption class="text-sm text-muted-foreground text-center">
+        The Probat drum roaster we restored in 2021.
+      </figcaption>
+    </figure>
+    <p class="mt-lg">
+      Every batch is roasted the morning it ships. Come by on Saturdays and we'll walk you through
+      it.
+    </p>
+  </div>
+</section>
+```
+
+In a classic max-width container this would take negative margins or restructured markup. Here it's one attribute: `data-container="bleed"` places the figure edge to edge, and the paragraph after it returns to the default band. The [layout and containers](/docs/core-concepts/layout) page explains the whole system.
+
+## 6. Add the signup form
+
+Forms use `.ui-field` for label and error layout and `.ui-input` for the control. Validation styling keys off the browser's own `:user-invalid`, so it appears after the user interacts with the field, not while they're still typing:
+
+```html
+<section id="signup" class="py-xl bg-muted">
+  <div class="container" data-container="xs">
+    <hgroup class="flex flex-col gap-sm text-center">
+      <h2 class="text-h2">Join the mailing list</h2>
+      <p class="text-muted-foreground">One email a month. Roasts, events, no filler.</p>
+    </hgroup>
+    <form class="flex flex-col gap-md mt-lg">
+      <div class="ui-field">
+        <label data-slot="field-label" for="email">Email</label>
+        <input
+          class="ui-input"
+          id="email"
+          name="email"
+          type="email"
+          required
+          placeholder="you@example.com"
+          autocomplete="email"
+        />
+        <div data-slot="field-description">
+          <span data-slot="field-error" role="alert">Please enter a valid email address.</span>
+        </div>
+      </div>
+      <button class="ui-button" data-variant="primary" type="submit">Subscribe</button>
+    </form>
+  </div>
+</section>
+```
+
+The `data-container="xs"` on the container narrows the default band for this section, because a form stretched to content width looks lost. Try submitting the empty form to see the error state.
+
+## 7. Close with a footer
+
+```html
+<footer class="pt-xl border-t">
+  <div class="container flex items-center justify-between py-md">
+    <span class="text-sm text-muted-foreground">© 2026 Northwind Coffee</span>
+    <nav class="flex gap-sm">
+      <a class="ui-button" data-variant="ghost" data-size="sm" href="#story">Our story</a>
+      <a class="ui-button" data-variant="ghost" data-size="sm" href="#signup">Newsletter</a>
+    </nav>
+  </div>
+</footer>
+```
+
+That's the full page. Resize the window: the bands cap and center on wide screens, fill with gutters on narrow ones, and the type scales smoothly the entire way. Switch your OS to dark mode and the page follows, because every color on it is a semantic role.
+
+## 8. Make it yours
+
+So far the page looks like Zazz's defaults. The whole kit reads from tokens on `:root`, so rebranding is a stylesheet loaded after the kit. Add to `<head>`:
+
+```html
+<link rel="stylesheet" href="./theme.css" />
+```
+
+And create `theme.css`:
+
+```css
+:root {
+  --primary: oklch(0.45 0.12 150); /* deep green */
+  --radius-md: 0; /* square the corners */
+  --ui-button-radius: var(--radius-full); /* except buttons, make those pills */
+}
+```
+
+Reload. Every primary button, focus ring, and accent is now green, corners are square, and buttons are pills. You changed three custom properties and didn't override a single rule. That's the theming model in miniature:
+
+- Global tokens (`--primary`, `--radius-md`) move the whole system.
+- Component hooks (`--ui-button-radius`) move one primitive everywhere.
+- The same hooks set inline move one instance.
+
+[Theme variables](/docs/foundation/variables) lists what's available, and [extending Zazz](/docs/core-concepts/extending) covers adding your own tokens, utilities, and variants when overriding isn't enough.
+
+## Where to go next
+
+- [Layout and containers](/docs/core-concepts/layout) for the band system you've been using, in depth.
+- [Styling with utility classes](/docs/core-concepts/utility-classes) for the utility vocabulary.
+- [Dark mode](/docs/core-concepts/dark-mode) for adding a manual theme toggle.
+- The [components](/docs/components/button) section for everything the kit ships: dialogs, menus, tabs, tables, and the rest of the form controls.
+- [Installation](/docs/getting-started/installation) when you're ready to move from CDN tags to npm or vendored source.

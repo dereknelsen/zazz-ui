@@ -1,0 +1,19 @@
+---
+title: Layout
+description: A full page exercising every container band, the responsive container variants, and the article reading measure.
+---
+
+This is the working companion to [layout and containers](/docs/core-concepts/layout). Where that page explains the band model, this one shows all of it on a single page at real width: every band from `xs` to `bleed`, one after another, in a live document you can resize.
+
+<TemplateFrame src="/zazz/examples/layout.html" title="Layout template" />
+
+## What to look at
+
+- **Every band in sequence.** The first section places a labeled block in each band, so you can see exactly how `xs` through `xl`, `full`, and `bleed` relate at any viewport width. Drag the window narrower and watch the bands merge into the gutters with no snapping.
+- **A container-wide default.** The second section sets `data-container` on the container itself, shifting every child at once.
+- **The responsive handoff.** The `@md:container` block is a plain full-width element below `md` and a band subgrid above it. Its inverse, `@max-md:container`, is the pattern to study: a centered band container on small screens that becomes a two-column grid on large ones, with no media queries in sight.
+- **The article measure.** The last section uses `data-variant="article"` for `ch`-based reading widths instead of breakpoint bands.
+
+## Source
+
+Open [the raw page](/zazz/examples/layout.html) and view source, or read [layout.html on GitHub](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/examples/layout.html). The same file ships in the npm package at `examples/layout.html`.

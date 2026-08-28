@@ -1,0 +1,34 @@
+---
+title: Templates
+description: Complete reference pages built with nothing but Zazz classes. Open them, resize them, and copy from them.
+---
+
+These are full, working pages that ship inside `@zazz-ui/core` under `examples/`. Each one is plain HTML loading the kit's stylesheet and scripts, with no build step and no custom CSS. They exist so you can see the system working at real page width, then view source and take what you need.
+
+Every page here is served raw at `/zazz/examples/`, embedded below its docs page, and linked so you can open it in its own tab. The same files live in the package, so if you installed Zazz you already have them on disk.
+
+## Page templates
+
+Start with these two when you're building something real. They are complete page shapes, not test grids:
+
+- **[About](/docs/templates/about)**: a marketing and editorial page. The hero heading group, a card carousel, dialogs opened with invoker commands, and the standard header/main/footer skeleton with view transitions wired up.
+- **[Products](/docs/templates/products)**: a product detail page. Breadcrumb trail, a lightbox photo gallery inside a carousel, prose product copy, and a two-column layout that hands off between a container and a grid with `@max-md:container`.
+
+## System references
+
+These four exercise one part of the kit each, exhaustively. Use them to see a feature from every angle:
+
+- **[Layout](/docs/templates/layout)**: every container band from `xs` to `bleed`, per-child overrides, container defaults, the responsive `@md:container` and `@max-md:container` variants, and the article reading measure. The companion to [layout and containers](/docs/core-concepts/layout).
+- **[Responsive](/docs/templates/responsive)**: the `@xs:` through `@xl:` utility prefixes across grid columns, flex direction, display toggles, column spans, basis, and alignment.
+- **[Components](/docs/templates/components)**: the kitchen sink. Buttons, badges, breadcrumbs, cards, avatars, accordion, tabs, tooltip, menu, dialog, and prose on one page, adapted from each component's source examples.
+- **[Forms](/docs/templates/forms)**: every field type with labels, hints, and `:user-invalid` validation. Inputs, input groups, the password toggle, textarea, select, checkboxes, radios, switches, and the slider.
+
+## Using them as starting points
+
+The fastest way to start a page is to copy a template and delete what you don't need. If you installed via npm, the files are in `node_modules/@zazz-ui/core/examples/`; with the degit route from [installation](/docs/getting-started/installation) you can pull the folder directly:
+
+```bash
+pnpm dlx degit dereknelsen/zazz-ui/packages/core/examples ./templates
+```
+
+One thing to know before copying: each template's `<head>` is generated from the kit's head contract (the block between the `zazz:head` markers) and references the kit at `../src/`. Point those URLs at your own copy of the kit or swap in the CDN tags, and see [head recommendations](/docs/getting-started/head) for what each tag is doing.

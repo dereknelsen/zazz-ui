@@ -1,0 +1,178 @@
+---
+title: Layout and containers
+description: The Zazz container is a band grid that spans the whole region, not a fixed-width box. Each child picks its own width, so measured text and full-bleed media live in the same flow.
+---
+
+Most frameworks give you a `.container` that is a box: a `max-width`, auto margins, some padding. It works until you want one thing to be wider than the box. A full-bleed image between two paragraphs means negative margins, a `100vw` hack, or splitting the section into three siblings so the image can sit outside the wrapper.
+
+The Zazz container inverts this. It is not a box that constrains its contents. It is a grid of named width bands that spans the entire region, and every direct child chooses which band it occupies. The heading can sit in the `md` band, the photo below it can bleed to the viewport edge, and the caption after that can return to `md`, all as siblings in one flow, without touching the markup structure.
+
+## How it works
+
+When a `main`, `header`, `footer`, `section`, or `article` element contains a `.container` as a direct child, that region becomes a layout grid. The grid's columns are a set of concentric bands defined once on `:root`, so every region on the page shares the same template and content lines up across sections:
+
+<BandDiagram />
+
+The `.container` itself spans the whole region as a subgrid, which re-exposes those bands to its children. Each direct child is then placed into a band with `grid-column`. That's the whole trick: width is a placement decision made per child, not a wall around all of them.
+
+```html
+<section>
+  <div class="container">
+    <h2>Sits in the md band (the default)</h2>
+    <p>So does this paragraph.</p>
+    <figure data-container="bleed">
+      <img src="/wide.jpg" alt="" />
+    </figure>
+    <p>And the caption comes back to md.</p>
+  </div>
+</section>
+```
+
+<BandFlowDiagram />
+
+To see the whole system moving at real page width, open the [layout template](/docs/templates/layout): a full page that walks every band, the responsive variants, and the article measure.
+
+The bands are fluid. Each one caps at its breakpoint width and centers while the viewport has room to spare, then fills the available space (minus gutters) once it doesn't. There is no snap at the breakpoint; the transition is continuous.
+
+## The bands
+
+| Band           | Width                           | Typical use                              |
+| -------------- | ------------------------------- | ---------------------------------------- |
+| `xs`           | caps at `--breakpoint-xs` 40rem | narrow columns, short forms              |
+| `sm`           | caps at `--breakpoint-sm` 48rem | forms, focused content                   |
+| `md` (default) | caps at `--breakpoint-md` 64rem | standard page content                    |
+| `lg`           | caps at `--breakpoint-lg` 80rem | wide sections                            |
+| `xl`           | caps at `--breakpoint-xl` 96rem | dashboards, galleries                    |
+| `full`         | region width minus gutters      | edge-aligned rows that keep page gutters |
+| `bleed`        | edge to edge, no gutters        | full-bleed media, background color bands |
+
+## Choosing bands
+
+`data-container` on the `.container` sets the default band for all of its children:
+
+```html
+<section>
+  <div class="container" data-container="lg">
+    <h2>Everything in here defaults to lg</h2>
+    <p>Including this.</p>
+  </div>
+</section>
+```
+
+`data-container` on a direct child overrides the band for that child only:
+
+```html
+<section>
+  <div class="container">
+    <h2>md, the default</h2>
+    <div class="grid @md:grid-cols-3 gap-md" data-container="xl">
+      <!-- a wide card grid inside a normal-width section -->
+    </div>
+  </div>
+</section>
+```
+
+Only direct children of the container get band placement. A wrapper takes one band for itself, and its own children lay out inside it normally. That cuts both ways: it means you can't reach a band from two levels down, and it also means a `grid` or `flex` wrapper is how you do multi-column layout inside a band, as in the card grid above.
+
+## How this differs from a classic container
+
+A Bootstrap or Tailwind container puts the width on the box. Everything inside inherits that constraint, and escaping it means escaping the box. The Zazz container puts the width on each child, so:
+
+- Mixed widths need no markup surgery. Text at `md`, a table at `xl`, a photo at `bleed`, all siblings.
+- Backgrounds and content are independent. Give a child `data-container="bleed"` and a background color, and you have a full-width color band inside a normal section.
+- Sections stay semantic. The page is a `header`, a `main` of `section`s, and a `footer`. The container is one `div` inside each region, not a nest of wrappers.
+- Alignment is systemic. Every band comes from the same template, so an `md` heading in one section lines up exactly with `md` text in the next.
+
+One habit to unlearn: don't reach for `.container` to size a component. It is a page-level tool for regions. Inside a band, use `flex`, `grid`, and the sizing utilities like you normally would.
+
+## Vertical rhythm belongs to the section
+
+The container only handles inline (horizontal) placement. Vertical spacing between and within sections comes from padding utilities on the region:
+
+```html
+<main>
+  <section class="py-xl">
+    <div class="container">...</div>
+  </section>
+  <section class="py-xl bg-muted">
+    <div class="container">...</div>
+  </section>
+</main>
+```
+
+A region can also hold more than one container. A footer often has a main content container and a separate colophon container:
+
+```html
+<footer class="pt-xl border-t">
+  <div class="container">
+    <!-- link columns -->
+  </div>
+  <div class="container flex items-center justify-between py-md">
+    <!-- copyright, social icons -->
+  </div>
+</footer>
+```
+
+## The article variant
+
+`data-variant="article"` switches the container from the band grid to a reading measure. Instead of breakpoint-based widths it uses `ch` units, so the line length tracks the font:
+
+```html
+<article>
+  <div class="container" data-variant="article">
+    <h1>A readable column</h1>
+    <p>Line length holds at 70ch regardless of viewport width.</p>
+  </div>
+</article>
+```
+
+Pick the measure with `data-container`:
+
+| Value          | Measure |
+| -------------- | ------- |
+| `xs`           | 45ch    |
+| `sm`           | 50ch    |
+| `md`           | 65ch    |
+| `lg` (default) | 70ch    |
+| `xl`           | 75ch    |
+
+Two things to know about this variant. It is a centered inline-size element rather than a subgrid, so its children don't get band placement (`full` and `bleed` don't apply; use a plain container for those). And it establishes a container query context named `article`, so components inside it can respond to the column width rather than the viewport.
+
+## Responsive container variants
+
+The container class takes the same `@` prefixes as other utilities. A prefixed container is a band subgrid only in its range and a plain block otherwise:
+
+- `@md:container` acts as a container from `md` up. Below that it renders as a normal full-width block.
+- `@max-md:container` is the inverse: a container only below `md`. Above the breakpoint it falls back to whatever else the element carries.
+
+The `@max-*` form is the useful one for handoffs. An element can be a centered band container on small screens and become a real grid on large ones:
+
+```html
+<section>
+  <div class="@max-md:container grid @md:grid-cols-2 gap-lg">
+    <!-- stacked in a band below md, two columns above -->
+  </div>
+</section>
+```
+
+## Gotchas
+
+- The `.container` must be a direct child of `main`, `header`, `footer`, `section`, or `article`. The region establishes the grid, so a container floating in a bare `div` has nothing to align to.
+- Gap utilities do nothing on an active container. The bands are positioned exactly by the shared template, so the container forces `column-gap` to zero. Put gaps on the flex or grid wrappers inside a band instead.
+- Don't give the container element a `container-type` of its own. A size container context breaks subgrid, which is why the kit explicitly clears it.
+- Band placement applies to direct children only. If a child seems stuck at full width, check whether a wrapper slipped in between.
+
+## Tuning the system
+
+Three token families control everything, all on `:root`:
+
+```css
+:root {
+  --gutters: var(--gap-lg); /* edge padding reserved by every band, default --gap-md */
+  --article-lg: 65ch; /* reading measures for the article variant */
+}
+```
+
+The `--breakpoint-*` tokens set the band caps, but treat them as read-only. The `@md:` responsive utilities are gated by container queries whose thresholds must be literal lengths (CSS doesn't allow `var()` in a query prelude), so changing a breakpoint token would move the band widths while the responsive utilities keep switching at the old values.
+
+For the full list of layout utilities (display, position, overflow, aspect ratio, and the rest), see the [layout utilities reference](/docs/foundation/utilities/layout).
