@@ -8,7 +8,7 @@ Sources: every resolved ticket under [issues/](issues/) and ADRs [0005](../../do
 One published package, `@zazz-ui/core`, serves both surfaces (ADR-0005):
 
 - **CDN**: jsDelivr URLs into the tarball — bundle grain (`dist/zazz.css` + `dist/zazz.js`) or per-file grain (`src/...`).
-- **CLI**: unscoped `zazz-ui` (placeholder `0.0.0` live since 2026-08-28; scope `@zazz-ui` controlled via the `zazz-ui` org, owner `thederek`). It vendors files out of the npm tarball — npm is the registry; there is no registry server (ADR-0006). Users own their copies; updates are provenance-recorded 3-way merges (ADR-0009).
+- **CLI**: unscoped `zazz-ui` (placeholder `0.0.0` live since 2026-08-28; scope `@zazz-ui` controlled via the `zazz-ui` org — ownership facts in [ticket 03](issues/03-reserve-npm-names.md)). It vendors files out of the npm tarball — npm is the registry; there is no registry server (ADR-0006). Users own their copies; updates are provenance-recorded 3-way merges (ADR-0009).
 
 Vocabulary: "primitive", never "component"; the copy model is "vendor" (CONTEXT.md).
 
@@ -69,7 +69,7 @@ Resolves at the **project's recorded kit version** (never latest; moving forward
 
 ## 5. Versioning & release (ticket 07, ADR-0010)
 
-- **Kit first**: publish gate = spec assembled ✓ + §2 artifacts building + changelog; mechanical flip = drop `"private": true`, restore `prepublishOnly` to `vp run build`, version 0.1.0, manual `pnpm publish` by Derek (2FA web-auth). CLI and docs do not gate the kit; CLI replaces its placeholder when built and e2e-tested against the published kit.
+- **Kit first**: publish gate = spec assembled ✓ + §2 artifacts building + changelog; mechanical flip = drop `"private": true`, restore `prepublishOnly` to `vp run build`, version 0.1.0, manual `pnpm publish` by Derek. CLI and docs do not gate the kit; CLI replaces its placeholder when built and e2e-tested against the published kit.
 - **Independent versions**; CLI declares its supported kit range via `manifestVersion` (graceful "upgrade the CLI" failure). **0.x semver**: 0.MINOR = breaking (css var/data-attr/slot/head/manifest/schema/browser-floor changes), patch = additive. Immutable versions; deprecate, never unpublish.
 - Mechanics: `bumpp`, per-package tags `core-v*`/`cli-v*`. Checklist: `vp check` + tests green → `vp run build` → changelog → bump/tag → publish → `npm view` + jsDelivr spot-check → GitHub Release.
 
@@ -90,7 +90,7 @@ One Installation page, site-wide persistent tabs **CLI (default) | CDN | Manual*
 5. CLI: `init` → `add` → `update`/`diff`, e2e against 0.1.0; publish `zazz-ui@0.1.x` over the placeholder.
 6. Docs: head configurator.
 
-**Facts an implementer needs**: npm owner `thederek`; `npm`/`pnpm` auth configs are separate on Derek's machine (working login via `npm login`); registry commands fail inside the repo root (`devEngines` pins pnpm) — run them elsewhere. The tarball `files` allowlist (`dist`, `src`, `examples`, no tests) is the CLI's entire supply chain.
+**Facts an implementer needs**: npm ownership per [ticket 03](issues/03-reserve-npm-names.md) — publishes are manual and interactively confirmed, no automation tokens; registry commands fail inside the repo root (`devEngines` pins pnpm) — run them elsewhere. The tarball `files` allowlist (`dist`, `src`, `examples`, no tests) is the CLI's entire supply chain.
 
 **Politeness posture**: no telemetry, no phone-home update checks (dlx usage fetches a fresh CLI; kit-version freshness is guaranteed by fresh registry resolution per ticket 02); offline = npm cache semantics with a clear "cannot reach npm and @zazz-ui/core@x.y.z is not cached" error.
 

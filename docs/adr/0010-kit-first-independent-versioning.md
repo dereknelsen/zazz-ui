@@ -22,5 +22,5 @@ The versioning grilling (`.scratch/distribution-dx/issues/07-versioning-release-
 ## Consequences
 
 - 0.1.0's tarball is forever; the manifest shape and `sri.json` must be right (or at least present and versioned) before the flip.
-- Publishing stays a deliberate manual act by Derek (2FA web-auth); CI publish automation is explicitly deferred until cadence demands it.
+- Publishing stays a deliberate, interactively confirmed manual act by the maintainer; CI publish automation is explicitly deferred until cadence demands it.
 - Tags are per-package (`core-v*`, `cli-v*`), driven by `bumpp`.

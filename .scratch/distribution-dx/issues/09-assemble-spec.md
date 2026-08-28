@@ -19,4 +19,4 @@ Resolved 2026-08-28. [spec.md](../spec.md) is written, consolidating tickets 01�
 
 ADR set confirmed complete: [0005](../../../docs/adr/0005-single-package-per-file-cdn.md) and [0006](../../../docs/adr/0006-cli-vendors-from-npm-tarball.md) from charting, plus two minted by this assembly (grilled with Derek): [0009 provenance-recorded 3-way update](../../../docs/adr/0009-provenance-recorded-three-way-update.md) and [0010 kit-first, independent versioning](../../../docs/adr/0010-kit-first-independent-versioning.md). All are cross-linked from the spec.
 
-Final review with Derek: pending — the map closes when he signs off on spec.md.
+Final review with Derek: **signed off 2026-08-28** (with two amendments folded in the same day: the `@zazz-ui/ui` → `@zazz-ui/core` rename, and a sensitive-info scrub for the public repo). The map is closed; execution proceeds per spec §7.
