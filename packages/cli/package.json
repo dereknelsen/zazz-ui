@@ -1,0 +1,61 @@
+{
+  "name": "zazz-ui",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CLI for the Zazz Design Framework — vendors primitives from @zazz-ui/core into your project, with provenance-tracked updates.",
+  "keywords": [
+    "cli",
+    "design-system",
+    "ui-kit",
+    "vendor",
+    "zazz"
+  ],
+  "homepage": "https://zazz.sh",
+  "bugs": {
+    "url": "https://github.com/dereknelsen/zazz-ui/issues"
+  },
+  "license": "MIT",
+  "author": "Derek Nelsen",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dereknelsen/zazz-ui.git",
+    "directory": "packages/cli"
+  },
+  "bin": {
+    "zazz-ui": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "vp pack",
+    "dev": "vp pack --watch",
+    "test": "tsc -p tsconfig.json && vp test run",
+    "check": "vp check",
+    "prepublishOnly": "echo 'zazz-ui publishes after milestone M2 (init+add). Drop \"private\": true and restore this script to `vp run build` when ready.' && exit 1"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.7.0",
+    "@npmcli/config": "^11.0.1",
+    "chalk": "^6.0.0",
+    "commander": "^15.0.0",
+    "diff": "^9.0.0",
+    "node-diff3": "^3.2.1",
+    "pacote": "^22.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/pacote": "^11.1.8",
+    "tar": "^7.5.22",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plus": "catalog:"
+  },
+  "engines": {
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
+  }
+}
