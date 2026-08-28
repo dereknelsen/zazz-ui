@@ -32,6 +32,14 @@ const walk = (dir) => {
 };
 walk(path.join(pkgRoot, "src"));
 
+// lib/zazz-package.ts locates the package with require.resolve at module
+// scope, which walks node_modules — so the traced bundle also needs the
+// package.json it resolves to AND the workspace symlink resolution walks
+// through. Without these the route throws on import and every /zazz/*
+// request 500s in deployment (the src files alone only fix the 404s).
+files.push(path.join(pkgRoot, "package.json"));
+files.push(path.join(appDir, "node_modules", "@zazz-ui", "core"));
+
 const trace = JSON.parse(readFileSync(traceFile, "utf8"));
 const merged = new Set(trace.files);
 for (const file of files) {
