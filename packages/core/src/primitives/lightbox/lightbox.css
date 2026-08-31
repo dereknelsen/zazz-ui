@@ -14,17 +14,13 @@
   :root {
     --ui-lightbox-aspect-ratio: 3 / 2;
     --ui-lightbox-object-fit: cover;
-    --ui-lightbox-radius: var(--radius-md);
     --ui-lightbox-slide-radius: var(--radius-lg);
     --ui-lightbox-thumb-radius: var(--radius-md);
     --ui-lightbox-thumb-size: var(--step-16);
-    --ui-lightbox-thumb-border-color: var(--border);
-    --ui-lightbox-thumb-border-color--active: var(--primary);
     --ui-lightbox-thumb-opacity: 0.5;
     --ui-lightbox-thumb-opacity--active: 1;
     --ui-lightbox-thumb-columns: 6;
     --ui-lightbox-thumb-gap: var(--step-1_5);
-    --ui-lightbox-thumb-aspect-ratio: 1 / 1;
     --ui-lightbox-img-border: 1px solid var(--faded);
 
     /* Reveal transitions/animations */
@@ -251,7 +247,6 @@
     opacity: var(--ui-lightbox-thumb-opacity);
     transition:
       opacity var(--default-transition-duration) var(--default-transition-timing-function),
-      border-color var(--default-transition-duration) var(--default-transition-timing-function),
       transform var(--default-transition-duration) var(--default-transition-timing-function);
     inline-size: 100%;
     block-size: 100%;
@@ -338,8 +333,6 @@
   }
 
   [data-slot~="lightbox-dialog"] [data-slot~="lightbox-thumb"] {
-    --ui-lightbox-thumb-border-color: var(--tint-200);
-    --ui-lightbox-thumb-border-color--active: var(--ring);
     flex: 0 0 var(--ui-lightbox-thumb-size);
     inline-size: var(--ui-lightbox-thumb-size);
   }
