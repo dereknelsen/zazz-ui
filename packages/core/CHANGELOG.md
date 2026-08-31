@@ -11,6 +11,7 @@ Token naming consistency pass + shared field-family inheritance. Two themes: (1)
 - **BREAKING** `fields.css` now registers first among primitives in `index.css` (it owns the shared `--ui-field-*` family); `CSS_CASCADE_ORDER` and the `button`/`badge`/`tabs`/`checkbox` manifest entries gained a `fields` dependency. Migration: re-run `zazz-ui update` (vendored) or re-emit your import order from the manifest; hand-maintained subsets must load `fields.css` before its consumers.
 - CONVENTIONS.styles.md §5/§6 now document the token-naming rules: logical property names, full property names (no abbreviations), the border width/style/color decomposition (composed at the usage site, never into a `:root` token), `-foreground` vs `-{part}-color`, and sanctioned cross-component token defaults.
 - Physical `top`/`left`/`width`/`height` declarations converted to logical equivalents in dialog, lightbox, mobile-menu, tooltip, carousel, and badge; remaining physical uses are commented exceptions (`anchor()` side keywords, centering idioms).
+- **BREAKING** `group-hover:scale-*` now matches the regular `scale-*` set (`0`, `25`, `50`, `75`, `90`, `98`, `99`, `100`, `101`, `102`, `110`, `125`, `150`). Dropped `95`/`105`. Migration: `group-hover:scale-95` → `group-hover:scale-98` (or `90`); `group-hover:scale-105` → `group-hover:scale-102` (or `110`).
 
 ### fields
 
@@ -36,7 +37,7 @@ Token naming consistency pass + shared field-family inheritance. Two themes: (1)
 
 ### combobox
 
-- **BREAKING** `--ui-combobox-border-radius` → `--ui-combobox-radius`; `--ui-combobox-border` replaced by `--ui-combobox-border-width/-style/-color` (aliasing the select parts); `--ui-combobox-control-align` → `--ui-combobox-control-align-items`; `--ui-combobox-control-wrap` → `--ui-combobox-control-flex-wrap`.
+- **BREAKING** `--ui-combobox-border-radius` → `--ui-combobox-radius`; `--ui-combobox-border` replaced by `--ui-combobox-border-width/-style/-color` (aliasing the select parts); `--ui-combobox-control-align` → `--ui-combobox-control-align-items`; `--ui-combobox-control-wrap` → `--ui-combobox-control-flex-wrap`; removed the dead `--ui-combobox-display` token (nothing consumed it).
 
 ### input-group
 
@@ -78,7 +79,7 @@ Token naming consistency pass + shared field-family inheritance. Two themes: (1)
 
 ### dialog
 
-- **BREAKING** `--ui-dialog-width/-height` → `--ui-dialog-inline-size/-block-size`.
+- **BREAKING** `--ui-dialog-width/-height` → `--ui-dialog-inline-size/-block-size`; removed the dead `--ui-dialog-display` token (nothing consumed it).
 
 ### alert-dialog
 
@@ -130,7 +131,7 @@ Token naming consistency pass + shared field-family inheritance. Two themes: (1)
 
 ### lightbox
 
-- **BREAKING** `--ui-lightbox-thumb-border(--active)` → `--ui-lightbox-thumb-border-color(--active)` (they held colors).
+- **BREAKING** Removed dead tokens nothing consumed: `--ui-lightbox-thumb-border(--active)` (the thumb border comes from `--ui-lightbox-img-border`; active/focus feedback is the inset ring + opacity), `--ui-lightbox-radius` (slides/thumbs use `--ui-lightbox-slide-radius` / `--ui-lightbox-thumb-radius`), and `--ui-lightbox-thumb-aspect-ratio`. Migration: delete overrides of these; retune the named replacements instead.
 
 ## 0.1.0 (2026-08-28)
 
