@@ -5796,6 +5796,10 @@
     transform: scale(0);
   }
 
+  :where(.group:hover .group-hover\:scale-25) {
+    transform: scale(0.25);
+  }
+
   :where(.group:hover .group-hover\:scale-50) {
     transform: scale(0.5);
   }
@@ -5808,16 +5812,24 @@
     transform: scale(0.9);
   }
 
-  :where(.group:hover .group-hover\:scale-95) {
-    transform: scale(0.95);
+  :where(.group:hover .group-hover\:scale-98) {
+    transform: scale(0.98);
+  }
+
+  :where(.group:hover .group-hover\:scale-99) {
+    transform: scale(0.99);
   }
 
   :where(.group:hover .group-hover\:scale-100) {
     transform: scale(1);
   }
 
-  :where(.group:hover .group-hover\:scale-105) {
-    transform: scale(1.05);
+  :where(.group:hover .group-hover\:scale-101) {
+    transform: scale(1.01);
+  }
+
+  :where(.group:hover .group-hover\:scale-102) {
+    transform: scale(1.02);
   }
 
   :where(.group:hover .group-hover\:scale-110) {
