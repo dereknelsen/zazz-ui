@@ -1,0 +1,19 @@
+---
+title: Products
+description: A product detail page with a lightbox gallery, breadcrumbs, product copy, and a responsive grid.
+---
+
+This product detail template places a gallery beside product copy, with breadcrumbs above. It nests a carousel inside a lightbox and uses `@max-md:container` to reflow the page on narrow screens.
+
+<TemplateFrame src="/zazz/examples/products.html" title="Products template" />
+
+## Included patterns
+
+- The `<ui-lightbox>` contains a looping `<ui-carousel>`. Each slide is a button that opens the same modal through invoker commands, so both views share one image set.
+- The two-column wrapper uses `grid grid-cols-2 gap-lg @max-md:container`. Below `md`, it becomes a band container and the gallery narrows to the `xs` band through `data-container="xs"`.
+- The description is an `hgroup` with `.ui-prose`, which styles its feature list and paragraphs without classes on each element.
+- The breadcrumbs use a `menu` of link-variant buttons with the current page disabled. They need no dedicated breadcrumb markup.
+
+## Source
+
+Open [the raw page](/zazz/examples/products.html), or read [products.html on GitHub](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/examples/products.html).

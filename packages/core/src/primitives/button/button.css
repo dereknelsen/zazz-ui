@@ -2,21 +2,26 @@
  * button.css — Button (.ui-button)
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css, _reset.css, kbd.css (--ui-kbd-*)
+ * @requires   layers.css, _variables.css, _reset.css, fields.css (--ui-field-* metrics), kbd.css (--ui-kbd-*)
  * @uses       color-mix(), oklch(from …) — variant hover/active tints
  * @uses       text-box — vertical trim (patchy browser support)
- * @tokens     --ui-button-* (@layer variables)
+ * @tokens     --ui-button-* (@layer variables; metrics default to the --ui-field-* family)
  * @consumedby toggle.css (reads the --ui-button-* token family)
  */
 
 @layer variables {
   :root {
-    --ui-button-ring-color: var(--ring-color);
+    /* Metrics default to the shared --ui-field-* family (owned in fields.css) so a
+       button sitting beside an input, select, or textarea reads as one family:
+       retune a --ui-field-* token and buttons follow; remap a --ui-button-* token
+       to diverge just the buttons. Colors stay independent — a button surface is
+       not a field surface, and button borders don't go primary on hover. */
+    --ui-button-ring-color: var(--ui-field-ring-color);
 
     --ui-button-font-family: var(--font-family-body);
-    --ui-button-font-size: var(--font-size-sm);
+    --ui-button-font-size: var(--ui-field-font-size);
     --ui-button-font-weight: var(--font-weight-strong);
-    --ui-button-line-height: 1;
+    --ui-button-line-height: var(--ui-field-line-height);
 
     --ui-button-background: var(--card);
     --ui-button-background--hover: var(--muted);
@@ -26,16 +31,18 @@
     --ui-button-foreground--hover: var(--foreground);
     --ui-button-foreground--active: var(--foreground);
 
-    --ui-button-border: 1px solid var(--border);
-    --ui-button-border--hover: 1px solid var(--border);
-    --ui-button-border--active: 1px solid var(--border);
+    --ui-button-border-width: var(--ui-field-border-width);
+    --ui-button-border-style: var(--ui-field-border-style);
+    --ui-button-border-color: var(--border);
+    --ui-button-border-color--hover: var(--border);
+    --ui-button-border-color--active: var(--border);
 
     --ui-button-gap: var(--step-1);
-    --ui-button-padding: var(--step-2_5);
-    --ui-button-height: var(--step-8);
-    --ui-button-radius: var(--radius-md);
+    --ui-button-padding: var(--ui-field-padding);
+    --ui-button-block-size: var(--ui-field-block-size);
+    --ui-button-radius: var(--ui-field-radius);
 
-    --ui-button-icon-size: var(--step-4);
+    --ui-button-icon-size: var(--ui-field-icon-size);
 
     /* composes into the button's box-shadow list — use a transparent shadow,
        never `none`, so the focus ring layers stay valid */
@@ -60,11 +67,12 @@
     column-gap: var(--ui-button-gap);
     flex-shrink: 0;
 
-    min-block-size: var(--ui-button-height);
+    min-block-size: var(--ui-button-block-size);
     min-inline-size: max-content;
     padding-inline: var(--ui-button-padding);
 
-    border: var(--ui-button-border);
+    border: var(--ui-button-border-width) var(--ui-button-border-style)
+      var(--ui-button-border-color);
     border-radius: var(--ui-button-radius);
 
     color: var(--ui-button-foreground);
@@ -106,13 +114,13 @@
   .ui-button:hover:not(:disabled, [aria-disabled="true"]) {
     color: var(--ui-button-foreground--hover);
     background-color: var(--ui-button-background--hover);
-    border: var(--ui-button-border--hover);
+    border-color: var(--ui-button-border-color--hover);
   }
 
   .ui-button:active:not(:disabled, [aria-disabled="true"]) {
     color: var(--ui-button-foreground--active);
     background-color: var(--ui-button-background--active);
-    border: var(--ui-button-border--active);
+    border-color: var(--ui-button-border-color--active);
   }
 
   .ui-button:focus-visible:not(:disabled, [aria-disabled="true"]) {
@@ -164,9 +172,9 @@
     --ui-button-foreground--hover: var(--primary-foreground);
     --ui-button-foreground--active: var(--primary-foreground);
 
-    --ui-button-border: 1px solid transparent;
-    --ui-button-border--hover: 1px solid transparent;
-    --ui-button-border--active: 1px solid transparent;
+    --ui-button-border-color: transparent;
+    --ui-button-border-color--hover: transparent;
+    --ui-button-border-color--active: transparent;
 
     --ui-button-shadow: 0 0 transparent;
   }
@@ -180,9 +188,9 @@
     --ui-button-foreground--hover: var(--foreground);
     --ui-button-foreground--active: var(--foreground);
 
-    --ui-button-border: 1px solid transparent;
-    --ui-button-border--hover: 1px solid transparent;
-    --ui-button-border--active: 1px solid transparent;
+    --ui-button-border-color: transparent;
+    --ui-button-border-color--hover: transparent;
+    --ui-button-border-color--active: transparent;
 
     --ui-button-shadow: 0 0 transparent;
   }
@@ -196,9 +204,9 @@
     --ui-button-foreground--hover: var(--foreground);
     --ui-button-foreground--active: var(--foreground);
 
-    --ui-button-border: 1px solid transparent;
-    --ui-button-border--hover: 1px solid transparent;
-    --ui-button-border--active: 1px solid transparent;
+    --ui-button-border-color: transparent;
+    --ui-button-border-color--hover: transparent;
+    --ui-button-border-color--active: transparent;
 
     --ui-button-shadow: 0 0 transparent;
   }
@@ -214,9 +222,9 @@
     --ui-button-foreground--hover: var(--destructive-foreground);
     --ui-button-foreground--active: var(--destructive-foreground);
 
-    --ui-button-border: 1px solid var(--destructive);
-    --ui-button-border--hover: 1px solid var(--destructive);
-    --ui-button-border--active: 1px solid var(--destructive);
+    --ui-button-border-color: var(--destructive);
+    --ui-button-border-color--hover: var(--destructive);
+    --ui-button-border-color--active: var(--destructive);
 
     --ui-button-shadow: 0 0 transparent;
   }
@@ -230,11 +238,9 @@
     --ui-button-foreground--hover: var(--primary);
     --ui-button-foreground--active: oklch(from var(--primary) l c h / 0.8);
 
-    --ui-button-border: none;
-    --ui-button-border--hover: none;
-    --ui-button-border--active: none;
+    --ui-button-border-style: none;
 
-    --ui-button-height: fit-content;
+    --ui-button-block-size: fit-content;
     --ui-button-padding: 0;
     --ui-button-radius: 0;
 
@@ -262,26 +268,26 @@
   =========================================================================== */
 
   .ui-button[data-size="sm"] {
-    --ui-button-height: var(--step-6);
+    --ui-button-block-size: var(--step-6);
     --ui-button-padding: var(--step-2);
     --ui-button-radius: var(--radius-sm);
   }
 
   .ui-button[data-size="icon"] {
-    block-size: var(--ui-button-height);
-    inline-size: var(--ui-button-height);
+    block-size: var(--ui-button-block-size);
+    inline-size: var(--ui-button-block-size);
     padding: 0;
     aspect-ratio: 1 / 1;
   }
 
   .ui-button[data-size="icon-sm"] {
-    --ui-button-height: var(--step-6);
+    --ui-button-block-size: var(--step-6);
     --ui-button-padding: var(--step-2);
     --ui-button-radius: var(--radius-sm);
     --ui-button-icon-size: var(--step-3_5);
 
-    block-size: var(--ui-button-height);
-    inline-size: var(--ui-button-height);
+    block-size: var(--ui-button-block-size);
+    inline-size: var(--ui-button-block-size);
     padding: 0;
     aspect-ratio: 1 / 1;
   }

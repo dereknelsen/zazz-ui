@@ -22,7 +22,7 @@
     /* Geometry rides the progress family so the two bars read identically;
        retune a --ui-progress-* token and both follow. */
     --ui-meter-inline-size: var(--ui-progress-inline-size);
-    --ui-meter-height: var(--ui-progress-height);
+    --ui-meter-block-size: var(--ui-progress-block-size);
     --ui-meter-radius: var(--ui-progress-radius);
     --ui-meter-track-background: var(--ui-progress-track-background);
     --ui-meter-track-border: var(--ui-progress-track-border);
@@ -44,7 +44,7 @@
 
   :where(.ui-meter) {
     inline-size: var(--ui-meter-inline-size);
-    block-size: var(--ui-meter-height);
+    block-size: var(--ui-meter-block-size);
     overflow: hidden;
     background-color: var(--ui-meter-track-background);
     border: var(--ui-meter-track-border);

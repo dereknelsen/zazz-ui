@@ -16,7 +16,7 @@
   :root {
     --ui-progress-inline-size: 100%;
     /* Matches the slider track so the two bars read as one family */
-    --ui-progress-height: var(--step-1_5);
+    --ui-progress-block-size: var(--step-1_5);
     --ui-progress-radius: var(--radius-full);
     --ui-progress-track-background: var(--muted);
     --ui-progress-track-border: 1px solid transparent;
@@ -36,7 +36,7 @@
 
   :where(.ui-progress) {
     inline-size: var(--ui-progress-inline-size);
-    block-size: var(--ui-progress-height);
+    block-size: var(--ui-progress-block-size);
     overflow: hidden;
     background-color: var(--ui-progress-track-background);
     border: var(--ui-progress-track-border);

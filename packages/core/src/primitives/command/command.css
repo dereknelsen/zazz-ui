@@ -64,7 +64,7 @@
 
   /* Dialog form: the palette owns its interior, edge to edge */
   [data-slot~="command-panel"]:where(dialog) {
-    --ui-dialog-width: min(var(--breakpoint-sm), 100% - var(--gutters) * 2);
+    --ui-dialog-inline-size: min(var(--breakpoint-sm), 100% - var(--gutters) * 2);
     padding: 0;
   }
 

@@ -200,7 +200,7 @@ They group related hooks; they do **not** document individual tokens (the names 
   --ui-button-background: var(--card);
   --ui-button-background--hover: var(--muted);
   /* metrics */
-  --ui-button-height: var(--step-8);
+  --ui-button-block-size: var(--step-8);
 }
 ```
 
@@ -230,7 +230,7 @@ organized in tiers (literal scales → semantic roles → component primitives):
 | Brand/literal scales | `--primary-600`, `--neutral-100`, `--shade-50`                                                           | `_variables.css`    |
 | Semantic roles       | `--background`, `--foreground`, `--primary`, `--muted`, `--border`                                       | `_variables.css`    |
 | Metrics & systems    | `--step-*`, `--radius-*`, `--gap-*`, `--font-family-*`, `--font-size-*`, `--font-weight-*`, `--shadow-*` | `_variables.css`    |
-| **Component tokens** | `--ui-button-background`, `--ui-field-border`, `--ui-dialog-radius`                                      | each component file |
+| **Component tokens** | `--ui-button-background`, `--ui-field-border-color`, `--ui-dialog-radius`                                | each component file |
 
 Selected tokens are also **registered as typed `@property`**, inline in
 [`_variables.css`](./src/base/_variables.css), so they can be read by container `style()`
@@ -247,7 +247,7 @@ token **defaults to a global token**:
   :root {
     --ui-button-background: var(--card);
     --ui-button-background--hover: var(--muted);
-    --ui-button-height: var(--step-8);
+    --ui-button-block-size: var(--step-8);
     --ui-button-radius: var(--radius-md);
   }
 }
@@ -259,6 +259,37 @@ Naming convention:
 - `--{component}-{property}--{state}`: a **double dash** before the state:
   `--ui-button-background--hover`, `--ui-field-background--focus`,
   `--ui-button-background--active`.
+- **A token is named after the CSS property it feeds, using the _logical_ property
+  name**: `-block-size` not `-height`, `-inline-size` not `-width`,
+  `-padding-inline` not `-padding-left`. Exceptions: `-line-height` (that _is_ the
+  property name — there is no logical variant), and a bare `-size` for square /
+  single-value dimensions (`--ui-checkbox-size`, `--ui-button-icon-size`).
+- **Full property names, never abbreviations**: `-align-items` not `-align`,
+  `-flex-wrap` not `-wrap`, `-radius` (matching `border-radius`'s common short
+  form used throughout) — but never a truncated fragment of a multi-word property.
+- **Border tokens**: a token named `-border` always holds a **full shorthand**
+  (`1px solid var(--border)`, or `none`) — fine for decorative, non-varying
+  borders (`--ui-table-border`, `--ui-dialog-border`). Interactive controls
+  decompose into `-border-width` / `-border-style` / `-border-color`
+  (+ `-border-color--{state}`), and the rule composes them:
+  `border: var(--ui-x-border-width) var(--ui-x-border-style) var(--ui-x-border-color)`.
+  Compose **at the usage site**, never into a `:root` token: a custom property is
+  substituted where it is _declared_, so a `:root`-composed shorthand would ignore
+  the element-scoped part overrides that variants and states rely on. State rules
+  set the `border-color` longhand from the `--{state}` color token.
+- **Text color**: `-foreground` is the text color of a component or part surface
+  (paired with `-background`); `-{part}-color` is reserved for non-text
+  decorations (`--ui-otp-caret-color`, `--ui-separator-color`,
+  `--ui-dialog-backdrop-color`, icon/arrow tints).
+- **Cross-component defaults are sanctioned**: a component token may default to
+  another component's token (`--ui-button-radius: var(--ui-field-radius)`,
+  `--ui-toggle-radius: var(--ui-button-radius)`) so families stay visually
+  coupled. Use a bare alias — never the two-arg `var(--x, fallback)` form; the
+  owner file always defines the token. When adding one, update the owner's
+  `@consumedby`, your `@requires`, and the `index.css` order (owner registers
+  first). The `--ui-field-*` family (fields.css) is the shared owner for controls
+  that sit on a line together: inputs, selects, textareas, buttons (metrics),
+  tabs, checkbox/radio (surface + border), badges (border/ring).
 
 ### Public hooks vs. private internals
 
@@ -320,7 +351,7 @@ token values**: they never restate the rule:
   }
 
   .ui-button[data-size="sm"] {
-    --ui-button-height: var(--step-6);
+    --ui-button-block-size: var(--step-6);
     --ui-button-radius: var(--radius-sm);
   }
 }
@@ -417,6 +448,10 @@ use case exists in an example fragment or docs page.
   (`:where(input[type="range"])`, `:where(.grid)`).
 - **Logical properties**: prefer `inline-size`/`block-size`,
   `padding-inline`/`margin-block`, `inset-inline-start` so components flip in RTL.
+  **Token names follow suit** (`--ui-field-block-size`, never `--ui-field-height`;
+  see §5 naming convention). Physical `top`/`left` stay only where the platform
+  demands them (`anchor()` side keywords) or in direction-neutral centering idioms
+  (`left: 50%` + `translate: -50%`) — leave a comment saying why.
 - **Focus**: rings render as box-shadows from Tailwind/shadcn-compatible tokens:
   `--ring` (color), `--ring-width`, `--ring-offset-width`, `--ring-offset-color`,
   composed as `--ring-offset-shadow` + `--ring-shadow` (`--shadow-ring`) and layered

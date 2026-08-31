@@ -12,7 +12,7 @@
 @layer variables {
   :root {
     --ui-accordion-icon-size: var(--step-4);
-    --ui-accordion-icon-transform-open: rotate(-180deg);
+    --ui-accordion-icon-transform--open: rotate(-180deg);
   }
 }
 
@@ -99,6 +99,6 @@
   }
 
   :where(ui-accordion, .ui-accordion) > details[open] > summary > svg {
-    transform: var(--ui-accordion-icon-transform-open);
+    transform: var(--ui-accordion-icon-transform--open);
   }
 }

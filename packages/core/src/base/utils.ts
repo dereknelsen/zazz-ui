@@ -6,7 +6,7 @@
  * typed JavaScript values.
  *
  * This is a **public, consumer-facing** surface (`window.Utils`, documented at
- * /docs/components/utils), not just kit plumbing: data-attribute configuration
+ * /docs/scripts/utils), not just kit plumbing: data-attribute configuration
  * is the kit's documented pattern for authoring a component
  * (CONVENTIONS.scripts.md), so anyone writing a component in the Zazz idiom
  * needs this exact parser to match kit behaviour. Keep it here rather than

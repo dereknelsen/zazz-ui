@@ -76,7 +76,7 @@ import { registerRefresh } from "./zazz-element.ts";
 // import map in browsers (pinned jsDelivr URLs; see `head.ts`) and through
 // node_modules in tests/bundlers. No more UMD globals, no tag-order contract.
 import EmblaCarousel from "embla-carousel";
-import type { EmblaOptionsType } from "embla-carousel";
+import type { EmblaCarouselType, EmblaOptionsType, EmblaPluginType } from "embla-carousel";
 import EmblaCarouselAutoplay from "embla-carousel-autoplay";
 import type { AutoplayOptionsType } from "embla-carousel-autoplay";
 import EmblaCarouselAutoScroll from "embla-carousel-auto-scroll";
@@ -105,7 +105,7 @@ function parseCarouselPlugins(value: string | null): string[] {
  * Map of plugin slug → Embla factory. Slugs match Embla package names
  * (`embla-carousel-auto-scroll`, etc.).
  */
-const PLUGIN_BY_SLUG: Record<CarouselPluginSlug, (node: Element) => EmblaPlugin> = {
+const PLUGIN_BY_SLUG: Record<CarouselPluginSlug, (node: Element) => EmblaPluginType> = {
   autoplay: (node) =>
     EmblaCarouselAutoplay(
       readCarouselOptions<AutoplayOptionsType>(node, "data-carousel-autoplay-"),
@@ -495,7 +495,7 @@ function initEmblaRoot(emblaNode: Element): void {
 
   // Plugins load only when listed in data-carousel-plugins; option attrs alone
   // do not enable them. Unknown slugs are ignored.
-  const plugins: EmblaPlugin[] = [];
+  const plugins: EmblaPluginType[] = [];
   for (const slug of parseCarouselPlugins(emblaNode.getAttribute("data-carousel-plugins"))) {
     const create = PLUGIN_BY_SLUG[slug as CarouselPluginSlug];
     if (!create) continue;

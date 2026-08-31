@@ -25,7 +25,7 @@
     --ui-table-cell-padding-block: var(--step-2);
     --ui-table-cell-padding-inline: var(--step-2);
 
-    --ui-table-head-height: var(--step-10);
+    --ui-table-head-block-size: var(--step-10);
     --ui-table-head-foreground: var(--foreground);
     --ui-table-head-font-weight: var(--font-weight-strong);
 
@@ -76,7 +76,7 @@
   }
 
   .ui-table thead th {
-    block-size: var(--ui-table-head-height);
+    block-size: var(--ui-table-head-block-size);
     padding-block: 0;
   }
 
@@ -153,6 +153,6 @@
   .ui-table[data-size="sm"] {
     --ui-table-cell-padding-block: var(--step-1);
     --ui-table-cell-padding-inline: var(--step-1_5);
-    --ui-table-head-height: var(--step-8);
+    --ui-table-head-block-size: var(--step-8);
   }
 }

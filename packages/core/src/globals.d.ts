@@ -4,10 +4,10 @@
  * checkJs can validate files that reference them across module boundaries.
  */
 
-// Embla loads as real ES modules (see base/embla.ts imports); these aliases
-// keep the shared names other scripts reference pointing at the real types.
+// Scripts import Embla types directly from "embla-carousel" (so emitted .d.ts
+// files stay self-contained for consumers); this alias exists only for the
+// ambient interface merges below, which cannot use top-level imports.
 type EmblaCarouselType = import("embla-carousel").EmblaCarouselType;
-type EmblaPlugin = import("embla-carousel").EmblaPluginType;
 
 interface UtilsNamespace {
   parseValue(value: string): boolean | number | unknown[] | string;

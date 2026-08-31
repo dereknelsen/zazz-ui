@@ -43,7 +43,7 @@ Component stylesheets organize rules in top-to-bottom order:
 @layer variables {
   :root {
     --ui-button-background: var(--card);
-    --ui-button-height: var(--step-8);
+    --ui-button-block-size: var(--step-8);
     --ui-button-radius: var(--radius-md);
   }
 }
@@ -51,7 +51,7 @@ Component stylesheets organize rules in top-to-bottom order:
 @layer zazz.components {
   .ui-button {
     background-color: var(--ui-button-background);
-    height: var(--ui-button-height);
+    min-block-size: var(--ui-button-block-size);
     border-radius: var(--ui-button-radius);
   }
 }
@@ -73,7 +73,10 @@ Component stylesheets organize rules in top-to-bottom order:
 ## Token naming conventions
 
 - **Default token:** `--ui-{component}-{property}` (e.g. `--ui-button-background`, `--ui-dialog-radius`).
-- **State variation:** `--ui-{component}-{property}--{state}` with double-dash (e.g. `--ui-button-background--hover`, `--ui-field-border--focus`).
+- **State variation:** `--ui-{component}-{property}--{state}` with double-dash (e.g. `--ui-button-background--hover`, `--ui-field-border-color--focus`).
+- **Logical property names:** a token is named after the CSS property it feeds, in its logical form — `--ui-field-block-size`, never `--ui-field-height`; `--ui-toaster-inline-size`, never `--ui-toaster-width`. `-line-height` is the exception (that _is_ the property name), and a bare `-size` names square dimensions (`--ui-checkbox-size`, `--ui-button-icon-size`).
+- **Border tokens:** interactive controls expose `-border-width` / `-border-style` / `-border-color` (plus `-border-color--{state}`) so any part can be retuned independently; decorative, non-varying borders keep a single `-border` shorthand token (`--ui-table-border`, `--ui-dialog-border`).
+- **Cross-component defaults:** a component token may default to another component's token so families stay in sync — button metrics default to the shared `--ui-field-*` family, and toggle defaults to `--ui-button-*`.
 
 ## Selector conventions
 

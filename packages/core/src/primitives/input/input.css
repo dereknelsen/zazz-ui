@@ -16,13 +16,15 @@
     --ui-input-padding-inline-end: var(--ui-field-padding);
     --ui-input-font-size: var(--ui-field-font-size);
     --ui-input-line-height: var(--ui-field-line-height);
-    --ui-input-border: 1px solid var(--ui-field-border);
-    --ui-input-border-radius: var(--ui-field-radius);
+    --ui-input-border-width: var(--ui-field-border-width);
+    --ui-input-border-style: var(--ui-field-border-style);
+    --ui-input-border-color: var(--ui-field-border-color);
+    --ui-input-radius: var(--ui-field-radius);
 
     --ui-input-calendar-picker-color: currentColor;
     --ui-input-calendar-picker-icon-size: var(--step-4);
     --ui-input-calendar-picker-size: var(--step-6);
-    --ui-input-calendar-picker-radius: var(--radius-sm);
+    --ui-input-calendar-picker-radius: var(--ui-field-inset-child-radius);
     --ui-input-calendar-picker-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Crect x='40' y='40' width='176' height='176' rx='8' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='176' y1='24' x2='176' y2='56' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='80' y1='24' x2='80' y2='56' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='40' y1='88' x2='216' y2='88' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3C/svg%3E");
   }
 }
@@ -39,7 +41,7 @@
   .ui-input {
     inline-size: var(--ui-input-inline-size);
     min-inline-size: var(--ui-input-min-inline-size);
-    block-size: var(--ui-field-height);
+    block-size: var(--ui-field-block-size);
     padding-inline-start: var(--ui-input-padding-inline-start);
     padding-inline-end: var(--ui-input-padding-inline-end);
 
@@ -48,8 +50,8 @@
     color: var(--ui-field-foreground);
     background-color: var(--ui-field-background);
 
-    border: var(--ui-input-border);
-    border-radius: var(--ui-input-border-radius);
+    border: var(--ui-input-border-width) var(--ui-input-border-style) var(--ui-input-border-color);
+    border-radius: var(--ui-input-radius);
 
     /* ring renders as box-shadow; transparent outline twin keeps focus visible
        in forced-colors / high-contrast modes */
@@ -66,13 +68,13 @@
   }
 
   .ui-input:hover {
-    border-color: var(--ui-field-border--hover);
+    border-color: var(--ui-field-border-color--hover);
     background-color: var(--ui-field-background--hover);
   }
 
   .ui-input:focus-within {
     background-color: var(--ui-field-background--focus);
-    border-color: var(--ui-field-border--focus);
+    border-color: var(--ui-field-border-color--focus);
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
     outline-color: transparent;

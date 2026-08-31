@@ -15,7 +15,7 @@
   :where(input[type="range"]) {
     --ui-slider-ring-color: var(--ring-color);
 
-    --ui-slider-track-height: var(--step-1_5);
+    --ui-slider-track-block-size: var(--step-1_5);
     --ui-slider-track-background: var(--muted);
     --ui-slider-track-border: 1px solid var(--muted);
     --ui-slider-track-radius: var(--radius-full);
@@ -25,7 +25,7 @@
     --ui-slider-thumb-shadow: var(--shadow-xs);
     --ui-slider-thumb-border: 1px solid var(--border);
     --ui-slider-thumb-radius: var(--radius-full);
-    --ui-slider-thumb-offset: calc(var(--ui-slider-track-height) * -1);
+    --ui-slider-thumb-offset: calc(var(--ui-slider-track-block-size) * -1);
 
     -webkit-appearance: none;
     appearance: none;
@@ -41,7 +41,7 @@
   }
 
   :where(input[type="range"])::-webkit-slider-runnable-track {
-    block-size: var(--ui-slider-track-height);
+    block-size: var(--ui-slider-track-block-size);
     inline-size: 100%;
     background: var(--ui-slider-track-background);
     border: var(--ui-slider-track-border);
@@ -49,7 +49,7 @@
   }
 
   :where(input[type="range"])::-moz-range-track {
-    block-size: var(--ui-slider-track-height);
+    block-size: var(--ui-slider-track-block-size);
     inline-size: 100%;
     background: var(--ui-slider-track-background);
     border: var(--ui-slider-track-border);

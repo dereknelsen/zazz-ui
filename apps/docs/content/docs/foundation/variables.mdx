@@ -19,9 +19,11 @@ Values in Zazz are CSS custom properties on `:root`. Components consume `var(--t
 | Brand & literal scales | Fixed color ramps           | `--primary-50` to `--primary-950`, `--neutral-*`, `--shade-*`, `--tint-*`                        |
 | Semantic roles         | Theme-aware colors          | `--background`, `--foreground`, `--primary`, `--muted`, `--border`, `--destructive`              |
 | Metrics & systems      | Spacing, typography, shapes | `--gap-*`, `--step-*`, `--font-size-*`, `--radius-*`, `--shadow-*`, `--breakpoint-*`, `--ring-*` |
-| Component tokens       | Component-specific hooks    | `--ui-button-background`, `--ui-field-border`, `--ui-dialog-radius`                              |
+| Component tokens       | Component-specific hooks    | `--ui-button-background`, `--ui-field-border-color`, `--ui-dialog-radius`                        |
 
-Roles resolve through [`light-dark()`](/docs/core-concepts/dark-mode). Component tokens default to global semantic tokens.
+Roles resolve through [`light-dark()`](/docs/core-concepts/dark-mode). Component tokens default to global semantic tokens — or to another component's tokens when two components should stay visually coupled: the shared `--ui-field-*` family (owned by `fields.css`) drives inputs, selects, and textareas, and also the metrics of buttons, toggles, tabs, checkboxes, radios, and badge borders. One `--ui-field-radius` or `--ui-field-block-size` override retunes the whole row of controls together.
+
+Token names mirror the logical CSS property they feed (`--ui-field-block-size`, not `--ui-field-height`), and interactive controls split borders into `-border-width` / `-border-style` / `-border-color` (+ `-border-color--hover` / `--focus`) so any part can be overridden on its own.
 
 ## Override scopes
 

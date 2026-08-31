@@ -18,8 +18,8 @@ import "@zazz-ui/core"; // custom elements and shared behaviors
 From a CDN:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.1.0/dist/zazz.css" />
-<script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.1.0/dist/zazz.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.2.0/dist/zazz.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.2.0/dist/zazz.js"></script>
 ```
 
 Use an exact version in CDN URLs. Each release includes `dist/sri.json`, which lists the SHA-384 hash for every published file. Use those hashes in `integrity` attributes.

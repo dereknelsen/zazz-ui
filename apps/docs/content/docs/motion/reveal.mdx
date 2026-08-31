@@ -1,0 +1,178 @@
+---
+title: Reveal
+description: Scroll-driven viewport entry animations. Markup, stagger groups, configuration, the JS API, and custom animation types.
+---
+
+Reveal animates elements as they enter the viewport. An `IntersectionObserver` adds `.in-viewport` when an element becomes visible, then CSS transitions in `reveal.css` run the animation. By default it inherits the kit's [spring transition tokens](/docs/motion/transitions), so revealed content moves like everything else.
+
+## The contract
+
+Reveal has three parts:
+
+1. You mark elements with `data-reveal="fade"` (single) or `data-reveal-each="slide-up"` (stagger group, direct children animate).
+2. The script observes them, adds `.in-viewport` on first intersection, and stops observing. Each element reveals once.
+3. The stylesheet hides marked elements with `opacity: 0` and the animation's transform, then transitions them to their final state when the class is added.
+
+The hidden state is inside `prefers-reduced-motion: no-preference`, so reduced-motion users see the content without movement. Crawlers and reader modes can read the markup without running the observer.
+
+## Setup
+
+Reveal is included in the kit's script entry:
+
+```html
+<link rel="stylesheet" href="./zazz/index.css" />
+<script type="module" src="./zazz/index.js"></script>
+```
+
+When the DOM is ready, Reveal creates an instance, scans for `data-reveal` and `data-reveal-each`, and starts observing. Access that instance with `Reveal.getAutoInstance()`.
+
+## Single elements
+
+```html
+<div data-reveal="slide-up">Slides up into view</div>
+<div data-reveal="fade">Fades in</div>
+<div data-reveal="slide-left">Slides in from right</div>
+```
+
+### Animation types
+
+| Value         | Effect                        |
+| ------------- | ----------------------------- |
+| `slide-up`    | Translate up from below       |
+| `slide-down`  | Translate down from above     |
+| `slide-left`  | Translate left from the right |
+| `slide-right` | Translate right from the left |
+| `fade`        | Opacity fade                  |
+| `grow`        | Scale up from smaller         |
+| `shrink`      | Scale down from larger        |
+
+## Stagger groups
+
+Animate child elements sequentially with `data-reveal-each`:
+
+```html
+<div data-reveal-each="fade" data-reveal-step="100">
+  <div>Item 1 (first)</div>
+  <div>Item 2 (100ms delay)</div>
+  <div>Item 3 (200ms delay)</div>
+</div>
+```
+
+Set `data-reveal-order="reversed"` to animate children in reverse order.
+
+Each child's delay is `base + step × position`. Browsers with `sibling-index()` calculate the delay in CSS from two custom properties on the group; other browsers receive a per-child inline delay from the script. Keep staggered elements as direct children of the group: a wrapper counts as one child, so its contents animate together.
+
+## Element transition isolation
+
+Reveal controls `transition-*` properties to handle delays and durations. To apply hover transitions (such as borders or background changes) without conflicting with scroll reveals, place the reveal attribute on a parent container:
+
+```html
+<div data-reveal-each="slide-up">
+  <a class="bg-card border rounded-md transition hover:border-primary">Card 1</a>
+  <a class="bg-card border rounded-md transition hover:border-primary">Card 2</a>
+</div>
+```
+
+## Configuration
+
+Settings resolve in precedence order: data attributes on the element or group, then instance config, then the global tokens.
+
+### Data attributes
+
+| Attribute               | Default                       | Purpose                                           |
+| ----------------------- | ----------------------------- | ------------------------------------------------- |
+| `data-reveal-duration`  | `--ui-reveal-global-duration` | Animation duration                                |
+| `data-reveal-wait`      | `0`                           | Base delay before starting (ms)                   |
+| `data-reveal-step`      | `80`                          | Delay step between children (ms)                  |
+| `data-reveal-ease`      | `--ui-reveal-global-ease`     | Timing function                                   |
+| `data-reveal-distance`  | `1rem`                        | Slide translation distance                        |
+| `data-reveal-scale`     | None                          | Scale value for grow/shrink                       |
+| `data-reveal-margin`    | `0px`                         | Observer rootMargin                               |
+| `data-reveal-threshold` | `0.2`                         | Intersection threshold (0 to 1)                   |
+| `data-reveal-order`     | None                          | Set to `"reversed"` for reversed stagger sequence |
+
+### Global tokens
+
+Use the tokens for site-wide settings without JavaScript. The duration and easing default to the kit's [transition tokens](/docs/motion/transitions), so reveal follows a retuned spring automatically:
+
+```css
+:root {
+  --ui-reveal-global-duration: var(--default-transition-duration);
+  --ui-reveal-global-ease: var(--default-transition-timing-function);
+  --ui-reveal-global-wait: 0ms;
+  --ui-reveal-global-distance: 1rem;
+  --ui-reveal-global-grow: 0.97;
+  --ui-reveal-global-shrink: 1.03;
+}
+```
+
+## The JS API
+
+The class is available as `window.Reveal` on script-tag pages and as a module import:
+
+```js
+import { Reveal } from "@zazz-ui/core/base/reveal.js";
+```
+
+### Constructing an instance
+
+```js
+const reveal = new Reveal({
+  config: {
+    duration: 400, // ms number or CSS time string ("0.4s")
+    ease: "ease-in-out",
+    threshold: 0.3, // how much of the element must be visible (0 to 1)
+    margin: "100px", // IntersectionObserver rootMargin: start earlier or later
+    wait: 0, // base delay in ms
+    distance: "1.5rem", // slide translation distance
+    step: 40, // ms between stagger children
+    grow: 0.97, // starting scale for grow
+    shrink: 1.03, // starting scale for shrink
+  },
+});
+```
+
+Constructing an instance runs `init()`, writes its config to the `--ui-reveal-global-*` tokens, and scans the document. Omitted settings retain their current token values.
+
+The auto instance and a manual instance will both observe the same elements. For manual control, disable auto-init in a module that runs before the DOM is ready:
+
+```js
+import { Reveal } from "@zazz-ui/core/base/reveal.js";
+
+Reveal.disableAutoInit();
+const reveal = new Reveal({ config: { threshold: 0.5 } });
+```
+
+Most pages only need the auto instance and data attributes.
+
+### Dynamic content
+
+Observers are created at init time. Call `refresh()` after inserting nodes:
+
+```js
+list.innerHTML = renderItems(items);
+Reveal.getAutoInstance()?.refresh();
+```
+
+`refresh()` disconnects the old observers and rescans the document. Elements that already have `.in-viewport` do not replay.
+
+Zazz SPA navigation rescans a replaced `<main>` automatically through a [component runtime](/docs/scripts/custom-elements) refresh hook.
+
+## Custom animation types
+
+Animation names such as `slide-up`, `fade`, and `grow` map to CSS rules keyed by the attribute value. Base rules handle visibility and transitions, so a custom type only needs to define its hidden state:
+
+```css
+@layer zazz.utilities {
+  [data-reveal="tilt"]:not(:where(.in-viewport)),
+  [data-reveal-each="tilt"] > *:not(:where(.in-viewport)) {
+    transform: rotate(3deg) translateY(var(--ui-reveal-effective-distance));
+  }
+}
+```
+
+```html
+<img data-reveal="tilt" src="/photo.jpg" alt="" />
+```
+
+Use `--ui-reveal-effective-distance` and its `-duration`, `-ease`, and `-wait` counterparts so data attributes and instance config also apply to the custom type.

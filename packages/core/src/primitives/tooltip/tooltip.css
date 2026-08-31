@@ -14,7 +14,7 @@
   :root {
     --ui-tooltip-background: var(--foreground);
     --ui-tooltip-foreground: var(--background);
-    --ui-tooltip-border: transparent;
+    --ui-tooltip-border-color: transparent;
     --ui-tooltip-radius: var(--radius-sm);
     --ui-tooltip-shadow: var(--shadow-sm);
     --ui-tooltip-padding-inline: var(--gap-xs);
@@ -136,7 +136,7 @@
     padding-inline: var(--ui-tooltip-padding-inline);
     padding-block: var(--ui-tooltip-padding-block);
 
-    border: 1px solid var(--ui-tooltip-border);
+    border: 1px solid var(--ui-tooltip-border-color);
     border-radius: var(--ui-tooltip-radius);
     box-shadow: var(--ui-tooltip-shadow);
 
@@ -150,7 +150,7 @@
   /* Descendant (not child) so keys wrapped in a ui-kbd-group still retint */
   [data-slot~="tooltip-content"] :where(kbd) {
     --ui-kbd-background: color-mix(in oklch, var(--ui-tooltip-foreground) 15%, transparent);
-    --ui-kbd-color: var(--ui-tooltip-foreground);
+    --ui-kbd-foreground: var(--ui-tooltip-foreground);
     --ui-kbd-min-inline-size: var(--step-4);
     --ui-kbd-min-block-size: var(--step-4);
     --ui-kbd-font-size: var(--font-size-xs);
@@ -199,10 +199,12 @@
   /* Tooltip arrow */
   [data-slot~="tooltip-arrow"] {
     position: absolute;
+    /* physical top/left/right/bottom throughout the arrow rules: they pair with
+       the physical [data-side] placement semantics from anchor positioning */
     top: calc(100% - var(--ui-tooltip-arrow-size) / 2);
     left: 50%;
     transform: translate(-50%, 0%) rotate(45deg);
-    width: var(--ui-tooltip-arrow-size);
+    inline-size: var(--ui-tooltip-arrow-size);
     block-size: var(--ui-tooltip-arrow-size);
     background-color: var(--ui-tooltip-arrow-color);
     border-radius: var(--ui-tooltip-arrow-radius);

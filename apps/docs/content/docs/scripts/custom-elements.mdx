@@ -1,0 +1,90 @@
+---
+title: Custom elements
+description: ZazzElement lifecycle management, refresh hooks for SPA swaps, and dialog lifecycle events.
+---
+
+Zazz components such as `<ui-carousel>`, `<ui-password>`, and `<ui-toaster>` are custom elements built on a small shared runtime. Use that runtime to build compatible elements, register refresh hooks after SPA navigation, and respond to dialog lifecycle events.
+
+```js
+import {
+  ZazzElement,
+  defineZazzElement,
+  registerRefresh,
+} from "@zazz-ui/core/base/zazz-element.js";
+```
+
+## ZazzElement
+
+`ZazzElement` creates an `AbortController` for each connection, prevents duplicate `connectedCallback` runs, and cleans up on disconnect. Implement `setup(signal)` and bind listeners and effects to its signal:
+
+```js
+import { ZazzElement, defineZazzElement } from "@zazz-ui/core/base/zazz-element.js";
+
+class CopyButton extends ZazzElement {
+  setup(signal) {
+    const button = this.querySelector("button");
+    button?.addEventListener(
+      "click",
+      () => navigator.clipboard.writeText(this.dataset.copyText ?? ""),
+      { signal },
+    );
+  }
+}
+
+defineZazzElement("copy-button", CopyButton);
+```
+
+```html
+<copy-button data-copy-text="pnpm add @zazz-ui/core">
+  <button class="ui-button" data-size="sm" type="button">Copy</button>
+</copy-button>
+```
+
+When the element leaves the DOM, the controller aborts every listener, observer, and [signal effect](/docs/scripts/signals) bound with `{ signal }`. You do not need to unregister them manually.
+
+Implement the optional `teardown()` for resources that an abort cannot release, such as a third-party library instance or attributes added to other elements. It runs after the abort on disconnect.
+
+Follow two conventions:
+
+- Parse configuration from `data-*` attributes with [`Utils.parseDataAttributes`](/docs/scripts/utils). This keeps elements configurable in plain HTML.
+- Read and enhance the light DOM instead of replacing it. The server-rendered markup should still make sense before the script runs.
+
+`defineZazzElement` guards `customElements.define`, so loading a script twice does not throw.
+
+## The refresh registry
+
+The [navigation module](/docs/foundation/view-transitions) can intercept same-origin links and replace `<main>` inside a view transition. Modules that scan page content only on load must process the new content after each swap.
+
+Register a refresh hook for this work. After a swap, the runtime calls each hook with the new `<main>`:
+
+```js
+import { registerRefresh } from "@zazz-ui/core/base/zazz-element.js";
+
+registerRefresh((scope) => {
+  scope.querySelectorAll("[data-chart]").forEach(initChart);
+});
+```
+
+Hooks must be idempotent. Mark initialized nodes with a data attribute such as `data-carousel-init`, then skip them on later runs. Custom elements do not need hooks because the swap triggers their native `connectedCallback` and `disconnectedCallback`. Use `ZazzElement` when behavior belongs to a specific element.
+
+The swap mechanics impose two page rules:
+
+- Set `<main data-layout="...">`. Pages swap in place only when the source and destination use the same layout. Different values trigger a full browser load so the header and footer can also change.
+- Place persistent overlays outside `<main>`, which the swap replaces in full. The kit places its toaster at the end of `<body>` so active toasts survive navigation.
+
+## Dialog lifecycle events
+
+Native `<dialog>` is hard to observe because `showModal()` fires no event and `close` does not bubble. A page-level watcher dispatches two bubbling events on the dialog:
+
+- `zazz:dialog-open`: the dialog's `open` attribute appeared (covers `showModal()`, `show()`, and invoker commands).
+- `zazz:dialog-close`: the dialog closed; unlike native `close`, this one bubbles.
+
+The events have no `detail` payload. The dialog is the event target, so you can listen on the dialog, an ancestor, or `document`:
+
+```js
+document.addEventListener("zazz:dialog-open", (event) => {
+  console.log("opened:", event.target.id);
+});
+```
+
+Components use these events to coordinate with a containing dialog. A carousel cannot measure itself while its dialog is closed, so it listens for `zazz:dialog-open` on `closest("dialog")` and initializes on first open. Use the same pattern whenever a component needs to measure its layout inside a dialog.

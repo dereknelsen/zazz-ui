@@ -30,8 +30,10 @@
     --ui-combobox-min-inline-size: var(--ui-select-min-inline-size);
     --ui-combobox-padding-inline-start: var(--ui-select-padding-inline-start);
     --ui-combobox-padding-inline-end: var(--ui-select-padding-inline-end);
-    --ui-combobox-border: var(--ui-select-border);
-    --ui-combobox-border-radius: var(--ui-select-border-radius);
+    --ui-combobox-border-width: var(--ui-select-border-width);
+    --ui-combobox-border-style: var(--ui-select-border-style);
+    --ui-combobox-border-color: var(--ui-select-border-color);
+    --ui-combobox-radius: var(--ui-select-radius);
     --ui-combobox-icon-mask: var(--ui-select-picker-icon-mask);
     --ui-combobox-icon-size: var(--ui-select-picker-icon-size);
     --ui-combobox-icon-color: var(--ui-select-picker-icon-color);
@@ -39,10 +41,10 @@
     --ui-combobox-shadow: var(--ui-menu-shadow);
 
     /* Control box: the multiselect variant swaps these to wrap into rows */
-    --ui-combobox-control-align: center;
-    --ui-combobox-control-wrap: nowrap;
+    --ui-combobox-control-align-items: center;
+    --ui-combobox-control-flex-wrap: nowrap;
     --ui-combobox-control-gap: var(--ui-field-gap);
-    --ui-combobox-control-block-size: var(--ui-field-height);
+    --ui-combobox-control-block-size: var(--ui-field-block-size);
     --ui-combobox-control-min-block-size: auto;
     --ui-combobox-control-padding-block: 0;
     --ui-combobox-input-min-inline-size: 0;
@@ -84,8 +86,8 @@
   [data-slot~="combobox-control"] {
     anchor-name: --ui-combobox-trigger;
     display: flex;
-    flex-wrap: var(--ui-combobox-control-wrap);
-    align-items: var(--ui-combobox-control-align);
+    flex-wrap: var(--ui-combobox-control-flex-wrap);
+    align-items: var(--ui-combobox-control-align-items);
     gap: var(--ui-combobox-control-gap);
 
     inline-size: 100%;
@@ -100,8 +102,9 @@
     color: var(--ui-field-foreground);
     background-color: var(--ui-field-background);
 
-    border: var(--ui-combobox-border);
-    border-radius: var(--ui-combobox-border-radius);
+    border: var(--ui-combobox-border-width) var(--ui-combobox-border-style)
+      var(--ui-combobox-border-color);
+    border-radius: var(--ui-combobox-radius);
 
     /* Same ring recipe as .ui-select: transparent outline twin keeps focus
        visible in forced-colors mode */
@@ -118,11 +121,11 @@
   }
 
   [data-slot~="combobox-control"]:hover {
-    border-color: var(--ui-field-border--hover);
+    border-color: var(--ui-field-border-color--hover);
   }
 
   [data-slot~="combobox-control"]:focus-within {
-    border-color: var(--ui-field-border--focus);
+    border-color: var(--ui-field-border-color--focus);
     background-color: var(--ui-field-background--focus);
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
@@ -257,13 +260,13 @@
   =========================================================================== */
 
   :where(ui-combobox, .ui-combobox)[data-variant="multiselect"] {
-    --ui-combobox-control-wrap: wrap;
+    --ui-combobox-control-flex-wrap: wrap;
     --ui-combobox-control-gap: var(--ui-combobox-tag-gap);
     --ui-combobox-control-block-size: auto;
-    --ui-combobox-control-min-block-size: var(--ui-field-height);
+    --ui-combobox-control-min-block-size: var(--ui-field-block-size);
     --ui-combobox-control-padding-block: var(--ui-combobox-tag-padding-block);
     --ui-combobox-input-min-inline-size: var(--step-16);
-    --ui-combobox-input-min-block-size: var(--ui-badge-height);
+    --ui-combobox-input-min-block-size: var(--ui-badge-block-size);
   }
 
   /* Overrides badge.css min-width: max-content (same layer, same

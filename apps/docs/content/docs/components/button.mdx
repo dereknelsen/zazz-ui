@@ -39,4 +39,6 @@ Add a `<kbd>` element inside the button for shortcut keys. Wrap a run of keys in
 | `data-variant` | `primary`, `muted`, `ghost`, `destructive`, `link` (omit = default) |
 | `data-size`    | `sm`, `icon`, `icon-sm`                                             |
 
-Customize buttons globally by overriding `--ui-button-background`, `--ui-button-radius`, `--ui-button-height`, etc. on `:root`.
+Customize buttons globally by overriding `--ui-button-background`, `--ui-button-radius`, `--ui-button-block-size`, etc. on `:root`.
+
+Button metrics (block-size, radius, padding, font-size, icon size, ring color, border width/style) default to the shared [`--ui-field-*` family](/docs/components/input), so a button sitting beside an input, select, or textarea stays visually consistent: retune a `--ui-field-*` token once and buttons follow; override the `--ui-button-*` token to diverge just the buttons. Colors stay independent — a button surface is not a field surface.

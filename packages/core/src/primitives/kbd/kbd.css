@@ -23,7 +23,7 @@
 
     /* surface */
     --ui-kbd-background: var(--muted);
-    --ui-kbd-color: var(--muted-foreground);
+    --ui-kbd-foreground: var(--muted-foreground);
     --ui-kbd-border: 1px solid transparent;
     --ui-kbd-radius: var(--radius-xs);
 
@@ -54,7 +54,7 @@
     font-size: var(--ui-kbd-font-size);
     line-height: var(--ui-kbd-line-height);
     background-color: var(--ui-kbd-background);
-    color: var(--ui-kbd-color);
+    color: var(--ui-kbd-foreground);
     padding-inline: var(--ui-kbd-padding-inline);
     padding-block: var(--ui-kbd-padding-block);
     border: var(--ui-kbd-border);
