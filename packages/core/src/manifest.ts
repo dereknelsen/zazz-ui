@@ -116,7 +116,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     css: ["primitives/badge/badge.css"],
     js: [],
     base: [],
-    primitives: [],
+    primitives: ["fields"],
     bare: [],
     examples: ["primitives/badge/badge.html", "primitives/badge/badge-icon.html"],
   },
@@ -132,7 +132,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     css: ["primitives/button/button.css"],
     js: [],
     base: [],
-    primitives: ["kbd"],
+    primitives: ["kbd", "fields"],
     bare: [],
     examples: [
       "primitives/button/button.html",
@@ -171,7 +171,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     css: ["primitives/checkbox/checkbox.css"],
     js: ["primitives/checkbox/checkbox.js"],
     base: [],
-    primitives: [],
+    primitives: ["fields"],
     bare: SIGNALS_BARE,
     examples: ["primitives/checkbox/checkbox.html", "primitives/checkbox/checkbox-tasklist.html"],
   },
@@ -413,7 +413,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     css: ["primitives/tabs/tabs.css"],
     js: ["primitives/tabs/tabs.js"],
     base: [],
-    primitives: [],
+    primitives: ["fields"],
     bare: [],
     examples: ["primitives/tabs/tabs.html"],
   },
@@ -526,6 +526,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
  */
 export const CSS_CASCADE_ORDER: string[] = [
   "separator",
+  "fields",
   "badge",
   "kbd",
   "button",
@@ -543,7 +544,6 @@ export const CSS_CASCADE_ORDER: string[] = [
   "menu",
   "navigation-menu",
   "mobile-menu",
-  "fields",
   "input",
   "textarea",
   "select",
@@ -577,7 +577,7 @@ export const CSS_CASCADE_ORDER: string[] = [
  * @throws {Error} On an unknown primitive name.
  * @example
  * resolveClosure(["combobox"]);
- * // ["kbd", "button", "popover", "fields", "input", "select", "badge", "combobox"]
+ * // ["fields", "badge", "kbd", "button", "popover", "select", "combobox"]
  */
 export function resolveClosure(names: string[]): string[] {
   const closure = new Set<string>();

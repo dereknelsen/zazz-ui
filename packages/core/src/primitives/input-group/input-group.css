@@ -13,16 +13,16 @@
 @layer variables {
   :root {
     --ui-input-group-display: flex;
-    --ui-input-group-wrap: wrap;
-    --ui-input-group-align: center;
+    --ui-input-group-flex-wrap: wrap;
+    --ui-input-group-align-items: center;
     --ui-input-group-gap: var(--step-1);
     --ui-input-group-inline-size: 100%;
-    --ui-input-group-min-block-size: var(--ui-field-height);
+    --ui-input-group-min-block-size: var(--ui-field-block-size);
     --ui-input-group-padding: 0;
     --ui-input-group-cursor: text;
-    --ui-input-group-text-color: var(--muted-foreground);
-    --ui-input-group-text-weight: var(--font-weight-strong);
-    --ui-input-group-text-size: var(--font-size-sm);
+    --ui-input-group-foreground: var(--muted-foreground);
+    --ui-input-group-font-weight: var(--font-weight-strong);
+    --ui-input-group-font-size: var(--font-size-sm);
     --ui-input-group-textarea-min-block-size: 3lh;
     --ui-input-group-textarea-padding-inline: var(--step-2);
     --ui-input-group-textarea-padding-block: var(--step-1_5);
@@ -52,8 +52,8 @@
 
   .ui-input-group {
     display: var(--ui-input-group-display);
-    flex-wrap: var(--ui-input-group-wrap);
-    align-items: var(--ui-input-group-align);
+    flex-wrap: var(--ui-input-group-flex-wrap);
+    align-items: var(--ui-input-group-align-items);
     gap: var(--ui-input-group-gap);
     inline-size: var(--ui-input-group-inline-size);
     min-block-size: var(--ui-input-group-min-block-size);
@@ -65,7 +65,7 @@
 
     color: var(--ui-field-foreground);
     background-color: var(--ui-field-background);
-    border: 1px solid var(--ui-field-border);
+    border: 1px solid var(--ui-field-border-color);
     border-radius: var(--ui-field-radius);
 
     --_ring-offset-width: 0px;
@@ -84,12 +84,12 @@
 
   .ui-input-group:hover {
     background-color: var(--ui-field-background--hover);
-    border-color: var(--ui-field-border--hover);
+    border-color: var(--ui-field-border-color--hover);
   }
 
   .ui-input-group:focus-within {
     background-color: var(--ui-field-background--focus);
-    border-color: var(--ui-field-border--focus);
+    border-color: var(--ui-field-border-color--focus);
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
     outline-color: transparent;
@@ -152,8 +152,8 @@
     gap: var(--step-1);
     color: var(--muted-foreground);
     white-space: nowrap;
-    block-size: var(--ui-field-height);
-    min-inline-size: var(--ui-field-height);
+    block-size: var(--ui-field-block-size);
+    min-inline-size: var(--ui-field-block-size);
     padding-inline: var(--ui-field-addon-padding);
   }
 
@@ -192,9 +192,9 @@
     align-items: center;
     gap: var(--gap-xs);
     padding-inline: var(--ui-field-addon-padding);
-    font-size: var(--ui-input-group-text-size);
-    font-weight: var(--ui-input-group-text-weight);
-    color: var(--ui-input-group-text-color);
+    font-size: var(--ui-input-group-font-size);
+    font-weight: var(--ui-input-group-font-weight);
+    color: var(--ui-input-group-foreground);
     min-inline-size: max-content;
   }
 
@@ -206,10 +206,10 @@
   /* Buttons embedded in a group shrink to nest cleanly inside the shell */
   .ui-input-group .ui-button {
     flex-shrink: 0;
-    border-radius: var(--ui-field-button-radius);
+    border-radius: var(--ui-field-inset-child-radius);
   }
 
   :where(.ui-field:has(:user-invalid)) [data-slot~="input-group-text"] {
-    --ui-input-group-text-color: var(--destructive);
+    --ui-input-group-foreground: var(--destructive);
   }
 }

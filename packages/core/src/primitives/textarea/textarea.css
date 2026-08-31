@@ -15,10 +15,12 @@
     --ui-textarea-min-block-size: 5lh;
     --ui-textarea-max-block-size: 12lh;
     --ui-textarea-padding: var(--ui-field-padding);
-    --ui-textarea-font-size: var(--font-size-sm);
+    --ui-textarea-font-size: var(--ui-field-font-size);
     --ui-textarea-line-height: var(--leading-sm);
-    --ui-textarea-border: 1px solid var(--ui-field-border);
-    --ui-textarea-border-radius: var(--ui-field-radius);
+    --ui-textarea-border-width: var(--ui-field-border-width);
+    --ui-textarea-border-style: var(--ui-field-border-style);
+    --ui-textarea-border-color: var(--ui-field-border-color);
+    --ui-textarea-radius: var(--ui-field-radius);
     --ui-textarea-resize: vertical;
   }
 }
@@ -45,8 +47,9 @@
     color: var(--ui-field-foreground);
     background-color: var(--ui-field-background);
 
-    border: var(--ui-textarea-border);
-    border-radius: var(--ui-textarea-border-radius);
+    border: var(--ui-textarea-border-width) var(--ui-textarea-border-style)
+      var(--ui-textarea-border-color);
+    border-radius: var(--ui-textarea-radius);
     resize: var(--ui-textarea-resize);
 
     /* ring renders as box-shadow; transparent outline twin keeps focus visible
@@ -64,13 +67,13 @@
   }
 
   .ui-textarea:hover {
-    border-color: var(--ui-field-border--hover);
+    border-color: var(--ui-field-border-color--hover);
     background-color: var(--ui-field-background--hover);
   }
 
   .ui-textarea:focus-visible {
     background-color: var(--ui-field-background--focus);
-    border-color: var(--ui-field-border--focus);
+    border-color: var(--ui-field-border-color--focus);
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
     outline-color: transparent;

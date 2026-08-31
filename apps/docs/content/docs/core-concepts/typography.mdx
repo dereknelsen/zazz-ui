@@ -1,0 +1,116 @@
+---
+title: Typography
+description: How type works in Zazz. Unstyled headings by design, a fluid four-token scale, text-* bundles for UI, and .ui-prose for content you don't control.
+---
+
+Typography in Zazz starts from a decision most frameworks don't make: a bare `<h1>` looks exactly like body text. The reset sets headings to inherit size and weight, so the tag carries document structure and nothing else. Appearance comes from a class:
+
+```html
+<h1 class="text-display">Looks like a headline</h1>
+<h2 class="text-md text-muted-foreground">Looks like a caption, still outlines as an h2</h2>
+```
+
+This decouples semantics from styling. You pick the heading level for the document outline and screen readers, and the visual size for the design, and the two never fight. A card title can be an `<h3>` at `text-lg`; a hero can put `text-display` on a `<p>` if the page already has its `<h1>`.
+
+The exception is long-form content, where tags should just work. That's what `.ui-prose` is for, covered below.
+
+## One step, four tokens
+
+Every step of the type scale is four tokens that travel together: `--font-size-*`, `--font-weight-*`, `--leading-*`, and `--tracking-*`. A `.text-*` utility applies all four at once, plus the right font family:
+
+```html
+<span class="text-h2">Everything set together</span>
+```
+
+The steps are the body sizes `xs` through `xl`, the heading sizes `h6` through `h1`, `display` above them, and `eyebrow` below. The pairing matters because good type metrics co-vary: as size grows, line height tightens (1.6 for body text down to 0.95 for display) and letter spacing goes negative (down to -0.05em). Setting only a font size and inheriting the rest produces the slightly-off look the bundles exist to prevent, so reach for `text-h3` before composing `font-size` by hand.
+
+Heading bundles also set `text-wrap: balance`, so multi-line headlines break evenly without markup tricks.
+
+## The scale is fluid
+
+Each size token is a `clamp()` between a mobile size and a desktop size, interpolating on viewport width:
+
+```css
+--font-size-h1: clamp(2.2807rem, 1.1499rem + 4.523vi, 4.7684rem);
+```
+
+Two consequences worth internalizing:
+
+- There are no typography breakpoints. An `h1` is 2.28rem on a phone, 4.77rem on a wide desktop, and every size in between on the way. You never write `@md:text-h1`.
+- The scale diverges as it grows. Body text barely moves (`md` is 1rem everywhere) while `display` more than doubles, so hierarchy is compressed on small screens and dramatic on large ones without any intervention.
+
+## Two contexts: UI and prose
+
+Composed UI (cards, forms, navigation) uses the `text-*` utilities directly, one class per element, like the rest of the utility system.
+
+Content you don't control (Markdown output, CMS bodies, anything with bare tags) gets `.ui-prose` on its wrapper:
+
+```html
+<article class="ui-prose">
+  <h2>Now bare tags work</h2>
+  <p>Headings, paragraphs, lists, blockquotes, figures, and links are all formatted.</p>
+</article>
+```
+
+Inside prose, the same scale applies to plain tags, and vertical rhythm switches on: block spacing uses `rlh` units keyed to each element type, so a heading gets more air above it than a paragraph does. One token scales the whole rhythm:
+
+```css
+:root {
+  --paragraph-spacing-multiplier: 1.25; /* airier long-form text */
+}
+```
+
+Prose deliberately does not constrain line length. Measure is a layout concern, handled by the [article container](/docs/core-concepts/layout#the-article-variant), so the usual pairing is both together:
+
+```html
+<article>
+  <div class="container ui-prose" data-variant="article">...</div>
+</article>
+```
+
+The [Prose component page](/docs/components/prose) covers its configuration tokens.
+
+## The eyebrow
+
+`text-eyebrow` is the small uppercase label above a headline. The uppercasing and wide tracking come from the class, so you still author the text in sentence case, per the house rule:
+
+```html
+<hgroup class="flex flex-col gap-sm">
+  <span class="text-eyebrow">Case study</span>
+  <h1 class="text-display">The art of typography</h1>
+</hgroup>
+```
+
+## Fonts
+
+The kit's stacks are Geist for text and headings and Geist Mono for code, each backed by a full system fallback stack, so nothing breaks if the webfont never loads. The fonts themselves arrive via the Google Fonts tags in the [head setup](/docs/getting-started/head); the CSS only names them.
+
+Three semantic aliases sit between the stacks and the rules: `--font-family-body`, `--font-family-heading`, and `--font-family-mono`. Body copy reads the body alias; every heading bundle reads the heading alias. That's the seam for a display typeface:
+
+```css
+:root {
+  --font-heading: "Fraunces", ui-serif, Georgia, serif;
+}
+```
+
+Load the font in your `<head>`, override the one token, and every `text-h*` and `text-display` on the site changes typeface while body text stays put. The `.font-sans`, `.font-serif`, and `.font-mono` utilities switch stacks per element; `.font-body`, `.font-heading`, and `.font-strong` are semantic weight-and-family shortcuts.
+
+## Retuning the scale
+
+Like everything else in the kit, the scale is tokens on `:root`, so adjustments are overrides, not new rules:
+
+```css
+:root {
+  --font-weight-heading: 700; /* heavier headings everywhere */
+  --tracking-h1: -0.03em; /* less aggressive tightening */
+  --font-size-display: clamp(3rem, 1rem + 7vi, 7rem); /* louder hero type */
+}
+```
+
+Because components and prose both read the same tokens, one override lands everywhere, in both color schemes, at every viewport width.
+
+## Reference pages
+
+- [Typography base file](/docs/foundation/typography) for what `_typography.css` implements.
+- [Text and font utilities](/docs/foundation/utilities/text-and-font) for the full class list.
+- [Text color utilities](/docs/foundation/utilities/text-color) for the role-token color classes.

@@ -15,7 +15,7 @@
   :root {
     --ui-mobile-menu-background: var(--background);
     --ui-mobile-menu-foreground: var(--foreground);
-    --ui-mobile-menu-backdrop: var(--faded-foreground);
+    --ui-mobile-menu-backdrop-color: var(--faded-foreground);
     --ui-mobile-menu-header-padding-inline: var(--gap-md) var(--gap-xs);
     --ui-mobile-menu-header-padding-block: var(--gap-xs);
     --ui-mobile-menu-body-padding-inline: var(--gap-sm);
@@ -52,7 +52,7 @@
   }
 
   .ui-mobile-menu::backdrop {
-    background-color: var(--ui-mobile-menu-backdrop);
+    background-color: var(--ui-mobile-menu-backdrop-color);
   }
 
   [data-slot~="mobile-menu-viewport"] {
@@ -87,9 +87,9 @@
     justify-content: space-between;
     padding-inline: var(--ui-mobile-menu-header-padding-inline);
     padding-block: var(--ui-mobile-menu-header-padding-block);
-    border-bottom: 1px solid var(--border);
+    border-block-end: 1px solid var(--border);
     position: sticky;
-    top: 0;
+    inset-block-start: 0;
     background-color: var(--ui-mobile-menu-background);
     z-index: 1;
   }
@@ -110,9 +110,9 @@
     flex-wrap: wrap;
     gap: var(--ui-mobile-menu-footer-gap);
     padding: var(--ui-mobile-menu-footer-padding);
-    border-top: 1px solid var(--border);
+    border-block-start: 1px solid var(--border);
     position: sticky;
-    bottom: 0;
+    inset-block-end: 0;
     background-color: var(--ui-mobile-menu-background);
   }
 

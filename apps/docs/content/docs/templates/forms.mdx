@@ -1,0 +1,19 @@
+---
+title: Forms
+description: Inputs, groups, password toggle, textarea, select, checkboxes, radios, switches, and slider with native validation.
+---
+
+This template includes every form control in the kit. Each uses the `.ui-field` structure for labels, hints, and error messages. Submit the empty form to see native validation.
+
+<TemplateFrame src="/zazz/examples/forms.html" title="Forms template" />
+
+## Included patterns
+
+- Each control sits in a `.ui-field` with a `data-slot="field-label"` label. A `data-slot="field-description"` block contains its hint and error spans.
+- Errors use the browser's `:user-invalid` state, so they appear after you leave a field or submit the form rather than while you type.
+- `.ui-input-group` joins controls, `.ui-field-group` groups related fields, and `<ui-password>` adds a show and hide toggle configured with `data-*` attributes.
+- Every control appears in both color schemes, making the page useful for testing `color-scheme` and role tokens.
+
+## Source
+
+Open [the raw page](/zazz/examples/forms.html), or read [forms.html on GitHub](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/examples/forms.html).

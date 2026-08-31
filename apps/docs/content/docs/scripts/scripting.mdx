@@ -7,6 +7,8 @@ Scripts in `@zazz-ui/core` live alongside their components: shared runtime in `s
 
 `index.js` imports all component scripts so pages can load behaviors with a single `<script type="module" src="./zazz/index.js">` tag.
 
+The shared libraries have separate guides for [utils](/docs/scripts/utils), [signals](/docs/scripts/signals), [hotkeys](/docs/scripts/hotkeys), and [custom elements](/docs/scripts/custom-elements). The scroll reveal library is documented with the rest of the kit's motion under [reveal](/docs/motion/reveal).
+
 ## Principles
 
 - **Vanilla JS:** Shipped `.js` files are standard ES modules. External dependencies (signals polyfill, Embla) resolve through the page's import map.

@@ -1,0 +1,84 @@
+---
+title: Hotkeys
+description: Parse and bind keyboard shortcuts with platform-aware modifiers and editable-context guards.
+---
+
+The hotkey module parses `"mod+k"`-style shortcuts, matches exact modifier combinations, ignores held-key repeats, and prevents bare shortcuts from firing while someone types in a field.
+
+Import it directly:
+
+```js
+import { bindHotkey } from "@zazz-ui/core/base/hotkeys.js";
+```
+
+On a no-build page, import the dependency-free module from a CDN:
+
+```js
+import { bindHotkey } from "https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.2.0/src/base/hotkeys.js";
+```
+
+## bindHotkey
+
+`bindHotkey` adds a document-level listener:
+
+```js
+bindHotkey("mod+k", () => {
+  document.querySelector("#command-dialog")?.showModal();
+});
+```
+
+It returns `true` after binding a valid spec and `false` for an invalid spec. On a match, it calls `preventDefault()` before your callback. It ignores held-key repeats and events already marked `defaultPrevented`.
+
+To unbind, pass an `AbortSignal`. Inside a [ZazzElement](/docs/scripts/custom-elements) `setup()`, the element's own signal ties the hotkey to the element's lifetime:
+
+```js
+class SearchBox extends ZazzElement {
+  setup(signal) {
+    bindHotkey("mod+/", () => this.querySelector("input")?.focus(), { signal });
+  }
+}
+```
+
+## The spec grammar
+
+Specs are case-insensitive tokens separated by `+`. Each token except the last is a modifier. The final token is compared with `KeyboardEvent.key`:
+
+| Token                    | Meaning                                              |
+| ------------------------ | ---------------------------------------------------- |
+| `mod`                    | Meta on Apple platforms, Control everywhere else     |
+| `ctrl` / `control`       | Control                                              |
+| `alt` / `option`         | Alt                                                  |
+| `shift`                  | Shift                                                |
+| `meta` / `cmd` / `super` | Meta                                                 |
+| final token              | The key: `k`, `enter`, `escape`, `arrowdown`, `/`... |
+
+Use `mod` for shortcuts that should follow platform conventions. `"mod+k"` maps to ⌘K on a Mac and Ctrl+K elsewhere. An unknown modifier makes the entire spec invalid.
+
+## Matching is exact
+
+Modifier state must match exactly. `mod+k` does not fire on `mod+shift+k`; bind both specs if you need both combinations.
+
+Single-letter keys match case-insensitively, so `mod+K` and `mod+k` are equivalent. Neither implies Shift.
+
+## Bare keys and editable contexts
+
+A spec without modifiers, such as `"escape"` or `"/"`, is suppressed while focus is in an input, textarea, select, or contenteditable region. Modified hotkeys still fire there, allowing shortcuts such as `mod+enter` to submit.
+
+## Lower-level pieces
+
+Use the lower-level functions to match inside an existing keydown handler or bind to a specific element:
+
+```js
+import { parseHotkey, matchesHotkey, isEditableTarget } from "@zazz-ui/core/base/hotkeys.js";
+
+const hotkey = parseHotkey("mod+shift+p");
+
+menu.addEventListener("keydown", (event) => {
+  if (matchesHotkey(event, hotkey)) {
+    event.preventDefault();
+    openPalette();
+  }
+});
+```
+
+`parseHotkey` returns a structured object or `null`. `matchesHotkey` tests an event against it, `isEditableTarget` checks whether the target accepts text input, and `isBareKey` checks for a parsed hotkey without modifiers.

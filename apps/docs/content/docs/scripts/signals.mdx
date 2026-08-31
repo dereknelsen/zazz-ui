@@ -1,0 +1,90 @@
+---
+title: Signals
+description: Reactive component state through state, computed, and effect.
+---
+
+Zazz component scripts use signals to track reads and notify subscribers when values change. A wrapper around the [TC39 Signals proposal](https://github.com/tc39/proposal-signals) keeps components independent of the underlying implementation.
+
+Import from the wrapper instead of `signal-polyfill`:
+
+```js
+import { state, computed, effect } from "@zazz-ui/core/base/signals.js";
+```
+
+Script-tag pages expose the same functions on `window.Signals`. On no-build pages, the polyfill resolves through the import map included by the [head setup](/docs/getting-started/head).
+
+## The three functions
+
+### state
+
+A mutable value read with `.get()` and updated with `.set()`. Reads inside `computed` or `effect` are tracked:
+
+```js
+const expanded = state(false);
+
+expanded.get(); // false
+expanded.set(true);
+```
+
+### computed
+
+A derived value that is cached until a dependency changes, then recomputed lazily. Keep the function pure because it may run at any time:
+
+```js
+const paused = computed(() => expanded.get() || hidden.get());
+```
+
+### effect
+
+A tracked side effect. It runs immediately and runs again when any signal it reads changes. Use effects for DOM writes:
+
+```js
+const dispose = effect(() => {
+  node.dataset.paused = String(paused.get());
+});
+```
+
+Reruns are batched in a microtask, so ten writes in one event handler trigger one rerun. The callback can return a cleanup function that runs before each rerun and on disposal:
+
+```js
+effect(() => {
+  const id = setInterval(tick, delay.get());
+  return () => clearInterval(id);
+});
+```
+
+`effect` returns a disposer. Call it directly, tie it to an element's lifetime with an `AbortSignal`, or bind it with `using` in TypeScript for disposal at scope exit:
+
+```js
+// Inside a ZazzElement setup(signal): dies with the element
+effect(() => render(count.get()), { signal });
+```
+
+## Organizing component state
+
+Kit components follow this pattern:
+
+- DOM events and observers write into `state`.
+- `computed` contains pure derivations that can be unit tested.
+- `effect` reads signals and writes results to the DOM.
+
+```js
+import { state, computed, effect } from "@zazz-ui/core/base/signals.js";
+
+const query = state("");
+const items = state([]);
+
+const visible = computed(() => items.get().filter((item) => item.name.includes(query.get())));
+
+input.addEventListener("input", () => query.set(input.value)); // input adapter
+
+effect(() => {
+  list.replaceChildren(...visible.get().map(renderItem)); // output adapter
+});
+```
+
+Keep timers, transition choreography, and DOM construction imperative. The DOM remains the source of truth for element lists; signals hold state rather than copies of the document.
+
+## Signals in kit components
+
+`<ui-password>` and `<ui-toaster>` use this module. In a [ZazzElement](/docs/scripts/custom-elements), bind effects to the abort signal passed to `setup()` so they are disposed on disconnect.

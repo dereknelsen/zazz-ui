@@ -9,8 +9,10 @@
  * @uses       color-mix(): destructive field tint on invalid
  * @tokens     --ui-field-*, --ui-field-group-* (Tier 3 owner; @layer variables)
  * @consumedby input.css, textarea.css, select.css, input-group.css,
- *             password-group.css, otp.css, radio.css (.ui-radio-group),
- *             autocomplete.css, combobox.css, command.css
+ *             password-group.css, otp.css, radio.css (.ui-radio-group, border colors),
+ *             autocomplete.css, combobox.css, command.css,
+ *             button.css (metrics: block-size/radius/padding/font/icon/ring/border width+style),
+ *             toggle.css (via button.css), tabs.css, checkbox.css, badge.css (border/ring)
  */
 
 @layer variables {
@@ -21,15 +23,17 @@
 
     --ui-field-foreground: var(--input-foreground);
 
-    --ui-field-border: var(--border);
-    --ui-field-border--hover: var(--primary);
-    --ui-field-border--focus: var(--primary);
+    --ui-field-border-width: 1px;
+    --ui-field-border-style: solid;
+    --ui-field-border-color: var(--border);
+    --ui-field-border-color--hover: var(--primary);
+    --ui-field-border-color--focus: var(--primary);
 
     --ui-field-label-color: inherit;
     --ui-field-ring-color: var(--ring-color);
     --ui-field-radius: var(--radius-md);
-    --ui-field-button-radius: var(--radius-sm);
-    --ui-field-height: var(--step-8);
+    --ui-field-inset-child-radius: var(--radius-sm);
+    --ui-field-block-size: var(--step-8);
     --ui-field-font-size: var(--font-size-sm);
     --ui-field-line-height: 1;
     --ui-field-padding: var(--step-2_5);
@@ -206,9 +210,9 @@
   .ui-password-group:has(:user-invalid) {
     --ui-field-background: color-mix(in oklch, var(--destructive) 5%, var(--input));
     --ui-field-background--hover: color-mix(in oklch, var(--destructive) 10%, var(--input));
-    --ui-field-border: var(--destructive);
-    --ui-field-border--hover: var(--destructive);
-    --ui-field-border--focus: var(--destructive);
+    --ui-field-border-color: var(--destructive);
+    --ui-field-border-color--hover: var(--destructive);
+    --ui-field-border-color--focus: var(--destructive);
     --ui-field-ring-color: var(--destructive);
 
     border-color: var(--destructive);

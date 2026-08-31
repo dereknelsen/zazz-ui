@@ -109,7 +109,12 @@ Tokens resolve lazily, so you can intervene at three scopes — pick the narrowe
 1. **Global** — redefine a semantic token on `:root` (`--radius-md: 0` squares every medium
    radius across the system).
 2. **Component default** — redefine a component token (`--ui-button-radius: var(--radius-full)` →
-   all buttons go pill-shaped).
+   all buttons go pill-shaped). The shared `--ui-field-*` family (fields.css) is the widest lever:
+   inputs/selects/textareas consume it directly, and button/toggle/tabs metrics, checkbox/radio
+   surface+border, and badge borders default to it — one `--ui-field-radius` or
+   `--ui-field-block-size` override retunes the whole control row. Token names mirror logical CSS
+   property names (`--ui-field-block-size`, never `-height`); interactive borders split into
+   `-border-width`/`-border-style`/`-border-color` (+ `-border-color--hover/--focus`).
 3. **Instance** — set the token inline or via a `data-*` variant
    (`style="--ui-button-background: var(--secondary)"`).
 
@@ -126,7 +131,8 @@ Tokens resolve lazily, so you can intervene at three scopes — pick the narrowe
    (`@md:grid-cols-2`); see `references/tokens.md` §7.
 
 Forms share `--ui-field-*` tokens and validate via `:user-invalid` (after blur/submit, never
-while typing). Cards and avatars are composition patterns (utilities + theme tokens), not
+while typing); buttons, toggles, tabs, checkboxes, radios, and badge borders inherit from the
+same family, so grouped controls stay visually consistent by default. Cards and avatars are composition patterns (utilities + theme tokens), not
 dedicated CSS files. Tables are one `.ui-table` class on a semantic `<table>` — variants
 (`alternating`, `grid`), `data-layout="fixed"`, and caption `data-side="top"` are attributes;
 every setting is a `--ui-table-*` token.

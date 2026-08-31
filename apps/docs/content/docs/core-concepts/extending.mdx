@@ -88,12 +88,24 @@ Every primitive publishes `--ui-<name>-*` hooks that default to the global token
 ```css
 :root {
   --ui-button-radius: var(--radius-full);
-  --ui-field-border: var(--border);
+  --ui-field-border-color: var(--muted-foreground);
   --ui-dialog-radius: var(--radius-lg);
 }
 ```
 
-This works because the kit's own rules reference each hook exactly once instead of hardcoding values. Interactive states have their own hooks with a `--hover` or `--active` suffix (`--ui-button-background--hover`, `--ui-field-border--focus`), so resting and interactive appearance can be tuned independently.
+This works because the kit's own rules reference each hook exactly once instead of hardcoding values. Interactive states have their own hooks with a `--hover` or `--active` suffix (`--ui-button-background--hover`, `--ui-field-border-color--focus`), so resting and interactive appearance can be tuned independently.
+
+Some hooks default to another primitive's hooks rather than a global token. The shared `--ui-field-*` family is the biggest example: inputs, selects, and textareas consume it directly, and buttons, toggles, tabs, checkboxes, radios, and badge borders default to it. One override moves the whole control row:
+
+```css
+:root {
+  /* squarer, taller controls everywhere: inputs, selects, buttons, toggles, tabs */
+  --ui-field-radius: var(--radius-sm);
+  --ui-field-block-size: var(--step-9);
+}
+```
+
+Border hooks on interactive controls come in parts — `-border-width`, `-border-style`, `-border-color` (plus `-border-color--hover` / `--focus`) — so you can thicken every control border with a single `--ui-field-border-width: 2px` without touching colors or styles.
 
 Each primitive's stylesheet declares its hooks in an `@layer variables` block at the top of the file, with the full list in the file's header comment. Tokens prefixed `--_` (like `--_bg`) are private internals; they can change in any release, so don't reach for them.
 

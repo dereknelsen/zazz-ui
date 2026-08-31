@@ -13,15 +13,17 @@
 
 @layer variables {
   :root {
-    --ui-otp-slot-inline-size: var(--ui-field-height);
-    --ui-otp-slot-block-size: var(--ui-field-height);
+    --ui-otp-slot-inline-size: var(--ui-field-block-size);
+    --ui-otp-slot-block-size: var(--ui-field-block-size);
     --ui-otp-slot-background: var(--ui-field-background);
-    --ui-otp-slot-border: 1px solid var(--ui-field-border);
+    --ui-otp-slot-border-width: var(--ui-field-border-width);
+    --ui-otp-slot-border-style: var(--ui-field-border-style);
+    --ui-otp-slot-border-color: var(--ui-field-border-color);
     --ui-otp-slot-radius: var(--ui-field-radius);
     --ui-otp-slot-font-size: var(--font-size-md);
     --ui-otp-gap: var(--step-1_5);
     --ui-otp-separator-color: var(--muted-foreground);
-    --ui-otp-caret-color: var(--ui-field-border--focus);
+    --ui-otp-caret-color: var(--ui-field-border-color--focus);
   }
 }
 
@@ -83,7 +85,8 @@
     color: var(--ui-field-foreground);
 
     background-color: var(--ui-otp-slot-background);
-    border: var(--ui-otp-slot-border);
+    border: var(--ui-otp-slot-border-width) var(--ui-otp-slot-border-style)
+      var(--ui-otp-slot-border-color);
     border-radius: var(--ui-otp-slot-radius);
 
     transition: var(--default-transition);
@@ -91,7 +94,7 @@
 
   /* Active cell: ring + focus border, only while the input has focus */
   :where(ui-otp:focus-within) [data-slot~="otp-slot"][data-active] {
-    border-color: var(--ui-field-border--focus);
+    border-color: var(--ui-field-border-color--focus);
     background-color: var(--ui-field-background--focus);
     box-shadow:
       0 0 0 var(--ring-offset-width) var(--ring-offset-color),

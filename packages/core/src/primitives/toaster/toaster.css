@@ -23,14 +23,14 @@
     /* surface */
     --ui-toaster-background: var(--popover);
     --ui-toaster-foreground: var(--popover-foreground);
-    --ui-toaster-border: var(--border);
+    --ui-toaster-border-color: var(--border);
     --ui-toaster-radius: var(--radius-md);
     --ui-toaster-shadow: var(--shadow-md);
     /* status accent: icon color; variants reassign */
     --ui-toaster-accent: var(--popover-foreground);
 
     /* metrics: mobile full width falls out of the min(); no media query */
-    --ui-toaster-width: min(356px, calc(100vi - var(--gutters) * 2));
+    --ui-toaster-inline-size: min(356px, calc(100vi - var(--gutters) * 2));
     --ui-toaster-inset: var(--gutters);
     --ui-toaster-gap: var(--step-3_5);
     --ui-toaster-padding: var(--step-4);
@@ -40,7 +40,7 @@
     --ui-toaster-title-font-size: var(--font-size-sm);
     --ui-toaster-title-font-weight: var(--font-weight-strong);
     --ui-toaster-description-font-size: var(--font-size-sm);
-    --ui-toaster-description-color: var(--muted-foreground);
+    --ui-toaster-description-foreground: var(--muted-foreground);
 
     /* stack: per-depth shrink of collapsed toasts */
     --ui-toaster-scale-step: 0.05;
@@ -86,7 +86,7 @@
     inset: auto;
     inset-block-end: var(--ui-toaster-inset);
     inset-inline-end: var(--ui-toaster-inset);
-    inline-size: var(--ui-toaster-width);
+    inline-size: var(--ui-toaster-inline-size);
     --_lift: -1;
 
     /* Own snapshot group for page view transitions: frozen (never animated)
@@ -114,7 +114,7 @@
   }
 
   :where(ui-toaster, .ui-toaster)[data-position$="center"] {
-    inset-inline-start: calc(50vi - var(--ui-toaster-width) / 2);
+    inset-inline-start: calc(50vi - var(--ui-toaster-inline-size) / 2);
     inset-inline-end: auto;
   }
 
@@ -144,7 +144,7 @@
 
     color: var(--ui-toaster-foreground);
     background-color: var(--ui-toaster-background);
-    border: 1px solid var(--ui-toaster-border);
+    border: 1px solid var(--ui-toaster-border-color);
     border-radius: var(--ui-toaster-radius);
     box-shadow: var(--ui-toaster-shadow);
     overflow-wrap: anywhere;
@@ -279,7 +279,7 @@
   [data-slot~="toaster-description"] {
     font-size: var(--ui-toaster-description-font-size);
     line-height: var(--leading-sm);
-    color: var(--ui-toaster-description-color);
+    color: var(--ui-toaster-description-foreground);
   }
 
   [data-slot~="toaster-action"],

@@ -18,8 +18,8 @@
     --ui-lightbox-slide-radius: var(--radius-lg);
     --ui-lightbox-thumb-radius: var(--radius-md);
     --ui-lightbox-thumb-size: var(--step-16);
-    --ui-lightbox-thumb-border: var(--border);
-    --ui-lightbox-thumb-border--active: var(--primary);
+    --ui-lightbox-thumb-border-color: var(--border);
+    --ui-lightbox-thumb-border-color--active: var(--primary);
     --ui-lightbox-thumb-opacity: 0.5;
     --ui-lightbox-thumb-opacity--active: 1;
     --ui-lightbox-thumb-columns: 6;
@@ -338,8 +338,8 @@
   }
 
   [data-slot~="lightbox-dialog"] [data-slot~="lightbox-thumb"] {
-    --ui-lightbox-thumb-border: var(--tint-200);
-    --ui-lightbox-thumb-border--active: var(--ring);
+    --ui-lightbox-thumb-border-color: var(--tint-200);
+    --ui-lightbox-thumb-border-color--active: var(--ring);
     flex: 0 0 var(--ui-lightbox-thumb-size);
     inline-size: var(--ui-lightbox-thumb-size);
   }
@@ -417,17 +417,17 @@
 
     pointer-events: auto;
     position: absolute;
-    top: 50%;
+    inset-block-start: 50%;
     transform: translateY(-50%);
     z-index: 50;
   }
 
   [data-slot~="lightbox-prev"] {
-    left: var(--gap-md);
+    inset-inline-start: var(--gap-md);
   }
 
   [data-slot~="lightbox-next"] {
-    right: var(--gap-md);
+    inset-inline-end: var(--gap-md);
   }
 
   /* ---------------------------------------------------------------------------
@@ -437,8 +437,8 @@
   [data-slot~="lightbox-close"] {
     pointer-events: auto;
     position: absolute;
-    top: var(--gap-sm);
-    right: var(--gap-sm);
+    inset-block-start: var(--gap-sm);
+    inset-inline-end: var(--gap-sm);
     z-index: 10;
   }
 
@@ -448,7 +448,8 @@
 
   [data-slot~="lightbox-counter"] {
     position: absolute;
-    bottom: var(--gap-sm);
+    inset-block-end: var(--gap-sm);
+    /* left + physical translate is a direction-neutral centering idiom; keep physical */
     left: 50%;
     translate: -50% 0;
     opacity: 0.7;

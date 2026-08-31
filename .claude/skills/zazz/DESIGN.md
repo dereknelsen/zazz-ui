@@ -391,7 +391,7 @@ Headings use `text-wrap: balance`. Body uses `text-wrap: pretty`. Tight-leading 
 **Two conventions:**
 
 - **Variants are data attributes:** `class="ui-button" data-variant="primary"` — never `.ui-button-primary`.
-- **Theming via local custom properties:** Components declare `--ui-button-background`, `--ui-button-radius`, etc. off theme roles. Variants re-point those locals.
+- **Theming via local custom properties:** Components declare `--ui-button-background`, `--ui-button-radius`, etc. off theme roles (or off another component's tokens: button metrics default to the shared `--ui-field-*` family, toggle to `--ui-button-*`). Variants re-point those locals. Token names use logical property names (`-block-size`, `-inline-size`); interactive borders decompose into `-border-width`/`-border-style`/`-border-color` parts.
 
 ### Buttons
 
@@ -419,7 +419,7 @@ CSS-first grouped radio inputs wrapped in `<ui-tabs>`. Segmented control with sl
 
 ### Forms
 
-Shared `--ui-field-*` tokens unify `.ui-input`, `.ui-textarea`, `.ui-select`, `.ui-input-group`, `.ui-password-group`. Validation via `:user-invalid` (surfaces after blur/submit, never while typing). `.ui-field` wrapper for label/control/hint/error layout. Password visibility uses `<ui-password>` around `.ui-password-group`; checkbox, switch, and radio are restyled native inputs.
+Shared `--ui-field-*` tokens unify `.ui-input`, `.ui-textarea`, `.ui-select`, `.ui-input-group`, `.ui-password-group` — and feed the defaults for button/toggle/tabs metrics, checkbox/radio surface+border, and badge border/ring, so grouped controls read as one family. Validation via `:user-invalid` (surfaces after blur/submit, never while typing). `.ui-field` wrapper for label/control/hint/error layout. Password visibility uses `<ui-password>` around `.ui-password-group`; checkbox, switch, and radio are restyled native inputs.
 
 ---
 

@@ -2,7 +2,7 @@
  * tabs.css — Tabs (ui-tabs | .ui-tabs) — CSS-only radio tab panels
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css
+ * @requires   layers.css, _variables.css, fields.css (--ui-field-* metrics)
  * @uses       input[type="radio"] + :checked — panel visibility via :has() (no JS)
  * @uses       anchor-name, position-anchor, anchor() — sliding indicator pill
  *             (@supports gated; checked-label fallback paints card fill without pill)
@@ -13,21 +13,24 @@
 
 @layer variables {
   :root {
+    /* Track/label metrics default to the shared --ui-field-* family (owned in
+       fields.css) so a segmented tab track beside fields and buttons reads as
+       one family; --ui-tabs-label-min-block-size is deliberately shorter. */
     --ui-tabs-gap: var(--gap-xs);
     --ui-tabs-track-padding: var(--step-0_5);
-    --ui-tabs-track-radius: var(--radius-md);
+    --ui-tabs-track-radius: var(--ui-field-radius);
     --ui-tabs-track-gap: var(--step-0_5);
     --ui-tabs-track-background: var(--muted);
 
     --ui-tabs-indicator-background: var(--card);
-    --ui-tabs-indicator-radius: var(--radius-sm);
+    --ui-tabs-indicator-radius: var(--ui-field-inset-child-radius);
     --ui-tabs-indicator-shadow: var(--shadow-xs);
     --ui-tabs-indicator-inset: var(--ui-tabs-track-padding);
 
     --ui-tabs-label-font-family: var(--font-family-body);
-    --ui-tabs-label-font-size: var(--font-size-sm);
+    --ui-tabs-label-font-size: var(--ui-field-font-size);
     --ui-tabs-label-font-weight: var(--font-weight-strong);
-    --ui-tabs-label-line-height: 1;
+    --ui-tabs-label-line-height: var(--ui-field-line-height);
 
     --ui-tabs-label-background: transparent;
     --ui-tabs-label-background--hover: transparent;
@@ -37,9 +40,9 @@
     --ui-tabs-label-foreground--hover: var(--foreground);
     --ui-tabs-label-foreground--active: var(--foreground);
 
-    --ui-tabs-label-padding: var(--step-2_5);
-    --ui-tabs-label-min-height: var(--step-7);
-    --ui-tabs-label-ring-color: var(--ring-color);
+    --ui-tabs-label-padding: var(--ui-field-padding);
+    --ui-tabs-label-min-block-size: var(--step-7);
+    --ui-tabs-label-ring-color: var(--ui-field-ring-color);
   }
 }
 
@@ -105,7 +108,7 @@
     font-weight: var(--ui-tabs-label-font-weight);
     line-height: var(--ui-tabs-label-line-height);
 
-    min-block-size: var(--ui-tabs-label-min-height);
+    min-block-size: var(--ui-tabs-label-min-block-size);
     padding-inline: var(--ui-tabs-label-padding);
 
     color: var(--ui-tabs-label-foreground);
@@ -172,6 +175,7 @@
   @supports (anchor-name: --active-tab) {
     [data-slot~="tabs-indicator"] {
       position-anchor: --active-tab;
+      /* physical top/left/right/bottom: anchor() only accepts physical side keywords */
       top: calc(anchor(--active-tab top) + var(--ui-tabs-indicator-inset));
       left: calc(anchor(--active-tab left) + var(--ui-tabs-indicator-inset));
       right: calc(anchor(--active-tab right) + var(--ui-tabs-indicator-inset));

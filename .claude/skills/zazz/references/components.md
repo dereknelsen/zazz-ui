@@ -62,9 +62,12 @@ at once (`data-slot="lightbox-slide carousel-slide"`). Roots never carry `data-s
 
 ## Forms
 
-All field types share `--ui-field-*` tokens (`fields.css`, the Tier-3 owner). Wrap a control in
-`.ui-field` (supports `data-orientation="horizontal"`) for the label / control / hint / error
-layout. Validation surfaces via `:user-invalid` — **after** blur/submit, never while typing.
+All field types share `--ui-field-*` tokens (`fields.css`, the Tier-3 owner) — and so do the
+controls commonly grouped with them: button/toggle/tabs metrics, checkbox/radio surface+border,
+and badge border/ring default to `--ui-field-*`, so one family override retunes the whole row.
+Wrap a control in `.ui-field` (supports `data-orientation="horizontal"`) for the label / control
+/ hint / error layout. Validation surfaces via `:user-invalid` — **after** blur/submit, never
+while typing.
 
 ## Behaviors (not components — see `apis.md`)
 

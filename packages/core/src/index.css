@@ -26,6 +26,9 @@
 
 /* Zazz primitives - UI omponents. */
 @import "./primitives/separator/separator.css";
+/* fields.css owns the shared --ui-field-* family; it registers before its
+   consumers (badge, button, toggle, tabs, checkbox, radio, inputs, …) */
+@import "./primitives/fields/fields.css";
 @import "./primitives/badge/badge.css";
 @import "./primitives/kbd/kbd.css";
 @import "./primitives/button/button.css";
@@ -43,7 +46,6 @@
 @import "./primitives/menu/menu.css";
 @import "./primitives/navigation-menu/navigation-menu.css";
 @import "./primitives/mobile-menu/mobile-menu.css";
-@import "./primitives/fields/fields.css";
 @import "./primitives/input/input.css";
 @import "./primitives/textarea/textarea.css";
 @import "./primitives/select/select.css";

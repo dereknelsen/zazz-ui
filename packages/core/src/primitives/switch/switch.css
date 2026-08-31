@@ -11,14 +11,14 @@
 
 @layer variables {
   :root {
-    --ui-switch-track-width: var(--step-7);
+    --ui-switch-track-inline-size: var(--step-7);
     --ui-switch-track-padding: var(--step-0_5);
-    --ui-switch-track-height: calc(
-      var(--ui-switch-track-width) / 2 + var(--ui-switch-track-padding)
+    --ui-switch-track-block-size: calc(
+      var(--ui-switch-track-inline-size) / 2 + var(--ui-switch-track-padding)
     );
-    --ui-switch-thumb: var(--white);
+    --ui-switch-thumb-background: var(--white);
     --ui-switch-thumb-size: calc(
-      (var(--ui-switch-track-width) / 2) - var(--ui-switch-track-padding)
+      (var(--ui-switch-track-inline-size) / 2) - var(--ui-switch-track-padding)
     );
     --ui-switch-thumb-shadow: var(--shadow-xs);
     --ui-switch-thumb-translate: var(--ui-switch-track-padding), -50%;
@@ -48,7 +48,7 @@
       inline-size: var(--ui-switch-thumb-size);
       block-size: var(--ui-switch-thumb-size);
       border-radius: var(--radius-full);
-      background-color: var(--ui-switch-thumb);
+      background-color: var(--ui-switch-thumb-background);
       box-shadow: var(--ui-switch-thumb-shadow);
       pointer-events: none;
       transform: translate(var(--ui-switch-thumb-translate)) scale(var(--ui-switch-thumb-scale));
@@ -85,8 +85,8 @@
   :where(input[role="switch"]) {
     appearance: none;
     flex-shrink: 0;
-    inline-size: var(--ui-switch-track-width);
-    block-size: var(--ui-switch-track-height);
+    inline-size: var(--ui-switch-track-inline-size);
+    block-size: var(--ui-switch-track-block-size);
 
     background-color: var(--ui-switch-track-background);
 

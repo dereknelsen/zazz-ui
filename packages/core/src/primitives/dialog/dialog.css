@@ -21,7 +21,7 @@
     --ui-dialog-backdrop-blur: blur(5px);
     --ui-dialog-shadow: var(--shadow-lg);
     --ui-dialog-border: 1px solid var(--border);
-    --ui-dialog-width: min(var(--breakpoint-md), 100% - var(--gutters) * 2);
+    --ui-dialog-inline-size: min(var(--breakpoint-md), 100% - var(--gutters) * 2);
 
     /* Reveal transitions/animations */
     --ui-dialog-opacity--start: 0;
@@ -35,11 +35,11 @@
   }
 }
 
-/* Sizing tokens — second variables block (overrides --ui-dialog-width above). */
+/* Sizing tokens — second variables block (overrides --ui-dialog-inline-size above). */
 @layer variables {
   :root {
-    --ui-dialog-width: min(50ch, 100% - var(--gap-md) * 2);
-    --ui-dialog-height: fit-content;
+    --ui-dialog-inline-size: min(50ch, 100% - var(--gap-md) * 2);
+    --ui-dialog-block-size: fit-content;
     --ui-dialog-background: var(--card);
     --ui-dialog-foreground: var(--card-foreground);
     --ui-dialog-radius: var(--radius-lg);
@@ -94,10 +94,9 @@
   /* Dialog backdrop with smooth fade transition */
   :where(dialog)::backdrop {
     position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    inset: 0;
     z-index: 1000;
     opacity: 0;
     overscroll-behavior: contain;
@@ -122,8 +121,8 @@
     /* Overrides reset-layer --ui-dialog-shadow (reset > variables) */
     --ui-dialog-shadow: var(--shadow-md);
 
-    inline-size: var(--ui-dialog-width);
-    block-size: var(--ui-dialog-height);
+    inline-size: var(--ui-dialog-inline-size);
+    block-size: var(--ui-dialog-block-size);
     background-color: var(--ui-dialog-background);
     color: var(--ui-dialog-foreground);
     box-shadow: var(--ui-dialog-shadow);
@@ -143,8 +142,8 @@
 
   [data-slot~="dialog-close"] {
     position: absolute;
-    top: var(--gap-xs);
-    right: var(--gap-xs);
+    inset-block-start: var(--gap-xs);
+    inset-inline-end: var(--gap-xs);
     z-index: 50;
   }
 
@@ -179,7 +178,7 @@
     content: "";
     display: block;
     position: absolute;
-    top: 100%;
+    inset-block-start: 100%;
     inline-size: 100%;
     block-size: var(--gap-md);
     background: linear-gradient(to top, transparent, var(--ui-dialog-background));
@@ -199,28 +198,28 @@
   [data-slot~="dialog-footer"] {
     block-size: fit-content;
     position: sticky;
-    bottom: 0;
+    inset-block-end: 0;
     display: flex;
     justify-content: flex-end;
     align-self: end;
     flex-shrink: 0;
     gap: var(--gap-xs);
     padding: var(--gap-sm);
-    border-top: 1px solid var(--border);
+    border-block-start: 1px solid var(--border);
     background-color: var(--ui-dialog-background);
   }
 
   .ui-dialog[data-size="article"] {
-    --ui-dialog-width: var(--article-md);
+    --ui-dialog-inline-size: var(--article-md);
   }
 
   .ui-dialog[data-size="container"] {
-    --ui-dialog-width: var(--breakpoint-md);
+    --ui-dialog-inline-size: var(--breakpoint-md);
   }
 
   .ui-dialog[data-size="screen"] {
-    --ui-dialog-width: 100vi;
-    --ui-dialog-height: 100svh;
+    --ui-dialog-inline-size: 100vi;
+    --ui-dialog-block-size: 100svh;
     --ui-dialog-radius: 0;
     --ui-dialog-shadow: none;
     max-inline-size: 100vi;

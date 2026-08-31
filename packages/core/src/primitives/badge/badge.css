@@ -2,7 +2,7 @@
  * badge.css: Badge (.ui-badge)
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css, _reset.css
+ * @requires   layers.css, _variables.css, _reset.css, fields.css (--ui-field-* border/ring)
  * @uses       color-mix(), oklch(from …): variant hover/active tints
  * @uses       text-box: vertical trim (patchy browser support)
  * @tokens     --ui-badge-* (@layer variables)
@@ -11,7 +11,10 @@
 
 @layer variables {
   :root {
-    --ui-badge-ring-color: var(--ring-color);
+    /* Border + ring default to the shared --ui-field-* family (owned in fields.css)
+       so a badge sitting beside fields and buttons reads as one family; metrics stay
+       independent — a badge is deliberately a smaller scale. */
+    --ui-badge-ring-color: var(--ui-field-ring-color);
 
     --ui-badge-font-family: var(--font-family-body);
     --ui-badge-font-size: var(--font-size-xs);
@@ -26,13 +29,15 @@
     --ui-badge-foreground--hover: var(--foreground);
     --ui-badge-foreground--active: var(--foreground);
 
-    --ui-badge-border: 1px solid var(--border);
-    --ui-badge-border--hover: 1px solid var(--border);
-    --ui-badge-border--active: 1px solid var(--border);
+    --ui-badge-border-width: var(--ui-field-border-width);
+    --ui-badge-border-style: var(--ui-field-border-style);
+    --ui-badge-border-color: var(--ui-field-border-color);
+    --ui-badge-border-color--hover: var(--ui-field-border-color);
+    --ui-badge-border-color--active: var(--ui-field-border-color);
 
     --ui-badge-gap: var(--step-1);
     --ui-badge-padding: var(--step-1_5);
-    --ui-badge-height: var(--step-5_5);
+    --ui-badge-block-size: var(--step-5_5);
     --ui-badge-radius: var(--radius-sm);
 
     --ui-badge-icon-size: var(--step-3);
@@ -60,11 +65,11 @@
     gap: var(--ui-badge-gap);
     flex-shrink: 0;
 
-    block-size: var(--ui-badge-height);
-    min-width: max-content;
+    block-size: var(--ui-badge-block-size);
+    min-inline-size: max-content;
     padding-inline: var(--ui-badge-padding);
 
-    border: var(--ui-badge-border);
+    border: var(--ui-badge-border-width) var(--ui-badge-border-style) var(--ui-badge-border-color);
     border-radius: var(--ui-badge-radius);
 
     color: var(--ui-badge-foreground);
@@ -106,14 +111,14 @@
   a[href].ui-badge:hover:not(:disabled, [aria-disabled="true"]) {
     color: var(--ui-badge-foreground--hover);
     background-color: var(--ui-badge-background--hover);
-    border: var(--ui-badge-border--hover);
+    border-color: var(--ui-badge-border-color--hover);
   }
 
   button.ui-badge:active:not(:disabled, [aria-disabled="true"]),
   a[href].ui-badge:active:not(:disabled, [aria-disabled="true"]) {
     color: var(--ui-badge-foreground--active);
     background-color: var(--ui-badge-background--active);
-    border: var(--ui-badge-border--active);
+    border-color: var(--ui-badge-border-color--active);
   }
 
   button.ui-badge:focus-visible:hover:not(:disabled, [aria-disabled="true"]),
@@ -167,9 +172,9 @@
     --ui-badge-foreground--hover: var(--primary-foreground);
     --ui-badge-foreground--active: var(--primary-foreground);
 
-    --ui-badge-border: 1px solid transparent;
-    --ui-badge-border--hover: 1px solid transparent;
-    --ui-badge-border--active: 1px solid transparent;
+    --ui-badge-border-color: transparent;
+    --ui-badge-border-color--hover: transparent;
+    --ui-badge-border-color--active: transparent;
   }
 
   .ui-badge[data-variant="muted"] {
@@ -181,9 +186,9 @@
     --ui-badge-foreground--hover: var(--foreground);
     --ui-badge-foreground--active: var(--foreground);
 
-    --ui-badge-border: 1px solid transparent;
-    --ui-badge-border--hover: 1px solid transparent;
-    --ui-badge-border--active: 1px solid transparent;
+    --ui-badge-border-color: transparent;
+    --ui-badge-border-color--hover: transparent;
+    --ui-badge-border-color--active: transparent;
   }
 
   .ui-badge[data-variant="ghost"] {
@@ -195,9 +200,9 @@
     --ui-badge-foreground--hover: var(--foreground);
     --ui-badge-foreground--active: var(--foreground);
 
-    --ui-badge-border: 1px solid transparent;
-    --ui-badge-border--hover: 1px solid transparent;
-    --ui-badge-border--active: 1px solid transparent;
+    --ui-badge-border-color: transparent;
+    --ui-badge-border-color--hover: transparent;
+    --ui-badge-border-color--active: transparent;
   }
 
   .ui-badge[data-variant="link"] {
@@ -209,11 +214,9 @@
     --ui-badge-foreground--hover: var(--primary);
     --ui-badge-foreground--active: oklch(from var(--primary) l c h / 0.8);
 
-    --ui-badge-border: none;
-    --ui-badge-border--hover: none;
-    --ui-badge-border--active: none;
+    --ui-badge-border-style: none;
 
-    --ui-badge-height: fit-content;
+    --ui-badge-block-size: fit-content;
     --ui-badge-padding: 0;
     --ui-badge-radius: 0;
 
@@ -243,8 +246,8 @@
   =========================================================================== */
 
   .ui-badge[data-size="icon"] {
-    block-size: var(--ui-badge-height);
-    inline-size: var(--ui-badge-height);
+    block-size: var(--ui-badge-block-size);
+    inline-size: var(--ui-badge-block-size);
     padding: 0;
     aspect-ratio: 1 / 1;
   }

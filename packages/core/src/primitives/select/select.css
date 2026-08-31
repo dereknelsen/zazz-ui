@@ -33,8 +33,10 @@
     --ui-select-padding-inline-end: var(--step-2);
     --ui-select-font-size: var(--ui-field-font-size);
     --ui-select-line-height: var(--ui-field-line-height);
-    --ui-select-border: 1px solid var(--ui-field-border);
-    --ui-select-border-radius: var(--ui-field-radius);
+    --ui-select-border-width: var(--ui-field-border-width);
+    --ui-select-border-style: var(--ui-field-border-style);
+    --ui-select-border-color: var(--ui-field-border-color);
+    --ui-select-radius: var(--ui-field-radius);
     --ui-select-option-gap: var(--ui-field-option-gap);
 
     /* Picker icon (trigger chevron)
@@ -48,15 +50,15 @@
        the --ui-button-* family (owned in button.css) so a select's options and a
        menu's ghost items read as one; retune a --ui-button-* token and both
        follow. The ghost look is base button minus the surface fill + border, so
-       only --ui-option-background/--ui-option-border diverge. Radius bridges to the
-       shared --ui-menu-button-radius. */
+       only --ui-option-background/--ui-option-border-color diverge. Radius bridges
+       to the shared --ui-menu-button-radius. */
     --ui-option-font-family: var(--ui-button-font-family);
     --ui-option-font-size: var(--ui-button-font-size);
     --ui-option-font-weight: var(--ui-button-font-weight);
     --ui-option-line-height: var(--ui-button-line-height);
     --ui-option-gap: var(--ui-button-gap);
     --ui-option-padding: var(--ui-button-padding);
-    --ui-option-height: var(--ui-button-height);
+    --ui-option-block-size: var(--ui-button-block-size);
     --ui-option-icon-size: var(--ui-button-icon-size);
     --ui-option-radius: var(--ui-menu-button-radius);
     --ui-option-shadow: none;
@@ -67,9 +69,11 @@
     --ui-option-foreground: var(--ui-button-foreground);
     --ui-option-foreground--hover: var(--ui-button-foreground--hover);
     --ui-option-foreground--active: var(--ui-button-foreground--active);
-    --ui-option-border: 1px solid transparent;
-    --ui-option-border--hover: 1px solid transparent;
-    --ui-option-border--active: 1px solid transparent;
+    --ui-option-border-width: var(--ui-button-border-width);
+    --ui-option-border-style: var(--ui-button-border-style);
+    --ui-option-border-color: transparent;
+    --ui-option-border-color--hover: transparent;
+    --ui-option-border-color--active: transparent;
 
     /* Option checkmark
     ** @see https://www.svgbackgrounds.com/tools/svg-to-css/
@@ -161,7 +165,7 @@
 
     inline-size: var(--ui-select-inline-size);
     min-inline-size: var(--ui-select-min-inline-size);
-    block-size: var(--ui-field-height);
+    block-size: var(--ui-field-block-size);
     padding-inline: var(--ui-select-padding-inline-start) var(--ui-select-padding-inline-end);
 
     font-size: var(--ui-select-font-size);
@@ -171,8 +175,9 @@
     background-color: var(--ui-field-background);
     background-image: none;
 
-    border: var(--ui-select-border);
-    border-radius: var(--ui-select-border-radius);
+    border: var(--ui-select-border-width) var(--ui-select-border-style)
+      var(--ui-select-border-color);
+    border-radius: var(--ui-select-radius);
     cursor: pointer;
 
     /* ring renders as box-shadow; transparent outline twin keeps focus visible
@@ -190,12 +195,12 @@
   }
 
   .ui-select:hover {
-    border-color: var(--ui-field-border--hover);
+    border-color: var(--ui-field-border-color--hover);
   }
 
   .ui-select:focus-visible,
   .ui-select:open {
-    border-color: var(--ui-field-border--focus);
+    border-color: var(--ui-field-border-color--focus);
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
     outline-color: transparent;
@@ -254,7 +259,7 @@
 
     background-color: var(--popover);
     color: var(--popover-foreground);
-    border: 1px solid var(--ui-popover-border);
+    border: 1px solid var(--ui-popover-border-color);
     border-radius: var(--ui-popover-radius);
     box-shadow: var(--ui-popover-shadow);
   }
@@ -292,7 +297,7 @@
     display: flex;
     align-items: center;
     gap: var(--ui-option-gap);
-    min-block-size: var(--ui-option-height);
+    min-block-size: var(--ui-option-block-size);
     padding-inline: var(--ui-option-padding);
 
     font-family: var(--ui-option-font-family);
@@ -302,7 +307,8 @@
 
     color: var(--ui-option-foreground);
     background-color: var(--ui-option-background);
-    border: var(--ui-option-border);
+    border: var(--ui-option-border-width) var(--ui-option-border-style)
+      var(--ui-option-border-color);
     border-radius: var(--ui-option-radius);
     box-shadow: var(--ui-option-shadow);
     cursor: pointer;
@@ -313,13 +319,13 @@
   .ui-select option:hover {
     color: var(--ui-option-foreground--hover);
     background-color: var(--ui-option-background--hover);
-    border: var(--ui-option-border--hover);
+    border-color: var(--ui-option-border-color--hover);
   }
 
   .ui-select option:checked {
     color: var(--ui-option-foreground--active);
     background-color: var(--ui-option-background--active);
-    border: var(--ui-option-border--active);
+    border-color: var(--ui-option-border-color--active);
   }
 
   .ui-select option:disabled {
@@ -419,7 +425,7 @@
     display: flex;
     align-items: center;
     gap: var(--ui-option-gap);
-    min-block-size: var(--ui-option-height);
+    min-block-size: var(--ui-option-block-size);
     padding-inline: var(--ui-option-padding);
 
     font-family: var(--ui-option-font-family);
@@ -429,7 +435,8 @@
 
     color: var(--ui-option-foreground);
     background-color: var(--ui-option-background);
-    border: var(--ui-option-border);
+    border: var(--ui-option-border-width) var(--ui-option-border-style)
+      var(--ui-option-border-color);
     border-radius: var(--ui-option-radius);
     cursor: pointer;
 

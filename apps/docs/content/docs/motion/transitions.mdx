@@ -1,0 +1,102 @@
+---
+title: Transitions
+description: "The kit's default motion: a spring easing curve expressed as linear(), one duration token, and the transition utilities that apply them."
+---
+
+Every transition in Zazz runs on two tokens: `--default-transition-timing-function` and `--default-transition-duration`. Buttons, dialogs, accordions, form fields, and the [reveal system](/docs/motion/reveal) all read the same pair, so the kit moves with one consistent feel, and changing two lines retunes all of it.
+
+## The spring curve
+
+CSS transitions can't run spring physics, but `linear()` can replay a spring that was solved ahead of time: the token holds a sampled curve, and the browser interpolates between the sample points. Zazz ships one:
+
+```css
+:root {
+  --spring-easing: linear(
+    0,
+    0.012 0.9%,
+    0.049 2%,
+    0.409 9.3%,
+    0.513 11.9%,
+    0.606 14.7%,
+    0.691 17.9%,
+    0.762 21.3%,
+    0.82 25%,
+    0.868 29.1%,
+    0.907 33.6%,
+    0.937 38.7%,
+    0.976 51.3%,
+    0.994 68.8%,
+    1
+  );
+  --spring-duration: 0.333s;
+}
+```
+
+Read the samples and you can see the character: the value covers about 80% of the distance in the first quarter of the duration, then spends the rest settling. That fast-out, long-settle shape is what makes interactions feel physical instead of eased. The curve peaks at 1, so it settles without overshooting; nothing in the kit bounces.
+
+Browsers without `linear()` support fall back to `--bezier-easing`, a `cubic-bezier(0.17, 0.84, 0.44, 1)` with a similar fast-out profile.
+
+The defaults derive from those:
+
+```css
+:root {
+  --default-transition-timing-function: var(--spring-easing, var(--bezier-easing));
+  --default-transition-duration: var(--spring-duration, 0.333s);
+}
+```
+
+## The default transition
+
+`--default-transition` is a ready-made `transition` value covering the properties UI work actually animates: colors, borders, shadows, opacity, the individual transform properties (`translate`, `scale`, `rotate`), filters, and text decoration, each at the default duration and easing. The property list also includes discrete properties such as `display`, `overlay`, and `content-visibility`; components pair those with `allow-discrete` and `@starting-style` to animate popovers and dialogs in and out of the page.
+
+Apply it with the utilities:
+
+| Class                  | Transitions                             |
+| ---------------------- | --------------------------------------- |
+| `transition`           | The curated `--default-transition` list |
+| `transition-opacity`   | `opacity` only                          |
+| `transition-transform` | `transform` only                        |
+| `transition-all`       | Everything (`all`)                      |
+
+```html
+<a class="bg-card border rounded-md transition hover:border-primary hover:shadow-md" href="/report">
+  Hover me
+</a>
+```
+
+Prefer `transition` over `transition-all`: the curated list skips layout properties, so you can't accidentally animate `width` or `padding` and trigger reflow on every frame.
+
+## Retuning the motion
+
+Because everything reads the two tokens, motion is themed like color is:
+
+```css
+:root {
+  --spring-duration: 0.25s; /* snappier everywhere */
+}
+```
+
+Supply your own `linear()` samples to change the character entirely, or swap in a plain keyword:
+
+```css
+:root {
+  --spring-easing: ease-out; /* no spring settle */
+}
+```
+
+Both tokens cascade, so a subtree can move differently from the rest of the page:
+
+```css
+.marketing-hero {
+  --default-transition-duration: 0.5s;
+}
+```
+
+## Reduced motion
+
+When `prefers-reduced-motion: reduce` is active, the kit zeroes `--default-transition-duration` and resets the easing, so everything built on the defaults snaps instead of animating. You get compliance for free as long as your own transitions read the tokens instead of hardcoding times, which is one more reason to write `var(--default-transition-duration)` rather than `0.333s`.
+
+## Related
+
+- [Reveal](/docs/motion/reveal) inherits this duration and easing for scroll-driven entrances.
+- [View transitions](/docs/foundation/view-transitions) covers page-to-page navigation animation, a separate system built on the View Transitions API.

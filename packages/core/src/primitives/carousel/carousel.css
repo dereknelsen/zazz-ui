@@ -12,7 +12,7 @@
 @layer variables {
   :root {
     --ui-carousel-slide-basis: calc(100% - var(--_gap, 0px));
-    --ui-carousel-slide-min-width: 0;
+    --ui-carousel-slide-min-inline-size: 0;
     --ui-carousel-touch-action: pan-y pinch-zoom;
     --ui-carousel-cursor--grabbing: grabbing;
   }
@@ -52,7 +52,7 @@
 
   [data-slot~="carousel-slide"] {
     flex: 0 0 var(--ui-carousel-slide-basis);
-    min-width: var(--ui-carousel-slide-min-width);
+    min-inline-size: var(--ui-carousel-slide-min-inline-size);
   }
 
   [data-slot~="carousel-thumbs"] [data-slot~="carousel-slide"] {

@@ -18,7 +18,7 @@
 @layer variables {
   :root {
     /* Styles */
-    --ui-popover-border: var(--border);
+    --ui-popover-border-color: var(--border);
     --ui-popover-radius: var(--radius-md);
     --ui-popover-button-radius: var(--radius-sm);
     --ui-popover-shadow: var(--shadow-md);
@@ -112,7 +112,7 @@
   =========================================================================== */
 
   [popover] {
-    border: 1px solid var(--ui-popover-border);
+    border: 1px solid var(--ui-popover-border-color);
     padding: var(--ui-popover-padding);
     min-inline-size: var(--ui-popover-min-inline-size);
     max-inline-size: var(--ui-popover-max-inline-size);

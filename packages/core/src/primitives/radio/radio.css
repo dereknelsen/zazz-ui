@@ -2,19 +2,23 @@
  * radio.css — Radio (.ui-radio, .ui-radio-group)
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css, fields.css (.ui-field-group layout)
+ * @requires   layers.css, _variables.css, fields.css (.ui-field-group layout, --ui-field-* surface/border)
  * @uses       appearance: none — custom circle + radial-gradient dot when :checked
  * @tokens     --ui-radio-* (@layer variables)
  */
 
 @layer variables {
   :root {
+    /* Surface + border default to the shared --ui-field-* family (owned in
+       fields.css) so a radio reads as one family with the controls around it. */
     --ui-radio-size: var(--step-4_5);
-    --ui-radio-background: var(--input);
+    --ui-radio-background: var(--ui-field-background);
     --ui-radio-background--checked: var(--primary);
-    --ui-radio-border: var(--border);
-    --ui-radio-border--hover: var(--primary);
-    --ui-radio-border--checked: var(--primary);
+    --ui-radio-border-width: var(--ui-field-border-width);
+    --ui-radio-border-style: var(--ui-field-border-style);
+    --ui-radio-border-color: var(--ui-field-border-color);
+    --ui-radio-border-color--hover: var(--ui-field-border-color--hover);
+    --ui-radio-border-color--checked: var(--primary);
     --ui-radio-radius: var(--radius-full);
     --ui-radio-background-size: 90%;
     --ui-radio-dot-foreground: var(--primary-foreground);
@@ -44,7 +48,7 @@
     block-size: var(--ui-radio-size);
 
     background-color: var(--ui-radio-background);
-    border: 1px solid var(--ui-radio-border);
+    border: var(--ui-radio-border-width) var(--ui-radio-border-style) var(--ui-radio-border-color);
     border-radius: var(--ui-radio-radius);
 
     background-repeat: no-repeat;
@@ -67,7 +71,7 @@
   }
 
   .ui-radio:hover {
-    border-color: var(--ui-radio-border--hover);
+    border-color: var(--ui-radio-border-color--hover);
   }
 
   .ui-radio:focus-visible {
@@ -78,7 +82,7 @@
 
   .ui-radio:checked {
     background-color: var(--ui-radio-background--checked);
-    border-color: var(--ui-radio-border--checked);
+    border-color: var(--ui-radio-border-color--checked);
     background-image: var(--ui-radio-dot-gradient);
   }
 }

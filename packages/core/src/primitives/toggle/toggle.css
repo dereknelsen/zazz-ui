@@ -41,17 +41,19 @@
     --ui-toggle-foreground--checked-hover: var(--primary-foreground);
     --ui-toggle-foreground--checked-active: var(--primary-foreground);
 
-    --ui-toggle-border: var(--ui-button-border);
-    --ui-toggle-border--hover: var(--ui-button-border--hover);
-    --ui-toggle-border--active: var(--ui-button-border--active);
+    --ui-toggle-border-width: var(--ui-button-border-width);
+    --ui-toggle-border-style: var(--ui-button-border-style);
+    --ui-toggle-border-color: var(--ui-button-border-color);
+    --ui-toggle-border-color--hover: var(--ui-button-border-color--hover);
+    --ui-toggle-border-color--active: var(--ui-button-border-color--active);
 
-    --ui-toggle-border--checked: 1px solid var(--primary);
-    --ui-toggle-border--checked-hover: 1px solid var(--primary);
-    --ui-toggle-border--checked-active: 1px solid var(--primary);
+    --ui-toggle-border-color--checked: var(--primary);
+    --ui-toggle-border-color--checked-hover: var(--primary);
+    --ui-toggle-border-color--checked-active: var(--primary);
 
     --ui-toggle-gap: var(--ui-button-gap);
     --ui-toggle-padding: var(--ui-button-padding);
-    --ui-toggle-height: var(--ui-button-height);
+    --ui-toggle-block-size: var(--ui-button-block-size);
     --ui-toggle-radius: var(--ui-button-radius);
 
     --ui-toggle-icon-size: var(--ui-button-icon-size);
@@ -85,11 +87,12 @@
     column-gap: var(--ui-toggle-gap);
     flex-shrink: 0;
 
-    min-block-size: var(--ui-toggle-height);
+    min-block-size: var(--ui-toggle-block-size);
     min-inline-size: max-content;
     padding-inline: var(--ui-toggle-padding);
 
-    border: var(--ui-toggle-border);
+    border: var(--ui-toggle-border-width) var(--ui-toggle-border-style)
+      var(--ui-toggle-border-color);
     border-radius: var(--ui-toggle-radius);
 
     color: var(--ui-toggle-foreground);
@@ -134,32 +137,32 @@
   .ui-toggle:hover:not(:has(> input:disabled)) {
     color: var(--ui-toggle-foreground--hover);
     background-color: var(--ui-toggle-background--hover);
-    border: var(--ui-toggle-border--hover);
+    border-color: var(--ui-toggle-border-color--hover);
   }
 
   .ui-toggle:active:not(:has(> input:disabled)) {
     color: var(--ui-toggle-foreground--active);
     background-color: var(--ui-toggle-background--active);
-    border: var(--ui-toggle-border--active);
+    border-color: var(--ui-toggle-border-color--active);
   }
 
   /* the "on" state reuses the button's active look */
   .ui-toggle:has(> input:checked) {
     color: var(--ui-toggle-foreground--checked);
     background-color: var(--ui-toggle-background--checked);
-    border: var(--ui-toggle-border--checked);
+    border-color: var(--ui-toggle-border-color--checked);
   }
 
   .ui-toggle:has(> input:checked:hover) {
     color: var(--ui-toggle-foreground--checked-hover);
     background-color: var(--ui-toggle-background--checked-hover);
-    border: var(--ui-toggle-border--checked-hover);
+    border-color: var(--ui-toggle-border-color--checked-hover);
   }
 
   .ui-toggle:has(> input:checked:active) {
     color: var(--ui-toggle-foreground--checked-active);
     background-color: var(--ui-toggle-background--checked-active);
-    border: var(--ui-toggle-border--checked-active);
+    border-color: var(--ui-toggle-border-color--checked-active);
   }
 
   .ui-toggle:has(> input:focus-visible) {
@@ -206,9 +209,9 @@
     --ui-toggle-foreground--hover: var(--primary-foreground);
     --ui-toggle-foreground--active: var(--primary-foreground);
 
-    --ui-toggle-border: 1px solid transparent;
-    --ui-toggle-border--hover: 1px solid transparent;
-    --ui-toggle-border--active: 1px solid transparent;
+    --ui-toggle-border-color: transparent;
+    --ui-toggle-border-color--hover: transparent;
+    --ui-toggle-border-color--active: transparent;
 
     --ui-toggle-shadow: 0 0 transparent;
   }
@@ -222,9 +225,9 @@
     --ui-toggle-foreground--hover: var(--foreground);
     --ui-toggle-foreground--active: var(--foreground);
 
-    --ui-toggle-border: 1px solid transparent;
-    --ui-toggle-border--hover: 1px solid transparent;
-    --ui-toggle-border--active: 1px solid transparent;
+    --ui-toggle-border-color: transparent;
+    --ui-toggle-border-color--hover: transparent;
+    --ui-toggle-border-color--active: transparent;
 
     --ui-toggle-shadow: 0 0 transparent;
   }
@@ -239,9 +242,9 @@
     --ui-toggle-foreground--hover: var(--foreground);
     --ui-toggle-foreground--active: var(--foreground);
 
-    --ui-toggle-border: 1px solid transparent;
-    --ui-toggle-border--hover: 1px solid transparent;
-    --ui-toggle-border--active: 1px solid transparent;
+    --ui-toggle-border-color: transparent;
+    --ui-toggle-border-color--hover: transparent;
+    --ui-toggle-border-color--active: transparent;
 
     --ui-toggle-shadow: 0 0 transparent;
   }
@@ -257,9 +260,9 @@
     --ui-toggle-foreground--hover: var(--destructive-foreground);
     --ui-toggle-foreground--active: var(--destructive-foreground);
 
-    --ui-toggle-border: 1px solid var(--destructive);
-    --ui-toggle-border--hover: 1px solid var(--destructive);
-    --ui-toggle-border--active: 1px solid var(--destructive);
+    --ui-toggle-border-color: var(--destructive);
+    --ui-toggle-border-color--hover: var(--destructive);
+    --ui-toggle-border-color--active: var(--destructive);
 
     --ui-toggle-shadow: 0 0 transparent;
   }
@@ -269,26 +272,26 @@
   =========================================================================== */
 
   .ui-toggle[data-size="sm"] {
-    --ui-toggle-height: var(--step-6);
+    --ui-toggle-block-size: var(--step-6);
     --ui-toggle-padding: var(--step-2);
     --ui-toggle-radius: var(--radius-sm);
   }
 
   .ui-toggle[data-size="icon"] {
-    block-size: var(--ui-toggle-height);
-    inline-size: var(--ui-toggle-height);
+    block-size: var(--ui-toggle-block-size);
+    inline-size: var(--ui-toggle-block-size);
     padding: 0;
     aspect-ratio: 1 / 1;
   }
 
   .ui-toggle[data-size="icon-sm"] {
-    --ui-toggle-height: var(--step-6);
+    --ui-toggle-block-size: var(--step-6);
     --ui-toggle-padding: var(--step-2);
     --ui-toggle-radius: var(--radius-sm);
     --ui-toggle-icon-size: var(--step-3_5);
 
-    block-size: var(--ui-toggle-height);
-    inline-size: var(--ui-toggle-height);
+    block-size: var(--ui-toggle-block-size);
+    inline-size: var(--ui-toggle-block-size);
     padding: 0;
     aspect-ratio: 1 / 1;
   }

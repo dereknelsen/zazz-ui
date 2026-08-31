@@ -139,12 +139,13 @@ describe("buildHead cdn mode", () => {
     const order = [
       `${KIT}/src/base/_layers.css`,
       `${KIT}/src/base/_view-transitions.css`,
-      // combobox closure css, cascade order: kbd, button, popover, fields,
-      // input, select, badge... combobox.
+      // combobox closure css, cascade order: fields (shared token owner first),
+      // badge, kbd, button, popover, select... combobox.
+      `${KIT}/src/primitives/fields/fields.css`,
+      `${KIT}/src/primitives/badge/badge.css`,
       `${KIT}/src/primitives/kbd/kbd.css`,
       `${KIT}/src/primitives/button/button.css`,
       `${KIT}/src/primitives/popover/popover.css`,
-      `${KIT}/src/primitives/fields/fields.css`,
       `${KIT}/src/primitives/select/select.css`,
       `${KIT}/src/primitives/combobox/combobox.css`,
       `${KIT}/src/base/_utilities.css`,
