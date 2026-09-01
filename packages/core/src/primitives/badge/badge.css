@@ -74,6 +74,7 @@
 
     color: var(--ui-badge-foreground);
     background-color: var(--ui-badge-background);
+    background-clip: padding-box;
 
     /* ring renders as box-shadow so it composes with --ui-badge-shadow; the
        ring widths animate from 0 so the ring grows in smoothly on focus */
@@ -149,7 +150,7 @@
   BADGE ICONS
   =========================================================================== */
 
-  .ui-badge > svg {
+  .ui-badge>svg {
     inline-size: var(--ui-badge-icon-size);
     block-size: var(--ui-badge-icon-size);
     pointer-events: none;
@@ -172,9 +173,9 @@
     --ui-badge-foreground--hover: var(--primary-foreground);
     --ui-badge-foreground--active: var(--primary-foreground);
 
-    --ui-badge-border-color: transparent;
-    --ui-badge-border-color--hover: transparent;
-    --ui-badge-border-color--active: transparent;
+    --ui-badge-border-color: var(--ui-badge-background);
+    --ui-badge-border-color--hover: var(--ui-badge-background--hover);
+    --ui-badge-border-color--active: var(--ui-badge-background--active);
   }
 
   .ui-badge[data-variant="muted"] {
@@ -186,9 +187,9 @@
     --ui-badge-foreground--hover: var(--foreground);
     --ui-badge-foreground--active: var(--foreground);
 
-    --ui-badge-border-color: transparent;
-    --ui-badge-border-color--hover: transparent;
-    --ui-badge-border-color--active: transparent;
+    --ui-badge-border-color: var(--ui-badge-background);
+    --ui-badge-border-color--hover: var(--ui-badge-background--hover);
+    --ui-badge-border-color--active: var(--ui-badge-background--active);
   }
 
   .ui-badge[data-variant="ghost"] {
@@ -200,9 +201,9 @@
     --ui-badge-foreground--hover: var(--foreground);
     --ui-badge-foreground--active: var(--foreground);
 
-    --ui-badge-border-color: transparent;
-    --ui-badge-border-color--hover: transparent;
-    --ui-badge-border-color--active: transparent;
+    --ui-badge-border-color: var(--ui-badge-background);
+    --ui-badge-border-color--hover: var(--ui-badge-background--hover);
+    --ui-badge-border-color--active: var(--ui-badge-background--active);
   }
 
   .ui-badge[data-variant="link"] {

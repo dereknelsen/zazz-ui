@@ -71,8 +71,7 @@
     min-inline-size: max-content;
     padding-inline: var(--ui-button-padding);
 
-    border: var(--ui-button-border-width) var(--ui-button-border-style)
-      var(--ui-button-border-color);
+    border: var(--ui-button-border-width) var(--ui-button-border-style) var(--ui-button-border-color);
     border-radius: var(--ui-button-radius);
 
     color: var(--ui-button-foreground);
@@ -149,7 +148,7 @@
   BUTTON ICONS
   =========================================================================== */
 
-  .ui-button > svg {
+  .ui-button>svg {
     inline-size: var(--ui-button-icon-size);
     block-size: var(--ui-button-icon-size);
     pointer-events: none;
@@ -172,9 +171,9 @@
     --ui-button-foreground--hover: var(--primary-foreground);
     --ui-button-foreground--active: var(--primary-foreground);
 
-    --ui-button-border-color: transparent;
-    --ui-button-border-color--hover: transparent;
-    --ui-button-border-color--active: transparent;
+    --ui-button-border-color: var(--ui-button-background);
+    --ui-button-border-color--hover: var(--ui-button-background--hover);
+    --ui-button-border-color--active: var(--ui-button-background--active);
 
     --ui-button-shadow: 0 0 transparent;
   }
@@ -188,9 +187,9 @@
     --ui-button-foreground--hover: var(--foreground);
     --ui-button-foreground--active: var(--foreground);
 
-    --ui-button-border-color: transparent;
-    --ui-button-border-color--hover: transparent;
-    --ui-button-border-color--active: transparent;
+    --ui-button-border-color: var(--ui-button-background);
+    --ui-button-border-color--hover: var(--ui-button-background--hover);
+    --ui-button-border-color--active: var(--ui-button-background--active);
 
     --ui-button-shadow: 0 0 transparent;
   }
@@ -204,9 +203,9 @@
     --ui-button-foreground--hover: var(--foreground);
     --ui-button-foreground--active: var(--foreground);
 
-    --ui-button-border-color: transparent;
-    --ui-button-border-color--hover: transparent;
-    --ui-button-border-color--active: transparent;
+    --ui-button-border-color: var(--ui-button-background);
+    --ui-button-border-color--hover: var(--ui-button-background--hover);
+    --ui-button-border-color--active: var(--ui-button-background--active);
 
     --ui-button-shadow: 0 0 transparent;
   }
@@ -222,9 +221,9 @@
     --ui-button-foreground--hover: var(--destructive-foreground);
     --ui-button-foreground--active: var(--destructive-foreground);
 
-    --ui-button-border-color: var(--destructive);
-    --ui-button-border-color--hover: var(--destructive);
-    --ui-button-border-color--active: var(--destructive);
+    --ui-button-border-color: var(--ui-button-background);
+    --ui-button-border-color--hover: var(--ui-button-background--hover);
+    --ui-button-border-color--active: var(--ui-button-background--active);
 
     --ui-button-shadow: 0 0 transparent;
   }
@@ -311,15 +310,11 @@
     padding-inline-start: var(--step-1_5);
   }
 
-  .ui-button[data-size="sm"]:has(
-    > :where(kbd, ui-kbd-group, .ui-kbd-group):last-child:not(:only-child)
-  ) {
+  .ui-button[data-size="sm"]:has(> :where(kbd, ui-kbd-group, .ui-kbd-group):last-child:not(:only-child)) {
     padding-inline-end: var(--step-0_5);
   }
 
-  .ui-button[data-size="sm"]:has(
-    > :where(kbd, ui-kbd-group, .ui-kbd-group):first-child:not(:only-child)
-  ) {
+  .ui-button[data-size="sm"]:has(> :where(kbd, ui-kbd-group, .ui-kbd-group):first-child:not(:only-child)) {
     padding-inline-start: var(--step-0_5);
   }
 }
