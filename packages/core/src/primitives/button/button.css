@@ -71,7 +71,8 @@
     min-inline-size: max-content;
     padding-inline: var(--ui-button-padding);
 
-    border: var(--ui-button-border-width) var(--ui-button-border-style) var(--ui-button-border-color);
+    border: var(--ui-button-border-width) var(--ui-button-border-style)
+      var(--ui-button-border-color);
     border-radius: var(--ui-button-radius);
 
     color: var(--ui-button-foreground);
@@ -148,7 +149,7 @@
   BUTTON ICONS
   =========================================================================== */
 
-  .ui-button>svg {
+  .ui-button > svg {
     inline-size: var(--ui-button-icon-size);
     block-size: var(--ui-button-icon-size);
     pointer-events: none;
@@ -310,11 +311,15 @@
     padding-inline-start: var(--step-1_5);
   }
 
-  .ui-button[data-size="sm"]:has(> :where(kbd, ui-kbd-group, .ui-kbd-group):last-child:not(:only-child)) {
+  .ui-button[data-size="sm"]:has(
+    > :where(kbd, ui-kbd-group, .ui-kbd-group):last-child:not(:only-child)
+  ) {
     padding-inline-end: var(--step-0_5);
   }
 
-  .ui-button[data-size="sm"]:has(> :where(kbd, ui-kbd-group, .ui-kbd-group):first-child:not(:only-child)) {
+  .ui-button[data-size="sm"]:has(
+    > :where(kbd, ui-kbd-group, .ui-kbd-group):first-child:not(:only-child)
+  ) {
     padding-inline-start: var(--step-0_5);
   }
 }

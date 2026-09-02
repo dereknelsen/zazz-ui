@@ -82,26 +82,26 @@
   initial-value: 0;
 }
 
-/* border-radius (physical corners, shorthand order TL TR BR BL) */
-@property --_radius-top-left {
+/* border-radius (logical corners: start-start / start-end / end-end / end-start) */
+@property --_radius-start-start {
   syntax: "<length-percentage>";
   inherits: false;
   initial-value: 0;
 }
 
-@property --_radius-top-right {
+@property --_radius-start-end {
   syntax: "<length-percentage>";
   inherits: false;
   initial-value: 0;
 }
 
-@property --_radius-bottom-right {
+@property --_radius-end-end {
   syntax: "<length-percentage>";
   inherits: false;
   initial-value: 0;
 }
 
-@property --_radius-bottom-left {
+@property --_radius-end-start {
   syntax: "<length-percentage>";
   inherits: false;
   initial-value: 0;
@@ -359,12 +359,12 @@
     text-align: center;
   }
 
-  :where(.text-left) {
-    text-align: left;
+  :where(.text-left, .text-start) {
+    text-align: start;
   }
 
-  :where(.text-right) {
-    text-align: right;
+  :where(.text-right, .text-end) {
+    text-align: end;
   }
 
   :where(.text-justify) {
@@ -1046,6 +1046,7 @@
     .grid-flow-row.grid-cols-11,
     .grid-flow-row.grid-cols-12
   ) {
+    --_grid-track-flow: auto-fill;
     --_grid-track-min: min(
       100%,
       max(
@@ -1054,7 +1055,7 @@
       )
     );
     grid-auto-flow: row;
-    grid-template-columns: repeat(auto-fill, minmax(var(--_grid-track-min), 1fr));
+    grid-template-columns: repeat(var(--_grid-track-flow), minmax(var(--_grid-track-min), 1fr));
   }
 
   :where(.col-span-1) {
@@ -1359,12 +1360,12 @@
       text-align: center;
     }
 
-    :where(.\@xs\:text-left) {
-      text-align: left;
+    :where(.\@xs\:text-left, .\@xs\:text-start) {
+      text-align: start;
     }
 
-    :where(.\@xs\:text-right) {
-      text-align: right;
+    :where(.\@xs\:text-right, .\@xs\:text-end) {
+      text-align: end;
     }
 
     :where(.\@xs\:text-justify) {
@@ -1724,12 +1725,12 @@
       text-align: center;
     }
 
-    :where(.\@sm\:text-left) {
-      text-align: left;
+    :where(.\@sm\:text-left, .\@sm\:text-start) {
+      text-align: start;
     }
 
-    :where(.\@sm\:text-right) {
-      text-align: right;
+    :where(.\@sm\:text-right, .\@sm\:text-end) {
+      text-align: end;
     }
 
     :where(.\@sm\:text-justify) {
@@ -2089,12 +2090,12 @@
       text-align: center;
     }
 
-    :where(.\@md\:text-left) {
-      text-align: left;
+    :where(.\@md\:text-left, .\@md\:text-start) {
+      text-align: start;
     }
 
-    :where(.\@md\:text-right) {
-      text-align: right;
+    :where(.\@md\:text-right, .\@md\:text-end) {
+      text-align: end;
     }
 
     :where(.\@md\:text-justify) {
@@ -2454,12 +2455,12 @@
       text-align: center;
     }
 
-    :where(.\@lg\:text-left) {
-      text-align: left;
+    :where(.\@lg\:text-left, .\@lg\:text-start) {
+      text-align: start;
     }
 
-    :where(.\@lg\:text-right) {
-      text-align: right;
+    :where(.\@lg\:text-right, .\@lg\:text-end) {
+      text-align: end;
     }
 
     :where(.\@lg\:text-justify) {
@@ -2819,12 +2820,12 @@
       text-align: center;
     }
 
-    :where(.\@xl\:text-left) {
-      text-align: left;
+    :where(.\@xl\:text-left, .\@xl\:text-start) {
+      text-align: start;
     }
 
-    :where(.\@xl\:text-right) {
-      text-align: right;
+    :where(.\@xl\:text-right, .\@xl\:text-end) {
+      text-align: end;
     }
 
     :where(.\@xl\:text-justify) {
@@ -3198,7 +3199,8 @@
   }
 
   /* ===========================================================================
-  POSITIONING UTILITIES
+  POSITIONING UTILITIES — logical inset properties; start- and end- classes are
+  equivalent aliases of left- and right-
   =========================================================================== */
 
   :where(.static) {
@@ -3222,141 +3224,123 @@
   }
 
   :where(.inset-0) {
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    inset: 0;
   }
 
   :where(.inset-xs) {
-    top: var(--gap-xs);
-    right: var(--gap-xs);
-    bottom: var(--gap-xs);
-    left: var(--gap-xs);
+    inset: var(--gap-xs);
   }
 
   :where(.inset-sm) {
-    top: var(--gap-sm);
-    right: var(--gap-sm);
-    bottom: var(--gap-sm);
-    left: var(--gap-sm);
+    inset: var(--gap-sm);
   }
 
   :where(.inset-md) {
-    top: var(--gap-md);
-    right: var(--gap-md);
-    bottom: var(--gap-md);
-    left: var(--gap-md);
+    inset: var(--gap-md);
   }
 
   :where(.inset-lg) {
-    top: var(--gap-lg);
-    right: var(--gap-lg);
-    bottom: var(--gap-lg);
-    left: var(--gap-lg);
+    inset: var(--gap-lg);
   }
 
   :where(.inset-xl) {
-    top: var(--gap-xl);
-    right: var(--gap-xl);
-    bottom: var(--gap-xl);
-    left: var(--gap-xl);
+    inset: var(--gap-xl);
   }
 
-  :where(.left-0) {
-    left: 0rem;
+  :where(.left-0, .start-0) {
+    inset-inline-start: 0rem;
   }
 
-  :where(.left-xs) {
-    left: var(--gap-xs);
+  :where(.left-xs, .start-xs) {
+    inset-inline-start: var(--gap-xs);
   }
 
-  :where(.left-sm) {
-    left: var(--gap-sm);
+  :where(.left-sm, .start-sm) {
+    inset-inline-start: var(--gap-sm);
   }
 
-  :where(.left-md) {
-    left: var(--gap-md);
+  :where(.left-md, .start-md) {
+    inset-inline-start: var(--gap-md);
   }
 
-  :where(.left-lg) {
-    left: var(--gap-lg);
+  :where(.left-lg, .start-lg) {
+    inset-inline-start: var(--gap-lg);
   }
 
-  :where(.left-xl) {
-    left: var(--gap-xl);
+  :where(.left-xl, .start-xl) {
+    inset-inline-start: var(--gap-xl);
   }
 
   :where(.top-0) {
-    top: 0rem;
+    inset-block-start: 0rem;
   }
 
   :where(.top-xs) {
-    top: var(--gap-xs);
+    inset-block-start: var(--gap-xs);
   }
 
   :where(.top-sm) {
-    top: var(--gap-sm);
+    inset-block-start: var(--gap-sm);
   }
 
   :where(.top-md) {
-    top: var(--gap-md);
+    inset-block-start: var(--gap-md);
   }
 
   :where(.top-lg) {
-    top: var(--gap-lg);
+    inset-block-start: var(--gap-lg);
   }
 
   :where(.top-xl) {
-    top: var(--gap-xl);
+    inset-block-start: var(--gap-xl);
   }
 
-  :where(.right-0) {
-    right: 0rem;
+  :where(.right-0, .end-0) {
+    inset-inline-end: 0rem;
   }
 
-  :where(.right-xs) {
-    right: var(--gap-xs);
+  :where(.right-xs, .end-xs) {
+    inset-inline-end: var(--gap-xs);
   }
 
-  :where(.right-sm) {
-    right: var(--gap-sm);
+  :where(.right-sm, .end-sm) {
+    inset-inline-end: var(--gap-sm);
   }
 
-  :where(.right-md) {
-    right: var(--gap-md);
+  :where(.right-md, .end-md) {
+    inset-inline-end: var(--gap-md);
   }
 
-  :where(.right-lg) {
-    right: var(--gap-lg);
+  :where(.right-lg, .end-lg) {
+    inset-inline-end: var(--gap-lg);
   }
 
-  :where(.right-xl) {
-    right: var(--gap-xl);
+  :where(.right-xl, .end-xl) {
+    inset-inline-end: var(--gap-xl);
   }
 
   :where(.bottom-0) {
-    bottom: 0rem;
+    inset-block-end: 0rem;
   }
 
   :where(.bottom-xs) {
-    bottom: var(--gap-xs);
+    inset-block-end: var(--gap-xs);
   }
 
   :where(.bottom-sm) {
-    bottom: var(--gap-sm);
+    inset-block-end: var(--gap-sm);
   }
 
   :where(.bottom-md) {
-    bottom: var(--gap-md);
+    inset-block-end: var(--gap-md);
   }
 
   :where(.bottom-lg) {
-    bottom: var(--gap-lg);
+    inset-block-end: var(--gap-lg);
   }
 
   :where(.bottom-xl) {
-    bottom: var(--gap-xl);
+    inset-block-end: var(--gap-xl);
   }
 
   /* ===========================================================================
@@ -3365,6 +3349,10 @@
 
   :where(.pointer-events-none) {
     pointer-events: none;
+  }
+
+  :where(.pointer-events-auto) {
+    pointer-events: auto;
   }
 
   :where(.pointer-cursor) {
@@ -3512,7 +3500,7 @@
   =========================================================================== */
 
   :where(.z-isolate) {
-    z-index: isolate;
+    isolation: isolate;
     /* Creates new stacking context */
   }
 
@@ -3783,126 +3771,127 @@
   }
 
   /* ===========================================================================
-  SIZE UTILITIES
+  SIZE UTILITIES — w/h map to inline-size/block-size; inline- and block- classes (and
+  min/max variants) are equivalent logical-name aliases
   =========================================================================== */
 
-  :where(.w-0) {
+  :where(.w-0, .inline-0) {
     inline-size: 0;
   }
 
-  :where(.w-px) {
+  :where(.w-px, .inline-px) {
     inline-size: 1px;
   }
 
-  :where(.w-auto) {
+  :where(.w-auto, .inline-auto) {
     inline-size: auto;
   }
 
-  :where(.w-full) {
+  :where(.w-full, .inline-full) {
     inline-size: 100%;
   }
 
-  :where(.w-xs) {
+  :where(.w-xs, .inline-xs) {
     inline-size: var(--step-3);
   }
 
-  :where(.w-sm) {
+  :where(.w-sm, .inline-sm) {
     inline-size: var(--gap-sm);
   }
 
-  :where(.w-md) {
+  :where(.w-md, .inline-md) {
     inline-size: var(--gap-md);
   }
 
-  :where(.w-lg) {
+  :where(.w-lg, .inline-lg) {
     inline-size: var(--gap-lg);
   }
 
-  :where(.w-xl) {
+  :where(.w-xl, .inline-xl) {
     inline-size: var(--gap-xl);
   }
 
-  :where(.w-screen) {
+  :where(.w-screen, .inline-screen) {
     inline-size: 100vi;
   }
 
-  :where(.w-screen-xs) {
+  :where(.w-screen-xs, .inline-screen-xs) {
     inline-size: var(--breakpoint-xs);
   }
 
-  :where(.w-screen-sm) {
+  :where(.w-screen-sm, .inline-screen-sm) {
     inline-size: var(--breakpoint-sm);
   }
 
-  :where(.w-screen-md) {
+  :where(.w-screen-md, .inline-screen-md) {
     inline-size: var(--breakpoint-md);
   }
 
-  :where(.w-screen-lg) {
+  :where(.w-screen-lg, .inline-screen-lg) {
     inline-size: var(--breakpoint-lg);
   }
 
-  :where(.w-screen-xl) {
+  :where(.w-screen-xl, .inline-screen-xl) {
     inline-size: var(--breakpoint-xl);
   }
 
-  :where(.h-0) {
+  :where(.h-0, .block-0) {
     block-size: 0;
   }
 
-  :where(.h-px) {
+  :where(.h-px, .block-px) {
     block-size: 1px;
   }
 
-  :where(.h-auto) {
+  :where(.h-auto, .block-auto) {
     block-size: auto;
   }
 
-  :where(.h-full) {
+  :where(.h-full, .block-full) {
     block-size: 100%;
   }
 
-  :where(.h-xs) {
+  :where(.h-xs, .block-xs) {
     block-size: var(--step-3);
   }
 
-  :where(.h-sm) {
+  :where(.h-sm, .block-sm) {
     block-size: var(--gap-sm);
   }
 
-  :where(.h-md) {
+  :where(.h-md, .block-md) {
     block-size: var(--gap-md);
   }
 
-  :where(.h-lg) {
+  :where(.h-lg, .block-lg) {
     block-size: var(--gap-lg);
   }
 
-  :where(.h-xl) {
+  :where(.h-xl, .block-xl) {
     block-size: var(--gap-xl);
   }
 
-  :where(.h-screen) {
+  :where(.h-screen, .block-screen) {
     block-size: 100svh;
   }
 
-  :where(.h-screen-xs) {
+  :where(.h-screen-xs, .block-screen-xs) {
     block-size: var(--breakpoint-xs);
   }
 
-  :where(.h-screen-sm) {
+  :where(.h-screen-sm, .block-screen-sm) {
     block-size: var(--breakpoint-sm);
   }
 
-  :where(.h-screen-md) {
+  :where(.h-screen-md, .block-screen-md) {
     block-size: var(--breakpoint-md);
   }
 
-  :where(.h-screen-lg) {
+  :where(.h-screen-lg, .block-screen-lg) {
     block-size: var(--breakpoint-lg);
   }
 
-  :where(.h-screen-xl) {
+  :where(.h-screen-xl, .block-screen-xl) {
     block-size: var(--breakpoint-xl);
   }
 
@@ -3976,187 +3965,187 @@
     block-size: var(--breakpoint-xl);
   }
 
-  :where(.max-w-0) {
+  :where(.max-w-0, .max-inline-0) {
     max-inline-size: 0;
   }
 
-  :where(.max-w-auto) {
+  :where(.max-w-auto, .max-inline-auto) {
     max-inline-size: auto;
   }
 
-  :where(.max-w-full) {
+  :where(.max-w-full, .max-inline-full) {
     max-inline-size: 100%;
   }
 
-  :where(.max-w-xs) {
+  :where(.max-w-xs, .max-inline-xs) {
     max-inline-size: var(--step-8);
   }
 
-  :where(.max-w-sm) {
+  :where(.max-w-sm, .max-inline-sm) {
     max-inline-size: var(--step-24);
   }
 
-  :where(.max-w-md) {
+  :where(.max-w-md, .max-inline-md) {
     max-inline-size: var(--step-36);
   }
 
-  :where(.max-w-lg) {
+  :where(.max-w-lg, .max-inline-lg) {
     max-inline-size: var(--step-80);
   }
 
-  :where(.max-w-xl) {
+  :where(.max-w-xl, .max-inline-xl) {
     max-inline-size: var(--step-96);
   }
 
-  :where(.max-w-screen) {
+  :where(.max-w-screen, .max-inline-screen) {
     max-inline-size: 100vi;
   }
 
-  :where(.max-w-screen-xs) {
+  :where(.max-w-screen-xs, .max-inline-screen-xs) {
     max-inline-size: var(--breakpoint-xs);
   }
 
-  :where(.max-w-screen-sm) {
+  :where(.max-w-screen-sm, .max-inline-screen-sm) {
     max-inline-size: var(--breakpoint-sm);
   }
 
-  :where(.max-w-screen-md) {
+  :where(.max-w-screen-md, .max-inline-screen-md) {
     max-inline-size: var(--breakpoint-md);
   }
 
-  :where(.max-w-screen-lg) {
+  :where(.max-w-screen-lg, .max-inline-screen-lg) {
     max-inline-size: var(--breakpoint-lg);
   }
 
-  :where(.max-w-screen-xl) {
+  :where(.max-w-screen-xl, .max-inline-screen-xl) {
     max-inline-size: var(--breakpoint-xl);
   }
 
-  :where(.max-h-0) {
+  :where(.max-h-0, .max-block-0) {
     max-block-size: 0;
   }
 
-  :where(.max-h-auto) {
+  :where(.max-h-auto, .max-block-auto) {
     max-block-size: auto;
   }
 
-  :where(.max-h-full) {
+  :where(.max-h-full, .max-block-full) {
     max-block-size: 100%;
   }
 
-  :where(.max-h-xs) {
+  :where(.max-h-xs, .max-block-xs) {
     max-block-size: var(--step-8);
   }
 
-  :where(.max-h-sm) {
+  :where(.max-h-sm, .max-block-sm) {
     max-block-size: var(--step-24);
   }
 
-  :where(.max-h-md) {
+  :where(.max-h-md, .max-block-md) {
     max-block-size: var(--step-56);
   }
 
-  :where(.max-h-lg) {
+  :where(.max-h-lg, .max-block-lg) {
     max-block-size: var(--step-72);
   }
 
-  :where(.max-h-xl) {
+  :where(.max-h-xl, .max-block-xl) {
     max-block-size: var(--step-96);
   }
 
-  :where(.max-h-screen) {
+  :where(.max-h-screen, .max-block-screen) {
     max-block-size: 100svh;
   }
 
-  :where(.max-h-screen-xs) {
+  :where(.max-h-screen-xs, .max-block-screen-xs) {
     max-block-size: var(--breakpoint-xs);
   }
 
-  :where(.max-h-screen-sm) {
+  :where(.max-h-screen-sm, .max-block-screen-sm) {
     max-block-size: var(--breakpoint-sm);
   }
 
-  :where(.max-h-screen-md) {
+  :where(.max-h-screen-md, .max-block-screen-md) {
     max-block-size: var(--breakpoint-md);
   }
 
-  :where(.max-h-screen-lg) {
+  :where(.max-h-screen-lg, .max-block-screen-lg) {
     max-block-size: var(--breakpoint-lg);
   }
 
-  :where(.max-h-screen-xl) {
+  :where(.max-h-screen-xl, .max-block-screen-xl) {
     max-block-size: var(--breakpoint-xl);
   }
 
-  :where(.min-w-0) {
+  :where(.min-w-0, .min-inline-0) {
     min-inline-size: 0;
   }
 
-  :where(.min-w-auto) {
+  :where(.min-w-auto, .min-inline-auto) {
     min-inline-size: auto;
   }
 
-  :where(.min-w-full) {
+  :where(.min-w-full, .min-inline-full) {
     min-inline-size: 100%;
   }
 
-  :where(.min-w-screen) {
+  :where(.min-w-screen, .min-inline-screen) {
     min-inline-size: 100vi;
   }
 
-  :where(.min-w-screen-xs) {
+  :where(.min-w-screen-xs, .min-inline-screen-xs) {
     min-inline-size: var(--breakpoint-xs);
   }
 
-  :where(.min-w-screen-sm) {
+  :where(.min-w-screen-sm, .min-inline-screen-sm) {
     min-inline-size: var(--breakpoint-sm);
   }
 
-  :where(.min-w-screen-md) {
+  :where(.min-w-screen-md, .min-inline-screen-md) {
     min-inline-size: var(--breakpoint-md);
   }
 
-  :where(.min-w-screen-lg) {
+  :where(.min-w-screen-lg, .min-inline-screen-lg) {
     min-inline-size: var(--breakpoint-lg);
   }
 
-  :where(.min-w-screen-xl) {
+  :where(.min-w-screen-xl, .min-inline-screen-xl) {
     min-inline-size: var(--breakpoint-xl);
   }
 
-  :where(.min-h-0) {
+  :where(.min-h-0, .min-block-0) {
     min-block-size: 0;
   }
 
-  :where(.min-h-auto) {
+  :where(.min-h-auto, .min-block-auto) {
     min-block-size: auto;
   }
 
-  :where(.min-h-full) {
+  :where(.min-h-full, .min-block-full) {
     min-block-size: 100%;
   }
 
-  :where(.min-h-screen) {
+  :where(.min-h-screen, .min-block-screen) {
     min-block-size: 100svh;
   }
 
-  :where(.min-h-screen-xs) {
+  :where(.min-h-screen-xs, .min-block-screen-xs) {
     min-block-size: var(--breakpoint-xs);
   }
 
-  :where(.min-h-screen-sm) {
+  :where(.min-h-screen-sm, .min-block-screen-sm) {
     min-block-size: var(--breakpoint-sm);
   }
 
-  :where(.min-h-screen-md) {
+  :where(.min-h-screen-md, .min-block-screen-md) {
     min-block-size: var(--breakpoint-md);
   }
 
-  :where(.min-h-screen-lg) {
+  :where(.min-h-screen-lg, .min-block-screen-lg) {
     min-block-size: var(--breakpoint-lg);
   }
 
-  :where(.min-h-screen-xl) {
+  :where(.min-h-screen-xl, .min-block-screen-xl) {
     min-block-size: var(--breakpoint-xl);
   }
 
@@ -4285,7 +4274,7 @@
   }
 
   /* ===========================================================================
-  PADDING UTILITIES — physical sides, logical axes (px/py)
+  PADDING UTILITIES — logical sides & axes (pl/ps, pr/pe, px/py)
   =========================================================================== */
 
   /* Composing rules — emitted once per axis, only for elements that use a
@@ -4295,11 +4284,11 @@
     padding-inline: var(--_padding-inline-start) var(--_padding-inline-end);
   }
 
-  :where([class*="pl-"]) {
+  :where([class*="pl-"], [class^="ps-"], [class*=" ps-"]) {
     padding-inline-start: var(--_padding-inline-start);
   }
 
-  :where([class*="pr-"]) {
+  :where([class*="pr-"], [class^="pe-"], [class*=" pe-"]) {
     padding-inline-end: var(--_padding-inline-end);
   }
 
@@ -4317,7 +4306,8 @@
 
   /* Setters — all-sides → axes → sides, so the more specific utility wins via
      source order (e.g. `p-md pl-0` → inline-start 0, rest md). pt/pr/pb/pl map
-     to logical edges (block-start/inline-end/block-end/inline-start). */
+     to logical edges (block-start/inline-end/block-end/inline-start); ps/pe are
+     equivalent inline-start/inline-end aliases of pl/pr. */
   :where(.p-0) {
     --_padding-inline-start: 0;
     --_padding-inline-end: 0;
@@ -4444,27 +4434,27 @@
     --_padding-block-start: var(--gap-xl);
   }
 
-  :where(.pr-0) {
+  :where(.pr-0, .pe-0) {
     --_padding-inline-end: 0;
   }
 
-  :where(.pr-xs) {
+  :where(.pr-xs, .pe-xs) {
     --_padding-inline-end: var(--gap-xs);
   }
 
-  :where(.pr-sm) {
+  :where(.pr-sm, .pe-sm) {
     --_padding-inline-end: var(--gap-sm);
   }
 
-  :where(.pr-md) {
+  :where(.pr-md, .pe-md) {
     --_padding-inline-end: var(--gap-md);
   }
 
-  :where(.pr-lg) {
+  :where(.pr-lg, .pe-lg) {
     --_padding-inline-end: var(--gap-lg);
   }
 
-  :where(.pr-xl) {
+  :where(.pr-xl, .pe-xl) {
     --_padding-inline-end: var(--gap-xl);
   }
 
@@ -4492,32 +4482,32 @@
     --_padding-block-end: var(--gap-xl);
   }
 
-  :where(.pl-0) {
+  :where(.pl-0, .ps-0) {
     --_padding-inline-start: 0;
   }
 
-  :where(.pl-xs) {
+  :where(.pl-xs, .ps-xs) {
     --_padding-inline-start: var(--gap-xs);
   }
 
-  :where(.pl-sm) {
+  :where(.pl-sm, .ps-sm) {
     --_padding-inline-start: var(--gap-sm);
   }
 
-  :where(.pl-md) {
+  :where(.pl-md, .ps-md) {
     --_padding-inline-start: var(--gap-md);
   }
 
-  :where(.pl-lg) {
+  :where(.pl-lg, .ps-lg) {
     --_padding-inline-start: var(--gap-lg);
   }
 
-  :where(.pl-xl) {
+  :where(.pl-xl, .ps-xl) {
     --_padding-inline-start: var(--gap-xl);
   }
 
   /* ===========================================================================
-  MARGIN UTILITIES — physical sides, logical axes (mx/my)
+  MARGIN UTILITIES — logical sides & axes (ml/ms, mr/me, mx/my)
   =========================================================================== */
 
   /* Composing rules — one per axis. The substring triggers also catch negative
@@ -4533,16 +4523,24 @@
     [class*="m-xl"],
     [class*="mx-"],
     [class*="ml-"],
-    [class*="mr-"]
+    [class*="mr-"],
+    [class^="ms-"],
+    [class*=" ms-"],
+    [class^="me-"],
+    [class*=" me-"],
+    [class^="-ms-"],
+    [class*=" -ms-"],
+    [class^="-me-"],
+    [class*=" -me-"]
   ) {
     margin-inline: var(--_margin-inline-start) var(--_margin-inline-end);
   }
 
-  :where([class*="ml-"]) {
+  :where([class*="ml-"], [class^="ms-"], [class*=" ms-"], [class^="-ms-"], [class*=" -ms-"]) {
     margin-inline-start: var(--_margin-inline-start);
   }
 
-  :where([class*="mr-"]) {
+  :where([class*="mr-"], [class^="me-"], [class*=" me-"], [class^="-me-"], [class*=" -me-"]) {
     margin-inline-end: var(--_margin-inline-end);
   }
 
@@ -4566,7 +4564,7 @@
     margin-block-end: var(--_margin-block-end);
   }
 
-  /* Setters — all-sides → axes → sides. mt/mr/mb/ml map to logical edges. */
+  /* Setters — all-sides → axes → sides. mt/mr/mb/ml map to logical edges; ms/me are equivalent aliases of ml/mr. */
   :where(.m-0) {
     --_margin-inline-start: 0;
     --_margin-inline-end: 0;
@@ -4707,31 +4705,31 @@
     --_margin-block-start: auto;
   }
 
-  :where(.mr-0) {
+  :where(.mr-0, .me-0) {
     --_margin-inline-end: 0;
   }
 
-  :where(.mr-xs) {
+  :where(.mr-xs, .me-xs) {
     --_margin-inline-end: var(--gap-xs);
   }
 
-  :where(.mr-sm) {
+  :where(.mr-sm, .me-sm) {
     --_margin-inline-end: var(--gap-sm);
   }
 
-  :where(.mr-md) {
+  :where(.mr-md, .me-md) {
     --_margin-inline-end: var(--gap-md);
   }
 
-  :where(.mr-lg) {
+  :where(.mr-lg, .me-lg) {
     --_margin-inline-end: var(--gap-lg);
   }
 
-  :where(.mr-xl) {
+  :where(.mr-xl, .me-xl) {
     --_margin-inline-end: var(--gap-xl);
   }
 
-  :where(.mr-auto) {
+  :where(.mr-auto, .me-auto) {
     --_margin-inline-end: auto;
   }
 
@@ -4763,31 +4761,31 @@
     --_margin-block-end: auto;
   }
 
-  :where(.ml-0) {
+  :where(.ml-0, .ms-0) {
     --_margin-inline-start: 0;
   }
 
-  :where(.ml-xs) {
+  :where(.ml-xs, .ms-xs) {
     --_margin-inline-start: var(--gap-xs);
   }
 
-  :where(.ml-sm) {
+  :where(.ml-sm, .ms-sm) {
     --_margin-inline-start: var(--gap-sm);
   }
 
-  :where(.ml-md) {
+  :where(.ml-md, .ms-md) {
     --_margin-inline-start: var(--gap-md);
   }
 
-  :where(.ml-lg) {
+  :where(.ml-lg, .ms-lg) {
     --_margin-inline-start: var(--gap-lg);
   }
 
-  :where(.ml-xl) {
+  :where(.ml-xl, .ms-xl) {
     --_margin-inline-start: var(--gap-xl);
   }
 
-  :where(.ml-auto) {
+  :where(.ml-auto, .ms-auto) {
     --_margin-inline-start: auto;
   }
 
@@ -4816,7 +4814,7 @@
     --_margin-block-start: calc(var(--gap-xs) * -1);
   }
 
-  :where(.-mr-xs) {
+  :where(.-mr-xs, .-me-xs) {
     --_margin-inline-end: calc(var(--gap-xs) * -1);
   }
 
@@ -4824,7 +4822,7 @@
     --_margin-block-end: calc(var(--gap-xs) * -1);
   }
 
-  :where(.-ml-xs) {
+  :where(.-ml-xs, .-ms-xs) {
     --_margin-inline-start: calc(var(--gap-xs) * -1);
   }
 
@@ -4849,7 +4847,7 @@
     --_margin-block-start: calc(var(--gap-sm) * -1);
   }
 
-  :where(.-mr-sm) {
+  :where(.-mr-sm, .-me-sm) {
     --_margin-inline-end: calc(var(--gap-sm) * -1);
   }
 
@@ -4857,7 +4855,7 @@
     --_margin-block-end: calc(var(--gap-sm) * -1);
   }
 
-  :where(.-ml-sm) {
+  :where(.-ml-sm, .-ms-sm) {
     --_margin-inline-start: calc(var(--gap-sm) * -1);
   }
 
@@ -4882,7 +4880,7 @@
     --_margin-block-start: calc(var(--gap-md) * -1);
   }
 
-  :where(.-mr-md) {
+  :where(.-mr-md, .-me-md) {
     --_margin-inline-end: calc(var(--gap-md) * -1);
   }
 
@@ -4890,7 +4888,7 @@
     --_margin-block-end: calc(var(--gap-md) * -1);
   }
 
-  :where(.-ml-md) {
+  :where(.-ml-md, .-ms-md) {
     --_margin-inline-start: calc(var(--gap-md) * -1);
   }
 
@@ -4915,7 +4913,7 @@
     --_margin-block-start: calc(var(--gap-lg) * -1);
   }
 
-  :where(.-mr-lg) {
+  :where(.-mr-lg, .-me-lg) {
     --_margin-inline-end: calc(var(--gap-lg) * -1);
   }
 
@@ -4923,7 +4921,7 @@
     --_margin-block-end: calc(var(--gap-lg) * -1);
   }
 
-  :where(.-ml-lg) {
+  :where(.-ml-lg, .-ms-lg) {
     --_margin-inline-start: calc(var(--gap-lg) * -1);
   }
 
@@ -4948,7 +4946,7 @@
     --_margin-block-start: calc(var(--gap-xl) * -1);
   }
 
-  :where(.-mr-xl) {
+  :where(.-mr-xl, .-me-xl) {
     --_margin-inline-end: calc(var(--gap-xl) * -1);
   }
 
@@ -4956,7 +4954,7 @@
     --_margin-block-end: calc(var(--gap-xl) * -1);
   }
 
-  :where(.-ml-xl) {
+  :where(.-ml-xl, .-ms-xl) {
     --_margin-inline-start: calc(var(--gap-xl) * -1);
   }
 
@@ -4964,7 +4962,7 @@
   BORDER RADIUS UTILITIES
   =========================================================================== */
 
-  /* Composing rules — one per physical corner, triggered only by classes that
+  /* Composing rules — one per logical corner, triggered only by classes that
      affect that corner. A corner you don't touch is left intact (e.g.
      `rounded-b-0` flattens the bottom and keeps a component's top radius). */
   :where(
@@ -4977,9 +4975,11 @@
     .rounded-full,
     [class*="rounded-t-"],
     [class*="rounded-l-"],
-    [class*="rounded-tl-"]
+    [class*="rounded-tl-"],
+    [class*="rounded-s-"],
+    [class*="rounded-ss-"]
   ) {
-    border-top-left-radius: var(--_radius-top-left);
+    border-start-start-radius: var(--_radius-start-start);
   }
 
   :where(
@@ -4992,9 +4992,11 @@
     .rounded-full,
     [class*="rounded-t-"],
     [class*="rounded-r-"],
-    [class*="rounded-tr-"]
+    [class*="rounded-tr-"],
+    [class*="rounded-e-"],
+    [class*="rounded-se-"]
   ) {
-    border-top-right-radius: var(--_radius-top-right);
+    border-start-end-radius: var(--_radius-start-end);
   }
 
   :where(
@@ -5007,9 +5009,11 @@
     .rounded-full,
     [class*="rounded-b-"],
     [class*="rounded-r-"],
-    [class*="rounded-br-"]
+    [class*="rounded-br-"],
+    [class*="rounded-e-"],
+    [class*="rounded-ee-"]
   ) {
-    border-bottom-right-radius: var(--_radius-bottom-right);
+    border-end-end-radius: var(--_radius-end-end);
   }
 
   :where(
@@ -5022,321 +5026,324 @@
     .rounded-full,
     [class*="rounded-b-"],
     [class*="rounded-l-"],
-    [class*="rounded-bl-"]
+    [class*="rounded-bl-"],
+    [class*="rounded-s-"],
+    [class*="rounded-es-"]
   ) {
-    border-bottom-left-radius: var(--_radius-bottom-left);
+    border-end-start-radius: var(--_radius-end-start);
   }
 
   :where(.rounded-0) {
-    --_radius-top-left: 0px;
-    --_radius-top-right: 0px;
-    --_radius-bottom-right: 0px;
-    --_radius-bottom-left: 0px;
+    --_radius-start-start: 0px;
+    --_radius-start-end: 0px;
+    --_radius-end-end: 0px;
+    --_radius-end-start: 0px;
   }
 
   :where(.rounded-xs) {
-    --_radius-top-left: var(--radius-xs);
-    --_radius-top-right: var(--radius-xs);
-    --_radius-bottom-right: var(--radius-xs);
-    --_radius-bottom-left: var(--radius-xs);
+    --_radius-start-start: var(--radius-xs);
+    --_radius-start-end: var(--radius-xs);
+    --_radius-end-end: var(--radius-xs);
+    --_radius-end-start: var(--radius-xs);
   }
 
   :where(.rounded-sm) {
-    --_radius-top-left: var(--radius-sm);
-    --_radius-top-right: var(--radius-sm);
-    --_radius-bottom-right: var(--radius-sm);
-    --_radius-bottom-left: var(--radius-sm);
+    --_radius-start-start: var(--radius-sm);
+    --_radius-start-end: var(--radius-sm);
+    --_radius-end-end: var(--radius-sm);
+    --_radius-end-start: var(--radius-sm);
   }
 
   :where(.rounded-md) {
-    --_radius-top-left: var(--radius-md);
-    --_radius-top-right: var(--radius-md);
-    --_radius-bottom-right: var(--radius-md);
-    --_radius-bottom-left: var(--radius-md);
+    --_radius-start-start: var(--radius-md);
+    --_radius-start-end: var(--radius-md);
+    --_radius-end-end: var(--radius-md);
+    --_radius-end-start: var(--radius-md);
   }
 
   :where(.rounded-lg) {
-    --_radius-top-left: var(--radius-lg);
-    --_radius-top-right: var(--radius-lg);
-    --_radius-bottom-right: var(--radius-lg);
-    --_radius-bottom-left: var(--radius-lg);
+    --_radius-start-start: var(--radius-lg);
+    --_radius-start-end: var(--radius-lg);
+    --_radius-end-end: var(--radius-lg);
+    --_radius-end-start: var(--radius-lg);
   }
 
   :where(.rounded-xl) {
-    --_radius-top-left: var(--radius-xl);
-    --_radius-top-right: var(--radius-xl);
-    --_radius-bottom-right: var(--radius-xl);
-    --_radius-bottom-left: var(--radius-xl);
+    --_radius-start-start: var(--radius-xl);
+    --_radius-start-end: var(--radius-xl);
+    --_radius-end-end: var(--radius-xl);
+    --_radius-end-start: var(--radius-xl);
   }
 
   :where(.rounded-full) {
-    --_radius-top-left: var(--radius-full);
-    --_radius-top-right: var(--radius-full);
-    --_radius-bottom-right: var(--radius-full);
-    --_radius-bottom-left: var(--radius-full);
+    --_radius-start-start: var(--radius-full);
+    --_radius-start-end: var(--radius-full);
+    --_radius-end-end: var(--radius-full);
+    --_radius-end-start: var(--radius-full);
   }
 
-  :where(.rounded-tl-0) {
-    --_radius-top-left: 0px;
+  :where(.rounded-tl-0, .rounded-ss-0) {
+    --_radius-start-start: 0px;
   }
 
-  :where(.rounded-tl-xs) {
-    --_radius-top-left: var(--radius-xs);
+  :where(.rounded-tl-xs, .rounded-ss-xs) {
+    --_radius-start-start: var(--radius-xs);
   }
 
-  :where(.rounded-tl-sm) {
-    --_radius-top-left: var(--radius-sm);
+  :where(.rounded-tl-sm, .rounded-ss-sm) {
+    --_radius-start-start: var(--radius-sm);
   }
 
-  :where(.rounded-tl-md) {
-    --_radius-top-left: var(--radius-md);
+  :where(.rounded-tl-md, .rounded-ss-md) {
+    --_radius-start-start: var(--radius-md);
   }
 
-  :where(.rounded-tl-lg) {
-    --_radius-top-left: var(--radius-lg);
+  :where(.rounded-tl-lg, .rounded-ss-lg) {
+    --_radius-start-start: var(--radius-lg);
   }
 
-  :where(.rounded-tl-xl) {
-    --_radius-top-left: var(--radius-xl);
+  :where(.rounded-tl-xl, .rounded-ss-xl) {
+    --_radius-start-start: var(--radius-xl);
   }
 
-  :where(.rounded-tl-full) {
-    --_radius-top-left: var(--radius-full);
+  :where(.rounded-tl-full, .rounded-ss-full) {
+    --_radius-start-start: var(--radius-full);
   }
 
-  :where(.rounded-tr-0) {
-    --_radius-top-right: 0;
+  :where(.rounded-tr-0, .rounded-se-0) {
+    --_radius-start-end: 0;
   }
 
-  :where(.rounded-tr-xs) {
-    --_radius-top-right: var(--radius-xs);
+  :where(.rounded-tr-xs, .rounded-se-xs) {
+    --_radius-start-end: var(--radius-xs);
   }
 
-  :where(.rounded-tr-sm) {
-    --_radius-top-right: var(--radius-sm);
+  :where(.rounded-tr-sm, .rounded-se-sm) {
+    --_radius-start-end: var(--radius-sm);
   }
 
-  :where(.rounded-tr-md) {
-    --_radius-top-right: var(--radius-md);
+  :where(.rounded-tr-md, .rounded-se-md) {
+    --_radius-start-end: var(--radius-md);
   }
 
-  :where(.rounded-tr-lg) {
-    --_radius-top-right: var(--radius-lg);
+  :where(.rounded-tr-lg, .rounded-se-lg) {
+    --_radius-start-end: var(--radius-lg);
   }
 
-  :where(.rounded-tr-xl) {
-    --_radius-top-right: var(--radius-xl);
+  :where(.rounded-tr-xl, .rounded-se-xl) {
+    --_radius-start-end: var(--radius-xl);
   }
 
-  :where(.rounded-tr-full) {
-    --_radius-top-right: var(--radius-full);
+  :where(.rounded-tr-full, .rounded-se-full) {
+    --_radius-start-end: var(--radius-full);
   }
 
-  :where(.rounded-bl-0) {
-    --_radius-bottom-left: 0;
+  :where(.rounded-bl-0, .rounded-es-0) {
+    --_radius-end-start: 0;
   }
 
-  :where(.rounded-bl-xs) {
-    --_radius-bottom-left: var(--radius-xs);
+  :where(.rounded-bl-xs, .rounded-es-xs) {
+    --_radius-end-start: var(--radius-xs);
   }
 
-  :where(.rounded-bl-sm) {
-    --_radius-bottom-left: var(--radius-sm);
+  :where(.rounded-bl-sm, .rounded-es-sm) {
+    --_radius-end-start: var(--radius-sm);
   }
 
-  :where(.rounded-bl-md) {
-    --_radius-bottom-left: var(--radius-md);
+  :where(.rounded-bl-md, .rounded-es-md) {
+    --_radius-end-start: var(--radius-md);
   }
 
-  :where(.rounded-bl-lg) {
-    --_radius-bottom-left: var(--radius-lg);
+  :where(.rounded-bl-lg, .rounded-es-lg) {
+    --_radius-end-start: var(--radius-lg);
   }
 
-  :where(.rounded-bl-xl) {
-    --_radius-bottom-left: var(--radius-xl);
+  :where(.rounded-bl-xl, .rounded-es-xl) {
+    --_radius-end-start: var(--radius-xl);
   }
 
-  :where(.rounded-bl-full) {
-    --_radius-bottom-left: var(--radius-full);
+  :where(.rounded-bl-full, .rounded-es-full) {
+    --_radius-end-start: var(--radius-full);
   }
 
-  :where(.rounded-br-0) {
-    --_radius-bottom-right: 0;
+  :where(.rounded-br-0, .rounded-ee-0) {
+    --_radius-end-end: 0;
   }
 
-  :where(.rounded-br-xs) {
-    --_radius-bottom-right: var(--radius-xs);
+  :where(.rounded-br-xs, .rounded-ee-xs) {
+    --_radius-end-end: var(--radius-xs);
   }
 
-  :where(.rounded-br-sm) {
-    --_radius-bottom-right: var(--radius-sm);
+  :where(.rounded-br-sm, .rounded-ee-sm) {
+    --_radius-end-end: var(--radius-sm);
   }
 
-  :where(.rounded-br-md) {
-    --_radius-bottom-right: var(--radius-md);
+  :where(.rounded-br-md, .rounded-ee-md) {
+    --_radius-end-end: var(--radius-md);
   }
 
-  :where(.rounded-br-lg) {
-    --_radius-bottom-right: var(--radius-lg);
+  :where(.rounded-br-lg, .rounded-ee-lg) {
+    --_radius-end-end: var(--radius-lg);
   }
 
-  :where(.rounded-br-xl) {
-    --_radius-bottom-right: var(--radius-xl);
+  :where(.rounded-br-xl, .rounded-ee-xl) {
+    --_radius-end-end: var(--radius-xl);
   }
 
-  :where(.rounded-br-full) {
-    --_radius-bottom-right: var(--radius-full);
+  :where(.rounded-br-full, .rounded-ee-full) {
+    --_radius-end-end: var(--radius-full);
   }
 
-  :where(.rounded-l-0) {
-    --_radius-top-left: 0px;
-    --_radius-bottom-left: 0px;
+  :where(.rounded-l-0, .rounded-s-0) {
+    --_radius-start-start: 0px;
+    --_radius-end-start: 0px;
   }
 
-  :where(.rounded-l-xs) {
-    --_radius-top-left: var(--radius-xs);
-    --_radius-bottom-left: var(--radius-xs);
+  :where(.rounded-l-xs, .rounded-s-xs) {
+    --_radius-start-start: var(--radius-xs);
+    --_radius-end-start: var(--radius-xs);
   }
 
-  :where(.rounded-l-sm) {
-    --_radius-top-left: var(--radius-sm);
-    --_radius-bottom-left: var(--radius-sm);
+  :where(.rounded-l-sm, .rounded-s-sm) {
+    --_radius-start-start: var(--radius-sm);
+    --_radius-end-start: var(--radius-sm);
   }
 
-  :where(.rounded-l-md) {
-    --_radius-top-left: var(--radius-md);
-    --_radius-bottom-left: var(--radius-md);
+  :where(.rounded-l-md, .rounded-s-md) {
+    --_radius-start-start: var(--radius-md);
+    --_radius-end-start: var(--radius-md);
   }
 
-  :where(.rounded-l-lg) {
-    --_radius-top-left: var(--radius-lg);
-    --_radius-bottom-left: var(--radius-lg);
+  :where(.rounded-l-lg, .rounded-s-lg) {
+    --_radius-start-start: var(--radius-lg);
+    --_radius-end-start: var(--radius-lg);
   }
 
-  :where(.rounded-l-xl) {
-    --_radius-top-left: var(--radius-xl);
-    --_radius-bottom-left: var(--radius-xl);
+  :where(.rounded-l-xl, .rounded-s-xl) {
+    --_radius-start-start: var(--radius-xl);
+    --_radius-end-start: var(--radius-xl);
   }
 
-  :where(.rounded-l-full) {
-    --_radius-top-left: var(--radius-full);
-    --_radius-bottom-left: var(--radius-full);
+  :where(.rounded-l-full, .rounded-s-full) {
+    --_radius-start-start: var(--radius-full);
+    --_radius-end-start: var(--radius-full);
   }
 
-  :where(.rounded-r-0) {
-    --_radius-top-right: 0px;
-    --_radius-bottom-right: 0px;
+  :where(.rounded-r-0, .rounded-e-0) {
+    --_radius-start-end: 0px;
+    --_radius-end-end: 0px;
   }
 
-  :where(.rounded-r-xs) {
-    --_radius-top-right: var(--radius-xs);
-    --_radius-bottom-right: var(--radius-xs);
+  :where(.rounded-r-xs, .rounded-e-xs) {
+    --_radius-start-end: var(--radius-xs);
+    --_radius-end-end: var(--radius-xs);
   }
 
-  :where(.rounded-r-sm) {
-    --_radius-top-right: var(--radius-sm);
-    --_radius-bottom-right: var(--radius-sm);
+  :where(.rounded-r-sm, .rounded-e-sm) {
+    --_radius-start-end: var(--radius-sm);
+    --_radius-end-end: var(--radius-sm);
   }
 
-  :where(.rounded-r-md) {
-    --_radius-top-right: var(--radius-md);
-    --_radius-bottom-right: var(--radius-md);
+  :where(.rounded-r-md, .rounded-e-md) {
+    --_radius-start-end: var(--radius-md);
+    --_radius-end-end: var(--radius-md);
   }
 
-  :where(.rounded-r-lg) {
-    --_radius-top-right: var(--radius-lg);
-    --_radius-bottom-right: var(--radius-lg);
+  :where(.rounded-r-lg, .rounded-e-lg) {
+    --_radius-start-end: var(--radius-lg);
+    --_radius-end-end: var(--radius-lg);
   }
 
-  :where(.rounded-r-xl) {
-    --_radius-top-right: var(--radius-xl);
-    --_radius-bottom-right: var(--radius-xl);
+  :where(.rounded-r-xl, .rounded-e-xl) {
+    --_radius-start-end: var(--radius-xl);
+    --_radius-end-end: var(--radius-xl);
   }
 
-  :where(.rounded-r-full) {
-    --_radius-top-right: var(--radius-full);
-    --_radius-bottom-right: var(--radius-full);
+  :where(.rounded-r-full, .rounded-e-full) {
+    --_radius-start-end: var(--radius-full);
+    --_radius-end-end: var(--radius-full);
   }
 
   :where(.rounded-t-0) {
-    --_radius-top-left: 0px;
-    --_radius-top-right: 0px;
+    --_radius-start-start: 0px;
+    --_radius-start-end: 0px;
   }
 
   :where(.rounded-t-xs) {
-    --_radius-top-left: var(--radius-xs);
-    --_radius-top-right: var(--radius-xs);
+    --_radius-start-start: var(--radius-xs);
+    --_radius-start-end: var(--radius-xs);
   }
 
   :where(.rounded-t-sm) {
-    --_radius-top-left: var(--radius-sm);
-    --_radius-top-right: var(--radius-sm);
+    --_radius-start-start: var(--radius-sm);
+    --_radius-start-end: var(--radius-sm);
   }
 
   :where(.rounded-t-md) {
-    --_radius-top-left: var(--radius-md);
-    --_radius-top-right: var(--radius-md);
+    --_radius-start-start: var(--radius-md);
+    --_radius-start-end: var(--radius-md);
   }
 
   :where(.rounded-t-lg) {
-    --_radius-top-left: var(--radius-lg);
-    --_radius-top-right: var(--radius-lg);
+    --_radius-start-start: var(--radius-lg);
+    --_radius-start-end: var(--radius-lg);
   }
 
   :where(.rounded-t-xl) {
-    --_radius-top-left: var(--radius-xl);
-    --_radius-top-right: var(--radius-xl);
+    --_radius-start-start: var(--radius-xl);
+    --_radius-start-end: var(--radius-xl);
   }
 
   :where(.rounded-t-full) {
-    --_radius-top-left: var(--radius-full);
-    --_radius-top-right: var(--radius-full);
+    --_radius-start-start: var(--radius-full);
+    --_radius-start-end: var(--radius-full);
   }
 
   :where(.rounded-b-0) {
-    --_radius-bottom-left: 0px;
-    --_radius-bottom-right: 0px;
+    --_radius-end-start: 0px;
+    --_radius-end-end: 0px;
   }
 
   :where(.rounded-b-xs) {
-    --_radius-bottom-left: var(--radius-xs);
-    --_radius-bottom-right: var(--radius-xs);
+    --_radius-end-start: var(--radius-xs);
+    --_radius-end-end: var(--radius-xs);
   }
 
   :where(.rounded-b-sm) {
-    --_radius-bottom-left: var(--radius-sm);
-    --_radius-bottom-right: var(--radius-sm);
+    --_radius-end-start: var(--radius-sm);
+    --_radius-end-end: var(--radius-sm);
   }
 
   :where(.rounded-b-md) {
-    --_radius-bottom-left: var(--radius-md);
-    --_radius-bottom-right: var(--radius-md);
+    --_radius-end-start: var(--radius-md);
+    --_radius-end-end: var(--radius-md);
   }
 
   :where(.rounded-b-lg) {
-    --_radius-bottom-left: var(--radius-lg);
-    --_radius-bottom-right: var(--radius-lg);
+    --_radius-end-start: var(--radius-lg);
+    --_radius-end-end: var(--radius-lg);
   }
 
   :where(.rounded-b-xl) {
-    --_radius-bottom-left: var(--radius-xl);
-    --_radius-bottom-right: var(--radius-xl);
+    --_radius-end-start: var(--radius-xl);
+    --_radius-end-end: var(--radius-xl);
   }
 
   :where(.rounded-b-full) {
-    --_radius-bottom-left: var(--radius-full);
-    --_radius-bottom-right: var(--radius-full);
+    --_radius-end-start: var(--radius-full);
+    --_radius-end-end: var(--radius-full);
   }
 
   /* ===========================================================================
-  BORDER UTILITIES
+  BORDER UTILITIES — logical sides (border-s/e alias border-l/r), widths 1–4,
+  dividers between children (divide-x/y)
   =========================================================================== */
 
   /* Color indirection — `border-*` color classes set --_border-color; the
      border-drawing classes below read it through the alpha-multiply pattern
      (default --_border-alpha 1 = unchanged; `border-opacity-*` dims it). The
      `.border` class has no trailing `-`, so it's named explicitly here. */
-  :where([class*="border-"], .border) {
+  :where([class*="border-"], .border, .divide-x, .divide-y) {
     --_border-color: var(--border);
   }
 
@@ -5384,39 +5391,150 @@
     border: 1px solid oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
   }
 
-  :where(.border-l-none) {
-    border-left: none;
+  :where(.border-1) {
+    border: 1px solid oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-2) {
+    border: 2px solid oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-3) {
+    border: 3px solid oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-4) {
+    border: 4px solid oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  /* Dividers — draw a border on the trailing logical edge of every child but
+     the last. Children inherit --_border-color, so border color utilities on
+     the divided container recolor the dividers. */
+  :where(.divide-x > :not(:last-child)) {
+    border-inline-start-width: 0px;
+    border-inline-end: 1px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.divide-y > :not(:last-child)) {
+    border-block-start-width: 0px;
+    border-block-end: 1px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-l-none, .border-s-none) {
+    border-inline-start: none;
   }
 
   :where(.border-t-none) {
-    border-top: none;
+    border-block-start: none;
   }
 
-  :where(.border-r-none) {
-    border-right: none;
+  :where(.border-r-none, .border-e-none) {
+    border-inline-end: none;
   }
 
   :where(.border-b-none) {
-    border-bottom: none;
+    border-block-end: none;
   }
 
-  :where(.border-l) {
-    border-left: 1px solid
+  :where(.border-l, .border-s) {
+    border-inline-start: 1px solid
       oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
   }
 
   :where(.border-t) {
-    border-top: 1px solid
+    border-block-start: 1px solid
       oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
   }
 
-  :where(.border-r) {
-    border-right: 1px solid
+  :where(.border-r, .border-e) {
+    border-inline-end: 1px solid
       oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
   }
 
   :where(.border-b) {
-    border-bottom: 1px solid
+    border-block-end: 1px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-l-1, .border-s-1) {
+    border-inline-start: 1px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-l-2, .border-s-2) {
+    border-inline-start: 2px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-l-3, .border-s-3) {
+    border-inline-start: 3px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-l-4, .border-s-4) {
+    border-inline-start: 4px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-t-1) {
+    border-block-start: 1px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-t-2) {
+    border-block-start: 2px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-t-3) {
+    border-block-start: 3px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-t-4) {
+    border-block-start: 4px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-r-1, .border-e-1) {
+    border-inline-end: 1px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-r-2, .border-e-2) {
+    border-inline-end: 2px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-r-3, .border-e-3) {
+    border-inline-end: 3px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-r-4, .border-e-4) {
+    border-inline-end: 4px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-b-1) {
+    border-block-end: 1px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-b-2) {
+    border-block-end: 2px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-b-3) {
+    border-block-end: 3px solid
+      oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
+  }
+
+  :where(.border-b-4) {
+    border-block-end: 4px solid
       oklch(from var(--_border-color) l c h / calc(alpha * var(--_border-alpha, 1)));
   }
 

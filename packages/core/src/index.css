@@ -21,8 +21,13 @@
 @import "./base/_typography.css";
 @import "./base/_view-transitions.css";
 
-/* Legacy layer — import legacy stylesheets here, into the legacy layer */
-/* @import "./your-legacy.css" layer(legacy); */
+/* Vendors layer — third-party CSS that does not build on Zazz */
+/* @import "./some-library.css" layer(vendors); */
+
+/* Legacy layer — import whole legacy stylesheets into legacy.imports.
+   Never bare layer(legacy): un-sublayered rules would beat the migration
+   shims in legacy.migrations. */
+/* @import "./your-legacy.css" layer(legacy.imports); */
 
 /* Zazz primitives - UI omponents. */
 @import "./primitives/separator/separator.css";
@@ -69,5 +74,6 @@
 @import "./base/_utilities.css";
 @import "./base/_layout.css";
 
-/* Migrations layer - for legacy css overrides */
-/* @import "./migrations.css"; */
+/* Migration shims — translate legacy classes while markup is rewritten.
+   Beats all other legacy sublayers; Zazz still wins on migrated markup. */
+/* @import "./migrations.css" layer(legacy.migrations); */

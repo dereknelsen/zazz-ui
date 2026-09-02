@@ -9,7 +9,7 @@ Utilities in Zazz are atomic classes declared in `@layer zazz.utilities`. They o
 
 ## Rules
 
-1. **Layer precedence:** Layer order is `variables`, `reset`, `legacy`, `zazz.components`, `zazz.utilities`, `migrations`. Utilities override component styles without `!important`.
+1. **Layer precedence:** Layer order is `variables`, `reset`, `vendors`, `legacy.*`, `zazz.components`, `zazz.plugins`, `zazz.utilities`, `overrides`. Utilities override component and plugin styles without `!important`.
 2. **Zero specificity:** Each rule uses `:where(.utility) { ... }` with `(0,0,0)` specificity so custom selectors can override them easily.
 
 ## Utility families
@@ -32,23 +32,28 @@ Utilities in Zazz are atomic classes declared in `@layer zazz.utilities`. They o
 Padding, margin, radius, and color-alpha utilities use `@property`-registered variables with `inherits: false`. Setting an edge or channel on an element does not leak into child elements:
 
 ```css
-/* Shared composing rule */
-:where(.p-0, .p-xs, .p-sm, .p-md, .p-lg, .p-xl, [class*="px-"], [class*="pl-"], [class*="pr-"]) {
+/* Axis composing rule — all-sides and axis classes set the whole axis */
+:where(.p-0, .p-xs, .p-sm, .p-md, .p-lg, .p-xl, [class*="px-"]) {
   padding-inline: var(--_padding-inline-start) var(--_padding-inline-end);
 }
 
+/* Side classes compose only their own edge */
+:where([class*="pl-"], [class^="ps-"], [class*=" ps-"]) {
+  padding-inline-start: var(--_padding-inline-start);
+}
+
 /* Side utility sets only its target variable */
-:where(.pl-0) {
+:where(.pl-0, .ps-0) {
   --_padding-inline-start: 0;
 }
 ```
 
-| Variable                                                  | Syntax                        | Initial | Managed by                                            |
-| --------------------------------------------------------- | ----------------------------- | ------- | ----------------------------------------------------- |
-| `--_padding-{inline,block}-{start,end}`                   | `<length-percentage>`         | `0`     | `p-*`, `px-*`, `py-*`, `pt-*`, `pr-*`, `pb-*`, `pl-*` |
-| `--_margin-{inline,block}-{start,end}`                    | `<length-percentage> \| auto` | `0`     | `m-*`, `mx-*`, `my-*`, `mt-*`, `-m-*`, `mx-auto`      |
-| `--_radius-{top-left,top-right,bottom-right,bottom-left}` | `<length-percentage>`         | `0`     | `rounded-*`, `rounded-t-*`, `rounded-tl-*`            |
-| `--_text-alpha`, `--_background-alpha`, `--_border-alpha` | `<number>`                    | `1`     | `text-opacity-*`, `bg-opacity-*`, `border-opacity-*`  |
+| Variable                                                  | Syntax                        | Initial | Managed by                                                                                        |
+| --------------------------------------------------------- | ----------------------------- | ------- | ------------------------------------------------------------------------------------------------- |
+| `--_padding-{inline,block}-{start,end}`                   | `<length-percentage>`         | `0`     | `p-*`, `px-*`, `py-*`, sides `pt/pr/pb/pl-*` and aliases `ps/pe-*`                                |
+| `--_margin-{inline,block}-{start,end}`                    | `<length-percentage> \| auto` | `0`     | `m-*`, `mx-*`, `my-*`, sides `mt/mr/mb/ml-*` and aliases `ms/me-*`, negatives, `mx-auto`          |
+| `--_radius-{start-start,start-end,end-end,end-start}`     | `<length-percentage>`         | `0`     | `rounded-*`, edges `rounded-t/r/b/l-*` (+ `s`/`e`), corners `rounded-tl-*` etc. (+ `ss/se/ee/es`) |
+| `--_text-alpha`, `--_background-alpha`, `--_border-alpha` | `<number>`                    | `1`     | `text-opacity-*`, `bg-opacity-*`, `border-opacity-*`                                              |
 
 ### Inheriting coordination variables
 

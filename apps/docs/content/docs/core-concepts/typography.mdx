@@ -14,9 +14,9 @@ This decouples semantics from styling. You pick the heading level for the docume
 
 The exception is long-form content, where tags should just work. That's what `.ui-prose` is for, covered below.
 
-## One step, four tokens
+## One step, three tokens
 
-Every step of the type scale is four tokens that travel together: `--font-size-*`, `--font-weight-*`, `--leading-*`, and `--tracking-*`. A `.text-*` utility applies all four at once, plus the right font family:
+Every step of the type scale is three tokens that travel together: `--font-size-*`, `--leading-*`, and `--tracking-*`. Heading utilities (`.text-h6` to `.text-h1`, `.text-display`) apply all three plus the heading font family and semantic heading weight; body utilities (`.text-xs` to `.text-xl`) apply the three and inherit family and weight:
 
 ```html
 <span class="text-h2">Everything set together</span>
@@ -93,7 +93,7 @@ Three semantic aliases sit between the stacks and the rules: `--font-family-body
 }
 ```
 
-Load the font in your `<head>`, override the one token, and every `text-h*` and `text-display` on the site changes typeface while body text stays put. The `.font-sans`, `.font-serif`, and `.font-mono` utilities switch stacks per element; `.font-body`, `.font-heading`, and `.font-strong` are semantic weight-and-family shortcuts.
+Load the font in your `<head>`, override the one token, and every `text-h*` and `text-display` on the site changes typeface while body text stays put. The `.font-sans`, `.font-serif`, and `.font-mono` utilities switch stacks per element (`.font-serif` maps to `--font-heading`, so it only reads as serif once you repoint that token); `.font-body`, `.font-heading`, and `.font-strong` are semantic weight shortcuts — they set `font-weight` only.
 
 ## Retuning the scale
 

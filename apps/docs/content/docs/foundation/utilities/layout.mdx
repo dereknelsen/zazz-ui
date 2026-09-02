@@ -122,14 +122,16 @@ Add `data-variant="article"` to center content constrained by `ch` units:
 
 ### Insets and offsets
 
-| Class                      | Declaration                          |
-| -------------------------- | ------------------------------------ |
-| `inset-0`                  | `top/right/bottom/left: 0`           |
-| `inset-xs` to `inset-xl`   | all four edges = `var(--gap-{size})` |
-| `top-xs` to `top-xl`       | `top: var(--gap-{size})`             |
-| `right-xs` to `right-xl`   | `right: var(--gap-{size})`           |
-| `bottom-xs` to `bottom-xl` | `bottom: var(--gap-{size})`          |
-| `left-xs` to `left-xl`     | `left: var(--gap-{size})`            |
+Offsets use logical inset properties, so they follow the writing mode. `start-*` / `end-*` are equivalent aliases of `left-*` / `right-*`.
+
+| Class                                    | Declaration                             |
+| ---------------------------------------- | --------------------------------------- |
+| `inset-0`                                | `inset: 0`                              |
+| `inset-xs` to `inset-xl`                 | `inset: var(--gap-{size})`              |
+| `top-*` (`0`, `xs` to `xl`)              | `inset-block-start: var(--gap-{size})`  |
+| `bottom-*` (`0`, `xs` to `xl`)           | `inset-block-end: var(--gap-{size})`    |
+| `left-*` / `start-*` (`0`, `xs` to `xl`) | `inset-inline-start: var(--gap-{size})` |
+| `right-*` / `end-*` (`0`, `xs` to `xl`)  | `inset-inline-end: var(--gap-{size})`   |
 
 ```html
 <div class="relative">
@@ -149,7 +151,7 @@ Add `data-variant="article"` to center content constrained by `ch` units:
 | `overflow-auto`    | `overflow: auto`                                               |
 | `overflow-x-auto`  | `overflow-x: auto; overflow-y: clip`                           |
 | `overflow-y-auto`  | `overflow-y: auto; overflow-x: clip`                           |
-| `no-scrollbar`     | Hides scrollbar display while keeping scrollable functionality |
+| `scrollbar-none`   | Hides scrollbar display while keeping scrollable functionality |
 
 ## Stacking (z-index)
 

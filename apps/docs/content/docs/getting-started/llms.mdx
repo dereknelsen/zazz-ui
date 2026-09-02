@@ -39,11 +39,11 @@ Provide key reference files as context:
 
 ## Core rules in the skill
 
-- Use the four-layer cascade (`variables`, `reset`, `components`, `utilities`).
+- Use the cascade layers (`variables, reset, vendors, legacy, zazz, overrides`, with `components`, `plugins`, `utilities` nested inside `zazz`).
 - Use semantic tokens (`--primary`, `--gap-md`) over hardcoded pixel/hex values.
 - Apply variants through `data-*` attributes.
 - Use `light-dark()` for theme-aware colors.
-- Follow token naming conventions (`--{component}-{property}--{state}`).
+- Follow token naming conventions (`--ui-{component}-{property}--{state}`).
 - Match existing component file structure.
 
 ## Repository

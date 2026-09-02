@@ -6,12 +6,12 @@ description: Color in Zazz is role-first. Semantic roles adapt across light/dark
 Zazz structures color around **roles** (`primary`, `muted-foreground`, `card`) rather than static color values. Roles resolve through [`light-dark()`](/docs/core-concepts/dark-mode), making them theme-ready by default.
 
 ```html
-<div class="bg-card text-card-foreground border border-border p-md rounded-lg">
+<div class="bg-card text-card-foreground border p-md rounded-lg">
   <p class="text-muted-foreground">Role classes carry their own light/dark values.</p>
 </div>
 ```
 
-Every role ships `text-{role}`, `bg-{role}`, and `border-{role}` utilities.
+Every role ships `text-{role}` and `bg-{role}` utilities. `border-{role}` exists for the nine colorable roles (`primary`, `secondary`, `tertiary`, `muted`, `faded`, `info`, `success`, `warning`, `destructive`); a bare `border` uses the default `--border` color.
 
 ## Role reference
 
@@ -67,12 +67,14 @@ Zazz defines colors in [`oklch()`](https://developer.mozilla.org/en-US/docs/Web/
 
 ## Changing brand colors
 
-Update the `--primary` token on `:root`:
+Update the `--primary` token on `:root` with a `light-dark()` pair, so both schemes stay covered:
 
 ```css
 :root {
-  --primary: oklch(0.6 0.2 145);
+  --primary: light-dark(oklch(0.6 0.2 145), oklch(0.52 0.17 145));
 }
 ```
+
+A flat value (`--primary: oklch(0.6 0.2 145)`) also works but pins the same color in light and dark mode.
 
 See [Theme variables](/docs/foundation/variables) and [Extending Zazz](/docs/core-concepts/extending).

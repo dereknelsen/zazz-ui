@@ -11,21 +11,26 @@ Unlayered CSS rules beat all layered CSS rules regardless of selector specificit
 
 ## Step 1: Layer legacy CSS below Zazz
 
-Declare layer order in your entry stylesheet and assign legacy rules to `legacy`:
+Declare layer order in your entry stylesheet and import legacy rules into `legacy.imports`:
 
 ```css
 /* entry.css */
-@layer variables, reset, legacy, zazz, migrations;
+@layer variables, reset, vendors, legacy, zazz, overrides;
 
-@import "./legacy/app.css" layer(legacy);
+@layer legacy {
+  @layer imports, components, utilities, migrations;
+}
+
+@import "./legacy/app.css" layer(legacy.imports);
 @import "./zazz/index.css";
 ```
 
 Because `legacy` is ordered below `zazz`, Zazz component and utility rules take precedence where they overlap, while unstyled legacy components continue working.
 
 <Callout>
-  The `migrations` layer sits above `zazz.utilities`. Shims in this layer override native Zazz rules
-  during refactoring.
+  Import into `legacy.imports`, never bare `layer(legacy)` — rules imported directly into `legacy`
+  form an implicit final sublayer that would override your `legacy.migrations` shims. Shims beat all
+  other legacy CSS; anything that must beat Zazz itself belongs in `overrides`.
 </Callout>
 
 ## Step 2: Isolate regions with `@scope`
@@ -55,13 +60,13 @@ To reset an element tree back to browser default styles:
 
 Use `all: revert-layer` to drop to the previous cascade layer without stripping Zazz rules.
 
-## Step 4: Translate legacy classes in `migrations`
+## Step 4: Translate legacy classes in `legacy.migrations`
 
-Bridge legacy HTML before markup updates using translation shims in `@layer migrations`:
+Bridge legacy HTML before markup updates using translation shims in `@layer legacy.migrations`:
 
 ```css
 /* migrations.css */
-@layer migrations {
+@layer legacy.migrations {
   @scope (.app) to (.legacy-widget) {
     .btn-primary {
       --ui-button-background: var(--primary);
@@ -75,7 +80,7 @@ Delete each translation rule once markup is converted to native Zazz classes.
 
 ## Migration workflow
 
-1. **Layer:** Place existing CSS in `@layer legacy`.
+1. **Layer:** Place existing CSS in `@layer legacy.imports`.
 2. **Isolate:** Apply `@scope` boundaries between converted and legacy trees.
 3. **Reset:** Apply `all: revert-layer` on converted sections to remove legacy styles.
 4. **Translate and convert:** Add temporary shims in `migrations.css`, update markup to Zazz classes, then remove shims.

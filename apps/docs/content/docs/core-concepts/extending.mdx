@@ -19,7 +19,7 @@ Work down this list and stop at the first entry that fits:
 2. You want to change one instance: add utility classes, or set a component token inline on that element.
 3. You keep writing the same declaration in `style` attributes: promote it to a utility class.
 4. You keep building the same block of markup with the same cluster of utilities: promote it to a component class.
-5. Nothing above works and you need to win against the kit unconditionally: write an unlayered rule. This is the escape hatch, not the default.
+5. Nothing above works and you need to win against the kit: put the rule in `@layer overrides` — it beats every Zazz layer while staying structured. A truly unlayered rule still outranks even `overrides`; that's the escape hatch, not the default.
 
 The rest of this page covers each mechanism in the order you'll reach for them.
 
@@ -31,7 +31,7 @@ Global tokens live on `:root`, and components read them with `var()`, so reassig
 
 ```css
 :root {
-  --primary: oklch(0.6 0.2 145);
+  --primary: light-dark(oklch(0.6 0.2 145), oklch(0.52 0.17 145));
   --radius-md: 0;
   --gutters: var(--gap-lg);
 }
@@ -107,7 +107,7 @@ Some hooks default to another primitive's hooks rather than a global token. The 
 
 Border hooks on interactive controls come in parts — `-border-width`, `-border-style`, `-border-color` (plus `-border-color--hover` / `--focus`) — so you can thicken every control border with a single `--ui-field-border-width: 2px` without touching colors or styles.
 
-Each primitive's stylesheet declares its hooks in an `@layer variables` block at the top of the file, with the full list in the file's header comment. Tokens prefixed `--_` (like `--_bg`) are private internals; they can change in any release, so don't reach for them.
+Each primitive's stylesheet declares its hooks in an `@layer variables` block at the top of the file, with the full list in the file's header comment. Tokens prefixed `--_` (like `--_ring`) are private internals; they can change in any release, so don't reach for them.
 
 The same hooks work at smaller scopes. On a selector, they retheme a subtree; inline, they retheme one element:
 

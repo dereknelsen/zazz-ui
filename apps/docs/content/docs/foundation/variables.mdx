@@ -6,9 +6,9 @@ description: "Design tokens in Zazz: global tiers, semantic roles, metric scales
 Values in Zazz are CSS custom properties on `:root`. Components consume `var(--token)` without hardcoded values.
 
 ```css
-/* Update global brand color */
+/* Update global brand color — a light-dark() pair covers both schemes */
 :root {
-  --primary: oklch(0.6 0.2 145);
+  --primary: light-dark(oklch(0.6 0.2 145), oklch(0.52 0.17 145));
 }
 ```
 
@@ -34,7 +34,7 @@ Update tokens on `:root` to apply system-wide:
 ```css
 :root {
   --radius-md: 0;
-  --primary: oklch(0.55 0.18 264);
+  --primary: light-dark(oklch(0.55 0.18 264), oklch(0.62 0.15 264));
 }
 ```
 
@@ -61,10 +61,10 @@ Set tokens inline on a single element:
 - **Spacing:** Semantic `--gap-xs` to `--gap-xl` and fluid step scale `--step-0_5` to `--step-96`.
 - **Typography:** `--font-size-*`, `--font-weight-*`, `--leading-*`, and `--tracking-*`.
 - **Color:** Semantic roles and literal scales. See [Colors](/docs/core-concepts/colors).
-- **Radius:** `--radius-none` to `--radius-full`, scaled by `--radius-multiplier`.
+- **Radius:** `--radius-none` to `--radius-full`; the `xs`–`xl` steps scale with `--radius-multiplier` (`none` and `full` are literals).
 - **Shadow:** `--shadow-xs` to `--shadow-xl`.
 - **Layout:** `--breakpoint-xs` to `--breakpoint-xl`, `--gutters`, and reading measures `--article-xs` to `--article-xl`.
-- **Motion:** `--spring-easing`, `--spring-duration`, and `--default-transition-*`. Zeroed automatically when `prefers-reduced-motion` is active.
+- **Motion:** `--spring-easing`, `--spring-duration`, and `--default-transition-*`. The `--default-transition-*` pair is zeroed automatically when `prefers-reduced-motion` is active (the spring tokens keep their values).
 
 ## Token source files
 

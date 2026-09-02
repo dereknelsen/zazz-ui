@@ -46,16 +46,19 @@ Scripts expose an API on `window` and provide named exports for ES module consum
 
 | File                  | Global             | Exports                                                            |
 | --------------------- | ------------------ | ------------------------------------------------------------------ |
-| `utils.js`            | `window.Utils`     | `{ parseValue, parseDataAttributes }`                              |
+| `utils.js`            | `window.Utils`     | `{ Utils }` (namespace with `parseValue`, `parseDataAttributes`)   |
 | `signals.js`          | `window.Signals`   | `{ state, computed, effect }`                                      |
 | `reveal.js`           | `window.Reveal`    | `Reveal` class                                                     |
 | `zazz-element.js`     | _(none)_           | `ZazzElement` base, `defineZazzElement`, refresh registry          |
 | `dialog-lifecycle.js` | _(none)_           | Emits `zazz:dialog-open` / `zazz:dialog-close` on every `<dialog>` |
-| `embla.js`            | `window.EmblaInit` | `{ init, initRoot, addDotBtnsAndClickHandlers }`                   |
+| `embla.js`            | `window.EmblaInit` | `{ EmblaInit, setActiveIndex, parseCarouselPlugins }`              |
+| `hotkeys.js`          | _(none)_           | Hotkey binding helpers (see [Hotkeys](/docs/scripts/hotkeys))      |
+| `typeahead.js`        | _(none)_           | Typeahead matching used by select/combobox/command                 |
+| `command-score.js`    | _(none)_           | `commandScore` fuzzy-match scorer                                  |
 | `toaster.js`          | `window.Toaster`   | `Toaster` imperative API                                           |
 | `navigation.js`       | None               | Side-effect only                                                   |
 
-Web component scripts (`carousel.js`, `lightbox.js`, `password-group.js`, `tabs.js`, `toaster.js`) register custom elements automatically.
+Custom elements are registered automatically by eleven scripts: `carousel.js` (`<ui-carousel>`), `lightbox.js` (`<ui-lightbox>`), `password-group.js` (`<ui-password>`), `tabs.js` (`<ui-tabs>`), `toaster.js` (`<ui-toaster>`), `autocomplete.js` (`<ui-autocomplete>`), `combobox.js` (`<ui-combobox>`), `command.js` (`<ui-command>`), `menu.js` (`<ui-menu>`), `otp.js` (`<ui-otp>`), and `multiselect.js` (`<ui-multiselect>`).
 
 ## Auto-initialization
 
@@ -75,18 +78,21 @@ Initializers are idempotent and check element state (e.g. `data-carousel-init`) 
 
 The module graph resolves loading order automatically via `index.js`:
 
-| Script                | Imports                    | Notes                                            |
-| --------------------- | -------------------------- | ------------------------------------------------ |
-| `utils.js`            | None                       | Exposes `window.Utils`                           |
-| `signals.js`          | `signal-polyfill`          | Reactive state (`window.Signals`)                |
-| `reveal.js`           | None                       | Standalone viewport observer                     |
-| `dialog-lifecycle.js` | None                       | Owns `<dialog>` visibility; components subscribe |
-| `embla.js`            | `utils.js`, Embla packages | Embla packages resolve through the import map    |
-| `carousel.js`         | `embla.js`                 | `<ui-carousel>` custom element                   |
-| `lightbox.js`         | `carousel.js`              | `<ui-lightbox>` custom element                   |
-| `password-group.js`   | `signals.js`               | `<ui-password>` custom element                   |
-| `tabs.js`             | None                       | `<ui-tabs>` custom element                       |
-| `toaster.js`          | `signals.js`               | `<ui-toaster>` custom element                    |
-| `navigation.js`       | `zazz-element.js`          | Page transitions; refreshes swapped-in content   |
+| Script                | Imports                                             | Notes                                                  |
+| --------------------- | --------------------------------------------------- | ------------------------------------------------------ |
+| `utils.js`            | None                                                | Exposes `window.Utils`                                 |
+| `signals.js`          | `signal-polyfill`                                   | Reactive state (`window.Signals`)                      |
+| `reveal.js`           | `zazz-element.js`                                   | Viewport observer; registers with the refresh registry |
+| `dialog-lifecycle.js` | None                                                | Owns `<dialog>` visibility; components subscribe       |
+| `hotkeys.js`          | None                                                | Standalone                                             |
+| `command-score.js`    | None                                                | Standalone                                             |
+| `typeahead.js`        | `command-score.js`, `zazz-element.js`, `signals.js` | Shared by select/combobox/command                      |
+| `embla.js`            | `utils.js`, `zazz-element.js`, Embla packages       | Embla packages resolve through the import map          |
+| `carousel.js`         | `embla.js`, `zazz-element.js`                       | `<ui-carousel>` custom element                         |
+| `lightbox.js`         | `carousel.js`, `zazz-element.js`                    | `<ui-lightbox>` custom element                         |
+| `password-group.js`   | `signals.js`, `zazz-element.js`                     | `<ui-password>` custom element                         |
+| `tabs.js`             | `zazz-element.js`                                   | `<ui-tabs>` custom element                             |
+| `toaster.js`          | `signals.js`, `zazz-element.js`                     | `<ui-toaster>` custom element                          |
+| `navigation.js`       | `zazz-element.js`                                   | Page transitions; refreshes swapped-in content         |
 
 Ensure the import map appears in the DOM before `index.js`.

@@ -79,7 +79,7 @@
 
   @keyframes global-view-transition--old {
     to {
-      opacity: var(--view-transition-opacity--new);
+      opacity: var(--view-transition-opacity--old);
       transform: scale(var(--view-transition-scale--old))
         translate3d(var(--view-transition-translate--old));
     }
