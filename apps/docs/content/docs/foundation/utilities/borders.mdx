@@ -9,12 +9,29 @@ Border utilities handle border lines, styles, and per-corner border radius.
 
 ### Edges
 
-| Class                                                              | Result                 |
-| ------------------------------------------------------------------ | ---------------------- |
-| `border`                                                           | 1px solid on all sides |
-| `border-t`, `border-r`, `border-b`, `border-l`                     | 1px solid on that edge |
-| `border-none`                                                      | Removes all borders    |
-| `border-t-none`, `border-r-none`, `border-b-none`, `border-l-none` | Removes that edge      |
+Edge classes map to logical border properties (`border-inline-start`, `border-block-end`, …), so they follow the writing mode. `border-s` / `border-e` are equivalent aliases of `border-l` / `border-r`.
+
+| Class                                                                    | Result                 |
+| ------------------------------------------------------------------------ | ---------------------- |
+| `border`                                                                 | 1px solid on all sides |
+| `border-t`, `border-r`, `border-b`, `border-l`                           | 1px solid on that edge |
+| `border-s` (= `border-l`), `border-e` (= `border-r`)                     | 1px solid on that edge |
+| `border-none`                                                            | Removes all borders    |
+| `border-t-none`, `border-r-none`, `border-b-none`, `border-l-none`       | Removes that edge      |
+| `border-s-none` (= `border-l-none`), `border-e-none` (= `border-r-none`) | Removes that edge      |
+
+### Width
+
+| Class                               | Result                      |
+| ----------------------------------- | --------------------------- |
+| `border-1` to `border-4`            | 1–4px solid on all sides    |
+| `border-t-{1-4}`, `border-b-{1-4}`  | 1–4px solid on that edge    |
+| `border-l-{1-4}` / `border-s-{1-4}` | 1–4px solid on inline start |
+| `border-r-{1-4}` / `border-e-{1-4}` | 1–4px solid on inline end   |
+
+```html
+<div class="border-2 border-primary rounded-md p-md">2px primary border.</div>
+```
 
 ### Color
 
@@ -38,6 +55,23 @@ Color classes update `--_border-color` (default: `--border`):
 <div class="border border-dashed border-muted rounded-md p-md">Dashed, muted border.</div>
 ```
 
+## Dividers
+
+`divide-x` and `divide-y` draw a 1px border on the trailing logical edge of every direct child except the last — inline edges for `divide-x` (row layouts), block edges for `divide-y` (stacked layouts). Children inherit `--_border-color`, so border color classes on the container recolor the dividers.
+
+| Class      | Result                                                     |
+| ---------- | ---------------------------------------------------------- |
+| `divide-x` | `border-inline-end: 1px solid` on children except the last |
+| `divide-y` | `border-block-end: 1px solid` on children except the last  |
+
+```html
+<ul class="divide-y border-muted">
+  <li class="py-sm">First</li>
+  <li class="py-sm">Second</li>
+  <li class="py-sm">Third</li>
+</ul>
+```
+
 ## Border radius
 
 Uses the radius scale (`--radius-xs` to `--radius-full`, scaled by `--radius-multiplier`):
@@ -56,26 +90,29 @@ Uses the radius scale (`--radius-xs` to `--radius-full`, scaled by `--radius-mul
 
 ### Edges and corners
 
-| Scope             | Classes                                                        |
-| ----------------- | -------------------------------------------------------------- |
-| Top / bottom edge | `rounded-t-*`, `rounded-b-*`                                   |
-| Left / right edge | `rounded-l-*`, `rounded-r-*`                                   |
-| Single corner     | `rounded-tl-*`, `rounded-tr-*`, `rounded-br-*`, `rounded-bl-*` |
+Corner classes map to logical radius properties (`border-start-start-radius`, …), so they follow the writing mode. The `s`/`e` forms are equivalent logical-name aliases.
+
+| Scope                   | Classes                                                                                            |
+| ----------------------- | -------------------------------------------------------------------------------------------------- |
+| Top / bottom edge       | `rounded-t-*`, `rounded-b-*`                                                                       |
+| Left / right edge       | `rounded-l-*` / `rounded-s-*`, `rounded-r-*` / `rounded-e-*`                                       |
+| Single corner           | `rounded-tl-*`, `rounded-tr-*`, `rounded-br-*`, `rounded-bl-*`                                     |
+| Single corner (aliases) | `rounded-ss-*` (= `tl`), `rounded-se-*` (= `tr`), `rounded-ee-*` (= `br`), `rounded-es-*` (= `bl`) |
 
 ## Composition variables
 
 Radius utilities set four `@property`-registered variables with `inherits: false`:
 
 ```css
-@property --_radius-top-left {
+@property --_radius-start-start {
   syntax: "<length-percentage>";
   inherits: false;
   initial-value: 0;
 }
 
 :where(.rounded-b-0) {
-  --_radius-bottom-left: 0px;
-  --_radius-bottom-right: 0px;
+  --_radius-end-start: 0px;
+  --_radius-end-end: 0px;
 }
 ```
 
@@ -84,9 +121,9 @@ Radius utilities set four `@property`-registered variables with `inherits: false
 <div class="rounded-lg rounded-b-0">...</div>
 ```
 
-| Variable                 | Syntax                | Initial | Managed by                                                |
-| ------------------------ | --------------------- | ------- | --------------------------------------------------------- |
-| `--_radius-top-left`     | `<length-percentage>` | `0`     | `rounded-*`, `rounded-t-*`, `rounded-l-*`, `rounded-tl-*` |
-| `--_radius-top-right`    | `<length-percentage>` | `0`     | `rounded-*`, `rounded-t-*`, `rounded-r-*`, `rounded-tr-*` |
-| `--_radius-bottom-right` | `<length-percentage>` | `0`     | `rounded-*`, `rounded-b-*`, `rounded-r-*`, `rounded-br-*` |
-| `--_radius-bottom-left`  | `<length-percentage>` | `0`     | `rounded-*`, `rounded-b-*`, `rounded-l-*`, `rounded-bl-*` |
+| Variable                | Syntax                | Initial | Managed by                                                               |
+| ----------------------- | --------------------- | ------- | ------------------------------------------------------------------------ |
+| `--_radius-start-start` | `<length-percentage>` | `0`     | `rounded-*`, `rounded-t-*`, `rounded-l-*`/`-s-*`, `rounded-tl-*`/`-ss-*` |
+| `--_radius-start-end`   | `<length-percentage>` | `0`     | `rounded-*`, `rounded-t-*`, `rounded-r-*`/`-e-*`, `rounded-tr-*`/`-se-*` |
+| `--_radius-end-end`     | `<length-percentage>` | `0`     | `rounded-*`, `rounded-b-*`, `rounded-r-*`/`-e-*`, `rounded-br-*`/`-ee-*` |
+| `--_radius-end-start`   | `<length-percentage>` | `0`     | `rounded-*`, `rounded-b-*`, `rounded-l-*`/`-s-*`, `rounded-bl-*`/`-es-*` |

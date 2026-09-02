@@ -10,33 +10,42 @@ Zazz structures styles with CSS cascade layers and semantic tokens. You can exte
 Zazz defines layer order in `_layers.css`:
 
 ```css
-@layer variables, reset, legacy, zazz, migrations;
+@layer variables, reset, vendors, legacy, zazz, overrides;
+
+@layer legacy {
+  @layer imports, components, utilities, migrations;
+}
 
 @layer zazz {
-  @layer components, utilities;
+  @layer components, plugins, utilities;
 }
 ```
 
 Later layers override earlier ones regardless of selector specificity:
 
-| Layer             | Purpose                                          | Example                                           |
-| ----------------- | ------------------------------------------------ | ------------------------------------------------- |
-| `variables`       | Token declarations only                          | `:root { --ui-button-radius: var(--radius-md); }` |
-| `reset`           | Native element baselines (zero specificity)      | `html`, `body`, `input`, `select` defaults        |
-| `legacy`          | Pre-Zazz CSS during migration                    | `@import "old.css" layer(legacy)`                 |
-| `zazz.components` | Component rules                                  | `.ui-button`, `.ui-dialog`, `.ui-field`           |
-| `zazz.utilities`  | Atomic override classes                          | `.text-primary`, `.gap-md`, `.rounded-full`       |
-| `migrations`      | Temporary migration shims (highest author layer) | `.btn-primary { --ui-button-background: ... }`    |
+| Layer             | Purpose                                     | Example                                           |
+| ----------------- | ------------------------------------------- | ------------------------------------------------- |
+| `variables`       | Token declarations only                     | `:root { --ui-button-radius: var(--radius-md); }` |
+| `reset`           | Native element baselines (zero specificity) | `html`, `body`, `input`, `select` defaults        |
+| `vendors`         | Third-party CSS that doesn't build on Zazz  | `@import "chart-lib.css" layer(vendors)`          |
+| `legacy.*`        | Pre-Zazz CSS during migration + its shims   | `@import "old.css" layer(legacy.imports)`         |
+| `zazz.components` | Component rules                             | `.ui-button`, `.ui-dialog`, `.ui-field`           |
+| `zazz.plugins`    | Zazz-dependent extensions                   | `.ui-button[data-variant="glow"]`                 |
+| `zazz.utilities`  | Atomic override classes                     | `.text-primary`, `.gap-md`, `.rounded-full`       |
+| `overrides`       | Your app's overrides (highest author layer) | `@layer overrides { .ui-button { … } }`           |
 
 Utilities in `zazz.utilities` override `.ui-button` in `zazz.components` without `!important`. See [Layers](/docs/foundation/layers).
 
 ## Base files
 
-Four core stylesheets form the system:
+Seven core stylesheets form the system:
 
 - [`_layers.css`](/docs/foundation/layers): Declares cascade layer order (loads first).
 - [`_variables.css`](/docs/foundation/variables): Global tokens for color scales, semantic roles, spacing, typography, radius, and shadows.
 - [`_reset.css`](/docs/foundation/reset): Element defaults wrapped in `:where()` for zero specificity.
+- [`_typography.css`](/docs/foundation/typography): Type scale utilities and the `.ui-prose` component.
+- [`_layout.css`](/docs/core-concepts/layout): The `.container` band system.
+- [`_view-transitions.css`](/docs/foundation/view-transitions): Cross-page transition defaults.
 - [`_utilities.css`](/docs/foundation/utilities): Atomic utility classes wrapped in `:where()`.
 
 ## Tokens and theming
@@ -45,7 +54,10 @@ Components read `var(--token)`. Restyle UI by updating variables:
 
 ```css
 :root {
-  --primary: oklch(0.6 0.2 145); /* global brand override */
+  --primary: light-dark(
+    oklch(0.6 0.2 145),
+    oklch(0.52 0.17 145)
+  ); /* global brand override, both schemes */
   --ui-button-radius: var(--radius-full); /* component-level override */
 }
 ```
@@ -60,7 +72,7 @@ See [Theme variables](/docs/foundation/variables).
 
 ## Typography
 
-Zazz uses fluid `clamp()` sizing. A single `text-*` utility sets font size, line height, letter spacing, and weight. The `.ui-prose` class formats author-controlled HTML.
+Zazz uses fluid `clamp()` sizing. A single `text-*` utility sets font size, line height, and letter spacing (heading steps also set family and weight). The `.ui-prose` class formats author-controlled HTML.
 
 ```html
 <span class="text-display">Headline</span>

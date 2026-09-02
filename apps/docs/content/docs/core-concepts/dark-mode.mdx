@@ -25,6 +25,14 @@ Each semantic role specifies values for light and dark modes:
 
 Use semantic roles (`--primary`, `--background`) to ensure theme compatibility. Use fixed scale steps (`--primary-600`) only when colors must remain static.
 
+Each role is declared exactly once. To re-skin a role for both themes, override that single declaration with a new `light-dark()` pair — every mode (system preference, manual toggle, sectional themes) picks it up:
+
+```css
+:root {
+  --primary: light-dark(oklch(0.45 0.2 270), oklch(0.6 0.16 270));
+}
+```
+
 ## Theme configuration modes
 
 ### 1. System preference (default)
@@ -33,7 +41,7 @@ Include the `<meta name="color-scheme" content="light dark">` tag in `<head>` so
 
 ### 2. Manual toggle with `.dark`
 
-Add the `.dark` class to `<html>` to pin dark mode:
+Add the `.dark` class (or `data-theme="dark"`) to `<html>` to pin dark mode:
 
 ```html
 <html class="dark">
@@ -41,40 +49,44 @@ Add the `.dark` class to `<html>` to pin dark mode:
 </html>
 ```
 
-### 3. Inverted surfaces
-
-Popovers and menus support an inverted scheme. Opt out using CSS variables or attributes:
-
-```css
-:root {
-  --use-inverted-popovers: false;
-}
-```
-
-```html
-<div popover data-use-inverted-menu="false">...</div>
-```
+`.dark`/`.light` and `data-theme="dark"|"light"` are pure `color-scheme` pins — they re-declare no tokens. Every `light-dark()` role re-resolves under the pinned scheme automatically.
 
 ## Building a theme toggle
 
-Use an inline script in `<head>` to read preferences from `localStorage` and set the `.dark` class before first render:
+Use an inline script in `<head>` to read preferences from `localStorage` and pin the theme class before first render. Persist under the `theme` key — the same key the kit's [head snippet](/docs/getting-started/head) script reads — so both scripts see the same choice:
 
 ```html
 <meta name="color-scheme" content="light dark" />
 <script>
   {
-    const choice = localStorage.getItem("color-scheme");
+    const choice = localStorage.getItem("theme");
     if (choice) {
       document.querySelector('meta[name="color-scheme"]').content = choice;
       document.documentElement.classList.toggle("dark", choice === "dark");
+      document.documentElement.classList.toggle("light", choice === "light");
     }
   }
 </script>
 ```
 
-## Section-level color scheme
+Pinning `.light` as well as `.dark` matters: a stored "light" choice must override a dark system preference, not just fall back to it.
 
-Set `color-scheme` on a container to force a specific mode for a subtree (such as a code block):
+## Section-level themes
+
+The same pins work on any container, not just `<html>` — and they nest. A `.dark` section renders dark on a light page, and a `.light` island inside it re-lightens its subtree:
+
+```html
+<section class="dark bg-background text-foreground p-lg">
+  <h2 class="text-h3">Dark section on a light page</h2>
+  <aside class="light bg-background text-foreground p-md">
+    Light island inside the dark section
+  </aside>
+</section>
+```
+
+Give a themed section its own background (`bg-background`) — the scope pins `color-scheme` and re-asserts the foreground color, but leaves backgrounds to the section.
+
+For a subtree that should always be dark regardless of theme (such as a code block), set `color-scheme` directly:
 
 ```css
 pre {

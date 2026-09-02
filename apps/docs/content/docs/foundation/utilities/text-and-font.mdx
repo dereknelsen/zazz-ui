@@ -7,14 +7,14 @@ Typographic utility classes in `_utilities.css` handle text alignment, casing, f
 
 ## Text align
 
-| Class          | Declaration           |
-| -------------- | --------------------- |
-| `text-left`    | `text-align: left`    |
-| `text-center`  | `text-align: center`  |
-| `text-right`   | `text-align: right`   |
-| `text-justify` | `text-align: justify` |
+| Class                      | Declaration           |
+| -------------------------- | --------------------- |
+| `text-left` / `text-start` | `text-align: start`   |
+| `text-center`              | `text-align: center`  |
+| `text-right` / `text-end`  | `text-align: end`     |
+| `text-justify`             | `text-align: justify` |
 
-All four classes support responsive prefixes (e.g. `text-center @md:text-left`).
+Alignment uses logical values (`start` / `end`), so it follows the writing mode; `text-start` / `text-end` are equivalent aliases of `text-left` / `text-right`. All classes support responsive prefixes (e.g. `text-center @md:text-start`).
 
 ## Text transform
 

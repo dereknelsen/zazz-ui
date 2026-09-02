@@ -2,8 +2,9 @@
  * _variables.css — Global design tokens (Tier 1).
  *
  * @layer      variables
- * @requires   layers.css, _properties.css
- * @uses       light-dark() — theme roles follow color-scheme / .dark overrides
+ * @requires   layers.css
+ * @uses       light-dark() — theme roles re-resolve per color-scheme (system,
+ *             .dark/.light, [data-theme]); tokens stay unregistered on purpose
  * @uses       oklch(from …) — shade/tint scales and shadow alphas
  * @uses       color-mix() — focus ring (--ring)
  * @uses       interpolate-size: allow-keywords — discrete block-size animations (details, etc.)
@@ -12,14 +13,6 @@
  *             layout, effects, animations. Re-declare any of these to re-skin the
  *             whole system; see CONVENTIONS.md.
  */
-
-/* Inverted menu */
-
-@property --use-inverted-popovers {
-  syntax: "*";
-  inherits: false;
-  initial-value: false;
-}
 
 /* Animations */
 
@@ -76,10 +69,11 @@
   initial-value: false;
 }
 
-/* Token values — @property registrations live in _properties.css (style() queries). */
+/* Token values — the few typed @property registrations (style() queries) live above. */
 @layer variables {
   :root {
-    /* Enable light/dark mode - make sure to redeclare dark mode tokens on .dark at the bottom of the file */
+    /* Enable light/dark mode — theme scopes at the bottom of the file pin
+     * color-scheme; light-dark() tokens re-resolve there automatically. */
     color-scheme: light dark;
 
     /* Enable discrete value animations, e.g. block-size: auto; */
@@ -98,11 +92,11 @@
     --card-foreground: light-dark(var(--neutral-900), var(--white));
     --popover: light-dark(var(--white), var(--neutral-950));
     --popover-foreground: light-dark(var(--neutral-900), var(--white));
-    --input: light-dark(var(--neutral-50), var(--tint-50));
+    --input: light-dark(var(--neutral-50), var(--tint-100));
     --input-foreground: light-dark(var(--neutral-900), var(--white));
 
     /* overlay */
-    --muted: light-dark(var(--shade-50), var(--tint-50));
+    --muted: light-dark(var(--shade-50), var(--tint-100));
     --muted-foreground: light-dark(var(--shade-600), var(--tint-600));
     --faded: light-dark(var(--tint-400), var(--shade-100));
     --faded-foreground: light-dark(var(--tint-600), var(--shade-600));
@@ -566,7 +560,7 @@
    * resolves it identically, no matter which container it reads from (the
    * .container element is intentionally container-type: normal).
    * Mobile-first: --is-breakpoint-X becomes true once width reaches X.
-   * Registered as typed @property (false default) in _properties.css.
+   * Registered as typed @property (false default) at the top of this file.
    * Literal rem required — var() is invalid in a container-query prelude.
    * ========================================================================== */
   @container (width >=40rem) {
@@ -607,76 +601,23 @@
   }
 
   /*
-   * Manual dark mode — re-declare dark theme tokens so light-dark() resolves
-   * with color-scheme: dark. Tokens defined only on :root inherit as computed
-   * light values; setting color-scheme on descendants alone does not flip them.
+   * Theme scopes — theme role tokens are intentionally unregistered, so their
+   * light-dark() expressions stay live in the token stream and re-resolve
+   * against each element's inherited color-scheme. Pinning color-scheme is all
+   * a scope needs; nesting works (.light inside .dark re-lightens its subtree).
+   * Built-in inherited color properties (color, accent-color, …) resolve at
+   * the ancestor, so re-assert them at each scope boundary.
    */
 
-  @container style(--use-inverted-popovers: true) {
-    :where([popover]:not([data-use-inverted-menu="false"])) {
-      color-scheme: dark;
-
-      --background: var(--neutral-900);
-      --foreground: var(--white);
-      --border: var(--tint-200);
-      --border-foreground: var(--shade-500);
-      --card: var(--neutral-950);
-      --card-foreground: var(--white);
-      --input: var(--tint-50);
-      --input-foreground: var(--white);
-      --popover: var(--shade-950);
-      --popover-foreground: var(--white);
-      --muted: var(--tint-50);
-      --muted-foreground: var(--tint-600);
-      --faded: var(--shade-100);
-      --faded-foreground: var(--shade-600);
-      --primary: var(--primary-500);
-      --primary-foreground: var(--white);
-      --secondary: var(--secondary-500);
-      --secondary-foreground: var(--white);
-      --tertiary: var(--tertiary-400);
-      --tertiary-foreground: var(--white);
-      --info: oklch(0.5 0.1193 242.75);
-      --info-foreground: var(--white);
-      --success: oklch(0.5081 0.1049 165.61);
-      --success-foreground: var(--white);
-      --warning: oklch(0.5553 0.1455 49);
-      --warning-foreground: var(--white);
-      --destructive: oklch(0.5054 0.1905 27.52);
-      --destructive-foreground: var(--white);
-    }
-  }
-
+  [data-theme="dark"],
   .dark {
     color-scheme: dark;
+    color: var(--foreground);
+  }
 
-    --background: var(--neutral-900);
-    --foreground: var(--white);
-    --border: var(--tint-200);
-    --border-foreground: var(--shade-500);
-    --card: var(--neutral-950);
-    --card-foreground: var(--white);
-    --input: var(--tint-50);
-    --input-foreground: var(--white);
-    --popover: var(--shade-950);
-    --popover-foreground: var(--white);
-    --muted: var(--tint-50);
-    --muted-foreground: var(--tint-600);
-    --faded: var(--shade-100);
-    --faded-foreground: var(--shade-600);
-    --primary: var(--primary-500);
-    --primary-foreground: var(--white);
-    --secondary: var(--secondary-500);
-    --secondary-foreground: var(--white);
-    --tertiary: var(--tertiary-400);
-    --tertiary-foreground: var(--white);
-    --info: oklch(0.5 0.1193 242.75);
-    --info-foreground: var(--white);
-    --success: oklch(0.5081 0.1049 165.61);
-    --success-foreground: var(--white);
-    --warning: oklch(0.5553 0.1455 49);
-    --warning-foreground: var(--white);
-    --destructive: oklch(0.5054 0.1905 27.52);
-    --destructive-foreground: var(--white);
+  [data-theme="light"],
+  .light {
+    color-scheme: light;
+    color: var(--foreground);
   }
 }

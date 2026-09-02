@@ -18,15 +18,20 @@ Spacing utilities use semantic gap tokens (`--gap-xs` to `--gap-xl`) and logical
 | Bottom (block-end)         | `pb-0`, `pb-xs` to `pb-xl` | `padding-block-end`    |
 | Left (inline-start)        | `pl-0`, `pl-xs` to `pl-xl` | `padding-inline-start` |
 | Right (inline-end)         | `pr-0`, `pr-xs` to `pr-xl` | `padding-inline-end`   |
+| Inline start (alias)       | `ps-0`, `ps-xs` to `ps-xl` | `padding-inline-start` |
+| Inline end (alias)         | `pe-0`, `pe-xs` to `pe-xl` | `padding-inline-end`   |
+
+`ps-*` / `pe-*` are logical-name aliases of `pl-*` / `pr-*` — identical values, identical declarations. All side classes map to logical edges, so they follow the writing mode.
 
 ## Margin
 
-| Scope       | Classes                                                        |
-| ----------- | -------------------------------------------------------------- |
-| All sides   | `m-0`, `m-xs` to `m-xl`                                        |
-| Inline axis | `mx-0`, `mx-xs` to `mx-xl`, `mx-auto`                          |
-| Block axis  | `my-0`, `my-xs` to `my-xl`, `my-auto`                          |
-| Per side    | `mt-*`, `mr-*`, `mb-*`, `ml-*` (`0`, `xs` to `xl`, and `auto`) |
+| Scope                      | Classes                                                        |
+| -------------------------- | -------------------------------------------------------------- |
+| All sides                  | `m-0`, `m-xs` to `m-xl`                                        |
+| Inline axis                | `mx-0`, `mx-xs` to `mx-xl`, `mx-auto`                          |
+| Block axis                 | `my-0`, `my-xs` to `my-xl`, `my-auto`                          |
+| Per side                   | `mt-*`, `mr-*`, `mb-*`, `ml-*` (`0`, `xs` to `xl`, and `auto`) |
+| Per side (logical aliases) | `ms-*` (= `ml-*`), `me-*` (= `mr-*`)                           |
 
 ### Auto margins
 
@@ -37,11 +42,12 @@ Spacing utilities use semantic gap tokens (`--gap-xs` to `--gap-xl`) and logical
 
 ### Negative margins
 
-| Scope               | Classes                                           |
-| ------------------- | ------------------------------------------------- |
-| All sides           | `-m-xs` to `-m-xl`                                |
-| Inline / block axis | `-mx-xs` to `-mx-xl`, `-my-xs` to `-my-xl`        |
-| Per side            | `-mt-*`, `-mr-*`, `-mb-*`, `-ml-*` (`xs` to `xl`) |
+| Scope                      | Classes                                           |
+| -------------------------- | ------------------------------------------------- |
+| All sides                  | `-m-xs` to `-m-xl`                                |
+| Inline / block axis        | `-mx-xs` to `-mx-xl`, `-my-xs` to `-my-xl`        |
+| Per side                   | `-mt-*`, `-mr-*`, `-mb-*`, `-ml-*` (`xs` to `xl`) |
+| Per side (logical aliases) | `-ms-*` (= `-ml-*`), `-me-*` (= `-mr-*`)          |
 
 ## Composition variables
 
@@ -54,9 +60,9 @@ Spacing utilities set `@property`-registered variables with `inherits: false`. Y
 
 <Preview src="utilities/padding-compose" />
 
-| Variable                                           | Syntax                        | Initial | Set by                                           |
-| -------------------------------------------------- | ----------------------------- | ------- | ------------------------------------------------ |
-| `--_padding-inline-start`, `--_padding-inline-end` | `<length-percentage>`         | `0`     | `p-*`, `px-*`, `pl-*`, `pr-*`                    |
-| `--_padding-block-start`, `--_padding-block-end`   | `<length-percentage>`         | `0`     | `p-*`, `py-*`, `pt-*`, `pb-*`                    |
-| `--_margin-inline-start`, `--_margin-inline-end`   | `<length-percentage> \| auto` | `0`     | `m-*`, `mx-*`, `ml-*`, `mr-*`, `-m-*`, `mx-auto` |
-| `--_margin-block-start`, `--_margin-block-end`     | `<length-percentage> \| auto` | `0`     | `m-*`, `my-*`, `mt-*`, `mb-*`, `-m-*`, `my-auto` |
+| Variable                                           | Syntax                        | Initial | Set by                                                         |
+| -------------------------------------------------- | ----------------------------- | ------- | -------------------------------------------------------------- |
+| `--_padding-inline-start`, `--_padding-inline-end` | `<length-percentage>`         | `0`     | `p-*`, `px-*`, `pl-*`/`ps-*`, `pr-*`/`pe-*`                    |
+| `--_padding-block-start`, `--_padding-block-end`   | `<length-percentage>`         | `0`     | `p-*`, `py-*`, `pt-*`, `pb-*`                                  |
+| `--_margin-inline-start`, `--_margin-inline-end`   | `<length-percentage> \| auto` | `0`     | `m-*`, `mx-*`, `ml-*`/`ms-*`, `mr-*`/`me-*`, `-m-*`, `mx-auto` |
+| `--_margin-block-start`, `--_margin-block-end`     | `<length-percentage> \| auto` | `0`     | `m-*`, `my-*`, `mt-*`, `mb-*`, `-m-*`, `my-auto`               |

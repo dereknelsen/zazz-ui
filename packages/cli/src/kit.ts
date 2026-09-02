@@ -88,7 +88,7 @@ function isFileSpec(spec: string): boolean {
  * (cache-keyed by version for registry specs; fresh temp dir for file specs,
  * which can change between builds), and loads + validates the kit modules.
  *
- * @param spec - Anything pacote accepts: `@zazz-ui/core@0.1.0`, `…@latest`,
+ * @param spec - Anything pacote accepts: `@zazz-ui/core@0.3.0`, `…@latest`,
  * a range, or a `file:` tarball.
  * @param fetch - Flattened npm/pacote options from `loadFetchOptions`.
  */

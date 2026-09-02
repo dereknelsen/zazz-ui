@@ -72,7 +72,7 @@ while typing.
 ## Behaviors (not components — see `apis.md`)
 
 - **`[popover]` (base)** — `data-side`/`data-align` positioning powers tooltip, menu, and
-  navigation-menu; dark "inverted" popovers come from a container `style()` query.
+  navigation-menu.
 - **Web components** (`<ui-carousel>`, `<ui-lightbox>`, `<ui-password>`,
   `<ui-tabs>`, `<ui-toaster>`) are light-DOM progressive enhancements; use the real
   examples as the source of truth.

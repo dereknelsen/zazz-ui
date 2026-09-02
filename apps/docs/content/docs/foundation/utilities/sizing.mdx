@@ -5,6 +5,8 @@ description: Width, height, size shorthands, and min/max dimension constraints u
 
 Sizing utilities use logical properties (`inline-size`, `block-size`) to match document writing mode.
 
+Every `w-*` / `h-*` class (including `min-*` and `max-*` variants) has a logical-name alias with identical values: `w-full` = `inline-full`, `h-screen` = `block-screen`, `max-w-md` = `max-inline-md`, `min-h-0` = `min-block-0`, and so on. Use whichever naming you prefer — they compile to the same declaration.
+
 ## Width & height
 
 <Preview src="utilities/width" />
@@ -15,11 +17,11 @@ Sizing utilities use logical properties (`inline-size`, `block-size`) to match d
 | `w-px` / `h-px`                | `1px`                                            |
 | `w-auto` / `h-auto`            | `auto`                                           |
 | `w-full` / `h-full`            | `100%`                                           |
-| `w-xs` / `h-xs`                | `var(--step-8)`                                  |
-| `w-sm` / `h-sm`                | `var(--step-24)`                                 |
-| `w-md` / `h-md`                | `var(--step-56)`                                 |
-| `w-lg` / `h-lg`                | `var(--step-72)`                                 |
-| `w-xl` / `h-xl`                | `var(--step-96)`                                 |
+| `w-xs` / `h-xs`                | `var(--step-3)`                                  |
+| `w-sm` / `h-sm`                | `var(--gap-sm)`                                  |
+| `w-md` / `h-md`                | `var(--gap-md)`                                  |
+| `w-lg` / `h-lg`                | `var(--gap-lg)`                                  |
+| `w-xl` / `h-xl`                | `var(--gap-xl)`                                  |
 | `w-screen`                     | `100vi`                                          |
 | `h-screen`                     | `100svh`                                         |
 | `w-screen-xs` to `w-screen-xl` | `var(--breakpoint-xs)` to `var(--breakpoint-xl)` |
@@ -36,7 +38,7 @@ Sizing utilities use logical properties (`inline-size`, `block-size`) to match d
 | `size-0`                             | `0`                             |
 | `size-auto`                          | `auto`                          |
 | `size-full`                          | `100%`                          |
-| `size-xs`                            | `var(--gap-xs)`                 |
+| `size-xs`                            | `var(--step-3)`                 |
 | `size-sm`                            | `var(--gap-sm)`                 |
 | `size-md`                            | `var(--gap-md)`                 |
 | `size-lg`                            | `var(--gap-lg)`                 |

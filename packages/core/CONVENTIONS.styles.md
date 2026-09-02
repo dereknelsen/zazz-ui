@@ -32,10 +32,14 @@ CSSDoc is intentionally lightweight:
 Cascade order is declared once, in [`_layers.css`](./src/base/_layers.css), and must load first:
 
 ```css
-@layer variables, reset, legacy, zazz, migrations;
+@layer variables, reset, vendors, legacy, zazz, overrides;
+
+@layer legacy {
+  @layer imports, components, utilities, migrations;
+}
 
 @layer zazz {
-  @layer components, utilities;
+  @layer components, plugins, utilities;
 }
 ```
 
@@ -46,13 +50,23 @@ Layering (not selector specificity or BEM) is how we control the cascade, so a
 plain `.ui-button` rule in `components` can still be overridden by a `utilities` class
 without `!important`.
 
-The five top-level layers, lowest priority to highest:
+The six top-level layers, lowest priority to highest:
 
 - **`variables`**: design tokens, the `:root` custom properties everything reads. Lowest priority.
 - **`reset`**: native-element baselines and re-skinned controls.
-- **`legacy`**: your existing (pre-Zazz) CSS, when you import it with `layer(legacy)`. Sits below Zazz, so the framework wins where they overlap.
-- **`zazz`**: everything Zazz ships, as two sublayers: `components` then `utilities`.
-- **`migrations`**: temporary shims for old markup mid-migration. On top, so a shim can beat even a utility. Add a `migrations.css` and uncomment its slot in `index.css` when you need it.
+- **`vendors`**: third-party CSS that does not build on Zazz, via `layer(vendors)`. Above `reset`
+  (the reset must not clobber a library's widget styling), below `legacy` (your app CSS keeps
+  overriding vendor defaults).
+- **`legacy`**: your existing (pre-Zazz) CSS, grouped as four sublayers — `imports` (whole files,
+  via `layer(legacy.imports)`), `components`, `utilities`, and `migrations` (temporary shims that
+  beat all other legacy CSS). Sits below Zazz, so the framework wins where they overlap, and
+  finishing a migration means deleting this one layer. **Never import into bare `layer(legacy)`**:
+  un-sublayered rules form an implicit final sublayer that would beat the migration shims.
+- **`zazz`**: everything Zazz ships, as three sublayers: `components`, then `plugins`
+  (Zazz-dependent extensions — above components so an added variant can restyle the primitive it
+  extends, via `layer(zazz.plugins)`), then `utilities`, which beat everything in `zazz`.
+- **`overrides`**: the app's deliberate overrides — beats every Zazz layer while staying
+  structured. Only unlayered CSS outranks it.
 
 For loading, link the single `index.css` bundle: it `@import`s every layer in cascade order,
 so there is nothing to keep in sync. For transfer size, enable **brotli or gzip** on the server.
@@ -114,7 +128,7 @@ The four layers, by responsibility:
   the `::picker` chrome in [`select.css`](./src/primitives/select/select.css), the redrawn switch in
   [`switch.css`](./src/primitives/switch/switch.css)). [`_reset.css`](./src/base/_reset.css) owns the global baseline.
 - **`components`**: the actual component (`.ui-button`, `.ui-dialog`, `.ui-field`).
-- **`migrations`**: temporary shims that map old class names to Zazz tokens while you rewrite markup. Delete each rule once the corresponding markup is updated. Lives in an optional `migrations.css` you add and import at the commented slot in [`index.css`](./src/index.css).
+- **`legacy.migrations`**: temporary shims that map old class names to Zazz tokens while you rewrite markup. Delete each rule once the corresponding markup is updated. Lives in an optional `migrations.css` you add and import at the commented slot in [`index.css`](./src/index.css) via `layer(legacy.migrations)`.
 - **`utilities`**: atomic, override-anything classes ([`_utilities.css`](./src/base/_utilities.css)),
   written with `:where()` for zero specificity.
 
@@ -234,8 +248,11 @@ organized in tiers (literal scales → semantic roles → component primitives):
 
 Selected tokens are also **registered as typed `@property`**, inline in
 [`_variables.css`](./src/base/_variables.css), so they can be read by container `style()`
-queries with typed comparison/range syntax. Theme roles register with `syntax: "*"` so
-`light-dark()` re-resolves correctly under a descendant's `color-scheme`.
+queries with typed comparison/range syntax. Theme roles are deliberately **unregistered**:
+an unregistered token keeps its `light-dark()` expression live in the token stream, so it
+re-resolves against each element's own inherited `color-scheme`. Never register a design
+token as `<color>` — that snapshots one resolved arm at the declaring element and kills
+re-resolution for every descendant.
 
 ### Local component tokens
 
@@ -415,12 +432,12 @@ use case exists in an example fragment or docs page.
 
 - `color-scheme: light dark` on `:root` enables system dark mode; semantic tokens use
   `light-dark(<light>, <dark>)` so they resolve per `color-scheme`.
-- A manual `.dark` class re-declares the same semantic tokens (descendant `color-scheme`
-  alone will not re-resolve an already-inherited `light-dark()` color: keep these tokens
-  **unregistered** so they re-resolve late).
-- Inverted surfaces (dark popovers/menus over a light page) flip via a container style
-  query: `@container style(--use-inverted-popovers: true)` on `[popover]`. Opt a single
-  popover out with `data-use-inverted-menu="false"`.
+- `.dark`/`.light` and `[data-theme="dark"|"light"]` are pure `color-scheme` pins — no
+  token re-declaration. Because theme tokens are unregistered, their `light-dark()`
+  expressions re-resolve under the pinned scheme, and scopes nest (a `.light` island
+  inside a `.dark` section re-lightens its subtree). Each scope re-asserts
+  `color: var(--foreground)`: built-in inherited `<color>` properties resolve at the
+  ancestor and cross a scheme boundary as a single resolved arm.
 
 ---
 
@@ -508,11 +525,12 @@ These deviate from the canonical shape on purpose: document the reason in-file:
   component hooks; the utilities composition/coordination system is system plumbing, not a
   component. Keep the in-file comment explaining the two `--_` kinds.
 - **Legacy isolation during migration**: bring an existing codebase along by importing its
-  stylesheet into the `legacy` layer (`@import "./your-legacy.css" layer(legacy)` at the
-  commented slot in [`index.css`](./src/index.css)); because `legacy` sits below `zazz`, the
-  framework wins where the two overlap. For shims that must beat Zazz while you rewrite
-  markup, add a `migrations.css` at the top of the stack. For surgical per-region isolation,
-  reach for `@scope` donut scoping rather than an attribute opt-out.
+  stylesheet into the `legacy.imports` sublayer (`@import "./your-legacy.css" layer(legacy.imports)`
+  at the commented slot in [`index.css`](./src/index.css)); because `legacy` sits below `zazz`, the
+  framework wins where the two overlap. For class-translation shims while you rewrite markup, add a
+  `migrations.css` in `layer(legacy.migrations)` — it beats all other legacy CSS; anything that must
+  beat Zazz itself goes in `@layer overrides`. For surgical per-region isolation, reach for `@scope`
+  donut scoping rather than an attribute opt-out.
 
 ---
 

@@ -33,22 +33,27 @@ Two rules govern every choice:
 - **Gap utilities:** `.gap-0 .gap-0.5px .gap-px .gap-xs .gap-sm .gap-md .gap-lg .gap-xl`,
   axis-specific `.gap-x-* .gap-y-*` (same sizes). Gap classes also set an internal `--_gap`
   var consumed by the responsive grid (`grid-flow-row`) and `basis-*` utilities.
-- **Padding utilities:** `.p-0 .p-xs .p-sm .p-md .p-lg .p-xl`, axis `.px-* .py-*`, physical
-  sides `.pt-* .pr-* .pb-* .pl-*` (pt/pb map to block; pl/pr map to inline). Uses a
-  composition-variable system — touching one axis leaves the other intact.
+- **Padding utilities:** `.p-0 .p-xs .p-sm .p-md .p-lg .p-xl`, axis `.px-* .py-*`, logical
+  sides `.pt-* .pr-* .pb-* .pl-*` (pt/pb map to block; pl/pr map to inline; `.ps-*`/`.pe-*`
+  are equivalent inline-start/end aliases). Uses a composition-variable system — touching
+  one axis leaves the other intact.
 - **Margin utilities:** `.m-0 .m-xs .m-sm .m-md .m-lg .m-xl`, axis `.mx-* .my-*` (+ `.mx-auto .my-auto`),
-  physical sides `.mt-* .mr-* .mb-* .ml-*` (+ per-side `auto`).
+  logical sides `.mt-* .mr-* .mb-* .ml-*` (+ per-side `auto`; `.ms-*`/`.me-*` alias `.ml-*`/`.mr-*`).
 - **Negative margins:** `.-m-xs ..-m-xl`, `.-mx-* .-my-*`, `.-mt-* .-mr-* .-mb-* .-ml-*`
-  (same sizes xs–xl). Base classes only — no responsive (`xs:`…) variants.
+  (same sizes xs–xl; `.-ms-*`/`.-me-*` alias `.-ml-*`/`.-mr-*`). Base classes only — no
+  responsive (`xs:`…) variants.
 - **Size utilities:** `.w-0 .w-px .w-auto .w-full .w-xs..xl .w-screen .w-screen-xs..xl`,
   `.h-0 .h-px .h-auto .h-full .h-xs..xl .h-screen .h-screen-xs..xl`,
   `.size-0 .size-auto .size-full .size-xs..xl .size-screen .size-screen-xs..xl`.
+  Logical-name aliases with identical values: `.inline-*` = `.w-*`, `.block-*` = `.h-*`.
 - **Min/max size:** `.max-w-0 .max-w-auto .max-w-full .max-w-screen .max-w-screen-xs..xl`,
   `.max-h-0 .max-h-auto .max-h-full .max-h-screen .max-h-screen-xs..xl`,
   `.min-w-0 .min-w-auto .min-w-full .min-w-screen .min-w-screen-xs..xl`,
   `.min-h-0 .min-h-auto .min-h-full .min-h-screen .min-h-screen-xs..xl`.
+  Aliases: `.max-inline-*`/`.max-block-*`/`.min-inline-*`/`.min-block-*`.
 - **Inset/position offsets:** `.inset-0 .inset-xs..xl`, `.top-xs..xl .right-xs..xl
-.bottom-xs..xl .left-xs..xl`.
+.bottom-xs..xl .left-xs..xl` (logical inset properties; `.start-*`/`.end-*` alias
+  `.left-*`/`.right-*`).
 
 ## 2. Color — theme roles (use these; light/dark swaps for free)
 
@@ -99,9 +104,11 @@ Reach here only when a role can't express it (a specific tint, a backdrop, a fix
 `--radius-none|xs|sm|md|lg|xl|full`, scaled by `--radius-multiplier`. Conventions: **md** =
 buttons/inputs, **lg** = cards/dialogs, **sm** = badges, **full** = pills/circles.
 Utilities: `.rounded-0|xs|sm|md|lg|xl|full`. Per-edge: `.rounded-t-*`, `.rounded-b-*`,
-`.rounded-l-*`, `.rounded-r-*`. Individual corners: `.rounded-tl-*`, `.rounded-tr-*`,
-`.rounded-br-*`, `.rounded-bl-*`. Uses a composition-variable system — touching one edge
-leaves other corners intact (e.g. `rounded-b-0` flattens the bottom only).
+`.rounded-l-*`/`.rounded-s-*`, `.rounded-r-*`/`.rounded-e-*`. Individual corners:
+`.rounded-tl-*`, `.rounded-tr-*`, `.rounded-br-*`, `.rounded-bl-*` (logical aliases:
+`.rounded-ss-*`/`.rounded-se-*`/`.rounded-ee-*`/`.rounded-es-*`). Maps to logical corner
+properties (`border-start-start-radius`, …). Uses a composition-variable system — touching
+one edge leaves other corners intact (e.g. `rounded-b-0` flattens the bottom only).
 
 ## 6. Shadow & elevation
 
@@ -209,8 +216,14 @@ Two separate systems — **element opacity** and **channel alpha**. Don't confus
 
 - **Color:** `.border-primary .border-secondary .border-tertiary .border-muted .border-faded
 .border-info .border-success .border-warning .border-destructive`. Default is `--border`.
-- **Sides:** `.border` (all), `.border-l .border-t .border-r .border-b`, plus
-  `.border-l-none .border-t-none .border-r-none .border-b-none`, `.border-none`.
+- **Sides:** `.border` (all), `.border-l .border-t .border-r .border-b` (logical
+  properties; `.border-s`/`.border-e` alias `.border-l`/`.border-r`), plus
+  `.border-l-none .border-t-none .border-r-none .border-b-none` (+ `-s-`/`-e-` aliases),
+  `.border-none`.
+- **Widths:** `.border-1..4` (all sides), per-side `.border-{t|b}-{1..4}`,
+  `.border-{l|s}-{1..4}`, `.border-{r|e}-{1..4}`.
+- **Dividers:** `.divide-x`/`.divide-y` — 1px border on the trailing logical edge of each
+  child except the last; border color classes on the container recolor the dividers.
 - **Style:** `.border-dashed .border-dotted .border-double`.
 - All borders use oklch with `--_border-alpha` composing (dim via `.border-opacity-*`).
 

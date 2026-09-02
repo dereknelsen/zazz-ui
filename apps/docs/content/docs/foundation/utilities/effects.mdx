@@ -7,14 +7,14 @@ Effect utilities configure elevation, element opacity, scale transforms, and tra
 
 ## Box shadow
 
-| Class         | Token              |
-| ------------- | ------------------ |
-| `shadow-none` | `none`             |
-| `shadow-xs`   | `var(--shadow-xs)` |
-| `shadow-sm`   | `var(--shadow-sm)` |
-| `shadow-md`   | `var(--shadow-md)` |
-| `shadow-lg`   | `var(--shadow-lg)` |
-| `shadow-xl`   | `var(--shadow-xl)` |
+| Class         | Token                                            |
+| ------------- | ------------------------------------------------ |
+| `shadow-none` | Clears the shadow (keeps focus-ring compositing) |
+| `shadow-xs`   | `var(--shadow-xs)`                               |
+| `shadow-sm`   | `var(--shadow-sm)`                               |
+| `shadow-md`   | `var(--shadow-md)`                               |
+| `shadow-lg`   | `var(--shadow-lg)`                               |
+| `shadow-xl`   | `var(--shadow-xl)`                               |
 
 ## Opacity
 
@@ -32,12 +32,14 @@ Supports `hover:` prefixes (e.g. `hover:opacity-75`). To fade only colors withou
 
 ## Scale
 
-| Class                                              | Value                 |
-| -------------------------------------------------- | --------------------- |
-| `scale-0`                                          | `scale(0)`            |
-| `scale-50`, `scale-75`, `scale-90`, `scale-95`     | `scale(0.5 ... 0.95)` |
-| `scale-100`                                        | `scale(1)`            |
-| `scale-105`, `scale-110`, `scale-125`, `scale-150` | `scale(1.05 ... 1.5)` |
+| Class                                          | Value                 |
+| ---------------------------------------------- | --------------------- |
+| `scale-0`                                      | `scale(0)`            |
+| `scale-25`, `scale-50`, `scale-75`, `scale-90` | `scale(0.25 ... 0.9)` |
+| `scale-98`, `scale-99`                         | `scale(0.98, 0.99)`   |
+| `scale-100`                                    | `scale(1)`            |
+| `scale-101`, `scale-102`                       | `scale(1.01, 1.02)`   |
+| `scale-110`, `scale-125`, `scale-150`          | `scale(1.1 ... 1.5)`  |
 
 All scale utilities support `hover:scale-*`.
 
@@ -57,5 +59,5 @@ Transitions map to system tokens (`--default-transition-*`):
 ```
 
 <Callout type="info">
-  When `prefers-reduced-motion: reduce` is active, transition duration defaults to `0ms`.
+  When `prefers-reduced-motion: reduce` is active, transition duration defaults to `0s`.
 </Callout>

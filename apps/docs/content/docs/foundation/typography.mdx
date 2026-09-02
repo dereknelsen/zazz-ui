@@ -11,20 +11,20 @@ Zazz defines raw stacks and semantic aliases on `:root`:
 
 ```css
 --font-family-body: var(--font-body);
---font-family-heading: var(--font-body);
+--font-family-heading: var(--font-heading);
 ```
 
-Point `--font-family-heading` at `--font-heading` to customize heading typography. Utility classes `.font-sans`, `.font-serif`, and `.font-mono` reference the raw font stacks.
+Override the raw `--font-heading` stack to customize heading typography (`--font-family-heading` already points at it). Utility classes map per element: `.font-sans` → `--font-body`, `.font-serif` → `--font-heading` (a sans stack by default — repoint `--font-heading` at a serif to change that), `.font-mono` → `--font-family-mono`.
 
 ## Fluid type scale
 
 Type sizes use fluid `clamp()` calculations that scale between mobile and desktop viewport widths without breakpoint queries. Steps include `--font-size-eyebrow`, body sizes (`xs` to `xl`), heading sizes (`h6` to `h1`), and `--font-size-display`.
 
-Each step specifies matching `--font-weight-*`, `--leading-*`, and `--tracking-*` tokens.
+Each step specifies matching `--leading-*` and `--tracking-*` tokens. Weights are semantic, not per-step: five tokens (`--font-weight-body`, `-heading`, `-strong`, `-mono`, `-eyebrow`) cover the system.
 
 ## Typography utility classes
 
-`.text-{step}` applies font size, line height, letter spacing, and font weight together:
+Heading steps (`.text-h6` to `.text-h1`, `.text-display`) apply font family, size, line height, letter spacing, and the heading weight together. Body steps (`.text-xs` to `.text-xl`) set size, line height, and letter spacing, inheriting family and weight:
 
 ```html
 <span class="text-display">Launch headline</span>
@@ -46,11 +46,12 @@ Wrap unclassed HTML (such as Markdown or CMS output) in `.ui-prose` to format he
 
 ### Prose configuration tokens
 
-| Token                          | Default               | Purpose                           |
-| ------------------------------ | --------------------- | --------------------------------- |
-| `--ui-prose-link-color`        | `var(--primary)`      | Link color inside prose           |
-| `--ui-prose-img-radius`        | `var(--radius-md)`    | Corner radius on images and video |
-| `--ui-prose-img-border`        | `none`                | Border on media elements          |
-| `--ui-prose-figcaption-margin` | `var(--gap-xs) 0 0 0` | Spacing above figure captions     |
+| Token                          | Default               | Purpose                                         |
+| ------------------------------ | --------------------- | ----------------------------------------------- |
+| `--ui-prose-link-color`        | `var(--primary)`      | Link color inside prose                         |
+| `--ui-prose-img-radius`        | `var(--radius-md)`    | Corner radius on images and video               |
+| `--ui-prose-img-border`        | `none`                | Border on media elements                        |
+| `--ui-prose-figcaption-margin` | `var(--gap-xs) 0 0 0` | Spacing above figure captions                   |
+| `--ui-prose-figcaption-gap`    | `0px`                 | Extra flex gap between figure media and caption |
 
 Vertical block rhythm is controlled by `--paragraph-spacing-*` tokens.

@@ -408,12 +408,15 @@
     --_article: var(--article-xl);
   }
 
+  /* full/bleed mirror the band container semantics: full spans the available
+     width but keeps the gutters; bleed runs edge to edge. */
   :where(:is(.container, [class*=":container"])[data-variant="article"])[data-container="full"] {
-    --_article: var(--article-full);
+    --_article: 100%;
   }
 
   :where(:is(.container, [class*=":container"])[data-variant="article"])[data-container="bleed"] {
-    --_article: var(--article-bleed);
+    --_article: 100%;
+    inline-size: 100%;
   }
 
   /* Responsive article variants — reading width from the breakpoint up (min) or only

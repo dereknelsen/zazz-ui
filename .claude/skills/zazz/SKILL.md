@@ -24,7 +24,7 @@ previews also expose the matching CSS and, for web components, the matching JS t
 
 ## How Zazz thinks (mental model)
 
-- **Cascade layers, not specificity.** Top-level order is `@layer variables, reset, legacy, zazz, migrations`.
+- **Cascade layers, not specificity.** Top-level order is `@layer variables, reset, vendors, legacy, zazz, overrides` (`legacy` nests `imports, components, utilities, migrations`; `zazz` nests `components, plugins, utilities`).
   `zazz` is subdivided: `components, utilities`. A utility wins
   over a component rule with no `!important`. Don't fight the cascade with selector tricks.
 - **Tokens are hooks.** Components read `var(--token)` and never hardcode; variants just

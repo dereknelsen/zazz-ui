@@ -2,6 +2,42 @@
 
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.3.0 (2026-09-02)
+
+Three themes: (1) **theming is single-source** — every theme role is declared once as a `light-dark()` pair, and `.dark`/`.light`/`[data-theme]` are pure `color-scheme` pins that re-resolve the same tokens (the inverted-popover feature is removed); (2) **utility classes go fully logical** — every physical-side declaration becomes its logical equivalent, every side-named class gains a logical-name alias, and border widths and dividers arrive; (3) the **cascade layer contract is reworked** around `vendors`, a grouped `legacy`, `zazz.plugins`, and `overrides`. In LTR horizontal writing with system theming, default rendering is unchanged except where flagged below.
+
+### base
+
+- Theme roles are now **declared exactly once** as `light-dark()` pairs on `:root`; `.dark`/`.light` and `[data-theme="dark"|"light"]` are pure `color-scheme` pins that also re-assert `color`. Scopes nest — a `.light` island inside a `.dark` section re-lightens its subtree. Override a role once (`--primary: light-dark(…, …)`) and every mode picks it up. **Visible change:** the manual/toggled dark palette had drifted from the system-dark arms and is now reconciled to them — `--border` (tint-100), `--popover` (neutral-950), `--primary`/`--secondary` (800), `--tertiary` (800) replace the stale tint-200/shade-950/500/400 copies, so toggled dark now matches system dark exactly.
+- **BREAKING** The inverted-popover feature is removed: the `--use-inverted-popovers` property and the `data-use-inverted-menu` attribute no longer exist. Popovers follow the page's color scheme. Migration: delete both from your markup/CSS; to force a dark popover, set `color-scheme: dark` on it (tokens re-resolve automatically).
+- New **text-decoration utilities**: `underline`, `overline`, `line-through`, `no-underline`.
+- New **border width utilities**: `border-1` to `border-4` (all sides), per-side `border-{t|b}-{1-4}`, `border-{l|s}-{1-4}`, `border-{r|e}-{1-4}`. Compose with border color classes. Not responsive.
+- New **divider utilities**: `divide-x` / `divide-y` draw a 1px border on the trailing logical edge of every direct child except the last. Children inherit `--_border-color`, so border color classes on the container recolor the dividers.
+- New **logical-name aliases** (identical values to their physical-name twins): `inline-*`/`block-*` for `w-*`/`h-*` (plus `min-`/`max-` variants), `start-*`/`end-*` for `left-*`/`right-*`, `ps-*`/`pe-*` for `pl-*`/`pr-*`, `ms-*`/`me-*` for `ml-*`/`mr-*` (negative margins included), `border-s`/`border-e` for `border-l`/`border-r`, `rounded-s/e/ss/se/ee/es-*` for `rounded-l/r/tl/tr/br/bl-*`, and `text-start`/`text-end` for `text-left`/`text-right` (responsive variants included).
+- Positioning, border, radius, and text-align utilities converted from physical to logical properties/values: `left:` → `inset-inline-start:`, `border-right:` → `border-inline-end:`, physical corner radii → `border-start-start-radius` etc., `text-align: left|right` → `start|end`. Rendering only changes in RTL/vertical writing modes, where utilities now mirror with the text direction.
+- **BREAKING** Internal radius composition variables renamed to logical corners: `--_radius-top-left|top-right|bottom-right|bottom-left` → `--_radius-start-start|start-end|end-end|end-start`. Migration: rename in any custom CSS that reads or sets the `--_radius-*` vars (they are internal, so most consumers are unaffected).
+- Fix: `z-isolate` declared invalid `z-index: isolate` (a no-op); now `isolation: isolate` as documented.
+- Fix: `--ui-prose-figcaption-gap` was consumed by `.ui-prose figure` but never declared; now declared (`0px`, preserving current spacing) so the hook works.
+- Fix: the `global-view-transition--old` keyframes read `--view-transition-opacity--new`; they now read `--view-transition-opacity--old`, making that documented hook functional (defaults are identical, so default rendering is unchanged).
+- Fix: article containers' `data-container="full"|"bleed"` referenced undeclared `--article-full`/`--article-bleed` tokens (the rules were invalid and fell back to auto width); they now implement band-container semantics — `full` spans the available width keeping gutters, `bleed` runs edge to edge.
+- **BREAKING** Cascade layer contract reworked: top-level order is now `variables, reset, vendors, legacy, zazz, overrides`. New `vendors` layer for third-party CSS that does not build on Zazz (above `reset` so the reset can't clobber library widgets, below `legacy`). The `migrations` top-level layer moved to a `legacy.migrations` sublayer — `legacy` now nests `imports, components, utilities, migrations`, so deleting a finished migration is dropping one layer; shims still beat all other legacy CSS but no longer beat Zazz (use `overrides` for that). New `zazz.plugins` sublayer between `components` and `utilities` for Zazz-dependent extensions (added variants can restyle the primitives they extend; utilities still win). New `overrides` top-level layer as the structured app-override slot — only unlayered CSS outranks it. Migration: import whole legacy files with `layer(legacy.imports)` (never bare `layer(legacy)` — un-sublayered rules form an implicit final sublayer that beats the shims), move `migrations.css` to `layer(legacy.migrations)`, and move any shim that had to override Zazz into `@layer overrides`.
+
+### button
+
+- Buttons paint with `background-clip: padding-box`, and filled variants (`primary`, `secondary`, `muted`, …) now default their border color to the variant background (`--ui-button-border-color: var(--ui-button-background)` and the `--hover`/`--active` pairs) instead of `transparent`. Same rendered look with cleaner edges on translucent backgrounds; if you overrode a variant background, its border now follows automatically.
+
+### badge
+
+- Same treatment as buttons: `background-clip: padding-box`, and variant border colors default to the variant background instead of `transparent`.
+
+### carousel
+
+- Example markup: dropped a redundant `font-heading` class from the example heading (`text-h5` already applies the heading weight).
+
+### tooltip
+
+- Example markup no longer carries `data-use-inverted-menu="false"` — the attribute was removed with the inverted-popover feature (see base).
+
 ## 0.2.0 (2026-08-31)
 
 Token naming consistency pass + shared field-family inheritance. Two themes: (1) every token is now named after the **logical** CSS property it feeds (`-block-size`, never `-height`), and interactive controls decompose borders into `-border-width` / `-border-style` / `-border-color` parts; (2) buttons, toggles, tabs, checkboxes, radios, and badge borders now **default to the shared `--ui-field-*` family**, so one `--ui-field-radius` or `--ui-field-block-size` override retunes every control that sits on a line together. Default rendering is unchanged — the new aliases resolve to the same values.
