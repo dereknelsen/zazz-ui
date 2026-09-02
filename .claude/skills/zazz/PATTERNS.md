@@ -89,7 +89,7 @@ Group an optional eyebrow, a heading, a subheading, and the call-to-action butto
   <p class="text-xl text-muted-foreground">How vexingly quick daft zebras jump.</p>
 
   <!-- CTA buttons -->
-  <div class="flex mt-sm justify-center @md:justify-start">
+  <div class="flex gap-xs mt-sm justify-center @md:justify-start">
     <a class="ui-button" data-variant="primary" href="/products">Products</a>
     <a class="ui-button" data-variant="ghost" href="/contact">Contact us</a>
   </div>
