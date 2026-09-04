@@ -80,9 +80,7 @@
     transition: var(--ui-navigation-menu-icon-transition);
   }
 
-  [data-slot~="navigation-menu-item"]:has(
-      [data-slot~="navigation-menu-popover"]:where(:popover-open, .\:popover-open)
-    )
+  [data-slot~="navigation-menu-item"]:has([data-slot~="navigation-menu-popover"]:popover-open)
     [data-slot~="navigation-menu-trigger"]
     > svg {
     transform: var(--ui-navigation-menu-icon-transform);
@@ -158,10 +156,7 @@
   /* Highlight the row on hover and while its submenu is open */
   [data-slot~="navigation-menu-submenu-trigger"]:hover,
   [data-slot~="navigation-menu-submenu"]:has(
-      [data-slot~="navigation-menu-popover"][data-variant="submenu"]:where(
-        :popover-open,
-        .\:popover-open
-      )
+      [data-slot~="navigation-menu-popover"][data-variant="submenu"]:popover-open
     )
     [data-slot~="navigation-menu-submenu-trigger"] {
     background-color: var(--muted);
@@ -237,10 +232,7 @@
       padding var(--default-transition-duration) var(--default-transition-timing-function);
   }
 
-  [data-slot~="navigation-menu-popover"][data-animation="slide-down"]:where(
-    :popover-open,
-    .\:popover-open
-  ) {
+  [data-slot~="navigation-menu-popover"][data-animation="slide-down"]:popover-open {
     opacity: var(--ui-popover-opacity--end);
     transform: scale(var(--ui-popover-scale--end)) translate3d(var(--ui-popover-translate--end));
 
@@ -251,10 +243,7 @@
     }
   }
 
-  [data-slot~="navigation-menu-popover"][data-animation="slide-down"]:where(
-      :popover-open,
-      .\:popover-open
-    )
+  [data-slot~="navigation-menu-popover"][data-animation="slide-down"]:popover-open
     [data-slot~="navigation-menu-viewport"] {
     block-size: auto;
     transform: scale(1) translateY(0);

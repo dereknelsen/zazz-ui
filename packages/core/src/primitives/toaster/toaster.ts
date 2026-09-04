@@ -642,7 +642,7 @@ class UiToaster extends ZazzElement {
    */
   #showRegion(): void {
     try {
-      if (!this.matches(":popover-open, .\\:popover-open")) this.showPopover();
+      if (!this.matches(":popover-open")) this.showPopover();
     } catch {
       // Older engines without the Popover API: the region stays a fixed-position
       // element, which still renders (just not on the top layer).
@@ -654,7 +654,7 @@ class UiToaster extends ZazzElement {
    */
   #hideRegion(): void {
     try {
-      if (this.matches(":popover-open, .\\:popover-open")) this.hidePopover();
+      if (this.matches(":popover-open")) this.hidePopover();
     } catch {
       // See #showRegion.
     }

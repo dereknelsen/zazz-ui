@@ -35,7 +35,8 @@ previews also expose the matching CSS and, for web components, the matching JS t
   **default** variant is the _absence_ of the attribute. Write
   `class="ui-button" data-variant="primary"` — never `.ui-button-primary`.
 - **Modern APIs do the work** (Popover, native `<dialog>`, Invoker Commands, anchor
-  positioning, View Transitions, `<details>`). Polyfills are already loaded — preserve them.
+  positioning, View Transitions, `<details>`) — all native across the support floor. The head
+  loads one polyfill, for Interest Invokers (`interestfor`) — preserve it.
 - **Composition variables** (`--_` prefix, `@property`-registered with `inherits: false`).
   Padding, margin, and radius utilities use an internal "composing rule + setter" pattern:
   one rule reads `--_padding-inline-start` etc. and the utility class just sets the var.
@@ -147,7 +148,7 @@ orientation-aware tab keyboard navigation, and `<ui-toaster>` for toast notifica
 (`<ui-carousel>` ≡ `.ui-carousel`); interior parts are `data-slot="{component}-{part}"` hooks
 (e.g. `data-slot="carousel-viewport"`); scroll reveals use `data-reveal-*`. Tooltips
 (`interestfor`), dialogs (`command`/`commandfor`), and popovers (`popovertarget`) use native
-invoker/popover APIs with polyfills already loaded.
+invoker/popover APIs; only `interestfor` is polyfilled.
 
 - Zazz hooks, custom elements, and the `data-carousel-*` / `data-reveal-*` catalogs →
   **`references/apis.md`**.
@@ -177,7 +178,7 @@ patterns live in `PATTERNS.md`.
   token-handled values.
 - **Do** reuse utilities/primitives. **Don't** add net-new CSS until you've ruled out a
   semantic option.
-- **Do** preserve the loaded polyfills and modern-API markup. **Don't** edit the
+- **Do** preserve the loaded polyfill and modern-API markup. **Don't** edit the
   `@zazz-ui/core` package source (`packages/core/src/`) unless asked.
 
 ## Reference index

@@ -87,7 +87,7 @@ class UiMenu extends ZazzElement {
     const isTrigger =
       target.parentElement === this &&
       (target.hasAttribute("popovertarget") || target.hasAttribute("interestfor"));
-    const open = panel.matches(":popover-open, .\\:popover-open");
+    const open = panel.matches(":popover-open");
 
     if (isTrigger && !open && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
       event.preventDefault();

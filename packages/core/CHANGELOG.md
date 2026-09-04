@@ -1,5 +1,24 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.4.0 (2026-09-03)
+
+One theme: the **polyfill set is corrected and cut to one**. The Popover API and Invoker Commands are native across the kit's browser floor and are no longer polyfilled; `interestfor` — which is Chromium-only and drives every tooltip — was never actually polyfilled despite appearing to be, and now is. Net effect: tooltips and hover-open menus start working in Firefox and Safari, and the head's polyfill payload drops from ~228 KB to 15 KB. See ADR-0011.
+
+### base
+
+- **BREAKING** The head contract ships one polyfill instead of two: `invokers@2.2.2/dist/esm/production/interest.js` (Interest Invokers). `@oddbird/popover-polyfill` is removed — the Popover API is native in Chrome 114+, Firefox 125+, Safari 17+, iOS Safari 18.3+, all below the support floor — and the `invokers` `compatible` build (Invoker Commands: Chrome 135+, Firefox 144+, Safari 26.2+) is replaced by the `interest` build from the same package. Migration: re-run `zazz-ui update` (vendored) or re-render `buildHead` / regenerate your `head.html`; if you hand-maintain your head, replace both old script tags with the single `interest.js` tag and its `sha384-hR2BVNtsS7fIIMwOm+f7MY0JZfuByGhQQfevCBB6evFATKzBsTw0JzH/RxD94z2T` hash.
+- **BREAKING** Browser floor raised to match: the Popover API and Invoker Commands are now assumed native rather than polyfilled. Browsers below the floor no longer get popover behavior at all (a closed `[popover]` keeps the UA's `display: none`) instead of degrading through the polyfill. Migration: none if you were already on the documented floor (latest Chrome/Firefox/Safari, two versions back).
+- **BREAKING** The `.\:popover-open` class hack is gone from every selector and `matches()` guard — 18 sites across popover, tooltip, menu, navigation-menu, command, select, combobox, autocomplete, toaster, and `base/typeahead`. Selectors are plain `:popover-open` now. `command.css` keeps `:where(:popover-open, [open])`; that branch is the dialog form of the panel, not the polyfill. Migration: if your own CSS matched `.\:popover-open` to hook Zazz popovers, switch to `:popover-open`.
+
+### tooltip
+
+- Fix: tooltips now work in Firefox and Safari. The trigger is `interestfor`, and the previously loaded polyfill (`invokers/compatible`) contained no `interestfor` implementation at all, so tooltips were silently Chromium-only. The `invokers/interest` build supplies it.
+- Header comment corrected: the Popover API is native across the floor, and `interestfor`'s implicit anchors still are not polyfilled (explicit `anchor-name` is why the styling holds).
+
+### menu
+
+- Fix: the optional hover/focus-open path on menu, menubar, and navigation-menu triggers (`interestfor` alongside `popovertarget`) now works outside Chromium, for the same reason as tooltip.
+
 ## 0.3.0 (2026-09-02)
 
 Three themes: (1) **theming is single-source** — every theme role is declared once as a `light-dark()` pair, and `.dark`/`.light`/`[data-theme]` are pure `color-scheme` pins that re-resolve the same tokens (the inverted-popover feature is removed); (2) **utility classes go fully logical** — every physical-side declaration becomes its logical equivalent, every side-named class gains a logical-name alias, and border widths and dividers arrive; (3) the **cascade layer contract is reworked** around `vendors`, a grouped `legacy`, `zazz.plugins`, and `overrides`. In LTR horizontal writing with system theming, default rendering is unchanged except where flagged below.

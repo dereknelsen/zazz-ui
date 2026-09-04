@@ -4,7 +4,8 @@
  * @layer      variables, reset, components
  * @requires   layers.css, _variables.css (--popover, --popover-foreground)
  * @uses       [popover], popovertarget, :popover-open: Popover API
- *             (Chromium-first; polyfill may use .\:popover-open class)
+ *             (native across the support floor — Chrome 114, Firefox 125,
+ *             Safari 17, iOS 18.3; no polyfill, see ADR-0011)
  * @uses       @starting-style + allow-discrete: enter/exit opacity/transform
  * @uses       anchor-name, position-anchor, position-area, position-try-fallbacks:
  *             anchor positioning (gated behind @supports; Firefox/Safari fall
@@ -91,8 +92,9 @@
     }
   }
 
-  /* .\:popover-open must be set for the polyfill to work with discrete animations */
-  [popover]:where(:popover-open, .\:popover-open) {
+  /* Only display is gated: closed popovers keep the UA's display: none, and
+     allow-discrete animates the switch */
+  [popover]:popover-open {
     display: grid;
     align-content: start;
     opacity: var(--ui-popover-opacity--end);

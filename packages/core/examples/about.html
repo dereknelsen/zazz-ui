@@ -48,19 +48,12 @@
       }
     </script>
     <link rel="modulepreload" href="../src/index.js" />
-    <!-- Polyfills: Popover API + Invoker Commands (command/commandfor) -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/@oddbird/popover-polyfill@0.7.2/dist/popover.min.js"
-      integrity="sha384-pOVHoXRgxuaWHCRM4KSyfyfRTmdxgjVo1Ux78ZKJ+GjUz4zIzXiTa8XXuDF1R1Sd"
-      crossorigin="anonymous"
-      defer
-    ></script>
+    <!-- Polyfill: Interest Invokers (interestfor) — native in Chromium only -->
     <script
       type="module"
-      src="https://cdn.jsdelivr.net/npm/invokers@2.2.2/dist/esm/production/compatible.js"
-      integrity="sha384-7vRXDaS2mcW7LheGSA/rxBwIQNEqmWj0OLEOta/+mvw+9Uf5w1vplA5qg8kLQ99u"
+      src="https://cdn.jsdelivr.net/npm/invokers@2.2.2/dist/esm/production/interest.js"
+      integrity="sha384-hR2BVNtsS7fIIMwOm+f7MY0JZfuByGhQQfevCBB6evFATKzBsTw0JzH/RxD94z2T"
       crossorigin="anonymous"
-      defer
     ></script>
     <!-- Zazz behavior: one ES module imports every component script in dependency order -->
     <script type="module" src="../src/index.js"></script>
@@ -129,7 +122,7 @@
 
     <main data-layout="main">
       <section class="container py-xl">
-        <div class="grid grid-cols-2 grid-flow-row gap-lg items-center">
+        <div class="grid @md:grid-cols-2 gap-lg items-center">
           <hgroup
             class="flex flex-col items-center @md:items-start gap-sm text-center @md:text-left"
           >
@@ -244,7 +237,7 @@
         </div>
       </section>
       <section class="container py-xl">
-        <ui-carousel data-carousel-plugins="class-names" data-container="lg">
+        <ui-carousel data-carousel-plugins="class-names">
           <div class="flex items-end justify-between gap-md flex-wrap pb-lg">
             <h2 class="text-h5 font-heading">Featured Articles</h2>
             <div class="flex @md:hidden gap-xs">

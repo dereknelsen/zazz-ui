@@ -448,7 +448,7 @@ abstract class TypeaheadElement extends ZazzElement {
    * @private
    */
   #panelOpen(): boolean {
-    return this.panel?.matches(":popover-open, .\\:popover-open") ?? false;
+    return this.panel?.matches(":popover-open") ?? false;
   }
 
   /**

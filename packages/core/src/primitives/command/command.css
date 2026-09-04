@@ -53,7 +53,7 @@
 
   /* Only display is gated; unconditional it would defeat the UA's
      display: none on closed popovers and dialogs */
-  [data-slot~="command-panel"]:where(:popover-open, .\:popover-open, [open]) {
+  [data-slot~="command-panel"]:where(:popover-open, [open]) {
     display: flex;
   }
 

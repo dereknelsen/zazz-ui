@@ -104,7 +104,7 @@ Place the import map before `index.js`. To remove external network calls, vendor
 `index.js` imports component behaviors in dependency order:
 
 1. **Import map:** Parsed before module execution.
-2. **Polyfills (optional):** Popover API (`@oddbird/popover-polyfill`), Invoker Commands.
+2. **Polyfill:** Interest Invokers (`invokers/interest`) — `interestfor` is Chromium-only. The Popover API and Invoker Commands are native across the supported browsers and are not polyfilled.
 3. **`index.js` (`<script type="module">`):** Deferred by default; runs before `DOMContentLoaded`.
 4. **Inline theme script:** Executed synchronously before paint.
 

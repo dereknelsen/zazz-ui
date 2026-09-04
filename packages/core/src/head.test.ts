@@ -31,6 +31,24 @@ describe("dependency manifest", () => {
       expect(dep.version).toMatch(/^\d+\.\d+\.\d+$/);
     }
   });
+
+  it("polyfills only Interest Invokers, the one API below the browser floor", () => {
+    // ADR-0011: the Popover API and Invoker Commands are native across the
+    // support window. `interestfor` is Chromium-only, so it is the sole
+    // polyfill — and it must be the invokers `interest` entrypoint, NOT
+    // `compatible`, which ships command/commandfor and no `interestfor` at all.
+    expect(POLYFILLS).toHaveLength(1);
+    const [interest] = POLYFILLS;
+    expect(interest.name).toBe("invokers");
+    expect(interest.file).toBe("dist/esm/production/interest.js");
+    expect(interest.file).not.toContain("compatible");
+  });
+
+  it("no longer ships the popover or invoker-commands polyfills", () => {
+    const head = buildHead();
+    expect(head).not.toContain("popover-polyfill");
+    expect(head).not.toContain("compatible.js");
+  });
 });
 
 describe("buildHead", () => {
@@ -44,7 +62,7 @@ describe("buildHead", () => {
       // The import map must precede every module load, including modulepreload.
       `<script type="importmap">`,
       `<link rel="modulepreload" href="./zazz/index.js">`,
-      `popover-polyfill`,
+      `dist/esm/production/interest.js`,
       `<script type="module" src="./zazz/index.js"></script>`,
       `localStorage.getItem("theme")`,
     ];
@@ -99,18 +117,18 @@ describe("buildHead", () => {
 });
 
 describe("buildHead cdn mode", () => {
-  const KIT = "https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.3.0";
+  const KIT = "https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.4.0";
 
   it("rejects anything but an exact version", () => {
     expect(() => buildHead({ cdn: { version: "latest" } })).toThrow(/exact version/);
     expect(() => buildHead({ cdn: { version: "0.1" } })).toThrow(/exact version/);
     expect(() => buildHead({ cdn: { version: "^0.1.0" } })).toThrow(/exact version/);
-    expect(() => buildHead({ cdn: { version: "0.3.0" } })).not.toThrow();
+    expect(() => buildHead({ cdn: { version: "0.4.0" } })).not.toThrow();
     expect(() => buildHead({ cdn: { version: "1.2.3-beta.1" } })).not.toThrow();
   });
 
   it("renders the bundle grain: two pinned dist requests", () => {
-    const head = buildHead({ cdn: { version: "0.3.0" } });
+    const head = buildHead({ cdn: { version: "0.4.0" } });
     expect(head).toContain(`<link rel="stylesheet" href="${KIT}/dist/zazz.css">`);
     expect(head).toContain(`<script type="module" src="${KIT}/dist/zazz.js"></script>`);
     expect(head).toContain(`<link rel="modulepreload" href="${KIT}/dist/zazz.js">`);
@@ -124,7 +142,7 @@ describe("buildHead cdn mode", () => {
       "dist/zazz.css": "sha384-css",
       "dist/zazz.js": "sha384-js",
     };
-    const head = buildHead({ cdn: { version: "0.3.0", sri } });
+    const head = buildHead({ cdn: { version: "0.4.0", sri } });
     expect(head).toContain(
       `href="${KIT}/dist/zazz.css" integrity="sha384-css" crossorigin="anonymous"`,
     );
@@ -134,7 +152,7 @@ describe("buildHead cdn mode", () => {
   });
 
   it("renders the granular grain from the dependency closure in cascade order", () => {
-    const head = buildHead({ cdn: { version: "0.3.0", primitives: ["combobox"] } });
+    const head = buildHead({ cdn: { version: "0.4.0", primitives: ["combobox"] } });
     // Base layers first (layer declaration leads), utilities/layout last.
     const order = [
       `${KIT}/src/base/_layers.css`,
@@ -169,9 +187,9 @@ describe("buildHead cdn mode", () => {
       "src/base/zazz-element.js": "sha384-ze",
       "src/base/dialog-lifecycle.js": "sha384-dl",
     };
-    const head = buildHead({ cdn: { version: "0.3.0", primitives: ["tooltip"], sri } });
-    // tooltip's closure is css-only, but its styles ride the Popover API.
-    expect(head).toContain("popover-polyfill");
+    const head = buildHead({ cdn: { version: "0.4.0", primitives: ["tooltip"], sri } });
+    // tooltip's closure is css-only, but its trigger is `interestfor`.
+    expect(head).toContain("dist/esm/production/interest.js");
     expect(head).toContain(
       `src="${KIT}/src/base/dialog-lifecycle.js" integrity="sha384-dl" crossorigin="anonymous"`,
     );
@@ -182,7 +200,7 @@ describe("buildHead cdn mode", () => {
   });
 
   it("mirrors index.css's base imports around the primitives", () => {
-    const head = buildHead({ cdn: { version: "0.3.0", primitives: ["button"] } });
+    const head = buildHead({ cdn: { version: "0.4.0", primitives: ["button"] } });
     const links = [...head.matchAll(/src\/base\/(_[a-z-]+\.css)/g)].map((m) => m[1]);
     expect(links).toEqual([
       "_layers.css",

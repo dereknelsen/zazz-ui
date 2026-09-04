@@ -146,7 +146,7 @@ class UiCommand extends TypeaheadElement {
     if (!panel) return;
     if (panel instanceof HTMLDialogElement) {
       if (panel.open) panel.close();
-    } else if (panel.matches(":popover-open, .\\:popover-open")) {
+    } else if (panel.matches(":popover-open")) {
       panel.hidePopover();
     }
   }
