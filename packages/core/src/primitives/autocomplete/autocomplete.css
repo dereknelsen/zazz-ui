@@ -49,7 +49,7 @@
   }
 
   /* Only display is gated — see popover.css: closed popovers stay display: none */
-  [data-slot~="autocomplete-panel"]:where(:popover-open, .\:popover-open) {
+  [data-slot~="autocomplete-panel"]:popover-open {
     display: flex;
   }
 

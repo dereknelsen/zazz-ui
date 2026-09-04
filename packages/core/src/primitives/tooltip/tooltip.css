@@ -90,7 +90,7 @@
     }
   }
 
-  [data-slot~="tooltip-content"]:where(:popover-open, .\:popover-open) {
+  [data-slot~="tooltip-content"]:popover-open {
     display: flex;
     opacity: var(--ui-tooltip-opacity--end);
     transform: scale(var(--ui-tooltip-scale--end)) translate3d(var(--ui-tooltip-translate--end));

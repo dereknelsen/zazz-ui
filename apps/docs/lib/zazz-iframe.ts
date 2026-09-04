@@ -46,7 +46,7 @@ export function buildPreviewDocument({
 }: BuildPreviewOptions): string {
   // The canonical head: metas, fonts (`optional` — previews should never flash
   // fallback text), one stylesheet, and — only when the example needs behavior —
-  // the import map, polyfills, and the single index.js module.
+  // the import map, the polyfill, and the single index.js module.
   const head = buildHead({
     base: ZAZZ_URL_BASE,
     scripts: scripts.length > 0,

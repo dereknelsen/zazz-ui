@@ -4,7 +4,7 @@
  * @fileoverview Canonical `<head>` contract for Zazz pages.
  * @description The single owner of everything a Zazz page loads before its own
  * content: meta tags, the Geist fonts block, the one `index.css` stylesheet
- * link, the feature polyfills, the third-party **import map**, the `index.js`
+ * link, the feature polyfill, the third-party **import map**, the `index.js`
  * module tag, and the theme-persistence script. The docs preview iframe, the
  * kit's example pages (via `scripts/generate-heads.mjs`), and the docs page
  * that teaches head structure all render from this module: there is no other
@@ -17,7 +17,7 @@
  * static package files only (never dynamically generated `/+esm` bundles,
  * as jsDelivr regenerates those when its bundler toolchain updates, which would
  * silently invalidate SRI hashes), `sha384` integrity on every URL. ES modules
- * resolve through the import map; classic polyfills load as plain script tags.
+ * resolve through the import map; the polyfill loads as its own module tag.
  *
  * @example
  * import { buildHead } from "@zazz-ui/core/head";
@@ -135,23 +135,24 @@ const ESM_DEPENDENCIES: readonly CdnDependency[] = [
 ];
 
 /**
- * Feature polyfills loaded as script tags ahead of the kit module: the Popover
- * API (menus, tooltips, the toaster region) and Invoker Commands
- * (`command`/`commandfor`). Native in current engines (2026); the polyfills
- * keep older browsers consistent.
+ * Feature polyfills loaded ahead of the kit module. Exactly one entry:
+ * **Interest Invokers** (`interestfor`), which drives tooltip triggers and the
+ * optional hover/focus open on menu, menubar, and navigation-menu. Chromium
+ * 142+ ships it; Firefox and Safari do not, so this is the kit's one API below
+ * the browser-support floor that a polyfill can cover (ADR-0011).
+ *
+ * Deliberately *not* polyfilled any more (all native across the support
+ * window): the **Popover API** (Chrome 114, Firefox 125, Safari 17, iOS 18.3)
+ * and **Invoker Commands** `command`/`commandfor` (Chrome 135, Firefox 144,
+ * Safari 26.2). CSS anchor positioning is below the floor but has no polyfill
+ * here — the components gate it behind `@supports` instead.
  */
 const POLYFILLS: readonly CdnDependency[] = [
   {
-    name: "@oddbird/popover-polyfill",
-    version: "0.7.2",
-    file: "dist/popover.min.js",
-    integrity: "sha384-pOVHoXRgxuaWHCRM4KSyfyfRTmdxgjVo1Ux78ZKJ+GjUz4zIzXiTa8XXuDF1R1Sd",
-  },
-  {
     name: "invokers",
     version: "2.2.2",
-    file: "dist/esm/production/compatible.js",
-    integrity: "sha384-7vRXDaS2mcW7LheGSA/rxBwIQNEqmWj0OLEOta/+mvw+9Uf5w1vplA5qg8kLQ99u",
+    file: "dist/esm/production/interest.js",
+    integrity: "sha384-hR2BVNtsS7fIIMwOm+f7MY0JZfuByGhQQfevCBB6evFATKzBsTw0JzH/RxD94z2T",
   },
 ];
 
@@ -196,18 +197,17 @@ ${json}
 }
 
 /**
- * @description Renders the polyfill script tags. The popover polyfill is a
- * classic script; the invokers compatibility build is a module. Both are
- * deferred, so they execute in document order ahead of `index.js`.
+ * @description Renders the polyfill script tag. The invokers interest build is
+ * an ES module, so it is deferred by default and executes in document order —
+ * ahead of the `index.js` module tag that follows it.
  *
  * @returns The polyfill markup.
  * @private
  */
 function polyfillsBlock(): string {
-  const [popover, invokers] = POLYFILLS;
-  return `<!-- Polyfills: Popover API + Invoker Commands (command/commandfor) -->
-<script src="${cdnUrl(popover)}" integrity="${popover.integrity}" crossorigin="anonymous" defer></script>
-<script type="module" src="${cdnUrl(invokers)}" integrity="${invokers.integrity}" crossorigin="anonymous" defer></script>`;
+  const [interest] = POLYFILLS;
+  return `<!-- Polyfill: Interest Invokers (interestfor) — native in Chromium only -->
+<script type="module" src="${cdnUrl(interest)}" integrity="${interest.integrity}" crossorigin="anonymous"></script>`;
 }
 
 /**
@@ -394,9 +394,8 @@ function cdnBlocks(cdn: CdnHeadOptions, scripts: boolean): string[] {
     // Side-effect modules need their own tag (nothing imports them); the rest
     // of each primitive's chain loads through native relative imports. The
     // core dialog-lifecycle module always leads: dialogs, menus, and popovers
-    // assume its lifecycle events. Polyfills stay in even for css-only
-    // closures — tooltip/dialog/menu styles ride on the Popover API and
-    // Invoker Commands.
+    // assume its lifecycle events. The polyfill stays in even for css-only
+    // closures — tooltip is styles-only but its trigger is `interestfor`.
     const scriptFiles = [
       ...new Set([
         "base/dialog-lifecycle.js",

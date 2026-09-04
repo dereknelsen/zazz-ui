@@ -18,8 +18,8 @@ import "@zazz-ui/core"; // custom elements and shared behaviors
 From a CDN:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.3.0/dist/zazz.css" />
-<script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.3.0/dist/zazz.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.4.0/dist/zazz.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.4.0/dist/zazz.js"></script>
 ```
 
 Use an exact version in CDN URLs. Each release includes `dist/sri.json`, which lists the SHA-384 hash for every published file. Use those hashes in `integrity` attributes.
@@ -79,6 +79,8 @@ See [layout and containers](https://zazz.sh/docs/core-concepts/layout) for the b
 ## Browser support
 
 Zazz targets the latest Chrome, Firefox, and Safari, two versions back. Features below that floor are feature-detected with a polyfill or a graceful fallback where practical. The kit leans on modern CSS (cascade layers, container style queries, subgrid, `light-dark()`), so older browsers get a degraded but functional experience rather than a pixel-perfect one.
+
+The head loads exactly one polyfill: `invokers/interest`, for Interest Invokers (`interestfor`), which is Chromium-only and drives tooltip triggers. Everything else the kit builds on — the Popover API, Invoker Commands, native `<dialog>`, `<details>` — is native across the floor. CSS anchor positioning is below the floor and is gated behind `@supports` with a UA-centered fallback.
 
 ## Package layout
 

@@ -96,7 +96,7 @@
     view-transition-name: toaster;
   }
 
-  :where(ui-toaster, .ui-toaster):where(:popover-open, .\:popover-open) {
+  :where(ui-toaster, .ui-toaster):popover-open {
     display: block;
   }
 

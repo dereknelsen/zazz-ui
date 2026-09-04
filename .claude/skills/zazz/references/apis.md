@@ -1,8 +1,9 @@
 # Zazz modern APIs & JS behaviors
 
-Zazz is built on modern web platform features, with polyfills already wired in the page head.
-**Preserve the polyfills**, prefer the native hook, and author behavior in **HTML** — the JS
-discovers and enhances markup; you rarely touch it.
+Zazz is built on modern web platform features. One polyfill is wired into the page head
+(Interest Invokers); everything else is native across the support floor. **Preserve that
+polyfill**, prefer the native hook, and author behavior in **HTML** — the JS discovers and
+enhances markup; you rarely touch it.
 
 > For how any of these APIs actually work, and for browser-support / fallback decisions, use
 > the **`modern-web-guidance`** skill (search → retrieve). Don't reimplement an API by hand.
@@ -11,11 +12,11 @@ discovers and enhances markup; you rarely touch it.
 
 | API                                   | Used by                                 | Markup hook                                                                                                                                                     | Polyfill                                |
 | ------------------------------------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
-| Popover API                           | tooltip, menu, navigation-menu, toaster | `popover="auto"` / `popover="hint"` / `popover="manual"` (toaster region — no light dismiss), `popovertarget="<id>"`, `:popover-open`                           | `@oddbird/popover-polyfill`             |
-| Invoker Commands                      | dialog, lightbox, toaster               | `command="show-modal"` / `command="close"` / custom `command="--toast[-variant]"`, `commandfor="<id>"`                                                          | `invokers/compatible`                   |
-| Interest Invokers                     | tooltip                                 | `interestfor="<id>"` (hover/focus/long-press → hint, wires ARIA)                                                                                                | `invokers/compatible`                   |
+| Popover API                           | tooltip, menu, navigation-menu, toaster | `popover="auto"` / `popover="hint"` / `popover="manual"` (toaster region — no light dismiss), `popovertarget="<id>"`, `:popover-open`                           | — (native; Baseline 2025)               |
+| Invoker Commands                      | dialog, lightbox, toaster               | `command="show-modal"` / `command="close"` / custom `command="--toast[-variant]"`, `commandfor="<id>"`                                                          | — (native; Baseline 2026)               |
+| Interest Invokers                     | tooltip, menu, menubar, navigation-menu | `interestfor="<id>"` (hover/focus/long-press → hint, wires ARIA)                                                                                                | **`invokers/interest`** (Chromium-only) |
 | CSS Anchor Positioning                | popover/tooltip placement               | `data-side`, `data-align` (drive `anchor-name` / `position-area`)                                                                                               | `@supports`-gated; UA-centered fallback |
-| Native `<dialog>`                     | dialog, lightbox, mobile-menu           | `<dialog>`, `::backdrop`, `closedby="any"`                                                                                                                      | (via Invoker Commands polyfill)         |
+| Native `<dialog>`                     | dialog, lightbox, mobile-menu           | `<dialog>`, `::backdrop`, `closedby="any"`                                                                                                                      | —                                       |
 | Native `<details>`                    | accordion                               | `<details>`/`<summary>`, `::details-content`, `interpolate-size: allow-keywords`                                                                                | —                                       |
 | View Transitions                      | cross-page nav                          | `@view-transition { navigation: auto }`, `data-transition-layer="global-header"` / `="global-footer"` (`<main>` is automatic), `document.startViewTransition()` | —                                       |
 | Navigation API                        | SPA-style nav                           | `navigation.js` (app-level; **not** loaded in preview iframes)                                                                                                  | falls back to full page load            |
@@ -127,9 +128,16 @@ defers while inside a closed `<dialog>`, and destroys its Embla instances on dis
   deliberately omit it. Custom elements initialize themselves when connected, so SPA swaps
   do not need a separate init call for them.
 
-## 3. Polyfills in the page head (keep these)
+## 3. The page head's one polyfill (keep it)
 
-`@oddbird/popover-polyfill` (Popover API) · `invokers/compatible` (Invoker + Interest
-Invokers, i.e. `command`/`commandfor`/`interestfor`) · the Embla Carousel CDN UMD bundles
-(core + autoplay, auto-scroll, class-names, ssr plugins). See `packages/core/examples/index.html` for
-the exact tags and SRI hashes.
+`invokers/interest` — Interest Invokers (`interestfor`) only. It is the kit's sole polyfill
+because `interestfor` is the sole API below the browser-support floor that a polyfill can
+cover (Chromium 142+; no Firefox or Safari). Do **not** swap it for `invokers/compatible`:
+that build ships `command`/`commandfor` — native everywhere the kit supports — and contains
+no `interestfor` at all. See ADR-0011.
+
+The Popover API and Invoker Commands were polyfilled through 0.3.x and are not any more; they
+are native across the support floor. Anchor positioning is below the floor but `@supports`-gated
+rather than polyfilled. The Embla Carousel ESM builds also load from the CDN, but through the
+import map as ordinary dependencies — not polyfills. See `packages/core/examples/index.html`
+for the exact tags and SRI hashes.

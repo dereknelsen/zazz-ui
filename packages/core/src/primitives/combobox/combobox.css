@@ -179,7 +179,7 @@
   }
 
   /* Only display is gated; see popover.css: closed popovers stay display: none */
-  [data-slot~="combobox-panel"]:where(:popover-open, .\:popover-open) {
+  [data-slot~="combobox-panel"]:popover-open {
     display: flex;
   }
 
