@@ -7,7 +7,7 @@
  *             select.css (--ui-option-*, --ui-select-picker-icon-*)
  * @uses       [popover="manual"]: panel opened/closed by combobox.js
  * @uses       anchor-name, anchor-scope, position-anchor: tether panel to the control
- * @uses       anchor-size(width): match panel width to the control (@supports gated)
+ * @uses       anchor-size(width): match panel width to the control (Baseline 2026)
  * @uses       :has(): chevron rotation, group + empty-state visibility
  * @uses       mask: chevron and tag-remove icons; wiped in forced-colors mode,
  *             matching the rest of the kit (option checkmark, picker icon)
@@ -190,10 +190,8 @@
     box-shadow: none;
   }
 
-  @supports (inline-size: anchor-size(width)) {
-    [data-slot~="combobox-panel"] {
-      min-inline-size: anchor-size(width);
-    }
+  [data-slot~="combobox-panel"] {
+    min-inline-size: anchor-size(width);
   }
 
   [data-slot~="combobox-list"] {

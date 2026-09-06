@@ -6,7 +6,7 @@
  *             select.css (--ui-option-*), input.css
  * @uses       [popover="manual"] — panel opened/closed by autocomplete.js
  * @uses       anchor-name, anchor-scope, position-anchor — tether panel to the input
- * @uses       anchor-size(width) — match panel width to the input (@supports gated)
+ * @uses       anchor-size(width) — match panel width to the input (Baseline 2026)
  * @uses       :has() — group + empty-state visibility without JavaScript
  * @uses       data-side / data-align — maps to --ui-popover-position-* in popover.css
  * @tokens     --ui-autocomplete-* (@layer variables); items alias --ui-option-*
@@ -60,10 +60,8 @@
     box-shadow: none;
   }
 
-  @supports (inline-size: anchor-size(width)) {
-    [data-slot~="autocomplete-panel"] {
-      min-inline-size: anchor-size(width);
-    }
+  [data-slot~="autocomplete-panel"] {
+    min-inline-size: anchor-size(width);
   }
 
   [data-slot~="autocomplete-list"] {

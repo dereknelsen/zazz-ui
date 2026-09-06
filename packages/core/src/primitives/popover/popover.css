@@ -8,8 +8,8 @@
  *             Safari 17, iOS 18.3; no polyfill, see ADR-0011)
  * @uses       @starting-style + allow-discrete: enter/exit opacity/transform
  * @uses       anchor-name, position-anchor, position-area, position-try-fallbacks:
- *             anchor positioning (gated behind @supports; Firefox/Safari fall
- *             back to UA-centered popover)
+ *             anchor positioning (gated behind @supports; Safari 26.x falls
+ *             back to UA-centered popover — full support lands in Safari 27)
  * @uses       backdrop-filter: popover surface blur
  * @tokens     --ui-popover-* (Tier 3 owner; @layer variables)
  * @consumedby select.css (picker placement), menu.css, navigation-menu.css, tooltip.css, toaster.css,
@@ -77,10 +77,11 @@
   }
 
   /* Anchor positioning tethers the popover to its trigger and lets the browser
-     flip it away from viewport edges (Chromium 125+ today). It is gated behind
-     @supports so browsers without anchor positioning (Firefox, Safari) keep the
-     UA-centered popover (inset: 0 + margin: auto) instead of a mispositioned
-     top-left box. Detection key is anchor-name — the entry property of the API. */
+     flip it away from viewport edges. Baseline 2026: Chrome 151, Firefox 147,
+     Safari 27. The @supports gate now covers exactly one case — Safari 26.x,
+     which keeps the UA-centered popover (inset: 0 + margin: auto) instead of a
+     mispositioned top-left box. Retire this gate once Safari 27 is two versions
+     back. Detection key is anchor-name — the entry property of the API. */
   @supports (anchor-name: --zazz) {
     :where([popover]) {
       position: fixed;

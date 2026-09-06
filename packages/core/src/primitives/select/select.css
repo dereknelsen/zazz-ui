@@ -6,7 +6,7 @@
  * @uses       appearance: base-select: customizable select (Chromium 135+ / Safari 17+)
  * @uses       ::picker(select), ::picker-icon, selectedcontent, option::checkmark
  * @uses       @starting-style + allow-discrete: picker open animation
- * @uses       anchor-size(width): match picker width to trigger (@supports gated)
+ * @uses       anchor-size(width): match picker width to trigger (Baseline 2026)
  * @uses       position-area, position-try-fallbacks: placement tokens come from
  *             popover.css's shared matrix (@supports gated)
  * @uses       backdrop-filter: picker surface blur (shared with [popover])
@@ -244,10 +244,11 @@
   }
 
   /* Dropdown panel: the shared [popover] surface (--ui-popover-* family), anchored
-     to the trigger. anchor-size() matches the panel to the trigger width; it is anchor-related,
-     so it is gated. The fallback (max-content) only matters in the narrow case
-     of a browser that supports customizable <select> (::picker) but not
-     anchor-size, where the panel sizes to its content instead of stretching. */
+     to the trigger. anchor-size() matches the panel to the trigger width. No
+     @supports gate: anchor-size() is Baseline 2026 (Chrome 125, Firefox 147,
+     Safari 26.0), and where it is missing the declaration is simply dropped, so
+     the max-content declared above stands — the panel sizes to its content
+     instead of stretching. */
   .ui-select::picker(select) {
     flex-direction: column;
     gap: var(--step-px);
@@ -264,10 +265,8 @@
     box-shadow: var(--ui-popover-shadow);
   }
 
-  @supports (inline-size: anchor-size(width)) {
-    .ui-select::picker(select) {
-      min-inline-size: anchor-size(width);
-    }
+  .ui-select::picker(select) {
+    min-inline-size: anchor-size(width);
   }
 
   /* ===========================================================================
@@ -413,10 +412,8 @@
     display: flex;
   }
 
-  @supports (inline-size: anchor-size(width)) {
-    [data-slot~="multiselect-panel"] {
-      min-inline-size: anchor-size(width);
-    }
+  [data-slot~="multiselect-panel"] {
+    min-inline-size: anchor-size(width);
   }
 
   /* Rows are ghost options; the checkbox is real but visually replaced by the

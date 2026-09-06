@@ -1,5 +1,15 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.4.1 (2026-09-04)
+
+Housekeeping on top of 0.4.0: the vestigial `anchor-size()` `@supports` gates come out, and the anchor-positioning support notes in the CSS headers and ADR-0011 are corrected. No rendered output changes in any browser — see the reasoning on the gate entry below.
+
+### base
+
+- The four `@supports (inline-size: anchor-size(width))` gates are removed (autocomplete panel, combobox panel, select `::picker(select)`, multiselect panel); `min-inline-size: anchor-size(width)` now applies unconditionally. **Not a browser-floor raise, and not breaking:** in a browser without `anchor-size()` the function is unknown, so the declaration is dropped at parse time and the `inline-size: max-content` above it still stands — exactly what the gate produced. `anchor-size()` is also Baseline 2026 (Chrome 125, Firefox 147, Safari 26.0), inside the support floor either way. Migration: none.
+- The `anchor-name` gates in popover, tooltip, select, and tabs are deliberately **kept**. Unlike `anchor-size()`, dropping those would change rendering: full `anchor-name` support starts at Safari 27, and on Safari 26.x the gate is what keeps a popover UA-centered instead of an unpositioned top-left box. `tabs.css` also keeps its `@supports not` branch, which is a real designed fallback (indicator hidden, filled label instead). `popover.css` records when to retire them.
+- Corrected support notes in `popover.css`, `autocomplete.css`, `combobox.css`, and `select.css`: anchor positioning reached Baseline in January 2026 (Chrome 151, Firefox 147, Safari 27), so the headers no longer claim Firefox lacks it. ADR-0011's support matrix is corrected the same way, and it now records why no anchor-positioning polyfill is adopted (`@oddbird/css-anchor-positioning` implements no `anchor-size()`, no dynamic anchors, and wraps the target in a way that disturbs custom-element lifecycles).
+
 ## 0.4.0 (2026-09-03)
 
 One theme: the **polyfill set is corrected and cut to one**. The Popover API and Invoker Commands are native across the kit's browser floor and are no longer polyfilled; `interestfor` — which is Chromium-only and drives every tooltip — was never actually polyfilled despite appearing to be, and now is. Net effect: tooltips and hover-open menus start working in Firefox and Safari, and the head's polyfill payload drops from ~228 KB to 15 KB. See ADR-0011.
