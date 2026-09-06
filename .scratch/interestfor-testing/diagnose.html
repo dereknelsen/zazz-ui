@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>interestfor layer diagnosis</title>
+
+    <!-- The EXACT polyfill @zazz-ui/core 0.4.0 pins in its head contract. -->
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/invokers@2.2.2/dist/esm/production/interest.js"
+      integrity="sha384-hR2BVNtsS7fIIMwOm+f7MY0JZfuByGhQQfevCBB6evFATKzBsTw0JzH/RxD94z2T"
+      crossorigin="anonymous"
+      onerror="window.__loadError = 'the browser refused the script (SRI, CORS, or network)'"
+    ></script>
+
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: system-ui, sans-serif;
+      }
+      body {
+        margin: 0 auto;
+        max-width: 46rem;
+        padding: 2rem 1.25rem 6rem;
+        line-height: 1.5;
+      }
+      h1 {
+        font-size: 1.35rem;
+        margin-block-end: 0.25rem;
+      }
+      p.lede {
+        margin-block-start: 0;
+        opacity: 0.75;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-block: 1.5rem 0.5rem;
+        font-size: 0.9rem;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 0.5rem 0.6rem;
+        border-block-end: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+        vertical-align: top;
+      }
+      th {
+        font-weight: 600;
+      }
+      code {
+        font-family: ui-monospace, monospace;
+        font-size: 0.85em;
+      }
+      .v {
+        font-family: ui-monospace, monospace;
+        font-weight: 700;
+      }
+      .ok {
+        color: light-dark(#0a7a34, #4ade80);
+      }
+      .no {
+        color: light-dark(#b42318, #fca5a5);
+      }
+      .meh {
+        color: light-dark(#a15c07, #fbbf24);
+      }
+      .verdict {
+        margin-block: 1.5rem;
+        padding: 1rem 1.1rem;
+        border-radius: 0.5rem;
+        border: 2px solid currentColor;
+        font-size: 0.95rem;
+      }
+      .stage {
+        margin-block-start: 2.5rem;
+        padding: 2.5rem;
+        border: 2px dashed color-mix(in srgb, currentColor 25%, transparent);
+        border-radius: 0.5rem;
+        text-align: center;
+      }
+      button {
+        font: inherit;
+        padding: 0.5rem 0.9rem;
+        border-radius: 0.4rem;
+        border: 1px solid currentColor;
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
+      }
+      /* Deliberately plain: no Zazz CSS, so this isolates the platform from the kit. */
+      [popover] {
+        border: 2px solid light-dark(#b42318, #fca5a5);
+        background: light-dark(#fffbe6, #3a3320);
+        color: inherit;
+        padding: 0.4rem 0.6rem;
+        border-radius: 0.35rem;
+        font-size: 0.85rem;
+      }
+      #where {
+        margin-block-start: 1rem;
+        font-family: ui-monospace, monospace;
+        font-size: 0.85rem;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Where does <code>interestfor</code> actually break?</h1>
+    <p class="lede">
+      Open this file in Safari and in Firefox. Each row is an independent layer — the tooltip needs
+      every one of them. This page loads no Zazz CSS, so a failure here is the platform or the
+      polyfill, not the design system.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Layer</th>
+          <th>Result</th>
+          <th>What it means</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+
+    <div class="verdict" id="verdict">Running…</div>
+
+    <div class="stage">
+      <button type="button" id="trigger" interestfor="tip">Hover me (or focus with Tab)</button>
+      <div id="tip" popover="hint">Add to library</div>
+      <div id="where">Hover the button; the result appears here.</div>
+    </div>
+
+    <script>
+      const rows = document.getElementById("rows");
+      const add = (name, state, value, meaning) => {
+        const cls = state === true ? "ok" : state === false ? "no" : "meh";
+        const mark = state === true ? "✓ " : state === false ? "✗ " : "• ";
+        rows.insertAdjacentHTML(
+          "beforeend",
+          `<tr><td><code>${name}</code></td>
+             <td class="v ${cls}">${mark}${value}</td>
+             <td>${meaning}</td></tr>`,
+        );
+      };
+
+      // Run after the deferred module has executed.
+      window.addEventListener("load", () => {
+        const btn = document.getElementById("trigger");
+        const tip = document.getElementById("tip");
+
+        // 1. Did the polyfill file even load?
+        add(
+          "polyfill script",
+          !window.__loadError,
+          window.__loadError ? "failed" : "loaded",
+          window.__loadError ?? "The pinned invokers/interest module was fetched and executed.",
+        );
+
+        // 2. Is interestfor available at all (native or polyfilled)?
+        const desc = Object.getOwnPropertyDescriptor(
+          HTMLButtonElement.prototype,
+          "interestForElement",
+        );
+        const hasApi = !!desc && (typeof desc.get === "function" || typeof desc.set === "function");
+        add(
+          "interestForElement",
+          hasApi,
+          hasApi ? "present" : "MISSING",
+          hasApi
+            ? "Something implements interestfor — native in Chromium 142+, otherwise the polyfill installed it."
+            : "Neither native nor polyfilled. THIS is the blocker: interestfor has no implementation on this page.",
+        );
+
+        // 3. Native or polyfill? (The polyfill sets this flag when it installs.)
+        const viaPolyfill = !!window.interestForPolyfillInstalled;
+        add(
+          "implementation",
+          null,
+          viaPolyfill ? "polyfill" : "native",
+          viaPolyfill
+            ? "The polyfill is doing the work — the path Firefox and Safari take."
+            : "Native browser support; the polyfill self-gated off. A pass here says nothing about Firefox/Safari.",
+        );
+
+        // 4. Does the reference resolve?
+        add(
+          "reference resolves",
+          btn.interestForElement === tip,
+          btn.interestForElement === tip ? "yes" : "no",
+          'interestfor="tip" resolves to the popover element.',
+        );
+
+        // 5. popover="hint" — Safari does NOT support this value.
+        const hint = tip.popover;
+        add(
+          'popover="hint"',
+          hint === "hint" ? true : null,
+          hint === "hint" ? "supported" : `falls back to "${hint}"`,
+          hint === "hint"
+            ? "The hint state works: light dismiss, and opening one hint closes other hints."
+            : 'Not supported here, so the attribute degrades to "manual" per spec. The tooltip still OPENS — but it will not light-dismiss, and two tooltips can stay open at once.',
+        );
+
+        // 6. Anchor positioning — decides WHERE the tooltip lands.
+        const anchorOk = CSS.supports("anchor-name", "--probe");
+        add(
+          "anchor positioning",
+          anchorOk,
+          anchorOk ? "supported" : "NOT supported",
+          anchorOk
+            ? "The tooltip can tether to its trigger."
+            : "Zazz gates positioning behind @supports (anchor-name), so the tooltip opens CENTERED IN THE VIEWPORT instead of beside the button. It is working — it is just nowhere near where you are looking.",
+        );
+
+        const verdict = document.getElementById("verdict");
+        if (!hasApi) {
+          verdict.textContent =
+            "BLOCKER: interestfor has no implementation on this page. Hovering cannot ever open the tooltip. Fix the polyfill before looking anywhere else.";
+        } else if (!anchorOk) {
+          verdict.textContent =
+            "interestfor IS implemented here. But anchor positioning is missing, so the tooltip will appear centered in the viewport, not next to the button. If it looked broken, check the middle of the screen — that is a positioning gap, not an interestfor gap.";
+        } else {
+          verdict.textContent =
+            "Every layer is available. Hover the button below; it should appear beside it.";
+        }
+
+        // 7. Live check: did it open, and where did it land?
+        const report = () => {
+          const out = document.getElementById("where");
+          const open = tip.matches(":popover-open");
+          if (!open) {
+            out.textContent = "closed — nothing open right now";
+            return;
+          }
+          const t = btn.getBoundingClientRect();
+          const p = tip.getBoundingClientRect();
+          const dx = Math.round(p.left - t.left);
+          const dy = Math.round(p.top - t.bottom);
+          const centred =
+            Math.abs(p.left + p.width / 2 - innerWidth / 2) < 12 &&
+            Math.abs(p.top + p.height / 2 - innerHeight / 2) < 12;
+          out.textContent =
+            `OPEN ✓  size ${Math.round(p.width)}×${Math.round(p.height)}\n` +
+            `offset from trigger: dx ${dx}px, dy ${dy}px\n` +
+            (centred
+              ? "→ VIEWPORT-CENTERED: interestfor worked, positioning did not."
+              : "→ anchored near the trigger: both layers working.");
+        };
+        tip.addEventListener("toggle", () => setTimeout(report, 30));
+        setInterval(report, 500);
+      });
+    </script>
+  </body>
+</html>
