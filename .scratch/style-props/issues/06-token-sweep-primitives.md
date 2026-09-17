@@ -1,7 +1,7 @@
 # 06 — Base + primitive token sweep (--gap-*, --breakpoint-*)
 
 Type: task
-Status: open
+Status: resolved
 Blocked by: 03
 Size: S
 
@@ -22,5 +22,28 @@ Replace every `var(--gap-X)` with `var(--space-X)` and every `--breakpoint-xs…
 Acceptance: that grep returns 0 lines; `vp check` passes.
 
 ## Answer
+
+Swept 14 files, 60 replacements (56 `var(--gap-X)` -> `var(--space-X)`, 4 `--breakpoint-*` shifts). Values unchanged: `--space-xs..xl` resolve to the same `--step-*` as the old `--gap-*`; each breakpoint shift keeps its rem (xs->sm 40rem, sm->md 48rem, md->lg 64rem).
+
+| File | gap->space | breakpoint shift |
+| --- | --- | --- |
+| `base/_reset.css` | 1 | 0 |
+| `base/_typography.css` | 8 | 0 |
+| `primitives/alert-dialog/alert-dialog.css` | 1 | 0 |
+| `primitives/command/command.css` | 0 | 1 (sm->md) |
+| `primitives/dialog/dialog.css` | 13 | 2 (md->lg) |
+| `primitives/fields/fields.css` | 2 | 0 |
+| `primitives/input-group/input-group.css` | 1 | 0 |
+| `primitives/lightbox/lightbox.css` | 11 | 0 |
+| `primitives/mobile-menu/mobile-menu.css` | 8 | 0 |
+| `primitives/navigation-menu/navigation-menu.css` | 6 | 1 (xs->sm) |
+| `primitives/password-group/password-group.css` | 1 | 0 |
+| `primitives/table/table.css` | 2 | 0 |
+| `primitives/tabs/tabs.css` | 1 | 0 |
+| `primitives/tooltip/tooltip.css` | 1 | 0 |
+
+Checklist grep after the sweep: zero `--gap-` hits in `.css`; the only remaining `--breakpoint-` hits in `.css` are the four shifted (new-name) reads, which the literal grep still matches by design. One out-of-scope hit remains in `primitives/navigation-menu/navigation-menu-icon-grid.html:33` (`--breakpoint-sm` / `--gap-md`) -- `.html` is excluded by this ticket; left for the examples ticket (28).
+
+`vp check` passes (one pre-existing lint warning in `scripts/generate-sri.mjs`, unrelated); `vp test` passes (15 files, 122 tests).
 
 ## Comments
