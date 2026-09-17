@@ -28,22 +28,22 @@ Format: see `docs/agents/issue-tracker.md`. Frontier = open, unblocked, unclaime
 
 - [01 — Baseline numbers for 0.4.1](issues/01-baseline-numbers.md) — blocked by: — · S
 - [02 — ADR-0012: style props amend ADR-0008; CONTEXT.md term](issues/02-adr-0012-style-props.md) — blocked by: — · S
-- [03 — Tokens: --space-*, --gap-* aliases, --bp-*, --screen-*, --breakpoint-* shift](issues/03-tokens.md) — blocked by: — · M
-- [04 — _utilities.css sweep: --gap-→--space-, flags, breakpoint prefix shift](issues/04-utilities-sweep.md) — blocked by: 03 · L
-- [05 — _layout.css: flags, band names, data-container, @max-*, new 2xl](issues/05-layout-shift.md) — blocked by: 03 · M
-- [06 — Base + primitive token sweep (--gap-*, --breakpoint-*)](issues/06-token-sweep-primitives.md) — blocked by: 03 · S
+- [03 — Tokens: --space-\*, --gap-\* aliases, --bp-\*, --screen-\*, --breakpoint-\* shift](issues/03-tokens.md) — blocked by: — · M
+- [04 — \_utilities.css sweep: --gap-→--space-, flags, breakpoint prefix shift](issues/04-utilities-sweep.md) — blocked by: 03 · L
+- [05 — \_layout.css: flags, band names, data-container, @max-\*, new 2xl](issues/05-layout-shift.md) — blocked by: 03 · M
+- [06 — Base + primitive token sweep (--gap-\*, --breakpoint-\*)](issues/06-token-sweep-primitives.md) — blocked by: 03 · S
 - [07 — tokens.test.ts: guard the new token contract](issues/07-tokens-test.md) — blocked by: 03 · S
-- [08 — src/props.ts + generate-properties.mjs + _properties.css + props.test.ts](issues/08-props-source-and-properties.md) — blocked by: 03 · M
-- [09 — _utilities-spacing.css style props](issues/09-utilities-spacing.md) — blocked by: 08 · M
-- [10 — _utilities-sizing.css style props](issues/10-utilities-sizing.md) — blocked by: 08 · S
-- [11 — _utilities-grid.css style props](issues/11-utilities-grid.md) — blocked by: 08 · S
-- [12 — _utilities-flex.css style props](issues/12-utilities-flex.md) — blocked by: 08 · S
-- [13 — _utilities-color.css style props](issues/13-utilities-color.md) — blocked by: 08 · S
-- [14 — _utilities-typography.css style props](issues/14-utilities-typography.md) — blocked by: 08 · S
-- [15 — _utilities-position.css style props](issues/15-utilities-position.md) — blocked by: 08 · S
+- [08 — src/props.ts + generate-properties.mjs + \_properties.css + props.test.ts](issues/08-props-source-and-properties.md) — blocked by: 03 · M
+- [09 — \_utilities-spacing.css style props](issues/09-utilities-spacing.md) — blocked by: 08 · M
+- [10 — \_utilities-sizing.css style props](issues/10-utilities-sizing.md) — blocked by: 08 · S
+- [11 — \_utilities-grid.css style props](issues/11-utilities-grid.md) — blocked by: 08 · S
+- [12 — \_utilities-flex.css style props](issues/12-utilities-flex.md) — blocked by: 08 · S
+- [13 — \_utilities-color.css style props](issues/13-utilities-color.md) — blocked by: 08 · S
+- [14 — \_utilities-typography.css style props](issues/14-utilities-typography.md) — blocked by: 08 · S
+- [15 — \_utilities-position.css style props](issues/15-utilities-position.md) — blocked by: 08 · S
 - [16 — Wiring: index.css imports, head.ts BASE lists, package.json exports, manifest base entries](issues/16-wiring.md) — blocked by: 09, 10, 11, 12, 13, 14, 15 · S
 - [17 — examples/style-props.html + browser verification](issues/17-example-style-props.md) — blocked by: 16 · S
-- [18 — Primitive audit: --step-* in component rules → --ui-* per ADR-0008](issues/18-primitive-audit.md) — blocked by: 17 · M
+- [18 — Primitive audit: --step-\* in component rules → --ui-\* per ADR-0008](issues/18-primitive-audit.md) — blocked by: 17 · M
 - [19 — build-dist.mjs + lightningcss + vite.config.ts + build order](issues/19-build-dist.md) — blocked by: 16 · M
 - [20 — DIST_CSS in manifest + dist.test.ts](issues/20-dist-manifest-test.md) — blocked by: 19 · S
 - [21 — /combine/ dry run + README dist section](issues/21-combine-dry-run.md) — blocked by: 19, 20 · S
@@ -65,3 +65,5 @@ Format: see `docs/agents/issue-tracker.md`. Frontier = open, unblocked, unclaime
 ## Decisions so far
 
 <!-- one line per resolved ticket; gist + link -->
+
+- 01: 0.4.1 baseline in `CHANGELOG.md` under `## 0.5.0 (unreleased)`: 304,258 B raw, 29,125 br (zlib q11), 39,174 CDN br, 2,189 rules, `_utilities.css` 159,583 B, coverage on `layout.html` 60,226 used / 244,032 unused (style rules only: Chrome's panel figure counts whole `@layer` blocks as used, see the ticket). Re-run `.scratch/style-props/measure.mjs` for ticket 35's after-numbers. ([01](issues/01-baseline-numbers.md))
