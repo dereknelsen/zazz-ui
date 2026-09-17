@@ -186,8 +186,13 @@ describe("consumer sweep", () => {
   // Tickets 04 (_utilities.css), 05 (_layout.css) and 06 (base + primitives)
   // rewrote every --gap-* read to --space-*, and ticket 08 removed the tokens
   // themselves, so no file may read one anywhere — _variables.css included.
+  // One exception: --gap-sm…2xl are the --gap style prop's responsive forms
+  // (ticket 09), and the file that implements them reads its own props.
   it("reads no --gap-xs…xl token anywhere", () => {
-    expect(offenders(allCss, /var\(--gap-(xs|sm|md|lg|xl)\b/)).toEqual([]);
+    const withoutGapProps = allCss.filter(
+      ({ path }) => !path.endsWith("_utilities-spacing-responsive.css"),
+    );
+    expect(offenders(withoutGapProps, /var\(--gap-(xs|sm|md|lg|xl)\b/)).toEqual([]);
   });
 
   // Tickets 04/05 drop the @xs / @max-xs class prefixes from the CSS; ticket 27
