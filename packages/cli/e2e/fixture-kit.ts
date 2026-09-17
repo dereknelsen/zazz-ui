@@ -7,8 +7,12 @@
  * conflict target), a changed primitive file, an added file, a removed file,
  * a new primitive that joins a dependency closure, a changelog with a
  * breaking entry, and (v2 only) a `migrations/<version>.json` rule set for
- * the migrate e2e. Consumed via `ZAZZ_UI_KIT=file:…/kit-{version}.tgz` — the
- * `{version}` placeholder routes each resolution to the right tarball.
+ * the migrate e2e. The base inventory also moves: v1 ships no `src/index.css`
+ * (the CLI falls back to its pinned 0.4 list), v2 ships one in the 0.5 shape
+ * plus the nine base files it adds (`_properties.css` and the style-prop
+ * family files), so the update e2e proves the list is derived from the kit.
+ * Consumed via `ZAZZ_UI_KIT=file:…/kit-{version}.tgz` — the `{version}`
+ * placeholder routes each resolution to the right tarball.
  */
 
 import { mkdir, writeFile } from "node:fs/promises";
@@ -47,6 +51,48 @@ export const V1_ALPHA_CSS = `/* alpha ${V1} */
 
 /** v2 touches only the header line — local edits below merge cleanly. */
 export const V2_ALPHA_CSS = V1_ALPHA_CSS.replace(`/* alpha ${V1} */`, `/* alpha ${V2} */`);
+
+/** The base files v2 adds, `src/`-relative, in the 0.5 kit's cascade order. */
+export const V2_PRE_BASE_ADDED = ["base/_properties.css"];
+export const V2_POST_BASE_ADDED = [
+  "base/_utilities-spacing.css",
+  "base/_utilities-spacing-responsive.css",
+  "base/_utilities-sizing.css",
+  "base/_utilities-grid.css",
+  "base/_utilities-flex.css",
+  "base/_utilities-color.css",
+  "base/_utilities-typography.css",
+  "base/_utilities-position.css",
+];
+
+/**
+ * v2's `src/index.css` in the 0.5 kit's shape: `_properties.css` after
+ * `_variables.css`, the commented-out legacy slot, the primitives, then the
+ * class utilities and the style-prop family files.
+ */
+const V2_INDEX_CSS = `/* base — order matters */
+@import "./base/_layers.css";
+@import "./base/_variables.css";
+/* _properties.css registers the style props */
+@import "./base/_properties.css";
+@import "./base/_reset.css";
+@import "./base/_typography.css";
+@import "./base/_view-transitions.css";
+
+/* @import "./your-legacy.css" layer(legacy.imports); */
+
+/* Zazz primitives */
+@import "./primitives/alpha/alpha.css";
+@import "./primitives/alpha/alpha-extra.css";
+@import "./primitives/gamma/gamma.css";
+@import "./primitives/beta/beta.css";
+
+@import "./base/_utilities.css";
+@import "./base/_layout.css";
+
+/* Style props — after the class utilities. */
+${V2_POST_BASE_ADDED.map((file) => `@import "./${file}";`).join("\n")}
+`;
 
 /**
  * v2's migration rules (`migrations/<V2>.json`), in the shape of the kit's
@@ -89,6 +135,7 @@ const CHANGELOG_V2 = `# Changelog
 ### base
 
 - Variables gained \`--delta\`. **BREAKING** — the \`--beta\` scale changed.
+- Added \`_properties.css\` and the style-prop family files.
 
 ### alpha
 
@@ -159,7 +206,7 @@ function headJs(version: string): string {
 `;
 }
 
-/** Files every version ships (the CLI's v1 fallback inventory needs them). */
+/** Files every version ships (the CLI's 0.4 fallback inventory needs them). */
 function commonFiles(version: string): Record<string, string> {
   const stubScript = (name: string) => `export const ${name} = "${version}";\n`;
   const stubTypes = (name: string) => `export declare const ${name}: string;\n`;
@@ -214,6 +261,11 @@ function versionFiles(version: string): Record<string, string> {
     files["src/primitives/alpha/alpha.css"] = V2_ALPHA_CSS;
     files["src/primitives/alpha/alpha-extra.css"] = ".ui-alpha-extra {\n  color: teal;\n}\n";
     files["src/primitives/gamma/gamma.css"] = ".ui-gamma {\n  display: flex;\n}\n";
+    // The 0.5-shaped base: index.css declares the list the CLI derives.
+    files["src/index.css"] = V2_INDEX_CSS;
+    for (const file of [...V2_PRE_BASE_ADDED, ...V2_POST_BASE_ADDED]) {
+      files[`src/${file}`] = `/* fixture ${path.basename(file, ".css")} ${V2} */\n`;
+    }
     files["CHANGELOG.md"] = CHANGELOG_V2;
     files[`migrations/${V2}.json`] = `${JSON.stringify(V2_MIGRATION, null, 2)}\n`;
   }

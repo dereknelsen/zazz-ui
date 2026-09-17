@@ -11,7 +11,7 @@ pnpm dlx zazz-ui add button combobox
 
 ## What init does
 
-`init` vendors the base platform into `zazz/` (or `--dir <path>`): the css layers (tokens, reset, typography, utilities, layout), the core runtime scripts, an `index.css` and `index.js` entry pair, and a `head.html` snippet to paste into your `<head>` (fonts, import map, polyfills, theme persistence). It also writes `zazz.json`, which records the kit version and a hash of every vendored file's original bytes.
+`init` vendors the base platform into `zazz/` (or `--dir <path>`): the css layers (tokens, style-prop registrations, reset, typography, utilities, layout, style-prop families — whatever the kit version's `index.css` lists), the core runtime scripts, an `index.css` and `index.js` entry pair, and a `head.html` snippet to paste into your `<head>` (fonts, import map, polyfills, theme persistence). It also writes `zazz.json`, which records the kit version and a hash of every vendored file's original bytes.
 
 Flags: `--dir <path>`, `--ts` (vendor TypeScript sources instead of compiled js), `--legacy <path>` (wire an existing stylesheet into the `legacy` cascade layer), `--no-fonts`, `--no-theme-script`. Re-running `init` repairs the tree: missing files come back, files you edited are left alone.
 

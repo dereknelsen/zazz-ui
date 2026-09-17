@@ -8,6 +8,9 @@
  * kit's own compiled `src/manifest.js` and `src/head.js` straight out of the
  * extract — the manifest in the tarball is the registry (ADR-0006), and the
  * kit's own `buildHead`/`resolveClosure` run rather than reimplementations.
+ * The base stylesheet inventory is read from the tarball's `src/index.css`
+ * (the kit's authoritative cascade order; its `head.js` lists are not
+ * exported), so the CLI needs no per-version table for base files.
  * `MANIFEST_VERSION` gates everything: a kit newer than this CLI understands
  * fails with "upgrade the CLI", never a parse error (ADR-0010).
  */
@@ -19,6 +22,7 @@ import { pathToFileURL } from "node:url";
 import pacote from "pacote";
 import { ZazzError, kitTooNew, offlineMiss } from "./errors.ts";
 import type { FetchOptions } from "./npmrc.ts";
+import { parseBaseCss } from "./plan.ts";
 
 /** The one package the CLI vendors from (ADR-0005: no package split). */
 export const KIT_PACKAGE = "@zazz-ui/core";
@@ -38,6 +42,16 @@ export interface PrimitiveEntry {
   examples: string[];
 }
 
+/**
+ * The kit's base stylesheets (`src/`-relative) around its primitive imports:
+ * `pre` loads before every primitive (layers, tokens, reset …), `post` after
+ * them (class utilities, layout, and from 0.5 the style-prop family files).
+ */
+export interface BaseCssLists {
+  pre: string[];
+  post: string[];
+}
+
 /** The validated slice of the kit's manifest module the CLI consumes. */
 export interface KitManifest {
   manifestVersion: number;
@@ -45,8 +59,12 @@ export interface KitManifest {
   cssCascadeOrder: string[];
   /** The kit's own closure resolver, imported — not reimplemented. */
   resolveClosure(names: string[]): string[];
-  /** Base stylesheet inventory, when the kit exports one (post-v1). */
-  baseCss?: string[];
+  /**
+   * Base stylesheet inventory, derived from the tarball's `src/index.css`.
+   * Absent when the kit ships no recognizable `index.css`; plan.ts then falls
+   * back to the pinned 0.4 list.
+   */
+  baseCss?: BaseCssLists;
   /** Core runtime scripts, when the kit exports them (post-v1). */
   coreRuntime?: string[];
 }
@@ -200,9 +218,17 @@ export async function loadKitFromDir(
     throw kitTooNew(meta.version, "its manifest shape is unrecognized");
   }
 
-  // Kits newer than manifest v1 may export their base inventory; v1 kits
+  // The base stylesheet list comes from the kit's own index.css — the file
+  // the kit's head.test.ts holds as the authoritative cascade order — so a
+  // kit that grows base files (0.5: _properties.css, the style-prop family
+  // files) vendors correctly from any CLI. No index.css, or one without the
+  // base/primitives/base shape → plan.ts falls back to the pinned 0.4 list.
+  const indexCssPath = path.join(srcDir, "index.css");
+  const baseCss = existsSync(indexCssPath)
+    ? parseBaseCss(await readFile(indexCssPath, "utf8"))
+    : null;
+  // Kits newer than manifest v1 may export their core runtime; v1 kits
   // don't, and plan.ts falls back to the v1 list pinned to that version.
-  const baseCss = manifestModule.BASE_CSS;
   const coreRuntime = manifestModule.CORE_RUNTIME;
 
   return {
@@ -214,7 +240,7 @@ export async function loadKitFromDir(
       primitives: primitives as Record<string, PrimitiveEntry>,
       cssCascadeOrder: cascade as string[],
       resolveClosure: resolveClosure as (names: string[]) => string[],
-      ...(Array.isArray(baseCss) ? { baseCss: baseCss as string[] } : {}),
+      ...(baseCss ? { baseCss } : {}),
       ...(Array.isArray(coreRuntime) ? { coreRuntime: coreRuntime as string[] } : {}),
     },
     buildHead: buildHead as (options: Record<string, unknown>) => string,
