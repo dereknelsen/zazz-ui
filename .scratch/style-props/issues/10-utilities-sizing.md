@@ -1,7 +1,7 @@
 # 10 — _utilities-sizing.css style props
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 08
 Size: S
 
