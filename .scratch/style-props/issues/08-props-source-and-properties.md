@@ -1,7 +1,7 @@
 # 08 — src/props.ts + generate-properties.mjs + _properties.css + props.test.ts
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 03
 Size: M
 
