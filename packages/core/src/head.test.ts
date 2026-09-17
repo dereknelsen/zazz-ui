@@ -131,6 +131,18 @@ describe("buildHead cdn mode", () => {
     expect(() => buildHead({ cdn: { version: "1.2.3-beta.1" } })).not.toThrow();
   });
 
+  it("refuses a pin below 0.5.0: that tarball lacks the base inventory this head links", () => {
+    // A 0.4.1 tarball has no _properties.css or style-prop family files.
+    const message = /pin @zazz-ui\/core 0\.5\.0 or newer \(got "0\.4\.1"\)/;
+    expect(() => buildHead({ cdn: { version: "0.4.1", primitives: ["button"] } })).toThrow(message);
+    expect(() => buildHead({ cdn: { version: "0.4.1" } })).toThrow(/0\.5 base inventory/);
+    expect(() => buildHead({ cdn: { version: "0.0.9" } })).toThrow(/0\.5\.0 or newer/);
+    // Numeric on major.minor.patch: a 0.5 prerelease and anything later pass.
+    for (const version of ["0.5.0-rc.1", "0.5.1", "0.10.0", "1.0.0"]) {
+      expect(() => buildHead({ cdn: { version, primitives: ["button"] } }), version).not.toThrow();
+    }
+  });
+
   it("renders the bundle grain: two pinned dist requests", () => {
     const head = buildHead({ cdn: { version: "0.5.0" } });
     expect(head).toContain(`<link rel="stylesheet" href="${KIT}/dist/zazz.css">`);
