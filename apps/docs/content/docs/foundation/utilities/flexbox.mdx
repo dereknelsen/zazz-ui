@@ -31,6 +31,10 @@ Flexbox utilities control container layout, item flex factors, and alignment acr
 | `flex-initial` | `flex: initial` | Shrink but do not grow               |
 | `flex-none`    | `flex: none`    | Prevent growing or shrinking         |
 
+### Open values: use a style prop
+
+For a basis, factor, or order the classes don't cover, set a [style prop](/docs/core-concepts/style-props) on the item: `style="--basis: 12rem; --grow-md: 1; --order: -1"`. `--basis`, `--grow`, `--shrink`, and `--order` pass their value straight to the flex longhand and take `-sm` to `-2xl` responsive suffixes. Gap-aware fractions stay classes (`basis-1/3`); see [Gap & basis](/docs/foundation/utilities/gap-and-basis).
+
 ## Alignment and distribution
 
 <Preview src="utilities/flex-align" />

@@ -23,7 +23,7 @@ Style Zazz layouts by adding utility classes (`flex`, `gap-md`, `text-h2`, `bg-p
 
 Prefer semantic tokens over arbitrary values:
 
-- **Spacing:** Use `gap-md`, `p-lg`, `py-sm` first. Use the `--step-*` scale only when no semantic gap fits.
+- **Spacing:** Use `gap-md`, `p-lg`, `py-sm` first; the `xs` to `xl` classes read `--space-xs` to `--space-xl`. When no semantic step fits, set a [style prop](/docs/core-concepts/style-props) (`style="--px: 5"`, a multiple of `--spacing-interval`) rather than reaching for `--step-*` in custom CSS.
 - **Color:** Use role classes (`bg-card`, `text-muted-foreground`, `border-primary`) so light/dark modes work automatically.
 - **Typography:** Use bundled `text-*` classes (`text-h1` to `text-xs`, `text-eyebrow`) that set size, weight, leading, and tracking together.
 
@@ -42,7 +42,7 @@ Full reference: [Utilities reference](/docs/foundation/utilities).
 
 ## Shared scale
 
-Properties use a consistent `xs`, `sm`, `md`, `lg`, `xl` scale:
+Properties use a consistent `xs`, `sm`, `md`, `lg`, `xl` scale (spacing reads the `--space-*` tokens, whose full range is `2xs` to `2xl`; breakpoints run `sm` to `2xl`, 40 to 96rem):
 
 | Property   | Class                        |
 | ---------- | ---------------------------- |
@@ -52,7 +52,7 @@ Properties use a consistent `xs`, `sm`, `md`, `lg`, `xl` scale:
 | Sizing     | `size-lg`, `max-w-screen-lg` |
 | Breakpoint | `@lg:grid-cols-3`            |
 
-Finer steps use the `--step-0_5` to `--step-96` scale for spacing, and `50` to `950` for [colors](/docs/core-concepts/colors).
+Finer steps use the `--step-0_5` to `--step-96` scale for spacing (a style prop takes any of them: `--p: 5`), and `50` to `950` for [colors](/docs/core-concepts/colors).
 
 ## Composable edges
 
@@ -78,3 +78,7 @@ Components define internal structure and accept `data-*` variants; utilities adj
 
 - **Hover:** `hover:bg-primary`, `hover:scale-102`. See [States](/docs/core-concepts/states).
 - **Responsive:** `@md:grid-cols-3`, `@lg:flex-row`. See [Responsive design](/docs/core-concepts/responsive-design).
+
+## Open values: use a style prop
+
+Classes cover the scale; a [style prop](/docs/core-concepts/style-props) covers everything off it. Set the value in the `style` attribute (`style="--px: 5; --w: 22rem; --grid-cols: 5"`) and a zero-specificity rule in the same utilities layer applies it, with the same `-sm` to `-2xl` breakpoints as a suffix (`--px-md: 8`). The 44 props span spacing, sizing, grid, flex, color, typography, and position; spacing props are step multiples (`--px: 6` is `px-md`), the rest pass their value through.

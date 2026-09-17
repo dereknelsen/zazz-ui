@@ -23,7 +23,7 @@ The `.container` itself spans the whole region as a subgrid, which re-exposes th
     <figure data-container="bleed">
       <img src="/wide.jpg" alt="" />
     </figure>
-    <p>And the caption comes back to md.</p>
+    <p>And the caption comes back to lg.</p>
   </div>
 </section>
 ```
@@ -32,7 +32,7 @@ The `.container` itself spans the whole region as a subgrid, which re-exposes th
 
 To see the whole system moving at real page width, open the [layout template](/docs/templates/layout): a full page that walks every band, the responsive variants, and the article measure.
 
-The bands are fluid. Each one caps at its breakpoint width and centers while the viewport has room to spare, then fills the available space (minus gutters) once it doesn't. There is no snap at the breakpoint; the transition is continuous.
+The band names are the breakpoint scale (`sm` 40rem to `2xl` 96rem), and `lg` is the default. The bands are fluid. Each one caps at its breakpoint width and centers while the viewport has room to spare, then fills the available space (minus gutters) once it doesn't. There is no snap at the breakpoint; the transition is continuous.
 
 ## The bands
 
@@ -53,7 +53,7 @@ The bands are fluid. Each one caps at its breakpoint width and centers while the
 ```html
 <section>
   <div class="container" data-container="xl">
-    <h2>Everything in here defaults to lg</h2>
+    <h2>Everything in here defaults to xl</h2>
     <p>Including this.</p>
   </div>
 </section>
@@ -64,7 +64,7 @@ The bands are fluid. Each one caps at its breakpoint width and centers while the
 ```html
 <section>
   <div class="container">
-    <h2>md, the default</h2>
+    <h2>lg, the default</h2>
     <div class="grid @lg:grid-cols-3 gap-md" data-container="2xl">
       <!-- a wide card grid inside a normal-width section -->
     </div>
@@ -173,6 +173,6 @@ Three token families control everything, all on `:root`:
 }
 ```
 
-The `--breakpoint-*` tokens set the band caps, but treat them as read-only. The `@md:` responsive utilities are gated by container queries whose thresholds must be literal lengths (CSS doesn't allow `var()` in a query prelude), so changing a breakpoint token would move the band widths while the responsive utilities keep switching at the old values.
+The `--breakpoint-*` tokens (40, 48, 64, 80, 96rem) set the band caps, but treat them as read-only. The `@md:` responsive utilities and the style-prop suffixes are gated by the `--bp-*` flags, which container queries set at literal lengths (CSS doesn't allow `var()` in a query prelude), so changing a breakpoint token would move the band widths while the responsive utilities keep switching at the old values.
 
 For the full list of layout utilities (display, position, overflow, aspect ratio, and the rest), see the [layout utilities reference](/docs/foundation/utilities/layout).
