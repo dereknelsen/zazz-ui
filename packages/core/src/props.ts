@@ -185,7 +185,8 @@ const PROPERTIES_HEADER = `/**
  * by hand. Regenerate with \`vp run properties\`; props.test.ts fails on drift.
  *
  * @layer      none — @property is layer-independent
- * @requires   none
+ * @requires   none — @property is layer-independent (the documented exception
+ *             to "always include layers.css")
  * @uses       @property — syntax "*" with no initial-value: the universal syntax
  *             keeps a prop guaranteed-invalid until the style attribute sets it,
  *             so an element with no prop matches no utility rule and needs no
@@ -193,7 +194,10 @@ const PROPERTIES_HEADER = `/**
  * @uses       inherits: false — a prop set on a container never surfaces on its
  *             children; anything that must travel goes through the private
  *             coordination vars (--_gap, --_grid-cols) in _utilities.css
- * @consumedby _variables.css, _utilities.css, _utilities-<family>.css
+ * @consumedby _utilities-<family>.css — the eight style-prop files (spacing,
+ *             spacing-responsive, sizing, grid, flex, color, typography,
+ *             position); _variables.css loads before this file and reads
+ *             nothing from it
  * @see        src/props.ts — the prop registry (names, families, kinds)
  * @see        docs/adr/0012-style-props.md
  */
