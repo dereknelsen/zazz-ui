@@ -1,7 +1,7 @@
 # 14 — _utilities-typography.css style props
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 08
 Size: S
 
