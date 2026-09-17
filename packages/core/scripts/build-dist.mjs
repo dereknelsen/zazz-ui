@@ -54,6 +54,11 @@ try {
   }
   throw error;
 }
+// A manifest.js emitted before the dist map existed loads fine and exports
+// nothing useful; say so instead of failing at the first map lookup.
+if (DIST_CSS === undefined || DIST_LAYERS_CSS === undefined || DIST_BUNDLE_CSS === undefined) {
+  throw new Error("src/manifest.js is stale (no DIST_CSS export) — rerun `tsc -p tsconfig.json`");
+}
 
 // --- index.css as the source of truth ---
 
