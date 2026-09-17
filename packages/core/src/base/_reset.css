@@ -342,7 +342,7 @@
   }
 
   :where(select:is([multiple], [size])) optgroup option {
-    padding-inline-start: var(--gap-sm);
+    padding-inline-start: var(--space-sm);
   }
 
   :-moz-ui-invalid {
