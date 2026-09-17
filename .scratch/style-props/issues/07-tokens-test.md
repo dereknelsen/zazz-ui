@@ -1,7 +1,7 @@
 # 07 — tokens.test.ts: guard the new token contract
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 03
 Size: S
 
