@@ -1,7 +1,7 @@
 # 18 — Primitive audit: --step-* in component rules → --ui-* per ADR-0008
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 17
 Size: M
 
