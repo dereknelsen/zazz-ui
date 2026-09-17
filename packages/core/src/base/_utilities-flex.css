@@ -1,0 +1,161 @@
+/**
+ * _utilities-flex.css — Flex item style props (--basis, --grow, --shrink, --order)
+ *
+ * @layer      utilities
+ * @requires   layers.css, _variables.css (--bp-* flags), _properties.css
+ *             (@property registrations), _utilities.css (family files load after it)
+ * @uses       :where() — zero specificity so a prop rule loses to nothing but
+ *             a later utility and stays overridable
+ * @uses       [style*="--x:"] — attribute substring gate: a rule fires only when
+ *             the style attribute names the prop, so an unset prop never applies
+ *             and needs no var() fallback (ADR-0012)
+ * @uses       style() queries — the responsive suffixes read the --bp-* flags
+ *             (typed @property tokens from _variables.css)
+ * @see        src/props.ts — the prop registry (names + target properties)
+ * @see        docs/adr/0012-style-props.md
+ *
+ * A style prop is a custom property set in the style attribute and read by one
+ * rule per breakpoint in this layer. Values are raw: they pass straight to the
+ * flex longhand (`--basis: 12rem` → flex-basis, `--grow: 1` → flex-grow,
+ * `--shrink: 0` → flex-shrink, `--order: -1` → order).
+ *
+ *   <div class="flex">
+ *     <div style="--basis: 12rem; --grow-md: 1">…</div>
+ *     <div style="--order: -1; --order-lg: 0">…</div>
+ *   </div>
+ *
+ * Contract of the gate: the selector matches the attribute's source text, so
+ * the prop name must be followed immediately by the colon — `--basis: 12rem`
+ * (space after the colon is fine); `--basis : 12rem` does not match.
+ * `element.style.setProperty("--basis", "12rem")` serializes to the matching
+ * form. The substring `--basis:` does not match `--basis-md:` (a dash follows
+ * the root there), so base and responsive rules stay independent.
+ *
+ * Unset props never apply: an element whose style attribute does not name a
+ * prop matches no rule here, so there is no fight between an initial value and
+ * the element's own (or a primitive's) flex declaration. Registration in
+ * _properties.css uses `syntax: "*"` with no initial-value and
+ * `inherits: false`, so a prop set on a parent never leaks onto its children.
+ *
+ * Responsive suffixes are mobile-first by source order: `--basis-sm` applies
+ * from --breakpoint-sm up, and a larger suffix on the same element wins because
+ * its block comes later in the file. The flags are container flags (the
+ * nearest size container, not the viewport) — see _variables.css.
+ */
+
+@layer zazz.utilities {
+  /* ===========================================================================
+  BASE — apply at every width
+  =========================================================================== */
+
+  :where([style*="--basis:"]) {
+    flex-basis: var(--basis);
+  }
+
+  :where([style*="--grow:"]) {
+    flex-grow: var(--grow);
+  }
+
+  :where([style*="--shrink:"]) {
+    flex-shrink: var(--shrink);
+  }
+
+  :where([style*="--order:"]) {
+    order: var(--order);
+  }
+
+  /* ===========================================================================
+  RESPONSIVE — mobile-first, gated on the --bp-* container flags
+  (sm 40rem, md 48rem, lg 64rem, xl 80rem, 2xl 96rem)
+  =========================================================================== */
+
+  @container style(--bp-sm: true) {
+    :where([style*="--basis-sm:"]) {
+      flex-basis: var(--basis-sm);
+    }
+
+    :where([style*="--grow-sm:"]) {
+      flex-grow: var(--grow-sm);
+    }
+
+    :where([style*="--shrink-sm:"]) {
+      flex-shrink: var(--shrink-sm);
+    }
+
+    :where([style*="--order-sm:"]) {
+      order: var(--order-sm);
+    }
+  }
+
+  @container style(--bp-md: true) {
+    :where([style*="--basis-md:"]) {
+      flex-basis: var(--basis-md);
+    }
+
+    :where([style*="--grow-md:"]) {
+      flex-grow: var(--grow-md);
+    }
+
+    :where([style*="--shrink-md:"]) {
+      flex-shrink: var(--shrink-md);
+    }
+
+    :where([style*="--order-md:"]) {
+      order: var(--order-md);
+    }
+  }
+
+  @container style(--bp-lg: true) {
+    :where([style*="--basis-lg:"]) {
+      flex-basis: var(--basis-lg);
+    }
+
+    :where([style*="--grow-lg:"]) {
+      flex-grow: var(--grow-lg);
+    }
+
+    :where([style*="--shrink-lg:"]) {
+      flex-shrink: var(--shrink-lg);
+    }
+
+    :where([style*="--order-lg:"]) {
+      order: var(--order-lg);
+    }
+  }
+
+  @container style(--bp-xl: true) {
+    :where([style*="--basis-xl:"]) {
+      flex-basis: var(--basis-xl);
+    }
+
+    :where([style*="--grow-xl:"]) {
+      flex-grow: var(--grow-xl);
+    }
+
+    :where([style*="--shrink-xl:"]) {
+      flex-shrink: var(--shrink-xl);
+    }
+
+    :where([style*="--order-xl:"]) {
+      order: var(--order-xl);
+    }
+  }
+
+  @container style(--bp-2xl: true) {
+    :where([style*="--basis-2xl:"]) {
+      flex-basis: var(--basis-2xl);
+    }
+
+    :where([style*="--grow-2xl:"]) {
+      flex-grow: var(--grow-2xl);
+    }
+
+    :where([style*="--shrink-2xl:"]) {
+      flex-shrink: var(--shrink-2xl);
+    }
+
+    :where([style*="--order-2xl:"]) {
+      order: var(--order-2xl);
+    }
+  }
+}
