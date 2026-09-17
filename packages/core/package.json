@@ -64,6 +64,7 @@
     "sri": "node scripts/generate-sri.mjs",
     "dev": "tsc -p tsconfig.json --watch",
     "heads": "node scripts/generate-heads.mjs",
+    "properties": "node scripts/generate-properties.mjs",
     "test": "tsc -p tsconfig.test.json && vp test run",
     "check": "vp check",
     "prepublishOnly": "vp run build"
