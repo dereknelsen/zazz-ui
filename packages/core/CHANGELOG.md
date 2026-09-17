@@ -6,15 +6,17 @@ One theme: **open values move to style props, tokens collapse to one space scale
 
 Measurements (0.4.1 → 0.5.0), from `node .scratch/style-props/measure.mjs` (build `packages/core` first):
 
-| Measure                                                                               | 0.4.1                                      | 0.5.0 |
-| ------------------------------------------------------------------------------------- | ------------------------------------------ | ----- |
-| `dist/zazz.css` raw bytes                                                             | 304,258                                    | tbd   |
-| brotli bytes (node zlib, q11)                                                         | 29,125                                     | tbd   |
-| gzip bytes (node zlib, default level)                                                 | 38,281                                     | tbd   |
-| rule count (`{` in `dist/zazz.css`)                                                   | 2,189                                      | tbd   |
-| `src/base/_utilities.css` bytes                                                       | 159,583                                    | tbd   |
-| CDN transfer bytes (jsDelivr, `Accept-Encoding: br`)                                  | 39,174                                     | tbd   |
-| Coverage on `examples/layout.html`, style rules (Chrome 153, 1280×900): used / unused | 60,226 / 244,032 (80.2% unused of 304,258) | tbd   |
+| Measure                                                                               | 0.4.1                                      | 0.5.0                                      |
+| ------------------------------------------------------------------------------------- | ------------------------------------------ | ------------------------------------------ |
+| `dist/zazz.css` raw bytes                                                             | 304,258                                    | 338,886                                    |
+| brotli bytes (node zlib, q11)                                                         | 29,125                                     | 31,088                                     |
+| gzip bytes (node zlib, default level)                                                 | 38,281                                     | 42,035                                     |
+| rule count (`{` in `dist/zazz.css`)                                                   | 2,189                                      | 2,767                                      |
+| `src/base/_utilities.css` bytes                                                       | 159,583                                    | 160,490                                    |
+| CDN transfer bytes (jsDelivr, `Accept-Encoding: br`)                                  | 39,174                                     | n/a until published                        |
+| Coverage on `examples/layout.html`, style rules (Chrome 153, 1280×900): used / unused | 60,226 / 244,032 (80.2% unused of 304,258) | 60,481 / 278,405 (82.2% unused of 338,886) |
+
+Read plainly, the monolith grew, not shrank: +34,628 B raw, +1,963 B brotli and +578 rules, roughly the 297 `@property` registrations (28 in 0.4.1; 14,865 B of blocks, 264 of them the style props) plus the eight family files (22,815 B together), and `examples/layout.html` matches the same ~60 KB of style rules it did before, so the bundle's unused share rises from 80.2% to 82.2%; the win is the modular `dist/`, where a page loads `base.css` (48,058 B / 6,623 br) plus only the families it uses (`utilities-spacing.css` 1,625 B, `-spacing-responsive` 8,102, `-sizing` 2,875, `-grid` 3,121, `-flex` 1,665, `-color` 1,411, `-typography` 1,609, `-position` 2,407; `utilities-core.css` 125,398 B / 9,202 br for the class utilities) and its primitives' closure (`primitives/<name>.css`, 968 B to 9,440 B each), so the button page from the README's `/combine/` example (`base` + `utilities-spacing` + `fields` + `kbd` + `button`) is 64,581 B / 8,678 br against the 338,886 B / 31,088 br bundle, and Coverage measured per family instead of per bundle is what the 0.5 numbers should be compared on.
 
 ### base
 
