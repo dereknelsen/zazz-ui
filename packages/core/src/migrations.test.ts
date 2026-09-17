@@ -115,12 +115,29 @@ describe("token rules", () => {
   });
 
   it("keep the idempotent families disjoint from their targets", () => {
-    // These two families may be re-run safely; --breakpoint-* and
-    // --container-* are chains (next test) and rely on the zazz.json stamp.
+    // Disjoint targets mean a second run cannot chain-shift these families
+    // (`--space-md` is no rule's source); --breakpoint-* and --container-*
+    // are chains (next test) and rely on the zazz.json stamp. Disjointness
+    // is not a licence to re-run on 0.5 markup, though: `--gap-sm…xl` live
+    // on as the `--gap` style prop's responsive forms, which is what the
+    // `readsOnly` flag protects (next test).
     for (const prefix of ["--is-breakpoint-", "--gap-"]) {
       const family = tokens.filter(([from]) => from.startsWith(prefix));
       const froms = new Set(family.map(([from]) => from));
       for (const [, to] of family) expect(froms).not.toContain(to);
+    }
+  });
+
+  it("flag --gap-sm…xl readsOnly — they are live style props in 0.5 — and nothing else", () => {
+    // In markup the engine then renames only `var(--gap-md)` reads; a
+    // `style="--gap-md: 4"` declaration is the prop and must survive.
+    // `--gap-xs` is no prop (the scale starts at sm), so it renames anywhere.
+    const readsOnly = RULES.rules
+      .filter((rule) => rule.readsOnly === true)
+      .map((rule) => rule.from);
+    expect(readsOnly).toEqual(["--gap-sm", "--gap-md", "--gap-lg", "--gap-xl"]);
+    for (const rule of RULES.rules) {
+      if (rule.readsOnly === true) expect(rule.kind).toBe("token");
     }
   });
 

@@ -57,9 +57,14 @@ const STYLES_CSS = `:root {
 }
 `;
 
-/** Two adjacent chain prefixes in one class list, plus a data-container. */
+/**
+ * Two adjacent chain prefixes in one class list, a data-container, and a
+ * style attribute mixing a `--gap-md:` declaration (a live prop name in v2,
+ * so `readsOnly` keeps it) with a `var(--gap-sm)` read (renamed).
+ */
 const PAGE_HTML = `<section data-container="xs">
   <div class="stack @xs:grid @sm:flex">hello</div>
+  <p style="--gap-md: 2; padding: var(--gap-sm)">tight</p>
 </section>
 `;
 
@@ -143,6 +148,7 @@ describe("zazz-ui migrate (e2e, fixture kit)", () => {
     expect(output).toContain("src/page.html");
     expect(output).toContain('-  <div class="stack @xs:grid @sm:flex">hello</div>');
     expect(output).toContain('+  <div class="stack @sm:grid @md:flex">hello</div>');
+    expect(output).toContain('+  <p style="--gap-md: 2; padding: var(--space-sm)">tight</p>');
     // Rule hit counts and the files-changed total.
     expect(output).toContain("Rules applied:");
     expect(output).toContain("--gap-md → --space-md");
@@ -184,6 +190,7 @@ describe("zazz-ui migrate (e2e, fixture kit)", () => {
     // html: adjacent prefixes in one class list each move exactly one step.
     expect(after["src/page.html"]).toBe(`<section data-container="sm">
   <div class="stack @sm:grid @md:flex">hello</div>
+  <p style="--gap-md: 2; padding: var(--space-sm)">tight</p>
 </section>
 `);
     expect(after["src/page.html"]).not.toContain("@lg:");
