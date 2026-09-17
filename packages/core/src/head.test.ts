@@ -11,6 +11,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vite-plus/test";
 import { ESM_DEPENDENCIES, POLYFILLS, buildHead, cdnUrl } from "./head.ts";
+import { BASE_CSS } from "./manifest.ts";
 
 const require = createRequire(import.meta.url);
 
@@ -120,18 +121,18 @@ describe("buildHead", () => {
 });
 
 describe("buildHead cdn mode", () => {
-  const KIT = "https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.4.1";
+  const KIT = "https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.5.0";
 
   it("rejects anything but an exact version", () => {
     expect(() => buildHead({ cdn: { version: "latest" } })).toThrow(/exact version/);
     expect(() => buildHead({ cdn: { version: "0.1" } })).toThrow(/exact version/);
     expect(() => buildHead({ cdn: { version: "^0.1.0" } })).toThrow(/exact version/);
-    expect(() => buildHead({ cdn: { version: "0.4.1" } })).not.toThrow();
+    expect(() => buildHead({ cdn: { version: "0.5.0" } })).not.toThrow();
     expect(() => buildHead({ cdn: { version: "1.2.3-beta.1" } })).not.toThrow();
   });
 
   it("renders the bundle grain: two pinned dist requests", () => {
-    const head = buildHead({ cdn: { version: "0.4.1" } });
+    const head = buildHead({ cdn: { version: "0.5.0" } });
     expect(head).toContain(`<link rel="stylesheet" href="${KIT}/dist/zazz.css">`);
     expect(head).toContain(`<script type="module" src="${KIT}/dist/zazz.js"></script>`);
     expect(head).toContain(`<link rel="modulepreload" href="${KIT}/dist/zazz.js">`);
@@ -145,7 +146,7 @@ describe("buildHead cdn mode", () => {
       "dist/zazz.css": "sha384-css",
       "dist/zazz.js": "sha384-js",
     };
-    const head = buildHead({ cdn: { version: "0.4.1", sri } });
+    const head = buildHead({ cdn: { version: "0.5.0", sri } });
     expect(head).toContain(
       `href="${KIT}/dist/zazz.css" integrity="sha384-css" crossorigin="anonymous"`,
     );
@@ -155,7 +156,7 @@ describe("buildHead cdn mode", () => {
   });
 
   it("renders the granular grain from the dependency closure in cascade order", () => {
-    const head = buildHead({ cdn: { version: "0.4.1", primitives: ["combobox"] } });
+    const head = buildHead({ cdn: { version: "0.5.0", primitives: ["combobox"] } });
     // Base layers first (layer declaration leads), utilities/layout last.
     const order = [
       `${KIT}/src/base/_layers.css`,
@@ -190,7 +191,7 @@ describe("buildHead cdn mode", () => {
       "src/base/zazz-element.js": "sha384-ze",
       "src/base/dialog-lifecycle.js": "sha384-dl",
     };
-    const head = buildHead({ cdn: { version: "0.4.1", primitives: ["tooltip"], sri } });
+    const head = buildHead({ cdn: { version: "0.5.0", primitives: ["tooltip"], sri } });
     // tooltip's closure is css-only, but its trigger is `interestfor`.
     expect(head).toContain("dist/esm/production/interest.js");
     expect(head).toContain(
@@ -203,8 +204,12 @@ describe("buildHead cdn mode", () => {
   });
 
   it("mirrors index.css's base imports around the primitives", () => {
-    const head = buildHead({ cdn: { version: "0.4.1", primitives: ["button"] } });
+    const head = buildHead({ cdn: { version: "0.5.0", primitives: ["button"] } });
     const links = [...head.matchAll(/src\/base\/(_[a-z-]+\.css)/g)].map((m) => m[1]);
+    // The manifest's BASE_CSS is what the head links, pre then post.
+    expect(links).toEqual(
+      [...BASE_CSS.pre, ...BASE_CSS.post].map((file) => file.replace(/^base\//, "")),
+    );
     expect(links).toEqual([
       "_layers.css",
       "_variables.css",

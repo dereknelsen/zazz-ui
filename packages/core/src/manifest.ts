@@ -580,6 +580,9 @@ export const DIST_LAYERS_CSS = "layers.css";
 /** The one-request bundle: everything `src/index.css` imports, in its order. */
 export const DIST_BUNDLE_CSS = "zazz.css";
 
+/** The cascade-layer order statement, the first file of every load. */
+const DIST_LAYERS_SRC = "base/_layers.css";
+
 /** Base layers after `_layers.css`: tokens, style-prop registrations, reset, type. */
 const DIST_BASE = [
   "base/_variables.css",
@@ -625,7 +628,7 @@ const DIST_PRIMITIVES = CSS_CASCADE_ORDER.flatMap((name) => PRIMITIVES[name]?.cs
  * every `utilities-<family>.css`; `zazz.css` is the union of everything.
  */
 export const DIST_CSS: Record<string, string[]> = {
-  [DIST_LAYERS_CSS]: ["base/_layers.css"],
+  [DIST_LAYERS_CSS]: [DIST_LAYERS_SRC],
   "base.css": DIST_BASE,
   "utilities-core.css": DIST_UTILITIES_CORE,
   ...DIST_UTILITY_FAMILIES,
@@ -634,12 +637,27 @@ export const DIST_CSS: Record<string, string[]> = {
     CSS_CASCADE_ORDER.map((name) => [`primitives/${name}.css`, PRIMITIVES[name]?.css ?? []]),
   ),
   [DIST_BUNDLE_CSS]: [
-    "base/_layers.css",
+    DIST_LAYERS_SRC,
     ...DIST_BASE,
     ...DIST_PRIMITIVES,
     ...DIST_UTILITIES_CORE,
     ...Object.values(DIST_UTILITY_FAMILIES).flat(),
   ],
+};
+
+/**
+ * Base stylesheets in the exact order `src/index.css` loads them around the
+ * primitive imports: `pre` before (layer order first, then tokens, the
+ * style-prop registrations, reset, type, view transitions), `post` after
+ * (class utilities and layout, then the style-prop family files, which must
+ * follow the classes so a prop beats a class on the same element by source
+ * order — ADR-0012). The granular CDN head (`head.ts`) and the `zazz-ui`
+ * CLI's vendoring both read this inventory; `head.test.ts` guards it against
+ * `index.css`. Derived from the dist map above, so the two cannot drift.
+ */
+export const BASE_CSS: { pre: string[]; post: string[] } = {
+  pre: [DIST_LAYERS_SRC, ...DIST_BASE],
+  post: [...DIST_UTILITIES_CORE, ...Object.values(DIST_UTILITY_FAMILIES).flat()],
 };
 
 // --- Dependency resolution ---
