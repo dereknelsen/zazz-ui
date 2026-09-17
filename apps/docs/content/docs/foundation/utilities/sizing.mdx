@@ -7,6 +7,12 @@ Sizing utilities use logical properties (`inline-size`, `block-size`) to match d
 
 Every `w-*` / `h-*` class (including `min-*` and `max-*` variants) has a logical-name alias with identical values: `w-full` = `inline-full`, `h-screen` = `block-screen`, `max-w-md` = `max-inline-md`, `min-h-0` = `min-block-0`, and so on. Use whichever naming you prefer — they compile to the same declaration.
 
+The `sm` to `xl` steps read `--space-sm` to `--space-xl` (`xs` is `--step-3`); the `screen-*` steps read `--breakpoint-sm` to `--breakpoint-2xl` (40, 48, 64, 80, 96rem).
+
+### Open values: use a style prop
+
+For a width or height that is not on the scale, set a [style prop](/docs/core-concepts/style-props): `style="--w: 22rem; --max-w: 60ch"`. The sizing props (`--w`, `--h`, `--min-w`, `--max-w`, `--min-h`, `--max-h`, `--size`) pass any length, percentage, or keyword (`auto`, `max-content`, `100dvh`) straight to the logical property, and each takes `-sm` to `-2xl` responsive suffixes (`--w-md: 100%`).
+
 ## Width & height
 
 <Preview src="utilities/width" />
@@ -59,6 +65,6 @@ Every `w-*` / `h-*` class (including `min-*` and `max-*` variants) has a logical
 
 ```html
 <article class="w-full max-w-screen-md mx-auto">
-  Fluid width constrained to sm breakpoint and centered.
+  Fluid width constrained to the md breakpoint (48rem) and centered.
 </article>
 ```

@@ -7,7 +7,7 @@ Layout utilities control display mode, positioning, overflow, stacking, and page
 
 ## Containers
 
-Place a `.container` as a direct child of `main`, `section`, `header`, `footer`, or `article`. The region becomes a layout grid of width bands, and each direct child of the container is placed into a band. See [Layout and containers](/docs/core-concepts/layout) for how the system works and how it differs from a fixed-width container.
+Place a `.container` as a direct child of `main`, `section`, `header`, `footer`, or `article`. The region becomes a layout grid of width bands, and each direct child of the container is placed into a band. The bands are named after the breakpoint scale (`sm` to `2xl`, 40 to 96rem), with `lg` as the default. See [Layout and containers](/docs/core-concepts/layout) for how the system works and how it differs from a fixed-width container.
 
 ```html
 <section>
@@ -60,7 +60,7 @@ Place a `.container` as a direct child of `main`, `section`, `header`, `footer`,
 
 ### Responsive variants
 
-`@md:container` is a band container from its breakpoint up and a plain block below. `@max-md:container` is the inverse: a container only below the breakpoint, falling back to the element's other classes above it (useful for handing off to a grid).
+`@md:container` is a band container from its breakpoint (48rem) up and a plain block below. `@max-md:container` is the inverse: a container only below the breakpoint, falling back to the element's other classes above it (useful for handing off to a grid). Both take any of the five prefixes, `sm` to `2xl`.
 
 ```html
 <section>
@@ -138,6 +138,10 @@ Offsets use logical inset properties, so they follow the writing mode. `start-*`
   <span class="absolute top-sm right-sm ui-badge" data-variant="primary">New</span>
 </div>
 ```
+
+### Open values: use a style prop
+
+For an offset off the scale, set a [style prop](/docs/core-concepts/style-props): `style="--top: 1rem; --left-md: 2rem; --z: 10"`. `--top`, `--right`, `--bottom`, `--left`, `--inset`, and `--z` pass any value (a length, percentage, `auto`, `anchor()`, an integer for `--z`) to the same logical inset properties, take `-sm` to `-2xl` responsive suffixes, and do not set `position`, so pair them with a position class as above.
 
 ## Overflow
 
