@@ -1,7 +1,7 @@
 # 25 — Migrate e2e test
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 22, 24
 Size: S
 
