@@ -1,7 +1,7 @@
 # 03 — Tokens: --space-*, --gap-* aliases, --bp-*, --screen-*, --breakpoint-* shift
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: —
 Size: M
 
