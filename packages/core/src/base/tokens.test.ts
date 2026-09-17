@@ -2,11 +2,13 @@
 
 /**
  * @fileoverview Guards the 0.5.0 token contract of `_variables.css` — the
- * `--space-*` scale, the deprecated `--gap-*` aliases, the `--breakpoint-*`
- * lengths and the typed `--bp-*` / `--screen-*` breakpoint flags with their
- * width thresholds — plus the sweep invariants the rest of `src/` and
- * `examples/` must hold once the consumers migrate off the old names
- * (skipped until the owning tickets land; see each `it.skip`).
+ * `--space-*` scale (with the old `--gap-*` size tokens gone, not aliased:
+ * their `--gap-sm…xl` names are the responsive forms of the `--gap` style
+ * prop), the `--breakpoint-*` lengths and the typed `--bp-*` / `--screen-*`
+ * breakpoint flags with their width thresholds — plus the sweep invariants
+ * the rest of `src/` and `examples/` must hold once the consumers migrate
+ * off the old names (skipped until the owning tickets land; see each
+ * `it.skip`).
  */
 
 import { readFileSync, readdirSync } from "node:fs";
@@ -33,9 +35,6 @@ const SPACE_STEPS = {
   xl: 24,
   "2xl": 40,
 } as const;
-
-/** The xs…xl subset that 0.4.1 shipped as `--gap-*`; aliased until 0.6.0. */
-const GAP_SIZES = ["xs", "sm", "md", "lg", "xl"];
 
 interface SourceFile {
   /** Path relative to the tree root, for failure messages. */
@@ -124,12 +123,12 @@ describe("_variables.css spacing", () => {
     }
   });
 
-  it("declares --gap-xs…xl only as var(--space-*) aliases", () => {
-    const declared = [...VARIABLES.matchAll(/^\s*(--gap-[\w-]+):\s*([^;]+);/gm)].map((match) => [
-      match[1],
-      match[2],
-    ]);
-    expect(declared).toEqual(GAP_SIZES.map((size) => [`--gap-${size}`, `var(--space-${size})`]));
+  it("declares no --gap-xs…xl at all", () => {
+    // Not even as aliases: `--gap-sm` … `--gap-xl` are the responsive forms of
+    // the `--gap` style prop, registered `inherits: false` in _properties.css.
+    // A :root token under the same name would stop inheriting the moment that
+    // file loads (spec.md, ticket 08).
+    expect(VARIABLES).not.toMatch(/--gap-(xs|sm|md|lg|xl)\b/);
   });
 });
 
@@ -175,7 +174,8 @@ describe("_variables.css breakpoints", () => {
 });
 
 describe("consumer sweep", () => {
-  const otherCss = readTree(SRC, [".css"]).filter(({ path }) => !path.endsWith("_variables.css"));
+  const allCss = readTree(SRC, [".css"]);
+  const otherCss = allCss.filter(({ path }) => !path.endsWith("_variables.css"));
 
   // Ticket 04 (_utilities.css) and ticket 05 (_layout.css) move the style()
   // queries onto --bp-*; flip this on once both are resolved.
@@ -184,9 +184,10 @@ describe("consumer sweep", () => {
   });
 
   // Tickets 04 (_utilities.css), 05 (_layout.css) and 06 (base + primitives)
-  // rewrite --gap-* reads to --space-*; flip this on once all three are resolved.
-  it("reads no deprecated --gap-xs…xl alias outside _variables.css", () => {
-    expect(offenders(otherCss, /var\(--gap-(xs|sm|md|lg|xl)\b/)).toEqual([]);
+  // rewrote every --gap-* read to --space-*, and ticket 08 removed the tokens
+  // themselves, so no file may read one anywhere — _variables.css included.
+  it("reads no --gap-xs…xl token anywhere", () => {
+    expect(offenders(allCss, /var\(--gap-(xs|sm|md|lg|xl)\b/)).toEqual([]);
   });
 
   // Tickets 04/05 drop the @xs / @max-xs class prefixes from the CSS; ticket 27
