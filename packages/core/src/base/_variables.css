@@ -2,7 +2,7 @@
  * _variables.css — Global design tokens (Tier 1).
  *
  * @layer      variables
- * @requires   layers.css, _properties.css
+ * @requires   layers.css
  * @uses       light-dark() — theme roles re-resolve per color-scheme (system,
  *             .dark/.light, [data-theme]); tokens stay unregistered on purpose
  * @uses       oklch(from …) — shade/tint scales and shadow alphas
@@ -17,6 +17,10 @@
  *             (--space-2xs…2xl), radius, layout (--breakpoint-*, --bp-*,
  *             --screen-*), effects, animations. Re-declare any of these to
  *             re-skin the whole system; see CONVENTIONS.md.
+ * @consumedby _utilities-spacing.css, _utilities-spacing-responsive.css,
+ *             _utilities-sizing.css, _utilities-grid.css, _utilities-flex.css,
+ *             _utilities-color.css, _utilities-typography.css,
+ *             _utilities-position.css
  */
 
 /* Animations */
