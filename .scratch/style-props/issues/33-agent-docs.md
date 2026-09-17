@@ -1,7 +1,7 @@
 # 33 — Agent docs: zazz skill, CONVENTIONS ladder rung, READMEs, AGENTS.md
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 02, 08, 27
 Size: M
 
