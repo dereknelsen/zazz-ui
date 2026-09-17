@@ -16,7 +16,32 @@ import {
 
 const CASCADE = ["kbd", "button", "popover", "fields", "input", "select", "combobox"];
 
-function fakeKit(): ResolvedKit {
+/** The 0.5 kit's base lists as `loadKitFromDir` derives them from index.css. */
+const BASE_CSS_0_5 = {
+  pre: [
+    "base/_layers.css",
+    "base/_variables.css",
+    "base/_properties.css",
+    "base/_reset.css",
+    "base/_typography.css",
+    "base/_view-transitions.css",
+  ],
+  post: [
+    "base/_utilities.css",
+    "base/_layout.css",
+    "base/_utilities-spacing.css",
+    "base/_utilities-spacing-responsive.css",
+    "base/_utilities-sizing.css",
+    "base/_utilities-grid.css",
+    "base/_utilities-flex.css",
+    "base/_utilities-color.css",
+    "base/_utilities-typography.css",
+    "base/_utilities-position.css",
+  ],
+};
+
+/** A kit without `baseCss` (no index.css derived) exercises the 0.4 fallback. */
+function fakeKit(baseCss?: ResolvedKit["manifest"]["baseCss"]): ResolvedKit {
   return {
     version: "0.1.0",
     integrity: "",
@@ -26,6 +51,7 @@ function fakeKit(): ResolvedKit {
       primitives: {},
       cssCascadeOrder: CASCADE,
       resolveClosure: (names) => names,
+      ...(baseCss ? { baseCss } : {}),
     },
     buildHead: (options) =>
       `<meta charset="utf-8"><!-- base=${String(options.base)} fonts=${String(
@@ -59,6 +85,55 @@ describe("renderIndexCss", () => {
     const css = renderIndexCss({ kit: fakeKit(), legacy: "../styles/old.css", primitives: [] });
     expect(css).toContain(`@import "../styles/old.css" layer(legacy);`);
     expect(css).not.toContain("your-legacy.css");
+  });
+
+  it("emits the 0.4 fallback list when the kit derived no base lists", () => {
+    const css = renderIndexCss({ kit: fakeKit(), legacy: null, primitives: [] });
+    expect(css.match(/@import "\.\/base\/_[\w-]+\.css";/g)).toHaveLength(7);
+    expect(css).not.toContain("_properties.css");
+  });
+
+  it("emits a 0.5 kit's base lists around the legacy slot and primitives", () => {
+    const css = renderIndexCss({
+      kit: fakeKit(BASE_CSS_0_5),
+      legacy: "../styles/old.css",
+      primitives: [{ name: "button", css: ["primitives/button/button.css"] }],
+    });
+    const order = [
+      `@import "./base/_layers.css";`,
+      `@import "./base/_variables.css";`,
+      `@import "./base/_properties.css";`,
+      `@import "./base/_reset.css";`,
+      `@import "./base/_view-transitions.css";`,
+      `@import "../styles/old.css" layer(legacy);`,
+      "Zazz primitives",
+      `@import "./primitives/button/button.css";`,
+      `@import "./base/_utilities.css";`,
+      `@import "./base/_layout.css";`,
+      `@import "./base/_utilities-spacing.css";`,
+      `@import "./base/_utilities-spacing-responsive.css";`,
+      `@import "./base/_utilities-position.css";`,
+    ];
+    let cursor = -1;
+    for (const marker of order) {
+      const index = css.indexOf(marker);
+      expect(index, marker).toBeGreaterThan(cursor);
+      cursor = index;
+    }
+    expect(css.match(/@import "\.\/base\/_[\w-]+\.css";/g)).toHaveLength(16);
+  });
+
+  it("keeps add's insertion anchors on a 0.5 entry", () => {
+    const fresh = renderIndexCss({ kit: fakeKit(BASE_CSS_0_5), legacy: null, primitives: [] });
+    const result = insertCssImports(
+      fresh,
+      [{ name: "button", css: ["primitives/button/button.css"] }],
+      CASCADE,
+    );
+    const button = result.indexOf("primitives/button/button.css");
+    expect(button).toBeGreaterThan(result.indexOf("Zazz primitives"));
+    expect(button).toBeLessThan(result.indexOf("base/_utilities.css"));
+    expect(button).toBeLessThan(result.indexOf("base/_utilities-spacing.css"));
   });
 });
 

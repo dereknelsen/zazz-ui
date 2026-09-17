@@ -40,10 +40,15 @@ describe("zazz-ui init (e2e, packed kit)", () => {
     const project = await tmpDir();
     await runInit(undefined, BASE_FLAGS, { cwd: project, silent: true });
 
-    // Base css + core runtime (.js + .d.ts) + generated entries.
+    // Base css (the 0.5 list, derived from the kit's index.css: properties
+    // + the style-prop families) + core runtime (.js + .d.ts) + entries.
     for (const file of [
       "zazz/base/_layers.css",
       "zazz/base/_variables.css",
+      "zazz/base/_properties.css",
+      "zazz/base/_utilities.css",
+      "zazz/base/_utilities-spacing.css",
+      "zazz/base/_utilities-position.css",
       "zazz/base/utils.js",
       "zazz/base/utils.d.ts",
       "zazz/base/dialog-lifecycle.js",
@@ -58,15 +63,34 @@ describe("zazz-ui init (e2e, packed kit)", () => {
     const config = await readConfig(project);
     expect(config.language).toBe("js");
     expect(config.kit.version).toMatch(/^\d+\.\d+\.\d+/);
-    // 7 css + 4 runtime × (.js + .d.ts) + 3 generated artifacts.
-    expect(Object.keys(config.base.files)).toHaveLength(18);
+    // 16 css + 4 runtime × (.js + .d.ts) + 3 generated artifacts.
+    expect(Object.keys(config.base.files)).toHaveLength(27);
 
     // Recorded hashes are of pristine bytes — untouched files match on disk.
     const layers = await readFile(path.join(project, "zazz/base/_layers.css"));
     expect(sha256(layers)).toBe(config.base.files["base/_layers.css"]);
 
+    // index.css mirrors the kit's order: layers … properties after variables,
+    // families after the class utilities and layout.
     const indexCss = await readFile(path.join(project, "zazz/index.css"), "utf8");
-    expect(indexCss.indexOf("_layers.css")).toBeLessThan(indexCss.indexOf("_utilities.css"));
+    const order = [
+      "_layers.css",
+      "_variables.css",
+      "_properties.css",
+      "_reset.css",
+      "Zazz primitives",
+      "_utilities.css",
+      "_layout.css",
+      "_utilities-spacing.css",
+      "_utilities-spacing-responsive.css",
+      "_utilities-position.css",
+    ];
+    let cursor = -1;
+    for (const marker of order) {
+      const index = indexCss.indexOf(marker);
+      expect(index, marker).toBeGreaterThan(cursor);
+      cursor = index;
+    }
     const head = await readFile(path.join(project, "zazz/head.html"), "utf8");
     expect(head).toContain("importmap");
     expect(head).toContain("./zazz/index.css");
