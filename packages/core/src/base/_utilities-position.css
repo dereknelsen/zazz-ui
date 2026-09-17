@@ -1,0 +1,214 @@
+/**
+ * _utilities-position.css — Position style props: --top --right --bottom --left --inset --z.
+ *
+ * A style prop is a custom property set in the `style` attribute and read by
+ * a zero-specificity rule gated on the attribute text (ADR-0012):
+ *
+ *   <div class="absolute" style="--top: 1rem; --left-md: 2rem; --z: 10">
+ *
+ * Each prop maps a raw value onto its logical inset property (0.3.0
+ * convention): --top → inset-block-start, --bottom → inset-block-end,
+ * --left → inset-inline-start, --right → inset-inline-end, --inset → inset,
+ * --z → z-index. Values pass through unchanged (any length, percentage,
+ * `auto`, `anchor()`, an integer for --z); the props do not set `position`.
+ *
+ * Contract:
+ *   - The gate matches the attribute's source text, so the prop name must be
+ *     followed immediately by the colon: `--top: 1rem` and `--top:1rem` both
+ *     match; `--top : 1rem` (space before the colon) never does.
+ *     `element.style.setProperty("--top", "1rem")` serializes to the matching
+ *     form. Substrings stay independent: `--top:` does not match `--top-md:`
+ *     (the colon follows `md`), so base and responsive rules never collide.
+ *   - An unset prop never applies. An element whose style attribute does not
+ *     name the prop matches no rule here, so there is no var() fallback and no
+ *     initial-value to fight the element's own declarations.
+ *   - Responsive suffixes are mobile-first: `--top-md` applies inside
+ *     `@container style(--bp-md: true)` (48rem and up, per the nearest size
+ *     container) and stays applied above it; a larger suffix wins by source
+ *     order (sm, md, lg, xl, 2xl).
+ *
+ * @layer      utilities
+ * @requires   layers.css, _variables.css (--bp-* flags), _properties.css
+ *             (--top…--z registrations, generated from src/props.ts)
+ * @uses       :where() — zero specificity so a prop stays overridable
+ * @uses       [style*="--x:"] — attribute substring gate (Baseline)
+ * @uses       style() queries — read the --bp-* flags (typed @property tokens
+ *             from _variables.css); Baseline Newly available (Safari 18,
+ *             Firefox 151). Without support the responsive rules do not apply
+ *             and the base prop still does.
+ * @consumedby index.css
+ * @see        src/props.ts — the prop registry (names, families, kinds)
+ * @see        docs/adr/0012-style-props.md
+ */
+
+@layer zazz.utilities {
+  /* ===========================================================================
+  POSITION STYLE PROPS — base (every width)
+  =========================================================================== */
+
+  :where([style*="--top:"]) {
+    inset-block-start: var(--top);
+  }
+
+  :where([style*="--right:"]) {
+    inset-inline-end: var(--right);
+  }
+
+  :where([style*="--bottom:"]) {
+    inset-block-end: var(--bottom);
+  }
+
+  :where([style*="--left:"]) {
+    inset-inline-start: var(--left);
+  }
+
+  :where([style*="--inset:"]) {
+    inset: var(--inset);
+  }
+
+  :where([style*="--z:"]) {
+    z-index: var(--z);
+  }
+
+  /* ===========================================================================
+  RESPONSIVE — mobile-first, gated on the breakpoint state flags (--bp-sm…2xl
+  at 40/48/64/80/96rem, set by the nearest size container in _variables.css).
+  Each suffix applies at or above its breakpoint; later blocks win by source
+  order.
+  =========================================================================== */
+
+  @container style(--bp-sm: true) {
+    /* --breakpoint-sm and up */
+    :where([style*="--top-sm:"]) {
+      inset-block-start: var(--top-sm);
+    }
+
+    :where([style*="--right-sm:"]) {
+      inset-inline-end: var(--right-sm);
+    }
+
+    :where([style*="--bottom-sm:"]) {
+      inset-block-end: var(--bottom-sm);
+    }
+
+    :where([style*="--left-sm:"]) {
+      inset-inline-start: var(--left-sm);
+    }
+
+    :where([style*="--inset-sm:"]) {
+      inset: var(--inset-sm);
+    }
+
+    :where([style*="--z-sm:"]) {
+      z-index: var(--z-sm);
+    }
+  }
+
+  @container style(--bp-md: true) {
+    /* --breakpoint-md and up */
+    :where([style*="--top-md:"]) {
+      inset-block-start: var(--top-md);
+    }
+
+    :where([style*="--right-md:"]) {
+      inset-inline-end: var(--right-md);
+    }
+
+    :where([style*="--bottom-md:"]) {
+      inset-block-end: var(--bottom-md);
+    }
+
+    :where([style*="--left-md:"]) {
+      inset-inline-start: var(--left-md);
+    }
+
+    :where([style*="--inset-md:"]) {
+      inset: var(--inset-md);
+    }
+
+    :where([style*="--z-md:"]) {
+      z-index: var(--z-md);
+    }
+  }
+
+  @container style(--bp-lg: true) {
+    /* --breakpoint-lg and up */
+    :where([style*="--top-lg:"]) {
+      inset-block-start: var(--top-lg);
+    }
+
+    :where([style*="--right-lg:"]) {
+      inset-inline-end: var(--right-lg);
+    }
+
+    :where([style*="--bottom-lg:"]) {
+      inset-block-end: var(--bottom-lg);
+    }
+
+    :where([style*="--left-lg:"]) {
+      inset-inline-start: var(--left-lg);
+    }
+
+    :where([style*="--inset-lg:"]) {
+      inset: var(--inset-lg);
+    }
+
+    :where([style*="--z-lg:"]) {
+      z-index: var(--z-lg);
+    }
+  }
+
+  @container style(--bp-xl: true) {
+    /* --breakpoint-xl and up */
+    :where([style*="--top-xl:"]) {
+      inset-block-start: var(--top-xl);
+    }
+
+    :where([style*="--right-xl:"]) {
+      inset-inline-end: var(--right-xl);
+    }
+
+    :where([style*="--bottom-xl:"]) {
+      inset-block-end: var(--bottom-xl);
+    }
+
+    :where([style*="--left-xl:"]) {
+      inset-inline-start: var(--left-xl);
+    }
+
+    :where([style*="--inset-xl:"]) {
+      inset: var(--inset-xl);
+    }
+
+    :where([style*="--z-xl:"]) {
+      z-index: var(--z-xl);
+    }
+  }
+
+  @container style(--bp-2xl: true) {
+    /* --breakpoint-2xl and up */
+    :where([style*="--top-2xl:"]) {
+      inset-block-start: var(--top-2xl);
+    }
+
+    :where([style*="--right-2xl:"]) {
+      inset-inline-end: var(--right-2xl);
+    }
+
+    :where([style*="--bottom-2xl:"]) {
+      inset-block-end: var(--bottom-2xl);
+    }
+
+    :where([style*="--left-2xl:"]) {
+      inset-inline-start: var(--left-2xl);
+    }
+
+    :where([style*="--inset-2xl:"]) {
+      inset: var(--inset-2xl);
+    }
+
+    :where([style*="--z-2xl:"]) {
+      z-index: var(--z-2xl);
+    }
+  }
+}
