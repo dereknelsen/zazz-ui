@@ -5,7 +5,10 @@
  * generated head and the invariant that CDN pins match the installed packages.
  */
 
+import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vite-plus/test";
 import { ESM_DEPENDENCIES, POLYFILLS, buildHead, cdnUrl } from "./head.ts";
 
@@ -205,11 +208,31 @@ describe("buildHead cdn mode", () => {
     expect(links).toEqual([
       "_layers.css",
       "_variables.css",
+      "_properties.css",
       "_reset.css",
       "_typography.css",
       "_view-transitions.css",
       "_utilities.css",
       "_layout.css",
+      // Style-prop families (ADR-0012) after the class utilities, spacing's
+      // responsive opt-in right behind its base file.
+      "_utilities-spacing.css",
+      "_utilities-spacing-responsive.css",
+      "_utilities-sizing.css",
+      "_utilities-grid.css",
+      "_utilities-flex.css",
+      "_utilities-color.css",
+      "_utilities-typography.css",
+      "_utilities-position.css",
     ]);
+    // And the list is exactly what index.css @imports from base/, in order.
+    const indexCss = readFileSync(
+      join(dirname(fileURLToPath(import.meta.url)), "index.css"),
+      "utf8",
+    );
+    const imported = [...indexCss.matchAll(/^@import "\.\/base\/(_[a-z-]+\.css)";/gm)].map(
+      (m) => m[1],
+    );
+    expect(links).toEqual(imported);
   });
 });
