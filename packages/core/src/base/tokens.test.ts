@@ -179,13 +179,13 @@ describe("consumer sweep", () => {
 
   // Ticket 04 (_utilities.css) and ticket 05 (_layout.css) move the style()
   // queries onto --bp-*; flip this on once both are resolved.
-  it.skip("reads no --is-breakpoint flag outside _variables.css", () => {
+  it("reads no --is-breakpoint flag outside _variables.css", () => {
     expect(offenders(otherCss, /--is-breakpoint/)).toEqual([]);
   });
 
   // Tickets 04 (_utilities.css), 05 (_layout.css) and 06 (base + primitives)
   // rewrite --gap-* reads to --space-*; flip this on once all three are resolved.
-  it.skip("reads no deprecated --gap-xs…xl alias outside _variables.css", () => {
+  it("reads no deprecated --gap-xs…xl alias outside _variables.css", () => {
     expect(offenders(otherCss, /var\(--gap-(xs|sm|md|lg|xl)\b/)).toEqual([]);
   });
 
