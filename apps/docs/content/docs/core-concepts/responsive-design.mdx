@@ -1,57 +1,97 @@
 ---
-title: Responsive design
-description: Responsive layout utilities using fluid typography, fluid spacing, and centralized container style queries.
+title: "Responsive: container vs viewport"
+description: One breakpoint scale, two families of flags. Container flags drive the class prefixes and prop suffixes; viewport flags are there for your own CSS.
 ---
 
-Zazz handles responsive design through fluid type/spacing scaling and container style query prefixes.
-
-## Fluid sizing
-
-- **Typography:** `text-*` classes use `clamp()` functions that scale with viewport width.
-- **Spacing:** Spacing utilities derive from fluid interval tokens, reducing spacing on small viewports and expanding on desktop.
-
-## Responsive prefixes
-
-Prefix layout utilities with `@sm:`, `@md:`, `@lg:`, `@xl:`, or `@2xl:`. These apply style queries against centralized page breakpoint flags published by the `body` container:
+Zazz publishes its breakpoints as boolean custom properties and reads them with container style queries. There are two families on one scale: `--bp-*` reports the width of the nearest size container, `--screen-*` reports the viewport. The class prefixes (`@md:`) and the style prop suffixes (`--px-md`) both read `--bp-*`, so by default a layout responds to the space it is given, not to the window.
 
 ```html
-<div class="grid grid-cols-1 @lg:grid-cols-3 gap-md">
+<div class="grid grid-cols-1 @md:grid-cols-3" style="--gap: 4; --gap-lg: 8">
   <article class="bg-card rounded-md p-md">...</article>
   <article class="bg-card rounded-md p-md">...</article>
   <article class="bg-card rounded-md p-md">...</article>
 </div>
 ```
 
-Breakpoints activate at or above the given threshold:
+One column, then three columns from `md`; four steps of gap, then eight from `lg`. The prefix and the suffix fire on the same flag at the same moment.
 
-| Prefix  | Threshold | Token              |
-| ------- | --------- | ------------------ |
-| `@sm:`  | >= 40rem  | `--breakpoint-sm`  |
-| `@md:`  | >= 48rem  | `--breakpoint-md`  |
-| `@lg:`  | >= 64rem  | `--breakpoint-lg`  |
-| `@xl:`  | >= 80rem  | `--breakpoint-xl`  |
-| `@2xl:` | >= 96rem  | `--breakpoint-2xl` |
+## The scale
 
-## Mobile-first authoring
+| Name  | Threshold | Container flag | Viewport flag  | Length token       |
+| ----- | --------- | -------------- | -------------- | ------------------ |
+| `sm`  | 40rem     | `--bp-sm`      | `--screen-sm`  | `--breakpoint-sm`  |
+| `md`  | 48rem     | `--bp-md`      | `--screen-md`  | `--breakpoint-md`  |
+| `lg`  | 64rem     | `--bp-lg`      | `--screen-lg`  | `--breakpoint-lg`  |
+| `xl`  | 80rem     | `--bp-xl`      | `--screen-xl`  | `--breakpoint-xl`  |
+| `2xl` | 96rem     | `--bp-2xl`     | `--screen-2xl` | `--breakpoint-2xl` |
 
-Apply base utilities for the narrowest view, then add prefixed overrides for wider viewports:
+Every flag is mobile-first: it is `false` below its threshold, flips to `true` at it, and stays `true` above. At 70rem `--bp-sm`, `--bp-md` and `--bp-lg` are all `true`. The length tokens exist for calculations and for named container queries in your own CSS; the flags are what the utilities read.
 
-```html
-<!-- stacked on mobile, row layout from md up -->
-<div class="flex flex-col @lg:flex-row gap-md">...</div>
-```
+## Container flags
 
-Supported responsive families are `container`, `display`, `grid-cols`, `grid-rows`, `flex-direction`, `text-align`, `align-items`, `justify-content`, `col-span`, `row-span`, and `basis` (`basis-0`/`-1`/`-auto`/`-full`; the fractional `basis-1/2`-style classes are base-only).
+`--bp-*` is set by an unnamed size query, so the subject is the nearest ancestor with a `container-type`. The reset makes `body`, `main`, `header`, `section` and `article` inline-size containers, which means a card grid inside a narrow sidebar `section` sees `--bp-md: false` while the same grid in the main column sees `true`, on the same page at the same window width. That is the point: a component laid out for its container can be dropped anywhere.
 
-## Breakpoint-free responsive layouts
+A `.container` is intentionally not a size container (`container-type: normal`), so its children measure the section or main around it.
 
-- **Auto-fit grids:** Combine `grid-flow-row` with `grid-cols-N` (where N > 1) for automatic column wrapping based on available width.
-- **Gap-aware basis:** `basis-1/2`, `basis-1/3`, etc. automatically subtract gap values for wrapping flex rows.
+### The nearest container is the parent's
+
+A style query resolves against the parent element, and the parent's flag comes from _its_ nearest size container. For most markup this is invisible. It shows up in one shape: a prefix or suffix on a direct child of a size container follows the width of the container above that one.
 
 ```html
-<div class="grid grid-flow-row grid-cols-3 gap-md">...</div>
+<main>
+  <!-- this section's @md: reads main's width, not the section's -->
+  <section class="@md:grid-cols-2">...</section>
+
+  <section>
+    <!-- one wrapper in: this grid reads the section's width -->
+    <div class="@md:grid-cols-2">...</div>
+  </section>
+</main>
 ```
+
+A `section` that is a direct child of `main` measures `main`; a `div` inside the `section` measures the `section`. When a responsive rule seems to fire at the wrong width, check which container the parent belongs to.
+
+## Viewport flags
+
+`--screen-*` is set by `@media` on `:root` and inherited everywhere, so it ignores container width and reports the window. Nothing in the utilities reads it; it is the hook for rules in your own CSS that must follow the viewport, such as a fixed header or a layout that changes shape only on a real desktop screen.
+
+```css
+@container style(--screen-lg: true) {
+  .site-header {
+    position: sticky;
+    inset-block-start: 0;
+  }
+}
+```
+
+The `w-screen-*` and `max-w-screen-*` classes are lengths (`max-w-screen-md` caps an element at 48rem), not flags; they are unrelated to `--screen-*`.
+
+## Class prefixes and prop suffixes
+
+Both forms read `--bp-*` and both are mobile-first. Choose by the [value-shape rule](/docs/core-concepts/style-props#the-value-shape-rule): a finite value takes a prefixed class, an open value takes a suffixed prop.
+
+| Form          | Base             | Responsive          |
+| ------------- | ---------------- | ------------------- |
+| Utility class | `grid-cols-3`    | `@md:grid-cols-3`   |
+| Style prop    | `--grid-cols: 3` | `--grid-cols-md: 3` |
+
+Prefixed classes cover the layout families: `container`, display, subgrid, grid tracks and spans, flex direction and basis, align and justify, and text align. The full list is on the [responsive utilities reference](/docs/foundation/utilities/responsive-design). Spacing, sizing, color, typography and position have no prefixed classes; where they need to change per breakpoint, that is what the suffixed [style props](/docs/core-concepts/style-props#responsive-suffixes) are for, and every one of the 44 props takes all five suffixes.
+
+```html
+<!-- stacked, then a row from lg; tighter gutters below md -->
+<div class="flex flex-col @lg:flex-row" style="--gap: 2; --gap-md: 6">...</div>
+```
+
+A `@max-*` prefix exists for `.container` only (`@max-md:container`), which is a container while the flag is `false` and a plain grid above it.
+
+## Fluid sizing
+
+Between breakpoints, type and spacing scale continuously. `text-*` classes use `clamp()` against the viewport, and every spacing step is a multiple of the fluid `--spacing-interval`, so `p-md` and `--p: 6` are a little narrower on a phone than on a desktop without a breakpoint changing anything. Many layouts need no breakpoint at all: an auto-fit grid (`grid grid-flow-row grid-cols-3`) wraps columns to the available width, and the gap-aware `basis-1/2`, `basis-1/3` classes fit N children per line whatever the gap.
+
+## What changed in 0.5
+
+The old scale started one step lower. What was `@xs:` at 40rem is now `@sm:`, and each prefix, length token, `.container` band name and `data-container` value shifted with it (old `xs` to `sm`, up to old `xl` to `2xl`); the `--is-breakpoint-*` flags became `--bp-*`; and `--screen-*` is new. The `zazz-ui migrate` command rewrites the old names in your CSS and HTML and reports what it could not reach. See [Upgrading to 0.5](/docs/getting-started/upgrading).
 
 ## Browser support
 
-Zazz responsive utilities use container style queries. Supported in modern Chrome, Safari, and Firefox. Unsupported browsers fall back to the base layout.
+Container style queries are supported in current Chrome, Safari and Firefox, inside the two-versions-back policy. A browser without them keeps the base layout: no prefixed class or suffixed prop applies, so the mobile-first base is the fallback.

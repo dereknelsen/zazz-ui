@@ -1,0 +1,194 @@
+---
+title: Style props vs classes
+description: When a value is a utility class, when it is a style prop, and how the 44 inline props resolve.
+---
+
+A **style prop** is a custom property set in the `style` attribute and read by a rule in the utilities layer. It carries a value a class cannot: a class scale is finite (`p-md`, `w-full`), a prop takes whatever you write.
+
+```html
+<div class="flex flex-wrap" style="--gap: 3; --px: 8; --px-md: 12">
+  <div class="basis-1/2">...</div>
+  <div class="basis-1/2">...</div>
+</div>
+```
+
+The gap is three spacing steps, the inline padding is eight steps and grows to twelve once the surrounding container reaches `md`. Nothing here needed a stylesheet or a build step.
+
+## The value-shape rule
+
+The shape of the value decides the mechanism:
+
+| Value   | Mechanism          | Example                                             |
+| ------- | ------------------ | --------------------------------------------------- |
+| Finite  | Utility class      | `grid`, `hidden`, `bg-primary`, `p-md`, `mx-auto`   |
+| Open    | Style prop         | `style="--px: 4"`, `style="--grid-cols: 7"`         |
+| Variant | `data-*` attribute | `<button class="ui-button" data-variant="primary">` |
+| Bundle  | Primitive          | `ui-card`, `ui-dialog`                              |
+
+No prop exists for a value a class already covers, and no numeric class exists for an open value. When you reach for a prop, ask first whether the scale has the value; `p-md` is shorter than `--p: 6` and reads better. In priority order: a class when a scale value fits, a style prop when the value is open, a `--ui-*` token set inline when the value lands where inline style cannot reach, raw inline style for a true one-off, and a CSS file the moment the one-off repeats.
+
+## The 44 props
+
+Every prop is a Tailwind root written as a custom property (`--px`, `--gap`, `--grid-cols`) with no prefix. Four names are the full CSS property instead, because the root or its responsive forms collide with an existing token family: `--border-color` (not `--border`, the theme role), `--text-size` (not `--font-size`), `--line-height` (not `--leading`) and `--letter-spacing` (not `--tracking`). `--text` is the text color, not a size.
+
+### Spacing
+
+Numeric. The value is a step count multiplied by `--spacing-interval`, so it rides the fluid scale (see [Numeric spacing](#numeric-spacing)). `--gap` also sets the private `--_gap` that gap-aware `basis-*` classes read.
+
+| Prop      | CSS property           | Value kind |
+| --------- | ---------------------- | ---------- |
+| `--p`     | `padding`              | Steps      |
+| `--px`    | `padding-inline`       | Steps      |
+| `--py`    | `padding-block`        | Steps      |
+| `--ps`    | `padding-inline-start` | Steps      |
+| `--pe`    | `padding-inline-end`   | Steps      |
+| `--pt`    | `padding-block-start`  | Steps      |
+| `--pb`    | `padding-block-end`    | Steps      |
+| `--m`     | `margin`               | Steps      |
+| `--mx`    | `margin-inline`        | Steps      |
+| `--my`    | `margin-block`         | Steps      |
+| `--ms`    | `margin-inline-start`  | Steps      |
+| `--me`    | `margin-inline-end`    | Steps      |
+| `--mt`    | `margin-block-start`   | Steps      |
+| `--mb`    | `margin-block-end`     | Steps      |
+| `--gap`   | `gap`                  | Steps      |
+| `--gap-x` | `column-gap`           | Steps      |
+| `--gap-y` | `row-gap`              | Steps      |
+
+Within a breakpoint a narrower prop wins by source order, so `--p: 6; --ps: 0` is six steps on three sides and zero at the inline start.
+
+### Sizing
+
+Passed through unchanged: any length, percentage or keyword.
+
+| Prop      | CSS property                | Value kind                  |
+| --------- | --------------------------- | --------------------------- |
+| `--w`     | `inline-size`               | Length, percentage, keyword |
+| `--h`     | `block-size`                | Length, percentage, keyword |
+| `--min-w` | `min-inline-size`           | Length, percentage, keyword |
+| `--max-w` | `max-inline-size`           | Length, percentage, keyword |
+| `--min-h` | `min-block-size`            | Length, percentage, keyword |
+| `--max-h` | `max-block-size`            | Length, percentage, keyword |
+| `--size`  | `inline-size`, `block-size` | Length, percentage, keyword |
+
+### Grid
+
+Integers. `--grid-cols` sets `display: grid` on its own (see [Coordination](#coordination)).
+
+| Prop          | CSS property            | Value kind                |
+| ------------- | ----------------------- | ------------------------- |
+| `--grid-cols` | `grid-template-columns` | Integer (N equal columns) |
+| `--grid-rows` | `grid-template-rows`    | Integer (N auto rows)     |
+| `--col-span`  | `grid-column`           | Integer (span N)          |
+| `--row-span`  | `grid-row`              | Integer (span N)          |
+
+### Flex
+
+| Prop       | CSS property  | Value kind                  |
+| ---------- | ------------- | --------------------------- |
+| `--basis`  | `flex-basis`  | Length, percentage, keyword |
+| `--grow`   | `flex-grow`   | Number                      |
+| `--shrink` | `flex-shrink` | Number                      |
+| `--order`  | `order`       | Integer                     |
+
+### Color
+
+Any `<color>`, including a theme token. A token's `light-dark()` re-resolves against the element's own `color-scheme`, so `--bg: var(--primary)` follows a `.dark` scope exactly as `bg-primary` does.
+
+| Prop             | CSS property       | Value kind |
+| ---------------- | ------------------ | ---------- |
+| `--bg`           | `background-color` | Color      |
+| `--text`         | `color`            | Color      |
+| `--border-color` | `border-color`     | Color      |
+
+### Typography
+
+| Prop               | CSS property     | Value kind     |
+| ------------------ | ---------------- | -------------- |
+| `--text-size`      | `font-size`      | Length         |
+| `--line-height`    | `line-height`    | Number, length |
+| `--letter-spacing` | `letter-spacing` | Length         |
+
+### Position
+
+Logical insets: `--left` is `inset-inline-start`, so it flips in right-to-left writing modes.
+
+| Prop       | CSS property         | Value kind                  |
+| ---------- | -------------------- | --------------------------- |
+| `--top`    | `inset-block-start`  | Length, percentage, keyword |
+| `--right`  | `inset-inline-end`   | Length, percentage, keyword |
+| `--bottom` | `inset-block-end`    | Length, percentage, keyword |
+| `--left`   | `inset-inline-start` | Length, percentage, keyword |
+| `--inset`  | `inset`              | Length, percentage, keyword |
+| `--z`      | `z-index`            | Integer                     |
+
+## Numeric spacing
+
+A spacing prop is a unitless step count, not a length. `--px: 6` becomes `calc(6 * var(--spacing-interval))`, which is the same value `px-md` produces, because the semantic scale is itself defined in steps:
+
+| Token         | Steps | Class equivalent |
+| ------------- | ----- | ---------------- |
+| `--space-2xs` | 1     | (token only)     |
+| `--space-xs`  | 2     | `p-xs`           |
+| `--space-sm`  | 4     | `p-sm`           |
+| `--space-md`  | 6     | `p-md`           |
+| `--space-lg`  | 11    | `p-lg`           |
+| `--space-xl`  | 24    | `p-xl`           |
+| `--space-2xl` | 40    | (token only)     |
+
+So `--px: 6` and `px-md` are interchangeable, and `--px: 7` is the value between `md` and `lg` that no class offers. Because the interval is a fluid `clamp()`, a step is slightly narrower on a phone than on a desktop, and a prop moves with it. Negative margins are negative steps: `--mt: -2`.
+
+## Responsive suffixes
+
+Every prop takes a breakpoint suffix: `--px-sm`, `--px-md`, `--px-lg`, `--px-xl`, `--px-2xl`. A suffixed prop applies once the nearest size container reaches that width and stays applied above it; a larger breakpoint wins over a smaller one. This is the same flag the `@md:` class prefixes read, so a prop and a class at the same breakpoint fire at the same moment.
+
+```html
+<section style="--grid-cols: 1; --grid-cols-md: 2; --grid-cols-xl: 4; --gap: 4; --gap-lg: 8">
+  ...
+</section>
+```
+
+Base and suffixed rules are independent: a `--px-md` alone does nothing below `md`. Which container the width is measured against, and how the container flags differ from the viewport ones, is on [Responsive: container vs viewport](/docs/core-concepts/responsive-design).
+
+## Coordination
+
+Two props do more than set one property, because the classes they replace do too.
+
+`--gap` sets the private coordination variable `--_gap` as well as `gap`. The fractional `basis-1/2`, `basis-1/3` classes subtract `--_gap` so N children fill a line exactly; a raw `gap: 1rem` in the style attribute is invisible to them. Write `style="--gap: 4"` and `basis-1/2` children fit two per line, the same as `class="gap-sm"`.
+
+`--grid-cols` sets `display: grid` and the private `--_grid-cols`, so `col-span-*` classes and `--col-span` clamp to the track count. A `div` with `style="--grid-cols: 3"` is a three-column grid without a `grid` class. The `display: grid` comes after the class utilities in source order, so it also beats `hidden` on the same element; for a grid that should appear at a breakpoint use `--grid-cols-md`, not `--grid-cols` plus a `hidden` class.
+
+## Props on components
+
+Primitives read only their `--ui-*` tokens, never a style prop. The two meet in the cascade: the utilities layer is ordered after the components layer, so `style="--px: 8"` on a `ui-button` root wins over the button's own padding with no `!important`.
+
+```html
+<button class="ui-button" data-variant="primary" style="--px: 8; --px-md: 12">Continue</button>
+```
+
+To change every button instead, override the token, and put the override on `:root`. `button.css` declares `--ui-button-padding: var(--ui-field-padding)` at `:root`, so the `var()` is substituted there and descendants inherit the resolved value; a `--ui-field-padding` set on a section never reaches the buttons inside it. The scoped lever is the component's own token, `--ui-button-padding`. Case g of the [style props template](/docs/templates/style-props) shows both side by side.
+
+## The attribute gate
+
+A prop rule matches on the text of the `style` attribute: `[style*="--px:"]`. That has two consequences.
+
+**No space before the colon.** `--px: 6` and `--px:6` match; `--px : 6` does not, because the substring `--px:` is not in the attribute. The formatter normalises the first form, so hand-written markup that passes `vp check` is safe. Frameworks are safe too: `element.style.setProperty("--px", "6")` serialises as `--px: 6`, and React, Vue and Svelte style bindings go through the same serialisation.
+
+**An unset prop applies nothing.** An element whose `style` never names `--px` matches no `--px` rule, so there is no `var()` fallback to reason about and no cost on elements that use no props. It also means the gates are prefix-free: `--p:` does not match `--px:` or `--p-md:`, and `--gap:` does not match `--gap-x:`.
+
+Props are registered `inherits: false`. A `--gap` on a container never surfaces as `--gap` on its children; only the private `--_gap` travels, and that is on purpose.
+
+## Pitfalls
+
+- **A unit on a spacing prop.** `--px: 1rem` multiplies a length by a length, the `calc()` is invalid at computed-value time, and the padding falls to zero. Spacing props take a step count; for a literal length use a sizing prop or raw inline style.
+- **`auto` on a spacing prop.** `--mx: auto` fails the same way and the margin is zero. Auto margins are a finite value, so they stay a class: `mx-auto`.
+- **`--border-color` beside a `border` shorthand.** An inline `border: 1px solid` resets `border-color` at inline precedence, which beats every layer including the prop rule. Pair `--border-color` with the `border` class or the width and style longhands.
+- **`--text` is a color.** The font-size prop is `--text-size`.
+- **No inheritance.** A prop applies to the element that carries it. To pad every card in a list, put the prop on each card, or set a `--ui-*` token on the list.
+- **Not a CSP workaround.** A prop lives in the `style` attribute, and a strict `style-src` blocks that attribute exactly as it blocks raw inline style. The CSP-safe rungs are classes and CSS files; `setProperty` from a script is not blocked, which is what frameworks do. See [Content Security Policy](/docs/getting-started/csp).
+
+## Further reading
+
+- [Style props template](/docs/templates/style-props): eight labelled cases with a live computed-style readout.
+- [Styling with utility classes](/docs/core-concepts/utility-classes): the finite half of the rule.
+- [ADR-0012](https://github.com/dereknelsen/zazz-ui/blob/main/docs/adr/0012-style-props.md): why props exist and why raw inline style keeps its place.
