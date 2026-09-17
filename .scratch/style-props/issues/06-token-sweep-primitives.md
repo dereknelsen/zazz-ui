@@ -1,7 +1,7 @@
 # 06 — Base + primitive token sweep (--gap-*, --breakpoint-*)
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 03
 Size: S
 
