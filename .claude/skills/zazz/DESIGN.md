@@ -439,15 +439,17 @@ on the container. No wrapper div needed. See `references/tokens.md` §7 for the 
 
 ### Spacing
 
-| Token        | Computed | Use For                                |
-| ------------ | -------- | -------------------------------------- |
-| `--space-xs` | 8px      | Tight grouping, button rows            |
-| `--space-sm` | 16px     | Default component gap, gutters         |
-| `--space-md` | 24px     | Card padding, section internal spacing |
-| `--space-lg` | 44px     | Large component separation             |
-| `--space-xl` | 96px     | Section-level vertical rhythm          |
+| Token         | Computed | Use For                                |
+| ------------- | -------- | -------------------------------------- |
+| `--space-2xs` | 4px      | Hairline gaps, icon-to-label           |
+| `--space-xs`  | 8px      | Tight grouping, button rows            |
+| `--space-sm`  | 16px     | Default component gap, gutters         |
+| `--space-md`  | 24px     | Card padding, section internal spacing |
+| `--space-lg`  | 44px     | Large component separation             |
+| `--space-xl`  | 96px     | Section-level vertical rhythm          |
+| `--space-2xl` | 160px    | Hero and chapter-level breathing room  |
 
-Utility classes: `.gap-*`, `.p-*`, `.px-*`, `.py-*`, `.m-*`, `.mx-*`, `.my-*` at each size (xs/sm/md/lg/xl).
+One scale for padding, margin, and gap (the old `--gap-*` tokens are gone). Utility classes: `.gap-*`, `.p-*`, `.px-*`, `.py-*`, `.m-*`, `.mx-*`, `.my-*` at each size (xs/sm/md/lg/xl). An off-scale amount is a style prop, not a new class: `style="--py: 30"` (unitless steps of `--spacing-interval`; `--py-md: 40` from the `md` breakpoint up).
 
 _Values shown throughout (spacing, radius, type sizes) are **desktop maximums**. Spacing and radius derive from `--spacing-interval` (`clamp(0.225rem, …, 0.25rem)`) and type from per-step `clamp()`s, so all three scale down fluidly on narrower viewports._
 
@@ -495,6 +497,8 @@ Spring easing (`--spring-easing`) with 0.333s duration. Fallback: `cubic-bezier(
 ### Breakpoints
 
 `--breakpoint-sm` (640px) · `--breakpoint-md` (768px) · `--breakpoint-lg` (1024px) · `--breakpoint-xl` (1280px) · `--breakpoint-2xl` (1536px)
+
+The same five names run through everything responsive: `@sm:`…`@2xl:` class prefixes, `-sm`…`-2xl` style-prop suffixes (`--grid-cols-lg: 3`), `--bp-*` container flags, `--screen-*` viewport flags, and the `.container` bands / `data-container` values.
 
 ---
 
