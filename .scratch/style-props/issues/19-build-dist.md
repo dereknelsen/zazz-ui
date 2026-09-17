@@ -1,7 +1,7 @@
 # 19 — build-dist.mjs + lightningcss + vite.config.ts + build order
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 16
 Size: M
 
