@@ -223,16 +223,18 @@ const CHANGELOG = readFileSync(join(PACKAGE, "CHANGELOG.md"), "utf8");
 
 /**
  * @description The lines of one version block: from its `## <version>` header
- * to the next `## ` header (or end of file).
+ * to the next `## ` header (or end of file). The version must end there
+ * (whitespace or end of line follows), so `## 0.5.0-beta.1` is not `0.5.0`.
  *
+ * @param changelog - The changelog text.
  * @param version - The version whose block to slice.
  * @returns The block's lines, or null when the changelog has no such block.
  * @private
  */
-function versionBlock(version: string): string[] | null {
-  const lines = CHANGELOG.split("\n");
+function versionBlock(changelog: string, version: string): string[] | null {
+  const lines = changelog.split("\n");
   const start = lines.findIndex((line) =>
-    new RegExp(`^## ${version.replace(/\./g, "\\.")}\\b`).test(line),
+    new RegExp(`^## ${version.replace(/\./g, "\\.")}(?=\\s|$)`).test(line),
   );
   if (start === -1) return null;
   const rest = lines.slice(start + 1);
@@ -273,8 +275,18 @@ function isRuleShaped(text: string): boolean {
   );
 }
 
+describe("versionBlock", () => {
+  it("matches the exact version header, not a prerelease that starts the same", () => {
+    const sample = ["# Changelog", "", "## 0.5.0-beta.1 (2026-08-01)", "", "- beta", ""].join("\n");
+    expect(versionBlock(sample, "0.5.0")).toBeNull();
+    expect(versionBlock(sample, "0.5.0-beta.1")).toEqual(["", "- beta", ""]);
+    expect(versionBlock("## 0.5.0\n- a\n## 0.5.1\n- b", "0.5.0")).toEqual(["- a"]);
+    expect(versionBlock("## 0.5.0", "0.5.0")).toEqual([]);
+  });
+});
+
 describe("CHANGELOG.md ## 0.5.0", () => {
-  const block = versionBlock(VERSION);
+  const block = versionBlock(CHANGELOG, VERSION);
   const rows = block === null ? [] : renameRows(block);
   const rowKeys = new Set(rows.map(({ from, to }) => `${from} → ${to}`));
   const ruleKeys = new Set(
