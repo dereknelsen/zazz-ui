@@ -5,8 +5,9 @@
  * e2e. Unlike the packed real kit (global-setup), these two tarballs give the
  * tests control over every upstream event: a changed base file (merge and
  * conflict target), a changed primitive file, an added file, a removed file,
- * a new primitive that joins a dependency closure, and a changelog with a
- * breaking entry. Consumed via `ZAZZ_UI_KIT=file:…/kit-{version}.tgz` — the
+ * a new primitive that joins a dependency closure, a changelog with a
+ * breaking entry, and (v2 only) a `migrations/<version>.json` rule set for
+ * the migrate e2e. Consumed via `ZAZZ_UI_KIT=file:…/kit-{version}.tgz` — the
  * `{version}` placeholder routes each resolution to the right tarball.
  */
 
@@ -46,6 +47,40 @@ export const V1_ALPHA_CSS = `/* alpha ${V1} */
 
 /** v2 touches only the header line — local edits below merge cleanly. */
 export const V2_ALPHA_CSS = V1_ALPHA_CSS.replace(`/* alpha ${V1} */`, `/* alpha ${V2} */`);
+
+/**
+ * v2's migration rules (`migrations/<V2>.json`), in the shape of the kit's
+ * `migrations/0.5.0.json`: chained token / class-prefix / attr-value shifts
+ * (each `to` is another rule's `from`, so the engine must not chain them),
+ * a one-to-one token rename family, and the two manual rules.
+ */
+export const V2_MIGRATION = {
+  from: V1.split(".").slice(0, 2).join("."),
+  to: V2,
+  rules: [
+    { kind: "token", from: "--breakpoint-xs", to: "--breakpoint-sm" },
+    { kind: "token", from: "--breakpoint-sm", to: "--breakpoint-md" },
+    { kind: "token", from: "--breakpoint-md", to: "--breakpoint-lg" },
+    { kind: "token", from: "--gap-sm", to: "--space-sm" },
+    { kind: "token", from: "--gap-md", to: "--space-md" },
+    { kind: "class-prefix", from: "@xs:", to: "@sm:" },
+    { kind: "class-prefix", from: "@sm:", to: "@md:" },
+    { kind: "class-prefix", from: "@md:", to: "@lg:" },
+    { kind: "attr-value", from: "data-container=xs", to: "data-container=sm" },
+    { kind: "attr-value", from: "data-container=sm", to: "data-container=md" },
+    { kind: "attr-value", from: "data-container=md", to: "data-container=lg" },
+    {
+      kind: "manual",
+      from: "className={",
+      note: "JSX className expression: shift the breakpoint prefixes inside it by hand",
+    },
+    {
+      kind: "manual",
+      from: "[",
+      note: "arbitrary value in a class name: move it to the matching style prop by hand",
+    },
+  ],
+} as const;
 
 const CHANGELOG_V2 = `# Changelog
 
@@ -180,6 +215,7 @@ function versionFiles(version: string): Record<string, string> {
     files["src/primitives/alpha/alpha-extra.css"] = ".ui-alpha-extra {\n  color: teal;\n}\n";
     files["src/primitives/gamma/gamma.css"] = ".ui-gamma {\n  display: flex;\n}\n";
     files["CHANGELOG.md"] = CHANGELOG_V2;
+    files[`migrations/${V2}.json`] = `${JSON.stringify(V2_MIGRATION, null, 2)}\n`;
   }
   return files;
 }
