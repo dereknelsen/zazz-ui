@@ -1,0 +1,46 @@
+{
+  "from": "0.4",
+  "to": "0.5.0",
+  "rules": [
+    { "kind": "token", "from": "--is-breakpoint-xs", "to": "--bp-sm" },
+    { "kind": "token", "from": "--is-breakpoint-sm", "to": "--bp-md" },
+    { "kind": "token", "from": "--is-breakpoint-md", "to": "--bp-lg" },
+    { "kind": "token", "from": "--is-breakpoint-lg", "to": "--bp-xl" },
+    { "kind": "token", "from": "--is-breakpoint-xl", "to": "--bp-2xl" },
+    { "kind": "token", "from": "--breakpoint-xs", "to": "--breakpoint-sm" },
+    { "kind": "token", "from": "--breakpoint-sm", "to": "--breakpoint-md" },
+    { "kind": "token", "from": "--breakpoint-md", "to": "--breakpoint-lg" },
+    { "kind": "token", "from": "--breakpoint-lg", "to": "--breakpoint-xl" },
+    { "kind": "token", "from": "--breakpoint-xl", "to": "--breakpoint-2xl" },
+    { "kind": "token", "from": "--gap-xs", "to": "--space-xs" },
+    { "kind": "token", "from": "--gap-sm", "to": "--space-sm" },
+    { "kind": "token", "from": "--gap-md", "to": "--space-md" },
+    { "kind": "token", "from": "--gap-lg", "to": "--space-lg" },
+    { "kind": "token", "from": "--gap-xl", "to": "--space-xl" },
+    { "kind": "class-prefix", "from": "@xs:", "to": "@sm:" },
+    { "kind": "class-prefix", "from": "@sm:", "to": "@md:" },
+    { "kind": "class-prefix", "from": "@md:", "to": "@lg:" },
+    { "kind": "class-prefix", "from": "@lg:", "to": "@xl:" },
+    { "kind": "class-prefix", "from": "@xl:", "to": "@2xl:" },
+    { "kind": "class-prefix", "from": "@max-xs:", "to": "@max-sm:" },
+    { "kind": "class-prefix", "from": "@max-sm:", "to": "@max-md:" },
+    { "kind": "class-prefix", "from": "@max-md:", "to": "@max-lg:" },
+    { "kind": "class-prefix", "from": "@max-lg:", "to": "@max-xl:" },
+    { "kind": "class-prefix", "from": "@max-xl:", "to": "@max-2xl:" },
+    { "kind": "attr-value", "from": "data-container=xs", "to": "data-container=sm" },
+    { "kind": "attr-value", "from": "data-container=sm", "to": "data-container=md" },
+    { "kind": "attr-value", "from": "data-container=md", "to": "data-container=lg" },
+    { "kind": "attr-value", "from": "data-container=lg", "to": "data-container=xl" },
+    { "kind": "attr-value", "from": "data-container=xl", "to": "data-container=2xl" },
+    {
+      "kind": "manual",
+      "from": "className={",
+      "note": "JSX className expression: the breakpoint prefixes inside it cannot be followed; shift @xs:…@xl: (and @max-*) one step by hand"
+    },
+    {
+      "kind": "manual",
+      "from": "[",
+      "note": "arbitrary value in a class name: move it to the matching style prop by hand"
+    }
+  ]
+}
