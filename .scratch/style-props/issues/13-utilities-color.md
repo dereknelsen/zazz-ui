@@ -17,9 +17,9 @@ Read first: [/SPEC.md](../../../SPEC.md), [spec.md](../spec.md) (frozen names + 
 
 Hand-write the color style-prop file(s). Load the `modern-web-guidance` skill first (verify `@container style()`, `@property`, attribute substring selectors). Read `CONVENTIONS.styles.md` (CSSDoc header, `:where()` zero specificity) and `.scratch/style-props/spec.md` (frozen names, rule shape).
 
-Props: bg text border.
+Props: bg text border-color.
 
-Shape: everything inside `@layer zazz.utilities`. Base rule per prop: `:where([style*="--<name>:"]) { <property>: <value>; }`. Then five blocks `@container style(--bp-<bp>: true) { :where([style*="--<name>-<bp>:"]) { … } }` in order sm, md, lg, xl, 2xl (mobile-first by source order). Raw color values: bg → background-color, text → color, border → border-color. Values are expected to be tokens (`--bg: var(--primary)`) or any color. Responsive blocks in the same file.
+Shape: everything inside `@layer zazz.utilities`. Base rule per prop: `:where([style*="--<name>:"]) { <property>: <value>; }`. Then five blocks `@container style(--bp-<bp>: true) { :where([style*="--<name>-<bp>:"]) { … } }` in order sm, md, lg, xl, 2xl (mobile-first by source order). Raw color values: bg → background-color, text → color, border-color → border-color. Values are expected to be tokens (`--bg: var(--primary)`) or any color. Responsive blocks in the same file.
 
 Header must document: no space before the colon in the inline value; unset props never apply (attribute gate). Acceptance: `vp check` passes; a quick scratch html in the worktree (not committed) shows the rule applying in Chrome via agent-browser `eval getComputedStyle`.
 
