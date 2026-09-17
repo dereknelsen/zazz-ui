@@ -58,18 +58,32 @@ const EXACT_VERSION = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/;
 
 /**
  * Base stylesheets in the exact order `src/index.css` loads them around the
- * primitive imports: `PRE` before (layer declaration first), `POST` after
- * (utilities and layout stay the final normal override layer). The granular
+ * primitive imports: `PRE` before (layer declaration first, then tokens and
+ * the style-prop registrations), `POST` after (class utilities and layout,
+ * then the style-prop family files, which must follow the classes so a prop
+ * beats a class on the same element by source order — ADR-0012). The granular
  * CDN head mirrors this split; `head.test.ts` guards it against `index.css`.
  */
 const BASE_CSS_PRE = [
   "base/_layers.css",
   "base/_variables.css",
+  "base/_properties.css",
   "base/_reset.css",
   "base/_typography.css",
   "base/_view-transitions.css",
 ];
-const BASE_CSS_POST = ["base/_utilities.css", "base/_layout.css"];
+const BASE_CSS_POST = [
+  "base/_utilities.css",
+  "base/_layout.css",
+  "base/_utilities-spacing.css",
+  "base/_utilities-spacing-responsive.css",
+  "base/_utilities-sizing.css",
+  "base/_utilities-grid.css",
+  "base/_utilities-flex.css",
+  "base/_utilities-color.css",
+  "base/_utilities-typography.css",
+  "base/_utilities-position.css",
+];
 
 /**
  * Core runtime modules reached by relative import from primitive scripts
