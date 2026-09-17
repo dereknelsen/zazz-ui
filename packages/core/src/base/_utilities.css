@@ -5,7 +5,7 @@
  * @requires   layers.css, _variables.css
  * @uses       :where() — zero specificity so utilities stay overridable
  * @uses       container-type / @container — responsive layout utilities
- * @uses       style() queries — read typed @property tokens from _properties.css
+ * @uses       style() queries — read --bp-* flags (typed @property tokens from _variables.css)
  */
 
 @layer variables {
@@ -1188,378 +1188,14 @@
   }
 
   /* ===========================================================================
-  CONTAINER RESPONSIVE UTILITIES — mobile-first, gated on the global breakpoint
-  state flags (--is-breakpoint-*, sourced from the body container in _variables.css).
-  Each prefix applies at or above its breakpoint: style(--is-breakpoint-X: true).
+  CONTAINER RESPONSIVE UTILITIES — mobile-first, gated on the breakpoint state
+  flags (--bp-sm…2xl at 40/48/64/80/96rem, set by the nearest size container in
+  _variables.css). Each prefix applies at or above its breakpoint:
+  @sm: … @2xl: inside @container style(--bp-X: true).
   =========================================================================== */
 
-  @container style(--is-breakpoint-xs: true) {
-    /* --breakpoint-xs and up */
-    /* display */
-    :where(.\@xs\:hidden) {
-      display: none;
-    }
-
-    :where(.\@xs\:block) {
-      display: block;
-    }
-
-    :where(.\@xs\:flex) {
-      display: flex;
-    }
-
-    :where(.\@xs\:inline-flex) {
-      display: inline-flex;
-    }
-
-    :where(.\@xs\:grid) {
-      display: grid;
-    }
-
-    :where(.\@xs\:grid-cols-subgrid) {
-      grid-template-columns: subgrid;
-    }
-
-    :where(.\@xs\:grid-rows-subgrid) {
-      grid-template-rows: subgrid;
-    }
-
-    /* grid-cols */
-    :where(.\@xs\:grid-cols-1) {
-      --_grid-cols: 1;
-      grid-template-columns: repeat(var(--_grid-cols, 1), minmax(0, 1fr));
-    }
-
-    :where(.\@xs\:grid-cols-2) {
-      --_grid-cols: 2;
-      grid-template-columns: repeat(var(--_grid-cols, 2), minmax(0, 1fr));
-    }
-
-    :where(.\@xs\:grid-cols-3) {
-      --_grid-cols: 3;
-      grid-template-columns: repeat(var(--_grid-cols, 3), minmax(0, 1fr));
-    }
-
-    :where(.\@xs\:grid-cols-4) {
-      --_grid-cols: 4;
-      grid-template-columns: repeat(var(--_grid-cols, 4), minmax(0, 1fr));
-    }
-
-    :where(.\@xs\:grid-cols-5) {
-      --_grid-cols: 5;
-      grid-template-columns: repeat(var(--_grid-cols, 5), minmax(0, 1fr));
-    }
-
-    :where(.\@xs\:grid-cols-6) {
-      --_grid-cols: 6;
-      grid-template-columns: repeat(var(--_grid-cols, 6), minmax(0, 1fr));
-    }
-
-    :where(.\@xs\:grid-cols-7) {
-      --_grid-cols: 7;
-      grid-template-columns: repeat(var(--_grid-cols, 7), minmax(0, 1fr));
-    }
-
-    :where(.\@xs\:grid-cols-8) {
-      --_grid-cols: 8;
-      grid-template-columns: repeat(var(--_grid-cols, 8), minmax(0, 1fr));
-    }
-
-    :where(.\@xs\:grid-cols-9) {
-      --_grid-cols: 9;
-      grid-template-columns: repeat(var(--_grid-cols, 9), minmax(0, 1fr));
-    }
-
-    :where(.\@xs\:grid-cols-10) {
-      --_grid-cols: 10;
-      grid-template-columns: repeat(var(--_grid-cols, 10), minmax(0, 1fr));
-    }
-
-    :where(.\@xs\:grid-cols-11) {
-      --_grid-cols: 11;
-      grid-template-columns: repeat(var(--_grid-cols, 11), minmax(0, 1fr));
-    }
-
-    :where(.\@xs\:grid-cols-12) {
-      --_grid-cols: 12;
-      grid-template-columns: repeat(var(--_grid-cols, 12), minmax(0, 1fr));
-    }
-
-    /* grid-rows */
-    :where(.\@xs\:grid-rows-1) {
-      --_grid-rows: 1;
-      grid-template-rows: repeat(var(--_grid-rows, 1), auto);
-    }
-
-    :where(.\@xs\:grid-rows-2) {
-      --_grid-rows: 2;
-      grid-template-rows: repeat(var(--_grid-rows, 2), auto);
-    }
-
-    :where(.\@xs\:grid-rows-3) {
-      --_grid-rows: 3;
-      grid-template-rows: repeat(var(--_grid-rows, 3), auto);
-    }
-
-    :where(.\@xs\:grid-rows-4) {
-      --_grid-rows: 4;
-      grid-template-rows: repeat(var(--_grid-rows, 4), auto);
-    }
-
-    :where(.\@xs\:grid-rows-5) {
-      --_grid-rows: 5;
-      grid-template-rows: repeat(var(--_grid-rows, 5), auto);
-    }
-
-    :where(.\@xs\:grid-rows-6) {
-      --_grid-rows: 6;
-      grid-template-rows: repeat(var(--_grid-rows, 6), auto);
-    }
-
-    :where(.\@xs\:grid-rows-7) {
-      --_grid-rows: 7;
-      grid-template-rows: repeat(var(--_grid-rows, 7), auto);
-    }
-
-    :where(.\@xs\:grid-rows-8) {
-      --_grid-rows: 8;
-      grid-template-rows: repeat(var(--_grid-rows, 8), auto);
-    }
-
-    :where(.\@xs\:grid-rows-9) {
-      --_grid-rows: 9;
-      grid-template-rows: repeat(var(--_grid-rows, 9), auto);
-    }
-
-    :where(.\@xs\:grid-rows-10) {
-      --_grid-rows: 10;
-      grid-template-rows: repeat(var(--_grid-rows, 10), auto);
-    }
-
-    :where(.\@xs\:grid-rows-11) {
-      --_grid-rows: 11;
-      grid-template-rows: repeat(var(--_grid-rows, 11), auto);
-    }
-
-    :where(.\@xs\:grid-rows-12) {
-      --_grid-rows: 12;
-      grid-template-rows: repeat(var(--_grid-rows, 12), auto);
-    }
-
-    /* flex-direction */
-    :where(.\@xs\:flex-row) {
-      flex-direction: row;
-    }
-
-    :where(.\@xs\:flex-col) {
-      flex-direction: column;
-    }
-
-    /* text-align */
-    :where(.\@xs\:text-center) {
-      text-align: center;
-    }
-
-    :where(.\@xs\:text-left, .\@xs\:text-start) {
-      text-align: start;
-    }
-
-    :where(.\@xs\:text-right, .\@xs\:text-end) {
-      text-align: end;
-    }
-
-    :where(.\@xs\:text-justify) {
-      text-align: justify;
-    }
-
-    /* align-items */
-    :where(.\@xs\:items-start) {
-      align-items: start;
-    }
-
-    :where(.\@xs\:items-center) {
-      align-items: center;
-    }
-
-    :where(.\@xs\:items-end) {
-      align-items: end;
-    }
-
-    :where(.\@xs\:items-stretch) {
-      align-items: stretch;
-    }
-
-    /* justify-content */
-    :where(.\@xs\:justify-start) {
-      justify-content: start;
-    }
-
-    :where(.\@xs\:justify-center) {
-      justify-content: center;
-    }
-
-    :where(.\@xs\:justify-end) {
-      justify-content: end;
-    }
-
-    :where(.\@xs\:justify-stretch) {
-      justify-content: stretch;
-    }
-
-    :where(.\@xs\:justify-around) {
-      justify-content: space-around;
-    }
-
-    :where(.\@xs\:justify-between) {
-      justify-content: space-between;
-    }
-
-    /* col-span */
-    :where(.\@xs\:col-span-1) {
-      --_col-span: 1;
-      --_col-span-responsive: 1;
-    }
-
-    :where(.\@xs\:col-span-2) {
-      --_col-span: 2;
-      --_col-span-responsive: 2;
-    }
-
-    :where(.\@xs\:col-span-3) {
-      --_col-span: 3;
-      --_col-span-responsive: 3;
-    }
-
-    :where(.\@xs\:col-span-4) {
-      --_col-span: 4;
-      --_col-span-responsive: 4;
-    }
-
-    :where(.\@xs\:col-span-5) {
-      --_col-span: 5;
-      --_col-span-responsive: 5;
-    }
-
-    :where(.\@xs\:col-span-6) {
-      --_col-span: 6;
-      --_col-span-responsive: 6;
-    }
-
-    :where(.\@xs\:col-span-7) {
-      --_col-span: 7;
-      --_col-span-responsive: 7;
-    }
-
-    :where(.\@xs\:col-span-8) {
-      --_col-span: 8;
-      --_col-span-responsive: 8;
-    }
-
-    :where(.\@xs\:col-span-9) {
-      --_col-span: 9;
-      --_col-span-responsive: 9;
-    }
-
-    :where(.\@xs\:col-span-10) {
-      --_col-span: 10;
-      --_col-span-responsive: 10;
-    }
-
-    :where(.\@xs\:col-span-11) {
-      --_col-span: 11;
-      --_col-span-responsive: 11;
-    }
-
-    :where(.\@xs\:col-span-12) {
-      --_col-span: 12;
-      --_col-span-responsive: 12;
-    }
-
-    /* row-span */
-    :where(.\@xs\:row-span-1) {
-      grid-row: span min(1, var(--_grid-rows, 1));
-    }
-
-    :where(.\@xs\:row-span-2) {
-      grid-row: span min(2, var(--_grid-rows, 2));
-    }
-
-    :where(.\@xs\:row-span-3) {
-      grid-row: span min(3, var(--_grid-rows, 3));
-    }
-
-    :where(.\@xs\:row-span-4) {
-      grid-row: span min(4, var(--_grid-rows, 4));
-    }
-
-    :where(.\@xs\:row-span-5) {
-      grid-row: span min(5, var(--_grid-rows, 5));
-    }
-
-    :where(.\@xs\:row-span-6) {
-      grid-row: span min(6, var(--_grid-rows, 6));
-    }
-
-    :where(.\@xs\:row-span-7) {
-      grid-row: span min(7, var(--_grid-rows, 7));
-    }
-
-    :where(.\@xs\:row-span-8) {
-      grid-row: span min(8, var(--_grid-rows, 8));
-    }
-
-    :where(.\@xs\:row-span-9) {
-      grid-row: span min(9, var(--_grid-rows, 9));
-    }
-
-    :where(.\@xs\:row-span-10) {
-      grid-row: span min(10, var(--_grid-rows, 10));
-    }
-
-    :where(.\@xs\:row-span-11) {
-      grid-row: span min(11, var(--_grid-rows, 11));
-    }
-
-    :where(.\@xs\:row-span-12) {
-      grid-row: span min(12, var(--_grid-rows, 12));
-    }
-
-    /* basis */
-    :where(.\@xs\:basis-0) {
-      flex-basis: 0;
-    }
-
-    :where(.\@xs\:basis-auto) {
-      flex-basis: auto;
-    }
-
-    :where(.\@xs\:basis-full) {
-      flex-basis: 100%;
-    }
-
-    :where(.\@xs\:basis-1\/6) {
-      flex-basis: calc((100% - (var(--_gap, 0px) * 5)) / 6);
-    }
-
-    :where(.\@xs\:basis-1\/5) {
-      flex-basis: calc((100% - (var(--_gap, 0px) * 4)) / 5);
-    }
-
-    :where(.\@xs\:basis-1\/4) {
-      flex-basis: calc((100% - (var(--_gap, 0px) * 3)) / 4);
-    }
-
-    :where(.\@xs\:basis-1\/3) {
-      flex-basis: calc((100% - (var(--_gap, 0px) * 2)) / 3);
-    }
-
-    :where(.\@xs\:basis-1\/2) {
-      flex-basis: calc((100% - (var(--_gap, 0px) * 1)) / 2);
-    }
-  }
-
-  @container style(--is-breakpoint-sm: true) {
-    /* --breakpoint-sm */
+  @container style(--bp-sm: true) {
+    /* --breakpoint-sm and up */
     /* display */
     :where(.\@sm\:hidden) {
       display: none;
@@ -1923,7 +1559,7 @@
     }
   }
 
-  @container style(--is-breakpoint-md: true) {
+  @container style(--bp-md: true) {
     /* --breakpoint-md */
     /* display */
     :where(.\@md\:hidden) {
@@ -2288,7 +1924,7 @@
     }
   }
 
-  @container style(--is-breakpoint-lg: true) {
+  @container style(--bp-lg: true) {
     /* --breakpoint-lg */
     /* display */
     :where(.\@lg\:hidden) {
@@ -2653,7 +2289,7 @@
     }
   }
 
-  @container style(--is-breakpoint-xl: true) {
+  @container style(--bp-xl: true) {
     /* --breakpoint-xl */
     /* display */
     :where(.\@xl\:hidden) {
@@ -3018,6 +2654,371 @@
     }
   }
 
+  @container style(--bp-2xl: true) {
+    /* --breakpoint-2xl */
+    /* display */
+    :where(.\@2xl\:hidden) {
+      display: none;
+    }
+
+    :where(.\@2xl\:block) {
+      display: block;
+    }
+
+    :where(.\@2xl\:flex) {
+      display: flex;
+    }
+
+    :where(.\@2xl\:inline-flex) {
+      display: inline-flex;
+    }
+
+    :where(.\@2xl\:grid) {
+      display: grid;
+    }
+
+    :where(.\@2xl\:grid-cols-subgrid) {
+      grid-template-columns: subgrid;
+    }
+
+    :where(.\@2xl\:grid-rows-subgrid) {
+      grid-template-rows: subgrid;
+    }
+
+    /* grid-cols */
+    :where(.\@2xl\:grid-cols-1) {
+      --_grid-cols: 1;
+      grid-template-columns: repeat(var(--_grid-cols, 1), minmax(0, 1fr));
+    }
+
+    :where(.\@2xl\:grid-cols-2) {
+      --_grid-cols: 2;
+      grid-template-columns: repeat(var(--_grid-cols, 2), minmax(0, 1fr));
+    }
+
+    :where(.\@2xl\:grid-cols-3) {
+      --_grid-cols: 3;
+      grid-template-columns: repeat(var(--_grid-cols, 3), minmax(0, 1fr));
+    }
+
+    :where(.\@2xl\:grid-cols-4) {
+      --_grid-cols: 4;
+      grid-template-columns: repeat(var(--_grid-cols, 4), minmax(0, 1fr));
+    }
+
+    :where(.\@2xl\:grid-cols-5) {
+      --_grid-cols: 5;
+      grid-template-columns: repeat(var(--_grid-cols, 5), minmax(0, 1fr));
+    }
+
+    :where(.\@2xl\:grid-cols-6) {
+      --_grid-cols: 6;
+      grid-template-columns: repeat(var(--_grid-cols, 6), minmax(0, 1fr));
+    }
+
+    :where(.\@2xl\:grid-cols-7) {
+      --_grid-cols: 7;
+      grid-template-columns: repeat(var(--_grid-cols, 7), minmax(0, 1fr));
+    }
+
+    :where(.\@2xl\:grid-cols-8) {
+      --_grid-cols: 8;
+      grid-template-columns: repeat(var(--_grid-cols, 8), minmax(0, 1fr));
+    }
+
+    :where(.\@2xl\:grid-cols-9) {
+      --_grid-cols: 9;
+      grid-template-columns: repeat(var(--_grid-cols, 9), minmax(0, 1fr));
+    }
+
+    :where(.\@2xl\:grid-cols-10) {
+      --_grid-cols: 10;
+      grid-template-columns: repeat(var(--_grid-cols, 10), minmax(0, 1fr));
+    }
+
+    :where(.\@2xl\:grid-cols-11) {
+      --_grid-cols: 11;
+      grid-template-columns: repeat(var(--_grid-cols, 11), minmax(0, 1fr));
+    }
+
+    :where(.\@2xl\:grid-cols-12) {
+      --_grid-cols: 12;
+      grid-template-columns: repeat(var(--_grid-cols, 12), minmax(0, 1fr));
+    }
+
+    /* grid-rows */
+    :where(.\@2xl\:grid-rows-1) {
+      --_grid-rows: 1;
+      grid-template-rows: repeat(var(--_grid-rows, 1), auto);
+    }
+
+    :where(.\@2xl\:grid-rows-2) {
+      --_grid-rows: 2;
+      grid-template-rows: repeat(var(--_grid-rows, 2), auto);
+    }
+
+    :where(.\@2xl\:grid-rows-3) {
+      --_grid-rows: 3;
+      grid-template-rows: repeat(var(--_grid-rows, 3), auto);
+    }
+
+    :where(.\@2xl\:grid-rows-4) {
+      --_grid-rows: 4;
+      grid-template-rows: repeat(var(--_grid-rows, 4), auto);
+    }
+
+    :where(.\@2xl\:grid-rows-5) {
+      --_grid-rows: 5;
+      grid-template-rows: repeat(var(--_grid-rows, 5), auto);
+    }
+
+    :where(.\@2xl\:grid-rows-6) {
+      --_grid-rows: 6;
+      grid-template-rows: repeat(var(--_grid-rows, 6), auto);
+    }
+
+    :where(.\@2xl\:grid-rows-7) {
+      --_grid-rows: 7;
+      grid-template-rows: repeat(var(--_grid-rows, 7), auto);
+    }
+
+    :where(.\@2xl\:grid-rows-8) {
+      --_grid-rows: 8;
+      grid-template-rows: repeat(var(--_grid-rows, 8), auto);
+    }
+
+    :where(.\@2xl\:grid-rows-9) {
+      --_grid-rows: 9;
+      grid-template-rows: repeat(var(--_grid-rows, 9), auto);
+    }
+
+    :where(.\@2xl\:grid-rows-10) {
+      --_grid-rows: 10;
+      grid-template-rows: repeat(var(--_grid-rows, 10), auto);
+    }
+
+    :where(.\@2xl\:grid-rows-11) {
+      --_grid-rows: 11;
+      grid-template-rows: repeat(var(--_grid-rows, 11), auto);
+    }
+
+    :where(.\@2xl\:grid-rows-12) {
+      --_grid-rows: 12;
+      grid-template-rows: repeat(var(--_grid-rows, 12), auto);
+    }
+
+    /* flex-direction */
+    :where(.\@2xl\:flex-row) {
+      flex-direction: row;
+    }
+
+    :where(.\@2xl\:flex-col) {
+      flex-direction: column;
+    }
+
+    /* text-align */
+    :where(.\@2xl\:text-center) {
+      text-align: center;
+    }
+
+    :where(.\@2xl\:text-left, .\@2xl\:text-start) {
+      text-align: start;
+    }
+
+    :where(.\@2xl\:text-right, .\@2xl\:text-end) {
+      text-align: end;
+    }
+
+    :where(.\@2xl\:text-justify) {
+      text-align: justify;
+    }
+
+    /* align-items */
+    :where(.\@2xl\:items-start) {
+      align-items: start;
+    }
+
+    :where(.\@2xl\:items-center) {
+      align-items: center;
+    }
+
+    :where(.\@2xl\:items-end) {
+      align-items: end;
+    }
+
+    :where(.\@2xl\:items-stretch) {
+      align-items: stretch;
+    }
+
+    /* justify-content */
+    :where(.\@2xl\:justify-start) {
+      justify-content: start;
+    }
+
+    :where(.\@2xl\:justify-center) {
+      justify-content: center;
+    }
+
+    :where(.\@2xl\:justify-end) {
+      justify-content: end;
+    }
+
+    :where(.\@2xl\:justify-stretch) {
+      justify-content: stretch;
+    }
+
+    :where(.\@2xl\:justify-around) {
+      justify-content: space-around;
+    }
+
+    :where(.\@2xl\:justify-between) {
+      justify-content: space-between;
+    }
+
+    /* col-span */
+    :where(.\@2xl\:col-span-1) {
+      --_col-span: 1;
+      --_col-span-responsive: 1;
+    }
+
+    :where(.\@2xl\:col-span-2) {
+      --_col-span: 2;
+      --_col-span-responsive: 2;
+    }
+
+    :where(.\@2xl\:col-span-3) {
+      --_col-span: 3;
+      --_col-span-responsive: 3;
+    }
+
+    :where(.\@2xl\:col-span-4) {
+      --_col-span: 4;
+      --_col-span-responsive: 4;
+    }
+
+    :where(.\@2xl\:col-span-5) {
+      --_col-span: 5;
+      --_col-span-responsive: 5;
+    }
+
+    :where(.\@2xl\:col-span-6) {
+      --_col-span: 6;
+      --_col-span-responsive: 6;
+    }
+
+    :where(.\@2xl\:col-span-7) {
+      --_col-span: 7;
+      --_col-span-responsive: 7;
+    }
+
+    :where(.\@2xl\:col-span-8) {
+      --_col-span: 8;
+      --_col-span-responsive: 8;
+    }
+
+    :where(.\@2xl\:col-span-9) {
+      --_col-span: 9;
+      --_col-span-responsive: 9;
+    }
+
+    :where(.\@2xl\:col-span-10) {
+      --_col-span: 10;
+      --_col-span-responsive: 10;
+    }
+
+    :where(.\@2xl\:col-span-11) {
+      --_col-span: 11;
+      --_col-span-responsive: 11;
+    }
+
+    :where(.\@2xl\:col-span-12) {
+      --_col-span: 12;
+      --_col-span-responsive: 12;
+    }
+
+    /* row-span */
+    :where(.\@2xl\:row-span-1) {
+      grid-row: span min(1, var(--_grid-rows, 1));
+    }
+
+    :where(.\@2xl\:row-span-2) {
+      grid-row: span min(2, var(--_grid-rows, 2));
+    }
+
+    :where(.\@2xl\:row-span-3) {
+      grid-row: span min(3, var(--_grid-rows, 3));
+    }
+
+    :where(.\@2xl\:row-span-4) {
+      grid-row: span min(4, var(--_grid-rows, 4));
+    }
+
+    :where(.\@2xl\:row-span-5) {
+      grid-row: span min(5, var(--_grid-rows, 5));
+    }
+
+    :where(.\@2xl\:row-span-6) {
+      grid-row: span min(6, var(--_grid-rows, 6));
+    }
+
+    :where(.\@2xl\:row-span-7) {
+      grid-row: span min(7, var(--_grid-rows, 7));
+    }
+
+    :where(.\@2xl\:row-span-8) {
+      grid-row: span min(8, var(--_grid-rows, 8));
+    }
+
+    :where(.\@2xl\:row-span-9) {
+      grid-row: span min(9, var(--_grid-rows, 9));
+    }
+
+    :where(.\@2xl\:row-span-10) {
+      grid-row: span min(10, var(--_grid-rows, 10));
+    }
+
+    :where(.\@2xl\:row-span-11) {
+      grid-row: span min(11, var(--_grid-rows, 11));
+    }
+
+    :where(.\@2xl\:row-span-12) {
+      grid-row: span min(12, var(--_grid-rows, 12));
+    }
+
+    /* basis */
+    :where(.\@2xl\:basis-0) {
+      flex-basis: 0;
+    }
+
+    :where(.\@2xl\:basis-auto) {
+      flex-basis: auto;
+    }
+
+    :where(.\@2xl\:basis-full) {
+      flex-basis: 100%;
+    }
+
+    :where(.\@2xl\:basis-1\/6) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 5)) / 6);
+    }
+
+    :where(.\@2xl\:basis-1\/5) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 4)) / 5);
+    }
+
+    :where(.\@2xl\:basis-1\/4) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 3)) / 4);
+    }
+
+    :where(.\@2xl\:basis-1\/3) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 2)) / 3);
+    }
+
+    :where(.\@2xl\:basis-1\/2) {
+      flex-basis: calc((100% - (var(--_gap, 0px) * 1)) / 2);
+    }
+  }
+
   /*
    * col-span grid-column — applied after all --_col-span setters (including @container variants).
    * Fixed grids: clamp to --_grid-cols; col-span-full spans all tracks.
@@ -3065,26 +3066,7 @@
     grid-column: span 1;
   }
 
-  @container style(--is-breakpoint-xs: true) {
-    :where(
-        .grid-flow-row.grid-cols-2,
-        .grid-flow-row.grid-cols-3,
-        .grid-flow-row.grid-cols-4,
-        .grid-flow-row.grid-cols-5,
-        .grid-flow-row.grid-cols-6,
-        .grid-flow-row.grid-cols-7,
-        .grid-flow-row.grid-cols-8,
-        .grid-flow-row.grid-cols-9,
-        .grid-flow-row.grid-cols-10,
-        .grid-flow-row.grid-cols-11,
-        .grid-flow-row.grid-cols-12
-      )
-      :where(.\@xs\:col-span-full) {
-      grid-column: 1 / -1;
-    }
-  }
-
-  @container style(--is-breakpoint-sm: true) {
+  @container style(--bp-sm: true) {
     :where(
         .grid-flow-row.grid-cols-2,
         .grid-flow-row.grid-cols-3,
@@ -3103,7 +3085,7 @@
     }
   }
 
-  @container style(--is-breakpoint-md: true) {
+  @container style(--bp-md: true) {
     :where(
         .grid-flow-row.grid-cols-2,
         .grid-flow-row.grid-cols-3,
@@ -3122,7 +3104,7 @@
     }
   }
 
-  @container style(--is-breakpoint-lg: true) {
+  @container style(--bp-lg: true) {
     :where(
         .grid-flow-row.grid-cols-2,
         .grid-flow-row.grid-cols-3,
@@ -3141,7 +3123,7 @@
     }
   }
 
-  @container style(--is-breakpoint-xl: true) {
+  @container style(--bp-xl: true) {
     :where(
         .grid-flow-row.grid-cols-2,
         .grid-flow-row.grid-cols-3,
@@ -3156,6 +3138,25 @@
         .grid-flow-row.grid-cols-12
       )
       :where(.\@xl\:col-span-full) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @container style(--bp-2xl: true) {
+    :where(
+        .grid-flow-row.grid-cols-2,
+        .grid-flow-row.grid-cols-3,
+        .grid-flow-row.grid-cols-4,
+        .grid-flow-row.grid-cols-5,
+        .grid-flow-row.grid-cols-6,
+        .grid-flow-row.grid-cols-7,
+        .grid-flow-row.grid-cols-8,
+        .grid-flow-row.grid-cols-9,
+        .grid-flow-row.grid-cols-10,
+        .grid-flow-row.grid-cols-11,
+        .grid-flow-row.grid-cols-12
+      )
+      :where(.\@2xl\:col-span-full) {
       grid-column: 1 / -1;
     }
   }
@@ -3228,23 +3229,23 @@
   }
 
   :where(.inset-xs) {
-    inset: var(--gap-xs);
+    inset: var(--space-xs);
   }
 
   :where(.inset-sm) {
-    inset: var(--gap-sm);
+    inset: var(--space-sm);
   }
 
   :where(.inset-md) {
-    inset: var(--gap-md);
+    inset: var(--space-md);
   }
 
   :where(.inset-lg) {
-    inset: var(--gap-lg);
+    inset: var(--space-lg);
   }
 
   :where(.inset-xl) {
-    inset: var(--gap-xl);
+    inset: var(--space-xl);
   }
 
   :where(.left-0, .start-0) {
@@ -3252,23 +3253,23 @@
   }
 
   :where(.left-xs, .start-xs) {
-    inset-inline-start: var(--gap-xs);
+    inset-inline-start: var(--space-xs);
   }
 
   :where(.left-sm, .start-sm) {
-    inset-inline-start: var(--gap-sm);
+    inset-inline-start: var(--space-sm);
   }
 
   :where(.left-md, .start-md) {
-    inset-inline-start: var(--gap-md);
+    inset-inline-start: var(--space-md);
   }
 
   :where(.left-lg, .start-lg) {
-    inset-inline-start: var(--gap-lg);
+    inset-inline-start: var(--space-lg);
   }
 
   :where(.left-xl, .start-xl) {
-    inset-inline-start: var(--gap-xl);
+    inset-inline-start: var(--space-xl);
   }
 
   :where(.top-0) {
@@ -3276,23 +3277,23 @@
   }
 
   :where(.top-xs) {
-    inset-block-start: var(--gap-xs);
+    inset-block-start: var(--space-xs);
   }
 
   :where(.top-sm) {
-    inset-block-start: var(--gap-sm);
+    inset-block-start: var(--space-sm);
   }
 
   :where(.top-md) {
-    inset-block-start: var(--gap-md);
+    inset-block-start: var(--space-md);
   }
 
   :where(.top-lg) {
-    inset-block-start: var(--gap-lg);
+    inset-block-start: var(--space-lg);
   }
 
   :where(.top-xl) {
-    inset-block-start: var(--gap-xl);
+    inset-block-start: var(--space-xl);
   }
 
   :where(.right-0, .end-0) {
@@ -3300,23 +3301,23 @@
   }
 
   :where(.right-xs, .end-xs) {
-    inset-inline-end: var(--gap-xs);
+    inset-inline-end: var(--space-xs);
   }
 
   :where(.right-sm, .end-sm) {
-    inset-inline-end: var(--gap-sm);
+    inset-inline-end: var(--space-sm);
   }
 
   :where(.right-md, .end-md) {
-    inset-inline-end: var(--gap-md);
+    inset-inline-end: var(--space-md);
   }
 
   :where(.right-lg, .end-lg) {
-    inset-inline-end: var(--gap-lg);
+    inset-inline-end: var(--space-lg);
   }
 
   :where(.right-xl, .end-xl) {
-    inset-inline-end: var(--gap-xl);
+    inset-inline-end: var(--space-xl);
   }
 
   :where(.bottom-0) {
@@ -3324,23 +3325,23 @@
   }
 
   :where(.bottom-xs) {
-    inset-block-end: var(--gap-xs);
+    inset-block-end: var(--space-xs);
   }
 
   :where(.bottom-sm) {
-    inset-block-end: var(--gap-sm);
+    inset-block-end: var(--space-sm);
   }
 
   :where(.bottom-md) {
-    inset-block-end: var(--gap-md);
+    inset-block-end: var(--space-md);
   }
 
   :where(.bottom-lg) {
-    inset-block-end: var(--gap-lg);
+    inset-block-end: var(--space-lg);
   }
 
   :where(.bottom-xl) {
-    inset-block-end: var(--gap-xl);
+    inset-block-end: var(--space-xl);
   }
 
   /* ===========================================================================
@@ -3796,27 +3797,23 @@
   }
 
   :where(.w-sm, .inline-sm) {
-    inline-size: var(--gap-sm);
+    inline-size: var(--space-sm);
   }
 
   :where(.w-md, .inline-md) {
-    inline-size: var(--gap-md);
+    inline-size: var(--space-md);
   }
 
   :where(.w-lg, .inline-lg) {
-    inline-size: var(--gap-lg);
+    inline-size: var(--space-lg);
   }
 
   :where(.w-xl, .inline-xl) {
-    inline-size: var(--gap-xl);
+    inline-size: var(--space-xl);
   }
 
   :where(.w-screen, .inline-screen) {
     inline-size: 100vi;
-  }
-
-  :where(.w-screen-xs, .inline-screen-xs) {
-    inline-size: var(--breakpoint-xs);
   }
 
   :where(.w-screen-sm, .inline-screen-sm) {
@@ -3833,6 +3830,10 @@
 
   :where(.w-screen-xl, .inline-screen-xl) {
     inline-size: var(--breakpoint-xl);
+  }
+
+  :where(.w-screen-2xl, .inline-screen-2xl) {
+    inline-size: var(--breakpoint-2xl);
   }
 
   :where(.h-0, .block-0) {
@@ -3856,27 +3857,23 @@
   }
 
   :where(.h-sm, .block-sm) {
-    block-size: var(--gap-sm);
+    block-size: var(--space-sm);
   }
 
   :where(.h-md, .block-md) {
-    block-size: var(--gap-md);
+    block-size: var(--space-md);
   }
 
   :where(.h-lg, .block-lg) {
-    block-size: var(--gap-lg);
+    block-size: var(--space-lg);
   }
 
   :where(.h-xl, .block-xl) {
-    block-size: var(--gap-xl);
+    block-size: var(--space-xl);
   }
 
   :where(.h-screen, .block-screen) {
     block-size: 100svh;
-  }
-
-  :where(.h-screen-xs, .block-screen-xs) {
-    block-size: var(--breakpoint-xs);
   }
 
   :where(.h-screen-sm, .block-screen-sm) {
@@ -3893,6 +3890,10 @@
 
   :where(.h-screen-xl, .block-screen-xl) {
     block-size: var(--breakpoint-xl);
+  }
+
+  :where(.h-screen-2xl, .block-screen-2xl) {
+    block-size: var(--breakpoint-2xl);
   }
 
   :where(.size-0) {
@@ -3916,33 +3917,28 @@
   }
 
   :where(.size-sm) {
-    inline-size: var(--gap-sm);
-    block-size: var(--gap-sm);
+    inline-size: var(--space-sm);
+    block-size: var(--space-sm);
   }
 
   :where(.size-md) {
-    inline-size: var(--gap-md);
-    block-size: var(--gap-md);
+    inline-size: var(--space-md);
+    block-size: var(--space-md);
   }
 
   :where(.size-lg) {
-    inline-size: var(--gap-lg);
-    block-size: var(--gap-lg);
+    inline-size: var(--space-lg);
+    block-size: var(--space-lg);
   }
 
   :where(.size-xl) {
-    inline-size: var(--gap-xl);
-    block-size: var(--gap-xl);
+    inline-size: var(--space-xl);
+    block-size: var(--space-xl);
   }
 
   :where(.size-screen) {
     inline-size: 100vi;
     block-size: 100svh;
-  }
-
-  :where(.size-screen-xs) {
-    inline-size: var(--breakpoint-xs);
-    block-size: var(--breakpoint-xs);
   }
 
   :where(.size-screen-sm) {
@@ -3963,6 +3959,11 @@
   :where(.size-screen-xl) {
     inline-size: var(--breakpoint-xl);
     block-size: var(--breakpoint-xl);
+  }
+
+  :where(.size-screen-2xl) {
+    inline-size: var(--breakpoint-2xl);
+    block-size: var(--breakpoint-2xl);
   }
 
   :where(.max-w-0, .max-inline-0) {
@@ -4001,10 +4002,6 @@
     max-inline-size: 100vi;
   }
 
-  :where(.max-w-screen-xs, .max-inline-screen-xs) {
-    max-inline-size: var(--breakpoint-xs);
-  }
-
   :where(.max-w-screen-sm, .max-inline-screen-sm) {
     max-inline-size: var(--breakpoint-sm);
   }
@@ -4019,6 +4016,10 @@
 
   :where(.max-w-screen-xl, .max-inline-screen-xl) {
     max-inline-size: var(--breakpoint-xl);
+  }
+
+  :where(.max-w-screen-2xl, .max-inline-screen-2xl) {
+    max-inline-size: var(--breakpoint-2xl);
   }
 
   :where(.max-h-0, .max-block-0) {
@@ -4057,10 +4058,6 @@
     max-block-size: 100svh;
   }
 
-  :where(.max-h-screen-xs, .max-block-screen-xs) {
-    max-block-size: var(--breakpoint-xs);
-  }
-
   :where(.max-h-screen-sm, .max-block-screen-sm) {
     max-block-size: var(--breakpoint-sm);
   }
@@ -4075,6 +4072,10 @@
 
   :where(.max-h-screen-xl, .max-block-screen-xl) {
     max-block-size: var(--breakpoint-xl);
+  }
+
+  :where(.max-h-screen-2xl, .max-block-screen-2xl) {
+    max-block-size: var(--breakpoint-2xl);
   }
 
   :where(.min-w-0, .min-inline-0) {
@@ -4093,10 +4094,6 @@
     min-inline-size: 100vi;
   }
 
-  :where(.min-w-screen-xs, .min-inline-screen-xs) {
-    min-inline-size: var(--breakpoint-xs);
-  }
-
   :where(.min-w-screen-sm, .min-inline-screen-sm) {
     min-inline-size: var(--breakpoint-sm);
   }
@@ -4111,6 +4108,10 @@
 
   :where(.min-w-screen-xl, .min-inline-screen-xl) {
     min-inline-size: var(--breakpoint-xl);
+  }
+
+  :where(.min-w-screen-2xl, .min-inline-screen-2xl) {
+    min-inline-size: var(--breakpoint-2xl);
   }
 
   :where(.min-h-0, .min-block-0) {
@@ -4129,10 +4130,6 @@
     min-block-size: 100svh;
   }
 
-  :where(.min-h-screen-xs, .min-block-screen-xs) {
-    min-block-size: var(--breakpoint-xs);
-  }
-
   :where(.min-h-screen-sm, .min-block-screen-sm) {
     min-block-size: var(--breakpoint-sm);
   }
@@ -4147,6 +4144,10 @@
 
   :where(.min-h-screen-xl, .min-block-screen-xl) {
     min-block-size: var(--breakpoint-xl);
+  }
+
+  :where(.min-h-screen-2xl, .min-block-screen-2xl) {
+    min-block-size: var(--breakpoint-2xl);
   }
 
   /* ===========================================================================
@@ -4169,27 +4170,27 @@
   }
 
   :where(.gap-xs) {
-    --_gap: var(--gap-xs);
+    --_gap: var(--space-xs);
     gap: var(--_gap);
   }
 
   :where(.gap-sm) {
-    --_gap: var(--gap-sm);
+    --_gap: var(--space-sm);
     gap: var(--_gap);
   }
 
   :where(.gap-md) {
-    --_gap: var(--gap-md);
+    --_gap: var(--space-md);
     gap: var(--_gap);
   }
 
   :where(.gap-lg) {
-    --_gap: var(--gap-lg);
+    --_gap: var(--space-lg);
     gap: var(--_gap);
   }
 
   :where(.gap-xl) {
-    --_gap: var(--gap-xl);
+    --_gap: var(--space-xl);
     gap: var(--_gap);
   }
 
@@ -4209,27 +4210,27 @@
   }
 
   :where(.gap-x-xs) {
-    --_gap-x: var(--gap-xs);
+    --_gap-x: var(--space-xs);
     column-gap: var(--_gap-x);
   }
 
   :where(.gap-x-sm) {
-    --_gap-x: var(--gap-sm);
+    --_gap-x: var(--space-sm);
     column-gap: var(--_gap-x);
   }
 
   :where(.gap-x-md) {
-    --_gap-x: var(--gap-md);
+    --_gap-x: var(--space-md);
     column-gap: var(--_gap-x);
   }
 
   :where(.gap-x-lg) {
-    --_gap-x: var(--gap-lg);
+    --_gap-x: var(--space-lg);
     column-gap: var(--_gap-x);
   }
 
   :where(.gap-x-xl) {
-    --_gap-x: var(--gap-xl);
+    --_gap-x: var(--space-xl);
     column-gap: var(--_gap-x);
   }
 
@@ -4249,27 +4250,27 @@
   }
 
   :where(.gap-y-xs) {
-    --_gap-y: var(--gap-xs);
+    --_gap-y: var(--space-xs);
     row-gap: var(--_gap-y);
   }
 
   :where(.gap-y-sm) {
-    --_gap-y: var(--gap-sm);
+    --_gap-y: var(--space-sm);
     row-gap: var(--_gap-y);
   }
 
   :where(.gap-y-md) {
-    --_gap-y: var(--gap-md);
+    --_gap-y: var(--space-md);
     row-gap: var(--_gap-y);
   }
 
   :where(.gap-y-lg) {
-    --_gap-y: var(--gap-lg);
+    --_gap-y: var(--space-lg);
     row-gap: var(--_gap-y);
   }
 
   :where(.gap-y-xl) {
-    --_gap-y: var(--gap-xl);
+    --_gap-y: var(--space-xl);
     row-gap: var(--_gap-y);
   }
 
@@ -4316,38 +4317,38 @@
   }
 
   :where(.p-xs) {
-    --_padding-inline-start: var(--gap-xs);
-    --_padding-inline-end: var(--gap-xs);
-    --_padding-block-start: var(--gap-xs);
-    --_padding-block-end: var(--gap-xs);
+    --_padding-inline-start: var(--space-xs);
+    --_padding-inline-end: var(--space-xs);
+    --_padding-block-start: var(--space-xs);
+    --_padding-block-end: var(--space-xs);
   }
 
   :where(.p-sm) {
-    --_padding-inline-start: var(--gap-sm);
-    --_padding-inline-end: var(--gap-sm);
-    --_padding-block-start: var(--gap-sm);
-    --_padding-block-end: var(--gap-sm);
+    --_padding-inline-start: var(--space-sm);
+    --_padding-inline-end: var(--space-sm);
+    --_padding-block-start: var(--space-sm);
+    --_padding-block-end: var(--space-sm);
   }
 
   :where(.p-md) {
-    --_padding-inline-start: var(--gap-md);
-    --_padding-inline-end: var(--gap-md);
-    --_padding-block-start: var(--gap-md);
-    --_padding-block-end: var(--gap-md);
+    --_padding-inline-start: var(--space-md);
+    --_padding-inline-end: var(--space-md);
+    --_padding-block-start: var(--space-md);
+    --_padding-block-end: var(--space-md);
   }
 
   :where(.p-lg) {
-    --_padding-inline-start: var(--gap-lg);
-    --_padding-inline-end: var(--gap-lg);
-    --_padding-block-start: var(--gap-lg);
-    --_padding-block-end: var(--gap-lg);
+    --_padding-inline-start: var(--space-lg);
+    --_padding-inline-end: var(--space-lg);
+    --_padding-block-start: var(--space-lg);
+    --_padding-block-end: var(--space-lg);
   }
 
   :where(.p-xl) {
-    --_padding-inline-start: var(--gap-xl);
-    --_padding-inline-end: var(--gap-xl);
-    --_padding-block-start: var(--gap-xl);
-    --_padding-block-end: var(--gap-xl);
+    --_padding-inline-start: var(--space-xl);
+    --_padding-inline-end: var(--space-xl);
+    --_padding-block-start: var(--space-xl);
+    --_padding-block-end: var(--space-xl);
   }
 
   :where(.px-0) {
@@ -4356,28 +4357,28 @@
   }
 
   :where(.px-xs) {
-    --_padding-inline-start: var(--gap-xs);
-    --_padding-inline-end: var(--gap-xs);
+    --_padding-inline-start: var(--space-xs);
+    --_padding-inline-end: var(--space-xs);
   }
 
   :where(.px-sm) {
-    --_padding-inline-start: var(--gap-sm);
-    --_padding-inline-end: var(--gap-sm);
+    --_padding-inline-start: var(--space-sm);
+    --_padding-inline-end: var(--space-sm);
   }
 
   :where(.px-md) {
-    --_padding-inline-start: var(--gap-md);
-    --_padding-inline-end: var(--gap-md);
+    --_padding-inline-start: var(--space-md);
+    --_padding-inline-end: var(--space-md);
   }
 
   :where(.px-lg) {
-    --_padding-inline-start: var(--gap-lg);
-    --_padding-inline-end: var(--gap-lg);
+    --_padding-inline-start: var(--space-lg);
+    --_padding-inline-end: var(--space-lg);
   }
 
   :where(.px-xl) {
-    --_padding-inline-start: var(--gap-xl);
-    --_padding-inline-end: var(--gap-xl);
+    --_padding-inline-start: var(--space-xl);
+    --_padding-inline-end: var(--space-xl);
   }
 
   :where(.py-0) {
@@ -4386,28 +4387,28 @@
   }
 
   :where(.py-xs) {
-    --_padding-block-start: var(--gap-xs);
-    --_padding-block-end: var(--gap-xs);
+    --_padding-block-start: var(--space-xs);
+    --_padding-block-end: var(--space-xs);
   }
 
   :where(.py-sm) {
-    --_padding-block-start: var(--gap-sm);
-    --_padding-block-end: var(--gap-sm);
+    --_padding-block-start: var(--space-sm);
+    --_padding-block-end: var(--space-sm);
   }
 
   :where(.py-md) {
-    --_padding-block-start: var(--gap-md);
-    --_padding-block-end: var(--gap-md);
+    --_padding-block-start: var(--space-md);
+    --_padding-block-end: var(--space-md);
   }
 
   :where(.py-lg) {
-    --_padding-block-start: var(--gap-lg);
-    --_padding-block-end: var(--gap-lg);
+    --_padding-block-start: var(--space-lg);
+    --_padding-block-end: var(--space-lg);
   }
 
   :where(.py-xl) {
-    --_padding-block-start: var(--gap-xl);
-    --_padding-block-end: var(--gap-xl);
+    --_padding-block-start: var(--space-xl);
+    --_padding-block-end: var(--space-xl);
   }
 
   :where(.pt-0) {
@@ -4415,23 +4416,23 @@
   }
 
   :where(.pt-xs) {
-    --_padding-block-start: var(--gap-xs);
+    --_padding-block-start: var(--space-xs);
   }
 
   :where(.pt-sm) {
-    --_padding-block-start: var(--gap-sm);
+    --_padding-block-start: var(--space-sm);
   }
 
   :where(.pt-md) {
-    --_padding-block-start: var(--gap-md);
+    --_padding-block-start: var(--space-md);
   }
 
   :where(.pt-lg) {
-    --_padding-block-start: var(--gap-lg);
+    --_padding-block-start: var(--space-lg);
   }
 
   :where(.pt-xl) {
-    --_padding-block-start: var(--gap-xl);
+    --_padding-block-start: var(--space-xl);
   }
 
   :where(.pr-0, .pe-0) {
@@ -4439,23 +4440,23 @@
   }
 
   :where(.pr-xs, .pe-xs) {
-    --_padding-inline-end: var(--gap-xs);
+    --_padding-inline-end: var(--space-xs);
   }
 
   :where(.pr-sm, .pe-sm) {
-    --_padding-inline-end: var(--gap-sm);
+    --_padding-inline-end: var(--space-sm);
   }
 
   :where(.pr-md, .pe-md) {
-    --_padding-inline-end: var(--gap-md);
+    --_padding-inline-end: var(--space-md);
   }
 
   :where(.pr-lg, .pe-lg) {
-    --_padding-inline-end: var(--gap-lg);
+    --_padding-inline-end: var(--space-lg);
   }
 
   :where(.pr-xl, .pe-xl) {
-    --_padding-inline-end: var(--gap-xl);
+    --_padding-inline-end: var(--space-xl);
   }
 
   :where(.pb-0) {
@@ -4463,23 +4464,23 @@
   }
 
   :where(.pb-xs) {
-    --_padding-block-end: var(--gap-xs);
+    --_padding-block-end: var(--space-xs);
   }
 
   :where(.pb-sm) {
-    --_padding-block-end: var(--gap-sm);
+    --_padding-block-end: var(--space-sm);
   }
 
   :where(.pb-md) {
-    --_padding-block-end: var(--gap-md);
+    --_padding-block-end: var(--space-md);
   }
 
   :where(.pb-lg) {
-    --_padding-block-end: var(--gap-lg);
+    --_padding-block-end: var(--space-lg);
   }
 
   :where(.pb-xl) {
-    --_padding-block-end: var(--gap-xl);
+    --_padding-block-end: var(--space-xl);
   }
 
   :where(.pl-0, .ps-0) {
@@ -4487,23 +4488,23 @@
   }
 
   :where(.pl-xs, .ps-xs) {
-    --_padding-inline-start: var(--gap-xs);
+    --_padding-inline-start: var(--space-xs);
   }
 
   :where(.pl-sm, .ps-sm) {
-    --_padding-inline-start: var(--gap-sm);
+    --_padding-inline-start: var(--space-sm);
   }
 
   :where(.pl-md, .ps-md) {
-    --_padding-inline-start: var(--gap-md);
+    --_padding-inline-start: var(--space-md);
   }
 
   :where(.pl-lg, .ps-lg) {
-    --_padding-inline-start: var(--gap-lg);
+    --_padding-inline-start: var(--space-lg);
   }
 
   :where(.pl-xl, .ps-xl) {
-    --_padding-inline-start: var(--gap-xl);
+    --_padding-inline-start: var(--space-xl);
   }
 
   /* ===========================================================================
@@ -4511,7 +4512,7 @@
   =========================================================================== */
 
   /* Composing rules — one per axis. The substring triggers also catch negative
-     (`-mx-…`) and responsive (`@xs:-m-…`) margin classes, so those sections only
+     (`-mx-…`) and responsive (`@sm:-m-…`) margin classes, so those sections only
      need to set vars. `m-<size>` substrings are safe here (unlike `p-<size>`,
      they don't collide with `gap-<size>`). */
   :where(
@@ -4573,38 +4574,38 @@
   }
 
   :where(.m-xs) {
-    --_margin-inline-start: var(--gap-xs);
-    --_margin-inline-end: var(--gap-xs);
-    --_margin-block-start: var(--gap-xs);
-    --_margin-block-end: var(--gap-xs);
+    --_margin-inline-start: var(--space-xs);
+    --_margin-inline-end: var(--space-xs);
+    --_margin-block-start: var(--space-xs);
+    --_margin-block-end: var(--space-xs);
   }
 
   :where(.m-sm) {
-    --_margin-inline-start: var(--gap-sm);
-    --_margin-inline-end: var(--gap-sm);
-    --_margin-block-start: var(--gap-sm);
-    --_margin-block-end: var(--gap-sm);
+    --_margin-inline-start: var(--space-sm);
+    --_margin-inline-end: var(--space-sm);
+    --_margin-block-start: var(--space-sm);
+    --_margin-block-end: var(--space-sm);
   }
 
   :where(.m-md) {
-    --_margin-inline-start: var(--gap-md);
-    --_margin-inline-end: var(--gap-md);
-    --_margin-block-start: var(--gap-md);
-    --_margin-block-end: var(--gap-md);
+    --_margin-inline-start: var(--space-md);
+    --_margin-inline-end: var(--space-md);
+    --_margin-block-start: var(--space-md);
+    --_margin-block-end: var(--space-md);
   }
 
   :where(.m-lg) {
-    --_margin-inline-start: var(--gap-lg);
-    --_margin-inline-end: var(--gap-lg);
-    --_margin-block-start: var(--gap-lg);
-    --_margin-block-end: var(--gap-lg);
+    --_margin-inline-start: var(--space-lg);
+    --_margin-inline-end: var(--space-lg);
+    --_margin-block-start: var(--space-lg);
+    --_margin-block-end: var(--space-lg);
   }
 
   :where(.m-xl) {
-    --_margin-inline-start: var(--gap-xl);
-    --_margin-inline-end: var(--gap-xl);
-    --_margin-block-start: var(--gap-xl);
-    --_margin-block-end: var(--gap-xl);
+    --_margin-inline-start: var(--space-xl);
+    --_margin-inline-end: var(--space-xl);
+    --_margin-block-start: var(--space-xl);
+    --_margin-block-end: var(--space-xl);
   }
 
   :where(.mx-0) {
@@ -4613,28 +4614,28 @@
   }
 
   :where(.mx-xs) {
-    --_margin-inline-start: var(--gap-xs);
-    --_margin-inline-end: var(--gap-xs);
+    --_margin-inline-start: var(--space-xs);
+    --_margin-inline-end: var(--space-xs);
   }
 
   :where(.mx-sm) {
-    --_margin-inline-start: var(--gap-sm);
-    --_margin-inline-end: var(--gap-sm);
+    --_margin-inline-start: var(--space-sm);
+    --_margin-inline-end: var(--space-sm);
   }
 
   :where(.mx-md) {
-    --_margin-inline-start: var(--gap-md);
-    --_margin-inline-end: var(--gap-md);
+    --_margin-inline-start: var(--space-md);
+    --_margin-inline-end: var(--space-md);
   }
 
   :where(.mx-lg) {
-    --_margin-inline-start: var(--gap-lg);
-    --_margin-inline-end: var(--gap-lg);
+    --_margin-inline-start: var(--space-lg);
+    --_margin-inline-end: var(--space-lg);
   }
 
   :where(.mx-xl) {
-    --_margin-inline-start: var(--gap-xl);
-    --_margin-inline-end: var(--gap-xl);
+    --_margin-inline-start: var(--space-xl);
+    --_margin-inline-end: var(--space-xl);
   }
 
   :where(.mx-auto) {
@@ -4648,28 +4649,28 @@
   }
 
   :where(.my-xs) {
-    --_margin-block-start: var(--gap-xs);
-    --_margin-block-end: var(--gap-xs);
+    --_margin-block-start: var(--space-xs);
+    --_margin-block-end: var(--space-xs);
   }
 
   :where(.my-sm) {
-    --_margin-block-start: var(--gap-sm);
-    --_margin-block-end: var(--gap-sm);
+    --_margin-block-start: var(--space-sm);
+    --_margin-block-end: var(--space-sm);
   }
 
   :where(.my-md) {
-    --_margin-block-start: var(--gap-md);
-    --_margin-block-end: var(--gap-md);
+    --_margin-block-start: var(--space-md);
+    --_margin-block-end: var(--space-md);
   }
 
   :where(.my-lg) {
-    --_margin-block-start: var(--gap-lg);
-    --_margin-block-end: var(--gap-lg);
+    --_margin-block-start: var(--space-lg);
+    --_margin-block-end: var(--space-lg);
   }
 
   :where(.my-xl) {
-    --_margin-block-start: var(--gap-xl);
-    --_margin-block-end: var(--gap-xl);
+    --_margin-block-start: var(--space-xl);
+    --_margin-block-end: var(--space-xl);
   }
 
   :where(.my-auto) {
@@ -4682,23 +4683,23 @@
   }
 
   :where(.mt-xs) {
-    --_margin-block-start: var(--gap-xs);
+    --_margin-block-start: var(--space-xs);
   }
 
   :where(.mt-sm) {
-    --_margin-block-start: var(--gap-sm);
+    --_margin-block-start: var(--space-sm);
   }
 
   :where(.mt-md) {
-    --_margin-block-start: var(--gap-md);
+    --_margin-block-start: var(--space-md);
   }
 
   :where(.mt-lg) {
-    --_margin-block-start: var(--gap-lg);
+    --_margin-block-start: var(--space-lg);
   }
 
   :where(.mt-xl) {
-    --_margin-block-start: var(--gap-xl);
+    --_margin-block-start: var(--space-xl);
   }
 
   :where(.mt-auto) {
@@ -4710,23 +4711,23 @@
   }
 
   :where(.mr-xs, .me-xs) {
-    --_margin-inline-end: var(--gap-xs);
+    --_margin-inline-end: var(--space-xs);
   }
 
   :where(.mr-sm, .me-sm) {
-    --_margin-inline-end: var(--gap-sm);
+    --_margin-inline-end: var(--space-sm);
   }
 
   :where(.mr-md, .me-md) {
-    --_margin-inline-end: var(--gap-md);
+    --_margin-inline-end: var(--space-md);
   }
 
   :where(.mr-lg, .me-lg) {
-    --_margin-inline-end: var(--gap-lg);
+    --_margin-inline-end: var(--space-lg);
   }
 
   :where(.mr-xl, .me-xl) {
-    --_margin-inline-end: var(--gap-xl);
+    --_margin-inline-end: var(--space-xl);
   }
 
   :where(.mr-auto, .me-auto) {
@@ -4738,23 +4739,23 @@
   }
 
   :where(.mb-xs) {
-    --_margin-block-end: var(--gap-xs);
+    --_margin-block-end: var(--space-xs);
   }
 
   :where(.mb-sm) {
-    --_margin-block-end: var(--gap-sm);
+    --_margin-block-end: var(--space-sm);
   }
 
   :where(.mb-md) {
-    --_margin-block-end: var(--gap-md);
+    --_margin-block-end: var(--space-md);
   }
 
   :where(.mb-lg) {
-    --_margin-block-end: var(--gap-lg);
+    --_margin-block-end: var(--space-lg);
   }
 
   :where(.mb-xl) {
-    --_margin-block-end: var(--gap-xl);
+    --_margin-block-end: var(--space-xl);
   }
 
   :where(.mb-auto) {
@@ -4766,23 +4767,23 @@
   }
 
   :where(.ml-xs, .ms-xs) {
-    --_margin-inline-start: var(--gap-xs);
+    --_margin-inline-start: var(--space-xs);
   }
 
   :where(.ml-sm, .ms-sm) {
-    --_margin-inline-start: var(--gap-sm);
+    --_margin-inline-start: var(--space-sm);
   }
 
   :where(.ml-md, .ms-md) {
-    --_margin-inline-start: var(--gap-md);
+    --_margin-inline-start: var(--space-md);
   }
 
   :where(.ml-lg, .ms-lg) {
-    --_margin-inline-start: var(--gap-lg);
+    --_margin-inline-start: var(--space-lg);
   }
 
   :where(.ml-xl, .ms-xl) {
-    --_margin-inline-start: var(--gap-xl);
+    --_margin-inline-start: var(--space-xl);
   }
 
   :where(.ml-auto, .ms-auto) {
@@ -4794,168 +4795,168 @@
   =========================================================================== */
 
   :where(.-m-xs) {
-    --_margin-inline-start: calc(var(--gap-xs) * -1);
-    --_margin-inline-end: calc(var(--gap-xs) * -1);
-    --_margin-block-start: calc(var(--gap-xs) * -1);
-    --_margin-block-end: calc(var(--gap-xs) * -1);
+    --_margin-inline-start: calc(var(--space-xs) * -1);
+    --_margin-inline-end: calc(var(--space-xs) * -1);
+    --_margin-block-start: calc(var(--space-xs) * -1);
+    --_margin-block-end: calc(var(--space-xs) * -1);
   }
 
   :where(.-mx-xs) {
-    --_margin-inline-start: calc(var(--gap-xs) * -1);
-    --_margin-inline-end: calc(var(--gap-xs) * -1);
+    --_margin-inline-start: calc(var(--space-xs) * -1);
+    --_margin-inline-end: calc(var(--space-xs) * -1);
   }
 
   :where(.-my-xs) {
-    --_margin-block-start: calc(var(--gap-xs) * -1);
-    --_margin-block-end: calc(var(--gap-xs) * -1);
+    --_margin-block-start: calc(var(--space-xs) * -1);
+    --_margin-block-end: calc(var(--space-xs) * -1);
   }
 
   :where(.-mt-xs) {
-    --_margin-block-start: calc(var(--gap-xs) * -1);
+    --_margin-block-start: calc(var(--space-xs) * -1);
   }
 
   :where(.-mr-xs, .-me-xs) {
-    --_margin-inline-end: calc(var(--gap-xs) * -1);
+    --_margin-inline-end: calc(var(--space-xs) * -1);
   }
 
   :where(.-mb-xs) {
-    --_margin-block-end: calc(var(--gap-xs) * -1);
+    --_margin-block-end: calc(var(--space-xs) * -1);
   }
 
   :where(.-ml-xs, .-ms-xs) {
-    --_margin-inline-start: calc(var(--gap-xs) * -1);
+    --_margin-inline-start: calc(var(--space-xs) * -1);
   }
 
   :where(.-m-sm) {
-    --_margin-inline-start: calc(var(--gap-sm) * -1);
-    --_margin-inline-end: calc(var(--gap-sm) * -1);
-    --_margin-block-start: calc(var(--gap-sm) * -1);
-    --_margin-block-end: calc(var(--gap-sm) * -1);
+    --_margin-inline-start: calc(var(--space-sm) * -1);
+    --_margin-inline-end: calc(var(--space-sm) * -1);
+    --_margin-block-start: calc(var(--space-sm) * -1);
+    --_margin-block-end: calc(var(--space-sm) * -1);
   }
 
   :where(.-mx-sm) {
-    --_margin-inline-start: calc(var(--gap-sm) * -1);
-    --_margin-inline-end: calc(var(--gap-sm) * -1);
+    --_margin-inline-start: calc(var(--space-sm) * -1);
+    --_margin-inline-end: calc(var(--space-sm) * -1);
   }
 
   :where(.-my-sm) {
-    --_margin-block-start: calc(var(--gap-sm) * -1);
-    --_margin-block-end: calc(var(--gap-sm) * -1);
+    --_margin-block-start: calc(var(--space-sm) * -1);
+    --_margin-block-end: calc(var(--space-sm) * -1);
   }
 
   :where(.-mt-sm) {
-    --_margin-block-start: calc(var(--gap-sm) * -1);
+    --_margin-block-start: calc(var(--space-sm) * -1);
   }
 
   :where(.-mr-sm, .-me-sm) {
-    --_margin-inline-end: calc(var(--gap-sm) * -1);
+    --_margin-inline-end: calc(var(--space-sm) * -1);
   }
 
   :where(.-mb-sm) {
-    --_margin-block-end: calc(var(--gap-sm) * -1);
+    --_margin-block-end: calc(var(--space-sm) * -1);
   }
 
   :where(.-ml-sm, .-ms-sm) {
-    --_margin-inline-start: calc(var(--gap-sm) * -1);
+    --_margin-inline-start: calc(var(--space-sm) * -1);
   }
 
   :where(.-m-md) {
-    --_margin-inline-start: calc(var(--gap-md) * -1);
-    --_margin-inline-end: calc(var(--gap-md) * -1);
-    --_margin-block-start: calc(var(--gap-md) * -1);
-    --_margin-block-end: calc(var(--gap-md) * -1);
+    --_margin-inline-start: calc(var(--space-md) * -1);
+    --_margin-inline-end: calc(var(--space-md) * -1);
+    --_margin-block-start: calc(var(--space-md) * -1);
+    --_margin-block-end: calc(var(--space-md) * -1);
   }
 
   :where(.-mx-md) {
-    --_margin-inline-start: calc(var(--gap-md) * -1);
-    --_margin-inline-end: calc(var(--gap-md) * -1);
+    --_margin-inline-start: calc(var(--space-md) * -1);
+    --_margin-inline-end: calc(var(--space-md) * -1);
   }
 
   :where(.-my-md) {
-    --_margin-block-start: calc(var(--gap-md) * -1);
-    --_margin-block-end: calc(var(--gap-md) * -1);
+    --_margin-block-start: calc(var(--space-md) * -1);
+    --_margin-block-end: calc(var(--space-md) * -1);
   }
 
   :where(.-mt-md) {
-    --_margin-block-start: calc(var(--gap-md) * -1);
+    --_margin-block-start: calc(var(--space-md) * -1);
   }
 
   :where(.-mr-md, .-me-md) {
-    --_margin-inline-end: calc(var(--gap-md) * -1);
+    --_margin-inline-end: calc(var(--space-md) * -1);
   }
 
   :where(.-mb-md) {
-    --_margin-block-end: calc(var(--gap-md) * -1);
+    --_margin-block-end: calc(var(--space-md) * -1);
   }
 
   :where(.-ml-md, .-ms-md) {
-    --_margin-inline-start: calc(var(--gap-md) * -1);
+    --_margin-inline-start: calc(var(--space-md) * -1);
   }
 
   :where(.-m-lg) {
-    --_margin-inline-start: calc(var(--gap-lg) * -1);
-    --_margin-inline-end: calc(var(--gap-lg) * -1);
-    --_margin-block-start: calc(var(--gap-lg) * -1);
-    --_margin-block-end: calc(var(--gap-lg) * -1);
+    --_margin-inline-start: calc(var(--space-lg) * -1);
+    --_margin-inline-end: calc(var(--space-lg) * -1);
+    --_margin-block-start: calc(var(--space-lg) * -1);
+    --_margin-block-end: calc(var(--space-lg) * -1);
   }
 
   :where(.-mx-lg) {
-    --_margin-inline-start: calc(var(--gap-lg) * -1);
-    --_margin-inline-end: calc(var(--gap-lg) * -1);
+    --_margin-inline-start: calc(var(--space-lg) * -1);
+    --_margin-inline-end: calc(var(--space-lg) * -1);
   }
 
   :where(.-my-lg) {
-    --_margin-block-start: calc(var(--gap-lg) * -1);
-    --_margin-block-end: calc(var(--gap-lg) * -1);
+    --_margin-block-start: calc(var(--space-lg) * -1);
+    --_margin-block-end: calc(var(--space-lg) * -1);
   }
 
   :where(.-mt-lg) {
-    --_margin-block-start: calc(var(--gap-lg) * -1);
+    --_margin-block-start: calc(var(--space-lg) * -1);
   }
 
   :where(.-mr-lg, .-me-lg) {
-    --_margin-inline-end: calc(var(--gap-lg) * -1);
+    --_margin-inline-end: calc(var(--space-lg) * -1);
   }
 
   :where(.-mb-lg) {
-    --_margin-block-end: calc(var(--gap-lg) * -1);
+    --_margin-block-end: calc(var(--space-lg) * -1);
   }
 
   :where(.-ml-lg, .-ms-lg) {
-    --_margin-inline-start: calc(var(--gap-lg) * -1);
+    --_margin-inline-start: calc(var(--space-lg) * -1);
   }
 
   :where(.-m-xl) {
-    --_margin-inline-start: calc(var(--gap-xl) * -1);
-    --_margin-inline-end: calc(var(--gap-xl) * -1);
-    --_margin-block-start: calc(var(--gap-xl) * -1);
-    --_margin-block-end: calc(var(--gap-xl) * -1);
+    --_margin-inline-start: calc(var(--space-xl) * -1);
+    --_margin-inline-end: calc(var(--space-xl) * -1);
+    --_margin-block-start: calc(var(--space-xl) * -1);
+    --_margin-block-end: calc(var(--space-xl) * -1);
   }
 
   :where(.-mx-xl) {
-    --_margin-inline-start: calc(var(--gap-xl) * -1);
-    --_margin-inline-end: calc(var(--gap-xl) * -1);
+    --_margin-inline-start: calc(var(--space-xl) * -1);
+    --_margin-inline-end: calc(var(--space-xl) * -1);
   }
 
   :where(.-my-xl) {
-    --_margin-block-start: calc(var(--gap-xl) * -1);
-    --_margin-block-end: calc(var(--gap-xl) * -1);
+    --_margin-block-start: calc(var(--space-xl) * -1);
+    --_margin-block-end: calc(var(--space-xl) * -1);
   }
 
   :where(.-mt-xl) {
-    --_margin-block-start: calc(var(--gap-xl) * -1);
+    --_margin-block-start: calc(var(--space-xl) * -1);
   }
 
   :where(.-mr-xl, .-me-xl) {
-    --_margin-inline-end: calc(var(--gap-xl) * -1);
+    --_margin-inline-end: calc(var(--space-xl) * -1);
   }
 
   :where(.-mb-xl) {
-    --_margin-block-end: calc(var(--gap-xl) * -1);
+    --_margin-block-end: calc(var(--space-xl) * -1);
   }
 
   :where(.-ml-xl, .-ms-xl) {
-    --_margin-inline-start: calc(var(--gap-xl) * -1);
+    --_margin-inline-start: calc(var(--space-xl) * -1);
   }
 
   /* ===========================================================================
@@ -6650,105 +6651,105 @@
 
   /* Fade depth on Zazz's semantic spacing scale (default is min(12%, ~40px)). */
   :where(.scroll-fade-xs) {
-    --scroll-fade-size: var(--gap-xs);
+    --scroll-fade-size: var(--space-xs);
   }
 
   :where(.scroll-fade-sm) {
-    --scroll-fade-size: var(--gap-sm);
+    --scroll-fade-size: var(--space-sm);
   }
 
   :where(.scroll-fade-md) {
-    --scroll-fade-size: var(--gap-md);
+    --scroll-fade-size: var(--space-md);
   }
 
   :where(.scroll-fade-lg) {
-    --scroll-fade-size: var(--gap-lg);
+    --scroll-fade-size: var(--space-lg);
   }
 
   :where(.scroll-fade-xl) {
-    --scroll-fade-size: var(--gap-xl);
+    --scroll-fade-size: var(--space-xl);
   }
 
   /* Per-edge depth — overrides scroll-fade-<size> on the edge it targets.
      Use s/e on horizontal scrollers so the sizes mirror in RTL. */
   :where(.scroll-fade-t-xs) {
-    --scroll-fade-t-size: var(--gap-xs);
+    --scroll-fade-t-size: var(--space-xs);
   }
 
   :where(.scroll-fade-t-sm) {
-    --scroll-fade-t-size: var(--gap-sm);
+    --scroll-fade-t-size: var(--space-sm);
   }
 
   :where(.scroll-fade-t-md) {
-    --scroll-fade-t-size: var(--gap-md);
+    --scroll-fade-t-size: var(--space-md);
   }
 
   :where(.scroll-fade-t-lg) {
-    --scroll-fade-t-size: var(--gap-lg);
+    --scroll-fade-t-size: var(--space-lg);
   }
 
   :where(.scroll-fade-t-xl) {
-    --scroll-fade-t-size: var(--gap-xl);
+    --scroll-fade-t-size: var(--space-xl);
   }
 
   :where(.scroll-fade-b-xs) {
-    --scroll-fade-b-size: var(--gap-xs);
+    --scroll-fade-b-size: var(--space-xs);
   }
 
   :where(.scroll-fade-b-sm) {
-    --scroll-fade-b-size: var(--gap-sm);
+    --scroll-fade-b-size: var(--space-sm);
   }
 
   :where(.scroll-fade-b-md) {
-    --scroll-fade-b-size: var(--gap-md);
+    --scroll-fade-b-size: var(--space-md);
   }
 
   :where(.scroll-fade-b-lg) {
-    --scroll-fade-b-size: var(--gap-lg);
+    --scroll-fade-b-size: var(--space-lg);
   }
 
   :where(.scroll-fade-b-xl) {
-    --scroll-fade-b-size: var(--gap-xl);
+    --scroll-fade-b-size: var(--space-xl);
   }
 
   :where(.scroll-fade-s-xs) {
-    --scroll-fade-s-size: var(--gap-xs);
+    --scroll-fade-s-size: var(--space-xs);
   }
 
   :where(.scroll-fade-s-sm) {
-    --scroll-fade-s-size: var(--gap-sm);
+    --scroll-fade-s-size: var(--space-sm);
   }
 
   :where(.scroll-fade-s-md) {
-    --scroll-fade-s-size: var(--gap-md);
+    --scroll-fade-s-size: var(--space-md);
   }
 
   :where(.scroll-fade-s-lg) {
-    --scroll-fade-s-size: var(--gap-lg);
+    --scroll-fade-s-size: var(--space-lg);
   }
 
   :where(.scroll-fade-s-xl) {
-    --scroll-fade-s-size: var(--gap-xl);
+    --scroll-fade-s-size: var(--space-xl);
   }
 
   :where(.scroll-fade-e-xs) {
-    --scroll-fade-e-size: var(--gap-xs);
+    --scroll-fade-e-size: var(--space-xs);
   }
 
   :where(.scroll-fade-e-sm) {
-    --scroll-fade-e-size: var(--gap-sm);
+    --scroll-fade-e-size: var(--space-sm);
   }
 
   :where(.scroll-fade-e-md) {
-    --scroll-fade-e-size: var(--gap-md);
+    --scroll-fade-e-size: var(--space-md);
   }
 
   :where(.scroll-fade-e-lg) {
-    --scroll-fade-e-size: var(--gap-lg);
+    --scroll-fade-e-size: var(--space-lg);
   }
 
   :where(.scroll-fade-e-xl) {
-    --scroll-fade-e-size: var(--gap-xl);
+    --scroll-fade-e-size: var(--space-xl);
   }
 
   /* Remove the fade. Last so it wins over any edge mask regardless of order. */
