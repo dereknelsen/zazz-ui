@@ -1,0 +1,1353 @@
+/**
+ * _properties.css — Style prop registrations (@property), one per prop × breakpoint.
+ *
+ * GENERATED from src/props.ts by scripts/generate-properties.mjs — do not edit
+ * by hand. Regenerate with `vp run properties`; props.test.ts fails on drift.
+ *
+ * @layer      none — @property is layer-independent
+ * @requires   none
+ * @uses       @property — syntax "*" with no initial-value: the universal syntax
+ *             keeps a prop guaranteed-invalid until the style attribute sets it,
+ *             so an element with no prop matches no utility rule and needs no
+ *             var() fallback (ADR-0012)
+ * @uses       inherits: false — a prop set on a container never surfaces on its
+ *             children; anything that must travel goes through the private
+ *             coordination vars (--_gap, --_grid-cols) in _utilities.css
+ * @consumedby _variables.css, _utilities.css, _utilities-<family>.css
+ * @see        src/props.ts — the prop registry (names, families, kinds)
+ * @see        docs/adr/0012-style-props.md
+ */
+
+/* spacing — numeric, × --spacing-interval */
+
+@property --p {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --p-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --p-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --p-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --p-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --p-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --px {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --px-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --px-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --px-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --px-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --px-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --py {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --py-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --py-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --py-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --py-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --py-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --ps {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --ps-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --ps-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --ps-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --ps-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --ps-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --pe {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --pe-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --pe-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --pe-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --pe-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --pe-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --pt {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --pt-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --pt-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --pt-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --pt-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --pt-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --pb {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --pb-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --pb-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --pb-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --pb-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --pb-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --m {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --m-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --m-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --m-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --m-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --m-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mx {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mx-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mx-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mx-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mx-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mx-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --my {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --my-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --my-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --my-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --my-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --my-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --ms {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --ms-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --ms-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --ms-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --ms-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --ms-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --me {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --me-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --me-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --me-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --me-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --me-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mt {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mt-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mt-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mt-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mt-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mt-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mb {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mb-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mb-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mb-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mb-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mb-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --gap {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --gap-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --gap-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --gap-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --gap-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --gap-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --gap-x {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --gap-x-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --gap-x-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --gap-x-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --gap-x-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --gap-x-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --gap-y {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --gap-y-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --gap-y-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --gap-y-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --gap-y-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --gap-y-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+/* sizing — length, percentage or keyword */
+
+@property --w {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --w-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --w-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --w-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --w-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --w-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --h {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --h-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --h-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --h-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --h-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --h-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --min-w {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --min-w-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --min-w-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --min-w-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --min-w-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --min-w-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --max-w {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --max-w-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --max-w-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --max-w-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --max-w-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --max-w-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --min-h {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --min-h-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --min-h-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --min-h-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --min-h-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --min-h-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --max-h {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --max-h-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --max-h-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --max-h-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --max-h-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --max-h-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --size {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --size-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --size-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --size-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --size-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --size-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+/* grid — --grid-cols implies display: grid */
+
+@property --grid-cols {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --grid-cols-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --grid-cols-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --grid-cols-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --grid-cols-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --grid-cols-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --grid-rows {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --grid-rows-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --grid-rows-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --grid-rows-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --grid-rows-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --grid-rows-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --col-span {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --col-span-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --col-span-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --col-span-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --col-span-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --col-span-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --row-span {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --row-span-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --row-span-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --row-span-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --row-span-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --row-span-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+/* flex — flex item props */
+
+@property --basis {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --basis-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --basis-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --basis-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --basis-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --basis-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --grow {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --grow-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --grow-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --grow-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --grow-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --grow-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --shrink {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --shrink-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --shrink-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --shrink-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --shrink-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --shrink-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --order {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --order-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --order-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --order-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --order-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --order-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+/* color — --text is the text color */
+
+@property --bg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --bg-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --bg-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --bg-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --bg-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --bg-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --text {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --text-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --text-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --text-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --text-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --text-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --border-color {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --border-color-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --border-color-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --border-color-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --border-color-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --border-color-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+/* typography — font-size, line-height, letter-spacing */
+
+@property --text-size {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --text-size-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --text-size-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --text-size-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --text-size-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --text-size-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --line-height {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --line-height-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --line-height-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --line-height-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --line-height-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --line-height-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --letter-spacing {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --letter-spacing-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --letter-spacing-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --letter-spacing-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --letter-spacing-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --letter-spacing-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+/* position — logical insets + z-index */
+
+@property --top {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --top-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --top-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --top-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --top-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --top-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --right {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --right-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --right-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --right-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --right-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --right-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --bottom {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --bottom-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --bottom-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --bottom-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --bottom-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --bottom-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --left {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --left-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --left-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --left-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --left-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --left-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --inset {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --inset-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --inset-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --inset-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --inset-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --inset-2xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --z {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --z-sm {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --z-md {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --z-lg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --z-xl {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --z-2xl {
+  syntax: "*";
+  inherits: false;
+}
