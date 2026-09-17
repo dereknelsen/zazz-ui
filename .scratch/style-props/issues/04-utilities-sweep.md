@@ -1,7 +1,7 @@
 # 04 — _utilities.css sweep: --gap-→--space-, flags, breakpoint prefix shift
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 03
 Size: L
 
