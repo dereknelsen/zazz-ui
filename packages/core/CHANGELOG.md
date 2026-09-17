@@ -168,6 +168,10 @@ Measurements (0.4.1 → 0.5.0), from `node .scratch/style-props/measure.mjs` (bu
 - New **modular dist**: alongside `dist/zazz.css`, the build emits `layers.css` (the `@layer` order alone), `base.css`, `utilities-core.css`, one `utilities-<family>.css` per style-prop family, `utilities-spacing-responsive.css`, `utilities.css` (all utilities), and `primitives/<name>.css`, each wrapped in its own layer so any subset can be loaded, or combined into one request with jsDelivr's `/combine/`. Load only what you use; the docs' _Optimize your CSS_ page has the recipes, and the measurements table above takes the after-numbers once the release is cut.
 - The styling ladder in `CONVENTIONS.styles.md` §5 gains a rung: a utility class when a scale value fits; a style prop when the value is open and a prop exists; a `--ui-*` token set inline when the value lands where inline style cannot reach; raw inline style for a true same-element one-off; a CSS file the moment the one-off repeats. ADR-0008's "same-element hooks add nothing" still holds for 1:1 hooks; ADR-0012 records why style props pass that test.
 
+### autocomplete
+
+- New `--ui-autocomplete-option-gap` hook, defaulting to the shared `--ui-field-option-gap` so the list renders unchanged. The suggestion list and its groups read it instead of a hard `--step-px`, so retuning `--ui-field-option-gap` now reaches the autocomplete the way it already reached combobox, command, menu and select. Found by the ADR-0008 audit of every `--step-*` and literal length in component rules; every other one stays, with the failing four-part test recorded per row.
+
 ## 0.4.1 (2026-09-04)
 
 Housekeeping on top of 0.4.0: the vestigial `anchor-size()` `@supports` gates come out, and the anchor-positioning support notes in the CSS headers and ADR-0011 are corrected. No rendered output changes in any browser — see the reasoning on the gate entry below.

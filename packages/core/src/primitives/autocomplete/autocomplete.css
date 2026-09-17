@@ -15,6 +15,7 @@
 
 @layer variables {
   :root {
+    --ui-autocomplete-option-gap: var(--ui-field-option-gap);
     --ui-autocomplete-panel-max-block-size: var(--step-72);
     --ui-autocomplete-shadow: var(--ui-menu-shadow);
   }
@@ -67,7 +68,7 @@
   [data-slot~="autocomplete-list"] {
     display: flex;
     flex-direction: column;
-    gap: var(--step-px);
+    gap: var(--ui-autocomplete-option-gap);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -76,7 +77,7 @@
   [data-slot~="autocomplete-group"] {
     display: flex;
     flex-direction: column;
-    gap: var(--step-px);
+    gap: var(--ui-autocomplete-option-gap);
   }
 
   /* Score ranking writes order -1000..0 on sibling items — keep the label first */
