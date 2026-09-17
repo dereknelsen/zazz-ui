@@ -1,0 +1,137 @@
+/**
+ * _utilities-typography.css — Typography style props (--text-size, --line-height, --letter-spacing)
+ *
+ * @layer      utilities
+ * @requires   layers.css, _variables.css (--bp-* flags), _properties.css (@property registrations)
+ * @uses       :where() — zero specificity so a prop stays overridable by any later rule
+ * @uses       [style*="--x:"] — attribute substring gate: a rule fires only when the style
+ *             attribute names the prop, so an element with no prop matches no rule
+ * @uses       style() queries — responsive forms read the --bp-* flags (_variables.css)
+ * @consumedby index.css
+ * @see        src/props.ts — the prop registry (names, properties, kinds)
+ * @see        docs/adr/0012-style-props.md
+ *
+ * A style prop is a custom property set inline and read by one rule here:
+ *
+ *   <p style="--text-size: var(--font-size-lg); --line-height-md: 1.4">
+ *
+ * Values are raw: text-size → font-size, line-height → line-height,
+ * letter-spacing → letter-spacing. Any value the property accepts works —
+ * a type-scale token (var(--font-size-lg), var(--leading-md),
+ * var(--tracking-h2)), a length, a number, a keyword.
+ *
+ * Contract: the prop name is followed IMMEDIATELY by the colon (`--text-size: 1rem`;
+ * `--text-size:1rem` also matches). `--text-size : 1rem` — a space before the
+ * colon — never matches the gate, so the rule never applies.
+ * `el.style.setProperty("--text-size", "1rem")` serializes to the matching form.
+ *
+ * Unset props never apply: each prop is registered `syntax: "*"` with no
+ * initial-value (_properties.css), so it is guaranteed-invalid until the style
+ * attribute sets it, and the gate keeps the rule off the element until then. No
+ * var() fallback is needed. `inherits: false` keeps the prop on the element it
+ * was written on — the resulting font-size / line-height / letter-spacing still
+ * inherit as usual, the prop itself does not.
+ *
+ * Responsive suffixes (-sm -md -lg -xl -2xl) are mobile-first by source order:
+ * `--text-size-md:` applies from 48rem up and stays on above it; a later block
+ * (-lg, -xl, -2xl) wins where its flag is also true. The substring gate keeps
+ * base and responsive forms independent: `--text-size:` does not match
+ * `--text-size-md:` because the colon follows `md`.
+ */
+
+@layer zazz.utilities {
+  /* ===========================================================================
+    BASE — every width
+    =========================================================================== */
+
+  :where([style*="--text-size:"]) {
+    font-size: var(--text-size);
+  }
+
+  :where([style*="--line-height:"]) {
+    line-height: var(--line-height);
+  }
+
+  :where([style*="--letter-spacing:"]) {
+    letter-spacing: var(--letter-spacing);
+  }
+
+  /* ===========================================================================
+    RESPONSIVE — gated on the --bp-* container flags, sm → 2xl
+    =========================================================================== */
+
+  @container style(--bp-sm: true) {
+    /* --breakpoint-sm and up */
+    :where([style*="--text-size-sm:"]) {
+      font-size: var(--text-size-sm);
+    }
+
+    :where([style*="--line-height-sm:"]) {
+      line-height: var(--line-height-sm);
+    }
+
+    :where([style*="--letter-spacing-sm:"]) {
+      letter-spacing: var(--letter-spacing-sm);
+    }
+  }
+
+  @container style(--bp-md: true) {
+    /* --breakpoint-md and up */
+    :where([style*="--text-size-md:"]) {
+      font-size: var(--text-size-md);
+    }
+
+    :where([style*="--line-height-md:"]) {
+      line-height: var(--line-height-md);
+    }
+
+    :where([style*="--letter-spacing-md:"]) {
+      letter-spacing: var(--letter-spacing-md);
+    }
+  }
+
+  @container style(--bp-lg: true) {
+    /* --breakpoint-lg and up */
+    :where([style*="--text-size-lg:"]) {
+      font-size: var(--text-size-lg);
+    }
+
+    :where([style*="--line-height-lg:"]) {
+      line-height: var(--line-height-lg);
+    }
+
+    :where([style*="--letter-spacing-lg:"]) {
+      letter-spacing: var(--letter-spacing-lg);
+    }
+  }
+
+  @container style(--bp-xl: true) {
+    /* --breakpoint-xl and up */
+    :where([style*="--text-size-xl:"]) {
+      font-size: var(--text-size-xl);
+    }
+
+    :where([style*="--line-height-xl:"]) {
+      line-height: var(--line-height-xl);
+    }
+
+    :where([style*="--letter-spacing-xl:"]) {
+      letter-spacing: var(--letter-spacing-xl);
+    }
+  }
+
+  @container style(--bp-2xl: true) {
+    /* --breakpoint-2xl and up */
+    :where([style*="--text-size-2xl:"]) {
+      font-size: var(--text-size-2xl);
+    }
+
+    :where([style*="--line-height-2xl:"]) {
+      line-height: var(--line-height-2xl);
+    }
+
+    :where([style*="--letter-spacing-2xl:"]) {
+      letter-spacing: var(--letter-spacing-2xl);
+    }
+  }
+}
