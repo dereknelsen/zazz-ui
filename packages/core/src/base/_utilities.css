@@ -6,6 +6,11 @@
  * @uses       :where() — zero specificity so utilities stay overridable
  * @uses       container-type / @container — responsive layout utilities
  * @uses       style() queries — read --bp-* flags (typed @property tokens from _variables.css)
+ * @consumedby _utilities-spacing.css, _utilities-spacing-responsive.css,
+ *             _utilities-sizing.css, _utilities-grid.css, _utilities-flex.css
+ *             (the style-prop families load after this file and read the
+ *             --_gap* / --_grid-* coordination vars declared here)
+ * @see        docs/adr/0012-style-props.md
  */
 
 @layer variables {

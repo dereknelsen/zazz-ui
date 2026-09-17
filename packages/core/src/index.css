@@ -1,9 +1,12 @@
 /**
  * index.css — Plain-CSS entry point; @import bundle in cascade order.
  *
- * Bundles the base layers (layers → variables → reset) followed by every
- * component, so a page only needs a single stylesheet link. Order matters:
- * layers.css declares the cascade layers and must load first.
+ * Bundles the base layers (layers → variables → properties → reset) followed
+ * by every component, then the class utilities and layout grid, then the style
+ * prop families (ADR-0012), so a page only needs a single stylesheet link.
+ * Order matters: layers.css declares the cascade layers and must load first;
+ * the prop families load last within zazz.utilities so a style prop beats a
+ * class on the same element by source order.
  *
  * Legacy support: import your legacy stylesheets into the legacy layer at the slot
  * below (between the reset baseline and the components). Projects that prefer to
@@ -17,6 +20,9 @@
 /* base — order matters; _layers.css declares the cascade layers first. */
 @import "./base/_layers.css";
 @import "./base/_variables.css";
+/* _properties.css registers the style props (@property, layer-independent);
+   generated from src/props.ts — `vp run properties`. */
+@import "./base/_properties.css";
 @import "./base/_reset.css";
 @import "./base/_typography.css";
 @import "./base/_view-transitions.css";
@@ -73,6 +79,19 @@
 /* Utilities and layout remain the final normal Zazz override layer. */
 @import "./base/_utilities.css";
 @import "./base/_layout.css";
+
+/* Style props (ADR-0012) — one family file per prop family, after the class
+   utilities so a prop beats a class on the same element by source order.
+   _utilities-spacing-responsive.css is the opt-in responsive spacing set and
+   must follow _utilities-spacing.css. */
+@import "./base/_utilities-spacing.css";
+@import "./base/_utilities-spacing-responsive.css";
+@import "./base/_utilities-sizing.css";
+@import "./base/_utilities-grid.css";
+@import "./base/_utilities-flex.css";
+@import "./base/_utilities-color.css";
+@import "./base/_utilities-typography.css";
+@import "./base/_utilities-position.css";
 
 /* Migration shims — translate legacy classes while markup is rewritten.
    Beats all other legacy sublayers; Zazz still wins on migrated markup. */
