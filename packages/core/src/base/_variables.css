@@ -2,16 +2,21 @@
  * _variables.css — Global design tokens (Tier 1).
  *
  * @layer      variables
- * @requires   layers.css
+ * @requires   layers.css, _properties.css
  * @uses       light-dark() — theme roles re-resolve per color-scheme (system,
  *             .dark/.light, [data-theme]); tokens stay unregistered on purpose
  * @uses       oklch(from …) — shade/tint scales and shadow alphas
  * @uses       color-mix() — focus ring (--ring)
  * @uses       interpolate-size: allow-keywords — discrete block-size animations (details, etc.)
+ * @uses       @property — typed boolean breakpoint flags (--bp-*, --screen-*) so
+ *             style() queries resolve `false` before any threshold matches
+ * @uses       @container (width >= …) / @media (width >= …) — range syntax for the
+ *             flag setters (nearest size container vs. viewport)
  * @tokens     Global token tiers (the root override hooks) — Theme roles, brand
- *             scales (50–950), grayscale/shade/tint, typography, spacing, radius,
- *             layout, effects, animations. Re-declare any of these to re-skin the
- *             whole system; see CONVENTIONS.md.
+ *             scales (50–950), grayscale/shade/tint, typography, spacing
+ *             (--space-2xs…2xl), radius, layout (--breakpoint-*, --bp-*,
+ *             --screen-*), effects, animations. Re-declare any of these to
+ *             re-skin the whole system; see CONVENTIONS.md.
  */
 
 /* Animations */
@@ -35,35 +40,72 @@
   initial-value: 0s;
 }
 
-/* Layout breakpoint state — boolean flags read by container style() queries.
- * Typed enum + false default so style(--is-breakpoint-X: false) resolves before
- * any min-width query matches. Sourced from the body container in _variables.css. */
+/* Breakpoint state — boolean flags read by container style() queries.
+ * Typed enum + false default so style(--bp-X: false) resolves before any
+ * threshold matches (an unregistered property is guaranteed-invalid, so a
+ * `false` query could never match). Two families, one scale
+ * (sm 40rem · md 48rem · lg 64rem · xl 80rem · 2xl 96rem), set at the end of
+ * this file:
+ *   --bp-*      the nearest size container — an unnamed @container query, so
+ *               the subject is whichever ancestor has a container-type (body,
+ *               main, section, article … per _reset.css), not the viewport.
+ *   --screen-*  the viewport — @media on :root. */
 
-@property --is-breakpoint-xs {
+@property --bp-sm {
   syntax: "true | false";
   inherits: true;
   initial-value: false;
 }
 
-@property --is-breakpoint-sm {
+@property --bp-md {
   syntax: "true | false";
   inherits: true;
   initial-value: false;
 }
 
-@property --is-breakpoint-md {
+@property --bp-lg {
   syntax: "true | false";
   inherits: true;
   initial-value: false;
 }
 
-@property --is-breakpoint-lg {
+@property --bp-xl {
   syntax: "true | false";
   inherits: true;
   initial-value: false;
 }
 
-@property --is-breakpoint-xl {
+@property --bp-2xl {
+  syntax: "true | false";
+  inherits: true;
+  initial-value: false;
+}
+
+@property --screen-sm {
+  syntax: "true | false";
+  inherits: true;
+  initial-value: false;
+}
+
+@property --screen-md {
+  syntax: "true | false";
+  inherits: true;
+  initial-value: false;
+}
+
+@property --screen-lg {
+  syntax: "true | false";
+  inherits: true;
+  initial-value: false;
+}
+
+@property --screen-xl {
+  syntax: "true | false";
+  inherits: true;
+  initial-value: false;
+}
+
+@property --screen-2xl {
   syntax: "true | false";
   inherits: true;
   initial-value: false;
@@ -303,7 +345,7 @@
     --paragraph-spacing-eyebrow: calc(1rlh * var(--paragraph-spacing-multiplier));
 
     /* ==========================================================================
-    * 5. Spacing — interval modifier, semantic gaps, step scale
+    * 5. Spacing — interval modifier, step scale, semantic --space-* family
     * ========================================================================== */
 
     /* modifiers */
@@ -350,12 +392,23 @@
     --step-96: calc(var(--spacing-interval) * 96);
     --step-full: 100%;
 
-    /* semantic */
-    --gap-xs: var(--step-2);
-    --gap-sm: var(--step-4);
-    --gap-md: var(--step-6);
-    --gap-lg: var(--step-11);
-    --gap-xl: var(--step-24);
+    /* semantic — the one spacing family utilities and primitives read.
+       Step multiples (not literal rem) so the scale stays fluid through
+       --spacing-interval. */
+    --space-2xs: var(--step-1);
+    --space-xs: var(--step-2);
+    --space-sm: var(--step-4);
+    --space-md: var(--step-6);
+    --space-lg: var(--step-11);
+    --space-xl: var(--step-24);
+    --space-2xl: var(--step-40);
+
+    /* --gap-* aliases — deprecated 0.5.0, removed 0.6.0. Read --space-* instead. */
+    --gap-xs: var(--space-xs);
+    --gap-sm: var(--space-sm);
+    --gap-md: var(--space-md);
+    --gap-lg: var(--space-lg);
+    --gap-xl: var(--space-xl);
 
     /* ==========================================================================
     * 6. Radius — multiplier, semantic scale, component primitives
@@ -378,17 +431,18 @@
     * ========================================================================== */
 
     /* semantic */
-    --gutters: var(--gap-md);
+    --gutters: var(--space-md);
 
-    /* breakpoints — length tokens for calcs and container queries.
-       The matching --is-breakpoint-* state flags are sourced from the body
-       container after this :root block (the size-query subject must be a body
-       descendant, so it cannot live in :root). */
-    --breakpoint-xs: 40rem;
-    --breakpoint-sm: 48rem;
-    --breakpoint-md: 64rem;
-    --breakpoint-lg: 80rem;
-    --breakpoint-xl: 96rem;
+    /* breakpoints — length tokens for calcs and named container queries.
+       Same scale as the --bp-* (container) and --screen-* (viewport) flags,
+       which are what style() queries read; they are registered at the top of
+       this file and set after this :root block. The setters repeat these
+       literals because var() is invalid in a @container / @media prelude. */
+    --breakpoint-sm: 40rem;
+    --breakpoint-md: 48rem;
+    --breakpoint-lg: 64rem;
+    --breakpoint-xl: 80rem;
+    --breakpoint-2xl: 96rem;
 
     /* article container widths */
     --article-xs: 45ch;
@@ -555,41 +609,80 @@
   }
 
   /* ==========================================================================
-   * Breakpoint state flags — global, sourced from the body container.
-   * Set the same value on every body descendant so any style() consumer
-   * resolves it identically, no matter which container it reads from (the
-   * .container element is intentionally container-type: normal).
-   * Mobile-first: --is-breakpoint-X becomes true once width reaches X.
-   * Registered as typed @property (false default) at the top of this file.
-   * Literal rem required — var() is invalid in a container-query prelude.
+   * Breakpoint state flags — registered as typed @property (false default) at
+   * the top of this file; set here. Mobile-first: a flag flips to true once
+   * width reaches its threshold and stays true above it.
+   *
+   * --bp-* (container). Unnamed size queries, so the subject is the nearest
+   * ancestor with a container-type — body, main, section, article … are all
+   * inline-size containers (_reset.css) — not the body specifically and not
+   * the viewport. Set on every body descendant so any style() consumer
+   * resolves the same value whichever container it reads from (.container is
+   * intentionally container-type: normal). An element with no size-container
+   * ancestor never matches and keeps the registered `false`.
+   *
+   * --screen-* (viewport). @media on :root, inherited everywhere; the
+   * viewport-only counterpart for rules that must ignore container width.
+   *
+   * Literal rem required — var() is invalid in a @container / @media prelude.
    * ========================================================================== */
-  @container (width >=40rem) {
+  @container (width >= 40rem) {
     :where(body *) {
-      --is-breakpoint-xs: true;
+      --bp-sm: true;
     }
   }
 
-  @container (width >=48rem) {
+  @container (width >= 48rem) {
     :where(body *) {
-      --is-breakpoint-sm: true;
+      --bp-md: true;
     }
   }
 
-  @container (width >=64rem) {
+  @container (width >= 64rem) {
     :where(body *) {
-      --is-breakpoint-md: true;
+      --bp-lg: true;
     }
   }
 
-  @container (width >=80rem) {
+  @container (width >= 80rem) {
     :where(body *) {
-      --is-breakpoint-lg: true;
+      --bp-xl: true;
     }
   }
 
-  @container (width >=96rem) {
+  @container (width >= 96rem) {
     :where(body *) {
-      --is-breakpoint-xl: true;
+      --bp-2xl: true;
+    }
+  }
+
+  @media (width >= 40rem) {
+    :root {
+      --screen-sm: true;
+    }
+  }
+
+  @media (width >= 48rem) {
+    :root {
+      --screen-md: true;
+    }
+  }
+
+  @media (width >= 64rem) {
+    :root {
+      --screen-lg: true;
+    }
+  }
+
+  @media (width >= 80rem) {
+    :root {
+      --screen-xl: true;
+    }
+  }
+
+  @media (width >= 96rem) {
+    :root {
+      --screen-2xl: true;
     }
   }
 
