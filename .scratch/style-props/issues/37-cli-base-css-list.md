@@ -1,7 +1,7 @@
 # 37 — CLI: vendor the 0.5 base css list (properties + prop families)
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 16
 Size: S
 
