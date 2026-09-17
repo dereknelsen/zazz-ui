@@ -1,7 +1,7 @@
 # 09 — _utilities-spacing.css style props
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 08
 Size: M
 
