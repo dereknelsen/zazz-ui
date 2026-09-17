@@ -1,5 +1,19 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.5.0 (unreleased)
+
+Measurements (0.4.1 → 0.5.0), from `node .scratch/style-props/measure.mjs` (build `packages/core` first):
+
+| Measure                                                                               | 0.4.1                                      | 0.5.0 |
+| ------------------------------------------------------------------------------------- | ------------------------------------------ | ----- |
+| `dist/zazz.css` raw bytes                                                             | 304,258                                    | tbd   |
+| brotli bytes (node zlib, q11)                                                         | 29,125                                     | tbd   |
+| gzip bytes (node zlib, default level)                                                 | 38,281                                     | tbd   |
+| rule count (`{` in `dist/zazz.css`)                                                   | 2,189                                      | tbd   |
+| `src/base/_utilities.css` bytes                                                       | 159,583                                    | tbd   |
+| CDN transfer bytes (jsDelivr, `Accept-Encoding: br`)                                  | 39,174                                     | tbd   |
+| Coverage on `examples/layout.html`, style rules (Chrome 153, 1280×900): used / unused | 60,226 / 244,032 (80.2% unused of 304,258) | tbd   |
+
 ## 0.4.1 (2026-09-04)
 
 Housekeeping on top of 0.4.0: the vestigial `anchor-size()` `@supports` gates come out, and the anchor-positioning support notes in the CSS headers and ADR-0011 are corrected. No rendered output changes in any browser — see the reasoning on the gate entry below.
