@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Page-specific tags stay above the generated block -->
+    <title>Zazz tests | Style props</title>
+    <link rel="prefetch" href="index.html" />
+
+    <!-- Shared head, generated from @zazz-ui/core's head contract (src/head.ts). -->
+    <!-- Edit nothing between the markers; run `vp run heads` to regenerate. -->
+    <!-- zazz:head -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Paint the right theme (background, form controls, scrollbars) before CSS loads -->
+    <meta name="color-scheme" content="light dark" />
+    <!-- Google Fonts: Geist + Geist Mono (preconnect so the CSS request starts early) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwcGFWNOITd.woff2"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:ital,wght@0,100..900;1,100..900&family=Geist:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Zazz styles: one bundle (index.css @imports every layer in cascade order) -->
+    <link rel="stylesheet" href="../src/index.css" />
+    <!-- Import map: bare specifiers in Zazz scripts resolve to pinned, SRI-checked files -->
+    <script type="importmap">
+      {
+        "imports": {
+          "signal-polyfill": "https://cdn.jsdelivr.net/npm/signal-polyfill@0.2.2/dist/index.js",
+          "embla-carousel": "https://cdn.jsdelivr.net/npm/embla-carousel@8.6.0/esm/embla-carousel.esm.js",
+          "embla-carousel-autoplay": "https://cdn.jsdelivr.net/npm/embla-carousel-autoplay@8.6.0/esm/embla-carousel-autoplay.esm.js",
+          "embla-carousel-auto-scroll": "https://cdn.jsdelivr.net/npm/embla-carousel-auto-scroll@8.6.0/esm/embla-carousel-auto-scroll.esm.js",
+          "embla-carousel-class-names": "https://cdn.jsdelivr.net/npm/embla-carousel-class-names@8.6.0/esm/embla-carousel-class-names.esm.js"
+        },
+        "integrity": {
+          "https://cdn.jsdelivr.net/npm/signal-polyfill@0.2.2/dist/index.js": "sha384-0OqM7OXGT6Oz1z98u/geiFn/FUyz4iWexkXHCvbIGXRRDXl6bp6IKc0j78AQ6DEK",
+          "https://cdn.jsdelivr.net/npm/embla-carousel@8.6.0/esm/embla-carousel.esm.js": "sha384-GXjfyU1fSHHeweoYd3rwo7OBKYtkq+JcsDoe8VDRc6znCty2ZTzyVvX1DwqCE+9t",
+          "https://cdn.jsdelivr.net/npm/embla-carousel-autoplay@8.6.0/esm/embla-carousel-autoplay.esm.js": "sha384-AX49yBc7zd/CT8ZqNMRiiqqVSV9xfxb27VwEGziPioT3wL4k4C5BW2qwefdWuN4J",
+          "https://cdn.jsdelivr.net/npm/embla-carousel-auto-scroll@8.6.0/esm/embla-carousel-auto-scroll.esm.js": "sha384-SPdnL1eic73WfM72zFEf0RJ5PdUC7TL3Yb5jOl1JC3/l4D7EsVxwO8wFnnezlMSu",
+          "https://cdn.jsdelivr.net/npm/embla-carousel-class-names@8.6.0/esm/embla-carousel-class-names.esm.js": "sha384-ZWno/FqzYeWE5Ils19GIhep1AZ5bMl0mp9wmm6baTJE4+pjMjOdTnE55SjUQAdVh"
+        }
+      }
+    </script>
+    <link rel="modulepreload" href="../src/index.js" />
+    <!-- Polyfill: Interest Invokers (interestfor) — native in Chromium only -->
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/invokers@2.2.2/dist/esm/production/interest.js"
+      integrity="sha384-hR2BVNtsS7fIIMwOm+f7MY0JZfuByGhQQfevCBB6evFATKzBsTw0JzH/RxD94z2T"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Zazz behavior: one ES module imports every component script in dependency order -->
+    <script type="module" src="../src/index.js"></script>
+    <!-- Theme: apply the persisted (or preferred) scheme before first paint -->
+    <script>
+      (() => {
+        try {
+          const storedTheme = localStorage.getItem("theme");
+          const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches;
+          const theme = storedTheme ?? (prefersDark ? "dark" : "light");
+          document.documentElement.classList.toggle("dark", theme === "dark");
+        } catch {
+          document.documentElement.classList.toggle(
+            "dark",
+            matchMedia("(prefers-color-scheme: dark)").matches,
+          );
+        }
+      })();
+    </script>
+    <!-- /zazz:head -->
+  </head>
+
+  <body class="bg-background">
+    <header class="py-md border-b" data-transition-layer="global-header">
+      <div class="container">
+        <div class="flex items-center justify-between">
+          <a href="index.html" class="text-h6 font-black">Zazz tests</a>
+          <nav>
+            <menu class="flex gap-xs">
+              <li>
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="index.html"
+                  >Overview</a
+                >
+              </li>
+              <li>
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="about.html">About</a>
+              </li>
+              <li>
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="products.html"
+                  >Products</a
+                >
+              </li>
+              <li>
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="layout.html"
+                  >Layout</a
+                >
+              </li>
+              <li>
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="responsive.html"
+                  >Responsive</a
+                >
+              </li>
+              <li>
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="style-props.html"
+                  >Style props</a
+                >
+              </li>
+              <li>
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="components.html"
+                  >Components</a
+                >
+              </li>
+              <li>
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="forms.html">Forms</a>
+              </li>
+            </menu>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main data-layout="main">
+      <!-- Intro -->
+      <section class="py-xl">
+        <div class="container">
+          <hgroup class="flex flex-col gap-sm">
+            <span class="text-eyebrow">Style props</span>
+            <h1 class="text-h1">Open values, inline</h1>
+            <p class="text-lg text-muted-foreground max-w-screen-sm">
+              A style prop is a custom property set in the <code>style</code> attribute and read by
+              a zero-specificity rule in the utilities layer: <code>style="--px: 8"</code> is
+              padding-inline of eight spacing steps, <code>--px-md</code> takes over from the
+              <code>md</code> container width. Eight labelled cases below exercise the contract; the
+              readout at the end prints the computed values and refreshes on resize.
+            </p>
+          </hgroup>
+        </div>
+      </section>
+
+      <!-- a. Responsive spacing on a plain element -->
+      <section class="py-xl border-t">
+        <div class="container">
+          <hgroup class="flex flex-col gap-sm pb-md">
+            <span class="text-eyebrow">Case a</span>
+            <h2 class="text-h5 font-heading">Responsive padding on a div</h2>
+            <p class="text-muted-foreground">
+              <code>style="--px: 8; --px-md: 12"</code>. Padding-inline is eight steps below
+              <code>md</code> and twelve at <code>md</code> and up. The base gate
+              <code>--px:</code> never matches <code>--px-md:</code>, so the two rules stay
+              independent and source order picks the wider one.
+            </p>
+          </hgroup>
+          <div
+            data-case="a"
+            style="--px: 8; --px-md: 12"
+            class="bg-primary text-primary-foreground rounded-md py-sm text-sm font-strong"
+          >
+            <span class="bg-background text-foreground rounded-sm px-xs py-2xs inline-block">
+              --px: 8 · --px-md: 12
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- b. The same props on a primitive -->
+      <section class="py-xl border-t">
+        <div class="container">
+          <hgroup class="flex flex-col gap-sm pb-md">
+            <span class="text-eyebrow">Case b</span>
+            <h2 class="text-h5 font-heading">A prop beats a component's own padding</h2>
+            <p class="text-muted-foreground">
+              The same <code>--px: 8; --px-md: 12</code> on a <code>.ui-button</code>. The button
+              sets its own padding-inline from <code>--ui-button-padding</code> in
+              <code>zazz.components</code>; the prop rule lives in <code>zazz.utilities</code>,
+              ordered after it, so the prop wins with no <code>!important</code>.
+            </p>
+          </hgroup>
+          <div class="flex flex-wrap items-center gap-sm">
+            <button class="ui-button" data-variant="primary" data-case="b-control">
+              Default padding
+            </button>
+            <button
+              class="ui-button"
+              data-variant="primary"
+              data-case="b"
+              style="--px: 8; --px-md: 12"
+            >
+              --px: 8 · --px-md: 12
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- c. inherits: false -->
+      <section class="py-xl border-t">
+        <div class="container">
+          <hgroup class="flex flex-col gap-sm pb-md">
+            <span class="text-eyebrow">Case c</span>
+            <h2 class="text-h5 font-heading">A child does not inherit the prop</h2>
+            <p class="text-muted-foreground">
+              Every prop is registered <code>inherits: false</code>. The outer box sets
+              <code>--px: 8</code>; the inner box sets nothing, so it reads an empty
+              <code>--px</code> and keeps zero padding. Only the private coordination vars
+              (<code>--_gap</code>, <code>--_grid-cols</code>) travel to children.
+            </p>
+          </hgroup>
+          <div
+            data-case="c"
+            style="--px: 8"
+            class="bg-secondary text-secondary-foreground rounded-md py-sm text-sm font-strong"
+          >
+            <div data-case="c-child" class="bg-background text-foreground rounded-sm py-2xs">
+              child · no style attribute · padding-inline stays 0
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- d. --gap coordinates with .basis-1/2 -->
+      <section class="py-xl border-t">
+        <div class="container">
+          <hgroup class="flex flex-col gap-sm pb-md">
+            <span class="text-eyebrow">Case d</span>
+            <h2 class="text-h5 font-heading">--gap feeds the basis fractions</h2>
+            <p class="text-muted-foreground">
+              A <code>.flex .flex-wrap</code> row with <code>style="--gap: 4"</code> and two
+              <code>.basis-1/2</code> children. <code>--gap</code> also sets <code>--_gap</code>, so
+              each child's basis is <code>(100% - gap) / 2</code> and the pair fills one line
+              exactly, the same as with <code>.gap-*</code>.
+            </p>
+          </hgroup>
+          <div data-case="d" style="--gap: 4" class="flex flex-wrap">
+            <div
+              data-case="d-child"
+              class="basis-1/2 bg-tertiary text-tertiary-foreground rounded-md p-sm text-center text-sm font-strong"
+            >
+              .basis-1/2
+            </div>
+            <div
+              class="basis-1/2 bg-tertiary text-tertiary-foreground rounded-md p-sm text-center text-sm font-strong"
+            >
+              .basis-1/2
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- e. --grid-cols implies display: grid -->
+      <section class="py-xl border-t">
+        <div class="container">
+          <hgroup class="flex flex-col gap-sm pb-md">
+            <span class="text-eyebrow">Case e</span>
+            <h2 class="text-h5 font-heading">--grid-cols without .grid</h2>
+            <p class="text-muted-foreground">
+              <code>style="--grid-cols: 3"</code> on a plain div, no <code>.grid</code> class. The
+              prop sets <code>display: grid</code>, three <code>minmax(0, 1fr)</code> tracks, and
+              <code>--_grid-cols</code> so spans clamp to the track count.
+            </p>
+          </hgroup>
+          <div data-case="e" style="--grid-cols: 3" class="gap-sm">
+            <div
+              class="bg-info text-info-foreground rounded-md p-sm text-center text-sm font-strong"
+            >
+              1
+            </div>
+            <div
+              class="bg-info text-info-foreground rounded-md p-sm text-center text-sm font-strong"
+            >
+              2
+            </div>
+            <div
+              class="bg-info text-info-foreground rounded-md p-sm text-center text-sm font-strong"
+            >
+              3
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- f. Raw sizing -->
+      <section class="py-xl border-t">
+        <div class="container">
+          <hgroup class="flex flex-col gap-sm pb-md">
+            <span class="text-eyebrow">Case f</span>
+            <h2 class="text-h5 font-heading">A raw length on --w</h2>
+            <p class="text-muted-foreground">
+              <code>style="--w: 16rem"</code>. Sizing props pass the value through unchanged to the
+              logical property, here <code>inline-size</code>.
+            </p>
+          </hgroup>
+          <div
+            data-case="f"
+            style="--w: 16rem"
+            class="bg-success text-success-foreground rounded-md p-sm text-center text-sm font-strong"
+          >
+            --w: 16rem
+          </div>
+        </div>
+      </section>
+
+      <!-- g. Theme override island -->
+      <section class="py-xl border-t">
+        <div class="container">
+          <hgroup class="flex flex-col gap-sm pb-md">
+            <span class="text-eyebrow">Case g</span>
+            <h2 class="text-h5 font-heading">A theme override and a prop, side by side</h2>
+            <p class="text-muted-foreground">
+              A <code>&lt;style&gt;</code> block in this section sets
+              <code>:root { --ui-field-padding: var(--step-5) }</code>, the global theme lever for
+              every field-derived control. The plain button picks the new default up through the
+              token chain (every button on the page does); the button carrying
+              <code>--px: 8; --px-md: 12</code> still shows the prop, because the utilities layer
+              wins over the component rule that reads the token. The override must sit on
+              <code>:root</code>: <code>--ui-button-padding</code> reads
+              <code>--ui-field-padding</code> at <code>:root</code>, so a value set lower in the
+              tree never reaches it.
+            </p>
+          </hgroup>
+          <style>
+            :root {
+              --ui-field-padding: var(--step-5);
+            }
+          </style>
+          <div class="flex flex-wrap items-center gap-sm">
+            <button class="ui-button" data-variant="secondary" data-case="g-control">
+              Token override · --step-5
+            </button>
+            <button
+              class="ui-button"
+              data-variant="secondary"
+              data-case="g"
+              style="--px: 8; --px-md: 12"
+            >
+              --px: 8 · --px-md: 12
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- h. The documented failure -->
+      <section class="py-xl border-t">
+        <div class="container">
+          <hgroup class="flex flex-col gap-sm pb-md">
+            <span class="text-eyebrow">Case h</span>
+            <h2 class="text-h5 font-heading">--mx: auto has no effect</h2>
+            <p class="text-muted-foreground">
+              Spacing props multiply by <code>--spacing-interval</code>, so
+              <code>--mx: auto</code> makes the <code>calc()</code> invalid at computed-value time
+              and margin-inline falls back to zero: the first box hugs the start edge. Auto margins
+              are a finite value, so they stay a class: the second box uses <code>.mx-auto</code>
+              and centers.
+            </p>
+          </hgroup>
+          <div class="flex flex-col gap-xs">
+            <div
+              data-case="h"
+              style="--w: 16rem; --mx: auto"
+              class="bg-warning text-warning-foreground rounded-md p-sm text-center text-sm font-strong"
+            >
+              --mx: auto · not centered
+            </div>
+            <div
+              data-case="h-control"
+              style="--w: 16rem"
+              class="mx-auto bg-warning text-warning-foreground rounded-md p-sm text-center text-sm font-strong"
+            >
+              .mx-auto · centered
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Readout -->
+      <section class="py-xl border-t">
+        <div class="container">
+          <hgroup class="flex flex-col gap-sm pb-md">
+            <span class="text-eyebrow">Readout</span>
+            <h2 class="text-h5 font-heading">Computed values</h2>
+            <p class="text-muted-foreground">
+              One line per case from <code>getComputedStyle</code>, refreshed on resize. The first
+              line reports the width of the size container the flags read from.
+            </p>
+          </hgroup>
+          <pre
+            id="results"
+            class="bg-muted text-muted-foreground rounded-md p-md text-sm overflow-x-auto"
+          ></pre>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t" data-transition-layer="global-footer">
+      <div class="container py-xl">
+        <div class="flex items-center justify-between gap-md">
+          <div class="text-h6 font-black">Zazz tests</div>
+          <menu class="flex gap-sm">
+            <li><a class="ui-button" data-variant="link" href="about.html">About</a></li>
+            <li><a class="ui-button" data-variant="link" href="layout.html">Layout</a></li>
+            <li><a class="ui-button" data-variant="link" href="responsive.html">Responsive</a></li>
+            <li>
+              <a class="ui-button" data-variant="link" href="style-props.html">Style props</a>
+            </li>
+            <li><a class="ui-button" data-variant="link" href="products.html">Products</a></li>
+            <li><a class="ui-button" data-variant="link" href="components.html">Components</a></li>
+            <li><a class="ui-button" data-variant="link" href="forms.html">Forms</a></li>
+          </menu>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Readout: computed values per case, for the regression check (ticket 17) -->
+    <script>
+      (() => {
+        const out = document.getElementById("results");
+        const el = (name) => document.querySelector(`[data-case="${name}"]`);
+        const cs = (name) => getComputedStyle(el(name));
+        const px = (value) => `${Math.round(parseFloat(value) * 100) / 100}px`;
+
+        const render = () => {
+          const main = document.querySelector("main");
+          const rows = [
+            [
+              "container",
+              `${px(main.getBoundingClientRect().width)} (main) · --bp-md ${cs("a").getPropertyValue("--bp-md").trim() || "false"}`,
+            ],
+            ["a  div --px: 8; --px-md: 12", `padding-inline ${px(cs("a").paddingInlineStart)}`],
+            [
+              "b  button --px: 8; --px-md: 12",
+              `padding-inline ${px(cs("b").paddingInlineStart)} (control ${px(cs("b-control").paddingInlineStart)})`,
+            ],
+            ["c  parent --px: 8", `padding-inline ${px(cs("c").paddingInlineStart)}`],
+            [
+              "c  child (no prop)",
+              `padding-inline ${px(cs("c-child").paddingInlineStart)} · --px "${cs("c-child").getPropertyValue("--px")}"`,
+            ],
+            [
+              "d  flex --gap: 4",
+              `gap ${px(cs("d").columnGap)} · --_gap ${cs("d").getPropertyValue("--_gap").trim()}`,
+            ],
+            [
+              "d  child .basis-1/2",
+              `flex-basis ${cs("d-child").flexBasis} · inline-size ${px(cs("d-child").inlineSize)} (parent ${px(cs("d").inlineSize)})`,
+            ],
+            [
+              "e  --grid-cols: 3",
+              `display ${cs("e").display} · grid-template-columns ${cs("e").gridTemplateColumns}`,
+            ],
+            ["f  --w: 16rem", `inline-size ${px(cs("f").inlineSize)}`],
+            [
+              "g  button (token --step-5)",
+              `padding-inline ${px(cs("g-control").paddingInlineStart)}`,
+            ],
+            ["g  button --px: 8; --px-md: 12", `padding-inline ${px(cs("g").paddingInlineStart)}`],
+            [
+              "h  --mx: auto",
+              `margin-inline ${px(cs("h").marginInlineStart)} · inline-size ${px(cs("h").inlineSize)}`,
+            ],
+            ["h  .mx-auto", `margin-inline ${px(cs("h-control").marginInlineStart)}`],
+          ];
+          const width = Math.max(...rows.map(([label]) => label.length));
+          out.textContent = rows
+            .map(([label, value]) => `${label.padEnd(width)}  ${value}`)
+            .join("\n");
+        };
+
+        render();
+        addEventListener("resize", render);
+      })();
+    </script>
+  </body>
+</html>
