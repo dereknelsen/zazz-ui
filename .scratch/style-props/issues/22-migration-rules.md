@@ -1,7 +1,7 @@
 # 22 — migrations/0.5.0.json + files entry + migrations.test.ts
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 03, 05, 08
 Size: S
 
