@@ -1,0 +1,432 @@
+/**
+ * _utilities-spacing-responsive.css — Responsive spacing style props:
+ * --<prop>-sm … --<prop>-2xl for the 17 props in _utilities-spacing.css.
+ *
+ *   <div style="--px: 4; --px-md: 8; --gap-lg: 6">
+ *
+ * Mobile-first: a base prop applies everywhere, `--px-md` applies once the
+ * nearest size container is 48rem or wider and stays applied above it, and a
+ * larger breakpoint's rule wins by source order (sm → md → lg → xl → 2xl).
+ * Each block is gated on the --bp-* flag from _variables.css, exactly like
+ * the @sm: … @2xl: class prefixes, so a prop and a class at the same
+ * breakpoint agree on when they fire. The subject is the nearest ancestor
+ * size container (body, main, section, article … are inline-size containers
+ * via _reset.css), not the viewport; use --screen-* rules for that.
+ *
+ * Same contract as the base file: unitless step multiplier on
+ * --spacing-interval; the gate is the attribute text with no space before
+ * the colon (`--px-md:`); an unset prop applies nothing; `auto` is invalid;
+ * --gap-<bp> also sets --_gap (--gap-x-<bp>/--gap-y-<bp> set --_gap-x/-y).
+ * Within a block the order is all sides → axes → sides, so
+ * `--p-md: 6; --ps-md: 0` is inline-start 0 at md. Across blocks a later
+ * breakpoint's shorthand beats an earlier breakpoint's longhand
+ * (`--ps-sm: 0; --p-md: 6` is 6 all round at md), the same override
+ * `@sm:ps-0 @md:p-md` gives.
+ *
+ * Opt-in: this file is separate so a page that never writes a responsive
+ * spacing prop can skip its 85 rules (/SPEC.md §5). It must load after
+ * _utilities-spacing.css so a responsive rule outranks the base rule.
+ *
+ * @layer      utilities
+ * @requires   layers.css, _variables.css (--spacing-interval, --bp-*),
+ *             _properties.css (the --p-sm … --gap-y-2xl registrations),
+ *             _utilities.css (--_gap on :root), _utilities-spacing.css
+ * @uses       :where() — zero specificity so a prop stays overridable
+ * @uses       [style*="--x-md:"] — attribute substring gate; matches the source text
+ * @uses       style() queries — @container style(--bp-*: true) on the typed
+ *             breakpoint flags from _variables.css
+ * @see        src/props.ts — the prop registry (names, breakpoints)
+ * @see        docs/adr/0012-style-props.md
+ */
+
+@layer zazz.utilities {
+  @container style(--bp-sm: true) {
+    /* --breakpoint-sm (40rem) and up */
+
+    /* padding — all sides → axes → sides */
+    :where([style*="--p-sm:"]) {
+      padding: calc(var(--p-sm) * var(--spacing-interval));
+    }
+
+    :where([style*="--px-sm:"]) {
+      padding-inline: calc(var(--px-sm) * var(--spacing-interval));
+    }
+
+    :where([style*="--py-sm:"]) {
+      padding-block: calc(var(--py-sm) * var(--spacing-interval));
+    }
+
+    :where([style*="--ps-sm:"]) {
+      padding-inline-start: calc(var(--ps-sm) * var(--spacing-interval));
+    }
+
+    :where([style*="--pe-sm:"]) {
+      padding-inline-end: calc(var(--pe-sm) * var(--spacing-interval));
+    }
+
+    :where([style*="--pt-sm:"]) {
+      padding-block-start: calc(var(--pt-sm) * var(--spacing-interval));
+    }
+
+    :where([style*="--pb-sm:"]) {
+      padding-block-end: calc(var(--pb-sm) * var(--spacing-interval));
+    }
+
+    /* margin */
+    :where([style*="--m-sm:"]) {
+      margin: calc(var(--m-sm) * var(--spacing-interval));
+    }
+
+    :where([style*="--mx-sm:"]) {
+      margin-inline: calc(var(--mx-sm) * var(--spacing-interval));
+    }
+
+    :where([style*="--my-sm:"]) {
+      margin-block: calc(var(--my-sm) * var(--spacing-interval));
+    }
+
+    :where([style*="--ms-sm:"]) {
+      margin-inline-start: calc(var(--ms-sm) * var(--spacing-interval));
+    }
+
+    :where([style*="--me-sm:"]) {
+      margin-inline-end: calc(var(--me-sm) * var(--spacing-interval));
+    }
+
+    :where([style*="--mt-sm:"]) {
+      margin-block-start: calc(var(--mt-sm) * var(--spacing-interval));
+    }
+
+    :where([style*="--mb-sm:"]) {
+      margin-block-end: calc(var(--mb-sm) * var(--spacing-interval));
+    }
+
+    /* gap — coordination vars for .basis-1/N and .grid-cols-* */
+    :where([style*="--gap-sm:"]) {
+      --_gap: calc(var(--gap-sm) * var(--spacing-interval));
+      gap: var(--_gap);
+    }
+
+    :where([style*="--gap-x-sm:"]) {
+      --_gap-x: calc(var(--gap-x-sm) * var(--spacing-interval));
+      column-gap: var(--_gap-x);
+    }
+
+    :where([style*="--gap-y-sm:"]) {
+      --_gap-y: calc(var(--gap-y-sm) * var(--spacing-interval));
+      row-gap: var(--_gap-y);
+    }
+  }
+
+  @container style(--bp-md: true) {
+    /* --breakpoint-md (48rem) and up */
+
+    /* padding — all sides → axes → sides */
+    :where([style*="--p-md:"]) {
+      padding: calc(var(--p-md) * var(--spacing-interval));
+    }
+
+    :where([style*="--px-md:"]) {
+      padding-inline: calc(var(--px-md) * var(--spacing-interval));
+    }
+
+    :where([style*="--py-md:"]) {
+      padding-block: calc(var(--py-md) * var(--spacing-interval));
+    }
+
+    :where([style*="--ps-md:"]) {
+      padding-inline-start: calc(var(--ps-md) * var(--spacing-interval));
+    }
+
+    :where([style*="--pe-md:"]) {
+      padding-inline-end: calc(var(--pe-md) * var(--spacing-interval));
+    }
+
+    :where([style*="--pt-md:"]) {
+      padding-block-start: calc(var(--pt-md) * var(--spacing-interval));
+    }
+
+    :where([style*="--pb-md:"]) {
+      padding-block-end: calc(var(--pb-md) * var(--spacing-interval));
+    }
+
+    /* margin */
+    :where([style*="--m-md:"]) {
+      margin: calc(var(--m-md) * var(--spacing-interval));
+    }
+
+    :where([style*="--mx-md:"]) {
+      margin-inline: calc(var(--mx-md) * var(--spacing-interval));
+    }
+
+    :where([style*="--my-md:"]) {
+      margin-block: calc(var(--my-md) * var(--spacing-interval));
+    }
+
+    :where([style*="--ms-md:"]) {
+      margin-inline-start: calc(var(--ms-md) * var(--spacing-interval));
+    }
+
+    :where([style*="--me-md:"]) {
+      margin-inline-end: calc(var(--me-md) * var(--spacing-interval));
+    }
+
+    :where([style*="--mt-md:"]) {
+      margin-block-start: calc(var(--mt-md) * var(--spacing-interval));
+    }
+
+    :where([style*="--mb-md:"]) {
+      margin-block-end: calc(var(--mb-md) * var(--spacing-interval));
+    }
+
+    /* gap — coordination vars for .basis-1/N and .grid-cols-* */
+    :where([style*="--gap-md:"]) {
+      --_gap: calc(var(--gap-md) * var(--spacing-interval));
+      gap: var(--_gap);
+    }
+
+    :where([style*="--gap-x-md:"]) {
+      --_gap-x: calc(var(--gap-x-md) * var(--spacing-interval));
+      column-gap: var(--_gap-x);
+    }
+
+    :where([style*="--gap-y-md:"]) {
+      --_gap-y: calc(var(--gap-y-md) * var(--spacing-interval));
+      row-gap: var(--_gap-y);
+    }
+  }
+
+  @container style(--bp-lg: true) {
+    /* --breakpoint-lg (64rem) and up */
+
+    /* padding — all sides → axes → sides */
+    :where([style*="--p-lg:"]) {
+      padding: calc(var(--p-lg) * var(--spacing-interval));
+    }
+
+    :where([style*="--px-lg:"]) {
+      padding-inline: calc(var(--px-lg) * var(--spacing-interval));
+    }
+
+    :where([style*="--py-lg:"]) {
+      padding-block: calc(var(--py-lg) * var(--spacing-interval));
+    }
+
+    :where([style*="--ps-lg:"]) {
+      padding-inline-start: calc(var(--ps-lg) * var(--spacing-interval));
+    }
+
+    :where([style*="--pe-lg:"]) {
+      padding-inline-end: calc(var(--pe-lg) * var(--spacing-interval));
+    }
+
+    :where([style*="--pt-lg:"]) {
+      padding-block-start: calc(var(--pt-lg) * var(--spacing-interval));
+    }
+
+    :where([style*="--pb-lg:"]) {
+      padding-block-end: calc(var(--pb-lg) * var(--spacing-interval));
+    }
+
+    /* margin */
+    :where([style*="--m-lg:"]) {
+      margin: calc(var(--m-lg) * var(--spacing-interval));
+    }
+
+    :where([style*="--mx-lg:"]) {
+      margin-inline: calc(var(--mx-lg) * var(--spacing-interval));
+    }
+
+    :where([style*="--my-lg:"]) {
+      margin-block: calc(var(--my-lg) * var(--spacing-interval));
+    }
+
+    :where([style*="--ms-lg:"]) {
+      margin-inline-start: calc(var(--ms-lg) * var(--spacing-interval));
+    }
+
+    :where([style*="--me-lg:"]) {
+      margin-inline-end: calc(var(--me-lg) * var(--spacing-interval));
+    }
+
+    :where([style*="--mt-lg:"]) {
+      margin-block-start: calc(var(--mt-lg) * var(--spacing-interval));
+    }
+
+    :where([style*="--mb-lg:"]) {
+      margin-block-end: calc(var(--mb-lg) * var(--spacing-interval));
+    }
+
+    /* gap — coordination vars for .basis-1/N and .grid-cols-* */
+    :where([style*="--gap-lg:"]) {
+      --_gap: calc(var(--gap-lg) * var(--spacing-interval));
+      gap: var(--_gap);
+    }
+
+    :where([style*="--gap-x-lg:"]) {
+      --_gap-x: calc(var(--gap-x-lg) * var(--spacing-interval));
+      column-gap: var(--_gap-x);
+    }
+
+    :where([style*="--gap-y-lg:"]) {
+      --_gap-y: calc(var(--gap-y-lg) * var(--spacing-interval));
+      row-gap: var(--_gap-y);
+    }
+  }
+
+  @container style(--bp-xl: true) {
+    /* --breakpoint-xl (80rem) and up */
+
+    /* padding — all sides → axes → sides */
+    :where([style*="--p-xl:"]) {
+      padding: calc(var(--p-xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--px-xl:"]) {
+      padding-inline: calc(var(--px-xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--py-xl:"]) {
+      padding-block: calc(var(--py-xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--ps-xl:"]) {
+      padding-inline-start: calc(var(--ps-xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--pe-xl:"]) {
+      padding-inline-end: calc(var(--pe-xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--pt-xl:"]) {
+      padding-block-start: calc(var(--pt-xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--pb-xl:"]) {
+      padding-block-end: calc(var(--pb-xl) * var(--spacing-interval));
+    }
+
+    /* margin */
+    :where([style*="--m-xl:"]) {
+      margin: calc(var(--m-xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--mx-xl:"]) {
+      margin-inline: calc(var(--mx-xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--my-xl:"]) {
+      margin-block: calc(var(--my-xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--ms-xl:"]) {
+      margin-inline-start: calc(var(--ms-xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--me-xl:"]) {
+      margin-inline-end: calc(var(--me-xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--mt-xl:"]) {
+      margin-block-start: calc(var(--mt-xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--mb-xl:"]) {
+      margin-block-end: calc(var(--mb-xl) * var(--spacing-interval));
+    }
+
+    /* gap — coordination vars for .basis-1/N and .grid-cols-* */
+    :where([style*="--gap-xl:"]) {
+      --_gap: calc(var(--gap-xl) * var(--spacing-interval));
+      gap: var(--_gap);
+    }
+
+    :where([style*="--gap-x-xl:"]) {
+      --_gap-x: calc(var(--gap-x-xl) * var(--spacing-interval));
+      column-gap: var(--_gap-x);
+    }
+
+    :where([style*="--gap-y-xl:"]) {
+      --_gap-y: calc(var(--gap-y-xl) * var(--spacing-interval));
+      row-gap: var(--_gap-y);
+    }
+  }
+
+  @container style(--bp-2xl: true) {
+    /* --breakpoint-2xl (96rem) and up */
+
+    /* padding — all sides → axes → sides */
+    :where([style*="--p-2xl:"]) {
+      padding: calc(var(--p-2xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--px-2xl:"]) {
+      padding-inline: calc(var(--px-2xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--py-2xl:"]) {
+      padding-block: calc(var(--py-2xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--ps-2xl:"]) {
+      padding-inline-start: calc(var(--ps-2xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--pe-2xl:"]) {
+      padding-inline-end: calc(var(--pe-2xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--pt-2xl:"]) {
+      padding-block-start: calc(var(--pt-2xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--pb-2xl:"]) {
+      padding-block-end: calc(var(--pb-2xl) * var(--spacing-interval));
+    }
+
+    /* margin */
+    :where([style*="--m-2xl:"]) {
+      margin: calc(var(--m-2xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--mx-2xl:"]) {
+      margin-inline: calc(var(--mx-2xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--my-2xl:"]) {
+      margin-block: calc(var(--my-2xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--ms-2xl:"]) {
+      margin-inline-start: calc(var(--ms-2xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--me-2xl:"]) {
+      margin-inline-end: calc(var(--me-2xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--mt-2xl:"]) {
+      margin-block-start: calc(var(--mt-2xl) * var(--spacing-interval));
+    }
+
+    :where([style*="--mb-2xl:"]) {
+      margin-block-end: calc(var(--mb-2xl) * var(--spacing-interval));
+    }
+
+    /* gap — coordination vars for .basis-1/N and .grid-cols-* */
+    :where([style*="--gap-2xl:"]) {
+      --_gap: calc(var(--gap-2xl) * var(--spacing-interval));
+      gap: var(--_gap);
+    }
+
+    :where([style*="--gap-x-2xl:"]) {
+      --_gap-x: calc(var(--gap-x-2xl) * var(--spacing-interval));
+      column-gap: var(--_gap-x);
+    }
+
+    :where([style*="--gap-y-2xl:"]) {
+      --_gap-y: calc(var(--gap-y-2xl) * var(--spacing-interval));
+      row-gap: var(--_gap-y);
+    }
+  }
+}

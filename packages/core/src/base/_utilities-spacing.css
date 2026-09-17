@@ -1,0 +1,138 @@
+/**
+ * _utilities-spacing.css — Spacing style props: --p/--px/--py/--ps/--pe/--pt/--pb,
+ * --m/--mx/--my/--ms/--me/--mt/--mb, --gap/--gap-x/--gap-y (ADR-0012).
+ *
+ * A style prop is a custom property set in the style attribute and read by a
+ * zero-specificity rule gated on the attribute text:
+ *
+ *   <div style="--px: 6; --gap: 4">   → padding-inline: calc(6 * --spacing-interval)
+ *                                       gap: calc(4 * --spacing-interval)
+ *
+ * Values are unitless step multipliers on --spacing-interval, the scale the
+ * class utilities use: `--px: 6` == `.px-md` (--space-md is --step-6),
+ * `--p: 0` zeroes, and a negative margin (`--mt: -2`) is a negative step.
+ * Only the 17 base forms live here; the responsive forms (--px-md …) are in
+ * _utilities-spacing-responsive.css, an opt-in file that loads after this one.
+ *
+ * Contract:
+ * - The gate is the attribute's source text: `--px` immediately followed by
+ *   the colon. `style="--px: 6"` and `style="--px:6"` match;
+ *   `style="--px : 6"` (space before the colon) does not.
+ *   element.style.setProperty("--px", "6") serializes to the matching form.
+ * - An element that does not set a prop matches no rule: nothing is applied,
+ *   no var() fallback runs, a primitive's own padding stays untouched. Every
+ *   prop is registered `syntax: "*"; inherits: false` in _properties.css, so
+ *   a prop set on a container never surfaces on its children.
+ * - The gate substrings are prefix-free: `--p:` does not match `--px:`,
+ *   `--pt:` or `--p-md:`; `--gap:` does not match `--gap-x:` or `--gap-md:`.
+ * - `auto` is invalid here: `--mx: auto` makes the calc() invalid at
+ *   computed-value time and the margin falls back to 0. Use `.mx-auto`
+ *   (or `.ms-auto` / `.me-auto`) for auto margins.
+ * - Source order resolves overlap, as with the classes: all sides, then axes,
+ *   then single sides, so `--p: 6; --ps: 0` is inline-start 0 and 6 elsewhere.
+ *   A prop beats a class on the same property (this file loads after
+ *   _utilities.css): `class="mx-auto" style="--m: 4"` is margin 4 all round,
+ *   not auto.
+ * - --gap also sets --_gap (--gap-x/--gap-y set --_gap-x/--_gap-y), the
+ *   inheriting coordination vars declared in _utilities.css, so .basis-1/N
+ *   and the .grid-cols-* widths subtract the prop's gap exactly as they do
+ *   for .gap-*. Consumers never write --_gap themselves.
+ *
+ * @layer      utilities
+ * @requires   layers.css, _variables.css (--spacing-interval), _properties.css
+ *             (the --p … --gap-y registrations), _utilities.css (--_gap on :root)
+ * @uses       :where() — zero specificity so a prop stays overridable
+ * @uses       [style*="--x:"] — attribute substring gate; matches the source text
+ * @uses       @property syntax "*" (registered in _properties.css) — a prop is
+ *             guaranteed-invalid until the style attribute sets it
+ * @consumedby _utilities-spacing-responsive.css
+ * @see        src/props.ts — the prop registry (names, target properties)
+ * @see        docs/adr/0012-style-props.md
+ */
+
+@layer zazz.utilities {
+  /* ===========================================================================
+  PADDING — all sides → axes → sides, so a narrower prop wins by source order
+  =========================================================================== */
+
+  :where([style*="--p:"]) {
+    padding: calc(var(--p) * var(--spacing-interval));
+  }
+
+  :where([style*="--px:"]) {
+    padding-inline: calc(var(--px) * var(--spacing-interval));
+  }
+
+  :where([style*="--py:"]) {
+    padding-block: calc(var(--py) * var(--spacing-interval));
+  }
+
+  :where([style*="--ps:"]) {
+    padding-inline-start: calc(var(--ps) * var(--spacing-interval));
+  }
+
+  :where([style*="--pe:"]) {
+    padding-inline-end: calc(var(--pe) * var(--spacing-interval));
+  }
+
+  :where([style*="--pt:"]) {
+    padding-block-start: calc(var(--pt) * var(--spacing-interval));
+  }
+
+  :where([style*="--pb:"]) {
+    padding-block-end: calc(var(--pb) * var(--spacing-interval));
+  }
+
+  /* ===========================================================================
+  MARGIN — all sides → axes → sides; negative steps allowed, `auto` is not
+  =========================================================================== */
+
+  :where([style*="--m:"]) {
+    margin: calc(var(--m) * var(--spacing-interval));
+  }
+
+  :where([style*="--mx:"]) {
+    margin-inline: calc(var(--mx) * var(--spacing-interval));
+  }
+
+  :where([style*="--my:"]) {
+    margin-block: calc(var(--my) * var(--spacing-interval));
+  }
+
+  :where([style*="--ms:"]) {
+    margin-inline-start: calc(var(--ms) * var(--spacing-interval));
+  }
+
+  :where([style*="--me:"]) {
+    margin-inline-end: calc(var(--me) * var(--spacing-interval));
+  }
+
+  :where([style*="--mt:"]) {
+    margin-block-start: calc(var(--mt) * var(--spacing-interval));
+  }
+
+  :where([style*="--mb:"]) {
+    margin-block-end: calc(var(--mb) * var(--spacing-interval));
+  }
+
+  /* ===========================================================================
+  GAP — sets the coordination var that .basis-1/N and .grid-cols-* read
+  =========================================================================== */
+
+  /* --_gap is substituted here, on the container, then inherits as a resolved
+     calc() so a child's flex-basis subtracts the same length the gap uses. */
+  :where([style*="--gap:"]) {
+    --_gap: calc(var(--gap) * var(--spacing-interval));
+    gap: var(--_gap);
+  }
+
+  :where([style*="--gap-x:"]) {
+    --_gap-x: calc(var(--gap-x) * var(--spacing-interval));
+    column-gap: var(--_gap-x);
+  }
+
+  :where([style*="--gap-y:"]) {
+    --_gap-y: calc(var(--gap-y) * var(--spacing-interval));
+    row-gap: var(--_gap-y);
+  }
+}
