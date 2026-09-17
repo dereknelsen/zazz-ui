@@ -346,17 +346,19 @@ export function applyToText(
 ): ApplyResult {
   const counts: Record<string, number> = {};
   const unmappable: Unmappable[] = [];
-  const lines = new LineIndex(text);
   const hit = (id: string): void => {
     counts[id] = (counts[id] ?? 0) + 1;
   };
 
-  // Reports come from the input text; no rewrite below adds or removes a
-  // newline, so its line numbers hold for the output too.
+  // No rewrite below adds or removes a newline, so a line number holds for
+  // input and output alike — but an offset does not (a rename can change a
+  // line's length), so every lookup goes through an index over the very
+  // string the offset was measured in.
+  const inputLines = new LineIndex(text);
   const reportedLines = new Set<number>();
   for (const { needle, id, note } of compiled.manualInText) {
     for (let at = text.indexOf(needle); at !== -1; at = text.indexOf(needle, at + needle.length)) {
-      const line = lines.at(at);
+      const line = inputLines.at(at);
       reportedLines.add(line);
       unmappable.push({ line, snippet: excerpt(text, at), note });
       hit(id);
@@ -365,7 +367,7 @@ export function applyToText(
   if (options.kind === "js" && compiled.classNeedles !== null) {
     const needles = compiled.classNeedles;
     for (const match of text.matchAll(TEMPLATE_LITERAL)) {
-      const line = lines.at(match.index);
+      const line = inputLines.at(match.index);
       if (reportedLines.has(line)) continue;
       // Prefixes that sit inside a class attribute are rewritten below; only the rest is stuck.
       const loose = match[0].replace(CLASS_ATTR, "");
@@ -391,6 +393,8 @@ export function applyToText(
     });
   }
 
+  // Class attribute offsets are measured in the token-rewritten text.
+  const tokenLines = new LineIndex(out);
   out = out.replace(
     CLASS_ATTR,
     (whole, name: string, eq: string, dq?: string, sq?: string, offset?: number) => {
@@ -404,7 +408,7 @@ export function applyToText(
         if (piece.length === 0 || /^\s+$/.test(piece)) return piece;
         for (const { needle, id, note } of compiled.manualInClass) {
           if (!piece.includes(needle)) continue;
-          unmappable.push({ line: lines.at(start), snippet: piece, note });
+          unmappable.push({ line: tokenLines.at(start), snippet: piece, note });
           hit(id);
         }
         const exact = compiled.className.get(piece);
@@ -447,27 +451,40 @@ export function applyToText(
   return { text: out, counts, unmappable };
 }
 
-/** Line lookup by offset via binary search over line starts. */
+/**
+ * Line lookup by offset via binary search over line starts. The starts are
+ * collected on the first lookup, so a file with nothing to report never pays
+ * for the scan.
+ */
 class LineIndex {
-  readonly #starts: number[] = [0];
+  readonly #text: string;
+  #starts: number[] | null = null;
 
   constructor(text: string) {
-    for (let i = text.indexOf("\n"); i !== -1; i = text.indexOf("\n", i + 1)) {
-      this.#starts.push(i + 1);
-    }
+    this.#text = text;
   }
 
   /** 1-based line containing `offset`. */
   at(offset: number): number {
+    const starts = (this.#starts ??= lineStarts(this.#text));
     let low = 0;
-    let high = this.#starts.length - 1;
+    let high = starts.length - 1;
     while (low < high) {
       const mid = (low + high + 1) >> 1;
-      if ((this.#starts[mid] ?? 0) <= offset) low = mid;
+      if ((starts[mid] ?? 0) <= offset) low = mid;
       else high = mid - 1;
     }
     return low + 1;
   }
+}
+
+/** Offset of every line start in `text`, the first being 0. */
+function lineStarts(text: string): number[] {
+  const starts = [0];
+  for (let i = text.indexOf("\n"); i !== -1; i = text.indexOf("\n", i + 1)) {
+    starts.push(i + 1);
+  }
+  return starts;
 }
 
 /** From `start` to the end of its line, whitespace collapsed, capped. */

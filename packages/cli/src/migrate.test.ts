@@ -302,6 +302,21 @@ describe("unmappable", () => {
     expect(result.counts["class-prefix:@xs:"]).toBe(1);
   });
 
+  it("names the right line after an earlier rename changed a line's length", () => {
+    // The `[` report is found in the token-rewritten text; three renames on
+    // line 1 push every later offset by six, past the end of line 2's tail.
+    const html = [":root { --gap-xs: 1; --gap-sm: 2; --gap-md: 3 }", '<i class="[x]">', "<p>"].join(
+      "\n",
+    );
+    const result = run(html);
+    expect(result.text.split("\n")[0]).toBe(
+      ":root { --space-xs: 1; --space-sm: 2; --space-md: 3 }",
+    );
+    expect(result.unmappable).toEqual([
+      { line: 2, snippet: "[x]", note: "arbitrary value; migrate by hand" },
+    ]);
+  });
+
   it("falls back to built-in manual rules when the file omits them", () => {
     const minimal = compile(
       loadRules({
