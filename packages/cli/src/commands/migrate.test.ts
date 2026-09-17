@@ -133,6 +133,39 @@ describe("discoverFiles", () => {
     expect(rel(root, found)).not.toContain("src/zazz/local.css");
   });
 
+  it("prunes the vendored dir however zazz.json spells it (trailing slash)", async () => {
+    const root = await project();
+    const warnings: string[] = [];
+    const found = discoverFiles([], {
+      cwd: root,
+      // The command builds this with path.join(root, config.dir); `dir: "zazz/"` keeps the slash.
+      vendoredDir: path.join(root, "zazz/"),
+      include: [],
+      exclude: [],
+      warn: (message) => warnings.push(message),
+    });
+    expect(rel(root, found)).not.toContain("zazz/base/_layers.css");
+    expect(rel(root, found)).toContain("src/zazz/local.css");
+    expect(warnings).toEqual([]);
+  });
+
+  it('warns and prunes nothing when the vendored dir is the scan root (dir: ".")', async () => {
+    const root = await project();
+    const warnings: string[] = [];
+    const found = discoverFiles([], {
+      cwd: root,
+      vendoredDir: path.join(root, "."),
+      include: [],
+      exclude: [],
+      warn: (message) => warnings.push(message),
+    });
+    expect(rel(root, found)).toContain("zazz/base/_layers.css");
+    expect(rel(root, found)).toContain("src/app.css");
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]).toMatch(/vendored directory \(\.\) is the scan root/);
+    expect(warnings[0]).toMatch(/--exclude/);
+  });
+
   it("takes named files as-is and walks named directories", async () => {
     const root = await project();
     const found = discoverFiles(["docs", "src/app.css", "notes.txt"], {
