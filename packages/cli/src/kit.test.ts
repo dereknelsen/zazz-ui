@@ -121,6 +121,34 @@ describe("loadKitFromDir", () => {
     });
   });
 
+  it("prefers the manifest's BASE_CSS export over index.css", async () => {
+    const manifestJs = `${VALID_MANIFEST_JS}
+export const BASE_CSS = {
+  pre: ["base/_layers.css", "base/_variables.css", "base/_properties.css"],
+  post: ["base/_utilities.css", "base/_utilities-grid.css"],
+};
+`;
+    // An index.css that disagrees is ignored: the export is the kit's word.
+    const dir = await fixtureKitDir({ manifestJs, indexCss: INDEX_CSS_0_5 });
+    const kit = await loadKitFromDir(dir, { version: "0.5.0", integrity: "" });
+    expect(kit.manifest.baseCss).toEqual({
+      pre: ["base/_layers.css", "base/_variables.css", "base/_properties.css"],
+      post: ["base/_utilities.css", "base/_utilities-grid.css"],
+    });
+  });
+
+  it("falls back to index.css when the BASE_CSS export is not { pre, post } of strings", async () => {
+    const manifestJs = `${VALID_MANIFEST_JS}\nexport const BASE_CSS = ["base/_layers.css"];\n`;
+    const dir = await fixtureKitDir({ manifestJs, indexCss: INDEX_CSS_0_5 });
+    const kit = await loadKitFromDir(dir, { version: "0.5.0", integrity: "" });
+    expect(kit.manifest.baseCss?.pre).toEqual([
+      "base/_layers.css",
+      "base/_variables.css",
+      "base/_properties.css",
+      "base/_reset.css",
+    ]);
+  });
+
   it("leaves baseCss unset without an index.css, so plan.ts falls back", async () => {
     const dir = await fixtureKitDir();
     const kit = await loadKitFromDir(dir, { version: "0.4.1", integrity: "" });
