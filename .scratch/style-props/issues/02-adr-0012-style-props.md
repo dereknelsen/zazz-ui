@@ -1,7 +1,7 @@
 # 02 — ADR-0012: style props amend ADR-0008; CONTEXT.md term
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: —
 Size: S
 
