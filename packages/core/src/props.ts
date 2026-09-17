@@ -14,8 +14,14 @@
  * nowhere else.
  *
  * Names are Tailwind roots with no prefix; the only suffix is a breakpoint
- * (`--px-md`). Registered names are global, so the list is a published
- * contract: adding a prop is additive, renaming or removing one is breaking.
+ * (`--px-md`). One exception: a root that collides with an existing token
+ * family, directly or through its responsive forms (`--border`,
+ * `--font-size-md`, `--leading-lg`…), takes the full CSS property name
+ * instead (`border-color`, `line-height`, `letter-spacing`; `text-size` for
+ * font-size), because a registered `inherits: false` name would break every
+ * `var()` read of the token below `:root`. Registered names are global, so
+ * the list is a published contract: adding a prop is additive, renaming or
+ * removing one is breaking.
  *
  * @see ../../docs/adr/0012-style-props.md
  * @see ../../SPEC.md
@@ -123,17 +129,19 @@ const PROPS: readonly StyleProp[] = [
     ["shrink", "flex-shrink"],
     ["order", "order"],
   ]),
-  // color — `--text` is the text color, not a size.
+  // color — `--text` is the text color, not a size. `border-color`, not the
+  // root `border`: `--border` is the theme role token.
   ...family("color", "raw", [
     ["bg", "background-color"],
     ["text", "color"],
-    ["border", "border-color"],
+    ["border-color", "border-color"],
   ]),
-  // typography
+  // typography — full property names: the roots' responsive forms
+  // (`--font-size-md`, `--leading-lg`, `--tracking-sm`) are type-scale tokens.
   ...family("typography", "raw", [
-    ["font-size", "font-size"],
-    ["leading", "line-height"],
-    ["tracking", "letter-spacing"],
+    ["text-size", "font-size"],
+    ["line-height", "line-height"],
+    ["letter-spacing", "letter-spacing"],
   ]),
   // position — logical insets.
   ...family("position", "raw", [

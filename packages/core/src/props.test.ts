@@ -25,8 +25,8 @@ const FROZEN: Record<string, string[]> = {
   sizing: "w h min-w max-w min-h max-h size".split(" "),
   grid: "grid-cols grid-rows col-span row-span".split(" "),
   flex: "basis grow shrink order".split(" "),
-  color: "bg text border".split(" "),
-  typography: "font-size leading tracking".split(" "),
+  color: "bg text border-color".split(" "),
+  typography: "text-size line-height letter-spacing".split(" "),
   position: "top right bottom left inset z".split(" "),
 };
 

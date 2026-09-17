@@ -1,7 +1,7 @@
 # 08 — src/props.ts + generate-properties.mjs + _properties.css + props.test.ts
 
 Type: task
-Status: claimed
+Status: resolved
 Blocked by: 03
 Size: M
 
@@ -30,6 +30,8 @@ Do not edit `index.css` (ticket 16).
 ## Answer
 
 Delivered: `src/props.ts` (registry + `propNames()` + `propertiesCss()` renderer), `scripts/generate-properties.mjs` (thin writer; imports the compiled `src/props.js`, writes only on change), the generated `src/base/_properties.css` (264 registrations, `@layer none`, one comment per family), `src/props.test.ts` (13 tests), and the `properties` script in `package.json`. `index.css`, `head.ts` and `build` untouched (16/19).
+
+Naming follows the spec.md amendment of 2026-09-17 (collision exception, recorded in ADR-0012 too): four roots that collide with token families take the full CSS property name — `border` → `border-color`, `font-size` → `text-size`, `leading` → `line-height`, `tracking` → `letter-spacing`. The `--gap-xs…xl` tokens are removed from `_variables.css` (not aliased; `--gap-sm…xl` are now the `--gap` prop's responsive forms) and `tokens.test.ts` guards that nothing declares or reads them anywhere in `src/**/*.css`. One example still read `var(--gap-md)` inline (`primitives/navigation-menu/navigation-menu-icon-grid.html`); it now reads `--space-md`.
 
 Final prop table (44; `property` is the logical longhand where one exists; `kind` = step: × `--spacing-interval`, raw: passed through). Each takes suffixes `-sm -md -lg -xl -2xl` → 264 names, every one `@property { syntax: "*"; inherits: false; }` with no `initial-value` (the universal syntax leaves the prop guaranteed-invalid until `style=""` sets it, which is what the `[style*="--x:"]` gate needs).
 
@@ -69,10 +71,10 @@ Final prop table (44; `property` is the logical longhand where one exists; `kind
 | flex | order | order | raw |
 | color | bg | background-color | raw |
 | color | text | color | raw |
-| color | border | border-color | raw |
-| typography | font-size | font-size | raw |
-| typography | leading | line-height | raw |
-| typography | tracking | letter-spacing | raw |
+| color | border-color | border-color | raw |
+| typography | text-size | font-size | raw |
+| typography | line-height | line-height | raw |
+| typography | letter-spacing | letter-spacing | raw |
 | position | top | inset-block-start | raw |
 | position | right | inset-inline-end | raw |
 | position | bottom | inset-block-end | raw |
@@ -80,22 +82,10 @@ Final prop table (44; `property` is the logical longhand where one exists; `kind
 | position | inset | inset | raw |
 | position | z | z-index | raw |
 
-**Finding (blocks resolution): 17 of the 264 registered names are already tokens in `_variables.css`.** The collision test (`props.test.ts › collisions › never registers a name _variables.css already declares`) is red on purpose; 12 other tests plus the rest of the package are green.
+Finding that shaped the names (now resolved): with the original roots, 17 of the 264 registered names were already tokens in `_variables.css` — `--border` (theme role), `--gap-{sm,md,lg,xl}` (ticket 03's aliases) and `--font-size-/--leading-/--tracking-{sm,md,lg,xl}` (type scale). An `@property … inherits: false` registration applies to the name globally, so those `var()` reads would have become guaranteed-invalid below `:root` the moment `_properties.css` is imported. Structural cause: the breakpoint suffixes share the t-shirt vocabulary of the size-scale tokens, so any Tailwind root that is also a Zazz token family collides on its responsive forms. The collision test in `props.test.ts` keeps guarding this for future props.
 
-- `--border` — the theme role color token (shadcn-compatible, read by every primitive as `var(--border)`).
-- `--gap-sm`, `--gap-md`, `--gap-lg`, `--gap-xl` — ticket 03's deprecated `--gap-*` aliases (kept until 0.6.0).
-- `--font-size-{sm,md,lg,xl}`, `--leading-{sm,md,lg,xl}`, `--tracking-{sm,md,lg,xl}` — the type-scale tokens.
-
-Why it cannot ship as-is: an `@property … inherits: false` registration applies to the name globally, so `var(--border)`, `var(--font-size-md)`, etc. would become guaranteed-invalid on every element below `:root` the moment `_properties.css` is imported (ticket 16). The structural cause is that the breakpoint suffix vocabulary (`sm md lg xl`) is the same t-shirt vocabulary the size-scale tokens use, so any Tailwind root that is also a Zazz token family (`--<root>-<size>`) collides on its responsive forms.
-
-Options for the spec owner (not decided here; the frozen list was implemented verbatim):
-
-1. `--gap-*` aliases: drop them from `_variables.css` (0.5.0 is breaking anyway and the codemod already rewrites `--gap-*` → `--space-*`). Clears 4.
-2. `--border`: rename the prop (or drop it from the color family → 43 × 6 = 258). Clears 1.
-3. Typography: the tokens must stay, so rename the three props (e.g. `--fs`/`--lh`/`--ls`, or `--text-size`…), or give responsive forms a suffix that cannot be a size name. Clears 12.
-
-Whichever is chosen is a one-line change per name in `PROPS` (and the `FROZEN` table in the test), then `tsc -p tsconfig.json && vp run properties`.
+Verification: `vp test` in `packages/core` 144 passed / 1 skipped (the ticket-27 prefix sweep), `vp check` 0 errors.
 
 ## Comments
 
-- 2026-09-17: implemented per the frozen list; left `Status: claimed` rather than `resolved` because the ticket's own collision check fails on 17 names (see Answer). Tickets 09–15 should stay blocked until the names are settled, otherwise the family files get written against names that will change.
+- 2026-09-17: first pass implemented the frozen list verbatim and left the ticket claimed with the collision test red (17 names). Coordinator recorded the resolution in spec.md (47cca23); second pass applied the renames, removed the `--gap-*` tokens, updated `tokens.test.ts` and ADR-0012, and resolved.
