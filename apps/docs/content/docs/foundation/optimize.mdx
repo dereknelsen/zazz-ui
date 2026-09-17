@@ -1,0 +1,157 @@
+---
+title: Optimize your CSS
+description: "Load only the parts of the kit a page uses: the dist file map, why load order is safe for modular files, a jsDelivr /combine/ recipe, async loading, and measuring with DevTools Coverage."
+---
+
+`dist/zazz.css` is the whole kit in one request. That is the right default for a first page and for any site that uses most of the primitives. A page that uses three primitives and one style-prop family does not need the other thirty-four, and from 0.5.0 the build also emits one minified file per part so it can skip them.
+
+## The dist file map
+
+Every published `dist/` stylesheet, in load order. The map is `DIST_CSS` in `@zazz-ui/core/manifest`, and `scripts/build-dist.mjs` emits exactly these files.
+
+| `dist/` file                       | Contents                                                                                       | Layers                                  |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------- | --------------------------------------- |
+| `layers.css`                       | Only the `@layer` order statement                                                              | none                                    |
+| `base.css`                         | Tokens, style-prop `@property` registrations, reset, typography, view transitions              | `variables`, `reset`, `zazz.components` |
+| `utilities-core.css`               | Class utilities and the `.container` layout grid                                               | `zazz.utilities`                        |
+| `utilities-spacing.css`            | The spacing style props (`--p`, `--px`, `--m`, `--gap` …)                                      | `zazz.utilities`                        |
+| `utilities-spacing-responsive.css` | The responsive spacing forms (`--px-md` …). Opt-in; must follow `utilities-spacing.css`        | `zazz.utilities`                        |
+| `utilities-sizing.css`             | `--w`, `--h`, `--min-w`, `--max-w`, `--min-h`, `--max-h`, `--size`                             | `zazz.utilities`                        |
+| `utilities-grid.css`               | `--grid-cols`, `--grid-rows`, `--col-span`, `--row-span`                                       | `zazz.utilities`                        |
+| `utilities-flex.css`               | `--basis`, `--grow`, `--shrink`, `--order`                                                     | `zazz.utilities`                        |
+| `utilities-color.css`              | `--bg`, `--text`, `--border-color`                                                             | `zazz.utilities`                        |
+| `utilities-typography.css`         | `--text-size`, `--line-height`, `--letter-spacing`                                             | `zazz.utilities`                        |
+| `utilities-position.css`           | `--top`, `--right`, `--bottom`, `--left`, `--inset`, `--z`                                     | `zazz.utilities`                        |
+| `utilities.css`                    | `utilities-core.css` plus every family above, in one file                                      | `zazz.utilities`                        |
+| `primitives/<name>.css`            | One file per primitive, thirty-seven in all (`primitives/button.css`, `primitives/dialog.css`) | `variables`, `reset`, `zazz.components` |
+| `zazz.css`                         | Everything above, in this order (what the CDN snippet on the install page loads)               | all                                     |
+
+The primitives, in cascade order: `separator`, `fields`, `badge`, `kbd`, `button`, `button-group`, `toggle`, `toggle-group`, `accordion`, `table`, `progress`, `meter`, `popover`, `tooltip`, `dialog`, `alert-dialog`, `menu`, `navigation-menu`, `mobile-menu`, `input`, `textarea`, `select`, `autocomplete`, `combobox`, `command`, `checkbox`, `slider`, `switch`, `input-group`, `password-group`, `otp`, `radio`, `tabs`, `carousel`, `lightbox`, `toaster`, `reveal`. Markup-only primitives (avatar, breadcrumbs, card, menubar, toolbar) have no stylesheet of their own; they compose the ones listed.
+
+`base.css` is the floor. Every primitive reads its tokens from `_variables.css`, and every style prop needs its `@property` registration from `_properties.css`, so a modular page always starts with `base.css` and adds files to it.
+
+## Why load order cannot break the layers
+
+Zazz resolves precedence with [cascade layers](/docs/foundation/layers), and a layer's position is fixed by the first `@layer` statement that names it. Each modular file (everything except `layers.css` and `zazz.css`) is prefixed at build time with the bundled layer order, so whichever file the browser parses first establishes `variables, reset, vendors, legacy, zazz, overrides`, and the copies in later files are no-ops. Every rule in the kit sits inside a named layer, so nothing depends on which file happened to open that layer.
+
+The ticket that shipped the modular build tested this directly: `base.css`, `utilities-spacing.css`, and the button closure loaded in reverse order produced byte-for-byte the same computed styles as the forward order.
+
+Two things still depend on order, because the cascade inside one layer is source order:
+
+- `utilities-spacing-responsive.css` must follow `utilities-spacing.css`. Both write the same properties inside `zazz.utilities`; the responsive rule has to come later to win at its breakpoint.
+- Primitives follow the cascade order above. `alert-dialog` restyles parts of `dialog`, so its file comes after `dialog.css`.
+
+Keep the order of the table and both hold. A mistake degrades one rule, not the layer stack.
+
+`layers.css` on its own is for one case: your own stylesheet has to come _before_ any kit file (a vendor reset you load first, say). Link `layers.css`, then yours, then the kit. Otherwise it is redundant; every modular file already carries it.
+
+## Load a primitive's dependency closure
+
+A `dist/` list is a dependency closure, not a wish list. `button.css` reads every metric from the `--ui-field-*` family that `fields.css` owns (padding, font size, line height, border, focus ring) and the `--ui-kbd-*` tokens for a `<kbd>` inside a button. Load `primitives/button.css` alone and a button renders with the prop you set and nothing else: no padding, no border, inherited type.
+
+| Computed on `.ui-button`    | `button.css` alone | With `fields.css` + `kbd.css` | `zazz.css`      |
+| --------------------------- | ------------------ | ----------------------------- | --------------- |
+| `padding-inline`            | 0px                | 10px                          | 10px            |
+| `font-size` / `line-height` | 16px / 25.6px      | 12.8px / 12.8px               | 12.8px / 12.8px |
+| `border-width` / `radius`   | 0px / 0px          | 1px / 10px                    | 1px / 10px      |
+
+The manifest computes the closure so you do not have to:
+
+```js
+import { DIST_CSS, resolveClosure } from "@zazz-ui/core/manifest";
+
+resolveClosure(["button"]); // ["fields", "kbd", "button"], in cascade order
+resolveClosure(["combobox"]); // ["fields", "badge", "kbd", "button", "popover", "select", "combobox"]
+
+Object.keys(DIST_CSS); // every dist/ file, in load order
+```
+
+The `zazz-ui` CLI's `add` and the head builder's granular CDN mode use the same function, so a page that vendors files gets the closure for free.
+
+## One request with jsDelivr `/combine/`
+
+jsDelivr's `/combine/` endpoint concatenates any list of files into one response. The grammar is `https://cdn.jsdelivr.net/combine/` followed by comma-separated `npm/@zazz-ui/core@<version>/dist/<file>` entries, where `<file>` is a key from the table above, in table order, and every entry pins the same exact version.
+
+A page that uses buttons and the spacing props:
+
+```text
+https://cdn.jsdelivr.net/combine/npm/@zazz-ui/core@<version>/dist/base.css,npm/@zazz-ui/core@<version>/dist/utilities-spacing.css,npm/@zazz-ui/core@<version>/dist/primitives/fields.css,npm/@zazz-ui/core@<version>/dist/primitives/kbd.css,npm/@zazz-ui/core@<version>/dist/primitives/button.css
+```
+
+```html
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/combine/npm/@zazz-ui/core@<version>/dist/base.css,…"
+/>
+```
+
+What to expect from the response:
+
+- The body is the listed files concatenated in URL order, already minified. jsDelivr adds a header comment naming the original files and a `sourceMappingURL` trailer.
+- Nothing in `dist/` uses `url()`, `@import`, or `@font-face`, so the response URL (`/combine/…`, not the package path) breaks no reference. Fonts stay the [head's job](/docs/getting-started/head).
+- Exact-version pins are served with `cache-control: public, max-age=31536000, immutable`, the same as a plain `/npm/` URL.
+
+<Callout type="warn">
+  A combined response is generated by jsDelivr, and its header says so: `Do NOT use SRI with dynamically generated files!` A `/combine/` link cannot carry an `integrity` attribute. If your policy requires subresource integrity, link the same `dist/` files individually, one `<link>` each; `dist/sri.json` in every release lists a SHA-384 hash for each of them.
+</Callout>
+
+Scripts are not part of this. `dist/zazz.js` is the only `dist/` script; per-primitive behaviour loads from `src/` as native modules, which is what the head builder's granular mode emits. Combining scripts would also lose the import map's `integrity` section.
+
+## Load it without blocking render
+
+A stylesheet `<link>` in `<head>` blocks the first paint until it arrives, which is what you want for `base.css` and for any primitive visible above the fold: the reset and the tokens are what the first paint is made of. The candidates for deferral are the parts nothing in the first viewport needs, such as `primitives/lightbox.css` and `primitives/carousel.css` on a page whose gallery sits below the fold, or `utilities-spacing-responsive.css` if only a footer uses it.
+
+The portable pattern loads the file as a print stylesheet (non-blocking, low priority) and switches it on once it has arrived:
+
+```html
+<link
+  rel="stylesheet"
+  href="…/dist/primitives/lightbox.css"
+  media="print"
+  onload="this.media='all'"
+/>
+<noscript><link rel="stylesheet" href="…/dist/primitives/lightbox.css" /></noscript>
+```
+
+`rel="preload"` does the same with an explicit fetch priority and the same `onload` swap:
+
+```html
+<link
+  rel="preload"
+  as="style"
+  href="…/dist/primitives/lightbox.css"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+<noscript><link rel="stylesheet" href="…/dist/primitives/lightbox.css" /></noscript>
+```
+
+Two cautions. The content the deferred file styles will render unstyled until it lands, so only defer what is out of view. And `onload=""` is an inline event handler: under a strict `script-src` (no `'unsafe-inline'`, no hashed `'unsafe-hashes'`) the browser refuses to run it and the stylesheet never switches on. In that case insert the `<link>` from a script the policy allows:
+
+```js
+const link = document.createElement("link");
+link.rel = "stylesheet";
+link.href = "…/dist/primitives/lightbox.css";
+document.head.append(link);
+```
+
+Do not defer the single-file `zazz.css` this way. Deferring the reset is a guaranteed flash of unstyled content, and a same-document stylesheet link in `<head>` already loads at the highest network priority, which is also why a `preload` for the blocking stylesheet [is unnecessary](/docs/getting-started/head#stylesheet-link).
+
+## Measure with DevTools Coverage
+
+Chrome's Coverage panel shows how much of a stylesheet a page actually matched. Open DevTools, run **Show Coverage** from the command menu (⌘⇧P / Ctrl+Shift+P), click the reload button in the panel, and interact with the page (open the dialog, scroll to the carousel). Each stylesheet gets a used/unused bar; click it to see the unmatched rules highlighted in the Sources panel.
+
+Read the kit's number with one caveat. The panel treats each enclosing `@layer`, `@media`, `@supports`, and `@container` block as one used range spanning the block's whole body, and everything in Zazz sits inside an `@layer` block. So the panel reports `zazz.css` as almost entirely used (1% unused on the 0.4.1 layout example) and says nothing about dead utilities. The measurement script in the repository drops the block ranges and unions only the matched style rules; that is the figure in the changelog table below, and the figure to use when deciding which `dist/` files a page needs.
+
+## The numbers
+
+From the `@zazz-ui/core` changelog (`node .scratch/style-props/measure.mjs` against a built kit; the 0.5.0 column is filled in when the release is cut, so it reads `tbd` until then):
+
+| Measure                                                                | 0.4.1                                       | 0.5.0 |
+| ---------------------------------------------------------------------- | ------------------------------------------- | ----- |
+| `dist/zazz.css` raw bytes                                              | 304,258                                     | tbd   |
+| brotli bytes (node zlib, q11)                                          | 29,125                                      | tbd   |
+| gzip bytes (node zlib, default level)                                  | 38,281                                      | tbd   |
+| CDN transfer bytes (jsDelivr, `Accept-Encoding: br`)                   | 39,174                                      | tbd   |
+| Coverage on `examples/layout.html`, style rules (Chrome 153, 1280×900) | 60,226 used / 244,032 unused (80.2% unused) | tbd   |
+
+For scale, the 0.4.1 bundle was 128,822 bytes of `@layer zazz.utilities`, 101,296 bytes of `@layer zazz.components`, and 45,125 bytes of `@layer variables`. The modular build's dry run, on a pre-release 0.5.0 build, measured `base.css` + `utilities-spacing.css` + the button closure at 64,740 raw bytes against 338,792 for the full `zazz.css` from the same build: about a fifth of the bundle for a page that uses buttons and spacing props, with computed styles pixel-identical to the bundle. Treat those two figures as a dry run, not a release number; the changelog table is the record.
