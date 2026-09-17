@@ -4,12 +4,15 @@
  * @fileoverview Drift guard for the style prop registry (`props.ts`) and the
  * generated `_properties.css` — the frozen 44-name contract, the 264
  * registrations it expands to, the `syntax: "*"` / `inherits: false` shape of
- * every registration, and the rule that no prop name collides with a token
+ * every registration, the rule that no prop name collides with a token
  * `_variables.css` already declares (a registered name would re-scope that
- * token to `inherits: false` and break every `var()` read on a descendant).
+ * token to `inherits: false` and break every `var()` read on a descendant),
+ * and the hand-written family css: every registered name is gated
+ * (`[style*="--<name>:"]`) in some `_utilities-<family>.css`, and no gate
+ * names an unregistered prop.
  */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vite-plus/test";
@@ -113,6 +116,42 @@ describe("_properties.css", () => {
   it("groups registrations under one comment per family", () => {
     for (const family of Object.keys(FROZEN)) {
       expect(PROPERTIES_CSS).toContain(`/* ${family} — `);
+    }
+  });
+});
+
+describe("_utilities-<family>.css gates", () => {
+  /** Every family file: name → contents with block comments stripped. */
+  const families = new Map(
+    readdirSync(join(SRC, "base"))
+      .filter((file) => /^_utilities-[a-z-]+\.css$/.test(file))
+      .sort()
+      .map((file) => [
+        file,
+        readFileSync(join(SRC, "base", file), "utf8").replace(/\/\*[\s\S]*?\*\//g, ""),
+      ]),
+  );
+  /** The prop names a file gates on, via `[style*="--<name>:"]`. */
+  const gated = (css: string): Set<string> =>
+    new Set([...css.matchAll(/\[style\*="(--[a-z0-9-]+):"\]/g)].map((match) => match[1] ?? ""));
+
+  it("reads the eight family files", () => {
+    expect([...families.keys()]).toHaveLength(8);
+  });
+
+  it("gate every registered prop in at least one family file", () => {
+    // The family css is hand-written against PROPS: a rename here must fail
+    // until the gate follows, or the prop registers and never fires.
+    const everywhere = new Set([...families.values()].flatMap((css) => [...gated(css)]));
+    const ungated = [...propNames()].filter((name) => !everywhere.has(name));
+    expect(ungated, `registered but gated nowhere: ${ungated.join(", ")}`).toEqual([]);
+  });
+
+  it("gate nothing that is not a registered prop", () => {
+    const registered = new Set(propNames());
+    for (const [file, css] of families) {
+      const unknown = [...gated(css)].filter((name) => !registered.has(name));
+      expect(unknown, `${file} gates on unregistered ${unknown.join(", ")}`).toEqual([]);
     }
   });
 });
