@@ -1,7 +1,7 @@
 # 21 — /combine/ dry run + README dist section
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 19, 20
 Size: S
 
