@@ -12,7 +12,7 @@
 
 @layer variables {
   :root {
-    --ui-prose-figcaption-margin: var(--gap-xs) 0 0 0;
+    --ui-prose-figcaption-margin: var(--space-xs) 0 0 0;
     /* 0 preserves the figcaption-margin spacing; a length adds flex gap on top */
     --ui-prose-figcaption-gap: 0px;
     --ui-prose-img-radius: var(--radius-md);
@@ -158,16 +158,16 @@
 
   :where(.ui-prose ul) {
     list-style: disc;
-    padding-inline-start: var(--gap-md);
+    padding-inline-start: var(--space-md);
   }
 
   :where(.ui-prose ol) {
     list-style: decimal;
-    padding-inline-start: var(--gap-md);
+    padding-inline-start: var(--space-md);
   }
 
   :where(.ui-prose dl > dd) {
-    padding-inline-start: var(--gap-md);
+    padding-inline-start: var(--space-md);
   }
 
   :where(.ui-prose dl > dt) {
@@ -179,14 +179,14 @@
   }
 
   :where(.ui-prose blockquote) {
-    padding-inline-start: var(--gap-sm);
+    padding-inline-start: var(--space-sm);
     border-inline-start: 1px solid var(--border);
     font-style: italic;
   }
 
   :where(.ui-prose blockquote > cite) {
     color: var(--muted-foreground);
-    padding-inline-start: var(--gap-xs);
+    padding-inline-start: var(--space-xs);
     font-style: normal;
     font-size: var(--font-size-sm);
     line-height: var(--leading-sm);
@@ -275,11 +275,11 @@
   }
 
   :where(.ui-prose hr:first-child) {
-    margin-block-end: calc(var(--gap-md) * var(--paragraph-spacing-multiplier));
+    margin-block-end: calc(var(--space-md) * var(--paragraph-spacing-multiplier));
   }
 
   :where(.ui-prose hr:not(:first-child)) {
-    margin-block: calc(var(--gap-lg) * var(--paragraph-spacing-multiplier));
+    margin-block: calc(var(--space-lg) * var(--paragraph-spacing-multiplier));
   }
 
   :where(.ui-prose .text-eyebrow + *) {
