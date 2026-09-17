@@ -29,16 +29,16 @@
 
 // --- Contract ---
 
-/** Responsive suffixes, in ascending order: `--px-sm` … `--px-2xl`. */
+/** @description Responsive suffixes, in ascending order: `--px-sm` … `--px-2xl`. */
 const BREAKPOINTS = ["sm", "md", "lg", "xl", "2xl"] as const;
 
 type Breakpoint = (typeof BREAKPOINTS)[number];
 
-/** The utility file a prop's rules live in (`_utilities-<family>.css`). */
+/** @description The utility file a prop's rules live in (`_utilities-<family>.css`). */
 type PropFamily = "spacing" | "sizing" | "grid" | "flex" | "color" | "typography" | "position";
 
 /**
- * How a prop's value reaches its property: `step` multiplies by
+ * @description How a prop's value reaches its property: `step` multiplies by
  * `--spacing-interval` (`--p: 4` → `calc(4 * var(--spacing-interval))`),
  * `raw` passes the value through unchanged.
  */
@@ -81,8 +81,8 @@ function family(
 // --- Registry ---
 
 /**
- * The frozen prop list, in family order. Counts: spacing 17, sizing 7,
- * grid 4, flex 4, color 3, typography 3, position 6 = 44.
+ * @description The frozen prop list, in family order. Counts: spacing 17,
+ * sizing 7, grid 4, flex 4, color 3, typography 3, position 6 = 44.
  */
 const PROPS: readonly StyleProp[] = [
   // spacing — numeric, multiplied by --spacing-interval. `--gap` also sets --_gap.
@@ -175,8 +175,9 @@ function* propNames(): Generator<string, void, undefined> {
 // --- _properties.css ---
 
 /**
- * The CSSDoc header of the generated file. `@layer none`: `@property` is
- * layer-independent, so the file contributes to no cascade layer.
+ * @description The CSSDoc header of the generated file. `@layer none`:
+ * `@property` is layer-independent, so the file contributes to no cascade
+ * layer.
  */
 const PROPERTIES_HEADER = `/**
  * _properties.css — Style prop registrations (@property), one per prop × breakpoint.
@@ -203,7 +204,7 @@ const PROPERTIES_HEADER = `/**
  */
 `;
 
-/** One-line family notes for the generated file's group comments. */
+/** @description One-line family notes for the generated file's group comments. */
 const FAMILY_NOTES: Record<PropFamily, string> = {
   spacing: "numeric, × --spacing-interval",
   sizing: "length, percentage or keyword",
