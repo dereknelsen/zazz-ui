@@ -1,7 +1,7 @@
 # 28 — Hand-convert examples to style props
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 17, 27
 Size: M
 
