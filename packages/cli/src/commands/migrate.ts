@@ -161,6 +161,13 @@ export async function runMigrate(
   if (loaded) {
     loaded.config.migrated = to;
     await saveConfig(loaded.root, loaded.config);
+  } else {
+    // CDN/npm projects have no stamp, so nothing refuses a second --write —
+    // and the chain shifts would move every prefix one more step.
+    ui.warn(
+      `no zazz.json — nothing records that these sources are now at ${to}; ` +
+        "run --write once (a second run would shift the chain shifts again)",
+    );
   }
   ui.outro(
     `${changed.length > 0 ? `Rewrote ${changed.length} file${changed.length === 1 ? "" : "s"}` : "Nothing to rewrite"} for ${to}` +
