@@ -63,6 +63,7 @@ Format: see `docs/agents/issue-tracker.md`. Frontier = open, unblocked, unclaime
 - [34 — Regression: examples-migrated.test.ts + computed-style comparison vs 0.4.1](issues/34-regression-check.md) — blocked by: 27, 28 · S
 - [35 — Release-ready checklist + after-numbers](issues/35-release-ready.md) — blocked by: 18, 20, 21, 25, 26, 29, 30, 31, 32, 33, 34 · S
 - [36 — Codemod gap rules: *-screen-* classes and --container-* tokens](issues/36-codemod-gap-rules.md) — blocked by: 26 · S
+- [37 — CLI: vendor the 0.5 base css list (properties + prop families)](issues/37-cli-base-css-list.md) — blocked by: 16 · S
 
 ## Decisions so far
 
