@@ -1,7 +1,7 @@
 # 34 — Regression: examples-migrated.test.ts + computed-style comparison vs 0.4.1
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 27, 28
 Size: S
 
