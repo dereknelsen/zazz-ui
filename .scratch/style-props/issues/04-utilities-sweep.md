@@ -1,7 +1,7 @@
 # 04 — _utilities.css sweep: --gap-→--space-, flags, breakpoint prefix shift
 
 Type: task
-Status: open
+Status: resolved
 Blocked by: 03
 Size: L
 
@@ -25,5 +25,24 @@ Edit only `_utilities.css` (6758 lines). Names are frozen in `.scratch/style-pro
 Acceptance: `grep -c "is-breakpoint\|--gap-\|@xs" _utilities.css` = 0; rule count unchanged (`grep -o "{" | wc -l` before/after); `vp check` passes.
 
 ## Answer
+
+Done in one simultaneous regex pass (scratch node script, not committed) plus two literal comment edits. `packages/core/src/base/_utilities.css` is the only file touched.
+
+Replacements by kind:
+
+| Kind | Count | Mapping |
+| --- | --- | --- |
+| `var(--gap-*)` → `var(--space-*)` | 261 | same letter (xs 49, sm/md/lg/xl 53 each); values untouched |
+| `style(--is-breakpoint-*)` → `style(--bp-*)` | 10 | shifted: 2 groups × 5 blocks; 40rem block is now `sm`, 96rem is `2xl` |
+| `.\\@X\\:` class prefixes | 410 | shifted xs→sm→md→lg→xl→2xl (82 per prefix before and after) |
+| `var(--breakpoint-*)` reads + block comments | 45 | shifted (9 per name; `--breakpoint-sm` = 40rem now) |
+| `*-screen-*` class suffixes (w/h/size/min/max, inline/block aliases) | 65 | shifted so each class still resolves to the same rem (13 per suffix) |
+| comment prose `--is-breakpoint-*`/`-X` → `--bp-*`/`-X` | 2 | section comment |
+| header `@uses style()` line + responsive section comment + margin comment example (`@xs:-m-…` → `@sm:-m-…`) | 3 | hand/literal edits |
+
+Rule count: 1371 before → 1371 after (`grep -o "{" | wc -l`). Lines 6758 → 6759 (section comment grew by one line).
+Acceptance: `grep -c "is-breakpoint\|--gap-\|@xs" _utilities.css` = 0. `vp check` passes (only pre-existing warning in `scripts/generate-sri.mjs`); `vp test` 15 files / 122 tests pass — no failures attributable to other tickets at this branch tip.
+
+Notes for downstream tickets: `--_gap` (internal coordination var) intentionally untouched; comments that name `@sm:/@md:` as generic examples were left as-is since those prefixes still exist.
 
 ## Comments
