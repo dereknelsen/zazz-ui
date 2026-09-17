@@ -1,0 +1,236 @@
+/**
+ * _utilities-sizing.css — Sizing style props (--w, --h, --min-w, --max-w, --min-h, --max-h, --size).
+ *
+ * A style prop is a custom property set in the `style` attribute and read by a
+ * zero-specificity rule gated on the attribute text (ADR-0012):
+ *
+ *   <div style="--w: 24rem; --w-md: 100%">…</div>
+ *
+ * Values pass through unchanged — any length, percentage or keyword the target
+ * property accepts (`auto`, `max-content`, `fit-content`, `100dvh`, `50%`…).
+ * Each prop maps to the logical property named in src/props.ts:
+ *
+ *   --w      inline-size        --min-w  min-inline-size   --max-w  max-inline-size
+ *   --h      block-size         --min-h  min-block-size    --max-h  max-block-size
+ *   --size   inline-size and block-size (one value, both axes)
+ *
+ * Responsive suffixes `-sm -md -lg -xl -2xl` apply from that breakpoint up,
+ * mobile-first by source order (a later block wins over an earlier one when
+ * several flags are true), gated on the --bp-* container flags.
+ *
+ * Contract:
+ *   - The gate matches the attribute's source text, so the prop name must be
+ *     immediately followed by the colon: `--w: 24rem` (or `--w:24rem`), never
+ *     `--w : 24rem`. `element.style.setProperty("--w", "24rem")` serializes to
+ *     the matching form.
+ *   - An unset prop never applies: an element whose style attribute does not
+ *     name `--w:` matches no rule, so there is no var() fallback and nothing to
+ *     fight the element's own sizing. Base and responsive gates stay
+ *     independent (`--w:` does not occur inside `--w-md:`, and `--w:` does not
+ *     occur inside `--max-w:` or `--min-w:`: the second dash is required).
+ *   - Props are registered `syntax: "*"; inherits: false` in _properties.css,
+ *     so a prop set on a container never surfaces on its children.
+ *
+ * @layer      utilities
+ * @requires   layers.css, _variables.css (--bp-*), _properties.css (@property
+ *             registrations), _utilities.css
+ * @uses       :where() — zero specificity so props stay overridable by any
+ *             later utility and by raw inline style
+ * @uses       [style*="--w:"] — attribute substring selector as the prop gate
+ * @uses       style() queries — read the --bp-* flags (typed @property tokens
+ *             from _variables.css) for the responsive forms
+ * @see        src/props.ts — the prop registry (names, families, kinds)
+ * @see        docs/adr/0012-style-props.md
+ */
+
+@layer zazz.utilities {
+  /* ===========================================================================
+    BASE — every width
+    =========================================================================== */
+  :where([style*="--w:"]) {
+    inline-size: var(--w);
+  }
+
+  :where([style*="--h:"]) {
+    block-size: var(--h);
+  }
+
+  :where([style*="--min-w:"]) {
+    min-inline-size: var(--min-w);
+  }
+
+  :where([style*="--max-w:"]) {
+    max-inline-size: var(--max-w);
+  }
+
+  :where([style*="--min-h:"]) {
+    min-block-size: var(--min-h);
+  }
+
+  :where([style*="--max-h:"]) {
+    max-block-size: var(--max-h);
+  }
+
+  :where([style*="--size:"]) {
+    inline-size: var(--size);
+    block-size: var(--size);
+  }
+
+  /* ===========================================================================
+    RESPONSIVE — from each breakpoint up, sm → 2xl (mobile-first by source order)
+    =========================================================================== */
+  @container style(--bp-sm: true) {
+    :where([style*="--w-sm:"]) {
+      inline-size: var(--w-sm);
+    }
+
+    :where([style*="--h-sm:"]) {
+      block-size: var(--h-sm);
+    }
+
+    :where([style*="--min-w-sm:"]) {
+      min-inline-size: var(--min-w-sm);
+    }
+
+    :where([style*="--max-w-sm:"]) {
+      max-inline-size: var(--max-w-sm);
+    }
+
+    :where([style*="--min-h-sm:"]) {
+      min-block-size: var(--min-h-sm);
+    }
+
+    :where([style*="--max-h-sm:"]) {
+      max-block-size: var(--max-h-sm);
+    }
+
+    :where([style*="--size-sm:"]) {
+      inline-size: var(--size-sm);
+      block-size: var(--size-sm);
+    }
+  }
+
+  @container style(--bp-md: true) {
+    :where([style*="--w-md:"]) {
+      inline-size: var(--w-md);
+    }
+
+    :where([style*="--h-md:"]) {
+      block-size: var(--h-md);
+    }
+
+    :where([style*="--min-w-md:"]) {
+      min-inline-size: var(--min-w-md);
+    }
+
+    :where([style*="--max-w-md:"]) {
+      max-inline-size: var(--max-w-md);
+    }
+
+    :where([style*="--min-h-md:"]) {
+      min-block-size: var(--min-h-md);
+    }
+
+    :where([style*="--max-h-md:"]) {
+      max-block-size: var(--max-h-md);
+    }
+
+    :where([style*="--size-md:"]) {
+      inline-size: var(--size-md);
+      block-size: var(--size-md);
+    }
+  }
+
+  @container style(--bp-lg: true) {
+    :where([style*="--w-lg:"]) {
+      inline-size: var(--w-lg);
+    }
+
+    :where([style*="--h-lg:"]) {
+      block-size: var(--h-lg);
+    }
+
+    :where([style*="--min-w-lg:"]) {
+      min-inline-size: var(--min-w-lg);
+    }
+
+    :where([style*="--max-w-lg:"]) {
+      max-inline-size: var(--max-w-lg);
+    }
+
+    :where([style*="--min-h-lg:"]) {
+      min-block-size: var(--min-h-lg);
+    }
+
+    :where([style*="--max-h-lg:"]) {
+      max-block-size: var(--max-h-lg);
+    }
+
+    :where([style*="--size-lg:"]) {
+      inline-size: var(--size-lg);
+      block-size: var(--size-lg);
+    }
+  }
+
+  @container style(--bp-xl: true) {
+    :where([style*="--w-xl:"]) {
+      inline-size: var(--w-xl);
+    }
+
+    :where([style*="--h-xl:"]) {
+      block-size: var(--h-xl);
+    }
+
+    :where([style*="--min-w-xl:"]) {
+      min-inline-size: var(--min-w-xl);
+    }
+
+    :where([style*="--max-w-xl:"]) {
+      max-inline-size: var(--max-w-xl);
+    }
+
+    :where([style*="--min-h-xl:"]) {
+      min-block-size: var(--min-h-xl);
+    }
+
+    :where([style*="--max-h-xl:"]) {
+      max-block-size: var(--max-h-xl);
+    }
+
+    :where([style*="--size-xl:"]) {
+      inline-size: var(--size-xl);
+      block-size: var(--size-xl);
+    }
+  }
+
+  @container style(--bp-2xl: true) {
+    :where([style*="--w-2xl:"]) {
+      inline-size: var(--w-2xl);
+    }
+
+    :where([style*="--h-2xl:"]) {
+      block-size: var(--h-2xl);
+    }
+
+    :where([style*="--min-w-2xl:"]) {
+      min-inline-size: var(--min-w-2xl);
+    }
+
+    :where([style*="--max-w-2xl:"]) {
+      max-inline-size: var(--max-w-2xl);
+    }
+
+    :where([style*="--min-h-2xl:"]) {
+      min-block-size: var(--min-h-2xl);
+    }
+
+    :where([style*="--max-h-2xl:"]) {
+      max-block-size: var(--max-h-2xl);
+    }
+
+    :where([style*="--size-2xl:"]) {
+      inline-size: var(--size-2xl);
+      block-size: var(--size-2xl);
+    }
+  }
+}
