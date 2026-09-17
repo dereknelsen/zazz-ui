@@ -1,0 +1,194 @@
+/**
+ * _utilities-grid.css — Grid style props: --grid-cols, --grid-rows, --col-span, --row-span.
+ *
+ * A style prop is a custom property set in the style attribute and read by a
+ * zero-specificity rule gated on the attribute text (ADR-0012). Open values
+ * only: a column count a `.grid-cols-N` class does not cover, a span that
+ * changes per breakpoint.
+ *
+ *   <div style="--grid-cols: 3; --grid-cols-md: 5">
+ *     <div style="--col-span: 2">…</div>
+ *   </div>
+ *
+ *   --grid-cols N  display: grid + N equal `minmax(0, 1fr)` columns. Sets
+ *                  --_grid-cols so --col-span and .col-span-N clamp to the
+ *                  track count, exactly as .grid-cols-N does.
+ *   --grid-rows N  N `auto` rows. Sets --_grid-rows so --row-span and
+ *                  .row-span-N clamp to the row count, as .grid-rows-N does.
+ *   --col-span  N  grid-column: span N, clamped to --_grid-cols. When the
+ *                  parent's columns came from neither --grid-cols nor
+ *                  .grid-cols-N the clamp falls back to 1 (mirrors the
+ *                  .col-span-N rule in _utilities.css).
+ *   --row-span  N  grid-row: span N, clamped to --_grid-rows when the parent
+ *                  set it; otherwise the span is unclamped (mirrors .row-span-N).
+ *
+ * Contract:
+ *   - No space before the colon. The gate matches the attribute's source
+ *     text, so the name must be followed immediately by the colon:
+ *     `--grid-cols: 3` matches, `--grid-cols : 3` does not.
+ *     element.style.setProperty("--grid-cols", "3") serializes to the
+ *     matching form.
+ *   - Unset props never apply. A rule only matches when the attribute names
+ *     its prop, so an element with no prop matches nothing here and needs no
+ *     var() fallback. The registrations in _properties.css carry no
+ *     initial-value, so a prop stays guaranteed-invalid until the attribute
+ *     sets it.
+ *   - Responsive forms --<prop>-{sm,md,lg,xl,2xl} apply at or above their
+ *     breakpoint: mobile-first, the later block wins by source order. They
+ *     gate on --bp-* (the nearest size container, not the viewport; see
+ *     _variables.css). The `--grid-cols:` gate never matches
+ *     `--grid-cols-md:` (the colon follows `md`), so the base and responsive
+ *     rules stay independent.
+ *   - Values are integers: each prop is substituted into repeat() or span.
+ *   - --grid-cols sets display: grid in the utilities layer, after the class
+ *     utilities in source order, so it also beats `.hidden` on the same
+ *     element. Use --grid-cols-md (not --grid-cols) for a grid that appears
+ *     at a breakpoint.
+ *   - Props are `inherits: false`; only the private coordination vars
+ *     (--_grid-cols, --_grid-rows) travel to the children that read them.
+ *
+ * @layer      utilities
+ * @requires   layers.css, _variables.css, _properties.css, _utilities.css
+ * @uses       [style*="--x:"] — attribute substring gate, wrapped in :where() for zero specificity
+ * @uses       style() queries — read --bp-* flags (typed @property tokens from _variables.css)
+ * @uses       min() in an <integer> context — the span clamp, as in _utilities.css
+ * @see        src/props.ts — the prop registry (names, families, kinds)
+ * @see        docs/adr/0012-style-props.md
+ */
+
+@layer zazz.utilities {
+  /* ===========================================================================
+    BASE — applies at every width; the @container blocks below refine it.
+    =========================================================================== */
+
+  :where([style*="--grid-cols:"]) {
+    --_grid-cols: var(--grid-cols);
+    display: grid;
+    grid-template-columns: repeat(var(--_grid-cols), minmax(0, 1fr));
+  }
+
+  :where([style*="--grid-rows:"]) {
+    --_grid-rows: var(--grid-rows);
+    grid-template-rows: repeat(var(--_grid-rows), auto);
+  }
+
+  :where([style*="--col-span:"]) {
+    grid-column: span min(var(--col-span), var(--_grid-cols, 1));
+  }
+
+  :where([style*="--row-span:"]) {
+    grid-row: span min(var(--row-span), var(--_grid-rows, var(--row-span)));
+  }
+
+  /* ===========================================================================
+    RESPONSIVE — mobile-first, gated on the breakpoint flags (--bp-sm…2xl at
+    40/48/64/80/96rem, set by the nearest size container in _variables.css).
+    Each block applies at or above its breakpoint; source order lets a wider
+    block win over a narrower one.
+    =========================================================================== */
+
+  @container style(--bp-sm: true) {
+    :where([style*="--grid-cols-sm:"]) {
+      --_grid-cols: var(--grid-cols-sm);
+      display: grid;
+      grid-template-columns: repeat(var(--_grid-cols), minmax(0, 1fr));
+    }
+
+    :where([style*="--grid-rows-sm:"]) {
+      --_grid-rows: var(--grid-rows-sm);
+      grid-template-rows: repeat(var(--_grid-rows), auto);
+    }
+
+    :where([style*="--col-span-sm:"]) {
+      grid-column: span min(var(--col-span-sm), var(--_grid-cols, 1));
+    }
+
+    :where([style*="--row-span-sm:"]) {
+      grid-row: span min(var(--row-span-sm), var(--_grid-rows, var(--row-span-sm)));
+    }
+  }
+
+  @container style(--bp-md: true) {
+    :where([style*="--grid-cols-md:"]) {
+      --_grid-cols: var(--grid-cols-md);
+      display: grid;
+      grid-template-columns: repeat(var(--_grid-cols), minmax(0, 1fr));
+    }
+
+    :where([style*="--grid-rows-md:"]) {
+      --_grid-rows: var(--grid-rows-md);
+      grid-template-rows: repeat(var(--_grid-rows), auto);
+    }
+
+    :where([style*="--col-span-md:"]) {
+      grid-column: span min(var(--col-span-md), var(--_grid-cols, 1));
+    }
+
+    :where([style*="--row-span-md:"]) {
+      grid-row: span min(var(--row-span-md), var(--_grid-rows, var(--row-span-md)));
+    }
+  }
+
+  @container style(--bp-lg: true) {
+    :where([style*="--grid-cols-lg:"]) {
+      --_grid-cols: var(--grid-cols-lg);
+      display: grid;
+      grid-template-columns: repeat(var(--_grid-cols), minmax(0, 1fr));
+    }
+
+    :where([style*="--grid-rows-lg:"]) {
+      --_grid-rows: var(--grid-rows-lg);
+      grid-template-rows: repeat(var(--_grid-rows), auto);
+    }
+
+    :where([style*="--col-span-lg:"]) {
+      grid-column: span min(var(--col-span-lg), var(--_grid-cols, 1));
+    }
+
+    :where([style*="--row-span-lg:"]) {
+      grid-row: span min(var(--row-span-lg), var(--_grid-rows, var(--row-span-lg)));
+    }
+  }
+
+  @container style(--bp-xl: true) {
+    :where([style*="--grid-cols-xl:"]) {
+      --_grid-cols: var(--grid-cols-xl);
+      display: grid;
+      grid-template-columns: repeat(var(--_grid-cols), minmax(0, 1fr));
+    }
+
+    :where([style*="--grid-rows-xl:"]) {
+      --_grid-rows: var(--grid-rows-xl);
+      grid-template-rows: repeat(var(--_grid-rows), auto);
+    }
+
+    :where([style*="--col-span-xl:"]) {
+      grid-column: span min(var(--col-span-xl), var(--_grid-cols, 1));
+    }
+
+    :where([style*="--row-span-xl:"]) {
+      grid-row: span min(var(--row-span-xl), var(--_grid-rows, var(--row-span-xl)));
+    }
+  }
+
+  @container style(--bp-2xl: true) {
+    :where([style*="--grid-cols-2xl:"]) {
+      --_grid-cols: var(--grid-cols-2xl);
+      display: grid;
+      grid-template-columns: repeat(var(--_grid-cols), minmax(0, 1fr));
+    }
+
+    :where([style*="--grid-rows-2xl:"]) {
+      --_grid-rows: var(--grid-rows-2xl);
+      grid-template-rows: repeat(var(--_grid-rows), auto);
+    }
+
+    :where([style*="--col-span-2xl:"]) {
+      grid-column: span min(var(--col-span-2xl), var(--_grid-cols, 1));
+    }
+
+    :where([style*="--row-span-2xl:"]) {
+      grid-row: span min(var(--row-span-2xl), var(--_grid-rows, var(--row-span-2xl)));
+    }
+  }
+}
