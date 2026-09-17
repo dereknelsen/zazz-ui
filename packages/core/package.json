@@ -62,7 +62,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json && vp pack && node scripts/generate-heads.mjs && node scripts/generate-sri.mjs",
+    "build": "tsc -p tsconfig.json && vp pack && node scripts/build-dist.mjs && node scripts/generate-heads.mjs && node scripts/generate-sri.mjs",
+    "dist": "node scripts/build-dist.mjs",
     "sri": "node scripts/generate-sri.mjs",
     "dev": "tsc -p tsconfig.json --watch",
     "heads": "node scripts/generate-heads.mjs",
@@ -82,6 +83,7 @@
     "@types/node": "catalog:",
     "bumpp": "^11.1.0",
     "happy-dom": "catalog:",
+    "lightningcss": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:"
