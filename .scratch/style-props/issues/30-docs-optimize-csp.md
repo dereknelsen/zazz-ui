@@ -1,7 +1,7 @@
 # 30 — Docs: optimize.mdx + csp.mdx
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 21, 27
 Size: M
 
