@@ -1,7 +1,7 @@
 # 31 — Docs: Upgrading to 0.5
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 24, 26, 30
 Size: S
 
