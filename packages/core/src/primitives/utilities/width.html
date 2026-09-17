@@ -19,4 +19,9 @@
     <div class="w-full h-sm bg-secondary rounded-sm"></div>
     <span class="text-xs text-muted-foreground font-strong">w-full</span>
   </div>
+  <!-- Open values: style prop (ADR-0012). --w: 12rem is off the w-* scale (w-xl is 24 steps, about 6rem; the next stop is w-screen-sm at 40rem) -->
+  <div class="flex items-center gap-sm">
+    <div class="h-sm bg-tertiary rounded-sm" style="--w: 12rem"></div>
+    <span class="text-xs text-muted-foreground font-strong">--w: 12rem · style prop</span>
+  </div>
 </div>
