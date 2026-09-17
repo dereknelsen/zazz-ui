@@ -212,8 +212,8 @@ describe("CHANGELOG.md ## 0.5.0", () => {
     expect(block).not.toBeNull();
   });
 
-  // Enable after ticket 26 writes the 0.5.0 block's rename tables.
-  it.skip("lists every non-manual rule as a | `from` | `to` | row", () => {
+  // Forward half: every rule the codemod applies is documented (ticket 26).
+  it("lists every non-manual rule as a | `from` | `to` | row", () => {
     const missing = [...ruleKeys].filter((key) => !rowKeys.has(key));
     expect(missing).toEqual([]);
   });
