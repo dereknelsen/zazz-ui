@@ -87,3 +87,30 @@ describe("serializeConfig", () => {
     expect(serializeConfig(a).endsWith("\n")).toBe(true);
   });
 });
+
+describe("migrated stamp", () => {
+  it("is optional and accepted as a version string", () => {
+    const config = validConfig();
+    expect(() => validateConfig(config, "zazz.json")).not.toThrow();
+    config.migrated = "0.5.0";
+    expect(validateConfig(config, "zazz.json").migrated).toBe("0.5.0");
+  });
+
+  it.each([
+    ["a number", 5],
+    ["an empty string", ""],
+  ])("rejects %s with a pointed message", (_label, value) => {
+    const config = validConfig();
+    Object.assign(config, { migrated: value });
+    expect(() => validateConfig(config, "zazz.json")).toThrow(/migrated must be a version string/);
+  });
+
+  it("serializes right after kit, and only when present", () => {
+    expect(serializeConfig(validConfig())).not.toContain("migrated");
+
+    const config = validConfig();
+    config.migrated = "0.5.0";
+    const keys = Object.keys(JSON.parse(serializeConfig(config)) as Record<string, unknown>);
+    expect(keys.indexOf("migrated")).toBe(keys.indexOf("kit") + 1);
+  });
+});
