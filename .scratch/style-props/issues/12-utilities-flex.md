@@ -1,7 +1,7 @@
 # 12 — _utilities-flex.css style props
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 08
 Size: S
 
