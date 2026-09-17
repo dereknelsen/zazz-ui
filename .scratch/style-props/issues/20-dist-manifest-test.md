@@ -1,7 +1,7 @@
 # 20 — DIST_CSS in manifest + dist.test.ts
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 19
 Size: S
 
