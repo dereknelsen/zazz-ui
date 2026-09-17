@@ -1,7 +1,7 @@
 # 27 — Repo-wide codemod run (serial, sole owner)
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 04, 05, 06, 16, 22, 24, 36
 Size: S
 
