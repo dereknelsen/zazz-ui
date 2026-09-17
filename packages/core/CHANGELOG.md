@@ -43,7 +43,7 @@ Measurements (0.4.1 → 0.5.0), from `node .scratch/style-props/measure.mjs` (bu
 | `@max-lg:` | `@max-xl:`  |
 | `@max-xl:` | `@max-2xl:` |
 
-- **BREAKING** Breakpoint length tokens shift the same step: `--breakpoint-sm` is now 40rem (it was 48rem), and so on up to the new `--breakpoint-2xl` at 96rem; `--breakpoint-xs` no longer exists. The viewport-width utility classes follow the tokens by rem, not by name: `w-screen-sm` (and `h-`, `size-`, `min-`/`max-`, and the `inline-`/`block-` aliases) is now 40rem, where `w-screen-xs` was, and `*-screen-2xl` is new. Migration: `zazz-ui migrate` rewrites the token reads; the `*-screen-*` class suffixes have no rule yet, so shift those by hand (`w-screen-xs` → `w-screen-sm` … `w-screen-xl` → `w-screen-2xl`).
+- **BREAKING** Breakpoint length tokens shift the same step: `--breakpoint-sm` is now 40rem (it was 48rem), and so on up to the new `--breakpoint-2xl` at 96rem; `--breakpoint-xs` no longer exists. The viewport-width utility classes follow the tokens by rem, not by name: `w-screen-sm` (and `h-`, `size-`, `min-`/`max-`, and the `inline-`/`block-` aliases) is now 40rem, where `w-screen-xs` was, and `*-screen-2xl` is new. Migration: `zazz-ui migrate` rewrites the token reads and the `*-screen-*` class names (tabled with the `--container-*` tokens below).
 
 | 0.4               | 0.5                |
 | ----------------- | ------------------ |
@@ -65,7 +65,7 @@ Measurements (0.4.1 → 0.5.0), from `node .scratch/style-props/measure.mjs` (bu
 | `--gap-xl` | `--space-xl`  |
 | —          | `--space-2xl` |
 
-- **BREAKING** `.container` band names shift with the breakpoints: `data-container` values, the `--container-*` line-range variables, and the grid line names all move one step, and each keeps its rem width (`data-container="sm"` is the 40rem band, where `xs` was; `2xl` is the new 96rem band next to `full` and `bleed`). The default band is now `var(--container-lg)`, the same 64rem that `var(--container-md)` was. The article variant follows: `data-container="sm"` reads 45ch (`--article-xs`) … `2xl` reads 75ch (`--article-xl`), so every reading width is unchanged and the `--article-*` tokens are not renamed. Migration: `zazz-ui migrate` rewrites `data-container` attribute values; if your own CSS reads `var(--container-xs)` … `var(--container-xl)` or places children on `container-xs-start` … `container-xl-end`, shift those names one step by hand (`xs` → `sm` … `xl` → `2xl`).
+- **BREAKING** `.container` band names shift with the breakpoints: `data-container` values, the `--container-*` line-range variables, and the grid line names all move one step, and each keeps its rem width (`data-container="sm"` is the 40rem band, where `xs` was; `2xl` is the new 96rem band next to `full` and `bleed`). The default band is now `var(--container-lg)`, the same 64rem that `var(--container-md)` was. The article variant follows: `data-container="sm"` reads 45ch (`--article-xs`) … `2xl` reads 75ch (`--article-xl`), so every reading width is unchanged and the `--article-*` tokens are not renamed. Migration: `zazz-ui migrate` rewrites `data-container` attribute values and every `--container-*` read (tabled below); grid line names are not tokens, so if your own CSS places children on `container-xs-start` … `container-xl-end`, shift those one step by hand (`xs` → `sm` … `xl` → `2xl`).
 
 | 0.4                 | 0.5                  |
 | ------------------- | -------------------- |
@@ -84,6 +84,84 @@ Measurements (0.4.1 → 0.5.0), from `node .scratch/style-props/measure.mjs` (bu
 | xl → 2xl         | 96rem        | `container-2xl-start` / `container-2xl-end`     |
 | full             | gutters kept | `container-full-start` / `container-full-end`   |
 | bleed            | edge to edge | `container-bleed-start` / `container-bleed-end` |
+
+- **BREAKING** `*-screen-*` classes and `--container-*` tokens shift with the breakpoints. The viewport-width utilities (`w-`, `h-`, `size-`, `min-w-`, `min-h-`, `max-w-`, `max-h-` and their `inline-`/`block-` aliases, each `-screen-<size>`) read `--breakpoint-<size>`, and the `.container` line-range variables `--container-<size>` name the band, so both take the new names and keep their rem: `w-screen-sm` and `var(--container-sm)` are the 40rem width, where `-xs` was; the `-2xl` forms are new and `-xs` is gone. Both are chains, like the prefixes above. Migration: `zazz-ui migrate` rewrites the class names in `class` attributes and CSS selectors and the token reads everywhere; nothing is aliased.
+
+| 0.4              | 0.5               |
+| ---------------- | ----------------- |
+| `--container-xs` | `--container-sm`  |
+| `--container-sm` | `--container-md`  |
+| `--container-md` | `--container-lg`  |
+| `--container-lg` | `--container-xl`  |
+| `--container-xl` | `--container-2xl` |
+
+| 0.4                    | 0.5                     |
+| ---------------------- | ----------------------- |
+| `w-screen-xs`          | `w-screen-sm`           |
+| `w-screen-sm`          | `w-screen-md`           |
+| `w-screen-md`          | `w-screen-lg`           |
+| `w-screen-lg`          | `w-screen-xl`           |
+| `w-screen-xl`          | `w-screen-2xl`          |
+| `inline-screen-xs`     | `inline-screen-sm`      |
+| `inline-screen-sm`     | `inline-screen-md`      |
+| `inline-screen-md`     | `inline-screen-lg`      |
+| `inline-screen-lg`     | `inline-screen-xl`      |
+| `inline-screen-xl`     | `inline-screen-2xl`     |
+| `h-screen-xs`          | `h-screen-sm`           |
+| `h-screen-sm`          | `h-screen-md`           |
+| `h-screen-md`          | `h-screen-lg`           |
+| `h-screen-lg`          | `h-screen-xl`           |
+| `h-screen-xl`          | `h-screen-2xl`          |
+| `block-screen-xs`      | `block-screen-sm`       |
+| `block-screen-sm`      | `block-screen-md`       |
+| `block-screen-md`      | `block-screen-lg`       |
+| `block-screen-lg`      | `block-screen-xl`       |
+| `block-screen-xl`      | `block-screen-2xl`      |
+| `size-screen-xs`       | `size-screen-sm`        |
+| `size-screen-sm`       | `size-screen-md`        |
+| `size-screen-md`       | `size-screen-lg`        |
+| `size-screen-lg`       | `size-screen-xl`        |
+| `size-screen-xl`       | `size-screen-2xl`       |
+| `max-w-screen-xs`      | `max-w-screen-sm`       |
+| `max-w-screen-sm`      | `max-w-screen-md`       |
+| `max-w-screen-md`      | `max-w-screen-lg`       |
+| `max-w-screen-lg`      | `max-w-screen-xl`       |
+| `max-w-screen-xl`      | `max-w-screen-2xl`      |
+| `max-inline-screen-xs` | `max-inline-screen-sm`  |
+| `max-inline-screen-sm` | `max-inline-screen-md`  |
+| `max-inline-screen-md` | `max-inline-screen-lg`  |
+| `max-inline-screen-lg` | `max-inline-screen-xl`  |
+| `max-inline-screen-xl` | `max-inline-screen-2xl` |
+| `max-h-screen-xs`      | `max-h-screen-sm`       |
+| `max-h-screen-sm`      | `max-h-screen-md`       |
+| `max-h-screen-md`      | `max-h-screen-lg`       |
+| `max-h-screen-lg`      | `max-h-screen-xl`       |
+| `max-h-screen-xl`      | `max-h-screen-2xl`      |
+| `max-block-screen-xs`  | `max-block-screen-sm`   |
+| `max-block-screen-sm`  | `max-block-screen-md`   |
+| `max-block-screen-md`  | `max-block-screen-lg`   |
+| `max-block-screen-lg`  | `max-block-screen-xl`   |
+| `max-block-screen-xl`  | `max-block-screen-2xl`  |
+| `min-w-screen-xs`      | `min-w-screen-sm`       |
+| `min-w-screen-sm`      | `min-w-screen-md`       |
+| `min-w-screen-md`      | `min-w-screen-lg`       |
+| `min-w-screen-lg`      | `min-w-screen-xl`       |
+| `min-w-screen-xl`      | `min-w-screen-2xl`      |
+| `min-inline-screen-xs` | `min-inline-screen-sm`  |
+| `min-inline-screen-sm` | `min-inline-screen-md`  |
+| `min-inline-screen-md` | `min-inline-screen-lg`  |
+| `min-inline-screen-lg` | `min-inline-screen-xl`  |
+| `min-inline-screen-xl` | `min-inline-screen-2xl` |
+| `min-h-screen-xs`      | `min-h-screen-sm`       |
+| `min-h-screen-sm`      | `min-h-screen-md`       |
+| `min-h-screen-md`      | `min-h-screen-lg`       |
+| `min-h-screen-lg`      | `min-h-screen-xl`       |
+| `min-h-screen-xl`      | `min-h-screen-2xl`      |
+| `min-block-screen-xs`  | `min-block-screen-sm`   |
+| `min-block-screen-sm`  | `min-block-screen-md`   |
+| `min-block-screen-md`  | `min-block-screen-lg`   |
+| `min-block-screen-lg`  | `min-block-screen-xl`   |
+| `min-block-screen-xl`  | `min-block-screen-2xl`  |
 
 - New **style props** (ADR-0012): 44 props, each with five responsive forms (`-sm` … `-2xl`), 264 registrations in `src/base/_properties.css`, every one `@property { syntax: "*"; inherits: false }` with no initial value. Set them inline and the matching rule in `@layer zazz.utilities` applies: `style="--px: 4; --grid-cols-md: 3"`. Families and names — spacing (numeric, multiplied by `--spacing-interval`): `p px py ps pe pt pb m mx my ms me mt mb gap gap-x gap-y`; sizing: `w h min-w max-w min-h max-h size`; grid: `grid-cols grid-rows col-span row-span`; flex: `basis grow shrink order`; color: `bg text border-color`; typography: `text-size line-height letter-spacing`; position (logical): `top right bottom left inset z`. Four names are the full CSS property rather than the Tailwind root because the root collides with a token family through its responsive forms: `border-color` (not `border`), `text-size` (not `font-size`), `line-height` (not `leading`), `letter-spacing` (not `tracking`). `--gap` also sets `--_gap`, and `--grid-cols` implies `display: grid` and sets `--_grid-cols`, so `.basis-1/N` and the span utilities keep agreeing with them. Rules are gated on the attribute text (`:where([style*="--px:"])`), so an element with no prop matches no rule; responsive forms live inside `@container style(--bp-md: true)` and so answer the nearest size container, like the `@md:` classes. Primitives never read props; the utilities layer sits above `zazz.components`, so `style="--px: 8"` on a `ui-button` wins. Props live in the `style` attribute and are not a CSP workaround. The registry is `src/props.ts` (`vp run properties` regenerates the CSS); the rules are one file per family, `src/base/_utilities-<family>.css`. Adding a prop is additive; renaming or removing one is breaking.
 - New `--screen-sm` … `--screen-2xl` **viewport flags**, the `@media` twins of the `--bp-*` container flags: same scale (40/48/64/80/96rem), same registration, set on `:root` by `@media (width >= …)` and inherited everywhere. Gate on `style(--screen-md: true)` when a rule should answer the viewport rather than the nearest container.
