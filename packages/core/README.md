@@ -24,7 +24,7 @@ From a CDN:
 
 Use an exact version in CDN URLs. Each release includes `dist/sri.json`, which lists the SHA-384 hash for every published file. Use those hashes in `integrity` attributes.
 
-You can also copy files directly. Each primitive has a folder under `src/primitives/<name>/` containing its stylesheet, script, and HTML examples. A `zazz-ui` CLI for copying primitives and their dependencies is planned.
+You can also copy files directly. Each primitive has a folder under `src/primitives/<name>/` containing its stylesheet, script, and HTML examples. The `zazz-ui` CLI does this for you with provenance: `init` vendors the base, `add` copies a primitive with its dependencies, `update` and `diff` move or preview a vendored copy against a newer version, and `migrate` rewrites your own sources for a version's renames.
 
 ## Load only what you use
 
