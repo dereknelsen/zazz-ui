@@ -10,8 +10,10 @@
  * the breakpoint suffixes each one takes, and renders the `@property`
  * registrations that `scripts/generate-properties.mjs` writes to
  * `src/base/_properties.css`. The utility files (`_utilities-<family>.css`)
- * and `props.test.ts` read this list, so a prop is added or renamed here and
- * nowhere else.
+ * are hand-written against this list; `props.test.ts` guards that every
+ * registered name has its `[style*="--<name>:"]` gate in one of them and that
+ * no gate names an unregistered prop, so a prop added or renamed here fails
+ * until the CSS follows.
  *
  * Names are Tailwind roots with no prefix; the only suffix is a breakpoint
  * (`--px-md`). One exception: a root that collides with an existing token
