@@ -208,6 +208,37 @@ describe("class-prefix / class rules", () => {
     // The escaped form is css-only: the same text in html is untouched.
     expect(run(css, "html").text).toBe(css);
   });
+
+  it("rewrites escaped selectors inside <style> blocks of markup, and nowhere else", () => {
+    const html = [
+      "<html><head>",
+      '<style media="screen">',
+      "  .\\@xs\\:grid { display: grid; }",
+      "  .stack-tight {} .\\@max-xl\\:hidden {}",
+      "</style>",
+      "</head><body>",
+      '<div class="@xs:grid">.\\@xs\\:grid in prose</div>',
+      "<STYLE>.\\@sm\\:flex {}</STYLE>",
+      "</body></html>",
+    ].join("\n");
+    const result = run(html, "html");
+    expect(result.text.split("\n").slice(2, 4)).toEqual([
+      "  .\\@sm\\:grid { display: grid; }",
+      "  .stack-sm {} .\\@max-2xl\\:hidden {}",
+    ]);
+    expect(result.text.split("\n")[6]).toBe('<div class="@sm:grid">.\\@xs\\:grid in prose</div>');
+    expect(result.text.split("\n")[7]).toBe("<STYLE>.\\@md\\:flex {}</STYLE>");
+    expect(result.counts["class-prefix:@xs:"]).toBe(2);
+    expect(result.counts["class-prefix:@sm:"]).toBe(1);
+    expect(result.counts["class:stack-tight"]).toBe(1);
+    // Other kinds never carry a <style> block worth parsing.
+    expect(run("<style>.\\@xs\\:grid {}</style>", "md").text).toBe(
+      "<style>.\\@xs\\:grid {}</style>",
+    );
+    expect(run("const s = `<style>.\\\\@xs\\\\:grid {}</style>`;", "js").text).toBe(
+      "const s = `<style>.\\\\@xs\\\\:grid {}</style>`;",
+    );
+  });
 });
 
 describe("attr-value rules", () => {
