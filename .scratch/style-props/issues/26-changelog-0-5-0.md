@@ -1,7 +1,7 @@
 # 26 — CHANGELOG 0.5.0 entry
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 01, 22
 Size: S
 
