@@ -257,7 +257,7 @@ The token contract in the frontmatter is what lets you be bold without the resul
 - **Commit to a direction** — one cohesive, opinionated aesthetic true to the brand, not a safe average. Vary between light and dark, different type pairings, different atmospheres across generations.
 - **Distinctive typography** — pair the brand's sans with a classic serif italic (Playfair Display Italic, Cormorant Garamond Italic) on emphasis words ("_quality_", "_trusted_") for editorial cadence, and use the full scale for real hierarchy: a genuine `text-display`/`text-h1` moment against calm body copy, not five near-identical sizes. Always adopt the brand's real typefaces — never default to generic system fonts.
 - **Commit to the palette** — a dominant surface with sharp brand accents reads as _designed_; timid, evenly-distributed grays read as slop. The frontmatter ships no default palette — fill it from the brand and make its colors the point.
-- **Compose with tension** — break the centered stack. Play full-bleed imagery against capped text columns, use the left-label layout, overlap layers, and let section rhythm (`--gap-xl`, 96px) open real negative space. Asymmetry and generous whitespace are choices, not accidents.
+- **Compose with tension** — break the centered stack. Play full-bleed imagery against capped text columns, use the left-label layout, overlap layers, and let section rhythm (`--space-xl`, 96px) open real negative space. Asymmetry and generous whitespace are choices, not accidents.
 - **Build atmosphere, not flat fills** — layer depth from tokens: gradient washes across a brand scale (`--primary-600` → `--primary-900`), `shade`/`tint` transparencies, subtle noise/grain, decorative `--border` rules, and emotive photography. (Keep surfaces flat and reserve `--shadow-*` for genuine elevation — atmosphere lives in the background, not on every card.)
 - **Spend motion where it counts** — one orchestrated page-load with staggered reveals delights more than scattered micro-interactions. Use `--spring-easing` / `--spring-duration` for confident, unhurried movement and scroll reveals for narrative pacing.
 - **Balance conversion mechanics with brand storytelling** — clear CTAs and product grids alongside testimonials, messaging, and premium photography.
@@ -267,7 +267,7 @@ The token contract in the frontmatter is what lets you be bold without the resul
 - **Never use generic AI aesthetics** — no cold tech minimalism, cliched startup palettes, sterile layouts, or the lazy violet-gradient-on-white centered hero. Designs must feel unique to the brand.
 - **Use Zazz tokens exclusively** — never hardcode colors, spacing, radii, shadows, or typography. Use `var(--token-name)`.
 - **Typography via `text-*` classes** — never compose type from individual size/weight/leading utilities.
-- **Spacing via `--gap-*` semantic scale** — never use arbitrary px/rem values.
+- **Spacing via `--space-*` semantic scale** — never use arbitrary px/rem values.
 - **Dark mode for free** — role tokens auto-swap; never write separate dark-mode overrides for token-handled values.
 
 ---
@@ -415,7 +415,7 @@ CSS-first grouped radio inputs wrapped in `<ui-tabs>`. Segmented control with sl
 
 ### Cards (composition pattern)
 
-`--card` / `--card-foreground`, `1px solid var(--border)`, `--radius-lg`. Padding: `--gap-md`. Figure: `--radius-md`, aspect 3/2.
+`--card` / `--card-foreground`, `1px solid var(--border)`, `--radius-lg`. Padding: `--space-md`. Figure: `--radius-md`, aspect 3/2.
 
 ### Forms
 
@@ -429,23 +429,23 @@ Shared `--ui-field-*` tokens unify `.ui-input`, `.ui-textarea`, `.ui-select`, `.
 
 | Markup                               | Result                                                         | Purpose                    |
 | ------------------------------------ | -------------------------------------------------------------- | -------------------------- |
-| `.container`                         | Subgrid band system; children land in the `md` band by default | Full-width content wrapper |
+| `.container`                         | Subgrid band system; children land in the `lg` band by default | Full-width content wrapper |
 | `.container[data-variant="article"]` | Centered reading width (`--article-lg` 70ch by default)        | Reading-width content      |
 
-`.container` is a subgrid spanning its region; each direct child drops into a band (`xs sm md lg xl`
+`.container` is a subgrid spanning its region; each direct child drops into a band (`sm md lg xl 2xl`
 cap + center at that breakpoint, `full` = region minus gutters, `bleed` = edge to edge). Set the band
 per child with `data-container="…"`, or the default for all children with `data-container="…"`
 on the container. No wrapper div needed. See `references/tokens.md` §7 for the full model.
 
 ### Spacing
 
-| Token      | Computed | Use For                                |
-| ---------- | -------- | -------------------------------------- |
-| `--gap-xs` | 8px      | Tight grouping, button rows            |
-| `--gap-sm` | 16px     | Default component gap, gutters         |
-| `--gap-md` | 24px     | Card padding, section internal spacing |
-| `--gap-lg` | 44px     | Large component separation             |
-| `--gap-xl` | 96px     | Section-level vertical rhythm          |
+| Token        | Computed | Use For                                |
+| ------------ | -------- | -------------------------------------- |
+| `--space-xs` | 8px      | Tight grouping, button rows            |
+| `--space-sm` | 16px     | Default component gap, gutters         |
+| `--space-md` | 24px     | Card padding, section internal spacing |
+| `--space-lg` | 44px     | Large component separation             |
+| `--space-xl` | 96px     | Section-level vertical rhythm          |
 
 Utility classes: `.gap-*`, `.p-*`, `.px-*`, `.py-*`, `.m-*`, `.mx-*`, `.my-*` at each size (xs/sm/md/lg/xl).
 
@@ -494,7 +494,7 @@ Spring easing (`--spring-easing`) with 0.333s duration. Fallback: `cubic-bezier(
 
 ### Breakpoints
 
-`--breakpoint-xs` (640px) · `--breakpoint-sm` (768px) · `--breakpoint-md` (1024px) · `--breakpoint-lg` (1280px) · `--breakpoint-xl` (1536px)
+`--breakpoint-sm` (640px) · `--breakpoint-md` (768px) · `--breakpoint-lg` (1024px) · `--breakpoint-xl` (1280px) · `--breakpoint-2xl` (1536px)
 
 ---
 

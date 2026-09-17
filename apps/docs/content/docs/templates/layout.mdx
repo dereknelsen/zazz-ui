@@ -9,9 +9,9 @@ This is the working companion to [layout and containers](/docs/core-concepts/lay
 
 ## What to look at
 
-- **Every band in sequence.** The first section places a labeled block in each band, so you can see exactly how `xs` through `xl`, `full`, and `bleed` relate at any viewport width. Drag the window narrower and watch the bands merge into the gutters with no snapping.
+- **Every band in sequence.** The first section places a labeled block in each band, so you can see exactly how `sm` through `2xl`, `full`, and `bleed` relate at any viewport width. Drag the window narrower and watch the bands merge into the gutters with no snapping.
 - **A container-wide default.** The second section sets `data-container` on the container itself, shifting every child at once.
-- **The responsive handoff.** The `@md:container` block is a plain full-width element below `md` and a band subgrid above it. Its inverse, `@max-md:container`, is the pattern to study: a centered band container on small screens that becomes a two-column grid on large ones, with no media queries in sight.
+- **The responsive handoff.** The `@lg:container` block is a plain full-width element below `lg` and a band subgrid above it. Its inverse, `@max-lg:container`, is the pattern to study: a centered band container on small screens that becomes a two-column grid on large ones, with no media queries in sight.
 - **The article measure.** The last section uses `data-variant="article"` for `ch`-based reading widths instead of breakpoint bands.
 
 ## Source

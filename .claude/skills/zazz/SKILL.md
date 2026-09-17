@@ -54,7 +54,7 @@ Start at the most semantic layer; get specific only when nothing semantic fits. 
 keeps designs consistent and reusable — you compose from a shared vocabulary instead of
 writing net-new CSS every time.
 
-- **Spacing** → `--gap-*` (or `.gap-* .p-* .py-*` utilities) first; `--step-*` only when no
+- **Spacing** → `--space-*` (or `.gap-* .p-* .py-*` utilities) first; `--step-*` only when no
   gap fits. Never a raw px/rem.
 - **Color** → theme **role** tokens (`--background`, `--foreground`, `--muted-foreground`,
   `--primary`, `--border`, `--destructive`…) so light/dark swap for free; literal scales

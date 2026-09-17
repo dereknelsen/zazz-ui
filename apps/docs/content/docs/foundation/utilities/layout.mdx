@@ -12,7 +12,7 @@ Place a `.container` as a direct child of `main`, `section`, `header`, `footer`,
 ```html
 <section>
   <div class="container">
-    <h1>Title in the default md band</h1>
+    <h1>Title in the default lg band</h1>
     <p>Body copy aligned to the same band.</p>
   </div>
 </section>
@@ -22,11 +22,11 @@ Place a `.container` as a direct child of `main`, `section`, `header`, `footer`,
 
 | Band           | Max width                  | Use                                      |
 | -------------- | -------------------------- | ---------------------------------------- |
-| `xs`           | `--breakpoint-xs` (40rem)  | Narrow column                            |
-| `sm`           | `--breakpoint-sm` (48rem)  | Forms, card layouts                      |
-| `md` (default) | `--breakpoint-md` (64rem)  | Standard content width                   |
-| `lg`           | `--breakpoint-lg` (80rem)  | Wide sections                            |
-| `xl`           | `--breakpoint-xl` (96rem)  | Dashboards and galleries                 |
+| `sm`           | `--breakpoint-sm` (40rem)  | Narrow column                            |
+| `md`           | `--breakpoint-md` (48rem)  | Forms, card layouts                      |
+| `lg` (default) | `--breakpoint-lg` (64rem)  | Standard content width                   |
+| `xl`           | `--breakpoint-xl` (80rem)  | Wide sections                            |
+| `2xl`          | `--breakpoint-2xl` (96rem) | Dashboards and galleries                 |
 | `full`         | Region width minus gutters | Edge-aligned rows retaining page gutters |
 | `bleed`        | 100% viewport/region width | Full-bleed media and color bands         |
 
@@ -36,9 +36,9 @@ Place a `.container` as a direct child of `main`, `section`, `header`, `footer`,
 
 ```html
 <section>
-  <div class="container" data-container="lg">
+  <div class="container" data-container="xl">
     <h2>Wide section</h2>
-    <p>Children align to the lg band.</p>
+    <p>Children align to the xl band.</p>
   </div>
 </section>
 ```
@@ -64,7 +64,7 @@ Place a `.container` as a direct child of `main`, `section`, `header`, `footer`,
 
 ```html
 <section>
-  <div class="@max-md:container grid @md:grid-cols-2 gap-lg">...</div>
+  <div class="@max-lg:container grid @lg:grid-cols-2 gap-lg">...</div>
 </section>
 ```
 
@@ -74,7 +74,7 @@ Add `data-variant="article"` to center content constrained by `ch` units:
 
 ```html
 <article>
-  <div class="container" data-variant="article" data-container="md">
+  <div class="container" data-variant="article" data-container="lg">
     <h1>Reading column</h1>
     <p>Constrained to 65ch line length with gutters.</p>
   </div>
@@ -83,11 +83,11 @@ Add `data-variant="article"` to center content constrained by `ch` units:
 
 | Value          | Measure |
 | -------------- | ------- |
-| `xs`           | 45ch    |
-| `sm`           | 50ch    |
-| `md`           | 65ch    |
-| `lg` (default) | 70ch    |
-| `xl`           | 75ch    |
+| `sm`           | 45ch    |
+| `md`           | 50ch    |
+| `lg`           | 65ch    |
+| `xl` (default) | 70ch    |
+| `2xl`          | 75ch    |
 
 ## Display
 
@@ -124,14 +124,14 @@ Add `data-variant="article"` to center content constrained by `ch` units:
 
 Offsets use logical inset properties, so they follow the writing mode. `start-*` / `end-*` are equivalent aliases of `left-*` / `right-*`.
 
-| Class                                    | Declaration                             |
-| ---------------------------------------- | --------------------------------------- |
-| `inset-0`                                | `inset: 0`                              |
-| `inset-xs` to `inset-xl`                 | `inset: var(--gap-{size})`              |
-| `top-*` (`0`, `xs` to `xl`)              | `inset-block-start: var(--gap-{size})`  |
-| `bottom-*` (`0`, `xs` to `xl`)           | `inset-block-end: var(--gap-{size})`    |
-| `left-*` / `start-*` (`0`, `xs` to `xl`) | `inset-inline-start: var(--gap-{size})` |
-| `right-*` / `end-*` (`0`, `xs` to `xl`)  | `inset-inline-end: var(--gap-{size})`   |
+| Class                                    | Declaration                               |
+| ---------------------------------------- | ----------------------------------------- |
+| `inset-0`                                | `inset: 0`                                |
+| `inset-xs` to `inset-xl`                 | `inset: var(--space-{size})`              |
+| `top-*` (`0`, `xs` to `xl`)              | `inset-block-start: var(--space-{size})`  |
+| `bottom-*` (`0`, `xs` to `xl`)           | `inset-block-end: var(--space-{size})`    |
+| `left-*` / `start-*` (`0`, `xs` to `xl`) | `inset-inline-start: var(--space-{size})` |
+| `right-*` / `end-*` (`0`, `xs` to `xl`)  | `inset-inline-end: var(--space-{size})`   |
 
 ```html
 <div class="relative">
