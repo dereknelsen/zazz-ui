@@ -14,7 +14,6 @@ import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import chalk from "chalk";
-import { structuredPatch } from "diff";
 import { compareVersions, sliceChangelog } from "../changelog.ts";
 import { type ZazzConfig, loadConfig } from "../config.ts";
 import { ZazzError } from "../errors.ts";
@@ -22,6 +21,7 @@ import { type ResolvedKit, kitSpec, resolveKit } from "../kit.ts";
 import { loadFetchOptions } from "../npmrc.ts";
 import { isBinary } from "../merge.ts";
 import { baseFiles, primitiveFiles } from "../plan.ts";
+import { renderFileDiff as renderTextDiff } from "../render-diff.ts";
 import { createUi } from "../ui.ts";
 import { sha256 } from "../vendor.ts";
 import { appendJsImports, renderHead, renderIndexCss, renderIndexJs } from "../wiring.ts";
@@ -267,28 +267,9 @@ function renderFileDiff(
     return `${chalk.bold(file)}${badge} ${chalk.yellow("— binary files differ")}`;
   }
 
-  const patch = structuredPatch(
-    file,
-    file,
-    mineBuf.toString("utf8"),
-    theirsBuf.toString("utf8"),
-    undefined,
-    undefined,
-    { context: 3 },
-  );
-  if (patch.hunks.length === 0) return null;
-  const lines: string[] = [`${chalk.bold(file)}${badge}`];
-  for (const hunk of patch.hunks) {
-    lines.push(
-      chalk.cyan(`@@ -${hunk.oldStart},${hunk.oldLines} +${hunk.newStart},${hunk.newLines} @@`),
-    );
-    for (const line of hunk.lines) {
-      if (line.startsWith("+")) lines.push(chalk.green(line));
-      else if (line.startsWith("-")) lines.push(chalk.red(line));
-      else lines.push(chalk.dim(line));
-    }
-  }
-  return lines.join("\n");
+  return renderTextDiff(file, mineBuf.toString("utf8"), theirsBuf.toString("utf8"), {
+    heading: `${chalk.bold(file)}${badge}`,
+  });
 }
 
 function sortedByCascade(names: string[], kit: ResolvedKit): string[] {

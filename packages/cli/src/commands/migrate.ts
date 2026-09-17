@@ -20,8 +20,8 @@
 import { type Dirent, existsSync, globSync, statSync } from "node:fs";
 import { readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { stripVTControlCharacters } from "node:util";
 import chalk from "chalk";
-import { structuredPatch } from "diff";
 import { compareVersions } from "../changelog.ts";
 import { type ZazzConfig, loadConfig, saveConfig } from "../config.ts";
 import { ZazzError } from "../errors.ts";
@@ -38,6 +38,7 @@ import {
   ruleId,
 } from "../migrate.ts";
 import { loadFetchOptions } from "../npmrc.ts";
+import { renderFileDiff } from "../render-diff.ts";
 import { type Ui, createUi } from "../ui.ts";
 import { type GlobalFlags, parseVersionArg } from "./init.ts";
 
@@ -127,7 +128,8 @@ export async function runMigrate(
   const unmappable = results.filter((result) => result.unmappable.length > 0);
 
   for (const result of changed) {
-    ui.step(renderFileDiff(path.relative(cwd, result.file), result.before, result.after));
+    const rendered = renderFileDiff(path.relative(cwd, result.file), result.before, result.after);
+    if (rendered !== null) ui.step(rendered);
   }
   const counts = renderRuleCounts(compiled, results);
   if (counts) ui.step(counts);
@@ -314,6 +316,13 @@ export interface DiscoverOptions {
   warn?: (message: string) => void;
 }
 
+/** One file to scan, with the engine kind its extension maps to. */
+export interface ScannedFile {
+  /** Absolute path. */
+  file: string;
+  kind: FileKind;
+}
+
 /**
  * @description Resolves positional paths (default: cwd) to the absolute files
  * to scan. Directories are walked for the scanned extensions, skipping
@@ -324,20 +333,24 @@ export interface DiscoverOptions {
  * without scanning nothing, so the walk warns and scans it — the path was
  * asked for.
  *
- * @returns Absolute paths, deduplicated and sorted.
+ * @returns The files with their kinds, deduplicated and sorted by path.
  */
-export function discoverFiles(paths: string[], options: DiscoverOptions): string[] {
+export function discoverFiles(paths: string[], options: DiscoverOptions): ScannedFile[] {
   const { cwd } = options;
   const vendoredDir = options.vendoredDir === null ? null : path.resolve(options.vendoredDir);
   const targets = paths.length > 0 ? paths.map((p) => path.resolve(cwd, p)) : [cwd];
-  const found = new Set<string>();
+  const found = new Map<string, FileKind>();
+  const add = (file: string): void => {
+    const kind = fileKindOf(file);
+    if (kind !== null) found.set(file, kind);
+  };
 
   for (const target of targets) {
     if (!existsSync(target)) {
       throw new ZazzError(`no such file or directory: ${path.relative(cwd, target) || target}`);
     }
     if (statSync(target).isFile()) {
-      if (fileKindOf(target) !== null) found.add(target);
+      add(target);
       continue;
     }
     if (vendoredDir === target) {
@@ -355,7 +368,7 @@ export function discoverFiles(paths: string[], options: DiscoverOptions): string
       },
     });
     for (const entry of entries) {
-      if (entry.isFile()) found.add(path.join(entry.parentPath, entry.name));
+      if (entry.isFile()) add(path.join(entry.parentPath, entry.name));
     }
   }
 
@@ -364,16 +377,16 @@ export function discoverFiles(paths: string[], options: DiscoverOptions): string
     globs.some((glob) => path.matchesGlob(relPosix(file), glob));
 
   return [...found]
-    .filter((file) => options.include.length === 0 || matches(file, options.include))
-    .filter((file) => !matches(file, options.exclude))
-    .sort();
+    .filter(([file]) => options.include.length === 0 || matches(file, options.include))
+    .filter(([file]) => !matches(file, options.exclude))
+    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+    .map(([file, kind]) => ({ file, kind }));
 }
 
 // --- Application ---
 
 interface FileResult {
   file: string;
-  kind: FileKind;
   before: string;
   after: string;
   counts: Record<string, number>;
@@ -381,38 +394,19 @@ interface FileResult {
 }
 
 /** Runs the compiled rules over every file; binary files are skipped. */
-async function applyToFiles(files: string[], compiled: Compiled): Promise<FileResult[]> {
+async function applyToFiles(files: ScannedFile[], compiled: Compiled): Promise<FileResult[]> {
   const results: FileResult[] = [];
-  for (const file of files) {
-    const kind = fileKindOf(file);
-    if (kind === null) continue;
+  for (const { file, kind } of files) {
     const buffer = await readFile(file);
     if (isBinary(buffer)) continue;
     const before = buffer.toString("utf8");
     const { text, counts, unmappable } = applyToText(before, compiled, { kind });
-    results.push({ file, kind, before, after: text, counts, unmappable });
+    results.push({ file, before, after: text, counts, unmappable });
   }
   return results;
 }
 
 // --- Rendering ---
-
-/** One file's coloured unified diff (the `diff` command's rendering, for text). */
-function renderFileDiff(file: string, before: string, after: string): string {
-  const patch = structuredPatch(file, file, before, after, undefined, undefined, { context: 3 });
-  const lines: string[] = [chalk.bold(file)];
-  for (const hunk of patch.hunks) {
-    lines.push(
-      chalk.cyan(`@@ -${hunk.oldStart},${hunk.oldLines} +${hunk.newStart},${hunk.newLines} @@`),
-    );
-    for (const line of hunk.lines) {
-      if (line.startsWith("+")) lines.push(chalk.green(line));
-      else if (line.startsWith("-")) lines.push(chalk.red(line));
-      else lines.push(chalk.dim(line));
-    }
-  }
-  return lines.join("\n");
-}
 
 /** Hits per rule in declaration order; null when no rule fired. */
 function renderRuleCounts(compiled: Compiled, results: FileResult[]): string | null {
@@ -430,17 +424,13 @@ function renderRuleCounts(compiled: Compiled, results: FileResult[]): string | n
   const labels = rows.map(({ rule }) =>
     rule.kind === "manual" ? `${rule.from} ${chalk.dim("(by hand)")}` : `${rule.from} → ${rule.to}`,
   );
-  const width = Math.max(...labels.map((label) => stripAnsi(label).length));
+  const visible = (label: string): number => stripVTControlCharacters(label).length;
+  const width = Math.max(...labels.map(visible));
   return [
     "Rules applied:",
     ...rows.map(
       ({ count }, index) =>
-        `  ${labels[index]}${" ".repeat(width - stripAnsi(labels[index] ?? "").length)}  ${chalk.bold(String(count))}`,
+        `  ${labels[index]}${" ".repeat(width - visible(labels[index] ?? ""))}  ${chalk.bold(String(count))}`,
     ),
   ].join("\n");
-}
-
-function stripAnsi(text: string): string {
-  // eslint-disable-next-line no-control-regex -- terminal escape sequences
-  return text.replace(/\[[0-9;]*m/g, "");
 }
