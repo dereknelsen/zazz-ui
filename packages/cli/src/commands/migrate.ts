@@ -9,14 +9,16 @@
  * rewrites in place and, in a vendored project, stamps `migrated: <to>` in
  * zazz.json so the next run refuses to shift the sources twice (the chain
  * shifts in the engine are simultaneous within a run, not idempotent across
- * runs). Rules come from `migrations/<to>.json` inside the resolved kit
- * tarball (read the way `update` reads CHANGELOG.md) or from `--rules <file>`.
+ * runs). Rules come from `migrations/<version>.json` inside the resolved kit
+ * tarball (read the way `update` reads CHANGELOG.md; a patch release without
+ * its own file falls back to the newest one that applies) or from
+ * `--rules <file>`.
  * Only the project's own sources are scanned: `node_modules`, `dist`, `.git`
  * and the vendored `dir` are skipped — vendored files move via `update`.
  */
 
 import { type Dirent, existsSync, globSync, statSync } from "node:fs";
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import chalk from "chalk";
 import { structuredPatch } from "diff";
@@ -87,9 +89,9 @@ export async function runMigrate(
   const loaded = await loadConfig(cwd);
 
   ui.intro("zazz-ui migrate");
-  const rules = await loadRuleSet(flags, { cwd, global, ui });
-  const to = rules.to;
   const from = resolveFrom(flags.from, loaded?.config ?? null);
+  const rules = await loadRuleSet(flags, { cwd, from, global, ui });
+  const to = rules.to;
   if (compareVersions(from, to) >= 0) {
     throw new ZazzError(`already migrated: this project is at ${from}, the rules target ${to}`, {
       hint:
@@ -182,13 +184,14 @@ export async function runMigrate(
 
 /**
  * @description Loads the rule set: `--rules <file>` read locally (no network),
- * else `migrations/<version>.json` from the resolved kit at `--to`.
+ * else the rules the resolved kit at `--to` ships for a project at `from`
+ * (see `locateRules`).
  */
 async function loadRuleSet(
   flags: MigrateFlags,
-  context: { cwd: string; global: GlobalFlags; ui: Ui },
+  context: { cwd: string; from: string; global: GlobalFlags; ui: Ui },
 ): Promise<Rules> {
-  const { cwd, global, ui } = context;
+  const { cwd, from, global, ui } = context;
 
   if (flags.rules !== undefined) {
     const file = path.resolve(cwd, flags.rules);
@@ -220,17 +223,55 @@ async function loadRuleSet(
     () => resolveKit(kitSpec(version), fetch),
     (resolved) => `Migrating to @zazz-ui/core@${resolved.version}`,
   );
-  const relPath = path.posix.join("migrations", `${kit.version}.json`);
-  const file = path.join(kit.extractDir, "migrations", `${kit.version}.json`);
-  let text: string;
-  try {
-    text = await readFile(file, "utf8");
-  } catch {
-    throw new ZazzError(`@zazz-ui/core@${kit.version} ships no migration rules (${relPath})`, {
-      hint: "pick a version that has a migration with --to @<version>, or pass --rules <file>",
-    });
+  const relPath = await locateRules(kit.extractDir, { version: kit.version, from });
+  if (relPath === null) {
+    throw new ZazzError(
+      `@zazz-ui/core@${kit.version} ships no migration rules for a project at ${from} ` +
+        `(no ${MIGRATIONS_DIR}/<version>.json above ${from} and up to ${kit.version})`,
+      { hint: "pick a version that has a migration with --to @<version>, or pass --rules <file>" },
+    );
   }
+  const text = await readFile(path.join(kit.extractDir, ...relPath.split("/")), "utf8");
   return loadRules(text, `@zazz-ui/core@${kit.version}/${relPath}`);
+}
+
+/** Where a kit tarball keeps its rules files, relative to the package root. */
+const MIGRATIONS_DIR = "migrations";
+
+const RULES_FILE = /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)\.json$/;
+
+/**
+ * @description Picks the rules file an extracted kit ships for a project at
+ * `from`: `migrations/<kit version>.json` when it exists, else the newest
+ * `migrations/<version>.json` whose version is at most the kit's and above
+ * `from` — a 0.5.1 tarball still carries only `0.5.0.json`, and that is the
+ * migration a 0.4 project needs. Null when nothing applies.
+ *
+ * @param extractDir - Root of the extracted package.
+ * @param kit - The kit's exact version and the version the sources are on.
+ * @returns The rules file's package-relative posix path, or null.
+ */
+export async function locateRules(
+  extractDir: string,
+  kit: { version: string; from: string },
+): Promise<string | null> {
+  const rulesPath = (version: string): string => path.posix.join(MIGRATIONS_DIR, `${version}.json`);
+  let names: string[];
+  try {
+    names = await readdir(path.join(extractDir, MIGRATIONS_DIR));
+  } catch {
+    return null;
+  }
+  const versions = names.flatMap((name) => {
+    const version = RULES_FILE.exec(name)?.[1];
+    return version === undefined ? [] : [version];
+  });
+  if (versions.includes(kit.version)) return rulesPath(kit.version);
+  const applicable = versions
+    .filter((v) => compareVersions(v, kit.version) < 0 && compareVersions(v, kit.from) > 0)
+    .sort(compareVersions);
+  const newest = applicable.at(-1);
+  return newest === undefined ? null : rulesPath(newest);
 }
 
 /**
