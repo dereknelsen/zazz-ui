@@ -7,12 +7,12 @@ Layout utilities control display mode, positioning, overflow, stacking, and page
 
 ## Containers
 
-Place a `.container` as a direct child of `main`, `section`, `header`, `footer`, or `article`. The region becomes a layout grid of width bands, and each direct child of the container is placed into a band. See [Layout and containers](/docs/core-concepts/layout) for how the system works and how it differs from a fixed-width container.
+Place a `.container` as a direct child of `main`, `section`, `header`, `footer`, or `article`. The region becomes a layout grid of width bands, and each direct child of the container is placed into a band. The bands are named after the breakpoint scale (`sm` to `2xl`, 40 to 96rem), with `lg` as the default. See [Layout and containers](/docs/core-concepts/layout) for how the system works and how it differs from a fixed-width container.
 
 ```html
 <section>
   <div class="container">
-    <h1>Title in the default md band</h1>
+    <h1>Title in the default lg band</h1>
     <p>Body copy aligned to the same band.</p>
   </div>
 </section>
@@ -22,11 +22,11 @@ Place a `.container` as a direct child of `main`, `section`, `header`, `footer`,
 
 | Band           | Max width                  | Use                                      |
 | -------------- | -------------------------- | ---------------------------------------- |
-| `xs`           | `--breakpoint-xs` (40rem)  | Narrow column                            |
-| `sm`           | `--breakpoint-sm` (48rem)  | Forms, card layouts                      |
-| `md` (default) | `--breakpoint-md` (64rem)  | Standard content width                   |
-| `lg`           | `--breakpoint-lg` (80rem)  | Wide sections                            |
-| `xl`           | `--breakpoint-xl` (96rem)  | Dashboards and galleries                 |
+| `sm`           | `--breakpoint-sm` (40rem)  | Narrow column                            |
+| `md`           | `--breakpoint-md` (48rem)  | Forms, card layouts                      |
+| `lg` (default) | `--breakpoint-lg` (64rem)  | Standard content width                   |
+| `xl`           | `--breakpoint-xl` (80rem)  | Wide sections                            |
+| `2xl`          | `--breakpoint-2xl` (96rem) | Dashboards and galleries                 |
 | `full`         | Region width minus gutters | Edge-aligned rows retaining page gutters |
 | `bleed`        | 100% viewport/region width | Full-bleed media and color bands         |
 
@@ -36,9 +36,9 @@ Place a `.container` as a direct child of `main`, `section`, `header`, `footer`,
 
 ```html
 <section>
-  <div class="container" data-container="lg">
+  <div class="container" data-container="xl">
     <h2>Wide section</h2>
-    <p>Children align to the lg band.</p>
+    <p>Children align to the xl band.</p>
   </div>
 </section>
 ```
@@ -60,11 +60,11 @@ Place a `.container` as a direct child of `main`, `section`, `header`, `footer`,
 
 ### Responsive variants
 
-`@md:container` is a band container from its breakpoint up and a plain block below. `@max-md:container` is the inverse: a container only below the breakpoint, falling back to the element's other classes above it (useful for handing off to a grid).
+`@md:container` is a band container from its breakpoint (48rem) up and a plain block below. `@max-md:container` is the inverse: a container only below the breakpoint, falling back to the element's other classes above it (useful for handing off to a grid). Both take any of the five prefixes, `sm` to `2xl`.
 
 ```html
 <section>
-  <div class="@max-md:container grid @md:grid-cols-2 gap-lg">...</div>
+  <div class="@max-lg:container grid @lg:grid-cols-2 gap-lg">...</div>
 </section>
 ```
 
@@ -74,7 +74,7 @@ Add `data-variant="article"` to center content constrained by `ch` units:
 
 ```html
 <article>
-  <div class="container" data-variant="article" data-container="md">
+  <div class="container" data-variant="article" data-container="lg">
     <h1>Reading column</h1>
     <p>Constrained to 65ch line length with gutters.</p>
   </div>
@@ -83,11 +83,11 @@ Add `data-variant="article"` to center content constrained by `ch` units:
 
 | Value          | Measure |
 | -------------- | ------- |
-| `xs`           | 45ch    |
-| `sm`           | 50ch    |
-| `md`           | 65ch    |
-| `lg` (default) | 70ch    |
-| `xl`           | 75ch    |
+| `sm`           | 45ch    |
+| `md`           | 50ch    |
+| `lg`           | 65ch    |
+| `xl` (default) | 70ch    |
+| `2xl`          | 75ch    |
 
 ## Display
 
@@ -124,20 +124,24 @@ Add `data-variant="article"` to center content constrained by `ch` units:
 
 Offsets use logical inset properties, so they follow the writing mode. `start-*` / `end-*` are equivalent aliases of `left-*` / `right-*`.
 
-| Class                                    | Declaration                             |
-| ---------------------------------------- | --------------------------------------- |
-| `inset-0`                                | `inset: 0`                              |
-| `inset-xs` to `inset-xl`                 | `inset: var(--gap-{size})`              |
-| `top-*` (`0`, `xs` to `xl`)              | `inset-block-start: var(--gap-{size})`  |
-| `bottom-*` (`0`, `xs` to `xl`)           | `inset-block-end: var(--gap-{size})`    |
-| `left-*` / `start-*` (`0`, `xs` to `xl`) | `inset-inline-start: var(--gap-{size})` |
-| `right-*` / `end-*` (`0`, `xs` to `xl`)  | `inset-inline-end: var(--gap-{size})`   |
+| Class                                    | Declaration                               |
+| ---------------------------------------- | ----------------------------------------- |
+| `inset-0`                                | `inset: 0`                                |
+| `inset-xs` to `inset-xl`                 | `inset: var(--space-{size})`              |
+| `top-*` (`0`, `xs` to `xl`)              | `inset-block-start: var(--space-{size})`  |
+| `bottom-*` (`0`, `xs` to `xl`)           | `inset-block-end: var(--space-{size})`    |
+| `left-*` / `start-*` (`0`, `xs` to `xl`) | `inset-inline-start: var(--space-{size})` |
+| `right-*` / `end-*` (`0`, `xs` to `xl`)  | `inset-inline-end: var(--space-{size})`   |
 
 ```html
 <div class="relative">
   <span class="absolute top-sm right-sm ui-badge" data-variant="primary">New</span>
 </div>
 ```
+
+### Open values: use a style prop
+
+For an offset off the scale, set a [style prop](/docs/core-concepts/style-props): `style="--top: 1rem; --left-md: 2rem; --z: 10"`. `--top`, `--right`, `--bottom`, `--left`, `--inset`, and `--z` pass any value (a length, percentage, `auto`, `anchor()`, an integer for `--z`) to the same logical inset properties, take `-sm` to `-2xl` responsive suffixes, and do not set `position`, so pair them with a position class as above.
 
 ## Overflow
 

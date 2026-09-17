@@ -17,7 +17,7 @@ description: The cascade layer architecture that lets utility classes override c
 }
 ```
 
-`index.css` imports `_layers.css` first to establish this ordering before rules are defined.
+`index.css` imports `_layers.css` first to establish this ordering before rules are defined. The rest of the bundle follows in cascade order: `_variables.css`, `_properties.css`, `_reset.css`, `_typography.css`, `_view-transitions.css`, the primitives, `_utilities.css`, `_layout.css`, and then the style-prop family files `_utilities-spacing.css`, `_utilities-spacing-responsive.css`, `_utilities-sizing.css`, `_utilities-grid.css`, `_utilities-flex.css`, `_utilities-color.css`, `_utilities-typography.css`, and `_utilities-position.css`.
 
 ## Layer precedence
 
@@ -33,19 +33,21 @@ Later layers override earlier layers regardless of selector specificity:
 
 Priority order runs from lowest to highest:
 
-| Layer               | Purpose                                                    | File                                                                    |
-| ------------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------- |
-| `variables`         | Design tokens on `:root`                                   | [`_variables.css`](/docs/foundation/variables) + component token blocks |
-| `reset`             | Element baselines and control resets                       | [`_reset.css`](/docs/foundation/reset)                                  |
-| `vendors`           | Third-party CSS that does not build on Zazz                | `@import … layer(vendors)`                                              |
-| `legacy.imports`    | Whole pre-Zazz stylesheets, imported as-is                 | `@import … layer(legacy.imports)`                                       |
-| `legacy.components` | Curated legacy component CSS                               | Your legacy CSS, split out                                              |
-| `legacy.utilities`  | Curated legacy utility CSS                                 | Your legacy CSS, split out                                              |
-| `legacy.migrations` | Temporary translation shims for legacy class migration     | Custom `migrations.css`                                                 |
-| `zazz.components`   | Component rules                                            | `primitives/<name>/<name>.css`                                          |
-| `zazz.plugins`      | Zazz-dependent extensions (new primitives, added variants) | Plugin stylesheets, `layer(zazz.plugins)`                               |
-| `zazz.utilities`    | Atomic utility classes                                     | [`_utilities.css`](/docs/foundation/utilities)                          |
-| `overrides`         | Your app's deliberate overrides of anything below          | Your app CSS                                                            |
+| Layer               | Purpose                                                    | File                                                                                     |
+| ------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `variables`         | Design tokens on `:root`                                   | [`_variables.css`](/docs/foundation/variables) + component token blocks                  |
+| `reset`             | Element baselines and control resets                       | [`_reset.css`](/docs/foundation/reset)                                                   |
+| `vendors`           | Third-party CSS that does not build on Zazz                | `@import … layer(vendors)`                                                               |
+| `legacy.imports`    | Whole pre-Zazz stylesheets, imported as-is                 | `@import … layer(legacy.imports)`                                                        |
+| `legacy.components` | Curated legacy component CSS                               | Your legacy CSS, split out                                                               |
+| `legacy.utilities`  | Curated legacy utility CSS                                 | Your legacy CSS, split out                                                               |
+| `legacy.migrations` | Temporary translation shims for legacy class migration     | Custom `migrations.css`                                                                  |
+| `zazz.components`   | Component rules                                            | `primitives/<name>/<name>.css`                                                           |
+| `zazz.plugins`      | Zazz-dependent extensions (new primitives, added variants) | Plugin stylesheets, `layer(zazz.plugins)`                                                |
+| `zazz.utilities`    | Atomic utility classes, the layout grid, and style props   | [`_utilities.css`](/docs/foundation/utilities), `_layout.css`, `_utilities-<family>.css` |
+| `overrides`         | Your app's deliberate overrides of anything below          | Your app CSS                                                                             |
+
+The style-prop family files load after `_utilities.css` and `_layout.css` inside `zazz.utilities`, so a [style prop](/docs/core-concepts/style-props) beats a class on the same element by source order. `_properties.css` belongs to no layer: `@property` registrations are layer-independent, so the file sits between `_variables.css` and `_reset.css` only to register the props before anything reads them.
 
 Position encodes intent. `vendors` sits above `reset` (the reset must not clobber a library's widget styling) and below `legacy` (your legacy CSS historically overrode vendor defaults, and still does). All of `legacy` sits below `zazz`, so migrated markup always resolves to Zazz; when a migration finishes, delete the `legacy` imports and the whole layer disappears in one move. Inside `zazz`, `plugins` follows `components` so an extension can restyle the primitives it extends (a plugin variant like `.ui-button[data-variant="glow"]` must beat the base `.ui-button` background), and `utilities` comes last, guaranteeing utility overrides.
 

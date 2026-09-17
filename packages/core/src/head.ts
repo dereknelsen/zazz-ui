@@ -24,7 +24,7 @@
  * const head = buildHead({ base: "./zazz" });
  */
 
-import { PRIMITIVES, resolveClosure } from "./manifest.ts";
+import { BASE_CSS, PRIMITIVES, resolveClosure } from "./manifest.ts";
 
 // --- Third-party dependency manifest ---
 
@@ -57,19 +57,13 @@ const PACKAGE_NAME = "@zazz-ui/core";
 const EXACT_VERSION = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/;
 
 /**
- * Base stylesheets in the exact order `src/index.css` loads them around the
- * primitive imports: `PRE` before (layer declaration first), `POST` after
- * (utilities and layout stay the final normal override layer). The granular
- * CDN head mirrors this split; `head.test.ts` guards it against `index.css`.
+ * The kit version whose base inventory this module describes. The granular
+ * CDN head links `BASE_CSS` (from the manifest) into a pinned tarball, and an
+ * older tarball does not hold those files, so cdn mode refuses a pin below
+ * this version rather than emit links to `_properties.css` and the family
+ * files that 0.4 never shipped.
  */
-const BASE_CSS_PRE = [
-  "base/_layers.css",
-  "base/_variables.css",
-  "base/_reset.css",
-  "base/_typography.css",
-  "base/_view-transitions.css",
-];
-const BASE_CSS_POST = ["base/_utilities.css", "base/_layout.css"];
+const MIN_CDN_VERSION = "0.5.0";
 
 /**
  * Core runtime modules reached by relative import from primitive scripts
@@ -83,6 +77,27 @@ const CORE_RUNTIME_JS = [
   "base/signals.js",
   "base/zazz-element.js",
 ];
+
+/**
+ * @description Whether exact version `a` is numerically below `b` on
+ * major.minor.patch. A prerelease suffix is ignored: `0.5.0-beta.1` counts
+ * as 0.5.0, since a 0.5 prerelease tarball already carries the 0.5 files.
+ *
+ * @param a - An exact version, `EXACT_VERSION`-shaped.
+ * @param b - The version to compare against, same shape.
+ * @returns True when `a` sorts before `b`.
+ * @private
+ */
+function precedes(a: string, b: string): boolean {
+  const parts = (version: string): number[] =>
+    (version.split("-", 1)[0] ?? "").split(".").map(Number);
+  const [left, right] = [parts(a), parts(b)];
+  for (let i = 0; i < 3; i += 1) {
+    const delta = (left[i] ?? 0) - (right[i] ?? 0);
+    if (delta !== 0) return delta < 0;
+  }
+  return false;
+}
 
 /**
  * @description Builds the pinned jsDelivr URL for a dependency.
@@ -352,6 +367,12 @@ function cdnBlocks(cdn: CdnHeadOptions, scripts: boolean): string[] {
         `dist-tags and ranges break SRI and permanent caching`,
     );
   }
+  if (precedes(version, MIN_CDN_VERSION)) {
+    throw new Error(
+      `buildHead emits the ${MIN_CDN_VERSION.slice(0, 3)} base inventory; ` +
+        `pin ${PACKAGE_NAME} ${MIN_CDN_VERSION} or newer (got "${version}")`,
+    );
+  }
   const url = (path: string): string => `${CDN}/${PACKAGE_NAME}@${version}/${path}`;
   const attrs = (path: string): string => {
     const hash = sri?.[path];
@@ -378,10 +399,12 @@ function cdnBlocks(cdn: CdnHeadOptions, scripts: boolean): string[] {
 
   const closure = resolveClosure(primitives);
 
+  // The manifest's inventory mirrors index.css: base layers, primitives, then
+  // the class utilities and style-prop families (head.test.ts guards it).
   const css = [
-    ...BASE_CSS_PRE,
+    ...BASE_CSS.pre,
     ...closure.flatMap((name) => PRIMITIVES[name]?.css ?? []),
-    ...BASE_CSS_POST,
+    ...BASE_CSS.post,
   ];
   parts.push(
     `<!-- Zazz styles: base layers, then ${closure.join(", ")} in cascade order -->`,

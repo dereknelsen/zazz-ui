@@ -1,0 +1,143 @@
+/**
+ * _utilities-color.css — Color style props (--bg, --text, --border-color).
+ *
+ * A style prop is a custom property set in the `style` attribute and read by a
+ * zero-specificity rule gated on the attribute text (ADR-0012). This file
+ * carries the color family: `--bg` → background-color, `--text` → color,
+ * `--border-color` → border-color. Values pass through unchanged, so a prop
+ * takes a theme token (`style="--bg: var(--primary)"`) or any <color>
+ * (`style="--text: oklch(60% 0.2 30)"`). A token keeps its light-dark()
+ * expression live: `syntax: "*"` substitutes the token stream at the element,
+ * where it re-resolves against the element's own color-scheme.
+ *
+ * Contract of the attribute gate:
+ *   - The gate matches the attribute's source text, `--bg:` with the colon
+ *     immediately after the name. `style="--bg: var(--primary)"` and
+ *     `el.style.setProperty("--bg", …)` both match; `--bg : …` (a space
+ *     before the colon) does not.
+ *   - An unset prop never applies. The rule exists only on elements whose
+ *     `style` names the prop, so there is no var() fallback, no fight with a
+ *     primitive's own declaration, and no cost on elements without props.
+ *   - The base gate `--bg:` does not match a responsive form (`--bg-md:`), so
+ *     base and breakpoint rules are independent. Responsive forms apply inside
+ *     @container style(--bp-X: true), mobile-first by source order:
+ *     `style="--bg: var(--muted); --bg-md: var(--card)"`.
+ *
+ * `--text` is the text color, not a size (`--text-size` is the font-size prop
+ * in _utilities-typography.css). `--border-color`, not `--border`: `--border`
+ * is the theme role token (see src/props.ts for the collision rule). Pair
+ * `--border-color` with a border class (`.border`) or the width/style
+ * longhands: an inline `border:` shorthand resets border-color at inline
+ * precedence, which beats every layer, so the prop would lose to it.
+ *
+ * @layer      utilities
+ * @requires   layers.css, _variables.css (--bp-* flags), _properties.css
+ *             (@property --bg, --text, --border-color × breakpoints)
+ * @uses       :where() — zero specificity so a class or later rule can still win
+ * @uses       [style*="--x:"] attribute substring selector — the gate that
+ *             scopes each rule to elements that set the prop inline
+ * @uses       style() queries — read the --bp-* flags (typed @property booleans
+ *             from _variables.css, set by the nearest size container)
+ * @see        src/props.ts — the prop registry (names, families, kinds)
+ * @see        docs/adr/0012-style-props.md
+ */
+
+@layer zazz.utilities {
+  /* ===========================================================================
+    COLOR STYLE PROPS — base rules (apply at every width)
+    =========================================================================== */
+
+  :where([style*="--bg:"]) {
+    background-color: var(--bg);
+  }
+
+  :where([style*="--text:"]) {
+    color: var(--text);
+  }
+
+  :where([style*="--border-color:"]) {
+    border-color: var(--border-color);
+  }
+
+  /* ===========================================================================
+    RESPONSIVE COLOR STYLE PROPS — mobile-first, gated on the breakpoint state
+    flags (--bp-sm…2xl at 40/48/64/80/96rem, set by the nearest size container
+    in _variables.css). Each suffix applies at or above its breakpoint; a later
+    block beats an earlier one at the same specificity by source order.
+    =========================================================================== */
+
+  @container style(--bp-sm: true) {
+    /* --breakpoint-sm and up */
+    :where([style*="--bg-sm:"]) {
+      background-color: var(--bg-sm);
+    }
+
+    :where([style*="--text-sm:"]) {
+      color: var(--text-sm);
+    }
+
+    :where([style*="--border-color-sm:"]) {
+      border-color: var(--border-color-sm);
+    }
+  }
+
+  @container style(--bp-md: true) {
+    /* --breakpoint-md and up */
+    :where([style*="--bg-md:"]) {
+      background-color: var(--bg-md);
+    }
+
+    :where([style*="--text-md:"]) {
+      color: var(--text-md);
+    }
+
+    :where([style*="--border-color-md:"]) {
+      border-color: var(--border-color-md);
+    }
+  }
+
+  @container style(--bp-lg: true) {
+    /* --breakpoint-lg and up */
+    :where([style*="--bg-lg:"]) {
+      background-color: var(--bg-lg);
+    }
+
+    :where([style*="--text-lg:"]) {
+      color: var(--text-lg);
+    }
+
+    :where([style*="--border-color-lg:"]) {
+      border-color: var(--border-color-lg);
+    }
+  }
+
+  @container style(--bp-xl: true) {
+    /* --breakpoint-xl and up */
+    :where([style*="--bg-xl:"]) {
+      background-color: var(--bg-xl);
+    }
+
+    :where([style*="--text-xl:"]) {
+      color: var(--text-xl);
+    }
+
+    :where([style*="--border-color-xl:"]) {
+      border-color: var(--border-color-xl);
+    }
+  }
+
+  @container style(--bp-2xl: true) {
+    /* --breakpoint-2xl and up */
+    :where([style*="--bg-2xl:"]) {
+      background-color: var(--bg-2xl);
+    }
+
+    :where([style*="--text-2xl:"]) {
+      color: var(--text-2xl);
+    }
+
+    :where([style*="--border-color-2xl:"]) {
+      border-color: var(--border-color-2xl);
+    }
+  }
+}

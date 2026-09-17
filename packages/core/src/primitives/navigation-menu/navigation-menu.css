@@ -21,7 +21,7 @@
     --ui-navigation-menu-popover-shadow: var(--shadow-md);
     --ui-navigation-menu-popover-child-radius: var(--radius-sm);
     --ui-navigation-menu-popover-gap: var(--step-1_5);
-    --ui-navigation-menu-popover-inline-size: min(var(--breakpoint-xs), 100% - var(--gap-md));
+    --ui-navigation-menu-popover-inline-size: min(var(--breakpoint-md), 100% - var(--space-md));
     --ui-navigation-menu-popover-viewport-display: grid;
     --ui-navigation-menu-popover-viewport-align-items: stretch;
     --ui-navigation-menu-popover-viewport-justify-items: stretch;
@@ -75,8 +75,8 @@
 
   /* Chevron points down by default, flips up while its popover is open (no JS) */
   [data-slot~="navigation-menu-trigger"] > svg {
-    inline-size: var(--gap-sm);
-    block-size: var(--gap-sm);
+    inline-size: var(--space-sm);
+    block-size: var(--space-sm);
     transition: var(--ui-navigation-menu-icon-transition);
   }
 
@@ -142,7 +142,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--gap-sm);
+    gap: var(--space-sm);
     inline-size: 100%;
     padding: var(--ui-popover-gap);
     border: 0;
@@ -164,8 +164,8 @@
 
   /* Caret points right — the direction the submenu opens */
   [data-slot~="navigation-menu-submenu-trigger"] > svg {
-    inline-size: var(--gap-sm);
-    block-size: var(--gap-sm);
+    inline-size: var(--space-sm);
+    block-size: var(--space-sm);
     flex: 0 0 auto;
     color: var(--muted-foreground);
   }

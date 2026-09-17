@@ -1,0 +1,295 @@
+---
+title: Upgrading to 0.5
+description: "What 0.5 renames (the breakpoint scale, --gap-* to --space-*, .container bands), how zazz-ui migrate applies every rename in one pass, and the places you shift by hand."
+---
+
+0.5 has one theme: open values move to [style props](/docs/core-concepts/style-props), the size tokens collapse to one `--space-*` scale, and every breakpoint name takes Tailwind's. The [changelog](/docs/changelog) is the record; this page is the procedure. Nothing here changes a width or a value: every breaking change is a rename, and each name keeps the rem it had, so a migrated page renders as it did on 0.4.
+
+## What changed
+
+Additive, nothing to do:
+
+- **Style props.** 44 custom properties you set inline (`style="--px: 4; --px-md: 8"`), each with five responsive forms. The [style props page](/docs/core-concepts/style-props) has the list and the value-shape rule; the `.p-*`, `.gap-*` and `.m-*` classes are unchanged.
+- **`--screen-sm` … `--screen-2xl` viewport flags**, the `@media` twins of the container flags. See [Responsive: container vs viewport](/docs/core-concepts/responsive-design).
+- **Modular `dist/`.** `base.css`, one file per utility family, one per primitive, all loadable in any subset. See [Optimize your CSS](/docs/foundation/optimize).
+
+Breaking, all renames, all covered by `zazz-ui migrate` unless the [manual section](#what-the-codemod-cannot-reach) says otherwise:
+
+- **The breakpoint scale shifts one step.** Old `xs` is now `sm`, old `sm` is `md`, and so on to old `xl`, now `2xl`; a new `2xl` sits at 96rem. That one shift runs through every name that carries a size: the `@sm:` … `@2xl:` and `@max-*` class prefixes, the `--breakpoint-*` length tokens, the `*-screen-*` sizing classes, the `.container` bands (`data-container` values, `--container-*` line ranges, `container-*-start` / `-end` line names). Each name keeps its width under the new name: `@sm:flex` fires at 40rem, exactly where `@xs:flex` did.
+- **Container flags** `--is-breakpoint-*` become `--bp-*` on the same shifted scale. There is no alias.
+- **`--gap-xs` … `--gap-xl` are removed** and replaced by `--space-2xs` … `--space-2xl`, one scale for padding, margin and gap. `xs` through `xl` are byte-identical to the old `--gap-*` values and stay fluid. There is no alias, and a leftover read is not merely stale: `--gap-sm` … `--gap-2xl` are now the responsive forms of the `--gap` style prop, registered `inherits: false`, so `var(--gap-md)` anywhere below `:root` resolves to nothing.
+- **The default `.container` band** is now `--container-lg`, the same 64rem that `--container-md` was. The article measures (`--article-*`) are not renamed; `data-container="sm"` on an article reads 45ch, where `xs` did.
+
+## Do not sed this
+
+The breakpoint shift is a chain. `@sm:` is both a source (it becomes `@md:`) and a target (`@xs:` becomes it), and the same holds for `--breakpoint-sm`, `--container-sm`, `w-screen-sm` and `data-container="sm"`. Applied one rename at a time, in either order, the chain double-shifts: `xs → sm` first turns your old `@xs:flex` into `@sm:flex`, and the next rule turns it into `@md:flex`, a 48rem class where a 40rem one was. Applied in the other order it double-shifts the other end. A find-and-replace also has no way to know which `@sm:flex` it is looking at, the old one or one it already produced.
+
+`zazz-ui migrate` applies every rule in one simultaneous pass (one alternation, one replacement, longest name first), so a chain never double-applies within a run. The corollary is that a second run shifts everything again, which is why the command stamps `zazz.json` and refuses to run twice. If you migrate by hand, the [recipe below](#the-manual-recipe) has the ordering that makes a hand shift safe.
+
+## Vendored projects
+
+If you set up with `zazz-ui init`, `zazz.json` records your kit version, and the sequence is dry run, review, write, then update. The order matters: `migrate` rewrites your own sources against the rules of the version you are moving to, and `update` reads the stamp `migrate` leaves so the vendored files under `zazz/` are never shifted twice.
+
+### 1. Dry run
+
+```bash
+pnpm dlx zazz-ui migrate --to @0.5.0
+```
+
+Nothing is written. The command resolves `@zazz-ui/core@0.5.0`, reads `migrations/0.5.0.json` from the package, takes `zazz.json`'s kit version as the version your sources are on, and scans `**/*.{css,html,htm,md,mdx,js,jsx,ts,tsx,astro,vue,svelte}` under the current directory, skipping `node_modules`, `dist`, `.git` and your vendored `zazz/` directory. It prints a coloured diff per file, how often each rule fired, the files-changed total, and everything it could not map as `file:line: snippet — note`.
+
+Name paths to narrow the scan (`zazz-ui migrate src content`); `--include <glob>` and `--exclude <glob>` narrow further and repeat. A file you name explicitly is scanned even inside `zazz/`.
+
+### 2. Review
+
+Read the diff. The renames are mechanical, but the diff is where you see a `@sm:` that was already 0.5 vocabulary (a page you wrote against a pre-release, say) about to be shifted with the rest; exclude that file. Then read the "Could not map" list: each line is a place the rules cannot reach, and [the section below](#what-the-codemod-cannot-reach) says what to do with each kind.
+
+### 3. Write
+
+```bash
+pnpm dlx zazz-ui migrate --to @0.5.0 --write
+```
+
+The same rewrites, applied, and `"migrated": "0.5.0"` stamped in `zazz.json`. The stamp is written even when the report still lists places to fix by hand, because the automatic rewrites have happened; a second `migrate --to @0.5.0` is refused as already migrated. `--from <version>` overrides the stamp and the kit version when you know better.
+
+### 4. Update the vendored files
+
+```bash
+pnpm dlx zazz-ui update @0.5.0
+```
+
+Moves `zazz/` to 0.5.0 with the usual three-way merge: files you never edited take the new version, your edits to files upstream did not touch stay, and only a real conflict asks. The changelog slice prints first with the breaking entries flagged.
+
+### Exit codes
+
+| Exit | Meaning                                                                                                                       |
+| ---- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `0`  | Done, nothing left to do by hand.                                                                                             |
+| `1`  | Refused: no rules in that kit, unknown source version, already migrated, unreadable `--rules`, `--to` and `--rules` disagree. |
+| `2`  | Completed (written, under `--write`), but the "Could not map" list is not empty. Same in a dry run.                           |
+
+`2` is the signal CI can watch for: the run is not broken, it needs a person.
+
+## CDN and npm projects
+
+Without `zazz.json` there is no recorded version, so tell the command where your sources are (`--from`) and know that nothing is stamped: the guard against running twice is you.
+
+**CDN:** bump the pin first, then migrate your own files. The rules are fetched from the registry, so this needs the network once (the kit is cached after that).
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.5.0/dist/zazz.css" />
+```
+
+```bash
+pnpm dlx zazz-ui migrate --from 0.4.1 --to @0.5.0            # dry run
+pnpm dlx zazz-ui migrate --from 0.4.1 --to @0.5.0 --write    # apply
+```
+
+**npm:** bump the dependency, then point `--rules` at the file the package ships. This reads no registry and works offline.
+
+```bash
+pnpm add @zazz-ui/core@0.5.0
+pnpm dlx zazz-ui migrate --from 0.4.1 --rules node_modules/@zazz-ui/core/migrations/0.5.0.json
+pnpm dlx zazz-ui migrate --from 0.4.1 --rules node_modules/@zazz-ui/core/migrations/0.5.0.json --write
+```
+
+Both forms accept paths, `--include` and `--exclude` as above, and exit `2` on the same condition.
+
+<Callout type="warn">
+  Run the write once. With no `zazz.json` to stamp, a second `--write` shifts every chain a further
+  step (`@sm:flex` becomes `@md:flex`), and the report will not warn you. If a run is interrupted or
+  you are unsure whether it applied, `git diff` before running again.
+</Callout>
+
+## What the codemod cannot reach
+
+The rules are four kinds: a custom-property name anywhere in any file; a class prefix or class name inside a `class="…"` / `className="…"` literal (and the escaped selector form in CSS); an `attr="value"` pair; and a "manual" needle that only reports. Everything else is yours. The dry run flags the first three below; the rest it cannot see, so search for them yourself.
+
+**Reported in the dry run:**
+
+- **JSX `className={…}` expressions.** `className={cn("@xs:flex", open && "@sm:grid")}` is reported at its line, not rewritten. Shift the prefixes inside by hand.
+- **String literals and template literals in scripts.** Any `"…"`, `'…'` or `` `…` `` literal in a `.js`/`.ts`/`.jsx`/`.tsx` file that carries an old class name or prefix (`classList.add("@xs:grid")`, `` `flex ${open ? "@sm:grid" : ""}` ``) is reported at its line, not rewritten. Shift by hand.
+- **Arbitrary values in class names.** A `[…]` token in a class list is reported with a note to move it to the matching style prop; the codemod never introduces a prop for you.
+
+**Silent, search for these:**
+
+- **Vue and Svelte bindings.** `:class="{ '@xs:flex': open }"`, `class:@xs:flex={open}` and any expression in a template are not class attributes as the rules define them; they are neither rewritten nor reported. A `<style>` block inside `.html`, `.vue`, `.svelte` or `.astro` files is treated as CSS (escaped selectors such as `.\@xs\:grid` are rewritten).
+- **Prose and text nodes.** A caption, a comment, a Markdown table or a sentence that names `@xs:` is left alone. The token and `data-container` rules do fire in prose (they are not scoped to attributes), so a Markdown page's `var(--gap-md)` becomes `var(--space-md)` while its `@xs:` does not; read the diff of documentation with that asymmetry in mind. The four names that are also 0.5 style props (`--gap-sm` … `--gap-xl`) are only rewritten as `var()` reads outside CSS, so `style="--gap-md: 4"` in 0.5 markup survives a second run.
+- **Breakpoint names as data.** A TypeScript table such as `{ name: "xs", rem: 40 }`, an enum, a JSON config or a string compared against `data-container`: the strings are data, and no rule kind reads data.
+- **Grid line names.** If your own CSS places children on the `.container` grid by line name, `grid-column: container-xs-start / container-xs-end`, shift the names one step (`xs` → `sm` … `xl` → `2xl`). Line names are bare identifiers; no rule kind covers them. The `--container-*` token reads in the same rule are rewritten.
+- **Wildcard mentions.** `--gap-*` in a comment or a docs page is not `--gap-md`, so nothing matches it.
+
+### The manual recipe
+
+For any of the above, work from the rename tables below and do the shift **from the top of the scale down**: rename `xl` → `2xl` first, then `lg` → `xl`, then `md` → `lg`, `sm` → `md`, and `xs` → `sm` last. Going upward from `xs` would turn `xs` into `sm` and then, one step later, that `sm` into `md`. Downward, each target is a name no remaining source uses, so nothing double-shifts. Scope every pass to one file and one construct (one `className={…}`, one `:class` binding) so a stray `sm` elsewhere in the file is not swept along.
+
+Then search for what is left. Every old name that still exists after a complete migration is one of two things, a prose mention you meant to keep or a miss:
+
+```bash
+git grep -n -e "is-breakpoint" -e "@xs:" -e "@max-xs:" -e 'data-container="xs"' -e "--gap-" -e "screen-xs" -e "container-xs"
+```
+
+`--gap-` will also find the responsive `--gap-sm` … `--gap-2xl` style props if you have started using them; those are correct.
+
+## Retuning the scale
+
+If you set `--gap-*` on `:root` to retune spacing, set `--space-*` instead; the codemod rewrites the declaration like any other token. `--gutters` now reads `--space-md` (the same value it had). The scale itself is `--space-2xs` (`--step-1`), `xs` (`--step-2`), `sm` (`--step-4`), `md` (`--step-6`), `lg` (`--step-11`), `xl` (`--step-24`), `2xl` (`--step-40`); a `var(--gap-md)` read left below `:root` resolves to nothing, because the name now belongs to a non-inheriting style prop.
+
+## Rename tables
+
+Copied from the [changelog](/docs/changelog), where a test keeps them in sync with `migrations/0.5.0.json`. The names are exact; the codemod applies every row.
+
+### Container flags
+
+| 0.4                  | 0.5        |
+| -------------------- | ---------- |
+| `--is-breakpoint-xs` | `--bp-sm`  |
+| `--is-breakpoint-sm` | `--bp-md`  |
+| `--is-breakpoint-md` | `--bp-lg`  |
+| `--is-breakpoint-lg` | `--bp-xl`  |
+| `--is-breakpoint-xl` | `--bp-2xl` |
+
+### Class prefixes
+
+| 0.4        | 0.5         |
+| ---------- | ----------- |
+| `@xs:`     | `@sm:`      |
+| `@sm:`     | `@md:`      |
+| `@md:`     | `@lg:`      |
+| `@lg:`     | `@xl:`      |
+| `@xl:`     | `@2xl:`     |
+| `@max-xs:` | `@max-sm:`  |
+| `@max-sm:` | `@max-md:`  |
+| `@max-md:` | `@max-lg:`  |
+| `@max-lg:` | `@max-xl:`  |
+| `@max-xl:` | `@max-2xl:` |
+
+### Breakpoint length tokens
+
+| 0.4               | 0.5                |
+| ----------------- | ------------------ |
+| `--breakpoint-xs` | `--breakpoint-sm`  |
+| `--breakpoint-sm` | `--breakpoint-md`  |
+| `--breakpoint-md` | `--breakpoint-lg`  |
+| `--breakpoint-lg` | `--breakpoint-xl`  |
+| `--breakpoint-xl` | `--breakpoint-2xl` |
+
+### Size tokens
+
+| 0.4        | 0.5           |
+| ---------- | ------------- |
+| —          | `--space-2xs` |
+| `--gap-xs` | `--space-xs`  |
+| `--gap-sm` | `--space-sm`  |
+| `--gap-md` | `--space-md`  |
+| `--gap-lg` | `--space-lg`  |
+| `--gap-xl` | `--space-xl`  |
+| —          | `--space-2xl` |
+
+### Container bands
+
+| 0.4                 | 0.5                  |
+| ------------------- | -------------------- |
+| `data-container=xs` | `data-container=sm`  |
+| `data-container=sm` | `data-container=md`  |
+| `data-container=md` | `data-container=lg`  |
+| `data-container=lg` | `data-container=xl`  |
+| `data-container=xl` | `data-container=2xl` |
+
+| Band (0.4 → 0.5) | Width        | Line names                                      |
+| ---------------- | ------------ | ----------------------------------------------- |
+| xs → sm          | 40rem        | `container-sm-start` / `container-sm-end`       |
+| sm → md          | 48rem        | `container-md-start` / `container-md-end`       |
+| md → lg          | 64rem        | `container-lg-start` / `container-lg-end`       |
+| lg → xl          | 80rem        | `container-xl-start` / `container-xl-end`       |
+| xl → 2xl         | 96rem        | `container-2xl-start` / `container-2xl-end`     |
+| full             | gutters kept | `container-full-start` / `container-full-end`   |
+| bleed            | edge to edge | `container-bleed-start` / `container-bleed-end` |
+
+The line names are the one row set the codemod does not apply; see [Grid line names](#what-the-codemod-cannot-reach).
+
+### Container line-range tokens
+
+| 0.4              | 0.5               |
+| ---------------- | ----------------- |
+| `--container-xs` | `--container-sm`  |
+| `--container-sm` | `--container-md`  |
+| `--container-md` | `--container-lg`  |
+| `--container-lg` | `--container-xl`  |
+| `--container-xl` | `--container-2xl` |
+
+### Viewport-width classes
+
+Thirteen families (`w`, `inline`, `h`, `block`, `size`, `max-w`, `max-inline`, `max-h`, `max-block`, `min-w`, `min-inline`, `min-h`, `min-block`), each `-screen-<size>`, each shifted one step. `w-screen` on its own is not a breakpoint class and is untouched.
+
+| 0.4                    | 0.5                     |
+| ---------------------- | ----------------------- |
+| `w-screen-xs`          | `w-screen-sm`           |
+| `w-screen-sm`          | `w-screen-md`           |
+| `w-screen-md`          | `w-screen-lg`           |
+| `w-screen-lg`          | `w-screen-xl`           |
+| `w-screen-xl`          | `w-screen-2xl`          |
+| `inline-screen-xs`     | `inline-screen-sm`      |
+| `inline-screen-sm`     | `inline-screen-md`      |
+| `inline-screen-md`     | `inline-screen-lg`      |
+| `inline-screen-lg`     | `inline-screen-xl`      |
+| `inline-screen-xl`     | `inline-screen-2xl`     |
+| `h-screen-xs`          | `h-screen-sm`           |
+| `h-screen-sm`          | `h-screen-md`           |
+| `h-screen-md`          | `h-screen-lg`           |
+| `h-screen-lg`          | `h-screen-xl`           |
+| `h-screen-xl`          | `h-screen-2xl`          |
+| `block-screen-xs`      | `block-screen-sm`       |
+| `block-screen-sm`      | `block-screen-md`       |
+| `block-screen-md`      | `block-screen-lg`       |
+| `block-screen-lg`      | `block-screen-xl`       |
+| `block-screen-xl`      | `block-screen-2xl`      |
+| `size-screen-xs`       | `size-screen-sm`        |
+| `size-screen-sm`       | `size-screen-md`        |
+| `size-screen-md`       | `size-screen-lg`        |
+| `size-screen-lg`       | `size-screen-xl`        |
+| `size-screen-xl`       | `size-screen-2xl`       |
+| `max-w-screen-xs`      | `max-w-screen-sm`       |
+| `max-w-screen-sm`      | `max-w-screen-md`       |
+| `max-w-screen-md`      | `max-w-screen-lg`       |
+| `max-w-screen-lg`      | `max-w-screen-xl`       |
+| `max-w-screen-xl`      | `max-w-screen-2xl`      |
+| `max-inline-screen-xs` | `max-inline-screen-sm`  |
+| `max-inline-screen-sm` | `max-inline-screen-md`  |
+| `max-inline-screen-md` | `max-inline-screen-lg`  |
+| `max-inline-screen-lg` | `max-inline-screen-xl`  |
+| `max-inline-screen-xl` | `max-inline-screen-2xl` |
+| `max-h-screen-xs`      | `max-h-screen-sm`       |
+| `max-h-screen-sm`      | `max-h-screen-md`       |
+| `max-h-screen-md`      | `max-h-screen-lg`       |
+| `max-h-screen-lg`      | `max-h-screen-xl`       |
+| `max-h-screen-xl`      | `max-h-screen-2xl`      |
+| `max-block-screen-xs`  | `max-block-screen-sm`   |
+| `max-block-screen-sm`  | `max-block-screen-md`   |
+| `max-block-screen-md`  | `max-block-screen-lg`   |
+| `max-block-screen-lg`  | `max-block-screen-xl`   |
+| `max-block-screen-xl`  | `max-block-screen-2xl`  |
+| `min-w-screen-xs`      | `min-w-screen-sm`       |
+| `min-w-screen-sm`      | `min-w-screen-md`       |
+| `min-w-screen-md`      | `min-w-screen-lg`       |
+| `min-w-screen-lg`      | `min-w-screen-xl`       |
+| `min-w-screen-xl`      | `min-w-screen-2xl`      |
+| `min-inline-screen-xs` | `min-inline-screen-sm`  |
+| `min-inline-screen-sm` | `min-inline-screen-md`  |
+| `min-inline-screen-md` | `min-inline-screen-lg`  |
+| `min-inline-screen-lg` | `min-inline-screen-xl`  |
+| `min-inline-screen-xl` | `min-inline-screen-2xl` |
+| `min-h-screen-xs`      | `min-h-screen-sm`       |
+| `min-h-screen-sm`      | `min-h-screen-md`       |
+| `min-h-screen-md`      | `min-h-screen-lg`       |
+| `min-h-screen-lg`      | `min-h-screen-xl`       |
+| `min-h-screen-xl`      | `min-h-screen-2xl`      |
+| `min-block-screen-xs`  | `min-block-screen-sm`   |
+| `min-block-screen-sm`  | `min-block-screen-md`   |
+| `min-block-screen-md`  | `min-block-screen-lg`   |
+| `min-block-screen-lg`  | `min-block-screen-xl`   |
+| `min-block-screen-xl`  | `min-block-screen-2xl`  |
+
+## After migrating
+
+Style props are optional and nothing on this page requires them, but a page that carried raw inline style or a one-off class for an open value can now say it as a prop: `style="padding-inline: calc(8 * var(--spacing-interval))"` is `style="--px: 8"`, and gains `--px-md`. The [style props page](/docs/core-concepts/style-props) has the value-shape rule for deciding what to convert; [Content Security Policy](/docs/getting-started/csp) is the one page to read first if your site ships a strict `style-src`, because props live in the `style` attribute and a strict policy blocks them like any inline style.

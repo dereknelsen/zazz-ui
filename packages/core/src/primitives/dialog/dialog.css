@@ -20,7 +20,7 @@
     --ui-dialog-backdrop-blur: blur(5px);
     --ui-dialog-shadow: var(--shadow-lg);
     --ui-dialog-border: 1px solid var(--border);
-    --ui-dialog-inline-size: min(var(--breakpoint-md), 100% - var(--gutters) * 2);
+    --ui-dialog-inline-size: min(var(--breakpoint-xl), 100% - var(--gutters) * 2);
 
     /* Reveal transitions/animations */
     --ui-dialog-opacity--start: 0;
@@ -37,7 +37,7 @@
 /* Sizing tokens — second variables block (overrides --ui-dialog-inline-size above). */
 @layer variables {
   :root {
-    --ui-dialog-inline-size: min(50ch, 100% - var(--gap-md) * 2);
+    --ui-dialog-inline-size: min(50ch, 100% - var(--space-md) * 2);
     --ui-dialog-block-size: fit-content;
     --ui-dialog-background: var(--card);
     --ui-dialog-foreground: var(--card-foreground);
@@ -56,8 +56,8 @@
   /* Dialog animations with spring easing */
   :where(dialog) {
     margin: auto;
-    max-inline-size: calc(100% - var(--gap-md));
-    max-block-size: calc(100% - var(--gap-md));
+    max-inline-size: calc(100% - var(--space-md));
+    max-block-size: calc(100% - var(--space-md));
     border: var(--ui-dialog-border);
     contain: layout style;
     opacity: var(--ui-dialog-opacity--start);
@@ -141,8 +141,8 @@
 
   [data-slot~="dialog-close"] {
     position: absolute;
-    inset-block-start: var(--gap-xs);
-    inset-inline-end: var(--gap-xs);
+    inset-block-start: var(--space-xs);
+    inset-inline-end: var(--space-xs);
     z-index: 50;
   }
 
@@ -168,8 +168,8 @@
   [data-slot~="dialog-header"] {
     display: flex;
     flex-direction: column;
-    padding-inline: var(--gap-sm);
-    padding-block-start: var(--gap-sm);
+    padding-inline: var(--space-sm);
+    padding-block-start: var(--space-sm);
   }
 
   /* Sticky top edge */
@@ -179,16 +179,16 @@
     position: absolute;
     inset-block-start: 100%;
     inline-size: 100%;
-    block-size: var(--gap-md);
+    block-size: var(--space-md);
     background: linear-gradient(to top, transparent, var(--ui-dialog-background));
   }
 
   [data-slot~="dialog-body"] {
     display: grid;
-    padding-inline: var(--gap-sm);
-    padding-block: var(--gap-md);
+    padding-inline: var(--space-sm);
+    padding-block: var(--space-md);
     min-block-size: 0;
-    min-block-size: var(--gap-xl);
+    min-block-size: var(--space-xl);
     overflow-x: clip;
     overflow-y: auto;
     scrollbar-gutter: stable both-edges;
@@ -202,8 +202,8 @@
     justify-content: flex-end;
     align-self: end;
     flex-shrink: 0;
-    gap: var(--gap-xs);
-    padding: var(--gap-sm);
+    gap: var(--space-xs);
+    padding: var(--space-sm);
     border-block-start: 1px solid var(--border);
     background-color: var(--ui-dialog-background);
   }
@@ -213,7 +213,7 @@
   }
 
   .ui-dialog[data-size="container"] {
-    --ui-dialog-inline-size: var(--breakpoint-md);
+    --ui-dialog-inline-size: var(--breakpoint-xl);
   }
 
   .ui-dialog[data-size="screen"] {

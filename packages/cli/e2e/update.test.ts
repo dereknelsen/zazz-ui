@@ -17,7 +17,15 @@ import { sha256 } from "../src/vendor.ts";
 import { runAdd } from "../src/commands/add.ts";
 import { runInit } from "../src/commands/init.ts";
 import { runUpdate, splitVersionArgs } from "../src/commands/update.ts";
-import { V1, V1_VARIABLES, V2, V2_VARIABLES, buildFixtureKits } from "./fixture-kit.ts";
+import {
+  V1,
+  V1_VARIABLES,
+  V2,
+  V2_POST_BASE_ADDED,
+  V2_PRE_BASE_ADDED,
+  V2_VARIABLES,
+  buildFixtureKits,
+} from "./fixture-kit.ts";
 
 const tmpDirs: string[] = [];
 let previousKitEnv: string | undefined;
@@ -81,6 +89,11 @@ describe("zazz-ui update (e2e, fixture kit)", () => {
     // Removed upstream, unedited → deleted, record dropped.
     expect(existsSync(at(root, "primitives/beta/beta-old.css"))).toBe(false);
     expect(config.primitives.beta?.files["primitives/beta/beta-old.css"]).toBeUndefined();
+    // Base files the target kit adds (its index.css grew) → vendored, recorded.
+    for (const file of [...V2_PRE_BASE_ADDED, ...V2_POST_BASE_ADDED]) {
+      expect(existsSync(at(root, file)), file).toBe(true);
+      expect(config.base.files[file], file).toBeDefined();
+    }
 
     // Entries regenerated for the new shape; head is CLI-owned.
     const indexCss = await readFile(at(root, "index.css"), "utf8");
@@ -88,6 +101,22 @@ describe("zazz-ui update (e2e, fixture kit)", () => {
     expect(indexCss).toContain("primitives/gamma/gamma.css");
     expect(indexCss).not.toContain("beta-old");
     expect(indexCss.indexOf("gamma")).toBeLessThan(indexCss.indexOf("primitives/beta/"));
+    // …and for the new base list, in the target kit's order.
+    const order = [
+      "base/_variables.css",
+      "base/_properties.css",
+      "base/_reset.css",
+      "primitives/alpha/",
+      "base/_utilities.css",
+      "base/_layout.css",
+      ...V2_POST_BASE_ADDED,
+    ];
+    let cursor = -1;
+    for (const marker of order) {
+      const index = indexCss.indexOf(marker);
+      expect(index, marker).toBeGreaterThan(cursor);
+      cursor = index;
+    }
     expect(await readFile(at(root, "head.html"), "utf8")).toContain(`fixture head ${V2}`);
     expect(process.exitCode ?? 0).toBe(0);
   });
@@ -213,11 +242,15 @@ describe("zazz-ui update (e2e, fixture kit)", () => {
     expect(config.primitives.alpha?.version).toBe(V2);
     expect(config.primitives.beta?.version).toBe(V1);
     expect(config.primitives.gamma).toBeUndefined();
-    // Base platform untouched; entries reflect alpha's new file.
+    // Base platform untouched (v2's new base files stay out); entries
+    // reflect alpha's new file.
     expect(await readFile(at(root, "base/_variables.css"), "utf8")).toBe(V1_VARIABLES);
+    expect(existsSync(at(root, "base/_properties.css"))).toBe(false);
+    expect(config.base.files["base/_properties.css"]).toBeUndefined();
     expect(existsSync(at(root, "primitives/alpha/alpha-extra.css"))).toBe(true);
     const indexCss = await readFile(at(root, "index.css"), "utf8");
     expect(indexCss).toContain("primitives/alpha/alpha-extra.css");
+    expect(indexCss).not.toContain("_properties.css");
     // beta-old is still vendored — beta didn't move.
     expect(existsSync(at(root, "primitives/beta/beta-old.css"))).toBe(true);
   });

@@ -67,8 +67,8 @@ ${BLOCK_NAVIGATION}
     align-content: ${block};
     align-content: safe ${block};
     justify-items: ${inline};
-    gap: var(--gap-md);
-    padding: var(--gap-md);
+    gap: var(--space-md);
+    padding: var(--space-md);
     inline-size: 100%;
     block-size: 100%;
     min-block-size: ${minHeight}px;

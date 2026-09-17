@@ -23,7 +23,11 @@ Utilities in Zazz are atomic classes declared in `@layer zazz.utilities`. They o
 | [Backgrounds](/docs/foundation/utilities/backgrounds), [Borders](/docs/foundation/utilities/borders)                                            | surface colors, overlays, borders, border-radius                                       |
 | [Effects](/docs/foundation/utilities/effects), [Color opacity](/docs/foundation/utilities/color-opacity)                                        | shadows, opacity, scale, transitions, channel-specific alpha                           |
 | [Interactivity](/docs/foundation/utilities/interactivity), [Hover states](/docs/foundation/utilities/hover)                                     | cursor, focus ring, screen readers, `hover:` variant prefixes                          |
-| [Responsive design](/docs/foundation/utilities/responsive-design)                                                                               | `@xs:`, `@sm:`, `@md:`, `@lg:`, `@xl:` container query prefixes                        |
+| [Responsive design](/docs/foundation/utilities/responsive-design)                                                                               | `@sm:`, `@md:`, `@lg:`, `@xl:`, `@2xl:` container query prefixes                       |
+
+### Open values: use a style prop
+
+Every class above takes a value from a fixed list (the `xs` to `xl` scale, a fraction, a track count). For a value that is not on the list, set a [style prop](/docs/core-concepts/style-props) in the `style` attribute instead of writing custom CSS: `style="--px: 5; --w: 22rem; --grid-cols: 5"`. A prop reads the same tokens (`--px: 6` is `px-md`), takes the same `-sm` to `-2xl` breakpoints as a suffix (`--px-md: 8`), and lives in the same layer, so it beats a class on the same element by source order. Each family page below notes which props it has.
 
 ## Internal composition and coordination variables
 
@@ -59,20 +63,20 @@ Padding, margin, radius, and color-alpha utilities use `@property`-registered va
 
 Unregistered variables that pass layout settings from container to children:
 
-| Variable                       | Default           | Set by                       | Consumed by                                |
-| ------------------------------ | ----------------- | ---------------------------- | ------------------------------------------ |
-| `--_gap`                       | `0px`             | `gap-*`                      | `basis-1/2` to `basis-1/6`, auto-fill grid |
-| `--_gap-x`, `--_gap-y`         | None              | `gap-x-*`, `gap-y-*`         | `column-gap`, `row-gap`                    |
-| `--_grid-cols`, `--_grid-rows` | `1`               | `grid-cols-N`, `grid-rows-N` | `col-span-*`, `row-span-*`, auto-fill grid |
-| `--_grid-col-min`              | `min(100%, 25ch)` | `.grid`                      | `grid-flow-row` auto-fill floor            |
+| Variable                       | Default           | Set by                                                     | Consumed by                                |
+| ------------------------------ | ----------------- | ---------------------------------------------------------- | ------------------------------------------ |
+| `--_gap`                       | `0px`             | `gap-*`, `--gap`                                           | `basis-1/2` to `basis-1/6`, auto-fill grid |
+| `--_gap-x`, `--_gap-y`         | None              | `gap-x-*`, `gap-y-*`, `--gap-x`, `--gap-y`                 | `column-gap`, `row-gap`                    |
+| `--_grid-cols`, `--_grid-rows` | `1`               | `grid-cols-N`, `grid-rows-N`, `--grid-cols`, `--grid-rows` | `col-span-*`, `row-span-*`, auto-fill grid |
+| `--_grid-col-min`              | `min(100%, 25ch)` | `.grid`                                                    | `grid-flow-row` auto-fill floor            |
 
 ## Responsive and state prefixes
 
-Layout utilities support `@xs:` to `@xl:` container query prefixes. Color, opacity, and scale utilities support `hover:` prefixes.
+Layout utilities support `@sm:` to `@2xl:` container query prefixes (40, 48, 64, 80, and 96rem, read from the `--bp-*` flags of the nearest size container). Color, opacity, and scale utilities support `hover:` prefixes. Style props take the same five breakpoints as a suffix: `--px-md`, `--grid-cols-lg`.
 
 ```html
-<div class="flex flex-col @md:flex-row gap-md">
-  <aside class="@md:basis-1/3">Sidebar</aside>
+<div class="flex flex-col @lg:flex-row gap-md">
+  <aside class="@lg:basis-1/3">Sidebar</aside>
   <main class="flex-1 hover:bg-muted transition">Content</main>
 </div>
 ```

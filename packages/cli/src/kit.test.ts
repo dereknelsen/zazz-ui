@@ -51,8 +51,28 @@ export function buildHead(options = {}) {
 }
 `;
 
+/** A 0.5-shaped `src/index.css`: properties after variables, families last. */
+const INDEX_CSS_0_5 = `/* base — order matters */
+@import "./base/_layers.css";
+@import "./base/_variables.css";
+/* _properties.css registers the style props */
+@import "./base/_properties.css";
+@import "./base/_reset.css";
+
+/* @import "./your-legacy.css" layer(legacy.imports); */
+
+@import "./primitives/kbd/kbd.css";
+@import "./primitives/button/button.css";
+
+@import "./base/_utilities.css";
+@import "./base/_layout.css";
+@import "./base/_utilities-spacing.css";
+`;
+
 /** Builds a fixture extracted-package directory. */
-async function fixtureKitDir(overrides: { manifestJs?: string; omitManifest?: boolean } = {}) {
+async function fixtureKitDir(
+  overrides: { manifestJs?: string; omitManifest?: boolean; indexCss?: string } = {},
+) {
   const dir = await tmpDir();
   await mkdir(path.join(dir, "src", "primitives", "button"), { recursive: true });
   await writeFile(
@@ -64,6 +84,9 @@ async function fixtureKitDir(overrides: { manifestJs?: string; omitManifest?: bo
       path.join(dir, "src", "manifest.js"),
       overrides.manifestJs ?? VALID_MANIFEST_JS,
     );
+  }
+  if (overrides.indexCss !== undefined) {
+    await writeFile(path.join(dir, "src", "index.css"), overrides.indexCss);
   }
   await writeFile(path.join(dir, "src", "head.js"), VALID_HEAD_JS);
   await writeFile(
@@ -87,6 +110,55 @@ describe("loadKitFromDir", () => {
     expect(kit.has("primitives/ghost/ghost.css")).toBe(false);
     const css = await kit.readFile("primitives/button/button.css");
     expect(css.toString()).toContain(".ui-button");
+  });
+
+  it("derives the base stylesheet lists from the kit's own index.css", async () => {
+    const dir = await fixtureKitDir({ indexCss: INDEX_CSS_0_5 });
+    const kit = await loadKitFromDir(dir, { version: "0.5.0", integrity: "" });
+    expect(kit.manifest.baseCss).toEqual({
+      pre: ["base/_layers.css", "base/_variables.css", "base/_properties.css", "base/_reset.css"],
+      post: ["base/_utilities.css", "base/_layout.css", "base/_utilities-spacing.css"],
+    });
+  });
+
+  it("prefers the manifest's BASE_CSS export over index.css", async () => {
+    const manifestJs = `${VALID_MANIFEST_JS}
+export const BASE_CSS = {
+  pre: ["base/_layers.css", "base/_variables.css", "base/_properties.css"],
+  post: ["base/_utilities.css", "base/_utilities-grid.css"],
+};
+`;
+    // An index.css that disagrees is ignored: the export is the kit's word.
+    const dir = await fixtureKitDir({ manifestJs, indexCss: INDEX_CSS_0_5 });
+    const kit = await loadKitFromDir(dir, { version: "0.5.0", integrity: "" });
+    expect(kit.manifest.baseCss).toEqual({
+      pre: ["base/_layers.css", "base/_variables.css", "base/_properties.css"],
+      post: ["base/_utilities.css", "base/_utilities-grid.css"],
+    });
+  });
+
+  it("falls back to index.css when the BASE_CSS export is not { pre, post } of strings", async () => {
+    const manifestJs = `${VALID_MANIFEST_JS}\nexport const BASE_CSS = ["base/_layers.css"];\n`;
+    const dir = await fixtureKitDir({ manifestJs, indexCss: INDEX_CSS_0_5 });
+    const kit = await loadKitFromDir(dir, { version: "0.5.0", integrity: "" });
+    expect(kit.manifest.baseCss?.pre).toEqual([
+      "base/_layers.css",
+      "base/_variables.css",
+      "base/_properties.css",
+      "base/_reset.css",
+    ]);
+  });
+
+  it("leaves baseCss unset without an index.css, so plan.ts falls back", async () => {
+    const dir = await fixtureKitDir();
+    const kit = await loadKitFromDir(dir, { version: "0.4.1", integrity: "" });
+    expect(kit.manifest.baseCss).toBeUndefined();
+  });
+
+  it("leaves baseCss unset for an index.css without the base/primitives/base shape", async () => {
+    const dir = await fixtureKitDir({ indexCss: `@import "./base/_layers.css";\n` });
+    const kit = await loadKitFromDir(dir, { version: "0.4.1", integrity: "" });
+    expect(kit.manifest.baseCss).toBeUndefined();
   });
 
   it("rejects a manifest version newer than the CLI supports", async () => {

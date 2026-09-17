@@ -7,25 +7,31 @@ Sizing utilities use logical properties (`inline-size`, `block-size`) to match d
 
 Every `w-*` / `h-*` class (including `min-*` and `max-*` variants) has a logical-name alias with identical values: `w-full` = `inline-full`, `h-screen` = `block-screen`, `max-w-md` = `max-inline-md`, `min-h-0` = `min-block-0`, and so on. Use whichever naming you prefer — they compile to the same declaration.
 
+The `sm` to `xl` steps read `--space-sm` to `--space-xl` (`xs` is `--step-3`); the `screen-*` steps read `--breakpoint-sm` to `--breakpoint-2xl` (40, 48, 64, 80, 96rem).
+
+### Open values: use a style prop
+
+For a width or height that is not on the scale, set a [style prop](/docs/core-concepts/style-props): `style="--w: 22rem; --max-w: 60ch"`. The sizing props (`--w`, `--h`, `--min-w`, `--max-w`, `--min-h`, `--max-h`, `--size`) pass any length, percentage, or keyword (`auto`, `max-content`, `100dvh`) straight to the logical property, and each takes `-sm` to `-2xl` responsive suffixes (`--w-md: 100%`).
+
 ## Width & height
 
 <Preview src="utilities/width" />
 
-| Class                          | Width / height value                             |
-| ------------------------------ | ------------------------------------------------ |
-| `w-0` / `h-0`                  | `0`                                              |
-| `w-px` / `h-px`                | `1px`                                            |
-| `w-auto` / `h-auto`            | `auto`                                           |
-| `w-full` / `h-full`            | `100%`                                           |
-| `w-xs` / `h-xs`                | `var(--step-3)`                                  |
-| `w-sm` / `h-sm`                | `var(--gap-sm)`                                  |
-| `w-md` / `h-md`                | `var(--gap-md)`                                  |
-| `w-lg` / `h-lg`                | `var(--gap-lg)`                                  |
-| `w-xl` / `h-xl`                | `var(--gap-xl)`                                  |
-| `w-screen`                     | `100vi`                                          |
-| `h-screen`                     | `100svh`                                         |
-| `w-screen-xs` to `w-screen-xl` | `var(--breakpoint-xs)` to `var(--breakpoint-xl)` |
-| `h-screen-xs` to `h-screen-xl` | `var(--breakpoint-xs)` to `var(--breakpoint-xl)` |
+| Class                           | Width / height value                              |
+| ------------------------------- | ------------------------------------------------- |
+| `w-0` / `h-0`                   | `0`                                               |
+| `w-px` / `h-px`                 | `1px`                                             |
+| `w-auto` / `h-auto`             | `auto`                                            |
+| `w-full` / `h-full`             | `100%`                                            |
+| `w-xs` / `h-xs`                 | `var(--step-3)`                                   |
+| `w-sm` / `h-sm`                 | `var(--space-sm)`                                 |
+| `w-md` / `h-md`                 | `var(--space-md)`                                 |
+| `w-lg` / `h-lg`                 | `var(--space-lg)`                                 |
+| `w-xl` / `h-xl`                 | `var(--space-xl)`                                 |
+| `w-screen`                      | `100vi`                                           |
+| `h-screen`                      | `100svh`                                          |
+| `w-screen-sm` to `w-screen-2xl` | `var(--breakpoint-sm)` to `var(--breakpoint-2xl)` |
+| `h-screen-sm` to `h-screen-2xl` | `var(--breakpoint-sm)` to `var(--breakpoint-2xl)` |
 
 ## Square size shorthand
 
@@ -33,32 +39,32 @@ Every `w-*` / `h-*` class (including `min-*` and `max-*` variants) has a logical
 
 `size-*` sets `inline-size` and `block-size` simultaneously:
 
-| Class                                | Value (both axes)               |
-| ------------------------------------ | ------------------------------- |
-| `size-0`                             | `0`                             |
-| `size-auto`                          | `auto`                          |
-| `size-full`                          | `100%`                          |
-| `size-xs`                            | `var(--step-3)`                 |
-| `size-sm`                            | `var(--gap-sm)`                 |
-| `size-md`                            | `var(--gap-md)`                 |
-| `size-lg`                            | `var(--gap-lg)`                 |
-| `size-xl`                            | `var(--gap-xl)`                 |
-| `size-screen`                        | `100vi` x `100svh`              |
-| `size-screen-xs` to `size-screen-xl` | `var(--breakpoint-*)` both axes |
+| Class                                 | Value (both axes)               |
+| ------------------------------------- | ------------------------------- |
+| `size-0`                              | `0`                             |
+| `size-auto`                           | `auto`                          |
+| `size-full`                           | `100%`                          |
+| `size-xs`                             | `var(--step-3)`                 |
+| `size-sm`                             | `var(--space-sm)`               |
+| `size-md`                             | `var(--space-md)`               |
+| `size-lg`                             | `var(--space-lg)`               |
+| `size-xl`                             | `var(--space-xl)`               |
+| `size-screen`                         | `100vi` x `100svh`              |
+| `size-screen-sm` to `size-screen-2xl` | `var(--breakpoint-*)` both axes |
 
 ## Min and max constraints
 
-| Max width                 | Max height                | Min width                 | Min height                |
-| ------------------------- | ------------------------- | ------------------------- | ------------------------- |
-| `max-w-0`                 | `max-h-0`                 | `min-w-0`                 | `min-h-0`                 |
-| `max-w-auto`              | `max-h-auto`              | `min-w-auto`              | `min-h-auto`              |
-| `max-w-full`              | `max-h-full`              | `min-w-full`              | `min-h-full`              |
-| `max-w-xs` to `max-w-xl`  | `max-h-xs` to `max-h-xl`  | None                      | None                      |
-| `max-w-screen`            | `max-h-screen`            | `min-w-screen`            | `min-h-screen`            |
-| `max-w-screen-xs` to `xl` | `max-h-screen-xs` to `xl` | `min-w-screen-xs` to `xl` | `min-h-screen-xs` to `xl` |
+| Max width                  | Max height                 | Min width                  | Min height                 |
+| -------------------------- | -------------------------- | -------------------------- | -------------------------- |
+| `max-w-0`                  | `max-h-0`                  | `min-w-0`                  | `min-h-0`                  |
+| `max-w-auto`               | `max-h-auto`               | `min-w-auto`               | `min-h-auto`               |
+| `max-w-full`               | `max-h-full`               | `min-w-full`               | `min-h-full`               |
+| `max-w-xs` to `max-w-xl`   | `max-h-xs` to `max-h-xl`   | None                       | None                       |
+| `max-w-screen`             | `max-h-screen`             | `min-w-screen`             | `min-h-screen`             |
+| `max-w-screen-sm` to `2xl` | `max-h-screen-sm` to `2xl` | `min-w-screen-sm` to `2xl` | `min-h-screen-sm` to `2xl` |
 
 ```html
-<article class="w-full max-w-screen-sm mx-auto">
-  Fluid width constrained to sm breakpoint and centered.
+<article class="w-full max-w-screen-md mx-auto">
+  Fluid width constrained to the md breakpoint (48rem) and centered.
 </article>
 ```

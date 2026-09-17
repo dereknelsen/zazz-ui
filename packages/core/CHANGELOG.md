@@ -1,5 +1,179 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.5.0 (unreleased)
+
+One theme: **open values move to style props, tokens collapse to one space scale, and breakpoints take Tailwind's names** (ADR-0012). A style prop is a custom property set inline (`style="--px: 4; --px-md: 8"`) and read by a zero-specificity rule in `@layer zazz.utilities`; it carries the responsive suffixes, the fluid spacing scale, and the `--_gap` / `--_grid-cols` coordination that raw inline style cannot. The `--gap-*` size tokens become `--space-*` (with a new `2xs` and `2xl`), and every breakpoint name — flags, class prefixes, length tokens, band line names, `data-container` values — shifts one step (old `xs` → `sm` … old `xl` → `2xl`, plus a new 96rem `2xl`). Run `zazz-ui migrate` to apply the renames tabled below; do not sed them. The breakpoint shift is a chain (`@sm:` is both a source and a target, as is `--breakpoint-sm`), and the codemod applies every rule in one simultaneous pass and stamps `zazz.json` so it never runs twice. The rules it reads are `migrations/0.5.0.json` in this package; a test keeps that file and the tables here in sync.
+
+Measurements (0.4.1 → 0.5.0), from `node .scratch/style-props/measure.mjs` (build `packages/core` first):
+
+| Measure                                                                               | 0.4.1                                      | 0.5.0                                      |
+| ------------------------------------------------------------------------------------- | ------------------------------------------ | ------------------------------------------ |
+| `dist/zazz.css` raw bytes                                                             | 304,258                                    | 338,886                                    |
+| brotli bytes (node zlib, q11)                                                         | 29,125                                     | 31,088                                     |
+| gzip bytes (node zlib, default level)                                                 | 38,281                                     | 42,035                                     |
+| rule count (`{` in `dist/zazz.css`)                                                   | 2,189                                      | 2,767                                      |
+| `src/base/_utilities.css` bytes                                                       | 159,583                                    | 160,490                                    |
+| CDN transfer bytes (jsDelivr, `Accept-Encoding: br`)                                  | 39,174                                     | n/a until published                        |
+| Coverage on `examples/layout.html`, style rules (Chrome 153, 1280×900): used / unused | 60,226 / 244,032 (80.2% unused of 304,258) | 60,481 / 278,405 (82.2% unused of 338,886) |
+
+Read plainly, the monolith grew, not shrank: +34,628 B raw, +1,963 B brotli and +578 rules, roughly the 297 `@property` registrations (28 in 0.4.1; 14,865 B of blocks, 264 of them the style props) plus the eight family files (22,815 B together), and `examples/layout.html` matches the same ~60 KB of style rules it did before, so the bundle's unused share rises from 80.2% to 82.2%; the win is the modular `dist/`, where a page loads `base.css` (48,058 B / 6,623 br) plus only the families it uses (`utilities-spacing.css` 1,625 B, `-spacing-responsive` 8,102, `-sizing` 2,875, `-grid` 3,121, `-flex` 1,665, `-color` 1,411, `-typography` 1,609, `-position` 2,407; `utilities-core.css` 125,398 B / 9,202 br for the class utilities) and its primitives' closure (`primitives/<name>.css`, 968 B to 9,440 B each), so the button page from the README's `/combine/` example (`base` + `utilities-spacing` + `fields` + `kbd` + `button`) is 64,581 B / 8,678 br against the 338,886 B / 31,088 br bundle, and Coverage measured per family instead of per bundle is what the 0.5 numbers should be compared on.
+
+### base
+
+- **BREAKING** Container breakpoint flags renamed `--is-breakpoint-*` → `--bp-*` and shifted onto Tailwind's scale: `sm` 40rem, `md` 48rem, `lg` 64rem, `xl` 80rem, `2xl` 96rem (so `--bp-sm` is true where `--is-breakpoint-xs` was, and `--bp-2xl` is new). Still registered typed booleans (`inherits: true`, initial `false`), still set by unnamed size queries on `:where(body *)`, so the subject is the nearest ancestor with a `container-type` (`body`, `main`, `section`, `article` per the reset), not the viewport. Migration: `zazz-ui migrate` rewrites every `style(--is-breakpoint-…)` gate and `var()` read in your CSS; there is no alias.
+
+| 0.4                  | 0.5        |
+| -------------------- | ---------- |
+| `--is-breakpoint-xs` | `--bp-sm`  |
+| `--is-breakpoint-sm` | `--bp-md`  |
+| `--is-breakpoint-md` | `--bp-lg`  |
+| `--is-breakpoint-lg` | `--bp-xl`  |
+| `--is-breakpoint-xl` | `--bp-2xl` |
+
+- **BREAKING** Responsive class prefixes shift one step, `@xs:` … `@xl:` → `@sm:` … `@2xl:`, and `@max-xs:` … `@max-xl:` → `@max-sm:` … `@max-2xl:`, for every responsive utility and for `.@sm:container` / `.@max-sm:container`. Each class keeps its width: `@sm:flex` fires at 40rem, exactly where `@xs:flex` did. The names are a chain: an untouched `@sm:flex` now fires at 40rem instead of 48rem, which is why the codemod, not sed, has to do this. Migration: `zazz-ui migrate` rewrites `class` attributes in HTML and templates; JSX `className={…}` expressions are reported, not rewritten — shift those by hand.
+
+| 0.4        | 0.5         |
+| ---------- | ----------- |
+| `@xs:`     | `@sm:`      |
+| `@sm:`     | `@md:`      |
+| `@md:`     | `@lg:`      |
+| `@lg:`     | `@xl:`      |
+| `@xl:`     | `@2xl:`     |
+| `@max-xs:` | `@max-sm:`  |
+| `@max-sm:` | `@max-md:`  |
+| `@max-md:` | `@max-lg:`  |
+| `@max-lg:` | `@max-xl:`  |
+| `@max-xl:` | `@max-2xl:` |
+
+- **BREAKING** Breakpoint length tokens shift the same step: `--breakpoint-sm` is now 40rem (it was 48rem), and so on up to the new `--breakpoint-2xl` at 96rem; `--breakpoint-xs` no longer exists. The viewport-width utility classes follow the tokens by rem, not by name: `w-screen-sm` (and `h-`, `size-`, `min-`/`max-`, and the `inline-`/`block-` aliases) is now 40rem, where `w-screen-xs` was, and `*-screen-2xl` is new. Migration: `zazz-ui migrate` rewrites the token reads and the `*-screen-*` class names (tabled with the `--container-*` tokens below).
+
+| 0.4               | 0.5                |
+| ----------------- | ------------------ |
+| `--breakpoint-xs` | `--breakpoint-sm`  |
+| `--breakpoint-sm` | `--breakpoint-md`  |
+| `--breakpoint-md` | `--breakpoint-lg`  |
+| `--breakpoint-lg` | `--breakpoint-xl`  |
+| `--breakpoint-xl` | `--breakpoint-2xl` |
+
+- **BREAKING** The `--gap-xs` … `--gap-xl` size tokens are removed and replaced by the `--space-*` family, one scale for padding, margin, and gap: `--space-2xs` (`--step-1`), `xs` (`--step-2`), `sm` (`--step-4`), `md` (`--step-6`), `lg` (`--step-11`), `xl` (`--step-24`), `2xl` (`--step-40`). `xs` … `xl` are byte-identical to the old `--gap-*` values and stay fluid through `--spacing-interval`; `--gutters` now reads `--space-md` (same value). The `.gap-*`, `.p-*`, `.m-*` class names are unchanged and read `--space-*` underneath. There are **no aliases**: `--gap-sm` … `--gap-2xl` are now the responsive forms of the `--gap` style prop, registered `inherits: false`, so a leftover `var(--gap-md)` below `:root` resolves to nothing. Migration: `zazz-ui migrate` rewrites every `--gap-*` read to `--space-*`; if you set `--gap-*` on `:root` to retune the scale, set `--space-*` instead.
+
+| 0.4        | 0.5           |
+| ---------- | ------------- |
+| —          | `--space-2xs` |
+| `--gap-xs` | `--space-xs`  |
+| `--gap-sm` | `--space-sm`  |
+| `--gap-md` | `--space-md`  |
+| `--gap-lg` | `--space-lg`  |
+| `--gap-xl` | `--space-xl`  |
+| —          | `--space-2xl` |
+
+- **BREAKING** `.container` band names shift with the breakpoints: `data-container` values, the `--container-*` line-range variables, and the grid line names all move one step, and each keeps its rem width (`data-container="sm"` is the 40rem band, where `xs` was; `2xl` is the new 96rem band next to `full` and `bleed`). The default band is now `var(--container-lg)`, the same 64rem that `var(--container-md)` was. The article variant follows: `data-container="sm"` reads 45ch (`--article-xs`) … `2xl` reads 75ch (`--article-xl`), so every reading width is unchanged and the `--article-*` tokens are not renamed. Migration: `zazz-ui migrate` rewrites `data-container` attribute values and every `--container-*` read (tabled below); grid line names are not tokens, so if your own CSS places children on `container-xs-start` … `container-xl-end`, shift those one step by hand (`xs` → `sm` … `xl` → `2xl`).
+
+| 0.4                 | 0.5                  |
+| ------------------- | -------------------- |
+| `data-container=xs` | `data-container=sm`  |
+| `data-container=sm` | `data-container=md`  |
+| `data-container=md` | `data-container=lg`  |
+| `data-container=lg` | `data-container=xl`  |
+| `data-container=xl` | `data-container=2xl` |
+
+| Band (0.4 → 0.5) | Width        | Line names                                      |
+| ---------------- | ------------ | ----------------------------------------------- |
+| xs → sm          | 40rem        | `container-sm-start` / `container-sm-end`       |
+| sm → md          | 48rem        | `container-md-start` / `container-md-end`       |
+| md → lg          | 64rem        | `container-lg-start` / `container-lg-end`       |
+| lg → xl          | 80rem        | `container-xl-start` / `container-xl-end`       |
+| xl → 2xl         | 96rem        | `container-2xl-start` / `container-2xl-end`     |
+| full             | gutters kept | `container-full-start` / `container-full-end`   |
+| bleed            | edge to edge | `container-bleed-start` / `container-bleed-end` |
+
+- **BREAKING** `*-screen-*` classes and `--container-*` tokens shift with the breakpoints. The viewport-width utilities (`w-`, `h-`, `size-`, `min-w-`, `min-h-`, `max-w-`, `max-h-` and their `inline-`/`block-` aliases, each `-screen-<size>`) read `--breakpoint-<size>`, and the `.container` line-range variables `--container-<size>` name the band, so both take the new names and keep their rem: `w-screen-sm` and `var(--container-sm)` are the 40rem width, where `-xs` was; the `-2xl` forms are new and `-xs` is gone. Both are chains, like the prefixes above. Migration: `zazz-ui migrate` rewrites the class names in `class` attributes and CSS selectors and the token reads everywhere; nothing is aliased.
+
+| 0.4              | 0.5               |
+| ---------------- | ----------------- |
+| `--container-xs` | `--container-sm`  |
+| `--container-sm` | `--container-md`  |
+| `--container-md` | `--container-lg`  |
+| `--container-lg` | `--container-xl`  |
+| `--container-xl` | `--container-2xl` |
+
+| 0.4                    | 0.5                     |
+| ---------------------- | ----------------------- |
+| `w-screen-xs`          | `w-screen-sm`           |
+| `w-screen-sm`          | `w-screen-md`           |
+| `w-screen-md`          | `w-screen-lg`           |
+| `w-screen-lg`          | `w-screen-xl`           |
+| `w-screen-xl`          | `w-screen-2xl`          |
+| `inline-screen-xs`     | `inline-screen-sm`      |
+| `inline-screen-sm`     | `inline-screen-md`      |
+| `inline-screen-md`     | `inline-screen-lg`      |
+| `inline-screen-lg`     | `inline-screen-xl`      |
+| `inline-screen-xl`     | `inline-screen-2xl`     |
+| `h-screen-xs`          | `h-screen-sm`           |
+| `h-screen-sm`          | `h-screen-md`           |
+| `h-screen-md`          | `h-screen-lg`           |
+| `h-screen-lg`          | `h-screen-xl`           |
+| `h-screen-xl`          | `h-screen-2xl`          |
+| `block-screen-xs`      | `block-screen-sm`       |
+| `block-screen-sm`      | `block-screen-md`       |
+| `block-screen-md`      | `block-screen-lg`       |
+| `block-screen-lg`      | `block-screen-xl`       |
+| `block-screen-xl`      | `block-screen-2xl`      |
+| `size-screen-xs`       | `size-screen-sm`        |
+| `size-screen-sm`       | `size-screen-md`        |
+| `size-screen-md`       | `size-screen-lg`        |
+| `size-screen-lg`       | `size-screen-xl`        |
+| `size-screen-xl`       | `size-screen-2xl`       |
+| `max-w-screen-xs`      | `max-w-screen-sm`       |
+| `max-w-screen-sm`      | `max-w-screen-md`       |
+| `max-w-screen-md`      | `max-w-screen-lg`       |
+| `max-w-screen-lg`      | `max-w-screen-xl`       |
+| `max-w-screen-xl`      | `max-w-screen-2xl`      |
+| `max-inline-screen-xs` | `max-inline-screen-sm`  |
+| `max-inline-screen-sm` | `max-inline-screen-md`  |
+| `max-inline-screen-md` | `max-inline-screen-lg`  |
+| `max-inline-screen-lg` | `max-inline-screen-xl`  |
+| `max-inline-screen-xl` | `max-inline-screen-2xl` |
+| `max-h-screen-xs`      | `max-h-screen-sm`       |
+| `max-h-screen-sm`      | `max-h-screen-md`       |
+| `max-h-screen-md`      | `max-h-screen-lg`       |
+| `max-h-screen-lg`      | `max-h-screen-xl`       |
+| `max-h-screen-xl`      | `max-h-screen-2xl`      |
+| `max-block-screen-xs`  | `max-block-screen-sm`   |
+| `max-block-screen-sm`  | `max-block-screen-md`   |
+| `max-block-screen-md`  | `max-block-screen-lg`   |
+| `max-block-screen-lg`  | `max-block-screen-xl`   |
+| `max-block-screen-xl`  | `max-block-screen-2xl`  |
+| `min-w-screen-xs`      | `min-w-screen-sm`       |
+| `min-w-screen-sm`      | `min-w-screen-md`       |
+| `min-w-screen-md`      | `min-w-screen-lg`       |
+| `min-w-screen-lg`      | `min-w-screen-xl`       |
+| `min-w-screen-xl`      | `min-w-screen-2xl`      |
+| `min-inline-screen-xs` | `min-inline-screen-sm`  |
+| `min-inline-screen-sm` | `min-inline-screen-md`  |
+| `min-inline-screen-md` | `min-inline-screen-lg`  |
+| `min-inline-screen-lg` | `min-inline-screen-xl`  |
+| `min-inline-screen-xl` | `min-inline-screen-2xl` |
+| `min-h-screen-xs`      | `min-h-screen-sm`       |
+| `min-h-screen-sm`      | `min-h-screen-md`       |
+| `min-h-screen-md`      | `min-h-screen-lg`       |
+| `min-h-screen-lg`      | `min-h-screen-xl`       |
+| `min-h-screen-xl`      | `min-h-screen-2xl`      |
+| `min-block-screen-xs`  | `min-block-screen-sm`   |
+| `min-block-screen-sm`  | `min-block-screen-md`   |
+| `min-block-screen-md`  | `min-block-screen-lg`   |
+| `min-block-screen-lg`  | `min-block-screen-xl`   |
+| `min-block-screen-xl`  | `min-block-screen-2xl`  |
+
+- New **style props** (ADR-0012): 44 props, each with five responsive forms (`-sm` … `-2xl`), 264 registrations in `src/base/_properties.css`, every one `@property { syntax: "*"; inherits: false }` with no initial value. Set them inline and the matching rule in `@layer zazz.utilities` applies: `style="--px: 4; --grid-cols-md: 3"`. Families and names — spacing (numeric, multiplied by `--spacing-interval`): `p px py ps pe pt pb m mx my ms me mt mb gap gap-x gap-y`; sizing: `w h min-w max-w min-h max-h size`; grid: `grid-cols grid-rows col-span row-span`; flex: `basis grow shrink order`; color: `bg text border-color`; typography: `text-size line-height letter-spacing`; position (logical): `top right bottom left inset z`. Four names are the full CSS property rather than the Tailwind root because the root collides with a token family through its responsive forms: `border-color` (not `border`), `text-size` (not `font-size`), `line-height` (not `leading`), `letter-spacing` (not `tracking`). `--gap` also sets `--_gap`, and `--grid-cols` implies `display: grid` and sets `--_grid-cols`, so `.basis-1/N` and the span utilities keep agreeing with them. Rules are gated on the attribute text (`:where([style*="--px:"])`), so an element with no prop matches no rule; responsive forms live inside `@container style(--bp-md: true)` and so answer the nearest size container, like the `@md:` classes. Primitives never read props; the utilities layer sits above `zazz.components`, so `style="--px: 8"` on a `ui-button` wins. Props live in the `style` attribute and are not a CSP workaround. The registry is `src/props.ts` (`vp run properties` regenerates the CSS); the rules are one file per family, `src/base/_utilities-<family>.css`. Adding a prop is additive; renaming or removing one is breaking.
+- New `--screen-sm` … `--screen-2xl` **viewport flags**, the `@media` twins of the `--bp-*` container flags: same scale (40/48/64/80/96rem), same registration, set on `:root` by `@media (width >= …)` and inherited everywhere. Gate on `style(--screen-md: true)` when a rule should answer the viewport rather than the nearest container.
+- New **modular dist**: alongside `dist/zazz.css`, the build emits `layers.css` (the `@layer` order alone), `base.css`, `utilities-core.css`, one `utilities-<family>.css` per style-prop family, `utilities-spacing-responsive.css`, `utilities.css` (all utilities), and `primitives/<name>.css`, each wrapped in its own layer so any subset can be loaded, or combined into one request with jsDelivr's `/combine/`. Load only what you use; the docs' _Optimize your CSS_ page has the recipes, and the measurements table above takes the after-numbers once the release is cut.
+- The styling ladder in `CONVENTIONS.styles.md` §5 gains a rung: a utility class when a scale value fits; a style prop when the value is open and a prop exists; a `--ui-*` token set inline when the value lands where inline style cannot reach; raw inline style for a true same-element one-off; a CSS file the moment the one-off repeats. ADR-0008's "same-element hooks add nothing" still holds for 1:1 hooks; ADR-0012 records why style props pass that test.
+
+### autocomplete
+
+- New `--ui-autocomplete-option-gap` hook, defaulting to the shared `--ui-field-option-gap` so the list renders unchanged. The suggestion list and its groups read it instead of a hard `--step-px`, so retuning `--ui-field-option-gap` now reaches the autocomplete the way it already reached combobox, command, menu and select. Found by the ADR-0008 audit of every `--step-*` and literal length in component rules; every other one stays, with the failing four-part test recorded per row.
+
 ## 0.4.1 (2026-09-04)
 
 Housekeeping on top of 0.4.0: the vestigial `anchor-size()` `@supports` gates come out, and the anchor-positioning support notes in the CSS headers and ADR-0011 are corrected. No rendered output changes in any browser — see the reasoning on the gate entry below.

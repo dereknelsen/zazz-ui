@@ -5,8 +5,10 @@
  * the invariants that make `PRIMITIVES` safe for the CLI, the docs, and the
  * granular CDN head to trust: every primitive directory has an entry, every
  * listed file exists, dependencies resolve and stay acyclic, the cascade
- * order mirrors `index.css`, and every bare specifier is pinned in the
- * import map.
+ * order mirrors `index.css`, every bare specifier is pinned in the import
+ * map, and the distribution map (`DIST_CSS`) covers exactly the primitives
+ * that own css and bundles `zazz.css` in `index.css` order. The built
+ * `dist/` itself is checked by `dist.test.ts`.
  */
 
 import { existsSync, readFileSync, readdirSync } from "node:fs";
@@ -16,6 +18,9 @@ import { describe, expect, it } from "vite-plus/test";
 import { ESM_DEPENDENCIES } from "./head.ts";
 import {
   CSS_CASCADE_ORDER,
+  DIST_BUNDLE_CSS,
+  DIST_CSS,
+  DIST_LAYERS_CSS,
   MANIFEST_VERSION,
   PRIMITIVES,
   WEB_COMPONENT_SCRIPT_FILES,
@@ -133,6 +138,53 @@ describe("cascade order", () => {
       .map(([name]) => name)
       .sort();
     expect([...CSS_CASCADE_ORDER].sort()).toEqual(withCss);
+  });
+});
+
+describe("distribution css map", () => {
+  const primitiveFiles = Object.keys(DIST_CSS).filter((file) => file.startsWith("primitives/"));
+
+  it("maps every primitive with css to dist/primitives/<name>.css, and nothing else", () => {
+    const withCss = Object.entries(PRIMITIVES)
+      .filter(([, entry]) => entry.css.length > 0)
+      .map(([name]) => name)
+      .sort();
+    const mapped = primitiveFiles.map((file) => file.slice("primitives/".length, -".css".length));
+    expect(mapped.sort()).toEqual(withCss);
+    for (const name of withCss) {
+      expect(DIST_CSS[`primitives/${name}.css`], name).toEqual(PRIMITIVES[name]?.css);
+    }
+  });
+
+  it("orders the primitive files by the cascade", () => {
+    expect(primitiveFiles).toEqual(CSS_CASCADE_ORDER.map((name) => `primitives/${name}.css`));
+  });
+
+  it("bundles zazz.css from exactly index.css's @imports, in order", () => {
+    const indexCss = readFileSync(join(SRC, "index.css"), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+    const imported = [...indexCss.matchAll(/@import "\.\/([^"]+)";/g)].map((m) => m[1]);
+    expect(DIST_CSS[DIST_BUNDLE_CSS]).toEqual(imported);
+  });
+
+  it("keeps layers.css to the layer order and utilities.css the union of its parts", () => {
+    expect(DIST_CSS[DIST_LAYERS_CSS]).toEqual(["base/_layers.css"]);
+    expect(DIST_CSS[DIST_BUNDLE_CSS]?.[0]).toBe("base/_layers.css");
+    const families = Object.keys(DIST_CSS).filter(
+      (file) => file.startsWith("utilities-") && file !== "utilities-core.css",
+    );
+    expect(DIST_CSS["utilities.css"]).toEqual([
+      ...(DIST_CSS["utilities-core.css"] ?? []),
+      ...families.flatMap((file) => DIST_CSS[file] ?? []),
+    ]);
+  });
+
+  it("lists no source twice within a file, and every source exists", () => {
+    for (const [file, sources] of Object.entries(DIST_CSS)) {
+      expect(new Set(sources).size, `${file} repeats a source`).toBe(sources.length);
+      for (const source of sources) {
+        expect(existsSync(join(SRC, source)), `${file}: ${source}`).toBe(true);
+      }
+    }
   });
 });
 

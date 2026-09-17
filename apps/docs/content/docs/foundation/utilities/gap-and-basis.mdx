@@ -9,16 +9,22 @@ description: Gap utilities for flex and grid containers, gap-aware flex basis fr
 
 <Preview src="utilities/gap" />
 
-| Class       | Value           |
-| ----------- | --------------- |
-| `gap-0`     | `0`             |
-| `gap-0.5px` | `0.5px`         |
-| `gap-px`    | `1px`           |
-| `gap-xs`    | `var(--gap-xs)` |
-| `gap-sm`    | `var(--gap-sm)` |
-| `gap-md`    | `var(--gap-md)` |
-| `gap-lg`    | `var(--gap-lg)` |
-| `gap-xl`    | `var(--gap-xl)` |
+| Class       | Value             |
+| ----------- | ----------------- |
+| `gap-0`     | `0`               |
+| `gap-0.5px` | `0.5px`           |
+| `gap-px`    | `1px`             |
+| `gap-xs`    | `var(--space-xs)` |
+| `gap-sm`    | `var(--space-sm)` |
+| `gap-md`    | `var(--space-md)` |
+| `gap-lg`    | `var(--space-lg)` |
+| `gap-xl`    | `var(--space-xl)` |
+
+The `xs` to `xl` steps are the middle five of the `--space-2xs` to `--space-2xl` scale (step multiples of `--spacing-interval`; see [Spacing](/docs/foundation/utilities/spacing)).
+
+### Open values: use a style prop
+
+For a gap off the scale, set a [style prop](/docs/core-concepts/style-props): `style="--gap: 5"` is `gap: calc(5 * var(--spacing-interval))`, so `--gap: 6` equals `gap-md`. `--gap`, `--gap-x`, and `--gap-y` take `-sm` to `-2xl` responsive suffixes (`--gap-lg: 8`), and `--gap` also sets `--_gap`, so the basis fractions below subtract the prop's gap exactly as they do for `gap-*`.
 
 ### Axis-specific gaps
 
@@ -46,14 +52,14 @@ Fraction utilities subtract gap values so child elements fit on a single line:
 | `basis-1/6`  | `(100% - 5 * gap) / 6` |
 
 <Callout type="info">
-  Set a `gap-*` class on the flex container to pass the gap value into `--_gap`. With no gap class,
-  `--_gap` defaults to `0px`.
+  Set a `gap-*` class or a `--gap` style prop on the flex container to pass the gap value into
+  `--_gap`. With neither, `--_gap` defaults to `0px`.
 </Callout>
 
 ## Gap coordination variables
 
-| Variable   | Default | Set by    | Consumed by                                |
-| ---------- | ------- | --------- | ------------------------------------------ |
-| `--_gap`   | `0px`   | `gap-*`   | `basis-1/2` to `basis-1/6`, auto-fill grid |
-| `--_gap-x` | None    | `gap-x-*` | `column-gap`                               |
-| `--_gap-y` | None    | `gap-y-*` | `row-gap`                                  |
+| Variable   | Default | Set by               | Consumed by                                |
+| ---------- | ------- | -------------------- | ------------------------------------------ |
+| `--_gap`   | `0px`   | `gap-*`, `--gap`     | `basis-1/2` to `basis-1/6`, auto-fill grid |
+| `--_gap-x` | None    | `gap-x-*`, `--gap-x` | `column-gap`                               |
+| `--_gap-y` | None    | `gap-y-*`, `--gap-y` | `row-gap`                                  |

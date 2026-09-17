@@ -3,6 +3,12 @@ title: Migrating to Zazz
 description: Adopt Zazz incrementally on existing CSS codebases using cascade layers, @scope donut scoping, and migration shims.
 ---
 
+<Callout>
+  This page is about bringing an existing, non-Zazz stylesheet under Zazz. If you are already on
+  Zazz and moving from 0.4 to 0.5, you want [Upgrading to 0.5](/docs/getting-started/upgrading): the
+  renamed breakpoints and tokens, and the `zazz-ui migrate` command that applies them.
+</Callout>
+
 Zazz uses cascade layers and zero-specificity resets, allowing incremental adoption on existing codebases without full rewrites or `!important` overrides.
 
 ## The cascade rule: unlayered rules beat layered rules

@@ -107,6 +107,11 @@
                 >
               </li>
               <li>
+                <a class="ui-button" data-variant="ghost" data-size="sm" href="style-props.html"
+                  >Style props</a
+                >
+              </li>
+              <li>
                 <a class="ui-button" data-variant="ghost" data-size="sm" href="components.html"
                   >Components</a
                 >
@@ -127,9 +132,9 @@
           <hgroup class="flex flex-col gap-sm">
             <span class="text-eyebrow">Layout</span>
             <h1 class="text-h1">Container bands</h1>
-            <p class="text-lg text-muted-foreground max-w-screen-sm">
+            <p class="text-lg text-muted-foreground max-w-screen-md">
               A <code>.container</code> turns its region into a band grid and spans every column as
-              a subgrid. Each child drops into a band: <code>xs</code> through <code>xl</code> cap
+              a subgrid. Each child drops into a band: <code>sm</code> through <code>2xl</code> cap
               and center at the matching breakpoint, <code>full</code> fills minus the gutters, and
               <code>bleed</code> runs edge to edge. Children default to <code>lg</code>.
             </p>
@@ -142,7 +147,7 @@
         <div class="container">
           <p class="text-sm text-muted-foreground font-strong pb-sm" data-container="full">
             Seven children of one container, each placed with <code>data-container</code>. The
-            widths nest from bleed down to xs.
+            widths nest from bleed down to sm.
           </p>
 
           <div
@@ -158,55 +163,55 @@
             data-container="full" · full region width minus the gutters
           </div>
           <div
-            data-container="xl"
+            data-container="2xl"
             class="bg-secondary text-secondary-foreground rounded-md p-sm mb-xs text-center text-sm font-strong"
           >
-            data-container="xl" · caps at 96rem
+            data-container="2xl" · caps at 96rem
+          </div>
+          <div
+            data-container="xl"
+            class="bg-tertiary text-tertiary-foreground rounded-md p-sm mb-xs text-center text-sm font-strong"
+          >
+            data-container="xl" · caps at 80rem
           </div>
           <div
             data-container="lg"
-            class="bg-tertiary text-tertiary-foreground rounded-md p-sm mb-xs text-center text-sm font-strong"
+            class="bg-info text-info-foreground rounded-md p-sm mb-xs text-center text-sm font-strong"
           >
-            data-container="lg" · caps at 80rem · the default band
+            data-container="lg" · caps at 64rem · the default band
           </div>
           <div
             data-container="md"
-            class="bg-info text-info-foreground rounded-md p-sm mb-xs text-center text-sm font-strong"
+            class="bg-success text-success-foreground rounded-md p-sm mb-xs text-center text-sm font-strong"
           >
-            data-container="md" · caps at 64rem
+            data-container="md" · caps at 48rem
           </div>
           <div
             data-container="sm"
-            class="bg-success text-success-foreground rounded-md p-sm mb-xs text-center text-sm font-strong"
-          >
-            data-container="sm" · caps at 48rem
-          </div>
-          <div
-            data-container="xs"
             class="bg-warning text-warning-foreground rounded-md p-sm text-center text-sm font-strong"
           >
-            data-container="xs" · caps at 40rem
+            data-container="sm" · caps at 40rem
           </div>
         </div>
       </section>
 
       <!-- Default band for the whole container -->
       <section class="py-xl border-t">
-        <div class="container" data-container="md">
+        <div class="container" data-container="lg">
           <hgroup class="flex flex-col gap-sm pb-md">
-            <span class="text-eyebrow">data-container="md"</span>
+            <span class="text-eyebrow">data-container="lg"</span>
             <h2 class="text-h5 font-heading">One default for every child</h2>
             <p class="text-muted-foreground">
               Set <code>data-container</code> on the container and every child lands in that band
               unless it sets its own <code>data-container</code>. This section defaults to
-              <code>md</code>, so the heading and this paragraph sit at 64rem.
+              <code>lg</code>, so the heading and this paragraph sit at 64rem.
             </p>
           </hgroup>
 
           <div
             class="bg-muted text-muted-foreground rounded-md p-md mb-xs text-center text-sm font-strong"
           >
-            no data-container · inherits the md default
+            no data-container · inherits the lg default
           </div>
           <div
             data-container="bleed"
@@ -222,45 +227,45 @@
         <div class="container">
           <hgroup class="flex flex-col gap-sm pb-md">
             <span class="text-eyebrow">Responsive variants</span>
-            <h2 class="text-h5 font-heading">@md:container and @max-md:container</h2>
+            <h2 class="text-h5 font-heading">@lg:container and @max-lg:container</h2>
             <p class="text-muted-foreground">
               A responsive container is a band subgrid for only part of the range and a plain block
-              the rest. <code>@md:container</code> aligns to the bands at md and up;
-              <code>@max-md:container</code> aligns below md and falls back to a normal grid above
+              the rest. <code>@lg:container</code> aligns to the bands at lg and up;
+              <code>@max-lg:container</code> aligns below lg and falls back to a normal grid above
               it. Resize to watch each switch.
             </p>
           </hgroup>
 
-          <!-- @md:container — plain block below md, band subgrid at md+ -->
+          <!-- @lg:container — plain block below lg, band subgrid at lg+ -->
           <p class="text-sm text-muted-foreground font-strong pb-sm">
-            @md:container · stacks full width below md; at md and up the second child moves into the
-            sm band.
+            @lg:container · stacks full width below lg; at lg and up the second child moves into the
+            md band.
           </p>
-          <div class="@md:container mb-lg">
+          <div class="@lg:container mb-lg">
             <div
               class="bg-card text-card-foreground border rounded-md p-md mb-xs text-center text-sm font-strong"
             >
-              no data-container · lg default at md+
+              no data-container · lg default at lg+
             </div>
             <div
-              data-container="sm"
+              data-container="md"
               class="bg-primary text-primary-foreground rounded-md p-md text-center text-sm font-strong"
             >
-              data-container="sm" · only narrows at md+
+              data-container="md" · only narrows at lg+
             </div>
           </div>
 
-          <!-- @max-md:container — band subgrid below md, two-col grid at md+ -->
+          <!-- @max-lg:container — band subgrid below lg, two-col grid at lg+ -->
           <p class="text-sm text-muted-foreground font-strong pb-sm">
-            @max-md:container · a two column grid at md and up; below md it becomes a band container
-            so its first child drops into the xs band.
+            @max-lg:container · a two column grid at lg and up; below lg it becomes a band container
+            so its first child drops into the sm band.
           </p>
-          <div class="grid grid-cols-2 gap-md @max-md:container">
+          <div class="grid grid-cols-2 gap-md @max-lg:container">
             <div
-              data-container="xs"
+              data-container="sm"
               class="bg-secondary text-secondary-foreground rounded-md p-md text-center text-sm font-strong"
             >
-              data-container="xs"
+              data-container="sm"
             </div>
             <div
               class="bg-tertiary text-tertiary-foreground rounded-md p-md text-center text-sm font-strong"
@@ -302,6 +307,9 @@
             <li><a class="ui-button" data-variant="link" href="about.html">About</a></li>
             <li><a class="ui-button" data-variant="link" href="layout.html">Layout</a></li>
             <li><a class="ui-button" data-variant="link" href="responsive.html">Responsive</a></li>
+            <li>
+              <a class="ui-button" data-variant="link" href="style-props.html">Style props</a>
+            </li>
             <li><a class="ui-button" data-variant="link" href="products.html">Products</a></li>
             <li><a class="ui-button" data-variant="link" href="components.html">Components</a></li>
             <li><a class="ui-button" data-variant="link" href="forms.html">Forms</a></li>

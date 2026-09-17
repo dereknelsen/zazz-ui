@@ -44,8 +44,16 @@ Cascade order is declared once, in [`_layers.css`](./src/base/_layers.css), and 
 ```
 
 Load order lives in [`index.css`](./src/index.css): it `@import`s `_layers.css` first,
-then the base partials, then every `primitives/<name>/<name>.css`, with `_utilities.css` and
-`_layout.css` last. Everything slots into one of these layers.
+then `_variables.css`, then [`_properties.css`](./src/base/_properties.css), then the rest of
+the base partials, then every `primitives/<name>/<name>.css`, then `_utilities.css` and
+`_layout.css`, and last the style-prop family files (`_utilities-spacing.css`,
+`_utilities-spacing-responsive.css`, `-sizing`, `-grid`, `-flex`, `-color`, `-typography`,
+`-position`), so a prop beats a class on the same element by source order (ADR-0012).
+`_properties.css` is **generated**: [`src/props.ts`](./src/props.ts) is the prop registry
+(names, families, value kind) and `scripts/generate-properties.mjs` (`vp run properties`)
+renders it as one `@property { syntax: "*"; inherits: false }` per prop × breakpoint;
+`props.test.ts` fails on drift and on a name that collides with a token family. Add or
+rename a prop in `props.ts` and nowhere else. Everything slots into one of these layers.
 Layering (not selector specificity or BEM) is how we control the cascade, so a
 plain `.ui-button` rule in `components` can still be overridden by a `utilities` class
 without `!important`.
@@ -77,7 +85,12 @@ CSS this regular compresses to about 10-15% of its raw size, which beats hand-sp
 <link rel="stylesheet" href="../src/index.css" />
 ```
 
-(Package consumers import the same bundle as `@zazz-ui/core/index.css`.)
+(Package consumers import the same bundle as `@zazz-ui/core/index.css`, or load the built
+`dist/zazz.css`. `scripts/build-dist.mjs` also emits the modular dist — `layers.css`,
+`base.css`, `utilities-core.css`, one `utilities-<family>.css` per style-prop family,
+`utilities.css`, `primitives/<name>.css` — each prefixed with the layer order so any subset
+loads in cascade order; `src/` keeps the per-file grain and is the only place `@import` is
+allowed.)
 
 Do not pair it with a `<link rel="preload" as="style">` for the same file: a same-document
 stylesheet link is already the highest-priority, render-blocking fetch, so the preload is
@@ -130,7 +143,9 @@ The four layers, by responsibility:
 - **`components`**: the actual component (`.ui-button`, `.ui-dialog`, `.ui-field`).
 - **`legacy.migrations`**: temporary shims that map old class names to Zazz tokens while you rewrite markup. Delete each rule once the corresponding markup is updated. Lives in an optional `migrations.css` you add and import at the commented slot in [`index.css`](./src/index.css) via `layer(legacy.migrations)`.
 - **`utilities`**: atomic, override-anything classes ([`_utilities.css`](./src/base/_utilities.css)),
-  written with `:where()` for zero specificity.
+  written with `:where()` for zero specificity, and the style-prop rules
+  (`_utilities-<family>.css`): `:where([style*="--px:"]) { padding-inline: … }`, gated on the
+  attribute text so an element that sets no prop matches no rule.
 
 ---
 
@@ -239,12 +254,12 @@ without editing a single rule.
 Global tokens live in [`_variables.css`](./src/base/_variables.css) under `@layer variables`,
 organized in tiers (literal scales → semantic roles → component primitives):
 
-| Tier                 | Example                                                                                                  | Where               |
-| -------------------- | -------------------------------------------------------------------------------------------------------- | ------------------- |
-| Brand/literal scales | `--primary-600`, `--neutral-100`, `--shade-50`                                                           | `_variables.css`    |
-| Semantic roles       | `--background`, `--foreground`, `--primary`, `--muted`, `--border`                                       | `_variables.css`    |
-| Metrics & systems    | `--step-*`, `--radius-*`, `--gap-*`, `--font-family-*`, `--font-size-*`, `--font-weight-*`, `--shadow-*` | `_variables.css`    |
-| **Component tokens** | `--ui-button-background`, `--ui-field-border-color`, `--ui-dialog-radius`                                | each component file |
+| Tier                 | Example                                                                                                    | Where               |
+| -------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------- |
+| Brand/literal scales | `--primary-600`, `--neutral-100`, `--shade-50`                                                             | `_variables.css`    |
+| Semantic roles       | `--background`, `--foreground`, `--primary`, `--muted`, `--border`                                         | `_variables.css`    |
+| Metrics & systems    | `--step-*`, `--radius-*`, `--space-*`, `--font-family-*`, `--font-size-*`, `--font-weight-*`, `--shadow-*` | `_variables.css`    |
+| **Component tokens** | `--ui-button-background`, `--ui-field-border-color`, `--ui-dialog-radius`                                  | each component file |
 
 Selected tokens are also **registered as typed `@property`**, inline in
 [`_variables.css`](./src/base/_variables.css), so they can be read by container `style()`
@@ -412,6 +427,11 @@ the variables layer.
 For a value that applies to one instance only, reach for (in order):
 
 1. **A utility class**, when a scale value fits (`class="w-full max-w-xl"`).
+   - **1b. A style prop**, when the value is open but the property is one of the 44 props
+     (`style="--px: 5; --grid-cols-md: 3"`; registry in [`src/props.ts`](./src/props.ts)).
+     A prop carries what raw inline style cannot: the responsive suffixes, the fluid spacing
+     scale (`--px: 5` is five `--spacing-interval` steps), and the `--_gap` / `--_grid-cols`
+     coordination the class utilities rely on. See `docs/adr/0012-style-props.md`.
 2. **A public `--ui-*` token set inline**, when the value lands where inline style cannot
    reach (`style="--ui-popover-inline-size: max-content"`).
 3. **Raw inline style** for a true same-element one-off (`style="max-inline-size: 16ch"`).
@@ -420,13 +440,16 @@ For a value that applies to one instance only, reach for (in order):
 4. **A CSS file**, the moment the one-off repeats.
 
 Because of rung 3, primitives do **not** carry per-property hook variables for values
-inline style can already set. A new `--ui-*` hook is added only when all four hold:
+inline style can already set, and primitives never read style props (a component rule that
+reads `--px` is a bug against ADR-0012; props and primitives meet only in the cascade, where
+`zazz.utilities` sits above `zazz.components`). A new `--ui-*` hook is added only when all four hold:
 **(a)** inline style on the root cannot set the declaration (pseudo/vendor shadow part,
 descendant slot, or state-conditional); **(b)** it is a design value, not structural
 plumbing; **(c)** no existing token already reaches it via fan-out; **(d)** a concrete
 use case exists in an example fragment or docs page.
 
-@see `docs/adr/0008-instance-override-escape-hatch.md` for the decision record.
+@see `docs/adr/0008-instance-override-escape-hatch.md` for the decision record, amended by
+`docs/adr/0012-style-props.md` (rung 1b).
 
 ### Dark mode is a hook too
 

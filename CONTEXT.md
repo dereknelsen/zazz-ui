@@ -20,6 +20,10 @@ _Avoid_: expanded version, raw form
 An interior part of a primitive, identified by `data-slot="{primitive}-{part}"` (e.g. `data-slot="dialog-header"`). The attribute is a space-separated token list (like `class`); selectors match with `[data-slot~="…"]`. Slots replace BEM element classes; classes only ever name primitive roots.
 _Avoid_: part, fragment, segment, sub-component, BEM element
 
+**Style prop**:
+An inline custom property (`style="--px: 4"`) read by a zero-specificity rule in `@layer zazz.utilities` gated on `[style*="--px:"]`. The mechanism for open values; finite values are classes. Names are Tailwind roots with no prefix, and the only suffix is a breakpoint (`--px-md`). See `docs/adr/0012-style-props.md`.
+_Avoid_: slot, hook variable, inline token
+
 **Vendor**:
 The CLI's distribution model: copying kit files into a consumer's project so the consumer owns and edits them; updates are diffs against recorded provenance, not package bumps.
 _Avoid_: eject, copy-paste install, scaffold

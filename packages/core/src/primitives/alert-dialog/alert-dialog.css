@@ -12,7 +12,7 @@
 @layer variables {
   :root {
     /* Narrower than the base dialog: an alert is a single question, not a form */
-    --ui-alert-dialog-inline-size: min(45ch, 100% - var(--gap-md) * 2);
+    --ui-alert-dialog-inline-size: min(45ch, 100% - var(--space-md) * 2);
     --ui-alert-dialog-accent: var(--destructive);
     --ui-alert-dialog-shadow: var(--ui-dialog-shadow);
   }

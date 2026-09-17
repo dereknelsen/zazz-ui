@@ -1,0 +1,20 @@
+---
+title: Style props
+description: "Eight labelled cases for the inline style props: responsive padding on a div and on a button, inherits: false, --gap feeding .basis-1/2, --grid-cols without .grid, raw sizing, a theme override island, and the documented --mx: auto failure."
+---
+
+The regression page for [style props](/docs/core-concepts/style-props): a custom property set in the `style` attribute (`style="--px: 8; --px-md: 12"`) and read by a zero-specificity rule in the utilities layer. Each case is labelled with the markup it uses, and a readout at the bottom prints the computed values and refreshes on resize, so the page doubles as its own check.
+
+<TemplateFrame src="/zazz/examples/style-props.html" title="Style props template" />
+
+## What to look at
+
+- **Responsive padding** on a plain div (case a) and on a `.ui-button` (case b). The utilities layer is ordered after the components layer, so the prop beats the button's own `--ui-button-padding` with no `!important`.
+- **No inheritance** (case c). Props are registered `inherits: false`; the child of a `--px: 8` box keeps zero padding.
+- **Coordination** (cases d and e). `--gap` also sets `--_gap`, so `.basis-1/2` children fill one line exactly; `--grid-cols: 3` sets `display: grid` and the track count without a `.grid` class.
+- **A theme override next to a prop** (case g). A `<style>` block sets `--ui-field-padding` on `:root`; the plain button follows the token, the prop-carrying button still shows the prop. The override has to be global: `--ui-button-padding` reads `--ui-field-padding` at `:root`, so a scoped override never reaches it.
+- **The documented failure** (case h). `--mx: auto` makes the spacing `calc()` invalid and the margin falls back to zero. Auto margins are a finite value, so they stay a class: `.mx-auto`.
+
+## Source
+
+Open [the raw page](/zazz/examples/style-props.html), or read [style-props.html on GitHub](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/examples/style-props.html). The same file ships in the npm package at `examples/style-props.html`.

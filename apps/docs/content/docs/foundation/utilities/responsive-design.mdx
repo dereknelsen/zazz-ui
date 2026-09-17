@@ -1,9 +1,9 @@
 ---
 title: Responsive design
-description: "Container style query prefixes (@xs: to @xl:) and supported utility families."
+description: "Container style query prefixes (@sm: to @2xl:) and supported utility families."
 ---
 
-Responsive utilities use container style queries with `@` prefixes: `@xs:`, `@sm:`, `@md:`, `@lg:`, `@xl:`.
+Responsive utilities use container style queries with `@` prefixes: `@sm:`, `@md:`, `@lg:`, `@xl:`, `@2xl:`.
 
 <Preview src="utilities/responsive-grid" />
 
@@ -11,24 +11,26 @@ Responsive utilities use container style queries with `@` prefixes: `@xs:`, `@sm
 
 Each prefix applies min-width style rules at or above the threshold:
 
-| Prefix | Threshold | Token             |
-| ------ | --------- | ----------------- |
-| (none) | Base view | None              |
-| `@xs:` | 40rem     | `--breakpoint-xs` |
-| `@sm:` | 48rem     | `--breakpoint-sm` |
-| `@md:` | 64rem     | `--breakpoint-md` |
-| `@lg:` | 80rem     | `--breakpoint-lg` |
-| `@xl:` | 96rem     | `--breakpoint-xl` |
+| Prefix  | Threshold | Token              |
+| ------- | --------- | ------------------ |
+| (none)  | Base view | None               |
+| `@sm:`  | 40rem     | `--breakpoint-sm`  |
+| `@md:`  | 48rem     | `--breakpoint-md`  |
+| `@lg:`  | 64rem     | `--breakpoint-lg`  |
+| `@xl:`  | 80rem     | `--breakpoint-xl`  |
+| `@2xl:` | 96rem     | `--breakpoint-2xl` |
 
 ```html
-<div class="grid grid-cols-1 @xs:grid-cols-2 @sm:grid-cols-3 @lg:grid-cols-4 gap-md">...</div>
+<div class="grid grid-cols-1 @sm:grid-cols-2 @md:grid-cols-3 @xl:grid-cols-4 gap-md">...</div>
 ```
 
 ## How breakpoints work
 
-1. `_variables.css` defines `--breakpoint-*` length tokens.
-2. The `body` element acts as a container (`container-name: body`). Container size queries set boolean flags (`--is-breakpoint-md: true`) when width thresholds are reached.
-3. Responsive classes evaluate `@container style(--is-breakpoint-md: true)`.
+1. `_variables.css` defines the `--breakpoint-sm` to `--breakpoint-2xl` length tokens (40, 48, 64, 80, 96rem) and registers two families of typed boolean flags on the same scale, `--bp-*` and `--screen-*`, with `false` as the initial value.
+2. Unnamed container size queries (`@container (width >= 48rem)`) flip `--bp-md: true` on every body descendant once the nearest size container reaches the threshold. The subject is whichever ancestor has a `container-type` — `body`, `main`, `section`, `article`, and the other regions are all inline-size containers — not the viewport, so the same class can fire at different widths in a sidebar and in the main column. `--screen-*` are the viewport counterparts, set on `:root` by `@media`.
+3. Responsive classes evaluate `@container style(--bp-md: true)`; the `@max-md:` prefixes evaluate `style(--bp-md: false)`.
+
+Mobile-first: a flag stays `true` above its threshold, and a larger prefix's rule wins by source order. Style props use the same flags as a suffix (`--px-md`), so a prop and a class at the same breakpoint agree on when they fire.
 
 ## Supported responsive families
 
@@ -45,12 +47,16 @@ Each prefix applies min-width style rules at or above the threshold:
 
 ## Base-only families
 
-To keep CSS size compact, the following families do not generate responsive prefixes:
+To keep CSS size compact, the following families do not generate responsive class prefixes (the class prefixes stop at the list above; their style props still take breakpoint suffixes, see below):
 
 - Self alignment (`self-*`, `justify-self-*`, `place-items-*`)
 - Spacing (`p-*`, `m-*`, `gap-*`), sizing (`w-*`, `h-*`, `size-*`), and negative margins
 - Color, borders, radius, shadow, opacity, and scale
 
 Change layout structure at breakpoints (e.g. `@md:flex-row`) to adapt spacing instead of using per-breakpoint spacing classes.
+
+### Open values: use a style prop
+
+When a value has to change per breakpoint, set a [style prop](/docs/core-concepts/style-props) with a breakpoint suffix: `style="--px: 4; --px-md: 8; --w-lg: 60ch"`. Every prop takes `-sm`, `-md`, `-lg`, `-xl`, and `-2xl`, including the spacing, sizing, color, and typography families that have no class prefixes; the suffixes read the same `--bp-*` flags as the prefixes above. The responsive spacing props ship in a separate file (`_utilities-spacing-responsive.css`) so a page that never writes one can leave it out.
 
 <Preview src="utilities/responsive-flex" />

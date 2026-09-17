@@ -24,6 +24,14 @@ export interface ZazzConfig {
   $schema: string;
   /** The kit version the project tracks, and its tarball integrity. */
   kit: { version: string; integrity: string };
+  /**
+   * The kit version whose migration rules `zazz-ui migrate --write` last
+   * applied to this project's sources. Read ahead of `kit.version` as the
+   * default `--from`, so sources already rewritten for a version the vendored
+   * files have not yet moved to are never shifted twice. Absent until the
+   * first migrate.
+   */
+  migrated?: string;
   /** Vendor target directory, posix-relative to zazz.json's directory. */
   dir: string;
   /** Vendored script language; every command honors it. */
@@ -78,6 +86,7 @@ export function serializeConfig(config: ZazzConfig): string {
   const ordered: ZazzConfig = {
     $schema: config.$schema,
     kit: { version: config.kit.version, integrity: config.kit.integrity },
+    ...(config.migrated !== undefined ? { migrated: config.migrated } : {}),
     dir: config.dir,
     language: config.language,
     legacy: config.legacy,
@@ -116,6 +125,12 @@ export function validateConfig(raw: unknown, source: string): ZazzConfig {
   const kit = config.kit as Record<string, unknown> | undefined;
   if (typeof kit !== "object" || kit === null || typeof kit.version !== "string") {
     fail("kit.version missing");
+  }
+  if (
+    config.migrated !== undefined &&
+    (typeof config.migrated !== "string" || config.migrated.length === 0)
+  ) {
+    fail("migrated must be a version string");
   }
   if (typeof config.dir !== "string" || config.dir.length === 0) fail("dir missing");
   if (config.language !== "js" && config.language !== "ts") fail("language must be js or ts");

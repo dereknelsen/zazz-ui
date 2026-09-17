@@ -3,20 +3,28 @@
 /**
  * @fileoverview The kit's distribution manifest: machine-readable facts about
  * every primitive — its files, its dependencies on other primitives and base
- * scripts, its bare npm imports, and its example fragments.
+ * scripts, its bare npm imports, and its example fragments — plus the
+ * distribution map (`DIST_CSS`): which `src/` stylesheets each `dist/` css
+ * file bundles.
  * @description This is the single data source for anything that assembles a
  * subset of the kit: the `zazz-ui` CLI (`add` resolves the dependency closure
- * from `PRIMITIVES`), the docs site (install blocks and previews), and the
- * head builder's granular CDN mode. Presentation metadata for the docs
- * previews (iframe heights, placement) is docs-site state and lives in the
- * docs app (`apps/docs/lib/preview-manifest.ts`), not in the published kit.
+ * from `PRIMITIVES`), the docs site (install blocks and previews), the head
+ * builder's granular CDN mode, and `scripts/build-dist.mjs` (which emits
+ * exactly the files `DIST_CSS` lists, so the CLI and docs can map a
+ * primitive to its `dist/` file without reading the build script).
+ * Presentation metadata for the docs previews (iframe heights, placement) is
+ * docs-site state and lives in the docs app
+ * (`apps/docs/lib/preview-manifest.ts`), not in the published kit.
  *
- * Paths are tarball-relative to the package `src/` root. Script fields list
- * the emitted `.js` files (the published, browser-runnable form); consumers
- * that want `.ts` sources or `.d.ts` types swap the extension. `manifest.test.ts`
- * guards this file against drift: every primitive directory must have an
- * entry, every listed file must exist, and every bare specifier must be
- * pinned in `head.ts`'s import map.
+ * Paths are tarball-relative to the package `src/` root (`DIST_CSS` keys are
+ * relative to `dist/`). Script fields list the emitted `.js` files (the
+ * published, browser-runnable form); consumers that want `.ts` sources or
+ * `.d.ts` types swap the extension. `manifest.test.ts` guards this file
+ * against drift: every primitive directory must have an entry, every listed
+ * file must exist, every bare specifier must be pinned in `head.ts`'s import
+ * map, and the primitives with css and the `dist/primitives/<name>.css`
+ * entries are the same set. `dist.test.ts` checks a built `dist/` against
+ * `DIST_CSS`.
  */
 
 // --- Manifest version ---
@@ -563,6 +571,94 @@ export const CSS_CASCADE_ORDER: string[] = [
   "toaster",
   "reveal",
 ];
+
+// --- Distribution css map ---
+
+/** The `dist/` file holding only the cascade-layer order (`base/_layers.css`). */
+export const DIST_LAYERS_CSS = "layers.css";
+
+/** The one-request bundle: everything `src/index.css` imports, in its order. */
+export const DIST_BUNDLE_CSS = "zazz.css";
+
+/** The cascade-layer order statement, the first file of every load. */
+const DIST_LAYERS_SRC = "base/_layers.css";
+
+/** Base layers after `_layers.css`: tokens, style-prop registrations, reset, type. */
+const DIST_BASE = [
+  "base/_variables.css",
+  "base/_properties.css",
+  "base/_reset.css",
+  "base/_typography.css",
+  "base/_view-transitions.css",
+];
+
+/** Class utilities + the `.container` layout grid. */
+const DIST_UTILITIES_CORE = ["base/_utilities.css", "base/_layout.css"];
+
+/**
+ * Style-prop families (ADR-0012), in `index.css` order. The responsive
+ * spacing set is a separate opt-in file that must follow `spacing`.
+ */
+const DIST_UTILITY_FAMILIES: Record<string, string[]> = {
+  "utilities-spacing.css": ["base/_utilities-spacing.css"],
+  "utilities-spacing-responsive.css": ["base/_utilities-spacing-responsive.css"],
+  "utilities-sizing.css": ["base/_utilities-sizing.css"],
+  "utilities-grid.css": ["base/_utilities-grid.css"],
+  "utilities-flex.css": ["base/_utilities-flex.css"],
+  "utilities-color.css": ["base/_utilities-color.css"],
+  "utilities-typography.css": ["base/_utilities-typography.css"],
+  "utilities-position.css": ["base/_utilities-position.css"],
+};
+
+/** Every primitive stylesheet, in cascade order. */
+const DIST_PRIMITIVES = CSS_CASCADE_ORDER.flatMap((name) => PRIMITIVES[name]?.css ?? []);
+
+/**
+ * The distribution map: `dist/` css file → the `src/`-relative stylesheets it
+ * bundles, in order (ADR-0005, SPEC.md §5). This is the source of truth for
+ * `scripts/build-dist.mjs`, which emits exactly these files (nothing more)
+ * and refuses to build if the `zazz.css` list drifts from the `@import`s of
+ * `src/index.css`.
+ *
+ * Build contract: every file except `layers.css` and `zazz.css` — the
+ * "modular" files that `/combine/` URLs assemble a la carte — is prefixed at
+ * build time with the bundled `layers.css`, so the order in which they are
+ * concatenated cannot change layer precedence. That prefix is not listed in
+ * the sources here. `utilities.css` is the union of `utilities-core.css` and
+ * every `utilities-<family>.css`; `zazz.css` is the union of everything.
+ */
+export const DIST_CSS: Record<string, string[]> = {
+  [DIST_LAYERS_CSS]: [DIST_LAYERS_SRC],
+  "base.css": DIST_BASE,
+  "utilities-core.css": DIST_UTILITIES_CORE,
+  ...DIST_UTILITY_FAMILIES,
+  "utilities.css": [...DIST_UTILITIES_CORE, ...Object.values(DIST_UTILITY_FAMILIES).flat()],
+  ...Object.fromEntries(
+    CSS_CASCADE_ORDER.map((name) => [`primitives/${name}.css`, PRIMITIVES[name]?.css ?? []]),
+  ),
+  [DIST_BUNDLE_CSS]: [
+    DIST_LAYERS_SRC,
+    ...DIST_BASE,
+    ...DIST_PRIMITIVES,
+    ...DIST_UTILITIES_CORE,
+    ...Object.values(DIST_UTILITY_FAMILIES).flat(),
+  ],
+};
+
+/**
+ * Base stylesheets in the exact order `src/index.css` loads them around the
+ * primitive imports: `pre` before (layer order first, then tokens, the
+ * style-prop registrations, reset, type, view transitions), `post` after
+ * (class utilities and layout, then the style-prop family files, which must
+ * follow the classes so a prop beats a class on the same element by source
+ * order — ADR-0012). The granular CDN head (`head.ts`) and the `zazz-ui`
+ * CLI's vendoring both read this inventory; `head.test.ts` guards it against
+ * `index.css`. Derived from the dist map above, so the two cannot drift.
+ */
+export const BASE_CSS: { pre: string[]; post: string[] } = {
+  pre: [DIST_LAYERS_SRC, ...DIST_BASE],
+  post: [...DIST_UTILITIES_CORE, ...Object.values(DIST_UTILITY_FAMILIES).flat()],
+};
 
 // --- Dependency resolution ---
 

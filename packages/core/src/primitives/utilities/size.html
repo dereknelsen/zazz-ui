@@ -19,4 +19,9 @@
     <div class="size-xl bg-primary rounded-md"></div>
     <span class="text-xs text-muted-foreground font-strong">size-xl</span>
   </div>
+  <!-- Open values: style prop (ADR-0012). --size: 4rem sits between size-lg (11 steps) and size-xl (24 steps) -->
+  <div class="flex flex-col items-center gap-xs">
+    <div class="bg-tertiary rounded-md" style="--size: 4rem"></div>
+    <span class="text-xs text-muted-foreground font-strong">--size: 4rem · style prop</span>
+  </div>
 </div>

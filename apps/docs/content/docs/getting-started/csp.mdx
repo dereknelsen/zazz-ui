@@ -1,0 +1,164 @@
+---
+title: Content Security Policy
+description: "What a strict style-src blocks (the style attribute, so style props and raw inline style alike), what it leaves alone (CSSOM setProperty), and the CSP-safe ways to set an open value."
+---
+
+Zazz has two mechanisms that live in the `style` attribute: [style props](/docs/core-concepts/style-props) (`style="--px: 8"`) and the per-instance [`--ui-*` overrides](/docs/core-concepts/extending) and raw inline style of the escape-hatch ladder. A strict `Content-Security-Policy` blocks that attribute. This page says exactly what breaks, what does not, and what to use instead.
+
+## What the kit needs from your policy
+
+A page built from the [head template](/docs/getting-started/head) touches these directives:
+
+| Directive    | What Zazz loads                                                                                                | Allow                                                                                   |
+| ------------ | -------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `style-src`  | The kit stylesheet(s) and the Geist stylesheet from Google Fonts                                               | `'self'` or `https://cdn.jsdelivr.net`, `https://fonts.googleapis.com`                  |
+| `font-src`   | The Geist font files                                                                                           | `https://fonts.gstatic.com`                                                             |
+| `script-src` | `index.js` and the Interest Invokers polyfill (module scripts), the inline import map, the inline theme script | `'self'` or `https://cdn.jsdelivr.net`, plus a nonce or hash for the two inline scripts |
+
+The import map and the theme script are inline by design (an import map has to be inline, and the theme script has to run before first paint), so under a strict `script-src` both carry a `nonce` from the server, or the policy lists their hashes. The kit's own scripts never write inline styles: every runtime style they set goes through the CSSOM, which the next section explains.
+
+## What a strict `style-src` blocks
+
+```http
+Content-Security-Policy: style-src 'self'
+```
+
+With no `'unsafe-inline'`, the `style` attribute is not applied on any element. The browser keeps the attribute in the DOM and reports a violation; the declarations in it never reach the cascade. That covers every rung of the ladder that uses the attribute, and a custom property is no exception:
+
+```html
+<!-- All three are the same attribute, and all three are blocked -->
+<div style="--px: 8; --px-md: 12">…</div>
+<button class="ui-button" style="--ui-button-background: var(--secondary)">…</button>
+<p style="max-inline-size: 16ch">…</p>
+```
+
+Style props are not a CSP workaround, and were never designed as one: a custom property set inline is the same attribute as `padding-inline` set inline. The rung that survives is the class rung (`class="px-md"`), and the CSS-file rung, because a stylesheet from an allowed origin is what `style-src 'self'` permits.
+
+<Callout type="warn">
+  A blocked prop is worse than no prop on a primitive. The utility rule is gated on the attribute's
+  text (`:where([style*="--px:"])`), and the attribute is still there, so the rule still matches;
+  but `--px` was never set, so its `calc()` is invalid at computed-value time and the declaration
+  falls back to `unset`. On a `.ui-button`, `style="--px: 8"` under a strict policy computes to
+  `padding-inline: 0`, not the button's default. Do not ship props to a page whose policy blocks
+  them.
+</Callout>
+
+## What it does not block
+
+CSP governs how a style _arrives_, not the CSSOM. Setting a property through `element.style` is not an inline style in CSP's sense and is never blocked:
+
+```js
+el.style.setProperty("--px", "8"); // allowed, and the utility rule applies
+el.style.display = "none"; // allowed
+```
+
+The JavaScript form that _is_ blocked is the one that writes the attribute itself:
+
+```js
+el.setAttribute("style", "--px: 8"); // blocked: this sets the attribute, same as markup
+el.style.cssText = "--px: 8"; // CSSOM in Chromium (allowed), listed as blocked by MDN: avoid
+```
+
+`setAttribute("style", …)` is the attribute by another route, and the policy treats it as one. `cssText` is a CSSOM write and Chromium applies it under a strict policy, but the documentation disagrees and other engines may too, so use `setProperty`, which every engine treats as CSSOM.
+
+`setProperty` serializes into the attribute as `--px: 8;`, so the `[style*="--px:"]` gate matches and the prop behaves as if written in the markup. Every major framework applies its `style` binding this way on the client (React's `style={{ "--px": 8 }}`, Vue's `:style`, Svelte's `style:--px`), so a client-rendered app can use style props under a strict policy without changes.
+
+Server rendering is the catch. The HTML a framework renders on the server carries `style="--px: 8"` as a real attribute, which the policy blocks on arrival, and hydration does not reapply a style it considers unchanged. If you render on the server under a strict `style-src`, the options below apply to the server-rendered markup exactly as they do to hand-written HTML.
+
+## Does `'unsafe-hashes'` help?
+
+Not for open values. CSP Level 3 does let `'unsafe-hashes'` extend hash matching to `style` attributes, but a hash covers one exact attribute text. `style="--px: 8"` and `style="--px: 7"` need two hashes; an attribute that combines props needs a hash for every combination you will ever write. That is only workable when the set of values is finite and known in advance, and a finite set of values is the case the class utilities already cover without a policy exception. Support for `'unsafe-hashes'` on `style-src` also varies by browser, so it cannot be the mechanism the kit relies on. Leave it out.
+
+## The options
+
+In order of preference:
+
+### 1. Classes and a stylesheet
+
+Under a strict policy the [utility classes](/docs/core-concepts/utility-classes) do the finite values (`class="px-md @md:px-lg"`), and a stylesheet from an allowed origin does the open ones. The stylesheet can write the same declaration a prop would have produced, on the fluid scale:
+
+```css
+/* your.css, linked from an allowed origin */
+.hero {
+  padding-inline: calc(8 * var(--spacing-interval));
+}
+```
+
+The responsive form goes through a container style query on the [`--bp-*` flags](/docs/core-concepts/responsive-design):
+
+```css
+@container style(--bp-md: true) {
+  .hero {
+    padding-inline: calc(12 * var(--spacing-interval));
+  }
+}
+```
+
+This is rung four of the ladder ("a CSS file the moment the one-off repeats"), promoted to rung one by the policy.
+
+### 2. A nonced `<style>` block
+
+For a page-specific one-off, a `<style>` element with the response's nonce is allowed while the attribute is not:
+
+```html
+<style nonce="{RANDOM}">
+  .hero {
+    padding-inline: calc(8 * var(--spacing-interval));
+  }
+</style>
+```
+
+```http
+Content-Security-Policy: style-src 'self' 'nonce-{RANDOM}'
+```
+
+Write the real property, not the prop. A `<style>` rule that sets `--px: 8` on `.hero` does nothing: the utility rule is gated on the attribute text, so it never matches an element whose prop came from a stylesheet, and the registered property on its own has no effect. The nonce must be generated per response, so this option needs a server that renders the page; static hosting uses a hash (`'sha256-…'` of the block's text) instead.
+
+### 3. Set the props from a script
+
+If the markup has to stay declarative (a CMS emits it, a static site generator renders it), move the props out of the `style` attribute into a `data-*` attribute that CSP does not police, and let a small script copy them into the CSSOM:
+
+```html
+<div data-style="--px: 8; --px-md: 12">…</div>
+<button class="ui-button" data-style="--ui-button-background: var(--secondary)">…</button>
+```
+
+```js
+// style-props.js: apply data-style="--name: value; …" through the CSSOM.
+// Only custom properties are copied; anything else in the attribute is ignored.
+function apply(el) {
+  for (const decl of el.dataset.style.split(";")) {
+    const colon = decl.indexOf(":");
+    if (colon < 0) continue;
+    const name = decl.slice(0, colon).trim();
+    if (!name.startsWith("--")) continue;
+    el.style.setProperty(name, decl.slice(colon + 1).trim());
+  }
+}
+
+const applyAll = (root) => root.querySelectorAll("[data-style]").forEach(apply);
+applyAll(document);
+
+// Content inserted later (a carousel's slides, a fetched fragment) gets the same treatment.
+new MutationObserver((records) => {
+  for (const { addedNodes } of records) {
+    for (const node of addedNodes) {
+      if (node.nodeType !== Node.ELEMENT_NODE) continue;
+      if (node.matches("[data-style]")) apply(node);
+      applyAll(node);
+    }
+  }
+}).observe(document.body, { childList: true, subtree: true });
+```
+
+<Callout type="warn">
+  This is a script, so `script-src` governs it. Either ship it as a file from an allowed origin and load it with `<script type="module" src="/style-props.js">`, or, if you inline it, give the `<script>` element the response's `nonce` (or list its hash). An inline copy without a nonce is blocked by the same policy that blocked the attribute, and nothing on the page will tell you why the padding is missing except the console.
+</Callout>
+
+Two properties of this script matter for the policy. It copies only names that start with `--`, so it cannot become a general inline-style injector; a `data-style="display: none"` is ignored. And it runs after the parser reaches it: as a module script it runs before `DOMContentLoaded`, but the browser may paint first, so content in the first viewport can show one frame without its props. Prefer option 1 for that content.
+
+Treat `data-style` with the same care as `style`. It only ever sets custom properties, but a custom property still feeds `--bg`, `--w` and `--z`, so a value that came from an untrusted source can restyle the page. Escape it as you would any attribute value.
+
+## Checking your policy
+
+Deploy the policy as `Content-Security-Policy-Report-Only` first and watch the console (or a `report-to` endpoint) for `style-src` violations; each names the element and the first characters of the blocked attribute. Chrome's Issues panel lists them without a reload. Once the count is zero, switch to the enforcing header and keep reporting on.

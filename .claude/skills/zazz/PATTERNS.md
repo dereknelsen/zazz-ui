@@ -22,10 +22,10 @@ sentence case — let the class do the uppercasing.)
 
 The standard page: a `<header>` with logo + desktop nav + mobile nav, a `<main>` of
 `<section>`s, and a `<footer>`. `.container` places its direct children into a centered band
-(default `md`); `<section>`s own the vertical rhythm with `.py-*`. Desktop nav is
-`hidden @sm:flex`; the mobile nav is `flex @sm:hidden` and opens a dialog (see the Dialog
+(default `lg`); `<section>`s own the vertical rhythm with `.py-*`. Desktop nav is
+`hidden @md:flex`; the mobile nav is `flex @md:hidden` and opens a dialog (see the Dialog
 component / mobile-menu). The container is a subgrid band system, not a fixed-width wrapper —
-set the band per child with `data-container="xs|sm|md|lg|xl|full|bleed"`, or change the default
+set the band per child with `data-container="sm|md|lg|xl|2xl|full|bleed"`, or change the default
 for all children with `data-container="…"` on the `.container`. See
 `references/tokens.md` §7 for the full band model.
 
@@ -36,7 +36,7 @@ for all children with `data-container="…"` on the `.container`. See
       <a href="/">
         <!-- site logo -->
       </a>
-      <nav class="hidden @sm:flex items-center py-md">
+      <nav class="hidden @md:flex items-center py-md">
         <menu class="flex items-center gap-sm">
           <li>
             <a class="ui-button" data-variant="ghost" href="/">Home</a>
@@ -44,7 +44,7 @@ for all children with `data-container="…"` on the `.container`. See
           <!-- navigation links and menus -->
         </menu>
       </nav>
-      <nav class="flex @sm:hidden">
+      <nav class="flex @md:hidden">
         <!-- mobile navigation — use the dialog pattern -->
       </nav>
     </div>
@@ -78,7 +78,7 @@ Group an optional eyebrow, a heading, a subheading, and the call-to-action butto
 `<hgroup>`. Center on mobile, left-align from `md`.
 
 ```html
-<hgroup class="flex flex-col gap-sm text-center @md:text-left">
+<hgroup class="flex flex-col gap-sm text-center @lg:text-left">
   <!-- eyebrow (optional) -->
   <span class="text-eyebrow">Featured</span>
 
@@ -89,7 +89,7 @@ Group an optional eyebrow, a heading, a subheading, and the call-to-action butto
   <p class="text-xl text-muted-foreground">How vexingly quick daft zebras jump.</p>
 
   <!-- CTA buttons -->
-  <div class="flex gap-xs mt-sm justify-center @md:justify-start">
+  <div class="flex gap-xs mt-sm justify-center @lg:justify-start">
     <a class="ui-button" data-variant="primary" href="/products">Products</a>
     <a class="ui-button" data-variant="ghost" href="/contact">Contact us</a>
   </div>
@@ -106,7 +106,8 @@ For the rest, reach for the primitives and components directly — they carry th
 composition guidance:
 
 - Structure & spacing → `references/tokens.md` (`.container` band system + `data-container`,
-  `.container[data-variant="article"]`, `--gap-*`, the responsive `@sm:`/`@md:`/`@lg:`
-  utilities and `@max-*` container variants).
+  `.container[data-variant="article"]`, `--space-*`, the responsive `@sm:`…`@2xl:`
+  utilities and `@max-*` container variants, and style props for open values —
+  `style="--grid-cols: 5; --gap: 3"` where no class scale fits).
 - Components (cards, carousels, dialogs, forms, navigation, …) → `references/components.md`.
 - Brand voice, color roles, type scale, archetypes → `DESIGN.md`.
