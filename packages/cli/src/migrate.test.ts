@@ -27,10 +27,11 @@ const FIXTURE: Rules = {
     { kind: "token", from: "--breakpoint-lg", to: "--breakpoint-xl" },
     { kind: "token", from: "--breakpoint-xl", to: "--breakpoint-2xl" },
     { kind: "token", from: "--gap-xs", to: "--space-xs" },
-    { kind: "token", from: "--gap-sm", to: "--space-sm" },
-    { kind: "token", from: "--gap-md", to: "--space-md" },
-    { kind: "token", from: "--gap-lg", to: "--space-lg" },
-    { kind: "token", from: "--gap-xl", to: "--space-xl" },
+    // --gap-sm…xl live on as the `--gap` style prop's responsive forms.
+    { kind: "token", from: "--gap-sm", to: "--space-sm", readsOnly: true },
+    { kind: "token", from: "--gap-md", to: "--space-md", readsOnly: true },
+    { kind: "token", from: "--gap-lg", to: "--space-lg", readsOnly: true },
+    { kind: "token", from: "--gap-xl", to: "--space-xl", readsOnly: true },
     { kind: "class-prefix", from: "@xs:", to: "@sm:" },
     { kind: "class-prefix", from: "@sm:", to: "@md:" },
     { kind: "class-prefix", from: "@md:", to: "@lg:" },
@@ -85,6 +86,14 @@ describe("loadRules", () => {
     bad(doc({ kind: "class", from: "a b", to: "c" }), "must not contain whitespace");
     bad(doc({ kind: "manual", from: "x", to: "y" }), 'manual rules take no "to"');
     bad(doc({ kind: "manual", from: "x", note: 1 }), "note must be a string");
+    bad(doc({ kind: "token", from: "--a", to: "--b", readsOnly: "yes" }), "must be a boolean");
+    bad(
+      doc({ kind: "class", from: "a", to: "b", readsOnly: true }),
+      "readsOnly applies to token rules only",
+    );
+    expect(
+      loadRules(doc({ kind: "token", from: "--a", to: "--b", readsOnly: false })).rules,
+    ).toEqual([{ kind: "token", from: "--a", to: "--b" }]);
     bad(doc({ kind: "attr-value", from: "xs", to: "sm" }), "must be attr=value");
     bad(
       doc({ kind: "attr-value", from: "data-a=xs", to: "data-b=sm" }),
@@ -131,10 +140,63 @@ describe("token rules", () => {
 
   it("applies in every file kind", () => {
     for (const kind of ["css", "html", "md", "js"] as const) {
-      expect(run('style="--gap-sm: 1" /* --is-breakpoint-md */', kind).text).toBe(
-        'style="--space-sm: 1" /* --bp-lg */',
+      expect(run('style="--gap-xs: 1" /* --is-breakpoint-md */', kind).text).toBe(
+        'style="--space-xs: 1" /* --bp-lg */',
       );
     }
+  });
+
+  describe("readsOnly", () => {
+    it("renames declarations and reads alike in css", () => {
+      const css = ":root { --gap-md: 1rem; } .a { gap: var(--gap-md); margin: var( --gap-lg ); }";
+      const result = run(css, "css");
+      expect(result.text).toBe(
+        ":root { --space-md: 1rem; } .a { gap: var(--space-md); margin: var( --space-lg ); }",
+      );
+      expect(result.counts["token:--gap-md"]).toBe(2);
+      expect(result.counts["token:--gap-lg"]).toBe(1);
+    });
+
+    it("renames only var() reads outside stylesheets: a style-attribute declaration is the prop", () => {
+      const html = [
+        '<div style="--gap-md: 4; gap: var(--gap-md); --gap-xs: 2">',
+        "<p>The old `--gap-lg` token; write `var(--gap-lg)` as `var(--space-lg)`.</p>",
+      ].join("\n");
+      for (const kind of ["html", "md", "js"] as const) {
+        const result = run(html, kind);
+        expect(result.text.split("\n")[0]).toBe(
+          '<div style="--gap-md: 4; gap: var(--space-md); --space-xs: 2">',
+        );
+        expect(result.text.split("\n")[1]).toBe(
+          "<p>The old `--gap-lg` token; write `var(--space-lg)` as `var(--space-lg)`.</p>",
+        );
+        expect(result.counts["token:--gap-md"]).toBe(1);
+        expect(result.counts["token:--gap-lg"]).toBe(1);
+        expect(result.counts["token:--gap-xs"]).toBe(1);
+      }
+    });
+
+    it("keeps css semantics inside a markup file's <style> block", () => {
+      const html = [
+        "<style>:root { --gap-md: 1rem; }</style>",
+        '<div style="--gap-md: 4">',
+        "<style>.b { --gap-lg: 2rem }</style>",
+      ].join("\n");
+      expect(run(html, "html").text).toBe(
+        [
+          "<style>:root { --space-md: 1rem; }</style>",
+          '<div style="--gap-md: 4">',
+          "<style>.b { --space-lg: 2rem }</style>",
+        ].join("\n"),
+      );
+    });
+
+    it("leaves 0.5 markup alone on a second run", () => {
+      const html = '<div style="--gap-md: 4; gap: var(--gap-sm)">';
+      const once = run(html).text;
+      expect(once).toBe('<div style="--gap-md: 4; gap: var(--space-sm)">');
+      expect(run(once).text).toBe(once);
+    });
   });
 
   it("is idempotent for families whose new names are not also old names", () => {
@@ -373,12 +435,14 @@ describe("unmappable", () => {
   it("names the right line after an earlier rename changed a line's length", () => {
     // The `[` report is found in the token-rewritten text; three renames on
     // line 1 push every later offset by six, past the end of line 2's tail.
-    const html = [":root { --gap-xs: 1; --gap-sm: 2; --gap-md: 3 }", '<i class="[x]">', "<p>"].join(
-      "\n",
-    );
+    const html = [
+      '<b style="gap: var(--gap-xs) var(--gap-sm) var(--gap-md)">',
+      '<i class="[x]">',
+      "<p>",
+    ].join("\n");
     const result = run(html);
     expect(result.text.split("\n")[0]).toBe(
-      ":root { --space-xs: 1; --space-sm: 2; --space-md: 3 }",
+      '<b style="gap: var(--space-xs) var(--space-sm) var(--space-md)">',
     );
     expect(result.unmappable).toEqual([
       { line: 2, snippet: "[x]", note: "arbitrary value; migrate by hand" },

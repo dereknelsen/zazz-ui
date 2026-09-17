@@ -14,6 +14,9 @@
  *
  * Rule kinds and where each applies:
  * - `token`: a custom-property name, every file kind, word-and-dash bounded.
+ *   With `readsOnly` (the old name is a live style prop in the new version),
+ *   markup, `md` and `js` rename only `var(--name)` reads, never a `--name:`
+ *   declaration in a `style` attribute; `css` and `<style>` blocks rename both.
  * - `class-prefix` / `class`: whitespace-separated tokens inside `class="…"`,
  *   `class='…'`, `className="…"` / `className='…'` literals, plus the escaped
  *   selector form (`.\@xs\:grid`) in `css` and inside `<style>` blocks of
@@ -48,6 +51,14 @@ export interface Rule {
   to?: string;
   /** Wording for the report. Manual rules should always carry one. */
   note?: string;
+  /**
+   * `token` rules only. The old name lives on as a *style prop* in the new
+   * version (`--gap-md` is the `--gap` prop at md), so outside stylesheets
+   * only `var(--name)` reads are renamed; a `--name:` declaration in a
+   * `style` attribute is the new prop and stays. In `css` (and `<style>`
+   * blocks) declarations and reads are both renamed, as for any token.
+   */
+  readsOnly?: boolean;
 }
 
 /** The parsed `migrations/<to>.json` document. */
@@ -125,12 +136,18 @@ export function loadRules(json: unknown, source = "migration rules"): Rules {
 function validateRule(entry: unknown, index: number, fail: (detail: string) => never): Rule {
   const where = `rules[${index}]`;
   if (typeof entry !== "object" || entry === null) fail(`${where} is not an object`);
-  const { kind, from, to, note } = entry as Record<string, unknown>;
+  const { kind, from, to, note, readsOnly } = entry as Record<string, unknown>;
 
   if (!isKind(kind)) fail(`${where}.kind must be one of ${[...KINDS].join(", ")}`);
   if (typeof from !== "string" || from.length === 0) fail(`${where}.from missing`);
   if (/\s/.test(from)) fail(`${where}.from must not contain whitespace`);
   if (note !== undefined && typeof note !== "string") fail(`${where}.note must be a string`);
+  if (readsOnly !== undefined && typeof readsOnly !== "boolean") {
+    fail(`${where}.readsOnly must be a boolean`);
+  }
+  if (readsOnly !== undefined && kind !== "token") {
+    fail(`${where}: readsOnly applies to token rules only`);
+  }
 
   if (kind === "manual") {
     if (to !== undefined) fail(`${where}: manual rules take no "to"`);
@@ -140,8 +157,15 @@ function validateRule(entry: unknown, index: number, fail: (detail: string) => n
   if (typeof to !== "string" || to.length === 0) fail(`${where}.to missing`);
   if (/\s/.test(to)) fail(`${where}.to must not contain whitespace`);
   if (to === from) fail(`${where} maps ${from} to itself`);
-  if (kind === "token" && (!from.startsWith("--") || !to.startsWith("--"))) {
-    fail(`${where}: token names start with --`);
+  if (kind === "token") {
+    if (!from.startsWith("--") || !to.startsWith("--")) {
+      fail(`${where}: token names start with --`);
+    }
+    if (readsOnly === true) {
+      return note === undefined
+        ? { kind, from, to, readsOnly }
+        : { kind, from, to, note, readsOnly };
+    }
   }
   if (kind === "attr-value") {
     const source = parseAttrValue(from);
@@ -167,9 +191,16 @@ function parseAttrValue(pair: string): { attr: string; value: string } | null {
 // --- Compilation ---
 
 /** One alternation regex plus the lookup it feeds; `map` keys are match text. */
-interface Replacer {
+interface Replacer<Entry extends { to: string; id: string } = { to: string; id: string }> {
   regex: RegExp;
-  map: Map<string, { to: string; id: string }>;
+  map: Map<string, Entry>;
+}
+
+/** A token rule's replacement, with the `readsOnly` restriction when set. */
+interface TokenEntry {
+  to: string;
+  id: string;
+  readsOnly: boolean;
 }
 
 interface ManualNeedle {
@@ -181,7 +212,7 @@ interface ManualNeedle {
 export interface Compiled {
   /** The rules in force, built-in manual rules included. */
   readonly rules: readonly Rule[];
-  readonly token: Replacer | null;
+  readonly token: Replacer<TokenEntry> | null;
   /** Exact class name → replacement. */
   readonly className: Map<string, { to: string; id: string }>;
   /** Class prefixes, longest first, each with its replacement. */
@@ -220,7 +251,7 @@ export function compile(rules: Rules): Compiled {
   const declared = new Set(rules.rules.map((rule) => rule.from));
   const all = [...rules.rules, ...BUILTIN_MANUAL.filter((rule) => !declared.has(rule.from))];
 
-  const tokens = new Map<string, { to: string; id: string }>();
+  const tokens = new Map<string, TokenEntry>();
   const className = new Map<string, { to: string; id: string }>();
   const classPrefix: Compiled["classPrefix"] = [];
   const attrs = new Map<string, Map<string, { to: string; id: string }>>();
@@ -232,7 +263,7 @@ export function compile(rules: Rules): Compiled {
     const to = rule.to ?? "";
     switch (rule.kind) {
       case "token":
-        tokens.set(rule.from, { to, id });
+        tokens.set(rule.from, { to, id, readsOnly: rule.readsOnly === true });
         break;
       case "class":
         className.set(rule.from, { to, id });
@@ -315,7 +346,9 @@ export function compile(rules: Rules): Compiled {
 }
 
 /** `(?<![\w-])NAME(?![\w-])` over every name, longest first. */
-function boundedReplacer(map: Map<string, { to: string; id: string }>): Replacer {
+function boundedReplacer<Entry extends { to: string; id: string }>(
+  map: Map<string, Entry>,
+): Replacer<Entry> {
   const names = [...map.keys()].sort(byLengthDesc).map(escapeRegExp).join("|");
   return { regex: new RegExp(`(?<![\\w-])(?:${names})(?![\\w-])`, "g"), map };
 }
@@ -390,9 +423,22 @@ export function applyToText(
 
   if (compiled.token !== null) {
     const { regex, map } = compiled.token;
-    out = out.replace(regex, (name) => {
+    // Outside stylesheets a readsOnly name is renamed only as a var() read;
+    // css semantics still apply inside a markup file's <style> blocks.
+    const styleBlocks =
+      options.kind === "html"
+        ? [...text.matchAll(STYLE_BLOCK)].map((match) => [
+            match.index,
+            match.index + match[0].length,
+          ])
+        : [];
+    const isStylesheet = (offset: number): boolean =>
+      options.kind === "css" ||
+      styleBlocks.some(([start, end]) => offset >= (start ?? 0) && offset < (end ?? 0));
+    out = out.replace(regex, (name, offset: number) => {
       const entry = map.get(name);
       if (entry === undefined) return name;
+      if (entry.readsOnly && !isStylesheet(offset) && !isVarRead(text, offset)) return name;
       hit(entry.id);
       return entry.to;
     });
@@ -542,6 +588,11 @@ function lineStarts(text: string): number[] {
     starts.push(i + 1);
   }
   return starts;
+}
+
+/** Whether the name at `offset` is the argument of a `var(` read. */
+function isVarRead(text: string, offset: number): boolean {
+  return /var\(\s*$/.test(text.slice(Math.max(0, offset - 32), offset));
 }
 
 /** From `start` to the end of its line, whitespace collapsed, capped. */
