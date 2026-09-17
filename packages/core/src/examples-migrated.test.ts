@@ -24,9 +24,10 @@
  * Matching per rule kind: `token` as `--name` bounded by anything but a word
  * character or dash (only as a `var(--name)` read when the name is also a
  * registered style prop: `--gap-lg` is the `--gap` prop at lg, ticket 09),
- * `class` as a whole class name inside a `class="…"`
- * attribute, `class-prefix` as the prefix at the start of a class name inside
- * `class="…"`, `attr-value` as the literal `name="value"` attribute. A second,
+ * `class` as a whole class name inside a class attribute literal (either
+ * quote style, whitespace around `=`, as the engine), `class-prefix` as the
+ * prefix at the start of a class name inside one, `attr-value` as the
+ * literal `name="value"` / `name='value'` attribute. A second,
  * looser pass reports the retired class names and prefixes anywhere in the
  * text (captions, comments, `<code>`), since ticket 27 rewrote that prose by
  * hand. Failures list `path:line`.
@@ -121,11 +122,18 @@ function offenders(files: SourceFile[], pattern: RegExp): string[] {
  */
 function classOffenders(files: SourceFile[], matches: (name: string) => boolean): string[] {
   return files.flatMap(({ path, text }) =>
-    [...text.matchAll(/\bclass="([^"]*)"/g)]
-      .filter((match) => (match[1] ?? "").split(/\s+/).some(matches))
+    [...text.matchAll(CLASS_ATTR)]
+      .filter((match) => (match[1] ?? match[2] ?? "").split(/\s+/).some(matches))
       .map((match) => `${path}:${text.slice(0, match.index).split("\n").length}`),
   );
 }
+
+/**
+ * The class attribute literal exactly as the engine matches it (`CLASS_ATTR`
+ * in `packages/cli/src/migrate.ts`): `class` or `className`, either quote
+ * style, whitespace allowed around `=`.
+ */
+const CLASS_ATTR = /(?<![\w:.@-])(?:class|className)\s*=\s*(?:"([^"]*)"|'([^']*)')/g;
 
 /**
  * @description The regex that finds one rule's `from` in raw text, by kind.
@@ -144,8 +152,11 @@ function needle(rule: Rule): RegExp {
         ? new RegExp(`var\\(\\s*${escape(rule.from)}(?![\\w-])`)
         : new RegExp(`(?<![\\w-])${escape(rule.from)}(?![\\w-])`);
     case "attr-value": {
+      // Either quote style and whitespace around `=`, as the engine's attr-value regex.
       const [name, value] = rule.from.split("=");
-      return new RegExp(`\\b${escape(name ?? "")}="${escape(value ?? "")}"`);
+      return new RegExp(
+        `(?<![\\w:.-])${escape(name ?? "")}\\s*=\\s*(["'])${escape(value ?? "")}\\1`,
+      );
     }
     case "class-prefix":
       return new RegExp(`(?<![\\w-])${escape(rule.from)}`);
