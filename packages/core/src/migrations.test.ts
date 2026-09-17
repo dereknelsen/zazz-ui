@@ -6,15 +6,18 @@
  * document against the CLI's own loader (`packages/cli/src/migrate.ts`), the
  * invariants that keep the rules safe as one simultaneous map (no self-maps,
  * the class-prefix map a bijection with prefix-free `from` names, the
- * idempotent token families disjoint), and the `## 0.5.0` block of
+ * idempotent token families disjoint, the chain families exactly one step,
+ * the `class` rules covering exactly the `*-screen-*` names the kit
+ * defines), and the `## 0.5.0` block of
  * `CHANGELOG.md`: every non-manual rule must be a `| \`from\` | \`to\` |`
  * table row there, and every rule-shaped row there must be a rule here, so
  * the changelog and the codemod share one source (SPEC.md Phase 6).
  *
  * Changelog contract (ticket 26 writes the block): a *rename row* is a table
  * row whose first two cells are each one code span; the reverse check only
- * considers rename rows whose first cell is rule-shaped (`--name`, `@prefix:`
- * or `attr=value`), so band line names and the like may still be tabulated.
+ * considers rename rows whose first cell is rule-shaped (`--name`, `@prefix:`,
+ * `attr=value` or a `*-screen-<size>` class), so band line names and the
+ * like may still be tabulated.
  */
 
 import { existsSync, readFileSync } from "node:fs";
@@ -38,6 +41,28 @@ const OLD_SIZES = ["xs", "sm", "md", "lg", "xl"] as const;
 const NEW_SIZES = ["sm", "md", "lg", "xl", "2xl"] as const;
 const shifted = (template: (size: string) => string): [string, string][] =>
   OLD_SIZES.map((old, index) => [template(old), template(NEW_SIZES[index] as string)]);
+
+/**
+ * The `<family>-screen-<size>` utility families, in `_utilities.css` order:
+ * width, height, and size, then the max and min forms, each with its logical
+ * `inline-` / `block-` alias. Ticket 04 shifted their suffixes with the
+ * breakpoints, so every name needs a `class` rule (ticket 36).
+ */
+const SCREEN_FAMILIES = [
+  "w",
+  "inline",
+  "h",
+  "block",
+  "size",
+  "max-w",
+  "max-inline",
+  "max-h",
+  "max-block",
+  "min-w",
+  "min-inline",
+  "min-h",
+  "min-block",
+] as const;
 
 describe("migrations/0.5.0.json", () => {
   it("is accepted by the CLI loader and names its own version", () => {
@@ -77,7 +102,7 @@ describe("migrations/0.5.0.json", () => {
 describe("token rules", () => {
   const tokens = mapped(byKind("token"));
 
-  it("rename the flags, shift the breakpoint lengths, and fold --gap-* into --space-*", () => {
+  it("rename the flags, shift the breakpoint and container ranges, and fold --gap-* into --space-*", () => {
     expect(tokens).toEqual([
       ...OLD_SIZES.map((old, index): [string, string] => [
         `--is-breakpoint-${old}`,
@@ -85,15 +110,28 @@ describe("token rules", () => {
       ]),
       ...shifted((size) => `--breakpoint-${size}`),
       ...OLD_SIZES.map((size): [string, string] => [`--gap-${size}`, `--space-${size}`]),
+      ...shifted((size) => `--container-${size}`),
     ]);
   });
 
   it("keep the idempotent families disjoint from their targets", () => {
-    // These two families may be re-run safely; only --breakpoint-* is a chain.
+    // These two families may be re-run safely; --breakpoint-* and
+    // --container-* are chains (next test) and rely on the zazz.json stamp.
     for (const prefix of ["--is-breakpoint-", "--gap-"]) {
       const family = tokens.filter(([from]) => from.startsWith(prefix));
       const froms = new Set(family.map(([from]) => from));
       for (const [, to] of family) expect(froms).not.toContain(to);
+    }
+  });
+
+  it("shift the chain families exactly one step: every target but the last is also a source", () => {
+    for (const prefix of ["--breakpoint-", "--container-"]) {
+      const family = tokens.filter(([from]) => from.startsWith(prefix));
+      expect(family).toHaveLength(OLD_SIZES.length);
+      const froms = new Set(family.map(([from]) => from));
+      const tos = family.map(([, to]) => to);
+      for (const to of tos.slice(0, -1)) expect(froms).toContain(to);
+      expect(froms).not.toContain(tos.at(-1));
     }
   });
 
@@ -134,6 +172,36 @@ describe("class-prefix rules", () => {
     for (const [from, to] of prefixes) {
       expect(to.startsWith("@max-")).toBe(from.startsWith("@max-"));
     }
+  });
+});
+
+describe("class rules", () => {
+  const classes = mapped(byKind("class"));
+
+  it("shift every *-screen-<size> class one step, family by family", () => {
+    expect(classes).toEqual(
+      SCREEN_FAMILIES.flatMap((family) => shifted((size) => `${family}-screen-${size}`)),
+    );
+  });
+
+  it("cover exactly the *-screen-* classes _utilities.css defines", () => {
+    // The kit is the source of truth for the family list: a family added or
+    // dropped there must show up here, and no rule may target a name the
+    // kit no longer ships (the old xs names are gone, not aliased).
+    const css = readFileSync(join(PACKAGE, "src", "base", "_utilities.css"), "utf8");
+    const defined = new Set([...css.matchAll(/\.([\w-]+-screen-\w+)(?![\w-])/g)].map((m) => m[1]));
+    const targets = new Set(classes.map(([, to]) => to));
+    expect([...defined].sort()).toEqual([...targets].sort());
+    for (const [from] of classes) {
+      if (from.endsWith("-screen-xs")) expect(defined).not.toContain(from);
+    }
+  });
+
+  it("keep each class in its family and form a bijection", () => {
+    const family = (name: string): string => name.replace(/-(?:xs|sm|md|lg|xl|2xl)$/, "");
+    for (const [from, to] of classes) expect(family(to)).toBe(family(from));
+    expect(new Set(classes.map(([from]) => from)).size).toBe(classes.length);
+    expect(new Set(classes.map(([, to]) => to)).size).toBe(classes.length);
   });
 });
 
@@ -197,7 +265,12 @@ function renameRows(lines: string[]): { from: string; to: string }[] {
 
 /** Whether a rename-row cell looks like something the engine could rewrite. */
 function isRuleShaped(text: string): boolean {
-  return text.startsWith("--") || /^@[\w-]+:$/.test(text) || /^[\w:-]+=.+$/.test(text);
+  return (
+    text.startsWith("--") ||
+    /^@[\w-]+:$/.test(text) ||
+    /^[\w:-]+=.+$/.test(text) ||
+    /^[\w-]+-screen-\w+$/.test(text)
+  );
 }
 
 describe("CHANGELOG.md ## 0.5.0", () => {
@@ -237,6 +310,7 @@ describe("CHANGELOG.md ## 0.5.0", () => {
       "| `data-container=xs` | `data-container=sm` |",
       "| — | `--space-2xs` |",
       "| `container-xs-start` | `container-sm-start` |",
+      "| `max-w-screen-xs` | `max-w-screen-sm` |",
       "| `dist/zazz.css` raw bytes | 304,258 | tbd |",
     ];
     const parsed = renameRows(sample);
@@ -245,8 +319,10 @@ describe("CHANGELOG.md ## 0.5.0", () => {
       { from: "@max-xl:", to: "@max-2xl:" },
       { from: "data-container=xs", to: "data-container=sm" },
       { from: "container-xs-start", to: "container-sm-start" },
+      { from: "max-w-screen-xs", to: "max-w-screen-sm" },
     ]);
-    expect(parsed.filter(({ from }) => isRuleShaped(from))).toHaveLength(3);
+    // The band line name is the one row the engine cannot rewrite.
+    expect(parsed.filter(({ from }) => isRuleShaped(from))).toHaveLength(4);
   });
 
   it("parses the measurements table without mistaking it for rename rows", () => {
