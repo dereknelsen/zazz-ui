@@ -3,7 +3,25 @@ title: Spacing
 description: Padding, margin, negative margin, and auto-margin utilities powered by logical properties and composition variables.
 ---
 
-Spacing utilities use semantic gap tokens (`--space-xs` to `--space-xl`) and logical properties (`inline`, `block`).
+Spacing utilities read the semantic `--space-*` scale and use logical properties (`inline`, `block`).
+
+## The scale
+
+`--space-2xs` to `--space-2xl` are step multiples of `--spacing-interval`, the fluid base unit (`clamp(0.225rem, …, 0.25rem)`, about 3.6px to 4px), so the whole scale scales with the viewport. The classes cover the middle five steps, `xs` to `xl`; `2xs` and `2xl` are tokens for custom CSS and [style props](/docs/core-concepts/style-props).
+
+| Token         | Step        | Multiplier | At 4px |
+| ------------- | ----------- | ---------- | ------ |
+| `--space-2xs` | `--step-1`  | 1          | 4px    |
+| `--space-xs`  | `--step-2`  | 2          | 8px    |
+| `--space-sm`  | `--step-4`  | 4          | 16px   |
+| `--space-md`  | `--step-6`  | 6          | 24px   |
+| `--space-lg`  | `--step-11` | 11         | 44px   |
+| `--space-xl`  | `--step-24` | 24         | 96px   |
+| `--space-2xl` | `--step-40` | 40         | 160px  |
+
+### Open values: use a style prop
+
+For a step the classes don't cover, set a [style prop](/docs/core-concepts/style-props): `style="--px: 5"` is `padding-inline: calc(5 * var(--spacing-interval))`, so `--px: 6` equals `px-md` and `--mt: -2` is a negative margin. The spacing family has 17 props (`--p`, `--px`, `--py`, `--ps`, `--pe`, `--pt`, `--pb`, `--m`, `--mx`, `--my`, `--ms`, `--me`, `--mt`, `--mb`, `--gap`, `--gap-x`, `--gap-y`), each with `-sm` to `-2xl` responsive suffixes (`--px-md: 8`). Two limits: a prop is a unitless multiplier (`--px: 1rem` is invalid and applies nothing), and `auto` is not a step, so auto margins stay classes (`mx-auto`).
 
 ## Padding
 
