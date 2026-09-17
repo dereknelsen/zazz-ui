@@ -1,7 +1,7 @@
 # 24 — zazz-ui migrate command + registration + zazz.json stamp + README
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 23
 Size: M
 
