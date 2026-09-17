@@ -33,7 +33,7 @@ Global tokens live on `:root`, and components read them with `var()`, so reassig
 :root {
   --primary: light-dark(oklch(0.6 0.2 145), oklch(0.52 0.17 145));
   --radius-md: 0;
-  --gutters: var(--gap-lg);
+  --gutters: var(--space-lg);
 }
 ```
 
@@ -157,7 +157,7 @@ When a repeated pattern has structure (a block with children, states, maybe a va
 
     background: var(--callout-background);
     border-inline-start: var(--step-1) solid var(--primary);
-    padding: var(--gap-md);
+    padding: var(--space-md);
     border-radius: var(--radius-md);
   }
 

@@ -65,11 +65,11 @@ The `.container` is not a fixed-width box. A region (`main`, `header`, `footer`,
 ```html
 <section>
   <div class="container">
-    <h2>Sits in the default md band</h2>
+    <h2>Sits in the default lg band</h2>
     <figure data-container="bleed">
       <img src="/wide.jpg" alt="" />
     </figure>
-    <p>Back to the md band.</p>
+    <p>Back to the lg band.</p>
   </div>
 </section>
 ```

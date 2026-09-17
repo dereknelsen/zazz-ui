@@ -48,7 +48,7 @@ Borrow the confidence and negative space; skip the craft-narrative framing.
   atmospheric — night cityscapes, low-key product shots — framed in `--radius-lg` figures, not
   bright studio cut-outs. Duotone or a dark overlay keeps it consistent with the surface.
 - **Tight, structured rhythm with air.** Break the centered stack: dense bordered grids for
-  features and stats against `--gap-xl` (96px) breathing room around section heads. Use the
+  features and stats against `--space-xl` (96px) breathing room around section heads. Use the
   `.container` band system — `full` grids against capped `article`/`lg` intro text.
 - **One orchestrated reveal.** A single staggered hero load (`data-reveal` / `data-reveal-each`)
   and scroll reveals down the page beat scattered micro-interactions. `--spring-easing` for movement.

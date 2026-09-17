@@ -92,7 +92,7 @@ Here is where the Zazz container stops looking like other containers. Add a seco
 <section id="menu" class="py-xl bg-muted">
   <div class="container">
     <h2 class="text-h2 text-center">What we're pouring</h2>
-    <div class="grid @md:grid-cols-3 gap-md mt-lg" data-container="lg">
+    <div class="grid @lg:grid-cols-3 gap-md mt-lg" data-container="xl">
       <article class="bg-card text-card-foreground rounded-lg shadow-sm p-md flex flex-col gap-sm">
         <span class="ui-badge" data-variant="muted">Espresso</span>
         <h3 class="text-h4">The classic</h3>
@@ -119,11 +119,11 @@ Here is where the Zazz container stops looking like other containers. Add a seco
 </section>
 ```
 
-The container is a grid of named width bands (`xs` through `xl`, plus `full` and `bleed`), and every direct child picks one. The heading sits in the default `md` band. The card grid opts into the wider `lg` band with `data-container="lg"`. Both are centered, both are siblings, and no wrapper had to change.
+The container is a grid of named width bands (`sm` through `2xl`, plus `full` and `bleed`), and every direct child picks one. The heading sits in the default `lg` band. The card grid opts into the wider `xl` band with `data-container="xl"`. Both are centered, both are siblings, and no wrapper had to change.
 
 The cards themselves are just utilities over semantic color roles: `bg-card` and `text-card-foreground` resolve through `light-dark()`, which is why this section will look right in dark mode without any extra code.
 
-`@md:grid-cols-3` is a responsive prefix: one column on phones, three from the `md` breakpoint up. Mobile first, like everything in the kit.
+`@lg:grid-cols-3` is a responsive prefix: one column on phones, three from the `lg` breakpoint up. Mobile first, like everything in the kit.
 
 ## 5. Go full bleed
 
@@ -159,7 +159,7 @@ Forms use `.ui-field` for label and error layout and `.ui-input` for the control
 
 ```html
 <section id="signup" class="py-xl bg-muted">
-  <div class="container" data-container="xs">
+  <div class="container" data-container="sm">
     <hgroup class="flex flex-col gap-sm text-center">
       <h2 class="text-h2">Join the mailing list</h2>
       <p class="text-muted-foreground">One email a month. Roasts, events, no filler.</p>
@@ -186,7 +186,7 @@ Forms use `.ui-field` for label and error layout and `.ui-input` for the control
 </section>
 ```
 
-The `data-container="xs"` on the container narrows the default band for this section, because a form stretched to content width looks lost. Try submitting the empty form to see the error state.
+The `data-container="sm"` on the container narrows the default band for this section, because a form stretched to content width looks lost. Try submitting the empty form to see the error state.
 
 ## 7. Close with a footer
 

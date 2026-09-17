@@ -14,12 +14,12 @@ Values in Zazz are CSS custom properties on `:root`. Components consume `var(--t
 
 ## Token tiers
 
-| Tier                   | Description                 | Examples                                                                                         |
-| ---------------------- | --------------------------- | ------------------------------------------------------------------------------------------------ |
-| Brand & literal scales | Fixed color ramps           | `--primary-50` to `--primary-950`, `--neutral-*`, `--shade-*`, `--tint-*`                        |
-| Semantic roles         | Theme-aware colors          | `--background`, `--foreground`, `--primary`, `--muted`, `--border`, `--destructive`              |
-| Metrics & systems      | Spacing, typography, shapes | `--gap-*`, `--step-*`, `--font-size-*`, `--radius-*`, `--shadow-*`, `--breakpoint-*`, `--ring-*` |
-| Component tokens       | Component-specific hooks    | `--ui-button-background`, `--ui-field-border-color`, `--ui-dialog-radius`                        |
+| Tier                   | Description                 | Examples                                                                                           |
+| ---------------------- | --------------------------- | -------------------------------------------------------------------------------------------------- |
+| Brand & literal scales | Fixed color ramps           | `--primary-50` to `--primary-950`, `--neutral-*`, `--shade-*`, `--tint-*`                          |
+| Semantic roles         | Theme-aware colors          | `--background`, `--foreground`, `--primary`, `--muted`, `--border`, `--destructive`                |
+| Metrics & systems      | Spacing, typography, shapes | `--space-*`, `--step-*`, `--font-size-*`, `--radius-*`, `--shadow-*`, `--breakpoint-*`, `--ring-*` |
+| Component tokens       | Component-specific hooks    | `--ui-button-background`, `--ui-field-border-color`, `--ui-dialog-radius`                          |
 
 Roles resolve through [`light-dark()`](/docs/core-concepts/dark-mode). Component tokens default to global semantic tokens — or to another component's tokens when two components should stay visually coupled: the shared `--ui-field-*` family (owned by `fields.css`) drives inputs, selects, and textareas, and also the metrics of buttons, toggles, tabs, checkboxes, radios, and badge borders. One `--ui-field-radius` or `--ui-field-block-size` override retunes the whole row of controls together.
 
@@ -58,12 +58,12 @@ Set tokens inline on a single element:
 
 ## Token families
 
-- **Spacing:** Semantic `--gap-xs` to `--gap-xl` and fluid step scale `--step-0_5` to `--step-96`.
+- **Spacing:** Semantic `--space-xs` to `--space-xl` and fluid step scale `--step-0_5` to `--step-96`.
 - **Typography:** `--font-size-*`, `--font-weight-*`, `--leading-*`, and `--tracking-*`.
 - **Color:** Semantic roles and literal scales. See [Colors](/docs/core-concepts/colors).
 - **Radius:** `--radius-none` to `--radius-full`; the `xs`–`xl` steps scale with `--radius-multiplier` (`none` and `full` are literals).
 - **Shadow:** `--shadow-xs` to `--shadow-xl`.
-- **Layout:** `--breakpoint-xs` to `--breakpoint-xl`, `--gutters`, and reading measures `--article-xs` to `--article-xl`.
+- **Layout:** `--breakpoint-sm` to `--breakpoint-2xl`, `--gutters`, and reading measures `--article-xs` to `--article-xl`.
 - **Motion:** `--spring-easing`, `--spring-duration`, and `--default-transition-*`. The `--default-transition-*` pair is zeroed automatically when `prefers-reduced-motion` is active (the spring tokens keep their values).
 
 ## Token source files
