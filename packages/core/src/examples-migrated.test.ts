@@ -16,9 +16,10 @@
  * - *retired* names (`from` of some rule, `to` of none) no longer exist in the
  *   kit and must not appear anywhere: every `--is-breakpoint-*`, every old
  *   `--gap-*` size token, the `xs` end of each shifted family;
- * - *live* names are asserted to be exactly the `to` of a sibling rule of the
- *   same kind, so the JSON stays a closed shift and the retired set stays the
- *   complete list of what can be checked textually.
+ * - *live* names (the `to` of a sibling rule of the same kind) are skipped;
+ *   the retired count is pinned so a new rule family cannot slip past the
+ *   sweep unnoticed, and the retired set stays the complete list of what can
+ *   be checked textually.
  *
  * Matching per rule kind: `token` as `--name` bounded by anything but a word
  * character or dash (only as a `var(--name)` read when the name is also a
@@ -200,7 +201,7 @@ describe("examples-migrated: the sweep's inputs", () => {
     // data-container=xs. A different count means the JSON gained or lost a
     // family (ticket 22 / 36): re-derive the breakdown and update this pin so
     // the sweep below is known to cover the new retired name. Every other rule
-    // (74 of them) maps a live name one step along its family.
+    // (72 of them) maps a live name one step along its family.
     expect(retired).toHaveLength(28);
     expect(live).toHaveLength(MECHANICAL.length - 28);
   });
