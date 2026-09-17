@@ -11,7 +11,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterAll, describe, expect, it } from "vite-plus/test";
 import { ZazzError } from "../errors.ts";
-import { discoverFiles, fileKindOf, inLine, resolveFrom } from "./migrate.ts";
+import { discoverFiles, fileKindOf, inLine, locateRules, resolveFrom } from "./migrate.ts";
 
 const tmpDirs: string[] = [];
 afterAll(async () => {
@@ -50,6 +50,56 @@ describe("inLine", () => {
     expect(inLine("0.4", "0.4")).toBe(true);
     expect(inLine("0.41.0", "0.4")).toBe(false);
     expect(inLine("0.3.9", "0.4")).toBe(false);
+  });
+});
+
+describe("locateRules", () => {
+  /** A fake extracted kit whose `migrations/` holds the given rules files. */
+  async function kit(files: string[]): Promise<string> {
+    const dir = await mkdtemp(path.join(os.tmpdir(), "zazz-migrate-kit-"));
+    tmpDirs.push(dir);
+    await mkdir(path.join(dir, "migrations"));
+    for (const file of files) await writeFile(path.join(dir, "migrations", file), "{}");
+    return dir;
+  }
+
+  it("takes the kit version's own file when it exists, whatever from is", async () => {
+    const dir = await kit(["0.4.0.json", "0.5.0.json"]);
+    expect(await locateRules(dir, { version: "0.5.0", from: "0.4.1" })).toBe(
+      "migrations/0.5.0.json",
+    );
+    // `from` at the target still finds it: the command then reports "already migrated".
+    expect(await locateRules(dir, { version: "0.5.0", from: "0.5.0" })).toBe(
+      "migrations/0.5.0.json",
+    );
+  });
+
+  it("falls back to the newest file below the kit version and above from", async () => {
+    const dir = await kit(["0.4.0.json", "0.5.0.json", "0.7.0.json", "README.md"]);
+    expect(await locateRules(dir, { version: "0.5.1", from: "0.4.1" })).toBe(
+      "migrations/0.5.0.json",
+    );
+    expect(await locateRules(dir, { version: "0.6.2", from: "0.3.0" })).toBe(
+      "migrations/0.5.0.json",
+    );
+    // 0.4.0 applies to a 0.3 project on a kit that predates 0.5.
+    expect(await locateRules(dir, { version: "0.4.9", from: "0.3.0" })).toBe(
+      "migrations/0.4.0.json",
+    );
+  });
+
+  it("returns null when no file applies, or the kit ships none", async () => {
+    const dir = await kit(["0.5.0.json"]);
+    // Already at or past every migration the kit carries.
+    expect(await locateRules(dir, { version: "0.5.1", from: "0.5.0" })).toBeNull();
+    // Only a newer file than the kit itself (never shipped, but never picked).
+    expect(
+      await locateRules(await kit(["0.7.0.json"]), { version: "0.6.0", from: "0.5.0" }),
+    ).toBeNull();
+    expect(await locateRules(await kit([]), { version: "0.5.0", from: "0.4.1" })).toBeNull();
+    const bare = await mkdtemp(path.join(os.tmpdir(), "zazz-migrate-nokit-"));
+    tmpDirs.push(bare);
+    expect(await locateRules(bare, { version: "0.5.0", from: "0.4.1" })).toBeNull();
   });
 });
 
