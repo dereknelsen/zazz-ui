@@ -15,16 +15,18 @@
  * order in which `/combine/` concatenates them cannot change layer precedence.
  * `url()` in the sources are `data:` URIs only, so nothing is rewritten.
  *
- * `src/index.css` stays the single source of truth for load order: the script
- * parses its plain relative `@import` list and refuses to build if the map
- * below and that list drift apart (a file in one but not the other, or the
- * `zazz.css` order differing from `index.css`). Qualified imports
- * (`layer(...)`, media) are rejected — the bundle would silently change their
- * cascade position.
+ * The file map is `DIST_CSS` in `src/manifest.ts` (the published manifest, so
+ * the CLI and docs read the same map); this script imports the compiled
+ * `src/manifest.js`, so `tsc` must have run first. `src/index.css` stays the
+ * single source of truth for load order: the script parses its plain
+ * relative `@import` list and refuses to build if the map's `zazz.css` entry
+ * and that list drift apart (a file in one but not the other, or the order
+ * differing). Qualified imports (`layer(...)`, media) are rejected — the
+ * bundle would silently change their cascade position.
  *
  * Usage: part of `vp run build` (or `node scripts/build-dist.mjs`), after
- * `vp pack` (which owns `dist/zazz.js`) and before `generate-sri.mjs` (so the
- * hashes cover these files).
+ * `tsc` and `vp pack` (which owns `dist/zazz.js`) and before
+ * `generate-sri.mjs` (so the hashes cover these files).
  */
 
 import { readFileSync } from "node:fs";
@@ -39,101 +41,19 @@ const DIST = path.join(ROOT, "dist");
 
 // --- The dist map ---
 
-/** Cascade-layer order — prepended to every modular file. */
-const LAYERS = "base/_layers.css";
-
-/** Base layers after `_layers.css`: tokens, style-prop registrations, reset, type. */
-const BASE = [
-  "base/_variables.css",
-  "base/_properties.css",
-  "base/_reset.css",
-  "base/_typography.css",
-  "base/_view-transitions.css",
-];
-
-/** Class utilities + the `.container` layout grid. */
-const UTILITIES_CORE = ["base/_utilities.css", "base/_layout.css"];
-
-/**
- * Style-prop families (ADR-0012), in `index.css` order. The responsive
- * spacing set is a separate opt-in file that must follow `spacing`.
- */
-const UTILITY_FAMILIES = {
-  "utilities-spacing.css": ["base/_utilities-spacing.css"],
-  "utilities-spacing-responsive.css": ["base/_utilities-spacing-responsive.css"],
-  "utilities-sizing.css": ["base/_utilities-sizing.css"],
-  "utilities-grid.css": ["base/_utilities-grid.css"],
-  "utilities-flex.css": ["base/_utilities-flex.css"],
-  "utilities-color.css": ["base/_utilities-color.css"],
-  "utilities-typography.css": ["base/_utilities-typography.css"],
-  "utilities-position.css": ["base/_utilities-position.css"],
-};
-
-/** Primitives in `index.css` order (`fields` registers before its consumers). */
-const PRIMITIVES = [
-  "separator",
-  "fields",
-  "badge",
-  "kbd",
-  "button",
-  "button-group",
-  "toggle",
-  "toggle-group",
-  "accordion",
-  "table",
-  "progress",
-  "meter",
-  "popover",
-  "tooltip",
-  "dialog",
-  "alert-dialog",
-  "menu",
-  "navigation-menu",
-  "mobile-menu",
-  "input",
-  "textarea",
-  "select",
-  "autocomplete",
-  "combobox",
-  "command",
-  "checkbox",
-  "slider",
-  "switch",
-  "input-group",
-  "password-group",
-  "otp",
-  "radio",
-  "tabs",
-  "carousel",
-  "lightbox",
-  "toaster",
-  "reveal",
-];
-
-/**
- * `dist/` css file → the `src/`-relative stylesheets it bundles, in order.
- * Every modular file (everything but `layers.css` and `zazz.css`) is prefixed
- * with the layer order at build time; it is not listed here. Ticket 20 moves
- * this constant into `src/manifest.ts` (`DIST_CSS`) so the CLI and docs can
- * read the same map.
- */
-export const DIST_CSS = {
-  "layers.css": [LAYERS],
-  "base.css": BASE,
-  "utilities-core.css": UTILITIES_CORE,
-  ...UTILITY_FAMILIES,
-  "utilities.css": [...UTILITIES_CORE, ...Object.values(UTILITY_FAMILIES).flat()],
-  ...Object.fromEntries(
-    PRIMITIVES.map((name) => [`primitives/${name}.css`, [`primitives/${name}/${name}.css`]]),
-  ),
-  "zazz.css": [
-    LAYERS,
-    ...BASE,
-    ...PRIMITIVES.map((name) => `primitives/${name}/${name}.css`),
-    ...UTILITIES_CORE,
-    ...Object.values(UTILITY_FAMILIES).flat(),
-  ],
-};
+// The map lives in the published manifest (`DIST_CSS`); the compiled module
+// is dependency-free ESM, so Node loads it directly once tsc has emitted it.
+let DIST_CSS, DIST_LAYERS_CSS, DIST_BUNDLE_CSS;
+try {
+  ({ DIST_CSS, DIST_LAYERS_CSS, DIST_BUNDLE_CSS } = await import("../src/manifest.js"));
+} catch (error) {
+  if (error?.code === "ERR_MODULE_NOT_FOUND") {
+    throw new Error("src/manifest.js is missing — run `tsc -p tsconfig.json` first", {
+      cause: error,
+    });
+  }
+  throw error;
+}
 
 // --- index.css as the source of truth ---
 
@@ -164,7 +84,7 @@ const parseImports = (css) => {
 };
 
 const indexImports = parseImports(await readFile(path.join(SRC, "index.css"), "utf8"));
-const zazz = DIST_CSS["zazz.css"];
+const zazz = DIST_CSS[DIST_BUNDLE_CSS];
 if (zazz.join("\n") !== indexImports.join("\n")) {
   const listed = new Set(zazz);
   const imported = new Set(indexImports);
@@ -221,10 +141,10 @@ for (const name of await readdir(DIST)) {
 await rm(path.join(DIST, "primitives"), { recursive: true, force: true });
 await mkdir(path.join(DIST, "primitives"));
 
-const layers = await bundleFiles([LAYERS]);
+const layers = await bundleFiles(DIST_CSS[DIST_LAYERS_CSS]);
 const written = [];
 for (const [file, sources] of Object.entries(DIST_CSS)) {
-  const modular = file !== "layers.css" && file !== "zazz.css";
+  const modular = file !== DIST_LAYERS_CSS && file !== DIST_BUNDLE_CSS;
   const css = modular ? layers + (await bundleFiles(sources)) : await bundleFiles(sources);
   await writeFile(path.join(DIST, file), css);
   written.push([file, Buffer.byteLength(css)]);
