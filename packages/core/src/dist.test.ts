@@ -6,8 +6,8 @@
  * are exactly the map's keys, every modular file opens with the cascade-layer
  * order, no `@import` survives bundling, and `zazz.css` holds the same rules
  * as the sum of its parts. Needs a built `dist/` (`vp run build`); the suite
- * skips itself, by name, when there is none (the root `ready` script builds
- * before it tests).
+ * skips itself, naming the first missing file, when any file the map lists
+ * is absent (the root `ready` script builds before it tests).
  *
  * Reading the numbers: lightningcss minifies, and when it bundles the whole
  * of `index.css` it merges *adjacent blocks with an identical prelude* across
@@ -93,11 +93,16 @@ function distCssFiles(): string[] {
     .map((file) => relative(DIST, file).split("\\").join("/"));
 }
 
-const built = existsSync(DIST);
+// `vp pack` writes `dist/zazz.js` before `build-dist.mjs` runs, so `dist/`
+// can exist half-built; only a dist/ holding every listed file is checked.
+const missing = Object.keys(DIST_CSS).filter((file) => !existsSync(join(DIST, file)));
+const built = missing.length === 0;
 const describeDist = built ? describe : describe.skip;
 
 describeDist(
-  built ? "dist css" : "dist css (skipped: dist/ is absent — run `vp run build` first)",
+  built
+    ? "dist css"
+    : `dist css (skipped: dist/${missing[0]} is absent — run \`vp run build\` first)`,
   () => {
     it("holds exactly the files DIST_CSS lists", () => {
       expect(distCssFiles().sort()).toEqual(Object.keys(DIST_CSS).sort());
