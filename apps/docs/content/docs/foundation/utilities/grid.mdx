@@ -19,6 +19,10 @@ CSS Grid utilities define container tracks, item spans, subgrid alignment, and r
 
 `grid-cols-N` and `grid-rows-N` update `--_grid-cols` and `--_grid-rows` coordination variables.
 
+### Open values: use a style prop
+
+For a track count the classes don't cover, or one that changes per breakpoint, set a [style prop](/docs/core-concepts/style-props): `style="--grid-cols: 3; --grid-cols-md: 5"`. `--grid-cols` implies `display: grid` (no `grid` class needed) and sets `--_grid-cols`, so spans clamp as they do for `grid-cols-N`; `--grid-rows`, `--col-span`, and `--row-span` mirror their classes the same way, and all four take `-sm` to `-2xl` responsive suffixes.
+
 ## Spanning
 
 <Preview src="utilities/col-span" />
@@ -65,8 +69,8 @@ Combining `grid-flow-row` with `grid-cols-N` (N > 1) activates a gap-aware `auto
 
 ## Coordination variables
 
-| Variable          | Set by        | Default           | Consumed by                                   |
-| ----------------- | ------------- | ----------------- | --------------------------------------------- |
-| `--_grid-cols`    | `grid-cols-N` | `1`               | `col-span-*` clamping, auto-fill grid         |
-| `--_grid-rows`    | `grid-rows-N` | `1`               | `row-span-*` clamping                         |
-| `--_grid-col-min` | `.grid`       | `min(100%, 25ch)` | `grid-flow-row` auto-fill minimum track floor |
+| Variable          | Set by                       | Default           | Consumed by                                   |
+| ----------------- | ---------------------------- | ----------------- | --------------------------------------------- |
+| `--_grid-cols`    | `grid-cols-N`, `--grid-cols` | `1`               | `col-span-*` clamping, auto-fill grid         |
+| `--_grid-rows`    | `grid-rows-N`, `--grid-rows` | `1`               | `row-span-*` clamping                         |
+| `--_grid-col-min` | `.grid`                      | `min(100%, 25ch)` | `grid-flow-row` auto-fill minimum track floor |

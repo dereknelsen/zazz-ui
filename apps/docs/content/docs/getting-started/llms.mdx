@@ -40,7 +40,9 @@ Provide key reference files as context:
 ## Core rules in the skill
 
 - Use the cascade layers (`variables, reset, vendors, legacy, zazz, overrides`, with `components`, `plugins`, `utilities` nested inside `zazz`).
-- Use semantic tokens (`--primary`, `--space-md`) over hardcoded pixel/hex values.
+- Use semantic tokens (`--primary`, `--space-md`) over hardcoded pixel/hex values. The spacing scale is `--space-2xs` to `--space-2xl`, step multiples of `--spacing-interval`; utility classes cover `xs` to `xl`.
+- For a value off the scale, set a style prop in the `style` attribute (`style="--px: 5; --w-md: 22rem"`) instead of custom CSS; spacing props are step multiples (`--px: 6` is `px-md`).
+- Responsive: `@sm:` to `@2xl:` class prefixes and `-sm` to `-2xl` prop suffixes at 40, 48, 64, 80, and 96rem, gated on the `--bp-*` flags of the nearest size container (`--screen-*` for the viewport). Container bands and `data-container` use the same names, with `lg` as the default.
 - Apply variants through `data-*` attributes.
 - Use `light-dark()` for theme-aware colors.
 - Follow token naming conventions (`--ui-{component}-{property}--{state}`).
