@@ -290,30 +290,67 @@ describe("unmappable", () => {
     expect(result.counts["manual:className={"]).toBe(1);
   });
 
-  it("reports template literals that carry a class prefix outside a class attribute (js only)", () => {
+  it("reports string literals that carry a class prefix outside a class attribute (js only)", () => {
     const js = [
       "const a = `@xs:grid ${gap}`;",
       'const b = html`<div class="@xs:grid">${x}</div>`;',
       "const c = `plain ${y}`;",
       "const d = `stack-tight`;",
       "const e = `stack-tighter`;",
+      'el.classList.add("@xs:grid", "@md:flex");',
+      "el.classList.toggle('stack-tight', open);",
     ].join("\n");
     const result = run(js, "js");
     expect(result.text.split("\n")[1]).toBe('const b = html`<div class="@sm:grid">${x}</div>`;');
+    expect(result.text.split("\n")[5]).toBe('el.classList.add("@xs:grid", "@md:flex");');
     expect(result.unmappable).toEqual([
       {
         line: 1,
-        snippet: "`@xs:grid ${gap}`",
-        note: "template literal contains `@xs:`; rewrite by hand",
+        snippet: "const a = `@xs:grid ${gap}`;",
+        note: "string literal contains `@xs:`; rewrite by hand",
       },
       {
         line: 4,
-        snippet: "`stack-tight`",
-        note: "template literal contains `stack-tight`; rewrite by hand",
+        snippet: "const d = `stack-tight`;",
+        note: "string literal contains `stack-tight`; rewrite by hand",
+      },
+      {
+        line: 6,
+        snippet: 'el.classList.add("@xs:grid", "@md:flex");',
+        note: "string literal contains `@xs:`; rewrite by hand",
+      },
+      {
+        line: 7,
+        snippet: "el.classList.toggle('stack-tight', open);",
+        note: "string literal contains `stack-tight`; rewrite by hand",
       },
     ]);
-    // Markdown inline code is not a template literal.
+    // Markdown inline code is not a string literal.
     expect(run("Use `@xs:grid` here.", "md").unmappable).toEqual([]);
+  });
+
+  it("names each line of a multi-line template literal, once", () => {
+    const js = [
+      "const tpl = `",
+      "  <div class=\"@xs:a\">${'@xs:b'} ${x}</div>",
+      "  @sm:c @sm:d",
+      "`;",
+    ].join("\n");
+    expect(run(js, "js").unmappable.map(({ line, note }) => `${line} ${note}`)).toEqual([
+      "2 string literal contains `@xs:`; rewrite by hand",
+      "3 string literal contains `@sm:`; rewrite by hand",
+    ]);
+  });
+
+  it("does not pair stray backticks in separate string literals into a template", () => {
+    const js = [
+      'const open = "`";',
+      "// the @xs:grid prefix is discussed here, not used",
+      "const close = '`';",
+      'const esc = "a \\" @xs:grid";',
+    ].join("\n");
+    const result = run(js, "js");
+    expect(result.unmappable.map(({ line }) => line)).toEqual([4]);
   });
 
   it("reports arbitrary values inside class tokens, with the token as the snippet", () => {

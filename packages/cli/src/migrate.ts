@@ -24,9 +24,11 @@
  *   expression (`className={`) and is searched in the raw text; any other
  *   needle (`[`) is searched inside class tokens.
  *
- * Built in, rule-independent: template literals in `js` that carry a class
- * prefix or class name outside a `class` attribute are reported, since the
- * expression that builds them is not something a rename can follow.
+ * Built in, rule-independent: in `js`, any line whose string literal (quotes
+ * or backticks) carries a class prefix or class name outside a `class` /
+ * `className` attribute literal is reported (`classList.add("@xs:grid")`,
+ * `` `@xs:grid ${gap}` ``), since the expression that builds the class list
+ * is not something a rename can follow.
  */
 
 import { ZazzError } from "./errors.ts";
@@ -195,7 +197,7 @@ export interface Compiled {
   readonly manualInClass: ManualNeedle[];
   /** Manual needles (ending in `{`) searched in the raw text. */
   readonly manualInText: ManualNeedle[];
-  /** Class prefixes and names, longest first, for the template-literal probe. */
+  /** Class prefixes and names, longest first, for the js string-literal probe. */
   readonly classNeedles: RegExp | null;
 }
 
@@ -336,8 +338,6 @@ function cssEscape(ident: string): string {
 /** Attribute literals the class rewrite owns; excludes `:class`, `data-class`, `el.className`. */
 const CLASS_ATTR = /(?<![\w:.@-])(class|className)(\s*=\s*)(?:"([^"]*)"|'([^']*)')/g;
 
-const TEMPLATE_LITERAL = /`[^`]*`/g;
-
 /** A `<style>` element in markup, tags included: the one place css lives in `html`. */
 const STYLE_BLOCK = /<style\b[^>]*>[\s\S]*?<\/style\s*>/gi;
 
@@ -370,17 +370,18 @@ export function applyToText(
   }
   if (options.kind === "js" && compiled.classNeedles !== null) {
     const needles = compiled.classNeedles;
-    for (const match of text.matchAll(TEMPLATE_LITERAL)) {
-      const line = inputLines.at(match.index);
+    // Class attribute literals are rewritten below, so they are blanked out
+    // (newlines kept, offsets intact) before the string literals are walked.
+    const loose = text.replace(CLASS_ATTR, (attr) => attr.replace(/[^\n]/g, " "));
+    for (const { line, lineStart, content } of jsLiterals(loose)) {
       if (reportedLines.has(line)) continue;
-      // Prefixes that sit inside a class attribute are rewritten below; only the rest is stuck.
-      const loose = match[0].replace(CLASS_ATTR, "");
-      const found = needles.exec(loose);
+      const found = needles.exec(content);
       if (found === null) continue;
+      reportedLines.add(line);
       unmappable.push({
         line,
-        snippet: excerpt(match[0], 0),
-        note: `template literal contains \`${found[0]}\`; rewrite by hand`,
+        snippet: excerpt(text, lineStart),
+        note: `string literal contains \`${found[0]}\`; rewrite by hand`,
       });
     }
   }
@@ -483,6 +484,55 @@ class LineIndex {
     }
     return low + 1;
   }
+}
+
+/** One line's worth of a js string literal's contents. */
+interface LiteralLine {
+  /** 1-based line the contents sit on. */
+  line: number;
+  /** Offset of that line's first character in the scanned text. */
+  lineStart: number;
+  /** The literal's contents on this line, quotes excluded. */
+  content: string;
+}
+
+/**
+ * @description Walks the `"…"`, `'…'` and `` `…` `` literals of js text and
+ * yields their contents one line at a time, so a report can name the line
+ * even for a template literal that spans several. Escapes are honoured; an
+ * unterminated quote ends at its line (as the parser would reject it), while
+ * a template runs on until its closing backtick. Comments and regex literals
+ * are not modelled: a quote inside one opens a literal like any other, which
+ * at worst yields a line the rules never match.
+ */
+function* jsLiterals(text: string): Generator<LiteralLine, void, undefined> {
+  let line = 1;
+  let lineStart = 0;
+  let quote: '"' | "'" | "`" | null = null;
+  let start = 0;
+  for (let i = 0; i < text.length; i += 1) {
+    const char = text[i];
+    if (char === "\n") {
+      if (quote !== null) {
+        yield { line, lineStart, content: text.slice(start, i) };
+        if (quote === "`") start = i + 1;
+        else quote = null;
+      }
+      line += 1;
+      lineStart = i + 1;
+    } else if (quote === null) {
+      if (char === '"' || char === "'" || char === "`") {
+        quote = char;
+        start = i + 1;
+      }
+    } else if (char === "\\" && text[i + 1] !== "\n") {
+      i += 1;
+    } else if (char === quote) {
+      yield { line, lineStart, content: text.slice(start, i) };
+      quote = null;
+    }
+  }
+  if (quote !== null) yield { line, lineStart, content: text.slice(start) };
 }
 
 /** Offset of every line start in `text`, the first being 0. */
