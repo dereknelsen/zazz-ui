@@ -1,7 +1,7 @@
 # 01 — Baseline numbers for 0.4.1
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: —
 Size: S
 
