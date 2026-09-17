@@ -1,7 +1,7 @@
 # 29 — Docs: style-props page + responsive rewrite
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 27
 Size: M
 
