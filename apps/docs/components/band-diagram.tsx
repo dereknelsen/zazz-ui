@@ -7,7 +7,7 @@ import { cn } from "@/lib/cn";
  * way an ASCII-art code block does.
  *
  * Proportions are honest: they model a 104rem-wide region with 2rem gutters,
- * so every band renders at its real share of that region (md = 64/104, etc.).
+ * so every band renders at its real share of that region (lg = 64/104, etc.).
  */
 
 const REGION = 104; // rem — reference region width for the drawing
@@ -15,19 +15,19 @@ const REGION = 104; // rem — reference region width for the drawing
 const BANDS = [
   { name: "bleed", rem: 104, cap: "edge to edge", isDefault: false },
   { name: "full", rem: 100, cap: "region minus gutters", isDefault: false },
-  { name: "xl", rem: 96, cap: "96rem", isDefault: false },
-  { name: "lg", rem: 80, cap: "80rem", isDefault: false },
-  { name: "md", rem: 64, cap: "64rem", isDefault: true },
-  { name: "sm", rem: 48, cap: "48rem", isDefault: false },
-  { name: "xs", rem: 40, cap: "40rem", isDefault: false },
+  { name: "2xl", rem: 96, cap: "96rem", isDefault: false },
+  { name: "xl", rem: 80, cap: "80rem", isDefault: false },
+  { name: "lg", rem: 64, cap: "64rem", isDefault: true },
+  { name: "md", rem: 48, cap: "48rem", isDefault: false },
+  { name: "sm", rem: 40, cap: "40rem", isDefault: false },
 ];
 
 const pct = (rem: number) => `${((rem / REGION) * 100).toFixed(2)}%`;
 /** Inset from either edge to a band's start line. */
 const inset = (rem: number) => `${(((REGION - rem) / 2 / REGION) * 100).toFixed(2)}%`;
 
-/** Dashed vertical guides marking the md band's edges across a whole stack. */
-function MdGuides() {
+/** Dashed vertical guides marking the lg band's edges across a whole stack. */
+function LgGuides() {
   return (
     <div
       aria-hidden
@@ -42,7 +42,7 @@ export function BandDiagram() {
   return (
     <figure className="not-prose my-6 rounded-lg border bg-fd-card p-4 sm:p-6">
       <div className="relative flex flex-col gap-1.5">
-        <MdGuides />
+        <LgGuides />
         {BANDS.map((band) => (
           <div
             key={band.name}
@@ -73,8 +73,8 @@ export function BandDiagram() {
       </div>
       <figcaption className="mt-4 text-sm text-fd-muted-foreground">
         The band template, drawn to scale for a 104rem region with 2rem gutters. Every region shares
-        it, so an <code className="text-fd-foreground">md</code> child in one section lines up
-        exactly with <code className="text-fd-foreground">md</code> children in every other. The
+        it, so an <code className="text-fd-foreground">lg</code> child in one section lines up
+        exactly with <code className="text-fd-foreground">lg</code> children in every other. The
         dashed guides mark the default band.
       </figcaption>
     </figure>
@@ -82,10 +82,10 @@ export function BandDiagram() {
 }
 
 const FLOW_CHILDREN = [
-  { label: "<h2>", band: "md", rem: 64, tall: false },
-  { label: "<p>", band: "md", rem: 64, tall: false },
+  { label: "<h2>", band: "lg", rem: 64, tall: false },
+  { label: "<p>", band: "lg", rem: 64, tall: false },
   { label: '<figure data-container="bleed">', band: "bleed", rem: 104, tall: true },
-  { label: "<p>", band: "md", rem: 64, tall: false },
+  { label: "<p>", band: "lg", rem: 64, tall: false },
 ];
 
 /** Siblings in one container flow, each occupying its own band. */
@@ -93,7 +93,7 @@ export function BandFlowDiagram() {
   return (
     <figure className="not-prose my-6 rounded-lg border bg-fd-card p-4 sm:p-6">
       <div className="relative flex flex-col gap-1.5">
-        <MdGuides />
+        <LgGuides />
         {FLOW_CHILDREN.map((child, i) => (
           <div
             key={i}

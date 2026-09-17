@@ -12,10 +12,10 @@ Zazz handles responsive design through fluid type/spacing scaling and container 
 
 ## Responsive prefixes
 
-Prefix layout utilities with `@xs:`, `@sm:`, `@md:`, `@lg:`, or `@xl:`. These apply style queries against centralized page breakpoint flags published by the `body` container:
+Prefix layout utilities with `@sm:`, `@md:`, `@lg:`, `@xl:`, or `@2xl:`. These apply style queries against centralized page breakpoint flags published by the `body` container:
 
 ```html
-<div class="grid grid-cols-1 @md:grid-cols-3 gap-md">
+<div class="grid grid-cols-1 @lg:grid-cols-3 gap-md">
   <article class="bg-card rounded-md p-md">...</article>
   <article class="bg-card rounded-md p-md">...</article>
   <article class="bg-card rounded-md p-md">...</article>
@@ -24,13 +24,13 @@ Prefix layout utilities with `@xs:`, `@sm:`, `@md:`, `@lg:`, or `@xl:`. These ap
 
 Breakpoints activate at or above the given threshold:
 
-| Prefix | Threshold | Token             |
-| ------ | --------- | ----------------- |
-| `@xs:` | >= 40rem  | `--breakpoint-xs` |
-| `@sm:` | >= 48rem  | `--breakpoint-sm` |
-| `@md:` | >= 64rem  | `--breakpoint-md` |
-| `@lg:` | >= 80rem  | `--breakpoint-lg` |
-| `@xl:` | >= 96rem  | `--breakpoint-xl` |
+| Prefix  | Threshold | Token              |
+| ------- | --------- | ------------------ |
+| `@sm:`  | >= 40rem  | `--breakpoint-sm`  |
+| `@md:`  | >= 48rem  | `--breakpoint-md`  |
+| `@lg:`  | >= 64rem  | `--breakpoint-lg`  |
+| `@xl:`  | >= 80rem  | `--breakpoint-xl`  |
+| `@2xl:` | >= 96rem  | `--breakpoint-2xl` |
 
 ## Mobile-first authoring
 
@@ -38,7 +38,7 @@ Apply base utilities for the narrowest view, then add prefixed overrides for wid
 
 ```html
 <!-- stacked on mobile, row layout from md up -->
-<div class="flex flex-col @md:flex-row gap-md">...</div>
+<div class="flex flex-col @lg:flex-row gap-md">...</div>
 ```
 
 Supported responsive families are `container`, `display`, `grid-cols`, `grid-rows`, `flex-direction`, `text-align`, `align-items`, `justify-content`, `col-span`, `row-span`, and `basis` (`basis-0`/`-1`/`-auto`/`-full`; the fractional `basis-1/2`-style classes are base-only).

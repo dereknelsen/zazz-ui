@@ -10,7 +10,7 @@ Two rules govern every choice:
 1. **Never hardcode.** Every value is a `var(--…)` hook. Override at one of the three
    surfaces in `SKILL.md` (global → component-default → instance) instead of editing source.
 2. **Most semantic that fits.** Reach for the semantic token first; drop to a literal scale
-   only when no semantic token can express it. `gap-sm` → `var(--gap-sm)` → `var(--step-4)`,
+   only when no semantic token can express it. `gap-sm` → `var(--space-sm)` → `var(--step-4)`,
    in that order of preference.
 
 ## Contents
@@ -24,7 +24,7 @@ Two rules govern every choice:
 
 ## 1. Spacing
 
-- **Semantic gaps (use first):** `--gap-xs --gap-sm --gap-md --gap-lg --gap-xl`. These are
+- **Semantic gaps (use first):** `--space-xs --space-sm --space-md --space-lg --space-xl`. These are
   the default for padding, margins, and `gap`.
 - **Step scale (escape hatch):** `--step-0_5 --step-1 … --step-96`, plus `--step-px`,
   `--step-0_5px`, `--step-full`. Half-steps run through `--step-5_5` (escaped dot —
@@ -42,14 +42,14 @@ Two rules govern every choice:
 - **Negative margins:** `.-m-xs ..-m-xl`, `.-mx-* .-my-*`, `.-mt-* .-mr-* .-mb-* .-ml-*`
   (same sizes xs–xl; `.-ms-*`/`.-me-*` alias `.-ml-*`/`.-mr-*`). Base classes only — no
   responsive (`xs:`…) variants.
-- **Size utilities:** `.w-0 .w-px .w-auto .w-full .w-xs..xl .w-screen .w-screen-xs..xl`,
-  `.h-0 .h-px .h-auto .h-full .h-xs..xl .h-screen .h-screen-xs..xl`,
-  `.size-0 .size-auto .size-full .size-xs..xl .size-screen .size-screen-xs..xl`.
+- **Size utilities:** `.w-0 .w-px .w-auto .w-full .w-xs..xl .w-screen .w-screen-sm..2xl`,
+  `.h-0 .h-px .h-auto .h-full .h-xs..xl .h-screen .h-screen-sm..2xl`,
+  `.size-0 .size-auto .size-full .size-xs..xl .size-screen .size-screen-sm..2xl`.
   Logical-name aliases with identical values: `.inline-*` = `.w-*`, `.block-*` = `.h-*`.
-- **Min/max size:** `.max-w-0 .max-w-auto .max-w-full .max-w-screen .max-w-screen-xs..xl`,
-  `.max-h-0 .max-h-auto .max-h-full .max-h-screen .max-h-screen-xs..xl`,
-  `.min-w-0 .min-w-auto .min-w-full .min-w-screen .min-w-screen-xs..xl`,
-  `.min-h-0 .min-h-auto .min-h-full .min-h-screen .min-h-screen-xs..xl`.
+- **Min/max size:** `.max-w-0 .max-w-auto .max-w-full .max-w-screen .max-w-screen-sm..2xl`,
+  `.max-h-0 .max-h-auto .max-h-full .max-h-screen .max-h-screen-sm..2xl`,
+  `.min-w-0 .min-w-auto .min-w-full .min-w-screen .min-w-screen-sm..2xl`,
+  `.min-h-0 .min-h-auto .min-h-full .min-h-screen .min-h-screen-sm..2xl`.
   Aliases: `.max-inline-*`/`.max-block-*`/`.min-inline-*`/`.min-block-*`.
 - **Inset/position offsets:** `.inset-0 .inset-xs..xl`, `.top-xs..xl .right-xs..xl
 .bottom-xs..xl .left-xs..xl` (logical inset properties; `.start-*`/`.end-*` alias
@@ -120,33 +120,33 @@ intentionally (**md** ≈ popovers/modals). Utilities: `.shadow-none|xs|sm|md|lg
 - **`.container` — subgrid band system.** A `<main>/<header>/<footer>/<section>/<article>` that
   `:has(> .container)` becomes a layout grid with named band lines; the `.container` is a subgrid
   spanning the whole region, and each **direct child** drops into a band. No wrapper div, no fixed
-  width — the band caps + centers content fluidly. Bands: `xs sm md lg xl` (cap at the matching
+  width — the band caps + centers content fluidly. Bands: `sm md lg xl 2xl` (cap at the matching
   breakpoint width), `full` (region width minus gutters), `bleed` (edge-to-edge, gutters included).
-  **Default band is `md`.**
-  - `data-container="xs|sm|md|lg|xl|full|bleed"` on the `.container` resets the default for
+  **Default band is `lg`.**
+  - `data-container="sm|md|lg|xl|2xl|full|bleed"` on the `.container` resets the default for
     all its children.
-  - `data-container="xs|sm|md|lg|xl|full|bleed"` on a **direct child** overrides that one child's band.
-  - Responsive variants: `@md:container`, `@max-md:container`, etc. — the element is a band subgrid
-    only at/above (min) or below (max) its breakpoint, and a plain block otherwise. (`@max-md:container`
-    pairs with a grid that takes over above `md`; see `products.html`.)
+  - `data-container="sm|md|lg|xl|2xl|full|bleed"` on a **direct child** overrides that one child's band.
+  - Responsive variants: `@lg:container`, `@max-lg:container`, etc. — the element is a band subgrid
+    only at/above (min) or below (max) its breakpoint, and a plain block otherwise. (`@max-lg:container`
+    pairs with a grid that takes over above `lg`; see `products.html`.)
 - **`.container[data-variant="article"]` — reading width** (replaces the old `.article`). A centered,
   inline-size container; widths from `--article-xs` 45ch, `--article-sm` 50ch, `--article-md` 65ch,
-  `--article-lg` 70ch, `--article-xl` 75ch. **Default `lg`.** Pick the width with
-  `data-container="xs..xl"`. Responsive `@md:container[data-variant="article"]` / `@max-*`
+  `--article-lg` 70ch, `--article-xl` 75ch. **Default `xl`.** Pick the width with
+  `data-container="sm..2xl"` (one step behind the ch token: `sm` reads `--article-xs`). Responsive `@lg:container[data-variant="article"]` / `@max-*`
   variants exist. (full/bleed aren't reading widths — use them on a plain band `.container`.)
-- **Gutters:** `--gutters` (= `--gap-md`) — the region's edge padding the band system reserves.
-- **Breakpoints** (for `calc()` and **container** queries — not `@media`): `--breakpoint-xs` 40rem,
-  `--breakpoint-sm` 48rem, `--breakpoint-md` 64rem, `--breakpoint-lg` 80rem, `--breakpoint-xl` 96rem.
-- **Responsive utilities are `@`-prefixed:** `@xs:* @sm:* @md:* @lg:* @xl:*` — author as
-  `class="@md:grid-cols-3"`, `class="@lg:flex-row"`. Mobile-first (apply at/above the breakpoint),
-  gated on global `--is-breakpoint-*` flags sourced from the **body** container, so they track the
+- **Gutters:** `--gutters` (= `--space-md`) — the region's edge padding the band system reserves.
+- **Breakpoints** (for `calc()` and **container** queries — not `@media`): `--breakpoint-sm` 40rem,
+  `--breakpoint-md` 48rem, `--breakpoint-lg` 64rem, `--breakpoint-xl` 80rem, `--breakpoint-2xl` 96rem.
+- **Responsive utilities are `@`-prefixed:** `@sm:* @md:* @lg:* @xl:* @2xl:*` — author as
+  `class="@lg:grid-cols-3"`, `class="@xl:flex-row"`. Mobile-first (apply at/above the breakpoint),
+  gated on global `--bp-*` flags sourced from the **body** container, so they track the
   viewport breakpoint (not the nearest arbitrary container). Available at each breakpoint: display
   (`hidden block flex inline-flex grid grid-cols-subgrid grid-rows-subgrid`), grid-cols, grid-rows,
   flex-direction (`flex-row flex-col`), text-align, items-_, justify-_, col-span, row-span, basis.
   (Less-toggled families — align-self, justify-self, place-items, visibility, negative margins — ship
   only as base classes, not per-breakpoint; apply them outside the responsive layer.)
   - **`@max-*` (below the breakpoint):** the inverse of the min variants — applies only _below_ its
-    breakpoint. In utilities this only exists for the **container** family (`@max-md:container` etc.);
+    breakpoint. In utilities this only exists for the **container** family (`@max-lg:container` etc.);
     the atomic utilities above (grid-cols, display, …) ship min variants only.
 - **Display:** `.hidden .block .inline-block .inline .visible .invisible`.
 - **Flexbox:** `.flex .inline-flex`, direction `.flex-row .flex-row-reverse .flex-col
@@ -231,7 +231,7 @@ Two separate systems — **element opacity** and **channel alpha**. Don't confus
 
 ## 12. Positioning
 
-`.static .relative .absolute .fixed .sticky`. Inset/offset utilities use `--gap-*` sizes:
+`.static .relative .absolute .fixed .sticky`. Inset/offset utilities use `--space-*` sizes:
 `.inset-0 .inset-xs..xl`, `.top-xs..xl .right-xs..xl .bottom-xs..xl .left-xs..xl`.
 
 ---

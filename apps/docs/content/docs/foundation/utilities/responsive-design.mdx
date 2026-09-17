@@ -1,9 +1,9 @@
 ---
 title: Responsive design
-description: "Container style query prefixes (@xs: to @xl:) and supported utility families."
+description: "Container style query prefixes (@sm: to @2xl:) and supported utility families."
 ---
 
-Responsive utilities use container style queries with `@` prefixes: `@xs:`, `@sm:`, `@md:`, `@lg:`, `@xl:`.
+Responsive utilities use container style queries with `@` prefixes: `@sm:`, `@md:`, `@lg:`, `@xl:`, `@2xl:`.
 
 <Preview src="utilities/responsive-grid" />
 
@@ -11,24 +11,24 @@ Responsive utilities use container style queries with `@` prefixes: `@xs:`, `@sm
 
 Each prefix applies min-width style rules at or above the threshold:
 
-| Prefix | Threshold | Token             |
-| ------ | --------- | ----------------- |
-| (none) | Base view | None              |
-| `@xs:` | 40rem     | `--breakpoint-xs` |
-| `@sm:` | 48rem     | `--breakpoint-sm` |
-| `@md:` | 64rem     | `--breakpoint-md` |
-| `@lg:` | 80rem     | `--breakpoint-lg` |
-| `@xl:` | 96rem     | `--breakpoint-xl` |
+| Prefix  | Threshold | Token              |
+| ------- | --------- | ------------------ |
+| (none)  | Base view | None               |
+| `@sm:`  | 40rem     | `--breakpoint-sm`  |
+| `@md:`  | 48rem     | `--breakpoint-md`  |
+| `@lg:`  | 64rem     | `--breakpoint-lg`  |
+| `@xl:`  | 80rem     | `--breakpoint-xl`  |
+| `@2xl:` | 96rem     | `--breakpoint-2xl` |
 
 ```html
-<div class="grid grid-cols-1 @xs:grid-cols-2 @sm:grid-cols-3 @lg:grid-cols-4 gap-md">...</div>
+<div class="grid grid-cols-1 @sm:grid-cols-2 @md:grid-cols-3 @xl:grid-cols-4 gap-md">...</div>
 ```
 
 ## How breakpoints work
 
 1. `_variables.css` defines `--breakpoint-*` length tokens.
-2. The `body` element acts as a container (`container-name: body`). Container size queries set boolean flags (`--is-breakpoint-md: true`) when width thresholds are reached.
-3. Responsive classes evaluate `@container style(--is-breakpoint-md: true)`.
+2. The `body` element acts as a container (`container-name: body`). Container size queries set boolean flags (`--bp-lg: true`) when width thresholds are reached.
+3. Responsive classes evaluate `@container style(--bp-lg: true)`.
 
 ## Supported responsive families
 
