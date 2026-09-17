@@ -91,6 +91,18 @@ async function project(): Promise<string> {
   return dir;
 }
 
+/** A CDN/npm-style project: the same three sources, no zazz.json. */
+async function bareProject(): Promise<string> {
+  const dir = await mkdtemp(path.join(os.tmpdir(), "zazz-e2e-migrate-bare-"));
+  tmpDirs.push(dir);
+  for (const [file, content] of Object.entries(SOURCES)) {
+    const dest = path.join(dir, ...file.split("/"));
+    await mkdir(path.dirname(dest), { recursive: true });
+    await writeFile(dest, content);
+  }
+  return dir;
+}
+
 async function readConfig(root: string): Promise<ZazzConfig> {
   return JSON.parse(await readFile(path.join(root, "zazz.json"), "utf8")) as ZazzConfig;
 }
@@ -193,6 +205,19 @@ describe("zazz-ui migrate (e2e, fixture kit)", () => {
     expect(output).toContain(`Next: \`zazz-ui update @${V2}\`.`);
     // The vendored directory is not a migration target.
     expect(await readFile(at(root, "zazz/index.css"), "utf8")).not.toContain("@sm:");
+  });
+
+  it("without zazz.json, --write rewrites but warns that nothing records the migration", async () => {
+    const root = await bareProject();
+
+    const output = await capturedMigrate(root, { write: true, from: V1 });
+
+    expect((await readSources(root))["src/page.html"]).toContain('class="stack @sm:grid @md:flex"');
+    expect(output).toContain(`Rewrote 2 files for ${V2}.`);
+    expect(output).toContain("no zazz.json — nothing records");
+    expect(output).toContain("run --write once");
+    // A dry run has nothing to record yet, so it stays quiet about the stamp.
+    expect(await capturedMigrate(await bareProject(), { from: V1 })).not.toContain("no zazz.json");
   });
 
   it("refuses a second run as already migrated and leaves the sources alone", async () => {
