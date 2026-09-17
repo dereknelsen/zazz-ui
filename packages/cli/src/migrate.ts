@@ -16,7 +16,8 @@
  * - `token`: a custom-property name, every file kind, word-and-dash bounded.
  * - `class-prefix` / `class`: whitespace-separated tokens inside `class="…"`,
  *   `class='…'`, `className="…"` / `className='…'` literals, plus the escaped
- *   selector form (`.\@xs\:grid`) in `css`.
+ *   selector form (`.\@xs\:grid`) in `css` and inside `<style>` blocks of
+ *   `html` (which covers `.vue`, `.svelte` and `.astro` single-file components).
  * - `attr-value`: `from`/`to` are `attr=value` pairs; rewrites `attr="value"`
  *   and `attr='value'` (markup and CSS attribute selectors alike).
  * - `manual`: report only. A needle ending in `{` names a JSX attribute
@@ -183,7 +184,7 @@ export interface Compiled {
   readonly className: Map<string, { to: string; id: string }>;
   /** Class prefixes, longest first, each with its replacement. */
   readonly classPrefix: { from: string; to: string; id: string }[];
-  /** Escaped selector forms of the class rules (`.\@xs\:` …) for `css`. */
+  /** Escaped selector forms of the class rules (`.\@xs\:` …) for `css` and `<style>` blocks. */
   readonly cssSelector: Replacer | null;
   /** `attr` → (`value` → replacement) for attr-value rules. */
   readonly attrValue: {
@@ -337,6 +338,9 @@ const CLASS_ATTR = /(?<![\w:.@-])(class|className)(\s*=\s*)(?:"([^"]*)"|'([^']*)
 
 const TEMPLATE_LITERAL = /`[^`]*`/g;
 
+/** A `<style>` element in markup, tags included: the one place css lives in `html`. */
+const STYLE_BLOCK = /<style\b[^>]*>[\s\S]*?<\/style\s*>/gi;
+
 const SNIPPET_MAX = 80;
 
 export function applyToText(
@@ -427,14 +431,17 @@ export function applyToText(
       return rewritten === value ? whole : `${name}${eq}${quote}${rewritten}${quote}`;
     },
   );
-  if (options.kind === "css" && compiled.cssSelector !== null) {
+  if (compiled.cssSelector !== null) {
     const { regex, map } = compiled.cssSelector;
-    out = out.replace(regex, (form) => {
-      const entry = map.get(form);
-      if (entry === undefined) return form;
-      hit(entry.id);
-      return entry.to;
-    });
+    const rewriteSelectors = (css: string): string =>
+      css.replace(regex, (form) => {
+        const entry = map.get(form);
+        if (entry === undefined) return form;
+        hit(entry.id);
+        return entry.to;
+      });
+    if (options.kind === "css") out = rewriteSelectors(out);
+    else if (options.kind === "html") out = out.replace(STYLE_BLOCK, rewriteSelectors);
   }
 
   if (compiled.attrValue !== null) {
