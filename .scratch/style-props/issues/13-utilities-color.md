@@ -1,7 +1,7 @@
 # 13 — _utilities-color.css style props
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 08
 Size: S
 
