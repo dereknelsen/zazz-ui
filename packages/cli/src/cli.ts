@@ -104,6 +104,27 @@ program
     await runAdd(names, options as AddParams[1], program.opts() as AddParams[2]);
   });
 
+program
+  .command("migrate")
+  .description("rewrite your sources for a new kit version (dry run by default)")
+  .argument("[paths...]", "files or directories to scan (default: the current directory)")
+  .option("--to <version>", "kit version whose migration to apply, @-prefixed (default @latest)")
+  .option("--from <version>", "kit version the sources are on (default: read from zazz.json)")
+  .option("--rules <file>", "read migration rules from a local file instead of the kit")
+  .option("--write", "apply the rewrites; without it, print the diff and write nothing")
+  .option("--include <glob>", "only scan files matching <glob>; repeatable", collect, [])
+  .option("--exclude <glob>", "skip files matching <glob>; repeatable", collect, [])
+  .action(async (paths: string[], options: unknown) => {
+    const { runMigrate } = await import("./commands/migrate.ts");
+    type MigrateParams = Parameters<typeof runMigrate>;
+    await runMigrate(paths, options as MigrateParams[1], program.opts() as MigrateParams[2]);
+  });
+
+/** Commander accumulator for repeatable options. */
+function collect(value: string, previous: string[]): string[] {
+  return [...previous, value];
+}
+
 try {
   await program.parseAsync();
 } catch (error) {
