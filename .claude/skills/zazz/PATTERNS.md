@@ -106,7 +106,8 @@ For the rest, reach for the primitives and components directly — they carry th
 composition guidance:
 
 - Structure & spacing → `references/tokens.md` (`.container` band system + `data-container`,
-  `.container[data-variant="article"]`, `--space-*`, the responsive `@md:`/`@lg:`/`@xl:`
-  utilities and `@max-*` container variants).
+  `.container[data-variant="article"]`, `--space-*`, the responsive `@sm:`…`@2xl:`
+  utilities and `@max-*` container variants, and style props for open values —
+  `style="--grid-cols: 5; --gap: 3"` where no class scale fits).
 - Components (cards, carousels, dialogs, forms, navigation, …) → `references/components.md`.
 - Brand voice, color roles, type scale, archetypes → `DESIGN.md`.

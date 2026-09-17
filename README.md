@@ -4,10 +4,10 @@ Monorepo for the Zazz Design Framework (a zero-build, semantic-token CSS and van
 
 ## Layout
 
-| Path            | What it is                                                                                                                                                                                       |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `packages/core` | [`@zazz-ui/core`](packages/core): the kit itself (not yet published; see [Publishing](#publishing)). CSS, HTML, and TS-authored scripts co-located per component under `src/primitives/<name>/`. |
-| `apps/docs`     | The documentation site (Next.js + fumadocs). Serves the kit files raw at `/zazz/*` for component previews.                                                                                       |
+| Path            | What it is                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `packages/core` | [`@zazz-ui/core`](packages/core): the kit itself (not yet published; see [Publishing](#publishing)). CSS, HTML, and TS-authored scripts co-located per component under `src/primitives/<name>/`. Finite values are classes, open values are style props (`style="--px: 4; --px-md: 8"`, ADR-0012), and `dist/` ships a modular build (`zazz.css` plus per-layer, per-family, and per-primitive files) for loading only what a page uses. |
+| `apps/docs`     | The documentation site (Next.js + fumadocs). Serves the kit files raw at `/zazz/*` for component previews.                                                                                                                                                                                                                                                                                                                               |
 
 ## Development
 
