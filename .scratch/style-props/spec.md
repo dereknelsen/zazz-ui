@@ -6,11 +6,12 @@ Spec: [/SPEC.md](../../SPEC.md) (locked decisions + phases). This file records t
 ## Amendments to /SPEC.md (agreed 2026-09-17)
 
 - **Term:** the inline custom-property mechanism (`style="--px: 4"`) is a **style prop**. "Slot" stays reserved for `data-slot` parts (CONTEXT.md). Family file names keep the spec's `_utilities-<family>.css`.
-- **`--space-*` are step multiples**, not literal rem: `2xs=--step-1, xs=--step-2, sm=--step-4, md=--step-6, lg=--step-11, xl=--step-24, 2xl=--step-40` (xs–xl byte-identical to 0.4.1's `--gap-*`; stays fluid via `--spacing-interval`). `--gap-xs…xl` remain as deprecated aliases until 0.6.0.
+- **`--space-*` are step multiples**, not literal rem: `2xs=--step-1, xs=--step-2, sm=--step-4, md=--step-6, lg=--step-11, xl=--step-24, 2xl=--step-40` (xs–xl byte-identical to 0.4.1's `--gap-*`; stays fluid via `--spacing-interval`). `--gap-xs…xl` are **removed outright** (no aliases): the responsive prop `--gap-md` needs the name, and the codemod rewrites every read.
 - **Breakpoint shift is one vocabulary:** flags `--bp-{sm,md,lg,xl,2xl}` = 40/48/64/80/96rem, class prefixes `@sm:…@2xl:` (and `@max-*`), length tokens `--breakpoint-{sm…2xl}`, `.container` band line names and `data-container` values all shift one step (old xs → sm … old xl → 2xl). `--screen-*` viewport flags are new.
 - **Spacing base stays `--spacing-interval`** (the spec's `--spacing` is not renamed).
 - **No numeric classes exist in 0.4.1**, so `compat-tailwind.css` is **deferred** and the codemod's HTML transform is the breakpoint-prefix shift + `data-container` values (no numeric-class → prop rewrite). No `--compat` flag.
-- **Style props (44 × 6):** spacing (numeric × `--spacing-interval`) `p px py ps pe pt pb m mx my ms me mt mb gap gap-x gap-y`; sizing `w h min-w max-w min-h max-h size`; grid `grid-cols grid-rows col-span row-span` (`--grid-cols` implies `display: grid`); flex `basis grow shrink order`; color `bg text border` (`--text` is color); typography `font-size leading tracking`; position `top right bottom left inset z` (logical). Suffixes `-sm -md -lg -xl -2xl`. Each registered `@property { syntax: "*"; inherits: false }`; rules gated on `:where([style*="--x:"])` in `@layer zazz.utilities`; family files import after `_utilities.css`/`_layout.css`. `--gap` also sets `--_gap`; `--grid-cols` sets `--_grid-cols`.
+- **Style props (44 × 6):** spacing (numeric × `--spacing-interval`) `p px py ps pe pt pb m mx my ms me mt mb gap gap-x gap-y`; sizing `w h min-w max-w min-h max-h size`; grid `grid-cols grid-rows col-span row-span` (`--grid-cols` implies `display: grid`); flex `basis grow shrink order`; color `bg text border-color` (`--text` is color); typography `text-size line-height letter-spacing`; position `top right bottom left inset z` (logical). Suffixes `-sm -md -lg -xl -2xl`. Each registered `@property { syntax: "*"; inherits: false }`; rules gated on `:where([style*="--x:"])` in `@layer zazz.utilities`; family files import after `_utilities.css`/`_layout.css`. `--gap` also sets `--_gap`; `--grid-cols` sets `--_grid-cols`.
+- **Prop naming exception (2026-09-17, ticket 08):** a prop name is the Tailwind root *unless* the root, or its responsive forms (`<root>-sm…-2xl`), collides with an existing Zazz token family. Collisions found: `--border` (Shadcn role), `--font-size-*`, `--leading-*`, `--tracking-*` (type scale), `--gap-*` (old size tokens). Resolution: `border` → `border-color`; `font-size` → `text-size`; `leading` → `line-height`; `tracking` → `letter-spacing`; the `--gap-*` tokens are removed. `props.test.ts` guards against future collisions.
 - **Dist** is built by `scripts/build-dist.mjs` (lightningcss bundle+minify, no targets): `layers.css`, `base.css`, `utilities-core.css`, `utilities-<family>.css`, `utilities-spacing-responsive.css`, `utilities.css`, `primitives/<name>.css`, `zazz.css`; `src/` per-file grain stays (ADR-0005).
 - **Codemod** ships as `zazz-ui migrate` in `packages/cli`; rules in `packages/core/migrations/0.5.0.json` (in the tarball); CHANGELOG stays hand-written and a test guards the JSON ↔ table drift.
 - **ADR-0012** amends ADR-0008 (style props add responsive suffixes, scale multiplication and coordination that raw inline style lacks).
@@ -28,22 +29,22 @@ Format: see `docs/agents/issue-tracker.md`. Frontier = open, unblocked, unclaime
 
 - [01 — Baseline numbers for 0.4.1](issues/01-baseline-numbers.md) — blocked by: — · S
 - [02 — ADR-0012: style props amend ADR-0008; CONTEXT.md term](issues/02-adr-0012-style-props.md) — blocked by: — · S
-- [03 — Tokens: --space-*, --gap-* aliases, --bp-*, --screen-*, --breakpoint-* shift](issues/03-tokens.md) — blocked by: — · M
-- [04 — _utilities.css sweep: --gap-→--space-, flags, breakpoint prefix shift](issues/04-utilities-sweep.md) — blocked by: 03 · L
-- [05 — _layout.css: flags, band names, data-container, @max-*, new 2xl](issues/05-layout-shift.md) — blocked by: 03 · M
-- [06 — Base + primitive token sweep (--gap-*, --breakpoint-*)](issues/06-token-sweep-primitives.md) — blocked by: 03 · S
+- [03 — Tokens: --space-\*, --gap-\* aliases, --bp-\*, --screen-\*, --breakpoint-\* shift](issues/03-tokens.md) — blocked by: — · M
+- [04 — \_utilities.css sweep: --gap-→--space-, flags, breakpoint prefix shift](issues/04-utilities-sweep.md) — blocked by: 03 · L
+- [05 — \_layout.css: flags, band names, data-container, @max-\*, new 2xl](issues/05-layout-shift.md) — blocked by: 03 · M
+- [06 — Base + primitive token sweep (--gap-\*, --breakpoint-\*)](issues/06-token-sweep-primitives.md) — blocked by: 03 · S
 - [07 — tokens.test.ts: guard the new token contract](issues/07-tokens-test.md) — blocked by: 03 · S
-- [08 — src/props.ts + generate-properties.mjs + _properties.css + props.test.ts](issues/08-props-source-and-properties.md) — blocked by: 03 · M
-- [09 — _utilities-spacing.css style props](issues/09-utilities-spacing.md) — blocked by: 08 · M
-- [10 — _utilities-sizing.css style props](issues/10-utilities-sizing.md) — blocked by: 08 · S
-- [11 — _utilities-grid.css style props](issues/11-utilities-grid.md) — blocked by: 08 · S
-- [12 — _utilities-flex.css style props](issues/12-utilities-flex.md) — blocked by: 08 · S
-- [13 — _utilities-color.css style props](issues/13-utilities-color.md) — blocked by: 08 · S
-- [14 — _utilities-typography.css style props](issues/14-utilities-typography.md) — blocked by: 08 · S
-- [15 — _utilities-position.css style props](issues/15-utilities-position.md) — blocked by: 08 · S
+- [08 — src/props.ts + generate-properties.mjs + \_properties.css + props.test.ts](issues/08-props-source-and-properties.md) — blocked by: 03 · M
+- [09 — \_utilities-spacing.css style props](issues/09-utilities-spacing.md) — blocked by: 08 · M
+- [10 — \_utilities-sizing.css style props](issues/10-utilities-sizing.md) — blocked by: 08 · S
+- [11 — \_utilities-grid.css style props](issues/11-utilities-grid.md) — blocked by: 08 · S
+- [12 — \_utilities-flex.css style props](issues/12-utilities-flex.md) — blocked by: 08 · S
+- [13 — \_utilities-color.css style props](issues/13-utilities-color.md) — blocked by: 08 · S
+- [14 — \_utilities-typography.css style props](issues/14-utilities-typography.md) — blocked by: 08 · S
+- [15 — \_utilities-position.css style props](issues/15-utilities-position.md) — blocked by: 08 · S
 - [16 — Wiring: index.css imports, head.ts BASE lists, package.json exports, manifest base entries](issues/16-wiring.md) — blocked by: 09, 10, 11, 12, 13, 14, 15 · S
 - [17 — examples/style-props.html + browser verification](issues/17-example-style-props.md) — blocked by: 16 · S
-- [18 — Primitive audit: --step-* in component rules → --ui-* per ADR-0008](issues/18-primitive-audit.md) — blocked by: 17 · M
+- [18 — Primitive audit: --step-\* in component rules → --ui-\* per ADR-0008](issues/18-primitive-audit.md) — blocked by: 17 · M
 - [19 — build-dist.mjs + lightningcss + vite.config.ts + build order](issues/19-build-dist.md) — blocked by: 16 · M
 - [20 — DIST_CSS in manifest + dist.test.ts](issues/20-dist-manifest-test.md) — blocked by: 19 · S
 - [21 — /combine/ dry run + README dist section](issues/21-combine-dry-run.md) — blocked by: 19, 20 · S
@@ -65,3 +66,5 @@ Format: see `docs/agents/issue-tracker.md`. Frontier = open, unblocked, unclaime
 ## Decisions so far
 
 <!-- one line per resolved ticket; gist + link -->
+
+- 01: 0.4.1 baseline in `CHANGELOG.md` under `## 0.5.0 (unreleased)`: 304,258 B raw, 29,125 br (zlib q11), 39,174 CDN br, 2,189 rules, `_utilities.css` 159,583 B, coverage on `layout.html` 60,226 used / 244,032 unused (style rules only: Chrome's panel figure counts whole `@layer` blocks as used, see the ticket). Re-run `.scratch/style-props/measure.mjs` for ticket 35's after-numbers. ([01](issues/01-baseline-numbers.md))

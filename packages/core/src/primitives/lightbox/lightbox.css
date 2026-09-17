@@ -87,7 +87,7 @@
     > [data-slot~="carousel-viewport"]
     > [data-slot~="carousel-container"] {
     border-radius: var(--ui-lightbox-slide-radius);
-    margin-inline-start: calc(var(--gap-sm) * -1);
+    margin-inline-start: calc(var(--space-sm) * -1);
   }
 
   [data-slot~="lightbox-stage"] [data-slot~="lightbox-slide"] {
@@ -101,7 +101,7 @@
     block-size: 100%;
     cursor: zoom-in;
     overflow: clip;
-    padding-inline-start: var(--gap-sm);
+    padding-inline-start: var(--space-sm);
   }
 
   [data-slot~="lightbox-stage"] [data-slot~="lightbox-content"] {
@@ -323,13 +323,13 @@
   }
 
   [data-slot~="lightbox-dialog"] [data-slot~="lightbox-thumbs"] {
-    padding-block: var(--gap-sm);
+    padding-block: var(--space-sm);
     pointer-events: auto;
   }
 
   [data-slot~="lightbox-dialog"] [data-slot~="lightbox-thumbs"] [data-slot~="carousel-container"] {
     justify-content: center;
-    padding-block: var(--gap-xs);
+    padding-block: var(--space-xs);
   }
 
   [data-slot~="lightbox-dialog"] [data-slot~="lightbox-thumb"] {
@@ -353,7 +353,7 @@
     justify-content: center;
     min-block-size: 0;
     min-inline-size: 0;
-    padding: clamp(var(--gap-sm), 4vi, var(--gap-lg));
+    padding: clamp(var(--space-sm), 4vi, var(--space-lg));
   }
 
   [data-slot~="lightbox-dialog"] [data-slot~="lightbox-content"] {
@@ -416,11 +416,11 @@
   }
 
   [data-slot~="lightbox-prev"] {
-    inset-inline-start: var(--gap-md);
+    inset-inline-start: var(--space-md);
   }
 
   [data-slot~="lightbox-next"] {
-    inset-inline-end: var(--gap-md);
+    inset-inline-end: var(--space-md);
   }
 
   /* ---------------------------------------------------------------------------
@@ -430,8 +430,8 @@
   [data-slot~="lightbox-close"] {
     pointer-events: auto;
     position: absolute;
-    inset-block-start: var(--gap-sm);
-    inset-inline-end: var(--gap-sm);
+    inset-block-start: var(--space-sm);
+    inset-inline-end: var(--space-sm);
     z-index: 10;
   }
 
@@ -441,7 +441,7 @@
 
   [data-slot~="lightbox-counter"] {
     position: absolute;
-    inset-block-end: var(--gap-sm);
+    inset-block-end: var(--space-sm);
     /* left + physical translate is a direction-neutral centering idiom; keep physical */
     left: 50%;
     translate: -50% 0;
