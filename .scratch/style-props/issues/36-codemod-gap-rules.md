@@ -1,7 +1,7 @@
 # 36 — Codemod gap rules: *-screen-* classes and --container-* tokens
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 26
 Size: S
 
