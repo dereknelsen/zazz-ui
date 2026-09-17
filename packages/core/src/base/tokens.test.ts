@@ -6,9 +6,8 @@
  * their `--gap-sm…xl` names are the responsive forms of the `--gap` style
  * prop), the `--breakpoint-*` lengths and the typed `--bp-*` / `--screen-*`
  * breakpoint flags with their width thresholds — plus the sweep invariants
- * the rest of `src/` and `examples/` must hold once the consumers migrate
- * off the old names (skipped until the owning tickets land; see each
- * `it.skip`).
+ * the rest of `src/` and `examples/` hold now that every consumer has
+ * migrated off the old names (tickets 04–06 by hand, ticket 27 by codemod).
  */
 
 import { readFileSync, readdirSync } from "node:fs";
@@ -195,10 +194,9 @@ describe("consumer sweep", () => {
     expect(offenders(withoutGapProps, /var\(--gap-(xs|sm|md|lg|xl)\b/)).toEqual([]);
   });
 
-  // Tickets 04/05 drop the @xs / @max-xs class prefixes from the CSS; ticket 27
-  // (repo-wide codemod run) shifts the markup in src/ and examples/. Flip this
-  // on once ticket 27 is resolved.
-  it.skip("uses no @xs / @max-xs prefix anywhere in src/ or examples/", () => {
+  // Tickets 04/05 dropped the @xs / @max-xs class prefixes from the CSS and
+  // ticket 27 (repo-wide codemod run) shifted the markup in src/ and examples/.
+  it("uses no @xs / @max-xs prefix anywhere in src/ or examples/", () => {
     const files = [...readTree(SRC, [".css", ".html"]), ...readTree(EXAMPLES, [".html"])];
     expect(offenders(files, /@(max-)?xs\b/)).toEqual([]);
   });

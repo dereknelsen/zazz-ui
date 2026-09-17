@@ -67,7 +67,7 @@ Not for building an actual page — that's `zazz-pass`. This skill only _authors
 - **Imagery** — photographic or illustrative? Studio cut-outs or in-context/cinematic? Moody or bright?
   Full-bleed or framed? Any grain/duotone/overlay treatment? → `.container` bands + figure radius.
 - **Layout rhythm & density** — centered stack or asymmetric? Dense/catalog or airy/gallery? Card-based
-  or full-bleed sections? Gutters tight or generous? → band system, `--gap-*`, grid utilities.
+  or full-bleed sections? Gutters tight or generous? → band system, `--space-*`, grid utilities.
 - **Decoration & motifs** — the signature move: oversized ghost numerals, ruled dividers, borders on
   everything, badges, tickers, gradient washes, noise. → tokens/utilities that produce it.
 - **Motion cues** — implied stagger, scroll reveals, marquees, hover states. → `data-reveal-*`,
@@ -89,7 +89,7 @@ Not for building an actual page — that's `zazz-pass`. This skill only _authors
 | Big stat numbers                        | `text-display`/`text-h2` numerals in `--primary`, `text-eyebrow` labels  |
 | Oversized ghost numerals / watermark    | large type at low opacity via `--muted`/tint, `grid-area-pile` overlap   |
 | Gradient band / colored section         | brand-scale wash (`--primary-600` → `--primary-900`)                     |
-| Generous whitespace                     | `--gap-xl` (96px) section rhythm, capped `article`/`lg` text             |
+| Generous whitespace                     | `--space-xl` (96px) section rhythm, capped `article`/`lg` text           |
 | Staggered load / scroll reveals         | `data-reveal` / `data-reveal-each`, `--spring-easing`                    |
 | Left-aligned label + content column     | left-label layout (eyebrow column split by `--border`)                   |
 
@@ -116,7 +116,7 @@ noted if the content model doesn't fit).>
 - **<Palette>** — mode, the dominant accent + where it lands, surface tokens, all via role tokens.
 - **<Imagery>** — photographic/illustrative, cinematic/studio, framing, any treatment.
 - **<Atmosphere>** — depth from tokens (washes, grain, borders); surfaces flat, `--shadow-*` reserved.
-- **<Composition>** — band-system tension, asymmetry, `--gap-*` rhythm; the signature decoration/motif.
+- **<Composition>** — band-system tension, asymmetry, `--space-*` rhythm; the signature decoration/motif.
 - **<Motion>** — one orchestrated reveal; `data-reveal-*`, `--spring-easing`.
 
 ## Page structure (top to bottom)
@@ -134,7 +134,7 @@ motifs), plus a reminder of the sentence-case house rule.>
 ## House rules to bake into every style
 
 - **Sentence case** everywhere except `text-eyebrow`. Never instruct uppercase buttons/headings.
-- **Semantic tokens only** — role tokens (`--primary`, `--muted`, `--border`…), `--gap-*`, `text-*`,
+- **Semantic tokens only** — role tokens (`--primary`, `--muted`, `--border`…), `--space-*`, `text-*`,
   `--radius-*`. Never hardcode hex, px, or rem in guidance; never name a raw scale step unless a role
   token can't express it.
 - **`data-variant`, not `.ui-button-primary`.** Reference components by their real selector + `data-*` API.

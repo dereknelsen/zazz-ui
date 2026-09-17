@@ -20,7 +20,7 @@
     --ui-dialog-backdrop-blur: blur(5px);
     --ui-dialog-shadow: var(--shadow-lg);
     --ui-dialog-border: 1px solid var(--border);
-    --ui-dialog-inline-size: min(var(--breakpoint-lg), 100% - var(--gutters) * 2);
+    --ui-dialog-inline-size: min(var(--breakpoint-xl), 100% - var(--gutters) * 2);
 
     /* Reveal transitions/animations */
     --ui-dialog-opacity--start: 0;
@@ -213,7 +213,7 @@
   }
 
   .ui-dialog[data-size="container"] {
-    --ui-dialog-inline-size: var(--breakpoint-lg);
+    --ui-dialog-inline-size: var(--breakpoint-xl);
   }
 
   .ui-dialog[data-size="screen"] {

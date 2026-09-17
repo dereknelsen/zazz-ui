@@ -239,12 +239,12 @@ without editing a single rule.
 Global tokens live in [`_variables.css`](./src/base/_variables.css) under `@layer variables`,
 organized in tiers (literal scales → semantic roles → component primitives):
 
-| Tier                 | Example                                                                                                  | Where               |
-| -------------------- | -------------------------------------------------------------------------------------------------------- | ------------------- |
-| Brand/literal scales | `--primary-600`, `--neutral-100`, `--shade-50`                                                           | `_variables.css`    |
-| Semantic roles       | `--background`, `--foreground`, `--primary`, `--muted`, `--border`                                       | `_variables.css`    |
-| Metrics & systems    | `--step-*`, `--radius-*`, `--gap-*`, `--font-family-*`, `--font-size-*`, `--font-weight-*`, `--shadow-*` | `_variables.css`    |
-| **Component tokens** | `--ui-button-background`, `--ui-field-border-color`, `--ui-dialog-radius`                                | each component file |
+| Tier                 | Example                                                                                                    | Where               |
+| -------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------- |
+| Brand/literal scales | `--primary-600`, `--neutral-100`, `--shade-50`                                                             | `_variables.css`    |
+| Semantic roles       | `--background`, `--foreground`, `--primary`, `--muted`, `--border`                                         | `_variables.css`    |
+| Metrics & systems    | `--step-*`, `--radius-*`, `--space-*`, `--font-family-*`, `--font-size-*`, `--font-weight-*`, `--shadow-*` | `_variables.css`    |
+| **Component tokens** | `--ui-button-background`, `--ui-field-border-color`, `--ui-dialog-radius`                                  | each component file |
 
 Selected tokens are also **registered as typed `@property`**, inline in
 [`_variables.css`](./src/base/_variables.css), so they can be read by container `style()`
