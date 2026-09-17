@@ -17,9 +17,9 @@ Read first: [/SPEC.md](../../../SPEC.md), [spec.md](../spec.md) (frozen names + 
 
 Hand-write the typography style-prop file(s). Load the `modern-web-guidance` skill first (verify `@container style()`, `@property`, attribute substring selectors). Read `CONVENTIONS.styles.md` (CSSDoc header, `:where()` zero specificity) and `.scratch/style-props/spec.md` (frozen names, rule shape).
 
-Props: font-size leading tracking.
+Props: text-size line-height letter-spacing.
 
-Shape: everything inside `@layer zazz.utilities`. Base rule per prop: `:where([style*="--<name>:"]) { <property>: <value>; }`. Then five blocks `@container style(--bp-<bp>: true) { :where([style*="--<name>-<bp>:"]) { … } }` in order sm, md, lg, xl, 2xl (mobile-first by source order). Raw values: font-size → font-size, leading → line-height, tracking → letter-spacing. Responsive blocks in the same file.
+Shape: everything inside `@layer zazz.utilities`. Base rule per prop: `:where([style*="--<name>:"]) { <property>: <value>; }`. Then five blocks `@container style(--bp-<bp>: true) { :where([style*="--<name>-<bp>:"]) { … } }` in order sm, md, lg, xl, 2xl (mobile-first by source order). Raw values: text-size → font-size, line-height → line-height, letter-spacing → letter-spacing. Responsive blocks in the same file.
 
 Header must document: no space before the colon in the inline value; unset props never apply (attribute gate). Acceptance: `vp check` passes; a quick scratch html in the worktree (not committed) shows the rule applying in Chrome via agent-browser `eval getComputedStyle`.
 
