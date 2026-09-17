@@ -1,7 +1,7 @@
 # 17 — examples/style-props.html + browser verification
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 16
 Size: S
 
