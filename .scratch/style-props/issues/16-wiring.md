@@ -1,7 +1,7 @@
 # 16 — Wiring: index.css imports, head.ts BASE lists, package.json exports, manifest base entries
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 09, 10, 11, 12, 13, 14, 15
 Size: S
 
