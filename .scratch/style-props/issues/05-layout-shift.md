@@ -1,7 +1,7 @@
 # 05 — _layout.css: flags, band names, data-container, @max-*, new 2xl
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 03
 Size: M
 
