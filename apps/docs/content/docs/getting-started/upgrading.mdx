@@ -108,13 +108,13 @@ The rules are four kinds: a custom-property name anywhere in any file; a class p
 **Reported in the dry run:**
 
 - **JSX `className={…}` expressions.** `className={cn("@xs:flex", open && "@sm:grid")}` is reported at its line, not rewritten. Shift the prefixes inside by hand.
-- **Template literals that build class strings.** `` `flex ${open ? "@sm:grid" : ""}` `` is reported. Shift by hand.
+- **String literals and template literals in scripts.** Any `"…"`, `'…'` or `` `…` `` literal in a `.js`/`.ts`/`.jsx`/`.tsx` file that carries an old class name or prefix (`classList.add("@xs:grid")`, `` `flex ${open ? "@sm:grid" : ""}` ``) is reported at its line, not rewritten. Shift by hand.
 - **Arbitrary values in class names.** A `[…]` token in a class list is reported with a note to move it to the matching style prop; the codemod never introduces a prop for you.
 
 **Silent, search for these:**
 
-- **Vue and Svelte bindings.** `:class="{ '@xs:flex': open }"`, `class:@xs:flex={open}` and any expression in a template are not class attributes as the rules define them; they are neither rewritten nor reported. The same goes for a plain string or array in a script (`const cls = "@md:flex"`) that ends up in a class attribute at runtime.
-- **Prose and text nodes.** A caption, a comment, a Markdown table or a sentence that names `@xs:` is left alone. The token and `data-container` rules do fire in prose (they are not scoped to attributes), so a Markdown page's `--gap-md` becomes `--space-md` while its `@xs:` does not; read the diff of documentation with that asymmetry in mind.
+- **Vue and Svelte bindings.** `:class="{ '@xs:flex': open }"`, `class:@xs:flex={open}` and any expression in a template are not class attributes as the rules define them; they are neither rewritten nor reported. A `<style>` block inside `.html`, `.vue`, `.svelte` or `.astro` files is treated as CSS (escaped selectors such as `.\@xs\:grid` are rewritten).
+- **Prose and text nodes.** A caption, a comment, a Markdown table or a sentence that names `@xs:` is left alone. The token and `data-container` rules do fire in prose (they are not scoped to attributes), so a Markdown page's `var(--gap-md)` becomes `var(--space-md)` while its `@xs:` does not; read the diff of documentation with that asymmetry in mind. The four names that are also 0.5 style props (`--gap-sm` … `--gap-xl`) are only rewritten as `var()` reads outside CSS, so `style="--gap-md: 4"` in 0.5 markup survives a second run.
 - **Breakpoint names as data.** A TypeScript table such as `{ name: "xs", rem: 40 }`, an enum, a JSON config or a string compared against `data-container`: the strings are data, and no rule kind reads data.
 - **Grid line names.** If your own CSS places children on the `.container` grid by line name, `grid-column: container-xs-start / container-xs-end`, shift the names one step (`xs` → `sm` … `xl` → `2xl`). Line names are bare identifiers; no rule kind covers them. The `--container-*` token reads in the same rule are rewritten.
 - **Wildcard mentions.** `--gap-*` in a comment or a docs page is not `--gap-md`, so nothing matches it.
