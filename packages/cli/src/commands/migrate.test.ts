@@ -11,7 +11,14 @@ import os from "node:os";
 import path from "node:path";
 import { afterAll, describe, expect, it } from "vite-plus/test";
 import { ZazzError } from "../errors.ts";
-import { discoverFiles, fileKindOf, inLine, locateRules, resolveFrom } from "./migrate.ts";
+import {
+  type ScannedFile,
+  discoverFiles,
+  fileKindOf,
+  inLine,
+  locateRules,
+  resolveFrom,
+} from "./migrate.ts";
 
 const tmpDirs: string[] = [];
 afterAll(async () => {
@@ -151,8 +158,8 @@ describe("discoverFiles", () => {
     return root;
   }
 
-  const rel = (root: string, files: string[]) =>
-    files.map((file) => path.relative(root, file).split(path.sep).join("/"));
+  const rel = (root: string, files: ScannedFile[]) =>
+    files.map(({ file }) => path.relative(root, file).split(path.sep).join("/"));
 
   it("walks the cwd for scanned extensions, skipping build dirs and the vendored dir", async () => {
     const root = await project();
@@ -169,6 +176,7 @@ describe("discoverFiles", () => {
       "src/pages/index.html",
       "src/zazz/local.css",
     ]);
+    expect(found.map(({ kind }) => kind)).toEqual(["md", "css", "js", "html", "css"]);
   });
 
   it("keeps a same-named nested directory when the vendored dir is elsewhere", async () => {

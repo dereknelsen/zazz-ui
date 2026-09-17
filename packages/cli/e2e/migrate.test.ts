@@ -12,6 +12,7 @@
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { stripVTControlCharacters } from "node:util";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vite-plus/test";
 import type { ZazzConfig } from "../src/config.ts";
 import { runInit } from "../src/commands/init.ts";
@@ -124,12 +125,7 @@ async function capturedMigrate(root: string, flags: MigrateFlags = {}): Promise<
   vi.spyOn(console, "log").mockImplementation(record);
   vi.spyOn(console, "warn").mockImplementation(record);
   await runMigrate([], { to: `@${V2}`, ...flags }, { cwd: root });
-  return stripAnsi(lines.join("\n"));
-}
-
-function stripAnsi(text: string): string {
-  // eslint-disable-next-line no-control-regex -- terminal escape sequences
-  return text.replace(/\[[0-9;]*m/g, "");
+  return stripVTControlCharacters(lines.join("\n"));
 }
 
 describe("zazz-ui migrate (e2e, fixture kit)", () => {
