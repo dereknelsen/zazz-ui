@@ -54,8 +54,38 @@ Start at the most semantic layer; get specific only when nothing semantic fits. 
 keeps designs consistent and reusable — you compose from a shared vocabulary instead of
 writing net-new CSS every time.
 
-- **Spacing** → `--space-*` (or `.gap-* .p-* .py-*` utilities) first; `--step-*` only when no
-  gap fits. Never a raw px/rem.
+- **Value shape decides the mechanism** (ADR-0012). A **finite** value is a class (`grid`,
+  `hidden`, `bg-primary`, `p-md`). An **open** value is a **style prop**: a custom property set
+  inline and read by a utility rule — `style="--px: 5"`, `style="--grid-cols: 3"`,
+  `style="--w: 16rem"`, `style="--bg: var(--primary-600)"`. A variant on a primitive is a
+  `data-*` attribute; a bundle is a primitive. Never a numeric class, never a raw
+  `style="padding: 13px"` when a prop covers the property.
+  - 44 props, Tailwind roots, no prefix. Spacing: `p px py ps pe pt pb m mx my ms me mt mb`
+    and `gap gap-x gap-y` (unitless steps × `--spacing-interval`, so `--px: 6` = `.px-md`).
+    Sizing: `w h min-w max-w min-h max-h size`. Grid: `grid-cols grid-rows col-span row-span`
+    (`--grid-cols` implies `display: grid`). Flex: `basis grow shrink order`. Color:
+    `bg text border-color` (`--text` is the color). Typography:
+    `text-size line-height letter-spacing`. Position: `top right bottom left inset z`
+    (logical). The four long names are the collision rule: a root that is already a token
+    family (`--border`, `--font-size-*`, `--leading-*`, `--tracking-*`) takes the full
+    property name.
+  - Responsive suffix, mobile-first: `--px-md`, `--grid-cols-lg` (`-sm -md -lg -xl -2xl`).
+    Applies from the **nearest size container** (`--bp-*` flags), like the `@md:` classes —
+    not the viewport.
+  - Contract: the colon follows the name (`--px: 5` matches, `--px : 5` does not); an unset prop
+    applies nothing; props don't inherit; `--mx: auto` is invalid (use `.mx-auto`); pair
+    `--border-color` with `.border` (an inline `border:` shorthand would reset it); a prop on a
+    `ui-*` root beats the primitive's own value (utilities sit above components). Props live in
+    the `style` attribute, so they are not a CSP workaround — the CSP-safe rungs are classes and
+    CSS files.
+- **Spacing** → `--space-*` (`2xs xs sm md lg xl 2xl`; or the `.gap-* .p-* .py-*` utilities,
+  `xs`–`xl`) first; a spacing prop (`--gap: 5`) for an open step count; `--step-*` only when no
+  `--space-*` fits. Never a raw px/rem. The old `--gap-xs…xl` size tokens are gone — `--gap-md`
+  is now the responsive form of the `--gap` prop.
+- **Breakpoints** are `sm md lg xl 2xl` = 40/48/64/80/96rem, one vocabulary everywhere: class
+  prefixes `@sm:`…`@2xl:` (+ `@max-*`), prop suffixes, `--breakpoint-*` lengths,
+  `--bp-*` container flags, `--screen-*` viewport flags, `.container` bands and `data-container`
+  values.
 - **Color** → theme **role** tokens (`--background`, `--foreground`, `--muted-foreground`,
   `--primary`, `--border`, `--destructive`…) so light/dark swap for free; literal scales
   (`--primary-600`, `--neutral-100`, `--shade-800`) only as a last resort.
@@ -116,8 +146,13 @@ Tokens resolve lazily, so you can intervene at three scopes — pick the narrowe
    `--ui-field-block-size` override retunes the whole control row. Token names mirror logical CSS
    property names (`--ui-field-block-size`, never `-height`); interactive borders split into
    `-border-width`/`-border-style`/`-border-color` (+ `-border-color--hover/--focus`).
+   Retune a shared family on **`:root`**: a component token defaults via `var(--ui-field-*)`
+   on `:root`, so a `--ui-field-*` override scoped to a section never reaches the button —
+   scope with the component's own token (`--ui-button-padding`) instead.
 3. **Instance** — set the token inline or via a `data-*` variant
-   (`style="--ui-button-background: var(--secondary)"`).
+   (`style="--ui-button-background: var(--secondary)"`). For an open layout value on the
+   instance (padding, width, columns), use a style prop (`style="--px: 8"`) — primitives never
+   read props themselves, but the prop wins over the primitive's own value.
 
 ## Building with components
 
@@ -125,11 +160,13 @@ Tokens resolve lazily, so you can intervene at three scopes — pick the narrowe
    powers it + docs link).
 2. Get the real markup — fetch `/docs/components/{name}` or read
    `packages/core/src/primitives/{name}/*.html`. Adapt it; don't reinvent.
-3. Apply variants via `data-*`; set spacing/color/type via semantic tokens & `text-*` classes.
+3. Apply variants via `data-*`; set spacing/color/type via semantic tokens & `text-*` classes;
+   an open value goes in a style prop (`style="--gap: 5"`).
 4. Compose pages from the `.container` band system (`data-container` sets the band — on the
    container for its default, on a child to override that one; `data-variant="article"` for
    reading width) + flex/grid utilities. Responsive utilities are `@`-prefixed
-   (`@md:grid-cols-2`); see `references/tokens.md` §7.
+   (`@md:grid-cols-2`, `@sm:`…`@2xl:`), responsive props are suffixed (`--grid-cols-md: 2`);
+   see `references/tokens.md` §7.
 
 Forms share `--ui-field-*` tokens and validate via `:user-invalid` (after blur/submit, never
 while typing); buttons, toggles, tabs, checkboxes, radios, and badge borders inherit from the
@@ -173,6 +210,8 @@ patterns live in `PATTERNS.md`.
   **Don't** Title-Case or UPPERCASE unless asked (the eyebrow's caps come from `.text-eyebrow`).
 - **Do** use `var(--token)` and semantic utilities. **Don't** hardcode colors, spacing, radii,
   or type.
+- **Do** put an open value in a style prop (`style="--px: 5; --px-md: 8"`). **Don't** invent a
+  numeric class or write raw inline `padding`/`width` when a prop covers the property.
 - **Do** write `data-variant="primary"`. **Don't** invent `.ui-button-primary` classes.
 - **Do** let role tokens handle dark mode. **Don't** hand-write `.dark` overrides for
   token-handled values.
@@ -185,7 +224,8 @@ patterns live in `PATTERNS.md`.
 
 | Read                                                                      | When                                                                                                        |
 | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `references/tokens.md`                                                    | Choosing spacing, color, type, radius, shadow, or layout tokens/utilities                                   |
+| `references/tokens.md`                                                    | Choosing spacing, color, type, radius, shadow, or layout tokens/utilities; style props (§1, §7)             |
+| `packages/core/src/props.ts`, `packages/core/examples/style-props.html`   | The style prop registry (names, families) and its worked example page                                       |
 | `references/components.md`                                                | Picking a component and its `data-*` API + docs link                                                        |
 | `references/apis.md`                                                      | Wiring custom elements, popovers/dialogs/tooltips, carousels (`data-carousel-*`), reveals (`data-reveal-*`) |
 | `DESIGN.md`                                                               | Brand colors, type scale, archetypes, motion, brand customization                                           |

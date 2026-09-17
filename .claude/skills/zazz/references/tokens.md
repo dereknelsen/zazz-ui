@@ -10,8 +10,9 @@ Two rules govern every choice:
 1. **Never hardcode.** Every value is a `var(--…)` hook. Override at one of the three
    surfaces in `SKILL.md` (global → component-default → instance) instead of editing source.
 2. **Most semantic that fits.** Reach for the semantic token first; drop to a literal scale
-   only when no semantic token can express it. `gap-sm` → `var(--space-sm)` → `var(--step-4)`,
-   in that order of preference.
+   only when no semantic token can express it. In markup: `gap-sm` when a scale value fits, the
+   style prop `style="--gap: 5"` when the value is open (ADR-0012). In CSS: `var(--space-sm)`
+   → `var(--step-4)`, in that order of preference.
 
 ## Contents
 
@@ -24,12 +25,27 @@ Two rules govern every choice:
 
 ## 1. Spacing
 
-- **Semantic gaps (use first):** `--space-xs --space-sm --space-md --space-lg --space-xl`. These are
-  the default for padding, margins, and `gap`.
-- **Step scale (escape hatch):** `--step-0_5 --step-1 … --step-96`, plus `--step-px`,
+- **Space scale (use first):** one family for padding, margin, and `gap` —
+  `--space-2xs --space-xs --space-sm --space-md --space-lg --space-xl --space-2xl`, defined as
+  step multiples (`2xs`=`--step-1`, `xs`=`--step-2`, `sm`=`--step-4`, `md`=`--step-6`,
+  `lg`=`--step-11`, `xl`=`--step-24`, `2xl`=`--step-40`), so they stay fluid. The old
+  `--gap-xs…xl` size tokens are **removed, not aliased** (`--gap-md` is now the responsive form
+  of the `--gap` style prop and never inherits) — read `--space-*` instead. `2xs`/`2xl` are
+  token-only; the class scales below run `xs`–`xl`.
+- **Style props (open values):** an arbitrary step count goes in the `style` attribute and a
+  utility rule reads it — `style="--px: 5"`, `style="--gap: 3; --gap-md: 6"`. Spacing props:
+  `--p --px --py --ps --pe --pt --pb --m --mx --my --ms --me --mt --mb --gap --gap-x --gap-y`,
+  each unitless × `--spacing-interval` (`--px: 6` == `.px-md`; `--mt: -2` is a negative step;
+  `--mx: auto` is invalid — use `.mx-auto`). Suffix `-sm -md -lg -xl -2xl` for a breakpoint.
+  `--gap` sets `--_gap` exactly as `.gap-*` does, so `basis-1/N` and the grid stay gap-aware. A
+  prop beats a class on the same property. The full list and the sizing/grid/flex/color/type/
+  position props are in `SKILL.md` and §7.
+- **Step scale (escape hatch in CSS):** `--step-0_5 --step-1 … --step-96`, plus `--step-px`,
   `--step-0_5px`, `--step-full`. Half-steps run through `--step-5_5` (escaped dot —
   `var(--step-2_5)` = 2.5×); above that the scale is whole-numbered and sparse. Everything
   derives from `--spacing-interval` (a fluid `clamp()`), so spacing scales with the viewport.
+  Reach for `--step-*` only in a CSS file when no `--space-*` fits; in markup, a style prop
+  already is the open step.
 - **Gap utilities:** `.gap-0 .gap-0.5px .gap-px .gap-xs .gap-sm .gap-md .gap-lg .gap-xl`,
   axis-specific `.gap-x-* .gap-y-*` (same sizes). Gap classes also set an internal `--_gap`
   var consumed by the responsive grid (`grid-flow-row`) and `basis-*` utilities.
@@ -41,7 +57,7 @@ Two rules govern every choice:
   logical sides `.mt-* .mr-* .mb-* .ml-*` (+ per-side `auto`; `.ms-*`/`.me-*` alias `.ml-*`/`.mr-*`).
 - **Negative margins:** `.-m-xs ..-m-xl`, `.-mx-* .-my-*`, `.-mt-* .-mr-* .-mb-* .-ml-*`
   (same sizes xs–xl; `.-ms-*`/`.-me-*` alias `.-ml-*`/`.-mr-*`). Base classes only — no
-  responsive (`xs:`…) variants.
+  responsive (`@sm:`…) variants; a responsive negative margin is a prop (`--mt-md: -2`).
 - **Size utilities:** `.w-0 .w-px .w-auto .w-full .w-xs..xl .w-screen .w-screen-sm..2xl`,
   `.h-0 .h-px .h-auto .h-full .h-xs..xl .h-screen .h-screen-sm..2xl`,
   `.size-0 .size-auto .size-full .size-xs..xl .size-screen .size-screen-sm..2xl`.
@@ -51,6 +67,9 @@ Two rules govern every choice:
   `.min-w-0 .min-w-auto .min-w-full .min-w-screen .min-w-screen-sm..2xl`,
   `.min-h-0 .min-h-auto .min-h-full .min-h-screen .min-h-screen-sm..2xl`.
   Aliases: `.max-inline-*`/`.max-block-*`/`.min-inline-*`/`.min-block-*`.
+- **Sizing props (open values):** `--w --h --min-w --max-w --min-h --max-h --size`, any
+  length/percentage/keyword passed through as written (`style="--w: 16rem"`,
+  `style="--max-w: 60ch"`); logical properties underneath (`--w` → `inline-size`).
 - **Inset/position offsets:** `.inset-0 .inset-xs..xl`, `.top-xs..xl .right-xs..xl
 .bottom-xs..xl .left-xs..xl` (logical inset properties; `.start-*`/`.end-*` alias
   `.left-*`/`.right-*`).
@@ -68,6 +87,9 @@ step) keeps both modes correct automatically.
 - **Brand:** `--primary` `--secondary` `--tertiary` (+ `-foreground`).
 - **Status:** `--info` `--success` `--warning` `--destructive` (+ `-foreground`).
 - **Utilities:** `.text-{role}`, `.bg-{role}`, `.border-{role}`.
+- **Open value:** a color no role class covers goes in a style prop — `style="--bg: var(--tertiary)"`,
+  `--text`, `--border-color` (§7). The `light-dark()` stream is substituted at the element, so
+  the token still re-resolves against that element's own `color-scheme`.
 
 ## 3. Color — scales & overlays (escape hatch only)
 
@@ -76,7 +98,7 @@ Reach here only when a role can't express it (a specific tint, a backdrop, a fix
 - **Scales 50–950 (tokens only):** `--primary-50…950` (same for `--secondary-*`, `--tertiary-*`,
   `--neutral-*`), plus `--white` / `--black`. Light theme binds primary/secondary at **600**,
   tertiary at **500**; dark shifts lighter. These have **no utility classes** — reach a fixed
-  shade via the token in custom CSS or inline (`style="color: var(--primary-600)"`).
+  shade via the token in custom CSS or a color prop (`style="--text: var(--primary-600)"`).
 - **Overlays (alpha):** `--shade-50…950` / `--shade-full` (darken; from neutral-950 — use for
   backdrops, e.g. `--shade-900`, the dialog's default backdrop) and `--tint-50…950` / `--tint-full`
   (lighten; from white). `*-none` = transparent. Overlays **do** ship `bg-*` utilities (the one
@@ -135,12 +157,23 @@ intentionally (**md** ≈ popovers/modals). Utilities: `.shadow-none|xs|sm|md|lg
   `data-container="sm..2xl"` (one step behind the ch token: `sm` reads `--article-xs`). Responsive `@lg:container[data-variant="article"]` / `@max-*`
   variants exist. (full/bleed aren't reading widths — use them on a plain band `.container`.)
 - **Gutters:** `--gutters` (= `--space-md`) — the region's edge padding the band system reserves.
-- **Breakpoints** (for `calc()` and **container** queries — not `@media`): `--breakpoint-sm` 40rem,
-  `--breakpoint-md` 48rem, `--breakpoint-lg` 64rem, `--breakpoint-xl` 80rem, `--breakpoint-2xl` 96rem.
+- **Breakpoints** are one vocabulary, `sm md lg xl 2xl` = 40/48/64/80/96rem (Tailwind's names;
+  0.4's `xs`…`xl` shifted one step and `2xl` is new). Three token forms, all in `_variables.css`:
+  - **Length tokens** `--breakpoint-sm…2xl` (for `calc()` and **container** queries — a `var()`
+    is invalid in a `@container`/`@media` prelude, so the flags below use literal rem).
+  - **Container flags** `--bp-sm…2xl` — typed `@property` booleans, `false` by default, flipped
+    to `true` on every body descendant by an unnamed size query. The subject is the **nearest
+    ancestor size container** (`body`, `main`, `section`, `article`… are all inline-size
+    containers; `.container` deliberately is not), so a `@md:` class or a `--px-md` prop answers
+    the region it sits in, not the viewport. A `style()` query resolves against the parent, so a
+    prop on a direct child of a size container follows the container _above_ that one — one
+    wrapper in makes it follow the parent.
+  - **Viewport flags** `--screen-sm…2xl` — the same booleans set by `@media` on `:root` and
+    inherited everywhere; for rules that must ignore container width. Read them in your own CSS
+    with `@container style(--screen-md: true)`.
 - **Responsive utilities are `@`-prefixed:** `@sm:* @md:* @lg:* @xl:* @2xl:*` — author as
   `class="@lg:grid-cols-3"`, `class="@xl:flex-row"`. Mobile-first (apply at/above the breakpoint),
-  gated on global `--bp-*` flags sourced from the **body** container, so they track the
-  viewport breakpoint (not the nearest arbitrary container). Available at each breakpoint: display
+  gated on the `--bp-*` container flags. Available at each breakpoint: display
   (`hidden block flex inline-flex grid grid-cols-subgrid grid-rows-subgrid`), grid-cols, grid-rows,
   flex-direction (`flex-row flex-col`), text-align, items-_, justify-_, col-span, row-span, basis.
   (Less-toggled families — align-self, justify-self, place-items, visibility, negative margins — ship
@@ -148,6 +181,28 @@ intentionally (**md** ≈ popovers/modals). Utilities: `.shadow-none|xs|sm|md|lg
   - **`@max-*` (below the breakpoint):** the inverse of the min variants — applies only _below_ its
     breakpoint. In utilities this only exists for the **container** family (`@max-lg:container` etc.);
     the atomic utilities above (grid-cols, display, …) ship min variants only.
+- **Responsive style props are suffixed:** every prop takes `-sm -md -lg -xl -2xl`
+  (`style="--grid-cols: 1; --grid-cols-md: 2; --grid-cols-xl: 4"`), gated on the same `--bp-*`
+  flags, mobile-first by source order; the base form and each suffix are independent rules
+  (`--px:` never matches `--px-md:`). The 44 props are registered in
+  `packages/core/src/props.ts` (`@property { syntax: "*"; inherits: false }`, no initial value)
+  and read by `_utilities-<family>.css`, which load after the classes so a prop beats a class.
+  Rules gate on the attribute text — the colon must follow the name (`--px: 5`, not
+  `--px : 5`). Primitives never read props; a prop on a `ui-*` root still wins because
+  `zazz.utilities` sits above `zazz.components`.
+  - **Grid props:** `--grid-cols` (implies `display: grid`, sets `--_grid-cols`, N equal
+    `minmax(0, 1fr)` tracks), `--grid-rows`, `--col-span`, `--row-span` (clamped to the parent's
+    track count like the classes).
+  - **Flex props:** `--basis --grow --shrink --order`, passed through as written.
+  - **Position props:** `--top --right --bottom --left --inset --z` (logical insets: `--left` →
+    `inset-inline-start`).
+  - **Color props:** `--bg --text --border-color` — a role token or any `<color>`
+    (`style="--bg: var(--primary-600)"`); `--text` is the text color. Pair `--border-color` with
+    `.border` or the width/style longhands — an inline `border:` shorthand resets it.
+  - **Typography props:** `--text-size --line-height --letter-spacing` (full property names:
+    the roots' responsive forms would collide with the `--font-size-*`/`--leading-*`/
+    `--tracking-*` scale tokens). Prefer the bundled `text-*` classes (§4); a type prop is for
+    a genuinely open size.
 - **Display:** `.hidden .block .inline-block .inline .visible .invisible`.
 - **Flexbox:** `.flex .inline-flex`, direction `.flex-row .flex-row-reverse .flex-col
 .flex-col-reverse`, shorthand `.flex-1 .flex-auto .flex-initial .flex-none`, alignment
@@ -232,7 +287,9 @@ Two separate systems — **element opacity** and **channel alpha**. Don't confus
 ## 12. Positioning
 
 `.static .relative .absolute .fixed .sticky`. Inset/offset utilities use `--space-*` sizes:
-`.inset-0 .inset-xs..xl`, `.top-xs..xl .right-xs..xl .bottom-xs..xl .left-xs..xl`.
+`.inset-0 .inset-xs..xl`, `.top-xs..xl .right-xs..xl .bottom-xs..xl .left-xs..xl`. An open
+offset is a prop: `style="--top: 3rem; --z: 5"` (`--top --right --bottom --left --inset --z`,
+logical; §7).
 
 ---
 
