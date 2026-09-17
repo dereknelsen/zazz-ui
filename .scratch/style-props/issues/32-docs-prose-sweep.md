@@ -1,7 +1,7 @@
 # 32 — Docs prose sweep of existing pages
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 27
 Size: M
 
