@@ -107,6 +107,7 @@ export async function runMigrate(
     vendoredDir: loaded ? path.join(loaded.root, loaded.config.dir) : null,
     include: flags.include ?? [],
     exclude: flags.exclude ?? [],
+    warn: (message) => ui.warn(message),
   });
   if (files.length === 0) {
     ui.outro("No source files to scan.");
@@ -257,10 +258,12 @@ export function fileKindOf(file: string): FileKind | null {
 
 export interface DiscoverOptions {
   cwd: string;
-  /** Absolute path of the vendored directory, skipped during walks. */
+  /** Path of the vendored directory (as zazz.json spells it, resolved here), skipped during walks. */
   vendoredDir: string | null;
   include: string[];
   exclude: string[];
+  /** Receives the one warning a walk can raise: the vendored dir is the scan root. */
+  warn?: (message: string) => void;
 }
 
 /**
@@ -269,11 +272,15 @@ export interface DiscoverOptions {
  * `node_modules`, `dist`, `.git`, and the vendored directory; a file named
  * explicitly is taken as-is when its extension is scanned. `include` narrows
  * and `exclude` drops by glob, matched against the cwd-relative posix path.
+ * A vendored directory that *is* a scan root (`dir: "."`) cannot be pruned
+ * without scanning nothing, so the walk warns and scans it — the path was
+ * asked for.
  *
  * @returns Absolute paths, deduplicated and sorted.
  */
 export function discoverFiles(paths: string[], options: DiscoverOptions): string[] {
-  const { cwd, vendoredDir } = options;
+  const { cwd } = options;
+  const vendoredDir = options.vendoredDir === null ? null : path.resolve(options.vendoredDir);
   const targets = paths.length > 0 ? paths.map((p) => path.resolve(cwd, p)) : [cwd];
   const found = new Set<string>();
 
@@ -285,12 +292,18 @@ export function discoverFiles(paths: string[], options: DiscoverOptions): string
       if (fileKindOf(target) !== null) found.add(target);
       continue;
     }
+    if (vendoredDir === target) {
+      options.warn?.(
+        `the vendored directory (${path.relative(cwd, vendoredDir) || "."}) is the scan root, so its files are scanned too; ` +
+          "name the paths to migrate, or --exclude the kit files",
+      );
+    }
     const entries = globSync(SCAN_GLOB, {
       cwd: target,
       withFileTypes: true,
       exclude: (entry: Dirent) => {
         if (SKIPPED_DIRS.has(entry.name)) return true;
-        return vendoredDir !== null && path.join(entry.parentPath, entry.name) === vendoredDir;
+        return vendoredDir !== null && path.resolve(entry.parentPath, entry.name) === vendoredDir;
       },
     });
     for (const entry of entries) {
