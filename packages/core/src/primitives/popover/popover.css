@@ -41,7 +41,6 @@
     --ui-popover-margin-inline: 0;
     --ui-popover-position-area: block-end inline-start;
     --ui-popover-position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
-    --ui-popover-backdrop-filter: blur(4px);
   }
 }
 
@@ -62,7 +61,6 @@
     border-radius: var(--ui-popover-radius);
     box-shadow: var(--ui-popover-shadow);
     opacity: var(--ui-popover-opacity--start);
-    backdrop-filter: var(--ui-popover-backdrop-filter);
     transform: scale(var(--ui-popover-scale--start)) translate3d(var(--ui-popover-translate--start));
     transition:
       opacity var(--default-transition-duration) var(--default-transition-timing-function),
