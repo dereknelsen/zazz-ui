@@ -1,32 +1,52 @@
 <div
-  class="flex flex-row flex-wrap items-center gap-xs rounded-lg p-xs border"
   aria-label="Formatting options"
+  style="
+    --display: flex;
+    --flex-direction: row;
+    --flex-wrap: wrap;
+    --items: center;
+    --gap: var(--space-xs);
+    --rounded: var(--radius-lg);
+    --p: var(--space-xs);
+    --border-width: 1px;
+    --border-color: var(--color-border);
+  "
 >
   <ui-button-group role="group" aria-label="History">
-    <button class="ui-button" data-variant="outline" type="button">Undo</button>
-    <button class="ui-button" data-variant="outline" type="button">Redo</button>
+    <button data-ui="button" data-button-variant="outline" type="button">Undo</button>
+    <button data-ui="button" data-button-variant="outline" type="button">Redo</button>
   </ui-button-group>
 
-  <hr class="ui-separator mx-xs" data-orientation="vertical" aria-orientation="vertical" />
+  <hr
+    data-ui="separator"
+    data-separator-orientation="vertical"
+    aria-orientation="vertical"
+    style="--mx: var(--space-xs)"
+  />
 
   <ui-toggle-group role="group" aria-label="Text formatting">
-    <label class="ui-toggle" data-size="icon">
+    <label data-ui="toggle" data-toggle-size="icon">
       <input type="checkbox" name="format" value="bold" aria-label="Bold" checked />
-      <span class="font-strong" aria-hidden="true">B</span>
+      <span aria-hidden="true" style="--font-weight: var(--font-weight-strong)">B</span>
     </label>
-    <label class="ui-toggle" data-size="icon">
+    <label data-ui="toggle" data-toggle-size="icon">
       <input type="checkbox" name="format" value="italic" aria-label="Italic" />
-      <span class="italic" aria-hidden="true">I</span>
+      <span aria-hidden="true" style="--font-style: italic">I</span>
     </label>
-    <label class="ui-toggle" data-size="icon">
+    <label data-ui="toggle" data-toggle-size="icon">
       <input type="checkbox" name="format" value="underline" aria-label="Underline" />
       <u aria-hidden="true">U</u>
     </label>
   </ui-toggle-group>
 
-  <hr class="ui-separator mx-xs" data-orientation="vertical" aria-orientation="vertical" />
+  <hr
+    data-ui="separator"
+    data-separator-orientation="vertical"
+    aria-orientation="vertical"
+    style="--mx: var(--space-xs)"
+  />
 
-  <select class="ui-select" aria-label="Paragraph style" style="--ui-select-inline-size: auto">
+  <select data-ui="select" aria-label="Paragraph style" style="--w: auto">
     <button>
       <selectedcontent></selectedcontent>
     </button>
@@ -36,10 +56,13 @@
   </select>
 
   <input
-    class="ui-input ml-auto"
+    data-ui="input"
     type="search"
     aria-label="Find in document"
     placeholder="Find"
-    style="max-inline-size: 16ch"
+    style="
+      --ml: auto;
+      --max-w: 16ch;
+    "
   />
 </div>

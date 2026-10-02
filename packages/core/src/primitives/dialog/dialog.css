@@ -1,26 +1,30 @@
 /**
- * dialog.css — Dialog (.ui-dialog on native <dialog>)
+ * dialog.css — Dialog ([data-ui~="dialog"] on native <dialog>; slots
+ *             data-dialog-slot="content | header | body | footer | close")
  *
  * @layer      variables, reset, components
- * @requires   layers.css, _variables.css
+ * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved)
  * @uses       <dialog>, ::backdrop — native modal + backdrop
  * @uses       @starting-style + allow-discrete — open/close opacity, transform, overlay
  * @uses       anchor-name, container-type — layout hooks for sized variants
- * @tokens     --ui-dialog-* (@layer variables; sizing tokens in a second variables block)
+ * @tokens     --ui-dialog-* (@layer variables; --ui-dialog-h defaults to a keyword, so it is read
+ *             raw: a --h length, or a tier carrying a length, applies; a scale
+ *             number applies only as a base utility)
+ * @presets    data-dialog-size="article | container | screen"
  * @consumedby alert-dialog.css, mobile-menu.css
  */
 
 @layer variables {
   :root {
-    --ui-dialog-backdrop-color: var(--shade-900);
+    --ui-dialog-backdrop-color: var(--color-shade-900);
     --ui-dialog-transition-duration: var(--default-transition-duration);
     --ui-dialog-transition-timing-function: var(--default-transition-timing-function);
     --ui-dialog-backdrop-transition-duration: calc(var(--ui-dialog-transition-duration) - 100ms);
     --ui-dialog-backdrop-transition-timing-function: ease;
     --ui-dialog-backdrop-blur: blur(5px);
     --ui-dialog-shadow: var(--shadow-lg);
-    --ui-dialog-border: 1px solid var(--border);
-    --ui-dialog-inline-size: min(var(--breakpoint-md), 100% - var(--gutters) * 2);
+    --ui-dialog-border: 1px solid var(--color-border);
+    --ui-dialog-w: min(var(--breakpoint-md), 100% - var(--gutters) * 2);
 
     /* Reveal transitions/animations */
     --ui-dialog-opacity--start: 0;
@@ -34,30 +38,28 @@
   }
 }
 
-/* Sizing tokens — second variables block (overrides --ui-dialog-inline-size above). */
+/* Second variables block: overrides --ui-dialog-w above. */
 @layer variables {
   :root {
-    --ui-dialog-inline-size: min(50ch, 100% - var(--gap-md) * 2);
-    --ui-dialog-block-size: fit-content;
-    --ui-dialog-background: var(--card);
-    --ui-dialog-foreground: var(--card-foreground);
-    --ui-dialog-radius: var(--radius-lg);
+    --ui-dialog-w: min(50ch, 100% - var(--space-md) * 2);
+    --ui-dialog-h: fit-content;
+    --ui-dialog-bg: var(--color-card);
+    --ui-dialog-text: var(--color-card-foreground);
+    --ui-dialog-rounded: var(--radius-lg);
   }
 }
 
 @layer reset {
   /* ===========================================================================
   DIALOG — native <dialog> open/close animation, sizing, backdrop fade
-  - In the reset layer so the .ui-dialog component styling below wins.
+  - In the reset layer so the dialog component styling below wins.
   =========================================================================== */
 
-  /* Prevent body scroll when a dialog inside the preview is open */
-
-  /* Dialog animations with spring easing */
+  /* Spring-eased open/close */
   :where(dialog) {
     margin: auto;
-    max-inline-size: calc(100% - var(--gap-md));
-    max-block-size: calc(100% - var(--gap-md));
+    max-inline-size: calc(100% - var(--space-md));
+    max-block-size: calc(100% - var(--space-md));
     border: var(--ui-dialog-border);
     contain: layout style;
     opacity: var(--ui-dialog-opacity--start);
@@ -90,7 +92,7 @@
     }
   }
 
-  /* Dialog backdrop with smooth fade transition */
+  /* Backdrop fades via a discrete transition */
   :where(dialog)::backdrop {
     position: fixed;
     inline-size: 100%;
@@ -115,17 +117,42 @@
   }
 }
 
+/* Size privates: written by data-dialog-size, non-inheriting. */
+@property --_dialog-w {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_dialog-h {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_dialog-rounded {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_dialog-shadow {
+  syntax: "*";
+  inherits: false;
+}
+
 @layer zazz.components {
-  .ui-dialog {
-    /* Overrides reset-layer --ui-dialog-shadow (reset > variables) */
+  :where([data-ui~="dialog"]) {
+    /* Set the hook on the element (not :root) so a later consumer (alert-dialog)
+       or a subtree hook still wins; --_dialog-shadow is written only by the
+       screen preset. */
     --ui-dialog-shadow: var(--shadow-md);
 
-    inline-size: var(--ui-dialog-inline-size);
-    block-size: var(--ui-dialog-block-size);
-    background-color: var(--ui-dialog-background);
-    color: var(--ui-dialog-foreground);
-    box-shadow: var(--ui-dialog-shadow);
-    border-radius: var(--ui-dialog-radius);
+    --_w-len: var(--_w-resolved, var(--_dialog-w, var(--ui-dialog-w)));
+    --_w-num: var(--_w-resolved, var(--_dialog-w, var(--ui-dialog-w)));
+    inline-size: calc(var(--_w-len) + var(--_w-num) * var(--spacing));
+    block-size: var(--_h-resolved, var(--_dialog-h, var(--ui-dialog-h)));
+    background-color: var(--_bg-resolved, var(--ui-dialog-bg));
+    color: var(--_text-resolved, var(--ui-dialog-text));
+    box-shadow: var(--_shadow-resolved, var(--_dialog-shadow, var(--ui-dialog-shadow)));
+    border-radius: var(--_rounded-resolved, var(--_dialog-rounded, var(--ui-dialog-rounded)));
 
     anchor-name: --ui-dialog-root;
     container-type: inline-size;
@@ -134,21 +161,21 @@
     isolation: isolate;
   }
 
-  .ui-dialog[open] {
+  :where([data-ui~="dialog"][open]) {
     grid-template-rows: minmax(0, 1fr);
     min-block-size: 0;
   }
 
-  [data-slot~="dialog-close"] {
+  :where([data-ui~="dialog"]) [data-dialog-slot~="close"] {
     position: absolute;
-    inset-block-start: var(--gap-xs);
-    inset-inline-end: var(--gap-xs);
+    inset-block-start: var(--space-xs);
+    inset-inline-end: var(--space-xs);
     z-index: 50;
   }
 
-  [data-slot~="dialog-close"] > svg {
-    inline-size: var(--step-4);
-    block-size: var(--step-4);
+  :where([data-ui~="dialog"]) [data-dialog-slot~="close"] > svg {
+    inline-size: calc(var(--spacing) * 4);
+    block-size: calc(var(--spacing) * 4);
     pointer-events: none;
     justify-content: center;
     align-items: center;
@@ -156,7 +183,7 @@
     padding: 0;
   }
 
-  [data-slot~="dialog-content"] {
+  :where([data-ui~="dialog"]) [data-dialog-slot~="content"] {
     display: grid;
     align-self: center;
     grid-template-rows: auto minmax(0, 1fr) auto;
@@ -165,36 +192,35 @@
     overflow: clip;
   }
 
-  [data-slot~="dialog-header"] {
+  :where([data-ui~="dialog"]) [data-dialog-slot~="header"] {
     display: flex;
     flex-direction: column;
-    padding-inline: var(--gap-sm);
-    padding-block-start: var(--gap-sm);
+    padding-inline: var(--space-sm);
+    padding-block-start: var(--space-sm);
   }
 
-  /* Sticky top edge */
-  [data-slot~="dialog-header"]::after {
+  :where([data-ui~="dialog"]) [data-dialog-slot~="header"]::after {
     content: "";
     display: block;
     position: absolute;
     inset-block-start: 100%;
     inline-size: 100%;
-    block-size: var(--gap-md);
-    background: linear-gradient(to top, transparent, var(--ui-dialog-background));
+    block-size: var(--space-md);
+    background: linear-gradient(to top, transparent, var(--ui-dialog-bg));
   }
 
-  [data-slot~="dialog-body"] {
+  :where([data-ui~="dialog"]) [data-dialog-slot~="body"] {
     display: grid;
-    padding-inline: var(--gap-sm);
-    padding-block: var(--gap-md);
+    padding-inline: var(--space-sm);
+    padding-block: var(--space-md);
     min-block-size: 0;
-    min-block-size: var(--gap-xl);
+    min-block-size: var(--space-xl);
     overflow-x: clip;
     overflow-y: auto;
     scrollbar-gutter: stable both-edges;
   }
 
-  [data-slot~="dialog-footer"] {
+  :where([data-ui~="dialog"]) [data-dialog-slot~="footer"] {
     block-size: fit-content;
     position: sticky;
     inset-block-end: 0;
@@ -202,25 +228,25 @@
     justify-content: flex-end;
     align-self: end;
     flex-shrink: 0;
-    gap: var(--gap-xs);
-    padding: var(--gap-sm);
-    border-block-start: 1px solid var(--border);
-    background-color: var(--ui-dialog-background);
+    gap: var(--space-xs);
+    padding: var(--space-sm);
+    border-block-start: 1px solid var(--color-border);
+    background-color: var(--ui-dialog-bg);
   }
 
-  .ui-dialog[data-size="article"] {
-    --ui-dialog-inline-size: var(--article-md);
+  :where([data-ui~="dialog"][data-dialog-size="article"]) {
+    --_dialog-w: var(--article-md);
   }
 
-  .ui-dialog[data-size="container"] {
-    --ui-dialog-inline-size: var(--breakpoint-md);
+  :where([data-ui~="dialog"][data-dialog-size="container"]) {
+    --_dialog-w: var(--breakpoint-md);
   }
 
-  .ui-dialog[data-size="screen"] {
-    --ui-dialog-inline-size: 100vi;
-    --ui-dialog-block-size: 100svh;
-    --ui-dialog-radius: 0;
-    --ui-dialog-shadow: none;
+  :where([data-ui~="dialog"][data-dialog-size="screen"]) {
+    --_dialog-w: 100vi;
+    --_dialog-h: 100svh;
+    --_dialog-rounded: 0;
+    --_dialog-shadow: none;
     max-inline-size: 100vi;
     max-block-size: 100svh;
   }

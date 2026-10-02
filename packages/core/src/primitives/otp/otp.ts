@@ -3,7 +3,7 @@
 /**
  * @fileoverview `<ui-otp>`: a one-time password field with character slots.
  * @description Light-DOM custom element that augments a single
- * `<input class="ui-input ui-otp-input">` (the standard OTP shape with
+ * `<input data-ui="input" data-otp-slot="input">` (the standard OTP shape with
  * `autocomplete="one-time-code"`, `inputmode`, `pattern`, and `maxlength`)
  * with a presentational slot rail. The input stays the source of truth:
  * autofill, paste, IME, undo, form submission, and `:user-invalid` are all
@@ -12,8 +12,7 @@
  * character and the caret position. Without JavaScript the markup is a plain,
  * fully functional OTP input.
  *
- * The code length comes from the input `maxlength`. There is no
- * `data-otp-length`.
+ * The code length comes from the input `maxlength`.
  *
  * Attributes on `<ui-otp>`:
  * - `data-otp-groups`: separator layout, e.g. `"3-3"` or `"2-2-2"`. The
@@ -25,15 +24,13 @@
  * - `data-otp-auto-submit`: request the owning form submission once when
  *   the code is complete.
  *
- * Stamped state: cells are `[data-slot~="otp-slot"]` with `data-filled` /
- * `data-active`; separators are `[data-slot~="otp-separator"]`; the root
+ * Stamped state: cells are `[data-otp-slot~="cell"]` with a `data-otp-state`
+ * token list (`filled`, `active`); separators are `[data-otp-slot~="separator"]`; the root
  * gains `data-otp-ready` when enhanced and `data-otp-complete` when full.
  */
 
 import { ZazzElement, defineZazzElement } from "../../base/zazz-element.ts";
 import { effect, state } from "../../base/signals.ts";
-
-// --- Types ---
 
 /** Sanitization charset for typed and pasted text. */
 type OtpType = "numeric" | "alpha" | "alphanumeric" | "none";
@@ -47,8 +44,6 @@ interface SlotState {
   /** Whether the caret sits on this cell. */
   active: boolean;
 }
-
-// --- Pure derivations (exported for unit tests only) ---
 
 /**
  * @description Parses `data-otp-groups` ("3-3") into group sizes. Groups that
@@ -137,8 +132,6 @@ function isComplete(value: string, length: number): boolean {
   return length > 0 && value.length === length;
 }
 
-// --- Element ---
-
 class UiOtp extends ZazzElement {
   #rail: HTMLElement | null = null;
   #lastSubmitted = "";
@@ -183,7 +176,6 @@ class UiOtp extends ZazzElement {
     input.addEventListener("focus", () => focused.set(true), { signal });
     input.addEventListener("blur", () => focused.set(false), { signal });
 
-    // Clicking a cell moves the caret to it
     rail.addEventListener(
       "pointerdown",
       (event) => {
@@ -208,10 +200,11 @@ class UiOtp extends ZazzElement {
           const cell = cells[index];
           if (!(cell instanceof HTMLElement)) return;
           cell.textContent = slot.char;
-          if (slot.filled) cell.setAttribute("data-filled", "");
-          else cell.removeAttribute("data-filled");
-          if (slot.active) cell.setAttribute("data-active", "");
-          else cell.removeAttribute("data-active");
+          const state = [slot.filled && "filled", slot.active && "active"]
+            .filter(Boolean)
+            .join(" ");
+          if (state) cell.setAttribute("data-otp-state", state);
+          else cell.removeAttribute("data-otp-state");
         });
 
         const complete = isComplete(value.get(), length);
@@ -247,21 +240,21 @@ class UiOtp extends ZazzElement {
    */
   #stampRail(groups: number[]): HTMLElement {
     const rail = document.createElement("div");
-    rail.setAttribute("data-slot", "otp-rail");
+    rail.setAttribute("data-otp-slot", "rail");
     rail.setAttribute("aria-hidden", "true");
 
     let index = 0;
     groups.forEach((size, groupIndex) => {
       if (groupIndex > 0) {
         const separator = document.createElement("span");
-        separator.setAttribute("data-slot", "otp-separator");
+        separator.setAttribute("data-otp-slot", "separator");
         separator.setAttribute("aria-role", "presentation");
         separator.textContent = "–";
         rail.append(separator);
       }
       for (let i = 0; i < size; i++) {
         const cell = document.createElement("span");
-        cell.setAttribute("data-slot", "otp-slot");
+        cell.setAttribute("data-otp-slot", "cell");
         cell.setAttribute("data-otp-index", String(index++));
         rail.append(cell);
       }

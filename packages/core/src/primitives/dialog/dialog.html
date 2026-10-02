@@ -1,4 +1,4 @@
-<button class="ui-button" type="button" command="show-modal" commandfor="dialog-example-1">
+<button data-ui="button" type="button" command="show-modal" commandfor="dialog-example-1">
   Dialog
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
     <rect width="256" height="256" fill="none" />
@@ -23,30 +23,38 @@
     />
   </svg>
 </button>
-<dialog id="dialog-example-1" class="ui-dialog" closedby="any">
-  <div data-slot="dialog-content">
-    <header data-slot="dialog-header">
-      <h2 class="text-lg font-heading font-strong">Dialog title</h2>
-      <p class="text-muted-foreground">
+<dialog id="dialog-example-1" data-ui="dialog" closedby="any">
+  <div data-dialog-slot="content">
+    <header data-dialog-slot="header">
+      <h2
+        style="
+          --font-size: var(--font-size-lg);
+          --font-family: var(--font-family-heading);
+          --font-weight: var(--font-weight-strong);
+        "
+      >
+        Dialog title
+      </h2>
+      <p style="--text: var(--color-muted-foreground)">
         This dialog was opened using an
         <a
           href="https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API"
           target="_blank"
-          class="text-link"
+          style="--text: var(--color-primary)"
           >invoker command</a
         >.
       </p>
     </header>
-    <div data-slot="dialog-body">
-      <p>Set the size of the dialog with the <code>data-size</code> attribute.</p>
+    <div data-dialog-slot="body">
+      <p>Set the size of the dialog with the <code>data-dialog-size</code> attribute.</p>
     </div>
-    <footer data-slot="dialog-footer">
-      <button class="ui-button" type="button" commandfor="dialog-example-1" command="close">
+    <footer data-dialog-slot="footer">
+      <button data-ui="button" type="button" commandfor="dialog-example-1" command="close">
         Cancel
       </button>
       <button
-        class="ui-button"
-        data-variant="primary"
+        data-ui="button"
+        data-button-variant="primary"
         commandfor="dialog-example-1"
         command="close"
       >
@@ -55,10 +63,10 @@
     </footer>
   </div>
   <button
-    class="ui-button"
-    data-slot="dialog-close"
-    data-size="icon"
-    data-variant="ghost"
+    data-ui="button"
+    data-dialog-slot="close"
+    data-button-size="icon"
+    data-button-variant="ghost"
     type="button"
     commandfor="dialog-example-1"
     command="close"

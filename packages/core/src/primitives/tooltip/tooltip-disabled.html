@@ -1,14 +1,14 @@
 <ui-tooltip>
   <button
     type="button"
-    class="ui-button"
+    data-ui="button"
     aria-disabled="true"
     interestfor="tooltip-example-disabled-1"
   >
     Disabled
   </button>
-  <div data-slot="tooltip-content" id="tooltip-example-disabled-1" popover="hint">
+  <div data-tooltip-slot="content" id="tooltip-example-disabled-1" popover="hint">
     This action is unavailable
-    <span data-slot="tooltip-arrow" aria-hidden="true"></span>
+    <span data-tooltip-slot="arrow" aria-hidden="true"></span>
   </div>
 </ui-tooltip>

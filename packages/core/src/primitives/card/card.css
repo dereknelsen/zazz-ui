@@ -1,0 +1,52 @@
+/**
+ * card.css — Card ([data-ui~="card"])
+ *
+ * @layer      variables, components
+ * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved)
+ * @tokens     --ui-card-* (@layer variables; named after the utilities they back)
+ * @presets    data-card-variant="muted"
+ *
+ * The card is a surface: a grid with a gap, the card colors, a radius, a shadow,
+ * and clipped overflow. Its parts are plain elements laid out with utilities.
+ * Every utility-backed declaration reads one chain, highest first:
+ *   var(--_<utility>-resolved, var(--_card-<utility>, var(--ui-card-<utility>)))
+ */
+
+@layer variables {
+  :root {
+    --ui-card-bg: var(--color-card);
+    --ui-card-text: var(--color-card-foreground);
+    --ui-card-rounded: var(--radius-md);
+    --ui-card-shadow: var(--shadow-sm);
+    --ui-card-gap: var(--space-sm);
+  }
+}
+
+/* Variant privates: non-inheriting so a variant never cascades into a nested card. */
+@property --_card-bg {
+  syntax: "*";
+  inherits: false;
+}
+@property --_card-text {
+  syntax: "*";
+  inherits: false;
+}
+
+@layer zazz.components {
+  :where([data-ui~="card"]) {
+    display: grid;
+    --_gap-len: var(--_gap-resolved, var(--ui-card-gap));
+    --_gap-num: var(--_gap-resolved, var(--ui-card-gap));
+    gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));
+    color: var(--_text-resolved, var(--_card-text, var(--ui-card-text)));
+    background-color: var(--_bg-resolved, var(--_card-bg, var(--ui-card-bg)));
+    border-radius: var(--_rounded-resolved, var(--ui-card-rounded));
+    box-shadow: var(--_shadow-resolved, var(--ui-card-shadow));
+    overflow: clip;
+  }
+
+  :where([data-ui~="card"][data-card-variant="muted"]) {
+    --_card-bg: var(--color-muted);
+    --_card-text: var(--color-foreground);
+  }
+}

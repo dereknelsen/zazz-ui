@@ -1,0 +1,35 @@
+<ui-layout style="--gap: var(--space-sm)">
+  <div data-ui="card" style="--p: var(--space-sm)">Default band (lg)</div>
+  <div
+    data-ui="card"
+    style="
+      --p: var(--space-sm);
+      --col: layout-md;
+    "
+  >
+    --col: layout-md
+  </div>
+  <div
+    data-ui="card"
+    style="
+      --p: var(--space-sm);
+      --col: layout-bleed;
+      --rounded: 0;
+    "
+  >
+    --col: layout-bleed
+  </div>
+  <div
+    data-ui="card"
+    style="
+      --p: var(--space-sm);
+      --col: layout-sm;
+      --col--lg: layout-xl;
+    "
+  >
+    --col: layout-sm, --col--lg: layout-xl
+  </div>
+  <ui-layout data-layout-size="md" style="--col: layout-bleed">
+    <div data-ui="card" style="--p: var(--space-sm)">nested layout, data-layout-size="md"</div>
+  </ui-layout>
+</ui-layout>

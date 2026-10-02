@@ -1,19 +1,21 @@
 /**
- * toggle.css: Toggle (.ui-toggle), a button-styled checkbox/radio
+ * toggle.css: Toggle ([data-ui~="toggle"]), a button-styled checkbox/radio
  *
- * Same look as .ui-button (tokens default to the --ui-button-* family), but it wraps a
+ * Same look as the button (hooks default to the --ui-button-* family), but it wraps a
  * native checkbox or radio inside a <label>. State is driven from the nested input
  * via :has(): the checked state reuses the button's *active* token values, so an
- * "on" toggle reads like a pressed button.
+ * "on" toggle reads like a pressed button. Because the state lives on the input,
+ * the label's own state tiers (`--bg--checked`) do not fire; theme the checked
+ * look through the `--ui-toggle-*--checked` hooks.
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css, button.css
+ * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-ring), button.css
  * @uses       :has(): drive label state from the nested input (checked/focus/disabled)
  * @uses       oklch(from …): variant hover/active tints (inherited from --ui-button-*)
  * @uses       text-box: vertical trim (patchy browser support)
- * @tokens     --ui-toggle-* (@layer variables; default to the --ui-button-* family)
+ * @tokens     --ui-toggle-* (@layer variables;
+ *             default to the --ui-button-* family)
  * @consumedby toggle-group.css
- * @see        https://ui.shadcn.com/docs/components/base/toggle
  */
 
 @layer variables {
@@ -23,23 +25,23 @@
     --ui-toggle-font-family: var(--ui-button-font-family);
     --ui-toggle-font-size: var(--ui-button-font-size);
     --ui-toggle-font-weight: var(--ui-button-font-weight);
-    --ui-toggle-line-height: var(--ui-button-line-height);
+    --ui-toggle-leading: var(--ui-button-leading);
 
-    --ui-toggle-background: var(--ui-button-background);
-    --ui-toggle-background--hover: var(--ui-button-background--hover);
-    --ui-toggle-background--active: var(--ui-button-background--active);
+    --ui-toggle-bg: var(--ui-button-bg);
+    --ui-toggle-bg--hover: var(--ui-button-bg--hover);
+    --ui-toggle-bg--active: var(--ui-button-bg--active);
 
-    --ui-toggle-background--checked: var(--primary);
-    --ui-toggle-background--checked-hover: oklch(from var(--primary) l c h / 0.9);
-    --ui-toggle-background--checked-active: oklch(from var(--primary) l c h / 0.8);
+    --ui-toggle-bg--checked: var(--color-primary);
+    --ui-toggle-bg--checked-hover: oklch(from var(--color-primary) l c h / 0.9);
+    --ui-toggle-bg--checked-active: oklch(from var(--color-primary) l c h / 0.8);
 
-    --ui-toggle-foreground: var(--ui-button-foreground);
-    --ui-toggle-foreground--hover: var(--ui-button-foreground--hover);
-    --ui-toggle-foreground--active: var(--ui-button-foreground--active);
+    --ui-toggle-text: var(--ui-button-text);
+    --ui-toggle-text--hover: var(--ui-button-text--hover);
+    --ui-toggle-text--active: var(--ui-button-text--active);
 
-    --ui-toggle-foreground--checked: var(--primary-foreground);
-    --ui-toggle-foreground--checked-hover: var(--primary-foreground);
-    --ui-toggle-foreground--checked-active: var(--primary-foreground);
+    --ui-toggle-text--checked: var(--color-primary-foreground);
+    --ui-toggle-text--checked-hover: var(--color-primary-foreground);
+    --ui-toggle-text--checked-active: var(--color-primary-foreground);
 
     --ui-toggle-border-width: var(--ui-button-border-width);
     --ui-toggle-border-style: var(--ui-button-border-style);
@@ -47,14 +49,15 @@
     --ui-toggle-border-color--hover: var(--ui-button-border-color--hover);
     --ui-toggle-border-color--active: var(--ui-button-border-color--active);
 
-    --ui-toggle-border-color--checked: var(--primary);
-    --ui-toggle-border-color--checked-hover: var(--primary);
-    --ui-toggle-border-color--checked-active: var(--primary);
+    --ui-toggle-border-color--checked: var(--color-primary);
+    --ui-toggle-border-color--checked-hover: var(--color-primary);
+    --ui-toggle-border-color--checked-active: var(--color-primary);
 
+    /* dual-mode hooks: a scale number or a length */
     --ui-toggle-gap: var(--ui-button-gap);
-    --ui-toggle-padding: var(--ui-button-padding);
-    --ui-toggle-block-size: var(--ui-button-block-size);
-    --ui-toggle-radius: var(--ui-button-radius);
+    --ui-toggle-px: var(--ui-button-px);
+    --ui-toggle-min-h: var(--ui-button-min-h);
+    --ui-toggle-rounded: var(--ui-button-rounded);
 
     --ui-toggle-icon-size: var(--ui-button-icon-size);
 
@@ -64,49 +67,197 @@
   }
 }
 
+/* variant privates: one per hook, non-inheriting */
+@property --_toggle-ring-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-font-family {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-font-size {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-font-weight {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-leading {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-bg {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-bg--hover {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-bg--active {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-bg--checked {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-bg--checked-hover {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-bg--checked-active {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-text {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-text--hover {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-text--active {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-text--checked {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-text--checked-hover {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-text--checked-active {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-border-width {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-border-style {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-border-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-border-color--hover {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-border-color--active {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-border-color--checked {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-border-color--checked-hover {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-border-color--checked-active {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-gap {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-px {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-min-h {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-rounded {
+  syntax: "*";
+  inherits: false;
+}
+@property --_toggle-shadow {
+  syntax: "*";
+  inherits: false;
+}
+
 @layer zazz.components {
-  /* ===========================================================================
-  TOGGLE
-
-  Markup: a <label class="toggle"> wrapping a visually-hidden
-  <input type="checkbox"> (or "radio") and the visible content. Clicking the
-  label flips the input; the input stays keyboard-focusable so :focus-visible
-  still drives the ring.
-  =========================================================================== */
-
-  .ui-toggle {
-    font-family: var(--ui-toggle-font-family);
-    font-size: var(--ui-toggle-font-size);
-    font-weight: var(--ui-toggle-font-weight);
-    line-height: var(--ui-toggle-line-height);
+  /* The label wraps a visually-hidden checkbox/radio that stays focusable, so
+     :focus-visible on the input still drives the ring. */
+  :where([data-ui~="toggle"]) {
+    font-family: var(
+      --_font-family-resolved,
+      var(--_toggle-font-family, var(--ui-toggle-font-family))
+    );
+    font-size: var(--_font-size-resolved, var(--_toggle-font-size, var(--ui-toggle-font-size)));
+    font-weight: var(
+      --_font-weight-resolved,
+      var(--_toggle-font-weight, var(--ui-toggle-font-weight))
+    );
+    line-height: var(--_leading-resolved, var(--_toggle-leading, var(--ui-toggle-leading)));
 
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    column-gap: var(--ui-toggle-gap);
     flex-shrink: 0;
 
-    min-block-size: var(--ui-toggle-block-size);
+    /* dual-mode metrics go through the registered typed pair */
+    --_gap-len: var(--_gap-resolved, var(--_toggle-gap, var(--ui-toggle-gap)));
+    --_gap-num: var(--_gap-resolved, var(--_toggle-gap, var(--ui-toggle-gap)));
+    column-gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));
+
+    --_min-h-len: var(--_min-h-resolved, var(--_toggle-min-h, var(--ui-toggle-min-h)));
+    --_min-h-num: var(--_min-h-resolved, var(--_toggle-min-h, var(--ui-toggle-min-h)));
+    min-block-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
     min-inline-size: max-content;
-    padding-inline: var(--ui-toggle-padding);
 
-    border: var(--ui-toggle-border-width) var(--ui-toggle-border-style)
-      var(--ui-toggle-border-color);
-    border-radius: var(--ui-toggle-radius);
+    --_px-len: var(--_px-resolved, var(--_toggle-px, var(--ui-toggle-px)));
+    --_px-num: var(--_px-resolved, var(--_toggle-px, var(--ui-toggle-px)));
+    padding-inline: calc(var(--_px-len) + var(--_px-num) * var(--spacing));
 
-    color: var(--ui-toggle-foreground);
-    background-color: var(--ui-toggle-background);
+    border-width: var(
+      --_border-width-resolved,
+      var(--_toggle-border-width, var(--ui-toggle-border-width))
+    );
+    border-style: var(
+      --_border-style-resolved,
+      var(--_toggle-border-style, var(--ui-toggle-border-style))
+    );
+    border-color: var(
+      --_border-color-resolved,
+      var(--_toggle-border-color, var(--ui-toggle-border-color))
+    );
+    border-radius: var(--_rounded-resolved, var(--_toggle-rounded, var(--ui-toggle-rounded)));
 
-    /* ring renders as box-shadow so it composes with --ui-toggle-shadow; the
-       ring widths animate from 0 so the ring grows in smoothly on focus */
+    color: var(--_text-resolved, var(--_toggle-text, var(--ui-toggle-text)));
+    background-color: var(--_bg-resolved, var(--_toggle-bg, var(--ui-toggle-bg)));
+
+    /* published to --_focus-ring so a --shadow or --ring utility keeps it; the
+       widths grow from 0 on :focus-visible so the ring eases in */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    --_ring: color-mix(in oklch, var(--ui-toggle-ring-color) var(--ring-opacity), transparent);
+    --_ring-fill: color-mix(
+      in oklch,
+      var(--_ring-color-resolved, var(--_toggle-ring-color, var(--ui-toggle-ring-color)))
+        var(--ring-opacity),
+      transparent
+    );
+    --_focus-ring:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+        var(--_ring-fill, var(--ring-shadow-color));
     box-shadow:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring, var(--ring)),
-      var(--ui-toggle-shadow);
+      var(--_focus-ring, 0 0 #0000),
+      var(--_shadow-resolved, var(--_toggle-shadow, var(--ui-toggle-shadow)));
 
     cursor: pointer;
     text-decoration: none;
@@ -122,8 +273,7 @@
   }
 
   /* visually hidden but still in the tab order and focusable */
-  .ui-toggle > input[type="checkbox"],
-  .ui-toggle > input[type="radio"] {
+  :where([data-ui~="toggle"]) > input:is([type="checkbox"], [type="radio"]) {
     position: absolute;
     clip-path: inset(50%);
     opacity: 0;
@@ -131,62 +281,83 @@
   }
 
   /* ===========================================================================
-  TOGGLE STATES
+  STATES — driven from the nested input
   =========================================================================== */
 
-  .ui-toggle:hover:not(:has(> input:disabled)) {
-    color: var(--ui-toggle-foreground--hover);
-    background-color: var(--ui-toggle-background--hover);
-    border-color: var(--ui-toggle-border-color--hover);
+  @media (hover: hover) {
+    :where([data-ui~="toggle"]):hover:not(:has(> input:disabled)) {
+      color: var(--_text-resolved, var(--_toggle-text--hover, var(--ui-toggle-text--hover)));
+      background-color: var(--_bg-resolved, var(--_toggle-bg--hover, var(--ui-toggle-bg--hover)));
+      border-color: var(
+        --_border-color-resolved,
+        var(--_toggle-border-color--hover, var(--ui-toggle-border-color--hover))
+      );
+    }
   }
 
-  .ui-toggle:active:not(:has(> input:disabled)) {
-    color: var(--ui-toggle-foreground--active);
-    background-color: var(--ui-toggle-background--active);
-    border-color: var(--ui-toggle-border-color--active);
+  :where([data-ui~="toggle"]):active:not(:has(> input:disabled)) {
+    color: var(--_text-resolved, var(--_toggle-text--active, var(--ui-toggle-text--active)));
+    background-color: var(--_bg-resolved, var(--_toggle-bg--active, var(--ui-toggle-bg--active)));
+    border-color: var(
+      --_border-color-resolved,
+      var(--_toggle-border-color--active, var(--ui-toggle-border-color--active))
+    );
   }
 
   /* the "on" state reuses the button's active look */
-  .ui-toggle:has(> input:checked) {
-    color: var(--ui-toggle-foreground--checked);
-    background-color: var(--ui-toggle-background--checked);
-    border-color: var(--ui-toggle-border-color--checked);
+  :where([data-ui~="toggle"]):has(> input:checked) {
+    color: var(--_text-resolved, var(--_toggle-text--checked, var(--ui-toggle-text--checked)));
+    background-color: var(--_bg-resolved, var(--_toggle-bg--checked, var(--ui-toggle-bg--checked)));
+    border-color: var(
+      --_border-color-resolved,
+      var(--_toggle-border-color--checked, var(--ui-toggle-border-color--checked))
+    );
   }
 
-  .ui-toggle:has(> input:checked:hover) {
-    color: var(--ui-toggle-foreground--checked-hover);
-    background-color: var(--ui-toggle-background--checked-hover);
-    border-color: var(--ui-toggle-border-color--checked-hover);
+  @media (hover: hover) {
+    :where([data-ui~="toggle"]):has(> input:checked):hover:not(:has(> input:disabled)) {
+      color: var(
+        --_text-resolved,
+        var(--_toggle-text--checked-hover, var(--ui-toggle-text--checked-hover))
+      );
+      background-color: var(
+        --_bg-resolved,
+        var(--_toggle-bg--checked-hover, var(--ui-toggle-bg--checked-hover))
+      );
+      border-color: var(
+        --_border-color-resolved,
+        var(--_toggle-border-color--checked-hover, var(--ui-toggle-border-color--checked-hover))
+      );
+    }
   }
 
-  .ui-toggle:has(> input:checked:active) {
-    color: var(--ui-toggle-foreground--checked-active);
-    background-color: var(--ui-toggle-background--checked-active);
-    border-color: var(--ui-toggle-border-color--checked-active);
+  :where([data-ui~="toggle"]):has(> input:checked):active:not(:has(> input:disabled)) {
+    color: var(
+      --_text-resolved,
+      var(--_toggle-text--checked-active, var(--ui-toggle-text--checked-active))
+    );
+    background-color: var(
+      --_bg-resolved,
+      var(--_toggle-bg--checked-active, var(--ui-toggle-bg--checked-active))
+    );
+    border-color: var(
+      --_border-color-resolved,
+      var(--_toggle-border-color--checked-active, var(--ui-toggle-border-color--checked-active))
+    );
   }
 
-  .ui-toggle:has(> input:focus-visible) {
+  :where([data-ui~="toggle"]):has(> input:focus-visible) {
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
 
     outline-color: transparent;
   }
 
-  .ui-toggle:has(> input:disabled) {
-    --ui-toggle-foreground: var(--muted-foreground);
-    --ui-toggle-background: var(--muted);
-    --ui-toggle-shadow: 0 0 transparent;
-
-    cursor: default;
-    opacity: 0.5;
-    outline: none;
-  }
-
   /* ===========================================================================
-  TOGGLE ICONS
+  ICONS
   =========================================================================== */
 
-  .ui-toggle > svg {
+  :where([data-ui~="toggle"]) > svg {
     inline-size: var(--ui-toggle-icon-size);
     block-size: var(--ui-toggle-icon-size);
     pointer-events: none;
@@ -197,101 +368,113 @@
   }
 
   /* ===========================================================================
-  TOGGLE VARIANTS
+  VARIANTS
   =========================================================================== */
 
-  .ui-toggle[data-variant="primary"] {
-    --ui-toggle-background: var(--primary);
-    --ui-toggle-background--hover: oklch(from var(--primary) l c h / 0.9);
-    --ui-toggle-background--active: oklch(from var(--primary) l c h / 0.8);
+  :where([data-ui~="toggle"][data-toggle-variant="primary"]) {
+    --_toggle-bg: var(--color-primary);
+    --_toggle-bg--hover: oklch(from var(--color-primary) l c h / 0.9);
+    --_toggle-bg--active: oklch(from var(--color-primary) l c h / 0.8);
 
-    --ui-toggle-foreground: var(--primary-foreground);
-    --ui-toggle-foreground--hover: var(--primary-foreground);
-    --ui-toggle-foreground--active: var(--primary-foreground);
+    --_toggle-text: var(--color-primary-foreground);
+    --_toggle-text--hover: var(--color-primary-foreground);
+    --_toggle-text--active: var(--color-primary-foreground);
 
-    --ui-toggle-border-color: transparent;
-    --ui-toggle-border-color--hover: transparent;
-    --ui-toggle-border-color--active: transparent;
+    --_toggle-border-color: transparent;
+    --_toggle-border-color--hover: transparent;
+    --_toggle-border-color--active: transparent;
 
-    --ui-toggle-shadow: 0 0 transparent;
+    --_toggle-shadow: 0 0 transparent;
   }
 
-  .ui-toggle[data-variant="muted"] {
-    --ui-toggle-background: var(--muted);
-    --ui-toggle-background--hover: oklch(from var(--muted) l c h / calc(alpha - 0.02));
-    --ui-toggle-background--active: var(--muted);
+  :where([data-ui~="toggle"][data-toggle-variant="muted"]) {
+    --_toggle-bg: var(--color-muted);
+    --_toggle-bg--hover: oklch(from var(--color-muted) l c h / calc(alpha - 0.02));
+    --_toggle-bg--active: var(--color-muted);
 
-    --ui-toggle-foreground: var(--foreground);
-    --ui-toggle-foreground--hover: var(--foreground);
-    --ui-toggle-foreground--active: var(--foreground);
+    --_toggle-text: var(--color-foreground);
+    --_toggle-text--hover: var(--color-foreground);
+    --_toggle-text--active: var(--color-foreground);
 
-    --ui-toggle-border-color: transparent;
-    --ui-toggle-border-color--hover: transparent;
-    --ui-toggle-border-color--active: transparent;
+    --_toggle-border-color: transparent;
+    --_toggle-border-color--hover: transparent;
+    --_toggle-border-color--active: transparent;
 
-    --ui-toggle-shadow: 0 0 transparent;
+    --_toggle-shadow: 0 0 transparent;
   }
 
-  /* the default "ghost" toggle reads as bare until on/hovered (the shadcn look) */
-  .ui-toggle[data-variant="ghost"] {
-    --ui-toggle-background: transparent;
-    --ui-toggle-background--hover: var(--muted);
-    --ui-toggle-background--active: oklch(from var(--muted) l c h / calc(alpha - 0.02));
+  /* the "ghost" toggle reads as bare until on/hovered */
+  :where([data-ui~="toggle"][data-toggle-variant="ghost"]) {
+    --_toggle-bg: transparent;
+    --_toggle-bg--hover: var(--color-muted);
+    --_toggle-bg--active: oklch(from var(--color-muted) l c h / calc(alpha - 0.02));
 
-    --ui-toggle-foreground: var(--foreground);
-    --ui-toggle-foreground--hover: var(--foreground);
-    --ui-toggle-foreground--active: var(--foreground);
+    --_toggle-text: var(--color-foreground);
+    --_toggle-text--hover: var(--color-foreground);
+    --_toggle-text--active: var(--color-foreground);
 
-    --ui-toggle-border-color: transparent;
-    --ui-toggle-border-color--hover: transparent;
-    --ui-toggle-border-color--active: transparent;
+    --_toggle-border-color: transparent;
+    --_toggle-border-color--hover: transparent;
+    --_toggle-border-color--active: transparent;
 
-    --ui-toggle-shadow: 0 0 transparent;
+    --_toggle-shadow: 0 0 transparent;
   }
 
-  .ui-toggle[data-variant="destructive"] {
-    --ui-toggle-ring-color: var(--destructive);
+  :where([data-ui~="toggle"][data-toggle-variant="destructive"]) {
+    --_toggle-ring-color: var(--color-destructive);
 
-    --ui-toggle-background: var(--destructive);
-    --ui-toggle-background--hover: oklch(from var(--destructive) l c h / 0.9);
-    --ui-toggle-background--active: oklch(from var(--destructive) l c h / 0.8);
+    --_toggle-bg: var(--color-destructive);
+    --_toggle-bg--hover: oklch(from var(--color-destructive) l c h / 0.9);
+    --_toggle-bg--active: oklch(from var(--color-destructive) l c h / 0.8);
 
-    --ui-toggle-foreground: var(--destructive-foreground);
-    --ui-toggle-foreground--hover: var(--destructive-foreground);
-    --ui-toggle-foreground--active: var(--destructive-foreground);
+    --_toggle-text: var(--color-destructive-foreground);
+    --_toggle-text--hover: var(--color-destructive-foreground);
+    --_toggle-text--active: var(--color-destructive-foreground);
 
-    --ui-toggle-border-color: var(--destructive);
-    --ui-toggle-border-color--hover: var(--destructive);
-    --ui-toggle-border-color--active: var(--destructive);
+    --_toggle-border-color: var(--color-destructive);
+    --_toggle-border-color--hover: var(--color-destructive);
+    --_toggle-border-color--active: var(--color-destructive);
 
-    --ui-toggle-shadow: 0 0 transparent;
+    --_toggle-shadow: 0 0 transparent;
+  }
+
+  /* disabled comes after the variants so a disabled toggle is muted whatever its variant */
+  :where([data-ui~="toggle"]:has(> input:disabled)) {
+    --_toggle-text: var(--color-muted-foreground);
+    --_toggle-bg: var(--color-muted);
+    --_toggle-shadow: 0 0 transparent;
+
+    cursor: default;
+    opacity: 0.5;
+    outline: none;
   }
 
   /* ===========================================================================
-  TOGGLE SIZES
+  SIZES
   =========================================================================== */
 
-  .ui-toggle[data-size="sm"] {
-    --ui-toggle-block-size: var(--step-6);
-    --ui-toggle-padding: var(--step-2);
-    --ui-toggle-radius: var(--radius-sm);
+  :where([data-ui~="toggle"][data-toggle-size="sm"]) {
+    --_toggle-min-h: calc(var(--spacing) * 6);
+    --_toggle-px: calc(var(--spacing) * 2);
+    --_toggle-rounded: var(--radius-sm);
   }
 
-  .ui-toggle[data-size="icon"] {
-    block-size: var(--ui-toggle-block-size);
-    inline-size: var(--ui-toggle-block-size);
+  :where([data-ui~="toggle"][data-toggle-size="icon"]) {
+    block-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
+    inline-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
     padding: 0;
     aspect-ratio: 1 / 1;
   }
 
-  .ui-toggle[data-size="icon-sm"] {
-    --ui-toggle-block-size: var(--step-6);
-    --ui-toggle-padding: var(--step-2);
-    --ui-toggle-radius: var(--radius-sm);
-    --ui-toggle-icon-size: var(--step-3_5);
+  :where([data-ui~="toggle"][data-toggle-size="icon-sm"]) {
+    --_toggle-min-h: calc(var(--spacing) * 6);
+    --_toggle-px: calc(var(--spacing) * 2);
+    --_toggle-rounded: var(--radius-sm);
+    /* the hook, not a private: it must inherit to reach the icon */
+    --ui-toggle-icon-size: calc(var(--spacing) * 3.5);
 
-    block-size: var(--ui-toggle-block-size);
-    inline-size: var(--ui-toggle-block-size);
+    block-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
+    inline-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
     padding: 0;
     aspect-ratio: 1 / 1;
   }

@@ -1,38 +1,44 @@
 /**
  * slider.css — Range input (input[type="range"])
  *
- * @layer      reset
- * @requires   layers.css, _variables.css
+ * @layer      variables, reset
+ * @requires   _layers.css, _variables.css
  * @uses       appearance: none — redraws track + thumb from theme tokens
- * @tokens     --ui-slider-* (track height, background, border, radius; thumb size, bg, border, radius)
+ * @tokens     --ui-slider-* (@layer variables, on :root so subtree hooks work)
  *
  * Note: The active region is NOT filled (parity across engines); add a paint
  * via JS if a filled track is needed. The thumb is centered on the track with a
  * calc'd negative margin so retuning either size keeps it aligned.
  */
 
-@layer reset {
-  :where(input[type="range"]) {
-    --ui-slider-ring-color: var(--ring-color);
+@layer variables {
+  :root {
+    --ui-slider-ring-color: var(--color-ring);
 
-    --ui-slider-track-block-size: var(--step-1_5);
-    --ui-slider-track-background: var(--muted);
-    --ui-slider-track-border: 1px solid var(--muted);
-    --ui-slider-track-radius: var(--radius-full);
-    --ui-slider-thumb-size: var(--step-4);
-    --ui-slider-thumb-background: var(--background);
+    --ui-slider-track-h: calc(var(--spacing) * 1.5);
+    --ui-slider-track-bg: var(--color-muted);
+    --ui-slider-track-border: 1px solid var(--color-muted);
+    --ui-slider-track-rounded: var(--radius-full);
+    --ui-slider-thumb-size: calc(var(--spacing) * 4);
+    --ui-slider-thumb-bg: var(--color-background);
 
     --ui-slider-thumb-shadow: var(--shadow-xs);
-    --ui-slider-thumb-border: 1px solid var(--border);
-    --ui-slider-thumb-radius: var(--radius-full);
-    --ui-slider-thumb-offset: calc(var(--ui-slider-track-block-size) * -1);
+    --ui-slider-thumb-border: 1px solid var(--color-border);
+    --ui-slider-thumb-rounded: var(--radius-full);
+  }
+}
+
+@layer reset {
+  :where(input[type="range"]) {
+    /* derived on the element so a subtree --ui-slider-track-h keeps the thumb centered */
+    --ui-slider-thumb-offset: calc(var(--ui-slider-track-h) * -1);
 
     -webkit-appearance: none;
     appearance: none;
     inline-size: 100%;
     background: transparent;
     cursor: grab;
-    border-radius: var(--ui-slider-track-radius);
+    border-radius: var(--ui-slider-track-rounded);
 
     /* transparent outline keeps focus visible in forced-colors / high-contrast
        modes; the visible focus ring lives on the thumb via --shadow-ring */
@@ -41,30 +47,31 @@
   }
 
   :where(input[type="range"])::-webkit-slider-runnable-track {
-    block-size: var(--ui-slider-track-block-size);
+    block-size: var(--ui-slider-track-h);
     inline-size: 100%;
-    background: var(--ui-slider-track-background);
+    background: var(--ui-slider-track-bg);
     border: var(--ui-slider-track-border);
-    border-radius: var(--ui-slider-track-radius);
+    border-radius: var(--ui-slider-track-rounded);
   }
 
   :where(input[type="range"])::-moz-range-track {
-    block-size: var(--ui-slider-track-block-size);
+    block-size: var(--ui-slider-track-h);
     inline-size: 100%;
-    background: var(--ui-slider-track-background);
+    background: var(--ui-slider-track-bg);
     border: var(--ui-slider-track-border);
-    border-radius: var(--ui-slider-track-radius);
+    border-radius: var(--ui-slider-track-rounded);
   }
 
   :where(input[type="range"])::-webkit-slider-thumb {
-    /* ring renders as box-shadow so it composes with --ui-slider-thumb-shadow; the
-       ring widths animate from 0 so the ring grows in smoothly on focus */
+    /* the ring is a box-shadow so it composes with --ui-slider-thumb-shadow;
+       widths animate from 0 so it grows in on focus */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    --_ring: color-mix(in oklch, var(--ui-slider-ring-color) var(--ring-opacity), transparent);
+    --_ring-fill: color-mix(in oklch, var(--ui-slider-ring-color) var(--ring-opacity), transparent);
     box-shadow:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring, var(--ring)),
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+        var(--_ring-fill, var(--ring-shadow-color)),
       var(--ui-slider-thumb-shadow);
 
     -webkit-appearance: none;
@@ -72,37 +79,40 @@
     margin-block-start: var(--ui-slider-thumb-offset);
     inline-size: var(--ui-slider-thumb-size);
     block-size: var(--ui-slider-thumb-size);
-    background-color: var(--ui-slider-thumb-background);
+    background-color: var(--ui-slider-thumb-bg);
     border: var(--ui-slider-thumb-border);
-    border-radius: var(--ui-slider-thumb-radius);
+    border-radius: var(--ui-slider-thumb-rounded);
 
     transition: var(--default-transition);
   }
 
   :where(input[type="range"])::-moz-range-thumb {
-    /* ring renders as box-shadow so it composes with --ui-slider-thumb-shadow; the
-       ring widths animate from 0 so the ring grows in smoothly on focus */
+    /* the ring is a box-shadow so it composes with --ui-slider-thumb-shadow;
+       widths animate from 0 so it grows in on focus */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    --_ring: color-mix(in oklch, var(--ui-slider-ring-color) var(--ring-opacity), transparent);
+    --_ring-fill: color-mix(in oklch, var(--ui-slider-ring-color) var(--ring-opacity), transparent);
 
     appearance: none;
     inline-size: var(--ui-slider-thumb-size);
     block-size: var(--ui-slider-thumb-size);
-    background-color: var(--ui-slider-thumb-background);
+    background-color: var(--ui-slider-thumb-bg);
     border: var(--ui-slider-thumb-border);
-    border-radius: var(--ui-slider-thumb-radius);
+    border-radius: var(--ui-slider-thumb-rounded);
 
     box-shadow:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring, var(--ring)),
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+        var(--_ring-fill, var(--ring-shadow-color)),
       var(--ui-slider-thumb-shadow);
 
     transition: var(--default-transition);
   }
 
-  :where(input[type="range"]:hover) {
-    --ui-slider-thumb-border: 1px solid var(--primary);
+  @media (hover: hover) {
+    :where(input[type="range"]:hover) {
+      --ui-slider-thumb-border: 1px solid var(--color-primary);
+    }
   }
 
   :where(input[type="range"]:active) {

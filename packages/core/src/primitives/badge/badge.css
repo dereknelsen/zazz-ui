@@ -1,33 +1,35 @@
 /**
- * badge.css: Badge (.ui-badge)
+ * badge.css: Badge ([data-ui~="badge"])
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css, _reset.css, fields.css (--ui-field-* border/ring)
+ * @requires   _layers.css, _variables.css, _reset.css, _properties.css (--_*-resolved, --_focus-ring), fields.css (--ui-field-* border/ring)
  * @uses       color-mix(), oklch(from …): variant hover/active tints
  * @uses       text-box: vertical trim (patchy browser support)
- * @tokens     --ui-badge-* (@layer variables)
+ * @tokens     --ui-badge-* (@layer variables; hooks are named after the utilities they back)
  * @consumedby combobox.css (selection tags)
+ *
+ * Every utility-backed declaration reads one chain, highest first:
+ *   var(--_<utility>-resolved, var(--_badge-<utility>, var(--ui-badge-<utility>)))
+ * States apply only to interactive badges (button, a[href]).
  */
 
 @layer variables {
   :root {
-    /* Border + ring default to the shared --ui-field-* family (owned in fields.css)
-       so a badge sitting beside fields and buttons reads as one family; metrics stay
-       independent — a badge is deliberately a smaller scale. */
+    /* border + ring follow --ui-field-*; metrics stay independent (badges are smaller) */
     --ui-badge-ring-color: var(--ui-field-ring-color);
 
     --ui-badge-font-family: var(--font-family-body);
     --ui-badge-font-size: var(--font-size-xs);
     --ui-badge-font-weight: var(--font-weight-strong);
-    --ui-badge-line-height: 1;
+    --ui-badge-leading: 1;
 
-    --ui-badge-background: var(--background);
-    --ui-badge-background--hover: var(--muted);
-    --ui-badge-background--active: oklch(from var(--muted) l c h / calc(alpha - 0.02));
+    --ui-badge-bg: var(--color-background);
+    --ui-badge-bg--hover: var(--color-muted);
+    --ui-badge-bg--active: oklch(from var(--color-muted) l c h / calc(alpha - 0.02));
 
-    --ui-badge-foreground: var(--foreground);
-    --ui-badge-foreground--hover: var(--foreground);
-    --ui-badge-foreground--active: var(--foreground);
+    --ui-badge-text: var(--color-foreground);
+    --ui-badge-text--hover: var(--color-foreground);
+    --ui-badge-text--active: var(--color-foreground);
 
     --ui-badge-border-width: var(--ui-field-border-width);
     --ui-badge-border-style: var(--ui-field-border-style);
@@ -35,56 +37,176 @@
     --ui-badge-border-color--hover: var(--ui-field-border-color);
     --ui-badge-border-color--active: var(--ui-field-border-color);
 
-    --ui-badge-gap: var(--step-1);
-    --ui-badge-padding: var(--step-1_5);
-    --ui-badge-block-size: var(--step-5_5);
-    --ui-badge-radius: var(--radius-sm);
+    /* dual-mode: a scale number or a length */
+    --ui-badge-gap: var(--spacing);
+    --ui-badge-px: calc(var(--spacing) * 1.5);
+    --ui-badge-h: calc(var(--spacing) * 5.5);
+    --ui-badge-rounded: var(--radius-sm);
 
-    --ui-badge-icon-size: var(--step-3);
+    --ui-badge-icon-size: calc(var(--spacing) * 3);
 
-    /* composes into the badge's box-shadow list; use a transparent shadow,
-       never `none`, so the focus ring layers stay valid */
+    /* never `none`: the focus ring layers into this box-shadow list */
     --ui-badge-shadow: 0 0 transparent;
   }
 }
 
-@layer zazz.components {
-  /* ===========================================================================
-  BADGE
-  =========================================================================== */
+/* Variant privates: non-inheriting so a variant never cascades into a nested badge. */
+@property --_badge-ring-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-font-family {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-font-size {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-font-weight {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-leading {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-bg {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-bg--hover {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-bg--active {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-text {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-text--hover {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-text--active {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-border-width {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-border-style {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-border-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-border-color--hover {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-border-color--active {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-gap {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-px {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-h {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-rounded {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-icon-size {
+  syntax: "*";
+  inherits: false;
+}
+@property --_badge-shadow {
+  syntax: "*";
+  inherits: false;
+}
 
-  .ui-badge {
-    font-family: var(--ui-badge-font-family);
-    font-size: var(--ui-badge-font-size);
-    font-weight: var(--ui-badge-font-weight);
-    line-height: var(--ui-badge-line-height);
+@layer zazz.components {
+  :where([data-ui~="badge"]) {
+    font-family: var(
+      --_font-family-resolved,
+      var(--_badge-font-family, var(--ui-badge-font-family))
+    );
+    font-size: var(--_font-size-resolved, var(--_badge-font-size, var(--ui-badge-font-size)));
+    font-weight: var(
+      --_font-weight-resolved,
+      var(--_badge-font-weight, var(--ui-badge-font-weight))
+    );
+    line-height: var(--_leading-resolved, var(--_badge-leading, var(--ui-badge-leading)));
 
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--ui-badge-gap);
     flex-shrink: 0;
 
-    block-size: var(--ui-badge-block-size);
+    --_gap-len: var(--_gap-resolved, var(--_badge-gap, var(--ui-badge-gap)));
+    --_gap-num: var(--_gap-resolved, var(--_badge-gap, var(--ui-badge-gap)));
+    gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));
+
+    --_h-len: var(--_h-resolved, var(--_badge-h, var(--ui-badge-h)));
+    --_h-num: var(--_h-resolved, var(--_badge-h, var(--ui-badge-h)));
+    block-size: calc(var(--_h-len) + var(--_h-num) * var(--spacing));
     min-inline-size: max-content;
-    padding-inline: var(--ui-badge-padding);
 
-    border: var(--ui-badge-border-width) var(--ui-badge-border-style) var(--ui-badge-border-color);
-    border-radius: var(--ui-badge-radius);
+    --_px-len: var(--_px-resolved, var(--_badge-px, var(--ui-badge-px)));
+    --_px-num: var(--_px-resolved, var(--_badge-px, var(--ui-badge-px)));
+    padding-inline: calc(var(--_px-len) + var(--_px-num) * var(--spacing));
 
-    color: var(--ui-badge-foreground);
-    background-color: var(--ui-badge-background);
+    border-width: var(
+      --_border-width-resolved,
+      var(--_badge-border-width, var(--ui-badge-border-width))
+    );
+    border-style: var(
+      --_border-style-resolved,
+      var(--_badge-border-style, var(--ui-badge-border-style))
+    );
+    border-color: var(
+      --_border-color-resolved,
+      var(--_badge-border-color, var(--ui-badge-border-color))
+    );
+    border-radius: var(--_rounded-resolved, var(--_badge-rounded, var(--ui-badge-rounded)));
+
+    color: var(--_text-resolved, var(--_badge-text, var(--ui-badge-text)));
+    background-color: var(--_bg-resolved, var(--_badge-bg, var(--ui-badge-bg)));
     background-clip: padding-box;
 
-    /* ring renders as box-shadow so it composes with --ui-badge-shadow; the
-       ring widths animate from 0 so the ring grows in smoothly on focus */
+    /* The ring is published to --_focus-ring so the utilities layer's
+       box-shadow emission keeps it above a --shadow or --ring utility; the ring
+       widths grow from 0 on :focus-visible so the ring eases in. */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    --_ring: color-mix(in oklch, var(--ui-badge-ring-color) var(--ring-opacity), transparent);
+    --_ring-fill: color-mix(
+      in oklch,
+      var(--_ring-color-resolved, var(--_badge-ring-color, var(--ui-badge-ring-color)))
+        var(--ring-opacity),
+      transparent
+    );
+    --_focus-ring:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+        var(--_ring-fill, var(--ring-shadow-color));
     box-shadow:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring, var(--ring)),
-      var(--ui-badge-shadow);
+      var(--_focus-ring, 0 0 #0000),
+      var(--_shadow-resolved, var(--_badge-shadow, var(--ui-badge-shadow)));
 
     cursor: default;
     text-decoration: none;
@@ -99,50 +221,46 @@
     text-box: trim-both ex alphabetic;
   }
 
-  a[href] .ui-badge:not(:disabled, [aria-disabled="true"]),
-  a[href].ui-badge:not(:disabled, [aria-disabled="true"]) {
+  a[href] :where([data-ui~="badge"]):not(:disabled, [aria-disabled="true"]),
+  a[href]:where([data-ui~="badge"]):not(:disabled, [aria-disabled="true"]) {
     cursor: pointer;
   }
 
   /* ===========================================================================
-  BADGE STATES
+  BADGE STATES — interactive badges only (button, a[href])
   =========================================================================== */
 
-  button.ui-badge:hover:not(:disabled, [aria-disabled="true"]),
-  a[href].ui-badge:hover:not(:disabled, [aria-disabled="true"]) {
-    color: var(--ui-badge-foreground--hover);
-    background-color: var(--ui-badge-background--hover);
-    border-color: var(--ui-badge-border-color--hover);
+  @media (hover: hover) {
+    :where([data-ui~="badge"]):is(button, a[href]):hover:not(:disabled, [aria-disabled="true"]) {
+      color: var(--_text-resolved, var(--_badge-text--hover, var(--ui-badge-text--hover)));
+      background-color: var(--_bg-resolved, var(--_badge-bg--hover, var(--ui-badge-bg--hover)));
+      border-color: var(
+        --_border-color-resolved,
+        var(--_badge-border-color--hover, var(--ui-badge-border-color--hover))
+      );
+    }
   }
 
-  button.ui-badge:active:not(:disabled, [aria-disabled="true"]),
-  a[href].ui-badge:active:not(:disabled, [aria-disabled="true"]) {
-    color: var(--ui-badge-foreground--active);
-    background-color: var(--ui-badge-background--active);
-    border-color: var(--ui-badge-border-color--active);
+  :where([data-ui~="badge"]):is(button, a[href]):active:not(:disabled, [aria-disabled="true"]) {
+    color: var(--_text-resolved, var(--_badge-text--active, var(--ui-badge-text--active)));
+    background-color: var(--_bg-resolved, var(--_badge-bg--active, var(--ui-badge-bg--active)));
+    border-color: var(
+      --_border-color-resolved,
+      var(--_badge-border-color--active, var(--ui-badge-border-color--active))
+    );
   }
 
-  button.ui-badge:focus-visible:hover:not(:disabled, [aria-disabled="true"]),
-  a[href].ui-badge:focus-visible:hover:not(:disabled, [aria-disabled="true"]) {
+  :where([data-ui~="badge"]):is(button, a[href]):focus-visible:not(
+    :disabled,
+    [aria-disabled="true"]
+  ) {
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
 
     outline-color: transparent;
   }
 
-  :is(button.ui-badge:disabled, a[href].ui-badge:disabled),
-  :is(button.ui-badge[aria-disabled="true"], a[href].ui-badge[aria-disabled="true"]) {
-    --ui-badge-foreground: var(--muted-foreground);
-    --ui-badge-background: var(--muted);
-    --ui-badge-shadow: 0 0 transparent;
-
-    cursor: default;
-    opacity: 0.5;
-    outline: none;
-  }
-
-  button.ui-badge[aria-busy="true"],
-  a[href].ui-badge[aria-busy="true"] {
+  :where([data-ui~="badge"]):is(button, a[href])[aria-busy="true"] {
     cursor: progress;
   }
 
@@ -150,7 +268,7 @@
   BADGE ICONS
   =========================================================================== */
 
-  .ui-badge > svg {
+  :where([data-ui~="badge"]) > svg {
     inline-size: var(--ui-badge-icon-size);
     block-size: var(--ui-badge-icon-size);
     pointer-events: none;
@@ -161,67 +279,69 @@
   }
 
   /* ===========================================================================
-  BADGE VARIANTS
+  BADGE VARIANTS — data-badge-variant writes the privates
   =========================================================================== */
 
-  .ui-badge[data-variant="primary"] {
-    --ui-badge-background: var(--primary);
-    --ui-badge-background--hover: oklch(from var(--primary) l c h / 0.9);
-    --ui-badge-background--active: oklch(from var(--primary) l c h / 0.8);
+  :where([data-ui~="badge"][data-badge-variant="primary"]) {
+    --_badge-bg: var(--color-primary);
+    --_badge-bg--hover: oklch(from var(--color-primary) l c h / 0.9);
+    --_badge-bg--active: oklch(from var(--color-primary) l c h / 0.8);
 
-    --ui-badge-foreground: var(--primary-foreground);
-    --ui-badge-foreground--hover: var(--primary-foreground);
-    --ui-badge-foreground--active: var(--primary-foreground);
+    --_badge-text: var(--color-primary-foreground);
+    --_badge-text--hover: var(--color-primary-foreground);
+    --_badge-text--active: var(--color-primary-foreground);
 
-    --ui-badge-border-color: var(--ui-badge-background);
-    --ui-badge-border-color--hover: var(--ui-badge-background--hover);
-    --ui-badge-border-color--active: var(--ui-badge-background--active);
+    --_badge-border-color: var(--_badge-bg);
+    --_badge-border-color--hover: var(--_badge-bg--hover);
+    --_badge-border-color--active: var(--_badge-bg--active);
   }
 
-  .ui-badge[data-variant="muted"] {
-    --ui-badge-background: var(--muted);
-    --ui-badge-background--hover: oklch(from var(--muted) l c h / calc(alpha - 0.02));
-    --ui-badge-background--active: var(--muted);
+  :where([data-ui~="badge"][data-badge-variant="muted"]) {
+    --_badge-bg: var(--color-muted);
+    --_badge-bg--hover: oklch(from var(--color-muted) l c h / calc(alpha - 0.02));
+    --_badge-bg--active: var(--color-muted);
 
-    --ui-badge-foreground: var(--foreground);
-    --ui-badge-foreground--hover: var(--foreground);
-    --ui-badge-foreground--active: var(--foreground);
+    --_badge-text: var(--color-foreground);
+    --_badge-text--hover: var(--color-foreground);
+    --_badge-text--active: var(--color-foreground);
 
-    --ui-badge-border-color: var(--ui-badge-background);
-    --ui-badge-border-color--hover: var(--ui-badge-background--hover);
-    --ui-badge-border-color--active: var(--ui-badge-background--active);
+    --_badge-border-color: var(--_badge-bg);
+    --_badge-border-color--hover: var(--_badge-bg--hover);
+    --_badge-border-color--active: var(--_badge-bg--active);
   }
 
-  .ui-badge[data-variant="ghost"] {
-    --ui-badge-background: transparent;
-    --ui-badge-background--hover: var(--muted);
-    --ui-badge-background--active: oklch(from var(--muted) l c h / calc(alpha - 0.02));
+  :where([data-ui~="badge"][data-badge-variant="ghost"]) {
+    --_badge-bg: transparent;
+    --_badge-bg--hover: var(--color-muted);
+    --_badge-bg--active: oklch(from var(--color-muted) l c h / calc(alpha - 0.02));
 
-    --ui-badge-foreground: var(--foreground);
-    --ui-badge-foreground--hover: var(--foreground);
-    --ui-badge-foreground--active: var(--foreground);
+    --_badge-text: var(--color-foreground);
+    --_badge-text--hover: var(--color-foreground);
+    --_badge-text--active: var(--color-foreground);
 
-    --ui-badge-border-color: var(--ui-badge-background);
-    --ui-badge-border-color--hover: var(--ui-badge-background--hover);
-    --ui-badge-border-color--active: var(--ui-badge-background--active);
+    --_badge-border-color: var(--_badge-bg);
+    --_badge-border-color--hover: var(--_badge-bg--hover);
+    --_badge-border-color--active: var(--_badge-bg--active);
   }
 
-  .ui-badge[data-variant="link"] {
-    --ui-badge-background: transparent;
-    --ui-badge-background--hover: transparent;
-    --ui-badge-background--active: transparent;
+  :where([data-ui~="badge"][data-badge-variant="link"]) {
+    --_badge-bg: transparent;
+    --_badge-bg--hover: transparent;
+    --_badge-bg--active: transparent;
 
-    --ui-badge-foreground: var(--foreground);
-    --ui-badge-foreground--hover: var(--primary);
-    --ui-badge-foreground--active: oklch(from var(--primary) l c h / 0.8);
+    --_badge-text: var(--color-foreground);
+    --_badge-text--hover: var(--color-primary);
+    --_badge-text--active: oklch(from var(--color-primary) l c h / 0.8);
 
-    --ui-badge-border-style: none;
+    --_badge-border-style: none;
 
-    --ui-badge-block-size: fit-content;
-    --ui-badge-padding: 0;
-    --ui-badge-radius: 0;
+    --_badge-px: 0;
+    --_badge-rounded: 0;
 
-    --ui-badge-shadow: 0 0 transparent;
+    --_badge-shadow: 0 0 transparent;
+
+    /* the link sizes to its text (dual mode cannot carry fit-content) */
+    block-size: auto;
 
     text-decoration-line: var(--decoration-line);
     text-decoration-style: var(--decoration-style);
@@ -230,25 +350,39 @@
     text-decoration-thickness: var(--decoration-thickness);
   }
 
-  button.ui-badge[data-variant="link"]:hover:not(:disabled, [aria-disabled="true"]),
-  a[href].ui-badge[data-variant="link"]:hover:not(:disabled, [aria-disabled="true"]) {
-    text-decoration-color: var(--decoration-color--hover);
-    text-underline-offset: var(--decoration-offset--hover);
+  @media (hover: hover) {
+    :where([data-ui~="badge"][data-badge-variant="link"]):is(button, a[href]):hover:not(
+      :disabled,
+      [aria-disabled="true"]
+    ) {
+      --decoration-offset: calc(var(--decoration-thickness) * 2);
+    }
   }
 
-  button.ui-badge[data-variant="link"]:active:not(:disabled, [aria-disabled="true"]),
-  a[href].ui-badge[data-variant="link"]:active:not(:disabled, [aria-disabled="true"]) {
-    text-decoration-color: var(--decoration-color--active);
-    text-underline-offset: var(--decoration-offset--active);
+  :where([data-ui~="badge"][data-badge-variant="link"]):is(button, a[href]):active:not(
+    :disabled,
+    [aria-disabled="true"]
+  ) {
+    --decoration-offset: inherit; /* back to the base offset while pressed */
+  }
+
+  /* after the variants at zero specificity: a disabled badge is muted whatever its variant */
+  :where([data-ui~="badge"]:is(button, a[href]):is(:disabled, [aria-disabled="true"])) {
+    --_badge-text: var(--color-muted-foreground);
+    --_badge-bg: var(--color-muted);
+    --_badge-shadow: 0 0 transparent;
+
+    cursor: default;
+    opacity: 0.5;
+    outline: none;
   }
 
   /* ===========================================================================
-  BADGE SIZES
+  BADGE SIZES — data-badge-size
   =========================================================================== */
 
-  .ui-badge[data-size="icon"] {
-    block-size: var(--ui-badge-block-size);
-    inline-size: var(--ui-badge-block-size);
+  :where([data-ui~="badge"][data-badge-size="icon"]) {
+    inline-size: calc(var(--_h-len) + var(--_h-num) * var(--spacing));
     padding: 0;
     aspect-ratio: 1 / 1;
   }

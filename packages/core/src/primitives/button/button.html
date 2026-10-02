@@ -1,8 +1,15 @@
-<div class="flex items-center gap-sm">
-  <button class="ui-button" type="button">Default</button>
-  <button class="ui-button" data-variant="primary" type="button">Primary</button>
-  <button class="ui-button" data-variant="muted" type="button">Muted</button>
-  <button class="ui-button" data-variant="ghost" type="button">Ghost</button>
-  <button class="ui-button" data-variant="destructive" type="button">Destructive</button>
-  <button class="ui-button" data-variant="link" type="button">Link</button>
+<div
+  style="
+    --display: flex;
+    --items: center;
+    --gap: var(--space-sm);
+  "
+>
+  <button data-ui="button" type="button">Default</button>
+  <button data-ui="button" data-button-variant="primary" type="button">Primary</button>
+  <button data-ui="button" data-button-variant="muted" type="button">Muted</button>
+  <button data-ui="button" data-button-variant="ghost" type="button">Ghost</button>
+  <button data-ui="button" data-button-variant="outline" type="button">Outline</button>
+  <button data-ui="button" data-button-variant="destructive" type="button">Destructive</button>
+  <button data-ui="button" data-button-variant="link" type="button">Link</button>
 </div>

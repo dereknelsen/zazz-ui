@@ -19,19 +19,16 @@
  *    palette-wide concerns like analytics.
  */
 
-// --- Custom invoker commands ---
-
 /**
- * @description Binds this page's custom `--command` handlers. Handlers attach
- * to the command *target* (the `commandfor` element), per the Invoker
- * Commands contract.
+ * @description Binds this page's custom `--command` handlers on the command
+ * *target* (the `commandfor` element).
  */
 function initCommandActions(): void {
   const themeTarget = document.getElementById("command-actions-target");
   if (!themeTarget) return;
 
-  // The invokers polyfill can deliver the same command twice in one task even
-  // with native support: de-dupe like the toaster does.
+  // The invokers polyfill can deliver the same command twice in one task, even
+  // with native support.
   let lastEvent: Event | null = null;
 
   themeTarget.addEventListener("command", (event) => {
@@ -40,17 +37,21 @@ function initCommandActions(): void {
 
     const command = (event as CommandEvent).command;
     switch (command) {
-      case "--theme-toggle":
-        document.documentElement.classList.toggle("dark");
+      case "--theme-toggle": {
+        // data-ui-theme pins the scheme; unset follows the system
+        const root = document.documentElement;
+        const dark = root.dataset.uiTheme
+          ? root.dataset.uiTheme === "dark"
+          : matchMedia("(prefers-color-scheme: dark)").matches;
+        root.dataset.uiTheme = dark ? "light" : "dark";
         break;
+      }
       case "--copy-link":
         void navigator.clipboard?.writeText(window.location.href);
         break;
     }
   });
 }
-
-// --- Palette-wide hook ---
 
 /**
  * @description Logs every command activation: swap for analytics, recents
@@ -62,8 +63,6 @@ function initCommandSelectLogging(): void {
     console.info("[command] selected:", detail.value);
   });
 }
-
-// --- Auto-initialization ---
 
 if (typeof window !== "undefined" && typeof document !== "undefined") {
   const init = (): void => {

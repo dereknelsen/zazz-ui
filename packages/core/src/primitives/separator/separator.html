@@ -1,16 +1,44 @@
-<div class="flex flex-col gap-sm max-w-xl">
+<div
+  style="
+    --display: flex;
+    --flex-direction: column;
+    --gap: var(--space-sm);
+    --max-w: 96;
+  "
+>
   <div>
-    <p class="text-sm font-strong">Zazz Design Framework</p>
-    <p class="text-sm text-muted-foreground">Web-native primitives.</p>
+    <p
+      style="
+        --font-size: var(--font-size-sm);
+        --font-weight: var(--font-weight-strong);
+      "
+    >
+      Zazz Design Framework
+    </p>
+    <p
+      style="
+        --font-size: var(--font-size-sm);
+        --text: var(--color-muted-foreground);
+      "
+    >
+      Web-native primitives.
+    </p>
   </div>
 
-  <hr class="ui-separator" />
+  <hr data-ui="separator" />
 
-  <div class="flex flex-row items-center gap-xs text-sm">
-    <a href="#" class="ui-button" data-variant="link">Docs</a>
-    <hr class="ui-separator" data-orientation="vertical" aria-orientation="vertical" />
-    <a href="#" class="ui-button" data-variant="link">Components</a>
-    <hr class="ui-separator" data-orientation="vertical" aria-orientation="vertical" />
-    <a href="#" class="ui-button" data-variant="link">Themes</a>
+  <div
+    style="
+      --display: flex;
+      --items: center;
+      --gap: var(--space-xs);
+      --font-size: var(--font-size-sm);
+    "
+  >
+    <a href="#" data-ui="button" data-button-variant="link">Docs</a>
+    <hr data-ui="separator" data-separator-orientation="vertical" aria-orientation="vertical" />
+    <a href="#" data-ui="button" data-button-variant="link">Components</a>
+    <hr data-ui="separator" data-separator-orientation="vertical" aria-orientation="vertical" />
+    <a href="#" data-ui="button" data-button-variant="link">Themes</a>
   </div>
 </div>

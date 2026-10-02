@@ -3,14 +3,12 @@
 /**
  * @fileoverview `<ui-toaster>`: HTML web component for stacked toast notifications.
  * @description Light-DOM custom element that hosts a top-layer toast stack, plus
- * the `window.Toaster` imperative API. The stacking model (newest toast in front,
- * older toasts peeking behind, expand on hover, timer pause on hover/hidden tab)
- * is adapted from Sonner by Emil Kowalski (https://sonner.emilkowal.ski, MIT).
+ * the `window.Toaster` imperative API. Timers pause on hover and in hidden tabs.
  *
  * The region is a `popover="manual"` element: it enters the top layer via
  * `showPopover()` when the first toast arrives and leaves it after the last
  * toast's exit transition. Toasts are plain `<li>` children, so the collapsed
- * stack offsets in `_toaster.css` work with normal CSS transforms.
+ * stack offsets in `toaster.css` work with normal CSS transforms.
  *
  * Fire toasts two ways:
  * - Declaratively, from any button, via a custom Invoker Command:
@@ -22,26 +20,20 @@
  *   and the `.success()/.info()/.warning()/.error()` shorthands.
  *
  * Region attributes:
- * - `data-position`: `top-start | top-center | top-end | bottom-start |
+ * - `data-toaster-position`: `top-start | top-center | top-end | bottom-start |
  *   bottom-center | bottom-end` (logical; default `bottom-end`).
  *
- * @see https://developer.mozilla.org/en-US/docs/Web/API/Popover_API
- * @see https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API
- *
  * @example
- * <ui-toaster class="ui-toaster" id="toaster" popover="manual"></ui-toaster>
+ * <ui-toaster id="toaster" popover="manual"></ui-toaster>
  * <button commandfor="toaster" command="--toast" data-title="Saved">Save</button>
  */
 
 import { computed, effect, state } from "../../base/signals.ts";
 import { ZazzElement, defineZazzElement } from "../../base/zazz-element.ts";
 
-// `using` compiles (target ES2022) to try/finally helpers that read this
-// well-known symbol at runtime; engines without native Explicit Resource
-// Management (Safari) don't define it, so give them a local stand-in.
+// compiled `using` reads Symbol.dispose, which engines without native Explicit
+// Resource Management (Safari) lack
 (Symbol as { dispose: symbol }).dispose ??= Symbol("Symbol.dispose");
-
-// --- Constants ---
 
 /** Default toast lifetime in milliseconds. */
 const TOAST_LIFETIME = 4000;
@@ -54,8 +46,6 @@ const EXIT_FALLBACK_MS = 600;
 
 const VARIANTS: ReadonlyArray<string> = ["success", "info", "warning", "destructive"];
 
-// --- Icons (adapted from Sonner's assets.tsx (MIT, Emil Kowalski)) ---
-
 const ICONS: Record<string, string> = {
   success:
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/></svg>',
@@ -67,8 +57,6 @@ const ICONS: Record<string, string> = {
   close:
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
 };
-
-// --- Typedefs ---
 
 interface ToastAction {
   /** Button label. */
@@ -125,8 +113,6 @@ interface ToastStackLayout {
   visible: boolean;
 }
 
-// --- Measurement ---
-
 /**
  * @description Unclamps every toast's block-size for a batch measurement (the
  * inline style beats the collapsed block-size rule) and returns a disposer
@@ -145,8 +131,6 @@ function unclampForMeasure(toasts: readonly HTMLElement[]): Disposable {
     },
   };
 }
-
-// --- Stack math (pure) ---
 
 /**
  * @description Computes the collapsed-stack placement for every toast from the
@@ -180,14 +164,29 @@ function computeStackLayout(heights: number[]): {
   return { toasts, frontToastHeightPx: count > 0 ? heights[count - 1] : null };
 }
 
-// --- <ui-toaster> element ---
-
 /**
  * @class
  * @description Hosts the toast stack: builds toast markup, maintains the
  * collapsed-stack CSS custom properties, runs auto-dismiss timers, and shows or
  * hides the `popover="manual"` region as toasts come and go.
  */
+
+/**
+ * @description Adds or removes one token of an element's `data-toaster-state`
+ * list: `expanded` on the region; `front`, `visible`, `removed` on a toast.
+ */
+function setToasterState(node: Element, token: string, on: boolean): void {
+  const tokens = (node.getAttribute("data-toaster-state") ?? "").split(/\s+/).filter(Boolean);
+  const next = on ? [...new Set([...tokens, token])] : tokens.filter((t) => t !== token);
+  if (next.length) node.setAttribute("data-toaster-state", next.join(" "));
+  else node.removeAttribute("data-toaster-state");
+}
+
+/** @description Whether a toast has been dismissed and is animating out. */
+function isRemoved(toast: Element): boolean {
+  return toast.matches('[data-toaster-state~="removed"]');
+}
+
 class UiToaster extends ZazzElement {
   #timers: Map<string, ToastTimer> = new Map();
 
@@ -224,9 +223,9 @@ class UiToaster extends ZazzElement {
     if (!this.hasAttribute("tabindex")) this.setAttribute("tabindex", "-1");
 
     // The live region must exist before toasts are inserted so additions announce.
-    if (!this.querySelector('[data-slot~="toaster-list"]')) {
+    if (!this.querySelector('[data-toaster-slot~="list"]')) {
       const list = document.createElement("ol");
-      list.setAttribute("data-slot", "toaster-list");
+      list.setAttribute("data-toaster-slot", "list");
       list.setAttribute("aria-live", "polite");
       list.setAttribute("aria-relevant", "additions text");
       list.setAttribute("aria-atomic", "false");
@@ -263,7 +262,7 @@ class UiToaster extends ZazzElement {
     // one writes the computed stack placement to the DOM.
     effect(
       () => {
-        this.dataset.expanded = String(this.#expanded.get());
+        setToasterState(this, "expanded", this.#expanded.get());
       },
       { signal },
     );
@@ -287,8 +286,8 @@ class UiToaster extends ZazzElement {
         for (let i = 0; i < entries.length; i++) {
           const { node, height } = entries[i];
           const layout = toasts[i];
-          node.dataset.front = String(layout.front);
-          node.dataset.visible = String(layout.visible);
+          setToasterState(node, "front", layout.front);
+          setToasterState(node, "visible", layout.visible);
           node.style.zIndex = String(layout.zIndex);
           node.style.setProperty("--toasts-before", String(layout.stackIndex));
           node.style.setProperty("--initial-height", `${height}px`);
@@ -312,8 +311,6 @@ class UiToaster extends ZazzElement {
     for (const timer of this.#timers.values()) clearTimeout(timer.timeoutId);
     this.#timers.clear();
   }
-
-  // --- Public API ---
 
   /**
    * @description Adds a toast to this region and shows the region if needed.
@@ -347,14 +344,14 @@ class UiToaster extends ZazzElement {
       return;
     }
 
-    const toast = this.#list().querySelector(`[data-toast-id="${CSS.escape(id)}"]`);
-    if (!(toast instanceof HTMLElement) || toast.dataset.removed === "true") return;
+    const toast = this.#list().querySelector(`[data-toaster-id="${CSS.escape(id)}"]`);
+    if (!(toast instanceof HTMLElement) || isRemoved(toast)) return;
 
     const timer = this.#timers.get(id);
     if (timer) clearTimeout(timer.timeoutId);
     this.#timers.delete(id);
 
-    toast.dataset.removed = "true";
+    setToasterState(toast, "removed", true);
 
     // Keyboard users keep their place: hand focus to the next toast before this
     // one goes. A mouse click's incidental focus is left to drop to <body>;
@@ -367,7 +364,7 @@ class UiToaster extends ZazzElement {
       active.matches(":focus-visible")
     ) {
       this.#toasts()
-        .filter((t) => t.dataset.removed !== "true")
+        .filter((t) => !isRemoved(t))
         .at(-1)
         ?.focus({ preventScroll: true });
     }
@@ -381,12 +378,10 @@ class UiToaster extends ZazzElement {
    */
   dismissAll(): void {
     for (const toast of this.#toasts()) {
-      const toastId = toast.dataset.toastId;
+      const toastId = toast.dataset.toasterId;
       if (toastId) this.dismiss(toastId);
     }
   }
-
-  // --- Invoker Commands ---
 
   /**
    * @description Handles the custom `--toast` Invoker Command fired by buttons
@@ -439,8 +434,6 @@ class UiToaster extends ZazzElement {
     this.addToast(options);
   }
 
-  // --- Toast construction ---
-
   /**
    * @description Builds a toast `<li>`: status icon, title/description, and the
    * optional action and close buttons. Text is set via `textContent`.
@@ -451,30 +444,30 @@ class UiToaster extends ZazzElement {
    */
   #buildToast(options: ToastOptions, id: string): HTMLLIElement {
     const toast = document.createElement("li");
-    toast.setAttribute("data-slot", "toaster-toast");
-    toast.dataset.toastId = id;
+    toast.setAttribute("data-toaster-slot", "toast");
+    toast.dataset.toasterId = id;
     toast.tabIndex = 0;
-    if (options.variant) toast.dataset.variant = options.variant;
+    if (options.variant) toast.dataset.toasterVariant = options.variant;
 
     if (options.variant) {
       const icon = document.createElement("span");
-      icon.setAttribute("data-slot", "toaster-icon");
+      icon.setAttribute("data-toaster-slot", "icon");
       icon.setAttribute("aria-hidden", "true");
       icon.innerHTML = ICONS[options.variant];
       toast.append(icon);
     }
 
     const content = document.createElement("div");
-    content.setAttribute("data-slot", "toaster-content");
+    content.setAttribute("data-toaster-slot", "content");
     if (options.title) {
       const title = document.createElement("div");
-      title.setAttribute("data-slot", "toaster-title");
+      title.setAttribute("data-toaster-slot", "title");
       title.textContent = options.title;
       content.append(title);
     }
     if (options.description) {
       const description = document.createElement("div");
-      description.setAttribute("data-slot", "toaster-description");
+      description.setAttribute("data-toaster-slot", "description");
       description.textContent = options.description;
       content.append(description);
     }
@@ -484,9 +477,9 @@ class UiToaster extends ZazzElement {
     if (action) {
       const button = document.createElement("button");
       button.type = "button";
-      button.className = "ui-button";
-      button.setAttribute("data-slot", "toaster-action");
-      button.dataset.size = "sm";
+      button.dataset.ui = "button";
+      button.setAttribute("data-toaster-slot", "action");
+      button.dataset.buttonSize = "sm";
       button.textContent = action.label;
       button.addEventListener("click", (event) => {
         action.onClick?.(event);
@@ -498,10 +491,10 @@ class UiToaster extends ZazzElement {
     if (options.closeButton !== false) {
       const close = document.createElement("button");
       close.type = "button";
-      close.className = "ui-button";
-      close.setAttribute("data-slot", "toaster-close");
-      close.dataset.variant = "ghost";
-      close.dataset.size = "icon-sm";
+      close.dataset.ui = "button";
+      close.setAttribute("data-toaster-slot", "close");
+      close.dataset.buttonVariant = "ghost";
+      close.dataset.buttonSize = "icon-sm";
       close.setAttribute("aria-label", "Close notification");
       close.innerHTML = ICONS.close;
       close.addEventListener("click", () => this.dismiss(id));
@@ -511,20 +504,18 @@ class UiToaster extends ZazzElement {
     return toast;
   }
 
-  // --- Stack math ---
-
   /**
    * @description Remeasures the stack: the measure half of the stacking
    * model. Batch-reads every live toast's natural height and writes the
    * result into `#stack`; `#layout` derives the placement purely
    * (`computeStackLayout`) and the stack effect writes the CSS custom
-   * properties `_toaster.css` reads (`--toasts-before`, `--offset`,
-   * `--initial-height`, `--front-toast-height`) plus `data-front`,
-   * `data-visible`, and z-index. DOM order is chronological; the last child
+   * properties `toaster.css` reads (`--toasts-before`, `--offset`,
+   * `--initial-height`, `--front-toast-height`) plus `data-toaster-state~="front"`,
+   * `data-toaster-state~="visible"`, and z-index. DOM order is chronological; the last child
    * is the front (newest) toast.
    */
   #reindex(): void {
-    const toasts = this.#toasts().filter((toast) => toast.dataset.removed !== "true");
+    const toasts = this.#toasts().filter((toast) => !isRemoved(toast));
 
     // Batch-measure with heights unclamped, restored at scope exit: one
     // layout pass, no visible change (the stack effect is microtask-batched,
@@ -539,10 +530,10 @@ class UiToaster extends ZazzElement {
    * @returns The toast list (created in `connectedCallback`).
    */
   #list(): HTMLOListElement {
-    let list = this.querySelector('[data-slot~="toaster-list"]');
+    let list = this.querySelector('[data-toaster-slot~="list"]');
     if (!(list instanceof HTMLOListElement)) {
       list = document.createElement("ol");
-      list.setAttribute("data-slot", "toaster-list");
+      list.setAttribute("data-toaster-slot", "list");
       this.append(list);
     }
     return list as HTMLOListElement;
@@ -554,14 +545,12 @@ class UiToaster extends ZazzElement {
   #toasts(): HTMLElement[] {
     return Array.from(this.#list().children)
       .filter((child): child is HTMLElement => child instanceof HTMLElement)
-      .filter((child) => child.matches('[data-slot~="toaster-toast"]'));
+      .filter((child) => child.matches('[data-toaster-slot~="toast"]'));
   }
-
-  // --- Expand / collapse ---
 
   /**
    * @description Expands or collapses the stack by writing the signal state.
-   * The attribute write and the timer pause/resume (matching Sonner) are owned
+   * The attribute write and the timer pause/resume are owned
    * by the effects in `connectedCallback`: no caller has to remember them.
    *
    * @param expanded - Whether the stack is expanded.
@@ -585,8 +574,6 @@ class UiToaster extends ZazzElement {
       if (!this.matches(":hover") && !focusWithin) this.#setExpanded(false);
     }, 100);
   }
-
-  // --- Timers ---
 
   /**
    * @description Registers a toast's auto-dismiss timer and schedules it unless
@@ -635,8 +622,6 @@ class UiToaster extends ZazzElement {
     }
   }
 
-  // --- Region show/hide ---
-
   /**
    * @description Puts the region on the top layer if it isn't already.
    */
@@ -644,8 +629,7 @@ class UiToaster extends ZazzElement {
     try {
       if (!this.matches(":popover-open")) this.showPopover();
     } catch {
-      // Older engines without the Popover API: the region stays a fixed-position
-      // element, which still renders (just not on the top layer).
+      // without the Popover API the region stays a fixed-position element
     }
   }
 
@@ -664,7 +648,7 @@ class UiToaster extends ZazzElement {
    * @description Removes a dismissed toast after its exit transition (with a
    * timeout safety net), then hides the region once the stack is empty.
    *
-   * @param toast - The toast marked `data-removed="true"`.
+   * @param toast - The toast marked `data-toaster-state~="removed"`.
    */
   #finalizeRemoval(toast: HTMLElement): void {
     let done = false;
@@ -692,8 +676,6 @@ class UiToaster extends ZazzElement {
   }
 }
 
-// --- Imperative API ---
-
 /**
  * @description Resolves a target region from an id, element, or the document.
  *
@@ -707,12 +689,12 @@ function resolveRegion(region?: string | Element): UiToaster | null {
       ? region
       : typeof region === "string"
         ? document.getElementById(region)
-        : document.querySelector("ui-toaster");
+        : document.querySelector('ui-toaster, [data-ui~="toaster"]');
 
   if (node instanceof UiToaster) return node;
 
   console.warn(
-    'Toaster: no <ui-toaster> found. Add `<ui-toaster class="ui-toaster" popover="manual"></ui-toaster>` to the page.',
+    'Toaster: no <ui-toaster> found. Add `<ui-toaster popover="manual"></ui-toaster>` to the page.',
   );
   return null;
 }
@@ -804,7 +786,7 @@ const Toaster = {
    * @param id - Toast id returned by `toast()`.
    */
   dismiss(id?: string): void {
-    for (const region of document.querySelectorAll("ui-toaster")) {
+    for (const region of document.querySelectorAll('ui-toaster, [data-ui~="toaster"]')) {
       if (region instanceof UiToaster) region.dismiss(id);
     }
   },
@@ -812,12 +794,8 @@ const Toaster = {
 
 defineZazzElement("ui-toaster", UiToaster);
 
-// Attach the imperative toast API to window (the documented public surface app
-// authors call), then export for module consumers.
 if (typeof window !== "undefined") {
   window.Toaster = Toaster;
 }
 
-// computeStackLayout is exported for unit tests only; not part of the
-// documented public API (window.Toaster is the surface app authors use).
 export { Toaster, UiToaster, computeStackLayout };

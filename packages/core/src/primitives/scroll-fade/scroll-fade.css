@@ -1,0 +1,115 @@
+/**
+ * scroll-fade.css — Scroll fade ([data-ui~="scroll-fade"]): edge masks on a scroller
+ *
+ * @layer      variables, components
+ * @requires   _layers.css, _variables.css
+ * @uses       mask-image + scroll-driven animation (animation-timeline: scroll(self));
+ *             where scroll timelines are unsupported the fades are static
+ * @tokens     --ui-scroll-fade-* (@layer variables)
+ * @presets    data-scroll-fade-axis="y | x" (y when absent)
+ *
+ * The mask fades the element's start and end edges along the scroll axis, and
+ * the scroll timeline reveals each edge only while there is content beyond it.
+ * Hooks: --ui-scroll-fade-size (depth of each fade), --ui-scroll-fade-reveal (the
+ * scroll distance over which an edge fades in), --ui-scroll-fade-mask (replace the
+ * whole mask). The animated per-edge depths are registered privates.
+ */
+
+@layer variables {
+  :root {
+    --ui-scroll-fade-size: min(12%, calc(var(--spacing) * 10));
+    --ui-scroll-fade-reveal: calc(var(--spacing) * 24);
+  }
+}
+
+/* the composed mask (a private the axis preset rewrites) and the animated per-edge fade depths */
+@property --_scroll-fade-gradient {
+  syntax: "*";
+  inherits: false;
+}
+@property --_scroll-fade-start {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0px;
+}
+@property --_scroll-fade-end {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes ui-scroll-fade-reveal-start {
+  from {
+    --_scroll-fade-start: 0px;
+  }
+  to {
+    --_scroll-fade-start: var(--ui-scroll-fade-size);
+  }
+}
+
+@keyframes ui-scroll-fade-reveal-end {
+  from {
+    --_scroll-fade-end: var(--ui-scroll-fade-size);
+  }
+  to {
+    --_scroll-fade-end: 0px;
+  }
+}
+
+@layer zazz.components {
+  :where([data-ui~="scroll-fade"]) {
+    --_scroll-fade-gradient: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--_scroll-fade-start),
+      #000 calc(100% - var(--_scroll-fade-end)),
+      transparent 100%
+    );
+    -webkit-mask-image: var(--ui-scroll-fade-mask, var(--_scroll-fade-gradient));
+    mask-image: var(--ui-scroll-fade-mask, var(--_scroll-fade-gradient));
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    @supports (animation-timeline: scroll()) {
+      animation:
+        ui-scroll-fade-reveal-start 1ms ease-in-out,
+        ui-scroll-fade-reveal-end 1ms ease-in-out;
+      animation-timeline: scroll(self block), scroll(self block);
+      animation-range:
+        0 var(--ui-scroll-fade-reveal),
+        calc(100% - var(--ui-scroll-fade-reveal)) 100%;
+      animation-fill-mode: both;
+    }
+
+    @supports not (animation-timeline: scroll()) {
+      --_scroll-fade-start: var(--ui-scroll-fade-size);
+      --_scroll-fade-end: var(--ui-scroll-fade-size);
+    }
+  }
+
+  :where([data-ui~="scroll-fade"][data-scroll-fade-axis="x"]) {
+    --_scroll-fade-gradient: linear-gradient(
+      to right,
+      transparent 0,
+      #000 var(--_scroll-fade-start),
+      #000 calc(100% - var(--_scroll-fade-end)),
+      transparent 100%
+    );
+
+    &:where([dir="rtl"], [dir="rtl"] *) {
+      --_scroll-fade-gradient: linear-gradient(
+        to left,
+        transparent 0,
+        #000 var(--_scroll-fade-start),
+        #000 calc(100% - var(--_scroll-fade-end)),
+        transparent 100%
+      );
+    }
+
+    @supports (animation-timeline: scroll()) {
+      animation-timeline: scroll(self inline), scroll(self inline);
+    }
+  }
+}

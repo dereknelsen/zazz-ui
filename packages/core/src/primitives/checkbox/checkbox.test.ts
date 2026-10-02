@@ -81,15 +81,15 @@ describe("select-all groups", () => {
     expect(controller.indeterminate).toBe(true);
   });
 
-  it("reflects member state onto rows as data-state='selected'", async () => {
+  it("reflects member state onto rows as data-table-state='selected'", async () => {
     const scope = render(GROUP);
     const { controller, members } = parts(scope);
     const rows = scope.querySelectorAll("tbody tr");
-    expect(rows[0]?.getAttribute("data-state")).toBe("selected");
-    expect(rows[1]?.hasAttribute("data-state")).toBe(false);
+    expect(rows[0]?.getAttribute("data-table-state")).toBe("selected");
+    expect(rows[1]?.hasAttribute("data-table-state")).toBe(false);
     await change(controller, true);
-    expect(rows[1]?.getAttribute("data-state")).toBe("selected");
+    expect(rows[1]?.getAttribute("data-table-state")).toBe("selected");
     await change(members[0] as HTMLInputElement, false);
-    expect(rows[0]?.hasAttribute("data-state")).toBe(false);
+    expect(rows[0]?.hasAttribute("data-table-state")).toBe(false);
   });
 });

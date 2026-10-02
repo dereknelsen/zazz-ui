@@ -1,7 +1,7 @@
-<div class="ui-field">
-  <label data-slot="field-label" for="f-name">Name</label>
+<div data-ui="field">
+  <label data-field-slot="label" for="f-name">Name</label>
   <input
-    class="ui-input"
+    data-ui="input"
     id="f-name"
     name="name"
     type="text"
@@ -12,10 +12,10 @@
     enterkeyhint="next"
   />
 </div>
-<div class="ui-field">
-  <label data-slot="field-label" for="f-email">Email</label>
+<div data-ui="field">
+  <label data-field-slot="label" for="f-email">Email</label>
   <input
-    class="ui-input"
+    data-ui="input"
     id="f-email"
     name="email"
     type="email"
@@ -28,17 +28,17 @@
     enterkeyhint="next"
     aria-describedby="f-email-hint"
   />
-  <div data-slot="field-description">
-    <span data-slot="field-hint" id="f-email-hint"
+  <div data-field-slot="description">
+    <span data-field-slot="hint" id="f-email-hint"
       >We'll never sell or share your email address.</span
     >
-    <span data-slot="field-error" role="alert">Please enter a valid email address.</span>
+    <span data-field-slot="error" role="alert">Please enter a valid email address.</span>
   </div>
 </div>
-<div class="ui-field">
-  <label data-slot="field-label" for="f-phone">Phone</label>
+<div data-ui="field">
+  <label data-field-slot="label" for="f-phone">Phone</label>
   <input
-    class="ui-input"
+    data-ui="input"
     id="f-phone"
     name="phone"
     type="tel"
@@ -48,10 +48,10 @@
     enterkeyhint="next"
   />
 </div>
-<div class="ui-field">
-  <label data-slot="field-label" for="f-date">Datetime</label>
+<div data-ui="field">
+  <label data-field-slot="label" for="f-date">Datetime</label>
   <input
-    class="ui-input"
+    data-ui="input"
     id="f-date"
     name="date"
     type="datetime-local"

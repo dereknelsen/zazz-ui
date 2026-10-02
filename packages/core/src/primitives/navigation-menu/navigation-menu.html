@@ -1,12 +1,12 @@
-<header class="w-full">
-  <nav class="ui-navigation-menu container">
-    <menu data-slot="navigation-menu-list">
+<header data-ui="layout" style="--w: 100%">
+  <nav data-ui="navigation-menu">
+    <menu data-navigation-menu-slot="list">
       <!-- Rich panel: featured callout + link grid -->
-      <li data-slot="navigation-menu-item">
+      <li data-navigation-menu-slot="item">
         <button
-          class="ui-button"
-          data-slot="navigation-menu-trigger"
-          data-variant="ghost"
+          data-ui="button"
+          data-navigation-menu-slot="trigger"
+          data-button-variant="ghost"
           type="button"
           popovertarget="nav-panel-1"
         >
@@ -26,43 +26,161 @@
 
         <div
           id="nav-panel-1"
-          data-slot="navigation-menu-popover"
+          data-navigation-menu-slot="popover"
           popover="auto"
-          data-animation="slide-down"
+          data-navigation-menu-animation="slide-down"
         >
-          <div class="grid grid-cols-3" data-slot="navigation-menu-viewport">
-            <div class="grid py-xs pl-xs">
+          <div
+            data-navigation-menu-slot="viewport"
+            style="
+              --display: grid;
+              --grid-cols: 3;
+            "
+          >
+            <div
+              style="
+                --display: grid;
+                --py: var(--space-xs);
+                --pl: var(--space-xs);
+              "
+            >
               <a
                 href="#"
-                class="flex flex-col items-start justify-end bg-muted transition hover:opacity-75 rounded-sm p-sm"
+                style="
+                  --display: flex;
+                  --flex-direction: column;
+                  --items: start;
+                  --justify: end;
+                  --bg: var(--color-muted);
+                  --transition: var(--default-transition);
+                  --opacity: 1;
+                  --opacity--hover: 0.75;
+                  --rounded: var(--radius-sm);
+                  --p: var(--space-sm);
+                "
               >
-                <span class="text-eyebrow text-muted-foreground mb-xs">Featured</span>
-                <span class="text-md font-strong">Platform</span>
-                <span class="text-sm text-muted-foreground text-pretty">
+                <span
+                  style="
+                    --display: inline-flex;
+                    --font-size: var(--font-size-eyebrow);
+                    --leading: var(--leading-eyebrow);
+                    --font-weight: var(--font-weight-eyebrow);
+                    --tracking: var(--tracking-eyebrow);
+                    --text-transform: uppercase;
+                    --text: var(--color-muted-foreground);
+                    --mb: var(--space-xs);
+                  "
+                  >Featured</span
+                >
+                <span
+                  style="
+                    --font-size: var(--font-size-md);
+                    --leading: var(--leading-md);
+                    --tracking: var(--tracking-md);
+                    --font-weight: var(--font-weight-strong);
+                  "
+                  >Platform</span
+                >
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --text: var(--color-muted-foreground);
+                    --text-wrap: pretty;
+                  "
+                >
                   Everything you need to design, build, and ship.
                 </span>
               </a>
             </div>
-            <div class="flex flex-col gap-px py-xs pr-xs col-span-2">
-              <a href="#" data-slot="navigation-menu-link">
-                <span class="text-sm font-strong">Analytics</span>
-                <span class="text-sm text-muted-foreground"
+            <div
+              style="
+                --display: flex;
+                --flex-direction: column;
+                --gap: 1px;
+                --py: var(--space-xs);
+                --pr: var(--space-xs);
+                --col: span 2;
+              "
+            >
+              <a href="#" data-navigation-menu-slot="link">
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --font-weight: var(--font-weight-strong);
+                  "
+                  >Analytics</span
+                >
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --text: var(--color-muted-foreground);
+                  "
                   >Real-time insights into product usage.</span
                 >
               </a>
-              <a href="#" data-slot="navigation-menu-link">
-                <span class="text-sm font-strong">Automation</span>
-                <span class="text-sm text-muted-foreground">Workflows that run themselves.</span>
+              <a href="#" data-navigation-menu-slot="link">
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --font-weight: var(--font-weight-strong);
+                  "
+                  >Automation</span
+                >
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --text: var(--color-muted-foreground);
+                  "
+                  >Workflows that run themselves.</span
+                >
               </a>
-              <a href="#" data-slot="navigation-menu-link">
-                <span class="text-sm font-strong">Integrations</span>
-                <span class="text-sm text-muted-foreground"
+              <a href="#" data-navigation-menu-slot="link">
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --font-weight: var(--font-weight-strong);
+                  "
+                  >Integrations</span
+                >
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --text: var(--color-muted-foreground);
+                  "
                   >Connect the tools your team already uses.</span
                 >
               </a>
-              <a href="#" data-slot="navigation-menu-link">
-                <span class="text-sm font-strong">Features</span>
-                <span class="text-sm text-muted-foreground"
+              <a href="#" data-navigation-menu-slot="link">
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --font-weight: var(--font-weight-strong);
+                  "
+                  >Features</span
+                >
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --text: var(--color-muted-foreground);
+                  "
                   >Everything you need to design, build, and ship.</span
                 >
               </a>
@@ -72,11 +190,11 @@
       </li>
 
       <!-- Simple panel: single-column link list -->
-      <li data-slot="navigation-menu-item">
+      <li data-navigation-menu-slot="item">
         <button
-          class="ui-button"
-          data-slot="navigation-menu-trigger"
-          data-variant="ghost"
+          data-ui="button"
+          data-navigation-menu-slot="trigger"
+          data-button-variant="ghost"
           type="button"
           popovertarget="nav-panel-2"
         >
@@ -96,26 +214,77 @@
 
         <div
           id="nav-panel-2"
-          data-slot="navigation-menu-popover"
-          data-align="start"
+          data-navigation-menu-slot="popover"
+          data-popover-align="start"
           popover="auto"
-          data-animation="slide-down"
+          data-navigation-menu-animation="slide-down"
         >
-          <div data-slot="navigation-menu-viewport">
-            <div class="flex flex-col gap-px p-xs">
-              <a href="#" data-slot="navigation-menu-link">
-                <span class="text-sm font-strong">Documentation</span>
-                <span class="text-sm text-muted-foreground">Guides and API references.</span>
+          <div data-navigation-menu-slot="viewport">
+            <div
+              style="
+                --display: flex;
+                --flex-direction: column;
+                --gap: 1px;
+                --p: var(--space-xs);
+              "
+            >
+              <a href="#" data-navigation-menu-slot="link">
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --font-weight: var(--font-weight-strong);
+                  "
+                  >Documentation</span
+                >
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --text: var(--color-muted-foreground);
+                  "
+                  >Guides and API references.</span
+                >
               </a>
-              <a href="#" data-slot="navigation-menu-link">
-                <span class="text-sm font-strong">Blog</span>
-                <span class="text-sm text-muted-foreground"
+              <a href="#" data-navigation-menu-slot="link">
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --font-weight: var(--font-weight-strong);
+                  "
+                  >Blog</span
+                >
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --text: var(--color-muted-foreground);
+                  "
                   >Product news and engineering notes.</span
                 >
               </a>
-              <a href="#" data-slot="navigation-menu-link">
-                <span class="text-sm font-strong">Community</span>
-                <span class="text-sm text-muted-foreground"
+              <a href="#" data-navigation-menu-slot="link">
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --font-weight: var(--font-weight-strong);
+                  "
+                  >Community</span
+                >
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --text: var(--color-muted-foreground);
+                  "
                   >Join the conversation and get help.</span
                 >
               </a>
@@ -124,12 +293,12 @@
         </div>
       </li>
 
-      <!-- Submenu panel — categories whose products fly out to the right -->
-      <li data-slot="navigation-menu-item">
+      <!-- Submenu panel -->
+      <li data-navigation-menu-slot="item">
         <button
-          class="ui-button"
-          data-slot="navigation-menu-trigger"
-          data-variant="ghost"
+          data-ui="button"
+          data-navigation-menu-slot="trigger"
+          data-button-variant="ghost"
           type="button"
           popovertarget="nav-panel-3"
         >
@@ -149,20 +318,35 @@
 
         <div
           id="nav-panel-3"
-          data-slot="navigation-menu-popover"
+          data-navigation-menu-slot="popover"
           popover="auto"
-          data-animation="slide-down"
+          data-navigation-menu-animation="slide-down"
         >
-          <div data-slot="navigation-menu-viewport">
-            <div class="flex flex-col gap-px p-xs">
-              <!-- Category — opens its product list to the right -->
-              <div data-slot="navigation-menu-submenu">
+          <div data-navigation-menu-slot="viewport">
+            <div
+              style="
+                --display: flex;
+                --flex-direction: column;
+                --gap: 1px;
+                --p: var(--space-xs);
+              "
+            >
+              <!-- Category -->
+              <div data-navigation-menu-slot="submenu">
                 <button
-                  data-slot="navigation-menu-submenu-trigger"
+                  data-navigation-menu-slot="submenu-trigger"
                   type="button"
                   popovertarget="nav-submenu-1"
                 >
-                  <span class="text-sm font-strong">Design</span>
+                  <span
+                    style="
+                      --font-size: var(--font-size-sm);
+                      --leading: var(--leading-sm);
+                      --tracking: var(--tracking-sm);
+                      --font-weight: var(--font-weight-strong);
+                    "
+                    >Design</span
+                  >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                     <rect width="256" height="256" fill="none" />
                     <polyline
@@ -178,33 +362,96 @@
 
                 <div
                   id="nav-submenu-1"
-                  data-slot="navigation-menu-popover"
-                  data-variant="submenu"
+                  data-navigation-menu-slot="popover"
+                  data-navigation-menu-variant="submenu"
                   popover="auto"
                 >
-                  <div data-slot="navigation-menu-viewport">
-                    <div class="flex flex-col gap-px p-xs">
-                      <a href="#" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Figma Kit</span>
-                        <span class="text-sm text-muted-foreground"
+                  <div data-navigation-menu-slot="viewport">
+                    <div
+                      style="
+                        --display: flex;
+                        --flex-direction: column;
+                        --gap: 1px;
+                        --p: var(--space-xs);
+                      "
+                    >
+                      <a href="#" data-navigation-menu-slot="link">
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --font-weight: var(--font-weight-strong);
+                          "
+                          >Figma Kit</span
+                        >
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --text: var(--color-muted-foreground);
+                          "
                           >Variables, styles, and components.</span
                         >
                       </a>
-                      <a href="#" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Color Generator</span>
-                        <span class="text-sm text-muted-foreground"
+                      <a href="#" data-navigation-menu-slot="link">
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --font-weight: var(--font-weight-strong);
+                          "
+                          >Color Generator</span
+                        >
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --text: var(--color-muted-foreground);
+                          "
                           >OKLCH scales from a single brand hex.</span
                         >
                       </a>
-                      <a href="#" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Type Scale</span>
-                        <span class="text-sm text-muted-foreground"
+                      <a href="#" data-navigation-menu-slot="link">
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --font-weight: var(--font-weight-strong);
+                          "
+                          >Type Scale</span
+                        >
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --text: var(--color-muted-foreground);
+                          "
                           >Fluid sizes tuned with Utopia.</span
                         >
                       </a>
-                      <a href="#" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Icon Set</span>
-                        <span class="text-sm text-muted-foreground"
+                      <a href="#" data-navigation-menu-slot="link">
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --font-weight: var(--font-weight-strong);
+                          "
+                          >Icon Set</span
+                        >
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --text: var(--color-muted-foreground);
+                          "
                           >A consistent, lightweight icon library.</span
                         >
                       </a>
@@ -213,14 +460,22 @@
                 </div>
               </div>
 
-              <!-- Category — opens its product list to the right -->
-              <div data-slot="navigation-menu-submenu">
+              <!-- Category -->
+              <div data-navigation-menu-slot="submenu">
                 <button
-                  data-slot="navigation-menu-submenu-trigger"
+                  data-navigation-menu-slot="submenu-trigger"
                   type="button"
                   popovertarget="nav-submenu-2"
                 >
-                  <span class="text-sm font-strong">Development</span>
+                  <span
+                    style="
+                      --font-size: var(--font-size-sm);
+                      --leading: var(--leading-sm);
+                      --tracking: var(--tracking-sm);
+                      --font-weight: var(--font-weight-strong);
+                    "
+                    >Development</span
+                  >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                     <rect width="256" height="256" fill="none" />
                     <polyline
@@ -236,33 +491,96 @@
 
                 <div
                   id="nav-submenu-2"
-                  data-slot="navigation-menu-popover"
-                  data-variant="submenu"
+                  data-navigation-menu-slot="popover"
+                  data-navigation-menu-variant="submenu"
                   popover="auto"
                 >
-                  <div data-slot="navigation-menu-viewport">
-                    <div class="flex flex-col gap-px p-xs">
-                      <a href="#" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">CLI</span>
-                        <span class="text-sm text-muted-foreground"
+                  <div data-navigation-menu-slot="viewport">
+                    <div
+                      style="
+                        --display: flex;
+                        --flex-direction: column;
+                        --gap: 1px;
+                        --p: var(--space-xs);
+                      "
+                    >
+                      <a href="#" data-navigation-menu-slot="link">
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --font-weight: var(--font-weight-strong);
+                          "
+                          >CLI</span
+                        >
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --text: var(--color-muted-foreground);
+                          "
                           >Scaffold and ship from the terminal.</span
                         >
                       </a>
-                      <a href="#" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">React Components</span>
-                        <span class="text-sm text-muted-foreground"
+                      <a href="#" data-navigation-menu-slot="link">
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --font-weight: var(--font-weight-strong);
+                          "
+                          >React Components</span
+                        >
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --text: var(--color-muted-foreground);
+                          "
                           >Token-driven primitives for your app.</span
                         >
                       </a>
-                      <a href="#" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">REST API</span>
-                        <span class="text-sm text-muted-foreground"
+                      <a href="#" data-navigation-menu-slot="link">
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --font-weight: var(--font-weight-strong);
+                          "
+                          >REST API</span
+                        >
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --text: var(--color-muted-foreground);
+                          "
                           >Programmatic access to your design data.</span
                         >
                       </a>
-                      <a href="#" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Webhooks</span>
-                        <span class="text-sm text-muted-foreground"
+                      <a href="#" data-navigation-menu-slot="link">
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --font-weight: var(--font-weight-strong);
+                          "
+                          >Webhooks</span
+                        >
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --text: var(--color-muted-foreground);
+                          "
                           >React to changes in real time.</span
                         >
                       </a>
@@ -271,14 +589,22 @@
                 </div>
               </div>
 
-              <!-- Category — opens its product list to the right -->
-              <div data-slot="navigation-menu-submenu">
+              <!-- Category -->
+              <div data-navigation-menu-slot="submenu">
                 <button
-                  data-slot="navigation-menu-submenu-trigger"
+                  data-navigation-menu-slot="submenu-trigger"
                   type="button"
                   popovertarget="nav-submenu-3"
                 >
-                  <span class="text-sm font-strong">Content</span>
+                  <span
+                    style="
+                      --font-size: var(--font-size-sm);
+                      --leading: var(--leading-sm);
+                      --tracking: var(--tracking-sm);
+                      --font-weight: var(--font-weight-strong);
+                    "
+                    >Content</span
+                  >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                     <rect width="256" height="256" fill="none" />
                     <polyline
@@ -294,27 +620,76 @@
 
                 <div
                   id="nav-submenu-3"
-                  data-slot="navigation-menu-popover"
-                  data-variant="submenu"
+                  data-navigation-menu-slot="popover"
+                  data-navigation-menu-variant="submenu"
                   popover="auto"
                 >
-                  <div data-slot="navigation-menu-viewport">
-                    <div class="flex flex-col gap-px p-xs">
-                      <a href="#" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">CMS</span>
-                        <span class="text-sm text-muted-foreground"
+                  <div data-navigation-menu-slot="viewport">
+                    <div
+                      style="
+                        --display: flex;
+                        --flex-direction: column;
+                        --gap: 1px;
+                        --p: var(--space-xs);
+                      "
+                    >
+                      <a href="#" data-navigation-menu-slot="link">
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --font-weight: var(--font-weight-strong);
+                          "
+                          >CMS</span
+                        >
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --text: var(--color-muted-foreground);
+                          "
                           >Structured content for any surface.</span
                         >
                       </a>
-                      <a href="#" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Localization</span>
-                        <span class="text-sm text-muted-foreground"
+                      <a href="#" data-navigation-menu-slot="link">
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --font-weight: var(--font-weight-strong);
+                          "
+                          >Localization</span
+                        >
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --text: var(--color-muted-foreground);
+                          "
                           >Ship in every language your users speak.</span
                         >
                       </a>
-                      <a href="#" data-slot="navigation-menu-link">
-                        <span class="text-sm font-strong">Media Library</span>
-                        <span class="text-sm text-muted-foreground"
+                      <a href="#" data-navigation-menu-slot="link">
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --font-weight: var(--font-weight-strong);
+                          "
+                          >Media Library</span
+                        >
+                        <span
+                          style="
+                            --font-size: var(--font-size-sm);
+                            --leading: var(--leading-sm);
+                            --tracking: var(--tracking-sm);
+                            --text: var(--color-muted-foreground);
+                          "
                           >Optimized assets, delivered fast.</span
                         >
                       </a>
@@ -327,12 +702,17 @@
         </div>
       </li>
 
-      <li class="ml-auto mr-xs" data-slot="navigation-menu-item">
-        <!-- Form dialog START -->
+      <li
+        data-navigation-menu-slot="item"
+        style="
+          --ml: auto;
+          --mr: var(--space-xs);
+        "
+      >
         <button
-          class="ui-button"
+          data-ui="button"
           type="button"
-          data-variant="ghost"
+          data-button-variant="ghost"
           command="show-modal"
           commandfor="form-sign-in-1"
         >
@@ -368,20 +748,44 @@
             />
           </svg>
         </button>
-        <dialog id="form-sign-in-1" class="ui-dialog" closedby="any">
-          <form method="dialog" data-slot="dialog-content">
-            <header data-slot="dialog-header">
-              <h2 class="text-lg font-heading font-strong">Sign in</h2>
-              <p class="text-muted-foreground">Enter your email and password to sign in.</p>
+        <dialog id="form-sign-in-1" data-ui="dialog" closedby="any">
+          <form method="dialog" data-dialog-slot="content">
+            <header data-dialog-slot="header">
+              <h2
+                style="
+                  --font-size: var(--font-size-lg);
+                  --leading: var(--leading-lg);
+                  --tracking: var(--tracking-lg);
+                  --font-family: var(--font-family-heading);
+                  --font-weight: var(--font-weight-strong);
+                "
+              >
+                Sign in
+              </h2>
+              <p style="--text: var(--color-muted-foreground)">
+                Enter your email and password to sign in.
+              </p>
             </header>
-            <div class="flex flex-col gap-md" data-slot="dialog-body">
-              <fieldset class="ui-field-group">
-                <legend class="sr-only">Sign in</legend>
-                <div class="grid gap-xs">
-                  <div class="ui-field">
-                    <label data-slot="field-label" for="fd-email">Email</label>
+            <div
+              data-dialog-slot="body"
+              style="
+                --display: flex;
+                --flex-direction: column;
+                --gap: var(--space-md);
+              "
+            >
+              <fieldset data-ui="field-group">
+                <legend data-ui="sr-only">Sign in</legend>
+                <div
+                  style="
+                    --display: grid;
+                    --gap: var(--space-xs);
+                  "
+                >
+                  <div data-ui="field">
+                    <label data-field-slot="label" for="fd-email">Email</label>
                     <input
-                      class="ui-input"
+                      data-ui="input"
                       id="fd-email"
                       name="email"
                       type="email"
@@ -391,23 +795,22 @@
                       autocomplete="email"
                       aria-describedby="fd-email-hint"
                     />
-                    <div data-slot="field-description">
-                      <span data-slot="field-hint" id="fd-email-hint"
+                    <div data-field-slot="description">
+                      <span data-field-slot="hint" id="fd-email-hint"
                         >We'll only use this to send receipts.</span
                       >
-                      <span data-slot="field-error" role="alert"
+                      <span data-field-slot="error" role="alert"
                         >Please enter a valid email address.</span
                       >
                     </div>
                   </div>
 
-                  <!-- Password START -->
-                  <div class="ui-field">
-                    <label data-slot="field-label" for="f-login-password">Password</label>
+                  <div data-ui="field">
+                    <label data-field-slot="label" for="f-login-password">Password</label>
                     <ui-password>
-                      <label class="ui-password-group">
+                      <label data-ui="password-group">
                         <input
-                          class="ui-input"
+                          data-ui="input"
                           id="f-login-password"
                           name="password"
                           type="password"
@@ -417,20 +820,23 @@
                           placeholder="••••••••"
                           aria-describedby="f-login-password-hint f-login-password-warning"
                         />
-                        <span data-slot="password-group-addon" data-align="inline-end">
+                        <span
+                          data-password-group-slot="addon"
+                          data-password-group-align="inline-end"
+                        >
                           <button
-                            class="ui-button"
-                            data-slot="password-group-toggle"
+                            data-ui="button"
+                            data-password-group-slot="toggle"
                             id="f-login-password-toggle"
-                            data-variant="ghost"
-                            data-size="icon-sm"
+                            data-button-variant="ghost"
+                            data-button-size="icon-sm"
                             type="button"
                             aria-pressed="false"
                             aria-label="Show password"
                             aria-describedby="f-login-password-warning"
                           >
                             <svg
-                              data-slot="password-group-icon password-group-icon-show"
+                              data-password-group-slot="icon icon-show"
                               xmlns="http://www.w3.org/2000/svg"
                               viewBox="0 0 256 256"
                               aria-hidden="true"
@@ -456,7 +862,7 @@
                               />
                             </svg>
                             <svg
-                              data-slot="password-group-icon password-group-icon-hide"
+                              data-password-group-slot="icon icon-hide"
                               xmlns="http://www.w3.org/2000/svg"
                               viewBox="0 0 256 256"
                               aria-hidden="true"
@@ -502,21 +908,20 @@
                         </span>
                       </label>
                     </ui-password>
-                    <div data-slot="field-description">
-                      <span data-slot="field-error" role="alert">Incorrect email or password.</span>
+                    <div data-field-slot="description">
+                      <span data-field-slot="error" role="alert">Incorrect email or password.</span>
                     </div>
-                    <span class="sr-only" id="f-login-password-warning"
+                    <span data-ui="sr-only" id="f-login-password-warning"
                       >Warning: showing the password makes it visible to anyone near your
                       screen.</span
                     >
                   </div>
-                  <!-- Password END -->
                 </div>
               </fieldset>
             </div>
-            <footer data-slot="dialog-footer">
+            <footer data-dialog-slot="footer">
               <button
-                class="ui-button"
+                data-ui="button"
                 type="button"
                 value="cancel"
                 commandfor="form-sign-in-1"
@@ -524,16 +929,16 @@
               >
                 Cancel
               </button>
-              <button class="ui-button" data-variant="primary" type="submit" value="save">
+              <button data-ui="button" data-button-variant="primary" type="submit" value="save">
                 Sign in
               </button>
             </footer>
           </form>
           <button
-            class="ui-button"
-            data-slot="dialog-close"
-            data-size="icon"
-            data-variant="ghost"
+            data-ui="button"
+            data-dialog-slot="close"
+            data-button-size="icon"
+            data-button-variant="ghost"
             type="button"
             commandfor="form-sign-in-1"
             command="close"
@@ -564,12 +969,11 @@
             </svg>
           </button>
         </dialog>
-        <!-- Form dialog END -->
       </li>
 
       <!-- Plain CTA — no popover -->
-      <li data-slot="navigation-menu-item">
-        <a href="#" class="ui-button" data-variant="primary">Get started</a>
+      <li data-navigation-menu-slot="item">
+        <a href="#" data-ui="button" data-button-variant="primary">Get started</a>
       </li>
     </menu>
   </nav>

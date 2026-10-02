@@ -1,8 +1,20 @@
-<div class="flex w-full items-center gap-px bg-card border-b p-xs" aria-label="Application menu">
+<div
+  aria-label="Application menu"
+  style="
+    --border-b-width: 1px;
+    --border-b-color: var(--color-border);
+    --display: flex;
+    --w: 100%;
+    --items: center;
+    --gap: 1px;
+    --bg: var(--color-card);
+    --p: var(--space-xs);
+  "
+>
   <ui-menu>
     <button
-      class="ui-button"
-      data-variant="ghost"
+      data-ui="button"
+      data-button-variant="ghost"
       type="button"
       popovertarget="menubar-example-file"
       interestfor="menubar-example-file"
@@ -11,30 +23,62 @@
     </button>
     <div
       id="menubar-example-file"
-      data-slot="menu-popover"
-      data-side="bottom"
-      data-align="start"
+      data-menu-slot="popover"
+      data-popover-side="bottom"
+      data-popover-align="start"
       popover="auto"
     >
       <menu>
         <li>
-          <button class="ui-button w-full justify-between" data-variant="ghost" type="button">
+          <button
+            data-ui="button"
+            data-button-variant="ghost"
+            type="button"
+            style="
+              --w: 100%;
+              --justify: space-between;
+            "
+          >
             New window
           </button>
         </li>
         <li>
-          <button class="ui-button w-full justify-between" data-variant="ghost" type="button">
+          <button
+            data-ui="button"
+            data-button-variant="ghost"
+            type="button"
+            style="
+              --w: 100%;
+              --justify: space-between;
+            "
+          >
             Open...
           </button>
         </li>
         <li>
-          <button class="ui-button w-full justify-between" data-variant="ghost" type="button">
+          <button
+            data-ui="button"
+            data-button-variant="ghost"
+            type="button"
+            style="
+              --w: 100%;
+              --justify: space-between;
+            "
+          >
             Save
           </button>
         </li>
-        <hr class="ui-separator my-xs" />
+        <hr data-ui="separator" style="--my: var(--space-xs)" />
         <li>
-          <button class="ui-button w-full justify-between" data-variant="ghost" type="button">
+          <button
+            data-ui="button"
+            data-button-variant="ghost"
+            type="button"
+            style="
+              --w: 100%;
+              --justify: space-between;
+            "
+          >
             Close window
           </button>
         </li>
@@ -44,8 +88,8 @@
 
   <ui-menu>
     <button
-      class="ui-button"
-      data-variant="ghost"
+      data-ui="button"
+      data-button-variant="ghost"
       type="button"
       popovertarget="menubar-example-edit"
       interestfor="menubar-example-edit"
@@ -54,35 +98,75 @@
     </button>
     <div
       id="menubar-example-edit"
-      data-slot="menu-popover"
-      data-side="bottom"
-      data-align="start"
+      data-menu-slot="popover"
+      data-popover-side="bottom"
+      data-popover-align="start"
       popover="auto"
     >
       <menu>
         <li>
-          <button class="ui-button w-full justify-between" data-variant="ghost" type="button">
+          <button
+            data-ui="button"
+            data-button-variant="ghost"
+            type="button"
+            style="
+              --w: 100%;
+              --justify: space-between;
+            "
+          >
             Undo
           </button>
         </li>
         <li>
-          <button class="ui-button w-full justify-between" data-variant="ghost" type="button">
+          <button
+            data-ui="button"
+            data-button-variant="ghost"
+            type="button"
+            style="
+              --w: 100%;
+              --justify: space-between;
+            "
+          >
             Redo
           </button>
         </li>
-        <hr class="ui-separator my-xs" />
+        <hr data-ui="separator" style="--my: var(--space-xs)" />
         <li>
-          <button class="ui-button w-full justify-between" data-variant="ghost" type="button">
+          <button
+            data-ui="button"
+            data-button-variant="ghost"
+            type="button"
+            style="
+              --w: 100%;
+              --justify: space-between;
+            "
+          >
             Cut
           </button>
         </li>
         <li>
-          <button class="ui-button w-full justify-between" data-variant="ghost" type="button">
+          <button
+            data-ui="button"
+            data-button-variant="ghost"
+            type="button"
+            style="
+              --w: 100%;
+              --justify: space-between;
+            "
+          >
             Copy
           </button>
         </li>
         <li>
-          <button class="ui-button w-full justify-between" data-variant="ghost" type="button">
+          <button
+            data-ui="button"
+            data-button-variant="ghost"
+            type="button"
+            style="
+              --w: 100%;
+              --justify: space-between;
+            "
+          >
             Paste
           </button>
         </li>
@@ -92,8 +176,8 @@
 
   <ui-menu>
     <button
-      class="ui-button"
-      data-variant="ghost"
+      data-ui="button"
+      data-button-variant="ghost"
       type="button"
       popovertarget="menubar-example-view"
       interestfor="menubar-example-view"
@@ -102,24 +186,48 @@
     </button>
     <div
       id="menubar-example-view"
-      data-slot="menu-popover"
-      data-side="bottom"
-      data-align="start"
+      data-menu-slot="popover"
+      data-popover-side="bottom"
+      data-popover-align="start"
       popover="auto"
     >
       <menu>
         <li>
-          <button class="ui-button w-full justify-between" data-variant="ghost" type="button">
+          <button
+            data-ui="button"
+            data-button-variant="ghost"
+            type="button"
+            style="
+              --w: 100%;
+              --justify: space-between;
+            "
+          >
             Zoom in
           </button>
         </li>
         <li>
-          <button class="ui-button w-full justify-between" data-variant="ghost" type="button">
+          <button
+            data-ui="button"
+            data-button-variant="ghost"
+            type="button"
+            style="
+              --w: 100%;
+              --justify: space-between;
+            "
+          >
             Zoom out
           </button>
         </li>
         <li>
-          <button class="ui-button w-full justify-between" data-variant="ghost" type="button">
+          <button
+            data-ui="button"
+            data-button-variant="ghost"
+            type="button"
+            style="
+              --w: 100%;
+              --justify: space-between;
+            "
+          >
             Full screen
           </button>
         </li>
@@ -129,8 +237,8 @@
 
   <ui-menu>
     <button
-      class="ui-button"
-      data-variant="ghost"
+      data-ui="button"
+      data-button-variant="ghost"
       type="button"
       popovertarget="menubar-example-help"
       interestfor="menubar-example-help"
@@ -139,24 +247,45 @@
     </button>
     <div
       id="menubar-example-help"
-      data-slot="menu-popover"
-      data-side="bottom"
-      data-align="end"
+      data-menu-slot="popover"
+      data-popover-side="bottom"
+      data-popover-align="end"
       popover="auto"
     >
       <menu>
         <li>
-          <a href="#" class="ui-button w-full justify-between" data-variant="ghost"
+          <a
+            href="#"
+            data-ui="button"
+            data-button-variant="ghost"
+            style="
+              --w: 100%;
+              --justify: space-between;
+            "
             >Documentation</a
           >
         </li>
         <li>
-          <a href="#" class="ui-button w-full justify-between" data-variant="ghost"
+          <a
+            href="#"
+            data-ui="button"
+            data-button-variant="ghost"
+            style="
+              --w: 100%;
+              --justify: space-between;
+            "
             >Keyboard shortcuts</a
           >
         </li>
         <li>
-          <a href="#" class="ui-button w-full justify-between" data-variant="ghost"
+          <a
+            href="#"
+            data-ui="button"
+            data-button-variant="ghost"
+            style="
+              --w: 100%;
+              --justify: space-between;
+            "
             >Report an issue</a
           >
         </li>

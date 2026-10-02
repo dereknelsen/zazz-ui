@@ -1,8 +1,8 @@
-<div class="ui-field">
-  <label data-slot="field-label" for="f-search">Search</label>
-  <label class="ui-input-group">
+<div data-ui="field">
+  <label data-field-slot="label" for="f-search">Search</label>
+  <label data-ui="input-group">
     <input
-      class="ui-input"
+      data-ui="input"
       id="f-search"
       type="search"
       name="q"
@@ -13,7 +13,7 @@
       enterkeyhint="search"
       aria-describedby="f-search-hint"
     />
-    <span data-slot="input-group-addon">
+    <span data-input-group-slot="addon">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
         <rect width="256" height="256" fill="none" />
         <circle
@@ -39,11 +39,11 @@
         />
       </svg>
     </span>
-    <span data-slot="input-group-addon" data-align="inline-end">
+    <span data-input-group-slot="addon" data-input-group-align="inline-end">
       <button
-        class="ui-button"
-        data-variant="ghost"
-        data-size="icon-sm"
+        data-ui="button"
+        data-button-variant="ghost"
+        data-button-size="icon-sm"
         type="submit"
         aria-label="Submit search"
       >
@@ -72,16 +72,16 @@
       </button>
     </span>
   </label>
-  <div data-slot="field-description">
-    <span data-slot="field-hint" id="f-search-hint">Search across every page in the docs.</span>
+  <div data-field-slot="description">
+    <span data-field-slot="hint" id="f-search-hint">Search across every page in the docs.</span>
   </div>
 </div>
 
-<div class="ui-field">
-  <label data-slot="field-label" for="f-url">Website</label>
-  <label class="ui-input-group">
+<div data-ui="field">
+  <label data-field-slot="label" for="f-url">Website</label>
+  <label data-ui="input-group">
     <input
-      class="ui-input"
+      data-ui="input"
       id="f-url"
       type="url"
       name="url"
@@ -94,38 +94,48 @@
       enterkeyhint="go"
       aria-describedby="f-url-hint"
     />
-    <span data-slot="input-group-addon">
-      <span data-slot="input-group-text">https://</span>
+    <span data-input-group-slot="addon">
+      <span data-input-group-slot="text">https://</span>
     </span>
-    <span data-slot="input-group-addon" data-align="inline-end">
-      <button class="ui-button" data-variant="primary" data-size="sm" type="submit">Apply</button>
+    <span data-input-group-slot="addon" data-input-group-align="inline-end">
+      <button data-ui="button" data-button-variant="primary" data-button-size="sm" type="submit">
+        Apply
+      </button>
     </span>
   </label>
-  <div data-slot="field-description">
-    <span data-slot="field-hint" id="f-url-hint">Where people can find you online.</span>
-    <span data-slot="field-error" role="alert">Enter a valid URL, e.g. https://zazz.sh.</span>
+  <div data-field-slot="description">
+    <span data-field-slot="hint" id="f-url-hint">Where people can find you online.</span>
+    <span data-field-slot="error" role="alert">Enter a valid URL, e.g. https://zazz.sh.</span>
   </div>
 </div>
 
-<div class="ui-field">
-  <label data-slot="field-label" for="f-prompt">Prompt</label>
-  <label class="ui-input-group">
+<div data-ui="field">
+  <label data-field-slot="label" for="f-prompt">Prompt</label>
+  <label data-ui="input-group">
     <textarea
       id="f-prompt"
-      class="ui-textarea"
+      data-ui="textarea"
       name="prompt"
       inputmode="text"
       placeholder="Ask anything…"
       aria-describedby="f-prompt-hint"
     ></textarea>
-    <span data-slot="input-group-addon" data-align="block-end">
-      <button class="ui-button bg-background ml-auto" data-size="sm" type="submit">
+    <span data-input-group-slot="addon" data-input-group-align="block-end">
+      <button
+        data-ui="button"
+        data-button-size="sm"
+        type="submit"
+        style="
+          --bg: var(--color-background);
+          --ml: auto;
+        "
+      >
         <span>Send</span> <kbd>↵</kbd>
       </button>
     </span>
   </label>
-  <div data-slot="field-description">
-    <span data-slot="field-hint" id="f-prompt-hint"
+  <div data-field-slot="description">
+    <span data-field-slot="hint" id="f-prompt-hint"
       >Enter to send · Shift + Enter for a new line.</span
     >
   </div>

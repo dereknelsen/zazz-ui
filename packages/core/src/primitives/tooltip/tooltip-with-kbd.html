@@ -1,9 +1,9 @@
 <ui-tooltip>
   <button
     type="button"
-    class="ui-button"
-    data-variant="muted"
-    data-size="icon"
+    data-ui="button"
+    data-button-variant="muted"
+    data-button-size="icon"
     interestfor="tooltip-example-save-1"
     aria-label="Save"
   >
@@ -15,12 +15,12 @@
       />
     </svg>
   </button>
-  <div data-slot="tooltip-content" id="tooltip-example-save-1" popover="hint">
+  <div data-tooltip-slot="content" id="tooltip-example-save-1" popover="hint">
     Save
     <ui-kbd-group>
       <kbd>⌘</kbd>
       <kbd>S</kbd>
     </ui-kbd-group>
-    <span data-slot="tooltip-arrow" aria-hidden="true"></span>
+    <span data-tooltip-slot="arrow" aria-hidden="true"></span>
   </div>
 </ui-tooltip>

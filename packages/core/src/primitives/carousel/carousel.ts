@@ -8,7 +8,7 @@
  * dynamically inserted or SPA-swapped carousels need no manual wiring.
  *
  * The element *is* the carousel root — CSS and `embla.js` target
- * `:is(ui-carousel, .ui-carousel)` directly, and `data-carousel-*`
+ * `:is(ui-carousel, [data-ui~="carousel"])` directly, and `data-carousel-*`
  * configuration attributes are read off the element (see embla.js for the
  * full attribute reference). No shadow DOM; children are regular markup.
  *
@@ -16,19 +16,16 @@
  * first opens (a closed dialog is `display: none`, so Embla cannot measure
  * the viewport).
  *
- * Load order: the module graph resolves it — `index.js` imports embla.js
- * (which imports the Embla packages via the page's import map) before this file.
- *
  * @example
  * <ui-carousel data-carousel-loop="true">
- *   <div data-slot="carousel-viewport">
- *     <div data-slot="carousel-container">
- *       <div data-slot="carousel-slide">Slide 1</div>
- *       <div data-slot="carousel-slide">Slide 2</div>
+ *   <div data-carousel-slot="viewport">
+ *     <div data-carousel-slot="container">
+ *       <div data-carousel-slot="slide">Slide 1</div>
+ *       <div data-carousel-slot="slide">Slide 2</div>
  *     </div>
  *   </div>
- *   <button type="button" data-slot="carousel-prev">Prev</button>
- *   <button type="button" data-slot="carousel-next">Next</button>
+ *   <button type="button" data-carousel-slot="prev">Prev</button>
+ *   <button type="button" data-carousel-slot="next">Next</button>
  * </ui-carousel>
  */
 
@@ -41,7 +38,7 @@ class UiCarouselElement extends ZazzElement {
     const dialog = this.closest("dialog");
     if (dialog && !dialog.open) {
       // Closed dialogs are display:none — Embla can't measure the viewport.
-      // Initialize on the dialog's open instead (zazz:dialog-open, ADR-0003).
+      // Initialize on the dialog's open instead (zazz:dialog-open).
       dialog.addEventListener("zazz:dialog-open", () => this.init(), { signal });
       return;
     }

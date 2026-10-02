@@ -1,19 +1,18 @@
 /**
- * reveal.css — Scroll reveals ([data-reveal])
+ * reveal.css — Scroll reveals ([data-reveal] / [data-reveal-each]; the script marks
+ *              revealed targets data-reveal-state="in-view")
  *
  * @layer      variables, utilities
- * @requires   layers.css, _variables.css
+ * @requires   _layers.css, _variables.css
  * @uses       prefers-reduced-motion — native media feature
  * @uses       sibling-index(), sibling-count() — native stagger delays (@supports
- *             gated — no Firefox yet; where unsupported, reveal.js writes a
- *             per-child --ui-reveal-wait instead)
+ *             gated; where unsupported, reveal.js writes a per-child
+ *             --ui-reveal-wait instead)
  * @uses       Behaviour requires zazz/scripts/reveal.js (IntersectionObserver)
  * @tokens     --ui-reveal-global-* (@layer variables);
  *             per-instance --ui-reveal-* set from data-* attributes by reveal.js;
  *             --ui-reveal-stagger-base / --ui-reveal-stagger-step written on stagger
  *             groups by reveal.js for the native sibling-index() path
- * @version    0.1.0
- * @since      0.1.0
  *
  * A lightweight, configurable animation system for scroll-based reveals. Focuses
  * on viewport entry animations for single elements and direct children of stagger
@@ -55,10 +54,9 @@
 }
 
 @layer zazz.utilities {
-  /* --- Animation Styles --- */
   @media screen and (prefers-reduced-motion: no-preference) {
-    /* Effective values + hidden state. Kept at :where() (0,0,0) so the
-       .in-viewport final state overrides opacity with minimal specificity. */
+    /* Effective values + hidden state, at :where() specificity so the in-view
+       final state overrides it. */
     :where(
       [data-reveal]:not([data-gjs-type]),
       [data-reveal-each]:not([data-gjs-type]) > *:not([data-gjs-type])
@@ -71,11 +69,10 @@
       opacity: 0;
     }
 
-    /* Transition config — deliberately NOT wrapped in :where(), so its (0,1,0)
-       beats bare transition utilities (e.g. .transition is :where(.transition)
-       = 0,0,0) that share this layer and would otherwise reset transition-delay,
-       wiping out the per-child stagger. The gjs exclusion uses :not(:where())
-       to add no specificity, so the fade override below still wins on order. */
+    /* Deliberately not wrapped in :where(): its (0,1,0) specificity beats bare
+       transition utilities in this layer that would reset transition-delay and
+       wipe out the per-child stagger. The gjs exclusion uses :not(:where()) to
+       add no specificity, so the fade override below still wins on order. */
     [data-reveal]:not(:where([data-gjs-type])),
     [data-reveal-each]:not(:where([data-gjs-type])) > *:not(:where([data-gjs-type])) {
       transition-timing-function: var(--ui-reveal-effective-ease);
@@ -84,13 +81,10 @@
       transition-property: opacity, transform;
     }
 
-    /* --- Stagger timing (native) --- */
-    /* Each stagger child derives its own delay from its DOM position:
-       wait = base + step × (index − 1); reversed groups count from the end.
-       reveal.js writes --ui-reveal-stagger-base/-step on the group (from
-       data-reveal-wait / data-reveal-step, config defaults applied) and skips
-       the per-child --ui-reveal-wait it falls back to where sibling-index() is
-       unsupported (Firefox). The literal 80ms mirrors the JS default step. */
+    /* Native stagger: wait = base + step × (index − 1); reversed groups count
+       from the end. reveal.js writes the base/step on the group and skips its
+       per-child --ui-reveal-wait fallback here. The literal 80ms mirrors the JS
+       default step. */
     @supports (top: calc(sibling-index() * 1px)) {
       [data-reveal-each] > * {
         --ui-reveal-wait: calc(
@@ -107,56 +101,53 @@
       }
     }
 
-    /* Slide animations */
-    [data-reveal="slide-up"]:not(:where(.in-viewport, [data-gjs-type])),
-    [data-reveal-each="slide-up"] > *:not(:where(.in-viewport, [data-gjs-type])) {
+    [data-reveal="slide-up"]:not(:where([data-reveal-state~="in-view"], [data-gjs-type])),
+    [data-reveal-each="slide-up"] > *:not(:where([data-reveal-state~="in-view"], [data-gjs-type])) {
       transform: translateY(var(--ui-reveal-effective-distance));
     }
 
-    [data-reveal="slide-down"]:not(:where(.in-viewport, [data-gjs-type])),
-    [data-reveal-each="slide-down"] > *:not(:where(.in-viewport, [data-gjs-type])) {
+    [data-reveal="slide-down"]:not(:where([data-reveal-state~="in-view"], [data-gjs-type])),
+    [data-reveal-each="slide-down"]
+      > *:not(:where([data-reveal-state~="in-view"], [data-gjs-type])) {
       transform: translateY(calc(-1 * var(--ui-reveal-effective-distance)));
     }
 
-    [data-reveal="slide-left"]:not(:where(.in-viewport, [data-gjs-type])),
-    [data-reveal-each="slide-left"] > *:not(:where(.in-viewport, [data-gjs-type])) {
+    [data-reveal="slide-left"]:not(:where([data-reveal-state~="in-view"], [data-gjs-type])),
+    [data-reveal-each="slide-left"]
+      > *:not(:where([data-reveal-state~="in-view"], [data-gjs-type])) {
       transform: translateX(var(--ui-reveal-effective-distance));
     }
 
-    [data-reveal="slide-right"]:not(:where(.in-viewport, [data-gjs-type])),
-    [data-reveal-each="slide-right"] > *:not(:where(.in-viewport, [data-gjs-type])) {
+    [data-reveal="slide-right"]:not(:where([data-reveal-state~="in-view"], [data-gjs-type])),
+    [data-reveal-each="slide-right"]
+      > *:not(:where([data-reveal-state~="in-view"], [data-gjs-type])) {
       transform: translateX(calc(-1 * var(--ui-reveal-effective-distance)));
     }
 
-    /* Fade animation */
-    [data-reveal="fade"]:not(:where(.in-viewport, [data-gjs-type])),
-    [data-reveal-each="fade"] > *:not(:where(.in-viewport, [data-gjs-type])) {
+    [data-reveal="fade"]:not(:where([data-reveal-state~="in-view"], [data-gjs-type])),
+    [data-reveal-each="fade"] > *:not(:where([data-reveal-state~="in-view"], [data-gjs-type])) {
       transition-property: opacity;
       transform: none;
     }
 
-    /* Scale animations */
-    [data-reveal="grow"]:not(:where(.in-viewport, [data-gjs-type])),
-    [data-reveal-each="grow"] > *:not(:where(.in-viewport, [data-gjs-type])) {
+    [data-reveal="grow"]:not(:where([data-reveal-state~="in-view"], [data-gjs-type])),
+    [data-reveal-each="grow"] > *:not(:where([data-reveal-state~="in-view"], [data-gjs-type])) {
       transform: scale(var(--ui-reveal-scale, var(--ui-reveal-global-grow)));
     }
 
-    [data-reveal="shrink"]:not(:where(.in-viewport, [data-gjs-type])),
-    [data-reveal-each="shrink"] > *:not(:where(.in-viewport, [data-gjs-type])) {
+    [data-reveal="shrink"]:not(:where([data-reveal-state~="in-view"], [data-gjs-type])),
+    [data-reveal-each="shrink"] > *:not(:where([data-reveal-state~="in-view"], [data-gjs-type])) {
       transform: scale(var(--ui-reveal-scale, var(--ui-reveal-global-shrink)));
     }
 
-    /* Final state */
-    [data-reveal]:where(.in-viewport, [data-gjs-type]),
-    [data-reveal-each] > *:where(.in-viewport, [data-gjs-type]) {
+    [data-reveal]:where([data-reveal-state~="in-view"], [data-gjs-type]),
+    [data-reveal-each] > *:where([data-reveal-state~="in-view"], [data-gjs-type]) {
       opacity: 1;
       transform: none;
     }
   }
 
-  /* --- Accessibility: Reduced Motion --- */
   @media (prefers-reduced-motion: reduce) {
-    /* Immediately show elements without transition */
     :where([data-reveal], [data-reveal-each] > *) {
       transition: none !important;
       transform: none !important;

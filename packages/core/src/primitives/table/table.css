@@ -1,10 +1,15 @@
 /**
- * table.css — Table (.ui-table)
+ * table.css — Table ([data-ui~="table"])
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css, _reset.css
+ * @requires   _layers.css, _variables.css, _reset.css, _properties.css (--_*-resolved)
  * @uses       oklch(from …) — translucent hover/footer tints
- * @tokens     --ui-table-* (@layer variables)
+ * @tokens     --ui-table-* (@layer variables; part hooks are read on cells, so presets
+ *             set the inheriting hooks rather than privates)
+ *
+ * Presets: data-table-variant="alternating | grid", data-table-size="sm",
+ * data-table-layout="fixed"; on a row data-table-state="selected"; on the
+ * caption data-table-caption="top".
  */
 
 @layer variables {
@@ -12,92 +17,88 @@
     --ui-table-font-family: var(--font-family-body);
     --ui-table-font-size: var(--font-size-sm);
 
-    --ui-table-foreground: var(--foreground);
-    --ui-table-background: transparent;
+    --ui-table-text: var(--color-foreground);
+    --ui-table-bg: transparent;
 
     /* structural borders — the outer/footer rule, the header separator,
-       the tbody row dividers, and the column dividers (grid variant) */
-    --ui-table-border: 1px solid var(--border);
+       the tbody row dividers, and the column dividers (grid preset) */
+    --ui-table-border: 1px solid var(--color-border);
     --ui-table-head-border: var(--ui-table-border);
     --ui-table-row-border: var(--ui-table-border);
     --ui-table-column-border: none;
 
-    --ui-table-cell-padding-block: var(--step-2);
-    --ui-table-cell-padding-inline: var(--step-2);
+    --ui-table-cell-py: calc(var(--spacing) * 2);
+    --ui-table-cell-px: calc(var(--spacing) * 2);
 
-    --ui-table-head-block-size: var(--step-10);
-    --ui-table-head-foreground: var(--foreground);
+    --ui-table-head-h: calc(var(--spacing) * 10);
+    --ui-table-head-text: var(--color-foreground);
     --ui-table-head-font-weight: var(--font-weight-strong);
 
-    --ui-table-foot-background: oklch(from var(--muted) l c h / calc(alpha / 2));
+    --ui-table-foot-bg: oklch(from var(--color-muted) l c h / calc(alpha / 2));
     --ui-table-foot-font-weight: var(--font-weight-strong);
 
-    --ui-table-row-background--hover: oklch(from var(--muted) l c h / calc(alpha / 2));
-    --ui-table-row-background--selected: var(--muted);
+    --ui-table-row-bg--hover: oklch(from var(--color-muted) l c h / calc(alpha / 2));
+    --ui-table-row-bg--selected: var(--color-muted);
 
-    --ui-table-alternating-background: var(--muted);
+    --ui-table-alternating-bg: var(--color-muted);
 
-    --ui-table-caption-foreground: var(--muted-foreground);
-    --ui-table-caption-padding-block: var(--gap-xs);
-    --ui-table-caption-padding-inline: var(--gap-xs);
+    --ui-table-caption-text: var(--color-muted-foreground);
+    --ui-table-caption-py: var(--space-xs);
+    --ui-table-caption-px: var(--space-xs);
   }
 }
 
 @layer zazz.components {
-  /* ===========================================================================
-  TABLE
-  =========================================================================== */
-
-  .ui-table {
-    font-family: var(--ui-table-font-family);
-    font-size: var(--ui-table-font-size);
+  :where([data-ui~="table"]) {
+    font-family: var(--_font-family-resolved, var(--ui-table-font-family));
+    font-size: var(--_font-size-resolved, var(--ui-table-font-size));
     font-variant-numeric: tabular-nums;
 
     inline-size: 100%;
 
-    color: var(--ui-table-foreground);
-    background-color: var(--ui-table-background);
+    color: var(--_text-resolved, var(--ui-table-text));
+    background-color: var(--_bg-resolved, var(--ui-table-bg));
 
     caption-side: bottom;
     text-align: start;
   }
 
-  .ui-table :is(th, td) {
-    padding-block: var(--ui-table-cell-padding-block);
-    padding-inline: var(--ui-table-cell-padding-inline);
+  :where([data-ui~="table"]) :is(th, td) {
+    padding-block: var(--ui-table-cell-py);
+    padding-inline: var(--ui-table-cell-px);
     vertical-align: middle;
     text-align: start;
     border-inline: var(--ui-table-column-border);
   }
 
-  .ui-table th {
-    color: var(--ui-table-head-foreground);
+  :where([data-ui~="table"]) th {
+    color: var(--ui-table-head-text);
     font-weight: var(--ui-table-head-font-weight);
   }
 
-  .ui-table thead th {
-    block-size: var(--ui-table-head-block-size);
+  :where([data-ui~="table"]) thead th {
+    block-size: var(--ui-table-head-h);
     padding-block: 0;
   }
 
-  .ui-table thead tr {
+  :where([data-ui~="table"]) thead tr {
     border-block-end: var(--ui-table-head-border);
   }
 
-  .ui-table tbody tr:not(:last-child) {
+  :where([data-ui~="table"]) tbody tr:not(:last-child) {
     border-block-end: var(--ui-table-row-border);
   }
 
-  .ui-table tfoot {
-    background-color: var(--ui-table-foot-background);
+  :where([data-ui~="table"]) tfoot {
+    background-color: var(--ui-table-foot-bg);
     font-weight: var(--ui-table-foot-font-weight);
     border-block-start: var(--ui-table-border);
   }
 
-  .ui-table caption {
-    color: var(--ui-table-caption-foreground);
-    padding-block: var(--ui-table-caption-padding-block);
-    padding-inline: var(--ui-table-caption-padding-inline);
+  :where([data-ui~="table"]) caption {
+    color: var(--ui-table-caption-text);
+    padding-block: var(--ui-table-caption-py);
+    padding-inline: var(--ui-table-caption-px);
   }
 
   /* ===========================================================================
@@ -105,12 +106,12 @@
   =========================================================================== */
 
   /* omit = table-layout: auto */
-  .ui-table[data-layout="fixed"] {
+  :where([data-ui~="table"][data-table-layout="fixed"]) {
     table-layout: fixed;
   }
 
-  /* omit = caption-side: bottom (set on .ui-table) */
-  .ui-table caption[data-side="top"] {
+  /* omit = caption-side: bottom (set on the table) */
+  :where([data-ui~="table"]) caption[data-table-caption="top"] {
     caption-side: top;
   }
 
@@ -119,40 +120,42 @@
   =========================================================================== */
 
   /* hover/selected paint on the cells so they layer above any row stripe;
-     disable hover with --ui-table-row-background--hover: transparent */
-  .ui-table tbody tr:hover > :is(th, td) {
-    background-color: var(--ui-table-row-background--hover);
+     disable hover with --ui-table-row-bg--hover: transparent */
+  @media (hover: hover) {
+    :where([data-ui~="table"]) tbody tr:hover > :is(th, td) {
+      background-color: var(--ui-table-row-bg--hover);
+    }
   }
 
-  .ui-table tbody tr[data-state="selected"] > :is(th, td) {
-    background-color: var(--ui-table-row-background--selected);
+  :where([data-ui~="table"]) tbody tr[data-table-state~="selected"] > :is(th, td) {
+    background-color: var(--ui-table-row-bg--selected);
   }
 
   /* ===========================================================================
-  TABLE VARIANTS
+  TABLE VARIANTS — data-table-variant sets the inheriting part hooks
   =========================================================================== */
 
-  .ui-table[data-variant="alternating"] {
+  :where([data-ui~="table"][data-table-variant="alternating"]) {
     --ui-table-row-border: none;
   }
 
-  .ui-table[data-variant="alternating"] tbody tr:nth-child(even) {
-    background-color: var(--ui-table-alternating-background);
+  :where([data-ui~="table"][data-table-variant="alternating"]) tbody tr:nth-child(even) {
+    background-color: var(--ui-table-alternating-bg);
   }
 
-  .ui-table[data-variant="grid"] {
+  :where([data-ui~="table"][data-table-variant="grid"]) {
     --ui-table-column-border: var(--ui-table-border);
 
     border: var(--ui-table-border);
   }
 
   /* ===========================================================================
-  TABLE SIZES
+  TABLE SIZES — data-table-size
   =========================================================================== */
 
-  .ui-table[data-size="sm"] {
-    --ui-table-cell-padding-block: var(--step-1);
-    --ui-table-cell-padding-inline: var(--step-1_5);
-    --ui-table-head-block-size: var(--step-8);
+  :where([data-ui~="table"][data-table-size="sm"]) {
+    --ui-table-cell-py: var(--spacing);
+    --ui-table-cell-px: calc(var(--spacing) * 1.5);
+    --ui-table-head-h: calc(var(--spacing) * 8);
   }
 }

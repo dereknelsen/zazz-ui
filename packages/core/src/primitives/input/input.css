@@ -1,29 +1,30 @@
 /**
- * input.css — Text input (.ui-input)
+ * input.css — Text input ([data-ui~="input"])
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css, fields.css, _reset.css
+ * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-ring), fields.css, _reset.css
  * @uses       ::-webkit-calendar-picker-indicator — date/time picker chrome (WebKit)
  * @uses       mask — calendar icon (not background-image, for color: currentColor)
- * @tokens     --ui-input-* (@layer variables)
+ * @tokens     --ui-input-* (@layer variables; surface colors and height read the
+ *             --ui-field-* family directly)
  */
 
 @layer variables {
   :root {
-    --ui-input-inline-size: 100%;
-    --ui-input-min-inline-size: 16ch;
-    --ui-input-padding-inline-start: var(--ui-field-padding);
-    --ui-input-padding-inline-end: var(--ui-field-padding);
+    --ui-input-w: 100%;
+    --ui-input-min-w: 16ch;
+    --ui-input-pl: var(--ui-field-px);
+    --ui-input-pr: var(--ui-field-px);
     --ui-input-font-size: var(--ui-field-font-size);
-    --ui-input-line-height: var(--ui-field-line-height);
+    --ui-input-leading: var(--ui-field-leading);
     --ui-input-border-width: var(--ui-field-border-width);
     --ui-input-border-style: var(--ui-field-border-style);
     --ui-input-border-color: var(--ui-field-border-color);
-    --ui-input-radius: var(--ui-field-radius);
+    --ui-input-rounded: var(--ui-field-rounded);
 
     --ui-input-calendar-picker-color: currentColor;
-    --ui-input-calendar-picker-icon-size: var(--step-4);
-    --ui-input-calendar-picker-size: var(--step-6);
+    --ui-input-calendar-picker-icon-size: calc(var(--spacing) * 4);
+    --ui-input-calendar-picker-size: calc(var(--spacing) * 6);
     --ui-input-calendar-picker-radius: var(--ui-field-inset-child-radius);
     --ui-input-calendar-picker-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Crect x='40' y='40' width='176' height='176' rx='8' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='176' y1='24' x2='176' y2='56' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='80' y1='24' x2='80' y2='56' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='40' y1='88' x2='216' y2='88' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3C/svg%3E");
   }
@@ -31,63 +32,80 @@
 
 @layer zazz.components {
   /* ===========================================================================
-  TEXT INPUTS — .ui-input
-  - One class for every text-like type (text, search, email, number, date, …);
+  TEXT INPUTS — data-ui="input"
+  - One identity for every text-like type (text, search, email, number, date, …);
     the type only changes the picker/keyboard, not the box.
-  - Shares the --ui-field-* tokens defined in fields.css so it aligns with .ui-select,
-    .ui-textarea, and .ui-button.
+  - Shares the --ui-field-* tokens defined in fields.css so it aligns with the select,
+    the textarea, and [data-ui~="button"].
   =========================================================================== */
 
-  .ui-input {
-    inline-size: var(--ui-input-inline-size);
-    min-inline-size: var(--ui-input-min-inline-size);
-    block-size: var(--ui-field-block-size);
-    padding-inline-start: var(--ui-input-padding-inline-start);
-    padding-inline-end: var(--ui-input-padding-inline-end);
+  :where([data-ui~="input"]) {
+    /* dual-mode metrics go through the registered typed pair */
+    --_w-len: var(--_w-resolved, var(--ui-input-w));
+    --_w-num: var(--_w-resolved, var(--ui-input-w));
+    inline-size: calc(var(--_w-len) + var(--_w-num) * var(--spacing));
+    --_min-w-len: var(--_min-w-resolved, var(--ui-input-min-w));
+    --_min-w-num: var(--_min-w-resolved, var(--ui-input-min-w));
+    min-inline-size: calc(var(--_min-w-len) + var(--_min-w-num) * var(--spacing));
+    --_h-len: var(--_h-resolved, var(--ui-field-h));
+    --_h-num: var(--_h-resolved, var(--ui-field-h));
+    block-size: calc(var(--_h-len) + var(--_h-num) * var(--spacing));
+    --_pl-len: var(--_pl-resolved, var(--ui-input-pl));
+    --_pl-num: var(--_pl-resolved, var(--ui-input-pl));
+    padding-inline-start: calc(var(--_pl-len) + var(--_pl-num) * var(--spacing));
+    --_pr-len: var(--_pr-resolved, var(--ui-input-pr));
+    --_pr-num: var(--_pr-resolved, var(--ui-input-pr));
+    padding-inline-end: calc(var(--_pr-len) + var(--_pr-num) * var(--spacing));
 
-    font-size: var(--ui-input-font-size);
-    line-height: var(--ui-input-line-height);
-    color: var(--ui-field-foreground);
-    background-color: var(--ui-field-background);
+    font-size: var(--_font-size-resolved, var(--ui-input-font-size));
+    line-height: var(--_leading-resolved, var(--ui-input-leading));
+    color: var(--_text-resolved, var(--ui-field-text));
+    background-color: var(--_bg-resolved, var(--ui-field-bg));
 
-    border: var(--ui-input-border-width) var(--ui-input-border-style) var(--ui-input-border-color);
-    border-radius: var(--ui-input-radius);
+    border-width: var(--_border-width-resolved, var(--ui-input-border-width));
+    border-style: var(--_border-style-resolved, var(--ui-input-border-style));
+    border-color: var(--_border-color-resolved, var(--ui-input-border-color));
+    border-radius: var(--_rounded-resolved, var(--ui-input-rounded));
 
-    /* ring renders as box-shadow; transparent outline twin keeps focus visible
-       in forced-colors / high-contrast modes */
+    /* The ring is published to --_focus-ring so a --shadow utility keeps
+       it; the transparent outline twin keeps focus visible in forced-colors */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    --_ring: color-mix(in oklch, var(--ui-field-ring-color) var(--ring-opacity), transparent);
-    box-shadow:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring, var(--ring));
+    --_ring-fill: color-mix(in oklch, var(--ui-field-ring-color) var(--ring-opacity), transparent);
+    --_focus-ring:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+        var(--_ring-fill, var(--ring-shadow-color));
+    box-shadow: var(--_focus-ring, 0 0 #0000), var(--_shadow-resolved, 0 0 #0000);
     outline: var(--outline-width) var(--outline-style) transparent;
     outline-offset: var(--outline-offset);
 
     transition: var(--default-transition);
   }
 
-  .ui-input:hover {
-    border-color: var(--ui-field-border-color--hover);
-    background-color: var(--ui-field-background--hover);
+  @media (hover: hover) {
+    :where([data-ui~="input"]):hover {
+      border-color: var(--_border-color-resolved, var(--ui-field-border-color--hover));
+      background-color: var(--_bg-resolved, var(--ui-field-bg--hover));
+    }
   }
 
-  .ui-input:focus-within {
-    background-color: var(--ui-field-background--focus);
-    border-color: var(--ui-field-border-color--focus);
+  :where([data-ui~="input"]):focus-within {
+    background-color: var(--_bg-resolved, var(--ui-field-bg--focus-within));
+    border-color: var(--_border-color-resolved, var(--ui-field-border-color--focus-within));
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
     outline-color: transparent;
   }
 
-  .ui-input[type="date"],
-  .ui-input[type="time"],
-  .ui-input[type="datetime-local"] {
-    --ui-input-padding-inline-end: var(--step-1_5);
+  :where([data-ui~="input"])[type="date"],
+  :where([data-ui~="input"])[type="time"],
+  :where([data-ui~="input"])[type="datetime-local"] {
+    --ui-input-pr: calc(var(--spacing) * 1.5);
   }
 
   /* Native date/time controls keep their picker indicator tinted to the text */
-  .ui-input::-webkit-calendar-picker-indicator {
+  :where([data-ui~="input"])::-webkit-calendar-picker-indicator {
     cursor: pointer;
     -webkit-appearance: none;
 
@@ -110,7 +128,27 @@
     background-position: center;
   }
 
-  .ui-input::-webkit-calendar-picker-indicator:is(:hover) {
+  :where([data-ui~="input"])::-webkit-calendar-picker-indicator:is(:hover) {
     opacity: 0.5;
+  }
+}
+
+/* Disabled and committed-invalid states; an invalid control remaps the
+   --ui-field-* family on itself. */
+@layer zazz.components {
+  :where([data-ui~="input"]):disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  :where([data-ui~="input"]):user-invalid {
+    --ui-field-bg: color-mix(in oklch, var(--color-destructive) 5%, var(--color-input));
+    --ui-field-bg--hover: color-mix(in oklch, var(--color-destructive) 10%, var(--color-input));
+    --ui-field-border-color: var(--color-destructive);
+    --ui-field-border-color--hover: var(--color-destructive);
+    --ui-field-border-color--focus-within: var(--color-destructive);
+    --ui-field-ring-color: var(--color-destructive);
+
+    border-color: var(--color-destructive);
   }
 }

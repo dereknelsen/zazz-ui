@@ -1,88 +1,125 @@
 /**
- * radio.css — Radio (.ui-radio, .ui-radio-group)
+ * radio.css — Radio ([data-ui~="radio"] on input[type="radio"]; groups wear [data-ui~="radio-group"])
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css, fields.css (.ui-field-group layout, --ui-field-* surface/border)
- * @uses       appearance: none — custom circle + radial-gradient dot when :checked
+ * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-ring), fields.css (field-group layout, --ui-field-* surface/border)
+ * @uses       appearance: none — custom circle + masked ::before dot when :checked
  * @tokens     --ui-radio-* (@layer variables)
  */
 
 @layer variables {
   :root {
-    /* Surface + border default to the shared --ui-field-* family (owned in
-       fields.css) so a radio reads as one family with the controls around it. */
-    --ui-radio-size: var(--step-4_5);
-    --ui-radio-background: var(--ui-field-background);
-    --ui-radio-background--checked: var(--primary);
+    --ui-radio-size: calc(var(--spacing) * 4.5);
+    --ui-radio-bg: var(--ui-field-bg);
+    --ui-radio-bg--checked: var(--color-primary);
+    --ui-radio-dot-foreground: var(--color-primary-foreground);
     --ui-radio-border-width: var(--ui-field-border-width);
     --ui-radio-border-style: var(--ui-field-border-style);
     --ui-radio-border-color: var(--ui-field-border-color);
     --ui-radio-border-color--hover: var(--ui-field-border-color--hover);
-    --ui-radio-border-color--checked: var(--primary);
-    --ui-radio-radius: var(--radius-full);
-    --ui-radio-background-size: 90%;
-    --ui-radio-dot-foreground: var(--primary-foreground);
-    --ui-radio-dot-inner-stop: 28%;
-    --ui-radio-dot-outer-stop: 30%;
-    --ui-radio-dot-gradient: radial-gradient(
-      circle,
-      var(--ui-radio-dot-foreground) 0 var(--ui-radio-dot-inner-stop),
-      transparent var(--ui-radio-dot-outer-stop)
-    );
+    --ui-radio-border-color--checked: var(--color-primary);
+    --ui-radio-rounded: var(--radius-full);
+    --ui-radio-dot-size: 1em;
+    --ui-radio-dot-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' fill='currentColor' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3C/svg%3E")
+      center / contain no-repeat;
   }
 }
 
 @layer zazz.components {
   /* ===========================================================================
-  RADIO — .ui-radio (+ .ui-radio-group)
+  RADIO — data-ui="radio" (+ data-ui="radio-group")
   - appearance: none redraws the circle from theme tokens; the checked dot is a
-    radial-gradient so it tracks --ui-radio-dot-foreground, not colour alone.
-  - Group by shared `name`; wrap in a <fieldset>/<legend> or .ui-radio-group for an
-    accessible labelled set.
+    masked ::before so it tracks --ui-radio-dot-foreground, not colour alone.
+  - Group by shared `name` inside a <fieldset>/<legend> or [data-ui~="radio-group"].
   =========================================================================== */
 
-  .ui-radio {
+  :where([data-ui~="radio"]) {
+    position: relative;
     appearance: none;
     flex-shrink: 0;
-    inline-size: var(--ui-radio-size);
-    block-size: var(--ui-radio-size);
+    --_size-len: var(--_size-resolved, var(--ui-radio-size));
+    --_size-num: var(--_size-resolved, var(--ui-radio-size));
+    inline-size: calc(var(--_size-len) + var(--_size-num) * var(--spacing));
+    block-size: calc(var(--_size-len) + var(--_size-num) * var(--spacing));
 
-    background-color: var(--ui-radio-background);
-    border: var(--ui-radio-border-width) var(--ui-radio-border-style) var(--ui-radio-border-color);
-    border-radius: var(--ui-radio-radius);
+    background-color: var(--_bg-resolved, var(--ui-radio-bg));
+    border-width: var(--_border-width-resolved, var(--ui-radio-border-width));
+    border-style: var(--_border-style-resolved, var(--ui-radio-border-style));
+    border-color: var(--_border-color-resolved, var(--ui-radio-border-color));
+    border-radius: var(--_rounded-resolved, var(--ui-radio-rounded));
 
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: var(--ui-radio-background-size);
+    /* centres the ::before dot */
+    display: inline-grid;
+    place-items: center;
+    background-clip: padding-box;
 
     cursor: pointer;
 
-    /* ring renders as box-shadow; transparent outline twin keeps focus visible
-       in forced-colors / high-contrast modes */
+    /* the transparent outline keeps focus visible in forced-colors */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    box-shadow:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring, var(--ring));
+    --_focus-ring:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+        var(--_ring-fill, var(--ring-shadow-color));
+    box-shadow: var(--_focus-ring, 0 0 #0000), var(--_shadow-resolved, 0 0 #0000);
     outline: var(--outline-width) var(--outline-style) transparent;
     outline-offset: var(--outline-offset);
 
-    transition: var(--default-transition);
+    transition-property: border-color, background-color, color, opacity, box-shadow;
+    transition-duration: var(--default-transition-duration);
+    transition-timing-function: var(--default-transition-timing-function);
   }
 
-  .ui-radio:hover {
-    border-color: var(--ui-radio-border-color--hover);
+  @media (hover: hover) {
+    :where([data-ui~="radio"]):hover {
+      border-color: var(--_border-color-resolved, var(--ui-radio-border-color--hover));
+    }
   }
 
-  .ui-radio:focus-visible {
+  :where([data-ui~="radio"]):focus-visible {
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
     outline-color: transparent;
   }
 
-  .ui-radio:checked {
-    background-color: var(--ui-radio-background--checked);
-    border-color: var(--ui-radio-border-color--checked);
-    background-image: var(--ui-radio-dot-gradient);
+  :where([data-ui~="radio"]):checked {
+    background-color: var(--_bg-resolved, var(--ui-radio-bg--checked));
+    border-color: var(--_border-color-resolved, var(--ui-radio-border-color--checked));
+    color: var(--ui-radio-dot-foreground);
+  }
+
+  /* masked ::before dot painted in currentColor; the :where() closes before
+     the pseudo-element, which is invalid inside it */
+  :where([data-ui~="radio"]:checked)::before {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    background-color: currentColor;
+    inline-size: var(--ui-radio-dot-size);
+    block-size: var(--ui-radio-dot-size);
+    max-inline-size: 100%;
+    max-block-size: 100%;
+    mask: var(--ui-radio-dot-mask);
+    transition-property: background-color, opacity, transform;
+    transition-duration: calc(var(--default-transition-duration) * 0.75);
+    transition-delay: calc(var(--default-transition-duration) * 0.25);
+    transition-timing-function: var(--default-transition-timing-function);
+    transform: scale(1);
+    opacity: 1;
+    will-change: transform;
+
+    @starting-style {
+      transform: scale(0);
+      opacity: 0;
+    }
+  }
+}
+
+/* An invalid control remaps the --ui-field-* family on itself. */
+@layer zazz.components {
+  :where([data-ui~="radio"]):disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }

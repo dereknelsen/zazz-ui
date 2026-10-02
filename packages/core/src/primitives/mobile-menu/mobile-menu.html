@@ -1,6 +1,6 @@
 <button
-  class="ui-button"
-  data-size="icon"
+  data-ui="button"
+  data-button-size="icon"
   type="button"
   command="show-modal"
   commandfor="mobile-menu-1"
@@ -46,18 +46,27 @@
 
 <dialog
   id="mobile-menu-1"
-  class="ui-dialog ui-mobile-menu border-none"
-  data-size="screen"
-  data-animation="slide-right"
+  data-ui="dialog mobile-menu"
+  data-dialog-size="screen"
+  data-mobile-menu-animation="slide-right"
   closedby="any"
+  style="--border-width: 0"
 >
-  <div data-slot="mobile-menu-viewport">
-    <div data-slot="mobile-menu-header">
-      <span class="text-md font-strong">Menu</span>
+  <div data-mobile-menu-slot="viewport">
+    <div data-mobile-menu-slot="header">
+      <span
+        style="
+          --font-size: var(--font-size-md);
+          --leading: var(--leading-md);
+          --tracking: var(--tracking-md);
+          --font-weight: var(--font-weight-strong);
+        "
+        >Menu</span
+      >
       <button
-        class="ui-button"
-        data-variant="ghost"
-        data-size="icon"
+        data-ui="button"
+        data-button-variant="ghost"
+        data-button-size="icon"
         type="button"
         commandfor="mobile-menu-1"
         command="close"
@@ -89,11 +98,18 @@
       </button>
     </div>
 
-    <div data-slot="mobile-menu-body">
+    <div data-mobile-menu-slot="body">
       <ui-accordion>
         <!-- Platform -->
         <details>
-          <summary class="ui-button w-full justify-between" data-variant="ghost">
+          <summary
+            data-ui="button"
+            data-button-variant="ghost"
+            style="
+              --w: 100%;
+              --justify: space-between;
+            "
+          >
             Platform
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
               <rect width="256" height="256" fill="none" />
@@ -107,26 +123,130 @@
               />
             </svg>
           </summary>
-          <div class="flex flex-col pb-sm">
-            <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-              <span class="text-sm font-strong">Analytics</span>
-              <span class="text-sm text-muted-foreground"
+          <div
+            style="
+              --display: flex;
+              --flex-direction: column;
+              --pb: var(--space-sm);
+            "
+          >
+            <a
+              href="#"
+              data-ui="button"
+              data-button-variant="ghost"
+              style="
+                --display: flex;
+                --flex-direction: column;
+                --items: start;
+                --p: var(--space-xs);
+              "
+            >
+              <span
+                style="
+                  --font-size: var(--font-size-sm);
+                  --leading: var(--leading-sm);
+                  --tracking: var(--tracking-sm);
+                  --font-weight: var(--font-weight-strong);
+                "
+                >Analytics</span
+              >
+              <span
+                style="
+                  --font-size: var(--font-size-sm);
+                  --leading: var(--leading-sm);
+                  --tracking: var(--tracking-sm);
+                  --text: var(--color-muted-foreground);
+                "
                 >Real-time insights into product usage.</span
               >
             </a>
-            <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-              <span class="text-sm font-strong">Automation</span>
-              <span class="text-sm text-muted-foreground">Workflows that run themselves.</span>
+            <a
+              href="#"
+              data-ui="button"
+              data-button-variant="ghost"
+              style="
+                --display: flex;
+                --flex-direction: column;
+                --items: start;
+                --p: var(--space-xs);
+              "
+            >
+              <span
+                style="
+                  --font-size: var(--font-size-sm);
+                  --leading: var(--leading-sm);
+                  --tracking: var(--tracking-sm);
+                  --font-weight: var(--font-weight-strong);
+                "
+                >Automation</span
+              >
+              <span
+                style="
+                  --font-size: var(--font-size-sm);
+                  --leading: var(--leading-sm);
+                  --tracking: var(--tracking-sm);
+                  --text: var(--color-muted-foreground);
+                "
+                >Workflows that run themselves.</span
+              >
             </a>
-            <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-              <span class="text-sm font-strong">Integrations</span>
-              <span class="text-sm text-muted-foreground"
+            <a
+              href="#"
+              data-ui="button"
+              data-button-variant="ghost"
+              style="
+                --display: flex;
+                --flex-direction: column;
+                --items: start;
+                --p: var(--space-xs);
+              "
+            >
+              <span
+                style="
+                  --font-size: var(--font-size-sm);
+                  --leading: var(--leading-sm);
+                  --tracking: var(--tracking-sm);
+                  --font-weight: var(--font-weight-strong);
+                "
+                >Integrations</span
+              >
+              <span
+                style="
+                  --font-size: var(--font-size-sm);
+                  --leading: var(--leading-sm);
+                  --tracking: var(--tracking-sm);
+                  --text: var(--color-muted-foreground);
+                "
                 >Connect the tools your team already uses.</span
               >
             </a>
-            <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-              <span class="text-sm font-strong">Features</span>
-              <span class="text-sm text-muted-foreground"
+            <a
+              href="#"
+              data-ui="button"
+              data-button-variant="ghost"
+              style="
+                --display: flex;
+                --flex-direction: column;
+                --items: start;
+                --p: var(--space-xs);
+              "
+            >
+              <span
+                style="
+                  --font-size: var(--font-size-sm);
+                  --leading: var(--leading-sm);
+                  --tracking: var(--tracking-sm);
+                  --font-weight: var(--font-weight-strong);
+                "
+                >Features</span
+              >
+              <span
+                style="
+                  --font-size: var(--font-size-sm);
+                  --leading: var(--leading-sm);
+                  --tracking: var(--tracking-sm);
+                  --text: var(--color-muted-foreground);
+                "
                 >Everything you need to design, build, and ship.</span
               >
             </a>
@@ -135,7 +255,14 @@
 
         <!-- Resources -->
         <details>
-          <summary class="ui-button w-full justify-between" data-variant="ghost">
+          <summary
+            data-ui="button"
+            data-button-variant="ghost"
+            style="
+              --w: 100%;
+              --justify: space-between;
+            "
+          >
             Resources
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
               <rect width="256" height="256" fill="none" />
@@ -149,25 +276,116 @@
               />
             </svg>
           </summary>
-          <div class="flex flex-col pb-sm">
-            <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-              <span class="text-sm font-strong">Documentation</span>
-              <span class="text-sm text-muted-foreground">Guides and API references.</span>
+          <div
+            style="
+              --display: flex;
+              --flex-direction: column;
+              --pb: var(--space-sm);
+            "
+          >
+            <a
+              href="#"
+              data-ui="button"
+              data-button-variant="ghost"
+              style="
+                --display: flex;
+                --flex-direction: column;
+                --items: start;
+                --p: var(--space-xs);
+              "
+            >
+              <span
+                style="
+                  --font-size: var(--font-size-sm);
+                  --leading: var(--leading-sm);
+                  --tracking: var(--tracking-sm);
+                  --font-weight: var(--font-weight-strong);
+                "
+                >Documentation</span
+              >
+              <span
+                style="
+                  --font-size: var(--font-size-sm);
+                  --leading: var(--leading-sm);
+                  --tracking: var(--tracking-sm);
+                  --text: var(--color-muted-foreground);
+                "
+                >Guides and API references.</span
+              >
             </a>
-            <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-              <span class="text-sm font-strong">Blog</span>
-              <span class="text-sm text-muted-foreground">Product news and engineering notes.</span>
+            <a
+              href="#"
+              data-ui="button"
+              data-button-variant="ghost"
+              style="
+                --display: flex;
+                --flex-direction: column;
+                --items: start;
+                --p: var(--space-xs);
+              "
+            >
+              <span
+                style="
+                  --font-size: var(--font-size-sm);
+                  --leading: var(--leading-sm);
+                  --tracking: var(--tracking-sm);
+                  --font-weight: var(--font-weight-strong);
+                "
+                >Blog</span
+              >
+              <span
+                style="
+                  --font-size: var(--font-size-sm);
+                  --leading: var(--leading-sm);
+                  --tracking: var(--tracking-sm);
+                  --text: var(--color-muted-foreground);
+                "
+                >Product news and engineering notes.</span
+              >
             </a>
-            <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-              <span class="text-sm font-strong">Community</span>
-              <span class="text-sm text-muted-foreground">Join the conversation and get help.</span>
+            <a
+              href="#"
+              data-ui="button"
+              data-button-variant="ghost"
+              style="
+                --display: flex;
+                --flex-direction: column;
+                --items: start;
+                --p: var(--space-xs);
+              "
+            >
+              <span
+                style="
+                  --font-size: var(--font-size-sm);
+                  --leading: var(--leading-sm);
+                  --tracking: var(--tracking-sm);
+                  --font-weight: var(--font-weight-strong);
+                "
+                >Community</span
+              >
+              <span
+                style="
+                  --font-size: var(--font-size-sm);
+                  --leading: var(--leading-sm);
+                  --tracking: var(--tracking-sm);
+                  --text: var(--color-muted-foreground);
+                "
+                >Join the conversation and get help.</span
+              >
             </a>
           </div>
         </details>
 
         <!-- Products — nested accordions for subcategories -->
         <details>
-          <summary class="ui-button w-full justify-between" data-variant="ghost">
+          <summary
+            data-ui="button"
+            data-button-variant="ghost"
+            style="
+              --w: 100%;
+              --justify: space-between;
+            "
+          >
             Products
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
               <rect width="256" height="256" fill="none" />
@@ -181,11 +399,24 @@
               />
             </svg>
           </summary>
-          <div class="flex flex-col pb-sm">
+          <div
+            style="
+              --display: flex;
+              --flex-direction: column;
+              --pb: var(--space-sm);
+            "
+          >
             <ui-accordion>
               <!-- Design -->
               <details>
-                <summary class="ui-button w-full justify-between" data-variant="ghost">
+                <summary
+                  data-ui="button"
+                  data-button-variant="ghost"
+                  style="
+                    --w: 100%;
+                    --justify: space-between;
+                  "
+                >
                   Design
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                     <rect width="256" height="256" fill="none" />
@@ -199,28 +430,130 @@
                     />
                   </svg>
                 </summary>
-                <div class="flex flex-col pb-sm">
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Figma Kit</span>
-                    <span class="text-sm text-muted-foreground"
+                <div
+                  style="
+                    --display: flex;
+                    --flex-direction: column;
+                    --pb: var(--space-sm);
+                  "
+                >
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Figma Kit</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Variables, styles, and components.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Color Generator</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Color Generator</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >OKLCH scales from a single brand hex.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Type Scale</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Type Scale</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Fluid sizes tuned with Utopia.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Icon Set</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Icon Set</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >A consistent, lightweight icon library.</span
                     >
                   </a>
@@ -229,7 +562,14 @@
 
               <!-- Development -->
               <details>
-                <summary class="ui-button w-full justify-between" data-variant="ghost">
+                <summary
+                  data-ui="button"
+                  data-button-variant="ghost"
+                  style="
+                    --w: 100%;
+                    --justify: space-between;
+                  "
+                >
                   Development
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                     <rect width="256" height="256" fill="none" />
@@ -243,28 +583,130 @@
                     />
                   </svg>
                 </summary>
-                <div class="flex flex-col pb-sm">
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">CLI</span>
-                    <span class="text-sm text-muted-foreground"
+                <div
+                  style="
+                    --display: flex;
+                    --flex-direction: column;
+                    --pb: var(--space-sm);
+                  "
+                >
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >CLI</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Scaffold and ship from the terminal.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">React Components</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >React Components</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Token-driven primitives for your app.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">REST API</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >REST API</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Programmatic access to your design data.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Webhooks</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Webhooks</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >React to changes in real time.</span
                     >
                   </a>
@@ -273,7 +715,14 @@
 
               <!-- Content -->
               <details>
-                <summary class="ui-button w-full justify-between" data-variant="ghost">
+                <summary
+                  data-ui="button"
+                  data-button-variant="ghost"
+                  style="
+                    --w: 100%;
+                    --justify: space-between;
+                  "
+                >
                   Content
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                     <rect width="256" height="256" fill="none" />
@@ -287,22 +736,100 @@
                     />
                   </svg>
                 </summary>
-                <div class="flex flex-col pb-sm">
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">CMS</span>
-                    <span class="text-sm text-muted-foreground"
+                <div
+                  style="
+                    --display: flex;
+                    --flex-direction: column;
+                    --pb: var(--space-sm);
+                  "
+                >
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >CMS</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Structured content for any surface.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Localization</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Localization</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Ship in every language your users speak.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Media Library</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Media Library</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Optimized assets, delivered fast.</span
                     >
                   </a>
@@ -314,7 +841,14 @@
 
         <!-- Megamenu — flattened into nested accordions for mobile -->
         <details>
-          <summary class="ui-button w-full justify-between" data-variant="ghost">
+          <summary
+            data-ui="button"
+            data-button-variant="ghost"
+            style="
+              --w: 100%;
+              --justify: space-between;
+            "
+          >
             Shop
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
               <rect width="256" height="256" fill="none" />
@@ -328,11 +862,24 @@
               />
             </svg>
           </summary>
-          <div class="flex flex-col pb-sm">
+          <div
+            style="
+              --display: flex;
+              --flex-direction: column;
+              --pb: var(--space-sm);
+            "
+          >
             <ui-accordion>
               <!-- Women -->
               <details>
-                <summary class="ui-button w-full justify-between" data-variant="ghost">
+                <summary
+                  data-ui="button"
+                  data-button-variant="ghost"
+                  style="
+                    --w: 100%;
+                    --justify: space-between;
+                  "
+                >
                   Women
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                     <rect width="256" height="256" fill="none" />
@@ -346,63 +893,322 @@
                     />
                   </svg>
                 </summary>
-                <div class="flex flex-col pb-sm pl-sm">
-                  <span class="text-eyebrow text-muted-foreground my-xs">Dresses</span>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Mini &amp; Midi</span>
-                    <span class="text-sm text-muted-foreground"
+                <div
+                  style="
+                    --display: flex;
+                    --flex-direction: column;
+                    --pb: var(--space-sm);
+                    --pl: var(--space-sm);
+                  "
+                >
+                  <span
+                    style="
+                      --display: inline-flex;
+                      --font-size: var(--font-size-eyebrow);
+                      --leading: var(--leading-eyebrow);
+                      --font-weight: var(--font-weight-eyebrow);
+                      --tracking: var(--tracking-eyebrow);
+                      --text-transform: uppercase;
+                      --text: var(--color-muted-foreground);
+                      --my: var(--space-xs);
+                    "
+                    >Dresses</span
+                  >
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Mini &amp; Midi</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Everyday lengths for work and weekends.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Maxi Dresses</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Maxi Dresses</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Flowing silhouettes in linen and cotton.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Jumpsuits</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Jumpsuits</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >One-piece outfits, easy to style.</span
                     >
                   </a>
 
-                  <span class="text-eyebrow text-muted-foreground my-xs">Tops</span>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">T-shirts &amp; Tanks</span>
-                    <span class="text-sm text-muted-foreground"
+                  <span
+                    style="
+                      --display: inline-flex;
+                      --font-size: var(--font-size-eyebrow);
+                      --leading: var(--leading-eyebrow);
+                      --font-weight: var(--font-weight-eyebrow);
+                      --tracking: var(--tracking-eyebrow);
+                      --text-transform: uppercase;
+                      --text: var(--color-muted-foreground);
+                      --my: var(--space-xs);
+                    "
+                    >Tops</span
+                  >
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >T-shirts &amp; Tanks</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Basics in organic cotton blends.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Blouses &amp; Shirts</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Blouses &amp; Shirts</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Office-ready and off-duty styles.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Sweaters &amp; Cardigans</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Sweaters &amp; Cardigans</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Layering pieces for cooler days.</span
                     >
                   </a>
 
-                  <span class="text-eyebrow text-muted-foreground my-xs">Bottoms &amp; Shoes</span>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Jeans &amp; Denim</span>
-                    <span class="text-sm text-muted-foreground"
+                  <span
+                    style="
+                      --display: inline-flex;
+                      --font-size: var(--font-size-eyebrow);
+                      --leading: var(--leading-eyebrow);
+                      --font-weight: var(--font-weight-eyebrow);
+                      --tracking: var(--tracking-eyebrow);
+                      --text-transform: uppercase;
+                      --text: var(--color-muted-foreground);
+                      --my: var(--space-xs);
+                    "
+                    >Bottoms &amp; Shoes</span
+                  >
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Jeans &amp; Denim</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Straight, wide-leg, and high-rise fits.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Sneakers &amp; Flats</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Sneakers &amp; Flats</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Comfort-first everyday footwear.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Boots &amp; Heels</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Boots &amp; Heels</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Seasonal styles for dress-up moments.</span
                     >
                   </a>
@@ -411,7 +1217,14 @@
 
               <!-- Men -->
               <details>
-                <summary class="ui-button w-full justify-between" data-variant="ghost">
+                <summary
+                  data-ui="button"
+                  data-button-variant="ghost"
+                  style="
+                    --w: 100%;
+                    --justify: space-between;
+                  "
+                >
                   Men
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                     <rect width="256" height="256" fill="none" />
@@ -425,63 +1238,322 @@
                     />
                   </svg>
                 </summary>
-                <div class="flex flex-col pb-sm pl-sm">
-                  <span class="text-eyebrow text-muted-foreground my-xs">Shirts</span>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">T-shirts &amp; Polos</span>
-                    <span class="text-sm text-muted-foreground"
+                <div
+                  style="
+                    --display: flex;
+                    --flex-direction: column;
+                    --pb: var(--space-sm);
+                    --pl: var(--space-sm);
+                  "
+                >
+                  <span
+                    style="
+                      --display: inline-flex;
+                      --font-size: var(--font-size-eyebrow);
+                      --leading: var(--leading-eyebrow);
+                      --font-weight: var(--font-weight-eyebrow);
+                      --tracking: var(--tracking-eyebrow);
+                      --text-transform: uppercase;
+                      --text: var(--color-muted-foreground);
+                      --my: var(--space-xs);
+                    "
+                    >Shirts</span
+                  >
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >T-shirts &amp; Polos</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Classic fits in breathable fabrics.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Oxford &amp; Dress Shirts</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Oxford &amp; Dress Shirts</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Collared styles for work and events.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Henleys &amp; Sweaters</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Henleys &amp; Sweaters</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Casual layers for transitional weather.</span
                     >
                   </a>
 
-                  <span class="text-eyebrow text-muted-foreground my-xs">Pants &amp; Shorts</span>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Chinos &amp; Trousers</span>
-                    <span class="text-sm text-muted-foreground"
+                  <span
+                    style="
+                      --display: inline-flex;
+                      --font-size: var(--font-size-eyebrow);
+                      --leading: var(--leading-eyebrow);
+                      --font-weight: var(--font-weight-eyebrow);
+                      --tracking: var(--tracking-eyebrow);
+                      --text-transform: uppercase;
+                      --text: var(--color-muted-foreground);
+                      --my: var(--space-xs);
+                    "
+                    >Pants &amp; Shorts</span
+                  >
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Chinos &amp; Trousers</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Smart casual staples in neutral tones.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Jeans</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Jeans</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Slim, relaxed, and straight-leg denim.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Joggers &amp; Sweatpants</span>
-                    <span class="text-sm text-muted-foreground">Loungewear you can wear out.</span>
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Joggers &amp; Sweatpants</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
+                      >Loungewear you can wear out.</span
+                    >
                   </a>
 
-                  <span class="text-eyebrow text-muted-foreground my-xs"
+                  <span
+                    style="
+                      --display: inline-flex;
+                      --font-size: var(--font-size-eyebrow);
+                      --leading: var(--leading-eyebrow);
+                      --font-weight: var(--font-weight-eyebrow);
+                      --tracking: var(--tracking-eyebrow);
+                      --text-transform: uppercase;
+                      --text: var(--color-muted-foreground);
+                      --my: var(--space-xs);
+                    "
                     >Outerwear &amp; Shoes</span
                   >
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Jackets &amp; Coats</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Jackets &amp; Coats</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Bombers, parkas, and wool overcoats.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Sneakers</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Sneakers</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Low-top and high-top everyday pairs.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Boots &amp; Loafers</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Boots &amp; Loafers</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Leather and suede dress-casual options.</span
                     >
                   </a>
@@ -490,7 +1562,14 @@
 
               <!-- Home -->
               <details>
-                <summary class="ui-button w-full justify-between" data-variant="ghost">
+                <summary
+                  data-ui="button"
+                  data-button-variant="ghost"
+                  style="
+                    --w: 100%;
+                    --justify: space-between;
+                  "
+                >
                   Home
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                     <rect width="256" height="256" fill="none" />
@@ -504,65 +1583,322 @@
                     />
                   </svg>
                 </summary>
-                <div class="flex flex-col pb-sm pl-sm">
-                  <span class="text-eyebrow text-muted-foreground my-xs">Bedding</span>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Sheet Sets</span>
-                    <span class="text-sm text-muted-foreground"
+                <div
+                  style="
+                    --display: flex;
+                    --flex-direction: column;
+                    --pb: var(--space-sm);
+                    --pl: var(--space-sm);
+                  "
+                >
+                  <span
+                    style="
+                      --display: inline-flex;
+                      --font-size: var(--font-size-eyebrow);
+                      --leading: var(--leading-eyebrow);
+                      --font-weight: var(--font-weight-eyebrow);
+                      --tracking: var(--tracking-eyebrow);
+                      --text-transform: uppercase;
+                      --text: var(--color-muted-foreground);
+                      --my: var(--space-xs);
+                    "
+                    >Bedding</span
+                  >
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Sheet Sets</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Percale, sateen, and linen weaves.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Duvets &amp; Comforters</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Duvets &amp; Comforters</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >All-season weights and down alternatives.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Pillows &amp; Throws</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Pillows &amp; Throws</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Accent layers for beds and sofas.</span
                     >
                   </a>
 
-                  <span class="text-eyebrow text-muted-foreground my-xs">Kitchen &amp; Dining</span>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Cookware</span>
-                    <span class="text-sm text-muted-foreground"
+                  <span
+                    style="
+                      --display: inline-flex;
+                      --font-size: var(--font-size-eyebrow);
+                      --leading: var(--leading-eyebrow);
+                      --font-weight: var(--font-weight-eyebrow);
+                      --tracking: var(--tracking-eyebrow);
+                      --text-transform: uppercase;
+                      --text: var(--color-muted-foreground);
+                      --my: var(--space-xs);
+                    "
+                    >Kitchen &amp; Dining</span
+                  >
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Cookware</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Pots, pans, and non-stick sets.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Tableware</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Tableware</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Plates, bowls, and flatware collections.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Glassware &amp; Bar</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Glassware &amp; Bar</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Tumblers, wine glasses, and decanters.</span
                     >
                   </a>
 
-                  <span class="text-eyebrow text-muted-foreground my-xs"
+                  <span
+                    style="
+                      --display: inline-flex;
+                      --font-size: var(--font-size-eyebrow);
+                      --leading: var(--leading-eyebrow);
+                      --font-weight: var(--font-weight-eyebrow);
+                      --tracking: var(--tracking-eyebrow);
+                      --text-transform: uppercase;
+                      --text: var(--color-muted-foreground);
+                      --my: var(--space-xs);
+                    "
                     >Decor &amp; Furniture</span
                   >
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Lighting</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Lighting</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Floor lamps, pendants, and table lights.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Rugs &amp; Curtains</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Rugs &amp; Curtains</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Textiles to anchor and soften a room.</span
                     >
                   </a>
-                  <a href="#" class="ui-button flex flex-col items-start p-xs" data-variant="ghost">
-                    <span class="text-sm font-strong">Seating &amp; Tables</span>
-                    <span class="text-sm text-muted-foreground"
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --items: start;
+                      --p: var(--space-xs);
+                    "
+                  >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --font-weight: var(--font-weight-strong);
+                      "
+                      >Seating &amp; Tables</span
+                    >
+                    <span
+                      style="
+                        --font-size: var(--font-size-sm);
+                        --leading: var(--leading-sm);
+                        --tracking: var(--tracking-sm);
+                        --text: var(--color-muted-foreground);
+                      "
                       >Chairs, side tables, and accent pieces.</span
                     >
                   </a>
@@ -574,8 +1910,8 @@
       </ui-accordion>
     </div>
 
-    <div data-slot="mobile-menu-footer">
-      <button class="ui-button flex-1" type="button">
+    <div data-mobile-menu-slot="footer">
+      <button data-ui="button" type="button" style="--flex: 1">
         Sign in
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
           <rect width="256" height="256" fill="none" />
@@ -608,7 +1944,7 @@
           />
         </svg>
       </button>
-      <a href="#" class="ui-button flex-1" data-variant="primary">Get started</a>
+      <a href="#" data-ui="button" data-button-variant="primary" style="--flex: 1">Get started</a>
     </div>
   </div>
 </dialog>

@@ -1,19 +1,21 @@
-<ui-lightbox class="max-w-screen-xs mx-auto">
-  <div data-slot="lightbox-gallery">
-    <ui-carousel
-      data-slot="lightbox-stage"
-      data-carousel-loop="true"
-      data-carousel-plugins="class-names"
-    >
-      <div data-slot="carousel-viewport">
-        <div data-slot="carousel-container">
+<ui-lightbox
+  style="
+    --max-w: var(--breakpoint-xs);
+    --mx: auto;
+  "
+>
+  <div data-lightbox-slot="gallery">
+    <ui-carousel data-lightbox-slot="stage" data-carousel-loop="true">
+      <div data-carousel-slot="viewport">
+        <div data-carousel-slot="container">
           <button
-            data-slot="lightbox-slide carousel-slide"
+            data-lightbox-slot="slide"
+            data-carousel-slot="slide"
             type="button"
             command="show-modal"
             commandfor="lightbox-example-1"
           >
-            <figure data-slot="lightbox-content">
+            <figure data-lightbox-slot="content">
               <img
                 sizes="(max-width: 40rem) 100vw, 800px"
                 src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop"
@@ -29,12 +31,13 @@
             </figure>
           </button>
           <button
-            data-slot="lightbox-slide carousel-slide"
+            data-lightbox-slot="slide"
+            data-carousel-slot="slide"
             type="button"
             command="show-modal"
             commandfor="lightbox-example-1"
           >
-            <figure data-slot="lightbox-content">
+            <figure data-lightbox-slot="content">
               <img
                 sizes="(max-width: 40rem) 100vw, 800px"
                 src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop"
@@ -50,12 +53,13 @@
             </figure>
           </button>
           <button
-            data-slot="lightbox-slide carousel-slide"
+            data-lightbox-slot="slide"
+            data-carousel-slot="slide"
             type="button"
             command="show-modal"
             commandfor="lightbox-example-1"
           >
-            <figure data-slot="lightbox-content">
+            <figure data-lightbox-slot="content">
               <img
                 sizes="(max-width: 40rem) 100vw, 800px"
                 src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=800&h=600&fit=crop"
@@ -71,12 +75,13 @@
             </figure>
           </button>
           <button
-            data-slot="lightbox-slide carousel-slide"
+            data-lightbox-slot="slide"
+            data-carousel-slot="slide"
             type="button"
             command="show-modal"
             commandfor="lightbox-example-1"
           >
-            <figure data-slot="lightbox-content">
+            <figure data-lightbox-slot="content">
               <img
                 sizes="(max-width: 40rem) 100vw, 800px"
                 src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=800&h=600&fit=crop"
@@ -92,12 +97,13 @@
             </figure>
           </button>
           <button
-            data-slot="lightbox-slide carousel-slide"
+            data-lightbox-slot="slide"
+            data-carousel-slot="slide"
             type="button"
             command="show-modal"
             commandfor="lightbox-example-1"
           >
-            <figure data-slot="lightbox-content">
+            <figure data-lightbox-slot="content">
               <img
                 sizes="(max-width: 40rem) 100vw, 800px"
                 src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&h=600&fit=crop"
@@ -113,12 +119,13 @@
             </figure>
           </button>
           <button
-            data-slot="lightbox-slide carousel-slide"
+            data-lightbox-slot="slide"
+            data-carousel-slot="slide"
             type="button"
             command="show-modal"
             commandfor="lightbox-example-1"
           >
-            <figure data-slot="lightbox-content">
+            <figure data-lightbox-slot="content">
               <img
                 sizes="(max-width: 40rem) 100vw, 800px"
                 src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=600&fit=crop"
@@ -135,20 +142,25 @@
           </button>
         </div>
       </div>
-      <div data-slot="lightbox-thumbs carousel-thumbs" data-carousel-loop="true">
+      <div data-lightbox-slot="thumbs" data-carousel-slot="thumbs" data-carousel-loop="true">
         <button
-          class="ui-button text-muted-foreground hover:text-foreground"
-          data-slot="lightbox-thumbs-prev carousel-prev"
-          data-size="icon-sm"
-          data-variant="ghost"
+          data-ui="button"
+          data-lightbox-slot="thumbs-prev"
+          data-carousel-slot="prev"
+          data-button-size="icon-sm"
+          data-button-variant="ghost"
           type="button"
           aria-label="Previous image"
+          style="
+            --text: var(--color-muted-foreground);
+            --text--hover: var(--color-foreground);
+          "
         >
           <svg
-            class="size-sm"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 256 256"
             aria-hidden="true"
+            style="--size: var(--space-sm)"
           >
             <rect width="256" height="256" fill="none" />
             <polyline
@@ -161,14 +173,15 @@
             />
           </svg>
         </button>
-        <div data-slot="carousel-viewport">
-          <div data-slot="carousel-container">
+        <div data-carousel-slot="viewport">
+          <div data-carousel-slot="container">
             <button
               type="button"
-              data-slot="lightbox-thumb carousel-slide"
+              data-lightbox-slot="thumb"
+              data-carousel-slot="slide"
               aria-label="Show image 1"
             >
-              <figure data-slot="lightbox-thumb-content">
+              <figure data-lightbox-slot="thumb-content">
                 <img
                   sizes="auto"
                   loading="lazy"
@@ -188,10 +201,11 @@
             </button>
             <button
               type="button"
-              data-slot="lightbox-thumb carousel-slide"
+              data-lightbox-slot="thumb"
+              data-carousel-slot="slide"
               aria-label="Show image 2"
             >
-              <figure data-slot="lightbox-thumb-content">
+              <figure data-lightbox-slot="thumb-content">
                 <img
                   sizes="auto"
                   loading="lazy"
@@ -211,10 +225,11 @@
             </button>
             <button
               type="button"
-              data-slot="lightbox-thumb carousel-slide"
+              data-lightbox-slot="thumb"
+              data-carousel-slot="slide"
               aria-label="Show image 3"
             >
-              <figure data-slot="lightbox-thumb-content">
+              <figure data-lightbox-slot="thumb-content">
                 <img
                   sizes="auto"
                   loading="lazy"
@@ -234,10 +249,11 @@
             </button>
             <button
               type="button"
-              data-slot="lightbox-thumb carousel-slide"
+              data-lightbox-slot="thumb"
+              data-carousel-slot="slide"
               aria-label="Show image 4"
             >
-              <figure data-slot="lightbox-thumb-content">
+              <figure data-lightbox-slot="thumb-content">
                 <img
                   sizes="auto"
                   loading="lazy"
@@ -257,10 +273,11 @@
             </button>
             <button
               type="button"
-              data-slot="lightbox-thumb carousel-slide"
+              data-lightbox-slot="thumb"
+              data-carousel-slot="slide"
               aria-label="Show image 5"
             >
-              <figure data-slot="lightbox-thumb-content">
+              <figure data-lightbox-slot="thumb-content">
                 <img
                   sizes="auto"
                   loading="lazy"
@@ -280,10 +297,11 @@
             </button>
             <button
               type="button"
-              data-slot="lightbox-thumb carousel-slide"
+              data-lightbox-slot="thumb"
+              data-carousel-slot="slide"
               aria-label="Show image 6"
             >
-              <figure data-slot="lightbox-thumb-content">
+              <figure data-lightbox-slot="thumb-content">
                 <img
                   sizes="auto"
                   loading="lazy"
@@ -304,18 +322,23 @@
           </div>
         </div>
         <button
-          class="ui-button text-muted-foreground hover:text-foreground"
-          data-slot="lightbox-thumbs-next carousel-next"
-          data-size="icon-sm"
-          data-variant="ghost"
+          data-ui="button"
+          data-lightbox-slot="thumbs-next"
+          data-carousel-slot="next"
+          data-button-size="icon-sm"
+          data-button-variant="ghost"
           type="button"
           aria-label="Next image"
+          style="
+            --text: var(--color-muted-foreground);
+            --text--hover: var(--color-foreground);
+          "
         >
           <svg
-            class="size-sm"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 256 256"
             aria-hidden="true"
+            style="--size: var(--space-sm)"
           >
             <rect width="256" height="256" fill="none" />
             <polyline
@@ -334,17 +357,18 @@
 
   <dialog
     id="lightbox-example-1"
-    class="ui-dialog dark"
-    data-slot="lightbox-dialog"
-    data-size="screen"
+    data-ui="dialog"
+    data-ui-theme="dark"
+    data-lightbox-slot="dialog"
+    data-dialog-size="screen"
     closedby="any"
   >
-    <div data-slot="dialog-content">
-      <ui-carousel data-carousel-loop="true" data-carousel-plugins="class-names">
-        <div data-slot="carousel-viewport">
-          <div data-slot="carousel-container">
-            <div data-slot="lightbox-slide carousel-slide">
-              <figure data-slot="lightbox-content">
+    <div data-dialog-slot="content">
+      <ui-carousel data-carousel-loop="true">
+        <div data-carousel-slot="viewport">
+          <div data-carousel-slot="container">
+            <div data-lightbox-slot="slide" data-carousel-slot="slide">
+              <figure data-lightbox-slot="content">
                 <img
                   sizes="(max-width: 40rem) 100vw, 800px"
                   src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop"
@@ -359,8 +383,8 @@
                 />
               </figure>
             </div>
-            <div data-slot="lightbox-slide carousel-slide">
-              <figure data-slot="lightbox-content">
+            <div data-lightbox-slot="slide" data-carousel-slot="slide">
+              <figure data-lightbox-slot="content">
                 <img
                   sizes="(max-width: 40rem) 100vw, 800px"
                   src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop"
@@ -375,8 +399,8 @@
                 />
               </figure>
             </div>
-            <div data-slot="lightbox-slide carousel-slide">
-              <figure data-slot="lightbox-content">
+            <div data-lightbox-slot="slide" data-carousel-slot="slide">
+              <figure data-lightbox-slot="content">
                 <img
                   sizes="(max-width: 40rem) 100vw, 800px"
                   src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=800&h=600&fit=crop"
@@ -391,8 +415,8 @@
                 />
               </figure>
             </div>
-            <div data-slot="lightbox-slide carousel-slide">
-              <figure data-slot="lightbox-content">
+            <div data-lightbox-slot="slide" data-carousel-slot="slide">
+              <figure data-lightbox-slot="content">
                 <img
                   sizes="(max-width: 40rem) 100vw, 800px"
                   src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=800&h=600&fit=crop"
@@ -407,8 +431,8 @@
                 />
               </figure>
             </div>
-            <div data-slot="lightbox-slide carousel-slide">
-              <figure data-slot="lightbox-content">
+            <div data-lightbox-slot="slide" data-carousel-slot="slide">
+              <figure data-lightbox-slot="content">
                 <img
                   sizes="(max-width: 40rem) 100vw, 800px"
                   src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&h=600&fit=crop"
@@ -423,8 +447,8 @@
                 />
               </figure>
             </div>
-            <div data-slot="lightbox-slide carousel-slide">
-              <figure data-slot="lightbox-content">
+            <div data-lightbox-slot="slide" data-carousel-slot="slide">
+              <figure data-lightbox-slot="content">
                 <img
                   sizes="(max-width: 40rem) 100vw, 800px"
                   src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=600&fit=crop"
@@ -442,14 +466,24 @@
           </div>
         </div>
         <button
-          class="ui-button size-auto text-muted-foreground hover:text-foreground"
-          data-slot="lightbox-prev carousel-prev"
-          data-size="icon"
-          data-variant="ghost"
+          data-ui="button"
+          data-lightbox-slot="prev"
+          data-carousel-slot="prev"
+          data-button-size="icon"
+          data-button-variant="ghost"
           type="button"
           aria-label="Previous image"
+          style="
+            --size: auto;
+            --text: var(--color-muted-foreground);
+            --text--hover: var(--color-foreground);
+          "
         >
-          <svg class="size-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 256 256"
+            style="--size: var(--space-md)"
+          >
             <rect width="256" height="256" fill="none" />
             <polyline
               points="160 208 80 128 160 48"
@@ -462,14 +496,24 @@
           </svg>
         </button>
         <button
-          class="ui-button size-auto text-muted-foreground hover:text-foreground"
-          data-slot="lightbox-next carousel-next"
-          data-size="icon"
-          data-variant="ghost"
+          data-ui="button"
+          data-lightbox-slot="next"
+          data-carousel-slot="next"
+          data-button-size="icon"
+          data-button-variant="ghost"
           type="button"
           aria-label="Next image"
+          style="
+            --size: auto;
+            --text: var(--color-muted-foreground);
+            --text--hover: var(--color-foreground);
+          "
         >
-          <svg class="size-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 256 256"
+            style="--size: var(--space-md)"
+          >
             <rect width="256" height="256" fill="none" />
             <polyline
               points="96 48 176 128 96 208"
@@ -481,15 +525,16 @@
             />
           </svg>
         </button>
-        <div data-slot="lightbox-thumbs carousel-thumbs">
-          <div data-slot="carousel-viewport">
-            <div data-slot="carousel-container">
+        <div data-lightbox-slot="thumbs" data-carousel-slot="thumbs">
+          <div data-carousel-slot="viewport">
+            <div data-carousel-slot="container">
               <button
                 type="button"
-                data-slot="lightbox-thumb carousel-slide"
+                data-lightbox-slot="thumb"
+                data-carousel-slot="slide"
                 aria-label="Show image 1"
               >
-                <figure data-slot="lightbox-thumb-content">
+                <figure data-lightbox-slot="thumb-content">
                   <img
                     sizes="auto"
                     loading="lazy"
@@ -509,10 +554,11 @@
               </button>
               <button
                 type="button"
-                data-slot="lightbox-thumb carousel-slide"
+                data-lightbox-slot="thumb"
+                data-carousel-slot="slide"
                 aria-label="Show image 2"
               >
-                <figure data-slot="lightbox-thumb-content">
+                <figure data-lightbox-slot="thumb-content">
                   <img
                     sizes="auto"
                     loading="lazy"
@@ -532,10 +578,11 @@
               </button>
               <button
                 type="button"
-                data-slot="lightbox-thumb carousel-slide"
+                data-lightbox-slot="thumb"
+                data-carousel-slot="slide"
                 aria-label="Show image 3"
               >
-                <figure data-slot="lightbox-thumb-content">
+                <figure data-lightbox-slot="thumb-content">
                   <img
                     sizes="auto"
                     loading="lazy"
@@ -555,10 +602,11 @@
               </button>
               <button
                 type="button"
-                data-slot="lightbox-thumb carousel-slide"
+                data-lightbox-slot="thumb"
+                data-carousel-slot="slide"
                 aria-label="Show image 4"
               >
-                <figure data-slot="lightbox-thumb-content">
+                <figure data-lightbox-slot="thumb-content">
                   <img
                     sizes="auto"
                     loading="lazy"
@@ -578,10 +626,11 @@
               </button>
               <button
                 type="button"
-                data-slot="lightbox-thumb carousel-slide"
+                data-lightbox-slot="thumb"
+                data-carousel-slot="slide"
                 aria-label="Show image 5"
               >
-                <figure data-slot="lightbox-thumb-content">
+                <figure data-lightbox-slot="thumb-content">
                   <img
                     sizes="auto"
                     loading="lazy"
@@ -601,10 +650,11 @@
               </button>
               <button
                 type="button"
-                data-slot="lightbox-thumb carousel-slide"
+                data-lightbox-slot="thumb"
+                data-carousel-slot="slide"
                 aria-label="Show image 6"
               >
-                <figure data-slot="lightbox-thumb-content">
+                <figure data-lightbox-slot="thumb-content">
                   <img
                     sizes="auto"
                     loading="lazy"
@@ -628,10 +678,10 @@
       </ui-carousel>
     </div>
     <button
-      class="ui-button"
-      data-slot="lightbox-close"
-      data-size="icon"
-      data-variant="ghost"
+      data-ui="button"
+      data-lightbox-slot="close"
+      data-button-size="icon"
+      data-button-variant="ghost"
       type="button"
       commandfor="lightbox-example-1"
       command="close"

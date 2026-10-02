@@ -4,10 +4,10 @@
  * @fileoverview `<ui-password>`: HTML web component for password visibility.
  * @description Light-DOM custom element that adds show/hide behavior to a
  * standard password field. Wrap the existing `.password-group` markup: the
- * element finds the input and the `[data-slot~="password-group-toggle"]` button, flips the
+ * element finds the input and the `[data-password-group-slot~="toggle"]` button, flips the
  * input between `type="password"` and `type="text"` on click, and keeps
  * `aria-pressed` and `aria-label` in sync. The icon swap is pure CSS, driven
- * by `aria-pressed` (see _password-group.css).
+ * by `aria-pressed` (see password-group.css).
  *
  * The revealed/hidden state is a signal (`base/signals.ts`): the click handler
  * is the input adapter, `resolveToggleState` is the pure derivation, and one
@@ -27,8 +27,8 @@
  * <ui-password>
  *   <label class="password-group">
  *     <input class="input" type="password" autocomplete="current-password" />
- *     <span data-slot="password-group-addon" data-align="inline-end">
- *       <button class="button" data-slot="password-group-toggle" type="button"
+ *     <span data-password-group-slot="addon" data-password-group-align="inline-end">
+ *       <button data-ui="button" data-password-group-slot="toggle" type="button"
  *         aria-pressed="false" aria-label="Show password">…</button>
  *     </span>
  *   </label>
@@ -67,7 +67,7 @@ function resolveToggleState(revealed: boolean, labelShow: string, labelHide: str
 class UiPassword extends ZazzElement {
   protected setup(signal: AbortSignal): void {
     const input = this.querySelector('input[type="password"], input[type="text"]');
-    const toggle = this.querySelector('[data-slot~="password-group-toggle"]');
+    const toggle = this.querySelector('[data-password-group-slot~="toggle"]');
     if (!(input instanceof HTMLInputElement) || !(toggle instanceof HTMLElement)) return;
 
     const revealed = state(input.type === "text");
@@ -76,8 +76,14 @@ class UiPassword extends ZazzElement {
 
     effect(
       () => {
-        const labelShow = this.getAttribute("data-label-show") || "Show password";
-        const labelHide = this.getAttribute("data-label-hide") || "Hide password";
+        const labelShow =
+          (this.getAttribute("data-password-group-label-show") ??
+            this.getAttribute("data-label-show")) ||
+          "Show password";
+        const labelHide =
+          (this.getAttribute("data-password-group-label-hide") ??
+            this.getAttribute("data-label-hide")) ||
+          "Hide password";
         const next = resolveToggleState(revealed.get(), labelShow, labelHide);
         input.type = next.type;
         toggle.setAttribute("aria-pressed", next.ariaPressed);
@@ -90,6 +96,5 @@ class UiPassword extends ZazzElement {
 
 defineZazzElement("ui-password", UiPassword);
 
-// resolveToggleState is exported for unit tests only: not part of the public API.
 export { UiPassword, resolveToggleState };
 export type { ToggleState };

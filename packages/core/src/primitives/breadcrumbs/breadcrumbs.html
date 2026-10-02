@@ -1,9 +1,29 @@
-<nav class="flex items-center gap-xs">
-  <menu class="flex items-center gap-xs">
-    <li><a class="ui-button" data-variant="link">Home</a></li>
-    <li><span class="text-muted-foreground opacity-50">/</span></li>
+<nav
+  style="
+    --display: flex;
+    --items: center;
+    --gap: var(--space-xs);
+  "
+>
+  <menu
+    style="
+      --display: flex;
+      --items: center;
+      --gap: var(--space-xs);
+    "
+  >
+    <li><a data-ui="button" data-button-variant="link">Home</a></li>
     <li>
-      <div class="ui-button" data-variant="link" aria-disabled="true">Product name</div>
+      <span
+        style="
+          --text: var(--color-muted-foreground);
+          --opacity: 0.5;
+        "
+        >/</span
+      >
+    </li>
+    <li>
+      <div data-ui="button" data-button-variant="link" aria-disabled="true">Product name</div>
     </li>
   </menu>
 </nav>

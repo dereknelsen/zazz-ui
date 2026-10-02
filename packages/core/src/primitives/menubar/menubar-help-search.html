@@ -1,8 +1,20 @@
-<div class="flex w-full items-center gap-px bg-card border-b p-xs" aria-label="Application menu">
+<div
+  aria-label="Application menu"
+  style="
+    --border-b-width: 1px;
+    --border-b-color: var(--color-border);
+    --display: flex;
+    --w: 100%;
+    --items: center;
+    --gap: 1px;
+    --bg: var(--color-card);
+    --p: var(--space-xs);
+  "
+>
   <ui-menu>
     <button
-      class="ui-button"
-      data-variant="ghost"
+      data-ui="button"
+      data-button-variant="ghost"
       type="button"
       popovertarget="menubar-search-file"
       interestfor="menubar-search-file"
@@ -11,19 +23,31 @@
     </button>
     <div
       id="menubar-search-file"
-      data-slot="menu-popover"
-      data-side="bottom"
-      data-align="start"
+      data-menu-slot="popover"
+      data-popover-side="bottom"
+      data-popover-align="start"
       popover="auto"
     >
       <menu>
         <li>
-          <button class="ui-button justify-start" data-variant="ghost" type="button">
+          <button
+            data-ui="button"
+            data-button-variant="ghost"
+            type="button"
+            style="--justify: start"
+          >
             New window
           </button>
         </li>
         <li>
-          <button class="ui-button justify-start" data-variant="ghost" type="button">Open…</button>
+          <button
+            data-ui="button"
+            data-button-variant="ghost"
+            type="button"
+            style="--justify: start"
+          >
+            Open…
+          </button>
         </li>
       </menu>
     </div>
@@ -31,8 +55,8 @@
 
   <ui-menu>
     <button
-      class="ui-button"
-      data-variant="ghost"
+      data-ui="button"
+      data-button-variant="ghost"
       type="button"
       popovertarget="menubar-search-help"
       interestfor="menubar-search-help"
@@ -41,18 +65,37 @@
     </button>
     <div
       id="menubar-search-help"
-      data-slot="menu-popover"
-      data-side="bottom"
-      data-align="start"
+      data-menu-slot="popover"
+      data-popover-side="bottom"
+      data-popover-align="start"
       popover="auto"
     >
-      <div class="flex flex-col gap-xs p-xs" style="min-inline-size: 20rem">
-        <label class="font-strong text-eyebrow text-muted-foreground" for="menubar-help-topic"
+      <div
+        style="
+          --display: flex;
+          --flex-direction: column;
+          --gap: var(--space-xs);
+          --p: var(--space-xs);
+          --min-w: 20rem;
+        "
+      >
+        <label
+          for="menubar-help-topic"
+          style="
+            --font-weight: var(--font-weight-strong);
+            --display: inline-flex;
+            --font-size: var(--font-size-eyebrow);
+            --leading: var(--leading-eyebrow);
+            --font-weight: var(--font-weight-eyebrow);
+            --tracking: var(--tracking-eyebrow);
+            --text-transform: uppercase;
+            --text: var(--color-muted-foreground);
+          "
           >Search help topics</label
         >
         <ui-combobox>
-          <input type="hidden" name="help-topic" data-slot="combobox-value" value="" />
-          <div data-slot="combobox-control">
+          <input type="hidden" name="help-topic" data-combobox-slot="value" value="" />
+          <div data-combobox-slot="control">
             <input
               id="menubar-help-topic"
               type="text"
@@ -64,37 +107,42 @@
             />
           </div>
           <!-- No [popover] = the inline variant: the list renders in flow, always open -->
-          <div data-slot="combobox-panel">
-            <ul role="listbox" data-slot="combobox-list" aria-label="Help topics">
+          <div data-combobox-slot="panel">
+            <ul role="listbox" data-combobox-slot="list" aria-label="Help topics">
               <li
                 role="option"
-                data-slot="combobox-item"
-                class="ui-button justify-start"
-                data-variant="ghost"
-                data-value="shortcuts"
+                data-combobox-slot="item"
+                data-ui="button"
+                data-button-variant="ghost"
+                data-combobox-value="shortcuts"
+                style="--justify: start"
               >
                 Keyboard shortcuts
               </li>
               <li
                 role="option"
-                data-slot="combobox-item"
-                class="ui-button justify-start"
-                data-variant="ghost"
-                data-value="theming"
+                data-combobox-slot="item"
+                data-ui="button"
+                data-button-variant="ghost"
+                data-combobox-value="theming"
+                style="--justify: start"
               >
                 Theming and dark mode
               </li>
               <li
                 role="option"
-                data-slot="combobox-item"
-                class="ui-button justify-start"
-                data-variant="ghost"
-                data-value="updates"
+                data-combobox-slot="item"
+                data-ui="button"
+                data-button-variant="ghost"
+                data-combobox-value="updates"
+                style="--justify: start"
               >
                 Checking for updates
               </li>
             </ul>
-            <p data-slot="combobox-empty" class="text-muted-foreground">No topics found.</p>
+            <p data-combobox-slot="empty" style="--text: var(--color-muted-foreground)">
+              No topics found.
+            </p>
           </div>
         </ui-combobox>
       </div>

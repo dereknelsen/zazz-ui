@@ -1,17 +1,17 @@
 /**
- * accordion.css: Accordion (ui-accordion | .ui-accordion on <details>/<summary>)
+ * accordion.css: Accordion (ui-accordion | [data-ui~="accordion"] on <details>/<summary>)
  *
  * @layer      variables, reset, components
- * @requires   layers.css, _variables.css
+ * @requires   _layers.css, _variables.css, _properties.css (--_focus-ring)
  * @uses       ::details-content: native open/close block-size transition (reset layer)
  * @uses       interpolate-size: allow-keywords (from _variables.css; required for
  *             block-size: 0 -> auto transitions)
- * @tokens     --ui-accordion-* (@layer variables)
+ * @tokens     --ui-accordion-* (@layer variables; none backs a utility)
  */
 
 @layer variables {
   :root {
-    --ui-accordion-icon-size: var(--step-4);
+    --ui-accordion-icon-size: calc(var(--spacing) * 4);
     --ui-accordion-icon-transform--open: rotate(-180deg);
   }
 }
@@ -19,7 +19,6 @@
 @layer reset {
   /* ===========================================================================
   DETAILS & SUMMARY: native open/close transition + summary marker reset
-  - In the reset layer so the :where(ui-accordion, .ui-accordion) component styling below wins.
   =========================================================================== */
 
   :where(details)::details-content {
@@ -49,29 +48,31 @@
 }
 
 @layer zazz.components {
-  :where(ui-accordion, .ui-accordion) {
+  :where(ui-accordion, [data-ui~="accordion"]) {
     display: grid;
     inline-size: 100%;
     flex: 1;
   }
 
-  :where(ui-accordion, .ui-accordion) > details {
+  :where(ui-accordion, [data-ui~="accordion"]) > details {
     display: grid;
     flex: 1 0 auto;
   }
 
-  :where(ui-accordion, .ui-accordion) > details > summary {
+  :where(ui-accordion, [data-ui~="accordion"]) > details > summary {
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    /* ring renders as box-shadow; the ring widths animate from 0 so the ring
-      grows in smoothly on focus */
+    /* The ring is published to --_focus-ring so a --shadow utility on the
+       summary keeps it; the ring widths grow from 0 so the ring eases in. */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    box-shadow:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring, var(--ring));
+    --_focus-ring:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+        var(--_ring-fill, var(--ring-shadow-color));
+    box-shadow: var(--_focus-ring, 0 0 #0000), var(--_shadow-resolved, 0 0 #0000);
 
     /* transparent twin of the ring for forced-colors / high-contrast modes */
     outline: var(--outline-width) var(--outline-style) transparent;
@@ -80,14 +81,14 @@
     transition: var(--default-transition);
   }
 
-  :where(ui-accordion, .ui-accordion) > details > summary:focus-visible {
+  :where(ui-accordion, [data-ui~="accordion"]) > details > summary:focus-visible {
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
 
     outline-color: transparent;
   }
 
-  :where(ui-accordion, .ui-accordion) summary > svg {
+  :where(ui-accordion, [data-ui~="accordion"]) summary > svg {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -98,7 +99,7 @@
       var(--default-transition-timing-function);
   }
 
-  :where(ui-accordion, .ui-accordion) > details[open] > summary > svg {
+  :where(ui-accordion, [data-ui~="accordion"]) > details[open] > summary > svg {
     transform: var(--ui-accordion-icon-transform--open);
   }
 }

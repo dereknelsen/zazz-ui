@@ -3,14 +3,11 @@
 /**
  * @fileoverview `<ui-tabs>`: HTML web component for keyboard-enhanced tabs.
  * @description Light-DOM custom element that augments the CSS-only radio
- * tabs pattern with orientation-aware arrow-key navigation. The element
- * replaces the `.tabs` wrapper `<div>` and carries the same class, so all
- * existing CSS (panel visibility via `:has()`, the anchor-positioned
- * indicator) applies unchanged.
+ * tabs pattern with orientation-aware arrow-key navigation.
  *
  * Keyboard behavior on the focused tab radio:
  * - Horizontal (default): ArrowLeft / ArrowRight move between tabs.
- * - Vertical (`data-orientation="vertical"`): ArrowUp / ArrowDown move between tabs.
+ * - Vertical (`data-tabs-orientation="vertical"`): ArrowUp / ArrowDown move between tabs.
  * - Home / End jump to the first / last enabled tab.
  * - Navigation wraps around and skips disabled tabs.
  *
@@ -20,12 +17,12 @@
  *
  * @example
  * <ui-tabs class="tabs">
- *   <div data-slot="tabs-list" role="tablist">
- *     <label data-slot="tabs-label"><input type="radio" name="tg" checked />One</label>
- *     <label data-slot="tabs-label"><input type="radio" name="tg" />Two</label>
+ *   <div data-tabs-slot="list" role="tablist">
+ *     <label data-tabs-slot="label"><input type="radio" name="tg" checked />One</label>
+ *     <label data-tabs-slot="label"><input type="radio" name="tg" />Two</label>
  *   </div>
- *   <div data-slot="tabs-panel">…</div>
- *   <div data-slot="tabs-panel">…</div>
+ *   <div data-tabs-slot="panel">…</div>
+ *   <div data-tabs-slot="panel">…</div>
  * </ui-tabs>
  */
 
@@ -45,16 +42,18 @@ class UiTabs extends ZazzElement {
     const target = event.target;
     if (!(target instanceof HTMLInputElement) || target.type !== "radio") return;
 
-    const list = target.closest('[role="tablist"], [data-slot~="tabs-list"]');
-    // Ignore radios that belong to a nested ui-tabs
-    if (!list || list.closest("ui-tabs") !== this) return;
+    const list = target.closest('[role="tablist"], [data-tabs-slot~="list"]');
+    // ignore radios of a nested ui-tabs
+    if (!list || list.closest('ui-tabs, [data-ui~="tabs"]') !== this) return;
 
     const tabs = Array.from(list.querySelectorAll('input[type="radio"]'))
       .filter((node): node is HTMLInputElement => node instanceof HTMLInputElement)
       .filter((tab) => !tab.disabled);
     if (tabs.length < 2) return;
 
-    const vertical = this.getAttribute("data-orientation") === "vertical";
+    const vertical =
+      (this.getAttribute("data-tabs-orientation") ?? this.getAttribute("data-orientation")) ===
+      "vertical";
     const prevKey = vertical ? "ArrowUp" : "ArrowLeft";
     const nextKey = vertical ? "ArrowDown" : "ArrowRight";
 

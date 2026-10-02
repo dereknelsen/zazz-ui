@@ -1,8 +1,8 @@
 /**
- * progress.css — Progress (.ui-progress on native <progress>)
+ * progress.css — Progress ([data-ui~="progress"] on native <progress>)
  *
  * @layer      variables, reset, components
- * @requires   layers.css, _variables.css, _reset.css
+ * @requires   _layers.css, _variables.css, _reset.css, _properties.css (--_*-resolved)
  * @uses       appearance: none — element box becomes the track; only the fill
  *             needs vendor pseudo-elements (::-webkit-progress-value,
  *             ::-moz-progress-bar) — never combine the two vendors in one
@@ -14,14 +14,12 @@
 
 @layer variables {
   :root {
-    --ui-progress-inline-size: 100%;
-    /* Matches the slider track so the two bars read as one family */
-    --ui-progress-block-size: var(--step-1_5);
-    --ui-progress-radius: var(--radius-full);
-    --ui-progress-track-background: var(--muted);
+    --ui-progress-w: 100%;
+    --ui-progress-h: calc(var(--spacing) * 1.5);
+    --ui-progress-rounded: var(--radius-full);
+    --ui-progress-bg: var(--color-muted);
     --ui-progress-track-border: 1px solid transparent;
-    --ui-progress-bar-background: var(--primary);
-    /* One tile (--step-4) of travel per cycle */
+    --ui-progress-bar-bg: var(--color-primary);
     --ui-progress-indeterminate-duration: 1s;
   }
 }
@@ -29,43 +27,45 @@
 @layer reset {
   /* ===========================================================================
   PROGRESS — native <progress> fill redraw
-  - The appearance strip lives in _reset.css; the element box is the themed
-    track (overflow clips the fill's corners), so only the fill pseudos are
-    redrawn here. One rule per vendor pseudo, by necessity.
+  The element box is the track (overflow clips the fill's corners); only the
+  fill pseudos are redrawn, one rule per vendor.
   =========================================================================== */
 
-  :where(.ui-progress) {
-    inline-size: var(--ui-progress-inline-size);
-    block-size: var(--ui-progress-block-size);
+  :where([data-ui~="progress"]) {
+    --_w-len: var(--_w-resolved, var(--ui-progress-w));
+    --_w-num: var(--_w-resolved, var(--ui-progress-w));
+    inline-size: calc(var(--_w-len) + var(--_w-num) * var(--spacing));
+    --_h-len: var(--_h-resolved, var(--ui-progress-h));
+    --_h-num: var(--_h-resolved, var(--ui-progress-h));
+    block-size: calc(var(--_h-len) + var(--_h-num) * var(--spacing));
     overflow: hidden;
-    background-color: var(--ui-progress-track-background);
+    background-color: var(--_bg-resolved, var(--ui-progress-bg));
     border: var(--ui-progress-track-border);
-    border-radius: var(--ui-progress-radius);
+    border-radius: var(--_rounded-resolved, var(--ui-progress-rounded));
   }
 
-  :where(.ui-progress)::-webkit-progress-bar {
+  :where([data-ui~="progress"])::-webkit-progress-bar {
     background: transparent;
   }
 
-  :where(.ui-progress)::-webkit-progress-value {
-    background-color: var(--ui-progress-bar-background);
+  :where([data-ui~="progress"])::-webkit-progress-value {
+    background-color: var(--ui-progress-bar-bg);
     border-radius: inherit;
     transition: inline-size var(--default-transition-duration)
       var(--default-transition-timing-function);
   }
 
-  :where(.ui-progress)::-moz-progress-bar {
-    background-color: var(--ui-progress-bar-background);
+  :where([data-ui~="progress"])::-moz-progress-bar {
+    background-color: var(--ui-progress-bar-bg);
     border-radius: inherit;
   }
 
-  /* Indeterminate — a moving stripe on the element itself, so it renders the
-     same in every engine; the vendor fills go transparent to avoid a phantom
-     bar underneath. Percentage stops in a square tile wrap seamlessly at 45°,
-     and animating by exactly one tile keeps the loop jump-free; clipping to
-     the padding box keeps stripes out of the border ring. */
-  :where(.ui-progress:indeterminate) {
-    --_stripe: color-mix(in oklch, var(--ui-progress-bar-background) 30%, transparent);
+  /* Stripe on the element itself so it renders the same in every engine; the
+     vendor fills go transparent to avoid a phantom bar. Percentage stops in a
+     square tile wrap seamlessly at 45°, and animating exactly one tile keeps
+     the loop jump-free; the padding-box clip keeps stripes out of the border. */
+  :where([data-ui~="progress"]:indeterminate) {
+    --_stripe: color-mix(in oklch, var(--ui-progress-bar-bg) 30%, transparent);
     background-image: linear-gradient(
       -45deg,
       var(--_stripe) 25%,
@@ -73,33 +73,32 @@
       var(--_stripe) 50% 75%,
       transparent 75%
     );
-    background-size: var(--step-4) var(--step-4);
+    background-size: calc(var(--spacing) * 4) calc(var(--spacing) * 4);
     background-origin: padding-box;
     background-clip: padding-box;
   }
 
-  :where(.ui-progress:indeterminate)::-webkit-progress-value {
+  :where([data-ui~="progress"]:indeterminate)::-webkit-progress-value {
     background: transparent;
   }
 
-  :where(.ui-progress:indeterminate)::-moz-progress-bar {
+  :where([data-ui~="progress"]:indeterminate)::-moz-progress-bar {
     background: transparent;
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    :where(.ui-progress:indeterminate) {
+    :where([data-ui~="progress"]:indeterminate) {
       animation: ui-progress-slide var(--ui-progress-indeterminate-duration) linear infinite;
     }
   }
 
-  /* One full tile per cycle — the wrap lands on an identical frame */
   @keyframes ui-progress-slide {
     from {
       background-position: 0 0;
     }
 
     to {
-      background-position: var(--step-4) 0;
+      background-position: calc(var(--spacing) * 4) 0;
     }
   }
 }

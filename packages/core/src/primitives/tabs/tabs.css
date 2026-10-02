@@ -1,8 +1,8 @@
 /**
- * tabs.css — Tabs (ui-tabs | .ui-tabs) — CSS-only radio tab panels
+ * tabs.css — Tabs (ui-tabs | [data-ui~="tabs"]) — CSS-only radio tab panels
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css, fields.css (--ui-field-* metrics)
+ * @requires   _layers.css, _variables.css, fields.css (--ui-field-* metrics)
  * @uses       input[type="radio"] + :checked — panel visibility via :has() (no JS)
  * @uses       anchor-name, position-anchor, anchor() — sliding indicator pill
  *             (@supports gated; checked-label fallback paints card fill without pill)
@@ -13,75 +13,69 @@
 
 @layer variables {
   :root {
-    /* Track/label metrics default to the shared --ui-field-* family (owned in
-       fields.css) so a segmented tab track beside fields and buttons reads as
-       one family; --ui-tabs-label-min-block-size is deliberately shorter. */
-    --ui-tabs-gap: var(--gap-xs);
-    --ui-tabs-track-padding: var(--step-0_5);
-    --ui-tabs-track-radius: var(--ui-field-radius);
-    --ui-tabs-track-gap: var(--step-0_5);
-    --ui-tabs-track-background: var(--muted);
+    /* metrics default to the shared --ui-field-* family so the track matches
+       adjacent fields and buttons; --ui-tabs-label-min-h is deliberately shorter */
+    --ui-tabs-gap: var(--space-xs);
+    --ui-tabs-track-padding: calc(var(--spacing) * 0.5);
+    --ui-tabs-track-rounded: var(--ui-field-rounded);
+    --ui-tabs-track-gap: calc(var(--spacing) * 0.5);
+    --ui-tabs-track-bg: var(--color-muted);
 
-    --ui-tabs-indicator-background: var(--card);
-    --ui-tabs-indicator-radius: var(--ui-field-inset-child-radius);
+    --ui-tabs-indicator-bg: var(--color-card);
+    --ui-tabs-indicator-rounded: var(--ui-field-inset-child-radius);
     --ui-tabs-indicator-shadow: var(--shadow-xs);
     --ui-tabs-indicator-inset: var(--ui-tabs-track-padding);
 
     --ui-tabs-label-font-family: var(--font-family-body);
     --ui-tabs-label-font-size: var(--ui-field-font-size);
     --ui-tabs-label-font-weight: var(--font-weight-strong);
-    --ui-tabs-label-line-height: var(--ui-field-line-height);
+    --ui-tabs-label-leading: var(--ui-field-leading);
 
-    --ui-tabs-label-background: transparent;
-    --ui-tabs-label-background--hover: transparent;
-    --ui-tabs-label-background--active: transparent;
+    --ui-tabs-label-bg: transparent;
+    --ui-tabs-label-bg--hover: transparent;
+    --ui-tabs-label-bg--active: transparent;
 
-    --ui-tabs-label-foreground: var(--muted-foreground);
-    --ui-tabs-label-foreground--hover: var(--foreground);
-    --ui-tabs-label-foreground--active: var(--foreground);
+    --ui-tabs-label-text: var(--color-muted-foreground);
+    --ui-tabs-label-text--hover: var(--color-foreground);
+    --ui-tabs-label-text--active: var(--color-foreground);
 
-    --ui-tabs-label-padding: var(--ui-field-padding);
-    --ui-tabs-label-min-block-size: var(--step-7);
+    --ui-tabs-label-px: var(--ui-field-px);
+    --ui-tabs-label-min-h: calc(var(--spacing) * 7);
     --ui-tabs-label-ring-color: var(--ui-field-ring-color);
   }
 }
 
 @layer zazz.components {
-  /* ===========================================================================
-  TABS — :where(ui-tabs, .ui-tabs)
-  [data-slot~="tabs-list"] — inline-flex muted track (fits tab row only; panels live outside).
-  [data-slot~="tabs-indicator"] — card pill anchored to checked label.
-  Panels — direct :where(ui-tabs, .ui-tabs) children after [data-slot~="tabs-list"]; order must match tab order.
-  Panel N is shown when the Nth radio in [data-slot~="tabs-list"] is checked (see rules below).
-  =========================================================================== */
+  /* Panels are direct children after the list; their order must match tab order.
+     Panel N shows when the Nth radio in the list is checked. */
 
-  :where(ui-tabs, .ui-tabs) {
+  :where(ui-tabs, [data-ui~="tabs"]) {
     display: flex;
     flex-direction: column;
     align-items: start;
     gap: var(--ui-tabs-gap);
   }
 
-  [data-slot~="tabs-list"] {
+  :where(ui-tabs, [data-ui~="tabs"]) [data-tabs-slot~="list"] {
     position: relative;
     display: inline-flex;
     align-items: center;
     gap: var(--ui-tabs-track-gap);
     padding: var(--ui-tabs-track-padding);
-    border-radius: var(--ui-tabs-track-radius);
-    background-color: var(--ui-tabs-track-background);
+    border-radius: var(--ui-tabs-track-rounded);
+    background-color: var(--ui-tabs-track-bg);
 
-    /* Scoped so [data-slot~="tabs-indicator"] can resolve --active-tab even when an ancestor
-       (e.g. [data-slot~="navigation-menu-item"]) sets anchor-scope to its own trigger name. */
+    /* Scoped so [data-tabs-slot~="indicator"] can resolve --active-tab even when an ancestor
+       (e.g. [data-navigation-menu-slot~="item"]) sets anchor-scope to its own trigger name. */
     anchor-scope: --active-tab;
   }
 
-  [data-slot~="tabs-indicator"] {
+  :where(ui-tabs, [data-ui~="tabs"]) [data-tabs-slot~="indicator"] {
     position: absolute;
     z-index: 0;
     pointer-events: none;
-    border-radius: var(--ui-tabs-indicator-radius);
-    background-color: var(--ui-tabs-indicator-background);
+    border-radius: var(--ui-tabs-indicator-rounded);
+    background-color: var(--ui-tabs-indicator-bg);
     box-shadow: var(--ui-tabs-indicator-shadow);
     transition-property: left, right, top, bottom;
     transition-duration: var(--default-transition-duration);
@@ -89,14 +83,14 @@
     will-change: left, right, top, bottom;
   }
 
-  [data-slot~="tabs-list"] input[type="radio"] {
+  :where(ui-tabs, [data-ui~="tabs"]) [data-tabs-slot~="list"] input[type="radio"] {
     position: absolute;
     clip-path: inset(50%);
     opacity: 0;
     pointer-events: none;
   }
 
-  [data-slot~="tabs-list"] [data-slot~="tabs-label"] {
+  :where(ui-tabs, [data-ui~="tabs"]) [data-tabs-slot~="list"] [data-tabs-slot~="label"] {
     position: relative;
     z-index: 1;
     display: flex;
@@ -106,30 +100,35 @@
     font-family: var(--ui-tabs-label-font-family);
     font-size: var(--ui-tabs-label-font-size);
     font-weight: var(--ui-tabs-label-font-weight);
-    line-height: var(--ui-tabs-label-line-height);
+    line-height: var(--ui-tabs-label-leading);
 
-    min-block-size: var(--ui-tabs-label-min-block-size);
-    padding-inline: var(--ui-tabs-label-padding);
+    min-block-size: var(--ui-tabs-label-min-h);
+    padding-inline: var(--ui-tabs-label-px);
 
-    color: var(--ui-tabs-label-foreground);
-    background-color: var(--ui-tabs-label-background);
+    color: var(--ui-tabs-label-text);
+    background-color: var(--ui-tabs-label-bg);
     text-wrap: balance;
 
     cursor: pointer;
     user-select: none;
     text-box: trim-both ex alphabetic;
 
-    border-radius: var(--ui-tabs-indicator-radius);
+    border-radius: var(--ui-tabs-indicator-rounded);
 
     /* ring renders as box-shadow so it composes with the indicator shadow in
        the no-anchor fallback below; the ring widths animate from 0 so the
        ring grows in smoothly on focus */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    --_ring: color-mix(in oklch, var(--ui-tabs-label-ring-color) var(--ring-opacity), transparent);
+    --_ring-fill: color-mix(
+      in oklch,
+      var(--ui-tabs-label-ring-color) var(--ring-opacity),
+      transparent
+    );
     box-shadow:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring, var(--ring));
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+        var(--_ring-fill, var(--ring-shadow-color));
 
     /* transparent twin of the ring for forced-colors / high-contrast modes */
     outline: var(--outline-width) var(--outline-style) transparent;
@@ -137,43 +136,44 @@
     transition: var(--default-transition);
   }
 
-  [data-slot~="tabs-list"] [data-slot~="tabs-label"]:hover {
-    color: var(--ui-tabs-label-foreground--hover);
-    background-color: var(--ui-tabs-label-background--hover);
+  @media (hover: hover) {
+    :where(ui-tabs, [data-ui~="tabs"]) [data-tabs-slot~="list"] [data-tabs-slot~="label"]:hover {
+      color: var(--ui-tabs-label-text--hover);
+      background-color: var(--ui-tabs-label-bg--hover);
+    }
   }
 
-  [data-slot~="tabs-list"] [data-slot~="tabs-label"]:active {
-    color: var(--ui-tabs-label-foreground--active);
-    background-color: var(--ui-tabs-label-background--active);
+  :where(ui-tabs, [data-ui~="tabs"]) [data-tabs-slot~="list"] [data-tabs-slot~="label"]:active {
+    color: var(--ui-tabs-label-text--active);
+    background-color: var(--ui-tabs-label-bg--active);
   }
 
-  [data-slot~="tabs-list"] input[type="radio"]:checked + [data-slot~="tabs-label"] {
-    color: var(--ui-tabs-label-foreground--active);
+  :where(ui-tabs, [data-ui~="tabs"])
+    [data-tabs-slot~="list"]
+    input[type="radio"]:checked
+    + [data-tabs-slot~="label"] {
+    color: var(--ui-tabs-label-text--active);
     anchor-name: --active-tab;
   }
 
-  [data-slot~="tabs-list"] input[type="radio"]:focus-visible + [data-slot~="tabs-label"] {
+  :where(ui-tabs, [data-ui~="tabs"])
+    [data-tabs-slot~="list"]
+    input[type="radio"]:focus-visible
+    + [data-tabs-slot~="label"] {
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
 
     outline-color: transparent;
   }
 
-  /* ===========================================================================
-  INDICATOR POSITIONING — anchor positioning (Chromium 125+) with a paint
-  fallback. The pill sizes itself from the checked label via anchor() insets;
-  the checked label exposes itself as --active-tab. [data-slot~="tabs-list"] sets
-  anchor-scope: --active-tab so the pill still resolves inside scoped ancestors
-  (navigation menu items scope their trigger name). Where anchor positioning is
-  unavailable (Firefox, Safari) the anchor() insets would be invalid and the
-  pill would collapse to nothing — leaving the active tab with no affordance, as
-  its label background is transparent by design. So in the fallback we hide the
-  floating pill and paint the checked label (card fill + shadow) directly. The
-  trade-off is the loss of the slide animation, not the active-state indication.
-  =========================================================================== */
+  /* Indicator positioning: the pill sizes itself from the checked label (exposed
+     as --active-tab) via anchor() insets. Without anchor positioning the insets
+     are invalid and the pill collapses, leaving the active tab unmarked (label
+     background is transparent), so the fallback hides the pill and paints the
+     checked label directly, losing only the slide animation. */
 
   @supports (anchor-name: --active-tab) {
-    [data-slot~="tabs-indicator"] {
+    :where(ui-tabs, [data-ui~="tabs"]) [data-tabs-slot~="indicator"] {
       position-anchor: --active-tab;
       /* physical top/left/right/bottom: anchor() only accepts physical side keywords */
       top: calc(anchor(--active-tab top) + var(--ui-tabs-indicator-inset));
@@ -182,132 +182,133 @@
       bottom: calc(anchor(--active-tab bottom) + var(--ui-tabs-indicator-inset));
     }
 
-    [data-slot~="tabs-list"] input[type="radio"]:checked + [data-slot~="tabs-label"] {
-      background-color: var(--ui-tabs-label-background--active);
+    :where(ui-tabs, [data-ui~="tabs"])
+      [data-tabs-slot~="list"]
+      input[type="radio"]:checked
+      + [data-tabs-slot~="label"] {
+      background-color: var(--ui-tabs-label-bg--active);
     }
   }
 
   @supports not (anchor-name: --active-tab) {
-    [data-slot~="tabs-indicator"] {
+    :where(ui-tabs, [data-ui~="tabs"]) [data-tabs-slot~="indicator"] {
       display: none;
     }
 
-    [data-slot~="tabs-list"] input[type="radio"]:checked + [data-slot~="tabs-label"] {
-      border-radius: var(--ui-tabs-indicator-radius);
-      background-color: var(--ui-tabs-indicator-background);
+    :where(ui-tabs, [data-ui~="tabs"])
+      [data-tabs-slot~="list"]
+      input[type="radio"]:checked
+      + [data-tabs-slot~="label"] {
+      border-radius: var(--ui-tabs-indicator-rounded);
+      background-color: var(--ui-tabs-indicator-bg);
       box-shadow:
-        0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
-        0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring, var(--ring)),
+        0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
+        0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+          var(--_ring-fill, var(--ring-shadow-color)),
         var(--ui-tabs-indicator-shadow);
     }
   }
 
-  /* Nth radio in [data-slot~="tabs-list"] → (N + 1)th child of :where(ui-tabs, .ui-tabs) (after [data-slot~="tabs-list"]).
-     The per-index enumeration below (capped at 24 tabs) is irreducible in pure
-     CSS: it correlates the checked radio's position with a panel's position,
-     and selectors cannot do index arithmetic. sibling-index()/sibling-count()
-     (Baseline 2026) do NOT replace it — they are value functions (<integer> in
-     calc() on the element they're used on), unusable inside selectors, and no
-     mechanism carries the checked radio's index out of its own subtree (custom
-     properties only inherit down; only :has() looks up, and it can't count).
-     Hiding must stay display:none (accessibility: opacity/size tricks leave
-     panels focusable), so a value-level rewrite has nowhere to land. */
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(1):not(:checked)
+  /* Nth radio in the list maps to the (N + 1)th child of the root. Selectors
+     cannot do index arithmetic and sibling-index() is a value function, so the
+     per-index enumeration (capped at 24 tabs) is needed. Hiding stays
+     display:none so hidden panels are not focusable. */
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(1):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(2),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(2):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(2),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(2):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(3),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(3):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(3),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(3):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(4),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(4):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(4),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(4):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(5),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(5):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(5),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(5):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(6),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(6):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(6),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(6):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(7),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(7):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(7),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(7):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(8),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(8):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(8),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(8):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(9),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(9):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(9),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(9):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(10),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(10):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(10),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(10):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(11),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(11):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(11),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(11):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(12),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(12):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(12),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(12):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(13),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(13):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(13),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(13):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(14),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(14):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(14),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(14):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(15),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(15):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(15),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(15):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(16),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(16):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(16),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(16):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(17),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(17):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(17),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(17):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(18),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(18):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(18),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(18):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(19),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(19):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(19),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(19):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(20),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(20):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(20),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(20):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(21),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(21):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(21),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(21):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(22),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(22):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(22),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(22):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(23),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(23):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(23),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(23):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(24),
-  :where(ui-tabs, .ui-tabs):has(
-      [data-slot~="tabs-list"] > input[type="radio"]:nth-of-type(24):not(:checked)
+    > [data-tabs-slot~="panel"]:nth-child(24),
+  :where(ui-tabs, [data-ui~="tabs"]):has(
+      [data-tabs-slot~="list"] > input[type="radio"]:nth-of-type(24):not(:checked)
     )
-    > [data-slot~="tabs-panel"]:nth-child(25) {
+    > [data-tabs-slot~="panel"]:nth-child(25) {
     display: none !important;
   }
 
@@ -315,17 +316,17 @@
   DIRECTIONAL VARIANTS
   =========================================================================== */
 
-  :where(ui-tabs, .ui-tabs)[data-orientation="vertical"] {
+  :where(ui-tabs, [data-ui~="tabs"])[data-tabs-orientation="vertical"] {
     flex-direction: row;
   }
 
-  :where(ui-tabs, .ui-tabs)[data-orientation="vertical"] [data-slot~="tabs-list"] {
+  :where(ui-tabs, [data-ui~="tabs"])[data-tabs-orientation="vertical"] [data-tabs-slot~="list"] {
     flex-direction: column;
     align-items: stretch;
-    min-inline-size: var(--step-44);
+    min-inline-size: calc(var(--spacing) * 44);
   }
 
-  :where(ui-tabs, .ui-tabs)[data-orientation="vertical"] [data-slot~="tabs-label"] {
+  :where(ui-tabs, [data-ui~="tabs"])[data-tabs-orientation="vertical"] [data-tabs-slot~="label"] {
     text-align: start;
     justify-content: start;
   }

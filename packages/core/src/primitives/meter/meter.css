@@ -1,8 +1,8 @@
 /**
- * meter.css: Meter (.ui-meter on native <meter>)
+ * meter.css: Meter ([data-ui~="meter"] on native <meter>)
  *
  * @layer      variables, reset
- * @requires   layers.css, _variables.css, _reset.css, progress.css
+ * @requires   _layers.css, _variables.css, _reset.css, _properties.css (--_*-resolved), progress.css
  * @uses       appearance: none: element box becomes the track; only the fill
  *             needs vendor pseudo-elements (::-webkit-meter-*-value,
  *             ::-moz-meter-bar + :-moz-meter-* state classes); never combine
@@ -21,16 +21,16 @@
   :root {
     /* Geometry rides the progress family so the two bars read identically;
        retune a --ui-progress-* token and both follow. */
-    --ui-meter-inline-size: var(--ui-progress-inline-size);
-    --ui-meter-block-size: var(--ui-progress-block-size);
-    --ui-meter-radius: var(--ui-progress-radius);
-    --ui-meter-track-background: var(--ui-progress-track-background);
+    --ui-meter-w: var(--ui-progress-w);
+    --ui-meter-h: var(--ui-progress-h);
+    --ui-meter-rounded: var(--ui-progress-rounded);
+    --ui-meter-bg: var(--ui-progress-bg);
     --ui-meter-track-border: var(--ui-progress-track-border);
 
     /* Fills are semantic: a meter communicates good/bad, not completion */
-    --ui-meter-bar-background: var(--success);
-    --ui-meter-bar-background--suboptimum: var(--warning);
-    --ui-meter-bar-background--even-less-good: var(--destructive);
+    --ui-meter-bar-bg: var(--color-success);
+    --ui-meter-bar-bg--suboptimum: var(--color-warning);
+    --ui-meter-bar-bg--even-less-good: var(--color-destructive);
   }
 }
 
@@ -42,55 +42,59 @@
     state classes. One rule per vendor pseudo, by necessity.
   =========================================================================== */
 
-  :where(.ui-meter) {
-    inline-size: var(--ui-meter-inline-size);
-    block-size: var(--ui-meter-block-size);
+  :where([data-ui~="meter"]) {
+    --_w-len: var(--_w-resolved, var(--ui-meter-w));
+    --_w-num: var(--_w-resolved, var(--ui-meter-w));
+    inline-size: calc(var(--_w-len) + var(--_w-num) * var(--spacing));
+    --_h-len: var(--_h-resolved, var(--ui-meter-h));
+    --_h-num: var(--_h-resolved, var(--ui-meter-h));
+    block-size: calc(var(--_h-len) + var(--_h-num) * var(--spacing));
     overflow: hidden;
-    background-color: var(--ui-meter-track-background);
+    background-color: var(--_bg-resolved, var(--ui-meter-bg));
     border: var(--ui-meter-track-border);
-    border-radius: var(--ui-meter-radius);
+    border-radius: var(--_rounded-resolved, var(--ui-meter-rounded));
   }
 
-  :where(.ui-meter)::-webkit-meter-bar {
+  :where([data-ui~="meter"])::-webkit-meter-bar {
     background: transparent;
     border: none;
     block-size: 100%;
   }
 
   /* The value pseudos keep a UA-default height unless given one explicitly */
-  :where(.ui-meter)::-webkit-meter-optimum-value {
+  :where([data-ui~="meter"])::-webkit-meter-optimum-value {
     block-size: 100%;
-    background: var(--ui-meter-bar-background);
+    background: var(--ui-meter-bar-bg);
     border-radius: inherit;
   }
 
-  :where(.ui-meter)::-webkit-meter-suboptimum-value {
+  :where([data-ui~="meter"])::-webkit-meter-suboptimum-value {
     block-size: 100%;
-    background: var(--ui-meter-bar-background--suboptimum);
+    background: var(--ui-meter-bar-bg--suboptimum);
     border-radius: inherit;
   }
 
-  :where(.ui-meter)::-webkit-meter-even-less-good-value {
+  :where([data-ui~="meter"])::-webkit-meter-even-less-good-value {
     block-size: 100%;
-    background: var(--ui-meter-bar-background--even-less-good);
+    background: var(--ui-meter-bar-bg--even-less-good);
     border-radius: inherit;
   }
 
-  :where(.ui-meter)::-moz-meter-bar {
+  :where([data-ui~="meter"])::-moz-meter-bar {
     block-size: 100%;
     border-radius: inherit;
   }
 
-  :where(.ui-meter:-moz-meter-optimum)::-moz-meter-bar {
-    background: var(--ui-meter-bar-background);
+  :where([data-ui~="meter"]:-moz-meter-optimum)::-moz-meter-bar {
+    background: var(--ui-meter-bar-bg);
   }
 
-  :where(.ui-meter:-moz-meter-sub-optimum)::-moz-meter-bar {
-    background: var(--ui-meter-bar-background--suboptimum);
+  :where([data-ui~="meter"]:-moz-meter-sub-optimum)::-moz-meter-bar {
+    background: var(--ui-meter-bar-bg--suboptimum);
   }
 
-  :where(.ui-meter:-moz-meter-sub-sub-optimum)::-moz-meter-bar {
-    background: var(--ui-meter-bar-background--even-less-good);
+  :where([data-ui~="meter"]:-moz-meter-sub-sub-optimum)::-moz-meter-bar {
+    background: var(--ui-meter-bar-bg--even-less-good);
   }
 
   /* ===========================================================================
@@ -105,7 +109,7 @@
   =========================================================================== */
 
   @supports (inline-size: calc(attr(value type(<number>), 0) * 1px)) {
-    :where(.ui-meter) {
+    :where([data-ui~="meter"]) {
       /* Attribute facts, with the spec's defaults */
       --_val: attr(value type(<number>), 0);
       --_min: attr(min type(<number>), 0);
@@ -135,12 +139,11 @@
       /* distance 0 → optimal, 1 → suboptimal, 2 → even less good */
       --_fill: color-mix(
         in oklch,
-        var(--ui-meter-bar-background--even-less-good)
-          calc(clamp(0, var(--_distance) - 1, 1) * 100%),
+        var(--ui-meter-bar-bg--even-less-good) calc(clamp(0, var(--_distance) - 1, 1) * 100%),
         color-mix(
           in oklch,
-          var(--ui-meter-bar-background--suboptimum) calc(min(var(--_distance), 1) * 100%),
-          var(--ui-meter-bar-background)
+          var(--ui-meter-bar-bg--suboptimum) calc(min(var(--_distance), 1) * 100%),
+          var(--ui-meter-bar-bg)
         )
       );
 
@@ -153,25 +156,25 @@
       background-clip: padding-box;
     }
 
-    :where(.ui-meter:dir(rtl)) {
+    :where([data-ui~="meter"]:dir(rtl)) {
       background-image: linear-gradient(to left, var(--_fill) var(--_pct), transparent var(--_pct));
     }
 
     /* The shadow fills would double-paint under the gradient (the UA styles
        these parts with a bevel background-image) */
-    :where(.ui-meter)::-webkit-meter-optimum-value {
+    :where([data-ui~="meter"])::-webkit-meter-optimum-value {
       background: transparent;
     }
 
-    :where(.ui-meter)::-webkit-meter-suboptimum-value {
+    :where([data-ui~="meter"])::-webkit-meter-suboptimum-value {
       background: transparent;
     }
 
-    :where(.ui-meter)::-webkit-meter-even-less-good-value {
+    :where([data-ui~="meter"])::-webkit-meter-even-less-good-value {
       background: transparent;
     }
 
-    :where(.ui-meter)::-moz-meter-bar {
+    :where([data-ui~="meter"])::-moz-meter-bar {
       background: transparent;
     }
   }

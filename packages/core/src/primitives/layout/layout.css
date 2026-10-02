@@ -1,0 +1,167 @@
+/**
+ * layout.css — Layout (ui-layout | [data-ui~="layout"]): the band grid
+ *
+ * @layer      variables, components
+ * @requires   _layers.css, _variables.css (--gutters), _breakpoints.css (--breakpoint-*),
+ *             _properties.css (--_col-resolved)
+ * @uses       named grid lines + implicit named areas: `--col: layout-md` on a
+ *             child resolves through `layout-md-start / layout-md-end`
+ * @uses       grid-template-columns: subgrid — a nested layout keeps the parent's
+ *             line names
+ * @tokens     --ui-layout-* (@layer variables)
+ * @presets    data-layout-size="2xs | xs | sm | md | lg | xl | 2xl | full | bleed"
+ *             (the default band for this layout's children; lg when absent)
+ *
+ * The layout element itself is the grid; nothing styles a parent. Each side band
+ * is a clamp() that stays at 0 until the inner content has reached its breakpoint
+ * width, then grows up to its fixed step, so a band caps and centers while there
+ * is room and fluidly fills (minus gutters) once there is not. Band widths equal
+ * the breakpoint widths; `layout-full` is the layout minus the gutters;
+ * `layout-bleed` runs edge to edge. Children are placed by the chain
+ * `var(--_col-resolved, var(--ui-layout-band))`: a `--col` utility (or tier) on the
+ * child, else the layout's default band. The `--col` no-base rule excludes layout
+ * children (utilities.ts), so a tier-only `--col--lg` keeps the band below lg.
+ */
+
+@layer variables {
+  :root {
+    --ui-layout-gutters: var(--gutters);
+    /* inline space left for the bands once the two gutters are removed */
+    --ui-layout-available: calc(100% - var(--ui-layout-gutters) * 2);
+    /* the default band for children; data-layout-size changes it per layout */
+    --ui-layout-band: layout-lg;
+    --ui-layout-template-columns: [layout-bleed-start] var(--ui-layout-gutters) [layout-full-start]
+      minmax(0, 1fr) [layout-2xl-start]
+      clamp(
+        0rem,
+        calc((var(--ui-layout-available) - var(--breakpoint-xl)) / 2),
+        calc((var(--breakpoint-2xl) - var(--breakpoint-xl)) / 2)
+      )
+      [layout-xl-start]
+      clamp(
+        0rem,
+        calc((var(--ui-layout-available) - var(--breakpoint-lg)) / 2),
+        calc((var(--breakpoint-xl) - var(--breakpoint-lg)) / 2)
+      )
+      [layout-lg-start]
+      clamp(
+        0rem,
+        calc((var(--ui-layout-available) - var(--breakpoint-md)) / 2),
+        calc((var(--breakpoint-lg) - var(--breakpoint-md)) / 2)
+      )
+      [layout-md-start]
+      clamp(
+        0rem,
+        calc((var(--ui-layout-available) - var(--breakpoint-sm)) / 2),
+        calc((var(--breakpoint-md) - var(--breakpoint-sm)) / 2)
+      )
+      [layout-sm-start]
+      clamp(
+        0rem,
+        calc((var(--ui-layout-available) - var(--breakpoint-xs)) / 2),
+        calc((var(--breakpoint-sm) - var(--breakpoint-xs)) / 2)
+      )
+      [layout-xs-start]
+      clamp(
+        0rem,
+        calc((var(--ui-layout-available) - var(--breakpoint-2xs)) / 2),
+        calc((var(--breakpoint-xs) - var(--breakpoint-2xs)) / 2)
+      )
+      [layout-2xs-start] clamp(0rem, var(--ui-layout-available), var(--breakpoint-2xs))
+      [layout-2xs-end]
+      clamp(
+        0rem,
+        calc((var(--ui-layout-available) - var(--breakpoint-2xs)) / 2),
+        calc((var(--breakpoint-xs) - var(--breakpoint-2xs)) / 2)
+      )
+      [layout-xs-end]
+      clamp(
+        0rem,
+        calc((var(--ui-layout-available) - var(--breakpoint-xs)) / 2),
+        calc((var(--breakpoint-sm) - var(--breakpoint-xs)) / 2)
+      )
+      [layout-sm-end]
+      clamp(
+        0rem,
+        calc((var(--ui-layout-available) - var(--breakpoint-sm)) / 2),
+        calc((var(--breakpoint-md) - var(--breakpoint-sm)) / 2)
+      )
+      [layout-md-end]
+      clamp(
+        0rem,
+        calc((var(--ui-layout-available) - var(--breakpoint-md)) / 2),
+        calc((var(--breakpoint-lg) - var(--breakpoint-md)) / 2)
+      )
+      [layout-lg-end]
+      clamp(
+        0rem,
+        calc((var(--ui-layout-available) - var(--breakpoint-lg)) / 2),
+        calc((var(--breakpoint-xl) - var(--breakpoint-lg)) / 2)
+      )
+      [layout-xl-end]
+      clamp(
+        0rem,
+        calc((var(--ui-layout-available) - var(--breakpoint-xl)) / 2),
+        calc((var(--breakpoint-2xl) - var(--breakpoint-xl)) / 2)
+      )
+      [layout-2xl-end] minmax(0, 1fr) [layout-full-end] var(--ui-layout-gutters) [layout-bleed-end];
+  }
+}
+
+@layer zazz.components {
+  :where(ui-layout, [data-ui~="layout"]) {
+    display: grid;
+    grid-template-columns: var(--ui-layout-template-columns);
+    /* the bands are positioned exactly by the template: no column gap */
+    column-gap: 0;
+    /* children sit at the block start and stretch across their band */
+    place-items: start stretch;
+    /* a container context would break a nested subgrid */
+    container-type: normal;
+  }
+
+  :where(ui-layout, [data-ui~="layout"]) > * {
+    grid-column: var(--_col-resolved, var(--ui-layout-band));
+  }
+
+  /* A layout inside a band is a subgrid and keeps the parent's line names */
+  :where(ui-layout, [data-ui~="layout"]) :where(ui-layout, [data-ui~="layout"]) {
+    grid-template-columns: subgrid;
+  }
+
+  :where(ui-layout[data-layout-size="2xs"], [data-ui~="layout"][data-layout-size="2xs"]) {
+    --ui-layout-band: layout-2xs;
+  }
+
+  :where(ui-layout[data-layout-size="xs"], [data-ui~="layout"][data-layout-size="xs"]) {
+    --ui-layout-band: layout-xs;
+  }
+
+  :where(ui-layout[data-layout-size="sm"], [data-ui~="layout"][data-layout-size="sm"]) {
+    --ui-layout-band: layout-sm;
+  }
+
+  :where(ui-layout[data-layout-size="md"], [data-ui~="layout"][data-layout-size="md"]) {
+    --ui-layout-band: layout-md;
+  }
+
+  :where(ui-layout[data-layout-size="lg"], [data-ui~="layout"][data-layout-size="lg"]) {
+    --ui-layout-band: layout-lg;
+  }
+
+  :where(ui-layout[data-layout-size="xl"], [data-ui~="layout"][data-layout-size="xl"]) {
+    --ui-layout-band: layout-xl;
+  }
+
+  :where(ui-layout[data-layout-size="2xl"], [data-ui~="layout"][data-layout-size="2xl"]) {
+    --ui-layout-band: layout-2xl;
+  }
+
+  :where(ui-layout[data-layout-size="full"], [data-ui~="layout"][data-layout-size="full"]) {
+    --ui-layout-band: layout-full;
+  }
+
+  :where(ui-layout[data-layout-size="bleed"], [data-ui~="layout"][data-layout-size="bleed"]) {
+    --ui-layout-band: layout-bleed;
+  }
+}

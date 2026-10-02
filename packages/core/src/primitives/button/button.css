@@ -1,93 +1,239 @@
 /**
- * button.css — Button (.ui-button)
+ * button.css — Button ([data-ui~="button"])
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css, _reset.css, fields.css (--ui-field-* metrics), kbd.css (--ui-kbd-*)
+ * @requires   _layers.css, _variables.css, _reset.css, _properties.css (--_*-resolved, --_focus-ring), fields.css (--ui-field-* metrics), kbd.css (--ui-kbd-*)
  * @uses       color-mix(), oklch(from …) — variant hover/active tints
  * @uses       text-box — vertical trim (patchy browser support)
- * @tokens     --ui-button-* (@layer variables; metrics default to the --ui-field-* family)
- * @consumedby toggle.css (reads the --ui-button-* token family)
+ * @tokens     --ui-button-* (@layer variables; hooks are named after the utilities they back; metrics default to the --ui-field-* family)
+ * @consumedby toggle.css, select.css, button-group.css, autocomplete.css, combobox.css,
+ *             command.css, lightbox.css, menu.css, navigation-menu.css, popover.css
+ *
+ * Every utility-backed declaration reads one chain, highest first:
+ *   var(--_<utility>-resolved, var(--_button-<utility>, var(--ui-button-<utility>)))
+ * The resolver is set by the utilities layer from the element's `style` gate
+ * (inline utilities and their tiers), the private by a variant or size on this
+ * element, and the hook by :root, a subtree, or an inline hook.
  */
 
 @layer variables {
   :root {
-    /* Metrics default to the shared --ui-field-* family (owned in fields.css) so a
-       button sitting beside an input, select, or textarea reads as one family:
-       retune a --ui-field-* token and buttons follow; remap a --ui-button-* token
-       to diverge just the buttons. Colors stay independent — a button surface is
-       not a field surface, and button borders don't go primary on hover. */
+    /* metrics follow --ui-field-* so buttons match adjacent fields; remap a
+       --ui-button-* token to diverge. Colors stay independent: a button is not a
+       field surface, and its border doesn't go primary on hover. */
     --ui-button-ring-color: var(--ui-field-ring-color);
 
     --ui-button-font-family: var(--font-family-body);
     --ui-button-font-size: var(--ui-field-font-size);
     --ui-button-font-weight: var(--font-weight-strong);
-    --ui-button-line-height: var(--ui-field-line-height);
+    --ui-button-leading: var(--ui-field-leading);
 
-    --ui-button-background: var(--card);
-    --ui-button-background--hover: var(--muted);
-    --ui-button-background--active: oklch(from var(--muted) l c h / calc(alpha - 0.02));
+    --ui-button-bg: var(--color-card);
+    --ui-button-bg--hover: var(--color-muted);
+    --ui-button-bg--active: oklch(from var(--color-muted) l c h / calc(alpha - 0.02));
 
-    --ui-button-foreground: var(--foreground);
-    --ui-button-foreground--hover: var(--foreground);
-    --ui-button-foreground--active: var(--foreground);
+    --ui-button-text: var(--color-foreground);
+    --ui-button-text--hover: var(--color-foreground);
+    --ui-button-text--active: var(--color-foreground);
 
     --ui-button-border-width: var(--ui-field-border-width);
     --ui-button-border-style: var(--ui-field-border-style);
-    --ui-button-border-color: var(--border);
-    --ui-button-border-color--hover: var(--border);
-    --ui-button-border-color--active: var(--border);
+    --ui-button-border-color: var(--color-border);
+    --ui-button-border-color--hover: var(--color-border);
+    --ui-button-border-color--active: var(--color-border);
 
-    --ui-button-gap: var(--step-1);
-    --ui-button-padding: var(--ui-field-padding);
-    --ui-button-block-size: var(--ui-field-block-size);
-    --ui-button-radius: var(--ui-field-radius);
+    /* dual-mode: a scale number or a length */
+    --ui-button-gap: var(--spacing);
+    --ui-button-px: var(--ui-field-px);
+    --ui-button-min-h: var(--ui-field-h);
+    --ui-button-rounded: var(--ui-field-rounded);
 
     --ui-button-icon-size: var(--ui-field-icon-size);
 
-    /* composes into the button's box-shadow list — use a transparent shadow,
-       never `none`, so the focus ring layers stay valid */
+    /* never `none`: the focus ring layers into this box-shadow list */
     --ui-button-shadow: 0 0 transparent;
   }
 }
 
-@layer zazz.components {
-  /* ===========================================================================
-  BUTTON
-  =========================================================================== */
+/* Variant privates: non-inheriting so a variant never cascades into a nested
+   button. Unset, they are guaranteed-invalid and the chain falls to the hook. */
+@property --_button-ring-color {
+  syntax: "*";
+  inherits: false;
+}
 
-  .ui-button {
-    font-family: var(--ui-button-font-family);
-    font-size: var(--ui-button-font-size);
-    font-weight: var(--ui-button-font-weight);
-    line-height: var(--ui-button-line-height);
+@property --_button-font-family {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-font-size {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-font-weight {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-leading {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-bg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-bg--hover {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-bg--active {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-text {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-text--hover {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-text--active {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-border-width {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-border-style {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-border-color {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-border-color--hover {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-border-color--active {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-gap {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-px {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-min-h {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-rounded {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-icon-size {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_button-shadow {
+  syntax: "*";
+  inherits: false;
+}
+
+@layer zazz.components {
+  :where([data-ui~="button"]) {
+    font-family: var(
+      --_font-family-resolved,
+      var(--_button-font-family, var(--ui-button-font-family))
+    );
+    font-size: var(--_font-size-resolved, var(--_button-font-size, var(--ui-button-font-size)));
+    font-weight: var(
+      --_font-weight-resolved,
+      var(--_button-font-weight, var(--ui-button-font-weight))
+    );
+    line-height: var(--_leading-resolved, var(--_button-leading, var(--ui-button-leading)));
 
     display: flex;
     align-items: center;
     justify-content: center;
-    column-gap: var(--ui-button-gap);
     flex-shrink: 0;
 
-    min-block-size: var(--ui-button-block-size);
+    --_gap-len: var(--_gap-resolved, var(--_button-gap, var(--ui-button-gap)));
+    --_gap-num: var(--_gap-resolved, var(--_button-gap, var(--ui-button-gap)));
+    column-gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));
+
+    --_min-h-len: var(--_min-h-resolved, var(--_button-min-h, var(--ui-button-min-h)));
+    --_min-h-num: var(--_min-h-resolved, var(--_button-min-h, var(--ui-button-min-h)));
+    min-block-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
     min-inline-size: max-content;
-    padding-inline: var(--ui-button-padding);
 
-    border: var(--ui-button-border-width) var(--ui-button-border-style)
-      var(--ui-button-border-color);
-    border-radius: var(--ui-button-radius);
+    --_px-len: var(--_px-resolved, var(--_button-px, var(--ui-button-px)));
+    --_px-num: var(--_px-resolved, var(--_button-px, var(--ui-button-px)));
+    padding-inline: calc(var(--_px-len) + var(--_px-num) * var(--spacing));
 
-    color: var(--ui-button-foreground);
-    background-color: var(--ui-button-background);
+    border-width: var(
+      --_border-width-resolved,
+      var(--_button-border-width, var(--ui-button-border-width))
+    );
+    border-style: var(
+      --_border-style-resolved,
+      var(--_button-border-style, var(--ui-button-border-style))
+    );
+    border-color: var(
+      --_border-color-resolved,
+      var(--_button-border-color, var(--ui-button-border-color))
+    );
+    border-radius: var(--_rounded-resolved, var(--_button-rounded, var(--ui-button-rounded)));
+
+    color: var(--_text-resolved, var(--_button-text, var(--ui-button-text)));
+    background-color: var(--_bg-resolved, var(--_button-bg, var(--ui-button-bg)));
     background-clip: padding-box;
 
-    /* ring renders as box-shadow so it composes with --ui-button-shadow; the
-       ring widths animate from 0 so the ring grows in smoothly on focus */
+    /* The ring is published to --_focus-ring so the utilities layer's
+       box-shadow emission keeps it above a --shadow or --ring utility; the ring
+       widths grow from 0 on :focus-visible so the ring eases in. */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    --_ring: color-mix(in oklch, var(--ui-button-ring-color) var(--ring-opacity), transparent);
+    --_ring-fill: color-mix(
+      in oklch,
+      var(--_ring-color-resolved, var(--_button-ring-color, var(--ui-button-ring-color)))
+        var(--ring-opacity),
+      transparent
+    );
+    --_focus-ring:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+        var(--_ring-fill, var(--ring-shadow-color));
     box-shadow:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring, var(--ring)),
-      var(--ui-button-shadow);
+      var(--_focus-ring, 0 0 #0000),
+      var(--_shadow-resolved, var(--_button-shadow, var(--ui-button-shadow)));
 
     cursor: default;
     text-decoration: none;
@@ -102,8 +248,8 @@
     text-box: trim-both ex alphabetic;
   }
 
-  a[href] .ui-button:not(:disabled, [aria-disabled="true"]),
-  a[href].ui-button:not(:disabled, [aria-disabled="true"]) {
+  a[href] :where([data-ui~="button"]):not(:disabled, [aria-disabled="true"]),
+  a[href]:where([data-ui~="button"]):not(:disabled, [aria-disabled="true"]) {
     cursor: pointer;
   }
 
@@ -111,29 +257,38 @@
   BUTTON STATES
   =========================================================================== */
 
-  .ui-button:hover:not(:disabled, [aria-disabled="true"]) {
-    color: var(--ui-button-foreground--hover);
-    background-color: var(--ui-button-background--hover);
-    border-color: var(--ui-button-border-color--hover);
+  @media (hover: hover) {
+    :where([data-ui~="button"]):hover:not(:disabled, [aria-disabled="true"]) {
+      color: var(--_text-resolved, var(--_button-text--hover, var(--ui-button-text--hover)));
+      background-color: var(--_bg-resolved, var(--_button-bg--hover, var(--ui-button-bg--hover)));
+      border-color: var(
+        --_border-color-resolved,
+        var(--_button-border-color--hover, var(--ui-button-border-color--hover))
+      );
+    }
   }
 
-  .ui-button:active:not(:disabled, [aria-disabled="true"]) {
-    color: var(--ui-button-foreground--active);
-    background-color: var(--ui-button-background--active);
-    border-color: var(--ui-button-border-color--active);
+  :where([data-ui~="button"]):active:not(:disabled, [aria-disabled="true"]) {
+    color: var(--_text-resolved, var(--_button-text--active, var(--ui-button-text--active)));
+    background-color: var(--_bg-resolved, var(--_button-bg--active, var(--ui-button-bg--active)));
+    border-color: var(
+      --_border-color-resolved,
+      var(--_button-border-color--active, var(--ui-button-border-color--active))
+    );
   }
 
-  .ui-button:focus-visible:not(:disabled, [aria-disabled="true"]) {
+  :where([data-ui~="button"]):focus-visible:not(:disabled, [aria-disabled="true"]) {
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
 
     outline-color: transparent;
   }
 
-  :is(.ui-button:disabled, .ui-button[aria-disabled="true"]) {
-    --ui-button-foreground: var(--muted-foreground);
-    --ui-button-background: var(--muted);
-    --ui-button-shadow: 0 0 transparent;
+  /* before the variants at the same specificity: a disabled primary keeps its color; only the default surface goes muted */
+  :where([data-ui~="button"]:is(:disabled, [aria-disabled="true"])) {
+    --_button-text: var(--color-muted-foreground);
+    --_button-bg: var(--color-muted);
+    --_button-shadow: 0 0 transparent;
     --decoration-line: none;
 
     cursor: default;
@@ -141,7 +296,7 @@
     outline: none;
   }
 
-  .ui-button[aria-busy="true"] {
+  :where([data-ui~="button"])[aria-busy="true"] {
     cursor: progress;
   }
 
@@ -149,7 +304,7 @@
   BUTTON ICONS
   =========================================================================== */
 
-  .ui-button > svg {
+  :where([data-ui~="button"]) > svg {
     inline-size: var(--ui-button-icon-size);
     block-size: var(--ui-button-icon-size);
     pointer-events: none;
@@ -160,134 +315,133 @@
   }
 
   /* ===========================================================================
-  BUTTON VARIANTS
+  BUTTON VARIANTS — data-button-variant writes the privates
   =========================================================================== */
+  :where([data-ui~="button"][data-button-variant="outline"]) {
+    --_button-bg: transparent;
 
-  .ui-button[data-variant="primary"] {
-    --ui-button-background: var(--primary);
-    --ui-button-background--hover: oklch(from var(--primary) l c h / 0.9);
-    --ui-button-background--active: oklch(from var(--primary) l c h / 0.8);
-
-    --ui-button-foreground: var(--primary-foreground);
-    --ui-button-foreground--hover: var(--primary-foreground);
-    --ui-button-foreground--active: var(--primary-foreground);
-
-    --ui-button-border-color: var(--ui-button-background);
-    --ui-button-border-color--hover: var(--ui-button-background--hover);
-    --ui-button-border-color--active: var(--ui-button-background--active);
-
-    --ui-button-shadow: 0 0 transparent;
+    --_button-shadow: 0 0 transparent;
   }
 
-  .ui-button[data-variant="muted"] {
-    --ui-button-background: var(--muted);
-    --ui-button-background--hover: oklch(from var(--muted) l c h / calc(alpha - 0.02));
-    --ui-button-background--active: var(--muted);
+  :where([data-ui~="button"][data-button-variant="primary"]) {
+    --_button-bg: var(--color-primary);
+    --_button-bg--hover: oklch(from var(--color-primary) l c h / 0.9);
+    --_button-bg--active: oklch(from var(--color-primary) l c h / 0.8);
 
-    --ui-button-foreground: var(--foreground);
-    --ui-button-foreground--hover: var(--foreground);
-    --ui-button-foreground--active: var(--foreground);
+    --_button-text: var(--color-primary-foreground);
+    --_button-text--hover: var(--color-primary-foreground);
+    --_button-text--active: var(--color-primary-foreground);
 
-    --ui-button-border-color: var(--ui-button-background);
-    --ui-button-border-color--hover: var(--ui-button-background--hover);
-    --ui-button-border-color--active: var(--ui-button-background--active);
+    --_button-border-color: var(--_button-bg);
+    --_button-border-color--hover: var(--_button-bg--hover);
+    --_button-border-color--active: var(--_button-bg--active);
 
-    --ui-button-shadow: 0 0 transparent;
+    --_button-shadow: 0 0 transparent;
   }
 
-  .ui-button[data-variant="ghost"] {
-    --ui-button-background: transparent;
-    --ui-button-background--hover: var(--muted);
-    --ui-button-background--active: oklch(from var(--muted) l c h / calc(alpha - 0.02));
+  :where([data-ui~="button"][data-button-variant="muted"]) {
+    --_button-bg: var(--color-muted);
+    --_button-bg--hover: oklch(from var(--color-muted) l c h / calc(alpha - 0.02));
+    --_button-bg--active: var(--color-muted);
 
-    --ui-button-foreground: var(--foreground);
-    --ui-button-foreground--hover: var(--foreground);
-    --ui-button-foreground--active: var(--foreground);
+    --_button-text: var(--color-foreground);
+    --_button-text--hover: var(--color-foreground);
+    --_button-text--active: var(--color-foreground);
 
-    --ui-button-border-color: var(--ui-button-background);
-    --ui-button-border-color--hover: var(--ui-button-background--hover);
-    --ui-button-border-color--active: var(--ui-button-background--active);
+    --_button-border-color: var(--_button-bg);
+    --_button-border-color--hover: var(--_button-bg--hover);
+    --_button-border-color--active: var(--_button-bg--active);
 
-    --ui-button-shadow: 0 0 transparent;
+    --_button-shadow: 0 0 transparent;
   }
 
-  .ui-button[data-variant="destructive"] {
-    --ui-button-ring-color: var(--destructive);
+  :where([data-ui~="button"][data-button-variant="ghost"]) {
+    --_button-bg: transparent;
+    --_button-bg--hover: var(--color-muted);
+    --_button-bg--active: oklch(from var(--color-muted) l c h / calc(alpha - 0.02));
 
-    --ui-button-background: var(--destructive);
-    --ui-button-background--hover: oklch(from var(--destructive) l c h / 0.9);
-    --ui-button-background--active: oklch(from var(--destructive) l c h / 0.8);
+    --_button-text: var(--color-foreground);
+    --_button-text--hover: var(--color-foreground);
+    --_button-text--active: var(--color-foreground);
 
-    --ui-button-foreground: var(--destructive-foreground);
-    --ui-button-foreground--hover: var(--destructive-foreground);
-    --ui-button-foreground--active: var(--destructive-foreground);
+    --_button-border-color: var(--_button-bg);
+    --_button-border-color--hover: var(--_button-bg--hover);
+    --_button-border-color--active: var(--_button-bg--active);
 
-    --ui-button-border-color: var(--ui-button-background);
-    --ui-button-border-color--hover: var(--ui-button-background--hover);
-    --ui-button-border-color--active: var(--ui-button-background--active);
-
-    --ui-button-shadow: 0 0 transparent;
+    --_button-shadow: 0 0 transparent;
   }
 
-  .ui-button[data-variant="link"] {
-    --ui-button-background: transparent;
-    --ui-button-background--hover: transparent;
-    --ui-button-background--active: transparent;
+  :where([data-ui~="button"][data-button-variant="destructive"]) {
+    --_button-ring-color: var(--color-destructive);
 
-    --ui-button-foreground: var(--foreground);
-    --ui-button-foreground--hover: var(--primary);
-    --ui-button-foreground--active: oklch(from var(--primary) l c h / 0.8);
+    --_button-bg: var(--color-destructive);
+    --_button-bg--hover: oklch(from var(--color-destructive) l c h / 0.9);
+    --_button-bg--active: oklch(from var(--color-destructive) l c h / 0.8);
 
-    --ui-button-border-style: none;
+    --_button-text: var(--color-destructive-foreground);
+    --_button-text--hover: var(--color-destructive-foreground);
+    --_button-text--active: var(--color-destructive-foreground);
 
-    --ui-button-block-size: fit-content;
-    --ui-button-padding: 0;
-    --ui-button-radius: 0;
+    --_button-border-color: var(--_button-bg);
+    --_button-border-color--hover: var(--_button-bg--hover);
+    --_button-border-color--active: var(--_button-bg--active);
 
-    --ui-button-shadow: 0 0 transparent;
-
-    text-decoration-line: var(--decoration-line);
-    text-decoration-style: var(--decoration-style);
-    text-decoration-color: var(--decoration-color);
-    text-underline-offset: var(--decoration-offset);
-    text-decoration-thickness: var(--decoration-thickness);
+    --_button-shadow: 0 0 transparent;
   }
 
-  .ui-button[data-variant="link"]:hover:not(:disabled, [aria-disabled="true"]) {
-    text-decoration-color: var(--decoration-color--hover);
-    text-underline-offset: var(--decoration-offset--hover);
-  }
+  :where([data-ui~="button"][data-button-variant="link"]) {
+    --_button-bg: transparent;
+    --_button-bg--hover: transparent;
+    --_button-bg--active: transparent;
 
-  .ui-button[data-variant="link"]:active:not(:disabled, [aria-disabled="true"]) {
-    text-decoration-color: var(--decoration-color--active);
-    text-underline-offset: var(--decoration-offset--active);
+    --_button-text: var(--color-foreground);
+    --_button-text--hover: oklch(from var(--color-primary) l c h / 0.6);
+    --_button-text--active: oklch(from var(--color-primary) l c h / 0.5);
+
+    --_button-border-style: none;
+
+    /* no minimum: the link sizes to its text (dual mode cannot carry fit-content) */
+    --_button-min-h: 0;
+    --_button-px: 0;
+    --_button-rounded: 0;
+
+    --_button-shadow: 0 0 transparent;
   }
 
   /* ===========================================================================
-  BUTTON SIZES
+  BUTTON SIZES — data-button-size
   =========================================================================== */
 
-  .ui-button[data-size="sm"] {
-    --ui-button-block-size: var(--step-6);
-    --ui-button-padding: var(--step-2);
-    --ui-button-radius: var(--radius-sm);
+  :where([data-ui~="button"][data-button-size="sm"]) {
+    --_button-min-h: calc(var(--spacing) * 6);
+    --_button-px: calc(var(--spacing) * 2);
+    --_button-rounded: var(--radius-sm);
+    --_button-font-size: var(--font-size-xs);
   }
 
-  .ui-button[data-size="icon"] {
-    block-size: var(--ui-button-block-size);
-    inline-size: var(--ui-button-block-size);
+  :where(
+    ui-button-group,
+    [data-ui~="button-group"]:has([data-ui~="button"][data-button-size="sm"])
+  ) {
+    --_button-group-rounded: var(--radius-sm);
+  }
+
+  :where([data-ui~="button"][data-button-size="icon"]) {
+    block-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
+    inline-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
     padding: 0;
     aspect-ratio: 1 / 1;
   }
 
-  .ui-button[data-size="icon-sm"] {
-    --ui-button-block-size: var(--step-6);
-    --ui-button-padding: var(--step-2);
-    --ui-button-radius: var(--radius-sm);
-    --ui-button-icon-size: var(--step-3_5);
+  :where([data-ui~="button"][data-button-size="icon-sm"]) {
+    --_button-min-h: calc(var(--spacing) * 6);
+    --_button-px: calc(var(--spacing) * 2);
+    --_button-rounded: var(--radius-sm);
+    /* the hook, not a private: it must inherit to reach the icon */
+    --ui-button-icon-size: calc(var(--spacing) * 3.5);
 
-    block-size: var(--ui-button-block-size);
-    inline-size: var(--ui-button-block-size);
+    block-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
+    inline-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
     padding: 0;
     aspect-ratio: 1 / 1;
   }
@@ -297,29 +451,33 @@
   =========================================================================== */
 
   /* Descendant (not child) so keys wrapped in a ui-kbd-group still resize */
-  .ui-button :where(kbd) {
-    --ui-kbd-min-inline-size: var(--step-4_5);
-    --ui-kbd-min-block-size: var(--step-4_5);
-    --ui-kbd-icon-size: var(--step-3);
+  :where([data-ui~="button"]) :where(kbd) {
+    --ui-kbd-min-w: calc(var(--spacing) * 4.5);
+    --ui-kbd-min-h: calc(var(--spacing) * 4.5);
+    --ui-kbd-icon-size: calc(var(--spacing) * 3);
   }
 
-  .ui-button:has(> :where(kbd, ui-kbd-group, .ui-kbd-group):last-child:not(:only-child)) {
-    padding-inline-end: var(--step-1_5);
-  }
-
-  .ui-button:has(> :where(kbd, ui-kbd-group, .ui-kbd-group):first-child:not(:only-child)) {
-    padding-inline-start: var(--step-1_5);
-  }
-
-  .ui-button[data-size="sm"]:has(
-    > :where(kbd, ui-kbd-group, .ui-kbd-group):last-child:not(:only-child)
+  :where([data-ui~="button"]):has(
+    > :where(kbd, ui-kbd-group, [data-ui~="kbd-group"]):last-child:not(:only-child)
   ) {
-    padding-inline-end: var(--step-0_5);
+    padding-inline-end: calc(var(--spacing) * 1.5);
   }
 
-  .ui-button[data-size="sm"]:has(
-    > :where(kbd, ui-kbd-group, .ui-kbd-group):first-child:not(:only-child)
+  :where([data-ui~="button"]):has(
+    > :where(kbd, ui-kbd-group, [data-ui~="kbd-group"]):first-child:not(:only-child)
   ) {
-    padding-inline-start: var(--step-0_5);
+    padding-inline-start: calc(var(--spacing) * 1.5);
+  }
+
+  :where([data-ui~="button"][data-button-size="sm"]):has(
+    > :where(kbd, ui-kbd-group, [data-ui~="kbd-group"]):last-child:not(:only-child)
+  ) {
+    padding-inline-end: calc(var(--spacing) * 0.5);
+  }
+
+  :where([data-ui~="button"][data-button-size="sm"]):has(
+    > :where(kbd, ui-kbd-group, [data-ui~="kbd-group"]):first-child:not(:only-child)
+  ) {
+    padding-inline-start: calc(var(--spacing) * 0.5);
   }
 }

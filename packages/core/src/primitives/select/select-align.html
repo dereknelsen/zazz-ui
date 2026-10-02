@@ -1,12 +1,37 @@
-<div class="flex gap-sm items-start">
-  <div class="ui-field">
-    <label data-slot="field-label" for="f-align-start">Start</label>
-    <select class="ui-select" id="f-align-start" name="align-start" data-align="start">
+<div
+  style="
+    --display: flex;
+    --gap: var(--space-sm);
+    --items: start;
+  "
+>
+  <div data-ui="field">
+    <label data-field-slot="label" for="f-align-start">Start</label>
+    <select data-ui="select" id="f-align-start" name="align-start" data-select-align="start">
       <button>
         <selectedcontent></selectedcontent>
       </button>
-      <optgroup class="grid gap-px" label="Sort by">
-        <legend class="text-eyebrow text-muted-foreground p-xs">Sort by</legend>
+      <optgroup
+        label="Sort by"
+        style="
+          --display: grid;
+          --gap: 1px;
+        "
+      >
+        <legend
+          style="
+            --display: inline-flex;
+            --font-size: var(--font-size-eyebrow);
+            --leading: var(--leading-eyebrow);
+            --font-weight: var(--font-weight-eyebrow);
+            --tracking: var(--tracking-eyebrow);
+            --text-transform: uppercase;
+            --text: var(--color-muted-foreground);
+            --p: var(--space-xs);
+          "
+        >
+          Sort by
+        </legend>
         <option value="recent" selected>Most recent</option>
         <option value="popular">Most popular</option>
         <option value="price-asc">Price: low to high</option>
@@ -15,14 +40,33 @@
     </select>
   </div>
 
-  <div class="ui-field">
-    <label data-slot="field-label" for="f-align-center">Center</label>
-    <select class="ui-select" id="f-align-center" name="align-center" data-align="center">
+  <div data-ui="field">
+    <label data-field-slot="label" for="f-align-center">Center</label>
+    <select data-ui="select" id="f-align-center" name="align-center" data-select-align="center">
       <button>
         <selectedcontent></selectedcontent>
       </button>
-      <optgroup class="grid gap-px" label="Sort by">
-        <legend class="text-eyebrow text-muted-foreground p-xs">Sort by</legend>
+      <optgroup
+        label="Sort by"
+        style="
+          --display: grid;
+          --gap: 1px;
+        "
+      >
+        <legend
+          style="
+            --display: inline-flex;
+            --font-size: var(--font-size-eyebrow);
+            --leading: var(--leading-eyebrow);
+            --font-weight: var(--font-weight-eyebrow);
+            --tracking: var(--tracking-eyebrow);
+            --text-transform: uppercase;
+            --text: var(--color-muted-foreground);
+            --p: var(--space-xs);
+          "
+        >
+          Sort by
+        </legend>
         <option value="recent" selected>Most recent</option>
         <option value="popular">Most popular</option>
         <option value="price-asc">Price: low to high</option>
@@ -31,14 +75,33 @@
     </select>
   </div>
 
-  <div class="ui-field">
-    <label data-slot="field-label" for="f-align-end">End</label>
-    <select class="ui-select" id="f-align-end" name="align-end" data-align="end">
+  <div data-ui="field">
+    <label data-field-slot="label" for="f-align-end">End</label>
+    <select data-ui="select" id="f-align-end" name="align-end" data-select-align="end">
       <button>
         <selectedcontent></selectedcontent>
       </button>
-      <optgroup class="grid gap-px" label="Sort by">
-        <legend class="text-eyebrow text-muted-foreground p-xs">Sort by</legend>
+      <optgroup
+        label="Sort by"
+        style="
+          --display: grid;
+          --gap: 1px;
+        "
+      >
+        <legend
+          style="
+            --display: inline-flex;
+            --font-size: var(--font-size-eyebrow);
+            --leading: var(--leading-eyebrow);
+            --font-weight: var(--font-weight-eyebrow);
+            --tracking: var(--tracking-eyebrow);
+            --text-transform: uppercase;
+            --text: var(--color-muted-foreground);
+            --p: var(--space-xs);
+          "
+        >
+          Sort by
+        </legend>
         <option value="recent" selected>Most recent</option>
         <option value="popular">Most popular</option>
         <option value="price-asc">Price: low to high</option>

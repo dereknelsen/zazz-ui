@@ -1,83 +1,71 @@
 /**
- * select.css: Select (.ui-select on customizable <select>)
+ * select.css: Select (:where([data-ui~="select"]) on customizable <select>)
  *
  * @layer      variables, reset, components
- * @requires   layers.css, _variables.css, fields.css, _reset.css, popover.css (--ui-popover-*), button.css (--ui-button-*)
- * @uses       appearance: base-select: customizable select (Chromium 135+ / Safari 17+)
+ * @requires   _layers.css, _variables.css, fields.css, _reset.css, popover.css (--ui-popover-*), button.css (--ui-button-*)
+ * @uses       appearance: base-select: customizable select
  * @uses       ::picker(select), ::picker-icon, selectedcontent, option::checkmark
  * @uses       @starting-style + allow-discrete: picker open animation
- * @uses       anchor-size(width): match picker width to trigger (Baseline 2026)
+ * @uses       anchor-size(width): match picker width to trigger
  * @uses       position-area, position-try-fallbacks: placement tokens come from
  *             popover.css's shared matrix (@supports gated)
- * @uses       backdrop-filter: picker surface blur (shared with [popover])
  * @uses       Degrades to native OS dropdown where base-select is unsupported
  * @uses       ui-multiselect (multiselect.ts): JS-projected dropdown for
- *             <select multiple>; base-select has no stable multi-select yet, so
- *             this is a recorded exception like base-select itself. Degrades to
- *             the native multi listbox without JS; retire the enhancement when
- *             base-select-for-multiple ships stable.
+ *             <select multiple> (base-select has no stable multi-select);
+ *             degrades to the native multi listbox without JS
  * @tokens     --ui-select-* (@layer variables); picker panel reuses --ui-popover-* (owned in popover.css)
  * @consumedby autocomplete.css, combobox.css, command.css (--ui-option-*, --ui-select-picker-icon-*)
  */
 
 @layer variables {
   :root {
-    /* Box treatment: alias the shared --ui-field-* family (owned in fields.css) so
-       a select, a text input, and a textarea read as one family. Retune a
-       --ui-field-* token and every control follows; remap a --ui-select-* token to
-       diverge just the select. */
-    --ui-select-inline-size: 100%;
-    --ui-select-min-inline-size: 16ch;
-    --ui-select-padding-inline-start: var(--ui-field-padding);
-    /* Trailing space differs from .ui-input: room for the picker icon */
-    --ui-select-padding-inline-end: var(--step-2);
+    /* Box treatment aliases the shared --ui-field-* family; remap a --ui-select-*
+       token to diverge just the select. */
+    --ui-select-w: 100%;
+    --ui-select-min-w: 16ch;
+    --ui-select-pl: var(--ui-field-px);
+    /* room for the picker icon */
+    --ui-select-pr: calc(var(--spacing) * 2);
     --ui-select-font-size: var(--ui-field-font-size);
-    --ui-select-line-height: var(--ui-field-line-height);
+    --ui-select-leading: var(--ui-field-leading);
     --ui-select-border-width: var(--ui-field-border-width);
     --ui-select-border-style: var(--ui-field-border-style);
     --ui-select-border-color: var(--ui-field-border-color);
-    --ui-select-radius: var(--ui-field-radius);
+    --ui-select-rounded: var(--ui-field-rounded);
     --ui-select-option-gap: var(--ui-field-option-gap);
 
-    /* Picker icon (trigger chevron)
-    ** @see https://www.svgbackgrounds.com/tools/svg-to-css/
-    ** Set to Legacy / URL Wrapper to update icon */
+    /* Picker icon (trigger chevron) */
     --ui-select-picker-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cpolyline points='80 176 128 224 176 176' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cpolyline points='80 80 128 32 176 80' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3C/svg%3E");
     --ui-select-picker-icon-size: var(--ui-field-icon-size);
     --ui-select-picker-icon-color: currentColor;
 
-    /* Option (menu item): a ghost button rendered as a native <option>. Alias
-       the --ui-button-* family (owned in button.css) so a select's options and a
-       menu's ghost items read as one; retune a --ui-button-* token and both
-       follow. The ghost look is base button minus the surface fill + border, so
-       only --ui-option-background/--ui-option-border-color diverge. Radius bridges
-       to the shared --ui-menu-button-radius. */
+    /* Option (menu item): a ghost button rendered as a native <option>. Aliases
+       --ui-button-*; only --ui-option-bg/--ui-option-border-color diverge
+       (no fill or border). Radius bridges to --ui-menu-button-rounded. */
     --ui-option-font-family: var(--ui-button-font-family);
     --ui-option-font-size: var(--ui-button-font-size);
     --ui-option-font-weight: var(--ui-button-font-weight);
-    --ui-option-line-height: var(--ui-button-line-height);
+    --ui-option-leading: var(--ui-button-leading);
     --ui-option-gap: var(--ui-button-gap);
-    --ui-option-padding: var(--ui-button-padding);
-    --ui-option-block-size: var(--ui-button-block-size);
+    --ui-option-px: var(--ui-button-px);
+    --ui-option-min-h: var(--ui-button-min-h);
     --ui-option-icon-size: var(--ui-button-icon-size);
-    --ui-option-radius: var(--ui-menu-button-radius);
+    --ui-option-rounded: var(--ui-menu-button-rounded);
     --ui-option-shadow: none;
 
-    --ui-option-background: transparent;
-    --ui-option-background--hover: var(--ui-button-background--hover);
-    --ui-option-background--active: var(--ui-button-background--active);
-    --ui-option-foreground: var(--ui-button-foreground);
-    --ui-option-foreground--hover: var(--ui-button-foreground--hover);
-    --ui-option-foreground--active: var(--ui-button-foreground--active);
+    --ui-option-bg: transparent;
+    --ui-option-bg--hover: var(--ui-button-bg--hover);
+    --ui-option-bg--active: var(--ui-button-bg--active);
+    --ui-option-text: var(--ui-button-text);
+    --ui-option-text--hover: var(--ui-button-text--hover);
+    --ui-option-text--active: var(--ui-button-text--active);
     --ui-option-border-width: var(--ui-button-border-width);
     --ui-option-border-style: var(--ui-button-border-style);
     --ui-option-border-color: transparent;
     --ui-option-border-color--hover: transparent;
     --ui-option-border-color--active: transparent;
 
-    /* Option checkmark
-    ** @see https://www.svgbackgrounds.com/tools/svg-to-css/
-    ** Set to Legacy / URL Wrapper to update icon */
+    /* Option checkmark */
     --ui-option-checkmark-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cpolyline points='40 144 96 200 224 72' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3C/svg%3E");
     --ui-option-checkmark-size: var(--ui-field-icon-size);
     --ui-option-checkmark-color: currentColor;
@@ -87,21 +75,19 @@
 @layer reset {
   /* ===========================================================================
   SELECT: native <select> internals (::picker, <option>, ::picker-icon)
-  - In the reset layer so component overrides win; the plain appearance reset
-    stays in _reset.css.
+  - In the reset layer so component overrides win.
   - Both the select and ::picker(select) need appearance: base-select before
-    picker pseudo styles apply (MDN customizable select).
+    picker pseudo styles apply.
   =========================================================================== */
 
-  :where(.ui-select),
-  :where(.ui-select)::picker(select) {
+  :where([data-ui~="select"]),
+  :where([data-ui~="select"])::picker(select) {
     appearance: base-select;
   }
 
-  :where(.ui-select)::picker(select) {
+  :where([data-ui~="select"])::picker(select) {
     transform-origin: var(--ui-popover-origin);
     opacity: var(--ui-popover-opacity--start);
-    backdrop-filter: var(--ui-popover-backdrop-filter);
     transform: scale(var(--ui-popover-scale--start)) translate3d(var(--ui-popover-translate--start));
 
     transition:
@@ -116,14 +102,14 @@
         allow-discrete;
   }
 
-  :where(.ui-select:open)::picker(select) {
+  :where([data-ui~="select"]:open)::picker(select) {
     opacity: var(--ui-popover-opacity--end);
     transform: scale(var(--ui-popover-scale--end)) translate3d(var(--ui-popover-translate--end));
     display: flex;
   }
 
   @starting-style {
-    :where(.ui-select:open)::picker(select) {
+    :where([data-ui~="select"]:open)::picker(select) {
       opacity: var(--ui-popover-opacity--start);
       transform: scale(var(--ui-popover-scale--start))
         translate3d(var(--ui-popover-translate--start));
@@ -138,7 +124,7 @@
     mask: var(--ui-option-checkmark-mask) center / contain no-repeat;
   }
 
-  :where(.ui-select)::picker-icon {
+  :where([data-ui~="select"])::picker-icon {
     content: "";
     inline-size: var(--ui-select-picker-icon-size);
     block-size: var(--ui-select-picker-icon-size);
@@ -149,65 +135,76 @@
 
 @layer zazz.components {
   /* ===========================================================================
-  SELECT: .ui-select (customizable <select>, no JS)
-  - appearance: base-select themes the trigger, picker, options, and arrow while
-    the browser keeps keyboard nav, top-layer rendering, and form integration.
+  SELECT: :where([data-ui~="select"]) (customizable <select>, no JS)
   - Needs a <button><selectedcontent></selectedcontent></button> child. Degrades
     to the native OS dropdown where unsupported (the _reset.css chevron covers it).
-  - Shares the --ui-field-* tokens defined in fields.css.
   =========================================================================== */
 
-  .ui-select {
+  :where([data-ui~="select"]) {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--ui-select-option-gap);
 
-    inline-size: var(--ui-select-inline-size);
-    min-inline-size: var(--ui-select-min-inline-size);
-    block-size: var(--ui-field-block-size);
-    padding-inline: var(--ui-select-padding-inline-start) var(--ui-select-padding-inline-end);
+    --_w-len: var(--_w-resolved, var(--ui-select-w));
+    --_w-num: var(--_w-resolved, var(--ui-select-w));
+    inline-size: calc(var(--_w-len) + var(--_w-num) * var(--spacing));
+    --_min-w-len: var(--_min-w-resolved, var(--ui-select-min-w));
+    --_min-w-num: var(--_min-w-resolved, var(--ui-select-min-w));
+    min-inline-size: calc(var(--_min-w-len) + var(--_min-w-num) * var(--spacing));
+    --_h-len: var(--_h-resolved, var(--ui-field-h));
+    --_h-num: var(--_h-resolved, var(--ui-field-h));
+    block-size: calc(var(--_h-len) + var(--_h-num) * var(--spacing));
+    --_pl-len: var(--_pl-resolved, var(--ui-select-pl));
+    --_pl-num: var(--_pl-resolved, var(--ui-select-pl));
+    padding-inline-start: calc(var(--_pl-len) + var(--_pl-num) * var(--spacing));
+    --_pr-len: var(--_pr-resolved, var(--ui-select-pr));
+    --_pr-num: var(--_pr-resolved, var(--ui-select-pr));
+    padding-inline-end: calc(var(--_pr-len) + var(--_pr-num) * var(--spacing));
 
-    font-size: var(--ui-select-font-size);
-    line-height: var(--ui-select-line-height);
+    font-size: var(--_font-size-resolved, var(--ui-select-font-size));
+    line-height: var(--_leading-resolved, var(--ui-select-leading));
     text-align: start;
-    color: var(--ui-field-foreground);
-    background-color: var(--ui-field-background);
+    color: var(--_text-resolved, var(--ui-field-text));
+    background-color: var(--_bg-resolved, var(--ui-field-bg));
     background-image: none;
 
-    border: var(--ui-select-border-width) var(--ui-select-border-style)
-      var(--ui-select-border-color);
-    border-radius: var(--ui-select-radius);
+    border-width: var(--_border-width-resolved, var(--ui-select-border-width));
+    border-style: var(--_border-style-resolved, var(--ui-select-border-style));
+    border-color: var(--_border-color-resolved, var(--ui-select-border-color));
+    border-radius: var(--_rounded-resolved, var(--ui-select-rounded));
     cursor: pointer;
 
-    /* ring renders as box-shadow; transparent outline twin keeps focus visible
-       in forced-colors / high-contrast modes */
+    /* the transparent outline keeps focus visible in forced-colors */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    --_ring: color-mix(in oklch, var(--ui-field-ring-color) var(--ring-opacity), transparent);
-    box-shadow:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring, var(--ring));
+    --_ring-fill: color-mix(in oklch, var(--ui-field-ring-color) var(--ring-opacity), transparent);
+    --_focus-ring:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+        var(--_ring-fill, var(--ring-shadow-color));
+    box-shadow: var(--_focus-ring, 0 0 #0000), var(--_shadow-resolved, 0 0 #0000);
     outline: var(--outline-width) var(--outline-style) transparent;
     outline-offset: var(--outline-offset);
 
     transition: var(--default-transition);
   }
 
-  .ui-select:hover {
-    border-color: var(--ui-field-border-color--hover);
+  @media (hover: hover) {
+    :where([data-ui~="select"]):hover {
+      border-color: var(--_border-color-resolved, var(--ui-field-border-color--hover));
+    }
   }
 
-  .ui-select:focus-visible,
-  .ui-select:open {
-    border-color: var(--ui-field-border-color--focus);
+  :where([data-ui~="select"]):focus-visible,
+  :where([data-ui~="select"]):open {
+    border-color: var(--_border-color-resolved, var(--ui-field-border-color--focus-within));
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
     outline-color: transparent;
   }
 
-  /* Trigger button child holds the (optional) leading icon + mirrored value */
-  .ui-select > button {
+  :where([data-ui~="select"]) > button {
     block-size: 100%;
     display: flex;
     flex: 1;
@@ -217,7 +214,7 @@
     overflow: hidden;
   }
 
-  .ui-select selectedcontent {
+  :where([data-ui~="select"]) selectedcontent {
     display: flex;
     align-items: center;
     block-size: 100%;
@@ -226,121 +223,113 @@
     white-space: nowrap;
   }
 
-  /* Trigger icons (leading glyph + mirrored value) size to the field icon */
-  .ui-select > button > svg,
-  .ui-select selectedcontent > svg {
+  :where([data-ui~="select"]) > button > svg,
+  :where([data-ui~="select"]) selectedcontent > svg {
     flex-shrink: 0;
     inline-size: var(--ui-field-icon-size);
     block-size: var(--ui-field-icon-size);
-    color: var(--muted-foreground);
+    color: var(--color-muted-foreground);
   }
 
-  .ui-select:open {
-    background-color: var(--ui-field-background--focus);
+  :where([data-ui~="select"]):open {
+    background-color: var(--_bg-resolved, var(--ui-field-bg--focus-within));
   }
 
-  .ui-select:open::picker-icon {
+  :where([data-ui~="select"]):open::picker-icon {
     transform: rotate(-180deg);
   }
 
-  /* Dropdown panel: the shared [popover] surface (--ui-popover-* family), anchored
-     to the trigger. anchor-size() matches the panel to the trigger width. No
-     @supports gate: anchor-size() is Baseline 2026 (Chrome 125, Firefox 147,
-     Safari 26.0), and where it is missing the declaration is simply dropped, so
-     the max-content declared above stands — the panel sizes to its content
-     instead of stretching. */
-  .ui-select::picker(select) {
+  /* Where anchor-size() is missing the declaration is dropped, so the panel
+     keeps max-content sizing. */
+  :where([data-ui~="select"])::picker(select) {
     flex-direction: column;
-    gap: var(--step-px);
+    gap: 1px;
     inline-size: max-content;
-    max-inline-size: var(--ui-popover-max-inline-size);
-    padding: var(--ui-popover-padding);
-    margin-block: var(--ui-popover-margin-block);
+    max-inline-size: var(--ui-popover-max-w);
+    padding: var(--ui-popover-p);
+    margin-block: var(--ui-popover-my);
     overflow: clip;
 
-    background-color: var(--popover);
-    color: var(--popover-foreground);
+    background-color: var(--color-popover);
+    color: var(--color-popover-foreground);
     border: 1px solid var(--ui-popover-border-color);
-    border-radius: var(--ui-popover-radius);
+    border-radius: var(--ui-popover-rounded);
     box-shadow: var(--ui-popover-shadow);
   }
 
-  .ui-select::picker(select) {
+  :where([data-ui~="select"])::picker(select) {
     min-inline-size: anchor-size(width);
   }
 
   /* ===========================================================================
-  PICKER PLACEMENT: the shared matrix in popover.css owns data-side x data-align
-  (it includes .ui-select, and custom properties set on the select inherit into
-  ::picker(select)). Only the application of those tokens lives here, because
-  position-area is gated on anchor support.
+  PICKER PLACEMENT: the placement tokens come from the matrix below (select
+  custom properties inherit into ::picker(select)); applying them is gated on
+  anchor support.
   =========================================================================== */
 
-  /* The picker is implicitly anchored to the select, so position-area needs no
-     anchor-name; but it is still anchor positioning, gated like popover.css so
-     browsers without it (Firefox/Safari) keep the UA picker placement instead of
-     a mispositioned box. */
+  /* The picker is implicitly anchored, so no anchor-name is needed; gated like
+     popover.css so unsupporting browsers keep the UA placement. */
   @supports (anchor-name: --zazz) {
-    .ui-select::picker(select) {
+    :where([data-ui~="select"])::picker(select) {
       position-area: var(--ui-popover-position-area);
       position-try-fallbacks: var(--ui-popover-position-try-fallbacks);
-      margin-inline: var(--ui-popover-margin-inline);
+      margin-inline: var(--ui-popover-mx);
     }
   }
 
-  /* Options render as ghost buttons: the --ui-option-* family (set in @layer
-     variables) aliases the --ui-button-* ghost values, so a select's menu items and
-     a menu's ghost items read identically. Like .ui-button, sizing rides on
-     min-block-size + padding-inline (no block padding) so every row is uniform. */
-  .ui-select option {
+  /* Like [data-ui~="button"], sizing rides on min-block-size + padding-inline
+     (no block padding) so every row is uniform. */
+  :where([data-ui~="select"]) option {
     display: flex;
     align-items: center;
     gap: var(--ui-option-gap);
-    min-block-size: var(--ui-option-block-size);
-    padding-inline: var(--ui-option-padding);
+    min-block-size: var(--ui-option-min-h);
+    padding-inline: var(--ui-option-px);
 
     font-family: var(--ui-option-font-family);
     font-size: var(--ui-option-font-size);
     font-weight: var(--ui-option-font-weight);
-    line-height: var(--ui-option-line-height);
+    line-height: var(--ui-option-leading);
 
-    color: var(--ui-option-foreground);
-    background-color: var(--ui-option-background);
+    color: var(--ui-option-text);
+    background-color: var(--ui-option-bg);
     border: var(--ui-option-border-width) var(--ui-option-border-style)
       var(--ui-option-border-color);
-    border-radius: var(--ui-option-radius);
+    border-radius: var(--ui-option-rounded);
     box-shadow: var(--ui-option-shadow);
     cursor: pointer;
 
     transition: var(--default-transition);
   }
 
-  .ui-select option:hover {
-    color: var(--ui-option-foreground--hover);
-    background-color: var(--ui-option-background--hover);
-    border-color: var(--ui-option-border-color--hover);
+  @media (hover: hover) {
+    :where([data-ui~="select"]) option:hover {
+      color: var(--ui-option-text--hover);
+      background-color: var(--ui-option-bg--hover);
+      border-color: var(--ui-option-border-color--hover);
+    }
   }
 
-  .ui-select option:checked {
-    color: var(--ui-option-foreground--active);
-    background-color: var(--ui-option-background--active);
+  :where([data-ui~="select"]) option:checked {
+    color: var(--ui-option-text--active);
+    background-color: var(--ui-option-bg--active);
     border-color: var(--ui-option-border-color--active);
   }
 
-  .ui-select option:disabled {
-    --ui-option-foreground: var(--muted-foreground);
+  :where([data-ui~="select"]) option:disabled {
+    --ui-option-text: var(--color-muted-foreground);
     cursor: default;
     opacity: 0.5;
   }
 
-  .ui-select option > svg {
+  :where([data-ui~="select"]) option > svg {
     flex-shrink: 0;
     inline-size: var(--ui-option-icon-size);
     block-size: var(--ui-option-icon-size);
-    color: var(--muted-foreground);
+    color: var(--color-muted-foreground);
   }
 
-  .ui-select option::checkmark {
+  :where([data-ui~="select"]) option::checkmark {
     order: 1;
     margin-inline-start: auto;
     color: currentcolor;
@@ -348,45 +337,46 @@
 
   /* ===========================================================================
   MULTISELECT: ui-multiselect (JS-projected dropdown over <select multiple>)
-  - The script hides the real select and stamps a .ui-select-classed trigger +
-    a popover of checkbox rows (see multiselect.ts). Rows are ghost options
-    (--ui-option-*) with the shared checkmark, so single- and multi-select
-    pickers read identically.
-  - Without JS the native multi listbox renders; it gets minimal field-family
-    dress below rather than the single-select trigger treatment.
+  - The script hides the real select and stamps a trigger plus a popover of
+    checkbox rows (see multiselect.ts).
+  - Without JS the native multi listbox renders with minimal field styling.
   =========================================================================== */
 
-  :where(ui-multiselect) {
+  :where(ui-multiselect, [data-ui~="multiselect"]) {
     anchor-scope: --ui-multiselect-trigger;
     display: block;
-    inline-size: var(--ui-select-inline-size);
-    min-inline-size: var(--ui-select-min-inline-size);
+    --_w-len: var(--_w-resolved, var(--ui-select-w));
+    --_w-num: var(--_w-resolved, var(--ui-select-w));
+    inline-size: calc(var(--_w-len) + var(--_w-num) * var(--spacing));
+    --_min-w-len: var(--_min-w-resolved, var(--ui-select-min-w));
+    --_min-w-num: var(--_min-w-resolved, var(--ui-select-min-w));
+    min-inline-size: calc(var(--_min-w-len) + var(--_min-w-num) * var(--spacing));
   }
 
-  /* Enhanced: the real select stays in the DOM as the form value carrier */
-  select[multiple][data-multiselect-enhanced] {
+  /* The real select stays in the DOM as the form value carrier */
+  :where(ui-multiselect, [data-ui~="multiselect"])
+    select[multiple][data-multiselect-state~="enhanced"] {
     display: none;
   }
 
-  /* No-JS baseline: the native listbox wears the field surface, sized by rows */
-  ui-multiselect select[multiple].ui-select:not([data-multiselect-enhanced]) {
+  :where(ui-multiselect, [data-ui~="multiselect"])
+    select[multiple][data-ui~="select"]:not([data-multiselect-state~="enhanced"]) {
     display: block;
     block-size: auto;
-    padding-block: var(--step-1);
+    padding-block: var(--spacing);
   }
 
-  [data-slot~="multiselect-trigger"] {
+  :where(ui-multiselect, [data-ui~="multiselect"]) [data-multiselect-slot~="trigger"] {
     anchor-name: --ui-multiselect-trigger;
   }
 
-  [data-slot~="multiselect-label"] {
+  :where(ui-multiselect, [data-ui~="multiselect"]) [data-multiselect-slot~="label"] {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  /* Chevron: the ::picker-icon treatment, rebuilt for a plain button */
-  [data-slot~="multiselect-icon"] {
+  :where(ui-multiselect, [data-ui~="multiselect"]) [data-multiselect-slot~="icon"] {
     flex-shrink: 0;
     inline-size: var(--ui-select-picker-icon-size);
     block-size: var(--ui-select-picker-icon-size);
@@ -395,70 +385,75 @@
     transition: var(--default-transition);
   }
 
-  [data-slot~="multiselect-trigger"][aria-expanded="true"] [data-slot~="multiselect-icon"] {
+  :where(ui-multiselect, [data-ui~="multiselect"])
+    [data-multiselect-slot~="trigger"][aria-expanded="true"]
+    [data-multiselect-slot~="icon"] {
     transform: rotate(-180deg);
   }
 
-  [data-slot~="multiselect-panel"] {
+  :where(ui-multiselect, [data-ui~="multiselect"]) [data-multiselect-slot~="panel"] {
     position-anchor: --ui-multiselect-trigger;
-    /* Layout stays ungated so the close fade keeps it; only display is gated */
+    /* layout stays ungated so the close fade keeps it */
     flex-direction: column;
-    gap: var(--step-px);
+    gap: 1px;
     box-shadow: var(--ui-menu-shadow);
   }
 
-  /* Only display is gated; see popover.css: closed popovers stay display: none */
-  [data-slot~="multiselect-panel"]:popover-open {
+  :where(ui-multiselect, [data-ui~="multiselect"]) [data-multiselect-slot~="panel"]:popover-open {
     display: flex;
   }
 
-  [data-slot~="multiselect-panel"] {
+  :where(ui-multiselect, [data-ui~="multiselect"]) [data-multiselect-slot~="panel"] {
     min-inline-size: anchor-size(width);
   }
 
-  /* Rows are ghost options; the checkbox is real but visually replaced by the
-     shared checkmark glyph */
-  [data-slot~="multiselect-option"] {
+  /* The checkbox is real but visually replaced by the shared checkmark glyph */
+  :where(ui-multiselect, [data-ui~="multiselect"]) [data-multiselect-slot~="option"] {
     display: flex;
     align-items: center;
     gap: var(--ui-option-gap);
-    min-block-size: var(--ui-option-block-size);
-    padding-inline: var(--ui-option-padding);
+    min-block-size: var(--ui-option-min-h);
+    padding-inline: var(--ui-option-px);
 
     font-family: var(--ui-option-font-family);
     font-size: var(--ui-option-font-size);
     font-weight: var(--ui-option-font-weight);
-    line-height: var(--ui-option-line-height);
+    line-height: var(--ui-option-leading);
 
-    color: var(--ui-option-foreground);
-    background-color: var(--ui-option-background);
+    color: var(--ui-option-text);
+    background-color: var(--ui-option-bg);
     border: var(--ui-option-border-width) var(--ui-option-border-style)
       var(--ui-option-border-color);
-    border-radius: var(--ui-option-radius);
+    border-radius: var(--ui-option-rounded);
     cursor: pointer;
 
     transition: var(--default-transition);
   }
 
-  [data-slot~="multiselect-option"]:hover {
-    color: var(--ui-option-foreground--hover);
-    background-color: var(--ui-option-background--hover);
+  @media (hover: hover) {
+    :where(ui-multiselect, [data-ui~="multiselect"]) [data-multiselect-slot~="option"]:hover {
+      color: var(--ui-option-text--hover);
+      background-color: var(--ui-option-bg--hover);
+    }
   }
 
-  [data-slot~="multiselect-option"]:has(:checked) {
-    color: var(--ui-option-foreground--active);
-    background-color: var(--ui-option-background--active);
+  :where(ui-multiselect, [data-ui~="multiselect"]) [data-multiselect-slot~="option"]:has(:checked) {
+    color: var(--ui-option-text--active);
+    background-color: var(--ui-option-bg--active);
   }
 
-  [data-slot~="multiselect-option"]:has(:disabled) {
-    color: var(--muted-foreground);
+  :where(ui-multiselect, [data-ui~="multiselect"])
+    [data-multiselect-slot~="option"]:has(:disabled) {
+    color: var(--color-muted-foreground);
     cursor: default;
     opacity: 0.5;
   }
 
   /* The checkbox stays focusable and announced but invisible; keyboard focus
      surfaces on the row via :focus-within */
-  [data-slot~="multiselect-option"] input[type="checkbox"] {
+  :where(ui-multiselect, [data-ui~="multiselect"])
+    [data-multiselect-slot~="option"]
+    input[type="checkbox"] {
     position: absolute;
     inline-size: 1px;
     block-size: 1px;
@@ -467,13 +462,14 @@
     white-space: nowrap;
   }
 
-  [data-slot~="multiselect-option"]:focus-within {
-    background-color: var(--ui-option-background--hover);
-    outline: var(--outline-width) var(--outline-style) var(--ring);
+  :where(ui-multiselect, [data-ui~="multiselect"]) [data-multiselect-slot~="option"]:focus-within {
+    background-color: var(--ui-option-bg--hover);
+    outline: var(--outline-width) var(--outline-style) var(--ring-shadow-color);
     outline-offset: calc(var(--outline-offset) * -1);
   }
 
-  [data-slot~="multiselect-option"]:has(:checked)::after {
+  :where(ui-multiselect, [data-ui~="multiselect"])
+    [data-multiselect-slot~="option"]:has(:checked)::after {
     content: "";
     order: 1;
     margin-inline-start: auto;
@@ -481,5 +477,120 @@
     block-size: var(--ui-option-checkmark-size);
     background-color: var(--ui-option-checkmark-color);
     mask: var(--ui-option-checkmark-mask) center / contain no-repeat;
+  }
+}
+
+/* An invalid control remaps the --ui-field-* family on itself. */
+@layer zazz.components {
+  :where([data-ui~="select"]):disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  :where([data-ui~="select"]):user-invalid {
+    --ui-field-bg: color-mix(in oklch, var(--color-destructive) 5%, var(--color-input));
+    --ui-field-bg--hover: color-mix(in oklch, var(--color-destructive) 10%, var(--color-input));
+    --ui-field-border-color: var(--color-destructive);
+    --ui-field-border-color--hover: var(--color-destructive);
+    --ui-field-border-color--focus-within: var(--color-destructive);
+    --ui-field-ring-color: var(--color-destructive);
+
+    border-color: var(--color-destructive);
+  }
+}
+
+/* Placement rows of the popover matrix for the native select, keyed on
+   data-select-side / data-select-align. */
+@layer zazz.components {
+  :where([data-ui~="select"])[data-select-side="bottom"]:not([data-select-align]),
+  :where([data-ui~="select"])[data-select-side="bottom"][data-select-align="start"],
+  :where([data-ui~="select"]:not([data-select-side]):not([data-select-align])),
+  :where([data-ui~="select"]:not([data-select-side])[data-select-align="start"]) {
+    --ui-popover-position-area: block-end span-inline-end;
+    --ui-popover-origin: top center;
+    --ui-popover-my: calc(var(--spacing) * 1.5);
+    --ui-popover-mx: 0;
+  }
+
+  :where([data-ui~="select"])[data-select-side="bottom"][data-select-align="center"],
+  :where([data-ui~="select"]:not([data-select-side])[data-select-align="center"]) {
+    --ui-popover-position-area: block-end span-all;
+    --ui-popover-origin: top center;
+    --ui-popover-my: calc(var(--spacing) * 1.5);
+    --ui-popover-mx: 0;
+  }
+
+  :where([data-ui~="select"])[data-select-side="bottom"][data-select-align="end"],
+  :where([data-ui~="select"]:not([data-select-side])[data-select-align="end"]) {
+    --ui-popover-position-area: block-end span-inline-start;
+    --ui-popover-origin: top center;
+    --ui-popover-my: calc(var(--spacing) * 1.5);
+    --ui-popover-mx: 0;
+  }
+
+  :where([data-ui~="select"])[data-select-side="top"]:not([data-select-align]),
+  :where([data-ui~="select"])[data-select-side="top"][data-select-align="start"] {
+    --ui-popover-position-area: block-start span-inline-end;
+    --ui-popover-origin: bottom center;
+    --ui-popover-my: calc(var(--spacing) * 1.5);
+    --ui-popover-mx: 0;
+  }
+
+  :where([data-ui~="select"])[data-select-side="top"][data-select-align="center"] {
+    --ui-popover-position-area: block-start span-all;
+    --ui-popover-origin: bottom center;
+    --ui-popover-my: calc(var(--spacing) * 1.5);
+    --ui-popover-mx: 0;
+  }
+
+  :where([data-ui~="select"])[data-select-side="top"][data-select-align="end"] {
+    --ui-popover-position-area: block-start span-inline-start;
+    --ui-popover-origin: bottom center;
+    --ui-popover-my: calc(var(--spacing) * 1.5);
+    --ui-popover-mx: 0;
+  }
+
+  :where([data-ui~="select"])[data-select-side="right"]:not([data-select-align]),
+  :where([data-ui~="select"])[data-select-side="right"][data-select-align="start"] {
+    --ui-popover-position-area: inline-end span-block-end;
+    --ui-popover-origin: bottom left;
+    --ui-popover-my: 0;
+    --ui-popover-mx: calc(var(--spacing) * 1.5);
+  }
+
+  :where([data-ui~="select"])[data-select-side="right"][data-select-align="center"] {
+    --ui-popover-position-area: inline-end span-all;
+    --ui-popover-origin: center left;
+    --ui-popover-my: 0;
+    --ui-popover-mx: calc(var(--spacing) * 1.5);
+  }
+
+  :where([data-ui~="select"])[data-select-side="right"][data-select-align="end"] {
+    --ui-popover-position-area: inline-end span-block-start;
+    --ui-popover-origin: top left;
+    --ui-popover-my: 0;
+    --ui-popover-mx: calc(var(--spacing) * 1.5);
+  }
+
+  :where([data-ui~="select"])[data-select-side="left"]:not([data-select-align]),
+  :where([data-ui~="select"])[data-select-side="left"][data-select-align="start"] {
+    --ui-popover-position-area: inline-start span-block-end;
+    --ui-popover-origin: bottom right;
+    --ui-popover-my: 0;
+    --ui-popover-mx: calc(var(--spacing) * 1.5);
+  }
+
+  :where([data-ui~="select"])[data-select-side="left"][data-select-align="center"] {
+    --ui-popover-position-area: inline-start span-all;
+    --ui-popover-origin: center right;
+    --ui-popover-my: 0;
+    --ui-popover-mx: calc(var(--spacing) * 1.5);
+  }
+
+  :where([data-ui~="select"])[data-select-side="left"][data-select-align="end"] {
+    --ui-popover-position-area: inline-start span-block-start;
+    --ui-popover-origin: top right;
+    --ui-popover-my: 0;
+    --ui-popover-mx: calc(var(--spacing) * 1.5);
   }
 }

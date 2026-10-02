@@ -1,35 +1,35 @@
 /**
- * tooltip.css: Tooltip (ui-tooltip | .ui-tooltip, [data-slot~="tooltip-content"])
+ * tooltip.css: Tooltip (ui-tooltip | [data-ui~="tooltip"]; slots data-tooltip-slot="trigger | content | arrow")
  *
  * @layer      variables, reset, components
- * @requires   layers.css, _variables.css, popover.css, kbd.css (--ui-kbd-*)
+ * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved), popover.css, kbd.css (--ui-kbd-*)
  * @uses       interestfor: Interest Invokers API (Chromium 142+; polyfill via invokers)
- * @uses       [data-slot~="tooltip-content"]: hint popover (light dismiss, auto-hides sibling hints)
+ * @uses       data-tooltip-slot="content": hint popover (light dismiss, auto-hides sibling hints)
  * @uses       anchor-name, position-anchor, position-area, position-try-fallbacks:
- *             explicit anchors for polyfill; data-side maps to --ui-popover-position-*
- * @tokens     --ui-tooltip-* (@layer variables)
+ *             explicit anchors for polyfill; data-popover-side maps to --ui-popover-position-*
+ * @tokens     --ui-tooltip-* (@layer variables; read on the content slot)
  */
 
 @layer variables {
   :root {
-    --ui-tooltip-background: var(--foreground);
-    --ui-tooltip-foreground: var(--background);
+    --ui-tooltip-bg: var(--color-foreground);
+    --ui-tooltip-text: var(--color-background);
     --ui-tooltip-border-color: transparent;
-    --ui-tooltip-radius: var(--radius-sm);
+    --ui-tooltip-rounded: var(--radius-sm);
     --ui-tooltip-shadow: var(--shadow-sm);
-    --ui-tooltip-padding-inline: var(--gap-xs);
-    --ui-tooltip-padding-block: var(--step-1);
-    --ui-tooltip-gap: var(--step-1);
+    --ui-tooltip-px: var(--space-xs);
+    --ui-tooltip-py: var(--spacing);
+    --ui-tooltip-gap: var(--spacing);
     --ui-tooltip-font-family: var(--font-family-mono);
     --ui-tooltip-font-size: var(--font-size-xs);
-    --ui-tooltip-line-height: var(--leading-xs);
+    --ui-tooltip-leading: var(--leading-xs);
     --ui-tooltip-font-weight: var(--font-weight-body);
-    --ui-tooltip-max-inline-size: 16ch;
+    --ui-tooltip-max-w: 16ch;
 
     /* Arrow */
-    --ui-tooltip-arrow-size: var(--step-2);
-    --ui-tooltip-arrow-color: var(--ui-tooltip-background);
-    --ui-tooltip-arrow-radius: var(--step-0_5);
+    --ui-tooltip-arrow-size: calc(var(--spacing) * 2);
+    --ui-tooltip-arrow-color: var(--ui-tooltip-bg);
+    --ui-tooltip-arrow-radius: calc(var(--spacing) * 0.5);
 
     /* Reveal transitions: lighter than popover */
     --ui-tooltip-transition-duration: calc(var(--default-transition-duration) / 2);
@@ -52,12 +52,17 @@
     --ui-tooltip-opacity--end: 1;
 
     /* Positioning: smaller offset than popover menus */
-    --ui-tooltip-margin-block: var(--step-1);
-    --ui-tooltip-margin-inline: 0;
+    --ui-tooltip-my: var(--spacing);
+    --ui-tooltip-mx: 0;
+  }
+}
 
-    /* Popover overrides */
+/* Popover overrides, on the tooltip content (declared on :root they would retheme
+   every popover in the kit, since tooltip.css loads after popover.css). */
+@layer zazz.components {
+  :where(ui-tooltip, [data-ui~="tooltip"]) [data-tooltip-slot~="content"] {
     --ui-popover-shadow: var(--shadow-xs);
-    --ui-popover-min-inline-size: fit-content;
+    --ui-popover-min-w: 0; /* dual-mode: no minimum (fit-content cannot pass the typed pair) */
     --ui-popover-position-area: block-start span-all;
     --ui-popover-origin: bottom center;
   }
@@ -65,16 +70,17 @@
 
 @layer reset {
   /* ===========================================================================
-  HINT POPOVER OVERRIDES
-  - [popover] defaults in popover.css target menus; hint tooltips need a compact
-    surface and must not inherit min-inline-size or backdrop blur.
+  HINT POPOVER OVERRIDES: popover.css targets menus; hints need a compact
+  surface without min-inline-size or backdrop blur.
   =========================================================================== */
 
-  :where([data-slot~="tooltip-content"]) {
-    color: var(--ui-tooltip-foreground);
-    background-color: var(--ui-tooltip-background);
+  :where(ui-tooltip, [data-ui~="tooltip"]) :where([data-tooltip-slot~="content"]) {
+    color: var(--_text-resolved, var(--ui-tooltip-text));
+    background-color: var(--_bg-resolved, var(--ui-tooltip-bg));
     min-inline-size: unset;
-    max-inline-size: var(--ui-tooltip-max-inline-size);
+    --_max-w-len: var(--_max-w-resolved, var(--ui-tooltip-max-w));
+    --_max-w-num: var(--_max-w-resolved, var(--ui-tooltip-max-w));
+    max-inline-size: calc(var(--_max-w-len) + var(--_max-w-num) * var(--spacing));
     backdrop-filter: none;
 
     transform-origin: var(--ui-popover-origin);
@@ -84,13 +90,17 @@
   }
 
   @supports (anchor-name: --zazz) {
-    :where([data-slot~="tooltip-content"]) {
-      margin-block: var(--ui-tooltip-margin-block);
-      margin-inline: var(--ui-tooltip-margin-inline);
+    :where(ui-tooltip, [data-ui~="tooltip"]) :where([data-tooltip-slot~="content"]) {
+      --_my-len: var(--_my-resolved, var(--ui-tooltip-my));
+      --_my-num: var(--_my-resolved, var(--ui-tooltip-my));
+      margin-block: calc(var(--_my-len) + var(--_my-num) * var(--spacing));
+      --_mx-len: var(--_mx-resolved, var(--ui-tooltip-mx));
+      --_mx-num: var(--_mx-resolved, var(--ui-tooltip-mx));
+      margin-inline: calc(var(--_mx-len) + var(--_mx-num) * var(--spacing));
     }
   }
 
-  [data-slot~="tooltip-content"]:popover-open {
+  :where(ui-tooltip, [data-ui~="tooltip"]) [data-tooltip-slot~="content"]:popover-open {
     display: flex;
     opacity: var(--ui-tooltip-opacity--end);
     transform: scale(var(--ui-tooltip-scale--end)) translate3d(var(--ui-tooltip-translate--end));
@@ -105,102 +115,115 @@
 
 @layer zazz.components {
   /* ===========================================================================
-  TOOLTIP: interestfor trigger + anchored hint popover
-  - interestfor wires hover/focus/long-press to the hint popover and sets ARIA
-    (aria-describedby / aria-details). Do not add role="tooltip" or manual ARIA.
-  - Explicit anchor-name supports the invokers/anchor polyfills (implicit anchors
-    from interestfor are not polyfilled).
+  TOOLTIP: interestfor sets the ARIA (aria-describedby / aria-details), so do
+  not add role="tooltip". Explicit anchor-name is needed because the polyfill
+  does not provide implicit anchors.
   =========================================================================== */
 
-  :where(ui-tooltip, .ui-tooltip) {
+  :where(ui-tooltip, [data-ui~="tooltip"]) {
     anchor-scope: --ui-tooltip-trigger;
     display: inline-block;
   }
 
-  :where(ui-tooltip, .ui-tooltip) > :where([interestfor], [data-slot~="tooltip-trigger"]) {
+  :where(ui-tooltip, [data-ui~="tooltip"]) > :where([interestfor], [data-tooltip-slot~="trigger"]) {
     anchor-name: --ui-tooltip-trigger;
   }
 
-  [data-slot~="tooltip-trigger"] {
+  :where(ui-tooltip, [data-ui~="tooltip"]) [data-tooltip-slot~="trigger"] {
     display: inline-flex;
   }
 
-  [data-slot~="tooltip-content"] {
+  :where(ui-tooltip, [data-ui~="tooltip"]) [data-tooltip-slot~="content"] {
     position-anchor: --ui-tooltip-trigger;
 
     display: flex;
     align-items: center;
-    gap: var(--ui-tooltip-gap);
+    --_gap-len: var(--_gap-resolved, var(--ui-tooltip-gap));
+    --_gap-num: var(--_gap-resolved, var(--ui-tooltip-gap));
+    gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));
     inline-size: max-content;
 
-    padding-inline: var(--ui-tooltip-padding-inline);
-    padding-block: var(--ui-tooltip-padding-block);
+    --_px-len: var(--_px-resolved, var(--ui-tooltip-px));
+    --_px-num: var(--_px-resolved, var(--ui-tooltip-px));
+    padding-inline: calc(var(--_px-len) + var(--_px-num) * var(--spacing));
+    --_py-len: var(--_py-resolved, var(--ui-tooltip-py));
+    --_py-num: var(--_py-resolved, var(--ui-tooltip-py));
+    padding-block: calc(var(--_py-len) + var(--_py-num) * var(--spacing));
 
-    border: 1px solid var(--ui-tooltip-border-color);
-    border-radius: var(--ui-tooltip-radius);
-    box-shadow: var(--ui-tooltip-shadow);
+    border: 1px solid var(--_border-color-resolved, var(--ui-tooltip-border-color));
+    border-radius: var(--_rounded-resolved, var(--ui-tooltip-rounded));
+    box-shadow: var(--_shadow-resolved, var(--ui-tooltip-shadow));
 
-    font-family: var(--ui-tooltip-font-family);
-    font-size: var(--ui-tooltip-font-size);
-    line-height: var(--ui-tooltip-line-height);
-    font-weight: var(--ui-tooltip-font-weight);
+    font-family: var(--_font-family-resolved, var(--ui-tooltip-font-family));
+    font-size: var(--_font-size-resolved, var(--ui-tooltip-font-size));
+    line-height: var(--_leading-resolved, var(--ui-tooltip-leading));
+    font-weight: var(--_font-weight-resolved, var(--ui-tooltip-font-weight));
     text-wrap: balance;
   }
 
   /* Descendant (not child) so keys wrapped in a ui-kbd-group still retint */
-  [data-slot~="tooltip-content"] :where(kbd) {
-    --ui-kbd-background: color-mix(in oklch, var(--ui-tooltip-foreground) 15%, transparent);
-    --ui-kbd-foreground: var(--ui-tooltip-foreground);
-    --ui-kbd-min-inline-size: var(--step-4);
-    --ui-kbd-min-block-size: var(--step-4);
+  :where(ui-tooltip, [data-ui~="tooltip"]) [data-tooltip-slot~="content"] :where(kbd) {
+    --ui-kbd-bg: color-mix(in oklch, var(--ui-tooltip-text) 15%, transparent);
+    --ui-kbd-text: var(--ui-tooltip-text);
+    --ui-kbd-min-w: calc(var(--spacing) * 4);
+    --ui-kbd-min-h: calc(var(--spacing) * 4);
     --ui-kbd-font-size: var(--font-size-xs);
   }
 
-  [data-slot~="tooltip-content"]:has([data-slot~="tooltip-arrow"]) {
+  :where(ui-tooltip, [data-ui~="tooltip"])
+    [data-tooltip-slot~="content"]:has([data-tooltip-slot~="arrow"]) {
     overflow: visible;
   }
 
-  /* Positioning: reuse --ui-popover-position-* hooks from popover.css via data-side */
+  /* Positioning: reuse --ui-popover-position-* hooks from popover.css via data-popover-side */
 
-  [data-slot~="tooltip-content"][data-side="top"]:not([data-align]),
-  [data-slot~="tooltip-content"][data-side="top"][data-align="center"] {
+  :where(ui-tooltip, [data-ui~="tooltip"])
+    [data-tooltip-slot~="content"][data-popover-side="top"]:not([data-popover-align]),
+  :where(ui-tooltip, [data-ui~="tooltip"])
+    [data-tooltip-slot~="content"][data-popover-side="top"][data-popover-align="center"] {
     --ui-tooltip-translate--start: 0, 0.25em, 0;
     --ui-popover-position-area: block-start span-all;
     --ui-popover-origin: bottom center;
-    --ui-tooltip-margin-block: var(--step-1);
+    --ui-tooltip-my: var(--spacing);
   }
 
-  [data-slot~="tooltip-content"][data-side="bottom"]:not([data-align]),
-  [data-slot~="tooltip-content"][data-side="bottom"][data-align="center"] {
+  :where(ui-tooltip, [data-ui~="tooltip"])
+    [data-tooltip-slot~="content"][data-popover-side="bottom"]:not([data-popover-align]),
+  :where(ui-tooltip, [data-ui~="tooltip"])
+    [data-tooltip-slot~="content"][data-popover-side="bottom"][data-popover-align="center"] {
     --ui-tooltip-translate--start: 0, 0.25em, 0;
     --ui-popover-position-area: block-end span-all;
     --ui-popover-origin: top center;
-    --ui-tooltip-margin-block: var(--step-1);
+    --ui-tooltip-my: var(--spacing);
   }
 
-  [data-slot~="tooltip-content"][data-side="left"]:not([data-align]),
-  [data-slot~="tooltip-content"][data-side="left"][data-align="center"] {
+  :where(ui-tooltip, [data-ui~="tooltip"])
+    [data-tooltip-slot~="content"][data-popover-side="left"]:not([data-popover-align]),
+  :where(ui-tooltip, [data-ui~="tooltip"])
+    [data-tooltip-slot~="content"][data-popover-side="left"][data-popover-align="center"] {
     --ui-tooltip-translate--start: 0.25em, 0, 0;
     --ui-popover-position-area: inline-start span-all;
     --ui-popover-origin: center right;
-    --ui-tooltip-margin-inline: var(--step-1);
-    --ui-tooltip-margin-block: 0;
+    --ui-tooltip-mx: var(--spacing);
+    --ui-tooltip-my: 0;
   }
 
-  [data-slot~="tooltip-content"][data-side="right"]:not([data-align]),
-  [data-slot~="tooltip-content"][data-side="right"][data-align="center"] {
+  :where(ui-tooltip, [data-ui~="tooltip"])
+    [data-tooltip-slot~="content"][data-popover-side="right"]:not([data-popover-align]),
+  :where(ui-tooltip, [data-ui~="tooltip"])
+    [data-tooltip-slot~="content"][data-popover-side="right"][data-popover-align="center"] {
     --ui-tooltip-translate--start: 0.25em, 0, 0;
     --ui-popover-position-area: inline-end span-all;
     --ui-popover-origin: center left;
-    --ui-tooltip-margin-inline: var(--step-1);
-    --ui-tooltip-margin-block: 0;
+    --ui-tooltip-mx: var(--spacing);
+    --ui-tooltip-my: 0;
   }
 
   /* Tooltip arrow */
-  [data-slot~="tooltip-arrow"] {
+  :where(ui-tooltip, [data-ui~="tooltip"]) [data-tooltip-slot~="arrow"] {
     position: absolute;
     /* physical top/left/right/bottom throughout the arrow rules: they pair with
-       the physical [data-side] placement semantics from anchor positioning */
+       the physical [data-popover-side] placement semantics from anchor positioning */
     top: calc(100% - var(--ui-tooltip-arrow-size) / 2);
     left: 50%;
     transform: translate(-50%, 0%) rotate(45deg);
@@ -212,23 +235,31 @@
   }
 
   /* Tooltip arrow position */
-  [data-slot~="tooltip-content"][data-side="top"] [data-slot~="tooltip-arrow"] {
+  :where(ui-tooltip, [data-ui~="tooltip"])
+    [data-tooltip-slot~="content"][data-popover-side="top"]
+    [data-tooltip-slot~="arrow"] {
     bottom: calc((var(--ui-tooltip-arrow-size) / 2) * -1);
     left: 50%;
   }
 
-  [data-slot~="tooltip-content"][data-side="bottom"] [data-slot~="tooltip-arrow"] {
+  :where(ui-tooltip, [data-ui~="tooltip"])
+    [data-tooltip-slot~="content"][data-popover-side="bottom"]
+    [data-tooltip-slot~="arrow"] {
     top: calc((var(--ui-tooltip-arrow-size) / 2) * -1);
     left: 50%;
   }
 
-  [data-slot~="tooltip-content"][data-side="left"] [data-slot~="tooltip-arrow"] {
+  :where(ui-tooltip, [data-ui~="tooltip"])
+    [data-tooltip-slot~="content"][data-popover-side="left"]
+    [data-tooltip-slot~="arrow"] {
     left: calc(100% - var(--ui-tooltip-arrow-size) / 2);
     top: 50%;
     transform: translate(0%, -50%) rotate(45deg);
   }
 
-  [data-slot~="tooltip-content"][data-side="right"] [data-slot~="tooltip-arrow"] {
+  :where(ui-tooltip, [data-ui~="tooltip"])
+    [data-tooltip-slot~="content"][data-popover-side="right"]
+    [data-tooltip-slot~="arrow"] {
     right: calc(100% - var(--ui-tooltip-arrow-size) / 2);
     left: auto;
     top: 50%;

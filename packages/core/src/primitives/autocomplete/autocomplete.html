@@ -1,8 +1,8 @@
-<div class="ui-field max-w-xl">
-  <label data-slot="field-label" for="ac-fruit">Fruit</label>
+<div data-ui="field" style="--max-w: 96">
+  <label data-field-slot="label" for="ac-fruit">Fruit</label>
   <ui-autocomplete>
     <input
-      class="ui-input"
+      data-ui="input"
       id="ac-fruit"
       name="fruit"
       type="text"
@@ -12,55 +12,67 @@
       aria-autocomplete="list"
       autocomplete="off"
     />
-    <div data-slot="autocomplete-panel" data-side="bottom" data-align="start" popover="manual">
-      <ul role="listbox" data-slot="autocomplete-list" aria-label="Fruit suggestions">
+    <div
+      data-autocomplete-slot="panel"
+      data-popover-side="bottom"
+      data-popover-align="start"
+      popover="manual"
+    >
+      <ul role="listbox" data-autocomplete-slot="list" aria-label="Fruit suggestions">
         <li
           role="option"
-          data-slot="autocomplete-item"
-          class="ui-button justify-start"
-          data-variant="ghost"
-          data-value="Apple"
+          data-autocomplete-slot="item"
+          data-ui="button"
+          data-button-variant="ghost"
+          data-autocomplete-value="Apple"
+          style="--justify: start"
         >
           Apple
         </li>
         <li
           role="option"
-          data-slot="autocomplete-item"
-          class="ui-button justify-start"
-          data-variant="ghost"
-          data-value="Banana"
+          data-autocomplete-slot="item"
+          data-ui="button"
+          data-button-variant="ghost"
+          data-autocomplete-value="Banana"
+          style="--justify: start"
         >
           Banana
         </li>
         <li
           role="option"
-          data-slot="autocomplete-item"
-          class="ui-button justify-start"
-          data-variant="ghost"
-          data-value="Blueberry"
+          data-autocomplete-slot="item"
+          data-ui="button"
+          data-button-variant="ghost"
+          data-autocomplete-value="Blueberry"
+          style="--justify: start"
         >
           Blueberry
         </li>
         <li
           role="option"
-          data-slot="autocomplete-item"
-          class="ui-button justify-start"
-          data-variant="ghost"
-          data-value="Cherry"
+          data-autocomplete-slot="item"
+          data-ui="button"
+          data-button-variant="ghost"
+          data-autocomplete-value="Cherry"
+          style="--justify: start"
         >
           Cherry
         </li>
         <li
           role="option"
-          data-slot="autocomplete-item"
-          class="ui-button justify-start"
-          data-variant="ghost"
-          data-value="Grape"
+          data-autocomplete-slot="item"
+          data-ui="button"
+          data-button-variant="ghost"
+          data-autocomplete-value="Grape"
+          style="--justify: start"
         >
           Grape
         </li>
       </ul>
-      <p data-slot="autocomplete-empty" class="text-muted-foreground">No results.</p>
+      <p data-autocomplete-slot="empty" style="--text: var(--color-muted-foreground)">
+        No results.
+      </p>
     </div>
   </ui-autocomplete>
 </div>

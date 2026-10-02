@@ -1,8 +1,8 @@
 /**
- * lightbox.css — Lightbox gallery (ui-lightbox | .ui-lightbox)
+ * lightbox.css — Lightbox gallery (ui-lightbox | [data-ui~="lightbox"])
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css, dialog.css, carousel.css, button.css
+ * @requires   _layers.css, _variables.css, dialog.css, carousel.css, button.css
  * @uses       command="show-modal" — Invoker Commands open fullscreen dialog (no JS)
  * @uses       @container — thumb column count at narrow widths
  * @uses       @starting-style — dialog slide scale/opacity on snap
@@ -12,22 +12,24 @@
 
 @layer variables {
   :root {
-    --ui-lightbox-aspect-ratio: 3 / 2;
+    --ui-lightbox-aspect: 3 / 2;
     --ui-lightbox-object-fit: cover;
-    --ui-lightbox-slide-radius: var(--radius-lg);
-    --ui-lightbox-thumb-radius: var(--radius-md);
-    --ui-lightbox-thumb-size: var(--step-16);
+    --ui-lightbox-slide-rounded: var(--radius-lg);
+    --ui-lightbox-thumb-rounded: var(--radius-md);
+    --ui-lightbox-thumb-size: calc(var(--spacing) * 16);
     --ui-lightbox-thumb-opacity: 0.5;
     --ui-lightbox-thumb-opacity--active: 1;
     --ui-lightbox-thumb-columns: 6;
-    --ui-lightbox-thumb-gap: var(--step-1_5);
-    --ui-lightbox-img-border: 1px solid var(--faded);
+    --ui-lightbox-thumb-gap: calc(var(--spacing) * 1.5);
+    --ui-lightbox-img-border: 1px solid var(--color-faded);
 
     /* Reveal transitions/animations */
     --ui-lightbox-slide-opacity--start: 0;
     --ui-lightbox-slide-opacity--end: 1;
     --ui-lightbox-slide-scale--start: 0.9;
     --ui-lightbox-slide-scale--end: 1;
+    --ui-lightbox-img-scale: 1;
+    --ui-lightbox-img-opacity: 1;
     --ui-lightbox-img-scale--hover: 1.03;
     --ui-lightbox-img-filter--hover: brightness(0.8);
     --ui-lightbox-img-scale--active: 1;
@@ -49,48 +51,53 @@
   =========================================================================== */
 
   /* ---------------------------------------------------------------------------
-  GALLERY — :where(ui-lightbox, .ui-lightbox)
+  GALLERY — :where(ui-lightbox, [data-ui~="lightbox"])
   --------------------------------------------------------------------------- */
 
-  :where(ui-lightbox, .ui-lightbox) {
+  :where(ui-lightbox, [data-ui~="lightbox"]) {
     display: flex;
     flex-direction: column;
   }
 
   @container section (width <= 40rem) {
-    :where(ui-lightbox, .ui-lightbox) {
+    :where(ui-lightbox, [data-ui~="lightbox"]) {
       --ui-lightbox-thumb-columns: 4;
     }
   }
 
   /* ---------------------------------------------------------------------------
-  INLINE GALLERY — [data-slot~="lightbox-gallery"] / [data-slot~="lightbox-stage"]
+  INLINE GALLERY — [data-lightbox-slot~="gallery"] / [data-lightbox-slot~="stage"]
   --------------------------------------------------------------------------- */
 
-  [data-slot~="lightbox-gallery"] {
+  :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="gallery"] {
     inline-size: 100%;
   }
 
-  [data-slot~="lightbox-stage"] {
+  :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="stage"] {
     position: relative;
     display: flex;
     flex-direction: column;
     gap: calc(var(--ui-lightbox-thumb-gap) * 2);
   }
 
-  [data-slot~="lightbox-stage"] > [data-slot~="carousel-viewport"] {
-    border-radius: var(--ui-lightbox-slide-radius);
-    background: var(--card);
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="stage"]
+    > [data-carousel-slot~="viewport"] {
+    border-radius: var(--ui-lightbox-slide-rounded);
+    background: var(--color-card);
   }
 
-  [data-slot~="lightbox-stage"]
-    > [data-slot~="carousel-viewport"]
-    > [data-slot~="carousel-container"] {
-    border-radius: var(--ui-lightbox-slide-radius);
-    margin-inline-start: calc(var(--gap-sm) * -1);
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="stage"]
+    > [data-carousel-slot~="viewport"]
+    > [data-carousel-slot~="container"] {
+    border-radius: var(--ui-lightbox-slide-rounded);
+    margin-inline-start: calc(var(--space-sm) * -1);
   }
 
-  [data-slot~="lightbox-stage"] [data-slot~="lightbox-slide"] {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="stage"]
+    [data-lightbox-slot~="slide"] {
     appearance: none;
     border: none;
     background: none;
@@ -101,18 +108,20 @@
     block-size: 100%;
     cursor: zoom-in;
     overflow: clip;
-    padding-inline-start: var(--gap-sm);
+    padding-inline-start: var(--space-sm);
   }
 
-  [data-slot~="lightbox-stage"] [data-slot~="lightbox-content"] {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="stage"]
+    [data-lightbox-slot~="content"] {
     --_ring-width: 0px;
 
-    aspect-ratio: var(--ui-lightbox-aspect-ratio);
+    aspect-ratio: var(--ui-lightbox-aspect);
     inline-size: 100%;
     block-size: 100%;
     overflow: clip;
     position: relative;
-    border-radius: var(--ui-lightbox-slide-radius);
+    border-radius: var(--ui-lightbox-slide-rounded);
     border: var(--ui-lightbox-img-border);
 
     /* transparent twin of the inset ring for forced-colors / high-contrast modes */
@@ -123,31 +132,39 @@
   /* The inset ring paints on an overlay so it sits above the slide image (an
      inset box-shadow on the figure itself would hide behind the img); the
      ring width animates from 0 so the ring grows in smoothly on focus. */
-  [data-slot~="lightbox-stage"] [data-slot~="lightbox-content"]::after {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="stage"]
+    [data-lightbox-slot~="content"]::after {
     content: "";
     position: absolute;
     inset: 0;
     pointer-events: none;
     border-radius: inherit;
-    box-shadow: inset 0 0 0 var(--_ring-width) var(--ring-color);
+    box-shadow: inset 0 0 0 var(--_ring-width) var(--color-ring);
     transition: box-shadow var(--default-transition-duration)
       var(--default-transition-timing-function);
   }
 
-  [data-slot~="lightbox-stage"] [data-slot~="lightbox-slide"]:focus-visible {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="stage"]
+    [data-lightbox-slot~="slide"]:focus-visible {
     outline: none;
   }
 
-  [data-slot~="lightbox-stage"]
-    [data-slot~="lightbox-slide"]:focus-visible
-    [data-slot~="lightbox-content"] {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="stage"]
+    [data-lightbox-slot~="slide"]:focus-visible
+    [data-lightbox-slot~="content"] {
     --_ring-width: var(--ring-width);
 
     outline-color: transparent;
   }
 
-  [data-slot~="lightbox-stage"] [data-slot~="lightbox-slide"] img {
-    aspect-ratio: var(--ui-lightbox-aspect-ratio);
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="stage"]
+    [data-lightbox-slot~="slide"]
+    img {
+    aspect-ratio: var(--ui-lightbox-aspect);
     inline-size: 100%;
     block-size: 100%;
     object-fit: var(--ui-lightbox-object-fit);
@@ -162,67 +179,87 @@
     opacity: var(--ui-lightbox-img-opacity);
   }
 
-  [data-slot~="lightbox-stage"] [data-slot~="lightbox-slide"]:hover img {
-    transform: scale(var(--ui-lightbox-img-scale--hover));
-    filter: var(--ui-lightbox-img-filter--hover);
+  @media (hover: hover) {
+    :where(ui-lightbox, [data-ui~="lightbox"])
+      [data-lightbox-slot~="stage"]
+      [data-lightbox-slot~="slide"]:hover
+      img {
+      transform: scale(var(--ui-lightbox-img-scale--hover));
+      filter: var(--ui-lightbox-img-filter--hover);
+    }
   }
 
-  [data-slot~="lightbox-stage"] [data-slot~="lightbox-slide"]:active img {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="stage"]
+    [data-lightbox-slot~="slide"]:active
+    img {
     transform: scale(var(--ui-lightbox-img-scale--active));
     filter: var(--ui-lightbox-img-filter--active);
   }
 
   /* ---------------------------------------------------------------------------
-  thumbs — [data-slot~="lightbox-thumbs"] / [data-slot~="lightbox-thumb"]
+  thumbs — [data-lightbox-slot~="thumbs"] / [data-lightbox-slot~="thumb"]
   --------------------------------------------------------------------------- */
 
-  [data-slot~="lightbox-thumbs"] {
+  :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="thumbs"] {
     position: relative;
     z-index: 2;
   }
 
-  [data-slot~="lightbox-stage"] [data-slot~="lightbox-thumbs"] {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="stage"]
+    [data-lightbox-slot~="thumbs"] {
     display: flex;
     align-items: center;
     gap: var(--ui-lightbox-thumb-gap);
   }
 
-  [data-slot~="lightbox-stage"] [data-slot~="lightbox-thumbs"] [data-slot~="carousel-viewport"] {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="stage"]
+    [data-lightbox-slot~="thumbs"]
+    [data-carousel-slot~="viewport"] {
     flex: 1;
     min-inline-size: 0;
-    border-radius: var(--ui-lightbox-thumb-radius);
+    border-radius: var(--ui-lightbox-thumb-rounded);
   }
 
-  [data-slot~="lightbox-thumbs-prev"],
-  [data-slot~="lightbox-thumbs-next"] {
+  :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="thumbs-prev"],
+  :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="thumbs-next"] {
     flex-shrink: 0;
   }
 
-  [data-slot~="lightbox-thumbs"] [data-slot~="carousel-container"] {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="thumbs"]
+    [data-carousel-slot~="container"] {
     gap: var(--ui-lightbox-thumb-gap);
   }
 
   /* Gallery thumbs: fill track evenly, centered, max 6 columns */
-  [data-slot~="lightbox-stage"] [data-slot~="lightbox-thumbs"] [data-slot~="carousel-container"] {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="stage"]
+    [data-lightbox-slot~="thumbs"]
+    [data-carousel-slot~="container"] {
     justify-content: start;
   }
 
-  [data-slot~="lightbox-stage"] [data-slot~="lightbox-thumb"] {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="stage"]
+    [data-lightbox-slot~="thumb"] {
     max-inline-size: calc(
       (100% - (var(--ui-lightbox-thumb-gap) * (var(--ui-lightbox-thumb-columns) - 1))) /
         var(--ui-lightbox-thumb-columns)
     );
   }
 
-  [data-slot~="lightbox-thumb-content"] {
+  :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="thumb-content"] {
     --_ring-width: 0px;
-    --_ring: var(--ring-color);
+    --_ring-fill: var(--color-ring);
 
     appearance: none;
     cursor: pointer;
     position: relative;
     border: var(--ui-lightbox-img-border);
-    border-radius: var(--ui-lightbox-thumb-radius);
+    border-radius: var(--ui-lightbox-thumb-rounded);
     overflow: clip;
 
     /* transparent twin of the inset ring for forced-colors / high-contrast modes */
@@ -232,18 +269,18 @@
 
   /* The inset ring paints on an overlay so it sits above the thumb image (an
      inset box-shadow on the button itself would hide behind the img). */
-  [data-slot~="lightbox-thumb-content"]::after {
+  :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="thumb-content"]::after {
     content: "";
     position: absolute;
     inset: 0;
     pointer-events: none;
     border-radius: inherit;
-    box-shadow: inset 0 0 0 var(--_ring-width) var(--_ring);
+    box-shadow: inset 0 0 0 var(--_ring-width) var(--_ring-fill);
     transition: box-shadow var(--default-transition-duration)
       var(--default-transition-timing-function);
   }
 
-  [data-slot~="lightbox-thumb"] img {
+  :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="thumb"] img {
     opacity: var(--ui-lightbox-thumb-opacity);
     transition:
       opacity var(--default-transition-duration) var(--default-transition-timing-function),
@@ -253,36 +290,42 @@
     object-fit: cover;
   }
 
-  [data-slot~="lightbox-thumb"]:hover img {
-    opacity: var(--ui-lightbox-thumb-opacity--active);
+  @media (hover: hover) {
+    :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="thumb"]:hover img {
+      opacity: var(--ui-lightbox-thumb-opacity--active);
+    }
   }
 
-  [data-slot~="lightbox-thumb"].is-active img {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="thumb"][data-carousel-state~="active"]
+    img {
     transform: scale(1.1);
     opacity: var(--ui-lightbox-thumb-opacity--active);
   }
 
-  [data-slot~="lightbox-thumb"]:focus-visible {
+  :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="thumb"]:focus-visible {
     outline: none;
   }
 
-  [data-slot~="lightbox-thumb"]:focus-visible [data-slot~="lightbox-thumb-content"] {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="thumb"]:focus-visible
+    [data-lightbox-slot~="thumb-content"] {
     --_ring-width: var(--ring-width);
 
     outline-color: transparent;
   }
 
-  [data-slot~="lightbox-thumb"]:focus-visible img {
+  :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="thumb"]:focus-visible img {
     transform: scale(1);
   }
 
   /* ---------------------------------------------------------------------------
-  DIALOG — [data-slot~="lightbox-dialog"] (fullscreen dark overlay)
+  DIALOG — [data-lightbox-slot~="dialog"] (fullscreen dark overlay)
   --------------------------------------------------------------------------- */
 
-  [data-slot~="lightbox-dialog"] {
-    --ui-lightbox-thumb-radius: var(--radius-sm);
-    --ui-dialog-background: transparent;
+  :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="dialog"] {
+    --ui-lightbox-thumb-rounded: var(--radius-sm);
+    --ui-dialog-bg: transparent;
     --ui-dialog-border: none;
 
     overflow: clip;
@@ -290,73 +333,97 @@
     outline: none;
   }
 
-  [data-slot~="lightbox-dialog"] [data-slot~="lightbox-thumb"] img {
-    border-radius: var(--ui-lightbox-thumb-radius);
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="dialog"]
+    [data-lightbox-slot~="thumb"]
+    img {
+    border-radius: var(--ui-lightbox-thumb-rounded);
   }
 
-  [data-slot~="lightbox-dialog"] [data-slot~="dialog-content"] {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="dialog"]
+    [data-dialog-slot~="content"] {
     grid-template-rows: 1fr;
     max-block-size: 100svh;
     block-size: 100svh;
     overflow: clip;
   }
 
-  [data-slot~="lightbox-dialog"] :where(ui-carousel, .ui-carousel) {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="dialog"]
+    :where(ui-carousel, [data-ui~="carousel"]) {
     display: grid;
     grid-template-rows: 1fr auto;
     block-size: 100%;
     max-block-size: 100svh;
   }
 
-  [data-slot~="lightbox-dialog"] [data-slot~="carousel-container"] {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="dialog"]
+    [data-carousel-slot~="container"] {
     block-size: 100%;
   }
 
-  [data-slot~="lightbox-dialog"] [data-slot~="carousel-viewport"] {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="dialog"]
+    [data-carousel-slot~="viewport"] {
     outline: none;
   }
 
-  [data-slot~="lightbox-dialog"]
-    :where(ui-carousel, .ui-carousel)
-    > [data-slot~="carousel-viewport"]:first-of-type {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="dialog"]
+    :where(ui-carousel, [data-ui~="carousel"])
+    > [data-carousel-slot~="viewport"]:first-of-type {
     min-block-size: 0;
   }
 
-  [data-slot~="lightbox-dialog"] [data-slot~="lightbox-thumbs"] {
-    padding-block: var(--gap-sm);
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="dialog"]
+    [data-lightbox-slot~="thumbs"] {
+    padding-block: var(--space-sm);
     pointer-events: auto;
   }
 
-  [data-slot~="lightbox-dialog"] [data-slot~="lightbox-thumbs"] [data-slot~="carousel-container"] {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="dialog"]
+    [data-lightbox-slot~="thumbs"]
+    [data-carousel-slot~="container"] {
     justify-content: center;
-    padding-block: var(--gap-xs);
+    padding-block: var(--space-xs);
   }
 
-  [data-slot~="lightbox-dialog"] [data-slot~="lightbox-thumb"] {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="dialog"]
+    [data-lightbox-slot~="thumb"] {
     flex: 0 0 var(--ui-lightbox-thumb-size);
     inline-size: var(--ui-lightbox-thumb-size);
   }
 
-  [data-slot~="lightbox-dialog"]
-    [data-slot~="lightbox-thumb"]:focus-visible
-    [data-slot~="lightbox-thumb-content"] {
-    --_ring: var(--foreground);
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="dialog"]
+    [data-lightbox-slot~="thumb"]:focus-visible
+    [data-lightbox-slot~="thumb-content"] {
+    --_ring-fill: var(--color-foreground);
   }
 
   /* ---------------------------------------------------------------------------
-  SLIDE — [data-slot~="lightbox-slide"] (dialog full-size slides)
+  SLIDE — [data-lightbox-slot~="slide"] (dialog full-size slides)
   --------------------------------------------------------------------------- */
 
-  [data-slot~="lightbox-dialog"] [data-slot~="lightbox-slide"] {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="dialog"]
+    [data-lightbox-slot~="slide"] {
     display: flex;
     align-items: center;
     justify-content: center;
     min-block-size: 0;
     min-inline-size: 0;
-    padding: clamp(var(--gap-sm), 4vi, var(--gap-lg));
+    padding: clamp(var(--space-sm), 4vi, var(--space-lg));
   }
 
-  [data-slot~="lightbox-dialog"] [data-slot~="lightbox-content"] {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="dialog"]
+    [data-lightbox-slot~="content"] {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -368,10 +435,13 @@
     max-inline-size: 100%;
   }
 
-  [data-slot~="lightbox-dialog"] [data-slot~="lightbox-slide"] img {
-    --ui-lightbox-thumb-radius: var(--radius-xs);
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="dialog"]
+    [data-lightbox-slot~="slide"]
+    img {
+    --ui-lightbox-thumb-rounded: var(--radius-xs);
 
-    border-radius: var(--ui-lightbox-slide-radius);
+    border-radius: var(--ui-lightbox-slide-rounded);
     border: var(--ui-lightbox-img-border);
     overflow: clip;
     inline-size: 100%;
@@ -389,7 +459,10 @@
     pointer-events: auto;
   }
 
-  [data-slot~="lightbox-dialog"] [data-slot~="lightbox-slide"].is-in-view.is-snapped img {
+  :where(ui-lightbox, [data-ui~="lightbox"])
+    [data-lightbox-slot~="dialog"]
+    [data-lightbox-slot~="slide"][data-carousel-state~="in-view"][data-carousel-state~="snapped"]
+    img {
     opacity: var(--ui-lightbox-slide-opacity--end);
     transform: scale(var(--ui-lightbox-slide-scale--end));
 
@@ -400,12 +473,12 @@
   }
 
   /* ---------------------------------------------------------------------------
-  NAV BUTTONS — [data-slot~="lightbox-prev"] / [data-slot~="lightbox-next"] (icon-size .ui-button)
+  NAV BUTTONS — [data-lightbox-slot~="prev"] / [data-lightbox-slot~="next"] (icon-size [data-ui~="button"])
   --------------------------------------------------------------------------- */
 
-  [data-slot~="lightbox-prev"],
-  [data-slot~="lightbox-next"] {
-    --ui-button-ring-color: var(--foreground);
+  :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="prev"],
+  :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="next"] {
+    --ui-button-ring-color: var(--color-foreground);
     --ring-opacity: 80%;
 
     pointer-events: auto;
@@ -415,23 +488,23 @@
     z-index: 50;
   }
 
-  [data-slot~="lightbox-prev"] {
-    inset-inline-start: var(--gap-md);
+  :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="prev"] {
+    inset-inline-start: var(--space-md);
   }
 
-  [data-slot~="lightbox-next"] {
-    inset-inline-end: var(--gap-md);
+  :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="next"] {
+    inset-inline-end: var(--space-md);
   }
 
   /* ---------------------------------------------------------------------------
   CLOSE BUTTON — top-right
   --------------------------------------------------------------------------- */
 
-  [data-slot~="lightbox-close"] {
+  :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="close"] {
     pointer-events: auto;
     position: absolute;
-    inset-block-start: var(--gap-sm);
-    inset-inline-end: var(--gap-sm);
+    inset-block-start: var(--space-sm);
+    inset-inline-end: var(--space-sm);
     z-index: 10;
   }
 
@@ -439,9 +512,9 @@
   COUNTER — slide count indicator (optional)
   --------------------------------------------------------------------------- */
 
-  [data-slot~="lightbox-counter"] {
+  :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="counter"] {
     position: absolute;
-    inset-block-end: var(--gap-sm);
+    inset-block-end: var(--space-sm);
     /* left + physical translate is a direction-neutral centering idiom; keep physical */
     left: 50%;
     translate: -50% 0;

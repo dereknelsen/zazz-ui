@@ -3,8 +3,8 @@
 /**
  * @fileoverview `<ui-command>`: a command menu for search and quick actions.
  * @description Light-DOM custom element on the shared typeahead engine
- * (`base/typeahead.ts`), architected after cmdk. The panel (a `popover="auto"`
- * dropdown or a `<dialog class="ui-dialog">`) contains the search input;
+ * (`base/typeahead.ts`). The panel (a `popover="auto"`
+ * dropdown or a `<dialog data-ui="dialog">`) contains the search input;
  * items rank by match score and the best match auto-highlights.
  *
  * Actions are the platform's own vocabulary: navigation items are real
@@ -17,10 +17,10 @@
  *
  * Attributes:
  * - `data-command-hotkey` (root): global toggle shortcut, e.g. `"mod+k"`.
- * - `data-hotkey` (item): global accelerator that activates the item, active
+ * - `data-command-hotkey` (item): global accelerator that activates the item, active
  *   while the element is connected (even with the panel closed).
- * - `data-stay-open` (item): keep the panel open after activation.
- * - `data-sort="document"` (root): opt out of score ranking (default: score).
+ * - `data-command-stay-open` (item): keep the panel open after activation.
+ * - `data-command-sort="document"` (root): opt out of score ranking (default: score).
  *
  * Parts: `command-open` (trigger), `command-panel`, `command-header`,
  * `command-input`, `command-list`, `command-group` / `command-group-label`,
@@ -40,9 +40,9 @@ class UiCommand extends TypeaheadElement {
   protected readonly managesPanel: boolean = false;
   protected readonly autoHighlight: boolean = true;
 
-  /** Command ranks by score unless the author opts back into DOM order. */
+  /** Ranks by score unless `data-command-sort="document"`. */
   protected get sortByScore(): boolean {
-    return this.getAttribute("data-sort") !== "document";
+    return this.config("sort") !== "document";
   }
 
   protected setup(signal: AbortSignal): void {
@@ -59,7 +59,7 @@ class UiCommand extends TypeaheadElement {
 
     // Per-item accelerators: global while connected, panel open or not
     for (const item of this.items()) {
-      const spec = item.getAttribute("data-hotkey");
+      const spec = item.getAttribute("data-command-hotkey") ?? item.getAttribute("data-hotkey");
       if (spec) {
         bindHotkey(spec, () => this.#activate(item, true), { signal });
       }
@@ -105,7 +105,7 @@ class UiCommand extends TypeaheadElement {
 
   /**
    * @description Runs one item's activation: optional synthetic click,
-   * `zazz:command-select`, then close (unless `data-stay-open`).
+   * `zazz:command-select`, then close (unless `data-command-stay-open`).
    *
    * @param item - The item to activate.
    * @param click - Whether to run the native activation via `click()`.
@@ -119,7 +119,9 @@ class UiCommand extends TypeaheadElement {
       }),
     );
     if (click) item.click();
-    if (!item.hasAttribute("data-stay-open")) this.#closePanel();
+    if (!(item.hasAttribute("data-command-stay-open") || item.hasAttribute("data-stay-open"))) {
+      this.#closePanel();
+    }
   }
 
   /**

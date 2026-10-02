@@ -1,24 +1,34 @@
-<ui-command data-command-hotkey="mod+k" class="w-full max-w-xl">
+<ui-command
+  data-command-hotkey="mod+k"
+  style="
+    --w: 100%;
+    --max-w: 96;
+  "
+>
   <button
-    class="ui-button w-full justify-between"
+    data-ui="button"
     type="button"
-    data-variant="outline"
+    data-button-variant="outline"
     popovertarget="command-example-1"
-    data-slot="command-open"
+    data-command-slot="open"
+    style="
+      --w: 100%;
+      --justify: space-between;
+    "
   >
-    <span class="text-muted-foreground">Search...</span>
+    <span style="--text: var(--color-muted-foreground)">Search...</span>
     <ui-kbd-group><kbd>⌘</kbd><kbd>K</kbd></ui-kbd-group>
   </button>
   <div
     id="command-example-1"
-    data-slot="command-panel"
-    data-side="bottom"
-    data-align="start"
+    data-command-slot="panel"
+    data-popover-side="bottom"
+    data-popover-align="start"
     popover="auto"
   >
-    <header data-slot="command-header">
+    <header data-command-slot="header">
       <input
-        data-slot="command-input"
+        data-command-slot="input"
         type="text"
         placeholder="Type a command or search..."
         role="combobox"
@@ -28,65 +38,96 @@
         aria-label="Search commands"
       />
     </header>
-    <div role="listbox" data-slot="command-list" aria-label="Commands">
-      <div role="group" data-slot="command-group" aria-labelledby="command-example-1-nav">
+    <div role="listbox" data-command-slot="list" aria-label="Commands">
+      <div role="group" data-command-slot="group" aria-labelledby="command-example-1-nav">
         <span
-          class="font-strong text-eyebrow text-muted-foreground"
-          data-slot="command-group-label"
+          data-command-slot="group-label"
           id="command-example-1-nav"
+          style="
+            --font-weight: var(--font-weight-strong);
+            --display: inline-flex;
+            --font-size: var(--font-size-eyebrow);
+            --leading: var(--leading-eyebrow);
+            --font-weight: var(--font-weight-eyebrow);
+            --tracking: var(--tracking-eyebrow);
+            --text-transform: uppercase;
+            --text: var(--color-muted-foreground);
+          "
           >Navigation</span
         >
         <a
           role="option"
-          data-slot="command-item"
-          class="ui-button justify-start"
-          data-variant="ghost"
+          data-command-slot="item"
+          data-ui="button"
+          data-button-variant="ghost"
           href="#docs"
           tabindex="-1"
-          data-keywords="documentation guides"
-          data-hotkey="mod+shift+d"
+          data-command-keywords="documentation guides"
+          data-command-hotkey="mod+shift+d"
+          style="--justify: start"
         >
           Go to docs
           <ui-kbd-group><kbd>⇧</kbd><kbd>⌘</kbd><kbd>D</kbd></ui-kbd-group>
         </a>
         <a
           role="option"
-          data-slot="command-item"
-          class="ui-button justify-start"
-          data-variant="ghost"
+          data-command-slot="item"
+          data-ui="button"
+          data-button-variant="ghost"
           href="#settings"
           tabindex="-1"
-          data-keywords="preferences options"
-          data-hotkey="mod+shift+s"
+          data-command-keywords="preferences options"
+          data-command-hotkey="mod+shift+s"
+          style="--justify: start"
         >
           Go to settings
           <ui-kbd-group><kbd>⇧</kbd><kbd>⌘</kbd><kbd>S</kbd></ui-kbd-group>
         </a>
       </div>
-      <div role="group" data-slot="command-group" aria-labelledby="command-example-1-actions">
+      <div role="group" data-command-slot="group" aria-labelledby="command-example-1-actions">
         <span
-          class="font-strong text-eyebrow text-muted-foreground"
-          data-slot="command-group-label"
+          data-command-slot="group-label"
           id="command-example-1-actions"
+          style="
+            --font-weight: var(--font-weight-strong);
+            --display: inline-flex;
+            --font-size: var(--font-size-eyebrow);
+            --leading: var(--leading-eyebrow);
+            --font-weight: var(--font-weight-eyebrow);
+            --tracking: var(--tracking-eyebrow);
+            --text-transform: uppercase;
+            --text: var(--color-muted-foreground);
+          "
           >Actions</span
         >
         <button
           role="option"
-          data-slot="command-item"
-          class="ui-button justify-start"
-          data-variant="ghost"
+          data-command-slot="item"
+          data-ui="button"
+          data-button-variant="ghost"
           type="button"
           command="show-modal"
           commandfor="command-example-1-dialog"
           tabindex="-1"
-          data-keywords="modal open"
+          data-command-keywords="modal open"
+          style="--justify: start"
         >
           Open example dialog
         </button>
       </div>
     </div>
-    <p data-slot="command-empty" class="text-muted-foreground text-sm">No commands found.</p>
-    <footer data-slot="command-footer">
+    <p
+      data-command-slot="empty"
+      style="
+        --text: var(--color-muted-foreground);
+        --font-size: var(--font-size-sm);
+        --leading: var(--leading-sm);
+        --tracking: var(--tracking-sm);
+      "
+    >
+      No commands found.
+    </p>
+    <footer data-command-slot="footer">
       <span
         ><ui-kbd-group><kbd>↑</kbd><kbd>↓</kbd></ui-kbd-group> navigate</span
       >
@@ -96,23 +137,27 @@
   </div>
 </ui-command>
 
-<dialog
-  id="command-example-1-dialog"
-  class="ui-dialog"
-  closedby="any"
-  data-side="bottom"
-  data-align="center"
->
-  <div data-slot="dialog-content">
-    <header data-slot="dialog-header">
-      <h2 class="text-lg font-heading font-strong">Opened by a command</h2>
+<dialog id="command-example-1-dialog" data-ui="dialog" closedby="any">
+  <div data-dialog-slot="content">
+    <header data-dialog-slot="header">
+      <h2
+        style="
+          --font-size: var(--font-size-lg);
+          --leading: var(--leading-lg);
+          --tracking: var(--tracking-lg);
+          --font-family: var(--font-family-heading);
+          --font-weight: var(--font-weight-strong);
+        "
+      >
+        Opened by a command
+      </h2>
     </header>
-    <div data-slot="dialog-body">
+    <div data-dialog-slot="body">
       <p>The command item is a plain invoker button (no custom wiring).</p>
     </div>
   </div>
-  <footer data-slot="dialog-footer">
-    <button class="ui-button" type="button" commandfor="command-example-1-dialog" command="close">
+  <footer data-dialog-slot="footer">
+    <button data-ui="button" type="button" commandfor="command-example-1-dialog" command="close">
       Close
     </button>
   </footer>

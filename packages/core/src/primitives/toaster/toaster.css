@@ -1,46 +1,44 @@
 /**
- * toaster.css: Toaster (ui-toaster | .ui-toaster, [data-slot~="toaster-toast"])
+ * toaster.css: Toaster (ui-toaster | [data-ui~="toaster"], [data-toaster-slot~="toast"])
  *
- * Stacked toast notifications. Collapsed-stack presentation (newest toast in
- * front, older toasts peeking behind, expand on hover) adapted from Sonner by
- * Emil Kowalski: https://sonner.emilkowal.ski (MIT).
+ * Stacked toast notifications: newest toast in front, older toasts peeking
+ * behind, expand on hover.
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css, popover.css, button.css
+ * @requires   _layers.css, _variables.css, popover.css, button.css
  * @uses       popover="manual" + showPopover()/hidePopover(): top-layer region,
  *             driven by zazz/scripts/toaster.js (no light dismiss)
  * @uses       @starting-style: enter motion for toasts inserted into the open region
  * @uses       view-transition-name: toaster: own snapshot group, frozen in
  *             _view-transitions.css so page transitions never repaint the stack
- * @uses       JS-maintained props (--toasts-before, --offset, --initial-height,
+ * @uses       JS-maintained custom properties (--toasts-before, --offset, --initial-height,
  *             --front-toast-height + inline z-index): stack math from toaster.js
  * @tokens     --ui-toaster-* (@layer variables)
- * @see        /docs/components/toaster
  */
 
 @layer variables {
   :root {
     /* surface */
-    --ui-toaster-background: var(--popover);
-    --ui-toaster-foreground: var(--popover-foreground);
-    --ui-toaster-border-color: var(--border);
-    --ui-toaster-radius: var(--radius-md);
+    --ui-toaster-bg: var(--color-popover);
+    --ui-toaster-text: var(--color-popover-foreground);
+    --ui-toaster-border-color: var(--color-border);
+    --ui-toaster-rounded: var(--radius-md);
     --ui-toaster-shadow: var(--shadow-md);
     /* status accent: icon color; variants reassign */
-    --ui-toaster-accent: var(--popover-foreground);
+    --ui-toaster-accent: var(--color-popover-foreground);
 
     /* metrics: mobile full width falls out of the min(); no media query */
-    --ui-toaster-inline-size: min(356px, calc(100vi - var(--gutters) * 2));
+    --ui-toaster-w: min(356px, calc(100vi - var(--gutters) * 2));
     --ui-toaster-inset: var(--gutters);
-    --ui-toaster-gap: var(--step-3_5);
-    --ui-toaster-padding: var(--step-4);
-    --ui-toaster-icon-size: var(--step-5);
+    --ui-toaster-gap: calc(var(--spacing) * 3.5);
+    --ui-toaster-p: calc(var(--spacing) * 4);
+    --ui-toaster-icon-size: calc(var(--spacing) * 5);
 
     /* type */
     --ui-toaster-title-font-size: var(--font-size-sm);
     --ui-toaster-title-font-weight: var(--font-weight-strong);
     --ui-toaster-description-font-size: var(--font-size-sm);
-    --ui-toaster-description-foreground: var(--muted-foreground);
+    --ui-toaster-description-text: var(--color-muted-foreground);
 
     /* stack: per-depth shrink of collapsed toasts */
     --ui-toaster-scale-step: 0.05;
@@ -55,18 +53,13 @@
 
 @layer zazz.components {
   /* ===========================================================================
-  TOASTER REGION: popover="manual" host (<ui-toaster class="toaster">)
-  - Sits in the top layer while any toast is visible; toaster.js calls
-    showPopover()/hidePopover(). It is a positioning shell, not a surface, so
-    the shared [popover] chrome from popover.css (reset + components layers)
-    is neutralized here. The region does not animate: JS hides it only after
-    the last toast's exit transition finishes.
-  - --_lift is an inherited coordination var (like --_gap in _utilities.css):
-    set per data-position on the region, read by every toast for the stack
-    direction (-1 = toasts travel up from the bottom edge, 1 = down from top).
+  REGION: positioning shell in the top layer, not a surface, so the shared
+  [popover] chrome is neutralized. --_lift is set on the region and read by
+  every toast for the stack direction (-1 = up from the bottom edge, 1 = down
+  from the top).
   =========================================================================== */
 
-  :where(ui-toaster, .ui-toaster) {
+  :where(ui-toaster, [data-ui~="toaster"]) {
     /* neutralize shared [popover] chrome + UA popover styles */
     background: none;
     border: none;
@@ -86,66 +79,62 @@
     inset: auto;
     inset-block-end: var(--ui-toaster-inset);
     inset-inline-end: var(--ui-toaster-inset);
-    inline-size: var(--ui-toaster-inline-size);
+    inline-size: var(--ui-toaster-w);
     --_lift: -1;
 
-    /* Own snapshot group for page view transitions: frozen (never animated)
-       in _view-transitions.css, so navigations cannot cross-fade or repaint an
-       active stack. One region per page: duplicate view-transition-names
-       would make the browser skip the whole transition. */
+    /* own frozen snapshot group so page transitions never repaint the stack;
+       one region per page, since duplicate names skip the whole transition */
     view-transition-name: toaster;
   }
 
-  :where(ui-toaster, .ui-toaster):popover-open {
+  :where(ui-toaster, [data-ui~="toaster"]):popover-open {
     display: block;
   }
 
-  /* Positions: logical, so RTL flips for free. Default is bottom-end. */
+  /* logical positions flip for RTL; default is bottom-end */
 
-  :where(ui-toaster, .ui-toaster)[data-position^="top"] {
+  :where(ui-toaster, [data-ui~="toaster"])[data-toaster-position^="top"] {
     inset-block-start: var(--ui-toaster-inset);
     inset-block-end: auto;
     --_lift: 1;
   }
 
-  :where(ui-toaster, .ui-toaster)[data-position$="start"] {
+  :where(ui-toaster, [data-ui~="toaster"])[data-toaster-position$="start"] {
     inset-inline-start: var(--ui-toaster-inset);
     inset-inline-end: auto;
   }
 
-  :where(ui-toaster, .ui-toaster)[data-position$="center"] {
-    inset-inline-start: calc(50vi - var(--ui-toaster-inline-size) / 2);
+  :where(ui-toaster, [data-ui~="toaster"])[data-toaster-position$="center"] {
+    inset-inline-start: calc(50vi - var(--ui-toaster-w) / 2);
     inset-inline-end: auto;
   }
 
-  [data-slot~="toaster-list"] {
+  :where(ui-toaster, [data-ui~="toaster"]) [data-toaster-slot~="list"] {
     list-style: none;
     margin: 0;
     padding: 0;
   }
 
   /* ===========================================================================
-  TOAST: absolutely positioned against the region's edge; all placement is
-  transform-based so enter/exit/stack shifts share one transition.
-  toaster.js maintains --toasts-before, --offset (cumulative expanded offset),
-  --initial-height, data-front, data-visible, data-removed, and inline z-index.
+  TOAST: placement is transform-based so enter/exit/stack shifts share one
+  transition.
   =========================================================================== */
 
-  [data-slot~="toaster-toast"] {
+  :where(ui-toaster, [data-ui~="toaster"]) [data-toaster-slot~="toast"] {
     position: absolute;
     inset-inline: 0;
     inset-block-end: 0;
 
     display: flex;
     align-items: center;
-    gap: var(--step-2);
+    gap: calc(var(--spacing) * 2);
     inline-size: 100%;
-    padding: var(--ui-toaster-padding);
+    padding: var(--ui-toaster-p);
 
-    color: var(--ui-toaster-foreground);
-    background-color: var(--ui-toaster-background);
+    color: var(--ui-toaster-text);
+    background-color: var(--ui-toaster-bg);
     border: 1px solid var(--ui-toaster-border-color);
-    border-radius: var(--ui-toaster-radius);
+    border-radius: var(--ui-toaster-rounded);
     box-shadow: var(--ui-toaster-shadow);
     overflow-wrap: anywhere;
 
@@ -157,21 +146,21 @@
       opacity var(--ui-toaster-transition-duration) var(--ui-toaster-transition-timing-function),
       block-size var(--ui-toaster-transition-duration) var(--ui-toaster-transition-timing-function);
 
-    /* Newly inserted toasts slide in from the region's edge (the region is
-       already :popover-open; JS shows it before appending). */
+    /* slide in from the region's edge (JS opens the region before appending) */
     @starting-style {
       opacity: var(--ui-toaster-opacity--start);
       transform: translateY(calc(var(--_lift) * -100%));
     }
   }
 
-  :where(ui-toaster, .ui-toaster)[data-position^="top"] [data-slot~="toaster-toast"] {
+  :where(ui-toaster, [data-ui~="toaster"])[data-toaster-position^="top"]
+    [data-toaster-slot~="toast"] {
     inset-block-end: auto;
     inset-block-start: 0;
   }
 
-  /* Content crossfades when the stack collapses/expands. */
-  [data-slot~="toaster-toast"] > * {
+  /* content crossfades on collapse/expand */
+  :where(ui-toaster, [data-ui~="toaster"]) [data-toaster-slot~="toast"] > * {
     transition: opacity var(--ui-toaster-transition-duration)
       var(--ui-toaster-transition-timing-function);
   }
@@ -182,15 +171,18 @@
   their edges peek, content hidden.
   =========================================================================== */
 
-  :where(ui-toaster, .ui-toaster):not([data-expanded="true"])
-    [data-slot~="toaster-toast"]:not([data-front="true"], [data-removed="true"]) {
+  :where(ui-toaster, [data-ui~="toaster"]):not([data-toaster-state~="expanded"])
+    [data-toaster-slot~="toast"]:not(
+      [data-toaster-state~="front"],
+      [data-toaster-state~="removed"]
+    ) {
     --_y: translateY(calc(var(--_lift) * var(--ui-toaster-gap) * var(--toasts-before, 0)))
       scale(calc(1 - var(--ui-toaster-scale-step) * var(--toasts-before, 0)));
     block-size: var(--front-toast-height);
   }
 
-  :where(ui-toaster, .ui-toaster):not([data-expanded="true"])
-    [data-slot~="toaster-toast"]:not([data-front="true"], [data-removed="true"])
+  :where(ui-toaster, [data-ui~="toaster"]):not([data-toaster-state~="expanded"])
+    [data-toaster-slot~="toast"]:not([data-toaster-state~="front"], [data-toaster-state~="removed"])
     > * {
     opacity: 0;
   }
@@ -201,11 +193,13 @@
   while moving between toasts (which would collapse it).
   =========================================================================== */
 
-  :where(ui-toaster, .ui-toaster)[data-expanded="true"] [data-slot~="toaster-toast"] {
+  :where(ui-toaster, [data-ui~="toaster"])[data-toaster-state~="expanded"]
+    [data-toaster-slot~="toast"] {
     block-size: var(--initial-height, auto);
   }
 
-  :where(ui-toaster, .ui-toaster)[data-expanded="true"] [data-slot~="toaster-toast"]::after {
+  :where(ui-toaster, [data-ui~="toaster"])[data-toaster-state~="expanded"]
+    [data-toaster-slot~="toast"]::after {
     content: "";
     position: absolute;
     inset-inline: 0;
@@ -213,14 +207,18 @@
     block-size: calc(var(--ui-toaster-gap) + 1px);
   }
 
-  :where(ui-toaster, .ui-toaster)[data-position^="top"][data-expanded="true"]
-    [data-slot~="toaster-toast"]::after {
+  :where(
+      ui-toaster,
+      [data-ui~="toaster"]
+    )[data-toaster-position^="top"][data-toaster-state~="expanded"]
+    [data-toaster-slot~="toast"]::after {
     inset-block-end: auto;
     inset-block-start: 100%;
   }
 
-  /* Beyond the visible limit: kept in the DOM until dismissed, but hidden. */
-  [data-slot~="toaster-toast"][data-visible="false"] {
+  /* beyond the visible limit: stays in the DOM but hidden */
+  :where(ui-toaster, [data-ui~="toaster"])
+    [data-toaster-slot~="toast"]:not([data-toaster-state~="visible"]) {
     opacity: 0;
     pointer-events: none;
   }
@@ -231,59 +229,55 @@
   and simply fade, so removal doesn't jump the stack.
   =========================================================================== */
 
-  /* Keep the dying toast pointer-active: hiding it from hit-testing would fire
-     mouseleave on the region and collapse an expanded stack mid-dismiss.
-     toaster.js already ignores interactions with removed toasts. */
-  [data-slot~="toaster-toast"][data-removed="true"] {
+  /* keep the dying toast pointer-active: dropping it from hit-testing would
+     fire mouseleave and collapse an expanded stack mid-dismiss */
+  :where(ui-toaster, [data-ui~="toaster"])
+    [data-toaster-slot~="toast"][data-toaster-state~="removed"] {
     opacity: var(--ui-toaster-opacity--start);
     --_y: translateY(calc(var(--_lift) * var(--offset, 0px) + var(--_lift) * -100%));
   }
 
-  :where(ui-toaster, .ui-toaster):not([data-expanded="true"])
-    [data-slot~="toaster-toast"][data-removed="true"]:not([data-front="true"]) {
+  :where(ui-toaster, [data-ui~="toaster"]):not([data-toaster-state~="expanded"])
+    [data-toaster-slot~="toast"][data-toaster-state~="removed"]:not([data-toaster-state~="front"]) {
     --_y: translateY(calc(var(--_lift) * var(--ui-toaster-gap) * var(--toasts-before, 0)))
       scale(calc(1 - var(--ui-toaster-scale-step) * var(--toasts-before, 0)));
   }
 
-  /* ===========================================================================
-  TOAST PARTS
-  =========================================================================== */
-
-  [data-slot~="toaster-icon"] {
+  :where(ui-toaster, [data-ui~="toaster"]) [data-toaster-slot~="icon"] {
     flex-shrink: 0;
     inline-size: var(--ui-toaster-icon-size);
     block-size: var(--ui-toaster-icon-size);
     color: var(--ui-toaster-accent);
   }
 
-  [data-slot~="toaster-icon"] > svg {
+  :where(ui-toaster, [data-ui~="toaster"]) [data-toaster-slot~="icon"] > svg {
     display: block;
     inline-size: 100%;
     block-size: 100%;
   }
 
-  [data-slot~="toaster-content"] {
+  :where(ui-toaster, [data-ui~="toaster"]) [data-toaster-slot~="content"] {
     flex: 1;
     min-inline-size: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--step-1);
+    gap: var(--spacing);
   }
 
-  [data-slot~="toaster-title"] {
+  :where(ui-toaster, [data-ui~="toaster"]) [data-toaster-slot~="title"] {
     font-size: var(--ui-toaster-title-font-size);
     font-weight: var(--ui-toaster-title-font-weight);
     line-height: var(--leading-sm);
   }
 
-  [data-slot~="toaster-description"] {
+  :where(ui-toaster, [data-ui~="toaster"]) [data-toaster-slot~="description"] {
     font-size: var(--ui-toaster-description-font-size);
     line-height: var(--leading-sm);
-    color: var(--ui-toaster-description-foreground);
+    color: var(--ui-toaster-description-text);
   }
 
-  [data-slot~="toaster-action"],
-  [data-slot~="toaster-close"] {
+  :where(ui-toaster, [data-ui~="toaster"]) [data-toaster-slot~="action"],
+  :where(ui-toaster, [data-ui~="toaster"]) [data-toaster-slot~="close"] {
     flex-shrink: 0;
   }
 
@@ -291,19 +285,23 @@
   VARIANTS: reassign the accent token only
   =========================================================================== */
 
-  [data-slot~="toaster-toast"][data-variant="success"] {
-    --ui-toaster-accent: var(--success);
+  :where(ui-toaster, [data-ui~="toaster"])
+    [data-toaster-slot~="toast"][data-toaster-variant="success"] {
+    --ui-toaster-accent: var(--color-success);
   }
 
-  [data-slot~="toaster-toast"][data-variant="info"] {
-    --ui-toaster-accent: var(--info);
+  :where(ui-toaster, [data-ui~="toaster"])
+    [data-toaster-slot~="toast"][data-toaster-variant="info"] {
+    --ui-toaster-accent: var(--color-info);
   }
 
-  [data-slot~="toaster-toast"][data-variant="warning"] {
-    --ui-toaster-accent: var(--warning);
+  :where(ui-toaster, [data-ui~="toaster"])
+    [data-toaster-slot~="toast"][data-toaster-variant="warning"] {
+    --ui-toaster-accent: var(--color-warning);
   }
 
-  [data-slot~="toaster-toast"][data-variant="destructive"] {
-    --ui-toaster-accent: var(--destructive);
+  :where(ui-toaster, [data-ui~="toaster"])
+    [data-toaster-slot~="toast"][data-toaster-variant="destructive"] {
+    --ui-toaster-accent: var(--color-destructive);
   }
 }

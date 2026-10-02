@@ -2,62 +2,71 @@
  * fields.css: Shared form field family (Tier 3 owner for --ui-field-*)
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css
+ * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved)
  * @uses       :user-invalid: validation after commit (not while typing)
  * @uses       :has(:user-invalid): label/hint/error crossfade
  * @uses       @starting-style + visibility allow-discrete: hint <-> error swap
- * @uses       color-mix(): destructive field tint on invalid
  * @tokens     --ui-field-*, --ui-field-group-* (Tier 3 owner; @layer variables)
  * @consumedby input.css, textarea.css, select.css, input-group.css,
- *             password-group.css, otp.css, radio.css (.ui-radio-group, border colors),
+ *             password-group.css, otp.css, radio.css, checkbox.css,
  *             autocomplete.css, combobox.css, command.css,
- *             button.css (metrics: block-size/radius/padding/font/icon/ring/border width+style),
- *             toggle.css (via button.css), tabs.css, checkbox.css, badge.css (border/ring)
+ *             button.css (metrics: h/rounded/px/text/leading/icon/ring/border width+style),
+ *             toggle.css (via button.css), tabs.css, badge.css (border/ring)
+ *
+ * Identities: data-ui="field" (label + control + description wrapper),
+ * data-ui="field-group" (fieldset; data-ui="radio-group" shares its rules).
+ * Slots: data-field-slot="label | description | hint | error".
+ * Each control owns its own disabled and :user-invalid rules and remaps the
+ * --ui-field-* family on itself when invalid.
  */
 
 @layer variables {
   :root {
-    --ui-field-background: var(--input);
-    --ui-field-background--hover: var(--input);
-    --ui-field-background--focus: var(--background);
+    --ui-field-bg: var(--color-input);
+    --ui-field-bg--hover: var(--color-input);
+    --ui-field-bg--focus-within: var(--color-background);
 
-    --ui-field-foreground: var(--input-foreground);
+    --ui-field-text: var(--color-input-foreground);
 
     --ui-field-border-width: 1px;
     --ui-field-border-style: solid;
-    --ui-field-border-color: var(--border);
-    --ui-field-border-color--hover: var(--primary);
-    --ui-field-border-color--focus: var(--primary);
+    --ui-field-border-color: var(--color-border);
+    --ui-field-border-color--hover: light-dark(
+      oklch(from var(--color-border) calc(l * 0.9) c h),
+      oklch(from var(--color-border) calc(l * 0.6) c h)
+    );
+    --ui-field-border-color--focus-within: var(--color-primary);
 
-    --ui-field-label-color: inherit;
-    --ui-field-ring-color: var(--ring-color);
-    --ui-field-radius: var(--radius-md);
+    --ui-field-label-text: inherit;
+    --ui-field-ring-color: var(--color-ring);
+    --ui-field-rounded: var(--radius-md);
     --ui-field-inset-child-radius: var(--radius-sm);
-    --ui-field-block-size: var(--step-8);
+    --ui-field-h: calc(var(--spacing) * 8);
     --ui-field-font-size: var(--font-size-sm);
-    --ui-field-line-height: 1;
-    --ui-field-padding: var(--step-2_5);
-    --ui-field-addon-padding: var(--step-1);
-    --ui-field-gap: var(--step-2);
-    --ui-field-option-gap: var(--step-px);
-    --ui-field-icon-size: var(--step-4);
+    --ui-field-leading: 1;
+    --ui-field-px: calc(var(--spacing) * 2.5);
+    --ui-field-addon-padding: var(--spacing);
+    --ui-field-gap: calc(var(--spacing) * 2);
+    --ui-field-option-gap: 1px;
+    --ui-field-icon-size: calc(var(--spacing) * 4);
 
+    /* wrapper layout */
     --ui-field-display: grid;
-    --ui-field-template-columns: 1fr;
-    --ui-field-align-self: flex-start;
-    --ui-field-inline-size: 100%;
+    --ui-field-grid-template-cols: 1fr;
+    --ui-field-self: flex-start;
+    --ui-field-w: 100%;
 
     /* Reveal transitions/animations */
-    --ui-field-hint-translate--start: 0 calc(var(--step-1) * -1);
+    --ui-field-hint-translate--start: 0 calc(var(--spacing) * -1);
     --ui-field-hint-translate--end: 0 0;
 
     --ui-field-group-display: grid;
     --ui-field-group-border: 1px solid transparent;
-    --ui-field-group-background: transparent;
-    --ui-field-group-padding: 0;
-    --ui-field-group-margin: 0;
-    --ui-field-group-gap: var(--gap-xs);
-    --ui-field-group-radius: var(--radius-lg);
+    --ui-field-group-bg: transparent;
+    --ui-field-group-p: 0;
+    --ui-field-group-m: 0;
+    --ui-field-group-gap: var(--space-xs);
+    --ui-field-group-rounded: var(--radius-lg);
   }
 }
 
@@ -65,72 +74,49 @@
   /* ===========================================================================
   FORM: global form behaviour shared across every control
   - This file holds only the cross-control glue: the shared field-level tokens,
-    the disabled state, the .ui-field layout wrapper, .ui-field-group / .ui-radio-group
-    fieldsets, and validation messaging.
-    Each control lives in its own file:
-      .ui-input        -> input.css
-      .ui-textarea     -> textarea.css
-      .ui-select       -> select.css
-      .ui-input-group  -> input-group.css
-      checkbox         -> _reset.css (input[type="checkbox"])
-      switch           -> _reset.css (input[role="switch"])
-      .ui-radio        -> radio.css
+    the field layout wrapper, the field-group / radio-group fieldsets, and the
+    validation messaging. Each control lives in its own file and owns its own
+    disabled and :user-invalid rules.
   =========================================================================== */
 
   /* ---------------------------------------------------------------------------
   SHARED FIELD TOKENS: Tier-3 shared family, owned here.
-  - .ui-input / .ui-textarea / .ui-select / .ui-input-group all share the same surface
-    treatment so a text input, a dropdown, and a message box read as one family.
-    Each control aliases these locals so a single override retunes the whole set.
-  - Sibling control files only remap these --ui-field-* tokens; this is the owner.
+  - input / textarea / select / input-group all share the same surface treatment
+    so a text input, a dropdown, and a message box read as one family. Each
+    control aliases these into its own hooks so a single override retunes the set.
   --------------------------------------------------------------------------- */
 
   /* ---------------------------------------------------------------------------
-  SHARED DISABLED STATE
-  --------------------------------------------------------------------------- */
-
-  .ui-input:disabled,
-  .ui-textarea:disabled,
-  .ui-select:disabled,
-  .ui-input-file:disabled,
-  .ui-input-color:disabled,
-  .ui-input-group:disabled,
-  .ui-password-group:disabled,
-  input[type="checkbox"]:disabled,
-  .ui-radio:disabled,
-  .ui-input-group:has(:disabled) {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  /* ---------------------------------------------------------------------------
-  FIELD WRAPPER: .ui-field (label + control + hint/error)
+  FIELD WRAPPER: data-ui="field" (label + control + hint/error)
   - Optional layout helper. Validation messaging uses :user-invalid so errors
     surface only after the user commits a value (blur/submit), never while typing.
   --------------------------------------------------------------------------- */
 
-  .ui-field {
+  :where([data-ui~="field"]) {
     /* --ui-field-gap differs from the control family default (step-2) */
-    --ui-field-gap: var(--step-1);
+    --ui-field-gap: var(--spacing);
 
-    display: var(--ui-field-display);
-    grid-template-columns: var(--ui-field-template-columns);
-    gap: var(--ui-field-gap);
-    align-self: var(--ui-field-align-self);
-    inline-size: var(--ui-field-inline-size);
+    display: var(--_display-resolved, var(--ui-field-display));
+    grid-template-columns: var(--_grid-template-cols-resolved, var(--ui-field-grid-template-cols));
+    --_gap-len: var(--_gap-resolved, var(--ui-field-gap));
+    --_gap-num: var(--_gap-resolved, var(--ui-field-gap));
+    gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));
+    align-self: var(--_self-resolved, var(--ui-field-self));
+    --_w-len: var(--_w-resolved, var(--ui-field-w));
+    --_w-num: var(--_w-resolved, var(--ui-field-w));
+    inline-size: calc(var(--_w-len) + var(--_w-num) * var(--spacing));
   }
 
-  .ui-field > :not([data-slot~="field-label"]):not([data-slot~="field-description"]) {
+  :where([data-ui~="field"]) > :not([data-field-slot~="label"], [data-field-slot~="description"]) {
     grid-row: 2;
     grid-column: 1;
   }
 
-  /* Label sits top-left above the control by default */
-  [data-slot~="field-label"] {
+  :where([data-ui~="field"]) [data-field-slot~="label"] {
     grid-row: 1;
     grid-column: 1;
     align-self: start;
-    color: var(--ui-field-label-color);
+    color: var(--ui-field-label-text);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-strong);
     text-align: start;
@@ -138,12 +124,12 @@
   }
 
   /* ---------------------------------------------------------------------------
-  FIELD DESCRIPTION: [data-slot~="field-description"] (wrapper for hint + error)
+  FIELD DESCRIPTION: data-field-slot="description" (wrapper for hint + error)
   - Occupies a stable grid slot so hint/error swaps never cause layout shift.
     The wrapper keeps a fixed block-size while the children crossfade inside it.
   --------------------------------------------------------------------------- */
 
-  [data-slot~="field-description"] {
+  :where([data-ui~="field"]) [data-field-slot~="description"] {
     grid-row: 3;
     grid-column: 1;
     display: grid;
@@ -152,8 +138,7 @@
   }
 
   /* Hint and error stack in the same grid area: only one is visible at a time */
-  [data-slot~="field-hint"],
-  [data-slot~="field-error"] {
+  :where([data-ui~="field"]) :is([data-field-slot~="hint"], [data-field-slot~="error"]) {
     grid-area: msg;
     display: inline-flex;
     transition:
@@ -163,22 +148,22 @@
         allow-discrete;
   }
 
-  [data-slot~="field-hint"] {
-    color: var(--muted-foreground);
+  :where([data-ui~="field"]) [data-field-slot~="hint"] {
+    color: var(--color-muted-foreground);
     opacity: 1;
     translate: var(--ui-field-hint-translate--end);
     visibility: visible;
   }
 
-  [data-slot~="field-error"] {
-    color: var(--destructive);
+  :where([data-ui~="field"]) [data-field-slot~="error"] {
+    color: var(--color-destructive);
     opacity: 0;
     translate: var(--ui-field-hint-translate--start);
     visibility: hidden;
   }
 
   /* After interaction: invalid controls turn destructive, reveal the error */
-  :where(.ui-field:has(:user-invalid)) [data-slot~="field-hint"] {
+  :where([data-ui~="field"]:has(:user-invalid)) [data-field-slot~="hint"] {
     opacity: 0;
     translate: var(--ui-field-hint-translate--start);
     visibility: hidden;
@@ -190,7 +175,7 @@
     }
   }
 
-  :where(.ui-field:has(:user-invalid)) [data-slot~="field-error"] {
+  :where([data-ui~="field"]:has(:user-invalid)) [data-field-slot~="error"] {
     opacity: 1;
     translate: var(--ui-field-hint-translate--end);
     visibility: visible;
@@ -202,81 +187,69 @@
     }
   }
 
-  .ui-input:user-invalid,
-  .ui-textarea:user-invalid,
-  .ui-select:user-invalid,
-  .ui-input-file:user-invalid,
-  .ui-input-group:has(:user-invalid),
-  .ui-password-group:has(:user-invalid) {
-    --ui-field-background: color-mix(in oklch, var(--destructive) 5%, var(--input));
-    --ui-field-background--hover: color-mix(in oklch, var(--destructive) 10%, var(--input));
-    --ui-field-border-color: var(--destructive);
-    --ui-field-border-color--hover: var(--destructive);
-    --ui-field-border-color--focus: var(--destructive);
-    --ui-field-ring-color: var(--destructive);
-
-    border-color: var(--destructive);
+  :where([data-ui~="field"]:has(:user-invalid)) [data-field-slot~="label"] {
+    --ui-field-label-text: var(--color-destructive);
   }
 
-  :where(.ui-field:has(:user-invalid)) [data-slot~="field-label"] {
-    --ui-field-label-color: var(--destructive);
-  }
-
-  :where(.ui-field:has(:user-invalid)) ::placeholder {
-    --placeholder-color: var(--destructive);
+  :where([data-ui~="field"]:has(:user-invalid)) ::placeholder {
+    --placeholder-color: var(--color-destructive);
   }
 
   /* ---------------------------------------------------------------------------
-  FIELD GROUP: .ui-field-group (+ .ui-radio-group in radio.css)
+  FIELD GROUP: data-ui="field-group" (data-ui="radio-group" shares the rules)
   - Semantic <fieldset> wrapper for a labelled set of related controls (a radio
     group, a set of checkboxes/switches). Resets browser chrome and stacks
     children; the <legend> names the whole set.
   - Use a fieldset/legend ONLY when the legend labels a genuine group. A single
     control (or several independently-labelled fields) should carry its own
-    [data-slot~="field-label"] instead, never lean on the legend as a stand-in label.
+    data-field-slot="label" instead, never lean on the legend as a stand-in label.
   --------------------------------------------------------------------------- */
 
-  .ui-field-group,
-  .ui-radio-group {
-    display: var(--ui-field-group-display);
-    background-color: var(--ui-field-group-background);
-    gap: var(--ui-field-group-gap);
+  :where([data-ui~="field-group"], [data-ui~="radio-group"]) {
+    display: var(--_display-resolved, var(--ui-field-group-display));
+    background-color: var(--_bg-resolved, var(--ui-field-group-bg));
+    --_gap-len: var(--_gap-resolved, var(--ui-field-group-gap));
+    --_gap-num: var(--_gap-resolved, var(--ui-field-group-gap));
+    gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));
     border: var(--ui-field-group-border);
-    border-radius: var(--ui-field-group-radius);
-    padding: var(--ui-field-group-padding);
-    margin: var(--ui-field-group-margin);
+    border-radius: var(--_rounded-resolved, var(--ui-field-group-rounded));
+    --_p-len: var(--_p-resolved, var(--ui-field-group-p));
+    --_p-num: var(--_p-resolved, var(--ui-field-group-p));
+    padding: calc(var(--_p-len) + var(--_p-num) * var(--spacing));
+    --_m-len: var(--_m-resolved, var(--ui-field-group-m));
+    --_m-num: var(--_m-resolved, var(--ui-field-group-m));
+    margin: calc(var(--_m-len) + var(--_m-num) * var(--spacing));
   }
 
-  /* Legend reads as the group label: same weight and size as a [data-slot~="field-label"] */
-  .ui-field-group > legend,
-  .ui-radio-group > legend {
+  :where([data-ui~="field-group"], [data-ui~="radio-group"]) > legend {
     padding: 0;
-    margin-block: 0 var(--step-1_5);
-    color: var(--ui-field-label-color, inherit);
+    margin-block: 0 calc(var(--spacing) * 1.5);
+    color: var(--ui-field-label-text, inherit);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-strong);
   }
 
   /* ===========================================================================
-  FIELD DIRECTION VARIANTS
+  FIELD ORIENTATION: data-field-orientation="horizontal"
   =========================================================================== */
 
   /* Inline layout for checkbox/radio/switch: control beside its label */
-  .ui-field[data-orientation="horizontal"] {
+  :where([data-ui~="field"][data-field-orientation="horizontal"]) {
     --ui-field-horizontal-display: flex;
     --ui-field-horizontal-flex-direction: row;
     --ui-field-horizontal-align-items: center;
     --ui-field-horizontal-justify-content: flex-start;
-    --ui-field-horizontal-gap: var(--gap-xs);
+    --ui-field-horizontal-gap: var(--space-xs);
 
-    display: var(--ui-field-horizontal-display);
-    flex-direction: var(--ui-field-horizontal-flex-direction);
-    align-items: var(--ui-field-horizontal-align-items);
-    justify-content: var(--ui-field-horizontal-justify-content);
-    gap: var(--ui-field-horizontal-gap);
+    display: var(--_display-resolved, var(--ui-field-horizontal-display));
+    flex-direction: var(--_flex-direction-resolved, var(--ui-field-horizontal-flex-direction));
+    align-items: var(--_items-resolved, var(--ui-field-horizontal-align-items));
+    justify-content: var(--_justify-resolved, var(--ui-field-horizontal-justify-content));
+    --_gap-len: var(--_gap-resolved, var(--ui-field-horizontal-gap));
+    --_gap-num: var(--_gap-resolved, var(--ui-field-horizontal-gap));
   }
 
-  .ui-field[data-orientation="horizontal"] [data-slot~="field-label"] {
+  :where([data-ui~="field"][data-field-orientation="horizontal"]) [data-field-slot~="label"] {
     align-self: center;
   }
 }

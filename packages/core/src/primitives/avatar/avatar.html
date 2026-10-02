@@ -1,44 +1,149 @@
-<div class="flex items-center gap-xs">
+<div
+  style="
+    --display: flex;
+    --items: center;
+    --gap: var(--space-xs);
+  "
+>
   <figure
-    class="grid grid-area-pile size-lg bg-background border rounded-full overflow-clip"
+    data-ui="grid-pile"
     role="img"
+    style="
+      --display: grid;
+      --size: var(--space-lg);
+      --bg: var(--color-background);
+      --border-width: 1px;
+      --border-color: var(--color-border);
+      --rounded: var(--radius-full);
+      --overflow: clip;
+    "
   >
     <img
-      class="size-full object-cover order-last bg-transparent"
       width="64"
       height="64"
       loading="lazy"
       src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=facearea&facepad=2&w=64&h=64&q=90"
       alt="John Doe"
       aria-hidden="true"
+      style="
+        --order: 9999;
+        --bg: transparent;
+        --size: 100%;
+        --object-fit: cover;
+      "
     />
     <figcaption
-      class="order-first bg-muted size-full text-muted-foreground flex items-center justify-center text-center text-md font-strong"
+      style="
+        --order: -9999;
+        --bg: var(--color-muted);
+        --size: 100%;
+        --text: var(--color-muted-foreground);
+        --display: flex;
+        --items: center;
+        --justify: center;
+        --text-align: center;
+        --font-size: var(--font-size-md);
+        --leading: var(--leading-md);
+        --tracking: var(--tracking-md);
+        --font-weight: var(--font-weight-strong);
+      "
     >
-      <span class="sr-only">John Doe</span>
+      <span data-ui="sr-only">John Doe</span>
       <span aria-hidden="true">JD</span>
     </figcaption>
   </figure>
-  <div class="flex flex-col">
-    <span class="text-sm font-strong leading-none">John Doe</span>
-    <span class="text-xs text-muted-foreground">Founder, ACME Inc.</span>
+  <div
+    style="
+      --display: flex;
+      --flex-direction: column;
+    "
+  >
+    <span
+      style="
+        --leading: 1;
+        --font-size: var(--font-size-sm);
+        --leading: var(--leading-sm);
+        --tracking: var(--tracking-sm);
+        --font-weight: var(--font-weight-strong);
+      "
+      >John Doe</span
+    >
+    <span
+      style="
+        --font-size: var(--font-size-xs);
+        --leading: var(--leading-xs);
+        --tracking: var(--tracking-xs);
+        --text: var(--color-muted-foreground);
+      "
+      >Founder, ACME Inc.</span
+    >
   </div>
 </div>
 
-<div class="flex items-center gap-xs">
+<div
+  style="
+    --display: flex;
+    --items: center;
+    --gap: var(--space-xs);
+  "
+>
   <figure
-    class="grid grid-area-pile size-lg bg-background border rounded-full overflow-clip"
+    data-ui="grid-pile"
     role="img"
+    style="
+      --display: grid;
+      --size: var(--space-lg);
+      --bg: var(--color-background);
+      --border-width: 1px;
+      --border-color: var(--color-border);
+      --rounded: var(--radius-full);
+      --overflow: clip;
+    "
   >
     <figcaption
-      class="order-first bg-muted size-full text-muted-foreground flex items-center justify-center text-center text-md font-strong"
+      style="
+        --order: -9999;
+        --bg: var(--color-muted);
+        --size: 100%;
+        --text: var(--color-muted-foreground);
+        --display: flex;
+        --items: center;
+        --justify: center;
+        --text-align: center;
+        --font-size: var(--font-size-md);
+        --leading: var(--leading-md);
+        --tracking: var(--tracking-md);
+        --font-weight: var(--font-weight-strong);
+      "
     >
-      <span class="sr-only">John Doe</span>
+      <span data-ui="sr-only">John Doe</span>
       <span aria-hidden="true">JD</span>
     </figcaption>
   </figure>
-  <div class="flex flex-col">
-    <span class="text-sm font-strong leading-none">John Doe</span>
-    <span class="text-xs text-muted-foreground">Founder, ACME Inc.</span>
+  <div
+    style="
+      --display: flex;
+      --flex-direction: column;
+    "
+  >
+    <span
+      style="
+        --leading: 1;
+        --font-size: var(--font-size-sm);
+        --leading: var(--leading-sm);
+        --tracking: var(--tracking-sm);
+        --font-weight: var(--font-weight-strong);
+      "
+      >John Doe</span
+    >
+    <span
+      style="
+        --font-size: var(--font-size-xs);
+        --leading: var(--leading-xs);
+        --tracking: var(--tracking-xs);
+        --text: var(--color-muted-foreground);
+      "
+      >Founder, ACME Inc.</span
+    >
   </div>
 </div>

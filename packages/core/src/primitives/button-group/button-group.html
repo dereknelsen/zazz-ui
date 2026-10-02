@@ -1,20 +1,27 @@
-<div class="flex flex-col items-start gap-md">
+<div
+  style="
+    --display: flex;
+    --flex-direction: column;
+    --items: start;
+    --gap: var(--space-md);
+  "
+>
   <ui-button-group role="group" aria-label="Text alignment">
-    <button class="ui-button" type="button">Left</button>
-    <button class="ui-button" type="button">Center</button>
-    <button class="ui-button" type="button">Right</button>
+    <button data-ui="button" type="button">Left</button>
+    <button data-ui="button" type="button">Center</button>
+    <button data-ui="button" type="button">Right</button>
   </ui-button-group>
 
   <ui-button-group role="group" aria-label="Pagination">
-    <button class="ui-button" data-variant="muted" type="button">Previous</button>
-    <button class="ui-button" data-variant="muted" type="button">1</button>
-    <button class="ui-button" data-variant="muted" type="button">2</button>
-    <button class="ui-button" data-variant="muted" type="button">3</button>
-    <button class="ui-button" data-variant="muted" type="button">Next</button>
+    <button data-ui="button" data-button-variant="muted" type="button">Previous</button>
+    <button data-ui="button" data-button-variant="muted" type="button">1</button>
+    <button data-ui="button" data-button-variant="muted" type="button">2</button>
+    <button data-ui="button" data-button-variant="muted" type="button">3</button>
+    <button data-ui="button" data-button-variant="muted" type="button">Next</button>
   </ui-button-group>
 
   <ui-button-group role="group" aria-label="Formatting">
-    <button class="ui-button" data-size="icon" type="button" aria-label="Bold">
+    <button data-ui="button" data-button-size="icon" type="button" aria-label="Bold">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -29,7 +36,7 @@
         <path d="M6 12h9a4 4 0 0 1 0 8H6z" />
       </svg>
     </button>
-    <button class="ui-button" data-size="icon" type="button" aria-label="Italic">
+    <button data-ui="button" data-button-size="icon" type="button" aria-label="Italic">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -45,7 +52,7 @@
         <line x1="15" y1="4" x2="9" y2="20" />
       </svg>
     </button>
-    <button class="ui-button" data-size="icon" type="button" aria-label="Underline">
+    <button data-ui="button" data-button-size="icon" type="button" aria-label="Underline">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"

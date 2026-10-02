@@ -1,19 +1,43 @@
-<ui-carousel data-carousel-plugins="class-names">
-  <div class="flex items-end justify-between gap-md flex-wrap pb-lg">
-    <h2 class="text-h5">Featured Articles</h2>
-    <div class="flex @md:hidden gap-xs">
+<ui-carousel>
+  <div
+    style="
+      --display: flex;
+      --items: end;
+      --justify: space-between;
+      --gap: var(--space-md);
+      --flex-wrap: wrap;
+      --pb: var(--space-lg);
+    "
+  >
+    <h2
+      style="
+        --font-size: var(--font-size-h5);
+        --leading: var(--leading-h5);
+        --font-weight: var(--font-weight-heading);
+        --font-family: var(--font-family-heading);
+      "
+    >
+      Featured Articles
+    </h2>
+    <div
+      style="
+        --display--md: none;
+        --display: flex;
+        --gap: var(--space-xs);
+      "
+    >
       <button
         type="button"
-        class="ui-button"
-        data-size="icon"
-        data-variant="muted"
-        data-slot="carousel-prev"
+        data-ui="button"
+        data-button-size="icon"
+        data-button-variant="muted"
+        data-carousel-slot="prev"
       >
         <svg
-          class="size-sm"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 256 256"
           aria-hidden="true"
+          style="--size: var(--space-sm)"
         >
           <rect width="256" height="256" fill="none" />
           <polyline
@@ -28,16 +52,16 @@
       </button>
       <button
         type="button"
-        class="ui-button"
-        data-size="icon"
-        data-variant="muted"
-        data-slot="carousel-next"
+        data-ui="button"
+        data-button-size="icon"
+        data-button-variant="muted"
+        data-carousel-slot="next"
       >
         <svg
-          class="size-sm"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 256 256"
           aria-hidden="true"
+          style="--size: var(--space-sm)"
         >
           <rect width="256" height="256" fill="none" />
           <polyline
@@ -53,41 +77,121 @@
     </div>
   </div>
 
-  <div data-slot="carousel-viewport" class="overflow-visible">
-    <div data-slot="carousel-container" class="-ml-md">
-      <!-- Card START -->
+  <div data-carousel-slot="viewport" style="--overflow: visible">
+    <div data-carousel-slot="container" style="--ml: calc(var(--space-md) * -1)">
       <a
-        data-slot="carousel-slide"
-        class="basis-full @xs:basis-1/2 @sm:basis-1/3 @md:basis-1/4 cursor-pointer"
+        data-carousel-slot="slide"
         href="#"
+        style="
+          --basis: 100%;
+          --basis--xs: 50%;
+          --basis--sm: 33.333%;
+          --basis--md: 25%;
+          --cursor: pointer;
+        "
       >
-        <div class="pl-md">
-          <div class="grid gap-sm bg-card text-card-foreground rounded-md shadow-sm overflow-clip">
-            <figure class="aspect-landscape rounded-t-md overflow-clip">
+        <div style="--pl: var(--space-md)">
+          <div
+            style="
+              --display: grid;
+              --gap: var(--space-sm);
+              --bg: var(--color-card);
+              --text: var(--color-card-foreground);
+              --rounded: var(--radius-md);
+              --shadow: var(--shadow-sm);
+              --overflow: clip;
+            "
+          >
+            <figure
+              style="
+                --aspect: 3 / 2;
+                --rounded: var(--radius-md) var(--radius-md) 0 0;
+                --overflow: clip;
+              "
+            >
               <img
-                class="size-full object-cover hover:scale-102 hover:opacity-75 transition"
                 width="300"
                 height="200"
                 loading="lazy"
                 src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=300&h=200&q=60"
                 alt="Zebras grazing at dawn on the savanna"
+                style="
+                  --scale: 1;
+                  --scale--hover: 1.02;
+                  --size: 100%;
+                  --object-fit: cover;
+                  --opacity: 1;
+                  --opacity--hover: 0.75;
+                  --transition: var(--default-transition);
+                "
               />
             </figure>
-            <div class="grid gap-sm px-sm pb-sm">
-              <header class="grid gap-xs">
-                <div class="flex items-center gap-xs">
-                  <span class="ui-badge" data-variant="muted">Field notes</span>
+            <div
+              style="
+                --display: grid;
+                --gap: var(--space-sm);
+                --px: var(--space-sm);
+                --pb: var(--space-sm);
+              "
+            >
+              <header
+                style="
+                  --display: grid;
+                  --gap: var(--space-xs);
+                "
+              >
+                <div
+                  style="
+                    --display: flex;
+                    --items: center;
+                    --gap: var(--space-xs);
+                  "
+                >
+                  <span data-ui="badge" data-badge-variant="muted">Field notes</span>
                 </div>
-                <hgroup class="grid gap-xs">
-                  <h3 class="text-lg font-heading line-clamp-1">How quickly zebras jump</h3>
-                  <p class="text-sm text-muted-foreground line-clamp-2">
+                <hgroup
+                  style="
+                    --display: grid;
+                    --gap: var(--space-xs);
+                  "
+                >
+                  <h3
+                    style="
+                      --line-clamp: 1;
+                      --font-size: var(--font-size-lg);
+                      --leading: var(--leading-lg);
+                      --tracking: var(--tracking-lg);
+                      --font-family: var(--font-family-heading);
+                    "
+                  >
+                    How quickly zebras jump
+                  </h3>
+                  <p
+                    style="
+                      --line-clamp: 2;
+                      --font-size: var(--font-size-sm);
+                      --leading: var(--leading-sm);
+                      --tracking: var(--tracking-sm);
+                      --text: var(--color-muted-foreground);
+                    "
+                  >
                     Striped coats and sudden bursts of speed help herds evade predators when the
                     grasslands go quiet at dusk.
                   </p>
                 </hgroup>
               </header>
-              <footer class="grid justify-end gap-sm pb-xs pt-sm border-t">
-                <div class="ui-button" data-variant="link">
+              <footer
+                style="
+                  --border-t-width: 1px;
+                  --border-t-color: var(--color-border);
+                  --display: grid;
+                  --justify: end;
+                  --gap: var(--space-sm);
+                  --pb: var(--space-xs);
+                  --pt: var(--space-sm);
+                "
+              >
+                <div data-ui="button" data-button-variant="link">
                   Read article
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                     <rect width="256" height="256" fill="none" />
@@ -117,41 +221,120 @@
           </div>
         </div>
       </a>
-      <!-- Card END -->
 
-      <!-- Card START -->
       <a
-        data-slot="carousel-slide"
-        class="basis-full @xs:basis-1/2 @sm:basis-1/3 @md:basis-1/4 cursor-pointer"
+        data-carousel-slot="slide"
         href="#"
+        style="
+          --basis: 100%;
+          --basis--xs: 50%;
+          --basis--sm: 33.333%;
+          --basis--md: 25%;
+          --cursor: pointer;
+        "
       >
-        <div class="pl-md">
-          <div class="grid gap-sm bg-card text-card-foreground rounded-md shadow-sm overflow-clip">
-            <figure class="aspect-landscape rounded-t-md overflow-clip">
+        <div style="--pl: var(--space-md)">
+          <div
+            style="
+              --display: grid;
+              --gap: var(--space-sm);
+              --bg: var(--color-card);
+              --text: var(--color-card-foreground);
+              --rounded: var(--radius-md);
+              --shadow: var(--shadow-sm);
+              --overflow: clip;
+            "
+          >
+            <figure
+              style="
+                --aspect: 3 / 2;
+                --rounded: var(--radius-md) var(--radius-md) 0 0;
+                --overflow: clip;
+              "
+            >
               <img
-                class="size-full object-cover hover:scale-102 hover:opacity-75 transition"
                 width="300"
                 height="200"
                 loading="lazy"
                 src="https://images.unsplash.com/photo-1564760055775-d63b17a55c44?auto=format&fit=crop&w=300&h=200&q=60"
                 alt="A lion resting in tall golden grass"
+                style="
+                  --scale: 1;
+                  --scale--hover: 1.02;
+                  --size: 100%;
+                  --object-fit: cover;
+                  --opacity: 1;
+                  --opacity--hover: 0.75;
+                  --transition: var(--default-transition);
+                "
               />
             </figure>
-            <div class="grid gap-sm px-sm pb-sm">
-              <header class="grid gap-xs">
-                <div class="flex items-center gap-xs">
-                  <span class="ui-badge" data-variant="muted">Wildlife</span>
+            <div
+              style="
+                --display: grid;
+                --gap: var(--space-sm);
+                --px: var(--space-sm);
+                --pb: var(--space-sm);
+              "
+            >
+              <header
+                style="
+                  --display: grid;
+                  --gap: var(--space-xs);
+                "
+              >
+                <div
+                  style="
+                    --display: flex;
+                    --items: center;
+                    --gap: var(--space-xs);
+                  "
+                >
+                  <span data-ui="badge" data-badge-variant="muted">Wildlife</span>
                 </div>
-                <hgroup class="grid gap-xs">
-                  <h3 class="text-lg font-heading line-clamp-1">Lions at golden hour</h3>
-                  <p class="text-sm text-muted-foreground line-clamp-2">
+                <hgroup
+                  style="
+                    --display: grid;
+                    --gap: var(--space-xs);
+                  "
+                >
+                  <h3
+                    style="
+                      --line-clamp: 1;
+                      --font-size: var(--font-size-lg);
+                      --leading: var(--leading-lg);
+                      --tracking: var(--tracking-lg);
+                      --font-family: var(--font-family-heading);
+                    "
+                  >
+                    Lions at golden hour
+                  </h3>
+                  <p
+                    style="
+                      --line-clamp: 2;
+                      --font-size: var(--font-size-sm);
+                      --leading: var(--leading-sm);
+                      --tracking: var(--tracking-sm);
+                      --text: var(--color-muted-foreground);
+                    "
+                  >
                     Warm light and long shadows make dawn patrols the best time to photograph big
                     cats on the open plain.
                   </p>
                 </hgroup>
               </header>
-              <footer class="grid justify-end gap-sm pb-xs pt-sm border-t">
-                <div class="ui-button" data-variant="link">
+              <footer
+                style="
+                  --border-t-width: 1px;
+                  --border-t-color: var(--color-border);
+                  --display: grid;
+                  --justify: end;
+                  --gap: var(--space-sm);
+                  --pb: var(--space-xs);
+                  --pt: var(--space-sm);
+                "
+              >
+                <div data-ui="button" data-button-variant="link">
                   View gallery
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                     <rect width="256" height="256" fill="none" />
@@ -181,41 +364,120 @@
           </div>
         </div>
       </a>
-      <!-- Card END -->
 
-      <!-- Card START -->
       <a
-        data-slot="carousel-slide"
-        class="basis-full @xs:basis-1/2 @sm:basis-1/3 @md:basis-1/4 cursor-pointer"
+        data-carousel-slot="slide"
         href="#"
+        style="
+          --basis: 100%;
+          --basis--xs: 50%;
+          --basis--sm: 33.333%;
+          --basis--md: 25%;
+          --cursor: pointer;
+        "
       >
-        <div class="pl-md">
-          <div class="grid gap-sm bg-card text-card-foreground rounded-md shadow-sm overflow-clip">
-            <figure class="aspect-landscape rounded-t-md overflow-clip">
+        <div style="--pl: var(--space-md)">
+          <div
+            style="
+              --display: grid;
+              --gap: var(--space-sm);
+              --bg: var(--color-card);
+              --text: var(--color-card-foreground);
+              --rounded: var(--radius-md);
+              --shadow: var(--shadow-sm);
+              --overflow: clip;
+            "
+          >
+            <figure
+              style="
+                --aspect: 3 / 2;
+                --rounded: var(--radius-md) var(--radius-md) 0 0;
+                --overflow: clip;
+              "
+            >
               <img
-                class="size-full object-cover hover:scale-102 hover:opacity-75 transition"
                 width="300"
                 height="200"
                 loading="lazy"
                 src="https://images.unsplash.com/photo-1511735111819-9a3f7709049c?auto=format&fit=crop&w=300&h=200&q=60"
                 alt="Elephants crossing a dusty riverbed"
+                style="
+                  --scale: 1;
+                  --scale--hover: 1.02;
+                  --size: 100%;
+                  --object-fit: cover;
+                  --opacity: 1;
+                  --opacity--hover: 0.75;
+                  --transition: var(--default-transition);
+                "
               />
             </figure>
-            <div class="grid gap-sm px-sm pb-sm">
-              <header class="grid gap-xs">
-                <div class="flex items-center gap-xs">
-                  <span class="ui-badge" data-variant="muted">Research</span>
+            <div
+              style="
+                --display: grid;
+                --gap: var(--space-sm);
+                --px: var(--space-sm);
+                --pb: var(--space-sm);
+              "
+            >
+              <header
+                style="
+                  --display: grid;
+                  --gap: var(--space-xs);
+                "
+              >
+                <div
+                  style="
+                    --display: flex;
+                    --items: center;
+                    --gap: var(--space-xs);
+                  "
+                >
+                  <span data-ui="badge" data-badge-variant="muted">Research</span>
                 </div>
-                <hgroup class="grid gap-xs">
-                  <h3 class="text-lg font-heading line-clamp-1">Migration patterns decoded</h3>
-                  <p class="text-sm text-muted-foreground line-clamp-2">
+                <hgroup
+                  style="
+                    --display: grid;
+                    --gap: var(--space-xs);
+                  "
+                >
+                  <h3
+                    style="
+                      --line-clamp: 1;
+                      --font-size: var(--font-size-lg);
+                      --leading: var(--leading-lg);
+                      --tracking: var(--tracking-lg);
+                      --font-family: var(--font-family-heading);
+                    "
+                  >
+                    Migration patterns decoded
+                  </h3>
+                  <p
+                    style="
+                      --line-clamp: 2;
+                      --font-size: var(--font-size-sm);
+                      --leading: var(--leading-sm);
+                      --tracking: var(--tracking-sm);
+                      --text: var(--color-muted-foreground);
+                    "
+                  >
                     Satellite collars reveal ancient routes herds still follow each dry season
                     across the floodplain.
                   </p>
                 </hgroup>
               </header>
-              <footer class="grid justify-end gap-sm pb-xs pt-sm border-t">
-                <div class="ui-button" data-variant="link">
+              <footer
+                style="
+                  --border-t-width: 1px;
+                  --border-t-color: var(--color-border);
+                  --display: grid;
+                  --justify: end;
+                  --gap: var(--space-sm);
+                  --pb: var(--space-xs);
+                  --pt: var(--space-sm);
+                "
+              >
+                <div data-ui="button" data-button-variant="link">
                   See the data
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                     <rect width="256" height="256" fill="none" />
@@ -245,41 +507,120 @@
           </div>
         </div>
       </a>
-      <!-- Card END -->
 
-      <!-- Card START -->
       <a
-        data-slot="carousel-slide"
-        class="basis-full @xs:basis-1/2 @sm:basis-1/3 @md:basis-1/4 cursor-pointer"
+        data-carousel-slot="slide"
         href="#"
+        style="
+          --basis: 100%;
+          --basis--xs: 50%;
+          --basis--sm: 33.333%;
+          --basis--md: 25%;
+          --cursor: pointer;
+        "
       >
-        <div class="pl-md">
-          <div class="grid gap-sm bg-card text-card-foreground rounded-md shadow-sm overflow-clip">
-            <figure class="aspect-landscape rounded-t-md overflow-clip">
+        <div style="--pl: var(--space-md)">
+          <div
+            style="
+              --display: grid;
+              --gap: var(--space-sm);
+              --bg: var(--color-card);
+              --text: var(--color-card-foreground);
+              --rounded: var(--radius-md);
+              --shadow: var(--shadow-sm);
+              --overflow: clip;
+            "
+          >
+            <figure
+              style="
+                --aspect: 3 / 2;
+                --rounded: var(--radius-md) var(--radius-md) 0 0;
+                --overflow: clip;
+              "
+            >
               <img
-                class="size-full object-cover hover:scale-102 hover:opacity-75 transition"
                 width="300"
                 height="200"
                 loading="lazy"
                 src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=300&h=200&q=60"
                 alt="Misty highland valley at sunrise"
+                style="
+                  --scale: 1;
+                  --scale--hover: 1.02;
+                  --size: 100%;
+                  --object-fit: cover;
+                  --opacity: 1;
+                  --opacity--hover: 0.75;
+                  --transition: var(--default-transition);
+                "
               />
             </figure>
-            <div class="grid gap-sm px-sm pb-sm">
-              <header class="grid gap-xs">
-                <div class="flex items-center gap-xs">
-                  <span class="ui-badge" data-variant="muted">Conservation</span>
+            <div
+              style="
+                --display: grid;
+                --gap: var(--space-sm);
+                --px: var(--space-sm);
+                --pb: var(--space-sm);
+              "
+            >
+              <header
+                style="
+                  --display: grid;
+                  --gap: var(--space-xs);
+                "
+              >
+                <div
+                  style="
+                    --display: flex;
+                    --items: center;
+                    --gap: var(--space-xs);
+                  "
+                >
+                  <span data-ui="badge" data-badge-variant="muted">Conservation</span>
                 </div>
-                <hgroup class="grid gap-xs">
-                  <h3 class="text-lg font-heading line-clamp-1">Rewilding the highlands</h3>
-                  <p class="text-sm text-muted-foreground line-clamp-2">
+                <hgroup
+                  style="
+                    --display: grid;
+                    --gap: var(--space-xs);
+                  "
+                >
+                  <h3
+                    style="
+                      --line-clamp: 1;
+                      --font-size: var(--font-size-lg);
+                      --leading: var(--leading-lg);
+                      --tracking: var(--tracking-lg);
+                      --font-family: var(--font-family-heading);
+                    "
+                  >
+                    Rewilding the highlands
+                  </h3>
+                  <p
+                    style="
+                      --line-clamp: 2;
+                      --font-size: var(--font-size-sm);
+                      --leading: var(--leading-sm);
+                      --tracking: var(--tracking-sm);
+                      --text: var(--color-muted-foreground);
+                    "
+                  >
                     Community nurseries are planting native grasses and bringing endemic songbirds
                     back to the ridgeline.
                   </p>
                 </hgroup>
               </header>
-              <footer class="grid justify-end gap-sm pb-xs pt-sm border-t">
-                <div class="ui-button" data-variant="link">
+              <footer
+                style="
+                  --border-t-width: 1px;
+                  --border-t-color: var(--color-border);
+                  --display: grid;
+                  --justify: end;
+                  --gap: var(--space-sm);
+                  --pb: var(--space-xs);
+                  --pt: var(--space-sm);
+                "
+              >
+                <div data-ui="button" data-button-variant="link">
                   Get started
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                     <rect width="256" height="256" fill="none" />
@@ -309,7 +650,6 @@
           </div>
         </div>
       </a>
-      <!-- Card END -->
     </div>
   </div>
 </ui-carousel>

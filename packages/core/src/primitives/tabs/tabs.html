@@ -1,75 +1,231 @@
 <!-- Tabs horizontal START -->
-<ui-tabs class="w-full">
-  <div data-slot="tabs-list" role="tablist">
-    <div data-slot="tabs-indicator" aria-hidden="true"></div>
+<ui-tabs style="--w: 100%">
+  <div data-tabs-slot="list" role="tablist">
+    <div data-tabs-slot="indicator" aria-hidden="true"></div>
 
     <input type="radio" role="tab" name="tabs-group-1" id="tab-1" checked />
-    <label for="tab-1" data-slot="tabs-label">
-      <span data-slot="tabs-label-text">Account</span>
+    <label for="tab-1" data-tabs-slot="label">
+      <span data-tabs-slot="label-text">Account</span>
     </label>
 
     <input type="radio" role="tab" name="tabs-group-1" id="tab-2" />
-    <label for="tab-2" data-slot="tabs-label">
-      <span data-slot="tabs-label-text">Billing</span>
+    <label for="tab-2" data-tabs-slot="label">
+      <span data-tabs-slot="label-text">Billing</span>
     </label>
 
     <input type="radio" role="tab" name="tabs-group-1" id="tab-3" />
-    <label for="tab-3" data-slot="tabs-label">
-      <span data-slot="tabs-label-text">Notifications</span>
+    <label for="tab-3" data-tabs-slot="label">
+      <span data-tabs-slot="label-text">Notifications</span>
     </label>
   </div>
 
-  <div class="border rounded-md p-md w-full" data-slot="tabs-panel" role="tabpanel">
-    <h2 class="text-lg font-strong">Account</h2>
-    <p class="text-muted-foreground mt-xs">Manage your profile, email, and password.</p>
+  <div
+    data-tabs-slot="panel"
+    role="tabpanel"
+    style="
+      --border-width: 1px;
+      --border-color: var(--color-border);
+      --rounded: var(--radius-md);
+      --p: var(--space-md);
+      --w: 100%;
+    "
+  >
+    <h2
+      style="
+        --font-size: var(--font-size-lg);
+        --leading: var(--leading-lg);
+        --tracking: var(--tracking-lg);
+        --font-weight: var(--font-weight-strong);
+      "
+    >
+      Account
+    </h2>
+    <p
+      style="
+        --text: var(--color-muted-foreground);
+        --mt: var(--space-xs);
+      "
+    >
+      Manage your profile, email, and password.
+    </p>
   </div>
 
-  <div class="border rounded-md p-md w-full" data-slot="tabs-panel" role="tabpanel">
-    <h2 class="text-lg font-strong">Billing</h2>
-    <p class="text-muted-foreground mt-xs">Review invoices and update your payment method.</p>
+  <div
+    data-tabs-slot="panel"
+    role="tabpanel"
+    style="
+      --border-width: 1px;
+      --border-color: var(--color-border);
+      --rounded: var(--radius-md);
+      --p: var(--space-md);
+      --w: 100%;
+    "
+  >
+    <h2
+      style="
+        --font-size: var(--font-size-lg);
+        --leading: var(--leading-lg);
+        --tracking: var(--tracking-lg);
+        --font-weight: var(--font-weight-strong);
+      "
+    >
+      Billing
+    </h2>
+    <p
+      style="
+        --text: var(--color-muted-foreground);
+        --mt: var(--space-xs);
+      "
+    >
+      Review invoices and update your payment method.
+    </p>
   </div>
 
-  <div class="border rounded-md p-md w-full" data-slot="tabs-panel" role="tabpanel">
-    <h2 class="text-lg font-strong">Notifications</h2>
-    <p class="text-muted-foreground mt-xs">Choose what we email you about and how often.</p>
+  <div
+    data-tabs-slot="panel"
+    role="tabpanel"
+    style="
+      --border-width: 1px;
+      --border-color: var(--color-border);
+      --rounded: var(--radius-md);
+      --p: var(--space-md);
+      --w: 100%;
+    "
+  >
+    <h2
+      style="
+        --font-size: var(--font-size-lg);
+        --leading: var(--leading-lg);
+        --tracking: var(--tracking-lg);
+        --font-weight: var(--font-weight-strong);
+      "
+    >
+      Notifications
+    </h2>
+    <p
+      style="
+        --text: var(--color-muted-foreground);
+        --mt: var(--space-xs);
+      "
+    >
+      Choose what we email you about and how often.
+    </p>
   </div>
 </ui-tabs>
 <!-- Tabs horizontal END -->
 
 <!-- Tabs vertical START -->
-<ui-tabs class="w-full" data-orientation="vertical">
-  <div data-slot="tabs-list" role="tablist">
-    <div data-slot="tabs-indicator" aria-hidden="true"></div>
+<ui-tabs data-tabs-orientation="vertical" style="--w: 100%">
+  <div data-tabs-slot="list" role="tablist">
+    <div data-tabs-slot="indicator" aria-hidden="true"></div>
 
     <input type="radio" role="tab" name="tabs-group-2" id="tab-vertical-1" checked />
-    <label for="tab-vertical-1" data-slot="tabs-label">
-      <span data-slot="tabs-label-text">Account</span>
+    <label for="tab-vertical-1" data-tabs-slot="label">
+      <span data-tabs-slot="label-text">Account</span>
     </label>
 
     <input type="radio" role="tab" name="tabs-group-2" id="tab-vertical-2" />
-    <label for="tab-vertical-2" data-slot="tabs-label">
-      <span data-slot="tabs-label-text">Billing</span>
+    <label for="tab-vertical-2" data-tabs-slot="label">
+      <span data-tabs-slot="label-text">Billing</span>
     </label>
 
     <input type="radio" role="tab" name="tabs-group-2" id="tab-vertical-3" />
-    <label for="tab-vertical-3" data-slot="tabs-label">
-      <span data-slot="tabs-label-text">Notifications</span>
+    <label for="tab-vertical-3" data-tabs-slot="label">
+      <span data-tabs-slot="label-text">Notifications</span>
     </label>
   </div>
 
-  <div class="border rounded-md p-md w-full" data-slot="tabs-panel" role="tabpanel">
-    <h2 class="text-lg font-strong">Account</h2>
-    <p class="text-muted-foreground mt-xs">Manage your profile, email, and password.</p>
+  <div
+    data-tabs-slot="panel"
+    role="tabpanel"
+    style="
+      --border-width: 1px;
+      --border-color: var(--color-border);
+      --rounded: var(--radius-md);
+      --p: var(--space-md);
+      --w: 100%;
+    "
+  >
+    <h2
+      style="
+        --font-size: var(--font-size-lg);
+        --leading: var(--leading-lg);
+        --tracking: var(--tracking-lg);
+        --font-weight: var(--font-weight-strong);
+      "
+    >
+      Account
+    </h2>
+    <p
+      style="
+        --text: var(--color-muted-foreground);
+        --mt: var(--space-xs);
+      "
+    >
+      Manage your profile, email, and password.
+    </p>
   </div>
 
-  <div class="border rounded-md p-md w-full" data-slot="tabs-panel" role="tabpanel">
-    <h2 class="text-lg font-strong">Billing</h2>
-    <p class="text-muted-foreground mt-xs">Review invoices and update your payment method.</p>
+  <div
+    data-tabs-slot="panel"
+    role="tabpanel"
+    style="
+      --border-width: 1px;
+      --border-color: var(--color-border);
+      --rounded: var(--radius-md);
+      --p: var(--space-md);
+      --w: 100%;
+    "
+  >
+    <h2
+      style="
+        --font-size: var(--font-size-lg);
+        --leading: var(--leading-lg);
+        --tracking: var(--tracking-lg);
+        --font-weight: var(--font-weight-strong);
+      "
+    >
+      Billing
+    </h2>
+    <p
+      style="
+        --text: var(--color-muted-foreground);
+        --mt: var(--space-xs);
+      "
+    >
+      Review invoices and update your payment method.
+    </p>
   </div>
 
-  <div class="border rounded-md p-md w-full" data-slot="tabs-panel" role="tabpanel">
-    <h2 class="text-lg font-strong">Notifications</h2>
-    <p class="text-muted-foreground mt-xs">Choose what we email you about and how often.</p>
+  <div
+    data-tabs-slot="panel"
+    role="tabpanel"
+    style="
+      --border-width: 1px;
+      --border-color: var(--color-border);
+      --rounded: var(--radius-md);
+      --p: var(--space-md);
+      --w: 100%;
+    "
+  >
+    <h2
+      style="
+        --font-size: var(--font-size-lg);
+        --leading: var(--leading-lg);
+        --tracking: var(--tracking-lg);
+        --font-weight: var(--font-weight-strong);
+      "
+    >
+      Notifications
+    </h2>
+    <p
+      style="
+        --text: var(--color-muted-foreground);
+        --mt: var(--space-xs);
+      "
+    >
+      Choose what we email you about and how often.
+    </p>
   </div>
 </ui-tabs>
 <!-- Tabs vertical END -->

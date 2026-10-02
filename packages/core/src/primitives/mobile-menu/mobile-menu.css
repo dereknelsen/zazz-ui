@@ -1,28 +1,30 @@
 /**
- * mobile-menu.css — Mobile menu (.ui-mobile-menu)
+ * mobile-menu.css — Mobile menu ([data-ui~="mobile-menu"] on a [data-ui~="dialog"] <dialog>;
+ *                   slots data-mobile-menu-slot="viewport | header | body | footer")
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css, dialog.css, accordion.css
- * @uses       Composes .ui-dialog[data-size="screen"] — fullscreen native <dialog>
+ * @requires   _layers.css, _variables.css, dialog.css, accordion.css
+ * @uses       Composes [data-ui~="dialog"][data-dialog-size="screen"] — fullscreen native <dialog>
  * @uses       Invoker Commands (command="show-modal") — open without JS (markup)
  * @uses       view-transition-name — stable menu across navigations
  * @uses       @starting-style — viewport enter animation
  * @uses       Overrides --ui-dialog-* motion tokens for slide-right variant
  * @tokens     --ui-mobile-menu-* (@layer variables)
+ * @presets    data-mobile-menu-animation="slide-right"
  */
 
 @layer variables {
   :root {
-    --ui-mobile-menu-background: var(--background);
-    --ui-mobile-menu-foreground: var(--foreground);
-    --ui-mobile-menu-backdrop-color: var(--faded-foreground);
-    --ui-mobile-menu-header-padding-inline: var(--gap-md) var(--gap-xs);
-    --ui-mobile-menu-header-padding-block: var(--gap-xs);
-    --ui-mobile-menu-body-padding-inline: var(--gap-sm);
-    --ui-mobile-menu-body-padding-block: var(--gap-md);
-    --ui-mobile-menu-footer-padding: var(--gap-sm);
-    --ui-mobile-menu-footer-gap: var(--gap-xs);
-    --ui-mobile-menu-nested-accordion-padding-inline-start: var(--gap-sm);
+    --ui-mobile-menu-bg: var(--color-background);
+    --ui-mobile-menu-text: var(--color-foreground);
+    --ui-mobile-menu-backdrop-color: var(--color-faded-foreground);
+    --ui-mobile-menu-header-padding-inline: var(--space-md) var(--space-xs);
+    --ui-mobile-menu-header-py: var(--space-xs);
+    --ui-mobile-menu-body-px: var(--space-sm);
+    --ui-mobile-menu-body-py: var(--space-md);
+    --ui-mobile-menu-footer-p: var(--space-sm);
+    --ui-mobile-menu-footer-gap: var(--space-xs);
+    --ui-mobile-menu-nested-accordion-pl: var(--space-sm);
 
     --ui-mobile-menu-viewport-opacity--start: 0;
     --ui-mobile-menu-viewport-opacity--end: 1;
@@ -36,26 +38,26 @@
 @layer zazz.components {
   /* ===========================================================================
   MOBILE MENU — full-screen dialog with accordion-based nested navigation
-  - Composes .ui-dialog[data-size="screen"] + :where(ui-accordion, .ui-accordion) for expand/collapse
+  - Composes [data-ui~="dialog"][data-dialog-size="screen"] + the accordion for expand/collapse
   - No JavaScript — Invoker Commands to open, native dialog close, native details
   =========================================================================== */
 
-  .ui-mobile-menu {
+  :where([data-ui~="mobile-menu"]) {
     /* View transitions - keeps the menu stable when navigating between pages */
     view-transition-name: global-mobile-menu;
     inline-size: 100%;
 
-    --ui-dialog-background: var(--ui-mobile-menu-background);
-    --ui-dialog-foreground: var(--ui-mobile-menu-foreground);
+    --ui-dialog-bg: var(--ui-mobile-menu-bg);
+    --ui-dialog-text: var(--ui-mobile-menu-text);
 
     overflow: clip;
   }
 
-  .ui-mobile-menu::backdrop {
+  :where([data-ui~="mobile-menu"])::backdrop {
     background-color: var(--ui-mobile-menu-backdrop-color);
   }
 
-  [data-slot~="mobile-menu-viewport"] {
+  :where([data-ui~="mobile-menu"]) [data-mobile-menu-slot~="viewport"] {
     display: grid;
     position: relative;
     grid-template-rows: auto 1fr auto;
@@ -69,7 +71,8 @@
     transition-delay: calc(var(--ui-dialog-transition-duration) / 1.5);
   }
 
-  .ui-mobile-menu[data-animation="slide-right"][open] [data-slot~="mobile-menu-viewport"] {
+  :where([data-ui~="mobile-menu"][data-mobile-menu-animation="slide-right"])[open]
+    [data-mobile-menu-slot~="viewport"] {
     opacity: var(--ui-mobile-menu-viewport-opacity--end);
     transform: scale(var(--ui-mobile-menu-viewport-scale--end))
       translate3d(var(--ui-mobile-menu-viewport-translate--end));
@@ -81,50 +84,54 @@
     }
   }
 
-  [data-slot~="mobile-menu-header"] {
+  :where([data-ui~="mobile-menu"]) [data-mobile-menu-slot~="header"] {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding-inline: var(--ui-mobile-menu-header-padding-inline);
-    padding-block: var(--ui-mobile-menu-header-padding-block);
-    border-block-end: 1px solid var(--border);
+    padding-block: var(--ui-mobile-menu-header-py);
+    border-block-end: 1px solid var(--color-border);
     position: sticky;
     inset-block-start: 0;
-    background-color: var(--ui-mobile-menu-background);
+    background-color: var(--ui-mobile-menu-bg);
     z-index: 1;
   }
 
-  [data-slot~="mobile-menu-body"] {
+  :where([data-ui~="mobile-menu"]) [data-mobile-menu-slot~="body"] {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
     overflow-x: clip;
-    padding-inline: var(--ui-mobile-menu-body-padding-inline);
-    padding-block: var(--ui-mobile-menu-body-padding-block);
+    padding-inline: var(--ui-mobile-menu-body-px);
+    padding-block: var(--ui-mobile-menu-body-py);
     max-block-size: 100%;
     scrollbar-gutter: stable both-edges;
   }
 
-  [data-slot~="mobile-menu-footer"] {
+  :where([data-ui~="mobile-menu"]) [data-mobile-menu-slot~="footer"] {
     display: flex;
     flex-wrap: wrap;
     gap: var(--ui-mobile-menu-footer-gap);
-    padding: var(--ui-mobile-menu-footer-padding);
-    border-block-start: 1px solid var(--border);
+    padding: var(--ui-mobile-menu-footer-p);
+    border-block-start: 1px solid var(--color-border);
     position: sticky;
     inset-block-end: 0;
-    background-color: var(--ui-mobile-menu-background);
+    background-color: var(--ui-mobile-menu-bg);
   }
 
-  /* Nested accordion inside mobile menu — tighter padding for sub-levels */
-  [data-slot~="mobile-menu-body"]
-    :where(ui-accordion, .ui-accordion)
-    :where(ui-accordion, .ui-accordion) {
-    padding-inline-start: var(--ui-mobile-menu-nested-accordion-padding-inline-start);
+  /* Tighter padding for nested accordion sub-levels */
+  :where([data-ui~="mobile-menu"])
+    [data-mobile-menu-slot~="body"]
+    :where(ui-accordion, [data-ui~="accordion"])
+    :where(ui-accordion, [data-ui~="accordion"]) {
+    padding-inline-start: var(--ui-mobile-menu-nested-accordion-pl);
   }
 
-  [data-slot~="mobile-menu-body"] :where(ui-accordion, .ui-accordion) details:not(:last-child) {
-    border-bottom-color: var(--border);
+  :where([data-ui~="mobile-menu"])
+    [data-mobile-menu-slot~="body"]
+    :where(ui-accordion, [data-ui~="accordion"])
+    details:not(:last-child) {
+    border-bottom-color: var(--color-border);
   }
 
   /* ===========================================================================
@@ -132,7 +139,7 @@
   =========================================================================== */
 
   /* Slide-right: accordion-style block-size reveal on the viewport (not scaleY). */
-  .ui-mobile-menu[data-animation="slide-right"] {
+  :where([data-ui~="mobile-menu"][data-mobile-menu-animation="slide-right"]) {
     --ui-dialog-transition-duration: calc(var(--default-transition-duration) * 1.75);
     --ui-dialog-opacity--start: 1;
     --ui-dialog-scale--start: 1;

@@ -1,12 +1,31 @@
-<div class="ui-field">
-  <label data-slot="field-label" for="f-sort">Sort by</label>
-  <select class="ui-select" id="f-sort" name="sort">
+<div data-ui="field">
+  <label data-field-slot="label" for="f-sort">Sort by</label>
+  <select data-ui="select" id="f-sort" name="sort">
     <button>
       <selectedcontent></selectedcontent>
     </button>
     <!-- Keep label in optgroup as a fallback -->
-    <optgroup class="grid gap-px" label="Sort by">
-      <legend class="text-eyebrow text-muted-foreground p-xs">Sort by</legend>
+    <optgroup
+      label="Sort by"
+      style="
+        --display: grid;
+        --gap: 1px;
+      "
+    >
+      <legend
+        style="
+          --display: inline-flex;
+          --font-size: var(--font-size-eyebrow);
+          --leading: var(--leading-eyebrow);
+          --font-weight: var(--font-weight-eyebrow);
+          --tracking: var(--tracking-eyebrow);
+          --text-transform: uppercase;
+          --text: var(--color-muted-foreground);
+          --p: var(--space-xs);
+        "
+      >
+        Sort by
+      </legend>
       <option value="recent" selected>Most recent</option>
       <option value="popular">Most popular</option>
       <option value="price-asc">Price: low to high</option>

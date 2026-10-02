@@ -2,16 +2,15 @@
  * popover.css: Shared [popover] primitive (Tier 3 owner for --ui-popover-*)
  *
  * @layer      variables, reset, components
- * @requires   layers.css, _variables.css (--popover, --popover-foreground)
- * @uses       [popover], popovertarget, :popover-open: Popover API
- *             (native across the support floor — Chrome 114, Firefox 125,
- *             Safari 17, iOS 18.3; no polyfill, see ADR-0011)
+ * @requires   _layers.css, _variables.css (--color-popover, --color-popover-foreground), _properties.css (--_*-resolved)
+ * @uses       [popover], popovertarget, :popover-open: Popover API (native, no polyfill)
  * @uses       @starting-style + allow-discrete: enter/exit opacity/transform
  * @uses       anchor-name, position-anchor, position-area, position-try-fallbacks:
  *             anchor positioning (gated behind @supports; Safari 26.x falls
- *             back to UA-centered popover — full support lands in Safari 27)
- * @uses       backdrop-filter: popover surface blur
+ *             back to the UA-centered popover)
  * @tokens     --ui-popover-* (Tier 3 owner; @layer variables)
+ * @presets    data-popover-side="top | bottom | left | right", data-popover-align="start | center | end"
+ *             on the [popover] element (the identity is the native attribute)
  * @consumedby select.css (picker placement), menu.css, navigation-menu.css, tooltip.css, toaster.css,
  *             autocomplete.css, combobox.css, command.css
  */
@@ -19,13 +18,13 @@
 @layer variables {
   :root {
     /* Styles */
-    --ui-popover-border-color: var(--border);
-    --ui-popover-radius: var(--radius-md);
-    --ui-popover-button-radius: var(--radius-sm);
+    --ui-popover-border-color: var(--color-border);
+    --ui-popover-rounded: var(--radius-md);
+    --ui-popover-button-rounded: var(--radius-sm);
     --ui-popover-shadow: var(--shadow-md);
-    --ui-popover-padding: var(--step-1_5);
-    --ui-popover-min-inline-size: var(--article-xs);
-    --ui-popover-max-inline-size: 100vi;
+    --ui-popover-p: calc(var(--spacing) * 1.5);
+    --ui-popover-min-w: var(--article-xs);
+    --ui-popover-max-w: 100vi;
 
     /* Reveal transitions/animations */
     --ui-popover-scale--start: 0.98;
@@ -37,8 +36,8 @@
 
     /* Positioning */
     --ui-popover-origin: top center;
-    --ui-popover-margin-block: var(--step-1_5);
-    --ui-popover-margin-inline: 0;
+    --ui-popover-my: calc(var(--spacing) * 1.5);
+    --ui-popover-mx: 0;
     --ui-popover-position-area: block-end inline-start;
     --ui-popover-position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
   }
@@ -47,19 +46,18 @@
 @layer reset {
   /* ===========================================================================
   POPOVER ELEMENT ENHANCEMENTS
-  - [popover] is a shared primitive (menu, navigation-menu, …). Token
-    defaults live in @layer variables above; this block wires native open/close
-    motion and anchor positioning. Surface chrome is in @layer zazz.components below.
+  Wires native open/close motion and anchor positioning; surface chrome is in
+  @layer zazz.components below.
   =========================================================================== */
 
   :where([popover]) {
-    color: var(--popover-foreground);
-    background-color: var(--popover);
+    color: var(--color-popover-foreground);
+    background-color: var(--color-popover);
 
     align-content: start;
     transform-origin: var(--ui-popover-origin);
-    border-radius: var(--ui-popover-radius);
-    box-shadow: var(--ui-popover-shadow);
+    border-radius: var(--_rounded-resolved, var(--ui-popover-rounded));
+    box-shadow: var(--_shadow-resolved, var(--ui-popover-shadow));
     opacity: var(--ui-popover-opacity--start);
     transform: scale(var(--ui-popover-scale--start)) translate3d(var(--ui-popover-translate--start));
     transition:
@@ -74,25 +72,26 @@
         allow-discrete;
   }
 
-  /* Anchor positioning tethers the popover to its trigger and lets the browser
-     flip it away from viewport edges. Baseline 2026: Chrome 151, Firefox 147,
-     Safari 27. The @supports gate now covers exactly one case — Safari 26.x,
-     which keeps the UA-centered popover (inset: 0 + margin: auto) instead of a
-     mispositioned top-left box. Retire this gate once Safari 27 is two versions
-     back. Detection key is anchor-name — the entry property of the API. */
+  /* Anchor positioning tethers the popover to its trigger and flips it away
+     from viewport edges. The gate keeps Safari 26.x on the UA-centered popover
+     (inset: 0 + margin: auto) instead of a mispositioned top-left box.
+     Detection key is anchor-name, the API's entry property. */
   @supports (anchor-name: --zazz) {
     :where([popover]) {
       position: fixed;
       inset: auto;
-      margin-block: var(--ui-popover-margin-block);
-      margin-inline: var(--ui-popover-margin-inline);
+      --_my-len: var(--_my-resolved, var(--ui-popover-my));
+      --_my-num: var(--_my-resolved, var(--ui-popover-my));
+      margin-block: calc(var(--_my-len) + var(--_my-num) * var(--spacing));
+      --_mx-len: var(--_mx-resolved, var(--ui-popover-mx));
+      --_mx-num: var(--_mx-resolved, var(--ui-popover-mx));
+      margin-inline: calc(var(--_mx-len) + var(--_mx-num) * var(--spacing));
       position-area: var(--ui-popover-position-area);
       position-try-fallbacks: var(--ui-popover-position-try-fallbacks);
     }
   }
 
-  /* Only display is gated: closed popovers keep the UA's display: none, and
-     allow-discrete animates the switch */
+  /* Closed popovers keep the UA's display: none; allow-discrete animates the switch. */
   [popover]:popover-open {
     display: grid;
     align-content: start;
@@ -113,122 +112,118 @@
   =========================================================================== */
 
   [popover] {
-    border: 1px solid var(--ui-popover-border-color);
-    padding: var(--ui-popover-padding);
-    min-inline-size: var(--ui-popover-min-inline-size);
-    max-inline-size: var(--ui-popover-max-inline-size);
+    border: 1px solid var(--_border-color-resolved, var(--ui-popover-border-color));
+    --_p-len: var(--_p-resolved, var(--ui-popover-p));
+    --_p-num: var(--_p-resolved, var(--ui-popover-p));
+    padding: calc(var(--_p-len) + var(--_p-num) * var(--spacing));
+    --_min-w-len: var(--_min-w-resolved, var(--ui-popover-min-w));
+    --_min-w-num: var(--_min-w-resolved, var(--ui-popover-min-w));
+    min-inline-size: calc(var(--_min-w-len) + var(--_min-w-num) * var(--spacing));
+    --_max-w-len: var(--_max-w-resolved, var(--ui-popover-max-w));
+    --_max-w-num: var(--_max-w-resolved, var(--ui-popover-max-w));
+    max-inline-size: calc(var(--_max-w-len) + var(--_max-w-num) * var(--spacing));
   }
 
-  [popover] .ui-button {
-    --ui-button-radius: var(--ui-popover-button-radius);
+  [popover] [data-ui~="button"] {
+    --ui-button-rounded: var(--ui-popover-button-rounded);
   }
 
   /* ===========================================================================
-  POSITIONING — side × align (row/block first, column/inline second per MDN)
+  POSITIONING — side × align
 
   The single placement matrix for every anchored surface. It assigns the
   --ui-popover-position-* tokens; each surface applies them itself (popover
-  below, ::picker(select) in select.css) because the properties are gated on
-  anchor support. .ui-select joins by selector rather than by [popover]: a
-  <select> is not a popover, but custom properties set on it inherit into
-  ::picker(select). Zero specificity (:where) so components can override a
-  cell — see navigation-menu.css.
+  above, ::picker(select) in select.css) because the properties are gated on
+  anchor support. Zero specificity (:where) so components can override a cell.
+  A <select> joins from select.css: custom properties set on it inherit into
+  ::picker(select).
   =========================================================================== */
 
-  /* bottom — and .ui-select's default side, so a select with only data-align
-     (or no attributes at all) still drops below its trigger */
-  :where([popover], .ui-select)[data-side="bottom"]:not([data-align]),
-  :where([popover], .ui-select)[data-side="bottom"][data-align="start"],
-  :where(.ui-select:not([data-side]):not([data-align])),
-  :where(.ui-select:not([data-side])[data-align="start"]) {
+  :where([popover])[data-popover-side="bottom"]:not([data-popover-align]),
+  :where([popover])[data-popover-side="bottom"][data-popover-align="start"] {
     --ui-popover-position-area: block-end span-inline-end;
     --ui-popover-origin: top center;
-    --ui-popover-margin-block: var(--step-1_5);
-    --ui-popover-margin-inline: 0;
+    --ui-popover-my: calc(var(--spacing) * 1.5);
+    --ui-popover-mx: 0;
   }
 
-  :where([popover], .ui-select)[data-side="bottom"][data-align="center"],
-  :where(.ui-select:not([data-side])[data-align="center"]) {
+  :where([popover])[data-popover-side="bottom"][data-popover-align="center"] {
     --ui-popover-position-area: block-end span-all;
     --ui-popover-origin: top center;
-    --ui-popover-margin-block: var(--step-1_5);
-    --ui-popover-margin-inline: 0;
+    --ui-popover-my: calc(var(--spacing) * 1.5);
+    --ui-popover-mx: 0;
   }
 
-  :where([popover], .ui-select)[data-side="bottom"][data-align="end"],
-  :where(.ui-select:not([data-side])[data-align="end"]) {
+  :where([popover])[data-popover-side="bottom"][data-popover-align="end"] {
     --ui-popover-position-area: block-end span-inline-start;
     --ui-popover-origin: top center;
-    --ui-popover-margin-block: var(--step-1_5);
-    --ui-popover-margin-inline: 0;
+    --ui-popover-my: calc(var(--spacing) * 1.5);
+    --ui-popover-mx: 0;
   }
 
-  /* top */
-  :where([popover], .ui-select)[data-side="top"]:not([data-align]),
-  :where([popover], .ui-select)[data-side="top"][data-align="start"] {
+  :where([popover])[data-popover-side="top"]:not([data-popover-align]),
+  :where([popover])[data-popover-side="top"][data-popover-align="start"] {
     --ui-popover-position-area: block-start span-inline-end;
     --ui-popover-origin: bottom center;
-    --ui-popover-margin-block: var(--step-1_5);
-    --ui-popover-margin-inline: 0;
+    --ui-popover-my: calc(var(--spacing) * 1.5);
+    --ui-popover-mx: 0;
   }
 
-  :where([popover], .ui-select)[data-side="top"][data-align="center"] {
+  :where([popover])[data-popover-side="top"][data-popover-align="center"] {
     --ui-popover-position-area: block-start span-all;
     --ui-popover-origin: bottom center;
-    --ui-popover-margin-block: var(--step-1_5);
-    --ui-popover-margin-inline: 0;
+    --ui-popover-my: calc(var(--spacing) * 1.5);
+    --ui-popover-mx: 0;
   }
 
-  :where([popover], .ui-select)[data-side="top"][data-align="end"] {
+  :where([popover])[data-popover-side="top"][data-popover-align="end"] {
     --ui-popover-position-area: block-start span-inline-start;
     --ui-popover-origin: bottom center;
-    --ui-popover-margin-block: var(--step-1_5);
-    --ui-popover-margin-inline: 0;
+    --ui-popover-my: calc(var(--spacing) * 1.5);
+    --ui-popover-mx: 0;
   }
 
-  /* right */
-  :where([popover], .ui-select)[data-side="right"]:not([data-align]),
-  :where([popover], .ui-select)[data-side="right"][data-align="start"] {
+  :where([popover])[data-popover-side="right"]:not([data-popover-align]),
+  :where([popover])[data-popover-side="right"][data-popover-align="start"] {
     --ui-popover-position-area: inline-end span-block-end;
     --ui-popover-origin: bottom left;
-    --ui-popover-margin-block: 0;
-    --ui-popover-margin-inline: var(--step-1_5);
+    --ui-popover-my: 0;
+    --ui-popover-mx: calc(var(--spacing) * 1.5);
   }
 
-  :where([popover], .ui-select)[data-side="right"][data-align="center"] {
+  :where([popover])[data-popover-side="right"][data-popover-align="center"] {
     --ui-popover-position-area: inline-end span-all;
     --ui-popover-origin: center left;
-    --ui-popover-margin-block: 0;
-    --ui-popover-margin-inline: var(--step-1_5);
+    --ui-popover-my: 0;
+    --ui-popover-mx: calc(var(--spacing) * 1.5);
   }
 
-  :where([popover], .ui-select)[data-side="right"][data-align="end"] {
+  :where([popover])[data-popover-side="right"][data-popover-align="end"] {
     --ui-popover-position-area: inline-end span-block-start;
     --ui-popover-origin: top left;
-    --ui-popover-margin-block: 0;
-    --ui-popover-margin-inline: var(--step-1_5);
+    --ui-popover-my: 0;
+    --ui-popover-mx: calc(var(--spacing) * 1.5);
   }
 
-  /* left */
-  :where([popover], .ui-select)[data-side="left"]:not([data-align]),
-  :where([popover], .ui-select)[data-side="left"][data-align="start"] {
+  :where([popover])[data-popover-side="left"]:not([data-popover-align]),
+  :where([popover])[data-popover-side="left"][data-popover-align="start"] {
     --ui-popover-position-area: inline-start span-block-end;
     --ui-popover-origin: bottom right;
-    --ui-popover-margin-block: 0;
-    --ui-popover-margin-inline: var(--step-1_5);
+    --ui-popover-my: 0;
+    --ui-popover-mx: calc(var(--spacing) * 1.5);
   }
 
-  :where([popover], .ui-select)[data-side="left"][data-align="center"] {
+  :where([popover])[data-popover-side="left"][data-popover-align="center"] {
     --ui-popover-position-area: inline-start span-all;
     --ui-popover-origin: center right;
-    --ui-popover-margin-block: 0;
-    --ui-popover-margin-inline: var(--step-1_5);
+    --ui-popover-my: 0;
+    --ui-popover-mx: calc(var(--spacing) * 1.5);
   }
 
-  :where([popover], .ui-select)[data-side="left"][data-align="end"] {
+  :where([popover])[data-popover-side="left"][data-popover-align="end"] {
     --ui-popover-position-area: inline-start span-block-start;
     --ui-popover-origin: top right;
-    --ui-popover-margin-block: 0;
-    --ui-popover-margin-inline: var(--step-1_5);
+    --ui-popover-my: 0;
+    --ui-popover-mx: calc(var(--spacing) * 1.5);
   }
 }

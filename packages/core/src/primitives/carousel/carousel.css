@@ -1,61 +1,68 @@
 /**
- * carousel.css — Embla carousel (ui-carousel | .ui-carousel + data-slot="carousel-*" hooks)
+ * carousel.css — Embla carousel (ui-carousel | [data-ui~="carousel"] + data-carousel-slot="carousel-*" hooks)
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css
+ * @requires   _layers.css, _variables.css
  * @uses       data-carousel attributes — layout hooks only; behaviour from zazz/scripts/embla.js
- * @uses       container-type on viewport — basis-* / @sm:basis-* utils query [data-slot~="carousel-viewport"] width
+ * @uses       container-type on viewport — basis-* / @sm:basis-* utils query [data-carousel-slot~="viewport"] width
  * @tokens     --ui-carousel-* (@layer variables)
  * @consumedby lightbox.css
  */
 
 @layer variables {
   :root {
-    --ui-carousel-slide-basis: calc(100% - var(--_gap, 0px));
-    --ui-carousel-slide-min-inline-size: 0;
+    /* the gap between slides; a --gap utility on the container wins (dual-mode) */
+    --ui-carousel-gap: 0px;
+    --ui-carousel-slide-basis: calc(100% - var(--ui-carousel-gap));
+    --ui-carousel-slide-min-w: 0;
     --ui-carousel-touch-action: pan-y pinch-zoom;
     --ui-carousel-cursor--grabbing: grabbing;
   }
 }
 
-/* ===========================================================================
-   EMBLA CAROUSEL STYLES
-   - Documentation: https://www.embla-carousel.com/
-   =========================================================================== */
 @layer zazz.components {
-  /* <ui-carousel> is a custom element (inline by default) — give it block
-     flow like a div; the class form inherits div flow already. */
+  /* custom elements are inline by default */
   ui-carousel {
     display: block;
   }
 
-  :is(body:has([data-slot~="carousel-viewport"].is-dragging) *) {
+  :is(
+    body:has(
+        :where(ui-carousel, [data-ui~="carousel"])
+          [data-carousel-slot~="viewport"][data-carousel-state~="dragging"]
+      )
+      *
+  ) {
     cursor: var(--ui-carousel-cursor--grabbing);
   }
 
-  :where(ui-carousel, .ui-carousel) {
+  :where(ui-carousel, [data-ui~="carousel"]) {
     position: relative;
     isolation: isolate;
   }
 
-  [data-slot~="carousel-viewport"] {
+  :where(ui-carousel, [data-ui~="carousel"]) [data-carousel-slot~="viewport"] {
     overflow: clip;
     max-block-size: 100%;
     max-inline-size: 100%;
   }
 
-  [data-slot~="carousel-container"] {
+  :where(ui-carousel, [data-ui~="carousel"]) [data-carousel-slot~="container"] {
     display: flex;
-    gap: var(--_gap, 0);
+    --_gap-len: var(--_gap-resolved, var(--ui-carousel-gap));
+    --_gap-num: var(--_gap-resolved, var(--ui-carousel-gap));
+    gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));
     touch-action: var(--ui-carousel-touch-action);
   }
 
-  [data-slot~="carousel-slide"] {
+  :where(ui-carousel, [data-ui~="carousel"]) [data-carousel-slot~="slide"] {
     flex: 0 0 var(--ui-carousel-slide-basis);
-    min-inline-size: var(--ui-carousel-slide-min-inline-size);
+    min-inline-size: var(--ui-carousel-slide-min-w);
   }
 
-  [data-slot~="carousel-thumbs"] [data-slot~="carousel-slide"] {
+  :where(ui-carousel, [data-ui~="carousel"])
+    [data-carousel-slot~="thumbs"]
+    [data-carousel-slot~="slide"] {
     flex: 0 0 auto;
   }
 }

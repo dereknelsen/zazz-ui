@@ -1,15 +1,17 @@
 /**
- * navigation-menu.css: Navigation menu (.ui-navigation-menu)
+ * navigation-menu.css: Navigation menu ([data-ui~="navigation-menu"])
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css, popover.css, button.css
+ * @requires   _layers.css, _variables.css, popover.css, button.css
  * @uses       [popover] + nested popovers: megamenu panels and flyout submenus
  * @uses       anchor-name, anchor-scope, position-anchor, anchor-size(): panel
  *             sizing and positioning (Chromium 125+ for anchor-size)
  * @uses       :has(:popover-open): chevron rotation without JS
- * @uses       view-transition-name: stable header across navigations
  * @uses       @starting-style: slide-down viewport reveal
  * @tokens     --ui-navigation-menu-* (@layer variables)
+ * @presets    on the popover slot: data-navigation-menu-variant="submenu",
+ *             data-navigation-menu-size="container | root | screen",
+ *             data-navigation-menu-animation="slide-down"
  */
 
 @layer variables {
@@ -19,35 +21,21 @@
     --ui-navigation-menu-icon-transform: rotate(-180deg);
 
     --ui-navigation-menu-popover-shadow: var(--shadow-md);
-    --ui-navigation-menu-popover-child-radius: var(--radius-sm);
-    --ui-navigation-menu-popover-gap: var(--step-1_5);
-    --ui-navigation-menu-popover-inline-size: min(var(--breakpoint-xs), 100% - var(--gap-md));
+    --ui-navigation-menu-popover-child-rounded: var(--radius-sm);
+    --ui-navigation-menu-popover-gap: calc(var(--spacing) * 1.5);
+    --ui-navigation-menu-popover-w: min(var(--breakpoint-xs), 100% - var(--space-md));
     --ui-navigation-menu-popover-viewport-display: grid;
-    --ui-navigation-menu-popover-viewport-align-items: stretch;
+    --ui-navigation-menu-popover-viewport-items: stretch;
     --ui-navigation-menu-popover-viewport-justify-items: stretch;
-    --ui-navigation-menu-popover-viewport-template-columns: 1fr;
-    --ui-navigation-menu-popover-viewport-gap: var(--step-1_5);
-    --ui-navigation-menu-popover-viewport-min-inline-size: var(--step-52);
+    --ui-navigation-menu-popover-viewport-grid-template-cols: 1fr;
+    --ui-navigation-menu-popover-viewport-gap: calc(var(--spacing) * 1.5);
+    --ui-navigation-menu-popover-viewport-min-w: calc(var(--spacing) * 52);
   }
 }
 
 @layer zazz.components {
-  .ui-navigation-menu {
-    /* View transitions - keeps the header stable when navigating between pages */
+  :where([data-ui~="navigation-menu"]) {
     --ui-popover-shadow: var(--ui-navigation-menu-popover-shadow);
-    --ui-popover-child-radius: var(--ui-navigation-menu-popover-child-radius);
-    --ui-popover-gap: var(--ui-navigation-menu-popover-gap);
-    --ui-popover-inline-size: var(--ui-navigation-menu-popover-inline-size);
-    --ui-popover-viewport-display: var(--ui-navigation-menu-popover-viewport-display);
-    --ui-popover-viewport-align-items: var(--ui-navigation-menu-popover-viewport-align-items);
-    --ui-popover-viewport-justify-items: var(--ui-navigation-menu-popover-viewport-justify-items);
-    --ui-popover-viewport-template-columns: var(
-      --ui-navigation-menu-popover-viewport-template-columns
-    );
-    --ui-popover-viewport-gap: var(--ui-navigation-menu-popover-viewport-gap);
-    --ui-popover-viewport-min-inline-size: var(
-      --ui-navigation-menu-popover-viewport-min-inline-size
-    );
 
     display: inline-flex;
     position: relative;
@@ -55,131 +43,133 @@
     isolation: isolate;
   }
 
-  [data-slot~="navigation-menu-list"] {
+  :where([data-ui~="navigation-menu"]) [data-navigation-menu-slot~="list"] {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: var(--ui-popover-gap);
+    gap: var(--ui-navigation-menu-popover-gap);
     anchor-name: --ui-navigation-menu-menu-list;
   }
 
-  /* Each item scopes its own anchor name so triggers can share one name */
-  [data-slot~="navigation-menu-item"] {
+  /* Per-item anchor scope lets every trigger share one name */
+  :where([data-ui~="navigation-menu"]) [data-navigation-menu-slot~="item"] {
     anchor-scope: --ui-navigation-menu-menu-trigger;
     position: relative;
   }
 
-  [data-slot~="navigation-menu-trigger"] {
+  :where([data-ui~="navigation-menu"]) [data-navigation-menu-slot~="trigger"] {
     anchor-name: --ui-navigation-menu-menu-trigger;
   }
 
   /* Chevron points down by default, flips up while its popover is open (no JS) */
-  [data-slot~="navigation-menu-trigger"] > svg {
-    inline-size: var(--gap-sm);
-    block-size: var(--gap-sm);
+  :where([data-ui~="navigation-menu"]) [data-navigation-menu-slot~="trigger"] > svg {
+    inline-size: var(--space-sm);
+    block-size: var(--space-sm);
     transition: var(--ui-navigation-menu-icon-transition);
   }
 
-  [data-slot~="navigation-menu-item"]:has([data-slot~="navigation-menu-popover"]:popover-open)
-    [data-slot~="navigation-menu-trigger"]
+  :where([data-ui~="navigation-menu"])
+    [data-navigation-menu-slot~="item"]:has([data-navigation-menu-slot~="popover"]:popover-open)
+    [data-navigation-menu-slot~="trigger"]
     > svg {
     transform: var(--ui-navigation-menu-icon-transform);
   }
 
   /* ===========================================================================
-  POPOVER — inherits --ui-popover-* from popover.css; panel layout overrides here
+  POPOVER
   =========================================================================== */
 
-  [data-slot~="navigation-menu-popover"] {
+  :where([data-ui~="navigation-menu"]) [data-navigation-menu-slot~="popover"] {
     position-anchor: --ui-navigation-menu-menu-trigger;
-    max-inline-size: var(--ui-popover-inline-size);
+    max-inline-size: var(--ui-navigation-menu-popover-w);
 
-    --ui-popover-padding: 0;
-    --ui-popover-min-inline-size: auto;
+    --ui-popover-p: 0;
+    --ui-popover-min-w: 0;
 
-    /* Default: open below the trigger, aligned to its start edge */
     --ui-popover-position-area: block-end span-inline-end;
     --ui-popover-origin: top center;
-    --ui-popover-margin-block: var(--step-1_5);
+    --ui-popover-my: calc(var(--spacing) * 1.5);
   }
 
-  [data-slot~="navigation-menu-popover"] .ui-button {
-    --ui-button-radius: var(--radius-xs);
+  :where([data-ui~="navigation-menu"]) [data-navigation-menu-slot~="popover"] [data-ui~="button"] {
+    --ui-button-rounded: var(--radius-xs);
   }
 
   /* ===========================================================================
-  ALIGNMENT — nav menus only open downward, so they set placement directly here
-  rather than through data-side; popover.css's shared matrix keys on [data-side]
-  and so never applies to these panels.
+  ALIGNMENT — panels always open downward and set placement directly;
+  popover.css's [data-popover-side] matrix never applies to them.
   =========================================================================== */
 
-  [data-slot~="navigation-menu-popover"][data-align="center"] {
+  :where([data-ui~="navigation-menu"])
+    [data-navigation-menu-slot~="popover"][data-popover-align="center"] {
     --ui-popover-position-area: block-end span-all;
     --ui-popover-origin: top center;
   }
 
-  [data-slot~="navigation-menu-popover"][data-align="end"] {
+  :where([data-ui~="navigation-menu"])
+    [data-navigation-menu-slot~="popover"][data-popover-align="end"] {
     --ui-popover-position-area: block-end span-inline-start;
     --ui-popover-origin: top right;
   }
 
   /* ===========================================================================
-  SUBMENU — categories inside a panel whose product lists fly out to the right.
-  Native nested popovers: each sub-trigger's popovertarget lives inside the parent
-  panel, so opening a submenu keeps the panel open (ancestor chain, no JS).
+  SUBMENU — nested native popovers: the sub-trigger lives inside the parent
+  panel, so opening a submenu keeps the panel open.
   =========================================================================== */
 
-  /* Each category scopes its own anchor so every sub-trigger reuses one name */
-  [data-slot~="navigation-menu-submenu"] {
+  :where([data-ui~="navigation-menu"]) [data-navigation-menu-slot~="submenu"] {
     anchor-scope: --ui-navigation-menu-menu-subtrigger;
     position: relative;
   }
 
-  /* Category row — a full-width link row with a trailing caret */
-  [data-slot~="navigation-menu-submenu-trigger"] {
+  :where([data-ui~="navigation-menu"]) [data-navigation-menu-slot~="submenu-trigger"] {
     anchor-name: --ui-navigation-menu-menu-subtrigger;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--gap-sm);
+    gap: var(--space-sm);
     inline-size: 100%;
-    padding: var(--ui-popover-gap);
+    padding: var(--ui-navigation-menu-popover-gap);
     border: 0;
-    border-radius: var(--ui-popover-child-radius);
+    border-radius: var(--ui-navigation-menu-popover-child-rounded);
     color: inherit;
     font: inherit;
     text-align: start;
     cursor: pointer;
   }
 
-  /* Highlight the row on hover and while its submenu is open */
-  [data-slot~="navigation-menu-submenu-trigger"]:hover,
-  [data-slot~="navigation-menu-submenu"]:has(
-      [data-slot~="navigation-menu-popover"][data-variant="submenu"]:popover-open
+  :where([data-ui~="navigation-menu"])
+    [data-navigation-menu-slot~="submenu"]:has(
+      [data-navigation-menu-slot~="popover"][data-navigation-menu-variant="submenu"]:popover-open
     )
-    [data-slot~="navigation-menu-submenu-trigger"] {
-    background-color: var(--muted);
+    [data-navigation-menu-slot~="submenu-trigger"] {
+    background-color: var(--color-muted);
   }
 
-  /* Caret points right — the direction the submenu opens */
-  [data-slot~="navigation-menu-submenu-trigger"] > svg {
-    inline-size: var(--gap-sm);
-    block-size: var(--gap-sm);
+  @media (hover: hover) {
+    :where([data-ui~="navigation-menu"]) [data-navigation-menu-slot~="submenu-trigger"]:hover {
+      background-color: var(--color-muted);
+    }
+  }
+
+  :where([data-ui~="navigation-menu"]) [data-navigation-menu-slot~="submenu-trigger"] > svg {
+    inline-size: var(--space-sm);
+    block-size: var(--space-sm);
     flex: 0 0 auto;
-    color: var(--muted-foreground);
+    color: var(--color-muted-foreground);
   }
 
-  /* Submenu (data-variant="submenu") inherits all base [data-slot~="navigation-menu-popover"]
-     styling; only the anchor and open direction differ — it flies out to the
-     inline-end edge, top-aligned, flipping leftward near the viewport's edge. */
-  [data-slot~="navigation-menu-popover"][data-variant="submenu"] {
+  /* Inherits the base popover styling; only anchor and direction differ:
+     opens at the inline-end edge, flipping when near the viewport edge. */
+  :where([data-ui~="navigation-menu"])
+    [data-navigation-menu-slot~="popover"][data-navigation-menu-variant="submenu"] {
     position-anchor: --ui-navigation-menu-menu-subtrigger;
 
     --ui-popover-position-area: inline-end span-block-start;
     --ui-popover-origin: left top;
-    --ui-popover-margin-block: 0;
-    --ui-popover-margin-inline: var(--step-1_5);
+    --ui-popover-my: 0;
+    --ui-popover-mx: calc(var(--spacing) * 1.5);
     --ui-popover-position-try-fallbacks: flip-inline, flip-block, flip-inline flip-block;
   }
 
@@ -187,41 +177,44 @@
   PANEL CONTENT
   =========================================================================== */
 
-  [data-slot~="navigation-menu-viewport"] {
-    display: var(--ui-popover-viewport-display);
-    grid-template-columns: var(--ui-popover-viewport-template-columns);
-    align-items: var(--ui-popover-viewport-align-items);
-    justify-items: var(--ui-popover-viewport-justify-items);
-    gap: var(--ui-popover-viewport-gap);
-    min-inline-size: var(--ui-popover-viewport-min-inline-size);
+  :where([data-ui~="navigation-menu"]) [data-navigation-menu-slot~="viewport"] {
+    display: var(--ui-navigation-menu-popover-viewport-display);
+    grid-template-columns: var(--ui-navigation-menu-popover-viewport-grid-template-cols);
+    align-items: var(--ui-navigation-menu-popover-viewport-items);
+    justify-items: var(--ui-navigation-menu-popover-viewport-justify-items);
+    gap: var(--ui-navigation-menu-popover-viewport-gap);
+    min-inline-size: var(--ui-navigation-menu-popover-viewport-min-w);
   }
 
-  /* Rich link row: title + description, hover fills with muted */
-  [data-slot~="navigation-menu-link"] {
+  :where([data-ui~="navigation-menu"]) [data-navigation-menu-slot~="link"] {
     display: flex;
     flex-direction: column;
-    padding: var(--ui-popover-gap);
-    border-radius: var(--ui-popover-child-radius);
+    padding: var(--ui-navigation-menu-popover-gap);
+    border-radius: var(--ui-navigation-menu-popover-child-rounded);
     text-decoration: none;
     transition: background-color var(--default-transition-duration)
       var(--default-transition-timing-function);
   }
 
-  [data-slot~="navigation-menu-link"]:hover {
-    background-color: var(--muted);
+  @media (hover: hover) {
+    :where([data-ui~="navigation-menu"]) [data-navigation-menu-slot~="link"]:hover {
+      background-color: var(--color-muted);
+    }
   }
 
   /* ===========================================================================
   MEGAMENU ANIMATION
   =========================================================================== */
 
-  /* Slide-down: accordion-style block-size reveal on the viewport (not scaleY). */
-  [data-slot~="navigation-menu-popover"][data-size="screen"][data-animation="slide-down"] {
+  /* Block-size reveal on the viewport, not scaleY. */
+  :where([data-ui~="navigation-menu"])
+    [data-navigation-menu-slot~="popover"][data-navigation-menu-size="screen"][data-navigation-menu-animation="slide-down"] {
     --ui-popover-scale--start: 1;
   }
 
-  [data-slot~="navigation-menu-popover"][data-animation="slide-down"]
-    > [data-slot~="navigation-menu-viewport"] {
+  :where([data-ui~="navigation-menu"])
+    [data-navigation-menu-slot~="popover"][data-navigation-menu-animation="slide-down"]
+    > [data-navigation-menu-slot~="viewport"] {
     overflow: clip;
     block-size: 0;
     transform: translateY(0.5rem);
@@ -232,7 +225,8 @@
       padding var(--default-transition-duration) var(--default-transition-timing-function);
   }
 
-  [data-slot~="navigation-menu-popover"][data-animation="slide-down"]:popover-open {
+  :where([data-ui~="navigation-menu"])
+    [data-navigation-menu-slot~="popover"][data-navigation-menu-animation="slide-down"]:popover-open {
     opacity: var(--ui-popover-opacity--end);
     transform: scale(var(--ui-popover-scale--end)) translate3d(var(--ui-popover-translate--end));
 
@@ -243,8 +237,9 @@
     }
   }
 
-  [data-slot~="navigation-menu-popover"][data-animation="slide-down"]:popover-open
-    [data-slot~="navigation-menu-viewport"] {
+  :where([data-ui~="navigation-menu"])
+    [data-navigation-menu-slot~="popover"][data-navigation-menu-animation="slide-down"]:popover-open
+    [data-navigation-menu-slot~="viewport"] {
     block-size: auto;
     transform: scale(1) translateY(0);
 
@@ -258,27 +253,30 @@
   SIZING VARIANTS
   =========================================================================== */
 
-  [data-slot~="navigation-menu-popover"][data-size="container"] {
+  :where([data-ui~="navigation-menu"])
+    [data-navigation-menu-slot~="popover"][data-navigation-menu-size="container"] {
     position-anchor: --ui-navigation-menu-menu-list;
-    --ui-popover-inline-size: anchor-size();
+    --ui-navigation-menu-popover-w: anchor-size();
     --ui-popover-position-area: block-end span-all;
 
-    inline-size: var(--ui-popover-inline-size);
+    inline-size: var(--ui-navigation-menu-popover-w);
   }
 
-  [data-slot~="navigation-menu-popover"][data-size="root"] {
+  :where([data-ui~="navigation-menu"])
+    [data-navigation-menu-slot~="popover"][data-navigation-menu-size="root"] {
     position-anchor: --ui-navigation-menu-menu-root;
-    --ui-popover-inline-size: anchor-size();
+    --ui-navigation-menu-popover-w: anchor-size();
     --ui-popover-position-area: block-end span-all;
 
-    inline-size: var(--ui-popover-inline-size);
+    inline-size: var(--ui-navigation-menu-popover-w);
   }
 
-  [data-slot~="navigation-menu-popover"][data-size="screen"] {
+  :where([data-ui~="navigation-menu"])
+    [data-navigation-menu-slot~="popover"][data-navigation-menu-size="screen"] {
     position-anchor: --ui-navigation-menu-menu-root;
-    --ui-popover-inline-size: 100vi;
+    --ui-navigation-menu-popover-w: 100vi;
     --ui-popover-position-area: block-end span-all;
 
-    inline-size: var(--ui-popover-inline-size);
+    inline-size: var(--ui-navigation-menu-popover-w);
   }
 }

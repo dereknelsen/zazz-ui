@@ -1,38 +1,60 @@
-<div class="flex flex-wrap items-center gap-md">
+<div
+  style="
+    --display: flex;
+    --flex-wrap: wrap;
+    --items: center;
+    --gap: var(--space-md);
+  "
+>
   <ui-tooltip>
-    <button type="button" class="ui-button" interestfor="tooltip-example-left-1">Left</button>
-    <div data-slot="tooltip-content" id="tooltip-example-left-1" popover="hint" data-side="left">
-      Tooltip on left
-      <span data-slot="tooltip-arrow" aria-hidden="true"></span>
-    </div>
-  </ui-tooltip>
-
-  <ui-tooltip>
-    <button type="button" class="ui-button" interestfor="tooltip-example-top-1">Top</button>
-    <div data-slot="tooltip-content" id="tooltip-example-top-1" popover="hint" data-side="top">
-      Tooltip on top
-      <span data-slot="tooltip-arrow" aria-hidden="true"></span>
-    </div>
-  </ui-tooltip>
-
-  <ui-tooltip>
-    <button type="button" class="ui-button" interestfor="tooltip-example-bottom-1">Bottom</button>
+    <button type="button" data-ui="button" interestfor="tooltip-example-left-1">Left</button>
     <div
-      data-slot="tooltip-content"
+      data-tooltip-slot="content"
+      id="tooltip-example-left-1"
+      popover="hint"
+      data-popover-side="left"
+    >
+      Tooltip on left
+      <span data-tooltip-slot="arrow" aria-hidden="true"></span>
+    </div>
+  </ui-tooltip>
+
+  <ui-tooltip>
+    <button type="button" data-ui="button" interestfor="tooltip-example-top-1">Top</button>
+    <div
+      data-tooltip-slot="content"
+      id="tooltip-example-top-1"
+      popover="hint"
+      data-popover-side="top"
+    >
+      Tooltip on top
+      <span data-tooltip-slot="arrow" aria-hidden="true"></span>
+    </div>
+  </ui-tooltip>
+
+  <ui-tooltip>
+    <button type="button" data-ui="button" interestfor="tooltip-example-bottom-1">Bottom</button>
+    <div
+      data-tooltip-slot="content"
       id="tooltip-example-bottom-1"
       popover="hint"
-      data-side="bottom"
+      data-popover-side="bottom"
     >
       Tooltip on bottom
-      <span data-slot="tooltip-arrow" aria-hidden="true"></span>
+      <span data-tooltip-slot="arrow" aria-hidden="true"></span>
     </div>
   </ui-tooltip>
 
   <ui-tooltip>
-    <button type="button" class="ui-button" interestfor="tooltip-example-right-1">Right</button>
-    <div data-slot="tooltip-content" id="tooltip-example-right-1" popover="hint" data-side="right">
+    <button type="button" data-ui="button" interestfor="tooltip-example-right-1">Right</button>
+    <div
+      data-tooltip-slot="content"
+      id="tooltip-example-right-1"
+      popover="hint"
+      data-popover-side="right"
+    >
       Tooltip on right
-      <span data-slot="tooltip-arrow" aria-hidden="true"></span>
+      <span data-tooltip-slot="arrow" aria-hidden="true"></span>
     </div>
   </ui-tooltip>
 </div>

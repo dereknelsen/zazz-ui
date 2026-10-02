@@ -1,23 +1,24 @@
 /**
- * menu.css: Menu (ui-menu | .ui-menu, [data-slot~="menu-popover"])
+ * menu.css: Menu (ui-menu | [data-ui~="menu"]; slot data-menu-slot="popover")
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css, popover.css, button.css
+ * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved), popover.css, button.css
  * @uses       popovertarget + [popover]: inherits Popover API from popover.css
  * @uses       interestfor: optional hover/focus open on the same trigger
  *             (Interest Invokers, Chromium 142+; polyfill via invokers)
  * @uses       anchor-name, anchor-scope, position-anchor: tether panel to trigger
- * @uses       data-side / data-align: maps to --ui-popover-position-* in popover.css
+ * @uses       data-popover-side / data-popover-align: maps to --ui-popover-position-* in popover.css
  * @tokens     --ui-menu-* (@layer variables)
- * @consumedby select.css (--ui-menu-button-radius)
- * @see        menu.ts: optional arrow-key navigation; the class form stays no-JS
+ * @consumedby select.css (--ui-menu-button-rounded), autocomplete.css, combobox.css, command.css (--ui-menu-shadow)
+ * @see        menu.ts: optional arrow-key navigation; both forms stay no-JS
  */
 
 @layer variables {
   :root {
-    --ui-menu-button-radius: var(--radius-sm);
-    --ui-menu-min-inline-size: var(--step-52);
-    --ui-menu-option-gap: var(--ui-field-option-gap);
+    --ui-menu-button-rounded: var(--radius-sm);
+    /* a scale number or a length */
+    --ui-menu-min-w: calc(var(--spacing) * 52);
+    --ui-menu-gap: var(--ui-field-option-gap);
     --ui-menu-shadow: var(--shadow-sm);
   }
 }
@@ -33,23 +34,27 @@
     (hover/focus) triggers; implicit interest anchors are not polyfilled.
   =========================================================================== */
 
-  :where(ui-menu, .ui-menu) {
+  :where(ui-menu, [data-ui~="menu"]) {
     anchor-scope: --ui-menu-trigger;
     display: grid;
-    gap: var(--ui-menu-option-gap);
+    --_gap-len: var(--_gap-resolved, var(--ui-menu-gap));
+    --_gap-num: var(--_gap-resolved, var(--ui-menu-gap));
+    gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));
   }
 
-  :where(ui-menu, .ui-menu) > :where([popovertarget], [interestfor]) {
+  :where(ui-menu, [data-ui~="menu"]) > :where([popovertarget], [interestfor]) {
     anchor-name: --ui-menu-trigger;
   }
 
-  [data-slot~="menu-popover"] {
+  :where(ui-menu, [data-ui~="menu"]) [data-menu-slot~="popover"] {
     position-anchor: --ui-menu-trigger;
-    min-inline-size: var(--ui-menu-min-inline-size);
-    box-shadow: var(--ui-menu-shadow);
+    --_min-w-len: var(--_min-w-resolved, var(--ui-menu-min-w));
+    --_min-w-num: var(--_min-w-resolved, var(--ui-menu-min-w));
+    min-inline-size: calc(var(--_min-w-len) + var(--_min-w-num) * var(--spacing));
+    box-shadow: var(--_shadow-resolved, var(--ui-menu-shadow));
   }
 
-  [data-slot~="menu-popover"] .ui-button {
-    --ui-button-radius: var(--ui-menu-button-radius);
+  :where(ui-menu, [data-ui~="menu"]) [data-menu-slot~="popover"] [data-ui~="button"] {
+    --ui-button-rounded: var(--ui-menu-button-rounded);
   }
 }

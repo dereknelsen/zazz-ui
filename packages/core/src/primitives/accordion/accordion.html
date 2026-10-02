@@ -1,6 +1,18 @@
 <ui-accordion>
-  <details class="border-b py-sm">
-    <summary class="font-strong hover:text-muted-foreground">
+  <details
+    style="
+      --border-b-width: 1px;
+      --border-b-color: var(--color-border);
+      --py: var(--space-sm);
+    "
+  >
+    <summary
+      style="
+        --font-weight: var(--font-weight-strong);
+        --text: currentColor;
+        --text--hover: var(--color-muted-foreground);
+      "
+    >
       What is an accordion?
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
         <rect width="256" height="256" fill="none" />
@@ -14,7 +26,7 @@
         />
       </svg>
     </summary>
-    <div class="pb-sm">
+    <div style="--pb: var(--space-sm)">
       <p>
         A disclosure widget built from the native <code>&lt;details&gt;</code> and
         <code>&lt;summary&gt;</code> elements. The open/close animation uses the
@@ -22,8 +34,20 @@
       </p>
     </div>
   </details>
-  <details class="border-b py-sm">
-    <summary class="font-strong hover:text-muted-foreground">
+  <details
+    style="
+      --border-b-width: 1px;
+      --border-b-color: var(--color-border);
+      --py: var(--space-sm);
+    "
+  >
+    <summary
+      style="
+        --font-weight: var(--font-weight-strong);
+        --text: currentColor;
+        --text--hover: var(--color-muted-foreground);
+      "
+    >
       How does it work?
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
         <rect width="256" height="256" fill="none" />
@@ -37,15 +61,27 @@
         />
       </svg>
     </summary>
-    <div class="pb-sm">
+    <div style="--pb: var(--space-sm)">
       <p>
         Each item is a separate <code>&lt;details&gt;</code>, so several can stay open at once.
         Click a summary or focus it and press Enter to toggle.
       </p>
     </div>
   </details>
-  <details class="border-b py-sm">
-    <summary class="font-strong hover:text-muted-foreground">
+  <details
+    style="
+      --border-b-width: 1px;
+      --border-b-color: var(--color-border);
+      --py: var(--space-sm);
+    "
+  >
+    <summary
+      style="
+        --font-weight: var(--font-weight-strong);
+        --text: currentColor;
+        --text--hover: var(--color-muted-foreground);
+      "
+    >
       Why use it?
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
         <rect width="256" height="256" fill="none" />
@@ -59,7 +95,7 @@
         />
       </svg>
     </summary>
-    <div class="pb-sm">
+    <div style="--pb: var(--space-sm)">
       <p>
         Keyboard support, state, and accessibility come from the platform — Zazz only styles the
         chrome through theme tokens.

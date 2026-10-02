@@ -2,65 +2,82 @@
  * checkbox.css — Checkbox (input[type="checkbox"]:not([role="switch"]))
  *
  * @layer      variables, reset
- * @requires   layers.css, _variables.css, fields.css (--ui-field-* background/border)
+ * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-ring), fields.css (--ui-field-* background/border)
  * @uses       appearance: none — redraws the native control from theme tokens
  * @uses       checked/indeterminate fill with --primary and layer a glyph (never colour alone)
- * @tokens     --ui-checkbox-* (@layer variables; surface/border default to the --ui-field-* family)
+ * @tokens     --ui-checkbox-* (@layer variables; named after the utilities they back;
+ *             surface/border default to the --ui-field-* family)
  * @see        checkbox.ts: derives select-all group state (data-checkbox-controls)
  *             into the JS-only indeterminate property; styling keys off :indeterminate
  */
 
 @layer variables {
   :root {
-    /* Surface + border default to the shared --ui-field-* family (owned in
-       fields.css) so a checkbox reads as one family with the controls around it. */
-    --ui-checkbox-size: var(--step-4_5);
-    --ui-checkbox-background: var(--ui-field-background);
+    /* surface + border follow --ui-field-* */
+    --ui-checkbox-size: calc(var(--spacing) * 4.5);
+    --ui-checkbox-bg: var(--ui-field-bg);
+    --ui-checkbox-foreground: var(--color-primary-foreground);
     --ui-checkbox-border-width: var(--ui-field-border-width);
     --ui-checkbox-border-style: var(--ui-field-border-style);
     --ui-checkbox-border-color: var(--ui-field-border-color);
     --ui-checkbox-border-color--hover: var(--ui-field-border-color--hover);
-    --ui-checkbox-background--checked: var(--primary);
-    --ui-checkbox-border-color--checked: var(--primary);
-    --ui-checkbox-radius: var(--radius-xs);
-    /* @see https://www.svgbackgrounds.com/tools/svg-to-css/
-    ** Set to Legacy / URL Wrapper to update icon */
-    --ui-checkbox-checkmark-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cpolyline points='40 144 96 200 224 72' fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='32'/%3E%3C/svg%3E");
-    --ui-checkbox-checkmark-size: var(--step-3);
-    --ui-checkbox-indeterminate-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cline x1='40' y1='128' x2='216' y2='128' fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='32'/%3E%3C/svg%3E");
-    --ui-checkbox-indeterminate-size: var(--step-3);
+    --ui-checkbox-bg--checked: var(--color-primary);
+    --ui-checkbox-border-color--checked: var(--color-primary);
+    --ui-checkbox-rounded: var(--radius-xs);
+    --ui-checkbox-glyph-size: 1em;
+    --ui-checkbox-checkmark-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' fill='none' stroke='currentColor' stroke-linecap='square' stroke-linejoin='square' stroke-width='3' viewBox='0 0 24 24'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    --ui-checkbox-indeterminate-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' fill='none' stroke='currentColor' stroke-linecap='square' stroke-linejoin='square' stroke-width='3' viewBox='0 0 24 24'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E")
+      center / contain no-repeat;
   }
 }
 
 @layer reset {
   :where(input[type="checkbox"]:not([role="switch"])) {
+    position: relative;
+    -webkit-appearance: none;
     appearance: none;
     flex-shrink: 0;
-    inline-size: var(--ui-checkbox-size);
-    block-size: var(--ui-checkbox-size);
+    /* dual-mode: --size is a scale number or a length */
+    --_size-len: var(--_size-resolved, var(--ui-checkbox-size));
+    --_size-num: var(--_size-resolved, var(--ui-checkbox-size));
+    inline-size: calc(var(--_size-len) + var(--_size-num) * var(--spacing));
+    block-size: calc(var(--_size-len) + var(--_size-num) * var(--spacing));
 
-    background-color: var(--ui-checkbox-background);
-    border: var(--ui-checkbox-border-width) var(--ui-checkbox-border-style)
-      var(--ui-checkbox-border-color);
-    border-radius: var(--ui-checkbox-radius);
+    background-color: var(--_bg-resolved, var(--ui-checkbox-bg));
+    border-width: var(--_border-width-resolved, var(--ui-checkbox-border-width));
+    border-style: var(--_border-style-resolved, var(--ui-checkbox-border-style));
+    border-color: var(--_border-color-resolved, var(--ui-checkbox-border-color));
+    border-radius: var(--_rounded-resolved, var(--ui-checkbox-rounded));
+
+    /* centres the ::before glyph */
+    display: inline-grid;
+    place-items: center;
+    background-clip: padding-box;
 
     cursor: pointer;
 
-    /* ring renders as box-shadow; transparent outline twin keeps focus visible
-       in forced-colors / high-contrast modes */
+    /* The ring is published to --_focus-ring so a --shadow utility keeps
+       it; the transparent outline twin keeps focus visible in forced-colors */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    box-shadow:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring, var(--ring));
+    --_focus-ring:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+        var(--_ring-fill, var(--ring-shadow-color));
+    box-shadow: var(--_focus-ring, 0 0 #0000), var(--_shadow-resolved, 0 0 #0000);
     outline: var(--outline-width) var(--outline-style) transparent;
     outline-offset: var(--outline-offset);
 
-    transition: var(--default-transition);
+    transition-property: border-color, background-color, color, opacity, box-shadow;
+    transition-duration: var(--default-transition-duration);
+    transition-timing-function: var(--default-transition-timing-function);
   }
 
-  :where(input[type="checkbox"]:not([role="switch"]):hover) {
-    border-color: var(--ui-checkbox-border-color--hover);
+  @media (hover: hover) {
+    :where(input[type="checkbox"]:not([role="switch"]):hover) {
+      border-color: var(--_border-color-resolved, var(--ui-checkbox-border-color--hover));
+    }
   }
 
   :where(input[type="checkbox"]:not([role="switch"]):focus-visible) {
@@ -73,19 +90,60 @@
     input[type="checkbox"]:not([role="switch"]):checked,
     input[type="checkbox"]:not([role="switch"]):indeterminate
   ) {
-    background-color: var(--ui-checkbox-background--checked);
-    border-color: var(--ui-checkbox-border-color--checked);
-    background-repeat: no-repeat;
-    background-position: center;
+    background-color: var(--_bg-resolved, var(--ui-checkbox-bg--checked));
+    border-color: var(--_border-color-resolved, var(--ui-checkbox-border-color--checked));
+    color: var(--ui-checkbox-foreground);
   }
 
-  :where(input[type="checkbox"]:not([role="switch"]):checked) {
-    background-image: var(--ui-checkbox-checkmark-mask);
-    background-size: var(--ui-checkbox-checkmark-size);
+  /* The glyph is a masked ::before painted in currentColor (pseudo-elements
+     are invalid inside :where(), so the :where() closes before ::before) */
+  :where(input[type="checkbox"]:not([role="switch"]):checked)::before,
+  :where(input[type="checkbox"]:not([role="switch"]):indeterminate)::before {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    background-color: currentColor;
+    inline-size: var(--ui-checkbox-glyph-size);
+    block-size: var(--ui-checkbox-glyph-size);
+    max-inline-size: 100%;
+    max-block-size: 100%;
+    transition-property: background-color, opacity, transform;
+    transition-duration: calc(var(--default-transition-duration) * 0.75);
+    transition-delay: calc(var(--default-transition-duration) * 0.25);
+    transition-timing-function: var(--default-transition-timing-function);
+    transform: scale(0) translateY(100%);
+    opacity: 0;
+    will-change: transform;
   }
 
-  :where(input[type="checkbox"]:not([role="switch"]):indeterminate) {
-    background-image: var(--ui-checkbox-indeterminate-mask);
-    background-size: var(--ui-checkbox-indeterminate-size);
+  :where(input[type="checkbox"]:not([role="switch"]):checked)::before {
+    mask: var(--ui-checkbox-checkmark-mask);
+    transform: scale(1);
+    opacity: 1;
+
+    @starting-style {
+      transform: scale(0) translateY(100%);
+      opacity: 0;
+    }
+  }
+
+  :where(input[type="checkbox"]:not([role="switch"]):indeterminate)::before {
+    mask: var(--ui-checkbox-indeterminate-mask);
+    transform: scale(1);
+    opacity: 1;
+
+    @starting-style {
+      transform: scaleX(0);
+      opacity: 0;
+    }
+  }
+}
+
+/* Disabled and committed-invalid states: an invalid control remaps the
+   --ui-field-* family on itself. */
+@layer zazz.components {
+  input[type="checkbox"]:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }

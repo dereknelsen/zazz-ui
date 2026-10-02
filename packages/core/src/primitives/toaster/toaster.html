@@ -1,6 +1,13 @@
-<div class="flex flex-wrap items-center gap-sm">
+<div
+  style="
+    --display: flex;
+    --flex-wrap: wrap;
+    --items: center;
+    --gap: var(--space-sm);
+  "
+>
   <button
-    class="ui-button"
+    data-ui="button"
     type="button"
     commandfor="toaster-example"
     command="--toast"
@@ -10,7 +17,7 @@
     Show toast
   </button>
   <button
-    class="ui-button"
+    data-ui="button"
     type="button"
     commandfor="toaster-example"
     command="--toast-success"
@@ -19,7 +26,7 @@
     Success
   </button>
   <button
-    class="ui-button"
+    data-ui="button"
     type="button"
     commandfor="toaster-example"
     command="--toast-info"
@@ -28,7 +35,7 @@
     Info
   </button>
   <button
-    class="ui-button"
+    data-ui="button"
     type="button"
     commandfor="toaster-example"
     command="--toast-warning"
@@ -37,7 +44,7 @@
     Warning
   </button>
   <button
-    class="ui-button"
+    data-ui="button"
     type="button"
     commandfor="toaster-example"
     command="--toast-destructive"
@@ -46,7 +53,7 @@
   >
     Error
   </button>
-  <button class="ui-button" data-variant="primary" type="button" id="toaster-action-example">
+  <button data-ui="button" data-button-variant="primary" type="button" id="toaster-action-example">
     With action
   </button>
 </div>
@@ -54,8 +61,7 @@
 <ui-toaster id="toaster-example" popover="manual"></ui-toaster>
 
 <script type="module">
-  // Toasts with an action button need the imperative API (a callback can't live
-  // in a data attribute). Everything else above is wired declaratively.
+  // An action callback can't live in a data attribute, so it needs the imperative API.
   await customElements.whenDefined("ui-toaster");
 
   const toastTrigger = document.getElementById("toaster-action-example");
@@ -69,8 +75,6 @@
 
   toastTrigger.addEventListener("click", handler);
 
-  // Optional: If you need to clean up immediately after the event or on some app shutdown:
-  // Example cleanup on page unload for demo purposes:
   window.addEventListener("unload", () => {
     toastTrigger.removeEventListener("click", handler);
   });

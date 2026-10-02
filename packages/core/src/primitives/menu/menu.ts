@@ -3,8 +3,8 @@
 /**
  * @fileoverview `<ui-menu>`: HTML web component for keyboard-enhanced menus.
  * @description Light-DOM custom element that augments the CSS-only menu
- * pattern (trigger + anchored `[data-slot~="menu-popover"]` panel) with
- * arrow-key navigation. The class form `.ui-menu` stays fully functional
+ * pattern (trigger + anchored `[data-menu-slot~="popover"]` panel) with
+ * arrow-key navigation. The attribute form `[data-ui~="menu"]` stays fully functional
  * without JavaScript: the Popover API provides open/close, light dismiss,
  * and focus return on its own.
  *
@@ -23,10 +23,10 @@
  *
  * @example
  * <ui-menu>
- *   <button class="ui-button" type="button" popovertarget="m1">Open</button>
- *   <div id="m1" data-slot="menu-popover" popover="auto">
+ *   <button data-ui="button" type="button" popovertarget="m1">Open</button>
+ *   <div id="m1" data-menu-slot="popover" popover="auto">
  *     <menu>
- *       <li><a href="/docs" class="ui-button justify-start" data-variant="ghost">Docs</a></li>
+ *       <li><a href="/docs" data-ui="button" data-button-variant="ghost" style="--justify: start">Docs</a></li>
  *     </menu>
  *   </div>
  * </ui-menu>
@@ -46,7 +46,7 @@ class UiMenu extends ZazzElement {
    * @returns The panel element, or null when the markup is incomplete.
    */
   #panel(): HTMLElement | null {
-    const panel = this.querySelector(':scope > [data-slot~="menu-popover"]');
+    const panel = this.querySelector(':scope > [data-menu-slot~="popover"]');
     return panel instanceof HTMLElement ? panel : null;
   }
 
@@ -63,7 +63,7 @@ class UiMenu extends ZazzElement {
         (item) =>
           !item.hasAttribute("disabled") &&
           item.getAttribute("aria-disabled") !== "true" &&
-          item.closest("ui-menu, .ui-menu") === this,
+          item.closest('ui-menu, [data-ui~="menu"]') === this,
       );
   }
 
@@ -79,7 +79,7 @@ class UiMenu extends ZazzElement {
     const target = event.target;
     if (!(target instanceof HTMLElement)) return;
     // Ignore keys that belong to a nested ui-menu
-    if (target.closest("ui-menu") !== this) return;
+    if (target.closest('ui-menu, [data-ui~="menu"]') !== this) return;
 
     const panel = this.#panel();
     if (!panel) return;

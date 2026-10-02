@@ -1,13 +1,19 @@
-<fieldset class="ui-field-group">
+<fieldset data-ui="field-group">
   <legend>Notifications</legend>
-  <div class="flex flex-col gap-xs">
-    <label class="ui-field" data-orientation="horizontal">
+  <div
+    style="
+      --display: flex;
+      --flex-direction: column;
+      --gap: var(--space-xs);
+    "
+  >
+    <label data-ui="field" data-field-orientation="horizontal">
       <input type="checkbox" role="switch" name="notifications-email" />
-      <span data-slot="field-label">Email notifications</span>
+      <span data-field-slot="label">Email notifications</span>
     </label>
-    <label class="ui-field" data-orientation="horizontal">
+    <label data-ui="field" data-field-orientation="horizontal">
       <input type="checkbox" role="switch" name="notifications-2fa" checked />
-      <span data-slot="field-label">Two-factor authentication</span>
+      <span data-field-slot="label">Two-factor authentication</span>
     </label>
   </div>
 </fieldset>

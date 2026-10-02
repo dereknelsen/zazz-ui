@@ -1,7 +1,11 @@
-<div class="ui-field max-w-xl">
-  <label data-slot="field-label" for="f-tags">Tags</label>
-  <ui-multiselect data-placeholder="Select tags" data-side="bottom" data-align="start">
-    <select class="ui-select" id="f-tags" name="tags" multiple>
+<div data-ui="field" style="--max-w: 96">
+  <label data-field-slot="label" for="f-tags">Tags</label>
+  <ui-multiselect
+    data-multiselect-placeholder="Select tags"
+    data-multiselect-side="bottom"
+    data-multiselect-align="start"
+  >
+    <select data-ui="select" id="f-tags" name="tags" multiple>
       <option value="design" selected>Design</option>
       <option value="engineering" selected>Engineering</option>
       <option value="research">Research</option>

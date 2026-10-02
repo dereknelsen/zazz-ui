@@ -1,12 +1,12 @@
 <!-- Content-site panel layout: link rows beside a featured card. -->
-<header class="w-full">
-  <nav class="ui-navigation-menu container">
-    <menu data-slot="navigation-menu-list">
-      <li data-slot="navigation-menu-item">
+<header data-ui="layout" style="--w: 100%">
+  <nav data-ui="navigation-menu">
+    <menu data-navigation-menu-slot="list">
+      <li data-navigation-menu-slot="item">
         <button
-          class="ui-button"
-          data-slot="navigation-menu-trigger"
-          data-variant="ghost"
+          data-ui="button"
+          data-navigation-menu-slot="trigger"
+          data-button-variant="ghost"
           type="button"
           popovertarget="nav-featured-1"
         >
@@ -25,38 +25,162 @@
         </button>
         <div
           id="nav-featured-1"
-          data-slot="navigation-menu-popover"
-          data-align="start"
+          data-navigation-menu-slot="popover"
+          data-popover-align="start"
           popover="auto"
-          data-animation="slide-down"
+          data-navigation-menu-animation="slide-down"
         >
-          <div class="grid grid-cols-3" data-slot="navigation-menu-viewport">
-            <div class="flex flex-col gap-px py-xs pl-xs col-span-2">
-              <a href="#" data-slot="navigation-menu-link">
-                <span class="text-sm font-strong">Latest issue</span>
-                <span class="text-sm text-muted-foreground">This month's stories.</span>
+          <div
+            data-navigation-menu-slot="viewport"
+            style="
+              --display: grid;
+              --grid-cols: 3;
+            "
+          >
+            <div
+              style="
+                --display: flex;
+                --flex-direction: column;
+                --gap: 1px;
+                --py: var(--space-xs);
+                --pl: var(--space-xs);
+                --col: span 2;
+              "
+            >
+              <a href="#" data-navigation-menu-slot="link">
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --font-weight: var(--font-weight-strong);
+                  "
+                  >Latest issue</span
+                >
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --text: var(--color-muted-foreground);
+                  "
+                  >This month's stories.</span
+                >
               </a>
-              <a href="#" data-slot="navigation-menu-link">
-                <span class="text-sm font-strong">Interviews</span>
-                <span class="text-sm text-muted-foreground">Conversations with makers.</span>
+              <a href="#" data-navigation-menu-slot="link">
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --font-weight: var(--font-weight-strong);
+                  "
+                  >Interviews</span
+                >
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --text: var(--color-muted-foreground);
+                  "
+                  >Conversations with makers.</span
+                >
               </a>
-              <a href="#" data-slot="navigation-menu-link">
-                <span class="text-sm font-strong">Essays</span>
-                <span class="text-sm text-muted-foreground">Long reads on craft.</span>
+              <a href="#" data-navigation-menu-slot="link">
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --font-weight: var(--font-weight-strong);
+                  "
+                  >Essays</span
+                >
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --text: var(--color-muted-foreground);
+                  "
+                  >Long reads on craft.</span
+                >
               </a>
-              <a href="#" data-slot="navigation-menu-link">
-                <span class="text-sm font-strong">Archive</span>
-                <span class="text-sm text-muted-foreground">Every issue since day one.</span>
+              <a href="#" data-navigation-menu-slot="link">
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --font-weight: var(--font-weight-strong);
+                  "
+                  >Archive</span
+                >
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --text: var(--color-muted-foreground);
+                  "
+                  >Every issue since day one.</span
+                >
               </a>
             </div>
-            <div class="grid py-xs pr-xs">
+            <div
+              style="
+                --display: grid;
+                --py: var(--space-xs);
+                --pr: var(--space-xs);
+              "
+            >
               <a
                 href="#"
-                class="flex flex-col items-start justify-end bg-muted transition hover:opacity-75 rounded-sm p-sm"
+                style="
+                  --display: flex;
+                  --flex-direction: column;
+                  --items: start;
+                  --justify: end;
+                  --bg: var(--color-muted);
+                  --transition: var(--default-transition);
+                  --opacity: 1;
+                  --opacity--hover: 0.75;
+                  --rounded: var(--radius-sm);
+                  --p: var(--space-sm);
+                "
               >
-                <span class="text-eyebrow text-muted-foreground mb-xs">Featured</span>
-                <span class="text-md font-strong">The typography issue</span>
-                <span class="text-sm text-muted-foreground text-pretty">
+                <span
+                  style="
+                    --display: inline-flex;
+                    --font-size: var(--font-size-eyebrow);
+                    --leading: var(--leading-eyebrow);
+                    --font-weight: var(--font-weight-eyebrow);
+                    --tracking: var(--tracking-eyebrow);
+                    --text-transform: uppercase;
+                    --text: var(--color-muted-foreground);
+                    --mb: var(--space-xs);
+                  "
+                  >Featured</span
+                >
+                <span
+                  style="
+                    --font-size: var(--font-size-md);
+                    --leading: var(--leading-md);
+                    --tracking: var(--tracking-md);
+                    --font-weight: var(--font-weight-strong);
+                  "
+                  >The typography issue</span
+                >
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --text: var(--color-muted-foreground);
+                    --text-wrap: pretty;
+                  "
+                >
                   A whole issue on letters, grids, and rhythm.
                 </span>
               </a>
@@ -65,11 +189,11 @@
         </div>
       </li>
 
-      <li data-slot="navigation-menu-item">
-        <a href="#" class="ui-button" data-variant="ghost">Newsletter</a>
+      <li data-navigation-menu-slot="item">
+        <a href="#" data-ui="button" data-button-variant="ghost">Newsletter</a>
       </li>
-      <li data-slot="navigation-menu-item">
-        <a href="#" class="ui-button" data-variant="ghost">About</a>
+      <li data-navigation-menu-slot="item">
+        <a href="#" data-ui="button" data-button-variant="ghost">About</a>
       </li>
     </menu>
   </nav>

@@ -1,16 +1,16 @@
-<div class="ui-field max-w-xl">
-  <label data-slot="field-label" for="cb-tags">Tags</label>
-  <ui-combobox data-variant="multiselect" data-label-remove="Remove {label}">
+<div data-ui="field" style="--max-w: 96">
+  <label data-field-slot="label" for="cb-tags">Tags</label>
+  <ui-combobox data-combobox-variant="multiselect" data-combobox-label-remove="Remove {label}">
     <!-- Pre-selected rows carry aria-selected="true"; the authored input holds
          the first value and combobox.js stamps a same-name sibling per extra -->
-    <input type="hidden" name="tags" data-slot="combobox-value" value="design" />
-    <div data-slot="combobox-control">
+    <input type="hidden" name="tags" data-combobox-slot="value" value="design" />
+    <div data-combobox-slot="control">
       <!-- Optional: the tag blueprint, cloned per selection. Omit it and the
            kit's default applies; keep it to restyle tags in HTML -->
-      <template data-slot="combobox-tag-template">
-        <span class="ui-badge" data-slot="combobox-tag">
-          <span data-slot="combobox-tag-label"></span>
-          <button type="button" tabindex="-1" data-slot="combobox-tag-remove"></button>
+      <template data-combobox-slot="tag-template">
+        <span data-ui="badge" data-combobox-slot="tag">
+          <span data-combobox-slot="tag-label"></span>
+          <button type="button" tabindex="-1" data-combobox-slot="tag-remove"></button>
         </span>
       </template>
 
@@ -27,65 +27,85 @@
       />
       <button
         type="button"
-        data-slot="combobox-trigger"
+        data-combobox-slot="trigger"
         tabindex="-1"
         aria-label="Show options"
       ></button>
     </div>
-    <div data-slot="combobox-panel" data-side="bottom" data-align="start" popover="manual">
-      <ul role="listbox" aria-multiselectable="true" data-slot="combobox-list" aria-label="Tags">
+    <div
+      data-combobox-slot="panel"
+      data-popover-side="bottom"
+      data-popover-align="start"
+      popover="manual"
+    >
+      <ul role="listbox" aria-multiselectable="true" data-combobox-slot="list" aria-label="Tags">
         <li
           role="option"
           aria-selected="true"
-          data-slot="combobox-item"
-          class="ui-button justify-start"
-          data-variant="ghost"
-          data-value="design"
+          data-combobox-slot="item"
+          data-ui="button"
+          data-button-variant="ghost"
+          data-combobox-value="design"
+          style="--justify: start"
         >
           Design
         </li>
         <li
           role="option"
           aria-selected="true"
-          data-slot="combobox-item"
-          class="ui-button justify-start"
-          data-variant="ghost"
-          data-value="engineering"
+          data-combobox-slot="item"
+          data-ui="button"
+          data-button-variant="ghost"
+          data-combobox-value="engineering"
+          style="--justify: start"
         >
           Engineering
         </li>
         <li
           role="option"
           aria-selected="false"
-          data-slot="combobox-item"
-          class="ui-button justify-start"
-          data-variant="ghost"
-          data-value="marketing"
+          data-combobox-slot="item"
+          data-ui="button"
+          data-button-variant="ghost"
+          data-combobox-value="marketing"
+          style="--justify: start"
         >
           Marketing
         </li>
         <li
           role="option"
           aria-selected="false"
-          data-slot="combobox-item"
-          class="ui-button justify-start"
-          data-variant="ghost"
-          data-value="research"
+          data-combobox-slot="item"
+          data-ui="button"
+          data-button-variant="ghost"
+          data-combobox-value="research"
+          style="--justify: start"
         >
           Research
         </li>
         <li
           role="option"
           aria-selected="false"
-          data-slot="combobox-item"
-          class="ui-button justify-start"
-          data-variant="ghost"
-          data-value="support"
+          data-combobox-slot="item"
+          data-ui="button"
+          data-button-variant="ghost"
+          data-combobox-value="support"
+          style="--justify: start"
         >
           Support
         </li>
       </ul>
-      <p data-slot="combobox-empty" class="text-muted-foreground text-sm">No matches.</p>
+      <p
+        data-combobox-slot="empty"
+        style="
+          --text: var(--color-muted-foreground);
+          --font-size: var(--font-size-sm);
+          --leading: var(--leading-sm);
+          --tracking: var(--tracking-sm);
+        "
+      >
+        No matches.
+      </p>
     </div>
   </ui-combobox>
 </div>

@@ -1,28 +1,38 @@
-<!-- command-actions.js (loaded with this example) shows how to register
-     custom actions: listen for your `--command` on its `commandfor` target,
-     or for `zazz:command-select` on the root. Copy it into your project as a
-     starting point. -->
-<ui-command data-command-hotkey="mod+j" id="command-actions-target" class="w-full max-w-xl">
+<!-- command-actions.js shows how to register custom actions: listen for your
+     `--command` on its `commandfor` target, or for `zazz:command-select` on
+     the root. -->
+<ui-command
+  data-command-hotkey="mod+j"
+  id="command-actions-target"
+  style="
+    --w: 100%;
+    --max-w: 96;
+  "
+>
   <button
-    class="ui-button w-full justify-between"
+    data-ui="button"
     type="button"
-    data-variant="outline"
+    data-button-variant="outline"
     popovertarget="command-example-actions-1"
-    data-slot="command-open"
+    data-command-slot="open"
+    style="
+      --w: 100%;
+      --justify: space-between;
+    "
   >
-    <span class="text-muted-foreground">Quick actions...</span>
+    <span style="--text: var(--color-muted-foreground)">Quick actions...</span>
     <ui-kbd-group><kbd>⌘</kbd><kbd>J</kbd></ui-kbd-group>
   </button>
   <div
     id="command-example-actions-1"
-    data-slot="command-panel"
-    data-side="bottom"
-    data-align="start"
+    data-command-slot="panel"
+    data-popover-side="bottom"
+    data-popover-align="start"
     popover="auto"
   >
-    <header data-slot="command-header">
+    <header data-command-slot="header">
       <input
-        data-slot="command-input"
+        data-command-slot="input"
         type="text"
         placeholder="Type a command..."
         role="combobox"
@@ -32,52 +42,57 @@
         aria-label="Search commands"
       />
     </header>
-    <div role="listbox" data-slot="command-list" aria-label="Commands">
+    <div role="listbox" data-command-slot="list" aria-label="Commands">
       <button
         role="option"
-        data-slot="command-item"
-        class="ui-button justify-start"
-        data-variant="ghost"
+        data-command-slot="item"
+        data-ui="button"
+        data-button-variant="ghost"
         type="button"
         command="--theme-toggle"
         commandfor="command-actions-target"
         tabindex="-1"
-        data-keywords="dark light mode appearance"
-        data-stay-open
+        data-command-keywords="dark light mode appearance"
+        data-command-stay-open
+        style="--justify: start"
       >
         Toggle theme
       </button>
       <button
         role="option"
-        data-slot="command-item"
-        class="ui-button justify-start"
-        data-variant="ghost"
+        data-command-slot="item"
+        data-ui="button"
+        data-button-variant="ghost"
         type="button"
         command="--copy-link"
         commandfor="command-actions-target"
         tabindex="-1"
-        data-keywords="share url clipboard"
+        data-command-keywords="share url clipboard"
+        style="--justify: start"
       >
         Copy link
       </button>
       <button
         role="option"
-        data-slot="command-item"
-        class="ui-button justify-start"
-        data-variant="ghost"
+        data-command-slot="item"
+        data-ui="button"
+        data-button-variant="ghost"
         type="button"
         command="--toast-success"
         commandfor="command-actions-toaster"
         data-title="Saved"
         data-description="Your changes are safe."
         tabindex="-1"
-        data-keywords="notify notification"
+        data-command-keywords="notify notification"
+        style="--justify: start"
       >
         Show a toast
       </button>
     </div>
-    <p data-slot="command-empty" class="text-muted-foreground">No commands found.</p>
-    <footer data-slot="command-footer">
+    <p data-command-slot="empty" style="--text: var(--color-muted-foreground)">
+      No commands found.
+    </p>
+    <footer data-command-slot="footer">
       <span
         ><ui-kbd-group><kbd>↑</kbd><kbd>↓</kbd></ui-kbd-group> navigate</span
       >
@@ -86,4 +101,4 @@
   </div>
 </ui-command>
 
-<ui-toaster id="command-actions-toaster" data-position="bottom-end"></ui-toaster>
+<ui-toaster id="command-actions-toaster" data-toaster-position="bottom-end"></ui-toaster>

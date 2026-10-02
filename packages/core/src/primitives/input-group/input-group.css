@@ -1,31 +1,32 @@
 /**
- * input-group.css — Input group (.ui-input-group)
+ * input-group.css — Input group ([data-ui~="input-group"])
  *
  * @layer      variables, components
- * @requires   layers.css, _variables.css, fields.css, input.css,
+ * @requires   _layers.css, _variables.css, fields.css, input.css,
  *             textarea.css, button.css
  * @uses       :focus-within — lifts shell ring/border as one field
  * @uses       :has() — restore padding when addons absent; invalid text color
- * @uses       data-align on [data-slot~="input-group-addon"] — inline-start/end, block-start/end
+ * @uses       data-input-group-align on the addon slot — inline-start/end, block-start/end
  * @tokens     --ui-input-group-* (@layer variables)
+ * @presets    data-input-group-align="inline-start | inline-end | block-start | block-end" on the addon slot
  */
 
 @layer variables {
   :root {
     --ui-input-group-display: flex;
     --ui-input-group-flex-wrap: wrap;
-    --ui-input-group-align-items: center;
-    --ui-input-group-gap: var(--step-1);
-    --ui-input-group-inline-size: 100%;
-    --ui-input-group-min-block-size: var(--ui-field-block-size);
-    --ui-input-group-padding: 0;
+    --ui-input-group-items: center;
+    --ui-input-group-gap: var(--spacing);
+    --ui-input-group-w: 100%;
+    --ui-input-group-min-h: var(--ui-field-h);
+    --ui-input-group-p: 0;
     --ui-input-group-cursor: text;
-    --ui-input-group-foreground: var(--muted-foreground);
+    --ui-input-group-text: var(--color-muted-foreground);
     --ui-input-group-font-weight: var(--font-weight-strong);
     --ui-input-group-font-size: var(--font-size-sm);
-    --ui-input-group-textarea-min-block-size: 3lh;
-    --ui-input-group-textarea-padding-inline: var(--step-2);
-    --ui-input-group-textarea-padding-block: var(--step-1_5);
+    --ui-input-group-textarea-min-h: 3lh;
+    --ui-input-group-textarea-px: calc(var(--spacing) * 2);
+    --ui-input-group-textarea-py: calc(var(--spacing) * 1.5);
 
     --ui-input-group-shadow: 0 0 transparent;
   }
@@ -33,7 +34,7 @@
 
 @layer zazz.components {
   /* ===========================================================================
-  INPUT GROUP — .ui-input-group  (shadcn-style composition)
+  INPUT GROUP — :where([data-ui~="input-group"])
   - A single bordered shell that fuses a text control with addons (icons, text,
     kbd) and buttons. The nested control goes borderless/transparent so the group
     reads as one field; :focus-within lifts the whole shell.
@@ -42,39 +43,50 @@
       inline-start (default) · inline-end · block-start · block-end
     block-* span the full width on their own row — that's how a textarea grows a
     toolbar above or below it.
-  - Composition: .ui-input-group > [.ui-input | .ui-textarea] + [data-slot~="input-group-addon"]
-    where an addon may hold [data-slot~="input-group-text"], an <svg>, <kbd>, or .ui-button.
+  - Composition: :where([data-ui~="input-group"]) > [[data-ui~="input"] | [data-ui~="textarea"]] + [data-input-group-slot~="addon"]
+    where an addon may hold [data-input-group-slot~="text"], an <svg>, <kbd>, or [data-ui~="button"].
   - The shell is a <label> for click-to-focus, but it is NOT the field's label.
-    Wrap it in a .ui-field with a real [data-slot~="field-label"][for] (and optional [data-slot~="field-hint"]
-    / [data-slot~="field-error"]) so the control is named by visible text, never by a legend.
+    Wrap it in a data-ui="field" with a real data-field-slot="label"[for] (and optional [data-slot~="field-hint"]
+    / data-field-slot="error") so the control is named by visible text, never by a legend.
   - Shares the --ui-field-* tokens (height, radius, surface) defined in fields.css.
   =========================================================================== */
 
-  .ui-input-group {
-    display: var(--ui-input-group-display);
-    flex-wrap: var(--ui-input-group-flex-wrap);
-    align-items: var(--ui-input-group-align-items);
-    gap: var(--ui-input-group-gap);
-    inline-size: var(--ui-input-group-inline-size);
-    min-block-size: var(--ui-input-group-min-block-size);
-    padding: var(--ui-input-group-padding);
+  :where([data-ui~="input-group"]) {
+    display: var(--_display-resolved, var(--ui-input-group-display));
+    flex-wrap: var(--_flex-wrap-resolved, var(--ui-input-group-flex-wrap));
+    align-items: var(--_items-resolved, var(--ui-input-group-items));
+    --_gap-len: var(--_gap-resolved, var(--ui-input-group-gap));
+    --_gap-num: var(--_gap-resolved, var(--ui-input-group-gap));
+    gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));
+    --_w-len: var(--_w-resolved, var(--ui-input-group-w));
+    --_w-num: var(--_w-resolved, var(--ui-input-group-w));
+    inline-size: calc(var(--_w-len) + var(--_w-num) * var(--spacing));
+    --_min-h-len: var(--_min-h-resolved, var(--ui-input-group-min-h));
+    --_min-h-num: var(--_min-h-resolved, var(--ui-input-group-min-h));
+    min-block-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
+    --_p-len: var(--_p-resolved, var(--ui-input-group-p));
+    --_p-num: var(--_p-resolved, var(--ui-input-group-p));
+    padding: calc(var(--_p-len) + var(--_p-num) * var(--spacing));
 
     /* The shell is a <label>: clicking a non-interactive addon focuses the
        nested control, so the whole field reads as one clickable target. */
-    cursor: var(--ui-input-group-cursor);
+    cursor: var(--_cursor-resolved, var(--ui-input-group-cursor));
 
-    color: var(--ui-field-foreground);
-    background-color: var(--ui-field-background);
-    border: 1px solid var(--ui-field-border-color);
-    border-radius: var(--ui-field-radius);
+    color: var(--_text-resolved, var(--ui-field-text));
+    background-color: var(--_bg-resolved, var(--ui-field-bg));
+    border: 1px solid var(--_border-color-resolved, var(--ui-field-border-color));
+    border-radius: var(--_rounded-resolved, var(--ui-field-rounded));
 
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    --_ring: color-mix(in oklch, var(--ui-field-ring-color) var(--ring-opacity), transparent);
+    --_ring-fill: color-mix(in oklch, var(--ui-field-ring-color) var(--ring-opacity), transparent);
+    /* The ring is published to --_focus-ring so a --shadow utility keeps it */
+    --_focus-ring:
+      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
+      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+        var(--_ring-fill, var(--ring-shadow-color));
     box-shadow:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring, var(--ring)),
-      var(--ui-input-group-shadow);
+      var(--_focus-ring, 0 0 #0000), var(--_shadow-resolved, var(--ui-input-group-shadow));
 
     outline: var(--outline-width) var(--outline-style) transparent;
     outline-offset: var(--outline-offset);
@@ -82,22 +94,24 @@
     transition: var(--default-transition);
   }
 
-  .ui-input-group:hover {
-    background-color: var(--ui-field-background--hover);
-    border-color: var(--ui-field-border-color--hover);
+  @media (hover: hover) {
+    :where([data-ui~="input-group"]):hover {
+      background-color: var(--_bg-resolved, var(--ui-field-bg--hover));
+      border-color: var(--_border-color-resolved, var(--ui-field-border-color--hover));
+    }
   }
 
-  .ui-input-group:focus-within {
-    background-color: var(--ui-field-background--focus);
-    border-color: var(--ui-field-border-color--focus);
+  :where([data-ui~="input-group"]):focus-within {
+    background-color: var(--_bg-resolved, var(--ui-field-bg--focus-within));
+    border-color: var(--_border-color-resolved, var(--ui-field-border-color--focus-within));
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);
     outline-color: transparent;
   }
 
   /* Nested control sheds its own chrome and fills the row */
-  .ui-input-group .ui-input,
-  .ui-input-group .ui-textarea {
+  :where([data-ui~="input-group"]) [data-ui~="input"],
+  :where([data-ui~="input-group"]) [data-ui~="textarea"] {
     flex: 1;
     min-inline-size: 0;
     background-color: transparent;
@@ -107,7 +121,7 @@
     box-shadow: none;
   }
 
-  .ui-input-group .ui-input {
+  :where([data-ui~="input-group"]) [data-ui~="input"] {
     flex: 1;
     padding-inline: 0;
 
@@ -120,66 +134,72 @@
      text never sits flush against the shell. An addon already supplies the
      spacing on its side; block-* addons take their own row and don't count here.
      (Default/no-data-align addons are inline-start.) */
-  .ui-input-group:not(
+  :where([data-ui~="input-group"]):not(
       :has(
-        [data-slot~="input-group-addon"]:not([data-align]),
-        [data-slot~="input-group-addon"][data-align="inline-start"]
+        [data-input-group-slot~="addon"]:not([data-input-group-align]),
+        [data-input-group-slot~="addon"][data-input-group-align="inline-start"]
       )
     )
-    .ui-input {
-    padding-inline-start: var(--ui-field-padding);
+    [data-ui~="input"] {
+    padding-inline-start: var(--ui-field-px);
   }
 
-  .ui-input-group:not(:has([data-slot~="input-group-addon"][data-align="inline-end"])) .ui-input {
-    padding-inline-end: var(--ui-field-padding);
+  :where([data-ui~="input-group"]):not(
+      :has([data-input-group-slot~="addon"][data-input-group-align="inline-end"])
+    )
+    [data-ui~="input"] {
+    padding-inline-end: var(--ui-field-px);
   }
 
   /* A textarea claims the full width; addons stack above/below via block-* */
-  .ui-input-group .ui-textarea {
+  :where([data-ui~="input-group"]) [data-ui~="textarea"] {
     flex-basis: 100%;
-    min-block-size: var(--ui-input-group-textarea-min-block-size);
-    padding-inline: var(--ui-input-group-textarea-padding-inline);
-    padding-block: var(--ui-input-group-textarea-padding-block);
+    min-block-size: var(--ui-input-group-textarea-min-h);
+    padding-inline: var(--ui-input-group-textarea-px);
+    padding-block: var(--ui-input-group-textarea-py);
     resize: none;
   }
 
-  /* Addon — groups icons, text, kbd, or buttons together */
-  [data-slot~="input-group-addon"] {
+  :where([data-ui~="input-group"]) [data-input-group-slot~="addon"] {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    gap: var(--step-1);
-    color: var(--muted-foreground);
+    gap: var(--spacing);
+    color: var(--color-muted-foreground);
     white-space: nowrap;
-    block-size: var(--ui-field-block-size);
-    min-inline-size: var(--ui-field-block-size);
+    block-size: var(--ui-field-h);
+    min-inline-size: var(--ui-field-h);
     padding-inline: var(--ui-field-addon-padding);
   }
 
-  [data-slot~="input-group-addon"] > svg {
+  :where([data-ui~="input-group"]) [data-input-group-slot~="addon"] > svg {
     inline-size: var(--ui-field-icon-size);
     block-size: var(--ui-field-icon-size);
   }
 
-  /* Alignment — inline-start is the default (addon visually leads the control) */
-  [data-slot~="input-group-addon"]:not([data-align]),
-  [data-slot~="input-group-addon"][data-align="inline-start"] {
+  /* inline-start is the default alignment */
+  :where([data-ui~="input-group"]) [data-input-group-slot~="addon"]:not([data-input-group-align]),
+  :where([data-ui~="input-group"])
+    [data-input-group-slot~="addon"][data-input-group-align="inline-start"] {
     order: -1;
   }
 
-  [data-slot~="input-group-addon"][data-align="inline-end"] {
+  :where([data-ui~="input-group"])
+    [data-input-group-slot~="addon"][data-input-group-align="inline-end"] {
     order: 1;
   }
 
-  [data-slot~="input-group-addon"][data-align="block-start"] {
+  :where([data-ui~="input-group"])
+    [data-input-group-slot~="addon"][data-input-group-align="block-start"] {
     order: -2;
     flex-basis: 100%;
     padding-block: var(--ui-field-addon-padding);
     align-items: flex-start;
   }
 
-  [data-slot~="input-group-addon"][data-align="block-end"] {
+  :where([data-ui~="input-group"])
+    [data-input-group-slot~="addon"][data-input-group-align="block-end"] {
     order: 2;
     flex-basis: 100%;
     padding-block: var(--ui-field-addon-padding);
@@ -187,29 +207,52 @@
   }
 
   /* Text addon — units, protocols, @handles ("https://", "USD", "@user") */
-  [data-slot~="input-group-text"] {
+  :where([data-ui~="input-group"]) [data-input-group-slot~="text"] {
     display: inline-flex;
     align-items: center;
-    gap: var(--gap-xs);
+    gap: var(--space-xs);
     padding-inline: var(--ui-field-addon-padding);
     font-size: var(--ui-input-group-font-size);
     font-weight: var(--ui-input-group-font-weight);
-    color: var(--ui-input-group-foreground);
+    color: var(--ui-input-group-text);
     min-inline-size: max-content;
   }
 
-  [data-slot~="input-group-text"] > svg {
+  :where([data-ui~="input-group"]) [data-input-group-slot~="text"] > svg {
     inline-size: var(--ui-field-icon-size);
     block-size: var(--ui-field-icon-size);
   }
 
   /* Buttons embedded in a group shrink to nest cleanly inside the shell */
-  .ui-input-group .ui-button {
+  :where([data-ui~="input-group"]) [data-ui~="button"] {
     flex-shrink: 0;
     border-radius: var(--ui-field-inset-child-radius);
   }
 
-  :where(.ui-field:has(:user-invalid)) [data-slot~="input-group-text"] {
-    --ui-input-group-foreground: var(--destructive);
+  :where([data-ui~="field"]:has(:user-invalid))
+    :where([data-ui~="input-group"])
+    [data-input-group-slot~="text"] {
+    --ui-input-group-text: var(--color-destructive);
+  }
+}
+
+/* Disabled and committed-invalid states; an invalid control remaps the
+   --ui-field-* family on itself. */
+@layer zazz.components {
+  :where([data-ui~="input-group"]):disabled,
+  :where([data-ui~="input-group"]):has(:disabled) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  :where([data-ui~="input-group"]):has(:user-invalid) {
+    --ui-field-bg: color-mix(in oklch, var(--color-destructive) 5%, var(--color-input));
+    --ui-field-bg--hover: color-mix(in oklch, var(--color-destructive) 10%, var(--color-input));
+    --ui-field-border-color: var(--color-destructive);
+    --ui-field-border-color--hover: var(--color-destructive);
+    --ui-field-border-color--focus-within: var(--color-destructive);
+    --ui-field-ring-color: var(--color-destructive);
+
+    border-color: var(--color-destructive);
   }
 }

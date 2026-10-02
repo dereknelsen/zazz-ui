@@ -1,8 +1,9 @@
-<form class="ui-field" style="max-inline-size: max-content">
-  <label data-slot="field-label" for="f-otp">Verification code</label>
+<form data-ui="field" style="--max-w: max-content">
+  <label data-field-slot="label" for="f-otp">Verification code</label>
   <ui-otp data-otp-groups="3-3">
     <input
-      class="ui-input ui-otp-input"
+      data-ui="input"
+      data-otp-slot="input"
       id="f-otp"
       name="otp"
       type="text"
@@ -15,8 +16,8 @@
       autocapitalize="off"
     />
   </ui-otp>
-  <div data-slot="field-description">
-    <span data-slot="field-hint">Enter the 6-digit code we sent you.</span>
-    <span data-slot="field-error">Enter all 6 digits.</span>
+  <div data-field-slot="description">
+    <span data-field-slot="hint">Enter the 6-digit code we sent you.</span>
+    <span data-field-slot="error">Enter all 6 digits.</span>
   </div>
 </form>

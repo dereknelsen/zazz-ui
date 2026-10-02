@@ -5,33 +5,33 @@
  * @description Light-DOM custom element on the shared typeahead engine
  * (`base/typeahead.ts`). A relative of select: the panel filters as you type,
  * but free text can never submit. The form value lives in an authored hidden
- * input (`data-slot="combobox-value"`), synced whenever the selection changes.
+ * input (`data-combobox-slot="value"`), synced whenever the selection changes.
  *
  * The visible input carries a **display value, not the filter**. Committing
  * writes the option label into it and clears the query, so reopening shows
- * the full list with the committed row checked, matching `.ui-select`.
+ * the full list with the committed row checked, matching `[data-ui~="select"]`.
  * Opening selects that label so the first keystroke replaces it, and focus
  * alone never opens the panel (a click, the chevron, an arrow key or typing
  * does). On blur, stray text reverts to the committed label and cleared text
  * clears the selection.
  *
- * `data-variant="multiselect"` selects a set instead: committing toggles a row
+ * `data-combobox-variant="multiselect"` selects a set instead: committing toggles a row
  * and keeps the panel open, and every selected value renders as a removable
  * tag stamped inside the control. The tag markup is HTML, not script: author
- * a `<template data-slot="combobox-tag-template">` to control its classes and
+ * a `<template data-combobox-slot="tag-template">` to control its classes and
  * structure, and this file fills in the label, the value, and the remove
- * button accessible name. Without one, the ui-badge default below applies.
+ * button accessible name. Without one, the badge default below applies.
  * Backspace on an empty input drops the last tag. Options carrying
  * `aria-selected="true"` are the single source of truth: the tags and the
  * hidden inputs are both derived from them in DOM order so nothing can drift.
  * The form submits repeated `name` pairs like `<select multiple>`: the authored
  * hidden input carries the first value, and stamped siblings carry the rest.
  *
- * Where a no-JS fallback matters, prefer `.ui-select` / `<ui-multiselect>`:
+ * Where a no-JS fallback matters, prefer `[data-ui~="select"]` / `<ui-multiselect>`:
  * this control is inert without its script (the hidden input still submits a
  * server-set value, but no tags render).
  *
- * Attributes on the root: `data-variant="multiselect"`, `data-sort="score"`,
+ * Attributes on the root: `data-combobox-variant="multiselect"`, `data-sort="score"`,
  * `data-min-length="<n>"`, `data-label-remove="Remove {label}"`.
  * Parts: `combobox-value` (hidden input), `combobox-control` (select-look
  * shell), `combobox-tag-template` (authored `<template>`), `combobox-tag` /
@@ -43,19 +43,11 @@
 import { TypeaheadElement } from "../../base/typeahead.ts";
 import { defineZazzElement } from "../../base/zazz-element.ts";
 
-// --- Tag blueprint ---
-
-/**
- * The default tag markup, cloned once per selected value. Authors override it
- * wholesale with a `<template data-slot="combobox-tag-template">`, so restyling
- * a tag (other classes, an extra icon, a different component entirely) never
- * means editing this script. Kept as markup rather than createElement calls so
- * the default reads the same way the override is written.
- */
+/** Default tag markup, cloned per selected value; a `tag-template` overrides it. */
 const TAG_MARKUP =
-  '<span class="ui-badge" data-slot="combobox-tag">' +
-  '<span data-slot="combobox-tag-label"></span>' +
-  '<button type="button" tabindex="-1" data-slot="combobox-tag-remove"></button>' +
+  '<span data-ui="badge" data-combobox-slot="tag">' +
+  '<span data-combobox-slot="tag-label"></span>' +
+  '<button type="button" tabindex="-1" data-combobox-slot="tag-remove"></button>' +
   "</span>";
 
 let defaultTagTemplate: HTMLTemplateElement | null = null;
@@ -73,8 +65,6 @@ function defaultTagBlueprint(): HTMLTemplateElement {
   }
   return defaultTagTemplate;
 }
-
-// --- Pure derivations ---
 
 /** What a blur does to the input's text and to the committed selection. */
 interface BlurOutcome {
@@ -102,7 +92,7 @@ function resolveBlur(typed: string, committedLabel: string, multiselect: boolean
 }
 
 /**
- * @description Fills the remove-button label template (`data-label-remove`).
+ * @description Fills the remove-button label template (`data-combobox-label-remove`).
  *
  * @param template - Template with a `{label}` placeholder.
  * @param label - The tag's visible label.
@@ -111,8 +101,6 @@ function resolveBlur(typed: string, committedLabel: string, multiselect: boolean
 function resolveRemoveLabel(template: string, label: string): string {
   return template.replace("{label}", label);
 }
-
-// --- Element ---
 
 class UiCombobox extends TypeaheadElement {
   protected readonly slotPrefix = "combobox";
@@ -132,7 +120,7 @@ class UiCombobox extends TypeaheadElement {
     this.#placeholder = input.getAttribute("placeholder") ?? "";
 
     if (multiselect) {
-      this.querySelector('[data-slot~="combobox-list"]')?.setAttribute(
+      this.querySelector('[data-combobox-slot~="list"]')?.setAttribute(
         "aria-multiselectable",
         "true",
       );
@@ -163,7 +151,7 @@ class UiCombobox extends TypeaheadElement {
     input.value = this.#committedLabel;
     this.#syncSelection(false);
 
-    const control = input.closest<HTMLElement>('[data-slot~="combobox-control"]');
+    const control = input.closest<HTMLElement>('[data-combobox-slot~="control"]');
 
     // A select-look control is one big hit target
     input.addEventListener("click", () => this.#openPanel(), { signal });
@@ -176,7 +164,7 @@ class UiCombobox extends TypeaheadElement {
         // the tag remove buttons would otherwise blur it and close the panel
         event.preventDefault();
         input.focus();
-        if (!event.target.closest('[data-slot~="combobox-trigger"], [data-slot~="combobox-tag"]')) {
+        if (!event.target.closest('[data-combobox-slot~="trigger"], [data-combobox-slot~="tag"]')) {
           this.#openPanel();
         }
       },
@@ -188,11 +176,13 @@ class UiCombobox extends TypeaheadElement {
       "click",
       (event) => {
         if (!(event.target instanceof Element)) return;
-        const remove = event.target.closest('[data-slot~="combobox-tag-remove"]');
+        const remove = event.target.closest('[data-combobox-slot~="tag-remove"]');
         if (!remove) return;
         // A template that forgets type="button" would otherwise submit the form
         event.preventDefault();
-        const value = remove.closest('[data-slot~="combobox-tag"]')?.getAttribute("data-value");
+        const value = remove
+          .closest('[data-combobox-slot~="tag"]')
+          ?.getAttribute("data-combobox-value");
         this.#deselect(this.items().find((item) => this.#itemFormValue(item) === value));
         input.focus();
       },
@@ -200,7 +190,7 @@ class UiCombobox extends TypeaheadElement {
     );
 
     // Chevron toggles the full, unfiltered list
-    const trigger = this.querySelector('[data-slot~="combobox-trigger"]');
+    const trigger = this.querySelector('[data-combobox-slot~="trigger"]');
     if (trigger instanceof HTMLElement) {
       trigger.addEventListener(
         "click",
@@ -254,7 +244,7 @@ class UiCombobox extends TypeaheadElement {
 
   protected teardown(): void {
     for (const node of this.querySelectorAll(
-      '[data-slot~="combobox-tag"], [data-combobox-stamped]',
+      '[data-combobox-slot~="tag"], [data-combobox-state~="stamped"]',
     )) {
       node.remove();
     }
@@ -263,7 +253,7 @@ class UiCombobox extends TypeaheadElement {
 
   /**
    * @description Combobox items match against what the user sees (the label)
-   * not the machine `data-value`.
+   * not the machine `data-combobox-value`.
    *
    * @param item - The item element.
    * @returns The trimmed visible label.
@@ -285,7 +275,7 @@ class UiCombobox extends TypeaheadElement {
   }
 
   /**
-   * @description Committing shows the item's label, stores its `data-value` in
+   * @description Committing shows the item's label, stores its `data-combobox-value` in
    * the hidden input, and moves `aria-selected`. The multiselect variant
    * toggles the row instead and keeps the panel open so picking can continue.
    *
@@ -327,11 +317,11 @@ class UiCombobox extends TypeaheadElement {
   /**
    * @description Whether the multiselect variant is active.
    *
-   * @returns True for `data-variant="multiselect"`.
+   * @returns True for `data-combobox-variant="multiselect"`.
    * @private
    */
   #multiselect(): boolean {
-    return this.getAttribute("data-variant") === "multiselect";
+    return this.config("variant") === "multiselect";
   }
 
   /**
@@ -384,11 +374,15 @@ class UiCombobox extends TypeaheadElement {
    * @description An item's machine value.
    *
    * @param item - The item element.
-   * @returns `data-value` when present, the visible label otherwise.
+   * @returns `data-combobox-value` when present, the visible label otherwise.
    * @private
    */
   #itemFormValue(item: HTMLElement): string {
-    return item.getAttribute("data-value") ?? this.itemValue(item);
+    return (
+      item.getAttribute("data-combobox-value") ??
+      item.getAttribute("data-value") ??
+      this.itemValue(item)
+    );
   }
 
   /**
@@ -411,7 +405,9 @@ class UiCombobox extends TypeaheadElement {
    * @private
    */
   #valueInput(): HTMLInputElement | null {
-    const hidden = this.querySelector('[data-slot~="combobox-value"]:not([data-combobox-stamped])');
+    const hidden = this.querySelector(
+      '[data-combobox-slot~="value"]:not([data-combobox-state~="stamped"])',
+    );
     return hidden instanceof HTMLInputElement ? hidden : null;
   }
 
@@ -438,13 +434,13 @@ class UiCombobox extends TypeaheadElement {
     const hidden = this.#valueInput();
     if (!hidden) return;
     hidden.value = values[0] ?? "";
-    for (const stale of this.querySelectorAll("[data-combobox-stamped]")) stale.remove();
+    for (const stale of this.querySelectorAll('[data-combobox-state~="stamped"]')) stale.remove();
     let anchor: Element = hidden;
     for (const value of values.slice(1)) {
       const extra = document.createElement("input");
       extra.type = "hidden";
-      extra.setAttribute("data-slot", "combobox-value");
-      extra.setAttribute("data-combobox-stamped", "");
+      extra.setAttribute("data-combobox-slot", "value");
+      extra.setAttribute("data-combobox-state", "stamped");
       if (hidden.name) extra.name = hidden.name;
       extra.value = value;
       anchor.after(extra);
@@ -455,16 +451,16 @@ class UiCombobox extends TypeaheadElement {
 
   /**
    * @description The element cloned per selected value: the first child of an
-   * authored `<template data-slot="combobox-tag-template">` when present, the
-   * default ui-badge otherwise. A template's content lives in a separate
-   * fragment, so a blueprint carrying `data-slot="combobox-tag"` is invisible to
+   * authored `<template data-combobox-slot="tag-template">` when present, the
+   * default badge otherwise. A template's content lives in a separate
+   * fragment, so a blueprint carrying `data-combobox-slot="tag"` is invisible to
    * the stale-tag sweep and can never be mistaken for a rendered tag.
    *
    * @returns The blueprint element, or null when an authored template is empty.
    * @private
    */
   #tagBlueprint(): HTMLElement | null {
-    const authored = this.querySelector('[data-slot~="combobox-tag-template"]');
+    const authored = this.querySelector('[data-combobox-slot~="tag-template"]');
     const template = authored instanceof HTMLTemplateElement ? authored : defaultTagBlueprint();
     const root = template.content.firstElementChild;
     return root instanceof HTMLElement ? root : null;
@@ -479,35 +475,35 @@ class UiCombobox extends TypeaheadElement {
    * @private
    */
   #renderTags(input: HTMLInputElement): void {
-    const control = input.closest('[data-slot~="combobox-control"]');
+    const control = input.closest('[data-combobox-slot~="control"]');
     if (!control) return;
-    for (const stale of control.querySelectorAll('[data-slot~="combobox-tag"]')) stale.remove();
+    for (const stale of control.querySelectorAll('[data-combobox-slot~="tag"]')) stale.remove();
 
     const blueprint = this.#tagBlueprint();
     if (!blueprint) return;
 
-    const removeLabel = this.getAttribute("data-label-remove") ?? "Remove {label}";
+    const removeLabel = this.config("label-remove") ?? "Remove {label}";
     const tags = this.#selectedItems().map((item) => {
       const label = this.itemValue(item);
       const tag = blueprint.cloneNode(true) as HTMLElement;
-      tag.setAttribute("data-value", this.#itemFormValue(item));
+      tag.setAttribute("data-combobox-value", this.#itemFormValue(item));
 
       // The slot is the contract every other moving part keys off (the CSS, the
       // stale sweep above, and tag removal), so add the token if the template
       // left it out rather than stamping an orphan
-      if (!tag.matches('[data-slot~="combobox-tag"]')) {
-        const slots = tag.getAttribute("data-slot");
-        tag.setAttribute("data-slot", slots ? `${slots} combobox-tag` : "combobox-tag");
+      if (!tag.matches('[data-combobox-slot~="tag"]')) {
+        const slots = tag.getAttribute("data-combobox-slot");
+        tag.setAttribute("data-combobox-slot", slots ? `${slots} tag` : "tag");
       }
 
       // The label wants its own box: text-overflow ignores a flex container's
       // own text, but a template without one still gets its text
-      const text = tag.querySelector('[data-slot~="combobox-tag-label"]');
+      const text = tag.querySelector('[data-combobox-slot~="tag-label"]');
       if (text) text.textContent = label;
       else tag.prepend(document.createTextNode(label));
 
       tag
-        .querySelector('[data-slot~="combobox-tag-remove"]')
+        .querySelector('[data-combobox-slot~="tag-remove"]')
         ?.setAttribute("aria-label", resolveRemoveLabel(removeLabel, label));
 
       return tag;

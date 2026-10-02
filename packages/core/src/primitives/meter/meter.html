@@ -1,11 +1,33 @@
-<div class="flex flex-col gap-sm w-full max-w-xl">
-  <div class="ui-field">
-    <label class="flex items-center justify-between" data-slot="field-label" for="f-storage">
+<div
+  style="
+    --display: flex;
+    --flex-direction: column;
+    --gap: var(--space-sm);
+    --w: 100%;
+    --max-w: 96;
+  "
+>
+  <div data-ui="field">
+    <label
+      style="
+        --display: flex;
+        --items: center;
+        --justify: space-between;
+      "
+      data-field-slot="label"
+      for="f-storage"
+    >
       <span>Storage used</span>
-      <span class="text-xs text-muted-foreground">52/100 GB</span>
+      <span
+        style="
+          --font-size: var(--font-size-xs);
+          --text: var(--color-muted-foreground);
+        "
+        >52/100 GB</span
+      >
     </label>
     <meter
-      class="ui-meter"
+      data-ui="meter"
       id="f-storage"
       min="0"
       max="100"
@@ -17,13 +39,27 @@
       52 GB of 100 GB
     </meter>
   </div>
-  <div class="ui-field">
-    <label class="flex items-center justify-between" data-slot="field-label" for="f-storage-high">
+  <div data-ui="field">
+    <label
+      style="
+        --display: flex;
+        --items: center;
+        --justify: space-between;
+      "
+      data-field-slot="label"
+      for="f-storage-high"
+    >
       <span>Nearly full</span>
-      <span class="text-xs text-muted-foreground">93/100 GB</span>
+      <span
+        style="
+          --font-size: var(--font-size-xs);
+          --text: var(--color-muted-foreground);
+        "
+        >93/100 GB</span
+      >
     </label>
     <meter
-      class="ui-meter"
+      data-ui="meter"
       id="f-storage-high"
       min="0"
       max="100"

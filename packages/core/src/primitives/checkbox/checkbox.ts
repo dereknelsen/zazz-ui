@@ -10,7 +10,7 @@
  * indeterminate (a subset) — the mixed state is the JS-only `indeterminate`
  * property (the platform has no content attribute for it), painted by
  * `:indeterminate` in checkbox.css. Members inside a `<tr>` reflect their
- * state as `data-state="selected"` on the row, lighting up the table
+ * state as `data-table-state="selected"` on the row, lighting up the table
  * primitive's selected-row styling.
  *
  * State follows the kit's signals division of labor (`base/signals.ts`): the
@@ -20,7 +20,7 @@
  * to the DOM, batched to a microtask.
  *
  * @example
- * <table class="ui-table">
+ * <table data-ui="table">
  *   <thead><tr><th><input type="checkbox" data-checkbox-controls="tasks" /></th>...</tr></thead>
  *   <tbody><tr><td><input type="checkbox" name="tasks" /></td>...</tr></tbody>
  * </table>
@@ -30,8 +30,6 @@ import { computed, effect, state } from "../../base/signals.ts";
 import { registerRefresh } from "../../base/zazz-element.ts";
 
 const CONTROLS_ATTR = "data-checkbox-controls";
-
-// --- Pure derived logic ---
 
 /** The tri-state a select-all controller derives from its members. */
 type TriState = "all" | "some" | "none";
@@ -49,8 +47,6 @@ function deriveTriState(checked: readonly boolean[]): TriState {
   if (count === 0) return "none";
   return count === checked.length ? "all" : "some";
 }
-
-// --- Group discovery ---
 
 /**
  * @description Collects the member checkboxes a controller manages: every
@@ -90,8 +86,6 @@ function controllerOf(member: HTMLInputElement): HTMLInputElement | null {
   return null;
 }
 
-// --- Reactive groups ---
-
 /** A live select-all group: the member-state signal and its effect disposer. */
 interface Group {
   /** Each member's checked state, recounted from the DOM (input adapter writes here). */
@@ -118,7 +112,7 @@ function recount(controller: HTMLInputElement): void {
  * @description Creates the reactive group for a controller: a member-state
  * signal, the pure tri-state derivation, and one effect writing the
  * controller's `checked`/`indeterminate` and each member row's
- * `data-state="selected"` back to the DOM. The effect's first run is
+ * `data-table-state="selected"` back to the DOM. The effect's first run is
  * immediate; re-runs batch to a microtask.
  *
  * @param controller - The select-all checkbox.
@@ -137,9 +131,9 @@ function createGroup(controller: HTMLInputElement): void {
       const row = member.closest("tr");
       if (!row) return;
       if (checked[index]) {
-        row.setAttribute("data-state", "selected");
-      } else if (row.getAttribute("data-state") === "selected") {
-        row.removeAttribute("data-state");
+        row.setAttribute("data-table-state", "selected");
+      } else if (row.getAttribute("data-table-state") === "selected") {
+        row.removeAttribute("data-table-state");
       }
     });
   });
@@ -171,8 +165,6 @@ function onChange(event: Event): void {
   if (!groups.has(controller)) createGroup(controller);
   recount(controller);
 }
-
-// --- Init ---
 
 /**
  * @description Initializes select-all groups in a scope: prunes groups whose
@@ -212,7 +204,7 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
   // Delegate at document level so groups work wherever checkboxes appear.
   document.addEventListener("change", onChange);
 
-  // After a SPA <main> swap, re-scan the new content.
+  // After an in-page navigation swap, re-scan the new content.
   registerRefresh(initCheckboxes);
 }
 

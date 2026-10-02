@@ -1,69 +1,224 @@
-<div class="flex gap-sm">
+<div
+  style="
+    --display: flex;
+    --gap: var(--space-sm);
+  "
+>
   <ui-menu>
-    <button class="ui-button" type="button" popovertarget="menu-example-1">Bottom / start</button>
+    <button data-ui="button" type="button" popovertarget="menu-example-1">Bottom / start</button>
     <div
       id="menu-example-1"
-      data-slot="menu-popover"
-      data-side="bottom"
-      data-align="start"
+      data-menu-slot="popover"
+      data-popover-side="bottom"
+      data-popover-align="start"
       popover="auto"
     >
       <menu>
-        <li class="font-strong text-eyebrow text-muted-foreground p-xs">Group 1</li>
-        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Link 1</a></li>
-        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Link 2</a></li>
-        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Link 3</a></li>
-        <hr class="ui-separator my-xs" />
-        <li class="font-strong text-eyebrow text-muted-foreground p-xs">Group 2</li>
-        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Link 4</a></li>
-        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Link 5</a></li>
-        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Link 6</a></li>
+        <li
+          style="
+            --font-weight: var(--font-weight-strong);
+            --display: inline-flex;
+            --font-size: var(--font-size-eyebrow);
+            --leading: var(--leading-eyebrow);
+            --tracking: var(--tracking-eyebrow);
+            --text-transform: uppercase;
+            --text: var(--color-muted-foreground);
+            --p: var(--space-xs);
+          "
+        >
+          Group 1
+        </li>
+        <li>
+          <a href="#" data-ui="button" data-button-variant="ghost" style="--justify: start"
+            >Link 1</a
+          >
+        </li>
+        <li>
+          <a href="#" data-ui="button" data-button-variant="ghost" style="--justify: start"
+            >Link 2</a
+          >
+        </li>
+        <li>
+          <a href="#" data-ui="button" data-button-variant="ghost" style="--justify: start"
+            >Link 3</a
+          >
+        </li>
+        <hr data-ui="separator" style="--my: var(--space-xs)" />
+        <li
+          style="
+            --font-weight: var(--font-weight-strong);
+            --display: inline-flex;
+            --font-size: var(--font-size-eyebrow);
+            --leading: var(--leading-eyebrow);
+            --tracking: var(--tracking-eyebrow);
+            --text-transform: uppercase;
+            --text: var(--color-muted-foreground);
+            --p: var(--space-xs);
+          "
+        >
+          Group 2
+        </li>
+        <li>
+          <a href="#" data-ui="button" data-button-variant="ghost" style="--justify: start"
+            >Link 4</a
+          >
+        </li>
+        <li>
+          <a href="#" data-ui="button" data-button-variant="ghost" style="--justify: start"
+            >Link 5</a
+          >
+        </li>
+        <li>
+          <a href="#" data-ui="button" data-button-variant="ghost" style="--justify: start"
+            >Link 6</a
+          >
+        </li>
       </menu>
     </div>
   </ui-menu>
 
   <ui-menu>
-    <button class="ui-button" type="button" popovertarget="menu-example-2">Bottom / center</button>
+    <button data-ui="button" type="button" popovertarget="menu-example-2">Bottom / center</button>
     <div
       id="menu-example-2"
-      data-slot="menu-popover"
-      data-side="bottom"
-      data-align="center"
+      data-menu-slot="popover"
+      data-popover-side="bottom"
+      data-popover-align="center"
       popover="auto"
     >
       <menu>
-        <li class="font-strong text-eyebrow text-muted-foreground p-xs">Group 1</li>
-        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Link 1</a></li>
-        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Link 2</a></li>
-        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Link 3</a></li>
-        <hr class="ui-separator my-xs" />
-        <li class="font-strong text-eyebrow text-muted-foreground p-xs">Group 2</li>
-        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Link 4</a></li>
-        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Link 5</a></li>
-        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Link 6</a></li>
+        <li
+          style="
+            --font-weight: var(--font-weight-strong);
+            --display: inline-flex;
+            --font-size: var(--font-size-eyebrow);
+            --leading: var(--leading-eyebrow);
+            --tracking: var(--tracking-eyebrow);
+            --text-transform: uppercase;
+            --text: var(--color-muted-foreground);
+            --p: var(--space-xs);
+          "
+        >
+          Group 1
+        </li>
+        <li>
+          <a href="#" data-ui="button" data-button-variant="ghost" style="--justify: start"
+            >Link 1</a
+          >
+        </li>
+        <li>
+          <a href="#" data-ui="button" data-button-variant="ghost" style="--justify: start"
+            >Link 2</a
+          >
+        </li>
+        <li>
+          <a href="#" data-ui="button" data-button-variant="ghost" style="--justify: start"
+            >Link 3</a
+          >
+        </li>
+        <hr data-ui="separator" style="--my: var(--space-xs)" />
+        <li
+          style="
+            --font-weight: var(--font-weight-strong);
+            --display: inline-flex;
+            --font-size: var(--font-size-eyebrow);
+            --leading: var(--leading-eyebrow);
+            --tracking: var(--tracking-eyebrow);
+            --text-transform: uppercase;
+            --text: var(--color-muted-foreground);
+            --p: var(--space-xs);
+          "
+        >
+          Group 2
+        </li>
+        <li>
+          <a href="#" data-ui="button" data-button-variant="ghost" style="--justify: start"
+            >Link 4</a
+          >
+        </li>
+        <li>
+          <a href="#" data-ui="button" data-button-variant="ghost" style="--justify: start"
+            >Link 5</a
+          >
+        </li>
+        <li>
+          <a href="#" data-ui="button" data-button-variant="ghost" style="--justify: start"
+            >Link 6</a
+          >
+        </li>
       </menu>
     </div>
   </ui-menu>
 
   <ui-menu>
-    <button class="ui-button" type="button" popovertarget="menu-example-3">Bottom / end</button>
+    <button data-ui="button" type="button" popovertarget="menu-example-3">Bottom / end</button>
     <div
       id="menu-example-3"
-      data-slot="menu-popover"
-      data-side="bottom"
-      data-align="end"
+      data-menu-slot="popover"
+      data-popover-side="bottom"
+      data-popover-align="end"
       popover="auto"
     >
       <menu>
-        <li class="font-strong text-eyebrow text-muted-foreground p-xs">Group 1</li>
-        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Link 1</a></li>
-        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Link 2</a></li>
-        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Link 3</a></li>
-        <hr class="ui-separator my-xs" />
-        <li class="font-strong text-eyebrow text-muted-foreground p-xs">Group 2</li>
-        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Link 4</a></li>
-        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Link 5</a></li>
-        <li><a href="#" class="ui-button justify-start" data-variant="ghost">Link 6</a></li>
+        <li
+          style="
+            --font-weight: var(--font-weight-strong);
+            --display: inline-flex;
+            --font-size: var(--font-size-eyebrow);
+            --leading: var(--leading-eyebrow);
+            --tracking: var(--tracking-eyebrow);
+            --text-transform: uppercase;
+            --text: var(--color-muted-foreground);
+            --p: var(--space-xs);
+          "
+        >
+          Group 1
+        </li>
+        <li>
+          <a href="#" data-ui="button" data-button-variant="ghost" style="--justify: start"
+            >Link 1</a
+          >
+        </li>
+        <li>
+          <a href="#" data-ui="button" data-button-variant="ghost" style="--justify: start"
+            >Link 2</a
+          >
+        </li>
+        <li>
+          <a href="#" data-ui="button" data-button-variant="ghost" style="--justify: start"
+            >Link 3</a
+          >
+        </li>
+        <hr data-ui="separator" style="--my: var(--space-xs)" />
+        <li
+          style="
+            --font-weight: var(--font-weight-strong);
+            --display: inline-flex;
+            --font-size: var(--font-size-eyebrow);
+            --leading: var(--leading-eyebrow);
+            --tracking: var(--tracking-eyebrow);
+            --text-transform: uppercase;
+            --text: var(--color-muted-foreground);
+            --p: var(--space-xs);
+          "
+        >
+          Group 2
+        </li>
+        <li>
+          <a href="#" data-ui="button" data-button-variant="ghost" style="--justify: start"
+            >Link 4</a
+          >
+        </li>
+        <li>
+          <a href="#" data-ui="button" data-button-variant="ghost" style="--justify: start"
+            >Link 5</a
+          >
+        </li>
+        <li>
+          <a href="#" data-ui="button" data-button-variant="ghost" style="--justify: start"
+            >Link 6</a
+          >
+        </li>
       </menu>
     </div>
   </ui-menu>

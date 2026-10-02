@@ -3,34 +3,30 @@
 /**
  * @fileoverview `<ui-multiselect>`: a multi-select styled as a dropdown.
  * @description Light-DOM custom element that progressively enhances a real
- * `<select multiple class="ui-select">`. `appearance: base-select` does not
- * yet apply to multi-selects in any stable engine, so the script hides the
+ * `<select multiple data-ui="select">`. `appearance: base-select` does not
+ * apply to multi-selects in stable engines, so the script hides the
  * select (which remains the form value carrier and source of truth) and
- * stamps a `.ui-select`-look trigger button plus an anchored popover of
+ * stamps a `[data-ui~="select"]`-look trigger button plus an anchored popover of
  * checkbox rows projected from the options. Checkbox changes write back to
  * `option.selected` and re-dispatch `change` on the select; external writes
  * and form resets flow the other way. Without JavaScript the native
  * multi-select listbox renders: fully functional and accessible.
  *
- * The trigger reads `<first selection> (+N more)`. When base-select grows
- * stable multi-select support this enhancement can retire (see the CSS
- * header note in select.css).
+ * The trigger reads `<first selection> (+N more)`.
  *
  * Attributes on `<ui-multiselect>`:
- * - `data-placeholder`: trigger text when nothing is selected.
- * - `data-label-more`: overflow template, default `"(+{n} more)"`.
- * - `data-side` / `data-align`: forwarded to the stamped panel (popover
+ * - `data-multiselect-placeholder`: trigger text when nothing is selected.
+ * - `data-multiselect-label-more`: overflow template, default `"(+{n} more)"`.
+ * - `data-multiselect-side` / `data-multiselect-align`: forwarded to the stamped panel as `data-popover-*` (popover
  *   placement matrix).
  *
- * Stamped parts: `multiselect-trigger` (a `.ui-select`-classed button),
+ * Stamped parts: `multiselect-trigger` (a `[data-ui~="select"]`-identity button),
  * `multiselect-icon` (chevron), `multiselect-panel` (`[popover]`),
  * `multiselect-option` (label + checkbox per option).
  */
 
 import { ZazzElement, defineZazzElement } from "../../base/zazz-element.ts";
 import { effect, state } from "../../base/signals.ts";
-
-// --- Pure derivations (exported for unit tests only) ---
 
 /**
  * @description Formats the trigger label from the selected option labels.
@@ -50,8 +46,6 @@ function resolveTriggerLabel(
   return `${labels[0]} ${moreTemplate.replace("{n}", String(labels.length - 1))}`;
 }
 
-// --- Element ---
-
 let multiselectIdCounter = 0;
 
 class UiMultiselect extends ZazzElement {
@@ -63,11 +57,17 @@ class UiMultiselect extends ZazzElement {
     if (!(select instanceof HTMLSelectElement)) return;
     this.#select = select;
 
-    const placeholder = this.getAttribute("data-placeholder") ?? "Select…";
-    const moreTemplate = this.getAttribute("data-label-more") ?? "(+{n} more)";
+    const placeholder =
+      this.getAttribute("data-multiselect-placeholder") ??
+      this.getAttribute("data-placeholder") ??
+      "Select…";
+    const moreTemplate =
+      this.getAttribute("data-multiselect-label-more") ??
+      this.getAttribute("data-label-more") ??
+      "(+{n} more)";
 
     const { trigger, label, panel, checkboxes } = this.#stamp(select);
-    select.setAttribute("data-multiselect-enhanced", "");
+    select.setAttribute("data-multiselect-state", "enhanced");
 
     const selectedLabels = (): string[] =>
       Array.from(select.selectedOptions).map((option) => option.label);
@@ -95,7 +95,7 @@ class UiMultiselect extends ZazzElement {
       { signal },
     );
 
-    // The popover polyfill doesn't reflect expanded state: mirror it ourselves
+    // Mirror popover open state onto the trigger's aria-expanded
     panel.addEventListener(
       "toggle",
       (event) => {
@@ -121,7 +121,7 @@ class UiMultiselect extends ZazzElement {
   protected teardown(): void {
     for (const node of this.#stamped) node.remove();
     this.#stamped = [];
-    this.#select?.removeAttribute("data-multiselect-enhanced");
+    this.#select?.removeAttribute("data-multiselect-state");
     this.#select = null;
   }
 
@@ -143,31 +143,31 @@ class UiMultiselect extends ZazzElement {
 
     const trigger = document.createElement("button");
     trigger.type = "button";
-    trigger.className = "ui-select";
-    trigger.setAttribute("data-slot", "multiselect-trigger");
+    trigger.dataset.ui = "select";
+    trigger.setAttribute("data-multiselect-slot", "trigger");
     trigger.setAttribute("popovertarget", panelId);
     trigger.setAttribute("aria-expanded", "false");
 
     const label = document.createElement("span");
-    label.setAttribute("data-slot", "multiselect-label");
+    label.setAttribute("data-multiselect-slot", "label");
     const icon = document.createElement("span");
-    icon.setAttribute("data-slot", "multiselect-icon");
+    icon.setAttribute("data-multiselect-slot", "icon");
     icon.setAttribute("aria-hidden", "true");
     trigger.append(label, icon);
 
     const panel = document.createElement("div");
     panel.id = panelId;
-    panel.setAttribute("data-slot", "multiselect-panel");
+    panel.setAttribute("data-multiselect-slot", "panel");
     panel.setAttribute("popover", "auto");
-    const side = this.getAttribute("data-side");
-    const align = this.getAttribute("data-align");
-    if (side) panel.setAttribute("data-side", side);
-    if (align) panel.setAttribute("data-align", align);
+    const side = this.getAttribute("data-multiselect-side") ?? this.getAttribute("data-side");
+    const align = this.getAttribute("data-multiselect-align") ?? this.getAttribute("data-align");
+    if (side) panel.setAttribute("data-popover-side", side);
+    if (align) panel.setAttribute("data-popover-align", align);
 
     const checkboxes: HTMLInputElement[] = [];
     for (const option of Array.from(select.options)) {
       const row = document.createElement("label");
-      row.setAttribute("data-slot", "multiselect-option");
+      row.setAttribute("data-multiselect-slot", "option");
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
       checkbox.checked = option.selected;

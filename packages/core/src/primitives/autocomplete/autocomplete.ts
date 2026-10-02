@@ -6,7 +6,7 @@
  * (`base/typeahead.ts`). The visible input is the form value (free text is
  * allowed) and the anchored `popover="manual"` panel suggests matches ranked
  * by the vendored cmdk scorer. Committing a suggestion (Enter or click) fills
- * the input; without JavaScript the markup degrades to a plain `.ui-input`.
+ * the input; without JavaScript the markup degrades to a plain `[data-ui~="input"]`.
  *
  * Attributes on the root:
  * - `data-sort="score"`: re-rank visually by match score (default: DOM order).

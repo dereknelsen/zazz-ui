@@ -1,8 +1,8 @@
-<div class="ui-field max-w-xl">
-  <label data-slot="field-label" for="cb-country">Country</label>
+<div data-ui="field" style="--max-w: 96">
+  <label data-field-slot="label" for="cb-country">Country</label>
   <ui-combobox>
-    <input type="hidden" name="country" data-slot="combobox-value" value="" />
-    <div data-slot="combobox-control">
+    <input type="hidden" name="country" data-combobox-slot="value" value="" />
+    <div data-combobox-slot="control">
       <input
         id="cb-country"
         type="text"
@@ -14,60 +14,80 @@
       />
       <button
         type="button"
-        data-slot="combobox-trigger"
+        data-combobox-slot="trigger"
         tabindex="-1"
         aria-label="Show options"
       ></button>
     </div>
-    <div data-slot="combobox-panel" data-side="bottom" data-align="start" popover="manual">
-      <ul role="listbox" data-slot="combobox-list" aria-label="Countries">
+    <div
+      data-combobox-slot="panel"
+      data-popover-side="bottom"
+      data-popover-align="start"
+      popover="manual"
+    >
+      <ul role="listbox" data-combobox-slot="list" aria-label="Countries">
         <li
           role="option"
-          data-slot="combobox-item"
-          class="ui-button justify-start"
-          data-variant="ghost"
-          data-value="au"
+          data-combobox-slot="item"
+          data-ui="button"
+          data-button-variant="ghost"
+          data-combobox-value="au"
+          style="--justify: start"
         >
           Australia
         </li>
         <li
           role="option"
-          data-slot="combobox-item"
-          class="ui-button justify-start"
-          data-variant="ghost"
-          data-value="ca"
+          data-combobox-slot="item"
+          data-ui="button"
+          data-button-variant="ghost"
+          data-combobox-value="ca"
+          style="--justify: start"
         >
           Canada
         </li>
         <li
           role="option"
-          data-slot="combobox-item"
-          class="ui-button justify-start"
-          data-variant="ghost"
-          data-value="jp"
+          data-combobox-slot="item"
+          data-ui="button"
+          data-button-variant="ghost"
+          data-combobox-value="jp"
+          style="--justify: start"
         >
           Japan
         </li>
         <li
           role="option"
-          data-slot="combobox-item"
-          class="ui-button justify-start"
-          data-variant="ghost"
-          data-value="nz"
+          data-combobox-slot="item"
+          data-ui="button"
+          data-button-variant="ghost"
+          data-combobox-value="nz"
+          style="--justify: start"
         >
           New Zealand
         </li>
         <li
           role="option"
-          data-slot="combobox-item"
-          class="ui-button justify-start"
-          data-variant="ghost"
-          data-value="us"
+          data-combobox-slot="item"
+          data-ui="button"
+          data-button-variant="ghost"
+          data-combobox-value="us"
+          style="--justify: start"
         >
           United States
         </li>
       </ul>
-      <p data-slot="combobox-empty" class="text-muted-foreground text-sm">No matches.</p>
+      <p
+        data-combobox-slot="empty"
+        style="
+          --text: var(--color-muted-foreground);
+          --font-size: var(--font-size-sm);
+          --leading: var(--leading-sm);
+          --tracking: var(--tracking-sm);
+        "
+      >
+        No matches.
+      </p>
     </div>
   </ui-combobox>
 </div>
