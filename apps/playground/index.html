@@ -1,0 +1,4294 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="Zazz playground" />
+    <title>Zazz playground</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Theme: apply the persisted (or preferred) scheme before first paint -->
+    <script>
+      (() => {
+        try {
+          const storedTheme = localStorage.getItem("theme");
+          if (storedTheme === "dark" || storedTheme === "light") {
+            document.documentElement.setAttribute("data-ui-theme", storedTheme);
+          }
+        } catch {
+          /* no storage access: follow the system scheme */
+        }
+      })();
+    </script>
+
+    <!-- The kit, live from packages/core/src. The stylesheet link blocks rendering;
+       the module script (behavior and the dev-only audit) runs after parsing. -->
+    <link rel="stylesheet" href="/src/zazz.css" />
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+
+  <body style="--bg: var(--color-background)">
+    <!-- ================================================================== -->
+    <!-- Header: utility bar, navigation menu, command palette, account     -->
+    <!-- ================================================================== -->
+    <header data-transition-layer="global-header" style="--border-b: 1">
+      <div
+        style="
+          --bg: var(--color-muted);
+          --border-b: 1;
+        "
+      >
+        <ui-layout>
+          <div
+            style="
+              --display: flex;
+              --flex-wrap: wrap;
+              --items: center;
+              --justify: space-between;
+              --gap: var(--space-xs);
+              --py: var(--space-2xs);
+            "
+          >
+            <p data-ui="text-xs" style="--text: var(--color-muted-foreground)">
+              Free next-morning delivery on orders over $250 within 60 miles
+            </p>
+            <div
+              style="
+                --display: flex;
+                --items: center;
+                --gap: var(--space-xs);
+              "
+            >
+              <button
+                data-ui="button"
+                data-button-variant="ghost"
+                data-button-size="sm"
+                type="button"
+                popovertarget="hs-branch-hours"
+              >
+                Akron branch: open until 5:00 p.m.
+              </button>
+              <div
+                id="hs-branch-hours"
+                popover="auto"
+                data-popover-side="bottom"
+                data-popover-align="end"
+                style="--p: var(--space-sm)"
+              >
+                <p
+                  data-ui="text-sm"
+                  style="
+                    --font-weight: 600;
+                    --mb: var(--space-xs);
+                  "
+                >
+                  Counter hours
+                </p>
+                <table data-ui="table" data-table-size="sm">
+                  <tbody>
+                    <tr>
+                      <th scope="row">Monday to Friday</th>
+                      <td
+                        style="
+                          --font-family: var(--font-family-mono);
+                          --text-align: end;
+                        "
+                      >
+                        6:30 a.m. to 5:00 p.m.
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Saturday</th>
+                      <td
+                        style="
+                          --font-family: var(--font-family-mono);
+                          --text-align: end;
+                        "
+                      >
+                        7:00 a.m. to noon
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Sunday</th>
+                      <td
+                        style="
+                          --text-align: end;
+                          --text: var(--color-muted-foreground);
+                        "
+                      >
+                        Closed
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <ui-toggle-group id="hs-theme" role="radiogroup" aria-label="Color theme">
+                <label data-ui="toggle" data-toggle-size="icon-sm">
+                  <input type="radio" name="theme" value="light" aria-label="Light theme" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <circle cx="12" cy="12" r="4" />
+                    <path
+                      d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+                    />
+                  </svg>
+                </label>
+                <label data-ui="toggle" data-toggle-size="icon-sm">
+                  <input
+                    type="radio"
+                    name="theme"
+                    value="system"
+                    aria-label="System theme"
+                    checked
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect x="2" y="3" width="20" height="14" rx="2" />
+                    <path d="M8 21h8M12 17v4" />
+                  </svg>
+                </label>
+                <label data-ui="toggle" data-toggle-size="icon-sm">
+                  <input type="radio" name="theme" value="dark" aria-label="Dark theme" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+                  </svg>
+                </label>
+              </ui-toggle-group>
+            </div>
+          </div>
+        </ui-layout>
+      </div>
+
+      <ui-layout>
+        <div
+          style="
+            --display: flex;
+            --items: center;
+            --gap: var(--space-xs);
+            --py: var(--space-xs);
+          "
+        >
+          <a
+            href="/"
+            data-ui="text-lg"
+            style="
+              --font-weight: 700;
+              --mr: var(--space-sm);
+            "
+            >Halvorsen Supply</a
+          >
+
+          <nav
+            data-ui="navigation-menu"
+            aria-label="Main"
+            style="
+              --display: none;
+              --display--md: flex;
+            "
+          >
+            <menu data-navigation-menu-slot="list">
+              <li data-navigation-menu-slot="item">
+                <button
+                  data-ui="button"
+                  data-navigation-menu-slot="trigger"
+                  data-button-variant="ghost"
+                  type="button"
+                  popovertarget="hs-nav-catalog"
+                >
+                  Catalog
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-hidden="true">
+                    <rect width="256" height="256" fill="none" />
+                    <polyline
+                      points="208 96 128 176 48 96"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    />
+                  </svg>
+                </button>
+                <div
+                  id="hs-nav-catalog"
+                  data-navigation-menu-slot="popover"
+                  data-popover-align="start"
+                  popover="auto"
+                  data-navigation-menu-animation="slide-down"
+                >
+                  <div data-navigation-menu-slot="viewport">
+                    <div
+                      style="
+                        --display: grid;
+                        --grid-cols: 2;
+                        --gap: 1px;
+                        --p: var(--space-xs);
+                      "
+                    >
+                      <a href="#featured" data-navigation-menu-slot="link">
+                        <span data-ui="text-sm" style="--font-weight: var(--font-weight-strong)"
+                          >Bolts and screws</span
+                        >
+                        <span data-ui="text-sm" style="--text: var(--color-muted-foreground)"
+                          >Hex, socket, carriage, self-drilling</span
+                        >
+                      </a>
+                      <a href="#featured" data-navigation-menu-slot="link">
+                        <span data-ui="text-sm" style="--font-weight: var(--font-weight-strong)"
+                          >Nuts and washers</span
+                        >
+                        <span data-ui="text-sm" style="--text: var(--color-muted-foreground)"
+                          >Lock, flange, flat, split</span
+                        >
+                      </a>
+                      <a href="#featured" data-navigation-menu-slot="link">
+                        <span data-ui="text-sm" style="--font-weight: var(--font-weight-strong)"
+                          >Anchors</span
+                        >
+                        <span data-ui="text-sm" style="--text: var(--color-muted-foreground)"
+                          >Wedge, sleeve, drop-in, toggle</span
+                        >
+                      </a>
+                      <a href="#featured" data-navigation-menu-slot="link">
+                        <span data-ui="text-sm" style="--font-weight: var(--font-weight-strong)"
+                          >Hand and power tools</span
+                        >
+                        <span data-ui="text-sm" style="--text: var(--color-muted-foreground)"
+                          >Drivers, bits, pliers, sockets</span
+                        >
+                      </a>
+                      <a href="#featured" data-navigation-menu-slot="link">
+                        <span data-ui="text-sm" style="--font-weight: var(--font-weight-strong)"
+                          >Safety and PPE</span
+                        >
+                        <span data-ui="text-sm" style="--text: var(--color-muted-foreground)"
+                          >Gloves, eyewear, hearing, fall</span
+                        >
+                      </a>
+                      <a href="#featured" data-navigation-menu-slot="link">
+                        <span data-ui="text-sm" style="--font-weight: var(--font-weight-strong)"
+                          >Shop by job</span
+                        >
+                        <span data-ui="text-sm" style="--text: var(--color-muted-foreground)"
+                          >HVAC, electrical, steel framing</span
+                        >
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+
+              <li data-navigation-menu-slot="item">
+                <ui-menu>
+                  <button
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    type="button"
+                    popovertarget="hs-nav-services"
+                    interestfor="hs-nav-services"
+                  >
+                    Services
+                  </button>
+                  <div
+                    id="hs-nav-services"
+                    data-menu-slot="popover"
+                    data-popover-side="bottom"
+                    data-popover-align="start"
+                    popover="auto"
+                  >
+                    <menu>
+                      <li>
+                        <a
+                          href="#pad"
+                          data-ui="button"
+                          data-button-variant="ghost"
+                          style="--justify: start"
+                          >Vendor-managed inventory</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          href="#pad"
+                          data-ui="button"
+                          data-button-variant="ghost"
+                          style="--justify: start"
+                          >Kitting and bagging</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          href="#pad"
+                          data-ui="button"
+                          data-button-variant="ghost"
+                          style="--justify: start"
+                          >Cut-to-length threaded rod</a
+                        >
+                      </li>
+                    </menu>
+                  </div>
+                </ui-menu>
+              </li>
+
+              <li data-navigation-menu-slot="item">
+                <a href="#branches" data-ui="button" data-button-variant="ghost">Branches</a>
+              </li>
+            </menu>
+          </nav>
+
+          <ui-command
+            data-command-hotkey="mod+k"
+            style="
+              --ml: auto;
+              --display: none;
+              --display--sm: block;
+            "
+          >
+            <button
+              data-ui="button"
+              type="button"
+              data-button-variant="outline"
+              command="show-modal"
+              commandfor="hs-command"
+              data-command-slot="open"
+              style="--gap: var(--space-sm)"
+            >
+              <span style="--text: var(--color-muted-foreground)">Search parts and pages</span>
+              <ui-kbd-group><kbd>⌘</kbd><kbd>K</kbd></ui-kbd-group>
+            </button>
+            <dialog id="hs-command" data-ui="dialog" data-command-slot="panel" closedby="any">
+              <header data-command-slot="header">
+                <input
+                  data-command-slot="input"
+                  type="text"
+                  placeholder="Type a part number, page, or action…"
+                  role="combobox"
+                  aria-expanded="false"
+                  aria-autocomplete="list"
+                  autocomplete="off"
+                  aria-label="Search parts and pages"
+                />
+              </header>
+              <div role="listbox" data-command-slot="list" aria-label="Results">
+                <div role="group" data-command-slot="group" aria-labelledby="hs-command-pages">
+                  <span
+                    data-command-slot="group-label"
+                    id="hs-command-pages"
+                    data-ui="text-eyebrow"
+                    style="--text: var(--color-muted-foreground)"
+                    >Pages</span
+                  >
+                  <a
+                    role="option"
+                    data-command-slot="item"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    href="#stock"
+                    tabindex="-1"
+                    data-command-keywords="inventory counts"
+                    style="--justify: start"
+                    >Stock board</a
+                  >
+                  <a
+                    role="option"
+                    data-command-slot="item"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    href="#featured"
+                    tabindex="-1"
+                    data-command-keywords="new clearance safety"
+                    style="--justify: start"
+                    >Featured products</a
+                  >
+                  <a
+                    role="option"
+                    data-command-slot="item"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    href="#account"
+                    tabindex="-1"
+                    data-command-keywords="credit orders rep"
+                    style="--justify: start"
+                    >Your account</a
+                  >
+                  <a
+                    role="option"
+                    data-command-slot="item"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    href="#pad"
+                    tabindex="-1"
+                    data-command-keywords="quick order upload"
+                    style="--justify: start"
+                    >Order pad</a
+                  >
+                </div>
+                <div role="group" data-command-slot="group" aria-labelledby="hs-command-parts">
+                  <span
+                    data-command-slot="group-label"
+                    id="hs-command-parts"
+                    data-ui="text-eyebrow"
+                    style="--text: var(--color-muted-foreground)"
+                    >Parts</span
+                  >
+                  <a
+                    role="option"
+                    data-command-slot="item"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    href="#stock"
+                    tabindex="-1"
+                    data-command-keywords="hex cap screw grade 5"
+                    style="--justify: space-between"
+                  >
+                    Hex cap screw, 5/16-18 × 1"
+                    <span
+                      style="
+                        --font-family: var(--font-family-mono);
+                        --text: var(--color-muted-foreground);
+                      "
+                      >HX-0516-100Z</span
+                    >
+                  </a>
+                  <a
+                    role="option"
+                    data-command-slot="item"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    href="#stock"
+                    tabindex="-1"
+                    data-command-keywords="nylon insert lock nut"
+                    style="--justify: space-between"
+                  >
+                    Lock nut, 3/8-16
+                    <span
+                      style="
+                        --font-family: var(--font-family-mono);
+                        --text: var(--color-muted-foreground);
+                      "
+                      >NN-0375-ZY</span
+                    >
+                  </a>
+                  <a
+                    role="option"
+                    data-command-slot="item"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    href="#spotlight"
+                    tabindex="-1"
+                    data-command-keywords="drill driver cordless"
+                    style="--justify: space-between"
+                  >
+                    Cordless drill driver, 18 V
+                    <span
+                      style="
+                        --font-family: var(--font-family-mono);
+                        --text: var(--color-muted-foreground);
+                      "
+                      >PT-DD18-K2</span
+                    >
+                  </a>
+                </div>
+                <div role="group" data-command-slot="group" aria-labelledby="hs-command-actions">
+                  <span
+                    data-command-slot="group-label"
+                    id="hs-command-actions"
+                    data-ui="text-eyebrow"
+                    style="--text: var(--color-muted-foreground)"
+                    >Actions</span
+                  >
+                  <button
+                    role="option"
+                    data-command-slot="item"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    type="button"
+                    tabindex="-1"
+                    command="--theme-toggle"
+                    commandfor="hs-theme"
+                    data-command-keywords="dark light mode"
+                    style="--justify: start"
+                  >
+                    Switch light or dark theme
+                  </button>
+                  <button
+                    role="option"
+                    data-command-slot="item"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    type="button"
+                    tabindex="-1"
+                    command="show-modal"
+                    commandfor="hs-sign-in"
+                    data-command-keywords="log in account"
+                    style="--justify: start"
+                  >
+                    Sign in
+                  </button>
+                </div>
+              </div>
+              <p data-command-slot="empty" style="--text: var(--color-muted-foreground)">
+                No parts or pages match.
+              </p>
+              <footer data-command-slot="footer">
+                <span
+                  ><ui-kbd-group><kbd>↑</kbd><kbd>↓</kbd></ui-kbd-group> navigate</span
+                >
+                <span><kbd>↵</kbd> select</span>
+                <span><kbd>esc</kbd> close</span>
+              </footer>
+            </dialog>
+          </ui-command>
+
+          <ui-menu
+            style="
+              --ml: auto;
+              --ml--sm: 0;
+            "
+          >
+            <button
+              data-ui="button"
+              data-button-variant="ghost"
+              type="button"
+              popovertarget="hs-account-menu"
+              interestfor="hs-account-menu"
+            >
+              Account
+            </button>
+            <div
+              id="hs-account-menu"
+              data-menu-slot="popover"
+              data-popover-side="bottom"
+              data-popover-align="end"
+              popover="auto"
+            >
+              <menu>
+                <li
+                  data-ui="text-eyebrow"
+                  style="
+                    --display: inline-flex;
+                    --text: var(--color-muted-foreground);
+                    --p: var(--space-xs);
+                  "
+                >
+                  Northgate Mechanical
+                </li>
+                <li>
+                  <a
+                    href="#account"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="--justify: start"
+                    >Open orders</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#account"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="--justify: start"
+                    >Invoices and statements</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#pad"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="--justify: start"
+                    >Saved order pads</a
+                  >
+                </li>
+                <hr data-ui="separator" style="--my: var(--space-xs)" />
+                <li>
+                  <button
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    type="button"
+                    command="show-modal"
+                    commandfor="hs-sign-in"
+                    style="
+                      --w: 100%;
+                      --justify: start;
+                    "
+                  >
+                    Switch account
+                  </button>
+                </li>
+              </menu>
+            </div>
+          </ui-menu>
+
+          <ui-tooltip>
+            <a
+              href="#pad"
+              data-ui="button"
+              data-button-variant="ghost"
+              data-button-size="icon"
+              interestfor="hs-cart-tip"
+              aria-label="Order pad, 3 lines"
+              style="--position: relative"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-hidden="true">
+                <rect width="256" height="256" fill="none" />
+                <path
+                  d="M40 40h24l32 128h112l24-88H80"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="16"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <circle cx="104" cy="208" r="16" fill="currentColor" />
+                <circle cx="192" cy="208" r="16" fill="currentColor" />
+              </svg>
+              <span
+                data-ui="badge"
+                data-badge-variant="primary"
+                aria-hidden="true"
+                style="
+                  --position: absolute;
+                  --top: -4px;
+                  --right: -4px;
+                  --font-family: var(--font-family-mono);
+                "
+                >3</span
+              >
+            </a>
+            <div data-tooltip-slot="content" id="hs-cart-tip" popover="hint">
+              Order pad
+              <ui-kbd-group><kbd>⌘</kbd><kbd>O</kbd></ui-kbd-group>
+              <span data-tooltip-slot="arrow" aria-hidden="true"></span>
+            </div>
+          </ui-tooltip>
+
+          <button
+            data-ui="button"
+            data-button-variant="ghost"
+            data-button-size="icon"
+            type="button"
+            command="show-modal"
+            commandfor="hs-mobile-menu"
+            aria-label="Open menu"
+            style="
+              --display: flex;
+              --display--md: none;
+            "
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-hidden="true">
+              <rect width="256" height="256" fill="none" />
+              <line
+                x1="40"
+                y1="128"
+                x2="216"
+                y2="128"
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="16"
+              />
+              <line
+                x1="40"
+                y1="64"
+                x2="216"
+                y2="64"
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="16"
+              />
+              <line
+                x1="40"
+                y1="192"
+                x2="216"
+                y2="192"
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="16"
+              />
+            </svg>
+          </button>
+        </div>
+      </ui-layout>
+    </header>
+
+    <dialog
+      id="hs-mobile-menu"
+      data-ui="dialog mobile-menu"
+      data-dialog-size="screen"
+      data-mobile-menu-animation="slide-right"
+      closedby="any"
+      style="--border-width: 0"
+    >
+      <div data-mobile-menu-slot="viewport">
+        <div data-mobile-menu-slot="header">
+          <span data-ui="text-md" style="--font-weight: var(--font-weight-strong)"
+            >Halvorsen Supply</span
+          >
+          <button
+            data-ui="button"
+            data-button-variant="ghost"
+            data-button-size="icon"
+            type="button"
+            commandfor="hs-mobile-menu"
+            command="close"
+            aria-label="Close menu"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-hidden="true">
+              <rect width="256" height="256" fill="none" />
+              <line
+                x1="200"
+                y1="56"
+                x2="56"
+                y2="200"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="16"
+              />
+              <line
+                x1="200"
+                y1="200"
+                x2="56"
+                y2="56"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="16"
+              />
+            </svg>
+          </button>
+        </div>
+        <div data-mobile-menu-slot="body">
+          <ui-accordion>
+            <details>
+              <summary
+                data-ui="button"
+                data-button-variant="ghost"
+                style="
+                  --w: 100%;
+                  --justify: space-between;
+                "
+              >
+                Catalog
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-hidden="true">
+                  <rect width="256" height="256" fill="none" />
+                  <polyline
+                    points="208 96 128 176 48 96"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                </svg>
+              </summary>
+              <div
+                style="
+                  --display: flex;
+                  --flex-direction: column;
+                  --pb: var(--space-sm);
+                "
+              >
+                <a
+                  href="#featured"
+                  data-ui="button"
+                  data-button-variant="ghost"
+                  style="--justify: start"
+                  >Bolts and screws</a
+                >
+                <a
+                  href="#featured"
+                  data-ui="button"
+                  data-button-variant="ghost"
+                  style="--justify: start"
+                  >Nuts and washers</a
+                >
+                <a
+                  href="#featured"
+                  data-ui="button"
+                  data-button-variant="ghost"
+                  style="--justify: start"
+                  >Anchors</a
+                >
+                <a
+                  href="#featured"
+                  data-ui="button"
+                  data-button-variant="ghost"
+                  style="--justify: start"
+                  >Hand and power tools</a
+                >
+                <a
+                  href="#featured"
+                  data-ui="button"
+                  data-button-variant="ghost"
+                  style="--justify: start"
+                  >Safety and PPE</a
+                >
+              </div>
+            </details>
+            <details>
+              <summary
+                data-ui="button"
+                data-button-variant="ghost"
+                style="
+                  --w: 100%;
+                  --justify: space-between;
+                "
+              >
+                Services
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-hidden="true">
+                  <rect width="256" height="256" fill="none" />
+                  <polyline
+                    points="208 96 128 176 48 96"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                </svg>
+              </summary>
+              <div
+                style="
+                  --display: flex;
+                  --flex-direction: column;
+                  --pb: var(--space-sm);
+                "
+              >
+                <a href="#pad" data-ui="button" data-button-variant="ghost" style="--justify: start"
+                  >Vendor-managed inventory</a
+                >
+                <a href="#pad" data-ui="button" data-button-variant="ghost" style="--justify: start"
+                  >Kitting and bagging</a
+                >
+                <a href="#pad" data-ui="button" data-button-variant="ghost" style="--justify: start"
+                  >Cut-to-length threaded rod</a
+                >
+              </div>
+            </details>
+          </ui-accordion>
+          <a
+            href="#branches"
+            data-ui="button"
+            data-button-variant="ghost"
+            style="
+              --w: 100%;
+              --justify: start;
+            "
+            >Branches</a
+          >
+        </div>
+        <div data-mobile-menu-slot="footer">
+          <button
+            data-ui="button"
+            type="button"
+            command="show-modal"
+            commandfor="hs-sign-in"
+            style="--flex: 1"
+          >
+            Sign in
+          </button>
+          <a href="#pad" data-ui="button" data-button-variant="primary" style="--flex: 1"
+            >Order pad</a
+          >
+        </div>
+      </div>
+    </dialog>
+
+    <main>
+      <!-- ================================================================ -->
+      <!-- Hero: grid-pile photo + card, autocomplete part search           -->
+      <!-- ================================================================ -->
+      <section style="--py: var(--space-md)">
+        <ui-layout>
+          <div
+            data-ui="grid-pile"
+            style="
+              --display: grid;
+              --rounded: var(--radius-lg);
+              --overflow: clip;
+            "
+          >
+            <img
+              src="https://images.unsplash.com/photo-1553413077-190dd305871c?w=1600&h=700&fit=crop"
+              srcset="
+                https://images.unsplash.com/photo-1553413077-190dd305871c?w=800&h=600&fit=crop 800w,
+                https://images.unsplash.com/photo-1553413077-190dd305871c?w=1600&h=700&fit=crop 1600w
+              "
+              sizes="(max-width: 64rem) 100vw, 1200px"
+              width="1600"
+              height="700"
+              alt=""
+              fetchpriority="high"
+              style="
+                --size: 100%;
+                --min-h: 120;
+                --object-fit: cover;
+              "
+            />
+            <div
+              data-ui="card"
+              data-reveal="slide-up"
+              style="
+                --self: end;
+                --m: var(--space-sm);
+                --m--md: var(--space-md);
+                --max-w: var(--article-sm);
+                --p: var(--space-md);
+                --gap: var(--space-sm);
+              "
+            >
+              <hgroup
+                style="
+                  --display: grid;
+                  --gap: var(--space-2xs);
+                "
+              >
+                <p data-ui="text-eyebrow">Fasteners and MRO supply in Akron, Canton, and Toledo</p>
+                <h1 data-ui="text-h4">Find the part. See which shelf it’s on.</h1>
+                <p style="--text: var(--color-muted-foreground)">
+                  Search 41,800 stocked parts. Counts update every fifteen minutes at all three
+                  branches.
+                </p>
+              </hgroup>
+              <form
+                role="search"
+                action="#stock"
+                style="
+                  --display: flex;
+                  --gap: var(--space-xs);
+                "
+              >
+                <ui-autocomplete style="--flex: 1">
+                  <input
+                    data-ui="input"
+                    id="hs-hero-search"
+                    name="q"
+                    type="search"
+                    placeholder="Part number, size, or description"
+                    role="combobox"
+                    aria-label="Search parts"
+                    aria-expanded="false"
+                    aria-autocomplete="list"
+                    autocomplete="off"
+                    enterkeyhint="search"
+                  />
+                  <div
+                    data-autocomplete-slot="panel"
+                    data-popover-side="bottom"
+                    data-popover-align="start"
+                    popover="manual"
+                  >
+                    <ul role="listbox" data-autocomplete-slot="list" aria-label="Part suggestions">
+                      <li
+                        role="option"
+                        data-autocomplete-slot="item"
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        data-autocomplete-value="HX-0516-100Z hex cap screw"
+                        style="--justify: start"
+                      >
+                        HX-0516-100Z hex cap screw
+                      </li>
+                      <li
+                        role="option"
+                        data-autocomplete-slot="item"
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        data-autocomplete-value="NN-0375-ZY lock nut"
+                        style="--justify: start"
+                      >
+                        NN-0375-ZY lock nut
+                      </li>
+                      <li
+                        role="option"
+                        data-autocomplete-slot="item"
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        data-autocomplete-value="FW-0250-SS flat washer"
+                        style="--justify: start"
+                      >
+                        FW-0250-SS flat washer
+                      </li>
+                      <li
+                        role="option"
+                        data-autocomplete-slot="item"
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        data-autocomplete-value="SD-1014-150 self-drilling screw"
+                        style="--justify: start"
+                      >
+                        SD-1014-150 self-drilling screw
+                      </li>
+                      <li
+                        role="option"
+                        data-autocomplete-slot="item"
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        data-autocomplete-value="WA-0375-375 wedge anchor"
+                        style="--justify: start"
+                      >
+                        WA-0375-375 wedge anchor
+                      </li>
+                    </ul>
+                    <p data-autocomplete-slot="empty" style="--text: var(--color-muted-foreground)">
+                      No stocked parts match.
+                    </p>
+                  </div>
+                </ui-autocomplete>
+                <button data-ui="button" data-button-variant="primary" type="submit">Search</button>
+              </form>
+              <div
+                data-ui="scroll-fade"
+                data-scroll-fade-axis="x"
+                style="
+                  --display: flex;
+                  --gap: var(--space-2xs);
+                  --overflow-x: auto;
+                  --pb: var(--space-2xs);
+                "
+              >
+                <a
+                  data-ui="badge"
+                  data-badge-variant="muted"
+                  href="#stock"
+                  style="--whitespace: nowrap"
+                  >Hex cap screws</a
+                >
+                <a
+                  data-ui="badge"
+                  data-badge-variant="muted"
+                  href="#stock"
+                  style="--whitespace: nowrap"
+                  >Lock nuts</a
+                >
+                <a
+                  data-ui="badge"
+                  data-badge-variant="muted"
+                  href="#stock"
+                  style="--whitespace: nowrap"
+                  >Self-drilling screws</a
+                >
+                <a
+                  data-ui="badge"
+                  data-badge-variant="muted"
+                  href="#stock"
+                  style="--whitespace: nowrap"
+                  >Concrete anchors</a
+                >
+                <a
+                  data-ui="badge"
+                  data-badge-variant="muted"
+                  href="#stock"
+                  style="--whitespace: nowrap"
+                  >Threaded rod</a
+                >
+                <a
+                  data-ui="badge"
+                  data-badge-variant="muted"
+                  href="#stock"
+                  style="--whitespace: nowrap"
+                  >Cut-resistant gloves</a
+                >
+              </div>
+            </div>
+          </div>
+        </ui-layout>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- Stock board: toolbar, select-all table in a scroll-fade, toasts  -->
+      <!-- ================================================================ -->
+      <section id="stock" style="--py: var(--space-lg)">
+        <ui-layout>
+          <div
+            style="
+              --display: flex;
+              --flex-wrap: wrap;
+              --items: baseline;
+              --justify: space-between;
+              --gap: var(--space-xs);
+              --mb: var(--space-sm);
+            "
+          >
+            <h2 data-ui="text-h6">Most reordered this week</h2>
+            <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+              List price per 100. Sign in to see your contract price.
+            </p>
+          </div>
+
+          <div
+            role="toolbar"
+            aria-label="Stock board controls"
+            style="
+              --display: flex;
+              --flex-wrap: wrap;
+              --items: center;
+              --gap: var(--space-xs);
+              --p: var(--space-xs);
+              --border: 1;
+              --rounded: var(--radius-lg);
+              --mb: var(--space-sm);
+            "
+          >
+            <ui-toggle-group role="group" aria-label="Show branches">
+              <label data-ui="toggle">
+                <input type="checkbox" name="branch" value="akron" checked />
+                Akron
+              </label>
+              <label data-ui="toggle">
+                <input type="checkbox" name="branch" value="canton" checked />
+                Canton
+              </label>
+              <label data-ui="toggle">
+                <input type="checkbox" name="branch" value="toledo" checked />
+                Toledo
+              </label>
+            </ui-toggle-group>
+
+            <hr
+              data-ui="separator"
+              data-separator-orientation="vertical"
+              aria-orientation="vertical"
+              style="--mx: var(--space-2xs)"
+            />
+
+            <select data-ui="select" aria-label="Sort parts" style="--w: auto">
+              <button>
+                <selectedcontent></selectedcontent>
+              </button>
+              <option value="reorders" selected>Most reordered</option>
+              <option value="part">Part number</option>
+              <option value="stock">Lowest stock first</option>
+              <option value="price">Price per 100</option>
+            </select>
+
+            <ui-button-group role="group" aria-label="Export" style="--ml: auto">
+              <button
+                data-ui="button"
+                data-button-variant="outline"
+                data-button-size="sm"
+                type="button"
+                commandfor="hs-toaster"
+                command="--toast-info"
+                data-title="Preparing CSV"
+                data-description="Your download starts in a moment."
+              >
+                Export CSV
+              </button>
+              <button
+                data-ui="button"
+                data-button-variant="outline"
+                data-button-size="sm"
+                type="button"
+                commandfor="hs-toaster"
+                command="--toast"
+                data-title="Pick list sent to printer"
+              >
+                Print pick list
+              </button>
+            </ui-button-group>
+          </div>
+
+          <div data-ui="scroll-fade" data-scroll-fade-axis="x" style="--overflow-x: auto">
+            <table data-ui="table" data-table-size="sm">
+              <caption data-ui="sr-only">
+                Most reordered parts with stock at each branch
+              </caption>
+              <thead>
+                <tr>
+                  <th style="--w: 8">
+                    <input
+                      type="checkbox"
+                      data-checkbox-controls="hs-parts"
+                      aria-label="Select all parts"
+                    />
+                  </th>
+                  <th>Part number</th>
+                  <th style="--min-w: 64">Description</th>
+                  <th>Status</th>
+                  <th style="--text-align: end">Akron</th>
+                  <th style="--text-align: end">Canton</th>
+                  <th style="--text-align: end">Toledo</th>
+                  <th style="--text-align: end">Per 100</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <input
+                      type="checkbox"
+                      name="hs-parts"
+                      value="HX-0516-100Z"
+                      aria-label="Select HX-0516-100Z"
+                    />
+                  </td>
+                  <td
+                    style="
+                      --font-family: var(--font-family-mono);
+                      --whitespace: nowrap;
+                    "
+                  >
+                    HX-0516-100Z
+                  </td>
+                  <td>Hex cap screw, 5/16-18 × 1", grade 5, zinc</td>
+                  <td>
+                    <span data-ui="badge" data-badge-variant="ghost" style="--whitespace: nowrap"
+                      >Toledo by transfer</span
+                    >
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                    "
+                  >
+                    4,200
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                    "
+                  >
+                    1,850
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                      --text: var(--color-muted-foreground);
+                    "
+                  >
+                    0
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                    "
+                  >
+                    $11.40
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <input
+                      type="checkbox"
+                      name="hs-parts"
+                      value="NN-0375-ZY"
+                      aria-label="Select NN-0375-ZY"
+                      checked
+                    />
+                  </td>
+                  <td
+                    style="
+                      --font-family: var(--font-family-mono);
+                      --whitespace: nowrap;
+                    "
+                  >
+                    NN-0375-ZY
+                  </td>
+                  <td>Nylon insert lock nut, 3/8-16, zinc yellow</td>
+                  <td>
+                    <span data-ui="badge" data-badge-variant="primary" style="--whitespace: nowrap"
+                      >All branches</span
+                    >
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                    "
+                  >
+                    9,600
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                    "
+                  >
+                    3,100
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                    "
+                  >
+                    2,240
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                    "
+                  >
+                    $8.95
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <input
+                      type="checkbox"
+                      name="hs-parts"
+                      value="FW-0250-SS"
+                      aria-label="Select FW-0250-SS"
+                    />
+                  </td>
+                  <td
+                    style="
+                      --font-family: var(--font-family-mono);
+                      --whitespace: nowrap;
+                    "
+                  >
+                    FW-0250-SS
+                  </td>
+                  <td>Flat washer, 1/4", 18-8 stainless</td>
+                  <td>
+                    <span data-ui="badge" data-badge-variant="ghost" style="--whitespace: nowrap"
+                      >Canton by transfer</span
+                    >
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                    "
+                  >
+                    12,000
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                      --text: var(--color-muted-foreground);
+                    "
+                  >
+                    0
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                    "
+                  >
+                    5,500
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                    "
+                  >
+                    $4.20
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <input
+                      type="checkbox"
+                      name="hs-parts"
+                      value="SD-1014-150"
+                      aria-label="Select SD-1014-150"
+                      checked
+                    />
+                  </td>
+                  <td
+                    style="
+                      --font-family: var(--font-family-mono);
+                      --whitespace: nowrap;
+                    "
+                  >
+                    SD-1014-150
+                  </td>
+                  <td>Self-drilling screw, #10-14 × 1-1/2", hex washer head</td>
+                  <td>
+                    <span data-ui="badge" data-badge-variant="primary" style="--whitespace: nowrap"
+                      >All branches</span
+                    >
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                    "
+                  >
+                    2,750
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                    "
+                  >
+                    6,400
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                    "
+                  >
+                    1,100
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                    "
+                  >
+                    $6.80
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <input
+                      type="checkbox"
+                      name="hs-parts"
+                      value="WA-0375-375"
+                      aria-label="Select WA-0375-375"
+                    />
+                  </td>
+                  <td
+                    style="
+                      --font-family: var(--font-family-mono);
+                      --whitespace: nowrap;
+                    "
+                  >
+                    WA-0375-375
+                  </td>
+                  <td>Wedge anchor, 3/8 × 3-3/4", zinc</td>
+                  <td>
+                    <span data-ui="badge" data-badge-variant="muted" style="--whitespace: nowrap"
+                      >Low at Toledo</span
+                    >
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                    "
+                  >
+                    640
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                    "
+                  >
+                    220
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                    "
+                  >
+                    90
+                  </td>
+                  <td
+                    style="
+                      --text-align: end;
+                      --font-family: var(--font-family-mono);
+                    "
+                  >
+                    $62.00
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div
+            style="
+              --display: flex;
+              --flex-wrap: wrap;
+              --items: center;
+              --justify: end;
+              --gap: var(--space-xs);
+              --mt: var(--space-sm);
+            "
+          >
+            <p
+              data-ui="text-sm"
+              style="
+                --text: var(--color-muted-foreground);
+                --mr: auto;
+              "
+            >
+              Selected parts go to your order pad at 100 each.
+            </p>
+            <button
+              data-ui="button"
+              data-button-variant="outline"
+              type="button"
+              commandfor="hs-toaster"
+              command="--toast-warning"
+              data-title="Quote requests need an account"
+              data-description="Sign in to request contract pricing."
+            >
+              Request a quote
+            </button>
+            <button
+              data-ui="button"
+              data-button-variant="primary"
+              type="button"
+              commandfor="hs-toaster"
+              command="--toast-success"
+              data-title="Added to order pad"
+              data-description="The selected parts are on your order pad."
+            >
+              Add selected to order pad
+            </button>
+          </div>
+        </ui-layout>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- Featured: tabs holding a card grid, a carousel, muted cards      -->
+      <!-- ================================================================ -->
+      <section
+        id="featured"
+        style="
+          --py: var(--space-lg);
+          --border-t: 1;
+        "
+      >
+        <ui-layout>
+          <hgroup
+            data-reveal="slide-up"
+            style="
+              --display: grid;
+              --gap: var(--space-2xs);
+              --mb: var(--space-md);
+            "
+          >
+            <p data-ui="text-eyebrow">Featured</p>
+            <h2 data-ui="text-h5">Stocked this month at every branch</h2>
+          </hgroup>
+
+          <ui-tabs style="--w: 100%">
+            <div data-tabs-slot="list" role="tablist">
+              <div data-tabs-slot="indicator" aria-hidden="true"></div>
+              <input type="radio" role="tab" name="hs-featured" id="hs-featured-new" checked />
+              <label for="hs-featured-new" data-tabs-slot="label"
+                ><span data-tabs-slot="label-text">New this month</span></label
+              >
+              <input type="radio" role="tab" name="hs-featured" id="hs-featured-tools" />
+              <label for="hs-featured-tools" data-tabs-slot="label"
+                ><span data-tabs-slot="label-text">Tools</span></label
+              >
+              <input type="radio" role="tab" name="hs-featured" id="hs-featured-clearance" />
+              <label for="hs-featured-clearance" data-tabs-slot="label"
+                ><span data-tabs-slot="label-text">Clearance</span></label
+              >
+            </div>
+
+            <div
+              data-tabs-slot="panel"
+              role="tabpanel"
+              style="
+                --w: 100%;
+                --pt: var(--space-md);
+              "
+            >
+              <div
+                data-reveal-each="slide-up"
+                style="
+                  --display: grid;
+                  --grid-cols: 1;
+                  --grid-cols--sm: 2;
+                  --grid-cols--lg: 4;
+                  --gap: var(--space-md);
+                "
+              >
+                <article data-ui="card group" style="--auto-rows: min-content">
+                  <figure
+                    style="
+                      --display: grid;
+                      --aspect: 3 / 2;
+                      --rounded: var(--radius-md) var(--radius-md) 0 0;
+                      --overflow: clip;
+                    "
+                  >
+                    <img
+                      src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=600&h=400&fit=crop"
+                      width="600"
+                      height="400"
+                      loading="lazy"
+                      alt="Cordless drill driver with battery"
+                      style="
+                        --size: 100%;
+                        --object-fit: cover;
+                        --scale: 1;
+                        --group-scale--hover: 1.03;
+                        --transition: var(--default-transition);
+                      "
+                    />
+                  </figure>
+                  <div
+                    style="
+                      --display: grid;
+                      --gap: var(--space-xs);
+                      --px: var(--space-sm);
+                      --pb: var(--space-sm);
+                    "
+                  >
+                    <div
+                      style="
+                        --display: flex;
+                        --items: center;
+                        --justify: space-between;
+                      "
+                    >
+                      <span data-ui="badge" data-badge-variant="muted">Power tools</span>
+                      <label
+                        data-ui="toggle"
+                        data-toggle-size="icon-sm"
+                        data-toggle-variant="ghost"
+                      >
+                        <input type="checkbox" aria-label="Save cordless drill driver" />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.6 1-1.1a5.5 5.5 0 0 0 0-7.7z"
+                          />
+                        </svg>
+                      </label>
+                    </div>
+                    <h3 data-ui="text-lg">Cordless drill driver, 18 V</h3>
+                    <p
+                      data-ui="text-sm"
+                      style="
+                        --text: var(--color-muted-foreground);
+                        --line-clamp: 2;
+                      "
+                    >
+                      Two batteries, a fast charger, and a hard case. Half-inch metal chuck.
+                    </p>
+                    <div
+                      style="
+                        --display: flex;
+                        --items: center;
+                        --justify: space-between;
+                        --pt: var(--space-xs);
+                        --border-t: 1;
+                      "
+                    >
+                      <span style="--font-family: var(--font-family-mono)">$179.00</span>
+                      <button
+                        data-ui="button"
+                        data-button-size="sm"
+                        type="button"
+                        commandfor="hs-toaster"
+                        command="--toast-success"
+                        data-title="Added to order pad"
+                        data-description="Cordless drill driver, 18 V"
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </div>
+                </article>
+                <article data-ui="card group" style="--auto-rows: min-content">
+                  <figure
+                    style="
+                      --display: grid;
+                      --aspect: 3 / 2;
+                      --rounded: var(--radius-md) var(--radius-md) 0 0;
+                      --overflow: clip;
+                    "
+                  >
+                    <img
+                      src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=600&h=400&fit=crop"
+                      width="600"
+                      height="400"
+                      loading="lazy"
+                      alt="Pliers and wrenches racked in a tool cart"
+                      style="
+                        --size: 100%;
+                        --object-fit: cover;
+                        --scale: 1;
+                        --group-scale--hover: 1.03;
+                        --transition: var(--default-transition);
+                      "
+                    />
+                  </figure>
+                  <div
+                    style="
+                      --display: grid;
+                      --gap: var(--space-xs);
+                      --px: var(--space-sm);
+                      --pb: var(--space-sm);
+                    "
+                  >
+                    <div
+                      style="
+                        --display: flex;
+                        --items: center;
+                        --justify: space-between;
+                      "
+                    >
+                      <span data-ui="badge" data-badge-variant="muted">Hand tools</span>
+                      <label
+                        data-ui="toggle"
+                        data-toggle-size="icon-sm"
+                        data-toggle-variant="ghost"
+                      >
+                        <input type="checkbox" aria-label="Save pliers set" checked />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.6 1-1.1a5.5 5.5 0 0 0 0-7.7z"
+                          />
+                        </svg>
+                      </label>
+                    </div>
+                    <h3 data-ui="text-lg">Pliers set, 8 pieces</h3>
+                    <p
+                      data-ui="text-sm"
+                      style="
+                        --text: var(--color-muted-foreground);
+                        --line-clamp: 2;
+                      "
+                    >
+                      Linesman, diagonal, long-nose, and groove-joint pliers with insulated grips
+                      rated to 1,000 V.
+                    </p>
+                    <div
+                      style="
+                        --display: flex;
+                        --items: center;
+                        --justify: space-between;
+                        --pt: var(--space-xs);
+                        --border-t: 1;
+                      "
+                    >
+                      <span style="--font-family: var(--font-family-mono)">$48.20</span>
+                      <button
+                        data-ui="button"
+                        data-button-size="sm"
+                        type="button"
+                        commandfor="hs-toaster"
+                        command="--toast-success"
+                        data-title="Added to order pad"
+                        data-description="Pliers set, 8 pieces"
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </div>
+                </article>
+                <article data-ui="card group" style="--auto-rows: min-content">
+                  <figure
+                    style="
+                      --display: grid;
+                      --aspect: 3 / 2;
+                      --rounded: var(--radius-md) var(--radius-md) 0 0;
+                      --overflow: clip;
+                    "
+                  >
+                    <img
+                      src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=600&h=400&fit=crop"
+                      width="600"
+                      height="400"
+                      loading="lazy"
+                      alt="Sparks from an angle grinder cutting steel"
+                      style="
+                        --size: 100%;
+                        --object-fit: cover;
+                        --scale: 1;
+                        --group-scale--hover: 1.03;
+                        --transition: var(--default-transition);
+                      "
+                    />
+                  </figure>
+                  <div
+                    style="
+                      --display: grid;
+                      --gap: var(--space-xs);
+                      --px: var(--space-sm);
+                      --pb: var(--space-sm);
+                    "
+                  >
+                    <div
+                      style="
+                        --display: flex;
+                        --items: center;
+                        --justify: space-between;
+                      "
+                    >
+                      <span data-ui="badge" data-badge-variant="muted">Abrasives</span>
+                      <label
+                        data-ui="toggle"
+                        data-toggle-size="icon-sm"
+                        data-toggle-variant="ghost"
+                      >
+                        <input type="checkbox" aria-label="Save cut-off wheels" />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.6 1-1.1a5.5 5.5 0 0 0 0-7.7z"
+                          />
+                        </svg>
+                      </label>
+                    </div>
+                    <h3 data-ui="text-lg">Cut-off wheels, 4-1/2", 25 pack</h3>
+                    <p
+                      data-ui="text-sm"
+                      style="
+                        --text: var(--color-muted-foreground);
+                        --line-clamp: 2;
+                      "
+                    >
+                      Thin 0.045" wheels for steel and stainless.
+                    </p>
+                    <div
+                      style="
+                        --display: flex;
+                        --items: center;
+                        --justify: space-between;
+                        --pt: var(--space-xs);
+                        --border-t: 1;
+                      "
+                    >
+                      <span style="--font-family: var(--font-family-mono)">$31.75</span>
+                      <button
+                        data-ui="button"
+                        data-button-size="sm"
+                        type="button"
+                        commandfor="hs-toaster"
+                        command="--toast-success"
+                        data-title="Added to order pad"
+                        data-description="Cut-off wheels, 25 pack"
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </div>
+                </article>
+                <article data-ui="card group" style="--auto-rows: min-content">
+                  <figure
+                    style="
+                      --display: grid;
+                      --aspect: 3 / 2;
+                      --rounded: var(--radius-md) var(--radius-md) 0 0;
+                      --overflow: clip;
+                    "
+                  >
+                    <img
+                      src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&h=400&fit=crop"
+                      width="600"
+                      height="400"
+                      loading="lazy"
+                      alt="Electrician in a hard hat and gloves working at a panel"
+                      style="
+                        --size: 100%;
+                        --object-fit: cover;
+                        --scale: 1;
+                        --group-scale--hover: 1.03;
+                        --transition: var(--default-transition);
+                      "
+                    />
+                  </figure>
+                  <div
+                    style="
+                      --display: grid;
+                      --gap: var(--space-xs);
+                      --px: var(--space-sm);
+                      --pb: var(--space-sm);
+                    "
+                  >
+                    <div
+                      style="
+                        --display: flex;
+                        --items: center;
+                        --justify: space-between;
+                      "
+                    >
+                      <span data-ui="badge" data-badge-variant="muted">Safety and PPE</span>
+                      <label
+                        data-ui="toggle"
+                        data-toggle-size="icon-sm"
+                        data-toggle-variant="ghost"
+                      >
+                        <input type="checkbox" aria-label="Save class 0 glove kit" />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.6 1-1.1a5.5 5.5 0 0 0 0-7.7z"
+                          />
+                        </svg>
+                      </label>
+                    </div>
+                    <h3 data-ui="text-lg">Class 0 insulating glove kit</h3>
+                    <p
+                      data-ui="text-sm"
+                      style="
+                        --text: var(--color-muted-foreground);
+                        --line-clamp: 2;
+                      "
+                    >
+                      Rubber gloves, leather protectors, and a storage bag. Tested and dated.
+                    </p>
+                    <div
+                      style="
+                        --display: flex;
+                        --items: center;
+                        --justify: space-between;
+                        --pt: var(--space-xs);
+                        --border-t: 1;
+                      "
+                    >
+                      <span style="--font-family: var(--font-family-mono)">$96.40</span>
+                      <button
+                        data-ui="button"
+                        data-button-size="sm"
+                        type="button"
+                        commandfor="hs-toaster"
+                        command="--toast-success"
+                        data-title="Added to order pad"
+                        data-description="Class 0 insulating glove kit"
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <div
+              data-tabs-slot="panel"
+              role="tabpanel"
+              style="
+                --w: 100%;
+                --pt: var(--space-md);
+              "
+            >
+              <ui-carousel>
+                <div
+                  style="
+                    --display: flex;
+                    --items: end;
+                    --justify: space-between;
+                    --gap: var(--space-md);
+                    --pb: var(--space-sm);
+                  "
+                >
+                  <p style="--text: var(--color-muted-foreground)">
+                    Tools our counter staff reach for most.
+                  </p>
+                  <div
+                    style="
+                      --display: flex;
+                      --gap: var(--space-xs);
+                    "
+                  >
+                    <button
+                      type="button"
+                      data-ui="button"
+                      data-button-size="icon"
+                      data-button-variant="muted"
+                      data-carousel-slot="prev"
+                      aria-label="Previous tools"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 256 256"
+                        aria-hidden="true"
+                        style="--size: var(--space-sm)"
+                      >
+                        <rect width="256" height="256" fill="none" />
+                        <polyline
+                          points="160 208 80 128 160 48"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="14"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      data-ui="button"
+                      data-button-size="icon"
+                      data-button-variant="muted"
+                      data-carousel-slot="next"
+                      aria-label="Next tools"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 256 256"
+                        aria-hidden="true"
+                        style="--size: var(--space-sm)"
+                      >
+                        <rect width="256" height="256" fill="none" />
+                        <polyline
+                          points="96 48 176 128 96 208"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="14"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <div data-carousel-slot="viewport">
+                  <div data-carousel-slot="container" style="--ml: calc(var(--space-md) * -1)">
+                    <div
+                      data-carousel-slot="slide"
+                      style="
+                        --basis: 100%;
+                        --basis--xs: 50%;
+                        --basis--md: 33.333%;
+                      "
+                    >
+                      <div style="--pl: var(--space-md)">
+                        <article
+                          data-ui="card"
+                          data-card-variant="muted"
+                          style="--p: var(--space-sm)"
+                        >
+                          <img
+                            src="https://images.unsplash.com/photo-1426927308491-6380b6a9936f?w=600&h=400&fit=crop"
+                            width="600"
+                            height="400"
+                            loading="lazy"
+                            alt="Hand tools hung on a pegboard wall"
+                            style="
+                              --w: 100%;
+                              --h: auto;
+                              --aspect: 3 / 2;
+                              --object-fit: cover;
+                              --rounded: var(--radius-md);
+                            "
+                          />
+                          <h3 data-ui="text-lg">Pegboard starter wall</h3>
+                          <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+                            48 hooks and two panels for a shop or service truck.
+                          </p>
+                        </article>
+                      </div>
+                    </div>
+                    <div
+                      data-carousel-slot="slide"
+                      style="
+                        --basis: 100%;
+                        --basis--xs: 50%;
+                        --basis--md: 33.333%;
+                      "
+                    >
+                      <div style="--pl: var(--space-md)">
+                        <article
+                          data-ui="card"
+                          data-card-variant="muted"
+                          style="--p: var(--space-sm)"
+                        >
+                          <img
+                            src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=600&h=400&fit=crop"
+                            width="600"
+                            height="400"
+                            loading="lazy"
+                            alt="Technical drawings next to a toolbox"
+                            style="
+                              --w: 100%;
+                              --h: auto;
+                              --aspect: 3 / 2;
+                              --object-fit: cover;
+                              --rounded: var(--radius-md);
+                            "
+                          />
+                          <h3 data-ui="text-lg">Layout and measuring kit</h3>
+                          <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+                            Squares, a 25-foot tape, chalk line, and a torpedo level.
+                          </p>
+                        </article>
+                      </div>
+                    </div>
+                    <div
+                      data-carousel-slot="slide"
+                      style="
+                        --basis: 100%;
+                        --basis--xs: 50%;
+                        --basis--md: 33.333%;
+                      "
+                    >
+                      <div style="--pl: var(--space-md)">
+                        <article
+                          data-ui="card"
+                          data-card-variant="muted"
+                          style="--p: var(--space-sm)"
+                        >
+                          <img
+                            src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=600&h=400&fit=crop"
+                            width="600"
+                            height="400"
+                            loading="lazy"
+                            alt="Hands repairing a circuit board"
+                            style="
+                              --w: 100%;
+                              --h: auto;
+                              --aspect: 3 / 2;
+                              --object-fit: cover;
+                              --rounded: var(--radius-md);
+                            "
+                          />
+                          <h3 data-ui="text-lg">Precision driver set</h3>
+                          <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+                            32 bits in a magnetic case, for controls and electronics.
+                          </p>
+                        </article>
+                      </div>
+                    </div>
+                    <div
+                      data-carousel-slot="slide"
+                      style="
+                        --basis: 100%;
+                        --basis--xs: 50%;
+                        --basis--md: 33.333%;
+                      "
+                    >
+                      <div style="--pl: var(--space-md)">
+                        <article
+                          data-ui="card"
+                          data-card-variant="muted"
+                          style="--p: var(--space-sm)"
+                        >
+                          <img
+                            src="https://images.unsplash.com/photo-1513828583688-c52646db42da?w=600&h=400&fit=crop"
+                            width="600"
+                            height="400"
+                            loading="lazy"
+                            alt="Industrial pump and stainless piping"
+                            style="
+                              --w: 100%;
+                              --h: auto;
+                              --aspect: 3 / 2;
+                              --object-fit: cover;
+                              --rounded: var(--radius-md);
+                            "
+                          />
+                          <h3 data-ui="text-lg">Pipe wrench pair</h3>
+                          <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+                            14- and 18-inch aluminum wrenches for process piping.
+                          </p>
+                        </article>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ui-carousel>
+            </div>
+
+            <div
+              data-tabs-slot="panel"
+              role="tabpanel"
+              style="
+                --w: 100%;
+                --pt: var(--space-md);
+              "
+            >
+              <ul
+                style="
+                  --display: grid;
+                  --grid-cols: 1;
+                  --grid-cols--md: 2;
+                  --gap: var(--space-sm);
+                "
+              >
+                <li
+                  data-ui="card"
+                  data-card-variant="muted"
+                  style="
+                    --p: var(--space-sm);
+                    --display: flex;
+                    --items: center;
+                    --gap: var(--space-sm);
+                  "
+                >
+                  <span data-ui="badge" data-badge-variant="primary">40% off</span>
+                  <div style="--flex: 1">
+                    <p style="--font-weight: 600">
+                      Carriage bolts, 1/2-13 × 6", hot-dip galvanized
+                    </p>
+                    <p
+                      data-ui="text-sm"
+                      style="
+                        --text: var(--color-muted-foreground);
+                        --font-family: var(--font-family-mono);
+                      "
+                    >
+                      CB-0500-600G · 1,200 left
+                    </p>
+                  </div>
+                  <span style="--font-family: var(--font-family-mono)">$38.10</span>
+                </li>
+                <li
+                  data-ui="card"
+                  data-card-variant="muted"
+                  style="
+                    --p: var(--space-sm);
+                    --display: flex;
+                    --items: center;
+                    --gap: var(--space-sm);
+                  "
+                >
+                  <span data-ui="badge" data-badge-variant="primary">25% off</span>
+                  <div style="--flex: 1">
+                    <p style="--font-weight: 600">Strut channel, 1-5/8" × 10', slotted</p>
+                    <p
+                      data-ui="text-sm"
+                      style="
+                        --text: var(--color-muted-foreground);
+                        --font-family: var(--font-family-mono);
+                      "
+                    >
+                      SC-1625-10S · 86 left
+                    </p>
+                  </div>
+                  <span style="--font-family: var(--font-family-mono)">$24.60</span>
+                </li>
+              </ul>
+            </div>
+          </ui-tabs>
+        </ui-layout>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- Spotlight: breadcrumbs, lightbox, purchase form, accordion specs -->
+      <!-- ================================================================ -->
+      <section
+        id="spotlight"
+        style="
+          --py: var(--space-lg);
+          --border-t: 1;
+        "
+      >
+        <ui-layout>
+          <nav aria-label="Breadcrumb" style="--mb: var(--space-sm)">
+            <menu
+              style="
+                --display: flex;
+                --flex-wrap: wrap;
+                --items: center;
+                --gap: var(--space-xs);
+              "
+            >
+              <li><a data-ui="button" data-button-variant="link" href="#featured">Catalog</a></li>
+              <li>
+                <span
+                  style="
+                    --text: var(--color-muted-foreground);
+                    --opacity: 0.5;
+                  "
+                  aria-hidden="true"
+                  >/</span
+                >
+              </li>
+              <li>
+                <a data-ui="button" data-button-variant="link" href="#featured">Power tools</a>
+              </li>
+              <li>
+                <span
+                  style="
+                    --text: var(--color-muted-foreground);
+                    --opacity: 0.5;
+                  "
+                  aria-hidden="true"
+                  >/</span
+                >
+              </li>
+              <li>
+                <span
+                  data-ui="button"
+                  data-button-variant="link"
+                  aria-current="page"
+                  aria-disabled="true"
+                  >Cordless drill driver, 18 V</span
+                >
+              </li>
+            </menu>
+          </nav>
+
+          <div
+            style="
+              --display: grid;
+              --grid-template-cols: 1fr;
+              --grid-template-cols--md: 3fr 2fr;
+              --gap: var(--space-lg);
+            "
+          >
+            <ui-lightbox>
+              <div data-lightbox-slot="gallery">
+                <ui-carousel data-lightbox-slot="stage" data-carousel-loop="true">
+                  <div data-carousel-slot="viewport">
+                    <div data-carousel-slot="container">
+                      <button
+                        data-lightbox-slot="slide"
+                        data-carousel-slot="slide"
+                        type="button"
+                        command="show-modal"
+                        commandfor="hs-lightbox"
+                      >
+                        <figure data-lightbox-slot="content">
+                          <img
+                            src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=800&h=600&fit=crop"
+                            alt="Cordless drill driver, front view"
+                            width="800"
+                            height="600"
+                            loading="lazy"
+                          />
+                        </figure>
+                      </button>
+                      <button
+                        data-lightbox-slot="slide"
+                        data-carousel-slot="slide"
+                        type="button"
+                        command="show-modal"
+                        commandfor="hs-lightbox"
+                      >
+                        <figure data-lightbox-slot="content">
+                          <img
+                            src="https://images.unsplash.com/photo-1426927308491-6380b6a9936f?w=800&h=600&fit=crop"
+                            alt="Drill stored with hand tools on a pegboard"
+                            width="800"
+                            height="600"
+                            loading="lazy"
+                          />
+                        </figure>
+                      </button>
+                      <button
+                        data-lightbox-slot="slide"
+                        data-carousel-slot="slide"
+                        type="button"
+                        command="show-modal"
+                        commandfor="hs-lightbox"
+                      >
+                        <figure data-lightbox-slot="content">
+                          <img
+                            src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&h=600&fit=crop"
+                            alt="Boxed stock staged in the Akron warehouse"
+                            width="800"
+                            height="600"
+                            loading="lazy"
+                          />
+                        </figure>
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    data-lightbox-slot="thumbs"
+                    data-carousel-slot="thumbs"
+                    data-carousel-loop="true"
+                  >
+                    <div data-carousel-slot="viewport">
+                      <div data-carousel-slot="container">
+                        <button
+                          type="button"
+                          data-lightbox-slot="thumb"
+                          data-carousel-slot="slide"
+                          aria-label="Show image 1"
+                        >
+                          <figure data-lightbox-slot="thumb-content">
+                            <img
+                              src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=228&h=171&fit=crop"
+                              alt=""
+                              width="228"
+                              height="171"
+                              loading="lazy"
+                            />
+                          </figure>
+                        </button>
+                        <button
+                          type="button"
+                          data-lightbox-slot="thumb"
+                          data-carousel-slot="slide"
+                          aria-label="Show image 2"
+                        >
+                          <figure data-lightbox-slot="thumb-content">
+                            <img
+                              src="https://images.unsplash.com/photo-1426927308491-6380b6a9936f?w=228&h=171&fit=crop"
+                              alt=""
+                              width="228"
+                              height="171"
+                              loading="lazy"
+                            />
+                          </figure>
+                        </button>
+                        <button
+                          type="button"
+                          data-lightbox-slot="thumb"
+                          data-carousel-slot="slide"
+                          aria-label="Show image 3"
+                        >
+                          <figure data-lightbox-slot="thumb-content">
+                            <img
+                              src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=228&h=171&fit=crop"
+                              alt=""
+                              width="228"
+                              height="171"
+                              loading="lazy"
+                            />
+                          </figure>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </ui-carousel>
+              </div>
+
+              <dialog
+                id="hs-lightbox"
+                data-ui="dialog"
+                data-ui-theme="dark"
+                data-lightbox-slot="dialog"
+                data-dialog-size="screen"
+                closedby="any"
+              >
+                <div data-dialog-slot="content">
+                  <ui-carousel data-carousel-loop="true">
+                    <div data-carousel-slot="viewport">
+                      <div data-carousel-slot="container">
+                        <div data-lightbox-slot="slide" data-carousel-slot="slide">
+                          <figure data-lightbox-slot="content">
+                            <img
+                              src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=1600&h=1200&fit=crop"
+                              alt="Cordless drill driver, front view"
+                              width="1600"
+                              height="1200"
+                              loading="lazy"
+                            />
+                          </figure>
+                        </div>
+                        <div data-lightbox-slot="slide" data-carousel-slot="slide">
+                          <figure data-lightbox-slot="content">
+                            <img
+                              src="https://images.unsplash.com/photo-1426927308491-6380b6a9936f?w=1600&h=1200&fit=crop"
+                              alt="Drill stored with hand tools on a pegboard"
+                              width="1600"
+                              height="1200"
+                              loading="lazy"
+                            />
+                          </figure>
+                        </div>
+                        <div data-lightbox-slot="slide" data-carousel-slot="slide">
+                          <figure data-lightbox-slot="content">
+                            <img
+                              src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1600&h=1200&fit=crop"
+                              alt="Boxed stock staged in the Akron warehouse"
+                              width="1600"
+                              height="1200"
+                              loading="lazy"
+                            />
+                          </figure>
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      data-ui="button"
+                      data-lightbox-slot="prev"
+                      data-carousel-slot="prev"
+                      data-button-size="icon"
+                      data-button-variant="ghost"
+                      type="button"
+                      aria-label="Previous image"
+                      style="
+                        --size: auto;
+                        --ui-button-text: var(--color-muted-foreground);
+                        --ui-button-text--hover: var(--color-foreground);
+                      "
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 256 256"
+                        aria-hidden="true"
+                        style="--size: var(--space-md)"
+                      >
+                        <rect width="256" height="256" fill="none" />
+                        <polyline
+                          points="160 208 80 128 160 48"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="14"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      data-ui="button"
+                      data-lightbox-slot="next"
+                      data-carousel-slot="next"
+                      data-button-size="icon"
+                      data-button-variant="ghost"
+                      type="button"
+                      aria-label="Next image"
+                      style="
+                        --size: auto;
+                        --ui-button-text: var(--color-muted-foreground);
+                        --ui-button-text--hover: var(--color-foreground);
+                      "
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 256 256"
+                        aria-hidden="true"
+                        style="--size: var(--space-md)"
+                      >
+                        <rect width="256" height="256" fill="none" />
+                        <polyline
+                          points="96 48 176 128 96 208"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="14"
+                        />
+                      </svg>
+                    </button>
+                  </ui-carousel>
+                </div>
+                <button
+                  data-ui="button"
+                  data-lightbox-slot="close"
+                  data-button-size="icon"
+                  data-button-variant="ghost"
+                  type="button"
+                  commandfor="hs-lightbox"
+                  command="close"
+                  aria-label="Close lightbox"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-hidden="true">
+                    <rect width="256" height="256" fill="none" />
+                    <line
+                      x1="200"
+                      y1="56"
+                      x2="56"
+                      y2="200"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    />
+                    <line
+                      x1="200"
+                      y1="200"
+                      x2="56"
+                      y2="56"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    />
+                  </svg>
+                </button>
+              </dialog>
+            </ui-lightbox>
+
+            <div
+              style="
+                --display: flex;
+                --flex-direction: column;
+                --gap: var(--space-md);
+              "
+            >
+              <hgroup
+                style="
+                  --display: grid;
+                  --gap: var(--space-2xs);
+                "
+              >
+                <p
+                  data-ui="text-sm"
+                  style="
+                    --font-family: var(--font-family-mono);
+                    --text: var(--color-muted-foreground);
+                  "
+                >
+                  PT-DD18-K2
+                </p>
+                <h2 data-ui="text-h5">Cordless drill driver, 18 V</h2>
+                <div
+                  style="
+                    --display: flex;
+                    --flex-wrap: wrap;
+                    --gap: var(--space-2xs);
+                    --mt: var(--space-2xs);
+                  "
+                >
+                  <span data-ui="badge" data-badge-variant="primary">In stock at Akron</span>
+                  <span data-ui="badge" data-badge-variant="muted">Ships with 2 batteries</span>
+                </div>
+              </hgroup>
+              <p data-ui="text-xl" style="--font-family: var(--font-family-mono)">
+                $179.00
+                <span data-ui="text-sm" style="--text: var(--color-muted-foreground)">each</span>
+              </p>
+
+              <form
+                id="hs-spotlight-form"
+                style="
+                  --display: grid;
+                  --gap: var(--space-sm);
+                "
+                action="#pad"
+              >
+                <fieldset data-ui="radio-group">
+                  <legend>Kit</legend>
+                  <div
+                    style="
+                      --display: flex;
+                      --flex-wrap: wrap;
+                      --gap: var(--space-sm);
+                    "
+                  >
+                    <label
+                      data-ui="field"
+                      data-field-orientation="horizontal"
+                      style="--w: fit-content"
+                    >
+                      <input data-ui="radio" type="radio" name="kit" value="bare" />
+                      <span data-field-slot="label">Tool only</span>
+                    </label>
+                    <label
+                      data-ui="field"
+                      data-field-orientation="horizontal"
+                      style="--w: fit-content"
+                    >
+                      <input data-ui="radio" type="radio" name="kit" value="k2" checked />
+                      <span data-field-slot="label">With 2 batteries</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <div
+                  style="
+                    --display: grid;
+                    --grid-cols: 2;
+                    --gap: var(--space-sm);
+                  "
+                >
+                  <div data-ui="field">
+                    <label data-field-slot="label" for="hs-qty">Quantity</label>
+                    <div data-ui="input-group">
+                      <span data-input-group-slot="addon" data-input-group-align="inline-start">
+                        <button
+                          data-ui="button"
+                          data-button-variant="ghost"
+                          data-button-size="icon-sm"
+                          type="button"
+                          aria-label="One fewer"
+                        >
+                          −
+                        </button>
+                      </span>
+                      <input
+                        data-ui="input"
+                        id="hs-qty"
+                        name="qty"
+                        type="number"
+                        min="1"
+                        value="1"
+                        inputmode="numeric"
+                        style="--text-align: center"
+                      />
+                      <span data-input-group-slot="addon" data-input-group-align="inline-end">
+                        <button
+                          data-ui="button"
+                          data-button-variant="ghost"
+                          data-button-size="icon-sm"
+                          type="button"
+                          aria-label="One more"
+                        >
+                          +
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                  <div data-ui="field">
+                    <label data-field-slot="label" for="hs-pickup">Pick up at</label>
+                    <select data-ui="select" id="hs-pickup" name="pickup">
+                      <button>
+                        <selectedcontent></selectedcontent>
+                      </button>
+                      <option value="akron" selected>Akron</option>
+                      <option value="canton">Canton (next day)</option>
+                      <option value="toledo">Toledo (next day)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <label data-ui="field" data-field-orientation="horizontal">
+                  <input type="checkbox" role="switch" name="text-me" checked />
+                  <span data-field-slot="label">Text me when it’s ready at the counter</span>
+                </label>
+
+                <div
+                  style="
+                    --display: flex;
+                    --flex-wrap: wrap;
+                    --gap: var(--space-xs);
+                  "
+                >
+                  <button
+                    data-ui="button"
+                    data-button-variant="primary"
+                    type="button"
+                    commandfor="hs-toaster"
+                    command="--toast-success"
+                    data-title="Added to order pad"
+                    data-description="1 × cordless drill driver, 18 V"
+                    style="--flex: 1"
+                  >
+                    Add to order pad
+                  </button>
+                  <ui-tooltip>
+                    <button
+                      data-ui="button"
+                      data-button-variant="outline"
+                      data-button-size="icon"
+                      type="button"
+                      interestfor="hs-compare-tip"
+                      aria-label="Compare"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M16 3h5v5M8 21H3v-5M21 3l-7 7M3 21l7-7" />
+                      </svg>
+                    </button>
+                    <div data-tooltip-slot="content" id="hs-compare-tip" popover="hint">
+                      Compare with similar drills
+                      <span data-tooltip-slot="arrow" aria-hidden="true"></span>
+                    </div>
+                  </ui-tooltip>
+                </div>
+              </form>
+
+              <ui-accordion>
+                <details
+                  style="
+                    --border-b: 1;
+                    --py: var(--space-sm);
+                  "
+                  open
+                >
+                  <summary
+                    style="
+                      --font-weight: var(--font-weight-strong);
+                      --text: currentColor;
+                      --text--hover: var(--color-muted-foreground);
+                    "
+                  >
+                    Specifications
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 256 256"
+                      aria-hidden="true"
+                    >
+                      <rect width="256" height="256" fill="none" />
+                      <polyline
+                        points="208 96 128 176 48 96"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="16"
+                      />
+                    </svg>
+                  </summary>
+                  <div style="--pb: var(--space-sm)">
+                    <table data-ui="table" data-table-size="sm" data-table-variant="alternating">
+                      <tbody>
+                        <tr>
+                          <th scope="row">Chuck</th>
+                          <td>1/2" metal, ratcheting</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Max torque</th>
+                          <td style="--font-family: var(--font-family-mono)">530 in-lb</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Speed</th>
+                          <td style="--font-family: var(--font-family-mono)">
+                            0–450 / 0–1,700 rpm
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Weight</th>
+                          <td style="--font-family: var(--font-family-mono)">
+                            3.6 lb with battery
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </details>
+                <details
+                  style="
+                    --border-b: 1;
+                    --py: var(--space-sm);
+                  "
+                >
+                  <summary
+                    style="
+                      --font-weight: var(--font-weight-strong);
+                      --text: currentColor;
+                      --text--hover: var(--color-muted-foreground);
+                    "
+                  >
+                    Warranty and returns
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 256 256"
+                      aria-hidden="true"
+                    >
+                      <rect width="256" height="256" fill="none" />
+                      <polyline
+                        points="208 96 128 176 48 96"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="16"
+                      />
+                    </svg>
+                  </summary>
+                  <div style="--pb: var(--space-sm)">
+                    <p>
+                      Three-year limited warranty on the tool, two years on batteries. Bring it to
+                      any branch counter for a swap.
+                    </p>
+                  </div>
+                </details>
+              </ui-accordion>
+            </div>
+          </div>
+        </ui-layout>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- Account: left-label band; avatar, meter, progress, orders table  -->
+      <!-- ================================================================ -->
+      <section
+        id="account"
+        style="
+          --py: var(--space-lg);
+          --bg: var(--color-muted);
+          --border-t: 1;
+          --border-b: 1;
+        "
+      >
+        <ui-layout>
+          <div
+            style="
+              --display: grid;
+              --grid-template-cols: 1fr;
+              --grid-template-cols--lg: 1fr 3fr;
+              --gap: var(--space-md);
+            "
+          >
+            <hgroup
+              data-reveal="slide-right"
+              style="
+                --display: grid;
+                --gap: var(--space-2xs);
+                --self: start;
+              "
+            >
+              <p data-ui="text-eyebrow">Your account</p>
+              <h2 data-ui="text-h5">Northgate Mechanical</h2>
+              <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+                Account 40-1187 · Net 30 terms
+              </p>
+            </hgroup>
+
+            <div
+              data-reveal-each="fade"
+              style="
+                --display: grid;
+                --grid-cols: 1;
+                --grid-cols--sm: 2;
+                --grid-cols--xl: 3;
+                --gap: var(--space-sm);
+              "
+            >
+              <article
+                data-ui="card"
+                style="
+                  --auto-rows: min-content;
+                  --p: var(--space-sm);
+                  --gap: var(--space-sm);
+                "
+              >
+                <h3 data-ui="text-sm" style="--font-weight: 600">Your account rep</h3>
+                <div
+                  style="
+                    --display: flex;
+                    --items: center;
+                    --gap: var(--space-xs);
+                  "
+                >
+                  <figure
+                    data-ui="grid-pile"
+                    role="img"
+                    style="
+                      --display: grid;
+                      --size: var(--space-lg);
+                      --bg: var(--color-background);
+                      --border: 1;
+                      --rounded: var(--radius-full);
+                      --overflow: clip;
+                    "
+                  >
+                    <img
+                      width="64"
+                      height="64"
+                      loading="lazy"
+                      src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=facearea&facepad=2&w=64&h=64&q=90"
+                      alt=""
+                      aria-hidden="true"
+                      style="
+                        --order: 9999;
+                        --bg: transparent;
+                        --size: 100%;
+                        --object-fit: cover;
+                      "
+                    />
+                    <figcaption
+                      style="
+                        --order: -9999;
+                        --bg: var(--color-muted);
+                        --size: 100%;
+                        --text: var(--color-muted-foreground);
+                        --display: flex;
+                        --items: center;
+                        --justify: center;
+                        --font-weight: var(--font-weight-strong);
+                      "
+                    >
+                      <span data-ui="sr-only">Marcus Webb</span>
+                      <span aria-hidden="true">MW</span>
+                    </figcaption>
+                  </figure>
+                  <div
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                    "
+                  >
+                    <span style="--font-weight: 600">Marcus Webb</span>
+                    <span data-ui="text-sm" style="--text: var(--color-muted-foreground)"
+                      >Inside sales, Akron</span
+                    >
+                  </div>
+                </div>
+                <div
+                  style="
+                    --display: flex;
+                    --gap: var(--space-xs);
+                  "
+                >
+                  <a
+                    data-ui="button"
+                    data-button-variant="outline"
+                    data-button-size="sm"
+                    href="mailto:mwebb@example.com"
+                    style="--flex: 1"
+                    >Email Marcus</a
+                  >
+                  <ui-tooltip>
+                    <a
+                      data-ui="button"
+                      data-button-variant="outline"
+                      data-button-size="sm"
+                      href="tel:+13305550142"
+                      interestfor="hs-rep-phone"
+                      style="--flex: 1"
+                      >Call</a
+                    >
+                    <div data-tooltip-slot="content" id="hs-rep-phone" popover="hint">
+                      (330) 555-0142, ext. 214
+                      <span data-tooltip-slot="arrow" aria-hidden="true"></span>
+                    </div>
+                  </ui-tooltip>
+                </div>
+              </article>
+
+              <article
+                data-ui="card"
+                style="
+                  --auto-rows: min-content;
+                  --p: var(--space-sm);
+                  --gap: var(--space-sm);
+                "
+              >
+                <h3 data-ui="text-sm" style="--font-weight: 600">Credit line</h3>
+                <div data-ui="field">
+                  <label
+                    data-field-slot="label"
+                    for="hs-credit"
+                    style="
+                      --display: flex;
+                      --items: center;
+                      --justify: space-between;
+                    "
+                  >
+                    <span>Used this cycle</span>
+                    <span
+                      data-ui="text-xs"
+                      style="
+                        --text: var(--color-muted-foreground);
+                        --font-family: var(--font-family-mono);
+                      "
+                      >$18,400 / $25,000</span
+                    >
+                  </label>
+                  <meter
+                    data-ui="meter"
+                    id="hs-credit"
+                    min="0"
+                    max="25000"
+                    low="15000"
+                    high="22000"
+                    optimum="5000"
+                    value="18400"
+                  >
+                    $18,400 of $25,000
+                  </meter>
+                </div>
+                <div data-ui="field">
+                  <label
+                    data-field-slot="label"
+                    for="hs-delivery"
+                    style="
+                      --display: flex;
+                      --items: center;
+                      --justify: space-between;
+                    "
+                  >
+                    <span>Toward free delivery</span>
+                    <span
+                      data-ui="text-xs"
+                      style="
+                        --text: var(--color-muted-foreground);
+                        --font-family: var(--font-family-mono);
+                      "
+                      >$212 / $250</span
+                    >
+                  </label>
+                  <progress data-ui="progress" id="hs-delivery" max="250" value="212">
+                    $212 of $250
+                  </progress>
+                </div>
+              </article>
+
+              <article
+                data-ui="card"
+                style="
+                  --auto-rows: min-content;
+                  --p: var(--space-sm);
+                  --gap: var(--space-sm);
+                  --col--sm: span 2;
+                  --col--xl: auto;
+                "
+              >
+                <div
+                  style="
+                    --display: flex;
+                    --items: center;
+                    --justify: space-between;
+                  "
+                >
+                  <h3 data-ui="text-sm" style="--font-weight: 600">Open orders</h3>
+                  <progress
+                    data-ui="progress"
+                    aria-label="Refreshing open orders"
+                    style="--w: 16"
+                  ></progress>
+                </div>
+                <div data-ui="scroll-fade" data-scroll-fade-axis="x" style="--overflow-x: auto">
+                  <table data-ui="table" data-table-size="sm" data-table-variant="alternating">
+                    <thead>
+                      <tr>
+                        <th>Order</th>
+                        <th>Status</th>
+                        <th style="--text-align: end">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td
+                          style="
+                            --font-family: var(--font-family-mono);
+                            --whitespace: nowrap;
+                          "
+                        >
+                          SO-88412
+                        </td>
+                        <td><span data-ui="badge" data-badge-variant="primary">Ready</span></td>
+                        <td
+                          style="
+                            --text-align: end;
+                            --font-family: var(--font-family-mono);
+                          "
+                        >
+                          $1,240.18
+                        </td>
+                      </tr>
+                      <tr>
+                        <td
+                          style="
+                            --font-family: var(--font-family-mono);
+                            --whitespace: nowrap;
+                          "
+                        >
+                          SO-88397
+                        </td>
+                        <td><span data-ui="badge" data-badge-variant="muted">Picking</span></td>
+                        <td
+                          style="
+                            --text-align: end;
+                            --font-family: var(--font-family-mono);
+                          "
+                        >
+                          $386.40
+                        </td>
+                      </tr>
+                      <tr>
+                        <td
+                          style="
+                            --font-family: var(--font-family-mono);
+                            --whitespace: nowrap;
+                          "
+                        >
+                          SO-88350
+                        </td>
+                        <td><span data-ui="badge" data-badge-variant="ghost">On truck</span></td>
+                        <td
+                          style="
+                            --text-align: end;
+                            --font-family: var(--font-family-mono);
+                          "
+                        >
+                          $2,918.00
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </article>
+            </div>
+          </div>
+        </ui-layout>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- Order pad: menubar, alert dialog, combobox, textarea, slider     -->
+      <!-- ================================================================ -->
+      <section id="pad" style="--py: var(--space-lg)">
+        <ui-layout data-layout-size="md">
+          <hgroup
+            style="
+              --display: grid;
+              --gap: var(--space-2xs);
+              --mb: var(--space-md);
+            "
+          >
+            <p data-ui="text-eyebrow">Order pad</p>
+            <h2 data-ui="text-h5">Paste a parts list, we’ll match it</h2>
+          </hgroup>
+
+          <div
+            data-ui="card"
+            style="
+              --p: 0;
+              --gap: 0;
+              --overflow: clip;
+            "
+          >
+            <div
+              aria-label="Order pad menu"
+              style="
+                --display: flex;
+                --w: 100%;
+                --items: center;
+                --gap: 1px;
+                --p: var(--space-xs);
+                --border-b: 1;
+              "
+            >
+              <ui-menu>
+                <button
+                  data-ui="button"
+                  data-button-variant="ghost"
+                  data-button-size="sm"
+                  type="button"
+                  popovertarget="hs-pad-file"
+                  interestfor="hs-pad-file"
+                >
+                  File
+                </button>
+                <div
+                  id="hs-pad-file"
+                  data-menu-slot="popover"
+                  data-popover-side="bottom"
+                  data-popover-align="start"
+                  popover="auto"
+                >
+                  <menu>
+                    <li>
+                      <button
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        type="button"
+                        style="
+                          --w: 100%;
+                          --justify: space-between;
+                        "
+                      >
+                        New pad <ui-kbd-group><kbd>⌘</kbd><kbd>N</kbd></ui-kbd-group>
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        type="button"
+                        style="
+                          --w: 100%;
+                          --justify: space-between;
+                        "
+                      >
+                        Import CSV…
+                      </button>
+                    </li>
+                    <hr data-ui="separator" style="--my: var(--space-xs)" />
+                    <li>
+                      <button
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        type="button"
+                        commandfor="hs-toaster"
+                        command="--toast"
+                        data-title="Pad saved as “Boiler room retrofit”"
+                        style="
+                          --w: 100%;
+                          --justify: space-between;
+                        "
+                      >
+                        Save pad <ui-kbd-group><kbd>⌘</kbd><kbd>S</kbd></ui-kbd-group>
+                      </button>
+                    </li>
+                  </menu>
+                </div>
+              </ui-menu>
+              <ui-menu>
+                <button
+                  data-ui="button"
+                  data-button-variant="ghost"
+                  data-button-size="sm"
+                  type="button"
+                  popovertarget="hs-pad-edit"
+                  interestfor="hs-pad-edit"
+                >
+                  Edit
+                </button>
+                <div
+                  id="hs-pad-edit"
+                  data-menu-slot="popover"
+                  data-popover-side="bottom"
+                  data-popover-align="start"
+                  popover="auto"
+                >
+                  <menu>
+                    <li>
+                      <button
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        type="button"
+                        style="
+                          --w: 100%;
+                          --justify: space-between;
+                        "
+                      >
+                        Undo <ui-kbd-group><kbd>⌘</kbd><kbd>Z</kbd></ui-kbd-group>
+                      </button>
+                    </li>
+                    <hr data-ui="separator" style="--my: var(--space-xs)" />
+                    <li>
+                      <button
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        type="button"
+                        command="show-modal"
+                        commandfor="hs-clear-pad"
+                        style="
+                          --w: 100%;
+                          --justify: start;
+                          --ui-button-text: var(--color-destructive);
+                          --ui-button-text--hover: var(--color-destructive);
+                        "
+                      >
+                        Clear pad…
+                      </button>
+                    </li>
+                  </menu>
+                </div>
+              </ui-menu>
+              <span
+                data-ui="text-xs"
+                style="
+                  --ml: auto;
+                  --text: var(--color-muted-foreground);
+                  --pr: var(--space-xs);
+                "
+                >Saved 2 minutes ago</span
+              >
+            </div>
+
+            <form
+              id="hs-pad-form"
+              style="
+                --display: grid;
+                --gap: var(--space-md);
+                --p: var(--space-md);
+              "
+              action="#pad"
+            >
+              <div
+                style="
+                  --display: grid;
+                  --grid-cols: 1;
+                  --grid-cols--sm: 2;
+                  --gap: var(--space-sm);
+                "
+              >
+                <div data-ui="field">
+                  <label data-field-slot="label" for="hs-job">Job or PO</label>
+                  <ui-combobox>
+                    <input type="hidden" name="job" data-combobox-slot="value" value="" />
+                    <div data-combobox-slot="control">
+                      <input
+                        id="hs-job"
+                        type="text"
+                        placeholder="Choose a job…"
+                        role="combobox"
+                        aria-expanded="false"
+                        aria-autocomplete="list"
+                        autocomplete="off"
+                      />
+                      <button
+                        type="button"
+                        data-combobox-slot="trigger"
+                        tabindex="-1"
+                        aria-label="Show jobs"
+                      ></button>
+                    </div>
+                    <div
+                      data-combobox-slot="panel"
+                      data-popover-side="bottom"
+                      data-popover-align="start"
+                      popover="manual"
+                    >
+                      <ul role="listbox" data-combobox-slot="list" aria-label="Jobs">
+                        <li
+                          role="option"
+                          data-combobox-slot="item"
+                          data-ui="button"
+                          data-button-variant="ghost"
+                          data-combobox-value="boiler"
+                          style="--justify: start"
+                        >
+                          Boiler room retrofit · PO 7731
+                        </li>
+                        <li
+                          role="option"
+                          data-combobox-slot="item"
+                          data-ui="button"
+                          data-button-variant="ghost"
+                          data-combobox-value="rtu"
+                          style="--justify: start"
+                        >
+                          Rooftop unit swap · PO 7745
+                        </li>
+                        <li
+                          role="option"
+                          data-combobox-slot="item"
+                          data-ui="button"
+                          data-button-variant="ghost"
+                          data-combobox-value="shop"
+                          style="--justify: start"
+                        >
+                          Shop stock
+                        </li>
+                      </ul>
+                      <p data-combobox-slot="empty" style="--text: var(--color-muted-foreground)">
+                        No jobs match.
+                      </p>
+                    </div>
+                  </ui-combobox>
+                </div>
+                <div data-ui="field">
+                  <label data-field-slot="label" for="hs-need-by">Need by</label>
+                  <input data-ui="input" id="hs-need-by" name="need-by" type="date" required />
+                  <div data-field-slot="description">
+                    <span data-field-slot="hint">Orders before 10:00 a.m. ship the same day.</span>
+                    <span data-field-slot="error">Choose a date.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div data-ui="field">
+                <label data-field-slot="label" for="hs-list">Parts list</label>
+                <textarea
+                  data-ui="textarea"
+                  id="hs-list"
+                  name="list"
+                  rows="5"
+                  placeholder="One part per line: part number, then quantity"
+                  style="--font-family: var(--font-family-mono)"
+                  aria-describedby="hs-list-hint"
+                >
+HX-0516-100Z 200
+NN-0375-ZY 200
+WA-0375-375 50</textarea
+                >
+                <div data-field-slot="description">
+                  <span data-field-slot="hint" id="hs-list-hint"
+                    >We match part numbers, our old catalog numbers, and most manufacturer
+                    numbers.</span
+                  >
+                </div>
+              </div>
+
+              <div
+                style="
+                  --display: grid;
+                  --grid-cols: 1;
+                  --grid-cols--sm: 2;
+                  --gap: var(--space-md);
+                "
+              >
+                <fieldset data-ui="radio-group">
+                  <legend>Delivery</legend>
+                  <div
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --gap: var(--space-xs);
+                    "
+                  >
+                    <label data-ui="field" data-field-orientation="horizontal">
+                      <input data-ui="radio" type="radio" name="delivery" value="counter" checked />
+                      <span data-field-slot="label">Counter pickup</span>
+                    </label>
+                    <label data-ui="field" data-field-orientation="horizontal">
+                      <input data-ui="radio" type="radio" name="delivery" value="truck" />
+                      <span data-field-slot="label">Our truck, next morning</span>
+                    </label>
+                    <label data-ui="field" data-field-orientation="horizontal">
+                      <input data-ui="radio" type="radio" name="delivery" value="freight" />
+                      <span data-field-slot="label">Freight, 2 to 4 days</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <fieldset data-ui="field-group">
+                  <legend>Reminders</legend>
+                  <div
+                    style="
+                      --display: flex;
+                      --flex-direction: column;
+                      --gap: var(--space-xs);
+                    "
+                  >
+                    <label data-ui="field" data-field-orientation="horizontal">
+                      <input type="checkbox" role="switch" name="remind" checked />
+                      <span data-field-slot="label">Remind me to reorder</span>
+                    </label>
+                    <div data-ui="field">
+                      <label
+                        data-field-slot="label"
+                        for="hs-threshold"
+                        style="
+                          --display: flex;
+                          --justify: space-between;
+                        "
+                      >
+                        <span>When shop stock falls below</span>
+                        <output
+                          for="hs-threshold"
+                          data-ui="text-xs"
+                          style="
+                            --font-family: var(--font-family-mono);
+                            --text: var(--color-muted-foreground);
+                          "
+                          >20%</output
+                        >
+                      </label>
+                      <input id="hs-threshold" type="range" min="0" max="50" step="5" value="20" />
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+
+              <div
+                style="
+                  --display: flex;
+                  --flex-wrap: wrap;
+                  --justify: end;
+                  --gap: var(--space-xs);
+                  --pt: var(--space-sm);
+                  --border-t: 1;
+                "
+              >
+                <button
+                  data-ui="button"
+                  data-button-variant="ghost"
+                  type="button"
+                  command="show-modal"
+                  commandfor="hs-clear-pad"
+                >
+                  Clear pad
+                </button>
+                <button data-ui="button" data-button-variant="primary" type="submit">
+                  Match parts
+                </button>
+              </div>
+            </form>
+          </div>
+        </ui-layout>
+      </section>
+
+      <dialog
+        id="hs-clear-pad"
+        data-ui="dialog alert-dialog"
+        role="alertdialog"
+        aria-labelledby="hs-clear-pad-title"
+        aria-describedby="hs-clear-pad-body"
+        closedby="none"
+      >
+        <div data-dialog-slot="content">
+          <header
+            data-dialog-slot="header"
+            style="
+              --flex-direction: row;
+              --items: center;
+              --gap: var(--space-xs);
+            "
+          >
+            <h2
+              id="hs-clear-pad-title"
+              data-ui="text-lg"
+              style="--font-weight: var(--font-weight-strong)"
+            >
+              Clear the order pad?
+            </h2>
+          </header>
+          <div data-dialog-slot="body" id="hs-clear-pad-body">
+            <p>This removes all 3 lines and the job selection. Saved pads are not affected.</p>
+          </div>
+        </div>
+        <footer data-dialog-slot="footer">
+          <button data-ui="button" type="button" commandfor="hs-clear-pad" command="close">
+            Keep lines
+          </button>
+          <button
+            data-ui="button"
+            data-button-variant="destructive"
+            type="button"
+            commandfor="hs-clear-pad"
+            command="close"
+            id="hs-clear-pad-confirm"
+          >
+            Clear pad
+          </button>
+        </footer>
+      </dialog>
+
+      <!-- ================================================================ -->
+      <!-- Fleet band: full-width photo with a stacked caption              -->
+      <!-- ================================================================ -->
+      <section>
+        <ui-layout>
+          <div
+            data-ui="grid-pile"
+            style="
+              --display: grid;
+              --col: layout-full;
+            "
+          >
+            <img
+              src="https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=1920&h=640&fit=crop"
+              width="1920"
+              height="640"
+              loading="lazy"
+              alt="Delivery trucks parked in rows at a depot, seen from above"
+              style="
+                --size: 100%;
+                --min-h: 80;
+                --object-fit: cover;
+              "
+            />
+            <ui-layout style="--self: center">
+              <div
+                data-ui="card"
+                data-ui-theme="dark"
+                style="
+                  --max-w: var(--article-xs);
+                  --p: var(--space-md);
+                  --gap: var(--space-xs);
+                "
+              >
+                <h2 data-ui="text-h6">14 truck routes, every weekday</h2>
+                <p style="--text: var(--color-muted-foreground)">
+                  Order by 3:00 p.m. and it’s on a Halvorsen truck the next morning, liftgate
+                  included.
+                </p>
+                <a data-ui="text-link" href="#branches">See delivery zones</a>
+              </div>
+            </ui-layout>
+          </div>
+        </ui-layout>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- FAQ + prose: left-label accordion, reading column                -->
+      <!-- ================================================================ -->
+      <section id="faq" style="--py: var(--space-xl)">
+        <ui-layout>
+          <div
+            style="
+              --display: grid;
+              --grid-template-cols: 1fr;
+              --grid-template-cols--md: 1fr 2fr;
+              --gap: var(--space-lg);
+            "
+          >
+            <hgroup
+              style="
+                --display: grid;
+                --gap: var(--space-2xs);
+                --self: start;
+              "
+            >
+              <p data-ui="text-eyebrow">Questions</p>
+              <h2 data-ui="text-h5">Before you open an account</h2>
+            </hgroup>
+            <ui-accordion>
+              <details
+                style="
+                  --border-b: 1;
+                  --py: var(--space-sm);
+                "
+              >
+                <summary
+                  style="
+                    --font-weight: var(--font-weight-strong);
+                    --text: currentColor;
+                    --text--hover: var(--color-muted-foreground);
+                  "
+                >
+                  How long does a credit application take?
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-hidden="true">
+                    <rect width="256" height="256" fill="none" />
+                    <polyline
+                      points="208 96 128 176 48 96"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    />
+                  </svg>
+                </summary>
+                <div style="--pb: var(--space-sm)">
+                  <p>
+                    Most are approved within one business day. Until then you can buy at the counter
+                    with a card.
+                  </p>
+                </div>
+              </details>
+              <details
+                style="
+                  --border-b: 1;
+                  --py: var(--space-sm);
+                "
+              >
+                <summary
+                  style="
+                    --font-weight: var(--font-weight-strong);
+                    --text: currentColor;
+                    --text--hover: var(--color-muted-foreground);
+                  "
+                >
+                  Can my crew order on my account?
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-hidden="true">
+                    <rect width="256" height="256" fill="none" />
+                    <polyline
+                      points="208 96 128 176 48 96"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    />
+                  </svg>
+                </summary>
+                <div style="--pb: var(--space-sm)">
+                  <p>
+                    Yes. Add each buyer with their own sign-in and a spending limit. Orders over the
+                    limit wait for your approval.
+                  </p>
+                </div>
+              </details>
+              <details
+                style="
+                  --border-b: 1;
+                  --py: var(--space-sm);
+                "
+              >
+                <summary
+                  style="
+                    --font-weight: var(--font-weight-strong);
+                    --text: currentColor;
+                    --text--hover: var(--color-muted-foreground);
+                  "
+                >
+                  Do you cut threaded rod to length?
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-hidden="true">
+                    <rect width="256" height="256" fill="none" />
+                    <polyline
+                      points="208 96 128 176 48 96"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    />
+                  </svg>
+                </summary>
+                <div style="--pb: var(--space-sm)">
+                  <p>
+                    At Akron and Canton, while you wait, in diameters up to 1". Toledo cuts orders
+                    overnight.
+                  </p>
+                </div>
+              </details>
+            </ui-accordion>
+          </div>
+
+          <article
+            data-ui="prose"
+            style="
+              --max-w: var(--article-lg);
+              --mt: var(--space-xl);
+            "
+          >
+            <h2 data-ui="text-h5">Three branches, one stock count</h2>
+            <p>
+              Halvorsen started as a single bolt counter on Home Avenue in 1962. We still run the
+              counters the same way: <strong>the person at the counter knows the part</strong>, and
+              the count on the screen is the count on the shelf.
+            </p>
+            <h3 data-ui="text-h6">What “in stock” means here</h3>
+            <ul>
+              <li>Counts refresh every fifteen minutes from the warehouse scanners.</li>
+              <li>A part shows as in stock only when it’s on a shelf you can pick from today.</li>
+              <li>
+                Transfers between branches run overnight, so “by transfer” means tomorrow morning.
+              </li>
+            </ul>
+            <blockquote>
+              <p>We would rather tell you a part is out than have you drive over for it.</p>
+            </blockquote>
+            <p>
+              Questions about an order? Press <kbd>⌘</kbd> <kbd>K</kbd> and type the order number.
+            </p>
+          </article>
+        </ui-layout>
+      </section>
+    </main>
+
+    <!-- ================================================================== -->
+    <!-- Footer                                                             -->
+    <!-- ================================================================== -->
+    <footer id="branches" data-transition-layer="global-footer" style="--border-t: 1">
+      <ui-layout style="--py: var(--space-lg)">
+        <div
+          style="
+            --display: grid;
+            --grid-cols: 1;
+            --grid-cols--sm: 2;
+            --grid-cols--lg: 4;
+            --gap: var(--space-md);
+          "
+        >
+          <address
+            style="
+              --display: flex;
+              --flex-direction: column;
+              --gap: var(--space-2xs);
+              --font-style: normal;
+            "
+          >
+            <h2 data-ui="text-md" style="--font-weight: 600">Akron</h2>
+            <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+              1180 Home Ave, Akron, OH 44310
+            </p>
+            <p data-ui="text-sm" style="--font-family: var(--font-family-mono)">
+              Counter 6:30 a.m. to 5:00 p.m.
+            </p>
+          </address>
+          <address
+            style="
+              --display: flex;
+              --flex-direction: column;
+              --gap: var(--space-2xs);
+              --font-style: normal;
+            "
+          >
+            <h2 data-ui="text-md" style="--font-weight: 600">Canton</h2>
+            <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+              2405 Harrison Ave SW, Canton, OH 44706
+            </p>
+            <p data-ui="text-sm" style="--font-family: var(--font-family-mono)">
+              Counter 7:00 a.m. to 4:30 p.m.
+            </p>
+          </address>
+          <address
+            style="
+              --display: flex;
+              --flex-direction: column;
+              --gap: var(--space-2xs);
+              --font-style: normal;
+            "
+          >
+            <h2 data-ui="text-md" style="--font-weight: 600">Toledo</h2>
+            <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+              530 Matzinger Rd, Toledo, OH 43612
+            </p>
+            <p data-ui="text-sm" style="--font-family: var(--font-family-mono)">
+              Counter 7:00 a.m. to 4:30 p.m.
+            </p>
+          </address>
+          <nav
+            aria-label="Footer"
+            style="
+              --display: flex;
+              --flex-direction: column;
+              --gap: var(--space-2xs);
+            "
+          >
+            <h2 data-ui="text-md" style="--font-weight: 600">Help</h2>
+            <a data-ui="text-link" href="#faq">Open an account</a>
+            <a data-ui="text-link" href="#faq">Returns</a>
+            <button
+              data-ui="button"
+              data-button-variant="link"
+              type="button"
+              command="show-modal"
+              commandfor="hs-sign-in"
+              style="
+                --justify: start;
+                --px: 0;
+              "
+            >
+              Sign in
+            </button>
+          </nav>
+        </div>
+      </ui-layout>
+      <hr data-ui="separator" />
+      <ui-layout style="--py: var(--space-sm)">
+        <div
+          style="
+            --display: flex;
+            --flex-wrap: wrap;
+            --items: center;
+            --justify: space-between;
+            --gap: var(--space-xs);
+          "
+        >
+          <p data-ui="text-xs" style="--text: var(--color-muted-foreground)">
+            MIT License · Built with Zazz
+          </p>
+          <p data-ui="text-xs" style="--text: var(--color-muted-foreground)">
+            Press <ui-kbd-group><kbd>⌘</kbd><kbd>K</kbd></ui-kbd-group> to search parts and pages
+          </p>
+        </div>
+      </ui-layout>
+    </footer>
+
+    <!-- ================================================================== -->
+    <!-- Sign-in dialog: tabs, password group, OTP                          -->
+    <!-- ================================================================== -->
+    <dialog id="hs-sign-in" data-ui="dialog" closedby="any" data-dialog-size="article">
+      <div data-dialog-slot="content">
+        <header data-dialog-slot="header">
+          <h2 data-ui="text-lg" style="--font-weight: var(--font-weight-strong)">
+            Sign in to Halvorsen
+          </h2>
+          <p style="--text: var(--color-muted-foreground)">
+            See contract pricing, open orders, and saved order pads.
+          </p>
+        </header>
+        <div data-dialog-slot="body">
+          <ui-tabs style="--w: 100%">
+            <div data-tabs-slot="list" role="tablist">
+              <div data-tabs-slot="indicator" aria-hidden="true"></div>
+              <input
+                type="radio"
+                role="tab"
+                name="hs-sign-in-method"
+                id="hs-sign-in-password"
+                checked
+              />
+              <label for="hs-sign-in-password" data-tabs-slot="label"
+                ><span data-tabs-slot="label-text">Password</span></label
+              >
+              <input type="radio" role="tab" name="hs-sign-in-method" id="hs-sign-in-code" />
+              <label for="hs-sign-in-code" data-tabs-slot="label"
+                ><span data-tabs-slot="label-text">Text me a code</span></label
+              >
+            </div>
+            <div
+              data-tabs-slot="panel"
+              role="tabpanel"
+              style="
+                --w: 100%;
+                --pt: var(--space-sm);
+              "
+            >
+              <form
+                id="hs-sign-in-form"
+                method="dialog"
+                style="
+                  --display: grid;
+                  --gap: var(--space-sm);
+                "
+              >
+                <div data-ui="field">
+                  <label data-field-slot="label" for="hs-email">Email</label>
+                  <input
+                    data-ui="input"
+                    id="hs-email"
+                    name="email"
+                    type="email"
+                    inputmode="email"
+                    autocomplete="email"
+                    required
+                    placeholder="you@company.com"
+                  />
+                  <div data-field-slot="description">
+                    <span data-field-slot="error" role="alert"
+                      >Enter the email on your account.</span
+                    >
+                  </div>
+                </div>
+                <div data-ui="field">
+                  <label data-field-slot="label" for="hs-password">Password</label>
+                  <ui-password>
+                    <label data-ui="password-group">
+                      <input
+                        data-ui="input"
+                        id="hs-password"
+                        name="password"
+                        type="password"
+                        autocomplete="current-password"
+                        required
+                        placeholder="••••••••"
+                      />
+                      <span data-password-group-slot="addon" data-password-group-align="inline-end">
+                        <button
+                          data-ui="button"
+                          data-password-group-slot="toggle"
+                          data-button-variant="ghost"
+                          data-button-size="icon-sm"
+                          type="button"
+                          aria-pressed="false"
+                          aria-label="Show password"
+                        >
+                          <svg
+                            data-password-group-slot="icon icon-show"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 256 256"
+                            aria-hidden="true"
+                          >
+                            <rect width="256" height="256" fill="none" />
+                            <path
+                              d="M128,56C48,56,16,128,16,128s32,72,112,72,112-72,112-72S208,56,128,56Z"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="16"
+                            />
+                            <circle
+                              cx="128"
+                              cy="128"
+                              r="40"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="16"
+                            />
+                          </svg>
+                          <svg
+                            data-password-group-slot="icon icon-hide"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 256 256"
+                            aria-hidden="true"
+                          >
+                            <rect width="256" height="256" fill="none" />
+                            <line
+                              x1="48"
+                              y1="40"
+                              x2="208"
+                              y2="216"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="16"
+                            />
+                            <path
+                              d="M74,68C33.21,88.66,16,128,16,128s32,72,112,72a118.05,118.05,0,0,0,54-12.6"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="16"
+                            />
+                            <path
+                              d="M208.6,169.28C230.41,149.73,240,128,240,128S208,56,128,56c-6.93,0-13.51.54-19.77,1.54"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="16"
+                            />
+                          </svg>
+                        </button>
+                      </span>
+                    </label>
+                  </ui-password>
+                </div>
+                <label data-ui="field" data-field-orientation="horizontal">
+                  <input type="checkbox" name="remember" checked />
+                  <span data-field-slot="label">Keep me signed in on this device</span>
+                </label>
+              </form>
+            </div>
+            <div
+              data-tabs-slot="panel"
+              role="tabpanel"
+              style="
+                --w: 100%;
+                --pt: var(--space-sm);
+              "
+            >
+              <form data-ui="field" method="dialog" style="--max-w: max-content">
+                <label data-field-slot="label" for="hs-otp">Code from your text message</label>
+                <ui-otp data-otp-groups="3-3">
+                  <input
+                    data-ui="input"
+                    data-otp-slot="input"
+                    id="hs-otp"
+                    name="otp"
+                    type="text"
+                    autocomplete="one-time-code"
+                    inputmode="numeric"
+                    pattern="\d{6}"
+                    maxlength="6"
+                    required
+                    spellcheck="false"
+                    autocapitalize="off"
+                  />
+                </ui-otp>
+                <div data-field-slot="description">
+                  <span data-field-slot="hint">We sent 6 digits to the phone ending in 0142.</span>
+                  <span data-field-slot="error">Enter all 6 digits.</span>
+                </div>
+              </form>
+            </div>
+          </ui-tabs>
+        </div>
+        <footer data-dialog-slot="footer">
+          <button data-ui="button" type="button" commandfor="hs-sign-in" command="close">
+            Cancel
+          </button>
+          <button
+            data-ui="button"
+            data-button-variant="primary"
+            type="submit"
+            form="hs-sign-in-form"
+          >
+            Sign in
+          </button>
+        </footer>
+        <button
+          data-ui="button"
+          data-dialog-slot="close"
+          data-button-size="icon"
+          data-button-variant="ghost"
+          type="button"
+          commandfor="hs-sign-in"
+          command="close"
+          aria-label="Close dialog"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-hidden="true">
+            <rect width="256" height="256" fill="none" />
+            <line
+              x1="200"
+              y1="56"
+              x2="56"
+              y2="200"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="16"
+            />
+            <line
+              x1="200"
+              y1="200"
+              x2="56"
+              y2="56"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="16"
+            />
+          </svg>
+        </button>
+      </div>
+    </dialog>
+
+    <ui-toaster id="hs-toaster" popover="manual"></ui-toaster>
+
+    <script type="module">
+      // Page behavior the kit leaves to the author: the theme switch, the slider
+      // readout, and the undo action on "Clear pad" (a callback cannot live in an attribute).
+      const root = document.documentElement;
+      const theme = document.getElementById("hs-theme");
+      const stored = root.dataset.uiTheme ?? "system";
+      theme.querySelector(`input[value="${stored}"]`).checked = true;
+
+      const applyTheme = (value) => {
+        if (value === "system") delete root.dataset.uiTheme;
+        else root.dataset.uiTheme = value;
+        try {
+          if (value === "system") localStorage.removeItem("theme");
+          else localStorage.setItem("theme", value);
+        } catch {
+          /* no storage access */
+        }
+      };
+      theme.addEventListener("change", (event) => applyTheme(event.target.value));
+
+      let lastCommand = null;
+      theme.addEventListener("command", (event) => {
+        if (event === lastCommand || event.command !== "--theme-toggle") return;
+        lastCommand = event;
+        const dark = root.dataset.uiTheme
+          ? root.dataset.uiTheme === "dark"
+          : matchMedia("(prefers-color-scheme: dark)").matches;
+        const next = dark ? "light" : "dark";
+        theme.querySelector(`input[value="${next}"]`).checked = true;
+        applyTheme(next);
+      });
+
+      const threshold = document.getElementById("hs-threshold");
+      const readout = document.querySelector('output[for="hs-threshold"]');
+      threshold.addEventListener("input", () => (readout.value = `${threshold.value}%`));
+
+      await customElements.whenDefined("ui-toaster");
+      document.getElementById("hs-clear-pad-confirm").addEventListener("click", () => {
+        window.Toaster.toast({
+          title: "Order pad cleared",
+          description: "3 lines removed.",
+          action: { label: "Undo", onClick: () => window.Toaster.success("Order pad restored") },
+        });
+      });
+    </script>
+  </body>
+</html>
