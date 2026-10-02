@@ -5,7 +5,7 @@
  * @description Loads the user's real npm config through `@npmcli/config`
  * (builtin → project → user → global → env, npm's own precedence) so
  * registries, scoped registries, proxies, and auth all behave exactly like
- * `npm install` would (ticket 02). The flattened config is spread into every
+ * `npm install` would. The flattened config is spread into every
  * pacote call, then the CLI's own flags override. If the config machinery
  * can't load (an npm-internals layout change), the CLI degrades to registry
  * defaults rather than failing — a plain public-registry fetch needs nothing.

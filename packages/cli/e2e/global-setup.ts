@@ -5,8 +5,7 @@
  * a tarball once per run and points the kit engine at it through the
  * environment (`ZAZZ_UI_KIT=file:<tgz>`, plus an isolated `XDG_CACHE_HOME` so
  * tests never touch the user's cache). Workers inherit the env, so tests need
- * no wiring — this is the spec's "e2e tests vendor from a locally packed
- * tarball" seam.
+ * no wiring.
  */
 
 import { execSync } from "node:child_process";

@@ -4,9 +4,9 @@
  * @fileoverview `zazz.json` — the project's vendoring provenance record.
  * @description One file at the project root records what was vendored, from
  * which kit version, and the sha256 of each file's pristine published bytes
- * at vendor time (never the on-disk state, so edits stay detectable forever —
- * ADR-0009). Every command loads it by walking up from the cwd, and every
- * successful transaction rewrites it exactly once.
+ * at vendor time (never the on-disk state, so edits stay detectable forever).
+ * Every command loads it by walking up from the cwd, and every successful
+ * transaction rewrites it exactly once.
  */
 
 import { readFile, writeFile } from "node:fs/promises";

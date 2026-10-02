@@ -1,9 +1,7 @@
 import { defineConfig } from "vite-plus";
 
 export default defineConfig({
-  // Single ESM bin: the shebang in src/cli.ts survives and dist/cli.js is
-  // chmod +x by tsdown; everything in "dependencies" stays external and is
-  // installed by the consumer's package manager.
+  // Shebang in src/cli.ts survives; "dependencies" stay external.
   pack: {
     entry: {
       cli: "src/cli.ts",
@@ -12,7 +10,6 @@ export default defineConfig({
     dts: false,
     // The package is type: module — emit dist/cli.js, not .mjs.
     fixedExtension: false,
-    // Readable stack traces beat a few KB in a CLI.
     minify: false,
   },
   test: {

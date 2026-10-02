@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * @fileoverview The stray-file collision prompt (ticket 01), shared by every
+ * @fileoverview The stray-file collision prompt, shared by every
  * command that writes files it has no provenance record for.
  * @description A write whose destination already exists is a conflict: prompt
  * (default no), or overwrite everything under `--force`. Skipped paths are

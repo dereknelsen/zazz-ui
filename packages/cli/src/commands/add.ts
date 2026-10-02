@@ -7,7 +7,7 @@
  * latest — moving forward is `update`'s job), vendors what isn't already
  * there (css, scripts per language, required base scripts), inserts entry
  * imports at cascade position, regenerates `head.html`, and records
- * per-primitive provenance. No examples unless `--examples` (ticket 05).
+ * per-primitive provenance. No examples unless `--examples`.
  */
 
 import { existsSync } from "node:fs";
@@ -18,7 +18,7 @@ import { type ZazzConfig, loadConfig } from "../config.ts";
 import { ZazzError } from "../errors.ts";
 import { type ResolvedKit, kitSpec, resolveKit } from "../kit.ts";
 import { loadFetchOptions } from "../npmrc.ts";
-import { baseScriptFiles, primitiveFiles } from "../plan.ts";
+import { baseCssSplit, baseScriptFiles, primitiveFiles } from "../plan.ts";
 import { type Transaction, type Write, apply, describe } from "../transaction.ts";
 import { createUi } from "../ui.ts";
 import { sha256, vendorFiles } from "../vendor.ts";
@@ -154,7 +154,12 @@ async function wiringWrites(
   const currentCss = existsSync(cssPath)
     ? await readFile(cssPath, "utf8")
     : renderIndexCss({ kit, legacy: config.legacy, primitives: [] });
-  const nextCss = insertCssImports(currentCss, cssAdditions, cascade);
+  const nextCss = insertCssImports(
+    currentCss,
+    cssAdditions,
+    cascade,
+    baseCssSplit(kit.manifest).post[0],
+  );
   if (!existsSync(cssPath) || nextCss !== currentCss) {
     writes.push({ dest: cssPath, content: nextCss, note: "entry" });
   }

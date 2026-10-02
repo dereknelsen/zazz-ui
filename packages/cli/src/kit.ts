@@ -6,10 +6,10 @@
  * semver/dist-tag resolution, SSRI verification, offline-capable caching),
  * extracts the tarball into a version-keyed cache directory, then imports the
  * kit's own compiled `src/manifest.js` and `src/head.js` straight out of the
- * extract — the manifest in the tarball is the registry (ADR-0006), and the
+ * extract — the manifest in the tarball is the registry, and the
  * kit's own `buildHead`/`resolveClosure` run rather than reimplementations.
  * `MANIFEST_VERSION` gates everything: a kit newer than this CLI understands
- * fails with "upgrade the CLI", never a parse error (ADR-0010).
+ * fails with "upgrade the CLI", never a parse error.
  */
 
 import { existsSync } from "node:fs";
@@ -20,11 +20,11 @@ import pacote from "pacote";
 import { ZazzError, kitTooNew, offlineMiss } from "./errors.ts";
 import type { FetchOptions } from "./npmrc.ts";
 
-/** The one package the CLI vendors from (ADR-0005: no package split). */
+/** The one package the CLI vendors from. */
 export const KIT_PACKAGE = "@zazz-ui/core";
 
 /** Inclusive range of kit manifest versions this CLI understands. */
-const SUPPORTED_MANIFEST = { min: 1, max: 1 };
+const SUPPORTED_MANIFEST = { min: 1, max: 2 };
 
 const EXACT_VERSION = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/;
 
@@ -45,9 +45,11 @@ export interface KitManifest {
   cssCascadeOrder: string[];
   /** The kit's own closure resolver, imported — not reimplemented. */
   resolveClosure(names: string[]): string[];
-  /** Base stylesheet inventory, when the kit exports one (post-v1). */
-  baseCss?: string[];
-  /** Core runtime scripts, when the kit exports them (post-v1). */
+  /** Base stylesheets before the primitives, when the kit exports them. */
+  baseCssPre?: string[];
+  /** Base stylesheets after the primitives (the override layer), when exported. */
+  baseCssPost?: string[];
+  /** Core runtime scripts, when the kit exports them. */
   coreRuntime?: string[];
 }
 
@@ -202,7 +204,8 @@ export async function loadKitFromDir(
 
   // Kits newer than manifest v1 may export their base inventory; v1 kits
   // don't, and plan.ts falls back to the v1 list pinned to that version.
-  const baseCss = manifestModule.BASE_CSS;
+  const baseCssPre = manifestModule.BASE_CSS_PRE;
+  const baseCssPost = manifestModule.BASE_CSS_POST;
   const coreRuntime = manifestModule.CORE_RUNTIME;
 
   return {
@@ -214,7 +217,8 @@ export async function loadKitFromDir(
       primitives: primitives as Record<string, PrimitiveEntry>,
       cssCascadeOrder: cascade as string[],
       resolveClosure: resolveClosure as (names: string[]) => string[],
-      ...(Array.isArray(baseCss) ? { baseCss: baseCss as string[] } : {}),
+      ...(Array.isArray(baseCssPre) ? { baseCssPre: baseCssPre as string[] } : {}),
+      ...(Array.isArray(baseCssPost) ? { baseCssPost: baseCssPost as string[] } : {}),
       ...(Array.isArray(coreRuntime) ? { coreRuntime: coreRuntime as string[] } : {}),
     },
     buildHead: buildHead as (options: Record<string, unknown>) => string,

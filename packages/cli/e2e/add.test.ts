@@ -74,13 +74,13 @@ describe("zazz-ui add (e2e, packed kit)", () => {
       (name) => ({ name, index: css.indexOf(`./primitives/${name}/`) }),
     );
     for (const { name, index } of positions) expect(index, name).toBeGreaterThan(-1);
-    // badge before kbd? No: kit cascade order is separator, badge, kbd, button…
+    // Kit cascade order: separator, badge, kbd, button…
     const badge = positions.find((p) => p.name === "badge");
     const kbd = positions.find((p) => p.name === "kbd");
     const combobox = positions.find((p) => p.name === "combobox");
     expect(badge && kbd && badge.index < kbd.index).toBe(true);
     expect(combobox?.index).toBeGreaterThan(kbd?.index ?? Infinity);
-    expect(css.indexOf("combobox")).toBeLessThan(css.indexOf("base/_utilities.css"));
+    expect(css.indexOf("combobox")).toBeLessThan(css.indexOf("base/_properties.css"));
 
     const entry = await readFile(path.join(project, "zazz/index.js"), "utf8");
     expect(entry.indexOf(`import "./base/typeahead.js";`)).toBeGreaterThan(-1);
@@ -111,11 +111,11 @@ describe("zazz-ui add (e2e, packed kit)", () => {
   });
 
   it("records markup-only primitives without css imports", async () => {
-    await runAdd(["card"], {}, { cwd: project, silent: true });
+    await runAdd(["avatar"], {}, { cwd: project, silent: true });
     const config = await readConfig(project);
-    expect(config.primitives.card).toBeDefined();
+    expect(config.primitives.avatar).toBeDefined();
     const css = await readFile(path.join(project, "zazz/index.css"), "utf8");
-    expect(css).not.toContain("primitives/card/");
+    expect(css).not.toContain("primitives/avatar/");
   });
 
   it("rejects unknown primitives with the valid list", async () => {

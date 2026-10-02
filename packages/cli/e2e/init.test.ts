@@ -58,15 +58,17 @@ describe("zazz-ui init (e2e, packed kit)", () => {
     const config = await readConfig(project);
     expect(config.language).toBe("js");
     expect(config.kit.version).toMatch(/^\d+\.\d+\.\d+/);
-    // 7 css + 4 runtime × (.js + .d.ts) + 3 generated artifacts.
-    expect(Object.keys(config.base.files)).toHaveLength(18);
+    // Every base css the kit lists + 4 runtime × (.js + .d.ts) + 3 generated artifacts.
+    const indexCss = await readFile(path.join(project, "zazz/index.css"), "utf8");
+    const baseCssCount = indexCss.match(/@import "\.\/base\/[^"]+\.css";/g)?.length ?? 0;
+    expect(baseCssCount).toBeGreaterThanOrEqual(7);
+    expect(Object.keys(config.base.files)).toHaveLength(baseCssCount + 4 * 2 + 3);
 
     // Recorded hashes are of pristine bytes — untouched files match on disk.
     const layers = await readFile(path.join(project, "zazz/base/_layers.css"));
     expect(sha256(layers)).toBe(config.base.files["base/_layers.css"]);
 
-    const indexCss = await readFile(path.join(project, "zazz/index.css"), "utf8");
-    expect(indexCss.indexOf("_layers.css")).toBeLessThan(indexCss.indexOf("_utilities.css"));
+    expect(indexCss.indexOf("_layers.css")).toBeLessThan(indexCss.indexOf("_properties.css"));
     const head = await readFile(path.join(project, "zazz/head.html"), "utf8");
     expect(head).toContain("importmap");
     expect(head).toContain("./zazz/index.css");

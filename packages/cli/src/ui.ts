@@ -5,7 +5,7 @@
  * injectable interface.
  * @description Commands talk to `Ui`, never to @clack/prompts directly, so
  * `--silent`, `-y`, and non-TTY environments degrade in one place and tests
- * inject a scripted prompter. Happy paths never prompt (ticket 01); every
+ * inject a scripted prompter. Happy paths never prompt; every
  * prompt is a conflict with a safe non-interactive default.
  */
 

@@ -26,7 +26,7 @@ export interface Transaction {
   /** Directory that owns zazz.json. */
   root: string;
   writes: Write[];
-  /** Absolute paths removed at commit (upstream-removed files, ADR-0009). */
+  /** Absolute paths removed at commit (upstream-removed files). */
   deletes?: string[];
   config: ZazzConfig;
 }

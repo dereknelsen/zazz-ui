@@ -6,7 +6,7 @@
  * CLI-composed entry files, `head.html`, and a `zazz.json` provenance record.
  * Re-running in an initialized project is repair mode: restore what's
  * missing, report what's edited, touch nothing edited without `--force`,
- * and never re-ask identity decisions (ticket 04). No happy-path prompts.
+ * and never re-ask identity decisions. No happy-path prompts.
  */
 
 import { existsSync } from "node:fs";
@@ -100,7 +100,7 @@ export async function runInit(
   for (const write of generatedWrites(kit, config, destRoot, hashes)) writes.push(write);
   config.base.files = hashes;
 
-  // Stray files at target paths (no zazz.json): conflict prompt per ticket 01.
+  // Stray files at target paths (no zazz.json): conflict prompt.
   const { kept, skipped } = await filterCollisions(writes, {
     ui,
     force: flags.force === true,

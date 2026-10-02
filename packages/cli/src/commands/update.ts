@@ -2,7 +2,7 @@
 
 /**
  * @fileoverview `zazz-ui update` — move vendored files to a new kit version
- * with provenance-recorded 3-way merges (ADR-0009).
+ * with provenance-recorded 3-way merges.
  * @description Whole-kit by default; naming primitives narrows the update
  * (base files stay put, skew recorded via per-primitive versions). Every
  * file is classified against its pristine bytes at the *recorded* version

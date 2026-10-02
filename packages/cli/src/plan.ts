@@ -12,15 +12,14 @@
 import type { KitManifest, PrimitiveEntry } from "./kit.ts";
 
 /** The v1 base stylesheet inventory (kit `src/index.css` cascade shell). */
-const V1_BASE_CSS = [
+const V1_BASE_CSS_PRE = [
   "base/_layers.css",
   "base/_variables.css",
   "base/_reset.css",
   "base/_typography.css",
   "base/_view-transitions.css",
-  "base/_utilities.css",
-  "base/_layout.css",
 ];
+const V1_BASE_CSS_POST = ["base/_utilities.css", "base/_layout.css"];
 
 /** The v1 core runtime — always vendored, never a per-primitive dependency. */
 const V1_CORE_RUNTIME = [
@@ -32,8 +31,17 @@ const V1_CORE_RUNTIME = [
 
 export type Language = "js" | "ts";
 
+/** Base stylesheets split around the primitives: pre loads first, post is the override layer. */
+export function baseCssSplit(manifest: KitManifest): { pre: string[]; post: string[] } {
+  return {
+    pre: manifest.baseCssPre ?? V1_BASE_CSS_PRE,
+    post: manifest.baseCssPost ?? V1_BASE_CSS_POST,
+  };
+}
+
 export function baseCss(manifest: KitManifest): string[] {
-  return manifest.baseCss ?? V1_BASE_CSS;
+  const { pre, post } = baseCssSplit(manifest);
+  return [...pre, ...post];
 }
 
 export function coreRuntime(manifest: KitManifest): string[] {

@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * @fileoverview Per-file update classification and 3-way merging (ADR-0009).
+ * @fileoverview Per-file update classification and 3-way merging.
  * @description `classify` turns one file's three states — ours (on disk),
  * base (pristine bytes at the recorded version), theirs (pristine bytes at
  * the target version) — plus the recorded hash into a disposition. The

@@ -6,7 +6,7 @@
  * resolved kit and produces transaction writes plus the provenance hashes
  * zazz.json records. Hashes are always of the pristine bytes — never what
  * lands on disk — so a skipped overwrite or later edit reads as "edited"
- * against the recorded version (ADR-0009).
+ * against the recorded version.
  */
 
 import { createHash } from "node:crypto";

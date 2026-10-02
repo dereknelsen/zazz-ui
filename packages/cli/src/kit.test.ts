@@ -91,7 +91,7 @@ describe("loadKitFromDir", () => {
 
   it("rejects a manifest version newer than the CLI supports", async () => {
     const dir = await fixtureKitDir({
-      manifestJs: VALID_MANIFEST_JS.replace("MANIFEST_VERSION = 1", "MANIFEST_VERSION = 2"),
+      manifestJs: VALID_MANIFEST_JS.replace("MANIFEST_VERSION = 1", "MANIFEST_VERSION = 3"),
     });
     await expect(loadKitFromDir(dir, { version: "9.9.9", integrity: "" })).rejects.toThrow(
       /newer than this CLI/,

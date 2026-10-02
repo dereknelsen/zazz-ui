@@ -20,14 +20,14 @@ export class ZazzError extends Error {
   }
 }
 
-/** The offline cache-miss error (ticket 02's canonical wording). */
+/** The offline cache-miss error. */
 export function offlineMiss(spec: string): ZazzError {
   return new ZazzError(`cannot reach npm and ${spec} is not cached`, {
     hint: "reconnect, or drop --offline; exact versions cache after the first fetch",
   });
 }
 
-/** The kit-newer-than-CLI error (ADR-0010's graceful failure). */
+/** The kit-newer-than-CLI error. */
 export function kitTooNew(version: string, detail: string): ZazzError {
   return new ZazzError(`@zazz-ui/core@${version} is newer than this CLI understands (${detail})`, {
     hint: "upgrade with: pnpm dlx zazz-ui@latest (or npm i -g zazz-ui@latest)",
