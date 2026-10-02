@@ -1,26 +1,100 @@
-<div class="flex flex-col gap-md w-full max-w-xl">
-  <div class="flex flex-col gap-xs">
-    <span class="text-xs text-muted-foreground font-strong">justify-start</span>
-    <div class="flex justify-start gap-sm bg-muted rounded-md p-sm">
-      <span class="ui-badge" data-variant="primary">a</span>
-      <span class="ui-badge" data-variant="primary">b</span>
-      <span class="ui-badge" data-variant="primary">c</span>
+<div
+  style="
+    --display: flex;
+    --flex-direction: column;
+    --gap: var(--space-md);
+    --w: 100%;
+    --max-w: 96;
+  "
+>
+  <div
+    style="
+      --display: flex;
+      --flex-direction: column;
+      --gap: var(--space-xs);
+    "
+  >
+    <span
+      data-ui="text-xs"
+      style="
+        --text: var(--color-muted-foreground);
+        --font-weight: var(--font-weight-strong);
+      "
+      >--justify: start</span
+    >
+    <div
+      style="
+        --display: flex;
+        --justify: start;
+        --gap: var(--space-sm);
+        --bg: var(--color-muted);
+        --rounded: var(--radius-md);
+        --p: var(--space-sm);
+      "
+    >
+      <span data-ui="badge" data-badge-variant="primary">a</span>
+      <span data-ui="badge" data-badge-variant="primary">b</span>
+      <span data-ui="badge" data-badge-variant="primary">c</span>
     </div>
   </div>
-  <div class="flex flex-col gap-xs">
-    <span class="text-xs text-muted-foreground font-strong">justify-center</span>
-    <div class="flex justify-center gap-sm bg-muted rounded-md p-sm">
-      <span class="ui-badge" data-variant="primary">a</span>
-      <span class="ui-badge" data-variant="primary">b</span>
-      <span class="ui-badge" data-variant="primary">c</span>
+  <div
+    style="
+      --display: flex;
+      --flex-direction: column;
+      --gap: var(--space-xs);
+    "
+  >
+    <span
+      data-ui="text-xs"
+      style="
+        --text: var(--color-muted-foreground);
+        --font-weight: var(--font-weight-strong);
+      "
+      >--justify: center</span
+    >
+    <div
+      style="
+        --display: flex;
+        --justify: center;
+        --gap: var(--space-sm);
+        --bg: var(--color-muted);
+        --rounded: var(--radius-md);
+        --p: var(--space-sm);
+      "
+    >
+      <span data-ui="badge" data-badge-variant="primary">a</span>
+      <span data-ui="badge" data-badge-variant="primary">b</span>
+      <span data-ui="badge" data-badge-variant="primary">c</span>
     </div>
   </div>
-  <div class="flex flex-col gap-xs">
-    <span class="text-xs text-muted-foreground font-strong">justify-between</span>
-    <div class="flex justify-between gap-sm bg-muted rounded-md p-sm">
-      <span class="ui-badge" data-variant="primary">a</span>
-      <span class="ui-badge" data-variant="primary">b</span>
-      <span class="ui-badge" data-variant="primary">c</span>
+  <div
+    style="
+      --display: flex;
+      --flex-direction: column;
+      --gap: var(--space-xs);
+    "
+  >
+    <span
+      data-ui="text-xs"
+      style="
+        --text: var(--color-muted-foreground);
+        --font-weight: var(--font-weight-strong);
+      "
+      >--justify: space-between</span
+    >
+    <div
+      style="
+        --display: flex;
+        --justify: space-between;
+        --gap: var(--space-sm);
+        --bg: var(--color-muted);
+        --rounded: var(--radius-md);
+        --p: var(--space-sm);
+      "
+    >
+      <span data-ui="badge" data-badge-variant="primary">a</span>
+      <span data-ui="badge" data-badge-variant="primary">b</span>
+      <span data-ui="badge" data-badge-variant="primary">c</span>
     </div>
   </div>
 </div>

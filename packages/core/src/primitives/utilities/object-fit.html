@@ -1,41 +1,106 @@
-<div class="grid grid-cols-3 gap-md w-full max-w-xl">
-  <figure class="flex flex-col gap-xs">
+<div
+  style="
+    --display: grid;
+    --grid-cols: 3;
+    --gap: var(--space-md);
+    --w: 100%;
+    --max-w: 96;
+  "
+>
+  <figure
+    style="
+      --display: flex;
+      --flex-direction: column;
+      --gap: var(--space-xs);
+    "
+  >
     <img
-      class="aspect-square w-full object-cover rounded-md bg-muted"
       src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=320&h=200&q=60"
       width="320"
       height="200"
       loading="lazy"
       alt="Savanna grass at dawn"
+      style="
+        --aspect: 1;
+        --w: 100%;
+        --object-fit: cover;
+        --rounded: var(--radius-md);
+        --bg: var(--color-muted);
+      "
     />
-    <figcaption class="text-xs text-muted-foreground text-center font-strong">
-      object-cover
+    <figcaption
+      data-ui="text-xs"
+      style="
+        --text: var(--color-muted-foreground);
+        --text-align: center;
+        --font-weight: var(--font-weight-strong);
+      "
+    >
+      --object-fit: cover
     </figcaption>
   </figure>
-  <figure class="flex flex-col gap-xs">
+  <figure
+    style="
+      --display: flex;
+      --flex-direction: column;
+      --gap: var(--space-xs);
+    "
+  >
     <img
-      class="aspect-square w-full object-contain rounded-md bg-muted"
       src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=320&h=200&q=60"
       width="320"
       height="200"
       loading="lazy"
       alt="Savanna grass at dawn"
+      style="
+        --aspect: 1;
+        --w: 100%;
+        --object-fit: contain;
+        --rounded: var(--radius-md);
+        --bg: var(--color-muted);
+      "
     />
-    <figcaption class="text-xs text-muted-foreground text-center font-strong">
-      object-contain
+    <figcaption
+      data-ui="text-xs"
+      style="
+        --text: var(--color-muted-foreground);
+        --text-align: center;
+        --font-weight: var(--font-weight-strong);
+      "
+    >
+      --object-fit: contain
     </figcaption>
   </figure>
-  <figure class="flex flex-col gap-xs">
+  <figure
+    style="
+      --display: flex;
+      --flex-direction: column;
+      --gap: var(--space-xs);
+    "
+  >
     <img
-      class="aspect-square w-full object-fill rounded-md bg-muted"
       src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=320&h=200&q=60"
       width="320"
       height="200"
       loading="lazy"
       alt="Savanna grass at dawn"
+      style="
+        --aspect: 1;
+        --w: 100%;
+        --object-fit: fill;
+        --rounded: var(--radius-md);
+        --bg: var(--color-muted);
+      "
     />
-    <figcaption class="text-xs text-muted-foreground text-center font-strong">
-      object-fill
+    <figcaption
+      data-ui="text-xs"
+      style="
+        --text: var(--color-muted-foreground);
+        --text-align: center;
+        --font-weight: var(--font-weight-strong);
+      "
+    >
+      --object-fit: fill
     </figcaption>
   </figure>
 </div>

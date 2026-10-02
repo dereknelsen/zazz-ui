@@ -1,0 +1,32 @@
+/**
+ * _switches.css — Switches: fixed rule sets with no value, carried as
+ * `data-ui` tokens.
+ *
+ * @layer      utilities
+ * @requires   _layers.css
+ * @uses       data-ui="sr-only": visually hidden, still in the accessibility tree
+ * @uses       data-ui="grid-pile": every child in one grid area
+ */
+
+@layer zazz.utilities {
+  :where([data-ui~="sr-only"]) {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  :where([data-ui~="grid-pile"]) {
+    grid-template-areas: "pile";
+    place-items: center;
+
+    > * {
+      grid-area: pile;
+    }
+  }
+}

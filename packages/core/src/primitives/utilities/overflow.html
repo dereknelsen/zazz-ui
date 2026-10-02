@@ -1,26 +1,84 @@
-<div class="grid grid-cols-2 gap-md w-full max-w-xl">
-  <div class="flex flex-col gap-xs">
-    <div class="overflow-y-auto h-sm bg-muted rounded-md p-sm flex flex-col gap-xs">
-      <p class="text-sm">Scrollable region one</p>
-      <p class="text-sm">Scrollable region two</p>
-      <p class="text-sm">Scrollable region three</p>
-      <p class="text-sm">Scrollable region four</p>
-      <p class="text-sm">Scrollable region five</p>
-      <p class="text-sm">Scrollable region six</p>
+<div
+  style="
+    --display: grid;
+    --grid-cols: 2;
+    --gap: var(--space-md);
+    --w: 100%;
+    --max-w: 96;
+  "
+>
+  <div
+    style="
+      --display: flex;
+      --flex-direction: column;
+      --gap: var(--space-xs);
+    "
+  >
+    <div
+      style="
+        --overflow-x: clip;
+        --overflow-y: auto;
+        --h: var(--space-sm);
+        --bg: var(--color-muted);
+        --rounded: var(--radius-md);
+        --p: var(--space-sm);
+        --display: flex;
+        --flex-direction: column;
+        --gap: var(--space-xs);
+      "
+    >
+      <p data-ui="text-sm">Scrollable region one</p>
+      <p data-ui="text-sm">Scrollable region two</p>
+      <p data-ui="text-sm">Scrollable region three</p>
+      <p data-ui="text-sm">Scrollable region four</p>
+      <p data-ui="text-sm">Scrollable region five</p>
+      <p data-ui="text-sm">Scrollable region six</p>
     </div>
-    <span class="text-xs text-muted-foreground text-center font-strong">overflow-y-auto</span>
+    <span
+      data-ui="text-xs"
+      style="
+        --text: var(--color-muted-foreground);
+        --text-align: center;
+        --font-weight: var(--font-weight-strong);
+      "
+      >overflow-y-auto</span
+    >
   </div>
-  <div class="flex flex-col gap-xs">
-    <div class="overflow-y-auto no-scrollbar h-sm bg-muted rounded-md p-sm flex flex-col gap-xs">
-      <p class="text-sm">Scrollable region one</p>
-      <p class="text-sm">Scrollable region two</p>
-      <p class="text-sm">Scrollable region three</p>
-      <p class="text-sm">Scrollable region four</p>
-      <p class="text-sm">Scrollable region five</p>
-      <p class="text-sm">Scrollable region six</p>
+  <div
+    style="
+      --display: flex;
+      --flex-direction: column;
+      --gap: var(--space-xs);
+    "
+  >
+    <div
+      style="
+        --overflow-x: clip;
+        --overflow-y: auto;
+        --h: var(--space-sm);
+        --bg: var(--color-muted);
+        --rounded: var(--radius-md);
+        --p: var(--space-sm);
+        --display: flex;
+        --flex-direction: column;
+        --gap: var(--space-xs);
+      "
+    >
+      <p data-ui="text-sm">Scrollable region one</p>
+      <p data-ui="text-sm">Scrollable region two</p>
+      <p data-ui="text-sm">Scrollable region three</p>
+      <p data-ui="text-sm">Scrollable region four</p>
+      <p data-ui="text-sm">Scrollable region five</p>
+      <p data-ui="text-sm">Scrollable region six</p>
     </div>
-    <span class="text-xs text-muted-foreground text-center font-strong"
-      >overflow-y-auto no-scrollbar</span
+    <span
+      data-ui="text-xs"
+      style="
+        --text: var(--color-muted-foreground);
+        --text-align: center;
+        --font-weight: var(--font-weight-strong);
+      "
+      >overflow-y-auto</span
     >
   </div>
 </div>

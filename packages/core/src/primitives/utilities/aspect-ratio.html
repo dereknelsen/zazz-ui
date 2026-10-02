@@ -1,17 +1,61 @@
-<div class="grid grid-cols-3 gap-md w-full max-w-xl">
+<div
+  style="
+    --display: grid;
+    --grid-cols: 3;
+    --gap: var(--space-md);
+    --w: 100%;
+    --max-w: 96;
+  "
+>
   <div
-    class="aspect-square flex items-center justify-center bg-primary text-primary-foreground rounded-md p-xs text-center text-xs font-strong"
+    data-ui="text-xs"
+    style="
+      --aspect: 1;
+      --display: flex;
+      --items: center;
+      --justify: center;
+      --bg: var(--color-primary);
+      --text: var(--color-primary-foreground);
+      --rounded: var(--radius-md);
+      --p: var(--space-xs);
+      --text-align: center;
+      --font-weight: var(--font-weight-strong);
+    "
   >
-    aspect-square · 1:1
+    --aspect: 1 · 1:1
   </div>
   <div
-    class="aspect-widescreen flex items-center justify-center bg-secondary text-secondary-foreground rounded-md p-xs text-center text-xs font-strong"
+    data-ui="text-xs"
+    style="
+      --aspect: 16 / 9;
+      --display: flex;
+      --items: center;
+      --justify: center;
+      --bg: var(--color-secondary);
+      --text: var(--color-secondary-foreground);
+      --rounded: var(--radius-md);
+      --p: var(--space-xs);
+      --text-align: center;
+      --font-weight: var(--font-weight-strong);
+    "
   >
-    aspect-widescreen · 16:9
+    --aspect: 16 / 9 · 16:9
   </div>
   <div
-    class="aspect-portrait flex items-center justify-center bg-tertiary text-tertiary-foreground rounded-md p-xs text-center text-xs font-strong"
+    data-ui="text-xs"
+    style="
+      --aspect: 2 / 3;
+      --display: flex;
+      --items: center;
+      --justify: center;
+      --bg: var(--color-tertiary);
+      --text: var(--color-tertiary-foreground);
+      --rounded: var(--radius-md);
+      --p: var(--space-xs);
+      --text-align: center;
+      --font-weight: var(--font-weight-strong);
+    "
   >
-    aspect-portrait · 2:3
+    --aspect: 2 / 3 · 2:3
   </div>
 </div>

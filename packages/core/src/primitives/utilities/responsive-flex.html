@@ -1,20 +1,69 @@
-<div class="flex flex-col gap-xs w-full">
-  <span class="text-xs text-muted-foreground font-strong">
-    flex-col @sm:flex-row — stacks on a narrow container, rows out on a wide one. Expand to see it.
+<div
+  style="
+    --display: flex;
+    --flex-direction: column;
+    --gap: var(--space-xs);
+    --w: 100%;
+  "
+>
+  <span
+    data-ui="text-xs"
+    style="
+      --text: var(--color-muted-foreground);
+      --font-weight: var(--font-weight-strong);
+    "
+  >
+    --flex-direction: column; --flex-direction--sm: row — stacks on a narrow container, rows out on
+    a wide one. Expand to see it.
   </span>
-  <div class="flex flex-col @sm:flex-row gap-md w-full">
+  <div
+    style="
+      --display: flex;
+      --flex-direction: column;
+      --flex-direction--sm: row;
+      --gap: var(--space-md);
+      --w: 100%;
+    "
+  >
     <div
-      class="flex-1 bg-primary text-primary-foreground rounded-md p-md text-center text-sm font-strong"
+      data-ui="text-sm"
+      style="
+        --flex: 1;
+        --bg: var(--color-primary);
+        --text: var(--color-primary-foreground);
+        --rounded: var(--radius-md);
+        --p: var(--space-md);
+        --text-align: center;
+        --font-weight: var(--font-weight-strong);
+      "
     >
       Sidebar
     </div>
     <div
-      class="flex-1 bg-muted text-muted-foreground rounded-md p-md text-center text-sm font-strong"
+      data-ui="text-sm"
+      style="
+        --flex: 1;
+        --bg: var(--color-muted);
+        --text: var(--color-muted-foreground);
+        --rounded: var(--radius-md);
+        --p: var(--space-md);
+        --text-align: center;
+        --font-weight: var(--font-weight-strong);
+      "
     >
       Content
     </div>
     <div
-      class="flex-1 bg-muted text-muted-foreground rounded-md p-md text-center text-sm font-strong"
+      data-ui="text-sm"
+      style="
+        --flex: 1;
+        --bg: var(--color-muted);
+        --text: var(--color-muted-foreground);
+        --rounded: var(--radius-md);
+        --p: var(--space-md);
+        --text-align: center;
+        --font-weight: var(--font-weight-strong);
+      "
     >
       Aside
     </div>

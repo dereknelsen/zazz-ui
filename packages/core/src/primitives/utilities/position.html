@@ -1,13 +1,70 @@
-<div class="relative w-full max-w-xl h-md bg-muted rounded-lg p-md">
-  <span class="absolute top-sm left-sm ui-badge" data-variant="primary">top-sm left-sm</span>
-  <span class="absolute top-sm right-sm ui-badge" data-variant="muted">top-sm right-sm</span>
-  <span class="absolute bottom-sm left-sm ui-badge" data-variant="muted">bottom-sm left-sm</span>
-  <span class="absolute bottom-sm right-sm ui-badge" data-variant="primary"
-    >bottom-sm right-sm</span
+<div
+  style="
+    --position: relative;
+    --w: 100%;
+    --max-w: 96;
+    --h: var(--space-md);
+    --bg: var(--color-muted);
+    --rounded: var(--radius-lg);
+    --p: var(--space-md);
+  "
+>
+  <span
+    data-ui="badge"
+    data-badge-variant="primary"
+    style="
+      --position: absolute;
+      --top: var(--space-sm);
+      --left: var(--space-sm);
+    "
+    >--top: var(--space-sm); --left: var(--space-sm)</span
+  >
+  <span
+    data-ui="badge"
+    data-badge-variant="muted"
+    style="
+      --position: absolute;
+      --top: var(--space-sm);
+      --right: var(--space-sm);
+    "
+    >--top: var(--space-sm); --right: var(--space-sm)</span
+  >
+  <span
+    data-ui="badge"
+    data-badge-variant="muted"
+    style="
+      --position: absolute;
+      --bottom: var(--space-sm);
+      --left: var(--space-sm);
+    "
+    >--bottom: var(--space-sm); --left: var(--space-sm)</span
+  >
+  <span
+    data-ui="badge"
+    data-badge-variant="primary"
+    style="
+      --position: absolute;
+      --bottom: var(--space-sm);
+      --right: var(--space-sm);
+    "
+    >--bottom: var(--space-sm); --right: var(--space-sm)</span
   >
   <div
-    class="absolute inset-md flex items-center justify-center border border-dashed rounded-md text-xs text-muted-foreground font-strong"
+    data-ui="text-xs"
+    style="
+      --position: absolute;
+      --inset: var(--space-md);
+      --display: flex;
+      --items: center;
+      --justify: center;
+      --border-width: 1px;
+      --border-color: var(--color-border);
+      --border-style: dashed;
+      --rounded: var(--radius-md);
+      --text: var(--color-muted-foreground);
+      --font-weight: var(--font-weight-strong);
+    "
   >
-    absolute inset-md
+    --position: absolute; --inset: var(--space-md)
   </div>
 </div>

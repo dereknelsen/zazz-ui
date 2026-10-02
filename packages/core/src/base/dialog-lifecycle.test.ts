@@ -2,7 +2,7 @@
 "use strict";
 
 /**
- * @fileoverview Tests for the dialog lifecycle owner (ADR-0003): one watcher
+ * @fileoverview Tests for the dialog lifecycle owner: one watcher
  * re-emitting `<dialog>` visibility as bubbling `zazz:dialog-open` /
  * `zazz:dialog-close` events on the dialog.
  */

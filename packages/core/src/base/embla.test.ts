@@ -17,14 +17,22 @@ describe("setActiveIndex", () => {
   it("marks only the selected node active", () => {
     const nodes = makeNodes(3);
     setActiveIndex(nodes, 1);
-    expect(nodes.map((n) => n.classList.contains("is-active"))).toEqual([false, true, false]);
+    expect(nodes.map((n) => n.getAttribute("data-carousel-state") === "active")).toEqual([
+      false,
+      true,
+      false,
+    ]);
   });
 
   it("moves the active class when the selection changes", () => {
     const nodes = makeNodes(3);
     setActiveIndex(nodes, 0);
     setActiveIndex(nodes, 2);
-    expect(nodes.map((n) => n.classList.contains("is-active"))).toEqual([false, false, true]);
+    expect(nodes.map((n) => n.getAttribute("data-carousel-state") === "active")).toEqual([
+      false,
+      false,
+      true,
+    ]);
   });
 
   it("does not touch aria-current by default", () => {

@@ -1,19 +1,60 @@
 <article
-  class="flex flex-col gap-md w-full max-w-xl bg-card text-card-foreground border rounded-lg shadow-md p-lg"
+  style="
+    --display: flex;
+    --flex-direction: column;
+    --gap: var(--space-md);
+    --w: 100%;
+    --max-w: 96;
+    --bg: var(--color-card);
+    --text: var(--color-card-foreground);
+    --border-width: 1px;
+    --border-color: var(--color-border);
+    --rounded: var(--radius-lg);
+    --shadow: var(--shadow-md);
+    --p: var(--space-lg);
+  "
 >
-  <div class="flex items-center justify-between gap-sm">
-    <span class="ui-badge" data-variant="primary">Utilities</span>
-    <span class="text-xs text-muted-foreground tabular-nums">12 groups</span>
+  <div
+    style="
+      --display: flex;
+      --items: center;
+      --justify: space-between;
+      --gap: var(--space-sm);
+    "
+  >
+    <span data-ui="badge" data-badge-variant="primary">Utilities</span>
+    <span data-ui="text-xs" style="--text: var(--color-muted-foreground)">12 groups</span>
   </div>
-  <hgroup class="flex flex-col gap-xs">
-    <h3 class="text-lg font-heading">Composed from atoms</h3>
-    <p class="text-sm text-muted-foreground text-pretty">
+  <hgroup
+    style="
+      --display: flex;
+      --flex-direction: column;
+      --gap: var(--space-xs);
+    "
+  >
+    <h3 data-ui="text-lg" style="--font-family: var(--font-family-heading)">Composed from atoms</h3>
+    <p
+      data-ui="text-sm"
+      style="
+        --text: var(--color-muted-foreground);
+        --text-wrap: pretty;
+      "
+    >
       No component class here — just flex, gap, padding, radius, border, shadow, and color utilities
       reading the same semantic tokens.
     </p>
   </hgroup>
-  <div class="flex items-center gap-sm pt-sm border-t">
-    <button type="button" class="ui-button" data-variant="primary">Get started</button>
-    <button type="button" class="ui-button" data-variant="ghost">Browse groups</button>
+  <div
+    style="
+      --display: flex;
+      --items: center;
+      --gap: var(--space-sm);
+      --pt: var(--space-sm);
+      --border-t-width: 1px;
+      --border-t-color: var(--color-border);
+    "
+  >
+    <button type="button" data-ui="button" data-button-variant="primary">Get started</button>
+    <button type="button" data-ui="button" data-button-variant="ghost">Browse groups</button>
   </div>
 </article>

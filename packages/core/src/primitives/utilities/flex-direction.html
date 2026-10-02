@@ -1,34 +1,137 @@
-<div class="flex flex-col gap-lg w-full max-w-xl">
-  <div class="flex flex-col gap-xs">
-    <span class="text-xs text-muted-foreground font-strong">flex flex-row</span>
-    <div class="flex flex-row gap-sm">
+<div
+  style="
+    --display: flex;
+    --flex-direction: column;
+    --gap: var(--space-lg);
+    --w: 100%;
+    --max-w: 96;
+  "
+>
+  <div
+    style="
+      --display: flex;
+      --flex-direction: column;
+      --gap: var(--space-xs);
+    "
+  >
+    <span
+      data-ui="text-xs"
+      style="
+        --text: var(--color-muted-foreground);
+        --font-weight: var(--font-weight-strong);
+      "
+      >--flex-direction: row</span
+    >
+    <div
+      style="
+        --display: flex;
+        --flex-direction: row;
+        --gap: var(--space-sm);
+      "
+    >
       <div
-        class="flex-1 bg-primary text-primary-foreground rounded-md p-sm text-center text-sm font-strong"
+        data-ui="text-sm"
+        style="
+          --flex: 1;
+          --bg: var(--color-primary);
+          --text: var(--color-primary-foreground);
+          --rounded: var(--radius-md);
+          --p: var(--space-sm);
+          --text-align: center;
+          --font-weight: var(--font-weight-strong);
+        "
       >
         1
       </div>
       <div
-        class="flex-1 bg-primary text-primary-foreground rounded-md p-sm text-center text-sm font-strong"
+        data-ui="text-sm"
+        style="
+          --flex: 1;
+          --bg: var(--color-primary);
+          --text: var(--color-primary-foreground);
+          --rounded: var(--radius-md);
+          --p: var(--space-sm);
+          --text-align: center;
+          --font-weight: var(--font-weight-strong);
+        "
       >
         2
       </div>
       <div
-        class="flex-1 bg-primary text-primary-foreground rounded-md p-sm text-center text-sm font-strong"
+        data-ui="text-sm"
+        style="
+          --flex: 1;
+          --bg: var(--color-primary);
+          --text: var(--color-primary-foreground);
+          --rounded: var(--radius-md);
+          --p: var(--space-sm);
+          --text-align: center;
+          --font-weight: var(--font-weight-strong);
+        "
       >
         3
       </div>
     </div>
   </div>
-  <div class="flex flex-col gap-xs">
-    <span class="text-xs text-muted-foreground font-strong">flex flex-col</span>
-    <div class="flex flex-col gap-sm">
-      <div class="bg-muted text-muted-foreground rounded-md p-sm text-center text-sm font-strong">
+  <div
+    style="
+      --display: flex;
+      --flex-direction: column;
+      --gap: var(--space-xs);
+    "
+  >
+    <span
+      data-ui="text-xs"
+      style="
+        --text: var(--color-muted-foreground);
+        --font-weight: var(--font-weight-strong);
+      "
+      >--flex-direction: column</span
+    >
+    <div
+      style="
+        --display: flex;
+        --flex-direction: column;
+        --gap: var(--space-sm);
+      "
+    >
+      <div
+        data-ui="text-sm"
+        style="
+          --bg: var(--color-muted);
+          --text: var(--color-muted-foreground);
+          --rounded: var(--radius-md);
+          --p: var(--space-sm);
+          --text-align: center;
+          --font-weight: var(--font-weight-strong);
+        "
+      >
         1
       </div>
-      <div class="bg-muted text-muted-foreground rounded-md p-sm text-center text-sm font-strong">
+      <div
+        data-ui="text-sm"
+        style="
+          --bg: var(--color-muted);
+          --text: var(--color-muted-foreground);
+          --rounded: var(--radius-md);
+          --p: var(--space-sm);
+          --text-align: center;
+          --font-weight: var(--font-weight-strong);
+        "
+      >
         2
       </div>
-      <div class="bg-muted text-muted-foreground rounded-md p-sm text-center text-sm font-strong">
+      <div
+        data-ui="text-sm"
+        style="
+          --bg: var(--color-muted);
+          --text: var(--color-muted-foreground);
+          --rounded: var(--radius-md);
+          --p: var(--space-sm);
+          --text-align: center;
+          --font-weight: var(--font-weight-strong);
+        "
+      >
         3
       </div>
     </div>
