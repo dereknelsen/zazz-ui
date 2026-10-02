@@ -29,27 +29,27 @@ Borrow the confidence and negative space; skip the craft-narrative framing.
   weight range — Geist, Satoshi, General Sans, or Space Grotesk — set heavy and tight for headlines.
   Emphasis comes from **weight and size, not italic serif accents** (that's heritage's move, not
   this one). Micro-labels, eyebrows, and stat captions go uppercase and wide-tracked via
-  `text-eyebrow`; everything else stays sentence case per the house rule.
+  the `text-eyebrow` role; everything else stays sentence case per the house rule.
 - **A true `text-display` moment.** Give the hero a genuine `text-display`/`text-h1` at the heaviest
-  weight against calm `text-md` `--muted-foreground` body copy — the contrast is the hierarchy.
+  weight against calm `text-md` `--color-muted-foreground` body copy — the contrast is the hierarchy.
   Open sections with a short accent-colored `text-eyebrow` ("features", "how it works").
-- **Near-black surface, one hot accent.** Lean the dark mode: `--background` near-black,
-  `--foreground` white, `--muted-foreground` for body. Route a **single saturated accent** through
-  `--primary` (e.g. a hot orange, electric lime, or signal red) and spend it sparingly — CTAs,
+- **Near-black surface, one hot accent.** Lean the dark mode (`data-ui-theme="dark"` on `<html>`): `--color-background`
+  near-black, `--color-foreground` white, `--color-muted-foreground` for body. Route a **single
+  saturated accent** through `--color-primary` (e.g. a hot orange, electric lime, or signal red) and spend it sparingly — CTAs,
   stat numerals, active nav, list indices. No second brand color competing; restraint is the point.
 - **Oversized ghost numerals as the motif.** The signature decoration: huge step/stat numbers
-  (`text-display` scale) at low opacity via `--muted` or a tint, overlapped behind their content
-  with `grid-area-pile`. Also a faint watermark figure behind the hero. Texture, never legible focus.
-- **Bordered cards on flat dark, atmosphere from tokens.** Cards are `--card` with
-  `1px solid var(--border)` on the dark surface — flat, hairline-defined, no drop shadows. Build
-  depth from a subtle `--primary`-scale wash or grain in section backgrounds and decorative
-  `--border` dividers; reserve `--shadow-*` for genuine overlays (popovers, dialogs) only.
+  (`text-display` scale) at low opacity via `--color-muted` or a tint, overlapped behind their content
+  with `data-ui="grid-pile"`. Also a faint watermark figure behind the hero. Texture, never legible focus.
+- **Bordered cards on flat dark, atmosphere from tokens.** Cards are `data-ui="card"` with
+  `--border-width: 1px; --border-color: var(--color-border)` on the dark surface — flat, hairline-defined, no drop shadows. Build
+  depth from a subtle `--color-primary-*`-scale wash or grain in section backgrounds and decorative
+  `--color-border` dividers; reserve `--shadow-*` for genuine overlays (popovers, dialogs) only.
 - **Moody, in-context imagery.** When photography appears (blog cards, features), it's dark and
   atmospheric — night cityscapes, low-key product shots — framed in `--radius-lg` figures, not
   bright studio cut-outs. Duotone or a dark overlay keeps it consistent with the surface.
 - **Tight, structured rhythm with air.** Break the centered stack: dense bordered grids for
-  features and stats against `--gap-xl` (96px) breathing room around section heads. Use the
-  `.container` band system — `full` grids against capped `article`/`lg` intro text.
+  features and stats against `var(--space-xl)` (96px) breathing room around section heads. Use the
+  layout bands — `--col: layout-full` grids against capped `--max-w: var(--article-lg)` intro text.
 - **One orchestrated reveal.** A single staggered hero load (`data-reveal` / `data-reveal-each`)
   and scroll reveals down the page beat scattered micro-interactions. `--spring-easing` for movement.
 
@@ -58,25 +58,25 @@ Borrow the confidence and negative space; skip the craft-narrative framing.
 Build sections from Zazz components and the band system — don't hand-roll CSS. See
 `references/components.md` and `PATTERNS.md`.
 
-1. **Sticky header:** Wordmark top-left, slim center/right nav, a `.ui-button` `data-variant="link"`
-   sign-in, and a `.ui-button` `data-variant="primary"` "sign up" in the accent.
+1. **Sticky header:** Wordmark top-left, slim center/right nav, a `data-button-variant="link"`
+   sign-in, and a `data-button-variant="primary"` "sign up" in the accent.
 2. **Hero:** Accent `text-eyebrow` + a heavy `text-display`/`text-h1` claim ("Transform the way your
-   team works") over `--muted-foreground` subcopy, with an oversized ghost numeral/figure piled
-   behind via `grid-area-pile`. Dual CTAs — one `primary`, one bordered default (`.ui-button` with no
-   variant, or `data-variant="ghost"`).
-3. **Stat band:** A row of 3–4 big accent numerals (`text-display`/`text-h2`, `--primary`) with
+   team works") over `--color-muted-foreground` subcopy, with an oversized ghost numeral/figure piled
+   behind via `data-ui="grid-pile"`. Dual CTAs — one `primary`, one bordered (`data-button-variant="outline"`,
+   or the default button with no preset).
+3. **Stat band:** A row of 3–4 big accent numerals (`text-display`/`text-h2`, `--color-primary`) with
    `text-eyebrow` labels ("500k+ active users", "99.99% uptime"). Hard numbers as credibility.
 4. **Logo / sponsors:** Bordered cards or a grayscale logo row on the dark surface — "trusted by",
-   partner placeholders — separated by `--border`.
+   partner placeholders — separated by `--color-border`.
 5. **About / positioning:** A capped (`article`) heavy heading on the future/vision, calm body, and
    a single accent stat card (e.g. an "A+" badge) alongside.
 6. **Features grid:** `text-eyebrow` + heading, then a bordered 3-column grid of feature cards
-   (`--card`, `1px solid var(--border)`, line icon + title + `--muted-foreground` description).
+   (`data-ui="card"`, 1px `--color-border`, line icon + title + `--color-muted-foreground` description).
 7. **Insights / blog:** A row of dark photographic cards (`--radius-lg` figures, moody imagery) with
-   date eyebrow, title, and a "view all ↗" `.ui-button` `data-variant="link"`.
+   date eyebrow, title, and a "view all ↗" `data-button-variant="link"` button.
 8. **How it works:** Numbered steps with oversized ghost `01 / 02 / 03` numerals piled behind each
    step's title + description.
-9. **Why choose us:** A numbered accent list (`01`–`04` in `--primary`) of differentiators beside a
+9. **Why choose us:** A numbered accent list (`01`–`04` in `--color-primary`) of differentiators beside a
    short heading.
 10. **Closing / footer:** A centered "trusted by" line, then a dark footer block with wordmark,
     tagline, multi-column nav, and a legal bar.

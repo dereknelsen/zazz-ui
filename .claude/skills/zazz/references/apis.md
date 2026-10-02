@@ -15,12 +15,12 @@ enhances markup; you rarely touch it.
 | Popover API                           | tooltip, menu, navigation-menu, toaster | `popover="auto"` / `popover="hint"` / `popover="manual"` (toaster region — no light dismiss), `popovertarget="<id>"`, `:popover-open`                           | — (native; Baseline 2025)               |
 | Invoker Commands                      | dialog, lightbox, toaster               | `command="show-modal"` / `command="close"` / custom `command="--toast[-variant]"`, `commandfor="<id>"`                                                          | — (native; Baseline 2026)               |
 | Interest Invokers                     | tooltip, menu, menubar, navigation-menu | `interestfor="<id>"` (hover/focus/long-press → hint, wires ARIA)                                                                                                | **`invokers/interest`** (Chromium-only) |
-| CSS Anchor Positioning                | popover/tooltip placement               | `data-side`, `data-align` (drive `anchor-name` / `position-area`)                                                                                               | `@supports`-gated; UA-centered fallback |
+| CSS Anchor Positioning                | popover/tooltip placement               | `data-popover-side`, `data-popover-align` on the `[popover]` (drive `position-area`)                                                                            | `@supports`-gated; UA-centered fallback |
 | Native `<dialog>`                     | dialog, lightbox, mobile-menu           | `<dialog>`, `::backdrop`, `closedby="any"`                                                                                                                      | —                                       |
 | Native `<details>`                    | accordion                               | `<details>`/`<summary>`, `::details-content`, `interpolate-size: allow-keywords`                                                                                | —                                       |
 | View Transitions                      | cross-page nav                          | `@view-transition { navigation: auto }`, `data-transition-layer="global-header"` / `="global-footer"` (`<main>` is automatic), `document.startViewTransition()` | —                                       |
-| Navigation API                        | SPA-style nav                           | `navigation.js` (app-level; **not** loaded in preview iframes)                                                                                                  | falls back to full page load            |
-| `light-dark()`                        | theming, dark mode                      | `.dark`/`.light` class or `[data-theme]` — pure `color-scheme` pins; tokens re-resolve                                                                          | —                                       |
+| Navigation API                        | SPA-style nav                           | `navigation.js`, opt-in: `<html data-ui-navigation="swap">`, `data-ui-persist="<id>"` to keep an element                                                        | falls back to full page load            |
+| `light-dark()`                        | theming, dark mode                      | `data-ui-theme="dark"` / `"light"` on any element pins `color-scheme`; `--color-*` tokens re-resolve                                                            | —                                       |
 | IntersectionObserver                  | scroll reveals                          | `[data-reveal]` / `[data-reveal-each]` (via `reveal.js`)                                                                                                        | —                                       |
 | `sibling-index()` / `sibling-count()` | reveal stagger delays                   | `[data-reveal-each]` children compute `--ui-reveal-wait` natively                                                                                               | `@supports`-gated; JS fallback          |
 | `:user-invalid` / `:has()`            | form validation                         | surfaces error state after commit, not while typing                                                                                                             | —                                       |
@@ -31,21 +31,21 @@ Configure entirely in markup. Don't edit the `@zazz-ui/core` package source (`pa
 unless the task is explicitly about framework internals. Every behavior ships in one ES module —
 `packages/core/src/index.js` — loaded with a single
 `<script type="module" src="…/index.js">`; its `import` graph orders the rest.
-The only external ordering: Embla-backed components need the Embla CDN UMD bundles loaded (as
-`defer` scripts) **before** the module, since `embla.js` reads them as globals.
+Embla-backed components resolve the Embla ESM builds through the head's import map (pinned,
+SRI-checked); keep the import map above the module.
 
 ### Light-DOM web components
 
 These custom elements augment regular child markup; they do not use shadow DOM or templates,
-so existing Zazz classes and `data-*` hooks keep working.
+so the `data-ui`, preset, slot, and utility markup inside them keeps working.
 
-| Element         | Script              | Use for                                     | Notes                                                                                                        |
-| --------------- | ------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `<ui-carousel>` | `carousel.js`       | Component carousels and carousel roots      | The element is the Embla root; put `data-carousel-*` options on it                                           |
-| `<ui-lightbox>` | `lightbox.js`       | Inline gallery + fullscreen dialog lightbox | Coordinates gallery/dialog slide state; opening/closing still uses Invoker Commands                          |
-| `<ui-password>` | `password-group.js` | Password show/hide toggle                   | Wrap `.ui-password-group`; optional `data-label-show` / `data-label-hide`; CSS swaps icons via ARIA          |
-| `<ui-tabs>`     | `tabs.js`           | Radio-driven tabs with richer keyboard nav  | Enhances the CSS-only radio tabs with orientation-aware arrows, Home/End, and wrap-around                    |
-| `<ui-toaster>`  | `toaster.js`        | Stacked toast notifications (top layer)     | Needs `popover="manual"`; fire via `command="--toast"` on any button or `window.Toaster.toast()/success()/…` |
+| Element         | Script              | Use for                                     | Notes                                                                                                           |
+| --------------- | ------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `<ui-carousel>` | `carousel.js`       | Component carousels and carousel roots      | The element is the Embla root; put `data-carousel-*` options on it                                              |
+| `<ui-lightbox>` | `lightbox.js`       | Inline gallery + fullscreen dialog lightbox | Coordinates gallery/dialog slide state; opening/closing still uses Invoker Commands                             |
+| `<ui-password>` | `password-group.js` | Password show/hide toggle                   | Wrap `data-ui="password-group"`; optional `data-password-group-label-show` / `-label-hide`; icons swap via ARIA |
+| `<ui-tabs>`     | `tabs.js`           | Radio-driven tabs with richer keyboard nav  | Enhances the CSS-only radio tabs with orientation-aware arrows, Home/End, and wrap-around                       |
+| `<ui-toaster>`  | `toaster.js`        | Stacked toast notifications (top layer)     | Needs `popover="manual"`; fire via `command="--toast"` on any button or `window.Toaster.toast()/success()/…`    |
 
 Component preview iframes use `packages/core/src/manifest.ts` to load scripts and expose a JS
 tab for these files. Custom elements are `display: inline` by default, so their component
@@ -54,8 +54,8 @@ styles define the needed block/flex display.
 ### Reveal — `reveal.js` (`window.Reveal`)
 
 Put `data-reveal` on a single element, or `data-reveal-each` on a parent to stagger its
-**direct children**. The animation plays once when the element enters the viewport (adds
-`.in-viewport`).
+**direct children**. The animation plays once when the element enters the viewport (the script
+writes `data-reveal-state="in-view"`).
 
 | Attribute                          | Values / unit                                                             | Notes                                                        |
 | ---------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------ |
@@ -72,59 +72,70 @@ Put `data-reveal` on a single element, or `data-reveal-each` on a parent to stag
 
 **Reveal owns `transition-*` on the element it's set on.** It drives the animation through
 `transition-duration`, `-delay` (the stagger), `-property`, and `-timing-function`, so don't
-put a `transition` / `transition-all` utility on the same element — they'd compete for those
-properties and break the stagger. When an element also needs its own transition (a `hover:`
-state, for example), wrap it: put the reveal on an outer `div` and keep `transition` on the
-inner element.
+put a `--transition` utility on the same element — they'd compete for those properties and break
+the stagger. When an element also needs its own transition (a `--border-color--hover` state, for
+example), wrap it: put the reveal on an outer `div` and keep `--transition` on the inner element.
 
 ```html
 <!-- ✅ outer div reveals; inner card keeps its own hover transition -->
 <div data-reveal-each="slide-up">
-  <a class="bg-card border rounded-lg transition hover:border-primary">…</a>
-  <a class="bg-card border rounded-lg transition hover:border-primary">…</a>
+  <div>
+    <a
+      data-ui="card"
+      href="…"
+      style="
+        --transition: var(--default-transition);
+        --border-width: 1px;
+        --border-color: var(--color-border);
+        --border-color--hover: var(--color-primary);
+      "
+      >…</a
+    >
+  </div>
 </div>
 
-<!-- ❌ same element does both — `transition` wipes out reveal's stagger delay -->
-<a class="bg-card border rounded-lg transition hover:border-primary" data-reveal="slide-up">…</a>
+<!-- ❌ same element does both — `--transition` wipes out reveal's stagger delay -->
+<a data-ui="card" data-reveal="slide-up" href="…" style="--transition: var(--default-transition)"
+  >…</a
+>
 ```
 
-### Embla carousel — `embla.js` (`window.EmblaInit`) — requires the Embla CDN UMD bundles
+### Embla carousel — `embla.js` (`window.EmblaInit`) — Embla via the import map
 
-The root is `<ui-carousel>` (class form `.ui-carousel`); put config on that element. Mark up
-child roles as slots: `data-slot="carousel-<role>"`. `data-slot` is a space-separated token
-list, so a lightbox element can double as a carousel role
-(`data-slot="lightbox-slide carousel-slide"`).
+The root is `<ui-carousel>` (or `data-ui="carousel"`); put config on that element. Mark up
+child roles as slots: `data-carousel-slot="<role>"`. A lightbox element doubles as a carousel
+role by carrying both slot attributes (`data-lightbox-slot="slide" data-carousel-slot="slide"`).
 
-**Role slots:** `carousel-viewport` (required) · `carousel-container` · `carousel-slide` ·
-`carousel-prev` · `carousel-next` · `carousel-dots` · `carousel-dot` (template, cloned per
-snap) · `carousel-thumbs` (linked thumb carousel).
+**Role slots:** `viewport` (required) · `container` · `slide` · `prev` · `next` · `dots` ·
+`dot` (template, cloned per snap) · `thumbs` (linked thumb carousel).
 
 **Config on the carousel root** (kebab-case → Embla options via
 `Utils.parseDataAttributes`):
 
-| Attribute                                                | Example                                                    | Purpose                                                                   |
-| -------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------- |
-| any core Embla option                                    | `data-carousel-loop="true"`, `data-carousel-align="start"` | passed straight to Embla                                                  |
-| `data-carousel-keyboard`                                 | `"false"`                                                  | disable ArrowLeft/Right navigation                                        |
-| `data-carousel-plugins`                                  | `"class-names autoplay"`                                   | space-separated plugin slugs to load                                      |
-| `data-carousel-autoplay-*`                               | `data-carousel-autoplay-delay="3000"`                      | Autoplay plugin options (requires `autoplay` in plugins)                  |
-| `data-carousel-auto-scroll-*`                            | `data-carousel-auto-scroll-speed="2"`                      | AutoScroll plugin options (requires `auto-scroll` in plugins)             |
-| `data-carousel-class-names-*`                            | `data-carousel-class-names-snapped="is-snapped"`           | ClassNames plugin options (requires `class-names` in plugins)             |
-| `data-carousel-thumbs-*` (on the `carousel-thumbs` slot) | `data-carousel-thumbs-contain-scroll="keepSnaps"`          | thumb carousel options (defaults: containScroll keepSnaps, dragFree true) |
-| `data-carousel-start` (on a trigger w/ `commandfor`)     | `data-carousel-start="2"`                                  | open a dialog carousel at slide N                                         |
+| Attribute                                            | Example                                                    | Purpose                                                                   |
+| ---------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------- |
+| any core Embla option                                | `data-carousel-loop="true"`, `data-carousel-align="start"` | passed straight to Embla                                                  |
+| `data-carousel-keyboard`                             | `"false"`                                                  | disable ArrowLeft/Right navigation                                        |
+| `data-carousel-plugins`                              | `"class-names autoplay"`                                   | space-separated plugin slugs to load                                      |
+| `data-carousel-autoplay-*`                           | `data-carousel-autoplay-delay="3000"`                      | Autoplay plugin options (requires `autoplay` in plugins)                  |
+| `data-carousel-auto-scroll-*`                        | `data-carousel-auto-scroll-speed="2"`                      | AutoScroll plugin options (requires `auto-scroll` in plugins)             |
+| `data-carousel-class-names-*`                        | `data-carousel-class-names-snapped="is-snapped"`           | ClassNames plugin options (requires `class-names` in plugins)             |
+| `data-carousel-thumbs-*` (on the `thumbs` slot)      | `data-carousel-thumbs-contain-scroll="keepSnaps"`          | thumb carousel options (defaults: containScroll keepSnaps, dragFree true) |
+| `data-carousel-start` (on a trigger w/ `commandfor`) | `data-carousel-start="2"`                                  | open a dialog carousel at slide N                                         |
 
 Script-managed (don't set by hand): `data-carousel-init`,
-`data-carousel-start-index`. The script adds `.is-active` to the current
-dot/thumb and stores `_emblaApi` on the root. `<ui-carousel>` initializes on connect,
+`data-carousel-start-index`, and `data-carousel-state` (`active` on the current dot/thumb;
+`in-view`, `snapped`, `dragging` on slides). The script stores `_emblaApi` on the root. `<ui-carousel>` initializes on connect,
 defers while inside a closed `<dialog>`, and destroys its Embla instances on disconnect.
 
 ### Helpers and app glue
 
 - **`utils.js` (`window.Utils`)** — `parseValue` and `parseDataAttributes(node, "data-carousel-")`
-  convert kebab-case `data-*` to a typed options object. This is why markup configures Embla
-  with zero JS.
-- **`navigation.js`** — intercepts same-origin navigations, swaps `<main>`, runs a View
-  Transition, and refreshes Reveal/Embla. App-level only; the component preview iframes
+  convert kebab-case `data-*` to a typed options object. It runs only on elements carrying the
+  identity, so a third-party `data-carousel-*` attribute elsewhere is ignored.
+- **`navigation.js`** — opt-in with `<html data-ui-navigation="swap">`: swaps the whole
+  `<body>` between opted-in pages, keeps only `data-ui-persist="<id>"` elements, runs a View
+  Transition, and refreshes Reveal/Embla (see `packages/core/AUTHORING.md`, Navigation). App-level only; the component preview iframes
   deliberately omit it. Custom elements initialize themselves when connected, so SPA swaps
   do not need a separate init call for them.
 
@@ -139,5 +150,5 @@ no `interestfor` at all. See ADR-0011.
 The Popover API and Invoker Commands were polyfilled through 0.3.x and are not any more; they
 are native across the support floor. Anchor positioning is below the floor but `@supports`-gated
 rather than polyfilled. The Embla Carousel ESM builds also load from the CDN, but through the
-import map as ordinary dependencies — not polyfills. See `packages/core/examples/index.html`
-for the exact tags and SRI hashes.
+import map as ordinary dependencies — not polyfills. `buildHead()` in `packages/core/src/head.ts`
+generates the exact tags and SRI hashes.

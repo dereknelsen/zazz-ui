@@ -7,6 +7,7 @@ colorMode: light dark
 colors:
   # No defaults ship — author every value from the brand (see Brand Customization below).
   # Values are OKLCH — the authoritative token format (HEX is imprecise for our scales).
+  # Theme inputs: set on :root as --<name>; markup reads them as var(--color-<name>).
   # Theme (author light-mode values; dark mode swaps automatically)
   background:
   foreground:
@@ -112,25 +113,29 @@ typography:
     lineHeight: 1.6
 
 spacing:
-  # Semantic scale only — px + xs–xl. No numeric step scale.
-  px: 1px
+  # --space-2xs … --space-2xl (multiples of --spacing; desktop maximums). No numeric step scale.
+  2xs: 4px
   xs: 8px
   sm: 16px
   md: 24px
   lg: 44px
   xl: 96px
+  2xl: 160px
 
 rounded:
   # Roundness is unspecified — author the scale from the brand (full stays pill).
+  2xs:
   xs:
   sm:
   md:
   lg:
   xl:
+  2xl:
   full: 9999px
 
 components:
-  # Variants below match the shipped `data-variant` values (no attribute = default).
+  # Variants below match the shipped presets: data-button-variant / data-badge-variant
+  # (no attribute = default).
   button-default:
     backgroundColor: "{colors.card}"
     textColor: "{colors.foreground}"
@@ -147,6 +152,11 @@ components:
     rounded: "{rounded.md}"
     padding: 10px
   button-ghost:
+    backgroundColor: transparent
+    textColor: "{colors.foreground}"
+    rounded: "{rounded.md}"
+    padding: 10px
+  button-outline:
     backgroundColor: transparent
     textColor: "{colors.foreground}"
     rounded: "{rounded.md}"
@@ -177,8 +187,8 @@ components:
     rounded: "{rounded.md}"
     padding: 10px
   # Badge ships primary/muted/ghost/link only — no destructive or status variants.
-  # Status badges (info/success/warning/destructive) are an instance override, e.g.
-  # style="--ui-badge-background: var(--success); --ui-badge-foreground: var(--success-foreground)".
+  # Status badges (info/success/warning/destructive) are an instance hook override, e.g.
+  # style="--ui-badge-bg: var(--color-success); --ui-badge-text: var(--color-success-foreground)".
   badge:
     backgroundColor: "{colors.background}"
     textColor: "{colors.foreground}"
@@ -257,18 +267,18 @@ The token contract in the frontmatter is what lets you be bold without the resul
 - **Commit to a direction** — one cohesive, opinionated aesthetic true to the brand, not a safe average. Vary between light and dark, different type pairings, different atmospheres across generations.
 - **Distinctive typography** — pair the brand's sans with a classic serif italic (Playfair Display Italic, Cormorant Garamond Italic) on emphasis words ("_quality_", "_trusted_") for editorial cadence, and use the full scale for real hierarchy: a genuine `text-display`/`text-h1` moment against calm body copy, not five near-identical sizes. Always adopt the brand's real typefaces — never default to generic system fonts.
 - **Commit to the palette** — a dominant surface with sharp brand accents reads as _designed_; timid, evenly-distributed grays read as slop. The frontmatter ships no default palette — fill it from the brand and make its colors the point.
-- **Compose with tension** — break the centered stack. Play full-bleed imagery against capped text columns, use the left-label layout, overlap layers, and let section rhythm (`--gap-xl`, 96px) open real negative space. Asymmetry and generous whitespace are choices, not accidents.
-- **Build atmosphere, not flat fills** — layer depth from tokens: gradient washes across a brand scale (`--primary-600` → `--primary-900`), `shade`/`tint` transparencies, subtle noise/grain, decorative `--border` rules, and emotive photography. (Keep surfaces flat and reserve `--shadow-*` for genuine elevation — atmosphere lives in the background, not on every card.)
+- **Compose with tension** — break the centered stack. Play full-bleed imagery against capped text columns, use the left-label layout, overlap layers, and let section rhythm (`--space-xl`, 96px) open real negative space. Asymmetry and generous whitespace are choices, not accidents.
+- **Build atmosphere, not flat fills** — layer depth from tokens: gradient washes across a brand scale (`--color-primary-600` → `--color-primary-900`), `shade`/`tint` transparencies, subtle noise/grain, decorative `--color-border` rules, and emotive photography. (Keep surfaces flat and reserve `--shadow-*` for genuine elevation — atmosphere lives in the background, not on every card.)
 - **Spend motion where it counts** — one orchestrated page-load with staggered reveals delights more than scattered micro-interactions. Use `--spring-easing` / `--spring-duration` for confident, unhurried movement and scroll reveals for narrative pacing.
 - **Balance conversion mechanics with brand storytelling** — clear CTAs and product grids alongside testimonials, messaging, and premium photography.
 
 **Discipline** — keeps it consistent:
 
 - **Never use generic AI aesthetics** — no cold tech minimalism, cliched startup palettes, sterile layouts, or the lazy violet-gradient-on-white centered hero. Designs must feel unique to the brand.
-- **Use Zazz tokens exclusively** — never hardcode colors, spacing, radii, shadows, or typography. Use `var(--token-name)`.
-- **Typography via `text-*` classes** — never compose type from individual size/weight/leading utilities.
-- **Spacing via `--gap-*` semantic scale** — never use arbitrary px/rem values.
-- **Dark mode for free** — role tokens auto-swap; never write separate dark-mode overrides for token-handled values.
+- **Use Zazz tokens exclusively** — never hardcode colors, spacing, radii, shadows, or typography. Use `var(--token-name)` in style utilities (`style="--bg: var(--color-card)"`); markup rules are in `packages/core/AUTHORING.md`.
+- **Typography via roles** — native `h1`–`h6` or `data-ui="text-*"`; override one property with a utility, never rebuild a role from utilities.
+- **Spacing via the `--space-*` semantic scale** — never use arbitrary px/rem values.
+- **Dark mode for free** — `--color-*` roles auto-swap; pin a scheme with `data-ui-theme`; never write separate dark-mode overrides for token-handled values.
 
 ---
 
@@ -276,30 +286,32 @@ The token contract in the frontmatter is what lets you be bold without the resul
 
 ### Theme (Mode-Aware Role Tokens)
 
-| Token                  | Role                                          | Light Character              | Dark Character              |
-| ---------------------- | --------------------------------------------- | ---------------------------- | --------------------------- |
-| `--background`         | Page surface                                  | White / warm off-white       | Near-black (brand-cast)     |
-| `--foreground`         | Default text                                  | Rich charcoal (neutral-900)  | Pure white                  |
-| `--border`             | 1px lines and dividers                        | Soft cool gray (neutral-100) | Deep gray                   |
-| `--border-foreground`  | Text on outlined/bordered elements            | Near-opaque white (tint-950) | Subtle white (tint-100)     |
-| `--card`               | Card surface, elevated from background        | Pure white                   | Dark charcoal               |
-| `--card-foreground`    | Text on cards                                 | Rich charcoal                | Pure white                  |
-| `--popover`            | Popover / menu surface                        | Pure white                   | Near-black (shade-950)      |
-| `--popover-foreground` | Text on popovers and menus                    | Rich charcoal                | Pure white                  |
-| `--input`              | Input field background                        | Near-white (neutral-50)      | Barely-there tint (tint-50) |
-| `--input-foreground`   | Input text                                    | Rich charcoal                | Pure white                  |
-| `--muted`              | Subtle dim — always darker than its surface   | shade-50                     | tint-50                     |
-| `--muted-foreground`   | De-emphasized text, helper copy               | shade-600                    | tint-600                    |
-| `--faded`              | Subtle fade — always lighter than its surface | tint-100                     | shade-100                   |
-| `--faded-foreground`   | Text on faded surfaces                        | tint-600                     | shade-600                   |
+Markup reads `--color-<role>`; the theme input on `:root` is the bare `--<role>`.
+
+| Token                        | Role                                          | Light Character              | Dark Character              |
+| ---------------------------- | --------------------------------------------- | ---------------------------- | --------------------------- |
+| `--color-background`         | Page surface                                  | White / warm off-white       | Near-black (brand-cast)     |
+| `--color-foreground`         | Default text                                  | Rich charcoal (neutral-900)  | Pure white                  |
+| `--color-border`             | 1px lines and dividers                        | Soft cool gray (neutral-100) | Deep gray                   |
+| `--color-border-foreground`  | Text on outlined/bordered elements            | Near-opaque white (tint-950) | Subtle white (tint-100)     |
+| `--color-card`               | Card surface, elevated from background        | Pure white                   | Dark charcoal               |
+| `--color-card-foreground`    | Text on cards                                 | Rich charcoal                | Pure white                  |
+| `--color-popover`            | Popover / menu surface                        | Pure white                   | Near-black (shade-950)      |
+| `--color-popover-foreground` | Text on popovers and menus                    | Rich charcoal                | Pure white                  |
+| `--color-input`              | Input field background                        | Near-white (neutral-50)      | Barely-there tint (tint-50) |
+| `--color-input-foreground`   | Input text                                    | Rich charcoal                | Pure white                  |
+| `--color-muted`              | Subtle dim — always darker than its surface   | shade-50                     | tint-50                     |
+| `--color-muted-foreground`   | De-emphasized text, helper copy               | shade-600                    | tint-600                    |
+| `--color-faded`              | Subtle fade — always lighter than its surface | tint-100                     | shade-100                   |
+| `--color-faded-foreground`   | Text on faded surfaces                        | tint-600                     | shade-600                   |
 
 ### Brand Colors
 
-| Token         | Role                  | Character                                   |
-| ------------- | --------------------- | ------------------------------------------- |
-| `--primary`   | Dominant brand anchor | Author from the brand's primary color       |
-| `--secondary` | Complementary accent  | Author from a supporting brand color        |
-| `--tertiary`  | Third accent          | Author from a third brand color (or derive) |
+| Token               | Role                  | Character                                   |
+| ------------------- | --------------------- | ------------------------------------------- |
+| `--color-primary`   | Dominant brand anchor | Author from the brand's primary color       |
+| `--color-secondary` | Complementary accent  | Author from a supporting brand color        |
+| `--color-tertiary`  | Third accent          | Author from a third brand color (or derive) |
 
 No brand colors ship by default — author all three from the brand (see the Brand Customization
 callout). Brand foregrounds are typically white. Bind step **600** (light) / **500** (dark), brand
@@ -315,22 +327,22 @@ Key scale steps for context:
 
 ### Grayscale (Neutrals)
 
-A full `--neutral-50` through `--neutral-950` scale — author it from the brand, ideally carrying a
+A full `--color-neutral-50` through `--color-neutral-950` scale — author it from the brand, ideally carrying a
 subtle cast of the brand hue rather than pure gray. Generate the scale via [Tints.dev](https://www.tints.dev).
 
 ### Overlays
 
-- **Shade** (`--shade-50` through `--shade-950`): Alpha-based dim derived from neutral-950. Use for backdrops and darkening. `--shade-900` for modal backdrops (not `--muted`).
-- **Tint** (`--tint-50` through `--tint-950`): Alpha-based fade derived from white. Use for lightening over dark surfaces.
+- **Shade** (`--color-shade-50` through `--color-shade-950`): Alpha-based dim derived from neutral-950. Use for backdrops and darkening. `--color-shade-900` for modal backdrops (not `--color-muted`).
+- **Tint** (`--color-tint-50` through `--color-tint-950`): Alpha-based fade derived from white. Use for lightening over dark surfaces.
 
 ### Status Colors
 
-| Token           | Character                                 |
-| --------------- | ----------------------------------------- |
-| `--info`        | Cerulean blue — informational notices     |
-| `--success`     | Teal green — positive confirmations       |
-| `--warning`     | Amber gold — cautionary alerts            |
-| `--destructive` | Vivid red-orange — errors, danger actions |
+| Token                 | Character                                 |
+| --------------------- | ----------------------------------------- |
+| `--color-info`        | Cerulean blue — informational notices     |
+| `--color-success`     | Teal green — positive confirmations       |
+| `--color-warning`     | Amber gold — cautionary alerts            |
+| `--color-destructive` | Vivid red-orange — errors, danger actions |
 
 All status foregrounds are white. Status steps **darker** in dark mode (opposite of brand).
 
@@ -362,27 +374,29 @@ sensible web-safe fallback stack). Never default to generic system fonts.
 
 All sizes are fluid via `clamp()`, scaling between mobile and desktop viewports.
 
-| Class          | Size (desktop) | Leading | Tracking | Character                     |
-| -------------- | -------------- | ------- | -------- | ----------------------------- |
-| `text-display` | 5.96rem        | 0.95    | -0.05em  | Massive hero statement        |
-| `text-h1`      | 4.77rem        | 0.95    | -0.05em  | Primary page heading          |
-| `text-h2`      | 3.81rem        | 0.95    | -0.025em | Section heading               |
-| `text-h3`      | 3.05rem        | 1       | -0.025em | Subsection heading            |
-| `text-h4`      | 2.44rem        | 1       | -0.015em | Component heading             |
-| `text-h5`      | 1.95rem        | 1       | -0.01em  | Small heading                 |
-| `text-h6`      | 1.56rem        | 1       | -0.005em | Minor heading                 |
-| `text-xl`      | 1.56rem        | 1.5     | 0        | Large body / intro paragraph  |
-| `text-lg`      | 1.25rem        | 1.5     | 0        | Lead text                     |
-| `text-md`      | 1rem           | 1.6     | 0        | Default body text             |
-| `text-sm`      | 0.8rem         | 1.5     | 0        | Small UI labels               |
-| `text-xs`      | 0.64rem        | 1.5     | 0        | Captions, fine print          |
-| `text-eyebrow` | 0.58rem        | 1.2     | 0.1em    | Uppercase label, wide-tracked |
+| Role (`data-ui`) | Size (desktop) | Leading | Tracking | Character                     |
+| ---------------- | -------------- | ------- | -------- | ----------------------------- |
+| `text-display`   | 5.96rem        | 0.95    | -0.05em  | Massive hero statement        |
+| `text-h1`        | 4.77rem        | 0.95    | -0.05em  | Primary page heading          |
+| `text-h2`        | 3.81rem        | 0.95    | -0.025em | Section heading               |
+| `text-h3`        | 3.05rem        | 1       | -0.025em | Subsection heading            |
+| `text-h4`        | 2.44rem        | 1       | -0.015em | Component heading             |
+| `text-h5`        | 1.95rem        | 1       | -0.01em  | Small heading                 |
+| `text-h6`        | 1.56rem        | 1       | -0.005em | Minor heading                 |
+| `text-xl`        | 1.56rem        | 1.5     | 0        | Large body / intro paragraph  |
+| `text-lg`        | 1.25rem        | 1.5     | 0        | Lead text                     |
+| `text-md`        | 1rem           | 1.6     | 0        | Default body text             |
+| `text-sm`        | 0.8rem         | 1.5     | 0        | Small UI labels               |
+| `text-xs`        | 0.64rem        | 1.5     | 0        | Captions, fine print          |
+| `text-eyebrow`   | 0.58rem        | 1.2     | 0.1em    | Uppercase label, wide-tracked |
 
 Headings use `text-wrap: balance`. Body uses `text-wrap: pretty`. Tight-leading on large text, generous-leading on body.
 
+Native `h1`–`h6` carry their heading role without a token.
+
 ### Text Link
 
-`.text-link` — `--primary` color, 1px underline, offset lifts on hover.
+`data-ui="text-link"` — `--color-primary`, 1px underline, offset lifts on hover.
 
 ---
 
@@ -390,66 +404,65 @@ Headings use `text-wrap: balance`. Body uses `text-wrap: pretty`. Tight-leading 
 
 **Two conventions:**
 
-- **Variants are data attributes:** `class="ui-button" data-variant="primary"` — never `.ui-button-primary`.
-- **Theming via local custom properties:** Components declare `--ui-button-background`, `--ui-button-radius`, etc. off theme roles (or off another component's tokens: button metrics default to the shared `--ui-field-*` family, toggle to `--ui-button-*`). Variants re-point those locals. Token names use logical property names (`-block-size`, `-inline-size`); interactive borders decompose into `-border-width`/`-border-style`/`-border-color` parts.
+- **Variants are presets:** `data-ui="button" data-button-variant="primary"` — never a class. Copy anatomy from `packages/core/src/primitives/{name}/*.html`.
+- **Theming via hooks:** primitives read `--ui-<name>-<utility>` hooks named after the utilities they back (`--ui-button-bg`, `--ui-button-rounded`, `--ui-button-px`), defaulting to theme roles or to another family (button metrics default to `--ui-field-*`). Set a hook on a subtree to retheme and keep hover/active states; a utility on the element flattens them.
 
 ### Buttons
 
-Subtly rounded (`--radius-md`, ~10px). Fixed height (`--step-8`). Variants (via `data-variant`): **default** (no attribute — bordered, `--card`), **primary** (solid `--primary`), **muted** (`--muted` fill), **ghost** (transparent, hover reveals `--muted`), **destructive** (solid `--destructive`), **link** (inline, underlined). Sizes (via `data-size`): `sm`, `icon`, `icon-sm`.
+Subtly rounded (`--radius-md`, ~10px). Height from `--ui-button-min-h` (= `--ui-field-h`). Variants (`data-button-variant`): **default** (no attribute — bordered, `--color-card`), **primary** (solid `--color-primary`), **muted** (`--color-muted` fill), **ghost** (transparent, hover reveals `--color-muted`), **outline** (transparent, bordered), **destructive** (solid `--color-destructive`), **link** (inline, underlined). Sizes (`data-button-size`): `sm`, `icon`, `icon-sm`.
 
 ### Badges
 
-Gently rounded chips (`--radius-sm`, ~6px). Height `--step-5_5`. Variants (via `data-variant`): `default`, `primary`, `muted`, `ghost`, `link` — note badge has **no** `destructive` variant. Size: `icon`. `--font-size-xs`, `--font-weight-strong`.
+Gently rounded chips (`--radius-sm`, ~6px). Height `--ui-badge-h`. Variants (`data-badge-variant`): default, `primary`, `muted`, `ghost`, `link` — note badge has **no** `destructive` variant. Size (`data-badge-size`): `icon`. `--font-size-xs`, `--font-weight-strong`.
 
 ### Dialog
 
-Native `<dialog>` via Invoker Commands API. `--card` surface, `--shadow-md`, `--radius-lg`. Backdrop: `--shade-900`. Sizes (via `data-size`): `article` (default width), `container`, `screen`.
+Native `<dialog data-ui="dialog">` via Invoker Commands API. `--color-card` surface, `--shadow-md`, `--radius-lg`. Backdrop: `--color-shade-900`. Sizes (`data-dialog-size`): `article` (default width), `container`, `screen`.
 
 ### Menu & Navigation Menu
 
-Popover API + CSS anchor positioning. Native light-dismiss. Menu items are `.ui-button[data-variant="ghost"]`. Navigation menu supports mega-panels with a `data-slot="navigation-menu-viewport"` grid and rich `data-slot="navigation-menu-link"` rows (title + description); callouts are built from utilities (e.g. `bg-muted rounded-sm p-sm` + `.text-eyebrow`).
+Popover API + CSS anchor positioning. Native light-dismiss. Menu items are `data-ui="button" data-button-variant="ghost"`. Navigation menu supports mega-panels with a `data-navigation-menu-slot="viewport"` grid and rich `data-navigation-menu-slot="link"` rows (title + description); callouts are built from utilities (`--bg: var(--color-muted); --rounded: var(--radius-sm); --p: var(--space-sm)`) plus a `text-eyebrow`.
 
 ### Tabs
 
 CSS-first grouped radio inputs wrapped in `<ui-tabs>`. Segmented control with sliding card pill indicator. Panel order must match radio order. The element adds orientation-aware arrow keys, Home/End, and wrap-around; radios still work without JS.
 
-### Cards (composition pattern)
+### Cards
 
-`--card` / `--card-foreground`, `1px solid var(--border)`, `--radius-lg`. Padding: `--gap-md`. Figure: `--radius-md`, aspect 3/2.
+`data-ui="card"` (`data-card-variant="muted"`): `--color-card` / `--color-card-foreground`, `--radius-lg`, hooks `--ui-card-*`. Inner padding `--space-sm`–`--space-md`; figure `--aspect: 3 / 2`. Copy `primitives/card/card.html`.
 
 ### Forms
 
-Shared `--ui-field-*` tokens unify `.ui-input`, `.ui-textarea`, `.ui-select`, `.ui-input-group`, `.ui-password-group` — and feed the defaults for button/toggle/tabs metrics, checkbox/radio surface+border, and badge border/ring, so grouped controls read as one family. Validation via `:user-invalid` (surfaces after blur/submit, never while typing). `.ui-field` wrapper for label/control/hint/error layout. Password visibility uses `<ui-password>` around `.ui-password-group`; checkbox, switch, and radio are restyled native inputs.
+Shared `--ui-field-*` hooks unify `input`, `textarea`, `select`, `input-group`, and `password-group` — and feed the defaults for button/toggle/tabs metrics, checkbox/radio surface+border, and badge border/ring, so grouped controls read as one family. Validation via `:user-invalid` (surfaces after blur/submit, never while typing). `data-ui="field"` wrapper (`data-field-slot`: label, description, hint, error). Password visibility uses `<ui-password>` around `data-ui="password-group"`; checkbox, switch, and radio are restyled native inputs.
 
 ---
 
 ## 5. Layout Principles
 
-### Container bands
+### Layout bands
 
-| Markup                               | Result                                                         | Purpose                    |
-| ------------------------------------ | -------------------------------------------------------------- | -------------------------- |
-| `.container`                         | Subgrid band system; children land in the `md` band by default | Full-width content wrapper |
-| `.container[data-variant="article"]` | Centered reading width (`--article-lg` 70ch by default)        | Reading-width content      |
+| Markup                                                       | Result                                               | Purpose                    |
+| ------------------------------------------------------------ | ---------------------------------------------------- | -------------------------- |
+| `data-ui="layout"` / `<ui-layout>`                           | Band grid; children land in the `lg` band by default | Full-width content wrapper |
+| `data-ui="prose"` + `--max-w: var(--article-lg); --mx: auto` | Centered reading width (70ch)                        | Reading-width content      |
 
-`.container` is a subgrid spanning its region; each direct child drops into a band (`xs sm md lg xl`
-cap + center at that breakpoint, `full` = region minus gutters, `bleed` = edge to edge). Set the band
-per child with `data-container="…"`, or the default for all children with `data-container="…"`
-on the container. No wrapper div needed. See `references/tokens.md` §7 for the full model.
+Bands `2xs … 2xl` cap and center at that breakpoint width, `full` = minus `--gutters`, `bleed` =
+edge to edge. Change the default with `data-layout-size`; place one child with
+`--col: layout-<band>` (responsive: `--col--md: layout-sm`). See `references/tokens.md` §7.
 
 ### Spacing
 
-| Token      | Computed | Use For                                |
-| ---------- | -------- | -------------------------------------- |
-| `--gap-xs` | 8px      | Tight grouping, button rows            |
-| `--gap-sm` | 16px     | Default component gap, gutters         |
-| `--gap-md` | 24px     | Card padding, section internal spacing |
-| `--gap-lg` | 44px     | Large component separation             |
-| `--gap-xl` | 96px     | Section-level vertical rhythm          |
+| Token        | Computed | Use For                                |
+| ------------ | -------- | -------------------------------------- |
+| `--space-xs` | 8px      | Tight grouping, button rows            |
+| `--space-sm` | 16px     | Default component gap, gutters         |
+| `--space-md` | 24px     | Card padding, section internal spacing |
+| `--space-lg` | 44px     | Large component separation             |
+| `--space-xl` | 96px     | Section-level vertical rhythm          |
 
-Utility classes: `.gap-*`, `.p-*`, `.px-*`, `.py-*`, `.m-*`, `.mx-*`, `.my-*` at each size (xs/sm/md/lg/xl).
+Use them in utilities: `--gap`, `--p`, `--px`, `--py`, `--m`, `--mx`, `--my` (`style="--py: var(--space-xl)"`).
 
-_Values shown throughout (spacing, radius, type sizes) are **desktop maximums**. Spacing and radius derive from `--spacing-interval` (`clamp(0.225rem, …, 0.25rem)`) and type from per-step `clamp()`s, so all three scale down fluidly on narrower viewports._
+_Values shown throughout (spacing, radius, type sizes) are **desktop maximums**. Spacing and radius derive from `--spacing` (`clamp(0.225rem, …, 0.25rem)`) and type from per-step `clamp()`s, so all three scale down fluidly on narrower viewports._
 
 ### Radius
 
@@ -463,7 +476,7 @@ _Values shown throughout (spacing, radius, type sizes) are **desktop maximums**.
 | `--radius-xl`   | ~28px       | Statement surfaces |
 | `--radius-full` | Pill-shaped | Circular/capsular  |
 
-Utility classes: `rounded-0` through `rounded-xl`, `rounded-full`.
+Utility: `--rounded: var(--radius-lg)`.
 
 ### Shadows & Elevation
 
@@ -480,7 +493,7 @@ Whisper-soft, multi-layered diffused shadows. Surfaces are flat by default — s
 
 ### Focus Ring
 
-Box-shadow-based, Tailwind/shadcn-compatible: `--ring` (color, = `--primary` at `--ring-opacity`), `--ring-width` (2px), `--ring-offset-width` (1px), `--ring-offset-color` (= `--background`), composed via `--ring-offset-shadow` + `--ring-shadow` (`--shadow-ring`). Components keep a same-geometry transparent outline (`--outline-*`) so forced-colors/high-contrast modes still show focus.
+Box-shadow-based, Tailwind/shadcn-compatible: set `--ring` on `:root` (base color, read as `--color-ring` and mixed at `--ring-opacity` into `--ring-shadow-color`), `--ring-width` (2px), `--ring-offset-width` (1px), offset color `--ring-offset-shadow-color`, composed via `--ring-offset-shadow` + `--ring-shadow` (`--shadow-ring`). Components keep a same-geometry transparent outline (`--outline-*`) so forced-colors/high-contrast modes still show focus.
 
 ### Animation
 
@@ -488,13 +501,13 @@ Spring easing (`--spring-easing`) with 0.333s duration. Fallback: `cubic-bezier(
 
 ### Section Layout Patterns
 
-- **Left-Label Layout**: Thin left column (eyebrow label, `--muted-foreground`) + right content column, separated by `--border`. Collapses to stacked on mobile.
-- **Horizontal Rule Dividers**: `1px solid var(--border)` as lightweight section separators.
+- **Left-Label Layout**: Thin left column (eyebrow label, `--color-muted-foreground`) + right content column, separated by `--color-border`. Collapses to stacked on mobile.
+- **Horizontal Rule Dividers**: `<hr data-ui="separator">` or `--border-b-width: 1px; --border-b-color: var(--color-border)` as lightweight section separators.
 - **Tabbed Content Areas**: Tab bar revealing different content panes. Good for 3-7 product families.
 
 ### Breakpoints
 
-`--breakpoint-xs` (640px) · `--breakpoint-sm` (768px) · `--breakpoint-md` (1024px) · `--breakpoint-lg` (1280px) · `--breakpoint-xl` (1536px)
+`--breakpoint-2xs` (384px) · `--breakpoint-xs` (480px) · `--breakpoint-sm` (640px) · `--breakpoint-md` (768px) · `--breakpoint-lg` (1024px) · `--breakpoint-xl` (1280px) · `--breakpoint-2xl` (1536px). Breakpoint tiers (`--grid-cols--md: 3`) are mobile-first.
 
 ---
 

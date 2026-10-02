@@ -2,7 +2,8 @@
 
 Page-level structure and house-style conventions. The primitives and components
 (`references/components.md`) already cover most UI — this file holds the conventions that
-apply everywhere plus the handful of compositions the components don't.
+apply everywhere plus the handful of compositions the components don't. Syntax rules are in
+`packages/core/AUTHORING.md`.
 
 ## Sentence case, always
 
@@ -15,98 +16,110 @@ nouns:
 - "Contact us" — not "Contact Us"
 
 Only deviate when the user explicitly asks for a different case. (The all-caps look of an
-eyebrow comes from `.text-eyebrow`'s CSS `text-transform`, so you still _author_ it in
-sentence case — let the class do the uppercasing.)
+eyebrow comes from the `text-eyebrow` role's `text-transform`, so you still _author_ it in
+sentence case.)
 
 ## Page structure
 
 The standard page: a `<header>` with logo + desktop nav + mobile nav, a `<main>` of
-`<section>`s, and a `<footer>`. `.container` places its direct children into a centered band
-(default `md`); `<section>`s own the vertical rhythm with `.py-*`. Desktop nav is
-`hidden @sm:flex`; the mobile nav is `flex @sm:hidden` and opens a dialog (see the Dialog
-component / mobile-menu). The container is a subgrid band system, not a fixed-width wrapper —
-set the band per child with `data-container="xs|sm|md|lg|xl|full|bleed"`, or change the default
-for all children with `data-container="…"` on the `.container`. See
-`references/tokens.md` §7 for the full band model.
+`<section>`s, and a `<footer>`. `data-ui="layout"` makes an element the band grid for its
+children (default band `lg`); `<section>`s own the vertical rhythm with `--py`. The desktop nav
+is `--display: none; --display--sm: flex`; the mobile control is
+`--display: flex; --display--sm: none` and opens a dialog (see the mobile-menu fragment). Change
+the default band with `data-layout-size="md"` on the layout, or place one child with
+`--col: layout-bleed | layout-full | layout-xl … layout-2xs`.
 
 ```html
-<body>
-  <header>
-    <div class="container flex items-center justify-between">
-      <a href="/">
-        <!-- site logo -->
-      </a>
-      <nav class="hidden @sm:flex items-center py-md">
-        <menu class="flex items-center gap-sm">
-          <li>
-            <a class="ui-button" data-variant="ghost" href="/">Home</a>
-          </li>
-          <!-- navigation links and menus -->
-        </menu>
-      </nav>
-      <nav class="flex @sm:hidden">
-        <!-- mobile navigation — use the dialog pattern -->
-      </nav>
+<body style="--bg: var(--color-background)">
+  <header
+    data-transition-layer="global-header"
+    style="--border-b-width: 1px; --border-b-color: var(--color-border)"
+  >
+    <div data-ui="layout">
+      <div style="--display: flex; --items: center; --justify: space-between">
+        <a href="/"><!-- site logo --></a>
+        <nav style="--display: none; --display--sm: flex; --items: center; --py: var(--space-md)">
+          <menu style="--display: flex; --items: center; --gap: var(--space-sm)">
+            <li><a data-ui="button" data-button-variant="ghost" href="/">Home</a></li>
+            <!-- navigation links and menus -->
+          </menu>
+        </nav>
+        <nav style="--display: flex; --display--sm: none">
+          <!-- mobile navigation: copy primitives/mobile-menu/mobile-menu.html -->
+        </nav>
+      </div>
     </div>
   </header>
   <main>
-    <section class="py-xl">
-      <div class="container">
-        <!-- page content -->
-      </div>
+    <section data-ui="layout" style="--py: var(--space-xl)">
+      <!-- page content: each child lands in the lg band -->
     </section>
-    <!-- other sections -->
   </main>
-  <footer class="pt-xl border-t">
-    <div class="container">
-      <!-- footer content -->
-    </div>
-    <div class="container flex items-center justify-between py-md">
-      <!-- footer colophon content -->
+  <footer
+    data-transition-layer="global-footer"
+    style="--pt: var(--space-xl); --border-t-width: 1px; --border-t-color: var(--color-border)"
+  >
+    <div data-ui="layout"><!-- footer content --></div>
+    <div data-ui="layout" style="--py: var(--space-md)">
+      <div style="--display: flex; --items: center; --justify: space-between">
+        <!-- footer colophon content -->
+      </div>
     </div>
   </footer>
 </body>
 ```
 
-Add `data-transition-layer="global-header"` to the `<header>` and `data-transition-layer="global-footer"`
-to the `<footer>` to persist them across view transitions (`<main>` animates automatically; see
-`references/apis.md`).
+`body` cannot take breakpoint tiers; put responsive utilities on a child. The
+`data-transition-layer` names persist the header and footer across view transitions (`<main>`
+animates automatically; see `references/apis.md`).
 
 ## Heading group with CTAs
 
 Group an optional eyebrow, a heading, a subheading, and the call-to-action buttons in one
-`<hgroup>`. Center on mobile, left-align from `md`.
+`<hgroup>`. Center on mobile, start-align from `md`.
 
 ```html
-<hgroup class="flex flex-col gap-sm text-center @md:text-left">
-  <!-- eyebrow (optional) -->
-  <span class="text-eyebrow">Featured</span>
-
-  <!-- heading -->
-  <h1 class="text-display">The art of typography</h1>
-
-  <!-- subheading -->
-  <p class="text-xl text-muted-foreground">How vexingly quick daft zebras jump.</p>
-
-  <!-- CTA buttons -->
-  <div class="flex gap-xs mt-sm justify-center @md:justify-start">
-    <a class="ui-button" data-variant="primary" href="/products">Products</a>
-    <a class="ui-button" data-variant="ghost" href="/contact">Contact us</a>
+<hgroup
+  style="
+    --display: flex;
+    --flex-direction: column;
+    --gap: var(--space-sm);
+    --text-align: center;
+    --text-align--md: start;
+  "
+>
+  <span data-ui="text-eyebrow">Featured</span>
+  <h1 data-ui="text-display">The art of typography</h1>
+  <p data-ui="text-xl" style="--text: var(--color-muted-foreground)">
+    How vexingly quick daft zebras jump.
+  </p>
+  <div
+    style="
+      --display: flex;
+      --gap: var(--space-xs);
+      --mt: var(--space-sm);
+      --justify: center;
+      --justify--md: start;
+    "
+  >
+    <a data-ui="button" data-button-variant="primary" href="/products">Products</a>
+    <a data-ui="button" data-button-variant="ghost" href="/contact">Contact us</a>
   </div>
 </hgroup>
 ```
 
-- Eyebrow → `.text-eyebrow`; heading → `.text-display` / `.text-h*`; subheading → `.text-xl
-.text-muted-foreground`.
-- Lead action `data-variant="primary"`, secondary `data-variant="ghost"`.
+- Eyebrow → `text-eyebrow`; heading → `text-display` / `text-h*`; subheading → `text-xl` with
+  `--text: var(--color-muted-foreground)`.
+- Lead action `data-button-variant="primary"`, secondary `ghost` or `outline`.
+
+## Reading column
+
+Long-form copy goes in `data-ui="prose"` with a reading measure:
+`style="--max-w: var(--article-lg); --mx: auto"` (`--article-2xs … 2xl`, 40–80ch).
 
 ## Everything else
 
-For the rest, reach for the primitives and components directly — they carry their own
-composition guidance:
-
-- Structure & spacing → `references/tokens.md` (`.container` band system + `data-container`,
-  `.container[data-variant="article"]`, `--gap-*`, the responsive `@sm:`/`@md:`/`@lg:`
-  utilities and `@max-*` container variants).
+- Structure & spacing → `references/tokens.md` (layout bands, `--space-*`, breakpoint tiers).
 - Components (cards, carousels, dialogs, forms, navigation, …) → `references/components.md`.
 - Brand voice, color roles, type scale, archetypes → `DESIGN.md`.
+- Component anatomy in 0.5 markup → `packages/core/src/primitives/<name>/*.html`.

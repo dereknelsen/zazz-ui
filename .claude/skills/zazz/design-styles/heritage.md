@@ -33,13 +33,13 @@ tell lean Lifestyle. Default to **Lifestyle Brand** when unclear.
   serif (editorial, real italics); Fraunces, Spectral, and Source Serif 4 are strong alternates,
   more contrast for older brands, less for modern ones. Set body and UI in a quiet geometric sans
   with character — Satoshi, Geist, Hanken Grotesk, or General Sans. Small labels, eyebrows, and
-  product captions go uppercase and wide-tracked via `text-eyebrow`; everything else sentence case.
+  product captions go uppercase and wide-tracked via the `text-eyebrow` role; everything else sentence case.
 - **Real hierarchy, not five near-identical sizes.** Give the hero a genuine `text-display` /
   `text-h1` moment against calm `text-md` body copy, and open sections with a `text-eyebrow` label
   that names the place or category ("wholesale dairy distribution", "who we serve").
 - **Warm, archival palette anchored by one deep brand color.** Route everything through role tokens
-  so dark mode comes free. Warm cream off-whites and neutrals for section surfaces (`--background`,
-  `--muted`), `--muted-foreground` for body copy, and a **single deep, saturated brand color**
+  so dark mode comes free. Warm cream off-whites and neutrals for section surfaces (`--color-background`,
+  `--color-muted`), `--color-muted-foreground` for body copy, and a **single deep, saturated brand color**
   (a rich navy, forest, oxblood, or bottle green) carrying the social-proof band and footer. That
   dark band, sandwiched between cream sections, is what gives the page its trustworthy weight —
   don't spread timid even grays. Commit to the brand color as the point.
@@ -50,13 +50,13 @@ tell lean Lifestyle. Default to **Lifestyle Brand** when unclear.
   in-context scenes rather than cut-out white backgrounds. Reach for nostalgic, lived-in warmth
   over crisp catalog sterility.
 - **Atmosphere from tokens, surfaces flat.** Layer depth with a gradient wash across the brand
-  scale (`--primary-600` → `--primary-900`) on the colored band, subtle grain, and decorative
-  `--border` rules as section separators. Reserve `--shadow-*` for genuine elevation — not on
+  scale (`--color-primary-600` → `--color-primary-900`) on the colored band, subtle grain, and decorative
+  `--color-border` rules as section separators. Reserve `--shadow-*` for genuine elevation — not on
   every card.
-- **Compose with tension.** Break the centered stack with the `.container` band system: full-bleed
-  (`bleed`/`full`) photography of product, fleet, warehouse, or craft against capped text
-  (`article`/`lg`). Use the **left-label layout** (thin eyebrow column + content column, split by
-  `--border`) for "who we serve" and specs. Let `--gap-xl` (96px) open real negative space.
+- **Compose with tension.** Break the centered stack with the layout band system: full-bleed
+  (`--col: layout-bleed` / `layout-full`) photography of product, fleet, warehouse, or craft
+  against capped text (`--max-w: var(--article-lg)` or the `lg` band). Use the **left-label layout** (thin eyebrow column + content column, split by
+  `--color-border`) for "who we serve" and specs. Let `var(--space-xl)` (96px) open real negative space.
 - **One orchestrated reveal.** A single staggered page-load on the hero (`data-reveal` /
   `data-reveal-each`) plus scroll reveals for narrative pacing beats scattered micro-interactions.
   Use `--spring-easing` for confident, unhurried movement.
@@ -66,24 +66,24 @@ tell lean Lifestyle. Default to **Lifestyle Brand** when unclear.
 Build sections from Zazz components and the band system — don't hand-roll CSS. See
 `references/components.md` and `PATTERNS.md`.
 
-1. **Sticky header:** Logo top-left, prominent catalog/product search (`.ui-input`, central or right),
-   primary CTA (`.ui-button` `data-variant="primary"`, e.g. "Become a customer" / "Request a quote"),
-   plus a secondary sign-in `.ui-button` `data-variant="link"`.
+1. **Sticky header:** Logo top-left, prominent catalog/product search (`data-ui="input"`, central or right),
+   primary CTA (`data-ui="button" data-button-variant="primary"`, e.g. "Become a customer" /
+   "Request a quote"), plus a secondary sign-in `data-button-variant="link"` button.
 2. **Hero:** Full-bleed golden-hour photo (landscape, fleet, or operations) with white text over
    the darker region. Small eyebrow states place + founding date ("EST. 1927 · Denver, Colorado").
    Serif `text-display`/`text-h1` headline with an italic emphasis word ("Colorado's most
-   _trusted_ dairy distributor") + a one-line value prop (reliability, quality, local sourcing).
+   _trusted_ dairy distributor") + a one-line value proposition (reliability, quality, local sourcing).
    Dual CTAs — one `primary`, one `link` with an arrow (→ / ↗).
-3. **Trust bar:** Muted strip (`--muted`) with an "trusted by" eyebrow and a row of grayscale
+3. **Trust bar:** Muted strip (`--bg: var(--color-muted)`) with an "trusted by" eyebrow and a row of grayscale
    partner logos to establish scale.
 4. **Category / product showcase:** Section heading + `<ui-carousel>` or grid of category cards
-   (`--card`, `--radius-lg`, figure aspect 3/2). A "shop all" `.ui-button` closes it.
+   (`data-ui="card"`, `--radius-lg`, figure `--aspect: 3 / 2`). A "shop all" button closes it.
 5. **Social-proof band:** Full-width deep-brand section with a gradient wash — a large serif-italic
    pull-quote testimonial ("We have been receiving your products for almost 25 years…") with plain
    attribution, or a longevity stat, paired with a warm in-context product image and carousel
    controls. This dark band is the page's trustworthy centerpiece.
-6. **Featured products grid:** Clean row of 4–5 product cards on `--background`/`--card` with
-   concise captions and a "view all products" `.ui-button` `data-variant="link"`.
+6. **Featured products grid:** Clean row of 4–5 product cards on `--color-background`/`--color-card`
+   with concise captions and a "view all products" `data-button-variant="link"` button.
 7. **"Who we serve":** Serif heading on flexibility ("From mom & pop shops to wholesale
    distribution"), a short paragraph, a CTA, and a wide framed golden-hour landscape image
    (`--radius-lg`) of the fleet or region below it.

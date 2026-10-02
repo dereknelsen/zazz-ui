@@ -42,7 +42,7 @@ Not for building an actual page — that's `zazz-pass`. This skill only _authors
    concrete observations, not vibes. "Near-black `#0a0a0a` surface, one hot orange accent, oversized
    ghosted numerals as decoration" — not "modern and bold".
 3. **Translate each observation to Zazz.** Use the cheatsheet below. Every visual trait must land on a
-   role token, a `text-*` class, a `.container` band, a utility, or a documented pattern. If something
+   role token, a `text-*` role, a layout band (`--col: layout-*`), a utility, or a documented pattern. If something
    has no Zazz expression, either find the closest primitive or drop it — do not invent new CSS or
    new tokens in a style file.
 4. **Pick the archetype.** Map the reference to Industrial Distributor / Lifestyle Brand / Editorial
@@ -65,7 +65,7 @@ Not for building an actual page — that's `zazz-pass`. This skill only _authors
   an italic/emphasis move? How big is the hero vs. body — real hierarchy or flat? → `text-*` scale +
   font recommendations with character (name 3–4 real faces, never "system font").
 - **Imagery** — photographic or illustrative? Studio cut-outs or in-context/cinematic? Moody or bright?
-  Full-bleed or framed? Any grain/duotone/overlay treatment? → `.container` bands + figure radius.
+  Full-bleed or framed? Any grain/duotone/overlay treatment? → layout bands (`--col: layout-full` / `layout-bleed`) + figure radius.
 - **Layout rhythm & density** — centered stack or asymmetric? Dense/catalog or airy/gallery? Card-based
   or full-bleed sections? Gutters tight or generous? → band system, `--gap-*`, grid utilities.
 - **Decoration & motifs** — the signature move: oversized ghost numerals, ruled dividers, borders on
@@ -77,21 +77,21 @@ Not for building an actual page — that's `zazz-pass`. This skill only _authors
 
 ## Screenshot → Zazz cheatsheet
 
-| You see                                 | Write it as                                                              |
-| --------------------------------------- | ------------------------------------------------------------------------ |
-| Dark UI                                 | `colorMode` lean + role tokens (`--background`/`--foreground` auto-swap) |
-| One hot accent on CTAs/stats            | dominant `--primary` (a specific step), foregrounds white                |
-| Serif headings / italic emphasis words  | serif heading face + italic true-cuts on virtue nouns (`text-*`)         |
-| Black grotesk, tight, huge hero         | `text-display`/`text-h1` moment, heavy weight, geometric sans            |
-| Uppercase micro-labels                  | `text-eyebrow` (the only caps; everything else sentence case)            |
-| Full-bleed cinematic photo w/ text over | `.container` `bleed`/`full` band, white overlay text                     |
-| Bordered cards on dark                  | `--card` + `1px solid var(--border)`, flat surfaces                      |
-| Big stat numbers                        | `text-display`/`text-h2` numerals in `--primary`, `text-eyebrow` labels  |
-| Oversized ghost numerals / watermark    | large type at low opacity via `--muted`/tint, `grid-area-pile` overlap   |
-| Gradient band / colored section         | brand-scale wash (`--primary-600` → `--primary-900`)                     |
-| Generous whitespace                     | `--gap-xl` (96px) section rhythm, capped `article`/`lg` text             |
-| Staggered load / scroll reveals         | `data-reveal` / `data-reveal-each`, `--spring-easing`                    |
-| Left-aligned label + content column     | left-label layout (eyebrow column split by `--border`)                   |
+| You see                                 | Write it as                                                                          |
+| --------------------------------------- | ------------------------------------------------------------------------------------ |
+| Dark UI                                 | `colorMode` lean + role tokens (`--color-background`/`--color-foreground` auto-swap) |
+| One hot accent on CTAs/stats            | dominant `--color-primary` (a specific step), foregrounds white                      |
+| Serif headings / italic emphasis words  | serif heading face + italic true-cuts on virtue nouns (`text-*`)                     |
+| Black grotesk, tight, huge hero         | `text-display`/`text-h1` moment, heavy weight, geometric sans                        |
+| Uppercase micro-labels                  | `text-eyebrow` (the only caps; everything else sentence case)                        |
+| Full-bleed cinematic photo w/ text over | `--col: layout-bleed` / `layout-full` band, white overlay text                       |
+| Bordered cards on dark                  | `--color-card` + `1px solid var(--color-border)`, flat surfaces                      |
+| Big stat numbers                        | `text-display`/`text-h2` numerals in `--color-primary`, `text-eyebrow` labels        |
+| Oversized ghost numerals / watermark    | large type at low opacity via `--color-muted`/tint, `grid-area-pile` overlap         |
+| Gradient band / colored section         | brand-scale wash (`--color-primary-600` → `--color-primary-900`)                     |
+| Generous whitespace                     | `--space-xl` (96px) section rhythm, capped `article`/`lg` text                       |
+| Staggered load / scroll reveals         | `data-reveal` / `data-reveal-each`, `--spring-easing`                                |
+| Left-aligned label + content column     | left-label layout (eyebrow column split by `--color-border`)                         |
 
 ## The style file template
 
@@ -122,7 +122,7 @@ noted if the content model doesn't fit).>
 ## Page structure (top to bottom)
 
 <Numbered sections a typical page of this style stacks, each naming real Zazz components/bands
-(`.ui-button data-variant=...`, `.ui-input`, `--card`, `<ui-carousel>`, `.container` bands). Header →
+(`.ui-button data-variant=...`, `.ui-input`, `--color-card`, `<ui-carousel>`, `<ui-layout>` bands). Header →
 hero → … → footer. Match the reference's actual section order.>
 
 ## {Signature cues} to weave in
@@ -134,7 +134,7 @@ motifs), plus a reminder of the sentence-case house rule.>
 ## House rules to bake into every style
 
 - **Sentence case** everywhere except `text-eyebrow`. Never instruct uppercase buttons/headings.
-- **Semantic tokens only** — role tokens (`--primary`, `--muted`, `--border`…), `--gap-*`, `text-*`,
+- **Semantic tokens only** — role tokens (`--color-primary`, `--color-muted`, `--color-border`…), `--gap-*`, `text-*`,
   `--radius-*`. Never hardcode hex, px, or rem in guidance; never name a raw scale step unless a role
   token can't express it.
 - **`data-variant`, not `.ui-button-primary`.** Reference components by their real selector + `data-*` API.
