@@ -1,11 +1,11 @@
 /**
- * reset.css — Native element baselines and shared control primitives.
+ * _reset.css — Native element baselines and shared control primitives.
  *
  * @layer      reset
- * @requires   layers.css, _properties.css, _variables.css
+ * @requires   _layers.css, _properties.css, _variables.css
  * @uses       appearance: none — select chevron reset
- * @uses       ::details-content — accordion open/close (see _accordion.css for :where(ui-accordion, .ui-accordion))
- * @uses       container-type — layout containers on main, article, section
+ * @uses       ::details-content — accordion open/close (see accordion.css for :where(ui-accordion, [data-ui~="accordion"]))
+ * @uses       container-type — inline-size containers on html, main, article, section (the layout primitive owns the band grid)
  * @uses       view-transition-name via the <main> tag - main-content and [data-transition-layer] —
  *             global (animated in _view-transitions.css)
  * @uses       text-box — vertical trim on headings
@@ -13,11 +13,8 @@
  * @tokens     Native-control hooks declared per element — --code-*,
  *             --search-cancel-*, --placeholder-color
  *
- * Note: Checkbox lives in _checkbox.css; range/slider in _slider.css;
- *   switch in _switch.css.
- *
- * Note: <select> picker internals live in _select.css; popover in _popover.css;
- *   dialog in _dialog.css.
+ * Checkbox, range, switch, select picker, popover and dialog internals live in
+ * their primitive stylesheets.
  */
 @layer reset {
   /* ===========================================================================
@@ -41,12 +38,13 @@
     line-height: 1.5;
     tab-size: 4;
     -webkit-text-size-adjust: 100%;
-    background-color: var(--background);
+    background-color: var(--color-background);
     -webkit-tap-highlight-color: transparent;
     overflow: clip;
 
-    /* Enable container queries by default */
-    container-type: normal;
+    /* The page container: _breakpoints.css sets the --cqi-* flags on body
+       from a size query against html. */
+    container-type: inline-size;
     container-name: html;
   }
 
@@ -66,8 +64,8 @@
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     text-wrap: pretty;
-    color: var(--foreground);
-    background-color: var(--background);
+    color: var(--color-foreground);
+    background-color: var(--color-background);
     block-size: 100svh;
     scroll-behavior: smooth;
     scrollbar-gutter: stable;
@@ -77,13 +75,12 @@
     line-height: var(--leading-md);
     letter-spacing: var(--tracking-md);
 
-    /* Enable container queries by default */
     container-type: inline-size;
     container-name: body;
   }
 
   :where(:focus-visible) {
-    outline: var(--outline-width) var(--outline-style) var(--ring);
+    outline: var(--outline-width) var(--outline-style) var(--ring-shadow-color);
     outline-offset: var(--outline-offset);
   }
 
@@ -96,7 +93,7 @@
     --_container-name: main;
     --_view-transition-name: main-content;
 
-    /* Allow for more predictable z-indexing and spacing */
+    /* predictable z-indexing */
     isolation: isolate;
     position: relative;
 
@@ -105,11 +102,10 @@
     flex: 1 0 auto;
     overflow: clip;
 
-    /* Enable container queries for main content */
     container-type: var(--_container-type);
     container-name: var(--_container-name);
 
-    /* View transitions - Main content is isolated from the rest of the page and can be animated independently of, for example, the header or footer */
+    /* isolated so it can animate independently of header/footer */
     view-transition-name: var(--_view-transition-name);
   }
 
@@ -142,10 +138,8 @@
   }
 
   :where(header, footer, section, article) {
-    /* Allow for more predictable z-indexing */
     position: relative;
 
-    /* Enable container queries for main content sections */
     container-type: var(--_container-type);
     container-name: var(--_container-name, layout);
   }
@@ -165,11 +159,7 @@
   TYPOGRAPHY & SEMANTIC ELEMENTS
   =========================================================================== */
 
-  /* Headings inherit by default — utility classes (.text-h1, etc.) drive size/weight */
-  :where(h1, h2, h3, h4, h5, h6) {
-    font-size: inherit;
-    font-weight: inherit;
-  }
+  /* Headings take their role from _typography.css */
 
   :where(small) {
     font-size: 80%;
@@ -197,16 +187,16 @@
 
   :where(hr) {
     block-size: 1px;
-    color: var(--border);
-    background-color: var(--border);
+    color: var(--color-border);
+    background-color: var(--color-border);
     border: 0;
     flex-shrink: 0;
   }
 
   :where(hr[data-orientation="vertical"]) {
     inline-size: 1px;
-    color: var(--border);
-    background-color: var(--border);
+    color: var(--color-border);
+    background-color: var(--color-border);
     border: 0;
   }
 
@@ -217,12 +207,12 @@
 
   :where(code) {
     --code-display: inline;
-    --code-background: var(--muted);
-    --code-border: 1px solid var(--muted);
-    --code-padding-inline: var(--step-1);
+    --code-background: var(--color-muted);
+    --code-border: 1px solid var(--color-muted);
+    --code-padding-inline: var(--spacing);
     --code-padding-block: 0em;
     --code-radius: var(--radius-xs);
-    --code-color: var(--foreground);
+    --code-color: var(--color-foreground);
 
     display: var(--code-display);
     background-color: var(--code-background);
@@ -236,8 +226,6 @@
     text-overflow: ellipsis;
     max-inline-size: 100%;
   }
-
-  /* <kbd> baseline lives with the Kbd primitive — see primitives/kbd/kbd.css */
 
   /* ===========================================================================
   LIST RESETS
@@ -270,7 +258,6 @@
   }
 
   :where(img, video) {
-    /* Ensure the image is responsive */
     max-inline-size: 100%;
     block-size: auto;
   }
@@ -289,17 +276,17 @@
      gated: without it the selection keeps its inherited text color, which stays
      legible against a 30%-opacity tint in both light and dark modes. */
   ::selection {
-    background-color: oklch(from var(--primary) calc(l + 0.1) c h / 0.3);
+    background-color: oklch(from var(--color-primary) calc(l + 0.1) c h / 0.3);
   }
 
   @supports (color: contrast-color(white)) {
     ::selection {
-      /* Ensure text is always legible on the primary color at 30% opacity + the background color */
+      /* legible on the 30% primary tint over the background */
       color: contrast-color(
         color-mix(
           in oklch,
-          var(--background) 50%,
-          oklch(from var(--primary) calc(l + 0.1) c h / 0.3)
+          var(--color-background) 50%,
+          oklch(from var(--color-primary) calc(l + 0.1) c h / 0.3)
         )
       );
     }
@@ -309,7 +296,6 @@
   FORM ELEMENT RESETS
   =========================================================================== */
 
-  /* Inherit font and color across all form controls */
   :where(button, input, optgroup, select, textarea),
   ::file-selector-button {
     font: inherit;
@@ -320,7 +306,6 @@
     padding: unset;
   }
 
-  /* Preflight compatibility — cross-browser form baselines */
   :where(button, input, select, textarea),
   ::file-selector-button {
     border-radius: 0;
@@ -342,7 +327,7 @@
   }
 
   :where(select:is([multiple], [size])) optgroup option {
-    padding-inline-start: var(--gap-sm);
+    padding-inline-start: var(--space-sm);
   }
 
   :-moz-ui-invalid {
@@ -366,8 +351,8 @@
     --search-cancel-display: block;
     --search-cancel-color: currentColor;
     --search-cancel-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cline x1='200' y1='56' x2='56' y2='200' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='200' y1='200' x2='56' y2='56' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3C/svg%3E");
-    --search-cancel-icon-size: var(--step-4);
-    --search-cancel-size: var(--step-6);
+    --search-cancel-icon-size: calc(var(--spacing) * 4);
+    --search-cancel-size: calc(var(--spacing) * 6);
     --search-cancel-radius: var(--radius-sm);
 
     -webkit-appearance: none;
@@ -395,7 +380,7 @@
   }
 
   /* Suppress the browser's built-in password reveal / clear glyphs (Edge/IE) so
-     they never double up with the Zazz [data-slot~="password-group-toggle"] button. */
+     they never double up with the Zazz [data-password-group-slot~="toggle"] button. */
   ::-ms-reveal,
   ::-ms-clear {
     display: none;
@@ -430,7 +415,6 @@
     line-height: 1;
   }
 
-  /* Input field resets */
   :where(textarea, input) {
     font-size: unset;
     block-size: unset;
@@ -446,7 +430,7 @@
   }
 
   ::placeholder {
-    --placeholder-color: var(--muted-foreground);
+    --placeholder-color: var(--color-muted-foreground);
     color: var(--placeholder-color);
   }
 
@@ -466,10 +450,6 @@
     margin: unset;
   }
 
-  /* Native <select> internals (::picker panel, <option>, ::picker-icon) live in
-     _select.css under @layer reset to keep the select styling modular. */
-
-  /* Button resets */
   :where(button) {
     color: unset;
     padding: unset;
@@ -481,10 +461,7 @@
   BROWSER NORMALIZATION
   =========================================================================== */
 
-  /* Strip UA chrome from progress/meter so the component files can redraw the
-     track (the element box) and fill (vendor pseudo-elements) from theme tokens —
-     same split as select: the plain appearance strip lives here, the redraw in
-     progress.css / meter.css under @layer reset. */
+  /* Strip UA chrome so progress.css / meter.css can redraw track and fill. */
   :where(progress, meter) {
     -webkit-appearance: none;
     -moz-appearance: none;
