@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Per-frame style cost</title>
+    <link rel="stylesheet" href="../../src/index.css" />
+  </head>
+  <body>
+    <main data-ui="layout" style="--py: var(--space-xl)">
+      <h1 data-ui="text-h3">Per-frame style cost</h1>
+      <p data-ui="prose">
+        Fifty boxes get a new <code>style</code> attribute every animation frame while 500 buttons
+        sit on the page. Record a few seconds in Chrome's Performance panel and read "Recalculate
+        Style" per frame (claim 16: under 1 ms). Swap the buttons' identity with the toggle to
+        compare <code>[data-ui~="button"]</code> against a class selector (claim 17). Load the page
+        with <code>?no-utilities</code> to drop the registered properties and compare (claim 18).
+      </p>
+      <div
+        style="
+          --display: flex;
+          --gap: var(--space-sm);
+          --my: var(--space-md);
+          --items: center;
+        "
+      >
+        <button data-ui="button" data-button-variant="primary" id="toggle">Stop</button>
+        <button data-ui="button" id="swap">Swap button identity to class</button>
+        <output
+          id="readout"
+          data-ui="text-sm"
+          style="--text: var(--color-muted-foreground)"
+        ></output>
+      </div>
+      <div
+        id="boxes"
+        style="
+          --display: grid;
+          --grid-cols: 10;
+          --gap: var(--space-xs);
+        "
+      ></div>
+      <div
+        id="buttons"
+        style="
+          --display: flex;
+          --flex-wrap: wrap;
+          --gap: var(--space-xs);
+          --mt: var(--space-lg);
+        "
+      ></div>
+    </main>
+    <script type="module">
+      const boxes = document.getElementById("boxes");
+      const buttons = document.getElementById("buttons");
+      const readout = document.getElementById("readout");
+      for (let i = 0; i < 50; i++) {
+        const box = document.createElement("div");
+        box.setAttribute(
+          "style",
+          "--h: 6; --bg: var(--color-primary); --rounded: var(--radius-md)",
+        );
+        boxes.append(box);
+      }
+      for (let i = 0; i < 500; i++) {
+        const button = document.createElement("button");
+        button.setAttribute("data-ui", "button");
+        button.textContent = `Button ${i + 1}`;
+        buttons.append(button);
+      }
+      if (new URLSearchParams(location.search).has("no-utilities")) {
+        for (const sheet of document.styleSheets) {
+          for (let i = sheet.cssRules.length - 1; i >= 0; i--) {
+            const rule = sheet.cssRules[i];
+            if (rule.constructor.name === "CSSPropertyRule") sheet.deleteRule(i);
+          }
+        }
+      }
+      let running = true;
+      let frames = 0;
+      let last = performance.now();
+      let elapsed = 0;
+      function tick(now) {
+        if (!running) return;
+        const t = (now / 1000) % 1;
+        const children = boxes.children;
+        for (let i = 0; i < children.length; i++) {
+          const px = 2 + Math.round(4 * Math.abs(Math.sin(t * Math.PI + i)));
+          children[i].setAttribute(
+            "style",
+            `--h: 6; --px: ${px}; --opacity: ${(0.5 + t / 2).toFixed(2)}; --bg: var(--color-primary); --rounded: var(--radius-md)`,
+          );
+        }
+        frames++;
+        elapsed += now - last;
+        last = now;
+        if (frames % 60 === 0)
+          readout.value = `${(elapsed / frames).toFixed(2)} ms/frame over ${frames} frames`;
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+      document.getElementById("toggle").addEventListener("click", (event) => {
+        running = !running;
+        event.currentTarget.textContent = running ? "Stop" : "Start";
+        if (running) {
+          last = performance.now();
+          requestAnimationFrame(tick);
+        }
+      });
+      document.getElementById("swap").addEventListener("click", (event) => {
+        const toClass = buttons.firstElementChild?.hasAttribute("data-ui");
+        for (const button of buttons.children) {
+          if (toClass) {
+            button.removeAttribute("data-ui");
+            button.className = "ui-button";
+          } else {
+            button.removeAttribute("class");
+            button.setAttribute("data-ui", "button");
+          }
+        }
+        event.currentTarget.textContent = toClass
+          ? "Swap button identity to data-ui"
+          : "Swap button identity to class";
+      });
+    </script>
+  </body>
+</html>

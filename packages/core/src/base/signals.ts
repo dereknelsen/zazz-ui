@@ -2,7 +2,7 @@
 
 /**
  * @fileoverview TC39 Signals wrapper: the kit reactive-state seam.
- * @description Zazz bets on the TC39 Signals proposal for component state. This
+ * @description Reactive component state via the TC39 Signals proposal. This
  * module is the only file in the kit allowed to import `signal-polyfill`;
  * component scripts import `state`, `computed`, and `effect` from here, so when
  * the proposal's API shifts or engines ship native signals, one file changes.
@@ -17,7 +17,6 @@
  * The bare `signal-polyfill` specifier resolves through the page's import map in
  * browsers (pinned jsDelivr URL) and through `node_modules` in tests/bundlers.
  *
- * @see https://github.com/tc39/proposal-signals
  * @see https://github.com/proposal-signals/signal-polyfill
  */
 
@@ -74,10 +73,9 @@ type EffectCallback = () => void | (() => void);
 /** The disposer `effect` returns: callable, and a `using`-compatible `Disposable`. */
 type EffectDispose = (() => void) & Disposable;
 
-// The proposal deliberately ships no effect(): this is the reference
-// implementation from the polyfill README: one shared Watcher notifies
-// synchronously on the first dirty signal, and re-runs are batched to a
-// microtask so N writes in one task trigger one re-run.
+// The proposal ships no effect(). One shared Watcher notifies synchronously on
+// the first dirty signal; re-runs are batched to a microtask so N writes in one
+// task trigger one re-run.
 let needsEnqueue = true;
 
 const watcher = new Signal.subtle.Watcher(() => {

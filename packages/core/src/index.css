@@ -3,20 +3,20 @@
  *
  * Bundles the base layers (layers → variables → reset) followed by every
  * component, so a page only needs a single stylesheet link. Order matters:
- * layers.css declares the cascade layers and must load first.
+ * _layers.css declares the cascade layers and must load first.
  *
  * Legacy support: import your legacy stylesheets into the legacy layer at the slot
- * below (between the reset baseline and the components). Projects that prefer to
- * compose the layers by hand can import the base files individually in the
- * same order instead of using this bundle — see CONVENTIONS.md.
+ * below (between the reset baseline and the components). To compose the layers
+ * by hand, import the base files individually in the same order.
  *
  * @layer      none
- * @see        CONVENTIONS.md — file anatomy & layer architecture
+ * @see        CONVENTIONS.styles.md — file anatomy & layer architecture
  */
 
-/* base — order matters; _layers.css declares the cascade layers first. */
+/* base */
 @import "./base/_layers.css";
 @import "./base/_variables.css";
+@import "./base/_breakpoints.css";
 @import "./base/_reset.css";
 @import "./base/_typography.css";
 @import "./base/_view-transitions.css";
@@ -25,16 +25,18 @@
 /* @import "./some-library.css" layer(vendors); */
 
 /* Legacy layer — import whole legacy stylesheets into legacy.imports.
-   Never bare layer(legacy): un-sublayered rules would beat the migration
-   shims in legacy.migrations. */
+   Never bare layer(legacy); see _layers.css. */
 /* @import "./your-legacy.css" layer(legacy.imports); */
 
-/* Zazz primitives - UI omponents. */
+/* Primitives */
+@import "./primitives/layout/layout.css";
+@import "./primitives/scroll-fade/scroll-fade.css";
 @import "./primitives/separator/separator.css";
 /* fields.css owns the shared --ui-field-* family; it registers before its
    consumers (badge, button, toggle, tabs, checkbox, radio, inputs, …) */
 @import "./primitives/fields/fields.css";
 @import "./primitives/badge/badge.css";
+@import "./primitives/card/card.css";
 @import "./primitives/kbd/kbd.css";
 @import "./primitives/button/button.css";
 @import "./primitives/button-group/button-group.css";
@@ -70,10 +72,48 @@
 @import "./primitives/toaster/toaster.css";
 @import "./primitives/reveal/reveal.css";
 
-/* Utilities and layout remain the final normal Zazz override layer. */
-@import "./base/_utilities.css";
-@import "./base/_layout.css";
+/* Generated utilities (scripts/generate-utilities.ts) and switches: the last
+   normal Zazz layer. */
+@import "./base/_properties.css";
+@import "./base/_properties-2xs.css";
+@import "./base/_properties-xs.css";
+@import "./base/_properties-sm.css";
+@import "./base/_properties-md.css";
+@import "./base/_properties-lg.css";
+@import "./base/_properties-xl.css";
+@import "./base/_properties-2xl.css";
+@import "./base/_properties-disabled.css";
+@import "./base/_properties-active.css";
+@import "./base/_properties-focus-visible.css";
+@import "./base/_properties-focus-within.css";
+@import "./base/_properties-hover.css";
+@import "./base/_properties-checked.css";
+@import "./base/_properties-open.css";
+@import "./base/_utilities-tier-2xs.css";
+@import "./base/_utilities-tier-xs.css";
+@import "./base/_utilities-tier-sm.css";
+@import "./base/_utilities-tier-md.css";
+@import "./base/_utilities-tier-lg.css";
+@import "./base/_utilities-tier-xl.css";
+@import "./base/_utilities-tier-2xl.css";
+@import "./base/_utilities-tier-disabled.css";
+@import "./base/_utilities-tier-active.css";
+@import "./base/_utilities-tier-focus-visible.css";
+@import "./base/_utilities-tier-focus-within.css";
+@import "./base/_utilities-tier-hover.css";
+@import "./base/_utilities-tier-checked.css";
+@import "./base/_utilities-tier-open.css";
+@import "./base/_utilities-flow.css";
+@import "./base/_utilities-grid.css";
+@import "./base/_utilities-spacing.css";
+@import "./base/_utilities-margin.css";
+@import "./base/_utilities-sizing.css";
+@import "./base/_utilities-typography.css";
+@import "./base/_utilities-color.css";
+@import "./base/_utilities-effects.css";
+@import "./base/_utilities-box.css";
+@import "./base/_utilities-pseudo.css";
+@import "./base/_switches.css";
 
-/* Migration shims — translate legacy classes while markup is rewritten.
-   Beats all other legacy sublayers; Zazz still wins on migrated markup. */
+/* Migration shims: beat all other legacy sublayers; Zazz still wins. */
 /* @import "./migrations.css" layer(legacy.migrations); */

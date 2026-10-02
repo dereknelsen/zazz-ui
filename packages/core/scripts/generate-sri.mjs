@@ -6,7 +6,7 @@
  * published css/js file (the `dist/` bundles and the readable `src/` tree).
  * @description The hashes are what lets every CDN snippet carry `integrity` —
  * the docs head-configurator and `buildHead`'s CDN mode read this file for a
- * pinned version and fill the attributes in (ticket 06). Runs after `vp pack`
+ * pinned version and fill the attributes in. Runs after `vp pack`
  * in the build so the bundle hashes are of the exact published bytes; the file
  * ships inside the same tarball it describes and is also fetchable per version
  * from the CDN (`…@<x.y.z>/dist/sri.json`).
@@ -39,7 +39,7 @@ for (const dir of ["dist", "src"]) {
 }
 
 const sri = {};
-for (const file of files.sort()) {
+for (const file of files.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))) {
   const digest = createHash("sha384")
     .update(await readFile(path.join(ROOT, file)))
     .digest("base64");

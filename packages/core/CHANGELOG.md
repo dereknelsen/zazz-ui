@@ -1,5 +1,257 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.5.0 (unreleased)
+
+Style utilities (custom properties in `style`, called "props" in earlier 0.5 previews) replace utility classes and `data-ui` replaces class identity (SPEC.md, ADR-0012, ADR-0013). 0.5 is an alpha with breaking changes throughout and is not compatible with 0.4.x: migrate markup and themes in one step, using the migration notes below.
+
+### base
+
+- New **utilities layer**, generated from `src/base/utilities.ts` into `_breakpoints.css`, `_properties*.css`, and `_utilities-*.css`: values are custom properties in `style=""` (`--p: 4`, `--w--md: fit-content`, `--bg--hover: var(--color-muted)`), read by attribute-gated rules with breakpoint and state tiers. Registrations are non-inheriting, so a utility never leaks into a child. `html` gains `container-type: inline-size`; breakpoint flags `--cqi-*` are set once on `body`.
+- **BREAKING** The focus ring's theme color is the `--color-ring` role (set it on `:root`; default `var(--color-primary)`). The `--ring` token is gone: `--ring`, `--ring-color`, and `--ring-offset-color` are utility names, registered non-inheriting, and the kit reads the ring through `--ring-shadow-color` (the opacity-mixed band color, previously `--ring`) and `--ring-offset-shadow-color` (previously `--ring-offset-color`). Migration: `--ring: …` or `--ring-color: …` on `:root` → `--color-ring: …`; `var(--ring)` / `var(--ring-offset-color)` in your CSS → `--ring-shadow-color` / `--ring-offset-shadow-color`.
+- **BREAKING** Theme roles are `--color-*` (`--color-background`, `--color-primary`, `--color-muted-foreground`, …), declared once as `light-dark()` pairs on `:root`. The bare Shadcn names (`--background`, `--primary`, `--card`, …) are removed, not aliased, so a utility name never collides with an inheriting token; a static test keeps every kit stylesheet on `--color-*`. Migration: prefix every role you set or read with `color-` (`--primary: …` → `--color-primary: …`, `var(--border)` → `var(--color-border)`).
+- **BREAKING** The palette scales are `--color-*` too: `--color-primary-50…950` (secondary, tertiary, neutral alike), `--color-white` / `--color-black`, and the alpha overlays `--color-shade-*` / `--color-tint-*`. Migration: prefix every scale you read with `color-` (`var(--primary-600)` → `var(--color-primary-600)`, `var(--shade-900)` → `var(--color-shade-900)`).
+- **BREAKING** Directional style utilities name the physical side, `l`/`t`/`r`/`b`, and still set logical properties (so `l` is the right side in RTL): `--ps`/`--pe` → `--pl`/`--pr`, `--ms`/`--me` → `--ml`/`--mr`, `--start`/`--end` → `--left`/`--right`, `--border-s-*`/`--border-e-*` → `--border-l-*`/`--border-r-*`, with their tier, group, and pseudo forms. Hooks named after them follow: `--ui-input-ps`/`-pe` → `-pl`/`-pr` (select, combobox, and the mobile menu's nested accordion alike). Migration: rename `s` → `l` and `e` → `r` in every directional utility and hook.
+- New border shorthand utilities: `--border`, `--border-x`, `--border-y`, `--border-l`, `--border-t`, `--border-r`, `--border-b`. A color is a 1px solid border in that color, a number is that many px (`abs()`, so `-2` is 2px) in `--color-border`, and a length is the width in `--color-border`; `--border-style` overrides the solid default. Per side, the side longhand beats `--border-width` / `--border-color`, which beat the side, axis, and all-sides shorthands in that order. The shorthands take state and group tiers, and on a primitive they flatten its border states like any base utility (`<ui-debug>` warns); it also warns on a value that is not one color, number, or length, such as CSS's `1px solid red`, which draws a 1px transparent border.
+- Terminology: the inline custom properties are **style utilities** ("style utils"); "props", "style props", "style variables", and "style tokens" are retired in docs, warnings, and code. `src/base/props.ts` is `src/base/utilities.ts` (`Prop` → `Utility`, `PROPS` → `UTILITIES`), and the manifest ships `base/utilities.js`.
+- **BREAKING** Text color is the `--text` utility and font size is `--font-size` (0.5 previews had `--color` and `--text`), so a utility never reads like a `--color-*` token: `--text: var(--color-muted-foreground); --text--hover: var(--color-foreground)`, `--font-size: var(--font-size-lg)`; the group and pseudo forms follow (`--group-text--hover`, `--before-text`). Hooks are named after the utilities they back, so `--ui-<x>-color` → `--ui-<x>-text` (button, badge, card, dialog, kbd, mobile-menu, option, table, table-head, table-caption, tabs-label, toaster, toaster-description, toggle, tooltip, field, field-label, input-group, password-group, otp-separator, prose-link) and `--ui-<x>-text` → `--ui-<x>-font-size` (field, button, badge, input, kbd, otp-cell, option, select, table, tabs-label, textarea, toaster-description, toaster-title, toggle, tooltip, password-group, input-group). Part hooks that fill a shape (`--ui-otp-caret-color`, `--ui-dialog-backdrop-color`, `--ui-tooltip-arrow-color`, …) keep their names. Migration: rename sizes first (`--text:` → `--font-size:`, `-text` hooks → `-font-size`), then colors (`--color:` → `--text:`, `-color` text hooks → `-text`).
+- Tier-only utilities: `--opacity`, `--scale`, `--translate`, `--rotate`, `--shrink`, `--flex-wrap`, `--position`, `--overflow` / `-x` / `-y`, `--rounded`, `--aspect`, and `--z` join the SPEC §3 no-base allowlist, so `--opacity--hover: .4` or `--rounded--md: var(--radius-lg)` works alone on a plain element (a primitive still needs the base, since it carries its own chain). `--shadow` and the `--ring*` utilities work tier-only the same way through their shared `box-shadow` composite. The no-base rules also fire on the `--group-<utility>--<state>` form.
+- Removed tokens nothing read: `--default-transition-property` and `--font-weight-mono`. **BREAKING** The per-state decoration tokens (`--decoration-color--hover` / `--active`, `--decoration-offset--hover` / `--active`) are removed; a link's `:hover` rule sets `--decoration-offset: calc(var(--decoration-thickness) * 2)` itself and `:active` resets it with `inherit` (button and badge link variants, prose links, `text-link`). Link buttons also read `--decoration-thickness--hover` / `--active`, which never existed, so their underline lost its thickness on hover; the reads are gone. Migration: override the base `--decoration-*` tokens on `:root`, or set them in your own `:hover` rule. Fix: a prose `h1` spaced itself with `--paragraph-spacing-display`; it reads `--paragraph-spacing-h1`.
+- **BREAKING** The focus-ring recipe's element private is renamed `--_ring` → `--_ring-fill` in every primitive (and carousel/toaster's `--_gap` → `--_carousel-gap` / `--_toaster-gap`): `--_<utility>` names are the utilities layer's own privates (a `--ring` utility would have overwritten the ring color). A static test rejects any hand-written use of a generated private name. Migration: if you copied the ring recipe from `_variables.css` into your own component, rename its `--_ring`.
+- Carousel: the slide gap is a hook, `--ui-carousel-gap` (default `0px`); set it on `:root` so the slide basis follows. A dual-mode `--gap` utility on the slide container changes the gap only (the basis token is computed on `:root`, as in 0.4). 0.4 read the gap from the `.gap-*` utility class on the host, which no longer exists.
+- **BREAKING** The theme is pinned with one attribute, `data-ui-theme="dark" | "light"` on any element (ADR-0013); the `.dark` / `.light` classes and `data-theme` no longer scope a theme. The head's theme script sets `data-ui-theme` on `<html>` from the stored choice and otherwise leaves the page on the system scheme; the command palette's `--theme-toggle` flips the attribute. Migration: replace `class="dark"` with `data-ui-theme="dark"`; if your own script toggled the class, set the attribute instead.
+- **BREAKING** The layout primitive replaces the `.container` system (SPEC §12): `<ui-layout>` or `data-ui="layout"` is itself the band grid for its children (0.4 turned the _parent_ region into the grid); children default to the `lg` band, `data-layout-size` changes that default (was `data-container` on the container), and a child is placed with `--col: layout-md`, `--col: layout-bleed`, `--col--lg: layout-xl` (was `data-container` on the child). Band lines are `layout-<breakpoint>-start/-end` plus `layout-full` and `layout-bleed`; a nested layout is a subgrid that keeps the parent's line names. `base/_layout.css` (the `.container`, `@md:container`, `@max-md:container`, and article-width variants) is removed; an article reading width is a utility (`--max-w: var(--article-lg); --mx: auto`). The `--col` no-base rule excludes layout children so a tier-only `--col--lg` keeps the band below lg.
+- **BREAKING** The 0.4 class layer `base/_utilities.css` is deleted; the generated utilities layer (`base/_properties*.css`, `base/_utilities-*.css`) is the whole utilities surface. `MANIFEST_VERSION` is 2 (the CLI's supported range is 1–2). The 0.4 `.container[data-variant="article"]` reading measure is a `data-ui="prose"` block with `--max-w: var(--article-*)` and `--mx: auto`; the responsive `@md:container` / `@max-md:container` variants are breakpoint tiers on a child's band (`--col: layout-full; --col--md: layout-sm`). Fractional basis classes subtracted the gap; write it out: `--basis: calc((100% - var(--space-md)) / 2)`. The utilities examples (`primitives/utilities/*.html`) and the example pages are rewritten to utilities.
+- **BREAKING** In-page navigation is opt-in and persistence is explicit (SPEC §17, ADR-0014). `navigation.js` swaps only between pages whose `<html>` carries `data-ui-navigation="swap"`, and swaps the whole `<body>` rather than `<main>`; an element survives only with `data-ui-persist="<id>"` on both pages (moved with `moveBefore()` where supported, so it keeps its state). Without the opt-in, navigation is native. `data-layout` on `<main>` is no longer read. Reloads are never intercepted (before, `location.reload()`, including a dev server's live reload, swapped only `<main>` and left the header stale). `ZazzElement` gains a no-op `connectedMoveCallback`, so a moved element keeps its setup. `<ui-debug>` lists the persisted elements and warns on misuse. Migration: add `data-ui-navigation="swap"` to `<html>` on pages that relied on the swap, and `data-ui-persist="toaster"` to a `<ui-toaster>` that should survive navigations.
+- New `AUTHORING.md` (shipped): the markup rules for 0.5 in one page, for people, editor rules, and AI assistants.
+- Editor custom data now completes values after the colon (design tokens per utility, CSS keywords for keyword utilities, layout bands for `--col`) and lists the `--group-<utility>--<state>` forms; `<ui-debug>` accepts group utilities.
+- Fix: card and carousel fragments read an undeclared `--aspect-landscape` token after the class migration; they use `3 / 2` again, as 0.4 did.
+- New `./index.ts` export: the TypeScript entry, for bundlers that transpile the sources (the playground imports it so core edits hot-reload without `tsc`).
+- New editor custom data (SPEC §13, claim 21): `editor/zazz.html-data.json` (every `data-ui` token, every `data-<name>-<key>` attribute with its values, the tag forms) and `editor/zazz.css-data.json` (every utility, tier and pseudo form, every `--ui-*` hook), generated by `vp run generate` and pinned by a freshness test; the workspace `.vscode/settings.json` wires them into VS Code.
+- New `<ui-debug data-debug-domains="localhost">` (`primitives/debug/debug.js`, SPEC §13, development only): audits every `style` attribute for unknown utilities, wrong modes (including a number read raw next to a sizing keyword, §6), tiers without a base, tiers a family lacks, a base utility that flattens a state a primitive hook covers (claim 27), raw properties shadowing a utility, whitespace the gates cannot match, and `data-<name>-*` presets outside their identity (tag form, token, or an ancestor; slots and states are exempt). Identities and hooks are read from the page's stylesheets, so it ships with only `base/utilities.js`; on an unlisted domain it removes itself and warns once (`data-debug-warnings="false"` silences it). `audit(root)` is exported for tooling. Not loaded by `index.js`; `zazz-ui add debug`.
+- New optional `primitives/style-guard/style-guard.js` (SPEC §13): a `MutationObserver` that restores an element's utilities when a legacy `style` rewrite (`el.style.cssText = …`, jQuery `.attr("style", …)`) drops them all at once; a single `removeProperty` stays removed (even when it was the only utility: the other declarations surviving the write tells a removal from a rewrite); a rewrite that sets new utilities becomes the new snapshot; `start(root)` re-roots; `data-ui-guard="off"` opts out. Not loaded by `index.js`; add it per page or via `zazz-ui add style-guard`.
+- Tests: the browser suite runs green in Chromium and WebKit (`ZAZZ_BROWSERS=webkit`); the harness gained `tabTo(el)` and `settled(el)` so focus-ring assertions wait for the ring transition and reach buttons where WebKit skips them on Tab.
+- Budget (SPEC §14): the generated utilities layer is 40 files, 349 rules (298 gated on `[style*=`, 2,405 substrings), 1,945 `@property` registrations, 295.6 KB raw and 13.2 KB Brotli. The 10 KB target is waived; `scripts/budget.test.ts` ratchets at 16 KB (15.0 KB Brotli, 2,211 registrations, after the no-base allowlist and the border shorthand). Per-frame, identity, and registration costs are measured by hand on `examples/spec/per-frame.html`.
+- **BREAKING** `scroll-fade` is a small primitive (SPEC §11): `data-ui="scroll-fade"` with `data-scroll-fade-axis="x"` for the inline axis, hooks `--ui-scroll-fade-size`, `--ui-scroll-fade-reveal`, and `--ui-scroll-fade-mask`. The `.scroll-fade*` utility classes (per-edge, per-size variants) are gone; a per-edge depth is not carried over (set `--ui-scroll-fade-size`).
+- **BREAKING** Typography roles are `data-ui` tokens (SPEC §10): `data-ui="text-display"`, `text-h1`…`text-h6`, `text-2xl`…`text-2xs`, `text-eyebrow`, `text-link` replace the `.text-*` classes, and native `h1`–`h6` wear their role without a token. Weight, family, style, and decoration are utilities (`--font-weight`, `--font-family`, `--font-style`, and the new `--text-decoration`), so the `.font-*`, `.italic`, `.underline`, `.overline`, `.line-through`, and `.no-underline` classes are gone. A role followed by `--font-size` / `--font-weight` keeps its family and leading (claim 12). Migration: `class="text-lg font-strong"` → `data-ui="text-lg" style="--font-weight: var(--font-weight-strong)"`. Roles sit in the `reset` layer, so a component rule now beats a role and utilities override both (0.4 role classes were utilities and beat component rules; use `--font-size`, `--leading`, `--font-weight` where a role must win).
+- **BREAKING** The rich-text switch is `data-ui="prose"` (was `class="ui-prose"`); its `--ui-prose-*` hooks are unchanged.
+- New `base/_switches.css` (SPEC §11): `data-ui="sr-only"` (was `.sr-only`) and `data-ui="grid-pile"` (was `.grid-area-pile`). It loads after the generated utilities.
+- **BREAKING** One spacing scale and one font-family layer. `--spacing` is the fluid unit (the dual-mode utility scale, `clamp(0.225rem, …, 0.25rem)`), and `--space-2xs … --space-2xl` are its named multiples (1, 2, 4, 6, 11, 24, 40). Removed: the numeric `--step-*` scale (write a utility number, `--max-w: 96`, or `calc(var(--spacing) * N)` in CSS; `--step-px` and `--step-full` are just `1px` and `100%`), `--gap-xs…xl` (now `--space-xs…xl`), `--_spacing-interval`, and `--font-body` / `--font-heading` / `--font-mono` (set `--font-family-body` / `-heading` / `-mono` directly).
+- Sized token families run 2xs to 2xl: `--space-*`, `--font-size-*`, `--leading-*`, `--tracking-*`, `--paragraph-spacing-*`, `--radius-*`, `--shadow-*`, `--article-*`, plus the `data-ui="text-2xs"` and `"text-2xl"` roles. The new end values extend each curve (`--font-size-2xs` matches the eyebrow size and `--font-size-2xl` the h5 size; `--article-2xs` / `-2xl` are 40ch / 80ch).
+- The full-page examples under `examples/` are removed pending a rewrite (the docs Templates section with them); `examples/spec/per-frame.html` stays. The containment test (claim 8) now runs against every primitive fragment.
+- Removed the unused `--is-breakpoint-*` flags (replaced by `--cqi-*`, SPEC §8).
+- Fix: prose paragraph spacing read `--paragraph-spacing-multiplier` instead of `--_paragraph-spacing-multiplier`, so its margins were invalid; scroll-fade read an undeclared `--spacing-interval`; the lightbox image base scale and opacity hooks were never declared; the select picker read an undeclared `--ui-popover-backdrop-filter` (removed). A new guard test fails on any variable a kit stylesheet reads without a fallback and nothing declares.
+
+### button
+
+- **BREAKING** Identity is `data-ui="button"` (a space-separated token list matched with `~=`); `.ui-button` no longer matches. Presets are scoped: `data-button-variant="primary|muted|ghost|outline|destructive|link"` (`outline` is new: transparent surface, hook-colored text and border) and `data-button-size="sm|icon|icon-sm"` replace `data-variant` / `data-size`. Migration: `class="ui-button" data-variant="primary"` → `data-ui="button" data-button-variant="primary"`.
+- **BREAKING** Hooks are named after the utilities they back (SPEC §9) and may take a scale number or a length where the utility is dual-mode:
+
+  | 0.4                                                                                            | 0.5                           |
+  | ---------------------------------------------------------------------------------------------- | ----------------------------- |
+  | `--ui-button-background(--hover/…)`                                                            | `--ui-button-bg(--hover/…)`   |
+  | `--ui-button-foreground(--hover/…)`                                                            | `--ui-button-text(--hover/…)` |
+  | `--ui-button-font-size`                                                                        | `--ui-button-font-size`       |
+  | `--ui-button-line-height`                                                                      | `--ui-button-leading`         |
+  | `--ui-button-padding`                                                                          | `--ui-button-px` (dual)       |
+  | `--ui-button-block-size`                                                                       | `--ui-button-min-h` (dual)    |
+  | `--ui-button-radius`                                                                           | `--ui-button-rounded`         |
+  | `--ui-button-gap`                                                                              | unchanged (dual)              |
+  | `--ui-button-ring-color`, `-font-family`, `-font-weight`, `-border-*`, `-icon-size`, `-shadow` | unchanged                     |
+
+  Every consumer inside the kit (toggle, select, autocomplete, combobox, command, lightbox, menu, navigation-menu, popover) reads the new names.
+
+- Utilities work on a button: `--px: 4` beats a variant, which beats an inline or subtree hook, which beats the `:root` hook; `--px--md: 6` alone applies at md with the hook below; a stylesheet `--px` does nothing. Variants write non-inheriting privates, so a variant never cascades into a nested button while an inline hook does. An inline `--bg` flattens hover (use the hook or `--bg--hover` to keep it). The focus ring is published to `--_focus-ring` and survives `--shadow` and `--ring` utilities.
+- The link variant's minimum block size is now `0` (was `fit-content`, which dual mode cannot carry); rendered size is unchanged.
+- Hover styles sit behind `@media (hover: hover)`, so a tapped button no longer sticks in its hover color on touch screens.
+- Toaster's action and close buttons are created with `data-ui="button"` and `data-button-*` presets.
+- The dual-mode hooks (`--ui-button-px`, `-min-h`, `-gap`) take scale numbers on the button itself; the select's option hooks (`--ui-option-px`, `-min-h`, `-gap`) alias them as raw lengths, so keep those hooks as lengths if you theme select options.
+
+### separator
+
+- **BREAKING** Identity is `data-ui="separator"`; `.ui-separator` no longer matches. The vertical form is `data-separator-orientation="vertical"` (was `data-orientation`). Migration: `<hr class="ui-separator" data-orientation="vertical">` → `<hr data-ui="separator" data-separator-orientation="vertical">`.
+- **BREAKING** `--ui-separator-color` is renamed `--ui-separator-bg` (it backs the `--bg` utility); `--ui-separator-thickness` is unchanged. A `--bg` utility on the separator wins over the hook.
+
+### fields
+
+- **BREAKING** Identities are `data-ui="field"` (wrapper) and `data-ui="field-group"` (fieldset; `data-ui="radio-group"` shares its rules). Slots are `data-field-slot="label | description | hint | error"` (was `data-slot="field-*"`); the inline layout is `data-field-orientation="horizontal"` (was `data-orientation`). Migration: `<div class="ui-field"><label data-slot="field-label">` → `<div data-ui="field"><label data-field-slot="label">`.
+- **BREAKING** The shared `--ui-field-*` family is renamed to utility names; every control in the kit reads the new names:
+
+  | 0.4                                                                                                                                                                                         | 0.5                                           |
+  | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+  | `--ui-field-background(--hover)`                                                                                                                                                            | `--ui-field-bg(--hover)`                      |
+  | `--ui-field-background--focus`                                                                                                                                                              | `--ui-field-bg--focus-within`                 |
+  | `--ui-field-border-color--focus`                                                                                                                                                            | `--ui-field-border-color--focus-within`       |
+  | `--ui-field-foreground`                                                                                                                                                                     | `--ui-field-text`                             |
+  | `--ui-field-radius`                                                                                                                                                                         | `--ui-field-rounded`                          |
+  | `--ui-field-block-size`                                                                                                                                                                     | `--ui-field-h`                                |
+  | `--ui-field-font-size` / `-line-height`                                                                                                                                                     | `--ui-field-font-size` / `--ui-field-leading` |
+  | `--ui-field-padding`                                                                                                                                                                        | `--ui-field-px`                               |
+  | `--ui-field-template-columns`                                                                                                                                                               | `--ui-field-grid-template-cols`               |
+  | `--ui-field-align-self` / `-inline-size`                                                                                                                                                    | `--ui-field-self` / `--ui-field-w`            |
+  | `--ui-field-group-background`                                                                                                                                                               | `--ui-field-group-bg`                         |
+  | `--ui-field-group-padding` / `-margin`                                                                                                                                                      | `--ui-field-group-p` / `--ui-field-group-m`   |
+  | `--ui-field-group-radius`                                                                                                                                                                   | `--ui-field-group-rounded`                    |
+  | `-border-width/style/color`, `-label-color`, `-ring-color`, `-inset-child-radius`, `-addon-padding`, `-gap`, `-option-gap`, `-icon-size`, `-hint-translate--*`, `-group-display/border/gap` | unchanged                                     |
+
+- **BREAKING** Slot styling is scoped to the wrapper: `data-field-slot="label"` and friends style only inside `data-ui="field"` (0.4 styled `data-slot="field-label"` anywhere). Migration: give the wrapping element `data-ui="field"`.
+- The dual-mode hooks (`--ui-field-px`, `-h`, `-gap`) take scale numbers on the field wrapper and group; the controls still alias them as raw lengths until their own cycles, so keep those hooks as lengths if you theme inputs, selects, or textareas. Textarea and select read the `--focus-within` hooks under `:focus-visible` / `:open` respectively, as before.
+- Each control now owns its disabled and `:user-invalid` rules in its own file (input, textarea, select, input-group, password-group, radio, checkbox) instead of `fields.css` listing them by class; rendering is unchanged. The dead `.ui-input-file` / `.ui-input-color` entries are dropped.
+- Utilities work on the wrapper and the group: `--display`, `--grid-template-cols`, `--gap`, `--self`, `--w` on a field; `--display`, `--bg`, `--gap`, `--rounded`, `--p`, `--m` on a group.
+
+### badge
+
+- **BREAKING** Identity is `data-ui="badge"`; presets are `data-badge-variant="primary|muted|ghost|link"` and `data-badge-size="icon"`. Hooks follow the button's rename (`background→bg`, `foreground→color`, `font-size→text`, `line-height→leading`, `padding→px`, `block-size→h`, `radius→rounded`); the combobox tag template and `--ui-combobox-*` defaults read the new names. Migration: `class="ui-badge" data-variant="muted"` → `data-ui="badge" data-badge-variant="muted"`.
+- Fix: the focus ring shows on keyboard focus alone; 0.4 required the pointer to be hovering as well. Hover styles sit behind `@media (hover: hover)`. A disabled badge still goes muted whatever its variant, as in 0.4.
+- The link variant's block size is `auto` (was `fit-content`); rendered size is unchanged. Icon badges in the fragments name themselves with `aria-label` instead of a visually hidden span.
+
+### kbd
+
+- **BREAKING** The group's attribute form is `data-ui="kbd-group"` (the `<ui-kbd-group>` tag form is unchanged); `.ui-kbd-group` no longer matches. Hooks are renamed to utility names: `--ui-kbd-font-size→text`, `-line-height→leading`, `-background→bg`, `-foreground→color`, `-radius→rounded`, `-padding-inline→px`, `-padding-block→py`, `-min-inline-size→min-w`, `-min-block-size→min-h` (`-font-family`, `-border`, `-icon-size`, `-gap`, `-group-gap` unchanged); button, tooltip, and command read the new names. The bare `<kbd>` needs no identity and takes utilities (`--min-w: 8`) and subtree hooks as before.
+
+### button-group
+
+- **BREAKING** The attribute form is `data-ui="button-group"` (the `<ui-button-group>` tag form is unchanged); the vertical preset is `data-button-group-orientation="vertical"` (was `data-orientation`). Hooks: `--ui-button-group-radius→rounded`, `-background→bg`; `--rounded` and `--bg` utilities apply to the group.
+
+### toggle
+
+- **BREAKING** Identity is `data-ui="toggle"` on the `<label>`; presets are `data-toggle-variant="primary|muted|ghost|destructive"` and `data-toggle-size="sm|icon|icon-sm"`. Hooks follow the button's rename (`background→bg`, `foreground→color`, `font-size→text`, `line-height→leading`, `padding→px`, `block-size→min-h`, `radius→rounded`); the `--checked`, `--checked-hover`, and `--checked-active` suffixes are unchanged. Migration: `class="ui-toggle" data-size="icon"` → `data-ui="toggle" data-toggle-size="icon"`.
+- A disabled toggle still goes muted whatever its variant, as in 0.4. Utilities apply to the label (`--px: 4` beats the `sm` size); because the checked state lives on the nested input, the label's own state tiers (`--bg--checked`) do not fire: theme the checked look through the `--ui-toggle-*--checked` hooks. Hover styles sit behind `@media (hover: hover)`.
+
+### toggle-group
+
+- **BREAKING** The attribute form is `data-ui="toggle-group"` (the `<ui-toggle-group>` tag form is unchanged); the vertical preset is `data-toggle-group-orientation="vertical"` (was `data-orientation`). The checked, focused, or hovered toggle now floats above its neighbours so its border and ring paint over the shared edge, as in the button group.
+
+### accordion
+
+- **BREAKING** The attribute form is `data-ui="accordion"` (the `<ui-accordion>` tag form is unchanged); `.ui-accordion` no longer matches. Hooks are unchanged (none backs a utility). The summary publishes its focus ring to `--_focus-ring`, so a `--shadow` utility on a summary keeps the ring.
+
+### table
+
+- **BREAKING** Identity is `data-ui="table"`; presets are `data-table-variant="alternating|grid"`, `data-table-size="sm"`, `data-table-layout="fixed"`, `data-table-state="selected"` on a row (was `data-state`), and `data-table-caption="top"` on the caption (was `data-side`). Hooks: `--ui-table-font-size→text`, `-foreground→color`, `-background→bg`, `-cell-padding-block/inline→cell-py/cell-px`, `-head-block-size→head-h`, `-head-foreground→head-color`, `-foot-background→foot-bg`, `-row-background--hover/--selected→row-bg--hover/--selected`, `-alternating-background→alternating-bg`, `-caption-foreground→caption-color`, `-caption-padding-block/inline→caption-py/caption-px`; `-font-family`, `-border`, `-head-border`, `-row-border`, `-column-border`, `-head-font-weight`, `-foot-font-weight` unchanged. Part hooks are read on cells, so the presets set the inheriting hooks (a preset on an outer table reaches a nested table, as in 0.4). Row hover sits behind `@media (hover: hover)`.
+
+### progress
+
+- **BREAKING** Identity is `data-ui="progress"`. Hooks: `--ui-progress-inline-size→w`, `-block-size→h` (both dual-mode), `-radius→rounded`, `-track-background→bg` (the element box is the track), `-bar-background→bar-bg`; `-track-border` and `-indeterminate-duration` unchanged. The meter reads the new names.
+
+### meter
+
+- **BREAKING** Identity is `data-ui="meter"`. Hooks: `--ui-meter-inline-size→w`, `-block-size→h` (dual-mode), `-radius→rounded`, `-track-background→bg`, `-bar-background(--suboptimum/--even-less-good)→bar-bg(…)`; `-track-border` unchanged.
+
+### popover
+
+- **BREAKING** The placement presets on a `[popover]` element are `data-popover-side="top|bottom|left|right"` and `data-popover-align="start|center|end"` (were `data-side` / `data-align`); every kit fragment and the multiselect's forwarded panel attributes follow. The native `<select>` keeps `data-side` / `data-align` until its own cycle (its rows of the placement matrix moved into `select.css`). Addon alignment on input-group and password-group (`data-align="inline-end"`) is a different attribute and is unchanged.
+- Fix: tooltip declared its popover overrides (`--ui-popover-position-area: block-start span-all`, shadow, origin, min width) on `:root`, which retinted and repositioned every popover loaded after it; they now sit on the tooltip content. A popover with no `data-popover-side` drops below its anchor again.
+- **BREAKING** Hooks: `--ui-popover-radius→rounded`, `-button-radius→button-rounded`, `-padding→p`, `-min-inline-size→min-w`, `-max-inline-size→max-w`, `-margin-block→my`, `-margin-inline→mx` (the last five dual-mode: numbers or lengths only, so tooltip and navigation-menu set `--ui-popover-min-w: 0` where they had `fit-content` / `auto`); `-border-color`, `-shadow`, `-origin`, `-position-area`, `-position-try-fallbacks`, and the `--left`/`--right` reveal tokens unchanged. Consumer-defined tokens in the namespace (`--ui-popover-inline-size`, `-gap`, `-child-radius`, `-viewport-*`) belong to their primitives and are unchanged.
+
+### tooltip
+
+- **BREAKING** The attribute form is `data-ui="tooltip"` (the `<ui-tooltip>` tag form is unchanged); slots are `data-tooltip-slot="trigger | content | arrow"` (were `data-slot="tooltip-*"`), styled only inside the tooltip. The content's placement uses the popover presets (`data-popover-side`, `data-popover-align`). Hooks: `--ui-tooltip-background→bg`, `-foreground→color`, `-radius→rounded`, `-padding-inline/block→px/py`, `-font-size→text`, `-line-height→leading`, `-max-inline-size→max-w`, `-margin-block/inline→my/mx` (`px`, `py`, `max-w`, `my`, `mx`, and the unrenamed `gap` are dual-mode); `-border-color`, `-shadow`, `-gap`, `-font-family`, `-font-weight`, `-arrow-*`, `-transition-*`, and the `--left`/`--right` tokens unchanged. Utilities on the content (`--bg`, `--px`, …) win over the hooks.
+- New utility `--flex-wrap` (keyword, flow family; requires a base like every flow utility outside the no-base list).
+
+### dialog
+
+- **BREAKING** Identity is `data-ui="dialog"` on the `<dialog>`; slots are `data-dialog-slot="content | header | body | footer | close"` (were `data-slot="dialog-*"`), styled only inside the dialog; sizes are `data-dialog-size="article | container | screen"` (was `data-size`). Hooks: `--ui-dialog-inline-size→w` (dual-mode), `-block-size→h` (read raw: a length, or a tier carrying a length, applies; a scale number applies only as a base utility), `-background→bg`, `-foreground→color`, `-radius→rounded`; `-border`, `-shadow`, `-backdrop-*`, `-transition-*`, and the `--left`/`--right` tokens unchanged. Alert-dialog, command, mobile-menu, and lightbox read the new names. A `--bg` utility on the dialog retints the root only; the header fade and footer read the `--ui-dialog-bg` hook, so retheme the surface through the hook.
+
+### alert-dialog
+
+- **BREAKING** Identity is the token list `data-ui="dialog alert-dialog"` on the `<dialog>` (was `class="ui-dialog ui-alert-dialog"`). Hook: `--ui-alert-dialog-inline-size→w`; `-accent` and `-shadow` unchanged.
+
+### menu
+
+- **BREAKING** The attribute form is `data-ui="menu"` (the `<ui-menu>` tag form is unchanged); the panel slot is `data-menu-slot="popover"` (was `data-slot="menu-popover"`), styled only inside the menu; `menu.ts` looks for the new slot and accepts both forms. Hooks: `--ui-menu-button-radius→button-rounded`, `-min-inline-size→min-w` (dual-mode), `-option-gap→gap` (dual-mode); `-shadow` unchanged. Select reads the new radius name.
+
+### navigation-menu
+
+- **BREAKING** Identity is `data-ui="navigation-menu"`; slots are `data-navigation-menu-slot="list | item | trigger | popover | viewport | link | submenu | submenu-trigger"` (were `data-slot="navigation-menu-*"`), styled only inside the menu; presets on the popover slot are `data-navigation-menu-variant="submenu"`, `data-navigation-menu-size="container | root | screen"`, and `data-navigation-menu-animation="slide-down"` (were `data-variant` / `data-size` / `data-animation`); placement alignment stays `data-popover-align`. Hooks: `--ui-navigation-menu-popover-child-radius→popover-child-rounded`, `-popover-inline-size→popover-w`, `-popover-viewport-align-items→popover-viewport-items`, `-popover-viewport-template-columns→popover-viewport-grid-template-cols`, `-popover-viewport-min-inline-size→popover-viewport-min-w`; the rest unchanged. The stylesheet reads its own hooks directly instead of republishing them as `--ui-popover-child-radius`, `-gap`, `-inline-size`, and `-viewport-*`.
+- New utility `--shrink` (`flex-shrink`, raw, flow family).
+
+### mobile-menu
+
+- **BREAKING** Identity is the token list `data-ui="dialog mobile-menu"` on the `<dialog>` (was `class="ui-mobile-menu"` beside `ui-dialog`); slots are `data-mobile-menu-slot="viewport | header | body | footer"`; the animation preset is `data-mobile-menu-animation="slide-right"` (was `data-animation`). Hooks: `--ui-mobile-menu-background→bg`, `-foreground→color`, `-header-padding-block→header-py` (`-header-padding-inline` keeps its two-value name), `-body-padding-inline/block→body-px/body-py`, `-footer-padding→footer-p`, `-nested-accordion-padding-inline-start→nested-accordion-ps`; `-backdrop-color`, `-footer-gap`, and the `-viewport-*` motion tokens unchanged.
+
+### input
+
+- **BREAKING** Identity is `data-ui="input"`. Hooks: `--ui-input-inline-size→w`, `-min-inline-size→min-w`, `-padding-inline-start/end→pl/pr` (all dual-mode), `-font-size→text`, `-line-height→leading`, `-radius→rounded`; `-border-*` and `-calendar-picker-*` unchanged. Height and surface colors still come from the `--ui-field-*` family. The focus ring is published to `--_focus-ring` and survives a `--shadow` utility; hover sits behind `@media (hover: hover)`. Input-group and password-group select the new identity.
+
+### textarea
+
+- **BREAKING** Identity is `data-ui="textarea"`. Hooks: `--ui-textarea-inline-size→w`, `-min-inline-size→min-w`, `-padding→p` (dual-mode), `-min-block-size→min-h`, `-max-block-size→max-h` (read raw: their defaults are `lh` lengths, so lengths and tiers apply and a scale number applies only as a base utility), `-font-size→text`, `-line-height→leading`, `-radius→rounded`; `-border-*` and `-resize` unchanged. The focus ring is published to `--_focus-ring`; hover sits behind `@media (hover: hover)`.
+
+### select
+
+- **BREAKING** Identity is `data-ui="select"` on the `<select>`; picker placement presets are `data-select-side` / `data-select-align` (were `data-side` / `data-align`). The multiselect's attribute form is `data-ui="multiselect"` (the `<ui-multiselect>` tag form is unchanged); its config attributes are `data-multiselect-placeholder`, `data-multiselect-label-more`, `data-multiselect-side`, and `data-multiselect-align` (were unprefixed); its stamped parts carry `data-multiselect-slot="trigger | label | icon | panel | option"`, the trigger carries `data-ui="select"`, and the enhanced native select is marked `data-multiselect-state="enhanced"` (was `data-multiselect-enhanced`). Hooks: `--ui-select-inline-size→w`, `-min-inline-size→min-w`, `-padding-inline-start/end→pl/pr` (dual-mode), `-font-size→text`, `-line-height→leading`, `-radius→rounded`; options: `--ui-option-font-size→text`, `-line-height→leading`, `-padding→px`, `-block-size→min-h`, `-radius→rounded`, `-background→bg`, `-foreground→color`; autocomplete and combobox read the new option names. The focus ring is published to `--_focus-ring`; hover sits behind `@media (hover: hover)`.
+
+### autocomplete
+
+- **BREAKING** The attribute form is `data-ui="autocomplete"` (the `<ui-autocomplete>` tag form is unchanged); parts are `data-autocomplete-slot="panel | list | item | group | group-label | empty"` (were `data-slot="autocomplete-*"`), styled only inside the autocomplete; item facts are `data-autocomplete-value` / `data-autocomplete-keywords` and root config is `data-autocomplete-sort` / `data-autocomplete-min-length` (the unprefixed spellings are still read); the keyboard highlight is `data-autocomplete-state="highlighted"` (the legacy `data-highlighted` flag is no longer written). Hook: `--ui-autocomplete-panel-max-block-size→panel-max-h` (read raw); `-shadow` unchanged.
+- Fix: the highlighted row in autocomplete, combobox, and command panels showed no highlight since the button started reading variant privates ahead of hooks; the highlight now writes the button's privates.
+
+### combobox
+
+- **BREAKING** The attribute form is `data-ui="combobox"` (the `<ui-combobox>` tag form is unchanged); parts are `data-combobox-slot="value | control | trigger | panel | list | item | group | group-label | empty | tag | tag-label | tag-remove | tag-template"` (were `data-slot="combobox-*"`); the variant is `data-combobox-variant="multiselect"`, item and tag facts are `data-combobox-value` / `data-combobox-keywords`, and root config is `data-combobox-label-remove` / `-sort` / `-min-length` (unprefixed spellings are still read); the keyboard highlight is `data-combobox-state="highlighted"`; stamped hidden inputs are marked `data-combobox-state="stamped"` (was `data-combobox-stamped`). The control reads the resolver chain and publishes its focus ring to `--_focus-ring`, so a `--shadow` utility keeps the ring. Hooks: `--ui-combobox-inline-size→w`, `-min-inline-size→min-w`, `-padding-inline-start/end→pl/pr`, `-radius→rounded`, `-panel-max-block-size→panel-max-h`, `-control-align-items→control-items`, `-control-block-size→control-h`, `-control-min-block-size→control-min-h`, `-control-padding-block→control-py`, `-input-min-inline-size→input-min-w`, `-input-min-block-size→input-min-h`, `-tag-padding-block→tag-py`, `-tag-max-inline-size→tag-max-w`, `-tag-remove-radius→tag-remove-rounded`; the rest unchanged.
+- Fix: the combobox read the select's `--ui-select-padding-inline-*` and `-radius` hooks under their 0.4 names after the select rename, so its control had lost its padding and radius.
+
+### command
+
+- **BREAKING** The attribute form is `data-ui="command"` (the `<ui-command>` tag form is unchanged); parts are `data-command-slot="panel | header | input | list | item | group | group-label | footer | empty"` (were `data-slot="command-*"`); item facts are `data-command-value` / `data-command-keywords` / `data-command-hotkey` and root config is `data-command-sort` / `data-command-min-length` (unprefixed spellings are still read); the keyboard highlight is `data-command-state="highlighted"`, the panel's stay-open flag is `data-command-stay-open` (was `data-stay-open`, still read), and the typeahead family no longer writes the legacy `data-highlighted` flag. Hooks: `--ui-command-min-inline-size→min-w` (dual-mode), `-max-block-size→max-h`, `-input-padding→input-p`, `-footer-padding→footer-p`; the rest unchanged.
+
+### checkbox
+
+- **BREAKING** Hooks: `--ui-checkbox-background(--checked)→bg(--checked)`, `-radius→rounded`; `-size` (dual-mode, backs `--size`), `-border-*`, and the mask tokens unchanged. The native control needs no identity; the focus ring is published to `--_focus-ring` and hover sits behind `@media (hover: hover)`.
+- Fix: select-all groups mark table rows with `data-table-state="selected"` (was `data-state`), which the migrated table reads; the row highlight had been lost since the table cycle.
+
+### slider
+
+- **BREAKING** Hooks: `--ui-slider-track-block-size→track-h`, `-track-background→track-bg`, `-track-radius→track-rounded`, `-thumb-background→thumb-bg`, `-thumb-radius→thumb-rounded`; the rest unchanged. The hooks now live on `:root` in the variables layer (0.4 declared them on the element, which silently shadowed any `:root` or subtree override); hover sits behind `@media (hover: hover)`.
+
+### switch
+
+- **BREAKING** Hooks: `--ui-switch-track-inline-size→track-w`, `-track-block-size→track-h` (both dual-mode), `-track-background(--hover/--checked/--checked-hover)→track-bg(…)`, `-thumb-background→thumb-bg`, `-radius→rounded`; `-track-padding`, `-thumb-size`, `-thumb-shadow`, `-thumb-translate`, `-thumb-scale` unchanged. The native control needs no identity; the focus ring is published to `--_focus-ring` and hover sits behind `@media (hover: hover)`.
+
+### input-group
+
+- **BREAKING** Identity is `data-ui="input-group"` on the `<label>` shell; slots are `data-input-group-slot="addon | text"` (were `data-slot="input-group-*"`); addon alignment is `data-input-group-align="inline-start | inline-end | block-start | block-end"` (was `data-align`). Hooks: `--ui-input-group-align-items→items`, `-inline-size→w`, `-min-block-size→min-h`, `-padding→p` (the last three dual-mode, as is `-gap`), `-foreground→color`, `-font-size→text`, `-textarea-min-block-size→textarea-min-h`, `-textarea-padding-inline/block→textarea-px/textarea-py`; `-display`, `-flex-wrap`, `-cursor`, `-font-weight`, `-shadow` unchanged. The focus ring is published to `--_focus-ring`; hover sits behind `@media (hover: hover)`.
+
+### password-group
+
+- **BREAKING** Identity is `data-ui="password-group"` on the `<label>` shell (the `<ui-password>` tag form is unchanged); slots are `data-password-group-slot="addon | text | toggle | icon-show | icon-hide"`; addon alignment is `data-password-group-align`; the toggle labels are `data-password-group-label-show` / `-label-hide` on `<ui-password>` (unprefixed spellings are still read). Hooks follow the input group's rename (`align-items→items`, `inline-size→w`, `min-block-size→min-h`, `padding→p`, `foreground→color`, `font-size→text`, `textarea-*` sizes). The focus ring is published to `--_focus-ring`; hover sits behind `@media (hover: hover)`.
+
+### otp
+
+- **BREAKING** The attribute form is `data-ui="otp"` (the `<ui-otp>` tag form is unchanged); the code field carries `data-otp-slot="input"` beside `data-ui="input"` (was `class="ui-otp-input"`); stamped parts are `data-otp-slot="rail | cell | separator"` (were `data-slot="otp-*"`, the cell was `otp-slot`), and cell state is the token list `data-otp-state="filled active"` (were `data-filled` / `data-active`). Hooks: `--ui-otp-slot-*` → `--ui-otp-cell-*` with `inline-size→w`, `block-size→h`, `background→bg`, `radius→rounded`, `font-size→text`; `-gap`, `-separator-color`, `-caret-color` unchanged.
+
+### radio
+
+- **BREAKING** Identity is `data-ui="radio"` on the input. Hooks: `--ui-radio-background(--checked)→bg(--checked)`, `-radius→rounded`, `-background-size→dot-size`; `-size` (dual-mode, backs `--size`), `-border-*`, and the `-dot-*` tokens unchanged. The focus ring is published to `--_focus-ring`; hover sits behind `@media (hover: hover)`.
+
+### tabs
+
+- **BREAKING** The attribute form is `data-ui="tabs"` (the `<ui-tabs>` tag form is unchanged); parts are `data-tabs-slot="list | indicator | label | label-text | panel"` (were `data-slot="tabs-*"`); the vertical preset is `data-tabs-orientation="vertical"` (was `data-orientation`, still read by the keyboard script). Hooks: `--ui-tabs-track-radius→track-rounded`, `-track-background→track-bg`, `-indicator-background→indicator-bg`, `-indicator-radius→indicator-rounded`, `-label-font-size→label-text`, `-label-line-height→label-leading`, `-label-background(--hover/--active)→label-bg(…)`, `-label-foreground(--hover/--active)→label-color(…)`, `-label-padding→label-px`, `-label-min-block-size→label-min-h`; the rest unchanged. Label hover sits behind `@media (hover: hover)`.
+
+### carousel
+
+- **BREAKING** The attribute form is `data-ui="carousel"` (the `<ui-carousel>` tag form is unchanged); parts are `data-carousel-slot="viewport | container | slide | prev | next | dots | dot | thumbs"` (were `data-slot="carousel-*"`; an element that serves two primitives now carries both attributes, e.g. `data-slot="lightbox-slide" data-carousel-slot="slide"`). JS state is `data-carousel-state`: `active` on the current dot or thumb (was the `is-active` class) and `dragging` on the viewport while a pointer drags it (the kit no longer reads the Embla ClassNames plugin's `is-dragging` class; the plugin remains available for your own CSS). Hook: `--ui-carousel-slide-min-inline-size→slide-min-w`; `-gap`, `-slide-basis`, `-touch-action`, `-cursor--grabbing` unchanged. The container takes a dual-mode `--gap` utility. Fix: the script discovered class-form roots after the identity moved; it now discovers `[data-ui~="carousel"]`.
+
+### lightbox
+
+- **BREAKING** The attribute form is `data-ui="lightbox"` (the `<ui-lightbox>` tag form is unchanged); parts are `data-lightbox-slot="gallery | stage | slide | content | thumbs | thumb | thumb-content | thumbs-prev | thumbs-next | dialog | prev | next | close | counter"` (were `data-slot="lightbox-*"`), carried beside `data-carousel-slot` where an element serves both primitives. The active thumb and the in-view, snapped dialog slide key on `data-carousel-state` tokens that the carousel script now writes itself (`active`, `in-view`, `snapped`), so the Embla ClassNames plugin is no longer required and the fragments drop `data-carousel-plugins="class-names"`. Hooks: `--ui-lightbox-aspect-ratio→aspect`, `-slide-radius→slide-rounded`, `-thumb-radius→thumb-rounded`; the rest unchanged. Hover effects sit behind `@media (hover: hover)`.
+
+### toaster
+
+- **BREAKING** The attribute form is `data-ui="toaster"` (the `<ui-toaster>` tag form is unchanged); the position preset is `data-toaster-position` (was `data-position`); stamped parts carry `data-toaster-slot="list | toast | icon | content | title | description | action | close"` (were `data-slot="toaster-*"`); a toast's variant is `data-toaster-variant` and its id `data-toaster-id`; JS state is the token list `data-toaster-state`: `expanded` on the region (was `data-expanded="true"`) and `front`, `visible`, `removed` on a toast (were `data-front` / `data-visible` / `data-removed` booleans; a hidden toast now simply lacks `visible`). Hooks: `--ui-toaster-background→bg`, `-foreground→color`, `-radius→rounded`, `-inline-size→w`, `-padding→p`, `-title-font-size→title-text`, `-description-font-size→description-text`, `-description-foreground→description-color`; the rest unchanged.
+
+### reveal
+
+- **BREAKING** A revealed target is marked `data-reveal-state="in-view"` by the script (was the `in-viewport` class); the identity stays `data-reveal` / `data-reveal-each` and the `data-reveal-*` config attributes are unchanged. Migration: if your CSS keyed on `.in-viewport`, switch to `[data-reveal-state~="in-view"]`.
+
+### card
+
+- New `card.css`: `data-ui="card"` is a grid surface with `--ui-card-bg`, `-color`, `-rounded`, `-shadow`, and a dual-mode `-gap` hook, plus `data-card-variant="muted"`. A variant never cascades into a nested card; an inline hook does (SPEC claim 26). The card fragments compose the surface with utilities instead of utility classes.
+
+### avatar, breadcrumbs, menubar, toolbar
+
+- These markup-only primitives' fragments carry utilities and `data-ui` tokens instead of utility classes; nothing changes in the kit's CSS.
+
 ## 0.4.1 (2026-09-04)
 
 Housekeeping on top of 0.4.0: the vestigial `anchor-size()` `@supports` gates come out, and the anchor-positioning support notes in the CSS headers and ADR-0011 are corrected. No rendered output changes in any browser — see the reasoning on the gate entry below.
@@ -166,7 +418,7 @@ Token naming consistency pass + shared field-family inheritance. Two themes: (1)
 
 ### toaster
 
-- **BREAKING** `--ui-toaster-width` → `--ui-toaster-inline-size`; `--ui-toaster-description-color` → `--ui-toaster-description-foreground`; `--ui-toaster-border` → `--ui-toaster-border-color` (it held a color).
+- **BREAKING** `--ui-toaster-width` → `--ui-toaster-inline-size`; `--ui-toaster-description-text` → `--ui-toaster-description-foreground`; `--ui-toaster-border` → `--ui-toaster-border-color` (it held a color).
 
 ### carousel
 
@@ -174,7 +426,7 @@ Token naming consistency pass + shared field-family inheritance. Two themes: (1)
 
 ### kbd
 
-- **BREAKING** `--ui-kbd-color` → `--ui-kbd-foreground`.
+- **BREAKING** `--ui-kbd-text` → `--ui-kbd-foreground`.
 
 ### mobile-menu
 

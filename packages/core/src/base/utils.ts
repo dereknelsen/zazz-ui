@@ -5,15 +5,11 @@
  * @description Shared helpers for converting HTML data-attribute strings into
  * typed JavaScript values.
  *
- * This is a **public, consumer-facing** surface (`window.Utils`, documented at
- * /docs/scripts/utils), not just kit plumbing: data-attribute configuration
- * is the kit's documented pattern for authoring a component
- * (CONVENTIONS.scripts.md), so anyone writing a component in the Zazz idiom
- * needs this exact parser to match kit behaviour. Keep it here rather than
- * folding it into a caller — see docs/adr/0004-keep-utils-public.md.
+ * Public surface (`window.Utils`): consumers writing a component in the Zazz
+ * idiom need this exact parser to match kit behaviour.
  *
  * Callers that need a typed result should wrap it at their own boundary (see
- * `readCarouselOptions` in embla.ts) rather than narrowing at each call.
+ * `readCarouselOptions` in embla.ts).
  */
 
 // --- Data type conversion ---
@@ -90,7 +86,7 @@ const Utils = {
 };
 
 // Attach to window for the documented public API (`window.Utils`), and export
-// for module consumers (embla.js imports it via the main.js bundle).
+// for module consumers (embla.js imports it via the index.js entry).
 if (typeof window !== "undefined") {
   window.Utils = Utils;
 }

@@ -15,6 +15,8 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vite-plus/test";
 import { ESM_DEPENDENCIES } from "./head.ts";
 import {
+  BASE_CSS_POST,
+  BASE_CSS_PRE,
   CSS_CASCADE_ORDER,
   MANIFEST_VERSION,
   PRIMITIVES,
@@ -37,6 +39,10 @@ describe("manifest version", () => {
   it("is a positive integer", () => {
     expect(Number.isInteger(MANIFEST_VERSION)).toBe(true);
     expect(MANIFEST_VERSION).toBeGreaterThan(0);
+  });
+
+  it("is 2 for the utilities kit (the 0.4 class layer is gone)", () => {
+    expect(MANIFEST_VERSION).toBe(2);
   });
 });
 
@@ -106,6 +112,29 @@ describe("dependency graph", () => {
     for (const name of Object.keys(PRIMITIVES)) visit(name, []);
   });
 
+  it("covers every relative import of a primitive's scripts with base, core runtime, or a dependency", () => {
+    const core = ["utils", "signals", "zazz-element", "dialog-lifecycle"].map(
+      (n) => `base/${n}.js`,
+    );
+    /** Every script the vendored closure of `name` contains. */
+    const closure = (name: string, seen = new Set<string>()): string[] => {
+      if (seen.has(name)) return [];
+      seen.add(name);
+      const entry = PRIMITIVES[name]!;
+      return [...entry.js, ...entry.base, ...entry.primitives.flatMap((dep) => closure(dep, seen))];
+    };
+    for (const [name, entry] of Object.entries(PRIMITIVES)) {
+      const shipped = new Set([...core, ...closure(name)]);
+      for (const script of entry.js) {
+        const source = readFileSync(sourcePath(script), "utf8");
+        for (const m of source.matchAll(/from\s+"(\.[^"]+)\.ts"/g)) {
+          const imported = join(dirname(script), m[1]!).replace(/\\/g, "/") + ".js";
+          expect(shipped, `${name}: ${script} imports ${imported}`).toContain(imported);
+        }
+      }
+    }
+  });
+
   it("never lists core runtime scripts as base dependencies", () => {
     const core = ["utils", "signals", "zazz-element", "dialog-lifecycle"].map(
       (n) => `base/${n}.js`,
@@ -127,12 +156,35 @@ describe("cascade order", () => {
     expect(CSS_CASCADE_ORDER).toEqual(imported);
   });
 
+  it("BASE_CSS_PRE and BASE_CSS_POST are index.css's base imports around the primitives", () => {
+    const css = readFileSync(join(SRC, "index.css"), "utf8");
+    const base = [...css.matchAll(/@import "\.\/(base\/_[a-z0-9-]+\.css)"/g)].map((m) => m[1]);
+    expect(base).toEqual([...BASE_CSS_PRE, ...BASE_CSS_POST]);
+    const firstPrimitive = css.indexOf('@import "./primitives/');
+    for (const file of BASE_CSS_PRE) expect(css.indexOf(file)).toBeLessThan(firstPrimitive);
+    for (const file of BASE_CSS_POST) expect(css.indexOf(file)).toBeGreaterThan(firstPrimitive);
+  });
+
   it("covers exactly the primitives that own css", () => {
     const withCss = Object.entries(PRIMITIVES)
       .filter(([, entry]) => entry.css.length > 0)
       .map(([name]) => name)
       .sort();
     expect([...CSS_CASCADE_ORDER].sort()).toEqual(withCss);
+  });
+});
+
+describe("tag forms", () => {
+  it("are ui- prefixed and each belongs to a primitive whose css or js mentions it", () => {
+    for (const [name, entry] of Object.entries(PRIMITIVES)) {
+      for (const tag of entry.tags ?? []) {
+        expect(tag, `${name}: ${tag}`).toMatch(/^ui-[a-z-]+$/);
+        const sources = [...entry.css, ...entry.js.map((js) => js.replace(/\.js$/, ".ts"))]
+          .map((file) => readFileSync(join(SRC, file), "utf8"))
+          .join("\n");
+        expect(sources.includes(tag), `${name}: ${tag} not found in its css/js`).toBe(true);
+      }
+    }
   });
 });
 

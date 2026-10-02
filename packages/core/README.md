@@ -29,10 +29,10 @@ You can also copy files directly. Each primitive has a folder under `src/primiti
 ## Usage
 
 ```html
-<button class="ui-button" data-variant="primary">It works!</button>
+<button data-ui="button" data-button-variant="primary">It works!</button>
 ```
 
-Components are classes (`.ui-button`, `.ui-dialog`, `.ui-field`), and variants are `data-*` attributes (`data-variant`, `data-size`) rather than modifier classes.
+Components are identified by `data-ui` tokens (`data-ui="button"`, `data-ui="field"`), presets are scoped attributes (`data-button-variant`, `data-button-size`), and values are style utilities set in `style` (`style="--px: 4; --w--md: fit-content"`) rather than utility classes.
 
 ## Theming
 
@@ -41,22 +41,22 @@ Every value in the kit resolves from a CSS custom property, which gives you thre
 ```css
 /* 1. Global tokens move the whole system */
 :root {
-  --primary: oklch(0.6 0.2 145);
+  --color-primary: oklch(0.6 0.2 145);
   --radius-md: 0;
 }
 
 /* 2. Component hooks (--ui-*) restyle one primitive everywhere */
 :root {
-  --ui-button-radius: var(--radius-full);
+  --ui-button-rounded: var(--radius-full);
 }
 ```
 
 ```html
 <!-- 3. The same hooks set inline restyle one instance -->
-<button class="ui-button" style="--ui-button-background: var(--secondary)">One-off</button>
+<button data-ui="button" style="--ui-button-bg: var(--color-secondary)">One-off</button>
 ```
 
-Color roles resolve through `light-dark()`, so light and dark themes work out of the box and follow the OS preference (pin one with a `.dark` class on `<html>`). Styles live in cascade layers, so your own CSS can override anything without `!important` or specificity fights. The [extending guide](https://zazz.sh/docs/core-concepts/extending) covers adding your own tokens, utilities, and variants.
+Color roles resolve through `light-dark()`, so light and dark themes work out of the box and follow the OS preference (pin one with `data-ui-theme="dark"` on `<html>`). Styles live in cascade layers, so your own CSS can override anything without `!important` or specificity fights. The [extending guide](https://zazz.sh/docs/core-concepts/extending) covers adding your own tokens, utilities, and variants.
 
 ## Layout
 
@@ -75,6 +75,16 @@ The `.container` is not a fixed-width box. A region (`main`, `header`, `footer`,
 ```
 
 See [layout and containers](https://zazz.sh/docs/core-concepts/layout) for the band model, the article reading-measure variant, and responsive container variants.
+
+## Tests
+
+`vp test` runs two projects: `unit` (happy-dom) and `browser` (Vitest browser mode, Chromium via Playwright, the SPEC claims register). Once per machine:
+
+```sh
+pnpm exec playwright install chromium
+```
+
+`vp test --project unit` is the fast loop. `ZAZZ_BROWSERS=webkit,firefox vp test --project "browser*"` runs the other engines after `pnpm exec playwright install webkit firefox`. `ZAZZ_SKIP_BROWSER=1` omits the browser project and says so.
 
 ## Browser support
 

@@ -7,11 +7,6 @@
  * Control elsewhere. Bare-key hotkeys (no modifier) are suppressed while the
  * user types in an editable context so accelerators never eat input.
  *
- * This file is a deliberate seam (like `signals.ts`): the kit's needs are a
- * parser, a matcher, and an editable-target guard, so a dependency was not
- * worth the pinning contract; swap the internals here if a library ever
- * earns its keep.
- *
  * Spec grammar: `+`-separated tokens, case-insensitive. Modifiers: `mod`,
  * `ctrl`/`control`, `alt`/`option`, `shift`, `meta`/`cmd`/`super`. The final
  * token is the key, compared against `KeyboardEvent.key` (single letters

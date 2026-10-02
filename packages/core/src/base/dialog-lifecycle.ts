@@ -3,7 +3,7 @@
 /**
  * @fileoverview Single owner of `<dialog>` visibility for the kit.
  * @description Watches every dialog on the page and re-emits its lifecycle as
- * two **bubbling** events dispatched on the dialog itself (ADR-0003):
+ * two **bubbling** events dispatched on the dialog itself:
  *
  * - `zazz:dialog-open`: the `open` attribute was added (works for both
  *   `showModal()` and `show()`, and for invoker commands).

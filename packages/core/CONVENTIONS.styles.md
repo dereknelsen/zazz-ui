@@ -44,11 +44,12 @@ Cascade order is declared once, in [`_layers.css`](./src/base/_layers.css), and 
 ```
 
 Load order lives in [`index.css`](./src/index.css): it `@import`s `_layers.css` first,
-then the base partials, then every `primitives/<name>/<name>.css`, with `_utilities.css` and
-`_layout.css` last. Everything slots into one of these layers.
+then the base partials (including the generated `_properties*.css` and
+`_utilities-*.css` utilities layer), then every `primitives/<name>/<name>.css`, with
+`_switches.css` last. Everything slots into one of these layers.
 Layering (not selector specificity or BEM) is how we control the cascade, so a
-plain `.ui-button` rule in `components` can still be overridden by a `utilities` class
-without `!important`.
+plain `[data-ui~="button"]` rule in `components` is overridden by a style utility set in
+`style=""` (the `utilities` layer) without `!important`.
 
 The six top-level layers, lowest priority to highest:
 
@@ -83,7 +84,7 @@ Do not pair it with a `<link rel="preload" as="style">` for the same file: a sam
 stylesheet link is already the highest-priority, render-blocking fetch, so the preload is
 redundant (`preload` is for late-discovered resources like web fonts or JS-injected CSS).
 
-See [`examples/index.html`](./examples/index.html) for a complete working example.
+`buildHead()` in [`src/head.ts`](./src/head.ts) generates this block, with SRI hashes, for a real page.
 
 A component file is written top-to-bottom in this order:
 
@@ -94,11 +95,11 @@ A component file is written top-to-bottom in this order:
 | 2   | Component token hooks    | `@layer variables`       | when the component has tokens |
 | 3   | Native-element baselines | `@layer reset`           | only if it redraws native UI  |
 | 4   | Component rules          | `@layer zazz.components` | the component itself          |
-| 5   | Utility classes          | `@layer zazz.utilities`  | only if it ships utilities    |
+| 5   | Generated utilities      | `@layer zazz.utilities`  | never in a component file     |
 
 ```css
 /**
- * button.css: Button (.ui-button)
+ * button.css: Button ([data-ui~="button"])
  *
  * @layer      variables, components
  * @requires   layers.css, _variables.css, _reset.css
@@ -113,8 +114,8 @@ A component file is written top-to-bottom in this order:
 }
 
 @layer zazz.components {
-  .ui-button {
-    /* rules that consume the hooks above */
+  :where([data-ui~="button"]) {
+    /* rules that consume the hooks above through the utility chain (§5) */
   }
 }
 ```
@@ -123,14 +124,19 @@ The four layers, by responsibility:
 
 - **`variables`**: token declarations only (`:root { --x: ... }`). Global tokens live in
   [`_variables.css`](./src/base/_variables.css); each component adds its own namespace here.
+  Exceptions in `_variables.css`: `color-scheme`, `interpolate-size`, and the one-frame
+  `ui-first-style` animation that holds `--default-transition-duration` at `0s` so primitives
+  don't transition in from UA styles when the stylesheet arrives after a style pass.
 - **`reset`**: native-element baselines and control internals that must _lose_ to
   component rules (e.g. `::details-content` in [`accordion.css`](./src/primitives/accordion/accordion.css),
   the `::picker` chrome in [`select.css`](./src/primitives/select/select.css), the redrawn switch in
   [`switch.css`](./src/primitives/switch/switch.css)). [`_reset.css`](./src/base/_reset.css) owns the global baseline.
-- **`components`**: the actual component (`.ui-button`, `.ui-dialog`, `.ui-field`).
+- **`components`**: the actual component (`[data-ui~="button"]`, `[data-ui~="dialog"]`, `[data-ui~="field"]`).
 - **`legacy.migrations`**: temporary shims that map old class names to Zazz tokens while you rewrite markup. Delete each rule once the corresponding markup is updated. Lives in an optional `migrations.css` you add and import at the commented slot in [`index.css`](./src/index.css) via `layer(legacy.migrations)`.
-- **`utilities`**: atomic, override-anything classes ([`_utilities.css`](./src/base/_utilities.css)),
-  written with `:where()` for zero specificity.
+- **`utilities`**: the utilities layer, generated from [`utilities.ts`](./src/base/utilities.ts) into
+  `_utilities-*.css` (`vp run generate`): attribute-gated rules that read `--p`, `--w--md`,
+  `--bg--hover`, … from `style=""`, written with `:where()` for zero specificity. The
+  `data-ui` switches (`sr-only`, `grid-pile`) live here too.
 
 ---
 
@@ -186,7 +192,7 @@ The header from [`fields.css`](./src/primitives/fields/fields.css), showing ever
  * @uses       color-mix(): destructive field tint on invalid
  * @tokens     --ui-field-*, --ui-field-group-* (Tier 3 owner; @layer variables)
  * @consumedby input.css, textarea.css, select.css, input-group.css,
- *             password-group.css, radio.css (.ui-radio-group)
+ *             password-group.css, radio.css ([data-ui~="radio-group"])
  */
 ```
 
@@ -211,10 +217,10 @@ They group related hooks; they do **not** document individual tokens (the names 
 ```css
 :root {
   /* surface */
-  --ui-button-background: var(--card);
-  --ui-button-background--hover: var(--muted);
+  --ui-button-bg: var(--color-card);
+  --ui-button-bg--hover: var(--color-muted);
   /* metrics */
-  --ui-button-block-size: var(--step-8);
+  --ui-button-block-size: calc(var(--spacing) * 8);
 }
 ```
 
@@ -241,10 +247,10 @@ organized in tiers (literal scales → semantic roles → component primitives):
 
 | Tier                 | Example                                                                                                  | Where               |
 | -------------------- | -------------------------------------------------------------------------------------------------------- | ------------------- |
-| Brand/literal scales | `--primary-600`, `--neutral-100`, `--shade-50`                                                           | `_variables.css`    |
-| Semantic roles       | `--background`, `--foreground`, `--primary`, `--muted`, `--border`                                       | `_variables.css`    |
+| Brand/literal scales | `--color-primary-600`, `--color-neutral-100`, `--color-shade-50`                                         | `_variables.css`    |
+| Semantic roles       | `--color-background`, `--color-foreground`, `--color-primary`, `--color-border`                          | `_variables.css`    |
 | Metrics & systems    | `--step-*`, `--radius-*`, `--gap-*`, `--font-family-*`, `--font-size-*`, `--font-weight-*`, `--shadow-*` | `_variables.css`    |
-| **Component tokens** | `--ui-button-background`, `--ui-field-border-color`, `--ui-dialog-radius`                                | each component file |
+| **Component tokens** | `--ui-button-bg`, `--ui-field-border-color`, `--ui-dialog-rounded`                                       | each component file |
 
 Selected tokens are also **registered as typed `@property`**, inline in
 [`_variables.css`](./src/base/_variables.css), so they can be read by container `style()`
@@ -262,30 +268,37 @@ token **defaults to a global token**:
 ```css
 @layer variables {
   :root {
-    --ui-button-background: var(--card);
-    --ui-button-background--hover: var(--muted);
-    --ui-button-block-size: var(--step-8);
-    --ui-button-radius: var(--radius-md);
+    --ui-button-bg: var(--color-card);
+    --ui-button-bg--hover: var(--color-muted);
+    --ui-button-min-h: calc(var(--spacing) * 8); /* dual-mode: a scale number or a length */
+    --ui-button-rounded: var(--radius-md);
   }
 }
 ```
 
 Naming convention:
 
-- `--{component}-{property}`: `--ui-button-background`, `--ui-dialog-radius`.
-- `--{component}-{property}--{state}`: a **double dash** before the state:
-  `--ui-button-background--hover`, `--ui-field-background--focus`,
-  `--ui-button-background--active`.
+- `--ui-{component}-{utility}`: **a hook is named after the utility it backs**:
+  `--ui-button-bg`, `--ui-button-text`, `--ui-button-font-size`, `--ui-button-leading`,
+  `--ui-button-px`, `--ui-button-min-h`, `--ui-button-rounded`. A hook that backs no utility
+  keeps a descriptive name (`--ui-button-icon-size`, `--ui-tooltip-arrow-size`).
+- `--ui-{component}-{utility}--{state}`: a **double dash** before one of the seven states
+  (`disabled`, `active`, `focus-visible`, `focus-within`, `hover`, `checked`, `open`):
+  `--ui-button-bg--hover`, `--ui-field-bg--focus-within`, `--ui-button-bg--active`.
+- Theme colors are read through the `--color-*` aliases (`var(--color-primary)`), never a
+  bare Shadcn role: `--ring` and friends are utility names and registered non-inheriting.
 - **A token is named after the CSS property it feeds, using the _logical_ property
   name**: `-block-size` not `-height`, `-inline-size` not `-width`,
-  `-padding-inline` not `-padding-left`. Exceptions: `-line-height` (that _is_ the
+  `-padding-inline` not `-padding-left`. Hooks that mirror a style utility take the
+  utility's name instead (`--ui-input-pl`, `--ui-button-px`, `--ui-field-h`). Exceptions: `-line-height` (that _is_ the
   property name — there is no logical variant), and a bare `-size` for square /
   single-value dimensions (`--ui-checkbox-size`, `--ui-button-icon-size`).
 - **Full property names, never abbreviations**: `-align-items` not `-align`,
   `-flex-wrap` not `-wrap`, `-radius` (matching `border-radius`'s common short
   form used throughout) — but never a truncated fragment of a multi-word property.
-- **Border tokens**: a token named `-border` always holds a **full shorthand**
-  (`1px solid var(--border)`, or `none`) — fine for decorative, non-varying
+- **Border tokens**: a hook named `-border` always holds a **full CSS shorthand** (it is
+  not the `--border` style utility, which takes one color, number, or length)
+  (`1px solid var(--color-border)`, or `none`) — fine for decorative, non-varying
   borders (`--ui-table-border`, `--ui-dialog-border`). Interactive controls
   decompose into `-border-width` / `-border-style` / `-border-color`
   (+ `-border-color--{state}`), and the rule composes them:
@@ -294,13 +307,12 @@ Naming convention:
   substituted where it is _declared_, so a `:root`-composed shorthand would ignore
   the element-scoped part overrides that variants and states rely on. State rules
   set the `border-color` longhand from the `--{state}` color token.
-- **Text color**: `-foreground` is the text color of a component or part surface
-  (paired with `-background`); `-{part}-color` is reserved for non-text
-  decorations (`--ui-otp-caret-color`, `--ui-separator-color`,
-  `--ui-dialog-backdrop-color`, icon/arrow tints).
+- **Text color**: `-color` is the text color of a component or part surface (it backs
+  the `--color` utility, paired with `-bg`); decoration tints keep descriptive names
+  (`--ui-otp-caret-color`, `--ui-dialog-backdrop-color`, `--ui-tooltip-arrow-color`).
 - **Cross-component defaults are sanctioned**: a component token may default to
-  another component's token (`--ui-button-radius: var(--ui-field-radius)`,
-  `--ui-toggle-radius: var(--ui-button-radius)`) so families stay visually
+  another component's token (`--ui-button-rounded: var(--ui-field-rounded)`,
+  `--ui-toggle-rounded: var(--ui-button-rounded)`) so families stay visually
   coupled. Use a bare alias — never the two-arg `var(--x, fallback)` form; the
   owner file always defines the token. When adding one, update the owner's
   `@consumedby`, your `@requires`, and the `index.css` order (owner registers
@@ -313,10 +325,11 @@ Naming convention:
 A component file declares two kinds of custom property, and the distinction is
 load-bearing: do not blur them:
 
-| Kind                    | Looks like                                                             | Lives in                                     | Declared on | Apps override?   |
-| ----------------------- | ---------------------------------------------------------------------- | -------------------------------------------- | ----------- | ---------------- |
-| **Public theming hook** | `--ui-accordion-summary-padding-block` (`--ui-` + component namespace) | `@layer variables`                           | `:root`     | **yes**: the API |
-| **Private internal**    | `--_ring-width`, `--_ring` (leading `--_`)                             | the rule that uses it (`components`/`reset`) | the element | **no**: plumbing |
+| Kind                    | Looks like                                                             | Lives in                                                        | Declared on              | Apps override?                                          |
+| ----------------------- | ---------------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------ | ------------------------------------------------------- |
+| **Public theming hook** | `--ui-accordion-summary-padding-block` (`--ui-` + component namespace) | `@layer variables`                                              | `:root`                  | **yes**: the API                                        |
+| **Private internal**    | `--_ring-width`, `--_ring-fill` (leading `--_`)                        | the rule that uses it (`components`/`reset`)                    | the element              | **no**: plumbing                                        |
+| **Variant private**     | `--_button-bg`, `--_card-bg` (`--_{component}-{utility}`)              | registered `@property … inherits: false` at the top of the file | the element, by a preset | **no**: written by `data-{component}-variant` / `-size` |
 
 **Public hooks** are the override API. They default to a global token, are read by the
 component (often on a descendant), and apps re-skin by reassigning them. Two rules keep
@@ -331,7 +344,7 @@ them overridable:
   instance: see below). Locality is already covered: each component declares its hooks at
   the top of its own file.
 - **Prefix them `--ui-{component}-`.** Component hooks carry the `ui-` brand prefix and
-  are derivable from the root class (`.ui-button` → `--ui-button-*`); semantic roles,
+  are derivable from the identity (`data-ui="button"` → `--ui-button-*`); semantic roles,
   metrics, and brand scales stay unprefixed as the Tailwind/shadcn-compatible theming
   surface (see `docs/adr/0001-dual-form-primitives.md`). `--_` still means _private_
   (below), and it is a footgun for hooks: hooks are usually read on a descendant, so a
@@ -339,43 +352,63 @@ them overridable:
   `--_` family trends toward non-inheriting registration.
 
 **Private internals** are transient plumbing: the ring widths flipped on `:focus-visible`
-(`--_ring-width`, `--_ring-offset-width`, `--_ring`), or a value composed and reused within
+(`--_ring-width`, `--_ring-offset-width`, `--_ring-fill`), or a value composed and reused within
 one rule (`--details-content-transition`). They carry the `--_` prefix and are declared
 _inside the rule that consumes them_, in `@layer zazz.components` or `reset`, **never** in
 `@layer variables`. They are not hooks; apps do not touch them. Scoping these to the element
 (or `:where(el)`) is correct precisely _because_ they are not meant to be overridden from
-`:root`.
+`:root`. Two names are off limits: `--_<utility>` (the utilities layer's own private for every utility
+in `utilities.ts`, e.g. `--_ring`, `--_gap`) and `--_<utility>-resolved`, which primitives only read.
+A static test rejects a hand-written `--_<utility>`.
+
+**Variant privates** are the third kind: `--_{component}-{utility}`, registered at the top of the
+file as `@property … { syntax: "*"; inherits: false; }`, written by a preset
+(`data-button-variant="primary"` sets `--_button-bg`) and read by the chain ahead of the hook.
+Because they never inherit, a variant never leaks into a nested same primitive; an inline hook
+does. Every private a file reads must be registered in that file (a static
+test checks).
 
 Rule of thumb: if an app should be able to override it, it is a `--ui-{component}-*`
 `:root` hook in the variables layer; if it is plumbing the component sets for itself, it is
 a `--_` var next to the rule that reads it.
 
-### Rules reference a token once; variants swap the token
+### Rules read one chain; presets write privates
 
-Component rules read the token a single time. Variants and sizes then only **reassign
-token values**: they never restate the rule:
+Every utility-backed declaration reads **one chain**, highest precedence first: the utility's
+resolver (set by the utilities layer from `style=""`, tiers included), the variant private,
+then the hook. Presets then only **write privates**: they never restate the
+rule:
 
 ```css
 @layer zazz.components {
-  .ui-button {
-    background-color: var(--ui-button-background); /* referenced once */
+  :where([data-ui~="button"]) {
+    background-color: var(--_bg-resolved, var(--_button-bg, var(--ui-button-bg)));
+
+    /* dual-mode metrics go through the registered typed pair */
+    --_px-len: var(--_px-resolved, var(--_button-px, var(--ui-button-px)));
+    --_px-num: var(--_px-resolved, var(--_button-px, var(--ui-button-px)));
+    padding-inline: calc(var(--_px-len) + var(--_px-num) * var(--spacing));
   }
 
-  /* a variant changes the value, not the rule */
-  .ui-button[data-variant="primary"] {
-    --ui-button-background: var(--primary);
-    --ui-button-background--hover: oklch(from var(--primary) l c h / 0.9);
+  /* a preset changes the private, not the rule */
+  :where([data-ui~="button"][data-button-variant="primary"]) {
+    --_button-bg: var(--color-primary);
+    --_button-bg--hover: oklch(from var(--color-primary) l c h / 0.9);
   }
 
-  .ui-button[data-size="sm"] {
-    --ui-button-block-size: var(--step-6);
-    --ui-button-radius: var(--radius-sm);
+  :where([data-ui~="button"][data-button-size="sm"]) {
+    --_button-min-h: calc(var(--spacing) * 6);
+    --_button-rounded: var(--radius-sm);
   }
 }
 ```
 
-This is what keeps the files small and the system consistent: one declaration of
-`background-color`, many token values.
+Two consequences to keep in mind: a base utility (`--bg`) flattens the primitive's own states,
+because the resolver wins in every state; and a hook that is read on a _descendant_
+(`--ui-button-icon-size` on the icon, `--ui-table-cell-px` on cells) must stay an inheriting
+hook, so presets set the hook there rather than a private. Hover rules sit behind
+`@media (hover: hover)`, and every ring-bearing primitive publishes its ring to `--_focus-ring`
+so a `--shadow` or `--ring` utility composes with it instead of replacing it.
 
 ### The three override surfaces (the hooks)
 
@@ -394,15 +427,19 @@ Because rules resolve tokens lazily, an app can intervene at any of three scopes
 
    ```css
    :root {
-     --ui-button-radius: var(--radius-full);
+     --ui-button-rounded: var(--radius-full);
    } /* all buttons go pill-shaped */
    ```
 
 3. **Instance**: set the token inline or via a variant/size attribute for a one-off:
 
    ```html
-   <button class="ui-button" style="--ui-button-background: var(--secondary)">One-off</button>
+   <button data-ui="button" style="--ui-button-bg: var(--color-secondary)">One-off</button>
    ```
+
+   For one property on one element, a **utility** is usually the right tool instead
+   (`style="--bg: var(--color-secondary)"`); it wins over every hook and variant, and it
+   flattens that property across the primitive's states.
 
 Authoring an override never requires touching the package `src/`. That is the point of
 the variables layer.
@@ -411,79 +448,85 @@ the variables layer.
 
 For a value that applies to one instance only, reach for (in order):
 
-1. **A utility class**, when a scale value fits (`class="w-full max-w-xl"`).
-2. **A public `--ui-*` token set inline**, when the value lands where inline style cannot
-   reach (`style="--ui-popover-inline-size: max-content"`).
-3. **Raw inline style** for a true same-element one-off (`style="max-inline-size: 16ch"`).
-   Legitimate, not a smell: inline style beats every layer in the stack, so it is
-   non-destructive by cascade definition.
-4. **A CSS file**, the moment the one-off repeats.
+1. **A utility**, set in `style=""` (`style="--w: 100%; --max-w: 96"`), with
+   breakpoint and state tiers (`--w--md: fit-content`, `--bg--hover: …`). Utilities are the
+   only thing a kit fragment puts in `style`; a static test enforces it.
+2. **A public `--ui-*` hook set inline**, when the value lands where a utility cannot reach
+   (a pseudo-element, a vendor shadow part, a descendant slot) or when the primitive's
+   states must survive (`style="--ui-button-bg: var(--color-secondary)"`).
+3. **A CSS file**, the moment the one-off repeats.
 
-Because of rung 3, primitives do **not** carry per-property hook variables for values
-inline style can already set. A new `--ui-*` hook is added only when all four hold:
-**(a)** inline style on the root cannot set the declaration (pseudo/vendor shadow part,
+Raw inline properties (`style="max-inline-size: 16ch"`) are for consumer pages, never for
+kit fragments. A new `--ui-*` hook is added only when all four hold:
+**(a)** a utility on the root cannot set the declaration (pseudo/vendor shadow part,
 descendant slot, or state-conditional); **(b)** it is a design value, not structural
 plumbing; **(c)** no existing token already reaches it via fan-out; **(d)** a concrete
 use case exists in an example fragment or docs page.
 
-@see `docs/adr/0008-instance-override-escape-hatch.md` for the decision record.
+@see `docs/adr/0012-props-replace-utility-classes.md` (utilities) and
+`docs/adr/0008-instance-override-escape-hatch.md` (the 0.4 ladder it supersedes).
 
 ### Dark mode is a hook too
 
 - `color-scheme: light dark` on `:root` enables system dark mode; semantic tokens use
   `light-dark(<light>, <dark>)` so they resolve per `color-scheme`.
-- `.dark`/`.light` and `[data-theme="dark"|"light"]` are pure `color-scheme` pins — no
-  token re-declaration. Because theme tokens are unregistered, their `light-dark()`
-  expressions re-resolve under the pinned scheme, and scopes nest (a `.light` island
-  inside a `.dark` section re-lightens its subtree). Each scope re-asserts
-  `color: var(--foreground)`: built-in inherited `<color>` properties resolve at the
+- `[data-ui-theme="dark" | "light"]` is a pure `color-scheme` pin on any element — no
+  token re-declaration (ADR-0013: one attribute, no `.dark` class). Because theme tokens are unregistered, their `light-dark()`
+  expressions re-resolve under the pinned scheme, and scopes nest (a light island
+  inside a dark section re-lightens its subtree). Each scope re-asserts
+  `color: var(--color-foreground)`: built-in inherited `<color>` properties resolve at the
   ancestor and cross a scheme boundary as a single resolved arm.
 
 ---
 
 ## 6. Naming & selector conventions
 
-- **Roots are dual-form**: every primitive has a `ui-`-prefixed class form
-  (`.ui-button`, `.ui-input-group`); primitives whose root would otherwise be a
-  generic `<div>`/`<span>` also have a tag form (`<ui-tooltip>`). The two are kept
-  equivalent by spelling every root selector `:where(ui-x, .ui-x)` (never one form
-  alone). Primitives rooted on semantic native elements (`<button>`, `<dialog>`,
-  `<select>`, …) are class-form only ("the most semantic tag wins"; see
-  `docs/adr/0001-dual-form-primitives.md`).
-- **Interior parts are slots, not classes**: `data-slot="{primitive}-{part}"`
-  (`data-slot="input-group-addon"`, `data-slot="dialog-header"`). The attribute is a
-  space-separated token list, like `class`: one element may serve two primitives
-  (`data-slot="lightbox-slide carousel-slide"`), so selectors always use the token
-  matcher `[data-slot~="…"]`, never exact `=`. Classes never name parts, roots are
-  never stamped with `data-slot`, and there are no BEM `__` or modifier classes; use
-  attributes for state (see `docs/adr/0002-data-slot-parts.md`).
-- **Variants & sizes**: data attributes (`[data-variant="primary"]`, `[data-size="sm"]`,
-  `[data-side]`, `[data-align]`, `[data-animation]`). They read as state and double as
-  token-override hooks.
-- **Zero-specificity where overridable**: wrap reset and utility selectors in `:where()`
-  so they sit at specificity 0 and stay overridable
-  (`:where(input[type="range"])`, `:where(.grid)`).
-- **Logical properties**: prefer `inline-size`/`block-size`,
-  `padding-inline`/`margin-block`, `inset-inline-start` so components flip in RTL.
-  **Token names follow suit** (`--ui-field-block-size`, never `--ui-field-height`;
-  see §5 naming convention). Physical `top`/`left` stay only where the platform
-  demands them (`anchor()` side keywords) or in direction-neutral centering idioms
-  (`left: 50%` + `translate: -50%`) — leave a comment saying why.
-- **Focus**: rings render as box-shadows from Tailwind/shadcn-compatible tokens:
-  `--ring` (color), `--ring-width`, `--ring-offset-width`, `--ring-offset-color`,
-  composed as `--ring-offset-shadow` + `--ring-shadow` (`--shadow-ring`) and layered
-  with the component's own shadow. Every shadow-ringed element also keeps a
-  same-geometry transparent outline (`--outline-width/style/offset`) so
-  forced-colors/high-contrast modes still show focus. Never `outline: none`
-  without a replacement.
-- **State exclusion**: express intent with `:not()` (`button:hover:not(:disabled)`)
-  rather than order-dependent overrides.
-- **Utility names track Tailwind**: atomic utilities reuse Tailwind's vocabulary where
-  one exists: weights `.font-thin … .font-black` (plus semantic `.font-body` /
-  `.font-heading` / `.font-strong`), families `.font-sans` / `.font-serif` / `.font-mono`, sizes `.text-sm`,
-  etc., so they read predictably to Tailwind users. Token names do **not** follow
-  Tailwind; they use the tiered `--font-family-*` / `--font-weight-*` (semantic) over
-  `--font-body` / `--font-heading` / `--font-mono` (raw) scheme.
+- **Identity is `data-ui`**, a space-separated token list matched with `~=`: every root
+  selector is `:where([data-ui~="button"])`, or `:where(ui-tooltip, [data-ui~="tooltip"])`
+  for the primitives that also have a tag form (`manifest.ts` `tags`). Zazz never reads or
+  writes `class`; a static test rejects class selectors in a migrated stylesheet. One element
+  may carry two identities (`data-ui="dialog alert-dialog"`). Native controls that need no
+  identity (`input[type="checkbox"]`, `input[role="switch"]`, `<kbd>`) are styled bare in
+  `@layer reset` (ADR-0013).
+- **Parts are scoped slots**: `data-{primitive}-slot="{part}"` (`data-dialog-slot="header"`,
+  `data-input-group-slot="addon"`), a token list matched with `~=`, and every slot selector
+  is compounded with its owner's identity
+  (`:where([data-ui~="dialog"]) [data-dialog-slot~="header"]`). An element that serves two
+  primitives carries both attributes (`data-lightbox-slot="slide" data-carousel-slot="slide"`).
+- **Presets and everything else a primitive owns** are `data-{primitive}-{key}`:
+  `data-button-variant="primary"`, `data-button-size="icon"`, `data-tabs-orientation="vertical"`,
+  `data-popover-side="top"`; JS config is the same shape (`data-carousel-loop="true"`,
+  `data-multiselect-placeholder="…"`). Unscoped `data-variant` / `data-size` / `data-slot` /
+  `data-orientation` are 0.4 forms and fail the guard.
+- **State written by kit JS is `data-{primitive}-state`**, a token list
+  (`data-carousel-state="active"`, `data-otp-state="filled active"`,
+  `data-toaster-state="front visible"`); CSS keys on `[data-x-state~="token"]`. Native state
+  stays native (`:checked`, `:open`, `:popover-open`, `[aria-expanded]`).
+- **Globals stay `data-ui-*`**: `data-ui-theme`, `data-ui-guard`.
+- **Zero-specificity where overridable**: roots and presets sit inside `:where()` so a utility
+  (the `utilities` layer) or a consumer rule wins without `!important`. Order matters
+  between equal-specificity rules: a disabled block that must beat a variant comes after it.
+- **Logical properties**: prefer `inline-size`/`block-size`, `padding-inline`/`margin-block`,
+  `inset-inline-start` so components flip in RTL. **Hook names follow the utility names**
+  (`--ui-field-h`, `--ui-field-px`, never `-height`; see §5). Physical `top`/`left` stay only
+  where the platform demands them (`anchor()` side keywords) or in direction-neutral
+  centering idioms — leave a comment saying why.
+- **Focus**: rings render as box-shadows from the ring tokens (`--ring` is the theme input,
+  read through `--color-ring`, `--ring-shadow-color`, `--ring-offset-shadow-color`), composed
+  on the element as `--_focus-ring` and placed first in the `box-shadow` list:
+  `box-shadow: var(--_focus-ring, 0 0 #0000), var(--_shadow-resolved, var(--ui-x-shadow))`.
+  The utilities layer's own `box-shadow` emission includes `--_focus-ring` first too, so a
+  `--shadow` utility never removes a ring. Every shadow-ringed element keeps a same-geometry
+  transparent outline (`--outline-width/style/offset`) for forced-colors modes. Never
+  `outline: none` without a replacement.
+- **Hover behind the media query**: `@media (hover: hover) { … :hover … }`, so a tapped
+  control does not stick in its hover color on touch screens.
+- **State exclusion**: express intent with `:not()` (`:hover:not(:disabled)`) rather than
+  order-dependent overrides.
+- **Utility names track Tailwind**: `--p`, `--w`, `--bg`, `--leading`, `--rounded` where Tailwind
+  has a short name, the CSS property name otherwise. Token names do **not**
+  follow Tailwind; they use the tiered `--font-family-*` / `--font-weight-*` (semantic) over
+  `--font-family-body` / `--font-family-heading` / `--font-family-mono` (raw) scheme.
 
 ---
 
@@ -517,7 +560,7 @@ These deviate from the canonical shape on purpose: document the reason in-file:
 - **Extended header**: [`reveal.css`](./src/primitives/reveal/reveal.css) keeps `@version`/`@since`/
   `@example` plus a data-attribute table because it is a configurable subsystem, not a
   single component.
-- **`--_` coordination var in `@layer variables`**: [`_utilities.css`](./src/base/_utilities.css)
+- **`--_` coordination var in `@layer variables`**: [`toaster.css`](./src/primitives/toaster/toaster.css)
   declares `--_gap` on `:root` inside its variables block. It is the one `--_` var that lives
   in a variables layer: an _inheriting_ coordination default (set on a container, read by
   descendants for `gap`), left unregistered so default inheritance applies. The §5 rule
@@ -564,23 +607,29 @@ These deviate from the canonical shape on purpose: document the reason in-file:
    @layer variables {
      :root {
        /* surface */
-       --ui-<component>-background: var(--card);
-       --ui-<component>-background--hover: var(--muted);
+       --ui-<component>-background: var(--color-card);
+       --ui-<component>-background--hover: var(--color-muted);
        /* metrics */
-       --ui-<component>-radius: var(--radius-md);
+       --ui-<component>-rounded: var(--radius-md);
      }
    }
    ```
 
-5. Write the rules in `@layer zazz.components`, referencing each token once. For a
-   dual-form component, spell every root selector `:where(ui-<component>, .ui-<component>)`
-   (never one form alone) and give the root rule an explicit `display` (an
-   unregistered custom tag is `display: inline` by default; skip the declaration only
-   when something else governs display, e.g. a `popover` root).
-6. Name interior parts with `data-slot="<component>-<part>"` and match them with
-   `[data-slot~="…"]`, never part classes. Roots are never stamped with `data-slot`.
-7. Add variants/sizes as `[data-*]` selectors that **only reassign tokens**. Config
-   and state attribute keys stay bare (`data-variant`, `data-<component>-loop`); never
-   mint bare non-`data` attributes, even on tag-form elements.
+5. Write the rules in `@layer zazz.components`, reading each utility-backed hook through the
+   chain `var(--_<utility>-resolved, var(--_<component>-<utility>, var(--ui-<component>-<utility>)))`
+   (dual-mode utilities through the `--_<utility>-len` / `--_<utility>-num` pair, §5). Spell the root
+   `:where([data-ui~="<component>"])`, or `:where(ui-<component>, [data-ui~="<component>"])`
+   for a tag-form component, and give the root rule an explicit `display` (an unregistered
+   custom tag is `display: inline` by default; skip the declaration only when something
+   else governs display, e.g. a `popover` root). Register the file's variant privates
+   (`@property --_<component>-<utility> { syntax: "*"; inherits: false; }`) above the layer.
+6. Name interior parts `data-<component>-slot="<part>"` and match them with
+   `:where([data-ui~="<component>"]) [data-<component>-slot~="<part>"]`, never part classes.
+   Roots are never stamped with a slot.
+7. Add presets as `[data-ui~="<component>"][data-<component>-variant="…"]` (or `-size`,
+   `-orientation`, …) that **only write privates**; hooks read on a descendant are set as
+   hooks instead. JS config and state keep the same prefix (`data-<component>-loop`,
+   `data-<component>-state="…"`); never mint bare non-`data` attributes, even on tag-form
+   elements.
 8. If you read another component's tokens, add this file to that file's `@consumedby`.
 9. If you redraw native UI, put those rules in `@layer reset` and say why.

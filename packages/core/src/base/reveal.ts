@@ -108,7 +108,7 @@ class Reveal {
   declare static getAutoInstance: () => Reveal | null;
 
   /**
-   * @description Default config from `--ui-reveal-global-*` tokens in `_reveal.css`.
+   * @description Default config from `--ui-reveal-global-*` tokens in `reveal.css`.
    */
   static #readDefaultConfig(): RevealConfig {
     return {
@@ -155,7 +155,7 @@ class Reveal {
       observer = new IntersectionObserver((entries, obs) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("in-viewport");
+            entry.target.setAttribute("data-reveal-state", "in-view");
             obs.unobserve(entry.target);
           }
         });
@@ -228,7 +228,7 @@ class Reveal {
     const groupOptions = this.#getElementObserverOptions(groupElement);
     const groupObserver = this.#getObserver(groupOptions);
 
-    const groupProps = {
+    const groupConfig = {
       step: Math.max(0, parseInt(dataset.revealStep || this.config.step.toString(), 10) || 0),
       duration: dataset.revealDuration
         ? Math.max(0, parseInt(dataset.revealDuration, 10) || 0)
@@ -240,12 +240,12 @@ class Reveal {
     };
 
     const childrenArray = Array.from(groupElement.children);
-    const sequence = groupProps.order === "reversed" ? childrenArray.reverse() : childrenArray;
+    const sequence = groupConfig.order === "reversed" ? childrenArray.reverse() : childrenArray;
 
     if (supportsSiblingIndex) {
       this.#setRevealProperties(groupElement, {
-        "--ui-reveal-stagger-base": `${groupProps.baseWait}ms`,
-        "--ui-reveal-stagger-step": `${groupProps.step}ms`,
+        "--ui-reveal-stagger-base": `${groupConfig.baseWait}ms`,
+        "--ui-reveal-stagger-step": `${groupConfig.step}ms`,
       });
     }
 
@@ -253,13 +253,13 @@ class Reveal {
       if (!(child instanceof HTMLElement)) return;
 
       this.#setRevealProperties(child, {
-        "--ui-reveal-duration": this.#formatTime(groupProps.duration),
-        "--ui-reveal-ease": groupProps.ease,
+        "--ui-reveal-duration": this.#formatTime(groupConfig.duration),
+        "--ui-reveal-ease": groupConfig.ease,
         // Fallback only: natively each child computes this in reveal.css.
         "--ui-reveal-wait": supportsSiblingIndex
           ? null
-          : `${groupProps.baseWait + groupProps.step * i}ms`,
-        "--ui-reveal-distance": groupProps.distance,
+          : `${groupConfig.baseWait + groupConfig.step * i}ms`,
+        "--ui-reveal-distance": groupConfig.distance,
         "--ui-reveal-scale": dataset.revealScale || null,
       });
 
@@ -350,7 +350,7 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
     autoInit();
   }
 
-  // After a SPA <main> swap, re-scan the new content for [data-reveal] targets.
+  // After an in-page navigation swap, re-scan the new content for [data-reveal] targets.
   registerRefresh(() => Reveal.getAutoInstance()?.refresh());
 
   /**
@@ -371,7 +371,7 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
 }
 
 // Attach to window for the documented public API (`window.Reveal`, `new Reveal()`),
-// and export for module consumers (navigation.js imports it via the main.js bundle).
+// and export for module consumers (navigation.js imports it via the index.js entry).
 if (typeof window !== "undefined") {
   window.Reveal = Reveal;
 }

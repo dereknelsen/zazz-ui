@@ -24,7 +24,7 @@
  * const head = buildHead({ base: "./zazz" });
  */
 
-import { PRIMITIVES, resolveClosure } from "./manifest.ts";
+import { BASE_CSS_POST, BASE_CSS_PRE, PRIMITIVES, resolveClosure } from "./manifest.ts";
 
 // --- Third-party dependency manifest ---
 
@@ -52,24 +52,16 @@ const PACKAGE_NAME = "@zazz-ui/core";
 /**
  * Exact-version pin required in every kit CDN URL. SRI hashes are per-byte,
  * so floating specs (`latest`, `0.3`) would break integrity on each release —
- * and unpinned URLs defeat jsDelivr's permanent caching (ticket 06).
+ * and unpinned URLs defeat jsDelivr's permanent caching.
  */
 const EXACT_VERSION = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/;
 
 /**
  * Base stylesheets in the exact order `src/index.css` loads them around the
  * primitive imports: `PRE` before (layer declaration first), `POST` after
- * (utilities and layout stay the final normal override layer). The granular
+ * (the generated utilities stay the final normal override layer). The granular
  * CDN head mirrors this split; `head.test.ts` guards it against `index.css`.
  */
-const BASE_CSS_PRE = [
-  "base/_layers.css",
-  "base/_variables.css",
-  "base/_reset.css",
-  "base/_typography.css",
-  "base/_view-transitions.css",
-];
-const BASE_CSS_POST = ["base/_utilities.css", "base/_layout.css"];
 
 /**
  * Core runtime modules reached by relative import from primitive scripts
@@ -139,10 +131,9 @@ const ESM_DEPENDENCIES: readonly CdnDependency[] = [
  * **Interest Invokers** (`interestfor`), which drives tooltip triggers and the
  * optional hover/focus open on menu, menubar, and navigation-menu. Chromium
  * 142+ ships it; Firefox and Safari do not, so this is the kit's one API below
- * the browser-support floor that a polyfill can cover (ADR-0011).
+ * the browser-support floor that a polyfill can cover.
  *
- * Deliberately *not* polyfilled any more (all native across the support
- * window): the **Popover API** (Chrome 114, Firefox 125, Safari 17, iOS 18.3)
+ * Not polyfilled (native across the support window): the **Popover API** (Chrome 114, Firefox 125, Safari 17, iOS 18.3)
  * and **Invoker Commands** `command`/`commandfor` (Chrome 135, Firefox 144,
  * Safari 26.2). CSS anchor positioning is below the floor but has no polyfill
  * here — the components gate it behind `@supports` instead.
@@ -212,7 +203,7 @@ function polyfillsBlock(): string {
 
 /**
  * The theme-persistence script. Runs inline (no `defer`) while the parser is
- * still in `<head>`, so `.dark` lands on `<html>` before first paint. The
+ * still in `<head>`, so `data-ui-theme` lands on `<html>` before first paint. The
  * try/catch covers contexts where storage access throws (sandboxed iframes,
  * blocked site data).
  */
@@ -220,22 +211,21 @@ const THEME_SCRIPT = `<!-- Theme: apply the persisted (or preferred) scheme befo
 <script>
   (() => {
     try {
+      // A stored choice pins the scheme with data-ui-theme; with no
+      // choice the attribute stays off and the page follows the system scheme.
       const storedTheme = localStorage.getItem("theme");
-      const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches;
-      const theme = storedTheme ?? (prefersDark ? "dark" : "light");
-      document.documentElement.classList.toggle("dark", theme === "dark");
+      if (storedTheme === "dark" || storedTheme === "light") {
+        document.documentElement.setAttribute("data-ui-theme", storedTheme);
+      }
     } catch {
-      document.documentElement.classList.toggle(
-        "dark",
-        matchMedia("(prefers-color-scheme: dark)").matches,
-      );
+      /* no storage access: follow the system scheme */
     }
   })();
 </script>`;
 
 // --- Public API ---
 
-/** CDN mode for `buildHead` — kit files served from jsDelivr (ticket 06). */
+/** CDN mode for `buildHead` — kit files served from jsDelivr. */
 export interface CdnHeadOptions {
   /** Exact published `@zazz-ui/core` version (`"0.1.0"`; never a dist-tag). */
   version: string;

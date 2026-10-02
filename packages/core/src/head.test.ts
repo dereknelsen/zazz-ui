@@ -33,7 +33,7 @@ describe("dependency manifest", () => {
   });
 
   it("polyfills only Interest Invokers, the one API below the browser floor", () => {
-    // ADR-0011: the Popover API and Invoker Commands are native across the
+    // The Popover API and Invoker Commands are native across the
     // support window. `interestfor` is Chromium-only, so it is the sole
     // polyfill — and it must be the invokers `interest` entrypoint, NOT
     // `compatible`, which ships command/commandfor and no `interestfor` at all.
@@ -166,8 +166,6 @@ describe("buildHead cdn mode", () => {
       `${KIT}/src/primitives/popover/popover.css`,
       `${KIT}/src/primitives/select/select.css`,
       `${KIT}/src/primitives/combobox/combobox.css`,
-      `${KIT}/src/base/_utilities.css`,
-      `${KIT}/src/base/_layout.css`,
       // Behavior: side-effect tags for the engine stack and the primitive.
       `${KIT}/src/base/dialog-lifecycle.js`,
       `${KIT}/src/base/typeahead.js`,
@@ -201,15 +199,55 @@ describe("buildHead cdn mode", () => {
 
   it("mirrors index.css's base imports around the primitives", () => {
     const head = buildHead({ cdn: { version: "0.4.1", primitives: ["button"] } });
-    const links = [...head.matchAll(/src\/base\/(_[a-z-]+\.css)/g)].map((m) => m[1]);
+    const links = [...head.matchAll(/src\/base\/(_[a-z0-9-]+\.css)/g)].map((m) => m[1]);
+    expect(head).toContain('setAttribute("data-ui-theme"');
     expect(links).toEqual([
       "_layers.css",
       "_variables.css",
+      "_breakpoints.css",
       "_reset.css",
       "_typography.css",
       "_view-transitions.css",
-      "_utilities.css",
-      "_layout.css",
+      "_properties.css",
+      "_properties-2xs.css",
+      "_properties-xs.css",
+      "_properties-sm.css",
+      "_properties-md.css",
+      "_properties-lg.css",
+      "_properties-xl.css",
+      "_properties-2xl.css",
+      "_properties-disabled.css",
+      "_properties-active.css",
+      "_properties-focus-visible.css",
+      "_properties-focus-within.css",
+      "_properties-hover.css",
+      "_properties-checked.css",
+      "_properties-open.css",
+      "_utilities-tier-2xs.css",
+      "_utilities-tier-xs.css",
+      "_utilities-tier-sm.css",
+      "_utilities-tier-md.css",
+      "_utilities-tier-lg.css",
+      "_utilities-tier-xl.css",
+      "_utilities-tier-2xl.css",
+      "_utilities-tier-disabled.css",
+      "_utilities-tier-active.css",
+      "_utilities-tier-focus-visible.css",
+      "_utilities-tier-focus-within.css",
+      "_utilities-tier-hover.css",
+      "_utilities-tier-checked.css",
+      "_utilities-tier-open.css",
+      "_utilities-flow.css",
+      "_utilities-grid.css",
+      "_utilities-spacing.css",
+      "_utilities-margin.css",
+      "_utilities-sizing.css",
+      "_utilities-typography.css",
+      "_utilities-color.css",
+      "_utilities-effects.css",
+      "_utilities-box.css",
+      "_utilities-pseudo.css",
+      "_switches.css",
     ]);
   });
 });

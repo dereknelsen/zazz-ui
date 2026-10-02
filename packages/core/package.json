@@ -28,6 +28,8 @@
     "dist",
     "src",
     "examples",
+    "editor",
+    "AUTHORING.md",
     "CHANGELOG.md",
     "!src/**/*.test.ts"
   ],
@@ -41,6 +43,7 @@
       "default": "./src/index.js"
     },
     "./index.css": "./src/index.css",
+    "./index.ts": "./src/index.ts",
     "./zazz.css": "./dist/zazz.css",
     "./zazz.js": "./dist/zazz.js",
     "./sri.json": "./dist/sri.json",
@@ -61,6 +64,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && vp pack && node scripts/generate-heads.mjs && node scripts/generate-sri.mjs",
+    "generate": "node scripts/generate-utilities.ts && node scripts/generate-editor-data.ts",
     "sri": "node scripts/generate-sri.mjs",
     "dev": "tsc -p tsconfig.json --watch",
     "heads": "node scripts/generate-heads.mjs",
@@ -79,8 +83,10 @@
     "@types/node": "catalog:",
     "bumpp": "^11.1.0",
     "happy-dom": "catalog:",
+    "playwright": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
-    "vite-plus": "catalog:"
+    "vite-plus": "catalog:",
+    "vitest": "catalog:"
   }
 }

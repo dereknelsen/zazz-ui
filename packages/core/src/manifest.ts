@@ -24,9 +24,9 @@
 /**
  * Compatibility version of this manifest's shape. Consumers (the CLI) declare
  * the range they understand and fail gracefully on a newer value. Bumping it
- * is by definition a breaking kit change (ADR-0010).
+ * is by definition a breaking kit change.
  */
-export const MANIFEST_VERSION = 1;
+export const MANIFEST_VERSION = 2;
 
 // --- Primitive entries ---
 
@@ -54,6 +54,8 @@ export interface PrimitiveEntry {
   bare: string[];
   /** Example fragments (`--examples`, docs previews). */
   examples: string[];
+  /** Tag forms the primitive is styled or registered under (`ui-tabs`); absent = attribute form only. */
+  tags?: string[];
 }
 
 /** Bare specifiers pulled in by `base/signals.ts` (core runtime). */
@@ -78,6 +80,7 @@ const TYPEAHEAD_BASE = ["base/command-score.js", "base/hotkeys.js", "base/typeah
  */
 export const PRIMITIVES: Record<string, PrimitiveEntry> = {
   accordion: {
+    tags: ["ui-accordion"],
     css: ["primitives/accordion/accordion.css"],
     js: [],
     base: [],
@@ -94,6 +97,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     examples: ["primitives/alert-dialog/alert-dialog.html"],
   },
   autocomplete: {
+    tags: ["ui-autocomplete"],
     css: ["primitives/autocomplete/autocomplete.css"],
     js: ["primitives/autocomplete/autocomplete.js"],
     base: TYPEAHEAD_BASE,
@@ -141,6 +145,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     ],
   },
   "button-group": {
+    tags: ["ui-button-group"],
     css: ["primitives/button-group/button-group.css"],
     js: [],
     base: [],
@@ -152,7 +157,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     ],
   },
   card: {
-    css: [],
+    css: ["primitives/card/card.css"],
     js: [],
     base: [],
     primitives: [],
@@ -160,6 +165,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     examples: ["primitives/card/card.html", "primitives/card/card-subgrid.html"],
   },
   carousel: {
+    tags: ["ui-carousel"],
     css: ["primitives/carousel/carousel.css"],
     js: ["primitives/carousel/carousel.js"],
     base: ["base/embla.js"],
@@ -176,6 +182,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     examples: ["primitives/checkbox/checkbox.html", "primitives/checkbox/checkbox-tasklist.html"],
   },
   combobox: {
+    tags: ["ui-combobox"],
     css: ["primitives/combobox/combobox.css"],
     js: ["primitives/combobox/combobox.js"],
     base: TYPEAHEAD_BASE,
@@ -187,6 +194,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     ],
   },
   command: {
+    tags: ["ui-command"],
     css: ["primitives/command/command.css"],
     js: ["primitives/command/command.js", "primitives/command/command-actions.js"],
     base: TYPEAHEAD_BASE,
@@ -197,6 +205,14 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/command/command-dialog.html",
       "primitives/command/command-actions.html",
     ],
+  },
+  debug: {
+    css: [],
+    js: ["primitives/debug/debug.js"],
+    base: ["base/utilities.js"],
+    primitives: [],
+    bare: [],
+    examples: [],
   },
   dialog: {
     css: ["primitives/dialog/dialog.css"],
@@ -238,6 +254,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     ],
   },
   kbd: {
+    tags: ["ui-kbd-group"],
     css: ["primitives/kbd/kbd.css"],
     js: [],
     base: [],
@@ -245,7 +262,17 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     bare: [],
     examples: ["primitives/kbd/kbd.html", "primitives/kbd/kbd-group.html"],
   },
+  layout: {
+    tags: ["ui-layout"],
+    css: ["primitives/layout/layout.css"],
+    js: [],
+    base: [],
+    primitives: [],
+    bare: [],
+    examples: ["primitives/layout/layout.html"],
+  },
   lightbox: {
+    tags: ["ui-lightbox"],
     css: ["primitives/lightbox/lightbox.css"],
     js: ["primitives/lightbox/lightbox.js"],
     base: ["base/embla.js"],
@@ -254,6 +281,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     examples: ["primitives/lightbox/lightbox.html"],
   },
   menu: {
+    tags: ["ui-menu"],
     css: ["primitives/menu/menu.css"],
     js: ["primitives/menu/menu.js"],
     base: [],
@@ -301,6 +329,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     ],
   },
   otp: {
+    tags: ["ui-otp"],
     css: ["primitives/otp/otp.css"],
     js: ["primitives/otp/otp.js"],
     base: [],
@@ -309,6 +338,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     examples: ["primitives/otp/otp.html"],
   },
   "password-group": {
+    tags: ["ui-password"],
     css: ["primitives/password-group/password-group.css"],
     js: ["primitives/password-group/password-group.js"],
     base: [],
@@ -359,7 +389,24 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     bare: [],
     examples: [],
   },
+  "style-guard": {
+    css: [],
+    js: ["primitives/style-guard/style-guard.js"],
+    base: [],
+    primitives: [],
+    bare: [],
+    examples: [],
+  },
+  "scroll-fade": {
+    css: ["primitives/scroll-fade/scroll-fade.css"],
+    js: [],
+    base: [],
+    primitives: [],
+    bare: [],
+    examples: ["primitives/scroll-fade/scroll-fade.html"],
+  },
   select: {
+    tags: ["ui-multiselect"],
     css: ["primitives/select/select.css"],
     js: ["primitives/select/multiselect.js"],
     base: [],
@@ -410,6 +457,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     ],
   },
   tabs: {
+    tags: ["ui-tabs"],
     css: ["primitives/tabs/tabs.css"],
     js: ["primitives/tabs/tabs.js"],
     base: [],
@@ -426,6 +474,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     examples: ["primitives/textarea/textarea.html"],
   },
   toaster: {
+    tags: ["ui-toaster"],
     css: ["primitives/toaster/toaster.css"],
     js: ["primitives/toaster/toaster.js"],
     base: [],
@@ -442,6 +491,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     examples: ["primitives/toggle/toggle.html"],
   },
   "toggle-group": {
+    tags: ["ui-toggle-group"],
     css: ["primitives/toggle-group/toggle-group.css"],
     js: [],
     base: [],
@@ -470,6 +520,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     examples: ["primitives/toolbar/toolbar.html"],
   },
   tooltip: {
+    tags: ["ui-tooltip"],
     css: ["primitives/tooltip/tooltip.css"],
     js: [],
     base: [],
@@ -524,10 +575,75 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
  * the kit was designed and tested. Markup-only primitives (no css) do not
  * appear. `manifest.test.ts` asserts this list matches `index.css` exactly.
  */
+/**
+ * Base stylesheets that load before the primitives, in `index.css` order.
+ * `_layers.css` declares the cascade layers and must stay first.
+ */
+export const BASE_CSS_PRE: string[] = [
+  "base/_layers.css",
+  "base/_variables.css",
+  "base/_breakpoints.css",
+  "base/_reset.css",
+  "base/_typography.css",
+  "base/_view-transitions.css",
+];
+
+/** Base stylesheets that load after the primitives: the final override layer. */
+export const BASE_CSS_POST: string[] = [
+  "base/_properties.css",
+  "base/_properties-2xs.css",
+  "base/_properties-xs.css",
+  "base/_properties-sm.css",
+  "base/_properties-md.css",
+  "base/_properties-lg.css",
+  "base/_properties-xl.css",
+  "base/_properties-2xl.css",
+  "base/_properties-disabled.css",
+  "base/_properties-active.css",
+  "base/_properties-focus-visible.css",
+  "base/_properties-focus-within.css",
+  "base/_properties-hover.css",
+  "base/_properties-checked.css",
+  "base/_properties-open.css",
+  "base/_utilities-tier-2xs.css",
+  "base/_utilities-tier-xs.css",
+  "base/_utilities-tier-sm.css",
+  "base/_utilities-tier-md.css",
+  "base/_utilities-tier-lg.css",
+  "base/_utilities-tier-xl.css",
+  "base/_utilities-tier-2xl.css",
+  "base/_utilities-tier-disabled.css",
+  "base/_utilities-tier-active.css",
+  "base/_utilities-tier-focus-visible.css",
+  "base/_utilities-tier-focus-within.css",
+  "base/_utilities-tier-hover.css",
+  "base/_utilities-tier-checked.css",
+  "base/_utilities-tier-open.css",
+  "base/_utilities-flow.css",
+  "base/_utilities-grid.css",
+  "base/_utilities-spacing.css",
+  "base/_utilities-margin.css",
+  "base/_utilities-sizing.css",
+  "base/_utilities-typography.css",
+  "base/_utilities-color.css",
+  "base/_utilities-effects.css",
+  "base/_utilities-box.css",
+  "base/_utilities-pseudo.css",
+  "base/_switches.css",
+];
+
+/** Every tag form in the kit; the generator excludes them from no-base emissions. */
+export const TAG_FORMS: string[] = Object.values(PRIMITIVES)
+  .flatMap((entry) => entry.tags ?? [])
+  .sort();
+
 export const CSS_CASCADE_ORDER: string[] = [
+  "layout",
+  "scroll-fade",
   "separator",
   "fields",
   "badge",
+  "card",
   "kbd",
   "button",
   "button-group",

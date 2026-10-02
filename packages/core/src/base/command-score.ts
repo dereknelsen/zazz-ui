@@ -10,8 +10,7 @@
  *
  * Vendored from cmdk's `command-score.ts` by @pacocoursey (MIT), itself
  * adapted from Superhuman's `command-score` (MIT), which builds on Joshaven
- * Potter's `string_score`. The constants and recursion are kept verbatim so
- * results match cmdk's ranking; only the module shape is Zazz's.
+ * Potter's `string_score`. Constants and recursion are kept verbatim.
  *
  * @see https://github.com/pacocoursey/cmdk
  * @see https://github.com/superhuman/command-score

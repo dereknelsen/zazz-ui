@@ -60,7 +60,7 @@ interface CommandEvent extends Event {
 
 interface HTMLElementEventMap {
   command: CommandEvent;
-  /** Dialog lifecycle events emitted by base/dialog-lifecycle.ts (ADR-0003). */
+  /** Dialog lifecycle events emitted by base/dialog-lifecycle.ts. */
   "zazz:dialog-open": Event;
   "zazz:dialog-close": Event;
 }

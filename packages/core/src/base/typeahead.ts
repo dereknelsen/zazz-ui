@@ -15,9 +15,10 @@
  * restructured, so forms, focus, and progressive enhancement stay untouched.
  * Groups and empty states hide with CSS `:has()`, not code.
  *
- * Item facts come from the markup: the match/commit text is `data-value`
- * (falling back to text content) and `data-keywords` adds extra match
- * targets. `data-sort="score"` on the root re-ranks visually via `order`.
+ * Item facts come from the markup: the match/commit text is `data-<prefix>-value`
+ * (falling back to text content) and `data-<prefix>-keywords` adds extra match
+ * targets. `data-<prefix>-sort="score"` on the root re-ranks visually via `order`.
+ * Unprefixed `data-<key>` spellings are also read.
  */
 
 import { commandScore } from "./command-score.ts";
@@ -28,9 +29,9 @@ import { effect, state } from "./signals.ts";
 
 /** What the ranker needs to know about one item. */
 interface ItemFacts {
-  /** The text scored and committed: `data-value` ?? trimmed text content. */
+  /** The text scored and committed: `data-<prefix>-value` ?? trimmed text content. */
   value: string;
-  /** Extra match targets from `data-keywords`. */
+  /** Extra match targets from `data-<prefix>-keywords`. */
   keywords: string[];
 }
 
@@ -97,6 +98,19 @@ let typeaheadIdCounter = 0;
 abstract class TypeaheadElement extends ZazzElement {
   /** Slot prefix: `"autocomplete"` finds `autocomplete-panel`, `-list`, `-item`. */
   protected abstract readonly slotPrefix: string;
+
+  /**
+   * @description Selector for a part: the scoped `data-<prefix>-slot` form or
+   * the `data-slot="<prefix>-<name>"` form.
+   */
+  protected partSelector(name: string): string {
+    return `[data-${this.slotPrefix}-slot~="${name}"], [data-slot~="${this.slotPrefix}-${name}"]`;
+  }
+
+  /** @description A root config attribute, scoped (`data-<prefix>-<key>`) or unprefixed. */
+  protected config(key: string): string | null {
+    return this.getAttribute(`data-${this.slotPrefix}-${key}`) ?? this.getAttribute(`data-${key}`);
+  }
   /** Whether this element opens/closes its own `popover="manual"` panel. */
   protected readonly managesPanel: boolean = true;
   /**
@@ -107,7 +121,7 @@ abstract class TypeaheadElement extends ZazzElement {
   protected readonly openOnFocus: boolean = true;
   /** Whether ranking also re-orders visually via inline `order`. */
   protected get sortByScore(): boolean {
-    return this.getAttribute("data-sort") === "score";
+    return this.config("sort") === "score";
   }
   /** Whether filtering auto-highlights the best item (command palettes do). */
   protected readonly autoHighlight: boolean = false;
@@ -129,15 +143,15 @@ abstract class TypeaheadElement extends ZazzElement {
 
   protected setup(signal: AbortSignal): void {
     const prefix = this.slotPrefix;
-    const panel = this.querySelector(`[data-slot~="${prefix}-panel"]`);
+    const panel = this.querySelector(this.partSelector("panel"));
     const input =
       this.querySelector<HTMLInputElement>('input[role="combobox"]') ??
-      this.querySelector<HTMLInputElement>(`[data-slot~="${prefix}-input"]`);
+      this.querySelector<HTMLInputElement>(this.partSelector("input"));
     if (!(panel instanceof HTMLElement) || !(input instanceof HTMLInputElement)) return;
     this.panel = panel;
     this.searchInput = input;
 
-    const list = panel.querySelector(`[data-slot~="${prefix}-list"]`);
+    const list = panel.querySelector(this.partSelector("list"));
     if (list instanceof HTMLElement) {
       list.id ||= `ui-${prefix}-list-${++typeaheadIdCounter}`;
       input.setAttribute("aria-controls", list.id);
@@ -240,7 +254,7 @@ abstract class TypeaheadElement extends ZazzElement {
       (event) => {
         if (!(event.target instanceof Element)) return;
         if (event.target.closest("input, textarea, select, [contenteditable]")) return;
-        if (!event.target.closest(`[data-slot~="${prefix}-list"]`)) return;
+        if (!event.target.closest(this.partSelector("list"))) return;
         event.preventDefault();
       },
       { signal },
@@ -252,7 +266,7 @@ abstract class TypeaheadElement extends ZazzElement {
       "click",
       (event) => {
         if (!(event.target instanceof Element)) return;
-        const item = event.target.closest<HTMLElement>(`[data-slot~="${prefix}-item"]`);
+        const item = event.target.closest<HTMLElement>(this.partSelector("item"));
         if (item && !item.hidden) this.commit(item, "pointer");
       },
       { signal },
@@ -316,8 +330,8 @@ abstract class TypeaheadElement extends ZazzElement {
 
         visible.forEach((item, index) => {
           item.id ||= `ui-${prefix}-item-${++typeaheadIdCounter}`;
-          if (index === active) item.setAttribute("data-highlighted", "");
-          else item.removeAttribute("data-highlighted");
+          if (index === active) item.setAttribute(`data-${this.slotPrefix}-state`, "highlighted");
+          else item.removeAttribute(`data-${this.slotPrefix}-state`);
         });
 
         const highlighted = active >= 0 ? visible[active] : undefined;
@@ -340,14 +354,14 @@ abstract class TypeaheadElement extends ZazzElement {
   protected items(): HTMLElement[] {
     const panel = this.panel;
     if (!panel) return [];
-    return Array.from(panel.querySelectorAll(`[data-slot~="${this.slotPrefix}-item"]`)).filter(
+    return Array.from(panel.querySelectorAll<HTMLElement>(this.partSelector("item"))).filter(
       (node): node is HTMLElement => node instanceof HTMLElement,
     );
   }
 
   /**
    * @description The visible items in visual order: score order when
-   * `data-sort="score"`, DOM order otherwise, so arrow keys always follow
+   * `data-<prefix>-sort="score"`, DOM order otherwise, so arrow keys always follow
    * what the user sees.
    *
    * @param items - All items, DOM order.
@@ -384,7 +398,13 @@ abstract class TypeaheadElement extends ZazzElement {
       query,
       items.map((item) => ({
         value: this.itemValue(item),
-        keywords: (item.getAttribute("data-keywords") ?? "").split(/\s+/).filter(Boolean),
+        keywords: (
+          item.getAttribute(`data-${this.slotPrefix}-keywords`) ??
+          item.getAttribute("data-keywords") ??
+          ""
+        )
+          .split(/\s+/)
+          .filter(Boolean),
       })),
     );
     return { items, ranked, visible: this.visibleItems(items, ranked) };
@@ -396,10 +416,11 @@ abstract class TypeaheadElement extends ZazzElement {
    * value ("Go to docs ⇧⌘D" matches and announces as "Go to docs").
    *
    * @param item - The item element.
-   * @returns `data-value` when present, trimmed hint-free text otherwise.
+   * @returns `data-<prefix>-value` when present, trimmed hint-free text otherwise.
    */
   protected itemValue(item: HTMLElement): string {
-    const explicit = item.getAttribute("data-value");
+    const explicit =
+      item.getAttribute(`data-${this.slotPrefix}-value`) ?? item.getAttribute("data-value");
     if (explicit !== null) return explicit;
     if (!item.querySelector("kbd, ui-kbd-group")) return item.textContent?.trim() ?? "";
     const clone = item.cloneNode(true) as HTMLElement;
@@ -420,13 +441,13 @@ abstract class TypeaheadElement extends ZazzElement {
   }
 
   /**
-   * @description Minimum query length before the panel opens (`data-min-length`).
+   * @description Minimum query length before the panel opens (`data-<prefix>-min-length`).
    *
    * @returns The threshold, 0 by default.
    * @private
    */
   #minLength(): number {
-    const raw = Number(this.getAttribute("data-min-length"));
+    const raw = Number(this.config("min-length"));
     return Number.isFinite(raw) && raw > 0 ? raw : 0;
   }
 
