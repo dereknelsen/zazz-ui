@@ -1,0 +1,1 @@
+This repo is the Zazz design framework. When writing or editing HTML, use the Zazz 0.5 markup syntax described in [packages/core/AUTHORING.md](../packages/core/AUTHORING.md): `data-ui` identities, `data-<identity>-<key>` presets and slots, and utilities in `style=""`. Never style with classes. Build and test with Vite+ (`vp`), as described in [AGENTS.md](../AGENTS.md).

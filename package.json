@@ -4,8 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "ready": "vp check && vp run -r build && vp run -r test",
+    "ready": "vp check && node packages/core/scripts/fmt-html.ts --check && vp run -r build && vp run -r test",
     "dev": "vp run core#build && vp run docs#dev",
+    "fmt:html": "node packages/core/scripts/fmt-html.ts",
+    "playground": "vp run playground#dev",
     "prepare": "vp config"
   },
   "devDependencies": {

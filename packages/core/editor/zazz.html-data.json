@@ -1,0 +1,1464 @@
+{
+  "version": 1.1,
+  "tags": [
+    {
+      "name": "ui-accordion",
+      "description": "Zazz accordion (tag form; the attribute form is data-ui=\"accordion\").",
+      "attributes": []
+    },
+    {
+      "name": "ui-autocomplete",
+      "description": "Zazz autocomplete (tag form; the attribute form is data-ui=\"autocomplete\").",
+      "attributes": []
+    },
+    {
+      "name": "ui-button-group",
+      "description": "Zazz button-group (tag form; the attribute form is data-ui=\"button-group\").",
+      "attributes": []
+    },
+    {
+      "name": "ui-carousel",
+      "description": "Zazz carousel (tag form; the attribute form is data-ui=\"carousel\").",
+      "attributes": []
+    },
+    {
+      "name": "ui-combobox",
+      "description": "Zazz combobox (tag form; the attribute form is data-ui=\"combobox\").",
+      "attributes": []
+    },
+    {
+      "name": "ui-command",
+      "description": "Zazz command (tag form; the attribute form is data-ui=\"command\").",
+      "attributes": []
+    },
+    {
+      "name": "ui-debug",
+      "description": "Zazz debug (tag form; the attribute form is data-ui=\"debug\").",
+      "attributes": []
+    },
+    {
+      "name": "ui-kbd-group",
+      "description": "Zazz kbd-group (tag form; the attribute form is data-ui=\"kbd-group\").",
+      "attributes": []
+    },
+    {
+      "name": "ui-layout",
+      "description": "Zazz layout (tag form; the attribute form is data-ui=\"layout\").",
+      "attributes": []
+    },
+    {
+      "name": "ui-lightbox",
+      "description": "Zazz lightbox (tag form; the attribute form is data-ui=\"lightbox\").",
+      "attributes": []
+    },
+    {
+      "name": "ui-menu",
+      "description": "Zazz menu (tag form; the attribute form is data-ui=\"menu\").",
+      "attributes": []
+    },
+    {
+      "name": "ui-multiselect",
+      "description": "Zazz multiselect (tag form; the attribute form is data-ui=\"multiselect\").",
+      "attributes": []
+    },
+    {
+      "name": "ui-otp",
+      "description": "Zazz otp (tag form; the attribute form is data-ui=\"otp\").",
+      "attributes": []
+    },
+    {
+      "name": "ui-password",
+      "description": "Zazz password (tag form; the attribute form is data-ui=\"password\").",
+      "attributes": []
+    },
+    {
+      "name": "ui-tabs",
+      "description": "Zazz tabs (tag form; the attribute form is data-ui=\"tabs\").",
+      "attributes": []
+    },
+    {
+      "name": "ui-toaster",
+      "description": "Zazz toaster (tag form; the attribute form is data-ui=\"toaster\").",
+      "attributes": []
+    },
+    {
+      "name": "ui-toggle-group",
+      "description": "Zazz toggle-group (tag form; the attribute form is data-ui=\"toggle-group\").",
+      "attributes": []
+    },
+    {
+      "name": "ui-tooltip",
+      "description": "Zazz tooltip (tag form; the attribute form is data-ui=\"tooltip\").",
+      "attributes": []
+    }
+  ],
+  "globalAttributes": [
+    {
+      "name": "data-ui",
+      "description": "Identity tokens: primitives, switches, and typography roles.",
+      "values": [
+        {
+          "name": "accordion"
+        },
+        {
+          "name": "alert-dialog"
+        },
+        {
+          "name": "autocomplete"
+        },
+        {
+          "name": "badge"
+        },
+        {
+          "name": "button"
+        },
+        {
+          "name": "button-group"
+        },
+        {
+          "name": "card"
+        },
+        {
+          "name": "carousel"
+        },
+        {
+          "name": "combobox"
+        },
+        {
+          "name": "command"
+        },
+        {
+          "name": "dialog"
+        },
+        {
+          "name": "field"
+        },
+        {
+          "name": "field-group"
+        },
+        {
+          "name": "grid-pile"
+        },
+        {
+          "name": "group"
+        },
+        {
+          "name": "input"
+        },
+        {
+          "name": "input-group"
+        },
+        {
+          "name": "kbd-group"
+        },
+        {
+          "name": "layout"
+        },
+        {
+          "name": "lightbox"
+        },
+        {
+          "name": "menu"
+        },
+        {
+          "name": "meter"
+        },
+        {
+          "name": "mobile-menu"
+        },
+        {
+          "name": "multiselect"
+        },
+        {
+          "name": "navigation-menu"
+        },
+        {
+          "name": "otp"
+        },
+        {
+          "name": "password-group"
+        },
+        {
+          "name": "progress"
+        },
+        {
+          "name": "prose"
+        },
+        {
+          "name": "radio"
+        },
+        {
+          "name": "radio-group"
+        },
+        {
+          "name": "scroll-fade"
+        },
+        {
+          "name": "select"
+        },
+        {
+          "name": "separator"
+        },
+        {
+          "name": "sr-only"
+        },
+        {
+          "name": "table"
+        },
+        {
+          "name": "tabs"
+        },
+        {
+          "name": "text-2xl"
+        },
+        {
+          "name": "text-2xs"
+        },
+        {
+          "name": "text-display"
+        },
+        {
+          "name": "text-eyebrow"
+        },
+        {
+          "name": "text-h1"
+        },
+        {
+          "name": "text-h2"
+        },
+        {
+          "name": "text-h3"
+        },
+        {
+          "name": "text-h4"
+        },
+        {
+          "name": "text-h5"
+        },
+        {
+          "name": "text-h6"
+        },
+        {
+          "name": "text-lg"
+        },
+        {
+          "name": "text-md"
+        },
+        {
+          "name": "text-sm"
+        },
+        {
+          "name": "text-xl"
+        },
+        {
+          "name": "text-xs"
+        },
+        {
+          "name": "textarea"
+        },
+        {
+          "name": "toaster"
+        },
+        {
+          "name": "toggle"
+        },
+        {
+          "name": "toggle-group"
+        },
+        {
+          "name": "tooltip"
+        }
+      ]
+    },
+    {
+      "name": "data-ui-theme",
+      "description": "Color scheme for the subtree.",
+      "values": [
+        {
+          "name": "dark"
+        },
+        {
+          "name": "light"
+        }
+      ]
+    },
+    {
+      "name": "data-ui-navigation",
+      "description": "On <html>: swap the body in place on navigations between opted-in pages.",
+      "values": [
+        {
+          "name": "swap"
+        }
+      ]
+    },
+    {
+      "name": "data-ui-persist",
+      "description": "Keep this element's live DOM and state across in-page navigations; the value is an id both pages share.",
+      "values": []
+    },
+    {
+      "name": "data-ui-guard",
+      "description": "Opts an element out of the style guard.",
+      "values": [
+        {
+          "name": "off"
+        }
+      ]
+    },
+    {
+      "name": "data-debug-domains",
+      "description": "<ui-debug>: comma-separated hostnames the audit runs on.",
+      "values": []
+    },
+    {
+      "name": "data-debug-warnings",
+      "description": "<ui-debug>: silences the unlisted-domain warning.",
+      "values": [
+        {
+          "name": "false"
+        }
+      ]
+    },
+    {
+      "name": "data-autocomplete-keywords",
+      "description": "Preset or config of the autocomplete primitive.",
+      "values": []
+    },
+    {
+      "name": "data-autocomplete-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "empty"
+        },
+        {
+          "name": "group"
+        },
+        {
+          "name": "group-label"
+        },
+        {
+          "name": "item"
+        },
+        {
+          "name": "list"
+        },
+        {
+          "name": "panel"
+        }
+      ]
+    },
+    {
+      "name": "data-autocomplete-sort",
+      "description": "Preset or config of the autocomplete primitive.",
+      "values": []
+    },
+    {
+      "name": "data-autocomplete-state",
+      "description": "State: tokens the primitive's script writes.",
+      "values": [
+        {
+          "name": "highlighted"
+        }
+      ]
+    },
+    {
+      "name": "data-autocomplete-value",
+      "description": "Preset or config of the autocomplete primitive.",
+      "values": []
+    },
+    {
+      "name": "data-badge-size",
+      "description": "Preset or config of the badge primitive.",
+      "values": [
+        {
+          "name": "icon"
+        }
+      ]
+    },
+    {
+      "name": "data-badge-variant",
+      "description": "Preset or config of the badge primitive.",
+      "values": [
+        {
+          "name": "ghost"
+        },
+        {
+          "name": "link"
+        },
+        {
+          "name": "muted"
+        },
+        {
+          "name": "primary"
+        }
+      ]
+    },
+    {
+      "name": "data-button-group-orientation",
+      "description": "Preset or config of the button-group primitive.",
+      "values": [
+        {
+          "name": "vertical"
+        }
+      ]
+    },
+    {
+      "name": "data-button-size",
+      "description": "Preset or config of the button primitive.",
+      "values": [
+        {
+          "name": "icon"
+        },
+        {
+          "name": "icon-sm"
+        },
+        {
+          "name": "sm"
+        }
+      ]
+    },
+    {
+      "name": "data-button-variant",
+      "description": "Preset or config of the button primitive.",
+      "values": [
+        {
+          "name": "destructive"
+        },
+        {
+          "name": "ghost"
+        },
+        {
+          "name": "link"
+        },
+        {
+          "name": "muted"
+        },
+        {
+          "name": "outline"
+        },
+        {
+          "name": "primary"
+        }
+      ]
+    },
+    {
+      "name": "data-card-variant",
+      "description": "Preset or config of the card primitive.",
+      "values": [
+        {
+          "name": "muted"
+        }
+      ]
+    },
+    {
+      "name": "data-carousel-init",
+      "description": "Preset or config of the carousel primitive.",
+      "values": []
+    },
+    {
+      "name": "data-carousel-keyboard",
+      "description": "Preset or config of the carousel primitive.",
+      "values": []
+    },
+    {
+      "name": "data-carousel-loop",
+      "description": "Preset or config of the carousel primitive.",
+      "values": []
+    },
+    {
+      "name": "data-carousel-plugins",
+      "description": "Preset or config of the carousel primitive.",
+      "values": []
+    },
+    {
+      "name": "data-carousel-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "container"
+        },
+        {
+          "name": "next"
+        },
+        {
+          "name": "prev"
+        },
+        {
+          "name": "slide"
+        },
+        {
+          "name": "thumbs"
+        },
+        {
+          "name": "viewport"
+        }
+      ]
+    },
+    {
+      "name": "data-carousel-start",
+      "description": "Preset or config of the carousel primitive.",
+      "values": []
+    },
+    {
+      "name": "data-carousel-start-index",
+      "description": "Preset or config of the carousel primitive.",
+      "values": []
+    },
+    {
+      "name": "data-carousel-state",
+      "description": "State: tokens the primitive's script writes.",
+      "values": [
+        {
+          "name": "active"
+        },
+        {
+          "name": "dragging"
+        },
+        {
+          "name": "in-view"
+        },
+        {
+          "name": "snapped"
+        }
+      ]
+    },
+    {
+      "name": "data-checkbox-controls",
+      "description": "Preset or config of the checkbox primitive.",
+      "values": []
+    },
+    {
+      "name": "data-combobox-label-remove",
+      "description": "Preset or config of the combobox primitive.",
+      "values": []
+    },
+    {
+      "name": "data-combobox-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "control"
+        },
+        {
+          "name": "empty"
+        },
+        {
+          "name": "group"
+        },
+        {
+          "name": "group-label"
+        },
+        {
+          "name": "item"
+        },
+        {
+          "name": "list"
+        },
+        {
+          "name": "panel"
+        },
+        {
+          "name": "tag"
+        },
+        {
+          "name": "tag-label"
+        },
+        {
+          "name": "tag-remove"
+        },
+        {
+          "name": "tag-template"
+        },
+        {
+          "name": "trigger"
+        },
+        {
+          "name": "value"
+        }
+      ]
+    },
+    {
+      "name": "data-combobox-state",
+      "description": "State: tokens the primitive's script writes.",
+      "values": [
+        {
+          "name": "highlighted"
+        }
+      ]
+    },
+    {
+      "name": "data-combobox-value",
+      "description": "Preset or config of the combobox primitive.",
+      "values": []
+    },
+    {
+      "name": "data-combobox-variant",
+      "description": "Preset or config of the combobox primitive.",
+      "values": [
+        {
+          "name": "multiselect"
+        }
+      ]
+    },
+    {
+      "name": "data-command-hotkey",
+      "description": "Preset or config of the command primitive.",
+      "values": []
+    },
+    {
+      "name": "data-command-keywords",
+      "description": "Preset or config of the command primitive.",
+      "values": []
+    },
+    {
+      "name": "data-command-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "empty"
+        },
+        {
+          "name": "footer"
+        },
+        {
+          "name": "group"
+        },
+        {
+          "name": "group-label"
+        },
+        {
+          "name": "header"
+        },
+        {
+          "name": "input"
+        },
+        {
+          "name": "item"
+        },
+        {
+          "name": "list"
+        },
+        {
+          "name": "open"
+        },
+        {
+          "name": "panel"
+        }
+      ]
+    },
+    {
+      "name": "data-command-state",
+      "description": "State: tokens the primitive's script writes.",
+      "values": [
+        {
+          "name": "highlighted"
+        }
+      ]
+    },
+    {
+      "name": "data-command-stay-open",
+      "description": "Preset or config of the command primitive.",
+      "values": []
+    },
+    {
+      "name": "data-dialog-size",
+      "description": "Preset or config of the dialog primitive.",
+      "values": [
+        {
+          "name": "article"
+        },
+        {
+          "name": "container"
+        },
+        {
+          "name": "screen"
+        }
+      ]
+    },
+    {
+      "name": "data-dialog-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "body"
+        },
+        {
+          "name": "close"
+        },
+        {
+          "name": "content"
+        },
+        {
+          "name": "footer"
+        },
+        {
+          "name": "header"
+        }
+      ]
+    },
+    {
+      "name": "data-field-orientation",
+      "description": "Preset or config of the fields primitive.",
+      "values": [
+        {
+          "name": "horizontal"
+        }
+      ]
+    },
+    {
+      "name": "data-field-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "description"
+        },
+        {
+          "name": "error"
+        },
+        {
+          "name": "hint"
+        },
+        {
+          "name": "label"
+        }
+      ]
+    },
+    {
+      "name": "data-input-group-align",
+      "description": "Preset or config of the input-group primitive.",
+      "values": [
+        {
+          "name": "block-end"
+        },
+        {
+          "name": "block-start"
+        },
+        {
+          "name": "inline-end"
+        },
+        {
+          "name": "inline-start"
+        }
+      ]
+    },
+    {
+      "name": "data-input-group-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "addon"
+        },
+        {
+          "name": "text"
+        }
+      ]
+    },
+    {
+      "name": "data-layout-size",
+      "description": "Preset or config of the layout primitive.",
+      "values": [
+        {
+          "name": "2xl"
+        },
+        {
+          "name": "2xs"
+        },
+        {
+          "name": "bleed"
+        },
+        {
+          "name": "full"
+        },
+        {
+          "name": "lg"
+        },
+        {
+          "name": "md"
+        },
+        {
+          "name": "sm"
+        },
+        {
+          "name": "xl"
+        },
+        {
+          "name": "xs"
+        }
+      ]
+    },
+    {
+      "name": "data-lightbox-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "close"
+        },
+        {
+          "name": "content"
+        },
+        {
+          "name": "counter"
+        },
+        {
+          "name": "dialog"
+        },
+        {
+          "name": "gallery"
+        },
+        {
+          "name": "next"
+        },
+        {
+          "name": "prev"
+        },
+        {
+          "name": "slide"
+        },
+        {
+          "name": "stage"
+        },
+        {
+          "name": "thumb"
+        },
+        {
+          "name": "thumb-content"
+        },
+        {
+          "name": "thumbs"
+        },
+        {
+          "name": "thumbs-next"
+        },
+        {
+          "name": "thumbs-prev"
+        }
+      ]
+    },
+    {
+      "name": "data-menu-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "popover"
+        }
+      ]
+    },
+    {
+      "name": "data-mobile-menu-animation",
+      "description": "Preset or config of the mobile-menu primitive.",
+      "values": [
+        {
+          "name": "slide-right"
+        }
+      ]
+    },
+    {
+      "name": "data-mobile-menu-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "body"
+        },
+        {
+          "name": "footer"
+        },
+        {
+          "name": "header"
+        },
+        {
+          "name": "viewport"
+        }
+      ]
+    },
+    {
+      "name": "data-multiselect-align",
+      "description": "Data attribute the kit reads.",
+      "values": []
+    },
+    {
+      "name": "data-multiselect-label-more",
+      "description": "Data attribute the kit reads.",
+      "values": []
+    },
+    {
+      "name": "data-multiselect-placeholder",
+      "description": "Data attribute the kit reads.",
+      "values": []
+    },
+    {
+      "name": "data-multiselect-side",
+      "description": "Data attribute the kit reads.",
+      "values": []
+    },
+    {
+      "name": "data-multiselect-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "icon"
+        },
+        {
+          "name": "label"
+        },
+        {
+          "name": "option"
+        },
+        {
+          "name": "panel"
+        },
+        {
+          "name": "trigger"
+        }
+      ]
+    },
+    {
+      "name": "data-multiselect-state",
+      "description": "State: tokens the primitive's script writes.",
+      "values": [
+        {
+          "name": "enhanced"
+        }
+      ]
+    },
+    {
+      "name": "data-navigation-menu-animation",
+      "description": "Preset or config of the navigation-menu primitive.",
+      "values": [
+        {
+          "name": "slide-down"
+        }
+      ]
+    },
+    {
+      "name": "data-navigation-menu-size",
+      "description": "Preset or config of the navigation-menu primitive.",
+      "values": [
+        {
+          "name": "container"
+        },
+        {
+          "name": "root"
+        },
+        {
+          "name": "screen"
+        }
+      ]
+    },
+    {
+      "name": "data-navigation-menu-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "item"
+        },
+        {
+          "name": "link"
+        },
+        {
+          "name": "list"
+        },
+        {
+          "name": "popover"
+        },
+        {
+          "name": "submenu"
+        },
+        {
+          "name": "submenu-trigger"
+        },
+        {
+          "name": "trigger"
+        },
+        {
+          "name": "viewport"
+        }
+      ]
+    },
+    {
+      "name": "data-navigation-menu-variant",
+      "description": "Preset or config of the navigation-menu primitive.",
+      "values": [
+        {
+          "name": "submenu"
+        }
+      ]
+    },
+    {
+      "name": "data-otp-auto-submit",
+      "description": "Preset or config of the otp primitive.",
+      "values": []
+    },
+    {
+      "name": "data-otp-complete",
+      "description": "Preset or config of the otp primitive.",
+      "values": []
+    },
+    {
+      "name": "data-otp-groups",
+      "description": "Preset or config of the otp primitive.",
+      "values": []
+    },
+    {
+      "name": "data-otp-index",
+      "description": "Preset or config of the otp primitive.",
+      "values": []
+    },
+    {
+      "name": "data-otp-mask",
+      "description": "Preset or config of the otp primitive.",
+      "values": []
+    },
+    {
+      "name": "data-otp-ready",
+      "description": "Preset or config of the otp primitive.",
+      "values": []
+    },
+    {
+      "name": "data-otp-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "cell"
+        },
+        {
+          "name": "input"
+        },
+        {
+          "name": "rail"
+        },
+        {
+          "name": "separator"
+        }
+      ]
+    },
+    {
+      "name": "data-otp-state",
+      "description": "State: tokens the primitive's script writes.",
+      "values": [
+        {
+          "name": "active"
+        }
+      ]
+    },
+    {
+      "name": "data-otp-type",
+      "description": "Preset or config of the otp primitive.",
+      "values": []
+    },
+    {
+      "name": "data-password-group-align",
+      "description": "Preset or config of the password-group primitive.",
+      "values": [
+        {
+          "name": "block-end"
+        },
+        {
+          "name": "block-start"
+        },
+        {
+          "name": "inline-end"
+        },
+        {
+          "name": "inline-start"
+        }
+      ]
+    },
+    {
+      "name": "data-password-group-label-hide",
+      "description": "Preset or config of the password-group primitive.",
+      "values": []
+    },
+    {
+      "name": "data-password-group-label-show",
+      "description": "Preset or config of the password-group primitive.",
+      "values": []
+    },
+    {
+      "name": "data-password-group-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "addon"
+        },
+        {
+          "name": "icon"
+        },
+        {
+          "name": "icon-hide"
+        },
+        {
+          "name": "icon-show"
+        },
+        {
+          "name": "text"
+        },
+        {
+          "name": "toggle"
+        }
+      ]
+    },
+    {
+      "name": "data-popover-align",
+      "description": "Preset or config of the popover primitive.",
+      "values": [
+        {
+          "name": "center"
+        },
+        {
+          "name": "end"
+        },
+        {
+          "name": "start"
+        }
+      ]
+    },
+    {
+      "name": "data-popover-side",
+      "description": "Preset or config of the popover primitive.",
+      "values": [
+        {
+          "name": "bottom"
+        },
+        {
+          "name": "left"
+        },
+        {
+          "name": "right"
+        },
+        {
+          "name": "top"
+        }
+      ]
+    },
+    {
+      "name": "data-reveal",
+      "description": "Data attribute the kit reads.",
+      "values": [
+        {
+          "name": "fade"
+        },
+        {
+          "name": "grow"
+        },
+        {
+          "name": "shrink"
+        },
+        {
+          "name": "slide-down"
+        },
+        {
+          "name": "slide-left"
+        },
+        {
+          "name": "slide-right"
+        },
+        {
+          "name": "slide-up"
+        }
+      ]
+    },
+    {
+      "name": "data-reveal-each",
+      "description": "Preset or config of the reveal primitive.",
+      "values": [
+        {
+          "name": "fade"
+        },
+        {
+          "name": "grow"
+        },
+        {
+          "name": "shrink"
+        },
+        {
+          "name": "slide-down"
+        },
+        {
+          "name": "slide-left"
+        },
+        {
+          "name": "slide-right"
+        },
+        {
+          "name": "slide-up"
+        }
+      ]
+    },
+    {
+      "name": "data-reveal-order",
+      "description": "Preset or config of the reveal primitive.",
+      "values": [
+        {
+          "name": "reversed"
+        }
+      ]
+    },
+    {
+      "name": "data-reveal-state",
+      "description": "State: tokens the primitive's script writes.",
+      "values": [
+        {
+          "name": "in-view"
+        }
+      ]
+    },
+    {
+      "name": "data-scroll-fade-axis",
+      "description": "Preset or config of the scroll-fade primitive.",
+      "values": [
+        {
+          "name": "x"
+        }
+      ]
+    },
+    {
+      "name": "data-select-align",
+      "description": "Preset or config of the select primitive.",
+      "values": [
+        {
+          "name": "center"
+        },
+        {
+          "name": "end"
+        },
+        {
+          "name": "start"
+        }
+      ]
+    },
+    {
+      "name": "data-select-side",
+      "description": "Preset or config of the select primitive.",
+      "values": [
+        {
+          "name": "bottom"
+        },
+        {
+          "name": "left"
+        },
+        {
+          "name": "right"
+        },
+        {
+          "name": "top"
+        }
+      ]
+    },
+    {
+      "name": "data-separator-orientation",
+      "description": "Preset or config of the separator primitive.",
+      "values": [
+        {
+          "name": "vertical"
+        }
+      ]
+    },
+    {
+      "name": "data-table-caption",
+      "description": "Preset or config of the table primitive.",
+      "values": [
+        {
+          "name": "top"
+        }
+      ]
+    },
+    {
+      "name": "data-table-layout",
+      "description": "Preset or config of the table primitive.",
+      "values": [
+        {
+          "name": "fixed"
+        }
+      ]
+    },
+    {
+      "name": "data-table-size",
+      "description": "Preset or config of the table primitive.",
+      "values": [
+        {
+          "name": "sm"
+        }
+      ]
+    },
+    {
+      "name": "data-table-state",
+      "description": "State: tokens the primitive's script writes.",
+      "values": [
+        {
+          "name": "selected"
+        }
+      ]
+    },
+    {
+      "name": "data-table-variant",
+      "description": "Preset or config of the table primitive.",
+      "values": [
+        {
+          "name": "alternating"
+        },
+        {
+          "name": "grid"
+        }
+      ]
+    },
+    {
+      "name": "data-tabs-orientation",
+      "description": "Preset or config of the tabs primitive.",
+      "values": [
+        {
+          "name": "vertical"
+        }
+      ]
+    },
+    {
+      "name": "data-tabs-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "indicator"
+        },
+        {
+          "name": "label"
+        },
+        {
+          "name": "label-text"
+        },
+        {
+          "name": "list"
+        },
+        {
+          "name": "panel"
+        }
+      ]
+    },
+    {
+      "name": "data-toaster-position",
+      "description": "Preset or config of the toaster primitive.",
+      "values": []
+    },
+    {
+      "name": "data-toaster-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "action"
+        },
+        {
+          "name": "close"
+        },
+        {
+          "name": "content"
+        },
+        {
+          "name": "description"
+        },
+        {
+          "name": "icon"
+        },
+        {
+          "name": "list"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "toast"
+        }
+      ]
+    },
+    {
+      "name": "data-toaster-state",
+      "description": "State: tokens the primitive's script writes.",
+      "values": [
+        {
+          "name": "expanded"
+        },
+        {
+          "name": "front"
+        },
+        {
+          "name": "removed"
+        },
+        {
+          "name": "visible"
+        }
+      ]
+    },
+    {
+      "name": "data-toaster-variant",
+      "description": "Preset or config of the toaster primitive.",
+      "values": [
+        {
+          "name": "destructive"
+        },
+        {
+          "name": "info"
+        },
+        {
+          "name": "success"
+        },
+        {
+          "name": "warning"
+        }
+      ]
+    },
+    {
+      "name": "data-toggle-group-orientation",
+      "description": "Preset or config of the toggle-group primitive.",
+      "values": [
+        {
+          "name": "vertical"
+        }
+      ]
+    },
+    {
+      "name": "data-toggle-size",
+      "description": "Preset or config of the toggle primitive.",
+      "values": [
+        {
+          "name": "icon"
+        },
+        {
+          "name": "icon-sm"
+        },
+        {
+          "name": "sm"
+        }
+      ]
+    },
+    {
+      "name": "data-toggle-variant",
+      "description": "Preset or config of the toggle primitive.",
+      "values": [
+        {
+          "name": "destructive"
+        },
+        {
+          "name": "ghost"
+        },
+        {
+          "name": "muted"
+        },
+        {
+          "name": "primary"
+        }
+      ]
+    },
+    {
+      "name": "data-tooltip-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "arrow"
+        },
+        {
+          "name": "content"
+        },
+        {
+          "name": "trigger"
+        }
+      ]
+    }
+  ]
+}
