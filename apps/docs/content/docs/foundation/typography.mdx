@@ -10,11 +10,11 @@ description: Fluid typography scale, font stacks, utility classes, and the .ui-p
 Zazz defines raw stacks and semantic aliases on `:root`:
 
 ```css
---font-family-body: var(--font-body);
---font-family-heading: var(--font-heading);
+--font-family-body: var(--font-family-body);
+--font-family-heading: var(--font-family-heading);
 ```
 
-Override the raw `--font-heading` stack to customize heading typography (`--font-family-heading` already points at it). Utility classes map per element: `.font-sans` → `--font-body`, `.font-serif` → `--font-heading` (a sans stack by default — repoint `--font-heading` at a serif to change that), `.font-mono` → `--font-family-mono`.
+Override the raw `--font-family-heading` stack to customize heading typography (`--font-family-heading` already points at it). Utility classes map per element: `.font-sans` → `--font-family-body`, `.font-serif` → `--font-family-heading` (a sans stack by default — repoint `--font-family-heading` at a serif to change that), `.font-mono` → `--font-family-mono`.
 
 ## Fluid type scale
 
@@ -46,12 +46,12 @@ Wrap unclassed HTML (such as Markdown or CMS output) in `.ui-prose` to format he
 
 ### Prose configuration tokens
 
-| Token                          | Default               | Purpose                                         |
-| ------------------------------ | --------------------- | ----------------------------------------------- |
-| `--ui-prose-link-color`        | `var(--primary)`      | Link color inside prose                         |
-| `--ui-prose-img-radius`        | `var(--radius-md)`    | Corner radius on images and video               |
-| `--ui-prose-img-border`        | `none`                | Border on media elements                        |
-| `--ui-prose-figcaption-margin` | `var(--gap-xs) 0 0 0` | Spacing above figure captions                   |
-| `--ui-prose-figcaption-gap`    | `0px`                 | Extra flex gap between figure media and caption |
+| Token                          | Default                 | Purpose                                         |
+| ------------------------------ | ----------------------- | ----------------------------------------------- |
+| `--ui-prose-link-color`        | `var(--primary)`        | Link color inside prose                         |
+| `--ui-prose-img-radius`        | `var(--radius-md)`      | Corner radius on images and video               |
+| `--ui-prose-img-border`        | `none`                  | Border on media elements                        |
+| `--ui-prose-figcaption-margin` | `var(--space-xs) 0 0 0` | Spacing above figure captions                   |
+| `--ui-prose-figcaption-gap`    | `0px`                   | Extra flex gap between figure media and caption |
 
 Vertical block rhythm is controlled by `--paragraph-spacing-*` tokens.

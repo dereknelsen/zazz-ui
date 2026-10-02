@@ -30,6 +30,6 @@ Scoped restyling works through CSS inheritance by reassigning a token on any anc
 ```css
 .my-toolbar {
   --ui-kbd-background: var(--card);
-  --ui-kbd-group-gap: var(--step-0_5);
+  --ui-kbd-group-gap: calc(var(--spacing) * 0.5);
 }
 ```

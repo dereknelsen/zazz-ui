@@ -89,11 +89,11 @@ Three semantic aliases sit between the stacks and the rules: `--font-family-body
 
 ```css
 :root {
-  --font-heading: "Fraunces", ui-serif, Georgia, serif;
+  --font-family-heading: "Fraunces", ui-serif, Georgia, serif;
 }
 ```
 
-Load the font in your `<head>`, override the one token, and every `text-h*` and `text-display` on the site changes typeface while body text stays put. The `.font-sans`, `.font-serif`, and `.font-mono` utilities switch stacks per element (`.font-serif` maps to `--font-heading`, so it only reads as serif once you repoint that token); `.font-body`, `.font-heading`, and `.font-strong` are semantic weight shortcuts — they set `font-weight` only.
+Load the font in your `<head>`, override the one token, and every `text-h*` and `text-display` on the site changes typeface while body text stays put. The `.font-sans`, `.font-serif`, and `.font-mono` utilities switch stacks per element (`.font-serif` maps to `--font-family-heading`, so it only reads as serif once you repoint that token); `.font-body`, `.font-heading`, and `.font-strong` are semantic weight shortcuts — they set `font-weight` only.
 
 ## Retuning the scale
 

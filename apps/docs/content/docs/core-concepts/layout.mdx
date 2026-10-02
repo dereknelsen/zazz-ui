@@ -30,8 +30,6 @@ The `.container` itself spans the whole region as a subgrid, which re-exposes th
 
 <BandFlowDiagram />
 
-To see the whole system moving at real page width, open the [layout template](/docs/templates/layout): a full page that walks every band, the responsive variants, and the article measure.
-
 The bands are fluid. Each one caps at its breakpoint width and centers while the viewport has room to spare, then fills the available space (minus gutters) once it doesn't. There is no snap at the breakpoint; the transition is continuous.
 
 ## The bands
@@ -168,7 +166,7 @@ Three token families control everything, all on `:root`:
 
 ```css
 :root {
-  --gutters: var(--gap-lg); /* edge padding reserved by every band, default --gap-md */
+  --gutters: var(--space-lg); /* edge padding reserved by every band, default --space-md */
   --article-lg: 65ch; /* reading measures for the article variant */
 }
 ```

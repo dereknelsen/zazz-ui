@@ -59,7 +59,7 @@ export function buildPreviewDocument({
 ${head}
 ${BLOCK_NAVIGATION}
 <style>
-  html, body { margin: 0; background: var(--background); color: var(--foreground); block-size: 100%; inline-size: 100%; overflow: clip; }
+  html, body { margin: 0; background: var(--color-background); color: var(--color-foreground); block-size: 100%; inline-size: 100%; overflow: clip; }
   .zazz-preview {
     display: grid;
     box-sizing: border-box;
@@ -67,8 +67,8 @@ ${BLOCK_NAVIGATION}
     align-content: ${block};
     align-content: safe ${block};
     justify-items: ${inline};
-    gap: var(--gap-md);
-    padding: var(--gap-md);
+    gap: var(--space-md);
+    padding: var(--space-md);
     inline-size: 100%;
     block-size: 100%;
     min-block-size: ${minHeight}px;

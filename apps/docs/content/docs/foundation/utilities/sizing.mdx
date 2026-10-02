@@ -17,11 +17,11 @@ Every `w-*` / `h-*` class (including `min-*` and `max-*` variants) has a logical
 | `w-px` / `h-px`                | `1px`                                            |
 | `w-auto` / `h-auto`            | `auto`                                           |
 | `w-full` / `h-full`            | `100%`                                           |
-| `w-xs` / `h-xs`                | `var(--step-3)`                                  |
-| `w-sm` / `h-sm`                | `var(--gap-sm)`                                  |
-| `w-md` / `h-md`                | `var(--gap-md)`                                  |
-| `w-lg` / `h-lg`                | `var(--gap-lg)`                                  |
-| `w-xl` / `h-xl`                | `var(--gap-xl)`                                  |
+| `w-xs` / `h-xs`                | `calc(var(--spacing) * 3)`                       |
+| `w-sm` / `h-sm`                | `var(--space-sm)`                                |
+| `w-md` / `h-md`                | `var(--space-md)`                                |
+| `w-lg` / `h-lg`                | `var(--space-lg)`                                |
+| `w-xl` / `h-xl`                | `var(--space-xl)`                                |
 | `w-screen`                     | `100vi`                                          |
 | `h-screen`                     | `100svh`                                         |
 | `w-screen-xs` to `w-screen-xl` | `var(--breakpoint-xs)` to `var(--breakpoint-xl)` |
@@ -38,11 +38,11 @@ Every `w-*` / `h-*` class (including `min-*` and `max-*` variants) has a logical
 | `size-0`                             | `0`                             |
 | `size-auto`                          | `auto`                          |
 | `size-full`                          | `100%`                          |
-| `size-xs`                            | `var(--step-3)`                 |
-| `size-sm`                            | `var(--gap-sm)`                 |
-| `size-md`                            | `var(--gap-md)`                 |
-| `size-lg`                            | `var(--gap-lg)`                 |
-| `size-xl`                            | `var(--gap-xl)`                 |
+| `size-xs`                            | `calc(var(--spacing) * 3)`      |
+| `size-sm`                            | `var(--space-sm)`               |
+| `size-md`                            | `var(--space-md)`               |
+| `size-lg`                            | `var(--space-lg)`               |
+| `size-xl`                            | `var(--space-xl)`               |
 | `size-screen`                        | `100vi` x `100svh`              |
 | `size-screen-xs` to `size-screen-xl` | `var(--breakpoint-*)` both axes |
 

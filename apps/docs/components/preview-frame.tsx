@@ -80,8 +80,9 @@ export function PreviewFrame({
     const syncTheme = () => {
       const doc = iframe.contentDocument;
       if (!doc) return;
-      const dark = document.documentElement.classList.contains("dark");
-      doc.documentElement.classList.toggle("dark", dark);
+      const theme = document.documentElement.dataset.uiTheme;
+      if (theme) doc.documentElement.dataset.uiTheme = theme;
+      else delete doc.documentElement.dataset.uiTheme;
     };
 
     const onLoad = () => {

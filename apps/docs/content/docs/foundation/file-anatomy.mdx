@@ -43,7 +43,7 @@ Component stylesheets organize rules in top-to-bottom order:
 @layer variables {
   :root {
     --ui-button-background: var(--card);
-    --ui-button-block-size: var(--step-8);
+    --ui-button-block-size: calc(var(--spacing) * 8);
     --ui-button-radius: var(--radius-md);
   }
 }

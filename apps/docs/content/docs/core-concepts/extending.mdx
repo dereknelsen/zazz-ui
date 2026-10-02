@@ -33,7 +33,7 @@ Global tokens live on `:root`, and components read them with `var()`, so reassig
 :root {
   --primary: light-dark(oklch(0.6 0.2 145), oklch(0.52 0.17 145));
   --radius-md: 0;
-  --gutters: var(--gap-lg);
+  --gutters: var(--space-lg);
 }
 ```
 
@@ -101,7 +101,7 @@ Some hooks default to another primitive's hooks rather than a global token. The 
 :root {
   /* squarer, taller controls everywhere: inputs, selects, buttons, toggles, tabs */
   --ui-field-radius: var(--radius-sm);
-  --ui-field-block-size: var(--step-9);
+  --ui-field-block-size: calc(var(--spacing) * 9);
 }
 ```
 
@@ -156,8 +156,8 @@ When a repeated pattern has structure (a block with children, states, maybe a va
     --callout-background: var(--muted);
 
     background: var(--callout-background);
-    border-inline-start: var(--step-1) solid var(--primary);
-    padding: var(--gap-md);
+    border-inline-start: var(--spacing) solid var(--primary);
+    padding: var(--space-md);
     border-radius: var(--radius-md);
   }
 
