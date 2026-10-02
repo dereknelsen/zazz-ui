@@ -1,5 +1,7 @@
 # Dual-form primitives: `ui-*` tags aliased to `ui-*` classes
 
+> Status (2026-09-25): amended by [ADR-0013](./0013-data-ui-markup-namespace.md). The class form is now the attribute form (`data-ui`); the `ui-` prefix applies to tags and tokens only.
+
 Zazz primitives get two equivalent spellings: a tag form (`<ui-tooltip>`) and a class form (`<div class="ui-tooltip">`), kept identical through **CSS selector aliasing** (`:where(ui-tooltip, .ui-tooltip)`) rather than JavaScript. An unregistered custom tag is valid, styleable HTML, so `customElements.define()` remains reserved for primitives that carry behavior. The no-JS baseline and zero-FOUC behavior are preserved by construction.
 
 ## Decisions

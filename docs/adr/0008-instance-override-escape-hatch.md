@@ -1,5 +1,7 @@
 # Instance one-offs use the escape-hatch ladder; no blanket private hook variables
 
+> Status (2026-09-25): superseded by [ADR-0012](./0012-props-replace-utility-classes.md). Utility classes are removed; inline props replace rungs 1 and 2 of the ladder.
+
 Per-instance styling (e.g. one command palette sized to `24rem` wide) is served by a defined
 ladder, in priority order:
 

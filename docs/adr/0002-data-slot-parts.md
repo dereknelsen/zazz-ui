@@ -1,5 +1,7 @@
 # Interior parts are `data-slot`, not BEM element classes
 
+> Status (2026-09-25): amended by [ADR-0013](./0013-data-ui-markup-namespace.md). The attribute is `data-ui-slot`; the "attribute keys that carry values stay bare" rule is withdrawn.
+
 Interior parts of a primitive are identified by a single generic attribute with a component-prefixed value (`data-slot="dialog-header"`, `data-slot="carousel-viewport"`), replacing both BEM element classes (`.dialog__header`) and the carousel component-keyed role attributes (`data-carousel="viewport"`). Classes now only ever name primitive roots.
 
 The component-prefixed value keeps selectors flat (`[data-slot="dialog-header"]`) and unambiguous under nesting (a card header inside a dialog can never match the dialog header rules), needs no `@scope` machinery, and matches shadcn v4 conventions: one attribute to learn, familiar to the surrounding ecosystem.
