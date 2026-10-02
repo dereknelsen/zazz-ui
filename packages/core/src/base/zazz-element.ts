@@ -4,8 +4,8 @@
  * @fileoverview The component runtime: a thin base element + the refresh registry.
  * @description Two small pieces every behavioral component shares:
  *
- * **`ZazzElement`** owns the lifecycle envelope each HTML web component used to
- * repeat: the `AbortController`, the reconnect guard, teardown-on-disconnect.
+ * **`ZazzElement`** owns the lifecycle envelope of an HTML web component: the
+ * `AbortController`, the reconnect guard, teardown-on-disconnect.
  * Subclasses implement `setup(signal)` (bind everything with `{ signal }`) and,
  * only when they hold resources an abort can't release, `teardown()`.
  * Deliberately thin: anything beyond the envelope belongs in the component.
@@ -13,12 +13,12 @@
  * **`defineZazzElement(tag, cls)`** is the registration guard (safe under
  * double script loads). Only behavioral components register; the CSS-only
  * tag forms (`ui-tooltip`, `ui-accordion`, `ui-button-group`,
- * `ui-toggle-group`) stay unregistered by design (ADR-0001).
+ * `ui-toggle-group`) stay unregistered.
  *
- * **The refresh registry** replaces hand-listing components in navigation.ts:
- * a module whose work is scoped to page content (reveal observer, class-form
- * carousel init) registers a refresh hook; after a SPA `<main>` swap the
- * navigation module calls `refreshAll(newMain)` and never names a component.
+ * **The refresh registry** lets navigation.ts re-scan swapped content without
+ * naming components: a module whose work is scoped to page content (reveal observer, class-form
+ * carousel init) registers a refresh hook, and after a navigation swap the
+ * navigation module calls `refreshAll(newMain)`.
  * Custom elements do not need hooks: their lifecycle rides the swap natively.
  */
 
@@ -31,6 +31,13 @@ abstract class ZazzElement extends HTMLElement {
     this.#controller = new AbortController();
     this.setup(this.#controller.signal);
   }
+
+  /**
+   * A `moveBefore()` move (a `data-ui-persist` element riding a navigation swap)
+   * keeps the element connected: without this, the browser would fire
+   * disconnect + connect and the element would tear down and set up again.
+   */
+  connectedMoveCallback(): void {}
 
   disconnectedCallback(): void {
     this.#controller?.abort();
@@ -57,7 +64,7 @@ type RefreshHook = (scope: Element) => void;
 const refreshHooks: RefreshHook[] = [];
 
 /**
- * @description Registers a hook to re-scan swapped-in content (SPA `<main>`
+ * @description Registers a hook to re-scan swapped-in content (in-page navigation
  * replacement). Hooks must be idempotent: already-initialized nodes are the
  * hook's own job to skip.
  */
