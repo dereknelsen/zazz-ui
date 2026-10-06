@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
-    <meta name="description" content="Zazz playground: Adesso home landing page" />
+    <meta name="description" content="Zazz playground: ACME INC furniture landing page" />
     <title>Zazz playground</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="/src/zazz.css" />
     <script type="module" src="/src/main.ts"></script>
 
-    <!-- Brand: Adesso. Theme inputs and primitive hooks only; the page itself is
+    <!-- Brand: ACME INC. Theme inputs and primitive hooks only; the page itself is
        primitives + utilities. Same layer as the kit's tokens, later in source order. -->
     <style>
       @layer variables {
@@ -56,7 +56,7 @@
           --color-neutral-900: oklch(0.24 0 0);
           --color-neutral-1117: oklch(0.17 0 0);
 
-          /* Adesso yellow as the secondary brand color; primary stays near-black */
+          /* ochre as the secondary brand color; primary stays near-black */
           --color-secondary-50: oklch(0.987 0.022 95);
           --color-secondary-100: oklch(0.973 0.071 97);
           --color-secondary-200: oklch(0.945 0.129 95);
@@ -88,7 +88,7 @@
     </style>
   </head>
 
-  <!-- Adesso is a light-only brand: pin the scheme for the page -->
+  <!-- Light-only sample brand: pin the scheme for the page -->
 
   <body data-ui-theme="light" style="--bg: var(--color-background)">
     <!-- ================================================================== -->
@@ -132,8 +132,8 @@
               --display: flex;
               --items: center;
               --justify: space-between;
-              --py: var(--space-xs);
-              --gap: var(--space-xs);
+              --py: 2;
+              --gap: 2;
               --w: 100%;
             "
           >
@@ -151,7 +151,7 @@
                 --group-text--hover: var(--color-foreground);
                 --opacity--hover: 0.8;
               "
-              >Adesso</a
+              >ACME INC</a
             >
 
             <nav
@@ -176,38 +176,26 @@
               >
                 <li>
                   <a
-                    href="#categories"
+                    href="#pieces"
                     data-ui="button"
                     data-button-variant="ghost"
                     style="
                       --px: 4;
                       --text: inherit;
                     "
-                    >Shop</a
+                    >Rooms</a
                   >
                 </li>
                 <li>
                   <a
-                    href="#catalogs"
+                    href="#lookbooks"
                     data-ui="button"
                     data-button-variant="ghost"
                     style="
                       --px: 4;
                       --text: inherit;
                     "
-                    >Catalogs</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    data-ui="button"
-                    data-button-variant="ghost"
-                    style="
-                      --px: 4;
-                      --text: inherit;
-                    "
-                    >Lighting guide</a
+                    >Lookbooks</a
                   >
                 </li>
                 <li>
@@ -219,7 +207,19 @@
                       --px: 4;
                       --text: inherit;
                     "
-                    >Become a customer</a
+                    >Materials</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    data-ui="button"
+                    data-button-variant="ghost"
+                    style="
+                      --px: 4;
+                      --text: inherit;
+                    "
+                    >Open an account</a
                   >
                 </li>
               </menu>
@@ -320,7 +320,7 @@
                 data-button-size="icon"
                 type="button"
                 command="show-modal"
-                commandfor="ad-mobile-menu"
+                commandfor="site-menu"
                 aria-label="Open menu"
                 style="
                   --display: flex;
@@ -370,11 +370,16 @@
       </header>
     </div>
 
-    <div data-ui="pile isolate">
+    <div data-ui="pile isolate group">
       <div
         style="
+          --display: flex;
           --position: relative;
+          --items: center;
+          --justify: center;
           --p: 2;
+          --size: 100%;
+          --max-h: 100svh;
           --z: 1;
         "
       >
@@ -396,30 +401,27 @@
           aria-label="Featured collections"
           style="
             --position: relative;
-            --w: 100%;
+            --size: 100%;
             --z: 1;
           "
         >
-          <h1 data-ui="sr-only">Adesso home lighting</h1>
-          <div data-carousel-slot="viewport">
-            <div data-carousel-slot="container">
+          <h1 data-ui="sr-only">ACME INC furniture</h1>
+          <div data-carousel-slot="viewport" style="--size: 100%">
+            <div data-carousel-slot="container" style="--size: 100%">
               <div
                 data-carousel-slot="slide"
                 role="group"
                 aria-roledescription="slide"
                 aria-label="1 of 5"
-                style="
-                  --w: 100%;
-                  --min-h: 100svh;
-                "
+                style="--size: 100%"
               >
                 <img
-                  src="/images/test-image-6.webp"
-                  srcset="/images/test-image-6-640.webp 640w, /images/test-image-6-1024.webp 1024w, /images/test-image-6-1440.webp 1440w, /images/test-image-6.webp 1980w"
+                  src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1980&q=80"
+                  srcset="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=640&q=80 640w, https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1024&q=80 1024w, https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1440&q=80 1440w, https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1980&q=80 1980w"
                   sizes="100vw"
                   width="1980"
                   height="950"
-                  alt="Candle warmer lamp with a patterned shade on a wood console"
+                  alt="Green velvet sofa in a bright living room"
                   fetchpriority="high"
                   loading="eager"
                   style="
@@ -435,12 +437,12 @@
                 aria-label="2 of 5"
               >
                 <img
-                  src="/images/test-image-2.webp"
-                  srcset="/images/test-image-2-640.webp 640w, /images/test-image-2-1024.webp 1024w, /images/test-image-2-1440.webp 1440w, /images/test-image-2.webp 1980w"
+                  src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1980&q=80"
+                  srcset="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=640&q=80 640w, https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1024&q=80 1024w, https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1440&q=80 1440w, https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1980&q=80 1980w"
                   sizes="100vw"
                   width="1980"
                   height="950"
-                  alt="Pair of table lamps with patterned drum shades in a living room"
+                  alt="Mustard armchair against a pale wall"
                   loading="lazy"
                   style="
                     --size: 100%;
@@ -455,12 +457,12 @@
                 aria-label="3 of 5"
               >
                 <img
-                  src="/images/test-image-3.webp"
-                  srcset="/images/test-image-3-640.webp 640w, /images/test-image-3-1024.webp 1024w, /images/test-image-3-1440.webp 1440w, /images/test-image-3.webp 1980w"
+                  src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1980&q=80"
+                  srcset="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=640&q=80 640w, https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1024&q=80 1024w, https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1440&q=80 1440w, https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1980&q=80 1980w"
                   sizes="100vw"
                   width="1980"
                   height="950"
-                  alt="Floor lamp with color-changing shelves beside a gray sofa"
+                  alt="Gray sofa with a low wood coffee table"
                   loading="lazy"
                   style="
                     --size: 100%;
@@ -475,12 +477,12 @@
                 aria-label="4 of 5"
               >
                 <img
-                  src="/images/test-image-4.webp"
-                  srcset="/images/test-image-4-640.webp 640w, /images/test-image-4-1024.webp 1024w, /images/test-image-4-1440.webp 1440w, /images/test-image-4.webp 1980w"
+                  src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1980&q=80"
+                  srcset="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=640&q=80 640w, https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1024&q=80 1024w, https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1440&q=80 1440w, https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1980&q=80 1980w"
                   sizes="100vw"
                   width="1980"
                   height="950"
-                  alt="Rechargeable glass lantern on an outdoor table"
+                  alt="Beige living room with a linen sofa"
                   loading="lazy"
                   style="
                     --size: 100%;
@@ -495,12 +497,12 @@
                 aria-label="5 of 5"
               >
                 <img
-                  src="/images/test-image-5.webp"
-                  srcset="/images/test-image-5-640.webp 640w, /images/test-image-5-1024.webp 1024w, /images/test-image-5-1440.webp 1440w, /images/test-image-5.webp 1980w"
+                  src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1980&q=80"
+                  srcset="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=640&q=80 640w, https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1024&q=80 1024w, https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1440&q=80 1440w, https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1980&q=80 1980w"
                   sizes="100vw"
                   width="1980"
                   height="950"
-                  alt="Brass floor lamp in a sunlit living room"
+                  alt="White lounge chair in a pale room"
                   loading="lazy"
                   style="
                     --size: 100%;
@@ -515,14 +517,16 @@
             type="button"
             data-ui="button"
             data-button-size="icon"
-            data-button-variant="muted"
+            data-button-variant="primary"
             data-carousel-slot="prev"
             aria-label="Previous slide"
             style="
               --position: absolute;
               --top: 50%;
               --left: 4;
-              --text: var(--color-white);
+              --opacity: 0.1;
+              --opacity--hover: 1;
+              --group-opacity--hover: 0.7;
               --translate: 0 -50%;
             "
           >
@@ -542,14 +546,16 @@
             type="button"
             data-ui="button"
             data-button-size="icon"
-            data-button-variant="muted"
+            data-button-variant="primary"
             data-carousel-slot="next"
             aria-label="Next slide"
             style="
               --position: absolute;
               --top: 50%;
               --right: 4;
-              --text: var(--color-white);
+              --opacity: 0.1;
+              --opacity--hover: 1;
+              --group-opacity--hover: 0.7;
               --translate: 0 -50%;
             "
           >
@@ -570,7 +576,7 @@
     </div>
 
     <dialog
-      id="ad-mobile-menu"
+      id="site-menu"
       data-ui="dialog mobile-menu"
       data-dialog-size="screen"
       data-mobile-menu-animation="slide-right"
@@ -587,14 +593,14 @@
               --text-transform: uppercase;
               --text: var(--color-secondary-500);
             "
-            >Adesso</span
+            >ACME INC</span
           >
           <button
             data-ui="button"
             data-button-variant="ghost"
             data-button-size="icon"
             type="button"
-            commandfor="ad-mobile-menu"
+            commandfor="site-menu"
             command="close"
             aria-label="Close menu"
           >
@@ -632,34 +638,24 @@
           "
         >
           <a
-            href="#categories"
+            href="#pieces"
             data-ui="button"
             data-button-variant="ghost"
             style="
               --justify: start;
               --w: 100%;
             "
-            >Shop</a
+            >Rooms</a
           >
           <a
-            href="#catalogs"
+            href="#lookbooks"
             data-ui="button"
             data-button-variant="ghost"
             style="
               --justify: start;
               --w: 100%;
             "
-            >Catalogs</a
-          >
-          <a
-            href="#"
-            data-ui="button"
-            data-button-variant="ghost"
-            style="
-              --justify: start;
-              --w: 100%;
-            "
-            >Lighting guide</a
+            >Lookbooks</a
           >
           <a
             href="#"
@@ -669,13 +665,23 @@
               --justify: start;
               --w: 100%;
             "
-            >Become a customer</a
+            >Materials</a
+          >
+          <a
+            href="#"
+            data-ui="button"
+            data-button-variant="ghost"
+            style="
+              --justify: start;
+              --w: 100%;
+            "
+            >Open an account</a
           >
         </nav>
         <div data-mobile-menu-slot="footer">
-          <a href="#" data-ui="button" style="--flex: 1">My account</a>
+          <a href="#" data-ui="button" style="--flex: 1">Sign in</a>
           <a href="#" data-ui="button" data-button-variant="primary" style="--flex: 1"
-            >Browse catalogs</a
+            >Open lookbooks</a
           >
         </div>
       </div>
@@ -683,10 +689,10 @@
 
     <main>
       <!-- ================================================================ -->
-      <!-- Spring collection: muted copy panel beside a photo               -->
+      <!-- Loft edit: muted copy panel beside a photo                       -->
       <!-- ================================================================ -->
-      <section aria-labelledby="ad-spring" style="--py: 24">
-        <ui-layout>
+      <section aria-labelledby="loft-edit" style="--py: 24">
+        <ui-layout data-layout-size="lg">
           <div
             data-reveal="slide-up"
             style="
@@ -700,21 +706,21 @@
                 --display: flex-col;
                 --items: center;
                 --justify: center;
-                --p: var(--space-lg);
+                --p: 11;
                 --gap: 6;
                 --text-align: center;
                 --bg: var(--color-muted);
               "
             >
               <h2
-                id="ad-spring"
+                id="loft-edit"
                 data-ui="text-h3"
                 style="
                   --font-weight: 400;
                   --text-transform: uppercase;
                 "
               >
-                Spring collection<br />is now available
+                Loft edit<br />just arrived
               </h2>
               <p
                 data-ui="text-sm"
@@ -723,11 +729,10 @@
                   --text: var(--color-muted-foreground);
                 "
               >
-                A thoughtfully curated collection featuring floral-printed shades, elevated material
-                mixes, and an emphasis on organic, natural elements designed to transform everyday
-                spaces into more intentional, inviting environments.
+                Oak frames, linen seats, and a few painted cabinets. Sized for rooms that need a
+                sofa, a table, and somewhere to put the books.
               </p>
-              <a href="#" data-ui="button">Browse spring 2026</a>
+              <a href="#" data-ui="button">See the loft edit</a>
             </div>
             <div
               style="
@@ -737,12 +742,12 @@
               "
             >
               <img
-                src="/images/test-image-1.webp"
-                srcset="/images/test-image-1-640.webp 640w, /images/test-image-1-1024.webp 1024w, /images/test-image-1-1440.webp 1440w, /images/test-image-1.webp 2000w"
+                src="https://images.unsplash.com/photo-1615874959474-d609969a20ed?auto=format&fit=crop&w=2000&q=80"
+                srcset="https://images.unsplash.com/photo-1615874959474-d609969a20ed?auto=format&fit=crop&w=640&q=80 640w, https://images.unsplash.com/photo-1615874959474-d609969a20ed?auto=format&fit=crop&w=1024&q=80 1024w, https://images.unsplash.com/photo-1615874959474-d609969a20ed?auto=format&fit=crop&w=1440&q=80 1440w, https://images.unsplash.com/photo-1615874959474-d609969a20ed?auto=format&fit=crop&w=2000&q=80 2000w"
                 sizes="auto, (min-width: 1280px) 640px, (min-width: 656px) 50vw, 100vw"
                 width="2000"
                 height="1774"
-                alt="Table lamp with a floral pleated shade and turned wood base"
+                alt="Bed and nightstand in a pale bedroom"
                 loading="lazy"
                 style="
                   --size: 100%;
@@ -755,20 +760,20 @@
       </section>
 
       <!-- ================================================================ -->
-      <!-- Top categories: four product cut-outs                            -->
+      <!-- Pieces: four furniture photos                                    -->
       <!-- ================================================================ -->
-      <section id="categories" aria-labelledby="ad-categories" style="--pb: 24">
+      <section id="pieces" aria-labelledby="pieces-title" style="--pb: 24">
         <ui-layout>
           <h2
-            id="ad-categories"
+            id="pieces-title"
             data-ui="text-h4"
             style="
-              --mb: var(--space-lg);
+              --mb: 11;
               --font-weight: 300;
               --text-align: center;
             "
           >
-            Top categories
+            Start with a piece
           </h2>
           <ul
             data-reveal-each="slide-up"
@@ -791,10 +796,10 @@
                 "
               >
                 <img
-                  src="/images/test-image-10.webp"
+                  src="https://images.unsplash.com/photo-1567016432779-094069958ea5?auto=format&fit=crop&w=1200&q=80"
                   width="650"
                   height="800"
-                  alt=""
+                  alt="Rust sofa"
                   loading="lazy"
                   style="
                     --mx: auto;
@@ -805,10 +810,10 @@
                     --scale: 1;
                     --group-scale--hover: 0.98;
                     --transition: var(--default-transition);
-                    --object-fit: contain;
+                    --object-fit: cover;
                   "
                 />
-                <b data-ui="text-lg" style="--text-transform: uppercase">Floor lamps</b>
+                <b data-ui="text-lg" style="--text-transform: uppercase">Sofas</b>
               </a>
             </li>
             <li>
@@ -822,10 +827,10 @@
                 "
               >
                 <img
-                  src="/images/test-image-9.webp"
+                  src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=1200&q=80"
                   width="650"
                   height="800"
-                  alt=""
+                  alt="Gray upholstered chair"
                   loading="lazy"
                   style="
                     --mx: auto;
@@ -836,10 +841,10 @@
                     --scale: 1;
                     --group-scale--hover: 0.98;
                     --transition: var(--default-transition);
-                    --object-fit: contain;
+                    --object-fit: cover;
                   "
                 />
-                <b data-ui="text-lg" style="--text-transform: uppercase">Table lamps</b>
+                <b data-ui="text-lg" style="--text-transform: uppercase">Chairs</b>
               </a>
             </li>
             <li>
@@ -853,10 +858,10 @@
                 "
               >
                 <img
-                  src="/images/test-image-8.webp"
+                  src="https://images.unsplash.com/photo-1530018607912-eff2daa1bac4?auto=format&fit=crop&w=1200&q=80"
                   width="650"
                   height="800"
-                  alt=""
+                  alt="Wood table"
                   loading="lazy"
                   style="
                     --mx: auto;
@@ -867,10 +872,10 @@
                     --scale: 1;
                     --group-scale--hover: 0.98;
                     --transition: var(--default-transition);
-                    --object-fit: contain;
+                    --object-fit: cover;
                   "
                 />
-                <b data-ui="text-lg" style="--text-transform: uppercase">Smart-tech</b>
+                <b data-ui="text-lg" style="--text-transform: uppercase">Tables</b>
               </a>
             </li>
             <li>
@@ -884,10 +889,10 @@
                 "
               >
                 <img
-                  src="/images/test-image-7.webp"
+                  src="https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?auto=format&fit=crop&w=1200&q=80"
                   width="650"
                   height="800"
-                  alt=""
+                  alt="Floating wood shelves"
                   loading="lazy"
                   style="
                     --mx: auto;
@@ -898,10 +903,10 @@
                     --scale: 1;
                     --group-scale--hover: 0.98;
                     --transition: var(--default-transition);
-                    --object-fit: contain;
+                    --object-fit: cover;
                   "
                 />
-                <b data-ui="text-lg" style="--text-transform: uppercase">Cordless</b>
+                <b data-ui="text-lg" style="--text-transform: uppercase">Shelves</b>
               </a>
             </li>
           </ul>
@@ -909,11 +914,11 @@
       </section>
 
       <!-- ================================================================ -->
-      <!-- Catalogs + candle warmers: full-bleed photo / dark panel pairs   -->
+      <!-- Lookbooks + seating: full-bleed photo / dark panel pairs         -->
       <!-- ================================================================ -->
       <section
-        id="catalogs"
-        aria-labelledby="ad-catalogs"
+        id="lookbooks"
+        aria-labelledby="lookbooks-title"
         style="
           --display: grid;
           --grid-cols: 1;
@@ -921,10 +926,10 @@
         "
       >
         <img
-          src="/images/test-image-16.webp"
+          src="https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=1400&q=80"
           width="700"
           height="450"
-          alt="Brass desk lamp with a scalloped shade over open books"
+          alt="Living room with an armchair and a console"
           loading="lazy"
           style="
             --size: 100%;
@@ -938,49 +943,43 @@
             --display: flex-col;
             --items: start;
             --justify: center;
-            --p: var(--space-lg);
+            --p: 11;
             --gap: 6;
             --bg: var(--color-neutral-800);
           "
         >
           <h2
-            id="ad-catalogs"
+            id="lookbooks-title"
             style="
               --font-weight: strong;
               --text-transform: uppercase;
             "
           >
-            Catalogs
+            Lookbooks
           </h2>
 
           <div data-ui="prose">
             <p>
-              Discover our digital catalogs, created to make browsing, planning, and ordering
-              seamless for our retail, hospitality, and interior designer partners.
+              Page through a finished room before you order a single piece. Every lookbook is a
+              sofa, a table, and the cabinet that belongs with them, shot in the same light.
             </p>
             <p>
-              We offer multiple catalogs organized by brand and by top-selling collections, so you
-              can quickly navigate through what matters most to your business. Each catalog
-              showcases beautiful lifestyle and product imagery, detailed descriptions, and key
-              features to help you evaluate items with confidence. When logged in, you’ll also see
-              pricing directly within the catalog for a streamlined buying experience.
+              The oak line, the linen line, and the small-apartment sets each have their own book.
+              Open a piece for dimensions, joinery, and the fabrics it ships with.
             </p>
             <p>
-              Our interactive digital catalogs go beyond traditional PDFs. You can bookmark pages,
-              build your own customized catalog, download a PDF version, and shop directly from the
-              pages, moving from inspiration to order in just a few clicks.
+              Save a page while you compare. Download a PDF for a client, or add the whole room to
+              an order. Signed-in trade accounts see the price on the page.
             </p>
-            <p>Everything you need to discover, curate, and purchase all in one place.</p>
+            <p>One set of pages for browsing and for buying.</p>
           </div>
-          <a href="#" data-ui="button" data-ui-theme="light" style="--mt: var(--space-xs)"
-            >Browse catalogs</a
-          >
+          <a href="#" data-ui="button" data-ui-theme="light" style="--mt: 2">Open lookbooks</a>
         </div>
       </section>
 
       <section
-        id="candle-warmers"
-        aria-labelledby="ad-candle-warmers"
+        id="seating"
+        aria-labelledby="seating-title"
         style="
           --display: grid;
           --grid-cols: 1;
@@ -988,10 +987,10 @@
         "
       >
         <img
-          src="/images/test-image-15.webp"
+          src="https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?auto=format&fit=crop&w=1400&q=80"
           width="700"
           height="450"
-          alt="Three candle warmer lamps with wavy brass frames, one lit over a pillar candle"
+          alt="Living room with a sofa and two armchairs"
           loading="lazy"
           style="
             --order--md: 2;
@@ -1006,60 +1005,54 @@
             --display: flex-col;
             --items: start;
             --justify: center;
-            --p: var(--space-lg);
+            --p: 11;
             --gap: 6;
             --bg: var(--color-neutral-800);
           "
         >
           <h2
-            id="ad-candle-warmers"
+            id="seating-title"
             style="
               --font-weight: strong;
               --text-transform: uppercase;
             "
           >
-            Candle warmers
+            Seating
           </h2>
           <div data-ui="prose">
             <p>
-              Discover candle warmer lamps that bring together beautiful design, quality
-              craftsmanship, and flame-free home fragrance. From distinctive finishes and
-              silhouettes to patterned fabric shades, our collection offers stylish options for
-              every space. Designed to warm scented candles from above without an open flame, select
-              styles feature convenient dimmer and timer switches for customized fragrance and
-              ambiance. Functional, decorative, and thoughtfully crafted, these candle warming lamps
-              make it easy to enjoy your favorite candles in style.
+              Armchairs, sectionals, and counter stools. Frames are kiln-dried oak or powder-coated
+              steel, and the cushions unzip. Choose a fabric from the swatch set, or send your own
+              and we will upholster to it.
             </p>
           </div>
-          <a href="#" data-ui="button" data-ui-theme="light" style="--mt: var(--space-xs)"
-            >Shop candle warmers</a
-          >
+          <a href="#" data-ui="button" data-ui-theme="light" style="--mt: 2">Shop seating</a>
         </div>
       </section>
 
       <!-- ================================================================ -->
-      <!-- Family brands: logo, blurb, black call to action                 -->
+      <!-- Lines: wordmark, blurb, call to action                           -->
       <!-- ================================================================ -->
-      <section aria-labelledby="ad-brands" style="--py: 24">
+      <section aria-labelledby="lines-title" style="--py: 24">
         <ui-layout>
           <h2
-            id="ad-brands"
+            id="lines-title"
             data-ui="text-h4"
             style="
-              --mb: var(--space-lg);
+              --mb: 11;
               --font-weight: 300;
               --text-align: center;
             "
           >
-            Our family brands
+            Three lines
           </h2>
           <ul
             data-reveal-each="slide-up"
             style="
               --display: grid;
               --grid-cols: 1;
-              --grid-cols--md: 3;
-              --gap: var(--space-lg);
+              --grid-cols--lg: 3;
+              --gap: 11;
             "
           >
             <li
@@ -1074,22 +1067,17 @@
                 style="
                   --display: flex;
                   --items: center;
-                  --h: 24;
                 "
               >
-                <img
-                  src="/images/test-image-18.webp"
-                  width="307"
-                  height="214"
-                  alt="Adesso"
-                  loading="lazy"
+                <span
+                  data-ui="text-2xl"
                   style="
-                    --w: auto;
-                    --h: 6rem;
-                    --max-w: 100%;
-                    --object-fit: contain;
+                    --font-weight: 300;
+                    --tracking: var(--tracking-eyebrow);
+                    --text-transform: uppercase;
                   "
-                />
+                  >ACME INC</span
+                >
               </div>
               <p
                 style="
@@ -1098,10 +1086,9 @@
                   --text: var(--color-muted-foreground);
                 "
               >
-                Main brand on all types of lighting: LED, desk, supercharging, portable, arcs, and
-                so much more.
+                The main line. Sofas, tables, and cabinets in oak and linen.
               </p>
-              <a href="#" data-ui="button" data-button-variant="primary">Browse Adesso</a>
+              <a href="#" data-ui="button" data-button-variant="primary">Shop the main line</a>
             </li>
             <li
               style="
@@ -1115,22 +1102,17 @@
                 style="
                   --display: flex;
                   --items: center;
-                  --h: 24;
                 "
               >
-                <img
-                  src="/images/test-image-17.webp"
-                  width="900"
-                  height="267"
-                  alt="Simplee Adesso"
-                  loading="lazy"
+                <span
+                  data-ui="text-2xl"
                   style="
-                    --w: auto;
-                    --h: 3.5rem;
-                    --max-w: 100%;
-                    --object-fit: contain;
+                    --font-weight: 300;
+                    --tracking: var(--tracking-eyebrow);
+                    --text-transform: uppercase;
                   "
-                />
+                  >ACME HOUSE</span
+                >
               </div>
               <p
                 style="
@@ -1139,10 +1121,9 @@
                   --text: var(--color-muted-foreground);
                 "
               >
-                Catered for more promotional price points: novelty, high-tech task, value packs, or
-                transitional lighting.
+                Smaller sets for a first apartment. They pack flat and go together with one hex key.
               </p>
-              <a href="#" data-ui="button" data-button-variant="primary">Browse Simplee Adesso</a>
+              <a href="#" data-ui="button" data-button-variant="primary">Shop ACME HOUSE</a>
             </li>
             <li
               style="
@@ -1156,22 +1137,17 @@
                 style="
                   --display: flex;
                   --items: center;
-                  --h: 24;
                 "
               >
-                <img
-                  src="/images/test-image-19.webp"
-                  width="2125"
-                  height="959"
-                  alt="ADS360"
-                  loading="lazy"
+                <span
+                  data-ui="text-2xl"
                   style="
-                    --w: auto;
-                    --h: 3.5rem;
-                    --max-w: 100%;
-                    --object-fit: contain;
+                    --font-weight: 300;
+                    --tracking: var(--tracking-eyebrow);
+                    --text-transform: uppercase;
                   "
-                />
+                  >ACME ATELIER</span
+                >
               </div>
               <p
                 style="
@@ -1180,19 +1156,19 @@
                   --text: var(--color-muted-foreground);
                 "
               >
-                “Adesso Design Studio 360” represents our search for design talent 360 degrees
-                around the world.
+                Short runs from the workshops we visit each spring. When a run sells through, it is
+                gone.
               </p>
-              <a href="#" data-ui="button" data-button-variant="primary">Browse ADS360</a>
+              <a href="#" data-ui="button" data-button-variant="primary">Shop ACME ATELIER</a>
             </li>
           </ul>
         </ui-layout>
       </section>
 
       <!-- ================================================================ -->
-      <!-- About: wordmark beside a short brand statement                   -->
+      <!-- About: wordmark beside a short statement                         -->
       <!-- ================================================================ -->
-      <section aria-labelledby="ad-about" style="--py: 24">
+      <section aria-labelledby="about-title" style="--py: 24">
         <ui-layout data-layout-size="md">
           <div
             data-reveal="fade"
@@ -1201,34 +1177,31 @@
               --items: center;
               --grid-cols: 1;
               --grid-cols--md: 2;
-              --gap: var(--space-lg);
+              --gap: 11;
             "
           >
-            <img
-              src="/images/test-image-11.webp"
-              width="1768"
-              height="246"
-              alt="Adesso"
-              loading="lazy"
+            <p
+              data-ui="text-2xl"
               style="
-                --mx: auto;
-                --w: 100%;
-                --max-w: 16rem;
+                --font-weight: 300;
+                --tracking: var(--tracking-eyebrow);
+                --text-align: center;
+                --text-transform: uppercase;
               "
-            />
+            >
+              ACME INC
+            </p>
             <div
               style="
                 --display: grid;
                 --gap: 4;
-                --max-w: var(--article-xs);
+                --max-w: 40ch;
               "
             >
-              <h2 id="ad-about" data-ui="text-md">Where design meets function</h2>
+              <h2 id="about-title" data-ui="text-md">Furniture that can move with you</h2>
               <p style="--text: var(--color-muted-foreground)">
-                For over thirty years, Adesso has been an integral part of the home furnishings
-                industry, specifically in the accessory category. With an assortment of lighting
-                solutions, you’ll find everything you need: high quality, top craftsmanship,
-                affordable prices.
+                ACME INC builds sofas, tables, and cabinets meant to come apart, ship, and be
+                repaired. Solid wood, replaceable cushions, and finishes you can spot-sand.
               </p>
             </div>
           </div>
@@ -1240,37 +1213,37 @@
     <!-- Footer: link columns, newsletter, social, legal bar               -->
     <!-- ================================================================== -->
     <footer style="--bg: var(--color-muted)">
-      <ui-layout style="--py: var(--space-lg)">
+      <ui-layout style="--py: 11">
         <div
           style="
             --display: grid;
             --grid-cols: 2;
             --grid-cols--md: 4;
-            --gap: var(--space-lg);
+            --gap: 11;
           "
         >
           <nav
-            aria-labelledby="ad-footer-discover"
+            aria-labelledby="footer-explore"
             style="
               --display: flex-col;
               --gap: 4;
             "
           >
             <h2
-              id="ad-footer-discover"
+              id="footer-explore"
               data-ui="text-md"
               style="
                 --font-weight: strong;
                 --text-transform: uppercase;
               "
             >
-              Discover
+              Explore
             </h2>
             <ul
               data-ui="text-sm"
               style="
                 --display: grid;
-                --gap: var(--space-xs);
+                --gap: 2;
               "
             >
               <li>
@@ -1281,7 +1254,7 @@
                     --text: var(--color-foreground);
                     --text--hover: var(--color-muted-foreground);
                   "
-                  >About us</a
+                  >The workshop</a
                 >
               </li>
               <li>
@@ -1292,45 +1265,45 @@
                     --text: var(--color-foreground);
                     --text--hover: var(--color-muted-foreground);
                   "
-                  >Brands</a
+                  >Lines</a
                 >
               </li>
               <li>
                 <a
-                  href="#catalogs"
+                  href="#lookbooks"
                   style="
                     --text-decoration: none;
                     --text: var(--color-foreground);
                     --text--hover: var(--color-muted-foreground);
                   "
-                  >Catalogs</a
+                  >Lookbooks</a
                 >
               </li>
             </ul>
           </nav>
 
           <nav
-            aria-labelledby="ad-footer-resources"
+            aria-labelledby="footer-help"
             style="
               --display: flex-col;
               --gap: 4;
             "
           >
             <h2
-              id="ad-footer-resources"
+              id="footer-help"
               data-ui="text-md"
               style="
                 --font-weight: strong;
                 --text-transform: uppercase;
               "
             >
-              Resources
+              Help
             </h2>
             <ul
               data-ui="text-sm"
               style="
                 --display: grid;
-                --gap: var(--space-xs);
+                --gap: 2;
               "
             >
               <li>
@@ -1341,7 +1314,7 @@
                     --text: var(--color-foreground);
                     --text--hover: var(--color-muted-foreground);
                   "
-                  >My account</a
+                  >Your account</a
                 >
               </li>
               <li>
@@ -1352,7 +1325,7 @@
                     --text: var(--color-foreground);
                     --text--hover: var(--color-muted-foreground);
                   "
-                  >Contact us</a
+                  >Write to us</a
                 >
               </li>
               <li>
@@ -1363,7 +1336,7 @@
                     --text: var(--color-foreground);
                     --text--hover: var(--color-muted-foreground);
                   "
-                  >Lighting guide</a
+                  >Fabric care</a
                 >
               </li>
               <li>
@@ -1374,7 +1347,7 @@
                     --text: var(--color-foreground);
                     --text--hover: var(--color-muted-foreground);
                   "
-                  >Tariffs Q&amp;A</a
+                  >Delivery</a
                 >
               </li>
               <li>
@@ -1385,7 +1358,7 @@
                     --text: var(--color-foreground);
                     --text--hover: var(--color-muted-foreground);
                   "
-                  >Recycling</a
+                  >Wood finishes</a
                 >
               </li>
             </ul>
@@ -1399,21 +1372,22 @@
             "
           >
             <h2
-              id="ad-footer-signup"
+              id="footer-notes"
               data-ui="text-md"
               style="
                 --font-weight: strong;
                 --text-transform: uppercase;
               "
             >
-              Sign up &amp; follow us
+              The seasonal note
             </h2>
             <form
               action="#"
-              aria-labelledby="ad-footer-signup"
+              aria-labelledby="footer-notes"
               style="
-                --display: grid;
-                --gap: var(--space-xs);
+                --display: flex-col;
+                --display--lg: flex-row;
+                --gap: 2;
                 --ui-field-bg: var(--color-background);
                 --ui-field-bg--hover: var(--color-background);
               "
@@ -1422,8 +1396,8 @@
                 data-ui="input"
                 type="email"
                 name="email"
-                placeholder="Email"
-                aria-label="Email"
+                placeholder="Email address"
+                aria-label="Email address"
                 autocomplete="email"
                 required
               />
@@ -1556,13 +1530,13 @@
               --display: flex;
               --flex-wrap: wrap;
               --justify: space-between;
-              --py: var(--space-xs);
-              --gap: var(--space-xs);
+              --py: 2;
+              --gap: 2;
               --text: var(--color-muted-foreground);
             "
           >
-            <p>©2026 Adesso Home. All rights reserved.</p>
-            <p>Powered by CIMcloud</p>
+            <p>©2026 ACME INC. All rights reserved.</p>
+            <p>Sample storefront</p>
           </div>
         </ui-layout>
       </div>
