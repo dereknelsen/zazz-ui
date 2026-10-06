@@ -1,0 +1,147 @@
+---
+/**
+ * Section navigation for Docs and API. Rendered twice: a sticky column from
+ * `lg` up, and a disclosure above the article below it.
+ */
+import { ChevronDown } from "@lucide/astro";
+import type { SidebarSection } from "../lib/sidebar.ts";
+
+interface Props {
+  label: string;
+  sections: SidebarSection[];
+}
+const { label, sections } = Astro.props;
+---
+
+{/* Wide: sticky column */}
+<aside
+  style="
+    --display: none;
+    --display--lg: flex-col;
+    --position: sticky;
+    --top: 5rem;
+    --max-h: calc(100dvh - 6rem);
+    --overflow-y: auto;
+    --pr: 2;
+  "
+>
+  <nav aria-label={label} style="--display: flex-col; --gap: 6">
+    {
+      sections.map((section) => (
+        <section>
+          <h2
+            data-ui="text-eyebrow"
+            style="
+              --px: 3;
+              --mb: 1;
+            "
+          >
+            {section.title}
+          </h2>
+          <ul
+            style="
+              --display: flex-col;
+              --gap: 0.5;
+            "
+          >
+            {section.links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  data-ui="button"
+                  data-button-variant={link.current ? "muted" : "ghost"}
+                  aria-current={link.current ? "page" : undefined}
+                  style=`--justify: start; --w: 100%${link.current ? "" : "; --ui-button-text: var(--color-muted-foreground)"}`
+                >
+                  {link.title}
+                </a>
+                {link.current && link.anchors.length > 0 && (
+                  <ul
+                    style="
+                      --display: flex-col;
+                      --gap: 0.5;
+                      --mt: 0.5;
+                      --ml: 3;
+                      --pl: 3;
+                      --border-l: 1;
+                    "
+                  >
+                    {link.anchors.map((anchor) => (
+                      <li>
+                        <a
+                          href={anchor.href}
+                          data-ui="button"
+                          data-button-variant="ghost"
+                          style="--justify: start; --w: 100%; --ui-button-text: var(--color-muted-foreground)"
+                        >
+                          {anchor.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </nav>
+</aside>
+
+{/* Narrow: disclosure above the article */}
+<ui-accordion
+  style="
+    --display: flex-col;
+    --display--lg: none;
+  "
+>
+  <details data-ui="card" style="--p: 0">
+    <summary
+      data-ui="button"
+      data-button-variant="ghost"
+      style="
+        --justify: space-between;
+        --w: 100%;
+      "
+    >
+      {label} navigation
+      <ChevronDown size={16} aria-hidden="true" />
+    </summary>
+    <nav
+      aria-label={`${label} (mobile)`}
+      style="
+        --display: flex-col;
+        --justify: start;
+        --gap: 4;
+        --p: 3;
+        --pt: 0;
+      "
+    >
+      {
+        sections.map((section) => (
+          <section>
+            <h2 data-ui="text-eyebrow" style="--px: 3; --mb: 1">
+              {section.title}
+            </h2>
+            <ul style="--display: flex-col; --gap: 0.5" aria-label={section.title}>
+              {section.links.map((link) => (
+                <li>
+                  <a
+                    href={link.href}
+                    data-ui="button"
+                    data-button-variant={link.current ? "muted" : "ghost"}
+                    aria-current={link.current ? "page" : undefined}
+                    style="--justify: start; --w: 100%"
+                  >
+                    {link.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </nav>
+  </details>
+</ui-accordion>

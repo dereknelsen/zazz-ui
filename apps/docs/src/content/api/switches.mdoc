@@ -1,0 +1,25 @@
+---
+title: "Switches"
+description: "Fixed rule sets with no value, carried as data-ui tokens."
+section: Switches
+sectionOrder: 4
+order: 0
+---
+
+A switch is the smallest kind of primitive: a fixed rule set with no slots, no tag form, no presets, and no value. It rides the same `data-ui` token list as everything else, so it stacks on a primitive (`data-ui="badge sr-only"`) or stands alone on a plain element.
+
+{% switches /%}
+
+## Pile
+
+`pile` stacks every child in one grid cell, like layering with `position: absolute` but without taking anything out of flow. Pair it with `isolate` for a layered hero so the stacking context stays local: `data-ui="pile isolate"`.
+
+{% preview src="utilities/pile" /%}
+
+## Dividers
+
+`divide-x` and `divide-y` draw a border between direct children. The container's `--divide` sizes or colors it with the border grammar: a number is pixels in `--color-border`, a color is 1px in that color, a length is the width.
+
+## Group and container
+
+`group` is listed with the [group modifier](/api/modifiers/group/) and `container` with [breakpoints](/api/foundations/breakpoints/); both are switches too.

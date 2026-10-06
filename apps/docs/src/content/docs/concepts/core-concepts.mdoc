@@ -1,0 +1,65 @@
+---
+title: "Core concepts"
+description: "Three channels in markup, hooks for theming, and the platform features underneath."
+section: "Concepts"
+sectionOrder: 1
+order: 0
+---
+
+## Three channels
+
+Every styling decision in Zazz markup is one of three things. The `class` attribute is yours; the kit never reads or writes it.
+
+| Channel | Says | Spelled as |
+| --- | --- | --- |
+| Identity | what the element *is* | `data-ui="button"`, or a tag form such as `<ui-tabs>` |
+| Preset | which named bundle applies | `data-button-variant="primary"`, `data-layout-size="md"` |
+| Value | one number, length, color, or keyword | a style utility in `style`: `--px: 6` |
+
+```html
+<button data-ui="button" data-button-variant="primary" style="--w: 100%; --w--md: fit-content; --px: 6">
+  Save
+</button>
+```
+
+## Identity
+
+`data-ui` is a space-separated token list. A primitive is one token (`button`, `card`, `dialog`); a specialization rides on its base (`data-ui="dialog alert-dialog"`); switches and typography roles stack on anything (`data-ui="badge text-xs"`, `data-ui="card group"`).
+
+Native elements keep their meaning. A button is `<button data-ui="button">`, a dialog is `<dialog data-ui="dialog">`, an input is `<input data-ui="input">`. The tag form (`<ui-tabs>`, `<ui-layout>`, `<ui-carousel>`) exists only where the wrapper would otherwise be a meaningless `<div>`; `<ui-button>` never exists.
+
+## Presets and slots
+
+A preset is `data-<identity>-<key>`, and it only works on an element that carries the identity: `data-button-variant` on a bare `<button>` does nothing. The default is the absence of the attribute. A preset is private to its element: it never cascades into a nested primitive of the same kind and never adds behavior.
+
+A slot names a part inside a primitive: `<header data-dialog-slot="header">`. A part shared by two primitives carries two attributes. State tokens (`data-carousel-state`, `data-command-state`) are written by the kit's scripts; read them in selectors, never author them.
+
+Copy a primitive's anatomy from the examples on its [API page](/api/); do not reconstruct one from memory.
+
+## Style utilities
+
+A utility is a custom property in `style`. Spelling is exact: `--<utility>: <value>`, one space after the colon, `; ` between declarations. Numbers on spacing, margin, and sizing utilities are steps on the spacing scale (`--p: 4` is `4 × --spacing`). Modifiers scope a utility with a double hyphen: a [breakpoint](/api/modifiers/responsive/) (`--w--md`), a [state](/api/modifiers/states/) (`--bg--hover`), a [group](/api/modifiers/group/) (`--group-opacity--hover`), the [starting style](/api/modifiers/starting/), or a [pseudo-element](/api/utilities/pseudo-elements/) (`--before-content`).
+
+A utility belongs to the element that sets it: every utility is registered non-inheriting, so nothing leaks into children. Utilities live in `@layer ui.utilities` at zero specificity and beat primitive rules by layer order. The full list and the rules that bite are on the [utilities overview](/api/utilities/).
+
+## Hooks
+
+A hook is a public, inheriting custom property a primitive reads: `--ui-button-bg`, `--ui-button-bg--hover`, `--ui-field-h`. Set one on `:root`, on a subtree, or inline on an element, and the primitive is themed while keeping its own states. Where a utility on a primitive flattens its states (`--bg: red` on a button is red on hover too), a hook does not.
+
+Order of preference for changing how a primitive looks: a preset, then a hook on a subtree, then a utility on the one element.
+
+## Switches
+
+The smallest primitive: a fixed rule set with no slots, no presets, and no value. `sr-only`, `pile`, `isolate`, `divide-x`, `divide-y`, `container`, and `group` ride the `data-ui` list like any other token. See [switches](/api/switches/).
+
+## Layers
+
+The kit's CSS lives entirely inside cascade layers: `variables, reset, vendors, legacy, ui, overrides`. Later layers win regardless of specificity, so utilities beat primitives without `!important`, and anything you write in `overrides` beats the kit. An existing app's CSS imports into `legacy.*`, below the kit. See [cascade layers](/api/foundations/layers/).
+
+## Breakpoints read containers
+
+A breakpoint tier applies at or above a threshold in `ch` of the nearest inline-size container: `sm` 40, `md` 65, `lg` 90, `xl` 120, `2xl` 150. The page's sectioning elements and each child of a layout are containers; mark anything else `data-ui="container"`. Layout bands share the names but are a separate rem scale. See [breakpoints](/api/foundations/breakpoints/) and [layout](/api/foundations/layout/).
+
+## Behavior
+
+Scripted primitives are light-DOM custom elements that enhance markup already styled by CSS. They read configuration from `data-<primitive>-*` attributes, write `data-<primitive>-state`, and dispatch `zazz:*` events. Without JavaScript the markup still renders, and natives such as `<dialog>`, `popover`, and `<details>` still work. See the [JavaScript reference](/api/javascript/).

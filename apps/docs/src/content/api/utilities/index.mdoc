@@ -1,0 +1,27 @@
+---
+title: "Style utilities"
+description: "Values in style, one custom property per decision."
+section: Utilities
+sectionOrder: 3
+order: 0
+---
+
+A style utility is a custom property in an element's `style` attribute: `style="--p: 4; --w--md: fit-content"`. The kit matches the attribute text, so spelling is exact: `--<utility>: <value>`, one space after the colon, declarations separated by `; `.
+
+{% preview src="utilities/compose" /%}
+
+## What a value can be
+
+- **A scale number** on spacing, margin, and sizing utilities: `--px: 6` is `6 × --spacing`. The space tokens sit on this scale (2xs 1, xs 2, sm 4, md 6, lg 11, xl 24, 2xl 40), so write the number and skip the `var()`.
+- **A length or any CSS value**: `--w: 100%`, `--rounded: var(--radius-lg)`, `--shadow: 0 1px 2px black`.
+- **A token by name**, on a few utilities, at every tier: `--shadow: md`, `--font-weight: strong`, `--display: flex-col`.
+- **A keyword** where the property takes one: `--position: sticky`, `--w: fit-content`, `--grid-cols: subgrid`.
+
+## Rules that bite
+
+1. A tier needs a base unless the utility works tier-only: write `--text: currentColor; --text--hover: red`, not `--text--hover: red` alone.
+2. Breakpoints reach layout and color; states reach color and effects. `--px--hover` does not exist.
+3. A utility on a primitive flattens its states: `--bg: red` on a button is red on hover too. Add the state tier, or set the hook (`--ui-button-bg`) instead.
+4. Breakpoints read the nearest inline-size container, not the window. See [breakpoints](/api/foundations/breakpoints/).
+
+Every utility that writes a property is registered with `@property` as non-inheriting, so a value never leaks into a child; the `--before-*` / `--after-*` forms are the exception, read on the pseudo-element and never registered. Utilities live in `@layer ui.utilities` at zero specificity: they beat component rules by layer order, and any rule you write in `overrides` beats them.

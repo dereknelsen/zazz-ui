@@ -1,0 +1,37 @@
+---
+title: "Runtime"
+description: "How the kit's scripts load and what they share."
+section: JavaScript
+sectionOrder: 6
+order: 0
+---
+
+Scripts live next to their primitives (`src/primitives/<name>/<name>.ts`) and share a small runtime in `src/base/`. They are written in TypeScript and emitted in place as readable `.js` ES modules, so a page can load them without a bundler: `index.js` imports every primitive's script.
+
+```html
+<script type="module" src="./zazz/index.js"></script>
+```
+
+Two bare specifiers reach the page through the import map `buildHead()` writes: `signal-polyfill` (the TC39 Signals polyfill) and the Embla packages behind the carousel. The single-file build `dist/zazz.js` keeps the same bare specifiers, so the import map stays.
+
+## Principles
+
+- **HTML drives configuration.** A script reads `data-<primitive>-*` attributes on its root (`data-carousel-loop="true"`, `data-command-hotkey="mod+k"`); it never takes options from JavaScript.
+- **Light DOM, progressive.** Every scripted primitive is a light-DOM custom element that augments markup already styled by CSS. Without JavaScript the markup still renders and native elements still work; you lose only the enhancement (filtering, keyboard navigation, animation).
+- **Scripts write state, not style.** A script writes `data-<primitive>-state` on the elements it manages, `data-ui-theme` (a theme toggle), and `data-ui-stuck` (the scroll-state polyfill); the toaster and multiselect also write `data-ui` on elements they create. Read state tokens in selectors; never author them.
+
+## Modules
+
+| Module | Exports | Page |
+| --- | --- | --- |
+| `base/zazz-element.js` | `ZazzElement`, `defineZazzElement`, `registerRefresh`, `refreshAll` | [Custom elements](/api/javascript/custom-elements/) |
+| `base/signals.js` | `state`, `computed`, `effect` (also `window.Signals`) | [Signals](/api/javascript/signals/) |
+| `base/utils.js` | `Utils.parseValue`, `Utils.parseDataAttributes` (also `window.Utils`) | [Utils](/api/javascript/utils/) |
+| `base/hotkeys.js` | `bindHotkey`, `parseHotkey`, `matchesHotkey`, `isEditableTarget`, `isBareKey` | [Hotkeys](/api/javascript/hotkeys/) |
+| `base/dialog-lifecycle.js` | dispatches `zazz:dialog-open` / `zazz:dialog-close` | [Events](/api/javascript/events/) |
+| `base/navigation.js` | `swapBody`; side effects behind `data-ui-navigation="swap"` | [Navigation](/api/javascript/navigation/) |
+| `base/typeahead.js`, `base/command-score.js` | the filter-as-you-type engine behind autocomplete, combobox, and command | [command](/api/primitives/command/) |
+| `base/embla.js` | the Embla adapter behind carousel and lightbox | [carousel](/api/primitives/carousel/) |
+| `base/reveal.js` | `Reveal` (also `window.Reveal`) | [reveal](/api/primitives/reveal/) |
+
+Each scripted primitive documents its own attributes and events under **Behavior** on its page.

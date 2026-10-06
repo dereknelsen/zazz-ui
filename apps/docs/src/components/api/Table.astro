@@ -1,0 +1,18 @@
+---
+/** A reference table: full width, small text, horizontal scroll on narrow screens. */
+interface Props {
+  caption?: string;
+  columns: string[];
+}
+const { caption, columns } = Astro.props;
+---
+
+<div style="--overflow-x: auto; --my: 4">
+  <table data-ui="table" data-table-size="sm" style="--w: 100%">
+    {caption && <caption data-ui="sr-only">{caption}</caption>}
+    <thead>
+      <tr>{columns.map((c) => <th scope="col">{c}</th>)}</tr>
+    </thead>
+    <tbody><slot /></tbody>
+  </table>
+</div>

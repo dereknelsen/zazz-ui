@@ -1,0 +1,182 @@
+---
+/**
+ * Site search: the kit's command palette over a Pagefind index. The trigger
+ * lives in the header; the panel is a modal `<dialog>`. Results are rendered
+ * by the client script below, so the palette opts out of its own filtering
+ * (`data-command-filter="none"`) and only navigates, highlights, and announces.
+ */
+import { Search as SearchIcon } from "@lucide/astro";
+---
+
+<ui-command data-command-hotkey="mod+k" data-command-filter="none" data-command-sort="document" data-site-search>
+  <button
+    data-ui="button"
+    type="button"
+    data-button-variant="outline"
+    popovertarget="command-example-1"
+    data-command-slot="open"
+    style="
+      --justify: space-between;
+      --w: 100%;
+      --min-w: 0;
+      --min-w--md: 64;
+    "
+  >
+    <span style="--display: none; --display--md: inline-flex; --items: center; --gap: 2">
+      <SearchIcon size={16} aria-hidden="true" />
+      Search…
+    </span>
+    <ui-kbd-group style="--display: none; --display--md: inline-flex"><kbd>⌘</kbd><kbd>K</kbd></ui-kbd-group>
+  </button>
+  <dialog id="site-search" data-ui="dialog" data-command-slot="panel" closedby="any">
+    <header data-command-slot="header">
+      <input
+        data-command-slot="input"
+        type="text"
+        placeholder="Search the docs…"
+        role="combobox"
+        aria-expanded="false"
+        aria-autocomplete="list"
+        autocomplete="off"
+        aria-label="Search the docs"
+      />
+    </header>
+    <div role="listbox" data-command-slot="list" aria-label="Results" data-search-results></div>
+    <p data-command-slot="empty" style="--text: var(--color-muted-foreground)" data-search-empty>
+      Type to search the docs, API, and blog.
+    </p>
+    <footer data-command-slot="footer">
+      <span><ui-kbd-group><kbd>↑</kbd><kbd>↓</kbd></ui-kbd-group> navigate</span>
+      <span><kbd>↵</kbd> open</span>
+      <span><kbd>esc</kbd> close</span>
+    </footer>
+  </dialog>
+</ui-command>
+
+<script>
+  /**
+   * Pagefind results into the command list. The index is built by astro-pagefind
+   * at `astro build`; in `astro dev` it is served from the last build, so run a
+   * build once before expecting search to work locally.
+   */
+  interface PagefindResult {
+    data(): Promise<{ url: string; meta: { title?: string }; excerpt: string; filters?: Record<string, string[]> }>;
+  }
+  interface Pagefind {
+    init(): Promise<void>;
+    search(query: string): Promise<{ results: PagefindResult[] }>;
+  }
+
+  const root = document.querySelector<HTMLElement>("[data-site-search]");
+  const input = root?.querySelector<HTMLInputElement>("[data-command-slot='input']");
+  const list = root?.querySelector<HTMLElement>("[data-search-results]");
+  const empty = root?.querySelector<HTMLElement>("[data-search-empty]");
+
+  if (root && input && list && empty) {
+    let loading: Promise<Pagefind | null> | undefined;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let latest = 0;
+    const PLACEHOLDER = "Type to search the docs, API, and blog.";
+
+    // One import + init, shared by the warm-up on open and the first keystroke.
+    const load = (): Promise<Pagefind | null> => {
+      loading ??= (async () => {
+        try {
+          // Built beside the site. A non-literal specifier so TypeScript does not
+          // resolve the URL, and Vite (@vite-ignore) does not bundle it.
+          const href = "/pagefind/pagefind.js";
+          const mod = (await import(/* @vite-ignore */ href)) as Pagefind;
+          await mod.init();
+          return mod;
+        } catch {
+          return null;
+        }
+      })();
+      return loading;
+    };
+
+    const section = (filters?: Record<string, string[]>): string => filters?.section?.[0] ?? "";
+
+    const render = (groups: Map<string, { url: string; title: string; excerpt: string }[]>): void => {
+      list.replaceChildren();
+      let n = 0;
+      for (const [name, items] of groups) {
+        const group = document.createElement("div");
+        group.setAttribute("role", "group");
+        group.setAttribute("data-command-slot", "group");
+        const labelId = `site-search-group-${++n}`;
+        group.setAttribute("aria-labelledby", labelId);
+        const label = document.createElement("span");
+        label.id = labelId;
+        label.setAttribute("data-command-slot", "group-label");
+        label.setAttribute("data-ui", "text-eyebrow");
+        label.setAttribute("style", "--text: var(--color-muted-foreground)");
+        label.textContent = name || "Pages";
+        group.append(label);
+        for (const item of items) {
+          const a = document.createElement("a");
+          a.href = item.url;
+          a.setAttribute("role", "option");
+          a.setAttribute("data-command-slot", "item");
+          a.setAttribute("data-ui", "button");
+          a.setAttribute("data-button-variant", "ghost");
+          a.setAttribute("data-command-value", item.title);
+          a.tabIndex = -1;
+          a.setAttribute("style", "--justify: start; --display: flex-col; --items: start; --gap: 0.5; --h: auto; --py: 2");
+          const title = document.createElement("span");
+          title.textContent = item.title;
+          const excerpt = document.createElement("span");
+          excerpt.setAttribute("data-ui", "text-xs");
+          excerpt.setAttribute("style", "--text: var(--color-muted-foreground); --font-weight: body; --text-align: start");
+          excerpt.innerHTML = item.excerpt; // Pagefind marks matches with <mark>; the rest is escaped text
+          a.append(title, excerpt);
+          group.append(a);
+        }
+        list.append(group);
+      }
+    };
+
+    const run = async (query: string): Promise<void> => {
+      const id = ++latest;
+      const trimmed = query.trim();
+      if (!trimmed) {
+        list.replaceChildren();
+        empty.textContent = PLACEHOLDER;
+        return;
+      }
+      const engine = await load();
+      if (!engine) {
+        empty.textContent = "Search index not available. Build the site to create it.";
+        return;
+      }
+      const { results } = await engine.search(trimmed);
+      if (id !== latest) return;
+      const data = await Promise.all(results.slice(0, 12).map((r) => r.data()));
+      if (id !== latest) return;
+      const groups = new Map<string, { url: string; title: string; excerpt: string }[]>();
+      for (const d of data) {
+        const key = section(d.filters);
+        const items = groups.get(key) ?? [];
+        items.push({ url: d.url, title: d.meta.title ?? d.url, excerpt: d.excerpt });
+        groups.set(key, items);
+      }
+      render(groups);
+      empty.textContent = data.length ? "" : `No results for “${trimmed}”.`;
+    };
+
+    input.addEventListener("input", () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => void run(input.value), 120);
+    });
+    // Warm the index the first time the palette opens.
+    root.addEventListener("zazz:dialog-open", () => void load(), { once: true });
+    // The palette resets its input on close; drop the results with it, so a
+    // reopen never shows the last query's list under an empty field.
+    root.addEventListener("zazz:dialog-close", () => {
+      latest++;
+      clearTimeout(timer);
+      list.replaceChildren();
+      empty.textContent = PLACEHOLDER;
+    });
+  }
+</script>

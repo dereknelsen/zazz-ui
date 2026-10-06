@@ -1,0 +1,67 @@
+---
+import Logo from "../components/Logo.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { links, site } from "../site.config.ts";
+---
+
+<BaseLayout title={site.name}>
+  <main id="main" data-ui="layout" style="--py: 24">
+    <div
+      style="
+        --col: layout-md;
+        --display: flex-col;
+        --items: center;
+        --justify: center;
+        --h: 100%;
+        --gap: 6;
+        --text-align: center;
+        --max-w: var(--article-sm);
+      "
+    >
+      <Logo variant="lockup" size={32} title="Zazz" />
+      <h1 data-ui="sr-only">{site.title}</h1>
+      <p
+        data-ui="text-xl"
+        style="
+          
+          --text-wrap: balance;
+        "
+      >
+        HTML's missing UI kit
+      </p>
+      <p>
+        Identities, presets, and style utilities in your markup, with design
+        tokens and cascade layers underneath. No build step.
+      </p>
+      <p
+        data-ui="text-sm"
+        style="
+          --display: flex;
+          --items: center;
+          --gap: 2;
+          --text: var(--color-muted-foreground);
+        "
+      >
+        <span data-ui="badge" data-badge-variant="outline">Alpha</span>
+        The markup contract can change in any release before 1.0.
+      </p>
+      <div
+        style="
+          --display: flex;
+          --flex-wrap: wrap;
+          --justify: center;
+          --gap: 2;
+        "
+      >
+        <a
+          href="/docs/quick-start/"
+          data-ui="button"
+          data-button-variant="primary">Get started</a
+        >
+        <a href="/api/" data-ui="button" data-button-variant="outline"
+          >API reference</a
+        >
+      </div>
+    </div>
+  </main>
+</BaseLayout>

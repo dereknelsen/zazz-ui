@@ -1,0 +1,24 @@
+---
+title: "API reference"
+description: "Every utility, switch, primitive, and script in the kit, read from the kit's own data."
+section: Reference
+sectionOrder: 0
+order: 0
+---
+
+The tables on these pages are generated at build time from `@zazz-ui/core`: the utility table (`base/utilities.ts`), the manifest, the editor data (`editor/*.json`), and each script's header. If a name is on a page here, it is in the kit.
+
+## Sections
+
+- **Foundations**: [tokens](/api/foundations/tokens/), [typography roles](/api/foundations/typography/), the [layout grid](/api/foundations/layout/), [breakpoints](/api/foundations/breakpoints/), [cascade layers](/api/foundations/layers/), and the [global attributes](/api/foundations/globals/).
+- **Modifiers**: the suffixes that scope a utility to a [breakpoint](/api/modifiers/responsive/), a [state](/api/modifiers/states/), a [group](/api/modifiers/group/), the [starting style](/api/modifiers/starting/), or a [stuck](/api/modifiers/stuck/) sticky element.
+- **Utilities**: the values you write in `style`, by section, starting with [layout](/api/utilities/layout/).
+- **[Switches](/api/switches/)**: fixed rule sets carried as `data-ui` tokens.
+- **Primitives**: one page each, with examples, attributes, and hooks, starting with [button](/api/primitives/button/).
+- **JavaScript**: the [runtime](/api/javascript/) behind the scripted primitives: custom elements, signals, hotkeys, events, and navigation.
+
+## Reading the tables
+
+A utility row names the CSS it writes, the value it takes (a scale number or length, any CSS value, a keyword, or an integer), and the tiers it accepts: breakpoints (`--px--md`), states (`--bg--hover`), or neither. "Works tier-only" means the utility has a natural default, so `--opacity--hover: .8` needs no `--opacity` base on a plain element.
+
+A primitive's attribute table lists its identity tokens, tag form, presets with their values, slots, the state tokens its script writes, and the configuration its script reads. Its hooks table lists every `--ui-<primitive>-*` custom property with the default the kit ships.

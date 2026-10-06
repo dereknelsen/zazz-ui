@@ -1,0 +1,52 @@
+---
+title: "Custom elements"
+description: "ZazzElement, the registration guard, and the refresh registry."
+section: JavaScript
+sectionOrder: 6
+order: 1
+---
+
+Every scripted primitive extends `ZazzElement`, a thin base class that owns the lifecycle: an `AbortController` per connection, a reconnect guard, and teardown on disconnect. Implement `setup(signal)` and bind every listener, observer, and effect with `{ signal }`; they are all released when the element leaves the DOM.
+
+```js
+import { ZazzElement, defineZazzElement } from "@zazz-ui/core/base/zazz-element.js";
+
+class CopyButton extends ZazzElement {
+  setup(signal) {
+    const button = this.querySelector("button");
+    button?.addEventListener(
+      "click",
+      () => navigator.clipboard.writeText(this.dataset.copyText ?? ""),
+      { signal },
+    );
+  }
+}
+
+defineZazzElement("copy-button", CopyButton);
+```
+
+```html
+<copy-button data-copy-text="pnpm add @zazz-ui/core">
+  <button data-ui="button" data-button-size="sm" type="button">Copy</button>
+</copy-button>
+```
+
+Implement the optional `teardown()` only for resources an abort cannot release: a third-party instance, attributes stamped on other elements. It runs after the abort on disconnect. `connectedMoveCallback` is a no-op, so an element moved with `moveBefore()` (a persisted element riding a navigation swap) keeps its setup.
+
+Two conventions keep elements configurable in plain HTML: read configuration from `data-<name>-*` attributes (with [`Utils.parseDataAttributes`](/api/javascript/utils/) when there are several), and enhance the light DOM instead of replacing it.
+
+`defineZazzElement(tag, cls)` guards `customElements.define`, so loading a script twice does not throw. Only behavioral primitives register; the CSS-only tag forms (`ui-tooltip`, `ui-accordion`, `ui-button-group`, `ui-toggle-group`, `ui-kbd-group`, `ui-layout`) stay unregistered.
+
+## The refresh registry
+
+A module whose work is scoped to page content rather than to one element (the reveal observer, for example) registers a refresh hook. After a [navigation swap](/api/javascript/navigation/), the runtime calls every hook with the new body:
+
+```js
+import { registerRefresh } from "@zazz-ui/core/base/zazz-element.js";
+
+registerRefresh((scope) => {
+  scope.querySelectorAll("[data-chart]").forEach(initChart);
+});
+```
+
+Hooks must be idempotent: mark initialized nodes with a data attribute and skip them on later runs. Custom elements need no hook; the swap fires their `connectedCallback` natively.

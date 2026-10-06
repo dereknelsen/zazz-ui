@@ -1,0 +1,17 @@
+---
+title: "Responsive"
+description: "--<utility>--<breakpoint>: a value from that breakpoint up."
+section: Modifiers
+sectionOrder: 2
+order: 0
+---
+
+Append a breakpoint with a double hyphen: `--grid-cols: 1; --grid-cols--md: 2; --grid-cols--xl: 4`. Tiers are mobile-first and read the nearest inline-size container; see [breakpoints](/api/foundations/breakpoints/) for the thresholds and the container rules.
+
+{% preview src="utilities/responsive-grid" /%}
+
+Families that take breakpoint tiers: flow, grid, spacing, margin, sizing, typography, and color. Effects (`--shadow`, `--opacity`) are state-only.
+
+{% preview src="utilities/responsive-flex" /%}
+
+A single hyphen inside a name is part of the utility (`--bg-alpha`, `--grid-cols`); the double hyphen always introduces a modifier.

@@ -1,0 +1,30 @@
+---
+title: "Events"
+description: "The zazz:* events the kit dispatches."
+section: JavaScript
+sectionOrder: 6
+order: 5
+---
+
+Kit events are `CustomEvent`s named `zazz:<subject>-<verb>`. Each is dispatched on the element it describes and bubbles, so you can listen on the element, an ancestor, or `document`.
+
+## Dialog lifecycle
+
+Native `<dialog>` is hard to observe: `showModal()` fires no event and `close` does not bubble. `base/dialog-lifecycle.js` watches every dialog on the page and re-emits its lifecycle:
+
+- `zazz:dialog-open`: the `open` attribute appeared (`showModal()`, `show()`, or an invoker command).
+- `zazz:dialog-close`: the dialog closed; unlike the native event, this one bubbles.
+
+Neither has a `detail`; the dialog is the target.
+
+```js
+document.addEventListener("zazz:dialog-open", (event) => {
+  console.log("opened:", event.target.id);
+});
+```
+
+Primitives use them to coordinate with a containing dialog: a carousel cannot measure itself while its dialog is closed, so it waits for `zazz:dialog-open` on `closest("dialog")`. Do the same when something needs to measure its layout inside a dialog.
+
+## Command palette
+
+`zazz:command-select` fires from a `<ui-command>` root when an item activates, by click, Enter, or a per-item hotkey, with `detail: { item, value }`. See [command](/api/primitives/command/).

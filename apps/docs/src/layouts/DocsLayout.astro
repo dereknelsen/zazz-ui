@@ -1,0 +1,63 @@
+---
+/**
+ * The three-column reading layout shared by Docs and API: section sidebar,
+ * the article (a `prose` block Pagefind indexes), and the page's own outline.
+ */
+import type { MarkdownHeading } from "astro";
+import Sidebar from "../components/Sidebar.astro";
+import Toc from "../components/Toc.astro";
+import type { SidebarSection } from "../lib/sidebar.ts";
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  /** The top-level area, for the eyebrow and the Pagefind filter. */
+  section: "Docs" | "API" | "Blog";
+  sidebar: SidebarSection[];
+  headings?: MarkdownHeading[];
+}
+const { title, description, section, sidebar, headings = [] } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <main id="main" data-ui="layout" style="--py: 6">
+    <div
+      style="
+        --display: grid;
+        --grid-template-cols: minmax(0, 1fr);
+        --grid-template-cols--lg: 15rem minmax(0, 1fr);
+        --grid-template-cols--xl: 15rem minmax(0, 1fr) 13rem;
+        --gap: 11;
+        --items: start;
+      "
+    >
+      <Sidebar label={section} sections={sidebar} />
+
+      <article
+        data-ui="prose"
+        data-pagefind-body
+        data-pagefind-filter={`section:${section}`}
+        style="
+          --min-w: 0;
+          --max-w: var(--article-xl);
+        "
+      >
+        <header style="--mb: 11">
+          <p data-ui="text-eyebrow" style="--text: var(--color-muted-foreground)">{section}</p>
+          <h1 data-ui="text-h4" style="--mt: 1" data-pagefind-meta="title">{title}</h1>
+          {
+            description && (
+              <p data-ui="text-lg" style="--mt: 2; --text: var(--color-muted-foreground)">
+                {description}
+              </p>
+            )
+          }
+        </header>
+        <slot />
+      </article>
+
+      <Toc headings={headings} />
+    </div>
+  </main>
+</BaseLayout>

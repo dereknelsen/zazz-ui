@@ -1,0 +1,24 @@
+---
+/** `{% examples primitive="button" /%}`: every example fragment the manifest lists, as previews. */
+import { primitiveApi } from "../../lib/api/primitives.ts";
+import Preview from "../Preview.astro";
+
+interface Props {
+  primitive: string;
+}
+const api = primitiveApi(Astro.props.primitive);
+const titleOf = (id: string) => {
+  const file = id.split("/")[1];
+  const rest = file === api.name ? "Default" : file.replace(`${api.name}-`, "").replace(/-/g, " ");
+  return rest.charAt(0).toUpperCase() + rest.slice(1);
+};
+---
+
+{
+  api.examples.map((id) => (
+    <>
+      {api.examples.length > 1 && <h3 id={`example-${id.split("/")[1]}`} data-ui="text-lg">{titleOf(id)}</h3>}
+      <Preview src={id} title={`${api.name}: ${titleOf(id)}`} />
+    </>
+  ))
+}

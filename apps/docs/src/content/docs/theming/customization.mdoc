@@ -1,0 +1,96 @@
+---
+title: "Customization and theming"
+description: "Tokens on :root, hooks on a subtree, utilities on an element, and how dark mode works."
+section: "Theming"
+sectionOrder: 3
+order: 0
+---
+
+Zazz has three override surfaces, from widest to narrowest. Pick the narrowest that does the job, and never edit the kit's own files to get a look.
+
+## 1. Tokens on `:root`
+
+The kit's colors, type, spacing, radii, and shadows are custom properties on `:root`. Redefine it and everything that reads it follows. The [tokens page](/api/foundations/tokens/) lists them all with their resolved light and dark values.
+
+```css
+@layer overrides {
+  :root {
+    --color-primary: light-dark(oklch(0.35 0.12 260), oklch(0.85 0.1 260));
+    --color-primary-foreground: light-dark(white, oklch(0.2 0.05 260));
+    --radius-multiplier: 0;
+    --font-family-heading: "Fraunces", var(--font-sans-fallback);
+    --spacing: 0.3rem;
+  }
+}
+```
+
+Write the block in `@layer overrides` (or import your stylesheet into it) so it outranks the kit's `variables` layer. Color roles are `light-dark()` pairs; keep them that way and dark mode keeps working with no extra rules.
+
+## 2. Hooks on a subtree
+
+Every primitive reads `--ui-<primitive>-<utility>` hooks that inherit, so a hook set on a region themes every instance inside it while each keeps its own states. Where a primitive has a state, it also reads a state hook.
+
+```html
+<nav style="--ui-button-px: 2; --ui-button-rounded: var(--radius-full); --ui-button-bg--hover: var(--color-muted)">
+  …every button in here…
+</nav>
+```
+
+The widest lever is the `--ui-field-*` family: inputs, selects, and textareas read it directly, and button, tabs, checkbox, radio, badge, menu, and command metrics default to it, so `--ui-field-h: 2.75rem` retunes a whole form row. Each primitive's hooks, with defaults, are on its [API page](/api/).
+
+## 3. Utilities on one element
+
+A style utility is the escape hatch for one element: `style="--bg: var(--color-muted); --rounded: var(--radius-lg)"`. On a primitive it flattens the states it touches (`--bg` on a button is that color on hover too), so add the state tier or use the hook when the states matter.
+
+## Dark mode
+
+`:root` declares `color-scheme: light dark`, and every color role is a `light-dark()` pair, so the page follows the system scheme with no second stylesheet. `data-ui-theme="dark"` or `"light"` on any element pins a scheme for that subtree by setting `color-scheme`; scopes nest, so a dark sidebar can hold a light card.
+
+The head's theme script reads `localStorage.theme` and sets `data-ui-theme` on `<html>` before first paint. A toggle writes the same two things:
+
+```js
+function setTheme(value) {
+  const root = document.documentElement;
+  if (value === "light" || value === "dark") {
+    root.setAttribute("data-ui-theme", value);
+    localStorage.setItem("theme", value);
+  } else {
+    root.removeAttribute("data-ui-theme"); // follow the system
+    localStorage.removeItem("theme");
+  }
+}
+```
+
+Roles are deliberately unregistered properties so they re-resolve per element inside a pinned subtree. Shadows tint through `--color-shadow` globally or `--shadow-hue` on a subtree.
+
+## A brand block
+
+A complete brand is a few dozen lines: the role colors, the scales they draw from, type, radius, and a handful of hooks.
+
+```css
+@layer overrides {
+  :root {
+    /* neutrals and brand scales */
+    --color-neutral-900: oklch(0.2 0.01 60);
+    --color-secondary-500: oklch(0.85 0.17 90);
+
+    /* roles */
+    --color-background: light-dark(oklch(0.98 0.005 80), var(--color-neutral-900));
+    --color-primary: light-dark(var(--color-neutral-900), oklch(0.98 0.005 80));
+    --color-secondary: var(--color-secondary-500);
+
+    /* shape and type */
+    --radius-multiplier: 0;
+    --font-family-heading: "Fraunces", var(--font-sans-fallback);
+
+    /* primitives */
+    --ui-field-h: 2.75rem;
+    --ui-button-font-weight: 600;
+    --ui-card-shadow: none;
+  }
+}
+```
+
+## Fonts
+
+The family tokens (`--font-family-body`, `--font-family-heading`, `--font-family-mono`) are system stacks by default. The head's fonts block loads Geist and Geist Mono from Google Fonts so a brand can opt in with `--font-family-body: "Geist", var(--font-sans-fallback)`; swap the block for your own fonts, or pass `fontDisplay: false` to `buildHead()` and load nothing.

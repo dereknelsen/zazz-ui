@@ -1,0 +1,37 @@
+---
+title: "LLM resources"
+description: "What to give an AI assistant so it writes correct Zazz 0.5 markup."
+section: "AI"
+sectionOrder: 5
+order: 0
+---
+
+No model has Zazz 0.5 in its training data yet, and 0.4 looked different (classes, `data-variant`). An assistant needs the rules in its context. These are the files to hand it, from shortest to longest.
+
+## Plain-text endpoints
+
+- **[/llms.txt](/llms.txt)**: a one-screen orientation with links to every page as Markdown.
+- **[/llms-full.txt](/llms-full.txt)**: every docs and API page in one file, tables included.
+- **Any page as Markdown**: the `index.md` next to it: `/api/primitives/button/index.md`.
+
+## The authoring rules
+
+`packages/core/AUTHORING.md` is the one-page source for the markup rules: identities, presets, slots, utilities, modifiers, hooks, layout, typography, theme. It ships inside `@zazz-ui/core` and is what every other resource below points at. Paste it, or link it, before asking for any markup.
+
+## Agent skills and rules
+
+The repo carries the same guidance for three assistants:
+
+- **Claude Code**: the `zazz` skill at [`.claude/skills/zazz/`](https://github.com/dereknelsen/zazz-ui/tree/main/.claude/skills/zazz): `SKILL.md` (mental model, golden rules, do/don't), `DESIGN.md` (visual theme, color roles, typography, component styling, layout principles), `PATTERNS.md` (page structure, sentence case, composition), and `references/` (tokens, components, APIs). Copy the folder into your project's `.claude/skills/`.
+- **Cursor**: `.cursor/rules/zazz-markup.mdc`, a rules file scoped to `**/*.html`.
+- **GitHub Copilot**: `.github/instructions/zazz-markup.instructions.md`.
+
+All three say the same thing: read `AUTHORING.md`, copy a primitive's anatomy from `src/primitives/<name>/<name>.html` instead of reconstructing it, use tokens, and never use 0.4 syntax.
+
+## The editor data
+
+For an assistant that can read JSON, `editor/zazz.html-data.json` lists every `data-ui` token and every `data-<name>-*` attribute with its allowed values, and `editor/zazz.css-data.json` lists every utility, tier, and hook. `vp run core#generate` regenerates them from the kit, so they match the kit they ship with. `editor/zazz.language-data.json` adds each primitive's summary, hook defaults, and resolved tokens.
+
+## Checking the output
+
+Whatever the assistant writes, run it through the same audit a human gets: `<ui-debug>` in the page, or `eslint "**/*.html"` with the [plugin](/docs/tooling/editor-and-linting/). A prompt that ends with "then fix every `[ui-debug]` warning" closes the loop.

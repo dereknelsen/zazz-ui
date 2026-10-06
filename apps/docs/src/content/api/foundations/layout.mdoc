@@ -1,0 +1,25 @@
+---
+title: "Layout"
+description: "The band grid: a layout caps and centers its children; a child picks its band."
+section: Foundations
+sectionOrder: 1
+order: 2
+---
+
+`data-ui="layout"` (or `<ui-layout>`) turns an element into the band grid for its own children. Each child sits in the default band, `xl`, unless placed elsewhere. A layout never styles its parent.
+
+{% preview src="layout/layout" /%}
+
+## Bands
+
+Bands share names with the breakpoints but are a separate rem scale, `--layout-sm` to `--layout-2xl` (40, 48, 64, 80, 96rem). Two more bands span wider: `layout-full` fills the layout minus the gutters, and `layout-bleed` runs edge to edge.
+
+- Change the default for every child with `data-layout-size="md"`.
+- Place one child with `--col: layout-md`; respond with `--col--lg: layout-xl`.
+- A layout nested in a layout is a subgrid: it keeps the parent's band lines, so a bleed section can still align its content to the page bands.
+
+## Children are containers
+
+Each child of a layout is an inline-size query container, so breakpoint tiers inside a band follow the band's width rather than the full-width section around it. Nested layouts, subgridded children, and content-sized children (`fit-content`, `min-content`) stay uncontained. The hook `--ui-layout-child-container: normal` opts a layout's children out.
+
+The gutters come from `--gutters` (default `--space-md`). Hooks are listed on the [layout](/api/primitives/layout/) page.

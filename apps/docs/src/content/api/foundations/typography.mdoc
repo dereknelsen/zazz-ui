@@ -1,0 +1,19 @@
+---
+title: "Typography roles"
+description: "Named text presets that bundle family, size, weight, leading, tracking, and case."
+section: Foundations
+sectionOrder: 1
+order: 1
+---
+
+Native `h1`–`h6` carry their role by default. Any other element takes a role as an identity token: `data-ui="text-h4"`, `data-ui="badge text-xs"`. A role stacks with other tokens, and a utility overrides one property of it (`--font-size`, `--leading`, `--font-weight`); never rebuild a role from utilities.
+
+{% roles /%}
+
+## Sizes
+
+The body sizes `text-2xs` to `text-2xl` are the `--font-size-*` tokens with matching leading and tracking. `text-eyebrow` is a small label: uppercase, tracked, and muted by convention. `text-display` is the one size above `h1`, for a hero headline.
+
+## Rich text
+
+`data-ui="prose"` styles the content inside it: paragraph rhythm, lists, figures, blockquotes, headings. Give it a reading measure with `--max-w: var(--article-lg); --mx: auto`. Its hooks are on the [prose](/api/primitives/prose/) page.

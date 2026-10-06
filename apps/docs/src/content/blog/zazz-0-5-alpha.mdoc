@@ -1,0 +1,53 @@
+---
+title: "Zazz 0.5 alpha: style utilities replace utility classes"
+description: "The 0.5 release moves every value out of class names and into custom properties, puts identity in data-ui, and ships a CLI that vendors primitives you own."
+date: 2026-10-06
+draft: true
+tags: ["release"]
+---
+
+Zazz 0.5 is the first alpha of the markup contract we intend to stabilize for 1.0. It is a breaking release: 0.4 pages do not render under 0.5, and there are no compatibility shims. The [changelog](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/CHANGELOG.md) flags every breaking entry with a one-line migration; this post is the shape of the change.
+
+## Values live in `style`
+
+0.4 carried values the Tailwind way, as class names: `class="px-6 opacity-90 hover:opacity-100 @md:w-fit"`. 0.5 carries them as custom properties in the element's `style` attribute:
+
+```html
+<button 
+  data-ui="button" 
+  data-button-variant="primary" 
+  style="
+    --px: 6; 
+    --opacity: .9; 
+    --opacity--hover: 1; 
+    --w--md: fit-content
+  ">
+  Save
+</button>
+```
+
+We call these **style utilities**. The stylesheet gates on the attribute text (`[style*="--px:"]`) and reads the value through registered, non-inheriting properties, so the CSS is a fixed size no matter how many values a site uses, nothing leaks into children, and an element's values are in one place. Breakpoints (`--w--md`) and states (`--opacity--hover`) are suffixes on the same property, and `--group-*` reacts to an ancestor.
+
+## Identity is `data-ui`
+
+Classes are gone from the kit entirely. An element says what it is with `data-ui="button"` (a space-separated token list, so `data-ui="card group"` works), picks a preset with `data-button-variant="primary"`, and names a part with `data-dialog-slot="header"`. Every `data-<name>-*` selector is compounded with its identity, so another library's `data-carousel-item` matches nothing. The `class` attribute is yours.
+
+## Tokens, layout, breakpoints
+
+- Color roles are `--color-*` (`--color-primary`, `--color-muted-foreground`), declared once as `light-dark()` pairs; the bare shadcn names are gone.
+- The layout primitive replaces `.container`: `data-ui="layout"` is the band grid for its children, and `--col: layout-md` places one of them.
+- Breakpoints are Tailwind's five names with thresholds in `ch`, read from the nearest inline-size container rather than the window. Layout widths are a separate rem scale.
+- New states: `starting` (the `@starting-style` value a transition animates from) and the experimental `stuck`.
+- Border shorthands (`--border: 1`, `--border-l: var(--color-primary)`) and dividers (`data-ui="divide-y"`).
+
+## Own the code
+
+The `zazz-ui` CLI vendors the base platform and any primitives into your project, records the pristine hash of every file, and three-way merges later updates: your edits survive, upstream fixes land, and only a real conflict asks a question. There is no runtime dependency on the package.
+
+## Tooling that agrees with itself
+
+`<ui-debug>` audits a page in the browser; the same audit runs in the editor through a language server (the VS Code extension), on the command line as an ESLint plugin, and in the commit hook. They share one implementation, so the squiggle, the console warning, and the CI failure point at the same range.
+
+## What alpha means
+
+The contract in `SPEC.md` is complete and validated, but it will move before 1.0 as real applications push on it. Pin exact versions, read the changelog slice `zazz-ui update` prints before it changes anything, and tell us what broke.

@@ -1,0 +1,54 @@
+---
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import { siteHead } from "../lib/head.ts";
+import { site } from "../site.config.ts";
+import "../styles/site.css";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = site.description } = Astro.props;
+const pageTitle = title === site.name ? site.title : `${title} · ${site.name}`;
+const canonical = new URL(Astro.url.pathname, site.url);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <Fragment set:html={siteHead()} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32x32.png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <slot name="head" />
+
+    <!-- Guestbook -->
+    <script defer src="https://guestbook.meridian.design/guestbook.js" data-website-id="3aab8403-e8c4-4c9d-b90a-e630f8119697"></script>
+  </head>
+  <body>
+    <a
+      href="#main"
+      data-ui="button"
+      data-button-variant="outline"
+      style="
+        --position: absolute;
+        --top: 2;
+        --left: 2;
+        --z: 30;
+        --translate: 0 -200%;
+        --translate--focus-visible: 0 0;
+      "
+    >
+      Skip to content
+    </a>
+    <slot />
+  </body>
+</html>

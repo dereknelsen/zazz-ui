@@ -1,0 +1,19 @@
+---
+title: "Pseudo-elements"
+description: "Style ::before and ::after from the host element."
+section: Utilities
+sectionOrder: 3
+order: 12
+---
+
+Sizing, spacing (padding and inset), position, display, z-index, color, radius, opacity, transforms, transition, and font size and weight also exist as `--before-<utility>` and `--after-<utility>`, read on the pseudo-element; the table on each section page marks them. `--before-content: ''` (or `--after-content`) creates it. Pseudo utilities take no tiers of their own; put a `--group-*` or state tier on the host's regular utility instead. `--before-display` takes CSS display values (`block`, `inline-flex`), not the `flex-col` shorthands.
+
+An accent bar, the way a callout draws one:
+
+```html
+<aside data-ui="card" style="--position: relative; --pl: 6; --before-content: ''; --before-position: absolute; --before-inset-y: 0; --before-left: 0; --before-w: 1; --before-bg: var(--color-info); --before-rounded: var(--radius-md)">…</aside>
+```
+
+## Reference
+
+{% utilities section="pseudo-elements" /%}

@@ -1,0 +1,49 @@
+---
+import { Info, Lightbulb, TriangleAlert } from "@lucide/astro";
+
+interface Props {
+  type?: "note" | "tip" | "warning";
+  title?: string;
+}
+const { type = "note", title } = Astro.props;
+const kinds = {
+  note: { Icon: Info, label: "Note", color: "var(--color-info)" },
+  tip: { Icon: Lightbulb, label: "Tip", color: "var(--color-success)" },
+  warning: {
+    Icon: TriangleAlert,
+    label: "Warning",
+    color: "var(--color-warning)",
+  },
+} as const;
+const kind = kinds[type];
+---
+
+<aside
+  style=`
+    --p: 4;
+    --my: 6;
+    --display: grid;
+    --grid-template-cols: auto 1fr;
+    --gap: 3;
+    --items: start;
+    --rounded: var(--radius-md);
+    --border-color: ${kind.color};
+    --text: ${kind.color};
+    --border: 1;
+    --border-style: dashed;
+  `
+>
+  <div data-ui="text-sm" style="--display: flex-col; --gap: 2">
+    <span
+      style="--font-weight: strong; --display: flex; --align-items: center; --gap: 2"
+    >
+      <kind.Icon
+        size={18}
+        aria-hidden="true"
+        style={`--text: oklch${kind.color};`}
+      />
+      <span>{title ?? kind.label}</span>
+    </span>
+    <div style="--pl: 6"><slot /></div>
+  </div>
+</aside>

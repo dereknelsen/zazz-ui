@@ -1,0 +1,97 @@
+---
+title: "Quick start"
+description: "A page in five steps: one head snippet, a layout, a header, a hero, and a theme."
+section: "Start here"
+sectionOrder: 0
+order: 1
+---
+
+You need a text editor and a browser. You install nothing; the kit loads from a CDN. When you are ready to own the files, the [installation](/docs/install/installation/) page covers the CLI.
+
+## 1. The head
+
+Create `index.html` and paste this into `<head>`. It is the output of the kit's own `buildHead()`: fonts, the stylesheet, the import map for the kit's bare dependencies (`signal-polyfill` and the Embla packages), the one polyfill, the script, and a theme script that paints `data-ui-theme` before first paint.
+
+{% head mode="cdn" /%}
+
+{% callout type="warning" title="Unreleased" %}
+The version in these URLs is the kit installed with this site. 0.5 is not on npm yet, so until it ships these URLs resolve to a 0.4 build that does not understand this markup. Pin an exact version in production; the import map's integrity hashes are per byte, so a floating tag would break them on the next release.
+{% /callout %}
+
+## 2. A layout
+
+Add a header and a main region. `data-ui="layout"` turns an element into the band grid for its children: everything inside is capped and centered at the `xl` band unless placed elsewhere.
+
+```html
+<body>
+  <header data-ui="layout" style="--py: 4; --border-b: 1">
+    <div style="--display: flex; --items: center; --justify: space-between">
+      <a href="/" data-ui="text-lg" style="--font-weight: strong">Northwind</a>
+      <nav style="--display: flex; --gap: 1">
+        <a href="#menu" data-ui="button" data-button-variant="ghost">Menu</a>
+        <a href="#signup" data-ui="button" data-button-variant="primary">Join</a>
+      </nav>
+    </div>
+  </header>
+  <main data-ui="layout"></main>
+</body>
+```
+
+Three things happened in that header. `--py: 4` is four steps on the spacing scale. `--border-b: 1` is a one-pixel border in `--color-border`. And the links became buttons through an identity and a preset, not a class.
+
+## 3. A hero
+
+Inside `<main>`:
+
+```html
+<section style="--py: 24; --text-align: center">
+  <p data-ui="text-eyebrow">Small-batch roasting since 2019</p>
+  <h1 data-ui="text-h4" style="--mt: 2; --text-wrap: balance">Coffee worth slowing down for</h1>
+  <p data-ui="text-lg" style="--mt: 4; --mx: auto; --max-w: var(--article-sm); --text: var(--color-muted-foreground)">
+    Beans roasted every morning, shipped the same day.
+  </p>
+</section>
+```
+
+`text-eyebrow`, `text-h4`, and `text-lg` are typography roles: each bundles family, size, weight, leading, tracking, and case, and every size is fluid. Write the text in sentence case; the eyebrow's capitals come from the role.
+
+## 4. Cards in a grid
+
+```html
+<section id="menu" style="--py: 11">
+  <div style="--display: grid; --grid-cols: 1; --grid-cols--md: 3; --gap: 4">
+    <article data-ui="card" style="--p: 6; --display: flex-col; --gap: 2">
+      <span data-ui="badge" data-badge-variant="muted">Espresso</span>
+      <h2 data-ui="text-lg">The classic</h2>
+      <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+        A Honduran single origin with notes of dark chocolate and orange peel.
+      </p>
+    </article>
+    <!-- two more cards -->
+  </div>
+</section>
+```
+
+`--grid-cols--md: 3` is a breakpoint tier: one column until the container is 65 characters wide, three from there. Breakpoints read the nearest inline-size container, not the window, so the same card grid works in a sidebar.
+
+## 5. A theme
+
+Open the page: fonts, colors, and form controls already follow the system scheme, because every color role is a `light-dark()` pair. Pin a scheme with `data-ui-theme="dark"` on `<html>` (the head's script does that from a stored choice), or change the look everywhere with a few tokens:
+
+```html
+<style>
+  @layer overrides {
+    :root {
+      --color-primary: light-dark(oklch(0.45 0.15 30), oklch(0.8 0.12 30));
+      --radius-multiplier: 0.5;
+      --ui-button-font-weight: 600;
+    }
+  }
+</style>
+```
+
+A token recolors every primary surface; a hook retunes every button. Neither touches your markup. The [theming](/docs/theming/customization/) page has the whole model.
+
+## Next
+
+Add `<ui-debug data-debug-domains="localhost"></ui-debug>` to the body while you work: it warns in the console about a misspelled utility, a tier without a base, or a preset on the wrong element. Then read the [core concepts](/docs/concepts/core-concepts/), or jump to the [API reference](/api/).

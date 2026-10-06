@@ -1,0 +1,32 @@
+---
+/** `{% hooks primitive="button" /%}`: the `--ui-<primitive>-*` hooks with their defaults. */
+import { primitiveApi } from "../../lib/api/primitives.ts";
+import Table from "./Table.astro";
+
+interface Props {
+  primitive: string;
+}
+const api = primitiveApi(Astro.props.primitive);
+---
+
+{
+  api.hooks.length === 0 ? (
+    <p>No hooks: this primitive has no stylesheet of its own.</p>
+  ) : (
+    <>
+      <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+        Set a hook on <code>:root</code>, on a subtree, or inline on one element. A state hook
+        (<code>--…--hover</code>) themes that state only; the primitive keeps its other states.
+      </p>
+      <Table caption={`${api.name} hooks`} columns={["Hook", "Default", "State"]}>
+        {api.hooks.map((h) => (
+          <tr>
+            <td><code>{h.name}</code></td>
+            <td><code>{h.value}</code></td>
+            <td>{h.state ?? "—"}</td>
+          </tr>
+        ))}
+      </Table>
+    </>
+  )
+}

@@ -1,0 +1,22 @@
+---
+title: "Group"
+description: "--group-<utility>--<state>: react to an ancestor's state."
+section: Modifiers
+sectionOrder: 2
+order: 2
+---
+
+Mark an ancestor `data-ui="group"` and its descendants can respond to its state with the `group-` form: `--opacity: 1; --group-opacity--hover: 0.85`. Any marked ancestor counts, nearest or not.
+
+```html
+<article data-ui="card group">
+  <img src="…" alt="…" style="--opacity: 1; --group-opacity--hover: 0.85" />
+  <a href="/p/1" style="--text: var(--color-muted-foreground); --group-text--hover: var(--color-foreground)">
+    Read more
+  </a>
+</article>
+```
+
+The group form exists for every pseudo-class state (`hover`, `active`, `focus-visible`, `focus-within`, `disabled`, `checked`, `open`). `starting` and `stuck` have no group form: the trigger is the element's own first style, or the sticky container.
+
+Named groups (`data-group-name`) are reserved and not implemented.

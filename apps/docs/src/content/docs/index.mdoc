@@ -1,0 +1,32 @@
+---
+title: "Introduction"
+description: "What Zazz is, and where to start."
+section: "Start here"
+sectionOrder: 0
+order: 0
+---
+
+Zazz is a UI kit for plain HTML. You write markup, and three things in that markup carry every styling decision: an **identity** (`data-ui="button"`) says what an element is, a **preset** (`data-button-variant="primary"`) picks a named look, and **style utilities** in `style` (`--px: 6; --w--md: fit-content`) carry one-off values. Underneath are design tokens, cascade layers, and a handful of light-DOM custom elements for behavior. There is no build step and no class names.
+
+{% preview src="button/button" /%}
+
+{% callout type="warning" title="Alpha" %}
+Zazz 0.5 is an alpha. The markup contract can change between releases until 1.0, and 0.5 is not compatible with 0.4. The [changelog](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/CHANGELOG.md) flags every breaking change with a migration note.
+{% /callout %}
+
+## What's here
+
+- **[Quick start](/docs/quick-start/)**: a page in five steps, from one `<head>` snippet to a themed layout.
+- **[Core concepts](/docs/concepts/core-concepts/)**: the three channels, hooks, switches, layers, and how breakpoints read containers.
+- **[Migrating a legacy app](/docs/concepts/migrating/)**: adopting Zazz page by page next to an existing stylesheet.
+- **[Installation](/docs/install/installation/)**: the CLI, the CDN, or npm with a bundler.
+- **[Customization and theming](/docs/theming/customization/)**: tokens, hooks, dark mode, and brand blocks.
+- **[Editor and linting](/docs/tooling/editor-and-linting/)**: the VS Code extension, the ESLint plugin, and `<ui-debug>`.
+- **[LLM resources](/docs/ai/llm-resources/)**: what to hand an AI assistant so it writes correct Zazz.
+- **[API reference](/api/)**: every utility, switch, primitive, and script, generated from the kit.
+
+## Why it looks like this
+
+Tailwind showed that values belong in markup. Zazz keeps that, but moves the values from class names into custom properties, so the stylesheet is a fixed size no matter how many pages you ship, and an element's own `style` attribute is the single place its values live. shadcn and Base UI showed that components can be copied, owned, and themed through variables rather than imported as a black box. Zazz does the same with a CLI that vendors primitives into your project and merges updates later.
+
+Everything runs on modern web platform features: cascade layers, `@property`, container queries, `light-dark()`, the Popover API, native `<dialog>`, invoker commands, and anchor positioning. The browser support floor is the latest two versions of Chrome, Firefox, and Safari; the one polyfill is for interest invokers.

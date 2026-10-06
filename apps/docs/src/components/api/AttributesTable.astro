@@ -1,0 +1,63 @@
+---
+/** `{% attributes primitive="button" /%}`: identities, tag forms, presets, slots, states, config. */
+import { primitiveApi } from "../../lib/api/primitives.ts";
+import Table from "./Table.astro";
+
+interface Props {
+  primitive: string;
+}
+const api = primitiveApi(Astro.props.primitive);
+const label: Record<string, string> = {
+  identity: "Identity",
+  tag: "Tag form",
+  preset: "Preset",
+  slot: "Slot",
+  state: "State",
+  config: "Config",
+};
+---
+
+{
+  api.attributes.length === 0 ? (
+    <p>
+      This primitive is a composition of other primitives and utilities: it has no presets, slots,
+      or hooks of its own. Copy its example and adapt it.
+    </p>
+  ) : (
+    <Table caption={`${api.name} attributes`} columns={["Attribute", "Kind", "Values", "Notes"]}>
+      {api.attributes.map((a) => (
+        <tr>
+          <td><code>{a.name}</code></td>
+          <td>{label[a.kind]}</td>
+          <td>
+            {a.values.length > 0
+              ? a.values.map((v, i) => (
+                  <>
+                    <code>{v}</code>
+                    {i < a.values.length - 1 ? " " : ""}
+                  </>
+                ))
+              : a.kind === "slot" || a.kind === "state"
+                ? "—"
+                : "free value"}
+          </td>
+          <td>{a.description}</td>
+        </tr>
+      ))}
+    </Table>
+  )
+}
+{
+  api.dependencies.length > 0 && (
+    <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+      Requires:{" "}
+      {api.dependencies.map((d, i) => (
+        <>
+          <a href={`/api/primitives/${d}/`}>{d}</a>
+          {i < api.dependencies.length - 1 ? ", " : ""}
+        </>
+      ))}
+      .
+    </p>
+  )
+}

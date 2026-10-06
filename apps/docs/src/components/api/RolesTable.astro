@@ -1,0 +1,14 @@
+---
+import { typographyRoles } from "../../lib/api/foundations.ts";
+---
+
+<div data-ui="card" style="--p: 6; --display: flex-col; --gap: 4; --my: 4">
+  {
+    typographyRoles().map((role) => (
+      <div style="--display: flex; --items: baseline; --gap: 4; --flex-wrap: wrap">
+        <code style="--min-w: 14ch">{role}</code>
+        <span data-ui={role}>The quick brown fox</span>
+      </div>
+    ))
+  }
+</div>

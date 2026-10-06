@@ -1,0 +1,36 @@
+---
+title: "Utils"
+description: "Parse data-attribute strings into typed values."
+section: JavaScript
+sectionOrder: 6
+order: 3
+---
+
+`base/utils.js` is the parser the kit's own scripts use for `data-<name>-*` configuration. Use it in your elements so your attributes behave exactly like the kit's.
+
+```js
+import { Utils } from "@zazz-ui/core/base/utils.js";
+```
+
+## parseValue
+
+Converts an attribute string to a boolean, number, JSON array or object, or leaves it a string:
+
+```js
+Utils.parseValue("true"); // true
+Utils.parseValue("42"); // 42
+Utils.parseValue("[1,2,3]"); // [1, 2, 3]
+Utils.parseValue("hello"); // "hello"
+```
+
+## parseDataAttributes
+
+Collects every attribute under a prefix, camel-cases the names, and parses the values:
+
+```js
+// <ui-carousel data-carousel-loop="true" data-carousel-start-index="2">
+Utils.parseDataAttributes(element, "data-carousel-");
+// { loop: true, startIndex: 2 }
+```
+
+The result is untyped; narrow it yourself when you need a typed shape.

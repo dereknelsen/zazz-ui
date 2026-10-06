@@ -1,0 +1,88 @@
+---
+import { acknowledgements, links, nav, site } from "../site.config.ts";
+import GithubIcon from "./GithubIcon.astro";
+import Logo from "./Logo.astro";
+---
+
+<footer
+  style="
+    --mt: 24;
+    --pt: 11;
+    --border-t: 1;
+  "
+>
+<ui-layout>
+  <div
+    style="
+      --display: grid;
+      --grid-cols: 1;
+      --grid-cols--md: 3;
+      --gap: 11;
+    "
+  >
+  <div style="--display: flex; --items: center; --gap: 4">
+    <Logo size={32} />
+  </div>
+
+
+    <nav aria-label="Footer" style="--display: flex-col; --gap: 2">
+      <h2 id="acknowledgements" data-ui="text-eyebrow" style="--text: var(--color-foreground); --mb: 3">
+        Navigation
+      </h2>
+      {
+        nav.map((item) => (
+          <a href={item.href} data-ui="text-sm"
+            style="--text: var(--color-muted-foreground); --text--hover: var(--color-foreground)">
+            {item.label}
+          </a>
+        ))
+      }
+      <a href={links.github} data-ui="text-sm"
+            style="--text: var(--color-muted-foreground); --text--hover: var(--color-foreground)" rel="noopener">GitHub</a>
+    </nav>
+
+    <section
+      aria-labelledby="acknowledgements"
+      data-ui="text-sm"
+      style="
+        --display: flex-col;
+        --gap: 2;
+        --text: var(--color-muted-foreground);
+      "
+    >
+      <h2 id="acknowledgements" data-ui="text-eyebrow" style="--text: var(--color-foreground); --mb: 3">
+        Acknowledgements
+      </h2>
+      <p>Built by {acknowledgements.team.join(", ")}.</p>
+      <p>
+        Thanks to {acknowledgements.contributors.join(" and ")} {acknowledgements.contributorsNote}.
+      </p>
+      {
+        acknowledgements.inspiration.map((item) => (
+          <p>
+            <strong>{item.name}</strong>, {item.note}.
+          </p>
+        ))
+      }
+    </section>
+  </div>
+</ui-layout>
+
+<ui-layout>
+    <section
+      data-ui="text-sm"
+      style="
+        --display: flex;
+        --items: center;
+        --justify: center;
+        --py: 6;
+        --mt: 6;
+        --border-t: 1;
+        --gap: 2;
+        --text: var(--color-muted-foreground);
+      "
+    >
+      <p>{site.copyright}</p>
+    </section>
+  </ui-layout>
+</footer>

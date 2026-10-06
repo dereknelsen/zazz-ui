@@ -1,0 +1,71 @@
+---
+title: "Migrating a legacy app"
+description: "Adopt Zazz page by page next to an existing stylesheet, without a rewrite."
+section: "Concepts"
+sectionOrder: 1
+order: 1
+---
+
+Zazz was built to land inside applications that already have CSS: a Bootstrap-era admin, a jQuery storefront, a design system of its own. Three properties make that practical: the kit's CSS is entirely layered, its selectors never read `class`, and every `data-<name>-*` selector is compounded with its identity, so another library's data attributes match nothing.
+
+## 1. Layer the old CSS below the kit
+
+Unlayered CSS beats every layer, so the first step is to give the existing stylesheet a layer of its own, below `ui`:
+
+```css
+/* entry.css */
+@import "./zazz/index.css";
+@import "./legacy/app.css" layer(legacy.imports);
+@import "./legacy/components.css" layer(legacy.components);
+```
+
+Now the kit wins wherever the two overlap, and legacy components the kit knows nothing about keep working. Always import into a sublayer (`legacy.imports`, `legacy.components`, `legacy.utilities`, `legacy.migrations`); rules dropped into bare `legacy` form an implicit final sublayer that outranks the named ones. Anything that must beat the kit itself belongs in `overrides`.
+
+`zazz-ui init --legacy ./css/app.css` writes that import for you, into `legacy.imports`.
+
+## 2. Convert one region at a time
+
+Pick a page, or a region of one, and write it in Zazz markup. The `class` attribute stays available for your own hooks and for whatever the legacy stylesheet still needs, so a converted region can keep a `class="legacy-footer"` while its contents use `data-ui`.
+
+Where a converted region sits inside an unconverted shell, isolate it:
+
+```css
+@layer legacy.migrations {
+  @scope (.app) to ([data-ui~="layout"]) {
+    /* legacy rules that should stop at the first Zazz layout */
+  }
+}
+```
+
+`all: revert-layer` inside a legacy layer strips the old styles from a converted subtree while leaving the kit's rules in place.
+
+## 3. Bridge old markup with migration shims
+
+When markup cannot change yet (a template owned by another team, a CMS block), translate the old class to a hook in `legacy.migrations`, then delete the rule when the markup is converted:
+
+```css
+@layer legacy.migrations {
+  .btn-primary {
+    --ui-button-bg: var(--color-primary);
+    --ui-button-text: var(--color-primary-foreground);
+  }
+}
+```
+
+Hooks inherit, so a shim on a container themes every primitive inside it.
+
+## 4. Protect utilities from old scripts
+
+Legacy scripts that write `element.style.cssText` or `setAttribute("style", …)` wipe the style utilities on that element. The [style guard](/api/primitives/style-guard/) watches for exactly that and restores the utilities a write dropped; opt an element out with `data-ui-guard="off"` where the old behavior is intended.
+
+## Coexisting with other libraries
+
+Another library's data attributes are inert: Flowbite's `data-carousel-item` or a `data-tabs-toggle` on an element without the Zazz identity matches none of the kit's rules, and the kit's scripts only parse attributes on elements that carry the identity. Its classes are yours: nothing in Zazz reads `class`, so Bootstrap grid classes can wrap a Zazz card until that grid becomes a layout. Its JavaScript stays: Zazz elements enhance light DOM and never render their own content, so a framework can own the markup while the kit styles it.
+
+## Checklist
+
+1. Import the legacy CSS into `legacy.*`; confirm nothing is unlayered.
+2. Add `<ui-debug data-debug-domains="localhost">` and the [ESLint plugin](/docs/tooling/editor-and-linting/) so converted markup is checked as you go.
+3. Convert page by page, shell last. Keep `class` for the legacy stylesheet's needs.
+4. Shim unconvertible markup in `legacy.migrations`; track each shim to a ticket.
+5. When a legacy stylesheet has nothing left to style, delete its import.

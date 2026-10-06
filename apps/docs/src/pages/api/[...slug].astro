@@ -1,0 +1,42 @@
+---
+import { getCollection, render } from "astro:content";
+import DocsLayout from "../../layouts/DocsLayout.astro";
+import { buildSidebar, hrefFor } from "../../lib/sidebar.ts";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("api");
+  return entries.map((entry) => ({
+    params: { slug: entry.id.replace(/\/?index$/, "") || undefined },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const all = await getCollection("api");
+const sidebar = buildSidebar(
+  all.map((e) => ({
+    id: e.id,
+    ...e.data,
+    anchors: e.data.primitive
+      ? [
+          { label: "Examples", slug: "examples" },
+          { label: "Attributes", slug: "attributes" },
+          { label: "Hooks", slug: "hooks" },
+        ]
+      : undefined,
+  })),
+  "/api",
+  hrefFor("/api", entry.id),
+);
+---
+
+<DocsLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  section="API"
+  sidebar={sidebar}
+  headings={headings}
+>
+  <Content />
+</DocsLayout>

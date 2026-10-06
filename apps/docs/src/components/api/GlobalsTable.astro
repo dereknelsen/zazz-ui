@@ -1,0 +1,16 @@
+---
+import { globalAttributes } from "../../lib/api/foundations.ts";
+import Table from "./Table.astro";
+---
+
+<Table caption="Global attributes" columns={["Attribute", "Values", "What it does"]}>
+  {
+    globalAttributes().map((a) => (
+      <tr>
+        <td><code>{a.name}</code></td>
+        <td>{a.values.length ? a.values.map((v) => <code>{v} </code>) : "free value"}</td>
+        <td>{a.description}</td>
+      </tr>
+    ))
+  }
+</Table>

@@ -1,0 +1,51 @@
+---
+title: "Signals"
+description: "Reactive component state through state, computed, and effect."
+section: JavaScript
+sectionOrder: 6
+order: 2
+---
+
+Component scripts hold state in signals: reads are tracked, and writes notify what read them. `base/signals.js` wraps the TC39 Signals polyfill, and it is the only module in the kit that imports `signal-polyfill`; when engines ship native signals, one file changes.
+
+```js
+import { state, computed, effect } from "@zazz-ui/core/base/signals.js";
+```
+
+### state
+
+A mutable value, read with `.get()` and written with `.set()`:
+
+```js
+const expanded = state(false);
+expanded.get(); // false
+expanded.set(true);
+```
+
+### computed
+
+A derived value, cached until a dependency changes and recomputed lazily. Keep it pure; it may run at any time.
+
+```js
+const paused = computed(() => expanded.get() || hidden.get());
+```
+
+### effect
+
+A tracked side effect for DOM writes. It runs immediately and again whenever a signal it read changes; re-runs are batched to a microtask, so ten writes in one handler trigger one re-run. The callback may return a cleanup, run before each re-run and on disposal.
+
+```js
+const dispose = effect(() => {
+  node.dataset.paused = String(paused.get());
+});
+
+effect(() => render(count.get()), { signal }); // inside setup(signal): dies with the element
+```
+
+`effect` returns a disposer that also implements `Symbol.dispose`, so TypeScript sources can bind it with `using`.
+
+## Division of labor
+
+DOM events and observers are input adapters: they write into `state`. `computed` holds the pure derivations, which is what the unit tests cover. `effect` is the output adapter: it writes back to the DOM.
+
+Timers, transition choreography, and DOM construction stay imperative, and the DOM itself remains the source of truth for element lists.

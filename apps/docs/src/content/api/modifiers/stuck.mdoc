@@ -1,0 +1,23 @@
+---
+title: "Stuck"
+description: "--<utility>--stuck: a value while the nearest sticky ancestor is stuck (experimental)."
+section: Modifiers
+sectionOrder: 2
+order: 4
+---
+
+{% callout type="warning" title="Experimental" %}
+Container scroll-state queries are native in Chromium only. Elsewhere `index.js` loads a small polyfill (`base/scroll-state.js`) that measures sticky containers on scroll and writes the stuck sides to `data-ui-stuck`. Markup is the same either way.
+{% /callout %}
+
+A sticky element (`--position: sticky`, or raw `position: sticky`) is a scroll-state container. While it is stuck to the side named by `--stuck-state` on it (`top` by default; also `right`, `bottom`, `left`, and the logical sides), `--<utility>--stuck` applies on its **descendants**: a container query never matches the container itself, so the tiers go on a child.
+
+```html
+<header style="--position: sticky; --position--lg: static; --top: 0; --z: 10">
+  <div style="--bg: transparent; --bg--stuck: var(--color-background); --shadow--stuck: var(--shadow-md)">
+    …
+  </div>
+</header>
+```
+
+`stuck` ranks below every other state (`--bg--hover` beats `--bg--stuck`), has no `--group-*` form, and `--stuck-state` takes no tiers: switch `--position` at a breakpoint to drop the state there. `<ui-debug>` flags an unknown side, a tiered `--stuck-state`, a `--*--stuck` on the sticky element itself, and a group form.

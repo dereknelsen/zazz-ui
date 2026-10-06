@@ -1,20 +1,27 @@
 # Zazz docs
 
-The documentation site for the [Zazz Design Framework](../../packages/core): Next.js App Router and fumadocs.
+The documentation site for the [Zazz Design Framework](../../packages/core): Astro 7, Markdoc content, Pagefind search, styled with Zazz itself.
 
-The kit itself lives in [`packages/core`](../../packages/core) (`@zazz-ui/core`). This app consumes it as a workspace dependency:
+## How it fits together
 
-- Component pages embed live previews via `<Preview src="button/default" />` (MDX). The preview server component reads the canonical example HTML, component CSS, and emitted JS straight from the installed package (`lib/zazz-assets.ts`), so docs stay in sync with the source.
-- The `/zazz/[...path]` route serves the package `src/` tree raw (`/zazz/index.css`, `/zazz/index.js`, `/zazz/primitives/**`) for the preview iframes without copying into `public/` or bundling.
+- **Content** is `.mdoc` under `src/content/`: `docs/` (guides), `api/` (reference), `blog/`. Frontmatter `section` / `order` / `sectionOrder` drive the sidebars (`src/lib/sidebar.ts`).
+- **The API reference is generated.** `src/lib/api/*` reads the kit's own data — the utility table (`@zazz-ui/core/base/utilities.js`), the manifest, the editor JSON (`editor/*.json`), and each script's header — and the Markdoc tags `{% utilities %}`, `{% attributes %}`, `{% hooks %}`, `{% examples %}`, `{% behavior %}`, `{% tokens %}`, `{% switches %}`, `{% roles %}`, `{% globals %}` render it. Tests fail when a utility or primitive has no page or a hook lands nowhere.
+- **Previews** (`{% preview src="button/button" /%}`) render a kit fragment in an isolated iframe and show the same string as code; the iframe's head is the kit's `buildHead()`.
+- **`/zazz/*`** (`src/pages/zazz/[...path].ts`) serves the installed kit's `src/` and `dist/`; the site's own `<head>` is `buildHead()` too (`src/lib/head.ts`).
+- **Playground** (`/playground/`): Monaco over a sandboxed iframe, code in the URL hash.
+- **LLM endpoints**: `/llms.txt`, `/llms-full.txt`, and an `index.md` twin next to every page (`src/lib/llms.ts`).
 
 ## Development
 
-From the monorepo root:
+From the repo root, after `vp install` and `vp run core#build` (the site links `packages/core/dist` in production builds and the kit's `src/` in dev):
 
 ```bash
-pnpm dev            # builds @zazz-ui/core first, then runs next dev
+vp run docs#dev      # astro dev at localhost:4321 (search uses the last build's index)
+vp run docs#build    # static site in dist/
+vp run docs#preview
+vp run docs#test     # the lib unit tests and the content coverage tests
+vp run docs#links    # broken internal links in dist/
+vp run docs#check    # tsc --noEmit (astro check does not support TypeScript 7)
 ```
 
-The previews load the package emitted JS. If you are editing kit scripts, run `vp run ui#dev` (tsc --watch) in a second terminal.
-
-Other scripts (run in this directory or via `vp run docs#<script>`): `build`, `start`, `types:check`.
+Hosting needs one header: `Access-Control-Allow-Origin: *` on `/zazz/*`, because the playground's sandboxed iframe loads the kit's module scripts cross-origin. `vercel.json` sets it for Vercel; `astro.config.ts` sets it for dev and preview.

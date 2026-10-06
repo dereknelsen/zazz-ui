@@ -1,0 +1,108 @@
+/*
+ * site.css — the docs site's own rules. Everything the kit's utilities can
+ * express is written in markup; this file holds only what needs a selector:
+ * code blocks (Shiki's dual-theme output), state the client sets (`aria-current`
+ * in the table of contents), and the preview frame's loading transition.
+ */
+
+@layer overrides {
+  /* Shiki emits both palettes as custom properties on the <pre>; follow the color scheme.
+     Tokens take only their color: the background belongs to the block. */
+  pre.astro-code {
+    display: block;
+    max-block-size: 20lh;
+    padding: var(--space-sm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    line-height: var(--leading-sm);
+    overflow: auto;
+    tab-size: 2;
+    white-space: pre-wrap;
+    text-wrap-mode: wrap;
+    word-break: break-all;
+    color: light-dark(var(--shiki-light), var(--shiki-dark));
+    background-color: light-dark(var(--shiki-light-bg), var(--shiki-dark-bg));
+  }
+
+  .astro-code span {
+    color: light-dark(var(--shiki-light), var(--shiki-dark));
+  }
+
+  /* The kit's reset draws every <code> as an inline chip (and keeps it on one line);
+     inside a block the <code> is just the lines. */
+  pre.astro-code > code {
+    --code-display: block;
+    --code-background: transparent;
+    --code-border: 0;
+    --code-padding-inline: 0;
+    --code-padding-block: 0;
+    --code-radius: 0;
+    --code-color: inherit;
+    font-size: inherit;
+    white-space: inherit;
+  }
+
+  [data-ui~="prose"] :not(pre) > code {
+    padding: 0.1em 0.35em;
+    border-radius: var(--radius-sm);
+    background: var(--color-muted);
+    font-size: 0.9em;
+  }
+
+  [data-toc] a[aria-current="true"] {
+    color: var(--color-foreground);
+  }
+
+  [data-preview-frame] iframe {
+    display: block;
+    inline-size: 100%;
+    border: 0;
+    color-scheme: normal;
+    transition: opacity 0.2s;
+  }
+
+  [data-preview-frame]:not([data-loaded]) iframe {
+    opacity: 0;
+  }
+}
+
+@layer overrides {
+  [data-preview-frame][data-fullscreen] {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    border-radius: 0;
+  }
+
+  [data-preview-frame][data-fullscreen] iframe {
+    block-size: 100%;
+  }
+}
+
+@layer overrides {
+  /* Reference tables: long token values wrap instead of forcing a scroll. */
+  [data-ui~="table"] code {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+
+@layer overrides {
+  /* The playground's formatting indicator. */
+  [data-spin] {
+    animation: zazz-spin 0.9s linear infinite;
+  }
+
+  @keyframes zazz-spin {
+    to {
+      rotate: 1turn;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-spin] {
+      animation: none;
+    }
+  }
+}

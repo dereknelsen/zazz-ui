@@ -1,0 +1,47 @@
+---
+title: "Hotkeys"
+description: "Parse and bind keyboard shortcuts with platform-aware modifiers."
+section: JavaScript
+sectionOrder: 6
+order: 4
+---
+
+`base/hotkeys.js` turns `"mod+k"`-style specs into structured hotkeys and matches them against keyboard events. It has no dependencies.
+
+```js
+import { bindHotkey } from "@zazz-ui/core/base/hotkeys.js";
+
+bindHotkey("mod+k", () => document.querySelector("#search")?.showModal());
+```
+
+`bindHotkey` adds a document-level listener and returns `true` for a valid spec, `false` otherwise. On a match it calls `preventDefault()` before your callback, ignores held-key repeats, and skips events already marked `defaultPrevented`. Pass an `AbortSignal` to unbind; inside a `ZazzElement`, the `setup(signal)` signal ties the shortcut to the element's lifetime.
+
+## The spec grammar
+
+Case-insensitive tokens joined with `+`. Every token but the last is a modifier; the last is compared with `KeyboardEvent.key`.
+
+| Token | Meaning |
+| --- | --- |
+| `mod` | Meta on Apple platforms, Control elsewhere |
+| `ctrl`, `control` | Control |
+| `alt`, `option` | Alt |
+| `shift` | Shift |
+| `meta`, `cmd`, `super` | Meta |
+| final token | the key: `k`, `enter`, `escape`, `arrowdown`, `/` |
+
+Modifier state must match exactly: `mod+k` does not fire on `mod+shift+k`. Single letters match case-insensitively, and neither spelling implies Shift. An unknown modifier makes the whole spec invalid.
+
+A bare key (`"escape"`, `"/"`) is suppressed while focus is in an input, textarea, select, or editable region; modified shortcuts still fire there, so `mod+enter` can submit a form.
+
+## Lower-level pieces
+
+```js
+import { parseHotkey, matchesHotkey, isEditableTarget, isBareKey } from "@zazz-ui/core/base/hotkeys.js";
+
+const hotkey = parseHotkey("mod+shift+p");
+menu.addEventListener("keydown", (event) => {
+  if (matchesHotkey(event, hotkey)) openPalette();
+});
+```
+
+`parseHotkey` returns a structured object or `null`; `matchesHotkey` tests an event against it; `isEditableTarget` and `isBareKey` are the two guards `bindHotkey` applies.

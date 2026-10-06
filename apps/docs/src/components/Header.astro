@@ -1,0 +1,179 @@
+---
+import { Menu, X } from "@lucide/astro";
+import { links, nav } from "../site.config.ts";
+import GithubIcon from "./GithubIcon.astro";
+import Logo from "./Logo.astro";
+import Search from "./Search.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => path === href || path.startsWith(href);
+---
+
+<header
+  data-ui="layout"
+  data-ui-persist="header"
+  style="
+    --position: sticky;
+    --top: 0;
+    --z: 20;
+    --py: 2;
+    --bg: var(--color-background);
+    --border-b: 1;
+  "
+>
+  <div
+    style="
+      --display: flex;
+      --items: center;
+      --gap: 1;
+    "
+  >
+    <a
+      href="/"
+      aria-label="Zazz home"
+      style="
+        --display: inline-flex;
+        --items: center;
+        --mr: 3;
+        --text: var(--color-foreground);
+        --opacity--hover: 0.8;
+        --transition: opacity var(--default-transition-duration) var(--default-transition-timing-function);
+      "
+    >
+      <Logo size={20} variant="mark" />
+    </a>
+
+    <nav
+      aria-label="Primary"
+      data-ui="navigation-menu"
+      style="
+        --display: none;
+        --display--md: inline-flex;
+      "
+    >
+      <menu data-navigation-menu-slot="list">
+        {
+          nav.map((item) => (
+            <li data-navigation-menu-slot="item">
+              <a
+                href={item.href}
+                data-ui="button"
+                data-button-variant="ghost"
+                aria-current={isCurrent(item.href) ? "page" : undefined}
+                style=`
+                  isCurrent(item.href)
+                    ? undefined
+                    : "--ui-button-text: var(--color-muted-foreground)"
+                `
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </menu>
+    </nav>
+
+    <div
+      style="
+        --display: flex;
+        --items: center;
+        --gap: 1;
+        --ml: auto;
+      "
+    >
+      <Search />
+      <a
+        href={links.github}
+        data-ui="button"
+        data-button-variant="ghost"
+        data-button-size="icon"
+        aria-label="Zazz on GitHub"
+        rel="noopener"
+      >
+        <GithubIcon size={16} />
+      </a>
+      <div style="--display: none; --display--md: block"><ThemeToggle name="theme-header" /></div>
+
+      <button
+        data-ui="button"
+        data-button-variant="ghost"
+        data-button-size="icon"
+        type="button"
+        command="show-modal"
+        commandfor="site-menu"
+        aria-label="Open menu"
+        style="
+          --display: inline-flex;
+          --display--md: none;
+        "
+      >
+        <Menu size={18} aria-hidden="true" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<dialog
+  id="site-menu"
+  data-ui="dialog mobile-menu"
+  data-dialog-size="screen"
+  data-mobile-menu-animation="slide-right"
+  closedby="any"
+  style="--border-width: 0"
+>
+  <div data-mobile-menu-slot="viewport">
+    <div data-mobile-menu-slot="header">
+      <Logo size={18} />
+      <button
+        data-ui="button"
+        data-button-variant="ghost"
+        data-button-size="icon"
+        type="button"
+        commandfor="site-menu"
+        command="close"
+        aria-label="Close menu"
+      >
+        <X size={18} aria-hidden="true" />
+      </button>
+    </div>
+    <div data-mobile-menu-slot="body">
+      <nav aria-label="Menu" style="--display: flex-col; --gap: 1">
+        {
+          nav.map((item) => (
+            <a
+              href={item.href}
+              data-ui="button"
+              data-button-variant={isCurrent(item.href) ? "muted" : "ghost"}
+              aria-current={isCurrent(item.href) ? "page" : undefined}
+              style="--justify: start; --w: 100%"
+            >
+              {item.label}
+            </a>
+          ))
+        }
+        <a
+          href={links.github}
+          data-ui="button"
+          data-button-variant="ghost"
+          rel="noopener"
+          style="--justify: start; --w: 100%; --gap: 2"
+        >
+          <GithubIcon size={16} /> GitHub
+        </a>
+      </nav>
+    </div>
+    <div
+      data-mobile-menu-slot="footer"
+      style="
+        --display: flex;
+        --items: center;
+        --justify: space-between;
+      "
+    >
+      <span data-ui="text-sm" style="--text: var(--color-muted-foreground)">Theme</span>
+      <ThemeToggle name="theme-menu" />
+    </div>
+  </div>
+</dialog>

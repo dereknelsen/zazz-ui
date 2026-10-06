@@ -1,0 +1,47 @@
+---
+/** `{% utilities section="spacing" /%}`: the utilities of one section, from the kit's table. */
+import { sectionById } from "../../lib/api/utility-sections.ts";
+import { utilityRows } from "../../lib/api/utilities.ts";
+import Table from "./Table.astro";
+
+interface Props {
+  section: string;
+}
+const section = sectionById(Astro.props.section);
+if (!section) throw new Error(`{% utilities %}: unknown section "${Astro.props.section}"`);
+const rows = utilityRows(section.utilities);
+const tierLabel = (tiers: string[]) =>
+  tiers.length === 0 ? "—" : tiers.map((t) => (t === "breakpoints" ? "breakpoints" : "states")).join(", ");
+---
+
+<Table caption={`${section.title} utilities`} columns={["Utility", "Writes", "Value", "Tiers", "Notes"]}>
+  {
+    rows.map((row) => (
+      <tr>
+        <td><code>--{row.name}</code></td>
+        <td><code>{row.properties}</code></td>
+        <td>{row.value}</td>
+        <td>{tierLabel(row.tiers)}</td>
+        <td>
+          {row.keywords.length > 0 && (
+            <span>
+              Keywords: {row.keywords.map((k, i) => (
+                <>
+                  <code>{k}</code>
+                  {i < row.keywords.length - 1 ? ", " : ""}
+                </>
+              ))}
+              {(row.tierOnly || row.pseudo) && "; "}
+            </span>
+          )}
+          {row.tierOnly && <span>works tier-only{row.pseudo ? "; " : ""}</span>}
+          {row.pseudo && (
+            <span>
+              <code>--before-{row.name}</code> / <code>--after-{row.name}</code>
+            </span>
+          )}
+        </td>
+      </tr>
+    ))
+  }
+</Table>

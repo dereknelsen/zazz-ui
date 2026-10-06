@@ -1,0 +1,26 @@
+---
+title: "States"
+description: "--<utility>--<state>: a value while the element is in that state."
+section: Modifiers
+sectionOrder: 2
+order: 1
+---
+
+Color and effects utilities take a state tier: `--bg: var(--color-background); --bg--hover: var(--color-muted)`. A state beats a breakpoint on the same utility, and the states rank in a fixed order, highest first:
+
+| State | Matches |
+| --- | --- |
+| `starting` | the element's `@starting-style`; see [starting](/api/modifiers/starting/) |
+| `disabled` | `:disabled`, `[aria-disabled="true"]` |
+| `active` | `:active` |
+| `focus-visible` | `:focus-visible` |
+| `focus-within` | `:focus-within` |
+| `hover` | `:hover`, only where the device can hover |
+| `checked` | `:checked`, `[aria-checked="true"]` |
+| `open` | `[open]`, `:popover-open`, `[aria-expanded="true"]` |
+| `stuck` | the nearest sticky container is stuck; see [stuck](/api/modifiers/stuck/) |
+
+Two consequences:
+
+- **A tier needs a base.** `--text--hover: red` alone does nothing on a plain element; write the base first. The utilities that work tier-only (opacity, the transforms, shadow and the ring utilities, and a handful of layout utilities with a natural default) are flagged in the [utility tables](/api/utilities/).
+- **A utility on a primitive flattens its states.** `--bg: red` on a button is red on hover too, because the utility outranks the button's own `:hover` rule. To keep the primitive's behavior, set its state hook instead: `--ui-button-bg--hover`.

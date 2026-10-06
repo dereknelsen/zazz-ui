@@ -1,0 +1,22 @@
+---
+import { switches } from "../../lib/api/foundations.ts";
+import Table from "./Table.astro";
+---
+
+<Table caption="Switches" columns={["Token", "Effect"]}>
+  {
+    switches().map((s) => (
+      <tr>
+        <td>
+          {s.tokens.map((t, i) => (
+            <>
+              <code>data-ui="{t}"</code>
+              {i < s.tokens.length - 1 ? " " : ""}
+            </>
+          ))}
+        </td>
+        <td>{s.description}</td>
+      </tr>
+    ))
+  }
+</Table>

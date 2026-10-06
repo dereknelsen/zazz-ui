@@ -1,0 +1,30 @@
+---
+title: "Navigation"
+description: "Opt-in in-page navigation with explicit persistence."
+section: JavaScript
+sectionOrder: 6
+order: 6
+---
+
+Pages navigate normally by default, and the kit animates full loads with CSS cross-document view transitions (`base/_view-transitions.css`). Opt into in-page navigation when state must survive a page change: a toast stack, a playing video, an open mini-cart.
+
+```html
+<html data-ui-navigation="swap">
+  …
+  <body>
+    <header>…</header>
+    <main>…</main>
+    <ui-toaster data-ui-persist="toaster"></ui-toaster>
+  </body>
+</html>
+```
+
+With `data-ui-navigation="swap"` on both the current and the destination page, `base/navigation.js` fetches the destination and swaps the whole `<body>` in place, inside a view transition. The browser still owns the URL and history: one `navigate` listener covers link clicks, back/forward, and programmatic navigations.
+
+## Persistence is explicit
+
+Nothing survives a swap unless it carries `data-ui-persist="<id>"` on both pages. Then the live element takes the new one's place (with `moveBefore()` where supported, so it keeps its state and its `ZazzElement` setup). Everything else comes from the new page, so headers, footers, and current-page links are never stale.
+
+Reloads, hash changes, downloads, and form posts are never intercepted. `<ui-debug>` lists the persisted elements on each page and warns about a missing or duplicate id, nested persisted elements, and `data-ui-persist` on a page without the opt-in.
+
+Content-scoped modules re-scan the new body through the [refresh registry](/api/javascript/custom-elements/).

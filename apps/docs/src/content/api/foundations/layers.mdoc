@@ -1,0 +1,43 @@
+---
+title: "Cascade layers"
+description: "Layer order decides what wins, so nothing in the kit needs specificity tricks."
+section: Foundations
+sectionOrder: 1
+order: 4
+---
+
+The kit declares its layers once, in `base/_layers.css`, and every stylesheet writes into one of them:
+
+```css
+@layer variables, reset, vendors, legacy, ui, overrides;
+
+@layer legacy {
+  @layer imports, components, utilities, migrations;
+}
+
+@layer ui {
+  @layer components, plugins, utilities;
+}
+```
+
+| Layer | Holds |
+| --- | --- |
+| `variables` | tokens and every `--ui-*` hook default |
+| `reset` | the element reset and the typography roles |
+| `vendors` | third-party CSS you import (Embla, a map widget) |
+| `legacy.*` | an existing app's stylesheets during a migration, in the order they used to cascade |
+| `ui.components` | the primitives |
+| `ui.plugins` | kit additions that extend a primitive |
+| `ui.utilities` | style utilities and switches, at zero specificity |
+| `overrides` | your rules; they beat everything above |
+
+A later layer wins regardless of selector specificity, so a utility beats a primitive rule without `!important`, and a one-line rule in `overrides` beats a utility. Never import a stylesheet into bare `legacy` or `ui`: un-sublayered rules form an implicit final sublayer that outranks the named ones.
+
+## Importing your own CSS
+
+```css
+@import "./brand.css" layer(overrides);
+@import "./old-app.css" layer(legacy.imports);
+```
+
+Unlayered CSS outranks every layer, so the kit keeps nothing unlayered. Import a legacy stylesheet into `legacy.*` rather than leaving it bare; left bare, it keeps winning over the kit until you move the rules.

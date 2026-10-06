@@ -1,0 +1,28 @@
+---
+title: "Breakpoints"
+description: "Five named thresholds in ch, read from the nearest inline-size container."
+section: Foundations
+sectionOrder: 1
+order: 3
+---
+
+A breakpoint tier (`--grid-cols--md: 3`) applies at or above a threshold measured in `ch` of the nearest inline-size container's font. The thresholds answer "what text layout fits here?", so a narrower face or a smaller font reaches each one earlier.
+
+| Breakpoint | Threshold | About (system font, 16px) | Fits |
+| --- | --- | --- | --- |
+| `sm` | 40ch | 404px | the narrowest comfortable line |
+| `md` | 65ch | 656px | one reading measure |
+| `lg` | 90ch | 909px | two 45ch columns |
+| `xl` | 120ch | 1210px | three 40ch columns |
+| `2xl` | 150ch | 1515px | two 75ch measures |
+
+## Which container answers
+
+The reset makes `html`, `body`, `main`, `header`, `footer`, `section`, and `article` inline-size containers, so page-level markup responds to the page. Inside a [layout](/api/foundations/layout/), each band child is a container, so tiers inside a band follow the band. Mark anything else (a card, a sidebar, a slot) with the `container` switch (`data-ui="container"`) and the tiers inside it follow its width.
+
+Two rules follow from how container queries work:
+
+- An element never queries itself. A container's own tiers read the container above it.
+- A container cannot size itself from its content, so give it a definite or stretched width.
+
+Tiers are mobile-first: `--display: none; --display--md: flex` hides below `md` and shows from `md` up. Color utilities take breakpoint tiers too, and a state still beats a breakpoint (`--bg--md: black; --bg--hover: gray` is gray on hover at any width).

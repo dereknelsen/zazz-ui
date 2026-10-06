@@ -1,0 +1,88 @@
+---
+title: "Editor and linting"
+description: "The VS Code extension, the ESLint plugin, <ui-debug>, and custom data for other editors."
+section: "Tooling"
+sectionOrder: 4
+order: 0
+---
+
+The same audit runs in four places: the browser console (`<ui-debug>`), the editor (the language server), the command line (the ESLint plugin), and the commit hook. They share one implementation, `audit-core.ts` in the kit, so they report the same finding on the same range.
+
+## `<ui-debug>`
+
+Development only. Add it to the page body and it audits every element's `style` and `data-*` attributes once, then again on each mutation, logging `[ui-debug]` warnings: an unknown utility, a wrong value mode, a tier without a base, a modifier the family lacks, a utility that flattens a state a hook covers, a raw property shadowing a utility, a whitespace form the gates cannot match, and a `data-<name>-*` attribute outside its identity. It also lists the elements persisted across navigations and flags misuse.
+
+```html
+<ui-debug data-debug-domains="localhost, staging.example.com"></ui-debug>
+```
+
+On a hostname not in the list it removes itself and logs once, so it can ship in a template without reaching production users. It reads identities and hooks from the page's own stylesheets, so it needs no manifest and works with a partial vendored kit.
+
+The [playground](/playground/) runs both inside its editor: findings appear as Monaco markers, Shift+Alt+F applies the same formatter, pasted markup is formatted on paste, and ⌘S / Ctrl+S formats and writes the share link.
+
+## VS Code and Cursor
+
+The Zazz extension runs the kit's code in a language server. It is not on the Marketplace yet; build it from the repo and install the `.vsix`:
+
+```bash
+vp run zazz-vscode#package
+code --install-extension packages/vscode/dist/zazz.vsix
+```
+
+| Feature | What you get |
+| --- | --- |
+| Diagnostics | the `<ui-debug>` audit as you type, plus a note when the head block does not load a primitive the page uses |
+| Completions | utility names, then only the tiers a utility takes; `--group-` and pseudo forms; hooks for the identities in reach; values with resolved tokens; `data-ui` identities, presets, and `ui-*` tags |
+| Hover and inlay hints | what a utility sets and when its tier applies; `--p: 4` ≈ 0.9–1rem; `--px--md` ≥ 65ch; a token's resolved value; a hook's default |
+| Formatting | `source.fixAll.zazz` on save writes every `style` in cascade order, one utility per line |
+| Code actions | quick fixes from the audit; **Organize imports** sorts kit stylesheets into cascade order |
+| Auto-imports | on a page with a `<!-- zazz:head {…} -->` block, completing an identity adds its primitive to the head |
+| Highlighting | utility families, tiers, prefixes, hooks, identities; color swatches before `var(--color-*)` |
+| Snippets and Emmet | `zazz-<example>` for every kit example; `ui-card>h2` with the repo's `emmet.extensionsPath` |
+| Templates | **Zazz: New page…**: blank, from a primitive, swap-navigation, or a primitive fragment |
+
+Settings: `zazz.languages`, `zazz.diagnostics.enable`, `zazz.inlayHints.enable`, `zazz.colorSwatches.enable`, `zazz.templates.base`. Add `"source.fixAll.zazz": "explicit"` to `editor.codeActionsOnSave`.
+
+### Templating languages
+
+The features run in plain HTML by default. Add a language id to `zazz.languages` and they run in that language's files too: the server masks the language's own expressions before parsing, so `{expr}`, `<%= %>`, `@Model.Name`, and `{{ name }}` are never read as markup or as CSS, and nothing inside them is reported, completed, or reformatted.
+
+```json
+{ "zazz.languages": ["html", "astro", "razor", "erb", "phoenix-heex"] }
+```
+
+Known ids: `astro`, `vue`, `svelte`, `razor` / `aspnetcorerazor`, `asp` / `aspx`, `erb`, `php`, `phoenix-heex` / `html-eex` / `eex`, `elixir` (the `~H` sigils), `handlebars`, `mustache`, `twig`, `jinja` / `jinja-html`, `nunjucks`, `liquid`, `django-html`, `blade`. Markup inside an Astro expression (`{items.map((i) => <li>…</li>)}`) is still audited. JSX and TSX are not on the list: `style` is an object there, not a string, so the utilities would need a different parser.
+
+## Other editors
+
+The language server speaks standard LSP over stdio (`node packages/vscode/dist/server.cjs --stdio` after `vp run zazz-vscode#build`), but it is not yet published as a standalone package or documented for Neovim, Zed, or Helix. Until it is, the kit ships VS Code custom-data files that any editor supporting the format can load for flat completions: `editor/zazz.html-data.json` (tags, `data-ui` tokens, every `data-<name>-*` attribute with its values) and `editor/zazz.css-data.json` (every utility, tier, and hook).
+
+```json
+{
+  "html.customData": ["./zazz/editor/zazz.html-data.json"],
+  "css.customData": ["./zazz/editor/zazz.css-data.json"]
+}
+```
+
+## ESLint
+
+`@zazz-ui/eslint-plugin` wraps the audit as rules for the html-eslint language, one rule per finding plus `style-format`, the fixable formatter (cascade order, one utility per line, `--px:6` normalized to `--px: 6`).
+
+```ts
+// eslint.config.ts
+import html from "@html-eslint/eslint-plugin";
+import { defineConfig } from "eslint/config";
+import zazz from "@zazz-ui/eslint-plugin";
+
+export default defineConfig([
+  {
+    files: ["**/*.html"],
+    plugins: { html },
+    language: "html/html",
+    extends: [zazz.configs.recommended],
+    rules: { "zazz/style-format": "error" },
+  },
+]);
+```
+
+`configs.recommended` sets every `zazz/*` rule to `warn`. Run it with `eslint "**/*.html"`; `eslint --fix` applies the formatter. In this repo that is `vp run lint:html` and `vp run fmt:html`, and the staged-files hook formats HTML on commit. The plugin is private to the monorepo for now.

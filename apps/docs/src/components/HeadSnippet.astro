@@ -1,0 +1,33 @@
+---
+/**
+ * `{% head mode="cdn" /%}`: the kit's real `buildHead()` output as a code
+ * block, so the docs never hand-write a `<head>` that drifts from the contract.
+ */
+import { Code } from "astro:components";
+import { buildHead } from "@zazz-ui/core/head";
+import { kitVersion } from "../lib/kit.ts";
+
+interface Props {
+  /** `local` links `./zazz/…` (a vendored copy); `cdn` pins jsDelivr to the installed version. */
+  mode?: "local" | "cdn";
+  /** Load only these primitives' files (the granular grain). */
+  primitives?: string;
+  scripts?: boolean;
+  theme?: boolean;
+  fonts?: boolean;
+}
+const { mode = "local", primitives, scripts = true, theme = true, fonts = true } = Astro.props;
+const list = primitives?.split(/[\s,]+/).filter(Boolean);
+const themes = { light: "github-light", dark: "github-dark" } as const;
+const head =
+  mode === "cdn"
+    ? buildHead({
+        cdn: { version: kitVersion(), ...(list ? { primitives: list } : {}) },
+        scripts,
+        theme,
+        fontDisplay: fonts ? "swap" : false,
+      })
+    : buildHead({ scripts, theme, fontDisplay: fonts ? "swap" : false, ...(list ? { primitives: list } : {}) });
+---
+
+<Code code={head} lang="html" themes={themes} defaultColor={false} wrap />

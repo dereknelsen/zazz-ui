@@ -1,0 +1,47 @@
+---
+/**
+ * Markdoc headings: the semantic tag with a smaller role (the native h2–h3
+ * sizes run large for documentation). The text is its own anchor, so the
+ * heading's accessible name stays the text; a link icon appears on hover.
+ */
+import { Link } from "@lucide/astro";
+
+interface Props {
+  level: 1 | 2 | 3 | 4 | 5 | 6;
+  id?: string;
+}
+const { level, id } = Astro.props;
+const Tag = `h${level}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+const role = { 1: "text-h4", 2: "text-h6", 3: "text-lg", 4: "text-md", 5: "text-md", 6: "text-sm" }[level];
+---
+
+<Tag id={id} data-ui={`${role} group`}>
+  {
+    id ? (
+      <a
+        href={`#${id}`}
+        style="
+          --display: inline-flex;
+          --items: center;
+          --gap: 2;
+          --text: inherit;
+          --text-decoration: none;
+        "
+      >
+        <slot />
+        <Link
+          size={14}
+          aria-hidden="true"
+          style="
+            --opacity: 0;
+            --group-opacity--hover: 1;
+            --group-opacity--focus-within: 1;
+            --transition: opacity 0.15s;
+          "
+        />
+      </a>
+    ) : (
+      <slot />
+    )
+  }
+</Tag>

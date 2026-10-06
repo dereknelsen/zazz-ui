@@ -1,0 +1,75 @@
+---
+title: "Installation"
+description: "Own the files with the CLI, load them from a CDN, or install the package with a bundler."
+section: "Install"
+sectionOrder: 2
+order: 0
+---
+
+Zazz installs three ways. All produce the same kit; they differ in who owns the files.
+
+| | Files live | Updates | Best for |
+| --- | --- | --- | --- |
+| **CLI** | in your repo (`zazz/`) | three-way merge with the published version | apps you will customize and keep |
+| **CDN** | on jsDelivr, pinned | change a version string | prototypes, docs, CMS pages |
+| **npm** | in `node_modules` | `pnpm update` | bundled apps that treat the kit as a dependency |
+
+## CLI
+
+The `zazz-ui` CLI copies primitives from `@zazz-ui/core` into your project so you own the code, and records where every file came from so later updates merge instead of overwrite.
+
+```bash
+pnpm dlx zazz-ui init
+pnpm dlx zazz-ui add button card dialog
+```
+
+`init` vendors the base platform into `zazz/`: the layers, tokens, reset, typography, the generated utilities, the core runtime scripts, an `index.css` and `index.js` pair, and a `head.html` snippet to paste into your `<head>`. It also writes `zazz.json`, the kit version plus a hash of every vendored file's original bytes. Flags: `--dir <path>`, `--ts` (TypeScript sources instead of emitted JavaScript), `--legacy <path>` (wire an existing stylesheet into the `legacy` layer), `--no-fonts`, `--no-theme-script`.
+
+`add <primitive…>` resolves dependencies (adding `combobox` brings `select`, `fields`, `popover`, `button`, `kbd`, and `badge`), copies the files at your recorded version, and inserts the imports at the right cascade position. `--examples` also copies the example fragments.
+
+`update [@version] [names…]` moves the project, or the named primitives, to a new version. Because `zazz.json` knows which files you edited, untouched files take the new version silently, your edits survive where upstream did not move, and non-overlapping changes merge. On a real conflict the CLI asks you to choose: write conflict markers, keep yours, take theirs, or skip (`--markers`, `--keep`, `--theirs` answer for non-interactive runs). The relevant slice of the changelog prints first, breaking changes flagged. `diff` shows the same read-only.
+
+There is no runtime dependency on the package. Edit the files, delete what you do not need, commit them.
+
+{% callout type="warning" title="Unreleased" %}
+0.5 is not on npm yet. `pnpm add @zazz-ui/core`, `zazz-ui init`, and the CDN URLs below resolve to the latest published 0.4 until the 0.5 alpha ships; the snippets pin the version installed with this site.
+{% /callout %}
+
+## CDN
+
+Two requests load the whole kit from jsDelivr: the single-file stylesheet and script. This is the `<head>` the kit's `buildHead()` produces for the installed version:
+
+{% head mode="cdn" /%}
+
+To load only the primitives a page uses, name them. The kit's manifest resolves each primitive's dependencies, and every URL is pinned and carries an integrity hash:
+
+{% head mode="cdn" primitives="button card dialog" /%}
+
+{% callout type="warning" %}
+Always pin an exact version. The import map's integrity hashes are per byte, so `@latest` would break on the next release; unpinned URLs also defeat jsDelivr's permanent caching.
+{% /callout %}
+
+## npm
+
+```bash
+pnpm add @zazz-ui/core
+```
+
+```js
+import "@zazz-ui/core/index.css";
+import "@zazz-ui/core"; // the behavior
+```
+
+The package also exports the single-file bundles (`@zazz-ui/core/zazz.css`, `@zazz-ui/core/zazz.js`), individual files (`@zazz-ui/core/primitives/dialog/dialog.css`, `@zazz-ui/core/base/signals.js`), the editor data (`@zazz-ui/core/editor/*`), and the head builder (`@zazz-ui/core/head`). Bundlers resolve the kit's bare dependencies (`signal-polyfill` and four Embla packages) from `node_modules`, so no import map is needed.
+
+{% callout %}
+Keep the kit's stylesheet out of CSS minifiers that rewrite modern syntax. `@property` registrations, `light-dark()`, and relative `oklch(from …)` colors are load-bearing; the published `dist/zazz.css` is already minified with them intact.
+{% /callout %}
+
+## The head contract
+
+Whichever route you take, a Zazz page's `<head>` has the same parts, in this order: the meta tags, the fonts block, the stylesheet link(s), the import map, a `modulepreload` hint, the interest-invokers polyfill, the module script, and the theme script. `buildHead()` from `@zazz-ui/core/head` writes it; the CLI's `head.html` is that output; this site's own head is too. The theme script must stay inline and last so `data-ui-theme` lands before first paint.
+
+For a vendored copy at `./zazz/`:
+
+{% head /%}

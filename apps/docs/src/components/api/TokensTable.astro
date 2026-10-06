@@ -1,0 +1,40 @@
+---
+/** `{% tokens group="color-roles" /%}`: one token group, with swatches for colors. */
+import { tokenGroup } from "../../lib/api/foundations.ts";
+import Table from "./Table.astro";
+
+interface Props {
+  group: string;
+}
+const group = tokenGroup(Astro.props.group);
+if (!group) throw new Error(`{% tokens %}: unknown group "${Astro.props.group}"`);
+const isColor = group.id.startsWith("color");
+const shown = (t: { value: string; min?: string; max?: string }) =>
+  t.min && t.max && t.min !== t.max ? `${t.min} – ${t.max}` : t.value;
+---
+
+<Table caption={group.title} columns={isColor ? ["", "Token", "Light", "Dark"] : ["Token", "Value"]}>
+  {
+    group.tokens.map((t) => (
+      <tr>
+        {isColor && (
+          <td>
+            <span
+              aria-hidden="true"
+              style={`--display: inline-block; --size: 5; --rounded: var(--radius-sm); --border: 1; --bg: light-dark(${t.light ?? t.value}, ${t.dark ?? t.value})`}
+            />
+          </td>
+        )}
+        <td><code>{t.name}</code></td>
+        {isColor ? (
+          <>
+            <td><code>{t.light ?? t.value}</code></td>
+            <td><code>{t.dark ?? t.value}</code></td>
+          </>
+        ) : (
+          <td><code>{shown(t)}</code></td>
+        )}
+      </tr>
+    ))
+  }
+</Table>

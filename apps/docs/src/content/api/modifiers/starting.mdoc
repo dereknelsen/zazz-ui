@@ -1,0 +1,25 @@
+---
+title: "Starting style"
+description: "--<utility>--starting: the value an element animates in from."
+section: Modifiers
+sectionOrder: 2
+order: 3
+---
+
+`--<utility>--starting` is the element's `@starting-style` value. When the element first renders, or leaves `display: none` (a popover opening, `hidden` removed), it starts there and a `--transition` animates it to its usual value. Without a transition nothing visible happens.
+
+```html
+<div
+  style="
+    --opacity--starting: 0;
+    --opacity: 1;
+    --translate--starting: 0 1rem;
+    --translate: 0;
+    --transition: opacity 0.3s, translate 0.3s;
+  "
+>
+  …
+</div>
+```
+
+It outranks every other state, has no `--group-*` form, and works without a base where the utility has a default (`--opacity`, `--scale`, `--translate`, `--rotate`). The formatter writes it first among its utility's lines.

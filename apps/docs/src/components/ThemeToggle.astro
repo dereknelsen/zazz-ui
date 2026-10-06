@@ -1,0 +1,71 @@
+---
+/**
+ * Light / dark / system, icons only. A stored choice pins `data-ui-theme` on
+ * `<html>` (the kit's head script restores it before first paint); "system"
+ * clears both so the page follows the OS scheme.
+ */
+import { Monitor, Moon, Sun } from "@lucide/astro";
+
+interface Props {
+  /** Radio group name; distinct per instance when the toggle renders twice on a page. */
+  name?: string;
+}
+const { name = "theme" } = Astro.props;
+const options = [
+  { value: "light", label: "Light theme", Icon: Sun },
+  { value: "dark", label: "Dark theme", Icon: Moon },
+  { value: "system", label: "System theme", Icon: Monitor },
+] as const;
+---
+
+<ui-toggle-group role="group" aria-label="Color theme" data-theme-toggle>
+  {
+    options.map(({ value, label, Icon }) => (
+      <label data-ui="toggle" data-toggle-size="icon">
+        <input type="radio" name={name} value={value} aria-label={label} checked={value === "system"} />
+        <Icon size={16} aria-hidden="true" />
+      </label>
+    ))
+  }
+</ui-toggle-group>
+
+<script>
+  const KEY = "theme";
+  const root = document.documentElement;
+
+  function stored(): string {
+    try {
+      const value = localStorage.getItem(KEY);
+      return value === "light" || value === "dark" ? value : "system";
+    } catch {
+      return root.getAttribute("data-ui-theme") ?? "system";
+    }
+  }
+
+  function apply(value: string): void {
+    if (value === "light" || value === "dark") root.setAttribute("data-ui-theme", value);
+    else root.removeAttribute("data-ui-theme");
+    try {
+      if (value === "system") localStorage.removeItem(KEY);
+      else localStorage.setItem(KEY, value);
+    } catch {
+      /* no storage: the choice lasts for this page */
+    }
+  }
+
+  function sync(value: string): void {
+    for (const input of document.querySelectorAll<HTMLInputElement>("[data-theme-toggle] input")) {
+      input.checked = input.value === value;
+    }
+  }
+
+  sync(stored());
+  for (const group of document.querySelectorAll("[data-theme-toggle]")) {
+    group.addEventListener("change", (event) => {
+      const input = event.target;
+      if (!(input instanceof HTMLInputElement)) return;
+      apply(input.value);
+      sync(input.value);
+    });
+  }
+</script>

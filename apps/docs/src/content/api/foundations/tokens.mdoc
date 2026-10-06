@@ -1,0 +1,73 @@
+---
+title: "Tokens"
+description: "The design tokens on :root, with their resolved light and dark values."
+section: Foundations
+sectionOrder: 1
+order: 0
+---
+
+Tokens are custom properties on `:root` in `base/_variables.css`. Primitives read them through `var()`, utilities take them as values, and you theme by redefining them: on `:root` for the whole page, on a subtree for a region. Color roles are `light-dark()` pairs, so `data-ui-theme="dark"` flips every one of them without a second stylesheet.
+
+Three places to change how something looks, narrowest last:
+
+1. **A token on `:root`**: `--radius-multiplier: 0` squares every scaled radius (`--radius-full` and `--radius-none` stay fixed); `--color-primary: light-dark(…, …)` recolors every primary surface.
+2. **A hook on a subtree**: `<nav style="--ui-button-px: 2">` retunes every button inside. Hooks are listed on each primitive's page.
+3. **A utility on one element**: `--bg: var(--color-muted)`, which also flattens the element's states.
+
+## Color roles
+
+Paired surface and text roles. Use these in utilities and CSS so light and dark swap for free. `--color-ring` is the focus ring; `--color-shadow` tints every shadow.
+
+{% tokens group="color-roles" /%}
+
+## Color scales
+
+Fixed shades, 50 to 950, for when a role is not enough. The light theme binds the brand roles at 950 and the dark theme at 50.
+
+{% tokens group="color-scales" /%}
+
+## Overlays
+
+Translucent black (`shade`) and white (`tint`) for scrims and backdrops; `--color-shade-900` is the dialog backdrop.
+
+{% tokens group="color-overlays" /%}
+
+## Spacing
+
+`--spacing` is the unit behind every scale number; the `--space-*` tokens are steps on it. All of them are fluid, so the table shows the range.
+
+{% tokens group="spacing" /%}
+
+## Radius
+
+`xs` to `xl` scale with `--radius-multiplier`; `none` and `full` are fixed. Conventions: `md` for buttons and inputs, `lg` for cards and dialogs, `sm` for badges, `full` for pills.
+
+{% tokens group="radius" /%}
+
+## Shadows and ring
+
+Soft, multi-layer shadows and the focus ring's geometry.
+
+{% tokens group="shadow" /%}
+
+## Type: families, sizes, weights
+
+Fluid sizes. The family tokens are system stacks by default; the head's fonts block loads Geist so a brand can set `--font-family-body: "Geist", var(--font-sans-fallback)`.
+
+{% tokens group="font" /%}
+
+## Type: leading, tracking, rhythm
+
+{% tokens group="leading-tracking" /%}
+
+## Layout widths
+
+Band and component widths in rem, and the article reading measures in ch.
+
+{% tokens group="layout" /%}
+
+## Motion
+
+The spring easing, its duration, and the default transition bundle. `prefers-reduced-motion: reduce` zeroes the duration globally.
+
+{% tokens group="motion" /%}
