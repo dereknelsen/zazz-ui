@@ -4,7 +4,7 @@ description: >-
   Author a new Zazz design-style overlay from a screenshot or reference of a website. Use whenever
   someone wants to "add a design style", "capture this vibe/look as a style", "turn this screenshot
   into a Zazz style", or otherwise codify a reference site's aesthetic (dark SaaS, editorial, brutalist,
-  playful, luxury, etc.) into a reusable overlay under `zazz-pass/design-styles/`. Produces one Markdown
+  playful, luxury, etc.) into a reusable overlay under `.claude/skills/zazz/design-styles/`. Produces one Markdown
   overlay file in the shape `heritage.md` established — an aesthetic direction + page structure expressed
   in Zazz tokens, never a fork of the design system. Start here before hand-writing a new style file.
 ---
@@ -14,14 +14,14 @@ description: >-
 A **design style** is a reusable overlay that sits on top of the Zazz design system. It captures one
 aesthetic direction — the look of a specific reference site — and expresses it in Zazz's vocabulary
 so a generation run can adopt it wholesale. Styles live in
-`zazz-pass/design-styles/{name}.md`. [`base.md`](../zazz-pass/design-styles/base.md) is the generic
-seed; [`heritage.md`](../zazz-pass/design-styles/heritage.md) is the canonical worked example — **read
-it first; every new style mirrors its shape.**
+`.claude/skills/zazz/design-styles/{name}.md`. [`heritage.md`](../zazz/design-styles/heritage.md) is the
+canonical worked example and [`midnight.md`](../zazz/design-styles/midnight.md) a second one — **read
+`heritage.md` first; every new style mirrors its shape.**
 
 **A style is an overlay, not a fork.** `DESIGN.md` (brand tokens, type scale, archetypes) and
 `SKILL.md` (components, cascade, house rules) still govern. A style only sets _direction and rhythm_:
 which tokens to lean on, what mood the type/color/imagery carry, and how sections stack. When a style
-would contradict a house rule (sentence case, semantic tokens, `data-variant`, no hand-rolled CSS),
+would contradict a house rule (sentence case, semantic tokens, `data-<primitive>-variant` presets, no hand-rolled CSS),
 the house rule wins — bake that into the file.
 
 ## When to use
@@ -30,13 +30,14 @@ the house rule wins — bake that into the file.
 - The user names a vibe to codify ("make a brutalist style", "a luxury style like this").
 - You're expanding the `design-styles/` library.
 
-Not for building an actual page — that's `zazz-pass`. This skill only _authors the overlay file_.
+Not for building an actual page — that's the `zazz` skill. This skill only _authors the overlay file_.
 
 ## Workflow
 
-1. **Load the models.** Read [`heritage.md`](../zazz-pass/design-styles/heritage.md) (the shape to
-   mirror), `zazz-pass/DESIGN.md` (color roles, the fluid type scale, the three archetypes, motion),
-   and skim `zazz-pass/SKILL.md` (house rules, cascade, `data-*` conventions). Everything you write
+1. **Load the models.** Read [`heritage.md`](../zazz/design-styles/heritage.md) (the shape to
+   mirror), `.claude/skills/zazz/DESIGN.md` (color roles, the fluid type scale, the three archetypes, motion),
+   and skim `.claude/skills/zazz/SKILL.md` plus `packages/core/AUTHORING.md` (house rules, cascade, the
+   `data-ui` / `data-<primitive>-*` / style-utility channels). Everything you write
    must be sayable in that vocabulary.
 2. **Read the screenshot as evidence — extract the DNA.** Work the checklist below and write down
    concrete observations, not vibes. "Near-black `#0a0a0a` surface, one hot orange accent, oversized
@@ -67,7 +68,7 @@ Not for building an actual page — that's `zazz-pass`. This skill only _authors
 - **Imagery** — photographic or illustrative? Studio cut-outs or in-context/cinematic? Moody or bright?
   Full-bleed or framed? Any grain/duotone/overlay treatment? → layout bands (`--col: layout-full` / `layout-bleed`) + figure radius.
 - **Layout rhythm & density** — centered stack or asymmetric? Dense/catalog or airy/gallery? Card-based
-  or full-bleed sections? Gutters tight or generous? → band system, `--gap-*`, grid utilities.
+  or full-bleed sections? Gutters tight or generous? → band system, `--gap` steps, grid utilities.
 - **Decoration & motifs** — the signature move: oversized ghost numerals, ruled dividers, borders on
   everything, badges, tickers, gradient washes, noise. → tokens/utilities that produce it.
 - **Motion cues** — implied stagger, scroll reveals, marquees, hover states. → `data-reveal-*`,
@@ -85,11 +86,11 @@ Not for building an actual page — that's `zazz-pass`. This skill only _authors
 | Black grotesk, tight, huge hero         | `text-display`/`text-h1` moment, heavy weight, geometric sans                        |
 | Uppercase micro-labels                  | `text-eyebrow` (the only caps; everything else sentence case)                        |
 | Full-bleed cinematic photo w/ text over | `--col: layout-bleed` / `layout-full` band, white overlay text                       |
-| Bordered cards on dark                  | `--color-card` + `1px solid var(--color-border)`, flat surfaces                      |
+| Bordered cards on dark                  | `data-ui="card"` with `--border: 1`, flat surfaces                                   |
 | Big stat numbers                        | `text-display`/`text-h2` numerals in `--color-primary`, `text-eyebrow` labels        |
-| Oversized ghost numerals / watermark    | large type at low opacity via `--color-muted`/tint, `grid-area-pile` overlap         |
+| Oversized ghost numerals / watermark    | large type at low opacity via `--color-muted`/tint, `data-ui="pile"` overlap         |
 | Gradient band / colored section         | brand-scale wash (`--color-primary-600` → `--color-primary-900`)                     |
-| Generous whitespace                     | `--space-xl` (96px) section rhythm, capped `article`/`lg` text                       |
+| Generous whitespace                     | `--py: 24` (the `xl` step) section rhythm, `--max-w: var(--article-lg)` text         |
 | Staggered load / scroll reveals         | `data-reveal` / `data-reveal-each`, `--spring-easing`                                |
 | Left-aligned label + content column     | left-label layout (eyebrow column split by `--color-border`)                         |
 
@@ -116,13 +117,13 @@ noted if the content model doesn't fit).>
 - **<Palette>** — mode, the dominant accent + where it lands, surface tokens, all via role tokens.
 - **<Imagery>** — photographic/illustrative, cinematic/studio, framing, any treatment.
 - **<Atmosphere>** — depth from tokens (washes, grain, borders); surfaces flat, `--shadow-*` reserved.
-- **<Composition>** — band-system tension, asymmetry, `--gap-*` rhythm; the signature decoration/motif.
+- **<Composition>** — band-system tension, asymmetry, `--gap` rhythm; the signature decoration/motif.
 - **<Motion>** — one orchestrated reveal; `data-reveal-*`, `--spring-easing`.
 
 ## Page structure (top to bottom)
 
 <Numbered sections a typical page of this style stacks, each naming real Zazz components/bands
-(`.ui-button data-variant=...`, `.ui-input`, `--color-card`, `<ui-carousel>`, `<ui-layout>` bands). Header →
+(`data-ui="button" data-button-variant="…"`, `data-ui="input"`, `data-ui="card"`, `<ui-carousel>`, `<ui-layout>` bands). Header →
 hero → … → footer. Match the reference's actual section order.>
 
 ## {Signature cues} to weave in
@@ -134,12 +135,12 @@ motifs), plus a reminder of the sentence-case house rule.>
 ## House rules to bake into every style
 
 - **Sentence case** everywhere except `text-eyebrow`. Never instruct uppercase buttons/headings.
-- **Semantic tokens only** — role tokens (`--color-primary`, `--color-muted`, `--color-border`…), `--gap-*`, `text-*`,
+- **Semantic tokens only** — role tokens (`--color-primary`, `--color-muted`, `--color-border`…), spacing steps, `text-*`,
   `--radius-*`. Never hardcode hex, px, or rem in guidance; never name a raw scale step unless a role
   token can't express it.
-- **`data-variant`, not `.ui-button-primary`.** Reference components by their real selector + `data-*` API.
+- **`data-ui="button" data-button-variant="primary"`, never a class.** Reference primitives by identity, preset, and slot (`packages/core/AUTHORING.md`).
 - **No net-new CSS or tokens** in a style file — it composes the existing system, it doesn't extend it.
-- **Dark mode is free** — role tokens auto-swap; never tell a style to hand-write `.dark` overrides.
+- **Dark mode is free** — role tokens auto-swap; never tell a style to hand-write `data-ui-theme="dark"` overrides.
 - **Don't restate DESIGN.md/SKILL.md** — point to them. A style adds _direction_, not documentation.
 
 ## Do / Don't

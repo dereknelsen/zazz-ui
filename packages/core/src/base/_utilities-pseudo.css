@@ -2,6 +2,190 @@
 
 /* Pseudo-element utilities (--before-, --after-) */
 @layer ui.utilities {
+  :where([style*="--before-display:"])::before {
+    display: var(--before-display);
+  }
+
+  :where([style*="--after-display:"])::after {
+    display: var(--after-display);
+  }
+
+  :where([style*="--before-position:"])::before {
+    position: var(--before-position);
+  }
+
+  :where([style*="--after-position:"])::after {
+    position: var(--after-position);
+  }
+
+  :where([style*="--before-p:"])::before {
+    --_before-p-len: var(--before-p);
+    --_before-p-num: var(--before-p);
+    padding: calc(var(--_before-p-len) + var(--_before-p-num) * var(--spacing));
+  }
+
+  :where([style*="--after-p:"])::after {
+    --_after-p-len: var(--after-p);
+    --_after-p-num: var(--after-p);
+    padding: calc(var(--_after-p-len) + var(--_after-p-num) * var(--spacing));
+  }
+
+  :where([style*="--before-px:"])::before {
+    --_before-px-len: var(--before-px);
+    --_before-px-num: var(--before-px);
+    padding-inline: calc(var(--_before-px-len) + var(--_before-px-num) * var(--spacing));
+  }
+
+  :where([style*="--after-px:"])::after {
+    --_after-px-len: var(--after-px);
+    --_after-px-num: var(--after-px);
+    padding-inline: calc(var(--_after-px-len) + var(--_after-px-num) * var(--spacing));
+  }
+
+  :where([style*="--before-py:"])::before {
+    --_before-py-len: var(--before-py);
+    --_before-py-num: var(--before-py);
+    padding-block: calc(var(--_before-py-len) + var(--_before-py-num) * var(--spacing));
+  }
+
+  :where([style*="--after-py:"])::after {
+    --_after-py-len: var(--after-py);
+    --_after-py-num: var(--after-py);
+    padding-block: calc(var(--_after-py-len) + var(--_after-py-num) * var(--spacing));
+  }
+
+  :where([style*="--before-pt:"])::before {
+    --_before-pt-len: var(--before-pt);
+    --_before-pt-num: var(--before-pt);
+    padding-block-start: calc(var(--_before-pt-len) + var(--_before-pt-num) * var(--spacing));
+  }
+
+  :where([style*="--after-pt:"])::after {
+    --_after-pt-len: var(--after-pt);
+    --_after-pt-num: var(--after-pt);
+    padding-block-start: calc(var(--_after-pt-len) + var(--_after-pt-num) * var(--spacing));
+  }
+
+  :where([style*="--before-pb:"])::before {
+    --_before-pb-len: var(--before-pb);
+    --_before-pb-num: var(--before-pb);
+    padding-block-end: calc(var(--_before-pb-len) + var(--_before-pb-num) * var(--spacing));
+  }
+
+  :where([style*="--after-pb:"])::after {
+    --_after-pb-len: var(--after-pb);
+    --_after-pb-num: var(--after-pb);
+    padding-block-end: calc(var(--_after-pb-len) + var(--_after-pb-num) * var(--spacing));
+  }
+
+  :where([style*="--before-pl:"])::before {
+    --_before-pl-len: var(--before-pl);
+    --_before-pl-num: var(--before-pl);
+    padding-inline-start: calc(var(--_before-pl-len) + var(--_before-pl-num) * var(--spacing));
+  }
+
+  :where([style*="--after-pl:"])::after {
+    --_after-pl-len: var(--after-pl);
+    --_after-pl-num: var(--after-pl);
+    padding-inline-start: calc(var(--_after-pl-len) + var(--_after-pl-num) * var(--spacing));
+  }
+
+  :where([style*="--before-pr:"])::before {
+    --_before-pr-len: var(--before-pr);
+    --_before-pr-num: var(--before-pr);
+    padding-inline-end: calc(var(--_before-pr-len) + var(--_before-pr-num) * var(--spacing));
+  }
+
+  :where([style*="--after-pr:"])::after {
+    --_after-pr-len: var(--after-pr);
+    --_after-pr-num: var(--after-pr);
+    padding-inline-end: calc(var(--_after-pr-len) + var(--_after-pr-num) * var(--spacing));
+  }
+
+  :where([style*="--before-inset:"])::before {
+    --_before-inset-len: var(--before-inset);
+    --_before-inset-num: var(--before-inset);
+    inset: calc(var(--_before-inset-len) + var(--_before-inset-num) * var(--spacing));
+  }
+
+  :where([style*="--after-inset:"])::after {
+    --_after-inset-len: var(--after-inset);
+    --_after-inset-num: var(--after-inset);
+    inset: calc(var(--_after-inset-len) + var(--_after-inset-num) * var(--spacing));
+  }
+
+  :where([style*="--before-inset-x:"])::before {
+    --_before-inset-x-len: var(--before-inset-x);
+    --_before-inset-x-num: var(--before-inset-x);
+    inset-inline: calc(var(--_before-inset-x-len) + var(--_before-inset-x-num) * var(--spacing));
+  }
+
+  :where([style*="--after-inset-x:"])::after {
+    --_after-inset-x-len: var(--after-inset-x);
+    --_after-inset-x-num: var(--after-inset-x);
+    inset-inline: calc(var(--_after-inset-x-len) + var(--_after-inset-x-num) * var(--spacing));
+  }
+
+  :where([style*="--before-inset-y:"])::before {
+    --_before-inset-y-len: var(--before-inset-y);
+    --_before-inset-y-num: var(--before-inset-y);
+    inset-block: calc(var(--_before-inset-y-len) + var(--_before-inset-y-num) * var(--spacing));
+  }
+
+  :where([style*="--after-inset-y:"])::after {
+    --_after-inset-y-len: var(--after-inset-y);
+    --_after-inset-y-num: var(--after-inset-y);
+    inset-block: calc(var(--_after-inset-y-len) + var(--_after-inset-y-num) * var(--spacing));
+  }
+
+  :where([style*="--before-top:"])::before {
+    --_before-top-len: var(--before-top);
+    --_before-top-num: var(--before-top);
+    inset-block-start: calc(var(--_before-top-len) + var(--_before-top-num) * var(--spacing));
+  }
+
+  :where([style*="--after-top:"])::after {
+    --_after-top-len: var(--after-top);
+    --_after-top-num: var(--after-top);
+    inset-block-start: calc(var(--_after-top-len) + var(--_after-top-num) * var(--spacing));
+  }
+
+  :where([style*="--before-bottom:"])::before {
+    --_before-bottom-len: var(--before-bottom);
+    --_before-bottom-num: var(--before-bottom);
+    inset-block-end: calc(var(--_before-bottom-len) + var(--_before-bottom-num) * var(--spacing));
+  }
+
+  :where([style*="--after-bottom:"])::after {
+    --_after-bottom-len: var(--after-bottom);
+    --_after-bottom-num: var(--after-bottom);
+    inset-block-end: calc(var(--_after-bottom-len) + var(--_after-bottom-num) * var(--spacing));
+  }
+
+  :where([style*="--before-left:"])::before {
+    --_before-left-len: var(--before-left);
+    --_before-left-num: var(--before-left);
+    inset-inline-start: calc(var(--_before-left-len) + var(--_before-left-num) * var(--spacing));
+  }
+
+  :where([style*="--after-left:"])::after {
+    --_after-left-len: var(--after-left);
+    --_after-left-num: var(--after-left);
+    inset-inline-start: calc(var(--_after-left-len) + var(--_after-left-num) * var(--spacing));
+  }
+
+  :where([style*="--before-right:"])::before {
+    --_before-right-len: var(--before-right);
+    --_before-right-num: var(--before-right);
+    inset-inline-end: calc(var(--_before-right-len) + var(--_before-right-num) * var(--spacing));
+  }
+
+  :where([style*="--after-right:"])::after {
+    --_after-right-len: var(--after-right);
+    --_after-right-num: var(--after-right);
+    inset-inline-end: calc(var(--_after-right-len) + var(--_after-right-num) * var(--spacing));
+  }
+
   :where([style*="--before-w:"])::before {
     --_before-w-len: var(--before-w);
     --_before-w-num: var(--before-w);
@@ -88,6 +272,30 @@
     max-block-size: calc(var(--_after-max-h-len) + var(--_after-max-h-num) * var(--spacing));
   }
 
+  :where([style*="--before-aspect:"])::before {
+    aspect-ratio: var(--before-aspect);
+  }
+
+  :where([style*="--after-aspect:"])::after {
+    aspect-ratio: var(--after-aspect);
+  }
+
+  :where([style*="--before-font-size:"])::before {
+    font-size: var(--before-font-size);
+  }
+
+  :where([style*="--after-font-size:"])::after {
+    font-size: var(--after-font-size);
+  }
+
+  :where([style*="--before-font-weight:"])::before {
+    font-weight: var(--before-font-weight);
+  }
+
+  :where([style*="--after-font-weight:"])::after {
+    font-weight: var(--after-font-weight);
+  }
+
   :where([style*="--before-text:"])::before {
     color: var(--before-text);
   }
@@ -128,12 +336,84 @@
     border-style: var(--after-border-style);
   }
 
+  :where([style*="--before-opacity:"])::before {
+    opacity: var(--before-opacity);
+  }
+
+  :where([style*="--after-opacity:"])::after {
+    opacity: var(--after-opacity);
+  }
+
+  :where([style*="--before-scale:"])::before {
+    scale: var(--before-scale);
+  }
+
+  :where([style*="--after-scale:"])::after {
+    scale: var(--after-scale);
+  }
+
+  :where([style*="--before-translate:"])::before {
+    translate: var(--before-translate);
+  }
+
+  :where([style*="--after-translate:"])::after {
+    translate: var(--after-translate);
+  }
+
+  :where([style*="--before-rotate:"])::before {
+    rotate: var(--before-rotate);
+  }
+
+  :where([style*="--after-rotate:"])::after {
+    rotate: var(--after-rotate);
+  }
+
+  :where([style*="--before-transition:"])::before {
+    transition: var(--before-transition);
+  }
+
+  :where([style*="--after-transition:"])::after {
+    transition: var(--after-transition);
+  }
+
   :where([style*="--before-rounded:"])::before {
     border-radius: var(--before-rounded);
   }
 
   :where([style*="--after-rounded:"])::after {
     border-radius: var(--after-rounded);
+  }
+
+  :where([style*="--before-outline:"])::before {
+    outline: var(--before-outline);
+  }
+
+  :where([style*="--after-outline:"])::after {
+    outline: var(--after-outline);
+  }
+
+  :where([style*="--before-pointer-events:"])::before {
+    pointer-events: var(--before-pointer-events);
+  }
+
+  :where([style*="--after-pointer-events:"])::after {
+    pointer-events: var(--after-pointer-events);
+  }
+
+  :where([style*="--before-visibility:"])::before {
+    visibility: var(--before-visibility);
+  }
+
+  :where([style*="--after-visibility:"])::after {
+    visibility: var(--after-visibility);
+  }
+
+  :where([style*="--before-z:"])::before {
+    z-index: var(--before-z);
+  }
+
+  :where([style*="--after-z:"])::after {
+    z-index: var(--after-z);
   }
 
   :where([style*="--before-content:"])::before {

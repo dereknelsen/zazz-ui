@@ -14,7 +14,14 @@ interface WireColor {
   dark: string;
 }
 
-export function registerSwatches(client: LanguageClient): Disposable[] {
+/**
+ * @param client - The running language client (re-created when `zazz.languages` changes).
+ * @param languages - The language ids the features run in.
+ */
+export function registerSwatches(
+  client: () => LanguageClient | undefined,
+  languages: () => string[],
+): Disposable[] {
   const swatch = window.createTextEditorDecorationType({
     before: {
       contentText: " ",
@@ -33,9 +40,11 @@ export function registerSwatches(client: LanguageClient): Disposable[] {
     [ColorThemeKind.Dark, ColorThemeKind.HighContrast].includes(window.activeColorTheme.kind);
 
   const paint = async (editor: TextEditor) => {
-    if (editor.document.languageId !== "html") return;
+    if (!languages().includes(editor.document.languageId)) return;
     if (!enabled()) return editor.setDecorations(swatch, []);
-    const colors = await client.sendRequest<WireColor[]>("zazz/colors", {
+    const running = client();
+    if (!running) return;
+    const colors = await running.sendRequest<WireColor[]>("zazz/colors", {
       uri: editor.document.uri.toString(),
     });
     editor.setDecorations(

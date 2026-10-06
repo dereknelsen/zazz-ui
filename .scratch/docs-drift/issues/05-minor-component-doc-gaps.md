@@ -1,6 +1,6 @@
 # 05 — Minor component/scripts doc completeness
 
-Status: open
+Status: superseded (the docs app was rewritten; see `.scratch/docs-site/`)
 
 - `components/navigation-menu.mdx:48` lists `data-align` values as `center, end` only;
   `start` is real (`popover.css:140`) and used by every canonical example

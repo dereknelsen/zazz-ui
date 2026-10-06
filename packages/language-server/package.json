@@ -9,7 +9,9 @@
   "exports": {
     ".": "./src/index.ts",
     "./html": "./src/html/index.ts",
-    "./server": "./src/server.ts"
+    "./server": "./src/server.ts",
+    "./format": "./src/service/format.ts",
+    "./diagnostics": "./src/service/diagnostics.ts"
   },
   "scripts": {
     "test": "tsc -p tsconfig.json && vp test run",

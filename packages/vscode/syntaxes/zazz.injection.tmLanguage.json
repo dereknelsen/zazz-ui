@@ -31,7 +31,7 @@
           }
         },
         {
-          "match": "(--)(group-)?(before-|after-)?(auto-cols|auto-rows|col-start|flex-wrap|grid-flow|row-start|col-span|position|row-span|col-end|display|justify|row-end|shrink|basis|items|order|place|flex|self|col|row)(?:(--)(focus-visible|focus-within|disabled|starting|checked|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
+          "match": "(--)(group-)?(before-|after-)?(place-content|place-items|auto-cols|auto-rows|col-start|flex-wrap|grid-flow|row-start|col-span|position|row-span|col-end|display|justify|row-end|shrink|basis|items|order|flex|self|col|row)(?:(--)(focus-visible|focus-within|disabled|starting|checked|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
           "captures": {
             "1": {
               "name": "punctuation.definition.custom-property.css.zazz"

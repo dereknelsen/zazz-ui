@@ -24,6 +24,7 @@ import {
   type TextEdit,
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
+import { overlapsHole } from "./html/holes.ts";
 import { parseHtml, type ParsedHtml } from "./html/parse.ts";
 import { diagnose, type ZazzDiagnostic } from "./service/diagnostics.ts";
 import { colorTokens } from "./service/colors.ts";
@@ -74,10 +75,17 @@ export function startServer(connection: Connection = createConnection(ProposedFe
   const parsedOf = (doc: TextDocument): ParsedHtml => {
     const cached = parses.get(doc.uri);
     if (cached?.version === doc.version) return cached.parsed;
-    const parsed = parseHtml(doc.getText());
+    const parsed = parseHtml(doc.getText(), doc.languageId);
     parses.set(doc.uri, { version: doc.version, parsed });
     return parsed;
   };
+  /** Keeps the items whose range stays clear of the document's template holes. */
+  const clearOfHoles = <T extends { range: [number, number] }>(parsed: ParsedHtml, items: T[]) =>
+    parsed.holes.length ? items.filter((item) => !overlapsHole(parsed.holes, item.range)) : items;
+  /** True when `offset` sits inside a template hole (no Zazz help there). */
+  const inHole = (parsed: ParsedHtml, offset: number) =>
+    overlapsHole(parsed.holes, [offset, offset + 1]) ||
+    overlapsHole(parsed.holes, [offset - 1, offset]);
   const range = (doc: TextDocument, [start, end]: [number, number]): Range => ({
     start: doc.positionAt(start),
     end: doc.positionAt(end),
@@ -100,8 +108,9 @@ export function startServer(connection: Connection = createConnection(ProposedFe
     ...(found.fix ? { data: found.fix } : {}),
   });
   const validate = (doc: TextDocument) => {
+    const parsed = parsedOf(doc);
     const diagnostics = settings.diagnostics.enable
-      ? diagnose(parsedOf(doc)).map((found) => toDiagnostic(doc, found))
+      ? clearOfHoles(parsed, diagnose(parsed)).map((found) => toDiagnostic(doc, found))
       : [];
     void connection.sendDiagnostics({ uri: doc.uri, version: doc.version, diagnostics });
   };
@@ -161,7 +170,10 @@ export function startServer(connection: Connection = createConnection(ProposedFe
   connection.onHover(({ textDocument, position }) => {
     const doc = documents.get(textDocument.uri);
     if (!doc) return null;
-    const result = hover(parsedOf(doc), doc.offsetAt(position));
+    const parsed = parsedOf(doc);
+    const offset = doc.offsetAt(position);
+    if (inHole(parsed, offset)) return null;
+    const result = hover(parsed, offset);
     return result
       ? { contents: { kind: "markdown", value: result.markdown }, range: range(doc, result.range) }
       : null;
@@ -190,7 +202,10 @@ export function startServer(connection: Connection = createConnection(ProposedFe
   connection.onCompletion(({ textDocument, position }) => {
     const doc = documents.get(textDocument.uri);
     if (!doc) return null;
-    const items = complete(parsedOf(doc), doc.offsetAt(position));
+    const parsed = parsedOf(doc);
+    const offset = doc.offsetAt(position);
+    if (inHole(parsed, offset)) return null;
+    const items = complete(parsed, offset);
     return items.length
       ? { isIncomplete: false, items: items.map((item) => toCompletion(doc, item)) }
       : null;
@@ -203,14 +218,16 @@ export function startServer(connection: Connection = createConnection(ProposedFe
   connection.languages.inlayHint.on(({ textDocument, range: visible }) => {
     const doc = documents.get(textDocument.uri);
     if (!doc || !settings.inlayHints.enable) return [];
-    return inlayHints(parsedOf(doc), doc.offsetAt(visible.start), doc.offsetAt(visible.end)).map(
-      (hint) => ({
+    const parsed = parsedOf(doc);
+    const hints = inlayHints(parsed, doc.offsetAt(visible.start), doc.offsetAt(visible.end));
+    return hints
+      .filter((hint) => !overlapsHole(parsed.holes, [hint.offset, hint.offset + 1]))
+      .map((hint) => ({
         position: doc.positionAt(hint.offset),
         label: hint.label,
         kind: InlayHintKind.Type,
         ...(hint.tooltip ? { tooltip: hint.tooltip } : {}),
-      }),
-    );
+      }));
   });
 
   connection.onFoldingRanges(({ textDocument }) => {
@@ -226,7 +243,8 @@ export function startServer(connection: Connection = createConnection(ProposedFe
   connection.onRequest(COLORS_REQUEST, ({ uri }: { uri: string }) => {
     const doc = documents.get(uri);
     if (!doc) return [];
-    return colorTokens(parsedOf(doc)).map((color) => ({
+    const parsed = parsedOf(doc);
+    return clearOfHoles(parsed, colorTokens(parsed)).map((color) => ({
       ...color,
       range: range(doc, color.range),
     }));
@@ -253,7 +271,9 @@ export function startServer(connection: Connection = createConnection(ProposedFe
       }
     }
     const parsed = parsedOf(doc);
-    const offer = (kind: string, title: string, edits: Edit[]) => {
+    const offer = (kind: string, title: string, unfiltered: Edit[]) => {
+      // never rewrite text that holds a template expression
+      const edits = clearOfHoles(parsed, unfiltered);
       if (!edits.length) return;
       const changes = { [doc.uri]: edits.map((edit) => textEdit(doc, edit)) };
       actions.push({ title, kind, edit: { changes } });

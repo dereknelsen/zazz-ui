@@ -242,8 +242,10 @@ describe("audit warnings", () => {
         `<div style="--before-content: 'x'; --before-w: 4; --after-bg--hover: red; --after-bg: blue"></div>`,
       ),
     ).toEqual([]);
-    expect(warningsFor(`<div style="--before-display: grid"></div>`)).toEqual([
-      expect.stringMatching(/--before-display.*::before/),
+    // display has a pseudo form now; gap (a container property) still does not
+    expect(warningsFor(`<div style="--before-display: grid"></div>`)).toEqual([]);
+    expect(warningsFor(`<div style="--before-gap: 4"></div>`)).toEqual([
+      expect.stringMatching(/--before-gap.*::before/),
     ]);
     expect(warningsFor(`<div style="--w: 4 !important"></div>`)).toEqual([]);
   });

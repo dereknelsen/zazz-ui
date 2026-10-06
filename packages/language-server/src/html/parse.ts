@@ -5,20 +5,30 @@
  */
 
 import { parseForESLint } from "@html-eslint/parser";
+import { maskTemplateHoles, type Span } from "./holes.ts";
 import { isTag, type Comment, type Node, type Tag } from "./nodes.ts";
 
 export interface ParsedHtml {
+  /** The parsed text: the source, with a templating language's holes masked to spaces. */
   text: string;
   /** Every element in document order. */
   tags: Tag[];
   comments: Comment[];
   /** The `<html>` element, when the file is a whole page rather than a fragment. */
   root?: Tag;
+  /** Spans of template holes masked out before parsing (empty for plain HTML). */
+  holes: Span[];
 }
 
-export function parseHtml(text: string): ParsedHtml {
+/**
+ * Parses `source` as HTML. For a templating language (`languageId` such as
+ * `astro` or `razor`) its expressions are masked first, so offsets still
+ * point into the source and the audit never reads template code as CSS.
+ */
+export function parseHtml(source: string, languageId = "html"): ParsedHtml {
+  const { text, holes } = maskTemplateHoles(source, languageId);
   const { ast } = parseForESLint(text, {}) as unknown as { ast: { body: Node[] } };
-  const parsed: ParsedHtml = { text, tags: [], comments: [] };
+  const parsed: ParsedHtml = { text, tags: [], comments: [], holes };
   const visit = (node: Node, parent: Node | undefined) => {
     if (parent) node.parent = parent;
     if (isTag(node)) {

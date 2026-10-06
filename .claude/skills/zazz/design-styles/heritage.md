@@ -56,7 +56,7 @@ tell lean Lifestyle. Default to **Lifestyle Brand** when unclear.
 - **Compose with tension.** Break the centered stack with the layout band system: full-bleed
   (`--col: layout-bleed` / `layout-full`) photography of product, fleet, warehouse, or craft
   against capped text (`--max-w: var(--article-lg)` or the `lg` band). Use the **left-label layout** (thin eyebrow column + content column, split by
-  `--color-border`) for "who we serve" and specs. Let `var(--space-xl)` (96px) open real negative space.
+  `--color-border`) for "who we serve" and specs. Let big section padding (`--py: 24`, 96px) open real negative space.
 - **One orchestrated reveal.** A single staggered page-load on the hero (`data-reveal` /
   `data-reveal-each`) plus scroll reveals for narrative pacing beats scattered micro-interactions.
   Use `--spring-easing` for confident, unhurried movement.

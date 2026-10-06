@@ -32,6 +32,7 @@
  * server-set value, but no tags render).
  *
  * Attributes on the root: `data-combobox-variant="multiselect"`, `data-sort="score"`,
+ * `data-combobox-filter="none"` (another source filters; the engine only navigates),
  * `data-min-length="<n>"`, `data-label-remove="Remove {label}"`.
  * Parts: `combobox-value` (hidden input), `combobox-control` (select-look
  * shell), `combobox-tag-template` (authored `<template>`), `combobox-tag` /

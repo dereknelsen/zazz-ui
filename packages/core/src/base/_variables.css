@@ -72,24 +72,24 @@
 
     /* brand */
     --color-primary: light-dark(var(--color-primary-950), var(--color-primary-50));
-    --color-primary-foreground: light-dark(var(--color-white), var(--color-primary-950));
+    --color-primary-foreground: contrast-color(var(--color-primary));
     --color-secondary: light-dark(var(--color-secondary-950), var(--color-secondary-50));
-    --color-secondary-foreground: light-dark(var(--color-white), var(--color-secondary-950));
+    --color-secondary-foreground: contrast-color(var(--color-secondary));
     --color-tertiary: light-dark(var(--color-tertiary-950), var(--color-tertiary-50));
-    --color-tertiary-foreground: light-dark(var(--color-white), var(--color-tertiary-950));
+    --color-tertiary-foreground: contrast-color(var(--color-tertiary));
     --color-ring: var(--color-primary);
     /* the shadow color every --shadow-* token is tinted with (alpha comes from the token) */
     --color-shadow: var(--color-black);
 
     /* status */
     --color-info: light-dark(oklch(0.5876 0.1389 241.97), oklch(0.5 0.1193 242.75));
-    --color-info-foreground: light-dark(var(--color-white), var(--color-white));
+    --color-info-foreground: contrast-color(var(--color-info));
     --color-success: light-dark(oklch(0.596 0.1274 163.23), oklch(0.5081 0.1049 165.61));
-    --color-success-foreground: light-dark(var(--color-white), var(--color-white));
+    --color-success-foreground: contrast-color(var(--color-success));
     --color-warning: light-dark(oklch(0.6658 0.1574 58.32), oklch(0.5553 0.1455 49));
-    --color-warning-foreground: light-dark(var(--color-white), var(--color-white));
+    --color-warning-foreground: contrast-color(var(--color-warning));
     --color-destructive: light-dark(oklch(0.5771 0.2152 27.33), oklch(0.5054 0.1905 27.52));
-    --color-destructive-foreground: light-dark(var(--color-white), var(--color-white));
+    --color-destructive-foreground: contrast-color(var(--color-destructive));
 
     /* ==========================================================================
     * Corporate — brand color scales (50–950)
@@ -314,7 +314,8 @@
        0.225rem and 0.25rem; pin it with `:root { --spacing: 0.25rem }` for a fixed scale. */
     --spacing: clamp(0.225rem, 0.2136rem + 0.0455vi, 0.25rem);
 
-    /* spacing scale — what utilities and components use (`--gap: var(--space-md)`) */
+    /* named spacing scale — for CSS and component hooks. In style utilities write the
+       number instead (`--gap: 6`, not `var(--space-md)`). */
     --space-2xs: calc(var(--spacing) * 1);
     --space-xs: calc(var(--spacing) * 2);
     --space-sm: calc(var(--spacing) * 4);

@@ -1,6 +1,6 @@
 # 02 — Template doc pages describe patterns their example files don't use
 
-Status: open
+Status: superseded (the docs app was rewritten; see `.scratch/docs-site/`)
 
 - `templates/responsive.mdx:12` cites `grid-cols-1 @sm:grid-cols-2 @lg:grid-cols-4`;
   `examples/responsive.html:154` actually uses

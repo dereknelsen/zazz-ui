@@ -1,10 +1,11 @@
 /**
- * @fileoverview The Zazz extension: starts the language server for HTML and
- * registers the editor-side features (commands, templates, decorations).
+ * @fileoverview The Zazz extension: starts the language server for HTML (and
+ * the templating languages `zazz.languages` lists) and registers the
+ * editor-side features (commands, templates, decorations).
  */
 
 import * as path from "node:path";
-import type { ExtensionContext } from "vscode";
+import { workspace, type ExtensionContext } from "vscode";
 import {
   LanguageClient,
   TransportKind,
@@ -16,7 +17,14 @@ import { registerSwatches } from "./swatches.ts";
 
 let client: LanguageClient | undefined;
 
-export async function activate(context: ExtensionContext): Promise<void> {
+/** The language ids the features run in (`zazz.languages`, default `["html"]`). */
+export function configuredLanguages(): string[] {
+  const configured = workspace.getConfiguration("zazz").get<string[]>("languages") ?? ["html"];
+  const languages = configured.filter((id) => typeof id === "string" && id.trim() !== "");
+  return languages.length ? [...new Set(languages)] : ["html"];
+}
+
+function createClient(context: ExtensionContext): LanguageClient {
   const module = context.asAbsolutePath(path.join("dist", "server.cjs"));
   const serverOptions: ServerOptions = {
     run: { module, transport: TransportKind.ipc },
@@ -27,15 +35,29 @@ export async function activate(context: ExtensionContext): Promise<void> {
     },
   };
   const clientOptions: LanguageClientOptions = {
-    documentSelector: [
-      { scheme: "file", language: "html" },
-      { scheme: "untitled", language: "html" },
-    ],
+    documentSelector: configuredLanguages().flatMap((language) => [
+      { scheme: "file", language },
+      { scheme: "untitled", language },
+    ]),
     synchronize: { configurationSection: "zazz" },
   };
-  client = new LanguageClient("zazz", "Zazz", serverOptions, clientOptions);
+  return new LanguageClient("zazz", "Zazz", serverOptions, clientOptions);
+}
+
+export async function activate(context: ExtensionContext): Promise<void> {
+  client = createClient(context);
   await client.start();
-  context.subscriptions.push(...registerSwatches(client), ...registerCommands(context));
+  context.subscriptions.push(
+    ...registerSwatches(() => client, configuredLanguages),
+    ...registerCommands(context),
+    // The document selector is fixed at start: a new language list needs a new client.
+    workspace.onDidChangeConfiguration(async (event) => {
+      if (!event.affectsConfiguration("zazz.languages")) return;
+      await client?.stop();
+      client = createClient(context);
+      await client.start();
+    }),
+  );
 }
 
 export async function deactivate(): Promise<void> {

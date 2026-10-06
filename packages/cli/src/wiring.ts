@@ -21,8 +21,10 @@ import { baseCssSplit, coreRuntime, scriptVariants } from "./plan.ts";
 export const PRIMITIVES_MARKER =
   "/* Zazz primitives — zazz-ui add inserts imports here in cascade order. */";
 
+// Always a sublayer: rules imported into bare `legacy` form an implicit final
+// sublayer that outranks `legacy.migrations` (see _layers.css).
 const LEGACY_SLOT_COMMENT =
-  '/* Legacy layer — import your legacy stylesheets into layer(legacy) here: */\n/* @import "./your-legacy.css" layer(legacy); */';
+  '/* Legacy layer — import your legacy stylesheets into layer(legacy.imports) here: */\n/* @import "./your-legacy.css" layer(legacy.imports); */';
 
 /** The v1 post-base anchor; newer kits pass `baseCssSplit(manifest).post[0]`. */
 const V1_POST_ANCHOR = "base/_utilities.css";
@@ -38,7 +40,7 @@ export function renderIndexCss(options: {
   const legacyBlock =
     options.legacy === null
       ? LEGACY_SLOT_COMMENT
-      : `/* Legacy layer — existing styles cascade below the kit. */\n@import "${options.legacy}" layer(legacy);`;
+      : `/* Legacy layer — existing styles cascade below the kit. */\n@import "${options.legacy}" layer(legacy.imports);`;
 
   const primitiveImports = options.primitives
     .flatMap((p) => p.css)

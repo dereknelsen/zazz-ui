@@ -1,5 +1,8 @@
 {
   "npm.scriptRunner": "vp",
+  // The Astro extension (Volar) needs a TypeScript with tsserver.js. The repo's TypeScript 7
+  // (tsgo) has none, so point the editor at the TypeScript 6 pinned for apps/docs.
+  "typescript.tsdk": "apps/docs/node_modules/typescript/lib",
   "editor.defaultFormatter": "oxc.oxc-vscode",
   "[javascript]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
@@ -24,10 +27,20 @@
   // Zazz completions, hover, and highlighting in HTML come from the Zazz extension
   // (packages/vscode); the custom data files stay published for editors without it.
   "emmet.extensionsPath": ["./packages/vscode/emmet"],
+  // The docs site is Astro: run the Zazz features in .astro files too (template holes are masked).
+  "zazz.languages": ["html", "astro"],
   // ESLint lints HTML only (eslint.config.ts); in the editor it shows the html/*
   // rules, and the Zazz extension shows the zazz/* audit. Oxc stays the formatter
   // and the JS/TS linter.
   "eslint.validate": ["html"],
   "eslint.probe": ["html"],
-  "eslint.rules.customizations": [{ "rule": "zazz/*", "severity": "off" }]
+  "eslint.rules.customizations": [
+    {
+      "rule": "zazz/*",
+      "severity": "off"
+    }
+  ],
+  "[astro]": {
+    "editor.defaultFormatter": "astro-build.astro-vscode"
+  }
 }

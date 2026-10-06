@@ -33,7 +33,7 @@ program
   .argument("[version]", "kit version, @-prefixed (e.g. @0.1.0); default latest")
   .option("--dir <path>", "target directory for vendored files", "zazz")
   .option("--ts", "vendor TypeScript sources instead of compiled .js")
-  .option("--legacy <path>", "wire an existing stylesheet into the legacy cascade layer")
+  .option("--legacy <path>", "wire an existing stylesheet into the legacy.imports cascade sublayer")
   .option("--no-fonts", "omit the Geist fonts block from head.html")
   .option("--no-theme-script", "omit the theme-persistence script from head.html")
   .option("--force", "overwrite existing files without asking")

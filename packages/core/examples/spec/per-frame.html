@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../../src/index.css" />
   </head>
   <body>
-    <main data-ui="layout" style="--py: var(--space-xl)">
+    <main data-ui="layout" style="--py: 24">
       <h1 data-ui="text-h3">Per-frame style cost</h1>
       <p data-ui="prose">
         Fifty boxes get a new <code>style</code> attribute every animation frame while 500 buttons
@@ -20,8 +20,8 @@
         style="
           --display: flex;
           --items: center;
-          --gap: var(--space-sm);
-          --my: var(--space-md);
+          --gap: 4;
+          --my: 6;
         "
       >
         <button data-ui="button" data-button-variant="primary" id="toggle">Stop</button>
@@ -37,7 +37,7 @@
         style="
           --display: grid;
           --grid-cols: 10;
-          --gap: var(--space-xs);
+          --gap: 2;
         "
       ></div>
       <div
@@ -45,8 +45,8 @@
         style="
           --display: flex;
           --flex-wrap: wrap;
-          --gap: var(--space-xs);
-          --mt: var(--space-lg);
+          --gap: 2;
+          --mt: 11;
         "
       ></div>
     </main>

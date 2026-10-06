@@ -1,6 +1,6 @@
 # 01 — Component doc markup recipes disagree with canonical examples
 
-Status: open
+Status: superseded (the docs app was rewritten; see `.scratch/docs-site/`)
 
 The example `.html` files are the source of truth; these pages describe markup that
 drifted from them. Fix each page (or, where the example is wrong, fix the example and

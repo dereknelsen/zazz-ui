@@ -1,6 +1,6 @@
 # 04 — Structure/meta docs drift (file-anatomy, reset, llms, head)
 
-Status: open
+Status: superseded (the docs app was rewritten; see `.scratch/docs-site/`)
 
 ## file-anatomy.mdx
 

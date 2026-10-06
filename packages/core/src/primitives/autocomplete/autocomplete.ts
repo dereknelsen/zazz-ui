@@ -10,6 +10,7 @@
  *
  * Attributes on the root:
  * - `data-sort="score"`: re-rank visually by match score (default: DOM order).
+ * - `data-autocomplete-filter="none"`: show every item; another source filters.
  * - `data-min-length="<n>"`: query length before the panel opens (default 0).
  *
  * Parts: `autocomplete-panel` (popover="manual"), `autocomplete-list`

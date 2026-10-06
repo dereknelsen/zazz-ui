@@ -261,7 +261,7 @@ Modes: **dual** takes a scale number (× `--spacing`) or a `<length-percentage>`
 
 ## 5. Dual mode
 
-`--p: 4` → `--_p-len` fails and takes `0px`, `--_p-num` is `4`, padding is `4 × --spacing`. `--p: 6rem` → `--_p-len` is `6rem`, `--_p-num` takes `0`. `--p: var(--space-md)` resolves before the type check and behaves as a length. `--p: 0` parses as both and sums to zero.
+`--p: 4` → `--_p-len` fails and takes `0px`, `--_p-num` is `4`, padding is `4 × --spacing`. `--p: 6rem` → `--_p-len` is `6rem`, `--_p-num` takes `0`. `--p: 6` resolves before the type check and behaves as a length. `--p: 0` parses as both and sums to zero.
 
 - One typed pair per dual utility, never shared: custom properties compute once per element.
 - The unit is fluid: `--spacing: clamp(0.225rem, …, 0.25rem)`. A consumer pins it with `:root { --spacing: .25rem }`. Named sizes are `--space-2xs … --space-2xl`, multiples of `--spacing`; there is no separate numeric step scale.

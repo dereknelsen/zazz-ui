@@ -38,8 +38,8 @@ the default band with `data-layout-size="md"` on the layout, or place one child 
     <div data-ui="layout">
       <div style="--display: flex; --items: center; --justify: space-between">
         <a href="/"><!-- site logo --></a>
-        <nav style="--display: none; --display--sm: flex; --items: center; --py: var(--space-md)">
-          <menu style="--display: flex; --items: center; --gap: var(--space-sm)">
+        <nav style="--display: none; --display--sm: flex; --items: center; --py: 6">
+          <menu style="--display: flex; --items: center; --gap: 4">
             <li><a data-ui="button" data-button-variant="ghost" href="/">Home</a></li>
             <!-- navigation links and menus -->
           </menu>
@@ -51,16 +51,16 @@ the default band with `data-layout-size="md"` on the layout, or place one child 
     </div>
   </header>
   <main>
-    <section data-ui="layout" style="--py: var(--space-xl)">
+    <section data-ui="layout" style="--py: 24">
       <!-- page content: each child lands in the xl band -->
     </section>
   </main>
   <footer
     data-transition-layer="global-footer"
-    style="--pt: var(--space-xl); --border-t-width: 1px; --border-t-color: var(--color-border)"
+    style="--pt: 24; --border-t-width: 1px; --border-t-color: var(--color-border)"
   >
     <div data-ui="layout"><!-- footer content --></div>
-    <div data-ui="layout" style="--py: var(--space-md)">
+    <div data-ui="layout" style="--py: 6">
       <div style="--display: flex; --items: center; --justify: space-between">
         <!-- footer colophon content -->
       </div>
@@ -83,7 +83,7 @@ Group an optional eyebrow, a heading, a subheading, and the call-to-action butto
   style="
     --display: flex;
     --flex-direction: column;
-    --gap: var(--space-sm);
+    --gap: 4;
     --text-align: center;
     --text-align--md: start;
   "
@@ -96,8 +96,8 @@ Group an optional eyebrow, a heading, a subheading, and the call-to-action butto
   <div
     style="
       --display: flex;
-      --gap: var(--space-xs);
-      --mt: var(--space-sm);
+      --gap: 2;
+      --mt: 4;
       --justify: center;
       --justify--md: start;
     "
@@ -123,3 +123,7 @@ Long-form copy goes in `data-ui="prose"` with a reading measure:
 - Components (cards, carousels, dialogs, forms, navigation, …) → `references/components.md`.
 - Brand voice, color roles, type scale, archetypes → `DESIGN.md`.
 - Component anatomy in 0.5 markup → `packages/core/src/primitives/<name>/*.html`.
+
+## Control sizes
+
+The regular size is the answer about 95% of the time. `data-button-size="sm"` and `"icon-sm"` (and the toggle equivalents) are for dense chrome where the control is secondary to the content around it: an addon inside an input group, a per-row action in a table, a crowded toolbar. Header and footer actions, navigation links, dialog footers, form submits, and card actions stay regular; an icon-only one of those is `data-button-size="icon"`, not `icon-sm`. Mixing sizes in one row reads as a mistake, so when one control in a group must be small, make the group small.

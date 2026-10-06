@@ -48,6 +48,16 @@
     "configuration": {
       "title": "Zazz",
       "properties": {
+        "zazz.languages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "html"
+          ],
+          "markdownDescription": "Language ids the Zazz language features run in. Plain HTML plus any templating language that embeds HTML: the server masks the language's expressions (`{…}`, `<%= %>`, `@Model.X`, `{{ }}`) before auditing, so only the markup is checked. Known ids: `astro`, `vue`, `svelte`, `razor`, `aspnetcorerazor`, `asp`, `aspx`, `erb`, `php`, `phoenix-heex`, `html-eex`, `eex`, `elixir` (inside `~H` sigils), `handlebars`, `mustache`, `twig`, `jinja`, `jinja-html`, `nunjucks`, `liquid`, `django-html`, `blade`. An unknown id is treated as plain HTML. The language client restarts when this changes."
+        },
         "zazz.diagnostics.enable": {
           "type": "boolean",
           "default": true,
@@ -76,7 +86,26 @@
         "path": "./syntaxes/zazz.injection.tmLanguage.json",
         "injectTo": [
           "text.html.basic",
-          "text.html.derivative"
+          "text.html.derivative",
+          "source.astro",
+          "text.html.vue",
+          "source.svelte",
+          "text.html.cshtml",
+          "text.aspnetcorerazor",
+          "text.html.asp",
+          "text.html.erb",
+          "text.html.php",
+          "text.html.elixir",
+          "text.elixir",
+          "source.elixir",
+          "text.html.handlebars",
+          "text.html.mustache",
+          "text.html.twig",
+          "text.html.jinja",
+          "text.html.nunjucks",
+          "text.html.liquid",
+          "text.html.django",
+          "text.html.php.blade"
         ]
       }
     ],
@@ -110,7 +139,29 @@
     }
   },
   "activationEvents": [
-    "onLanguage:html"
+    "onLanguage:asp",
+    "onLanguage:aspnetcorerazor",
+    "onLanguage:aspx",
+    "onLanguage:astro",
+    "onLanguage:blade",
+    "onLanguage:django-html",
+    "onLanguage:eex",
+    "onLanguage:elixir",
+    "onLanguage:erb",
+    "onLanguage:handlebars",
+    "onLanguage:html",
+    "onLanguage:html-eex",
+    "onLanguage:jinja",
+    "onLanguage:jinja-html",
+    "onLanguage:liquid",
+    "onLanguage:mustache",
+    "onLanguage:nunjucks",
+    "onLanguage:phoenix-heex",
+    "onLanguage:php",
+    "onLanguage:razor",
+    "onLanguage:svelte",
+    "onLanguage:twig",
+    "onLanguage:vue"
   ],
   "engines": {
     "vscode": "^1.100.0"

@@ -267,7 +267,7 @@ The token contract in the frontmatter is what lets you be bold without the resul
 - **Commit to a direction** — one cohesive, opinionated aesthetic true to the brand, not a safe average. Vary between light and dark, different type pairings, different atmospheres across generations.
 - **Distinctive typography** — pair the brand's sans with a classic serif italic (Playfair Display Italic, Cormorant Garamond Italic) on emphasis words ("_quality_", "_trusted_") for editorial cadence, and use the full scale for real hierarchy: a genuine `text-display`/`text-h1` moment against calm body copy, not five near-identical sizes. Always adopt the brand's real typefaces — never default to generic system fonts.
 - **Commit to the palette** — a dominant surface with sharp brand accents reads as _designed_; timid, evenly-distributed grays read as slop. The frontmatter ships no default palette — fill it from the brand and make its colors the point.
-- **Compose with tension** — break the centered stack. Play full-bleed imagery against capped text columns, use the left-label layout, overlap layers, and let section rhythm (`--space-xl`, 96px) open real negative space. Asymmetry and generous whitespace are choices, not accidents.
+- **Compose with tension** — break the centered stack. Play full-bleed imagery against capped text columns, use the left-label layout, overlap layers, and let section rhythm (`--py: 24`, 96px) open real negative space. Asymmetry and generous whitespace are choices, not accidents.
 - **Build atmosphere, not flat fills** — layer depth from tokens: gradient washes across a brand scale (`--color-primary-600` → `--color-primary-900`), `shade`/`tint` transparencies, subtle noise/grain, decorative `--color-border` rules, and emotive photography. (Keep surfaces flat and reserve `--shadow-*` for genuine elevation — atmosphere lives in the background, not on every card.)
 - **Spend motion where it counts** — one orchestrated page-load with staggered reveals delights more than scattered micro-interactions. Use `--spring-easing` / `--spring-duration` for confident, unhurried movement and scroll reveals for narrative pacing.
 - **Balance conversion mechanics with brand storytelling** — clear CTAs and product grids alongside testimonials, messaging, and premium photography.
@@ -421,7 +421,7 @@ Native `<dialog data-ui="dialog">` via Invoker Commands API. `--color-card` surf
 
 ### Menu & Navigation Menu
 
-Popover API + CSS anchor positioning. Native light-dismiss. Menu items are `data-ui="button" data-button-variant="ghost"`. Navigation menu supports mega-panels with a `data-navigation-menu-slot="viewport"` grid and rich `data-navigation-menu-slot="link"` rows (title + description); callouts are built from utilities (`--bg: var(--color-muted); --rounded: var(--radius-sm); --p: var(--space-sm)`) plus a `text-eyebrow`.
+Popover API + CSS anchor positioning. Native light-dismiss. Menu items are `data-ui="button" data-button-variant="ghost"`. Navigation menu supports mega-panels with a `data-navigation-menu-slot="viewport"` grid and rich `data-navigation-menu-slot="link"` rows (title + description); callouts are built from utilities (`--bg: var(--color-muted); --rounded: var(--radius-sm); --p: 4`) plus a `text-eyebrow`.
 
 ### Tabs
 
@@ -452,15 +452,15 @@ edge to edge. Change the default with `data-layout-size`; place one child with
 
 ### Spacing
 
-| Token        | Computed | Use For                                |
-| ------------ | -------- | -------------------------------------- |
-| `--space-xs` | 8px      | Tight grouping, button rows            |
-| `--space-sm` | 16px     | Default component gap, gutters         |
-| `--space-md` | 24px     | Card padding, section internal spacing |
-| `--space-lg` | 44px     | Large component separation             |
-| `--space-xl` | 96px     | Section-level vertical rhythm          |
+| Token        | Utility value | Computed | Use For                                |
+| ------------ | ------------- | -------- | -------------------------------------- |
+| `--space-xs` | `2`           | 8px      | Tight grouping, button rows            |
+| `--space-sm` | `4`           | 16px     | Default component gap, gutters         |
+| `--space-md` | `6`           | 24px     | Card padding, section internal spacing |
+| `--space-lg` | `11`          | 44px     | Large component separation             |
+| `--space-xl` | `24`          | 96px     | Section-level vertical rhythm          |
 
-Use them in utilities: `--gap`, `--p`, `--px`, `--py`, `--m`, `--mx`, `--my` (`style="--py: var(--space-xl)"`).
+Write the utility value in `style` on `--gap`, `--p`, `--px`, `--py`, `--m`, `--mx`, `--my` (`style="--py: 24"`).
 
 _Values shown throughout (spacing, radius, type sizes) are **desktop maximums**. Spacing and radius derive from `--spacing` (`clamp(0.225rem, …, 0.25rem)`) and type from per-step `clamp()`s, so all three scale down fluidly on narrower viewports._
 

@@ -28,7 +28,7 @@ export interface ZazzConfig {
   dir: string;
   /** Vendored script language; every command honors it. */
   language: "js" | "ts";
-  /** Stylesheet wired into layer(legacy), or null. */
+  /** Stylesheet wired into layer(legacy.imports), or null. */
   legacy: string | null;
   /** Head options that must survive head.html regeneration. */
   head: { fonts: boolean; themeScript: boolean };

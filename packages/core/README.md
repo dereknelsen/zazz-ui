@@ -2,7 +2,9 @@
 
 Zazz is a CSS and vanilla JavaScript UI kit that does not require a build step. It uses semantic design tokens, cascade layers, `data-*` variants, and browser APIs such as popover, `<dialog>`, invoker commands, anchor positioning, and view transitions.
 
-Docs: <https://zazz.sh> (component gallery, tokens, guides, and a [build-your-first-page tutorial](https://zazz.sh/docs/getting-started/first-page))
+Docs: <https://zazz.sh> (guides, a [quick start](https://zazz.sh/docs/quick-start/), and an [API reference](https://zazz.sh/api/) generated from this package's data).
+
+**0.5 is an alpha.** The markup contract can change in any release before 1.0, and 0.5 is not compatible with 0.4; see [`CHANGELOG.md`](./CHANGELOG.md) for every breaking change and its migration note.
 
 ## Install
 
@@ -24,7 +26,14 @@ From a CDN:
 
 Use an exact version in CDN URLs. Each release includes `dist/sri.json`, which lists the SHA-384 hash for every published file. Use those hashes in `integrity` attributes.
 
-You can also copy files directly. Each primitive has a folder under `src/primitives/<name>/` containing its stylesheet, script, and HTML examples. A `zazz-ui` CLI for copying primitives and their dependencies is planned.
+Or own the files: the [`zazz-ui`](https://www.npmjs.com/package/zazz-ui) CLI vendors the base platform and any primitives (with their dependencies) into your project and merges later updates against the recorded originals.
+
+```bash
+pnpm dlx zazz-ui init
+pnpm dlx zazz-ui add button card dialog
+```
+
+Each primitive is a folder under `src/primitives/<name>/` with its stylesheet, script, and HTML examples, so copying by hand works too.
 
 ## Usage
 
@@ -56,25 +65,23 @@ Every value in the kit resolves from a CSS custom property, which gives you thre
 <button data-ui="button" style="--ui-button-bg: var(--color-secondary)">One-off</button>
 ```
 
-Color roles resolve through `light-dark()`, so light and dark themes work out of the box and follow the OS preference (pin one with `data-ui-theme="dark"` on `<html>`). Styles live in cascade layers, so your own CSS can override anything without `!important` or specificity fights. The [extending guide](https://zazz.sh/docs/core-concepts/extending) covers adding your own tokens, utilities, and variants.
+Color roles resolve through `light-dark()`, so light and dark themes work out of the box and follow the OS preference (pin one with `data-ui-theme="dark"` on `<html>`). Styles live in cascade layers, so your own CSS can override anything without `!important` or specificity fights. The [theming guide](https://zazz.sh/docs/theming/customization/) covers tokens, hooks, dark mode, and brand blocks.
 
 ## Layout
 
-The `.container` is not a fixed-width box. A region (`main`, `header`, `footer`, `section`, `article`) holding a `.container` becomes a grid of named width bands, and each direct child of the container picks its band. Measured text and full-bleed media can be siblings in the same flow:
+`data-ui="layout"` (or `<ui-layout>`) turns an element into a grid of named width bands for its own children. Each child sits in the default band (`xl`, changed with `data-layout-size`) unless a `--col` utility places it elsewhere, so measured text and full-bleed media are siblings in one flow:
 
 ```html
-<section>
-  <div class="container">
-    <h2>Sits in the default md band</h2>
-    <figure data-container="bleed">
-      <img src="/wide.jpg" alt="" />
-    </figure>
-    <p>Back to the md band.</p>
-  </div>
-</section>
+<main data-ui="layout">
+  <h2>Sits in the default band</h2>
+  <figure style="--col: layout-bleed">
+    <img src="/wide.jpg" alt="" />
+  </figure>
+  <p style="--col: layout-md; --col--lg: layout-lg">Measured text, wider from lg up.</p>
+</main>
 ```
 
-See [layout and containers](https://zazz.sh/docs/core-concepts/layout) for the band model, the article reading-measure variant, and responsive container variants.
+See [layout](https://zazz.sh/api/foundations/layout/) for the band model and [breakpoints](https://zazz.sh/api/foundations/breakpoints/) for how tiers read the nearest container.
 
 ## Tests
 

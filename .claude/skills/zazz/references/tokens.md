@@ -11,8 +11,8 @@ Two rules govern every choice:
 
 1. **Never hardcode.** Every value is a `var(--…)` token that exists in the kit. Override at one
    of the scopes in `SKILL.md` (global → subtree hook → instance) instead of editing source.
-2. **Most semantic that fits.** `var(--space-sm)` → a scale number (`--p: 4`) → `calc(var(--spacing) * 4)`,
-   in that order of preference.
+2. **Most semantic that fits.** a scale number (`--p: 4`) → `calc(var(--spacing) * 4)`,
+   in that order of preference. Spacing in `style` is always a number, never `var(--space-*)`.
 
 ---
 
@@ -20,7 +20,7 @@ Two rules govern every choice:
 
 - **The space scale, as numbers (use first):** the `--space-*` tokens are steps of `--spacing`,
   so write the number and skip the `var()`: `2xs` = 1, `xs` = 2, `sm` = 4, `md` = 6, `lg` = 11,
-  `xl` = 24, `2xl` = 40 (`style="--p: 6; --gap: 4"` is `var(--space-md)` / `var(--space-sm)`).
+  `xl` = 24, `2xl` = 40 (`style="--p: 6; --gap: 4"` is `--space-md` / `--space-sm`).
   The tokens stay for CSS and hooks.
 - **Scale numbers:** spacing, margin, and sizing utilities take a bare number as `n × --spacing`
   (`--px: 6`). `--spacing` is fluid (a `clamp()`).
@@ -66,7 +66,7 @@ var(--color-shade-600), transparent 20%` (scrim over a photo); `--bg-radial: cir
 
 - **Roles (size + weight + leading + tracking bundled, all fluid):** native `h1`–`h6`, or
   `data-ui="text-display"`, `text-h1 … text-h6`, `text-xl text-lg text-md text-sm text-xs`,
-  `text-eyebrow`, `text-link`. A role stacks with other tokens: `data-ui="badge text-xs"`.
+  `text-eyebrow`. A role stacks with other tokens: `data-ui="badge text-xs"`.
 - **Override one property** with a utility: `--font-size`, `--font-weight`, `--font-family`,
   `--font-style`, `--leading`, `--tracking`, `--text-align`, `--text-transform`, `--text-wrap`,
   `--text-decoration`, `--whitespace`, `--line-clamp` (`1` = truncate).
@@ -110,7 +110,8 @@ primitive's focus ring.
   `data-ui="container"` to make what's inside respond to it; an element never queries itself).
 - **Flow utilities:** `--display` (plus `flex-row`, `flex-col`, `-reverse`, and `inline-flex-…`
   shorthands that set the direction; no `--flex-direction`), `--flex-wrap`, `--flex`, `--shrink`,
-  `--basis`, `--order`, `--items`, `--justify`, `--place`, `--self`.
+  `--basis`, `--order`, `--items`, `--justify`, `--self`, and for grids `--place-items`, `--place-content`
+  (alignment keywords only: `center`, `start`, `safe end`, `space-between`…).
 - **Grid utilities (Tailwind's set):** `--grid-cols` / `--grid-rows` (integer → equal tracks, or
   `subgrid`; `none` is `--grid-template-cols: none`), `--grid-template-cols` / `--grid-template-rows` (raw track list),
   `--grid-fit` (length → auto-fit columns), `--grid-flow`, `--auto-cols`, `--auto-rows`.
@@ -172,7 +173,8 @@ them). Color and effects utilities take state tiers: `hover active focus-visible
 checked starting`, e.g. `--text: var(--color-muted-foreground); --text--hover: var(--color-foreground)`.
 Group tiers react to an ancestor with `data-ui="group"`:
 `--opacity: 1; --group-opacity--hover: 0.85`. Pseudo-elements: `--before-content: ''` plus
-`--before-<utility>` / `--after-<utility>` for sizing, color, and `--rounded`. On a primitive, prefer
+`--before-<utility>` / `--after-<utility>` for sizing, padding, inset/position, display, z, color, `--rounded`,
+opacity, transforms, transition, and font size/weight (an accent bar: `--before-position: absolute; --before-inset-y: 0; --before-left: 0; --before-w: 1; --before-bg: var(--color-primary)`). On a primitive, prefer
 the state hook (`--ui-button-bg--hover`) so its own states stay intact.
 
 `--<utility>--starting` is the `@starting-style` value: an element starts there when it first

@@ -28,9 +28,12 @@
 @property --justify { syntax: "*"; inherits: false; }
 @property --_justify { syntax: "*"; inherits: false; }
 @property --_justify-resolved { syntax: "*"; inherits: false; }
-@property --place { syntax: "*"; inherits: false; }
-@property --_place { syntax: "*"; inherits: false; }
-@property --_place-resolved { syntax: "*"; inherits: false; }
+@property --place-items { syntax: "*"; inherits: false; }
+@property --_place-items { syntax: "*"; inherits: false; }
+@property --_place-items-resolved { syntax: "*"; inherits: false; }
+@property --place-content { syntax: "*"; inherits: false; }
+@property --_place-content { syntax: "*"; inherits: false; }
+@property --_place-content-resolved { syntax: "*"; inherits: false; }
 @property --self { syntax: "*"; inherits: false; }
 @property --_self { syntax: "*"; inherits: false; }
 @property --_self-resolved { syntax: "*"; inherits: false; }
@@ -451,6 +454,62 @@
 @property --_divide-c { syntax: "*"; inherits: true; }
 
 /* Dual pairs on pseudo-elements */
+@property --_before-p-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_before-p-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_after-p-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_after-p-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_before-px-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_before-px-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_after-px-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_after-px-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_before-py-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_before-py-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_after-py-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_after-py-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_before-pt-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_before-pt-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_after-pt-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_after-pt-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_before-pb-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_before-pb-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_after-pb-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_after-pb-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_before-pl-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_before-pl-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_after-pl-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_after-pl-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_before-pr-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_before-pr-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_after-pr-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_after-pr-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_before-inset-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_before-inset-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_after-inset-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_after-inset-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_before-inset-x-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_before-inset-x-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_after-inset-x-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_after-inset-x-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_before-inset-y-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_before-inset-y-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_after-inset-y-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_after-inset-y-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_before-top-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_before-top-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_after-top-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_after-top-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_before-bottom-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_before-bottom-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_after-bottom-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_after-bottom-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_before-left-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_before-left-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_after-left-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_after-left-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_before-right-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_before-right-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_after-right-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_after-right-num { syntax: "<number>"; inherits: false; initial-value: 0; }
 @property --_before-w-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
 @property --_before-w-num { syntax: "<number>"; inherits: false; initial-value: 0; }
 @property --_after-w-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }

@@ -107,7 +107,7 @@ describe("zazz-ui init (e2e, packed kit)", () => {
       { cwd: project, silent: true },
     );
     const css = await readFile(path.join(project, "zazz/index.css"), "utf8");
-    expect(css).toContain(`@import "../styles/old.css" layer(legacy);`);
+    expect(css).toContain(`@import "../styles/old.css" layer(legacy.imports);`);
     expect((await readConfig(project)).legacy).toBe("../styles/old.css");
   });
 

@@ -25,7 +25,7 @@ full contract is `SPEC.md` at the repo root.
 
 **Single source of truth for anatomy:** each component's markup lives once, in
 `packages/core/src/primitives/{name}/*.html`, surfaced on the docs site at
-`/docs/components/{name}`. Never invent or paste a second copy — read the real fragment and
+`/api/primitives/{name}/` on the docs site (zazz.sh). Never invent or paste a second copy — read the real fragment and
 adapt it. Never invent slot names or presets.
 
 ## How Zazz thinks (mental model)
@@ -46,7 +46,7 @@ Zazz markup has **no classes**. Every styling decision is one of four channels:
 Behind that:
 
 - **Cascade layers, not specificity.** `@layer variables, reset, vendors, legacy, ui, overrides`
-  (`zazz` nests `components, plugins, utilities`). Utilities live in `ui.utilities` at zero
+  (`ui` nests `components, plugins, utilities`). Utilities live in `ui.utilities` at zero
   specificity and beat component rules; typography roles sit in `reset`. Don't fight the
   cascade with selector tricks.
 - **Hooks theme primitives.** Every primitive reads `--ui-<identity>-<utility>` hooks (inheriting,
@@ -63,13 +63,18 @@ Behind that:
 Start at the most semantic layer; get specific only when nothing semantic fits.
 
 - **Spacing** → the space scale as a number, no `var()`: `--space-2xs` = 1, `xs` = 2, `sm` = 4,
-  `md` = 6, `lg` = 11, `xl` = 24, `2xl` = 40 (`--p: 4` is `var(--space-sm)`); other scale numbers when
+  `md` = 6, `lg` = 11, `xl` = 24, `2xl` = 40 (`--p: 4` is `--space-sm`); other scale numbers when
   no step fits. Never a raw px/rem in markup.
 - **Color** → `var(--color-<role>)` (`--color-foreground`, `--color-muted-foreground`,
   `--color-primary`, `--color-border`, `--color-destructive`…) so light/dark swap for free;
   literal scales (`--color-primary-600`, `--color-neutral-100`, `--color-shade-800`) only as a last resort.
 - **Type** → a role: native `h1`–`h6`, or `data-ui="text-h3"`, `text-display`, `text-eyebrow`,
   `text-xs … text-xl`. Override one property with a utility; never rebuild a role from utilities.
+- **Size** → the default. `data-button-size="sm"` / `"icon-sm"` and `data-toggle-size="sm"` /
+  `"icon-sm"` exist for dense chrome only: a control inside an input group, a row action in a table,
+  a tight toolbar. Navigation links, header and footer actions, dialog and form buttons, and anything
+  a visitor reads as a primary control stay at the regular size (`icon` for an icon-only one). If
+  the smaller size is for "fitting in", fix the layout instead.
 - **Reuse over new CSS.** A preset, hook, or utility almost always exists. Reaching for a `<style>`
   block or a class is a signal you skipped one — check `references/tokens.md` first.
 
@@ -93,7 +98,7 @@ intensity, is the bar.** Zazz supplies the vocabulary; you supply the point of v
   dark mode comes free, and don't treat the default blue-violet as a neutral.
 - **Compose with tension.** Break the centered stack. The layout band system is built for it:
   play `--col: layout-bleed`/`layout-full` imagery against capped `lg`/reading-width text, use
-  the left-label layout, overlap layers with `data-ui="pile"`, and let `var(--space-xl)` open
+  the left-label layout, overlap layers with `data-ui="pile"`, and let big section padding (`--py: 24`) open
   real negative space. Asymmetry and whitespace are choices, not accidents.
 - **Build atmosphere, not flat fills.** Layer depth from tokens — gradient washes across a brand
   scale (`--color-primary-600` → `--color-primary-900`), `shade`/`tint` transparencies, subtle noise/grain,
@@ -159,6 +164,8 @@ live in `design-styles/`.
   (the eyebrow's caps come from the `text-eyebrow` role).
 - **Do** use `var(--token)` in utilities. **Don't** hardcode colors, spacing, radii, or type, or
   invent tokens — every `var(--…)` must exist in the kit.
+- **Do** leave buttons and toggles at their default size; reach for `sm` / `icon-sm` only inside
+  input groups, table rows, and tight toolbars. **Don't** shrink nav links or header actions.
 - **Do** write `data-ui="button" data-button-variant="primary"`. **Don't** write classes,
   `data-variant`, `data-slot`, utility classes, or `class="dark"` (all 0.4).
 - **Do** let `--color-*` roles handle dark mode; pin a scheme with `data-ui-theme`. **Don't**

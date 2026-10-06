@@ -17,7 +17,10 @@
  *
  * Item facts come from the markup: the match/commit text is `data-<prefix>-value`
  * (falling back to text content) and `data-<prefix>-keywords` adds extra match
- * targets. `data-<prefix>-sort="score"` on the root re-ranks visually via `order`.
+ * targets. `data-<prefix>-sort="score"` on the root re-ranks visually via `order`;
+ * `data-<prefix>-filter="none"` leaves filtering to another source (a search
+ * index) and only navigates, highlights, and announces. Items added to or
+ * removed from the list after the query are ranked like typed input.
  * Unprefixed `data-<key>` spellings are also read.
  */
 
@@ -125,6 +128,20 @@ abstract class TypeaheadElement extends ZazzElement {
   }
   /** Whether filtering auto-highlights the best item (command palettes do). */
   protected readonly autoHighlight: boolean = false;
+  /**
+   * @description Whether the engine filters and scores the items itself.
+   * `data-<prefix>-filter="none"` opts out for a list another source already
+   * filtered (a search index, a server): every item stays visible in document
+   * order, and keyboard navigation, highlight, and ARIA still run.
+   */
+  protected get filtersItems(): boolean {
+    return this.config("filter") !== "none";
+  }
+
+  /** @description Whether visible items are re-ordered by score (never for an unfiltered list). */
+  protected get ordersByScore(): boolean {
+    return this.sortByScore && this.filtersItems;
+  }
 
   /**
    * Applies a committed item: fill the input, sync a value, activate.
@@ -140,6 +157,8 @@ abstract class TypeaheadElement extends ZazzElement {
   protected readonly query = state("");
   protected readonly open = state(false);
   protected readonly activeIndex = state(-1);
+  /** Bumped when items are added or removed, so the ranking effect re-runs. */
+  protected readonly itemsVersion = state(0);
 
   protected setup(signal: AbortSignal): void {
     const prefix = this.slotPrefix;
@@ -156,6 +175,24 @@ abstract class TypeaheadElement extends ZazzElement {
       list.id ||= `ui-${prefix}-list-${++typeaheadIdCounter}`;
       input.setAttribute("aria-controls", list.id);
     }
+
+    // Items that arrive or leave after the query (an async result source) are
+    // ranked like typed input: re-run the output effect and, for a palette,
+    // highlight the new best match. Only an added or removed *item* counts: a
+    // text swap inside an item or a result counter next to the list must not
+    // reset the highlight. The effect's own writes are attributes, so it never
+    // observes itself.
+    const itemSelector = this.partSelector("item");
+    const touchesItem = (node: Node): boolean =>
+      node instanceof Element &&
+      (node.matches(itemSelector) || node.querySelector(itemSelector) !== null);
+    const itemsObserver = new MutationObserver((records) => {
+      if (!records.some((r) => [...r.addedNodes, ...r.removedNodes].some(touchesItem))) return;
+      this.itemsVersion.set(this.itemsVersion.get() + 1);
+      if (this.autoHighlight) this.activeIndex.set(0);
+    });
+    itemsObserver.observe(list ?? panel, { childList: true, subtree: true });
+    signal.addEventListener("abort", () => itemsObserver.disconnect(), { once: true });
 
     // Input adapters: DOM events only write signals
     input.addEventListener(
@@ -320,7 +357,7 @@ abstract class TypeaheadElement extends ZazzElement {
         }
 
         const { items, ranked, visible } = this.#rank(query);
-        const sort = this.sortByScore;
+        const sort = this.ordersByScore;
         for (const verdict of ranked) {
           const item = items[verdict.index];
           item.hidden = verdict.hidden;
@@ -373,7 +410,7 @@ abstract class TypeaheadElement extends ZazzElement {
     ranked: readonly RankedItem[],
   ): HTMLElement[] {
     const visible = ranked.filter((verdict) => !verdict.hidden);
-    if (this.sortByScore) visible.sort((a, b) => b.score - a.score || a.index - b.index);
+    if (this.ordersByScore) visible.sort((a, b) => b.score - a.score || a.index - b.index);
     return visible.map((verdict) => items[verdict.index]);
   }
 
@@ -393,9 +430,10 @@ abstract class TypeaheadElement extends ZazzElement {
     ranked: RankedItem[];
     visible: HTMLElement[];
   } {
+    this.itemsVersion.get();
     const items = this.items();
     const ranked = rankItems(
-      query,
+      this.filtersItems ? query : "",
       items.map((item) => ({
         value: this.itemValue(item),
         keywords: (

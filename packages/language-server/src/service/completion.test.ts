@@ -67,9 +67,9 @@ describe("style names", () => {
 
 describe("style values", () => {
   it("offers tokens with their resolved values after the colon", () => {
-    const { parsed, offset, text } = cursor(`<p style="--px: |">a</p>`);
+    const { parsed, offset, text } = cursor(`<p style="--font-size: |">a</p>`);
     const items = complete(parsed, offset);
-    const md = items.find((item) => item.label === "var(--space-md)")!;
+    const md = items.find((item) => item.label === "var(--font-size-lg)")!;
     expect(md.detail).toMatch(/rem – .*rem/);
     expect(slice(text, md.range)).toBe("");
   });

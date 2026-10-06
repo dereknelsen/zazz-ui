@@ -20,7 +20,7 @@ export interface Session {
   diagnostics(
     uri: string,
   ): Promise<{ range: unknown; message: string; code: string; data?: unknown }[]>;
-  open(uri: string, text: string): void;
+  open(uri: string, text: string, languageId?: string): void;
   change(uri: string, version: number, text: string): void;
   close(): Promise<void>;
 }
@@ -54,9 +54,9 @@ export async function startSession(settings: Record<string, unknown> = {}): Prom
         queue.push(resolve as never);
         waiting.set(uri, queue);
       }),
-    open: (uri, text) =>
+    open: (uri, text, languageId = "html") =>
       void connection.sendNotification("textDocument/didOpen", {
-        textDocument: { uri, languageId: "html", version: 1, text },
+        textDocument: { uri, languageId, version: 1, text },
       }),
     change: (uri, version, text) =>
       void connection.sendNotification("textDocument/didChange", {

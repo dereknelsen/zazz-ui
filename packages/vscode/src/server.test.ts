@@ -26,6 +26,24 @@ describe("bundled language server", () => {
     ]);
   });
 
+  it("masks template holes for a templating language", async () => {
+    const uri = "file:///page.astro";
+    const published = session.diagnostics(uri);
+    session.open(
+      uri,
+      `---\nconst items = [{ label: "a" }];\n---\n<ul style="--gap: 2">{items.map((i) => <li style="--foo: 1">{i.label}</li>)}</ul>`,
+      "astro",
+    );
+    const diagnostics = await published;
+    // the real finding inside the expression's markup, nothing from the frontmatter or the code
+    expect(diagnostics.map((d) => d.code)).toEqual(["zazz/unknown-utility"]);
+    const inHole = await session.connection.sendRequest("textDocument/hover", {
+      textDocument: { uri },
+      position: { line: 1, character: 8 },
+    });
+    expect(inHole).toBeNull();
+  });
+
   it("answers hover on a utility", async () => {
     const result = await session.connection.sendRequest<{ contents: { value: string } }>(
       "textDocument/hover",

@@ -1,6 +1,6 @@
 # 03 — Utility families that exist in CSS but have no docs
 
-Status: open
+Status: superseded (the docs app was rewritten; see `.scratch/docs-site/`)
 
 Decide per family: document it, or mark it internal on purpose.
 

@@ -97,6 +97,22 @@ describe("families", () => {
     expect(style(tierOnly!, "grid-column-start")).toBe("span 1");
   });
 
+  it("--place-items and --place-content take the alignment keywords, safe variants included", async () => {
+    await atWidth(at("md"));
+    const grid = mount(
+      `<div style="--display: grid; --place-items: center; --place-content: space-between"><i style="--display: grid; --place-items: safe end"></i><i style="--place-content--md: end"></i></div>`,
+    );
+    expect(style(grid, "align-items")).toBe("center");
+    expect(style(grid, "justify-items")).toBe("center");
+    expect(style(grid, "align-content")).toBe("space-between");
+    expect(style(grid, "justify-content")).toBe("space-between");
+    const [safe, tierOnly] = [...grid.children];
+    expect(style(safe!, "align-items")).toBe("safe end");
+    expect(style(tierOnly!, "align-content")).toBe("end");
+    await atWidth(below("md"));
+    expect(style(tierOnly!, "align-content")).toBe("normal");
+  });
+
   it("a tier-only --col-span leaves a layout child in its band below the tier", async () => {
     const layout = mount(`<ui-layout><div style="--col-span--md: 2">x</div></ui-layout>`);
     await atWidth(below("md"));

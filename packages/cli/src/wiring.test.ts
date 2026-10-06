@@ -52,12 +52,14 @@ describe("renderIndexCss", () => {
       expect(index, marker).toBeGreaterThan(cursor);
       cursor = index;
     }
-    expect(css).toContain(`/* @import "./your-legacy.css" layer(legacy); */`);
+    expect(css).toContain(`/* @import "./your-legacy.css" layer(legacy.imports); */`);
   });
 
   it("wires the legacy layer when a path is given", () => {
     const css = renderIndexCss({ kit: fakeKit(), legacy: "../styles/old.css", primitives: [] });
-    expect(css).toContain(`@import "../styles/old.css" layer(legacy);`);
+    // a sublayer, never bare `legacy` (an implicit final sublayer would outrank migrations)
+    expect(css).toContain(`@import "../styles/old.css" layer(legacy.imports);`);
+    expect(css).not.toMatch(/layer\(legacy\)/);
     expect(css).not.toContain("your-legacy.css");
   });
 });

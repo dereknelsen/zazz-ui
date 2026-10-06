@@ -1,8 +1,14 @@
 <!-- A mixed bar: plain links, one rich panel, a plain link-list as a ui-menu
      item, and a search input at the end. -->
-<header data-ui="layout" style="--w: 100%">
-  <nav data-ui="navigation-menu">
-    <menu data-navigation-menu-slot="list">
+<header
+  data-ui="layout"
+  style="
+    --display: grid;
+    --w: 100%;
+  "
+>
+  <nav data-ui="navigation-menu" style="--w: 100%">
+    <menu data-navigation-menu-slot="list" style="--w: 100%">
       <li data-navigation-menu-slot="item">
         <a href="#" data-ui="button" data-button-variant="ghost">Home</a>
       </li>
@@ -39,7 +45,7 @@
             <div
               style="
                 --display: flex-col;
-                --p: var(--space-xs);
+                --p: 2;
                 --gap: 1px;
               "
             >
@@ -132,7 +138,7 @@
           type="search"
           aria-label="Search the site"
           placeholder="Search…"
-          style="--max-w: 16ch"
+          style="--min-w: 40ch"
         />
       </li>
     </menu>

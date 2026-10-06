@@ -24,7 +24,7 @@ Versioning and changelog rules live in their sources of truth — restate neithe
    rg -n '@zazz-ui/core@[0-9]' --glob '!node_modules'
    ```
 
-   Done when that search returns only the new version.
+   Done when that search returns only the new version. The docs site (`apps/docs`) reads the version from the installed package (`kitVersion()`), so it needs no edit — but rebuild it after publishing so its CDN snippets and `llms.txt` pin the new release.
 
 4. **Check the manifest contract** if primitives, dependencies, or import order changed: `CSS_CASCADE_ORDER` and the `PRIMITIVES` dependency entries in `packages/core/src/manifest.ts` must mirror `index.css` (`manifest.test.ts` and `head.test.ts` enforce this). If the manifest's _shape_ changed (not just data), bump `MANIFEST_VERSION` — it gates CLI compatibility.
 

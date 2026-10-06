@@ -1,6 +1,6 @@
 # Zazz owns no classes: identity is `data-ui`, every attribute Zazz reads is `data-ui-*`
 
-Status: accepted (2026-09-25). Amends [ADR-0001](./0001-dual-form-primitives.md) (class form → attribute form) and [ADR-0002](./0002-data-slot-parts.md) (`data-slot` → `data-ui-slot`; bare-key rule withdrawn).
+Status: accepted (2026-09-25). Amends [ADR-0001](./0001-dual-form-primitives.md) (class form → attribute form) and [ADR-0002](./0002-data-slot-parts.md) (`data-slot` → `data-<name>-slot`, as amended below; bare-key rule withdrawn).
 
 The class form of a primitive becomes an attribute form: `<button data-ui="button">`, `<div data-ui="tooltip">`. Every attribute that Zazz CSS or JS reads is namespaced `data-ui-*`. Zazz never reads or writes the `class` attribute; it belongs to the consumer. Tag form is unchanged and keeps ADR-0001's rule: `<ui-tooltip>` only where the root would otherwise be a generic element, never a wrapped or replaced semantic native.
 

@@ -21,6 +21,9 @@
  *   while the element is connected (even with the panel closed).
  * - `data-command-stay-open` (item): keep the panel open after activation.
  * - `data-command-sort="document"` (root): opt out of score ranking (default: score).
+ * - `data-command-filter="none"` (root): opt out of filtering for a list another
+ *   source already filtered (a search index); items added later are highlighted
+ *   and navigable like typed matches.
  *
  * Parts: `command-open` (trigger), `command-panel`, `command-header`,
  * `command-input`, `command-list`, `command-group` / `command-group-label`,
@@ -100,8 +103,14 @@ class UiCommand extends TypeaheadElement {
    * @param source - How the commit happened.
    */
   protected commit(item: HTMLElement, source: "keyboard" | "pointer"): void {
+    // The synthetic click() below bubbles back here as a pointer commit:
+    // one keystroke must announce once and close once.
+    if (this.#clicking) return;
     this.#activate(item, source === "keyboard");
   }
+
+  /** True while `#activate` runs an item's native activation via `click()`. */
+  #clicking = false;
 
   /**
    * @description Runs one item's activation: optional synthetic click,
@@ -118,7 +127,14 @@ class UiCommand extends TypeaheadElement {
         detail: { item, value: this.itemValue(item) },
       }),
     );
-    if (click) item.click();
+    if (click) {
+      this.#clicking = true;
+      try {
+        item.click();
+      } finally {
+        this.#clicking = false;
+      }
+    }
     if (!(item.hasAttribute("data-command-stay-open") || item.hasAttribute("data-stay-open"))) {
       this.#closePanel();
     }

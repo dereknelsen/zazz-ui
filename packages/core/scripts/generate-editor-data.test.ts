@@ -58,19 +58,19 @@ describe("editor custom data", () => {
   it("offers values after the colon: design tokens for token utilities, keywords for keyword utilities", () => {
     const values = (name: string) =>
       css.properties.find((property) => property.name === name)?.values?.map((v) => v.name) ?? [];
-    expect(values("--px")).toContain("var(--space-md)");
-    expect(values("--px--md")).toContain("var(--space-md)");
+    expect(values("--px")).toEqual(expect.arrayContaining(["2", "4", "6"]));
+    expect(values("--px")).not.toContain("var(--space-md)");
+    expect(values("--px--md")).toContain("6");
+    expect(values("--basis")).not.toContain("6");
     expect(values("--m")).toContain("auto");
-    expect(values("--w")).toEqual(expect.arrayContaining(["fit-content", "var(--space-md)"]));
+    expect(values("--w")).toEqual(expect.arrayContaining(["fit-content", "6"]));
     expect(values("--bg")).toContain("var(--color-primary)");
     expect(values("--bg--hover")).toContain("var(--color-primary)");
     expect(values("--rounded")).toContain("var(--radius-md)");
     expect(values("--text")).toContain("var(--color-primary)");
     expect(values("--font-size")).toContain("var(--font-size-lg)");
     expect(values("--shadow")).toContain("var(--shadow-md)");
-    expect(values("--border-b")).toEqual(
-      expect.arrayContaining(["var(--color-primary)", "var(--space-2xs)"]),
-    );
+    expect(values("--border-b")).toEqual(expect.arrayContaining(["var(--color-primary)"]));
     expect(values("--display")).toEqual(expect.arrayContaining(["grid", "flex", "none"]));
     expect(values("--items")).toEqual(expect.arrayContaining(["center", "start"]));
     expect(values("--col")).toEqual(expect.arrayContaining(["layout-lg", "layout-bleed"]));

@@ -305,17 +305,26 @@ function tokenFamilies(utility: Utility): string[] {
     return [utility.name];
   if (["font-size", "font-weight", "font-family", "aspect"].includes(utility.name))
     return [utility.name];
-  if (utility.name === "max-w" || utility.name === "w") return ["space", "breakpoint", "article"];
-  if (utility.emit === "border") return ["color", "space"];
+  if (utility.name === "max-w" || utility.name === "w") return ["breakpoint", "article"];
+  if (utility.emit === "border") return ["color"];
   if (
     utility.family === "color" &&
     !["bg-alpha", "bg-linear", "bg-radial", "bg-conic"].includes(utility.name)
   )
     return ["color"];
   if (utility.name === "ring-color" || utility.name === "ring-offset-color") return ["color"];
-  if (["spacing", "margin", "sizing"].includes(utility.family) || utility.name === "basis")
-    return ["space"];
   return [];
+}
+
+/** The `--space-*` scale as the numbers a utility takes (`--p: 4`); `--basis` is length-only. */
+const SPACE_STEPS = ["1", "2", "4", "6", "11", "24", "40"];
+
+function takesSpaceSteps(utility: Utility): boolean {
+  return (
+    ["spacing", "margin", "sizing"].includes(utility.family) ||
+    utility.name === "w" ||
+    utility.name === "max-w"
+  );
 }
 
 /** Common preludes offered for the gradient type utilities. */
@@ -350,6 +359,7 @@ function valuesFor(utility: Utility, tokens: Map<string, string[]>): HtmlValue[]
   }
   if (utility.name === "bg") names.add("none");
   for (const prelude of GRADIENT_PRELUDES[utility.name] ?? []) names.add(prelude);
+  if (takesSpaceSteps(utility)) for (const step of SPACE_STEPS) names.add(step);
   for (const family of tokenFamilies(utility))
     for (const token of tokens.get(family) ?? []) names.add(`var(${token})`);
   return names.size ? [...names].map((name) => ({ name })) : undefined;
