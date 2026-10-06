@@ -25,7 +25,7 @@
   }
 }
 
-@layer zazz.components {
+@layer ui.components {
   /* ===========================================================================
   RADIO — data-ui="radio" (+ data-ui="radio-group")
   - appearance: none redraws the circle from theme tokens; the checked dot is a
@@ -117,7 +117,7 @@
 }
 
 /* An invalid control remaps the --ui-field-* family on itself. */
-@layer zazz.components {
+@layer ui.components {
   :where([data-ui~="radio"]):disabled {
     opacity: 0.5;
     cursor: not-allowed;

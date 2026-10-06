@@ -14,7 +14,7 @@ The class form of a primitive becomes an attribute form: `<button data-ui="butto
 ## Decision
 
 - **`data-ui`** is a space-separated token list matched with `[data-ui~="…"]`. Selector aliasing becomes `:where(ui-tooltip, [data-ui~="tooltip"])`. A specialization rides on its base; unrelated primitives never share an element.
-- **Switches** (valueless rule sets: `sr-only`, `grid-pile`) are tokens in the same list (`data-ui="badge sr-only"`), not boolean attributes.
+- **Switches** (valueless rule sets: `sr-only`, `pile`) are tokens in the same list (`data-ui="badge sr-only"`), not boolean attributes.
 - **Namespaced CSS-read attributes**: `data-ui-slot`, `data-ui-variant`, `data-ui-size`, `data-ui-text`, `data-ui-state`, `data-ui-side`, `data-ui-align`, `data-ui-orientation`, `data-ui-position`, `data-ui-theme`, `data-ui-layout`.
 - **JS config keys keep the primitive name**: `data-ui-{primitive}-{key}` (`data-ui-carousel-loop`, `data-ui-reveal-duration`). Behaviors attach to arbitrary elements (reveal targets, command triggers, a thumbs slot carrying carousel config), so a root can host two behaviors; keeping the name is the only shape where `data-ui-carousel-duration` and `data-ui-reveal-duration` coexist and the parser stays a prefix match.
 - **Kit JS never writes a class.** Toaster and multiselect stamp `dataset.ui`; carousel `is-active` becomes `data-ui-state="active"`; reveal `in-viewport` becomes `data-ui-state="in-view"`; the theme toggle writes `data-ui-theme="dark"` on `<html>` with no `.dark` alias.

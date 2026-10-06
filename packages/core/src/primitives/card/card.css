@@ -32,7 +32,7 @@
   inherits: false;
 }
 
-@layer zazz.components {
+@layer ui.components {
   :where([data-ui~="card"]) {
     display: grid;
     --_gap-len: var(--_gap-resolved, var(--ui-card-gap));

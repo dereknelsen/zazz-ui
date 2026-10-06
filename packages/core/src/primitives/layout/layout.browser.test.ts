@@ -16,12 +16,12 @@ const width = (el: Element) => el.getBoundingClientRect().width;
 describe("layout", () => {
   useKit();
 
-  it("places children in the lg band by default, in tag and attribute form", async () => {
+  it("places children in the xl band by default, in tag and attribute form", async () => {
     await atWidth(1400);
     const root = mount(`<div>
       <ui-layout data-tag><p data-child>a</p></ui-layout>
       <div data-ui="layout" data-attr><p data-child>b</p></div>
-      <div data-probe style="--w: var(--breakpoint-lg)"></div>
+      <div data-probe style="--w: var(--layout-xl)"></div>
     </div>`);
     for (const selector of ["[data-tag]", "[data-attr]"]) {
       const layout = root.querySelector(selector)!;
@@ -51,8 +51,8 @@ describe("layout", () => {
     const root = mount(`<div>
       <ui-layout data-layout-size="xl"><p data-xl>a</p></ui-layout>
       <ui-layout><p style="--col: layout-bleed" data-bleed>b</p><p style="--col--lg: layout-xl" data-tier>c</p></ui-layout>
-      <div data-lg style="--w: var(--breakpoint-lg)"></div>
-      <div data-xl-probe style="--w: var(--breakpoint-xl)"></div>
+      <div data-lg style="--w: var(--layout-lg)"></div>
+      <div data-xl-probe style="--w: var(--layout-xl)"></div>
     </div>`);
     const at = (selector: string) => root.querySelector(selector)!;
     expect(width(at("[data-xl]"))).toBeCloseTo(width(at("[data-xl-probe]")), 0);
@@ -75,7 +75,7 @@ describe("layout", () => {
     await atWidth(600);
     const layout = mount(`<ui-layout style="--grid-cols--md: 3"><p data-child>a</p></ui-layout>`);
     expect(style(layout, "grid-template-columns")).not.toMatch(/^repeat|^\d+px \d+px \d+px$/);
-    expect(style(layout.querySelector("[data-child]")!, "grid-column-start")).toBe("layout-lg");
+    expect(style(layout.querySelector("[data-child]")!, "grid-column-start")).toBe("layout-xl");
     await atWidth(1400);
   });
 

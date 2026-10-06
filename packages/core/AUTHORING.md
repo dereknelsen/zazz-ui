@@ -15,7 +15,7 @@ State tokens (`data-<identity>-state="active open"`) are written by the kit's sc
 
 ## Identity
 
-- One element, one or more tokens: `data-ui="card group"`. Primitives (`button`, `card`, `dialog`, `layout`…), switches (`sr-only`, `grid-pile`), and typography roles (`text-h2`, `text-eyebrow`…) are all tokens.
+- One element, one or more tokens: `data-ui="card group"`. Primitives (`button`, `card`, `dialog`, `layout`…), switches (`sr-only`, `pile`, `isolate`, `container`, `divide-x`, `divide-y`), and typography roles (`text-h2`, `text-eyebrow`…) are all tokens.
 - Interactive primitives also have a tag form (`<ui-carousel>`, `<ui-tabs>`, `<ui-layout>`). Use the tag where the wrapper would otherwise be a plain `div`.
 - Native elements keep their meaning: a button is a `<button data-ui="button">`, a dialog is a `<dialog data-ui="dialog">`, an input is `<input data-ui="input">`. Never put `data-ui="button"` on a `div`.
 - Default variant = no preset attribute. Write `data-button-variant="primary"`, never a combined token.
@@ -34,9 +34,9 @@ State tokens (`data-<identity>-state="active open"`) are written by the kit's sc
 ```
 
 - **Spelling is exact**: `--<utility>: value`, one space after the colon, declarations separated by `; `. The kit matches the attribute text, so `--px:6` and `--px : 6` silently do nothing.
-- **Numbers are scale steps** on spacing, margin and sizing utilities: `--px: 6` is `6 × --spacing`. Any length works too: `--px: 1.5rem`, `--w: 100%`, `--gap: var(--space-md)`.
-- **Prefer tokens**: `var(--space-2xs … 2xl)` for spacing, `var(--color-<role>)` for color, `var(--radius-*)`, `var(--font-size-*)`, `var(--shadow-*)`. Raw values are the escape hatch.
-- **Names are short**, Tailwind-style where Tailwind has one: `--p --px --py --pt --pb --pl --pr`, `--m …`, `--w --h --size --min-w --max-w`, `--bg --text --border --border-color`, `--rounded`, `--font-size --leading --tracking --font-weight`, `--items --justify --place --self`, `--grid-cols --col --row`, `--flex --basis --shrink`. Sides are `l`/`t`/`r`/`b` (`--pl`, `--mr`, `--border-l`); they set logical properties, so `l` is the right side in RTL. `--border: <color | number | length>` is a solid border: a color is 1px wide, a number is that many px in `--color-border`, a length is the width in `--color-border`; `--border-width` and `--border-color` win over it. `--grid-cols` / `--grid-rows` take a count (`3` is three equal tracks); a track list goes in `--grid-template-cols: 2fr 1fr` / `--grid-template-rows`. The editor completes the full list (`editor/zazz.css-data.json`).
+- **Numbers are scale steps** on spacing, margin and sizing utilities: `--px: 6` is `6 × --spacing`. The space tokens sit on that scale, so write their number and skip the `var()`: `--space-2xs` = 1, `xs` = 2, `sm` = 4, `md` = 6, `lg` = 11, `xl` = 24, `2xl` = 40 (`--gap: 4` is `var(--space-sm)`). Any length works too: `--px: 1.5rem`, `--w: 100%`.
+- **Prefer tokens and their shorthands**: scale numbers for spacing (above), `var(--color-<role>)` for color, `var(--radius-*)`, `var(--font-size-*)`. A few utilities take a token by name, at every tier: `--shadow: md` (`2xs … 2xl`, any shadow or `var()` still works; `--shadow-hue: var(--color-primary)` tints an element's and its subtree's shadows, and `--color-shadow` on `:root` tints them all) and `--font-weight: strong` (also `heading`, `body`; standard names such as `medium` are not CSS, so write `500`). `--display` takes flex shorthands that set the direction too: `flex-row`, `flex-col`, their `-reverse` forms, and `inline-flex-…` (`--display: flex-col; --display--md: flex-row`); there is no `--flex-direction` utility. Raw values are the escape hatch.
+- **Names are short**, Tailwind-style where Tailwind has one: `--p --px --py --pt --pb --pl --pr`, `--m …`, `--w --h --size --min-w --max-w`, `--bg --text --border --border-color`, `--bg-linear --bg-radial --bg-conic --bg-stops`, `--rounded`, `--inset --inset-x --inset-y --top --right --bottom --left`, `--font-size --leading --tracking --font-weight`, `--items --justify --place --self`, `--grid-cols --grid-rows --col --row --col-span --col-start --col-end --row-span --row-start --row-end`, `--flex --basis --shrink`. Sides are `l`/`t`/`r`/`b` (`--pl`, `--mr`, `--border-l`); they set logical properties, so `l` is the right side in RTL. `--border: <color | number | length>` is a solid border: a color is 1px wide, a number is that many px in `--color-border`, a length is the width in `--color-border`; `--border-width` and `--border-color` win over it. A side takes only the shorthand: `--border-b: 1` is a one-line divider, `--border-l: var(--color-primary)` an accent edge (there is no `--border-b-width`). Borders between direct children are the `divide-x` / `divide-y` switches: `data-ui="divide-y"`, with `--divide: 2` or `--divide: var(--color-muted)` on the container to size or color them. Grids follow Tailwind: `--grid-cols` / `--grid-rows` take a count (`3` is three equal tracks) or `subgrid` (`none` is `--grid-template-cols: none`); a track list goes in `--grid-template-cols: 2fr 1fr` / `--grid-template-rows`. Place items with `--col-span: 2` (`span 2 / span 2`), `--col-start: 2`, `--col-end: -1`, and the `--row-*` twins; span every track with `--col: 1 / -1` (Tailwind's `col-span-full`). Gradients pair a type with its stops: `--bg-linear: to bottom in oklch; --bg-stops: var(--color-shade-600), transparent 20%` (also `--bg-radial: circle at top`, `--bg-conic: from 45deg`); the type takes the gradient's prelude (direction, shape, position, `in <color-space> [<hue> hue]`), any of it optional but not all of it, and `--bg` stays the color underneath. `--bg: none` clears both the color and any gradient, at the base or a state (`--bg--hover: none`). The editor completes the full list (`editor/zazz.css-data.json`).
 
 ### Modifiers
 
@@ -44,9 +44,11 @@ State tokens (`data-<identity>-state="active open"`) are written by the kit's sc
 
 | Modifier    | Values                                                                  | Families                                                    |
 | ----------- | ----------------------------------------------------------------------- | ----------------------------------------------------------- |
-| Breakpoint  | `2xs xs sm md lg xl 2xl` (min-width, mobile first)                      | flow, grid, spacing, margin, sizing, typography             |
+| Breakpoint  | `sm md lg xl 2xl` (nearest container's width in `ch`, mobile first)     | flow, grid, spacing, margin, sizing, typography, color      |
 | State       | `hover active focus-visible focus-within disabled open checked`         | color, effects (`--bg`, `--text`, `--opacity`, `--shadow`…) |
 | Group state | `--group-<utility>--hover` reacts to an ancestor with `data-ui="group"` | color, effects                                              |
+| Starting    | `--<utility>--starting`: the value a `--transition` animates from       | color, effects                                              |
+| Stuck       | `--<utility>--stuck` inside a sticky element (experimental)             | color, effects                                              |
 | Pseudo      | `--before-<utility>`, `--after-<utility>`, plus `--before-content: ''`  | sizing, color, `--rounded`                                  |
 
 ```html
@@ -64,13 +66,41 @@ State tokens (`data-<identity>-state="active open"`) are written by the kit's sc
 </article>
 ```
 
+**Starting.** `--<utility>--starting` is the element's `@starting-style` value: when it first renders, or leaves `display: none` (a popover opening, `hidden` removed), it starts there and a `--transition` animates it to its usual value. Without a transition it does nothing visible. It outranks every other state, has no `--group-*` form, and works without a base where the utility has a default (`--opacity`, `--scale`, `--translate`, `--rotate`). The formatter writes it first in its utility's lines.
+
+```html
+<div
+  style="
+    --opacity--starting: 0;
+    --opacity: 1;
+    --translate--starting: 0 1rem;
+    --translate: 0;
+    --transition: opacity 0.3s, translate 0.3s;
+  "
+>
+  …
+</div>
+```
+
+**Stuck (experimental).** `--<utility>--stuck` applies while the nearest sticky ancestor is stuck: the sticky element (`--position: sticky`, or raw `position: sticky`) is the container, and `--stuck-state` on it names the side to track (`top right bottom left block-start block-end inline-start inline-end`; default `top`). A container query never matches the container itself, so put the `--*--stuck` utilities on a **child** of the sticky element. It ranks below every other state (`--bg--hover` beats `--bg--stuck`), has no `--group-*` form, and `--stuck-state` takes no tiers: switch `--position` at a breakpoint to drop the state there. Chromium evaluates it natively (container scroll-state queries); elsewhere `index.js` loads a small polyfill (`base/scroll-state.js`) that writes the stuck sides to the container's `data-ui-stuck`, so markup does not change.
+
+```html
+<header style="--position: sticky; --position--lg: static; --top: 0; --z: 10">
+  <div
+    style="--bg: transparent; --bg--stuck: var(--color-background); --shadow--stuck: var(--shadow-md)"
+  >
+    …
+  </div>
+</header>
+```
+
 Rules that bite:
 
-1. **A tier needs a base.** `--text--hover: red` alone does nothing; write `--text: currentColor; --text--hover: red`. These utilities have a natural default and work tier-only: `--flex-direction --flex-wrap --shrink --grid-flow --auto-cols --auto-rows --items --justify --place --self --flex --basis --order --col --row --grid-cols --grid-rows --gap --gap-x --gap-y --text-align --text-wrap --opacity --scale --translate --rotate --shadow --ring --ring-color --ring-offset --ring-offset-color --rounded --aspect --position --overflow --overflow-x --overflow-y --z` (on plain elements; a primitive still needs the base).
-2. **Breakpoints are layout, states are paint.** `--bg--md` and `--px--hover` do not exist.
-3. **Sizing keywords switch the element to raw values.** Once an element has `--w: fit-content` (or `auto`, `min-content`, `max-content`) on any sizing or margin utility, its other sizing numbers must be lengths: `--w: fit-content; --h: 4rem`, not `--h: 4`.
+1. **A tier needs a base.** `--text--hover: red` alone does nothing; write `--text: currentColor; --text--hover: red`. These utilities have a natural default and work tier-only: `--flex-wrap --shrink --grid-flow --auto-cols --auto-rows --items --justify --place --self --flex --basis --order --col --row --grid-cols --grid-rows --gap --gap-x --gap-y --text-align --text-wrap --opacity --scale --translate --rotate --shadow --ring --ring-color --ring-offset --ring-offset-color --rounded --aspect --position --overflow --overflow-x --overflow-y --z` (on any element that is not a primitive: typography roles, switches, and prose count as plain, so `data-ui="text-2xl" style="--opacity--hover: .8"` works; a primitive like a button still needs the base).
+2. **Breakpoints reach layout and color; states reach color and effects.** `--bg--md`, `--text--lg`, and `--px--md` exist; `--px--hover` and `--shadow--md` do not. On a color utility a state beats a breakpoint: `--bg--md: black; --bg--hover: gray` is gray on hover at any width.
+3. **Keywords mix with numbers.** `--w: 4; --w--md: auto`, `--w: fit-content; --h: 4`, and `--grid-cols: 2; --grid-cols--md: subgrid` all work: each keyword-bearing utility has explicit keyword rules per tier until CSS `if()` can branch on the value. Keywords must be spelled exactly (`--w--md: auto`).
 4. **A utility on a primitive flattens its states.** `--bg: red` on a button is red on hover too. To keep hover, add the tier (`--bg--hover: darkred`) or set the hook instead (below).
-5. **`body` cannot use breakpoint tiers.** Put responsive utilities on a child.
+5. **Breakpoints read the nearest container, not the window.** A tier answers to the closest inline-size container: the page's `html`, `body`, `main`, `section`, `header`, `footer`, `article`, a layout band's child (so tiers inside a `layout-md` band follow the band), or any `data-ui="container"`. Thresholds are character counts: `sm` 40ch, `md` 65ch, `lg` 90ch, `xl` 120ch, `2xl` 150ch. Mark a card, sidebar, or slot `data-ui="container"` and the tiers inside it follow its width. An element never queries itself: a container's own tiers read the container above it. A container cannot size itself from its content, so give it a definite or stretched width.
 
 ## Theming primitives: hooks
 
@@ -86,7 +116,7 @@ Order of preference for changing how a primitive looks: preset, then hook on a s
 
 ## Layout and typography
 
-- `data-ui="layout"` (or `<ui-layout>`) makes the element a band grid. Children default to the `lg` band. Change the default with `data-layout-size="md"`; place one child with `--col: layout-bleed | layout-full | layout-xl … layout-2xs`, responsive with `--col--md: layout-sm`. A layout nested in a layout aligns to the parent's bands.
+- `data-ui="layout"` (or `<ui-layout>`) makes the element a band grid. Children default to the `xl` band. Change the default with `data-layout-size="md"`; place one child with `--col: layout-bleed | layout-full | layout-2xl … layout-sm`, responsive with `--col--md: layout-sm`. A layout nested in a layout aligns to the parent's bands.
 - Native `h1`–`h6` carry their role automatically. Give any other element a role with `data-ui="text-h3"`, `text-display`, `text-eyebrow`, `text-link`, or a body size `text-2xs … text-2xl`. Override one property with a utility (`--font-size`, `--leading`, `--font-weight`); never rebuild a role from utilities.
 - `data-ui="prose"` styles rich text inside it. Give a reading column `--max-w: var(--article-lg); --mx: auto`.
 
@@ -120,6 +150,6 @@ Pages navigate normally by default; the kit animates full loads with CSS view tr
 ## Tools
 
 - **`<ui-debug data-debug-domains="localhost">`** in development warns in the console about unknown utilities, wrong values, tiers without a base, flattened states, and misplaced presets.
-- **Editor**: VS Code and Cursor complete `data-ui` tokens, presets, slots, utilities, tiers and token values from `editor/zazz.html-data.json` and `editor/zazz.css-data.json` (`"html.customData"`, `"css.customData"` in settings).
-- **Formatting**: `vp run fmt:html` (repo root) runs oxfmt on HTML, then puts each utility of a multi-utility `style` on its own line and normalizes `--px:6` to `--px: 6`. The commit hook runs it on staged HTML, and `vp run ready` checks it.
+- **Editor**: the Zazz VS Code extension (`packages/vscode`, also for Cursor) shows the `<ui-debug>` audit as you type, completes utilities (only the tiers each takes), values with resolved tokens, identities, presets, and hooks, and adds hover, inlay hints, highlighting, snippets, and page templates. Without it, `editor/zazz.html-data.json` and `editor/zazz.css-data.json` give flat completions (`"html.customData"`, `"css.customData"` in settings).
+- **Formatting**: the `zazz/style-format` ESLint rule puts each utility of a multi-utility `style` on its own line, in cascade order (family, then shorthands first, tiers after their base), and normalizes `--px:6` to `--px: 6`. VS Code applies it on save (`source.fixAll.zazz`, from the extension), the commit hook on staged HTML, and `vp run fmt:html` (repo root) on every file; `vp run ready` checks it.
 - **`StyleGuard`** (`primitives/style-guard`) restores utilities when legacy scripts overwrite `style`.

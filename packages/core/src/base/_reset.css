@@ -5,13 +5,16 @@
  * @requires   _layers.css, _properties.css, _variables.css
  * @uses       appearance: none — select chevron reset
  * @uses       ::details-content — accordion open/close (see accordion.css for :where(ui-accordion, [data-ui~="accordion"]))
- * @uses       container-type — inline-size containers on html, main, article, section (the layout primitive owns the band grid)
+ * @uses       container-type — inline-size containers on html, body, main, header, footer, section, article:
+ *             the query containers breakpoint tiers read (the layout primitive owns the band grid)
  * @uses       view-transition-name via the <main> tag - main-content and [data-transition-layer] —
  *             global (animated in _view-transitions.css)
  * @uses       text-box — vertical trim on headings
  * @uses       color-mix(), oklch(from …), contrast-color() — mark/highlight tints
- * @tokens     Native-control hooks declared per element — --code-*,
- *             --search-cancel-*, --placeholder-color
+ * @tokens     Native-element hooks declared in each element's rule (override them
+ *             on the element): --code-* (incl. --code-font-family), --search-cancel-*,
+ *             --placeholder-color, --strong-font-weight, --hr-bg,
+ *             --optgroup-font-weight, --optgroup-option-pl; --selection-bg on html
  *
  * Checkbox, range, switch, select picker, popover and dialog internals live in
  * their primitive stylesheets.
@@ -40,10 +43,14 @@
     -webkit-text-size-adjust: 100%;
     background-color: var(--color-background);
     -webkit-tap-highlight-color: transparent;
-    overflow: clip;
+    /* text selection tint (::selection reads it from the selected element) */
+    --selection-bg: oklch(from var(--color-primary) calc(l + 0.1) c h / 0.3);
 
-    /* The page container: _breakpoints.css sets the --cqi-* flags on body
-       from a size query against html. */
+    /* html (the viewport) is the page's scrolling element, as browsers expect */
+    scroll-behavior: smooth;
+
+    /* The outermost query container: breakpoint tiers read the nearest
+       inline-size container, and this one is it when nothing closer is. */
     container-type: inline-size;
     container-name: html;
   }
@@ -66,10 +73,9 @@
     text-wrap: pretty;
     color: var(--color-foreground);
     background-color: var(--color-background);
-    block-size: 100svh;
-    scroll-behavior: smooth;
-    scrollbar-gutter: stable;
-    overflow-y: auto;
+    /* at least a screen tall, so main (flex: 1) pins the footer on short pages */
+    min-block-size: 100svh;
+    /* clip, not hidden: no scroll container, so the viewport keeps scrolling */
     overflow-x: clip;
     font-size: var(--font-size-md);
     line-height: var(--leading-md);
@@ -85,7 +91,8 @@
   }
 
   :where(b, strong) {
-    font-weight: var(--font-weight-strong);
+    --strong-font-weight: var(--font-weight-strong);
+    font-weight: var(--strong-font-weight);
   }
 
   :where(main) {
@@ -186,22 +193,24 @@
   }
 
   :where(hr) {
+    --hr-bg: var(--color-border);
     block-size: 1px;
-    color: var(--color-border);
-    background-color: var(--color-border);
+    color: var(--hr-bg);
+    background-color: var(--hr-bg);
     border: 0;
     flex-shrink: 0;
   }
 
   :where(hr[data-orientation="vertical"]) {
     inline-size: 1px;
-    color: var(--color-border);
-    background-color: var(--color-border);
+    color: var(--hr-bg);
+    background-color: var(--hr-bg);
     border: 0;
   }
 
   :where(code, samp, pre) {
-    font-family: var(--font-family-mono);
+    --code-font-family: var(--font-family-mono);
+    font-family: var(--code-font-family);
     font-size: 1em;
   }
 
@@ -274,21 +283,24 @@
   /* Custom text selection styling — the tinted background is safe everywhere
      (relative oklch is Baseline). contrast-color() is Chromium-only, so it is
      gated: without it the selection keeps its inherited text color, which stays
-     legible against a 30%-opacity tint in both light and dark modes. */
-  ::selection {
-    background-color: oklch(from var(--color-primary) calc(l + 0.1) c h / 0.3);
+     legible against a 30%-opacity tint in both light and dark modes.
+
+     On :root only, on purpose: highlight pseudo-elements inherit from the
+     parent's highlight pseudo-element (css-pseudo-4 highlight inheritance:
+     Chrome 134+, Firefox, WebKit), so one rule reaches every selection. A
+     universal `::selection` rule that reads a var() makes Chromium recalculate
+     an element's whole subtree whenever any custom property on it changes
+     (measured: a container's inline utility change restyled 1,000 styled
+     children, 194 ms per frame; 0.4 ms with this form). Engines without
+     highlight inheritance fall back to the UA selection color. */
+  :root::selection {
+    background-color: var(--selection-bg);
   }
 
   @supports (color: contrast-color(white)) {
-    ::selection {
+    :root::selection {
       /* legible on the 30% primary tint over the background */
-      color: contrast-color(
-        color-mix(
-          in oklch,
-          var(--color-background) 50%,
-          oklch(from var(--color-primary) calc(l + 0.1) c h / 0.3)
-        )
-      );
+      color: contrast-color(color-mix(in oklch, var(--color-background) 50%, var(--selection-bg)));
     }
   }
 
@@ -323,11 +335,13 @@
   }
 
   :where(select:is([multiple], [size])) optgroup {
-    font-weight: var(--font-weight-strong);
+    --optgroup-font-weight: var(--font-weight-strong);
+    font-weight: var(--optgroup-font-weight);
   }
 
   :where(select:is([multiple], [size])) optgroup option {
-    padding-inline-start: var(--space-sm);
+    --optgroup-option-pl: var(--space-sm);
+    padding-inline-start: var(--optgroup-option-pl);
   }
 
   :-moz-ui-invalid {

@@ -10,15 +10,18 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vite-plus/test";
-import { BREAKPOINT_REM, BREAKPOINTS, type Utility, STATES } from "../src/base/utilities.ts";
+import { BREAKPOINTS, type Utility, STATES, UTILITIES } from "../src/base/utilities.ts";
 import {
   baseRule,
+  bgNoneRules,
   borderSideRules,
-  breakpointFlag,
+  breakpointQuery,
   compositeRule,
   generate,
-  keywordGates,
+  gradientRules,
+  keywordRules,
   noBaseRule,
+  primitiveSelectors,
   pseudoRule,
   registrations,
   setterRule,
@@ -32,22 +35,25 @@ function squash(css: string): string {
   return css.replace(/\s+/g, " ").trim();
 }
 
-describe("breakpoint flags", () => {
-  it("publishes the md flag as a registered inherited boolean that body sets from the html container", () => {
-    expect(squash(breakpointFlag("md", BREAKPOINT_REM.md))).toBe(
+describe("breakpoint queries", () => {
+  it("puts each breakpoint tier in an unnamed size query, so it reads the nearest inline-size container", () => {
+    expect(breakpointQuery("md")).toBe("@container (width >= 65ch)");
+    expect(squash(setterRule("md", [W]))).toBe(
       squash(`
-        @property --cqi-md {
-          syntax: "true | false";
-          inherits: true;
-          initial-value: false;
-        }
-        @container html (width >= 48rem) {
-          body {
-            --cqi-md: true;
+        @container (width >= 65ch) {
+          :where([style*="--md:"]) {
+            --_w-md: var(--w--md);
           }
         }
       `),
     );
+  });
+
+  it("leaves no page flags or style queries behind", () => {
+    const all = [...generate().values()].join("\n");
+    expect(all).not.toContain("--cqi-");
+    expect(all).not.toContain("@container style(");
+    expect(all).not.toContain("@container html");
   });
 });
 
@@ -160,7 +166,7 @@ describe("base rules", () => {
     expect(squash(baseRule(W, BREAKPOINTS))).toBe(
       squash(`
         :where([style*="--w:"], [style*="--w--"]) {
-          --_w-resolved: var(--_w-2xl, var(--_w-xl, var(--_w-lg, var(--_w-md, var(--_w-sm, var(--_w-xs, var(--_w-2xs, var(--_w))))))));
+          --_w-resolved: var(--_w-2xl, var(--_w-xl, var(--_w-lg, var(--_w-md, var(--_w-sm, var(--_w))))));
         }
         :where([style*="--w:"]) {
           --_w: var(--w);
@@ -177,7 +183,7 @@ describe("setters", () => {
   it("emits the md setter under the md style query copying every breakpoint utility", () => {
     expect(squash(setterRule("md", [W]))).toBe(
       squash(`
-        @container style(--cqi-md: true) {
+        @container (width >= 65ch) {
           :where([style*="--md:"]) {
             --_w-md: var(--w--md);
           }
@@ -203,7 +209,7 @@ describe("state tiers", () => {
     expect(squash(setterRule("hover", [OPACITY]))).toBe(
       squash(`
         @media (hover: hover) {
-          :where([style*="--hover:"]:hover) {
+          :where(:hover[style*="--hover:"]) {
             --_opacity-hover: var(--opacity--hover);
           }
           :where([data-ui~="group"]:hover [style*="--group-"]) {
@@ -217,7 +223,7 @@ describe("state tiers", () => {
   it("emits the disabled setter with the aria fallback and no media query", () => {
     expect(squash(setterRule("disabled", [OPACITY]))).toBe(
       squash(`
-        :where([style*="--disabled:"]:is(:disabled, [aria-disabled="true"])) {
+        :where(:is(:disabled, [aria-disabled="true"])[style*="--disabled:"]) {
           --_opacity-disabled: var(--opacity--disabled);
         }
         :where([data-ui~="group"]:is(:disabled, [aria-disabled="true"]) [style*="--group-"]) {
@@ -227,11 +233,11 @@ describe("state tiers", () => {
     );
   });
 
-  it("emits the --opacity resolver with own states, then group states, then the base", () => {
+  it("emits the --opacity resolver with starting, own states, then group states, then stuck, then the base", () => {
     expect(squash(baseRule(OPACITY, STATES))).toBe(
       squash(`
         :where([style*="--opacity:"], [style*="--opacity--"], [style*="--group-opacity--"]) {
-          --_opacity-resolved: var(--_opacity-disabled, var(--_opacity-active, var(--_opacity-focus-visible, var(--_opacity-focus-within, var(--_opacity-hover, var(--_opacity-checked, var(--_opacity-open, var(--_opacity-g-disabled, var(--_opacity-g-active, var(--_opacity-g-focus-visible, var(--_opacity-g-focus-within, var(--_opacity-g-hover, var(--_opacity-g-checked, var(--_opacity-g-open, var(--_opacity)))))))))))))));
+          --_opacity-resolved: var(--_opacity-starting, var(--_opacity-disabled, var(--_opacity-active, var(--_opacity-focus-visible, var(--_opacity-focus-within, var(--_opacity-hover, var(--_opacity-checked, var(--_opacity-open, var(--_opacity-g-disabled, var(--_opacity-g-active, var(--_opacity-g-focus-visible, var(--_opacity-g-focus-within, var(--_opacity-g-hover, var(--_opacity-g-checked, var(--_opacity-g-open, var(--_opacity-stuck, var(--_opacity)))))))))))))))));
         }
         :where([style*="--opacity:"]) {
           --_opacity: var(--opacity);
@@ -239,6 +245,21 @@ describe("state tiers", () => {
         }
       `),
     );
+  });
+});
+
+describe("starting state", () => {
+  it("copies --<utility>--starting inside @starting-style, with no group form", () => {
+    expect(squash(setterRule("starting", [OPACITY]))).toBe(
+      squash(`
+        @starting-style {
+          :where([style*="--starting:"]) {
+            --_opacity-starting: var(--opacity--starting);
+          }
+        }
+      `),
+    );
+    expect(tierRegistrations(OPACITY, "starting")).not.toContain("group-");
   });
 });
 
@@ -254,10 +275,10 @@ describe("no-base rules", () => {
     );
   });
 
-  it("emits a no-base rule for --grid-cols gated on any tier, ending in the literal 1, excluding data-ui and every tag form", () => {
+  it("emits a no-base rule for --grid-cols gated on any tier, ending in the literal 1, excluding every primitive", () => {
     expect(squash(noBaseRule(GRID_COLS, ["ui-layout", "ui-tabs"]))).toBe(
       squash(`
-        :where(:is([style*="--grid-cols:"], [style*="--grid-cols--"], [style*="--group-grid-cols--"]):not([data-ui], ui-layout, ui-tabs)) {
+        :where(:is([style*="--grid-cols:"], [style*="--grid-cols--"], [style*="--group-grid-cols--"]):not(ui-layout, ui-tabs)) {
           grid-template-columns: repeat(var(--_grid-cols-resolved, 1), minmax(0, 1fr));
         }
       `),
@@ -265,41 +286,65 @@ describe("no-base rules", () => {
   });
 });
 
-describe("keyword switch", () => {
-  it("lists every keyword form of every utility at the base and each tier", () => {
-    expect(keywordGates([W_KW], ["md"])).toBe(
-      ':is([style*="--w: auto"], [style*="--w--md: auto"], [style*="--w: fit-content"], [style*="--w--md: fit-content"], [style*="--w: min-content"], [style*="--w--md: min-content"], [style*="--w: max-content"], [style*="--w--md: max-content"])',
-    );
-  });
-
-  it("has utilities × keywords × (1 + tiers) substrings", () => {
-    const list = keywordGates([W_KW, { ...W_KW, name: "h" }], BREAKPOINTS);
-    expect(list.match(/\[style\*=/g)).toHaveLength(2 * 4 * 8);
-  });
-
-  it("emits the dual --w rule ungated and a raw twin after it, gated on a sizing keyword form", () => {
-    const gate = keywordGates([W_KW], ["md"]);
-    expect(squash(baseRule(W_KW, ["md"], gate))).toBe(
+describe("keyword rules", () => {
+  it("emits a base keyword as written, then per tier a typed restore and a raw keyword rule", () => {
+    expect(squash(keywordRules({ ...W_KW, keywords: ["auto"] }, ["md"], []))).toBe(
       squash(`
-        :where([style*="--w:"], [style*="--w--"]) {
-          --_w-resolved: var(--_w-md, var(--_w));
-        }
-        :where([style*="--w:"]) {
-          --_w: var(--w);
-          --_w-len: var(--_w-resolved);
-          --_w-num: var(--_w-resolved);
-          inline-size: calc(var(--_w-len) + var(--_w-num) * var(--spacing));
-        }
-        :where([style*="--w:"]${gate}) {
-          --_w: var(--w);
+        :where(:is([style*="--w: auto"])) {
           inline-size: var(--_w-resolved);
+        }
+        @container (width >= 65ch) {
+          :where([style*="--w:"][style*="--w--md:"]) {
+            inline-size: calc(var(--_w-len) + var(--_w-num) * var(--spacing));
+          }
+          :where([style*="--w:"]:is([style*="--w--md: auto"])) {
+            inline-size: var(--_w-resolved);
+          }
         }
       `),
     );
   });
+
+  it("gates a no-base utility's tiers on a base or a plain element", () => {
+    const GRID_KW: Utility = { ...GRID_COLS, keywords: ["subgrid"] };
+    expect(squash(keywordRules(GRID_KW, ["md"], ["ui-layout"]))).toContain(
+      squash(`
+        :where(:is([style*="--grid-cols:"], :not(ui-layout))[style*="--grid-cols--md:"]) {
+          grid-template-columns: repeat(var(--_grid-cols-resolved), minmax(0, 1fr));
+        }
+      `),
+    );
+  });
+
+  it("orders keyword rules after the no-base rule and the tiers ascending", () => {
+    const css = generate().get("_utilities-grid.css")!;
+    const noBase = css.indexOf("grid-template-columns: repeat(var(--_grid-cols-resolved, 1)");
+    const sm = css.indexOf('[style*="--grid-cols--sm: subgrid"]');
+    const md = css.indexOf('[style*="--grid-cols--md: subgrid"]');
+    expect(noBase).toBeGreaterThan(-1);
+    expect(sm).toBeGreaterThan(noBase);
+    expect(md).toBeGreaterThan(sm);
+  });
+
+  it("keeps keyword gates per utility, so --h never reads --w's forms", () => {
+    const css = generate().get("_utilities-sizing.css")!;
+    const hRules = css.split("\n").filter((line) => line.includes('[style*="--h'));
+    expect(hRules.join("\n")).not.toContain('"--w: ');
+  });
 });
 
 describe("no-base exclusions", () => {
+  it("excludes primitives by tag form and data-ui identity, not roles, switches, or prose", () => {
+    const selectors = primitiveSelectors();
+    expect(selectors).toContain("ui-layout");
+    expect(selectors).toContain('[data-ui~="button"]');
+    expect(selectors).toContain('[data-ui~="card"]');
+    for (const plain of ["text-2xl", "text-h1", "group", "pile", "sr-only", "prose"]) {
+      expect(selectors, plain).not.toContain(`[data-ui~="${plain}"]`);
+    }
+    expect(selectors).not.toContain("[data-ui]");
+  });
+
   it("excludes a layout's children from the --col no-base rule", () => {
     const COL: Utility = {
       name: "col",
@@ -311,7 +356,7 @@ describe("no-base exclusions", () => {
     };
     expect(squash(noBaseRule(COL, ["ui-layout"]))).toBe(
       squash(`
-        :where(:is([style*="--col:"], [style*="--col--"], [style*="--group-col--"]):not([data-ui], ui-layout, ui-layout > *, [data-ui~="layout"] > *)) {
+        :where(:is([style*="--col:"], [style*="--col--"], [style*="--group-col--"]):not(ui-layout, ui-layout > *, [data-ui~="layout"] > *)) {
           grid-column: var(--_col-resolved, auto);
         }
       `),
@@ -323,13 +368,46 @@ describe("no-base rules for dual utilities", () => {
   it("emits the --gap no-base rule through the typed pair with a zero fallback", () => {
     expect(squash(noBaseRule(GAP, ["ui-tabs"]))).toBe(
       squash(`
-        :where(:is([style*="--gap:"], [style*="--gap--"], [style*="--group-gap--"]):not([data-ui], ui-tabs)) {
+        :where(:is([style*="--gap:"], [style*="--gap--"], [style*="--group-gap--"]):not(ui-tabs)) {
           --_gap-len: var(--_gap-resolved, 0);
           --_gap-num: var(--_gap-resolved, 0);
           gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));
         }
       `),
     );
+  });
+});
+
+describe("grid placement (Tailwind col-span / col-start / col-end)", () => {
+  const flow = () => generate().get("_utilities-flow.css")!;
+
+  it("--col-span emits span n / span n, and its no-base form falls back to span 1", () => {
+    expect(squash(flow())).toContain(
+      squash(`
+        :where([style*="--col-span:"]) {
+          --_col-span: var(--col-span);
+          grid-column: span var(--_col-span-resolved) / span var(--_col-span-resolved);
+        }
+      `),
+    );
+    expect(flow()).toContain(
+      "grid-column: span var(--_col-span-resolved, 1) / span var(--_col-span-resolved, 1);",
+    );
+  });
+
+  it("start and end follow span in source so they combine like Tailwind's", () => {
+    const css = flow();
+    expect(css.indexOf("grid-column-start:")).toBeGreaterThan(css.indexOf("--_col-span: var"));
+    expect(css.indexOf("grid-row-end:")).toBeGreaterThan(css.indexOf("--_row-span: var"));
+  });
+
+  it("keeps a layout's children in their band for tier-only column utilities", () => {
+    for (const name of ["col-span", "col-start", "col-end"]) {
+      const rule = flow()
+        .split("\n")
+        .find((line) => line.includes(`:where(:is([style*="--${name}:"]`));
+      expect(rule, name).toContain('ui-layout > *, [data-ui~="layout"] > *');
+    }
   });
 });
 
@@ -413,7 +491,7 @@ describe("color and effects composition", () => {
         :where(:is([style*="--shadow:"], [style*="--ring:"], [style*="--ring-color:"], [style*="--ring-offset:"], [style*="--ring-offset-color:"])) {
           ${emission}
         }
-        :where(:is(:is([style*="--shadow--"], [style*="--ring--"], [style*="--ring-color--"], [style*="--ring-offset--"], [style*="--ring-offset-color--"]), :is([style*="--group-shadow--"], [style*="--group-ring--"], [style*="--group-ring-color--"], [style*="--group-ring-offset--"], [style*="--group-ring-offset-color--"])):not([data-ui], ui-layout, ui-tabs)) {
+        :where(:is(:is([style*="--shadow--"], [style*="--ring--"], [style*="--ring-color--"], [style*="--ring-offset--"], [style*="--ring-offset-color--"]), :is([style*="--group-shadow--"], [style*="--group-ring--"], [style*="--group-ring-color--"], [style*="--group-ring-offset--"], [style*="--group-ring-offset-color--"])):not(ui-layout, ui-tabs)) {
           ${emission}
         }
       `),
@@ -467,20 +545,125 @@ describe("border shorthand", () => {
     );
   });
 
-  it("emits each side from its longhand, then the all-sides longhand, then the side, axis, and all-sides shorthands", () => {
+  it("emits each side from the all-sides longhand, then the side, axis, and all-sides shorthands", () => {
     expect(squash(borderSideRules())).toContain(
       squash(`
         :where([style*="--border:"], [style*="--border-x:"], [style*="--border-l:"]) {
-          border-inline-start-width: var(--_border-l-width-resolved, var(--_border-width-resolved, var(--_border-l-w, var(--_border-x-w, var(--_border-w)))));
+          border-inline-start-width: var(--_border-width-resolved, var(--_border-l-w, var(--_border-x-w, var(--_border-w))));
           border-inline-start-style: var(--_border-style-resolved, solid);
-          border-inline-start-color: var(--_border-l-color-resolved, var(--_border-color-resolved, var(--_border-l-c, var(--_border-x-c, var(--_border-c)))));
+          border-inline-start-color: var(--_border-color-resolved, var(--_border-l-c, var(--_border-x-c, var(--_border-c))));
         }
       `),
     );
     expect(squash(borderSideRules())).toContain(
       squash(`:where([style*="--border:"], [style*="--border-y:"], [style*="--border-b:"]) {
-          border-block-end-width: var(--_border-b-width-resolved, var(--_border-width-resolved, var(--_border-b-w, var(--_border-y-w, var(--_border-w)))));`),
+          border-block-end-width: var(--_border-width-resolved, var(--_border-b-w, var(--_border-y-w, var(--_border-w))));`),
     );
+  });
+
+  it("--divide registers inheriting width and color channels for the divide-x / divide-y switches", () => {
+    const divide = UTILITIES.find((utility) => utility.name === "divide")!;
+    const css = squash(registrations(divide));
+    expect(css).toContain(`@property --_divide-w { syntax: "*"; inherits: true; }`);
+    expect(css).toContain(`@property --_divide-c { syntax: "*"; inherits: true; }`);
+    expect(css).toContain(`@property --_divide-len { syntax: "<length>"; inherits: false;`);
+  });
+});
+
+describe("stuck state", () => {
+  const css = () => generate().get("_utilities-tier-stuck.css")!;
+
+  it("makes sticky and --stuck-state elements scroll-state containers publishing their side, keeping sectioning inline-size", () => {
+    const text = squash(css());
+    expect(text).toContain(
+      squash(
+        `:where([style*=": sticky"], [style*="--stuck-state:"]) { container-type: scroll-state; --_stuck-side: var(--stuck-state, top); }`,
+      ),
+    );
+    expect(text).toContain("container-type: inline-size scroll-state;");
+  });
+
+  it("switches the flag for descendants per side, natively and from data-ui-stuck, top by default", () => {
+    const text = squash(css());
+    const top =
+      ':is([style*="--stuck-state: top"], [style*=": sticky"]:not([style*="--stuck-state:"]))';
+    expect(text).toContain(
+      squash(
+        `@container scroll-state(stuck: top) and style(--_stuck-side: top) { :where([style*="--stuck:"]) { --_stuck-on: ; } }`,
+      ),
+    );
+    expect(text).toContain(
+      squash(
+        `@container scroll-state(stuck: bottom) and style(--_stuck-side: bottom) { :where([style*="--stuck:"]) { --_stuck-on: ; } }`,
+      ),
+    );
+    // the polyfill: the container compares its side with the attribute and publishes an inherited flag
+    expect(text).toContain(squash(`:where(${top}[data-ui-stuck~="top"]) { --_stuck-polyfill: ; }`));
+    expect(text).toContain(
+      squash(`:where([style*="--stuck:"]) { --_stuck-on: var(--_stuck-polyfill); }`),
+    );
+    expect(text).not.toContain("scrollable");
+  });
+
+  it("never names the container from a reader rule (a [style*=] ancestor compound would invalidate every styled descendant on any inline style change)", () => {
+    const readers = css()
+      .split("\n")
+      .filter((line) => line.includes('[style*="--stuck:"]'));
+    expect(readers.length).toBeGreaterThan(0);
+    for (const line of readers)
+      expect(line.trim()).toMatch(/^:where\(\[style\*="--stuck:"\]\) \{$/);
+  });
+
+  it("copies every utility behind the flag once, outside both @supports blocks", () => {
+    const text = css();
+    const copy = text.indexOf("--_bg-stuck: var(--_stuck-on) var(--bg--stuck);");
+    expect(copy).toBeGreaterThan(text.lastIndexOf("@supports"));
+    expect(text.match(/--_bg-stuck:/g)).toHaveLength(1);
+  });
+});
+
+describe("gradients", () => {
+  it("composes each type's prelude with the shared --bg-stops into background-image", () => {
+    expect(squash(gradientRules())).toBe(
+      squash(`
+        :where([style*="--bg-linear:"]) {
+          background-image: linear-gradient(var(--_bg-linear-resolved), var(--_bg-stops-resolved));
+        }
+        :where([style*="--bg-radial:"]) {
+          background-image: radial-gradient(var(--_bg-radial-resolved), var(--_bg-stops-resolved));
+        }
+        :where([style*="--bg-conic:"]) {
+          background-image: conic-gradient(var(--_bg-conic-resolved), var(--_bg-stops-resolved));
+        }
+      `),
+    );
+  });
+
+  it("--bg: none drops background-image at the base and each state, hover behind its media guard", () => {
+    const css = squash(bgNoneRules());
+    expect(
+      css.startsWith(squash(`:where([style*="--bg: none"]) { background-image: none; }`)),
+    ).toBe(true);
+    expect(css).toContain(
+      squash(`@media (hover: hover) {
+        :where(:hover[style*="--bg--hover: none"]) { background-image: none; }
+      }`),
+    );
+    // own states come after group states, and disabled (highest) last
+    expect(css.indexOf('"--bg--open: none"')).toBeGreaterThan(
+      css.indexOf('"--group-bg--disabled: none"'),
+    );
+    expect(css.lastIndexOf("background-image: none")).toBeGreaterThan(
+      css.indexOf('"--bg--disabled: none"'),
+    );
+  });
+
+  it("emits the gradient and none rules after the color utilities, none last", () => {
+    const css = generate().get("_utilities-color.css")!;
+    expect(css.indexOf("linear-gradient(")).toBeGreaterThan(
+      css.indexOf("--_bg-stops: var(--bg-stops)"),
+    );
+    expect(css.indexOf('[style*="--bg: none"]')).toBeGreaterThan(css.indexOf("conic-gradient("));
   });
 });
 
@@ -532,17 +715,17 @@ describe("generated comments", () => {
 
 describe("formatter round-trip", () => {
   it("keeps the colon directly after a utility name inside a style attribute", () => {
-    // The repo's HTML formatter (oxfmt, then scripts/fmt-html.ts); vp needs the
-    // file inside the workspace, so the scratch dir sits in this package.
+    // oxfmt keeps style values verbatim for HTML (zazz/style-format lays them
+    // out); vp needs the file inside the workspace, so the scratch dir sits in
+    // this package.
     const here = dirname(fileURLToPath(import.meta.url));
     const dir = mkdtempSync(join(here, "..", ".fmt-"));
     const file = join(dir, "page.html");
     writeFileSync(
       file,
-      `<!doctype html>\n<div style="--p:4;--w--md:fit-content;--before-content:''">x</div>\n`,
+      `<!doctype html>\n<div\n  style="\n    --p: 4;\n    --w--md: fit-content;\n    --before-content: '';\n  "\n>\n  x\n</div>\n`,
     );
-    const script = join(here, "fmt-html.ts");
-    const result = spawnSync("node", [script, file], { encoding: "utf8" });
+    const result = spawnSync("vp", ["fmt", file], { encoding: "utf8" });
     const formatted = readFileSync(file, "utf8");
     rmSync(dir, { recursive: true, force: true });
     expect(result.status, result.stderr).toBe(0);

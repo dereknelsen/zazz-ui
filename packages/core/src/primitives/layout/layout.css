@@ -2,15 +2,17 @@
  * layout.css — Layout (ui-layout | [data-ui~="layout"]): the band grid
  *
  * @layer      variables, components
- * @requires   _layers.css, _variables.css (--gutters), _breakpoints.css (--breakpoint-*),
+ * @requires   _layers.css, _variables.css (--gutters), _breakpoints.css (--layout-*),
  *             _properties.css (--_col-resolved)
  * @uses       named grid lines + implicit named areas: `--col: layout-md` on a
  *             child resolves through `layout-md-start / layout-md-end`
  * @uses       grid-template-columns: subgrid — a nested layout keeps the parent's
  *             line names
- * @tokens     --ui-layout-* (@layer variables)
- * @presets    data-layout-size="2xs | xs | sm | md | lg | xl | 2xl | full | bleed"
- *             (the default band for this layout's children; lg when absent)
+ * @tokens     --ui-layout-* (@layer variables); band widths read --layout-* (_breakpoints.css)
+ * @uses       container-type: inline-size on each child (not nested layouts, subgrids,
+ *             or content-sized children), so breakpoint tiers inside a band follow it
+ * @presets    data-layout-size="sm | md | lg | xl | 2xl | full | bleed"
+ *             (the default band for this layout's children; xl when absent)
  *
  * The layout element itself is the grid; nothing styles a parent. Each side band
  * is a clamp() that stays at 0 until the inner content has reached its breakpoint
@@ -29,86 +31,64 @@
     /* inline space left for the bands once the two gutters are removed */
     --ui-layout-available: calc(100% - var(--ui-layout-gutters) * 2);
     /* the default band for children; data-layout-size changes it per layout */
-    --ui-layout-band: layout-lg;
+    --ui-layout-band: layout-xl;
+    /* each child's container type: inline-size so tiers inside a band follow it;
+       set normal on a layout to opt its children out */
+    --ui-layout-child-container: inline-size;
     --ui-layout-template-columns: [layout-bleed-start] var(--ui-layout-gutters) [layout-full-start]
       minmax(0, 1fr) [layout-2xl-start]
       clamp(
         0rem,
-        calc((var(--ui-layout-available) - var(--breakpoint-xl)) / 2),
-        calc((var(--breakpoint-2xl) - var(--breakpoint-xl)) / 2)
+        calc((var(--ui-layout-available) - var(--layout-xl)) / 2),
+        calc((var(--layout-2xl) - var(--layout-xl)) / 2)
       )
       [layout-xl-start]
       clamp(
         0rem,
-        calc((var(--ui-layout-available) - var(--breakpoint-lg)) / 2),
-        calc((var(--breakpoint-xl) - var(--breakpoint-lg)) / 2)
+        calc((var(--ui-layout-available) - var(--layout-lg)) / 2),
+        calc((var(--layout-xl) - var(--layout-lg)) / 2)
       )
       [layout-lg-start]
       clamp(
         0rem,
-        calc((var(--ui-layout-available) - var(--breakpoint-md)) / 2),
-        calc((var(--breakpoint-lg) - var(--breakpoint-md)) / 2)
+        calc((var(--ui-layout-available) - var(--layout-md)) / 2),
+        calc((var(--layout-lg) - var(--layout-md)) / 2)
       )
       [layout-md-start]
       clamp(
         0rem,
-        calc((var(--ui-layout-available) - var(--breakpoint-sm)) / 2),
-        calc((var(--breakpoint-md) - var(--breakpoint-sm)) / 2)
+        calc((var(--ui-layout-available) - var(--layout-sm)) / 2),
+        calc((var(--layout-md) - var(--layout-sm)) / 2)
       )
-      [layout-sm-start]
+      [layout-sm-start] clamp(0rem, var(--ui-layout-available), var(--layout-sm)) [layout-sm-end]
       clamp(
         0rem,
-        calc((var(--ui-layout-available) - var(--breakpoint-xs)) / 2),
-        calc((var(--breakpoint-sm) - var(--breakpoint-xs)) / 2)
-      )
-      [layout-xs-start]
-      clamp(
-        0rem,
-        calc((var(--ui-layout-available) - var(--breakpoint-2xs)) / 2),
-        calc((var(--breakpoint-xs) - var(--breakpoint-2xs)) / 2)
-      )
-      [layout-2xs-start] clamp(0rem, var(--ui-layout-available), var(--breakpoint-2xs))
-      [layout-2xs-end]
-      clamp(
-        0rem,
-        calc((var(--ui-layout-available) - var(--breakpoint-2xs)) / 2),
-        calc((var(--breakpoint-xs) - var(--breakpoint-2xs)) / 2)
-      )
-      [layout-xs-end]
-      clamp(
-        0rem,
-        calc((var(--ui-layout-available) - var(--breakpoint-xs)) / 2),
-        calc((var(--breakpoint-sm) - var(--breakpoint-xs)) / 2)
-      )
-      [layout-sm-end]
-      clamp(
-        0rem,
-        calc((var(--ui-layout-available) - var(--breakpoint-sm)) / 2),
-        calc((var(--breakpoint-md) - var(--breakpoint-sm)) / 2)
+        calc((var(--ui-layout-available) - var(--layout-sm)) / 2),
+        calc((var(--layout-md) - var(--layout-sm)) / 2)
       )
       [layout-md-end]
       clamp(
         0rem,
-        calc((var(--ui-layout-available) - var(--breakpoint-md)) / 2),
-        calc((var(--breakpoint-lg) - var(--breakpoint-md)) / 2)
+        calc((var(--ui-layout-available) - var(--layout-md)) / 2),
+        calc((var(--layout-lg) - var(--layout-md)) / 2)
       )
       [layout-lg-end]
       clamp(
         0rem,
-        calc((var(--ui-layout-available) - var(--breakpoint-lg)) / 2),
-        calc((var(--breakpoint-xl) - var(--breakpoint-lg)) / 2)
+        calc((var(--ui-layout-available) - var(--layout-lg)) / 2),
+        calc((var(--layout-xl) - var(--layout-lg)) / 2)
       )
       [layout-xl-end]
       clamp(
         0rem,
-        calc((var(--ui-layout-available) - var(--breakpoint-xl)) / 2),
-        calc((var(--breakpoint-2xl) - var(--breakpoint-xl)) / 2)
+        calc((var(--ui-layout-available) - var(--layout-xl)) / 2),
+        calc((var(--layout-2xl) - var(--layout-xl)) / 2)
       )
       [layout-2xl-end] minmax(0, 1fr) [layout-full-end] var(--ui-layout-gutters) [layout-bleed-end];
   }
 }
 
-@layer zazz.components {
+@layer ui.components {
   :where(ui-layout, [data-ui~="layout"]) {
     display: grid;
     grid-template-columns: var(--ui-layout-template-columns);
@@ -124,17 +104,27 @@
     grid-column: var(--_col-resolved, var(--ui-layout-band));
   }
 
+  /* Each child is an inline-size query container, so breakpoint tiers inside
+     a band follow the band's width, not the full-width section around it.
+     Containment would stop a subgrid (a nested layout, or a child aligning to
+     the bands) and collapse a child sized by its content, so those stay out. */
+  :where(ui-layout, [data-ui~="layout"])
+    > :where(
+      :not(
+        ui-layout,
+        [data-ui~="layout"],
+        [style*="subgrid"],
+        [style*="fit-content"],
+        [style*="min-content"],
+        [style*="max-content"]
+      )
+    ) {
+    container-type: var(--ui-layout-child-container);
+  }
+
   /* A layout inside a band is a subgrid and keeps the parent's line names */
   :where(ui-layout, [data-ui~="layout"]) :where(ui-layout, [data-ui~="layout"]) {
     grid-template-columns: subgrid;
-  }
-
-  :where(ui-layout[data-layout-size="2xs"], [data-ui~="layout"][data-layout-size="2xs"]) {
-    --ui-layout-band: layout-2xs;
-  }
-
-  :where(ui-layout[data-layout-size="xs"], [data-ui~="layout"][data-layout-size="xs"]) {
-    --ui-layout-band: layout-xs;
   }
 
   :where(ui-layout[data-layout-size="sm"], [data-ui~="layout"][data-layout-size="sm"]) {

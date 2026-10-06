@@ -24,7 +24,7 @@
     --ui-dialog-backdrop-blur: blur(5px);
     --ui-dialog-shadow: var(--shadow-lg);
     --ui-dialog-border: 1px solid var(--color-border);
-    --ui-dialog-w: min(var(--breakpoint-md), 100% - var(--gutters) * 2);
+    --ui-dialog-w: min(var(--layout-md), 100% - var(--gutters) * 2);
 
     /* Reveal transitions/animations */
     --ui-dialog-opacity--start: 0;
@@ -138,7 +138,7 @@
   inherits: false;
 }
 
-@layer zazz.components {
+@layer ui.components {
   :where([data-ui~="dialog"]) {
     /* Set the hook on the element (not :root) so a later consumer (alert-dialog)
        or a subtree hook still wins; --_dialog-shadow is written only by the
@@ -239,7 +239,7 @@
   }
 
   :where([data-ui~="dialog"][data-dialog-size="container"]) {
-    --_dialog-w: var(--breakpoint-md);
+    --_dialog-w: var(--layout-md);
   }
 
   :where([data-ui~="dialog"][data-dialog-size="screen"]) {

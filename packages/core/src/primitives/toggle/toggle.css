@@ -189,7 +189,7 @@
   inherits: false;
 }
 
-@layer zazz.components {
+@layer ui.components {
   /* The label wraps a visually-hidden checkbox/radio that stays focusable, so
      :focus-visible on the input still drives the ring. */
   :where([data-ui~="toggle"]) {
@@ -379,6 +379,38 @@
     --_toggle-text: var(--color-primary-foreground);
     --_toggle-text--hover: var(--color-primary-foreground);
     --_toggle-text--active: var(--color-primary-foreground);
+
+    --_toggle-border-color: transparent;
+    --_toggle-border-color--hover: transparent;
+    --_toggle-border-color--active: transparent;
+
+    --_toggle-shadow: 0 0 transparent;
+  }
+
+  :where([data-ui~="toggle"][data-toggle-variant="secondary"]) {
+    --_toggle-bg: var(--color-secondary);
+    --_toggle-bg--hover: oklch(from var(--color-secondary) l c h / 0.9);
+    --_toggle-bg--active: oklch(from var(--color-secondary) l c h / 0.8);
+
+    --_toggle-text: var(--color-secondary-foreground);
+    --_toggle-text--hover: var(--color-secondary-foreground);
+    --_toggle-text--active: var(--color-secondary-foreground);
+
+    --_toggle-border-color: transparent;
+    --_toggle-border-color--hover: transparent;
+    --_toggle-border-color--active: transparent;
+
+    --_toggle-shadow: 0 0 transparent;
+  }
+
+  :where([data-ui~="toggle"][data-toggle-variant="tertiary"]) {
+    --_toggle-bg: var(--color-tertiary);
+    --_toggle-bg--hover: oklch(from var(--color-tertiary) l c h / 0.9);
+    --_toggle-bg--active: oklch(from var(--color-tertiary) l c h / 0.8);
+
+    --_toggle-text: var(--color-tertiary-foreground);
+    --_toggle-text--hover: var(--color-tertiary-foreground);
+    --_toggle-text--active: var(--color-tertiary-foreground);
 
     --_toggle-border-color: transparent;
     --_toggle-border-color--hover: transparent;

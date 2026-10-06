@@ -1,6 +1,10 @@
 # Props replace utility classes; primitives read props with hook fallback
 
 > Terminology, 2026-10-01: "props" are now called **style utilities** ("style utils"); see CONTEXT.md. The decision below is unchanged.
+>
+> Amended 2026-10-05: keywords no longer switch anything to raw emission. Each keyword-bearing utility gets explicit value-gated rules (a base keyword rule, then per breakpoint a typed restore rule and a raw keyword rule), so numbers and keywords mix across tiers; this adopts, in a compact form, the value-gated approach rejected below, as a stopgap until CSS `if()` reaches the support floor. SPEC §6 has the current rule.
+>
+> Amended 2026-10-05 (breakpoints): five breakpoints (`sm`–`2xl`) in `ch`, chosen for legibility; breakpoint tiers query the nearest inline-size container directly instead of page flags (the container and viewport flags below are retired), and layout widths are a separate rem scale (`--layout-*`). SPEC §8 has the current model.
 
 Status: accepted (2026-09-25). Supersedes [ADR-0008](./0008-instance-override-escape-hatch.md).
 
@@ -16,7 +20,7 @@ The utilities layer of class-per-value rules is removed. Values are carried by *
 
 **Three channels.** Identity and presets are attributes (ADR-0013); values are props. No utility classes remain. Compound utilities sort into three buckets: several properties that move together with one value become a prop (`--size`, `--line-clamp`, `--ring`, `--aspect`, `--flex`, `--inset`); a fixed rule set with no value becomes a switch (`data-ui="sr-only"`); a fixed rule set with an axis or size becomes a small primitive (`data-ui="scroll-fade" data-ui-axis="y"`).
 
-**Prop rules.** In `@layer zazz.utilities`, one rule per prop, gated on the attribute string with the colon included so `--p:` never matches `--px:` or `--p--md:`, wrapped in `:where()` for zero specificity: `:where([style*="--p:"]) { … }`. Props are inline-only by construction: a stylesheet that sets `--p` fires nothing. Absent means zero, never no-op, so **every rule is self-contained**: its own gate, its own private pair, its own property declaration. Gates are never shared or widened; state rules are never nested under the base rule, and they come last in source order (base, pseudo-elements, breakpoints, states) so a state beats a breakpoint for the same prop, matching Tailwind's outcome. Hover rules sit in `@media (hover: hover)`.
+**Prop rules.** In `@layer ui.utilities`, one rule per prop, gated on the attribute string with the colon included so `--p:` never matches `--px:` or `--p--md:`, wrapped in `:where()` for zero specificity: `:where([style*="--p:"]) { … }`. Props are inline-only by construction: a stylesheet that sets `--p` fires nothing. Absent means zero, never no-op, so **every rule is self-contained**: its own gate, its own private pair, its own property declaration. Gates are never shared or widened; state rules are never nested under the base rule, and they come last in source order (base, pseudo-elements, breakpoints, states) so a state beats a breakpoint for the same prop, matching Tailwind's outcome. Hover rules sit in `@media (hover: hover)`.
 
 **Naming.** Tailwind's short name where Tailwind has one distinct from the CSS property (`--p`, `--w`, `--bg`, `--leading`, `--tracking`, `--rounded`, `--col`, `--size`); otherwise the CSS property name (`--display`, `--color`, `--font-weight`, `--opacity`). Text color is `--color`; font size and family go through `--font` (the `font` shorthand) with `--text-*` composite tokens on top of the atomic `--font-size-*`, `--leading-*`, `--tracking-*` tokens. **A prop name must never equal an inheriting token name**: there is no `--border` shorthand prop (only `--border-width`, `--border-color`, `--border-style`), and props reference colors through the `--color-*` aliases, never the bare Shadcn names, so neither a cycle nor an inheritance leak is possible.
 

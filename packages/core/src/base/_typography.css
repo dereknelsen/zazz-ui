@@ -22,7 +22,7 @@
   }
 }
 
-@layer zazz.components {
+@layer ui.components {
   /* ===========================================================================
   TYPOGRAPHY — prose component styles
   =========================================================================== */
@@ -259,7 +259,7 @@
     font-feature-settings: var(--font-feature-heading);
     font-kerning: var(--font-kerning-heading);
     font-language-override: var(--font-language-heading);
-    font-optical-sizing: var(--font-optical-heading, auto);
+    font-optical-sizing: var(--font-optical-sizing-heading, auto);
     font-size-adjust: var(--font-size-adjust-heading);
     font-variant-alternates: var(--font-alternates-heading);
     font-variant-caps: var(--font-caps-heading);
@@ -281,7 +281,7 @@
     font-feature-settings: var(--font-feature-heading);
     font-kerning: var(--font-kerning-heading);
     font-language-override: var(--font-language-heading);
-    font-optical-sizing: var(--font-optical-heading, auto);
+    font-optical-sizing: var(--font-optical-sizing-heading, auto);
     font-size-adjust: var(--font-size-adjust-heading);
     font-variant-alternates: var(--font-alternates-heading);
     font-variant-caps: var(--font-caps-heading);
@@ -303,7 +303,7 @@
     font-feature-settings: var(--font-feature-heading);
     font-kerning: var(--font-kerning-heading);
     font-language-override: var(--font-language-heading);
-    font-optical-sizing: var(--font-optical-heading, auto);
+    font-optical-sizing: var(--font-optical-sizing-heading, auto);
     font-size-adjust: var(--font-size-adjust-heading);
     font-variant-alternates: var(--font-alternates-heading);
     font-variant-caps: var(--font-caps-heading);
@@ -325,7 +325,7 @@
     font-feature-settings: var(--font-feature-heading);
     font-kerning: var(--font-kerning-heading);
     font-language-override: var(--font-language-heading);
-    font-optical-sizing: var(--font-optical-heading, auto);
+    font-optical-sizing: var(--font-optical-sizing-heading, auto);
     font-size-adjust: var(--font-size-adjust-heading);
     font-variant-alternates: var(--font-alternates-heading);
     font-variant-caps: var(--font-caps-heading);
@@ -347,7 +347,7 @@
     font-feature-settings: var(--font-feature-heading);
     font-kerning: var(--font-kerning-heading);
     font-language-override: var(--font-language-heading);
-    font-optical-sizing: var(--font-optical-heading, auto);
+    font-optical-sizing: var(--font-optical-sizing-heading, auto);
     font-size-adjust: var(--font-size-adjust-heading);
     font-variant-alternates: var(--font-alternates-heading);
     font-variant-caps: var(--font-caps-heading);
@@ -369,7 +369,7 @@
     font-feature-settings: var(--font-feature-heading);
     font-kerning: var(--font-kerning-heading);
     font-language-override: var(--font-language-heading);
-    font-optical-sizing: var(--font-optical-heading, auto);
+    font-optical-sizing: var(--font-optical-sizing-heading, auto);
     font-size-adjust: var(--font-size-adjust-heading);
     font-variant-alternates: var(--font-alternates-heading);
     font-variant-caps: var(--font-caps-heading);
@@ -391,7 +391,7 @@
     font-feature-settings: var(--font-feature-heading);
     font-kerning: var(--font-kerning-heading);
     font-language-override: var(--font-language-heading);
-    font-optical-sizing: var(--font-optical-heading, auto);
+    font-optical-sizing: var(--font-optical-sizing-heading, auto);
     font-size-adjust: var(--font-size-adjust-heading);
     font-variant-alternates: var(--font-alternates-heading);
     font-variant-caps: var(--font-caps-heading);
@@ -558,7 +558,7 @@
     font-variation-settings: var(--font-settings-body);
   }
 
-  :where(a[href]:not([data-ui~="button"])) {
+  :where(p a[href]:not([data-ui~="button"])) {
     color: var(--ui-prose-link-text);
     text-decoration-line: var(--decoration-line);
     text-decoration-style: var(--decoration-style);
@@ -568,11 +568,11 @@
     transition: var(--default-transition);
   }
 
-  :where(a[href]:not([data-ui~="button"]):hover) {
+  :where(p a[href]:not([data-ui~="button"]):hover) {
     --decoration-offset: calc(var(--decoration-thickness) * 2);
   }
 
-  :where(a[href]:not([data-ui~="button"]):active) {
+  :where(p a[href]:not([data-ui~="button"]):active) {
     --decoration-offset: inherit;
     /* back to the base offset while pressed */
   }

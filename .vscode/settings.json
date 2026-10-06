@@ -17,8 +17,17 @@
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
   "editor.codeActionsOnSave": {
-    "source.fixAll.oxc": "explicit"
+    "source.fixAll.oxc": "explicit",
+    // Zazz extension (packages/vscode): style utilities in cascade order, one per line
+    "source.fixAll.zazz": "explicit"
   },
-  "html.customData": ["./packages/core/editor/zazz.html-data.json"],
-  "css.customData": ["./packages/core/editor/zazz.css-data.json"]
+  // Zazz completions, hover, and highlighting in HTML come from the Zazz extension
+  // (packages/vscode); the custom data files stay published for editors without it.
+  "emmet.extensionsPath": ["./packages/vscode/emmet"],
+  // ESLint lints HTML only (eslint.config.ts); in the editor it shows the html/*
+  // rules, and the Zazz extension shows the zazz/* audit. Oxc stays the formatter
+  // and the JS/TS linter.
+  "eslint.validate": ["html"],
+  "eslint.probe": ["html"],
+  "eslint.rules.customizations": [{ "rule": "zazz/*", "severity": "off" }]
 }

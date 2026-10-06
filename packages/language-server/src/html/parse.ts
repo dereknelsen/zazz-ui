@@ -1,0 +1,43 @@
+/**
+ * @fileoverview Parses HTML with `@html-eslint/parser`, the parser the lint
+ * rules run on, so the editor and `vp run lint:html` agree on every range.
+ * Outside ESLint nothing sets `parent`, so this links it.
+ */
+
+import { parseForESLint } from "@html-eslint/parser";
+import { isTag, type Comment, type Node, type Tag } from "./nodes.ts";
+
+export interface ParsedHtml {
+  text: string;
+  /** Every element in document order. */
+  tags: Tag[];
+  comments: Comment[];
+  /** The `<html>` element, when the file is a whole page rather than a fragment. */
+  root?: Tag;
+}
+
+export function parseHtml(text: string): ParsedHtml {
+  const { ast } = parseForESLint(text, {}) as unknown as { ast: { body: Node[] } };
+  const parsed: ParsedHtml = { text, tags: [], comments: [] };
+  const visit = (node: Node, parent: Node | undefined) => {
+    if (parent) node.parent = parent;
+    if (isTag(node)) {
+      parsed.tags.push(node);
+      if (node.name.toLowerCase() === "html") parsed.root ??= node;
+    } else if (node.type === "Comment") {
+      parsed.comments.push(node as Comment);
+    }
+    for (const child of node.children ?? []) visit(child, node);
+  };
+  for (const node of ast.body) visit(node, undefined);
+  return parsed;
+}
+
+/** The innermost tag whose source range holds `offset`. */
+export function tagAt(parsed: ParsedHtml, offset: number): Tag | undefined {
+  let found: Tag | undefined;
+  for (const tag of parsed.tags) {
+    if (tag.range[0] <= offset && offset <= tag.range[1]) found = tag;
+  }
+  return found;
+}

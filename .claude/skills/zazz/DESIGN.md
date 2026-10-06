@@ -507,7 +507,7 @@ Spring easing (`--spring-easing`) with 0.333s duration. Fallback: `cubic-bezier(
 
 ### Breakpoints
 
-`--breakpoint-2xs` (384px) · `--breakpoint-xs` (480px) · `--breakpoint-sm` (640px) · `--breakpoint-md` (768px) · `--breakpoint-lg` (1024px) · `--breakpoint-xl` (1280px) · `--breakpoint-2xl` (1536px). Breakpoint tiers (`--grid-cols--md: 3`) are mobile-first.
+Breakpoint tiers: `sm` 40ch · `md` 65ch · `lg` 90ch · `xl` 120ch · `2xl` 150ch, measured against the nearest container (chosen for legibility: one comfortable line, one reading measure, two, three, and two full measures). Layout widths: `--layout-sm` 40rem · `--layout-md` 48rem · `--layout-lg` 64rem · `--layout-xl` 80rem · `--layout-2xl` 96rem.
 
 ---
 

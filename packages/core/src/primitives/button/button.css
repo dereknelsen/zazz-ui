@@ -28,9 +28,9 @@
     --ui-button-font-weight: var(--font-weight-strong);
     --ui-button-leading: var(--ui-field-leading);
 
-    --ui-button-bg: var(--color-card);
-    --ui-button-bg--hover: var(--color-muted);
-    --ui-button-bg--active: oklch(from var(--color-muted) l c h / calc(alpha - 0.02));
+    --ui-button-bg: var(--color-background);
+    --ui-button-bg--hover: oklch(from var(--color-background) calc(l - 0.025) c h);
+    --ui-button-bg--active: oklch(from var(--color-background) calc(l - 0.05) c h);
 
     --ui-button-text: var(--color-foreground);
     --ui-button-text--hover: var(--color-foreground);
@@ -38,9 +38,9 @@
 
     --ui-button-border-width: var(--ui-field-border-width);
     --ui-button-border-style: var(--ui-field-border-style);
-    --ui-button-border-color: var(--color-border);
-    --ui-button-border-color--hover: var(--color-border);
-    --ui-button-border-color--active: var(--color-border);
+    --ui-button-border-color: var(--ui-field-border-color);
+    --ui-button-border-color--hover: var(--ui-field-border-color);
+    --ui-button-border-color--active: var(--ui-field-border-color);
 
     /* dual-mode: a scale number or a length */
     --ui-button-gap: var(--spacing);
@@ -167,7 +167,7 @@
   inherits: false;
 }
 
-@layer zazz.components {
+@layer ui.components {
   :where([data-ui~="button"]) {
     font-family: var(
       --_font-family-resolved,
@@ -339,6 +339,38 @@
     --_button-shadow: 0 0 transparent;
   }
 
+  :where([data-ui~="button"][data-button-variant="secondary"]) {
+    --_button-bg: var(--color-secondary);
+    --_button-bg--hover: oklch(from var(--color-secondary) l c h / 0.9);
+    --_button-bg--active: oklch(from var(--color-secondary) l c h / 0.8);
+
+    --_button-text: var(--color-secondary-foreground);
+    --_button-text--hover: var(--color-secondary-foreground);
+    --_button-text--active: var(--color-secondary-foreground);
+
+    --_button-border-color: var(--_button-bg);
+    --_button-border-color--hover: var(--_button-bg--hover);
+    --_button-border-color--active: var(--_button-bg--active);
+
+    --_button-shadow: 0 0 transparent;
+  }
+
+  :where([data-ui~="button"][data-button-variant="tertiary"]) {
+    --_button-bg: var(--color-tertiary);
+    --_button-bg--hover: oklch(from var(--color-tertiary) l c h / 0.9);
+    --_button-bg--active: oklch(from var(--color-tertiary) l c h / 0.8);
+
+    --_button-text: var(--color-tertiary-foreground);
+    --_button-text--hover: var(--color-tertiary-foreground);
+    --_button-text--active: var(--color-tertiary-foreground);
+
+    --_button-border-color: var(--_button-bg);
+    --_button-border-color--hover: var(--_button-bg--hover);
+    --_button-border-color--active: var(--_button-bg--active);
+
+    --_button-shadow: 0 0 transparent;
+  }
+
   :where([data-ui~="button"][data-button-variant="muted"]) {
     --_button-bg: var(--color-muted);
     --_button-bg--hover: oklch(from var(--color-muted) l c h / calc(alpha - 0.02));
@@ -420,8 +452,7 @@
   }
 
   :where(
-    ui-button-group,
-    [data-ui~="button-group"]:has([data-ui~="button"][data-button-size="sm"])
+    :is(ui-button-group, [data-ui~="button-group"]):has([data-ui~="button"][data-button-size="sm"])
   ) {
     --_button-group-rounded: var(--radius-sm);
   }

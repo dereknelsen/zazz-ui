@@ -38,4 +38,13 @@ describe("carousel", () => {
       ),
     ).toBeCloseTo(scale(4), 1);
   });
+
+  it("keeps transitions off slides so a looped slide never sweeps across (links included)", () => {
+    const root = mount(`<ui-carousel><div data-carousel-slot="viewport">
+      <div data-carousel-slot="container"><a href="#" data-carousel-slot="slide">1</a><div data-carousel-slot="slide">2</div></div>
+    </div></ui-carousel>`);
+    for (const slide of root.querySelectorAll("[data-carousel-slot='slide']")) {
+      expect(style(slide, "transition-property"), slide.tagName).toBe("none");
+    }
+  });
 });

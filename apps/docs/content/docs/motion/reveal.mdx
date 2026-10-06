@@ -79,17 +79,17 @@ Settings resolve in precedence order: data attributes on the element or group, t
 
 ### Data attributes
 
-| Attribute               | Default                       | Purpose                                           |
-| ----------------------- | ----------------------------- | ------------------------------------------------- |
-| `data-reveal-duration`  | `--ui-reveal-global-duration` | Animation duration                                |
-| `data-reveal-wait`      | `0`                           | Base delay before starting (ms)                   |
-| `data-reveal-step`      | `80`                          | Delay step between children (ms)                  |
-| `data-reveal-ease`      | `--ui-reveal-global-ease`     | Timing function                                   |
-| `data-reveal-distance`  | `1rem`                        | Slide translation distance                        |
-| `data-reveal-scale`     | None                          | Scale value for grow/shrink                       |
-| `data-reveal-margin`    | `0px`                         | Observer rootMargin                               |
-| `data-reveal-threshold` | `0.2`                         | Intersection threshold (0 to 1)                   |
-| `data-reveal-order`     | None                          | Set to `"reversed"` for reversed stagger sequence |
+| Attribute               | Default                              | Purpose                                           |
+| ----------------------- | ------------------------------------ | ------------------------------------------------- |
+| `data-reveal-duration`  | `--ui-reveal-global-duration`        | Animation duration                                |
+| `data-reveal-wait`      | `0`                                  | Base delay before starting (ms)                   |
+| `data-reveal-step`      | `80`                                 | Delay step between children (ms)                  |
+| `data-reveal-ease`      | `--ui-reveal-global-timing-function` | Timing function                                   |
+| `data-reveal-distance`  | `1rem`                               | Slide translation distance                        |
+| `data-reveal-scale`     | None                                 | Scale value for grow/shrink                       |
+| `data-reveal-margin`    | `0px`                                | Observer rootMargin                               |
+| `data-reveal-threshold` | `0.2`                                | Intersection threshold (0 to 1)                   |
+| `data-reveal-order`     | None                                 | Set to `"reversed"` for reversed stagger sequence |
 
 ### Global tokens
 
@@ -98,7 +98,7 @@ Use the tokens for site-wide settings without JavaScript. The duration and easin
 ```css
 :root {
   --ui-reveal-global-duration: var(--default-transition-duration);
-  --ui-reveal-global-ease: var(--default-transition-timing-function);
+  --ui-reveal-global-timing-function: var(--default-transition-timing-function);
   --ui-reveal-global-wait: 0ms;
   --ui-reveal-global-distance: 1rem;
   --ui-reveal-global-grow: 0.97;
@@ -163,7 +163,7 @@ Zazz SPA navigation rescans a replaced `<main>` automatically through a [compone
 Animation names such as `slide-up`, `fade`, and `grow` map to CSS rules keyed by the attribute value. Base rules handle visibility and transitions, so a custom type only needs to define its hidden state:
 
 ```css
-@layer zazz.utilities {
+@layer ui.utilities {
   [data-reveal="tilt"]:not(:where(.in-viewport)),
   [data-reveal-each="tilt"] > *:not(:where(.in-viewport)) {
     transform: rotate(3deg) translateY(var(--ui-reveal-effective-distance));

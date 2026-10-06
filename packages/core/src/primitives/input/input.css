@@ -30,7 +30,7 @@
   }
 }
 
-@layer zazz.components {
+@layer ui.components {
   /* ===========================================================================
   TEXT INPUTS — data-ui="input"
   - One identity for every text-like type (text, search, email, number, date, …);
@@ -135,7 +135,7 @@
 
 /* Disabled and committed-invalid states; an invalid control remaps the
    --ui-field-* family on itself. */
-@layer zazz.components {
+@layer ui.components {
   :where([data-ui~="input"]):disabled {
     opacity: 0.5;
     cursor: not-allowed;

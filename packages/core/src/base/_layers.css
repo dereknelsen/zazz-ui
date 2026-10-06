@@ -1,21 +1,21 @@
 /**
  * _layers.css — Cascade layer order (must load first).
  *
- * @layer      variables, reset, vendors, legacy, zazz, overrides
+ * @layer      variables, reset, vendors, legacy, ui, overrides
  * @sublayers  legacy.imports, legacy.components, legacy.utilities,
- *             legacy.migrations; zazz.components, zazz.plugins, zazz.utilities
+ *             legacy.migrations; ui.components, ui.plugins, ui.utilities
  *
- * Never import styles into bare `legacy` or `zazz`: un-sublayered rules form
+ * Never import styles into bare `legacy` or `ui`: un-sublayered rules form
  * an implicit final sublayer that outranks every named sublayer. Always target
  * a sublayer.
  */
 
-@layer variables, reset, vendors, legacy, zazz, overrides;
+@layer variables, reset, vendors, legacy, ui, overrides;
 
 @layer legacy {
   @layer imports, components, utilities, migrations;
 }
 
-@layer zazz {
+@layer ui {
   @layer components, plugins, utilities;
 }

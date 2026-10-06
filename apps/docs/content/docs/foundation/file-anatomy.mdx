@@ -23,13 +23,13 @@ Source files split into `base/` (core foundation) and `ui/` (co-located componen
 
 Component stylesheets organize rules in top-to-bottom order:
 
-| Step | Section                  | Layer                    | Condition                     |
-| ---- | ------------------------ | ------------------------ | ----------------------------- |
-| 1    | CSSDoc header            | None                     | Always                        |
-| 2    | Component token hooks    | `@layer variables`       | When component exposes tokens |
-| 3    | Native element baselines | `@layer reset`           | When restyling native UI      |
-| 4    | Component rules          | `@layer zazz.components` | Core component rules          |
-| 5    | Utility classes          | `@layer zazz.utilities`  | When shipping utilities       |
+| Step | Section                  | Layer                  | Condition                     |
+| ---- | ------------------------ | ---------------------- | ----------------------------- |
+| 1    | CSSDoc header            | None                   | Always                        |
+| 2    | Component token hooks    | `@layer variables`     | When component exposes tokens |
+| 3    | Native element baselines | `@layer reset`         | When restyling native UI      |
+| 4    | Component rules          | `@layer ui.components` | Core component rules          |
+| 5    | Utility classes          | `@layer ui.utilities`  | When shipping utilities       |
 
 ```css
 /**
@@ -48,7 +48,7 @@ Component stylesheets organize rules in top-to-bottom order:
   }
 }
 
-@layer zazz.components {
+@layer ui.components {
   .ui-button {
     background-color: var(--ui-button-background);
     min-block-size: var(--ui-button-block-size);

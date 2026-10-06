@@ -6,7 +6,7 @@
  */
 
 import { describe, expect, it } from "vite-plus/test";
-import { atWidth, lengthPx, mount, scale, useKit } from "../../test/browser.ts";
+import { at, atWidth, below, lengthPx, mount, scale, useKit } from "../../test/browser.ts";
 
 const width = (el: Element) => el.getBoundingClientRect().width;
 
@@ -56,16 +56,16 @@ describe("--w", () => {
 
   it("the highest matching breakpoint wins: 1rem, 2rem at sm, 3rem at lg", async () => {
     const el = mount(`<div style="--w: 1rem; --w--sm: 2rem; --w--lg: 3rem"></div>`);
-    await atWidth(600);
+    await atWidth(below("sm"));
     expect(width(el)).toBe(16);
-    await atWidth(700);
+    await atWidth(at("sm"));
     expect(width(el)).toBe(32);
-    await atWidth(1100);
+    await atWidth(at("lg"));
     expect(width(el)).toBe(48);
   });
 
-  it("the md setter gate matches --w--md and misses --cqi-md", async () => {
-    await atWidth(800);
+  it("the md setter gate matches --w--md and misses a custom --cqi-md", async () => {
+    await atWidth(at("md"));
     const root = mount(`
       <div>
         <div data-hit style="--w: 1rem; --w--md: 2rem"></div>
@@ -77,7 +77,7 @@ describe("--w", () => {
   });
 
   it("keywords switch the element to raw sizing at every tier", async () => {
-    await atWidth(800);
+    await atWidth(at("md"));
     const root = mount(`
       <div style="inline-size: 500px">
         <div style="display: inline-block; --w: 100%; --w--md: auto">x</div>

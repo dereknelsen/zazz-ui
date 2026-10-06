@@ -37,7 +37,7 @@ describe("editor custom data", () => {
       "prose",
       "text-h2",
       "sr-only",
-      "grid-pile",
+      "pile",
       "scroll-fade",
       "card",
     ]) {
@@ -91,6 +91,33 @@ describe("editor custom data", () => {
     }
     expect(attribute("data-autocomplete-value")?.values ?? []).toEqual([]);
     expect(attribute("data-multiselect-placeholder")?.values ?? []).toEqual([]);
+  });
+
+  it("gives the linter the identities and state hooks <ui-debug> reads from the stylesheets", () => {
+    const { lint } = generateEditorData();
+    expect(lint.identities).toEqual(expect.arrayContaining(["button", "field-group", "dialog"]));
+    expect(lint.hooks.button).toEqual(expect.arrayContaining(["bg--hover", "text--active"]));
+  });
+
+  it("gives the language server identity owners, headers, hooks, and resolved tokens", () => {
+    const { language } = generateEditorData();
+    expect(language.identities["dialog"]).toEqual({
+      primitive: "dialog",
+      file: "primitives/dialog/dialog.css",
+    });
+    expect(language.identities["radio-group"]?.primitive).toBe("radio");
+    expect(language.identities["field"]?.primitive).toBe("fields");
+    expect(language.identities["prose"]?.primitive).toBeNull();
+    expect(language.tags["ui-carousel"]).toBe("carousel");
+    expect(language.primitives["primitives/dialog/dialog.css"]?.tags["presets"]).toEqual([
+      'data-dialog-size="article | container | screen"',
+    ]);
+    expect(language.hooks["--ui-button-bg"]).toEqual({
+      value: "var(--color-background)",
+      file: "primitives/button/button.css",
+    });
+    expect(language.tokens["--space-md"]).toMatchObject({ min: "1.35rem", max: "1.5rem" });
+    expect(language.tokens["--color-primary"]?.light).toMatch(/^oklch\(/);
   });
 
   it("matches the committed files", () => {

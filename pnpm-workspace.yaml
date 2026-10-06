@@ -6,19 +6,32 @@ packages:
 catalogMode: prefer
 
 catalog:
+  "@html-eslint/eslint-plugin": ^0.66.1
+  "@html-eslint/parser": ^0.66.1
   "@types/node": ^26.2.0
+  "@types/vscode": 1.100.0
   "@vitest/browser-playwright": 4.1.10
+  "@vscode/test-cli": ^0.0.15
+  "@vscode/test-electron": ^3.1.0
+  "@vscode/vsce": ^4.0.0
   embla-carousel: ^8.6.0
   embla-carousel-auto-scroll: ^8.6.0
   embla-carousel-autoplay: ^8.6.0
   embla-carousel-class-names: ^8.6.0
+  emmet: ^2.4.11
+  eslint: ^10.12.0
   happy-dom: ^20.11.6
+  jiti: ^2.7.0
   playwright: 1.63.0
   signal-polyfill: 0.2.2
   typescript: ^7.0.2
   vite: npm:@voidzero-dev/vite-plus-core@0.2.4
   vite-plus: 0.2.4
   vitest: 4.1.10
+  vscode-jsonrpc: ^9.0.3
+  vscode-languageclient: ^10.1.2
+  vscode-languageserver: ^10.1.2
+  vscode-languageserver-textdocument: ^1.0.15
 overrides:
   vite: "catalog:"
 peerDependencyRules:
@@ -27,6 +40,7 @@ peerDependencyRules:
   allowedVersions:
     vite: "*"
 allowBuilds:
+  "@vscode/vsce-sign": set this to true or false
   esbuild: true
   sharp: true
 minimumReleaseAgeExclude:

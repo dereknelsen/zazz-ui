@@ -1,15 +1,15 @@
 ---
 title: Utilities
-description: Atomic utility classes in @layer zazz.utilities, zero-specificity architecture, and composition variables.
+description: Atomic utility classes in @layer ui.utilities, zero-specificity architecture, and composition variables.
 ---
 
-Utilities in Zazz are atomic classes declared in `@layer zazz.utilities`. They override component styles by layer position and are wrapped in `:where()` for zero specificity.
+Utilities in Zazz are atomic classes declared in `@layer ui.utilities`. They override component styles by layer position and are wrapped in `:where()` for zero specificity.
 
 <Preview src="utilities/compose" />
 
 ## Rules
 
-1. **Layer precedence:** Layer order is `variables`, `reset`, `vendors`, `legacy.*`, `zazz.components`, `zazz.plugins`, `zazz.utilities`, `overrides`. Utilities override component and plugin styles without `!important`.
+1. **Layer precedence:** Layer order is `variables`, `reset`, `vendors`, `legacy.*`, `ui.components`, `ui.plugins`, `ui.utilities`, `overrides`. Utilities override component and plugin styles without `!important`.
 2. **Zero specificity:** Each rule uses `:where(.utility) { ... }` with `(0,0,0)` specificity so custom selectors can override them easily.
 
 ## Utility families

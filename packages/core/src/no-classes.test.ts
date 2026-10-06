@@ -142,7 +142,20 @@ describe.each(MIGRATED)("%s is migrated", (name) => {
       const used = new Set(
         [...stripComments(css).matchAll(new RegExp(`--_${prefix}-[\\w-]+`, "g"))].map((m) => m[0]),
       );
-      for (const privateName of used) expect(registered, path).toContain(privateName);
+      for (const privateName of used) {
+        // a longer-named primitive's private (button writes --_button-group-rounded) is registered by its owner
+        const owner = readdirSync(join(SRC, "primitives")).find(
+          (name) => name.startsWith(`${prefix}-`) && privateName.startsWith(`--_${name}-`),
+        );
+        if (owner) {
+          const ownerCss = join(SRC, "primitives", owner, `${owner}.css`);
+          expect(readFileSync(ownerCss, "utf8"), ownerCss).toMatch(
+            new RegExp(`@property\\s+${privateName}\\b`),
+          );
+          continue;
+        }
+        expect(registered, path).toContain(privateName);
+      }
     }
   });
 

@@ -31,7 +31,7 @@
   }
 }
 
-@layer zazz.utilities {
+@layer ui.utilities {
   /* main is isolated from header/footer (see _reset.css view-transition-name) */
   @media screen and (prefers-reduced-motion: no-preference) {
     ::view-transition-old(main-content) {

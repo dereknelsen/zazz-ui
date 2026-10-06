@@ -17,6 +17,7 @@ function mount(html: string): HTMLElement {
 /** Messages the audit raises for `html`, joined so substring checks read well. */
 const IDENTITIES = [
   "button",
+  "button-group",
   "field",
   "field-group",
   "radio-group",
@@ -123,9 +124,16 @@ describe("audit warnings", () => {
     expect(warningsFor(`<div style="--rounded: 4; --rounded--md: 8"></div>`)).toEqual([
       expect.stringMatching(/--rounded--md.*tier/),
     ]);
-    expect(warningsFor(`<div style="--bg: red; --bg--md: blue"></div>`)).toEqual([
-      expect.stringMatching(/--bg--md.*tier/),
+    // color takes breakpoints and states; effects only states
+    expect(
+      warningsFor(`<div style="--bg: red; --bg--md: blue; --bg--hover: green"></div>`),
+    ).toEqual([]);
+    expect(warningsFor(`<div style="--opacity: 1; --opacity--md: 0.5"></div>`)).toEqual([
+      expect.stringMatching(/--opacity--md.*tier/),
     ]);
+    expect(
+      warningsFor(`<div data-ui="group"><i style="--bg: red; --group-bg--md: blue"></i></div>`),
+    ).toEqual([expect.stringMatching(/--group-bg--md.*state/)]);
   });
 
   it("flags a base utility that flattens a state a primitive hook covers (claim 27)", () => {
@@ -137,6 +145,16 @@ describe("audit warnings", () => {
       warningsFor(`<button data-ui="button" style="--bg: red; --bg--hover: blue"></button>`, hooks),
     ).toEqual([]);
     expect(warningsFor(`<button data-ui="button" style="--bg: red"></button>`)).toEqual([]);
+  });
+
+  it("trusts a utility on a primitive that carries a variant preset", () => {
+    const hooks = { button: ["text--hover", "text--active"] };
+    expect(
+      warningsFor(
+        `<a data-ui="button" data-button-variant="ghost" style="--text: var(--color-white)"></a>`,
+        hooks,
+      ),
+    ).toEqual([]);
   });
 
   it("flags a border shorthand value that is not one color, number, or length", () => {
@@ -182,11 +200,26 @@ describe("audit warnings", () => {
     ).toEqual([]);
   });
 
-  it("flags a number read raw next to a sizing keyword (claim 23)", () => {
-    expect(warningsFor(`<div style="--w: fit-content; --h: 4"></div>`)).toEqual([
-      expect.stringMatching(/--h: 4.*keyword/),
+  it("accepts numbers and keywords mixed across one utility's tiers (claim 23)", () => {
+    expect(warningsFor(`<div style="--w: auto; --w--md: 4"></div>`)).toEqual([]);
+    expect(warningsFor(`<div style="--w: 4; --w--md: auto"></div>`)).toEqual([]);
+  });
+
+  it("leaves other utilities' numbers alone next to a keyword", () => {
+    expect(warningsFor(`<div style="--w: fit-content; --h: 4"></div>`)).toEqual([]);
+    expect(warningsFor(`<img style="--w: 100%; --max-w: 56; --mx: auto" />`)).toEqual([]);
+  });
+
+  it("accepts grid track keywords and the span utilities", () => {
+    expect(
+      warningsFor(
+        `<div style="--display: grid; --grid-cols: subgrid; --grid-rows: 2; --col-span: 2; --col-start: 1; --row-span--md: 3"></div>`,
+      ),
+    ).toEqual([]);
+    expect(warningsFor(`<div style="--grid-cols: 1; --grid-cols--md: subgrid"></div>`)).toEqual([]);
+    expect(warningsFor(`<div style="--col-span: full"></div>`)).toEqual([
+      expect.stringMatching(/--col-span: full.*integer.*--col: 1 \/ -1/),
     ]);
-    expect(warningsFor(`<div style="--w: fit-content; --h: 4rem"></div>`)).toEqual([]);
   });
 
   it("understands group states: valid on state families, base still required", () => {
@@ -247,6 +280,9 @@ describe("audit warnings", () => {
       ),
     ).toEqual([]);
     expect(warningsFor(`<ui-otp data-otp-groups="3"></ui-otp>`)).toEqual([]);
+    expect(
+      warningsFor(`<ui-button-group data-button-group-orientation="vertical"></ui-button-group>`),
+    ).toEqual([]);
     expect(warningsFor(`<div data-reveal="slide-up" data-reveal-duration="300"></div>`)).toEqual(
       [],
     );
@@ -298,5 +334,83 @@ describe("navigation report", () => {
       ]),
     );
     expect(messages).toHaveLength(3);
+  });
+
+  it("flags an incomplete gradient: a type without stops, stops without a type, two types", () => {
+    expect(warningsFor(`<div style="--bg-linear: to right; --bg-stops: red, blue"></div>`)).toEqual(
+      [],
+    );
+    expect(warningsFor(`<div style="--bg-linear: to right"></div>`)).toEqual([
+      expect.stringMatching(/--bg-linear.*--bg-stops/),
+    ]);
+    expect(warningsFor(`<div style="--bg-stops: red, blue"></div>`)).toEqual([
+      expect.stringMatching(/--bg-stops.*gradient type/),
+    ]);
+    expect(
+      warningsFor(
+        `<div style="--bg-linear: to right; --bg-radial: circle; --bg-stops: red, blue"></div>`,
+      ),
+    ).toEqual([expect.stringMatching(/One gradient per element/)]);
+    expect(warningsFor(`<div style="--bg: none"></div>`)).toEqual([]);
+  });
+
+  it("knows the stuck state and its --stuck-state modifier", () => {
+    expect(
+      warningsFor(
+        `<header style="--position: sticky; --top: 0; --stuck-state: top"><p style="--bg: red; --bg--stuck: blue; --opacity--stuck: .5"></p></header>`,
+      ),
+    ).toEqual([]);
+    expect(warningsFor(`<header style="--position: sticky; --stuck-state: up"></header>`)).toEqual([
+      expect.stringMatching(/--stuck-state: up.*side/),
+    ]);
+    expect(
+      warningsFor(`<header style="--position: sticky; --stuck-state--md: top"></header>`),
+    ).toEqual([expect.stringMatching(/--stuck-state--md.*no tiers/)]);
+    expect(
+      warningsFor(`<header style="--position: sticky; --bg: red; --bg--stuck: blue"></header>`),
+    ).toEqual([expect.stringMatching(/--bg--stuck.*sticky container itself/)]);
+    expect(
+      warningsFor(`<p data-ui="group"><i style="--bg: red; --group-bg--stuck: blue"></i></p>`),
+    ).toEqual([expect.stringMatching(/--group-bg--stuck.*no group form/)]);
+    expect(warningsFor(`<p style="--w: 4; --w--stuck: 8"></p>`)).toEqual([
+      expect.stringMatching(/--w--stuck.*tier/),
+    ]);
+  });
+
+  it("knows the starting state: no base needed where the utility has a default, no group form", () => {
+    expect(
+      warningsFor(
+        `<p style="--opacity--starting: 0; --opacity: 1; --translate--starting: 0 1rem; --transition: opacity .3s, translate .3s"></p>`,
+      ),
+    ).toEqual([]);
+    expect(warningsFor(`<p style="--bg--starting: red"></p>`)).toEqual([
+      expect.stringMatching(/--bg--starting.*no base/),
+    ]);
+    expect(
+      warningsFor(
+        `<p data-ui="group"><i style="--opacity: 1; --group-opacity--starting: 0"></i></p>`,
+      ),
+    ).toEqual([expect.stringMatching(/--group-opacity--starting.*no group form/)]);
+    expect(warningsFor(`<p style="--w: 4; --w--starting: 0"></p>`)).toEqual([
+      expect.stringMatching(/--w--starting.*tier/),
+    ]);
+  });
+
+  it("points standard weight names to numbers, and --flex-direction to the display shorthands", () => {
+    expect(warningsFor(`<p style="--font-weight: medium"></p>`)).toEqual([
+      expect.stringMatching(/medium.*write `500`/),
+    ]);
+    expect(warningsFor(`<p style="--font-weight: strong; --font-weight--md: 600"></p>`)).toEqual(
+      [],
+    );
+    expect(warningsFor(`<p style="--flex-direction: column"></p>`)).toEqual([
+      expect.stringMatching(/--flex-direction.*--display: flex-col/),
+    ]);
+    expect(
+      warningsFor(`<p style="--display: flex-col; --display--md: inline-flex-row-reverse"></p>`),
+    ).toEqual([]);
+    expect(
+      warningsFor(`<p style="--shadow: md; --shadow--hover: xl; --shadow-hue: red"></p>`),
+    ).toEqual([]);
   });
 });

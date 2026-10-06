@@ -1,0 +1,118 @@
+{
+  "name": "zazz-vscode",
+  "displayName": "Zazz",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Zazz Design Framework support for HTML: diagnostics, completions, hover, inlay hints, highlighting, formatting, snippets, and page templates.",
+  "categories": [
+    "Formatters",
+    "Linters",
+    "Programming Languages",
+    "Snippets"
+  ],
+  "license": "MIT",
+  "author": "Derek Nelsen",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dereknelsen/zazz-ui.git",
+    "directory": "packages/vscode"
+  },
+  "publisher": "zazz-ui",
+  "type": "module",
+  "main": "./dist/client.cjs",
+  "scripts": {
+    "build": "vp pack",
+    "dev": "vp pack --watch",
+    "package": "vp pack && vsce package --no-dependencies --out dist/zazz.vsix",
+    "test": "vp pack && tsc -p tsconfig.json && vp test run",
+    "check": "vp check",
+    "generate": "node scripts/generate-grammar.ts && node scripts/generate-emmet.ts && node scripts/generate-snippets.ts",
+    "test:e2e": "vp pack && vscode-test"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/vscode": "~1.100.0",
+    "@vscode/test-cli": "catalog:",
+    "@vscode/test-electron": "catalog:",
+    "@vscode/vsce": "catalog:",
+    "@zazz-ui/core": "workspace:*",
+    "@zazz-ui/language-server": "workspace:*",
+    "emmet": "catalog:",
+    "typescript": "catalog:",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:",
+    "vscode-jsonrpc": "catalog:",
+    "vscode-languageclient": "catalog:"
+  },
+  "contributes": {
+    "configuration": {
+      "title": "Zazz",
+      "properties": {
+        "zazz.diagnostics.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Report Zazz markup problems (the <ui-debug> audit) in HTML files."
+        },
+        "zazz.inlayHints.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show inlay hints in style attributes: scale numbers in rem, breakpoint thresholds, shorthand targets, and size token ranges."
+        },
+        "zazz.colorSwatches.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a swatch before var(--color-*) values in style attributes, in the current theme's light or dark value."
+        },
+        "zazz.templates.base": {
+          "type": "string",
+          "default": "./zazz",
+          "description": "URL prefix to the kit's src/ contents in new pages (buildHead's base): where index.css, base/, and primitives/ are served."
+        }
+      }
+    },
+    "grammars": [
+      {
+        "scopeName": "zazz.injection",
+        "path": "./syntaxes/zazz.injection.tmLanguage.json",
+        "injectTo": [
+          "text.html.basic",
+          "text.html.derivative"
+        ]
+      }
+    ],
+    "snippets": [
+      {
+        "language": "html",
+        "path": "./snippets/zazz.code-snippets"
+      }
+    ],
+    "commands": [
+      {
+        "command": "zazz.newPage",
+        "title": "New Page…",
+        "category": "Zazz",
+        "shortTitle": "Zazz Page"
+      },
+      {
+        "command": "zazz.formatStyles",
+        "title": "Format Style Utilities",
+        "category": "Zazz",
+        "enablement": "editorLangId == html"
+      }
+    ],
+    "menus": {
+      "file/newFile": [
+        {
+          "command": "zazz.newPage",
+          "group": "file"
+        }
+      ]
+    }
+  },
+  "activationEvents": [
+    "onLanguage:html"
+  ],
+  "engines": {
+    "vscode": "^1.100.0"
+  }
+}

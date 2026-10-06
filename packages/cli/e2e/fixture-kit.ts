@@ -129,7 +129,7 @@ function commonFiles(version: string): Record<string, string> {
   const stubScript = (name: string) => `export const ${name} = "${version}";\n`;
   const stubTypes = (name: string) => `export declare const ${name}: string;\n`;
   return {
-    "src/base/_layers.css": "@layer variables, reset, legacy, zazz, migrations;\n",
+    "src/base/_layers.css": "@layer variables, reset, legacy, ui, migrations;\n",
     "src/base/_reset.css": "* {\n  box-sizing: border-box;\n}\n",
     "src/base/_typography.css": "body {\n  font-family: fixture;\n}\n",
     "src/base/_view-transitions.css": "/* fixture view transitions */\n",

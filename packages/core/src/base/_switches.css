@@ -5,10 +5,15 @@
  * @layer      utilities
  * @requires   _layers.css
  * @uses       data-ui="sr-only": visually hidden, still in the accessibility tree
- * @uses       data-ui="grid-pile": every child in one grid area
+ * @uses       data-ui="pile": every child in one grid area
+ * @uses       data-ui="isolate": a new stacking context (isolation: isolate)
+ * @uses       data-ui="divide-x" / "divide-y": a border between direct children,
+ *             sized and colored by the container's `--divide` (default 1px --color-border)
+ * @uses       data-ui="container": an inline-size query container, so breakpoint
+ *             tiers inside it (`--grid-cols--md`) follow its width, not the page's
  */
 
-@layer zazz.utilities {
+@layer ui.utilities {
   :where([data-ui~="sr-only"]) {
     position: absolute;
     inline-size: 1px;
@@ -21,12 +26,49 @@
     border-width: 0;
   }
 
-  :where([data-ui~="grid-pile"]) {
+  :where([data-ui~="pile"]) {
+    display: grid;
     grid-template-areas: "pile";
     place-items: center;
 
     > * {
       grid-area: pile;
+    }
+  }
+
+  :where([data-ui~="isolate"]) {
+    isolation: isolate;
+  }
+
+  /* dividers: a border on the trailing edge of every direct child but the last.
+     `--divide` on the container sets it with the border shorthand's grammar (a
+     number is px in --color-border, a color is 1px of it, a length is the width);
+     its width and color channels inherit so the children read them. A switch,
+     not a `--divide-x` utility: a `[style*=…] > *` rule would make every inline
+     style change invalidate the changed element's whole subtree (CONVENTIONS §6). */
+  :where([data-ui~="divide-x"]) > :where(:not(:last-child)) {
+    border-inline-end-width: var(--_divide-w, 1px);
+    border-inline-end-style: solid;
+    border-inline-end-color: var(--_divide-c, var(--color-border));
+  }
+
+  :where([data-ui~="divide-y"]) > :where(:not(:last-child)) {
+    border-block-end-width: var(--_divide-w, 1px);
+    border-block-end-style: solid;
+    border-block-end-color: var(--_divide-c, var(--color-border));
+  }
+
+  /* inline-size containment: its width cannot come from its content, so it
+     needs a definite or stretched width (a block, grid or flex item, a cell) */
+  :where([data-ui~="container"]) {
+    container-type: inline-size;
+  }
+
+  /* a sticky container is also the stuck state's scroll-state container
+     (_utilities-tier-stuck.css); this file loads after it, so keep both */
+  @supports (container-type: scroll-state) {
+    :where([data-ui~="container"]:is([style*=": sticky"], [style*="--stuck-state:"])) {
+      container-type: inline-size scroll-state;
     }
   }
 }

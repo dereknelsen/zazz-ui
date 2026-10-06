@@ -20,7 +20,7 @@
   }
 }
 
-@layer zazz.components {
+@layer ui.components {
   /* custom elements are inline by default */
   ui-carousel {
     display: block;
@@ -58,6 +58,9 @@
   :where(ui-carousel, [data-ui~="carousel"]) [data-carousel-slot~="slide"] {
     flex: 0 0 var(--ui-carousel-slide-basis);
     min-inline-size: var(--ui-carousel-slide-min-w);
+    /* Embla loops by moving slides with transform; a transition on it (a link's
+       default, say) sweeps a slide across the viewport. Animate a slide's child. */
+    transition: none;
   }
 
   :where(ui-carousel, [data-ui~="carousel"])

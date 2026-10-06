@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    // Typecheck-only: the VS Code extension bundles the sources (packages/vscode),
+    // and the ESLint plugin loads them through jiti.
+    "noEmit": true,
+    "target": "ES2023",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "lib": ["ES2023", "DOM"],
+    "types": ["node"],
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*.ts", "vite.config.ts"]
+}

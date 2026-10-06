@@ -140,7 +140,7 @@
   inherits: false;
 }
 
-@layer zazz.components {
+@layer ui.components {
   :where([data-ui~="badge"]) {
     font-family: var(
       --_font-family-resolved,
@@ -290,6 +290,34 @@
     --_badge-text: var(--color-primary-foreground);
     --_badge-text--hover: var(--color-primary-foreground);
     --_badge-text--active: var(--color-primary-foreground);
+
+    --_badge-border-color: var(--_badge-bg);
+    --_badge-border-color--hover: var(--_badge-bg--hover);
+    --_badge-border-color--active: var(--_badge-bg--active);
+  }
+
+  :where([data-ui~="badge"][data-badge-variant="secondary"]) {
+    --_badge-bg: var(--color-secondary);
+    --_badge-bg--hover: oklch(from var(--color-secondary) l c h / 0.9);
+    --_badge-bg--active: oklch(from var(--color-secondary) l c h / 0.8);
+
+    --_badge-text: var(--color-secondary-foreground);
+    --_badge-text--hover: var(--color-secondary-foreground);
+    --_badge-text--active: var(--color-secondary-foreground);
+
+    --_badge-border-color: var(--_badge-bg);
+    --_badge-border-color--hover: var(--_badge-bg--hover);
+    --_badge-border-color--active: var(--_badge-bg--active);
+  }
+
+  :where([data-ui~="badge"][data-badge-variant="tertiary"]) {
+    --_badge-bg: var(--color-tertiary);
+    --_badge-bg--hover: oklch(from var(--color-tertiary) l c h / 0.9);
+    --_badge-bg--active: oklch(from var(--color-tertiary) l c h / 0.8);
+
+    --_badge-text: var(--color-tertiary-foreground);
+    --_badge-text--hover: var(--color-tertiary-foreground);
+    --_badge-text--active: var(--color-tertiary-foreground);
 
     --_badge-border-color: var(--_badge-bg);
     --_badge-border-color--hover: var(--_badge-bg--hover);

@@ -23,7 +23,7 @@
     --ui-navigation-menu-popover-shadow: var(--shadow-md);
     --ui-navigation-menu-popover-child-rounded: var(--radius-sm);
     --ui-navigation-menu-popover-gap: calc(var(--spacing) * 1.5);
-    --ui-navigation-menu-popover-w: min(var(--breakpoint-xs), 100% - var(--space-md));
+    --ui-navigation-menu-popover-w: min(var(--article-sm), 100% - var(--space-md));
     --ui-navigation-menu-popover-viewport-display: grid;
     --ui-navigation-menu-popover-viewport-items: stretch;
     --ui-navigation-menu-popover-viewport-justify-items: stretch;
@@ -33,7 +33,7 @@
   }
 }
 
-@layer zazz.components {
+@layer ui.components {
   :where([data-ui~="navigation-menu"]) {
     --ui-popover-shadow: var(--ui-navigation-menu-popover-shadow);
 

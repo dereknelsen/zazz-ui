@@ -80,23 +80,24 @@ export { MyExport };
 
 Attach a named export object or class to `window` for the documented public API, then `export` it for module consumers (the `index.ts` entry and any sibling script that imports it).
 
-| File                                  | Global              | Export shape                                                                                                 |
-| ------------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `base/utils.ts`                       | `window.Utils`      | `{ parseValue, parseDataAttributes }`                                                                        |
-| `base/signals.ts`                     | `window.Signals`    | `{ state, computed, effect }`                                                                                |
-| `base/reveal.ts`                      | `window.Reveal`     | `Reveal` class                                                                                               |
-| `base/dialog-lifecycle.ts`            | _(none)_            | Emits `zazz:dialog-open` / `zazz:dialog-close` on every `<dialog>` (ADR-0003); the events are the public API |
-| `base/embla.ts`                       | `window.EmblaInit`  | `{ init, initRoot, ... }`                                                                                    |
-| `base/zazz-element.ts`                | _(none)_            | `ZazzElement` base + `defineZazzElement` + refresh registry (`registerRefresh` / `refreshAll`)               |
-| `ui/carousel/carousel.ts`             | _(none)_            | `<ui-carousel>` element class (module export only)                                                           |
-| `ui/checkbox/checkbox.ts`             | _(none)_            | `initCheckboxes`, `deriveTriState` (module exports only); signal-derived select-all groups                   |
-| `ui/lightbox/lightbox.ts`             | _(none)_            | `<ui-lightbox>` element class (module export only)                                                           |
-| `ui/password-group/password-group.ts` | _(none)_            | `<ui-password>` element class (module export only)                                                           |
-| `ui/tabs/tabs.ts`                     | _(none)_            | `<ui-tabs>` element class (module export only)                                                               |
-| `ui/toaster/toaster.ts`               | `window.Toaster`    | Imperative toast API + `<ui-toaster>` element class                                                          |
-| `base/navigation.ts`                  | _(none)_            | Side effect: opt-in body swap (`data-ui-navigation="swap"`); exports `swapBody` for tests                    |
-| `ui/debug/debug.ts`                   | _(none)_            | `<ui-debug>` element class + `audit(root)` (module exports only); development tooling                        |
-| `ui/style-guard/style-guard.ts`       | `window.StyleGuard` | `{ start, stop, restore }` — optional; restores utilities a legacy `style` rewrite dropped                   |
+| File                                  | Global              | Export shape                                                                                                                                                                                             |
+| ------------------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `base/utils.ts`                       | `window.Utils`      | `{ parseValue, parseDataAttributes }`                                                                                                                                                                    |
+| `base/signals.ts`                     | `window.Signals`    | `{ state, computed, effect }`                                                                                                                                                                            |
+| `base/reveal.ts`                      | `window.Reveal`     | `Reveal` class                                                                                                                                                                                           |
+| `base/dialog-lifecycle.ts`            | _(none)_            | Emits `zazz:dialog-open` / `zazz:dialog-close` on every `<dialog>` (ADR-0003); the events are the public API                                                                                             |
+| `base/embla.ts`                       | `window.EmblaInit`  | `{ init, initRoot, ... }`                                                                                                                                                                                |
+| `base/zazz-element.ts`                | _(none)_            | `ZazzElement` base + `defineZazzElement` + refresh registry (`registerRefresh` / `refreshAll`)                                                                                                           |
+| `ui/carousel/carousel.ts`             | _(none)_            | `<ui-carousel>` element class (module export only)                                                                                                                                                       |
+| `ui/checkbox/checkbox.ts`             | _(none)_            | `initCheckboxes`, `deriveTriState` (module exports only); signal-derived select-all groups                                                                                                               |
+| `ui/lightbox/lightbox.ts`             | _(none)_            | `<ui-lightbox>` element class (module export only)                                                                                                                                                       |
+| `ui/password-group/password-group.ts` | _(none)_            | `<ui-password>` element class (module export only)                                                                                                                                                       |
+| `ui/tabs/tabs.ts`                     | _(none)_            | `<ui-tabs>` element class (module export only)                                                                                                                                                           |
+| `ui/toaster/toaster.ts`               | `window.Toaster`    | Imperative toast API + `<ui-toaster>` element class                                                                                                                                                      |
+| `base/navigation.ts`                  | _(none)_            | Side effect: opt-in body swap (`data-ui-navigation="swap"`); exports `swapBody` for tests                                                                                                                |
+| `base/scroll-state.ts`                | _(none)_            | Polyfill for the `stuck` utility state (container scroll-state queries); `index.ts` imports it only where `scroll-state()` is unsupported. exports `ScrollState` `{ start, stop, isSupported, refresh }` |
+| `ui/debug/debug.ts`                   | _(none)_            | `<ui-debug>` element class + `audit(root)` (module exports only); development tooling                                                                                                                    |
+| `ui/style-guard/style-guard.ts`       | `window.StyleGuard` | `{ start, stop, restore }` — optional; restores utilities a legacy `style` rewrite dropped                                                                                                               |
 
 Document export objects with `@namespace` JSDoc and `@property` for each key.
 

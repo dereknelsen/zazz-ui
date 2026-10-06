@@ -76,3 +76,31 @@ describe("typography roles", () => {
     }
   });
 });
+
+describe("font-weight keywords and reset hooks", () => {
+  useKit();
+
+  it("--font-weight takes heading, body, and strong, and numbers as usual", () => {
+    const root = mount(`<div>
+      <span data-strong style="--font-weight: strong">a</span>
+      <span data-heading style="--font-weight: heading">b</span>
+      <span data-body style="--font-weight: body">c</span>
+      <span data-num style="--font-weight: 700">d</span>
+    </div>`);
+    const weight = (selector: string) => style(root.querySelector(selector)!, "font-weight");
+    const token = (name: string) => style(document.documentElement, `--font-weight-${name}`).trim();
+    expect(weight("[data-strong]")).toBe(token("strong"));
+    expect(weight("[data-heading]")).toBe(token("heading"));
+    expect(weight("[data-body]")).toBe(token("body"));
+    expect(weight("[data-num]")).toBe("700");
+  });
+
+  it("native elements read their reset hooks, so one declaration retunes them", () => {
+    const root = mount(`<div>
+      <b data-b style="--strong-font-weight: 800">bold</b>
+      <select multiple><optgroup label="g"><option data-option style="--optgroup-option-pl: 2rem">o</option></optgroup></select>
+    </div>`);
+    expect(style(root.querySelector("[data-b]")!, "font-weight")).toBe("800");
+    expect(style(root.querySelector("[data-option]")!, "padding-inline-start")).toBe("32px");
+  });
+});

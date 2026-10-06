@@ -27,7 +27,7 @@
   }
 }
 
-@layer zazz.components {
+@layer ui.components {
   :where([data-ui~="textarea"]) {
     field-sizing: content;
     /* dual-mode metrics go through the registered typed pair */
@@ -87,7 +87,7 @@
 }
 
 /* an invalid control remaps the --ui-field-* family on itself */
-@layer zazz.components {
+@layer ui.components {
   :where([data-ui~="textarea"]):disabled {
     opacity: 0.5;
     cursor: not-allowed;

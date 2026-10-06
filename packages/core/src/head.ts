@@ -74,6 +74,8 @@ const CORE_RUNTIME_JS = [
   "base/utils.js",
   "base/signals.js",
   "base/zazz-element.js",
+  // dynamically imported by index.js where container scroll-state queries are unsupported
+  "base/scroll-state.js",
 ];
 
 /**
@@ -267,6 +269,13 @@ export interface HeadOptions {
   fontDisplay?: "swap" | "optional" | false;
   /** Include the inline theme-persistence script (last in head). Default `true`. */
   theme?: boolean;
+  /**
+   * Local granular grain: the primitives this page uses, loaded file by file
+   * from `base` (base layers, the closure's stylesheets in cascade order, one
+   * module tag per closure script) instead of `index.css` / `index.js`. For CDN
+   * mode, set `cdn.primitives`.
+   */
+  primitives?: string[];
 }
 
 /**
@@ -296,6 +305,15 @@ export function buildHead(options: HeadOptions = {}): string {
 
   if (cdn) {
     parts.push(...cdnBlocks(cdn, scripts));
+  } else if (options.primitives) {
+    parts.push(
+      ...granularBlocks(
+        options.primitives,
+        (path) => `${base}/${path}`,
+        () => "",
+        scripts,
+      ),
+    );
   } else {
     parts.push(
       `<!-- Zazz styles: one bundle (index.css @imports every layer in cascade order) -->`,
@@ -366,6 +384,44 @@ function cdnBlocks(cdn: CdnHeadOptions, scripts: boolean): string[] {
     return parts;
   }
 
+  // Transitively imported core modules never get a tag, so their integrity
+  // rides in the import map's integrity section instead.
+  const transitive: Record<string, string> = {};
+  if (sri) {
+    for (const path of CORE_RUNTIME_JS) {
+      const hash = sri[`src/${path}`];
+      if (hash) transitive[url(`src/${path}`)] = hash;
+    }
+  }
+  return granularBlocks(
+    primitives,
+    (path) => url(`src/${path}`),
+    (path) => attrs(`src/${path}`),
+    scripts,
+    transitive,
+  );
+}
+
+/**
+ * @description The granular grain, local or CDN: base layers in cascade order,
+ * the dependency closure's stylesheets, and one module tag per closure script.
+ *
+ * @param primitives - The primitives the page uses (their closure loads).
+ * @param url - A `src/`-relative kit path → its URL.
+ * @param attrs - A `src/`-relative kit path → extra tag attributes (SRI).
+ * @param scripts - Whether behavior loads at all.
+ * @param transitive - Import-map integrity for modules that get no tag.
+ * @returns The head fragments between the fonts block and the theme script.
+ * @private
+ */
+function granularBlocks(
+  primitives: string[],
+  url: (path: string) => string,
+  attrs: (path: string) => string,
+  scripts: boolean,
+  transitive: Record<string, string> = {},
+): string[] {
+  const parts: string[] = [];
   const closure = resolveClosure(primitives);
 
   const css = [
@@ -375,9 +431,7 @@ function cdnBlocks(cdn: CdnHeadOptions, scripts: boolean): string[] {
   ];
   parts.push(
     `<!-- Zazz styles: base layers, then ${closure.join(", ")} in cascade order -->`,
-    ...css.map(
-      (path) => `<link rel="stylesheet" href="${url(`src/${path}`)}"${attrs(`src/${path}`)}>`,
-    ),
+    ...css.map((path) => `<link rel="stylesheet" href="${url(path)}"${attrs(path)}>`),
   );
 
   if (scripts) {
@@ -395,22 +449,12 @@ function cdnBlocks(cdn: CdnHeadOptions, scripts: boolean): string[] {
         }),
       ]),
     ];
-    // Transitively imported core modules never get a tag, so their integrity
-    // rides in the import map's integrity section instead.
-    const transitive: Record<string, string> = {};
-    if (sri) {
-      for (const path of CORE_RUNTIME_JS) {
-        const hash = sri[`src/${path}`];
-        if (hash) transitive[url(`src/${path}`)] = hash;
-      }
-    }
     parts.push(
       importMapBlock(transitive),
       polyfillsBlock(),
       `<!-- Zazz behavior: side-effect modules by tag; the rest via module imports -->`,
       ...scriptFiles.map(
-        (path) =>
-          `<script type="module" src="${url(`src/${path}`)}"${attrs(`src/${path}`)}></script>`,
+        (path) => `<script type="module" src="${url(path)}"${attrs(path)}></script>`,
       ),
     );
   }
@@ -420,3 +464,101 @@ function cdnBlocks(cdn: CdnHeadOptions, scripts: boolean): string[] {
 
 export { ESM_DEPENDENCIES, POLYFILLS, cdnUrl };
 export type { CdnDependency };
+
+// --- Head blocks in pages ---
+
+/**
+ * A page's generated head: the markup between `<!-- zazz:head … -->` and
+ * `<!-- /zazz:head -->`. The opening marker may carry the `buildHead` options
+ * as JSON (`<!-- zazz:head {"base":"./zazz","primitives":["dialog"]} -->`), so
+ * tools can re-render it with another primitive; a bare marker means the
+ * default head (the whole kit).
+ */
+export interface HeadBlock {
+  /** Offset of the opening marker. */
+  markerStart: number;
+  /** Offset just past the opening marker. */
+  start: number;
+  /** Offset of the closing marker. */
+  end: number;
+  options: HeadOptions;
+  /** The opening marker's indentation. */
+  indent: string;
+}
+
+const HEAD_START = /<!--\s*zazz:head(\s+\{[\s\S]*?\})?\s*-->/;
+const HEAD_END = "<!-- /zazz:head -->";
+
+/** The opening marker recording `options` (bare when there are none). */
+export function headMarker(options: HeadOptions = {}): string {
+  return Object.keys(options).length
+    ? `<!-- zazz:head ${JSON.stringify(options)} -->`
+    : "<!-- zazz:head -->";
+}
+
+/** The page's head block, or `undefined` without both markers (or with unreadable options). */
+export function findHeadBlock(html: string): HeadBlock | undefined {
+  const open = HEAD_START.exec(html);
+  if (!open) return undefined;
+  const start = open.index + open[0].length;
+  const end = html.indexOf(HEAD_END, start);
+  if (end === -1) return undefined;
+  let options: HeadOptions = {};
+  if (open[1]) {
+    try {
+      options = JSON.parse(open[1]) as HeadOptions;
+    } catch {
+      return undefined;
+    }
+  }
+  const indent = /(?:^|\n)([ \t]*)$/.exec(html.slice(0, open.index))?.[1] ?? "";
+  return { markerStart: open.index, start, end, options, indent };
+}
+
+/**
+ * Formatting-insensitive comparison: oxfmt rewraps attributes and self-closes
+ * void elements, and those differences don't make a head block out of date.
+ */
+function normalizeHead(html: string): string {
+  return html
+    .replace(/\s+/g, " ")
+    .replace(/\s*\/>/g, ">")
+    .replace(/\s+>/g, ">")
+    .trim();
+}
+
+/**
+ * @description The edit that renders `head` between the page's markers,
+ * indented like the opening marker (and, with `options`, rewrites the marker to
+ * record them). `undefined` when the page has no head block or the block is
+ * already current, modulo formatting.
+ *
+ * @param html - The page.
+ * @param head - The head markup (`buildHead` output).
+ * @param options - Options to record in the opening marker (default: keep it).
+ * @returns The replaced range and its new text.
+ */
+export function headBlockEdit(
+  html: string,
+  head: string,
+  options?: HeadOptions,
+): { start: number; end: number; text: string } | undefined {
+  const block = findHeadBlock(html);
+  if (!block) return undefined;
+  const marker = options ? headMarker(options) : html.slice(block.markerStart, block.start);
+  const sameMarker = marker === html.slice(block.markerStart, block.start);
+  if (sameMarker && normalizeHead(html.slice(block.start, block.end)) === normalizeHead(head)) {
+    return undefined;
+  }
+  const body = head
+    .split("\n")
+    .map((line) => (line ? block.indent + line : line))
+    .join("\n");
+  return { start: block.markerStart, end: block.end, text: `${marker}\n${body}\n${block.indent}` };
+}
+
+/** `html` with its head block rendered from `head` (unchanged when current or absent). */
+export function replaceHeadBlock(html: string, head: string, options?: HeadOptions): string {
+  const edit = headBlockEdit(html, head, options);
+  return edit ? html.slice(0, edit.start) + edit.text + html.slice(edit.end) : html;
+}

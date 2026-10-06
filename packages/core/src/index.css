@@ -75,8 +75,6 @@
 /* Generated utilities (scripts/generate-utilities.ts) and switches: the last
    normal Zazz layer. */
 @import "./base/_properties.css";
-@import "./base/_properties-2xs.css";
-@import "./base/_properties-xs.css";
 @import "./base/_properties-sm.css";
 @import "./base/_properties-md.css";
 @import "./base/_properties-lg.css";
@@ -89,8 +87,8 @@
 @import "./base/_properties-hover.css";
 @import "./base/_properties-checked.css";
 @import "./base/_properties-open.css";
-@import "./base/_utilities-tier-2xs.css";
-@import "./base/_utilities-tier-xs.css";
+@import "./base/_properties-stuck.css";
+@import "./base/_properties-starting.css";
 @import "./base/_utilities-tier-sm.css";
 @import "./base/_utilities-tier-md.css";
 @import "./base/_utilities-tier-lg.css";
@@ -103,6 +101,8 @@
 @import "./base/_utilities-tier-hover.css";
 @import "./base/_utilities-tier-checked.css";
 @import "./base/_utilities-tier-open.css";
+@import "./base/_utilities-tier-stuck.css";
+@import "./base/_utilities-tier-starting.css";
 @import "./base/_utilities-flow.css";
 @import "./base/_utilities-grid.css";
 @import "./base/_utilities-spacing.css";

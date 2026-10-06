@@ -48,7 +48,7 @@
   }
 }
 
-@layer zazz.components {
+@layer ui.components {
   :where([data-ui~="table"]) {
     font-family: var(--_font-family-resolved, var(--ui-table-font-family));
     font-size: var(--_font-size-resolved, var(--ui-table-font-size));

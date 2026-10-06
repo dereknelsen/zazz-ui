@@ -39,7 +39,7 @@ Borrow the confidence and negative space; skip the craft-narrative framing.
   stat numerals, active nav, list indices. No second brand color competing; restraint is the point.
 - **Oversized ghost numerals as the motif.** The signature decoration: huge step/stat numbers
   (`text-display` scale) at low opacity via `--color-muted` or a tint, overlapped behind their content
-  with `data-ui="grid-pile"`. Also a faint watermark figure behind the hero. Texture, never legible focus.
+  with `data-ui="pile"`. Also a faint watermark figure behind the hero. Texture, never legible focus.
 - **Bordered cards on flat dark, atmosphere from tokens.** Cards are `data-ui="card"` with
   `--border-width: 1px; --border-color: var(--color-border)` on the dark surface — flat, hairline-defined, no drop shadows. Build
   depth from a subtle `--color-primary-*`-scale wash or grain in section backgrounds and decorative
@@ -62,7 +62,7 @@ Build sections from Zazz components and the band system — don't hand-roll CSS.
    sign-in, and a `data-button-variant="primary"` "sign up" in the accent.
 2. **Hero:** Accent `text-eyebrow` + a heavy `text-display`/`text-h1` claim ("Transform the way your
    team works") over `--color-muted-foreground` subcopy, with an oversized ghost numeral/figure piled
-   behind via `data-ui="grid-pile"`. Dual CTAs — one `primary`, one bordered (`data-button-variant="outline"`,
+   behind via `data-ui="pile"`. Dual CTAs — one `primary`, one bordered (`data-button-variant="outline"`,
    or the default button with no preset).
 3. **Stat band:** A row of 3–4 big accent numerals (`text-display`/`text-h2`, `--color-primary`) with
    `text-eyebrow` labels ("500k+ active users", "99.99% uptime"). Hard numbers as credibility.

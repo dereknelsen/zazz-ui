@@ -32,13 +32,13 @@ CSSDoc is intentionally lightweight:
 Cascade order is declared once, in [`_layers.css`](./src/base/_layers.css), and must load first:
 
 ```css
-@layer variables, reset, vendors, legacy, zazz, overrides;
+@layer variables, reset, vendors, legacy, ui, overrides;
 
 @layer legacy {
   @layer imports, components, utilities, migrations;
 }
 
-@layer zazz {
+@layer ui {
   @layer components, plugins, utilities;
 }
 ```
@@ -63,9 +63,9 @@ The six top-level layers, lowest priority to highest:
   beat all other legacy CSS). Sits below Zazz, so the framework wins where they overlap, and
   finishing a migration means deleting this one layer. **Never import into bare `layer(legacy)`**:
   un-sublayered rules form an implicit final sublayer that would beat the migration shims.
-- **`zazz`**: everything Zazz ships, as three sublayers: `components`, then `plugins`
+- **`ui`**: everything Zazz ships, as three sublayers: `components`, then `plugins`
   (Zazz-dependent extensions — above components so an added variant can restyle the primitive it
-  extends, via `layer(zazz.plugins)`), then `utilities`, which beat everything in `zazz`.
+  extends, via `layer(ui.plugins)`), then `utilities`, which beat everything in `ui`.
 - **`overrides`**: the app's deliberate overrides — beats every Zazz layer while staying
   structured. Only unlayered CSS outranks it.
 
@@ -88,14 +88,14 @@ redundant (`preload` is for late-discovered resources like web fonts or JS-injec
 
 A component file is written top-to-bottom in this order:
 
-| #   | Section                  | Layer                    | Required?                     |
-| --- | ------------------------ | ------------------------ | ----------------------------- |
-| 1   | CSSDoc header            | None                     | always                        |
-| 2   | Deprecated css rules     | `@layer legacy`          | when migrating to Zazz        |
-| 2   | Component token hooks    | `@layer variables`       | when the component has tokens |
-| 3   | Native-element baselines | `@layer reset`           | only if it redraws native UI  |
-| 4   | Component rules          | `@layer zazz.components` | the component itself          |
-| 5   | Generated utilities      | `@layer zazz.utilities`  | never in a component file     |
+| #   | Section                  | Layer                  | Required?                     |
+| --- | ------------------------ | ---------------------- | ----------------------------- |
+| 1   | CSSDoc header            | None                   | always                        |
+| 2   | Deprecated css rules     | `@layer legacy`        | when migrating to Zazz        |
+| 2   | Component token hooks    | `@layer variables`     | when the component has tokens |
+| 3   | Native-element baselines | `@layer reset`         | only if it redraws native UI  |
+| 4   | Component rules          | `@layer ui.components` | the component itself          |
+| 5   | Generated utilities      | `@layer ui.utilities`  | never in a component file     |
 
 ```css
 /**
@@ -113,7 +113,7 @@ A component file is written top-to-bottom in this order:
   }
 }
 
-@layer zazz.components {
+@layer ui.components {
   :where([data-ui~="button"]) {
     /* rules that consume the hooks above through the utility chain (§5) */
   }
@@ -136,7 +136,7 @@ The four layers, by responsibility:
 - **`utilities`**: the utilities layer, generated from [`utilities.ts`](./src/base/utilities.ts) into
   `_utilities-*.css` (`vp run generate`): attribute-gated rules that read `--p`, `--w--md`,
   `--bg--hover`, … from `style=""`, written with `:where()` for zero specificity. The
-  `data-ui` switches (`sr-only`, `grid-pile`) live here too.
+  `data-ui` switches (`sr-only`, `pile`) live here too.
 
 ---
 
@@ -354,7 +354,7 @@ them overridable:
 **Private internals** are transient plumbing: the ring widths flipped on `:focus-visible`
 (`--_ring-width`, `--_ring-offset-width`, `--_ring-fill`), or a value composed and reused within
 one rule (`--details-content-transition`). They carry the `--_` prefix and are declared
-_inside the rule that consumes them_, in `@layer zazz.components` or `reset`, **never** in
+_inside the rule that consumes them_, in `@layer ui.components` or `reset`, **never** in
 `@layer variables`. They are not hooks; apps do not touch them. Scoping these to the element
 (or `:where(el)`) is correct precisely _because_ they are not meant to be overridden from
 `:root`. Two names are off limits: `--_<utility>` (the utilities layer's own private for every utility
@@ -380,7 +380,7 @@ then the hook. Presets then only **write privates**: they never restate the
 rule:
 
 ```css
-@layer zazz.components {
+@layer ui.components {
   :where([data-ui~="button"]) {
     background-color: var(--_bg-resolved, var(--_button-bg, var(--ui-button-bg)));
 
@@ -523,6 +523,22 @@ use case exists in an example fragment or docs page.
   control does not stick in its hover color on touch screens.
 - **State exclusion**: express intent with `:not()` (`:hover:not(:disabled)`) rather than
   order-dependent overrides.
+- **A `[style*=…]` gate is the subject, never an ancestor.** Style recalc cost in Chromium is
+  the number of `[style*=` substrings in the sheet times the length of each element's `style`
+  attribute (every gated rule is tested on every styled element and each test scans the whole
+  attribute; bodies and `@property` registrations cost nothing — SPEC claim 16). A gate in an
+  ancestor compound (`[style*="--x:"] [style*="--y:"]`) is worse: any inline style change then
+  invalidates every styled descendant. Publish from the container instead (a non-inheriting
+  private read by a `style()` container query, or an inherited private the descendants copy),
+  as `_utilities-tier-stuck.css` does. Put a pseudo-class before the gate in a compound
+  (`:where(:hover[style*="--hover:"])`): the flag test short-circuits the scan.
+- **No `var()` in a universal highlight pseudo-element rule.** `::selection`, `::target-text`,
+  `::highlight()`, `::spelling-error`, `::grammar-error` inherit through the highlight chain,
+  so style them on `:root` only (`:root::selection { background-color: var(--selection-bg) }`).
+  A universal `::selection` rule that reads a custom property makes Chromium recompute every
+  descendant's highlight style whenever any custom property changes on an ancestor — on a
+  Zazz page, every inline utility change (measured at 196 ms per restyle with 1,000 styled
+  children; 0.4 ms on `:root`).
 - **Utility names track Tailwind**: `--p`, `--w`, `--bg`, `--leading`, `--rounded` where Tailwind
   has a short name, the CSS property name otherwise. Token names do **not**
   follow Tailwind; they use the tiered `--font-family-*` / `--font-weight-*` (semantic) over
@@ -615,7 +631,7 @@ These deviate from the canonical shape on purpose: document the reason in-file:
    }
    ```
 
-5. Write the rules in `@layer zazz.components`, reading each utility-backed hook through the
+5. Write the rules in `@layer ui.components`, reading each utility-backed hook through the
    chain `var(--_<utility>-resolved, var(--_<component>-<utility>, var(--ui-<component>-<utility>)))`
    (dual-mode utilities through the `--_<utility>-len` / `--_<utility>-num` pair, §5). Spell the root
    `:where([data-ui~="<component>"])`, or `:where(ui-<component>, [data-ui~="<component>"])`

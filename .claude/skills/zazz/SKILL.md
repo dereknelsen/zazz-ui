@@ -45,8 +45,8 @@ Zazz markup has **no classes**. Every styling decision is one of four channels:
 
 Behind that:
 
-- **Cascade layers, not specificity.** `@layer variables, reset, vendors, legacy, zazz, overrides`
-  (`zazz` nests `components, plugins, utilities`). Utilities live in `zazz.utilities` at zero
+- **Cascade layers, not specificity.** `@layer variables, reset, vendors, legacy, ui, overrides`
+  (`zazz` nests `components, plugins, utilities`). Utilities live in `ui.utilities` at zero
   specificity and beat component rules; typography roles sit in `reset`. Don't fight the
   cascade with selector tricks.
 - **Hooks theme primitives.** Every primitive reads `--ui-<identity>-<utility>` hooks (inheriting,
@@ -62,8 +62,9 @@ Behind that:
 
 Start at the most semantic layer; get specific only when nothing semantic fits.
 
-- **Spacing** → `var(--space-2xs … 2xl)` first; a scale number (`--p: 4`, × `--spacing`) or
-  `--step-*` only when no space token fits. Never a raw px/rem.
+- **Spacing** → the space scale as a number, no `var()`: `--space-2xs` = 1, `xs` = 2, `sm` = 4,
+  `md` = 6, `lg` = 11, `xl` = 24, `2xl` = 40 (`--p: 4` is `var(--space-sm)`); other scale numbers when
+  no step fits. Never a raw px/rem in markup.
 - **Color** → `var(--color-<role>)` (`--color-foreground`, `--color-muted-foreground`,
   `--color-primary`, `--color-border`, `--color-destructive`…) so light/dark swap for free;
   literal scales (`--color-primary-600`, `--color-neutral-100`, `--color-shade-800`) only as a last resort.
@@ -92,7 +93,7 @@ intensity, is the bar.** Zazz supplies the vocabulary; you supply the point of v
   dark mode comes free, and don't treat the default blue-violet as a neutral.
 - **Compose with tension.** Break the centered stack. The layout band system is built for it:
   play `--col: layout-bleed`/`layout-full` imagery against capped `lg`/reading-width text, use
-  the left-label layout, overlap layers with `data-ui="grid-pile"`, and let `var(--space-xl)` open
+  the left-label layout, overlap layers with `data-ui="pile"`, and let `var(--space-xl)` open
   real negative space. Asymmetry and whitespace are choices, not accidents.
 - **Build atmosphere, not flat fills.** Layer depth from tokens — gradient washes across a brand
   scale (`--color-primary-600` → `--color-primary-900`), `shade`/`tint` transparencies, subtle noise/grain,

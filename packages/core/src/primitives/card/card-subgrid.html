@@ -1,8 +1,8 @@
 <div
   style="
     --display: grid;
-    --grid-rows: 3;
     --grid-cols: 2;
+    --grid-rows: 3;
     --gap: var(--space-md);
   "
 >
@@ -10,23 +10,23 @@
     href="#"
     style="
       --display: grid;
-      --grid-template-rows: subgrid;
       --row: span 3;
+      --grid-template-rows: subgrid;
       --cursor: pointer;
     "
   >
     <div
       data-ui="card"
       style="
-        --grid-template-rows: subgrid;
         --row: span 3;
+        --grid-template-rows: subgrid;
       "
     >
       <figure
         style="
           --display: grid;
-          --grid-template-rows: subgrid;
           --row: span 1;
+          --grid-template-rows: subgrid;
           --aspect: 3 / 2;
           --rounded: var(--radius-md) var(--radius-md) 0 0;
           --overflow: clip;
@@ -40,23 +40,23 @@
           alt="Elephants crossing a dusty riverbed"
           style="
             --size: 100%;
-            --object-fit: cover;
-            --scale: 1;
-            --scale--hover: 1.02;
             --opacity: 1;
             --opacity--hover: 0.75;
+            --scale: 1;
+            --scale--hover: 1.02;
             --transition: var(--default-transition);
+            --object-fit: cover;
           "
         />
       </figure>
       <div
         style="
           --display: grid;
-          --grid-template-rows: subgrid;
           --row: span 2;
-          --gap: var(--space-sm);
+          --grid-template-rows: subgrid;
           --px: var(--space-sm);
           --pb: var(--space-sm);
+          --gap: var(--space-sm);
         "
       >
         <header
@@ -83,9 +83,9 @@
             <h3
               style="
                 --font-size: var(--font-size-lg);
+                --font-family: var(--font-family-heading);
                 --leading: var(--leading-lg);
                 --tracking: var(--tracking-lg);
-                --font-family: var(--font-family-heading);
               "
             >
               Migration patterns
@@ -95,8 +95,8 @@
                 --font-size: var(--font-size-sm);
                 --leading: var(--leading-sm);
                 --tracking: var(--tracking-sm);
-                --text: var(--color-muted-foreground);
                 --line-clamp: 2;
+                --text: var(--color-muted-foreground);
               "
             >
               Satellite collars reveal ancient routes herds still follow each dry season across the
@@ -108,10 +108,9 @@
           style="
             --display: grid;
             --justify: start;
-            --gap: var(--space-sm);
             --pt: var(--space-sm);
-            --border-t-width: 1px;
-            --border-t-color: var(--color-border);
+            --gap: var(--space-sm);
+            --border-t: 1;
           "
         >
           <div
@@ -122,13 +121,13 @@
             "
           >
             <figure
-              data-ui="grid-pile"
+              data-ui="pile"
               role="img"
               style="
                 --display: grid;
-                --border-width: 1px;
-                --border-color: var(--color-border);
                 --size: var(--space-lg);
+                --border-color: var(--color-border);
+                --border-width: 1px;
                 --rounded: var(--radius-full);
                 --overflow: clip;
               "
@@ -141,45 +140,40 @@
                 alt="John Doe"
                 aria-hidden="true"
                 style="
-                  --size: 100%;
-                  --object-fit: cover;
                   --order: 9999;
+                  --size: 100%;
                   --bg: transparent;
+                  --object-fit: cover;
                 "
               />
               <figcaption
                 style="
-                  --bg: var(--color-primary);
-                  --text: var(--color-primary-foreground);
-                  --order: -9999;
-                  --size: 100%;
                   --display: flex;
                   --items: center;
                   --justify: center;
-                  --text-align: center;
+                  --order: -9999;
+                  --size: 100%;
                   --font-size: var(--font-size-md);
+                  --font-weight: strong;
                   --leading: var(--leading-md);
                   --tracking: var(--tracking-md);
-                  --font-weight: var(--font-weight-strong);
+                  --text-align: center;
+                  --text: var(--color-primary-foreground);
+                  --bg: var(--color-primary);
                 "
               >
                 <span data-ui="sr-only">John Doe</span>
                 <span aria-hidden="true">JD</span>
               </figcaption>
             </figure>
-            <div
-              style="
-                --display: flex;
-                --flex-direction: column;
-              "
-            >
+            <div style="--display: flex-col">
               <span
                 style="
                   --font-size: var(--font-size-sm);
+                  --font-weight: strong;
                   --leading: var(--leading-sm);
-                  --tracking: var(--tracking-sm);
-                  --font-weight: var(--font-weight-strong);
                   --leading: 1;
+                  --tracking: var(--tracking-sm);
                 "
                 >John Doe</span
               >
@@ -203,23 +197,23 @@
     href="#"
     style="
       --display: grid;
-      --grid-template-rows: subgrid;
       --row: span 3;
+      --grid-template-rows: subgrid;
       --cursor: pointer;
     "
   >
     <div
       data-ui="card"
       style="
-        --grid-template-rows: subgrid;
         --row: span 3;
+        --grid-template-rows: subgrid;
       "
     >
       <figure
         style="
           --display: grid;
-          --grid-template-rows: subgrid;
           --row: span 1;
+          --grid-template-rows: subgrid;
           --aspect: 3 / 2;
           --rounded: var(--radius-md) var(--radius-md) 0 0;
           --overflow: clip;
@@ -233,23 +227,23 @@
           alt="Zebras grazing at dawn on the savanna"
           style="
             --size: 100%;
-            --object-fit: cover;
-            --scale: 1;
-            --scale--hover: 1.02;
             --opacity: 1;
             --opacity--hover: 0.75;
+            --scale: 1;
+            --scale--hover: 1.02;
             --transition: var(--default-transition);
+            --object-fit: cover;
           "
         />
       </figure>
       <div
         style="
           --display: grid;
-          --grid-template-rows: subgrid;
           --row: span 2;
-          --gap: var(--space-sm);
+          --grid-template-rows: subgrid;
           --px: var(--space-sm);
           --pb: var(--space-sm);
+          --gap: var(--space-sm);
         "
       >
         <header
@@ -276,9 +270,9 @@
             <h3
               style="
                 --font-size: var(--font-size-lg);
+                --font-family: var(--font-family-heading);
                 --leading: var(--leading-lg);
                 --tracking: var(--tracking-lg);
-                --font-family: var(--font-family-heading);
               "
             >
               How quickly zebras jump
@@ -288,8 +282,8 @@
                 --font-size: var(--font-size-sm);
                 --leading: var(--leading-sm);
                 --tracking: var(--tracking-sm);
-                --text: var(--color-muted-foreground);
                 --line-clamp: 2;
+                --text: var(--color-muted-foreground);
               "
             >
               Striped coats and sudden bursts of speed help herds evade predators when the
@@ -301,11 +295,10 @@
           style="
             --display: grid;
             --justify: end;
-            --gap: var(--space-sm);
-            --pb: var(--space-xs);
             --pt: var(--space-sm);
-            --border-t-width: 1px;
-            --border-t-color: var(--color-border);
+            --pb: var(--space-xs);
+            --gap: var(--space-sm);
+            --border-t: 1;
           "
         >
           <div data-ui="button" data-button-variant="link">

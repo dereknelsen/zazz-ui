@@ -2,14 +2,13 @@
   aria-label="Formatting options"
   style="
     --display: flex;
-    --flex-direction: row;
     --flex-wrap: wrap;
     --items: center;
-    --gap: var(--space-xs);
-    --rounded: var(--radius-lg);
     --p: var(--space-xs);
-    --border-width: 1px;
+    --gap: var(--space-xs);
     --border-color: var(--color-border);
+    --border-width: 1px;
+    --rounded: var(--radius-lg);
   "
 >
   <ui-button-group role="group" aria-label="History">
@@ -27,7 +26,7 @@
   <ui-toggle-group role="group" aria-label="Text formatting">
     <label data-ui="toggle" data-toggle-size="icon">
       <input type="checkbox" name="format" value="bold" aria-label="Bold" checked />
-      <span aria-hidden="true" style="--font-weight: var(--font-weight-strong)">B</span>
+      <span aria-hidden="true" style="--font-weight: strong">B</span>
     </label>
     <label data-ui="toggle" data-toggle-size="icon">
       <input type="checkbox" name="format" value="italic" aria-label="Italic" />

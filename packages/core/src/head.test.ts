@@ -7,7 +7,15 @@
 
 import { createRequire } from "node:module";
 import { describe, expect, it } from "vite-plus/test";
-import { ESM_DEPENDENCIES, POLYFILLS, buildHead, cdnUrl } from "./head.ts";
+import {
+  ESM_DEPENDENCIES,
+  POLYFILLS,
+  buildHead,
+  cdnUrl,
+  findHeadBlock,
+  headMarker,
+  replaceHeadBlock,
+} from "./head.ts";
 
 const require = createRequire(import.meta.url);
 
@@ -209,8 +217,6 @@ describe("buildHead cdn mode", () => {
       "_typography.css",
       "_view-transitions.css",
       "_properties.css",
-      "_properties-2xs.css",
-      "_properties-xs.css",
       "_properties-sm.css",
       "_properties-md.css",
       "_properties-lg.css",
@@ -223,8 +229,8 @@ describe("buildHead cdn mode", () => {
       "_properties-hover.css",
       "_properties-checked.css",
       "_properties-open.css",
-      "_utilities-tier-2xs.css",
-      "_utilities-tier-xs.css",
+      "_properties-stuck.css",
+      "_properties-starting.css",
       "_utilities-tier-sm.css",
       "_utilities-tier-md.css",
       "_utilities-tier-lg.css",
@@ -237,6 +243,8 @@ describe("buildHead cdn mode", () => {
       "_utilities-tier-hover.css",
       "_utilities-tier-checked.css",
       "_utilities-tier-open.css",
+      "_utilities-tier-stuck.css",
+      "_utilities-tier-starting.css",
       "_utilities-flow.css",
       "_utilities-grid.css",
       "_utilities-spacing.css",
@@ -249,5 +257,40 @@ describe("buildHead cdn mode", () => {
       "_utilities-pseudo.css",
       "_switches.css",
     ]);
+  });
+});
+
+describe("buildHead local granular mode", () => {
+  it("loads the closure file by file from base, in cascade order", () => {
+    const head = buildHead({
+      base: "./zazz",
+      primitives: ["dialog"],
+      fontDisplay: false,
+      theme: false,
+    });
+    expect(head).not.toContain("index.css");
+    expect(head).toContain('<link rel="stylesheet" href="./zazz/base/_layers.css">');
+    expect(head).toContain('<link rel="stylesheet" href="./zazz/primitives/dialog/dialog.css">');
+    expect(head.indexOf("dialog.css")).toBeLessThan(head.indexOf("_properties.css"));
+  });
+});
+
+describe("head blocks", () => {
+  const page = (marker: string, inner = "") =>
+    `<head>\n  ${marker}\n${inner}  <!-- /zazz:head -->\n</head>`;
+
+  it("reads the options recorded in the marker", () => {
+    const html = page(headMarker({ base: "./zazz", primitives: ["dialog"] }));
+    expect(findHeadBlock(html)?.options).toEqual({ base: "./zazz", primitives: ["dialog"] });
+    expect(findHeadBlock(page("<!-- zazz:head -->"))?.options).toEqual({});
+    expect(findHeadBlock("<head></head>")).toBeUndefined();
+  });
+
+  it("renders a head between the markers, indented, and records new options", () => {
+    const options = { primitives: ["card"], fontDisplay: false as const, theme: false };
+    const html = replaceHeadBlock(page("<!-- zazz:head -->"), buildHead(options), options);
+    expect(findHeadBlock(html)?.options).toEqual(options);
+    expect(html).toContain('\n  <link rel="stylesheet" href="./zazz/primitives/card/card.css">');
+    expect(replaceHeadBlock(html, buildHead(options), options)).toBe(html);
   });
 });

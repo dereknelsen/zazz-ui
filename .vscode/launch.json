@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // Opens a window with packages/vscode loaded as an extension (Zazz in HTML files).
+      "name": "Run Zazz extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/packages/vscode",
+        "${workspaceFolder}"
+      ],
+      "outFiles": ["${workspaceFolder}/packages/vscode/dist/**/*.cjs"],
+      "preLaunchTask": "zazz: build extension"
+    },
+    {
+      // The language server listens for a debugger on 6009 in the dev host.
+      "name": "Attach to Zazz language server",
+      "type": "node",
+      "request": "attach",
+      "port": 6009,
+      "restart": true,
+      "outFiles": ["${workspaceFolder}/packages/vscode/dist/**/*.cjs"]
+    }
+  ]
+}

@@ -15,7 +15,7 @@ Declare layer order in your entry stylesheet and import legacy rules into `legac
 
 ```css
 /* entry.css */
-@layer variables, reset, vendors, legacy, zazz, overrides;
+@layer variables, reset, vendors, legacy, ui, overrides;
 
 @layer legacy {
   @layer imports, components, utilities, migrations;
@@ -25,7 +25,7 @@ Declare layer order in your entry stylesheet and import legacy rules into `legac
 @import "./zazz/index.css";
 ```
 
-Because `legacy` is ordered below `zazz`, Zazz component and utility rules take precedence where they overlap, while unstyled legacy components continue working.
+Because `legacy` is ordered below `ui`, Zazz component and utility rules take precedence where they overlap, while unstyled legacy components continue working.
 
 <Callout>
   Import into `legacy.imports`, never bare `layer(legacy)` — rules imported directly into `legacy`

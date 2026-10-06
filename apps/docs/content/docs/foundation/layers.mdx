@@ -6,13 +6,13 @@ description: The cascade layer architecture that lets utility classes override c
 `_layers.css` defines the [cascade layer](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer) order for the framework. Layer order determines rule precedence instead of selector specificity.
 
 ```css
-@layer variables, reset, vendors, legacy, zazz, overrides;
+@layer variables, reset, vendors, legacy, ui, overrides;
 
 @layer legacy {
   @layer imports, components, utilities, migrations;
 }
 
-@layer zazz {
+@layer ui {
   @layer components, plugins, utilities;
 }
 ```
@@ -24,8 +24,8 @@ description: The cascade layer architecture that lets utility classes override c
 Later layers override earlier layers regardless of selector specificity:
 
 ```html
-<!-- .ui-button sets background in @layer zazz.components.
-     .bg-primary sets background in @layer zazz.utilities and overrides it cleanly. -->
+<!-- .ui-button sets background in @layer ui.components.
+     .bg-primary sets background in @layer ui.utilities and overrides it cleanly. -->
 <button class="ui-button bg-primary">Save</button>
 ```
 
@@ -42,19 +42,19 @@ Priority order runs from lowest to highest:
 | `legacy.components` | Curated legacy component CSS                               | Your legacy CSS, split out                                              |
 | `legacy.utilities`  | Curated legacy utility CSS                                 | Your legacy CSS, split out                                              |
 | `legacy.migrations` | Temporary translation shims for legacy class migration     | Custom `migrations.css`                                                 |
-| `zazz.components`   | Component rules                                            | `primitives/<name>/<name>.css`                                          |
-| `zazz.plugins`      | Zazz-dependent extensions (new primitives, added variants) | Plugin stylesheets, `layer(zazz.plugins)`                               |
-| `zazz.utilities`    | Atomic utility classes                                     | [`_utilities.css`](/docs/foundation/utilities)                          |
+| `ui.components`     | Component rules                                            | `primitives/<name>/<name>.css`                                          |
+| `ui.plugins`        | Zazz-dependent extensions (new primitives, added variants) | Plugin stylesheets, `layer(ui.plugins)`                                 |
+| `ui.utilities`      | Atomic utility classes                                     | [`_utilities.css`](/docs/foundation/utilities)                          |
 | `overrides`         | Your app's deliberate overrides of anything below          | Your app CSS                                                            |
 
-Position encodes intent. `vendors` sits above `reset` (the reset must not clobber a library's widget styling) and below `legacy` (your legacy CSS historically overrode vendor defaults, and still does). All of `legacy` sits below `zazz`, so migrated markup always resolves to Zazz; when a migration finishes, delete the `legacy` imports and the whole layer disappears in one move. Inside `zazz`, `plugins` follows `components` so an extension can restyle the primitives it extends (a plugin variant like `.ui-button[data-variant="glow"]` must beat the base `.ui-button` background), and `utilities` comes last, guaranteeing utility overrides.
+Position encodes intent. `vendors` sits above `reset` (the reset must not clobber a library's widget styling) and below `legacy` (your legacy CSS historically overrode vendor defaults, and still does). All of `legacy` sits below `ui`, so migrated markup always resolves to Zazz; when a migration finishes, delete the `legacy` imports and the whole layer disappears in one move. Inside `ui`, `plugins` follows `components` so an extension can restyle the primitives it extends (a plugin variant like `.ui-button[data-variant="glow"]` must beat the base `.ui-button` background), and `utilities` comes last, guaranteeing utility overrides.
 
 ## Never import into a bare parent layer
 
 Within a layer, rules that don't belong to any named sublayer form an **implicit final sublayer** that outranks all named ones — the same way unlayered CSS beats layered CSS. Two consequences:
 
 - `@import "old-app.css" layer(legacy)` would beat `legacy.migrations`, silently disabling your own migration shims. Import whole files into `layer(legacy.imports)` instead.
-- Plugin CSS in bare `layer(zazz)` would beat `zazz.utilities`. Plugins publish into `layer(zazz.plugins)`.
+- Plugin CSS in bare `layer(ui)` would beat `ui.utilities`. Plugins publish into `layer(ui.plugins)`.
 
 ## Unlayered CSS
 
@@ -91,13 +91,13 @@ Zazz component and utility styles override legacy styles where selectors overlap
 
 ## Plugins
 
-CSS that builds on Zazz — new primitives or added variants for existing ones — belongs in `zazz.plugins`:
+CSS that builds on Zazz — new primitives or added variants for existing ones — belongs in `ui.plugins`:
 
 ```css
-@import "zazz-plugin-datagrid/index.css" layer(zazz.plugins);
+@import "zazz-plugin-datagrid/index.css" layer(ui.plugins);
 
 /* or, in the plugin's own stylesheet */
-@layer zazz.plugins {
+@layer ui.plugins {
   :where(.ui-button[data-variant="glow"]) {
     background: linear-gradient(in oklch, var(--primary), var(--tertiary));
   }

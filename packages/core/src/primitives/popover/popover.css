@@ -47,7 +47,7 @@
   /* ===========================================================================
   POPOVER ELEMENT ENHANCEMENTS
   Wires native open/close motion and anchor positioning; surface chrome is in
-  @layer zazz.components below.
+  @layer ui.components below.
   =========================================================================== */
 
   :where([popover]) {
@@ -106,7 +106,7 @@
   }
 }
 
-@layer zazz.components {
+@layer ui.components {
   /* ===========================================================================
   POPOVER SURFACE — shared chrome for every [popover] consumer
   =========================================================================== */

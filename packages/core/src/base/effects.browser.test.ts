@@ -109,10 +109,78 @@ describe("no-base state tiers", () => {
     await userEvent.unhover(el);
   });
 
+  it("--opacity--hover alone works on roles, switches, and prose (only primitives need a base)", async () => {
+    for (const token of ["text-2xl", "group", "prose", "group text-sm"]) {
+      const el = mount(`<a href="#" data-ui="${token}" style="${BOX} --opacity--hover: .8">x</a>`);
+      expect(style(el, "opacity"), token).toBe("1");
+      await userEvent.hover(el);
+      expect(style(el, "opacity"), token).toBe("0.8");
+      await userEvent.unhover(el);
+    }
+  });
+
   it("a primitive keeps its own chain: --opacity--hover alone on a button does nothing", async () => {
     const el = mount(`<button data-ui="button" style="--opacity--hover: .4">x</button>`);
     await userEvent.hover(el);
     expect(style(el, "opacity")).toBe("1");
     await userEvent.unhover(el);
+  });
+});
+
+describe("shadow keywords and hue", () => {
+  useKit();
+
+  /** box-shadow of a probe whose own style is `css`, measured beside the element. */
+  const probe = (css: string) => {
+    const el = document.createElement("div");
+    el.style.cssText = css;
+    document.body.append(el);
+    const value = style(el, "box-shadow");
+    el.remove();
+    return value;
+  };
+
+  it("--shadow: md reads as var(--shadow-md), at the base and on hover", async () => {
+    const root = mount(`<div>
+      <div data-kw style="--shadow: md; --shadow--hover: xl">x</div>
+      <div data-var style="--shadow: var(--shadow-md)">x</div>
+    </div>`);
+    const kw = root.querySelector("[data-kw]")!;
+    expect(style(kw, "box-shadow")).toBe(style(root.querySelector("[data-var]")!, "box-shadow"));
+    await userEvent.hover(kw);
+    // the composite leads with the (empty) ring layers, then the shadow
+    expect(style(kw, "box-shadow").endsWith(probe("box-shadow: var(--shadow-xl)"))).toBe(true);
+    await userEvent.unhover(kw);
+  });
+
+  it("custom values and variables still pass through", () => {
+    const el = mount(`<div style="--shadow: 0 0 0 3px rgb(1, 2, 3)">x</div>`);
+    expect(style(el, "box-shadow")).toContain("rgb(1, 2, 3) 0px 0px 0px 3px");
+  });
+
+  it("--shadow-hue tints keyword, var(), and primitive shadows on the element and its subtree", () => {
+    const root = mount(`<div style="--shadow-hue: rgb(255, 0, 0)">
+      <div data-kw style="--shadow: sm">x</div>
+      <div data-var style="--shadow: var(--shadow-sm)">x</div>
+      <div data-pop style="box-shadow: var(--shadow-md)">x</div>
+    </div>`);
+    const red = probe("box-shadow: 0 0 1px 0 oklch(from rgb(255, 0, 0) l c h / 0.05)").match(
+      /oklch\([^)]*\)/,
+    )?.[0];
+    for (const selector of ["[data-kw]", "[data-var]", "[data-pop]"]) {
+      expect(style(root.querySelector(selector)!, "box-shadow"), selector).not.toBe(
+        probe("box-shadow: var(--shadow-sm)"),
+      );
+    }
+    expect(style(root.querySelector("[data-kw]")!, "box-shadow")).toContain(red!.split(" / ")[0]);
+  });
+
+  it("--color-shadow re-tints every shadow from the theme", () => {
+    const el = mount(`<div style="--shadow: xs">x</div>`);
+    const before = style(el, "box-shadow");
+    document.documentElement.style.setProperty("--color-shadow", "rgb(0, 0, 255)");
+    const after = style(el, "box-shadow");
+    document.documentElement.style.removeProperty("--color-shadow");
+    expect(after).not.toBe(before);
   });
 });

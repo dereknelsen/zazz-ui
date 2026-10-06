@@ -1,14 +1,13 @@
 <div
   aria-label="Application menu"
   style="
-    --border-b-width: 1px;
-    --border-b-color: var(--color-border);
     --display: flex;
-    --w: 100%;
     --items: center;
-    --gap: 1px;
-    --bg: var(--color-card);
     --p: var(--space-xs);
+    --gap: 1px;
+    --w: 100%;
+    --bg: var(--color-card);
+    --border-b: 1;
   "
 >
   <ui-menu>
@@ -72,21 +71,20 @@
     >
       <div
         style="
-          --display: flex;
-          --flex-direction: column;
-          --gap: var(--space-xs);
+          --display: flex-col;
           --p: var(--space-xs);
+          --gap: var(--space-xs);
           --min-w: 20rem;
         "
       >
         <label
           for="menubar-help-topic"
           style="
-            --font-weight: var(--font-weight-strong);
             --display: inline-flex;
             --font-size: var(--font-size-eyebrow);
-            --leading: var(--leading-eyebrow);
+            --font-weight: strong;
             --font-weight: var(--font-weight-eyebrow);
+            --leading: var(--leading-eyebrow);
             --tracking: var(--tracking-eyebrow);
             --text-transform: uppercase;
             --text: var(--color-muted-foreground);

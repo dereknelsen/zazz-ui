@@ -18,13 +18,15 @@ Two rules govern every choice:
 
 ## 1. Spacing
 
-- **Semantic space (use first):** `--space-xs --space-sm --space-md --space-lg --space-xl`, for
-  padding, margin, gap, and inset utilities: `style="--p: var(--space-md); --gap: var(--space-sm)"`.
+- **The space scale, as numbers (use first):** the `--space-*` tokens are steps of `--spacing`,
+  so write the number and skip the `var()`: `2xs` = 1, `xs` = 2, `sm` = 4, `md` = 6, `lg` = 11,
+  `xl` = 24, `2xl` = 40 (`style="--p: 6; --gap: 4"` is `var(--space-md)` / `var(--space-sm)`).
+  The tokens stay for CSS and hooks.
 - **Scale numbers:** spacing, margin, and sizing utilities take a bare number as `n × --spacing`
   (`--px: 6`). `--spacing` is fluid (a `clamp()`).
 - **No numeric step scale.** Use a utility number (`--max-w: 96` is 96 × `--spacing`) or `calc(var(--spacing) * N)` in CSS; write `1px` and `100%` directly.
 - **Utilities:** padding `--p` `--px` `--py` `--pt` `--pb` `--pl` `--pr`; margin `--m` `--mx` `--my`
-  `--mt` `--mb` `--ml` `--mr` (+ `auto`); gap `--gap` `--gap-x` `--gap-y`; inset `--inset` `--top`
+  `--mt` `--mb` `--ml` `--mr` (+ `auto`); gap `--gap` `--gap-x` `--gap-y`; inset `--inset` `--inset-x` `--inset-y` `--top`
   `--bottom` `--left` `--right`.
   Sides are `l`/`t`/`r`/`b`; they set logical properties, so `l` is the right side in RTL.
 - **Sizing utilities:** `--w --h --size --min-w --max-w --min-h --max-h` (dual: number or length,
@@ -44,7 +46,12 @@ Use the `--color-*` roles in utilities and CSS; they are also the **theme inputs
 - **Brand:** `--color-primary` `--color-secondary` `--color-tertiary` (+ `-foreground`).
 - **Status:** `--color-info` `--color-success` `--color-warning` `--color-destructive`
   (+ `-foreground`).
-- **Utilities:** `--text` (text color), `--bg` (+ `--bg-alpha` for channel alpha), `--border-color` (or the `--border` shorthand, §11).
+- **Utilities:** `--text` (text color), `--bg` (+ `--bg-alpha` for channel alpha; `none` clears the
+  color and any gradient), `--border-color` (or the `--border` shorthand, §11).
+- **Gradients:** a type plus stops, built from role tokens: `--bg-linear: to bottom; --bg-stops:
+var(--color-shade-600), transparent 20%` (scrim over a photo); `--bg-radial: circle at top` and
+  `--bg-conic: from 45deg` work the same. The type value is the CSS prelude (direction, shape,
+  position, `in oklch [longer hue]`); the `--bg` color shows underneath. One gradient per element.
 
 ## 3. Color — scales & overlays (escape hatch only)
 
@@ -63,6 +70,8 @@ Use the `--color-*` roles in utilities and CSS; they are also the **theme inputs
 - **Override one property** with a utility: `--font-size`, `--font-weight`, `--font-family`,
   `--font-style`, `--leading`, `--tracking`, `--text-align`, `--text-transform`, `--text-wrap`,
   `--text-decoration`, `--whitespace`, `--line-clamp` (`1` = truncate).
+- **Weights:** `--font-weight: strong` (also `heading`, `body`) reads the role weight token; otherwise
+  a number (`500`; standard names like `medium` are not CSS).
 - **Tokens behind them:** `--font-size-*`, `--font-weight-body|heading|strong|eyebrow|mono`,
   `--leading-*`, `--tracking-*`, `--paragraph-spacing-*`, families
   `--font-family-body|heading|mono` (raw `--font-family-body|heading|mono`).
@@ -77,32 +86,43 @@ buttons/inputs, **lg** = cards/dialogs, **sm** = badges, **full** = pills/circle
 
 ## 6. Shadow & elevation
 
-`--shadow-xs|sm|md|lg|xl` — soft, multi-layer. Surfaces are flat by default; apply elevation
-intentionally (**md** ≈ popovers/modals). Utility: `--shadow` (state tiers:
-`--shadow: var(--shadow-xs); --shadow--hover: var(--shadow-md)`). A shadow utility never removes a
+`--shadow-2xs … 2xl` — soft, multi-layer. Surfaces are flat by default; apply elevation
+intentionally (**md** ≈ popovers/modals). Utility: `--shadow` takes the size by name at every tier
+(`--shadow: xs; --shadow--hover: md`), or any shadow / `var()`. Color: `--color-shadow` on `:root`
+tints every shadow; `--shadow-hue: var(--color-primary)` tints an element's and its subtree's
+shadows (keyword, `var()`, and primitive shadows alike). A shadow utility never removes a
 primitive's focus ring.
 
 ## 7. Layout & breakpoints
 
 - **Layout bands:** `data-ui="layout"` (or `<ui-layout>`) makes the element the band grid for
-  its children. Bands `2xs xs sm md lg xl 2xl` cap at the breakpoint widths, `full` = minus
-  `--gutters`, `bleed` = edge to edge. Children default to **`lg`**; `data-layout-size="md"`
+  its children. Bands `sm md lg xl 2xl` cap at the `--layout-*` widths (rem), `full` = minus
+  `--gutters`, `bleed` = edge to edge. Children default to **`xl`**; `data-layout-size="md"`
   changes the default; `--col: layout-full` (responsive `--col--md: layout-sm`) places one
   child. A nested layout is a subgrid that keeps the parent's band lines.
 - **Reading width:** `--max-w: var(--article-lg); --mx: auto` (`--article-xs` 45ch … `--article-xl`
   75ch), usually on `data-ui="prose"`.
-- **Breakpoints:** `--breakpoint-2xs` 24rem · `-xs` 30rem · `-sm` 40rem · `-md` 48rem · `-lg`
-  64rem · `-xl` 80rem · `-2xl` 96rem. Breakpoint tiers (`--<utility>--md`) are mobile-first and
-  track the `html` container width.
-- **Flow utilities:** `--display`, `--flex-direction`, `--flex-wrap`, `--flex`, `--shrink`,
+- **Breakpoints:** Tailwind's five names in `ch`, for legibility: `sm` 40ch (a comfortable line) ·
+  `md` 65ch (one reading measure) · `lg` 90ch (two columns) · `xl` 120ch (three) · `2xl` 150ch
+  (≈ 404/656/909/1210/1515px with the system font). Layout widths are separate rem tokens:
+  `--layout-sm` 40rem · `-md` 48rem · `-lg` 64rem · `-xl` 80rem · `-2xl` 96rem (bands, dialogs). Breakpoint tiers (`--<utility>--md`) are mobile-first and
+  track the **nearest inline-size container** (the page by default, or the band inside a layout; mark a card, sidebar, or slot
+  `data-ui="container"` to make what's inside respond to it; an element never queries itself).
+- **Flow utilities:** `--display` (plus `flex-row`, `flex-col`, `-reverse`, and `inline-flex-…`
+  shorthands that set the direction; no `--flex-direction`), `--flex-wrap`, `--flex`, `--shrink`,
   `--basis`, `--order`, `--items`, `--justify`, `--place`, `--self`.
-- **Grid utilities:** `--grid-cols` / `--grid-rows` (integer → equal tracks), `--grid-template-cols`
-  / `--grid-template-rows` (raw, incl. `subgrid`), `--grid-fit` (length → auto-fit columns),
-  `--grid-flow`, `--auto-cols`, `--auto-rows`, `--col`, `--row` (`span 2`, `layout-md`).
-- **Switches:** `data-ui="grid-pile"` (stack children in one cell), `data-ui="sr-only"`.
+- **Grid utilities (Tailwind's set):** `--grid-cols` / `--grid-rows` (integer → equal tracks, or
+  `subgrid`; `none` is `--grid-template-cols: none`), `--grid-template-cols` / `--grid-template-rows` (raw track list),
+  `--grid-fit` (length → auto-fit columns), `--grid-flow`, `--auto-cols`, `--auto-rows`.
+  Placement: `--col-span` / `--row-span` (integer → `span n / span n`), `--col-start`,
+  `--col-end`, `--row-start`, `--row-end` (line numbers), and `--col` / `--row` for a raw
+  `grid-column` / `grid-row` (`1 / -1` spans every track; `layout-md` places a layout child).
+- **Switches:** `data-ui="pile"` (stack children in one cell), `data-ui="container"` (inline-size query container), `data-ui="isolate"` (new stacking
+  context; pairs with pile for layered heroes: `data-ui="pile isolate"`), `data-ui="sr-only"`,
+  `data-ui="divide-x"` / `"divide-y"` (a border between direct children; `--divide` on the container sizes or colors it, §11).
 - **Scroll fade:** `data-ui="scroll-fade"` (+ `data-scroll-fade-axis="x"`), hooks
   `--ui-scroll-fade-size`, `--ui-scroll-fade-reveal`.
-- **Box utilities:** `--overflow --overflow-x --overflow-y`, `--object-fit`, `--z`, `--isolation`,
+- **Box utilities:** `--overflow --overflow-x --overflow-y`, `--object-fit`, `--z`,
   `--visibility`.
 
 ## 8. Focus ring
@@ -133,11 +153,12 @@ Two separate systems — don't confuse them.
 
 Shorthand: `--border`, `--border-x`, `--border-y`, `--border-{l,t,r,b}` take a color (1px solid in
 that color), a number (that many px in `--color-border`), or a length (that width in
-`--color-border`). Longhands win over it: `--border-width`, `--border-style`, `--border-color`,
-and per side `--border-{l,t,r,b}-width` / `--border-{l,t,r,b}-color`. A one-line divider:
-`--border-b: 1`. A divider:
-`--border-b-width: 1px; --border-b-color: var(--color-border)`. Separators between items are
-`<hr data-ui="separator">`.
+`--color-border`). The all-sides longhands win over it: `--border-width`, `--border-style`,
+`--border-color`. A side takes only the shorthand (there is no `--border-b-width`): a one-line
+divider is `--border-b: 1`, an accent edge `--border-l: var(--color-primary)`. Borders between
+direct children: `data-ui="divide-x"` / `"divide-y"` on the container, 1px `--color-border` by
+default, or `--divide: 2` / `--divide: var(--color-primary)` on the container (same grammar).
+Separators between items are `<hr data-ui="separator">`.
 
 ## 12. Positioning & interaction
 
@@ -146,9 +167,19 @@ and per side `--border-{l,t,r,b}-width` / `--border-{l,t,r,b}-color`. A one-line
 
 ## 13. State tiers
 
-Color and effects utilities take state tiers: `hover active focus-visible focus-within disabled open
-checked`, e.g. `--text: var(--color-muted-foreground); --text--hover: var(--color-foreground)`.
+Color utilities also take breakpoint tiers (`--bg--md: var(--color-muted)`; a state still beats
+them). Color and effects utilities take state tiers: `hover active focus-visible focus-within disabled open
+checked starting`, e.g. `--text: var(--color-muted-foreground); --text--hover: var(--color-foreground)`.
 Group tiers react to an ancestor with `data-ui="group"`:
 `--opacity: 1; --group-opacity--hover: 0.85`. Pseudo-elements: `--before-content: ''` plus
 `--before-<utility>` / `--after-<utility>` for sizing, color, and `--rounded`. On a primitive, prefer
 the state hook (`--ui-button-bg--hover`) so its own states stay intact.
+
+`--<utility>--starting` is the `@starting-style` value: an element starts there when it first
+renders or leaves `display: none`, and a `--transition` animates it in; e.g.
+`--opacity--starting: 0; --opacity: 1; --transition: opacity 0.3s` fades in. No group form.
+
+Experimental `--<utility>--stuck` applies while the nearest sticky ancestor is stuck (to its
+`--stuck-state` side, default `top`), below every other state, on that element's descendants only:
+`<header style="--position: sticky; --top: 0"><div style="--bg--stuck: var(--color-background)">`.
+Polyfilled where container scroll-state queries are unsupported.

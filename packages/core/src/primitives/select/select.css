@@ -133,7 +133,7 @@
   }
 }
 
-@layer zazz.components {
+@layer ui.components {
   /* ===========================================================================
   SELECT: :where([data-ui~="select"]) (customizable <select>, no JS)
   - Needs a <button><selectedcontent></selectedcontent></button> child. Degrades
@@ -481,7 +481,7 @@
 }
 
 /* An invalid control remaps the --ui-field-* family on itself. */
-@layer zazz.components {
+@layer ui.components {
   :where([data-ui~="select"]):disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -501,7 +501,7 @@
 
 /* Placement rows of the popover matrix for the native select, keyed on
    data-select-side / data-select-align. */
-@layer zazz.components {
+@layer ui.components {
   :where([data-ui~="select"])[data-select-side="bottom"]:not([data-select-align]),
   :where([data-ui~="select"])[data-select-side="bottom"][data-select-align="start"],
   :where([data-ui~="select"]:not([data-select-side]):not([data-select-align])),

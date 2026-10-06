@@ -115,7 +115,7 @@ class Reveal {
       margin: "0px",
       threshold: 0.2,
       duration: getRootCssVar("--ui-reveal-global-duration") || "400ms",
-      ease: getRootCssVar("--ui-reveal-global-ease") || "cubic-bezier(0.4, 0, 0.2, 1)",
+      ease: getRootCssVar("--ui-reveal-global-timing-function") || "cubic-bezier(0.4, 0, 0.2, 1)",
       wait: parseCssTimeMs(getRootCssVar("--ui-reveal-global-wait")),
       distance: getRootCssVar("--ui-reveal-global-distance") || "1rem",
       step: 80,
@@ -305,7 +305,7 @@ class Reveal {
 
     const rootStyle = document.documentElement.style;
     rootStyle.setProperty("--ui-reveal-global-duration", this.#formatTime(this.config.duration));
-    rootStyle.setProperty("--ui-reveal-global-ease", this.config.ease);
+    rootStyle.setProperty("--ui-reveal-global-timing-function", this.config.ease);
     rootStyle.setProperty("--ui-reveal-global-wait", this.#formatTime(this.config.wait));
     rootStyle.setProperty("--ui-reveal-global-distance", this.config.distance);
     rootStyle.setProperty("--ui-reveal-global-grow", this.config.grow.toString());

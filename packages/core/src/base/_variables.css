@@ -39,7 +39,7 @@
   initial-value: 1px;
 }
 
-/* Breakpoint flags (--cqi-*) are generated into _breakpoints.css. */
+/* Layout width tokens (--layout-*) are generated into _breakpoints.css. */
 @layer variables {
   :root {
     /* theme scopes at the bottom of the file pin color-scheme */
@@ -65,7 +65,7 @@
     --color-input-foreground: light-dark(var(--color-neutral-900), var(--color-white));
 
     /* overlay */
-    --color-muted: light-dark(var(--color-shade-50), var(--color-tint-100));
+    --color-muted: light-dark(var(--color-shade-100), var(--color-tint-100));
     --color-muted-foreground: light-dark(var(--color-shade-600), var(--color-tint-600));
     --color-faded: light-dark(var(--color-tint-400), var(--color-shade-100));
     --color-faded-foreground: light-dark(var(--color-tint-600), var(--color-shade-600));
@@ -78,6 +78,8 @@
     --color-tertiary: light-dark(var(--color-tertiary-950), var(--color-tertiary-50));
     --color-tertiary-foreground: light-dark(var(--color-white), var(--color-tertiary-950));
     --color-ring: var(--color-primary);
+    /* the shadow color every --shadow-* token is tinted with (alpha comes from the token) */
+    --color-shadow: var(--color-black);
 
     /* status */
     --color-info: light-dark(oklch(0.5876 0.1389 241.97), oklch(0.5 0.1193 242.75));
@@ -199,6 +201,35 @@
     --font-family-body: var(--font-sans-fallback);
     --font-family-mono: var(--font-mono-fallback);
 
+    /* OpenType and variant controls per role — CSS initial values; redeclare to
+       turn on features (e.g. --font-numeric-body: tabular-nums) */
+    --font-feature-heading: normal;
+    --font-feature-body: normal;
+    --font-kerning-heading: auto;
+    --font-kerning-body: auto;
+    --font-language-heading: normal;
+    --font-language-body: normal;
+    --font-size-adjust-heading: none;
+    --font-size-adjust-body: none;
+    --font-alternates-heading: normal;
+    --font-alternates-body: normal;
+    --font-caps-heading: normal;
+    --font-caps-body: normal;
+    --font-east-asian-heading: normal;
+    --font-east-asian-body: normal;
+    --font-emoji-heading: normal;
+    --font-emoji-body: normal;
+    --font-ligatures-heading: normal;
+    --font-ligatures-body: normal;
+    --font-numeric-heading: normal;
+    --font-numeric-body: normal;
+    --font-position-heading: normal;
+    --font-position-body: normal;
+    --font-settings-heading: normal;
+    --font-settings-body: normal;
+    --font-optical-sizing-heading: auto;
+    --font-optical-sizing-body: auto;
+
     /* font-size — fluid clamp() */
     --font-size-eyebrow: clamp(0.512rem, 0.609rem + 0.1213vi, 0.5787rem);
     --font-size-2xs: clamp(0.512rem, 0.609rem + 0.1213vi, 0.5787rem);
@@ -317,17 +348,17 @@
     /* semantic */
     --gutters: var(--space-md);
 
-    /* --breakpoint-* tokens and the --cqi-* page-container flags are generated
-       into _breakpoints.css. */
+    /* --layout-* tokens are generated into _breakpoints.css; breakpoint
+       tiers query the nearest inline-size container (_utilities-tier-*.css). */
 
     /* article container widths */
-    --article-2xs: 40ch;
+    --article-2xs: 30ch;
     --article-xs: 45ch;
     --article-sm: 50ch;
     --article-md: 65ch;
     --article-lg: 70ch;
     --article-xl: 75ch;
-    --article-2xl: 80ch;
+    --article-2xl: 90ch;
 
     /* ==========================================================================
     * Effects — shadows, focus rings
@@ -368,10 +399,10 @@
      * registered non-inheriting, so the ring's theme color is --color-ring (with
      * the other roles above); the kit reads it through the inheriting
      * --ring-shadow-color and --ring-offset-shadow-color tokens. */
-    --ring-opacity: 70%;
+    --ring-opacity: 20%;
     --ring-shadow-color: color-mix(in oklch, var(--color-ring) var(--ring-opacity), transparent);
-    --ring-width: 2px;
-    --ring-offset-width: 1px;
+    --ring-width: 3px;
+    --ring-offset-width: 0px;
     --ring-offset-shadow-color: var(--color-background);
 
     /* outline twin — transparent outline matching the ring's geometry.
@@ -386,46 +417,6 @@
     --ring-shadow: 0 0 0 calc(var(--ring-offset-width) + var(--ring-width)) var(--ring-shadow-color);
     /* the composed focus ring (offset gap + ring band) for box-shadow lists */
     --shadow-ring: var(--ring-offset-shadow), var(--ring-shadow);
-
-    --shadow-2xs:
-      0 1px 1px 0 oklch(from var(--color-black) l c h / 0.04),
-      0 0 1px 0 oklch(from var(--color-black) l c h / 0.05);
-    --shadow-xs:
-      0 8px 2px 0 oklch(from var(--color-black) l c h / 0),
-      0 5px 2px 0 oklch(from var(--color-black) l c h / 0.01),
-      0 3px 2px 0 oklch(from var(--color-black) l c h / 0.03),
-      0 1px 1px 0 oklch(from var(--color-black) l c h / 0.04),
-      0 0 1px 0 oklch(from var(--color-black) l c h / 0.05);
-    --shadow-sm:
-      0 25px 7px 0 oklch(from var(--color-black) l c h / 0),
-      0 16px 6px 0 oklch(from var(--color-black) l c h / 0.01),
-      0 9px 5px 0 oklch(from var(--color-black) l c h / 0.03),
-      0 4px 4px 0 oklch(from var(--color-black) l c h / 0.04),
-      0 1px 2px 0 oklch(from var(--color-black) l c h / 0.05);
-    --shadow-md:
-      0 66px 18px 0 oklch(from var(--color-black) l c h / 0),
-      0 42px 17px 0 oklch(from var(--color-black) l c h / 0.01),
-      0 24px 14px 0 oklch(from var(--color-black) l c h / 0.03),
-      0 11px 11px 0 oklch(from var(--color-black) l c h / 0.04),
-      0 3px 6px 0 oklch(from var(--color-black) l c h / 0.05);
-    --shadow-lg:
-      0 247px 69px 0 oklch(from var(--color-black) l c h / 0),
-      0 158px 63px 0 oklch(from var(--color-black) l c h / 0.01),
-      0 89px 53px 0 oklch(from var(--color-black) l c h / 0.03),
-      0 39px 39px 0 oklch(from var(--color-black) l c h / 0.05),
-      0 10px 22px 0 oklch(from var(--color-black) l c h / 0.06);
-    --shadow-xl:
-      0 370px 104px 0 oklch(from var(--color-black) l c h / 0),
-      0 237px 95px 0 oklch(from var(--color-black) l c h / 0.01),
-      0 133px 80px 0 oklch(from var(--color-black) l c h / 0.04),
-      0 59px 59px 0 oklch(from var(--color-black) l c h / 0.06),
-      0 15px 33px 0 oklch(from var(--color-black) l c h / 0.07);
-    --shadow-2xl:
-      0 555px 156px 0 oklch(from var(--color-black) l c h / 0),
-      0 356px 143px 0 oklch(from var(--color-black) l c h / 0.01),
-      0 200px 120px 0 oklch(from var(--color-black) l c h / 0.04),
-      0 89px 89px 0 oklch(from var(--color-black) l c h / 0.06),
-      0 23px 50px 0 oklch(from var(--color-black) l c h / 0.08);
 
     /* ==========================================================================
     * Decoration — underlines and decorations
@@ -529,5 +520,54 @@
   [data-ui-theme="light"] {
     color-scheme: light;
     color: var(--color-foreground);
+  }
+}
+
+/* Shadows: here, not in the :root block above, so the same rule re-declares
+   them wherever a --shadow-hue style utility is set. A token's var() resolves
+   where it is declared, so the element and its subtree get shadows tinted with
+   that hue: a --shadow keyword, var(--shadow-md), and any primitive's shadow. */
+@layer variables {
+  :root,
+  :where([style*="--shadow-hue:"]) {
+    --shadow-2xs:
+      0 1px 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
+      0 0 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05);
+    --shadow-xs:
+      0 8px 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
+      0 5px 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
+      0 3px 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03),
+      0 1px 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
+      0 0 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05);
+    --shadow-sm:
+      0 25px 7px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
+      0 16px 6px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
+      0 9px 5px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03),
+      0 4px 4px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
+      0 1px 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05);
+    --shadow-md:
+      0 66px 18px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
+      0 42px 17px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
+      0 24px 14px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03),
+      0 11px 11px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
+      0 3px 6px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05);
+    --shadow-lg:
+      0 247px 69px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
+      0 158px 63px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
+      0 89px 53px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03),
+      0 39px 39px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05),
+      0 10px 22px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06);
+    --shadow-xl:
+      0 370px 104px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
+      0 237px 95px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
+      0 133px 80px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
+      0 59px 59px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06),
+      0 15px 33px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.07);
+    --shadow-2xl:
+      0 555px 156px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
+      0 356px 143px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
+      0 200px 120px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
+      0 89px 89px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06),
+      0 23px 50px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.08);
   }
 }

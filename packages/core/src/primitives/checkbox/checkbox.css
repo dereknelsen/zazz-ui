@@ -141,7 +141,7 @@
 
 /* Disabled and committed-invalid states: an invalid control remaps the
    --ui-field-* family on itself. */
-@layer zazz.components {
+@layer ui.components {
   input[type="checkbox"]:disabled {
     opacity: 0.5;
     cursor: not-allowed;

@@ -12,6 +12,7 @@
 
 import { afterAll, beforeAll } from "vite-plus/test";
 import { page, server, userEvent } from "vite-plus/test/browser/context";
+import { BREAKPOINT_CH, type Breakpoint } from "../src/base/utilities.ts";
 
 const cssFiles = import.meta.glob("../src/**/*.css", {
   query: "?raw",
@@ -112,6 +113,25 @@ export async function atWidth(width: number): Promise<void> {
   await page.viewport(width, 800);
   await frame();
 }
+
+/**
+ * A breakpoint in px for the page: its ch count measured in body's font, which
+ * is what the page containers (body, sectioning elements) resolve ch against.
+ */
+export function breakpointPx(bp: Breakpoint): number {
+  const ruler = document.createElement("div");
+  ruler.style.cssText = `position: absolute; inline-size: ${BREAKPOINT_CH[bp]}ch`;
+  document.body.append(ruler);
+  const px = ruler.getBoundingClientRect().width;
+  ruler.remove();
+  return px;
+}
+
+/** A viewport width just below a breakpoint. */
+export const below = (bp: Breakpoint): number => Math.floor(breakpointPx(bp)) - 1;
+
+/** A viewport width at (just past) a breakpoint. */
+export const at = (bp: Breakpoint): number => Math.ceil(breakpointPx(bp)) + 1;
 
 /** Pixels of `n × --spacing` (the scale unit is a fluid clamp), measured with a probe. */
 export function scale(n: number): number {

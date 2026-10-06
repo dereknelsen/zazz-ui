@@ -27,7 +27,7 @@
   }
 }
 
-@layer zazz.components {
+@layer ui.components {
   /* ===========================================================================
   COMMAND: palette panel (popover or dialog) with the input inside
   - The popover form rides popover.css's surface + placement; the dialog form
@@ -68,7 +68,7 @@
 
   /* Dialog form: the palette owns its interior, edge to edge */
   :where(ui-command, [data-ui~="command"]) [data-command-slot~="panel"]:where(dialog) {
-    --ui-dialog-w: min(var(--breakpoint-sm), 100% - var(--gutters) * 2);
+    --ui-dialog-w: min(var(--layout-sm), 100% - var(--gutters) * 2);
     padding: 0;
   }
 

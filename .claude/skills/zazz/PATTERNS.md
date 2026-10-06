@@ -27,7 +27,7 @@ children (default band `lg`); `<section>`s own the vertical rhythm with `--py`. 
 is `--display: none; --display--sm: flex`; the mobile control is
 `--display: flex; --display--sm: none` and opens a dialog (see the mobile-menu fragment). Change
 the default band with `data-layout-size="md"` on the layout, or place one child with
-`--col: layout-bleed | layout-full | layout-xl … layout-2xs`.
+`--col: layout-bleed | layout-full | layout-2xl … layout-sm`.
 
 ```html
 <body style="--bg: var(--color-background)">
@@ -52,7 +52,7 @@ the default band with `data-layout-size="md"` on the layout, or place one child 
   </header>
   <main>
     <section data-ui="layout" style="--py: var(--space-xl)">
-      <!-- page content: each child lands in the lg band -->
+      <!-- page content: each child lands in the xl band -->
     </section>
   </main>
   <footer

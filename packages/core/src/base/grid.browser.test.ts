@@ -6,7 +6,7 @@
  */
 
 import { describe, expect, it } from "vite-plus/test";
-import { atWidth, mount, style, useKit } from "../../test/browser.ts";
+import { at, atWidth, below, mount, style, useKit } from "../../test/browser.ts";
 
 const tracks = (el: Element) => style(el, "grid-template-columns").trim().split(/\s+/).length;
 
@@ -17,16 +17,16 @@ describe("no-base tiers", () => {
     const el = mount(
       `<div style="--display: grid; --grid-cols--md: 3"><i></i><i></i><i></i></div>`,
     );
-    await atWidth(700);
+    await atWidth(below("md"));
     expect(style(el, "display")).toBe("grid");
     expect(tracks(el)).toBe(1);
-    await atWidth(800);
+    await atWidth(at("md"));
     expect(tracks(el)).toBe(3);
   });
 
   it("--display--md: none alone leaves display untouched", async () => {
     const el = mount(`<div style="--display--md: none"></div>`);
-    await atWidth(800);
+    await atWidth(at("md"));
     expect(style(el, "display")).toBe("block");
   });
 });

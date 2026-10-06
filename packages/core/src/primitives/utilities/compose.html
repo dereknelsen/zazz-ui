@@ -1,17 +1,16 @@
 <article
   style="
-    --display: flex;
-    --flex-direction: column;
+    --display: flex-col;
+    --p: var(--space-lg);
     --gap: var(--space-md);
     --w: 100%;
     --max-w: 96;
-    --bg: var(--color-card);
     --text: var(--color-card-foreground);
-    --border-width: 1px;
+    --bg: var(--color-card);
     --border-color: var(--color-border);
+    --border-width: 1px;
+    --shadow: md;
     --rounded: var(--radius-lg);
-    --shadow: var(--shadow-md);
-    --p: var(--space-lg);
   "
 >
   <div
@@ -27,8 +26,7 @@
   </div>
   <hgroup
     style="
-      --display: flex;
-      --flex-direction: column;
+      --display: flex-col;
       --gap: var(--space-xs);
     "
   >
@@ -36,8 +34,8 @@
     <p
       data-ui="text-sm"
       style="
-        --text: var(--color-muted-foreground);
         --text-wrap: pretty;
+        --text: var(--color-muted-foreground);
       "
     >
       No component class here — just flex, gap, padding, radius, border, shadow, and color utilities
@@ -48,10 +46,9 @@
     style="
       --display: flex;
       --items: center;
-      --gap: var(--space-sm);
       --pt: var(--space-sm);
-      --border-t-width: 1px;
-      --border-t-color: var(--color-border);
+      --gap: var(--space-sm);
+      --border-t: 1;
     "
   >
     <button type="button" data-ui="button" data-button-variant="primary">Get started</button>

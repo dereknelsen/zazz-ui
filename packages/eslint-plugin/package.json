@@ -1,0 +1,31 @@
+{
+  "name": "@zazz-ui/eslint-plugin",
+  "version": "0.0.0",
+  "private": true,
+  "description": "ESLint rules for Zazz markup in HTML: the <ui-debug> audit, as editor squiggles.",
+  "license": "MIT",
+  "author": "Derek Nelsen",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "tsc -p tsconfig.json && vp test run",
+    "check": "vp check"
+  },
+  "dependencies": {
+    "@zazz-ui/core": "workspace:*",
+    "@zazz-ui/language-server": "workspace:*"
+  },
+  "devDependencies": {
+    "@html-eslint/eslint-plugin": "catalog:",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "eslint": ">=9.22"
+  }
+}

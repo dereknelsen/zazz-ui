@@ -32,8 +32,8 @@
       <h2
         style="
           --font-size: var(--font-size-lg);
+          --font-weight: strong;
           --font-family: var(--font-family-heading);
-          --font-weight: var(--font-weight-strong);
         "
       >
         New project
@@ -45,8 +45,7 @@
     <form
       id="f-new-project-1"
       style="
-        --display: flex;
-        --flex-direction: column;
+        --display: flex-col;
         --gap: var(--space-md);
       "
       data-dialog-slot="body"
@@ -93,7 +92,7 @@
               <span data-field-slot="error" role="alert">Please enter a valid email address.</span>
             </div>
           </div>
-          <label data-ui="field" style="--col: span 2">
+          <label data-ui="field" style="--col-span: 2">
             <span data-field-slot="label">Repository</span>
             <div data-ui="input-group">
               <input

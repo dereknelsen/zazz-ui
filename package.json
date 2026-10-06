@@ -4,13 +4,18 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "ready": "vp check && node packages/core/scripts/fmt-html.ts --check && vp run -r build && vp run -r test",
+    "ready": "vp check && vp run lint:html && vp run -r build && vp run -r test",
     "dev": "vp run core#build && vp run docs#dev",
-    "fmt:html": "node packages/core/scripts/fmt-html.ts",
+    "fmt:html": "eslint --fix \"**/*.html\"",
+    "lint:html": "eslint \"**/*.html\"",
     "playground": "vp run playground#dev",
     "prepare": "vp config"
   },
   "devDependencies": {
+    "@html-eslint/eslint-plugin": "catalog:",
+    "@zazz-ui/eslint-plugin": "workspace:*",
+    "eslint": "catalog:",
+    "jiti": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   },

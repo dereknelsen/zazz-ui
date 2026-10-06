@@ -2,7 +2,7 @@
 
 /**
  * @fileoverview The radio: `data-ui="radio"` sizes from the hook or a
- * dual-mode `--size` utility, fills when checked, and publishes its focus ring.
+ * dual-mode `--size` utility, fills when checked (a masked ::before dot), and publishes its focus ring.
  */
 
 import { describe, expect, it } from "vite-plus/test";
@@ -28,7 +28,11 @@ describe("radio", () => {
     expect(style(at("[data-checked]"), "background-color")).toBe(
       style(at("[data-primary]"), "background-color"),
     );
-    expect(style(at("[data-checked]"), "background-image")).toContain("radial-gradient");
+    // the dot is a masked ::before painted in the dot foreground
+    const dot = getComputedStyle(at("[data-checked]"), "::before");
+    expect(dot.content).toBe('""');
+    expect(dot.maskImage).toContain("data:image/svg+xml");
+    expect(dot.backgroundColor).toBe(style(at("[data-checked]"), "color"));
   });
 
   it("the focus ring survives a --shadow utility", async () => {

@@ -45,7 +45,7 @@
 @layer variables {
   :root {
     --ui-reveal-global-duration: var(--default-transition-duration);
-    --ui-reveal-global-ease: var(--default-transition-timing-function);
+    --ui-reveal-global-timing-function: var(--default-transition-timing-function);
     --ui-reveal-global-wait: 0ms;
     --ui-reveal-global-distance: 1rem;
     --ui-reveal-global-grow: 0.97;
@@ -53,7 +53,7 @@
   }
 }
 
-@layer zazz.utilities {
+@layer ui.utilities {
   @media screen and (prefers-reduced-motion: no-preference) {
     /* Effective values + hidden state, at :where() specificity so the in-view
        final state overrides it. */
@@ -62,7 +62,7 @@
       [data-reveal-each]:not([data-gjs-type]) > *:not([data-gjs-type])
     ) {
       --ui-reveal-effective-duration: var(--ui-reveal-duration, var(--ui-reveal-global-duration));
-      --ui-reveal-effective-ease: var(--ui-reveal-ease, var(--ui-reveal-global-ease));
+      --ui-reveal-effective-ease: var(--ui-reveal-ease, var(--ui-reveal-global-timing-function));
       --ui-reveal-effective-wait: var(--ui-reveal-wait, var(--ui-reveal-global-wait));
       --ui-reveal-effective-distance: var(--ui-reveal-distance, var(--ui-reveal-global-distance));
       will-change: opacity, transform;

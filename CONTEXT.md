@@ -21,7 +21,7 @@ The `data-ui` spelling of a primitive (`<div data-ui="tooltip">`, `<button data-
 _Avoid_: class form, `.ui-button`, expanded version, raw form
 
 **Switch**:
-A primitive that is only a fixed rule set: no slots, no tag form, no presets, no value (`data-ui="sr-only"`, `data-ui="grid-pile"`). It rides the same `data-ui` token list as any primitive (`data-ui="badge sr-only"`).
+A primitive that is only a fixed rule set: no slots, no tag form, no presets, no value (`data-ui="sr-only"`, `data-ui="pile"`). It rides the same `data-ui` token list as any primitive (`data-ui="badge sr-only"`).
 _Avoid_: utility class, helper class, modifier class, boolean attribute
 
 **Slot**:
@@ -61,11 +61,11 @@ The primitive (`<section data-ui="layout">`, `<ui-layout>`) that turns an elemen
 _Avoid_: container, `.container`, wrapper, page grid
 
 **Band**:
-One of the named column spans of a layout: `layout-2xs`–`layout-2xl` cap and center content at the matching breakpoint width, `layout-full` fills the layout minus the gutters, `layout-bleed` runs edge to edge. A band is a width cap; it shares a name and a number with a breakpoint but is not one.
+One of the named column spans of a layout: `layout-sm`–`layout-2xl` cap and center content at the matching `--layout-*` width (rem), `layout-full` fills the layout minus the gutters, `layout-bleed` runs edge to edge. A band is a width cap; it shares a name and a number with a breakpoint but is not one.
 _Avoid_: column, container size, breakpoint
 
 **Breakpoint**:
-One of seven named inline-size thresholds (`2xs`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl`) at or above which a responsive modifier applies. Published as a page-container flag (`--cqi-md`) and a viewport flag (`--vi-md`); never read as a raw width in a query.
+One of five named inline-size thresholds (`sm` 40ch, `md` 65ch, `lg` 90ch, `xl` 120ch, `2xl` 150ch, chosen for legibility) at or above which a responsive modifier applies. Tiers read the nearest inline-size container (the page containers, a layout band's child, or any `data-ui="container"`), in `ch` of its font. Layout band and component widths are a separate rem scale, `--layout-*`.
 _Avoid_: media query, screen size, band, `--is-breakpoint-*`, `--bp-*`
 
 ### Distribution

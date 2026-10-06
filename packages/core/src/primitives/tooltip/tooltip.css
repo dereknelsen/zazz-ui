@@ -59,7 +59,7 @@
 
 /* Popover overrides, on the tooltip content (declared on :root they would retheme
    every popover in the kit, since tooltip.css loads after popover.css). */
-@layer zazz.components {
+@layer ui.components {
   :where(ui-tooltip, [data-ui~="tooltip"]) [data-tooltip-slot~="content"] {
     --ui-popover-shadow: var(--shadow-xs);
     --ui-popover-min-w: 0; /* dual-mode: no minimum (fit-content cannot pass the typed pair) */
@@ -113,7 +113,7 @@
   }
 }
 
-@layer zazz.components {
+@layer ui.components {
   /* ===========================================================================
   TOOLTIP: interestfor sets the ARIA (aria-describedby / aria-details), so do
   not add role="tooltip". Explicit anchor-name is needed because the polyfill

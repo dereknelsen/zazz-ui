@@ -58,10 +58,10 @@ One honest caveat: the kit's color utilities (`bg-*`, `text-*`, `border-*`) are 
 
 Add a utility when a single-purpose style shows up in three or more places. Below that threshold, an inline `style` attribute or an existing utility combination is less code to maintain.
 
-Put it in `@layer zazz.utilities` and wrap the selector in `:where()`:
+Put it in `@layer ui.utilities` and wrap the selector in `:where()`:
 
 ```css
-@layer zazz.utilities {
+@layer ui.utilities {
   :where(.bg-highlight) {
     background-color: var(--highlight);
     color: var(--highlight-foreground);
@@ -127,7 +127,7 @@ The same hooks work at smaller scopes. On a selector, they retheme a subtree; in
 Variants in Zazz swap tokens rather than writing properties, so a new variant is a token-assignment block keyed on `data-variant`:
 
 ```css
-@layer zazz.components {
+@layer ui.components {
   .ui-button[data-variant="highlight"] {
     --ui-button-background: var(--highlight);
     --ui-button-background--hover: oklch(from var(--highlight) l c h / 0.9);
@@ -148,10 +148,10 @@ The state tokens (`--hover`, `--active`) are part of the hook surface, and the k
 
 ## Writing your own components
 
-When a repeated pattern has structure (a block with children, states, maybe a variant or two), give it a component class in `@layer zazz.components`, built on tokens:
+When a repeated pattern has structure (a block with children, states, maybe a variant or two), give it a component class in `@layer ui.components`, built on tokens:
 
 ```css
-@layer zazz.components {
+@layer ui.components {
   :where(.callout) {
     --callout-background: var(--muted);
 
@@ -167,7 +167,7 @@ When a repeated pattern has structure (a block with children, states, maybe a va
 }
 ```
 
-Declaring your own local token (`--callout-background`) and swapping it per variant keeps your component overridable the same three ways the kit's primitives are: globally, per subtree, and per instance. Utilities still win over your component rules, since `zazz.utilities` comes later in the layer order.
+Declaring your own local token (`--callout-background`) and swapping it per variant keeps your component overridable the same three ways the kit's primitives are: globally, per subtree, and per instance. Utilities still win over your component rules, since `ui.utilities` comes later in the layer order.
 
 Since components read design tokens instead of raw values, they follow theme changes and dark mode without extra work.
 

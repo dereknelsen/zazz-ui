@@ -32,7 +32,7 @@
   }
 }
 
-@layer zazz.components {
+@layer ui.components {
   /* ===========================================================================
   INPUT GROUP — :where([data-ui~="input-group"])
   - A single bordered shell that fuses a text control with addons (icons, text,
@@ -238,7 +238,7 @@
 
 /* Disabled and committed-invalid states; an invalid control remaps the
    --ui-field-* family on itself. */
-@layer zazz.components {
+@layer ui.components {
   :where([data-ui~="input-group"]):disabled,
   :where([data-ui~="input-group"]):has(:disabled) {
     opacity: 0.5;
