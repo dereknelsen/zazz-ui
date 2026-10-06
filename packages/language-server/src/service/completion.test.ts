@@ -54,7 +54,8 @@ describe("style names", () => {
     const before = labels(`<p style="--before-|">a</p>`);
     expect(before).toContain("--before-content");
     expect(before).toContain("--before-w");
-    expect(before).not.toContain("--before-display");
+    expect(before).toContain("--before-display");
+    expect(before).not.toContain("--before-shadow");
   });
 
   it("offers hooks only for identities in reach", () => {

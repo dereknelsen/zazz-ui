@@ -2569,7 +2569,7 @@
       "file": "base/_typography.css"
     },
     "--ui-prose-link-text": {
-      "value": "var(--color-primary)",
+      "value": "inherit",
       "file": "base/_typography.css"
     },
     "--ui-radio-bg": {
@@ -3473,10 +3473,10 @@
       "dark": "oklch(0.5054 0.1905 27.52)"
     },
     "--color-destructive-foreground": {
-      "value": "light-dark(var(--color-white), var(--color-white))",
+      "value": "contrast-color(var(--color-destructive))",
       "file": "base/_variables.css",
-      "light": "oklch(1 0 0)",
-      "dark": "oklch(1 0 0)"
+      "light": "contrast-color(oklch(0.5771 0.2152 27.33))",
+      "dark": "contrast-color(oklch(0.5054 0.1905 27.52))"
     },
     "--color-faded": {
       "value": "light-dark(var(--color-tint-400), var(--color-shade-100))",
@@ -3503,10 +3503,10 @@
       "dark": "oklch(0.5 0.1193 242.75)"
     },
     "--color-info-foreground": {
-      "value": "light-dark(var(--color-white), var(--color-white))",
+      "value": "contrast-color(var(--color-info))",
       "file": "base/_variables.css",
-      "light": "oklch(1 0 0)",
-      "dark": "oklch(1 0 0)"
+      "light": "contrast-color(oklch(0.5876 0.1389 241.97))",
+      "dark": "contrast-color(oklch(0.5 0.1193 242.75))"
     },
     "--color-input": {
       "value": "light-dark(var(--color-neutral-50), var(--color-tint-100))",
@@ -3683,10 +3683,10 @@
       "dark": "oklch(0.145 0 0)"
     },
     "--color-primary-foreground": {
-      "value": "light-dark(var(--color-white), var(--color-primary-950))",
+      "value": "contrast-color(var(--color-primary))",
       "file": "base/_variables.css",
-      "light": "oklch(1 0 0)",
-      "dark": "oklch(0.145 0 0)"
+      "light": "contrast-color(oklch(0.145 0 0))",
+      "dark": "contrast-color(oklch(0.985 0 0))"
     },
     "--color-ring": {
       "value": "var(--color-primary)",
@@ -3767,10 +3767,10 @@
       "dark": "oklch(13% 0.028 261.692)"
     },
     "--color-secondary-foreground": {
-      "value": "light-dark(var(--color-white), var(--color-secondary-950))",
+      "value": "contrast-color(var(--color-secondary))",
       "file": "base/_variables.css",
-      "light": "oklch(1 0 0)",
-      "dark": "oklch(13% 0.028 261.692)"
+      "light": "contrast-color(oklch(13% 0.028 261.692))",
+      "dark": "contrast-color(oklch(98.5% 0.002 247.839))"
     },
     "--color-shade-100": {
       "value": "oklch(from var(--color-neutral-950) l c h / 0.1)",
@@ -3863,10 +3863,10 @@
       "dark": "oklch(0.5081 0.1049 165.61)"
     },
     "--color-success-foreground": {
-      "value": "light-dark(var(--color-white), var(--color-white))",
+      "value": "contrast-color(var(--color-success))",
       "file": "base/_variables.css",
-      "light": "oklch(1 0 0)",
-      "dark": "oklch(1 0 0)"
+      "light": "contrast-color(oklch(0.596 0.1274 163.23))",
+      "dark": "contrast-color(oklch(0.5081 0.1049 165.61))"
     },
     "--color-tertiary": {
       "value": "light-dark(var(--color-tertiary-950), var(--color-tertiary-50))",
@@ -3941,10 +3941,10 @@
       "dark": "oklch(0.147 0.004 49.3)"
     },
     "--color-tertiary-foreground": {
-      "value": "light-dark(var(--color-white), var(--color-tertiary-950))",
+      "value": "contrast-color(var(--color-tertiary))",
       "file": "base/_variables.css",
-      "light": "oklch(1 0 0)",
-      "dark": "oklch(0.147 0.004 49.3)"
+      "light": "contrast-color(oklch(0.147 0.004 49.3))",
+      "dark": "contrast-color(oklch(0.986 0.002 67.8))"
     },
     "--color-tint-100": {
       "value": "oklch(from var(--color-white) l c h / 0.1)",
@@ -4031,10 +4031,10 @@
       "dark": "oklch(0.5553 0.1455 49)"
     },
     "--color-warning-foreground": {
-      "value": "light-dark(var(--color-white), var(--color-white))",
+      "value": "contrast-color(var(--color-warning))",
       "file": "base/_variables.css",
-      "light": "oklch(1 0 0)",
-      "dark": "oklch(1 0 0)"
+      "light": "contrast-color(oklch(0.6658 0.1574 58.32))",
+      "dark": "contrast-color(oklch(0.5553 0.1455 49))"
     },
     "--color-white": {
       "value": "oklch(1 0 0)",
