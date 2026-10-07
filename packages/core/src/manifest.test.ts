@@ -17,6 +17,8 @@ import { ESM_DEPENDENCIES } from "./head.ts";
 import {
   BASE_CSS_POST,
   BASE_CSS_PRE,
+  CORE_POLYFILLS,
+  CORE_RUNTIME,
   CSS_CASCADE_ORDER,
   MANIFEST_VERSION,
   PRIMITIVES,
@@ -113,9 +115,7 @@ describe("dependency graph", () => {
   });
 
   it("covers every relative import of a primitive's scripts with base, core runtime, or a dependency", () => {
-    const core = ["utils", "signals", "zazz-element", "dialog-lifecycle"].map(
-      (n) => `base/${n}.js`,
-    );
+    const core = CORE_RUNTIME;
     /** Every script the vendored closure of `name` contains. */
     const closure = (name: string, seen = new Set<string>()): string[] => {
       if (seen.has(name)) return [];
@@ -136,14 +136,42 @@ describe("dependency graph", () => {
   });
 
   it("never lists core runtime scripts as base dependencies", () => {
-    const core = ["utils", "signals", "zazz-element", "dialog-lifecycle"].map(
-      (n) => `base/${n}.js`,
-    );
+    const core = CORE_RUNTIME;
     for (const [name, entry] of Object.entries(PRIMITIVES)) {
       for (const path of entry.base) {
         expect(core, `${name}: ${path} is core runtime`).not.toContain(path);
       }
     }
+  });
+});
+
+describe("core runtime", () => {
+  const indexTs = readFileSync(join(SRC, "index.ts"), "utf8");
+
+  it("lists scripts that exist", () => {
+    for (const file of [...CORE_RUNTIME, ...CORE_POLYFILLS.map((p) => p.file)]) {
+      expect(existsSync(sourcePath(file)), file).toBe(true);
+    }
+  });
+
+  it("with each primitive's base, covers every base script index.ts imports", () => {
+    const reachable = new Set([
+      ...CORE_RUNTIME,
+      ...Object.values(PRIMITIVES).flatMap((entry) => entry.base),
+    ]);
+    for (const m of indexTs.matchAll(/^import "\.\/(base\/[a-z-]+)\.ts";$/gm)) {
+      expect(reachable, `index.ts imports ${m[1]}`).toContain(`${m[1]}.js`);
+    }
+  });
+
+  it("lists exactly the polyfills index.ts imports behind a CSS.supports gate", () => {
+    const gated = [
+      ...indexTs.matchAll(
+        /!CSS\.supports\("([^"]+)", "([^"]+)"\)\) \{\s*void import\("\.\/(base\/[a-z-]+)\.ts"\)/g,
+      ),
+    ].map((m) => ({ file: `${m[3]}.js`, supports: [m[1], m[2]] }));
+    expect(gated.length).toBeGreaterThan(0);
+    expect(CORE_POLYFILLS).toEqual(gated);
   });
 });
 

@@ -31,7 +31,7 @@
           }
         },
         {
-          "match": "(--)(group-)?(before-|after-)?(place-content|place-items|auto-cols|auto-rows|col-start|flex-wrap|grid-flow|row-start|col-span|position|row-span|col-end|display|justify|row-end|shrink|basis|items|order|flex|self|col|row)(?:(--)(focus-visible|focus-within|disabled|starting|checked|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
+          "match": "(--)(group-)?(before-|after-)?(place-content|place-items|auto-cols|auto-rows|col-start|flex-wrap|grid-flow|row-start|col-span|position|row-span|col-end|display|justify|row-end|shrink|basis|items|order|band|flex|self)(?:(--)(focus-visible|focus-within|disabled|starting|checked|current|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
           "captures": {
             "1": {
               "name": "punctuation.definition.custom-property.css.zazz"
@@ -54,7 +54,7 @@
           }
         },
         {
-          "match": "(--)(group-)?(before-|after-)?(grid-template-cols|grid-template-rows|grid-cols|grid-rows|grid-fit)(?:(--)(focus-visible|focus-within|disabled|starting|checked|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
+          "match": "(--)(group-)?(before-|after-)?(template-cols|template-rows|grid-cols|grid-rows|grid-fit)(?:(--)(focus-visible|focus-within|disabled|starting|checked|current|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
           "captures": {
             "1": {
               "name": "punctuation.definition.custom-property.css.zazz"
@@ -77,7 +77,7 @@
           }
         },
         {
-          "match": "(--)(group-)?(before-|after-)?(inset-x|inset-y|bottom|gap-x|gap-y|inset|right|left|gap|top|pb|pl|pr|pt|px|py|p)(?:(--)(focus-visible|focus-within|disabled|starting|checked|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
+          "match": "(--)(group-)?(before-|after-)?(inset-x|inset-y|bottom|gap-x|gap-y|inset|right|left|gap|top|pb|pl|pr|pt|px|py|p)(?:(--)(focus-visible|focus-within|disabled|starting|checked|current|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
           "captures": {
             "1": {
               "name": "punctuation.definition.custom-property.css.zazz"
@@ -100,7 +100,7 @@
           }
         },
         {
-          "match": "(--)(group-)?(before-|after-)?(mb|ml|mr|mt|mx|my|m)(?:(--)(focus-visible|focus-within|disabled|starting|checked|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
+          "match": "(--)(group-)?(before-|after-)?(mb|ml|mr|mt|mx|my|m)(?:(--)(focus-visible|focus-within|disabled|starting|checked|current|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
           "captures": {
             "1": {
               "name": "punctuation.definition.custom-property.css.zazz"
@@ -123,7 +123,7 @@
           }
         },
         {
-          "match": "(--)(group-)?(before-|after-)?(aspect|max-h|max-w|min-h|min-w|size|h|w)(?:(--)(focus-visible|focus-within|disabled|starting|checked|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
+          "match": "(--)(group-)?(before-|after-)?(aspect|max-h|max-w|min-h|min-w|size|h|w)(?:(--)(focus-visible|focus-within|disabled|starting|checked|current|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
           "captures": {
             "1": {
               "name": "punctuation.definition.custom-property.css.zazz"
@@ -146,7 +146,7 @@
           }
         },
         {
-          "match": "(--)(group-)?(before-|after-)?(text-decoration|text-transform|font-family|font-weight|font-style|line-clamp|text-align|whitespace|font-size|text-wrap|tracking|leading)(?:(--)(focus-visible|focus-within|disabled|starting|checked|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
+          "match": "(--)(group-)?(before-|after-)?(text-decoration|text-transform|font-family|font-weight|font-style|line-clamp|text-align|whitespace|font-size|text-wrap|tracking|leading)(?:(--)(focus-visible|focus-within|disabled|starting|checked|current|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
           "captures": {
             "1": {
               "name": "punctuation.definition.custom-property.css.zazz"
@@ -169,7 +169,7 @@
           }
         },
         {
-          "match": "(--)(group-)?(before-|after-)?(border-color|border-style|border-width|bg-linear|bg-radial|bg-alpha|bg-conic|bg-stops|border-b|border-l|border-r|border-t|border-x|border-y|border|text|bg)(?:(--)(focus-visible|focus-within|disabled|starting|checked|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
+          "match": "(--)(group-)?(before-|after-)?(border-color|border-style|border-width|bg-linear|bg-radial|bg-alpha|bg-conic|bg-stops|border-b|border-l|border-r|border-t|border-x|border-y|border|text|bg)(?:(--)(focus-visible|focus-within|disabled|starting|checked|current|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
           "captures": {
             "1": {
               "name": "punctuation.definition.custom-property.css.zazz"
@@ -192,7 +192,7 @@
           }
         },
         {
-          "match": "(--)(group-)?(before-|after-)?(ring-offset-color|ring-offset|ring-color|transition|translate|opacity|rotate|shadow|scale|ring)(?:(--)(focus-visible|focus-within|disabled|starting|checked|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
+          "match": "(--)(group-)?(before-|after-)?(ring-offset-color|ring-offset|ring-color|transition|translate|opacity|rotate|shadow|scale|ring)(?:(--)(focus-visible|focus-within|disabled|starting|checked|current|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
           "captures": {
             "1": {
               "name": "punctuation.definition.custom-property.css.zazz"
@@ -215,7 +215,7 @@
           }
         },
         {
-          "match": "(--)(group-)?(before-|after-)?(pointer-events|object-fit|overflow-x|overflow-y|shadow-hue|visibility|overflow|content|outline|rounded|cursor|divide|z)(?:(--)(focus-visible|focus-within|disabled|starting|checked|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
+          "match": "(--)(group-)?(before-|after-)?(pointer-events|object-fit|overflow-x|overflow-y|shadow-hue|visibility|overflow|content|outline|rounded|cursor|divide|z)(?:(--)(focus-visible|focus-within|disabled|starting|checked|current|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
           "captures": {
             "1": {
               "name": "punctuation.definition.custom-property.css.zazz"
@@ -242,7 +242,7 @@
     "identities": {
       "patterns": [
         {
-          "match": "(?<=[\"'\\s])(navigation-menu|password-group|alert-dialog|autocomplete|button-group|text-display|text-eyebrow|toggle-group|field-group|input-group|mobile-menu|multiselect|radio-group|scroll-fade|accordion|container|kbd-group|separator|carousel|combobox|divide-x|divide-y|lightbox|progress|text-2xl|text-2xs|textarea|command|isolate|sr-only|text-h1|text-h2|text-h3|text-h4|text-h5|text-h6|text-lg|text-md|text-sm|text-xl|text-xs|toaster|tooltip|button|dialog|layout|select|toggle|badge|field|group|input|meter|prose|radio|table|card|menu|pile|tabs|otp)(?=[\"'\\s])",
+          "match": "(?<=[\"'\\s])(navigation-menu|password-group|alert-dialog|autocomplete|button-group|text-display|text-eyebrow|toggle-group|field-group|input-group|mobile-menu|multiselect|radio-group|scroll-fade|accordion|container|kbd-group|not-prose|separator|carousel|combobox|divide-x|divide-y|lightbox|progress|text-2xl|text-2xs|textarea|truncate|callout|command|isolate|sr-only|text-h1|text-h2|text-h3|text-h4|text-h5|text-h6|text-lg|text-md|text-sm|text-xl|text-xs|toaster|tooltip|bounce|button|dialog|layout|select|toggle|badge|field|group|input|meter|prose|pulse|radio|table|card|menu|pile|ping|spin|tabs|otp)(?=[\"'\\s])",
           "captures": {
             "1": {
               "name": "support.class.zazz.identity"

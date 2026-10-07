@@ -60,10 +60,25 @@ describe("ui-command filtering", () => {
     expect(items().every((item) => item.style.order !== "")).toBe(true);
   });
 
-  it("honors the unprefixed data-filter spelling", async () => {
-    const { input, items } = mount('data-filter="none"');
+  it("reads no unprefixed root config", async () => {
+    const { input, items } = mount('data-filter="none" data-sort="document"');
     await type(input, "zzz");
-    expect(items().map((item) => item.hidden)).toEqual([false, false]);
+    expect(items().map((item) => item.hidden)).toEqual([true, true]);
+    await type(input, "a");
+    expect(items().every((item) => item.style.order !== "")).toBe(true);
+  });
+
+  it("reads no unprefixed item facts and no data-slot parts", async () => {
+    const { input, list, items } = mount();
+    items()[0].setAttribute("data-value", "zzz");
+    items()[1].setAttribute("data-keywords", "zzz");
+    const legacy = document.createElement("a");
+    legacy.setAttribute("data-slot", "command-item");
+    legacy.textContent = "zzz";
+    list.append(legacy);
+    await type(input, "zzz");
+    expect(items().map((item) => item.hidden)).toEqual([true, true]);
+    expect(legacy.hasAttribute("data-command-state")).toBe(false);
   });
 
   it('shows every item in document order with data-command-filter="none"', async () => {

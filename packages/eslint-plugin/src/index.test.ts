@@ -71,6 +71,19 @@ describe("@zazz-ui/eslint-plugin", () => {
     );
   });
 
+  it("lets a custom-command invoker carry its target's attributes", () => {
+    expect(
+      lint(`<button commandfor="t" command="--toast" data-toaster-title="Saved"></button>`),
+    ).toEqual([]);
+    expect(
+      findings(`<button commandfor="d" command="show-modal" data-toaster-title="x"></button>`),
+    ).toEqual([["attribute-outside-identity", `data-toaster-title="x"`]]);
+    // only the identity the command names: --toast is the toaster's, not the dialog's
+    expect(
+      findings(`<button commandfor="t" command="--toast" data-dialog-size="sm"></button>`),
+    ).toEqual([["attribute-outside-identity", `data-dialog-size="sm"`]]);
+  });
+
   it("checks border colors without a browser", () => {
     expect(findings(`<div style="--border: 1px solid red; --border-b: rde"></div>`)).toEqual([
       ["border-value", "--border: 1px solid red"],
@@ -85,8 +98,16 @@ describe("@zazz-ui/eslint-plugin", () => {
     const fixed = linter.verifyAndFix(`<div style="--w  : 4"></div>`, config, "page.html");
     expect(fixed.output).toBe(`<div style="--w: 4"></div>`);
     const [message] = lint(`<div style="--grid-cols: 1fr 1fr"></div>`);
-    expect(message!.suggestions?.[0]?.desc).toBe("Write `--grid-template-cols: 1fr 1fr`.");
-    expect(message!.suggestions?.[0]?.fix.text).toBe("--grid-template-cols: 1fr 1fr");
+    expect(message!.suggestions?.[0]?.desc).toBe("Write `--template-cols: 1fr 1fr`.");
+    expect(message!.suggestions?.[0]?.fix.text).toBe("--template-cols: 1fr 1fr");
+  });
+
+  it("checks data-ui-persist-scroll on whole pages too", () => {
+    expect(
+      findings(
+        `<html data-ui-navigation="swap"><body><nav data-ui-persist-scroll="a"></nav><nav data-ui-persist-scroll="a"></nav></body></html>`,
+      ).map(([, source]) => source),
+    ).toEqual([`data-ui-persist-scroll="a"`]);
   });
 
   it("checks data-ui-persist on whole pages only", () => {

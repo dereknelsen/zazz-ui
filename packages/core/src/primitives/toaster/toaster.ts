@@ -14,8 +14,8 @@
  * - Declaratively, from any button, via a custom Invoker Command:
  *   `command="--toast"` (or `--toast-success|info|warning|destructive`) with
  *   `commandfor="<region id>"`. Toast content comes from the button's
- *   `data-title`, `data-description`, `data-variant`, `data-duration`, and
- *   `data-close-button` attributes.
+ *   `data-toaster-title`, `data-toaster-description`, `data-toaster-variant`,
+ *   `data-toaster-duration`, and `data-toaster-close-button` attributes.
  * - Imperatively: `window.Toaster.toast({ title, description, variant, … })`
  *   and the `.success()/.info()/.warning()/.error()` shorthands.
  *
@@ -25,7 +25,7 @@
  *
  * @example
  * <ui-toaster id="toaster" popover="manual"></ui-toaster>
- * <button commandfor="toaster" command="--toast" data-title="Saved">Save</button>
+ * <button commandfor="toaster" command="--toast" data-toaster-title="Saved">Save</button>
  */
 
 import { computed, effect, state } from "../../base/signals.ts";
@@ -386,7 +386,7 @@ class UiToaster extends ZazzElement {
   /**
    * @description Handles the custom `--toast` Invoker Command fired by buttons
    * with `commandfor` pointing at this region. `--toast-success` (etc.) sets the
-   * variant; everything else comes from the invoker's `data-*` attributes.
+   * variant; everything else comes from the invoker's `data-toaster-*` attributes.
    *
    * @param event - The command event.
    */
@@ -413,7 +413,13 @@ class UiToaster extends ZazzElement {
     }
 
     if (source instanceof HTMLElement) {
-      const { title, description, variant, duration, closeButton } = source.dataset;
+      const {
+        toasterTitle: title,
+        toasterDescription: description,
+        toasterVariant: variant,
+        toasterDuration: duration,
+        toasterCloseButton: closeButton,
+      } = source.dataset;
       if (title) options.title = title;
       if (description) options.description = description;
       if (!options.variant && variant && VARIANTS.includes(variant)) {

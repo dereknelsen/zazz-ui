@@ -1,14 +1,17 @@
 ---
 /**
  * `{% preview src="button/button" /%}`: one example fragment from the kit,
- * rendered live in an isolated iframe and shown as code (HTML, the primitive's
- * CSS, and its scripts) from that same string, so the two can never drift.
+ * rendered inline (the site loads the whole kit) and shown as code (HTML, the
+ * primitive's CSS, and its scripts) from that same string, so the two can never
+ * drift. The stage is `not-prose`, so the article's prose styles stop at it, and
+ * a container, so breakpoint tiers inside follow the stage's width.
  */
 import { Code } from "astro:components";
 import { ExternalLink, Maximize, Minimize } from "@lucide/astro";
 import { readExample, readKitFile, readPrimitiveCss } from "../lib/kit.ts";
 import { encodeCode } from "../lib/playground-hash.ts";
-import { buildPreviewDocument, nextPreviewId, previewMeta, primitiveOf, scriptsFor } from "../lib/preview.ts";
+import BandDiagram from "./BandDiagram.astro";
+import { liveHtml, nextPreviewId, previewMeta, primitiveOf, scriptsFor } from "../lib/preview.ts";
 
 interface Props {
   src: string;
@@ -19,14 +22,12 @@ const html = readExample(src);
 if (html === null) throw new Error(`{% preview %}: example "${src}" is not in @zazz-ui/core`);
 
 const meta = previewMeta(src);
-const scriptFiles = scriptsFor(src);
-const scripts = scriptFiles.length > 0 || meta.scripts === true;
-const js = scriptFiles
+const js = scriptsFor(src)
   .map((file) => `// ${file}\n${readKitFile(file) ?? ""}`)
   .join("\n\n")
   .trim();
 const css = readPrimitiveCss(primitiveOf(src));
-const doc = buildPreviewDocument(html, meta, scripts);
+const place = meta.inline ?? "center";
 const playgroundHref = `/playground/#${await encodeCode(html)}`;
 const uid = `pv-${src.replace(/[^a-z0-9]+/gi, "-")}-${nextPreviewId()}`;
 const tabs = [
@@ -56,22 +57,23 @@ const themes = { light: "github-light", dark: "github-dark" } as const;
   <div data-tabs-slot="panel" role="tabpanel" style="--w: 100%">
     <div
       data-preview-frame
-      data-min-height={meta.minHeight ?? 0}
       style="
         --position: relative;
         --border: 1;
         --rounded: var(--radius-md);
-        --overflow: clip;
         --bg: var(--color-background);
       "
     >
-      {/* allow-same-origin is deliberate: the page measures and themes the frame through contentDocument; the markup is the kit's own. */}
-      <iframe
-        title={title ?? `Preview: ${src}`}
-        srcdoc={doc}
-        loading="lazy"
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
-        style={`height: ${Math.max(meta.minHeight ?? 0, 160)}px`}></iframe>
+      <div
+        data-preview-stage
+        data-ui="not-prose container"
+        data-pagefind-ignore
+        role="region"
+        aria-label={title ?? `Example: ${src}`}
+        style={`--display: grid; --place-items: ${place}; --gap: 6; --p: 6; --pb: 12; --min-h: 40; --overflow-x: auto`}
+      >
+        {meta.diagram === "bands" ? <BandDiagram /> : <Fragment set:html={liveHtml(html)} />}
+      </div>
       <div
         style="
           --position: absolute;
@@ -130,64 +132,19 @@ const themes = { light: "github-light", dark: "github-dark" } as const;
 
 <script>
   /**
-   * The frame is same-origin (srcdoc), so the page can size it to its stage,
-   * mirror the site's theme into it, and reveal it once its styles are in.
+   * Links inside a demo stay put (they point at `#` placeholders), and the
+   * expand button toggles a full-viewport stage; Escape leaves it.
    */
-  const THEME = "data-ui-theme";
-  const root = document.documentElement;
+  document.addEventListener(
+    "click",
+    (event) => {
+      const link = (event.target as Element | null)?.closest?.("[data-preview-stage] a[href]");
+      if (link) event.preventDefault();
+    },
+    true,
+  );
 
-  function setup(frame: HTMLElement): void {
-    const iframe = frame.querySelector("iframe");
-    if (!iframe) return;
-    const minHeight = Number(frame.dataset.minHeight) || 0;
-
-    const stage = () => iframe.contentDocument?.querySelector<HTMLElement>("[data-preview-stage]") ?? null;
-
-    const measure = (): void => {
-      if (frame.hasAttribute("data-fullscreen")) return;
-      const target = stage() ?? iframe.contentDocument?.documentElement;
-      if (!target) return;
-      iframe.style.height = `${Math.max(Math.ceil(target.scrollHeight), minHeight, 160)}px`;
-    };
-
-    const syncTheme = (): void => {
-      const doc = iframe.contentDocument;
-      if (!doc) return;
-      const theme = root.getAttribute(THEME);
-      if (theme) doc.documentElement.setAttribute(THEME, theme);
-      else doc.documentElement.removeAttribute(THEME);
-    };
-
-    const onLoad = async (): Promise<void> => {
-      const doc = iframe.contentDocument;
-      if (!doc) return;
-      syncTheme();
-      const sheets = [...doc.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]')].map(
-        (link) =>
-          link.sheet
-            ? Promise.resolve()
-            : new Promise<void>((resolve) => {
-                link.addEventListener("load", () => resolve(), { once: true });
-                link.addEventListener("error", () => resolve(), { once: true });
-              }),
-      );
-      await Promise.all([...sheets, doc.fonts?.ready]).catch(() => {});
-      measure();
-      frame.setAttribute("data-loaded", "");
-      const observed = stage();
-      if (observed) {
-        const ro = new ResizeObserver(measure);
-        ro.observe(observed);
-        for (const child of observed.children) ro.observe(child);
-      }
-    };
-
-    iframe.addEventListener("load", () => void onLoad());
-    if (iframe.contentDocument?.readyState === "complete" && iframe.contentDocument.body?.children.length) {
-      void onLoad();
-    }
-    new MutationObserver(syncTheme).observe(root, { attributes: true, attributeFilter: [THEME] });
-
+  for (const frame of document.querySelectorAll<HTMLElement>("[data-preview-frame]")) {
     const expand = frame.querySelector<HTMLButtonElement>("[data-preview-expand]");
     expand?.addEventListener("click", () => {
       const on = frame.toggleAttribute("data-fullscreen");
@@ -195,12 +152,8 @@ const themes = { light: "github-light", dark: "github-dark" } as const;
       for (const icon of expand.querySelectorAll<HTMLElement>("[data-when]")) {
         icon.hidden = icon.dataset.when !== (on ? "expanded" : "collapsed");
       }
-      if (on) iframe.style.height = "100%";
-      else measure();
     });
   }
-
-  for (const frame of document.querySelectorAll<HTMLElement>("[data-preview-frame]")) setup(frame);
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
     document

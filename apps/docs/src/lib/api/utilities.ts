@@ -11,7 +11,7 @@ import {
   UTILITIES,
   tiersOf,
   type Utility,
-} from "@zazz-ui/core/base/utilities.js";
+} from "@zazz-ui/core/base/utilities.ts";
 
 export interface UtilityRow {
   name: string;

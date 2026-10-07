@@ -30,7 +30,7 @@ const program = new Command("zazz-ui")
 program
   .command("init")
   .description("vendor the Zazz base (tokens, reset, runtime) into this project")
-  .argument("[version]", "kit version, @-prefixed (e.g. @0.1.0); default latest")
+  .argument("[version]", "kit version, @-prefixed (e.g. @0.5.0); default latest")
   .option("--dir <path>", "target directory for vendored files", "zazz")
   .option("--ts", "vendor TypeScript sources instead of compiled .js")
   .option("--legacy <path>", "wire an existing stylesheet into the legacy.imports cascade sublayer")

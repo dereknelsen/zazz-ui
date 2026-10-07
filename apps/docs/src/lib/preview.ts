@@ -1,73 +1,25 @@
 /**
- * Builds the document a preview iframe renders: the kit's head (fonts, the
- * stylesheet, and the scripts when the example needs them) around one example
- * fragment, centered in a padded stage. Pure string building.
+ * Examples render inline: the site loads the whole kit, so a fragment is plain
+ * markup on the page. These helpers place a demo, list the scripts its JS tab
+ * shows, and adjust the live copy where the page itself owns something.
  */
-import { PRIMITIVES, resolveClosure } from "@zazz-ui/core/manifest";
-import { previewHead } from "./head.ts";
+import { PRIMITIVES, resolveClosure } from "@zazz-ui/core/manifest.ts";
 
 export interface PreviewMeta {
-  /** Block-axis placement of the demo. */
-  block?: "start" | "center" | "end";
-  /** Inline-axis placement of the demo. */
+  /** Inline-axis placement of the demo (centered by default). */
   inline?: "start" | "center" | "end";
-  /** Minimum stage height in px, so overlays (dialogs, menus) have room. */
-  minHeight?: number;
-  /** Force scripts on for a fragment whose primitive is CSS-only but composes a scripted one. */
-  scripts?: boolean;
+  /** Show a diagram instead of the live fragment (the HTML tab still shows it). */
+  diagram?: "bands";
 }
 
 /**
- * Per-example presentation tweaks. Only deviations from "centered, no minimum
- * height" are listed; the key is the example id (`<primitive>/<example>`).
+ * Per-example presentation tweaks. Only deviations from "centered" are listed;
+ * the key is the example id (`<primitive>/<example>`).
  */
 const META: Record<string, PreviewMeta> = {
-  "tooltip/tooltip": { minHeight: 180 },
-  "tooltip/tooltip-with-kbd": { minHeight: 180 },
-  "tooltip/tooltip-sides": { minHeight: 260 },
-  "tooltip/tooltip-disabled": { minHeight: 180 },
-  "dialog/dialog": { minHeight: 500 },
-  "dialog/dialog-with-form": { minHeight: 800 },
-  "alert-dialog/alert-dialog": { minHeight: 500 },
-  "menu/menu": { block: "start", minHeight: 500 },
-  "menu/menu-interest": { block: "start", minHeight: 400 },
-  "menubar/menubar": { block: "start", minHeight: 420 },
-  "menubar/menubar-help-search": { block: "start", minHeight: 560, scripts: true },
-  "navigation-menu/navigation-menu": { block: "start", minHeight: 500 },
-  "navigation-menu/navigation-menu-interest": { block: "start", minHeight: 480 },
-  "navigation-menu/navigation-menu-featured": { block: "start", minHeight: 520 },
-  "navigation-menu/navigation-menu-icon-grid": { block: "start", minHeight: 520 },
-  "navigation-menu/navigation-menu-megamenu": { block: "start", minHeight: 520 },
-  "navigation-menu/navigation-menu-simple": { block: "start", minHeight: 480 },
-  "select/select": { minHeight: 240 },
-  "select/select-align": { block: "start", minHeight: 340 },
-  "select/select-sides": { minHeight: 420 },
-  "select/select-multiple": { block: "start", minHeight: 480 },
-  "toaster/toaster": { minHeight: 420 },
-  "autocomplete/autocomplete": { block: "start", minHeight: 480 },
-  "autocomplete/autocomplete-groups": { block: "start", minHeight: 520 },
-  "combobox/combobox": { block: "start", minHeight: 480 },
-  "combobox/combobox-multiselect": { block: "start", minHeight: 520 },
-  "command/command": { block: "start", minHeight: 560 },
-  "command/command-dialog": { block: "start", minHeight: 640 },
-  "command/command-actions": { block: "start", minHeight: 560, scripts: true },
-  "carousel/carousel": { minHeight: 460 },
-  "lightbox/lightbox": { minHeight: 640 },
-  "card/card": { minHeight: 500 },
-  "card/card-subgrid": { minHeight: 500 },
-  "prose/prose": { minHeight: 500 },
-  "breadcrumbs/breadcrumbs": { minHeight: 120 },
-  "avatar/avatar": { minHeight: 160 },
-  "accordion/accordion": { block: "start", minHeight: 460 },
-  "tabs/tabs": { minHeight: 460 },
-  "mobile-menu/mobile-menu": { block: "start", inline: "start", minHeight: 500 },
-  "toolbar/toolbar": { minHeight: 240 },
-  "separator/separator": { minHeight: 200 },
-  "input/input": { block: "start", minHeight: 420 },
-  "input/input-icon-leading": { block: "start" },
-  "input/input-icon-trailing": { block: "start" },
-  "input-group/input-group": { block: "start", minHeight: 420 },
-  "otp/otp": { block: "start" },
+  // a live layout needs a page-wide grid to read; the bands diagram does not
+  "layout/layout": { diagram: "bands" },
+  "mobile-menu/mobile-menu": { inline: "start" },
 };
 
 let previewCounter = 0;
@@ -100,27 +52,12 @@ export function scriptsFor(id: string): string[] {
   return resolveClosure([name]).flatMap((n) => PRIMITIVES[n].js);
 }
 
-// Links inside a preview would navigate the iframe away from the demo.
-const BLOCK_NAVIGATION = `<script>
-document.addEventListener("click", (e) => { if (e.target.closest("a[href]")) e.preventDefault(); }, true);
-</script>`;
-
-export function buildPreviewDocument(html: string, meta: PreviewMeta, scripts: boolean): string {
-  const { block = "center", inline = "center", minHeight = 0 } = meta;
-  return `<!doctype html>
-<html lang="en">
-<head>
-${previewHead({ scripts })}
-${BLOCK_NAVIGATION}
-<style>
-  html, body { margin: 0; block-size: 100%; inline-size: 100%; overflow: clip; background: var(--color-background); color: var(--color-foreground); }
-  main { display: grid; box-sizing: border-box; align-content: ${block}; align-content: safe ${block}; justify-items: ${inline}; gap: var(--space-md); padding: var(--space-md); inline-size: 100%; block-size: 100%; min-block-size: ${minHeight}px; overflow-y: auto; overflow-x: clip; }
-</style>
-</head>
-<body>
-<main data-preview-stage>
-${html}
-</main>
-</body>
-</html>`;
+/**
+ * The copy of a fragment that renders on the page; the HTML tab shows the
+ * fragment as written. Command hotkeys bind for the whole document, so a demo
+ * would take mod+k from the site search and browser shortcuts (mod+j) from every
+ * reader of the page: the live copy drops them, and its trigger still opens it.
+ */
+export function liveHtml(html: string): string {
+  return html.replace(/\s+data-command-hotkey="[^"]*"/g, "");
 }

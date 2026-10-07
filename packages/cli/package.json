@@ -1,6 +1,6 @@
 {
   "name": "zazz-ui",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "CLI for the Zazz Design Framework — vendors primitives from @zazz-ui/core into your project, with provenance-tracked updates.",
   "keywords": [
     "cli",
@@ -24,7 +24,8 @@
     "zazz-ui": "./dist/cli.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "CHANGELOG.md"
   ],
   "type": "module",
   "publishConfig": {
@@ -35,7 +36,7 @@
     "dev": "vp pack --watch",
     "test": "tsc -p tsconfig.json && vp test run",
     "check": "vp check",
-    "prepublishOnly": "vp run build"
+    "prepublishOnly": "vp run --no-cache build"
   },
   "dependencies": {
     "@clack/prompts": "^1.7.0",

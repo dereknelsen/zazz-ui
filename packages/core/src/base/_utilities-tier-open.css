@@ -3,6 +3,9 @@
 /* open tier setter */
 @layer ui.utilities {
   :where(:is([open], :popover-open, [aria-expanded="true"])[style*="--open:"]) {
+    --_template-cols-open: var(--template-cols--open);
+    --_template-rows-open: var(--template-rows--open);
+    --_text-decoration-open: var(--text-decoration--open);
     --_text-open: var(--text--open);
     --_bg-open: var(--bg--open);
     --_bg-alpha-open: var(--bg-alpha--open);
@@ -28,6 +31,9 @@
     --_transition-open: var(--transition--open);
   }
   :where([data-ui~="group"]:is([open], :popover-open, [aria-expanded="true"]) [style*="--group-"]) {
+    --_template-cols-g-open: var(--group-template-cols--open);
+    --_template-rows-g-open: var(--group-template-rows--open);
+    --_text-decoration-g-open: var(--group-text-decoration--open);
     --_text-g-open: var(--group-text--open);
     --_bg-g-open: var(--group-bg--open);
     --_bg-alpha-g-open: var(--group-bg-alpha--open);

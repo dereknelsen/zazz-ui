@@ -215,6 +215,7 @@
     color: var(--_text-resolved, var(--_button-text, var(--ui-button-text)));
     background-color: var(--_bg-resolved, var(--_button-bg, var(--ui-button-bg)));
     background-clip: padding-box;
+    white-space-collapse: collapse;
 
     /* The ring is published to --_focus-ring so the utilities layer's
        box-shadow emission keeps it above a --shadow or --ring utility; the ring
@@ -332,9 +333,9 @@
     --_button-text--hover: var(--color-primary-foreground);
     --_button-text--active: var(--color-primary-foreground);
 
-    --_button-border-color: var(--_button-bg);
-    --_button-border-color--hover: var(--_button-bg--hover);
-    --_button-border-color--active: var(--_button-bg--active);
+    --_button-border-color: transparent;
+    --_button-border-color--hover: transparent;
+    --_button-border-color--active: transparent;
 
     --_button-shadow: 0 0 transparent;
   }
@@ -348,9 +349,9 @@
     --_button-text--hover: var(--color-secondary-foreground);
     --_button-text--active: var(--color-secondary-foreground);
 
-    --_button-border-color: var(--_button-bg);
-    --_button-border-color--hover: var(--_button-bg--hover);
-    --_button-border-color--active: var(--_button-bg--active);
+    --_button-border-color: transparent;
+    --_button-border-color--hover: transparent;
+    --_button-border-color--active: transparent;
 
     --_button-shadow: 0 0 transparent;
   }
@@ -364,9 +365,9 @@
     --_button-text--hover: var(--color-tertiary-foreground);
     --_button-text--active: var(--color-tertiary-foreground);
 
-    --_button-border-color: var(--_button-bg);
-    --_button-border-color--hover: var(--_button-bg--hover);
-    --_button-border-color--active: var(--_button-bg--active);
+    --_button-border-color: transparent;
+    --_button-border-color--hover: transparent;
+    --_button-border-color--active: transparent;
 
     --_button-shadow: 0 0 transparent;
   }
@@ -380,9 +381,9 @@
     --_button-text--hover: var(--color-foreground);
     --_button-text--active: var(--color-foreground);
 
-    --_button-border-color: var(--_button-bg);
-    --_button-border-color--hover: var(--_button-bg--hover);
-    --_button-border-color--active: var(--_button-bg--active);
+    --_button-border-color: transparent;
+    --_button-border-color--hover: transparent;
+    --_button-border-color--active: transparent;
 
     --_button-shadow: 0 0 transparent;
   }
@@ -396,9 +397,63 @@
     --_button-text--hover: var(--color-foreground);
     --_button-text--active: var(--color-foreground);
 
-    --_button-border-color: var(--_button-bg);
-    --_button-border-color--hover: var(--_button-bg--hover);
-    --_button-border-color--active: var(--_button-bg--active);
+    --_button-border-color: transparent;
+    --_button-border-color--hover: transparent;
+    --_button-border-color--active: transparent;
+
+    --_button-shadow: 0 0 transparent;
+  }
+
+  :where([data-ui~="button"][data-button-variant="info"]) {
+    --_button-ring-color: var(--color-info);
+
+    --_button-bg: var(--color-info);
+    --_button-bg--hover: oklch(from var(--color-info) l c h / 0.9);
+    --_button-bg--active: oklch(from var(--color-info) l c h / 0.8);
+
+    --_button-text: var(--color-info-foreground);
+    --_button-text--hover: var(--color-info-foreground);
+    --_button-text--active: var(--color-info-foreground);
+
+    --_button-border-color: transparent;
+    --_button-border-color--hover: transparent;
+    --_button-border-color--active: transparent;
+
+    --_button-shadow: 0 0 transparent;
+  }
+
+  :where([data-ui~="button"][data-button-variant="success"]) {
+    --_button-ring-color: var(--color-success);
+
+    --_button-bg: var(--color-success);
+    --_button-bg--hover: oklch(from var(--color-success) l c h / 0.9);
+    --_button-bg--active: oklch(from var(--color-success) l c h / 0.8);
+
+    --_button-text: var(--color-success-foreground);
+    --_button-text--hover: var(--color-success-foreground);
+    --_button-text--active: var(--color-success-foreground);
+
+    --_button-border-color: transparent;
+    --_button-border-color--hover: transparent;
+    --_button-border-color--active: transparent;
+
+    --_button-shadow: 0 0 transparent;
+  }
+
+  :where([data-ui~="button"][data-button-variant="warning"]) {
+    --_button-ring-color: var(--color-warning);
+
+    --_button-bg: var(--color-warning);
+    --_button-bg--hover: oklch(from var(--color-warning) l c h / 0.9);
+    --_button-bg--active: oklch(from var(--color-warning) l c h / 0.8);
+
+    --_button-text: var(--color-warning-foreground);
+    --_button-text--hover: var(--color-warning-foreground);
+    --_button-text--active: var(--color-warning-foreground);
+
+    --_button-border-color: transparent;
+    --_button-border-color--hover: transparent;
+    --_button-border-color--active: transparent;
 
     --_button-shadow: 0 0 transparent;
   }
@@ -414,9 +469,9 @@
     --_button-text--hover: var(--color-destructive-foreground);
     --_button-text--active: var(--color-destructive-foreground);
 
-    --_button-border-color: var(--_button-bg);
-    --_button-border-color--hover: var(--_button-bg--hover);
-    --_button-border-color--active: var(--_button-bg--active);
+    --_button-border-color: transparent;
+    --_button-border-color--hover: transparent;
+    --_button-border-color--active: transparent;
 
     --_button-shadow: 0 0 transparent;
   }

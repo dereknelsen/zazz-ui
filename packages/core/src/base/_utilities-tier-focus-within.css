@@ -3,6 +3,9 @@
 /* focus-within tier setter */
 @layer ui.utilities {
   :where(:focus-within[style*="--focus-within:"]) {
+    --_template-cols-focus-within: var(--template-cols--focus-within);
+    --_template-rows-focus-within: var(--template-rows--focus-within);
+    --_text-decoration-focus-within: var(--text-decoration--focus-within);
     --_text-focus-within: var(--text--focus-within);
     --_bg-focus-within: var(--bg--focus-within);
     --_bg-alpha-focus-within: var(--bg-alpha--focus-within);
@@ -28,6 +31,9 @@
     --_transition-focus-within: var(--transition--focus-within);
   }
   :where([data-ui~="group"]:focus-within [style*="--group-"]) {
+    --_template-cols-g-focus-within: var(--group-template-cols--focus-within);
+    --_template-rows-g-focus-within: var(--group-template-rows--focus-within);
+    --_text-decoration-g-focus-within: var(--group-text-decoration--focus-within);
     --_text-g-focus-within: var(--group-text--focus-within);
     --_bg-g-focus-within: var(--group-bg--focus-within);
     --_bg-alpha-g-focus-within: var(--group-bg-alpha--focus-within);

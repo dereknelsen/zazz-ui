@@ -2,7 +2,7 @@
  * site.css — the docs site's own rules. Everything the kit's utilities can
  * express is written in markup; this file holds only what needs a selector:
  * code blocks (Shiki's dual-theme output), state the client sets (`aria-current`
- * in the table of contents), and the preview frame's loading transition.
+ * in the table of contents), and the full-viewport state of an example.
  */
 
 @layer overrides {
@@ -43,27 +43,17 @@
     white-space: inherit;
   }
 
-  [data-ui~="prose"] :not(pre) > code {
-    padding: 0.1em 0.35em;
-    border-radius: var(--radius-sm);
-    background: var(--color-muted);
-    font-size: 0.9em;
+  @scope ([data-ui~="prose"]) to ([data-ui~="not-prose"]) {
+    :not(pre) > code {
+      padding: 0.1em 0.35em;
+      border-radius: var(--radius-sm);
+      background: var(--color-muted);
+      font-size: 0.9em;
+    }
   }
 
   [data-toc] a[aria-current="true"] {
     color: var(--color-foreground);
-  }
-
-  [data-preview-frame] iframe {
-    display: block;
-    inline-size: 100%;
-    border: 0;
-    color-scheme: normal;
-    transition: opacity 0.2s;
-  }
-
-  [data-preview-frame]:not([data-loaded]) iframe {
-    opacity: 0;
   }
 }
 
@@ -75,8 +65,9 @@
     border-radius: 0;
   }
 
-  [data-preview-frame][data-fullscreen] iframe {
+  [data-preview-frame][data-fullscreen] [data-preview-stage] {
     block-size: 100%;
+    overflow: auto;
   }
 }
 
@@ -85,24 +76,5 @@
   [data-ui~="table"] code {
     white-space: normal;
     overflow-wrap: anywhere;
-  }
-}
-
-@layer overrides {
-  /* The playground's formatting indicator. */
-  [data-spin] {
-    animation: zazz-spin 0.9s linear infinite;
-  }
-
-  @keyframes zazz-spin {
-    to {
-      rotate: 1turn;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    [data-spin] {
-      animation: none;
-    }
   }
 }

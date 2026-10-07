@@ -13,8 +13,9 @@ interface Props {
 const { label, sections } = Astro.props;
 ---
 
-{/* Wide: sticky column */}
+{/* Wide: sticky column, rendered fresh on each page; navigations keep its scroll offset */}
 <aside
+  data-ui-persist-scroll={`sidebar-${label.toLowerCase().replace(/\s+/g, "-")}`}
   style="
     --display: none;
     --display--lg: flex-col;
@@ -32,6 +33,7 @@ const { label, sections } = Astro.props;
           <h2
             data-ui="text-eyebrow"
             style="
+              --opacity: 0.5;
               --px: 3;
               --mb: 1;
             "
@@ -51,7 +53,7 @@ const { label, sections } = Astro.props;
                   data-ui="button"
                   data-button-variant={link.current ? "muted" : "ghost"}
                   aria-current={link.current ? "page" : undefined}
-                  style=`--justify: start; --w: 100%${link.current ? "" : "; --ui-button-text: var(--color-muted-foreground)"}`
+                  style="--justify: start; --w: 100%"
                 >
                   {link.title}
                 </a>
@@ -72,7 +74,7 @@ const { label, sections } = Astro.props;
                           href={anchor.href}
                           data-ui="button"
                           data-button-variant="ghost"
-                          style="--justify: start; --w: 100%; --ui-button-text: var(--color-muted-foreground)"
+                          style="--justify: start; --w: 100%"
                         >
                           {anchor.label}
                         </a>
@@ -90,16 +92,14 @@ const { label, sections } = Astro.props;
 </aside>
 
 {/* Narrow: disclosure above the article */}
-<ui-accordion
-  style="
+<ui-accordion style="
     --display: flex-col;
     --display--lg: none;
-  "
->
-  <details data-ui="card" style="--p: 0">
+  ">
+  <details>
     <summary
       data-ui="button"
-      data-button-variant="ghost"
+      data-button-variant="link"
       style="
         --justify: space-between;
         --w: 100%;
@@ -114,8 +114,8 @@ const { label, sections } = Astro.props;
         --display: flex-col;
         --justify: start;
         --gap: 4;
-        --p: 3;
-        --pt: 0;
+        --py: 4;
+        --border-b: 1;
       "
     >
       {
@@ -124,7 +124,10 @@ const { label, sections } = Astro.props;
             <h2 data-ui="text-eyebrow" style="--px: 3; --mb: 1">
               {section.title}
             </h2>
-            <ul style="--display: flex-col; --gap: 0.5" aria-label={section.title}>
+            <ul
+              style="--display: flex-col; --gap: 0.5"
+              aria-label={section.title}
+            >
               {section.links.map((link) => (
                 <li>
                   <a

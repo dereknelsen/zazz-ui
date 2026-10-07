@@ -21,7 +21,6 @@
  * `data-<prefix>-filter="none"` leaves filtering to another source (a search
  * index) and only navigates, highlights, and announces. Items added to or
  * removed from the list after the query are ranked like typed input.
- * Unprefixed `data-<key>` spellings are also read.
  */
 
 import { commandScore } from "./command-score.ts";
@@ -102,17 +101,14 @@ abstract class TypeaheadElement extends ZazzElement {
   /** Slot prefix: `"autocomplete"` finds `autocomplete-panel`, `-list`, `-item`. */
   protected abstract readonly slotPrefix: string;
 
-  /**
-   * @description Selector for a part: the scoped `data-<prefix>-slot` form or
-   * the `data-slot="<prefix>-<name>"` form.
-   */
+  /** @description Selector for a part: `data-<prefix>-slot~="<name>"`. */
   protected partSelector(name: string): string {
-    return `[data-${this.slotPrefix}-slot~="${name}"], [data-slot~="${this.slotPrefix}-${name}"]`;
+    return `[data-${this.slotPrefix}-slot~="${name}"]`;
   }
 
-  /** @description A root config attribute, scoped (`data-<prefix>-<key>`) or unprefixed. */
+  /** @description A root config attribute: `data-<prefix>-<key>`. */
   protected config(key: string): string | null {
-    return this.getAttribute(`data-${this.slotPrefix}-${key}`) ?? this.getAttribute(`data-${key}`);
+    return this.getAttribute(`data-${this.slotPrefix}-${key}`);
   }
   /** Whether this element opens/closes its own `popover="manual"` panel. */
   protected readonly managesPanel: boolean = true;
@@ -436,11 +432,7 @@ abstract class TypeaheadElement extends ZazzElement {
       this.filtersItems ? query : "",
       items.map((item) => ({
         value: this.itemValue(item),
-        keywords: (
-          item.getAttribute(`data-${this.slotPrefix}-keywords`) ??
-          item.getAttribute("data-keywords") ??
-          ""
-        )
+        keywords: (item.getAttribute(`data-${this.slotPrefix}-keywords`) ?? "")
           .split(/\s+/)
           .filter(Boolean),
       })),
@@ -457,8 +449,7 @@ abstract class TypeaheadElement extends ZazzElement {
    * @returns `data-<prefix>-value` when present, trimmed hint-free text otherwise.
    */
   protected itemValue(item: HTMLElement): string {
-    const explicit =
-      item.getAttribute(`data-${this.slotPrefix}-value`) ?? item.getAttribute("data-value");
+    const explicit = item.getAttribute(`data-${this.slotPrefix}-value`);
     if (explicit !== null) return explicit;
     if (!item.querySelector("kbd, ui-kbd-group")) return item.textContent?.trim() ?? "";
     const clone = item.cloneNode(true) as HTMLElement;

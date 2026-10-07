@@ -5,10 +5,9 @@
  * @description The single owner of everything a Zazz page loads before its own
  * content: meta tags, the Geist fonts block, the one `index.css` stylesheet
  * link, the feature polyfill, the third-party **import map**, the `index.js`
- * module tag, and the theme-persistence script. The docs preview iframe, the
- * kit's example pages (via `scripts/generate-heads.mjs`), and the docs page
- * that teaches head structure all render from this module: there is no other
- * copy to drift.
+ * module tag, and the theme-persistence script. The docs preview iframe and the
+ * docs page that teaches head structure both render from this module: there is
+ * no other copy to drift.
  *
  * This is a Node/server-side string builder (used at build/render time), not a
  * browser runtime module; it attaches nothing to `window`.

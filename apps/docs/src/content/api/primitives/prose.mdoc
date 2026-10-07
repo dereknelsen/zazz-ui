@@ -11,6 +11,19 @@ primitive: prose
 
 {% examples primitive="prose" /%}
 
+## Opting out
+
+Prose styles everything inside it. To embed a widget in an article (a form, a menu, a demo) without prose margins and list styles, put `data-ui="not-prose"` on its wrapper; prose picks up again after it.
+
+```html
+<article data-ui="prose">
+  <p>Prose styles this paragraph.</p>
+  <div data-ui="not-prose">
+    <ul><li>But not this list.</li></ul>
+  </div>
+</article>
+```
+
 ## Attributes
 
 {% attributes primitive="prose" /%}

@@ -1,83 +1,114 @@
 ---
-import { acknowledgements, links, nav, site } from "../site.config.ts";
-import GithubIcon from "./GithubIcon.astro";
+import { links, nav, site } from "../site.config.ts";
 import Logo from "./Logo.astro";
 ---
 
-<footer
-  style="
-    --mt: 24;
+<footer style="
     --pt: 11;
     --border-t: 1;
-  "
->
-<ui-layout>
-  <div
-    style="
+  ">
+  <ui-layout>
+    <div
+      style="
       --display: grid;
       --grid-cols: 1;
-      --grid-cols--md: 3;
-      --gap: 11;
+      --template-cols--md: auto 1fr 1fr;
+      --items: start;
+      --gap: 8;
+      --gap--md: 16;
     "
-  >
-  <div style="--display: flex; --items: center; --gap: 4">
-    <Logo size={32} />
-  </div>
-
-
-    <nav aria-label="Footer" style="--display: flex-col; --gap: 2">
-      <h2 id="acknowledgements" data-ui="text-eyebrow" style="--text: var(--color-foreground); --mb: 3">
-        Navigation
-      </h2>
-      {
-        nav.map((item) => (
-          <a href={item.href} data-ui="text-sm"
-            style="--text: var(--color-muted-foreground); --text--hover: var(--color-foreground)">
-            {item.label}
-          </a>
-        ))
-      }
-      <a href={links.github} data-ui="text-sm"
-            style="--text: var(--color-muted-foreground); --text--hover: var(--color-foreground)" rel="noopener">GitHub</a>
-    </nav>
-
-    <section
-      aria-labelledby="acknowledgements"
-      data-ui="text-sm"
-      style="
-        --display: flex-col;
-        --gap: 2;
-        --text: var(--color-muted-foreground);
-      "
     >
-      <h2 id="acknowledgements" data-ui="text-eyebrow" style="--text: var(--color-foreground); --mb: 3">
-        Acknowledgements
-      </h2>
-      <p>Built by {acknowledgements.team.join(", ")}.</p>
-      <p>
-        Thanks to {acknowledgements.contributors.join(" and ")} {acknowledgements.contributorsNote}.
-      </p>
-      {
-        acknowledgements.inspiration.map((item) => (
-          <p>
-            <strong>{item.name}</strong>, {item.note}.
-          </p>
-        ))
-      }
-    </section>
-  </div>
-</ui-layout>
+      <a
+        href="/"
+        aria-label="Zazz home"
+        style="--display: flex; --items: center; --gap: 4"
+      >
+        <Logo size={40} variant="mark" />
+      </a>
 
-<ui-layout>
+      <nav aria-label="Footer" style="--display: flex-col; --gap: 2">
+        <h2
+          id="navigation"
+          data-ui="text-eyebrow"
+          style="--text: var(--color-foreground);"
+        >
+          Navigation
+        </h2>
+        <ul style="--display: flex; --gap: 6; --flex-wrap: wrap">
+          {
+            nav.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  data-ui="text-sm"
+                  style="
+                    --text: var(--color-muted-foreground);
+                    --text--hover: var(--color-foreground);
+                    --text-decoration: underline;
+                    --text-decoration--hover: no-underline;
+                  "
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a
+              href={links.github}
+              data-ui="text-sm"
+              style="
+                --text: var(--color-muted-foreground);
+                --text--hover: var(--color-foreground);
+                --text-decoration: underline;
+                --text-decoration--hover: no-underline;
+              "
+              rel="noopener">GitHub</a
+            >
+          </li>
+        </ul>
+      </nav>
+
+      <section
+        aria-labelledby="acknowledgements"
+        data-ui="text-sm"
+        style="
+          --display: flex-col;
+          --gap: 2;
+        "
+      >
+        <h2 id="acknowledgements" data-ui="text-eyebrow" style="--mb: 1.5">
+          Inspiration
+        </h2>
+        <div
+          style="
+            --font-style: italic;
+            --text-wrap: balance;
+            --text: var(--color-muted-foreground); 
+            --display: flex-col;
+            --gap: 2;
+          "
+        >
+          <p>
+            Zazz is maintained by Derek Nelsen and is heavily inspired by
+            tailwindcss, shadcn/ui, base-ui, and Emil Kowalski. Thank you for
+            your incredible work.
+          </p>
+        </div>
+      </section>
+    </div>
+  </ui-layout>
+
+  <ui-layout>
     <section
-      data-ui="text-sm"
+      data-ui="text-xs"
       style="
+        --band: layout-bleed;
         --display: flex;
         --items: center;
         --justify: center;
         --py: 6;
         --mt: 6;
-        --border-t: 1;
         --gap: 2;
         --text: var(--color-muted-foreground);
       "

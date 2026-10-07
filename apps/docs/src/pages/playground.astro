@@ -10,7 +10,7 @@ import PlaygroundLayout from "../layouts/PlaygroundLayout.astro";
 import { siteHead } from "../lib/head.ts";
 import { readExample } from "../lib/kit.ts";
 
-const BLANK = `<main data-ui="layout" style="--py: 11">
+const BLANK = `<main data-ui="layout" style="--py: 8">
   <section>
     <p data-ui="text-eyebrow">Playground</p>
     <h1 data-ui="text-h4" style="--mt: 1">Hello, Zazz</h1>
@@ -45,7 +45,10 @@ const templates = [
 ];
 
 // `<` is escaped so the head's own <script> tags cannot close this one.
-const data = JSON.stringify({ head: siteHead(), templates }).replace(/</g, "\\u003c");
+const data = JSON.stringify({ head: siteHead(), templates }).replace(
+  /</g,
+  "\\u003c",
+);
 
 // Production isolates user HTML in an opaque origin. Astro's dev server blocks
 // every cross-site subresource request (its Sec-Fetch guard; `Origin: null`
@@ -55,13 +58,16 @@ const sandbox = import.meta.env.DEV
   : "allow-scripts allow-forms allow-modals";
 ---
 
-<PlaygroundLayout title="Playground" description="Write Zazz HTML and watch it render, then share the link.">
+<PlaygroundLayout
+  title="Playground"
+  description="Write Zazz HTML and watch it render, then share the link."
+>
   <main
     id="main"
     data-playground
     style="
       --display: grid;
-      --grid-template-rows: auto minmax(0, 1fr);
+      --template-rows: auto minmax(0, 1fr);
       --min-h: calc(100dvh - 3.5rem);
     "
   >
@@ -86,11 +92,24 @@ const sandbox = import.meta.env.DEV
           <ArrowLeft aria-hidden="true" />
           <span>Home</span>
         </a>
-        <label data-ui="field" data-field-orientation="horizontal" style="--gap: 2; --max-w: 64; --w: 100%">
+        <label
+          data-ui="field"
+          data-field-orientation="horizontal"
+          style="--gap: 2; --max-w: 64; --w: 100%"
+        >
           <span data-ui="sr-only" data-field-slot="label">Template</span>
-          <select data-ui="select" data-playground-template aria-label="Starter template">
+          <select
+            data-ui="select"
+            data-playground-template
+            aria-label="Starter template"
+            name="template"
+          >
             <button>
-              <span aria-hidden="true" style="--text: var(--color-muted-foreground)">Template:</span> <selectedcontent></selectedcontent>
+              <span
+                aria-hidden="true"
+                style="--text: var(--color-muted-foreground)">Template:</span
+              >
+              <selectedcontent style="--font-weight: strong"></selectedcontent>
             </button>
             {templates.map((t) => <option value={t.id}>{t.label}</option>)}
           </select>
@@ -112,14 +131,27 @@ const sandbox = import.meta.env.DEV
               --transition: opacity 0.25s;
             "
           >
-            <span data-spin style="--display: inline-flex"><LoaderCircle aria-hidden="true" /></span>
+            <span data-ui="spin" style="--display: inline-flex"
+              ><LoaderCircle aria-hidden="true" /></span
+            >
             Formatting styles…
           </span>
-          
-          <button type="button" data-ui="button" data-button-variant="outline" data-playground-copy>
-            <Copy aria-hidden="true" /> <span>Copy link</span>
+
+          <button
+            type="button"
+            data-ui="button"
+            data-button-variant="outline"
+            data-playground-copy
+          >
+            <Copy aria-hidden="true" />
+            <span>Copy link</span>
           </button>
-          <button type="button" data-ui="button" data-button-variant="ghost" data-playground-reset>
+          <button
+            type="button"
+            data-ui="button"
+            data-button-variant="ghost"
+            data-playground-reset
+          >
             <RotateCcw aria-hidden="true" /> Reset
           </button>
         </div>
@@ -129,8 +161,8 @@ const sandbox = import.meta.env.DEV
     <div
       style="
         --display: grid;
-        --grid-template-cols: minmax(0, 1fr);
-        --grid-template-cols--lg: minmax(0, 1fr) minmax(0, 1fr);
+        --template-cols: minmax(0, 1fr);
+        --template-cols--lg: minmax(0, 1fr) minmax(0, 1fr);
         --min-h: 0;
       "
       data-ui="divide-x"
@@ -150,7 +182,8 @@ const sandbox = import.meta.env.DEV
             --border: 0;
             --bg: var(--color-background);
             --text: var(--color-foreground);
-          "></textarea>
+          "
+        ></textarea>
       </div>
       <iframe
         data-playground-output
@@ -163,7 +196,8 @@ const sandbox = import.meta.env.DEV
           --min-h: 50dvh;
           --border: 0;
           --bg: var(--color-background);
-        "></iframe>
+        "
+      ></iframe>
     </div>
   </main>
 

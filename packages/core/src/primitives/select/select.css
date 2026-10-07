@@ -196,8 +196,8 @@
     }
   }
 
-  :where([data-ui~="select"]):focus-visible,
-  :where([data-ui~="select"]):open {
+  /* :is() takes a forgiving list: an engine without :open keeps the focus ring */
+  :where([data-ui~="select"]):is(:focus-visible, :open) {
     border-color: var(--_border-color-resolved, var(--ui-field-border-color--focus-within));
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: var(--ring-width);

@@ -3,10 +3,10 @@
  *
  * @layer      variables, components
  * @requires   _layers.css, _variables.css (--gutters), _breakpoints.css (--layout-*),
- *             _properties.css (--_col-resolved)
- * @uses       named grid lines + implicit named areas: `--col: layout-md` on a
+ *             _properties.css (--_band-resolved)
+ * @uses       named grid lines + implicit named areas: `--band: layout-md` on a
  *             child resolves through `layout-md-start / layout-md-end`
- * @uses       grid-template-columns: subgrid — a nested layout keeps the parent's
+ * @uses       grid-template-columns: subgrid — a layout that is a direct child keeps the parent's
  *             line names
  * @tokens     --ui-layout-* (@layer variables); band widths read --layout-* (_breakpoints.css)
  * @uses       container-type: inline-size on each child (not nested layouts, subgrids,
@@ -20,9 +20,9 @@
  * is room and fluidly fills (minus gutters) once there is not. Band widths equal
  * the breakpoint widths; `layout-full` is the layout minus the gutters;
  * `layout-bleed` runs edge to edge. Children are placed by the chain
- * `var(--_col-resolved, var(--ui-layout-band))`: a `--col` utility (or tier) on the
- * child, else the layout's default band. The `--col` no-base rule excludes layout
- * children (utilities.ts), so a tier-only `--col--lg` keeps the band below lg.
+ * `var(--_band-resolved, var(--ui-layout-band))`: a `--band` utility (or tier) on the
+ * child, else the layout's default band. The `--band` no-base rule excludes layout
+ * children (utilities.ts), so a tier-only `--band--lg` keeps the band below lg.
  */
 
 @layer variables {
@@ -101,7 +101,7 @@
   }
 
   :where(ui-layout, [data-ui~="layout"]) > * {
-    grid-column: var(--_col-resolved, var(--ui-layout-band));
+    grid-column: var(--_band-resolved, var(--ui-layout-band));
   }
 
   /* Each child is an inline-size query container, so breakpoint tiers inside
@@ -122,8 +122,10 @@
     container-type: var(--ui-layout-child-container);
   }
 
-  /* A layout inside a band is a subgrid and keeps the parent's line names */
-  :where(ui-layout, [data-ui~="layout"]) :where(ui-layout, [data-ui~="layout"]) {
+  /* A layout placed directly in a band is a subgrid and keeps the parent's line
+     names; one deeper inside (in a card, a section) has no parent grid to share,
+     so it stays its own band grid */
+  :where(ui-layout, [data-ui~="layout"]) > :where(ui-layout, [data-ui~="layout"]) {
     grid-template-columns: subgrid;
   }
 

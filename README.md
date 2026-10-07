@@ -16,7 +16,7 @@ Docs: [zazz.sh](https://zazz.sh). Quick start: [zazz.sh/docs/quick-start](https:
 | `packages/eslint-plugin`   | `@zazz-ui/eslint-plugin` (private): the same audit as html-eslint rules; `vp run lint:html`.                                                                                                    |
 | `packages/vscode`          | `zazz-vscode` (private): the VS Code extension, a client over the server plus grammar, snippets, Emmet, templates. `vp run zazz-vscode#package` builds the `.vsix`.                             |
 | `apps/docs`                | The documentation site (Astro + Markdoc + Pagefind, styled with Zazz). Its API reference is generated from the kit's data at build time.                                                        |
-| `apps/playground`          | A Vite app for authoring UI against the kit's sources with hot reload and `<ui-debug>`.                                                                                                         |
+| `apps/experiments`         | A Vite app for authoring UI against the kit's sources with hot reload and `<ui-debug>`.                                                                                                         |
 
 Vocabulary is in [`CONTEXT.md`](CONTEXT.md), the 0.5 contract in [`SPEC.md`](SPEC.md), decisions in [`docs/adr/`](docs/adr/), and the markup rules in [`packages/core/AUTHORING.md`](packages/core/AUTHORING.md).
 

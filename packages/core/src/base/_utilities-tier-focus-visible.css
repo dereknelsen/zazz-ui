@@ -3,6 +3,9 @@
 /* focus-visible tier setter */
 @layer ui.utilities {
   :where(:focus-visible[style*="--focus-visible:"]) {
+    --_template-cols-focus-visible: var(--template-cols--focus-visible);
+    --_template-rows-focus-visible: var(--template-rows--focus-visible);
+    --_text-decoration-focus-visible: var(--text-decoration--focus-visible);
     --_text-focus-visible: var(--text--focus-visible);
     --_bg-focus-visible: var(--bg--focus-visible);
     --_bg-alpha-focus-visible: var(--bg-alpha--focus-visible);
@@ -28,6 +31,9 @@
     --_transition-focus-visible: var(--transition--focus-visible);
   }
   :where([data-ui~="group"]:focus-visible [style*="--group-"]) {
+    --_template-cols-g-focus-visible: var(--group-template-cols--focus-visible);
+    --_template-rows-g-focus-visible: var(--group-template-rows--focus-visible);
+    --_text-decoration-g-focus-visible: var(--group-text-decoration--focus-visible);
     --_text-g-focus-visible: var(--group-text--focus-visible);
     --_bg-g-focus-visible: var(--group-bg--focus-visible);
     --_bg-alpha-g-focus-visible: var(--group-bg-alpha--focus-visible);

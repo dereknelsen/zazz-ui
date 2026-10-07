@@ -24,8 +24,8 @@ This skill gives the mental model and design guidance; it does not restate those
 full contract is `SPEC.md` at the repo root.
 
 **Single source of truth for anatomy:** each component's markup lives once, in
-`packages/core/src/primitives/{name}/*.html`, surfaced on the docs site at
-`/api/primitives/{name}/` on the docs site (zazz.sh). Never invent or paste a second copy — read the real fragment and
+`packages/core/src/primitives/{name}/*.html`, surfaced at `/api/primitives/{name}/` on the
+docs site (zazz.sh). Never invent or paste a second copy — read the real fragment and
 adapt it. Never invent slot names or presets.
 
 ## How Zazz thinks (mental model)
@@ -39,9 +39,9 @@ Zazz markup has **no classes**. Every styling decision is one of four channels:
   default is the _absence_ of the attribute.
 - **Slot** — a part inside it: `data-<identity>-slot` (`<header data-dialog-slot="header">`).
 - **Utility** — one value, in `style`: `style="--px: 6; --bg: var(--color-muted)"`. Spelling is
-  exact (one space after each colon). Breakpoint tiers (`--grid-cols--md: 3`) on layout
-  families; state tiers (`--bg--hover: …`) on color/effects. A tier needs a base unless the utility
-  is on the tier-only list — see AUTHORING.md "Rules that bite".
+  exact (one space after each colon). Breakpoint tiers (`--grid-cols--md: 3`) on layout, spacing,
+  sizing, typography, and color utilities; state tiers (`--bg--hover: …`) on color/effects. A tier
+  needs a base unless the utility is on the tier-only list — see AUTHORING.md "Rules that bite".
 
 Behind that:
 
@@ -95,9 +95,9 @@ intensity, is the bar.** Zazz supplies the vocabulary; you supply the point of v
   typefaces — never fall back to generic system fonts as a default.
 - **Commit to the palette.** A dominant surface with sharp brand accents reads as _designed_;
   timid, evenly-distributed grays read as slop. Route everything through `--color-*` roles so
-  dark mode comes free, and don't treat the default blue-violet as a neutral.
+  dark mode comes free, and replace the kit's neutral placeholder scales with the brand's.
 - **Compose with tension.** Break the centered stack. The layout band system is built for it:
-  play `--col: layout-bleed`/`layout-full` imagery against capped `lg`/reading-width text, use
+  play `--band: layout-bleed`/`layout-full` imagery against capped `lg`/reading-width text, use
   the left-label layout, overlap layers with `data-ui="pile"`, and let big section padding (`--py: 24`) open
   real negative space. Asymmetry and whitespace are choices, not accidents.
 - **Build atmosphere, not flat fills.** Layer depth from tokens — gradient washes across a brand
@@ -116,7 +116,8 @@ violet-gradient-on-white centered hero, predictable layouts, cookie-cutter cards
 Pick the narrowest scope that works. **Do not edit `packages/core/src/`** unless asked.
 
 1. **Global** — redefine a token on `:root` (`--radius-md: 0` squares every medium radius; the
-   theme inputs `--primary`, `--background`, … are set here and read through `--color-*`).
+   theme roles `--color-primary`, `--color-background`, … are set here too; there are no bare
+   `--primary`-style inputs).
 2. **Subtree** — set a hook on a region: `<nav style="--ui-button-px: 2">` or in a stylesheet
    (`.sidebar { --ui-button-rounded: var(--radius-full) }`). The shared `--ui-field-*` family is
    the widest lever: inputs/selects/textareas read it directly and button, toggle, tabs,
@@ -129,7 +130,7 @@ Pick the narrowest scope that works. **Do not edit `packages/core/src/`** unless
 2. Read the real fragment `packages/core/src/primitives/{name}/*.html`. Adapt it; don't reinvent.
 3. Apply presets; set spacing, color, and type with utilities over tokens.
 4. Compose pages from `data-ui="layout"` bands (`data-layout-size` sets the default band;
-   `--col: layout-md` places one child) plus flex/grid utilities. See `PATTERNS.md` and the
+   `--band: layout-md` places one child) plus flex/grid utilities. See `PATTERNS.md` and the
    layout fragment `packages/core/src/primitives/layout/layout.html`.
 
 Forms share `--ui-field-*` hooks and validate via `:user-invalid` (after blur/submit, never while

@@ -57,14 +57,8 @@ class UiMultiselect extends ZazzElement {
     if (!(select instanceof HTMLSelectElement)) return;
     this.#select = select;
 
-    const placeholder =
-      this.getAttribute("data-multiselect-placeholder") ??
-      this.getAttribute("data-placeholder") ??
-      "Select…";
-    const moreTemplate =
-      this.getAttribute("data-multiselect-label-more") ??
-      this.getAttribute("data-label-more") ??
-      "(+{n} more)";
+    const placeholder = this.getAttribute("data-multiselect-placeholder") ?? "Select…";
+    const moreTemplate = this.getAttribute("data-multiselect-label-more") ?? "(+{n} more)";
 
     const { trigger, label, panel, checkboxes } = this.#stamp(select);
     select.setAttribute("data-multiselect-state", "enhanced");
@@ -159,8 +153,8 @@ class UiMultiselect extends ZazzElement {
     panel.id = panelId;
     panel.setAttribute("data-multiselect-slot", "panel");
     panel.setAttribute("popover", "auto");
-    const side = this.getAttribute("data-multiselect-side") ?? this.getAttribute("data-side");
-    const align = this.getAttribute("data-multiselect-align") ?? this.getAttribute("data-align");
+    const side = this.getAttribute("data-multiselect-side");
+    const align = this.getAttribute("data-multiselect-align");
     if (side) panel.setAttribute("data-popover-side", side);
     if (align) panel.setAttribute("data-popover-align", align);
 

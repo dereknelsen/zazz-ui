@@ -9,13 +9,21 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vite-plus/test";
 
 type Handler = () => Promise<void>;
-type FakeNavigate = Event & { intercept: ReturnType<typeof vi.fn>; handler?: Handler };
+type FakeNavigate = Event & {
+  intercept: ReturnType<typeof vi.fn>;
+  scroll: ReturnType<typeof vi.fn>;
+  handler?: Handler;
+  abort: () => void;
+};
 
 function navigate(
   navigationType: "push" | "replace" | "reload" | "traverse",
   url = new URL("/next", location.href).href,
 ): FakeNavigate {
+  const controller = new AbortController();
   const event = Object.assign(new Event("navigate"), {
+    signal: controller.signal,
+    abort: () => controller.abort(),
     navigationType,
     canIntercept: true,
     hashChange: false,
@@ -40,6 +48,11 @@ function serve(html: string): void {
   );
 }
 
+/** Waits `n` animation frames. */
+async function frames(n: number): Promise<void> {
+  for (let i = 0; i < n; i++) await new Promise(requestAnimationFrame);
+}
+
 const page = (body: string, { swap = true, title = "Next" } = {}) =>
   `<!doctype html><html${swap ? ' data-ui-navigation="swap"' : ""}><head><title>${title}</title></head><body>${body}</body></html>`;
 
@@ -60,7 +73,8 @@ describe("navigation", () => {
     document.body.innerHTML = `<header>old header</header><main><h1>old</h1></main>`;
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    await frames(2); // let a swap's instant-scroll release run
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
     document.documentElement.removeAttribute("data-ui-navigation");
@@ -89,6 +103,46 @@ describe("navigation", () => {
     expect(document.querySelector("h1")!.textContent).toBe("new");
     expect(document.title).toBe("Next");
     expect(document.activeElement).toBe(document.querySelector("h1"));
+  });
+
+  it("scrolls the window instantly, even under scroll-behavior: smooth, then restores it", async () => {
+    document.documentElement.style.scrollBehavior = "smooth";
+    serve(page(`<main><h1>new</h1></main>`));
+    const event = navigate("push");
+    let during = "";
+    event.scroll.mockImplementation(() => {
+      during = document.documentElement.style.scrollBehavior;
+    });
+    navigation.dispatchEvent(event);
+    await event.handler!();
+    expect(event.scroll).toHaveBeenCalledOnce();
+    expect(during).toBe("auto");
+    await frames(2);
+    expect(document.documentElement.style.scrollBehavior).toBe("smooth");
+    document.documentElement.style.removeProperty("scroll-behavior");
+  });
+
+  it("restores scroll-behavior once when navigations overlap", async () => {
+    document.documentElement.style.scrollBehavior = "smooth";
+    serve(page(`<main><h1>new</h1></main>`));
+    const first = navigate("push");
+    const second = navigate("push");
+    navigation.dispatchEvent(first);
+    navigation.dispatchEvent(second);
+    await Promise.all([first.handler!(), second.handler!()]);
+    await frames(4);
+    expect(document.documentElement.style.scrollBehavior).toBe("smooth");
+    document.documentElement.style.removeProperty("scroll-behavior");
+  });
+
+  it("drops a navigation aborted while its page loads, without a full load", async () => {
+    serve(page(`<header>late</header><main><h1>late</h1></main>`));
+    const event = navigate("push");
+    navigation.dispatchEvent(event);
+    event.abort();
+    await event.handler!().catch(() => {});
+    expect(document.querySelector("header")!.textContent).toBe("old header");
+    expect(assign).not.toHaveBeenCalled();
   });
 
   it("keeps a persisted element's live node where the new page places it", async () => {

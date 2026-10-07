@@ -53,9 +53,28 @@ describe("<ui-multiselect> enhancement", () => {
     document.body.replaceChildren();
   });
 
-  it("still reads the unprefixed placeholder for unmigrated markup", () => {
-    const host = mount('data-placeholder="Legacy"', '<option value="a">Apple</option>');
-    expect(host.querySelector('[data-multiselect-slot~="label"]')?.textContent).toBe("Legacy");
+  it("ignores the unprefixed placeholder and overflow label", () => {
+    const host = mount(
+      'data-placeholder="Legacy" data-label-more="and {n}"',
+      '<option value="a">Apple</option>',
+    );
+    expect(host.querySelector('[data-multiselect-slot~="label"]')?.textContent).toBe("Select…");
+    document.body.replaceChildren();
+  });
+
+  it("places the panel from the scoped side and align only", () => {
+    const scoped = mount(
+      'data-multiselect-side="top" data-multiselect-align="end"',
+      '<option value="a">Apple</option>',
+    ).querySelector('[data-multiselect-slot~="panel"]')!;
+    expect(scoped.getAttribute("data-popover-side")).toBe("top");
+    expect(scoped.getAttribute("data-popover-align")).toBe("end");
+    const bare = mount(
+      'data-side="top" data-align="end"',
+      '<option value="a">Apple</option>',
+    ).querySelector('[data-multiselect-slot~="panel"]')!;
+    expect(bare.hasAttribute("data-popover-side")).toBe(false);
+    expect(bare.hasAttribute("data-popover-align")).toBe(false);
     document.body.replaceChildren();
   });
 });

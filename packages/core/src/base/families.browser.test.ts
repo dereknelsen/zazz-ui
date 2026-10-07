@@ -7,6 +7,7 @@
 
 import { describe, expect, it } from "vite-plus/test";
 import { at, atWidth, below, mount, scale, style, useKit } from "../../test/browser.ts";
+import { UTILITIES, tiersOf } from "./utilities.ts";
 
 const px = (value: string) => Number.parseFloat(value);
 const tracks = (el: Element) => style(el, "grid-template-columns").trim().split(/\s+/).length;
@@ -70,7 +71,7 @@ describe("families", () => {
     expect(px(style(down, "inline-size"))).toBeCloseTo(800, 0);
   });
 
-  it("--grid-cols takes subgrid besides a count; none is --grid-template-cols: none", async () => {
+  it("--grid-cols takes subgrid besides a count; none is --template-cols: none", async () => {
     await atWidth(at("md"));
     const parent = mount(
       `<div style="inline-size: 600px; --display: grid; --grid-cols: 3"><div style="--col-span: 3; --display: grid; --grid-cols: subgrid"><i></i><i></i><i></i></div></div>`,
@@ -78,8 +79,45 @@ describe("families", () => {
     const child = parent.firstElementChild!;
     expect(style(child, "grid-template-columns")).toMatch(/^subgrid/);
     expect(px(style(child.firstElementChild!, "inline-size"))).toBeCloseTo(200, 0);
-    const none = mount(`<div style="--display: grid; --grid-template-cols: none"></div>`);
+    const none = mount(`<div style="--display: grid; --template-cols: none"></div>`);
     expect(style(none, "grid-template-columns")).toBe("none");
+  });
+
+  it("--template-cols / --template-rows take breakpoints without a base (no-base allowlist)", async () => {
+    const root = mount(
+      `<div style="inline-size: 600px; --display: grid; --template-cols--md: 2fr 1fr"><i></i><i></i></div>`,
+    );
+    await atWidth(below("md"));
+    expect(tracks(root)).toBe(1);
+    await atWidth(at("md"));
+    expect(style(root, "grid-template-columns")).toBe("400px 200px");
+  });
+
+  it("--template-rows takes states and the group form: the 0fr → 1fr expand", () => {
+    const root = mount(`<div>
+      <div data-closed style="block-size: 100px; --display: grid; --template-rows: 0fr; --template-rows--open: 1fr"></div>
+      <div data-open aria-expanded="true" style="block-size: 100px; --display: grid; --template-rows: 0fr; --template-rows--open: 1fr"></div>
+      <div data-ui="group" aria-expanded="true">
+        <div data-group style="block-size: 100px; --display: grid; --template-rows: 0fr; --group-template-rows--open: 1fr"></div>
+      </div>
+    </div>`);
+    expect(style(root.querySelector("[data-closed]")!, "grid-template-rows")).toBe("0px");
+    expect(style(root.querySelector("[data-open]")!, "grid-template-rows")).toBe("100px");
+    expect(style(root.querySelector("[data-group]")!, "grid-template-rows")).toBe("100px");
+  });
+
+  it("--text-decoration takes states and the group form, without a base", () => {
+    const root = mount(`<div>
+      <a data-closed href="#" style="--text-decoration--open: underline">a</a>
+      <a data-open href="#" aria-expanded="true" style="--text-decoration--open: underline">b</a>
+      <div data-ui="group" aria-expanded="true"><span data-group style="--group-text-decoration--open: line-through">c</span></div>
+    </div>`);
+    expect(style(root.querySelector("[data-closed]")!, "text-decoration-line")).toBe("none");
+    expect(style(root.querySelector("[data-open]")!, "text-decoration-line")).toBe("underline");
+    expect(style(root.querySelector("[data-group]")!, "text-decoration-line")).toBe("line-through");
+    expect(tiersOf(UTILITIES.find((u) => u.name === "text-decoration")!)).toEqual(
+      expect.arrayContaining(["hover", "md"]),
+    );
   });
 
   it("--col-span spans, and --col-start / --col-end place lines like Tailwind", async () => {

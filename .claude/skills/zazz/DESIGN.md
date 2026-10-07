@@ -7,7 +7,7 @@ colorMode: light dark
 colors:
   # No defaults ship — author every value from the brand (see Brand Customization below).
   # Values are OKLCH — the authoritative token format (HEX is imprecise for our scales).
-  # Theme inputs: set on :root as --<name>; markup reads them as var(--color-<name>).
+  # Each name is a theme role: set it on :root as --color-<name>; markup reads var(--color-<name>).
   # Theme (author light-mode values; dark mode swaps automatically)
   background:
   foreground:
@@ -106,7 +106,7 @@ typography:
     fontSize: 0.58rem
     fontWeight: 600
     lineHeight: 1.2
-    letterSpacing: 0.1em
+    letterSpacing: 0.05em
   mono:
     fontSize: 1rem
     fontWeight: 400
@@ -134,10 +134,11 @@ rounded:
   full: 9999px
 
 components:
-  # Variants below match the shipped presets: data-button-variant / data-badge-variant
-  # (no attribute = default).
+  # Variants below are shipped presets: data-button-variant / data-badge-variant / data-card-variant
+  # (no attribute = default). The secondary, tertiary, info, success, warning, and destructive
+  # button and badge presets follow the primary pattern with their own role and -foreground.
   button-default:
-    backgroundColor: "{colors.card}"
+    backgroundColor: "{colors.background}"
     textColor: "{colors.foreground}"
     rounded: "{rounded.md}"
     padding: 10px
@@ -174,21 +175,28 @@ components:
   card:
     backgroundColor: "{colors.card}"
     textColor: "{colors.card-foreground}"
-    rounded: "{rounded.lg}"
+    rounded: "{rounded.md}"
+    padding: 0px
+  card-outline: # plus a 1px {colors.border} border
+    backgroundColor: "{colors.card}"
+    textColor: "{colors.card-foreground}"
+    rounded: "{rounded.md}"
     padding: 24px
-  card-inverted:
-    backgroundColor: "{colors.foreground}"
-    textColor: "{colors.faded-foreground}"
-    rounded: "{rounded.lg}"
+  card-muted:
+    backgroundColor: "{colors.muted}"
+    textColor: "{colors.foreground}"
+    rounded: "{rounded.md}"
+    padding: 24px
+  card-floating: # plus {shadow.sm}
+    backgroundColor: "{colors.card}"
+    textColor: "{colors.card-foreground}"
+    rounded: "{rounded.md}"
     padding: 24px
   input:
     backgroundColor: "{colors.input}"
     textColor: "{colors.input-foreground}"
     rounded: "{rounded.md}"
     padding: 10px
-  # Badge ships primary/muted/ghost/link only — no destructive or status variants.
-  # Status badges (info/success/warning/destructive) are an instance hook override, e.g.
-  # style="--ui-badge-bg: var(--color-success); --ui-badge-text: var(--color-success-foreground)".
   badge:
     backgroundColor: "{colors.background}"
     textColor: "{colors.foreground}"
@@ -236,7 +244,7 @@ roundness:
 > 3. **Include the logo** in the header and footer of generated designs
 > 4. **Adapt the archetype** — choose the site archetype (below) that best fits the brand's market position
 >
-> Generate OKLCH color scales using [Tints.dev](https://www.tints.dev) from extracted brand hex values. Default theme bindings: primary/secondary use step 600 (light) / 500 (dark); tertiary uses 500 / 400.
+> Generate OKLCH color scales using [Tints.dev](https://www.tints.dev) from extracted brand hex values. The kit's placeholder scales are neutral and bind the brand roles at 950 (light) / 50 (dark); for a real brand, rebind on `:root` (`--color-primary: light-dark(var(--color-primary-600), var(--color-primary-500))`): primary/secondary at step 600 (light) / 500 (dark), tertiary at 500 / 400.
 
 # Design System: Zazz Design System
 
@@ -286,24 +294,24 @@ The token contract in the frontmatter is what lets you be bold without the resul
 
 ### Theme (Mode-Aware Role Tokens)
 
-Markup reads `--color-<role>`; the theme input on `:root` is the bare `--<role>`.
+Markup reads `--color-<role>`, and a theme sets the same `--color-<role>` on `:root` (there are no bare `--<role>` inputs).
 
-| Token                        | Role                                          | Light Character              | Dark Character              |
-| ---------------------------- | --------------------------------------------- | ---------------------------- | --------------------------- |
-| `--color-background`         | Page surface                                  | White / warm off-white       | Near-black (brand-cast)     |
-| `--color-foreground`         | Default text                                  | Rich charcoal (neutral-900)  | Pure white                  |
-| `--color-border`             | 1px lines and dividers                        | Soft cool gray (neutral-100) | Deep gray                   |
-| `--color-border-foreground`  | Text on outlined/bordered elements            | Near-opaque white (tint-950) | Subtle white (tint-100)     |
-| `--color-card`               | Card surface, elevated from background        | Pure white                   | Dark charcoal               |
-| `--color-card-foreground`    | Text on cards                                 | Rich charcoal                | Pure white                  |
-| `--color-popover`            | Popover / menu surface                        | Pure white                   | Near-black (shade-950)      |
-| `--color-popover-foreground` | Text on popovers and menus                    | Rich charcoal                | Pure white                  |
-| `--color-input`              | Input field background                        | Near-white (neutral-50)      | Barely-there tint (tint-50) |
-| `--color-input-foreground`   | Input text                                    | Rich charcoal                | Pure white                  |
-| `--color-muted`              | Subtle dim — always darker than its surface   | shade-50                     | tint-50                     |
-| `--color-muted-foreground`   | De-emphasized text, helper copy               | shade-600                    | tint-600                    |
-| `--color-faded`              | Subtle fade — always lighter than its surface | tint-100                     | shade-100                   |
-| `--color-faded-foreground`   | Text on faded surfaces                        | tint-600                     | shade-600                   |
+| Token                        | Role                                          | Light Character              | Dark Character           |
+| ---------------------------- | --------------------------------------------- | ---------------------------- | ------------------------ |
+| `--color-background`         | Page surface                                  | White / warm off-white       | Near-black (brand-cast)  |
+| `--color-foreground`         | Default text                                  | Rich charcoal (neutral-900)  | Pure white               |
+| `--color-border`             | 1px lines and dividers                        | Soft cool gray (neutral-100) | Deep gray                |
+| `--color-border-foreground`  | Text on outlined/bordered elements            | Near-opaque white (tint-950) | Half black (shade-500)   |
+| `--color-card`               | Card surface, elevated from background        | Pure white                   | Dark charcoal            |
+| `--color-card-foreground`    | Text on cards                                 | Rich charcoal                | Pure white               |
+| `--color-popover`            | Popover / menu surface                        | Pure white                   | Near-black (neutral-950) |
+| `--color-popover-foreground` | Text on popovers and menus                    | Rich charcoal                | Pure white               |
+| `--color-input`              | Input field background                        | Near-white (neutral-50)      | Faint tint (tint-100)    |
+| `--color-input-foreground`   | Input text                                    | Rich charcoal                | Pure white               |
+| `--color-muted`              | Subtle dim — always darker than its surface   | shade-100                    | tint-100                 |
+| `--color-muted-foreground`   | De-emphasized text, helper copy               | shade-600                    | tint-600                 |
+| `--color-faded`              | Subtle fade — always lighter than its surface | tint-400                     | shade-100                |
+| `--color-faded-foreground`   | Text on faded surfaces                        | tint-600                     | shade-600                |
 
 ### Brand Colors
 
@@ -314,15 +322,15 @@ Markup reads `--color-<role>`; the theme input on `:root` is the bare `--<role>`
 | `--color-tertiary`  | Third accent          | Author from a third brand color (or derive) |
 
 No brand colors ship by default — author all three from the brand (see the Brand Customization
-callout). Brand foregrounds are typically white. Bind step **600** (light) / **500** (dark), brand
-steps **lighter** in dark mode, and generate a full 50–950 OKLCH scale per color via
+callout). Brand foregrounds are typically white. Bind step **600** (light) / **500** (dark) for a brand
+(the kit's neutral placeholders bind 950 / 50), brand steps **lighter** in dark mode, and generate a full 50–950 OKLCH scale per color via
 [Tints.dev](https://www.tints.dev).
 
 Key scale steps for context:
 
 - **-100**: Subtle background tint for sections
-- **-500**: Vivid mid-tone (dark mode default)
-- **-600**: Deep saturated (light mode default)
+- **-500**: Vivid mid-tone (typical dark-mode binding)
+- **-600**: Deep saturated (typical light-mode binding)
 - **-900**: Near-black for deep accent panels
 
 ### Grayscale (Neutrals)
@@ -388,7 +396,7 @@ All sizes are fluid via `clamp()`, scaling between mobile and desktop viewports.
 | `text-md`        | 1rem           | 1.6     | 0        | Default body text             |
 | `text-sm`        | 0.8rem         | 1.5     | 0        | Small UI labels               |
 | `text-xs`        | 0.64rem        | 1.5     | 0        | Captions, fine print          |
-| `text-eyebrow`   | 0.58rem        | 1.2     | 0.1em    | Uppercase label, wide-tracked |
+| `text-eyebrow`   | 0.58rem        | 1.2     | 0.05em   | Uppercase label, wide-tracked |
 
 Headings use `text-wrap: balance`. Body uses `text-wrap: pretty`. Tight-leading on large text, generous-leading on body.
 
@@ -396,7 +404,9 @@ Native `h1`–`h6` carry their heading role without a token.
 
 ### Text Link
 
-`data-ui="text-link"` — `--color-primary`, 1px underline, offset lifts on hover.
+A link inside a paragraph (`<p>…<a href>`) is styled for you: color from `--ui-prose-link-text`
+(inherits by default), a 1px `--decoration-*` underline whose offset lifts on hover. A standalone
+link is `data-ui="button" data-button-variant="link"`.
 
 ---
 
@@ -409,11 +419,11 @@ Native `h1`–`h6` carry their heading role without a token.
 
 ### Buttons
 
-Subtly rounded (`--radius-md`, ~10px). Height from `--ui-button-min-h` (= `--ui-field-h`). Variants (`data-button-variant`): **default** (no attribute — bordered, `--color-card`), **primary** (solid `--color-primary`), **muted** (`--color-muted` fill), **ghost** (transparent, hover reveals `--color-muted`), **outline** (transparent, bordered), **destructive** (solid `--color-destructive`), **link** (inline, underlined). Sizes (`data-button-size`): `sm`, `icon`, `icon-sm`.
+Subtly rounded (`--radius-md`, ~10px). Height from `--ui-button-min-h` (= `--ui-field-h`). Variants (`data-button-variant`): **default** (no attribute — bordered, `--color-background`), **primary** (solid `--color-primary`), **secondary** / **tertiary** (solid brand roles), **muted** (`--color-muted` fill), **ghost** (transparent, hover reveals `--color-muted`), **outline** (transparent, bordered), **link** (inline, underlined), and the status fills **info**, **success**, **warning**, **destructive**. Sizes (`data-button-size`): `sm`, `icon`, `icon-sm`.
 
 ### Badges
 
-Gently rounded chips (`--radius-sm`, ~6px). Height `--ui-badge-h`. Variants (`data-badge-variant`): default, `primary`, `muted`, `ghost`, `link` — note badge has **no** `destructive` variant. Size (`data-badge-size`): `icon`. `--font-size-xs`, `--font-weight-strong`.
+Gently rounded chips (`--radius-sm`, ~6px). Height `--ui-badge-h`. Variants (`data-badge-variant`): default, `primary`, `secondary`, `tertiary`, `muted`, `ghost`, `link`, and the status fills `info`, `success`, `warning`, `destructive`. Size (`data-badge-size`): `icon`. `--font-size-xs`, `--font-weight-strong`.
 
 ### Dialog
 
@@ -421,7 +431,7 @@ Native `<dialog data-ui="dialog">` via Invoker Commands API. `--color-card` surf
 
 ### Menu & Navigation Menu
 
-Popover API + CSS anchor positioning. Native light-dismiss. Menu items are `data-ui="button" data-button-variant="ghost"`. Navigation menu supports mega-panels with a `data-navigation-menu-slot="viewport"` grid and rich `data-navigation-menu-slot="link"` rows (title + description); callouts are built from utilities (`--bg: var(--color-muted); --rounded: var(--radius-sm); --p: 4`) plus a `text-eyebrow`.
+Popover API + CSS anchor positioning. Native light-dismiss. Menu items are `data-ui="button" data-button-variant="ghost"`. Navigation menu supports mega-panels with a `data-navigation-menu-slot="viewport"` grid and rich `data-navigation-menu-slot="link"` rows (title + description); featured panels are built from utilities (`--bg: var(--color-muted); --rounded: var(--radius-sm); --p: 4`) plus a `text-eyebrow`.
 
 ### Tabs
 
@@ -429,7 +439,7 @@ CSS-first grouped radio inputs wrapped in `<ui-tabs>`. Segmented control with sl
 
 ### Cards
 
-`data-ui="card"` (`data-card-variant="muted"`): `--color-card` / `--color-card-foreground`, `--radius-lg`, hooks `--ui-card-*`. Inner padding `--space-sm`–`--space-md`; figure `--aspect: 3 / 2`. Copy `primitives/card/card.html`.
+`data-ui="card"`: `--color-card` / `--color-card-foreground`, `--radius-md`, hooks `--ui-card-*`. The default card is bare (no padding, border, or shadow) for edge-to-edge media; pad its parts with utilities. `data-card-variant` adds `--space-md` padding plus one treatment: `outline` (a `--color-border` border), `muted` (`--color-muted` background), or `floating` (`--shadow-sm`). Card figures take `--aspect: 3 / 2`. Copy `primitives/card/card.html`.
 
 ### Forms
 
@@ -443,12 +453,12 @@ Shared `--ui-field-*` hooks unify `input`, `textarea`, `select`, `input-group`, 
 
 | Markup                                                       | Result                                               | Purpose                    |
 | ------------------------------------------------------------ | ---------------------------------------------------- | -------------------------- |
-| `data-ui="layout"` / `<ui-layout>`                           | Band grid; children land in the `lg` band by default | Full-width content wrapper |
+| `data-ui="layout"` / `<ui-layout>`                           | Band grid; children land in the `xl` band by default | Full-width content wrapper |
 | `data-ui="prose"` + `--max-w: var(--article-lg); --mx: auto` | Centered reading width (70ch)                        | Reading-width content      |
 
-Bands `2xs … 2xl` cap and center at that breakpoint width, `full` = minus `--gutters`, `bleed` =
+Bands `sm … 2xl` cap and center at that `--layout-*` width, `full` = minus `--gutters`, `bleed` =
 edge to edge. Change the default with `data-layout-size`; place one child with
-`--col: layout-<band>` (responsive: `--col--md: layout-sm`). See `references/tokens.md` §7.
+`--band: layout-<band>` (responsive: `--band--md: layout-sm`). See `references/tokens.md` §7.
 
 ### Spacing
 
@@ -466,21 +476,23 @@ _Values shown throughout (spacing, radius, type sizes) are **desktop maximums**.
 
 ### Radius
 
-| Token           | Computed    | Use For            |
-| --------------- | ----------- | ------------------ |
-| `--radius-none` | 0           | Sharp edges        |
-| `--radius-xs`   | ~4px        | Subtle softening   |
-| `--radius-sm`   | ~6px        | Badges             |
-| `--radius-md`   | ~10px       | Buttons, inputs    |
-| `--radius-lg`   | ~20px       | Cards, dialogs     |
-| `--radius-xl`   | ~28px       | Statement surfaces |
-| `--radius-full` | Pill-shaped | Circular/capsular  |
+| Token           | Computed    | Use For                |
+| --------------- | ----------- | ---------------------- |
+| `--radius-none` | 0           | Sharp edges            |
+| `--radius-2xs`  | ~2px        | Hairline softening     |
+| `--radius-xs`   | ~4px        | Subtle softening       |
+| `--radius-sm`   | ~6px        | Badges                 |
+| `--radius-md`   | ~10px       | Buttons, inputs, cards |
+| `--radius-lg`   | ~18px       | Dialogs                |
+| `--radius-xl`   | ~28px       | Statement surfaces     |
+| `--radius-2xl`  | ~40px       | Oversized surfaces     |
+| `--radius-full` | Pill-shaped | Circular/capsular      |
 
 Utility: `--rounded: var(--radius-lg)`.
 
 ### Shadows & Elevation
 
-Whisper-soft, multi-layered diffused shadows. Surfaces are flat by default — shadow is applied intentionally.
+Whisper-soft, multi-layered diffused shadows. Surfaces are flat by default, and shadow is applied on purpose: a `floating` card takes a resting `--shadow-sm`.
 
 | Token         | Character                          |
 | ------------- | ---------------------------------- |
@@ -493,7 +505,7 @@ Whisper-soft, multi-layered diffused shadows. Surfaces are flat by default — s
 
 ### Focus Ring
 
-Box-shadow-based, Tailwind/shadcn-compatible: set `--ring` on `:root` (base color, read as `--color-ring` and mixed at `--ring-opacity` into `--ring-shadow-color`), `--ring-width` (2px), `--ring-offset-width` (1px), offset color `--ring-offset-shadow-color`, composed via `--ring-offset-shadow` + `--ring-shadow` (`--shadow-ring`). Components keep a same-geometry transparent outline (`--outline-*`) so forced-colors/high-contrast modes still show focus.
+Box-shadow-based, Tailwind/shadcn-compatible: set `--color-ring` on `:root` (base color, defaults to `--color-primary`, mixed at `--ring-opacity` into `--ring-shadow-color`), `--ring-width` (2px), `--ring-offset-width` (1px), offset color `--ring-offset-shadow-color`, composed via `--ring-offset-shadow` + `--ring-shadow` (`--shadow-ring`). Components keep a same-geometry transparent outline (`--outline-*`) so forced-colors/high-contrast modes still show focus.
 
 ### Animation
 
@@ -502,7 +514,7 @@ Spring easing (`--spring-easing`) with 0.333s duration. Fallback: `cubic-bezier(
 ### Section Layout Patterns
 
 - **Left-Label Layout**: Thin left column (eyebrow label, `--color-muted-foreground`) + right content column, separated by `--color-border`. Collapses to stacked on mobile.
-- **Horizontal Rule Dividers**: `<hr data-ui="separator">` or `--border-b-width: 1px; --border-b-color: var(--color-border)` as lightweight section separators.
+- **Horizontal Rule Dividers**: `<hr data-ui="separator">` or `--border-b: 1` (1px in `--color-border`) as lightweight section separators.
 - **Tabbed Content Areas**: Tab bar revealing different content panes. Good for 3-7 product families.
 
 ### Breakpoints
@@ -520,6 +532,6 @@ See [`PATTERNS.md`](PATTERNS.md) for page-level structure and house style. It cu
 - **Heading group with CTAs** — eyebrow + heading + subheading + action buttons
 
 Most other patterns fall out of the primitives and components directly (browse them at
-`/docs/components`). A broader section library (hero variants, product grids, trust signals)
+`/api/primitives/`). A broader section library (hero variants, product grids, trust signals)
 and whole **page-type outlines** (eCommerce landing, PLP, PDP, cart, checkout, account, B2B
 quote) keyed to the archetypes are a planned future addition.

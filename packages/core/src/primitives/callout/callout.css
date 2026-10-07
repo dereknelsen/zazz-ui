@@ -1,0 +1,114 @@
+/**
+ * callout.css — Callout ([data-ui~="callout"])
+ *
+ * @layer      variables, components
+ * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved)
+ * @uses       oklch(from …): status tints
+ * @tokens     --ui-callout-* (@layer variables; named after the utilities they back)
+ * @see        badge.css (status tint and border formulas; the test keeps them in sync)
+ * @presets    data-callout-variant="muted" | "info" | "success" | "warning" | "destructive"
+ *
+ * A callout is an aside or alert: a padded grid with a gap, a border, and a
+ * radius. The default matches an outline card and muted a muted card. Info,
+ * success, and warning take the matching badge's tint and border, with the
+ * role mixed toward --color-foreground for text; destructive is the badge's
+ * solid fill.
+ * Every variant keeps the 1px border (muted makes it transparent), so every
+ * variant is the same size.
+ * Its parts are plain elements laid out with utilities. Use <aside> for a
+ * side note, or a <div> with role="status" or role="alert" for a message
+ * that follows something the user did.
+ * Every utility-backed declaration reads one chain, highest first:
+ *   var(--_<utility>-resolved, var(--_callout-<utility>, var(--ui-callout-<utility>)))
+ */
+
+@layer variables {
+  :root {
+    --ui-callout-bg: var(--color-card);
+    --ui-callout-text: var(--color-card-foreground);
+    --ui-callout-rounded: var(--radius-md);
+    --ui-callout-shadow: none;
+
+    --ui-callout-border-width: 1px;
+    --ui-callout-border-style: solid;
+    --ui-callout-border-color: var(--color-border);
+
+    /* dual-mode: a scale number or a length */
+    --ui-callout-gap: var(--space-xs);
+    --ui-callout-p: var(--space-sm);
+  }
+}
+
+/* Variant privates: non-inheriting so a variant never cascades into a nested callout. */
+@property --_callout-bg {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_callout-text {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_callout-border-color {
+  syntax: "*";
+  inherits: false;
+}
+
+@layer ui.components {
+  :where([data-ui~="callout"]) {
+    display: grid;
+    --_gap-len: var(--_gap-resolved, var(--ui-callout-gap));
+    --_gap-num: var(--_gap-resolved, var(--ui-callout-gap));
+    gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));
+    --_p-len: var(--_p-resolved, var(--ui-callout-p));
+    --_p-num: var(--_p-resolved, var(--ui-callout-p));
+    padding: calc(var(--_p-len) + var(--_p-num) * var(--spacing));
+    color: var(--_text-resolved, var(--_callout-text, var(--ui-callout-text)));
+    background-color: var(--_bg-resolved, var(--_callout-bg, var(--ui-callout-bg)));
+    border-width: var(--_border-width-resolved, var(--ui-callout-border-width));
+    border-style: var(--_border-style-resolved, var(--ui-callout-border-style));
+    border-color: var(
+      --_border-color-resolved,
+      var(--_callout-border-color, var(--ui-callout-border-color))
+    );
+    border-radius: var(--_rounded-resolved, var(--ui-callout-rounded));
+    box-shadow: var(--_shadow-resolved, var(--ui-callout-shadow));
+  }
+
+  /* ===========================================================================
+  CALLOUT VARIANTS — data-callout-variant writes the privates
+  =========================================================================== */
+
+  :where([data-ui~="callout"][data-callout-variant="muted"]) {
+    --_callout-bg: var(--color-muted);
+    --_callout-text: var(--color-foreground);
+    --_callout-border-color: transparent;
+  }
+
+  /* status variants: the badge's tint and border for the same role */
+
+  :where([data-ui~="callout"][data-callout-variant="info"]) {
+    --_callout-bg: oklch(from var(--color-info) l c h / 0.15);
+    --_callout-text: color-mix(in xyz, var(--color-info), var(--color-foreground));
+    --_callout-border-color: oklch(from var(--color-info) l c h / 0.2);
+  }
+
+  :where([data-ui~="callout"][data-callout-variant="success"]) {
+    --_callout-bg: oklch(from var(--color-success) l c h / 0.15);
+    --_callout-text: color-mix(in xyz, var(--color-success), var(--color-foreground));
+    --_callout-border-color: oklch(from var(--color-success) l c h / 0.2);
+  }
+
+  :where([data-ui~="callout"][data-callout-variant="warning"]) {
+    --_callout-bg: oklch(from var(--color-warning) l c h / 0.15);
+    --_callout-text: color-mix(in xyz, var(--color-warning), var(--color-foreground));
+    --_callout-border-color: oklch(from var(--color-warning) l c h / 0.2);
+  }
+
+  :where([data-ui~="callout"][data-callout-variant="destructive"]) {
+    --_callout-bg: var(--color-destructive);
+    --_callout-text: var(--color-destructive-foreground);
+    --_callout-border-color: var(--_callout-bg);
+  }
+}

@@ -1,13 +1,16 @@
 "use strict";
 
 /**
- * @fileoverview A hand-authored two-version fixture kit for the update/diff
- * e2e. Unlike the packed real kit (global-setup), these two tarballs give the
+ * @fileoverview A hand-authored three-version fixture kit for the update/diff
+ * e2e. Unlike the packed real kit (global-setup), these tarballs give the
  * tests control over every upstream event: a changed base file (merge and
  * conflict target), a changed primitive file, an added file, a removed file,
  * a new primitive that joins a dependency closure, and a changelog with a
- * breaking entry. Consumed via `ZAZZ_UI_KIT=file:…/kit-{version}.tgz` — the
- * `{version}` placeholder routes each resolution to the right tarball.
+ * breaking entry. V1 → V2 is a manifest-v1 update (0.4-shaped: the class
+ * layer `_utilities.css` / `_layout.css`); V3 is manifest v2 (0.5-shaped: the
+ * generated utilities layer, exported base inventory, runtime, and polyfills).
+ * Consumed via `ZAZZ_UI_KIT=file:…/kit-{version}.tgz` — the `{version}`
+ * placeholder routes each resolution to the right tarball.
  */
 
 import { mkdir, writeFile } from "node:fs/promises";
@@ -16,6 +19,23 @@ import * as tar from "tar";
 
 export const V1 = "0.9.0";
 export const V2 = "0.9.1";
+/** Manifest v2: the 0.4 → 0.5 shape change. */
+export const V3 = "0.10.0";
+
+/** The v2 base inventory V3 exports (the CLI's v1 fallback no longer applies). */
+export const V3_BASE_CSS_PRE = [
+  "base/_layers.css",
+  "base/_variables.css",
+  "base/_breakpoints.css",
+  "base/_reset.css",
+  "base/_typography.css",
+  "base/_view-transitions.css",
+];
+export const V3_BASE_CSS_POST = [
+  "base/_properties.css",
+  "base/_utilities-tier-stuck.css",
+  "base/_utilities-flow.css",
+];
 
 /** v1 of the conflict/merge target. */
 export const V1_VARIABLES = `:root {
@@ -70,9 +90,31 @@ const CHANGELOG_V2 = `# Changelog
 - Fixture first release.
 `;
 
+const CHANGELOG_V3 = CHANGELOG_V2.replace(
+  "# Changelog\n",
+  `# Changelog
+
+## ${V3} (2026-10-01)
+
+### base
+
+- **BREAKING** The class layer (\`_utilities.css\`, \`_layout.css\`) is replaced by the generated utilities layer.
+`,
+);
+
 function manifestJs(version: string): string {
-  const v2 = version === V2;
-  return `export const MANIFEST_VERSION = 1;
+  // V3 keeps V2's primitives; only the manifest shape and base inventory change.
+  const v2 = version !== V1;
+  const v3 = version === V3;
+  const v3Exports = v3
+    ? `export const BASE_CSS_PRE = ${JSON.stringify(V3_BASE_CSS_PRE)};
+export const BASE_CSS_POST = ${JSON.stringify(V3_BASE_CSS_POST)};
+export const CORE_RUNTIME = ["base/utils.js", "base/signals.js", "base/zazz-element.js", "base/dialog-lifecycle.js", "base/navigation.js"];
+export const CORE_POLYFILLS = [{ file: "base/scroll-state.js", supports: ["container-type", "scroll-state"] }];
+`
+    : "";
+  return `export const MANIFEST_VERSION = ${v3 ? 2 : 1};
+${v3Exports}
 export const PRIMITIVES = {
   alpha: {
     css: ["primitives/alpha/alpha.css"${v2 ? ', "primitives/alpha/alpha-extra.css"' : ""}],
@@ -124,17 +166,27 @@ function headJs(version: string): string {
 `;
 }
 
+/** The real kit's layer order (`packages/core/src/base/_layers.css`), comment-free. */
+const LAYERS_CSS = `@layer variables, reset, vendors, legacy, ui, overrides;
+
+@layer legacy {
+  @layer imports, components, utilities, migrations;
+}
+
+@layer ui {
+  @layer components, plugins, utilities;
+}
+`;
+
 /** Files every version ships (the CLI's v1 fallback inventory needs them). */
 function commonFiles(version: string): Record<string, string> {
   const stubScript = (name: string) => `export const ${name} = "${version}";\n`;
   const stubTypes = (name: string) => `export declare const ${name}: string;\n`;
   return {
-    "src/base/_layers.css": "@layer variables, reset, legacy, ui, migrations;\n",
+    "src/base/_layers.css": LAYERS_CSS,
     "src/base/_reset.css": "* {\n  box-sizing: border-box;\n}\n",
     "src/base/_typography.css": "body {\n  font-family: fixture;\n}\n",
     "src/base/_view-transitions.css": "/* fixture view transitions */\n",
-    "src/base/_utilities.css": "/* fixture utilities */\n",
-    "src/base/_layout.css": "/* fixture layout */\n",
     "src/base/utils.js": stubScript("utils"),
     "src/base/utils.d.ts": stubTypes("utils"),
     "src/base/utils.ts": stubScript("utils"),
@@ -168,6 +220,26 @@ function versionFiles(version: string): Record<string, string> {
     null,
     2,
   )}\n`;
+  if (version === V3) {
+    const stubScript = (name: string) => `export const ${name} = "${version}";\n`;
+    const stubTypes = (name: string) => `export declare const ${name}: string;\n`;
+    files["src/base/_breakpoints.css"] = "/* fixture breakpoints */\n";
+    files["src/base/_properties.css"] = "/* fixture properties */\n";
+    files["src/base/_utilities-tier-stuck.css"] = "/* fixture stuck tier */\n";
+    files["src/base/_utilities-flow.css"] = "/* fixture flow utilities */\n";
+    for (const [file, name] of [
+      ["navigation", "navigation"],
+      ["scroll-state", "scrollState"],
+    ] as const) {
+      files[`src/base/${file}.js`] = stubScript(name);
+      files[`src/base/${file}.d.ts`] = stubTypes(name);
+      files[`src/base/${file}.ts`] = stubScript(name);
+    }
+  } else {
+    // The 0.4 class layer: the CLI's manifest-v1 fallback inventory.
+    files["src/base/_utilities.css"] = "/* fixture utilities */\n";
+    files["src/base/_layout.css"] = "/* fixture layout */\n";
+  }
   if (version === V1) {
     files["src/base/_variables.css"] = V1_VARIABLES;
     files["src/primitives/alpha/alpha.css"] = V1_ALPHA_CSS;
@@ -179,17 +251,17 @@ function versionFiles(version: string): Record<string, string> {
     files["src/primitives/alpha/alpha.css"] = V2_ALPHA_CSS;
     files["src/primitives/alpha/alpha-extra.css"] = ".ui-alpha-extra {\n  color: teal;\n}\n";
     files["src/primitives/gamma/gamma.css"] = ".ui-gamma {\n  display: flex;\n}\n";
-    files["CHANGELOG.md"] = CHANGELOG_V2;
+    files["CHANGELOG.md"] = version === V3 ? CHANGELOG_V3 : CHANGELOG_V2;
   }
   return files;
 }
 
 /**
- * @description Writes both fixture tarballs under `dir` and returns the
+ * @description Writes every fixture tarball under `dir` and returns the
  * `ZAZZ_UI_KIT` value (a `file:` spec with the `{version}` placeholder).
  */
 export async function buildFixtureKits(dir: string): Promise<string> {
-  for (const version of [V1, V2]) {
+  for (const version of [V1, V2, V3]) {
     const tree = path.join(dir, `tree-${version}`);
     const files = versionFiles(version);
     for (const [file, content] of Object.entries(files)) {

@@ -38,9 +38,8 @@ export interface PrimitiveEntry {
   js: string[];
   /**
    * Non-core `base/` scripts its behavior needs, in load order. The core
-   * runtime (`utils`, `signals`, `zazz-element`, `dialog-lifecycle`) is
-   * assumed present (vendored by `init`, bundled in `dist/zazz.js`) and is
-   * never listed here.
+   * runtime (`CORE_RUNTIME`) is assumed present (vendored by `init`, bundled
+   * in `dist/zazz.js`) and is never listed here.
    */
   base: string[];
   /** Other primitives whose css/markup contract this primitive requires. */
@@ -156,6 +155,14 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/button-group/button-group-vertical.html",
     ],
   },
+  callout: {
+    css: ["primitives/callout/callout.css"],
+    js: [],
+    base: [],
+    primitives: [],
+    bare: [],
+    examples: ["primitives/callout/callout.html"],
+  },
   card: {
     css: ["primitives/card/card.css"],
     js: [],
@@ -228,7 +235,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     base: [],
     primitives: [],
     bare: [],
-    examples: [],
+    examples: ["primitives/fields/fields.html"],
   },
   input: {
     css: ["primitives/input/input.css"],
@@ -352,7 +359,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     base: [],
     primitives: [],
     bare: [],
-    examples: [],
+    examples: ["primitives/popover/popover.html"],
   },
   progress: {
     css: ["primitives/progress/progress.css"],
@@ -387,7 +394,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     base: ["base/reveal.js"],
     primitives: [],
     bare: [],
-    examples: [],
+    examples: ["primitives/reveal/reveal.html"],
   },
   "style-guard": {
     css: [],
@@ -602,6 +609,7 @@ export const BASE_CSS_POST: string[] = [
   "base/_properties-focus-within.css",
   "base/_properties-hover.css",
   "base/_properties-checked.css",
+  "base/_properties-current.css",
   "base/_properties-open.css",
   "base/_properties-stuck.css",
   "base/_properties-starting.css",
@@ -616,6 +624,7 @@ export const BASE_CSS_POST: string[] = [
   "base/_utilities-tier-focus-within.css",
   "base/_utilities-tier-hover.css",
   "base/_utilities-tier-checked.css",
+  "base/_utilities-tier-current.css",
   "base/_utilities-tier-open.css",
   "base/_utilities-tier-stuck.css",
   "base/_utilities-tier-starting.css",
@@ -632,6 +641,38 @@ export const BASE_CSS_POST: string[] = [
   "base/_switches.css",
 ];
 
+/**
+ * Core runtime scripts, in load order: always present (the CLI's `init`
+ * vendors and imports them, `dist/zazz.js` bundles them), so no primitive
+ * lists them in `base`. `navigation` is inert until a page opts in with
+ * `<html data-ui-navigation="swap">` (ADR-0014), so it loads everywhere, as
+ * in `index.ts`.
+ */
+export const CORE_RUNTIME: string[] = [
+  "base/utils.js",
+  "base/signals.js",
+  "base/zazz-element.js",
+  "base/dialog-lifecycle.js",
+  "base/navigation.js",
+];
+
+/** A runtime polyfill, loaded only where a CSS feature is unsupported. */
+export interface RuntimePolyfill {
+  /** The script, `src/`-relative. */
+  file: string;
+  /** The `CSS.supports(property, value)` test; the file loads when it is false. */
+  supports: [property: string, value: string];
+}
+
+/**
+ * Polyfills `index.ts` imports dynamically behind a `CSS.supports` test, so a
+ * browser with the feature never fetches them. Vendored with the core runtime;
+ * an entry script loads each one the way `index.ts` does.
+ */
+export const CORE_POLYFILLS: RuntimePolyfill[] = [
+  { file: "base/scroll-state.js", supports: ["container-type", "scroll-state"] },
+];
+
 /** Every tag form in the kit; the generator excludes them from no-base emissions. */
 export const TAG_FORMS: string[] = Object.values(PRIMITIVES)
   .flatMap((entry) => entry.tags ?? [])
@@ -644,6 +685,7 @@ export const CSS_CASCADE_ORDER: string[] = [
   "fields",
   "badge",
   "card",
+  "callout",
   "kbd",
   "button",
   "button-group",

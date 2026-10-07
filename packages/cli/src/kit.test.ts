@@ -94,8 +94,39 @@ describe("loadKitFromDir", () => {
       manifestJs: VALID_MANIFEST_JS.replace("MANIFEST_VERSION = 1", "MANIFEST_VERSION = 3"),
     });
     await expect(loadKitFromDir(dir, { version: "9.9.9", integrity: "" })).rejects.toThrow(
-      /newer than this CLI/,
+      /newer than this CLI understands \(manifest v3 > supported v2\)/,
     );
+  });
+
+  it("rejects a manifest version older than the CLI supports, saying so", async () => {
+    const dir = await fixtureKitDir({
+      manifestJs: VALID_MANIFEST_JS.replace("MANIFEST_VERSION = 1", "MANIFEST_VERSION = 0"),
+    });
+    const failure = await loadKitFromDir(dir, { version: "9.9.9", integrity: "" }).catch(
+      (error: unknown) => error,
+    );
+    expect(failure).toBeInstanceOf(ZazzError);
+    expect((failure as ZazzError).message).toMatch(/older than this CLI supports/);
+    expect((failure as ZazzError).message).toContain("manifest v0 < supported v1");
+    expect((failure as ZazzError).message).not.toMatch(/newer/);
+  });
+
+  it("reads the base inventory, runtime, and polyfills a v2 kit exports", async () => {
+    const dir = await fixtureKitDir({
+      manifestJs: `${VALID_MANIFEST_JS.replace("MANIFEST_VERSION = 1", "MANIFEST_VERSION = 2")}
+export const BASE_CSS_PRE = ["base/_layers.css"];
+export const BASE_CSS_POST = ["base/_properties.css"];
+export const CORE_RUNTIME = ["base/utils.js", "base/navigation.js"];
+export const CORE_POLYFILLS = [{ file: "base/scroll-state.js", supports: ["container-type", "scroll-state"] }];
+`,
+    });
+    const kit = await loadKitFromDir(dir, { version: "9.9.9", integrity: "" });
+    expect(kit.manifest.manifestVersion).toBe(2);
+    expect(kit.manifest.baseCssPost).toEqual(["base/_properties.css"]);
+    expect(kit.manifest.coreRuntime).toEqual(["base/utils.js", "base/navigation.js"]);
+    expect(kit.manifest.corePolyfills).toEqual([
+      { file: "base/scroll-state.js", supports: ["container-type", "scroll-state"] },
+    ]);
   });
 
   it("rejects a kit whose modules fail to load, with the upgrade hint", async () => {

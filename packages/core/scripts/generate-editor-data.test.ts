@@ -38,6 +38,9 @@ describe("editor custom data", () => {
       "text-h2",
       "sr-only",
       "pile",
+      "truncate",
+      "not-prose",
+      "spin",
       "scroll-fade",
       "card",
     ]) {
@@ -53,6 +56,16 @@ describe("editor custom data", () => {
     expect(attribute("data-ui-theme")?.values.map((v) => v.name)).toEqual(["dark", "light"]);
     expect(attribute("data-ui-guard")?.values.map((v) => v.name)).toEqual(["off"]);
     expect(html.tags.map((tag) => tag.name)).toContain("ui-carousel");
+  });
+
+  it("harvests dataset reads written as destructuring", () => {
+    expect(attribute("data-toaster-duration")).toBeDefined();
+    expect(attribute("data-toaster-close-button")).toBeDefined();
+  });
+
+  it("lists slots that only a script looks up", () => {
+    const slots = attribute("data-carousel-slot")?.values.map((v) => v.name);
+    expect(slots).toEqual(expect.arrayContaining(["dots", "dot"]));
   });
 
   it("offers values after the colon: design tokens for token utilities, keywords for keyword utilities", () => {
@@ -73,7 +86,43 @@ describe("editor custom data", () => {
     expect(values("--border-b")).toEqual(expect.arrayContaining(["var(--color-primary)"]));
     expect(values("--display")).toEqual(expect.arrayContaining(["grid", "flex", "none"]));
     expect(values("--items")).toEqual(expect.arrayContaining(["center", "start"]));
-    expect(values("--col")).toEqual(expect.arrayContaining(["layout-lg", "layout-bleed"]));
+    expect(values("--band")).toEqual(expect.arrayContaining(["layout-lg", "layout-bleed"]));
+  });
+
+  it("harvests config the scripts read through the typeahead engine and dataset", () => {
+    const names = html.globalAttributes.map((a) => a.name);
+    for (const name of [
+      // typeahead engine keys, crossed with each subclass's slot prefix
+      "data-command-filter",
+      "data-command-sort",
+      "data-command-min-length",
+      "data-command-value",
+      "data-combobox-sort",
+      "data-combobox-filter",
+      "data-combobox-min-length",
+      "data-combobox-keywords",
+      "data-autocomplete-filter",
+      "data-autocomplete-min-length",
+      // reveal's camelCase dataset reads
+      "data-reveal-step",
+      "data-reveal-duration",
+      "data-reveal-ease",
+      "data-reveal-wait",
+      "data-reveal-distance",
+      "data-reveal-scale",
+      "data-reveal-margin",
+      "data-reveal-threshold",
+    ]) {
+      expect(names, name).toContain(name);
+    }
+    // a subclass's own config key stays with that subclass
+    expect(names).toContain("data-combobox-variant");
+    expect(names).not.toContain("data-command-variant");
+  });
+
+  it("lists the pseudo-only utilities on both sides", () => {
+    expect(cssNames).toContain("--before-content");
+    expect(cssNames).toContain("--after-content");
   });
 
   it("harvests no free-text values and no 0.4 names from prose", () => {

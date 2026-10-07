@@ -31,3 +31,16 @@ Status: accepted (2026-10-01). Amends the navigation behavior of `base/navigatio
 - Breaking: pages that relied on the implicit swap get full loads until they add `data-ui-navigation="swap"`, and the toaster (or anything else meant to survive) needs `data-ui-persist`.
 - Stale chrome is impossible by default; persistence is visible in markup and in the debug console.
 - The examples drop `data-layout="main"`.
+
+## Amendment (2026-10-07): scroll and current-page state
+
+Persisting a sidebar to keep its scroll position left its links stale, and the docs header (persisted because its search and theme scripts bind once) never marked the new page. Both are forms of one problem: chrome that must survive a swap but shows the current URL.
+
+- **A persisted element keeps its scroll offsets in every engine.** `swapBody` records them before the move and restores them after; a plain move (no `moveBefore()`, as in WebKit) used to reset them.
+- **A persisted element's links take `aria-current` from the destination's copy**, paired by `href` in document order. The server's markup stays the source of truth: it decides which link is current, whether by exact or prefix match.
+- **A `current` state tier** (`[aria-current]:not([aria-current="false"])`) lets styling follow `aria-current`, so no variant attribute needs updating.
+- **`data-ui-persist-scroll="<id>"`** renders an element from the destination and carries only its scroll offset, for regions whose content depends on the page. Persistence updates nothing in a kept element but `aria-current`.
+- **Window scrolls are instant**: `scroll-behavior` on `<html>` is `auto` until the view transition finishes (overlapping navigations share one override), so the reset's `smooth` never animates the jump in view of the new snapshot.
+- **A navigation aborted by a newer one never swaps in**: the fetch takes the event's `signal`, and an aborted navigation neither swaps nor falls back to a full load.
+
+Considered: morphing persisted elements into the destination's markup (keeps scroll and state, updates content). It is a DOM diff with its own edge cases (listeners on replaced nodes, custom-element state, form values), and the two narrow mechanisms cover the cases seen so far.

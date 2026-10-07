@@ -17,7 +17,7 @@ import { mkdir, mkdtemp, readFile, rename, rm } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import pacote from "pacote";
-import { ZazzError, kitTooNew, offlineMiss } from "./errors.ts";
+import { ZazzError, kitTooNew, kitTooOld, offlineMiss } from "./errors.ts";
 import type { FetchOptions } from "./npmrc.ts";
 
 /** The one package the CLI vendors from. */
@@ -38,6 +38,12 @@ export interface PrimitiveEntry {
   examples: string[];
 }
 
+/** A runtime polyfill the entry loads only where `CSS.supports(property, value)` is false. */
+export interface RuntimePolyfill {
+  file: string;
+  supports: [property: string, value: string];
+}
+
 /** The validated slice of the kit's manifest module the CLI consumes. */
 export interface KitManifest {
   manifestVersion: number;
@@ -51,6 +57,8 @@ export interface KitManifest {
   baseCssPost?: string[];
   /** Core runtime scripts, when the kit exports them. */
   coreRuntime?: string[];
+  /** CSS-gated runtime polyfills, when the kit exports them. */
+  corePolyfills?: RuntimePolyfill[];
 }
 
 /** A resolved, extracted, validated kit at one exact version. */
@@ -181,10 +189,16 @@ export async function loadKitFromDir(
   if (typeof manifestVersion !== "number" || !Number.isInteger(manifestVersion)) {
     throw kitTooNew(meta.version, "it declares no manifest version");
   }
-  if (manifestVersion < SUPPORTED_MANIFEST.min || manifestVersion > SUPPORTED_MANIFEST.max) {
+  if (manifestVersion > SUPPORTED_MANIFEST.max) {
     throw kitTooNew(
       meta.version,
       `manifest v${manifestVersion} > supported v${SUPPORTED_MANIFEST.max}`,
+    );
+  }
+  if (manifestVersion < SUPPORTED_MANIFEST.min) {
+    throw kitTooOld(
+      meta.version,
+      `manifest v${manifestVersion} < supported v${SUPPORTED_MANIFEST.min}`,
     );
   }
 
@@ -204,9 +218,12 @@ export async function loadKitFromDir(
 
   // Kits newer than manifest v1 may export their base inventory; v1 kits
   // don't, and plan.ts falls back to the v1 list pinned to that version.
+  // These exports are additive within a manifest version: absent means the
+  // fallback (or, for polyfills, none).
   const baseCssPre = manifestModule.BASE_CSS_PRE;
   const baseCssPost = manifestModule.BASE_CSS_POST;
   const coreRuntime = manifestModule.CORE_RUNTIME;
+  const corePolyfills = manifestModule.CORE_POLYFILLS;
 
   return {
     version: meta.version,
@@ -220,11 +237,25 @@ export async function loadKitFromDir(
       ...(Array.isArray(baseCssPre) ? { baseCssPre: baseCssPre as string[] } : {}),
       ...(Array.isArray(baseCssPost) ? { baseCssPost: baseCssPost as string[] } : {}),
       ...(Array.isArray(coreRuntime) ? { coreRuntime: coreRuntime as string[] } : {}),
+      ...(Array.isArray(corePolyfills) && corePolyfills.every(isRuntimePolyfill)
+        ? { corePolyfills }
+        : {}),
     },
     buildHead: buildHead as (options: Record<string, unknown>) => string,
     readFile: async (srcRelPath) => readFile(resolveWithin(srcDir, srcRelPath)),
     has: (srcRelPath) => existsSync(resolveWithin(srcDir, srcRelPath)),
   };
+}
+
+function isRuntimePolyfill(value: unknown): value is RuntimePolyfill {
+  if (typeof value !== "object" || value === null) return false;
+  const { file, supports } = value as Record<string, unknown>;
+  return (
+    typeof file === "string" &&
+    Array.isArray(supports) &&
+    supports.length === 2 &&
+    supports.every((part) => typeof part === "string")
+  );
 }
 
 /** Path-traversal guard for manifest-supplied paths. */

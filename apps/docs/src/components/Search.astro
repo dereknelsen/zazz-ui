@@ -8,27 +8,51 @@
 import { Search as SearchIcon } from "@lucide/astro";
 ---
 
-<ui-command data-command-hotkey="mod+k" data-command-filter="none" data-command-sort="document" data-site-search>
+<ui-command
+  data-command-hotkey="mod+k"
+  data-command-filter="none"
+  data-command-sort="document"
+  data-site-search
+  style="--w: 100%; --justify: end;"
+>
   <button
-    data-ui="button"
+    data-ui="input"
     type="button"
-    data-button-variant="outline"
-    popovertarget="command-example-1"
     data-command-slot="open"
+    command="show-modal"
+    commandfor="site-search"
     style="
+      --display: inline-flex;
+      --items: center;
+      --gap: 2;
       --justify: space-between;
+      --pr: 1.5;
       --w: 100%;
-      --min-w: 0;
-      --min-w--md: 64;
+      --w--md: 64;
     "
   >
-    <span style="--display: none; --display--md: inline-flex; --items: center; --gap: 2">
+    <span
+      style="--display: inline-flex; --items: center; --gap: 2; --text: var(--color-muted-foreground)"
+    >
       <SearchIcon size={16} aria-hidden="true" />
       Search…
     </span>
-    <ui-kbd-group style="--display: none; --display--md: inline-flex"><kbd>⌘</kbd><kbd>K</kbd></ui-kbd-group>
+    <ui-kbd-group
+      style="
+        --display: none;
+        --display--md: inline-flex;
+        --text: var(--color-muted-foreground);
+      "
+    >
+      <kbd>⌘</kbd><kbd>K</kbd>
+    </ui-kbd-group>
   </button>
-  <dialog id="site-search" data-ui="dialog" data-command-slot="panel" closedby="any">
+  <dialog
+    id="site-search"
+    data-ui="dialog"
+    data-command-slot="panel"
+    closedby="any"
+  >
     <header data-command-slot="header">
       <input
         data-command-slot="input"
@@ -41,12 +65,34 @@ import { Search as SearchIcon } from "@lucide/astro";
         aria-label="Search the docs"
       />
     </header>
-    <div role="listbox" data-command-slot="list" aria-label="Results" data-search-results></div>
-    <p data-command-slot="empty" style="--text: var(--color-muted-foreground)" data-search-empty>
-      Type to search the docs, API, and blog.
-    </p>
+
+    <div
+      role="listbox"
+      data-command-slot="list"
+      aria-label="Results"
+      data-search-results
+      style="--min-h: 60; --position: relative;"
+    >
+      <p
+        data-command-slot="empty"
+        data-ui="text-sm"
+        style="
+          --py: 4;
+          --text: var(--color-muted-foreground); 
+          --font-style: italic; 
+          --text-align: center; 
+          --position: absolute;
+          --inset: 0;
+          --pointer-events: none;
+      "
+        data-search-empty
+      >
+        Type to search the docs, API, and blog.
+      </p>
+    </div>
     <footer data-command-slot="footer">
-      <span><ui-kbd-group><kbd>↑</kbd><kbd>↓</kbd></ui-kbd-group> navigate</span>
+      <span><ui-kbd-group><kbd>↑</kbd><kbd>↓</kbd></ui-kbd-group> navigate</span
+      >
       <span><kbd>↵</kbd> open</span>
       <span><kbd>esc</kbd> close</span>
     </footer>
@@ -60,7 +106,12 @@ import { Search as SearchIcon } from "@lucide/astro";
    * build once before expecting search to work locally.
    */
   interface PagefindResult {
-    data(): Promise<{ url: string; meta: { title?: string }; excerpt: string; filters?: Record<string, string[]> }>;
+    data(): Promise<{
+      url: string;
+      meta: { title?: string };
+      excerpt: string;
+      filters?: Record<string, string[]>;
+    }>;
   }
   interface Pagefind {
     init(): Promise<void>;
@@ -68,7 +119,9 @@ import { Search as SearchIcon } from "@lucide/astro";
   }
 
   const root = document.querySelector<HTMLElement>("[data-site-search]");
-  const input = root?.querySelector<HTMLInputElement>("[data-command-slot='input']");
+  const input = root?.querySelector<HTMLInputElement>(
+    "[data-command-slot='input']",
+  );
   const list = root?.querySelector<HTMLElement>("[data-search-results]");
   const empty = root?.querySelector<HTMLElement>("[data-search-empty]");
 
@@ -95,9 +148,12 @@ import { Search as SearchIcon } from "@lucide/astro";
       return loading;
     };
 
-    const section = (filters?: Record<string, string[]>): string => filters?.section?.[0] ?? "";
+    const section = (filters?: Record<string, string[]>): string =>
+      filters?.section?.[0] ?? "";
 
-    const render = (groups: Map<string, { url: string; title: string; excerpt: string }[]>): void => {
+    const render = (
+      groups: Map<string, { url: string; title: string; excerpt: string }[]>,
+    ): void => {
       list.replaceChildren();
       let n = 0;
       for (const [name, items] of groups) {
@@ -122,12 +178,18 @@ import { Search as SearchIcon } from "@lucide/astro";
           a.setAttribute("data-button-variant", "ghost");
           a.setAttribute("data-command-value", item.title);
           a.tabIndex = -1;
-          a.setAttribute("style", "--justify: start; --display: flex-col; --items: start; --gap: 0.5; --h: auto; --py: 2");
+          a.setAttribute(
+            "style",
+            "--justify: start; --display: flex-col; --items: start; --gap: 0.5; --h: auto; --py: 2; --w: 100%; --min-w: 0;",
+          );
           const title = document.createElement("span");
           title.textContent = item.title;
           const excerpt = document.createElement("span");
-          excerpt.setAttribute("data-ui", "text-xs");
-          excerpt.setAttribute("style", "--text: var(--color-muted-foreground); --font-weight: body; --text-align: start");
+          excerpt.setAttribute("data-ui", "text-xs truncate");
+          excerpt.setAttribute(
+            "style",
+            "--text: var(--color-muted-foreground); --font-weight: body; --text-align: start; --min-w: 0; --w: 100%;",
+          );
           excerpt.innerHTML = item.excerpt; // Pagefind marks matches with <mark>; the rest is escaped text
           a.append(title, excerpt);
           group.append(a);
@@ -146,18 +208,26 @@ import { Search as SearchIcon } from "@lucide/astro";
       }
       const engine = await load();
       if (!engine) {
-        empty.textContent = "Search index not available. Build the site to create it.";
+        empty.textContent =
+          "Search index not available. Build the site to create it.";
         return;
       }
       const { results } = await engine.search(trimmed);
       if (id !== latest) return;
       const data = await Promise.all(results.slice(0, 12).map((r) => r.data()));
       if (id !== latest) return;
-      const groups = new Map<string, { url: string; title: string; excerpt: string }[]>();
+      const groups = new Map<
+        string,
+        { url: string; title: string; excerpt: string }[]
+      >();
       for (const d of data) {
         const key = section(d.filters);
         const items = groups.get(key) ?? [];
-        items.push({ url: d.url, title: d.meta.title ?? d.url, excerpt: d.excerpt });
+        items.push({
+          url: d.url,
+          title: d.meta.title ?? d.url,
+          excerpt: d.excerpt,
+        });
         groups.set(key, items);
       }
       render(groups);
@@ -169,7 +239,9 @@ import { Search as SearchIcon } from "@lucide/astro";
       timer = setTimeout(() => void run(input.value), 120);
     });
     // Warm the index the first time the palette opens.
-    root.addEventListener("zazz:dialog-open", () => void load(), { once: true });
+    root.addEventListener("zazz:dialog-open", () => void load(), {
+      once: true,
+    });
     // The palette resets its input on close; drop the results with it, so a
     // reopen never shows the last query's list under an empty field.
     root.addEventListener("zazz:dialog-close", () => {

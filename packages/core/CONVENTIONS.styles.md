@@ -220,7 +220,7 @@ They group related hooks; they do **not** document individual tokens (the names 
   --ui-button-bg: var(--color-card);
   --ui-button-bg--hover: var(--color-muted);
   /* metrics */
-  --ui-button-block-size: calc(var(--spacing) * 8);
+  --ui-button-min-h: 8;
 }
 ```
 
@@ -245,12 +245,12 @@ without editing a single rule.
 Global tokens live in [`_variables.css`](./src/base/_variables.css) under `@layer variables`,
 organized in tiers (literal scales → semantic roles → component primitives):
 
-| Tier                 | Example                                                                                                  | Where               |
-| -------------------- | -------------------------------------------------------------------------------------------------------- | ------------------- |
-| Brand/literal scales | `--color-primary-600`, `--color-neutral-100`, `--color-shade-50`                                         | `_variables.css`    |
-| Semantic roles       | `--color-background`, `--color-foreground`, `--color-primary`, `--color-border`                          | `_variables.css`    |
-| Metrics & systems    | `--step-*`, `--radius-*`, `--gap-*`, `--font-family-*`, `--font-size-*`, `--font-weight-*`, `--shadow-*` | `_variables.css`    |
-| **Component tokens** | `--ui-button-bg`, `--ui-field-border-color`, `--ui-dialog-rounded`                                       | each component file |
+| Tier                 | Example                                                                                                     | Where               |
+| -------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------- |
+| Brand/literal scales | `--color-primary-600`, `--color-neutral-100`, `--color-shade-50`                                            | `_variables.css`    |
+| Semantic roles       | `--color-background`, `--color-foreground`, `--color-primary`, `--color-border`                             | `_variables.css`    |
+| Metrics & systems    | `--spacing`, `--space-*`, `--radius-*`, `--font-family-*`, `--font-size-*`, `--font-weight-*`, `--shadow-*` | `_variables.css`    |
+| **Component tokens** | `--ui-button-bg`, `--ui-field-border-color`, `--ui-dialog-rounded`                                          | each component file |
 
 Selected tokens are also **registered as typed `@property`**, inline in
 [`_variables.css`](./src/base/_variables.css), so they can be read by container `style()`
@@ -585,7 +585,7 @@ These deviate from the canonical shape on purpose: document the reason in-file:
   component. Keep the in-file comment explaining the two `--_` kinds.
 - **Legacy isolation during migration**: bring an existing codebase along by importing its
   stylesheet into the `legacy.imports` sublayer (`@import "./your-legacy.css" layer(legacy.imports)`
-  at the commented slot in [`index.css`](./src/index.css)); because `legacy` sits below `zazz`, the
+  at the commented slot in [`index.css`](./src/index.css)); because `legacy` sits below `ui`, the
   framework wins where the two overlap. For class-translation shims while you rewrite markup, add a
   `migrations.css` in `layer(legacy.migrations)` — it beats all other legacy CSS; anything that must
   beat Zazz itself goes in `@layer overrides`. For surgical per-region isolation, reach for `@scope`

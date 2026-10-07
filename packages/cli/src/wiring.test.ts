@@ -16,7 +16,7 @@ import {
 
 const CASCADE = ["kbd", "button", "popover", "fields", "input", "select", "combobox"];
 
-function fakeKit(): ResolvedKit {
+function fakeKit(manifest: Partial<ResolvedKit["manifest"]> = {}): ResolvedKit {
   return {
     version: "0.1.0",
     integrity: "",
@@ -26,6 +26,7 @@ function fakeKit(): ResolvedKit {
       primitives: {},
       cssCascadeOrder: CASCADE,
       resolveClosure: (names) => names,
+      ...manifest,
     },
     buildHead: (options) =>
       `<meta charset="utf-8"><!-- base=${String(options.base)} fonts=${String(
@@ -142,6 +143,13 @@ describe("appendJsImports", () => {
     expect(appendJsImports(once, ["primitives/combobox/combobox.js"], "js")).toBe(once);
   });
 
+  it("inserts after a user's multi-line import, not inside it", () => {
+    const entry = `import "./base/utils.js";\nimport {\n  setup,\n} from "./app.js";\nsetup();\n`;
+    expect(appendJsImports(entry, ["primitives/tabs/tabs.js"], "js")).toBe(
+      `import "./base/utils.js";\nimport {\n  setup,\n} from "./app.js";\nimport "./primitives/tabs/tabs.js";\nsetup();\n`,
+    );
+  });
+
   it("uses .ts specifiers for ts projects", () => {
     const entry = renderIndexJs({ kit: fakeKit(), language: "ts" });
     expect(entry).toContain(`import "./base/utils.ts";`);
@@ -150,10 +158,45 @@ describe("appendJsImports", () => {
   });
 });
 
+describe("renderIndexJs", () => {
+  const v2 = fakeKit({
+    manifestVersion: 2,
+    coreRuntime: ["base/utils.js", "base/navigation.js"],
+    corePolyfills: [{ file: "base/scroll-state.js", supports: ["container-type", "scroll-state"] }],
+  });
+
+  it("imports the runtime and gates each polyfill on CSS.supports, as the kit's index.ts does", () => {
+    const js = renderIndexJs({ kit: v2, language: "js" });
+    expect(js).toContain(`import "./base/navigation.js";`);
+    expect(js).toContain(
+      `if (typeof CSS !== "undefined" && !CSS.supports("container-type", "scroll-state")) {\n  void import("./base/scroll-state.js");\n}`,
+    );
+    expect(js).not.toContain(`import "./base/scroll-state.js";`);
+    expect(renderIndexJs({ kit: v2, language: "ts" })).toContain(
+      `void import("./base/scroll-state.ts");`,
+    );
+  });
+
+  it("keeps appended imports with the other imports, above the polyfill gates", () => {
+    const js = appendJsImports(
+      renderIndexJs({ kit: v2, language: "js" }),
+      ["primitives/tabs/tabs.js"],
+      "js",
+    );
+    expect(js.indexOf(`import "./primitives/tabs/tabs.js";`)).toBeGreaterThan(
+      js.indexOf(`import "./base/navigation.js";`),
+    );
+    expect(js.indexOf(`import "./primitives/tabs/tabs.js";`)).toBeLessThan(js.indexOf("if ("));
+  });
+
+  it("renders no gate for a kit that exports no polyfills (manifest v1)", () => {
+    expect(renderIndexJs({ kit: fakeKit(), language: "js" })).not.toContain("CSS.supports");
+  });
+});
+
 describe("renderHead", () => {
   it("threads dir and head options into the kit's buildHead", () => {
     const config = {
-      $schema: "",
       kit: { version: "0.1.0", integrity: "" },
       dir: "zazz",
       language: "js" as const,

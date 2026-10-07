@@ -16,7 +16,7 @@ Everything a primitive owns is `data-<primitive>-*`. Four attributes belong to t
 
 ## Navigation and persistence
 
-With `data-ui-navigation="swap"` on `<html>`, a same-origin navigation between two opted-in pages fetches the destination and swaps the whole `<body>` in place. Nothing survives the swap unless it carries `data-ui-persist="<id>"` on both pages; then the live element moves into the new page with its state. Reloads, hash changes, downloads, and form posts are never intercepted. See [navigation](/api/javascript/navigation/).
+With `data-ui-navigation="swap"` on `<html>`, a same-origin navigation between two opted-in pages fetches the destination and swaps the whole `<body>` in place. Nothing survives the swap unless it carries `data-ui-persist="<id>"` on both pages; then the live element moves into the new page with its state and scroll offsets, and its links take `aria-current` from the new page. `data-ui-persist-scroll="<id>"` renders an element from the new page but keeps its scroll offset, for a region whose content changes per page, such as a sidebar. Reloads, hash changes, downloads, and form posts are never intercepted. See [navigation](/api/javascript/navigation/).
 
 ## Style guard
 

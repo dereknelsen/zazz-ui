@@ -7,6 +7,16 @@
  * @uses       data-ui="sr-only": visually hidden, still in the accessibility tree
  * @uses       data-ui="pile": every child in one grid area
  * @uses       data-ui="isolate": a new stacking context (isolation: isolate)
+ * @uses       data-ui="not-prose": a prose ancestor stops styling this subtree
+ *             (a widget inside an article; rules in _typography.css)
+ * @uses       data-ui="truncate": one line, overflow cut with an ellipsis
+ *             (`--line-clamp` clamps to more lines)
+ * @uses       data-ui="spin": a full turn every second (loading indicators)
+ * @uses       data-ui="ping": scale up and fade out every second, like a radar
+ *             ping (notification dots)
+ * @uses       data-ui="pulse": fade to half opacity and back every two
+ *             seconds (skeleton loaders)
+ * @uses       data-ui="bounce": drop and rise every second (scroll hints)
  * @uses       data-ui="divide-x" / "divide-y": a border between direct children,
  *             sized and colored by the container's `--divide` (default 1px --color-border)
  * @uses       data-ui="container": an inline-size query container, so breakpoint
@@ -40,6 +50,14 @@
     isolation: isolate;
   }
 
+  /* needs a width to overflow: a block, a sized element, or a flex item with
+     `--min-w: 0` (a flex item's min width is its content by default) */
+  :where([data-ui~="truncate"]) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   /* dividers: a border on the trailing edge of every direct child but the last.
      `--divide` on the container sets it with the border shorthand's grammar (a
      number is px in --color-border, a color is 1px of it, a length is the width);
@@ -56,6 +74,59 @@
     border-block-end-width: var(--_divide-w, 1px);
     border-block-end-style: solid;
     border-block-end-color: var(--_divide-c, var(--color-border));
+  }
+
+  /* Tailwind's looping animations, on the kit's transition easing (applied to
+     each keyframe segment). They animate `transform`, so the `--rotate`,
+     `--scale`, and `--translate` utilities still compose with them; reduced
+     motion stops them, like every looping animation in the kit. */
+  @media (prefers-reduced-motion: no-preference) {
+    :where([data-ui~="spin"]) {
+      animation: ui-spin 1s var(--default-transition-timing-function) infinite;
+    }
+
+    :where([data-ui~="ping"]) {
+      animation: ui-ping 1s var(--default-transition-timing-function) infinite;
+    }
+
+    :where([data-ui~="pulse"]) {
+      animation: ui-pulse 2s var(--default-transition-timing-function) infinite;
+    }
+
+    :where([data-ui~="bounce"]) {
+      animation: ui-bounce 1s var(--default-transition-timing-function) infinite;
+    }
+  }
+
+  @keyframes ui-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes ui-ping {
+    75%,
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+
+  @keyframes ui-pulse {
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  @keyframes ui-bounce {
+    0%,
+    100% {
+      transform: translateY(-25%);
+    }
+
+    50% {
+      transform: none;
+    }
   }
 
   /* inline-size containment: its width cannot come from its content, so it

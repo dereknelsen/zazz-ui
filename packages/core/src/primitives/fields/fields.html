@@ -1,0 +1,39 @@
+<form
+  style="
+    --display: flex-col;
+    --gap: 6;
+    --w: 100%;
+    --max-w: 96;
+  "
+>
+  <div data-ui="field">
+    <label data-field-slot="label" for="fields-example-email">Email</label>
+    <input
+      data-ui="input"
+      id="fields-example-email"
+      name="fields-example-email"
+      type="email"
+      required
+      placeholder="you@example.com"
+      autocomplete="email"
+      aria-describedby="fields-example-email-hint"
+    />
+    <div data-field-slot="description">
+      <span data-field-slot="hint" id="fields-example-email-hint"
+        >We only use it to sign you in.</span
+      >
+      <span data-field-slot="error" role="alert">Enter a valid email address.</span>
+    </div>
+  </div>
+  <fieldset data-ui="field-group">
+    <legend>Notifications</legend>
+    <label data-ui="field" data-field-orientation="horizontal">
+      <input type="checkbox" name="fields-example-notify" value="mentions" checked />
+      <span data-field-slot="label">Mentions</span>
+    </label>
+    <label data-ui="field" data-field-orientation="horizontal">
+      <input type="checkbox" name="fields-example-notify" value="digest" />
+      <span data-field-slot="label">Weekly digest</span>
+    </label>
+  </fieldset>
+</form>

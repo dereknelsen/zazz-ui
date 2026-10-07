@@ -55,6 +55,30 @@ describe("typography roles", () => {
     ).toBeGreaterThan(0);
   });
 
+  it("not-prose stops prose styling for its subtree", () => {
+    const root = mount(`<article data-ui="prose">
+      <p>one</p>
+      <div data-ui="not-prose" data-out><p>a</p><p data-p>b</p><ul data-ul><li>x</li></ul></div>
+      <p data-after>two</p>
+    </article>`);
+    const px = (selector: string, property: string) =>
+      Number.parseFloat(style(root.querySelector(selector)!, property));
+    expect(px("[data-p]", "margin-block-start")).toBe(0);
+    expect(style(root.querySelector("[data-ul]")!, "list-style-type")).toBe("none");
+    expect(px("[data-ul]", "padding-inline-start")).toBe(0);
+    // prose resumes after the subtree
+    expect(px("[data-after]", "margin-block-start")).toBeGreaterThan(0);
+  });
+
+  it("a prose nested inside not-prose styles its own content again", () => {
+    const root = mount(`<article data-ui="prose">
+      <div data-ui="not-prose"><div data-ui="prose"><p>a</p><p data-inner>b</p></div></div>
+    </article>`);
+    expect(
+      Number.parseFloat(style(root.querySelector("[data-inner]")!, "margin-block-start")),
+    ).toBeGreaterThan(0);
+  });
+
   it("the size roles run 2xs to 2xl, each reading its own size, leading and tracking tokens", () => {
     const root = mount(
       `<div>${["2xs", "xs", "sm", "md", "lg", "xl", "2xl"].map((size) => `<p data-ui="text-${size}" data-size="${size}">a</p>`).join("")}</div>`,

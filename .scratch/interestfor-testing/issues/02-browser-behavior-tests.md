@@ -85,3 +85,5 @@ Filed 2026-09-04 while cutting 0.4.0. Context: 0.4.0 swapped the polyfill to
 Safari for the first time. That claim rests on reading the polyfill source and has **not** been
 verified in a real Firefox or Safari — doing so manually is the immediate pre-publish check; this
 ticket is about making it stop being manual.
+
+- 2026-10-06: the runner question is settled. Core now runs Vitest browser mode with the Playwright provider (`packages/core/vite.config.ts`, `*.browser.test.ts`; `ZAZZ_BROWSERS=firefox,webkit` adds engines). What remains is the test itself: hovering a tooltip trigger opens its hint popover in WebKit and Firefox. Firefox can't launch on the maintainer's Mac, so run it in CI or on another machine. Not a 0.5.0 blocker. The `examples/*.html` pages mentioned above were deleted.

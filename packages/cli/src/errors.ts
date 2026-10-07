@@ -33,3 +33,10 @@ export function kitTooNew(version: string, detail: string): ZazzError {
     hint: "upgrade with: pnpm dlx zazz-ui@latest (or npm i -g zazz-ui@latest)",
   });
 }
+
+/** The kit-older-than-CLI error (a manifest below the supported range). */
+export function kitTooOld(version: string, detail: string): ZazzError {
+  return new ZazzError(`@zazz-ui/core@${version} is older than this CLI supports (${detail})`, {
+    hint: "target a newer kit version (e.g. @latest), or use an older zazz-ui",
+  });
+}

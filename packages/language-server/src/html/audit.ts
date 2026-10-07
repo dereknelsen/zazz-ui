@@ -52,31 +52,36 @@ export function rangeOf(tag: Tag, finding: Finding): [number, number] {
   return tag.range;
 }
 
-/** `data-ui-persist` findings for a whole page; a fragment (no `<html>`) has none. */
+/** `data-ui-persist` and `data-ui-persist-scroll` findings for a whole page; a fragment (no `<html>`) has none. */
 export function persistenceFindings(
   tags: readonly Tag[],
   root: Tag | undefined,
 ): { tag: Tag; message: string; range: [number, number] }[] {
   if (!root) return [];
-  const persisted = tags
-    .filter((tag) => attributeOf(tag, "data-ui-persist"))
-    .sort((a, b) => a.range[0] - b.range[0]);
-  const { warnings } = auditPersistence(
-    valueOf(root, "data-ui-navigation") === "swap",
-    persisted,
-    (tag) => valueOf(tag, "data-ui-persist") ?? "",
-    (tag) => {
-      for (const node of selfAndAncestors(tag)) {
-        if (node !== tag && attributeOf(node, "data-ui-persist")) return node;
-      }
-      return null;
-    },
-  );
-  return warnings.map(({ el, message }) => ({
-    tag: el,
-    message,
-    range: attributeOf(el, "data-ui-persist")!.range,
-  }));
+  const swap = valueOf(root, "data-ui-navigation") === "swap";
+  const marked = (attribute: string) =>
+    tags.filter((tag) => attributeOf(tag, attribute)).sort((a, b) => a.range[0] - b.range[0]);
+  const persists = (tag: Tag) => valueOf(tag, "data-ui-persist") ?? "";
+  const owner = (tag: Tag, self: boolean) => {
+    for (const node of selfAndAncestors(tag)) {
+      if (node === tag && !self) continue;
+      if (attributeOf(node, "data-ui-persist")) return { id: persists(node), self: node === tag };
+    }
+    return null;
+  };
+  const findings = (attribute: "data-ui-persist" | "data-ui-persist-scroll") =>
+    auditPersistence(
+      swap,
+      marked(attribute),
+      (tag) => valueOf(tag, attribute) ?? "",
+      (tag) => owner(tag, attribute === "data-ui-persist-scroll"),
+      attribute,
+    ).warnings.map(({ el, message }) => ({
+      tag: el,
+      message,
+      range: attributeOf(el, attribute)!.range,
+    }));
+  return [...findings("data-ui-persist"), ...findings("data-ui-persist-scroll")];
 }
 
 /** The indent a style is laid out under: the attribute's line, one step in when the tag starts there. */

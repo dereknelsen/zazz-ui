@@ -60,6 +60,7 @@ const MIGRATED = [
   "toaster",
   "reveal",
   "card",
+  "callout",
   "avatar",
   "breadcrumbs",
   "menubar",

@@ -53,7 +53,7 @@ describe("diagnostics", () => {
       ["not-integer", "--grid-cols: 1fr 1fr"],
       ["unknown-utility", "--foo: 1"],
     ]);
-    expect(found[0]!.fix).toMatchObject({ newText: "--grid-template-cols: 1fr 1fr" });
+    expect(found[0]!.fix).toMatchObject({ newText: "--template-cols: 1fr 1fr" });
   });
 
   it("checks data-ui-persist on whole pages", () => {

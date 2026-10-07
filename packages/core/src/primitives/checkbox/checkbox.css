@@ -4,7 +4,7 @@
  * @layer      variables, reset
  * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-ring), fields.css (--ui-field-* background/border)
  * @uses       appearance: none — redraws the native control from theme tokens
- * @uses       checked/indeterminate fill with --primary and layer a glyph (never colour alone)
+ * @uses       checked/indeterminate fill with --primary and layer a glyph (never color alone)
  * @tokens     --ui-checkbox-* (@layer variables; named after the utilities they back;
  *             surface/border default to the --ui-field-* family)
  * @see        checkbox.ts: derives select-all group state (data-checkbox-controls)

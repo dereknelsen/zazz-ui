@@ -9,13 +9,13 @@
  * the input; without JavaScript the markup degrades to a plain `[data-ui~="input"]`.
  *
  * Attributes on the root:
- * - `data-sort="score"`: re-rank visually by match score (default: DOM order).
+ * - `data-autocomplete-sort="score"`: re-rank visually by match score (default: DOM order).
  * - `data-autocomplete-filter="none"`: show every item; another source filters.
- * - `data-min-length="<n>"`: query length before the panel opens (default 0).
+ * - `data-autocomplete-min-length="<n>"`: query length before the panel opens (default 0).
  *
  * Parts: `autocomplete-panel` (popover="manual"), `autocomplete-list`
- * ([role="listbox"]), `autocomplete-item` ([role="option"], `data-value`,
- * optional `data-keywords`), `autocomplete-group` / `autocomplete-group-label`,
+ * ([role="listbox"]), `autocomplete-item` ([role="option"], `data-autocomplete-value`,
+ * optional `data-autocomplete-keywords`), `autocomplete-group` / `autocomplete-group-label`,
  * `autocomplete-empty`.
  */
 

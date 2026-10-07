@@ -4,6 +4,9 @@
 @layer ui.utilities {
   @starting-style {
     :where([style*="--starting:"]) {
+      --_template-cols-starting: var(--template-cols--starting);
+      --_template-rows-starting: var(--template-rows--starting);
+      --_text-decoration-starting: var(--text-decoration--starting);
       --_text-starting: var(--text--starting);
       --_bg-starting: var(--bg--starting);
       --_bg-alpha-starting: var(--bg-alpha--starting);

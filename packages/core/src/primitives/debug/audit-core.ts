@@ -302,15 +302,17 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
       !(utility.keywords ?? []).includes(value) &&
       !(utility.emit === "line-clamp" && value === "none")
     ) {
-      const template = utility.name.replace(/^grid-/, "grid-template-");
+      const template = utility.name.replace(/^grid-/, "template-");
       const tier = parsed.tier ? `--${parsed.tier}` : "";
-      // Tailwind's col-span-full is a line range, which --col / --row take as written
+      // Tailwind's col-span-full is the line range 1 / -1, which splits into
+      // the start and end utilities (there is no raw grid-column / grid-row one)
       const line = utility.name.replace(/-span$/, "");
+      const fullSpan = `--${line}-start${tier}: 1; --${line}-end${tier}: -1`;
       const [hint, rewrite] =
         template !== utility.name && UTILITY_BY_NAME.has(template)
           ? ["For a track list write", `--${template}${tier}: ${value}`]
           : utility.emit === "span" && value === "full"
-            ? ["To span every track write", `--${line}${tier}: 1 / -1`]
+            ? ["To span every track write", fullSpan]
             : [];
       warn(
         "not-integer",
@@ -425,7 +427,12 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
       span: types[0]![2].span,
     });
   }
-  // data-<name>-<key> outside the identity (slots and states sit on children by design)
+  // data-<name>-<key> outside the identity (slots and states sit on children by design).
+  // A custom-command invoker carries the attributes of the identity its command
+  // names (`commandfor` + `command="--toast-success"` → toaster): that script
+  // reads them off the invoker.
+  const command = node.getAttribute("commandfor") === null ? "" : node.getAttribute("command");
+  const commandRoot = command?.startsWith("--") ? command.slice(2).split("-")[0] : "";
   const byLength = [...context.identities].sort((a, b) => b.length - a.length);
   for (const attribute of node.getAttributeNames()) {
     if (
@@ -436,7 +443,7 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
       continue;
     if (attribute.endsWith("-slot") || attribute.endsWith("-state")) continue;
     const owner = byLength.find((name) => attribute.startsWith(`data-${name}-`));
-    if (!owner) continue;
+    if (!owner || (commandRoot && owner.startsWith(commandRoot))) continue;
     const root = owner.split("-")[0]!;
     if (
       !node.withinIdentity(root, context.identities) &&
@@ -458,25 +465,35 @@ export interface PersistFinding<T> {
   message: string;
 }
 
+/** The persisted element that already carries another one (`self`: it is that element). */
+export interface PersistOwner {
+  id: string;
+  self: boolean;
+}
+
 /**
- * Checks `data-ui-persist` elements, in document order: each needs the swap
- * opt-in, an id, a unique id, and no persisted ancestor. Returns the elements
- * that persist and the findings.
+ * Checks `data-ui-persist` (or `data-ui-persist-scroll`) elements, in document
+ * order: each needs the swap opt-in, an id, a unique id, and no `data-ui-persist`
+ * element that already carries it (`ownerOf`: an ancestor, or for
+ * `data-ui-persist-scroll` the element itself). Returns the elements that work
+ * and the findings.
  */
 export function auditPersistence<T>(
   swap: boolean,
   persisted: T[],
   idOf: (el: T) => string,
-  persistedAncestor: (el: T) => T | null,
+  ownerOf: (el: T) => PersistOwner | null,
+  attribute: "data-ui-persist" | "data-ui-persist-scroll" = "data-ui-persist",
 ): { kept: T[]; warnings: PersistFinding<T>[] } {
   const warnings: PersistFinding<T>[] = [];
   const warn = (el: T, message: string) => warnings.push({ el, rule: "persist", message });
+  const scroll = attribute === "data-ui-persist-scroll";
   const kept: T[] = [];
   if (!swap) {
     for (const el of persisted) {
       warn(
         el,
-        '`data-ui-persist` has no effect: this page has no `<html data-ui-navigation="swap">`, so every navigation is a full load.',
+        `\`${attribute}\` has no effect: this page has no \`<html data-ui-navigation="swap">\`, so every navigation is a full load.`,
       );
     }
     return { kept, warnings };
@@ -485,19 +502,30 @@ export function auditPersistence<T>(
   for (const el of persisted) {
     const id = idOf(el);
     if (!id) {
-      warn(el, "`data-ui-persist` has no id; it is not carried across navigations.");
+      warn(
+        el,
+        scroll
+          ? "`data-ui-persist-scroll` has no id; its scroll offset is not carried across navigations."
+          : "`data-ui-persist` has no id; it is not carried across navigations.",
+      );
       continue;
     }
     if (seen.has(id)) {
-      warn(el, `\`data-ui-persist="${id}"\` is used twice; only the first is kept.`);
+      warn(
+        el,
+        `\`${attribute}="${id}"\` is used twice; only the first ${scroll ? "keeps its scroll offset" : "is kept"}.`,
+      );
       continue;
     }
     seen.add(id);
-    const outer = persistedAncestor(el);
-    if (outer) {
+    const owner = ownerOf(el);
+    if (owner) {
+      const where = owner.self ? "is on" : "sits inside";
       warn(
         el,
-        `\`data-ui-persist="${id}"\` sits inside \`data-ui-persist="${idOf(outer)}"\`, which already keeps it; drop the inner one.`,
+        scroll
+          ? `\`data-ui-persist-scroll="${id}"\` ${where} \`data-ui-persist="${owner.id}"\`, which already keeps its scroll offset; drop \`data-ui-persist-scroll\`.`
+          : `\`data-ui-persist="${id}"\` sits inside \`data-ui-persist="${owner.id}"\`, which already keeps it; drop the inner one.`,
       );
       continue;
     }

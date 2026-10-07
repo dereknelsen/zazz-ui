@@ -98,7 +98,8 @@
     max-block-size: var(--ui-command-max-h);
     padding: var(--ui-popover-p);
     margin: 0;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: clip;
     list-style: none;
   }
 

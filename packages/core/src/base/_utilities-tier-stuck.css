@@ -84,6 +84,9 @@
     }
   }
   :where([style*="--stuck:"]) {
+    --_template-cols-stuck: var(--_stuck-on) var(--template-cols--stuck);
+    --_template-rows-stuck: var(--_stuck-on) var(--template-rows--stuck);
+    --_text-decoration-stuck: var(--_stuck-on) var(--text-decoration--stuck);
     --_text-stuck: var(--_stuck-on) var(--text--stuck);
     --_bg-stuck: var(--_stuck-on) var(--bg--stuck);
     --_bg-alpha-stuck: var(--_stuck-on) var(--bg-alpha--stuck);

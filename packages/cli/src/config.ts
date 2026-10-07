@@ -14,14 +14,12 @@ import path from "node:path";
 import { ZazzError } from "./errors.ts";
 
 export const CONFIG_NAME = "zazz.json";
-export const SCHEMA_URL = "https://zazz.sh/schema.json";
 
 export interface FileHashes {
   [srcRelPath: string]: string; // "sha256-<base64>" of pristine bytes at vendor time
 }
 
 export interface ZazzConfig {
-  $schema: string;
   /** The kit version the project tracks, and its tarball integrity. */
   kit: { version: string; integrity: string };
   /** Vendor target directory, posix-relative to zazz.json's directory. */
@@ -76,7 +74,6 @@ export async function saveConfig(root: string, config: ZazzConfig): Promise<void
 /** Stable key order so diffs of zazz.json stay readable. */
 export function serializeConfig(config: ZazzConfig): string {
   const ordered: ZazzConfig = {
-    $schema: config.$schema,
     kit: { version: config.kit.version, integrity: config.kit.integrity },
     dir: config.dir,
     language: config.language,

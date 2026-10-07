@@ -19,6 +19,7 @@ import {
   hasGroup,
   isState,
   UTILITIES,
+  PSEUDO_ONLY,
   PSEUDO_SIDES,
   STUCK_STATE,
   tiersOf,
@@ -84,7 +85,13 @@ const GLOBALS: HtmlAttribute[] = [
   {
     name: "data-ui-persist",
     description:
-      "Keep this element's live DOM and state across in-page navigations; the value is an id both pages share.",
+      "Keep this element's live DOM, state and scroll offsets across in-page navigations; its links take aria-current from the next page. The value is an id both pages share.",
+    values: [],
+  },
+  {
+    name: "data-ui-persist-scroll",
+    description:
+      "Render this element from the next page but keep its scroll offset across in-page navigations (a section sidebar, a table of contents). The value is an id both pages share.",
     values: [],
   },
   {
@@ -122,7 +129,9 @@ function uiTokens(css: string[], html: string[]): string[] {
  * selectors (presets, slots, states) and, for those same attributes, from the
  * fragments; free-text config attributes (`data-autocomplete-value="Apple"`)
  * list no values. Script literals add names only under a known identity prefix,
- * with comments stripped.
+ * with comments stripped, as do the typeahead engine's `config()` keys (under
+ * each subclass's slot prefix), camelCase `dataset` reads, and slot values a
+ * script selects (`[data-carousel-slot~="dots"]`).
  */
 function dataAttributes(
   css: string[],
@@ -158,11 +167,38 @@ function dataAttributes(
       add(name, listed ? value : undefined);
     }
   }
-  for (const text of ts) {
-    const code = text.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:])\/\/.*$/gm, "$1");
-    for (const m of code.matchAll(/["'`](data-[a-z0-9]+(?:-[a-z0-9]+)+)["'`]/g)) {
-      if (owned(m[1]!)) add(m[1]!);
-    }
+  const codes = ts.map((text) =>
+    text.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:])\/\/.*$/gm, "$1"),
+  );
+  const slotPrefix = /\bslotPrefix = "([a-z-]+)"/;
+  const prefixes = codes.flatMap((code) => code.match(slotPrefix)?.[1] ?? []);
+  const addOwned = (name: string) => {
+    if (owned(name)) add(name);
+  };
+  for (const code of codes) {
+    for (const m of code.matchAll(/["'`](data-[a-z0-9]+(?:-[a-z0-9]+)+)["'`]/g)) addOwned(m[1]!);
+    // slots a script looks up but no stylesheet styles: `[data-carousel-slot~="dots"]`
+    for (const m of code.matchAll(/\[(data-[a-z0-9-]+-slot)~?="([a-z0-9-]+)"\]/g))
+      if (owned(m[1]!)) add(m[1]!, m[2]);
+    // typeahead config: `this.config("<key>")` and `data-${this.slotPrefix}-<key>` read
+    // data-<prefix>-<key> under the file's own prefix, or every subclass's in the base
+    const own = code.match(slotPrefix)?.[1];
+    const keys = [
+      ...code.matchAll(/\bthis\.config\("([a-z0-9-]+)"\)/g),
+      ...code.matchAll(/data-\$\{this\.slotPrefix\}-([a-z0-9]+(?:-[a-z0-9]+)*)/g),
+    ].map((m) => m[1]!);
+    for (const key of keys)
+      for (const prefix of own ? [own] : prefixes) addOwned(`data-${prefix}-${key}`);
+    // `dataset.revealStep` reads data-reveal-step
+    // and `const { toasterTitle: title } = el.dataset` reads data-toaster-title
+    const datasetKeys = [
+      ...[...code.matchAll(/\bdataset\.([a-z][a-zA-Z0-9]*)/g)].map((m) => m[1]!),
+      ...[...code.matchAll(/\{([^{}]*)\}\s*=\s*[\w.]+\.dataset\b/g)].flatMap((m) =>
+        [...m[1]!.matchAll(/(?:^|,)\s*([a-z][a-zA-Z0-9]*)/g)].map((k) => k[1]!),
+      ),
+    ];
+    for (const key of datasetKeys)
+      addOwned(`data-${key.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`);
   }
   return [...values]
     .sort(([a], [b]) => a.localeCompare(b))
@@ -352,11 +388,9 @@ function valuesFor(utility: Utility, tokens: Map<string, string[]>): HtmlValue[]
   if (utility.mode === "keyword")
     for (const property of utility.properties)
       for (const k of KEYWORDS[property] ?? []) names.add(k);
-  if (utility.name === "col") {
-    for (const band of ["2xs", "xs", "sm", "md", "lg", "xl", "2xl", "full", "bleed"])
+  if (utility.name === "band")
+    for (const band of ["sm", "md", "lg", "xl", "2xl", "full", "bleed"])
       names.add(`layout-${band}`);
-    names.add("1 / -1");
-  }
   if (utility.name === "bg") names.add("none");
   for (const prelude of GRADIENT_PRELUDES[utility.name] ?? []) names.add(prelude);
   if (takesSpaceSteps(utility)) for (const step of SPACE_STEPS) names.add(step);
@@ -438,6 +472,14 @@ function cssProperties(css: string[]): CssProperty[] {
           description: `--${utility.name} on the ::${side} pseudo-element.`,
         });
       }
+    }
+  }
+  for (const utility of PSEUDO_ONLY) {
+    for (const side of PSEUDO_SIDES) {
+      properties.push({
+        name: `--${side}-${utility.name}`,
+        description: `${utility.properties.join(", ")} on the ::${side} pseudo-element — any value; ${utility.family} family.`,
+      });
     }
   }
   properties.push({

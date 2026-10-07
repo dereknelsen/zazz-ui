@@ -1,6 +1,6 @@
 # Design specifications — Figma
 
-Use the **zazz-figma-design** skill for every system decision: color roles, type scale, spacing, radius, components, layout, motion, and sentence case. Follow its values exactly — never invent off-scale values — and run its verification checklist before delivering. This prompt adds the task; **where this prompt and the skill differ, this prompt wins.** The skill's Geist typefaces, indigo/orange/pink brand seeds, and roundness conventions are placeholder defaults — this prompt and the reference brand replace all of them.
+Use the **zazz-figma-create-design** skill for every system decision: color roles, type scale, spacing, radius, components, layout, motion, and sentence case. Follow its values exactly — never invent off-scale values — and run its verification checklist before delivering. This prompt adds the task; **where this prompt and the skill differ, this prompt wins.** The skill's Geist typefaces, indigo/orange/pink brand seeds, and roundness conventions are placeholder defaults — this prompt and the reference brand replace all of them.
 
 ## Reference site
 

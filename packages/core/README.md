@@ -17,14 +17,29 @@ import "@zazz-ui/core/index.css"; // all styles, imported in cascade order
 import "@zazz-ui/core"; // custom elements and shared behaviors
 ```
 
-From a CDN:
+From a CDN, the script needs an import map for its dependencies and the Interest Invokers polyfill:
 
 ```html
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.4.1/dist/zazz.css" />
+<script type="importmap">
+  {
+    "imports": {
+      "signal-polyfill": "https://cdn.jsdelivr.net/npm/signal-polyfill@0.2.2/dist/index.js",
+      "embla-carousel": "https://cdn.jsdelivr.net/npm/embla-carousel@8.6.0/esm/embla-carousel.esm.js",
+      "embla-carousel-autoplay": "https://cdn.jsdelivr.net/npm/embla-carousel-autoplay@8.6.0/esm/embla-carousel-autoplay.esm.js",
+      "embla-carousel-auto-scroll": "https://cdn.jsdelivr.net/npm/embla-carousel-auto-scroll@8.6.0/esm/embla-carousel-auto-scroll.esm.js",
+      "embla-carousel-class-names": "https://cdn.jsdelivr.net/npm/embla-carousel-class-names@8.6.0/esm/embla-carousel-class-names.esm.js"
+    }
+  }
+</script>
+<script
+  type="module"
+  src="https://cdn.jsdelivr.net/npm/invokers@2.2.2/dist/esm/production/interest.js"
+></script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.4.1/dist/zazz.js"></script>
 ```
 
-Use an exact version in CDN URLs. Each release includes `dist/sri.json`, which lists the SHA-384 hash for every published file. Use those hashes in `integrity` attributes.
+Use an exact version in CDN URLs. The [installation guide](https://zazz.sh/docs/install/installation/) has the complete `<head>`, with fonts, the theme script, a per-primitive variant, and integrity hashes on every URL; `buildHead({ cdn: { version } })` from `@zazz-ui/core/head` returns the same markup. Each release also includes `dist/sri.json` with the SHA-384 hash of every published file.
 
 Or own the files: the [`zazz-ui`](https://www.npmjs.com/package/zazz-ui) CLI vendors the base platform and any primitives (with their dependencies) into your project and merges later updates against the recorded originals.
 
@@ -69,15 +84,15 @@ Color roles resolve through `light-dark()`, so light and dark themes work out of
 
 ## Layout
 
-`data-ui="layout"` (or `<ui-layout>`) turns an element into a grid of named width bands for its own children. Each child sits in the default band (`xl`, changed with `data-layout-size`) unless a `--col` utility places it elsewhere, so measured text and full-bleed media are siblings in one flow:
+`data-ui="layout"` (or `<ui-layout>`) turns an element into a grid of named width bands for its own children. Each child sits in the default band (`xl`, changed with `data-layout-size`) unless a `--band` utility places it elsewhere, so measured text and full-bleed media are siblings in one flow:
 
 ```html
 <main data-ui="layout">
   <h2>Sits in the default band</h2>
-  <figure style="--col: layout-bleed">
+  <figure style="--band: layout-bleed">
     <img src="/wide.jpg" alt="" />
   </figure>
-  <p style="--col: layout-md; --col--lg: layout-lg">Measured text, wider from lg up.</p>
+  <p style="--band: layout-md; --band--lg: layout-lg">Measured text, wider from lg up.</p>
 </main>
 ```
 

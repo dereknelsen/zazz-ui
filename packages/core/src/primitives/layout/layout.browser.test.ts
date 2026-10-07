@@ -3,7 +3,7 @@
 /**
  * @fileoverview The layout is the band grid for its
  * children, `layout-*` lines resolve through implicit named areas and survive a
- * subgrid, a child's `--col` places it, and a `--grid-cols--md` tier on the
+ * subgrid, a child's `--band` places it, and a `--grid-cols--md` tier on the
  * layout leaves its bands intact below md.
  */
 
@@ -36,8 +36,8 @@ describe("layout", () => {
   it("a nested layout is a subgrid whose child aligns to the outer md band (claim 11)", async () => {
     await atWidth(1400);
     const root = mount(`<ui-layout>
-      <p style="--col: layout-md" data-outer>a</p>
-      <ui-layout data-nested><p style="--col: layout-md" data-inner>b</p></ui-layout>
+      <p style="--band: layout-md" data-outer>a</p>
+      <ui-layout data-nested><p style="--band: layout-md" data-inner>b</p></ui-layout>
     </ui-layout>`);
     expect(style(root.querySelector("[data-nested]")!, "grid-template-columns")).not.toBe("none");
     expect(left(root.querySelector("[data-inner]")!)).toBeCloseTo(
@@ -46,11 +46,23 @@ describe("layout", () => {
     );
   });
 
-  it("data-layout-size, --col, and a tier-only --col--lg place children; bleed spans the edge", async () => {
+  it("a layout deeper inside a band is its own grid, not a subgrid", async () => {
+    await atWidth(1400);
+    const root = mount(`<ui-layout>
+      <div data-ui="card"><ui-layout data-deep><p style="--band: layout-sm" data-sm>a</p><p data-xl>b</p></ui-layout></div>
+    </ui-layout>`);
+    const deep = root.querySelector("[data-deep]")!;
+    expect(style(deep, "grid-template-columns")).not.toMatch(/^subgrid/);
+    expect(width(root.querySelector("[data-sm]")!)).toBeLessThan(
+      width(root.querySelector("[data-xl]")!),
+    );
+  });
+
+  it("data-layout-size, --band, and a tier-only --band--lg place children; bleed spans the edge", async () => {
     await atWidth(1400);
     const root = mount(`<div>
       <ui-layout data-layout-size="xl"><p data-xl>a</p></ui-layout>
-      <ui-layout><p style="--col: layout-bleed" data-bleed>b</p><p style="--col--lg: layout-xl" data-tier>c</p></ui-layout>
+      <ui-layout><p style="--band: layout-bleed" data-bleed>b</p><p style="--band--lg: layout-xl" data-tier>c</p></ui-layout>
       <div data-lg style="--w: var(--layout-lg)"></div>
       <div data-xl-probe style="--w: var(--layout-xl)"></div>
     </div>`);

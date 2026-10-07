@@ -27,19 +27,3 @@ export const nav = [
   { label: "Blog", href: "/blog/" },
   { label: "Playground", href: "/playground/" },
 ] as const;
-
-export const acknowledgements = {
-  team: ["Derek Nelsen"],
-  contributors: ["CIMcloud", "Snapmarket"],
-  contributorsNote: "for their teams' feedback and contributions",
-  inspiration: [
-    {
-      name: "Tailwind",
-      note: "for the template behind the style utility API",
-    },
-    {
-      name: "shadcn, Base UI, and Emil Kowalski",
-      note: "for inspiring the primitive designs and architecture, the animation system, and the global CSS theming",
-    },
-  ],
-} as const;

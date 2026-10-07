@@ -31,9 +31,9 @@
  * this control is inert without its script (the hidden input still submits a
  * server-set value, but no tags render).
  *
- * Attributes on the root: `data-combobox-variant="multiselect"`, `data-sort="score"`,
+ * Attributes on the root: `data-combobox-variant="multiselect"`, `data-combobox-sort="score"`,
  * `data-combobox-filter="none"` (another source filters; the engine only navigates),
- * `data-min-length="<n>"`, `data-label-remove="Remove {label}"`.
+ * `data-combobox-min-length="<n>"`, `data-combobox-label-remove="Remove {label}"`.
  * Parts: `combobox-value` (hidden input), `combobox-control` (select-look
  * shell), `combobox-tag-template` (authored `<template>`), `combobox-tag` /
  * `combobox-tag-label` / `combobox-tag-remove` (cloned from it),
@@ -379,11 +379,7 @@ class UiCombobox extends TypeaheadElement {
    * @private
    */
   #itemFormValue(item: HTMLElement): string {
-    return (
-      item.getAttribute("data-combobox-value") ??
-      item.getAttribute("data-value") ??
-      this.itemValue(item)
-    );
+    return item.getAttribute("data-combobox-value") ?? this.itemValue(item);
   }
 
   /**

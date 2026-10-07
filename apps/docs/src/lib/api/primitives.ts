@@ -5,7 +5,7 @@
  * slots, states, and config attributes with their values), and the script
  * headers (behavior prose and events). Nothing here is hand-maintained.
  */
-import { PRIMITIVES } from "@zazz-ui/core/manifest";
+import { PRIMITIVES } from "@zazz-ui/core/manifest.ts";
 import htmlData from "@zazz-ui/core/editor/zazz.html-data.json";
 import languageData from "@zazz-ui/core/editor/zazz.language-data.json";
 import { readKitFile } from "../kit.ts";

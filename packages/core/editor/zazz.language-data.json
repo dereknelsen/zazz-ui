@@ -16,6 +16,10 @@
       "primitive": "badge",
       "file": "primitives/badge/badge.css"
     },
+    "bounce": {
+      "primitive": null,
+      "file": "base/_switches.css"
+    },
     "button": {
       "primitive": "button",
       "file": "primitives/button/button.css"
@@ -23,6 +27,10 @@
     "button-group": {
       "primitive": "button-group",
       "file": "primitives/button-group/button-group.css"
+    },
+    "callout": {
+      "primitive": "callout",
+      "file": "primitives/callout/callout.css"
     },
     "card": {
       "primitive": "card",
@@ -112,6 +120,10 @@
       "primitive": "navigation-menu",
       "file": "primitives/navigation-menu/navigation-menu.css"
     },
+    "not-prose": {
+      "primitive": null,
+      "file": "base/_typography.css"
+    },
     "otp": {
       "primitive": "otp",
       "file": "primitives/otp/otp.css"
@@ -124,6 +136,10 @@
       "primitive": null,
       "file": "base/_switches.css"
     },
+    "ping": {
+      "primitive": null,
+      "file": "base/_switches.css"
+    },
     "progress": {
       "primitive": "progress",
       "file": "primitives/progress/progress.css"
@@ -131,6 +147,10 @@
     "prose": {
       "primitive": null,
       "file": "base/_typography.css"
+    },
+    "pulse": {
+      "primitive": null,
+      "file": "base/_switches.css"
     },
     "radio": {
       "primitive": "radio",
@@ -151,6 +171,10 @@
     "separator": {
       "primitive": "separator",
       "file": "primitives/separator/separator.css"
+    },
+    "spin": {
+      "primitive": null,
+      "file": "base/_switches.css"
     },
     "sr-only": {
       "primitive": null,
@@ -243,6 +267,10 @@
     "tooltip": {
       "primitive": "tooltip",
       "file": "primitives/tooltip/tooltip.css"
+    },
+    "truncate": {
+      "primitive": null,
+      "file": "base/_switches.css"
     }
   },
   "tags": {
@@ -389,6 +417,29 @@
         ]
       }
     },
+    "primitives/callout/callout.css": {
+      "summary": "callout.css — Callout ([data-ui~=\"callout\"])",
+      "tags": {
+        "layer": [
+          "variables, components"
+        ],
+        "requires": [
+          "_layers.css, _variables.css, _properties.css (--_*-resolved)"
+        ],
+        "uses": [
+          "oklch(from …): status tints"
+        ],
+        "tokens": [
+          "--ui-callout-* (@layer variables; named after the utilities they back)"
+        ],
+        "see": [
+          "badge.css (status tint and border formulas; the test keeps them in sync)"
+        ],
+        "presets": [
+          "data-callout-variant=\"muted\" | \"info\" | \"success\" | \"warning\" | \"destructive\""
+        ]
+      }
+    },
     "primitives/card/card.css": {
       "summary": "card.css — Card ([data-ui~=\"card\"])",
       "tags": {
@@ -402,7 +453,7 @@
           "--ui-card-* (@layer variables; named after the utilities they back)"
         ],
         "presets": [
-          "data-card-variant=\"muted\""
+          "data-card-variant=\"outline\" | \"muted\" | \"floating\""
         ]
       }
     },
@@ -438,7 +489,7 @@
         ],
         "uses": [
           "appearance: none — redraws the native control from theme tokens",
-          "checked/indeterminate fill with --primary and layer a glyph (never colour alone)"
+          "checked/indeterminate fill with --primary and layer a glyph (never color alone)"
         ],
         "tokens": [
           "--ui-checkbox-* (@layer variables; named after the utilities they back; surface/border default to the --ui-field-* family)"
@@ -611,11 +662,11 @@
           "variables, components"
         ],
         "requires": [
-          "_layers.css, _variables.css (--gutters), _breakpoints.css (--layout-*), _properties.css (--_col-resolved)"
+          "_layers.css, _variables.css (--gutters), _breakpoints.css (--layout-*), _properties.css (--_band-resolved)"
         ],
         "uses": [
-          "named grid lines + implicit named areas: `--col: layout-md` on a child resolves through `layout-md-start / layout-md-end`",
-          "grid-template-columns: subgrid — a nested layout keeps the parent's line names",
+          "named grid lines + implicit named areas: `--band: layout-md` on a child resolves through `layout-md-start / layout-md-end`",
+          "grid-template-columns: subgrid — a layout that is a direct child keeps the parent's line names",
           "container-type: inline-size on each child (not nested layouts, subgrids, or content-sized children), so breakpoint tiers inside a band follow it"
         ],
         "tokens": [
@@ -1312,20 +1363,72 @@
       "value": "var(--color-foreground)",
       "file": "primitives/button/button.css"
     },
+    "--ui-callout-bg": {
+      "value": "var(--color-card)",
+      "file": "primitives/callout/callout.css"
+    },
+    "--ui-callout-border-color": {
+      "value": "var(--color-border)",
+      "file": "primitives/callout/callout.css"
+    },
+    "--ui-callout-border-style": {
+      "value": "solid",
+      "file": "primitives/callout/callout.css"
+    },
+    "--ui-callout-border-width": {
+      "value": "1px",
+      "file": "primitives/callout/callout.css"
+    },
+    "--ui-callout-gap": {
+      "value": "var(--space-xs)",
+      "file": "primitives/callout/callout.css"
+    },
+    "--ui-callout-p": {
+      "value": "var(--space-sm)",
+      "file": "primitives/callout/callout.css"
+    },
+    "--ui-callout-rounded": {
+      "value": "var(--radius-md)",
+      "file": "primitives/callout/callout.css"
+    },
+    "--ui-callout-shadow": {
+      "value": "none",
+      "file": "primitives/callout/callout.css"
+    },
+    "--ui-callout-text": {
+      "value": "var(--color-card-foreground)",
+      "file": "primitives/callout/callout.css"
+    },
     "--ui-card-bg": {
       "value": "var(--color-card)",
+      "file": "primitives/card/card.css"
+    },
+    "--ui-card-border-color": {
+      "value": "transparent",
+      "file": "primitives/card/card.css"
+    },
+    "--ui-card-border-style": {
+      "value": "solid",
+      "file": "primitives/card/card.css"
+    },
+    "--ui-card-border-width": {
+      "value": "1px",
       "file": "primitives/card/card.css"
     },
     "--ui-card-gap": {
       "value": "var(--space-sm)",
       "file": "primitives/card/card.css"
     },
+    "--ui-card-p": {
+      "value": "0",
+      "file": "primitives/card/card.css"
+    },
     "--ui-card-rounded": {
-      "value": "var(--radius-md)",
+      "value": "var(--radius-lg)",
       "file": "primitives/card/card.css"
     },
     "--ui-card-shadow": {
-      "value": "var(--shadow-sm)",
+      "value": "none",
       "file": "primitives/card/card.css"
     },
     "--ui-card-text": {
@@ -1696,10 +1799,6 @@
       "value": "calc(var(--spacing) * 2)",
       "file": "primitives/fields/fields.css"
     },
-    "--ui-field-grid-template-cols": {
-      "value": "1fr",
-      "file": "primitives/fields/fields.css"
-    },
     "--ui-field-group-bg": {
       "value": "transparent",
       "file": "primitives/fields/fields.css"
@@ -1794,6 +1893,10 @@
     },
     "--ui-field-self": {
       "value": "flex-start",
+      "file": "primitives/fields/fields.css"
+    },
+    "--ui-field-template-cols": {
+      "value": "1fr",
       "file": "primitives/fields/fields.css"
     },
     "--ui-field-text": {
@@ -2236,10 +2339,6 @@
       "value": "calc(var(--spacing) * 1.5)",
       "file": "primitives/navigation-menu/navigation-menu.css"
     },
-    "--ui-navigation-menu-popover-viewport-grid-template-cols": {
-      "value": "1fr",
-      "file": "primitives/navigation-menu/navigation-menu.css"
-    },
     "--ui-navigation-menu-popover-viewport-items": {
       "value": "stretch",
       "file": "primitives/navigation-menu/navigation-menu.css"
@@ -2250,6 +2349,10 @@
     },
     "--ui-navigation-menu-popover-viewport-min-w": {
       "value": "calc(var(--spacing) * 52)",
+      "file": "primitives/navigation-menu/navigation-menu.css"
+    },
+    "--ui-navigation-menu-popover-viewport-template-cols": {
+      "value": "1fr",
       "file": "primitives/navigation-menu/navigation-menu.css"
     },
     "--ui-navigation-menu-popover-w": {
@@ -3451,7 +3554,7 @@
     "--color-border-foreground": {
       "value": "light-dark(var(--color-tint-950), var(--color-shade-500))",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 0.95)",
+      "light": "oklch(from oklch(1 0 0) l c h / 0.96)",
       "dark": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.5)"
     },
     "--color-card": {
@@ -3473,10 +3576,10 @@
       "dark": "oklch(0.5054 0.1905 27.52)"
     },
     "--color-destructive-foreground": {
-      "value": "contrast-color(var(--color-destructive))",
+      "value": "light-dark(var(--color-white), var(--color-white))",
       "file": "base/_variables.css",
-      "light": "contrast-color(oklch(0.5771 0.2152 27.33))",
-      "dark": "contrast-color(oklch(0.5054 0.1905 27.52))"
+      "light": "oklch(1 0 0)",
+      "dark": "oklch(1 0 0)"
     },
     "--color-faded": {
       "value": "light-dark(var(--color-tint-400), var(--color-shade-100))",
@@ -3503,10 +3606,10 @@
       "dark": "oklch(0.5 0.1193 242.75)"
     },
     "--color-info-foreground": {
-      "value": "contrast-color(var(--color-info))",
+      "value": "light-dark(var(--color-white), var(--color-white))",
       "file": "base/_variables.css",
-      "light": "contrast-color(oklch(0.5876 0.1389 241.97))",
-      "dark": "contrast-color(oklch(0.5 0.1193 242.75))"
+      "light": "oklch(1 0 0)",
+      "dark": "oklch(1 0 0)"
     },
     "--color-input": {
       "value": "light-dark(var(--color-neutral-50), var(--color-tint-100))",
@@ -3521,9 +3624,9 @@
       "dark": "oklch(1 0 0)"
     },
     "--color-muted": {
-      "value": "light-dark(var(--color-shade-100), var(--color-tint-100))",
+      "value": "light-dark(var(--color-shade-50), var(--color-tint-100))",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.1)",
+      "light": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.04)",
       "dark": "oklch(from oklch(1 0 0) l c h / 0.1)"
     },
     "--color-muted-foreground": {
@@ -3683,10 +3786,10 @@
       "dark": "oklch(0.145 0 0)"
     },
     "--color-primary-foreground": {
-      "value": "contrast-color(var(--color-primary))",
+      "value": "light-dark(var(--color-white), var(--color-primary-950))",
       "file": "base/_variables.css",
-      "light": "contrast-color(oklch(0.145 0 0))",
-      "dark": "contrast-color(oklch(0.985 0 0))"
+      "light": "oklch(1 0 0)",
+      "dark": "oklch(0.145 0 0)"
     },
     "--color-ring": {
       "value": "var(--color-primary)",
@@ -3767,10 +3870,10 @@
       "dark": "oklch(13% 0.028 261.692)"
     },
     "--color-secondary-foreground": {
-      "value": "contrast-color(var(--color-secondary))",
+      "value": "light-dark(var(--color-white), var(--color-secondary-950))",
       "file": "base/_variables.css",
-      "light": "contrast-color(oklch(13% 0.028 261.692))",
-      "dark": "contrast-color(oklch(98.5% 0.002 247.839))"
+      "light": "oklch(1 0 0)",
+      "dark": "oklch(13% 0.028 261.692)"
     },
     "--color-shade-100": {
       "value": "oklch(from var(--color-neutral-950) l c h / 0.1)",
@@ -3797,10 +3900,10 @@
       "dark": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.4)"
     },
     "--color-shade-50": {
-      "value": "oklch(from var(--color-neutral-950) l c h / 0.05)",
+      "value": "oklch(from var(--color-neutral-950) l c h / 0.04)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.05)",
-      "dark": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.05)"
+      "light": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.04)",
+      "dark": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.04)"
     },
     "--color-shade-500": {
       "value": "oklch(from var(--color-neutral-950) l c h / 0.5)",
@@ -3833,10 +3936,10 @@
       "dark": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.9)"
     },
     "--color-shade-950": {
-      "value": "oklch(from var(--color-neutral-950) l c h / 0.95)",
+      "value": "oklch(from var(--color-neutral-950) l c h / 0.96)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.95)",
-      "dark": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.95)"
+      "light": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.96)",
+      "dark": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.96)"
     },
     "--color-shade-full": {
       "value": "oklch(from var(--color-neutral-950) l c h / 1)",
@@ -3863,10 +3966,10 @@
       "dark": "oklch(0.5081 0.1049 165.61)"
     },
     "--color-success-foreground": {
-      "value": "contrast-color(var(--color-success))",
+      "value": "light-dark(var(--color-white), var(--color-white))",
       "file": "base/_variables.css",
-      "light": "contrast-color(oklch(0.596 0.1274 163.23))",
-      "dark": "contrast-color(oklch(0.5081 0.1049 165.61))"
+      "light": "oklch(1 0 0)",
+      "dark": "oklch(1 0 0)"
     },
     "--color-tertiary": {
       "value": "light-dark(var(--color-tertiary-950), var(--color-tertiary-50))",
@@ -3941,10 +4044,10 @@
       "dark": "oklch(0.147 0.004 49.3)"
     },
     "--color-tertiary-foreground": {
-      "value": "contrast-color(var(--color-tertiary))",
+      "value": "light-dark(var(--color-white), var(--color-tertiary-950))",
       "file": "base/_variables.css",
-      "light": "contrast-color(oklch(0.147 0.004 49.3))",
-      "dark": "contrast-color(oklch(0.986 0.002 67.8))"
+      "light": "oklch(1 0 0)",
+      "dark": "oklch(0.147 0.004 49.3)"
     },
     "--color-tint-100": {
       "value": "oklch(from var(--color-white) l c h / 0.1)",
@@ -3971,10 +4074,10 @@
       "dark": "oklch(from oklch(1 0 0) l c h / 0.4)"
     },
     "--color-tint-50": {
-      "value": "oklch(from var(--color-white) l c h / 0.05)",
+      "value": "oklch(from var(--color-white) l c h / 0.04)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 0.05)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 0.05)"
+      "light": "oklch(from oklch(1 0 0) l c h / 0.04)",
+      "dark": "oklch(from oklch(1 0 0) l c h / 0.04)"
     },
     "--color-tint-500": {
       "value": "oklch(from var(--color-white) l c h / 0.5)",
@@ -4007,10 +4110,10 @@
       "dark": "oklch(from oklch(1 0 0) l c h / 0.9)"
     },
     "--color-tint-950": {
-      "value": "oklch(from var(--color-white) l c h / 0.95)",
+      "value": "oklch(from var(--color-white) l c h / 0.96)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 0.95)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 0.95)"
+      "light": "oklch(from oklch(1 0 0) l c h / 0.96)",
+      "dark": "oklch(from oklch(1 0 0) l c h / 0.96)"
     },
     "--color-tint-full": {
       "value": "oklch(from var(--color-white) l c h / 1)",
@@ -4031,10 +4134,10 @@
       "dark": "oklch(0.5553 0.1455 49)"
     },
     "--color-warning-foreground": {
-      "value": "contrast-color(var(--color-warning))",
+      "value": "light-dark(var(--color-white), var(--color-white))",
       "file": "base/_variables.css",
-      "light": "contrast-color(oklch(0.6658 0.1574 58.32))",
-      "dark": "contrast-color(oklch(0.5553 0.1455 49))"
+      "light": "oklch(1 0 0)",
+      "dark": "oklch(1 0 0)"
     },
     "--color-white": {
       "value": "oklch(1 0 0)",

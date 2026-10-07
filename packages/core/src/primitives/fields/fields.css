@@ -52,7 +52,7 @@
 
     /* wrapper layout */
     --ui-field-display: grid;
-    --ui-field-grid-template-cols: 1fr;
+    --ui-field-template-cols: 1fr;
     --ui-field-self: flex-start;
     --ui-field-w: 100%;
 
@@ -97,7 +97,7 @@
     --ui-field-gap: var(--spacing);
 
     display: var(--_display-resolved, var(--ui-field-display));
-    grid-template-columns: var(--_grid-template-cols-resolved, var(--ui-field-grid-template-cols));
+    grid-template-columns: var(--_template-cols-resolved, var(--ui-field-template-cols));
     --_gap-len: var(--_gap-resolved, var(--ui-field-gap));
     --_gap-num: var(--_gap-resolved, var(--ui-field-gap));
     gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));

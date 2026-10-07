@@ -86,7 +86,7 @@ describe("breakpoint tiers", () => {
   it("keep subgrids and content-sized children of a layout uncontained", () => {
     const root = mount(`<ui-layout>
       <ui-layout data-nested></ui-layout>
-      <div data-sub style="--display: grid; --grid-template-cols: subgrid"></div>
+      <div data-sub style="--display: grid; --template-cols: subgrid"></div>
       <a data-fit style="--w: fit-content">fit</a>
       <div data-plain></div>
     </ui-layout>`);

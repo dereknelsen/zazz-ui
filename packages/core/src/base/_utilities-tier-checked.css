@@ -3,6 +3,9 @@
 /* checked tier setter */
 @layer ui.utilities {
   :where(:is(:checked, [aria-checked="true"])[style*="--checked:"]) {
+    --_template-cols-checked: var(--template-cols--checked);
+    --_template-rows-checked: var(--template-rows--checked);
+    --_text-decoration-checked: var(--text-decoration--checked);
     --_text-checked: var(--text--checked);
     --_bg-checked: var(--bg--checked);
     --_bg-alpha-checked: var(--bg-alpha--checked);
@@ -28,6 +31,9 @@
     --_transition-checked: var(--transition--checked);
   }
   :where([data-ui~="group"]:is(:checked, [aria-checked="true"]) [style*="--group-"]) {
+    --_template-cols-g-checked: var(--group-template-cols--checked);
+    --_template-rows-g-checked: var(--group-template-rows--checked);
+    --_text-decoration-g-checked: var(--group-text-decoration--checked);
     --_text-g-checked: var(--group-text--checked);
     --_bg-g-checked: var(--group-bg--checked);
     --_bg-alpha-g-checked: var(--group-bg-alpha--checked);

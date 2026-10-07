@@ -10,20 +10,20 @@ enhances markup; you rarely touch it.
 
 ## 1. Platform APIs and their markup hooks
 
-| API                                   | Used by                                 | Markup hook                                                                                                                                                     | Polyfill                                |
-| ------------------------------------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
-| Popover API                           | tooltip, menu, navigation-menu, toaster | `popover="auto"` / `popover="hint"` / `popover="manual"` (toaster region — no light dismiss), `popovertarget="<id>"`, `:popover-open`                           | — (native; Baseline 2025)               |
-| Invoker Commands                      | dialog, lightbox, toaster               | `command="show-modal"` / `command="close"` / custom `command="--toast[-variant]"`, `commandfor="<id>"`                                                          | — (native; Baseline 2026)               |
-| Interest Invokers                     | tooltip, menu, menubar, navigation-menu | `interestfor="<id>"` (hover/focus/long-press → hint, wires ARIA)                                                                                                | **`invokers/interest`** (Chromium-only) |
-| CSS Anchor Positioning                | popover/tooltip placement               | `data-popover-side`, `data-popover-align` on the `[popover]` (drive `position-area`)                                                                            | `@supports`-gated; UA-centered fallback |
-| Native `<dialog>`                     | dialog, lightbox, mobile-menu           | `<dialog>`, `::backdrop`, `closedby="any"`                                                                                                                      | —                                       |
-| Native `<details>`                    | accordion                               | `<details>`/`<summary>`, `::details-content`, `interpolate-size: allow-keywords`                                                                                | —                                       |
-| View Transitions                      | cross-page nav                          | `@view-transition { navigation: auto }`, `data-transition-layer="global-header"` / `="global-footer"` (`<main>` is automatic), `document.startViewTransition()` | —                                       |
-| Navigation API                        | SPA-style nav                           | `navigation.js`, opt-in: `<html data-ui-navigation="swap">`, `data-ui-persist="<id>"` to keep an element                                                        | falls back to full page load            |
-| `light-dark()`                        | theming, dark mode                      | `data-ui-theme="dark"` / `"light"` on any element pins `color-scheme`; `--color-*` tokens re-resolve                                                            | —                                       |
-| IntersectionObserver                  | scroll reveals                          | `[data-reveal]` / `[data-reveal-each]` (via `reveal.js`)                                                                                                        | —                                       |
-| `sibling-index()` / `sibling-count()` | reveal stagger delays                   | `[data-reveal-each]` children compute `--ui-reveal-wait` natively                                                                                               | `@supports`-gated; JS fallback          |
-| `:user-invalid` / `:has()`            | form validation                         | surfaces error state after commit, not while typing                                                                                                             | —                                       |
+| API                                   | Used by                                 | Markup hook                                                                                                                                                       | Polyfill                                |
+| ------------------------------------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| Popover API                           | tooltip, menu, navigation-menu, toaster | `popover="auto"` / `popover="hint"` / `popover="manual"` (toaster region — no light dismiss), `popovertarget="<id>"`, `:popover-open`                             | — (native; Baseline 2025)               |
+| Invoker Commands                      | dialog, lightbox, toaster               | `command="show-modal"` / `command="close"` / custom `command="--toast[-variant]"`, `commandfor="<id>"`                                                            | — (native; Baseline 2026)               |
+| Interest Invokers                     | tooltip, menu, menubar, navigation-menu | `interestfor="<id>"` (hover/focus/long-press → hint, wires ARIA)                                                                                                  | **`invokers/interest`** (Chromium-only) |
+| CSS Anchor Positioning                | popover/tooltip placement               | `data-popover-side`, `data-popover-align` on the `[popover]` (drive `position-area`)                                                                              | `@supports`-gated; UA-centered fallback |
+| Native `<dialog>`                     | dialog, lightbox, mobile-menu           | `<dialog>`, `::backdrop`, `closedby="any"`                                                                                                                        | —                                       |
+| Native `<details>`                    | accordion                               | `<details>`/`<summary>`, `::details-content`, `interpolate-size: allow-keywords`                                                                                  | —                                       |
+| View Transitions                      | cross-page nav                          | `@view-transition { navigation: auto }`, `data-transition-layer="global-header"` / `="global-footer"` (`<main>` is automatic), `document.startViewTransition()`   | —                                       |
+| Navigation API                        | SPA-style nav                           | `navigation.js`, opt-in: `<html data-ui-navigation="swap">`, `data-ui-persist="<id>"` to keep an element, `data-ui-persist-scroll="<id>"` to keep only its scroll | falls back to full page load            |
+| `light-dark()`                        | theming, dark mode                      | `data-ui-theme="dark"` / `"light"` on any element pins `color-scheme`; `--color-*` tokens re-resolve                                                              | —                                       |
+| IntersectionObserver                  | scroll reveals                          | `[data-reveal]` / `[data-reveal-each]` (via `reveal.js`)                                                                                                          | —                                       |
+| `sibling-index()` / `sibling-count()` | reveal stagger delays                   | `[data-reveal-each]` children compute `--ui-reveal-wait` natively                                                                                                 | `@supports`-gated; JS fallback          |
+| `:user-invalid` / `:has()`            | form validation                         | surfaces error state after commit, not while typing                                                                                                               | —                                       |
 
 ## 2. Zazz JS behaviors (data-attribute driven)
 
@@ -39,13 +39,13 @@ SRI-checked); keep the import map above the module.
 These custom elements augment regular child markup; they do not use shadow DOM or templates,
 so the `data-ui`, preset, slot, and utility markup inside them keeps working.
 
-| Element         | Script              | Use for                                     | Notes                                                                                                           |
-| --------------- | ------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `<ui-carousel>` | `carousel.js`       | Component carousels and carousel roots      | The element is the Embla root; put `data-carousel-*` options on it                                              |
-| `<ui-lightbox>` | `lightbox.js`       | Inline gallery + fullscreen dialog lightbox | Coordinates gallery/dialog slide state; opening/closing still uses Invoker Commands                             |
-| `<ui-password>` | `password-group.js` | Password show/hide toggle                   | Wrap `data-ui="password-group"`; optional `data-password-group-label-show` / `-label-hide`; icons swap via ARIA |
-| `<ui-tabs>`     | `tabs.js`           | Radio-driven tabs with richer keyboard nav  | Enhances the CSS-only radio tabs with orientation-aware arrows, Home/End, and wrap-around                       |
-| `<ui-toaster>`  | `toaster.js`        | Stacked toast notifications (top layer)     | Needs `popover="manual"`; fire via `command="--toast"` on any button or `window.Toaster.toast()/success()/…`    |
+| Element         | Script              | Use for                                     | Notes                                                                                                                                                                                                      |
+| --------------- | ------------------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `<ui-carousel>` | `carousel.js`       | Component carousels and carousel roots      | The element is the Embla root; put `data-carousel-*` options on it                                                                                                                                         |
+| `<ui-lightbox>` | `lightbox.js`       | Inline gallery + fullscreen dialog lightbox | Coordinates gallery/dialog slide state; opening/closing still uses Invoker Commands                                                                                                                        |
+| `<ui-password>` | `password-group.js` | Password show/hide toggle                   | Wrap `data-ui="password-group"`; optional `data-password-group-label-show` / `-label-hide`; icons swap via ARIA                                                                                            |
+| `<ui-tabs>`     | `tabs.js`           | Radio-driven tabs with richer keyboard nav  | Enhances the CSS-only radio tabs with orientation-aware arrows, Home/End, and wrap-around                                                                                                                  |
+| `<ui-toaster>`  | `toaster.js`        | Stacked toast notifications (top layer)     | Needs `popover="manual"`; fire via `command="--toast"` on any button (content from `data-toaster-title`, `-description`, `-variant`, `-duration`, `-close-button`) or `window.Toaster.toast()/success()/…` |
 
 Component preview iframes use `packages/core/src/manifest.ts` to load scripts and expose a JS
 tab for these files. Custom elements are `display: inline` by default, so their component
@@ -134,7 +134,9 @@ defers while inside a closed `<dialog>`, and destroys its Embla instances on dis
   convert kebab-case `data-*` to a typed options object. It runs only on elements carrying the
   identity, so a third-party `data-carousel-*` attribute elsewhere is ignored.
 - **`navigation.js`** — opt-in with `<html data-ui-navigation="swap">`: swaps the whole
-  `<body>` between opted-in pages, keeps only `data-ui-persist="<id>"` elements, runs a View
+  `<body>` between opted-in pages, keeps only `data-ui-persist="<id>"` elements (with their
+  scroll offsets; their links take `aria-current` from the new page), carries the scroll offset
+  of `data-ui-persist-scroll="<id>"` elements rendered fresh (a section sidebar), runs a View
   Transition, and refreshes Reveal/Embla (see `packages/core/AUTHORING.md`, Navigation). App-level only; the component preview iframes
   deliberately omit it. Custom elements initialize themselves when connected, so SPA swaps
   do not need a separate init call for them.

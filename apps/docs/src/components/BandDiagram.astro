@@ -1,0 +1,61 @@
+---
+/**
+ * The layout's bands as a diagram: each band a bar at its width relative to a
+ * wide viewport, centered like the real grid, the default (xl) highlighted. A
+ * live layout needs a page-wide grid to show anything; the diagram does not.
+ */
+const VIEWPORT_REM = 112;
+const bands = [
+  { name: "bleed", width: "edge to edge", share: 100 },
+  { name: "full", width: "minus the gutters", share: 94 },
+  { name: "2xl", width: "96rem", share: (96 / VIEWPORT_REM) * 100 },
+  { name: "xl", width: "80rem (default)", share: (80 / VIEWPORT_REM) * 100 },
+  { name: "lg", width: "64rem", share: (64 / VIEWPORT_REM) * 100 },
+  { name: "md", width: "48rem", share: (48 / VIEWPORT_REM) * 100 },
+  { name: "sm", width: "40rem", share: (40 / VIEWPORT_REM) * 100 },
+];
+---
+
+<figure
+  style="
+    --display: flex-col;
+    --gap: 2;
+    --w: 100%;
+  "
+>
+  {
+    bands.map((band) => (
+      <div
+        style={`
+          --display: flex;
+          --justify: space-between;
+          --gap: 2;
+          --w: ${band.share.toFixed(1)}%;
+          --mx: auto;
+          --px: 3;
+          --py: 1.5;
+          --font-size: var(--font-size-xs);
+          --rounded: var(--radius-sm);
+          ${
+            band.name === "xl"
+              ? "--text: var(--color-primary-foreground); --bg: var(--color-primary);"
+              : "--text: var(--color-foreground); --bg: var(--color-muted);"
+          }
+        `}
+      >
+        <span style="--font-family: var(--font-family-mono)">layout-{band.name}</span>
+        <span style="--opacity: 0.8">{band.width}</span>
+      </div>
+    ))
+  }
+  <figcaption
+    style="
+      --mt: 2;
+      --font-size: var(--font-size-xs);
+      --text-align: center;
+      --text: var(--color-muted-foreground);
+    "
+  >
+    Each child of a layout sits in one band. Place it with <code>--band: layout-md</code>.
+  </figcaption>
+</figure>

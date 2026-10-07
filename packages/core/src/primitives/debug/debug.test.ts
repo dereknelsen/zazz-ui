@@ -95,13 +95,13 @@ describe("audit warnings", () => {
 
   it("flags a track list on an integer utility, base or tier, and points at the template form", () => {
     expect(warningsFor(`<div style="--grid-cols: 7fr 5fr"></div>`)).toEqual([
-      expect.stringMatching(/--grid-cols: 7fr 5fr.*integer.*--grid-template-cols/),
+      expect.stringMatching(/--grid-cols: 7fr 5fr.*integer.*--template-cols/),
     ]);
     expect(warningsFor(`<div style="--grid-cols: 1; --grid-cols--md: 1fr 2fr"></div>`)).toEqual([
-      expect.stringMatching(/--grid-cols--md: 1fr 2fr.*--grid-template-cols--md/),
+      expect.stringMatching(/--grid-cols--md: 1fr 2fr.*--template-cols--md/),
     ]);
     expect(warningsFor(`<div style="--grid-rows: auto 1fr"></div>`)).toEqual([
-      expect.stringMatching(/--grid-rows: auto 1fr.*--grid-template-rows/),
+      expect.stringMatching(/--grid-rows: auto 1fr.*--template-rows/),
     ]);
     expect(warningsFor(`<p style="--line-clamp: two"></p>`)).toEqual([
       expect.stringMatching(/^`--line-clamp: two` is not an integer\.$/),
@@ -218,7 +218,13 @@ describe("audit warnings", () => {
     ).toEqual([]);
     expect(warningsFor(`<div style="--grid-cols: 1; --grid-cols--md: subgrid"></div>`)).toEqual([]);
     expect(warningsFor(`<div style="--col-span: full"></div>`)).toEqual([
-      expect.stringMatching(/--col-span: full.*integer.*--col: 1 \/ -1/),
+      expect.stringMatching(/--col-span: full.*integer.*--col-start: 1; --col-end: -1/),
+    ]);
+    expect(warningsFor(`<div style="--row-span--md: full"></div>`)).toEqual([
+      expect.stringMatching(/--row-span--md: full.*integer.*--row-start--md: 1; --row-end--md: -1/),
+    ]);
+    expect(warningsFor(`<div style="--row: span 2"></div>`)).toEqual([
+      expect.stringMatching(/`--row` is an unknown utility/),
     ]);
   });
 
@@ -336,6 +342,27 @@ describe("navigation report", () => {
       ]),
     );
     expect(messages).toHaveLength(3);
+  });
+
+  it("lists the scroll-carried elements, and warns on persist-scroll that cannot work", () => {
+    document.body.innerHTML = `<aside data-ui-persist-scroll="side"></aside>`;
+    expect(navigationReport(document).warnings.map((w) => w.message)).toEqual([
+      expect.stringMatching(/data-ui-persist-scroll.*data-ui-navigation="swap"/),
+    ]);
+    document.documentElement.setAttribute("data-ui-navigation", "swap");
+    expect(navigationReport(document).notes[0]!.message).toMatch(
+      /1 element comes from the next page but keeps its scroll offset \("side"\)/,
+    );
+    document.body.innerHTML = `<div data-ui-persist="cart"></div>`;
+    expect(navigationReport(document).notes[0]!.message).toMatch(/1 element persists across/);
+    document.body.innerHTML = `<aside data-ui-persist-scroll></aside><nav data-ui-persist-scroll="a"></nav><nav data-ui-persist-scroll="a"></nav><header data-ui-persist="head"><nav data-ui-persist-scroll="inner"></nav></header><div data-ui-persist="self" data-ui-persist-scroll="both"></div>`;
+    const messages = navigationReport(document).warnings.map((w) => w.message);
+    expect(messages).toEqual([
+      expect.stringMatching(/data-ui-persist-scroll` has no id/),
+      expect.stringMatching(/data-ui-persist-scroll="a"` is used twice/),
+      expect.stringMatching(/"inner".*inside.*data-ui-persist="head"/),
+      expect.stringMatching(/"both".*data-ui-persist="self"/),
+    ]);
   });
 
   it("flags an incomplete gradient: a type without stops, stops without a type, two types", () => {

@@ -16,10 +16,12 @@
  * orientation and adds Home/End + wrap-around.
  *
  * @example
- * <ui-tabs class="tabs">
+ * <ui-tabs>
  *   <div data-tabs-slot="list" role="tablist">
- *     <label data-tabs-slot="label"><input type="radio" name="tg" checked />One</label>
- *     <label data-tabs-slot="label"><input type="radio" name="tg" />Two</label>
+ *     <input type="radio" role="tab" name="tg" id="tg-1" checked />
+ *     <label for="tg-1" data-tabs-slot="label">One</label>
+ *     <input type="radio" role="tab" name="tg" id="tg-2" />
+ *     <label for="tg-2" data-tabs-slot="label">Two</label>
  *   </div>
  *   <div data-tabs-slot="panel">…</div>
  *   <div data-tabs-slot="panel">…</div>
@@ -51,9 +53,7 @@ class UiTabs extends ZazzElement {
       .filter((tab) => !tab.disabled);
     if (tabs.length < 2) return;
 
-    const vertical =
-      (this.getAttribute("data-tabs-orientation") ?? this.getAttribute("data-orientation")) ===
-      "vertical";
+    const vertical = this.getAttribute("data-tabs-orientation") === "vertical";
     const prevKey = vertical ? "ArrowUp" : "ArrowLeft";
     const nextKey = vertical ? "ArrowDown" : "ArrowRight";
 

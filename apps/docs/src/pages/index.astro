@@ -1,66 +1,162 @@
 ---
 import Logo from "../components/Logo.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { links, site } from "../site.config.ts";
+import { site } from "../site.config.ts";
+import { ArrowUpRight, BookOpenText } from "@lucide/astro";
 ---
 
 <BaseLayout title={site.name}>
-  <main id="main" data-ui="layout" style="--py: 24">
+  <main
+    id="main"
+    data-ui="layout"
+    style="
+      --py: 20; 
+      --min-h: calc(100svh - (13 * var(--spacing))); 
+      --position: relative;
+    "
+  >
+    <div
+      aria-hidden="true"
+      style="
+          --band: layout-full; 
+          --border-x: 3;
+          --border-style: double;
+          --border-color: oklch(from var(--color-border) l c h / 0.25);
+          --position: absolute; 
+          --inset: 0;
+          --pointer-events: none;
+        "
+    >
+    </div>
+    <div
+      aria-hidden="true"
+      style="
+          --band: layout-2xl; 
+          --border-x: 3;
+          --border-style: double;
+          --border-color: oklch(from var(--color-border) l c h / 0.25);
+          --position: absolute; 
+          --inset: 0;
+          --pointer-events: none;
+        "
+    >
+    </div>
+    <div
+      aria-hidden="true"
+      style="
+          --band: layout-xl; 
+          --border-x: 3;
+          --border-style: double;
+          --border-color: oklch(from var(--color-border) l c h / 0.25);
+          --position: absolute; 
+          --inset: 0;
+          --pointer-events: none;
+        "
+    >
+    </div>
+    <div
+      aria-hidden="true"
+      style="
+          --band: layout-lg; 
+          --border-x: 3;
+          --border-style: double;
+          --border-color: oklch(from var(--color-border) l c h / 0.25);
+          --position: absolute; 
+          --inset: 0;
+          --pointer-events: none;
+        "
+    >
+    </div>
+    <div
+      aria-hidden="true"
+      style="
+          --band: layout-md; 
+          --border-x: 3;
+          --border-style: double;
+          --border-color: oklch(from var(--color-border) l c h / 0.25);
+          --position: absolute; 
+          --inset: 0;
+          --pointer-events: none;
+        "
+    >
+    </div>
+    <div
+      aria-hidden="true"
+      style="
+          --band: layout-sm; 
+          --border-x: 3;
+          --border-style: double;
+          --border-color: oklch(from var(--color-border) l c h / 0.25);
+          --position: absolute; 
+          --inset: 0;
+          --pointer-events: none;
+        "
+    >
+    </div>
     <div
       style="
-        --col: layout-md;
+        --band: layout-bleed;
         --display: flex-col;
         --items: center;
         --justify: center;
-        --h: 100%;
         --gap: 6;
         --text-align: center;
-        --max-w: var(--article-sm);
+        --my: auto;
       "
     >
-      <Logo variant="lockup" size={32} title="Zazz" />
-      <h1 data-ui="sr-only">{site.title}</h1>
-      <p
-        data-ui="text-xl"
-        style="
-          
-          --text-wrap: balance;
-        "
-      >
-        HTML's missing UI kit
-      </p>
-      <p>
-        Identities, presets, and style utilities in your markup, with design
-        tokens and cascade layers underneath. No build step.
-      </p>
-      <p
-        data-ui="text-sm"
-        style="
-          --display: flex;
-          --items: center;
-          --gap: 2;
-          --text: var(--color-muted-foreground);
-        "
-      >
-        <span data-ui="badge" data-badge-variant="outline">Alpha</span>
-        The markup contract can change in any release before 1.0.
-      </p>
       <div
         style="
-          --display: flex;
-          --flex-wrap: wrap;
+          --py: 12;
+          --display: flex-col; 
+          --items: center; 
+          --justify: center; 
+          --gap: 6;
+          --z: 1;
+        "
+        data-reveal-each="slide-up"
+      >
+        <div>
+          <Logo variant="lockup" size={32} title="Zazz" />
+        </div>
+        <h1 data-ui="sr-only">{site.title}</h1>
+        <p
+          data-ui="text-h5"
+          style="
+          --pt: 4;
+          --text-wrap: balance;
+        "
+        >
+          HTML&rsquo;s missing design system
+        </p>
+        <p
+          data-ui="text-lg"
+          style="--text: var(--color-muted-foreground); --font-weight: 300; --max-w: var(--article-sm); --mx: auto; --text-wrap: balance;"
+        >
+          A markup-first, composable, and accessible UI library and design
+          system for no-build, low-build, and vanilla web projects.
+        </p>
+        <div style="--display: flex-col; --gap: 6;">
+          <div
+            style="
+          --display: grid;
+          --grid-cols--sm: 2;
           --justify: center;
           --gap: 2;
         "
-      >
-        <a
-          href="/docs/quick-start/"
-          data-ui="button"
-          data-button-variant="primary">Get started</a
-        >
-        <a href="/api/" data-ui="button" data-button-variant="outline"
-          >API reference</a
-        >
+          >
+            <a
+              href="/docs/quick-start/"
+              data-ui="button"
+              data-button-variant="primary"><BookOpenText /> Read the docs</a
+            >
+            <a href="/api/" data-ui="button" data-button-variant="outline"
+              >Explore the API</a
+            >
+          </div>
+          <a href="/playground" data-ui="button" data-button-variant="link"
+            >Zazz playground <ArrowUpRight /></a
+          >
+        </div>
       </div>
     </div>
   </main>

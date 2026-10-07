@@ -7,6 +7,14 @@ order: 0
 primitive: debug
 ---
 
+## Example
+
+Add it once, at the end of `<body>`, in the pages you develop on. It audits the whole page and logs its findings to the console. On a hostname it doesn't list, it removes itself and logs one warning saying so (`data-debug-warnings="false"` silences that), so the tag can stay in a shared template.
+
+```html
+<ui-debug data-debug-domains="localhost, staging.example.com"></ui-debug>
+```
+
 ## Behavior
 
 {% behavior primitive="debug" /%}

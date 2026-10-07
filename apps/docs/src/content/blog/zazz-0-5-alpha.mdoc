@@ -1,53 +1,161 @@
 ---
-title: "Zazz 0.5 alpha: style utilities replace utility classes"
-description: "The 0.5 release moves every value out of class names and into custom properties, puts identity in data-ui, and ships a CLI that vendors primitives you own."
+title: "Zazz 0.5.0 alpha"
+description: "Zazz 0.5.0 replaces utility classes with style utilities: inline custom properties that keep the cascade and cascade layers intact."
 date: 2026-10-06
 draft: true
 tags: ["release"]
 ---
 
-Zazz 0.5 is the first alpha of the markup contract we intend to stabilize for 1.0. It is a breaking release: 0.4 pages do not render under 0.5, and there are no compatibility shims. The [changelog](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/CHANGELOG.md) flags every breaking entry with a one-line migration; this post is the shape of the change.
+**Zazz 0.5.0 alpha is a huge milestone that redefines the future of the Zazz design system and primitives library.**
 
-## Values live in `style`
+## Introduction of style utilities
 
-0.4 carried values the Tailwind way, as class names: `class="px-6 opacity-90 hover:opacity-100 @md:w-fit"`. 0.5 carries them as custom properties in the element's `style` attribute:
+This release removes the Tailwind-like class utility system in favor of an inline CSS custom property syntax we call [style utilities](/api/utilities/). This rework opens up huge wins for performance, file size, and flexibility. It also sets Zazz up to take full advantage of the new [`if()`](https://developer.mozilla.org/en-US/docs/Web/CSS/if), [`style()`](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_size_and_style_queries), and [`@function`](https://developer.mozilla.org/en-US/docs/Web/CSS/@function) CSS features as soon as they're widely available, which will greatly reduce file size and add a huge number of style utilities that would otherwise bloat the system.
+
+**0.4.x syntax:**
 
 ```html
-<button 
-  data-ui="button" 
-  data-button-variant="primary" 
-  style="
-    --px: 6; 
-    --opacity: .9; 
-    --opacity--hover: 1; 
-    --w--md: fit-content
-  ">
-  Save
-</button>
+<section class="py-xl text-center">
+  <div class="container">
+    <hgroup class="flex flex-col gap-sm">
+      <span class="text-eyebrow">Utilities</span>
+      <h1 class="text-h1" tabindex="-1">Responsive utilities</h1>
+      <p class="text-lg text-muted-foreground @md:max-w-screen-sm">
+        Every utility below carries an <code>@</code> breakpoint prefix. They are
+        mobile-first, gated on the global breakpoint flags from the body container, so they
+        react to the viewport. Resize to watch them move.
+      </p>
+      <a href="#" class="ui-button mt-md" data-variant="primary">Get started</a>
+    </hgroup>
+  </div>
+</section>
 ```
 
-We call these **style utilities**. The stylesheet gates on the attribute text (`[style*="--px:"]`) and reads the value through registered, non-inheriting properties, so the CSS is a fixed size no matter how many values a site uses, nothing leaks into children, and an element's values are in one place. Breakpoints (`--w--md`) and states (`--opacity--hover`) are suffixes on the same property, and `--group-*` reacts to an ancestor.
+**0.5.0 syntax:**
 
-## Identity is `data-ui`
+```html
+<section
+  style="
+    --py: 24;
+    --text-align: center;
+  "
+>
+  <div data-ui="layout">
+    <hgroup
+      style="
+        --display: flex-col;
+        --gap: 6;
+        --text-align: center;
+      "
+    >
+      <span data-ui="text-eyebrow">Utilities</span>
+      <h1 data-ui="text-h1" tabindex="-1">Responsive utilities</h1>
+      <p
+        data-ui="text-lg"
+        style="
+          --max-w: 100%;
+          --max-w--md: 60ch;
+          --text-wrap: balance;
+          --text: var(--color-muted-foreground);
+        "
+      >
+        Every utility below carries an <code>@</code> breakpoint prefix. They are
+        mobile-first, gated on the global breakpoint flags from the body container, so they
+        react to the viewport. Resize to watch them move.
+      </p>
+      <a
+        href="#"
+        data-ui="button"
+        data-button-variant="primary"
+        style="--mt: 24"
+      >Get started</a>
+    </hgroup>
+  </div>
+</section>
+```
 
-Classes are gone from the kit entirely. An element says what it is with `data-ui="button"` (a space-separated token list, so `data-ui="card group"` works), picks a preset with `data-button-variant="primary"`, and names a part with `data-dialog-slot="header"`. Every `data-<name>-*` selector is compounded with its identity, so another library's `data-carousel-item` matches nothing. The `class` attribute is yours.
+You have likely never seen a syntax quite like this, and your first question might be, "why not use normal inline styles?"
 
-## Tokens, layout, breakpoints
+The essential idea is that inline styles break the CSS cascade: they win over every selector, and they ignore [cascade layers](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer). If you've ever had to deal with inline styles that you're unable to remove from the markup, you know how much suffering they can cause.
 
-- Color roles are `--color-*` (`--color-primary`, `--color-muted-foreground`), declared once as `light-dark()` pairs; the bare shadcn names are gone.
-- The layout primitive replaces `.container`: `data-ui="layout"` is the band grid for its children, and `--col: layout-md` places one of them.
-- Breakpoints are Tailwind's five names with thresholds in `ch`, read from the nearest inline-size container rather than the window. Layout widths are a separate rem scale.
-- New states: `starting` (the `@starting-style` value a transition animates from) and the experimental `stuck`.
-- Border shorthands (`--border: 1`, `--border-l: var(--color-primary)`) and dividers (`data-ui="divide-y"`).
+Style utilities, on the other hand, _preserve_ the cascade and correctly use [Zazz's cascade layers](/api/foundations/layers/) by using the style attribute and the variable name inside it as the selector itself.
 
-## Own the code
+**The simplest expression of this idea looks like this:**
 
-The `zazz-ui` CLI vendors the base platform and any primitives into your project, records the pristine hash of every file, and three-way merges later updates: your edits survive, upstream fixes land, and only a real conflict asks a question. There is no runtime dependency on the package.
+```css
+@property --p { syntax: "*"; inherits: false; }
 
-## Tooling that agrees with itself
+@layer ui.utilities {
+  :where([style*="--p:"]) {
+    padding: var(--p);
+  }
+}
+```
 
-`<ui-debug>` audits a page in the browser; the same audit runs in the editor through a language server (the VS Code extension), on the command line as an ESLint plugin, and in the commit hook. They share one implementation, so the squiggle, the console warning, and the CI failure point at the same range.
+The trick is to keep style utilities from inheriting values from parent elements (that's the `inherits: false` in the [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) registration). Once you do that, each element's styles become scoped to itself. The result is a syntax that feels and reads more like [StyleX](https://stylexjs.com/) but uses familiar, Tailwind-like shorthand naming conventions that many developers are already used to.
 
-## What alpha means
+Zazz style utilities take this idea even further by allowing design system values and arbitrary values to live together.
 
-The contract in `SPEC.md` is complete and validated, but it will move before 1.0 as real applications push on it. Pin exact versions, read the changelog slice `zazz-ui update` prints before it changes anything, and tell us what broke.
+**All the following values are valid:**
+
+```html
+<div
+  style="
+    --p: 24; /* Spacing scale: equivalent to `calc(24 * var(--spacing, 0.25rem))` */
+    --p: 6rem; /* Fixed value: can be any regular length value */
+    --p: var(--space-md); /* Variable: can be any CSS variable of the same value type */
+  "
+></div>
+```
+
+Zazz uses CSS property types and type invalidation to switch between arbitrary fixed values and [spacing scale](/api/utilities/spacing/) values without functions or if statements.
+
+**The real utility looks closer to this:**
+
+```css
+@property --p { syntax: "*"; inherits: false; }
+@property --_p { syntax: "*"; inherits: false; }
+@property --_p-resolved { syntax: "*"; inherits: false; }
+@property --_p-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_p-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+
+@layer ui.utilities {
+  :where([style*="--p:"], [style*="--p--"]) {
+    --_p-resolved: var(--_p-2xl, var(--_p-xl, var(--_p-lg, var(--_p-md, var(--_p-sm, var(--_p))))));
+  }
+  :where([style*="--p:"]) {
+    --_p: var(--p);
+    --_p-len: var(--_p-resolved);
+    --_p-num: var(--_p-resolved);
+    padding: calc(var(--_p-len) + var(--_p-num) * var(--spacing));
+  }
+}
+```
+
+The `--_p-sm` through `--_p-2xl` values come from [breakpoint tiers](/api/modifiers/responsive/) like `--p--md: 12`. Much of this code will be simplified once `if()` CSS conditionals become widely available, but this solution brings type-driven conditional values to Zazz today.
+
+### How this affects legacy system migration
+
+There are two core target audiences for Zazz UI. First, Zazz is a no-build, drop-in solution that any technology can use without adopting new infrastructure. But Zazz is also built specifically for legacy applications, which drives the core decision to stay out of the class attribute.
+
+Many legacy applications are stuck with decades of fragile technical debt and rely heavily on classes as their primary target for styles and JavaScript selectors. On top of that, their backend language of choice often manipulates classes or depends on specific classes in ways that are difficult to track down or too fragile to just delete.
+
+Zazz stays out of your classes and can live beside them without worrying about name conflicts or unforeseen downstream bugs. Style utilities themselves never conflict with other JavaScript libraries that use the inline style attribute for things like animations or state changes. When JavaScript is turned on, your style utilities can be automatically preserved, even if a library tries to clear the style attribute completely, with the [style guard](/api/primitives/style-guard/). The [migration guide](/docs/concepts/migrating/) covers bringing Zazz into an existing app.
+
+### Other notable features
+
+- [`data-ui` identity](/docs/concepts/core-concepts/). Zazz never reads or writes a class. Components are `data-ui="button"`, presets are `data-button-variant="primary"`, and parts are `data-dialog-slot="header"`.
+- [Breakpoints](/api/modifiers/responsive/), [states](/api/modifiers/states/), and [groups](/api/modifiers/group/) are suffixes on the same utility: `--w--md`, `--bg--hover`, `--group-opacity--hover`. Plus the new [`starting`](/api/modifiers/starting/) state for `@starting-style` and an experimental [`stuck`](/api/modifiers/stuck/) state.
+- [Container breakpoints](/api/foundations/breakpoints/). Five Tailwind names (`sm` through `2xl`) with thresholds in `ch`, read from the nearest container instead of the window.
+- [Layout primitive](/api/primitives/layout/) replaces `.container` with a band grid.
+- [Pseudo-element utilities](/api/utilities/pseudo-elements/) (`--before-*`, `--after-*`) for accent bars and badge dots without a stylesheet.
+- New utilities: [border shorthands](/api/utilities/borders/) (`--border-b: 1`), [gradients](/api/utilities/backgrounds/), Tailwind-style grid placement, and the [`divide-x` / `divide-y` switches](/api/switches/).
+- [Color roles](/api/foundations/tokens/) are `--color-*` tokens built on `light-dark()`, and `data-ui-theme` pins a theme. See [theming](/docs/theming/customization/).
+- A new [card](/api/primitives/card/) primitive, and [button](/api/primitives/button/) and [badge](/api/primitives/badge/) now cover all four status colors: info, success, warning, and destructive.
+- [Opt-in in-page navigation](/api/javascript/navigation/) that keeps marked elements (a toast stack, a playing video) alive across pages.
+- [`<ui-debug>`](/api/primitives/debug/) audits your markup in the browser. The same audit runs in the [VS Code extension and the ESLint plugin](/docs/tooling/editor-and-linting/).
+- The `zazz-ui` CLI copies primitives into your project and merges later updates with your edits. See [installation](/docs/install/installation/).
+- [AI-ready docs](/docs/ai/llm-resources/): `AUTHORING.md` ships in the package, and the site publishes `llms.txt`.
+- A [playground](/playground/) for trying markup in the browser.
+
+The [changelog](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/CHANGELOG.md) lists every breaking change with a one-line migration.

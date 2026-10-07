@@ -27,7 +27,7 @@
  *
  * Parts: `command-open` (trigger), `command-panel`, `command-header`,
  * `command-input`, `command-list`, `command-group` / `command-group-label`,
- * `command-item` (`data-value`, `data-keywords`), `command-kbd`,
+ * `command-item` (`data-command-value`, `data-command-keywords`), `command-kbd`,
  * `command-footer`, `command-empty`.
  *
  * For complex custom actions, see the example `command-actions.ts`: listen
@@ -62,7 +62,7 @@ class UiCommand extends TypeaheadElement {
 
     // Per-item accelerators: global while connected, panel open or not
     for (const item of this.items()) {
-      const spec = item.getAttribute("data-command-hotkey") ?? item.getAttribute("data-hotkey");
+      const spec = item.getAttribute("data-command-hotkey");
       if (spec) {
         bindHotkey(spec, () => this.#activate(item, true), { signal });
       }
@@ -135,7 +135,7 @@ class UiCommand extends TypeaheadElement {
         this.#clicking = false;
       }
     }
-    if (!(item.hasAttribute("data-command-stay-open") || item.hasAttribute("data-stay-open"))) {
+    if (!item.hasAttribute("data-command-stay-open")) {
       this.#closePanel();
     }
   }

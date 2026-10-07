@@ -20,13 +20,13 @@
  * toggle button simply does nothing.
  *
  * Configuration (attributes on `<ui-password>`):
- * - `data-label-show`: Toggle label while the password is hidden (default "Show password").
- * - `data-label-hide`: Toggle label while the password is visible (default "Hide password").
+ * - `data-password-group-label-show`: Toggle label while the password is hidden (default "Show password").
+ * - `data-password-group-label-hide`: Toggle label while the password is visible (default "Hide password").
  *
  * @example
  * <ui-password>
- *   <label class="password-group">
- *     <input class="input" type="password" autocomplete="current-password" />
+ *   <label data-ui="password-group">
+ *     <input data-ui="input" type="password" autocomplete="current-password" />
  *     <span data-password-group-slot="addon" data-password-group-align="inline-end">
  *       <button data-ui="button" data-password-group-slot="toggle" type="button"
  *         aria-pressed="false" aria-label="Show password">…</button>
@@ -76,14 +76,8 @@ class UiPassword extends ZazzElement {
 
     effect(
       () => {
-        const labelShow =
-          (this.getAttribute("data-password-group-label-show") ??
-            this.getAttribute("data-label-show")) ||
-          "Show password";
-        const labelHide =
-          (this.getAttribute("data-password-group-label-hide") ??
-            this.getAttribute("data-label-hide")) ||
-          "Hide password";
+        const labelShow = this.getAttribute("data-password-group-label-show") || "Show password";
+        const labelHide = this.getAttribute("data-password-group-label-hide") || "Hide password";
         const next = resolveToggleState(revealed.get(), labelShow, labelHide);
         input.type = next.type;
         toggle.setAttribute("aria-pressed", next.ariaPressed);

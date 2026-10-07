@@ -4,7 +4,7 @@
  * that pins the kit's bare specifiers, the one polyfill, the kit module, and
  * the theme script that paints `data-ui-theme` before first paint.
  */
-import { buildHead } from "@zazz-ui/core/head";
+import { buildHead } from "@zazz-ui/core/head.ts";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { DIST_ROOT, ZAZZ_URL_BASE } from "./kit.ts";
@@ -25,9 +25,4 @@ export function siteHead(options: { dev?: boolean } = {}): string {
   return head
     .replaceAll(`${ZAZZ_URL_BASE}/index.css`, `${ZAZZ_URL_BASE}/zazz.css`)
     .replaceAll(`${ZAZZ_URL_BASE}/index.js`, `${ZAZZ_URL_BASE}/zazz.js`);
-}
-
-/** Head markup for a preview iframe: the kit's `src/` tree, scripts optional. */
-export function previewHead(options: { scripts: boolean }): string {
-  return buildHead({ base: ZAZZ_URL_BASE, scripts: options.scripts, fontDisplay: "optional" });
 }

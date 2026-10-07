@@ -4,7 +4,7 @@
  * each tag expands to the Markdown version of what the component renders
  * (a fenced fragment, a table, a blockquote) from the same kit data.
  */
-import { buildHead } from "@zazz-ui/core/head";
+import { buildHead } from "@zazz-ui/core/head.ts";
 import { globalAttributes, switches, tokenGroup, typographyRoles } from "./api/foundations.ts";
 import { primitiveApi } from "./api/primitives.ts";
 import { utilityRows } from "./api/utilities.ts";

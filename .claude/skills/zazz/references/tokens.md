@@ -56,8 +56,8 @@ var(--color-shade-600), transparent 20%` (scrim over a photo); `--bg-radial: cir
 ## 3. Color — scales & overlays (escape hatch only)
 
 - **Scales 50–950:** `--color-primary-50…950` (same for `--color-secondary-*`, `--color-tertiary-*`,
-  `--color-neutral-*`), plus `--color-white` / `--color-black`. The light theme binds the brand roles
-  at **950** and dark at **800**. Reach a fixed shade in a utility:
+  `--color-neutral-*`), plus `--color-white` / `--color-black`. The kit's placeholder scales are
+  neutral; it binds the brand roles at **950** (light) and **50** (dark). Reach a fixed shade in a utility:
   `--bg: var(--color-primary-900)`.
 - **Overlays (alpha):** `--color-shade-50…950` / `--color-shade-full` (darken; backdrops — `--color-shade-900` is
   the dialog default) and `--color-tint-50…950` / `--color-tint-full` (lighten). `*-none` = transparent.
@@ -65,29 +65,29 @@ var(--color-shade-600), transparent 20%` (scrim over a photo); `--bg-radial: cir
 ## 4. Typography — roles first; never compose a role from parts
 
 - **Roles (size + weight + leading + tracking bundled, all fluid):** native `h1`–`h6`, or
-  `data-ui="text-display"`, `text-h1 … text-h6`, `text-xl text-lg text-md text-sm text-xs`,
-  `text-eyebrow`. A role stacks with other tokens: `data-ui="badge text-xs"`.
+  `data-ui="text-display"`, `text-h1 … text-h6`, `text-2xl text-xl text-lg text-md text-sm text-xs
+text-2xs`, `text-eyebrow`. A role stacks with other tokens: `data-ui="badge text-xs"`.
 - **Override one property** with a utility: `--font-size`, `--font-weight`, `--font-family`,
   `--font-style`, `--leading`, `--tracking`, `--text-align`, `--text-transform`, `--text-wrap`,
-  `--text-decoration`, `--whitespace`, `--line-clamp` (`1` = truncate).
+  `--text-decoration` (also takes states: `--text-decoration--hover: underline`), `--white-space`, `--line-clamp` (`1` = truncate).
 - **Weights:** `--font-weight: strong` (also `heading`, `body`) reads the role weight token; otherwise
   a number (`500`; standard names like `medium` are not CSS).
-- **Tokens behind them:** `--font-size-*`, `--font-weight-body|heading|strong|eyebrow|mono`,
+- **Tokens behind them:** `--font-size-*`, `--font-weight-body|heading|strong|eyebrow`,
   `--leading-*`, `--tracking-*`, `--paragraph-spacing-*`, families
-  `--font-family-body|heading|mono` (raw `--font-family-body|heading|mono`).
-- **Rich text:** `data-ui="prose"` (`--ui-prose-*` hooks).
+  `--font-family-body|heading|mono`.
+- **Rich text:** `data-ui="prose"` (`--ui-prose-*` hooks); `data-ui="not-prose"` on a wrapper exempts a widget inside it.
 
 ## 5. Radius
 
-`--radius-none|xs|sm|md|lg|xl|full`, scaled by `--radius-multiplier`. Conventions: **md** =
-buttons/inputs, **lg** = cards/dialogs, **sm** = badges, **full** = pills/circles. Utility:
+`--radius-none|2xs|xs|sm|md|lg|xl|2xl|full`, scaled by `--radius-multiplier`. Conventions: **md** =
+buttons/inputs/cards, **lg** = dialogs, **sm** = badges, **full** = pills/circles. Utility:
 `--rounded` (raw `border-radius`, so per-corner values work:
 `--rounded: var(--radius-md) var(--radius-md) 0 0`).
 
 ## 6. Shadow & elevation
 
-`--shadow-2xs … 2xl` — soft, multi-layer. Surfaces are flat by default; apply elevation
-intentionally (**md** ≈ popovers/modals). Utility: `--shadow` takes the size by name at every tier
+`--shadow-2xs … 2xl` — soft, multi-layer. Surfaces are flat by default (a `floating` card takes a resting **sm**); apply
+elevation on purpose (**md** ≈ popovers/modals). Utility: `--shadow` takes the size by name at every tier
 (`--shadow: xs; --shadow--hover: md`), or any shadow / `var()`. Color: `--color-shadow` on `:root`
 tints every shadow; `--shadow-hue: var(--color-primary)` tints an element's and its subtree's
 shadows (keyword, `var()`, and primitive shadows alike). A shadow utility never removes a
@@ -98,7 +98,7 @@ primitive's focus ring.
 - **Layout bands:** `data-ui="layout"` (or `<ui-layout>`) makes the element the band grid for
   its children. Bands `sm md lg xl 2xl` cap at the `--layout-*` widths (rem), `full` = minus
   `--gutters`, `bleed` = edge to edge. Children default to **`xl`**; `data-layout-size="md"`
-  changes the default; `--col: layout-full` (responsive `--col--md: layout-sm`) places one
+  changes the default; `--band: layout-full` (responsive `--band--md: layout-sm`) places one
   child. A nested layout is a subgrid that keeps the parent's band lines.
 - **Reading width:** `--max-w: var(--article-lg); --mx: auto` (`--article-xs` 45ch … `--article-xl`
   75ch), usually on `data-ui="prose"`.
@@ -113,17 +113,20 @@ primitive's focus ring.
   `--basis`, `--order`, `--items`, `--justify`, `--self`, and for grids `--place-items`, `--place-content`
   (alignment keywords only: `center`, `start`, `safe end`, `space-between`…).
 - **Grid utilities (Tailwind's set):** `--grid-cols` / `--grid-rows` (integer → equal tracks, or
-  `subgrid`; `none` is `--grid-template-cols: none`), `--grid-template-cols` / `--grid-template-rows` (raw track list),
+  `subgrid`; `none` is `--template-cols: none`), `--template-cols` / `--template-rows` (raw track list),
   `--grid-fit` (length → auto-fit columns), `--grid-flow`, `--auto-cols`, `--auto-rows`.
   Placement: `--col-span` / `--row-span` (integer → `span n / span n`), `--col-start`,
-  `--col-end`, `--row-start`, `--row-end` (line numbers), and `--col` / `--row` for a raw
-  `grid-column` / `grid-row` (`1 / -1` spans every track; `layout-md` places a layout child).
+  `--col-end`, `--row-start`, `--row-end` (line numbers; `--col-start: 1; --col-end: -1` spans
+  every track). `--band: layout-md` places a layout child.
 - **Switches:** `data-ui="pile"` (stack children in one cell), `data-ui="container"` (inline-size query container), `data-ui="isolate"` (new stacking
   context; pairs with pile for layered heroes: `data-ui="pile isolate"`), `data-ui="sr-only"`,
+  `data-ui="not-prose"` (a prose ancestor skips this subtree),
+  `data-ui="truncate"` (one line, overflow ends in an ellipsis; a flex item also needs `--min-w: 0`),
+  `data-ui="spin"` / `"ping"` / `"pulse"` / `"bounce"` (Tailwind's looping animations on the default easing; off under reduced motion),
   `data-ui="divide-x"` / `"divide-y"` (a border between direct children; `--divide` on the container sizes or colors it, §11).
 - **Scroll fade:** `data-ui="scroll-fade"` (+ `data-scroll-fade-axis="x"`), hooks
   `--ui-scroll-fade-size`, `--ui-scroll-fade-reveal`.
-- **Box utilities:** `--overflow --overflow-x --overflow-y`, `--object-fit`, `--z`,
+- **Box utilities (no tiers):** `--overflow --overflow-x --overflow-y`, `--object-fit`, `--z`,
   `--visibility`.
 
 ## 8. Focus ring
@@ -170,12 +173,18 @@ Separators between items are `<hr data-ui="separator">`.
 
 Color utilities also take breakpoint tiers (`--bg--md: var(--color-muted)`; a state still beats
 them). Color and effects utilities take state tiers: `hover active focus-visible focus-within disabled open
-checked starting`, e.g. `--text: var(--color-muted-foreground); --text--hover: var(--color-foreground)`.
+checked current starting` (`current` is `[aria-current]`, not `"false"`), e.g. `--text: var(--color-muted-foreground); --text--hover: var(--color-foreground)`.
 Group tiers react to an ancestor with `data-ui="group"`:
-`--opacity: 1; --group-opacity--hover: 0.85`. Pseudo-elements: `--before-content: ''` plus
-`--before-<utility>` / `--after-<utility>` for sizing, padding, inset/position, display, z, color, `--rounded`,
-opacity, transforms, transition, and font size/weight (an accent bar: `--before-position: absolute; --before-inset-y: 0; --before-left: 0; --before-w: 1; --before-bg: var(--color-primary)`). On a primitive, prefer
-the state hook (`--ui-button-bg--hover`) so its own states stay intact.
+`--opacity: 1; --group-opacity--hover: 0.85`. On a primitive, prefer the state hook
+(`--ui-button-bg--hover`) so its own states stay intact.
+
+Pseudo-elements: `--before-content: ''` plus `--before-<utility>` / `--after-<utility>` for
+`--position`, `--display`, `--z`, `--inset` `--inset-x` `--inset-y` `--top` `--right` `--bottom` `--left`,
+padding, sizing and `--aspect`, `--text`, `--bg` (+ `--bg-alpha`), the border longhands,
+`--rounded`, `--outline`, `--opacity`, `--visibility`, `--pointer-events`, `--scale` `--translate`
+`--rotate`, `--transition`, `--font-size`, `--font-weight`. They take no tiers. An accent bar:
+`--before-content: ''; --before-position: absolute; --before-inset-y: 0; --before-left: 0;
+--before-w: 1; --before-bg: var(--color-primary)`.
 
 `--<utility>--starting` is the `@starting-style` value: an element starts there when it first
 renders or leaves `display: none`, and a `--transition` animates it in; e.g.

@@ -7,6 +7,27 @@ order: 0
 primitive: style-guard
 ---
 
+## Example
+
+Load the script once. When the page is ready it starts watching, and from then on it puts back an element's utilities whenever another script replaces its whole `style` attribute.
+
+```html
+<script type="module" src="/zazz/primitives/style-guard/style-guard.js"></script>
+
+<div id="banner" style="--p: 4; --bg: var(--color-muted)">Promo</div>
+<button type="button" id="legacy">Run the legacy script</button>
+<script>
+  // a legacy script rewrites the attribute; the guard restores --p and --bg
+  document.getElementById("legacy").addEventListener("click", () => {
+    document.getElementById("banner").style.cssText = "display: block";
+  });
+</script>
+```
+
+A rewrite that runs before the guard starts (an inline script during page load) wins, because there is nothing to restore yet.
+
+`data-ui-guard="off"` on an element opts it out.
+
 ## Behavior
 
 {% behavior primitive="style-guard" /%}

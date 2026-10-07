@@ -4,7 +4,7 @@
  * Borders. The test next to this file fails when a utility is added to the
  * kit's table and not filed here, or filed twice.
  */
-import { PSEUDO_ONLY, UTILITIES } from "@zazz-ui/core/base/utilities.js";
+import { PSEUDO_ONLY, UTILITIES } from "@zazz-ui/core/base/utilities.ts";
 
 export interface UtilitySection {
   /** URL slug under `/api/utilities/`. */
@@ -50,17 +50,16 @@ export const UTILITY_SECTIONS: readonly UtilitySection[] = [
       "order",
       "grid-cols",
       "grid-rows",
-      "grid-template-cols",
-      "grid-template-rows",
+      "template-cols",
+      "template-rows",
       "grid-fit",
       "grid-flow",
       "auto-cols",
       "auto-rows",
-      "col",
+      "band",
       "col-span",
       "col-start",
       "col-end",
-      "row",
       "row-span",
       "row-start",
       "row-end",

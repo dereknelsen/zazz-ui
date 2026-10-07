@@ -16,6 +16,39 @@ A switch is the smallest kind of primitive: a fixed rule set with no slots, no t
 
 {% preview src="utilities/pile" /%}
 
+## Truncate
+
+`truncate` keeps text on one line and ends the overflow with an ellipsis. It needs a width to overflow: a block element, a sized one (`--w: 48`), or a flex item with `--min-w: 0`, since a flex item can't shrink below its content otherwise. To clamp to more than one line, use the `--line-clamp` utility instead.
+
+```html
+<p data-ui="truncate">A file name far too long for its column.pdf</p>
+```
+
+## Animations
+
+`spin`, `ping`, `pulse`, and `bounce` are Tailwind's looping animations: a spinner, a ping that scales out and fades (put it on a copy stacked behind a notification dot), a skeleton loader's slow fade, and a bounce for a scroll hint. They run on the kit's transition easing (`--default-transition-timing-function`) and stop when the visitor prefers reduced motion. They animate `transform`, so `--rotate`, `--scale`, and `--translate` still apply on top.
+
+```html
+<svg data-ui="spin" aria-hidden="true">…</svg>
+<span data-ui="pile">
+  <i
+    data-ui="ping"
+    style="
+      --size: 2;
+      --bg: var(--color-primary);
+      --rounded: var(--radius-full);
+    "
+  ></i>
+  <i
+    style="
+      --size: 2;
+      --bg: var(--color-primary);
+      --rounded: var(--radius-full);
+    "
+  ></i>
+</span>
+```
+
 ## Dividers
 
 `divide-x` and `divide-y` draw a border between direct children. The container's `--divide` sizes or colors it with the border grammar: a number is pixels in `--color-border`, a color is 1px in that color, a length is the width.

@@ -1,6 +1,6 @@
 # Instance-hooks audit
 
-Status: in progress (2026-08-25)
+Status: superseded (ADR-0012 replaced ADR-0008, which this spec builds on; its one issue is resolved)
 
 Full sweep of `packages/core/src/primitives/<name>/<name>.css` for missing per-instance
 override hooks, per ADR-0008 (`docs/adr/0008-instance-override-escape-hatch.md`).

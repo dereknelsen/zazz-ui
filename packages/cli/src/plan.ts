@@ -6,10 +6,11 @@
  * the recorded language (`.js` ships with its `.d.ts`; `--ts` swaps to the
  * TypeScript source). Manifest v1 exports no base inventory, so the v1 list
  * lives here, pinned to the manifest version the CLI declares support for;
- * newer kits that export `BASE_CSS`/`CORE_RUNTIME` take precedence.
+ * newer kits that export `BASE_CSS_*`/`CORE_RUNTIME` take precedence, and
+ * `CORE_POLYFILLS` (none in v1) vendor with the runtime.
  */
 
-import type { KitManifest, PrimitiveEntry } from "./kit.ts";
+import type { KitManifest, PrimitiveEntry, RuntimePolyfill } from "./kit.ts";
 
 /** The v1 base stylesheet inventory (kit `src/index.css` cascade shell). */
 const V1_BASE_CSS_PRE = [
@@ -28,6 +29,11 @@ const V1_CORE_RUNTIME = [
   "base/zazz-element.js",
   "base/dialog-lifecycle.js",
 ];
+
+/** CSS-gated polyfills the entry loads where a feature is missing; none before the kit exports them. */
+export function corePolyfills(manifest: KitManifest): RuntimePolyfill[] {
+  return manifest.corePolyfills ?? [];
+}
 
 export type Language = "js" | "ts";
 
@@ -54,11 +60,14 @@ export function scriptVariants(jsPath: string, language: Language): string[] {
   return [jsPath, jsPath.replace(/\.js$/, ".d.ts")];
 }
 
-/** Everything `init` vendors: base css + core runtime per language. */
+/** Everything `init` vendors: base css + core runtime and its polyfills, per language. */
 export function baseFiles(manifest: KitManifest, language: Language): string[] {
   return [
     ...baseCss(manifest),
-    ...coreRuntime(manifest).flatMap((jsPath) => scriptVariants(jsPath, language)),
+    ...[
+      ...coreRuntime(manifest),
+      ...corePolyfills(manifest).map((polyfill) => polyfill.file),
+    ].flatMap((jsPath) => scriptVariants(jsPath, language)),
   ];
 }
 

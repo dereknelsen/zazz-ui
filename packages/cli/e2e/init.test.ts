@@ -58,11 +58,23 @@ describe("zazz-ui init (e2e, packed kit)", () => {
     const config = await readConfig(project);
     expect(config.language).toBe("js");
     expect(config.kit.version).toMatch(/^\d+\.\d+\.\d+/);
-    // Every base css the kit lists + 4 runtime × (.js + .d.ts) + 3 generated artifacts.
+    // Every base css the kit lists + 5 runtime + 1 polyfill, × (.js + .d.ts), + 3 generated artifacts.
     const indexCss = await readFile(path.join(project, "zazz/index.css"), "utf8");
     const baseCssCount = indexCss.match(/@import "\.\/base\/[^"]+\.css";/g)?.length ?? 0;
     expect(baseCssCount).toBeGreaterThanOrEqual(7);
-    expect(Object.keys(config.base.files)).toHaveLength(baseCssCount + 4 * 2 + 3);
+    expect(Object.keys(config.base.files)).toHaveLength(baseCssCount + 6 * 2 + 3);
+
+    // The stuck-state polyfill vendors and loads behind the kit's own CSS.supports gate;
+    // navigation loads everywhere and stays inert until <html data-ui-navigation="swap">.
+    expect(indexCss).toContain(`@import "./base/_utilities-tier-stuck.css";`);
+    expect(existsSync(path.join(project, "zazz/base/scroll-state.js"))).toBe(true);
+    const indexJs = await readFile(path.join(project, "zazz/index.js"), "utf8");
+    expect(indexJs).toContain(
+      `if (typeof CSS !== "undefined" && !CSS.supports("container-type", "scroll-state")) {\n  void import("./base/scroll-state.js");\n}`,
+    );
+    expect(existsSync(path.join(project, "zazz/base/navigation.js"))).toBe(true);
+    expect(indexJs).toContain(`import "./base/navigation.js";`);
+    expect(config).not.toHaveProperty("$schema");
 
     // Recorded hashes are of pristine bytes — untouched files match on disk.
     const layers = await readFile(path.join(project, "zazz/base/_layers.css"));
@@ -99,7 +111,7 @@ describe("zazz-ui init (e2e, packed kit)", () => {
     expect((await readConfig(project)).language).toBe("ts");
   });
 
-  it("wires --legacy into the legacy layer", async () => {
+  it("wires --legacy into the legacy.imports sublayer", async () => {
     const project = await tmpDir();
     await runInit(
       undefined,

@@ -57,7 +57,7 @@ _Avoid_: component token, private variable, `--_*`, `--ui-button-background`
 ### Layout
 
 **Layout**:
-The primitive (`<section data-ui="layout">`, `<ui-layout>`) that turns an element into the band grid for its own children. Children sit in the layout's default band (`xl`, changed with `data-layout-size`) unless a `--col` utility places them elsewhere. A layout never styles its parent.
+The primitive (`<section data-ui="layout">`, `<ui-layout>`) that turns an element into the band grid for its own children. Children sit in the layout's default band (`xl`, changed with `data-layout-size`) unless a `--band` utility places them elsewhere. A layout never styles its parent.
 _Avoid_: container, `.container`, wrapper, page grid
 
 **Band**:

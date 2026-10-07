@@ -13,7 +13,7 @@ import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { filterCollisions } from "../collisions.ts";
-import { SCHEMA_URL, type ZazzConfig, loadConfig } from "../config.ts";
+import { type ZazzConfig, loadConfig } from "../config.ts";
 import { ZazzError } from "../errors.ts";
 import { type ResolvedKit, kitSpec, resolveKit } from "../kit.ts";
 import { type FetchOptions, loadFetchOptions } from "../npmrc.ts";
@@ -81,7 +81,6 @@ export async function runInit(
   );
 
   const config: ZazzConfig = {
-    $schema: SCHEMA_URL,
     kit: { version: kit.version, integrity: kit.integrity },
     dir: flags.dir,
     language: flags.ts === true ? "ts" : "js",

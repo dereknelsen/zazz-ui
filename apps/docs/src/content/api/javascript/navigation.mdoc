@@ -23,8 +23,35 @@ With `data-ui-navigation="swap"` on both the current and the destination page, `
 
 ## Persistence is explicit
 
-Nothing survives a swap unless it carries `data-ui-persist="<id>"` on both pages. Then the live element takes the new one's place (with `moveBefore()` where supported, so it keeps its state and its `ZazzElement` setup). Everything else comes from the new page, so headers, footers, and current-page links are never stale.
+Nothing survives a swap unless it carries `data-ui-persist="<id>"` on both pages. Then the live element takes the new one's place (with `moveBefore()` where supported, so it keeps its state and its `ZazzElement` setup). It keeps its scroll offsets in every browser. Everything else comes from the new page.
 
-Reloads, hash changes, downloads, and form posts are never intercepted. `<ui-debug>` lists the persisted elements on each page and warns about a missing or duplicate id, nested persisted elements, and `data-ui-persist` on a page without the opt-in.
+## Current-page links in persisted chrome
+
+A persisted header still has to mark the page you navigated to. Its links take `aria-current` from the matching links in the new page's copy (paired by `href`), so render `aria-current` on the server as usual and style it with the `current` [state](/api/modifiers/states/):
+
+```html
+<header data-ui-persist="header">
+  <a href="/docs/" data-ui="button" data-button-variant="ghost" aria-current="page"
+     style="--bg--current: var(--color-muted)">Docs</a>
+</header>
+```
+
+Only `aria-current` is updated, and it is overwritten on every swap (a scroll-spy that sets it inside persisted chrome must set it again). A variant chosen per page (`data-button-variant="muted"` on the current link) stays as it was on the first page, so style the current link with the tier instead. Write the links root-relative (`/docs/`) or absolute: a kept relative link resolves against the new URL.
+
+## Keep the scroll, not the element
+
+A region whose content depends on the page (a section sidebar that lists the current page's headings, a table of contents) should not persist: it would keep the first page's markup. Mark it `data-ui-persist-scroll="<id>"` instead. It renders from the new page like everything else and takes the scroll offset of the old page's element with the same id.
+
+```html
+<aside data-ui-persist-scroll="sidebar-docs" style="--position: sticky; --overflow-y: auto">…</aside>
+```
+
+Use a different id where the content differs (one per section), so one sidebar's position never carries into another.
+
+## Scrolling and flashes
+
+The window scrolls as the browser decides: to the top (or the link's target) for a new page, back to the saved position on back and forward. The jump is instant even though the reset sets `scroll-behavior: smooth`, and every restored offset is applied in the same task as the swap, before the view transition captures the new page. A navigation that a newer click supersedes is dropped before it swaps.
+
+Reloads, hash changes, downloads, and form posts are never intercepted. `<ui-debug>` lists the persisted elements on each page and warns about a missing or duplicate id, nested persisted elements, and `data-ui-persist` on a page without the opt-in. It checks `data-ui-persist-scroll` the same way, and flags one on or inside a persisted element, which keeps its scroll already.
 
 Content-scoped modules re-scan the new body through the [refresh registry](/api/javascript/custom-elements/).

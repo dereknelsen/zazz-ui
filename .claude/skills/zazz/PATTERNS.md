@@ -23,22 +23,19 @@ sentence case.)
 
 The standard page: a `<header>` with logo + desktop nav + mobile nav, a `<main>` of
 `<section>`s, and a `<footer>`. `data-ui="layout"` makes an element the band grid for its
-children (default band `lg`); `<section>`s own the vertical rhythm with `--py`. The desktop nav
+children (default band `xl`); `<section>`s own the vertical rhythm with `--py`. The desktop nav
 is `--display: none; --display--sm: flex`; the mobile control is
 `--display: flex; --display--sm: none` and opens a dialog (see the mobile-menu fragment). Change
 the default band with `data-layout-size="md"` on the layout, or place one child with
-`--col: layout-bleed | layout-full | layout-2xl … layout-sm`.
+`--band: layout-bleed | layout-full | layout-2xl … layout-sm`.
 
 ```html
 <body style="--bg: var(--color-background)">
-  <header
-    data-transition-layer="global-header"
-    style="--border-b-width: 1px; --border-b-color: var(--color-border)"
-  >
+  <header data-transition-layer="global-header" style="--border-b: 1">
     <div data-ui="layout">
       <div style="--display: flex; --items: center; --justify: space-between">
         <a href="/"><!-- site logo --></a>
-        <nav style="--display: none; --display--sm: flex; --items: center; --py: 6">
+        <nav style="--display: none; --display--sm: flex; --items: center; --py: 8">
           <menu style="--display: flex; --items: center; --gap: 4">
             <li><a data-ui="button" data-button-variant="ghost" href="/">Home</a></li>
             <!-- navigation links and menus -->
@@ -55,12 +52,9 @@ the default band with `data-layout-size="md"` on the layout, or place one child 
       <!-- page content: each child lands in the xl band -->
     </section>
   </main>
-  <footer
-    data-transition-layer="global-footer"
-    style="--pt: 24; --border-t-width: 1px; --border-t-color: var(--color-border)"
-  >
+  <footer data-transition-layer="global-footer" style="--pt: 24; --border-t: 1">
     <div data-ui="layout"><!-- footer content --></div>
-    <div data-ui="layout" style="--py: 6">
+    <div data-ui="layout" style="--py: 8">
       <div style="--display: flex; --items: center; --justify: space-between">
         <!-- footer colophon content -->
       </div>
@@ -69,8 +63,8 @@ the default band with `data-layout-size="md"` on the layout, or place one child 
 </body>
 ```
 
-`body` cannot take breakpoint tiers; put responsive utilities on a child. The
-`data-transition-layer` names persist the header and footer across view transitions (`<main>`
+`body` is a query container like `main` and `section`, so its own breakpoint tiers read `html`.
+The `data-transition-layer` names persist the header and footer across view transitions (`<main>`
 animates automatically; see `references/apis.md`).
 
 ## Heading group with CTAs
@@ -81,8 +75,7 @@ Group an optional eyebrow, a heading, a subheading, and the call-to-action butto
 ```html
 <hgroup
   style="
-    --display: flex;
-    --flex-direction: column;
+    --display: flex-col;
     --gap: 4;
     --text-align: center;
     --text-align--md: start;
@@ -115,7 +108,7 @@ Group an optional eyebrow, a heading, a subheading, and the call-to-action butto
 ## Reading column
 
 Long-form copy goes in `data-ui="prose"` with a reading measure:
-`style="--max-w: var(--article-lg); --mx: auto"` (`--article-2xs … 2xl`, 40–80ch).
+`style="--max-w: var(--article-lg); --mx: auto"` (`--article-2xs … 2xl`, 30–90ch).
 
 ## Everything else
 

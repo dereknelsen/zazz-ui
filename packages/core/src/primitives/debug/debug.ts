@@ -102,26 +102,48 @@ export interface Note {
 
 /**
  * Calls out what survives an in-page navigation: on a `data-ui-navigation="swap"`
- * page, which `data-ui-persist` elements are kept; warnings for persistence that
- * cannot work as written.
+ * page, which `data-ui-persist` elements are kept and which
+ * `data-ui-persist-scroll` elements carry their scroll offset; warnings for
+ * persistence that cannot work as written.
  */
 export function navigationReport(doc: Document): { notes: Note[]; warnings: Warning[] } {
   const swap = doc.documentElement.getAttribute("data-ui-navigation") === "swap";
-  const persisted = [...doc.querySelectorAll("[data-ui-persist]")];
-  const { kept, warnings } = auditPersistence(
+  const idOf = (attribute: string) => (el: Element) => el.getAttribute(attribute) ?? "";
+  const persists = idOf("data-ui-persist");
+  const owner = (el: Element | null | undefined) => (el ? { id: persists(el), self: false } : null);
+  const persisted = auditPersistence(
     swap,
-    persisted,
-    (el) => el.getAttribute("data-ui-persist") ?? "",
-    (el) => el.parentElement?.closest("[data-ui-persist]") ?? null,
+    [...doc.querySelectorAll("[data-ui-persist]")],
+    persists,
+    (el) => owner(el.parentElement?.closest("[data-ui-persist]")),
   );
+  const scrolled = auditPersistence(
+    swap,
+    [...doc.querySelectorAll("[data-ui-persist-scroll]")],
+    idOf("data-ui-persist-scroll"),
+    (el) =>
+      el.hasAttribute("data-ui-persist")
+        ? { id: persists(el), self: true }
+        : owner(el.closest("[data-ui-persist]")),
+    "data-ui-persist-scroll",
+  );
+  const warnings = [...persisted.warnings, ...scrolled.warnings];
   if (!swap) return { notes: [], warnings };
-  const ids = kept.map((el) => `"${el.getAttribute("data-ui-persist")}"`).join(", ");
+  const kept = persisted.kept;
+  const ids = (els: Element[], attribute: string) =>
+    els.map((el) => `"${el.getAttribute(attribute)}"`).join(", ");
+  const one = scrolled.kept.length === 1;
+  const scroll = scrolled.kept.length
+    ? ` ${scrolled.kept.length} element${one ? " comes" : "s come"} from the next page but keep${one ? "s its" : " their"} scroll offset (${ids(scrolled.kept, "data-ui-persist-scroll")}).`
+    : "";
   const notes: Note[] = [
     {
-      message: kept.length
-        ? `In-page navigation is on. ${kept.length} element${kept.length === 1 ? "" : "s"} persist across navigations (${ids}); everything else is replaced by the next page.`
-        : "In-page navigation is on, and nothing persists: every navigation replaces the whole body.",
-      elements: kept,
+      message:
+        (kept.length
+          ? `In-page navigation is on. ${kept.length} element${kept.length === 1 ? " persists" : "s persist"} across navigations (${ids(kept, "data-ui-persist")}); everything else is replaced by the next page.`
+          : "In-page navigation is on, and nothing persists: every navigation replaces the whole body.") +
+        scroll,
+      elements: [...kept, ...scrolled.kept],
     },
   ];
   return { notes, warnings };

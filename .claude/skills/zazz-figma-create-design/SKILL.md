@@ -26,11 +26,11 @@ Zazz is a conversion-focused commerce design system for B2B, wholesale, and reta
 
 Build the palette as roles, each with a light and dark value. Generate 50–950 scales from brand seeds via [tints.dev](https://www.tints.dev); layers bind to roles, never raw scale steps.
 
-- **Surfaces** — `background` (white / neutral-900), `card` and `popover` (white / neutral-950), `input` (neutral-50 / tint-50).
+- **Surfaces** — `background` (white / neutral-900), `card` and `popover` (white / neutral-950), `input` (neutral-50 / tint-100).
 - **Text** — `foreground` (neutral-900 / white); every surface has a paired `*-foreground` — always use the pair.
 - **Lines** — `border` (neutral-100 / tint-100), always 1px.
-- **De-emphasis** — `muted` (shade-50 / tint-50) dims; `muted-foreground` (shade-600 / tint-600) for helper text; `faded` (tint-100 / shade-100) lightens.
-- **Overlays** — `shade` = black at 5–95% alpha (darkens; dialog backdrops use shade-800), `tint` = white at 5–95% alpha (lightens over dark surfaces).
+- **De-emphasis** — `muted` (shade-100 / tint-100) dims; `muted-foreground` (shade-600 / tint-600) for helper text; `faded` (tint-400 / shade-100) lightens.
+- **Overlays** — `shade` = black at 5–95% alpha (darkens; dialog backdrops use shade-900), `tint` = white at 5–95% alpha (lightens over dark surfaces).
 - **Brand** — `primary`, `secondary`, `tertiary`, plus a neutral scale. The seeds `primary` #4F46E5 (step 600 light / 500 dark), `secondary` #DE4917 (600 / 500), `tertiary` #E5375B (500 / 400), neutral #888890 are **placeholder defaults** — when a brand is given, derive all brand roles from its colors instead and never ship these. Brand colors go lighter in dark mode; their text is white.
 - **Status** — `info` cerulean blue, `success` teal green, `warning` amber gold, `destructive` red-orange. White text; status colors go darker in dark mode (opposite of brand).
 
@@ -52,9 +52,9 @@ In Figma, these already exist as `typography/*` text styles — `headings/` text
 | Body MD | 16px  | 400    | 160%    | 0        | Default body                |
 | Body SM | ~13px | 400    | 150%    | 0        | Small UI labels, buttons    |
 | Body XS | ~10px | 400    | 150%    | 0        | Captions, fine print        |
-| Eyebrow | ~9px  | 600    | 120%    | +10%     | Label — uppercase via style |
+| Eyebrow | ~9px  | 600    | 120%    | +5%      | Label — uppercase via style |
 
-Create real hierarchy — one big Display/H1 moment against calm body copy, not five near-identical sizes. Signature move: an italic serif accent (Playfair Display Italic, Cormorant Garamond Italic) on emphasis words in headings ("the art of _quality_"). Text links: `primary` color, 1px underline.
+Create real hierarchy — one big Display/H1 moment against calm body copy, not five near-identical sizes. Signature move: an italic serif accent (Playfair Display Italic, Cormorant Garamond Italic) on emphasis words in headings ("the art of _quality_"). Text links: the surrounding text color, 1px underline.
 
 ## Spacing
 
@@ -62,23 +62,23 @@ Only these values, applied as auto-layout gap and padding: **8 / 16 / 24 / 44 / 
 
 ## Radius, shadows, motion
 
-- **Radius scale** — 0 / 4 / 6 / 10 / 20 / 28px / pill. Convention: 6px badges, 10px buttons and inputs, 20px cards and dialogs, 28px statement surfaces. Choose the brand's overall roundness, then stay on the scale.
+- **Radius scale** — 0 / 2 / 4 / 6 / 10 / 18 / 28 / 40px / pill. Convention: 6px badges, 10px buttons, inputs, and cards, 18px dialogs, 28px statement surfaces. Choose the brand's overall roundness, then stay on the scale.
 - **Shadows** — surfaces are flat by default; apply elevation intentionally, always via the `shadows/*` effect styles (shadow-none through shadow-xl) — never a hand-tuned drop shadow. They're whisper-soft stacks of near-black at 1–6% opacity (reference `shadow-md`, for modals/popovers: Y3 blur6 @5% + Y11 blur11 @4% + Y24 blur14 @3% + Y42 blur17 @1%).
 - **Motion** — springy easing, ~0.33s, unhurried. Spend it on one orchestrated staggered page-load reveal plus scroll reveals — not scattered micro-interactions.
 
 ## Layout
 
-Content sits in centered capped bands, not a fixed grid: a full-width section frame (background spans the viewport) wrapping a centered content frame with 24px side gutters. Caps: **1280px** default page content, 1024px narrower content, ~70ch reading text, full-bleed for hero imagery. Play full-bleed imagery against capped text columns. Useful patterns: left-label sections (thin eyebrow column beside content, split by a 1px border), 1px hairline dividers, tabbed content areas. Breakpoints: 640 / 768 / 1024 / 1280 / 1536px.
+Content sits in centered capped bands, not a fixed grid: a full-width section frame (background spans the viewport) wrapping a centered content frame with 24px side gutters. Caps: **1280px** default page content, 1024px narrower content, ~70ch reading text, full-bleed for hero imagery. Play full-bleed imagery against capped text columns. Useful patterns: left-label sections (thin eyebrow column beside content, split by a 1px border), 1px hairline dividers, tabbed content areas. Band caps: 640 / 768 / 1024 / 1280 / 1536px. Breakpoints follow the container's width in characters (≈ 404 / 656 / 909 / 1210 / 1515px at 16px).
 
 ## Components
 
 In Figma, buttons, badges, avatars, form fields, cards, and dialogs already exist as components on the **❖ Primitives** page — place and override instances of them; never redraw one from rectangles. Build something from scratch (with variant properties named exactly as below, bound to the variables and styles above) only when no library component exists for it.
 
-- **Button** — height 32px, 10px inline padding, 10px radius, Body SM at weight 500, 4px icon–label gap. Variants: `default` (card fill + 1px border), `primary` (solid primary, white text), `muted`, `ghost` (transparent, hover shows muted), `destructive`, `link` (inline, underlined, no padding). Sizes: `sm` (24px tall, 6px radius), `icon` (square), `icon-sm`.
-- **Badge** — chip, ~22px tall, 8px padding, 6px radius, Body XS at weight 500. Variants: `default`, `primary`, `muted`, `ghost`, `link` — no destructive; apply status by overriding fill/text to a status role.
-- **Card** — card surface, 1px border, 20px radius, 24px padding; card images 3:2 at 10px radius. `inverted` variant flips to a dark surface.
+- **Button** — height 32px, 10px inline padding, 10px radius, Body SM at weight 500, 4px icon–label gap. Variants: `default` (background fill + 1px border), `primary` (solid primary, white text), `secondary`, `tertiary`, `muted`, `ghost` (transparent, hover shows muted), `outline`, `link` (inline, underlined, no padding), and the status fills `info`, `success`, `warning`, `destructive`. Sizes: `sm` (24px tall, 6px radius), `icon` (square), `icon-sm`.
+- **Badge** — chip, ~22px tall, 8px padding, 6px radius, Body XS at weight 500. Variants: `default`, `primary`, `secondary`, `tertiary`, `muted`, `ghost`, `link`, and the status fills `info`, `success`, `warning`, `destructive`.
+- **Card** — card surface, `shadow-sm`, 10px radius, 24px padding; card images 3:2. `muted` variant uses the muted surface.
 - **Form fields** — input fill, 1px border, 10px radius across input, textarea, select. Group control + label + hint + error together; error styling appears only after interaction, never in the resting state.
-- **Dialog** — card surface, 20px radius, `shadow-md`, shade-800 backdrop.
+- **Dialog** — card surface, 18px radius, `shadow-md`, shade-900 backdrop.
 - **Dropdown / menus** — popover surface; items look like ghost buttons.
 - **Tabs** — segmented control with a sliding pill indicator.
 - **Avatar** — circular, image with text fallback. **Breadcrumbs** — link buttons separated by a muted `/`, current crumb disabled.

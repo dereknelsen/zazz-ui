@@ -110,10 +110,16 @@
           "name": "badge"
         },
         {
+          "name": "bounce"
+        },
+        {
           "name": "button"
         },
         {
           "name": "button-group"
+        },
+        {
+          "name": "callout"
         },
         {
           "name": "card"
@@ -182,6 +188,9 @@
           "name": "navigation-menu"
         },
         {
+          "name": "not-prose"
+        },
+        {
           "name": "otp"
         },
         {
@@ -191,10 +200,16 @@
           "name": "pile"
         },
         {
+          "name": "ping"
+        },
+        {
           "name": "progress"
         },
         {
           "name": "prose"
+        },
+        {
+          "name": "pulse"
         },
         {
           "name": "radio"
@@ -210,6 +225,9 @@
         },
         {
           "name": "separator"
+        },
+        {
+          "name": "spin"
         },
         {
           "name": "sr-only"
@@ -279,6 +297,9 @@
         },
         {
           "name": "tooltip"
+        },
+        {
+          "name": "truncate"
         }
       ]
     },
@@ -305,7 +326,12 @@
     },
     {
       "name": "data-ui-persist",
-      "description": "Keep this element's live DOM and state across in-page navigations; the value is an id both pages share.",
+      "description": "Keep this element's live DOM, state and scroll offsets across in-page navigations; its links take aria-current from the next page. The value is an id both pages share.",
+      "values": []
+    },
+    {
+      "name": "data-ui-persist-scroll",
+      "description": "Render this element from the next page but keep its scroll offset across in-page navigations (a section sidebar, a table of contents). The value is an id both pages share.",
       "values": []
     },
     {
@@ -332,7 +358,17 @@
       ]
     },
     {
+      "name": "data-autocomplete-filter",
+      "description": "Preset or config of the autocomplete primitive.",
+      "values": []
+    },
+    {
       "name": "data-autocomplete-keywords",
+      "description": "Preset or config of the autocomplete primitive.",
+      "values": []
+    },
+    {
+      "name": "data-autocomplete-min-length",
       "description": "Preset or config of the autocomplete primitive.",
       "values": []
     },
@@ -393,7 +429,13 @@
       "description": "Preset or config of the badge primitive.",
       "values": [
         {
+          "name": "destructive"
+        },
+        {
           "name": "ghost"
+        },
+        {
+          "name": "info"
         },
         {
           "name": "link"
@@ -408,7 +450,13 @@
           "name": "secondary"
         },
         {
+          "name": "success"
+        },
+        {
           "name": "tertiary"
+        },
+        {
+          "name": "warning"
         }
       ]
     },
@@ -447,6 +495,9 @@
           "name": "ghost"
         },
         {
+          "name": "info"
+        },
+        {
           "name": "link"
         },
         {
@@ -462,7 +513,34 @@
           "name": "secondary"
         },
         {
+          "name": "success"
+        },
+        {
           "name": "tertiary"
+        },
+        {
+          "name": "warning"
+        }
+      ]
+    },
+    {
+      "name": "data-callout-variant",
+      "description": "Preset or config of the callout primitive.",
+      "values": [
+        {
+          "name": "destructive"
+        },
+        {
+          "name": "info"
+        },
+        {
+          "name": "muted"
+        },
+        {
+          "name": "success"
+        },
+        {
+          "name": "warning"
         }
       ]
     },
@@ -471,7 +549,13 @@
       "description": "Preset or config of the card primitive.",
       "values": [
         {
+          "name": "floating"
+        },
+        {
           "name": "muted"
+        },
+        {
+          "name": "outline"
         }
       ]
     },
@@ -501,6 +585,12 @@
       "values": [
         {
           "name": "container"
+        },
+        {
+          "name": "dot"
+        },
+        {
+          "name": "dots"
         },
         {
           "name": "next"
@@ -553,7 +643,22 @@
       "values": []
     },
     {
+      "name": "data-combobox-filter",
+      "description": "Preset or config of the combobox primitive.",
+      "values": []
+    },
+    {
+      "name": "data-combobox-keywords",
+      "description": "Preset or config of the combobox primitive.",
+      "values": []
+    },
+    {
       "name": "data-combobox-label-remove",
+      "description": "Preset or config of the combobox primitive.",
+      "values": []
+    },
+    {
+      "name": "data-combobox-min-length",
       "description": "Preset or config of the combobox primitive.",
       "values": []
     },
@@ -603,6 +708,11 @@
       ]
     },
     {
+      "name": "data-combobox-sort",
+      "description": "Preset or config of the combobox primitive.",
+      "values": []
+    },
+    {
       "name": "data-combobox-state",
       "description": "State: tokens the primitive's script writes.",
       "values": [
@@ -626,12 +736,22 @@
       ]
     },
     {
+      "name": "data-command-filter",
+      "description": "Preset or config of the command primitive.",
+      "values": []
+    },
+    {
       "name": "data-command-hotkey",
       "description": "Preset or config of the command primitive.",
       "values": []
     },
     {
       "name": "data-command-keywords",
+      "description": "Preset or config of the command primitive.",
+      "values": []
+    },
+    {
+      "name": "data-command-min-length",
       "description": "Preset or config of the command primitive.",
       "values": []
     },
@@ -672,6 +792,11 @@
       ]
     },
     {
+      "name": "data-command-sort",
+      "description": "Preset or config of the command primitive.",
+      "values": []
+    },
+    {
       "name": "data-command-state",
       "description": "State: tokens the primitive's script writes.",
       "values": [
@@ -682,6 +807,11 @@
     },
     {
       "name": "data-command-stay-open",
+      "description": "Preset or config of the command primitive.",
+      "values": []
+    },
+    {
+      "name": "data-command-value",
       "description": "Preset or config of the command primitive.",
       "values": []
     },
@@ -1177,6 +1307,16 @@
       ]
     },
     {
+      "name": "data-reveal-distance",
+      "description": "Preset or config of the reveal primitive.",
+      "values": []
+    },
+    {
+      "name": "data-reveal-duration",
+      "description": "Preset or config of the reveal primitive.",
+      "values": []
+    },
+    {
       "name": "data-reveal-each",
       "description": "Preset or config of the reveal primitive.",
       "values": [
@@ -1204,6 +1344,16 @@
       ]
     },
     {
+      "name": "data-reveal-ease",
+      "description": "Preset or config of the reveal primitive.",
+      "values": []
+    },
+    {
+      "name": "data-reveal-margin",
+      "description": "Preset or config of the reveal primitive.",
+      "values": []
+    },
+    {
       "name": "data-reveal-order",
       "description": "Preset or config of the reveal primitive.",
       "values": [
@@ -1213,6 +1363,11 @@
       ]
     },
     {
+      "name": "data-reveal-scale",
+      "description": "Preset or config of the reveal primitive.",
+      "values": []
+    },
+    {
       "name": "data-reveal-state",
       "description": "State: tokens the primitive's script writes.",
       "values": [
@@ -1220,6 +1375,21 @@
           "name": "in-view"
         }
       ]
+    },
+    {
+      "name": "data-reveal-step",
+      "description": "Preset or config of the reveal primitive.",
+      "values": []
+    },
+    {
+      "name": "data-reveal-threshold",
+      "description": "Preset or config of the reveal primitive.",
+      "values": []
+    },
+    {
+      "name": "data-reveal-wait",
+      "description": "Preset or config of the reveal primitive.",
+      "values": []
     },
     {
       "name": "data-scroll-fade-axis",
@@ -1351,6 +1521,26 @@
       ]
     },
     {
+      "name": "data-toaster-close-button",
+      "description": "Preset or config of the toaster primitive.",
+      "values": []
+    },
+    {
+      "name": "data-toaster-description",
+      "description": "Preset or config of the toaster primitive.",
+      "values": []
+    },
+    {
+      "name": "data-toaster-duration",
+      "description": "Preset or config of the toaster primitive.",
+      "values": []
+    },
+    {
+      "name": "data-toaster-id",
+      "description": "Preset or config of the toaster primitive.",
+      "values": []
+    },
+    {
       "name": "data-toaster-position",
       "description": "Preset or config of the toaster primitive.",
       "values": []
@@ -1402,6 +1592,11 @@
           "name": "visible"
         }
       ]
+    },
+    {
+      "name": "data-toaster-title",
+      "description": "Preset or config of the toaster primitive.",
+      "values": []
     },
     {
       "name": "data-toaster-variant",

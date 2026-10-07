@@ -17,7 +17,6 @@ afterAll(async () => {
 
 function validConfig(): ZazzConfig {
   return {
-    $schema: "https://zazz.sh/schema.json",
     kit: { version: "0.1.0", integrity: "sha512-x" },
     dir: "zazz",
     language: "js",
@@ -85,5 +84,11 @@ describe("serializeConfig", () => {
     a.base.files = Object.fromEntries(Object.entries(a.base.files).reverse());
     expect(serializeConfig(a)).toBe(serializeConfig(b));
     expect(serializeConfig(a).endsWith("\n")).toBe(true);
+  });
+
+  it("writes no $schema (no schema is published) and drops one from older files", () => {
+    const legacy = { ...validConfig(), $schema: "https://zazz.sh/schema.json" };
+    expect(validateConfig(legacy, "zazz.json")).toBeDefined();
+    expect(serializeConfig(legacy)).not.toContain("$schema");
   });
 });

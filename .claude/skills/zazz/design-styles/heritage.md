@@ -54,7 +54,7 @@ tell lean Lifestyle. Default to **Lifestyle Brand** when unclear.
   `--color-border` rules as section separators. Reserve `--shadow-*` for genuine elevation — not on
   every card.
 - **Compose with tension.** Break the centered stack with the layout band system: full-bleed
-  (`--col: layout-bleed` / `layout-full`) photography of product, fleet, warehouse, or craft
+  (`--band: layout-bleed` / `layout-full`) photography of product, fleet, warehouse, or craft
   against capped text (`--max-w: var(--article-lg)` or the `lg` band). Use the **left-label layout** (thin eyebrow column + content column, split by
   `--color-border`) for "who we serve" and specs. Let big section padding (`--py: 24`, 96px) open real negative space.
 - **One orchestrated reveal.** A single staggered page-load on the hero (`data-reveal` /
@@ -89,7 +89,7 @@ Build sections from Zazz components and the band system — don't hand-roll CSS.
    (`--radius-lg`) of the fleet or region below it.
 8. **Closing CTA:** Centered serif heading with an italic legacy note ("Join our _legacy_"), brief
    family-owned/provenance copy, dual CTAs ("Become a customer" / "Send a message").
-9. **Footer:** Deep brand-colored block (`card-inverted` tones) with logo, a legacy tagline
+9. **Footer:** Deep brand-colored block (`--color-primary` surface, `--color-primary-foreground` text) with logo, a legacy tagline
    ("A legacy of freshness, rooted in the mountains of Colorado…"), multi-column nav
    (Navigation / Connect / **Heritage**), contact details, social links, and a legal bar.
 

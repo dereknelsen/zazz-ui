@@ -237,7 +237,7 @@ describe("state tiers", () => {
     expect(squash(baseRule(OPACITY, STATES))).toBe(
       squash(`
         :where([style*="--opacity:"], [style*="--opacity--"], [style*="--group-opacity--"]) {
-          --_opacity-resolved: var(--_opacity-starting, var(--_opacity-disabled, var(--_opacity-active, var(--_opacity-focus-visible, var(--_opacity-focus-within, var(--_opacity-hover, var(--_opacity-checked, var(--_opacity-open, var(--_opacity-g-disabled, var(--_opacity-g-active, var(--_opacity-g-focus-visible, var(--_opacity-g-focus-within, var(--_opacity-g-hover, var(--_opacity-g-checked, var(--_opacity-g-open, var(--_opacity-stuck, var(--_opacity)))))))))))))))));
+          --_opacity-resolved: var(--_opacity-starting, var(--_opacity-disabled, var(--_opacity-active, var(--_opacity-focus-visible, var(--_opacity-focus-within, var(--_opacity-hover, var(--_opacity-checked, var(--_opacity-current, var(--_opacity-open, var(--_opacity-g-disabled, var(--_opacity-g-active, var(--_opacity-g-focus-visible, var(--_opacity-g-focus-within, var(--_opacity-g-hover, var(--_opacity-g-checked, var(--_opacity-g-current, var(--_opacity-g-open, var(--_opacity-stuck, var(--_opacity)))))))))))))))))));
         }
         :where([style*="--opacity:"]) {
           --_opacity: var(--opacity);
@@ -339,25 +339,35 @@ describe("no-base exclusions", () => {
     expect(selectors).toContain("ui-layout");
     expect(selectors).toContain('[data-ui~="button"]');
     expect(selectors).toContain('[data-ui~="card"]');
-    for (const plain of ["text-2xl", "text-h1", "group", "pile", "sr-only", "prose"]) {
+    for (const plain of [
+      "text-2xl",
+      "text-h1",
+      "group",
+      "pile",
+      "sr-only",
+      "not-prose",
+      "truncate",
+      "spin",
+      "prose",
+    ]) {
       expect(selectors, plain).not.toContain(`[data-ui~="${plain}"]`);
     }
     expect(selectors).not.toContain("[data-ui]");
   });
 
-  it("excludes a layout's children from the --col no-base rule", () => {
-    const COL: Utility = {
-      name: "col",
+  it("excludes a layout's children from the --band no-base rule", () => {
+    const BAND: Utility = {
+      name: "band",
       properties: ["grid-column"],
       mode: "raw",
       family: "flow",
       noBase: "auto",
       noBaseExclude: ["ui-layout > *", '[data-ui~="layout"] > *'],
     };
-    expect(squash(noBaseRule(COL, ["ui-layout"]))).toBe(
+    expect(squash(noBaseRule(BAND, ["ui-layout"]))).toBe(
       squash(`
-        :where(:is([style*="--col:"], [style*="--col--"], [style*="--group-col--"]):not(ui-layout, ui-layout > *, [data-ui~="layout"] > *)) {
-          grid-column: var(--_col-resolved, auto);
+        :where(:is([style*="--band:"], [style*="--band--"], [style*="--group-band--"]):not(ui-layout, ui-layout > *, [data-ui~="layout"] > *)) {
+          grid-column: var(--_band-resolved, auto);
         }
       `),
     );

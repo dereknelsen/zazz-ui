@@ -5,7 +5,7 @@ description: Release checklist for publishing @zazz-ui/core or the zazz-ui CLI t
 
 # Zazz version bump & publish
 
-Release checklist for `@zazz-ui/core` (and, with the differences at the bottom, the `zazz-ui` CLI). The agent runs steps 1–5; steps 6–8 are the maintainer's — npm auth is interactive and ADR-0010 makes publishing a deliberate manual act, so for those steps hand Derek a copy-paste script instead of running them.
+Release checklist for `@zazz-ui/core` (and, with the differences at the bottom, the `zazz-ui` CLI). The agent runs steps 1–6; steps 7–9 are the maintainer's — npm auth is interactive and ADR-0010 makes publishing a deliberate manual act, so for those steps hand Derek a copy-paste script instead of running them.
 
 Versioning and changelog rules live in their sources of truth — restate neither:
 
@@ -16,21 +16,23 @@ Versioning and changelog rules live in their sources of truth — restate neithe
 
 1. **Pick the version** from the diff since the last `core-v*` tag, judged against ADR-0010's breaking list. Done when every change in the diff is classified breaking/additive and the bump follows.
 
-2. **Write the changelog entry** in `packages/core/CHANGELOG.md`, matching the existing entries' shape. Done when every breaking change carries a **BREAKING** flag with a one-line migration note, and every touched primitive has its own `### <scope>` section (scope names must match manifest primitive names exactly).
+2. **Write the changelog entry** in `packages/core/CHANGELOG.md`, matching the existing entries' shape. If the section was kept as `## X.Y.Z (unreleased)` during development, date it now: `## X.Y.Z (YYYY-MM-DD)`. Done when every breaking change carries a **BREAKING** flag with a one-line migration note, and every touched primitive has its own `### <scope>` section (one name per heading; scope names must match manifest primitive names exactly). Released sections are history: never edit them.
 
 3. **Bump every pinned version reference.** `packages/core/package.json` is not the only one — CDN URLs pin exact versions in the README and docs. Find them all:
 
    ```bash
-   rg -n '@zazz-ui/core@[0-9]' --glob '!node_modules'
+   rg -n '@zazz-ui/core@[0-9]' --glob '!node_modules' --glob '!*.test.ts' --glob '!**/dist/**'
    ```
 
-   Done when that search returns only the new version. The docs site (`apps/docs`) reads the version from the installed package (`kitVersion()`), so it needs no edit — but rebuild it after publishing so its CDN snippets and `llms.txt` pin the new release.
+   Done when that search returns only the new version (the excluded tests pin fixture versions on purpose). The README's CDN import map also pins dependency versions; check them against `src/head.ts`. The docs site (`apps/docs`) reads the version from the installed package (`kitVersion()`), so it needs no edit — but rebuild it after publishing so its CDN snippets and `llms.txt` pin the new release.
 
-4. **Check the manifest contract** if primitives, dependencies, or import order changed: `CSS_CASCADE_ORDER` and the `PRIMITIVES` dependency entries in `packages/core/src/manifest.ts` must mirror `index.css` (`manifest.test.ts` and `head.test.ts` enforce this). If the manifest's _shape_ changed (not just data), bump `MANIFEST_VERSION` — it gates CLI compatibility.
+4. **Clear the pre-release markers** in the docs: remove the `{% callout type="warning" title="Unreleased" %}` blocks (`rg -n 'title="Unreleased"' apps/docs/src/content`), and ask Derek before setting a release blog post (`apps/docs/src/content/blog/`) to `draft: false`.
 
-5. **Validate**: `vp check && vp test` from the repo root, all green. This also catches changelog formatting via the formatter.
+5. **Check the manifest contract** if primitives, dependencies, or import order changed: `CSS_CASCADE_ORDER` and the `PRIMITIVES` dependency entries in `packages/core/src/manifest.ts` must mirror `index.css` (`manifest.test.ts` and `head.test.ts` enforce this). If the manifest's _shape_ changed (not just data), bump `MANIFEST_VERSION` — it gates CLI compatibility.
 
-6. **Commit, push, then publish** (maintainer). Give Derek this script:
+6. **Validate**: `vp run ready` from the repo root, all green. It runs with `--no-cache`, so a replayed task can't hide a stale build. This also catches changelog formatting via the formatter.
+
+7. **Commit, push, then publish** (maintainer). Give Derek this script:
 
    ```bash
    pnpm whoami   # MUST print your username before publishing — see gotchas
@@ -39,14 +41,14 @@ Versioning and changelog rules live in their sources of truth — restate neithe
    cd ../..
    ```
 
-7. **Tag and push the tag** (maintainer), matching the existing convention:
+8. **Tag and push the tag** (maintainer), matching the existing convention:
 
    ```bash
    git tag core-vX.Y.Z -m "core: X.Y.Z — <one-line theme>"
    git push origin core-vX.Y.Z
    ```
 
-8. **Confirm the registry took it**:
+9. **Confirm the registry took it**:
 
    ```bash
    curl -s https://registry.npmjs.org/@zazz-ui/core | python3 -c 'import json,sys; print(json.load(sys.stdin)["dist-tags"])'

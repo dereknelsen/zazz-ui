@@ -3,6 +3,9 @@
 /* disabled tier setter */
 @layer ui.utilities {
   :where(:is(:disabled, [aria-disabled="true"])[style*="--disabled:"]) {
+    --_template-cols-disabled: var(--template-cols--disabled);
+    --_template-rows-disabled: var(--template-rows--disabled);
+    --_text-decoration-disabled: var(--text-decoration--disabled);
     --_text-disabled: var(--text--disabled);
     --_bg-disabled: var(--bg--disabled);
     --_bg-alpha-disabled: var(--bg-alpha--disabled);
@@ -28,6 +31,9 @@
     --_transition-disabled: var(--transition--disabled);
   }
   :where([data-ui~="group"]:is(:disabled, [aria-disabled="true"]) [style*="--group-"]) {
+    --_template-cols-g-disabled: var(--group-template-cols--disabled);
+    --_template-rows-g-disabled: var(--group-template-rows--disabled);
+    --_text-decoration-g-disabled: var(--group-text-decoration--disabled);
     --_text-g-disabled: var(--group-text--disabled);
     --_bg-g-disabled: var(--group-bg--disabled);
     --_bg-alpha-g-disabled: var(--group-bg-alpha--disabled);

@@ -3,11 +3,13 @@
 /**
  * @fileoverview Switches: `data-ui="sr-only"` hides visually and keeps
  * the element in the accessibility tree; `pile` stacks children in one grid
- * area (grid by default); `isolate` starts a stacking context.
+ * area (grid by default); `isolate` starts a stacking context; `truncate`
+ * ends overflowing text on one line with an ellipsis; `spin`, `ping`, `pulse`,
+ * and `bounce` loop Tailwind's animations on the kit's transition easing.
  */
 
 import { describe, expect, it } from "vite-plus/test";
-import { mount, style, useKit } from "../../test/browser.ts";
+import { lengthPx, mount, style, useKit } from "../../test/browser.ts";
 
 describe("switches", () => {
   useKit();
@@ -29,6 +31,37 @@ describe("switches", () => {
     const b = root.querySelector("[data-b]")!;
     expect(style(a, "grid-area")).toBe(style(b, "grid-area"));
     expect(a.getBoundingClientRect().top).toBe(b.getBoundingClientRect().top);
+  });
+
+  it("truncate keeps text on one line and ends the overflow with an ellipsis", () => {
+    const root = mount(
+      `<p data-ui="truncate" style="--w: 24">A sentence far too long for the box it sits in.</p>`,
+    );
+    expect(style(root, "white-space")).toBe("nowrap");
+    expect(style(root, "overflow-x")).toBe("hidden");
+    expect(style(root, "text-overflow")).toBe("ellipsis");
+    expect(root.scrollWidth).toBeGreaterThan(root.clientWidth);
+    expect(root.getBoundingClientRect().height).toBeLessThan(lengthPx("2lh"));
+  });
+
+  it("spin, ping, pulse, and bounce loop forever on the default transition easing", () => {
+    const root = mount(`<div>
+      <i data-ui="spin"></i><i data-ui="ping"></i><i data-ui="pulse"></i><i data-ui="bounce"></i>
+      <i data-probe style="transition-timing-function: var(--default-transition-timing-function)"></i>
+    </div>`);
+    const easing = style(root.querySelector("[data-probe]")!, "transition-timing-function");
+    for (const [name, duration] of [
+      ["spin", "1s"],
+      ["ping", "1s"],
+      ["pulse", "2s"],
+      ["bounce", "1s"],
+    ] as const) {
+      const el = root.querySelector(`[data-ui="${name}"]`)!;
+      expect(style(el, "animation-name"), name).toBe(`ui-${name}`);
+      expect(style(el, "animation-duration"), name).toBe(duration);
+      expect(style(el, "animation-iteration-count"), name).toBe("infinite");
+      expect(style(el, "animation-timing-function"), name).toBe(easing);
+    }
   });
 
   it("isolate starts a stacking context and stacks with other tokens", () => {

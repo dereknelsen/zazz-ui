@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vite-plus/test";
-import { previewHead, siteHead } from "./head.ts";
+import { siteHead } from "./head.ts";
 
 describe("siteHead", () => {
   it("links the src entry points in development", () => {
@@ -15,12 +15,5 @@ describe("siteHead", () => {
     expect(head).not.toContain("/zazz/index.");
     expect(head).toContain('type="importmap"');
     expect(head).toContain("data-ui-theme");
-  });
-});
-
-describe("previewHead", () => {
-  it("omits scripts when the example is static", () => {
-    expect(previewHead({ scripts: false })).not.toContain('<script type="module"');
-    expect(previewHead({ scripts: true })).toContain("/zazz/index.js");
   });
 });

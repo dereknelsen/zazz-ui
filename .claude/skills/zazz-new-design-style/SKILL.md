@@ -43,7 +43,7 @@ Not for building an actual page — that's the `zazz` skill. This skill only _au
    concrete observations, not vibes. "Near-black `#0a0a0a` surface, one hot orange accent, oversized
    ghosted numerals as decoration" — not "modern and bold".
 3. **Translate each observation to Zazz.** Use the cheatsheet below. Every visual trait must land on a
-   role token, a `text-*` role, a layout band (`--col: layout-*`), a utility, or a documented pattern. If something
+   role token, a `text-*` role, a layout band (`--band: layout-*`), a utility, or a documented pattern. If something
    has no Zazz expression, either find the closest primitive or drop it — do not invent new CSS or
    new tokens in a style file.
 4. **Pick the archetype.** Map the reference to Industrial Distributor / Lifestyle Brand / Editorial
@@ -66,7 +66,7 @@ Not for building an actual page — that's the `zazz` skill. This skill only _au
   an italic/emphasis move? How big is the hero vs. body — real hierarchy or flat? → `text-*` scale +
   font recommendations with character (name 3–4 real faces, never "system font").
 - **Imagery** — photographic or illustrative? Studio cut-outs or in-context/cinematic? Moody or bright?
-  Full-bleed or framed? Any grain/duotone/overlay treatment? → layout bands (`--col: layout-full` / `layout-bleed`) + figure radius.
+  Full-bleed or framed? Any grain/duotone/overlay treatment? → layout bands (`--band: layout-full` / `layout-bleed`) + figure radius.
 - **Layout rhythm & density** — centered stack or asymmetric? Dense/catalog or airy/gallery? Card-based
   or full-bleed sections? Gutters tight or generous? → band system, `--gap` steps, grid utilities.
 - **Decoration & motifs** — the signature move: oversized ghost numerals, ruled dividers, borders on
@@ -85,7 +85,7 @@ Not for building an actual page — that's the `zazz` skill. This skill only _au
 | Serif headings / italic emphasis words  | serif heading face + italic true-cuts on virtue nouns (`text-*`)                     |
 | Black grotesk, tight, huge hero         | `text-display`/`text-h1` moment, heavy weight, geometric sans                        |
 | Uppercase micro-labels                  | `text-eyebrow` (the only caps; everything else sentence case)                        |
-| Full-bleed cinematic photo w/ text over | `--col: layout-bleed` / `layout-full` band, white overlay text                       |
+| Full-bleed cinematic photo w/ text over | `--band: layout-bleed` / `layout-full` band, white overlay text                      |
 | Bordered cards on dark                  | `data-ui="card"` with `--border: 1`, flat surfaces                                   |
 | Big stat numbers                        | `text-display`/`text-h2` numerals in `--color-primary`, `text-eyebrow` labels        |
 | Oversized ghost numerals / watermark    | large type at low opacity via `--color-muted`/tint, `data-ui="pile"` overlap         |

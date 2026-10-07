@@ -1,48 +1,91 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { FilePen, Rss } from "@lucide/astro";
 
-const posts = (await getCollection("blog", ({ data }) => import.meta.env.DEV || !data.draft)).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-);
+const posts = (
+  await getCollection("blog", ({ data }) => import.meta.env.DEV || !data.draft)
+).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 // Frontmatter dates parse as UTC midnight; format in UTC so no build renders them a day early.
 const format = (date: Date) =>
-  date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
+  date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  });
 ---
 
-<BaseLayout title="Blog" description="Releases, announcements, and engineering notes from Zazz.">
-  <main id="main" data-ui="layout" style="--py: 11">
-    <div style="--col: layout-md; --display: flex-col; --gap: 11">
+<BaseLayout
+  title="Blog"
+  description="Releases, announcements, and engineering notes from Zazz."
+>
+  <main id="main" data-ui="layout" style="--py: 8">
+    <div style="--band: layout-md; --display: flex-col; --gap: 11">
       <header>
-        <p data-ui="text-eyebrow" style="--text: var(--color-muted-foreground)">Blog</p>
-        <h1 data-ui="text-h4" style="--mt: 1">Releases, announcements, and engineering notes</h1>
-        <p data-ui="text-sm" style="--mt: 2; --text: var(--color-muted-foreground)">
-          <a href="/rss.xml">RSS feed</a>
-        </p>
+        <div
+          style="
+            --display: flex;
+            --items: center;
+            --justify: space-between;
+            --gap: 2;
+            --pb: 3;
+            --border-b: 1;
+            --w: 100%;
+          "
+        >
+          <p
+            data-ui="text-eyebrow"
+            style="--text: var(--color-muted-foreground)"
+          >
+            The Zazz Blog
+          </p>
+          <a href="/rss.xml" data-ui="badge" data-badge-variant="outline"
+            ><Rss /> <span>RSS feed</span></a
+          >
+        </div>
       </header>
       {
         posts.length === 0 ? (
-          <p style="--text: var(--color-muted-foreground)">Nothing published yet.</p>
+          <p style="--text: var(--color-muted-foreground)">
+            Nothing published yet.
+          </p>
         ) : (
           <ul style="--display: flex-col; --gap: 6" data-ui="divide-y">
             {posts.map((post) => (
-              <li style="--pb: 6">
-                <article style="--display: flex-col; --gap: 2">
-                  <p data-ui="text-xs" style="--text: var(--color-muted-foreground)">
-                    <time datetime={post.data.date.toISOString()}>{format(post.data.date)}</time>
-                    {post.data.draft && (
-                      <span data-ui="badge" data-badge-variant="muted" style="--ml: 2">
-                        Draft
+              <li data-ui="card">
+                <a
+                  href={`/blog/${post.id}/`}
+                  style="--opacity--hover: 0.8; --transition: var(--default-transition)"
+                >
+                  <article style="--display: flex-col; --gap: 2">
+                    <div style="--display: flex; --items: center; --gap: 2">
+                      {post.data.draft && (
+                        <span data-ui="badge" data-badge-variant="warning">
+                          <FilePen />
+                          <span>Draft</span>
+                        </span>
+                      )}
+                      <p
+                        data-ui="text-xs"
+                        style="--text: var(--color-muted-foreground)"
+                      >
+                        <time datetime={post.data.date.toISOString()}>
+                          {format(post.data.date)}
+                        </time>
+                      </p>
+                    </div>
+
+                    <h2 data-ui="text-lg">
+                      <span style="--text: var(--color-foreground); --text-decoration: none">
+                        {post.data.title}
                       </span>
-                    )}
-                  </p>
-                  <h2 data-ui="text-lg">
-                    <a href={`/blog/${post.id}/`} style="--text: var(--color-foreground); --text-decoration: none">
-                      {post.data.title}
-                    </a>
-                  </h2>
-                  <p style="--text: var(--color-muted-foreground)">{post.data.description}</p>
-                </article>
+                    </h2>
+                    <p style="--text: var(--color-muted-foreground)">
+                      {post.data.description}
+                    </p>
+                  </article>
+                </a>
               </li>
             ))}
           </ul>

@@ -40,6 +40,25 @@ describe("color and effects", () => {
     await userEvent.unhover(el);
   });
 
+  it('--bg--current applies on [aria-current] (not "false"), on a link, a button, and in the group form', () => {
+    const red = "rgb(255, 0, 0)";
+    const root = mount(`<div>
+      <a href="/a" data-page aria-current="page" style="${BOX} --display: block; --bg: transparent; --bg--current: ${red}">a</a>
+      <a href="/b" data-false aria-current="false" style="${BOX} --display: block; --bg: transparent; --bg--current: ${red}">b</a>
+      <a href="/c" data-none style="${BOX} --display: block; --bg: transparent; --bg--current: ${red}">c</a>
+      <a href="/d" data-button data-ui="button" data-button-variant="ghost" aria-current="true" style="--bg--current: ${red}">d</a>
+      <a href="/e" data-ui="group" aria-current="page"><span data-group style="${BOX} --display: block; --bg: transparent; --group-bg--current: ${red}">e</span></a>
+      <div data-probe style="${BOX} --bg: ${red}"></div>
+    </div>`);
+    const bg = (sel: string) => style(root.querySelector(sel)!, "background-color");
+    const current = bg("[data-probe]");
+    expect(bg("[data-page]")).toBe(current);
+    expect(bg("[data-button]")).toBe(red); // a primitive reads the resolver raw
+    expect(bg("[data-group]")).toBe(current);
+    expect(bg("[data-false]")).not.toBe(current);
+    expect(bg("[data-none]")).not.toBe(current);
+  });
+
   it("--ring and --shadow both appear in one box-shadow", () => {
     const el = mount(`<div style="${BOX} --ring: 2px; --shadow: 0 4px 8px rgb(0, 0, 0)"></div>`);
     const shadow = style(el, "box-shadow");

@@ -46,6 +46,7 @@ export const STATES = [
   "focus-within",
   "hover",
   "checked",
+  "current",
   "open",
   "stuck",
 ] as const;
@@ -71,6 +72,7 @@ export const STATE_SELECTORS: Record<
   "focus-within": { pseudo: ":focus-within" },
   hover: { pseudo: ":hover", media: "(hover: hover)" },
   checked: { pseudo: ':is(:checked, [aria-checked="true"])' },
+  current: { pseudo: ':is([aria-current]:not([aria-current="false"]))' },
   open: { pseudo: ':is([open], :popover-open, [aria-expanded="true"])' },
   stuck: { pseudo: "", stuck: true },
 };
@@ -175,7 +177,7 @@ export interface Utility {
   noBase?: string;
   /**
    * Extra selectors excluded from the no-base rule: elements whose
-   * placement chain a primitive owns, e.g. a layout's children for `--col`.
+   * placement chain a primitive owns, e.g. a layout's children for `--band`.
    */
   noBaseExclude?: readonly string[];
   /**
@@ -288,7 +290,7 @@ const LAYOUT_CHILDREN = ["ui-layout > *", '[data-ui~="layout"] > *'] as const;
 
 /**
  * Track-list keywords `--grid-cols` / `--grid-rows` take besides a count. `none`
- * is not one: `--grid-template-cols: none` says the same, and every keyword
+ * is not one: `--template-cols: none` says the same, and every keyword
  * costs a rule per breakpoint (SPEC claim 16).
  */
 export const GRID_TEMPLATE_KEYWORDS = ["subgrid"] as const;
@@ -362,15 +364,15 @@ export const UTILITIES: readonly Utility[] = [
   { name: "flex", properties: ["flex"], mode: "raw", family: "flow", noBase: "0 1 auto" },
   { name: "basis", properties: ["flex-basis"], mode: "raw", family: "flow", noBase: "auto" },
   { name: "order", properties: ["order"], mode: "raw", family: "flow", noBase: "0" },
+  // a layout child's band (`layout-md`); any grid-column value works
   {
-    name: "col",
+    name: "band",
     properties: ["grid-column"],
     mode: "raw",
     family: "flow",
     noBase: "auto",
     noBaseExclude: LAYOUT_CHILDREN,
   },
-  { name: "row", properties: ["grid-row"], mode: "raw", family: "flow", noBase: "auto" },
   // Tailwind's col-span / col-start / col-end (and row-*): span is a count,
   // start and end are line numbers; start and end follow span so they combine
   {
@@ -434,13 +436,23 @@ export const UTILITIES: readonly Utility[] = [
     noBase: "1",
     keywords: GRID_TEMPLATE_KEYWORDS,
   },
+  // raw track lists take states too, for the 0fr → 1fr expand (`--template-rows--open: 1fr`)
   {
-    name: "grid-template-cols",
+    name: "template-cols",
     properties: ["grid-template-columns"],
     mode: "raw",
     family: "grid",
+    tiers: "both",
+    noBase: "none",
   },
-  { name: "grid-template-rows", properties: ["grid-template-rows"], mode: "raw", family: "grid" },
+  {
+    name: "template-rows",
+    properties: ["grid-template-rows"],
+    mode: "raw",
+    family: "grid",
+    tiers: "both",
+    noBase: "none",
+  },
   {
     name: "grid-fit",
     properties: ["grid-template-columns"],
@@ -642,11 +654,14 @@ export const UTILITIES: readonly Utility[] = [
     family: "typography",
     emit: "line-clamp",
   },
+  // states too, for the link pattern `--text-decoration--hover: underline`
   {
     name: "text-decoration",
     properties: ["text-decoration-line"],
     mode: "raw",
     family: "typography",
+    tiers: "both",
+    noBase: "none",
   },
   { name: "whitespace", properties: ["white-space"], mode: "keyword", family: "typography" },
   // color: states; bg-alpha feeds the bg emission

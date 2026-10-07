@@ -1,10 +1,13 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import Toc from "../../components/Toc.astro";
+import { FilePen } from "@lucide/astro";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog", ({ data }) => import.meta.env.DEV || !data.draft);
+  const posts = await getCollection(
+    "blog",
+    ({ data }) => import.meta.env.DEV || !data.draft,
+  );
   return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
 }
 
@@ -19,29 +22,50 @@ const date = post.data.date.toLocaleDateString("en-US", {
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description}>
-  <main id="main" data-ui="layout" style="--py: 11">
+  <main id="main" data-ui="layout" style="--py: 8">
     <div
       style="
         --display: grid;
-        --grid-template-cols: minmax(0, 1fr);
-        --grid-template-cols--xl: minmax(0, 1fr) 13rem;
+        --template-cols: minmax(0, 1fr);
+        --template-cols--xl: minmax(0, 1fr);
         --gap: 11;
         --items: start;
-        --col: layout-lg;
+        --band: layout-md;
       "
     >
-      <article data-ui="prose" data-pagefind-body data-pagefind-filter="section:Blog" style="--min-w: 0; --max-w: var(--article-xl)">
+      <article
+        data-pagefind-body
+        data-pagefind-filter="section:Blog"
+        style="--min-w: 0;"
+      >
         <header style="--mb: 11">
-          <p data-ui="text-xs" style="--text: var(--color-muted-foreground)">
-            <time datetime={post.data.date.toISOString()}>{date}</time>
-            {post.data.draft && <span data-ui="badge" data-badge-variant="muted" style="--ml: 2">Draft</span>}
+          <div style="--display: flex; --items: center; --gap: 2">
+            {
+              post.data.draft && (
+                <span data-ui="badge" data-badge-variant="warning">
+                  <FilePen />
+                  <span>Draft</span>
+                </span>
+              )
+            }
+            <p data-ui="text-xs" style="--text: var(--color-muted-foreground)">
+              <time datetime={post.data.date.toISOString()}>{date}</time>
+            </p>
+          </div>
+          <h1 data-ui="text-h4" style="--mt: 4" data-pagefind-meta="title">
+            {post.data.title}
+          </h1>
+          <p
+            data-ui="text-lg"
+            style="--mt: 2; --text: var(--color-muted-foreground)"
+          >
+            {post.data.description}
           </p>
-          <h1 data-ui="text-h4" style="--mt: 1" data-pagefind-meta="title">{post.data.title}</h1>
-          <p data-ui="text-lg" style="--mt: 2; --text: var(--color-muted-foreground)">{post.data.description}</p>
         </header>
-        <Content />
+        <div data-ui="prose">
+          <Content />
+        </div>
       </article>
-      <Toc headings={headings} />
     </div>
   </main>
 </BaseLayout>

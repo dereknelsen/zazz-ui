@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * @fileoverview E2e for `zazz-ui update` against the two-version fixture kit
+ * @fileoverview E2e for `zazz-ui update` against the fixture kit
  * (see fixture-kit.ts). Each test gets its own project because updates
  * mutate state; the fixture's `{version}` spec template temporarily replaces
  * global-setup's packed-kit `ZAZZ_UI_KIT` for this file.
@@ -17,7 +17,16 @@ import { sha256 } from "../src/vendor.ts";
 import { runAdd } from "../src/commands/add.ts";
 import { runInit } from "../src/commands/init.ts";
 import { runUpdate, splitVersionArgs } from "../src/commands/update.ts";
-import { V1, V1_VARIABLES, V2, V2_VARIABLES, buildFixtureKits } from "./fixture-kit.ts";
+import {
+  V1,
+  V1_VARIABLES,
+  V2,
+  V2_VARIABLES,
+  V3,
+  V3_BASE_CSS_POST,
+  V3_BASE_CSS_PRE,
+  buildFixtureKits,
+} from "./fixture-kit.ts";
 
 const tmpDirs: string[] = [];
 let previousKitEnv: string | undefined;
@@ -234,6 +243,59 @@ describe("zazz-ui update (e2e, fixture kit)", () => {
     await expect(runUpdate([`@${V2}`, "blorbo"], {}, { cwd: root, silent: true })).rejects.toThrow(
       /isn't vendored/,
     );
+  });
+});
+
+describe("zazz-ui update across the manifest v1 → v2 shape change (0.4 → 0.5)", () => {
+  it("drops the class layer, vendors the utilities layer and runtime, keeps the legacy wiring", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "zazz-e2e-update-v2-"));
+    tmpDirs.push(root);
+    await runInit(
+      `@${V2}`,
+      { dir: "zazz", fonts: true, themeScript: true, legacy: "../styles/old.css" },
+      { cwd: root, silent: true },
+    );
+    await runAdd(["beta"], {}, { cwd: root, silent: true });
+    expect(existsSync(at(root, "base/_utilities.css"))).toBe(true);
+
+    await runUpdate([`@${V3}`], {}, { cwd: root, silent: true });
+
+    expect(process.exitCode ?? 0).toBe(0);
+    const config = await readConfig(root);
+    expect(config.kit.version).toBe(V3);
+    expect(config.base.version).toBeUndefined();
+
+    // The 0.4 class layer is gone from disk and from the record.
+    for (const file of ["base/_utilities.css", "base/_layout.css"]) {
+      expect(existsSync(at(root, file)), file).toBe(false);
+      expect(config.base.files[file], file).toBeUndefined();
+    }
+    // The manifest's exported inventory replaces the v1 fallback.
+    for (const file of [
+      ...V3_BASE_CSS_PRE,
+      ...V3_BASE_CSS_POST,
+      "base/navigation.js",
+      "base/scroll-state.js",
+      "base/scroll-state.d.ts",
+    ]) {
+      expect(existsSync(at(root, file)), file).toBe(true);
+      expect(config.base.files[file], file).toBeDefined();
+    }
+
+    const indexCss = await readFile(at(root, "index.css"), "utf8");
+    expect(indexCss).toContain(`@import "../styles/old.css" layer(legacy.imports);`);
+    expect(indexCss).not.toContain("_utilities.css");
+    expect(indexCss).not.toContain("_layout.css");
+    const legacy = indexCss.indexOf("layer(legacy.imports)");
+    const primitive = indexCss.indexOf("primitives/alpha/alpha.css");
+    expect(indexCss.indexOf("base/_breakpoints.css")).toBeLessThan(legacy);
+    expect(legacy).toBeLessThan(primitive);
+    expect(primitive).toBeLessThan(indexCss.indexOf("base/_properties.css"));
+
+    const indexJs = await readFile(at(root, "index.js"), "utf8");
+    expect(indexJs).toContain(`import "./base/navigation.js";`);
+    expect(indexJs).toContain(`void import("./base/scroll-state.js");`);
+    expect(indexJs).toContain(`import "./primitives/beta/beta.js";`);
   });
 });
 

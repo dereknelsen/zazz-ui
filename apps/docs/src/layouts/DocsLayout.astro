@@ -21,14 +21,14 @@ const { title, description, section, sidebar, headings = [] } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
-  <main id="main" data-ui="layout" style="--py: 6">
+  <main id="main" data-ui="layout" style="--py: 8">
     <div
       style="
         --display: grid;
-        --grid-template-cols: minmax(0, 1fr);
-        --grid-template-cols--lg: 15rem minmax(0, 1fr);
-        --grid-template-cols--xl: 15rem minmax(0, 1fr) 13rem;
-        --gap: 11;
+        --template-cols: minmax(0, 1fr);
+        --template-cols--lg: 15rem minmax(0, 1fr);
+        --template-cols--xl: 15rem minmax(0, 1fr) 13rem;
+        --gap: 6;
         --items: start;
       "
     >
@@ -44,11 +44,21 @@ const { title, description, section, sidebar, headings = [] } = Astro.props;
         "
       >
         <header style="--mb: 11">
-          <p data-ui="text-eyebrow" style="--text: var(--color-muted-foreground)">{section}</p>
-          <h1 data-ui="text-h4" style="--mt: 1" data-pagefind-meta="title">{title}</h1>
+          <p
+            data-ui="text-eyebrow"
+            style="--text: var(--color-muted-foreground)"
+          >
+            {section}
+          </p>
+          <h1 data-ui="text-h4" style="--mt: 1" data-pagefind-meta="title">
+            {title}
+          </h1>
           {
             description && (
-              <p data-ui="text-lg" style="--mt: 2; --text: var(--color-muted-foreground)">
+              <p
+                data-ui="text-lg"
+                style="--mt: 2; --text: var(--color-muted-foreground)"
+              >
                 {description}
               </p>
             )

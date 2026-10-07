@@ -23,7 +23,7 @@ pnpm dlx zazz-ui init
 pnpm dlx zazz-ui add button card dialog
 ```
 
-`init` vendors the base platform into `zazz/`: the layers, tokens, reset, typography, the generated utilities, the core runtime scripts, an `index.css` and `index.js` pair, and a `head.html` snippet to paste into your `<head>`. It also writes `zazz.json`, the kit version plus a hash of every vendored file's original bytes. Flags: `--dir <path>`, `--ts` (TypeScript sources instead of emitted JavaScript), `--legacy <path>` (wire an existing stylesheet into the `legacy` layer), `--no-fonts`, `--no-theme-script`.
+`init` vendors the base platform into `zazz/`: the layers, tokens, reset, typography, the generated utilities, the core runtime scripts, an `index.css` and `index.js` pair, and a `head.html` snippet to paste into your `<head>`. It also writes `zazz.json`, the kit version plus a hash of every vendored file's original bytes. Flags: `--dir <path>`, `--ts` (TypeScript sources instead of emitted JavaScript), `--legacy <path>` (wire an existing stylesheet into the `legacy.imports` sublayer), `--no-fonts`, `--no-theme-script`.
 
 `add <primitive…>` resolves dependencies (adding `combobox` brings `select`, `fields`, `popover`, `button`, `kbd`, and `badge`), copies the files at your recorded version, and inserts the imports at the right cascade position. `--examples` also copies the example fragments.
 

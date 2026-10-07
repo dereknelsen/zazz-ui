@@ -27,7 +27,7 @@
     --ui-navigation-menu-popover-viewport-display: grid;
     --ui-navigation-menu-popover-viewport-items: stretch;
     --ui-navigation-menu-popover-viewport-justify-items: stretch;
-    --ui-navigation-menu-popover-viewport-grid-template-cols: 1fr;
+    --ui-navigation-menu-popover-viewport-template-cols: 1fr;
     --ui-navigation-menu-popover-viewport-gap: calc(var(--spacing) * 1.5);
     --ui-navigation-menu-popover-viewport-min-w: calc(var(--spacing) * 52);
   }
@@ -179,7 +179,7 @@
 
   :where([data-ui~="navigation-menu"]) [data-navigation-menu-slot~="viewport"] {
     display: var(--ui-navigation-menu-popover-viewport-display);
-    grid-template-columns: var(--ui-navigation-menu-popover-viewport-grid-template-cols);
+    grid-template-columns: var(--ui-navigation-menu-popover-viewport-template-cols);
     align-items: var(--ui-navigation-menu-popover-viewport-items);
     justify-items: var(--ui-navigation-menu-popover-viewport-justify-items);
     gap: var(--ui-navigation-menu-popover-viewport-gap);
