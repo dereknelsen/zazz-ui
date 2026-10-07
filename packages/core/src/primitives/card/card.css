@@ -101,6 +101,7 @@
 
   :where([data-ui~="card"]:not([data-card-variant])) {
     --_card-rounded: 0;
+    --_card-bg: transparent;
   }
 
   :where([data-ui~="card"][data-card-variant="outline"]) {
