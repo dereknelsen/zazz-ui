@@ -2,7 +2,7 @@
 title: "Zazz 0.5.0 alpha"
 description: "Zazz 0.5.0 replaces utility classes with style utilities: inline custom properties that keep the cascade and cascade layers intact."
 date: 2026-10-06
-draft: true
+draft: false
 tags: ["release"]
 ---
 
@@ -12,7 +12,7 @@ tags: ["release"]
 
 This release removes the Tailwind-like class utility system in favor of an inline CSS custom property syntax we call [style utilities](/api/utilities/). This rework opens up huge wins for performance, file size, and flexibility. It also sets Zazz up to take full advantage of the new [`if()`](https://developer.mozilla.org/en-US/docs/Web/CSS/if), [`style()`](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_size_and_style_queries), and [`@function`](https://developer.mozilla.org/en-US/docs/Web/CSS/@function) CSS features as soon as they're widely available, which will greatly reduce file size and add a huge number of style utilities that would otherwise bloat the system.
 
-**0.4.x syntax:**
+### 0.4.x syntax
 
 ```html
 <section class="py-xl text-center">
@@ -31,7 +31,7 @@ This release removes the Tailwind-like class utility system in favor of an inlin
 </section>
 ```
 
-**0.5.0 syntax:**
+### 0.5.0 syntax
 
 ```html
 <section
@@ -74,13 +74,17 @@ This release removes the Tailwind-like class utility system in favor of an inlin
 </section>
 ```
 
+## Why not normal inline styles?
+
 You have likely never seen a syntax quite like this, and your first question might be, "why not use normal inline styles?"
 
 The essential idea is that inline styles break the CSS cascade: they win over every selector, and they ignore [cascade layers](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer). If you've ever had to deal with inline styles that you're unable to remove from the markup, you know how much suffering they can cause.
 
 Style utilities, on the other hand, _preserve_ the cascade and correctly use [Zazz's cascade layers](/api/foundations/layers/) by using the style attribute and the variable name inside it as the selector itself.
 
-**The simplest expression of this idea looks like this:**
+### The simplest version
+
+The simplest expression of this idea looks like this:
 
 ```css
 @property --p { syntax: "*"; inherits: false; }
@@ -94,9 +98,9 @@ Style utilities, on the other hand, _preserve_ the cascade and correctly use [Za
 
 The trick is to keep style utilities from inheriting values from parent elements (that's the `inherits: false` in the [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) registration). Once you do that, each element's styles become scoped to itself. The result is a syntax that feels and reads more like [StyleX](https://stylexjs.com/) but uses familiar, Tailwind-like shorthand naming conventions that many developers are already used to.
 
-Zazz style utilities take this idea even further by allowing design system values and arbitrary values to live together.
+### Design system values and arbitrary values together
 
-**All the following values are valid:**
+Zazz style utilities take this idea even further by allowing design system values and arbitrary values to live together. All the following values are valid:
 
 ```html
 <div
@@ -110,7 +114,9 @@ Zazz style utilities take this idea even further by allowing design system value
 
 Zazz uses CSS property types and type invalidation to switch between arbitrary fixed values and [spacing scale](/api/utilities/spacing/) values without functions or if statements.
 
-**The real utility looks closer to this:**
+### The real utility
+
+The real utility looks closer to this:
 
 ```css
 @property --p { syntax: "*"; inherits: false; }
@@ -134,7 +140,7 @@ Zazz uses CSS property types and type invalidation to switch between arbitrary f
 
 The `--_p-sm` through `--_p-2xl` values come from [breakpoint tiers](/api/modifiers/responsive/) like `--p--md: 12`. Much of this code will be simplified once `if()` CSS conditionals become widely available, but this solution brings type-driven conditional values to Zazz today.
 
-### How this affects legacy system migration
+## How this affects legacy system migration
 
 There are two core target audiences for Zazz UI. First, Zazz is a no-build, drop-in solution that any technology can use without adopting new infrastructure. But Zazz is also built specifically for legacy applications, which drives the core decision to stay out of the class attribute.
 
@@ -142,7 +148,7 @@ Many legacy applications are stuck with decades of fragile technical debt and re
 
 Zazz stays out of your classes and can live beside them without worrying about name conflicts or unforeseen downstream bugs. Style utilities themselves never conflict with other JavaScript libraries that use the inline style attribute for things like animations or state changes. When JavaScript is turned on, your style utilities can be automatically preserved, even if a library tries to clear the style attribute completely, with the [style guard](/api/primitives/style-guard/). The [migration guide](/docs/concepts/migrating/) covers bringing Zazz into an existing app.
 
-### Other notable features
+## Other notable features
 
 - [`data-ui` identity](/docs/concepts/core-concepts/). Zazz never reads or writes a class. Components are `data-ui="button"`, presets are `data-button-variant="primary"`, and parts are `data-dialog-slot="header"`.
 - [Breakpoints](/api/modifiers/responsive/), [states](/api/modifiers/states/), and [groups](/api/modifiers/group/) are suffixes on the same utility: `--w--md`, `--bg--hover`, `--group-opacity--hover`. Plus the new [`starting`](/api/modifiers/starting/) state for `@starting-style` and an experimental [`stuck`](/api/modifiers/stuck/) state.
