@@ -1,4 +1,8 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "astro",
+  "buildCommand": "cd ../.. && pnpm exec vp run --no-cache core#build && pnpm exec vp run --no-cache docs#build",
+  "outputDirectory": "dist",
   "headers": [
     {
       "source": "/zazz/(.*)",
