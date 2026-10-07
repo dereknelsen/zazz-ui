@@ -2,7 +2,7 @@
 
 Notable changes to the `zazz-ui` CLI. The CLI versions independently of `@zazz-ui/core` (ADR-0010); the kit's own changelog is the one `update` and `diff` print.
 
-## 0.3.0 (unreleased)
+## 0.3.0 (2026-10-07)
 
 First public release. npm had only a `0.0.0` placeholder before it.
 

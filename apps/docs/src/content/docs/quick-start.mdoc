@@ -14,8 +14,8 @@ Create `index.html` and paste this into `<head>`. It is the output of the kit's 
 
 {% head mode="cdn" /%}
 
-{% callout type="warning" title="Unreleased" %}
-The version in these URLs is the kit installed with this site. 0.5 is not on npm yet, so until it ships these URLs resolve to a 0.4 build that does not understand this markup. Pin an exact version in production; the import map's integrity hashes are per byte, so a floating tag would break them on the next release.
+{% callout type="note" %}
+Pin an exact version in production. The import map's integrity hashes are per byte, so a floating tag would break them on the next release.
 {% /callout %}
 
 ## 2. A layout

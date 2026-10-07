@@ -1776,7 +1776,7 @@
       "file": "primitives/fields/fields.css"
     },
     "--ui-field-border-color--hover": {
-      "value": "light-dark( oklch(from var(--color-border) calc(l * 0.9) c h), oklch(from var(--color-border) calc(l * 0.6) c h) )",
+      "value": "color-mix( in oklch, var(--color-border) 90%, var(--color-primary) 10% )",
       "file": "primitives/fields/fields.css"
     },
     "--ui-field-border-style": {
@@ -3546,10 +3546,10 @@
       "dark": "oklch(0 0 0)"
     },
     "--color-border": {
-      "value": "light-dark(var(--color-neutral-100), var(--color-tint-100))",
+      "value": "light-dark(var(--color-neutral-100), var(--color-neutral-800))",
       "file": "base/_variables.css",
       "light": "oklch(0.949 0.001 287.28)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 0.1)"
+      "dark": "oklch(0.336 0.014 285.66)"
     },
     "--color-border-foreground": {
       "value": "light-dark(var(--color-tint-950), var(--color-shade-500))",
@@ -4646,7 +4646,7 @@
       "file": "base/_variables.css"
     },
     "--paragraph-spacing-display": {
-      "value": "calc(1.75rlh * var(--_paragraph-spacing-multiplier))",
+      "value": "calc(3.5rlh * var(--_paragraph-spacing-multiplier))",
       "file": "base/_variables.css"
     },
     "--paragraph-spacing-eyebrow": {
@@ -4654,27 +4654,27 @@
       "file": "base/_variables.css"
     },
     "--paragraph-spacing-h1": {
-      "value": "calc(1.75rlh * var(--_paragraph-spacing-multiplier))",
+      "value": "calc(3.5rlh * var(--_paragraph-spacing-multiplier))",
       "file": "base/_variables.css"
     },
     "--paragraph-spacing-h2": {
-      "value": "calc(1.5rlh * var(--_paragraph-spacing-multiplier))",
+      "value": "calc(3rlh * var(--_paragraph-spacing-multiplier))",
       "file": "base/_variables.css"
     },
     "--paragraph-spacing-h3": {
-      "value": "calc(1.5rlh * var(--_paragraph-spacing-multiplier))",
+      "value": "calc(3rlh * var(--_paragraph-spacing-multiplier))",
       "file": "base/_variables.css"
     },
     "--paragraph-spacing-h4": {
-      "value": "calc(1.25rlh * var(--_paragraph-spacing-multiplier))",
+      "value": "calc(2rlh * var(--_paragraph-spacing-multiplier))",
       "file": "base/_variables.css"
     },
     "--paragraph-spacing-h5": {
-      "value": "calc(1.25rlh * var(--_paragraph-spacing-multiplier))",
+      "value": "calc(2rlh * var(--_paragraph-spacing-multiplier))",
       "file": "base/_variables.css"
     },
     "--paragraph-spacing-h6": {
-      "value": "calc(1.25rlh * var(--_paragraph-spacing-multiplier))",
+      "value": "calc(2rlh * var(--_paragraph-spacing-multiplier))",
       "file": "base/_variables.css"
     },
     "--paragraph-spacing-lg": {

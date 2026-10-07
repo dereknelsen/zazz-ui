@@ -31,9 +31,10 @@
     --ui-field-border-width: 1px;
     --ui-field-border-style: solid;
     --ui-field-border-color: var(--color-border);
-    --ui-field-border-color--hover: light-dark(
-      oklch(from var(--color-border) calc(l * 0.9) c h),
-      oklch(from var(--color-border) calc(l * 0.6) c h)
+    --ui-field-border-color--hover: color-mix(
+      in oklch,
+      var(--color-border) 90%,
+      var(--color-primary) 10%
     );
     --ui-field-border-color--focus-within: var(--color-primary);
 

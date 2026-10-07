@@ -1,6 +1,6 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
-## 0.5.0 (unreleased)
+## 0.5.0 (2026-10-07)
 
 Style utilities (custom properties in `style`, called "props" in earlier 0.5 previews) replace utility classes and `data-ui` replaces class identity (SPEC.md, ADR-0012, ADR-0013). 0.5 is an alpha with breaking changes throughout and is not compatible with 0.4.x: migrate markup and themes in one step, using the migration notes below.
 
@@ -122,6 +122,7 @@ Style utilities (custom properties in `style`, called "props" in earlier 0.5 pre
 
 ### fields
 
+- The hover border (`--ui-field-border-color--hover`) is `--color-border` mixed with 10% `--color-primary` (was the full primary color).
 - New example fragment `fields.html`: a field with hint and error, and a checkbox field group.
 - **BREAKING** Identities are `data-ui="field"` (wrapper) and `data-ui="field-group"` (fieldset; `data-ui="radio-group"` shares its rules). Slots are `data-field-slot="label | description | hint | error"` (was `data-slot="field-*"`); the inline layout is `data-field-orientation="horizontal"` (was `data-orientation`). Migration: `<div class="ui-field"><label data-slot="field-label">` → `<div data-ui="field"><label data-field-slot="label">`.
 - **BREAKING** The shared `--ui-field-*` family is renamed to utility names; every control in the kit reads the new names:

@@ -20,7 +20,7 @@ import "@zazz-ui/core"; // custom elements and shared behaviors
 From a CDN, the script needs an import map for its dependencies and the Interest Invokers polyfill:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.4.1/dist/zazz.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.5.0/dist/zazz.css" />
 <script type="importmap">
   {
     "imports": {
@@ -36,7 +36,7 @@ From a CDN, the script needs an import map for its dependencies and the Interest
   type="module"
   src="https://cdn.jsdelivr.net/npm/invokers@2.2.2/dist/esm/production/interest.js"
 ></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.4.1/dist/zazz.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.5.0/dist/zazz.js"></script>
 ```
 
 Use an exact version in CDN URLs. The [installation guide](https://zazz.sh/docs/install/installation/) has the complete `<head>`, with fonts, the theme script, a per-primitive variant, and integrity hashes on every URL; `buildHead({ cdn: { version } })` from `@zazz-ui/core/head` returns the same markup. Each release also includes `dist/sri.json` with the SHA-384 hash of every published file.
