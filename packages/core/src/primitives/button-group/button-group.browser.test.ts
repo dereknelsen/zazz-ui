@@ -42,4 +42,18 @@ describe("button group", () => {
     const group = mount(`<ui-button-group style="--rounded: 7px">${GROUP}</ui-button-group>`);
     expect(style(group, "border-radius")).toBe("7px");
   });
+
+  it("collapses the seam without overlapping: the later control drops its leading border", () => {
+    const root = mount(`<div>
+      <ui-button-group data-row>${GROUP}</ui-button-group>
+      <ui-button-group data-column data-button-group-orientation="vertical">${GROUP}</ui-button-group>
+    </div>`);
+    const [rowFirst, rowSecond] = root.querySelector("[data-row]")!.children;
+    expect(style(rowSecond!, "margin-inline-start")).toBe("0px");
+    expect(style(rowSecond!, "border-inline-start-width")).toBe("0px");
+    expect(style(rowFirst!, "border-inline-end-width")).not.toBe("0px");
+    const [, columnSecond] = root.querySelector("[data-column]")!.children;
+    expect(style(columnSecond!, "margin-block-start")).toBe("0px");
+    expect(style(columnSecond!, "border-block-start-width")).toBe("0px");
+  });
 });

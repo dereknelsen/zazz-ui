@@ -18,7 +18,8 @@
 
 @layer variables {
   :root {
-    --ui-card-bg: var(--color-card);
+    /* a bare card has no surface; the outline and floating variants paint --color-card */
+    --ui-card-bg: transparent;
     --ui-card-text: var(--color-card-foreground);
     --ui-card-rounded: var(--radius-lg);
     --ui-card-shadow: none;
@@ -101,7 +102,6 @@
 
   :where([data-ui~="card"]:not([data-card-variant])) {
     --_card-rounded: 0;
-    --_card-bg: transparent;
   }
 
   :where([data-ui~="card"][data-card-variant="outline"]) {

@@ -1,5 +1,19 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.5.1 (2026-10-07)
+
+### card
+
+- Fix: a card without a variant is bare again while still honoring `--ui-card-bg`. 0.5.0 set a private transparent background that blocked the hook, so an inline `--ui-card-bg` on a card no longer reached cards nested in it (SPEC claim 26). The hook's default is now `transparent`; the outline and floating variants still paint `--color-card`.
+
+### button-group
+
+- Fix: grouped controls no longer overlap by 1px, which let hover borders spill onto neighbors and nudged the layout. Each later control drops its leading border instead (`border-inline-start-width` in a row, `border-block-start-width` in a vertical group), so neighbors share one border and right-to-left rows work too.
+
+### toggle-group
+
+- Fix: grouped controls no longer overlap by 1px, which let hover borders spill onto neighbors and nudged the layout. Each later control drops its leading border instead (`border-inline-start-width` in a row, `border-block-start-width` in a vertical group), so neighbors share one border and right-to-left rows work too.
+
 ## 0.5.0 (2026-10-07)
 
 Style utilities (custom properties in `style`, called "props" in earlier 0.5 previews) replace utility classes and `data-ui` replaces class identity (SPEC.md, ADR-0012, ADR-0013). 0.5 is an alpha with breaking changes throughout and is not compatible with 0.4.x: migrate markup and themes in one step, using the migration notes below.

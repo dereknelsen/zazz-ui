@@ -37,4 +37,18 @@ describe("toggle group", () => {
     expect(style(first, "border-end-start-radius")).toBe("0px");
     expect(style(first, "border-start-end-radius")).not.toBe("0px");
   });
+
+  it("collapses the seam without overlapping: the later control drops its leading border", () => {
+    const root = mount(`<div>
+      <ui-toggle-group data-row>${TOGGLES}</ui-toggle-group>
+      <ui-toggle-group data-column data-toggle-group-orientation="vertical">${TOGGLES}</ui-toggle-group>
+    </div>`);
+    const [rowFirst, rowSecond] = root.querySelector("[data-row]")!.children;
+    expect(style(rowSecond!, "margin-inline-start")).toBe("0px");
+    expect(style(rowSecond!, "border-inline-start-width")).toBe("0px");
+    expect(style(rowFirst!, "border-inline-end-width")).not.toBe("0px");
+    const [, columnSecond] = root.querySelector("[data-column]")!.children;
+    expect(style(columnSecond!, "margin-block-start")).toBe("0px");
+    expect(style(columnSecond!, "border-block-start-width")).toBe("0px");
+  });
 });
