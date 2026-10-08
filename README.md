@@ -66,4 +66,4 @@ Bug reports and discussions are welcome. Pull requests aren't, for now; [CONTRIB
 
 ## License
 
-MIT. Copyright © 2026 Meridian Design, LLC.
+MIT. Copyright © 2026 Derek Nelsen
