@@ -503,5 +503,5 @@ ADR-0014. `navigation.js` intercepts a same-origin navigation only when the curr
 - **Aborted**: a navigation superseded by a newer one cancels its fetch and neither swaps nor falls back to a full load.
 - **Never intercepted**: reloads (`navigationType === "reload"`), hash changes, downloads, form submissions, cross-origin navigations, and navigations the browser marks as not interceptable.
 - **After a swap**: refresh hooks run on the new body (`refreshAll`), and focus moves to the first `h1` in `<main>`, else to `<main>`, else to the body.
-- **Without the opt-in**: native navigation, animated by `@view-transition { navigation: auto }` from `_view-transitions.css`.
+- **Without the opt-in**: native navigation. The kit does not enable cross-document view transitions; a site that wants them adds `@view-transition { navigation: auto; }` to its own CSS, and `_view-transitions.css` styles them.
 - **Debug** (`<ui-debug>`, §13): on a swap page, an info line lists the persisted elements; warnings for a `data-ui-persist` without an id, a duplicate id, a persisted element inside another, and `data-ui-persist` on a page without the opt-in. `data-ui-persist-scroll` gets the same checks, and a warning when a `data-ui-persist` element already carries it (on the element itself or an ancestor).

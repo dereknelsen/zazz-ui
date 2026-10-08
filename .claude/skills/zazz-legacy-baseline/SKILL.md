@@ -21,7 +21,7 @@ gap is real only when the CSS that ships and the markup the templates emit show 
 in the baseline names its evidence.
 
 [RESET-GROUPS.md](RESET-GROUPS.md) is the catalog: each reset group, the symptom it causes, how to
-detect it, and the baseline lines that close it. It reflects Zazz 0.5.3.
+detect it, and the baseline lines that close it. It reflects Zazz 0.5.4.
 
 ## Steps
 

@@ -64,8 +64,9 @@ the default band with `data-layout-size="md"` on the layout, or place one child 
 ```
 
 Only `html` is a page-level query container, so tiers on `body`, `main`, and sections read the page.
-The `data-transition-layer` names persist the header and footer across view transitions (`<main>`
-animates automatically; see `references/apis.md`).
+When the page runs view transitions (swap navigation, or `@view-transition { navigation: auto; }` in
+the site's own CSS, which the kit never declares), the `data-transition-layer` names give the header and
+footer their own transition layers and `<main>` animates on its own; see `references/apis.md`.
 
 ## Heading group with CTAs
 

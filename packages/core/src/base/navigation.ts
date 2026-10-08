@@ -24,9 +24,10 @@ import { refreshAll } from "./zazz-element.ts";
  * scrolls as the browser decides: to the top or the target for a new entry,
  * restored on back/forward.
  *
- * Without the opt-in the browser navigates normally, animated by the CSS
- * cross-document view transitions in `_view-transitions.css`. Reloads, hash
- * changes, downloads and form posts are never intercepted.
+ * Without the opt-in the browser navigates normally; a site animates those
+ * loads by enabling cross-document view transitions in its own CSS, which
+ * `_view-transitions.css` then styles. Reloads, hash changes, downloads and
+ * form posts are never intercepted.
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API
  * @see https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent/scroll

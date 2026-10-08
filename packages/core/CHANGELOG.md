@@ -1,5 +1,11 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.5.4 (2026-10-08)
+
+### base
+
+- Cross-document view transitions are opt-in. The kit no longer declares `@view-transition { navigation: auto }`, which animated every same-origin navigation on any page that loaded it and couldn't be turned off for some pages. It ships in a patch because nothing breaks without it: pages that relied on it load without the crossfade. To keep page-load transitions, add `@view-transition { navigation: auto; }` to your own CSS; the kit's `::view-transition-*` styling still applies. Swap navigation (`data-ui-navigation="swap"`) is unchanged.
+
 ## 0.5.3 (2026-10-08)
 
 ### base

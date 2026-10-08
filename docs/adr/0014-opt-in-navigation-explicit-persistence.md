@@ -2,6 +2,8 @@
 
 Status: accepted (2026-10-01). Amends the navigation behavior of `base/navigation.ts` (no earlier ADR).
 
+> Amended 2026-10-08: the kit no longer enables cross-document view transitions. `@view-transition` cannot be scoped, so declaring it animated every same-origin navigation on any page that loaded the kit, legacy pages included. A site that wants native page loads animated adds `@view-transition { navigation: auto; }` to its own CSS; `_view-transitions.css` still styles the transition. SPEC §17 has the current rule.
+
 `navigation.js` intercepts same-origin navigations only on a page whose `<html>` carries `data-ui-navigation="swap"`, and only toward a page that carries it too. A swap replaces the whole `<body>`, except elements marked `data-ui-persist="<id>"` whose id appears in both pages: those keep their live DOM and state. Without the opt-in, navigation is native (full loads, animated by the CSS cross-document view transitions the kit already enables).
 
 ## Context

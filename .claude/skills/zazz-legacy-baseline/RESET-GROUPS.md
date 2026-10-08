@@ -1,4 +1,4 @@
-# Reset groups (Zazz 0.5.3)
+# Reset groups (Zazz 0.5.4)
 
 One section per group of the Zazz reset. **Detect** names what to grep in the legacy CSS (`css`)
 and the server templates (`tpl`). **Close** gives the lines that go inside the baseline's
@@ -175,6 +175,16 @@ background: revert;` for `progress` and `meter`), and for unstyled controls
 - **Close:** this is an **adopt** decision for the user, the focus ring included. To opt out:
   `:where(input[type="checkbox"], input[type="range"]) { appearance: revert; }` plus `revert`
   for the properties the skin relies on.
+
+## Page transitions
+
+- **Kit:** from 0.5.4 the kit declares no `@view-transition` rule, so legacy pages navigate with no
+  transition. Through 0.5.3 it declared `@view-transition { navigation: auto }`, and every
+  same-origin navigation crossfaded the page for 250ms.
+- **Detect:** the vendored `zazz/base/_view-transitions.css` for `@view-transition`; the app's own
+  CSS for one.
+- **Close:** the baseline can't hold it: an at-rule can't be scoped, and `var()` doesn't work in it.
+  Upgrade the kit to 0.5.4 or later, and report any `@view-transition` the app's own CSS declares.
 
 ## `[hidden]`
 

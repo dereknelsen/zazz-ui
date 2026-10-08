@@ -6,7 +6,19 @@ sectionOrder: 6
 order: 6
 ---
 
-Pages navigate normally by default, and the kit animates full loads with CSS cross-document view transitions (`base/_view-transitions.css`). Opt into in-page navigation when state must survive a page change: a toast stack, a playing video, an open mini-cart.
+Pages navigate normally by default, with no transition between them. To animate full page loads, enable cross-document view transitions in your own CSS:
+
+```css
+@view-transition {
+  navigation: auto;
+}
+```
+
+The kit leaves that rule to you. Declared in the kit, it would animate every same-origin navigation on every page that loads it, legacy pages included, and an at-rule can't be scoped to some pages. A custom property can't switch it either: `@view-transition` belongs to the document, not to an element, so the browser drops `navigation: var(--…)` when it parses the rule. Include the rule in the stylesheets of the pages that should animate, and leave it out elsewhere.
+
+Once it's on, `base/_view-transitions.css` styles the transition. `<main>` animates on its own, `data-transition-layer="global-header"` and `"global-footer"` give the header and footer their own transition layers, and the `--view-transition-*` tokens set the duration, easing, and motion of `<main>`. To vary the animation by navigation, name a type in the same rule (`types: slide;`) or set one from script in the `pageswap` and `pagereveal` events, then style it with `:active-view-transition-type(slide)`.
+
+Opt into in-page navigation when state must survive a page change: a toast stack, a playing video, an open mini-cart.
 
 ```html
 <html data-ui-navigation="swap">

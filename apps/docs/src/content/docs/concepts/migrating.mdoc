@@ -57,7 +57,7 @@ What goes in the baseline depends on the CSS that actually ships, not on the fra
 Leave `[hidden]` alone. Browsers already hide it; the reset adds `!important` so that kit components that set `display` still respect the attribute, and no layer can override that. The one break is a legacy script that calls jQuery's `.show()` on an element that has the attribute: the element stays hidden. Remove the attribute in that markup, or have the script remove it.
 
 {% callout type="note" %}
-Through 0.5.2, the reset also made `body`, `main`, `header`, `footer`, `section`, and `article` inline-size query containers. A floated or inline-block `section` collapses under that containment. On those versions, add `:where(body, main, header, footer, section, article) { container-type: normal; }` to the baseline.
+Through 0.5.2, the reset also made `body`, `main`, `header`, `footer`, `section`, and `article` inline-size query containers. A floated or inline-block `section` collapses under that containment. On those versions, add `:where(body, main, header, footer, section, article) { container-type: normal; }` to the baseline. Through 0.5.3, the kit also turned on cross-document view transitions, which crossfaded every legacy page on navigation. The baseline can't scope an at-rule, so upgrade to 0.5.4 to drop them.
 {% /callout %}
 
 ## 3. Convert one region at a time

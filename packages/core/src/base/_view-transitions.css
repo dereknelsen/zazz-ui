@@ -1,22 +1,20 @@
 /**
- * _view-transitions.css — Cross-document view transitions
+ * _view-transitions.css — How view transitions animate
+ *
+ * Cross-document transitions are opt-in: the kit never declares @view-transition,
+ * because an at-rule cannot be scoped and would animate every same-origin navigation
+ * on a page that loads the kit. A site enables them in its own CSS with
+ * `@view-transition { navigation: auto; }`, and these rules style them.
  *
  * @layer      variables, utilities
  * @requires   _layers.css, _variables.css, _reset.css ([data-transition-layer] names)
- * @uses       ::view-transition-old/new — cross-document page transitions
- * @uses       @view-transition { navigation: auto } — enabled here, behind @supports
+ * @uses       ::view-transition-old/new — page transitions, cross-document and swap navigation
  * @uses       ::view-transition-group(toaster) — frozen group; excludes the toast
  *             stack (named in toaster.css) from transition repaints
  * @tokens     --view-transition-* (@layer variables)
  */
 
 @layer variables {
-  @supports at-rule(@view-transition) and (navigation: auto) {
-    @view-transition {
-      navigation: auto;
-    }
-  }
-
   :root {
     --view-transition-duration: 0ms;
     --view-transition-ease: var(--bezier-easing);
