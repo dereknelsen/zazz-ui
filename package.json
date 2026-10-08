@@ -8,7 +8,7 @@
     "dev": "vp run core#build && vp run docs#dev",
     "fmt:html": "eslint --fix \"**/*.html\"",
     "lint:html": "eslint \"**/*.html\"",
-    "playground": "vp run playground#dev",
+    "playground": "vp run experiments#dev",
     "prepare": "vp config"
   },
   "devDependencies": {
