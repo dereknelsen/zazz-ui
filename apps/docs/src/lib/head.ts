@@ -1,6 +1,6 @@
 /**
  * The site's `<head>` comes from the kit's own head contract, so the docs
- * load Zazz exactly as a consumer does: fonts, one stylesheet, the import map
+ * load Zazz exactly as a consumer does: one stylesheet, the import map
  * that pins the kit's bare specifiers, the one polyfill, the kit module, and
  * the theme script that paints `data-ui-theme` before first paint.
  */
@@ -15,7 +15,7 @@ import { DIST_ROOT, ZAZZ_URL_BASE } from "./kit.ts";
  * the single-file `dist/` bundles so a page costs two kit requests, not ninety.
  */
 export function siteHead(options: { dev?: boolean } = {}): string {
-  const head = buildHead({ base: ZAZZ_URL_BASE, fontDisplay: "swap" });
+  const head = buildHead({ base: ZAZZ_URL_BASE, fontDisplay: false });
   if (options.dev ?? import.meta.env.DEV) return head;
   if (!existsSync(path.join(DIST_ROOT, "zazz.css"))) {
     throw new Error(

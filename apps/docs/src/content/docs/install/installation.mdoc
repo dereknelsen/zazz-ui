@@ -23,7 +23,7 @@ pnpm dlx zazz-ui init
 pnpm dlx zazz-ui add button card dialog
 ```
 
-`init` vendors the base platform into `zazz/`: the layers, tokens, reset, typography, the generated utilities, the core runtime scripts, an `index.css` and `index.js` pair, and a `head.html` snippet to paste into your `<head>`. It also writes `zazz.json`, the kit version plus a hash of every vendored file's original bytes. Flags: `--dir <path>`, `--ts` (TypeScript sources instead of emitted JavaScript), `--legacy <path>` (wire an existing stylesheet into the `legacy.imports` sublayer), `--no-fonts`, `--no-theme-script`.
+`init` vendors the base platform into `zazz/`: the layers, tokens, reset, typography, the generated utilities, the core runtime scripts, an `index.css` and `index.js` pair, and a `head.html` snippet to paste into your `<head>`. It also writes `zazz.json`, the kit version plus a hash of every vendored file's original bytes. Flags: `--dir <path>`, `--ts` (TypeScript sources instead of emitted JavaScript), `--legacy <path>` (wire an existing stylesheet into the `legacy.imports` sublayer), `--no-fonts` (omit the Geist block from `head.html`), `--no-theme-script`.
 
 `add <primitive…>` resolves dependencies (adding `combobox` brings `select`, `fields`, `popover`, `button`, `kbd`, and `badge`), copies the files at your recorded version, and inserts the imports at the right cascade position. `--examples` also copies the example fragments.
 
@@ -64,7 +64,7 @@ Keep the kit's stylesheet out of CSS minifiers that rewrite modern syntax. `@pro
 
 ## The head contract
 
-Whichever route you take, a Zazz page's `<head>` has the same parts, in this order: the meta tags, the fonts block, the stylesheet link(s), the import map, a `modulepreload` hint, the interest-invokers polyfill, the module script, and the theme script. `buildHead()` from `@zazz-ui/core/head` writes it; the CLI's `head.html` is that output; this site's own head is too. The theme script must stay inline and last so `data-ui-theme` lands before first paint.
+Whichever route you take, a Zazz page's `<head>` has the same parts, in this order: the meta tags, any font links, the stylesheet link(s), the import map, a `modulepreload` hint, the interest-invokers polyfill, the module script, and the theme script. `buildHead()` from `@zazz-ui/core/head` writes it; the CLI's `head.html` is that output; this site's own head is too. The theme script must stay inline and last so `data-ui-theme` lands before first paint.
 
 For a vendored copy at `./zazz/`:
 

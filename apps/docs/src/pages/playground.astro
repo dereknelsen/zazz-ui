@@ -3,12 +3,12 @@
  * Write Zazz HTML, see it render. The editor is Monaco (loaded on demand); the
  * output is a sandboxed iframe whose document is the site's own head (the kit
  * stylesheet, import map, polyfill, script, theme script) around the editor's
- * body. The code travels in the URL hash, so a page is a link.
+ * body. A docs preview opens here with its example in the URL hash.
  */
-import { ArrowLeft, Copy, LoaderCircle, RotateCcw } from "@lucide/astro";
+import { ArrowLeft, LoaderCircle, RotateCcw } from "@lucide/astro";
 import PlaygroundLayout from "../layouts/PlaygroundLayout.astro";
 import { siteHead } from "../lib/head.ts";
-import { readExample } from "../lib/kit.ts";
+import { kitchenSink } from "../lib/kitchen-sink.ts";
 
 const BLANK = `<main data-ui="layout" style="--py: 8">
   <section>
@@ -29,19 +29,7 @@ const BLANK = `<main data-ui="layout" style="--py: 8">
 
 const templates = [
   { id: "blank", label: "Blank page", html: BLANK },
-  ...[
-    ["button/button", "Buttons"],
-    ["card/card", "Card"],
-    ["layout/layout", "Layout bands"],
-    ["navigation-menu/navigation-menu-simple", "Navigation menu"],
-    ["dialog/dialog", "Dialog"],
-    ["tabs/tabs", "Tabs"],
-    ["input-group/input-group", "Input group"],
-    ["table/table", "Table"],
-    ["command/command-dialog", "Command palette"],
-    ["carousel/carousel", "Carousel"],
-    ["utilities/responsive-grid", "Responsive grid"],
-  ].map(([id, label]) => ({ id, label, html: readExample(id) ?? "" })),
+  { id: "kitchen-sink", label: "Kitchen sink", html: kitchenSink() },
 ];
 
 // `<` is escaped so the head's own <script> tags cannot close this one.
@@ -60,7 +48,7 @@ const sandbox = import.meta.env.DEV
 
 <PlaygroundLayout
   title="Playground"
-  description="Write Zazz HTML and watch it render, then share the link."
+  description="Write Zazz HTML and watch it render."
 >
   <main
     id="main"
@@ -137,15 +125,6 @@ const sandbox = import.meta.env.DEV
             Formatting styles…
           </span>
 
-          <button
-            type="button"
-            data-ui="button"
-            data-button-variant="outline"
-            data-playground-copy
-          >
-            <Copy aria-hidden="true" />
-            <span>Copy link</span>
-          </button>
           <button
             type="button"
             data-ui="button"

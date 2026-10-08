@@ -1,9 +1,10 @@
 /**
  * Playground client: Monaco (on demand) over a textarea fallback, a sandboxed
- * iframe for the output, and the editor's code in the URL hash.
+ * iframe for the output. A docs preview's "Open in playground" link carries
+ * its example in the URL hash, read once at boot.
  */
 import { findings, formatEdits } from "../lib/playground-format.ts";
-import { decodeHash, encodeCode } from "../lib/playground-hash.ts";
+import { decodeHash } from "../lib/playground-hash.ts";
 
 interface Template {
   id: string;
@@ -21,21 +22,10 @@ const output = root?.querySelector<HTMLIFrameElement>("[data-playground-output]"
 const host = root?.querySelector<HTMLElement>("[data-playground-editor]");
 const fallback = root?.querySelector<HTMLTextAreaElement>("[data-playground-fallback]");
 const templateSelect = root?.querySelector<HTMLSelectElement>("[data-playground-template]");
-const copyButton = root?.querySelector<HTMLButtonElement>("[data-playground-copy]");
 const resetButton = root?.querySelector<HTMLButtonElement>("[data-playground-reset]");
 const status = root?.querySelector<HTMLElement>("[data-playground-status]");
 
-if (
-  root &&
-  dataNode &&
-  output &&
-  host &&
-  fallback &&
-  templateSelect &&
-  copyButton &&
-  resetButton &&
-  status
-) {
+if (root && dataNode && output && host && fallback && templateSelect && resetButton && status) {
   const editorHost = host;
   const textarea = fallback;
   const data = JSON.parse(dataNode.textContent ?? "{}") as Data;
@@ -179,7 +169,7 @@ ${code}
             monaco.Range.areIntersectingOrTouching(edit.range, range),
           ),
       });
-      // Cmd/Ctrl+S: there is no file, so "save" formats the styles and writes the share link.
+      // Cmd/Ctrl+S: there is no file, so "save" formats the styles and re-renders.
       editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => save());
       // Saving applies the edits directly (as one undo step); Shift+Alt+F goes through the provider.
       formatCode = () => {
@@ -234,16 +224,11 @@ ${code}
 
   // --- wiring ----------------------------------------------------------------
   let renderTimer: ReturnType<typeof setTimeout> | undefined;
-  let hashTimer: ReturnType<typeof setTimeout> | undefined;
-  const writeHash = (): Promise<void> =>
-    encodeCode(getCode()).then((hash) => history.replaceState(null, "", `#${hash}`));
-  /** Cmd/Ctrl+S: format the styles, render, and write the link, with no debounce. */
+  /** Cmd/Ctrl+S: format the styles and render, with no debounce. */
   const save = (): void => {
     formatCode();
     clearTimeout(renderTimer);
-    clearTimeout(hashTimer);
     render(getCode());
-    void writeHash();
   };
   // The same shortcut over the textarea fallback (and anywhere else in the page): never the
   // browser's Save dialog. Inside Monaco its own keybinding runs `save`.
@@ -256,9 +241,6 @@ ${code}
   listeners.add(() => {
     clearTimeout(renderTimer);
     renderTimer = setTimeout(() => render(getCode()), 250);
-    if (applyingHash) return;
-    clearTimeout(hashTimer);
-    hashTimer = setTimeout(() => void writeHash(), 600);
   });
 
   // Theme changes re-render the output (the sandbox has no shared document to mirror into).
@@ -279,33 +261,6 @@ ${code}
     templateSelect.value = "blank";
     setCode(blank);
     changed();
-  });
-
-  copyButton.addEventListener("click", async () => {
-    const hash = await encodeCode(getCode());
-    history.replaceState(null, "", `#${hash}`);
-    const label = copyButton.querySelector("span");
-    try {
-      await navigator.clipboard.writeText(location.href);
-      if (label) label.textContent = "Copied";
-    } catch {
-      if (label) label.textContent = "Copy failed";
-    }
-    setTimeout(() => {
-      if (label) label.textContent = "Copy link";
-    }, 1500);
-  });
-
-  // A link to a different snippet while the page is open (back/forward, a pasted hash).
-  let applyingHash = false;
-  window.addEventListener("hashchange", () => {
-    void decodeHash(location.hash).then((code) => {
-      if (code === null || code === getCode()) return;
-      applyingHash = true; // the editor's change event must not rewrite the hash we are reading
-      setCode(code);
-      applyingHash = false;
-      render(code);
-    });
   });
 
   // --- boot --------------------------------------------------------------

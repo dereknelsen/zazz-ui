@@ -1,0 +1,43 @@
+name: Bug report
+description: Something in the kit, the CLI, or the docs doesn't work as documented.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Questions and feature ideas go in [Discussions](https://github.com/dereknelsen/zazz-ui/discussions).
+  - type: dropdown
+    id: package
+    attributes:
+      label: Where is the bug?
+      options:
+        - "@zazz-ui/core (the kit)"
+        - zazz-ui (the CLI)
+        - Docs site (zazz.sh)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The kit or CLI version, from `zazz.json`, your CDN URL, or `npx zazz-ui --version`. Leave it blank for a docs site bug.
+      placeholder: "0.5.1"
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: The smallest HTML that shows the problem, or a playground link. For a CLI bug, the command you ran and its output.
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and OS
+      description: For rendering bugs. Zazz targets the latest Chrome, Firefox, and Safari, two versions back.
+      placeholder: "Safari 26.1, macOS 26"

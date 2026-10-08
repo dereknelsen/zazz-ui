@@ -93,4 +93,18 @@ A complete brand is a few dozen lines: the role colors, the scales they draw fro
 
 ## Fonts
 
-The family tokens (`--font-family-body`, `--font-family-heading`, `--font-family-mono`) are system stacks by default. The head's fonts block loads Geist and Geist Mono from Google Fonts so a brand can opt in with `--font-family-body: "Geist", var(--font-sans-fallback)`; swap the block for your own fonts, or pass `fontDisplay: false` to `buildHead()` and load nothing.
+The family tokens (`--font-family-body`, `--font-family-heading`, `--font-family-mono`) are system stacks by default; the kit's CSS loads no font files. To use your own fonts, load them in the head and point the tokens at them, keeping the system stack as the fallback:
+
+```html
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap">
+<style>
+  @layer overrides {
+    :root {
+      --font-family-body: "Inter", var(--font-sans-fallback);
+      --font-family-heading: var(--font-family-body);
+    }
+  }
+</style>
+```
+
+`buildHead()` still writes a Geist block by default. It loads Geist without applying it, so set the tokens as above to use it, or pass `fontDisplay: false` (`init --no-fonts` in the CLI) to skip the request.

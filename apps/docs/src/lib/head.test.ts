@@ -16,4 +16,8 @@ describe("siteHead", () => {
     expect(head).toContain('type="importmap"');
     expect(head).toContain("data-ui-theme");
   });
+
+  it("loads no web fonts: the site sets in the kit's system stacks", () => {
+    expect(siteHead({ dev: true })).not.toContain("fonts.googleapis.com");
+  });
 });

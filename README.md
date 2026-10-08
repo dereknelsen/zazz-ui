@@ -6,6 +6,25 @@ Monorepo for the Zazz Design Framework: a UI kit for plain HTML, built on modern
 
 Docs: [zazz.sh](https://zazz.sh). Quick start: [zazz.sh/docs/quick-start](https://zazz.sh/docs/quick-start/).
 
+[![Zazz: HTML's missing design system](.github/assets/readme-hero.webp)](https://zazz.sh)
+
+## Quick start
+
+```bash
+npx zazz-ui init            # vendors the base into ./zazz and writes zazz/head.html
+npx zazz-ui add button card # adds primitives and their dependencies
+```
+
+Paste `zazz/head.html` into your `<head>`, then write markup:
+
+```html
+<div data-ui="card" data-card-variant="outline" style="--p: 6">
+  <button data-ui="button" data-button-variant="primary">Save</button>
+</div>
+```
+
+To try it without installing anything, the [quick start](https://zazz.sh/docs/quick-start/) loads the kit from a CDN, and the [playground](https://zazz.sh/playground/) runs in the browser.
+
 ## Layout
 
 | Path                       | What it is                                                                                                                                                                                      |
@@ -40,6 +59,10 @@ The docs site needs the kit built once (`vp run core#build`) so `packages/core/d
 ## Publishing
 
 `@zazz-ui/core` and `zazz-ui` publish to npm on independent version lines ([ADR-0010](docs/adr/0010-kit-first-independent-versioning.md)). Releases are manual; the checklist is the `zazz-version-bump` skill under `.claude/skills/`. Versions are immutable: a bad release gets `npm deprecate` plus a patch, never an unpublish.
+
+## Contributing
+
+Bug reports and discussions are welcome. Pull requests aren't, for now; [CONTRIBUTING.md](.github/CONTRIBUTING.md) explains why.
 
 ## License
 

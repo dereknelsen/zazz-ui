@@ -20,7 +20,7 @@
     tab-size: 2;
     white-space: pre-wrap;
     text-wrap-mode: wrap;
-    word-break: break-all;
+    overflow-wrap: anywhere;
     color: light-dark(var(--shiki-light), var(--shiki-dark));
     background-color: light-dark(var(--shiki-light-bg), var(--shiki-dark-bg));
   }
@@ -44,11 +44,17 @@
   }
 
   @scope ([data-ui~="prose"]) to ([data-ui~="not-prose"]) {
+    /* The reset keeps a chip on one line; in prose a long one breaks rather
+       than running past a phone's edge. */
     :not(pre) > code {
       padding: 0.1em 0.35em;
       border-radius: var(--radius-sm);
       background: var(--color-muted);
       font-size: 0.9em;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      -webkit-box-decoration-break: clone;
+      box-decoration-break: clone;
     }
   }
 

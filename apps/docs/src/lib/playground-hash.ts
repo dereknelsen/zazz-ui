@@ -1,6 +1,6 @@
 /**
- * The playground's shareable URL: the editor's HTML, deflated and base64url
- * encoded into `#code=…`. Pure Web APIs (`CompressionStream`), so it runs in
+ * How a docs preview opens the playground with its example: the HTML, deflated
+ * and base64url encoded into `#code=…`. Pure Web APIs (`CompressionStream`), so it runs in
  * the browser and at build time alike.
  */
 

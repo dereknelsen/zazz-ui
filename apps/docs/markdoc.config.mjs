@@ -13,6 +13,10 @@ export default defineMarkdocConfig({
       ...nodes.heading,
       render: component("./src/components/Heading.astro"),
     },
+    table: {
+      ...nodes.table,
+      render: component("./src/components/MarkdownTable.astro"),
+    },
   },
   tags: {
     preview: {
@@ -64,7 +68,7 @@ export default defineMarkdocConfig({
         primitives: { type: String },
         scripts: { type: Boolean, default: true },
         theme: { type: Boolean, default: true },
-        fonts: { type: Boolean, default: true },
+        fonts: { type: Boolean, default: false },
       },
     },
     callout: {

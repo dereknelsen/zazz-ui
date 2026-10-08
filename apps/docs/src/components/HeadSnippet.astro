@@ -14,9 +14,10 @@ interface Props {
   primitives?: string;
   scripts?: boolean;
   theme?: boolean;
+  /** Include `buildHead()`'s Geist block. Off by default: the kit's family tokens are system stacks. */
   fonts?: boolean;
 }
-const { mode = "local", primitives, scripts = true, theme = true, fonts = true } = Astro.props;
+const { mode = "local", primitives, scripts = true, theme = true, fonts = false } = Astro.props;
 const list = primitives?.split(/[\s,]+/).filter(Boolean);
 const themes = { light: "github-light", dark: "github-dark" } as const;
 const head =

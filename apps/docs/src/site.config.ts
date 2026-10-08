@@ -9,7 +9,6 @@ export const site = {
   description:
     "A zero-build UI kit on modern web standards: identities, presets, and style utilities in plain HTML.",
   url: "https://zazz.sh",
-  copyright: "Copyright © 2026 Meridian Design, LLC.",
   stage: "alpha",
 } as const;
 

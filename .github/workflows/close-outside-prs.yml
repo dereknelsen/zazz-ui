@@ -1,0 +1,26 @@
+# Zazz isn't taking outside pull requests yet (.github/CONTRIBUTING.md).
+# Close any PR from someone without write access, with a pointer to issues.
+# pull_request_target runs this repo's copy of the workflow and never checks
+# out the PR's code.
+name: Close outside pull requests
+
+on:
+  pull_request_target:
+    types: [opened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  close:
+    if: >-
+      !contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.pull_request.author_association)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment and close
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr close "$PR" --comment "Thanks for this. Zazz isn't accepting pull requests while the API is still changing, so I'm closing it automatically. If it fixes a bug, please open an issue that describes the fix (a snippet is welcome) and I'll credit you if it lands. Details are in [CONTRIBUTING.md](https://github.com/dereknelsen/zazz-ui/blob/main/.github/CONTRIBUTING.md)."

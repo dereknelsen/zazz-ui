@@ -139,7 +139,7 @@ function headMarkdown(attrs: Attrs): string {
       : undefined;
   const scripts = attrs.scripts !== false;
   const theme = attrs.theme !== false;
-  const fontDisplay = attrs.fonts === false ? (false as const) : ("swap" as const);
+  const fontDisplay = attrs.fonts === true ? ("swap" as const) : false;
   const head =
     attrs.mode === "cdn"
       ? buildHead({

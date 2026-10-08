@@ -10,7 +10,7 @@ You need a text editor and a browser. You install nothing; the kit loads from a 
 
 ## 1. The head
 
-Create `index.html` and paste this into `<head>`. It is the output of the kit's own `buildHead()`: fonts, the stylesheet, the import map for the kit's bare dependencies (`signal-polyfill` and the Embla packages), the one polyfill, the script, and a theme script that paints `data-ui-theme` before first paint.
+Create `index.html` and paste this into `<head>`. It is the output of the kit's own `buildHead()` with the fonts block off: the stylesheet, the import map for the kit's bare dependencies (`signal-polyfill` and the Embla packages), the one polyfill, the script, and a theme script that paints `data-ui-theme` before first paint.
 
 {% head mode="cdn" /%}
 
@@ -76,7 +76,7 @@ Inside `<main>`:
 
 ## 5. A theme
 
-Open the page: fonts, colors, and form controls already follow the system scheme, because every color role is a `light-dark()` pair. Pin a scheme with `data-ui-theme="dark"` on `<html>` (the head's script does that from a stored choice), or change the look everywhere with a few tokens:
+Open the page. The text uses the system fonts, and the colors and form controls already follow the system color scheme, because every color role is a `light-dark()` pair. Pin a scheme with `data-ui-theme="dark"` on `<html>` (the head's script does that from a stored choice), or change the look everywhere with a few tokens:
 
 ```html
 <style>
