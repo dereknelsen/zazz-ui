@@ -398,7 +398,7 @@ All sizes are fluid via `clamp()`, scaling between mobile and desktop viewports.
 | `text-xs`        | 0.64rem        | 1.5     | 0        | Captions, fine print          |
 | `text-eyebrow`   | 0.58rem        | 1.2     | 0.05em   | Uppercase label, wide-tracked |
 
-Headings use `text-wrap: balance`. Body uses `text-wrap: pretty`. Tight-leading on large text, generous-leading on body.
+Display and `h1`–`h3` headings use `text-wrap: balance`; `h4`–`h6` and body use `text-wrap: pretty`. Tight-leading on large text, generous-leading on body.
 
 Native `h1`–`h6` carry their heading role without a token.
 

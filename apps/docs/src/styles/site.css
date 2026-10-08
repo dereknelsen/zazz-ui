@@ -20,7 +20,7 @@
     tab-size: 2;
     white-space: pre-wrap;
     text-wrap-mode: wrap;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
     color: light-dark(var(--shiki-light), var(--shiki-dark));
     background-color: light-dark(var(--shiki-light-bg), var(--shiki-dark-bg));
   }
@@ -52,7 +52,7 @@
       background: var(--color-muted);
       font-size: 0.9em;
       white-space: normal;
-      overflow-wrap: anywhere;
+      overflow-wrap: break-word;
       -webkit-box-decoration-break: clone;
       box-decoration-break: clone;
     }
@@ -81,6 +81,10 @@
   /* Reference tables: long token values wrap instead of forcing a scroll. */
   [data-ui~="table"] code {
     white-space: normal;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+  }
+
+  [data-ui~="table"] td {
+    min-inline-size: 16ch;
   }
 }

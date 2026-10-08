@@ -5,6 +5,7 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 ### base
 
 - Cross-document view transitions are opt-in. The kit no longer declares `@view-transition { navigation: auto }`, which animated every same-origin navigation on any page that loaded it and couldn't be turned off for some pages. It ships in a patch because nothing breaks without it: pages that relied on it load without the crossfade. To keep page-load transitions, add `@view-transition { navigation: auto; }` to your own CSS; the kit's `::view-transition-*` styling still applies. Swap navigation (`data-ui-navigation="swap"`) is unchanged.
+- `h4`, `h5`, `h6` and the `text-h4`, `text-h5`, `text-h6` roles default to `text-wrap: pretty` instead of `balance`; display and `h1`–`h3` stay balanced. `--text-wrap-heading` still sets every heading at once.
 
 ## 0.5.3 (2026-10-08)
 
