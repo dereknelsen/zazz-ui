@@ -68,7 +68,7 @@ Start at the most semantic layer; get specific only when nothing semantic fits.
 - **Color** → `var(--color-<role>)` (`--color-foreground`, `--color-muted-foreground`,
   `--color-primary`, `--color-border`, `--color-destructive`…) so light/dark swap for free;
   literal scales (`--color-primary-600`, `--color-neutral-100`, `--color-shade-800`) only as a last resort.
-- **Type** → a role: native `h1`–`h6`, or `data-ui="text-h3"`, `text-display`, `text-eyebrow`,
+- **Type** → a role: native `h1`–`h6`, or `data-ui="text-h3"`, `text-display`, `text-eyebrow`, `text-link`,
   `text-xs … text-xl`. Override one property with a utility; never rebuild a role from utilities.
 - **Size** → the default. `data-button-size="sm"` / `"icon-sm"` and `data-toggle-size="sm"` /
   `"icon-sm"` exist for dense chrome only: a control inside an input group, a row action in a table,

@@ -242,7 +242,7 @@
     "identities": {
       "patterns": [
         {
-          "match": "(?<=[\"'\\s])(navigation-menu|password-group|alert-dialog|autocomplete|button-group|text-display|text-eyebrow|toggle-group|field-group|input-group|mobile-menu|multiselect|radio-group|scroll-fade|accordion|container|kbd-group|not-prose|separator|carousel|combobox|divide-x|divide-y|lightbox|progress|text-2xl|text-2xs|textarea|truncate|callout|command|isolate|sr-only|text-h1|text-h2|text-h3|text-h4|text-h5|text-h6|text-lg|text-md|text-sm|text-xl|text-xs|toaster|tooltip|bounce|button|dialog|layout|select|toggle|badge|field|group|input|meter|prose|pulse|radio|table|card|menu|pile|ping|spin|tabs|otp)(?=[\"'\\s])",
+          "match": "(?<=[\"'\\s])(navigation-menu|password-group|alert-dialog|autocomplete|button-group|text-display|text-eyebrow|toggle-group|field-group|input-group|mobile-menu|multiselect|radio-group|scroll-fade|accordion|container|kbd-group|not-prose|separator|text-link|carousel|combobox|divide-x|divide-y|lightbox|progress|text-2xl|text-2xs|textarea|truncate|callout|command|isolate|sr-only|text-h1|text-h2|text-h3|text-h4|text-h5|text-h6|text-lg|text-md|text-sm|text-xl|text-xs|toaster|tooltip|bounce|button|dialog|layout|select|toggle|badge|field|group|input|meter|prose|pulse|radio|table|card|menu|pile|ping|spin|tabs|otp)(?=[\"'\\s])",
           "captures": {
             "1": {
               "name": "support.class.zazz.identity"

@@ -34,36 +34,19 @@ import Logo from "./Logo.astro";
         >
           Navigation
         </h2>
-        <ul style="--display: flex; --gap: 6; --flex-wrap: wrap">
+        <ul style="--display: flex; --gap: 5; --flex-wrap: wrap">
           {
             nav.map((item) => (
               <li>
-                <a
-                  href={item.href}
-                  data-ui="text-sm"
-                  style="
-                    --text: var(--color-muted-foreground);
-                    --text--hover: var(--color-foreground);
-                    --text-decoration: underline;
-                    --text-decoration--hover: no-underline;
-                  "
-                >
+                <a href={item.href} data-ui="text-sm text-link">
                   {item.label}
                 </a>
               </li>
             ))
           }
           <li>
-            <a
-              href={links.github}
-              data-ui="text-sm"
-              style="
-                --text: var(--color-muted-foreground);
-                --text--hover: var(--color-foreground);
-                --text-decoration: underline;
-                --text-decoration--hover: no-underline;
-              "
-              rel="noopener">GitHub</a
+            <a href={links.github} data-ui="text-sm text-link" rel="noopener"
+              >GitHub</a
             >
           </li>
         </ul>
@@ -78,7 +61,7 @@ import Logo from "./Logo.astro";
         "
       >
         <h2 id="acknowledgements" data-ui="text-eyebrow" style="--mb: 1.5">
-          Inspiration
+          Acknowledgements
         </h2>
         <div
           style="
@@ -90,9 +73,8 @@ import Logo from "./Logo.astro";
           "
         >
           <p>
-            Zazz is maintained by Derek Nelsen and is heavily inspired by
-            tailwindcss, shadcn/ui, base-ui, and Emil Kowalski. Thank you for
-            your incredible work.
+            Zazz is heavily inspired by tailwindcss, shadcn/ui, base-ui, and
+            Emil Kowalski. Thank you for your incredible work.
           </p>
         </div>
       </section>
@@ -113,7 +95,14 @@ import Logo from "./Logo.astro";
         --text: var(--color-muted-foreground);
       "
     >
-      <p>{site.copyright}</p>
+      <p>
+        Built and maintained by Derek Nelsen. Licensed under the MIT License.
+        Source code available on <a
+          data-ui="text-link"
+          href={links.github}
+          rel="noopener">GitHub</a
+        >.
+      </p>
     </section>
   </ui-layout>
 </footer>

@@ -66,7 +66,7 @@ var(--color-shade-600), transparent 20%` (scrim over a photo); `--bg-radial: cir
 
 - **Roles (size + weight + leading + tracking bundled, all fluid):** native `h1`–`h6`, or
   `data-ui="text-display"`, `text-h1 … text-h6`, `text-2xl text-xl text-lg text-md text-sm text-xs
-text-2xs`, `text-eyebrow`. A role stacks with other tokens: `data-ui="badge text-xs"`.
+text-2xs`, `text-eyebrow`, `text-link` (an inline link outside prose). A role stacks with other tokens: `data-ui="badge text-xs"`.
 - **Override one property** with a utility: `--font-size`, `--font-weight`, `--font-family`,
   `--font-style`, `--leading`, `--tracking`, `--text-align`, `--text-transform`, `--text-wrap`,
   `--text-decoration` (also takes states: `--text-decoration--hover: underline`), `--white-space`, `--line-clamp` (`1` = truncate).

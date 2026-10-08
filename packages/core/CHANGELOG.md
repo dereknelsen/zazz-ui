@@ -1,5 +1,16 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.5.2 (2026-10-08)
+
+### base
+
+- New `text-link` typography role for an inline link outside `prose`: an underline in the text's own color at `--decoration-thickness` and `--decoration-offset`, fading on hover. It stacks with a size role (`data-ui="text-sm text-link"`).
+- A link inside a plain `<p>` is no longer styled automatically; only `prose` styles its links without a token. That rule reached into markup the kit doesn't own, so it's removed in a patch, along with its `--ui-prose-link-text` hook, which nothing else read. To keep the underline on such a link, add `data-ui="text-link"`.
+
+### prose
+
+- The example sets `--w: 100%`, so the article fills its container up to its reading width instead of shrinking to its content.
+
 ## 0.5.1 (2026-10-07)
 
 ### card

@@ -15,7 +15,7 @@ State tokens (`data-<identity>-state="active open"`) are written by the kit's sc
 
 ## Identity
 
-- One element, one or more tokens: `data-ui="card group"`. Primitives (`button`, `card`, `dialog`, `layout`…), switches (`sr-only`, `pile`, `isolate`, `not-prose`, `truncate`, `spin`, `ping`, `pulse`, `bounce`, `container`, `divide-x`, `divide-y`), and typography roles (`text-h2`, `text-eyebrow`…) are all tokens.
+- One element, one or more tokens: `data-ui="card group"`. Primitives (`button`, `card`, `dialog`, `layout`…), switches (`sr-only`, `pile`, `isolate`, `not-prose`, `truncate`, `spin`, `ping`, `pulse`, `bounce`, `container`, `divide-x`, `divide-y`), and typography roles (`text-h2`, `text-eyebrow`, `text-link`…) are all tokens.
 - Interactive primitives also have a tag form (`<ui-carousel>`, `<ui-tabs>`, `<ui-layout>`). Use the tag where the wrapper would otherwise be a plain `div`.
 - Native elements keep their meaning: a button is a `<button data-ui="button">`, a dialog is a `<dialog data-ui="dialog">`, an input is `<input data-ui="input">`. Never put `data-ui="button"` on a `div`.
 - Default variant = no preset attribute. Write `data-button-variant="primary"`, never a combined token.
@@ -118,7 +118,7 @@ Order of preference for changing how a primitive looks: preset, then hook on a s
 ## Layout and typography
 
 - `data-ui="layout"` (or `<ui-layout>`) makes the element a band grid. Children default to the `xl` band. Change the default with `data-layout-size="md"`; place one child with `--band: layout-bleed | layout-full | layout-2xl … layout-sm`, responsive with `--band--md: layout-sm`. A layout nested in a layout aligns to the parent's bands.
-- Native `h1`–`h6` carry their role automatically. Give any other element a role with `data-ui="text-h3"`, `text-display`, `text-eyebrow`, or a body size `text-2xs … text-2xl`. Override one property with a utility (`--font-size`, `--leading`, `--font-weight`); never rebuild a role from utilities.
+- Native `h1`–`h6` carry their role automatically. Give any other element a role with `data-ui="text-h3"`, `text-display`, `text-eyebrow`, or a body size `text-2xs … text-2xl`. An inline link outside `prose` takes `text-link` (`data-ui="text-sm text-link"` stacks it with a size). Override one property with a utility (`--font-size`, `--leading`, `--font-weight`); never rebuild a role from utilities.
 - `data-ui="prose"` styles rich text inside it. Give a reading column `--max-w: var(--article-lg); --mx: auto`. `data-ui="not-prose"` on a wrapper stops prose styling for that subtree (a form or widget inside an article).
 
 ## Navigation

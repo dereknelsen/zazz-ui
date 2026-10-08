@@ -33,7 +33,7 @@ An enumerated preset on a primitive, chosen with `data-<primitive>-variant` or `
 _Avoid_: modifier, flavor, theme, BEM modifier, `data-variant`, `data-ui-variant`
 
 **Typography role**:
-A named text preset (`text-h1`–`text-h6`, `text-display`, `text-eyebrow`, `text-2xs`–`text-2xl`) that bundles family, size, weight, leading, tracking, and case. Native headings carry their role by default; any element takes a role as an identity token (`data-ui="text-h4"`). Utilities override a role one property at a time.
+A named text preset (`text-h1`–`text-h6`, `text-display`, `text-eyebrow`, `text-link`, `text-2xs`–`text-2xl`) that bundles family, size, weight, leading, tracking, and case. Native headings carry their role by default; any element takes a role as an identity token (`data-ui="text-h4"`). Utilities override a role one property at a time.
 _Avoid_: text class, heading style, type scale entry, `text-h1` (as a class), `data-ui-text`
 
 **Group**:

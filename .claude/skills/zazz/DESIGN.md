@@ -404,9 +404,10 @@ Native `h1`–`h6` carry their heading role without a token.
 
 ### Text Link
 
-A link inside a paragraph (`<p>…<a href>`) is styled for you: color from `--ui-prose-link-text`
-(inherits by default), a 1px `--decoration-*` underline whose offset lifts on hover. A standalone
-link is `data-ui="button" data-button-variant="link"`.
+Links inside `data-ui="prose"` are underlined for you. Anywhere else, give an inline link the
+`text-link` role (`<a href data-ui="text-link">`): an underline in the text's own color, at the
+`--decoration-thickness` and `--decoration-offset` tokens, that fades on hover. A standalone link
+that acts like a control is `data-ui="button" data-button-variant="link"`.
 
 ---
 

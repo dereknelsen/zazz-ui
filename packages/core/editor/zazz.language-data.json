@@ -232,6 +232,10 @@
       "primitive": null,
       "file": "base/_typography.css"
     },
+    "text-link": {
+      "primitive": null,
+      "file": "base/_typography.css"
+    },
     "text-md": {
       "primitive": null,
       "file": "base/_typography.css"
@@ -2671,10 +2675,6 @@
       "value": "var(--radius-md)",
       "file": "base/_typography.css"
     },
-    "--ui-prose-link-text": {
-      "value": "inherit",
-      "file": "base/_typography.css"
-    },
     "--ui-radio-bg": {
       "value": "var(--ui-field-bg)",
       "file": "primitives/radio/radio.css"
@@ -4156,6 +4156,12 @@
       "file": "base/_variables.css",
       "light": "underline",
       "dark": "underline"
+    },
+    "--decoration-offset": {
+      "value": "1px",
+      "file": "base/_variables.css",
+      "light": "1px",
+      "dark": "1px"
     },
     "--decoration-style": {
       "value": "solid",
