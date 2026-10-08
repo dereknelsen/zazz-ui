@@ -17,7 +17,7 @@ import {
   tiersOf,
   type Utility,
 } from "@zazz-ui/core/base/utilities.ts";
-import { selfAndAncestors, valueOf, type Tag } from "../html/nodes.ts";
+import { namedAttributes, selfAndAncestors, valueOf, type Tag } from "../html/nodes.ts";
 import type { ParsedHtml } from "../html/parse.ts";
 import { contextAt, tokenAround, type StyleContext } from "./context.ts";
 import {
@@ -326,7 +326,9 @@ function attributeNames(tag: Tag, range: [number, number]): ZazzCompletion[] {
     for (const token of (valueOf(node, "data-ui") ?? "").split(/\s+/)) if (token) target.add(token);
     if (node.name.startsWith("ui-")) target.add(node.name.slice(3));
   }
-  const present = new Set(tag.attributes.map((attribute) => attribute.key.value.toLowerCase()));
+  const present = new Set(
+    namedAttributes(tag).map((attribute) => attribute.key.value.toLowerCase()),
+  );
   const items: ZazzCompletion[] = [];
   const offer = (name: string, description?: string) => {
     if (present.has(name)) return;

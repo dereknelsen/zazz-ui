@@ -6,14 +6,14 @@
 
 import { scanDeclarations, type ScannedDeclaration } from "@zazz-ui/core/base/style-format.ts";
 import { parseHtml, type ParsedHtml } from "../html/parse.ts";
-import type { Attribute, Tag } from "../html/nodes.ts";
+import { namedAttributes, type NamedAttribute, type Tag } from "../html/nodes.ts";
 
 export interface StyleContext {
   /** The parse the context was read from (a repaired one while a tag is being typed). */
   parsed: ParsedHtml;
   kind: "style";
   tag: Tag;
-  attribute: Attribute;
+  attribute: NamedAttribute;
   /** Absolute offset of the style value's first character. */
   base: number;
   value: string;
@@ -31,7 +31,7 @@ export interface AttributeValueContext {
   parsed: ParsedHtml;
   kind: "attribute-value";
   tag: Tag;
-  attribute: Attribute;
+  attribute: NamedAttribute;
   name: string;
   /** Absolute offset of the value's first character. */
   base: number;
@@ -44,7 +44,7 @@ export interface AttributeNameContext {
   parsed: ParsedHtml;
   kind: "attribute-name";
   tag: Tag;
-  attribute?: Attribute;
+  attribute?: NamedAttribute;
   /** The attribute name typed so far, up to the cursor. */
   prefix: string;
   /** Absolute range of the name being typed (empty at a fresh position). */
@@ -154,7 +154,7 @@ export function contextAt(
       range: [nameStart, nameStart + tag.name.length],
     };
   }
-  for (const attribute of tag.attributes) {
+  for (const attribute of namedAttributes(tag)) {
     const { key, value } = attribute;
     if (key.range[0] <= offset && offset <= key.range[1]) {
       return {

@@ -9,7 +9,7 @@
 
 import { buildHead, findHeadBlock, headBlockEdit, type HeadOptions } from "@zazz-ui/core/head.ts";
 import { resolveClosure } from "@zazz-ui/core/manifest.ts";
-import { valueOf } from "../html/nodes.ts";
+import { attributeOf, valueOf } from "../html/nodes.ts";
 import type { ParsedHtml } from "../html/parse.ts";
 import { IDENTITIES, TAG_PRIMITIVES } from "./data.ts";
 import type { Edit } from "./format.ts";
@@ -71,7 +71,7 @@ export function missingImports(parsed: ParsedHtml): MissingImport[] {
   for (const tag of parsed.tags) {
     const name = tag.name.toLowerCase();
     if (name.startsWith("ui-")) check(name, [tag.range[0] + 1, tag.range[0] + 1 + name.length]);
-    const attribute = tag.attributes.find((a) => a.key.value.toLowerCase() === "data-ui");
+    const attribute = attributeOf(tag, "data-ui");
     if (!attribute?.value || !valueOf(tag, "data-ui")) continue;
     for (const m of attribute.value.value.matchAll(/\S+/g)) {
       const start = attribute.value.range[0] + m.index!;

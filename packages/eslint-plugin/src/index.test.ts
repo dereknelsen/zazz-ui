@@ -44,6 +44,12 @@ describe("@zazz-ui/eslint-plugin", () => {
     ).toEqual([]);
   });
 
+  it("skips an attribute with no name and audits the rest of the tag", () => {
+    expect(findings(`<div data-ui="card" ="x" style="--foo: 1"></div>`)).toEqual([
+      ["unknown-utility", "--foo: 1"],
+    ]);
+  });
+
   it("underlines the declaration in style, across lines", () => {
     const code = `<span\n  style="\n    --text: red;\n    --font-weight: 300;\n    --grid-cols: 1fr 2fr;\n    --foo: 1\n  "\n></span>`;
     expect(findings(code)).toEqual([

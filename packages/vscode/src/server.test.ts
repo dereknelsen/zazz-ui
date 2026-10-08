@@ -44,6 +44,22 @@ describe("bundled language server", () => {
     expect(inHole).toBeNull();
   });
 
+  it("survives a Razor directive attribute and keeps answering", async () => {
+    const uri = "file:///Counter.razor";
+    const published = session.diagnostics(uri);
+    session.open(
+      uri,
+      `<button data-ui="button" @onclick="Increment" style="--foo: 1">Count</button>`,
+      "aspnetcorerazor",
+    );
+    expect((await published).map((d) => d.code)).toEqual(["zazz/unknown-utility"]);
+    const hover = await session.connection.sendRequest("textDocument/hover", {
+      textDocument: { uri: URI },
+      position: { line: 0, character: 15 },
+    });
+    expect(hover).not.toBeNull();
+  });
+
   it("answers hover on a utility", async () => {
     const result = await session.connection.sendRequest<{ contents: { value: string } }>(
       "textDocument/hover",

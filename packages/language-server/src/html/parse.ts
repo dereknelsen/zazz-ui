@@ -32,6 +32,10 @@ export function parseHtml(source: string, languageId = "html"): ParsedHtml {
   const visit = (node: Node, parent: Node | undefined) => {
     if (parent) node.parent = parent;
     if (isTag(node)) {
+      // A masked attribute name (Razor's `@onclick="Save"`, Astro's `{name}="y"`) or a stray
+      // `="x"` parses as a value with no key. It has no name to audit, so it is dropped here
+      // and every reader can rely on `attribute.key`.
+      node.attributes = node.attributes.filter((attribute) => attribute.key);
       parsed.tags.push(node);
       if (node.name.toLowerCase() === "html") parsed.root ??= node;
     } else if (node.type === "Comment") {

@@ -123,7 +123,7 @@ describe("maskTemplateHoles", () => {
     const parsed = parseHtml(masked.text);
     expect(parsed.tags.map((t) => t.name)).toEqual(["ui-tabs", "button"]);
     const button = parsed.tags[1];
-    expect(button.attributes.map((a) => a.key.value)).toEqual(["data-ui", "data-button-variant"]);
+    expect(button.attributes.map((a) => a.key?.value)).toEqual(["data-ui", "data-button-variant"]);
   });
 
   it("keeps UTF-16 offsets when the markup has astral characters", () => {

@@ -16,7 +16,7 @@ import {
 } from "@zazz-ui/core/primitives/debug/audit-core.ts";
 import lintData from "@zazz-ui/core/editor/zazz.lint-data.json" with { type: "json" };
 import { isColor } from "./colors.ts";
-import { attributeOf, selfAndAncestors, valueOf, type Tag } from "./nodes.ts";
+import { attributeOf, namedAttributes, selfAndAncestors, valueOf, type Tag } from "./nodes.ts";
 
 /** Identities and hooks from the generated lint data, where `<ui-debug>` reads the page's stylesheets. */
 export const AUDIT_CONTEXT: AuditContext = { ...lintData, isColor };
@@ -24,7 +24,8 @@ export const AUDIT_CONTEXT: AuditContext = { ...lintData, isColor };
 export function auditNodeOf(tag: Tag): AuditNode {
   return {
     getAttribute: (name) => valueOf(tag, name),
-    getAttributeNames: () => tag.attributes.map((attribute) => attribute.key.value.toLowerCase()),
+    getAttributeNames: () =>
+      namedAttributes(tag).map((attribute) => attribute.key.value.toLowerCase()),
     withinIdentity: (name, identities) => {
       for (const node of selfAndAncestors(tag)) {
         if (carriesIdentity(node.name, valueOf(node, "data-ui"), name, identities)) return true;

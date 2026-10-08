@@ -107,11 +107,25 @@ export function startServer(connection: Connection = createConnection(ProposedFe
     code: `zazz/${found.rule}`,
     ...(found.fix ? { data: found.fix } : {}),
   });
+  /**
+   * Publishes one document's audit. It runs from a timer and from the settings
+   * load, outside any request, so a throw here would end the process; instead
+   * the error is logged and the document gets no diagnostics until it changes.
+   */
   const validate = (doc: TextDocument) => {
-    const parsed = parsedOf(doc);
-    const diagnostics = settings.diagnostics.enable
-      ? clearOfHoles(parsed, diagnose(parsed)).map((found) => toDiagnostic(doc, found))
-      : [];
+    let diagnostics: Diagnostic[] = [];
+    try {
+      const parsed = parsedOf(doc);
+      if (settings.diagnostics.enable) {
+        diagnostics = clearOfHoles(parsed, diagnose(parsed)).map((found) =>
+          toDiagnostic(doc, found),
+        );
+      }
+    } catch (error) {
+      connection.console.error(
+        `Zazz could not audit ${doc.uri}: ${error instanceof Error ? (error.stack ?? error.message) : String(error)}`,
+      );
+    }
     void connection.sendDiagnostics({ uri: doc.uri, version: doc.version, diagnostics });
   };
   const schedule = (doc: TextDocument) => {
