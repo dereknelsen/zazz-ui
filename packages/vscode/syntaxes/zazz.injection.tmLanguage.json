@@ -215,7 +215,7 @@
           }
         },
         {
-          "match": "(--)(group-)?(before-|after-)?(pointer-events|object-fit|overflow-x|overflow-y|shadow-hue|visibility|overflow|content|outline|rounded|cursor|divide|z)(?:(--)(focus-visible|focus-within|disabled|starting|checked|current|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
+          "match": "(--)(group-)?(before-|after-)?(object-position|pointer-events|object-fit|overflow-x|overflow-y|shadow-hue|visibility|overflow|content|outline|rounded|cursor|divide|z)(?:(--)(focus-visible|focus-within|disabled|starting|checked|current|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
           "captures": {
             "1": {
               "name": "punctuation.definition.custom-property.css.zazz"

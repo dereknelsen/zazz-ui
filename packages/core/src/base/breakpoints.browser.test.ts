@@ -2,10 +2,10 @@
 
 /**
  * @fileoverview Breakpoint tiers query the nearest inline-size container, in
- * ch of that container's font: the page containers (html, body, sectioning
- * elements) when nothing closer is, a layout band's child, or any
- * `data-ui="container"`. The --layout-* widths are rem, independent of the
- * font; dropping html's containment moves nothing (body has the same width).
+ * ch of that container's font: html when nothing closer is, a layout band's
+ * child, or any `data-ui="container"`. Body, main and the sectioning elements
+ * are not containers. The --layout-* widths are rem, independent of the font;
+ * html's containment places boxes exactly where body's used to.
  */
 
 import { describe, expect, it } from "vite-plus/test";
@@ -36,6 +36,22 @@ describe("breakpoint tiers", () => {
     expect(width(probe)).toBe(16);
     await atWidth(Math.ceil(md));
     expect(width(probe)).toBe(32);
+  });
+
+  it("follow the page past body, main and sectioning elements, however narrow", async () => {
+    await atWidth(1400);
+    const root = mount(`<div>
+      <main style="inline-size: 300px"><div data-main style="--w: 1rem; --w--md: 2rem"></div></main>
+      <section style="inline-size: 300px"><div data-section style="--w: 1rem; --w--md: 2rem"></div></section>
+      <article style="inline-size: 300px"><div data-article style="--w: 1rem; --w--md: 2rem"></div></article>
+      <header style="inline-size: 300px"><div data-header style="--w: 1rem; --w--md: 2rem"></div></header>
+      <footer style="inline-size: 300px"><div data-footer style="--w: 1rem; --w--md: 2rem"></div></footer>
+    </div>`);
+    for (const tag of ["main", "section", "article", "header", "footer"]) {
+      expect(getComputedStyle(root.querySelector(tag)!).containerType, tag).toBe("normal");
+      expect(width(root.querySelector(`[data-${tag}]`)!), tag).toBe(32);
+    }
+    expect(getComputedStyle(document.body).containerType).toBe("normal");
   });
 
   it('follow the nearest data-ui="container" instead of the page', async () => {
@@ -99,10 +115,10 @@ describe("breakpoint tiers", () => {
   });
 });
 
-describe("html as an inline-size container", () => {
+describe("html as the page container", () => {
   useKit();
 
-  it("leaves every box of every primitive fragment where it was", async () => {
+  it("places every box of every primitive fragment where a body container did", async () => {
     await atWidth(1024);
     const root = mount(`<div>${allFragments()}</div>`);
     const fingerprint = () =>
@@ -112,9 +128,9 @@ describe("html as an inline-size container", () => {
       });
     const before = fingerprint();
     expect(before.length).toBeGreaterThan(5);
-    // body is an inline-size container of the same width, so tiers keep answering to it
+    // body has the same width, so moving the page container there moves nothing
     const override = document.createElement("style");
-    override.textContent = `html { container-type: normal; }`;
+    override.textContent = `html { container-type: normal; } body { container-type: inline-size; }`;
     document.head.append(override);
     await frame();
     expect(fingerprint()).toEqual(before);

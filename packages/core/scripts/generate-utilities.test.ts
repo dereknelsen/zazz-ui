@@ -583,14 +583,19 @@ describe("border shorthand", () => {
 describe("stuck state", () => {
   const css = () => generate().get("_utilities-tier-stuck.css")!;
 
-  it("makes sticky and --stuck-state elements scroll-state containers publishing their side, keeping sectioning inline-size", () => {
+  it("makes sticky and --stuck-state elements scroll-state containers publishing their side, keeping layout children inline-size", () => {
     const text = squash(css());
     expect(text).toContain(
       squash(
         `:where([style*=": sticky"], [style*="--stuck-state:"]) { container-type: scroll-state; --_stuck-side: var(--stuck-state, top); }`,
       ),
     );
-    expect(text).toContain("container-type: inline-size scroll-state;");
+    expect(text).toContain(
+      squash(
+        `:where(ui-layout > *, [data-ui~="layout"] > *):where([style*=": sticky"], [style*="--stuck-state:"]) { container-type: inline-size scroll-state; }`,
+      ),
+    );
+    expect(text).not.toMatch(/\bsection\b/);
   });
 
   it("switches the flag for descendants per side, natively and from data-ui-stuck, top by default", () => {

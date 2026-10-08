@@ -804,6 +804,7 @@ export const UTILITIES: readonly Utility[] = [
   { name: "visibility", pseudo: true, properties: ["visibility"], mode: "keyword", family: "box" },
   { name: "z", pseudo: true, properties: ["z-index"], mode: "raw", family: "box", noBase: "auto" },
   { name: "object-fit", properties: ["object-fit"], mode: "keyword", family: "box" },
+  { name: "object-position", properties: ["object-position"], mode: "raw", family: "box" },
   // the divider between children for the divide-x / divide-y switches: the
   // border shorthand's grammar, emitting only its (inherited) width and color channels
   { name: "divide", properties: [], mode: "raw", family: "box", emit: "border", inherits: true },

@@ -23,6 +23,7 @@ export const UTILITY_SECTIONS: readonly UtilitySection[] = [
       "aspect",
       "display",
       "object-fit",
+      "object-position",
       "overflow",
       "overflow-x",
       "overflow-y",

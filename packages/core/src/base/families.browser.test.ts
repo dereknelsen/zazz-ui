@@ -208,4 +208,20 @@ describe("families", () => {
     expect(style(at_("[data-reset]"), "flex-direction")).toBe("row");
     expect(style(at_("[data-grid]"), "display")).toBe("grid");
   });
+
+  it("--object-position takes any position: keywords, lengths, percentages, and edge offsets", () => {
+    const root = mount(`<div>
+      <img data-top alt="" style="--object-fit: cover; --object-position: top" />
+      <img data-pct alt="" style="--object-position: 25% 75%" />
+      <img data-edge alt="" style="--object-position: right 1rem bottom 10px" />
+      <img data-edge-native alt="" style="object-position: right 1rem bottom 10px" />
+      <img data-plain alt="" />
+    </div>`);
+    const at_ = (selector: string) => style(root.querySelector(selector)!, "object-position");
+    expect(at_("[data-top]")).toBe("50% 0%");
+    expect(at_("[data-pct]")).toBe("25% 75%");
+    // engines serialize edge offsets differently, so compare with the property set directly
+    expect(at_("[data-edge]")).toBe(at_("[data-edge-native]"));
+    expect(at_("[data-plain]")).toBe("50% 50%");
+  });
 });

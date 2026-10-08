@@ -59,7 +59,7 @@
     flex-direction: column;
   }
 
-  @container section (width <= 40rem) {
+  @container (width <= 40rem) {
     :where(ui-lightbox, [data-ui~="lightbox"]) {
       --ui-lightbox-thumb-columns: 4;
     }

@@ -23,7 +23,44 @@ Now the kit wins wherever the two overlap, and legacy components the kit knows n
 
 `zazz-ui init --legacy ./css/app.css` writes that import for you, into `legacy.imports`.
 
-## 2. Convert one region at a time
+## 2. Give legacy pages a baseline
+
+Layering settles conflicts one property at a time. Where the old stylesheet sets a property, it wins over the kit's reset. Where it never sets one, the reset's value stays. Old frameworks leave several of those gaps. Bootstrap 2, for one, assumes `content-box` sizing and the browser's list bullets, and the reset changes both. Its inputs shrink by their padding, and lists in page content lose their bullets.
+
+Close the gaps with a small baseline stylesheet. Import it into its own sublayer, `legacy.imports.baseline`, and scope it to pages that haven't been converted yet:
+
+```css
+/* entry.css */
+@import "./zazz/index.css";
+@import "./legacy/baseline.css" layer(legacy.imports.baseline);
+@import "./legacy/app.css" layer(legacy.imports);
+```
+
+```css
+/* legacy/baseline.css */
+@scope (html[data-legacy]) to ([data-ui], ui-layout) {
+  :where(*, ::before, ::after) { box-sizing: revert; }
+  :where(body) { display: revert; min-block-size: revert; }
+  :where(ul, ol) { list-style: revert; }
+  :where(img, svg, video, canvas, iframe, embed, object) { display: revert; }
+}
+```
+
+The baseline's layer comes after the reset, so it wins there. Rules placed directly in `legacy.imports` outrank every sublayer of it, so any legacy rule that sets the same property beats the baseline, whatever its specificity. A legacy `* { box-sizing: border-box }` keeps working. The sublayer matters: in `legacy.imports` itself, the scoped baseline would win ties against unscoped legacy rules on scope proximity, and in `legacy.migrations` it would win outright. `revert` hands each property back to the browser default the old stylesheet was written against.
+
+The shared page template writes `data-legacy` on `<html>`, and a page drops it once it's converted. The lower boundary keeps the baseline out of converted regions, so a Zazz region inside a legacy page gets the full reset. If a converted region starts at some other tag-form element, add that tag to the list.
+
+`revert` can't restore HTML presentational attributes such as `cellpadding`, `border="1"`, or an `<img>`'s `height`, because the browser treats them as author styles and the reset overrides them. Pages that rely on them need explicit values, one rule per attribute value in use.
+
+What goes in the baseline depends on the CSS that actually ships, not on the framework it started from, since ten years of patches can move a stylesheet a long way from stock. Grep the legacy CSS and the templates before adding a line, and add only what the pages need. Every line is temporary: delete it once no legacy page needs it.
+
+Leave `[hidden]` alone. Browsers already hide it; the reset adds `!important` so that kit components that set `display` still respect the attribute, and no layer can override that. The one break is a legacy script that calls jQuery's `.show()` on an element that has the attribute: the element stays hidden. Remove the attribute in that markup, or have the script remove it.
+
+{% callout type="note" %}
+Through 0.5.2, the reset also made `body`, `main`, `header`, `footer`, `section`, and `article` inline-size query containers. A floated or inline-block `section` collapses under that containment. On those versions, add `:where(body, main, header, footer, section, article) { container-type: normal; }` to the baseline.
+{% /callout %}
+
+## 3. Convert one region at a time
 
 Pick a page, or a region of one, and write it in Zazz markup. The `class` attribute stays available for your own hooks and for whatever the legacy stylesheet still needs, so a converted region can keep a `class="legacy-footer"` while its contents use `data-ui`.
 
@@ -39,7 +76,7 @@ Where a converted region sits inside an unconverted shell, isolate it:
 
 `all: revert-layer` inside a legacy layer strips the old styles from a converted subtree while leaving the kit's rules in place.
 
-## 3. Bridge old markup with migration shims
+## 4. Bridge old markup with migration shims
 
 When markup cannot change yet (a template owned by another team, a CMS block), translate the old class to a hook in `legacy.migrations`, then delete the rule when the markup is converted:
 
@@ -54,7 +91,7 @@ When markup cannot change yet (a template owned by another team, a CMS block), t
 
 Hooks inherit, so a shim on a container themes every primitive inside it.
 
-## 4. Protect utilities from old scripts
+## 5. Protect utilities from old scripts
 
 Legacy scripts that write `element.style.cssText` or `setAttribute("style", …)` wipe the style utilities on that element. The [style guard](/api/primitives/style-guard/) watches for exactly that and restores the utilities a write dropped; opt an element out with `data-ui-guard="off"` where the old behavior is intended.
 
@@ -65,7 +102,8 @@ Another library's data attributes are inert: Flowbite's `data-carousel-item` or 
 ## Checklist
 
 1. Import the legacy CSS into `legacy.*`; confirm nothing is unlayered.
-2. Add `<ui-debug data-debug-domains="localhost">` and the [ESLint plugin](/docs/tooling/editor-and-linting/) so converted markup is checked as you go.
-3. Convert page by page, shell last. Keep `class` for the legacy stylesheet's needs.
-4. Shim unconvertible markup in `legacy.migrations`; track each shim to a ticket.
-5. When a legacy stylesheet has nothing left to style, delete its import.
+2. Add a scoped `legacy/baseline.css` for the reset values the old CSS never sets, and turn on `data-legacy` in the shared page template.
+3. Add `<ui-debug data-debug-domains="localhost">` and the [ESLint plugin](/docs/tooling/editor-and-linting/) so converted markup is checked as you go.
+4. Convert page by page, shell last. Keep `class` for the legacy stylesheet's needs.
+5. Shim unconvertible markup in `legacy.migrations`; track each shim to a ticket.
+6. When a legacy stylesheet has nothing left to style, delete its import.

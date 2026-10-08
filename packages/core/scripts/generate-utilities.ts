@@ -44,9 +44,9 @@ function register(name: string, syntax = '"*"', initial?: string, inherits = fal
 
 /**
  * The query a breakpoint tier sits in: the nearest ancestor inline-size
- * container (`ch` resolves against that container's font). html, body, and
- * the sectioning elements are containers by default; `data-ui="container"`
- * makes any element one.
+ * container (`ch` resolves against that container's font). html is the page
+ * container, each child of a layout is one, and `data-ui="container"` makes any
+ * element one.
  */
 export function breakpointQuery(bp: Breakpoint): string {
   return `@container (width >= ${BREAKPOINT_CH[bp]}ch)`;
@@ -411,8 +411,7 @@ export function setterRule(tier: string, utilities: readonly Utility[]): string 
  * The stuck state's setter (`_utilities-tier-stuck.css`). Every sticky element
  * (or one with `--stuck-state`) becomes a scroll-state container and publishes
  * the side it tracks as `--_stuck-side` (its `--stuck-state`, else the fallback
- * side); the reset's sectioning elements keep their inline-size container beside
- * it. A container condition cannot read `var()`, and a container query only
+ * side); a layout's children keep their inline-size container beside it. A container condition cannot read `var()`, and a container query only
  * reaches descendants, so each side is one query, `scroll-state(stuck: <side>)
  * and style(--_stuck-side: <side>)`, both evaluated on the nearest scroll-state
  * container, switching on `--_stuck-on` for the `--<utility>--stuck` readers.
@@ -442,7 +441,7 @@ function stuckSetter(tier: string, inTier: readonly Utility[]): string {
     `    container-type: scroll-state;`,
     `    --_stuck-side: var(--${modifier}, ${fallback});`,
     `  }`,
-    `  :where(header, footer, section, article, main, ui-layout > *, [data-ui~="layout"] > *):where(${containers}) {`,
+    `  :where(ui-layout > *, [data-ui~="layout"] > *):where(${containers}) {`,
     `    container-type: inline-size scroll-state;`,
     `  }`,
   ];

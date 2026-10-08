@@ -7,7 +7,7 @@
       container-type: scroll-state;
       --_stuck-side: var(--stuck-state, top);
     }
-    :where(header, footer, section, article, main, ui-layout > *, [data-ui~="layout"] > *):where([style*=": sticky"], [style*="--stuck-state:"]) {
+    :where(ui-layout > *, [data-ui~="layout"] > *):where([style*=": sticky"], [style*="--stuck-state:"]) {
       container-type: inline-size scroll-state;
     }
     @container scroll-state(stuck: top) and style(--_stuck-side: top) {

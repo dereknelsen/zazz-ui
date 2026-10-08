@@ -1,5 +1,16 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.5.3 (2026-10-08)
+
+### base
+
+- **BREAKING** `body`, `main`, `header`, `footer`, `section`, and `article` are no longer inline-size query containers, and their container names (`body`, `main`, `section`, …) are gone; `html` is the only page-level container. Breakpoint tiers inside a narrow `section` that sits outside a layout now follow the page: add `data-ui="container"` to that section to keep them on its width. A named query such as `@container section (…)` matches nothing now; drop the name. A sticky sectioning element is no longer an inline-size container either: the stuck state makes it a scroll-state container only.
+- New `--object-position` utility (box family, no tiers): any `object-position` value, such as `--object-position: top` or `--object-position: 25% 75%`. Pair it with `--object-fit: cover` to choose which part of an image stays in frame.
+
+### lightbox
+
+- The thumb strip drops to four columns in the nearest container 40rem or narrower, not only inside a `section`. A lightbox in a narrow `section` outside a layout now follows the page, so mark that section `data-ui="container"` to keep four columns there.
+
 ## 0.5.2 (2026-10-08)
 
 ### base

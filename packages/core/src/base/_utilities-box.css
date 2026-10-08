@@ -104,6 +104,14 @@
     object-fit: var(--_object-fit-resolved);
   }
 
+  :where([style*="--object-position:"], [style*="--object-position--"]) {
+    --_object-position-resolved: var(--_object-position);
+  }
+  :where([style*="--object-position:"]) {
+    --_object-position: var(--object-position);
+    object-position: var(--_object-position-resolved);
+  }
+
   :where([style*="--divide:"], [style*="--divide--"]) {
     --_divide-resolved: var(--_divide);
   }

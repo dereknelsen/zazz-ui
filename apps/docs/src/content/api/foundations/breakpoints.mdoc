@@ -18,7 +18,7 @@ A breakpoint tier (`--grid-cols--md: 3`) applies at or above a threshold measure
 
 ## Which container answers
 
-The reset makes `html`, `body`, `main`, `header`, `footer`, `section`, and `article` inline-size containers, so page-level markup responds to the page. Inside a [layout](/api/foundations/layout/), each band child is a container, so tiers inside a band follow the band. Mark anything else (a card, a sidebar, a slot) with the `container` switch (`data-ui="container"`) and the tiers inside it follow its width.
+The reset makes `html` an inline-size container, so markup outside any other container responds to the page, however narrow its own `section` or `main` is. Inside a [layout](/api/foundations/layout/), each band child is a container, so tiers inside a band follow the band. Mark anything else (a card, a sidebar, a slot) with the `container` switch (`data-ui="container"`) and the tiers inside it follow its width.
 
 Two rules follow from how container queries work:
 

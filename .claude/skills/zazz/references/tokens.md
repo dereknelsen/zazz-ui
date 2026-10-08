@@ -126,7 +126,7 @@ primitive's focus ring.
   `data-ui="divide-x"` / `"divide-y"` (a border between direct children; `--divide` on the container sizes or colors it, §11).
 - **Scroll fade:** `data-ui="scroll-fade"` (+ `data-scroll-fade-axis="x"`), hooks
   `--ui-scroll-fade-size`, `--ui-scroll-fade-reveal`.
-- **Box utilities (no tiers):** `--overflow --overflow-x --overflow-y`, `--object-fit`, `--z`,
+- **Box utilities (no tiers):** `--overflow --overflow-x --overflow-y`, `--object-fit --object-position`, `--z`,
   `--visibility`.
 
 ## 8. Focus ring

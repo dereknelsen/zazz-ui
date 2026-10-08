@@ -63,7 +63,7 @@ the default band with `data-layout-size="md"` on the layout, or place one child 
 </body>
 ```
 
-`body` is a query container like `main` and `section`, so its own breakpoint tiers read `html`.
+Only `html` is a page-level query container, so tiers on `body`, `main`, and sections read the page.
 The `data-transition-layer` names persist the header and footer across view transitions (`<main>`
 animates automatically; see `references/apis.md`).
 
