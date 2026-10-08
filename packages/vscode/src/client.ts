@@ -5,7 +5,7 @@
  */
 
 import * as path from "node:path";
-import { workspace, type ExtensionContext } from "vscode";
+import { commands, workspace, type ExtensionContext } from "vscode";
 import {
   LanguageClient,
   TransportKind,
@@ -22,6 +22,14 @@ export function configuredLanguages(): string[] {
   const configured = workspace.getConfiguration("zazz").get<string[]>("languages") ?? ["html"];
   const languages = configured.filter((id) => typeof id === "string" && id.trim() !== "");
   return languages.length ? [...new Set(languages)] : ["html"];
+}
+
+/**
+ * Publishes the language list as the `zazz.languages` context key, so a
+ * `when` or `enablement` clause can test `editorLangId in zazz.languages`.
+ */
+function publishLanguages(): void {
+  void commands.executeCommand("setContext", "zazz.languages", configuredLanguages());
 }
 
 function createClient(context: ExtensionContext): LanguageClient {
@@ -45,6 +53,7 @@ function createClient(context: ExtensionContext): LanguageClient {
 }
 
 export async function activate(context: ExtensionContext): Promise<void> {
+  publishLanguages();
   client = createClient(context);
   await client.start();
   context.subscriptions.push(
@@ -53,6 +62,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     // The document selector is fixed at start: a new language list needs a new client.
     workspace.onDidChangeConfiguration(async (event) => {
       if (!event.affectsConfiguration("zazz.languages")) return;
+      publishLanguages();
       await client?.stop();
       client = createClient(context);
       await client.start();

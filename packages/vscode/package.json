@@ -23,7 +23,7 @@
   "scripts": {
     "build": "vp pack",
     "dev": "vp pack --watch",
-    "package": "vp pack && vsce package --no-dependencies --out dist/zazz.vsix",
+    "package": "vp pack && vsce package --no-dependencies --out dist/zazz.vsix && node scripts/check-vsix.ts dist/zazz.vsix",
     "test": "vp pack && tsc -p tsconfig.json && vp test run",
     "check": "vp check",
     "generate": "node scripts/generate-grammar.ts && node scripts/generate-emmet.ts && node scripts/generate-snippets.ts",
@@ -126,7 +126,7 @@
         "command": "zazz.formatStyles",
         "title": "Format Style Utilities",
         "category": "Zazz",
-        "enablement": "editorLangId == html"
+        "enablement": "editorLangId in zazz.languages"
       }
     ],
     "menus": {
