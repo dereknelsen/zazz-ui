@@ -2,7 +2,7 @@
 
 /**
  * @fileoverview The textarea: field-family surface, dual-mode `--p`
- * over the padding hook, and the focus ring published to `--_focus-ring`.
+ * over the padding hook, and the focus ring published to `--_focus-shadow`.
  */
 
 import { describe, expect, it } from "vite-plus/test";

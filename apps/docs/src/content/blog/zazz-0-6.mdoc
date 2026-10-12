@@ -1,0 +1,103 @@
+---
+title: "Zazz 0.6 alpha"
+description: "Zazz 0.6 alpha moves breakpoints back to rem, adds inset rings, and lets you change the direction of a shadow."
+date: 2026-10-12
+draft: true
+tags: ["release"]
+---
+
+**Zazz 0.6 alpha walks back one experiment from 0.5 and adds a few tools I kept wishing I had while building with it.**
+
+## Breakpoints are rem again
+
+In 0.5, [breakpoint tiers](/api/foundations/breakpoints/) measured the nearest container in `ch`. I wanted every breakpoint to answer a reading question. Does one comfortable line fit here? Does a full measure fit? Do two columns fit? `md` was 65 characters, not 768 pixels.
+
+That held up on a single page of text, but it fell apart in real layouts. A `ch` in a container query is measured in the _container's_ font, and every child of a [layout](/api/primitives/layout/) band is its own container. Put two columns side by side, one in `text-sm` and one in the body size, and they flip at different widths. The footer of this site did exactly that. The navigation went left-aligned while the acknowledgements beside it stayed centered.
+
+I looked at `rch`, the width of a `0` in the root font, as a fix. It stops siblings from drifting apart, but brings two problems of its own. The system font stack renders a different `0` on macOS, Windows, and Android, so `md` lands at a different pixel width on each. When a web font loads after first paint, every threshold on the page can move at once.
+
+So 0.6 goes back to `rem` at the same widths as the `--layout-*` tokens.
+
+| Breakpoint | Threshold | At 16px |
+| --- | --- | --- |
+| `sm` | 40rem | 640px |
+| `md` | 48rem | 768px |
+| `lg` | 64rem | 1024px |
+| `xl` | 80rem | 1280px |
+| `2xl` | 96rem | 1536px |
+
+`rem` in a container query is measured against the root, so siblings in different type flip together. It still scales with the reader's font size setting and zoom, which was the part of the `ch` idea worth keeping. `md` also means something simple again. An `md` layout band fits here.
+
+The tiers still read the nearest container, not the window. The biggest change you'll notice is `sm`, which moves from about 404px to 640px. Check any layout that used an `sm` tier inside a narrow card or column.
+
+## Rings can be inset
+
+Focus rings often get clipped. Put a button flush inside a card with `overflow: hidden` and its focus ring gets cut off at the edge.
+
+0.6 makes ring widths signed. A negative width draws the ring inside the box.
+
+```html
+<div style="--ring: 2"></div>  <!-- 2px ring, outside -->
+<div style="--ring: -2"></div> <!-- 2px ring, inside -->
+<div style="--ring: 2; --ring--md: -2"></div> <!-- inside from md up -->
+```
+
+A bare number now means pixels. In 0.5, `--ring: 2` quietly wiped out the element's whole `box-shadow`. The four `--ring*` utilities also take breakpoint tiers now, not only states.
+
+A primitive's focus ring was never the `--ring` utility. Buttons, inputs, and the rest draw their own ring from the `--ring-width` token. The new [`--focus-ring`](/api/utilities/borders/) utility gives that ring the same signed width.
+
+```html
+<div style="--overflow: hidden">
+  <button data-ui="button" style="--focus-ring: -2">Save</button>
+</div>
+```
+
+It moves the transparent outline that forced-colors mode relies on as well, so high contrast users get the same inset ring. On a plain link it sets the focus outline. If you don't set it, focus rings look the same as they did in 0.5.
+
+### Why a sign and not `inset`?
+
+The obvious syntax would be `--ring: inset 2`. Pure CSS can't pull the word `inset` back out of a value like that, at least not until [`if()`](https://developer.mozilla.org/en-US/docs/Web/CSS/if) is widely available. It can read the sign of a number with `sign()` and `abs()`.
+
+The ring uses two pairs of shadows, one outside and one inside. The sign picks which pair gets a width.
+
+```css
+box-shadow:
+  0 0 0 calc(var(--_w) * (1 - var(--_in))) var(--_color),
+  inset 0 0 0 calc(var(--_w) * var(--_in)) var(--_color);
+/* --_in is max(0, -1 * sign(<the ring width>)): 1 when negative, 0 otherwise */
+```
+
+A shadow with no spread paints nothing, so only one pair ever shows. Numbers and lengths both use the same type trick as the spacing utilities. The value goes into a registered `<length>` and a registered `<number>`. One fails, and the sum becomes a single signed length.
+
+## Shadows can change direction
+
+Shadows in Zazz have always been cast downward, which looks wrong on anything pinned to the bottom of the screen, like a bottom sheet or a sticky footer.
+
+The new [`--shadow-angle`](/api/utilities/effects/) utility changes that direction.
+
+```html
+<div style="--shadow: lg; --shadow-angle: 180deg"></div> <!-- cast up -->
+<div style="--shadow: lg; --shadow-angle: 90deg"></div>  <!-- cast left -->
+```
+
+`0deg` points down by default, and the angle turns clockwise from there. Like `--shadow-hue`, it applies to the element and everything inside it, so primitive shadows follow too. It takes breakpoint tiers as well. A sheet can cast up on a phone and down once it becomes a card with `--shadow-angle: 180deg; --shadow-angle--md: 0deg`.
+
+## Breaking changes
+
+0.6 has a handful of small breaking changes. Each one has a one-line migration in the changelog.
+
+- Breakpoints are measured in `rem` (see above). `sm` is the one most likely to move a layout.
+- The color scheme pin is now a [switch](/api/switches/). Replace `data-ui-theme="dark"` with `data-ui="theme-dark"`. A pin has no value, so it was always a switch in disguise. The `theme-` prefix also leaves room for named themes later. See [theming](/docs/theming/customization/).
+- The accordion and navigation menu used to rotate any `svg` in a trigger, which also spun icons that weren't supposed to move. Mark the chevron with `data-accordion-slot="marker"` or `data-navigation-menu-slot="marker"`.
+- The [dialog](/api/primitives/dialog/) backdrop no longer blurs by default. `--ui-dialog-backdrop-blur` is now `--ui-dialog-backdrop-filter`, set to `none`; set it to `blur(5px)` to bring the blur back.
+
+## Other notable changes
+
+- [`--transition-duration` and `--transition-delay`](/api/utilities/transitions/) retime one element without restating its whole transition, and they win over a primitive's own timing.
+- Dialogs with `closedby="any"` now close on a backdrop tap in Safari, which knows `closedby` but not that value yet.
+- On iOS, field text is at least 16px, so focusing an input no longer zooms the page.
+- The command palette opens at once, and it styles a close button beside the input for touch screens, where there is no Esc.
+- [`<ui-debug>`](/api/primitives/debug/), the [VS Code extension, and the ESLint plugin](/docs/tooling/editor-and-linting/) now flag an `<input>`, `<select>`, or `<textarea>` with neither an `id` nor a `name`. Chrome reports those, and every example in the kit now has a name.
+- In-page navigation leaves files like `/llms.txt` and PDFs to the browser, and Back works after a fallback page load.
+
+The [changelog](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/CHANGELOG.md) lists every change with its migration.

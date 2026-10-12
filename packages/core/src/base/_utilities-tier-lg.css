@@ -2,7 +2,7 @@
 
 /* lg tier setter */
 @layer ui.utilities {
-  @container (width >= 90ch) {
+  @container (width >= 64rem) {
     :where([style*="--lg:"]) {
       --_display-lg: var(--display--lg);
       --_position-lg: var(--position--lg);
@@ -88,6 +88,14 @@
       --_border-t-lg: var(--border-t--lg);
       --_border-r-lg: var(--border-r--lg);
       --_border-b-lg: var(--border-b--lg);
+      --_shadow-angle-lg: var(--shadow-angle--lg);
+      --_ring-lg: var(--ring--lg);
+      --_ring-color-lg: var(--ring-color--lg);
+      --_ring-offset-lg: var(--ring-offset--lg);
+      --_ring-offset-color-lg: var(--ring-offset-color--lg);
+      --_focus-ring-lg: var(--focus-ring--lg);
+      --_transition-duration-lg: var(--transition-duration--lg);
+      --_transition-delay-lg: var(--transition-delay--lg);
     }
   }
 }

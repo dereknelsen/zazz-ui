@@ -11,25 +11,14 @@ export const BREAKPOINTS = ["sm", "md", "lg", "xl", "2xl"] as const;
 export type Breakpoint = (typeof BREAKPOINTS)[number];
 
 /**
- * Breakpoint thresholds, in `ch` of the nearest inline-size container's font,
- * chosen for legibility: each answers "what text layout fits here?". sm: the
- * narrowest comfortable line; md: one full reading measure (`--article-md`);
- * lg: two 45ch columns; xl: three 40ch columns; 2xl: two full 75ch measures.
- * ≈ 404 / 656 / 909 / 1210 / 1515px with the system font at 16px.
+ * Breakpoint thresholds and layout widths, in rem: Tailwind's scale. A tier
+ * applies when the nearest inline-size container is at least this wide, and
+ * `--layout-<breakpoint>` is the same width, so `@md` means "an md band fits".
+ * rem resolves against the root in every container, so siblings in different
+ * fonts flip together; it still follows the reader's font size and zoom.
+ * 640 / 768 / 1024 / 1280 / 1536px at 16px.
  */
-export const BREAKPOINT_CH: Record<Breakpoint, number> = {
-  sm: 40,
-  md: 65,
-  lg: 90,
-  xl: 120,
-  "2xl": 150,
-};
-
-/**
- * Layout band and component widths (`--layout-*`), in rem for predictable
- * geometry: Tailwind's scale. Decoupled from the query thresholds above.
- */
-export const LAYOUT_REM: Record<Breakpoint, number> = {
+export const BREAKPOINT_REM: Record<Breakpoint, number> = {
   sm: 40,
   md: 48,
   lg: 64,
@@ -160,9 +149,19 @@ export interface Utility {
    * `line-clamp` adds the -webkit-box companions; `bg` is a relative oklch
    * with `--bg-alpha`; `none` feeds a composite (`box-shadow`) and emits nothing itself;
    * `border` is a border shorthand: it sorts a color, number, or length into
-   * width and color channels, and the side rules emit them.
+   * width and color channels, and the side rules emit them. `px` feeds a
+   * composite too, as one signed length `--_<name>-w`: a number is that many
+   * pixels, a length passes through, and the sign carries meaning (a negative
+   * ring is inset).
    */
-  emit?: "plain" | "repeat" | "span" | "grid-fit" | "line-clamp" | "bg" | "none" | "border";
+  emit?: "plain" | "repeat" | "span" | "grid-fit" | "line-clamp" | "bg" | "none" | "border" | "px";
+  /**
+   * What the precedence chain ends in when neither the base nor an active tier
+   * sets the utility: a `px` utility that stands in for a token (`--focus-ring`
+   * falls back to `--ring-width`, so `--focus-ring--md: -2` alone keeps the
+   * default ring below md).
+   */
+  chainEnd?: string;
   /** Overrides the family's tier kind (`none` for a utility that is base-only). */
   tiers?: Tiers;
   /**
@@ -739,10 +738,53 @@ export const UTILITIES: readonly Utility[] = [
   // the shadow color for an element and its subtree: _variables.css re-declares the
   // --shadow-* tokens wherever this is set, so keyword, var(), and primitive shadows follow
   { name: "shadow-hue", properties: [], mode: "raw", family: "box", emit: "none" },
-  { name: "ring", properties: [], mode: "raw", family: "effects", emit: "none" },
-  { name: "ring-color", properties: [], mode: "raw", family: "effects", emit: "none" },
-  { name: "ring-offset", properties: [], mode: "raw", family: "effects", emit: "none" },
-  { name: "ring-offset-color", properties: [], mode: "raw", family: "effects", emit: "none" },
+  // the shadow's cast direction: the --shadow-* tokens rotate their offsets by it
+  // (0deg casts down, clockwise), re-declared where it is set (_variables.css)
+  {
+    name: "shadow-angle",
+    properties: [],
+    mode: "raw",
+    family: "effects",
+    emit: "none",
+    tiers: "both",
+  },
+  // ring widths are signed: a number is pixels, and a negative ring is inset
+  { name: "ring", properties: [], mode: "raw", family: "effects", emit: "px", tiers: "both" },
+  {
+    name: "ring-color",
+    properties: [],
+    mode: "raw",
+    family: "effects",
+    emit: "none",
+    tiers: "both",
+  },
+  {
+    name: "ring-offset",
+    properties: [],
+    mode: "raw",
+    family: "effects",
+    emit: "px",
+    tiers: "both",
+  },
+  {
+    name: "ring-offset-color",
+    properties: [],
+    mode: "raw",
+    family: "effects",
+    emit: "none",
+    tiers: "both",
+  },
+  // a primitive's focus ring (and the reset's focus outline): signed like --ring,
+  // the --ring-width token when unset
+  {
+    name: "focus-ring",
+    properties: [],
+    mode: "raw",
+    family: "effects",
+    emit: "px",
+    tiers: "breakpoints",
+    chainEnd: "var(--ring-width)",
+  },
   {
     name: "scale",
     pseudo: true,
@@ -768,6 +810,24 @@ export const UTILITIES: readonly Utility[] = [
     noBase: "none",
   },
   { name: "transition", pseudo: true, properties: ["transition"], mode: "raw", family: "effects" },
+  // longhands after the shorthand, so they win over --transition and over a
+  // primitive's transition: retime one element without restating its property list
+  {
+    name: "transition-duration",
+    pseudo: true,
+    properties: ["transition-duration"],
+    mode: "raw",
+    family: "effects",
+    tiers: "both",
+  },
+  {
+    name: "transition-delay",
+    pseudo: true,
+    properties: ["transition-delay"],
+    mode: "raw",
+    family: "effects",
+    tiers: "both",
+  },
   // box: no tiers
   {
     name: "rounded",

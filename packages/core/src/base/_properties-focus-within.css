@@ -73,6 +73,10 @@
 @property --_shadow-focus-within { syntax: "*"; inherits: false; }
 @property --group-shadow--focus-within { syntax: "*"; inherits: false; }
 @property --_shadow-g-focus-within { syntax: "*"; inherits: false; }
+@property --shadow-angle--focus-within { syntax: "*"; inherits: false; }
+@property --_shadow-angle-focus-within { syntax: "*"; inherits: false; }
+@property --group-shadow-angle--focus-within { syntax: "*"; inherits: false; }
+@property --_shadow-angle-g-focus-within { syntax: "*"; inherits: false; }
 @property --ring--focus-within { syntax: "*"; inherits: false; }
 @property --_ring-focus-within { syntax: "*"; inherits: false; }
 @property --group-ring--focus-within { syntax: "*"; inherits: false; }
@@ -105,3 +109,11 @@
 @property --_transition-focus-within { syntax: "*"; inherits: false; }
 @property --group-transition--focus-within { syntax: "*"; inherits: false; }
 @property --_transition-g-focus-within { syntax: "*"; inherits: false; }
+@property --transition-duration--focus-within { syntax: "*"; inherits: false; }
+@property --_transition-duration-focus-within { syntax: "*"; inherits: false; }
+@property --group-transition-duration--focus-within { syntax: "*"; inherits: false; }
+@property --_transition-duration-g-focus-within { syntax: "*"; inherits: false; }
+@property --transition-delay--focus-within { syntax: "*"; inherits: false; }
+@property --_transition-delay-focus-within { syntax: "*"; inherits: false; }
+@property --group-transition-delay--focus-within { syntax: "*"; inherits: false; }
+@property --_transition-delay-g-focus-within { syntax: "*"; inherits: false; }

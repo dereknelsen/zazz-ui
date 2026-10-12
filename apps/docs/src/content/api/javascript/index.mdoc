@@ -18,7 +18,7 @@ Two bare specifiers reach the page through the import map `buildHead()` writes: 
 
 - **HTML drives configuration.** A script reads `data-<primitive>-*` attributes on its root (`data-carousel-loop="true"`, `data-command-hotkey="mod+k"`); it never takes options from JavaScript.
 - **Light DOM, progressive.** Every scripted primitive is a light-DOM custom element that augments markup already styled by CSS. Without JavaScript the markup still renders and native elements still work; you lose only the enhancement (filtering, keyboard navigation, animation).
-- **Scripts write state, not style.** A script writes `data-<primitive>-state` on the elements it manages, `data-ui-theme` (a theme toggle), and `data-ui-stuck` (the scroll-state polyfill); the toaster and multiselect also write `data-ui` on elements they create. Read state tokens in selectors; never author them.
+- **Scripts write state, not style.** A script writes `data-<primitive>-state` on the elements it manages, the `theme-dark` / `theme-light` token in `<html>`'s `data-ui` (a theme toggle), and `data-ui-stuck` (the scroll-state polyfill); the toaster and multiselect also write `data-ui` on elements they create. Read state tokens in selectors; never author them.
 
 ## Modules
 

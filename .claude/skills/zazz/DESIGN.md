@@ -286,7 +286,7 @@ The token contract in the frontmatter is what lets you be bold without the resul
 - **Use Zazz tokens exclusively** — never hardcode colors, spacing, radii, shadows, or typography. Use `var(--token-name)` in style utilities (`style="--bg: var(--color-card)"`); markup rules are in `packages/core/AUTHORING.md`.
 - **Typography via roles** — native `h1`–`h6` or `data-ui="text-*"`; override one property with a utility, never rebuild a role from utilities.
 - **Spacing via the `--space-*` semantic scale** — never use arbitrary px/rem values.
-- **Dark mode for free** — `--color-*` roles auto-swap; pin a scheme with `data-ui-theme`; never write separate dark-mode overrides for token-handled values.
+- **Dark mode for free** — `--color-*` roles auto-swap; pin a scheme with the `theme-dark` / `theme-light` switch; never write separate dark-mode overrides for token-handled values.
 
 ---
 
@@ -520,7 +520,7 @@ Spring easing (`--spring-easing`) with 0.333s duration. Fallback: `cubic-bezier(
 
 ### Breakpoints
 
-Breakpoint tiers: `sm` 40ch · `md` 65ch · `lg` 90ch · `xl` 120ch · `2xl` 150ch, measured against the nearest container (chosen for legibility: one comfortable line, one reading measure, two, three, and two full measures). Layout widths: `--layout-sm` 40rem · `--layout-md` 48rem · `--layout-lg` 64rem · `--layout-xl` 80rem · `--layout-2xl` 96rem.
+Breakpoint tiers and layout widths share one rem scale: `sm` 40rem · `md` 48rem · `lg` 64rem · `xl` 80rem · `2xl` 96rem (`--layout-sm` … `--layout-2xl`). Tiers are measured against the nearest container, and rem means siblings in different fonts flip together.
 
 ---
 

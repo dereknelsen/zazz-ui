@@ -11,5 +11,6 @@ The short version:
 - Values are style utilities in `style`: `style="--px: 6; --gap: 6"`. Exactly one space after the colon. Numbers on spacing and sizing utilities are scale steps.
 - Breakpoint tiers `--grid-cols--md: 3` on flow, grid, spacing, margin, sizing, typography, and color utilities; state tiers `--bg--hover: …` on color and effects. A tier needs its base: `--text: currentColor; --text--hover: …`.
 - Use tokens (`var(--space-*)`, `var(--color-<role>)`, `var(--radius-*)`, `var(--font-size-*)`); every `var(--…)` must exist in `packages/core/src/base/_variables.css`.
+- Every `<input>`, `<select>`, and `<textarea>` gets a `name` (or, when it must not submit, an `id`); Chrome reports a field with neither.
 - Retheme primitives with inheriting hooks (`--ui-button-bg--hover`) rather than utilities, which flatten states.
 - Reference: the docs site at https://zazz.sh (API tables generated from the kit at `/api/`, Markdown twins at `…/index.md`, `https://zazz.sh/llms.txt` for an index).

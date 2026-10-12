@@ -6,7 +6,8 @@
  * @uses       [popover] + nested popovers: megamenu panels and flyout submenus
  * @uses       anchor-name, anchor-scope, position-anchor, anchor-size(): panel
  *             sizing and positioning (Chromium 125+ for anchor-size)
- * @uses       :has(:popover-open): chevron rotation without JS
+ * @uses       :has(:popover-open): rotates the trigger's data-navigation-menu-slot="marker"
+ *             chevron without JS
  * @uses       @starting-style: slide-down viewport reveal
  * @tokens     --ui-navigation-menu-* (@layer variables)
  * @presets    on the popover slot: data-navigation-menu-variant="submenu",
@@ -62,7 +63,9 @@
   }
 
   /* Chevron points down by default, flips up while its popover is open (no JS) */
-  :where([data-ui~="navigation-menu"]) [data-navigation-menu-slot~="trigger"] > svg {
+  :where([data-ui~="navigation-menu"])
+    [data-navigation-menu-slot~="trigger"]
+    > [data-navigation-menu-slot~="marker"] {
     inline-size: var(--space-sm);
     block-size: var(--space-sm);
     transition: var(--ui-navigation-menu-icon-transition);
@@ -71,7 +74,7 @@
   :where([data-ui~="navigation-menu"])
     [data-navigation-menu-slot~="item"]:has([data-navigation-menu-slot~="popover"]:popover-open)
     [data-navigation-menu-slot~="trigger"]
-    > svg {
+    > [data-navigation-menu-slot~="marker"] {
     transform: var(--ui-navigation-menu-icon-transform);
   }
 

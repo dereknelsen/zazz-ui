@@ -385,18 +385,33 @@
 @property --shadow-hue { syntax: "*"; inherits: false; }
 @property --_shadow-hue { syntax: "*"; inherits: false; }
 @property --_shadow-hue-resolved { syntax: "*"; inherits: false; }
+@property --shadow-angle { syntax: "*"; inherits: false; }
+@property --_shadow-angle { syntax: "*"; inherits: false; }
+@property --_shadow-angle-resolved { syntax: "*"; inherits: false; }
 @property --ring { syntax: "*"; inherits: false; }
 @property --_ring { syntax: "*"; inherits: false; }
 @property --_ring-resolved { syntax: "*"; inherits: false; }
+@property --_ring-len { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --_ring-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_ring-w { syntax: "*"; inherits: false; }
 @property --ring-color { syntax: "*"; inherits: false; }
 @property --_ring-color { syntax: "*"; inherits: false; }
 @property --_ring-color-resolved { syntax: "*"; inherits: false; }
 @property --ring-offset { syntax: "*"; inherits: false; }
 @property --_ring-offset { syntax: "*"; inherits: false; }
 @property --_ring-offset-resolved { syntax: "*"; inherits: false; }
+@property --_ring-offset-len { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --_ring-offset-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_ring-offset-w { syntax: "*"; inherits: false; }
 @property --ring-offset-color { syntax: "*"; inherits: false; }
 @property --_ring-offset-color { syntax: "*"; inherits: false; }
 @property --_ring-offset-color-resolved { syntax: "*"; inherits: false; }
+@property --focus-ring { syntax: "*"; inherits: false; }
+@property --_focus-ring { syntax: "*"; inherits: false; }
+@property --_focus-ring-resolved { syntax: "*"; inherits: false; }
+@property --_focus-ring-len { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --_focus-ring-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_focus-ring-w { syntax: "*"; inherits: false; }
 @property --scale { syntax: "*"; inherits: false; }
 @property --_scale { syntax: "*"; inherits: false; }
 @property --_scale-resolved { syntax: "*"; inherits: false; }
@@ -409,6 +424,12 @@
 @property --transition { syntax: "*"; inherits: false; }
 @property --_transition { syntax: "*"; inherits: false; }
 @property --_transition-resolved { syntax: "*"; inherits: false; }
+@property --transition-duration { syntax: "*"; inherits: false; }
+@property --_transition-duration { syntax: "*"; inherits: false; }
+@property --_transition-duration-resolved { syntax: "*"; inherits: false; }
+@property --transition-delay { syntax: "*"; inherits: false; }
+@property --_transition-delay { syntax: "*"; inherits: false; }
+@property --_transition-delay-resolved { syntax: "*"; inherits: false; }
 @property --rounded { syntax: "*"; inherits: false; }
 @property --_rounded { syntax: "*"; inherits: false; }
 @property --_rounded-resolved { syntax: "*"; inherits: false; }
@@ -540,7 +561,7 @@
 @property --_after-max-h-num { syntax: "<number>"; inherits: false; initial-value: 0; }
 
 /* Focus ring, published by primitives */
-@property --_focus-ring { syntax: "*"; inherits: false; }
+@property --_focus-shadow { syntax: "*"; inherits: false; }
 
 /* Stuck state */
 @property --_stuck-on { syntax: "*"; inherits: false; }

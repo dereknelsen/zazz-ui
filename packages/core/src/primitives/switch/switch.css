@@ -2,7 +2,7 @@
  * switch.css — Switch (input[type="checkbox"][role="switch"])
  *
  * @layer      variables, reset
- * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-ring)
+ * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow)
  * @uses       appearance: none on input[role="switch"]
  * @uses       label:has(> input[role="switch"])::after — thumb drawn on label (no JS)
  * @uses       oklch(from …) — checked/hover track tints
@@ -100,13 +100,20 @@
     /* the transparent outline keeps focus visible in forced-colors */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    --_focus-ring:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+    --_focus-in: max(0, -1 * sign(var(--_focus-ring-w, 1px)));
+    --_focus-shadow:
+      0 0 0 calc(var(--_ring-offset-width) * (1 - var(--_focus-in))) var(--ring-offset-shadow-color),
+      0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * (1 - var(--_focus-in)))
+        var(--_ring-fill, var(--ring-shadow-color)),
+      inset 0 0 0 calc(var(--_ring-offset-width) * var(--_focus-in)) var(--ring-offset-shadow-color),
+      inset 0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * var(--_focus-in))
         var(--_ring-fill, var(--ring-shadow-color));
-    box-shadow: var(--_focus-ring, 0 0 #0000), var(--_shadow-resolved, 0 0 #0000);
-    outline: var(--outline-width) var(--outline-style) transparent;
-    outline-offset: var(--outline-offset);
+    box-shadow: var(--_focus-shadow, 0 0 #0000), var(--_shadow-resolved, 0 0 #0000);
+    outline: abs(var(--_focus-ring-w, var(--outline-width))) var(--outline-style) transparent;
+    outline-offset: calc(
+      var(--outline-offset) - var(--_focus-in) *
+        (2 * var(--outline-offset) + abs(var(--_focus-ring-w, var(--outline-width))))
+    );
 
     transition: var(--default-transition);
   }
@@ -129,7 +136,7 @@
 
   :where(input[role="switch"]:focus-visible) {
     --_ring-offset-width: var(--ring-offset-width);
-    --_ring-width: var(--ring-width);
+    --_ring-width: abs(var(--_focus-ring-w, var(--ring-width)));
     outline-color: transparent;
   }
 }

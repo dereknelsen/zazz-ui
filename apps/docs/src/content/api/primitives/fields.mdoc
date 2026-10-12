@@ -11,6 +11,10 @@ primitive: fields
 
 {% examples primitive="fields" /%}
 
+## Field text on iOS
+
+iOS zooms the page to any focused control whose text renders under 16px, and `--ui-field-font-size` is `--font-size-sm` (about 12.8px). Rather than forcing 16px fields everywhere, the kit raises the token to `max(16px, var(--font-size-sm))` inside `@supports (-webkit-touch-callout: none)`, which only iOS browsers match. Desktop and Android keep the smaller type; an iPhone gets 16px controls and never zooms. Set `--ui-field-font-size` yourself and the override still applies on iOS, so a smaller value there is not possible without reintroducing the zoom.
+
 ## Attributes
 
 {% attributes primitive="fields" /%}

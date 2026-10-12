@@ -21,6 +21,7 @@
     --_border-b-focus-visible: var(--border-b--focus-visible);
     --_opacity-focus-visible: var(--opacity--focus-visible);
     --_shadow-focus-visible: var(--shadow--focus-visible);
+    --_shadow-angle-focus-visible: var(--shadow-angle--focus-visible);
     --_ring-focus-visible: var(--ring--focus-visible);
     --_ring-color-focus-visible: var(--ring-color--focus-visible);
     --_ring-offset-focus-visible: var(--ring-offset--focus-visible);
@@ -29,6 +30,8 @@
     --_translate-focus-visible: var(--translate--focus-visible);
     --_rotate-focus-visible: var(--rotate--focus-visible);
     --_transition-focus-visible: var(--transition--focus-visible);
+    --_transition-duration-focus-visible: var(--transition-duration--focus-visible);
+    --_transition-delay-focus-visible: var(--transition-delay--focus-visible);
   }
   :where([data-ui~="group"]:focus-visible [style*="--group-"]) {
     --_template-cols-g-focus-visible: var(--group-template-cols--focus-visible);
@@ -49,6 +52,7 @@
     --_border-b-g-focus-visible: var(--group-border-b--focus-visible);
     --_opacity-g-focus-visible: var(--group-opacity--focus-visible);
     --_shadow-g-focus-visible: var(--group-shadow--focus-visible);
+    --_shadow-angle-g-focus-visible: var(--group-shadow-angle--focus-visible);
     --_ring-g-focus-visible: var(--group-ring--focus-visible);
     --_ring-color-g-focus-visible: var(--group-ring-color--focus-visible);
     --_ring-offset-g-focus-visible: var(--group-ring-offset--focus-visible);
@@ -57,5 +61,7 @@
     --_translate-g-focus-visible: var(--group-translate--focus-visible);
     --_rotate-g-focus-visible: var(--group-rotate--focus-visible);
     --_transition-g-focus-visible: var(--group-transition--focus-visible);
+    --_transition-duration-g-focus-visible: var(--group-transition-duration--focus-visible);
+    --_transition-delay-g-focus-visible: var(--group-transition-delay--focus-visible);
   }
 }

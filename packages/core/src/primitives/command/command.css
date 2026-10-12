@@ -66,9 +66,11 @@
     padding: 0;
   }
 
-  /* Dialog form: the palette owns its interior, edge to edge */
+  /* Dialog form: the palette owns its interior, edge to edge. A palette is
+     asked for, so it skips the dialog's backdrop-first delay and opens at once. */
   :where(ui-command, [data-ui~="command"]) [data-command-slot~="panel"]:where(dialog) {
     --ui-dialog-w: min(var(--layout-sm), 100% - var(--gutters) * 2);
+    --ui-dialog-transition-delay--end: 0ms;
     padding: 0;
   }
 
@@ -77,6 +79,15 @@
     display: flex;
     align-items: center;
     border-block-end: var(--ui-command-input-border);
+  }
+
+  /* A close button beside the input: the dialog form's way out on touch, where
+     there is no Esc and the backdrop may be a sliver */
+  :where(ui-command, [data-ui~="command"])
+    [data-command-slot~="header"]
+    > :where([data-ui~="button"]) {
+    flex: none;
+    margin-inline-end: var(--spacing);
   }
 
   :where(ui-command, [data-ui~="command"]) [data-command-slot~="input"] {

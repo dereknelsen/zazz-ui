@@ -21,6 +21,9 @@
  *             sized and colored by the container's `--divide` (default 1px --color-border)
  * @uses       data-ui="container": an inline-size query container, so breakpoint
  *             tiers inside it (`--grid-cols--md`) follow its width, not the page's
+ * @uses       data-ui="theme-dark" / "theme-light": pins the color scheme for the
+ *             subtree (usually on <html>); without either, the system setting applies
+ *             (rules in _variables.css, so they rank with the theme tokens)
  */
 
 @layer ui.utilities {

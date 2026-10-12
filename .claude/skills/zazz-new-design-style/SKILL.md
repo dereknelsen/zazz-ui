@@ -140,7 +140,7 @@ motifs), plus a reminder of the sentence-case house rule.>
   token can't express it.
 - **`data-ui="button" data-button-variant="primary"`, never a class.** Reference primitives by identity, preset, and slot (`packages/core/AUTHORING.md`).
 - **No net-new CSS or tokens** in a style file — it composes the existing system, it doesn't extend it.
-- **Dark mode is free** — role tokens auto-swap; never tell a style to hand-write `data-ui-theme="dark"` overrides.
+- **Dark mode is free** — role tokens auto-swap; never tell a style to hand-write `theme-dark` overrides.
 - **Don't restate DESIGN.md/SKILL.md** — point to them. A style adds _direction_, not documentation.
 
 ## Do / Don't

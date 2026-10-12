@@ -5,7 +5,7 @@
  */
 
 import {
-  BREAKPOINT_CH,
+  BREAKPOINT_REM,
   BREAKPOINTS,
   PSEUDO_ONLY,
   STATE_SELECTORS,
@@ -23,16 +23,13 @@ export const UTILITY_BY_NAME = new Map<string, Utility>(
   [...UTILITIES, ...PSEUDO_ONLY].map((utility) => [utility.name, utility]),
 );
 
-/** ≈ px per ch with the system font at 16px (`utilities.ts`: md 65ch ≈ 656px). */
-const PX_PER_CH = 10.1;
-
 export function isBreakpoint(tier: string): tier is Breakpoint {
   return (BREAKPOINTS as readonly string[]).includes(tier);
 }
 
-/** `≥ 65ch` for a breakpoint tier. */
+/** `≥ 48rem` for a breakpoint tier. */
 export function breakpointThreshold(tier: Breakpoint): string {
-  return `≥ ${BREAKPOINT_CH[tier]}ch`;
+  return `≥ ${BREAKPOINT_REM[tier]}rem`;
 }
 
 export function modeDescription(utility: Utility): string {
@@ -51,8 +48,8 @@ export function modeDescription(utility: Utility): string {
 /** When a tier applies, as one sentence. */
 export function tierDescription(tier: string, group = false): string {
   if (isBreakpoint(tier)) {
-    const ch = BREAKPOINT_CH[tier];
-    return `when the nearest container is at least ${ch}ch wide (\`@container (width >= ${ch}ch)\`, ≈ ${Math.round(ch * PX_PER_CH)}px with the system font at 16px)`;
+    const rem = BREAKPOINT_REM[tier];
+    return `when the nearest container is at least ${rem}rem wide (\`@container (width >= ${rem}rem)\`, ${rem * 16}px at 16px)`;
   }
   if (!isState(tier)) return `in the ${tier} tier`;
   const selector = STATE_SELECTORS[tier];

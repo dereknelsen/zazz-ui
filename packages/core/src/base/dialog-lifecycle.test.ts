@@ -8,7 +8,7 @@
  */
 
 import { beforeAll, describe, expect, it } from "vite-plus/test";
-import { initDialogLifecycle } from "./dialog-lifecycle.ts";
+import { backdropHit, hasNativeLightDismiss, initDialogLifecycle } from "./dialog-lifecycle.ts";
 
 /** MutationObserver callbacks are microtasks: flush them. */
 const flush = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
@@ -75,6 +75,90 @@ describe("initDialogLifecycle", () => {
     dialog.dispatchEvent(new Event("close"));
 
     expect(target).toBe(dialog);
+  });
+
+  describe("light dismiss fallback (no closedby support)", () => {
+    /** A 200x100 dialog at (100, 100); happy-dom has no layout. */
+    function modal(closedby: string | null): HTMLDialogElement {
+      const { dialog } = mount();
+      if (closedby !== null) dialog.setAttribute("closedby", closedby);
+      dialog.setAttribute("open", "");
+      dialog.getBoundingClientRect = () =>
+        ({ left: 100, top: 100, right: 300, bottom: 200 }) as DOMRect;
+      return dialog;
+    }
+
+    function press(target: Element, x: number, y: number): void {
+      for (const type of ["pointerdown", "pointerup"]) {
+        target.dispatchEvent(new MouseEvent(type, { bubbles: true, clientX: x, clientY: y }));
+      }
+    }
+
+    it("is a fallback: it binds only where closedby='any' round-trips natively", () => {
+      const probe = document.createElement("dialog");
+      probe.setAttribute("closedby", "any");
+      const native = "closedBy" in HTMLDialogElement.prototype && probe.closedBy === "any";
+      expect(hasNativeLightDismiss()).toBe(native);
+    });
+
+    it("treats Safari 26's partial closedby (none, closerequest) as unsupported", () => {
+      const own = Object.getOwnPropertyDescriptor(HTMLDialogElement.prototype, "closedBy");
+      Object.defineProperty(HTMLDialogElement.prototype, "closedBy", {
+        configurable: true,
+        get(this: HTMLDialogElement) {
+          const value = this.getAttribute("closedby");
+          return value === "none" || value === "closerequest" ? value : "auto";
+        },
+      });
+      try {
+        expect(hasNativeLightDismiss()).toBe(false);
+      } finally {
+        if (own) Object.defineProperty(HTMLDialogElement.prototype, "closedBy", own);
+        else delete (HTMLDialogElement.prototype as { closedBy?: unknown }).closedBy;
+      }
+    });
+
+    it("recognises a backdrop hit: the dialog itself, outside its box", () => {
+      const dialog = modal("any");
+      const outside = new MouseEvent("click", { clientX: 10, clientY: 10 });
+      Object.defineProperty(outside, "target", { value: dialog });
+      expect(backdropHit(outside)).toBe(dialog);
+      const inside = new MouseEvent("click", { clientX: 150, clientY: 150 });
+      Object.defineProperty(inside, "target", { value: dialog });
+      expect(backdropHit(inside)).toBeNull();
+    });
+
+    it("closes a closedby='any' dialog on a backdrop tap", () => {
+      if (hasNativeLightDismiss()) return;
+      const dialog = modal("any");
+      press(dialog, 10, 10);
+      expect(dialog.open).toBe(false);
+    });
+
+    it("leaves a tap inside the dialog, and dialogs without closedby='any', alone", () => {
+      if (hasNativeLightDismiss()) return;
+      const any = modal("any");
+      press(any, 150, 150);
+      expect(any.open).toBe(true);
+      const none = modal("none");
+      press(none, 10, 10);
+      expect(none.open).toBe(true);
+      const unset = modal(null);
+      press(unset, 10, 10);
+      expect(unset.open).toBe(true);
+    });
+
+    it("does not close on a release alone: a drag out of the dialog is not a dismiss", () => {
+      if (hasNativeLightDismiss()) return;
+      const dialog = modal("any");
+      dialog.dispatchEvent(
+        new MouseEvent("pointerdown", { bubbles: true, clientX: 150, clientY: 150 }),
+      );
+      dialog.dispatchEvent(
+        new MouseEvent("pointerup", { bubbles: true, clientX: 10, clientY: 10 }),
+      );
+      expect(dialog.open).toBe(true);
+    });
   });
 
   it("is idempotent: a second init does not double-emit", async () => {

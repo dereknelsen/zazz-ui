@@ -134,13 +134,14 @@ export const UTILITY_SECTIONS: readonly UtilitySection[] = [
       "ring-color",
       "ring-offset",
       "ring-offset-color",
+      "focus-ring",
     ],
   },
   {
     id: "effects",
     title: "Effects",
     description: "Shadows and opacity.",
-    utilities: ["shadow", "shadow-hue", "opacity"],
+    utilities: ["shadow", "shadow-hue", "shadow-angle", "opacity"],
   },
   {
     id: "transforms",
@@ -152,7 +153,7 @@ export const UTILITY_SECTIONS: readonly UtilitySection[] = [
     id: "transitions",
     title: "Transitions",
     description: "Animate between states.",
-    utilities: ["transition"],
+    utilities: ["transition", "transition-duration", "transition-delay"],
   },
   {
     id: "interactivity",

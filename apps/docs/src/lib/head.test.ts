@@ -14,7 +14,7 @@ describe("siteHead", () => {
     expect(head).toContain('src="/zazz/zazz.js"');
     expect(head).not.toContain("/zazz/index.");
     expect(head).toContain('type="importmap"');
-    expect(head).toContain("data-ui-theme");
+    expect(head).toContain('" theme-" + storedTheme');
   });
 
   it("loads no web fonts: the site sets in the kit's system stacks", () => {

@@ -2,7 +2,7 @@
  * button.css — Button ([data-ui~="button"])
  *
  * @layer      variables, components
- * @requires   _layers.css, _variables.css, _reset.css, _properties.css (--_*-resolved, --_focus-ring), fields.css (--ui-field-* metrics), kbd.css (--ui-kbd-*)
+ * @requires   _layers.css, _variables.css, _reset.css, _properties.css (--_*-resolved, --_focus-shadow), fields.css (--ui-field-* metrics), kbd.css (--ui-kbd-*)
  * @uses       color-mix(), oklch(from …) — variant hover/active tints
  * @uses       text-box — vertical trim (patchy browser support)
  * @tokens     --ui-button-* (@layer variables; hooks are named after the utilities they back; metrics default to the --ui-field-* family)
@@ -24,9 +24,9 @@
     --ui-button-ring-color: var(--ui-field-ring-color);
 
     --ui-button-font-family: var(--font-family-body);
-    --ui-button-font-size: var(--ui-field-font-size);
+    --ui-button-font-size: var(--font-size-sm);
     --ui-button-font-weight: var(--font-weight-strong);
-    --ui-button-leading: var(--ui-field-leading);
+    --ui-button-leading: var(--leading-sm);
 
     --ui-button-bg: var(--color-background);
     --ui-button-bg--hover: oklch(from var(--color-background) calc(l - 0.025) c h);
@@ -217,31 +217,38 @@
     background-clip: padding-box;
     white-space-collapse: collapse;
 
-    /* The ring is published to --_focus-ring so the utilities layer's
+    /* The ring is published to --_focus-shadow so the utilities layer's
        box-shadow emission keeps it above a --shadow or --ring utility; the ring
        widths grow from 0 on :focus-visible so the ring eases in. */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
+    --_focus-in: max(0, -1 * sign(var(--_focus-ring-w, 1px)));
     --_ring-fill: color-mix(
       in oklch,
       var(--_ring-color-resolved, var(--_button-ring-color, var(--ui-button-ring-color)))
         var(--ring-opacity),
       transparent
     );
-    --_focus-ring:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+    --_focus-shadow:
+      0 0 0 calc(var(--_ring-offset-width) * (1 - var(--_focus-in))) var(--ring-offset-shadow-color),
+      0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * (1 - var(--_focus-in)))
+        var(--_ring-fill, var(--ring-shadow-color)),
+      inset 0 0 0 calc(var(--_ring-offset-width) * var(--_focus-in)) var(--ring-offset-shadow-color),
+      inset 0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * var(--_focus-in))
         var(--_ring-fill, var(--ring-shadow-color));
     box-shadow:
-      var(--_focus-ring, 0 0 #0000),
+      var(--_focus-shadow, 0 0 #0000),
       var(--_shadow-resolved, var(--_button-shadow, var(--ui-button-shadow)));
 
     cursor: default;
     text-decoration: none;
 
     /* transparent twin of the ring for forced-colors / high-contrast modes */
-    outline: var(--outline-width) var(--outline-style) transparent;
-    outline-offset: var(--outline-offset);
+    outline: abs(var(--_focus-ring-w, var(--outline-width))) var(--outline-style) transparent;
+    outline-offset: calc(
+      var(--outline-offset) - var(--_focus-in) *
+        (2 * var(--outline-offset) + abs(var(--_focus-ring-w, var(--outline-width))))
+    );
 
     transition: var(--default-transition);
 
@@ -280,7 +287,7 @@
 
   :where([data-ui~="button"]):focus-visible:not(:disabled, [aria-disabled="true"]) {
     --_ring-offset-width: var(--ring-offset-width);
-    --_ring-width: var(--ring-width);
+    --_ring-width: abs(var(--_focus-ring-w, var(--ring-width)));
 
     outline-color: transparent;
   }

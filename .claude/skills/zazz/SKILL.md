@@ -52,7 +52,7 @@ Behind that:
 - **Hooks theme primitives.** Every primitive reads `--ui-<identity>-<utility>` hooks (inheriting,
   same modifier grammar). Prefer: preset → hook on a subtree → utility on the one element. A utility on
   a primitive flattens its states; a hook keeps them.
-- **Kit JS writes state** (`data-<identity>-state`, `data-ui-theme`). Read it in selectors; never
+- **Kit JS writes state** (`data-<identity>-state`, the `theme-*` switch in `data-ui`). Read it in selectors; never
   author it.
 - **Modern APIs do the work** (Popover, native `<dialog>`, Invoker Commands, anchor
   positioning, View Transitions, `<details>`) — native across the support floor. The head
@@ -134,7 +134,8 @@ Pick the narrowest scope that works. **Do not edit `packages/core/src/`** unless
    layout fragment `packages/core/src/primitives/layout/layout.html`.
 
 Forms share `--ui-field-*` hooks and validate via `:user-invalid` (after blur/submit, never while
-typing). Card is `data-ui="card"`; avatars and breadcrumbs are utility compositions (copy the
+typing). Give every `<input>`, `<select>`, and `<textarea>` a `name`, search boxes and demos
+included (an `id` only when it must not submit); Chrome reports a field with neither. Card is `data-ui="card"`; avatars and breadcrumbs are utility compositions (copy the
 fragments). Tables are `data-ui="table"` on a semantic `<table>`.
 
 ## Modern APIs & JS behaviors
@@ -169,7 +170,7 @@ live in `design-styles/`.
   input groups, table rows, and tight toolbars. **Don't** shrink nav links or header actions.
 - **Do** write `data-ui="button" data-button-variant="primary"`. **Don't** write classes,
   `data-variant`, `data-slot`, utility classes, or `class="dark"` (all 0.4).
-- **Do** let `--color-*` roles handle dark mode; pin a scheme with `data-ui-theme`. **Don't**
+- **Do** let `--color-*` roles handle dark mode; pin a scheme with the `theme-dark` / `theme-light` switch (`data-ui="theme-dark"`). **Don't**
   hand-write dark overrides for token-handled values.
 - **Do** preserve the loaded polyfill and modern-API markup. **Don't** edit `packages/core/src/`
   unless asked.

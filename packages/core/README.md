@@ -20,7 +20,7 @@ import "@zazz-ui/core"; // custom elements and shared behaviors
 From a CDN, the script needs an import map for its dependencies and the Interest Invokers polyfill:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.5.4/dist/zazz.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.6.0/dist/zazz.css" />
 <script type="importmap">
   {
     "imports": {
@@ -36,7 +36,7 @@ From a CDN, the script needs an import map for its dependencies and the Interest
   type="module"
   src="https://cdn.jsdelivr.net/npm/invokers@2.2.2/dist/esm/production/interest.js"
 ></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.5.4/dist/zazz.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.6.0/dist/zazz.js"></script>
 ```
 
 Use an exact version in CDN URLs. The [installation guide](https://zazz.sh/docs/install/installation/) has the complete `<head>`, with fonts, the theme script, a per-primitive variant, and integrity hashes on every URL; `buildHead({ cdn: { version } })` from `@zazz-ui/core/head` returns the same markup. Each release also includes `dist/sri.json` with the SHA-384 hash of every published file.
@@ -80,7 +80,7 @@ Every value in the kit resolves from a CSS custom property, which gives you thre
 <button data-ui="button" style="--ui-button-bg: var(--color-secondary)">One-off</button>
 ```
 
-Color roles resolve through `light-dark()`, so light and dark themes work out of the box and follow the OS preference (pin one with `data-ui-theme="dark"` on `<html>`). Styles live in cascade layers, so your own CSS can override anything without `!important` or specificity fights. The [theming guide](https://zazz.sh/docs/theming/customization/) covers tokens, hooks, dark mode, and brand blocks.
+Color roles resolve through `light-dark()`, so light and dark themes work out of the box and follow the OS preference (pin one with `data-ui="theme-dark"` on `<html>`). Styles live in cascade layers, so your own CSS can override anything without `!important` or specificity fights. The [theming guide](https://zazz.sh/docs/theming/customization/) covers tokens, hooks, dark mode, and brand blocks.
 
 ## Layout
 

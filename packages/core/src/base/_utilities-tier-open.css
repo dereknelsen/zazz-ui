@@ -21,6 +21,7 @@
     --_border-b-open: var(--border-b--open);
     --_opacity-open: var(--opacity--open);
     --_shadow-open: var(--shadow--open);
+    --_shadow-angle-open: var(--shadow-angle--open);
     --_ring-open: var(--ring--open);
     --_ring-color-open: var(--ring-color--open);
     --_ring-offset-open: var(--ring-offset--open);
@@ -29,6 +30,8 @@
     --_translate-open: var(--translate--open);
     --_rotate-open: var(--rotate--open);
     --_transition-open: var(--transition--open);
+    --_transition-duration-open: var(--transition-duration--open);
+    --_transition-delay-open: var(--transition-delay--open);
   }
   :where([data-ui~="group"]:is([open], :popover-open, [aria-expanded="true"]) [style*="--group-"]) {
     --_template-cols-g-open: var(--group-template-cols--open);
@@ -49,6 +52,7 @@
     --_border-b-g-open: var(--group-border-b--open);
     --_opacity-g-open: var(--group-opacity--open);
     --_shadow-g-open: var(--group-shadow--open);
+    --_shadow-angle-g-open: var(--group-shadow-angle--open);
     --_ring-g-open: var(--group-ring--open);
     --_ring-color-g-open: var(--group-ring-color--open);
     --_ring-offset-g-open: var(--group-ring-offset--open);
@@ -57,5 +61,7 @@
     --_translate-g-open: var(--group-translate--open);
     --_rotate-g-open: var(--group-rotate--open);
     --_transition-g-open: var(--group-transition--open);
+    --_transition-duration-g-open: var(--group-transition-duration--open);
+    --_transition-delay-g-open: var(--group-transition-delay--open);
   }
 }

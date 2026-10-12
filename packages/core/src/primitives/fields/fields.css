@@ -6,12 +6,15 @@
  * @uses       :user-invalid: validation after commit (not while typing)
  * @uses       :has(:user-invalid): label/hint/error crossfade
  * @uses       @starting-style + visibility allow-discrete: hint <-> error swap
+ * @uses       @supports (-webkit-touch-callout: none): iOS-only 16px field text,
+ *             so a focused control does not zoom the page
  * @tokens     --ui-field-*, --ui-field-group-* (Tier 3 owner; @layer variables)
  * @consumedby input.css, textarea.css, select.css, input-group.css,
  *             password-group.css, otp.css, radio.css, checkbox.css,
  *             autocomplete.css, combobox.css, command.css,
- *             button.css (metrics: h/rounded/px/text/leading/icon/ring/border width+style),
- *             toggle.css (via button.css), tabs.css, badge.css (border/ring)
+ *             button.css (metrics: h/rounded/px/icon/ring/border width+style; not font-size
+ *             or leading, so the iOS 16px rule below reaches text controls only),
+ *             toggle.css (via button.css), tabs.css (same metrics), badge.css (border/ring)
  *
  * Identities: data-ui="field" (label + control + description wrapper),
  * data-ui="field-group" (fieldset; data-ui="radio-group" shares its rules).
@@ -68,6 +71,16 @@
     --ui-field-group-m: 0;
     --ui-field-group-gap: var(--space-xs);
     --ui-field-group-rounded: var(--radius-lg);
+  }
+
+  /* iOS zooms the page to any focused control that renders under 16px, so a
+     --font-size-sm field opens the keyboard with a lurch. Every iOS browser is
+     WebKit, and -webkit-touch-callout exists only there, so this raises the
+     field size on iOS alone; desktop and Android keep the smaller type. */
+  @supports (-webkit-touch-callout: none) {
+    :root {
+      --ui-field-font-size: max(16px, var(--font-size-sm));
+    }
   }
 }
 

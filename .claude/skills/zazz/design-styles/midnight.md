@@ -33,7 +33,7 @@ Borrow the confidence and negative space; skip the craft-narrative framing.
 - **A true `text-display` moment.** Give the hero a genuine `text-display`/`text-h1` at the heaviest
   weight against calm `text-md` `--color-muted-foreground` body copy — the contrast is the hierarchy.
   Open sections with a short accent-colored `text-eyebrow` ("features", "how it works").
-- **Near-black surface, one hot accent.** Lean the dark mode (`data-ui-theme="dark"` on `<html>`): `--color-background`
+- **Near-black surface, one hot accent.** Lean the dark mode (`data-ui="theme-dark"` on `<html>`): `--color-background`
   near-black, `--color-foreground` white, `--color-muted-foreground` for body. Route a **single
   saturated accent** through `--color-primary` (e.g. a hot orange, electric lime, or signal red) and spend it sparingly — CTAs,
   stat numerals, active nav, list indices. No second brand color competing; restraint is the point.

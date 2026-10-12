@@ -2,9 +2,15 @@
  * The playground's kitchen-sink template: every primitive's main example (its
  * `<name>/<name>.html` fragment), one section each, in alphabetical order.
  * Built from the kit at build time, so a new primitive shows up on its own.
+ * The page around the sections is `src/templates/kitchen-sink.html`; the
+ * generated sections replace its `<!-- sections … -->` comment line.
  */
+import shell from "../templates/kitchen-sink.html?raw";
 import { primitiveNames } from "./api/primitives.ts";
 import { readExample } from "./kit.ts";
+
+/** The shell's placeholder line, indentation and all. */
+const SECTIONS_MARKER = /^[ \t]*<!-- sections\b.*-->[ \t]*$/m;
 
 const ACRONYMS: Record<string, string> = { otp: "OTP" };
 
@@ -36,15 +42,8 @@ ${indent(example, "      ")}
   </section>`;
     });
 
-  return `<main data-ui="layout" style="--py: 12">
-  <hgroup>
-    <p data-ui="text-eyebrow">Playground</p>
-    <h1 data-ui="text-h4" style="--mt: 1">Kitchen sink</h1>
-    <p style="--mt: 4; --max-w: var(--article-sm); --text: var(--color-muted-foreground)">
-      Every primitive's main example, one per section, in alphabetical order.
-    </p>
-  </hgroup>
-${sections.join("\n")}
-</main>
-`;
+  if (!SECTIONS_MARKER.test(shell)) {
+    throw new Error("kitchenSink: src/templates/kitchen-sink.html lost its <!-- sections --> line");
+  }
+  return shell.replace(SECTIONS_MARKER, () => sections.join("\n"));
 }

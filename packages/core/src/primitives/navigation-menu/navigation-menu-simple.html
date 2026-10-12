@@ -22,7 +22,11 @@
           popovertarget="nav-simple-1"
         >
           Products
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+          <svg
+            data-navigation-menu-slot="marker"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 256 256"
+          >
             <rect width="256" height="256" fill="none" />
             <polyline
               points="208 96 128 176 48 96"
@@ -136,6 +140,7 @@
         <input
           data-ui="input"
           type="search"
+          name="q"
           aria-label="Search the site"
           placeholder="Search…"
           style="--min-w: 40ch"

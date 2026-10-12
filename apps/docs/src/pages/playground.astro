@@ -5,153 +5,151 @@
  * stylesheet, import map, polyfill, script, theme script) around the editor's
  * body. A docs preview opens here with its example in the URL hash.
  */
-import { ArrowLeft, LoaderCircle, RotateCcw } from "@lucide/astro";
-import PlaygroundLayout from "../layouts/PlaygroundLayout.astro";
-import { siteHead } from "../lib/head.ts";
-import { kitchenSink } from "../lib/kitchen-sink.ts";
+import { ArrowLeft, Code, RotateCcw } from '@lucide/astro';
+import PlaygroundLayout from '../layouts/PlaygroundLayout.astro';
+import { siteHead } from '../lib/head.ts';
+import { kitchenSink } from '../lib/kitchen-sink.ts';
+import acmeStorefront from '../templates/acme-storefront.html?raw';
+import blank from '../templates/blank.html?raw';
 
-const BLANK = `<main data-ui="layout" style="--py: 8">
-  <section>
-    <p data-ui="text-eyebrow">Playground</p>
-    <h1 data-ui="text-h4" style="--mt: 1">Hello, Zazz</h1>
-    <p style="--mt: 4; --max-w: var(--article-sm); --text: var(--color-muted-foreground)">
-      Edit the HTML on the left. Identities in <code>data-ui</code>, presets in
-      <code>data-&lt;primitive&gt;-*</code>, values as style utilities.
-    </p>
-    <div style="--mt: 6; --display: flex; --gap: 2; --flex-wrap: wrap">
-      <button data-ui="button" data-button-variant="primary">Primary</button>
-      <button data-ui="button" data-button-variant="outline">Outline</button>
-      <button data-ui="button" data-button-variant="ghost">Ghost</button>
-    </div>
-  </section>
-</main>
-`;
-
+// Templates live in src/templates/*.html. The first is what the playground
+// opens with; "blank" is what Reset returns to.
 const templates = [
-  { id: "blank", label: "Blank page", html: BLANK },
-  { id: "kitchen-sink", label: "Kitchen sink", html: kitchenSink() },
+  { id: 'acme-storefront', label: 'ACME storefront', html: acmeStorefront },
+  { id: 'blank', label: 'Blank page', html: blank },
+  { id: 'kitchen-sink', label: 'Kitchen sink', html: kitchenSink() },
 ];
 
 // `<` is escaped so the head's own <script> tags cannot close this one.
 const data = JSON.stringify({ head: siteHead(), templates }).replace(
   /</g,
-  "\\u003c",
+  '\\u003c',
 );
 
 // Production isolates user HTML in an opaque origin. Astro's dev server blocks
 // every cross-site subresource request (its Sec-Fetch guard; `Origin: null`
 // cannot be allow-listed), so in dev the frame stays same-origin instead.
-const sandbox = import.meta.env.DEV
-  ? "allow-scripts allow-same-origin allow-forms allow-modals"
-  : "allow-scripts allow-forms allow-modals";
+const sandbox =
+  import.meta.env.DEV ?
+    'allow-scripts allow-same-origin allow-forms allow-modals'
+  : 'allow-scripts allow-forms allow-modals';
 ---
 
 <PlaygroundLayout
-  title="Playground"
-  description="Write Zazz HTML and watch it render."
+  title='Playground'
+  description='Write Zazz HTML and watch it render.'
 >
   <main
-    id="main"
+    id='main'
     data-playground
-    style="
+    style='
       --display: grid;
       --template-rows: auto minmax(0, 1fr);
       --min-h: calc(100dvh - 3.5rem);
-    "
+    '
   >
     <div
-      data-ui="layout"
-      data-layout-size="bleed"
-      style="
+      data-ui='layout'
+      data-layout-size='bleed'
+      style='
         --p: 2;
         --border-b: 1;
         --bg: var(--color-card);
-      "
+      '
     >
       <div
-        style="
+        style='
           --display: flex;
           --items: center;
           --gap: 2;
           --flex-wrap: wrap;
-        "
+        '
       >
-        <a href="/" data-ui="button" data-button-variant="outline">
-          <ArrowLeft aria-hidden="true" />
+        <a href='/' data-ui='button' data-button-variant='outline'>
+          <ArrowLeft aria-hidden='true' />
           <span>Home</span>
         </a>
         <label
-          data-ui="field"
-          data-field-orientation="horizontal"
-          style="--gap: 2; --max-w: 64; --w: 100%"
+          data-ui='field'
+          data-field-orientation='horizontal'
+          style='--gap: 2; --max-w: 64; --w: 100%'
         >
-          <span data-ui="sr-only" data-field-slot="label">Template</span>
+          <span data-ui='sr-only' data-field-slot='label'>Template</span>
           <select
-            data-ui="select"
+            data-ui='select'
             data-playground-template
-            aria-label="Starter template"
-            name="template"
+            aria-label='Starter template'
+            name='template'
           >
             <button>
               <span
-                aria-hidden="true"
-                style="--text: var(--color-muted-foreground)">Template:</span
+                aria-hidden='true'
+                style='--text: var(--color-muted-foreground)'>Template:</span
               >
-              <selectedcontent style="--font-weight: strong"></selectedcontent>
+              <selectedcontent style='--font-weight: strong'></selectedcontent>
             </button>
             {templates.map((t) => <option value={t.id}>{t.label}</option>)}
           </select>
         </label>
-        <div style="--display: flex; --gap: 1; --ml: auto">
-          <span
-            data-playground-status
-            role="status"
-            aria-live="polite"
-            data-ui="text-xs"
-            style="
-              --display: inline-flex;
-              --items: center;
-              --gap: 1.5;
-              --self: center;
-              --mr: 2;
-              --text: var(--color-muted-foreground);
-              --opacity: 0;
-              --transition: opacity 0.25s;
-            "
-          >
-            <span data-ui="spin" style="--display: inline-flex"
-              ><LoaderCircle aria-hidden="true" /></span
-            >
-            Formatting styles…
-          </span>
-
+        <div style='--display: flex; --gap: 1; --ml: auto'>
+          <!-- Below lg the panes stack; collapsing the code gives the preview the screen -->
           <button
-            type="button"
-            data-ui="button"
-            data-button-variant="ghost"
+            type='button'
+            data-ui='button'
+            data-button-variant='ghost'
+            data-playground-toggle
+            aria-controls='playground-code'
+            aria-expanded='true'
+            style='
+              --display: flex;
+              --display--lg: none;
+            '
+          >
+            <Code aria-hidden='true' />
+            <span data-playground-toggle-label>Hide code</span>
+          </button>
+          <button
+            type='button'
+            data-ui='button'
+            data-button-variant='ghost'
             data-playground-reset
           >
-            <RotateCcw aria-hidden="true" /> Reset
+            <RotateCcw aria-hidden='true' /> Reset
           </button>
         </div>
       </div>
     </div>
 
+    <!-- Stacked below lg (each pane at least half the screen; a collapsed editor
+         leaves one row); side by side at lg with a draggable divider whose
+         script rewrites --template-cols--lg. -->
     <div
-      style="
+      data-playground-split
+      style='
         --display: grid;
         --template-cols: minmax(0, 1fr);
-        --template-cols--lg: minmax(0, 1fr) minmax(0, 1fr);
+        --template-cols--lg: minmax(0, 1fr) auto minmax(0, 1fr);
+        --auto-rows: minmax(50dvh, 1fr);
+        --auto-rows--lg: minmax(0, 1fr);
         --min-h: 0;
-      "
-      data-ui="divide-x"
+      '
     >
-      <div data-playground-editor style="--min-h: 50dvh; --position: relative">
+      <div
+        id='playground-code'
+        data-playground-editor
+        style='
+          --display: block;
+          --display--lg: block;
+          --position: relative;
+          --min-h: 0;
+        '
+      >
         <textarea
           data-playground-fallback
-          aria-label="HTML"
-          spellcheck="false"
-          style="
+          name='html'
+          aria-label='HTML'
+          spellcheck='false'
+          style='
             --w: 100%;
             --h: 100%;
             --min-h: 50dvh;
@@ -161,25 +159,49 @@ const sandbox = import.meta.env.DEV
             --border: 0;
             --bg: var(--color-background);
             --text: var(--color-foreground);
-          "
+          '
         ></textarea>
+      </div>
+      <div
+        role='separator'
+        tabindex='0'
+        aria-orientation='vertical'
+        aria-label='Resize code and preview'
+        aria-controls='playground-code'
+        aria-valuemin='20'
+        aria-valuemax='80'
+        aria-valuenow='50'
+        data-playground-resizer
+        style='
+          --display: none;
+          --display--lg: flex;
+          --justify: center;
+          --w: 2;
+          --cursor: col-resize;
+          --bg--hover: var(--color-muted);
+          --bg--focus-visible: var(--color-muted);
+        '
+      >
+        <span style='--w: 1px; --bg: var(--color-border)'></span>
       </div>
       <iframe
         data-playground-output
-        title="Output: user-supplied HTML"
+        title='Output: user-supplied HTML'
         sandbox={sandbox}
-        referrerpolicy="no-referrer"
-        style="
+        referrerpolicy='no-referrer'
+        style='
           --w: 100%;
           --h: 100%;
           --min-h: 50dvh;
           --border: 0;
           --bg: var(--color-background);
-        "
+          --overflow-y: auto;
+          --overflow-x: clip;
+        '
       ></iframe>
     </div>
   </main>
 
-  <script type="application/json" data-playground-data set:html={data} />
-  <script src="../scripts/playground.ts"></script>
+  <script type='application/json' data-playground-data set:html={data} />
+  <script src='../scripts/playground.ts'></script>
 </PlaygroundLayout>

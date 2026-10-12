@@ -73,6 +73,10 @@
 @property --_shadow-checked { syntax: "*"; inherits: false; }
 @property --group-shadow--checked { syntax: "*"; inherits: false; }
 @property --_shadow-g-checked { syntax: "*"; inherits: false; }
+@property --shadow-angle--checked { syntax: "*"; inherits: false; }
+@property --_shadow-angle-checked { syntax: "*"; inherits: false; }
+@property --group-shadow-angle--checked { syntax: "*"; inherits: false; }
+@property --_shadow-angle-g-checked { syntax: "*"; inherits: false; }
 @property --ring--checked { syntax: "*"; inherits: false; }
 @property --_ring-checked { syntax: "*"; inherits: false; }
 @property --group-ring--checked { syntax: "*"; inherits: false; }
@@ -105,3 +109,11 @@
 @property --_transition-checked { syntax: "*"; inherits: false; }
 @property --group-transition--checked { syntax: "*"; inherits: false; }
 @property --_transition-g-checked { syntax: "*"; inherits: false; }
+@property --transition-duration--checked { syntax: "*"; inherits: false; }
+@property --_transition-duration-checked { syntax: "*"; inherits: false; }
+@property --group-transition-duration--checked { syntax: "*"; inherits: false; }
+@property --_transition-duration-g-checked { syntax: "*"; inherits: false; }
+@property --transition-delay--checked { syntax: "*"; inherits: false; }
+@property --_transition-delay-checked { syntax: "*"; inherits: false; }
+@property --group-transition-delay--checked { syntax: "*"; inherits: false; }
+@property --_transition-delay-g-checked { syntax: "*"; inherits: false; }

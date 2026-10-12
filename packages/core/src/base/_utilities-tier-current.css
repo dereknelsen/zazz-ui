@@ -21,6 +21,7 @@
     --_border-b-current: var(--border-b--current);
     --_opacity-current: var(--opacity--current);
     --_shadow-current: var(--shadow--current);
+    --_shadow-angle-current: var(--shadow-angle--current);
     --_ring-current: var(--ring--current);
     --_ring-color-current: var(--ring-color--current);
     --_ring-offset-current: var(--ring-offset--current);
@@ -29,6 +30,8 @@
     --_translate-current: var(--translate--current);
     --_rotate-current: var(--rotate--current);
     --_transition-current: var(--transition--current);
+    --_transition-duration-current: var(--transition-duration--current);
+    --_transition-delay-current: var(--transition-delay--current);
   }
   :where([data-ui~="group"]:is([aria-current]:not([aria-current="false"])) [style*="--group-"]) {
     --_template-cols-g-current: var(--group-template-cols--current);
@@ -49,6 +52,7 @@
     --_border-b-g-current: var(--group-border-b--current);
     --_opacity-g-current: var(--group-opacity--current);
     --_shadow-g-current: var(--group-shadow--current);
+    --_shadow-angle-g-current: var(--group-shadow-angle--current);
     --_ring-g-current: var(--group-ring--current);
     --_ring-color-g-current: var(--group-ring-color--current);
     --_ring-offset-g-current: var(--group-ring-offset--current);
@@ -57,5 +61,7 @@
     --_translate-g-current: var(--group-translate--current);
     --_rotate-g-current: var(--group-rotate--current);
     --_transition-g-current: var(--group-transition--current);
+    --_transition-duration-g-current: var(--group-transition-duration--current);
+    --_transition-delay-g-current: var(--group-transition-delay--current);
   }
 }

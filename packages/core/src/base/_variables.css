@@ -4,7 +4,7 @@
  * @layer      variables
  * @requires   _layers.css
  * @uses       light-dark() — theme roles re-resolve per color-scheme (system,
- *             [data-ui-theme="dark" | "light"]); tokens stay unregistered on purpose
+ *             data-ui="theme-dark" | "theme-light"); tokens stay unregistered on purpose
  * @uses       oklch(from …) — shade/tint scales and shadow alphas
  * @uses       color-mix() — focus ring (--color-ring)
  * @uses       interpolate-size: allow-keywords — discrete block-size animations (details, etc.)
@@ -49,7 +49,7 @@
     interpolate-size: allow-keywords;
 
     /* ==========================================================================
-    * Theme — light/dark via light-dark(); follows color-scheme (system + data-ui-theme)
+    * Theme — light/dark via light-dark(); follows color-scheme (system + the theme-dark | theme-light switches)
     * ========================================================================== */
 
     /* base */
@@ -383,19 +383,25 @@
      *
      *   --_ring-offset-width: 0px;
      *   --_ring-width: 0px;
+     *   --_focus-in: max(0, -1 * sign(var(--_focus-ring-w, 1px)));
      *   --_ring-fill: color-mix(in oklch, var(--ui-x-ring-color) var(--ring-opacity), transparent);
-     *   box-shadow:
-     *     0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
-     *     0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width)) var(--_ring-fill, var(--ring-shadow-color)),
-     *     var(--ui-x-shadow);
+     *   --_focus-shadow:
+     *     0 0 0 calc(var(--_ring-offset-width) * (1 - var(--_focus-in))) var(--ring-offset-shadow-color),
+     *     0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * (1 - var(--_focus-in))) var(--_ring-fill, var(--ring-shadow-color)),
+     *     inset 0 0 0 calc(var(--_ring-offset-width) * var(--_focus-in)) var(--ring-offset-shadow-color),
+     *     inset 0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * var(--_focus-in)) var(--_ring-fill, var(--ring-shadow-color));
+     *   box-shadow: var(--_focus-shadow, 0 0 #0000), var(--_shadow-resolved, var(--ui-x-shadow));
      *
      * …then grow it in the focus rule:
      *
      *   --_ring-offset-width: var(--ring-offset-width);
-     *   --_ring-width: var(--ring-width);
+     *   --_ring-width: abs(var(--_focus-ring-w, var(--ring-width)));
      *   outline-color: transparent;
      *
-     * --_ring-fill is optional: omit it and the ring falls back to --ring-shadow-color. */
+     * The outset and inset pairs are weighted by --_focus-in, so a negative
+     * --focus-ring utility draws the ring inside the box (and the outline twin
+     * takes a negative offset to match). --_ring-fill is optional: omit it and
+     * the ring falls back to --ring-shadow-color. */
     /* --ring, --ring-color, and --ring-offset-color are utility names,
      * registered non-inheriting, so the ring's theme color is --color-ring (with
      * the other roles above); the kit reads it through the inheriting
@@ -455,31 +461,52 @@
     /* falls back to easeOutQuart when linear() easing is unsupported */
     --default-transition-timing-function: var(--spring-easing, var(--bezier-easing));
     --default-transition-duration: var(--spring-duration, 0.333s);
-    --default-transition:
-      text-decoration-offset var(--default-transition-duration)
-        var(--default-transition-timing-function),
+    --default-transition-property-colors:
+      text-decoration-color, background-color, border-color, color, fill, stroke;
+    --default-transition-property-transforms: transform, translate, scale, rotate;
+    --default-transition-property-effects:
+      opacity, filter, -webkit-backdrop-filter, backdrop-filter, box-shadow;
+    --default-transition-property-discrete: display, content-visibility, overlay, pointer-events;
+    --default-transition-property:
+      var(--default-transition-property-colors), var(--default-transition-property-transforms),
+      var(--default-transition-property-effects), var(--default-transition-property-discrete);
+
+    --default-transition-colors:
       text-decoration-color var(--default-transition-duration)
         var(--default-transition-timing-function),
-      box-shadow var(--default-transition-duration) var(--default-transition-timing-function),
       background-color var(--default-transition-duration) var(--default-transition-timing-function),
       border-color var(--default-transition-duration) var(--default-transition-timing-function),
-      opacity var(--default-transition-duration) var(--default-transition-timing-function),
       color var(--default-transition-duration) var(--default-transition-timing-function),
       fill var(--default-transition-duration) var(--default-transition-timing-function),
-      stroke var(--default-transition-duration) var(--default-transition-timing-function),
+      stroke var(--default-transition-duration) var(--default-transition-timing-function);
+
+    --default-transition-transforms:
       transform var(--default-transition-duration) var(--default-transition-timing-function),
       translate var(--default-transition-duration) var(--default-transition-timing-function),
       scale var(--default-transition-duration) var(--default-transition-timing-function),
-      rotate var(--default-transition-duration) var(--default-transition-timing-function),
+      rotate var(--default-transition-duration) var(--default-transition-timing-function);
+
+    --default-transition-effects:
+      opacity var(--default-transition-duration) var(--default-transition-timing-function),
       filter var(--default-transition-duration) var(--default-transition-timing-function),
       -webkit-backdrop-filter var(--default-transition-duration)
         var(--default-transition-timing-function),
       backdrop-filter var(--default-transition-duration) var(--default-transition-timing-function),
-      display var(--default-transition-duration) var(--default-transition-timing-function),
+      box-shadow var(--default-transition-duration) var(--default-transition-timing-function);
+
+    --default-transition-content:
+      display var(--default-transition-duration) var(--default-transition-timing-function)
+        allow-discrete,
       content-visibility var(--default-transition-duration)
-        var(--default-transition-timing-function),
-      overlay var(--default-transition-duration) var(--default-transition-timing-function),
-      pointer-events var(--default-transition-duration) var(--default-transition-timing-function);
+        var(--default-transition-timing-function) allow-discrete,
+      overlay var(--default-transition-duration) var(--default-transition-timing-function)
+        allow-discrete,
+      pointer-events var(--default-transition-duration) var(--default-transition-timing-function)
+        allow-discrete;
+
+    --default-transition:
+      var(--default-transition-colors), var(--default-transition-transforms),
+      var(--default-transition-effects), var(--default-transition-content);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -513,62 +540,96 @@
    * the ancestor, so re-assert them at each scope boundary.
    */
 
-  [data-ui-theme="dark"] {
+  [data-ui~="theme-dark"] {
     color-scheme: dark;
     color: var(--color-foreground);
   }
 
-  [data-ui-theme="light"] {
+  [data-ui~="theme-light"] {
     color-scheme: light;
     color: var(--color-foreground);
   }
 }
 
 /* Shadows: here, not in the :root block above, so the same rule re-declares
-   them wherever a --shadow-hue style utility is set. A token's var() resolves
-   where it is declared, so the element and its subtree get shadows tinted with
-   that hue: a --shadow keyword, var(--shadow-md), and any primitive's shadow. */
+   them wherever a --shadow-hue or --shadow-angle style utility is set. A
+   token's var() resolves where it is declared, so the element and its subtree
+   get shadows tinted with that hue and cast at that angle (0deg down,
+   clockwise): a --shadow keyword, var(--shadow-md), and any primitive's shadow.
+   --_shadow-x and -y are the cast direction, one pixel long. */
 @layer variables {
   :root,
-  :where([style*="--shadow-hue:"]) {
+  :where([style*="--shadow-hue:"], [style*="--shadow-angle"]) {
+    --_shadow-x: calc(-1px * sin(var(--_shadow-angle-resolved, 0deg)));
+    --_shadow-y: calc(1px * cos(var(--_shadow-angle-resolved, 0deg)));
     --shadow-2xs:
-      0 1px 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
+      calc(1 * var(--_shadow-x)) calc(1 * var(--_shadow-y)) 1px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
       0 0 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05);
     --shadow-xs:
-      0 8px 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
-      0 5px 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
-      0 3px 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03),
-      0 1px 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
+      calc(8 * var(--_shadow-x)) calc(8 * var(--_shadow-y)) 2px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
+      calc(5 * var(--_shadow-x)) calc(5 * var(--_shadow-y)) 2px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
+      calc(3 * var(--_shadow-x)) calc(3 * var(--_shadow-y)) 2px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03),
+      calc(1 * var(--_shadow-x)) calc(1 * var(--_shadow-y)) 1px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
       0 0 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05);
     --shadow-sm:
-      0 25px 7px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
-      0 16px 6px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
-      0 9px 5px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03),
-      0 4px 4px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
-      0 1px 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05);
+      calc(25 * var(--_shadow-x)) calc(25 * var(--_shadow-y)) 7px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
+      calc(16 * var(--_shadow-x)) calc(16 * var(--_shadow-y)) 6px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
+      calc(9 * var(--_shadow-x)) calc(9 * var(--_shadow-y)) 5px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03),
+      calc(4 * var(--_shadow-x)) calc(4 * var(--_shadow-y)) 4px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
+      calc(1 * var(--_shadow-x)) calc(1 * var(--_shadow-y)) 2px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05);
     --shadow-md:
-      0 66px 18px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
-      0 42px 17px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
-      0 24px 14px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03),
-      0 11px 11px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
-      0 3px 6px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05);
+      calc(66 * var(--_shadow-x)) calc(66 * var(--_shadow-y)) 18px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
+      calc(42 * var(--_shadow-x)) calc(42 * var(--_shadow-y)) 17px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
+      calc(24 * var(--_shadow-x)) calc(24 * var(--_shadow-y)) 14px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03),
+      calc(11 * var(--_shadow-x)) calc(11 * var(--_shadow-y)) 11px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
+      calc(3 * var(--_shadow-x)) calc(3 * var(--_shadow-y)) 6px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05);
     --shadow-lg:
-      0 247px 69px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
-      0 158px 63px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
-      0 89px 53px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03),
-      0 39px 39px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05),
-      0 10px 22px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06);
+      calc(247 * var(--_shadow-x)) calc(247 * var(--_shadow-y)) 69px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
+      calc(158 * var(--_shadow-x)) calc(158 * var(--_shadow-y)) 63px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
+      calc(89 * var(--_shadow-x)) calc(89 * var(--_shadow-y)) 53px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03),
+      calc(39 * var(--_shadow-x)) calc(39 * var(--_shadow-y)) 39px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05),
+      calc(10 * var(--_shadow-x)) calc(10 * var(--_shadow-y)) 22px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06);
     --shadow-xl:
-      0 370px 104px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
-      0 237px 95px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
-      0 133px 80px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
-      0 59px 59px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06),
-      0 15px 33px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.07);
+      calc(370 * var(--_shadow-x)) calc(370 * var(--_shadow-y)) 104px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
+      calc(237 * var(--_shadow-x)) calc(237 * var(--_shadow-y)) 95px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
+      calc(133 * var(--_shadow-x)) calc(133 * var(--_shadow-y)) 80px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
+      calc(59 * var(--_shadow-x)) calc(59 * var(--_shadow-y)) 59px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06),
+      calc(15 * var(--_shadow-x)) calc(15 * var(--_shadow-y)) 33px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.07);
     --shadow-2xl:
-      0 555px 156px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
-      0 356px 143px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
-      0 200px 120px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
-      0 89px 89px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06),
-      0 23px 50px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.08);
+      calc(555 * var(--_shadow-x)) calc(555 * var(--_shadow-y)) 156px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
+      calc(356 * var(--_shadow-x)) calc(356 * var(--_shadow-y)) 143px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
+      calc(200 * var(--_shadow-x)) calc(200 * var(--_shadow-y)) 120px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
+      calc(89 * var(--_shadow-x)) calc(89 * var(--_shadow-y)) 89px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06),
+      calc(23 * var(--_shadow-x)) calc(23 * var(--_shadow-y)) 50px 0
+        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.08);
   }
 }

@@ -8,6 +8,10 @@ order: 7
 
 The border shorthands sort one value into width and color: a color is a 1px solid border in that color, a number is that many pixels in `--color-border`, a length is the width in `--color-border`. The all-sides longhands (`--border-width`, `--border-color`, `--border-style`) win over a shorthand. Borders between direct children are the `divide-x` and `divide-y` switches, sized and colored by `--divide` on the container.
 
+`--ring` draws a ring as a box-shadow, so it never moves layout: a number is pixels, a length passes through, and a negative width draws it inset (`--ring: -2`). It takes breakpoint and state tiers, so `--ring: 2; --ring--md: -2` flips it inside from `md` up. `--ring-offset` adds a gap in `--ring-offset-color`.
+
+A primitive's focus ring is separate: it reads the `--ring-width` token, and `--focus-ring` overrides it per element with the same signed width. `--focus-ring: -2` keeps the ring inside the box (and its forced-colors outline with it), which keeps focus visible in a container that clips its overflow; on a plain link or element it sets the focus outline. It takes breakpoint tiers (`--focus-ring--md: 3`), and below a tier set alone the default ring stays.
+
 ## Reference
 
 {% utilities section="borders" /%}

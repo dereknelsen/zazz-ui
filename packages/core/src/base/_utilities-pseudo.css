@@ -376,6 +376,22 @@
     transition: var(--after-transition);
   }
 
+  :where([style*="--before-transition-duration:"])::before {
+    transition-duration: var(--before-transition-duration);
+  }
+
+  :where([style*="--after-transition-duration:"])::after {
+    transition-duration: var(--after-transition-duration);
+  }
+
+  :where([style*="--before-transition-delay:"])::before {
+    transition-delay: var(--before-transition-delay);
+  }
+
+  :where([style*="--after-transition-delay:"])::after {
+    transition-delay: var(--after-transition-delay);
+  }
+
   :where([style*="--before-rounded:"])::before {
     border-radius: var(--before-rounded);
   }

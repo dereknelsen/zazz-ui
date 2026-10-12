@@ -28,6 +28,8 @@ export const RULE_DESCRIPTIONS: Record<RuleId, string> = {
   "whitespace-before-colon":
     "Whitespace between a utility name and its colon, which the gates cannot match.",
   "attribute-outside-identity": "A `data-<name>-*` attribute on an element outside that identity.",
+  "field-id-or-name":
+    "An `<input>`, `<select>`, or `<textarea>` with neither `id` nor `name`, which Chrome reports as an issue.",
   persist: "`data-ui-persist` that cannot work as written.",
 };
 

@@ -13,7 +13,7 @@
 
 import { afterAll, beforeAll } from "vite-plus/test";
 import { page, server, userEvent } from "vite-plus/test/browser/context";
-import { BREAKPOINT_CH, type Breakpoint } from "../src/base/utilities.ts";
+import { BREAKPOINT_REM, type Breakpoint } from "../src/base/utilities.ts";
 
 const cssFiles = import.meta.glob("../src/**/*.css", {
   query: "?raw",
@@ -116,12 +116,11 @@ export async function atWidth(width: number): Promise<void> {
 }
 
 /**
- * A breakpoint in px for the page: its ch count measured in body's font, which
- * is what the page containers (body, sectioning elements) resolve ch against.
+ * A breakpoint in px: its rem count measured against the root font size.
  */
 export function breakpointPx(bp: Breakpoint): number {
   const ruler = document.createElement("div");
-  ruler.style.cssText = `position: absolute; inline-size: ${BREAKPOINT_CH[bp]}ch`;
+  ruler.style.cssText = `position: absolute; inline-size: ${BREAKPOINT_REM[bp]}rem`;
   document.body.append(ruler);
   const px = ruler.getBoundingClientRect().width;
   ruler.remove();

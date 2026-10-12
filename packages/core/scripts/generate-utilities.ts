@@ -14,8 +14,7 @@ import { fileURLToPath } from "node:url";
 import {
   BORDER_SIDES,
   type Breakpoint,
-  BREAKPOINT_CH,
-  LAYOUT_REM,
+  BREAKPOINT_REM,
   BREAKPOINTS,
   DISPLAY_SHORTHANDS,
   type Family,
@@ -44,12 +43,11 @@ function register(name: string, syntax = '"*"', initial?: string, inherits = fal
 
 /**
  * The query a breakpoint tier sits in: the nearest ancestor inline-size
- * container (`ch` resolves against that container's font). html is the page
- * container, each child of a layout is one, and `data-ui="container"` makes any
- * element one.
+ * container, in rem (the same in any font). html is the page container, each
+ * child of a layout is one, and `data-ui="container"` makes any element one.
  */
 export function breakpointQuery(bp: Breakpoint): string {
-  return `@container (width >= ${BREAKPOINT_CH[bp]}ch)`;
+  return `@container (width >= ${BREAKPOINT_REM[bp]}rem)`;
 }
 
 /** A utility's base registrations: the utility, its base layer variable, its resolver, and the dual pair. */
@@ -59,6 +57,11 @@ export function registrations(utility: Utility): string {
   if (utility.mode === "dual") {
     out += register(`_${n}-len`, '"<length-percentage>"', "0px");
     out += register(`_${n}-num`, '"<number>"', "0");
+  }
+  if (utility.emit === "px") {
+    out += register(`_${n}-len`, '"<length>"', "0px");
+    out += register(`_${n}-num`, '"<number>"', "0");
+    out += register(`_${n}-w`);
   }
   if (utility.emit === "border") {
     out += register(`_${n}-len`, '"<length>"', "0px");
@@ -112,9 +115,19 @@ export function baseRule(utility: Utility, tiers: readonly string[]): string {
     : breakpoints;
   const gates = [`[style*="--${n}:"]`, `[style*="--${n}--"]`];
   if (stateTiers) gates.push(`[style*="--group-${n}--"]`);
+  const end = utility.chainEnd ? `var(--_${n}, ${utility.chainEnd})` : `var(--_${n})`;
   const lines = [
     `:where(${gates.join(", ")}) {`,
-    `  --_${n}-resolved: ${chain(n, chainTiers, `var(--_${n})`)};`,
+    `  --_${n}-resolved: ${chain(n, chainTiers, end)};`,
+    // a number fails the <length> half and a length the <number> half (each
+    // then takes its 0 initial), so one signed length remains
+    ...(utility.emit === "px"
+      ? [
+          `  --_${n}-len: var(--_${n}-resolved);`,
+          `  --_${n}-num: var(--_${n}-resolved);`,
+          `  --_${n}-w: calc(var(--_${n}-len) + var(--_${n}-num) * 1px);`,
+        ]
+      : []),
     `}`,
     `:where([style*="--${n}:"]) {`,
     `  --_${n}: var(--${n});`,
@@ -486,10 +499,12 @@ function stuckSetter(tier: string, inTier: readonly Utility[]): string {
 
 /**
  * The effects composite: ring and shadow share one `box-shadow`,
- * behind the `--_focus-ring` a primitive publishes on `:focus-visible`. Every
+ * behind the `--_focus-shadow` a primitive publishes on `:focus-visible`. Every
  * chain in it already ends in a literal, so the composite is also the
  * no-base rule for these utilities: a second copy gated on any tier, primitives
- * excluded.
+ * excluded. The ring draws as an outset pair and an inset pair weighted by the
+ * sign of `--_ring-w` (a zero-spread shadow paints nothing), so `--ring: -2`
+ * is inset and a tier can flip it.
  */
 export function compositeRule(
   utilities: readonly Utility[],
@@ -501,8 +516,12 @@ export function compositeRule(
   const gate = (prefix: string, suffix: string) =>
     `:is(${RING.map((name) => `[style*="--${prefix}${name}${suffix}"]`).join(", ")})`;
   const excluded = primitives.join(", ");
-  const offset = "var(--_ring-offset-resolved, 0px)";
-  const emission = `  box-shadow: var(--_focus-ring, 0 0 #0000), 0 0 0 ${offset} var(--_ring-offset-color-resolved, transparent), 0 0 0 calc(${offset} + var(--_ring-resolved, 0px)) var(--_ring-color-resolved, var(--color-ring)), var(--_shadow-resolved, 0 0 #0000);`;
+  const offset = "abs(var(--_ring-offset-w, 0px))";
+  const band = `(${offset} + abs(var(--_ring-w, 0px)))`;
+  const inset = "max(0, -1 * sign(var(--_ring-w, 0px)))";
+  const offsetColor = "var(--_ring-offset-color-resolved, transparent)";
+  const color = "var(--_ring-color-resolved, var(--color-ring))";
+  const emission = `  box-shadow: var(--_focus-shadow, 0 0 #0000), 0 0 0 calc(${offset} * (1 - ${inset})) ${offsetColor}, 0 0 0 calc(${band} * (1 - ${inset})) ${color}, inset 0 0 0 calc(${offset} * ${inset}) ${offsetColor}, inset 0 0 0 calc(${band} * ${inset}) ${color}, var(--_shadow-resolved, 0 0 #0000);`;
   return [
     `:where(${gate("", ":")}) {`,
     emission,
@@ -604,8 +623,8 @@ function pseudoRegistrations(utility: Utility): string {
 
 /**
  * `_breakpoints.css`: the layout width tokens (the bands and the component
- * sizes that follow them, in rem). The breakpoint tiers are separate: they query
- * the nearest inline-size container in ch (`_utilities-tier-<breakpoint>.css`).
+ * sizes that follow them, in rem). The breakpoint tiers query the nearest
+ * inline-size container at the same widths (`_utilities-tier-<breakpoint>.css`).
  * Comments in every generated file stay to a few words: `src/index.css` ships
  * them raw to zero-build pages, and the explanations live here.
  */
@@ -615,7 +634,7 @@ function breakpointsFile(): string {
     "/* Layout widths (rem) */",
     "@layer variables {",
     "  :root {",
-    ...BREAKPOINTS.map((bp) => `    --layout-${bp}: ${LAYOUT_REM[bp]}rem;`),
+    ...BREAKPOINTS.map((bp) => `    --layout-${bp}: ${BREAKPOINT_REM[bp]}rem;`),
     "  }",
     "}",
     "",
@@ -687,7 +706,7 @@ export function generate(
     register(STUCK_STATE.modifier);
   files.set(
     "_properties.css",
-    `${BANNER}\n/* Registrations: utility, layer variable, resolver, dual pair */\n${utilities.map(registrations).join("")}\n/* Dual pairs on pseudo-elements */\n${utilities.map(pseudoRegistrations).join("")}\n/* Focus ring, published by primitives */\n${register("_focus-ring")}\n/* Stuck state */\n${stuckRegistrations}\n/* --display shorthands' flex-direction channel */\n${["", ...BREAKPOINTS.map((bp) => `-${bp}`), "-resolved"].map((suffix) => register(`_flex-direction${suffix}`)).join("")}`,
+    `${BANNER}\n/* Registrations: utility, layer variable, resolver, dual pair */\n${utilities.map(registrations).join("")}\n/* Dual pairs on pseudo-elements */\n${utilities.map(pseudoRegistrations).join("")}\n/* Focus ring, published by primitives */\n${register("_focus-shadow")}\n/* Stuck state */\n${stuckRegistrations}\n/* --display shorthands' flex-direction channel */\n${["", ...BREAKPOINTS.map((bp) => `-${bp}`), "-resolved"].map((suffix) => register(`_flex-direction${suffix}`)).join("")}`,
   );
   for (const tier of [...BREAKPOINTS, ...STATES]) {
     const inTier = utilities.filter((utility) => tiersOf(utility).includes(tier));

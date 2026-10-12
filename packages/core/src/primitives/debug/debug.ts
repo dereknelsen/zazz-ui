@@ -41,6 +41,7 @@ export interface AuditOptions {
 /** A live element as the audit core reads it. */
 function auditNodeOf(el: Element): AuditNode {
   return {
+    tagName: el.tagName,
     getAttribute: (name) => el.getAttribute(name),
     getAttributeNames: () => el.getAttributeNames(),
     withinIdentity: (name, identities) => {

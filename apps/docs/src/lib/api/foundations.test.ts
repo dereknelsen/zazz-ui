@@ -25,7 +25,16 @@ describe("parseSwitches", () => {
   it("finds the kit's switches", () => {
     const tokens = switches().flatMap((s) => s.tokens);
     expect(tokens).toEqual(
-      expect.arrayContaining(["sr-only", "pile", "isolate", "divide-x", "divide-y", "container"]),
+      expect.arrayContaining([
+        "sr-only",
+        "pile",
+        "isolate",
+        "divide-x",
+        "divide-y",
+        "container",
+        "theme-dark",
+        "theme-light",
+      ]),
     );
   });
 });
@@ -41,9 +50,9 @@ describe("typographyRoles", () => {
 
 describe("globalAttributes", () => {
   it("lists the data-ui-* globals with values", () => {
-    const theme = globalAttributes().find((a) => a.name === "data-ui-theme");
-    expect(theme?.values.sort()).toEqual(["dark", "light"]);
-    expect(globalAttributes().map((a) => a.name)).toContain("data-ui-persist");
+    const names = globalAttributes().map((a) => a.name);
+    expect(names).toContain("data-ui-persist");
+    expect(names).not.toContain("data-ui-theme");
   });
 });
 

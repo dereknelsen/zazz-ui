@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
-    <meta name="description" content="Zazz playground: ACME INC furniture landing page" />
+    <meta name="description" content="Zazz playground: ACME furniture landing page" />
     <title>Zazz playground</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
@@ -14,7 +14,8 @@
         try {
           const storedTheme = localStorage.getItem("theme");
           if (storedTheme === "dark" || storedTheme === "light") {
-            document.documentElement.setAttribute("data-ui-theme", storedTheme);
+            const root = document.documentElement;
+            root.dataset.ui = ((root.dataset.ui || "") + " theme-" + storedTheme).trim();
           }
         } catch {
           /* no storage access: follow the system scheme */
@@ -27,7 +28,7 @@
     <link rel="stylesheet" href="/src/zazz.css" />
     <script type="module" src="/src/main.ts"></script>
 
-    <!-- Brand: ACME INC. Theme inputs and primitive hooks only; the page itself is
+    <!-- Brand: ACME. Theme inputs and primitive hooks only; the page itself is
        primitives + utilities. Same layer as the kit's tokens, later in source order. -->
     <style>
       @layer variables {
@@ -78,19 +79,12 @@
           --ui-button-icon-size: 1.25em;
         }
       }
-
-      /* Primitive overrides: */
-      @layer ui.components {
-        :where([data-ui~="button"][data-button-variant="primary"]) {
-          --_button-text--hover: var(--color-secondary);
-        }
-      }
     </style>
   </head>
 
   <!-- Light-only sample brand: pin the scheme for the page -->
 
-  <body data-ui-theme="light" style="--bg: var(--color-background)">
+  <body data-ui="theme-light" style="--bg: var(--color-background)">
     <!-- ================================================================== -->
     <!-- Hero: header overlaid on an autoplaying carousel                  -->
     <!-- ================================================================== -->
@@ -151,7 +145,7 @@
                 --group-text--hover: var(--color-foreground);
                 --opacity--hover: 0.8;
               "
-              >ACME INC</a
+              >ACME</a
             >
 
             <nav
@@ -165,13 +159,10 @@
                 style="
                   --display: flex;
                   --items: center;
-                  --tracking: var(--tracking-eyebrow);
-                  --text-transform: uppercase;
                   --text: var(--color-foreground);
                   --text--md: var(--color-white);
                   --text--stuck: var(--color-foreground);
                   --group-text--hover: var(--color-foreground);
-                  --ui-button-font-size: var(--font-size-sm);
                 "
               >
                 <li>
@@ -234,87 +225,378 @@
                 --group-text--hover: var(--color-foreground);
               "
             >
-              <a
-                href="#"
-                data-ui="button"
-                data-button-size="icon"
-                data-button-variant="ghost"
-                aria-label="Search"
-              >
-                <svg
-                  style="
-                    --text: var(--color-white);
-                    --text--stuck: var(--color-foreground);
-                    --group-text--hover: var(--color-foreground);
-                    --transition: var(--default-transition);
-                  "
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 256 256"
-                  aria-hidden="true"
+              <ui-command data-command-hotkey="mod+k">
+                <button
+                  type="button"
+                  data-ui="button"
+                  data-button-size="icon"
+                  data-button-variant="ghost"
+                  command="show-modal"
+                  commandfor="site-search"
+                  data-command-slot="open"
+                  aria-label="Search"
+                  aria-keyshortcuts="Meta+K"
                 >
-                  <rect width="256" height="256" fill="none" />
-                  <circle
-                    cx="112"
-                    cy="112"
-                    r="80"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="16"
-                  />
-                  <line
-                    x1="168.57"
-                    y1="168.57"
-                    x2="224"
-                    y2="224"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="16"
-                  />
-                </svg>
-              </a>
-              <a
-                href="#"
-                data-ui="button"
-                data-button-size="icon"
-                data-button-variant="ghost"
-                aria-label="Account"
-              >
-                <svg
+                  <svg
+                    style="
+                      --text: var(--color-white);
+                      --text--stuck: var(--color-foreground);
+                      --group-text--hover: var(--color-foreground);
+                      --transition: var(--default-transition);
+                    "
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 256 256"
+                    aria-hidden="true"
+                  >
+                    <rect width="256" height="256" fill="none" />
+                    <circle
+                      cx="112"
+                      cy="112"
+                      r="80"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    />
+                    <line
+                      x1="168.57"
+                      y1="168.57"
+                      x2="224"
+                      y2="224"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    />
+                  </svg>
+                </button>
+
+                <dialog
+                  id="site-search"
+                  data-ui="dialog"
+                  data-command-slot="panel"
+                  closedby="any"
+                  aria-label="Search ACME"
                   style="
-                    --text: var(--color-white);
-                    --text--stuck: var(--color-foreground);
-                    --group-text--hover: var(--color-foreground);
-                    --transition: var(--default-transition);
+                    --ui-button-min-h: calc(var(--spacing) * 10);
+                    --ui-button-px: calc(var(--spacing) * 3);
                   "
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 256 256"
-                  aria-hidden="true"
                 >
-                  <rect width="256" height="256" fill="none" />
-                  <circle
-                    cx="128"
-                    cy="96"
-                    r="64"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="16"
-                  />
-                  <path
-                    d="M32 216c19.37-33.47 54.55-56 96-56s76.63 22.53 96 56"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="16"
-                  />
-                </svg>
-              </a>
+                  <header data-command-slot="header">
+                    <input
+                      data-command-slot="input"
+                      name="query"
+                      type="text"
+                      placeholder="Search ACME..."
+                      role="combobox"
+                      aria-expanded="false"
+                      aria-autocomplete="list"
+                      autocomplete="off"
+                      aria-label="Search"
+                    />
+                  </header>
+                  <div role="listbox" data-command-slot="list" aria-label="Results">
+                    <div
+                      role="group"
+                      data-command-slot="group"
+                      aria-labelledby="site-search-pieces"
+                    >
+                      <span
+                        data-command-slot="group-label"
+                        id="site-search-pieces"
+                        style="
+                          --display: inline-flex;
+                          --font-size: var(--font-size-eyebrow);
+                          --font-weight: var(--font-weight-eyebrow);
+                          --leading: var(--leading-eyebrow);
+                          --tracking: var(--tracking-eyebrow);
+                          --text-transform: uppercase;
+                          --text: var(--color-muted-foreground);
+                        "
+                        >Pieces</span
+                      >
+                      <a
+                        role="option"
+                        data-command-slot="item"
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        href="#pieces"
+                        tabindex="-1"
+                        data-command-keywords="couch sectional seating"
+                        style="--justify: start"
+                        >Sofas</a
+                      >
+                      <a
+                        role="option"
+                        data-command-slot="item"
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        href="#pieces"
+                        tabindex="-1"
+                        data-command-keywords="armchair stool seating"
+                        style="--justify: start"
+                        >Chairs</a
+                      >
+                      <a
+                        role="option"
+                        data-command-slot="item"
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        href="#pieces"
+                        tabindex="-1"
+                        data-command-keywords="dining coffee desk"
+                        style="--justify: start"
+                        >Tables</a
+                      >
+                      <a
+                        role="option"
+                        data-command-slot="item"
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        href="#pieces"
+                        tabindex="-1"
+                        data-command-keywords="storage cabinet bookcase"
+                        style="--justify: start"
+                        >Shelves</a
+                      >
+                    </div>
+                    <div role="group" data-command-slot="group" aria-labelledby="site-search-rooms">
+                      <span
+                        data-command-slot="group-label"
+                        id="site-search-rooms"
+                        style="
+                          --display: inline-flex;
+                          --font-size: var(--font-size-eyebrow);
+                          --font-weight: var(--font-weight-eyebrow);
+                          --leading: var(--leading-eyebrow);
+                          --tracking: var(--tracking-eyebrow);
+                          --text-transform: uppercase;
+                          --text: var(--color-muted-foreground);
+                        "
+                        >Rooms</span
+                      >
+                      <a
+                        role="option"
+                        data-command-slot="item"
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        href="#lookbooks"
+                        tabindex="-1"
+                        data-command-keywords="rooms catalog inspiration"
+                        style="--justify: start"
+                        >Lookbooks</a
+                      >
+                      <a
+                        role="option"
+                        data-command-slot="item"
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        href="#seating"
+                        tabindex="-1"
+                        data-command-keywords="living room sofa armchair"
+                        style="--justify: start"
+                        >Seating</a
+                      >
+                      <a
+                        role="option"
+                        data-command-slot="item"
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        href="#loft"
+                        tabindex="-1"
+                        data-command-keywords="new arrivals oak linen"
+                        style="--justify: start"
+                        >Loft edit</a
+                      >
+                    </div>
+                    <div role="group" data-command-slot="group" aria-labelledby="site-search-lines">
+                      <span
+                        data-command-slot="group-label"
+                        id="site-search-lines"
+                        style="
+                          --display: inline-flex;
+                          --font-size: var(--font-size-eyebrow);
+                          --font-weight: var(--font-weight-eyebrow);
+                          --leading: var(--leading-eyebrow);
+                          --tracking: var(--tracking-eyebrow);
+                          --text-transform: uppercase;
+                          --text: var(--color-muted-foreground);
+                        "
+                        >Lines</span
+                      >
+                      <a
+                        role="option"
+                        data-command-slot="item"
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        href="#lines"
+                        tabindex="-1"
+                        data-command-keywords="main line oak linen"
+                        style="--justify: start"
+                        >ACME Brand</a
+                      >
+                      <a
+                        role="option"
+                        data-command-slot="item"
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        href="#lines"
+                        tabindex="-1"
+                        data-command-keywords="apartment flat pack small"
+                        style="--justify: start"
+                        >ACME House</a
+                      >
+                      <a
+                        role="option"
+                        data-command-slot="item"
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        href="#lines"
+                        tabindex="-1"
+                        data-command-keywords="workshop limited short run"
+                        style="--justify: start"
+                        >ACME Atelier</a
+                      >
+                    </div>
+                    <div
+                      role="group"
+                      data-command-slot="group"
+                      aria-labelledby="site-search-account"
+                    >
+                      <span
+                        data-command-slot="group-label"
+                        id="site-search-account"
+                        style="
+                          --display: inline-flex;
+                          --font-size: var(--font-size-eyebrow);
+                          --font-weight: var(--font-weight-eyebrow);
+                          --leading: var(--leading-eyebrow);
+                          --tracking: var(--tracking-eyebrow);
+                          --text-transform: uppercase;
+                          --text: var(--color-muted-foreground);
+                        "
+                        >Account</span
+                      >
+                      <a
+                        role="option"
+                        data-command-slot="item"
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        href="#"
+                        tabindex="-1"
+                        data-command-keywords="login log in"
+                        style="--justify: start"
+                        >Sign in</a
+                      >
+                      <a
+                        role="option"
+                        data-command-slot="item"
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        href="#"
+                        tabindex="-1"
+                        data-command-keywords="register trade sign up"
+                        style="--justify: start"
+                        >Open an account</a
+                      >
+                    </div>
+                  </div>
+                  <p data-command-slot="empty" style="--text: var(--color-muted-foreground)">
+                    Nothing found.
+                  </p>
+                  <footer data-command-slot="footer">
+                    <span
+                      ><ui-kbd-group><kbd>↑</kbd><kbd>↓</kbd></ui-kbd-group> navigate</span
+                    >
+                    <span><kbd>↵</kbd> select</span>
+                    <span><kbd>esc</kbd> close</span>
+                  </footer>
+                </dialog>
+              </ui-command>
+              <ui-menu>
+                <button
+                  type="button"
+                  data-ui="button"
+                  data-button-size="icon"
+                  data-button-variant="ghost"
+                  popovertarget="account-menu"
+                  aria-label="Account"
+                >
+                  <svg
+                    style="
+                      --text: var(--color-white);
+                      --text--stuck: var(--color-foreground);
+                      --group-text--hover: var(--color-foreground);
+                      --transition: var(--default-transition);
+                    "
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 256 256"
+                    aria-hidden="true"
+                  >
+                    <rect width="256" height="256" fill="none" />
+                    <circle
+                      cx="128"
+                      cy="96"
+                      r="64"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    />
+                    <path
+                      d="M32 216c19.37-33.47 54.55-56 96-56s76.63 22.53 96 56"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    />
+                  </svg>
+                </button>
+                <div
+                  id="account-menu"
+                  data-menu-slot="popover"
+                  data-popover-side="bottom"
+                  data-popover-align="end"
+                  popover="auto"
+                  style="
+                    --ui-button-min-h: calc(var(--spacing) * 10);
+                    --ui-button-px: calc(var(--spacing) * 3);
+                  "
+                >
+                  <menu>
+                    <li>
+                      <button
+                        type="button"
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        style="
+                          --justify: start;
+                          --w: 100%;
+                        "
+                      >
+                        Sign in
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        type="button"
+                        data-ui="button"
+                        data-button-variant="ghost"
+                        style="
+                          --justify: start;
+                          --w: 100%;
+                        "
+                      >
+                        Register
+                      </button>
+                    </li>
+                  </menu>
+                </div>
+              </ui-menu>
               <button
                 data-ui="button"
                 data-button-size="icon"
@@ -388,8 +670,8 @@
           style="
             --position: absolute;
             --inset: 2;
-            --bg-linear: to bottom;
-            --bg-stops: var(--color-shade-600), var(--color-shade-50) 30%;
+            --bg-linear: in display-p3 to bottom;
+            --bg-stops: var(--color-shade-600) 0%, var(--color-shade-200) 30%, transparent 50%;
             --pointer-events: none;
             --z: 2;
           "
@@ -406,7 +688,7 @@
             --z: 1;
           "
         >
-          <h1 data-ui="sr-only">ACME INC furniture</h1>
+          <h1 data-ui="sr-only">ACME furniture</h1>
           <div data-carousel-slot="viewport" style="--size: 100%">
             <div data-carousel-slot="container" style="--size: 100%">
               <div
@@ -446,7 +728,7 @@
                   width="1980"
                   height="950"
                   alt="Mustard armchair against a pale wall"
-                  loading="lazy"
+                  loading="eager"
                   style="
                     --size: 100%;
                     --object-fit: cover;
@@ -466,7 +748,7 @@
                   width="1980"
                   height="950"
                   alt="Gray sofa with a low wood coffee table"
-                  loading="lazy"
+                  loading="eager"
                   style="
                     --size: 100%;
                     --object-fit: cover;
@@ -486,7 +768,7 @@
                   width="1980"
                   height="950"
                   alt="Beige living room with a linen sofa"
-                  loading="lazy"
+                  loading="eager"
                   style="
                     --size: 100%;
                     --object-fit: cover;
@@ -506,7 +788,7 @@
                   width="1980"
                   height="950"
                   alt="White lounge chair in a pale room"
-                  loading="lazy"
+                  loading="eager"
                   style="
                     --size: 100%;
                     --object-fit: cover;
@@ -596,7 +878,7 @@
               --text-transform: uppercase;
               --text: var(--color-secondary-500);
             "
-            >ACME INC</span
+            >ACME</span
           >
           <button
             data-ui="button"
@@ -694,7 +976,7 @@
       <!-- ================================================================ -->
       <!-- Loft edit: muted copy panel beside a photo                       -->
       <!-- ================================================================ -->
-      <section aria-labelledby="loft-edit" style="--py: 24">
+      <section id="loft" aria-labelledby="loft-edit" style="--py: 24">
         <ui-layout data-layout-size="lg">
           <div
             data-reveal="slide-up"
@@ -919,66 +1201,69 @@
       <!-- ================================================================ -->
       <!-- Lookbooks + seating: full-bleed photo / dark panel pairs         -->
       <!-- ================================================================ -->
-      <section
-        id="lookbooks"
-        aria-labelledby="lookbooks-title"
-        style="
-          --display: grid;
-          --grid-cols: 1;
-          --grid-cols--md: 2;
-        "
-      >
-        <img
-          src="https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=1400&q=80"
-          width="700"
-          height="450"
-          alt="Living room with an armchair and a console"
-          loading="lazy"
+      <ui-layout data-layout-size="bleed">
+        <section
+          id="lookbooks"
+          aria-labelledby="lookbooks-title"
           style="
-            --size: 100%;
-            --aspect: 700 / 450;
-            --object-fit: cover;
-          "
-        />
-        <div
-          data-ui-theme="dark"
-          style="
-            --display: flex-col;
-            --items: start;
-            --justify: center;
-            --p: 11;
-            --gap: 6;
-            --bg: var(--color-neutral-800);
+            --display: grid;
+            --grid-cols: 1;
+            --grid-cols--md: 2;
           "
         >
-          <h2
-            id="lookbooks-title"
+          <img
+            src="https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=1400&q=80"
+            width="700"
+            height="450"
+            alt="Living room with an armchair and a console"
+            loading="lazy"
             style="
-              --font-weight: strong;
-              --text-transform: uppercase;
+              --size: 100%;
+              --aspect: 700 / 450;
+              --object-fit: cover;
+            "
+          />
+          <div
+            data-ui="theme-dark"
+            style="
+              --display: flex-col;
+              --items: start;
+              --justify: center;
+              --p: 11;
+              --gap: 6;
+              --bg: var(--color-neutral-800);
             "
           >
-            Lookbooks
-          </h2>
+            <h2
+              id="lookbooks-title"
+              data-ui="text-h3"
+              style="
+                --font-weight: strong;
+                --text-transform: uppercase;
+              "
+            >
+              Lookbooks
+            </h2>
 
-          <div data-ui="prose">
-            <p>
-              Page through a finished room before you order a single piece. Every lookbook is a
-              sofa, a table, and the cabinet that belongs with them, shot in the same light.
-            </p>
-            <p>
-              The oak line, the linen line, and the small-apartment sets each have their own book.
-              Open a piece for dimensions, joinery, and the fabrics it ships with.
-            </p>
-            <p>
-              Save a page while you compare. Download a PDF for a client, or add the whole room to
-              an order. Signed-in trade accounts see the price on the page.
-            </p>
-            <p>One set of pages for browsing and for buying.</p>
+            <div data-ui="prose">
+              <p>
+                Page through a finished room before you order a single piece. Every lookbook is a
+                sofa, a table, and the cabinet that belongs with them, shot in the same light.
+              </p>
+              <p>
+                The oak line, the linen line, and the small-apartment sets each have their own book.
+                Open a piece for dimensions, joinery, and the fabrics it ships with.
+              </p>
+              <p>
+                Save a page while you compare. Download a PDF for a client, or add the whole room to
+                an order. Signed-in trade accounts see the price on the page.
+              </p>
+              <p>One set of pages for browsing and for buying.</p>
+            </div>
+            <a href="#" data-ui="button theme-light" style="--mt: 2">Open lookbooks</a>
           </div>
-          <a href="#" data-ui="button" data-ui-theme="light" style="--mt: 2">Open lookbooks</a>
-        </div>
-      </section>
+        </section>
+      </ui-layout>
 
       <section
         id="seating"
@@ -1003,7 +1288,7 @@
           "
         />
         <div
-          data-ui-theme="dark"
+          data-ui="theme-dark"
           style="
             --display: flex-col;
             --items: start;
@@ -1015,6 +1300,7 @@
         >
           <h2
             id="seating-title"
+            data-ui="text-h3"
             style="
               --font-weight: strong;
               --text-transform: uppercase;
@@ -1029,25 +1315,24 @@
               and we will upholster to it.
             </p>
           </div>
-          <a href="#" data-ui="button" data-ui-theme="light" style="--mt: 2">Shop seating</a>
+          <a href="#" data-ui="button theme-light" style="--mt: 2">Shop seating</a>
         </div>
       </section>
 
       <!-- ================================================================ -->
       <!-- Lines: wordmark, blurb, call to action                           -->
       <!-- ================================================================ -->
-      <section aria-labelledby="lines-title" style="--py: 24">
+      <section id="lines" aria-labelledby="lines-title" style="--py: 24">
         <ui-layout>
           <h2
             id="lines-title"
-            data-ui="text-h4"
+            data-ui="text-h3"
             style="
-              --mb: 11;
-              --font-weight: 300;
+              --mb: 20;
               --text-align: center;
             "
           >
-            Three lines
+            Three premium furniture lines
           </h2>
           <ul
             data-reveal-each="slide-up"
@@ -1055,15 +1340,21 @@
               --display: grid;
               --grid-cols: 1;
               --grid-cols--lg: 3;
-              --gap: 11;
+              --gap: var(--gutters);
+              --text-wrap: balance;
             "
           >
             <li
               style="
                 --display: flex-col;
                 --items: center;
+                --px: 8;
+                --py: 12;
                 --gap: 6;
                 --text-align: center;
+                --bg: var(--color-card);
+                --border: 1;
+                --shadow: xs;
               "
             >
               <div
@@ -1079,13 +1370,12 @@
                     --tracking: var(--tracking-eyebrow);
                     --text-transform: uppercase;
                   "
-                  >ACME INC</span
+                  >ACME BRAND</span
                 >
               </div>
               <p
                 style="
                   --flex: 1;
-                  --max-w: var(--article-2xs);
                   --text: var(--color-muted-foreground);
                 "
               >
@@ -1097,8 +1387,13 @@
               style="
                 --display: flex-col;
                 --items: center;
+                --px: 8;
+                --py: 12;
                 --gap: 6;
                 --text-align: center;
+                --bg: var(--color-card);
+                --border: 1;
+                --shadow: xs;
               "
             >
               <div
@@ -1120,7 +1415,6 @@
               <p
                 style="
                   --flex: 1;
-                  --max-w: var(--article-2xs);
                   --text: var(--color-muted-foreground);
                 "
               >
@@ -1132,8 +1426,13 @@
               style="
                 --display: flex-col;
                 --items: center;
+                --px: 8;
+                --py: 12;
                 --gap: 6;
                 --text-align: center;
+                --bg: var(--color-card);
+                --border: 1;
+                --shadow: xs;
               "
             >
               <div
@@ -1155,7 +1454,6 @@
               <p
                 style="
                   --flex: 1;
-                  --max-w: var(--article-2xs);
                   --text: var(--color-muted-foreground);
                 "
               >
@@ -1174,6 +1472,7 @@
       <section aria-labelledby="about-title" style="--py: 24">
         <ui-layout data-layout-size="md">
           <div
+            data-ui="divide-x"
             data-reveal="fade"
             style="
               --display: grid;
@@ -1184,15 +1483,19 @@
             "
           >
             <p
-              data-ui="text-2xl"
+              data-ui="text-h2"
               style="
-                --font-weight: 300;
+                --display: inline-flex;
+                --items: center;
+                --justify: center;
+                --h: 100%;
                 --tracking: var(--tracking-eyebrow);
                 --text-align: center;
                 --text-transform: uppercase;
+                --text: var(--color-secondary);
               "
             >
-              ACME INC
+              ACME
             </p>
             <div
               style="
@@ -1201,10 +1504,10 @@
                 --max-w: 40ch;
               "
             >
-              <h2 id="about-title" data-ui="text-md">Furniture that can move with you</h2>
+              <h2 id="about-title" data-ui="text-lg">Furniture that moves with you</h2>
               <p style="--text: var(--color-muted-foreground)">
-                ACME INC builds sofas, tables, and cabinets meant to come apart, ship, and be
-                repaired. Solid wood, replaceable cushions, and finishes you can spot-sand.
+                ACME builds sofas, tables, and cabinets meant to come apart, ship, and be repaired.
+                Solid wood, replaceable cushions, and finishes you can spot-sand.
               </p>
             </div>
           </div>
@@ -1525,7 +1828,7 @@
         </div>
       </ui-layout>
 
-      <div data-ui-theme="dark" style="--bg: var(--color-neutral-1117)">
+      <div data-ui="theme-dark" style="--bg: var(--color-neutral-1117)">
         <ui-layout data-layout-size="full">
           <div
             data-ui="text-sm"
@@ -1538,7 +1841,7 @@
               --text: var(--color-muted-foreground);
             "
           >
-            <p>©2026 ACME INC. All rights reserved.</p>
+            <p>©2026 ACME. All rights reserved.</p>
             <p>Sample storefront</p>
           </div>
         </ui-layout>

@@ -38,12 +38,17 @@ function initCommandActions(): void {
     const command = (event as CommandEvent).command;
     switch (command) {
       case "--theme-toggle": {
-        // data-ui-theme pins the scheme; unset follows the system
+        // A theme-dark / theme-light switch pins the scheme; neither follows the system
         const root = document.documentElement;
-        const dark = root.dataset.uiTheme
-          ? root.dataset.uiTheme === "dark"
+        const tokens = (root.dataset.ui ?? "").split(/\s+/).filter(Boolean);
+        const pinned = tokens.find((t) => t === "theme-dark" || t === "theme-light");
+        const dark = pinned
+          ? pinned === "theme-dark"
           : matchMedia("(prefers-color-scheme: dark)").matches;
-        root.dataset.uiTheme = dark ? "light" : "dark";
+        root.dataset.ui = [
+          ...tokens.filter((t) => !t.startsWith("theme-")),
+          dark ? "theme-light" : "theme-dark",
+        ].join(" ");
         break;
       }
       case "--copy-link":

@@ -6,7 +6,7 @@ sectionOrder: 3
 order: 8
 ---
 
-`--shadow` takes a size by name (`md`) at any tier, a token, or any box-shadow; it never removes a primitive's focus ring. `--shadow-hue` tints every shadow in a subtree. `--opacity` fades the whole element; for a translucent fill, see `--bg-alpha`.
+`--shadow` takes a size by name (`md`) at any tier, a token, or any box-shadow; it never removes a primitive's focus ring. `--shadow-hue` tints every shadow in a subtree, and `--shadow-angle` turns the direction they are cast in: `0deg` is down (the default), `90deg` left, `180deg` up, at any breakpoint or state (`--shadow-angle: 180deg` on a bottom sheet, `--shadow-angle--md: 0deg` once it becomes a card). `--opacity` fades the whole element; for a translucent fill, see `--bg-alpha`.
 
 ## Reference
 

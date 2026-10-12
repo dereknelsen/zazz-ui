@@ -12,7 +12,7 @@ Everything a primitive owns is `data-<primitive>-*`. Four attributes belong to t
 
 ## Theme
 
-`data-ui-theme="dark"` or `"light"` on any element pins that scheme for the subtree; it only sets `color-scheme`, so scopes nest and every `light-dark()` token follows. Without it, the page follows the system. The head's theme script sets the attribute on `<html>` from `localStorage.theme` before first paint.
+The `theme-dark` and `theme-light` switches are `data-ui` tokens (`data-ui="theme-dark"`), listed with the other [switches](/api/switches/). On any element one pins that scheme for the subtree; it only sets `color-scheme`, so scopes nest and every `light-dark()` token follows. Without one, the page follows the system. The head's theme script adds the switch to `<html>` from `localStorage.theme` before first paint.
 
 ## Navigation and persistence
 

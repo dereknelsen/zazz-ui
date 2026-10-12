@@ -2,7 +2,7 @@
  * The site's `<head>` comes from the kit's own head contract, so the docs
  * load Zazz exactly as a consumer does: one stylesheet, the import map
  * that pins the kit's bare specifiers, the one polyfill, the kit module, and
- * the theme script that paints `data-ui-theme` before first paint.
+ * the theme script that paints the `theme-*` switch before first paint.
  */
 import { buildHead } from "@zazz-ui/core/head.ts";
 import { existsSync } from "node:fs";

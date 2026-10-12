@@ -11,7 +11,7 @@ import { mount, style, useCss, useKit } from "../../../test/browser.ts";
 
 const NAV = (id: string, attrs = "") => `<menu data-navigation-menu-slot="list">
     <li data-navigation-menu-slot="item">
-      <button data-ui="button" data-navigation-menu-slot="trigger" type="button" popovertarget="${id}">P<svg></svg></button>
+      <button data-ui="button" data-navigation-menu-slot="trigger" type="button" popovertarget="${id}">P<svg data-navigation-menu-slot="marker"></svg></button>
       <div id="${id}" data-navigation-menu-slot="popover" popover="auto" ${attrs}>
         <div data-navigation-menu-slot="viewport"><a href="#" data-navigation-menu-slot="link">L</a></div>
       </div>
@@ -20,12 +20,14 @@ const NAV = (id: string, attrs = "") => `<menu data-navigation-menu-slot="list">
 
 describe("navigation menu", () => {
   useKit();
-  useCss(`[popover], svg { transition: none; }`);
+  useCss(`[popover], [data-navigation-menu-slot~="marker"] { transition: none; }`);
 
   it("sizes the panel from the width hook and flips the chevron while open", () => {
     const root = mount(`<nav data-ui="navigation-menu">${NAV("a")}</nav>`);
     const panel = root.querySelector("[data-navigation-menu-slot='popover']") as HTMLElement;
-    const chevron = root.querySelector("[data-navigation-menu-slot='trigger'] > svg")!;
+    const chevron = root.querySelector(
+      "[data-navigation-menu-slot='trigger'] > [data-navigation-menu-slot~='marker']",
+    )!;
     expect(style(chevron, "transform")).toBe("none");
     panel.showPopover();
     expect(style(chevron, "transform")).not.toBe("none");

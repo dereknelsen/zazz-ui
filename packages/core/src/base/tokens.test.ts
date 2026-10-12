@@ -58,8 +58,7 @@ describe("design tokens", () => {
     expect(variables).not.toMatch(/var\(--ring[,)]/);
   });
 
-  it("drops tokens nothing reads: --default-transition-property, --font-weight-mono", () => {
-    expect(declared).not.toContain("--default-transition-property");
+  it("drops tokens nothing reads: --font-weight-mono", () => {
     expect(declared).not.toContain("--font-weight-mono");
   });
 

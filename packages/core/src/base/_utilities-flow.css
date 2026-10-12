@@ -18,7 +18,7 @@
   :where([style*="--display: inline-flex-row-reverse"]) { --_display: inline-flex; --_flex-direction: row-reverse; }
   :where([style*="--display: inline-flex-col"]) { --_display: inline-flex; --_flex-direction: column; }
   :where([style*="--display: inline-flex-col-reverse"]) { --_display: inline-flex; --_flex-direction: column-reverse; }
-  @container (width >= 40ch) {
+  @container (width >= 40rem) {
     :where([style*="--display--sm:"]) { --_flex-direction-sm: row; }
     :where([style*="--display--sm: flex-row"]) { --_display-sm: flex; --_flex-direction-sm: row; }
     :where([style*="--display--sm: flex-row-reverse"]) { --_display-sm: flex; --_flex-direction-sm: row-reverse; }
@@ -29,7 +29,7 @@
     :where([style*="--display--sm: inline-flex-col"]) { --_display-sm: inline-flex; --_flex-direction-sm: column; }
     :where([style*="--display--sm: inline-flex-col-reverse"]) { --_display-sm: inline-flex; --_flex-direction-sm: column-reverse; }
   }
-  @container (width >= 65ch) {
+  @container (width >= 48rem) {
     :where([style*="--display--md:"]) { --_flex-direction-md: row; }
     :where([style*="--display--md: flex-row"]) { --_display-md: flex; --_flex-direction-md: row; }
     :where([style*="--display--md: flex-row-reverse"]) { --_display-md: flex; --_flex-direction-md: row-reverse; }
@@ -40,7 +40,7 @@
     :where([style*="--display--md: inline-flex-col"]) { --_display-md: inline-flex; --_flex-direction-md: column; }
     :where([style*="--display--md: inline-flex-col-reverse"]) { --_display-md: inline-flex; --_flex-direction-md: column-reverse; }
   }
-  @container (width >= 90ch) {
+  @container (width >= 64rem) {
     :where([style*="--display--lg:"]) { --_flex-direction-lg: row; }
     :where([style*="--display--lg: flex-row"]) { --_display-lg: flex; --_flex-direction-lg: row; }
     :where([style*="--display--lg: flex-row-reverse"]) { --_display-lg: flex; --_flex-direction-lg: row-reverse; }
@@ -51,7 +51,7 @@
     :where([style*="--display--lg: inline-flex-col"]) { --_display-lg: inline-flex; --_flex-direction-lg: column; }
     :where([style*="--display--lg: inline-flex-col-reverse"]) { --_display-lg: inline-flex; --_flex-direction-lg: column-reverse; }
   }
-  @container (width >= 120ch) {
+  @container (width >= 80rem) {
     :where([style*="--display--xl:"]) { --_flex-direction-xl: row; }
     :where([style*="--display--xl: flex-row"]) { --_display-xl: flex; --_flex-direction-xl: row; }
     :where([style*="--display--xl: flex-row-reverse"]) { --_display-xl: flex; --_flex-direction-xl: row-reverse; }
@@ -62,7 +62,7 @@
     :where([style*="--display--xl: inline-flex-col"]) { --_display-xl: inline-flex; --_flex-direction-xl: column; }
     :where([style*="--display--xl: inline-flex-col-reverse"]) { --_display-xl: inline-flex; --_flex-direction-xl: column-reverse; }
   }
-  @container (width >= 150ch) {
+  @container (width >= 96rem) {
     :where([style*="--display--2xl:"]) { --_flex-direction-2xl: row; }
     :where([style*="--display--2xl: flex-row"]) { --_display-2xl: flex; --_flex-direction-2xl: row; }
     :where([style*="--display--2xl: flex-row-reverse"]) { --_display-2xl: flex; --_flex-direction-2xl: row-reverse; }

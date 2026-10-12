@@ -2,7 +2,7 @@
 
 /* md tier setter */
 @layer ui.utilities {
-  @container (width >= 65ch) {
+  @container (width >= 48rem) {
     :where([style*="--md:"]) {
       --_display-md: var(--display--md);
       --_position-md: var(--position--md);
@@ -88,6 +88,14 @@
       --_border-t-md: var(--border-t--md);
       --_border-r-md: var(--border-r--md);
       --_border-b-md: var(--border-b--md);
+      --_shadow-angle-md: var(--shadow-angle--md);
+      --_ring-md: var(--ring--md);
+      --_ring-color-md: var(--ring-color--md);
+      --_ring-offset-md: var(--ring-offset--md);
+      --_ring-offset-color-md: var(--ring-offset-color--md);
+      --_focus-ring-md: var(--focus-ring--md);
+      --_transition-duration-md: var(--transition-duration--md);
+      --_transition-delay-md: var(--transition-delay--md);
     }
   }
 }

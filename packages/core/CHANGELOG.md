@@ -1,5 +1,49 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.6.0 (2026-10-12)
+
+### base
+
+- **BREAKING** The color scheme pin is a switch: `data-ui-theme="dark"` / `"light"` becomes `data-ui="theme-dark"` / `"theme-light"` (add the token to the element's `data-ui` list, e.g. `<html data-ui="theme-dark">`). Migration: replace the attribute; a script that pins the scheme edits that token in `data-ui` and keeps the others. The head snippet's theme script and the command palette's `--theme-toggle` already do.
+- **BREAKING** Breakpoint tiers query the nearest container in `rem` instead of `ch`, at the `--layout-*` widths: `sm` 40rem, `md` 48rem, `lg` 64rem, `xl` 80rem, `2xl` 96rem (640 to 1536px at 16px). Siblings set in different fonts now flip at the same width. `sm` moves from about 404px to 640px, so check layouts that relied on an `sm` tier in narrow containers; use a lower tier or an intrinsic grid where one flips too late.
+- `--ring` and `--ring-offset` take a number as pixels (`--ring: 2` used to void the whole box-shadow), and a negative ring draws inset (`--ring: -2`). The four `--ring*` utilities now take breakpoint tiers as well as states.
+- New `--focus-ring` utility (breakpoint tiers): a signed width for a primitive's focus ring and its forced-colors outline, and for a plain element's focus outline; negative keeps it inside the box. Unset, it is `--ring-width`. The private layer primitives publish their ring into is renamed `--_focus-ring` → `--_focus-shadow`; a custom primitive that set it should rename it.
+- New `--shadow-angle` utility (states and breakpoints): turns the direction the `--shadow-*` tokens are cast in, on the element and its subtree (`0deg` down, `90deg` left, `180deg` up).
+- New `--transition-duration` and `--transition-delay` utilities (states and breakpoints): longhands that win over `--transition` and over a primitive's own transition, so one element can be retimed without restating its property list.
+- Dialogs with `closedby="any"` close on a backdrop tap in browsers that don't support `any` yet (Safari 26), with the native rule that the press and the release both land on the backdrop.
+- Swap navigation (`data-ui-navigation="swap"`) leaves non-page links (`/llms.txt`, `.md`, `.pdf`) and non-HTML responses to the browser, and its full-load fallback replaces the history entry instead of adding one, so Back works.
+- `text-eyebrow` no longer sets `display: inline-flex`; it is inline text like the other roles. Add `--display: inline-flex` where an eyebrow relied on it.
+
+### accordion
+
+- **BREAKING** The open/close chevron is the `data-accordion-slot="marker"` slot instead of any `summary > svg`. Migration: add `data-accordion-slot="marker"` to the summary's icon (other icons in the summary no longer rotate).
+
+### navigation-menu
+
+- **BREAKING** The trigger's chevron is the `data-navigation-menu-slot="marker"` slot instead of any `svg` child. Migration: add `data-navigation-menu-slot="marker"` to the trigger's chevron icon.
+
+### dialog
+
+- **BREAKING** `--ui-dialog-backdrop-blur` is renamed `--ui-dialog-backdrop-filter` and defaults to `none` (was `blur(5px)`). Migration: set `--ui-dialog-backdrop-filter: blur(5px)` to keep the blur.
+
+### command
+
+- The dialog form opens at once instead of waiting for the backdrop, and styles a close button placed beside the input (the way out on touch, where there is no Esc).
+
+### fields
+
+- On iOS, field text is at least 16px, so focusing a control no longer zooms the page. Desktop and Android keep `--font-size-sm`.
+
+### debug
+
+- New `field-id-or-name` audit: an `<input>`, `<select>`, or `<textarea>` with neither `id` nor `name` (Chrome reports these) is flagged by `<ui-debug>`, the editor, and the html lint.
+- A tier-only `--ring*`, `--shadow`, or `--focus-ring` no longer reports `tier-without-base`; the composite already gives them a default.
+
+### primitives
+
+- Every form field in the primitive examples has a `name`; multiselect gives its mirrored checkboxes an `id`.
+- The examples pin dark mode with the `theme-dark` switch (lightbox) and mark accordion chevrons with the `marker` slot (mobile-menu).
+
 ## 0.5.4 (2026-10-08)
 
 ### base

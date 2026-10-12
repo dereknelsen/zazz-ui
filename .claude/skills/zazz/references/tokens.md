@@ -90,8 +90,9 @@ buttons/inputs/cards, **lg** = dialogs, **sm** = badges, **full** = pills/circle
 elevation on purpose (**md** ≈ popovers/modals). Utility: `--shadow` takes the size by name at every tier
 (`--shadow: xs; --shadow--hover: md`), or any shadow / `var()`. Color: `--color-shadow` on `:root`
 tints every shadow; `--shadow-hue: var(--color-primary)` tints an element's and its subtree's
-shadows (keyword, `var()`, and primitive shadows alike). A shadow utility never removes a
-primitive's focus ring.
+shadows (keyword, `var()`, and primitive shadows alike). `--shadow-angle` turns the cast
+direction the same way (`0deg` down, `90deg` left, `180deg` up; takes breakpoints, so a bottom
+sheet can cast up on mobile). A shadow utility never removes a primitive's focus ring.
 
 ## 7. Layout & breakpoints
 
@@ -102,10 +103,9 @@ primitive's focus ring.
   child. A nested layout is a subgrid that keeps the parent's band lines.
 - **Reading width:** `--max-w: var(--article-lg); --mx: auto` (`--article-xs` 45ch … `--article-xl`
   75ch), usually on `data-ui="prose"`.
-- **Breakpoints:** Tailwind's five names in `ch`, for legibility: `sm` 40ch (a comfortable line) ·
-  `md` 65ch (one reading measure) · `lg` 90ch (two columns) · `xl` 120ch (three) · `2xl` 150ch
-  (≈ 404/656/909/1210/1515px with the system font). Layout widths are separate rem tokens:
-  `--layout-sm` 40rem · `-md` 48rem · `-lg` 64rem · `-xl` 80rem · `-2xl` 96rem (bands, dialogs). Breakpoint tiers (`--<utility>--md`) are mobile-first and
+- **Breakpoints:** Tailwind's five names in rem, the same scale as the layout widths:
+  `sm` 40rem · `md` 48rem · `lg` 64rem · `xl` 80rem · `2xl` 96rem (640/768/1024/1280/1536px;
+  `--layout-sm` … `--layout-2xl` for bands and dialogs). Breakpoint tiers (`--<utility>--md`) are mobile-first and
   track the **nearest inline-size container** (the page by default, or the band inside a layout; mark a card, sidebar, or slot
   `data-ui="container"` to make what's inside respond to it; an element never queries itself).
 - **Flow utilities:** `--display` (plus `flex-row`, `flex-col`, `-reverse`, and `inline-flex-…`
@@ -137,13 +137,22 @@ Set `--color-ring` on `:root` (the base color; defaults to `--color-primary`); t
 `--ring-shadow` (`--shadow-ring`). A same-geometry transparent outline (`--outline-width`,
 `--outline-style`, `--outline-offset`) is kept for forced-colors modes. Primitives publish their
 ring themselves; on a plain element use the `--ring`, `--ring-color`, `--ring-offset` utilities.
+Ring widths are signed pixels at any breakpoint or state: `--ring: 2` (outset), `--ring: -2`
+(inset), `--ring: 2; --ring--md: -2`. `--focus-ring` sets a primitive's focus ring (and a plain
+element's focus outline) the same way, e.g. `--focus-ring: -2` inside an `overflow: hidden` card;
+unset, it is `--ring-width`.
 
 ## 9. Motion
 
 `--spring-easing` (natural spring) with `--bezier-easing` fallback; `--spring-duration`
 (~0.333s). `--default-transition` bundles the commonly animated properties:
-`--transition: var(--default-transition)`. `prefers-reduced-motion: reduce` zeroes the duration
-globally — don't fight it. Transform utilities: `--scale`, `--translate`, `--rotate`.
+`--transition: var(--default-transition)`. Narrow it with one of its groups:
+`--default-transition-colors`, `-transforms`, `-effects` (opacity, filters, shadow) or `-content`
+(discrete properties with `allow-discrete`); each has a `--default-transition-property-*` name list.
+Retime anything, a primitive included, with `--transition-duration` and `--transition-delay`, which
+take states and breakpoints (`--transition-delay--md: 240ms`). `prefers-reduced-motion: reduce`
+zeroes the default duration globally, so don't fight it. Transform utilities: `--scale`,
+`--translate`, `--rotate`.
 
 ## 10. Opacity & color alpha
 
@@ -182,7 +191,7 @@ Pseudo-elements: `--before-content: ''` plus `--before-<utility>` / `--after-<ut
 `--position`, `--display`, `--z`, `--inset` `--inset-x` `--inset-y` `--top` `--right` `--bottom` `--left`,
 padding, sizing and `--aspect`, `--text`, `--bg` (+ `--bg-alpha`), the border longhands,
 `--rounded`, `--outline`, `--opacity`, `--visibility`, `--pointer-events`, `--scale` `--translate`
-`--rotate`, `--transition`, `--font-size`, `--font-weight`. They take no tiers. An accent bar:
+`--rotate`, `--transition` `--transition-duration` `--transition-delay`, `--font-size`, `--font-weight`. They take no tiers. An accent bar:
 `--before-content: ''; --before-position: absolute; --before-inset-y: 0; --before-left: 0;
 --before-w: 1; --before-bg: var(--color-primary)`.
 

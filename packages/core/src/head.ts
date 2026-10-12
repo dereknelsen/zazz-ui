@@ -137,7 +137,10 @@ const ESM_DEPENDENCIES: readonly CdnDependency[] = [
  * Not polyfilled (native across the support window): the **Popover API** (Chrome 114, Firefox 125, Safari 17, iOS 18.3)
  * and **Invoker Commands** `command`/`commandfor` (Chrome 135, Firefox 144,
  * Safari 26.2). CSS anchor positioning is below the floor but has no polyfill
- * here — the components gate it behind `@supports` instead.
+ * here — the components gate it behind `@supports` instead. Dialog light
+ * dismiss (`closedby="any"`: Chrome 134, Firefox 141; Safari 26 has only `none`
+ * and `closerequest`) is filled in by `base/dialog-lifecycle.ts` where `any`
+ * is not supported.
  */
 const POLYFILLS: readonly CdnDependency[] = [
   {
@@ -204,7 +207,7 @@ function polyfillsBlock(): string {
 
 /**
  * The theme-persistence script. Runs inline (no `defer`) while the parser is
- * still in `<head>`, so `data-ui-theme` lands on `<html>` before first paint. The
+ * still in `<head>`, so the `theme-*` switch lands on `<html>` before first paint. The
  * try/catch covers contexts where storage access throws (sandboxed iframes,
  * blocked site data).
  */
@@ -212,11 +215,12 @@ const THEME_SCRIPT = `<!-- Theme: apply the persisted (or preferred) scheme befo
 <script>
   (() => {
     try {
-      // A stored choice pins the scheme with data-ui-theme; with no
-      // choice the attribute stays off and the page follows the system scheme.
+      // A stored choice pins the scheme with the theme-dark / theme-light
+      // switch; with no choice the page follows the system scheme.
       const storedTheme = localStorage.getItem("theme");
       if (storedTheme === "dark" || storedTheme === "light") {
-        document.documentElement.setAttribute("data-ui-theme", storedTheme);
+        const root = document.documentElement;
+        root.dataset.ui = ((root.dataset.ui || "") + " theme-" + storedTheme).trim();
       }
     } catch {
       /* no storage access: follow the system scheme */

@@ -2,7 +2,7 @@
 
 /* 2xl tier setter */
 @layer ui.utilities {
-  @container (width >= 150ch) {
+  @container (width >= 96rem) {
     :where([style*="--2xl:"]) {
       --_display-2xl: var(--display--2xl);
       --_position-2xl: var(--position--2xl);
@@ -88,6 +88,14 @@
       --_border-t-2xl: var(--border-t--2xl);
       --_border-r-2xl: var(--border-r--2xl);
       --_border-b-2xl: var(--border-b--2xl);
+      --_shadow-angle-2xl: var(--shadow-angle--2xl);
+      --_ring-2xl: var(--ring--2xl);
+      --_ring-color-2xl: var(--ring-color--2xl);
+      --_ring-offset-2xl: var(--ring-offset--2xl);
+      --_ring-offset-color-2xl: var(--ring-offset-color--2xl);
+      --_focus-ring-2xl: var(--focus-ring--2xl);
+      --_transition-duration-2xl: var(--transition-duration--2xl);
+      --_transition-delay-2xl: var(--transition-delay--2xl);
     }
   }
 }

@@ -47,3 +47,7 @@ The validation pass showed that a shared preset attribute is ambiguous when toke
 ## Amendment 2 (2026-09-28): identity-compounded selectors
 
 Dropping the `data-ui-` prefix from primitive-owned attributes reopened collisions with third-party libraries that use the same shape (Flowbite's `data-carousel-item`, `data-tabs-toggle`). Two rules close it: every `data-<name>-*` selector compounds with the identity (`[data-ui~="button"][data-button-variant="primary"]`; slots as descendants of `:where(ui-dialog, [data-ui~="dialog"])`), and `parseDataAttributes` runs only on elements carrying the identity. A same-shaped attribute on an element without the identity matches nothing.
+
+## Amendment 3 (2026-10-09): the color scheme is a switch
+
+`data-ui-theme="dark" | "light"` becomes the `theme-dark` / `theme-light` switches (`data-ui="theme-dark"`). A scheme pin is a fixed rule set with no value, which is what a switch is, and a second attribute shape for it bought nothing. It also leaves room for named themes as `theme-<name>`. The theme rules stay in `_variables.css` beside the tokens they re-resolve, and `_switches.css` lists them. Scripts that pin a scheme edit that one token in `data-ui` and keep the rest. The `data-ui-theme` entries above are superseded; `data-ui-*` globals are now only the navigation and guard attributes.

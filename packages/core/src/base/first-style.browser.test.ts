@@ -21,7 +21,7 @@ let sheet: HTMLStyleElement | undefined;
 
 /** Resolves every element's style, then applies the kit. */
 function kitArrivesAfterStyle(root: Element): void {
-  for (const el of root.children) getComputedStyle(el).color;
+  for (const el of root.children) void getComputedStyle(el).color;
   sheet = document.createElement("style");
   sheet.textContent = kitCss();
   document.head.append(sheet);
@@ -43,7 +43,7 @@ describe("first style pass", () => {
   it("does not transition primitives from their UA styles when the kit's stylesheet arrives", () => {
     const root = mount(MARKUP);
     kitArrivesAfterStyle(root);
-    for (const el of root.children) getComputedStyle(el).color;
+    for (const el of root.children) void getComputedStyle(el).color;
     expect(running(root)).toEqual([]);
   });
 
@@ -54,7 +54,7 @@ describe("first style pass", () => {
     await frame();
     const ghost = root.firstElementChild!;
     ghost.setAttribute("data-button-variant", "primary");
-    getComputedStyle(ghost).color;
+    void getComputedStyle(ghost).color;
     expect(ghost.getAnimations().length).toBeGreaterThan(0);
   });
 });

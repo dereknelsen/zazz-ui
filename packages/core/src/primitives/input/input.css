@@ -2,7 +2,7 @@
  * input.css — Text input ([data-ui~="input"])
  *
  * @layer      variables, components
- * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-ring), fields.css, _reset.css
+ * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow), fields.css, _reset.css
  * @uses       ::-webkit-calendar-picker-indicator — date/time picker chrome (WebKit)
  * @uses       mask — calendar icon (not background-image, for color: currentColor)
  * @tokens     --ui-input-* (@layer variables; surface colors and height read the
@@ -67,18 +67,25 @@
     border-color: var(--_border-color-resolved, var(--ui-input-border-color));
     border-radius: var(--_rounded-resolved, var(--ui-input-rounded));
 
-    /* The ring is published to --_focus-ring so a --shadow utility keeps
+    /* The ring is published to --_focus-shadow so a --shadow utility keeps
        it; the transparent outline twin keeps focus visible in forced-colors */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
+    --_focus-in: max(0, -1 * sign(var(--_focus-ring-w, 1px)));
     --_ring-fill: color-mix(in oklch, var(--ui-field-ring-color) var(--ring-opacity), transparent);
-    --_focus-ring:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+    --_focus-shadow:
+      0 0 0 calc(var(--_ring-offset-width) * (1 - var(--_focus-in))) var(--ring-offset-shadow-color),
+      0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * (1 - var(--_focus-in)))
+        var(--_ring-fill, var(--ring-shadow-color)),
+      inset 0 0 0 calc(var(--_ring-offset-width) * var(--_focus-in)) var(--ring-offset-shadow-color),
+      inset 0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * var(--_focus-in))
         var(--_ring-fill, var(--ring-shadow-color));
-    box-shadow: var(--_focus-ring, 0 0 #0000), var(--_shadow-resolved, 0 0 #0000);
-    outline: var(--outline-width) var(--outline-style) transparent;
-    outline-offset: var(--outline-offset);
+    box-shadow: var(--_focus-shadow, 0 0 #0000), var(--_shadow-resolved, 0 0 #0000);
+    outline: abs(var(--_focus-ring-w, var(--outline-width))) var(--outline-style) transparent;
+    outline-offset: calc(
+      var(--outline-offset) - var(--_focus-in) *
+        (2 * var(--outline-offset) + abs(var(--_focus-ring-w, var(--outline-width))))
+    );
 
     transition: var(--default-transition);
   }
@@ -94,7 +101,7 @@
     background-color: var(--_bg-resolved, var(--ui-field-bg--focus-within));
     border-color: var(--_border-color-resolved, var(--ui-field-border-color--focus-within));
     --_ring-offset-width: var(--ring-offset-width);
-    --_ring-width: var(--ring-width);
+    --_ring-width: abs(var(--_focus-ring-w, var(--ring-width)));
     outline-color: transparent;
   }
 

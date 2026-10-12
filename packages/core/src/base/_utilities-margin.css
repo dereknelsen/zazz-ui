@@ -14,7 +14,7 @@
   :where(:is([style*="--m: auto"])) {
     margin: var(--_m-resolved);
   }
-  @container (width >= 40ch) {
+  @container (width >= 40rem) {
     :where([style*="--m:"][style*="--m--sm:"]) {
       margin: calc(var(--_m-len) + var(--_m-num) * var(--spacing));
     }
@@ -22,7 +22,7 @@
       margin: var(--_m-resolved);
     }
   }
-  @container (width >= 65ch) {
+  @container (width >= 48rem) {
     :where([style*="--m:"][style*="--m--md:"]) {
       margin: calc(var(--_m-len) + var(--_m-num) * var(--spacing));
     }
@@ -30,7 +30,7 @@
       margin: var(--_m-resolved);
     }
   }
-  @container (width >= 90ch) {
+  @container (width >= 64rem) {
     :where([style*="--m:"][style*="--m--lg:"]) {
       margin: calc(var(--_m-len) + var(--_m-num) * var(--spacing));
     }
@@ -38,7 +38,7 @@
       margin: var(--_m-resolved);
     }
   }
-  @container (width >= 120ch) {
+  @container (width >= 80rem) {
     :where([style*="--m:"][style*="--m--xl:"]) {
       margin: calc(var(--_m-len) + var(--_m-num) * var(--spacing));
     }
@@ -46,7 +46,7 @@
       margin: var(--_m-resolved);
     }
   }
-  @container (width >= 150ch) {
+  @container (width >= 96rem) {
     :where([style*="--m:"][style*="--m--2xl:"]) {
       margin: calc(var(--_m-len) + var(--_m-num) * var(--spacing));
     }
@@ -67,7 +67,7 @@
   :where(:is([style*="--mx: auto"])) {
     margin-inline: var(--_mx-resolved);
   }
-  @container (width >= 40ch) {
+  @container (width >= 40rem) {
     :where([style*="--mx:"][style*="--mx--sm:"]) {
       margin-inline: calc(var(--_mx-len) + var(--_mx-num) * var(--spacing));
     }
@@ -75,7 +75,7 @@
       margin-inline: var(--_mx-resolved);
     }
   }
-  @container (width >= 65ch) {
+  @container (width >= 48rem) {
     :where([style*="--mx:"][style*="--mx--md:"]) {
       margin-inline: calc(var(--_mx-len) + var(--_mx-num) * var(--spacing));
     }
@@ -83,7 +83,7 @@
       margin-inline: var(--_mx-resolved);
     }
   }
-  @container (width >= 90ch) {
+  @container (width >= 64rem) {
     :where([style*="--mx:"][style*="--mx--lg:"]) {
       margin-inline: calc(var(--_mx-len) + var(--_mx-num) * var(--spacing));
     }
@@ -91,7 +91,7 @@
       margin-inline: var(--_mx-resolved);
     }
   }
-  @container (width >= 120ch) {
+  @container (width >= 80rem) {
     :where([style*="--mx:"][style*="--mx--xl:"]) {
       margin-inline: calc(var(--_mx-len) + var(--_mx-num) * var(--spacing));
     }
@@ -99,7 +99,7 @@
       margin-inline: var(--_mx-resolved);
     }
   }
-  @container (width >= 150ch) {
+  @container (width >= 96rem) {
     :where([style*="--mx:"][style*="--mx--2xl:"]) {
       margin-inline: calc(var(--_mx-len) + var(--_mx-num) * var(--spacing));
     }
@@ -120,7 +120,7 @@
   :where(:is([style*="--my: auto"])) {
     margin-block: var(--_my-resolved);
   }
-  @container (width >= 40ch) {
+  @container (width >= 40rem) {
     :where([style*="--my:"][style*="--my--sm:"]) {
       margin-block: calc(var(--_my-len) + var(--_my-num) * var(--spacing));
     }
@@ -128,7 +128,7 @@
       margin-block: var(--_my-resolved);
     }
   }
-  @container (width >= 65ch) {
+  @container (width >= 48rem) {
     :where([style*="--my:"][style*="--my--md:"]) {
       margin-block: calc(var(--_my-len) + var(--_my-num) * var(--spacing));
     }
@@ -136,7 +136,7 @@
       margin-block: var(--_my-resolved);
     }
   }
-  @container (width >= 90ch) {
+  @container (width >= 64rem) {
     :where([style*="--my:"][style*="--my--lg:"]) {
       margin-block: calc(var(--_my-len) + var(--_my-num) * var(--spacing));
     }
@@ -144,7 +144,7 @@
       margin-block: var(--_my-resolved);
     }
   }
-  @container (width >= 120ch) {
+  @container (width >= 80rem) {
     :where([style*="--my:"][style*="--my--xl:"]) {
       margin-block: calc(var(--_my-len) + var(--_my-num) * var(--spacing));
     }
@@ -152,7 +152,7 @@
       margin-block: var(--_my-resolved);
     }
   }
-  @container (width >= 150ch) {
+  @container (width >= 96rem) {
     :where([style*="--my:"][style*="--my--2xl:"]) {
       margin-block: calc(var(--_my-len) + var(--_my-num) * var(--spacing));
     }
@@ -173,7 +173,7 @@
   :where(:is([style*="--mt: auto"])) {
     margin-block-start: var(--_mt-resolved);
   }
-  @container (width >= 40ch) {
+  @container (width >= 40rem) {
     :where([style*="--mt:"][style*="--mt--sm:"]) {
       margin-block-start: calc(var(--_mt-len) + var(--_mt-num) * var(--spacing));
     }
@@ -181,7 +181,7 @@
       margin-block-start: var(--_mt-resolved);
     }
   }
-  @container (width >= 65ch) {
+  @container (width >= 48rem) {
     :where([style*="--mt:"][style*="--mt--md:"]) {
       margin-block-start: calc(var(--_mt-len) + var(--_mt-num) * var(--spacing));
     }
@@ -189,7 +189,7 @@
       margin-block-start: var(--_mt-resolved);
     }
   }
-  @container (width >= 90ch) {
+  @container (width >= 64rem) {
     :where([style*="--mt:"][style*="--mt--lg:"]) {
       margin-block-start: calc(var(--_mt-len) + var(--_mt-num) * var(--spacing));
     }
@@ -197,7 +197,7 @@
       margin-block-start: var(--_mt-resolved);
     }
   }
-  @container (width >= 120ch) {
+  @container (width >= 80rem) {
     :where([style*="--mt:"][style*="--mt--xl:"]) {
       margin-block-start: calc(var(--_mt-len) + var(--_mt-num) * var(--spacing));
     }
@@ -205,7 +205,7 @@
       margin-block-start: var(--_mt-resolved);
     }
   }
-  @container (width >= 150ch) {
+  @container (width >= 96rem) {
     :where([style*="--mt:"][style*="--mt--2xl:"]) {
       margin-block-start: calc(var(--_mt-len) + var(--_mt-num) * var(--spacing));
     }
@@ -226,7 +226,7 @@
   :where(:is([style*="--mb: auto"])) {
     margin-block-end: var(--_mb-resolved);
   }
-  @container (width >= 40ch) {
+  @container (width >= 40rem) {
     :where([style*="--mb:"][style*="--mb--sm:"]) {
       margin-block-end: calc(var(--_mb-len) + var(--_mb-num) * var(--spacing));
     }
@@ -234,7 +234,7 @@
       margin-block-end: var(--_mb-resolved);
     }
   }
-  @container (width >= 65ch) {
+  @container (width >= 48rem) {
     :where([style*="--mb:"][style*="--mb--md:"]) {
       margin-block-end: calc(var(--_mb-len) + var(--_mb-num) * var(--spacing));
     }
@@ -242,7 +242,7 @@
       margin-block-end: var(--_mb-resolved);
     }
   }
-  @container (width >= 90ch) {
+  @container (width >= 64rem) {
     :where([style*="--mb:"][style*="--mb--lg:"]) {
       margin-block-end: calc(var(--_mb-len) + var(--_mb-num) * var(--spacing));
     }
@@ -250,7 +250,7 @@
       margin-block-end: var(--_mb-resolved);
     }
   }
-  @container (width >= 120ch) {
+  @container (width >= 80rem) {
     :where([style*="--mb:"][style*="--mb--xl:"]) {
       margin-block-end: calc(var(--_mb-len) + var(--_mb-num) * var(--spacing));
     }
@@ -258,7 +258,7 @@
       margin-block-end: var(--_mb-resolved);
     }
   }
-  @container (width >= 150ch) {
+  @container (width >= 96rem) {
     :where([style*="--mb:"][style*="--mb--2xl:"]) {
       margin-block-end: calc(var(--_mb-len) + var(--_mb-num) * var(--spacing));
     }
@@ -279,7 +279,7 @@
   :where(:is([style*="--ml: auto"])) {
     margin-inline-start: var(--_ml-resolved);
   }
-  @container (width >= 40ch) {
+  @container (width >= 40rem) {
     :where([style*="--ml:"][style*="--ml--sm:"]) {
       margin-inline-start: calc(var(--_ml-len) + var(--_ml-num) * var(--spacing));
     }
@@ -287,7 +287,7 @@
       margin-inline-start: var(--_ml-resolved);
     }
   }
-  @container (width >= 65ch) {
+  @container (width >= 48rem) {
     :where([style*="--ml:"][style*="--ml--md:"]) {
       margin-inline-start: calc(var(--_ml-len) + var(--_ml-num) * var(--spacing));
     }
@@ -295,7 +295,7 @@
       margin-inline-start: var(--_ml-resolved);
     }
   }
-  @container (width >= 90ch) {
+  @container (width >= 64rem) {
     :where([style*="--ml:"][style*="--ml--lg:"]) {
       margin-inline-start: calc(var(--_ml-len) + var(--_ml-num) * var(--spacing));
     }
@@ -303,7 +303,7 @@
       margin-inline-start: var(--_ml-resolved);
     }
   }
-  @container (width >= 120ch) {
+  @container (width >= 80rem) {
     :where([style*="--ml:"][style*="--ml--xl:"]) {
       margin-inline-start: calc(var(--_ml-len) + var(--_ml-num) * var(--spacing));
     }
@@ -311,7 +311,7 @@
       margin-inline-start: var(--_ml-resolved);
     }
   }
-  @container (width >= 150ch) {
+  @container (width >= 96rem) {
     :where([style*="--ml:"][style*="--ml--2xl:"]) {
       margin-inline-start: calc(var(--_ml-len) + var(--_ml-num) * var(--spacing));
     }
@@ -332,7 +332,7 @@
   :where(:is([style*="--mr: auto"])) {
     margin-inline-end: var(--_mr-resolved);
   }
-  @container (width >= 40ch) {
+  @container (width >= 40rem) {
     :where([style*="--mr:"][style*="--mr--sm:"]) {
       margin-inline-end: calc(var(--_mr-len) + var(--_mr-num) * var(--spacing));
     }
@@ -340,7 +340,7 @@
       margin-inline-end: var(--_mr-resolved);
     }
   }
-  @container (width >= 65ch) {
+  @container (width >= 48rem) {
     :where([style*="--mr:"][style*="--mr--md:"]) {
       margin-inline-end: calc(var(--_mr-len) + var(--_mr-num) * var(--spacing));
     }
@@ -348,7 +348,7 @@
       margin-inline-end: var(--_mr-resolved);
     }
   }
-  @container (width >= 90ch) {
+  @container (width >= 64rem) {
     :where([style*="--mr:"][style*="--mr--lg:"]) {
       margin-inline-end: calc(var(--_mr-len) + var(--_mr-num) * var(--spacing));
     }
@@ -356,7 +356,7 @@
       margin-inline-end: var(--_mr-resolved);
     }
   }
-  @container (width >= 120ch) {
+  @container (width >= 80rem) {
     :where([style*="--mr:"][style*="--mr--xl:"]) {
       margin-inline-end: calc(var(--_mr-len) + var(--_mr-num) * var(--spacing));
     }
@@ -364,7 +364,7 @@
       margin-inline-end: var(--_mr-resolved);
     }
   }
-  @container (width >= 150ch) {
+  @container (width >= 96rem) {
     :where([style*="--mr:"][style*="--mr--2xl:"]) {
       margin-inline-end: calc(var(--_mr-len) + var(--_mr-num) * var(--spacing));
     }

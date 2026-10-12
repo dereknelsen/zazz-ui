@@ -41,6 +41,7 @@ export type RuleId =
   | "scroll-state"
   | "whitespace-before-colon"
   | "attribute-outside-identity"
+  | "field-id-or-name"
   | "persist";
 
 export const RULE_IDS: readonly RuleId[] = [
@@ -60,6 +61,7 @@ export const RULE_IDS: readonly RuleId[] = [
   "scroll-state",
   "whitespace-before-colon",
   "attribute-outside-identity",
+  "field-id-or-name",
   "persist",
 ];
 
@@ -84,6 +86,8 @@ export interface Finding {
 
 /** The parts of an element the audit reads. */
 export interface AuditNode {
+  /** The tag name, any case. */
+  tagName: string;
   getAttribute(name: string): string | null;
   getAttributeNames(): string[];
   /** True when this node or an ancestor carries the identity `name` (see {@link carriesIdentity}). */
@@ -103,6 +107,11 @@ const UTILITY_BY_NAME = new Map<string, Utility>(
   [...UTILITIES, ...PSEUDO_ONLY].map((utility) => [utility.name, utility]),
 );
 const PSEUDO_ONLY_NAMES = new Set(PSEUDO_ONLY.map((utility) => utility.name));
+
+/** Form fields Chrome's autofill identifies by `id` or `name`. */
+const FIELD_TAGS = new Set(["input", "select", "textarea"]);
+/** `<input>` types that are buttons, not fields. */
+const BUTTON_TYPES = new Set(["button", "submit", "reset", "image"]);
 
 const NUMBER = /^-?(\d+\.?\d*|\.\d+)$/;
 const DIMENSION =
@@ -333,7 +342,9 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
       const borderBase =
         /^border-(?:width|color|style)$/.test(baseName) &&
         BORDER_SHORTHANDS.some((name) => bases.has(name));
-      if (utility.noBase === undefined && !bases.has(baseName) && !borderBase) {
+      // a utility that only feeds a composite (ring, shadow) has a literal at its chain's end
+      const feedsComposite = utility.emit === "none" || utility.emit === "px";
+      if (utility.noBase === undefined && !bases.has(baseName) && !borderBase && !feedsComposite) {
         warn(
           "tier-without-base",
           `\`${name}\` has no base \`--${baseName}\`; the tier only overrides a base.`,
@@ -455,6 +466,19 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
         attribute,
       });
     }
+  }
+  // Chrome's Issues panel flags a form field with neither id nor name
+  const tag = node.tagName.toLowerCase();
+  if (
+    FIELD_TAGS.has(tag) &&
+    !(tag === "input" && BUTTON_TYPES.has((node.getAttribute("type") ?? "").toLowerCase())) &&
+    !node.getAttribute("id")?.trim() &&
+    !node.getAttribute("name")?.trim()
+  ) {
+    found.push({
+      rule: "field-id-or-name",
+      message: `\`<${tag}>\` has neither \`id\` nor \`name\`: give it a \`name\` (the key it submits under, and what autofill reads).`,
+    });
   }
   return found;
 }

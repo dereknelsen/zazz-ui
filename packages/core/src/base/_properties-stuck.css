@@ -37,6 +37,8 @@
 @property --_opacity-stuck { syntax: "*"; inherits: false; }
 @property --shadow--stuck { syntax: "*"; inherits: false; }
 @property --_shadow-stuck { syntax: "*"; inherits: false; }
+@property --shadow-angle--stuck { syntax: "*"; inherits: false; }
+@property --_shadow-angle-stuck { syntax: "*"; inherits: false; }
 @property --ring--stuck { syntax: "*"; inherits: false; }
 @property --_ring-stuck { syntax: "*"; inherits: false; }
 @property --ring-color--stuck { syntax: "*"; inherits: false; }
@@ -53,3 +55,7 @@
 @property --_rotate-stuck { syntax: "*"; inherits: false; }
 @property --transition--stuck { syntax: "*"; inherits: false; }
 @property --_transition-stuck { syntax: "*"; inherits: false; }
+@property --transition-duration--stuck { syntax: "*"; inherits: false; }
+@property --_transition-duration-stuck { syntax: "*"; inherits: false; }
+@property --transition-delay--stuck { syntax: "*"; inherits: false; }
+@property --_transition-delay-stuck { syntax: "*"; inherits: false; }

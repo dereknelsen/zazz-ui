@@ -11,5 +11,8 @@ export default defineConfig({
   // hosting sets `Access-Control-Allow-Origin` in `vercel.json`, and `astro
   // preview` gets it from Vite's `cors` here. (In `astro dev` the frame is
   // same-origin instead: Astro's dev server blocks cross-site subresources.)
-  vite: { server: { cors: { origin: "*" } }, preview: { cors: { origin: "*" } } },
+  vite: {
+    server: { cors: { origin: "*" }, allowedHosts: [".ngrok-free.app"] },
+    preview: { cors: { origin: "*" } },
+  },
 });

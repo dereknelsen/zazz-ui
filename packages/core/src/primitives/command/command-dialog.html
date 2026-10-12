@@ -24,6 +24,7 @@
     <header data-command-slot="header">
       <input
         data-command-slot="input"
+        name="search"
         type="text"
         placeholder="Type a command or search..."
         role="combobox"
@@ -32,6 +33,41 @@
         autocomplete="off"
         aria-label="Search commands"
       />
+      <button
+        data-ui="button"
+        data-button-variant="ghost"
+        data-button-size="icon"
+        type="button"
+        command="close"
+        commandfor="command-example-dialog-1"
+        aria-label="Close"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+          <rect width="256" height="256" fill="none" />
+          <line
+            x1="200"
+            y1="56"
+            x2="56"
+            y2="200"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="16"
+          />
+          <line
+            x1="200"
+            y1="200"
+            x2="56"
+            y2="56"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="16"
+          />
+        </svg>
+      </button>
     </header>
     <div role="listbox" data-command-slot="list" aria-label="Commands">
       <div role="group" data-command-slot="group" aria-labelledby="command-example-dialog-1-nav">

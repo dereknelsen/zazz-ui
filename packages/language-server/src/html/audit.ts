@@ -23,6 +23,7 @@ export const AUDIT_CONTEXT: AuditContext = { ...lintData, isColor };
 
 export function auditNodeOf(tag: Tag): AuditNode {
   return {
+    tagName: tag.name,
     getAttribute: (name) => valueOf(tag, name),
     getAttributeNames: () =>
       namedAttributes(tag).map((attribute) => attribute.key.value.toLowerCase()),

@@ -23,33 +23,41 @@ const host = root?.querySelector<HTMLElement>("[data-playground-editor]");
 const fallback = root?.querySelector<HTMLTextAreaElement>("[data-playground-fallback]");
 const templateSelect = root?.querySelector<HTMLSelectElement>("[data-playground-template]");
 const resetButton = root?.querySelector<HTMLButtonElement>("[data-playground-reset]");
-const status = root?.querySelector<HTMLElement>("[data-playground-status]");
 
-if (root && dataNode && output && host && fallback && templateSelect && resetButton && status) {
+if (root && dataNode && output && host && fallback && templateSelect && resetButton) {
   const editorHost = host;
   const textarea = fallback;
   const data = JSON.parse(dataNode.textContent ?? "{}") as Data;
-  const blank = data.templates[0]?.html ?? "";
+  const initial = data.templates[0]?.html ?? "";
+  const blank = data.templates.find((t) => t.id === "blank")?.html ?? initial;
 
   // --- the document the output renders -----------------------------------
   const theme = (): string | null => {
-    const pinned = document.documentElement.getAttribute("data-ui-theme");
-    if (pinned) return pinned;
+    const pinned = (document.documentElement.dataset.ui ?? "")
+      .split(/\s+/)
+      .find((t) => t === "theme-dark" || t === "theme-light");
+    if (pinned) return pinned.slice("theme-".length);
     return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   };
 
+  // A render reloads the whole frame (every kit file, every image, a full style
+  // pass), so an unchanged document is never written twice.
+  let rendered = "";
   const render = (code: string): void => {
     const scheme = theme();
-    output.srcdoc = `<!doctype html>
-<html lang="en"${scheme ? ` data-ui-theme="${scheme}"` : ""}>
+    const doc = `<!doctype html>
+<html lang="en"${scheme ? ` data-ui="theme-${scheme}"` : ""}>
 <head>
 ${data.head}
 <title>Playground output</title>
 </head>
-<body style="--p: 8;">
+<body>
 ${code}
 </body>
 </html>`;
+    if (doc === rendered) return;
+    rendered = doc;
+    output.srcdoc = doc;
   };
 
   // --- editor: textarea until Monaco arrives --------------------------------
@@ -57,18 +65,9 @@ ${code}
   let setCode = (code: string): void => {
     textarea.value = code;
   };
-  // "Formatting styles…" fades in while the formatter runs and out shortly after,
-  // from any path: Cmd/Ctrl+S, Shift+Alt+F, or format on paste.
-  let statusTimer: ReturnType<typeof setTimeout> | undefined;
-  const announce = (): void => {
-    status.style.setProperty("--opacity", "1");
-    clearTimeout(statusTimer);
-    statusTimer = setTimeout(() => status.style.setProperty("--opacity", "0"), 900);
-  };
 
   // Without Monaco, saving rewrites the textarea in place.
   let formatCode = (): void => {
-    announce();
     const code = getCode();
     const edits = formatEdits(code);
     if (!edits.length) return;
@@ -91,10 +90,12 @@ ${code}
   async function mountMonaco(): Promise<void> {
     // monaco-editor's export map serves `monaco-editor/<path>` from `esm/vs/<path>.js`;
     // the ESM modules import their own CSS.
-    const [monaco, , htmlLanguage] = await Promise.all([
+    const [monaco, , htmlLanguage, { default: monacoCss }] = await Promise.all([
       import("monaco-editor/editor/editor.api"),
       import("monaco-editor/basic-languages/monaco.contribution"),
       import("monaco-editor/language/html/monaco.contribution"),
+      // Not in the package exports map; the docs app depends on monaco-editor directly.
+      import("../../node_modules/monaco-editor/min/vs/editor/editor.main.css?inline"),
     ]);
     const [{ default: EditorWorker }, { default: HtmlWorker }] = await Promise.all([
       import("monaco-editor/editor/editor.worker?worker"),
@@ -104,9 +105,24 @@ ${code}
       getWorker: (_: string, label: string) =>
         label === "html" ? new HtmlWorker() : new EditorWorker(),
     };
+    // Monaco lives in a shadow root. Its few hundred inline-styled nodes would
+    // otherwise be tested against every one of the page's `[style*=]` utility
+    // selectors on each keystroke and scroll: about 30x the restyle cost,
+    // shared with the preview frame's main thread in dev. Its stylesheet is
+    // adopted into the root; the codicon @font-face it carries only works from
+    // the document, where Monaco's own CSS imports already put it. Monaco puts
+    // its theme rules in the root itself once the container is attached.
+    const shell = document.createElement("div");
+    shell.style.cssText = "position:absolute;inset:0";
+    const shadow = shell.attachShadow({ mode: "open" });
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(monacoCss);
+    shadow.adoptedStyleSheets = [sheet];
     const container = document.createElement("div");
     container.style.cssText = "position:absolute;inset:0";
-    monacoContainer = container;
+    shadow.append(container);
+    editorHost.append(shell);
+    monacoContainer = shell;
     const editor = monaco.editor.create(container, {
       value: getCode(),
       language: "html",
@@ -121,7 +137,6 @@ ${code}
       padding: { top: 12 },
       formatOnPaste: true,
     });
-    editorHost.append(container);
     textarea.hidden = true;
     getCode = () => editor.getValue();
     setCode = (code) => editor.setValue(code);
@@ -151,7 +166,6 @@ ${code}
         documentRangeFormattingEdits: false,
       });
       const toMonacoEdits = (text: string) => {
-        announce();
         return formatEdits(text).map((edit) => ({
           range: toRange(edit.range),
           text: edit.newText,
@@ -173,7 +187,6 @@ ${code}
       editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => save());
       // Saving applies the edits directly (as one undo step); Shift+Alt+F goes through the provider.
       formatCode = () => {
-        announce();
         const edits = formatEdits(model.getValue());
         if (!edits.length) return;
         editor.pushUndoStop();
@@ -217,7 +230,7 @@ ${code}
     }
     new MutationObserver(retheme).observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["data-ui-theme"],
+      attributeFilter: ["data-ui"],
     });
     matchMedia("(prefers-color-scheme: dark)").addEventListener("change", retheme);
   }
@@ -235,8 +248,72 @@ ${code}
   root.addEventListener("keydown", (event) => {
     if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== "s") return;
     event.preventDefault();
+    // Events from inside the shadow root arrive retargeted to its host.
     if (monacoContainer?.contains(event.target as Node)) return;
     save();
+  });
+
+  // --- layout: drag the divider (lg and up), collapse the code (below lg) ----
+  const split = root.querySelector<HTMLElement>("[data-playground-split]");
+  const resizer = root.querySelector<HTMLElement>("[data-playground-resizer]");
+  if (split && resizer) {
+    let percent = 50;
+    let frame = 0;
+    const setSplit = (next: number): void => {
+      percent = Math.min(80, Math.max(20, Math.round(next)));
+      resizer.setAttribute("aria-valuenow", String(percent));
+      // One layout per frame, however fast the pointer moves.
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() =>
+        split.style.setProperty(
+          "--template-cols--lg",
+          `minmax(0, ${percent}fr) auto minmax(0, ${100 - percent}fr)`,
+        ),
+      );
+    };
+    resizer.style.touchAction = "none";
+    resizer.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0) return;
+      event.preventDefault();
+      resizer.setPointerCapture(event.pointerId);
+      // The frame would swallow the pointer while it crosses the preview.
+      output.style.setProperty("--pointer-events", "none");
+      const box = split.getBoundingClientRect();
+      const drag = new AbortController();
+      resizer.addEventListener(
+        "pointermove",
+        (move) => setSplit(((move.clientX - box.left) / box.width) * 100),
+        { signal: drag.signal },
+      );
+      resizer.addEventListener(
+        "lostpointercapture",
+        () => {
+          drag.abort();
+          output.style.removeProperty("--pointer-events");
+        },
+        { signal: drag.signal },
+      );
+    });
+    resizer.addEventListener("keydown", (event) => {
+      const step = event.shiftKey ? 10 : 2;
+      const next = { ArrowLeft: percent - step, ArrowRight: percent + step, Home: 20, End: 80 }[
+        event.key
+      ];
+      if (next === undefined) return;
+      event.preventDefault();
+      setSplit(next);
+    });
+    resizer.addEventListener("dblclick", () => setSplit(50));
+  }
+
+  const toggle = root.querySelector<HTMLButtonElement>("[data-playground-toggle]");
+  const toggleLabel = toggle?.querySelector<HTMLElement>("[data-playground-toggle-label]");
+  toggle?.addEventListener("click", () => {
+    const open = toggle.getAttribute("aria-expanded") !== "true";
+    toggle.setAttribute("aria-expanded", String(open));
+    if (toggleLabel) toggleLabel.textContent = open ? "Hide code" : "Show code";
+    // Only the base value changes: the markup's --display--lg keeps the code visible at lg.
+    editorHost.style.setProperty("--display", open ? "block" : "none");
   });
   listeners.add(() => {
     clearTimeout(renderTimer);
@@ -246,7 +323,7 @@ ${code}
   // Theme changes re-render the output (the sandbox has no shared document to mirror into).
   new MutationObserver(() => render(getCode())).observe(document.documentElement, {
     attributes: true,
-    attributeFilter: ["data-ui-theme"],
+    attributeFilter: ["data-ui"],
   });
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => render(getCode()));
 
@@ -266,7 +343,7 @@ ${code}
   // --- boot --------------------------------------------------------------
   void (async () => {
     const shared = await decodeHash(location.hash);
-    setCode(shared ?? blank);
+    setCode(shared ?? initial);
     if (shared) templateSelect.value = "blank";
     render(getCode());
     try {

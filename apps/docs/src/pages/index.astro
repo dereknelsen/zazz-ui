@@ -1,100 +1,100 @@
 ---
-import Logo from "../components/Logo.astro";
-import BaseLayout from "../layouts/BaseLayout.astro";
-import { site } from "../site.config.ts";
-import { ArrowUpRight, BookOpenText } from "@lucide/astro";
+import Logo from '../components/Logo.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../site.config.ts';
+import { ArrowUpRight, BookOpenText } from '@lucide/astro';
 ---
 
 <BaseLayout title={site.name}>
   <main
-    id="main"
-    data-ui="layout"
-    style="
-      --py: 20; 
-      --min-h: calc(100svh - (13 * var(--spacing))); 
+    id='main'
+    data-ui='layout'
+    style='
+      --py: 20;
+      --min-h: calc(100svh - (13 * var(--spacing)));
       --position: relative;
-    "
+    '
   >
     <div
-      aria-hidden="true"
-      style="
-          --band: layout-full; 
+      aria-hidden='true'
+      style='
+          --band: layout-full;
           --border-x: 3;
           --border-style: double;
           --border-color: oklch(from var(--color-border) l c h / 0.25);
-          --position: absolute; 
+          --position: absolute;
           --inset: 0;
           --pointer-events: none;
-        "
+        '
     >
     </div>
     <div
-      aria-hidden="true"
-      style="
-          --band: layout-2xl; 
+      aria-hidden='true'
+      style='
+          --band: layout-2xl;
           --border-x: 3;
           --border-style: double;
           --border-color: oklch(from var(--color-border) l c h / 0.25);
-          --position: absolute; 
+          --position: absolute;
           --inset: 0;
           --pointer-events: none;
-        "
+        '
     >
     </div>
     <div
-      aria-hidden="true"
-      style="
-          --band: layout-xl; 
+      aria-hidden='true'
+      style='
+          --band: layout-xl;
           --border-x: 3;
           --border-style: double;
           --border-color: oklch(from var(--color-border) l c h / 0.25);
-          --position: absolute; 
+          --position: absolute;
           --inset: 0;
           --pointer-events: none;
-        "
+        '
     >
     </div>
     <div
-      aria-hidden="true"
-      style="
-          --band: layout-lg; 
+      aria-hidden='true'
+      style='
+          --band: layout-lg;
           --border-x: 3;
           --border-style: double;
           --border-color: oklch(from var(--color-border) l c h / 0.25);
-          --position: absolute; 
+          --position: absolute;
           --inset: 0;
           --pointer-events: none;
-        "
+        '
     >
     </div>
     <div
-      aria-hidden="true"
-      style="
-          --band: layout-md; 
+      aria-hidden='true'
+      style='
+          --band: layout-md;
           --border-x: 3;
           --border-style: double;
           --border-color: oklch(from var(--color-border) l c h / 0.25);
-          --position: absolute; 
+          --position: absolute;
           --inset: 0;
           --pointer-events: none;
-        "
+        '
     >
     </div>
     <div
-      aria-hidden="true"
-      style="
-          --band: layout-sm; 
+      aria-hidden='true'
+      style='
+          --band: layout-sm;
           --border-x: 3;
           --border-style: double;
           --border-color: oklch(from var(--color-border) l c h / 0.25);
-          --position: absolute; 
+          --position: absolute;
           --inset: 0;
           --pointer-events: none;
-        "
+        '
     >
     </div>
     <div
-      style="
+      style='
         --band: layout-bleed;
         --display: flex-col;
         --items: center;
@@ -102,58 +102,58 @@ import { ArrowUpRight, BookOpenText } from "@lucide/astro";
         --gap: 6;
         --text-align: center;
         --my: auto;
-        --px: var(--gutters); 
-      "
+        --px: var(--gutters);
+      '
     >
       <div
-        style="
+        style='
           --py: 12;
-          --display: flex-col; 
-          --items: center; 
-          --justify: center; 
+          --display: flex-col;
+          --items: center;
+          --justify: center;
           --gap: 6;
           --z: 1;
-        "
+        '
       >
         <div>
-          <Logo variant="lockup" size={32} title="Zazz" />
+          <Logo variant='lockup' size={32} title='Zazz' />
         </div>
-        <h1 data-ui="sr-only">{site.title}</h1>
+        <h1 data-ui='sr-only'>{site.title}</h1>
         <p
-          data-ui="text-h5"
-          style="
+          data-ui='text-h5'
+          style='
           --pt: 4;
           --text-wrap: balance;
-        "
+        '
         >
           HTML&rsquo;s missing design system
         </p>
         <p
-          data-ui="text-lg"
-          style="--text: var(--color-muted-foreground); --font-weight: 300; --max-w: var(--article-sm); --w: 100%; --mx: auto; --text-wrap: balance;"
+          data-ui='text-lg'
+          style='--text: var(--color-muted-foreground); --font-weight: 300; --max-w: var(--article-sm); --w: 100%; --mx: auto; --text-wrap: balance;'
         >
           A markup-first, composable, accessible UI library and design system
           for no-build, low-build, and vanilla web projects.
         </p>
-        <div style="--display: flex-col; --gap: 6;">
+        <div style='--display: flex-col; --gap: 6;'>
           <div
-            style="
+            style='
           --display: grid;
-          --grid-cols--sm: 2;
+          --grid-cols: 2;
           --justify: center;
           --gap: 2;
-        "
+        '
           >
             <a
-              href="/docs/quick-start/"
-              data-ui="button"
-              data-button-variant="primary"><BookOpenText /> Read the docs</a
+              href='/docs/quick-start/'
+              data-ui='button'
+              data-button-variant='primary'><BookOpenText /> Read the docs</a
             >
-            <a href="/api/" data-ui="button" data-button-variant="outline"
+            <a href='/api/' data-ui='button' data-button-variant='outline'
               >Explore the API</a
             >
           </div>
-          <a href="/playground" data-ui="button" data-button-variant="link"
+          <a href='/playground' data-ui='button' data-button-variant='link'
             >Zazz playground <ArrowUpRight /></a
           >
         </div>

@@ -90,6 +90,19 @@ describe("@zazz-ui/eslint-plugin", () => {
     ).toEqual([["attribute-outside-identity", `data-dialog-size="sm"`]]);
   });
 
+  it("asks a form field for an id or a name", () => {
+    expect(
+      findings(
+        `<input type="email"><select></select><textarea name=""></textarea><input type="submit">`,
+      ),
+    ).toEqual([
+      ["field-id-or-name", `<input type="email">`],
+      ["field-id-or-name", `<select></select>`],
+      ["field-id-or-name", `<textarea name=""></textarea>`],
+    ]);
+    expect(lint(`<input name="email"><select id="size"></select><button></button>`)).toEqual([]);
+  });
+
   it("checks border colors without a browser", () => {
     expect(findings(`<div style="--border: 1px solid red; --border-b: rde"></div>`)).toEqual([
       ["border-value", "--border: 1px solid red"],

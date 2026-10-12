@@ -159,11 +159,13 @@ class UiMultiselect extends ZazzElement {
     if (align) panel.setAttribute("data-popover-align", align);
 
     const checkboxes: HTMLInputElement[] = [];
-    for (const option of Array.from(select.options)) {
+    for (const [index, option] of Array.from(select.options).entries()) {
       const row = document.createElement("label");
       row.setAttribute("data-multiselect-slot", "option");
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
+      // an id, not a name: the select submits, and Chrome flags a field with neither
+      checkbox.id = `${panelId}-${index}`;
       checkbox.checked = option.selected;
       checkbox.disabled = option.disabled;
       row.append(checkbox, document.createTextNode(option.label));

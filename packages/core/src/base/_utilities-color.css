@@ -210,27 +210,27 @@
   :where([style*="--bg: none"]) {
     background-image: none;
   }
-  @container (width >= 40ch) {
+  @container (width >= 40rem) {
     :where([style*="--bg--sm: none"]) {
       background-image: none;
     }
   }
-  @container (width >= 65ch) {
+  @container (width >= 48rem) {
     :where([style*="--bg--md: none"]) {
       background-image: none;
     }
   }
-  @container (width >= 90ch) {
+  @container (width >= 64rem) {
     :where([style*="--bg--lg: none"]) {
       background-image: none;
     }
   }
-  @container (width >= 120ch) {
+  @container (width >= 80rem) {
     :where([style*="--bg--xl: none"]) {
       background-image: none;
     }
   }
-  @container (width >= 150ch) {
+  @container (width >= 96rem) {
     :where([style*="--bg--2xl: none"]) {
       background-image: none;
     }

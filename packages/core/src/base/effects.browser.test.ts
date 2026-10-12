@@ -3,11 +3,12 @@
 /**
  * @fileoverview `--opacity`: state tiers apply in the
  * documented precedence, and a modifier on a parent never reaches a child.
+ * Signed rings (`--ring`, `--focus-ring`) and the shadow's cast angle.
  */
 
 import { describe, expect, it } from "vite-plus/test";
 import { commands, server, userEvent } from "vite-plus/test/browser/context";
-import { mount, style, useKit } from "../../test/browser.ts";
+import { at, atWidth, below, mount, settled, style, tabTo, useKit } from "../../test/browser.ts";
 
 const held = commands as unknown as {
   mouseDown(): Promise<void>;
@@ -182,5 +183,103 @@ describe("shadow keywords and hue", () => {
     const after = style(el, "box-shadow");
     document.documentElement.style.removeProperty("--color-shadow");
     expect(after).not.toBe(before);
+  });
+});
+
+describe("signed rings", () => {
+  useKit();
+
+  const COLOR = "--ring-color: rgb(1, 2, 3)";
+  /** The ring band's layer: `rgb(1, 2, 3) 0px 0px 0px <spread>px[ inset]`. */
+  const band = (el: Element, inset: boolean) =>
+    style(el, "box-shadow")
+      .split(/,\s*(?=rgb)/)
+      .find((layer) => layer.startsWith("rgb(1, 2, 3)") && layer.endsWith("inset") === inset);
+
+  it("a number is pixels, outset", () => {
+    const el = mount(`<div style="--ring: 2; ${COLOR}">x</div>`);
+    expect(band(el, false)).toBe("rgb(1, 2, 3) 0px 0px 0px 2px");
+    expect(band(el, true)).toBe("rgb(1, 2, 3) 0px 0px 0px 0px inset");
+  });
+
+  it("a negative ring is inset, as a number or a length", () => {
+    for (const ring of ["-2", "-2px"]) {
+      const el = mount(`<div style="--ring: ${ring}; ${COLOR}">x</div>`);
+      expect(band(el, true), ring).toBe("rgb(1, 2, 3) 0px 0px 0px 2px inset");
+      expect(band(el, false), ring).toBe("rgb(1, 2, 3) 0px 0px 0px 0px");
+    }
+  });
+
+  it("the offset widens the band on either side", () => {
+    const el = mount(`<div style="--ring: -2; --ring-offset: 3; ${COLOR}">x</div>`);
+    expect(band(el, true)).toBe("rgb(1, 2, 3) 0px 0px 0px 5px inset");
+  });
+
+  it("a breakpoint tier flips the ring inset", async () => {
+    const el = mount(`<div style="--ring: 2; --ring--md: -2; ${COLOR}">x</div>`);
+    await atWidth(below("md"));
+    expect(band(el, false)).toBe("rgb(1, 2, 3) 0px 0px 0px 2px");
+    await atWidth(at("md"));
+    expect(band(el, true)).toBe("rgb(1, 2, 3) 0px 0px 0px 2px inset");
+  });
+
+  it("--focus-ring: -2 draws a button's focus ring inside, with the outline twin", async () => {
+    const el = mount(`<button data-ui="button" style="--focus-ring: -2">x</button>`);
+    await tabTo(el);
+    await settled(el);
+    expect(style(el, "box-shadow")).toMatch(/0px 0px 0px 2px inset/);
+    expect(style(el, "outline-width")).toBe("2px");
+    expect(Number.parseFloat(style(el, "outline-offset"))).toBeLessThanOrEqual(-2);
+  });
+
+  it("a --focus-ring tier alone keeps the default ring below it", async () => {
+    const el = mount(`<button data-ui="button" style="--focus-ring--md: -2">x</button>`);
+    await atWidth(below("md"));
+    await tabTo(el);
+    await settled(el);
+    expect(style(el, "box-shadow")).not.toMatch(/[1-9][\d.]*px inset/);
+    expect(style(el, "outline-width")).toBe(style(document.documentElement, "--ring-width"));
+  });
+
+  it("--focus-ring sets a plain element's focus outline", async () => {
+    const el = mount(`<a href="#x" style="--focus-ring: -3">x</a>`);
+    await tabTo(el);
+    expect(style(el, "outline-width")).toBe("3px");
+    expect(Number.parseFloat(style(el, "outline-offset"))).toBeLessThanOrEqual(-3);
+  });
+});
+
+describe("shadow angle", () => {
+  useKit();
+
+  /** The [x, y] offsets of a shadow's first layer, in px. */
+  const offsets = (el: Element) => {
+    const [, x, y] = /\) (-?[\d.e-]+)px (-?[\d.e-]+)px/.exec(style(el, "box-shadow"))!;
+    return [Number(x), Number(y)];
+  };
+
+  it("casts down by default, up at 180deg and left at 90deg", () => {
+    const root = mount(`<div>
+      <div data-down style="box-shadow: var(--shadow-xs)">x</div>
+      <div data-up style="box-shadow: var(--shadow-xs); --shadow-angle: 180deg">x</div>
+      <div data-left style="box-shadow: var(--shadow-xs); --shadow-angle: 90deg">x</div>
+    </div>`);
+    const [dx, dy] = offsets(root.querySelector("[data-down]")!);
+    expect([dx, dy]).toEqual([0, 8]);
+    const [ux, uy] = offsets(root.querySelector("[data-up]")!);
+    expect([Math.round(ux!), uy]).toEqual([0, -8]);
+    const [lx, ly] = offsets(root.querySelector("[data-left]")!);
+    expect([lx, Math.round(ly!)]).toEqual([-8, 0]);
+  });
+
+  it("follows a breakpoint tier, and reaches the subtree's token shadows", async () => {
+    const root = mount(`<div style="--shadow-angle--md: 180deg">
+      <div data-child style="box-shadow: var(--shadow-xs)">x</div>
+    </div>`);
+    const child = root.querySelector("[data-child]")!;
+    await atWidth(below("md"));
+    expect(offsets(child)[1]).toBe(8);
+    await atWidth(at("md"));
+    expect(offsets(child)[1]).toBe(-8);
   });
 });

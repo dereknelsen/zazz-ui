@@ -73,6 +73,10 @@
 @property --_shadow-active { syntax: "*"; inherits: false; }
 @property --group-shadow--active { syntax: "*"; inherits: false; }
 @property --_shadow-g-active { syntax: "*"; inherits: false; }
+@property --shadow-angle--active { syntax: "*"; inherits: false; }
+@property --_shadow-angle-active { syntax: "*"; inherits: false; }
+@property --group-shadow-angle--active { syntax: "*"; inherits: false; }
+@property --_shadow-angle-g-active { syntax: "*"; inherits: false; }
 @property --ring--active { syntax: "*"; inherits: false; }
 @property --_ring-active { syntax: "*"; inherits: false; }
 @property --group-ring--active { syntax: "*"; inherits: false; }
@@ -105,3 +109,11 @@
 @property --_transition-active { syntax: "*"; inherits: false; }
 @property --group-transition--active { syntax: "*"; inherits: false; }
 @property --_transition-g-active { syntax: "*"; inherits: false; }
+@property --transition-duration--active { syntax: "*"; inherits: false; }
+@property --_transition-duration-active { syntax: "*"; inherits: false; }
+@property --group-transition-duration--active { syntax: "*"; inherits: false; }
+@property --_transition-duration-g-active { syntax: "*"; inherits: false; }
+@property --transition-delay--active { syntax: "*"; inherits: false; }
+@property --_transition-delay-active { syntax: "*"; inherits: false; }
+@property --group-transition-delay--active { syntax: "*"; inherits: false; }
+@property --_transition-delay-g-active { syntax: "*"; inherits: false; }

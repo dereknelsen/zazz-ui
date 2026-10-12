@@ -83,7 +83,7 @@ describe("hover", () => {
     const result = hover(parsed, offset)!;
     expect(slice(text, result.range)).toBe("--px--md");
     expect(result.markdown).toContain("`padding-inline`");
-    expect(result.markdown).toContain("65ch");
+    expect(result.markdown).toContain("48rem");
   });
 
   it("describes group and starting states", () => {

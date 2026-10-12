@@ -189,17 +189,25 @@ function isSameOrigin(url: string): boolean {
   return new URL(url, location.href).origin === location.origin;
 }
 
+/** A path ending in a file extension other than `.html` (`/llms.txt`, `/a.md`, `/b.pdf`) is not a page. */
+function isPagePath(url: string): boolean {
+  const ext = /\.([a-z0-9]+)$/i.exec(new URL(url, location.href).pathname)?.[1];
+  return !ext || /^x?html?$/i.test(ext);
+}
+
 if ("navigation" in window) {
   /**
    * URL handed back to the browser for a full load. The `navigate` listener
-   * skips it once, so `location.assign()` from inside the handler does not
-   * re-enter the interception and loop.
+   * skips it once, so `location.replace()` from inside the handler does not
+   * re-enter the interception and loop. Replace, not assign: the intercepted
+   * navigation already committed an entry for this URL, and a second one would
+   * leave Back pointing at a page that no longer exists.
    */
   let bypassUrl: string | null = null;
 
   function fullLoad(url: string): void {
     bypassUrl = url;
-    location.assign(url);
+    location.replace(url);
   }
 
   window.navigation.addEventListener("navigate", (e) => {
@@ -216,7 +224,8 @@ if ("navigation" in window) {
       e.hashChange ||
       e.downloadRequest !== null ||
       e.formData !== null ||
-      !isSameOrigin(e.destination.url)
+      !isSameOrigin(e.destination.url) ||
+      !isPagePath(e.destination.url)
     ) {
       return;
     }
@@ -227,11 +236,12 @@ if ("navigation" in window) {
         try {
           const res = await fetch(e.destination.url, { signal: e.signal });
           if (!res.ok) throw new Error(res.statusText);
+          if (!res.headers.get("content-type")?.includes("html")) throw new Error("not a page");
           doc = new DOMParser().parseFromString(await res.text(), "text/html");
         } catch {
           // A newer navigation aborted this one; it must not swap in late.
           if (e.signal.aborted) return;
-          fullLoad(e.destination.url); // network or HTTP failure
+          fullLoad(e.destination.url); // network or HTTP failure, or not HTML
           return;
         }
         if (e.signal.aborted) return;

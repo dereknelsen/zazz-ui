@@ -21,6 +21,7 @@
     --_border-b-disabled: var(--border-b--disabled);
     --_opacity-disabled: var(--opacity--disabled);
     --_shadow-disabled: var(--shadow--disabled);
+    --_shadow-angle-disabled: var(--shadow-angle--disabled);
     --_ring-disabled: var(--ring--disabled);
     --_ring-color-disabled: var(--ring-color--disabled);
     --_ring-offset-disabled: var(--ring-offset--disabled);
@@ -29,6 +30,8 @@
     --_translate-disabled: var(--translate--disabled);
     --_rotate-disabled: var(--rotate--disabled);
     --_transition-disabled: var(--transition--disabled);
+    --_transition-duration-disabled: var(--transition-duration--disabled);
+    --_transition-delay-disabled: var(--transition-delay--disabled);
   }
   :where([data-ui~="group"]:is(:disabled, [aria-disabled="true"]) [style*="--group-"]) {
     --_template-cols-g-disabled: var(--group-template-cols--disabled);
@@ -49,6 +52,7 @@
     --_border-b-g-disabled: var(--group-border-b--disabled);
     --_opacity-g-disabled: var(--group-opacity--disabled);
     --_shadow-g-disabled: var(--group-shadow--disabled);
+    --_shadow-angle-g-disabled: var(--group-shadow-angle--disabled);
     --_ring-g-disabled: var(--group-ring--disabled);
     --_ring-color-g-disabled: var(--group-ring-color--disabled);
     --_ring-offset-g-disabled: var(--group-ring-offset--disabled);
@@ -57,5 +61,7 @@
     --_translate-g-disabled: var(--group-translate--disabled);
     --_rotate-g-disabled: var(--group-rotate--disabled);
     --_transition-g-disabled: var(--group-transition--disabled);
+    --_transition-duration-g-disabled: var(--group-transition-duration--disabled);
+    --_transition-delay-g-disabled: var(--group-transition-delay--disabled);
   }
 }

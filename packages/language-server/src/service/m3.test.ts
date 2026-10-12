@@ -80,7 +80,7 @@ describe("inlay hints", () => {
       hints(`<p style="--p: 4; --px--md: 6; --shadow: md; --gap: var(--space-md)">a</p>`),
     ).toEqual([
       ["4", " ≈ 0.9–1rem"],
-      ["--px--md", " ≥ 65ch"],
+      ["--px--md", " ≥ 48rem"],
       ["6", " ≈ 1.35–1.5rem"],
       ["md", " = var(--shadow-md)"],
       ["var(--space-md)", " ≈ 1.35rem – 1.5rem"],

@@ -39,12 +39,10 @@ function navigate(
 }
 
 /** Serves `html` for the next fetch. */
-function serve(html: string): void {
+function serve(html: string, type = "text/html"): void {
   vi.stubGlobal(
     "fetch",
-    vi.fn(
-      async () => new Response(html, { status: 200, headers: { "content-type": "text/html" } }),
-    ),
+    vi.fn(async () => new Response(html, { status: 200, headers: { "content-type": type } })),
   );
 }
 
@@ -67,7 +65,7 @@ describe("navigation", () => {
 
   beforeEach(() => {
     assign = vi.fn<(url: string | URL) => void>();
-    vi.spyOn(window.location, "assign").mockImplementation(assign);
+    vi.spyOn(window.location, "replace").mockImplementation(assign);
     document.documentElement.setAttribute("data-ui-navigation", "swap");
     document.title = "Current";
     document.body.innerHTML = `<header>old header</header><main><h1>old</h1></main>`;
@@ -165,6 +163,22 @@ describe("navigation", () => {
   it("hands a destination without the opt-in back to the browser for a full load", async () => {
     const url = new URL("/plain", location.href).href;
     serve(page(`<main>plain</main>`, { swap: false }));
+    const event = navigate("push", url);
+    navigation.dispatchEvent(event);
+    await event.handler!();
+    expect(assign).toHaveBeenCalledWith(url);
+    expect(document.querySelector("header")!.textContent).toBe("old header");
+  });
+
+  it("leaves a link to a non-page file to the browser, so history stays clean", () => {
+    const event = navigate("push", new URL("/llms.txt", location.href).href);
+    navigation.dispatchEvent(event);
+    expect(event.intercept).not.toHaveBeenCalled();
+  });
+
+  it("replaces the intercepted entry when the response is not HTML", async () => {
+    const url = new URL("/notes", location.href).href;
+    serve("# plain", "text/markdown");
     const event = navigate("push", url);
     navigation.dispatchEvent(event);
     await event.handler!();

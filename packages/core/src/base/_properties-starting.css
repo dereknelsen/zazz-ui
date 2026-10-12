@@ -37,6 +37,8 @@
 @property --_opacity-starting { syntax: "*"; inherits: false; }
 @property --shadow--starting { syntax: "*"; inherits: false; }
 @property --_shadow-starting { syntax: "*"; inherits: false; }
+@property --shadow-angle--starting { syntax: "*"; inherits: false; }
+@property --_shadow-angle-starting { syntax: "*"; inherits: false; }
 @property --ring--starting { syntax: "*"; inherits: false; }
 @property --_ring-starting { syntax: "*"; inherits: false; }
 @property --ring-color--starting { syntax: "*"; inherits: false; }
@@ -53,3 +55,7 @@
 @property --_rotate-starting { syntax: "*"; inherits: false; }
 @property --transition--starting { syntax: "*"; inherits: false; }
 @property --_transition-starting { syntax: "*"; inherits: false; }
+@property --transition-duration--starting { syntax: "*"; inherits: false; }
+@property --_transition-duration-starting { syntax: "*"; inherits: false; }
+@property --transition-delay--starting { syntax: "*"; inherits: false; }
+@property --_transition-delay-starting { syntax: "*"; inherits: false; }

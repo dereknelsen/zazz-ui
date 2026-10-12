@@ -5,7 +5,7 @@
  * by the client script below, so the palette opts out of its own filtering
  * (`data-command-filter="none"`) and only navigates, highlights, and announces.
  */
-import { Search as SearchIcon } from "@lucide/astro";
+import { Search as SearchIcon, X } from "@lucide/astro";
 ---
 
 <ui-command
@@ -57,6 +57,7 @@ import { Search as SearchIcon } from "@lucide/astro";
       <input
         data-command-slot="input"
         type="text"
+        name="q"
         placeholder="Search the docs…"
         role="combobox"
         aria-expanded="false"
@@ -64,6 +65,17 @@ import { Search as SearchIcon } from "@lucide/astro";
         autocomplete="off"
         aria-label="Search the docs"
       />
+      <button
+        data-ui="button"
+        data-button-variant="ghost"
+        data-button-size="icon"
+        type="button"
+        command="close"
+        commandfor="site-search"
+        aria-label="Close search"
+      >
+        <X size={16} aria-hidden="true" />
+      </button>
     </header>
 
     <div
@@ -238,7 +250,13 @@ import { Search as SearchIcon } from "@lucide/astro";
       clearTimeout(timer);
       timer = setTimeout(() => void run(input.value), 120);
     });
-    // Warm the index the first time the palette opens.
+    // Warm the index before the palette opens: on hover or focus of the trigger
+    // (desktop intent), on the press (touch), and on open as the last resort
+    // for the hotkey path. load() runs once, so the extra listeners are free.
+    const trigger = root.querySelector<HTMLElement>("[data-command-slot='open']");
+    for (const type of ["pointerenter", "focus", "pointerdown"]) {
+      trigger?.addEventListener(type, () => void load(), { once: true });
+    }
     root.addEventListener("zazz:dialog-open", () => void load(), {
       once: true,
     });

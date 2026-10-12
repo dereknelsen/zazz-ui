@@ -1,7 +1,7 @@
 /**
  * @fileoverview Inlay hints inside `style`: what a scale number comes to
  * (`--p: 4` → `≈ 0.9–1rem`, `--spacing` being fluid), a breakpoint tier's
- * threshold (`--px--md` → `≥ 65ch`), what a shorthand reads as (`--shadow: md`
+ * threshold (`--px--md` → `≥ 48rem`), what a shorthand reads as (`--shadow: md`
  * → `var(--shadow-md)`), and a size token's range (`var(--space-md)`).
  */
 

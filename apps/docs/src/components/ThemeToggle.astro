@@ -1,6 +1,6 @@
 ---
 /**
- * Light / dark / system, icons only. A stored choice pins `data-ui-theme` on
+ * Light / dark / system, icons only. A stored choice pins `theme-dark` / `theme-light` in `data-ui` on
  * `<html>` (the kit's head script restores it before first paint); "system"
  * clears both so the page follows the OS scheme.
  */
@@ -44,14 +44,25 @@ const options = [
       const value = localStorage.getItem(KEY);
       return value === "light" || value === "dark" ? value : "system";
     } catch {
-      return root.getAttribute("data-ui-theme") ?? "system";
+      return pinned() ?? "system";
     }
   }
 
+  /** The pinned scheme from a `theme-*` switch on `<html>`, if any. */
+  function pinned(): string | undefined {
+    return (root.dataset.ui ?? "")
+      .split(/\s+/)
+      .find((t) => t === "theme-light" || t === "theme-dark")
+      ?.slice("theme-".length);
+  }
+
   function apply(value: string): void {
-    if (value === "light" || value === "dark")
-      root.setAttribute("data-ui-theme", value);
-    else root.removeAttribute("data-ui-theme");
+    const tokens = (root.dataset.ui ?? "")
+      .split(/\s+/)
+      .filter((t) => t && !t.startsWith("theme-"));
+    if (value === "light" || value === "dark") tokens.push(`theme-${value}`);
+    if (tokens.length) root.dataset.ui = tokens.join(" ");
+    else delete root.dataset.ui;
     try {
       if (value === "system") localStorage.removeItem(KEY);
       else localStorage.setItem(KEY, value);

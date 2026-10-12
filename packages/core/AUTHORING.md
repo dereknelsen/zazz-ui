@@ -19,6 +19,7 @@ State tokens (`data-<identity>-state="active open"`) are written by the kit's sc
 - Interactive primitives also have a tag form (`<ui-carousel>`, `<ui-tabs>`, `<ui-layout>`). Use the tag where the wrapper would otherwise be a plain `div`.
 - Native elements keep their meaning: a button is a `<button data-ui="button">`, a dialog is a `<dialog data-ui="dialog">`, an input is `<input data-ui="input">`. Never put `data-ui="button"` on a `div`.
 - Default variant = no preset attribute. Write `data-button-variant="primary"`, never a combined token.
+- Every `<input>`, `<select>`, and `<textarea>` gets a `name` (the key it submits under; autofill reads it too), even in a search box or a demo. A field that must not submit, like a select-all checkbox or a control mirrored by script, can take an `id` instead. Chrome reports a field with neither, and the `field-id-or-name` lint rule flags it.
 
 ## Presets and slots
 
@@ -43,14 +44,14 @@ State tokens (`data-<identity>-state="active open"`) are written by the kit's sc
 
 `--<utility>--<breakpoint>` or `--<utility>--<state>`, joined with a double hyphen.
 
-| Modifier    | Values                                                                  | Families                                                                                                                      |
-| ----------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Breakpoint  | `sm md lg xl 2xl` (nearest container's width in `ch`, mobile first)     | flow, grid, spacing, margin, sizing, typography, color                                                                        |
-| State       | `hover active focus-visible focus-within disabled open checked current` | color, effects (`--bg`, `--text`, `--opacity`, `--shadow`…)                                                                   |
-| Group state | `--group-<utility>--hover` reacts to an ancestor with `data-ui="group"` | color, effects                                                                                                                |
-| Starting    | `--<utility>--starting`: the value a `--transition` animates from       | color, effects                                                                                                                |
-| Stuck       | `--<utility>--stuck` inside a sticky element (experimental)             | color, effects                                                                                                                |
-| Pseudo      | `--before-<utility>`, `--after-<utility>`, plus `--before-content: ''`  | sizing, spacing (padding, inset), position, display, z, color, `--rounded`, opacity, transforms, transition, font-size/weight |
+| Modifier    | Values                                                                  | Families                                                                                                                                                                  |
+| ----------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Breakpoint  | `sm md lg xl 2xl` (nearest container's width in `rem`, mobile first)    | flow, grid, spacing, margin, sizing, typography, color, plus `--transition-duration`, `--transition-delay`, the `--ring*` utilities, `--focus-ring`, and `--shadow-angle` |
+| State       | `hover active focus-visible focus-within disabled open checked current` | color, effects (`--bg`, `--text`, `--opacity`, `--shadow`…)                                                                                                               |
+| Group state | `--group-<utility>--hover` reacts to an ancestor with `data-ui="group"` | color, effects                                                                                                                                                            |
+| Starting    | `--<utility>--starting`: the value a `--transition` animates from       | color, effects                                                                                                                                                            |
+| Stuck       | `--<utility>--stuck` inside a sticky element (experimental)             | color, effects                                                                                                                                                            |
+| Pseudo      | `--before-<utility>`, `--after-<utility>`, plus `--before-content: ''`  | sizing, spacing (padding, inset), position, display, z, color, `--rounded`, opacity, transforms, transition (and its duration and delay), font-size/weight                |
 
 ```html
 <article data-ui="card group">
@@ -97,11 +98,13 @@ State tokens (`data-<identity>-state="active open"`) are written by the kit's sc
 
 Rules that bite:
 
-1. **A tier needs a base.** `--text--hover: red` alone does nothing; write `--text: currentColor; --text--hover: red`. These utilities have a natural default and work tier-only: `--flex-wrap --shrink --grid-flow --auto-cols --auto-rows --items --justify --place-items --place-content --self --flex --basis --order --band --grid-cols --grid-rows --gap --gap-x --gap-y --text-align --text-wrap --text-decoration --opacity --scale --translate --rotate --shadow --ring --ring-color --ring-offset --ring-offset-color --rounded --aspect --position --overflow --overflow-x --overflow-y --z` (on any element that is not a primitive: typography roles, switches, and prose count as plain, so `data-ui="text-2xl" style="--opacity--hover: .8"` works; a primitive like a button still needs the base).
-2. **Breakpoints reach layout and color; states reach color and effects.** `--bg--md`, `--text--lg`, and `--px--md` exist; `--px--hover` and `--shadow--md` do not. On a color utility a state beats a breakpoint: `--bg--md: black; --bg--hover: gray` is gray on hover at any width.
+1. **A tier needs a base.** `--text--hover: red` alone does nothing; write `--text: currentColor; --text--hover: red`. These utilities have a natural default and work tier-only: `--flex-wrap --shrink --grid-flow --auto-cols --auto-rows --items --justify --place-items --place-content --self --flex --basis --order --band --grid-cols --grid-rows --gap --gap-x --gap-y --text-align --text-wrap --text-decoration --opacity --scale --translate --rotate --shadow --shadow-angle --ring --ring-color --ring-offset --ring-offset-color --focus-ring --rounded --aspect --position --overflow --overflow-x --overflow-y --z` (on any element that is not a primitive: typography roles, switches, and prose count as plain, so `data-ui="text-2xl" style="--opacity--hover: .8"` works; a primitive like a button still needs the base).
+2. **Breakpoints reach layout and color; states reach color and effects.** `--bg--md`, `--text--lg`, and `--px--md` exist; `--px--hover` and `--shadow--md` do not. The rings and the shadow's angle take breakpoints too: `--ring--md`, `--focus-ring--md`, `--shadow-angle--md`. On a color utility a state beats a breakpoint: `--bg--md: black; --bg--hover: gray` is gray on hover at any width.
 3. **Keywords mix with numbers.** `--w: 4; --w--md: auto`, `--w: fit-content; --h: 4`, and `--grid-cols: 2; --grid-cols--md: subgrid` all work: each keyword-bearing utility has explicit keyword rules per tier until CSS `if()` can branch on the value. Keywords must be spelled exactly (`--w--md: auto`).
 4. **A utility on a primitive flattens its states.** `--bg: red` on a button is red on hover too. To keep hover, add the tier (`--bg--hover: darkred`) or set the hook instead (below).
-5. **Breakpoints read the nearest container, not the window.** A tier answers to the closest inline-size container: the page's `html`, a layout band's child (so tiers inside a `layout-md` band follow the band), or any `data-ui="container"`. Thresholds are character counts: `sm` 40ch, `md` 65ch, `lg` 90ch, `xl` 120ch, `2xl` 150ch. Mark a card, sidebar, or slot `data-ui="container"` and the tiers inside it follow its width. An element never queries itself: a container's own tiers read the container above it. A container cannot size itself from its content, so give it a definite or stretched width.
+5. **Breakpoints read the nearest container, not the window.** A tier answers to the closest inline-size container: the page's `html`, a layout band's child (so tiers inside a `layout-md` band follow the band), or any `data-ui="container"`. Thresholds are the `--layout-*` widths in rem, the same in any font: `sm` 40rem, `md` 48rem, `lg` 64rem, `xl` 80rem, `2xl` 96rem. Mark a card, sidebar, or slot `data-ui="container"` and the tiers inside it follow its width. An element never queries itself: a container's own tiers read the container above it. A container cannot size itself from its content, so give it a definite or stretched width.
+
+6. **Ring widths are signed pixels.** `--ring: 2` is a 2px ring and `--ring: -2` draws it inset; a length works too. A primitive's focus ring takes the same signed width from `--focus-ring` (`--focus-ring: -2` keeps it inside a clipping container), defaulting to the `--ring-width` token. `--shadow-angle` turns the direction shadows are cast in (`0deg` down, `90deg` left, `180deg` up) for the element's `--shadow` and its subtree.
 
 ## Theming primitives: hooks
 
@@ -142,7 +145,7 @@ A region whose content depends on the page, such as a section sidebar, should no
 
 ## Theme
 
-`data-ui-theme="dark"` or `"light"` on any element (usually `<html>`) forces that scheme for the subtree; without it, the system setting applies. Color utilities and tokens follow automatically when they use `var(--color-<role>)`.
+The `theme-dark` or `theme-light` switch on any element (`data-ui="theme-dark"`, usually on `<html>`) forces that scheme for the subtree; without one, the system setting applies. Color utilities and tokens follow automatically when they use `var(--color-<role>)`.
 
 ## Do not
 
@@ -152,7 +155,7 @@ A region whose content depends on the page, such as a section sidebar, should no
 
 ## Tools
 
-- **`<ui-debug data-debug-domains="localhost">`** in development warns in the console about unknown utilities, wrong values, tiers without a base, flattened states, and misplaced presets.
+- **`<ui-debug data-debug-domains="localhost">`** in development warns in the console about unknown utilities, wrong values, tiers without a base, flattened states, misplaced presets, and form fields with neither `id` nor `name`.
 - **Editor**: the Zazz VS Code extension (`packages/vscode`, also for Cursor) shows the `<ui-debug>` audit as you type, completes utilities (only the tiers each takes), values with resolved tokens, identities, presets, and hooks, and adds hover, inlay hints, highlighting, snippets, and page templates. Without it, `editor/zazz.html-data.json` and `editor/zazz.css-data.json` give flat completions (`"html.customData"`, `"css.customData"` in settings).
 - **Formatting**: the `zazz/style-format` ESLint rule puts each utility of a multi-utility `style` on its own line, in cascade order (family, then shorthands first, tiers after their base), and normalizes `--px:6` to `--px: 6`. VS Code applies it on save (`source.fixAll.zazz`, from the extension), the commit hook on staged HTML, and `vp run fmt:html` (repo root) on every file; `vp run ready` checks it.
 - **`StyleGuard`** (`primitives/style-guard`) restores utilities when legacy scripts overwrite `style`.

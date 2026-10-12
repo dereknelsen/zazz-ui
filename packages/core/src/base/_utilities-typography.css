@@ -20,27 +20,27 @@
   :where([style*="--font-weight: heading"]) { --_font-weight: var(--font-weight-heading); }
   :where([style*="--font-weight: body"]) { --_font-weight: var(--font-weight-body); }
   :where([style*="--font-weight: strong"]) { --_font-weight: var(--font-weight-strong); }
-  @container (width >= 40ch) {
+  @container (width >= 40rem) {
     :where([style*="--font-weight--sm: heading"]) { --_font-weight-sm: var(--font-weight-heading); }
     :where([style*="--font-weight--sm: body"]) { --_font-weight-sm: var(--font-weight-body); }
     :where([style*="--font-weight--sm: strong"]) { --_font-weight-sm: var(--font-weight-strong); }
   }
-  @container (width >= 65ch) {
+  @container (width >= 48rem) {
     :where([style*="--font-weight--md: heading"]) { --_font-weight-md: var(--font-weight-heading); }
     :where([style*="--font-weight--md: body"]) { --_font-weight-md: var(--font-weight-body); }
     :where([style*="--font-weight--md: strong"]) { --_font-weight-md: var(--font-weight-strong); }
   }
-  @container (width >= 90ch) {
+  @container (width >= 64rem) {
     :where([style*="--font-weight--lg: heading"]) { --_font-weight-lg: var(--font-weight-heading); }
     :where([style*="--font-weight--lg: body"]) { --_font-weight-lg: var(--font-weight-body); }
     :where([style*="--font-weight--lg: strong"]) { --_font-weight-lg: var(--font-weight-strong); }
   }
-  @container (width >= 120ch) {
+  @container (width >= 80rem) {
     :where([style*="--font-weight--xl: heading"]) { --_font-weight-xl: var(--font-weight-heading); }
     :where([style*="--font-weight--xl: body"]) { --_font-weight-xl: var(--font-weight-body); }
     :where([style*="--font-weight--xl: strong"]) { --_font-weight-xl: var(--font-weight-strong); }
   }
-  @container (width >= 150ch) {
+  @container (width >= 96rem) {
     :where([style*="--font-weight--2xl: heading"]) { --_font-weight-2xl: var(--font-weight-heading); }
     :where([style*="--font-weight--2xl: body"]) { --_font-weight-2xl: var(--font-weight-body); }
     :where([style*="--font-weight--2xl: strong"]) { --_font-weight-2xl: var(--font-weight-strong); }

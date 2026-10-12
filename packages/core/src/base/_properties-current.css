@@ -73,6 +73,10 @@
 @property --_shadow-current { syntax: "*"; inherits: false; }
 @property --group-shadow--current { syntax: "*"; inherits: false; }
 @property --_shadow-g-current { syntax: "*"; inherits: false; }
+@property --shadow-angle--current { syntax: "*"; inherits: false; }
+@property --_shadow-angle-current { syntax: "*"; inherits: false; }
+@property --group-shadow-angle--current { syntax: "*"; inherits: false; }
+@property --_shadow-angle-g-current { syntax: "*"; inherits: false; }
 @property --ring--current { syntax: "*"; inherits: false; }
 @property --_ring-current { syntax: "*"; inherits: false; }
 @property --group-ring--current { syntax: "*"; inherits: false; }
@@ -105,3 +109,11 @@
 @property --_transition-current { syntax: "*"; inherits: false; }
 @property --group-transition--current { syntax: "*"; inherits: false; }
 @property --_transition-g-current { syntax: "*"; inherits: false; }
+@property --transition-duration--current { syntax: "*"; inherits: false; }
+@property --_transition-duration-current { syntax: "*"; inherits: false; }
+@property --group-transition-duration--current { syntax: "*"; inherits: false; }
+@property --_transition-duration-g-current { syntax: "*"; inherits: false; }
+@property --transition-delay--current { syntax: "*"; inherits: false; }
+@property --_transition-delay-current { syntax: "*"; inherits: false; }
+@property --group-transition-delay--current { syntax: "*"; inherits: false; }
+@property --_transition-delay-g-current { syntax: "*"; inherits: false; }

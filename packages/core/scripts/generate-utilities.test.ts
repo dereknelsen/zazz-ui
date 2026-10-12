@@ -37,10 +37,10 @@ function squash(css: string): string {
 
 describe("breakpoint queries", () => {
   it("puts each breakpoint tier in an unnamed size query, so it reads the nearest inline-size container", () => {
-    expect(breakpointQuery("md")).toBe("@container (width >= 65ch)");
+    expect(breakpointQuery("md")).toBe("@container (width >= 48rem)");
     expect(squash(setterRule("md", [W]))).toBe(
       squash(`
-        @container (width >= 65ch) {
+        @container (width >= 48rem) {
           :where([style*="--md:"]) {
             --_w-md: var(--w--md);
           }
@@ -183,7 +183,7 @@ describe("setters", () => {
   it("emits the md setter under the md style query copying every breakpoint utility", () => {
     expect(squash(setterRule("md", [W]))).toBe(
       squash(`
-        @container (width >= 65ch) {
+        @container (width >= 48rem) {
           :where([style*="--md:"]) {
             --_w-md: var(--w--md);
           }
@@ -293,7 +293,7 @@ describe("keyword rules", () => {
         :where(:is([style*="--w: auto"])) {
           inline-size: var(--_w-resolved);
         }
-        @container (width >= 65ch) {
+        @container (width >= 48rem) {
           :where([style*="--w:"][style*="--w--md:"]) {
             inline-size: calc(var(--_w-len) + var(--_w-num) * var(--spacing));
           }
@@ -493,9 +493,41 @@ describe("color and effects composition", () => {
     );
   });
 
-  it("ring and shadow compose into one box-shadow behind the focus-ring placeholder, and tier-only on plain elements", () => {
-    const emission =
-      "box-shadow: var(--_focus-ring, 0 0 #0000), 0 0 0 var(--_ring-offset-resolved, 0px) var(--_ring-offset-color-resolved, transparent), 0 0 0 calc(var(--_ring-offset-resolved, 0px) + var(--_ring-resolved, 0px)) var(--_ring-color-resolved, var(--color-ring)), var(--_shadow-resolved, 0 0 #0000);";
+  it("a px utility resolves to one signed length, ending its chain in chainEnd", () => {
+    const focusRing: Utility = {
+      name: "focus-ring",
+      properties: [],
+      mode: "raw",
+      family: "effects",
+      emit: "px",
+      tiers: "breakpoints",
+      chainEnd: "var(--ring-width)",
+    };
+    expect(squash(baseRule(focusRing, ["md"]))).toBe(
+      squash(`
+        :where([style*="--focus-ring:"], [style*="--focus-ring--"]) {
+          --_focus-ring-resolved: var(--_focus-ring-md, var(--_focus-ring, var(--ring-width)));
+          --_focus-ring-len: var(--_focus-ring-resolved);
+          --_focus-ring-num: var(--_focus-ring-resolved);
+          --_focus-ring-w: calc(var(--_focus-ring-len) + var(--_focus-ring-num) * 1px);
+        }
+        :where([style*="--focus-ring:"]) {
+          --_focus-ring: var(--focus-ring);
+        }
+      `),
+    );
+    expect(registrations(focusRing)).toContain(
+      '@property --_focus-ring-len { syntax: "<length>"; inherits: false; initial-value: 0px; }',
+    );
+  });
+
+  it("ring and shadow compose into one box-shadow behind the focus-shadow placeholder, and tier-only on plain elements", () => {
+    const offset = "abs(var(--_ring-offset-w, 0px))";
+    const band = `(${offset} + abs(var(--_ring-w, 0px)))`;
+    const inset = "max(0, -1 * sign(var(--_ring-w, 0px)))";
+    const offsetColor = "var(--_ring-offset-color-resolved, transparent)";
+    const color = "var(--_ring-color-resolved, var(--color-ring))";
+    const emission = `box-shadow: var(--_focus-shadow, 0 0 #0000), 0 0 0 calc(${offset} * (1 - ${inset})) ${offsetColor}, 0 0 0 calc(${band} * (1 - ${inset})) ${color}, inset 0 0 0 calc(${offset} * ${inset}) ${offsetColor}, inset 0 0 0 calc(${band} * ${inset}) ${color}, var(--_shadow-resolved, 0 0 #0000);`;
     expect(squash(compositeRule([RING, SHADOW], ["ui-layout", "ui-tabs"]))).toBe(
       squash(`
         :where(:is([style*="--shadow:"], [style*="--ring:"], [style*="--ring-color:"], [style*="--ring-offset:"], [style*="--ring-offset-color:"])) {

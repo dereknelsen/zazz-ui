@@ -21,6 +21,7 @@
     --_border-b-active: var(--border-b--active);
     --_opacity-active: var(--opacity--active);
     --_shadow-active: var(--shadow--active);
+    --_shadow-angle-active: var(--shadow-angle--active);
     --_ring-active: var(--ring--active);
     --_ring-color-active: var(--ring-color--active);
     --_ring-offset-active: var(--ring-offset--active);
@@ -29,6 +30,8 @@
     --_translate-active: var(--translate--active);
     --_rotate-active: var(--rotate--active);
     --_transition-active: var(--transition--active);
+    --_transition-duration-active: var(--transition-duration--active);
+    --_transition-delay-active: var(--transition-delay--active);
   }
   :where([data-ui~="group"]:active [style*="--group-"]) {
     --_template-cols-g-active: var(--group-template-cols--active);
@@ -49,6 +52,7 @@
     --_border-b-g-active: var(--group-border-b--active);
     --_opacity-g-active: var(--group-opacity--active);
     --_shadow-g-active: var(--group-shadow--active);
+    --_shadow-angle-g-active: var(--group-shadow-angle--active);
     --_ring-g-active: var(--group-ring--active);
     --_ring-color-g-active: var(--group-ring-color--active);
     --_ring-offset-g-active: var(--group-ring-offset--active);
@@ -57,5 +61,7 @@
     --_translate-g-active: var(--group-translate--active);
     --_rotate-g-active: var(--group-rotate--active);
     --_transition-g-active: var(--group-transition--active);
+    --_transition-duration-g-active: var(--group-transition-duration--active);
+    --_transition-delay-g-active: var(--group-transition-delay--active);
   }
 }

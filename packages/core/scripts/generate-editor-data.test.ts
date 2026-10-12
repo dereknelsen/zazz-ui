@@ -53,7 +53,6 @@ describe("editor custom data", () => {
     expect(attribute("data-layout-size")?.values.map((v) => v.name)).toContain("xl");
     expect(attribute("data-dialog-slot")?.values.map((v) => v.name)).toContain("header");
     expect(attribute("data-carousel-state")?.values.map((v) => v.name)).toContain("active");
-    expect(attribute("data-ui-theme")?.values.map((v) => v.name)).toEqual(["dark", "light"]);
     expect(attribute("data-ui-guard")?.values.map((v) => v.name)).toEqual(["off"]);
     expect(html.tags.map((tag) => tag.name)).toContain("ui-carousel");
   });

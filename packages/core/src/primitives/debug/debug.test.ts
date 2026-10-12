@@ -186,18 +186,30 @@ describe("audit warnings", () => {
 
   it("flags a border shorthand that flattens a primitive's border-color state", () => {
     const hooks = { input: ["border-color--hover"] };
-    expect(warningsFor(`<input data-ui="input" style="--border-b: red">`, hooks)).toEqual([
+    expect(warningsFor(`<input data-ui="input" name="q" style="--border-b: red">`, hooks)).toEqual([
       expect.stringMatching(/--border-b.*hover.*--ui-input-border-color--hover/),
     ]);
     expect(
-      warningsFor(`<input data-ui="input" style="--border: red; --border--hover: blue">`, hooks),
-    ).toEqual([]);
-    expect(
       warningsFor(
-        `<input data-ui="input" style="--border-b: red; --border-color--hover: blue">`,
+        `<input data-ui="input" name="q" style="--border: red; --border--hover: blue">`,
         hooks,
       ),
     ).toEqual([]);
+    expect(
+      warningsFor(
+        `<input data-ui="input" name="q" style="--border-b: red; --border-color--hover: blue">`,
+        hooks,
+      ),
+    ).toEqual([]);
+  });
+
+  it("flags a form field with neither id nor name, as Chrome does", () => {
+    expect(warningsFor(`<input type="email">`)).toEqual([
+      expect.stringMatching(/<input>.*neither `id` nor `name`/),
+    ]);
+    expect(warningsFor(`<select id="size"></select>`)).toEqual([]);
+    expect(warningsFor(`<textarea name="notes"></textarea>`)).toEqual([]);
+    expect(warningsFor(`<input type="submit">`)).toEqual([]);
   });
 
   it("accepts numbers and keywords mixed across one utility's tiers (claim 23)", () => {

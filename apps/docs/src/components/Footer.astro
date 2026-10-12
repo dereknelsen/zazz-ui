@@ -1,51 +1,66 @@
 ---
-import { links, nav, site } from "../site.config.ts";
-import Logo from "./Logo.astro";
+import { links, nav, site } from '../site.config.ts';
+import Logo from './Logo.astro';
 ---
 
-<footer style="
+<footer style='
     --pt: 11;
     --border-t: 1;
-  ">
+  '>
   <ui-layout>
     <div
-      style="
-      --display: grid;
-      --grid-cols: 1;
-      --template-cols--md: auto 1fr 1fr;
-      --items: start;
-      --gap: 8;
-      --gap--md: 16;
-    "
+      style='
+        --display: grid;
+        --place-items: center;
+        --place-items--sm: start;
+        --grid-cols: 1;
+        --template-cols--md: auto 1fr 1fr;
+        --gap: 8;
+        --gap--md: 16;
+      '
     >
-      <a
-        href="/"
-        aria-label="Zazz home"
-        style="--display: flex; --items: center; --gap: 4"
-      >
-        <Logo size={40} variant="mark" />
+      <a href='/' aria-label='Zazz home'>
+        <Logo size={40} variant='mark' />
       </a>
 
-      <nav aria-label="Footer" style="--display: flex-col; --gap: 2">
+      <nav
+        aria-label='Footer'
+        style='
+          --display: flex-col;
+          --justify: center;
+          --justify--sm: start;
+          --gap: 2;
+          --text-align: center;
+          --text-align--sm: left;
+        '
+      >
         <h2
-          id="navigation"
-          data-ui="text-eyebrow"
-          style="--text: var(--color-foreground);"
+          id='navigation'
+          data-ui='text-eyebrow'
+          style='--text: var(--color-foreground)'
         >
           Navigation
         </h2>
-        <ul style="--display: flex; --gap: 5; --flex-wrap: wrap">
+        <ul
+          style='
+            --display: flex;
+            --flex-wrap: balance;
+            --justify: center;
+            --justify--sm: start;
+            --gap: 5;
+          '
+        >
           {
             nav.map((item) => (
               <li>
-                <a href={item.href} data-ui="text-sm text-link">
+                <a href={item.href} data-ui='text-sm text-link'>
                   {item.label}
                 </a>
               </li>
             ))
           }
           <li>
-            <a href={links.github} data-ui="text-sm text-link" rel="noopener"
+            <a href={links.github} data-ui='text-sm text-link' rel='noopener'
               >GitHub</a
             >
           </li>
@@ -53,24 +68,28 @@ import Logo from "./Logo.astro";
       </nav>
 
       <section
-        aria-labelledby="acknowledgements"
-        data-ui="text-sm"
-        style="
+        aria-labelledby='acknowledgements'
+        data-ui='text-sm'
+        style='
           --display: flex-col;
+          --justify: center;
+          --justify--sm: start;
           --gap: 2;
-        "
+          --text-align: center;
+          --text-align--sm: left;
+        '
       >
-        <h2 id="acknowledgements" data-ui="text-eyebrow" style="--mb: 1.5">
+        <h2 id='acknowledgements' data-ui='text-eyebrow' style='--mb: 1.5'>
           Acknowledgements
         </h2>
         <div
-          style="
-            --font-style: italic;
-            --text-wrap: balance;
-            --text: var(--color-muted-foreground); 
+          style='
             --display: flex-col;
             --gap: 2;
-          "
+            --font-style: italic;
+            --text-wrap: balance;
+            --text: var(--color-muted-foreground);
+          '
         >
           <p>
             Zazz is heavily inspired by tailwindcss, shadcn/ui, base-ui, and
@@ -81,27 +100,27 @@ import Logo from "./Logo.astro";
     </div>
   </ui-layout>
 
-  <ui-layout>
+  <ui-layout data-layout-size='bleed'>
     <section
-      data-ui="text-xs"
-      style="
-        --band: layout-bleed;
-        --display: flex;
+      data-ui='text-xs'
+      style='
+        --display: grid;
         --items: center;
         --justify: center;
+        --grid-cols: subgrid;
         --py: 6;
-        --mt: 6;
         --gap: 2;
+        --mt: 6;
+        --text-align: center;
         --text: var(--color-muted-foreground);
-      "
+        --border-t: 1;
+        --border-t--sm: 0;
+      '
     >
-      <p>
+      <p style='--band: layout-full'>
         Built and maintained by Derek Nelsen. Licensed under the MIT License.
-        Source code available on <a
-          data-ui="text-link"
-          href={links.github}
-          rel="noopener">GitHub</a
-        >.
+        Source code available on{' '}
+        <a data-ui='text-link' href={links.github} rel='noopener'>GitHub</a>.
       </p>
     </section>
   </ui-layout>

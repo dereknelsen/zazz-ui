@@ -27,9 +27,9 @@
     --ui-tabs-indicator-inset: var(--ui-tabs-track-padding);
 
     --ui-tabs-label-font-family: var(--font-family-body);
-    --ui-tabs-label-font-size: var(--ui-field-font-size);
+    --ui-tabs-label-font-size: var(--font-size-sm);
     --ui-tabs-label-font-weight: var(--font-weight-strong);
-    --ui-tabs-label-leading: var(--ui-field-leading);
+    --ui-tabs-label-leading: var(--leading-sm);
 
     --ui-tabs-label-bg: transparent;
     --ui-tabs-label-bg--hover: transparent;
@@ -120,19 +120,26 @@
        ring grows in smoothly on focus */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
+    --_focus-in: max(0, -1 * sign(var(--_focus-ring-w, 1px)));
     --_ring-fill: color-mix(
       in oklch,
       var(--ui-tabs-label-ring-color) var(--ring-opacity),
       transparent
     );
     box-shadow:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+      0 0 0 calc(var(--_ring-offset-width) * (1 - var(--_focus-in))) var(--ring-offset-shadow-color),
+      0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * (1 - var(--_focus-in)))
+        var(--_ring-fill, var(--ring-shadow-color)),
+      inset 0 0 0 calc(var(--_ring-offset-width) * var(--_focus-in)) var(--ring-offset-shadow-color),
+      inset 0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * var(--_focus-in))
         var(--_ring-fill, var(--ring-shadow-color));
 
     /* transparent twin of the ring for forced-colors / high-contrast modes */
-    outline: var(--outline-width) var(--outline-style) transparent;
-    outline-offset: var(--outline-offset);
+    outline: abs(var(--_focus-ring-w, var(--outline-width))) var(--outline-style) transparent;
+    outline-offset: calc(
+      var(--outline-offset) - var(--_focus-in) *
+        (2 * var(--outline-offset) + abs(var(--_focus-ring-w, var(--outline-width))))
+    );
     transition: var(--default-transition);
   }
 
@@ -161,7 +168,7 @@
     input[type="radio"]:focus-visible
     + [data-tabs-slot~="label"] {
     --_ring-offset-width: var(--ring-offset-width);
-    --_ring-width: var(--ring-width);
+    --_ring-width: abs(var(--_focus-ring-w, var(--ring-width)));
 
     outline-color: transparent;
   }
@@ -202,8 +209,13 @@
       border-radius: var(--ui-tabs-indicator-rounded);
       background-color: var(--ui-tabs-indicator-bg);
       box-shadow:
-        0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
-        0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+        0 0 0 calc(var(--_ring-offset-width) * (1 - var(--_focus-in)))
+          var(--ring-offset-shadow-color),
+        0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * (1 - var(--_focus-in)))
+          var(--_ring-fill, var(--ring-shadow-color)),
+        inset 0 0 0 calc(var(--_ring-offset-width) * var(--_focus-in))
+          var(--ring-offset-shadow-color),
+        inset 0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * var(--_focus-in))
           var(--_ring-fill, var(--ring-shadow-color)),
         var(--ui-tabs-indicator-shadow);
     }

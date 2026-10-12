@@ -2,7 +2,7 @@
 
 /* sm tier setter */
 @layer ui.utilities {
-  @container (width >= 40ch) {
+  @container (width >= 40rem) {
     :where([style*="--sm:"]) {
       --_display-sm: var(--display--sm);
       --_position-sm: var(--position--sm);
@@ -88,6 +88,14 @@
       --_border-t-sm: var(--border-t--sm);
       --_border-r-sm: var(--border-r--sm);
       --_border-b-sm: var(--border-b--sm);
+      --_shadow-angle-sm: var(--shadow-angle--sm);
+      --_ring-sm: var(--ring--sm);
+      --_ring-color-sm: var(--ring-color--sm);
+      --_ring-offset-sm: var(--ring-offset--sm);
+      --_ring-offset-color-sm: var(--ring-offset-color--sm);
+      --_focus-ring-sm: var(--focus-ring--sm);
+      --_transition-duration-sm: var(--transition-duration--sm);
+      --_transition-delay-sm: var(--transition-delay--sm);
     }
   }
 }

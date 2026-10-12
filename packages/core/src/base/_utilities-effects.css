@@ -157,32 +157,55 @@
   :where([style*="--shadow--stuck: xl"]) { --_shadow-stuck: var(--_stuck-on) var(--shadow-xl); }
   :where([style*="--shadow--stuck: 2xl"]) { --_shadow-stuck: var(--_stuck-on) var(--shadow-2xl); }
 
+  :where([style*="--shadow-angle:"], [style*="--shadow-angle--"], [style*="--group-shadow-angle--"]) {
+    --_shadow-angle-resolved: var(--_shadow-angle-starting, var(--_shadow-angle-disabled, var(--_shadow-angle-active, var(--_shadow-angle-focus-visible, var(--_shadow-angle-focus-within, var(--_shadow-angle-hover, var(--_shadow-angle-checked, var(--_shadow-angle-current, var(--_shadow-angle-open, var(--_shadow-angle-g-disabled, var(--_shadow-angle-g-active, var(--_shadow-angle-g-focus-visible, var(--_shadow-angle-g-focus-within, var(--_shadow-angle-g-hover, var(--_shadow-angle-g-checked, var(--_shadow-angle-g-current, var(--_shadow-angle-g-open, var(--_shadow-angle-stuck, var(--_shadow-angle-2xl, var(--_shadow-angle-xl, var(--_shadow-angle-lg, var(--_shadow-angle-md, var(--_shadow-angle-sm, var(--_shadow-angle))))))))))))))))))))))));
+  }
+  :where([style*="--shadow-angle:"]) {
+    --_shadow-angle: var(--shadow-angle);
+  }
+
   :where([style*="--ring:"], [style*="--ring--"], [style*="--group-ring--"]) {
-    --_ring-resolved: var(--_ring-starting, var(--_ring-disabled, var(--_ring-active, var(--_ring-focus-visible, var(--_ring-focus-within, var(--_ring-hover, var(--_ring-checked, var(--_ring-current, var(--_ring-open, var(--_ring-g-disabled, var(--_ring-g-active, var(--_ring-g-focus-visible, var(--_ring-g-focus-within, var(--_ring-g-hover, var(--_ring-g-checked, var(--_ring-g-current, var(--_ring-g-open, var(--_ring-stuck, var(--_ring)))))))))))))))))));
+    --_ring-resolved: var(--_ring-starting, var(--_ring-disabled, var(--_ring-active, var(--_ring-focus-visible, var(--_ring-focus-within, var(--_ring-hover, var(--_ring-checked, var(--_ring-current, var(--_ring-open, var(--_ring-g-disabled, var(--_ring-g-active, var(--_ring-g-focus-visible, var(--_ring-g-focus-within, var(--_ring-g-hover, var(--_ring-g-checked, var(--_ring-g-current, var(--_ring-g-open, var(--_ring-stuck, var(--_ring-2xl, var(--_ring-xl, var(--_ring-lg, var(--_ring-md, var(--_ring-sm, var(--_ring))))))))))))))))))))))));
+    --_ring-len: var(--_ring-resolved);
+    --_ring-num: var(--_ring-resolved);
+    --_ring-w: calc(var(--_ring-len) + var(--_ring-num) * 1px);
   }
   :where([style*="--ring:"]) {
     --_ring: var(--ring);
   }
 
   :where([style*="--ring-color:"], [style*="--ring-color--"], [style*="--group-ring-color--"]) {
-    --_ring-color-resolved: var(--_ring-color-starting, var(--_ring-color-disabled, var(--_ring-color-active, var(--_ring-color-focus-visible, var(--_ring-color-focus-within, var(--_ring-color-hover, var(--_ring-color-checked, var(--_ring-color-current, var(--_ring-color-open, var(--_ring-color-g-disabled, var(--_ring-color-g-active, var(--_ring-color-g-focus-visible, var(--_ring-color-g-focus-within, var(--_ring-color-g-hover, var(--_ring-color-g-checked, var(--_ring-color-g-current, var(--_ring-color-g-open, var(--_ring-color-stuck, var(--_ring-color)))))))))))))))))));
+    --_ring-color-resolved: var(--_ring-color-starting, var(--_ring-color-disabled, var(--_ring-color-active, var(--_ring-color-focus-visible, var(--_ring-color-focus-within, var(--_ring-color-hover, var(--_ring-color-checked, var(--_ring-color-current, var(--_ring-color-open, var(--_ring-color-g-disabled, var(--_ring-color-g-active, var(--_ring-color-g-focus-visible, var(--_ring-color-g-focus-within, var(--_ring-color-g-hover, var(--_ring-color-g-checked, var(--_ring-color-g-current, var(--_ring-color-g-open, var(--_ring-color-stuck, var(--_ring-color-2xl, var(--_ring-color-xl, var(--_ring-color-lg, var(--_ring-color-md, var(--_ring-color-sm, var(--_ring-color))))))))))))))))))))))));
   }
   :where([style*="--ring-color:"]) {
     --_ring-color: var(--ring-color);
   }
 
   :where([style*="--ring-offset:"], [style*="--ring-offset--"], [style*="--group-ring-offset--"]) {
-    --_ring-offset-resolved: var(--_ring-offset-starting, var(--_ring-offset-disabled, var(--_ring-offset-active, var(--_ring-offset-focus-visible, var(--_ring-offset-focus-within, var(--_ring-offset-hover, var(--_ring-offset-checked, var(--_ring-offset-current, var(--_ring-offset-open, var(--_ring-offset-g-disabled, var(--_ring-offset-g-active, var(--_ring-offset-g-focus-visible, var(--_ring-offset-g-focus-within, var(--_ring-offset-g-hover, var(--_ring-offset-g-checked, var(--_ring-offset-g-current, var(--_ring-offset-g-open, var(--_ring-offset-stuck, var(--_ring-offset)))))))))))))))))));
+    --_ring-offset-resolved: var(--_ring-offset-starting, var(--_ring-offset-disabled, var(--_ring-offset-active, var(--_ring-offset-focus-visible, var(--_ring-offset-focus-within, var(--_ring-offset-hover, var(--_ring-offset-checked, var(--_ring-offset-current, var(--_ring-offset-open, var(--_ring-offset-g-disabled, var(--_ring-offset-g-active, var(--_ring-offset-g-focus-visible, var(--_ring-offset-g-focus-within, var(--_ring-offset-g-hover, var(--_ring-offset-g-checked, var(--_ring-offset-g-current, var(--_ring-offset-g-open, var(--_ring-offset-stuck, var(--_ring-offset-2xl, var(--_ring-offset-xl, var(--_ring-offset-lg, var(--_ring-offset-md, var(--_ring-offset-sm, var(--_ring-offset))))))))))))))))))))))));
+    --_ring-offset-len: var(--_ring-offset-resolved);
+    --_ring-offset-num: var(--_ring-offset-resolved);
+    --_ring-offset-w: calc(var(--_ring-offset-len) + var(--_ring-offset-num) * 1px);
   }
   :where([style*="--ring-offset:"]) {
     --_ring-offset: var(--ring-offset);
   }
 
   :where([style*="--ring-offset-color:"], [style*="--ring-offset-color--"], [style*="--group-ring-offset-color--"]) {
-    --_ring-offset-color-resolved: var(--_ring-offset-color-starting, var(--_ring-offset-color-disabled, var(--_ring-offset-color-active, var(--_ring-offset-color-focus-visible, var(--_ring-offset-color-focus-within, var(--_ring-offset-color-hover, var(--_ring-offset-color-checked, var(--_ring-offset-color-current, var(--_ring-offset-color-open, var(--_ring-offset-color-g-disabled, var(--_ring-offset-color-g-active, var(--_ring-offset-color-g-focus-visible, var(--_ring-offset-color-g-focus-within, var(--_ring-offset-color-g-hover, var(--_ring-offset-color-g-checked, var(--_ring-offset-color-g-current, var(--_ring-offset-color-g-open, var(--_ring-offset-color-stuck, var(--_ring-offset-color)))))))))))))))))));
+    --_ring-offset-color-resolved: var(--_ring-offset-color-starting, var(--_ring-offset-color-disabled, var(--_ring-offset-color-active, var(--_ring-offset-color-focus-visible, var(--_ring-offset-color-focus-within, var(--_ring-offset-color-hover, var(--_ring-offset-color-checked, var(--_ring-offset-color-current, var(--_ring-offset-color-open, var(--_ring-offset-color-g-disabled, var(--_ring-offset-color-g-active, var(--_ring-offset-color-g-focus-visible, var(--_ring-offset-color-g-focus-within, var(--_ring-offset-color-g-hover, var(--_ring-offset-color-g-checked, var(--_ring-offset-color-g-current, var(--_ring-offset-color-g-open, var(--_ring-offset-color-stuck, var(--_ring-offset-color-2xl, var(--_ring-offset-color-xl, var(--_ring-offset-color-lg, var(--_ring-offset-color-md, var(--_ring-offset-color-sm, var(--_ring-offset-color))))))))))))))))))))))));
   }
   :where([style*="--ring-offset-color:"]) {
     --_ring-offset-color: var(--ring-offset-color);
+  }
+
+  :where([style*="--focus-ring:"], [style*="--focus-ring--"]) {
+    --_focus-ring-resolved: var(--_focus-ring-2xl, var(--_focus-ring-xl, var(--_focus-ring-lg, var(--_focus-ring-md, var(--_focus-ring-sm, var(--_focus-ring, var(--ring-width)))))));
+    --_focus-ring-len: var(--_focus-ring-resolved);
+    --_focus-ring-num: var(--_focus-ring-resolved);
+    --_focus-ring-w: calc(var(--_focus-ring-len) + var(--_focus-ring-num) * 1px);
+  }
+  :where([style*="--focus-ring:"]) {
+    --_focus-ring: var(--focus-ring);
   }
 
   :where([style*="--scale:"], [style*="--scale--"], [style*="--group-scale--"]) {
@@ -226,10 +249,26 @@
     transition: var(--_transition-resolved);
   }
 
+  :where([style*="--transition-duration:"], [style*="--transition-duration--"], [style*="--group-transition-duration--"]) {
+    --_transition-duration-resolved: var(--_transition-duration-starting, var(--_transition-duration-disabled, var(--_transition-duration-active, var(--_transition-duration-focus-visible, var(--_transition-duration-focus-within, var(--_transition-duration-hover, var(--_transition-duration-checked, var(--_transition-duration-current, var(--_transition-duration-open, var(--_transition-duration-g-disabled, var(--_transition-duration-g-active, var(--_transition-duration-g-focus-visible, var(--_transition-duration-g-focus-within, var(--_transition-duration-g-hover, var(--_transition-duration-g-checked, var(--_transition-duration-g-current, var(--_transition-duration-g-open, var(--_transition-duration-stuck, var(--_transition-duration-2xl, var(--_transition-duration-xl, var(--_transition-duration-lg, var(--_transition-duration-md, var(--_transition-duration-sm, var(--_transition-duration))))))))))))))))))))))));
+  }
+  :where([style*="--transition-duration:"]) {
+    --_transition-duration: var(--transition-duration);
+    transition-duration: var(--_transition-duration-resolved);
+  }
+
+  :where([style*="--transition-delay:"], [style*="--transition-delay--"], [style*="--group-transition-delay--"]) {
+    --_transition-delay-resolved: var(--_transition-delay-starting, var(--_transition-delay-disabled, var(--_transition-delay-active, var(--_transition-delay-focus-visible, var(--_transition-delay-focus-within, var(--_transition-delay-hover, var(--_transition-delay-checked, var(--_transition-delay-current, var(--_transition-delay-open, var(--_transition-delay-g-disabled, var(--_transition-delay-g-active, var(--_transition-delay-g-focus-visible, var(--_transition-delay-g-focus-within, var(--_transition-delay-g-hover, var(--_transition-delay-g-checked, var(--_transition-delay-g-current, var(--_transition-delay-g-open, var(--_transition-delay-stuck, var(--_transition-delay-2xl, var(--_transition-delay-xl, var(--_transition-delay-lg, var(--_transition-delay-md, var(--_transition-delay-sm, var(--_transition-delay))))))))))))))))))))))));
+  }
+  :where([style*="--transition-delay:"]) {
+    --_transition-delay: var(--transition-delay);
+    transition-delay: var(--_transition-delay-resolved);
+  }
+
   :where(:is([style*="--shadow:"], [style*="--ring:"], [style*="--ring-color:"], [style*="--ring-offset:"], [style*="--ring-offset-color:"])) {
-    box-shadow: var(--_focus-ring, 0 0 #0000), 0 0 0 var(--_ring-offset-resolved, 0px) var(--_ring-offset-color-resolved, transparent), 0 0 0 calc(var(--_ring-offset-resolved, 0px) + var(--_ring-resolved, 0px)) var(--_ring-color-resolved, var(--color-ring)), var(--_shadow-resolved, 0 0 #0000);
+    box-shadow: var(--_focus-shadow, 0 0 #0000), 0 0 0 calc(abs(var(--_ring-offset-w, 0px)) * (1 - max(0, -1 * sign(var(--_ring-w, 0px))))) var(--_ring-offset-color-resolved, transparent), 0 0 0 calc((abs(var(--_ring-offset-w, 0px)) + abs(var(--_ring-w, 0px))) * (1 - max(0, -1 * sign(var(--_ring-w, 0px))))) var(--_ring-color-resolved, var(--color-ring)), inset 0 0 0 calc(abs(var(--_ring-offset-w, 0px)) * max(0, -1 * sign(var(--_ring-w, 0px)))) var(--_ring-offset-color-resolved, transparent), inset 0 0 0 calc((abs(var(--_ring-offset-w, 0px)) + abs(var(--_ring-w, 0px))) * max(0, -1 * sign(var(--_ring-w, 0px)))) var(--_ring-color-resolved, var(--color-ring)), var(--_shadow-resolved, 0 0 #0000);
   }
   :where(:is(:is([style*="--shadow--"], [style*="--ring--"], [style*="--ring-color--"], [style*="--ring-offset--"], [style*="--ring-offset-color--"]), :is([style*="--group-shadow--"], [style*="--group-ring--"], [style*="--group-ring-color--"], [style*="--group-ring-offset--"], [style*="--group-ring-offset-color--"])):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    box-shadow: var(--_focus-ring, 0 0 #0000), 0 0 0 var(--_ring-offset-resolved, 0px) var(--_ring-offset-color-resolved, transparent), 0 0 0 calc(var(--_ring-offset-resolved, 0px) + var(--_ring-resolved, 0px)) var(--_ring-color-resolved, var(--color-ring)), var(--_shadow-resolved, 0 0 #0000);
+    box-shadow: var(--_focus-shadow, 0 0 #0000), 0 0 0 calc(abs(var(--_ring-offset-w, 0px)) * (1 - max(0, -1 * sign(var(--_ring-w, 0px))))) var(--_ring-offset-color-resolved, transparent), 0 0 0 calc((abs(var(--_ring-offset-w, 0px)) + abs(var(--_ring-w, 0px))) * (1 - max(0, -1 * sign(var(--_ring-w, 0px))))) var(--_ring-color-resolved, var(--color-ring)), inset 0 0 0 calc(abs(var(--_ring-offset-w, 0px)) * max(0, -1 * sign(var(--_ring-w, 0px)))) var(--_ring-offset-color-resolved, transparent), inset 0 0 0 calc((abs(var(--_ring-offset-w, 0px)) + abs(var(--_ring-w, 0px))) * max(0, -1 * sign(var(--_ring-w, 0px)))) var(--_ring-color-resolved, var(--color-ring)), var(--_shadow-resolved, 0 0 #0000);
   }
 }

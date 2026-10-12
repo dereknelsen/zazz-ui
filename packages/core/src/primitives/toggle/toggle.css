@@ -9,7 +9,7 @@
  * look through the `--ui-toggle-*--checked` hooks.
  *
  * @layer      variables, components
- * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-ring), button.css
+ * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow), button.css
  * @uses       :has(): drive label state from the nested input (checked/focus/disabled)
  * @uses       oklch(from …): variant hover/active tints (inherited from --ui-button-*)
  * @uses       text-box: vertical trim (patchy browser support)
@@ -241,30 +241,37 @@
     color: var(--_text-resolved, var(--_toggle-text, var(--ui-toggle-text)));
     background-color: var(--_bg-resolved, var(--_toggle-bg, var(--ui-toggle-bg)));
 
-    /* published to --_focus-ring so a --shadow or --ring utility keeps it; the
+    /* published to --_focus-shadow so a --shadow or --ring utility keeps it; the
        widths grow from 0 on :focus-visible so the ring eases in */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
+    --_focus-in: max(0, -1 * sign(var(--_focus-ring-w, 1px)));
     --_ring-fill: color-mix(
       in oklch,
       var(--_ring-color-resolved, var(--_toggle-ring-color, var(--ui-toggle-ring-color)))
         var(--ring-opacity),
       transparent
     );
-    --_focus-ring:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+    --_focus-shadow:
+      0 0 0 calc(var(--_ring-offset-width) * (1 - var(--_focus-in))) var(--ring-offset-shadow-color),
+      0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * (1 - var(--_focus-in)))
+        var(--_ring-fill, var(--ring-shadow-color)),
+      inset 0 0 0 calc(var(--_ring-offset-width) * var(--_focus-in)) var(--ring-offset-shadow-color),
+      inset 0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * var(--_focus-in))
         var(--_ring-fill, var(--ring-shadow-color));
     box-shadow:
-      var(--_focus-ring, 0 0 #0000),
+      var(--_focus-shadow, 0 0 #0000),
       var(--_shadow-resolved, var(--_toggle-shadow, var(--ui-toggle-shadow)));
 
     cursor: pointer;
     text-decoration: none;
 
     /* transparent twin of the ring for forced-colors / high-contrast modes */
-    outline: var(--outline-width) var(--outline-style) transparent;
-    outline-offset: var(--outline-offset);
+    outline: abs(var(--_focus-ring-w, var(--outline-width))) var(--outline-style) transparent;
+    outline-offset: calc(
+      var(--outline-offset) - var(--_focus-in) *
+        (2 * var(--outline-offset) + abs(var(--_focus-ring-w, var(--outline-width))))
+    );
 
     transition: var(--default-transition);
 
@@ -348,7 +355,7 @@
 
   :where([data-ui~="toggle"]):has(> input:focus-visible) {
     --_ring-offset-width: var(--ring-offset-width);
-    --_ring-width: var(--ring-width);
+    --_ring-width: abs(var(--_focus-ring-w, var(--ring-width)));
 
     outline-color: transparent;
   }

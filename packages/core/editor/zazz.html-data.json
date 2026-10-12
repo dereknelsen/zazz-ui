@@ -290,6 +290,12 @@
           "name": "textarea"
         },
         {
+          "name": "theme-dark"
+        },
+        {
+          "name": "theme-light"
+        },
+        {
           "name": "toaster"
         },
         {
@@ -303,18 +309,6 @@
         },
         {
           "name": "truncate"
-        }
-      ]
-    },
-    {
-      "name": "data-ui-theme",
-      "description": "Color scheme for the subtree.",
-      "values": [
-        {
-          "name": "dark"
-        },
-        {
-          "name": "light"
         }
       ]
     },
@@ -357,6 +351,15 @@
       "values": [
         {
           "name": "false"
+        }
+      ]
+    },
+    {
+      "name": "data-accordion-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "marker"
         }
       ]
     },
@@ -1108,6 +1111,9 @@
         },
         {
           "name": "list"
+        },
+        {
+          "name": "marker"
         },
         {
           "name": "popover"

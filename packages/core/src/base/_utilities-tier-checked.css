@@ -21,6 +21,7 @@
     --_border-b-checked: var(--border-b--checked);
     --_opacity-checked: var(--opacity--checked);
     --_shadow-checked: var(--shadow--checked);
+    --_shadow-angle-checked: var(--shadow-angle--checked);
     --_ring-checked: var(--ring--checked);
     --_ring-color-checked: var(--ring-color--checked);
     --_ring-offset-checked: var(--ring-offset--checked);
@@ -29,6 +30,8 @@
     --_translate-checked: var(--translate--checked);
     --_rotate-checked: var(--rotate--checked);
     --_transition-checked: var(--transition--checked);
+    --_transition-duration-checked: var(--transition-duration--checked);
+    --_transition-delay-checked: var(--transition-delay--checked);
   }
   :where([data-ui~="group"]:is(:checked, [aria-checked="true"]) [style*="--group-"]) {
     --_template-cols-g-checked: var(--group-template-cols--checked);
@@ -49,6 +52,7 @@
     --_border-b-g-checked: var(--group-border-b--checked);
     --_opacity-g-checked: var(--group-opacity--checked);
     --_shadow-g-checked: var(--group-shadow--checked);
+    --_shadow-angle-g-checked: var(--group-shadow-angle--checked);
     --_ring-g-checked: var(--group-ring--checked);
     --_ring-color-g-checked: var(--group-ring-color--checked);
     --_ring-offset-g-checked: var(--group-ring-offset--checked);
@@ -57,5 +61,7 @@
     --_translate-g-checked: var(--group-translate--checked);
     --_rotate-g-checked: var(--group-rotate--checked);
     --_transition-g-checked: var(--group-transition--checked);
+    --_transition-duration-g-checked: var(--group-transition-duration--checked);
+    --_transition-delay-g-checked: var(--group-transition-delay--checked);
   }
 }

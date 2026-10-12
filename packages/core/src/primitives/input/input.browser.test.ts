@@ -3,7 +3,7 @@
 /**
  * @fileoverview The text input: field-family surface, a dual-mode
  * `--w` utility over the width hook, and the focus ring published to
- * `--_focus-ring` so it survives a `--shadow` utility.
+ * `--_focus-shadow` so it survives a `--shadow` utility.
  */
 
 import { describe, expect, it } from "vite-plus/test";

@@ -73,6 +73,10 @@
 @property --_shadow-hover { syntax: "*"; inherits: false; }
 @property --group-shadow--hover { syntax: "*"; inherits: false; }
 @property --_shadow-g-hover { syntax: "*"; inherits: false; }
+@property --shadow-angle--hover { syntax: "*"; inherits: false; }
+@property --_shadow-angle-hover { syntax: "*"; inherits: false; }
+@property --group-shadow-angle--hover { syntax: "*"; inherits: false; }
+@property --_shadow-angle-g-hover { syntax: "*"; inherits: false; }
 @property --ring--hover { syntax: "*"; inherits: false; }
 @property --_ring-hover { syntax: "*"; inherits: false; }
 @property --group-ring--hover { syntax: "*"; inherits: false; }
@@ -105,3 +109,11 @@
 @property --_transition-hover { syntax: "*"; inherits: false; }
 @property --group-transition--hover { syntax: "*"; inherits: false; }
 @property --_transition-g-hover { syntax: "*"; inherits: false; }
+@property --transition-duration--hover { syntax: "*"; inherits: false; }
+@property --_transition-duration-hover { syntax: "*"; inherits: false; }
+@property --group-transition-duration--hover { syntax: "*"; inherits: false; }
+@property --_transition-duration-g-hover { syntax: "*"; inherits: false; }
+@property --transition-delay--hover { syntax: "*"; inherits: false; }
+@property --_transition-delay-hover { syntax: "*"; inherits: false; }
+@property --group-transition-delay--hover { syntax: "*"; inherits: false; }
+@property --_transition-delay-g-hover { syntax: "*"; inherits: false; }

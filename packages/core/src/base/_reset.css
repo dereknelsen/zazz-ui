@@ -83,9 +83,15 @@
     font-synthesis-weight: none;
   }
 
+  /* --focus-ring sets the width; a negative one draws the outline inside the box */
   :where(:focus-visible) {
-    outline: var(--outline-width) var(--outline-style) var(--ring-shadow-color);
-    outline-offset: var(--outline-offset);
+    --_focus-in: max(0, -1 * sign(var(--_focus-ring-w, 1px)));
+    outline: abs(var(--_focus-ring-w, var(--outline-width))) var(--outline-style)
+      var(--ring-shadow-color);
+    outline-offset: calc(
+      var(--outline-offset) - var(--_focus-in) *
+        (2 * var(--outline-offset) + abs(var(--_focus-ring-w, var(--outline-width))))
+    );
   }
 
   :where(b, strong) {

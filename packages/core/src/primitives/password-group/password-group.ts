@@ -26,7 +26,7 @@
  * @example
  * <ui-password>
  *   <label data-ui="password-group">
- *     <input data-ui="input" type="password" autocomplete="current-password" />
+ *     <input data-ui="input" type="password" name="password" autocomplete="current-password" />
  *     <span data-password-group-slot="addon" data-password-group-align="inline-end">
  *       <button data-ui="button" data-password-group-slot="toggle" type="button"
  *         aria-pressed="false" aria-label="Show password">…</button>

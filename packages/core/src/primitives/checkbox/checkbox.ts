@@ -21,7 +21,7 @@
  *
  * @example
  * <table data-ui="table">
- *   <thead><tr><th><input type="checkbox" data-checkbox-controls="tasks" /></th>...</tr></thead>
+ *   <thead><tr><th><input type="checkbox" name="tasks-all" data-checkbox-controls="tasks" /></th>...</tr></thead>
  *   <tbody><tr><td><input type="checkbox" name="tasks" /></td>...</tr></tbody>
  * </table>
  */

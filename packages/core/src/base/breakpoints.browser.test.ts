@@ -2,39 +2,27 @@
 
 /**
  * @fileoverview Breakpoint tiers query the nearest inline-size container, in
- * ch of that container's font: html when nothing closer is, a layout band's
+ * rem (the same in any font): html when nothing closer is, a layout band's
  * child, or any `data-ui="container"`. Body, main and the sectioning elements
- * are not containers. The --layout-* widths are rem, independent of the font;
- * html's containment places boxes exactly where body's used to.
+ * are not containers. The --layout-* widths use the same rem scale; html's
+ * containment places boxes exactly where body's used to.
  */
 
 import { describe, expect, it } from "vite-plus/test";
 import { allFragments, atWidth, frame, mount, useKit } from "../../test/browser.ts";
-import { BREAKPOINT_CH } from "./utilities.ts";
 
 const width = (el: Element) => el.getBoundingClientRect().width;
-
-/** 65ch (md) of a given element's font, in px. */
-function mdPx(host: Element = document.body): number {
-  const ruler = document.createElement("div");
-  ruler.style.cssText = `position: absolute; inline-size: ${BREAKPOINT_CH.md}ch`;
-  host.append(ruler);
-  const px = width(ruler);
-  ruler.remove();
-  return px;
-}
 
 describe("breakpoint tiers", () => {
   useKit();
 
-  it("follow the page container when nothing closer is, flipping at md (65ch)", async () => {
+  it("follow the page container when nothing closer is, flipping at md (48rem)", async () => {
     const probe = mount(
       `<div><div><div data-probe style="--w: 1rem; --w--md: 2rem"></div></div></div>`,
     ).querySelector("[data-probe]")!;
-    const md = mdPx();
-    await atWidth(Math.floor(md) - 1);
+    await atWidth(767);
     expect(width(probe)).toBe(16);
-    await atWidth(Math.ceil(md));
+    await atWidth(768);
     expect(width(probe)).toBe(32);
   });
 
@@ -73,14 +61,19 @@ describe("breakpoint tiers", () => {
     expect(box.getBoundingClientRect().height).toBe(32);
   });
 
-  it("resolve ch against the container's font, so a larger font raises the threshold", async () => {
+  it("flip at the same width in any container font", async () => {
     await atWidth(1400);
-    const root = mount(`<div data-ui="container" style="inline-size: 900px; font-size: 2rem">
-      <div data-probe style="--w: 1rem; --w--md: 2rem"></div>
+    const root = mount(`<div>
+      <div data-ui="container" style="inline-size: 768px; font-size: 2rem; font-family: monospace">
+        <div data-big style="--w: 1rem; --w--md: 2rem"></div>
+      </div>
+      <div data-ui="container" style="inline-size: 767px; font-size: 0.75rem">
+        <div data-small style="--w: 1rem; --w--md: 2rem"></div>
+      </div>
     </div>`);
-    // 65ch at 32px is wider than 900px, so md does not apply inside
-    expect(mdPx(root)).toBeGreaterThan(900);
-    expect(width(root.querySelector("[data-probe]")!)).toBe(16);
+    // md is 48rem of the root (768px), whatever the container's own font
+    expect(width(root.querySelector("[data-big]")!)).toBe(32);
+    expect(width(root.querySelector("[data-small]")!)).toBe(16);
   });
 
   it("the --layout-* widths are rem, the same in any font", () => {
@@ -95,7 +88,7 @@ describe("breakpoint tiers", () => {
     const root = mount(`<ui-layout data-layout-size="sm">
       <div><div data-probe style="--w: 1rem; --w--xl: 2rem"></div></div>
     </ui-layout>`);
-    // the sm band is 40rem (640px): xl (120ch) does not fit, even on a 1400px page
+    // the sm band is 40rem (640px): xl (80rem) does not fit, even on a 1400px page
     expect(width(root.querySelector("[data-probe]")!)).toBe(16);
   });
 

@@ -64,7 +64,7 @@ Keep the kit's stylesheet out of CSS minifiers that rewrite modern syntax. `@pro
 
 ## The head contract
 
-Whichever route you take, a Zazz page's `<head>` has the same parts, in this order: the meta tags, any font links, the stylesheet link(s), the import map, a `modulepreload` hint, the interest-invokers polyfill, the module script, and the theme script. `buildHead()` from `@zazz-ui/core/head` writes it; the CLI's `head.html` is that output; this site's own head is too. The theme script must stay inline and last so `data-ui-theme` lands before first paint.
+Whichever route you take, a Zazz page's `<head>` has the same parts, in this order: the meta tags, any font links, the stylesheet link(s), the import map, a `modulepreload` hint, the interest-invokers polyfill, the module script, and the theme script. `buildHead()` from `@zazz-ui/core/head` writes it; the CLI's `head.html` is that output; this site's own head is too. The theme script must stay inline and last so the `theme-*` switch lands before first paint.
 
 For a vendored copy at `./zazz/`:
 

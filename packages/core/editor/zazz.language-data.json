@@ -256,6 +256,14 @@
       "primitive": "textarea",
       "file": "primitives/textarea/textarea.css"
     },
+    "theme-dark": {
+      "primitive": null,
+      "file": "base/_variables.css"
+    },
+    "theme-light": {
+      "primitive": null,
+      "file": "base/_variables.css"
+    },
     "toaster": {
       "primitive": "toaster",
       "file": "primitives/toaster/toaster.css"
@@ -298,13 +306,13 @@
   },
   "primitives": {
     "primitives/accordion/accordion.css": {
-      "summary": "accordion.css: Accordion (ui-accordion | [data-ui~=\"accordion\"] on <details>/<summary>)",
+      "summary": "accordion.css: Accordion (ui-accordion | [data-ui~=\"accordion\"] on <details>/<summary>; slot data-accordion-slot=\"marker\" on the summary icon that rotates open)",
       "tags": {
         "layer": [
           "variables, reset, components"
         ],
         "requires": [
-          "_layers.css, _variables.css, _properties.css (--_focus-ring)"
+          "_layers.css, _variables.css, _properties.css (--_focus-shadow)"
         ],
         "uses": [
           "::details-content: native open/close block-size transition (reset layer)",
@@ -367,7 +375,7 @@
           "variables, components"
         ],
         "requires": [
-          "_layers.css, _variables.css, _reset.css, _properties.css (--_*-resolved, --_focus-ring), fields.css (--ui-field-* border/ring)"
+          "_layers.css, _variables.css, _reset.css, _properties.css (--_*-resolved, --_focus-shadow), fields.css (--ui-field-* border/ring)"
         ],
         "uses": [
           "color-mix(), oklch(from …): variant hover/active tints",
@@ -407,7 +415,7 @@
           "variables, components"
         ],
         "requires": [
-          "_layers.css, _variables.css, _reset.css, _properties.css (--_*-resolved, --_focus-ring), fields.css (--ui-field-* metrics), kbd.css (--ui-kbd-*)"
+          "_layers.css, _variables.css, _reset.css, _properties.css (--_*-resolved, --_focus-shadow), fields.css (--ui-field-* metrics), kbd.css (--ui-kbd-*)"
         ],
         "uses": [
           "color-mix(), oklch(from …) — variant hover/active tints",
@@ -489,7 +497,7 @@
           "variables, reset"
         ],
         "requires": [
-          "_layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-ring), fields.css (--ui-field-* background/border)"
+          "_layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow), fields.css (--ui-field-* background/border)"
         ],
         "uses": [
           "appearance: none — redraws the native control from theme tokens",
@@ -589,13 +597,14 @@
         "uses": [
           ":user-invalid: validation after commit (not while typing)",
           ":has(:user-invalid): label/hint/error crossfade",
-          "@starting-style + visibility allow-discrete: hint <-> error swap"
+          "@starting-style + visibility allow-discrete: hint <-> error swap",
+          "@supports (-webkit-touch-callout: none): iOS-only 16px field text, so a focused control does not zoom the page"
         ],
         "tokens": [
           "--ui-field-*, --ui-field-group-* (Tier 3 owner; @layer variables)"
         ],
         "consumedby": [
-          "input.css, textarea.css, select.css, input-group.css, password-group.css, otp.css, radio.css, checkbox.css, autocomplete.css, combobox.css, command.css, button.css (metrics: h/rounded/px/text/leading/icon/ring/border width+style), toggle.css (via button.css), tabs.css, badge.css (border/ring)"
+          "input.css, textarea.css, select.css, input-group.css, password-group.css, otp.css, radio.css, checkbox.css, autocomplete.css, combobox.css, command.css, button.css (metrics: h/rounded/px/icon/ring/border width+style; not font-size or leading, so the iOS 16px rule below reaches text controls only), toggle.css (via button.css), tabs.css (same metrics), badge.css (border/ring)"
         ]
       }
     },
@@ -628,7 +637,7 @@
           "variables, components"
         ],
         "requires": [
-          "_layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-ring), fields.css, _reset.css"
+          "_layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow), fields.css, _reset.css"
         ],
         "uses": [
           "::-webkit-calendar-picker-indicator — date/time picker chrome (WebKit)",
@@ -782,7 +791,7 @@
         "uses": [
           "[popover] + nested popovers: megamenu panels and flyout submenus",
           "anchor-name, anchor-scope, position-anchor, anchor-size(): panel sizing and positioning (Chromium 125+ for anchor-size)",
-          ":has(:popover-open): chevron rotation without JS",
+          ":has(:popover-open): rotates the trigger's data-navigation-menu-slot=\"marker\" chevron without JS",
           "@starting-style: slide-down viewport reveal"
         ],
         "tokens": [
@@ -886,7 +895,7 @@
           "variables, components"
         ],
         "requires": [
-          "_layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-ring), fields.css (field-group layout, --ui-field-* surface/border)"
+          "_layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow), fields.css (field-group layout, --ui-field-* surface/border)"
         ],
         "uses": [
           "appearance: none — custom circle + masked ::before dot when :checked"
@@ -1007,7 +1016,7 @@
           "variables, reset"
         ],
         "requires": [
-          "_layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-ring)"
+          "_layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow)"
         ],
         "uses": [
           "appearance: none on input[role=\"switch\"]",
@@ -1063,7 +1072,7 @@
           "variables, components"
         ],
         "requires": [
-          "_layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-ring), fields.css"
+          "_layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow), fields.css"
         ],
         "uses": [
           "field-sizing: content — auto-grow with text (modern browsers; falls back to fixed min/max block-size where unsupported)"
@@ -1119,7 +1128,7 @@
           "variables, components"
         ],
         "requires": [
-          "_layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-ring), button.css"
+          "_layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow), button.css"
         ],
         "uses": [
           ":has(): drive label state from the nested input (checked/focus/disabled)",
@@ -1308,7 +1317,7 @@
       "file": "primitives/button/button.css"
     },
     "--ui-button-font-size": {
-      "value": "var(--ui-field-font-size)",
+      "value": "var(--font-size-sm)",
       "file": "primitives/button/button.css"
     },
     "--ui-button-font-weight": {
@@ -1332,7 +1341,7 @@
       "file": "primitives/button/button.css"
     },
     "--ui-button-leading": {
-      "value": "var(--ui-field-leading)",
+      "value": "var(--leading-sm)",
       "file": "primitives/button/button.css"
     },
     "--ui-button-min-h": {
@@ -1671,12 +1680,12 @@
       "value": "var(--ui-menu-shadow)",
       "file": "primitives/command/command.css"
     },
-    "--ui-dialog-backdrop-blur": {
-      "value": "blur(5px)",
-      "file": "primitives/dialog/dialog.css"
-    },
     "--ui-dialog-backdrop-color": {
       "value": "var(--color-shade-900)",
+      "file": "primitives/dialog/dialog.css"
+    },
+    "--ui-dialog-backdrop-filter": {
+      "value": "none",
       "file": "primitives/dialog/dialog.css"
     },
     "--ui-dialog-backdrop-transition-duration": {
@@ -1728,8 +1737,8 @@
       "file": "primitives/dialog/dialog.css"
     },
     "--ui-dialog-transition-delay--end": {
-      "value": "150ms",
-      "file": "primitives/dialog/dialog.css"
+      "value": "0ms",
+      "file": "primitives/command/command.css"
     },
     "--ui-dialog-transition-delay--start": {
       "value": "0ms",
@@ -3060,7 +3069,7 @@
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-label-font-size": {
-      "value": "var(--ui-field-font-size)",
+      "value": "var(--font-size-sm)",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-label-font-weight": {
@@ -3068,7 +3077,7 @@
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-label-leading": {
-      "value": "var(--ui-field-leading)",
+      "value": "var(--leading-sm)",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-label-min-h": {
@@ -4176,10 +4185,22 @@
       "dark": "1px"
     },
     "--default-transition": {
-      "value": "text-decoration-offset var(--default-transition-duration) var(--default-transition-timing-function), text-decoration-color var(--default-transition-duration) var(--default-transition-timing-function), box-shadow var(--default-transition-duration) var(--default-transition-timing-function), background-color var(--default-transition-duration) var(--default-transition-timing-function), border-color var(--default-transition-duration) var(--default-transition-timing-function), opacity var(--default-transition-duration) var(--default-transition-timing-function), color var(--default-transition-duration) var(--default-transition-timing-function), fill var(--default-transition-duration) var(--default-transition-timing-function), stroke var(--default-transition-duration) var(--default-transition-timing-function), transform var(--default-transition-duration) var(--default-transition-timing-function), translate var(--default-transition-duration) var(--default-transition-timing-function), scale var(--default-transition-duration) var(--default-transition-timing-function), rotate var(--default-transition-duration) var(--default-transition-timing-function), filter var(--default-transition-duration) var(--default-transition-timing-function), -webkit-backdrop-filter var(--default-transition-duration) var(--default-transition-timing-function), backdrop-filter var(--default-transition-duration) var(--default-transition-timing-function), display var(--default-transition-duration) var(--default-transition-timing-function), content-visibility var(--default-transition-duration) var(--default-transition-timing-function), overlay var(--default-transition-duration) var(--default-transition-timing-function), pointer-events var(--default-transition-duration) var(--default-transition-timing-function)",
+      "value": "var(--default-transition-colors), var(--default-transition-transforms), var(--default-transition-effects), var(--default-transition-content)",
       "file": "base/_variables.css",
-      "light": "text-decoration-offset 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), text-decoration-color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), box-shadow 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), background-color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), border-color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), opacity 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), fill 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), stroke 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), transform 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), translate 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), scale 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), rotate 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), filter 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), -webkit-backdrop-filter 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), backdrop-filter 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), display 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), content-visibility 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), overlay 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), pointer-events 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 )",
-      "dark": "text-decoration-offset 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), text-decoration-color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), box-shadow 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), background-color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), border-color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), opacity 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), fill 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), stroke 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), transform 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), translate 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), scale 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), rotate 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), filter 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), -webkit-backdrop-filter 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), backdrop-filter 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), display 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), content-visibility 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), overlay 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), pointer-events 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 )"
+      "light": "text-decoration-color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), background-color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), border-color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), fill 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), stroke 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), transform 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), translate 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), scale 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), rotate 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), opacity 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), filter 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), -webkit-backdrop-filter 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), backdrop-filter 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), box-shadow 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), display 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ) allow-discrete, content-visibility 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ) allow-discrete, overlay 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ) allow-discrete, pointer-events 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ) allow-discrete",
+      "dark": "text-decoration-color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), background-color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), border-color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), fill 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), stroke 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), transform 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), translate 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), scale 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), rotate 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), opacity 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), filter 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), -webkit-backdrop-filter 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), backdrop-filter 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), box-shadow 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), display 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ) allow-discrete, content-visibility 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ) allow-discrete, overlay 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ) allow-discrete, pointer-events 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ) allow-discrete"
+    },
+    "--default-transition-colors": {
+      "value": "text-decoration-color var(--default-transition-duration) var(--default-transition-timing-function), background-color var(--default-transition-duration) var(--default-transition-timing-function), border-color var(--default-transition-duration) var(--default-transition-timing-function), color var(--default-transition-duration) var(--default-transition-timing-function), fill var(--default-transition-duration) var(--default-transition-timing-function), stroke var(--default-transition-duration) var(--default-transition-timing-function)",
+      "file": "base/_variables.css",
+      "light": "text-decoration-color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), background-color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), border-color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), fill 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), stroke 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 )",
+      "dark": "text-decoration-color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), background-color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), border-color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), color 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), fill 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), stroke 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 )"
+    },
+    "--default-transition-content": {
+      "value": "display var(--default-transition-duration) var(--default-transition-timing-function) allow-discrete, content-visibility var(--default-transition-duration) var(--default-transition-timing-function) allow-discrete, overlay var(--default-transition-duration) var(--default-transition-timing-function) allow-discrete, pointer-events var(--default-transition-duration) var(--default-transition-timing-function) allow-discrete",
+      "file": "base/_variables.css",
+      "light": "display 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ) allow-discrete, content-visibility 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ) allow-discrete, overlay 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ) allow-discrete, pointer-events 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ) allow-discrete",
+      "dark": "display 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ) allow-discrete, content-visibility 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ) allow-discrete, overlay 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ) allow-discrete, pointer-events 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ) allow-discrete"
     },
     "--default-transition-duration": {
       "value": "var(--spring-duration, 0.333s)",
@@ -4187,11 +4208,53 @@
       "min": "0.333s",
       "max": "0.333s"
     },
+    "--default-transition-effects": {
+      "value": "opacity var(--default-transition-duration) var(--default-transition-timing-function), filter var(--default-transition-duration) var(--default-transition-timing-function), -webkit-backdrop-filter var(--default-transition-duration) var(--default-transition-timing-function), backdrop-filter var(--default-transition-duration) var(--default-transition-timing-function), box-shadow var(--default-transition-duration) var(--default-transition-timing-function)",
+      "file": "base/_variables.css",
+      "light": "opacity 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), filter 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), -webkit-backdrop-filter 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), backdrop-filter 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), box-shadow 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 )",
+      "dark": "opacity 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), filter 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), -webkit-backdrop-filter 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), backdrop-filter 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), box-shadow 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 )"
+    },
+    "--default-transition-property": {
+      "value": "var(--default-transition-property-colors), var(--default-transition-property-transforms), var(--default-transition-property-effects), var(--default-transition-property-discrete)",
+      "file": "base/_variables.css",
+      "light": "text-decoration-color, background-color, border-color, color, fill, stroke, transform, translate, scale, rotate, opacity, filter, -webkit-backdrop-filter, backdrop-filter, box-shadow, display, content-visibility, overlay, pointer-events",
+      "dark": "text-decoration-color, background-color, border-color, color, fill, stroke, transform, translate, scale, rotate, opacity, filter, -webkit-backdrop-filter, backdrop-filter, box-shadow, display, content-visibility, overlay, pointer-events"
+    },
+    "--default-transition-property-colors": {
+      "value": "text-decoration-color, background-color, border-color, color, fill, stroke",
+      "file": "base/_variables.css",
+      "light": "text-decoration-color, background-color, border-color, color, fill, stroke",
+      "dark": "text-decoration-color, background-color, border-color, color, fill, stroke"
+    },
+    "--default-transition-property-discrete": {
+      "value": "display, content-visibility, overlay, pointer-events",
+      "file": "base/_variables.css",
+      "light": "display, content-visibility, overlay, pointer-events",
+      "dark": "display, content-visibility, overlay, pointer-events"
+    },
+    "--default-transition-property-effects": {
+      "value": "opacity, filter, -webkit-backdrop-filter, backdrop-filter, box-shadow",
+      "file": "base/_variables.css",
+      "light": "opacity, filter, -webkit-backdrop-filter, backdrop-filter, box-shadow",
+      "dark": "opacity, filter, -webkit-backdrop-filter, backdrop-filter, box-shadow"
+    },
+    "--default-transition-property-transforms": {
+      "value": "transform, translate, scale, rotate",
+      "file": "base/_variables.css",
+      "light": "transform, translate, scale, rotate",
+      "dark": "transform, translate, scale, rotate"
+    },
     "--default-transition-timing-function": {
       "value": "var(--spring-easing, var(--bezier-easing))",
       "file": "base/_variables.css",
       "light": "linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 )",
       "dark": "linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 )"
+    },
+    "--default-transition-transforms": {
+      "value": "transform var(--default-transition-duration) var(--default-transition-timing-function), translate var(--default-transition-duration) var(--default-transition-timing-function), scale var(--default-transition-duration) var(--default-transition-timing-function), rotate var(--default-transition-duration) var(--default-transition-timing-function)",
+      "file": "base/_variables.css",
+      "light": "transform 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), translate 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), scale 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), rotate 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 )",
+      "dark": "transform 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), translate 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), scale 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), rotate 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 )"
     },
     "--font-alternates-body": {
       "value": "normal",
@@ -4806,28 +4869,20 @@
       "dark": "3px"
     },
     "--shadow-2xl": {
-      "value": "0 555px 156px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0), 0 356px 143px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01), 0 200px 120px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04), 0 89px 89px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06), 0 23px 50px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.08)",
-      "file": "base/_variables.css",
-      "light": "0 555px 156px 0 oklch(from oklch(0 0 0) l c h / 0), 0 356px 143px 0 oklch(from oklch(0 0 0) l c h / 0.01), 0 200px 120px 0 oklch(from oklch(0 0 0) l c h / 0.04), 0 89px 89px 0 oklch(from oklch(0 0 0) l c h / 0.06), 0 23px 50px 0 oklch(from oklch(0 0 0) l c h / 0.08)",
-      "dark": "0 555px 156px 0 oklch(from oklch(0 0 0) l c h / 0), 0 356px 143px 0 oklch(from oklch(0 0 0) l c h / 0.01), 0 200px 120px 0 oklch(from oklch(0 0 0) l c h / 0.04), 0 89px 89px 0 oklch(from oklch(0 0 0) l c h / 0.06), 0 23px 50px 0 oklch(from oklch(0 0 0) l c h / 0.08)"
+      "value": "calc(555 * var(--_shadow-x)) calc(555 * var(--_shadow-y)) 156px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0), calc(356 * var(--_shadow-x)) calc(356 * var(--_shadow-y)) 143px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01), calc(200 * var(--_shadow-x)) calc(200 * var(--_shadow-y)) 120px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04), calc(89 * var(--_shadow-x)) calc(89 * var(--_shadow-y)) 89px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06), calc(23 * var(--_shadow-x)) calc(23 * var(--_shadow-y)) 50px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.08)",
+      "file": "base/_variables.css"
     },
     "--shadow-2xs": {
-      "value": "0 1px 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04), 0 0 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05)",
-      "file": "base/_variables.css",
-      "light": "0 1px 1px 0 oklch(from oklch(0 0 0) l c h / 0.04), 0 0 1px 0 oklch(from oklch(0 0 0) l c h / 0.05)",
-      "dark": "0 1px 1px 0 oklch(from oklch(0 0 0) l c h / 0.04), 0 0 1px 0 oklch(from oklch(0 0 0) l c h / 0.05)"
+      "value": "calc(1 * var(--_shadow-x)) calc(1 * var(--_shadow-y)) 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04), 0 0 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05)",
+      "file": "base/_variables.css"
     },
     "--shadow-lg": {
-      "value": "0 247px 69px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0), 0 158px 63px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01), 0 89px 53px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03), 0 39px 39px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05), 0 10px 22px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06)",
-      "file": "base/_variables.css",
-      "light": "0 247px 69px 0 oklch(from oklch(0 0 0) l c h / 0), 0 158px 63px 0 oklch(from oklch(0 0 0) l c h / 0.01), 0 89px 53px 0 oklch(from oklch(0 0 0) l c h / 0.03), 0 39px 39px 0 oklch(from oklch(0 0 0) l c h / 0.05), 0 10px 22px 0 oklch(from oklch(0 0 0) l c h / 0.06)",
-      "dark": "0 247px 69px 0 oklch(from oklch(0 0 0) l c h / 0), 0 158px 63px 0 oklch(from oklch(0 0 0) l c h / 0.01), 0 89px 53px 0 oklch(from oklch(0 0 0) l c h / 0.03), 0 39px 39px 0 oklch(from oklch(0 0 0) l c h / 0.05), 0 10px 22px 0 oklch(from oklch(0 0 0) l c h / 0.06)"
+      "value": "calc(247 * var(--_shadow-x)) calc(247 * var(--_shadow-y)) 69px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0), calc(158 * var(--_shadow-x)) calc(158 * var(--_shadow-y)) 63px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01), calc(89 * var(--_shadow-x)) calc(89 * var(--_shadow-y)) 53px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03), calc(39 * var(--_shadow-x)) calc(39 * var(--_shadow-y)) 39px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05), calc(10 * var(--_shadow-x)) calc(10 * var(--_shadow-y)) 22px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06)",
+      "file": "base/_variables.css"
     },
     "--shadow-md": {
-      "value": "0 66px 18px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0), 0 42px 17px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01), 0 24px 14px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03), 0 11px 11px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04), 0 3px 6px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05)",
-      "file": "base/_variables.css",
-      "light": "0 66px 18px 0 oklch(from oklch(0 0 0) l c h / 0), 0 42px 17px 0 oklch(from oklch(0 0 0) l c h / 0.01), 0 24px 14px 0 oklch(from oklch(0 0 0) l c h / 0.03), 0 11px 11px 0 oklch(from oklch(0 0 0) l c h / 0.04), 0 3px 6px 0 oklch(from oklch(0 0 0) l c h / 0.05)",
-      "dark": "0 66px 18px 0 oklch(from oklch(0 0 0) l c h / 0), 0 42px 17px 0 oklch(from oklch(0 0 0) l c h / 0.01), 0 24px 14px 0 oklch(from oklch(0 0 0) l c h / 0.03), 0 11px 11px 0 oklch(from oklch(0 0 0) l c h / 0.04), 0 3px 6px 0 oklch(from oklch(0 0 0) l c h / 0.05)"
+      "value": "calc(66 * var(--_shadow-x)) calc(66 * var(--_shadow-y)) 18px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0), calc(42 * var(--_shadow-x)) calc(42 * var(--_shadow-y)) 17px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01), calc(24 * var(--_shadow-x)) calc(24 * var(--_shadow-y)) 14px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03), calc(11 * var(--_shadow-x)) calc(11 * var(--_shadow-y)) 11px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04), calc(3 * var(--_shadow-x)) calc(3 * var(--_shadow-y)) 6px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05)",
+      "file": "base/_variables.css"
     },
     "--shadow-ring": {
       "value": "var(--ring-offset-shadow), var(--ring-shadow)",
@@ -4836,22 +4891,16 @@
       "dark": "0 0 0 0px oklch(0.241 0.009 285.7), 0 0 0 calc(0px + 3px) color-mix(in oklch, oklch(0.985 0 0) 20%, transparent)"
     },
     "--shadow-sm": {
-      "value": "0 25px 7px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0), 0 16px 6px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01), 0 9px 5px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03), 0 4px 4px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04), 0 1px 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05)",
-      "file": "base/_variables.css",
-      "light": "0 25px 7px 0 oklch(from oklch(0 0 0) l c h / 0), 0 16px 6px 0 oklch(from oklch(0 0 0) l c h / 0.01), 0 9px 5px 0 oklch(from oklch(0 0 0) l c h / 0.03), 0 4px 4px 0 oklch(from oklch(0 0 0) l c h / 0.04), 0 1px 2px 0 oklch(from oklch(0 0 0) l c h / 0.05)",
-      "dark": "0 25px 7px 0 oklch(from oklch(0 0 0) l c h / 0), 0 16px 6px 0 oklch(from oklch(0 0 0) l c h / 0.01), 0 9px 5px 0 oklch(from oklch(0 0 0) l c h / 0.03), 0 4px 4px 0 oklch(from oklch(0 0 0) l c h / 0.04), 0 1px 2px 0 oklch(from oklch(0 0 0) l c h / 0.05)"
+      "value": "calc(25 * var(--_shadow-x)) calc(25 * var(--_shadow-y)) 7px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0), calc(16 * var(--_shadow-x)) calc(16 * var(--_shadow-y)) 6px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01), calc(9 * var(--_shadow-x)) calc(9 * var(--_shadow-y)) 5px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03), calc(4 * var(--_shadow-x)) calc(4 * var(--_shadow-y)) 4px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04), calc(1 * var(--_shadow-x)) calc(1 * var(--_shadow-y)) 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05)",
+      "file": "base/_variables.css"
     },
     "--shadow-xl": {
-      "value": "0 370px 104px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0), 0 237px 95px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01), 0 133px 80px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04), 0 59px 59px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06), 0 15px 33px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.07)",
-      "file": "base/_variables.css",
-      "light": "0 370px 104px 0 oklch(from oklch(0 0 0) l c h / 0), 0 237px 95px 0 oklch(from oklch(0 0 0) l c h / 0.01), 0 133px 80px 0 oklch(from oklch(0 0 0) l c h / 0.04), 0 59px 59px 0 oklch(from oklch(0 0 0) l c h / 0.06), 0 15px 33px 0 oklch(from oklch(0 0 0) l c h / 0.07)",
-      "dark": "0 370px 104px 0 oklch(from oklch(0 0 0) l c h / 0), 0 237px 95px 0 oklch(from oklch(0 0 0) l c h / 0.01), 0 133px 80px 0 oklch(from oklch(0 0 0) l c h / 0.04), 0 59px 59px 0 oklch(from oklch(0 0 0) l c h / 0.06), 0 15px 33px 0 oklch(from oklch(0 0 0) l c h / 0.07)"
+      "value": "calc(370 * var(--_shadow-x)) calc(370 * var(--_shadow-y)) 104px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0), calc(237 * var(--_shadow-x)) calc(237 * var(--_shadow-y)) 95px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01), calc(133 * var(--_shadow-x)) calc(133 * var(--_shadow-y)) 80px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04), calc(59 * var(--_shadow-x)) calc(59 * var(--_shadow-y)) 59px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06), calc(15 * var(--_shadow-x)) calc(15 * var(--_shadow-y)) 33px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.07)",
+      "file": "base/_variables.css"
     },
     "--shadow-xs": {
-      "value": "0 8px 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0), 0 5px 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01), 0 3px 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03), 0 1px 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04), 0 0 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05)",
-      "file": "base/_variables.css",
-      "light": "0 8px 2px 0 oklch(from oklch(0 0 0) l c h / 0), 0 5px 2px 0 oklch(from oklch(0 0 0) l c h / 0.01), 0 3px 2px 0 oklch(from oklch(0 0 0) l c h / 0.03), 0 1px 1px 0 oklch(from oklch(0 0 0) l c h / 0.04), 0 0 1px 0 oklch(from oklch(0 0 0) l c h / 0.05)",
-      "dark": "0 8px 2px 0 oklch(from oklch(0 0 0) l c h / 0), 0 5px 2px 0 oklch(from oklch(0 0 0) l c h / 0.01), 0 3px 2px 0 oklch(from oklch(0 0 0) l c h / 0.03), 0 1px 1px 0 oklch(from oklch(0 0 0) l c h / 0.04), 0 0 1px 0 oklch(from oklch(0 0 0) l c h / 0.05)"
+      "value": "calc(8 * var(--_shadow-x)) calc(8 * var(--_shadow-y)) 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0), calc(5 * var(--_shadow-x)) calc(5 * var(--_shadow-y)) 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01), calc(3 * var(--_shadow-x)) calc(3 * var(--_shadow-y)) 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03), calc(1 * var(--_shadow-x)) calc(1 * var(--_shadow-y)) 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04), 0 0 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05)",
+      "file": "base/_variables.css"
     },
     "--space-2xl": {
       "value": "calc(var(--spacing) * 40)",

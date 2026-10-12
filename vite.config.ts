@@ -33,4 +33,7 @@ export default defineConfig({
   run: {
     cache: true,
   },
+  server: {
+    allowedHosts: ["localhost", "127.0.0.1", "0.0.0.0", ".ngrok-free.app"],
+  },
 });

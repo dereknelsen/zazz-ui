@@ -21,7 +21,7 @@
     --ui-dialog-transition-timing-function: var(--default-transition-timing-function);
     --ui-dialog-backdrop-transition-duration: calc(var(--ui-dialog-transition-duration) - 100ms);
     --ui-dialog-backdrop-transition-timing-function: ease;
-    --ui-dialog-backdrop-blur: blur(5px);
+    --ui-dialog-backdrop-filter: none;
     --ui-dialog-shadow: var(--shadow-lg);
     --ui-dialog-border: 1px solid var(--color-border);
     --ui-dialog-w: min(var(--layout-md), 100% - var(--gutters) * 2);
@@ -103,7 +103,7 @@
     overscroll-behavior: contain;
     overflow: auto;
     background-color: var(--ui-dialog-backdrop-color);
-    backdrop-filter: var(--ui-dialog-backdrop-blur);
+    backdrop-filter: var(--ui-dialog-backdrop-filter);
     transition: opacity var(--ui-dialog-backdrop-transition-duration)
       var(--ui-dialog-backdrop-transition-timing-function);
   }

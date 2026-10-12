@@ -22,6 +22,7 @@
       --_border-b-hover: var(--border-b--hover);
       --_opacity-hover: var(--opacity--hover);
       --_shadow-hover: var(--shadow--hover);
+      --_shadow-angle-hover: var(--shadow-angle--hover);
       --_ring-hover: var(--ring--hover);
       --_ring-color-hover: var(--ring-color--hover);
       --_ring-offset-hover: var(--ring-offset--hover);
@@ -30,6 +31,8 @@
       --_translate-hover: var(--translate--hover);
       --_rotate-hover: var(--rotate--hover);
       --_transition-hover: var(--transition--hover);
+      --_transition-duration-hover: var(--transition-duration--hover);
+      --_transition-delay-hover: var(--transition-delay--hover);
     }
     :where([data-ui~="group"]:hover [style*="--group-"]) {
       --_template-cols-g-hover: var(--group-template-cols--hover);
@@ -50,6 +53,7 @@
       --_border-b-g-hover: var(--group-border-b--hover);
       --_opacity-g-hover: var(--group-opacity--hover);
       --_shadow-g-hover: var(--group-shadow--hover);
+      --_shadow-angle-g-hover: var(--group-shadow-angle--hover);
       --_ring-g-hover: var(--group-ring--hover);
       --_ring-color-g-hover: var(--group-ring-color--hover);
       --_ring-offset-g-hover: var(--group-ring-offset--hover);
@@ -58,6 +62,8 @@
       --_translate-g-hover: var(--group-translate--hover);
       --_rotate-g-hover: var(--group-rotate--hover);
       --_transition-g-hover: var(--group-transition--hover);
+      --_transition-duration-g-hover: var(--group-transition-duration--hover);
+      --_transition-delay-g-hover: var(--group-transition-delay--hover);
     }
   }
 }

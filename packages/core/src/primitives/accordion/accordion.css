@@ -1,8 +1,9 @@
 /**
- * accordion.css: Accordion (ui-accordion | [data-ui~="accordion"] on <details>/<summary>)
+ * accordion.css: Accordion (ui-accordion | [data-ui~="accordion"] on <details>/<summary>;
+ *                slot data-accordion-slot="marker" on the summary icon that rotates open)
  *
  * @layer      variables, reset, components
- * @requires   _layers.css, _variables.css, _properties.css (--_focus-ring)
+ * @requires   _layers.css, _variables.css, _properties.css (--_focus-shadow)
  * @uses       ::details-content: native open/close block-size transition (reset layer)
  * @uses       interpolate-size: allow-keywords (from _variables.css; required for
  *             block-size: 0 -> auto transitions)
@@ -64,31 +65,38 @@
     align-items: center;
     justify-content: space-between;
 
-    /* The ring is published to --_focus-ring so a --shadow utility on the
+    /* The ring is published to --_focus-shadow so a --shadow utility on the
        summary keeps it; the ring widths grow from 0 so the ring eases in. */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
-    --_focus-ring:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+    --_focus-in: max(0, -1 * sign(var(--_focus-ring-w, 1px)));
+    --_focus-shadow:
+      0 0 0 calc(var(--_ring-offset-width) * (1 - var(--_focus-in))) var(--ring-offset-shadow-color),
+      0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * (1 - var(--_focus-in)))
+        var(--_ring-fill, var(--ring-shadow-color)),
+      inset 0 0 0 calc(var(--_ring-offset-width) * var(--_focus-in)) var(--ring-offset-shadow-color),
+      inset 0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * var(--_focus-in))
         var(--_ring-fill, var(--ring-shadow-color));
-    box-shadow: var(--_focus-ring, 0 0 #0000), var(--_shadow-resolved, 0 0 #0000);
+    box-shadow: var(--_focus-shadow, 0 0 #0000), var(--_shadow-resolved, 0 0 #0000);
 
     /* transparent twin of the ring for forced-colors / high-contrast modes */
-    outline: var(--outline-width) var(--outline-style) transparent;
-    outline-offset: var(--outline-offset);
+    outline: abs(var(--_focus-ring-w, var(--outline-width))) var(--outline-style) transparent;
+    outline-offset: calc(
+      var(--outline-offset) - var(--_focus-in) *
+        (2 * var(--outline-offset) + abs(var(--_focus-ring-w, var(--outline-width))))
+    );
 
     transition: var(--default-transition);
   }
 
   :where(ui-accordion, [data-ui~="accordion"]) > details > summary:focus-visible {
     --_ring-offset-width: var(--ring-offset-width);
-    --_ring-width: var(--ring-width);
+    --_ring-width: abs(var(--_focus-ring-w, var(--ring-width)));
 
     outline-color: transparent;
   }
 
-  :where(ui-accordion, [data-ui~="accordion"]) summary > svg {
+  :where(ui-accordion, [data-ui~="accordion"]) summary > [data-accordion-slot="marker"] {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -99,7 +107,10 @@
       var(--default-transition-timing-function);
   }
 
-  :where(ui-accordion, [data-ui~="accordion"]) > details[open] > summary > svg {
+  :where(ui-accordion, [data-ui~="accordion"])
+    > details[open]
+    > summary
+    > [data-accordion-slot="marker"] {
     transform: var(--ui-accordion-icon-transform--open);
   }
 }

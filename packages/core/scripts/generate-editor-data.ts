@@ -73,11 +73,6 @@ function filesUnder(dir: string, test: (path: string) => boolean): string[] {
 
 const GLOBALS: HtmlAttribute[] = [
   {
-    name: "data-ui-theme",
-    description: "Color scheme for the subtree.",
-    values: [{ name: "dark" }, { name: "light" }],
-  },
-  {
     name: "data-ui-navigation",
     description: "On <html>: swap the body in place on navigations between opted-in pages.",
     values: [{ name: "swap" }],

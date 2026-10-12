@@ -407,7 +407,7 @@ Two consequences to keep in mind: a base utility (`--bg`) flattens the primitive
 because the resolver wins in every state; and a hook that is read on a _descendant_
 (`--ui-button-icon-size` on the icon, `--ui-table-cell-px` on cells) must stay an inheriting
 hook, so presets set the hook there rather than a private. Hover rules sit behind
-`@media (hover: hover)`, and every ring-bearing primitive publishes its ring to `--_focus-ring`
+`@media (hover: hover)`, and every ring-bearing primitive publishes its ring to `--_focus-shadow`
 so a `--shadow` or `--ring` utility composes with it instead of replacing it.
 
 ### The three override surfaces (the hooks)
@@ -470,8 +470,8 @@ use case exists in an example fragment or docs page.
 
 - `color-scheme: light dark` on `:root` enables system dark mode; semantic tokens use
   `light-dark(<light>, <dark>)` so they resolve per `color-scheme`.
-- `[data-ui-theme="dark" | "light"]` is a pure `color-scheme` pin on any element — no
-  token re-declaration (ADR-0013: one attribute, no `.dark` class). Because theme tokens are unregistered, their `light-dark()`
+- The `theme-dark` / `theme-light` switches (`[data-ui~="theme-dark"]`) are a pure `color-scheme` pin on any element — no
+  token re-declaration (ADR-0013 amendment 3: a switch, no `.dark` class). Because theme tokens are unregistered, their `light-dark()`
   expressions re-resolve under the pinned scheme, and scopes nest (a light island
   inside a dark section re-lightens its subtree). Each scope re-asserts
   `color: var(--color-foreground)`: built-in inherited `<color>` properties resolve at the
@@ -502,7 +502,7 @@ use case exists in an example fragment or docs page.
   (`data-carousel-state="active"`, `data-otp-state="filled active"`,
   `data-toaster-state="front visible"`); CSS keys on `[data-x-state~="token"]`. Native state
   stays native (`:checked`, `:open`, `:popover-open`, `[aria-expanded]`).
-- **Globals stay `data-ui-*`**: `data-ui-theme`, `data-ui-guard`.
+- **Globals stay `data-ui-*`**: `data-ui-guard`. The color scheme is a switch (`data-ui="theme-dark"`), not a global.
 - **Zero-specificity where overridable**: roots and presets sit inside `:where()` so a utility
   (the `utilities` layer) or a consumer rule wins without `!important`. Order matters
   between equal-specificity rules: a disabled block that must beat a variant comes after it.
@@ -513,9 +513,9 @@ use case exists in an example fragment or docs page.
   centering idioms — leave a comment saying why.
 - **Focus**: rings render as box-shadows from the ring tokens (`--ring` is the theme input,
   read through `--color-ring`, `--ring-shadow-color`, `--ring-offset-shadow-color`), composed
-  on the element as `--_focus-ring` and placed first in the `box-shadow` list:
-  `box-shadow: var(--_focus-ring, 0 0 #0000), var(--_shadow-resolved, var(--ui-x-shadow))`.
-  The utilities layer's own `box-shadow` emission includes `--_focus-ring` first too, so a
+  on the element as `--_focus-shadow` and placed first in the `box-shadow` list:
+  `box-shadow: var(--_focus-shadow, 0 0 #0000), var(--_shadow-resolved, var(--ui-x-shadow))`.
+  The utilities layer's own `box-shadow` emission includes `--_focus-shadow` first too, so a
   `--shadow` utility never removes a ring. Every shadow-ringed element keeps a same-geometry
   transparent outline (`--outline-width/style/offset`) for forced-colors modes. Never
   `outline: none` without a replacement.

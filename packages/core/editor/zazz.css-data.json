@@ -101537,6 +101537,102 @@
       "description": " — any value; box family."
     },
     {
+      "name": "--shadow-angle",
+      "description": " — any value; effects family."
+    },
+    {
+      "name": "--shadow-angle--starting",
+      "description": "--shadow-angle in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none."
+    },
+    {
+      "name": "--shadow-angle--disabled",
+      "description": "--shadow-angle in the disabled state."
+    },
+    {
+      "name": "--shadow-angle--active",
+      "description": "--shadow-angle in the active state."
+    },
+    {
+      "name": "--shadow-angle--focus-visible",
+      "description": "--shadow-angle in the focus-visible state."
+    },
+    {
+      "name": "--shadow-angle--focus-within",
+      "description": "--shadow-angle in the focus-within state."
+    },
+    {
+      "name": "--shadow-angle--hover",
+      "description": "--shadow-angle in the hover state."
+    },
+    {
+      "name": "--shadow-angle--checked",
+      "description": "--shadow-angle in the checked state."
+    },
+    {
+      "name": "--shadow-angle--current",
+      "description": "--shadow-angle in the current state."
+    },
+    {
+      "name": "--shadow-angle--open",
+      "description": "--shadow-angle in the open state."
+    },
+    {
+      "name": "--shadow-angle--stuck",
+      "description": "--shadow-angle while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental."
+    },
+    {
+      "name": "--shadow-angle--sm",
+      "description": "--shadow-angle at the sm breakpoint and up."
+    },
+    {
+      "name": "--shadow-angle--md",
+      "description": "--shadow-angle at the md breakpoint and up."
+    },
+    {
+      "name": "--shadow-angle--lg",
+      "description": "--shadow-angle at the lg breakpoint and up."
+    },
+    {
+      "name": "--shadow-angle--xl",
+      "description": "--shadow-angle at the xl breakpoint and up."
+    },
+    {
+      "name": "--shadow-angle--2xl",
+      "description": "--shadow-angle at the 2xl breakpoint and up."
+    },
+    {
+      "name": "--group-shadow-angle--disabled",
+      "description": "--shadow-angle while an ancestor with data-ui=\"group\" is disabled."
+    },
+    {
+      "name": "--group-shadow-angle--active",
+      "description": "--shadow-angle while an ancestor with data-ui=\"group\" is active."
+    },
+    {
+      "name": "--group-shadow-angle--focus-visible",
+      "description": "--shadow-angle while an ancestor with data-ui=\"group\" is focus-visible."
+    },
+    {
+      "name": "--group-shadow-angle--focus-within",
+      "description": "--shadow-angle while an ancestor with data-ui=\"group\" is focus-within."
+    },
+    {
+      "name": "--group-shadow-angle--hover",
+      "description": "--shadow-angle while an ancestor with data-ui=\"group\" is hover."
+    },
+    {
+      "name": "--group-shadow-angle--checked",
+      "description": "--shadow-angle while an ancestor with data-ui=\"group\" is checked."
+    },
+    {
+      "name": "--group-shadow-angle--current",
+      "description": "--shadow-angle while an ancestor with data-ui=\"group\" is current."
+    },
+    {
+      "name": "--group-shadow-angle--open",
+      "description": "--shadow-angle while an ancestor with data-ui=\"group\" is open."
+    },
+    {
       "name": "--ring",
       "description": " — any value; effects family."
     },
@@ -101579,6 +101675,26 @@
     {
       "name": "--ring--stuck",
       "description": "--ring while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental."
+    },
+    {
+      "name": "--ring--sm",
+      "description": "--ring at the sm breakpoint and up."
+    },
+    {
+      "name": "--ring--md",
+      "description": "--ring at the md breakpoint and up."
+    },
+    {
+      "name": "--ring--lg",
+      "description": "--ring at the lg breakpoint and up."
+    },
+    {
+      "name": "--ring--xl",
+      "description": "--ring at the xl breakpoint and up."
+    },
+    {
+      "name": "--ring--2xl",
+      "description": "--ring at the 2xl breakpoint and up."
     },
     {
       "name": "--group-ring--disabled",
@@ -105045,6 +105161,1566 @@
       ]
     },
     {
+      "name": "--ring-color--sm",
+      "description": "--ring-color at the sm breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--ring-color--md",
+      "description": "--ring-color at the md breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--ring-color--lg",
+      "description": "--ring-color at the lg breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--ring-color--xl",
+      "description": "--ring-color at the xl breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--ring-color--2xl",
+      "description": "--ring-color at the 2xl breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
       "name": "--group-ring-color--disabled",
       "description": "--ring-color while an ancestor with data-ui=\"group\" is disabled.",
       "values": [
@@ -107583,6 +109259,26 @@
     {
       "name": "--ring-offset--stuck",
       "description": "--ring-offset while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental."
+    },
+    {
+      "name": "--ring-offset--sm",
+      "description": "--ring-offset at the sm breakpoint and up."
+    },
+    {
+      "name": "--ring-offset--md",
+      "description": "--ring-offset at the md breakpoint and up."
+    },
+    {
+      "name": "--ring-offset--lg",
+      "description": "--ring-offset at the lg breakpoint and up."
+    },
+    {
+      "name": "--ring-offset--xl",
+      "description": "--ring-offset at the xl breakpoint and up."
+    },
+    {
+      "name": "--ring-offset--2xl",
+      "description": "--ring-offset at the 2xl breakpoint and up."
     },
     {
       "name": "--group-ring-offset--disabled",
@@ -111049,6 +112745,1566 @@
       ]
     },
     {
+      "name": "--ring-offset-color--sm",
+      "description": "--ring-offset-color at the sm breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--ring-offset-color--md",
+      "description": "--ring-offset-color at the md breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--ring-offset-color--lg",
+      "description": "--ring-offset-color at the lg breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--ring-offset-color--xl",
+      "description": "--ring-offset-color at the xl breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--ring-offset-color--2xl",
+      "description": "--ring-offset-color at the 2xl breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
       "name": "--group-ring-offset-color--disabled",
       "description": "--ring-offset-color while an ancestor with data-ui=\"group\" is disabled.",
       "values": [
@@ -113545,6 +116801,30 @@
       ]
     },
     {
+      "name": "--focus-ring",
+      "description": " — any value; effects family."
+    },
+    {
+      "name": "--focus-ring--sm",
+      "description": "--focus-ring at the sm breakpoint and up."
+    },
+    {
+      "name": "--focus-ring--md",
+      "description": "--focus-ring at the md breakpoint and up."
+    },
+    {
+      "name": "--focus-ring--lg",
+      "description": "--focus-ring at the lg breakpoint and up."
+    },
+    {
+      "name": "--focus-ring--xl",
+      "description": "--focus-ring at the xl breakpoint and up."
+    },
+    {
+      "name": "--focus-ring--2xl",
+      "description": "--focus-ring at the 2xl breakpoint and up."
+    },
+    {
       "name": "--scale",
       "description": "scale — any value; effects family."
     },
@@ -113879,6 +117159,214 @@
     {
       "name": "--after-transition",
       "description": "--transition on the ::after pseudo-element."
+    },
+    {
+      "name": "--transition-duration",
+      "description": "transition-duration — any value; effects family."
+    },
+    {
+      "name": "--transition-duration--starting",
+      "description": "--transition-duration in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none."
+    },
+    {
+      "name": "--transition-duration--disabled",
+      "description": "--transition-duration in the disabled state."
+    },
+    {
+      "name": "--transition-duration--active",
+      "description": "--transition-duration in the active state."
+    },
+    {
+      "name": "--transition-duration--focus-visible",
+      "description": "--transition-duration in the focus-visible state."
+    },
+    {
+      "name": "--transition-duration--focus-within",
+      "description": "--transition-duration in the focus-within state."
+    },
+    {
+      "name": "--transition-duration--hover",
+      "description": "--transition-duration in the hover state."
+    },
+    {
+      "name": "--transition-duration--checked",
+      "description": "--transition-duration in the checked state."
+    },
+    {
+      "name": "--transition-duration--current",
+      "description": "--transition-duration in the current state."
+    },
+    {
+      "name": "--transition-duration--open",
+      "description": "--transition-duration in the open state."
+    },
+    {
+      "name": "--transition-duration--stuck",
+      "description": "--transition-duration while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental."
+    },
+    {
+      "name": "--transition-duration--sm",
+      "description": "--transition-duration at the sm breakpoint and up."
+    },
+    {
+      "name": "--transition-duration--md",
+      "description": "--transition-duration at the md breakpoint and up."
+    },
+    {
+      "name": "--transition-duration--lg",
+      "description": "--transition-duration at the lg breakpoint and up."
+    },
+    {
+      "name": "--transition-duration--xl",
+      "description": "--transition-duration at the xl breakpoint and up."
+    },
+    {
+      "name": "--transition-duration--2xl",
+      "description": "--transition-duration at the 2xl breakpoint and up."
+    },
+    {
+      "name": "--group-transition-duration--disabled",
+      "description": "--transition-duration while an ancestor with data-ui=\"group\" is disabled."
+    },
+    {
+      "name": "--group-transition-duration--active",
+      "description": "--transition-duration while an ancestor with data-ui=\"group\" is active."
+    },
+    {
+      "name": "--group-transition-duration--focus-visible",
+      "description": "--transition-duration while an ancestor with data-ui=\"group\" is focus-visible."
+    },
+    {
+      "name": "--group-transition-duration--focus-within",
+      "description": "--transition-duration while an ancestor with data-ui=\"group\" is focus-within."
+    },
+    {
+      "name": "--group-transition-duration--hover",
+      "description": "--transition-duration while an ancestor with data-ui=\"group\" is hover."
+    },
+    {
+      "name": "--group-transition-duration--checked",
+      "description": "--transition-duration while an ancestor with data-ui=\"group\" is checked."
+    },
+    {
+      "name": "--group-transition-duration--current",
+      "description": "--transition-duration while an ancestor with data-ui=\"group\" is current."
+    },
+    {
+      "name": "--group-transition-duration--open",
+      "description": "--transition-duration while an ancestor with data-ui=\"group\" is open."
+    },
+    {
+      "name": "--before-transition-duration",
+      "description": "--transition-duration on the ::before pseudo-element."
+    },
+    {
+      "name": "--after-transition-duration",
+      "description": "--transition-duration on the ::after pseudo-element."
+    },
+    {
+      "name": "--transition-delay",
+      "description": "transition-delay — any value; effects family."
+    },
+    {
+      "name": "--transition-delay--starting",
+      "description": "--transition-delay in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none."
+    },
+    {
+      "name": "--transition-delay--disabled",
+      "description": "--transition-delay in the disabled state."
+    },
+    {
+      "name": "--transition-delay--active",
+      "description": "--transition-delay in the active state."
+    },
+    {
+      "name": "--transition-delay--focus-visible",
+      "description": "--transition-delay in the focus-visible state."
+    },
+    {
+      "name": "--transition-delay--focus-within",
+      "description": "--transition-delay in the focus-within state."
+    },
+    {
+      "name": "--transition-delay--hover",
+      "description": "--transition-delay in the hover state."
+    },
+    {
+      "name": "--transition-delay--checked",
+      "description": "--transition-delay in the checked state."
+    },
+    {
+      "name": "--transition-delay--current",
+      "description": "--transition-delay in the current state."
+    },
+    {
+      "name": "--transition-delay--open",
+      "description": "--transition-delay in the open state."
+    },
+    {
+      "name": "--transition-delay--stuck",
+      "description": "--transition-delay while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental."
+    },
+    {
+      "name": "--transition-delay--sm",
+      "description": "--transition-delay at the sm breakpoint and up."
+    },
+    {
+      "name": "--transition-delay--md",
+      "description": "--transition-delay at the md breakpoint and up."
+    },
+    {
+      "name": "--transition-delay--lg",
+      "description": "--transition-delay at the lg breakpoint and up."
+    },
+    {
+      "name": "--transition-delay--xl",
+      "description": "--transition-delay at the xl breakpoint and up."
+    },
+    {
+      "name": "--transition-delay--2xl",
+      "description": "--transition-delay at the 2xl breakpoint and up."
+    },
+    {
+      "name": "--group-transition-delay--disabled",
+      "description": "--transition-delay while an ancestor with data-ui=\"group\" is disabled."
+    },
+    {
+      "name": "--group-transition-delay--active",
+      "description": "--transition-delay while an ancestor with data-ui=\"group\" is active."
+    },
+    {
+      "name": "--group-transition-delay--focus-visible",
+      "description": "--transition-delay while an ancestor with data-ui=\"group\" is focus-visible."
+    },
+    {
+      "name": "--group-transition-delay--focus-within",
+      "description": "--transition-delay while an ancestor with data-ui=\"group\" is focus-within."
+    },
+    {
+      "name": "--group-transition-delay--hover",
+      "description": "--transition-delay while an ancestor with data-ui=\"group\" is hover."
+    },
+    {
+      "name": "--group-transition-delay--checked",
+      "description": "--transition-delay while an ancestor with data-ui=\"group\" is checked."
+    },
+    {
+      "name": "--group-transition-delay--current",
+      "description": "--transition-delay while an ancestor with data-ui=\"group\" is current."
+    },
+    {
+      "name": "--group-transition-delay--open",
+      "description": "--transition-delay while an ancestor with data-ui=\"group\" is open."
+    },
+    {
+      "name": "--before-transition-delay",
+      "description": "--transition-delay on the ::before pseudo-element."
+    },
+    {
+      "name": "--after-transition-delay",
+      "description": "--transition-delay on the ::after pseudo-element."
     },
     {
       "name": "--rounded",
@@ -114979,11 +118467,11 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-dialog-backdrop-blur",
+      "name": "--ui-dialog-backdrop-color",
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-dialog-backdrop-color",
+      "name": "--ui-dialog-backdrop-filter",
       "description": "Primitive hook: the public override surface."
     },
     {

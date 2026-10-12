@@ -1,20 +1,22 @@
 ---
 title: "Breakpoints"
-description: "Five named thresholds in ch, read from the nearest inline-size container."
+description: "Five named thresholds in rem, read from the nearest inline-size container."
 section: Foundations
 sectionOrder: 1
 order: 3
 ---
 
-A breakpoint tier (`--grid-cols--md: 3`) applies at or above a threshold measured in `ch` of the nearest inline-size container's font. The thresholds answer "what text layout fits here?", so a narrower face or a smaller font reaches each one earlier.
+A breakpoint tier (`--grid-cols--md: 3`) applies when the nearest inline-size container is at least as wide as a threshold in `rem`. The thresholds are the same widths as the [layout tokens](/api/foundations/tokens/) (`--layout-md` is 48rem), so `md` means "an md band fits here".
 
-| Breakpoint | Threshold | About (system font, 16px) | Fits |
+| Breakpoint | Threshold | At 16px | Layout token |
 | --- | --- | --- | --- |
-| `sm` | 40ch | 404px | the narrowest comfortable line |
-| `md` | 65ch | 656px | one reading measure |
-| `lg` | 90ch | 909px | two 45ch columns |
-| `xl` | 120ch | 1210px | three 40ch columns |
-| `2xl` | 150ch | 1515px | two 75ch measures |
+| `sm` | 40rem | 640px | `--layout-sm` |
+| `md` | 48rem | 768px | `--layout-md` |
+| `lg` | 64rem | 1024px | `--layout-lg` |
+| `xl` | 80rem | 1280px | `--layout-xl` |
+| `2xl` | 96rem | 1536px | `--layout-2xl` |
+
+`rem` resolves against the root font in every container, so siblings set in different type flip at the same width, and a web font loading late never moves a threshold. The thresholds still scale with the reader's font size setting and zoom.
 
 ## Which container answers
 
