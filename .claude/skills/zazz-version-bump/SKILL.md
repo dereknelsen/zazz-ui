@@ -5,7 +5,7 @@ description: Release checklist for publishing @zazz-ui/core or the zazz-ui CLI t
 
 # Zazz version bump & publish
 
-Release checklist for `@zazz-ui/core` (and, with the differences at the bottom, the `zazz-ui` CLI). The agent runs steps 1–8 and 12; steps 9–11 are the maintainer's — npm auth is interactive and ADR-0010 makes publishing a deliberate manual act, so for those steps hand Derek a copy-paste script instead of running them.
+Release checklist for `@zazz-ui/core` (and, with the differences at the bottom, the `zazz-ui` CLI). The agent runs steps 1–8 (ending in a local release commit) and 12; steps 9–11 (publish, check the registry, push and tag) are the maintainer's — npm auth is interactive and ADR-0010 makes publishing a deliberate manual act, so for those steps hand Derek a copy-paste script instead of running them.
 
 Versioning and changelog rules live in their sources of truth — restate neither:
 
@@ -39,9 +39,9 @@ Versioning and changelog rules live in their sources of truth — restate neithe
 
 7. **Check the manifest contract** if primitives, dependencies, or import order changed: `CSS_CASCADE_ORDER` and the `PRIMITIVES` dependency entries in `packages/core/src/manifest.ts` must mirror `index.css` (`manifest.test.ts` and `head.test.ts` enforce this). If the manifest's _shape_ changed (not just data), bump `MANIFEST_VERSION` — it gates CLI compatibility.
 
-8. **Validate**: `vp run ready` from the repo root, all green. It runs with `--no-cache`, so a replayed task can't hide a stale build. This also catches changelog formatting via the formatter.
+8. **Validate, then commit** (agent): `vp run ready` from the repo root, all green. It runs with `--no-cache`, so a replayed task can't hide a stale build, and it catches changelog formatting via the formatter. Then commit everything as one release commit, `Release @zazz-ui/core X.Y.Z: <one-line theme>`, and **do not push it**. A push deploys the docs, which read the version from the workspace package, so their CDN snippets would pin a version npm doesn't have yet. Done when the tree is clean and `main` is one commit ahead of `origin/main`.
 
-9. **Commit, push, then publish** (maintainer). Give Derek this script:
+9. **Publish** (maintainer). Give Derek this script:
 
    ```bash
    pnpm whoami   # MUST print your username before publishing — see gotchas
@@ -50,23 +50,27 @@ Versioning and changelog rules live in their sources of truth — restate neithe
    cd ../..
    ```
 
-10. **Tag and push the tag** (maintainer), matching the existing convention:
+10. **Confirm the registry took it** before anything is pushed:
 
-```bash
-git tag core-vX.Y.Z -m "core: X.Y.Z — <one-line theme>"
-git push origin core-vX.Y.Z
-```
+    ```bash
+    curl -s "https://registry.npmjs.org/-/package/@zazz-ui/core/dist-tags?t=$(date +%s)"
+    ```
 
-11. **Confirm the registry took it**:
+    Done when it prints `{"latest":"X.Y.Z"}` with the new version. Use this endpoint, not the full package document (`registry.npmjs.org/@zazz-ui/core`): Cloudflare caches that one for five minutes (`max-age=300`), so right after a publish it still shows the previous version. The dist-tags endpoint is served uncached, and the `?t=` query is a cache-buster in case that changes.
 
-```bash
-curl -s "https://registry.npmjs.org/-/package/@zazz-ui/core/dist-tags?t=$(date +%s)"
-```
+11. **Push, then tag** (maintainer), in that order: the release commit goes to `main` first, so the tag never points at a commit the remote lacks. The push also triggers the Vercel docs build.
 
-Done when it prints `{"latest":"X.Y.Z"}` with the new version. Use this endpoint, not the full package document (`registry.npmjs.org/@zazz-ui/core`): Cloudflare caches that one for five minutes (`max-age=300`), so right after a publish it still shows the previous version. The dist-tags endpoint is served uncached, and the `?t=` query is a cache-buster in case that changes.
+    ```bash
+    git push origin main
+    git tag core-vX.Y.Z -m "core: X.Y.Z — <one-line theme>"
+    git push origin core-vX.Y.Z
+    git rev-parse core-vX.Y.Z^{commit}   # must print the release commit's hash
+    ```
 
-12. **Rebuild the docs and check the CLI** (agent, once step 11 shows the new version):
-    - Push a commit to `main` (the step 5 and 6 edits, or `git commit --allow-empty -m "Rebuild docs for core X.Y.Z"`). Vercel rebuilds on push, and the docs read the version from the installed package, so their CDN snippets and `llms.txt` pin the release only after this build. Done when `curl -sL "https://zazz.sh/llms-full.txt?t=$(date +%s)" | grep -o '@zazz-ui/core@[0-9.]*' | sort | uniq -c` lists only the new version (Vercel takes about two minutes; `-L` matters, because `zazz.sh` redirects to `www.zazz.sh`).
+    Done when `git status -sb` shows `main` in sync with `origin/main`, `git ls-remote --tags origin core-vX.Y.Z` lists the tag, and the tag resolves to the release commit (not a later one).
+
+12. **Check the docs and the CLI** (agent, once step 11 is pushed):
+    - The step 11 push rebuilt the docs. Done when `curl -sL "https://zazz.sh/llms-full.txt?t=$(date +%s)" | grep -o '@zazz-ui/core@[0-9.]*' | sort | uniq -c` lists only the new version (Vercel takes about two minutes; `-L` matters, because `zazz.sh` redirects to `www.zazz.sh`).
     - Run the published CLI against the release in an empty scratch directory with a stub `package.json`: `init -y`, `add` a primitive the release touched, then `diff -y` (no differences). Then upgrade from the previous release: `init <previous> -y`, `add` the same primitive, `diff @X.Y.Z -y` (it must print the new changelog slice, **BREAKING** notes included), and `update @X.Y.Z -y`. Done when all of them succeed. A failure, or a manifest shape change in step 7, means the CLI needs its own release; see the bottom of this file.
 
     ```bash
