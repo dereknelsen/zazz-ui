@@ -51,8 +51,10 @@ Versioning and changelog rules live in their sources of truth — restate neithe
 9. **Confirm the registry took it**:
 
    ```bash
-   curl -s https://registry.npmjs.org/@zazz-ui/core | python3 -c 'import json,sys; print(json.load(sys.stdin)["dist-tags"])'
+   curl -s "https://registry.npmjs.org/-/package/@zazz-ui/core/dist-tags?t=$(date +%s)"
    ```
+
+   Done when it prints `{"latest":"X.Y.Z"}` with the new version. Use this endpoint, not the full package document (`registry.npmjs.org/@zazz-ui/core`): Cloudflare caches that one for five minutes (`max-age=300`), so right after a publish it still shows the previous version. The dist-tags endpoint is served uncached, and the `?t=` query is a cache-buster in case that changes.
 
 ## Publish gotchas (learned 2026-08-31)
 
