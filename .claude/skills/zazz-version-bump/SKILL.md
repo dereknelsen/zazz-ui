@@ -5,7 +5,7 @@ description: Release checklist for publishing @zazz-ui/core or the zazz-ui CLI t
 
 # Zazz version bump & publish
 
-Release checklist for `@zazz-ui/core` (and, with the differences at the bottom, the `zazz-ui` CLI). The agent runs steps 1–8 (ending in a local release commit) and 12; steps 9–11 (publish, check the registry, push and tag) are the maintainer's — npm auth is interactive and ADR-0010 makes publishing a deliberate manual act, so for those steps hand Derek a copy-paste script instead of running them.
+Release checklist for `@zazz-ui/core` (and, with the differences at the bottom, the `zazz-ui` CLI). The agent runs steps 1–8 (ending in a local release commit) and 12 (the GitHub release and the post-release checks); steps 9–11 (publish, check the registry, push and tag) are the maintainer's — npm auth is interactive and ADR-0010 makes publishing a deliberate manual act, so for those steps hand Derek a copy-paste script instead of running them.
 
 Versioning and changelog rules live in their sources of truth — restate neither:
 
@@ -69,7 +69,16 @@ Versioning and changelog rules live in their sources of truth — restate neithe
 
     Done when `git status -sb` shows `main` in sync with `origin/main`, `git ls-remote --tags origin core-vX.Y.Z` lists the tag, and the tag resolves to the release commit (not a later one).
 
-12. **Check the docs and the CLI** (agent, once step 11 is pushed):
+12. **Publish the GitHub release, then check the docs and the CLI** (agent, once step 11 is pushed):
+    - A pushed tag is not a GitHub release: until one exists, the repo page keeps showing the previous release as Latest. Create it from the version's changelog section (its body without the `## X.Y.Z` header, then the install footer the earlier releases use), titled `@zazz-ui/core X.Y.Z`. Done when `gh release list --limit 3` shows it as **Latest**.
+
+      ```bash
+      v=X.Y.Z
+      awk -v v="$v" '$0 ~ "^## "v" " {on=1; next} /^## / {on=0} on' packages/core/CHANGELOG.md > /tmp/notes.md
+      printf '\n---\n\nInstall: `npm install @zazz-ui/core@%s`, or `npx zazz-ui update` in a project that already vendors the kit. Full history in [`packages/core/CHANGELOG.md`](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/CHANGELOG.md).\n' "$v" >> /tmp/notes.md
+      gh release create "core-v$v" --verify-tag --title "@zazz-ui/core $v" --notes-file /tmp/notes.md --latest
+      ```
+
     - The step 11 push rebuilt the docs. Done when `curl -sL "https://zazz.sh/llms-full.txt?t=$(date +%s)" | grep -o '@zazz-ui/core@[0-9.]*' | sort | uniq -c` lists only the new version (Vercel takes about two minutes; `-L` matters, because `zazz.sh` redirects to `www.zazz.sh`).
     - Run the published CLI against the release in an empty scratch directory with a stub `package.json`: `init -y`, `add` a primitive the release touched, then `diff -y` (no differences). Then upgrade from the previous release: `init <previous> -y`, `add` the same primitive, `diff @X.Y.Z -y` (it must print the new changelog slice, **BREAKING** notes included), and `update @X.Y.Z -y`. Done when all of them succeed. A failure, or a manifest shape change in step 7, means the CLI needs its own release; see the bottom of this file.
 
@@ -94,4 +103,4 @@ Versioning and changelog rules live in their sources of truth — restate neithe
 
 ## CLI (`zazz-ui`) differences
 
-Independent version line (ADR-0010) — a core release never forces a CLI release or vice versa. Same steps with: `packages/cli` instead of `packages/core`, tag prefix `cli-v*`, no CDN-pinned URLs to sweep, and no changelog-scope contract (core's CHANGELOG is the only one the CLI parses). The CLI's kit-compatibility gate is `MANIFEST_VERSION`, checked in `packages/cli/src/kit.ts`.
+Independent version line (ADR-0010) — a core release never forces a CLI release or vice versa. Same steps with: `packages/cli` instead of `packages/core`, tag prefix `cli-v*`, a GitHub release titled `zazz-ui CLI X.Y.Z` that is not marked Latest (`--latest=false`, so the repo page keeps pointing at the kit), no CDN-pinned URLs to sweep, and no changelog-scope contract (core's CHANGELOG is the only one the CLI parses). The CLI's kit-compatibility gate is `MANIFEST_VERSION`, checked in `packages/cli/src/kit.ts`.
