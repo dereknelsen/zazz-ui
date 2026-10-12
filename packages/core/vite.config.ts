@@ -22,6 +22,10 @@ export default defineConfig({
     dts: false,
     // The package is type: module — emit dist/zazz.js, not .mjs.
     fixedExtension: false,
+    // Match tsc's ES2022 so the bundle and the per-file output parse in the
+    // same browsers. Left at esnext, the toaster's `using` declaration shipped
+    // as-is, and stable Safari cannot parse it: the whole bundle failed there.
+    target: "es2022",
     minify: true,
     css: {
       fileName: "zazz.css",

@@ -1,5 +1,11 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.6.1 (2026-10-12)
+
+### base
+
+- The bundled build (`dist/zazz.js`, the CDN file) targets ES2022 like the per-file output. It used to ship the toaster's `using` declaration as written, which stable Safari cannot parse, so in Safari none of the kit's JavaScript ran from the bundle: reveal content stayed hidden, dialogs lost their backdrop-tap fallback, and the scripted primitives did nothing. Pages that load the per-file `index.js` were not affected. If you load the kit from the CDN, update the pinned version.
+
 ## 0.6.0 (2026-10-12)
 
 ### base
