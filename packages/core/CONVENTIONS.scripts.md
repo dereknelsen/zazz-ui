@@ -207,7 +207,7 @@ const entries = toasts.map((toast) => ({ node: toast, height: toast.offsetHeight
 
 Rules:
 
-- **TypeScript sources only, never in vanilla JS.** Safari has no native Explicit Resource Management, so `using` must not appear in docs snippets, example HTML, inline `<script>`s, or anything shipped uncompiled. In `.ts` sources it is safe: tsc (target ES2022) compiles `using` to plain try/finally.
+- **TypeScript sources only, never in vanilla JS.** Safari has no native Explicit Resource Management, so `using` must not appear in docs snippets, example HTML, inline `<script>`s, or anything shipped uncompiled. In `.ts` sources it is safe only because both compilers lower it to plain try/finally: tsc (target ES2022) for the per-file output, and `vp pack` for `dist/zazz.js`, whose `target: "es2022"` in `vite.config.ts` is pinned to tsc's by `scripts/pack-target.test.ts`. Before 0.6.1 the bundle was left at esnext and shipped `using` verbatim, so Safari could not parse it.
 - **Add the symbol fallback to every module that touches the protocol.** The compiled helpers (and `[Symbol.dispose]` method definitions) read `Symbol.dispose` at runtime and throw where it does not exist. Any file that declares `using` or creates a disposable carries this line after its imports:
 
   ```typescript

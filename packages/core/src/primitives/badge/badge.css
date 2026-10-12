@@ -39,8 +39,8 @@
 
     /* dual-mode: a scale number or a length */
     --ui-badge-gap: var(--spacing);
-    --ui-badge-px: calc(var(--spacing) * 1.5);
-    --ui-badge-h: calc(var(--spacing) * 5.5);
+    --ui-badge-px: calc(var(--spacing) * 1.25);
+    --ui-badge-h: calc(var(--spacing) * 5);
     --ui-badge-rounded: var(--radius-sm);
 
     --ui-badge-icon-size: calc(var(--spacing) * 3);
@@ -381,92 +381,79 @@
     --_badge-border-color--active: transparent;
   }
 
+  /* Status variants (info, success, warning, destructive) share one soft
+     design: the status color at 10% alpha (20% in dark) as the surface, and
+     the status hue as the text with its lightness clamped (at most 0.45 in
+     light, at least 0.82 in dark) so it holds 4.5:1 on the tint and on the
+     hover and active steps; status-contrast.browser.test.ts checks it. No border. One rule derives the states from the
+     surface; each variant names only its colors. */
+  :where(
+    [data-ui~="badge"]:is(
+      [data-badge-variant="info"],
+      [data-badge-variant="success"],
+      [data-badge-variant="warning"],
+      [data-badge-variant="destructive"]
+    )
+  ) {
+    --_badge-bg--hover: oklch(from var(--_badge-bg) l c h / calc(alpha + 0.1));
+    --_badge-bg--active: oklch(from var(--_badge-bg) l c h / calc(alpha + 0.15));
+
+    --_badge-text--hover: var(--_badge-text);
+    --_badge-text--active: var(--_badge-text);
+
+    --_badge-border-color: transparent;
+    --_badge-border-color--hover: transparent;
+    --_badge-border-color--active: transparent;
+
+    --_badge-shadow: 0 0 transparent;
+  }
+
   :where([data-ui~="badge"][data-badge-variant="info"]) {
-    --_badge-bg: oklch(from var(--color-info) l c h / 0.15);
-    --_badge-bg--hover: oklch(from var(--color-info) l c h / 0.1);
-    --_badge-bg--active: oklch(from var(--color-info) l c h / 0.05);
-
-    --_badge-text: color-mix(in xyz, var(--color-info) 100%, contrast-color(var(--_badge-bg)) 100%);
-    --_badge-text--hover: color-mix(
-      in xyz,
-      var(--color-info) 100%,
-      contrast-color(var(--_badge-bg--hover)) 100%
+    --_badge-ring-color: var(--color-info);
+    --_badge-bg: light-dark(
+      oklch(from var(--color-info) l c h / 0.1),
+      oklch(from var(--color-info) l c h / 0.2)
     );
-    --_badge-text--active: color-mix(
-      in xyz,
-      var(--color-info) 100%,
-      contrast-color(var(--_badge-bg--active)) 100%
+    --_badge-text: light-dark(
+      oklch(from var(--color-info) min(l, 0.45) c h),
+      oklch(from var(--color-info) max(l, 0.82) c h)
     );
-
-    --_badge-border-color: oklch(from var(--color-info) l c h / 0.2);
-    --_badge-border-color--hover: oklch(from var(--color-info) l c h / 0.15);
-    --_badge-border-color--active: oklch(from var(--color-info) l c h / 0.1);
   }
 
   :where([data-ui~="badge"][data-badge-variant="success"]) {
-    --_badge-bg: oklch(from var(--color-success) l c h / 0.15);
-    --_badge-bg--hover: oklch(from var(--color-success) l c h / 0.1);
-    --_badge-bg--active: oklch(from var(--color-success) l c h / 0.05);
-
-    --_badge-text: color-mix(
-      in xyz,
-      var(--color-success) 100%,
-      contrast-color(var(--_badge-bg)) 100%
+    --_badge-ring-color: var(--color-success);
+    --_badge-bg: light-dark(
+      oklch(from var(--color-success) l c h / 0.1),
+      oklch(from var(--color-success) l c h / 0.2)
     );
-    --_badge-text--hover: color-mix(
-      in xyz,
-      var(--color-success) 100%,
-      contrast-color(var(--_badge-bg--hover)) 100%
+    --_badge-text: light-dark(
+      oklch(from var(--color-success) min(l, 0.45) c h),
+      oklch(from var(--color-success) max(l, 0.82) c h)
     );
-    --_badge-text--active: color-mix(
-      in xyz,
-      var(--color-success) 100%,
-      contrast-color(var(--_badge-bg--active)) 100%
-    );
-
-    --_badge-border-color: oklch(from var(--color-success) l c h / 0.2);
-    --_badge-border-color--hover: oklch(from var(--color-success) l c h / 0.15);
-    --_badge-border-color--active: oklch(from var(--color-success) l c h / 0.1);
   }
 
   :where([data-ui~="badge"][data-badge-variant="warning"]) {
-    --_badge-bg: oklch(from var(--color-warning) l c h / 0.15);
-    --_badge-bg--hover: oklch(from var(--color-warning) l c h / 0.1);
-    --_badge-bg--active: oklch(from var(--color-warning) l c h / 0.05);
-
-    --_badge-text: color-mix(
-      in xyz,
-      var(--color-warning) 100%,
-      contrast-color(var(--_badge-bg)) 100%
+    --_badge-ring-color: var(--color-warning);
+    --_badge-bg: light-dark(
+      oklch(from var(--color-warning) l c h / 0.1),
+      oklch(from var(--color-warning) l c h / 0.2)
     );
-    --_badge-text--hover: color-mix(
-      in xyz,
-      var(--color-warning) 100%,
-      contrast-color(var(--_badge-bg--hover)) 100%
+    --_badge-text: light-dark(
+      oklch(from var(--color-warning) min(l, 0.45) c h),
+      oklch(from var(--color-warning) max(l, 0.82) c h)
     );
-    --_badge-text--active: color-mix(
-      in xyz,
-      var(--color-warning) 100%,
-      contrast-color(var(--_badge-bg--active)) 100%
-    );
-
-    --_badge-border-color: oklch(from var(--color-warning) l c h / 0.2);
-    --_badge-border-color--hover: oklch(from var(--color-warning) l c h / 0.15);
-    --_badge-border-color--active: oklch(from var(--color-warning) l c h / 0.1);
   }
 
   :where([data-ui~="badge"][data-badge-variant="destructive"]) {
-    --_badge-bg: var(--color-destructive);
-    --_badge-bg--hover: oklch(from var(--color-destructive) l c h / 0.9);
-    --_badge-bg--active: oklch(from var(--color-destructive) l c h / 0.8);
-
-    --_badge-text: var(--color-destructive-foreground);
-    --_badge-text--hover: var(--color-destructive-foreground);
-    --_badge-text--active: var(--color-destructive-foreground);
-
-    --_badge-border-color: var(--_badge-bg);
-    --_badge-border-color--hover: var(--_badge-bg--hover);
-    --_badge-border-color--active: var(--_badge-bg--active);
+    --_badge-ring-color: var(--color-destructive);
+    --_badge-bg: light-dark(
+      oklch(from var(--color-destructive) l c h / 0.1),
+      oklch(from var(--color-destructive) l c h / 0.2)
+    );
+    --_badge-text: light-dark(
+      oklch(from var(--color-destructive) min(l, 0.45) c h),
+      oklch(from var(--color-destructive) max(l, 0.82) c h)
+    );
   }
 
   :where([data-ui~="badge"][data-badge-variant="link"]) {
@@ -475,8 +462,8 @@
     --_badge-bg--active: transparent;
 
     --_badge-text: var(--color-foreground);
-    --_badge-text--hover: var(--color-primary);
-    --_badge-text--active: oklch(from var(--color-primary) l c h / 0.8);
+    --_badge-text--hover: oklch(from var(--color-primary) l c h / 0.6);
+    --_badge-text--active: oklch(from var(--color-primary) l c h / 0.5);
 
     --_badge-border-style: none;
 
@@ -484,43 +471,6 @@
     --_badge-rounded: 0;
 
     --_badge-shadow: 0 0 transparent;
-
-    /* the link sizes to its text (dual mode cannot carry fit-content) */
-    block-size: auto;
-
-    text-decoration-line: var(--decoration-line);
-    text-decoration-style: var(--decoration-style);
-    text-decoration-color: var(--decoration-color);
-    text-underline-offset: var(--decoration-offset);
-    text-decoration-thickness: var(--decoration-thickness);
-  }
-
-  @media (hover: hover) {
-    :where([data-ui~="badge"][data-badge-variant="link"]):is(button, a[href]):hover:not(
-      :disabled,
-      [aria-disabled="true"]
-    ) {
-      --decoration-offset: calc(var(--decoration-thickness) * 2);
-    }
-  }
-
-  :where([data-ui~="badge"][data-badge-variant="link"]):is(button, a[href]):active:not(
-    :disabled,
-    [aria-disabled="true"]
-  ) {
-    --decoration-offset: inherit;
-    /* back to the base offset while pressed */
-  }
-
-  /* after the variants at zero specificity: a disabled badge is muted whatever its variant */
-  :where([data-ui~="badge"]:is(button, a[href]):is(:disabled, [aria-disabled="true"])) {
-    --_badge-text: var(--color-muted-foreground);
-    --_badge-bg: var(--color-muted);
-    --_badge-shadow: 0 0 transparent;
-
-    cursor: default;
-    opacity: 0.5;
-    outline: none;
   }
 
   /* ===========================================================================

@@ -33,7 +33,7 @@ There is no runtime dependency on `@zazz-ui/core`. The files in `zazz/` are your
 
 ## Requirements
 
-Node 22.22+ (or 24.15+). Works with `@zazz-ui/core` 0.1 through 0.5 (manifest v1–v2); given a newer kit, the CLI tells you to upgrade it. Works offline once a kit version is cached; respects your `.npmrc` (registries, proxies, auth). `--registry`, `--offline`, and `--prefer-offline` are available on every command.
+Node 22.22+ (or 24.15+). Works with `@zazz-ui/core` 0.1 through 0.6 (manifest v1–v2); given a newer kit, the CLI tells you to upgrade it. Works offline once a kit version is cached; respects your `.npmrc` (registries, proxies, auth). `--registry`, `--offline`, and `--prefer-offline` are available on every command.
 
 ## License
 

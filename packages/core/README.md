@@ -4,7 +4,7 @@ Zazz is a CSS and vanilla JavaScript UI kit that does not require a build step. 
 
 Docs: <https://zazz.sh> (guides, a [quick start](https://zazz.sh/docs/quick-start/), and an [API reference](https://zazz.sh/api/) generated from this package's data).
 
-**0.5 is an alpha.** The markup contract can change in any release before 1.0, and 0.5 is not compatible with 0.4; see [`CHANGELOG.md`](./CHANGELOG.md) for every breaking change and its migration note.
+**Zazz is in alpha (0.6).** The markup contract can change in any minor release before 1.0, and 0.5 and later are not compatible with 0.4; see [`CHANGELOG.md`](./CHANGELOG.md) for every breaking change and its migration note.
 
 ## Install
 
@@ -20,7 +20,7 @@ import "@zazz-ui/core"; // custom elements and shared behaviors
 From a CDN, the script needs an import map for its dependencies and the Interest Invokers polyfill:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.6.1/dist/zazz.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.6.2/dist/zazz.css" />
 <script type="importmap">
   {
     "imports": {
@@ -36,7 +36,7 @@ From a CDN, the script needs an import map for its dependencies and the Interest
   type="module"
   src="https://cdn.jsdelivr.net/npm/invokers@2.2.2/dist/esm/production/interest.js"
 ></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.6.1/dist/zazz.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.6.2/dist/zazz.js"></script>
 ```
 
 Use an exact version in CDN URLs. The [installation guide](https://zazz.sh/docs/install/installation/) has the complete `<head>`, with fonts, the theme script, a per-primitive variant, and integrity hashes on every URL; `buildHead({ cdn: { version } })` from `@zazz-ui/core/head` returns the same markup. Each release also includes `dist/sri.json` with the SHA-384 hash of every published file.
@@ -112,7 +112,7 @@ pnpm exec playwright install chromium
 
 Zazz targets the latest Chrome, Firefox, and Safari, two versions back. Features below that floor are feature-detected with a polyfill or a graceful fallback where practical. The kit leans on modern CSS (cascade layers, container style queries, subgrid, `light-dark()`), so older browsers get a degraded but functional experience rather than a pixel-perfect one.
 
-The head loads exactly one polyfill: `invokers/interest`, for Interest Invokers (`interestfor`), which is Chromium-only and drives tooltip triggers. Everything else the kit builds on — the Popover API, Invoker Commands, native `<dialog>`, `<details>` — is native across the floor. CSS anchor positioning is below the floor and is gated behind `@supports` with a UA-centered fallback.
+The head loads exactly one polyfill: `invokers/interest`, for Interest Invokers (`interestfor`), which is Chromium-only and drives tooltip triggers. Everything else the kit builds on (the Popover API, Invoker Commands, native `<dialog>`, `<details>`) is native across the floor. One gap gets a fallback instead of a polyfill: Safari supports `<dialog closedby>` but not its `any` value, so the dialog script closes a `closedby="any"` dialog on a backdrop tap there. CSS anchor positioning is below the floor and is gated behind `@supports` with a UA-centered fallback.
 
 ## Package layout
 

@@ -5,7 +5,7 @@ description: Release checklist for publishing @zazz-ui/core or the zazz-ui CLI t
 
 # Zazz version bump & publish
 
-Release checklist for `@zazz-ui/core` (and, with the differences at the bottom, the `zazz-ui` CLI). The agent runs steps 1–7 and 11; steps 8–10 are the maintainer's — npm auth is interactive and ADR-0010 makes publishing a deliberate manual act, so for those steps hand Derek a copy-paste script instead of running them.
+Release checklist for `@zazz-ui/core` (and, with the differences at the bottom, the `zazz-ui` CLI). The agent runs steps 1–8 and 12; steps 9–11 are the maintainer's — npm auth is interactive and ADR-0010 makes publishing a deliberate manual act, so for those steps hand Derek a copy-paste script instead of running them.
 
 Versioning and changelog rules live in their sources of truth — restate neither:
 
@@ -30,11 +30,18 @@ Versioning and changelog rules live in their sources of truth — restate neithe
 
 5. **Update the agent skills** to match the new changelog entry: `.claude/skills/zazz*` (the `zazz` skill and its `references/`, `zazz-new-design-style`, the `zazz-figma-*` pair, `zazz-legacy-baseline`). For every entry, find what an agent would now get wrong: a renamed or removed attribute, token, or hook (search the skills for the old name; the hit count must be zero), a new slot or required attribute (add it to `references/components.md`), a new utility (`references/tokens.md`). If the release touched `_reset.css`, re-check `zazz-legacy-baseline/RESET-GROUPS.md` and move its "reflects Zazz X.Y.Z" label. Done when no skill names anything the release renamed or removed, and every new markup requirement appears in the skills.
 
-6. **Check the manifest contract** if primitives, dependencies, or import order changed: `CSS_CASCADE_ORDER` and the `PRIMITIVES` dependency entries in `packages/core/src/manifest.ts` must mirror `index.css` (`manifest.test.ts` and `head.test.ts` enforce this). If the manifest's _shape_ changed (not just data), bump `MANIFEST_VERSION` — it gates CLI compatibility.
+6. **Audit the Markdown docs** for content the release made wrong, and for stale version references. List the files with `find . -name '*.md' -not -path '*/node_modules/*' -not -path '*/dist/*' -not -path './.git/*' -not -path '*/.astro/*'`; skip `CHANGELOG.md` and `docs/adr/` (history), and the deliberate "don't write 0.4 syntax" examples. The ones that drift: the root, core, CLI, and vscode `README.md`s, `CONTEXT.md`, `SPEC.md` (its title and status line), `packages/core/AUTHORING.md`, the two `CONVENTIONS.*.md`, and the Copilot files under `.github/`.
+   - **Content:** for every changelog entry, search for the old name or value (breakpoint widths, renamed attributes and hooks, example output such as inlay hints). Check every relative file path still exists, and every `vp run <task>` against the `scripts` in the matching `package.json` (the root has no `generate`, `fmt`, or `lint`).
+   - **Versions:** status lines (`0.N alpha`), "works with core 0.1 through 0.N" in the CLI README, and version-labelled titles. Write "0.5 and later" for the markup syntax, not a single minor, so the next release doesn't stale it again.
+   - Commands a README tells people to run must work: run them. A bare `vp test` at the repo root fails; `vp run -r test` is the per-package form.
 
-7. **Validate**: `vp run ready` from the repo root, all green. It runs with `--no-cache`, so a replayed task can't hide a stale build. This also catches changelog formatting via the formatter.
+   Done when every hit is fixed or deliberately historical. The npm package pages show each README as of its last publish, so a CLI README fix waits for the next CLI release; don't cut one for docs alone.
 
-8. **Commit, push, then publish** (maintainer). Give Derek this script:
+7. **Check the manifest contract** if primitives, dependencies, or import order changed: `CSS_CASCADE_ORDER` and the `PRIMITIVES` dependency entries in `packages/core/src/manifest.ts` must mirror `index.css` (`manifest.test.ts` and `head.test.ts` enforce this). If the manifest's _shape_ changed (not just data), bump `MANIFEST_VERSION` — it gates CLI compatibility.
+
+8. **Validate**: `vp run ready` from the repo root, all green. It runs with `--no-cache`, so a replayed task can't hide a stale build. This also catches changelog formatting via the formatter.
+
+9. **Commit, push, then publish** (maintainer). Give Derek this script:
 
    ```bash
    pnpm whoami   # MUST print your username before publishing — see gotchas
@@ -43,14 +50,14 @@ Versioning and changelog rules live in their sources of truth — restate neithe
    cd ../..
    ```
 
-9. **Tag and push the tag** (maintainer), matching the existing convention:
+10. **Tag and push the tag** (maintainer), matching the existing convention:
 
-   ```bash
-   git tag core-vX.Y.Z -m "core: X.Y.Z — <one-line theme>"
-   git push origin core-vX.Y.Z
-   ```
+```bash
+git tag core-vX.Y.Z -m "core: X.Y.Z — <one-line theme>"
+git push origin core-vX.Y.Z
+```
 
-10. **Confirm the registry took it**:
+11. **Confirm the registry took it**:
 
 ```bash
 curl -s "https://registry.npmjs.org/-/package/@zazz-ui/core/dist-tags?t=$(date +%s)"
@@ -58,9 +65,9 @@ curl -s "https://registry.npmjs.org/-/package/@zazz-ui/core/dist-tags?t=$(date +
 
 Done when it prints `{"latest":"X.Y.Z"}` with the new version. Use this endpoint, not the full package document (`registry.npmjs.org/@zazz-ui/core`): Cloudflare caches that one for five minutes (`max-age=300`), so right after a publish it still shows the previous version. The dist-tags endpoint is served uncached, and the `?t=` query is a cache-buster in case that changes.
 
-11. **Rebuild the docs and check the CLI** (agent, once step 10 shows the new version):
-    - Push a commit to `main` (the step 5 skill edits, or `git commit --allow-empty -m "Rebuild docs for core X.Y.Z"`). Vercel rebuilds on push, and the docs read the version from the installed package, so their CDN snippets and `llms.txt` pin the release only after this build. Done when `curl -sL "https://zazz.sh/llms-full.txt?t=$(date +%s)" | grep -o '@zazz-ui/core@[0-9.]*' | sort | uniq -c` lists only the new version (Vercel takes about two minutes; `-L` matters, because `zazz.sh` redirects to `www.zazz.sh`).
-    - Run the published CLI against the release in an empty scratch directory with a stub `package.json`: `init -y`, `add` a primitive the release touched, then `diff -y` (no differences). Then upgrade from the previous release: `init <previous> -y`, `add` the same primitive, `diff @X.Y.Z -y` (it must print the new changelog slice, **BREAKING** notes included), and `update @X.Y.Z -y`. Done when all of them succeed. A failure, or a manifest shape change in step 6, means the CLI needs its own release; see the bottom of this file.
+12. **Rebuild the docs and check the CLI** (agent, once step 11 shows the new version):
+    - Push a commit to `main` (the step 5 and 6 edits, or `git commit --allow-empty -m "Rebuild docs for core X.Y.Z"`). Vercel rebuilds on push, and the docs read the version from the installed package, so their CDN snippets and `llms.txt` pin the release only after this build. Done when `curl -sL "https://zazz.sh/llms-full.txt?t=$(date +%s)" | grep -o '@zazz-ui/core@[0-9.]*' | sort | uniq -c` lists only the new version (Vercel takes about two minutes; `-L` matters, because `zazz.sh` redirects to `www.zazz.sh`).
+    - Run the published CLI against the release in an empty scratch directory with a stub `package.json`: `init -y`, `add` a primitive the release touched, then `diff -y` (no differences). Then upgrade from the previous release: `init <previous> -y`, `add` the same primitive, `diff @X.Y.Z -y` (it must print the new changelog slice, **BREAKING** notes included), and `update @X.Y.Z -y`. Done when all of them succeed. A failure, or a manifest shape change in step 7, means the CLI needs its own release; see the bottom of this file.
 
     ```bash
     z(){ pnpm dlx zazz-ui@latest "$@"; }   # a function: zsh does not word-split "$Z"

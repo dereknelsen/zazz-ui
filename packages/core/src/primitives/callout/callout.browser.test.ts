@@ -2,13 +2,14 @@
 
 /**
  * @fileoverview Callout: the default is an outline card's surface, muted a muted
- * card's, and the status variants follow the matching badge.
+ * card's, and the status variants share the soft status tokens with badges and
+ * buttons.
  */
 
 import { describe, expect, it } from "vite-plus/test";
 import { lengthPx, mount, scale, style, useKit } from "../../../test/browser.ts";
 
-const TINTED = ["info", "success", "warning"] as const;
+const STATUS = ["info", "success", "warning", "destructive"] as const;
 
 describe("callout", () => {
   useKit();
@@ -60,35 +61,32 @@ describe("callout", () => {
     }
   });
 
-  it.each(TINTED)(
-    "%s takes the badge's tint and border, with text mixed toward the foreground",
+  it.each(STATUS)(
+    "%s shares the soft status surface and text with badges and buttons, plus a faint status border",
     (variant) => {
       const root = mount(`<div>
       <aside data-ui="callout" data-callout-variant="${variant}" data-callout>c</aside>
       <span data-ui="badge" data-badge-variant="${variant}" data-badge>b</span>
-      <span data-swatch style="color: color-mix(in xyz, var(--color-${variant}), var(--color-foreground))">s</span>
+      <button data-ui="button" data-button-variant="${variant}" type="button" data-button>b</button>
+      <span data-swatch style="background-color: light-dark(oklch(from var(--color-${variant}) l c h / 0.1), oklch(from var(--color-${variant}) l c h / 0.2)); color: light-dark(oklch(from var(--color-${variant}) min(l, 0.45) c h), oklch(from var(--color-${variant}) max(l, 0.82) c h)); border-top-color: oklch(from var(--color-${variant}) l c h / 0.2)">s</span>
     </div>`);
-      const callout = root.querySelector("[data-callout]")!;
-      const badge = root.querySelector("[data-badge]")!;
-      expect(style(callout, "background-color")).toBe(style(badge, "background-color"));
-      expect(style(callout, "border-top-color")).toBe(style(badge, "border-top-color"));
-      expect(style(callout, "border-top-width")).toBe("1px");
-      expect(style(callout, "color")).toBe(style(root.querySelector("[data-swatch]")!, "color"));
+      const at = (selector: string) => root.querySelector(selector)!;
+      const swatch = at("[data-swatch]");
+      for (const selector of ["[data-callout]", "[data-badge]", "[data-button]"]) {
+        expect(style(at(selector), "background-color"), selector).toBe(
+          style(swatch, "background-color"),
+        );
+        expect(style(at(selector), "color"), selector).toBe(style(swatch, "color"));
+      }
+      expect(style(at("[data-callout]"), "border-top-color")).toBe(
+        style(swatch, "border-top-color"),
+      );
+      expect(style(at("[data-callout]"), "border-top-width")).toBe("1px");
+      for (const selector of ["[data-badge]", "[data-button]"]) {
+        expect(style(at(selector), "border-top-color"), selector).toBe("rgba(0, 0, 0, 0)");
+      }
     },
   );
-
-  it("destructive takes the destructive badge's solid fill, text, and border", () => {
-    const root = mount(`<div>
-      <aside data-ui="callout" data-callout-variant="destructive" data-callout>c</aside>
-      <span data-ui="badge" data-badge-variant="destructive" data-badge>b</span>
-    </div>`);
-    const callout = root.querySelector("[data-callout]")!;
-    const badge = root.querySelector("[data-badge]")!;
-    for (const property of ["background-color", "color", "border-top-color"]) {
-      expect(style(callout, property), property).toBe(style(badge, property));
-    }
-    expect(style(callout, "border-top-width")).toBe("1px");
-  });
 
   it("keeps a variant on its element and takes --p and --gap utilities", () => {
     const root = mount(`<div>

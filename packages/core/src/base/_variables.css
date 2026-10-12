@@ -64,6 +64,10 @@
     --color-input: light-dark(var(--color-neutral-50), var(--color-tint-100));
     --color-input-foreground: light-dark(var(--color-neutral-900), var(--color-white));
 
+    /* selection */
+    --color-selection: var(--color-primary);
+    --color-selection-foreground: var(--color-primary-foreground);
+
     /* overlay */
     --color-muted: light-dark(var(--color-shade-50), var(--color-tint-100));
     --color-muted-foreground: light-dark(var(--color-shade-600), var(--color-tint-600));

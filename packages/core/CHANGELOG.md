@@ -1,5 +1,26 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.6.2 (2026-10-12)
+
+### base
+
+- **BREAKING** The text-selection highlight is the `--color-selection` / `--color-selection-foreground` role pair (default: `--color-primary` / `--color-primary-foreground`), an opaque fill with its own text color. It replaces the `--selection-bg` hook on `html` (a 30% primary tint) and the `contrast-color()` text that went with it. Migration: rename `--selection-bg` to `--color-selection`, give it an opaque color, and set `--color-selection-foreground` to a text color with enough contrast on it; set both on `:root`. Shipped in a patch on purpose, as an exception to the 0.x contract (ADR-0010 makes a custom-property removal a minor): the alpha has few installs, and the selection highlight is the only thing it changes.
+
+### button
+
+- The info, success, warning, and destructive variants are soft: the status color at 10% alpha (20% in dark mode) as the surface, and the status hue as the text with its lightness clamped (at most 0.45 in light, at least 0.82 in dark) so it holds WCAG AA, 4.5:1, on the tint over the page or a card. A deeper tint on hover and press, no border, and the status color as the focus ring. The solid fills they replace fell below 4.5:1 with white text in light mode (info 4.1:1, success 3.8:1, warning 3.2:1). To keep a solid destructive button (white on `--color-destructive` holds 4.8:1), drop the variant and set the hooks on the button: `--ui-button-bg`, `--ui-button-bg--hover`, `--ui-button-text`, `--ui-button-text--hover`, and `--ui-button-border-color: transparent`. A variant's colors take precedence over the hooks, so the hooks do nothing alongside `data-button-variant`.
+- `--ui-button-leading` defaults to `1` instead of `--leading-sm`. Set the hook to `var(--leading-sm)` to keep the old line height.
+
+### badge
+
+- The info, success, warning, and destructive variants match the buttons: the same soft status colors, no border. Destructive was solid; it now matches the other three.
+- Badges are a little smaller: `--ui-badge-h` is `calc(var(--spacing) * 5)` (was `5.5`) and `--ui-badge-px` is `calc(var(--spacing) * 1.25)` (was `1.5`). Set the hooks back to keep the old size.
+- The `link` variant matches the link button: plain text that turns primary on hover, with no underline and no hover offset.
+
+### callout
+
+- The status variants use the same soft status colors and keep their faint status border. Destructive was solid; it now matches the other three.
+
 ## 0.6.1 (2026-10-12)
 
 ### base

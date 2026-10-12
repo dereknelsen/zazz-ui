@@ -2,7 +2,7 @@
 applyTo: "**/*.html"
 ---
 
-Write HTML for the Zazz kit with the 0.5 syntax. The full rules are in [packages/core/AUTHORING.md](../../packages/core/AUTHORING.md); follow them. Copy a primitive's anatomy from `packages/core/src/primitives/<name>/<name>.html`.
+Write HTML for the Zazz kit with the current syntax (0.5 and later). The full rules are in [packages/core/AUTHORING.md](../../packages/core/AUTHORING.md); follow them. Copy a primitive's anatomy from `packages/core/src/primitives/<name>/<name>.html`.
 
 The short version:
 

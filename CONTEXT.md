@@ -65,7 +65,7 @@ One of the named column spans of a layout: `layout-sm`–`layout-2xl` cap and ce
 _Avoid_: column, container size, breakpoint
 
 **Breakpoint**:
-One of five named inline-size thresholds (`sm` 40ch, `md` 65ch, `lg` 90ch, `xl` 120ch, `2xl` 150ch, chosen for legibility) at or above which a responsive modifier applies. Tiers read the nearest inline-size container (the page containers, a layout band's child, or any `data-ui="container"`), in `ch` of its font. Layout band and component widths are a separate rem scale, `--layout-*`.
+One of five named inline-size thresholds (`sm` 40rem, `md` 48rem, `lg` 64rem, `xl` 80rem, `2xl` 96rem) at or above which a responsive modifier applies. They are the same widths as the `--layout-*` bands, so `md` means "an md band fits here". Tiers read the nearest inline-size container (`html`, a layout band's child, or any `data-ui="container"`), in `rem`, so siblings set in different fonts flip at the same width.
 _Avoid_: media query, screen size, band, `--is-breakpoint-*`, `--bp-*`
 
 ### Distribution

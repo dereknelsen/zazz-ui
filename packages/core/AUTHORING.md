@@ -1,4 +1,4 @@
-# Authoring markup with Zazz 0.5
+# Authoring markup with Zazz (0.5 and later)
 
 How to write HTML for the Zazz kit: identities, presets, slots, and style utilities. This is the single source for humans, editor rules, and AI assistants. The contract behind it is `SPEC.md`; the vocabulary is `CONTEXT.md`.
 

@@ -1,6 +1,6 @@
-# Zazz 0.5.0 spec: style utilities, `data-ui`, and the end of utility classes
+# Zazz spec: style utilities, `data-ui`, and the end of utility classes
 
-Status: revision 3.1, 2026-09-28, after the second validation pass; resolver variables added during implementation. Decisions and rationale live in [ADR-0012](docs/adr/0012-props-replace-utility-classes.md) and [ADR-0013](docs/adr/0013-data-ui-markup-namespace.md), each with dated amendments; vocabulary lives in [CONTEXT.md](CONTEXT.md). This file is the mechanical contract, written so an agent can validate it without the conversation that produced it. No decisions are pending.
+Status: revision 3.2, 2026-10-12. The contract shipped in 0.5.0 and holds through 0.6; 0.6.0 moved breakpoints to `rem`, made `--ring` a signed pixel width, and added `--focus-ring`, `--shadow-angle`, and the `theme-*` switches. Revision 3.1 (2026-09-28) followed the second validation pass; resolver variables were added during implementation. Decisions and rationale live in [ADR-0012](docs/adr/0012-props-replace-utility-classes.md) and [ADR-0013](docs/adr/0013-data-ui-markup-namespace.md), each with dated amendments; vocabulary lives in [CONTEXT.md](CONTEXT.md). This file is the mechanical contract, written so an agent can validate it without the conversation that produced it. No decisions are pending.
 
 ## How to validate this spec
 
@@ -481,7 +481,7 @@ Each claim states the check and the expected result. Mechanics claims need Chrom
 ## 16. Delivery
 
 - 0.5.0, breaking under the 0.x contract (ADR-0010). No 0.4.2, no codemod; the changelog carries before/after tables per family and the hook rename table.
-- Files: `src/base/_properties.css` (registrations, generated, split per tier as `_properties-<tier>.css`), `src/base/_utilities-tier-<name>.css` (one setter file per tier), `src/base/_utilities-<family>.css` (emissions per family), `src/base/style-guard.ts`, `src/primitives/layout/`, `src/primitives/scroll-fade/`, `src/primitives/debug/`, typography roles in `_typography.css`, editor custom data under `packages/core/editor/`.
+- Files: `src/base/_properties.css` (registrations, generated, split per tier as `_properties-<tier>.css`), `src/base/_utilities-tier-<name>.css` (one setter file per tier), `src/base/_utilities-<family>.css` (emissions per family), `src/primitives/style-guard/style-guard.ts`, `src/primitives/layout/`, `src/primitives/scroll-fade/`, `src/primitives/debug/`, typography roles in `_typography.css`, editor custom data under `packages/core/editor/`.
 - Distribution: `dist/zazz.css` and `dist/zazz.js` unchanged; à la carte CSS as one jsDelivr URL per `src/` file, emitted by `buildHead`; JS via the existing per-file import map. No `dist/` split.
 - Order of work: tokens (`--space-*`, `--color-*` roles, `--layout-*`, hook rename) → generator for `_properties.css` and the tiers → emissions per family → primitives → layout, typography, scroll-fade, debug, guard → examples and docs → measure against claims 16–18.
 - **À la carte utilities**: tiers and families are separate files by construction. Omitting a tier file leaves its layer variables unset, so every chain still falls through correctly; omitting a family file drops its emissions. The default bundle includes everything; `buildHead` and the CLI accept a list of families and tiers to trim it, and the debug tool can report which tiers and families a page actually uses.

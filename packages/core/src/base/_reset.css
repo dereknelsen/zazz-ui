@@ -10,11 +10,11 @@
  * @uses       view-transition-name via the <main> tag - main-content and [data-transition-layer] —
  *             global (animated in _view-transitions.css)
  * @uses       text-box — vertical trim on headings
- * @uses       color-mix(), oklch(from …), contrast-color() — mark/highlight tints
  * @tokens     Native-element hooks declared in each element's rule (override them
  *             on the element): --code-* (incl. --code-font-family), --search-cancel-*,
  *             --placeholder-color, --strong-font-weight, --hr-bg,
- *             --optgroup-font-weight, --optgroup-option-pl; --selection-bg on html
+ *             --optgroup-font-weight, --optgroup-option-pl. Text selection reads
+ *             --color-selection / --color-selection-foreground (_variables.css)
  *
  * Checkbox, range, switch, select picker, popover and dialog internals live in
  * their primitive stylesheets.
@@ -43,8 +43,6 @@
     -webkit-text-size-adjust: 100%;
     background-color: var(--color-background);
     -webkit-tap-highlight-color: transparent;
-    /* text selection tint (::selection reads it from the selected element) */
-    --selection-bg: oklch(from var(--color-primary) calc(l + 0.1) c h / 0.3);
 
     /* html (the viewport) is the page's scrolling element, as browsers expect */
     scroll-behavior: smooth;
@@ -256,12 +254,12 @@
     }
   }
 
-  /* Custom text selection styling — the tinted background is safe everywhere
-     (relative oklch is Baseline). contrast-color() is Chromium-only, so it is
-     gated: without it the selection keeps its inherited text color, which stays
-     legible against a 30%-opacity tint in both light and dark modes.
+  /* Text selection: an opaque --color-selection fill with its own
+     --color-selection-foreground text, a role pair like primary, so contrast
+     comes from the pair rather than a tint over unknown content.
 
-     On :root only, on purpose: highlight pseudo-elements inherit from the
+     On :root only, on purpose (so the tokens only take effect on :root; set on
+     a subtree they change nothing): highlight pseudo-elements inherit from the
      parent's highlight pseudo-element (css-pseudo-4 highlight inheritance:
      Chrome 134+, Firefox, WebKit), so one rule reaches every selection. A
      universal `::selection` rule that reads a var() makes Chromium recalculate
@@ -270,14 +268,8 @@
      children, 194 ms per frame; 0.4 ms with this form). Engines without
      highlight inheritance fall back to the UA selection color. */
   :root::selection {
-    background-color: var(--selection-bg);
-  }
-
-  @supports (color: contrast-color(white)) {
-    :root::selection {
-      /* legible on the 30% primary tint over the background */
-      color: contrast-color(color-mix(in oklch, var(--color-background) 50%, var(--selection-bg)));
-    }
+    background-color: var(--color-selection);
+    color: var(--color-selection-foreground);
   }
 
   /* ===========================================================================

@@ -20,6 +20,10 @@ colors:
   input:
   input-foreground:
 
+  # Text selection (defaults to the primary pair)
+  selection:
+  selection-foreground:
+
   # Overlay
   muted:
   muted-foreground:
@@ -135,8 +139,10 @@ rounded:
 
 components:
   # Variants below are shipped presets: data-button-variant / data-badge-variant / data-card-variant
-  # (no attribute = default). The secondary, tertiary, info, success, warning, and destructive
-  # button and badge presets follow the primary pattern with their own role and -foreground.
+  # (no attribute = default). The secondary and tertiary button and badge presets follow the
+  # primary pattern with their own role and -foreground. The info, success, warning, and
+  # destructive presets are soft: a 10% tint of the role (20% in dark) with the role's hue
+  # as text, lightness clamped to hold 4.5:1.
   button-default:
     backgroundColor: "{colors.background}"
     textColor: "{colors.foreground}"
@@ -163,8 +169,8 @@ components:
     rounded: "{rounded.md}"
     padding: 10px
   button-destructive:
-    backgroundColor: "{colors.destructive}"
-    textColor: "{colors.destructive-foreground}"
+    backgroundColor: "{colors.destructive} at 10% (20% in dark)"
+    textColor: "{colors.destructive}, lightness ≤ 0.45 (≥ 0.82 in dark)"
     rounded: "{rounded.md}"
     padding: 10px
   button-link:
@@ -296,22 +302,24 @@ The token contract in the frontmatter is what lets you be bold without the resul
 
 Markup reads `--color-<role>`, and a theme sets the same `--color-<role>` on `:root` (there are no bare `--<role>` inputs).
 
-| Token                        | Role                                          | Light Character              | Dark Character           |
-| ---------------------------- | --------------------------------------------- | ---------------------------- | ------------------------ |
-| `--color-background`         | Page surface                                  | White / warm off-white       | Near-black (brand-cast)  |
-| `--color-foreground`         | Default text                                  | Rich charcoal (neutral-900)  | Pure white               |
-| `--color-border`             | 1px lines and dividers                        | Soft cool gray (neutral-100) | Deep gray                |
-| `--color-border-foreground`  | Text on outlined/bordered elements            | Near-opaque white (tint-950) | Half black (shade-500)   |
-| `--color-card`               | Card surface, elevated from background        | Pure white                   | Dark charcoal            |
-| `--color-card-foreground`    | Text on cards                                 | Rich charcoal                | Pure white               |
-| `--color-popover`            | Popover / menu surface                        | Pure white                   | Near-black (neutral-950) |
-| `--color-popover-foreground` | Text on popovers and menus                    | Rich charcoal                | Pure white               |
-| `--color-input`              | Input field background                        | Near-white (neutral-50)      | Faint tint (tint-100)    |
-| `--color-input-foreground`   | Input text                                    | Rich charcoal                | Pure white               |
-| `--color-muted`              | Subtle dim — always darker than its surface   | shade-100                    | tint-100                 |
-| `--color-muted-foreground`   | De-emphasized text, helper copy               | shade-600                    | tint-600                 |
-| `--color-faded`              | Subtle fade — always lighter than its surface | tint-400                     | shade-100                |
-| `--color-faded-foreground`   | Text on faded surfaces                        | tint-600                     | shade-600                |
+| Token                          | Role                                          | Light Character              | Dark Character           |
+| ------------------------------ | --------------------------------------------- | ---------------------------- | ------------------------ |
+| `--color-background`           | Page surface                                  | White / warm off-white       | Near-black (brand-cast)  |
+| `--color-foreground`           | Default text                                  | Rich charcoal (neutral-900)  | Pure white               |
+| `--color-border`               | 1px lines and dividers                        | Soft cool gray (neutral-100) | Deep gray                |
+| `--color-border-foreground`    | Text on outlined/bordered elements            | Near-opaque white (tint-950) | Half black (shade-500)   |
+| `--color-card`                 | Card surface, elevated from background        | Pure white                   | Dark charcoal            |
+| `--color-card-foreground`      | Text on cards                                 | Rich charcoal                | Pure white               |
+| `--color-popover`              | Popover / menu surface                        | Pure white                   | Near-black (neutral-950) |
+| `--color-popover-foreground`   | Text on popovers and menus                    | Rich charcoal                | Pure white               |
+| `--color-input`                | Input field background                        | Near-white (neutral-50)      | Faint tint (tint-100)    |
+| `--color-input-foreground`     | Input text                                    | Rich charcoal                | Pure white               |
+| `--color-selection`            | Text-selection highlight (`:root` only)       | Primary                      | Primary                  |
+| `--color-selection-foreground` | Selected text                                 | Primary foreground           | Primary foreground       |
+| `--color-muted`                | Subtle dim — always darker than its surface   | shade-100                    | tint-100                 |
+| `--color-muted-foreground`     | De-emphasized text, helper copy               | shade-600                    | tint-600                 |
+| `--color-faded`                | Subtle fade — always lighter than its surface | tint-400                     | shade-100                |
+| `--color-faded-foreground`     | Text on faded surfaces                        | tint-600                     | shade-600                |
 
 ### Brand Colors
 
@@ -420,11 +428,11 @@ that acts like a control is `data-ui="button" data-button-variant="link"`.
 
 ### Buttons
 
-Subtly rounded (`--radius-md`, ~10px). Height from `--ui-button-min-h` (= `--ui-field-h`). Variants (`data-button-variant`): **default** (no attribute — bordered, `--color-background`), **primary** (solid `--color-primary`), **secondary** / **tertiary** (solid brand roles), **muted** (`--color-muted` fill), **ghost** (transparent, hover reveals `--color-muted`), **outline** (transparent, bordered), **link** (inline, underlined), and the status fills **info**, **success**, **warning**, **destructive**. Sizes (`data-button-size`): `sm`, `icon`, `icon-sm`.
+Subtly rounded (`--radius-md`, ~10px). Height from `--ui-button-min-h` (= `--ui-field-h`). Variants (`data-button-variant`): **default** (no attribute — bordered, `--color-background`), **primary** (solid `--color-primary`), **secondary** / **tertiary** (solid brand roles), **muted** (`--color-muted` fill), **ghost** (transparent, hover reveals `--color-muted`), **outline** (transparent, bordered), **link** (inline text, primary on hover, no underline), and the soft status variants **info**, **success**, **warning**, **destructive** (a tint of the role with its hue as text, held at 4.5:1). Sizes (`data-button-size`): `sm`, `icon`, `icon-sm`.
 
 ### Badges
 
-Gently rounded chips (`--radius-sm`, ~6px). Height `--ui-badge-h`. Variants (`data-badge-variant`): default, `primary`, `secondary`, `tertiary`, `muted`, `ghost`, `link`, and the status fills `info`, `success`, `warning`, `destructive`. Size (`data-badge-size`): `icon`. `--font-size-xs`, `--font-weight-strong`.
+Gently rounded chips (`--radius-sm`, ~6px). Height `--ui-badge-h`. Variants (`data-badge-variant`): default, `primary`, `secondary`, `tertiary`, `muted`, `ghost`, `link`, and the soft status variants `info`, `success`, `warning`, `destructive` (as on buttons). Size (`data-badge-size`): `icon`. `--font-size-xs`, `--font-weight-strong`.
 
 ### Dialog
 

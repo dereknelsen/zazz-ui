@@ -134,7 +134,7 @@ The four layers, by responsibility:
 - **`components`**: the actual component (`[data-ui~="button"]`, `[data-ui~="dialog"]`, `[data-ui~="field"]`).
 - **`legacy.migrations`**: temporary shims that map old class names to Zazz tokens while you rewrite markup. Delete each rule once the corresponding markup is updated. Lives in an optional `migrations.css` you add and import at the commented slot in [`index.css`](./src/index.css) via `layer(legacy.migrations)`.
 - **`utilities`**: the utilities layer, generated from [`utilities.ts`](./src/base/utilities.ts) into
-  `_utilities-*.css` (`vp run generate`): attribute-gated rules that read `--p`, `--w--md`,
+  `_utilities-*.css` (`vp run core#generate`): attribute-gated rules that read `--p`, `--w--md`,
   `--bg--hover`, … from `style=""`, written with `:where()` for zero specificity. The
   `data-ui` switches (`sr-only`, `pile`) live here too.
 
@@ -534,7 +534,7 @@ use case exists in an example fragment or docs page.
   (`:where(:hover[style*="--hover:"])`): the flag test short-circuits the scan.
 - **No `var()` in a universal highlight pseudo-element rule.** `::selection`, `::target-text`,
   `::highlight()`, `::spelling-error`, `::grammar-error` inherit through the highlight chain,
-  so style them on `:root` only (`:root::selection { background-color: var(--selection-bg) }`).
+  so style them on `:root` only (`:root::selection { background-color: var(--color-selection) }`).
   A universal `::selection` rule that reads a custom property makes Chromium recompute every
   descendant's highlight style whenever any custom property changes on an ancestor — on a
   Zazz page, every inline utility change (measured at 196 ms per restyle with 1,000 styled

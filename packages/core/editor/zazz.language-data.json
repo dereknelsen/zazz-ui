@@ -1241,7 +1241,7 @@
       "file": "primitives/badge/badge.css"
     },
     "--ui-badge-h": {
-      "value": "calc(var(--spacing) * 5.5)",
+      "value": "calc(var(--spacing) * 5)",
       "file": "primitives/badge/badge.css"
     },
     "--ui-badge-icon-size": {
@@ -1253,7 +1253,7 @@
       "file": "primitives/badge/badge.css"
     },
     "--ui-badge-px": {
-      "value": "calc(var(--spacing) * 1.5)",
+      "value": "calc(var(--spacing) * 1.25)",
       "file": "primitives/badge/badge.css"
     },
     "--ui-badge-ring-color": {
@@ -1341,7 +1341,7 @@
       "file": "primitives/button/button.css"
     },
     "--ui-button-leading": {
-      "value": "var(--leading-sm)",
+      "value": "1",
       "file": "primitives/button/button.css"
     },
     "--ui-button-min-h": {
@@ -3883,6 +3883,18 @@
       "file": "base/_variables.css",
       "light": "oklch(1 0 0)",
       "dark": "oklch(13% 0.028 261.692)"
+    },
+    "--color-selection": {
+      "value": "var(--color-primary)",
+      "file": "base/_variables.css",
+      "light": "oklch(0.145 0 0)",
+      "dark": "oklch(0.985 0 0)"
+    },
+    "--color-selection-foreground": {
+      "value": "var(--color-primary-foreground)",
+      "file": "base/_variables.css",
+      "light": "oklch(1 0 0)",
+      "dark": "oklch(0.145 0 0)"
     },
     "--color-shade-100": {
       "value": "oklch(from var(--color-neutral-950) l c h / 0.1)",

@@ -26,7 +26,7 @@
     --ui-button-font-family: var(--font-family-body);
     --ui-button-font-size: var(--font-size-sm);
     --ui-button-font-weight: var(--font-weight-strong);
-    --ui-button-leading: var(--leading-sm);
+    --ui-button-leading: 1;
 
     --ui-button-bg: var(--color-background);
     --ui-button-bg--hover: oklch(from var(--color-background) calc(l - 0.025) c h);
@@ -411,76 +411,79 @@
     --_button-shadow: 0 0 transparent;
   }
 
-  :where([data-ui~="button"][data-button-variant="info"]) {
-    --_button-ring-color: var(--color-info);
+  /* Status variants (info, success, warning, destructive) share one soft
+     design: the status color at 10% alpha (20% in dark) as the surface, and
+     the status hue as the text with its lightness clamped (at most 0.45 in
+     light, at least 0.82 in dark) so it holds 4.5:1 on the tint and on the
+     hover and active steps; status-contrast.browser.test.ts checks it. No border. One rule derives the states from the
+     surface; each variant names only its colors. */
+  :where(
+    [data-ui~="button"]:is(
+      [data-button-variant="info"],
+      [data-button-variant="success"],
+      [data-button-variant="warning"],
+      [data-button-variant="destructive"]
+    )
+  ) {
+    --_button-bg--hover: oklch(from var(--_button-bg) l c h / calc(alpha + 0.1));
+    --_button-bg--active: oklch(from var(--_button-bg) l c h / calc(alpha + 0.15));
 
-    --_button-bg: var(--color-info);
-    --_button-bg--hover: oklch(from var(--color-info) l c h / 0.9);
-    --_button-bg--active: oklch(from var(--color-info) l c h / 0.8);
-
-    --_button-text: var(--color-info-foreground);
-    --_button-text--hover: var(--color-info-foreground);
-    --_button-text--active: var(--color-info-foreground);
+    --_button-text--hover: var(--_button-text);
+    --_button-text--active: var(--_button-text);
 
     --_button-border-color: transparent;
     --_button-border-color--hover: transparent;
     --_button-border-color--active: transparent;
 
     --_button-shadow: 0 0 transparent;
+  }
+
+  :where([data-ui~="button"][data-button-variant="info"]) {
+    --_button-ring-color: var(--color-info);
+    --_button-bg: light-dark(
+      oklch(from var(--color-info) l c h / 0.1),
+      oklch(from var(--color-info) l c h / 0.2)
+    );
+    --_button-text: light-dark(
+      oklch(from var(--color-info) min(l, 0.45) c h),
+      oklch(from var(--color-info) max(l, 0.82) c h)
+    );
   }
 
   :where([data-ui~="button"][data-button-variant="success"]) {
     --_button-ring-color: var(--color-success);
-
-    --_button-bg: var(--color-success);
-    --_button-bg--hover: oklch(from var(--color-success) l c h / 0.9);
-    --_button-bg--active: oklch(from var(--color-success) l c h / 0.8);
-
-    --_button-text: var(--color-success-foreground);
-    --_button-text--hover: var(--color-success-foreground);
-    --_button-text--active: var(--color-success-foreground);
-
-    --_button-border-color: transparent;
-    --_button-border-color--hover: transparent;
-    --_button-border-color--active: transparent;
-
-    --_button-shadow: 0 0 transparent;
+    --_button-bg: light-dark(
+      oklch(from var(--color-success) l c h / 0.1),
+      oklch(from var(--color-success) l c h / 0.2)
+    );
+    --_button-text: light-dark(
+      oklch(from var(--color-success) min(l, 0.45) c h),
+      oklch(from var(--color-success) max(l, 0.82) c h)
+    );
   }
 
   :where([data-ui~="button"][data-button-variant="warning"]) {
     --_button-ring-color: var(--color-warning);
-
-    --_button-bg: var(--color-warning);
-    --_button-bg--hover: oklch(from var(--color-warning) l c h / 0.9);
-    --_button-bg--active: oklch(from var(--color-warning) l c h / 0.8);
-
-    --_button-text: var(--color-warning-foreground);
-    --_button-text--hover: var(--color-warning-foreground);
-    --_button-text--active: var(--color-warning-foreground);
-
-    --_button-border-color: transparent;
-    --_button-border-color--hover: transparent;
-    --_button-border-color--active: transparent;
-
-    --_button-shadow: 0 0 transparent;
+    --_button-bg: light-dark(
+      oklch(from var(--color-warning) l c h / 0.1),
+      oklch(from var(--color-warning) l c h / 0.2)
+    );
+    --_button-text: light-dark(
+      oklch(from var(--color-warning) min(l, 0.45) c h),
+      oklch(from var(--color-warning) max(l, 0.82) c h)
+    );
   }
 
   :where([data-ui~="button"][data-button-variant="destructive"]) {
     --_button-ring-color: var(--color-destructive);
-
-    --_button-bg: var(--color-destructive);
-    --_button-bg--hover: oklch(from var(--color-destructive) l c h / 0.9);
-    --_button-bg--active: oklch(from var(--color-destructive) l c h / 0.8);
-
-    --_button-text: var(--color-destructive-foreground);
-    --_button-text--hover: var(--color-destructive-foreground);
-    --_button-text--active: var(--color-destructive-foreground);
-
-    --_button-border-color: transparent;
-    --_button-border-color--hover: transparent;
-    --_button-border-color--active: transparent;
-
-    --_button-shadow: 0 0 transparent;
+    --_button-bg: light-dark(
+      oklch(from var(--color-destructive) l c h / 0.1),
+      oklch(from var(--color-destructive) l c h / 0.2)
+    );
+    --_button-text: light-dark(
+      oklch(from var(--color-destructive) min(l, 0.45) c h),
+      oklch(from var(--color-destructive) max(l, 0.82) c h)
+    );
   }
 
   :where([data-ui~="button"][data-button-variant="link"]) {
@@ -494,7 +497,6 @@
 
     --_button-border-style: none;
 
-    /* no minimum: the link sizes to its text (dual mode cannot carry fit-content) */
     --_button-min-h: 0;
     --_button-px: 0;
     --_button-rounded: 0;

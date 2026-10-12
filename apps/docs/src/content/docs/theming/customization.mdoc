@@ -26,6 +26,8 @@ The kit's colors, type, spacing, radii, and shadows are custom properties on `:r
 
 Write the block in `@layer overrides` (or import your stylesheet into it) so it outranks the kit's `variables` layer. Color roles are `light-dark()` pairs; keep them that way and dark mode keeps working with no extra rules.
 
+The text-selection highlight is the `--color-selection` / `--color-selection-foreground` pair, which defaults to the primary pair. Unlike the other roles, it only takes effect on `:root`: the kit styles `::selection` there once and every selection inherits it, so the pair set on a subtree changes nothing.
+
 ## 2. Hooks on a subtree
 
 Every primitive reads `--ui-<primitive>-<utility>` hooks that inherit, so a hook set on a region themes every instance inside it while each keeps its own states. Where a primitive has a state, it also reads a state hook.

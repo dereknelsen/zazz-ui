@@ -44,8 +44,13 @@ Use the `--color-*` roles in utilities and CSS; they are also the **theme inputs
 - **Dim / fade (paired):** `--color-muted`/`--color-muted-foreground` (darker than its surface),
   `--color-faded`/`--color-faded-foreground` (lighter than its surface).
 - **Brand:** `--color-primary` `--color-secondary` `--color-tertiary` (+ `-foreground`).
+- **Selection:** `--color-selection`/`--color-selection-foreground` (default: the primary pair),
+  the text-selection highlight. Set them on `:root` only; a subtree override does nothing.
 - **Status:** `--color-info` `--color-success` `--color-warning` `--color-destructive`
-  (+ `-foreground`).
+  (+ `-foreground` for text on the solid color). The status variants of button, badge, and
+  callout are soft: a 10% tint of the role (20% in dark) with the role's hue as text, its
+  lightness clamped to hold 4.5:1. For a status surface, use one of those variants rather than
+  mixing your own tint and text.
 - **Utilities:** `--text` (text color), `--bg` (+ `--bg-alpha` for channel alpha; `none` clears the
   color and any gradient), `--border-color` (or the `--border` shorthand, §11).
 - **Gradients:** a type plus stops, built from role tokens: `--bg-linear: to bottom; --bg-stops:
