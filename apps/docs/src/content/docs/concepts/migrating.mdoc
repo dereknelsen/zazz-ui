@@ -93,7 +93,7 @@ Hooks inherit, so a shim on a container themes every primitive inside it.
 
 ## 5. Protect utilities from old scripts
 
-Legacy scripts that write `element.style.cssText` or `setAttribute("style", …)` wipe the style utilities on that element. The [style guard](/api/primitives/style-guard/) watches for exactly that and restores the utilities a write dropped; opt an element out with `data-ui-guard="off"` where the old behavior is intended.
+Legacy scripts that write `element.style.cssText` or `setAttribute("style", …)` wipe the style utilities on that element. The [style guard](/api/primitives/style-guard/) watches for exactly that and restores the utilities a write dropped; opt an element out with `data-ui-guard="off"` where the old behavior is intended. The one thing the guard cannot help with is an attribute that never applies: a Content Security Policy that blocks inline styles, or a sanitizer that strips `style`. The [security page](/docs/install/security/) covers both.
 
 ## Coexisting with other libraries
 

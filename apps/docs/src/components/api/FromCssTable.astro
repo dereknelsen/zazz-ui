@@ -1,0 +1,26 @@
+---
+/** `{% from-css /%}`: every CSS property the utilities write, by property. */
+import { fromCssRows } from "../../lib/api/from-css.ts";
+import Table from "./Table.astro";
+
+const rows = fromCssRows();
+---
+
+<Table caption="CSS properties and the utilities that write them" columns={["CSS property", "Utility", "Value"]}>
+  {
+    rows.map((row) => (
+      <tr>
+        <td><code>{row.property}</code></td>
+        <td>
+          {row.utilities.map((utility, i) => (
+            <>
+              <code>{utility}</code>
+              {i < row.utilities.length - 1 ? ", " : ""}
+            </>
+          ))}
+        </td>
+        <td>{row.note}</td>
+      </tr>
+    ))
+  }
+</Table>

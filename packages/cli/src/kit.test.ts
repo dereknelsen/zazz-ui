@@ -118,6 +118,10 @@ export const BASE_CSS_PRE = ["base/_layers.css"];
 export const BASE_CSS_POST = ["base/_properties.css"];
 export const CORE_RUNTIME = ["base/utils.js", "base/navigation.js"];
 export const CORE_POLYFILLS = [{ file: "base/scroll-state.js", supports: ["container-type", "scroll-state"] }];
+export const CORE_FALLBACKS = [
+  { file: "base/csp.js", requires: ["base/declarations.js"], gate: "blocked-inline-styles" },
+  { file: "base/future.js", requires: [], gate: "a-gate-this-cli-does-not-know" },
+];
 `,
     });
     const kit = await loadKitFromDir(dir, { version: "9.9.9", integrity: "" });
@@ -126,6 +130,10 @@ export const CORE_POLYFILLS = [{ file: "base/scroll-state.js", supports: ["conta
     expect(kit.manifest.coreRuntime).toEqual(["base/utils.js", "base/navigation.js"]);
     expect(kit.manifest.corePolyfills).toEqual([
       { file: "base/scroll-state.js", supports: ["container-type", "scroll-state"] },
+    ]);
+    // a fallback with a gate this CLI cannot write is left out, not an error
+    expect(kit.manifest.coreFallbacks).toEqual([
+      { file: "base/csp.js", requires: ["base/declarations.js"], gate: "blocked-inline-styles" },
     ]);
   });
 

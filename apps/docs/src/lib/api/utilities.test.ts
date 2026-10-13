@@ -28,9 +28,16 @@ describe("utilityRows", () => {
   });
 
   it("flags tier-only utilities and rejects unknown names", () => {
-    const [opacity, p, shadow, rounded] = utilityRows(["opacity", "p", "shadow", "rounded"]);
+    const [opacity, p, m, shadow, rounded] = utilityRows([
+      "opacity",
+      "p",
+      "m",
+      "shadow",
+      "rounded",
+    ]);
     expect(opacity.tierOnly).toBe(true);
-    expect(p.tierOnly).toBe(false);
+    expect(p.tierOnly).toBe(true);
+    expect(m.tierOnly).toBe(false);
     expect(shadow.tierOnly).toBe(true);
     expect(rounded.tierOnly).toBe(false); // no tiers at all
     expect(() => utilityRows(["nope"])).toThrow(/not in the kit/);

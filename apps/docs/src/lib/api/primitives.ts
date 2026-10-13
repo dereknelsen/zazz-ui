@@ -127,7 +127,9 @@ export function headerProse(source: string): string[] {
   const lines = match[1]
     .split("\n")
     .map((l) => l.replace(/^\s*\*? ?/, ""))
-    .map((l) => l.replace(/^@fileoverview\s*/, "").replace(/^@description\s*/, ""));
+    .map((l) => l.replace(/^@fileoverview\s*/, "").replace(/^@description\s*/, ""))
+    // `{@link Name}` is an editor affordance; on the page the name reads as code
+    .map((l) => l.replace(/\{@link\s+([^}|]+?)(?:\|[^}]*)?\}/g, "`$1`"));
   const out: string[] = [];
   for (const line of lines) {
     if (/^@example\b/.test(line)) break;

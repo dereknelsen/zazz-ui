@@ -4,8 +4,9 @@ A **map** of which token and style utility to reach for and when. Authoritative 
 `packages/core/src/base/_variables.css` (global tokens), `base/_breakpoints.css`, and each
 `packages/core/src/primitives/{name}/{name}.css` (the `--ui-<name>-*` hooks). Utility names live in
 `packages/core/src/base/utilities.ts` (`UTILITIES`); the editor completes them from
-`packages/core/editor/zazz.css-data.json`. Syntax rules (spelling, tiers, the base requirement)
-are in `packages/core/AUTHORING.md` — this file doesn't repeat them.
+`packages/core/editor/zazz.css-data.json`. The naming rule is Tailwind's names, CSS values (`--justify: space-between`, `--w: 100%`);
+the other syntax rules (spelling, tiers, the base requirement) are in `packages/core/AUTHORING.md`,
+and this file doesn't repeat them.
 
 Two rules govern every choice:
 

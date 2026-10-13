@@ -20,7 +20,7 @@ import "@zazz-ui/core"; // custom elements and shared behaviors
 From a CDN, the script needs an import map for its dependencies and the Interest Invokers polyfill:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.6.2/dist/zazz.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.6.3/dist/zazz.css" />
 <script type="importmap">
   {
     "imports": {
@@ -36,10 +36,10 @@ From a CDN, the script needs an import map for its dependencies and the Interest
   type="module"
   src="https://cdn.jsdelivr.net/npm/invokers@2.2.2/dist/esm/production/interest.js"
 ></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.6.2/dist/zazz.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.6.3/dist/zazz.js"></script>
 ```
 
-Use an exact version in CDN URLs. The [installation guide](https://zazz.sh/docs/install/installation/) has the complete `<head>`, with fonts, the theme script, a per-primitive variant, and integrity hashes on every URL; `buildHead({ cdn: { version } })` from `@zazz-ui/core/head` returns the same markup. Each release also includes `dist/sri.json` with the SHA-384 hash of every published file.
+Use an exact version in CDN URLs. Under a strict `script-src`, give the import map and the theme script the response's nonce (`buildHead({ nonce })` does); the docs' [security page](https://zazz.sh/docs/install/security/) has the full policy, including `style-src-attr` for the utilities. The [installation guide](https://zazz.sh/docs/install/installation/) has the complete `<head>`, with fonts, the theme script, a per-primitive variant, and integrity hashes on every URL; `buildHead({ cdn: { version } })` from `@zazz-ui/core/head` returns the same markup. Each release also includes `dist/sri.json` with the SHA-384 hash of every published file.
 
 Or own the files: the [`zazz-ui`](https://www.npmjs.com/package/zazz-ui) CLI vendors the base platform and any primitives (with their dependencies) into your project and merges later updates against the recorded originals.
 

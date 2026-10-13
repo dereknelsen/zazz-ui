@@ -1,0 +1,59 @@
+---
+/**
+ * An icon button that copies `text` to the clipboard and shows a check for a
+ * moment. Hidden where the clipboard API is missing (an insecure context), so
+ * the page never shows a button that cannot work.
+ */
+import { Check, Copy } from "@lucide/astro";
+
+interface Props {
+  text: string;
+  label?: string;
+}
+const { text, label = "Copy to clipboard" } = Astro.props;
+---
+
+<button
+  type="button"
+  data-ui="button"
+  data-button-variant="ghost"
+  data-button-size="icon-sm"
+  data-copy={text}
+  aria-label={label}
+  hidden
+>
+  <span data-copy-idle style="--display: inline-flex">
+    <Copy size={14} aria-hidden="true" />
+  </span>
+  <span data-copy-done hidden style="--display: inline-flex">
+    <Check size={14} aria-hidden="true" />
+  </span>
+</button>
+
+<script>
+  if (navigator.clipboard?.writeText) {
+    for (const button of document.querySelectorAll<HTMLButtonElement>("[data-copy]")) {
+      button.hidden = false;
+    }
+    document.addEventListener("click", async (event) => {
+      const button = (event.target as Element | null)?.closest<HTMLButtonElement>("[data-copy]");
+      if (!button) return;
+      try {
+        await navigator.clipboard.writeText(button.dataset.copy ?? "");
+      } catch {
+        return;
+      }
+      const idle = button.querySelector<HTMLElement>("[data-copy-idle]");
+      const done = button.querySelector<HTMLElement>("[data-copy-done]");
+      if (!idle || !done) return;
+      idle.hidden = true;
+      done.hidden = false;
+      button.setAttribute("aria-label", "Copied");
+      setTimeout(() => {
+        idle.hidden = false;
+        done.hidden = true;
+        button.setAttribute("aria-label", "Copy to clipboard");
+      }, 1500);
+    });
+  }
+</script>

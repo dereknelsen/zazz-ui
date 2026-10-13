@@ -39,6 +39,15 @@ describe("api content", () => {
       expect(readFileSync(file, "utf8"), name).toMatch(new RegExp(`^primitive: ${name}$`, "m"));
     }
   });
+
+  it("opens with the install block for its own primitive", () => {
+    for (const file of files(path.join(CONTENT, "api/primitives"))) {
+      const name = path.basename(file, ".mdoc");
+      expect(readFileSync(file, "utf8"), name).toContain(
+        `## Installation\n\n{% install primitive="${name}" /%}`,
+      );
+    }
+  });
 });
 
 describe("previews", () => {

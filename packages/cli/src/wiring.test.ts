@@ -190,7 +190,28 @@ describe("renderIndexJs", () => {
   });
 
   it("renders no gate for a kit that exports no polyfills (manifest v1)", () => {
-    expect(renderIndexJs({ kit: fakeKit(), language: "js" })).not.toContain("CSS.supports");
+    const js = renderIndexJs({ kit: fakeKit(), language: "js" });
+    expect(js).not.toContain("CSS.supports");
+    expect(js).not.toContain("blockedInlineStyles");
+  });
+
+  it("writes the document check for each fallback the kit exports, after the polyfill gates", () => {
+    const kit = fakeKit({
+      manifestVersion: 2,
+      coreRuntime: ["base/utils.js"],
+      corePolyfills: [
+        { file: "base/scroll-state.js", supports: ["container-type", "scroll-state"] },
+      ],
+      coreFallbacks: [
+        { file: "base/csp.js", requires: ["base/declarations.js"], gate: "blocked-inline-styles" },
+      ],
+    });
+    const js = renderIndexJs({ kit, language: "js" });
+    expect(js).toContain(`if (blockedInlineStyles()) void import("./base/csp.js");`);
+    expect(js).toContain(`el.style.length === 0`);
+    expect(js.indexOf("blockedInlineStyles")).toBeGreaterThan(js.indexOf("CSS.supports"));
+    expect(js).not.toContain(`import "./base/csp.js";`);
+    expect(renderIndexJs({ kit, language: "ts" })).toContain(`void import("./base/csp.ts");`);
   });
 });
 

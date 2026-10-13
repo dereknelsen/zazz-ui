@@ -246,8 +246,8 @@ describe("audit warnings", () => {
         `<div data-ui="group"><span style="--opacity: 1; --group-opacity--hover: 0.5; --text: red; --group-text--hover: blue"></span></div>`,
       ),
     ).toEqual([]);
-    expect(warningsFor(`<span style="--group-bg--hover: red"></span>`)).toEqual([
-      expect.stringMatching(/--group-bg--hover.*base/),
+    expect(warningsFor(`<span style="--group-text--hover: red"></span>`)).toEqual([
+      expect.stringMatching(/--group-text--hover.*base/),
     ]);
     expect(warningsFor(`<span style="--px: 2; --group-px--hover: 4"></span>`)).toEqual([
       expect.stringMatching(/--group-px--hover.*tier/),
@@ -277,6 +277,32 @@ describe("audit warnings", () => {
   it("flags a whitespace form the gates cannot match", () => {
     expect(warningsFor(`<div style="--w : 4"></div>`)).toEqual([
       expect.stringMatching(/--w.*whitespace|--w.*space/),
+    ]);
+  });
+
+  it("flags a gated value without exactly one space after the colon", () => {
+    // keyword, token by name, --display shorthand, --bg: none, --position: sticky, a stuck side
+    for (const style of [
+      "--w:auto",
+      "--w--md:  auto",
+      "--shadow--hover:lg",
+      "--display:flex-col",
+      "--bg:none",
+      "--position:sticky",
+      "--stuck-state:top",
+    ]) {
+      expect(
+        warningsFor(`<div style="--display: flex; --w: 4; --shadow: md; ${style}"></div>`),
+        style,
+      ).toEqual([expect.stringMatching(/exactly one space after the colon/)]);
+    }
+    // a tier gate reads the property itself, so any spacing works there; pseudo forms have no gate
+    expect(
+      warningsFor(`<div style="--p:4;--w: 4;--w--md:6;--before-w:auto;--before-content:''"></div>`),
+    ).toEqual([]);
+    // the fixture a JSX or Vue object style serializes to: one finding, on --w
+    expect(warningsFor(`<div style="--w:auto;--p:4"></div>`)).toEqual([
+      expect.stringMatching(/`--w:auto` is matched as text.*`--w: auto`/),
     ]);
   });
 
@@ -424,8 +450,8 @@ describe("navigation report", () => {
         `<p style="--opacity--starting: 0; --opacity: 1; --translate--starting: 0 1rem; --transition: opacity .3s, translate .3s"></p>`,
       ),
     ).toEqual([]);
-    expect(warningsFor(`<p style="--bg--starting: red"></p>`)).toEqual([
-      expect.stringMatching(/--bg--starting.*no base/),
+    expect(warningsFor(`<p style="--text--starting: red"></p>`)).toEqual([
+      expect.stringMatching(/--text--starting.*no base/),
     ]);
     expect(
       warningsFor(

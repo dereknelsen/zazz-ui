@@ -7,9 +7,7 @@
  * a container, so breakpoint tiers inside follow the stage's width.
  */
 import { Code } from "astro:components";
-import { ExternalLink, Maximize, Minimize } from "@lucide/astro";
 import { readExample, readKitFile, readPrimitiveCss } from "../lib/kit.ts";
-import { encodeCode } from "../lib/playground-hash.ts";
 import BandDiagram from "./BandDiagram.astro";
 import { liveHtml, nextPreviewId, previewMeta, primitiveOf, scriptsFor } from "../lib/preview.ts";
 
@@ -28,7 +26,6 @@ const js = scriptsFor(src)
   .trim();
 const css = readPrimitiveCss(primitiveOf(src));
 const place = meta.inline ?? "center";
-const playgroundHref = `/playground/#${await encodeCode(html)}`;
 const uid = `pv-${src.replace(/[^a-z0-9]+/gi, "-")}-${nextPreviewId()}`;
 const tabs = [
   { id: "preview", label: "Preview" },
@@ -58,7 +55,6 @@ const themes = { light: "github-light", dark: "github-dark" } as const;
     <div
       data-preview-frame
       style="
-        --position: relative;
         --border: 1;
         --rounded: var(--radius-md);
         --bg: var(--color-background);
@@ -73,40 +69,6 @@ const themes = { light: "github-light", dark: "github-dark" } as const;
         style={`--display: grid; --place-items: ${place}; --gap: 6; --p: 6; --pb: 12; --min-h: 40; --overflow-x: auto`}
       >
         {meta.diagram === "bands" ? <BandDiagram /> : <Fragment set:html={liveHtml(html)} />}
-      </div>
-      <div
-        style="
-          --position: absolute;
-          --right: 2;
-          --bottom: 2;
-          --display: flex;
-          --gap: 1;
-        "
-      >
-        <a
-          href={playgroundHref}
-          data-ui="button"
-          data-button-variant="outline"
-          data-button-size="icon-sm"
-          aria-label="Open in playground"
-        >
-          <ExternalLink size={14} aria-hidden="true" />
-        </a>
-        <button
-          type="button"
-          data-ui="button"
-          data-button-variant="outline"
-          data-button-size="icon-sm"
-          data-preview-expand
-          aria-label="Expand preview"
-        >
-          <span data-when="collapsed" style="--display: inline-flex">
-            <Maximize size={14} aria-hidden="true" />
-          </span>
-          <span data-when="expanded" hidden style="--display: inline-flex">
-            <Minimize size={14} aria-hidden="true" />
-          </span>
-        </button>
       </div>
     </div>
   </div>
@@ -131,10 +93,7 @@ const themes = { light: "github-light", dark: "github-dark" } as const;
 </ui-tabs>
 
 <script>
-  /**
-   * Links inside a demo stay put (they point at `#` placeholders), and the
-   * expand button toggles a full-viewport stage; Escape leaves it.
-   */
+  /** Links inside a demo stay put (they point at `#` placeholders). */
   document.addEventListener(
     "click",
     (event) => {
@@ -144,20 +103,4 @@ const themes = { light: "github-light", dark: "github-dark" } as const;
     true,
   );
 
-  for (const frame of document.querySelectorAll<HTMLElement>("[data-preview-frame]")) {
-    const expand = frame.querySelector<HTMLButtonElement>("[data-preview-expand]");
-    expand?.addEventListener("click", () => {
-      const on = frame.toggleAttribute("data-fullscreen");
-      expand.setAttribute("aria-label", on ? "Collapse preview" : "Expand preview");
-      for (const icon of expand.querySelectorAll<HTMLElement>("[data-when]")) {
-        icon.hidden = icon.dataset.when !== (on ? "expanded" : "collapsed");
-      }
-    });
-  }
-  document.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape") return;
-    document
-      .querySelector<HTMLButtonElement>("[data-preview-frame][data-fullscreen] [data-preview-expand]")
-      ?.click();
-  });
 </script>

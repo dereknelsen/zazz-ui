@@ -27,6 +27,8 @@ export const RULE_DESCRIPTIONS: Record<RuleId, string> = {
     "A gradient type without `--bg-stops`, stops without a type, or more than one type.",
   "whitespace-before-colon":
     "Whitespace between a utility name and its colon, which the gates cannot match.",
+  "whitespace-after-colon":
+    "A keyword, a token by name, or a `--display` shorthand without exactly one space after the colon (`--w:auto`), which its gate cannot match.",
   "attribute-outside-identity": "A `data-<name>-*` attribute on an element outside that identity.",
   "field-id-or-name":
     "An `<input>`, `<select>`, or `<textarea>` with neither `id` nor `name`, which Chrome reports as an issue.",

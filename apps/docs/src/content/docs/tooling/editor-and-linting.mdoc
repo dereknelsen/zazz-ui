@@ -10,7 +10,7 @@ The same audit runs in four places: the browser console (`<ui-debug>`), the edit
 
 ## `<ui-debug>`
 
-Development only. Add it to the page body and it audits every element's `style` and `data-*` attributes once, then again on each mutation, logging `[ui-debug]` warnings: an unknown utility, a wrong value mode, a tier without a base, a modifier the family lacks, a utility that flattens a state a hook covers, a raw property shadowing a utility, a whitespace form the gates cannot match, and a `data-<name>-*` attribute outside its identity. It also lists the elements persisted across navigations and flags misuse.
+Development only. Add it to the page body and it audits every element's `style` and `data-*` attributes once, then again on each mutation, logging `[ui-debug]` warnings: an unknown utility, a wrong value mode, a tier without a base, a modifier the family lacks, a utility that flattens a state a hook covers, a raw property shadowing a utility, a whitespace form the gates cannot match (`--w : 4`, or `--w:auto` where the value is matched as text), and a `data-<name>-*` attribute outside its identity. It also lists the elements persisted across navigations and flags misuse.
 
 ```html
 <ui-debug data-debug-domains="localhost, staging.example.com"></ui-debug>
@@ -51,7 +51,7 @@ The features run in plain HTML by default. Add a language id to `zazz.languages`
 { "zazz.languages": ["html", "astro", "razor", "erb", "phoenix-heex"] }
 ```
 
-Known ids: `astro`, `vue`, `svelte`, `razor` / `aspnetcorerazor`, `asp` / `aspx`, `erb`, `php`, `phoenix-heex` / `html-eex` / `eex`, `elixir` (the `~H` sigils), `handlebars`, `mustache`, `twig`, `jinja` / `jinja-html`, `nunjucks`, `liquid`, `django-html`, `blade`. Markup inside an Astro expression (`{items.map((i) => <li>…</li>)}`) is still audited. JSX and TSX are not on the list: `style` is an object there, not a string, so the utilities would need a different parser.
+Known ids: `astro`, `vue`, `svelte`, `razor` / `aspnetcorerazor`, `asp` / `aspx`, `erb`, `php`, `phoenix-heex` / `html-eex` / `eex`, `elixir` (the `~H` sigils), `handlebars`, `mustache`, `twig`, `jinja` / `jinja-html`, `nunjucks`, `liquid`, `django-html`, `blade`. Markup inside an Astro expression (`{items.map((i) => <li>…</li>)}`) is still audited. JSX and TSX are not on the list: `style` is an object there, not a string, so the utilities would need a different parser. React and Vue also serialize an object `style` without the space after the colon, which matters for keyword values; the [utilities overview](/api/utilities/#one-space-after-the-colon) has the workaround.
 
 ## Other editors
 
@@ -85,4 +85,4 @@ export default defineConfig([
 ]);
 ```
 
-`configs.recommended` sets every `zazz/*` rule to `warn`. Run it with `eslint "**/*.html"`; `eslint --fix` applies the formatter. In this repo that is `vp run lint:html` and `vp run fmt:html`, and the staged-files hook formats HTML on commit. The plugin is private to the monorepo for now.
+`configs.recommended` sets a rule to `error` when the finding means the declaration does nothing at all (an unknown utility, a tier the family has no setter for or that has no base, a pseudo or group form the utility lacks, and a whitespace form the gates cannot match), and the rest to `warn`. Run it with `eslint "**/*.html"`; `eslint --fix` applies the formatter. In this repo that is `vp run lint:html` and `vp run fmt:html`, and the staged-files hook formats HTML on commit. The plugin is private to the monorepo for now.

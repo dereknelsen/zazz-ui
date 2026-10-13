@@ -10,7 +10,7 @@
  * `CORE_POLYFILLS` (none in v1) vendor with the runtime.
  */
 
-import type { KitManifest, PrimitiveEntry, RuntimePolyfill } from "./kit.ts";
+import type { KitManifest, PrimitiveEntry, RuntimeFallback, RuntimePolyfill } from "./kit.ts";
 
 /** The v1 base stylesheet inventory (kit `src/index.css` cascade shell). */
 const V1_BASE_CSS_PRE = [
@@ -33,6 +33,11 @@ const V1_CORE_RUNTIME = [
 /** CSS-gated polyfills the entry loads where a feature is missing; none before the kit exports them. */
 export function corePolyfills(manifest: KitManifest): RuntimePolyfill[] {
   return manifest.corePolyfills ?? [];
+}
+
+/** Document-gated fallbacks the entry loads where the page needs them (the CSP fallback); none before 0.6.3. */
+export function coreFallbacks(manifest: KitManifest): RuntimeFallback[] {
+  return manifest.coreFallbacks ?? [];
 }
 
 export type Language = "js" | "ts";
@@ -60,13 +65,14 @@ export function scriptVariants(jsPath: string, language: Language): string[] {
   return [jsPath, jsPath.replace(/\.js$/, ".d.ts")];
 }
 
-/** Everything `init` vendors: base css + core runtime and its polyfills, per language. */
+/** Everything `init` vendors: base css + core runtime, its polyfills, and its fallbacks, per language. */
 export function baseFiles(manifest: KitManifest, language: Language): string[] {
   return [
     ...baseCss(manifest),
     ...[
       ...coreRuntime(manifest),
       ...corePolyfills(manifest).map((polyfill) => polyfill.file),
+      ...coreFallbacks(manifest).flatMap((fallback) => [fallback.file, ...fallback.requires]),
     ].flatMap((jsPath) => scriptVariants(jsPath, language)),
   ];
 }

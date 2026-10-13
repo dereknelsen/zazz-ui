@@ -75,6 +75,9 @@ const CORE_RUNTIME_JS = [
   "base/zazz-element.js",
   // dynamically imported by index.js where container scroll-state queries are unsupported
   "base/scroll-state.js",
+  // dynamically imported by index.js where the page's CSP blocks inline style attributes
+  "base/csp.js",
+  "base/declarations.js",
 ];
 
 /**
@@ -176,7 +179,7 @@ function fontsBlock(display: "swap" | "optional"): string {
  * @returns The import-map script tag.
  * @private
  */
-function importMapBlock(extraIntegrity: Record<string, string> = {}): string {
+function importMapBlock(extraIntegrity: Record<string, string> = {}, nonce?: string): string {
   const imports: Record<string, string> = {};
   const integrity: Record<string, string> = { ...extraIntegrity };
   for (const dep of ESM_DEPENDENCIES) {
@@ -186,7 +189,7 @@ function importMapBlock(extraIntegrity: Record<string, string> = {}): string {
   }
   const json = JSON.stringify({ imports, integrity }, null, 2);
   return `<!-- Import map: bare specifiers in Zazz scripts resolve to pinned, SRI-checked files -->
-<script type="importmap">
+<script type="importmap"${nonceAttr(nonce)}>
 ${json}
 </script>`;
 }
@@ -205,14 +208,21 @@ function polyfillsBlock(): string {
 <script type="module" src="${cdnUrl(interest)}" integrity="${interest.integrity}" crossorigin="anonymous"></script>`;
 }
 
+/** ` nonce="…"` for an inline script under a strict `script-src`, or nothing. */
+function nonceAttr(nonce?: string): string {
+  return nonce ? ` nonce="${nonce.replace(/"/g, "&quot;")}"` : "";
+}
+
 /**
  * The theme-persistence script. Runs inline (no `defer`) while the parser is
  * still in `<head>`, so the `theme-*` switch lands on `<html>` before first paint. The
  * try/catch covers contexts where storage access throws (sandboxed iframes,
  * blocked site data).
  */
-const THEME_SCRIPT = `<!-- Theme: apply the persisted (or preferred) scheme before first paint -->
-<script>
+const themeScript = (
+  nonce?: string,
+) => `<!-- Theme: apply the persisted (or preferred) scheme before first paint -->
+<script${nonceAttr(nonce)}>
   (() => {
     try {
       // A stored choice pins the scheme with the theme-dark / theme-light
@@ -273,6 +283,12 @@ export interface HeadOptions {
   /** Include the inline theme-persistence script (last in head). Default `true`. */
   theme?: boolean;
   /**
+   * A CSP nonce for the two inline scripts (the import map and the theme
+   * script), so a strict `script-src 'nonce-…'` allows them. The page's own
+   * value, generated per response; never a constant.
+   */
+  nonce?: string;
+  /**
    * Local granular grain: the primitives this page uses, loaded file by file
    * from `base` (base layers, the closure's stylesheets in cascade order, one
    * module tag per closure script) instead of `index.css` / `index.js`. For CDN
@@ -295,7 +311,14 @@ export interface HeadOptions {
  * buildHead({ base: "/zazz/src", scripts: false, fontDisplay: "optional" });
  */
 export function buildHead(options: HeadOptions = {}): string {
-  const { base = "./zazz", cdn, scripts = true, fontDisplay = "swap", theme = true } = options;
+  const {
+    base = "./zazz",
+    cdn,
+    scripts = true,
+    fontDisplay = "swap",
+    theme = true,
+    nonce,
+  } = options;
 
   const parts: string[] = [
     `<meta charset="utf-8">`,
@@ -307,7 +330,7 @@ export function buildHead(options: HeadOptions = {}): string {
   if (fontDisplay !== false) parts.push(fontsBlock(fontDisplay));
 
   if (cdn) {
-    parts.push(...cdnBlocks(cdn, scripts));
+    parts.push(...cdnBlocks(cdn, scripts, nonce));
   } else if (options.primitives) {
     parts.push(
       ...granularBlocks(
@@ -315,6 +338,8 @@ export function buildHead(options: HeadOptions = {}): string {
         (path) => `${base}/${path}`,
         () => "",
         scripts,
+        {},
+        nonce,
       ),
     );
   } else {
@@ -327,7 +352,7 @@ export function buildHead(options: HeadOptions = {}): string {
       parts.push(
         // The import map must precede EVERY module load — including the
         // modulepreload hint — or the browser rejects it and bare specifiers fail.
-        importMapBlock(),
+        importMapBlock({}, nonce),
         `<link rel="modulepreload" href="${base}/index.js">`,
         polyfillsBlock(),
         `<!-- Zazz behavior: one ES module imports every component script in dependency order -->`,
@@ -336,7 +361,7 @@ export function buildHead(options: HeadOptions = {}): string {
     }
   }
 
-  if (theme) parts.push(THEME_SCRIPT);
+  if (theme) parts.push(themeScript(nonce));
 
   return parts.join("\n");
 }
@@ -355,7 +380,7 @@ export function buildHead(options: HeadOptions = {}): string {
  * @returns The head fragments between the fonts block and the theme script.
  * @private
  */
-function cdnBlocks(cdn: CdnHeadOptions, scripts: boolean): string[] {
+function cdnBlocks(cdn: CdnHeadOptions, scripts: boolean, nonce?: string): string[] {
   const { version, primitives, sri } = cdn;
   if (!EXACT_VERSION.test(version)) {
     throw new Error(
@@ -377,7 +402,7 @@ function cdnBlocks(cdn: CdnHeadOptions, scripts: boolean): string[] {
     );
     if (scripts) {
       parts.push(
-        importMapBlock(),
+        importMapBlock({}, nonce),
         `<link rel="modulepreload" href="${url("dist/zazz.js")}"${attrs("dist/zazz.js")}>`,
         polyfillsBlock(),
         `<!-- Zazz behavior: the whole kit, one module -->`,
@@ -402,6 +427,7 @@ function cdnBlocks(cdn: CdnHeadOptions, scripts: boolean): string[] {
     (path) => attrs(`src/${path}`),
     scripts,
     transitive,
+    nonce,
   );
 }
 
@@ -423,6 +449,7 @@ function granularBlocks(
   attrs: (path: string) => string,
   scripts: boolean,
   transitive: Record<string, string> = {},
+  nonce?: string,
 ): string[] {
   const parts: string[] = [];
   const closure = resolveClosure(primitives);
@@ -453,7 +480,7 @@ function granularBlocks(
       ]),
     ];
     parts.push(
-      importMapBlock(transitive),
+      importMapBlock(transitive, nonce),
       polyfillsBlock(),
       `<!-- Zazz behavior: side-effect modules by tag; the rest via module imports -->`,
       ...scriptFiles.map(

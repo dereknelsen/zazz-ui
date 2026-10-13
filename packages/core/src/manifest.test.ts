@@ -17,6 +17,7 @@ import { ESM_DEPENDENCIES } from "./head.ts";
 import {
   BASE_CSS_POST,
   BASE_CSS_PRE,
+  CORE_FALLBACKS,
   CORE_POLYFILLS,
   CORE_RUNTIME,
   CSS_CASCADE_ORDER,
@@ -149,7 +150,11 @@ describe("core runtime", () => {
   const indexTs = readFileSync(join(SRC, "index.ts"), "utf8");
 
   it("lists scripts that exist", () => {
-    for (const file of [...CORE_RUNTIME, ...CORE_POLYFILLS.map((p) => p.file)]) {
+    for (const file of [
+      ...CORE_RUNTIME,
+      ...CORE_POLYFILLS.map((p) => p.file),
+      ...CORE_FALLBACKS.flatMap((f) => [f.file, ...f.requires]),
+    ]) {
       expect(existsSync(sourcePath(file)), file).toBe(true);
     }
   });
@@ -172,6 +177,24 @@ describe("core runtime", () => {
     ].map((m) => ({ file: `${m[3]}.js`, supports: [m[1], m[2]] }));
     expect(gated.length).toBeGreaterThan(0);
     expect(CORE_POLYFILLS).toEqual(gated);
+  });
+
+  it("lists every other dynamic import of index.ts as a fallback, with the scripts it requires", () => {
+    const dynamic = [...indexTs.matchAll(/void import\("\.\/(base\/[a-z-]+)\.ts"\)/g)].map(
+      (m) => `${m[1]}.js`,
+    );
+    const polyfills = new Set(CORE_POLYFILLS.map((p) => p.file));
+    expect(CORE_FALLBACKS.map((f) => f.file).sort()).toEqual(
+      dynamic.filter((file) => !polyfills.has(file)).sort(),
+    );
+    for (const { file, requires } of CORE_FALLBACKS) {
+      const source = readFileSync(sourcePath(file), "utf8");
+      for (const required of requires) {
+        expect(existsSync(sourcePath(required)), required).toBe(true);
+        const specifier = required.replace(/^base\//, "./").replace(/\.js$/, ".ts");
+        expect(source, `${file} imports ${required}`).toContain(`"${specifier}"`);
+      }
+    }
   });
 });
 

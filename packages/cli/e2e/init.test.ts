@@ -58,17 +58,21 @@ describe("zazz-ui init (e2e, packed kit)", () => {
     const config = await readConfig(project);
     expect(config.language).toBe("js");
     expect(config.kit.version).toMatch(/^\d+\.\d+\.\d+/);
-    // Every base css the kit lists + 5 runtime + 1 polyfill, × (.js + .d.ts), + 3 generated artifacts.
+    // Every base css the kit lists + 5 runtime + 1 polyfill + the CSP fallback and its parser (2), × (.js + .d.ts), + 3 generated artifacts.
     const indexCss = await readFile(path.join(project, "zazz/index.css"), "utf8");
     const baseCssCount = indexCss.match(/@import "\.\/base\/[^"]+\.css";/g)?.length ?? 0;
     expect(baseCssCount).toBeGreaterThanOrEqual(7);
-    expect(Object.keys(config.base.files)).toHaveLength(baseCssCount + 6 * 2 + 3);
+    expect(Object.keys(config.base.files)).toHaveLength(baseCssCount + 8 * 2 + 3);
 
     // The stuck-state polyfill vendors and loads behind the kit's own CSS.supports gate;
     // navigation loads everywhere and stays inert until <html data-ui-navigation="swap">.
     expect(indexCss).toContain(`@import "./base/_utilities-tier-stuck.css";`);
     expect(existsSync(path.join(project, "zazz/base/scroll-state.js"))).toBe(true);
+    // The CSP fallback vendors with its parser and loads behind the kit's document check.
+    expect(existsSync(path.join(project, "zazz/base/csp.js"))).toBe(true);
+    expect(existsSync(path.join(project, "zazz/base/declarations.js"))).toBe(true);
     const indexJs = await readFile(path.join(project, "zazz/index.js"), "utf8");
+    expect(indexJs).toContain(`if (blockedInlineStyles()) void import("./base/csp.js");`);
     expect(indexJs).toContain(
       `if (typeof CSS !== "undefined" && !CSS.supports("container-type", "scroll-state")) {\n  void import("./base/scroll-state.js");\n}`,
     );

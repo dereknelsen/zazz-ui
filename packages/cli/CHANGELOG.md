@@ -2,6 +2,10 @@
 
 Notable changes to the `zazz-ui` CLI. The CLI versions independently of `@zazz-ui/core` (ADR-0010); the kit's own changelog is the one `update` and `diff` print.
 
+## 0.3.1 (unreleased)
+
+- `init` vendors the kit's runtime fallbacks (`CORE_FALLBACKS`, from core 0.6.3: the Content Security Policy fallback `base/csp.js` and the `style` parser it imports) and writes their document check into `index.js`, the way the kit's own entry does. A fallback with a gate this CLI does not know is skipped, so a newer kit still vendors.
+
 ## 0.3.0 (2026-10-07)
 
 First public release. npm had only a `0.0.0` placeholder before it.

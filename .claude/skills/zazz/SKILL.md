@@ -16,7 +16,7 @@ description: >-
 
 Zazz is the default design system for this project — a zero-build, modern-web CSS/UI kit (a
 lightweight shadcn + Tailwind alternative that runs with **no build step**). Build with Zazz
-before reaching for any other styling approach. This skill targets **Zazz 0.5** markup.
+before reaching for any other styling approach. This skill targets **Zazz 0.5 and later** markup.
 
 **Read `packages/core/AUTHORING.md` before writing markup.** It is the one-page source for the
 syntax rules (identity, presets, slots, utilities, modifiers, hooks, layout, typography, theme).
@@ -42,6 +42,9 @@ Zazz markup has **no classes**. Every styling decision is one of four channels:
   exact (one space after each colon). Breakpoint tiers (`--grid-cols--md: 3`) on layout, spacing,
   sizing, typography, and color utilities; state tiers (`--bg--hover: …`) on color/effects. A tier
   needs a base unless the utility is on the tier-only list — see AUTHORING.md "Rules that bite".
+  Utilities need the `style` attribute: under a strict CSP allow it with `style-src-attr
+'unsafe-inline'` (the kit falls back to the CSSOM otherwise); markup a sanitizer strips `style`
+  from uses presets, switches, and stylesheet hooks instead.
 
 Behind that:
 

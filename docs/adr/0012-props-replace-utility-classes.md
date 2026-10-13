@@ -48,7 +48,7 @@ The utilities layer of class-per-value rules is removed. Values are carried by *
 - **A universal prop reader** (`:where(*) { padding: … }`): zeroes every primitive's padding, since absent means zero.
 - **Stylesheet-authored props** via a second trigger attribute: rejected; props are a markup channel, stylesheets have the real property.
 - **Bare flag names** (`--md`): rejected as generic inheriting names that any theme could clobber.
-- **A compat class file for strict CSP**: rejected; it keeps alive the thing being removed. The CSP path, when needed, is a `data-ui-style` shim that copies into `el.style` via CSSOM (not blocked by `style-src`).
+- **A compat class file for strict CSP**: rejected; it keeps alive the thing being removed. The CSP path, when needed, is a `data-ui-style` shim that copies into `el.style` via CSSOM (not blocked by `style-src`). (Built in 0.6.3 as `base/csp.ts`, reading the `style` attribute itself rather than a second attribute: ADR-0016.)
 
 ## Consequences
 

@@ -23,5 +23,5 @@ Color and effects utilities take a state tier: `--bg: var(--color-background); -
 
 Two consequences:
 
-- **A tier needs a base.** `--text--hover: red` alone does nothing on a plain element; write the base first. The utilities that work tier-only (opacity, the transforms, shadow and the ring utilities, and a handful of layout utilities with a natural default) are flagged in the [utility tables](/api/utilities/).
+- **A tier needs a base.** `--text--hover: red` alone does nothing on a plain element; write the base first. The utilities that work tier-only (padding, `--bg`, opacity, the transforms, shadow and the ring utilities, and a handful of layout utilities with a natural default) are flagged in the [utility tables](/api/utilities/); `--bg--hover: var(--color-muted)` alone paints a plain element on hover.
 - **A utility on a primitive flattens its states.** `--bg: red` on a button is red on hover too, because the utility outranks the button's own `:hover` rule. To keep the primitive's behavior, set its state hook instead: `--ui-button-bg--hover`.

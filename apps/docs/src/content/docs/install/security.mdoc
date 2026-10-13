@@ -1,0 +1,54 @@
+---
+title: "Content Security Policy"
+description: "The policy that keeps utilities working, what the kit does when a policy blocks them, and what a sanitizer leaves standing."
+section: "Install"
+sectionOrder: 2
+order: 1
+---
+
+Every style utility is a custom property in a `style` attribute. A Content Security Policy that forbids inline styles forbids that attribute, and with it every utility on the page. Primitives, presets, switches, and hooks set in a stylesheet keep working; only the `style` channel goes dark. This page gives the policy to write so it does not, what the kit does when it does anyway, and what to use in content a sanitizer has been through.
+
+## The policy to write
+
+CSP Level 3 splits styles in two. `style-src-elem` governs `<style>` elements and stylesheet links; `style-src-attr` governs `style` attributes. A strict policy can lock every stylesheet to your origin, or to a nonce, and still allow the attribute:
+
+```http
+Content-Security-Policy:
+  default-src 'self';
+  style-src-elem 'self' https://cdn.jsdelivr.net;
+  style-src-attr 'unsafe-inline';
+  script-src 'nonce-<per-response>' https://cdn.jsdelivr.net;
+  img-src 'self' data:;
+  font-src 'self' https://fonts.gstatic.com;
+  connect-src 'self'
+```
+
+Chrome 75, Firefox 108, and Safari 15.4 understand the two directives. A browser that only knows `style-src` falls back to it, so keep `style-src` out of the header unless it carries the same allowances.
+
+The keyword looks worse than it is. A `style` attribute cannot load a stylesheet, run a script, or reach another origin on its own: anything it fetches, such as a `background-image: url()`, goes through `img-src` and `font-src`, which stay strict. What `'unsafe-inline'` on attributes gives an attacker who can already inject markup is control of layout and color on that element, which is what injected markup gives them anyway. Nonces do not help here, because a nonce is an attribute on an element and cannot mark an attribute.
+
+For a static site with a fixed set of pages, there is a stricter option: `'unsafe-hashes'` with the hash of each distinct `style` value, computed at build time. It suits a site with a few hundred distinct values, not an app that renders them per request.
+
+## When the attribute is blocked anyway
+
+Some policies forbid `'unsafe-inline'` on attributes outright. The attribute text still arrives in the DOM; the browser parses the markup, keeps the attribute, and declines to apply it. The kit's rules still match (`[style*="--p:"]` reads the attribute text), but the values never reach the element.
+
+The kit notices. On load, `index.js` looks for a styled element whose declaration block is empty, which is what a blocked attribute looks like, and if it finds one it loads `base/csp.js`. That module reads each attribute and writes its declarations one by one with `style.setProperty()`. The policy does not govern writes through the CSSOM, so the values land, the rules read them, and the page looks as it should. The module keeps watching for attributes written or inserted later, including pages that arrive through swap navigation. `data-ui-guard="off"` on an element opts it out, as it does for the style guard. No probe element is written, so the kit never raises a violation report of its own.
+
+Two costs come with it. Utilities now need JavaScript, and they apply after the module runs, so the page paints once without them. A policy that allows the attribute pays neither, which is why the directive above comes first and the fallback second.
+
+## The head under a strict script policy
+
+`buildHead()` writes two inline scripts: the import map and the theme script. Under `script-src` without `'unsafe-inline'`, both need the response's nonce:
+
+```js
+import { buildHead } from "@zazz-ui/core/head";
+
+const head = buildHead({ nonce: res.locals.nonce });
+```
+
+The import map tag and the theme script tag then carry `nonce="…"`, and nothing else does; the kit's module and polyfill tags are external files allowed by their origin. The CDN snippet on the [installation page](/docs/install/installation/#cdn) has the same two inline tags, so add the nonce there by hand. The CLI's `head.html` is static, so a site that needs nonces generates the head per response instead of pasting the file.
+
+## Sanitized content
+
+A sanitizer that strips `style` strips the utility channel, and nothing in the kit can put it back. What survives a sanitizer that keeps `data-*` attributes, as DOMPurify does by default, is everything else the kit reads: identities and switches in `data-ui`, presets and slots in `data-<name>-*`. So content that goes through a sanitizer uses those, and takes its spacing and color from the stylesheet: `data-ui="prose"` for text, presets for primitives, and hooks (`--ui-card-px`) set in a stylesheet for anything the presets do not cover. Check what your sanitizer keeps before relying on either; the defaults differ between libraries, and some strip custom properties out of a `style` they otherwise keep.

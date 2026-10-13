@@ -40,3 +40,22 @@ import "./base/navigation.ts";
 if (typeof CSS !== "undefined" && !CSS.supports("container-type", "scroll-state")) {
   void import("./base/scroll-state.ts");
 }
+
+// A Content Security Policy that blocks inline style attributes leaves the
+// attribute text in the DOM with an empty declaration block, and with it every
+// utility unapplied; load the CSSOM fallback. A page that allows them
+// (`style-src-attr 'unsafe-inline'`) never fetches it.
+function blockedInlineStyles(): boolean {
+  for (const el of document.querySelectorAll("[style]")) {
+    const text = el.getAttribute("style");
+    if (text?.includes(":") && (el as HTMLElement).style.length === 0) return true;
+  }
+  return false;
+}
+if (typeof document !== "undefined") {
+  const check = () => {
+    if (blockedInlineStyles()) void import("./base/csp.ts");
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", check);
+  else check();
+}

@@ -64,20 +64,6 @@
 }
 
 @layer overrides {
-  [data-preview-frame][data-fullscreen] {
-    position: fixed;
-    inset: 0;
-    z-index: 40;
-    border-radius: 0;
-  }
-
-  [data-preview-frame][data-fullscreen] [data-preview-stage] {
-    block-size: 100%;
-    overflow: auto;
-  }
-}
-
-@layer overrides {
   /* Reference tables: long token values wrap instead of forcing a scroll. */
   [data-ui~="table"] code {
     white-space: normal;

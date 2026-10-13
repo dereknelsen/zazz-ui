@@ -30,78 +30,11 @@ import {
 
 // --- Declarations ---
 
-/** `[start, end)` offsets into a style value. */
-export type Range = [number, number];
+// the parser lives in declarations.ts (no imports) so the CSP fallback can share it
+import { scanDeclarations, splitDeclarations } from "./declarations.ts";
 
-/** One declaration of a style value, with its parts' offsets (all trimmed). */
-export interface ScannedDeclaration {
-  /** The whole declaration. */
-  span: Range;
-  /** The name; a declaration still being typed (`--p`) is all name. */
-  name: string;
-  nameSpan: Range;
-  /** Offset of the colon, or -1 when there is none yet. */
-  colon: number;
-  value: string;
-  /** Empty (`[colon + 1, colon + 1]`) when nothing follows the colon. */
-  valueSpan: Range;
-}
-
-/** Trims `[start, end)` of `text` to its non-whitespace extent. */
-function trimRange(text: string, start: number, end: number): Range {
-  while (start < end && /\s/.test(text[start]!)) start++;
-  while (end > start && /\s/.test(text[end - 1]!)) end--;
-  return [start, end];
-}
-
-/**
- * Scans a style value into declarations, splitting on top-level `;` (not inside
- * parentheses or quotes). Empty segments are skipped.
- */
-export function scanDeclarations(value: string): ScannedDeclaration[] {
-  const found: ScannedDeclaration[] = [];
-  const push = (from: number, to: number) => {
-    const span = trimRange(value, from, to);
-    if (span[0] === span[1]) return;
-    const colon = value.indexOf(":", span[0]);
-    const hasColon = colon !== -1 && colon < span[1];
-    const nameSpan = hasColon ? trimRange(value, span[0], colon) : span;
-    const valueSpan = hasColon
-      ? trimRange(value, colon + 1, span[1])
-      : ([span[1], span[1]] as Range);
-    found.push({
-      span,
-      name: value.slice(...nameSpan),
-      nameSpan,
-      colon: hasColon ? colon : -1,
-      value: value.slice(...valueSpan),
-      valueSpan,
-    });
-  };
-  let depth = 0;
-  let quote: string | null = null;
-  let start = 0;
-  for (let i = 0; i < value.length; i++) {
-    const ch = value[i]!;
-    if (quote) {
-      if (ch === "\\") i++;
-      else if (ch === quote) quote = null;
-    } else if (ch === '"' || ch === "'") quote = ch;
-    else if (ch === "(") depth++;
-    else if (ch === ")") depth = Math.max(0, depth - 1);
-    else if (ch === ";" && depth === 0) {
-      push(start, i);
-      start = i + 1;
-    }
-  }
-  push(start, value.length);
-  return found;
-}
-
-/** Splits a style value on top-level `;`, ignoring ones inside parentheses or quotes. */
-export function splitDeclarations(value: string): string[] {
-  return scanDeclarations(value).map(({ span }) => value.slice(...span));
-}
+export { scanDeclarations, splitDeclarations };
+export type { Range, ScannedDeclaration } from "./declarations.ts";
 
 /** Collapses whitespace runs to one space, outside quotes. */
 function collapse(text: string): string {

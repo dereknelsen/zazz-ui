@@ -7,6 +7,7 @@
 import { buildHead } from "@zazz-ui/core/head.ts";
 import { globalAttributes, switches, tokenGroup, typographyRoles } from "./api/foundations.ts";
 import { primitiveApi } from "./api/primitives.ts";
+import { installApi } from "./api/install.ts";
 import { utilityRows } from "./api/utilities.ts";
 import { sectionById } from "./api/utility-sections.ts";
 import { kitVersion, readExample } from "./kit.ts";
@@ -152,12 +153,25 @@ function headMarkdown(attrs: Attrs): string {
   return fence("html", head);
 }
 
+/** The install block: the pnpm command, then what `add` also vendors. */
+function installMarkdown(primitive: string): string {
+  const { commands, dependencies } = installApi(primitive);
+  const command = commands.find((c) => c.id === "pnpm")!.command;
+  const also =
+    dependencies.length > 0
+      ? `\n\nAlso adds ${dependencies.map((d) => `\`${d}\``).join(", ")}, which it depends on.`
+      : "";
+  return `${fence("bash", command)}${also}\n\nRun \`zazz-ui init\` first if the project has no \`zazz/\` folder yet.`;
+}
+
 /** Expands one self-closing tag to Markdown. Unknown tags become an HTML comment. */
 export function expandTag(name: string, attrs: Attrs): string {
   const str = (key: string) => (typeof attrs[key] === "string" ? (attrs[key] as string) : "");
   switch (name) {
     case "preview":
       return previewMarkdown(str("src"));
+    case "install":
+      return installMarkdown(str("primitive"));
     case "examples":
       return examplesMarkdown(str("primitive"));
     case "attributes":

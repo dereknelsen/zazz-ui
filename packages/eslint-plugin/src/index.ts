@@ -46,7 +46,7 @@ function locOf(context: Rule.RuleContext, [start, end]: [number, number]) {
 }
 
 function auditRule(id: RuleId): Rule.RuleModule {
-  const fixable = id === "whitespace-before-colon";
+  const fixable = id.startsWith("whitespace-");
   return {
     meta: {
       type: "problem",
@@ -149,10 +149,27 @@ const plugin = {
   configs: {} as Record<"recommended", Linter.Config>,
 } satisfies ESLint.Plugin;
 
-/** Every rule as a warning: the audit flags likely mistakes, and the layout is fixed on save. */
+/**
+ * A finding that means a declaration does nothing at all is an error: the
+ * utility is unknown, its tier has no setter or no base, or its spelling misses
+ * the gate. The rest flag likely mistakes and stay warnings; the layout is
+ * fixed on save.
+ */
+const ERRORS: ReadonlySet<RuleId> = new Set<RuleId>([
+  "unknown-utility",
+  "pseudo-form",
+  "group-needs-state",
+  "tier-unsupported",
+  "tier-without-base",
+  "whitespace-before-colon",
+  "whitespace-after-colon",
+]);
+
 plugin.configs.recommended = {
   plugins: { zazz: plugin },
-  rules: Object.fromEntries(Object.keys(rules).map((id) => [`zazz/${id}`, "warn"])),
+  rules: Object.fromEntries(
+    Object.keys(rules).map((id) => [`zazz/${id}`, ERRORS.has(id as RuleId) ? "error" : "warn"]),
+  ),
 };
 
 export default plugin;

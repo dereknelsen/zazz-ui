@@ -116,6 +116,12 @@ describe("@zazz-ui/eslint-plugin", () => {
   it("fixes whitespace before the colon and suggests the template form", () => {
     const fixed = linter.verifyAndFix(`<div style="--w  : 4"></div>`, config, "page.html");
     expect(fixed.output).toBe(`<div style="--w: 4"></div>`);
+    const after = linter.verifyAndFix(
+      `<div style="--w:auto; --shadow--hover:lg; --p:4"></div>`,
+      config,
+      "page.html",
+    );
+    expect(after.output).toBe(`<div style="--w: auto; --shadow--hover: lg; --p:4"></div>`);
     const [message] = lint(`<div style="--grid-cols: 1fr 1fr"></div>`);
     expect(message!.suggestions?.[0]?.desc).toBe("Write `--template-cols: 1fr 1fr`.");
     expect(message!.suggestions?.[0]?.fix.text).toBe("--template-cols: 1fr 1fr");
@@ -139,6 +145,18 @@ describe("@zazz-ui/eslint-plugin", () => {
         `<html data-ui-navigation="swap"><body><p data-ui-persist="a"></p><p data-ui-persist="a"></p><section data-ui-persist="outer"><span data-ui-persist="inner"></span></section></body></html>`,
       ).map(([, text]) => text),
     ).toEqual([`data-ui-persist="a"`, `data-ui-persist="inner"`]);
+  });
+
+  it("recommends an error for a declaration that does nothing and a warning for the rest", () => {
+    const { rules } = zazz.configs.recommended;
+    expect(rules).toMatchObject({
+      "zazz/unknown-utility": "error",
+      "zazz/tier-unsupported": "error",
+      "zazz/tier-without-base": "error",
+      "zazz/whitespace-after-colon": "error",
+      "zazz/flattens-state": "warn",
+      "zazz/style-format": "warn",
+    });
   });
 
   it("skips <ui-debug>", () => {

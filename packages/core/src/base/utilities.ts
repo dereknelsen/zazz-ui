@@ -286,6 +286,22 @@ export const SIZING_KEYWORDS = ["auto", "fit-content", "min-content", "max-conte
 export const MARGIN_KEYWORDS = ["auto"] as const;
 /** A layout places its children; a tier-only column utility there keeps the band below the tier. */
 const LAYOUT_CHILDREN = ["ui-layout > *", '[data-ui~="layout"] > *'] as const;
+/**
+ * Elements the reset or the prose scope pads (a prose list's indent, a quote's
+ * inset, inline code, form controls): a tier-only padding utility there would
+ * zero that padding below the tier, so they keep the base requirement.
+ */
+const BASE_PADDED = [
+  '[data-ui~="prose"] :is(ul, ol, dd, blockquote, cite)',
+  "code",
+  "button",
+  "input",
+  "select",
+  "textarea",
+  "optgroup",
+] as const;
+/** Elements the reset paints: a tier-only `--bg` there would clear the paint below the tier. */
+const BASE_PAINTED = ["code", "hr"] as const;
 
 /**
  * Track-list keywords `--grid-cols` / `--grid-rows` take besides a count. `none`
@@ -459,26 +475,29 @@ export const UTILITIES: readonly Utility[] = [
     family: "grid",
     emit: "grid-fit",
   },
-  // spacing: dual mode; gap is on the no-base allowlist
-  { name: "p", pseudo: true, properties: ["padding"], mode: "dual", family: "spacing" },
-  { name: "px", pseudo: true, properties: ["padding-inline"], mode: "dual", family: "spacing" },
-  { name: "py", pseudo: true, properties: ["padding-block"], mode: "dual", family: "spacing" },
-  {
-    name: "pt",
-    pseudo: true,
-    properties: ["padding-block-start"],
-    mode: "dual",
-    family: "spacing",
-  },
-  { name: "pb", pseudo: true, properties: ["padding-block-end"], mode: "dual", family: "spacing" },
-  {
-    name: "pl",
-    pseudo: true,
-    properties: ["padding-inline-start"],
-    mode: "dual",
-    family: "spacing",
-  },
-  { name: "pr", pseudo: true, properties: ["padding-inline-end"], mode: "dual", family: "spacing" },
+  // spacing: dual mode; padding and gap are on the no-base allowlist (the reset
+  // zeroes padding, so `--px--md: 8` alone pads from md), except where the base pads
+  ...(
+    [
+      ["p", "padding"],
+      ["px", "padding-inline"],
+      ["py", "padding-block"],
+      ["pt", "padding-block-start"],
+      ["pb", "padding-block-end"],
+      ["pl", "padding-inline-start"],
+      ["pr", "padding-inline-end"],
+    ] as const
+  ).map(
+    ([name, property]): Utility => ({
+      name,
+      pseudo: true,
+      properties: [property],
+      mode: "dual",
+      family: "spacing",
+      noBase: "0",
+      noBaseExclude: BASE_PADDED,
+    }),
+  ),
   { name: "gap", properties: ["gap"], mode: "dual", family: "spacing", noBase: "0" },
   { name: "gap-x", properties: ["column-gap"], mode: "dual", family: "spacing", noBase: "0" },
   { name: "gap-y", properties: ["row-gap"], mode: "dual", family: "spacing", noBase: "0" },
@@ -665,6 +684,7 @@ export const UTILITIES: readonly Utility[] = [
   { name: "whitespace", properties: ["white-space"], mode: "keyword", family: "typography" },
   // color: states; bg-alpha feeds the bg emission
   { name: "text", properties: ["color"], mode: "raw", family: "color", pseudo: true },
+  // on the no-base allowlist: a plain element is transparent, so `--bg--hover` alone paints on hover
   {
     name: "bg",
     properties: ["background-color"],
@@ -672,6 +692,8 @@ export const UTILITIES: readonly Utility[] = [
     family: "color",
     emit: "bg",
     pseudo: true,
+    noBase: "transparent",
+    noBaseExclude: BASE_PAINTED,
   },
   { name: "bg-alpha", properties: [], mode: "raw", family: "color", emit: "none" },
   // gradients: the type utility carries the prelude (direction, shape, position,

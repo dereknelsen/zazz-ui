@@ -44,6 +44,18 @@ export interface RuntimePolyfill {
   supports: [property: string, value: string];
 }
 
+/** The document checks this CLI can write into the entry; a fallback with another gate is skipped. */
+export const FALLBACK_GATES = ["blocked-inline-styles"] as const;
+export type FallbackGate = (typeof FALLBACK_GATES)[number];
+
+/** A runtime fallback the entry loads only when a document check (`gate`) says the page needs it. */
+export interface RuntimeFallback {
+  file: string;
+  /** Scripts it imports, vendored with it. */
+  requires: string[];
+  gate: FallbackGate;
+}
+
 /** The validated slice of the kit's manifest module the CLI consumes. */
 export interface KitManifest {
   manifestVersion: number;
@@ -59,6 +71,8 @@ export interface KitManifest {
   coreRuntime?: string[];
   /** CSS-gated runtime polyfills, when the kit exports them. */
   corePolyfills?: RuntimePolyfill[];
+  /** Document-gated runtime fallbacks this CLI knows the gate of, when the kit exports them. */
+  coreFallbacks?: RuntimeFallback[];
 }
 
 /** A resolved, extracted, validated kit at one exact version. */
@@ -224,6 +238,11 @@ export async function loadKitFromDir(
   const baseCssPost = manifestModule.BASE_CSS_POST;
   const coreRuntime = manifestModule.CORE_RUNTIME;
   const corePolyfills = manifestModule.CORE_POLYFILLS;
+  // a fallback whose gate this CLI does not know is left out, not an error: the
+  // page's own index.js (npm, CDN) still loads it, and a newer CLI will vendor it
+  const coreFallbacks = Array.isArray(manifestModule.CORE_FALLBACKS)
+    ? manifestModule.CORE_FALLBACKS.filter(isRuntimeFallback)
+    : [];
 
   return {
     version: meta.version,
@@ -240,6 +259,7 @@ export async function loadKitFromDir(
       ...(Array.isArray(corePolyfills) && corePolyfills.every(isRuntimePolyfill)
         ? { corePolyfills }
         : {}),
+      ...(coreFallbacks.length > 0 ? { coreFallbacks } : {}),
     },
     buildHead: buildHead as (options: Record<string, unknown>) => string,
     readFile: async (srcRelPath) => readFile(resolveWithin(srcDir, srcRelPath)),
@@ -255,6 +275,17 @@ function isRuntimePolyfill(value: unknown): value is RuntimePolyfill {
     Array.isArray(supports) &&
     supports.length === 2 &&
     supports.every((part) => typeof part === "string")
+  );
+}
+
+function isRuntimeFallback(value: unknown): value is RuntimeFallback {
+  if (typeof value !== "object" || value === null) return false;
+  const { file, requires, gate } = value as Record<string, unknown>;
+  return (
+    typeof file === "string" &&
+    Array.isArray(requires) &&
+    requires.every((part) => typeof part === "string") &&
+    (FALLBACK_GATES as readonly string[]).includes(gate as string)
   );
 }
 

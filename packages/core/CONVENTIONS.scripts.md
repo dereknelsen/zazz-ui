@@ -96,6 +96,8 @@ Attach a named export object or class to `window` for the documented public API,
 | `ui/toaster/toaster.ts`               | `window.Toaster`    | Imperative toast API + `<ui-toaster>` element class                                                                                                                                                      |
 | `base/navigation.ts`                  | _(none)_            | Side effect: opt-in body swap (`data-ui-navigation="swap"`); exports `swapBody` for tests                                                                                                                |
 | `base/scroll-state.ts`                | _(none)_            | Polyfill for the `stuck` utility state (container scroll-state queries); `index.ts` imports it only where `scroll-state()` is unsupported. exports `ScrollState` `{ start, stop, isSupported, refresh }` |
+| `base/csp.ts`                         | _(none)_            | CSP fallback: copies blocked `style` attributes into the CSSOM; `index.ts` imports it only after finding a blocked attribute. exports `Csp` `{ blockedInlineStyles, applyInlineStyles, start, stop }`    |
+| `base/declarations.ts`                | _(none)_            | `scanDeclarations`, `splitDeclarations`, `plainValue`: the one `style` attribute parser (no imports), shared by the formatter, the language server, and the CSP fallback                                 |
 | `ui/debug/debug.ts`                   | _(none)_            | `<ui-debug>` element class + `audit(root)` (module exports only); development tooling                                                                                                                    |
 | `ui/style-guard/style-guard.ts`       | `window.StyleGuard` | `{ start, stop, restore }` — optional; restores utilities a legacy `style` rewrite dropped                                                                                                               |
 
@@ -175,6 +177,8 @@ Scripts declare dependencies with ES imports so the module graph resolves order:
 | `ui/tabs/tabs.ts`                     | none                                                       | Standalone (`<ui-tabs>`)                                                                                    |
 | `ui/toaster/toaster.ts`               | `base/utils.ts`, `base/signals.ts`                         | `<ui-toaster>` + `window.Toaster` toast API                                                                 |
 | `base/navigation.ts`                  | `base/zazz-element.ts`                                     | Opt-in per page; drains the refresh registry after a body swap                                              |
+| `base/declarations.ts`                | none                                                       | The `style` attribute parser                                                                                |
+| `base/csp.ts`                         | `base/declarations.ts`                                     | Dynamic import from `index.ts` when the page's CSP blocks inline style attributes                           |
 | `ui/debug/debug.ts`                   | `base/zazz-element.ts`, `base/utilities.ts`, `manifest.ts` | Development only; not in `index.ts` — `zazz-ui add debug`                                                   |
 | `ui/style-guard/style-guard.ts`       | none                                                       | Optional; not in `index.ts` — a page adds it (or `zazz-ui add style-guard`) when legacy JS rewrites `style` |
 

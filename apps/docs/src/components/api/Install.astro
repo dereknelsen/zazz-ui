@@ -1,0 +1,110 @@
+---
+/**
+ * `{% install primitive="button" /%}`: the `zazz-ui add` command for a
+ * primitive, one tab per package manager, with a copy button, and the
+ * primitives that command also vendors (from the kit's own closure resolver).
+ * The chosen package manager is remembered across pages.
+ */
+import { Code } from "astro:components";
+import CopyButton from "../CopyButton.astro";
+import { installApi } from "../../lib/api/install.ts";
+
+interface Props {
+  primitive: string;
+}
+const { primitive } = Astro.props;
+const { commands, dependencies } = installApi(primitive);
+const uid = `install-${primitive}`;
+const themes = { light: "github-light", dark: "github-dark" } as const;
+---
+
+<div data-install data-ui="not-prose" style="--my: 6">
+  <ui-tabs style="--w: 100%">
+    <div data-tabs-slot="list" role="tablist">
+      <div data-tabs-slot="indicator" aria-hidden="true"></div>
+      {
+        commands.map(({ id }, i) => (
+          <>
+            <input
+              type="radio"
+              role="tab"
+              name={uid}
+              id={`${uid}-${id}`}
+              value={id}
+              data-install-manager
+              checked={i === 0}
+            />
+            <label for={`${uid}-${id}`} data-tabs-slot="label">
+              <span data-tabs-slot="label-text">{id}</span>
+            </label>
+          </>
+        ))
+      }
+    </div>
+    {
+      commands.map(({ command }) => (
+        <div data-tabs-slot="panel" role="tabpanel" style="--w: 100%">
+          <div style="--position: relative">
+            <Code code={command} lang="bash" themes={themes} defaultColor={false} />
+            <div style="--position: absolute; --right: 2; --top: 2">
+              <CopyButton text={command} label="Copy the command" />
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </ui-tabs>
+  <p data-ui="text-sm" style="--mt: 2; --text: var(--color-muted-foreground)">
+    {
+      dependencies.length > 0 && (
+        <>
+          Also adds{" "}
+          {dependencies.map((dep, i) => (
+            <>
+              <a href={`/api/primitives/${dep}/`} data-ui="text-link">
+                {dep}
+              </a>
+              {i < dependencies.length - 1 ? ", " : ""}
+            </>
+          ))}
+          , which it depends on.{" "}
+        </>
+      )
+    }
+    Run <a href="/docs/install/installation/#cli" data-ui="text-link">
+      <code>zazz-ui init</code>
+    </a> first if the project has no <code>zazz/</code> folder yet.
+  </p>
+</div>
+
+<script>
+  /** The package manager picked in one install block is picked in every block, on every page. */
+  const KEY = "zazz-docs:package-manager";
+  const read = () => {
+    try {
+      return localStorage.getItem(KEY);
+    } catch {
+      return null;
+    }
+  };
+  const write = (id: string) => {
+    try {
+      localStorage.setItem(KEY, id);
+    } catch {
+      /* no storage: the choice lasts for this page */
+    }
+  };
+  const radios = document.querySelectorAll<HTMLInputElement>("[data-install-manager]");
+  const pick = (id: string) => {
+    for (const radio of radios) if (radio.value === id) radio.checked = true;
+  };
+  const stored = read();
+  if (stored) pick(stored);
+  for (const radio of radios) {
+    radio.addEventListener("change", () => {
+      if (!radio.checked) return;
+      write(radio.value);
+      pick(radio.value);
+    });
+  }
+</script>

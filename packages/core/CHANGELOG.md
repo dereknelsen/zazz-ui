@@ -1,5 +1,30 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.6.3 (2026-10-13)
+
+### base
+
+- Under a Content Security Policy that blocks inline style attributes, utilities now apply: `index.js` finds a styled element whose declaration block is empty (the shape of a blocked attribute) and loads the new `base/csp.js`, which copies each `style` attribute into the CSSOM with `setProperty` and watches later writes. Utilities then need JavaScript and apply after the module runs; a policy that allows the attribute (`style-src-attr 'unsafe-inline'`, the documented one) never fetches it. `data-ui-guard="off"` opts an element out. New `base/declarations.js` holds the `style` attribute parser the formatter and the fallback share.
+- `buildHead({ nonce })` puts the response's nonce on the import map and the theme script, the head's two inline scripts, for a strict `script-src`.
+
+- Padding (`--p`, `--px`, `--py`, `--pt`, `--pb`, `--pl`, `--pr`) and `--bg` join the no-base allowlist: on a plain element a tier alone works, so `--px--md: 8` pads from md and `--bg--hover: var(--color-muted)` paints on hover, without `--px: 0` or `--bg: transparent` beside it. As with the rest of the allowlist, a primitive still needs the base, and so do the elements the base pads or paints (for padding: lists, definition details, and quotes inside `prose`, `code`, and form controls; for `--bg`: `code` and `hr`). The audit no longer reports a tier-only padding or `--bg` on a plain element.
+
+### prose
+
+- The example's figure caption no longer names the 0.4 `.ui-prose` class, and its image is a real photograph instead of a placeholder service.
+
+### table
+
+- The `size="sm"` example lists the table's own attributes (`data-table-variant`, `data-table-size`, `data-table-state`) instead of 0.4 names.
+
+### utilities
+
+- The position, overflow, aspect-ratio, margin-auto, and width examples lay out as described: the positioned box and the scroll regions have a height, the second overflow region clips instead of repeating the first, the aspect boxes keep their ratios, the centered box fits its content, and the full-width bar is labelled `--w: 100%`.
+
+### debug
+
+- New audit finding, `whitespace-after-colon`: a value the kit matches as text (a keyword such as `auto` or `subgrid`, a token by name such as `md` or `strong`, a `--display` shorthand, `--bg: none`, `--position: sticky`, a stuck side) written without exactly one space after the colon. `--w:auto` is 0 wide and `--shadow:md` draws nothing, and that is how React and Vue serialize an object `style`. The editor and the ESLint plugin offer the fix. A tier gate (`--p:4`) is not affected and is not reported.
+
 ## 0.6.2 (2026-10-12)
 
 ### base

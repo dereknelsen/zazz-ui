@@ -11,6 +11,7 @@
 
 import {
   BORDER_SHORTHANDS,
+  DISPLAY_SHORTHANDS,
   GRADIENT_TYPES,
   UTILITIES,
   PSEUDO_ONLY,
@@ -40,6 +41,7 @@ export type RuleId =
   | "font-weight-name"
   | "scroll-state"
   | "whitespace-before-colon"
+  | "whitespace-after-colon"
   | "attribute-outside-identity"
   | "field-id-or-name"
   | "persist";
@@ -60,6 +62,7 @@ export const RULE_IDS: readonly RuleId[] = [
   "font-weight-name",
   "scroll-state",
   "whitespace-before-colon",
+  "whitespace-after-colon",
   "attribute-outside-identity",
   "field-id-or-name",
   "persist",
@@ -122,7 +125,25 @@ interface Declaration {
   /** The name as written; its whitespace is a finding. */
   name: string;
   value: string;
+  /** The text after the colon as written (`!important` included), for the whitespace check. */
+  raw: string;
   span: Span;
+}
+
+/**
+ * True when the kit matches `value` as text (`[style*="--w: auto"]`): a
+ * keyword, a token by name, a `--display` shorthand, `none` on `--bg`, or
+ * `sticky` on `--position`. Those forms need exactly one space after the colon;
+ * a tier gate (`--p:`) reads the property itself and takes any spacing.
+ */
+function gatedValue(utility: Utility, value: string): boolean {
+  return (
+    (utility.keywords ?? []).includes(value) ||
+    value in (utility.aliases ?? {}) ||
+    (utility.name === "display" && value in DISPLAY_SHORTHANDS) ||
+    (utility.name === "bg" && value === "none") ||
+    (utility.name === "position" && value === "sticky")
+  );
 }
 
 /** Splits a `style` attribute into declarations with their spans. */
@@ -136,12 +157,11 @@ function declarations(text: string): Declaration[] {
     if (colon === -1) continue;
     const lead = part.length - part.trimStart().length;
     const trail = part.length - part.trimEnd().length;
+    const raw = part.slice(colon + 1);
     found.push({
       name: part.slice(0, colon),
-      value: part
-        .slice(colon + 1)
-        .replace(/!\s*important\s*$/i, "")
-        .trim(),
+      value: raw.replace(/!\s*important\s*$/i, "").trim(),
+      raw,
       span: [start + lead, start + part.length - trail],
     });
   }
@@ -227,6 +247,21 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
     const { value, span } = declaration;
     const warn = (rule: RuleId, message: string, suggestion?: Suggestion) =>
       found.push({ rule, message, span, ...(suggestion ? { suggestion } : {}) });
+    // the gated forms match the attribute text, so `--w:auto` and `--w:  auto` miss
+    const spacing = () => {
+      const { raw } = declaration;
+      if (raw === ` ${value}` || /!\s*important/i.test(raw)) return;
+      const colon = span[0] + declaration.name.trimStart().length;
+      warn(
+        "whitespace-after-colon",
+        `\`${name}:${raw}\` is matched as text, so it needs exactly one space after the colon: \`${name}: ${value}\`.`,
+        {
+          description: `Write \`${name}: ${value}\`.`,
+          span: [colon + 1, span[1]],
+          text: ` ${value}`,
+        },
+      );
+    };
     // --stuck-state names the side a sticky container reports as stuck
     if (parsed.name === STUCK_STATE.modifier && !parsed.group && !parsed.side) {
       if (parsed.tier) {
@@ -239,6 +274,8 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
           "scroll-state",
           `\`${name}: ${value}\` is not a side the stuck state matches: ${STUCK_STATE.sides.join(", ")}.`,
         );
+      } else {
+        spacing();
       }
       continue;
     }
@@ -265,6 +302,7 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
       );
       continue;
     }
+    if (!parsed.side && gatedValue(utility, value)) spacing();
     const baseName = (parsed.side ? `${parsed.side}-` : "") + utility.name;
     if (parsed.group && parsed.tier === "stuck") {
       warn(

@@ -667,10 +667,34 @@ export interface RuntimePolyfill {
 /**
  * Polyfills `index.ts` imports dynamically behind a `CSS.supports` test, so a
  * browser with the feature never fetches them. Vendored with the core runtime;
- * an entry script loads each one the way `index.ts` does.
+ * an entry script loads each one the way `index.ts` does. Every entry has a
+ * `supports` pair: the published CLI drops the whole list when one does not.
  */
 export const CORE_POLYFILLS: RuntimePolyfill[] = [
   { file: "base/scroll-state.js", supports: ["container-type", "scroll-state"] },
+];
+
+/** A runtime fallback, loaded only where a document check (not a CSS feature) says the page needs it. */
+export interface RuntimeFallback {
+  /** The script, `src/`-relative. */
+  file: string;
+  /** Scripts it imports, `src/`-relative, vendored with it. */
+  requires: string[];
+  /**
+   * The check an entry script runs before importing it. `blocked-inline-styles`:
+   * some element's `style` attribute holds a declaration while its declaration
+   * block is empty, the shape of an attribute a Content Security Policy blocked.
+   */
+  gate: "blocked-inline-styles";
+}
+
+/**
+ * Fallbacks `index.ts` imports dynamically behind a document check, so a page
+ * that does not need one never fetches it. Vendored with the core runtime by a
+ * CLI that knows the gate; an older CLI ignores the list.
+ */
+export const CORE_FALLBACKS: RuntimeFallback[] = [
+  { file: "base/csp.js", requires: ["base/declarations.js"], gate: "blocked-inline-styles" },
 ];
 
 /** Every tag form in the kit; the generator excludes them from no-base emissions. */

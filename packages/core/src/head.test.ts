@@ -111,6 +111,21 @@ describe("buildHead", () => {
     expect(head).not.toContain("polyfill");
   });
 
+  it("puts a nonce on the two inline scripts only", () => {
+    for (const head of [
+      buildHead({ nonce: "r4nd0m" }),
+      buildHead({ nonce: "r4nd0m", primitives: ["card"] }),
+      buildHead({ nonce: "r4nd0m", cdn: { version: "0.6.2" } }),
+      buildHead({ nonce: "r4nd0m", cdn: { version: "0.6.2", primitives: ["card"] } }),
+    ]) {
+      expect(head).toContain(`<script type="importmap" nonce="r4nd0m">`);
+      expect(head).toContain(`<script nonce="r4nd0m">`);
+      expect(head.match(/nonce=/g)).toHaveLength(2);
+    }
+    expect(buildHead()).not.toContain("nonce");
+    expect(buildHead({ nonce: 'a"b' })).toContain('nonce="a&quot;b"');
+  });
+
   it("honors fontDisplay and theme switches", () => {
     const head = buildHead({ fontDisplay: "optional" });
     expect(head).toContain("display=optional");

@@ -26,6 +26,13 @@ describe("toMarkdown", () => {
     expect(toMarkdown('{% callout type="tip" %}\nx\n{% /callout %}')).toContain("> **Tip**");
   });
 
+  it("expands the install tag to the command and what it adds", () => {
+    const md = toMarkdown('{% install primitive="button" /%}');
+    expect(md).toContain("```bash\npnpm dlx zazz-ui add button\n```");
+    expect(md).toContain("Also adds `fields`, `kbd`, which it depends on.");
+    expect(toMarkdown('{% install primitive="kbd" /%}')).not.toContain("Also adds");
+  });
+
   it("expands attribute and hook tables for a primitive", () => {
     const md = toMarkdown(
       '{% attributes primitive="button" /%}\n\n{% hooks primitive="button" /%}',
