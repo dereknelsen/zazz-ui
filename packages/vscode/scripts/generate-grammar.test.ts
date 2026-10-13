@@ -1,11 +1,19 @@
 /**
  * @fileoverview The injection grammar: committed file is fresh, and its
- * patterns scope utility names, tiers, prefixes, hooks, and identities.
+ * patterns scope utility names, tiers, prefixes, hooks, and identities. The
+ * Razor grammar rebuilds the attribute scopes inside Razor code blocks.
  */
 
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vite-plus/test";
-import { GRAMMAR_PATH, generateGrammar, grammarText } from "./generate-grammar.ts";
+import {
+  GRAMMAR_PATH,
+  RAZOR_GRAMMAR_PATH,
+  generateGrammar,
+  generateRazorGrammar,
+  grammarText,
+  razorGrammarText,
+} from "./generate-grammar.ts";
 
 interface Pattern {
   match: string;
@@ -63,5 +71,44 @@ describe("injection grammar", () => {
     const identities = repository.identities!.patterns;
     expect(scopes(`"card group"`, identities)).toEqual({ card: "support.class.zazz.identity" });
     expect(scopes(`"nope"`, identities)).toEqual({});
+  });
+});
+
+interface AttributeRule {
+  name: string;
+  begin: string;
+  patterns: { include: string }[];
+}
+
+describe("razor injection grammar", () => {
+  const rules = (generateRazorGrammar() as { patterns: AttributeRule[] }).patterns;
+  const rule = (name: string) => rules.find((r) => r.name === name)!;
+  const opens = (r: AttributeRule, text: string) => new RegExp(r.begin).test(text);
+
+  it("matches the committed file", () => {
+    expect(readFileSync(RAZOR_GRAMMAR_PATH, "utf8")).toBe(razorGrammarText());
+  });
+
+  it("opens a style attribute but not C# or a longer name", () => {
+    const style = rule("meta.attribute.style.html");
+    expect(opens(style, `<li style="`)).toBe(true);
+    expect(opens(style, `<li\n  style='`)).toBe(true);
+    expect(opens(style, `var style = "x";`)).toBe(false);
+    expect(opens(style, `<li mystyle="`)).toBe(false);
+  });
+
+  it("opens data-ui but not a longer data- name", () => {
+    const dataUi = rule("meta.attribute.data-x.data-ui.html");
+    expect(opens(dataUi, `<span data-ui="`)).toBe(true);
+    expect(opens(dataUi, `<span data-ui-x="`)).toBe(false);
+  });
+
+  it("reuses the main grammar's patterns", () => {
+    expect(rule("meta.attribute.style.html").patterns[0]).toEqual({
+      include: "zazz.injection#style",
+    });
+    expect(rule("meta.attribute.data-x.data-ui.html").patterns[0]).toEqual({
+      include: "zazz.injection#identities",
+    });
   });
 });
