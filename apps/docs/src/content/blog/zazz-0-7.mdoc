@@ -1,0 +1,62 @@
+---
+title: "Zazz 0.7 alpha"
+description: "Zazz 0.7 alpha adds anchor positioning utilities and moves tier-only utilities into a new cascade layer, so they stop wiping a primitive's own styles."
+date: 2026-10-13
+draft: false
+tags: ["release"]
+---
+
+**Zazz 0.7 alpha adds three anchor positioning utilities, and changes where a tier written without its base sits in the cascade. That second change alters the layer order, so this is a breaking release.**
+
+## Anchor positioning utilities
+
+I've been building editor chrome with Zazz: block toolbars, inline menus, handles that follow you around a document. All of it needs [CSS anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning), and until now that meant plain CSS.
+
+0.7 adds [`--anchor-name`, `--position-anchor`, and `--position-area`](/api/utilities/layout/). All three take states and breakpoints, so an anchor can move as you interact with the page. Here is a toolbar that follows whichever paragraph you hover:
+
+```html
+<p style="--anchor-name--hover: --block">First paragraph</p>
+<p style="--anchor-name--hover: --block">Second paragraph</p>
+
+<div style="--position: absolute; --position-anchor: --block; --position-area: block-start span-inline-end">
+  …
+</div>
+```
+
+Only the hovered paragraph has the name `--block`, so the toolbar sits above it and moves when you hover another one. When nothing is hovered there is no anchor, and the toolbar falls back to its normal position, so hide it in that case. `--position-area` takes the same keywords as the CSS property. For finer placement, write `anchor()` in plain CSS; the inset utilities only take numbers and lengths.
+
+## A new `defaults` layer
+
+Some utilities work without a base value. `--px--md: 8` on its own pads an element from `md` up and leaves it unpadded below. To do that, the kit writes the utility's natural value below the breakpoint, `0` in the case of padding.
+
+That rule lived in `ui.utilities`, above every primitive, so it had to skip the primitives by name. The list of exceptions was kept by hand and it had gaps. A tier on its own wiped the resting padding or background of popovers, menu popovers, tooltip content, `kbd`, checkboxes, and switches. Generating a complete list fixed that, but it added 2.5 KB to every page.
+
+0.7 moves those rules into a new [cascade layer](/api/foundations/layers/), `defaults`, and lets the layer order decide:
+
+```css
+@layer variables, reset, defaults, vendors, legacy, ui, overrides;
+```
+
+It sits above `reset`, so on a plain element a tier still beats the reset's zeroing. Everything else sits above it. When a primitive, a vendor stylesheet, or your legacy CSS sets the same property, that value stays. Where a primitive reads the utility itself, the tier still applies: `--px--md: 8` on a button changes the button's padding from `md` up.
+
+A few cases:
+
+- `--opacity--hover: .8` on its own now works on a card or a button, since neither sets opacity at rest.
+- `--bg--md` on its own leaves a popover's background alone. To change it, write the base too: `--bg: …; --bg--md: …`.
+- A longhand tier next to its shorthand works. `--p: 4; --px--md: 1` keeps the padding at 4 below `md`, where the inline padding used to drop to 0.
+- With a base, tiers behave as before, and the base still beats everything except your `overrides` layer.
+
+The utilities layer is 21.6 KB with Brotli, 0.2 KB more than 0.6 with the anchor utilities included.
+
+To migrate, add `defaults` after `reset` if your project declares its own `@layer` order. `npx zazz-ui update` brings the new `_layers.css` and `_defaults.css`. [ADR-0017](https://github.com/dereknelsen/zazz-ui/blob/main/docs/adr/0017-defaults-layer-for-tier-only-utilities.md) records the reasoning and the options I turned down.
+
+## The audit knows where a tier works
+
+[`<ui-debug>`](/api/primitives/debug/), the [VS Code extension, and the ESLint plugin](/docs/tooling/editor-and-linting/) warn when a tier has no base. They used to rely on lists kept by hand, the same lists that had gaps. Now the generator reads the kit's stylesheets and records which elements set or read each utility, and the warning appears where a tier on its own changes nothing. That covers ring and shadow tiers too, which were never checked before: `--ring--md` on its own does nothing on a card, which draws its own `box-shadow`.
+
+## Other changes
+
+- `--flex: 1; --shrink: 0` did nothing, because `--flex` came later in the stylesheet. It works now.
+- The VS Code extension highlights Zazz `style` and `data-ui` attributes inside Razor code blocks (`@foreach`, `@if`, `@{ }`), where the built-in Razor grammar left them unscoped.
+
+The [changelog](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/CHANGELOG.md) lists every change with its migration.
