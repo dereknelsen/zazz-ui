@@ -1,6 +1,15 @@
 <!-- ACME storefront: a sample brand on the kit. The theme inputs below restyle
-     the primitives; the page itself is primitives + utilities. -->
+     the primitives; the page itself is primitives + utilities.
+
+     How to read this file: every styling decision is one of four channels
+     (identity, preset, slot, utility); see
+     https://zazz.sh/docs/concepts/core-concepts/. The comments point at the
+     page that explains each idea the first time it appears. -->
 <style>
+  <!-- Theming: redefine tokens in the `variables` layer and every primitive
+       follows. Tokens: https://zazz.sh/api/foundations/tokens/ · The layer
+       order: https://zazz.sh/api/foundations/layers/ · The theming guide:
+       https://zazz.sh/docs/theming/customization/ -->
   @layer variables {
     :root {
       /* type: one grotesk for everything, lighter headings */
@@ -11,9 +20,11 @@
       --tracking-h2: -0.01em;
       --tracking-h3: -0.01em;
 
+      /* one multiplier scales every --radius-* token */
       /* square corners throughout */
       --radius-multiplier: 0;
 
+      /* palette scales are --color-<name>-50…1117; roles such as --color-background read them */
       /* achromatic neutrals (the kit default carries a violet cast) */
       --color-neutral-50: oklch(0.985 0 0);
       --color-neutral-100: oklch(0.955 0 0);
@@ -42,6 +53,8 @@
       --color-secondary: var(--color-secondary-400);
       --color-secondary-foreground: var(--color-black);
 
+      /* --ui-<primitive>-<utility> hooks theme a primitive while it keeps its states;
+         the shared --ui-field-* family sizes every control at once */
       /* chunky, wide buttons and fields */
       --ui-field-h: calc(var(--spacing) * 13);
       --ui-button-px: calc(var(--spacing) * 11);
@@ -51,11 +64,15 @@
   }
 </style>
 
-<!-- Light-only sample brand: pin the scheme for the page -->
+<!-- Light-only sample brand: pin the scheme for the page. `theme-light` is a
+     switch, an on/off token in data-ui: https://zazz.sh/api/switches/ -->
 <div data-ui="theme-light" style="--bg: var(--color-background)">
   <!-- ================================================================== -->
   <!-- Hero: header overlaid on an autoplaying carousel                  -->
   <!-- ================================================================== -->
+  <!-- A utility is a custom property in style (`--position`, `--inset`, `--z`):
+       https://zazz.sh/api/utilities/ · Position, inset, and z:
+       https://zazz.sh/api/utilities/layout/ -->
   <div
     style="
       --position: absolute;
@@ -65,6 +82,8 @@
       --z: 2;
     "
   >
+    <!-- `group` lets descendants react to the header's hover with
+         `--group-<utility>--hover`: https://zazz.sh/api/modifiers/group/ -->
     <header
       data-ui="group"
       style="
@@ -76,7 +95,14 @@
         --pointer-events: auto;
       "
     >
-      <!-- the stuck state reaches the sticky header's descendants, not the header itself -->
+      <!-- The sticky header is a scroll-state container; `--<utility>--stuck`
+           applies to its descendants while it is stuck, never to the header
+           itself: https://zazz.sh/api/modifiers/stuck/
+           Breakpoint tiers (`--bg--md`) read the nearest container:
+           https://zazz.sh/api/modifiers/responsive/ · State tiers
+           (`--shadow--hover`): https://zazz.sh/api/modifiers/states/
+           <ui-layout> is the band grid that caps and centers content:
+           https://zazz.sh/api/primitives/layout/ -->
       <ui-layout
         style="
           --bg: var(--color-background);
@@ -99,6 +125,9 @@
             --w: 100%;
           "
         >
+          <!-- `text-2xl` is a typography role; one utility then overrides one
+               property of it: https://zazz.sh/api/foundations/typography/ and
+               https://zazz.sh/api/utilities/typography/ -->
           <a
             href="/"
             data-ui="text-2xl"
@@ -116,6 +145,8 @@
             >ACME</a
           >
 
+          <!-- Mobile first: hidden, then shown from the md breakpoint (48rem).
+               Thresholds: https://zazz.sh/api/foundations/breakpoints/ -->
           <nav
             aria-label="Main"
             style="
@@ -133,6 +164,8 @@
                 --group-text--hover: var(--color-foreground);
               "
             >
+              <!-- Links can be buttons: `data-ui="button"` is the identity, the
+                   variant is a preset: https://zazz.sh/api/primitives/button/ -->
               <li>
                 <a
                   href="#pieces"
@@ -193,6 +226,11 @@
               --group-text--hover: var(--color-foreground);
             "
           >
+            <!-- Command palette: a <dialog> opened by an Invoker Command
+                 (`command="show-modal"`), searched by the kit's script.
+                 https://zazz.sh/api/primitives/command/ · Dialogs and invokers:
+                 https://zazz.sh/api/primitives/dialog/ · Hotkeys:
+                 https://zazz.sh/api/javascript/hotkeys/ -->
             <ui-command data-command-hotkey="mod+k">
               <button
                 type="button"
@@ -466,6 +504,7 @@
                 <p data-command-slot="empty" style="--text: var(--color-muted-foreground)">
                   Nothing found.
                 </p>
+                <!-- Key hints: https://zazz.sh/api/primitives/kbd/ -->
                 <footer data-command-slot="footer">
                   <span
                     ><ui-kbd-group><kbd>↑</kbd><kbd>↓</kbd></ui-kbd-group> navigate</span
@@ -475,6 +514,10 @@
                 </footer>
               </dialog>
             </ui-command>
+            <!-- Account menu: a native popover anchored to its button, with
+                 arrow-key navigation from the script. Menu:
+                 https://zazz.sh/api/primitives/menu/ · Placement presets
+                 (`data-popover-side`, `-align`): https://zazz.sh/api/primitives/popover/ -->
             <ui-menu>
               <button
                 type="button"
@@ -557,6 +600,7 @@
                 </menu>
               </div>
             </ui-menu>
+            <!-- Phone only: `--display--md: none` hides it from md up -->
             <button
               data-ui="button"
               data-button-size="icon"
@@ -612,6 +656,9 @@
     </header>
   </div>
 
+  <!-- data-ui takes several switches at once: `pile` stacks children in one
+       grid cell, `isolate` starts a stacking context, `group` feeds the arrow
+       buttons' hover tiers: https://zazz.sh/api/switches/ -->
   <div data-ui="pile isolate group">
     <div
       style="
@@ -626,6 +673,8 @@
         --z: 1;
       "
     >
+      <!-- A gradient is a type (`--bg-linear`) plus `--bg-stops`; the shade
+           tokens are black at an alpha: https://zazz.sh/api/utilities/backgrounds/ -->
       <div
         style="
           --position: absolute;
@@ -636,6 +685,9 @@
           --z: 2;
         "
       ></div>
+      <!-- Carousel on Embla; `data-carousel-*` attributes configure it and
+           `data-carousel-slot` names its parts:
+           https://zazz.sh/api/primitives/carousel/ -->
       <ui-carousel
         data-carousel-loop="true"
         data-carousel-plugins="autoplay"
@@ -648,6 +700,7 @@
           --z: 1;
         "
       >
+        <!-- `sr-only`: visible to assistive tech only (a switch) -->
         <h1 data-ui="sr-only">ACME furniture</h1>
         <div data-carousel-slot="viewport" style="--size: 100%">
           <div data-carousel-slot="container" style="--size: 100%">
@@ -758,6 +811,8 @@
           </div>
         </div>
 
+        <!-- `--opacity--hover` is the button's own state, `--group-opacity--hover`
+             the whole hero's: https://zazz.sh/api/modifiers/group/ -->
         <button
           type="button"
           data-ui="button"
@@ -820,6 +875,8 @@
     </div>
   </div>
 
+  <!-- Mobile menu: a full-screen dialog, two identities on one element
+       (`dialog mobile-menu`): https://zazz.sh/api/primitives/mobile-menu/ -->
   <dialog
     id="site-menu"
     data-ui="dialog mobile-menu"
@@ -936,8 +993,15 @@
     <!-- ================================================================ -->
     <!-- Loft edit: muted copy panel beside a photo                       -->
     <!-- ================================================================ -->
+    <!-- `--py: 24` is 24 steps on the spacing scale, never a raw length:
+         https://zazz.sh/api/utilities/spacing/ · `data-layout-size` picks the
+         band width: https://zazz.sh/api/primitives/layout/ -->
     <section id="loft" aria-labelledby="loft-edit" style="--py: 24">
       <ui-layout data-layout-size="lg">
+        <!-- Scroll-driven entrance (`data-reveal`); `data-reveal-each` below
+             staggers children: https://zazz.sh/api/primitives/reveal/
+             Grid and flex utilities (`--grid-cols--md: 2`, `flex-col`):
+             https://zazz.sh/api/utilities/flexbox-grid/ -->
         <div
           data-reveal="slide-up"
           style="
@@ -1030,6 +1094,12 @@
             --gap: 16;
           "
         >
+          <!-- Each tile is its own `group`. On the image: `--max-w: 56` is a scale
+               number and `14rem` a length, both valid
+               (https://zazz.sh/api/utilities/sizing/); `--aspect` keeps the
+               ratio (https://zazz.sh/api/utilities/layout/); the hover scale and
+               its transition: https://zazz.sh/api/utilities/transforms/ and
+               https://zazz.sh/api/utilities/transitions/ -->
           <li>
             <a
               href="#"
@@ -1161,6 +1231,10 @@
     <!-- ================================================================ -->
     <!-- Lookbooks + seating: full-bleed photo / dark panel pairs         -->
     <!-- ================================================================ -->
+    <!-- `bleed` is the edge-to-edge band. The dark panel pins its scheme with
+         the `theme-dark` switch on a subtree, so the color roles inside it
+         swap and the light button opts back out with `theme-light`:
+         https://zazz.sh/docs/theming/customization/ -->
     <ui-layout data-layout-size="bleed">
       <section
         id="lookbooks"
@@ -1196,6 +1270,8 @@
         >
           <h2 id="lookbooks-title" data-ui="text-h3" style="--font-weight: 300">Lookbooks</h2>
 
+          <!-- `prose` styles the rich text inside it:
+               https://zazz.sh/api/primitives/prose/ -->
           <div data-ui="prose">
             <p>
               Page through a finished room before you order a single piece. Every lookbook is a
@@ -1225,6 +1301,7 @@
         --grid-cols--md: 2;
       "
     >
+      <!-- `--order--md` flips the photo to the right from md up -->
       <img
         src="https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?auto=format&fit=crop&w=1400&q=80"
         width="700"
@@ -1264,6 +1341,11 @@
     <!-- ================================================================ -->
     <!-- Lines: wordmark, blurb, call to action                           -->
     <!-- ================================================================ -->
+    <!-- No card primitive here: a plain list item with `--border: 1` and
+         `--shadow: xs` (a shadow token by name). Borders:
+         https://zazz.sh/api/utilities/borders/ · Effects:
+         https://zazz.sh/api/utilities/effects/ · `--gap: var(--gutters)` reuses
+         the layout's gutter token. -->
     <section id="lines" aria-labelledby="lines-title" style="--py: 24">
       <ui-layout>
         <h2
@@ -1411,6 +1493,8 @@
     <!-- ================================================================ -->
     <!-- About: wordmark beside a short statement                         -->
     <!-- ================================================================ -->
+    <!-- `divide-x` draws a border between direct children (a switch);
+         `--max-w: 40ch` is a length, so it passes through as written. -->
     <section aria-labelledby="about-title" style="--py: 24">
       <ui-layout data-layout-size="md">
         <div
@@ -1460,6 +1544,8 @@
   <!-- ================================================================== -->
   <!-- Footer: link columns, newsletter, social, legal bar               -->
   <!-- ================================================================== -->
+  <!-- Plain links take `--text` and `--text--hover` directly; `--col-span: 2`
+       spans the newsletter across two columns. -->
   <footer style="--bg: var(--color-muted)">
     <ui-layout style="--py: 8">
       <div
@@ -1629,6 +1715,10 @@
           >
             The seasonal note
           </h2>
+          <!-- Hooks set on a subtree: every field inside reads `--ui-field-bg`
+               and keeps its own focus and error states (a utility would
+               flatten them): https://zazz.sh/docs/theming/customization/
+               Input: https://zazz.sh/api/primitives/input/ -->
           <form
             action="#"
             aria-labelledby="footer-notes"
@@ -1770,6 +1860,7 @@
       </div>
     </ui-layout>
 
+    <!-- Legal bar: `full` band (gutters only) in a dark subtree -->
     <div data-ui="theme-dark" style="--bg: var(--color-neutral-1117)">
       <ui-layout data-layout-size="full">
         <div

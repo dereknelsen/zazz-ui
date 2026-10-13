@@ -1,5 +1,25 @@
 # Zazz
 
+> [!WARNING]
+> Author's note: Zazz is still in an early alpha stage. While it is publicly available I hesitate to call it "beta" since much of the syntax and DX tools are in flux. That said, Zazz UI is being adopted by projects right now and is in a usable state. I welcome any and all feedback and plan to open Zazz up to contributions down the road. Be sure to check the changelogs for breaking changes even between minor version bumps.
+
+## Roadmap to 1.0.0
+
+For Zazz UI to hit 1.0.0 and be considered stable, `if()` css conditionals must become widely adopted by browsers. We are getting close! This will _significantly_ simplify much of the implementation that currently relies on `@property` types for the style utilities. `if()` and `@functions` will reduce the number of tradeoffs between features and file size and likely improve performance.
+
+> [!NOTE]
+> Author's note: I want to be transparent upfront about the use of LLMs in this project. While the concept of Zazz and the initial implementation were all developed by hand, LLMs have proven to be invaluable in two specific ways:
+>
+> First, the docs are 99% LLM generated. This is not the long-term goal. Personally, I prefer a human touch for written content as I have come to appreciate the unique and personal voice of individuals in contrast to the uncanny valley of LLM writing. That said, this is a one-man project at the moment and LLMs have taken the burden of keeping the docs current until I (or someone else) can rework them.
+>
+> Second, most of the code used to test and output the Zazz UI builds are generated from the concepts and code I originally developed by hand. I mention this to (hopefully) assure you that I actually know how Zazz works.
+>
+> As they say on X/Twitter, "Trust me bro."
+>
+> — Derek
+
+## Introduction
+
 Monorepo for the Zazz Design Framework: a UI kit for plain HTML, built on modern web standards. Markup carries every styling decision as an identity (`data-ui="button"`), a preset (`data-button-variant="primary"`), or a style utility (`style="--px: 6"`); design tokens, cascade layers, and a few light-DOM custom elements sit underneath. No build step, no class names.
 
 **Status: 0.6 alpha.** The markup contract can change in any minor release before 1.0, and 0.5 and later are not compatible with 0.4. Breaking changes are flagged in [`packages/core/CHANGELOG.md`](packages/core/CHANGELOG.md) with migration notes.
