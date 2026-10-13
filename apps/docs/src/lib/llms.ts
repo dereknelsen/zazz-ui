@@ -255,7 +255,7 @@ export function llmsIndex(pages: PageForLlm[], siteUrl: string): string {
     "",
     'Read `AUTHORING.md` (ships in `@zazz-ui/core`) before writing markup. Copy a primitive\'s anatomy from its API page; never reconstruct one from memory. Never use 0.4 syntax (`class="ui-button"`, `data-variant`, utility classes).',
     "",
-    `Full text of every page: ${siteUrl}/llms-full.txt`,
+    `Full text of every docs and API page: ${siteUrl}/llms-full.txt`,
     "",
   ];
   for (const [section, items] of groups) {

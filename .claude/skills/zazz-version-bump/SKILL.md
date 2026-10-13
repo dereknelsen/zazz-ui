@@ -30,12 +30,27 @@ Versioning and changelog rules live in their sources of truth — restate neithe
 
 5. **Update the agent skills** to match the new changelog entry: `.claude/skills/zazz*` (the `zazz` skill and its `references/`, `zazz-new-design-style`, the `zazz-figma-*` pair, `zazz-legacy-baseline`). For every entry, find what an agent would now get wrong: a renamed or removed attribute, token, or hook (search the skills for the old name; the hit count must be zero), a new slot or required attribute (add it to `references/components.md`), a new utility (`references/tokens.md`). If the release touched `_reset.css`, re-check `zazz-legacy-baseline/RESET-GROUPS.md` and move its "reflects Zazz X.Y.Z" label. Done when no skill names anything the release renamed or removed, and every new markup requirement appears in the skills.
 
-6. **Audit the Markdown docs** for content the release made wrong, and for stale version references. List the files with `find . -name '*.md' -not -path '*/node_modules/*' -not -path '*/dist/*' -not -path './.git/*' -not -path '*/.astro/*'`; skip `CHANGELOG.md` and `docs/adr/` (history), and the deliberate "don't write 0.4 syntax" examples. The ones that drift: the root, core, CLI, and vscode `README.md`s, `CONTEXT.md`, `SPEC.md` (its title and status line), `packages/core/AUTHORING.md`, the two `CONVENTIONS.*.md`, and the Copilot files under `.github/`.
+6. **Audit the Markdown docs and the docs site** for content the release made wrong, and for stale version references. List the files with `find . -name '*.md' -not -path '*/node_modules/*' -not -path '*/dist/*' -not -path './.git/*' -not -path '*/.astro/*'`; skip `CHANGELOG.md` and `docs/adr/` (history), and the deliberate "don't write 0.4 syntax" examples. The ones that drift: the root, core, CLI, and vscode `README.md`s, `CONTEXT.md`, `SPEC.md` (its title and status line), `packages/core/AUTHORING.md`, the two `CONVENTIONS.*.md`, and the Copilot files under `.github/`.
    - **Content:** for every changelog entry, search for the old name or value (breakpoint widths, renamed attributes and hooks, example output such as inlay hints). Check every relative file path still exists, and every `vp run <task>` against the `scripts` in the matching `package.json` (the root has no `generate`, `fmt`, or `lint`).
    - **Versions:** status lines (`0.N alpha`), "works with core 0.1 through 0.N" in the CLI README, and version-labelled titles. Write "0.5 and later" for the markup syntax, not a single minor, so the next release doesn't stale it again.
    - Commands a README tells people to run must work: run them. A bare `vp test` at the repo root fails; `vp run -r test` is the per-package form.
 
    Done when every hit is fixed or deliberately historical. The npm package pages show each README as of its last publish, so a CLI README fix waits for the next CLI release; don't cut one for docs alone.
+   - **Docs site (`.mdoc`).** The site's pages repeat what the Markdown files say, and the 0.6 releases left three of them stale after the `.md` sweep: a `ch` breakpoint summary in `concepts/core-concepts.mdoc`, a "0.5 is an alpha" status line on the docs home, and "Zazz 0.5 markup" in `ai/llm-resources.mdoc`. Run the same searches over `apps/docs/src/content/docs` and `apps/docs/src/content/api`, plus the hand-written text in `apps/docs/src/components` and `apps/docs/src/lib/llms.ts`:
+
+     ```bash
+     grep -rnE '<old name>|<old value>|Zazz 0\.[0-9]|0\.[0-9] (is an )?alpha' \
+       --include='*.mdoc' --include='*.astro' --include='*.ts' \
+       apps/docs/src/content/docs apps/docs/src/content/api apps/docs/src/components apps/docs/src/lib
+     ```
+
+     The API tables, token tables, and examples are generated from the kit, so a stale value there means the generator or the kit is wrong, not the page. Leave `apps/docs/src/content/blog/` alone: a post describes the kit on the day it shipped. Blog posts are kept out of `llms-full.txt` for that reason.
+
+     After the step 11 push, search the live `llms-full.txt` for the same old names. It is what assistants read, so a hit there is the one that matters most:
+
+     ```bash
+     curl -sL "https://zazz.sh/llms-full.txt?t=$(date +%s)" | grep -nE '<old name>|<old value>'
+     ```
 
 7. **Check the manifest contract** if primitives, dependencies, or import order changed: `CSS_CASCADE_ORDER` and the `PRIMITIVES` dependency entries in `packages/core/src/manifest.ts` must mirror `index.css` (`manifest.test.ts` and `head.test.ts` enforce this). If the manifest's _shape_ changed (not just data), bump `MANIFEST_VERSION` — it gates CLI compatibility.
 
