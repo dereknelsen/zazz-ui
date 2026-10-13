@@ -85,8 +85,29 @@
     --_position: var(--position);
     position: var(--_position-resolved);
   }
-  :where(:is([style*="--position:"], [style*="--position--"], [style*="--group-position--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    position: var(--_position-resolved, static);
+
+  :where([style*="--anchor-name:"], [style*="--anchor-name--"], [style*="--group-anchor-name--"]) {
+    --_anchor-name-resolved: var(--_anchor-name-starting, var(--_anchor-name-disabled, var(--_anchor-name-active, var(--_anchor-name-focus-visible, var(--_anchor-name-focus-within, var(--_anchor-name-hover, var(--_anchor-name-checked, var(--_anchor-name-current, var(--_anchor-name-open, var(--_anchor-name-g-disabled, var(--_anchor-name-g-active, var(--_anchor-name-g-focus-visible, var(--_anchor-name-g-focus-within, var(--_anchor-name-g-hover, var(--_anchor-name-g-checked, var(--_anchor-name-g-current, var(--_anchor-name-g-open, var(--_anchor-name-stuck, var(--_anchor-name-2xl, var(--_anchor-name-xl, var(--_anchor-name-lg, var(--_anchor-name-md, var(--_anchor-name-sm, var(--_anchor-name))))))))))))))))))))))));
+  }
+  :where([style*="--anchor-name:"]) {
+    --_anchor-name: var(--anchor-name);
+    anchor-name: var(--_anchor-name-resolved);
+  }
+
+  :where([style*="--position-anchor:"], [style*="--position-anchor--"], [style*="--group-position-anchor--"]) {
+    --_position-anchor-resolved: var(--_position-anchor-starting, var(--_position-anchor-disabled, var(--_position-anchor-active, var(--_position-anchor-focus-visible, var(--_position-anchor-focus-within, var(--_position-anchor-hover, var(--_position-anchor-checked, var(--_position-anchor-current, var(--_position-anchor-open, var(--_position-anchor-g-disabled, var(--_position-anchor-g-active, var(--_position-anchor-g-focus-visible, var(--_position-anchor-g-focus-within, var(--_position-anchor-g-hover, var(--_position-anchor-g-checked, var(--_position-anchor-g-current, var(--_position-anchor-g-open, var(--_position-anchor-stuck, var(--_position-anchor-2xl, var(--_position-anchor-xl, var(--_position-anchor-lg, var(--_position-anchor-md, var(--_position-anchor-sm, var(--_position-anchor))))))))))))))))))))))));
+  }
+  :where([style*="--position-anchor:"]) {
+    --_position-anchor: var(--position-anchor);
+    position-anchor: var(--_position-anchor-resolved);
+  }
+
+  :where([style*="--position-area:"], [style*="--position-area--"], [style*="--group-position-area--"]) {
+    --_position-area-resolved: var(--_position-area-starting, var(--_position-area-disabled, var(--_position-area-active, var(--_position-area-focus-visible, var(--_position-area-focus-within, var(--_position-area-hover, var(--_position-area-checked, var(--_position-area-current, var(--_position-area-open, var(--_position-area-g-disabled, var(--_position-area-g-active, var(--_position-area-g-focus-visible, var(--_position-area-g-focus-within, var(--_position-area-g-hover, var(--_position-area-g-checked, var(--_position-area-g-current, var(--_position-area-g-open, var(--_position-area-stuck, var(--_position-area-2xl, var(--_position-area-xl, var(--_position-area-lg, var(--_position-area-md, var(--_position-area-sm, var(--_position-area))))))))))))))))))))))));
+  }
+  :where([style*="--position-area:"]) {
+    --_position-area: var(--position-area);
+    position-area: var(--_position-area-resolved);
   }
 
   :where([style*="--flex-wrap:"], [style*="--flex-wrap--"]) {
@@ -96,20 +117,6 @@
     --_flex-wrap: var(--flex-wrap);
     flex-wrap: var(--_flex-wrap-resolved);
   }
-  :where(:is([style*="--flex-wrap:"], [style*="--flex-wrap--"], [style*="--group-flex-wrap--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    flex-wrap: var(--_flex-wrap-resolved, nowrap);
-  }
-
-  :where([style*="--shrink:"], [style*="--shrink--"]) {
-    --_shrink-resolved: var(--_shrink-2xl, var(--_shrink-xl, var(--_shrink-lg, var(--_shrink-md, var(--_shrink-sm, var(--_shrink))))));
-  }
-  :where([style*="--shrink:"]) {
-    --_shrink: var(--shrink);
-    flex-shrink: var(--_shrink-resolved);
-  }
-  :where(:is([style*="--shrink:"], [style*="--shrink--"], [style*="--group-shrink--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    flex-shrink: var(--_shrink-resolved, 1);
-  }
 
   :where([style*="--grid-flow:"], [style*="--grid-flow--"]) {
     --_grid-flow-resolved: var(--_grid-flow-2xl, var(--_grid-flow-xl, var(--_grid-flow-lg, var(--_grid-flow-md, var(--_grid-flow-sm, var(--_grid-flow))))));
@@ -117,9 +124,6 @@
   :where([style*="--grid-flow:"]) {
     --_grid-flow: var(--grid-flow);
     grid-auto-flow: var(--_grid-flow-resolved);
-  }
-  :where(:is([style*="--grid-flow:"], [style*="--grid-flow--"], [style*="--group-grid-flow--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    grid-auto-flow: var(--_grid-flow-resolved, row);
   }
 
   :where([style*="--auto-cols:"], [style*="--auto-cols--"]) {
@@ -129,9 +133,6 @@
     --_auto-cols: var(--auto-cols);
     grid-auto-columns: var(--_auto-cols-resolved);
   }
-  :where(:is([style*="--auto-cols:"], [style*="--auto-cols--"], [style*="--group-auto-cols--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    grid-auto-columns: var(--_auto-cols-resolved, auto);
-  }
 
   :where([style*="--auto-rows:"], [style*="--auto-rows--"]) {
     --_auto-rows-resolved: var(--_auto-rows-2xl, var(--_auto-rows-xl, var(--_auto-rows-lg, var(--_auto-rows-md, var(--_auto-rows-sm, var(--_auto-rows))))));
@@ -139,9 +140,6 @@
   :where([style*="--auto-rows:"]) {
     --_auto-rows: var(--auto-rows);
     grid-auto-rows: var(--_auto-rows-resolved);
-  }
-  :where(:is([style*="--auto-rows:"], [style*="--auto-rows--"], [style*="--group-auto-rows--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    grid-auto-rows: var(--_auto-rows-resolved, auto);
   }
 
   :where([style*="--items:"], [style*="--items--"]) {
@@ -151,9 +149,6 @@
     --_items: var(--items);
     align-items: var(--_items-resolved);
   }
-  :where(:is([style*="--items:"], [style*="--items--"], [style*="--group-items--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    align-items: var(--_items-resolved, normal);
-  }
 
   :where([style*="--justify:"], [style*="--justify--"]) {
     --_justify-resolved: var(--_justify-2xl, var(--_justify-xl, var(--_justify-lg, var(--_justify-md, var(--_justify-sm, var(--_justify))))));
@@ -161,9 +156,6 @@
   :where([style*="--justify:"]) {
     --_justify: var(--justify);
     justify-content: var(--_justify-resolved);
-  }
-  :where(:is([style*="--justify:"], [style*="--justify--"], [style*="--group-justify--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    justify-content: var(--_justify-resolved, normal);
   }
 
   :where([style*="--place-items:"], [style*="--place-items--"]) {
@@ -173,9 +165,6 @@
     --_place-items: var(--place-items);
     place-items: var(--_place-items-resolved);
   }
-  :where(:is([style*="--place-items:"], [style*="--place-items--"], [style*="--group-place-items--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    place-items: var(--_place-items-resolved, normal);
-  }
 
   :where([style*="--place-content:"], [style*="--place-content--"]) {
     --_place-content-resolved: var(--_place-content-2xl, var(--_place-content-xl, var(--_place-content-lg, var(--_place-content-md, var(--_place-content-sm, var(--_place-content))))));
@@ -183,9 +172,6 @@
   :where([style*="--place-content:"]) {
     --_place-content: var(--place-content);
     place-content: var(--_place-content-resolved);
-  }
-  :where(:is([style*="--place-content:"], [style*="--place-content--"], [style*="--group-place-content--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    place-content: var(--_place-content-resolved, normal);
   }
 
   :where([style*="--self:"], [style*="--self--"]) {
@@ -195,9 +181,6 @@
     --_self: var(--self);
     align-self: var(--_self-resolved);
   }
-  :where(:is([style*="--self:"], [style*="--self--"], [style*="--group-self--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    align-self: var(--_self-resolved, auto);
-  }
 
   :where([style*="--flex:"], [style*="--flex--"]) {
     --_flex-resolved: var(--_flex-2xl, var(--_flex-xl, var(--_flex-lg, var(--_flex-md, var(--_flex-sm, var(--_flex))))));
@@ -206,8 +189,38 @@
     --_flex: var(--flex);
     flex: var(--_flex-resolved);
   }
-  :where(:is([style*="--flex:"], [style*="--flex--"], [style*="--group-flex--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    flex: var(--_flex-resolved, 0 1 auto);
+
+  :where([style*="--shrink:"], [style*="--shrink--"]) {
+    --_shrink-resolved: var(--_shrink-2xl, var(--_shrink-xl, var(--_shrink-lg, var(--_shrink-md, var(--_shrink-sm, var(--_shrink))))));
+  }
+  :where([style*="--shrink:"]) {
+    --_shrink: var(--shrink);
+    flex-shrink: var(--_shrink-resolved);
+  }
+  @container (width >= 40rem) {
+    :where(:is([style*="--flex:"])[style*="--shrink--sm:"]) {
+      flex-shrink: var(--_shrink-resolved);
+    }
+  }
+  @container (width >= 48rem) {
+    :where(:is([style*="--flex:"])[style*="--shrink--md:"]) {
+      flex-shrink: var(--_shrink-resolved);
+    }
+  }
+  @container (width >= 64rem) {
+    :where(:is([style*="--flex:"])[style*="--shrink--lg:"]) {
+      flex-shrink: var(--_shrink-resolved);
+    }
+  }
+  @container (width >= 80rem) {
+    :where(:is([style*="--flex:"])[style*="--shrink--xl:"]) {
+      flex-shrink: var(--_shrink-resolved);
+    }
+  }
+  @container (width >= 96rem) {
+    :where(:is([style*="--flex:"])[style*="--shrink--2xl:"]) {
+      flex-shrink: var(--_shrink-resolved);
+    }
   }
 
   :where([style*="--basis:"], [style*="--basis--"]) {
@@ -217,8 +230,30 @@
     --_basis: var(--basis);
     flex-basis: var(--_basis-resolved);
   }
-  :where(:is([style*="--basis:"], [style*="--basis--"], [style*="--group-basis--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    flex-basis: var(--_basis-resolved, auto);
+  @container (width >= 40rem) {
+    :where(:is([style*="--flex:"])[style*="--basis--sm:"]) {
+      flex-basis: var(--_basis-resolved);
+    }
+  }
+  @container (width >= 48rem) {
+    :where(:is([style*="--flex:"])[style*="--basis--md:"]) {
+      flex-basis: var(--_basis-resolved);
+    }
+  }
+  @container (width >= 64rem) {
+    :where(:is([style*="--flex:"])[style*="--basis--lg:"]) {
+      flex-basis: var(--_basis-resolved);
+    }
+  }
+  @container (width >= 80rem) {
+    :where(:is([style*="--flex:"])[style*="--basis--xl:"]) {
+      flex-basis: var(--_basis-resolved);
+    }
+  }
+  @container (width >= 96rem) {
+    :where(:is([style*="--flex:"])[style*="--basis--2xl:"]) {
+      flex-basis: var(--_basis-resolved);
+    }
   }
 
   :where([style*="--order:"], [style*="--order--"]) {
@@ -228,9 +263,6 @@
     --_order: var(--order);
     order: var(--_order-resolved);
   }
-  :where(:is([style*="--order:"], [style*="--order--"], [style*="--group-order--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    order: var(--_order-resolved, 0);
-  }
 
   :where([style*="--band:"], [style*="--band--"]) {
     --_band-resolved: var(--_band-2xl, var(--_band-xl, var(--_band-lg, var(--_band-md, var(--_band-sm, var(--_band))))));
@@ -238,9 +270,6 @@
   :where([style*="--band:"]) {
     --_band: var(--band);
     grid-column: var(--_band-resolved);
-  }
-  :where(:is([style*="--band:"], [style*="--band--"], [style*="--group-band--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"], ui-layout > *, [data-ui~="layout"] > *)) {
-    grid-column: var(--_band-resolved, auto);
   }
 
   :where([style*="--col-span:"], [style*="--col-span--"]) {
@@ -250,9 +279,6 @@
     --_col-span: var(--col-span);
     grid-column: span var(--_col-span-resolved) / span var(--_col-span-resolved);
   }
-  :where(:is([style*="--col-span:"], [style*="--col-span--"], [style*="--group-col-span--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"], ui-layout > *, [data-ui~="layout"] > *)) {
-    grid-column: span var(--_col-span-resolved, 1) / span var(--_col-span-resolved, 1);
-  }
 
   :where([style*="--col-start:"], [style*="--col-start--"]) {
     --_col-start-resolved: var(--_col-start-2xl, var(--_col-start-xl, var(--_col-start-lg, var(--_col-start-md, var(--_col-start-sm, var(--_col-start))))));
@@ -260,9 +286,6 @@
   :where([style*="--col-start:"]) {
     --_col-start: var(--col-start);
     grid-column-start: var(--_col-start-resolved);
-  }
-  :where(:is([style*="--col-start:"], [style*="--col-start--"], [style*="--group-col-start--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"], ui-layout > *, [data-ui~="layout"] > *)) {
-    grid-column-start: var(--_col-start-resolved, auto);
   }
 
   :where([style*="--col-end:"], [style*="--col-end--"]) {
@@ -272,9 +295,6 @@
     --_col-end: var(--col-end);
     grid-column-end: var(--_col-end-resolved);
   }
-  :where(:is([style*="--col-end:"], [style*="--col-end--"], [style*="--group-col-end--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"], ui-layout > *, [data-ui~="layout"] > *)) {
-    grid-column-end: var(--_col-end-resolved, auto);
-  }
 
   :where([style*="--row-span:"], [style*="--row-span--"]) {
     --_row-span-resolved: var(--_row-span-2xl, var(--_row-span-xl, var(--_row-span-lg, var(--_row-span-md, var(--_row-span-sm, var(--_row-span))))));
@@ -282,9 +302,6 @@
   :where([style*="--row-span:"]) {
     --_row-span: var(--row-span);
     grid-row: span var(--_row-span-resolved) / span var(--_row-span-resolved);
-  }
-  :where(:is([style*="--row-span:"], [style*="--row-span--"], [style*="--group-row-span--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    grid-row: span var(--_row-span-resolved, 1) / span var(--_row-span-resolved, 1);
   }
 
   :where([style*="--row-start:"], [style*="--row-start--"]) {
@@ -294,9 +311,6 @@
     --_row-start: var(--row-start);
     grid-row-start: var(--_row-start-resolved);
   }
-  :where(:is([style*="--row-start:"], [style*="--row-start--"], [style*="--group-row-start--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    grid-row-start: var(--_row-start-resolved, auto);
-  }
 
   :where([style*="--row-end:"], [style*="--row-end--"]) {
     --_row-end-resolved: var(--_row-end-2xl, var(--_row-end-xl, var(--_row-end-lg, var(--_row-end-md, var(--_row-end-sm, var(--_row-end))))));
@@ -304,9 +318,6 @@
   :where([style*="--row-end:"]) {
     --_row-end: var(--row-end);
     grid-row-end: var(--_row-end-resolved);
-  }
-  :where(:is([style*="--row-end:"], [style*="--row-end--"], [style*="--group-row-end--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    grid-row-end: var(--_row-end-resolved, auto);
   }
 
 }

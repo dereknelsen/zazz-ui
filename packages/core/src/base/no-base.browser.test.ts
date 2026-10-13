@@ -2,13 +2,15 @@
 
 /**
  * @fileoverview The no-base allowlist for padding and `--bg`: a tier alone
- * works on a plain element (the reset zeroes padding and paints nothing), does
- * nothing on a primitive, and keeps the base's padding or paint on the elements
- * the base styles (a list's indent, inline code).
+ * works on a plain element (the reset zeroes padding and paints nothing),
+ * reaches a primitive only through the primitive's own chain, and keeps the
+ * base's padding or paint on the elements the base styles (a list's indent,
+ * inline code).
  */
 
 import { describe, expect, it } from "vite-plus/test";
-import { atWidth, mount, scale, style, useKit } from "../../test/browser.ts";
+import { KIT_SELECTORS } from "./kit-styling.ts";
+import { at, atWidth, below, mount, scale, style, useKit } from "../../test/browser.ts";
 
 /** True for a fully transparent color in either serialization (`rgba(0, 0, 0, 0)`, `oklch(… / 0)`). */
 const transparent = (color: string) => /\/ 0\)$|^rgba\(0, 0, 0, 0\)$|^transparent$/.test(color);
@@ -58,5 +60,116 @@ describe("no-base padding and background", () => {
     expect(style(tier, "padding-inline-start")).toBe(style(plain, "padding-inline-start"));
     expect(style(plain, "padding-inline-start")).not.toBe("0px");
     expect(transparent(style(root.querySelector("[data-code]")!, "background-color"))).toBe(false);
+  });
+
+  it.each([
+    [
+      "a popover",
+      `<div popover data-ref></div><div popover data-tier style="--p--md: 2; --bg--md: red"></div>`,
+    ],
+    [
+      "a menu popover",
+      `<div data-ui="menu"><div popover data-menu-slot="popover" data-ref></div><div popover data-menu-slot="popover" data-tier style="--p--md: 2; --bg--md: red"></div></div>`,
+    ],
+    ["a kbd", `<kbd data-ref>K</kbd><kbd data-tier style="--px--md: 2; --bg--md: red">K</kbd>`],
+    [
+      "a checkbox",
+      `<input type="checkbox" data-ref><input type="checkbox" data-tier style="--bg--md: red">`,
+    ],
+  ])("on %s a tier alone keeps the element's own padding and paint at rest", async (_, html) => {
+    const root = mount(`<div>${html}</div>`);
+    const ref = root.querySelector("[data-ref]")!;
+    const tier = root.querySelector("[data-tier]")!;
+    await atWidth(below("md"));
+    for (const property of ["padding-inline-start", "background-color"]) {
+      expect(style(tier, property), property).toBe(style(ref, property));
+    }
+  });
+
+  it("on a part that sets the property without reading it, a tier needs a base", async () => {
+    // a popover paints var(--color-popover) without reading --bg
+    const root = mount(
+      `<div><div popover data-ref></div><div popover data-alone style="--bg--md: red"></div><div popover data-based style="--bg: red; --bg--md: blue"></div><i data-blue style="--bg: blue"></i></div>`,
+    );
+    await atWidth(at("md"));
+    const color = (selector: string) => style(root.querySelector(selector)!, "background-color");
+    expect(color("[data-alone]")).toBe(color("[data-ref]"));
+    expect(color("[data-based]")).toBe(color("[data-blue]"));
+  });
+
+  it("on kbd, which reads --px, a tier alone applies", async () => {
+    const root = mount(`<div><kbd data-tier style="--px--md: 2">K</kbd></div>`);
+    await atWidth(at("md"));
+    const tier = root.querySelector("[data-tier]")!;
+    expect(parseFloat(style(tier, "padding-inline-start"))).toBeCloseTo(scale(2), 1);
+  });
+
+  it("on tooltip content, which reads --text, a tier alone applies", async () => {
+    const root = mount(
+      `<div data-ui="tooltip"><button>i</button><div data-tooltip-slot="content" style="--text--md: red"></div><i data-red style="--text: red"></i></div>`,
+    );
+    await atWidth(at("md"));
+    expect(style(root.querySelector("[data-tooltip-slot]")!, "color")).toBe(
+      style(root.querySelector("[data-red]")!, "color"),
+    );
+  });
+
+  it("every selector the generator derives from the kit's stylesheets is valid CSS", () => {
+    for (const selector of KIT_SELECTORS) {
+      expect(CSS.supports(`selector(${selector})`), selector).toBe(true);
+    }
+  });
+
+  it("a longhand tier beside its shorthand's base applies, and the shorthand holds below", async () => {
+    const root = mount(`<div>
+      <div data-p style="--p: 4; --px--md: 1; --pt--md: 0"></div>
+      <div data-gap style="--display: flex; --gap: 4; --gap-x--md: 8"></div>
+      <div style="--display: flex"><i data-flex style="--flex: 1; --basis--md: 50%"></i></div>
+    </div>`);
+    const p = root.querySelector("[data-p]")!;
+    const gap = root.querySelector("[data-gap]")!;
+    const flex = root.querySelector("[data-flex]")!;
+    await atWidth(below("md"));
+    expect(parseFloat(style(p, "padding-inline-start"))).toBeCloseTo(scale(4), 1);
+    expect(parseFloat(style(p, "padding-block-start"))).toBeCloseTo(scale(4), 1);
+    expect(parseFloat(style(gap, "column-gap"))).toBeCloseTo(scale(4), 1);
+    await atWidth(at("md"));
+    expect(parseFloat(style(p, "padding-inline-start"))).toBeCloseTo(scale(1), 1);
+    expect(parseFloat(style(p, "padding-block-start"))).toBe(0);
+    expect(parseFloat(style(p, "padding-block-end"))).toBeCloseTo(scale(4), 1);
+    expect(parseFloat(style(gap, "column-gap"))).toBeCloseTo(scale(8), 1);
+    expect(parseFloat(style(gap, "row-gap"))).toBeCloseTo(scale(4), 1);
+    expect(style(flex, "flex-basis")).toBe("50%");
+  });
+
+  it("a raw longhand beside --flex leaves the shorthand's part alone below the tier", async () => {
+    const root = mount(`<div style="display: flex">
+      <i data-basis style="--flex: 1; --basis--md: 50%"></i>
+      <i data-shrink style="--flex: none; --shrink--md: 1"></i>
+      <i data-based style="--flex: 1; --shrink: 0"></i>
+    </div>`);
+    const basis = root.querySelector("[data-basis]")!;
+    const shrink = root.querySelector("[data-shrink]")!;
+    await atWidth(below("md"));
+    expect(style(basis, "flex-basis")).toBe("0%");
+    expect(style(shrink, "flex-shrink")).toBe("0");
+    expect(style(root.querySelector("[data-based]")!, "flex-shrink")).toBe("0");
+    await atWidth(at("md"));
+    expect(style(shrink, "flex-shrink")).toBe("1");
+  });
+
+  it("keeps what the reset or the browser styles on purpose under a tier alone", async () => {
+    const root = mount(`<div>
+      <div style="display: flex"><hr data-hr style="--shrink--md: 1"></div>
+      <div style="text-align: center"><button data-button style="--text-align--md: end">b</button></div>
+      <dialog data-dialog style="--position--md: absolute">d</dialog>
+    </div>`);
+    const dialog = root.querySelector<HTMLDialogElement>("[data-dialog]")!;
+    dialog.showModal();
+    await atWidth(below("md"));
+    expect(style(root.querySelector("[data-hr]")!, "flex-shrink")).toBe("0");
+    expect(style(root.querySelector("[data-button]")!, "text-align")).toBe("center");
+    expect(style(dialog, "position")).toBe("fixed");
+    dialog.close();
   });
 });

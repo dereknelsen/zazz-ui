@@ -11,11 +11,6 @@
     --_p-num: var(--_p-resolved);
     padding: calc(var(--_p-len) + var(--_p-num) * var(--spacing));
   }
-  :where(:is([style*="--p:"], [style*="--p--"], [style*="--group-p--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"], [data-ui~="prose"] :is(ul, ol, dd, blockquote, cite), code, button, input, select, textarea, optgroup)) {
-    --_p-len: var(--_p-resolved, 0);
-    --_p-num: var(--_p-resolved, 0);
-    padding: calc(var(--_p-len) + var(--_p-num) * var(--spacing));
-  }
 
   :where([style*="--px:"], [style*="--px--"]) {
     --_px-resolved: var(--_px-2xl, var(--_px-xl, var(--_px-lg, var(--_px-md, var(--_px-sm, var(--_px))))));
@@ -26,9 +21,9 @@
     --_px-num: var(--_px-resolved);
     padding-inline: calc(var(--_px-len) + var(--_px-num) * var(--spacing));
   }
-  :where(:is([style*="--px:"], [style*="--px--"], [style*="--group-px--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"], [data-ui~="prose"] :is(ul, ol, dd, blockquote, cite), code, button, input, select, textarea, optgroup)) {
-    --_px-len: var(--_px-resolved, 0);
-    --_px-num: var(--_px-resolved, 0);
+  :where(:is([style*="--p:"]):is([style*="--px--"], [style*="--group-px--"])) {
+    --_px-len: var(--_px-resolved, var(--_p-resolved, 0));
+    --_px-num: var(--_px-resolved, var(--_p-resolved, 0));
     padding-inline: calc(var(--_px-len) + var(--_px-num) * var(--spacing));
   }
 
@@ -41,9 +36,9 @@
     --_py-num: var(--_py-resolved);
     padding-block: calc(var(--_py-len) + var(--_py-num) * var(--spacing));
   }
-  :where(:is([style*="--py:"], [style*="--py--"], [style*="--group-py--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"], [data-ui~="prose"] :is(ul, ol, dd, blockquote, cite), code, button, input, select, textarea, optgroup)) {
-    --_py-len: var(--_py-resolved, 0);
-    --_py-num: var(--_py-resolved, 0);
+  :where(:is([style*="--p:"]):is([style*="--py--"], [style*="--group-py--"])) {
+    --_py-len: var(--_py-resolved, var(--_p-resolved, 0));
+    --_py-num: var(--_py-resolved, var(--_p-resolved, 0));
     padding-block: calc(var(--_py-len) + var(--_py-num) * var(--spacing));
   }
 
@@ -56,9 +51,9 @@
     --_pt-num: var(--_pt-resolved);
     padding-block-start: calc(var(--_pt-len) + var(--_pt-num) * var(--spacing));
   }
-  :where(:is([style*="--pt:"], [style*="--pt--"], [style*="--group-pt--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"], [data-ui~="prose"] :is(ul, ol, dd, blockquote, cite), code, button, input, select, textarea, optgroup)) {
-    --_pt-len: var(--_pt-resolved, 0);
-    --_pt-num: var(--_pt-resolved, 0);
+  :where(:is([style*="--py:"], [style*="--p:"]):is([style*="--pt--"], [style*="--group-pt--"])) {
+    --_pt-len: var(--_pt-resolved, var(--_py-resolved, var(--_p-resolved, 0)));
+    --_pt-num: var(--_pt-resolved, var(--_py-resolved, var(--_p-resolved, 0)));
     padding-block-start: calc(var(--_pt-len) + var(--_pt-num) * var(--spacing));
   }
 
@@ -71,9 +66,9 @@
     --_pb-num: var(--_pb-resolved);
     padding-block-end: calc(var(--_pb-len) + var(--_pb-num) * var(--spacing));
   }
-  :where(:is([style*="--pb:"], [style*="--pb--"], [style*="--group-pb--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"], [data-ui~="prose"] :is(ul, ol, dd, blockquote, cite), code, button, input, select, textarea, optgroup)) {
-    --_pb-len: var(--_pb-resolved, 0);
-    --_pb-num: var(--_pb-resolved, 0);
+  :where(:is([style*="--py:"], [style*="--p:"]):is([style*="--pb--"], [style*="--group-pb--"])) {
+    --_pb-len: var(--_pb-resolved, var(--_py-resolved, var(--_p-resolved, 0)));
+    --_pb-num: var(--_pb-resolved, var(--_py-resolved, var(--_p-resolved, 0)));
     padding-block-end: calc(var(--_pb-len) + var(--_pb-num) * var(--spacing));
   }
 
@@ -86,9 +81,9 @@
     --_pl-num: var(--_pl-resolved);
     padding-inline-start: calc(var(--_pl-len) + var(--_pl-num) * var(--spacing));
   }
-  :where(:is([style*="--pl:"], [style*="--pl--"], [style*="--group-pl--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"], [data-ui~="prose"] :is(ul, ol, dd, blockquote, cite), code, button, input, select, textarea, optgroup)) {
-    --_pl-len: var(--_pl-resolved, 0);
-    --_pl-num: var(--_pl-resolved, 0);
+  :where(:is([style*="--px:"], [style*="--p:"]):is([style*="--pl--"], [style*="--group-pl--"])) {
+    --_pl-len: var(--_pl-resolved, var(--_px-resolved, var(--_p-resolved, 0)));
+    --_pl-num: var(--_pl-resolved, var(--_px-resolved, var(--_p-resolved, 0)));
     padding-inline-start: calc(var(--_pl-len) + var(--_pl-num) * var(--spacing));
   }
 
@@ -101,9 +96,9 @@
     --_pr-num: var(--_pr-resolved);
     padding-inline-end: calc(var(--_pr-len) + var(--_pr-num) * var(--spacing));
   }
-  :where(:is([style*="--pr:"], [style*="--pr--"], [style*="--group-pr--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"], [data-ui~="prose"] :is(ul, ol, dd, blockquote, cite), code, button, input, select, textarea, optgroup)) {
-    --_pr-len: var(--_pr-resolved, 0);
-    --_pr-num: var(--_pr-resolved, 0);
+  :where(:is([style*="--px:"], [style*="--p:"]):is([style*="--pr--"], [style*="--group-pr--"])) {
+    --_pr-len: var(--_pr-resolved, var(--_px-resolved, var(--_p-resolved, 0)));
+    --_pr-num: var(--_pr-resolved, var(--_px-resolved, var(--_p-resolved, 0)));
     padding-inline-end: calc(var(--_pr-len) + var(--_pr-num) * var(--spacing));
   }
 
@@ -116,11 +111,6 @@
     --_gap-num: var(--_gap-resolved);
     gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));
   }
-  :where(:is([style*="--gap:"], [style*="--gap--"], [style*="--group-gap--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    --_gap-len: var(--_gap-resolved, 0);
-    --_gap-num: var(--_gap-resolved, 0);
-    gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));
-  }
 
   :where([style*="--gap-x:"], [style*="--gap-x--"]) {
     --_gap-x-resolved: var(--_gap-x-2xl, var(--_gap-x-xl, var(--_gap-x-lg, var(--_gap-x-md, var(--_gap-x-sm, var(--_gap-x))))));
@@ -131,9 +121,9 @@
     --_gap-x-num: var(--_gap-x-resolved);
     column-gap: calc(var(--_gap-x-len) + var(--_gap-x-num) * var(--spacing));
   }
-  :where(:is([style*="--gap-x:"], [style*="--gap-x--"], [style*="--group-gap-x--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    --_gap-x-len: var(--_gap-x-resolved, 0);
-    --_gap-x-num: var(--_gap-x-resolved, 0);
+  :where(:is([style*="--gap:"]):is([style*="--gap-x--"], [style*="--group-gap-x--"])) {
+    --_gap-x-len: var(--_gap-x-resolved, var(--_gap-resolved, 0));
+    --_gap-x-num: var(--_gap-x-resolved, var(--_gap-resolved, 0));
     column-gap: calc(var(--_gap-x-len) + var(--_gap-x-num) * var(--spacing));
   }
 
@@ -146,9 +136,9 @@
     --_gap-y-num: var(--_gap-y-resolved);
     row-gap: calc(var(--_gap-y-len) + var(--_gap-y-num) * var(--spacing));
   }
-  :where(:is([style*="--gap-y:"], [style*="--gap-y--"], [style*="--group-gap-y--"]):not(ui-accordion, ui-autocomplete, ui-button-group, ui-carousel, ui-combobox, ui-command, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [data-ui~="accordion"], [data-ui~="alert-dialog"], [data-ui~="autocomplete"], [data-ui~="badge"], [data-ui~="button"], [data-ui~="button-group"], [data-ui~="callout"], [data-ui~="card"], [data-ui~="carousel"], [data-ui~="combobox"], [data-ui~="command"], [data-ui~="dialog"], [data-ui~="field"], [data-ui~="field-group"], [data-ui~="input"], [data-ui~="input-group"], [data-ui~="kbd-group"], [data-ui~="layout"], [data-ui~="lightbox"], [data-ui~="menu"], [data-ui~="meter"], [data-ui~="mobile-menu"], [data-ui~="multiselect"], [data-ui~="navigation-menu"], [data-ui~="otp"], [data-ui~="password-group"], [data-ui~="progress"], [data-ui~="radio"], [data-ui~="radio-group"], [data-ui~="scroll-fade"], [data-ui~="select"], [data-ui~="separator"], [data-ui~="table"], [data-ui~="tabs"], [data-ui~="textarea"], [data-ui~="toaster"], [data-ui~="toggle"], [data-ui~="toggle-group"], [data-ui~="tooltip"])) {
-    --_gap-y-len: var(--_gap-y-resolved, 0);
-    --_gap-y-num: var(--_gap-y-resolved, 0);
+  :where(:is([style*="--gap:"]):is([style*="--gap-y--"], [style*="--group-gap-y--"])) {
+    --_gap-y-len: var(--_gap-y-resolved, var(--_gap-resolved, 0));
+    --_gap-y-num: var(--_gap-y-resolved, var(--_gap-resolved, 0));
     row-gap: calc(var(--_gap-y-len) + var(--_gap-y-num) * var(--spacing));
   }
 

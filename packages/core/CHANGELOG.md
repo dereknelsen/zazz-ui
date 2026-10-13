@@ -1,5 +1,18 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.7.0 (2026-10-13)
+
+### base
+
+- **BREAKING:** the cascade order gains a `defaults` layer between `reset` and `vendors`: `@layer variables, reset, defaults, vendors, legacy, ui, overrides` (ADR-0017). It holds every utility rule gated on a tier alone (`--px--md: 8` with no `--px`), generated into the new `base/_defaults.css`. A primitive, vendor, or legacy rule that sets the property now beats a tier alone, so the element keeps its own value at rest; before, tier-only padding or paint wiped it on popovers, menu popovers, tooltip content, `kbd`, checkboxes, switches, and the combobox control. A tier alone still applies where the primitive reads the utility itself (a button's `--px` and `--bg`), and now also works on a primitive root that does not set the property (`--opacity--hover` on a card). On an element a primitive styles without reading the utility, write the base (`--bg--md` alone on a popover keeps the popover's paint). A longhand tier beside its shorthand's base (`--p: 4; --px--md: 1`) applies from the tier and keeps the shorthand's value below it; before, the longhand's rest value dropped to its literal (0 for padding). The utility table's `noBaseExclude` field is gone, and `--rounded`, `--overflow*`, and `--z`, which take no tiers, no longer list a no-base value. The generated layer is 21.6 KB with Brotli.
+- **Migration** for the `defaults` layer: if your project declares its own `@layer` order, add `defaults` after `reset`. `zazz-ui update` brings the new `_layers.css` and `_defaults.css`.
+- Fix: `--shrink` beside `--flex` (`--flex: 1; --shrink: 0`) did nothing, because `--flex`'s base came later in source. `--shrink` now follows it.
+- New utilities `--anchor-name` and `--position-anchor` set the anchor positioning properties, with state and breakpoint tiers (`--anchor-name--hover`, `--group-anchor-name--hover`, `--position-anchor--md`) for editor chrome that follows the hovered, focused, or current block. `--position-area` places the tethered element on its anchor's grid (`--position-area: block-start span-inline-end`), with the same tiers. All three work tier-only.
+
+### debug
+
+- The `tier-without-base` finding now reports where a tier alone does nothing: a no-base utility on an element whose primitive or base sets the property without reading it (`--bg--md` on a popover, `--p--md` on a button, which reads `--px`), a ring or shadow tier on an element whose primitive draws its own `box-shadow` (`--ring--md` on a card), and any other utility on an element no kit rule reads it on. A shorthand's base counts as the base for its longhand's tier (`--p: 4; --px--md: 1`). A tier the kit reads is not reported, outside the no-base allowlist too (`--text--hover` on a button, `--band--md` on a layout child). The editor and the ESLint plugin report the same findings. The data is generated from the kit's stylesheets into the new `base/kit-styling.js`, which `<ui-debug>` imports (the CLI vendors it with debug), and into the new `selectors`, `reads`, and `blocks` fields of `editor/zazz.lint-data.json`.
+
 ## 0.6.3 (2026-10-13)
 
 ### base

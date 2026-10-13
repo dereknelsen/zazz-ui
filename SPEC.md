@@ -1,6 +1,6 @@
 # Zazz spec: style utilities, `data-ui`, and the end of utility classes
 
-Status: revision 3.2, 2026-10-12. The contract shipped in 0.5.0 and holds through 0.6; 0.6.0 moved breakpoints to `rem`, made `--ring` a signed pixel width, and added `--focus-ring`, `--shadow-angle`, and the `theme-*` switches. Revision 3.1 (2026-09-28) followed the second validation pass; resolver variables were added during implementation. Decisions and rationale live in [ADR-0012](docs/adr/0012-props-replace-utility-classes.md) and [ADR-0013](docs/adr/0013-data-ui-markup-namespace.md), each with dated amendments; vocabulary lives in [CONTEXT.md](CONTEXT.md). This file is the mechanical contract, written so an agent can validate it without the conversation that produced it. No decisions are pending.
+Status: revision 3.3, 2026-10-13. The contract shipped in 0.5.0 and holds through 0.7; 0.6.0 moved breakpoints to `rem`, made `--ring` a signed pixel width, and added `--focus-ring`, `--shadow-angle`, and the `theme-*` switches; 0.7.0 moved the tier-only rules into `@layer defaults` ([ADR-0017](docs/adr/0017-defaults-layer-for-tier-only-utilities.md)) and added the anchor positioning utilities. Revision 3.1 (2026-09-28) followed the second validation pass; resolver variables were added during implementation. Decisions and rationale live in [ADR-0012](docs/adr/0012-props-replace-utility-classes.md) and [ADR-0013](docs/adr/0013-data-ui-markup-namespace.md), each with dated amendments; vocabulary lives in [CONTEXT.md](CONTEXT.md). This file is the mechanical contract, written so an agent can validate it without the conversation that produced it. No decisions are pending.
 
 ## How to validate this spec
 
@@ -50,7 +50,7 @@ Before and after, one element each:
 
 ## 3. Utilities architecture
 
-Three kinds of rules, all in `@layer ui.utilities`, all at zero specificity via `:where()`.
+Three kinds of rules, all at zero specificity via `:where()`. Rules gated on a base are in `@layer ui.utilities`; the tier-only rules (no-base emissions, below) are in `@layer defaults` (ADR-0017).
 
 **Registrations** (`src/base/_properties.css`, generated):
 
@@ -164,14 +164,15 @@ Precedence, highest first: own states (`disabled`, `active`, `focus-visible`, `f
 
 `[style*="--md:"]` matches `--w--md:` and `--p--md:` and nothing else (a custom `--accent-md:` contains `-md:` but not `--md:`). A false match, such as a consumer's `--x--md:`, only copies absent utilities and changes nothing.
 
-**No-base emissions**, for utilities whose CSS initial value is the natural value on a plain element. These are gated on any tier of the utility, end their chain in that initial value as a literal, and exclude primitives (which carry their own chain and set their own properties, such as a disabled button's opacity, §9). Primitives are every tag form plus every `data-ui` identity a primitive stylesheet selects (`[data-ui~="button"]`), read by the generator from `src/primitives/`; typography roles, switches (`group`, `pile`, `sr-only`), and `prose` are not primitives, so an element carrying only those gets the no-base rule:
+**No-base emissions**, for utilities with a natural value on a plain element: the value it shows with no utility at all. These are gated on any tier of the utility (not its base, which `ui.utilities` handles), end their chain in that initial value as a literal, and live in the generated `base/_defaults.css`, in `@layer defaults`. That layer sits above `reset`, so a tier alone beats the reset's universal zeroing, and below every component, vendor, and legacy layer, so any rule there that sets the property wins: the element keeps its own value at rest, and a tier alone applies only where that rule reads the utility's resolver (a button's `--px`, §9). Nothing excludes primitives by selector. The reset and the browser's own stylesheet sit below, so each rule skips the elements they style on purpose: a reset value that is not the utility's literal (inline code's padding, `flex-shrink: 0` on `hr`, `sub`'s `position: relative`), `inherit` on an inherited property (a button's `text-align`), and a short list of user-agent styling (a modal `dialog`'s `position`), all read or listed by the generator. A reset rule that writes the literal, `initial`, or `inherit` / `unset` on a property that does not inherit (`* { padding: 0 }`, a link's `text-decoration: inherit`) is what the layer exists to beat. A longhand tier beside its shorthand's base (`--p: 4; --px--md: 1`) has its own rule in `ui.utilities`, since the shorthand's base would beat the tier-only rule; a dual longhand falls back to the shorthand's value below the tier, and `--basis` / `--shrink` under `--flex` declare nothing below it.
 
 ```css
-:where(:is([style*="--grid-cols:"], [style*="--grid-cols--"]):not(ui-layout, ui-carousel, /* … every tag form */ [data-ui~="button"], [data-ui~="card"] /* … every primitive identity, generated */)) {
-  grid-template-columns: repeat(
-    var(--_grid-cols-2xl, /* … */ var(--_grid-cols, 1)),
-    minmax(0, 1fr)
-  );
+@layer defaults {
+  :where(:is([style*="--px--"], [style*="--group-px--"]):not(code, kbd /* … generated */)) {
+    --_px-len: var(--_px-resolved, 0);
+    --_px-num: var(--_px-resolved, 0);
+    padding-inline: calc(var(--_px-len) + var(--_px-num) * var(--spacing));
+  }
 }
 ```
 
@@ -193,17 +194,19 @@ Precedence, highest first: own states (`disabled`, `active`, `focus-visible`, `f
 | `--bg`                                                     | `background-color` (through the `--bg-alpha` emission)           | `transparent`     |
 | `--text-align`                                             | `text-align`                                                     | `start`           |
 | `--text-wrap`                                              | `text-wrap`                                                      | `wrap`            |
+| `--text-decoration`                                        | `text-decoration-line`                                           | `none`            |
+| `--template-cols`, `--template-rows`                       | `grid-template-columns`, `grid-template-rows`                    | `none`            |
 | `--flex-wrap`                                              | `flex-wrap`                                                      | `nowrap`          |
 | `--shrink`                                                 | `flex-shrink`                                                    | `1`               |
 | `--opacity`                                                | `opacity`                                                        | `1`               |
 | `--scale`, `--translate`, `--rotate`                       | `scale`, `translate`, `rotate`                                   | `none`            |
-| `--rounded`                                                | `border-radius`                                                  | `0`               |
 | `--aspect`                                                 | `aspect-ratio`                                                   | `auto`            |
 | `--position`                                               | `position`                                                       | `static`          |
-| `--overflow`, `--overflow-x`, `--overflow-y`               | `overflow`, `overflow-x`, `overflow-y`                           | `visible`         |
-| `--z`                                                      | `z-index`                                                        | `auto`            |
+| `--anchor-name`                                            | `anchor-name`                                                    | `none`            |
+| `--position-anchor`                                        | `position-anchor`                                                | `normal`          |
+| `--position-area`                                          | `position-area`                                                  | `none`            |
 
-`--shadow` and the `--ring*` utilities need no row: every chain in their shared `box-shadow` composite already ends in a literal, so the composite is emitted a second time gated on any of their tiers (primitives excluded). The no-base gates also match the `--group-<utility>--<state>` form. The literal must be what the element shows with no utility at all, which is the reset's value, not CSS's initial: the reset zeroes padding and paints nothing, so `0` and `transparent` hold on a plain element, and the rule excludes the elements the base pads or paints (`noBaseExclude`: a prose list's indent, a quote's inset, inline code, form controls; `code` and `hr` for `--bg`). Margin, `--text`, and `--font-size` have no such literal, since the prose scope sets the margins between text blocks, the reset colors links, and the typography layer sizes headings; they keep the base requirement.
+`--shadow` and the `--ring*` utilities need no row: every chain in their shared `box-shadow` composite already ends in a literal, so the composite is emitted a second time, in `@layer defaults`, gated on any of their tiers. The no-base gates also match the `--group-<utility>--<state>` form. The literal must be what the element shows with no utility at all, which is the reset's value, not CSS's initial: the reset zeroes padding and paints nothing, so `0` and `transparent` hold on a plain element; wherever a primitive, or the reset with a value of its own, sets the property, that value stands. Margin, `--text`, and `--font-size` have no such literal, since the prose scope sets the margins between text blocks, the reset colors links, and the typography layer sizes headings; they keep the base requirement. `normal` is `position-anchor`'s current initial value; an engine on the older draft finds it invalid at computed-value time and uses its own initial, `auto`.
 
 So `--display: grid; --grid-cols--md: 3` on a `<div>` is one column below md and three above.
 
@@ -244,6 +247,7 @@ Modes: **dual** takes a scale number (× `--spacing`) or a `<length-percentage>`
 | Family           | Utilities                                                                                                                                                                                                                                                                                                                    | Mode                                                       | Tiers                                                     |
 | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | --------------------------------------------------------- |
 | Display and flow | `--display` (flex shorthands, §3a), `--position`, `--flex-wrap`, `--grid-flow`, `--auto-cols`, `--auto-rows`, `--items`, `--justify`, `--place-items`, `--place-content`, `--self`, `--flex`, `--shrink`, `--basis`, `--order`, `--band`, `--col-start`, `--col-end`, `--row-start`, `--row-end`; `--col-span`, `--row-span` | keyword / raw; span is integer → `span n / span n`         | breakpoints                                               |
+|                  | `--anchor-name`, `--position-anchor`, `--position-area`                                                                                                                                                                                                                                                                      | raw                                                        | states and breakpoints                                    |
 | Grid             | `--grid-cols`, `--grid-rows`                                                                                                                                                                                                                                                                                                 | integer → `repeat(n, minmax(0, 1fr))`, plus `subgrid` (§6) | breakpoints                                               |
 |                  | `--template-cols`, `--template-rows`                                                                                                                                                                                                                                                                                         | raw                                                        | breakpoints                                               |
 |                  | `--grid-fit`                                                                                                                                                                                                                                                                                                                 | length → `repeat(auto-fit, minmax(min(v, 100%), 1fr))`     | breakpoints                                               |
@@ -292,7 +296,7 @@ Dual mode cannot pass a keyword (`auto`, `fit-content`, `min-content`, `max-cont
 /* … one block per breakpoint, ascending */
 ```
 
-Gates are exact and per utility (the tier suffix sits between the utility and the colon), so `--overflow: auto` or another utility's keyword changes nothing. A no-base utility (`--grid-cols`) gates its tier rules on a base or a plain element, like its no-base rule. So `--w: 4; --w--md: auto`, `--w: auto; --w--md: 4`, `--grid-cols: 2; --grid-cols--md: subgrid`, and `--mx: auto; --max-w: 56` all work, and there is no rule for a user to learn. When `if()` lands on the support floor it replaces these rules with one branching emission per utility. The gates take the one spelling: a second substring per gate for the no-space form (`--w:auto`, what React and Vue serialize an object `style` to) measured 2026-10-13 at +383 substrings (1,249 to 1,632) and +20 % initial style on the claim-16 page (1.94 s to 2.33 s, 2,300 elements), so the audit reports the missing space instead (`whitespace-after-colon`).
+Gates are exact and per utility (the tier suffix sits between the utility and the colon), so `--overflow: auto` or another utility's keyword changes nothing. A no-base utility (`--grid-cols`) has its tier keyword rules twice, like its emission: gated on a base in `ui.utilities`, and on the tier alone in `@layer defaults`. So `--w: 4; --w--md: auto`, `--w: auto; --w--md: 4`, `--grid-cols: 2; --grid-cols--md: subgrid`, and `--mx: auto; --max-w: 56` all work, and there is no rule for a user to learn. When `if()` lands on the support floor it replaces these rules with one branching emission per utility. The gates take the one spelling: a second substring per gate for the no-space form (`--w:auto`, what React and Vue serialize an object `style` to) measured 2026-10-13 at +383 substrings (1,249 to 1,632) and +20 % initial style on the claim-16 page (1.94 s to 2.33 s, 2,300 elements), so the audit reports the missing space instead (`whitespace-after-colon`).
 
 Claim 16 gates this: per utility, 4 base substrings plus 7 tiers × (1 restore + 4 keyword) for sizing. Rejected: raw-only margin and sizing; switching a whole family (or a whole utility) to raw on a keyword, which broke numbers elsewhere.
 

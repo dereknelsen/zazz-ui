@@ -6,8 +6,10 @@
     :where([style*="--sm:"]) {
       --_display-sm: var(--display--sm);
       --_position-sm: var(--position--sm);
+      --_anchor-name-sm: var(--anchor-name--sm);
+      --_position-anchor-sm: var(--position-anchor--sm);
+      --_position-area-sm: var(--position-area--sm);
       --_flex-wrap-sm: var(--flex-wrap--sm);
-      --_shrink-sm: var(--shrink--sm);
       --_grid-flow-sm: var(--grid-flow--sm);
       --_auto-cols-sm: var(--auto-cols--sm);
       --_auto-rows-sm: var(--auto-rows--sm);
@@ -17,6 +19,7 @@
       --_place-content-sm: var(--place-content--sm);
       --_self-sm: var(--self--sm);
       --_flex-sm: var(--flex--sm);
+      --_shrink-sm: var(--shrink--sm);
       --_basis-sm: var(--basis--sm);
       --_order-sm: var(--order--sm);
       --_band-sm: var(--band--sm);

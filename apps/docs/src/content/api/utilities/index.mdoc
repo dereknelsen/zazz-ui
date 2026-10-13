@@ -27,8 +27,8 @@ The place this bites is a framework's object `style`: React and Vue serialize `{
 
 ## Rules that bite
 
-1. A tier needs a base unless the utility works tier-only (the tables say which): write `--text: currentColor; --text--hover: red`, not `--text--hover: red` alone. Padding and `--bg` work tier-only on a plain element (`--px--md: 8`, `--bg--hover: var(--color-muted)`), since the reset leaves it unpadded and unpainted. `--text`, margin, and `--font-size` do not, because the base sets a link's color, the margins between text blocks, and a heading's size, and a tier-only value would reset them at rest.
-2. Breakpoints reach layout and color; states reach color and effects. `--px--hover` does not exist.
+1. A tier needs a base unless the utility works tier-only (the tables say which): write `--text: currentColor; --text--hover: red`, not `--text--hover: red` alone. Padding and `--bg` work tier-only on a plain element (`--px--md: 8`, `--bg--hover: var(--color-muted)`), since the reset leaves it unpadded and unpainted; where a primitive pads or paints the element itself, its value wins unless it reads the utility. `--text`, margin, and `--font-size` do not, because the base sets a link's color, the margins between text blocks, and a heading's size, and a tier-only value would reset them at rest.
+2. Breakpoints reach layout and color; states reach color and effects. `--px--hover` does not exist. The anchor utilities (`--anchor-name`, `--position-anchor`, `--position-area`) take both.
 3. A utility on a primitive flattens its states: `--bg: red` on a button is red on hover too. Add the state tier, or set the hook (`--ui-button-bg`) instead.
 4. Breakpoints read the nearest inline-size container, not the window. See [breakpoints](/api/foundations/breakpoints/).
 

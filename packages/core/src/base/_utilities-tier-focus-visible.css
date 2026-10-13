@@ -3,6 +3,9 @@
 /* focus-visible tier setter */
 @layer ui.utilities {
   :where(:focus-visible[style*="--focus-visible:"]) {
+    --_anchor-name-focus-visible: var(--anchor-name--focus-visible);
+    --_position-anchor-focus-visible: var(--position-anchor--focus-visible);
+    --_position-area-focus-visible: var(--position-area--focus-visible);
     --_template-cols-focus-visible: var(--template-cols--focus-visible);
     --_template-rows-focus-visible: var(--template-rows--focus-visible);
     --_text-decoration-focus-visible: var(--text-decoration--focus-visible);
@@ -34,6 +37,9 @@
     --_transition-delay-focus-visible: var(--transition-delay--focus-visible);
   }
   :where([data-ui~="group"]:focus-visible [style*="--group-"]) {
+    --_anchor-name-g-focus-visible: var(--group-anchor-name--focus-visible);
+    --_position-anchor-g-focus-visible: var(--group-position-anchor--focus-visible);
+    --_position-area-g-focus-visible: var(--group-position-area--focus-visible);
     --_template-cols-g-focus-visible: var(--group-template-cols--focus-visible);
     --_template-rows-g-focus-visible: var(--group-template-rows--focus-visible);
     --_text-decoration-g-focus-visible: var(--group-text-decoration--focus-visible);

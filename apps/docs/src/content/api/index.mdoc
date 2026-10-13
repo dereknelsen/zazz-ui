@@ -19,6 +19,6 @@ The tables on these pages are generated at build time from `@zazz-ui/core`: the 
 
 ## Reading the tables
 
-A utility row names the CSS it writes, the value it takes (a scale number or length, any CSS value, a keyword, or an integer), and the tiers it accepts: breakpoints (`--px--md`), states (`--bg--hover`), or neither. "Works tier-only" means the utility has a natural default, so `--opacity--hover: .8` needs no `--opacity` base on a plain element.
+A utility row names the CSS it writes, the value it takes (a scale number or length, any CSS value, a keyword, or an integer), and the tiers it accepts: breakpoints (`--px--md`), states (`--bg--hover`), or neither. "Works tier-only" means the utility has a natural default, so `--opacity--hover: .8` needs no `--opacity` base on an element whose primitive does not set opacity itself.
 
 A primitive's attribute table lists its identity tokens, tag form, presets with their values, slots, the state tokens its script writes, and the configuration its script reads. Its hooks table lists every `--ui-<primitive>-*` custom property with the default the kit ships.

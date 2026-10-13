@@ -216,7 +216,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
   debug: {
     css: [],
     js: ["primitives/debug/audit-core.js", "primitives/debug/debug.js"],
-    base: ["base/utilities.js"],
+    base: ["base/kit-styling.js", "base/utilities.js"],
     primitives: [],
     bare: [],
     examples: [],
@@ -638,6 +638,7 @@ export const BASE_CSS_POST: string[] = [
   "base/_utilities-effects.css",
   "base/_utilities-box.css",
   "base/_utilities-pseudo.css",
+  "base/_defaults.css",
   "base/_switches.css",
 ];
 

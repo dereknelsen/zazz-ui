@@ -444,6 +444,83 @@ describe("navigation report", () => {
     ]);
   });
 
+  it("a tier alone needs a base where the utility's no-base rule excludes the element", () => {
+    expect(warningsFor(`<p style="--anchor-name--hover: --block"></p>`)).toEqual([]);
+    expect(
+      warningsFor(
+        `<div data-ui="menu"><button popovertarget="m" style="--anchor-name--hover: --block">Open</button></div>`,
+      ),
+    ).toEqual([expect.stringMatching(/--anchor-name--hover.*no base/)]);
+    expect(warningsFor(`<code style="--p--md: 2">x</code>`)).toEqual([
+      expect.stringMatching(/--p--md.*no base/),
+    ]);
+  });
+
+  it("a tier alone needs a base on a primitive root that does not read the utility", () => {
+    // a button reads --px and --bg through its own chain
+    expect(
+      warningsFor(
+        `<a data-ui="button" aria-current="page" style="--px--md: 0; --bg--current: gray">x</a>`,
+      ),
+    ).toEqual([]);
+    // --text has no no-base rule, but the button's chain reads it too
+    expect(warningsFor(`<button data-ui="button" style="--text--hover: red">x</button>`)).toEqual(
+      [],
+    );
+  });
+
+  it("a shorthand's base is the base for its longhand's tier", () => {
+    expect(warningsFor(`<div data-ui="card" style="--p: 4; --px--md: 6"></div>`)).toEqual([]);
+    expect(warningsFor(`<code style="--p: 1; --px--md: 2">x</code>`)).toEqual([]);
+  });
+
+  it("a rule that sets the property only in a state does not block a tier alone", () => {
+    expect(warningsFor(`<button data-ui="button" style="--opacity--hover: .4">x</button>`)).toEqual(
+      [],
+    );
+  });
+
+  it("a ring or shadow tier alone needs a base where the kit sets box-shadow without reading it", () => {
+    expect(warningsFor(`<p style="--ring--md: 3">x</p>`)).toEqual([]);
+    expect(warningsFor(`<button data-ui="button" style="--shadow--hover: md">x</button>`)).toEqual(
+      [],
+    );
+    expect(warningsFor(`<div data-ui="card" style="--ring--md: 3"></div>`)).toEqual([
+      expect.stringMatching(/--ring--md.*no base/),
+    ]);
+  });
+
+  it("a tier alone works on a part its primitive reads the utility on, and not otherwise", () => {
+    expect(
+      warningsFor(
+        `<div data-ui="tooltip"><button>i</button><div data-tooltip-slot="content" style="--text--md: red"></div></div>`,
+      ),
+    ).toEqual([]);
+    expect(warningsFor(`<kbd style="--text--md: red">K</kbd>`)).toEqual([]);
+    // a vertical field sets no align-items, so the tier-only rule applies
+    expect(warningsFor(`<div data-ui="field" style="--items--md: end"></div>`)).toEqual([]);
+    // a popover paints itself without reading --bg: its paint wins over a tier alone
+    expect(warningsFor(`<div popover style="--bg--md: red"></div>`)).toEqual([
+      expect.stringMatching(/--bg--md.*no base/),
+    ]);
+    expect(
+      warningsFor(`<div data-ui="layout"><p style="--band--md: layout-md"></p></div>`),
+    ).toEqual([]);
+    expect(warningsFor(`<div data-ui="layout"><p style="--col-span--md: 2"></p></div>`)).toEqual([
+      expect.stringMatching(/--col-span--md.*no base/),
+    ]);
+  });
+
+  it("a tier alone needs a base on a primitive root, and works on a typography role", () => {
+    expect(warningsFor(`<button data-ui="button" style="--p--md: 2">x</button>`)).toEqual([
+      expect.stringMatching(/--p--md.*no base/),
+    ]);
+    expect(warningsFor(`<ui-layout style="--gap--md: 4"></ui-layout>`)).toEqual([
+      expect.stringMatching(/--gap--md.*no base/),
+    ]);
+    expect(warningsFor(`<p data-ui="text-2xl" style="--opacity--hover: .8">x</p>`)).toEqual([]);
+  });
+
   it("knows the starting state: no base needed where the utility has a default, no group form", () => {
     expect(
       warningsFor(

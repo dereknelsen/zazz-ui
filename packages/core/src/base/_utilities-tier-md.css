@@ -6,8 +6,10 @@
     :where([style*="--md:"]) {
       --_display-md: var(--display--md);
       --_position-md: var(--position--md);
+      --_anchor-name-md: var(--anchor-name--md);
+      --_position-anchor-md: var(--position-anchor--md);
+      --_position-area-md: var(--position-area--md);
       --_flex-wrap-md: var(--flex-wrap--md);
-      --_shrink-md: var(--shrink--md);
       --_grid-flow-md: var(--grid-flow--md);
       --_auto-cols-md: var(--auto-cols--md);
       --_auto-rows-md: var(--auto-rows--md);
@@ -17,6 +19,7 @@
       --_place-content-md: var(--place-content--md);
       --_self-md: var(--self--md);
       --_flex-md: var(--flex--md);
+      --_shrink-md: var(--shrink--md);
       --_basis-md: var(--basis--md);
       --_order-md: var(--order--md);
       --_band-md: var(--band--md);

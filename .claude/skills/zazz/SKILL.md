@@ -48,9 +48,10 @@ Zazz markup has **no classes**. Every styling decision is one of four channels:
 
 Behind that:
 
-- **Cascade layers, not specificity.** `@layer variables, reset, vendors, legacy, ui, overrides`
+- **Cascade layers, not specificity.** `@layer variables, reset, defaults, vendors, legacy, ui, overrides`
   (`ui` nests `components, plugins, utilities`). Utilities live in `ui.utilities` at zero
-  specificity and beat component rules; typography roles sit in `reset`. Don't fight the
+  specificity and beat component rules; a tier written without its base lives in `defaults`,
+  so a primitive's own value beats it unless the primitive reads the utility; typography roles sit in `reset`. Don't fight the
   cascade with selector tricks.
 - **Hooks theme primitives.** Every primitive reads `--ui-<identity>-<utility>` hooks (inheriting,
   same modifier grammar). Prefer: preset → hook on a subtree → utility on the one element. A utility on

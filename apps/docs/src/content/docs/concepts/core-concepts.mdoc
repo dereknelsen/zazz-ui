@@ -54,7 +54,7 @@ The smallest primitive: a fixed rule set with no slots, no presets, and no value
 
 ## Layers
 
-The kit's CSS lives entirely inside cascade layers: `variables, reset, vendors, legacy, ui, overrides`. Later layers win regardless of specificity, so utilities beat primitives without `!important`, and anything you write in `overrides` beats the kit. An existing app's CSS imports into `legacy.*`, below the kit. See [cascade layers](/api/foundations/layers/).
+The kit's CSS lives entirely inside cascade layers: `variables, reset, defaults, vendors, legacy, ui, overrides`. Later layers win regardless of specificity, so utilities beat primitives without `!important`, and anything you write in `overrides` beats the kit. A tier written without its base (`--px--md: 8` alone) is the exception: it sits in `defaults`, so a primitive that sets the property keeps its own value. An existing app's CSS imports into `legacy.*`, below the kit. See [cascade layers](/api/foundations/layers/).
 
 ## Breakpoints read containers
 

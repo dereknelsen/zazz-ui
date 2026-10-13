@@ -272,6 +272,7 @@ describe("buildHead cdn mode", () => {
       "_utilities-effects.css",
       "_utilities-box.css",
       "_utilities-pseudo.css",
+      "_defaults.css",
       "_switches.css",
     ]);
   });

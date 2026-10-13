@@ -3,6 +3,9 @@
 /* current tier setter */
 @layer ui.utilities {
   :where(:is([aria-current]:not([aria-current="false"]))[style*="--current:"]) {
+    --_anchor-name-current: var(--anchor-name--current);
+    --_position-anchor-current: var(--position-anchor--current);
+    --_position-area-current: var(--position-area--current);
     --_template-cols-current: var(--template-cols--current);
     --_template-rows-current: var(--template-rows--current);
     --_text-decoration-current: var(--text-decoration--current);
@@ -34,6 +37,9 @@
     --_transition-delay-current: var(--transition-delay--current);
   }
   :where([data-ui~="group"]:is([aria-current]:not([aria-current="false"])) [style*="--group-"]) {
+    --_anchor-name-g-current: var(--group-anchor-name--current);
+    --_position-anchor-g-current: var(--group-position-anchor--current);
+    --_position-area-g-current: var(--group-position-area--current);
     --_template-cols-g-current: var(--group-template-cols--current);
     --_template-rows-g-current: var(--group-template-rows--current);
     --_text-decoration-g-current: var(--group-text-decoration--current);

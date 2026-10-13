@@ -118,6 +118,11 @@ sheet can cast up on mobile). A shadow utility never removes a primitive's focus
   shorthands that set the direction; no `--flex-direction`), `--flex-wrap`, `--flex`, `--shrink`,
   `--basis`, `--order`, `--items`, `--justify`, `--self`, and for grids `--place-items`, `--place-content`
   (alignment keywords only: `center`, `start`, `safe end`, `space-between`…).
+- **Anchors:** `--anchor-name` / `--position-anchor` (dashed idents) and `--position-area` take states
+  and breakpoints. Put `--anchor-name--hover: --block` on each block and this on the toolbar, which then
+  sits above the hovered block:
+  `--position: absolute; --position-anchor: --block; --position-area: block-start span-inline-end`. For finer placement write `anchor()` in plain CSS (the inset utilities do
+  not take it).
 - **Grid utilities (Tailwind's set):** `--grid-cols` / `--grid-rows` (integer → equal tracks, or
   `subgrid`; `none` is `--template-cols: none`), `--template-cols` / `--template-rows` (raw track list),
   `--grid-fit` (length → auto-fit columns), `--grid-flow`, `--auto-cols`, `--auto-rows`.

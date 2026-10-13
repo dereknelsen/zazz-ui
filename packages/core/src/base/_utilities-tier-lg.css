@@ -6,8 +6,10 @@
     :where([style*="--lg:"]) {
       --_display-lg: var(--display--lg);
       --_position-lg: var(--position--lg);
+      --_anchor-name-lg: var(--anchor-name--lg);
+      --_position-anchor-lg: var(--position-anchor--lg);
+      --_position-area-lg: var(--position-area--lg);
       --_flex-wrap-lg: var(--flex-wrap--lg);
-      --_shrink-lg: var(--shrink--lg);
       --_grid-flow-lg: var(--grid-flow--lg);
       --_auto-cols-lg: var(--auto-cols--lg);
       --_auto-rows-lg: var(--auto-rows--lg);
@@ -17,6 +19,7 @@
       --_place-content-lg: var(--place-content--lg);
       --_self-lg: var(--self--lg);
       --_flex-lg: var(--flex--lg);
+      --_shrink-lg: var(--shrink--lg);
       --_basis-lg: var(--basis--lg);
       --_order-lg: var(--order--lg);
       --_band-lg: var(--band--lg);

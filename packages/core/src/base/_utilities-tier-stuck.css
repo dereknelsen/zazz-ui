@@ -84,6 +84,9 @@
     }
   }
   :where([style*="--stuck:"]) {
+    --_anchor-name-stuck: var(--_stuck-on) var(--anchor-name--stuck);
+    --_position-anchor-stuck: var(--_stuck-on) var(--position-anchor--stuck);
+    --_position-area-stuck: var(--_stuck-on) var(--position-area--stuck);
     --_template-cols-stuck: var(--_stuck-on) var(--template-cols--stuck);
     --_template-rows-stuck: var(--_stuck-on) var(--template-rows--stuck);
     --_text-decoration-stuck: var(--_stuck-on) var(--text-decoration--stuck);

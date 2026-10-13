@@ -171,14 +171,10 @@ export interface Utility {
   inherits?: true;
   /**
    * No-base allowlist: the CSS initial value as a literal. A utility with
-   * `noBase` applies a tier on a plain element without a base value.
+   * `noBase` applies a tier without a base value wherever no kit rule sets its
+   * property (the tier-only rule is in `@layer defaults`, which they beat).
    */
   noBase?: string;
-  /**
-   * Extra selectors excluded from the no-base rule: elements whose
-   * placement chain a primitive owns, e.g. a layout's children for `--band`.
-   */
-  noBaseExclude?: readonly string[];
   /**
    * Keywords the typed emission (the dual pair, or an integer's `repeat()`)
    * cannot carry. A utility written with one of its keywords, at the base or
@@ -201,6 +197,37 @@ export interface Utility {
    */
   aliases?: Readonly<Record<string, string>>;
 }
+
+/**
+ * The utilities that compose into one `box-shadow` (ring and shadow): the
+ * composite's chains all end in a literal, so a tier alone works on them, like
+ * a no-base utility.
+ */
+export const BOX_SHADOW_COMPOSITE = [
+  "shadow",
+  "ring",
+  "ring-color",
+  "ring-offset",
+  "ring-offset-color",
+] as const;
+
+/**
+ * The shorthands whose base a longhand's tier overrides, nearest first: `--p: 4;
+ * --px--md: 1` pads 4 below md and 1 inline from md. A shorthand's base is a
+ * base for its longhands' tiers.
+ */
+export const SHORTHAND_OF: Readonly<Record<string, readonly string[]>> = {
+  px: ["p"],
+  py: ["p"],
+  pt: ["py", "p"],
+  pb: ["py", "p"],
+  pl: ["px", "p"],
+  pr: ["px", "p"],
+  "gap-x": ["gap"],
+  "gap-y": ["gap"],
+  basis: ["flex"],
+  shrink: ["flex"],
+};
 
 /** Gradient types: `--bg-<type>` emits `<type>-gradient(<prelude>, <--bg-stops>)`. */
 export const GRADIENT_TYPES = ["linear", "radial", "conic"] as const;
@@ -284,24 +311,6 @@ export const BORDER_SIDES = [
 /** The four sizing keywords. Margin takes only `auto`. */
 export const SIZING_KEYWORDS = ["auto", "fit-content", "min-content", "max-content"] as const;
 export const MARGIN_KEYWORDS = ["auto"] as const;
-/** A layout places its children; a tier-only column utility there keeps the band below the tier. */
-const LAYOUT_CHILDREN = ["ui-layout > *", '[data-ui~="layout"] > *'] as const;
-/**
- * Elements the reset or the prose scope pads (a prose list's indent, a quote's
- * inset, inline code, form controls): a tier-only padding utility there would
- * zero that padding below the tier, so they keep the base requirement.
- */
-const BASE_PADDED = [
-  '[data-ui~="prose"] :is(ul, ol, dd, blockquote, cite)',
-  "code",
-  "button",
-  "input",
-  "select",
-  "textarea",
-  "optgroup",
-] as const;
-/** Elements the reset paints: a tier-only `--bg` there would clear the paint below the tier. */
-const BASE_PAINTED = ["code", "hr"] as const;
 
 /**
  * Track-list keywords `--grid-cols` / `--grid-rows` take besides a count. `none`
@@ -323,6 +332,37 @@ export const UTILITIES: readonly Utility[] = [
     family: "flow",
     noBase: "static",
   },
+  // anchor positioning: states and breakpoints, so the hovered (or open, or
+  // current) element can claim the anchor a toolbar or popover is tethered to.
+  // `normal` is position-anchor's initial value. Engines on the older draft
+  // don't know it, so the declaration is invalid at computed-value time and
+  // falls back to their initial value, `auto`.
+  {
+    name: "anchor-name",
+    properties: ["anchor-name"],
+    mode: "raw",
+    family: "flow",
+    tiers: "both",
+    noBase: "none",
+  },
+  {
+    name: "position-anchor",
+    properties: ["position-anchor"],
+    mode: "raw",
+    family: "flow",
+    tiers: "both",
+    noBase: "normal",
+  },
+  // where the tethered element sits on its anchor's 3×3 grid (`block-start
+  // span-inline-end`); a popover keeps its own area under a tier alone
+  {
+    name: "position-area",
+    properties: ["position-area"],
+    mode: "raw",
+    family: "flow",
+    tiers: "both",
+    noBase: "none",
+  },
   {
     name: "flex-wrap",
     properties: ["flex-wrap"],
@@ -330,7 +370,6 @@ export const UTILITIES: readonly Utility[] = [
     family: "flow",
     noBase: "nowrap",
   },
-  { name: "shrink", properties: ["flex-shrink"], mode: "raw", family: "flow", noBase: "1" },
   {
     name: "grid-flow",
     properties: ["grid-auto-flow"],
@@ -377,6 +416,8 @@ export const UTILITIES: readonly Utility[] = [
   },
   { name: "self", properties: ["align-self"], mode: "keyword", family: "flow", noBase: "auto" },
   { name: "flex", properties: ["flex"], mode: "raw", family: "flow", noBase: "0 1 auto" },
+  // after --flex, so its base beats the shorthand's
+  { name: "shrink", properties: ["flex-shrink"], mode: "raw", family: "flow", noBase: "1" },
   { name: "basis", properties: ["flex-basis"], mode: "raw", family: "flow", noBase: "auto" },
   { name: "order", properties: ["order"], mode: "raw", family: "flow", noBase: "0" },
   // a layout child's band (`layout-md`); any grid-column value works
@@ -386,7 +427,6 @@ export const UTILITIES: readonly Utility[] = [
     mode: "raw",
     family: "flow",
     noBase: "auto",
-    noBaseExclude: LAYOUT_CHILDREN,
   },
   // Tailwind's col-span / col-start / col-end (and row-*): span is a count,
   // start and end are line numbers; start and end follow span so they combine
@@ -397,7 +437,6 @@ export const UTILITIES: readonly Utility[] = [
     family: "flow",
     emit: "span",
     noBase: "1",
-    noBaseExclude: LAYOUT_CHILDREN,
   },
   {
     name: "col-start",
@@ -405,7 +444,6 @@ export const UTILITIES: readonly Utility[] = [
     mode: "raw",
     family: "flow",
     noBase: "auto",
-    noBaseExclude: LAYOUT_CHILDREN,
   },
   {
     name: "col-end",
@@ -413,7 +451,6 @@ export const UTILITIES: readonly Utility[] = [
     mode: "raw",
     family: "flow",
     noBase: "auto",
-    noBaseExclude: LAYOUT_CHILDREN,
   },
   {
     name: "row-span",
@@ -476,7 +513,7 @@ export const UTILITIES: readonly Utility[] = [
     emit: "grid-fit",
   },
   // spacing: dual mode; padding and gap are on the no-base allowlist (the reset
-  // zeroes padding, so `--px--md: 8` alone pads from md), except where the base pads
+  // zeroes padding, so `--px--md: 8` alone pads from md)
   ...(
     [
       ["p", "padding"],
@@ -495,7 +532,6 @@ export const UTILITIES: readonly Utility[] = [
       mode: "dual",
       family: "spacing",
       noBase: "0",
-      noBaseExclude: BASE_PADDED,
     }),
   ),
   { name: "gap", properties: ["gap"], mode: "dual", family: "spacing", noBase: "0" },
@@ -693,7 +729,6 @@ export const UTILITIES: readonly Utility[] = [
     emit: "bg",
     pseudo: true,
     noBase: "transparent",
-    noBaseExclude: BASE_PAINTED,
   },
   { name: "bg-alpha", properties: [], mode: "raw", family: "color", emit: "none" },
   // gradients: the type utility carries the prelude (direction, shape, position,
@@ -857,22 +892,19 @@ export const UTILITIES: readonly Utility[] = [
     mode: "raw",
     family: "box",
     pseudo: true,
-    noBase: "0",
   },
-  { name: "overflow", properties: ["overflow"], mode: "keyword", family: "box", noBase: "visible" },
+  { name: "overflow", properties: ["overflow"], mode: "keyword", family: "box" },
   {
     name: "overflow-x",
     properties: ["overflow-x"],
     mode: "keyword",
     family: "box",
-    noBase: "visible",
   },
   {
     name: "overflow-y",
     properties: ["overflow-y"],
     mode: "keyword",
     family: "box",
-    noBase: "visible",
   },
   { name: "outline", pseudo: true, properties: ["outline"], mode: "raw", family: "box" },
   { name: "cursor", properties: ["cursor"], mode: "keyword", family: "box" },
@@ -884,7 +916,7 @@ export const UTILITIES: readonly Utility[] = [
     family: "box",
   },
   { name: "visibility", pseudo: true, properties: ["visibility"], mode: "keyword", family: "box" },
-  { name: "z", pseudo: true, properties: ["z-index"], mode: "raw", family: "box", noBase: "auto" },
+  { name: "z", pseudo: true, properties: ["z-index"], mode: "raw", family: "box" },
   { name: "object-fit", properties: ["object-fit"], mode: "keyword", family: "box" },
   { name: "object-position", properties: ["object-position"], mode: "raw", family: "box" },
   // the divider between children for the divide-x / divide-y switches: the

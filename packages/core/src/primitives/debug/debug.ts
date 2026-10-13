@@ -16,11 +16,13 @@
  * <ui-debug data-debug-domains="localhost, staging.example.com"></ui-debug>
  */
 
+import { KIT_SELECTORS, TIER_BLOCKS, TIER_READS } from "../../base/kit-styling.ts";
 import { ZazzElement, defineZazzElement } from "../../base/zazz-element.ts";
 import {
   auditNode,
   auditPersistence,
   carriesIdentity,
+  expandStyling,
   type AuditNode,
   type RuleId,
 } from "./audit-core.ts";
@@ -51,8 +53,12 @@ function auditNodeOf(el: Element): AuditNode {
       }
       return false;
     },
+    matches: (selector) => el.matches(selector),
   };
 }
+
+const READS = expandStyling(KIT_SELECTORS, TIER_READS);
+const BLOCKS = expandStyling(KIT_SELECTORS, TIER_BLOCKS);
 
 /** Identity tokens and state-bearing hooks, read from the page's stylesheets. */
 function fromStylesheets(): { identities: string[]; hooks: Record<string, string[]> } {
@@ -86,7 +92,12 @@ export function audit(root: Element, options: AuditOptions = {}): Warning[] {
     hooks: options.hooks ?? sheets!.hooks,
     identities: options.identities ?? sheets!.identities,
   };
-  const context = { ...resolved, isColor: (value: string) => CSS.supports("color", value) };
+  const context = {
+    ...resolved,
+    reads: READS,
+    blocks: BLOCKS,
+    isColor: (value: string) => CSS.supports("color", value),
+  };
   const found: Warning[] = [];
   for (const el of [root, ...root.querySelectorAll("*")]) {
     if (el.tagName === "UI-DEBUG") continue;

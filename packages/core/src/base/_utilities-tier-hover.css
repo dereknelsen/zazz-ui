@@ -4,6 +4,9 @@
 @layer ui.utilities {
   @media (hover: hover) {
     :where(:hover[style*="--hover:"]) {
+      --_anchor-name-hover: var(--anchor-name--hover);
+      --_position-anchor-hover: var(--position-anchor--hover);
+      --_position-area-hover: var(--position-area--hover);
       --_template-cols-hover: var(--template-cols--hover);
       --_template-rows-hover: var(--template-rows--hover);
       --_text-decoration-hover: var(--text-decoration--hover);
@@ -35,6 +38,9 @@
       --_transition-delay-hover: var(--transition-delay--hover);
     }
     :where([data-ui~="group"]:hover [style*="--group-"]) {
+      --_anchor-name-g-hover: var(--group-anchor-name--hover);
+      --_position-anchor-g-hover: var(--group-position-anchor--hover);
+      --_position-area-g-hover: var(--group-position-area--hover);
       --_template-cols-g-hover: var(--group-template-cols--hover);
       --_template-rows-g-hover: var(--group-template-rows--hover);
       --_text-decoration-g-hover: var(--group-text-decoration--hover);

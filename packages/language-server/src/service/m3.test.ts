@@ -29,6 +29,21 @@ describe("quick fixes", () => {
     expect(diagnostic!.rule).toBe("tier-without-base");
     expect(apply(text, [diagnostic!.fix!])).toBe(`<p style="--w: 4; --w--md: 4">a</p>`);
   });
+
+  it("asks for the base where a no-base utility's rule excludes the element", () => {
+    expect(diagnose(parseHtml(`<p style="--anchor-name--hover: --block">a</p>`))).toEqual([]);
+    const text = `<div data-ui="menu"><button popovertarget="m" style="--anchor-name--hover: --block">a</button></div>`;
+    const [diagnostic] = diagnose(parseHtml(text));
+    expect(diagnostic!.rule).toBe("tier-without-base");
+  });
+
+  it("asks for the base on a primitive root that does not read the utility", () => {
+    const [diagnostic] = diagnose(parseHtml(`<div data-ui="card" style="--py--md: 4">a</div>`));
+    expect(diagnostic!.rule).toBe("tier-without-base");
+    // a card reads --p through its own chain, so the tier works alone
+    expect(diagnose(parseHtml(`<div data-ui="card" style="--p--md: 4">a</div>`))).toEqual([]);
+    expect(diagnose(parseHtml(`<div data-ui="text-lg" style="--p--md: 4">a</div>`))).toEqual([]);
+  });
 });
 
 describe("sort imports", () => {

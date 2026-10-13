@@ -26,6 +26,7 @@ import {
   type Utility,
 } from "../src/base/utilities.ts";
 import { PRIMITIVES } from "../src/manifest.ts";
+import { indexStyling, kitStyling } from "./generate-utilities.ts";
 import { languageData, type LanguageData } from "./language-data.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -56,10 +57,16 @@ export interface CssData {
   version: 1.1;
   properties: CssProperty[];
 }
-/** What `<ui-debug>` reads from the page's stylesheets, for the linter. */
+/** What `<ui-debug>` reads from the page's stylesheets, plus where the kit reads or sets each utility, for the linter. */
 export interface LintData {
   identities: string[];
   hooks: Record<string, string[]>;
+  /** The selectors `reads` and `blocks` index (`KIT_SELECTORS`). */
+  selectors: string[];
+  /** For each utility, the elements the kit reads it on (`TIER_READS`), as indices into `selectors`. */
+  reads: Record<string, number[]>;
+  /** For each tier-only utility, the elements the kit sets its property on (`TIER_BLOCKS`), as indices. */
+  blocks: Record<string, number[]>;
 }
 
 // --- Sources ---
@@ -493,6 +500,11 @@ function cssProperties(css: string[]): CssProperty[] {
   return properties;
 }
 
+/** Where the kit reads each utility, and where it sets a tier-only one's property. */
+function blocksAndReads(): Pick<LintData, "selectors" | "reads" | "blocks"> {
+  return indexStyling(kitStyling());
+}
+
 /**
  * Identity tokens and state-bearing hooks from the stylesheets, with the
  * patterns `<ui-debug>`'s `fromStylesheets` applies to the live CSSOM.
@@ -515,6 +527,7 @@ function lintData(css: string[]): LintData {
     hooks: Object.fromEntries(
       [...hooks].sort(([a], [b]) => a.localeCompare(b)).map(([id, set]) => [id, [...set].sort()]),
     ),
+    ...blocksAndReads(),
   };
 }
 

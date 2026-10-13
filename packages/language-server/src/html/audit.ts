@@ -9,6 +9,7 @@ import {
   auditNode,
   auditPersistence,
   carriesIdentity,
+  expandStyling,
   type AuditContext,
   type AuditNode,
   type Finding,
@@ -16,10 +17,17 @@ import {
 } from "@zazz-ui/core/primitives/debug/audit-core.ts";
 import lintData from "@zazz-ui/core/editor/zazz.lint-data.json" with { type: "json" };
 import { isColor } from "./colors.ts";
+import { matches } from "./matches.ts";
 import { attributeOf, namedAttributes, selfAndAncestors, valueOf, type Tag } from "./nodes.ts";
 
 /** Identities and hooks from the generated lint data, where `<ui-debug>` reads the page's stylesheets. */
-export const AUDIT_CONTEXT: AuditContext = { ...lintData, isColor };
+export const AUDIT_CONTEXT: AuditContext = {
+  identities: lintData.identities,
+  hooks: lintData.hooks,
+  reads: expandStyling(lintData.selectors, lintData.reads),
+  blocks: expandStyling(lintData.selectors, lintData.blocks),
+  isColor,
+};
 
 export function auditNodeOf(tag: Tag): AuditNode {
   return {
@@ -33,6 +41,7 @@ export function auditNodeOf(tag: Tag): AuditNode {
       }
       return false;
     },
+    matches: (selector) => matches(tag, selector),
   };
 }
 

@@ -5,10 +5,14 @@
 @property --_display-md { syntax: "*"; inherits: false; }
 @property --position--md { syntax: "*"; inherits: false; }
 @property --_position-md { syntax: "*"; inherits: false; }
+@property --anchor-name--md { syntax: "*"; inherits: false; }
+@property --_anchor-name-md { syntax: "*"; inherits: false; }
+@property --position-anchor--md { syntax: "*"; inherits: false; }
+@property --_position-anchor-md { syntax: "*"; inherits: false; }
+@property --position-area--md { syntax: "*"; inherits: false; }
+@property --_position-area-md { syntax: "*"; inherits: false; }
 @property --flex-wrap--md { syntax: "*"; inherits: false; }
 @property --_flex-wrap-md { syntax: "*"; inherits: false; }
-@property --shrink--md { syntax: "*"; inherits: false; }
-@property --_shrink-md { syntax: "*"; inherits: false; }
 @property --grid-flow--md { syntax: "*"; inherits: false; }
 @property --_grid-flow-md { syntax: "*"; inherits: false; }
 @property --auto-cols--md { syntax: "*"; inherits: false; }
@@ -27,6 +31,8 @@
 @property --_self-md { syntax: "*"; inherits: false; }
 @property --flex--md { syntax: "*"; inherits: false; }
 @property --_flex-md { syntax: "*"; inherits: false; }
+@property --shrink--md { syntax: "*"; inherits: false; }
+@property --_shrink-md { syntax: "*"; inherits: false; }
 @property --basis--md { syntax: "*"; inherits: false; }
 @property --_basis-md { syntax: "*"; inherits: false; }
 @property --order--md { syntax: "*"; inherits: false; }

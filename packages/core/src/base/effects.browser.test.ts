@@ -120,11 +120,21 @@ describe("no-base state tiers", () => {
     }
   });
 
-  it("a primitive keeps its own chain: --opacity--hover alone on a button does nothing", async () => {
-    const el = mount(`<button data-ui="button" style="--opacity--hover: .4">x</button>`);
-    await userEvent.hover(el);
+  it("--opacity--hover alone works on a button, which sets opacity only when disabled", async () => {
+    const root = mount(`<div>
+      <button data-ui="button" data-tier style="--transition: none; --opacity--hover: .4">x</button>
+      <button data-ui="button" data-ref disabled>x</button>
+      <button data-ui="button" data-disabled disabled style="--opacity--md: .4">x</button>
+    </div>`);
+    const el = root.querySelector<HTMLElement>("[data-tier]")!;
     expect(style(el, "opacity")).toBe("1");
+    await userEvent.hover(el);
+    expect(style(el, "opacity")).toBe("0.4");
     await userEvent.unhover(el);
+    // the button's disabled opacity is in a layer above the tier-only rule
+    expect(style(root.querySelector("[data-disabled]")!, "opacity")).toBe(
+      style(root.querySelector("[data-ref]")!, "opacity"),
+    );
   });
 });
 

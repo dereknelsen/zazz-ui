@@ -6,8 +6,10 @@
     :where([style*="--xl:"]) {
       --_display-xl: var(--display--xl);
       --_position-xl: var(--position--xl);
+      --_anchor-name-xl: var(--anchor-name--xl);
+      --_position-anchor-xl: var(--position-anchor--xl);
+      --_position-area-xl: var(--position-area--xl);
       --_flex-wrap-xl: var(--flex-wrap--xl);
-      --_shrink-xl: var(--shrink--xl);
       --_grid-flow-xl: var(--grid-flow--xl);
       --_auto-cols-xl: var(--auto-cols--xl);
       --_auto-rows-xl: var(--auto-rows--xl);
@@ -17,6 +19,7 @@
       --_place-content-xl: var(--place-content--xl);
       --_self-xl: var(--self--xl);
       --_flex-xl: var(--flex--xl);
+      --_shrink-xl: var(--shrink--xl);
       --_basis-xl: var(--basis--xl);
       --_order-xl: var(--order--xl);
       --_band-xl: var(--band--xl);

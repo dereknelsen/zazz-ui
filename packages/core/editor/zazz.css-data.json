@@ -486,6 +486,294 @@
       "description": "--position on the ::after pseudo-element."
     },
     {
+      "name": "--anchor-name",
+      "description": "anchor-name — any value; flow family."
+    },
+    {
+      "name": "--anchor-name--starting",
+      "description": "--anchor-name in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none."
+    },
+    {
+      "name": "--anchor-name--disabled",
+      "description": "--anchor-name in the disabled state."
+    },
+    {
+      "name": "--anchor-name--active",
+      "description": "--anchor-name in the active state."
+    },
+    {
+      "name": "--anchor-name--focus-visible",
+      "description": "--anchor-name in the focus-visible state."
+    },
+    {
+      "name": "--anchor-name--focus-within",
+      "description": "--anchor-name in the focus-within state."
+    },
+    {
+      "name": "--anchor-name--hover",
+      "description": "--anchor-name in the hover state."
+    },
+    {
+      "name": "--anchor-name--checked",
+      "description": "--anchor-name in the checked state."
+    },
+    {
+      "name": "--anchor-name--current",
+      "description": "--anchor-name in the current state."
+    },
+    {
+      "name": "--anchor-name--open",
+      "description": "--anchor-name in the open state."
+    },
+    {
+      "name": "--anchor-name--stuck",
+      "description": "--anchor-name while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental."
+    },
+    {
+      "name": "--anchor-name--sm",
+      "description": "--anchor-name at the sm breakpoint and up."
+    },
+    {
+      "name": "--anchor-name--md",
+      "description": "--anchor-name at the md breakpoint and up."
+    },
+    {
+      "name": "--anchor-name--lg",
+      "description": "--anchor-name at the lg breakpoint and up."
+    },
+    {
+      "name": "--anchor-name--xl",
+      "description": "--anchor-name at the xl breakpoint and up."
+    },
+    {
+      "name": "--anchor-name--2xl",
+      "description": "--anchor-name at the 2xl breakpoint and up."
+    },
+    {
+      "name": "--group-anchor-name--disabled",
+      "description": "--anchor-name while an ancestor with data-ui=\"group\" is disabled."
+    },
+    {
+      "name": "--group-anchor-name--active",
+      "description": "--anchor-name while an ancestor with data-ui=\"group\" is active."
+    },
+    {
+      "name": "--group-anchor-name--focus-visible",
+      "description": "--anchor-name while an ancestor with data-ui=\"group\" is focus-visible."
+    },
+    {
+      "name": "--group-anchor-name--focus-within",
+      "description": "--anchor-name while an ancestor with data-ui=\"group\" is focus-within."
+    },
+    {
+      "name": "--group-anchor-name--hover",
+      "description": "--anchor-name while an ancestor with data-ui=\"group\" is hover."
+    },
+    {
+      "name": "--group-anchor-name--checked",
+      "description": "--anchor-name while an ancestor with data-ui=\"group\" is checked."
+    },
+    {
+      "name": "--group-anchor-name--current",
+      "description": "--anchor-name while an ancestor with data-ui=\"group\" is current."
+    },
+    {
+      "name": "--group-anchor-name--open",
+      "description": "--anchor-name while an ancestor with data-ui=\"group\" is open."
+    },
+    {
+      "name": "--position-anchor",
+      "description": "position-anchor — any value; flow family."
+    },
+    {
+      "name": "--position-anchor--starting",
+      "description": "--position-anchor in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none."
+    },
+    {
+      "name": "--position-anchor--disabled",
+      "description": "--position-anchor in the disabled state."
+    },
+    {
+      "name": "--position-anchor--active",
+      "description": "--position-anchor in the active state."
+    },
+    {
+      "name": "--position-anchor--focus-visible",
+      "description": "--position-anchor in the focus-visible state."
+    },
+    {
+      "name": "--position-anchor--focus-within",
+      "description": "--position-anchor in the focus-within state."
+    },
+    {
+      "name": "--position-anchor--hover",
+      "description": "--position-anchor in the hover state."
+    },
+    {
+      "name": "--position-anchor--checked",
+      "description": "--position-anchor in the checked state."
+    },
+    {
+      "name": "--position-anchor--current",
+      "description": "--position-anchor in the current state."
+    },
+    {
+      "name": "--position-anchor--open",
+      "description": "--position-anchor in the open state."
+    },
+    {
+      "name": "--position-anchor--stuck",
+      "description": "--position-anchor while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental."
+    },
+    {
+      "name": "--position-anchor--sm",
+      "description": "--position-anchor at the sm breakpoint and up."
+    },
+    {
+      "name": "--position-anchor--md",
+      "description": "--position-anchor at the md breakpoint and up."
+    },
+    {
+      "name": "--position-anchor--lg",
+      "description": "--position-anchor at the lg breakpoint and up."
+    },
+    {
+      "name": "--position-anchor--xl",
+      "description": "--position-anchor at the xl breakpoint and up."
+    },
+    {
+      "name": "--position-anchor--2xl",
+      "description": "--position-anchor at the 2xl breakpoint and up."
+    },
+    {
+      "name": "--group-position-anchor--disabled",
+      "description": "--position-anchor while an ancestor with data-ui=\"group\" is disabled."
+    },
+    {
+      "name": "--group-position-anchor--active",
+      "description": "--position-anchor while an ancestor with data-ui=\"group\" is active."
+    },
+    {
+      "name": "--group-position-anchor--focus-visible",
+      "description": "--position-anchor while an ancestor with data-ui=\"group\" is focus-visible."
+    },
+    {
+      "name": "--group-position-anchor--focus-within",
+      "description": "--position-anchor while an ancestor with data-ui=\"group\" is focus-within."
+    },
+    {
+      "name": "--group-position-anchor--hover",
+      "description": "--position-anchor while an ancestor with data-ui=\"group\" is hover."
+    },
+    {
+      "name": "--group-position-anchor--checked",
+      "description": "--position-anchor while an ancestor with data-ui=\"group\" is checked."
+    },
+    {
+      "name": "--group-position-anchor--current",
+      "description": "--position-anchor while an ancestor with data-ui=\"group\" is current."
+    },
+    {
+      "name": "--group-position-anchor--open",
+      "description": "--position-anchor while an ancestor with data-ui=\"group\" is open."
+    },
+    {
+      "name": "--position-area",
+      "description": "position-area — any value; flow family."
+    },
+    {
+      "name": "--position-area--starting",
+      "description": "--position-area in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none."
+    },
+    {
+      "name": "--position-area--disabled",
+      "description": "--position-area in the disabled state."
+    },
+    {
+      "name": "--position-area--active",
+      "description": "--position-area in the active state."
+    },
+    {
+      "name": "--position-area--focus-visible",
+      "description": "--position-area in the focus-visible state."
+    },
+    {
+      "name": "--position-area--focus-within",
+      "description": "--position-area in the focus-within state."
+    },
+    {
+      "name": "--position-area--hover",
+      "description": "--position-area in the hover state."
+    },
+    {
+      "name": "--position-area--checked",
+      "description": "--position-area in the checked state."
+    },
+    {
+      "name": "--position-area--current",
+      "description": "--position-area in the current state."
+    },
+    {
+      "name": "--position-area--open",
+      "description": "--position-area in the open state."
+    },
+    {
+      "name": "--position-area--stuck",
+      "description": "--position-area while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental."
+    },
+    {
+      "name": "--position-area--sm",
+      "description": "--position-area at the sm breakpoint and up."
+    },
+    {
+      "name": "--position-area--md",
+      "description": "--position-area at the md breakpoint and up."
+    },
+    {
+      "name": "--position-area--lg",
+      "description": "--position-area at the lg breakpoint and up."
+    },
+    {
+      "name": "--position-area--xl",
+      "description": "--position-area at the xl breakpoint and up."
+    },
+    {
+      "name": "--position-area--2xl",
+      "description": "--position-area at the 2xl breakpoint and up."
+    },
+    {
+      "name": "--group-position-area--disabled",
+      "description": "--position-area while an ancestor with data-ui=\"group\" is disabled."
+    },
+    {
+      "name": "--group-position-area--active",
+      "description": "--position-area while an ancestor with data-ui=\"group\" is active."
+    },
+    {
+      "name": "--group-position-area--focus-visible",
+      "description": "--position-area while an ancestor with data-ui=\"group\" is focus-visible."
+    },
+    {
+      "name": "--group-position-area--focus-within",
+      "description": "--position-area while an ancestor with data-ui=\"group\" is focus-within."
+    },
+    {
+      "name": "--group-position-area--hover",
+      "description": "--position-area while an ancestor with data-ui=\"group\" is hover."
+    },
+    {
+      "name": "--group-position-area--checked",
+      "description": "--position-area while an ancestor with data-ui=\"group\" is checked."
+    },
+    {
+      "name": "--group-position-area--current",
+      "description": "--position-area while an ancestor with data-ui=\"group\" is current."
+    },
+    {
+      "name": "--group-position-area--open",
+      "description": "--position-area while an ancestor with data-ui=\"group\" is open."
+    },
+    {
       "name": "--flex-wrap",
       "description": "flex-wrap — a keyword; flow family.",
       "values": [
@@ -574,30 +862,6 @@
           "name": "wrap-reverse"
         }
       ]
-    },
-    {
-      "name": "--shrink",
-      "description": "flex-shrink — any value; flow family."
-    },
-    {
-      "name": "--shrink--sm",
-      "description": "--shrink at the sm breakpoint and up."
-    },
-    {
-      "name": "--shrink--md",
-      "description": "--shrink at the md breakpoint and up."
-    },
-    {
-      "name": "--shrink--lg",
-      "description": "--shrink at the lg breakpoint and up."
-    },
-    {
-      "name": "--shrink--xl",
-      "description": "--shrink at the xl breakpoint and up."
-    },
-    {
-      "name": "--shrink--2xl",
-      "description": "--shrink at the 2xl breakpoint and up."
     },
     {
       "name": "--grid-flow",
@@ -1414,6 +1678,30 @@
     {
       "name": "--flex--2xl",
       "description": "--flex at the 2xl breakpoint and up."
+    },
+    {
+      "name": "--shrink",
+      "description": "flex-shrink — any value; flow family."
+    },
+    {
+      "name": "--shrink--sm",
+      "description": "--shrink at the sm breakpoint and up."
+    },
+    {
+      "name": "--shrink--md",
+      "description": "--shrink at the md breakpoint and up."
+    },
+    {
+      "name": "--shrink--lg",
+      "description": "--shrink at the lg breakpoint and up."
+    },
+    {
+      "name": "--shrink--xl",
+      "description": "--shrink at the xl breakpoint and up."
+    },
+    {
+      "name": "--shrink--2xl",
+      "description": "--shrink at the 2xl breakpoint and up."
     },
     {
       "name": "--basis",

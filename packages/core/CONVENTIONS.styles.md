@@ -32,7 +32,7 @@ CSSDoc is intentionally lightweight:
 Cascade order is declared once, in [`_layers.css`](./src/base/_layers.css), and must load first:
 
 ```css
-@layer variables, reset, vendors, legacy, ui, overrides;
+@layer variables, reset, defaults, vendors, legacy, ui, overrides;
 
 @layer legacy {
   @layer imports, components, utilities, migrations;
@@ -44,17 +44,22 @@ Cascade order is declared once, in [`_layers.css`](./src/base/_layers.css), and 
 ```
 
 Load order lives in [`index.css`](./src/index.css): it `@import`s `_layers.css` first,
-then the base partials (including the generated `_properties*.css` and
-`_utilities-*.css` utilities layer), then every `primitives/<name>/<name>.css`, with
-`_switches.css` last. Everything slots into one of these layers.
+then the base partials, every `primitives/<name>/<name>.css`, the generated utility files
+(`_properties*.css`, `_utilities-*.css`, and `_defaults.css`), and `_switches.css` last.
+Everything slots into one of these layers.
 Layering (not selector specificity or BEM) is how we control the cascade, so a
 plain `[data-ui~="button"]` rule in `components` is overridden by a style utility set in
 `style=""` (the `utilities` layer) without `!important`.
 
-The six top-level layers, lowest priority to highest:
+The seven top-level layers, lowest priority to highest:
 
 - **`variables`**: design tokens, the `:root` custom properties everything reads. Lowest priority.
 - **`reset`**: native-element baselines and re-skinned controls.
+- **`defaults`**: generated, never hand-written. The tier-only utility rules (`--px--md: 8` with
+  no `--px`), which end in the value a plain element shows with no utility. Above `reset` so they beat its universal
+  zeroing; below everything else so a primitive, vendor, or legacy rule that sets the property
+  keeps its value at rest (ADR-0017). A primitive that wants a tier alone to reach it reads the
+  utility's `--_<utility>-resolved` in its own declaration.
 - **`vendors`**: third-party CSS that does not build on Zazz, via `layer(vendors)`. Above `reset`
   (the reset must not clobber a library's widget styling), below `legacy` (your app CSS keeps
   overriding vendor defaults).

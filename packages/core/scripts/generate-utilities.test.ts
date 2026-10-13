@@ -21,7 +21,12 @@ import {
   gradientRules,
   keywordRules,
   noBaseRule,
-  primitiveSelectors,
+  appliesAtRest,
+  indexStyling,
+  kitStyling,
+  shorthandTierRule,
+  restSelectors,
+  styleRules,
   pseudoRule,
   registrations,
   setterRule,
@@ -275,10 +280,10 @@ describe("no-base rules", () => {
     );
   });
 
-  it("emits a no-base rule for --grid-cols gated on any tier, ending in the literal 1, excluding every primitive", () => {
-    expect(squash(noBaseRule(GRID_COLS, ["ui-layout", "ui-tabs"]))).toBe(
+  it("emits a no-base rule for --grid-cols gated on any tier, ending in the literal 1, skipping what it is given", () => {
+    expect(squash(noBaseRule(GRID_COLS, ["hr"]))).toBe(
       squash(`
-        :where(:is([style*="--grid-cols:"], [style*="--grid-cols--"], [style*="--group-grid-cols--"]):not(ui-layout, ui-tabs)) {
+        :where(:is([style*="--grid-cols--"], [style*="--group-grid-cols--"]):not(hr)) {
           grid-template-columns: repeat(var(--_grid-cols-resolved, 1), minmax(0, 1fr));
         }
       `),
@@ -288,7 +293,7 @@ describe("no-base rules", () => {
 
 describe("keyword rules", () => {
   it("emits a base keyword as written, then per tier a typed restore and a raw keyword rule", () => {
-    expect(squash(keywordRules({ ...W_KW, keywords: ["auto"] }, ["md"], []))).toBe(
+    expect(squash(keywordRules({ ...W_KW, keywords: ["auto"] }, ["md"]))).toBe(
       squash(`
         :where(:is([style*="--w: auto"])) {
           inline-size: var(--_w-resolved);
@@ -305,19 +310,29 @@ describe("keyword rules", () => {
     );
   });
 
-  it("gates a no-base utility's tiers on a base or a plain element", () => {
+  it("gates a no-base utility's tiers on a base, and its defaults copy on the tier alone", () => {
     const GRID_KW: Utility = { ...GRID_COLS, keywords: ["subgrid"] };
-    expect(squash(keywordRules(GRID_KW, ["md"], ["ui-layout"]))).toContain(
+    expect(squash(keywordRules(GRID_KW, ["md"]))).toContain(
       squash(`
-        :where(:is([style*="--grid-cols:"], :not(ui-layout))[style*="--grid-cols--md:"]) {
+        :where([style*="--grid-cols:"][style*="--grid-cols--md:"]) {
           grid-template-columns: repeat(var(--_grid-cols-resolved), minmax(0, 1fr));
         }
       `),
     );
+    const defaults = squash(keywordRules(GRID_KW, ["md"], { skips: ["hr"] }));
+    expect(defaults).toContain(
+      squash(`
+        :where(:not(hr)[style*="--grid-cols--md:"]) {
+          grid-template-columns: repeat(var(--_grid-cols-resolved), minmax(0, 1fr));
+        }
+      `),
+    );
+    // the base keyword rule lives in the utilities copy only
+    expect(defaults).not.toContain('[style*="--grid-cols: subgrid"]');
   });
 
   it("orders keyword rules after the no-base rule and the tiers ascending", () => {
-    const css = generate().get("_utilities-grid.css")!;
+    const css = generate().get("_defaults.css")!;
     const noBase = css.indexOf("grid-template-columns: repeat(var(--_grid-cols-resolved, 1)");
     const sm = css.indexOf('[style*="--grid-cols--sm: subgrid"]');
     const md = css.indexOf('[style*="--grid-cols--md: subgrid"]');
@@ -333,52 +348,28 @@ describe("keyword rules", () => {
   });
 });
 
-describe("no-base exclusions", () => {
-  it("excludes primitives by tag form and data-ui identity, not roles, switches, or prose", () => {
-    const selectors = primitiveSelectors();
-    expect(selectors).toContain("ui-layout");
-    expect(selectors).toContain('[data-ui~="button"]');
-    expect(selectors).toContain('[data-ui~="card"]');
-    for (const plain of [
-      "text-2xl",
-      "text-h1",
-      "group",
-      "pile",
-      "sr-only",
-      "not-prose",
-      "truncate",
-      "spin",
-      "prose",
-    ]) {
-      expect(selectors, plain).not.toContain(`[data-ui~="${plain}"]`);
+describe("the defaults layer", () => {
+  it("holds every tier-only rule, below the components, and no base-gated rule", () => {
+    const css = generate().get("_defaults.css")!;
+    expect(css).toContain("@layer defaults {");
+    expect(css).toContain('[style*="--band--"]');
+    expect(css).not.toMatch(/\[style\*="--[a-z]+(?:-[a-z]+)*:"\]/);
+    for (const [file, text] of generate()) {
+      if (file.startsWith("_utilities-"))
+        expect(text, file).not.toContain("var(--_band-resolved, auto)");
     }
-    expect(selectors).not.toContain("[data-ui]");
   });
 
-  it("excludes a layout's children from the --band no-base rule", () => {
-    const BAND: Utility = {
-      name: "band",
-      properties: ["grid-column"],
-      mode: "raw",
-      family: "flow",
-      noBase: "auto",
-      noBaseExclude: ["ui-layout > *", '[data-ui~="layout"] > *'],
-    };
-    expect(squash(noBaseRule(BAND, ["ui-layout"]))).toBe(
-      squash(`
-        :where(:is([style*="--band:"], [style*="--band--"], [style*="--group-band--"]):not(ui-layout, ui-layout > *, [data-ui~="layout"] > *)) {
-          grid-column: var(--_band-resolved, auto);
-        }
-      `),
-    );
+  it("skips no layout child: the layout's own rule wins by layer", () => {
+    expect(generate().get("_defaults.css")!).not.toContain("ui-layout > *");
   });
 });
 
 describe("no-base rules for dual utilities", () => {
   it("emits the --gap no-base rule through the typed pair with a zero fallback", () => {
-    expect(squash(noBaseRule(GAP, ["ui-tabs"]))).toBe(
+    expect(squash(noBaseRule(GAP))).toBe(
       squash(`
-        :where(:is([style*="--gap:"], [style*="--gap--"], [style*="--group-gap--"]):not(ui-tabs)) {
+        :where(:is([style*="--gap--"], [style*="--group-gap--"])) {
           --_gap-len: var(--_gap-resolved, 0);
           --_gap-num: var(--_gap-resolved, 0);
           gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));
@@ -400,7 +391,7 @@ describe("grid placement (Tailwind col-span / col-start / col-end)", () => {
         }
       `),
     );
-    expect(flow()).toContain(
+    expect(generate().get("_defaults.css")!).toContain(
       "grid-column: span var(--_col-span-resolved, 1) / span var(--_col-span-resolved, 1);",
     );
   });
@@ -409,15 +400,6 @@ describe("grid placement (Tailwind col-span / col-start / col-end)", () => {
     const css = flow();
     expect(css.indexOf("grid-column-start:")).toBeGreaterThan(css.indexOf("--_col-span: var"));
     expect(css.indexOf("grid-row-end:")).toBeGreaterThan(css.indexOf("--_row-span: var"));
-  });
-
-  it("keeps a layout's children in their band for tier-only column utilities", () => {
-    for (const name of ["col-span", "col-start", "col-end"]) {
-      const rule = flow()
-        .split("\n")
-        .find((line) => line.includes(`:where(:is([style*="--${name}:"]`));
-      expect(rule, name).toContain('ui-layout > *, [data-ui~="layout"] > *');
-    }
   });
 });
 
@@ -528,12 +510,16 @@ describe("color and effects composition", () => {
     const offsetColor = "var(--_ring-offset-color-resolved, transparent)";
     const color = "var(--_ring-color-resolved, var(--color-ring))";
     const emission = `box-shadow: var(--_focus-shadow, 0 0 #0000), 0 0 0 calc(${offset} * (1 - ${inset})) ${offsetColor}, 0 0 0 calc(${band} * (1 - ${inset})) ${color}, inset 0 0 0 calc(${offset} * ${inset}) ${offsetColor}, inset 0 0 0 calc(${band} * ${inset}) ${color}, var(--_shadow-resolved, 0 0 #0000);`;
-    expect(squash(compositeRule([RING, SHADOW], ["ui-layout", "ui-tabs"]))).toBe(
+    expect(squash(compositeRule([RING, SHADOW]))).toBe(
       squash(`
         :where(:is([style*="--shadow:"], [style*="--ring:"], [style*="--ring-color:"], [style*="--ring-offset:"], [style*="--ring-offset-color:"])) {
           ${emission}
         }
-        :where(:is(:is([style*="--shadow--"], [style*="--ring--"], [style*="--ring-color--"], [style*="--ring-offset--"], [style*="--ring-offset-color--"]), :is([style*="--group-shadow--"], [style*="--group-ring--"], [style*="--group-ring-color--"], [style*="--group-ring-offset--"], [style*="--group-ring-offset-color--"])):not(ui-layout, ui-tabs)) {
+      `),
+    );
+    expect(squash(compositeRule([RING, SHADOW], { skips: ["hr"] }))).toBe(
+      squash(`
+        :where(:is(:is([style*="--shadow--"], [style*="--ring--"], [style*="--ring-color--"], [style*="--ring-offset--"], [style*="--ring-offset-color--"]), :is([style*="--group-shadow--"], [style*="--group-ring--"], [style*="--group-ring-color--"], [style*="--group-ring-offset--"], [style*="--group-ring-offset-color--"])):not(hr)) {
           ${emission}
         }
       `),
@@ -786,9 +772,11 @@ describe("formatter round-trip", () => {
 });
 
 describe("generated stylesheets", () => {
-  it("are the breakpoints file, the registrations, one registration file per breakpoint, and one file per family", () => {
+  it("are the breakpoints file, the defaults layer, the kit styling data, the registrations, one registration file per breakpoint, and one file per family", () => {
     expect([...generate().keys()]).toEqual([
       "_breakpoints.css",
+      "_defaults.css",
+      "kit-styling.ts",
       "_properties.css",
       ...BREAKPOINTS.map((bp) => `_properties-${bp}.css`),
       ...STATES.map((state) => `_properties-${state}.css`),
@@ -814,5 +802,122 @@ describe("generated stylesheets", () => {
       if (committed !== text) stale.push(file);
     }
     expect(stale, "run `vp run generate`").toEqual([]);
+  });
+});
+
+describe("kit-styling.ts", () => {
+  const styling = kitStyling();
+
+  it("exports the kit's styling facts with each selector stored once", async () => {
+    const module = await import("../src/base/kit-styling.ts");
+    const indexed = indexStyling(styling);
+    expect(module.KIT_SELECTORS).toEqual(indexed.selectors);
+    expect(module.TIER_READS).toEqual(indexed.reads);
+    expect(module.TIER_BLOCKS).toEqual(indexed.blocks);
+    expect(new Set(indexed.selectors).size).toBe(indexed.selectors.length);
+  });
+
+  it("maps each utility to the elements the kit reads it on", () => {
+    expect(styling.reads.px).toContain('[data-ui~="button"]');
+    expect(styling.reads.px).toContain("kbd");
+    expect(styling.reads.band).toEqual([':is(ui-layout, [data-ui~="layout"]) > *']);
+    // only the horizontal field's rule reads --items
+    expect(styling.reads.items).toContain(
+      '[data-ui~="field"][data-field-orientation="horizontal"]',
+    );
+    expect(styling.reads.items).not.toContain('[data-ui~="field"]');
+  });
+
+  it("maps each tier-only utility to the elements the kit sets its property on", () => {
+    // a popover paints itself; a card pads itself; inline code is padded by the reset
+    expect(styling.blocks.bg).toContain("[popover]");
+    expect(styling.blocks.p).toContain('[data-ui~="card"]');
+    expect(styling.blocks.px).toContain("code");
+    // the reset's normalizing (universal zeroing, a link's inherited decoration)
+    // is what the defaults layer beats
+    expect(styling.blocks.p).not.toContain("*");
+    expect(styling.blocks["text-decoration"]).not.toContain("a");
+    // a reset value that is not the utility's literal styles the element
+    expect(styling.blocks.shrink).toContain("hr");
+    // `inherit` on an inherited property keeps the parent's value
+    expect(styling.blocks["text-align"]).toEqual(expect.arrayContaining(["button"]));
+    // the browser's own styling sits below the defaults layer too
+    expect(styling.blocks.position).toContain("dialog");
+    // a card sets no opacity, so --opacity--hover works on it alone
+    expect(styling.blocks.opacity).not.toContain('[data-ui~="card"]');
+  });
+
+  it("skips in the defaults layer only the reset's and the browser's deliberate styling", () => {
+    const { skips } = styling;
+    expect(skips.px).toContain("code");
+    expect(skips.position).toContain("dialog");
+    expect(skips.p).not.toContain("*");
+    expect(skips.p ?? []).not.toContain('[data-ui~="card"]');
+    // a switch styles the label that has it, not every label
+    expect(Object.values(skips).flat()).not.toContain("label");
+    expect(Object.values(skips).flat()).not.toContain(":not([data-gjs-type])");
+  });
+
+  it("strips states, keeps :not(), :has(), and :is() groups, and joins a one-compound group", () => {
+    expect(restSelectors(":where(kbd):not([data-x]):hover > :is(a, b):has(> i:checked)")).toEqual([
+      "kbd:not([data-x]) > :is(a, b):has(> i)",
+    ]);
+    expect(restSelectors(':where(ui-layout, [data-ui~="layout"]) > *')).toEqual([
+      ':is(ui-layout, [data-ui~="layout"]) > *',
+    ]);
+    expect(restSelectors("label:has(> input):not(:disabled):first-child")).toEqual([
+      "label:has(> input)",
+    ]);
+    expect(restSelectors('input[type="radio"]:checked + [data-x~="label"]')).toEqual([
+      'input[type="radio"] + [data-x~="label"]',
+    ]);
+    expect(restSelectors('input[role="switch"]:checked')).toEqual(['input[role="switch"]']);
+    expect(restSelectors(":root")).toEqual(["html"]);
+    expect(restSelectors("label::after")).toEqual([]);
+    expect(restSelectors("label:after")).toEqual([]);
+    expect(restSelectors(":hover")).toEqual(["*"]);
+    expect(restSelectors(':where([data-ui~="badge"]):where(a[href])')).toEqual([
+      'a[data-ui~="badge"][href]',
+    ]);
+  });
+
+  it("counts a rule as applying at rest unless it needs a state outside :not()", () => {
+    expect(appliesAtRest("button:disabled")).toBe(false);
+    expect(appliesAtRest(':where([data-ui~="button"]:is(:disabled, [aria-disabled="true"]))')).toBe(
+      false,
+    );
+    expect(appliesAtRest("button:not(:disabled)")).toBe(true);
+    expect(appliesAtRest("input:placeholder-shown")).toBe(true);
+    expect(appliesAtRest(":target-within")).toBe(true);
+  });
+
+  it("tracks layers and resolves a nested &", () => {
+    expect(
+      styleRules("@layer ui.components { a, b { @media (x) { &:hover { --y: 1 } } } }").at(0),
+    ).toEqual({
+      selectors: ["a:hover", "b:hover"],
+      declarations: " --y: 1 ;",
+      layer: "ui.components",
+    });
+    expect(styleRules("@layer ui { @layer components { a { b: c } } }").at(0)!.layer).toBe(
+      "ui.components",
+    );
+    expect(styleRules("a { b { --y: 1 } }").at(0)!.selectors).toEqual(["a b"]);
+    expect(styleRules("@keyframes k { 0% { opacity: 0 } }").at(0)!.selectors).toEqual([]);
+  });
+});
+
+describe("shorthand tiers", () => {
+  it("gates a longhand's tier on its shorthand's base, falling back to the shorthand's value", () => {
+    const pt = UTILITIES.find((utility) => utility.name === "pt")!;
+    expect(squash(shorthandTierRule(pt))).toBe(
+      squash(`
+        :where(:is([style*="--py:"], [style*="--p:"]):is([style*="--pt--"], [style*="--group-pt--"])) {
+          --_pt-len: var(--_pt-resolved, var(--_py-resolved, var(--_p-resolved, 0)));
+          --_pt-num: var(--_pt-resolved, var(--_py-resolved, var(--_p-resolved, 0)));
+          padding-block-start: calc(var(--_pt-len) + var(--_pt-num) * var(--spacing));
+        }
+      `),
+    );
   });
 });

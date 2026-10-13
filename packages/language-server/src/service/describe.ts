@@ -93,7 +93,7 @@ export function describeUtilityName(raw: string): string | undefined {
   if (utility.noBase !== undefined) {
     lines.push(
       "",
-      `A tier works without a base here (the base defaults to \`${utility.noBase}\`).`,
+      `A tier works without a base (the base defaults to \`${utility.noBase}\`), except where the kit sets this property on the element without reading the utility; write the base there.`,
     );
   }
   return lines.join("\n");

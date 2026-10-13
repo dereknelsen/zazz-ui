@@ -167,7 +167,7 @@ function headJs(version: string): string {
 }
 
 /** The real kit's layer order (`packages/core/src/base/_layers.css`), comment-free. */
-const LAYERS_CSS = `@layer variables, reset, vendors, legacy, ui, overrides;
+const LAYERS_CSS = `@layer variables, reset, defaults, vendors, legacy, ui, overrides;
 
 @layer legacy {
   @layer imports, components, utilities, migrations;

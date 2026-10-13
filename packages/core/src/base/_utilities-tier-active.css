@@ -3,6 +3,9 @@
 /* active tier setter */
 @layer ui.utilities {
   :where(:active[style*="--active:"]) {
+    --_anchor-name-active: var(--anchor-name--active);
+    --_position-anchor-active: var(--position-anchor--active);
+    --_position-area-active: var(--position-area--active);
     --_template-cols-active: var(--template-cols--active);
     --_template-rows-active: var(--template-rows--active);
     --_text-decoration-active: var(--text-decoration--active);
@@ -34,6 +37,9 @@
     --_transition-delay-active: var(--transition-delay--active);
   }
   :where([data-ui~="group"]:active [style*="--group-"]) {
+    --_anchor-name-g-active: var(--group-anchor-name--active);
+    --_position-anchor-g-active: var(--group-position-anchor--active);
+    --_position-area-g-active: var(--group-position-area--active);
     --_template-cols-g-active: var(--group-template-cols--active);
     --_template-rows-g-active: var(--group-template-rows--active);
     --_text-decoration-g-active: var(--group-text-decoration--active);

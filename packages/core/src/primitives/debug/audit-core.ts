@@ -11,6 +11,8 @@
 
 import {
   BORDER_SHORTHANDS,
+  BOX_SHADOW_COMPOSITE,
+  SHORTHAND_OF,
   DISPLAY_SHORTHANDS,
   GRADIENT_TYPES,
   UTILITIES,
@@ -95,6 +97,8 @@ export interface AuditNode {
   getAttributeNames(): string[];
   /** True when this node or an ancestor carries the identity `name` (see {@link carriesIdentity}). */
   withinIdentity(name: string, identities: readonly string[]): boolean;
+  /** `Element.matches`, for the selectors in `reads` and `blocks`. */
+  matches(selector: string): boolean;
 }
 
 export interface AuditContext {
@@ -102,6 +106,10 @@ export interface AuditContext {
   hooks: Record<string, string[]>;
   /** Identity tokens the kit declares (`button`, `field-group`). */
   identities: readonly string[];
+  /** For each utility, the elements the kit reads it on through its own chain, as selectors. */
+  reads: Readonly<Record<string, readonly string[]>>;
+  /** For each tier-only utility, the elements a kit rule above `@layer defaults` sets its property on. */
+  blocks: Readonly<Record<string, readonly string[]>>;
   /** True when `value` is a color identifier (`red`, `currentcolor`); the browser asks `CSS.supports`. */
   isColor: (value: string) => boolean;
 }
@@ -209,6 +217,16 @@ export function carriesIdentity(
   const tokens = (dataUi ?? "").split(/\s+/).filter(Boolean);
   return tokens.some(
     (token) => identities.includes(token) && (token === name || token.startsWith(`${name}-`)),
+  );
+}
+
+/** `reads` / `blocks` as generated (indices into `selectors`), back as selector lists for {@link AuditContext}. */
+export function expandStyling(
+  selectors: readonly string[],
+  record: Readonly<Record<string, readonly number[]>>,
+): Record<string, string[]> {
+  return Object.fromEntries(
+    Object.entries(record).map(([name, indices]) => [name, indices.map((i) => selectors[i]!)]),
   );
 }
 
@@ -380,9 +398,30 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
       const borderBase =
         /^border-(?:width|color|style)$/.test(baseName) &&
         BORDER_SHORTHANDS.some((name) => bases.has(name));
-      // a utility that only feeds a composite (ring, shadow) has a literal at its chain's end
-      const feedsComposite = utility.emit === "none" || utility.emit === "px";
-      if (utility.noBase === undefined && !bases.has(baseName) && !borderBase && !feedsComposite) {
+      // a shorthand's base is the base its longhand's tier overrides (`--p: 4; --px--md: 1`)
+      const shorthandBase = (SHORTHAND_OF[baseName] ?? []).some((name) => bases.has(name));
+      // the box-shadow composite (ring, shadow) works tier-only like a no-base utility;
+      // the other feeds (`--bg-alpha`, `--focus-ring`, `--shadow-angle`) reach the
+      // element through another utility or a token, and are not checked here
+      const composite = (BOX_SHADOW_COMPOSITE as readonly string[]).includes(utility.name);
+      const feedsComposite = !composite && (utility.emit === "none" || utility.emit === "px");
+      // a tier alone works where the kit reads the utility through its own chain,
+      // or where the tier-only rule (`@layer defaults`) applies: a no-base utility
+      // whose property no kit rule above that layer sets on this element
+      const readByKit = (context.reads[utility.name] ?? []).some((selector) =>
+        node.matches(selector),
+      );
+      const noBase =
+        (utility.noBase !== undefined || composite) &&
+        !(context.blocks[utility.name] ?? []).some((selector) => node.matches(selector));
+      if (
+        !readByKit &&
+        !noBase &&
+        !bases.has(baseName) &&
+        !borderBase &&
+        !shorthandBase &&
+        !feedsComposite
+      ) {
         warn(
           "tier-without-base",
           `\`${name}\` has no base \`--${baseName}\`; the tier only overrides a base.`,

@@ -3,6 +3,9 @@
 /* open tier setter */
 @layer ui.utilities {
   :where(:is([open], :popover-open, [aria-expanded="true"])[style*="--open:"]) {
+    --_anchor-name-open: var(--anchor-name--open);
+    --_position-anchor-open: var(--position-anchor--open);
+    --_position-area-open: var(--position-area--open);
     --_template-cols-open: var(--template-cols--open);
     --_template-rows-open: var(--template-rows--open);
     --_text-decoration-open: var(--text-decoration--open);
@@ -34,6 +37,9 @@
     --_transition-delay-open: var(--transition-delay--open);
   }
   :where([data-ui~="group"]:is([open], :popover-open, [aria-expanded="true"]) [style*="--group-"]) {
+    --_anchor-name-g-open: var(--group-anchor-name--open);
+    --_position-anchor-g-open: var(--group-position-anchor--open);
+    --_position-area-g-open: var(--group-position-area--open);
     --_template-cols-g-open: var(--group-template-cols--open);
     --_template-rows-g-open: var(--group-template-rows--open);
     --_text-decoration-g-open: var(--group-text-decoration--open);
