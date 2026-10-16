@@ -120,7 +120,11 @@ export const UTILITY_SECTIONS: readonly UtilitySection[] = [
     title: "Borders",
     description: "Radius, borders, dividers, outline, and the focus ring.",
     utilities: [
-      "rounded",
+      "radius",
+      "radius-t",
+      "radius-b",
+      "radius-l",
+      "radius-r",
       "border",
       "border-x",
       "border-y",
@@ -143,8 +147,17 @@ export const UTILITY_SECTIONS: readonly UtilitySection[] = [
   {
     id: "effects",
     title: "Effects",
-    description: "Shadows and opacity.",
-    utilities: ["shadow", "shadow-hue", "shadow-angle", "opacity"],
+    description: "Shadows, opacity, filters, and blending.",
+    utilities: [
+      "shadow",
+      "elevation",
+      "shadow-tint",
+      "shadow-angle",
+      "opacity",
+      "filter",
+      "backdrop-filter",
+      "mix-blend",
+    ],
   },
   {
     id: "transforms",

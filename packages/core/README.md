@@ -71,7 +71,7 @@ Every value in the kit resolves from a CSS custom property, which gives you thre
 
 /* 2. Component hooks (--ui-*) restyle one primitive everywhere */
 :root {
-  --ui-button-rounded: var(--radius-full);
+  --ui-button-radius: var(--radius-full);
 }
 ```
 

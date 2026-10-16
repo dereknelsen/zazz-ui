@@ -21,7 +21,7 @@ const shown = (t: { value: string; min?: string; max?: string }) =>
           <td>
             <span
               aria-hidden="true"
-              style={`--display: inline-block; --size: 5; --rounded: var(--radius-sm); --border: 1; --bg: light-dark(${t.light ?? t.value}, ${t.dark ?? t.value})`}
+              style={`--display: inline-block; --size: 5; --radius: 1.5; --border: 1; --bg: light-dark(${t.light ?? t.value}, ${t.dark ?? t.value})`}
             />
           </td>
         )}

@@ -74,7 +74,7 @@
     },
     "group": {
       "primitive": null,
-      "file": "base/_utilities-color.css"
+      "file": "base/_utilities-box.css"
     },
     "input": {
       "primitive": "input",
@@ -604,7 +604,7 @@
           "--ui-field-*, --ui-field-group-* (Tier 3 owner; @layer variables)"
         ],
         "consumedby": [
-          "input.css, textarea.css, select.css, input-group.css, password-group.css, otp.css, radio.css, checkbox.css, autocomplete.css, combobox.css, command.css, button.css (metrics: h/rounded/px/icon/ring/border width+style; not font-size or leading, so the iOS 16px rule below reaches text controls only), toggle.css (via button.css), tabs.css (same metrics), badge.css (border/ring)"
+          "input.css, textarea.css, select.css, input-group.css, password-group.css, otp.css, radio.css, checkbox.css, autocomplete.css, combobox.css, command.css, button.css (metrics: h/radius/px/icon/ring/border width+style; not font-size or leading, so the iOS 16px rule below reaches text controls only), toggle.css (via button.css), tabs.css (same metrics), badge.css (border/ring)"
         ]
       }
     },
@@ -729,7 +729,7 @@
           "--ui-menu-* (@layer variables)"
         ],
         "consumedby": [
-          "select.css (--ui-menu-button-rounded), autocomplete.css, combobox.css, command.css (--ui-menu-shadow)"
+          "select.css (--ui-menu-button-radius), autocomplete.css, combobox.css, command.css (--ui-menu-shadow)"
         ],
         "see": [
           "menu.ts: optional arrow-key navigation; both forms stay no-JS"
@@ -1256,12 +1256,12 @@
       "value": "calc(var(--spacing) * 1.25)",
       "file": "primitives/badge/badge.css"
     },
-    "--ui-badge-ring-color": {
-      "value": "var(--ui-field-ring-color)",
+    "--ui-badge-radius": {
+      "value": "var(--radius-sm)",
       "file": "primitives/badge/badge.css"
     },
-    "--ui-badge-rounded": {
-      "value": "var(--radius-sm)",
+    "--ui-badge-ring-color": {
+      "value": "var(--ui-field-ring-color)",
       "file": "primitives/badge/badge.css"
     },
     "--ui-badge-shadow": {
@@ -1332,8 +1332,8 @@
       "value": "var(--color-card)",
       "file": "primitives/button-group/button-group.css"
     },
-    "--ui-button-group-rounded": {
-      "value": "var(--ui-button-rounded)",
+    "--ui-button-group-radius": {
+      "value": "var(--ui-button-radius)",
       "file": "primitives/button-group/button-group.css"
     },
     "--ui-button-icon-size": {
@@ -1352,12 +1352,12 @@
       "value": "var(--ui-field-px)",
       "file": "primitives/button/button.css"
     },
-    "--ui-button-ring-color": {
-      "value": "var(--ui-field-ring-color)",
+    "--ui-button-radius": {
+      "value": "var(--ui-field-radius)",
       "file": "primitives/button/button.css"
     },
-    "--ui-button-rounded": {
-      "value": "var(--ui-field-rounded)",
+    "--ui-button-ring-color": {
+      "value": "var(--ui-field-ring-color)",
       "file": "primitives/button/button.css"
     },
     "--ui-button-shadow": {
@@ -1400,7 +1400,7 @@
       "value": "var(--space-sm)",
       "file": "primitives/callout/callout.css"
     },
-    "--ui-callout-rounded": {
+    "--ui-callout-radius": {
       "value": "var(--radius-md)",
       "file": "primitives/callout/callout.css"
     },
@@ -1436,7 +1436,7 @@
       "value": "0",
       "file": "primitives/card/card.css"
     },
-    "--ui-card-rounded": {
+    "--ui-card-radius": {
       "value": "var(--radius-lg)",
       "file": "primitives/card/card.css"
     },
@@ -1512,7 +1512,7 @@
       "value": "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' fill='none' stroke='currentColor' stroke-linecap='square' stroke-linejoin='square' stroke-width='3' viewBox='0 0 24 24'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E\") center / contain no-repeat",
       "file": "primitives/checkbox/checkbox.css"
     },
-    "--ui-checkbox-rounded": {
+    "--ui-checkbox-radius": {
       "value": "var(--radius-xs)",
       "file": "primitives/checkbox/checkbox.css"
     },
@@ -1596,8 +1596,8 @@
       "value": "var(--ui-select-pr)",
       "file": "primitives/combobox/combobox.css"
     },
-    "--ui-combobox-rounded": {
-      "value": "var(--ui-select-rounded)",
+    "--ui-combobox-radius": {
+      "value": "var(--ui-select-radius)",
       "file": "primitives/combobox/combobox.css"
     },
     "--ui-combobox-shadow": {
@@ -1632,7 +1632,7 @@
       "value": "1",
       "file": "primitives/combobox/combobox.css"
     },
-    "--ui-combobox-tag-remove-rounded": {
+    "--ui-combobox-tag-remove-radius": {
       "value": "var(--radius-sm)",
       "file": "primitives/combobox/combobox.css"
     },
@@ -1716,7 +1716,7 @@
       "value": "0",
       "file": "primitives/dialog/dialog.css"
     },
-    "--ui-dialog-rounded": {
+    "--ui-dialog-radius": {
       "value": "var(--radius-lg)",
       "file": "primitives/dialog/dialog.css"
     },
@@ -1836,7 +1836,7 @@
       "value": "0",
       "file": "primitives/fields/fields.css"
     },
-    "--ui-field-group-rounded": {
+    "--ui-field-group-radius": {
       "value": "var(--radius-lg)",
       "file": "primitives/fields/fields.css"
     },
@@ -1896,12 +1896,12 @@
       "value": "calc(var(--spacing) * 2.5)",
       "file": "primitives/fields/fields.css"
     },
-    "--ui-field-ring-color": {
-      "value": "var(--color-ring)",
+    "--ui-field-radius": {
+      "value": "var(--radius-md)",
       "file": "primitives/fields/fields.css"
     },
-    "--ui-field-rounded": {
-      "value": "var(--radius-md)",
+    "--ui-field-ring-color": {
+      "value": "var(--color-ring)",
       "file": "primitives/fields/fields.css"
     },
     "--ui-field-self": {
@@ -2032,8 +2032,8 @@
       "value": "var(--ui-field-px)",
       "file": "primitives/input/input.css"
     },
-    "--ui-input-rounded": {
-      "value": "var(--ui-field-rounded)",
+    "--ui-input-radius": {
+      "value": "var(--ui-field-radius)",
       "file": "primitives/input/input.css"
     },
     "--ui-input-w": {
@@ -2088,7 +2088,7 @@
       "value": "0",
       "file": "primitives/kbd/kbd.css"
     },
-    "--ui-kbd-rounded": {
+    "--ui-kbd-radius": {
       "value": "var(--radius-xs)",
       "file": "primitives/kbd/kbd.css"
     },
@@ -2124,14 +2124,6 @@
       "value": "1px solid var(--color-faded)",
       "file": "primitives/lightbox/lightbox.css"
     },
-    "--ui-lightbox-img-filter--active": {
-      "value": "brightness(0.5)",
-      "file": "primitives/lightbox/lightbox.css"
-    },
-    "--ui-lightbox-img-filter--hover": {
-      "value": "brightness(0.8)",
-      "file": "primitives/lightbox/lightbox.css"
-    },
     "--ui-lightbox-img-opacity": {
       "value": "1",
       "file": "primitives/lightbox/lightbox.css"
@@ -2157,7 +2149,7 @@
       "file": "primitives/lightbox/lightbox.css"
     },
     "--ui-lightbox-img-transition-property": {
-      "value": "transform, filter",
+      "value": "transform",
       "file": "primitives/lightbox/lightbox.css"
     },
     "--ui-lightbox-img-transition-timing-function": {
@@ -2176,7 +2168,7 @@
       "value": "0",
       "file": "primitives/lightbox/lightbox.css"
     },
-    "--ui-lightbox-slide-rounded": {
+    "--ui-lightbox-slide-radius": {
       "value": "var(--radius-lg)",
       "file": "primitives/lightbox/lightbox.css"
     },
@@ -2204,7 +2196,7 @@
       "value": "1",
       "file": "primitives/lightbox/lightbox.css"
     },
-    "--ui-lightbox-thumb-rounded": {
+    "--ui-lightbox-thumb-radius": {
       "value": "var(--radius-md)",
       "file": "primitives/lightbox/lightbox.css"
     },
@@ -2212,7 +2204,7 @@
       "value": "calc(var(--spacing) * 16)",
       "file": "primitives/lightbox/lightbox.css"
     },
-    "--ui-menu-button-rounded": {
+    "--ui-menu-button-radius": {
       "value": "var(--radius-sm)",
       "file": "primitives/menu/menu.css"
     },
@@ -2248,8 +2240,8 @@
       "value": "var(--ui-progress-h)",
       "file": "primitives/meter/meter.css"
     },
-    "--ui-meter-rounded": {
-      "value": "var(--ui-progress-rounded)",
+    "--ui-meter-radius": {
+      "value": "var(--ui-progress-radius)",
       "file": "primitives/meter/meter.css"
     },
     "--ui-meter-track-border": {
@@ -2332,7 +2324,7 @@
       "value": "transform var(--default-transition-duration) var(--default-transition-timing-function)",
       "file": "primitives/navigation-menu/navigation-menu.css"
     },
-    "--ui-navigation-menu-popover-child-rounded": {
+    "--ui-navigation-menu-popover-child-radius": {
       "value": "var(--radius-sm)",
       "file": "primitives/navigation-menu/navigation-menu.css"
     },
@@ -2448,8 +2440,8 @@
       "value": "var(--ui-button-px)",
       "file": "primitives/select/select.css"
     },
-    "--ui-option-rounded": {
-      "value": "var(--ui-menu-button-rounded)",
+    "--ui-option-radius": {
+      "value": "var(--ui-menu-button-radius)",
       "file": "primitives/select/select.css"
     },
     "--ui-option-shadow": {
@@ -2496,8 +2488,8 @@
       "value": "var(--ui-field-h)",
       "file": "primitives/otp/otp.css"
     },
-    "--ui-otp-cell-rounded": {
-      "value": "var(--ui-field-rounded)",
+    "--ui-otp-cell-radius": {
+      "value": "var(--ui-field-radius)",
       "file": "primitives/otp/otp.css"
     },
     "--ui-otp-cell-w": {
@@ -2572,7 +2564,7 @@
       "value": "var(--color-border)",
       "file": "primitives/popover/popover.css"
     },
-    "--ui-popover-button-rounded": {
+    "--ui-popover-button-radius": {
       "value": "var(--radius-sm)",
       "file": "primitives/popover/popover.css"
     },
@@ -2616,7 +2608,7 @@
       "value": "flip-inline, flip-block, flip-inline flip-block",
       "file": "primitives/navigation-menu/navigation-menu.css"
     },
-    "--ui-popover-rounded": {
+    "--ui-popover-radius": {
       "value": "var(--radius-md)",
       "file": "primitives/popover/popover.css"
     },
@@ -2656,7 +2648,7 @@
       "value": "1s",
       "file": "primitives/progress/progress.css"
     },
-    "--ui-progress-rounded": {
+    "--ui-progress-radius": {
       "value": "var(--radius-full)",
       "file": "primitives/progress/progress.css"
     },
@@ -2724,7 +2716,7 @@
       "value": "1em",
       "file": "primitives/radio/radio.css"
     },
-    "--ui-radio-rounded": {
+    "--ui-radio-radius": {
       "value": "var(--radius-full)",
       "file": "primitives/radio/radio.css"
     },
@@ -2832,8 +2824,8 @@
       "value": "calc(var(--spacing) * 2)",
       "file": "primitives/select/select.css"
     },
-    "--ui-select-rounded": {
-      "value": "var(--ui-field-rounded)",
+    "--ui-select-radius": {
+      "value": "var(--ui-field-radius)",
       "file": "primitives/select/select.css"
     },
     "--ui-select-w": {
@@ -2864,7 +2856,7 @@
       "value": "calc(var(--ui-slider-track-h) * -1)",
       "file": "primitives/slider/slider.css"
     },
-    "--ui-slider-thumb-rounded": {
+    "--ui-slider-thumb-radius": {
       "value": "var(--radius-full)",
       "file": "primitives/slider/slider.css"
     },
@@ -2888,11 +2880,11 @@
       "value": "calc(var(--spacing) * 1.5)",
       "file": "primitives/slider/slider.css"
     },
-    "--ui-slider-track-rounded": {
+    "--ui-slider-track-radius": {
       "value": "var(--radius-full)",
       "file": "primitives/slider/slider.css"
     },
-    "--ui-switch-rounded": {
+    "--ui-switch-radius": {
       "value": "var(--radius-full)",
       "file": "primitives/switch/switch.css"
     },
@@ -3044,7 +3036,7 @@
       "value": "var(--ui-tabs-track-padding)",
       "file": "primitives/tabs/tabs.css"
     },
-    "--ui-tabs-indicator-rounded": {
+    "--ui-tabs-indicator-radius": {
       "value": "var(--ui-field-inset-child-radius)",
       "file": "primitives/tabs/tabs.css"
     },
@@ -3116,8 +3108,8 @@
       "value": "calc(var(--spacing) * 0.5)",
       "file": "primitives/tabs/tabs.css"
     },
-    "--ui-tabs-track-rounded": {
-      "value": "var(--ui-field-rounded)",
+    "--ui-tabs-track-radius": {
+      "value": "var(--ui-field-radius)",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-textarea-border-color": {
@@ -3156,12 +3148,12 @@
       "value": "var(--ui-field-px)",
       "file": "primitives/textarea/textarea.css"
     },
-    "--ui-textarea-resize": {
-      "value": "vertical",
+    "--ui-textarea-radius": {
+      "value": "var(--ui-field-radius)",
       "file": "primitives/textarea/textarea.css"
     },
-    "--ui-textarea-rounded": {
-      "value": "var(--ui-field-rounded)",
+    "--ui-textarea-resize": {
+      "value": "vertical",
       "file": "primitives/textarea/textarea.css"
     },
     "--ui-textarea-w": {
@@ -3212,7 +3204,7 @@
       "value": "calc(var(--spacing) * 4)",
       "file": "primitives/toaster/toaster.css"
     },
-    "--ui-toaster-rounded": {
+    "--ui-toaster-radius": {
       "value": "var(--radius-md)",
       "file": "primitives/toaster/toaster.css"
     },
@@ -3324,8 +3316,8 @@
       "value": "var(--color-card)",
       "file": "primitives/toggle-group/toggle-group.css"
     },
-    "--ui-toggle-group-rounded": {
-      "value": "var(--ui-toggle-rounded)",
+    "--ui-toggle-group-radius": {
+      "value": "var(--ui-toggle-radius)",
       "file": "primitives/toggle-group/toggle-group.css"
     },
     "--ui-toggle-icon-size": {
@@ -3344,12 +3336,12 @@
       "value": "var(--ui-button-px)",
       "file": "primitives/toggle/toggle.css"
     },
-    "--ui-toggle-ring-color": {
-      "value": "var(--ui-button-ring-color)",
+    "--ui-toggle-radius": {
+      "value": "var(--ui-button-radius)",
       "file": "primitives/toggle/toggle.css"
     },
-    "--ui-toggle-rounded": {
-      "value": "var(--ui-button-rounded)",
+    "--ui-toggle-ring-color": {
+      "value": "var(--ui-button-ring-color)",
       "file": "primitives/toggle/toggle.css"
     },
     "--ui-toggle-shadow": {
@@ -3448,7 +3440,7 @@
       "value": "var(--spacing)",
       "file": "primitives/tooltip/tooltip.css"
     },
-    "--ui-tooltip-rounded": {
+    "--ui-tooltip-radius": {
       "value": "var(--radius-sm)",
       "file": "primitives/tooltip/tooltip.css"
     },
@@ -4196,6 +4188,12 @@
       "light": "1px",
       "dark": "1px"
     },
+    "--default-shadow-angle": {
+      "value": "0deg",
+      "file": "base/_variables.css",
+      "light": "0deg",
+      "dark": "0deg"
+    },
     "--default-transition": {
       "value": "var(--default-transition-colors), var(--default-transition-transforms), var(--default-transition-effects), var(--default-transition-content)",
       "file": "base/_variables.css",
@@ -4880,39 +4878,11 @@
       "light": "3px",
       "dark": "3px"
     },
-    "--shadow-2xl": {
-      "value": "calc(555 * var(--_shadow-x)) calc(555 * var(--_shadow-y)) 156px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0), calc(356 * var(--_shadow-x)) calc(356 * var(--_shadow-y)) 143px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01), calc(200 * var(--_shadow-x)) calc(200 * var(--_shadow-y)) 120px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04), calc(89 * var(--_shadow-x)) calc(89 * var(--_shadow-y)) 89px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06), calc(23 * var(--_shadow-x)) calc(23 * var(--_shadow-y)) 50px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.08)",
-      "file": "base/_variables.css"
-    },
-    "--shadow-2xs": {
-      "value": "calc(1 * var(--_shadow-x)) calc(1 * var(--_shadow-y)) 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04), 0 0 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05)",
-      "file": "base/_variables.css"
-    },
-    "--shadow-lg": {
-      "value": "calc(247 * var(--_shadow-x)) calc(247 * var(--_shadow-y)) 69px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0), calc(158 * var(--_shadow-x)) calc(158 * var(--_shadow-y)) 63px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01), calc(89 * var(--_shadow-x)) calc(89 * var(--_shadow-y)) 53px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03), calc(39 * var(--_shadow-x)) calc(39 * var(--_shadow-y)) 39px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05), calc(10 * var(--_shadow-x)) calc(10 * var(--_shadow-y)) 22px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06)",
-      "file": "base/_variables.css"
-    },
-    "--shadow-md": {
-      "value": "calc(66 * var(--_shadow-x)) calc(66 * var(--_shadow-y)) 18px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0), calc(42 * var(--_shadow-x)) calc(42 * var(--_shadow-y)) 17px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01), calc(24 * var(--_shadow-x)) calc(24 * var(--_shadow-y)) 14px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03), calc(11 * var(--_shadow-x)) calc(11 * var(--_shadow-y)) 11px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04), calc(3 * var(--_shadow-x)) calc(3 * var(--_shadow-y)) 6px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05)",
-      "file": "base/_variables.css"
-    },
     "--shadow-ring": {
       "value": "var(--ring-offset-shadow), var(--ring-shadow)",
       "file": "base/_variables.css",
       "light": "0 0 0 0px oklch(1 0 0), 0 0 0 calc(0px + 3px) color-mix(in oklch, oklch(0.145 0 0) 20%, transparent)",
       "dark": "0 0 0 0px oklch(0.241 0.009 285.7), 0 0 0 calc(0px + 3px) color-mix(in oklch, oklch(0.985 0 0) 20%, transparent)"
-    },
-    "--shadow-sm": {
-      "value": "calc(25 * var(--_shadow-x)) calc(25 * var(--_shadow-y)) 7px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0), calc(16 * var(--_shadow-x)) calc(16 * var(--_shadow-y)) 6px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01), calc(9 * var(--_shadow-x)) calc(9 * var(--_shadow-y)) 5px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03), calc(4 * var(--_shadow-x)) calc(4 * var(--_shadow-y)) 4px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04), calc(1 * var(--_shadow-x)) calc(1 * var(--_shadow-y)) 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05)",
-      "file": "base/_variables.css"
-    },
-    "--shadow-xl": {
-      "value": "calc(370 * var(--_shadow-x)) calc(370 * var(--_shadow-y)) 104px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0), calc(237 * var(--_shadow-x)) calc(237 * var(--_shadow-y)) 95px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01), calc(133 * var(--_shadow-x)) calc(133 * var(--_shadow-y)) 80px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04), calc(59 * var(--_shadow-x)) calc(59 * var(--_shadow-y)) 59px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06), calc(15 * var(--_shadow-x)) calc(15 * var(--_shadow-y)) 33px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.07)",
-      "file": "base/_variables.css"
-    },
-    "--shadow-xs": {
-      "value": "calc(8 * var(--_shadow-x)) calc(8 * var(--_shadow-y)) 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0), calc(5 * var(--_shadow-x)) calc(5 * var(--_shadow-y)) 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01), calc(3 * var(--_shadow-x)) calc(3 * var(--_shadow-y)) 2px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03), calc(1 * var(--_shadow-x)) calc(1 * var(--_shadow-y)) 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04), 0 0 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05)",
-      "file": "base/_variables.css"
     },
     "--space-2xl": {
       "value": "calc(var(--spacing) * 40)",

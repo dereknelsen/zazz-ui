@@ -227,6 +227,7 @@ describe("buildHead cdn mode", () => {
     expect(links).toEqual([
       "_layers.css",
       "_variables.css",
+      "_shadows.css",
       "_breakpoints.css",
       "_reset.css",
       "_typography.css",

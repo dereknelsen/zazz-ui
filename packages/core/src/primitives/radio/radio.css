@@ -18,7 +18,7 @@
     --ui-radio-border-color: var(--ui-field-border-color);
     --ui-radio-border-color--hover: var(--ui-field-border-color--hover);
     --ui-radio-border-color--checked: var(--color-primary);
-    --ui-radio-rounded: var(--radius-full);
+    --ui-radio-radius: var(--radius-full);
     --ui-radio-dot-size: 1em;
     --ui-radio-dot-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' fill='currentColor' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3C/svg%3E")
       center / contain no-repeat;
@@ -46,7 +46,11 @@
     border-width: var(--_border-width-resolved, var(--ui-radio-border-width));
     border-style: var(--_border-style-resolved, var(--ui-radio-border-style));
     border-color: var(--_border-color-resolved, var(--ui-radio-border-color));
-    border-radius: var(--_rounded-resolved, var(--ui-radio-rounded));
+    --_radius-len: var(--_radius-resolved, var(--ui-radio-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-radio-radius));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
 
     /* centres the ::before dot */
     display: inline-grid;

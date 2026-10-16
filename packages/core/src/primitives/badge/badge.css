@@ -41,7 +41,7 @@
     --ui-badge-gap: var(--spacing);
     --ui-badge-px: calc(var(--spacing) * 1.25);
     --ui-badge-h: calc(var(--spacing) * 5);
-    --ui-badge-rounded: var(--radius-sm);
+    --ui-badge-radius: var(--radius-sm);
 
     --ui-badge-icon-size: calc(var(--spacing) * 3);
 
@@ -146,7 +146,7 @@
   inherits: false;
 }
 
-@property --_badge-rounded {
+@property --_badge-radius {
   syntax: "*";
   inherits: false;
 }
@@ -204,7 +204,11 @@
       --_border-color-resolved,
       var(--_badge-border-color, var(--ui-badge-border-color))
     );
-    border-radius: var(--_rounded-resolved, var(--_badge-rounded, var(--ui-badge-rounded)));
+    --_radius-len: var(--_radius-resolved, var(--_badge-radius, var(--ui-badge-radius)));
+    --_radius-num: var(--_radius-resolved, var(--_badge-radius, var(--ui-badge-radius)));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
 
     color: var(--_text-resolved, var(--_badge-text, var(--ui-badge-text)));
     background-color: var(--_bg-resolved, var(--_badge-bg, var(--ui-badge-bg)));
@@ -468,7 +472,7 @@
     --_badge-border-style: none;
 
     --_badge-px: 0;
-    --_badge-rounded: 0;
+    --_badge-radius: 0;
 
     --_badge-shadow: 0 0 transparent;
   }

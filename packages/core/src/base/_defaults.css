@@ -326,6 +326,19 @@
     opacity: var(--_opacity-resolved, 1);
   }
 
+  :where(:is([style*="--filter--"], [style*="--group-filter--"])) {
+    filter: var(--_filter-resolved, none);
+  }
+
+
+  :where(:is([style*="--backdrop-filter--"], [style*="--group-backdrop-filter--"])) {
+    backdrop-filter: var(--_backdrop-filter-resolved, none);
+  }
+
+  :where(:is([style*="--mix-blend--"], [style*="--group-mix-blend--"])) {
+    mix-blend-mode: var(--_mix-blend-resolved, normal);
+  }
+
 
 
 
@@ -349,6 +362,39 @@
 
 
 
+  :where(:is([style*="--radius--"], [style*="--group-radius--"]):not([data-ui~="meter"], [data-ui~="progress"], [popover], code, input[role="switch"], input[type="checkbox"]:not([role="switch"]), input[type="range"], kbd)) {
+    --_radius-len: var(--_radius-resolved, 0);
+    --_radius-num: var(--_radius-resolved, 0);
+    border-radius: calc(var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier));
+  }
+
+  :where(:is([style*="--radius-t--"], [style*="--group-radius-t--"]):not([data-ui~="meter"], [data-ui~="progress"], [popover], code, input[role="switch"], input[type="checkbox"]:not([role="switch"]), input[type="range"], kbd)) {
+    --_radius-t-len: var(--_radius-t-resolved, 0);
+    --_radius-t-num: var(--_radius-t-resolved, 0);
+    border-start-start-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-multiplier));
+    border-start-end-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-multiplier));
+  }
+
+  :where(:is([style*="--radius-b--"], [style*="--group-radius-b--"]):not([data-ui~="meter"], [data-ui~="progress"], [popover], code, input[role="switch"], input[type="checkbox"]:not([role="switch"]), input[type="range"], kbd)) {
+    --_radius-b-len: var(--_radius-b-resolved, 0);
+    --_radius-b-num: var(--_radius-b-resolved, 0);
+    border-end-start-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-multiplier));
+    border-end-end-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-multiplier));
+  }
+
+  :where(:is([style*="--radius-l--"], [style*="--group-radius-l--"]):not([data-ui~="meter"], [data-ui~="progress"], [popover], code, input[role="switch"], input[type="checkbox"]:not([role="switch"]), input[type="range"], kbd)) {
+    --_radius-l-len: var(--_radius-l-resolved, 0);
+    --_radius-l-num: var(--_radius-l-resolved, 0);
+    border-start-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-multiplier));
+    border-end-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-multiplier));
+  }
+
+  :where(:is([style*="--radius-r--"], [style*="--group-radius-r--"]):not([data-ui~="meter"], [data-ui~="progress"], [popover], code, input[role="switch"], input[type="checkbox"]:not([role="switch"]), input[type="range"], kbd)) {
+    --_radius-r-len: var(--_radius-r-resolved, 0);
+    --_radius-r-num: var(--_radius-r-resolved, 0);
+    border-start-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-multiplier));
+    border-end-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-multiplier));
+  }
 
 
 
@@ -363,5 +409,9 @@
 
   :where(:is(:is([style*="--shadow--"], [style*="--ring--"], [style*="--ring-color--"], [style*="--ring-offset--"], [style*="--ring-offset-color--"]), :is([style*="--group-shadow--"], [style*="--group-ring--"], [style*="--group-ring-color--"], [style*="--group-ring-offset--"], [style*="--group-ring-offset-color--"])):not([popover], dialog, input[role="switch"], input[type="checkbox"]:not([role="switch"]))) {
     box-shadow: var(--_focus-shadow, 0 0 #0000), 0 0 0 calc(abs(var(--_ring-offset-w, 0px)) * (1 - max(0, -1 * sign(var(--_ring-w, 0px))))) var(--_ring-offset-color-resolved, transparent), 0 0 0 calc((abs(var(--_ring-offset-w, 0px)) + abs(var(--_ring-w, 0px))) * (1 - max(0, -1 * sign(var(--_ring-w, 0px))))) var(--_ring-color-resolved, var(--color-ring)), inset 0 0 0 calc(abs(var(--_ring-offset-w, 0px)) * max(0, -1 * sign(var(--_ring-w, 0px)))) var(--_ring-offset-color-resolved, transparent), inset 0 0 0 calc((abs(var(--_ring-offset-w, 0px)) + abs(var(--_ring-w, 0px))) * max(0, -1 * sign(var(--_ring-w, 0px)))) var(--_ring-color-resolved, var(--color-ring)), var(--_shadow-resolved, 0 0 #0000);
+  }
+
+  :where(:is(:is([style*="--filter--"], [style*="--elevation--"]), :is([style*="--group-filter--"], [style*="--group-elevation--"]))) {
+    filter: var(--_filter-resolved,) var(--_elevation-filter,);
   }
 }

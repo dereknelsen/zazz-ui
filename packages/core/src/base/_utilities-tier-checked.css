@@ -23,6 +23,10 @@
     --_border-r-checked: var(--border-r--checked);
     --_border-b-checked: var(--border-b--checked);
     --_opacity-checked: var(--opacity--checked);
+    --_filter-checked: var(--filter--checked);
+    --_elevation-checked: var(--elevation--checked);
+    --_backdrop-filter-checked: var(--backdrop-filter--checked);
+    --_mix-blend-checked: var(--mix-blend--checked);
     --_shadow-checked: var(--shadow--checked);
     --_shadow-angle-checked: var(--shadow-angle--checked);
     --_ring-checked: var(--ring--checked);
@@ -35,6 +39,7 @@
     --_transition-checked: var(--transition--checked);
     --_transition-duration-checked: var(--transition-duration--checked);
     --_transition-delay-checked: var(--transition-delay--checked);
+    --_radius-checked: var(--radius--checked);
   }
   :where([data-ui~="group"]:is(:checked, [aria-checked="true"]) [style*="--group-"]) {
     --_anchor-name-g-checked: var(--group-anchor-name--checked);
@@ -57,6 +62,10 @@
     --_border-r-g-checked: var(--group-border-r--checked);
     --_border-b-g-checked: var(--group-border-b--checked);
     --_opacity-g-checked: var(--group-opacity--checked);
+    --_filter-g-checked: var(--group-filter--checked);
+    --_elevation-g-checked: var(--group-elevation--checked);
+    --_backdrop-filter-g-checked: var(--group-backdrop-filter--checked);
+    --_mix-blend-g-checked: var(--group-mix-blend--checked);
     --_shadow-g-checked: var(--group-shadow--checked);
     --_shadow-angle-g-checked: var(--group-shadow-angle--checked);
     --_ring-g-checked: var(--group-ring--checked);
@@ -69,5 +78,6 @@
     --_transition-g-checked: var(--group-transition--checked);
     --_transition-duration-g-checked: var(--group-transition-duration--checked);
     --_transition-delay-g-checked: var(--group-transition-delay--checked);
+    --_radius-g-checked: var(--group-radius--checked);
   }
 }

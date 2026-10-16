@@ -180,8 +180,8 @@ describe("families", () => {
     expect(style(el, "text-align")).toBe("center");
   });
 
-  it("--rounded and --position are plain utilities", () => {
-    const el = mount(`<div style="--rounded: 8px; --position: relative"></div>`);
+  it("--radius and --position are plain utilities", () => {
+    const el = mount(`<div style="--radius: 8px; --position: relative"></div>`);
     expect(style(el, "border-radius")).toBe("8px");
     expect(style(el, "position")).toBe("relative");
   });

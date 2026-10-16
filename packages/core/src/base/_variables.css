@@ -84,6 +84,9 @@
     --color-ring: var(--color-primary);
     /* the shadow color every --shadow-* token is tinted with (alpha comes from the token) */
     --color-shadow: var(--color-black);
+    /* the light direction every --shadow-* token is cast from (0deg down, clockwise);
+       --shadow-angle turns it for an element and its subtree */
+    --default-shadow-angle: 0deg;
 
     /* status */
     --color-info: light-dark(oklch(0.5876 0.1389 241.97), oklch(0.5 0.1193 242.75));
@@ -552,88 +555,5 @@
   [data-ui~="theme-light"] {
     color-scheme: light;
     color: var(--color-foreground);
-  }
-}
-
-/* Shadows: here, not in the :root block above, so the same rule re-declares
-   them wherever a --shadow-hue or --shadow-angle style utility is set. A
-   token's var() resolves where it is declared, so the element and its subtree
-   get shadows tinted with that hue and cast at that angle (0deg down,
-   clockwise): a --shadow keyword, var(--shadow-md), and any primitive's shadow.
-   --_shadow-x and -y are the cast direction, one pixel long. */
-@layer variables {
-  :root,
-  :where([style*="--shadow-hue:"], [style*="--shadow-angle"]) {
-    --_shadow-x: calc(-1px * sin(var(--_shadow-angle-resolved, 0deg)));
-    --_shadow-y: calc(1px * cos(var(--_shadow-angle-resolved, 0deg)));
-    --shadow-2xs:
-      calc(1 * var(--_shadow-x)) calc(1 * var(--_shadow-y)) 1px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
-      0 0 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05);
-    --shadow-xs:
-      calc(8 * var(--_shadow-x)) calc(8 * var(--_shadow-y)) 2px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
-      calc(5 * var(--_shadow-x)) calc(5 * var(--_shadow-y)) 2px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
-      calc(3 * var(--_shadow-x)) calc(3 * var(--_shadow-y)) 2px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03),
-      calc(1 * var(--_shadow-x)) calc(1 * var(--_shadow-y)) 1px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
-      0 0 1px 0 oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05);
-    --shadow-sm:
-      calc(25 * var(--_shadow-x)) calc(25 * var(--_shadow-y)) 7px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
-      calc(16 * var(--_shadow-x)) calc(16 * var(--_shadow-y)) 6px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
-      calc(9 * var(--_shadow-x)) calc(9 * var(--_shadow-y)) 5px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03),
-      calc(4 * var(--_shadow-x)) calc(4 * var(--_shadow-y)) 4px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
-      calc(1 * var(--_shadow-x)) calc(1 * var(--_shadow-y)) 2px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05);
-    --shadow-md:
-      calc(66 * var(--_shadow-x)) calc(66 * var(--_shadow-y)) 18px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
-      calc(42 * var(--_shadow-x)) calc(42 * var(--_shadow-y)) 17px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
-      calc(24 * var(--_shadow-x)) calc(24 * var(--_shadow-y)) 14px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03),
-      calc(11 * var(--_shadow-x)) calc(11 * var(--_shadow-y)) 11px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
-      calc(3 * var(--_shadow-x)) calc(3 * var(--_shadow-y)) 6px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05);
-    --shadow-lg:
-      calc(247 * var(--_shadow-x)) calc(247 * var(--_shadow-y)) 69px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
-      calc(158 * var(--_shadow-x)) calc(158 * var(--_shadow-y)) 63px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
-      calc(89 * var(--_shadow-x)) calc(89 * var(--_shadow-y)) 53px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.03),
-      calc(39 * var(--_shadow-x)) calc(39 * var(--_shadow-y)) 39px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.05),
-      calc(10 * var(--_shadow-x)) calc(10 * var(--_shadow-y)) 22px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06);
-    --shadow-xl:
-      calc(370 * var(--_shadow-x)) calc(370 * var(--_shadow-y)) 104px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
-      calc(237 * var(--_shadow-x)) calc(237 * var(--_shadow-y)) 95px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
-      calc(133 * var(--_shadow-x)) calc(133 * var(--_shadow-y)) 80px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
-      calc(59 * var(--_shadow-x)) calc(59 * var(--_shadow-y)) 59px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06),
-      calc(15 * var(--_shadow-x)) calc(15 * var(--_shadow-y)) 33px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.07);
-    --shadow-2xl:
-      calc(555 * var(--_shadow-x)) calc(555 * var(--_shadow-y)) 156px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0),
-      calc(356 * var(--_shadow-x)) calc(356 * var(--_shadow-y)) 143px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.01),
-      calc(200 * var(--_shadow-x)) calc(200 * var(--_shadow-y)) 120px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.04),
-      calc(89 * var(--_shadow-x)) calc(89 * var(--_shadow-y)) 89px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.06),
-      calc(23 * var(--_shadow-x)) calc(23 * var(--_shadow-y)) 50px 0
-        oklch(from var(--shadow-hue, var(--color-shadow)) l c h / 0.08);
   }
 }

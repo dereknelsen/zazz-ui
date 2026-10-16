@@ -144,7 +144,7 @@ describe.each(MIGRATED)("%s is migrated", (name) => {
         [...stripComments(css).matchAll(new RegExp(`--_${prefix}-[\\w-]+`, "g"))].map((m) => m[0]),
       );
       for (const privateName of used) {
-        // a longer-named primitive's private (button writes --_button-group-rounded) is registered by its owner
+        // a longer-named primitive's private (button writes --_button-group-radius) is registered by its owner
         const owner = readdirSync(join(SRC, "primitives")).find(
           (name) => name.startsWith(`${prefix}-`) && privateName.startsWith(`--_${name}-`),
         );

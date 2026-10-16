@@ -22,7 +22,7 @@
     --ui-navigation-menu-icon-transform: rotate(-180deg);
 
     --ui-navigation-menu-popover-shadow: var(--shadow-md);
-    --ui-navigation-menu-popover-child-rounded: var(--radius-sm);
+    --ui-navigation-menu-popover-child-radius: var(--radius-sm);
     --ui-navigation-menu-popover-gap: calc(var(--spacing) * 1.5);
     --ui-navigation-menu-popover-w: min(var(--article-sm), 100% - var(--space-md));
     --ui-navigation-menu-popover-viewport-display: grid;
@@ -95,7 +95,7 @@
   }
 
   :where([data-ui~="navigation-menu"]) [data-navigation-menu-slot~="popover"] [data-ui~="button"] {
-    --ui-button-rounded: var(--radius-xs);
+    --ui-button-radius: var(--radius-xs);
   }
 
   /* ===========================================================================
@@ -135,7 +135,7 @@
     inline-size: 100%;
     padding: var(--ui-navigation-menu-popover-gap);
     border: 0;
-    border-radius: var(--ui-navigation-menu-popover-child-rounded);
+    border-radius: var(--ui-navigation-menu-popover-child-radius);
     color: inherit;
     font: inherit;
     text-align: start;
@@ -193,7 +193,7 @@
     display: flex;
     flex-direction: column;
     padding: var(--ui-navigation-menu-popover-gap);
-    border-radius: var(--ui-navigation-menu-popover-child-rounded);
+    border-radius: var(--ui-navigation-menu-popover-child-radius);
     text-decoration: none;
     transition: background-color var(--default-transition-duration)
       var(--default-transition-timing-function);

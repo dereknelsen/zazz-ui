@@ -424,7 +424,7 @@ that acts like a control is `data-ui="button" data-button-variant="link"`.
 **Two conventions:**
 
 - **Variants are presets:** `data-ui="button" data-button-variant="primary"` — never a class. Copy anatomy from `packages/core/src/primitives/{name}/*.html`.
-- **Theming via hooks:** primitives read `--ui-<name>-<utility>` hooks named after the utilities they back (`--ui-button-bg`, `--ui-button-rounded`, `--ui-button-px`), defaulting to theme roles or to another family (button metrics default to `--ui-field-*`). Set a hook on a subtree to retheme and keep hover/active states; a utility on the element flattens them.
+- **Theming via hooks:** primitives read `--ui-<name>-<utility>` hooks named after the utilities they back (`--ui-button-bg`, `--ui-button-radius`, `--ui-button-px`), defaulting to theme roles or to another family (button metrics default to `--ui-field-*`). Set a hook on a subtree to retheme and keep hover/active states; a utility on the element flattens them.
 
 ### Buttons
 
@@ -440,7 +440,7 @@ Native `<dialog data-ui="dialog">` via Invoker Commands API. `--color-card` surf
 
 ### Menu & Navigation Menu
 
-Popover API + CSS anchor positioning. Native light-dismiss. Menu items are `data-ui="button" data-button-variant="ghost"`. Navigation menu supports mega-panels with a `data-navigation-menu-slot="viewport"` grid and rich `data-navigation-menu-slot="link"` rows (title + description); featured panels are built from utilities (`--bg: var(--color-muted); --rounded: var(--radius-sm); --p: 4`) plus a `text-eyebrow`.
+Popover API + CSS anchor positioning. Native light-dismiss. Menu items are `data-ui="button" data-button-variant="ghost"`. Navigation menu supports mega-panels with a `data-navigation-menu-slot="viewport"` grid and rich `data-navigation-menu-slot="link"` rows (title + description); featured panels are built from utilities (`--bg: var(--color-muted); --radius: 1.5; --p: 4`) plus a `text-eyebrow`.
 
 ### Tabs
 
@@ -497,7 +497,7 @@ _Values shown throughout (spacing, radius, type sizes) are **desktop maximums**.
 | `--radius-2xl`  | ~40px       | Oversized surfaces     |
 | `--radius-full` | Pill-shaped | Circular/capsular      |
 
-Utility: `--rounded: var(--radius-lg)`.
+Utility: `--radius: 4.5`.
 
 ### Shadows & Elevation
 

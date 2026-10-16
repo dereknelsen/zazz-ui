@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Elevation prototype</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/src/zazz.css" />
+    <!-- the formula's CSS, written by src/elevation.ts from the controls -->
+    <style id="formula"></style>
+    <script type="module" src="/src/elevation.ts"></script>
+  </head>
+  <body>
+    <main
+      style="
+        --display: flex-col;
+        --p: 6;
+        --gap: 8;
+        --mx: auto;
+        --max-w: var(--layout-xl);
+      "
+    >
+      <header
+        style="
+          --display: flex-col;
+          --gap: 2;
+        "
+      >
+        <h1 data-ui="text-h3">Elevation prototype</h1>
+        <p style="--text: var(--color-muted-foreground)">
+          Four layers per shadow (the first rows of the table). Layer k of N sits at
+          <code>n × spacing × 4 × (k/N)²</code>, blurs by <code>max(1px, d × r_k)</code>, and fades
+          in as <code>clamp(0, (n − t_k) × m_k, c_k)</code>. Tune the table, then copy the CSS at
+          the bottom.
+        </p>
+      </header>
+
+      <section
+        data-ui="card"
+        style="
+          --display: grid;
+          --grid-cols--md: 2;
+          --p: 6;
+          --gap: 6;
+        "
+      >
+        <div
+          style="
+            --display: flex-col;
+            --gap: 4;
+          "
+        >
+          <label data-ui="field">
+            <span>Elevation <output id="n-out">4</output></span>
+            <input id="n" name="n" type="range" min="0" max="30" step="0.5" value="4" />
+          </label>
+          <label data-ui="field">
+            <span>Light angle <output id="angle-out">0deg</output></span>
+            <input id="angle" name="angle" type="range" min="0" max="359" step="1" value="0" />
+          </label>
+          <div
+            style="
+              --display: flex;
+              --flex-wrap: wrap;
+              --items: center;
+              --gap: 4;
+            "
+          >
+            <label
+              style="
+                --display: flex;
+                --items: center;
+                --gap: 2;
+              "
+            >
+              <input id="tint-on" name="tint-on" type="checkbox" /> Tint
+              <input id="tint" name="tint" type="color" value="#4f46e5" />
+            </label>
+            <label
+              style="
+                --display: flex;
+                --items: center;
+                --gap: 2;
+              "
+            >
+              Layers
+              <select id="layers" name="layers">
+                <option>3</option>
+                <option selected>4</option>
+                <option>5</option>
+              </select>
+            </label>
+            <button id="theme" data-ui="button" data-button-variant="outline" type="button">
+              Toggle dark
+            </button>
+          </div>
+        </div>
+        <table data-ui="table" id="params">
+          <thead>
+            <tr>
+              <th>Layer</th>
+              <th>t (starts at n)</th>
+              <th>m (per n)</th>
+              <th>c (cap)</th>
+              <th>r (blur ratio)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <section
+        style="
+          --display: flex-col;
+          --gap: 4;
+        "
+      >
+        <h2 data-ui="text-h4">Live</h2>
+        <div
+          style="
+            --display: grid;
+            --grid-cols--md: 3;
+            --p: 12;
+            --gap: 12;
+            --bg: var(--color-muted);
+            --radius: 4.5;
+          "
+        >
+          <figure
+            style="
+              --display: flex-col;
+              --gap: 3;
+            "
+          >
+            <div class="drop sample" style="--bg: var(--color-background)"></div>
+            <figcaption>drop-shadow chain (<code>--elevation</code>)</figcaption>
+          </figure>
+          <figure
+            style="
+              --display: flex-col;
+              --gap: 3;
+            "
+          >
+            <div class="box sample" style="--bg: var(--color-background)"></div>
+            <figcaption>box-shadow list (the tokens)</figcaption>
+          </figure>
+          <figure
+            style="
+              --display: flex-col;
+              --gap: 3;
+            "
+          >
+            <p class="drop" data-ui="text-h2" style="--text-align: center">No background</p>
+            <figcaption>drop-shadow follows the painted shape</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section
+        style="
+          --display: flex-col;
+          --gap: 4;
+        "
+      >
+        <h2 data-ui="text-h4">Ladder against today's tokens</h2>
+        <div
+          id="ladder"
+          style="
+            --display: grid;
+            --p: 10;
+            --gap: 10;
+            --bg: var(--color-muted);
+          "
+        ></div>
+      </section>
+
+      <section
+        style="
+          --display: flex-col;
+          --gap: 2;
+        "
+      >
+        <h2 data-ui="text-h4">CSS</h2>
+        <pre
+          style="
+            --p: 4;
+            --font-size: var(--text-xs);
+            --bg: var(--color-muted);
+            --overflow: auto;
+          "
+        ><code id="css"></code></pre>
+      </section>
+    </main>
+  </body>
+</html>

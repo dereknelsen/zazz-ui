@@ -23,7 +23,7 @@
        retune a --ui-progress-* token and both follow. */
     --ui-meter-w: var(--ui-progress-w);
     --ui-meter-h: var(--ui-progress-h);
-    --ui-meter-rounded: var(--ui-progress-rounded);
+    --ui-meter-radius: var(--ui-progress-radius);
     --ui-meter-bg: var(--ui-progress-bg);
     --ui-meter-track-border: var(--ui-progress-track-border);
 
@@ -52,7 +52,11 @@
     overflow: hidden;
     background-color: var(--_bg-resolved, var(--ui-meter-bg));
     border: var(--ui-meter-track-border);
-    border-radius: var(--_rounded-resolved, var(--ui-meter-rounded));
+    --_radius-len: var(--_radius-resolved, var(--ui-meter-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-meter-radius));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
   }
 
   :where([data-ui~="meter"])::-webkit-meter-bar {

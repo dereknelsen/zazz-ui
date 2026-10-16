@@ -73,13 +73,13 @@ describe("card (claim 26)", () => {
     expect(Number.parseFloat(style(at("[data-utility]"), "padding-top"))).toBeCloseTo(scale(2), 1);
   });
 
-  it("takes --rounded and --border-color utilities over its variant", () => {
+  it("takes --radius and --border-color utilities over its variant", () => {
     const root = mount(`<div>
-      <div data-ui="card" data-rounded style="--rounded: var(--radius-sm)">r</div>
+      <div data-ui="card" data-radius style="--radius: 1.5">r</div>
       <div data-ui="card" data-card-variant="outline" data-colored style="--border-color: rgb(255, 0, 0)">c</div>
     </div>`);
     const at = (selector: string) => root.querySelector(selector)!;
-    expect(Number.parseFloat(style(at("[data-rounded]"), "border-top-left-radius"))).toBeCloseTo(
+    expect(Number.parseFloat(style(at("[data-radius]"), "border-top-left-radius"))).toBeCloseTo(
       lengthPx("var(--radius-sm)"),
       1,
     );

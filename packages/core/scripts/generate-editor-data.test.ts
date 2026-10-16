@@ -78,7 +78,7 @@ describe("editor custom data", () => {
     expect(values("--w")).toEqual(expect.arrayContaining(["fit-content", "6"]));
     expect(values("--bg")).toContain("var(--color-primary)");
     expect(values("--bg--hover")).toContain("var(--color-primary)");
-    expect(values("--rounded")).toContain("var(--radius-md)");
+    expect(values("--radius")).toContain("var(--radius-md)");
     expect(values("--text")).toContain("var(--color-primary)");
     expect(values("--font-size")).toContain("var(--font-size-lg)");
     expect(values("--shadow")).toContain("var(--shadow-md)");

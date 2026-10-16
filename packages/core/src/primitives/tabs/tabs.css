@@ -17,12 +17,12 @@
        adjacent fields and buttons; --ui-tabs-label-min-h is deliberately shorter */
     --ui-tabs-gap: var(--space-xs);
     --ui-tabs-track-padding: calc(var(--spacing) * 0.5);
-    --ui-tabs-track-rounded: var(--ui-field-rounded);
+    --ui-tabs-track-radius: var(--ui-field-radius);
     --ui-tabs-track-gap: calc(var(--spacing) * 0.5);
     --ui-tabs-track-bg: var(--color-muted);
 
     --ui-tabs-indicator-bg: var(--color-card);
-    --ui-tabs-indicator-rounded: var(--ui-field-inset-child-radius);
+    --ui-tabs-indicator-radius: var(--ui-field-inset-child-radius);
     --ui-tabs-indicator-shadow: var(--shadow-xs);
     --ui-tabs-indicator-inset: var(--ui-tabs-track-padding);
 
@@ -62,7 +62,11 @@
     align-items: center;
     gap: var(--ui-tabs-track-gap);
     padding: var(--ui-tabs-track-padding);
-    border-radius: var(--ui-tabs-track-rounded);
+    --_radius-len: var(--_radius-resolved, var(--ui-tabs-track-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-tabs-track-radius));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
     background-color: var(--ui-tabs-track-bg);
 
     /* Scoped so [data-tabs-slot~="indicator"] can resolve --active-tab even when an ancestor
@@ -74,7 +78,7 @@
     position: absolute;
     z-index: 0;
     pointer-events: none;
-    border-radius: var(--ui-tabs-indicator-rounded);
+    border-radius: var(--ui-tabs-indicator-radius);
     background-color: var(--ui-tabs-indicator-bg);
     box-shadow: var(--ui-tabs-indicator-shadow);
     transition-property: left, right, top, bottom;
@@ -113,7 +117,7 @@
     user-select: none;
     text-box: trim-both ex alphabetic;
 
-    border-radius: var(--ui-tabs-indicator-rounded);
+    border-radius: var(--ui-tabs-indicator-radius);
 
     /* ring renders as box-shadow so it composes with the indicator shadow in
        the no-anchor fallback below; the ring widths animate from 0 so the
@@ -206,7 +210,7 @@
       [data-tabs-slot~="list"]
       input[type="radio"]:checked
       + [data-tabs-slot~="label"] {
-      border-radius: var(--ui-tabs-indicator-rounded);
+      border-radius: var(--ui-tabs-indicator-radius);
       background-color: var(--ui-tabs-indicator-bg);
       box-shadow:
         0 0 0 calc(var(--_ring-offset-width) * (1 - var(--_focus-in)))

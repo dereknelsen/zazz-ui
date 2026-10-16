@@ -22,7 +22,7 @@ describe("menu", () => {
     const root = mount(`<div>
       <ui-menu data-tag>${MENU("a")}</ui-menu>
       <nav data-ui="menu" data-attr>${MENU("b")}</nav>
-      <div data-radius style="--rounded: var(--ui-menu-button-rounded)"></div>
+      <div data-radius style="--radius: var(--ui-menu-button-radius)"></div>
     </div>`);
     const minWidth = lengthPx("var(--ui-menu-min-w)");
     for (const selector of ["[data-tag]", "[data-attr]"]) {

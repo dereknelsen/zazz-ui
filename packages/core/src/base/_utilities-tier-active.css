@@ -23,6 +23,10 @@
     --_border-r-active: var(--border-r--active);
     --_border-b-active: var(--border-b--active);
     --_opacity-active: var(--opacity--active);
+    --_filter-active: var(--filter--active);
+    --_elevation-active: var(--elevation--active);
+    --_backdrop-filter-active: var(--backdrop-filter--active);
+    --_mix-blend-active: var(--mix-blend--active);
     --_shadow-active: var(--shadow--active);
     --_shadow-angle-active: var(--shadow-angle--active);
     --_ring-active: var(--ring--active);
@@ -35,6 +39,7 @@
     --_transition-active: var(--transition--active);
     --_transition-duration-active: var(--transition-duration--active);
     --_transition-delay-active: var(--transition-delay--active);
+    --_radius-active: var(--radius--active);
   }
   :where([data-ui~="group"]:active [style*="--group-"]) {
     --_anchor-name-g-active: var(--group-anchor-name--active);
@@ -57,6 +62,10 @@
     --_border-r-g-active: var(--group-border-r--active);
     --_border-b-g-active: var(--group-border-b--active);
     --_opacity-g-active: var(--group-opacity--active);
+    --_filter-g-active: var(--group-filter--active);
+    --_elevation-g-active: var(--group-elevation--active);
+    --_backdrop-filter-g-active: var(--group-backdrop-filter--active);
+    --_mix-blend-g-active: var(--group-mix-blend--active);
     --_shadow-g-active: var(--group-shadow--active);
     --_shadow-angle-g-active: var(--group-shadow-angle--active);
     --_ring-g-active: var(--group-ring--active);
@@ -69,5 +78,6 @@
     --_transition-g-active: var(--group-transition--active);
     --_transition-duration-g-active: var(--group-transition-duration--active);
     --_transition-delay-g-active: var(--group-transition-delay--active);
+    --_radius-g-active: var(--group-radius--active);
   }
 }

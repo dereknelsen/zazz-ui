@@ -46,7 +46,7 @@
     --ui-button-gap: var(--spacing);
     --ui-button-px: var(--ui-field-px);
     --ui-button-min-h: var(--ui-field-h);
-    --ui-button-rounded: var(--ui-field-rounded);
+    --ui-button-radius: var(--ui-field-radius);
 
     --ui-button-icon-size: var(--ui-field-icon-size);
 
@@ -152,7 +152,7 @@
   inherits: false;
 }
 
-@property --_button-rounded {
+@property --_button-radius {
   syntax: "*";
   inherits: false;
 }
@@ -210,7 +210,11 @@
       --_border-color-resolved,
       var(--_button-border-color, var(--ui-button-border-color))
     );
-    border-radius: var(--_rounded-resolved, var(--_button-rounded, var(--ui-button-rounded)));
+    --_radius-len: var(--_radius-resolved, var(--_button-radius, var(--ui-button-radius)));
+    --_radius-num: var(--_radius-resolved, var(--_button-radius, var(--ui-button-radius)));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
 
     color: var(--_text-resolved, var(--_button-text, var(--ui-button-text)));
     background-color: var(--_bg-resolved, var(--_button-bg, var(--ui-button-bg)));
@@ -499,7 +503,7 @@
 
     --_button-min-h: 0;
     --_button-px: 0;
-    --_button-rounded: 0;
+    --_button-radius: 0;
 
     --_button-shadow: 0 0 transparent;
   }
@@ -511,14 +515,14 @@
   :where([data-ui~="button"][data-button-size="sm"]) {
     --_button-min-h: calc(var(--spacing) * 6);
     --_button-px: calc(var(--spacing) * 2);
-    --_button-rounded: var(--radius-sm);
+    --_button-radius: var(--radius-sm);
     --_button-font-size: var(--font-size-xs);
   }
 
   :where(
     :is(ui-button-group, [data-ui~="button-group"]):has([data-ui~="button"][data-button-size="sm"])
   ) {
-    --_button-group-rounded: var(--radius-sm);
+    --_button-group-radius: var(--radius-sm);
   }
 
   :where([data-ui~="button"][data-button-size="icon"]) {
@@ -531,7 +535,7 @@
   :where([data-ui~="button"][data-button-size="icon-sm"]) {
     --_button-min-h: calc(var(--spacing) * 6);
     --_button-px: calc(var(--spacing) * 2);
-    --_button-rounded: var(--radius-sm);
+    --_button-radius: var(--radius-sm);
     /* the hook, not a private: it must inherit to reach the icon */
     --ui-button-icon-size: calc(var(--spacing) * 3.5);
 

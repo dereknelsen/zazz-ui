@@ -12,7 +12,10 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vite-plus/test";
 
 const SRC = join(dirname(fileURLToPath(import.meta.url)), "..");
-const variables = readFileSync(join(SRC, "base/_variables.css"), "utf8");
+// the shadow tokens are generated into _shadows.css
+const variables =
+  readFileSync(join(SRC, "base/_variables.css"), "utf8") +
+  readFileSync(join(SRC, "base/_shadows.css"), "utf8");
 const declared = new Set([...variables.matchAll(/(--[\w-]+)\s*:/g)].map((m) => m[1]!));
 const SIZES = ["2xs", "xs", "sm", "md", "lg", "xl", "2xl"];
 

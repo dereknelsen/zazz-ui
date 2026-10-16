@@ -121,8 +121,8 @@ describe("audit warnings", () => {
   });
 
   it("flags a modifier on a family that has none, and a tier the family lacks", () => {
-    expect(warningsFor(`<div style="--rounded: 4; --rounded--md: 8"></div>`)).toEqual([
-      expect.stringMatching(/--rounded--md.*tier/),
+    expect(warningsFor(`<div style="--z: 4; --z--md: 8"></div>`)).toEqual([
+      expect.stringMatching(/--z--md.*tier/),
     ]);
     // color takes breakpoints and states; effects only states
     expect(
@@ -285,14 +285,16 @@ describe("audit warnings", () => {
     for (const style of [
       "--w:auto",
       "--w--md:  auto",
-      "--shadow--hover:lg",
+      "--font-weight:strong",
       "--display:flex-col",
       "--bg:none",
       "--position:sticky",
       "--stuck-state:top",
     ]) {
       expect(
-        warningsFor(`<div style="--display: flex; --w: 4; --shadow: md; ${style}"></div>`),
+        warningsFor(
+          `<div style="--display: flex; --w: 4; --shadow: var(--shadow-md); ${style}"></div>`,
+        ),
         style,
       ).toEqual([expect.stringMatching(/exactly one space after the colon/)]);
     }
@@ -469,6 +471,13 @@ describe("navigation report", () => {
     );
   });
 
+  it("a dual utility takes its aliases, and reports any other word", () => {
+    expect(warningsFor(`<div style="--radius: full"></div>`)).toEqual([]);
+    expect(warningsFor(`<div style="--radius: round"></div>`)).toEqual([
+      expect.stringMatching(/--radius: round.*full/),
+    ]);
+  });
+
   it("a shorthand's base is the base for its longhand's tier", () => {
     expect(warningsFor(`<div data-ui="card" style="--p: 4; --px--md: 6"></div>`)).toEqual([]);
     expect(warningsFor(`<code style="--p: 1; --px--md: 2">x</code>`)).toEqual([]);
@@ -482,9 +491,9 @@ describe("navigation report", () => {
 
   it("a ring or shadow tier alone needs a base where the kit sets box-shadow without reading it", () => {
     expect(warningsFor(`<p style="--ring--md: 3">x</p>`)).toEqual([]);
-    expect(warningsFor(`<button data-ui="button" style="--shadow--hover: md">x</button>`)).toEqual(
-      [],
-    );
+    expect(
+      warningsFor(`<button data-ui="button" style="--shadow--hover: var(--shadow-md)">x</button>`),
+    ).toEqual([]);
     expect(warningsFor(`<div data-ui="card" style="--ring--md: 3"></div>`)).toEqual([
       expect.stringMatching(/--ring--md.*no base/),
     ]);
@@ -554,7 +563,9 @@ describe("navigation report", () => {
       warningsFor(`<p style="--display: flex-col; --display--md: inline-flex-row-reverse"></p>`),
     ).toEqual([]);
     expect(
-      warningsFor(`<p style="--shadow: md; --shadow--hover: xl; --shadow-hue: red"></p>`),
+      warningsFor(
+        `<p style="--shadow: var(--shadow-md); --shadow--hover: var(--shadow-xl); --shadow-tint: red"></p>`,
+      ),
     ).toEqual([]);
   });
 });

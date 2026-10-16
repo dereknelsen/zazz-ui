@@ -102586,30 +102586,1459 @@
       "description": "--opacity on the ::after pseudo-element."
     },
     {
+      "name": "--filter",
+      "description": "filter — any value; effects family.",
+      "values": [
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--filter--starting",
+      "description": "--filter in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none.",
+      "values": [
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--filter--disabled",
+      "description": "--filter in the disabled state.",
+      "values": [
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--filter--active",
+      "description": "--filter in the active state.",
+      "values": [
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--filter--focus-visible",
+      "description": "--filter in the focus-visible state.",
+      "values": [
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--filter--focus-within",
+      "description": "--filter in the focus-within state.",
+      "values": [
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--filter--hover",
+      "description": "--filter in the hover state.",
+      "values": [
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--filter--checked",
+      "description": "--filter in the checked state.",
+      "values": [
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--filter--current",
+      "description": "--filter in the current state.",
+      "values": [
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--filter--open",
+      "description": "--filter in the open state.",
+      "values": [
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--filter--stuck",
+      "description": "--filter while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental.",
+      "values": [
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--group-filter--disabled",
+      "description": "--filter while an ancestor with data-ui=\"group\" is disabled.",
+      "values": [
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--group-filter--active",
+      "description": "--filter while an ancestor with data-ui=\"group\" is active.",
+      "values": [
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--group-filter--focus-visible",
+      "description": "--filter while an ancestor with data-ui=\"group\" is focus-visible.",
+      "values": [
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--group-filter--focus-within",
+      "description": "--filter while an ancestor with data-ui=\"group\" is focus-within.",
+      "values": [
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--group-filter--hover",
+      "description": "--filter while an ancestor with data-ui=\"group\" is hover.",
+      "values": [
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--group-filter--checked",
+      "description": "--filter while an ancestor with data-ui=\"group\" is checked.",
+      "values": [
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--group-filter--current",
+      "description": "--filter while an ancestor with data-ui=\"group\" is current.",
+      "values": [
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--group-filter--open",
+      "description": "--filter while an ancestor with data-ui=\"group\" is open.",
+      "values": [
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--before-filter",
+      "description": "--filter on the ::before pseudo-element."
+    },
+    {
+      "name": "--after-filter",
+      "description": "--filter on the ::after pseudo-element."
+    },
+    {
+      "name": "--elevation",
+      "description": " — any value; effects family."
+    },
+    {
+      "name": "--elevation--starting",
+      "description": "--elevation in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none."
+    },
+    {
+      "name": "--elevation--disabled",
+      "description": "--elevation in the disabled state."
+    },
+    {
+      "name": "--elevation--active",
+      "description": "--elevation in the active state."
+    },
+    {
+      "name": "--elevation--focus-visible",
+      "description": "--elevation in the focus-visible state."
+    },
+    {
+      "name": "--elevation--focus-within",
+      "description": "--elevation in the focus-within state."
+    },
+    {
+      "name": "--elevation--hover",
+      "description": "--elevation in the hover state."
+    },
+    {
+      "name": "--elevation--checked",
+      "description": "--elevation in the checked state."
+    },
+    {
+      "name": "--elevation--current",
+      "description": "--elevation in the current state."
+    },
+    {
+      "name": "--elevation--open",
+      "description": "--elevation in the open state."
+    },
+    {
+      "name": "--elevation--stuck",
+      "description": "--elevation while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental."
+    },
+    {
+      "name": "--elevation--sm",
+      "description": "--elevation at the sm breakpoint and up."
+    },
+    {
+      "name": "--elevation--md",
+      "description": "--elevation at the md breakpoint and up."
+    },
+    {
+      "name": "--elevation--lg",
+      "description": "--elevation at the lg breakpoint and up."
+    },
+    {
+      "name": "--elevation--xl",
+      "description": "--elevation at the xl breakpoint and up."
+    },
+    {
+      "name": "--elevation--2xl",
+      "description": "--elevation at the 2xl breakpoint and up."
+    },
+    {
+      "name": "--group-elevation--disabled",
+      "description": "--elevation while an ancestor with data-ui=\"group\" is disabled."
+    },
+    {
+      "name": "--group-elevation--active",
+      "description": "--elevation while an ancestor with data-ui=\"group\" is active."
+    },
+    {
+      "name": "--group-elevation--focus-visible",
+      "description": "--elevation while an ancestor with data-ui=\"group\" is focus-visible."
+    },
+    {
+      "name": "--group-elevation--focus-within",
+      "description": "--elevation while an ancestor with data-ui=\"group\" is focus-within."
+    },
+    {
+      "name": "--group-elevation--hover",
+      "description": "--elevation while an ancestor with data-ui=\"group\" is hover."
+    },
+    {
+      "name": "--group-elevation--checked",
+      "description": "--elevation while an ancestor with data-ui=\"group\" is checked."
+    },
+    {
+      "name": "--group-elevation--current",
+      "description": "--elevation while an ancestor with data-ui=\"group\" is current."
+    },
+    {
+      "name": "--group-elevation--open",
+      "description": "--elevation while an ancestor with data-ui=\"group\" is open."
+    },
+    {
+      "name": "--backdrop-filter",
+      "description": "backdrop-filter — any value; effects family."
+    },
+    {
+      "name": "--backdrop-filter--starting",
+      "description": "--backdrop-filter in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none."
+    },
+    {
+      "name": "--backdrop-filter--disabled",
+      "description": "--backdrop-filter in the disabled state."
+    },
+    {
+      "name": "--backdrop-filter--active",
+      "description": "--backdrop-filter in the active state."
+    },
+    {
+      "name": "--backdrop-filter--focus-visible",
+      "description": "--backdrop-filter in the focus-visible state."
+    },
+    {
+      "name": "--backdrop-filter--focus-within",
+      "description": "--backdrop-filter in the focus-within state."
+    },
+    {
+      "name": "--backdrop-filter--hover",
+      "description": "--backdrop-filter in the hover state."
+    },
+    {
+      "name": "--backdrop-filter--checked",
+      "description": "--backdrop-filter in the checked state."
+    },
+    {
+      "name": "--backdrop-filter--current",
+      "description": "--backdrop-filter in the current state."
+    },
+    {
+      "name": "--backdrop-filter--open",
+      "description": "--backdrop-filter in the open state."
+    },
+    {
+      "name": "--backdrop-filter--stuck",
+      "description": "--backdrop-filter while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental."
+    },
+    {
+      "name": "--group-backdrop-filter--disabled",
+      "description": "--backdrop-filter while an ancestor with data-ui=\"group\" is disabled."
+    },
+    {
+      "name": "--group-backdrop-filter--active",
+      "description": "--backdrop-filter while an ancestor with data-ui=\"group\" is active."
+    },
+    {
+      "name": "--group-backdrop-filter--focus-visible",
+      "description": "--backdrop-filter while an ancestor with data-ui=\"group\" is focus-visible."
+    },
+    {
+      "name": "--group-backdrop-filter--focus-within",
+      "description": "--backdrop-filter while an ancestor with data-ui=\"group\" is focus-within."
+    },
+    {
+      "name": "--group-backdrop-filter--hover",
+      "description": "--backdrop-filter while an ancestor with data-ui=\"group\" is hover."
+    },
+    {
+      "name": "--group-backdrop-filter--checked",
+      "description": "--backdrop-filter while an ancestor with data-ui=\"group\" is checked."
+    },
+    {
+      "name": "--group-backdrop-filter--current",
+      "description": "--backdrop-filter while an ancestor with data-ui=\"group\" is current."
+    },
+    {
+      "name": "--group-backdrop-filter--open",
+      "description": "--backdrop-filter while an ancestor with data-ui=\"group\" is open."
+    },
+    {
+      "name": "--before-backdrop-filter",
+      "description": "--backdrop-filter on the ::before pseudo-element."
+    },
+    {
+      "name": "--after-backdrop-filter",
+      "description": "--backdrop-filter on the ::after pseudo-element."
+    },
+    {
+      "name": "--mix-blend",
+      "description": "mix-blend-mode — a keyword; effects family.",
+      "values": [
+        {
+          "name": "normal"
+        },
+        {
+          "name": "multiply"
+        },
+        {
+          "name": "screen"
+        },
+        {
+          "name": "overlay"
+        },
+        {
+          "name": "darken"
+        },
+        {
+          "name": "lighten"
+        },
+        {
+          "name": "color-dodge"
+        },
+        {
+          "name": "color-burn"
+        },
+        {
+          "name": "hard-light"
+        },
+        {
+          "name": "soft-light"
+        },
+        {
+          "name": "difference"
+        },
+        {
+          "name": "exclusion"
+        },
+        {
+          "name": "hue"
+        },
+        {
+          "name": "saturation"
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "luminosity"
+        },
+        {
+          "name": "plus-lighter"
+        }
+      ]
+    },
+    {
+      "name": "--mix-blend--starting",
+      "description": "--mix-blend in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none.",
+      "values": [
+        {
+          "name": "normal"
+        },
+        {
+          "name": "multiply"
+        },
+        {
+          "name": "screen"
+        },
+        {
+          "name": "overlay"
+        },
+        {
+          "name": "darken"
+        },
+        {
+          "name": "lighten"
+        },
+        {
+          "name": "color-dodge"
+        },
+        {
+          "name": "color-burn"
+        },
+        {
+          "name": "hard-light"
+        },
+        {
+          "name": "soft-light"
+        },
+        {
+          "name": "difference"
+        },
+        {
+          "name": "exclusion"
+        },
+        {
+          "name": "hue"
+        },
+        {
+          "name": "saturation"
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "luminosity"
+        },
+        {
+          "name": "plus-lighter"
+        }
+      ]
+    },
+    {
+      "name": "--mix-blend--disabled",
+      "description": "--mix-blend in the disabled state.",
+      "values": [
+        {
+          "name": "normal"
+        },
+        {
+          "name": "multiply"
+        },
+        {
+          "name": "screen"
+        },
+        {
+          "name": "overlay"
+        },
+        {
+          "name": "darken"
+        },
+        {
+          "name": "lighten"
+        },
+        {
+          "name": "color-dodge"
+        },
+        {
+          "name": "color-burn"
+        },
+        {
+          "name": "hard-light"
+        },
+        {
+          "name": "soft-light"
+        },
+        {
+          "name": "difference"
+        },
+        {
+          "name": "exclusion"
+        },
+        {
+          "name": "hue"
+        },
+        {
+          "name": "saturation"
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "luminosity"
+        },
+        {
+          "name": "plus-lighter"
+        }
+      ]
+    },
+    {
+      "name": "--mix-blend--active",
+      "description": "--mix-blend in the active state.",
+      "values": [
+        {
+          "name": "normal"
+        },
+        {
+          "name": "multiply"
+        },
+        {
+          "name": "screen"
+        },
+        {
+          "name": "overlay"
+        },
+        {
+          "name": "darken"
+        },
+        {
+          "name": "lighten"
+        },
+        {
+          "name": "color-dodge"
+        },
+        {
+          "name": "color-burn"
+        },
+        {
+          "name": "hard-light"
+        },
+        {
+          "name": "soft-light"
+        },
+        {
+          "name": "difference"
+        },
+        {
+          "name": "exclusion"
+        },
+        {
+          "name": "hue"
+        },
+        {
+          "name": "saturation"
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "luminosity"
+        },
+        {
+          "name": "plus-lighter"
+        }
+      ]
+    },
+    {
+      "name": "--mix-blend--focus-visible",
+      "description": "--mix-blend in the focus-visible state.",
+      "values": [
+        {
+          "name": "normal"
+        },
+        {
+          "name": "multiply"
+        },
+        {
+          "name": "screen"
+        },
+        {
+          "name": "overlay"
+        },
+        {
+          "name": "darken"
+        },
+        {
+          "name": "lighten"
+        },
+        {
+          "name": "color-dodge"
+        },
+        {
+          "name": "color-burn"
+        },
+        {
+          "name": "hard-light"
+        },
+        {
+          "name": "soft-light"
+        },
+        {
+          "name": "difference"
+        },
+        {
+          "name": "exclusion"
+        },
+        {
+          "name": "hue"
+        },
+        {
+          "name": "saturation"
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "luminosity"
+        },
+        {
+          "name": "plus-lighter"
+        }
+      ]
+    },
+    {
+      "name": "--mix-blend--focus-within",
+      "description": "--mix-blend in the focus-within state.",
+      "values": [
+        {
+          "name": "normal"
+        },
+        {
+          "name": "multiply"
+        },
+        {
+          "name": "screen"
+        },
+        {
+          "name": "overlay"
+        },
+        {
+          "name": "darken"
+        },
+        {
+          "name": "lighten"
+        },
+        {
+          "name": "color-dodge"
+        },
+        {
+          "name": "color-burn"
+        },
+        {
+          "name": "hard-light"
+        },
+        {
+          "name": "soft-light"
+        },
+        {
+          "name": "difference"
+        },
+        {
+          "name": "exclusion"
+        },
+        {
+          "name": "hue"
+        },
+        {
+          "name": "saturation"
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "luminosity"
+        },
+        {
+          "name": "plus-lighter"
+        }
+      ]
+    },
+    {
+      "name": "--mix-blend--hover",
+      "description": "--mix-blend in the hover state.",
+      "values": [
+        {
+          "name": "normal"
+        },
+        {
+          "name": "multiply"
+        },
+        {
+          "name": "screen"
+        },
+        {
+          "name": "overlay"
+        },
+        {
+          "name": "darken"
+        },
+        {
+          "name": "lighten"
+        },
+        {
+          "name": "color-dodge"
+        },
+        {
+          "name": "color-burn"
+        },
+        {
+          "name": "hard-light"
+        },
+        {
+          "name": "soft-light"
+        },
+        {
+          "name": "difference"
+        },
+        {
+          "name": "exclusion"
+        },
+        {
+          "name": "hue"
+        },
+        {
+          "name": "saturation"
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "luminosity"
+        },
+        {
+          "name": "plus-lighter"
+        }
+      ]
+    },
+    {
+      "name": "--mix-blend--checked",
+      "description": "--mix-blend in the checked state.",
+      "values": [
+        {
+          "name": "normal"
+        },
+        {
+          "name": "multiply"
+        },
+        {
+          "name": "screen"
+        },
+        {
+          "name": "overlay"
+        },
+        {
+          "name": "darken"
+        },
+        {
+          "name": "lighten"
+        },
+        {
+          "name": "color-dodge"
+        },
+        {
+          "name": "color-burn"
+        },
+        {
+          "name": "hard-light"
+        },
+        {
+          "name": "soft-light"
+        },
+        {
+          "name": "difference"
+        },
+        {
+          "name": "exclusion"
+        },
+        {
+          "name": "hue"
+        },
+        {
+          "name": "saturation"
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "luminosity"
+        },
+        {
+          "name": "plus-lighter"
+        }
+      ]
+    },
+    {
+      "name": "--mix-blend--current",
+      "description": "--mix-blend in the current state.",
+      "values": [
+        {
+          "name": "normal"
+        },
+        {
+          "name": "multiply"
+        },
+        {
+          "name": "screen"
+        },
+        {
+          "name": "overlay"
+        },
+        {
+          "name": "darken"
+        },
+        {
+          "name": "lighten"
+        },
+        {
+          "name": "color-dodge"
+        },
+        {
+          "name": "color-burn"
+        },
+        {
+          "name": "hard-light"
+        },
+        {
+          "name": "soft-light"
+        },
+        {
+          "name": "difference"
+        },
+        {
+          "name": "exclusion"
+        },
+        {
+          "name": "hue"
+        },
+        {
+          "name": "saturation"
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "luminosity"
+        },
+        {
+          "name": "plus-lighter"
+        }
+      ]
+    },
+    {
+      "name": "--mix-blend--open",
+      "description": "--mix-blend in the open state.",
+      "values": [
+        {
+          "name": "normal"
+        },
+        {
+          "name": "multiply"
+        },
+        {
+          "name": "screen"
+        },
+        {
+          "name": "overlay"
+        },
+        {
+          "name": "darken"
+        },
+        {
+          "name": "lighten"
+        },
+        {
+          "name": "color-dodge"
+        },
+        {
+          "name": "color-burn"
+        },
+        {
+          "name": "hard-light"
+        },
+        {
+          "name": "soft-light"
+        },
+        {
+          "name": "difference"
+        },
+        {
+          "name": "exclusion"
+        },
+        {
+          "name": "hue"
+        },
+        {
+          "name": "saturation"
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "luminosity"
+        },
+        {
+          "name": "plus-lighter"
+        }
+      ]
+    },
+    {
+      "name": "--mix-blend--stuck",
+      "description": "--mix-blend while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental.",
+      "values": [
+        {
+          "name": "normal"
+        },
+        {
+          "name": "multiply"
+        },
+        {
+          "name": "screen"
+        },
+        {
+          "name": "overlay"
+        },
+        {
+          "name": "darken"
+        },
+        {
+          "name": "lighten"
+        },
+        {
+          "name": "color-dodge"
+        },
+        {
+          "name": "color-burn"
+        },
+        {
+          "name": "hard-light"
+        },
+        {
+          "name": "soft-light"
+        },
+        {
+          "name": "difference"
+        },
+        {
+          "name": "exclusion"
+        },
+        {
+          "name": "hue"
+        },
+        {
+          "name": "saturation"
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "luminosity"
+        },
+        {
+          "name": "plus-lighter"
+        }
+      ]
+    },
+    {
+      "name": "--group-mix-blend--disabled",
+      "description": "--mix-blend while an ancestor with data-ui=\"group\" is disabled.",
+      "values": [
+        {
+          "name": "normal"
+        },
+        {
+          "name": "multiply"
+        },
+        {
+          "name": "screen"
+        },
+        {
+          "name": "overlay"
+        },
+        {
+          "name": "darken"
+        },
+        {
+          "name": "lighten"
+        },
+        {
+          "name": "color-dodge"
+        },
+        {
+          "name": "color-burn"
+        },
+        {
+          "name": "hard-light"
+        },
+        {
+          "name": "soft-light"
+        },
+        {
+          "name": "difference"
+        },
+        {
+          "name": "exclusion"
+        },
+        {
+          "name": "hue"
+        },
+        {
+          "name": "saturation"
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "luminosity"
+        },
+        {
+          "name": "plus-lighter"
+        }
+      ]
+    },
+    {
+      "name": "--group-mix-blend--active",
+      "description": "--mix-blend while an ancestor with data-ui=\"group\" is active.",
+      "values": [
+        {
+          "name": "normal"
+        },
+        {
+          "name": "multiply"
+        },
+        {
+          "name": "screen"
+        },
+        {
+          "name": "overlay"
+        },
+        {
+          "name": "darken"
+        },
+        {
+          "name": "lighten"
+        },
+        {
+          "name": "color-dodge"
+        },
+        {
+          "name": "color-burn"
+        },
+        {
+          "name": "hard-light"
+        },
+        {
+          "name": "soft-light"
+        },
+        {
+          "name": "difference"
+        },
+        {
+          "name": "exclusion"
+        },
+        {
+          "name": "hue"
+        },
+        {
+          "name": "saturation"
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "luminosity"
+        },
+        {
+          "name": "plus-lighter"
+        }
+      ]
+    },
+    {
+      "name": "--group-mix-blend--focus-visible",
+      "description": "--mix-blend while an ancestor with data-ui=\"group\" is focus-visible.",
+      "values": [
+        {
+          "name": "normal"
+        },
+        {
+          "name": "multiply"
+        },
+        {
+          "name": "screen"
+        },
+        {
+          "name": "overlay"
+        },
+        {
+          "name": "darken"
+        },
+        {
+          "name": "lighten"
+        },
+        {
+          "name": "color-dodge"
+        },
+        {
+          "name": "color-burn"
+        },
+        {
+          "name": "hard-light"
+        },
+        {
+          "name": "soft-light"
+        },
+        {
+          "name": "difference"
+        },
+        {
+          "name": "exclusion"
+        },
+        {
+          "name": "hue"
+        },
+        {
+          "name": "saturation"
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "luminosity"
+        },
+        {
+          "name": "plus-lighter"
+        }
+      ]
+    },
+    {
+      "name": "--group-mix-blend--focus-within",
+      "description": "--mix-blend while an ancestor with data-ui=\"group\" is focus-within.",
+      "values": [
+        {
+          "name": "normal"
+        },
+        {
+          "name": "multiply"
+        },
+        {
+          "name": "screen"
+        },
+        {
+          "name": "overlay"
+        },
+        {
+          "name": "darken"
+        },
+        {
+          "name": "lighten"
+        },
+        {
+          "name": "color-dodge"
+        },
+        {
+          "name": "color-burn"
+        },
+        {
+          "name": "hard-light"
+        },
+        {
+          "name": "soft-light"
+        },
+        {
+          "name": "difference"
+        },
+        {
+          "name": "exclusion"
+        },
+        {
+          "name": "hue"
+        },
+        {
+          "name": "saturation"
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "luminosity"
+        },
+        {
+          "name": "plus-lighter"
+        }
+      ]
+    },
+    {
+      "name": "--group-mix-blend--hover",
+      "description": "--mix-blend while an ancestor with data-ui=\"group\" is hover.",
+      "values": [
+        {
+          "name": "normal"
+        },
+        {
+          "name": "multiply"
+        },
+        {
+          "name": "screen"
+        },
+        {
+          "name": "overlay"
+        },
+        {
+          "name": "darken"
+        },
+        {
+          "name": "lighten"
+        },
+        {
+          "name": "color-dodge"
+        },
+        {
+          "name": "color-burn"
+        },
+        {
+          "name": "hard-light"
+        },
+        {
+          "name": "soft-light"
+        },
+        {
+          "name": "difference"
+        },
+        {
+          "name": "exclusion"
+        },
+        {
+          "name": "hue"
+        },
+        {
+          "name": "saturation"
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "luminosity"
+        },
+        {
+          "name": "plus-lighter"
+        }
+      ]
+    },
+    {
+      "name": "--group-mix-blend--checked",
+      "description": "--mix-blend while an ancestor with data-ui=\"group\" is checked.",
+      "values": [
+        {
+          "name": "normal"
+        },
+        {
+          "name": "multiply"
+        },
+        {
+          "name": "screen"
+        },
+        {
+          "name": "overlay"
+        },
+        {
+          "name": "darken"
+        },
+        {
+          "name": "lighten"
+        },
+        {
+          "name": "color-dodge"
+        },
+        {
+          "name": "color-burn"
+        },
+        {
+          "name": "hard-light"
+        },
+        {
+          "name": "soft-light"
+        },
+        {
+          "name": "difference"
+        },
+        {
+          "name": "exclusion"
+        },
+        {
+          "name": "hue"
+        },
+        {
+          "name": "saturation"
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "luminosity"
+        },
+        {
+          "name": "plus-lighter"
+        }
+      ]
+    },
+    {
+      "name": "--group-mix-blend--current",
+      "description": "--mix-blend while an ancestor with data-ui=\"group\" is current.",
+      "values": [
+        {
+          "name": "normal"
+        },
+        {
+          "name": "multiply"
+        },
+        {
+          "name": "screen"
+        },
+        {
+          "name": "overlay"
+        },
+        {
+          "name": "darken"
+        },
+        {
+          "name": "lighten"
+        },
+        {
+          "name": "color-dodge"
+        },
+        {
+          "name": "color-burn"
+        },
+        {
+          "name": "hard-light"
+        },
+        {
+          "name": "soft-light"
+        },
+        {
+          "name": "difference"
+        },
+        {
+          "name": "exclusion"
+        },
+        {
+          "name": "hue"
+        },
+        {
+          "name": "saturation"
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "luminosity"
+        },
+        {
+          "name": "plus-lighter"
+        }
+      ]
+    },
+    {
+      "name": "--group-mix-blend--open",
+      "description": "--mix-blend while an ancestor with data-ui=\"group\" is open.",
+      "values": [
+        {
+          "name": "normal"
+        },
+        {
+          "name": "multiply"
+        },
+        {
+          "name": "screen"
+        },
+        {
+          "name": "overlay"
+        },
+        {
+          "name": "darken"
+        },
+        {
+          "name": "lighten"
+        },
+        {
+          "name": "color-dodge"
+        },
+        {
+          "name": "color-burn"
+        },
+        {
+          "name": "hard-light"
+        },
+        {
+          "name": "soft-light"
+        },
+        {
+          "name": "difference"
+        },
+        {
+          "name": "exclusion"
+        },
+        {
+          "name": "hue"
+        },
+        {
+          "name": "saturation"
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "luminosity"
+        },
+        {
+          "name": "plus-lighter"
+        }
+      ]
+    },
+    {
+      "name": "--before-mix-blend",
+      "description": "--mix-blend on the ::before pseudo-element."
+    },
+    {
+      "name": "--after-mix-blend",
+      "description": "--mix-blend on the ::after pseudo-element."
+    },
+    {
       "name": "--shadow",
       "description": " — any value; effects family.",
       "values": [
-        {
-          "name": "2xs"
-        },
-        {
-          "name": "xs"
-        },
-        {
-          "name": "sm"
-        },
-        {
-          "name": "md"
-        },
-        {
-          "name": "lg"
-        },
-        {
-          "name": "xl"
-        },
-        {
-          "name": "2xl"
-        },
         {
           "name": "var(--shadow-2xs)"
         },
@@ -102641,27 +104070,6 @@
       "description": "--shadow in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none.",
       "values": [
         {
-          "name": "2xs"
-        },
-        {
-          "name": "xs"
-        },
-        {
-          "name": "sm"
-        },
-        {
-          "name": "md"
-        },
-        {
-          "name": "lg"
-        },
-        {
-          "name": "xl"
-        },
-        {
-          "name": "2xl"
-        },
-        {
           "name": "var(--shadow-2xs)"
         },
         {
@@ -102691,27 +104099,6 @@
       "name": "--shadow--disabled",
       "description": "--shadow in the disabled state.",
       "values": [
-        {
-          "name": "2xs"
-        },
-        {
-          "name": "xs"
-        },
-        {
-          "name": "sm"
-        },
-        {
-          "name": "md"
-        },
-        {
-          "name": "lg"
-        },
-        {
-          "name": "xl"
-        },
-        {
-          "name": "2xl"
-        },
         {
           "name": "var(--shadow-2xs)"
         },
@@ -102743,27 +104130,6 @@
       "description": "--shadow in the active state.",
       "values": [
         {
-          "name": "2xs"
-        },
-        {
-          "name": "xs"
-        },
-        {
-          "name": "sm"
-        },
-        {
-          "name": "md"
-        },
-        {
-          "name": "lg"
-        },
-        {
-          "name": "xl"
-        },
-        {
-          "name": "2xl"
-        },
-        {
           "name": "var(--shadow-2xs)"
         },
         {
@@ -102793,27 +104159,6 @@
       "name": "--shadow--focus-visible",
       "description": "--shadow in the focus-visible state.",
       "values": [
-        {
-          "name": "2xs"
-        },
-        {
-          "name": "xs"
-        },
-        {
-          "name": "sm"
-        },
-        {
-          "name": "md"
-        },
-        {
-          "name": "lg"
-        },
-        {
-          "name": "xl"
-        },
-        {
-          "name": "2xl"
-        },
         {
           "name": "var(--shadow-2xs)"
         },
@@ -102845,27 +104190,6 @@
       "description": "--shadow in the focus-within state.",
       "values": [
         {
-          "name": "2xs"
-        },
-        {
-          "name": "xs"
-        },
-        {
-          "name": "sm"
-        },
-        {
-          "name": "md"
-        },
-        {
-          "name": "lg"
-        },
-        {
-          "name": "xl"
-        },
-        {
-          "name": "2xl"
-        },
-        {
           "name": "var(--shadow-2xs)"
         },
         {
@@ -102895,27 +104219,6 @@
       "name": "--shadow--hover",
       "description": "--shadow in the hover state.",
       "values": [
-        {
-          "name": "2xs"
-        },
-        {
-          "name": "xs"
-        },
-        {
-          "name": "sm"
-        },
-        {
-          "name": "md"
-        },
-        {
-          "name": "lg"
-        },
-        {
-          "name": "xl"
-        },
-        {
-          "name": "2xl"
-        },
         {
           "name": "var(--shadow-2xs)"
         },
@@ -102947,27 +104250,6 @@
       "description": "--shadow in the checked state.",
       "values": [
         {
-          "name": "2xs"
-        },
-        {
-          "name": "xs"
-        },
-        {
-          "name": "sm"
-        },
-        {
-          "name": "md"
-        },
-        {
-          "name": "lg"
-        },
-        {
-          "name": "xl"
-        },
-        {
-          "name": "2xl"
-        },
-        {
           "name": "var(--shadow-2xs)"
         },
         {
@@ -102997,27 +104279,6 @@
       "name": "--shadow--current",
       "description": "--shadow in the current state.",
       "values": [
-        {
-          "name": "2xs"
-        },
-        {
-          "name": "xs"
-        },
-        {
-          "name": "sm"
-        },
-        {
-          "name": "md"
-        },
-        {
-          "name": "lg"
-        },
-        {
-          "name": "xl"
-        },
-        {
-          "name": "2xl"
-        },
         {
           "name": "var(--shadow-2xs)"
         },
@@ -103049,27 +104310,6 @@
       "description": "--shadow in the open state.",
       "values": [
         {
-          "name": "2xs"
-        },
-        {
-          "name": "xs"
-        },
-        {
-          "name": "sm"
-        },
-        {
-          "name": "md"
-        },
-        {
-          "name": "lg"
-        },
-        {
-          "name": "xl"
-        },
-        {
-          "name": "2xl"
-        },
-        {
           "name": "var(--shadow-2xs)"
         },
         {
@@ -103099,27 +104339,6 @@
       "name": "--shadow--stuck",
       "description": "--shadow while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental.",
       "values": [
-        {
-          "name": "2xs"
-        },
-        {
-          "name": "xs"
-        },
-        {
-          "name": "sm"
-        },
-        {
-          "name": "md"
-        },
-        {
-          "name": "lg"
-        },
-        {
-          "name": "xl"
-        },
-        {
-          "name": "2xl"
-        },
         {
           "name": "var(--shadow-2xs)"
         },
@@ -103151,27 +104370,6 @@
       "description": "--shadow while an ancestor with data-ui=\"group\" is disabled.",
       "values": [
         {
-          "name": "2xs"
-        },
-        {
-          "name": "xs"
-        },
-        {
-          "name": "sm"
-        },
-        {
-          "name": "md"
-        },
-        {
-          "name": "lg"
-        },
-        {
-          "name": "xl"
-        },
-        {
-          "name": "2xl"
-        },
-        {
           "name": "var(--shadow-2xs)"
         },
         {
@@ -103201,27 +104399,6 @@
       "name": "--group-shadow--active",
       "description": "--shadow while an ancestor with data-ui=\"group\" is active.",
       "values": [
-        {
-          "name": "2xs"
-        },
-        {
-          "name": "xs"
-        },
-        {
-          "name": "sm"
-        },
-        {
-          "name": "md"
-        },
-        {
-          "name": "lg"
-        },
-        {
-          "name": "xl"
-        },
-        {
-          "name": "2xl"
-        },
         {
           "name": "var(--shadow-2xs)"
         },
@@ -103253,27 +104430,6 @@
       "description": "--shadow while an ancestor with data-ui=\"group\" is focus-visible.",
       "values": [
         {
-          "name": "2xs"
-        },
-        {
-          "name": "xs"
-        },
-        {
-          "name": "sm"
-        },
-        {
-          "name": "md"
-        },
-        {
-          "name": "lg"
-        },
-        {
-          "name": "xl"
-        },
-        {
-          "name": "2xl"
-        },
-        {
           "name": "var(--shadow-2xs)"
         },
         {
@@ -103303,27 +104459,6 @@
       "name": "--group-shadow--focus-within",
       "description": "--shadow while an ancestor with data-ui=\"group\" is focus-within.",
       "values": [
-        {
-          "name": "2xs"
-        },
-        {
-          "name": "xs"
-        },
-        {
-          "name": "sm"
-        },
-        {
-          "name": "md"
-        },
-        {
-          "name": "lg"
-        },
-        {
-          "name": "xl"
-        },
-        {
-          "name": "2xl"
-        },
         {
           "name": "var(--shadow-2xs)"
         },
@@ -103355,27 +104490,6 @@
       "description": "--shadow while an ancestor with data-ui=\"group\" is hover.",
       "values": [
         {
-          "name": "2xs"
-        },
-        {
-          "name": "xs"
-        },
-        {
-          "name": "sm"
-        },
-        {
-          "name": "md"
-        },
-        {
-          "name": "lg"
-        },
-        {
-          "name": "xl"
-        },
-        {
-          "name": "2xl"
-        },
-        {
           "name": "var(--shadow-2xs)"
         },
         {
@@ -103405,27 +104519,6 @@
       "name": "--group-shadow--checked",
       "description": "--shadow while an ancestor with data-ui=\"group\" is checked.",
       "values": [
-        {
-          "name": "2xs"
-        },
-        {
-          "name": "xs"
-        },
-        {
-          "name": "sm"
-        },
-        {
-          "name": "md"
-        },
-        {
-          "name": "lg"
-        },
-        {
-          "name": "xl"
-        },
-        {
-          "name": "2xl"
-        },
         {
           "name": "var(--shadow-2xs)"
         },
@@ -103457,27 +104550,6 @@
       "description": "--shadow while an ancestor with data-ui=\"group\" is current.",
       "values": [
         {
-          "name": "2xs"
-        },
-        {
-          "name": "xs"
-        },
-        {
-          "name": "sm"
-        },
-        {
-          "name": "md"
-        },
-        {
-          "name": "lg"
-        },
-        {
-          "name": "xl"
-        },
-        {
-          "name": "2xl"
-        },
-        {
           "name": "var(--shadow-2xs)"
         },
         {
@@ -103508,27 +104580,6 @@
       "description": "--shadow while an ancestor with data-ui=\"group\" is open.",
       "values": [
         {
-          "name": "2xs"
-        },
-        {
-          "name": "xs"
-        },
-        {
-          "name": "sm"
-        },
-        {
-          "name": "md"
-        },
-        {
-          "name": "lg"
-        },
-        {
-          "name": "xl"
-        },
-        {
-          "name": "2xl"
-        },
-        {
           "name": "var(--shadow-2xs)"
         },
         {
@@ -103555,7 +104606,7 @@
       ]
     },
     {
-      "name": "--shadow-hue",
+      "name": "--shadow-tint",
       "description": " — any value; box family."
     },
     {
@@ -119679,9 +120730,12 @@
       "description": "--transition-delay on the ::after pseudo-element."
     },
     {
-      "name": "--rounded",
-      "description": "border-radius — any value; box family.",
+      "name": "--radius",
+      "description": "border-radius — a scale number (× --spacing) or any length; box family.",
       "values": [
+        {
+          "name": "full"
+        },
         {
           "name": "var(--radius-2xs)"
         },
@@ -119712,12 +120766,1704 @@
       ]
     },
     {
-      "name": "--before-rounded",
-      "description": "--rounded on the ::before pseudo-element."
+      "name": "--radius--starting",
+      "description": "--radius in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
     },
     {
-      "name": "--after-rounded",
-      "description": "--rounded on the ::after pseudo-element."
+      "name": "--radius--disabled",
+      "description": "--radius in the disabled state.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius--active",
+      "description": "--radius in the active state.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius--focus-visible",
+      "description": "--radius in the focus-visible state.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius--focus-within",
+      "description": "--radius in the focus-within state.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius--hover",
+      "description": "--radius in the hover state.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius--checked",
+      "description": "--radius in the checked state.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius--current",
+      "description": "--radius in the current state.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius--open",
+      "description": "--radius in the open state.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius--stuck",
+      "description": "--radius while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius--sm",
+      "description": "--radius at the sm breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius--md",
+      "description": "--radius at the md breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius--lg",
+      "description": "--radius at the lg breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius--xl",
+      "description": "--radius at the xl breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius--2xl",
+      "description": "--radius at the 2xl breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--group-radius--disabled",
+      "description": "--radius while an ancestor with data-ui=\"group\" is disabled.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--group-radius--active",
+      "description": "--radius while an ancestor with data-ui=\"group\" is active.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--group-radius--focus-visible",
+      "description": "--radius while an ancestor with data-ui=\"group\" is focus-visible.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--group-radius--focus-within",
+      "description": "--radius while an ancestor with data-ui=\"group\" is focus-within.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--group-radius--hover",
+      "description": "--radius while an ancestor with data-ui=\"group\" is hover.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--group-radius--checked",
+      "description": "--radius while an ancestor with data-ui=\"group\" is checked.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--group-radius--current",
+      "description": "--radius while an ancestor with data-ui=\"group\" is current.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--group-radius--open",
+      "description": "--radius while an ancestor with data-ui=\"group\" is open.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--before-radius",
+      "description": "--radius on the ::before pseudo-element."
+    },
+    {
+      "name": "--after-radius",
+      "description": "--radius on the ::after pseudo-element."
+    },
+    {
+      "name": "--radius-t",
+      "description": "border-start-start-radius, border-start-end-radius — a scale number (× --spacing) or any length; box family.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-t--sm",
+      "description": "--radius-t at the sm breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-t--md",
+      "description": "--radius-t at the md breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-t--lg",
+      "description": "--radius-t at the lg breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-t--xl",
+      "description": "--radius-t at the xl breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-t--2xl",
+      "description": "--radius-t at the 2xl breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-b",
+      "description": "border-end-start-radius, border-end-end-radius — a scale number (× --spacing) or any length; box family.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-b--sm",
+      "description": "--radius-b at the sm breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-b--md",
+      "description": "--radius-b at the md breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-b--lg",
+      "description": "--radius-b at the lg breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-b--xl",
+      "description": "--radius-b at the xl breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-b--2xl",
+      "description": "--radius-b at the 2xl breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-l",
+      "description": "border-start-start-radius, border-end-start-radius — a scale number (× --spacing) or any length; box family.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-l--sm",
+      "description": "--radius-l at the sm breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-l--md",
+      "description": "--radius-l at the md breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-l--lg",
+      "description": "--radius-l at the lg breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-l--xl",
+      "description": "--radius-l at the xl breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-l--2xl",
+      "description": "--radius-l at the 2xl breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-r",
+      "description": "border-start-end-radius, border-end-end-radius — a scale number (× --spacing) or any length; box family.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-r--sm",
+      "description": "--radius-r at the sm breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-r--md",
+      "description": "--radius-r at the md breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-r--lg",
+      "description": "--radius-r at the lg breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-r--xl",
+      "description": "--radius-r at the xl breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--radius-r--2xl",
+      "description": "--radius-r at the 2xl breakpoint and up.",
+      "values": [
+        {
+          "name": "full"
+        },
+        {
+          "name": "var(--radius-2xs)"
+        },
+        {
+          "name": "var(--radius-xs)"
+        },
+        {
+          "name": "var(--radius-sm)"
+        },
+        {
+          "name": "var(--radius-md)"
+        },
+        {
+          "name": "var(--radius-lg)"
+        },
+        {
+          "name": "var(--radius-xl)"
+        },
+        {
+          "name": "var(--radius-2xl)"
+        },
+        {
+          "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-none)"
+        }
+      ]
     },
     {
       "name": "--overflow",
@@ -120359,11 +123105,11 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-badge-ring-color",
+      "name": "--ui-badge-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-badge-rounded",
+      "name": "--ui-badge-ring-color",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -120435,7 +123181,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-button-group-rounded",
+      "name": "--ui-button-group-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -120455,11 +123201,11 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-button-ring-color",
+      "name": "--ui-button-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-button-rounded",
+      "name": "--ui-button-ring-color",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -120503,7 +123249,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-callout-rounded",
+      "name": "--ui-callout-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -120539,7 +123285,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-card-rounded",
+      "name": "--ui-card-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -120615,7 +123361,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-checkbox-rounded",
+      "name": "--ui-checkbox-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -120699,7 +123445,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-combobox-rounded",
+      "name": "--ui-combobox-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -120735,7 +123481,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-combobox-tag-remove-rounded",
+      "name": "--ui-combobox-tag-remove-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -120819,7 +123565,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-dialog-rounded",
+      "name": "--ui-dialog-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -120939,7 +123685,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-field-group-rounded",
+      "name": "--ui-field-group-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -120999,11 +123745,11 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-field-ring-color",
+      "name": "--ui-field-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-field-rounded",
+      "name": "--ui-field-ring-color",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -121135,7 +123881,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-input-rounded",
+      "name": "--ui-input-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -121191,7 +123937,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-kbd-rounded",
+      "name": "--ui-kbd-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -121224,14 +123970,6 @@
     },
     {
       "name": "--ui-lightbox-img-border",
-      "description": "Primitive hook: the public override surface."
-    },
-    {
-      "name": "--ui-lightbox-img-filter--active",
-      "description": "Primitive hook: the public override surface."
-    },
-    {
-      "name": "--ui-lightbox-img-filter--hover",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -121279,7 +124017,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-lightbox-slide-rounded",
+      "name": "--ui-lightbox-slide-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -121307,7 +124045,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-lightbox-thumb-rounded",
+      "name": "--ui-lightbox-thumb-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -121315,7 +124053,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-menu-button-rounded",
+      "name": "--ui-menu-button-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -121351,7 +124089,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-meter-rounded",
+      "name": "--ui-meter-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -121435,7 +124173,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-navigation-menu-popover-child-rounded",
+      "name": "--ui-navigation-menu-popover-child-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -121551,7 +124289,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-option-rounded",
+      "name": "--ui-option-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -121599,7 +124337,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-otp-cell-rounded",
+      "name": "--ui-otp-cell-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -121675,7 +124413,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-popover-button-rounded",
+      "name": "--ui-popover-button-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -121719,7 +124457,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-popover-rounded",
+      "name": "--ui-popover-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -121759,7 +124497,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-progress-rounded",
+      "name": "--ui-progress-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -121827,7 +124565,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-radio-rounded",
+      "name": "--ui-radio-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -121935,7 +124673,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-select-rounded",
+      "name": "--ui-select-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -121967,7 +124705,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-slider-thumb-rounded",
+      "name": "--ui-slider-thumb-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -121991,11 +124729,11 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-slider-track-rounded",
+      "name": "--ui-slider-track-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-switch-rounded",
+      "name": "--ui-switch-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -122147,7 +124885,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-tabs-indicator-rounded",
+      "name": "--ui-tabs-indicator-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -122219,7 +124957,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-tabs-track-rounded",
+      "name": "--ui-tabs-track-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -122259,11 +124997,11 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-textarea-resize",
+      "name": "--ui-textarea-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-textarea-rounded",
+      "name": "--ui-textarea-resize",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -122315,7 +125053,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-toaster-rounded",
+      "name": "--ui-toaster-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -122427,7 +125165,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-toggle-group-rounded",
+      "name": "--ui-toggle-group-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -122447,11 +125185,11 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-toggle-ring-color",
+      "name": "--ui-toggle-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-toggle-rounded",
+      "name": "--ui-toggle-ring-color",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -122551,7 +125289,7 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-tooltip-rounded",
+      "name": "--ui-tooltip-radius",
       "description": "Primitive hook: the public override surface."
     },
     {

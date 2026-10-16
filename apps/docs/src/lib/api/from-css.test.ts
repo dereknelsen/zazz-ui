@@ -20,7 +20,7 @@ describe("fromCssRows", () => {
   it("finds the Tailwind name from the CSS one", () => {
     expect(byProperty.get("justify-content")?.utilities).toEqual(["--justify"]);
     expect(byProperty.get("align-items")?.utilities).toEqual(["--items"]);
-    expect(byProperty.get("border-radius")?.utilities).toEqual(["--rounded"]);
+    expect(byProperty.get("border-radius")?.utilities).toEqual(["--radius"]);
     expect(byProperty.get("color")?.utilities).toEqual(["--text"]);
     expect(byProperty.get("line-height")?.utilities).toEqual(["--leading"]);
   });

@@ -23,7 +23,7 @@
     --ui-checkbox-border-color--hover: var(--ui-field-border-color--hover);
     --ui-checkbox-bg--checked: var(--color-primary);
     --ui-checkbox-border-color--checked: var(--color-primary);
-    --ui-checkbox-rounded: var(--radius-xs);
+    --ui-checkbox-radius: var(--radius-xs);
     --ui-checkbox-glyph-size: 1em;
     --ui-checkbox-checkmark-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' fill='none' stroke='currentColor' stroke-linecap='square' stroke-linejoin='square' stroke-width='3' viewBox='0 0 24 24'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E")
       center / contain no-repeat;
@@ -48,7 +48,11 @@
     border-width: var(--_border-width-resolved, var(--ui-checkbox-border-width));
     border-style: var(--_border-style-resolved, var(--ui-checkbox-border-style));
     border-color: var(--_border-color-resolved, var(--ui-checkbox-border-color));
-    border-radius: var(--_rounded-resolved, var(--ui-checkbox-rounded));
+    --_radius-len: var(--_radius-resolved, var(--ui-checkbox-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-checkbox-radius));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
 
     /* centres the ::before glyph */
     display: inline-grid;

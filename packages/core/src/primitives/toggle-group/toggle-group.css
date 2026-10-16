@@ -11,12 +11,12 @@
 
 @layer variables {
   :root {
-    --ui-toggle-group-rounded: var(--ui-toggle-rounded);
+    --ui-toggle-group-radius: var(--ui-toggle-radius);
     --ui-toggle-group-bg: var(--color-card);
   }
 }
 
-@property --_toggle-group-rounded {
+@property --_toggle-group-radius {
   syntax: "*";
   inherits: false;
 }
@@ -32,7 +32,7 @@
 
   Joins adjacent toggles into a single segmented unit: a single-select set
   (radios sharing a `name`) or a multi-select set (checkboxes). Children keep
-  their own --ui-toggle-rounded, so the outer corners follow the toggles' size
+  their own --ui-toggle-radius, so the outer corners follow the toggles' size
   preset automatically; only the *inner* corners are squared off and the
   doubled border is collapsed by dropping
   each later control's leading border (no overlap).
@@ -43,9 +43,16 @@
     inline-size: fit-content;
     /* stretch so mixed-height children share one edge */
     align-items: stretch;
-    border-radius: var(
-      --_rounded-resolved,
-      var(--_toggle-group-rounded, var(--ui-toggle-group-rounded))
+    --_radius-len: var(
+      --_radius-resolved,
+      var(--_toggle-group-radius, var(--ui-toggle-group-radius))
+    );
+    --_radius-num: var(
+      --_radius-resolved,
+      var(--_toggle-group-radius, var(--ui-toggle-group-radius))
+    );
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
     background-color: var(--_bg-resolved, var(--_toggle-group-bg, var(--ui-toggle-group-bg)));
     position: relative;

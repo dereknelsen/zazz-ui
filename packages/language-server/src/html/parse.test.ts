@@ -31,4 +31,13 @@ describe("parseHtml", () => {
     );
     expect(diagnose(parsed).map((found) => found.rule)).toEqual(["unknown-utility"]);
   });
+
+  it("reads a tag still being typed as no tags rather than throwing", () => {
+    // `<a …` with no `>` before the next tag: the parser rejects the whole document
+    const source = `<div data-ui="card">\n  <a data-ui="button" href="#"\n</div>`;
+    const parsed = parseHtml(source);
+    expect(parsed.tags).toEqual([]);
+    expect(parsed.text).toBe(source);
+    expect(() => diagnose(parsed)).not.toThrow();
+  });
 });

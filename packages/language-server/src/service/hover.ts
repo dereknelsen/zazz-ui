@@ -85,7 +85,7 @@ function styleName(context: StyleContext): ZazzHover | undefined {
   return markdown ? { markdown, range } : undefined;
 }
 
-/** A `var(--token)` under the cursor, or a keyword shorthand (`--shadow: md`). */
+/** A `var(--token)` under the cursor, or a keyword shorthand (`--font-weight: strong`). */
 function styleValue(context: StyleContext): ZazzHover | undefined {
   const { declaration, base, rel } = context;
   if (!declaration) return undefined;

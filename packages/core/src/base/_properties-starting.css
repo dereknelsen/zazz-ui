@@ -41,6 +41,14 @@
 @property --_border-b-starting { syntax: "*"; inherits: false; }
 @property --opacity--starting { syntax: "*"; inherits: false; }
 @property --_opacity-starting { syntax: "*"; inherits: false; }
+@property --filter--starting { syntax: "*"; inherits: false; }
+@property --_filter-starting { syntax: "*"; inherits: false; }
+@property --elevation--starting { syntax: "*"; inherits: false; }
+@property --_elevation-starting { syntax: "*"; inherits: false; }
+@property --backdrop-filter--starting { syntax: "*"; inherits: false; }
+@property --_backdrop-filter-starting { syntax: "*"; inherits: false; }
+@property --mix-blend--starting { syntax: "*"; inherits: false; }
+@property --_mix-blend-starting { syntax: "*"; inherits: false; }
 @property --shadow--starting { syntax: "*"; inherits: false; }
 @property --_shadow-starting { syntax: "*"; inherits: false; }
 @property --shadow-angle--starting { syntax: "*"; inherits: false; }
@@ -65,3 +73,5 @@
 @property --_transition-duration-starting { syntax: "*"; inherits: false; }
 @property --transition-delay--starting { syntax: "*"; inherits: false; }
 @property --_transition-delay-starting { syntax: "*"; inherits: false; }
+@property --radius--starting { syntax: "*"; inherits: false; }
+@property --_radius-starting { syntax: "*"; inherits: false; }

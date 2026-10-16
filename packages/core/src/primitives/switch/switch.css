@@ -24,7 +24,7 @@
     --ui-switch-track-bg--hover: oklch(from var(--color-muted) l c h / calc(alpha + 0.04));
     --ui-switch-track-bg--checked: var(--color-primary);
     --ui-switch-track-bg--checked-hover: var(--color-primary);
-    --ui-switch-rounded: var(--radius-full);
+    --ui-switch-radius: var(--radius-full);
   }
 }
 
@@ -94,7 +94,11 @@
 
     background-color: var(--_bg-resolved, var(--ui-switch-track-bg));
 
-    border-radius: var(--_rounded-resolved, var(--ui-switch-rounded));
+    --_radius-len: var(--_radius-resolved, var(--ui-switch-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-switch-radius));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
     cursor: pointer;
 
     /* the transparent outline keeps focus visible in forced-colors */

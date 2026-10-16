@@ -1,0 +1,53 @@
+---
+title: "Zazz 0.8 alpha"
+description: "Zazz 0.8 alpha puts radius on the spacing scale, adds a numeric --elevation drawn as GPU drop-shadows, and adds filter and blend utilities."
+date: 2026-10-15
+draft: true
+tags: ["release"]
+---
+
+**Zazz 0.8 alpha puts radius on the spacing scale, adds an `--elevation` utility whose shadow is computed from a single number, and adds filter and blend utilities. Renaming `--rounded` and dropping the shadow size words make it a breaking release.**
+
+## `--radius` takes a number
+
+`--rounded` was Tailwind's name for a raw `border-radius`. 0.8 renames it `--radius` and puts it on the same scale as spacing. A number is that many `--spacing` steps times `--radius-multiplier`, so `--radius: 2.5` is exactly `--radius-md`:
+
+```html
+<div style="--radius: 2.5"></div>           <!-- --radius-md -->
+<div style="--radius: 1rem"></div>          <!-- a length passes through -->
+<div style="--radius: full"></div>          <!-- a pill -->
+<div style="--radius: 1; --radius--hover: 4; --radius--md: 2.5"></div>
+```
+
+It takes states and breakpoints, and `--radius-multiplier` still squares or softens the whole kit at once. A value with several corners doesn't fit a single number, so four side utilities round two corners each: `--radius-t: 2.5` rounds a card's media along the top. The primitives' hooks follow the rename (`--ui-button-radius`), and each primitive's main radius hook takes a number too. A hook takes one value now, so a hook with several corners renders square.
+
+## `--elevation`
+
+I wanted a shadow you set by height, the way you set padding by a number. `--elevation` draws four drop-shadow layers from one value:
+
+```html
+<div style="--elevation: 1.5; --elevation--hover: 4"></div>
+```
+
+Each layer sits farther out along the light than the one before it and blurs in proportion. As the number rises, the blurred far layers fade in and darken, so a low element has a tight contact shadow and a high one gets a soft, wide spread. The layer offsets and blur ratios come from the old `--shadow-2xl`, which was already a stack of scaled layers, and the opacities were tuned by eye in a prototype. `--elevation: 4` uses the same layers as `--shadow-md`.
+
+It's drawn in `filter`, which browsers usually composite on the GPU, and it shares that one declaration with the new `--filter` utility, so `--filter: blur(2px); --elevation: 4` keeps both. A drop-shadow follows the element's painted shape. An element with no background shadows its text instead of its box, and `filter` makes the element a stacking context and the containing block for fixed and absolute descendants.
+
+## Shadow tokens and light
+
+The `--shadow-2xs` … `2xl` tokens are now drawn with the same formula, so `--shadow: var(--shadow-md)` and `--elevation: 4` look alike. `--shadow` is the box-shadow form: a token or any box-shadow. The size words (`--shadow: md`) are gone; write `var(--shadow-md)`.
+
+Two theme inputs set the light for the page: `--color-shadow` for the color and the new `--default-shadow-angle` for the direction. `--shadow-tint` (renamed from `--shadow-hue`) and `--shadow-angle` change them for an element and its subtree, so a bottom sheet can cast its shadow up.
+
+## Filters and blending
+
+`--filter`, `--backdrop-filter`, and `--mix-blend` set `filter`, `backdrop-filter`, and `mix-blend-mode`, with state tiers and pseudo-element forms.
+
+## Migrating
+
+- `--rounded` → `--radius`, and `--ui-<primitive>-rounded` → `--ui-<primitive>-radius`. A token value still works (`--radius: var(--radius-md)`), or write its number (`2.5`).
+- A multi-corner `--rounded` value or hook → the side utilities (`--radius-t: 2.5`), or a single value.
+- `--shadow: md` → `--shadow: var(--shadow-md)`, or `--elevation: 4`.
+- `--shadow-hue` → `--shadow-tint`.
+
+The [changelog](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/CHANGELOG.md) lists every change, including the hook renames for each primitive.

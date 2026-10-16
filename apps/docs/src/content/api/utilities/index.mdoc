@@ -6,7 +6,7 @@ sectionOrder: 3
 order: 0
 ---
 
-A style utility is a custom property in an element's `style` attribute: `style="--p: 4; --w--md: fit-content"`. The rule is Tailwind's names, CSS values: a utility is named after the Tailwind class it stands in for (`--justify`, `--items`, `--rounded`), and it takes the value its CSS property takes (`--justify: space-between`, `--w: 100%`). If you know the property and not the class, look it up in the [property-to-utility table](/api/utilities/from-css/).
+A style utility is a custom property in an element's `style` attribute: `style="--p: 4; --w--md: fit-content"`. The rule is Tailwind's names, CSS values: a utility is named after the Tailwind class it stands in for (`--justify`, `--items`; `border-radius` is `--radius`), and it takes the value its CSS property takes (`--justify: space-between`, `--w: 100%`). If you know the property and not the class, look it up in the [property-to-utility table](/api/utilities/from-css/).
 
 The kit matches the attribute text, so spelling is exact: `--<utility>: <value>`, one space after the colon, declarations separated by `; `.
 
@@ -14,14 +14,14 @@ The kit matches the attribute text, so spelling is exact: `--<utility>: <value>`
 
 ## What a value can be
 
-- **A scale number** on spacing, margin, and sizing utilities: `--px: 6` is `6 × --spacing`. The space tokens sit on this scale (2xs 1, xs 2, sm 4, md 6, lg 11, xl 24, 2xl 40), so write the number and skip the `var()`.
-- **A length or any CSS value**: `--w: 100%`, `--rounded: var(--radius-lg)`, `--shadow: 0 1px 2px black`.
-- **A token by name**, on a few utilities, at every tier: `--shadow: md`, `--font-weight: strong`, `--display: flex-col`. The `var()` form (`--shadow: var(--shadow-md)`) always works too.
+- **A scale number** on spacing, margin, sizing, and radius utilities: `--px: 6` is `6 × --spacing`, and `--radius: 2.5` is the same step times `--radius-multiplier` (`--radius-md`). The space tokens sit on this scale (2xs 1, xs 2, sm 4, md 6, lg 11, xl 24, 2xl 40), so write the number and skip the `var()`.
+- **A length or any CSS value**: `--w: 100%`, `--radius: 1rem`, `--shadow: 0 1px 2px black`.
+- **A token by name**, on a few utilities, at every tier: `--font-weight: strong`, `--radius: full`, `--display: flex-col`. Other tokens take the `var()` form: `--shadow: var(--shadow-md)`.
 - **A keyword** where the property takes one: `--position: sticky`, `--w: fit-content`, `--grid-cols: subgrid`.
 
 ## One space after the colon
 
-A tier gate reads the property itself, so `--p:4` and `--w--md:6` work with any spacing. A keyword (`auto`, `subgrid`), a token by name (`md`, `strong`), a `--display` shorthand, `--bg: none`, and `--position: sticky` are matched as text, and the text the kit looks for has one space after the colon. Written without it, `--w:auto` is 0 wide and `--shadow:md` draws nothing. The audit (`<ui-debug>`, the editor, and the ESLint plugin) reports both, and the formatter writes the space back.
+A tier gate reads the property itself, so `--p:4` and `--w--md:6` work with any spacing. A keyword (`auto`, `subgrid`), a token by name (`strong`, `full`), a `--display` shorthand, `--bg: none`, and `--position: sticky` are matched as text, and the text the kit looks for has one space after the colon. Written without it, `--w:auto` is 0 wide and `--radius:full` stays square. The audit (`<ui-debug>`, the editor, and the ESLint plugin) reports both, and the formatter writes the space back.
 
 The place this bites is a framework's object `style`: React and Vue serialize `{ "--w": "auto" }` as `--w:auto`, and JSX is outside the linter. There, write those values as a string `style`, or in the `var()` form (`"--shadow": "var(--shadow-md)"`).
 

@@ -170,6 +170,11 @@ export interface Utility {
    */
   inherits?: true;
   /**
+   * What a dual utility's number multiplies (default `var(--spacing)`):
+   * `--radius: 2` is two steps of `--spacing` times `--radius-multiplier`.
+   */
+  scale?: string;
+  /**
    * No-base allowlist: the CSS initial value as a literal. A utility with
    * `noBase` applies a tier without a base value wherever no kit rule sets its
    * property (the tier-only rule is in `@layer defaults`, which they beat).
@@ -190,9 +195,9 @@ export interface Utility {
    */
   pseudo?: true;
   /**
-   * Keyword shorthands: `--shadow: md` reads as `--shadow: var(--shadow-md)`.
+   * Keyword shorthands: `--font-weight: strong` reads as `var(--font-weight-strong)`.
    * Each is an exact-value rule at the base and at every tier of the family, so
-   * it works in `--shadow--hover: lg` too; any other value passes through as
+   * it works in `--font-weight--md: strong` too; any other value passes through as
    * usual. A keyword that is a prefix of another must come first.
    */
   aliases?: Readonly<Record<string, string>>;
@@ -227,16 +232,20 @@ export const SHORTHAND_OF: Readonly<Record<string, readonly string[]>> = {
   "gap-y": ["gap"],
   basis: ["flex"],
   shrink: ["flex"],
+  "radius-t": ["radius"],
+  "radius-b": ["radius"],
+  "radius-l": ["radius"],
+  "radius-r": ["radius"],
 };
+
+/**
+ * The utilities that compose into one `filter`: `--filter` and `--elevation`
+ * (a height drawn as drop-shadows), so neither removes the other.
+ */
+export const FILTER_COMPOSITE = ["filter", "elevation"] as const;
 
 /** Gradient types: `--bg-<type>` emits `<type>-gradient(<prelude>, <--bg-stops>)`. */
 export const GRADIENT_TYPES = ["linear", "radial", "conic"] as const;
-
-/** The size scale shared by the token keywords (`--shadow: md`). */
-export const SIZE_KEYWORDS = ["2xs", "xs", "sm", "md", "lg", "xl", "2xl"] as const;
-
-/** `--shadow: md` → `var(--shadow-md)`. */
-const SHADOWS = Object.fromEntries(SIZE_KEYWORDS.map((size) => [size, `var(--shadow-${size})`]));
 
 /**
  * `--font-weight: strong` → `var(--font-weight-strong)`: the role weights, so a
@@ -785,18 +794,54 @@ export const UTILITIES: readonly Utility[] = [
     noBase: "1",
   },
   {
+    name: "filter",
+    pseudo: true,
+    properties: ["filter"],
+    mode: "raw",
+    family: "effects",
+    noBase: "none",
+    // `none` empties the filter, so the composite keeps --elevation's drop-shadows
+    aliases: { none: "" },
+  },
+  // a height: four drop-shadows in `filter` (composited on the GPU), drawn with the
+  // elevation formula (generate-utilities.ts) in --shadow-angle's light and --shadow-tint
+  {
+    name: "elevation",
+    properties: [],
+    mode: "raw",
+    family: "effects",
+    tiers: "both",
+    noBase: "0",
+    emit: "none",
+  },
+  {
+    name: "backdrop-filter",
+    pseudo: true,
+    properties: ["backdrop-filter"],
+    mode: "raw",
+    family: "effects",
+    noBase: "none",
+  },
+  {
+    name: "mix-blend",
+    pseudo: true,
+    properties: ["mix-blend-mode"],
+    mode: "keyword",
+    family: "effects",
+    noBase: "normal",
+  },
+  {
     name: "shadow",
     properties: [],
     mode: "raw",
     family: "effects",
     emit: "none",
-    aliases: SHADOWS,
   },
-  // the shadow color for an element and its subtree: _variables.css re-declares the
-  // --shadow-* tokens wherever this is set, so keyword, var(), and primitive shadows follow
-  { name: "shadow-hue", properties: [], mode: "raw", family: "box", emit: "none" },
+  // the shadow color for an element and its subtree: _shadows.css re-declares the
+  // --shadow-* tokens wherever this is set, so var() and primitive shadows follow
+  { name: "shadow-tint", properties: [], mode: "raw", family: "box", emit: "none" },
   // the shadow's cast direction: the --shadow-* tokens rotate their offsets by it
-  // (0deg casts down, clockwise), re-declared where it is set (_variables.css)
+  // (0deg casts down, clockwise), re-declared where it is set (_shadows.css)
   {
     name: "shadow-angle",
     properties: [],
@@ -886,13 +931,40 @@ export const UTILITIES: readonly Utility[] = [
     tiers: "both",
   },
   // box: no tiers
+  // a number is that many --spacing steps times --radius-multiplier, like the
+  // --radius-* tokens (`--radius: 2.5` is --radius-md); `full` is the pill token
   {
-    name: "rounded",
+    name: "radius",
     properties: ["border-radius"],
-    mode: "raw",
+    mode: "dual",
     family: "box",
+    tiers: "both",
+    noBase: "0",
     pseudo: true,
+    scale: "var(--spacing) * var(--radius-multiplier)",
+    aliases: { full: "var(--radius-full)" },
   },
+  // two logical corners each (Tailwind's rounded-t/-b/-l/-r), after --radius so they
+  // win over it; l and r follow the writing direction
+  ...(
+    [
+      ["radius-t", ["border-start-start-radius", "border-start-end-radius"]],
+      ["radius-b", ["border-end-start-radius", "border-end-end-radius"]],
+      ["radius-l", ["border-start-start-radius", "border-end-start-radius"]],
+      ["radius-r", ["border-start-end-radius", "border-end-end-radius"]],
+    ] as const
+  ).map(
+    ([name, properties]): Utility => ({
+      name,
+      properties,
+      mode: "dual",
+      family: "box",
+      tiers: "breakpoints",
+      noBase: "0",
+      scale: "var(--spacing) * var(--radius-multiplier)",
+      aliases: { full: "var(--radius-full)" },
+    }),
+  ),
   { name: "overflow", properties: ["overflow"], mode: "keyword", family: "box" },
   {
     name: "overflow-x",

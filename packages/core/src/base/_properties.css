@@ -388,12 +388,26 @@
 @property --opacity { syntax: "*"; inherits: false; }
 @property --_opacity { syntax: "*"; inherits: false; }
 @property --_opacity-resolved { syntax: "*"; inherits: false; }
+@property --filter { syntax: "*"; inherits: false; }
+@property --_filter { syntax: "*"; inherits: false; }
+@property --_filter-resolved { syntax: "*"; inherits: false; }
+@property --elevation { syntax: "*"; inherits: false; }
+@property --_elevation { syntax: "*"; inherits: false; }
+@property --_elevation-resolved { syntax: "*"; inherits: false; }
+@property --_elevation-n { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_elevation-filter { syntax: "*"; inherits: false; }
+@property --backdrop-filter { syntax: "*"; inherits: false; }
+@property --_backdrop-filter { syntax: "*"; inherits: false; }
+@property --_backdrop-filter-resolved { syntax: "*"; inherits: false; }
+@property --mix-blend { syntax: "*"; inherits: false; }
+@property --_mix-blend { syntax: "*"; inherits: false; }
+@property --_mix-blend-resolved { syntax: "*"; inherits: false; }
 @property --shadow { syntax: "*"; inherits: false; }
 @property --_shadow { syntax: "*"; inherits: false; }
 @property --_shadow-resolved { syntax: "*"; inherits: false; }
-@property --shadow-hue { syntax: "*"; inherits: false; }
-@property --_shadow-hue { syntax: "*"; inherits: false; }
-@property --_shadow-hue-resolved { syntax: "*"; inherits: false; }
+@property --shadow-tint { syntax: "*"; inherits: false; }
+@property --_shadow-tint { syntax: "*"; inherits: false; }
+@property --_shadow-tint-resolved { syntax: "*"; inherits: false; }
 @property --shadow-angle { syntax: "*"; inherits: false; }
 @property --_shadow-angle { syntax: "*"; inherits: false; }
 @property --_shadow-angle-resolved { syntax: "*"; inherits: false; }
@@ -439,9 +453,31 @@
 @property --transition-delay { syntax: "*"; inherits: false; }
 @property --_transition-delay { syntax: "*"; inherits: false; }
 @property --_transition-delay-resolved { syntax: "*"; inherits: false; }
-@property --rounded { syntax: "*"; inherits: false; }
-@property --_rounded { syntax: "*"; inherits: false; }
-@property --_rounded-resolved { syntax: "*"; inherits: false; }
+@property --radius { syntax: "*"; inherits: false; }
+@property --_radius { syntax: "*"; inherits: false; }
+@property --_radius-resolved { syntax: "*"; inherits: false; }
+@property --_radius-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_radius-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --radius-t { syntax: "*"; inherits: false; }
+@property --_radius-t { syntax: "*"; inherits: false; }
+@property --_radius-t-resolved { syntax: "*"; inherits: false; }
+@property --_radius-t-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_radius-t-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --radius-b { syntax: "*"; inherits: false; }
+@property --_radius-b { syntax: "*"; inherits: false; }
+@property --_radius-b-resolved { syntax: "*"; inherits: false; }
+@property --_radius-b-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_radius-b-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --radius-l { syntax: "*"; inherits: false; }
+@property --_radius-l { syntax: "*"; inherits: false; }
+@property --_radius-l-resolved { syntax: "*"; inherits: false; }
+@property --_radius-l-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_radius-l-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --radius-r { syntax: "*"; inherits: false; }
+@property --_radius-r { syntax: "*"; inherits: false; }
+@property --_radius-r-resolved { syntax: "*"; inherits: false; }
+@property --_radius-r-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_radius-r-num { syntax: "<number>"; inherits: false; initial-value: 0; }
 @property --overflow { syntax: "*"; inherits: false; }
 @property --_overflow { syntax: "*"; inherits: false; }
 @property --_overflow-resolved { syntax: "*"; inherits: false; }
@@ -568,6 +604,10 @@
 @property --_before-max-h-num { syntax: "<number>"; inherits: false; initial-value: 0; }
 @property --_after-max-h-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
 @property --_after-max-h-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_before-radius-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_before-radius-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_after-radius-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_after-radius-num { syntax: "<number>"; inherits: false; initial-value: 0; }
 
 /* Focus ring, published by primitives */
 @property --_focus-shadow { syntax: "*"; inherits: false; }

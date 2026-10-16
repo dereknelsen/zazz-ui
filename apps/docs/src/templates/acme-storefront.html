@@ -110,8 +110,8 @@
           --bg--hover: var(--color-background);
           --bg--stuck: var(--color-background);
           --shadow: none;
-          --shadow--hover: md;
-          --shadow--stuck: md;
+          --shadow--hover: var(--shadow-md);
+          --shadow--stuck: var(--shadow-md);
           --transition: var(--default-transition);
         "
       >
@@ -1342,7 +1342,7 @@
     <!-- Lines: wordmark, blurb, call to action                           -->
     <!-- ================================================================ -->
     <!-- No card primitive here: a plain list item with `--border: 1` and
-         `--shadow: xs` (a shadow token by name). Borders:
+         `--shadow: var(--shadow-xs)` (a shadow token). Borders:
          https://zazz.sh/api/utilities/borders/ · Effects:
          https://zazz.sh/api/utilities/effects/ · `--gap: var(--gutters)` reuses
          the layout's gutter token. -->
@@ -1378,7 +1378,7 @@
               --text-align: center;
               --bg: var(--color-card);
               --border: 1;
-              --shadow: xs;
+              --shadow: var(--shadow-xs);
             "
           >
             <div
@@ -1417,7 +1417,7 @@
               --text-align: center;
               --bg: var(--color-card);
               --border: 1;
-              --shadow: xs;
+              --shadow: var(--shadow-xs);
             "
           >
             <div
@@ -1456,7 +1456,7 @@
               --text-align: center;
               --bg: var(--color-card);
               --border: 1;
-              --shadow: xs;
+              --shadow: var(--shadow-xs);
             "
           >
             <div

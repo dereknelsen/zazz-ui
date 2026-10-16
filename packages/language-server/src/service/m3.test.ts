@@ -92,12 +92,12 @@ describe("inlay hints", () => {
 
   it("shows scale ranges, breakpoint thresholds, shorthands, and size tokens", () => {
     expect(
-      hints(`<p style="--p: 4; --px--md: 6; --shadow: md; --gap: var(--space-md)">a</p>`),
+      hints(`<p style="--p: 4; --px--md: 6; --font-weight: strong; --gap: var(--space-md)">a</p>`),
     ).toEqual([
       ["4", " ≈ 0.9–1rem"],
       ["--px--md", " ≥ 48rem"],
       ["6", " ≈ 1.35–1.5rem"],
-      ["md", " = var(--shadow-md)"],
+      ["strong", " = var(--font-weight-strong)"],
       ["var(--space-md)", " ≈ 1.35rem – 1.5rem"],
     ]);
   });

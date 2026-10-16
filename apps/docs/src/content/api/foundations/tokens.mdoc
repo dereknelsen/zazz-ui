@@ -40,13 +40,13 @@ Translucent black (`shade`) and white (`tint`) for scrims and backdrops; `--colo
 
 ## Radius
 
-`xs` to `xl` scale with `--radius-multiplier`; `none` and `full` are fixed. Conventions: `md` for buttons and inputs, `lg` for cards and dialogs, `sm` for badges, `full` for pills.
+`xs` to `xl` scale with `--radius-multiplier`; `none` and `full` are fixed. `--radius` takes the same steps as numbers: `--radius: 2.5` is `md`. Conventions: `md` for buttons and inputs, `lg` for cards and dialogs, `sm` for badges, `full` for pills.
 
 {% tokens group="radius" /%}
 
 ## Shadows and ring
 
-Soft, multi-layer shadows and the focus ring's geometry.
+Soft, four-layer shadows drawn with the same formula as `--elevation`, and the focus ring's geometry. `--color-shadow` and `--default-shadow-angle` set their color and light.
 
 {% tokens group="shadow" /%}
 

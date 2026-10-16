@@ -2,10 +2,12 @@
 
 /**
  * @fileoverview The lightbox: `data-lightbox-slot` parts in tag and
- * attribute form, and the active thumb (a carousel state) at full opacity.
+ * attribute form, the active thumb (a carousel state) at full opacity, and
+ * a stage image the primitive never filters.
  */
 
 import { describe, expect, it } from "vite-plus/test";
+import { userEvent } from "vite-plus/test/browser/context";
 import { lengthPx, mount, style, useCss, useKit } from "../../../test/browser.ts";
 
 const GALLERY = `<div data-lightbox-slot="gallery">
@@ -37,7 +39,7 @@ describe("lightbox", () => {
           style(box.querySelector("[data-slide] [data-lightbox-slot='content']")!, "border-radius"),
         ),
         selector,
-      ).toBeCloseTo(lengthPx("var(--ui-lightbox-slide-rounded)"), 1);
+      ).toBeCloseTo(lengthPx("var(--ui-lightbox-slide-radius)"), 1);
       expect(style(box.querySelector("[data-on] img")!, "opacity"), selector).toBe("1");
       expect(style(box.querySelector("[data-off] img")!, "opacity"), selector).toBe(
         style(box, "--ui-lightbox-thumb-opacity").trim(),
@@ -54,5 +56,17 @@ describe("lightbox", () => {
       style(root.querySelector(selector)!, "--ui-lightbox-thumb-columns").trim();
     expect(columns("[data-narrow]")).toBe("4");
     expect(columns("[data-wide]")).toBe("6");
+  });
+
+  it("leaves a hovered stage image unfiltered, so a group filter tier owns it", async () => {
+    const root = mount(`<ui-lightbox>${GALLERY}</ui-lightbox>`);
+    const slide = root.querySelector<HTMLElement>("[data-slide]")!;
+    const img = slide.querySelector("img")!;
+    slide.dataset.ui = "group";
+    img.setAttribute("style", "--group-filter--hover: blur(1px)");
+    expect(style(img, "filter")).toBe("none");
+    await userEvent.hover(slide);
+    expect(style(img, "filter")).toBe("blur(1px)");
+    await userEvent.unhover(slide);
   });
 });

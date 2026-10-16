@@ -10,149 +10,66 @@
     opacity: var(--_opacity-resolved);
   }
 
+  :where([style*="--filter:"], [style*="--filter--"], [style*="--group-filter--"]) {
+    --_filter-resolved: var(--_filter-starting, var(--_filter-disabled, var(--_filter-active, var(--_filter-focus-visible, var(--_filter-focus-within, var(--_filter-hover, var(--_filter-checked, var(--_filter-current, var(--_filter-open, var(--_filter-g-disabled, var(--_filter-g-active, var(--_filter-g-focus-visible, var(--_filter-g-focus-within, var(--_filter-g-hover, var(--_filter-g-checked, var(--_filter-g-current, var(--_filter-g-open, var(--_filter-stuck, var(--_filter)))))))))))))))))));
+  }
+  :where([style*="--filter:"]) {
+    --_filter: var(--filter);
+    filter: var(--_filter-resolved);
+  }
+  :where([style*="--filter: none"]) { --_filter: ; }
+  @starting-style {
+    :where([style*="--filter--starting: none"]) { --_filter-starting: ; }
+  }
+  :where(:is(:disabled, [aria-disabled="true"])[style*="--filter--disabled: none"]) { --_filter-disabled: ; }
+  :where([data-ui~="group"]:is(:disabled, [aria-disabled="true"]) [style*="--group-filter--disabled: none"]) { --_filter-g-disabled: ; }
+  :where(:active[style*="--filter--active: none"]) { --_filter-active: ; }
+  :where([data-ui~="group"]:active [style*="--group-filter--active: none"]) { --_filter-g-active: ; }
+  :where(:focus-visible[style*="--filter--focus-visible: none"]) { --_filter-focus-visible: ; }
+  :where([data-ui~="group"]:focus-visible [style*="--group-filter--focus-visible: none"]) { --_filter-g-focus-visible: ; }
+  :where(:focus-within[style*="--filter--focus-within: none"]) { --_filter-focus-within: ; }
+  :where([data-ui~="group"]:focus-within [style*="--group-filter--focus-within: none"]) { --_filter-g-focus-within: ; }
+  @media (hover: hover) {
+    :where(:hover[style*="--filter--hover: none"]) { --_filter-hover: ; }
+    :where([data-ui~="group"]:hover [style*="--group-filter--hover: none"]) { --_filter-g-hover: ; }
+  }
+  :where(:is(:checked, [aria-checked="true"])[style*="--filter--checked: none"]) { --_filter-checked: ; }
+  :where([data-ui~="group"]:is(:checked, [aria-checked="true"]) [style*="--group-filter--checked: none"]) { --_filter-g-checked: ; }
+  :where(:is([aria-current]:not([aria-current="false"]))[style*="--filter--current: none"]) { --_filter-current: ; }
+  :where([data-ui~="group"]:is([aria-current]:not([aria-current="false"])) [style*="--group-filter--current: none"]) { --_filter-g-current: ; }
+  :where(:is([open], :popover-open, [aria-expanded="true"])[style*="--filter--open: none"]) { --_filter-open: ; }
+  :where([data-ui~="group"]:is([open], :popover-open, [aria-expanded="true"]) [style*="--group-filter--open: none"]) { --_filter-g-open: ; }
+  :where([style*="--filter--stuck: none"]) { --_filter-stuck: var(--_stuck-on) ; }
+
+  :where([style*="--elevation:"], [style*="--elevation--"], [style*="--group-elevation--"]) {
+    --_elevation-resolved: var(--_elevation-starting, var(--_elevation-disabled, var(--_elevation-active, var(--_elevation-focus-visible, var(--_elevation-focus-within, var(--_elevation-hover, var(--_elevation-checked, var(--_elevation-current, var(--_elevation-open, var(--_elevation-g-disabled, var(--_elevation-g-active, var(--_elevation-g-focus-visible, var(--_elevation-g-focus-within, var(--_elevation-g-hover, var(--_elevation-g-checked, var(--_elevation-g-current, var(--_elevation-g-open, var(--_elevation-stuck, var(--_elevation-2xl, var(--_elevation-xl, var(--_elevation-lg, var(--_elevation-md, var(--_elevation-sm, var(--_elevation))))))))))))))))))))))));
+  }
+  :where([style*="--elevation:"]) {
+    --_elevation: var(--elevation);
+  }
+
+  :where([style*="--backdrop-filter:"], [style*="--backdrop-filter--"], [style*="--group-backdrop-filter--"]) {
+    --_backdrop-filter-resolved: var(--_backdrop-filter-starting, var(--_backdrop-filter-disabled, var(--_backdrop-filter-active, var(--_backdrop-filter-focus-visible, var(--_backdrop-filter-focus-within, var(--_backdrop-filter-hover, var(--_backdrop-filter-checked, var(--_backdrop-filter-current, var(--_backdrop-filter-open, var(--_backdrop-filter-g-disabled, var(--_backdrop-filter-g-active, var(--_backdrop-filter-g-focus-visible, var(--_backdrop-filter-g-focus-within, var(--_backdrop-filter-g-hover, var(--_backdrop-filter-g-checked, var(--_backdrop-filter-g-current, var(--_backdrop-filter-g-open, var(--_backdrop-filter-stuck, var(--_backdrop-filter)))))))))))))))))));
+  }
+  :where([style*="--backdrop-filter:"]) {
+    --_backdrop-filter: var(--backdrop-filter);
+    backdrop-filter: var(--_backdrop-filter-resolved);
+  }
+
+  :where([style*="--mix-blend:"], [style*="--mix-blend--"], [style*="--group-mix-blend--"]) {
+    --_mix-blend-resolved: var(--_mix-blend-starting, var(--_mix-blend-disabled, var(--_mix-blend-active, var(--_mix-blend-focus-visible, var(--_mix-blend-focus-within, var(--_mix-blend-hover, var(--_mix-blend-checked, var(--_mix-blend-current, var(--_mix-blend-open, var(--_mix-blend-g-disabled, var(--_mix-blend-g-active, var(--_mix-blend-g-focus-visible, var(--_mix-blend-g-focus-within, var(--_mix-blend-g-hover, var(--_mix-blend-g-checked, var(--_mix-blend-g-current, var(--_mix-blend-g-open, var(--_mix-blend-stuck, var(--_mix-blend)))))))))))))))))));
+  }
+  :where([style*="--mix-blend:"]) {
+    --_mix-blend: var(--mix-blend);
+    mix-blend-mode: var(--_mix-blend-resolved);
+  }
+
   :where([style*="--shadow:"], [style*="--shadow--"], [style*="--group-shadow--"]) {
     --_shadow-resolved: var(--_shadow-starting, var(--_shadow-disabled, var(--_shadow-active, var(--_shadow-focus-visible, var(--_shadow-focus-within, var(--_shadow-hover, var(--_shadow-checked, var(--_shadow-current, var(--_shadow-open, var(--_shadow-g-disabled, var(--_shadow-g-active, var(--_shadow-g-focus-visible, var(--_shadow-g-focus-within, var(--_shadow-g-hover, var(--_shadow-g-checked, var(--_shadow-g-current, var(--_shadow-g-open, var(--_shadow-stuck, var(--_shadow)))))))))))))))))));
   }
   :where([style*="--shadow:"]) {
     --_shadow: var(--shadow);
   }
-  :where([style*="--shadow: 2xs"]) { --_shadow: var(--shadow-2xs); }
-  :where([style*="--shadow: xs"]) { --_shadow: var(--shadow-xs); }
-  :where([style*="--shadow: sm"]) { --_shadow: var(--shadow-sm); }
-  :where([style*="--shadow: md"]) { --_shadow: var(--shadow-md); }
-  :where([style*="--shadow: lg"]) { --_shadow: var(--shadow-lg); }
-  :where([style*="--shadow: xl"]) { --_shadow: var(--shadow-xl); }
-  :where([style*="--shadow: 2xl"]) { --_shadow: var(--shadow-2xl); }
-  @starting-style {
-    :where([style*="--shadow--starting: 2xs"]) { --_shadow-starting: var(--shadow-2xs); }
-    :where([style*="--shadow--starting: xs"]) { --_shadow-starting: var(--shadow-xs); }
-    :where([style*="--shadow--starting: sm"]) { --_shadow-starting: var(--shadow-sm); }
-    :where([style*="--shadow--starting: md"]) { --_shadow-starting: var(--shadow-md); }
-    :where([style*="--shadow--starting: lg"]) { --_shadow-starting: var(--shadow-lg); }
-    :where([style*="--shadow--starting: xl"]) { --_shadow-starting: var(--shadow-xl); }
-    :where([style*="--shadow--starting: 2xl"]) { --_shadow-starting: var(--shadow-2xl); }
-  }
-  :where(:is(:disabled, [aria-disabled="true"])[style*="--shadow--disabled: 2xs"]) { --_shadow-disabled: var(--shadow-2xs); }
-  :where(:is(:disabled, [aria-disabled="true"])[style*="--shadow--disabled: xs"]) { --_shadow-disabled: var(--shadow-xs); }
-  :where(:is(:disabled, [aria-disabled="true"])[style*="--shadow--disabled: sm"]) { --_shadow-disabled: var(--shadow-sm); }
-  :where(:is(:disabled, [aria-disabled="true"])[style*="--shadow--disabled: md"]) { --_shadow-disabled: var(--shadow-md); }
-  :where(:is(:disabled, [aria-disabled="true"])[style*="--shadow--disabled: lg"]) { --_shadow-disabled: var(--shadow-lg); }
-  :where(:is(:disabled, [aria-disabled="true"])[style*="--shadow--disabled: xl"]) { --_shadow-disabled: var(--shadow-xl); }
-  :where(:is(:disabled, [aria-disabled="true"])[style*="--shadow--disabled: 2xl"]) { --_shadow-disabled: var(--shadow-2xl); }
-  :where([data-ui~="group"]:is(:disabled, [aria-disabled="true"]) [style*="--group-shadow--disabled: 2xs"]) { --_shadow-g-disabled: var(--shadow-2xs); }
-  :where([data-ui~="group"]:is(:disabled, [aria-disabled="true"]) [style*="--group-shadow--disabled: xs"]) { --_shadow-g-disabled: var(--shadow-xs); }
-  :where([data-ui~="group"]:is(:disabled, [aria-disabled="true"]) [style*="--group-shadow--disabled: sm"]) { --_shadow-g-disabled: var(--shadow-sm); }
-  :where([data-ui~="group"]:is(:disabled, [aria-disabled="true"]) [style*="--group-shadow--disabled: md"]) { --_shadow-g-disabled: var(--shadow-md); }
-  :where([data-ui~="group"]:is(:disabled, [aria-disabled="true"]) [style*="--group-shadow--disabled: lg"]) { --_shadow-g-disabled: var(--shadow-lg); }
-  :where([data-ui~="group"]:is(:disabled, [aria-disabled="true"]) [style*="--group-shadow--disabled: xl"]) { --_shadow-g-disabled: var(--shadow-xl); }
-  :where([data-ui~="group"]:is(:disabled, [aria-disabled="true"]) [style*="--group-shadow--disabled: 2xl"]) { --_shadow-g-disabled: var(--shadow-2xl); }
-  :where(:active[style*="--shadow--active: 2xs"]) { --_shadow-active: var(--shadow-2xs); }
-  :where(:active[style*="--shadow--active: xs"]) { --_shadow-active: var(--shadow-xs); }
-  :where(:active[style*="--shadow--active: sm"]) { --_shadow-active: var(--shadow-sm); }
-  :where(:active[style*="--shadow--active: md"]) { --_shadow-active: var(--shadow-md); }
-  :where(:active[style*="--shadow--active: lg"]) { --_shadow-active: var(--shadow-lg); }
-  :where(:active[style*="--shadow--active: xl"]) { --_shadow-active: var(--shadow-xl); }
-  :where(:active[style*="--shadow--active: 2xl"]) { --_shadow-active: var(--shadow-2xl); }
-  :where([data-ui~="group"]:active [style*="--group-shadow--active: 2xs"]) { --_shadow-g-active: var(--shadow-2xs); }
-  :where([data-ui~="group"]:active [style*="--group-shadow--active: xs"]) { --_shadow-g-active: var(--shadow-xs); }
-  :where([data-ui~="group"]:active [style*="--group-shadow--active: sm"]) { --_shadow-g-active: var(--shadow-sm); }
-  :where([data-ui~="group"]:active [style*="--group-shadow--active: md"]) { --_shadow-g-active: var(--shadow-md); }
-  :where([data-ui~="group"]:active [style*="--group-shadow--active: lg"]) { --_shadow-g-active: var(--shadow-lg); }
-  :where([data-ui~="group"]:active [style*="--group-shadow--active: xl"]) { --_shadow-g-active: var(--shadow-xl); }
-  :where([data-ui~="group"]:active [style*="--group-shadow--active: 2xl"]) { --_shadow-g-active: var(--shadow-2xl); }
-  :where(:focus-visible[style*="--shadow--focus-visible: 2xs"]) { --_shadow-focus-visible: var(--shadow-2xs); }
-  :where(:focus-visible[style*="--shadow--focus-visible: xs"]) { --_shadow-focus-visible: var(--shadow-xs); }
-  :where(:focus-visible[style*="--shadow--focus-visible: sm"]) { --_shadow-focus-visible: var(--shadow-sm); }
-  :where(:focus-visible[style*="--shadow--focus-visible: md"]) { --_shadow-focus-visible: var(--shadow-md); }
-  :where(:focus-visible[style*="--shadow--focus-visible: lg"]) { --_shadow-focus-visible: var(--shadow-lg); }
-  :where(:focus-visible[style*="--shadow--focus-visible: xl"]) { --_shadow-focus-visible: var(--shadow-xl); }
-  :where(:focus-visible[style*="--shadow--focus-visible: 2xl"]) { --_shadow-focus-visible: var(--shadow-2xl); }
-  :where([data-ui~="group"]:focus-visible [style*="--group-shadow--focus-visible: 2xs"]) { --_shadow-g-focus-visible: var(--shadow-2xs); }
-  :where([data-ui~="group"]:focus-visible [style*="--group-shadow--focus-visible: xs"]) { --_shadow-g-focus-visible: var(--shadow-xs); }
-  :where([data-ui~="group"]:focus-visible [style*="--group-shadow--focus-visible: sm"]) { --_shadow-g-focus-visible: var(--shadow-sm); }
-  :where([data-ui~="group"]:focus-visible [style*="--group-shadow--focus-visible: md"]) { --_shadow-g-focus-visible: var(--shadow-md); }
-  :where([data-ui~="group"]:focus-visible [style*="--group-shadow--focus-visible: lg"]) { --_shadow-g-focus-visible: var(--shadow-lg); }
-  :where([data-ui~="group"]:focus-visible [style*="--group-shadow--focus-visible: xl"]) { --_shadow-g-focus-visible: var(--shadow-xl); }
-  :where([data-ui~="group"]:focus-visible [style*="--group-shadow--focus-visible: 2xl"]) { --_shadow-g-focus-visible: var(--shadow-2xl); }
-  :where(:focus-within[style*="--shadow--focus-within: 2xs"]) { --_shadow-focus-within: var(--shadow-2xs); }
-  :where(:focus-within[style*="--shadow--focus-within: xs"]) { --_shadow-focus-within: var(--shadow-xs); }
-  :where(:focus-within[style*="--shadow--focus-within: sm"]) { --_shadow-focus-within: var(--shadow-sm); }
-  :where(:focus-within[style*="--shadow--focus-within: md"]) { --_shadow-focus-within: var(--shadow-md); }
-  :where(:focus-within[style*="--shadow--focus-within: lg"]) { --_shadow-focus-within: var(--shadow-lg); }
-  :where(:focus-within[style*="--shadow--focus-within: xl"]) { --_shadow-focus-within: var(--shadow-xl); }
-  :where(:focus-within[style*="--shadow--focus-within: 2xl"]) { --_shadow-focus-within: var(--shadow-2xl); }
-  :where([data-ui~="group"]:focus-within [style*="--group-shadow--focus-within: 2xs"]) { --_shadow-g-focus-within: var(--shadow-2xs); }
-  :where([data-ui~="group"]:focus-within [style*="--group-shadow--focus-within: xs"]) { --_shadow-g-focus-within: var(--shadow-xs); }
-  :where([data-ui~="group"]:focus-within [style*="--group-shadow--focus-within: sm"]) { --_shadow-g-focus-within: var(--shadow-sm); }
-  :where([data-ui~="group"]:focus-within [style*="--group-shadow--focus-within: md"]) { --_shadow-g-focus-within: var(--shadow-md); }
-  :where([data-ui~="group"]:focus-within [style*="--group-shadow--focus-within: lg"]) { --_shadow-g-focus-within: var(--shadow-lg); }
-  :where([data-ui~="group"]:focus-within [style*="--group-shadow--focus-within: xl"]) { --_shadow-g-focus-within: var(--shadow-xl); }
-  :where([data-ui~="group"]:focus-within [style*="--group-shadow--focus-within: 2xl"]) { --_shadow-g-focus-within: var(--shadow-2xl); }
-  @media (hover: hover) {
-    :where(:hover[style*="--shadow--hover: 2xs"]) { --_shadow-hover: var(--shadow-2xs); }
-    :where(:hover[style*="--shadow--hover: xs"]) { --_shadow-hover: var(--shadow-xs); }
-    :where(:hover[style*="--shadow--hover: sm"]) { --_shadow-hover: var(--shadow-sm); }
-    :where(:hover[style*="--shadow--hover: md"]) { --_shadow-hover: var(--shadow-md); }
-    :where(:hover[style*="--shadow--hover: lg"]) { --_shadow-hover: var(--shadow-lg); }
-    :where(:hover[style*="--shadow--hover: xl"]) { --_shadow-hover: var(--shadow-xl); }
-    :where(:hover[style*="--shadow--hover: 2xl"]) { --_shadow-hover: var(--shadow-2xl); }
-    :where([data-ui~="group"]:hover [style*="--group-shadow--hover: 2xs"]) { --_shadow-g-hover: var(--shadow-2xs); }
-    :where([data-ui~="group"]:hover [style*="--group-shadow--hover: xs"]) { --_shadow-g-hover: var(--shadow-xs); }
-    :where([data-ui~="group"]:hover [style*="--group-shadow--hover: sm"]) { --_shadow-g-hover: var(--shadow-sm); }
-    :where([data-ui~="group"]:hover [style*="--group-shadow--hover: md"]) { --_shadow-g-hover: var(--shadow-md); }
-    :where([data-ui~="group"]:hover [style*="--group-shadow--hover: lg"]) { --_shadow-g-hover: var(--shadow-lg); }
-    :where([data-ui~="group"]:hover [style*="--group-shadow--hover: xl"]) { --_shadow-g-hover: var(--shadow-xl); }
-    :where([data-ui~="group"]:hover [style*="--group-shadow--hover: 2xl"]) { --_shadow-g-hover: var(--shadow-2xl); }
-  }
-  :where(:is(:checked, [aria-checked="true"])[style*="--shadow--checked: 2xs"]) { --_shadow-checked: var(--shadow-2xs); }
-  :where(:is(:checked, [aria-checked="true"])[style*="--shadow--checked: xs"]) { --_shadow-checked: var(--shadow-xs); }
-  :where(:is(:checked, [aria-checked="true"])[style*="--shadow--checked: sm"]) { --_shadow-checked: var(--shadow-sm); }
-  :where(:is(:checked, [aria-checked="true"])[style*="--shadow--checked: md"]) { --_shadow-checked: var(--shadow-md); }
-  :where(:is(:checked, [aria-checked="true"])[style*="--shadow--checked: lg"]) { --_shadow-checked: var(--shadow-lg); }
-  :where(:is(:checked, [aria-checked="true"])[style*="--shadow--checked: xl"]) { --_shadow-checked: var(--shadow-xl); }
-  :where(:is(:checked, [aria-checked="true"])[style*="--shadow--checked: 2xl"]) { --_shadow-checked: var(--shadow-2xl); }
-  :where([data-ui~="group"]:is(:checked, [aria-checked="true"]) [style*="--group-shadow--checked: 2xs"]) { --_shadow-g-checked: var(--shadow-2xs); }
-  :where([data-ui~="group"]:is(:checked, [aria-checked="true"]) [style*="--group-shadow--checked: xs"]) { --_shadow-g-checked: var(--shadow-xs); }
-  :where([data-ui~="group"]:is(:checked, [aria-checked="true"]) [style*="--group-shadow--checked: sm"]) { --_shadow-g-checked: var(--shadow-sm); }
-  :where([data-ui~="group"]:is(:checked, [aria-checked="true"]) [style*="--group-shadow--checked: md"]) { --_shadow-g-checked: var(--shadow-md); }
-  :where([data-ui~="group"]:is(:checked, [aria-checked="true"]) [style*="--group-shadow--checked: lg"]) { --_shadow-g-checked: var(--shadow-lg); }
-  :where([data-ui~="group"]:is(:checked, [aria-checked="true"]) [style*="--group-shadow--checked: xl"]) { --_shadow-g-checked: var(--shadow-xl); }
-  :where([data-ui~="group"]:is(:checked, [aria-checked="true"]) [style*="--group-shadow--checked: 2xl"]) { --_shadow-g-checked: var(--shadow-2xl); }
-  :where(:is([aria-current]:not([aria-current="false"]))[style*="--shadow--current: 2xs"]) { --_shadow-current: var(--shadow-2xs); }
-  :where(:is([aria-current]:not([aria-current="false"]))[style*="--shadow--current: xs"]) { --_shadow-current: var(--shadow-xs); }
-  :where(:is([aria-current]:not([aria-current="false"]))[style*="--shadow--current: sm"]) { --_shadow-current: var(--shadow-sm); }
-  :where(:is([aria-current]:not([aria-current="false"]))[style*="--shadow--current: md"]) { --_shadow-current: var(--shadow-md); }
-  :where(:is([aria-current]:not([aria-current="false"]))[style*="--shadow--current: lg"]) { --_shadow-current: var(--shadow-lg); }
-  :where(:is([aria-current]:not([aria-current="false"]))[style*="--shadow--current: xl"]) { --_shadow-current: var(--shadow-xl); }
-  :where(:is([aria-current]:not([aria-current="false"]))[style*="--shadow--current: 2xl"]) { --_shadow-current: var(--shadow-2xl); }
-  :where([data-ui~="group"]:is([aria-current]:not([aria-current="false"])) [style*="--group-shadow--current: 2xs"]) { --_shadow-g-current: var(--shadow-2xs); }
-  :where([data-ui~="group"]:is([aria-current]:not([aria-current="false"])) [style*="--group-shadow--current: xs"]) { --_shadow-g-current: var(--shadow-xs); }
-  :where([data-ui~="group"]:is([aria-current]:not([aria-current="false"])) [style*="--group-shadow--current: sm"]) { --_shadow-g-current: var(--shadow-sm); }
-  :where([data-ui~="group"]:is([aria-current]:not([aria-current="false"])) [style*="--group-shadow--current: md"]) { --_shadow-g-current: var(--shadow-md); }
-  :where([data-ui~="group"]:is([aria-current]:not([aria-current="false"])) [style*="--group-shadow--current: lg"]) { --_shadow-g-current: var(--shadow-lg); }
-  :where([data-ui~="group"]:is([aria-current]:not([aria-current="false"])) [style*="--group-shadow--current: xl"]) { --_shadow-g-current: var(--shadow-xl); }
-  :where([data-ui~="group"]:is([aria-current]:not([aria-current="false"])) [style*="--group-shadow--current: 2xl"]) { --_shadow-g-current: var(--shadow-2xl); }
-  :where(:is([open], :popover-open, [aria-expanded="true"])[style*="--shadow--open: 2xs"]) { --_shadow-open: var(--shadow-2xs); }
-  :where(:is([open], :popover-open, [aria-expanded="true"])[style*="--shadow--open: xs"]) { --_shadow-open: var(--shadow-xs); }
-  :where(:is([open], :popover-open, [aria-expanded="true"])[style*="--shadow--open: sm"]) { --_shadow-open: var(--shadow-sm); }
-  :where(:is([open], :popover-open, [aria-expanded="true"])[style*="--shadow--open: md"]) { --_shadow-open: var(--shadow-md); }
-  :where(:is([open], :popover-open, [aria-expanded="true"])[style*="--shadow--open: lg"]) { --_shadow-open: var(--shadow-lg); }
-  :where(:is([open], :popover-open, [aria-expanded="true"])[style*="--shadow--open: xl"]) { --_shadow-open: var(--shadow-xl); }
-  :where(:is([open], :popover-open, [aria-expanded="true"])[style*="--shadow--open: 2xl"]) { --_shadow-open: var(--shadow-2xl); }
-  :where([data-ui~="group"]:is([open], :popover-open, [aria-expanded="true"]) [style*="--group-shadow--open: 2xs"]) { --_shadow-g-open: var(--shadow-2xs); }
-  :where([data-ui~="group"]:is([open], :popover-open, [aria-expanded="true"]) [style*="--group-shadow--open: xs"]) { --_shadow-g-open: var(--shadow-xs); }
-  :where([data-ui~="group"]:is([open], :popover-open, [aria-expanded="true"]) [style*="--group-shadow--open: sm"]) { --_shadow-g-open: var(--shadow-sm); }
-  :where([data-ui~="group"]:is([open], :popover-open, [aria-expanded="true"]) [style*="--group-shadow--open: md"]) { --_shadow-g-open: var(--shadow-md); }
-  :where([data-ui~="group"]:is([open], :popover-open, [aria-expanded="true"]) [style*="--group-shadow--open: lg"]) { --_shadow-g-open: var(--shadow-lg); }
-  :where([data-ui~="group"]:is([open], :popover-open, [aria-expanded="true"]) [style*="--group-shadow--open: xl"]) { --_shadow-g-open: var(--shadow-xl); }
-  :where([data-ui~="group"]:is([open], :popover-open, [aria-expanded="true"]) [style*="--group-shadow--open: 2xl"]) { --_shadow-g-open: var(--shadow-2xl); }
-  :where([style*="--shadow--stuck: 2xs"]) { --_shadow-stuck: var(--_stuck-on) var(--shadow-2xs); }
-  :where([style*="--shadow--stuck: xs"]) { --_shadow-stuck: var(--_stuck-on) var(--shadow-xs); }
-  :where([style*="--shadow--stuck: sm"]) { --_shadow-stuck: var(--_stuck-on) var(--shadow-sm); }
-  :where([style*="--shadow--stuck: md"]) { --_shadow-stuck: var(--_stuck-on) var(--shadow-md); }
-  :where([style*="--shadow--stuck: lg"]) { --_shadow-stuck: var(--_stuck-on) var(--shadow-lg); }
-  :where([style*="--shadow--stuck: xl"]) { --_shadow-stuck: var(--_stuck-on) var(--shadow-xl); }
-  :where([style*="--shadow--stuck: 2xl"]) { --_shadow-stuck: var(--_stuck-on) var(--shadow-2xl); }
 
   :where([style*="--shadow-angle:"], [style*="--shadow-angle--"], [style*="--group-shadow-angle--"]) {
     --_shadow-angle-resolved: var(--_shadow-angle-starting, var(--_shadow-angle-disabled, var(--_shadow-angle-active, var(--_shadow-angle-focus-visible, var(--_shadow-angle-focus-within, var(--_shadow-angle-hover, var(--_shadow-angle-checked, var(--_shadow-angle-current, var(--_shadow-angle-open, var(--_shadow-angle-g-disabled, var(--_shadow-angle-g-active, var(--_shadow-angle-g-focus-visible, var(--_shadow-angle-g-focus-within, var(--_shadow-angle-g-hover, var(--_shadow-angle-g-checked, var(--_shadow-angle-g-current, var(--_shadow-angle-g-open, var(--_shadow-angle-stuck, var(--_shadow-angle-2xl, var(--_shadow-angle-xl, var(--_shadow-angle-lg, var(--_shadow-angle-md, var(--_shadow-angle-sm, var(--_shadow-angle))))))))))))))))))))))));
@@ -255,5 +172,14 @@
 
   :where(:is([style*="--shadow:"], [style*="--ring:"], [style*="--ring-color:"], [style*="--ring-offset:"], [style*="--ring-offset-color:"])) {
     box-shadow: var(--_focus-shadow, 0 0 #0000), 0 0 0 calc(abs(var(--_ring-offset-w, 0px)) * (1 - max(0, -1 * sign(var(--_ring-w, 0px))))) var(--_ring-offset-color-resolved, transparent), 0 0 0 calc((abs(var(--_ring-offset-w, 0px)) + abs(var(--_ring-w, 0px))) * (1 - max(0, -1 * sign(var(--_ring-w, 0px))))) var(--_ring-color-resolved, var(--color-ring)), inset 0 0 0 calc(abs(var(--_ring-offset-w, 0px)) * max(0, -1 * sign(var(--_ring-w, 0px)))) var(--_ring-offset-color-resolved, transparent), inset 0 0 0 calc((abs(var(--_ring-offset-w, 0px)) + abs(var(--_ring-w, 0px))) * max(0, -1 * sign(var(--_ring-w, 0px)))) var(--_ring-color-resolved, var(--color-ring)), var(--_shadow-resolved, 0 0 #0000);
+  }
+
+  :where([style*="--elevation:"], [style*="--elevation--"], [style*="--group-elevation--"]) {
+    --_elevation-n: abs(var(--_elevation-resolved));
+    --_elevation-filter: drop-shadow(oklch(from var(--_shadow-color) l c h / clamp(0, calc((var(--_elevation-n) - 0) * 0.04), 0.08)) calc(var(--_elevation-n) * var(--spacing) * 0.25 * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 0.25 * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 0.25 * 2.2))) drop-shadow(oklch(from var(--_shadow-color) l c h / clamp(0, calc((var(--_elevation-n) - 0.5) * 0.02), 0.06)) calc(var(--_elevation-n) * var(--spacing) * 1 * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 1 * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 1 * 1))) drop-shadow(oklch(from var(--_shadow-color) l c h / clamp(0, calc((var(--_elevation-n) - 1.5) * 0.012), 0.05)) calc(var(--_elevation-n) * var(--spacing) * 2.25 * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 2.25 * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 2.25 * 0.6))) drop-shadow(oklch(from var(--_shadow-color) l c h / clamp(0, calc((var(--_elevation-n) - 4) * 0.006), 0.04)) calc(var(--_elevation-n) * var(--spacing) * 4 * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 4 * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 4 * 0.4)));
+  }
+
+  :where(:is([style*="--filter:"], [style*="--elevation:"])) {
+    filter: var(--_filter-resolved,) var(--_elevation-filter,);
   }
 }

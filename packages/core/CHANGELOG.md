@@ -1,5 +1,135 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.8.0 (unreleased)
+
+### base
+
+- New utilities `--filter`, `--backdrop-filter`, and `--mix-blend` set `filter`, `backdrop-filter`, and `mix-blend-mode`. They take state tiers (`--filter--hover`, `--group-mix-blend--hover`), work tier-only (`--filter--hover: blur(2px)` alone leaves the element unfiltered at rest), and have pseudo-element forms (`--before-filter`, `--after-mix-blend`). The generated layer is 22.0 KB with Brotli.
+- **BREAKING:** `--rounded` is now `--radius`. A number is a step on the spacing scale times `--radius-multiplier`, so `--radius: 2.5` is `--radius-md` (0.5 `2xs`, 1 `xs`, 1.5 `sm`, 4.5 `lg`, 7 `xl`, 10 `2xl`); a length passes through, and `full` is the pill. It takes states and breakpoints and works tier-only. A value with several corners no longer works: round two corners with the new `--radius-t`, `--radius-b`, `--radius-l`, and `--radius-r` (logical, breakpoint tiers), as in `--radius-t: 2.5` for a card's media. A primitive's main radius hook takes one number or length the same way, so a hook value with several corners (`8px 8px 0 0`) now renders square. **Migration:** rename `--rounded` to `--radius` (`--before-rounded` to `--before-radius`), and the `--ui-<primitive>-rounded` hooks to `--ui-<primitive>-radius` (listed under each primitive below).
+- **BREAKING:** `--shadow` takes a token or any box-shadow; the size words are gone. **Migration:** `--shadow: md` → `--shadow: var(--shadow-md)`, at every tier.
+- **BREAKING:** `--shadow-hue` is now `--shadow-tint`. **Migration:** rename it.
+- The `--shadow-2xs` … `2xl` tokens are redrawn as four layers from the same formula as `--elevation`, at heights 0.25 to 16, and generated into the new `base/_shadows.css`. Shadows across the kit change slightly; `xs` and `2xs` are lighter than before.
+- New utility `--elevation`: a height (a number) drawn as four soft drop-shadows in `filter`, which browsers usually composite on the GPU. `--elevation: 4` uses the same layers as `--shadow-md`; the far layers fade in and darken as the number rises. It composes with `--filter` in one `filter`, takes states and breakpoints, and works tier-only. A drop-shadow follows the painted shape, so an element with no background shadows its text, and `filter` makes the element a stacking context. A negative height draws like its absolute value; a word draws nothing. `--filter: none` now empties the filter, so `--filter: none; --elevation: 4` keeps the elevation.
+- New token `--default-shadow-angle` (`0deg`, down) sets the direction of every shadow on the page; `--shadow-angle` still turns it for an element and its subtree.
+
+### badge
+
+- **BREAKING:** renamed with `--radius`: `--ui-badge-rounded` → `--ui-badge-radius`. `--ui-badge-radius` also takes a number (`2.5`).
+
+### button
+
+- **BREAKING:** renamed with `--radius`: `--ui-button-rounded` → `--ui-button-radius`. `--ui-button-radius` also takes a number (`2.5`).
+
+### button-group
+
+- **BREAKING:** renamed with `--radius`: `--ui-button-group-rounded` → `--ui-button-group-radius`. `--ui-button-group-radius` also takes a number (`2.5`).
+
+### callout
+
+- **BREAKING:** renamed with `--radius`: `--ui-callout-rounded` → `--ui-callout-radius`. `--ui-callout-radius` also takes a number (`2.5`).
+
+### card
+
+- **BREAKING:** renamed with `--radius`: `--ui-card-rounded` → `--ui-card-radius`. `--ui-card-radius` also takes a number (`2.5`).
+
+### checkbox
+
+- **BREAKING:** renamed with `--radius`: `--ui-checkbox-rounded` → `--ui-checkbox-radius`. `--ui-checkbox-radius` also takes a number (`2.5`).
+
+### combobox
+
+- **BREAKING:** renamed with `--radius`: `--ui-combobox-rounded` → `--ui-combobox-radius`, `--ui-combobox-tag-remove-rounded` → `--ui-combobox-tag-remove-radius`. `--ui-combobox-radius` also takes a number (`2.5`).
+
+### debug
+
+- `dual-value` accepts a dual utility's aliases (`--radius: full`).
+- `tier-without-base` checks `--elevation` like the ring and shadow tiers: on its own it does nothing where a primitive sets `filter` without reading it.
+
+### dialog
+
+- **BREAKING:** renamed with `--radius`: `--ui-dialog-rounded` → `--ui-dialog-radius`. `--ui-dialog-radius` also takes a number (`2.5`).
+
+### fields
+
+- **BREAKING:** renamed with `--radius`: `--ui-field-rounded` → `--ui-field-radius`, `--ui-field-group-rounded` → `--ui-field-group-radius`. `--ui-field-radius` also takes a number (`2.5`).
+
+### input
+
+- **BREAKING:** renamed with `--radius`: `--ui-input-rounded` → `--ui-input-radius`. `--ui-input-radius` also takes a number (`2.5`).
+
+### kbd
+
+- **BREAKING:** renamed with `--radius`: `--ui-kbd-rounded` → `--ui-kbd-radius`. `--ui-kbd-radius` also takes a number (`2.5`).
+
+### lightbox
+
+- **BREAKING:** a hovered or pressed stage image no longer darkens. The `--ui-lightbox-img-filter--hover` and `--ui-lightbox-img-filter--active` hooks are removed, and `filter` is gone from `--ui-lightbox-img-transition-property`, so the primitive never sets `filter` and the new `--filter` utility applies. Migration: to keep the dimming, put `data-ui="group"` on the slide and `--group-filter--hover: brightness(0.8); --group-filter--active: brightness(0.5)` on its image (the image takes no pointer events, so its own `--filter--hover` never matches).
+- **BREAKING:** renamed with `--radius`: `--ui-lightbox-slide-rounded` → `--ui-lightbox-slide-radius`, `--ui-lightbox-thumb-rounded` → `--ui-lightbox-thumb-radius`.
+
+### menu
+
+- **BREAKING:** renamed with `--radius`: `--ui-menu-button-rounded` → `--ui-menu-button-radius`.
+
+### meter
+
+- **BREAKING:** renamed with `--radius`: `--ui-meter-rounded` → `--ui-meter-radius`. `--ui-meter-radius` also takes a number (`2.5`).
+
+### navigation-menu
+
+- **BREAKING:** renamed with `--radius`: `--ui-navigation-menu-popover-child-rounded` → `--ui-navigation-menu-popover-child-radius`.
+
+### otp
+
+- **BREAKING:** renamed with `--radius`: `--ui-otp-cell-rounded` → `--ui-otp-cell-radius`. `--ui-otp-cell-radius` also takes a number (`2.5`).
+
+### popover
+
+- **BREAKING:** renamed with `--radius`: `--ui-popover-rounded` → `--ui-popover-radius`, `--ui-popover-button-rounded` → `--ui-popover-button-radius`. `--ui-popover-radius` also takes a number (`2.5`).
+
+### progress
+
+- **BREAKING:** renamed with `--radius`: `--ui-progress-rounded` → `--ui-progress-radius`. `--ui-progress-radius` also takes a number (`2.5`).
+
+### radio
+
+- **BREAKING:** renamed with `--radius`: `--ui-radio-rounded` → `--ui-radio-radius`. `--ui-radio-radius` also takes a number (`2.5`).
+
+### select
+
+- **BREAKING:** renamed with `--radius`: `--ui-select-rounded` → `--ui-select-radius`, `--ui-option-rounded` → `--ui-option-radius`. `--ui-select-radius` also takes a number (`2.5`).
+
+### slider
+
+- **BREAKING:** renamed with `--radius`: `--ui-slider-track-rounded` → `--ui-slider-track-radius`, `--ui-slider-thumb-rounded` → `--ui-slider-thumb-radius`.
+
+### switch
+
+- **BREAKING:** renamed with `--radius`: `--ui-switch-rounded` → `--ui-switch-radius`. `--ui-switch-radius` also takes a number (`2.5`).
+
+### tabs
+
+- **BREAKING:** renamed with `--radius`: `--ui-tabs-track-rounded` → `--ui-tabs-track-radius`, `--ui-tabs-indicator-rounded` → `--ui-tabs-indicator-radius`. `--ui-tabs-track-radius` also takes a number (`2.5`).
+
+### textarea
+
+- **BREAKING:** renamed with `--radius`: `--ui-textarea-rounded` → `--ui-textarea-radius`. `--ui-textarea-radius` also takes a number (`2.5`).
+
+### toaster
+
+- **BREAKING:** renamed with `--radius`: `--ui-toaster-rounded` → `--ui-toaster-radius`.
+
+### toggle
+
+- **BREAKING:** renamed with `--radius`: `--ui-toggle-rounded` → `--ui-toggle-radius`. `--ui-toggle-radius` also takes a number (`2.5`).
+
+### toggle-group
+
+- **BREAKING:** renamed with `--radius`: `--ui-toggle-group-rounded` → `--ui-toggle-group-radius`. `--ui-toggle-group-radius` also takes a number (`2.5`).
+
+### tooltip
+
+- **BREAKING:** renamed with `--radius`: `--ui-tooltip-rounded` → `--ui-tooltip-radius`. `--ui-tooltip-radius` also takes a number (`2.5`).
+
 ## 0.7.0 (2026-10-13)
 
 ### base

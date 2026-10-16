@@ -281,6 +281,25 @@ function tierDescription(tier: string): string {
 
 /** CSS keywords for keyword-mode utilities, by the CSS property they set. */
 const KEYWORDS: Record<string, readonly string[]> = {
+  "mix-blend-mode": [
+    "normal",
+    "multiply",
+    "screen",
+    "overlay",
+    "darken",
+    "lighten",
+    "color-dodge",
+    "color-burn",
+    "hard-light",
+    "soft-light",
+    "difference",
+    "exclusion",
+    "hue",
+    "saturation",
+    "color",
+    "luminosity",
+    "plus-lighter",
+  ],
   display: [
     "block",
     "inline",
@@ -338,7 +357,7 @@ const KEYWORDS: Record<string, readonly string[]> = {
 
 /** Design-token families per utility: the `--<family>-*` names in the kit's stylesheets. */
 function tokenFamilies(utility: Utility): string[] {
-  if (utility.name === "rounded") return ["radius"];
+  if (utility.name === "radius" || utility.name.startsWith("radius-")) return ["radius"];
   if (utility.name === "leading" || utility.name === "tracking" || utility.name === "shadow")
     return [utility.name];
   if (["font-size", "font-weight", "font-family", "aspect"].includes(utility.name))
@@ -383,7 +402,7 @@ const GRADIENT_PRELUDES: Record<string, readonly string[]> = {
 
 function valuesFor(utility: Utility, tokens: Map<string, string[]>): HtmlValue[] | undefined {
   const names = new Set<string>(utility.keywords ?? []);
-  // keyword shorthands first (--shadow: md, --font-weight: strong), then the display ones
+  // keyword shorthands first (--font-weight: strong, --radius: full), then the display ones
   for (const alias of Object.keys(utility.aliases ?? {})) names.add(alias);
   if (utility.name === "display")
     for (const shorthand of Object.keys(DISPLAY_SHORTHANDS)) names.add(shorthand);

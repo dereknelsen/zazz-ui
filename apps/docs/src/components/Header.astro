@@ -18,36 +18,35 @@ const latest = (
   data-ui-persist="header"
   style="
     --display: flex;
-    --items: center;
-    --h: 12;
-    --w: 100%;
     --position: sticky;
+    --items: center;
     --top: 0;
-    --z: 20;
+    --w: 100%;
+    --h: 12;
     --bg: var(--color-background);
     --border-b: 1;
+    --z: 20;
   "
 >
-  <ui-layout style="--w: 100%;">
+  <ui-layout style="--w: 100%">
     <div
       style="
-      --display: flex;
-      --items: center;
-      
-      --gap: 1;
-    "
+        --display: flex;
+        --items: center;
+        --gap: 1;
+      "
     >
       <a
         href="/"
         aria-label="Zazz home"
         style="
-        --display: inline-flex;
-        --items: center;
-        --mr: 3;
-        --text: var(--color-foreground);
-        --opacity--hover: 0.8;
-        --transition: opacity var(--default-transition-duration) var(--default-transition-timing-function);
-      "
+          --display: inline-flex;
+          --items: center;
+          --mr: 3;
+          --text: var(--color-foreground);
+          --opacity--hover: 0.8;
+          --transition: opacity var(--default-transition-duration) var(--default-transition-timing-function);
+        "
       >
         <Logo size={20} variant="mark" />
       </a>
@@ -56,11 +55,11 @@ const latest = (
         aria-label="Primary"
         data-ui="navigation-menu"
         style="
-        --display: none;
-        --display--md: inline-flex;
-        --items: center;
-        --gap: 2;
-      "
+          --display: none;
+          --display--md: inline-flex;
+          --items: center;
+          --gap: 2;
+        "
       >
         <menu data-navigation-menu-slot="list">
           {
@@ -98,16 +97,21 @@ const latest = (
 
       <div
         style="
-        --display: flex;
-        --items: center;
-        --gap: 2;
-        --ml: auto;
-        --flex: 1;
-      "
+          --display: flex;
+          --items: center;
+          --flex: 1;
+          --gap: 2;
+          --ml: auto;
+        "
       >
         <Search />
 
-        <div style="--display: none; --display--md: block">
+        <div
+          style="
+            --display: none;
+            --display--md: block;
+          "
+        >
           <ThemeToggle name="theme-header" />
         </div>
         <a
@@ -131,9 +135,9 @@ const latest = (
           commandfor="site-menu"
           aria-label="Open menu"
           style="
-          --display: inline-flex;
-          --display--md: none;
-        "
+            --display: inline-flex;
+            --display--md: none;
+          "
         >
           <Menu size={18} aria-hidden="true" />
         </button>
@@ -168,8 +172,17 @@ const latest = (
     </div>
 
     <div data-mobile-menu-slot="body">
-      <div style="--display: flex-col; --gap: 1">
-        <nav aria-label="Menu" style="--display: flex-col; --gap: 1">
+      <div style="
+          --display: flex-col;
+          --gap: 1;
+        ">
+        <nav
+          aria-label="Menu"
+          style="
+            --display: flex-col;
+            --gap: 1;
+          "
+        >
           {
             nav.map((item) => (
               <a
@@ -190,7 +203,10 @@ const latest = (
               href={`/blog/${latest.id}/`}
               data-ui="button"
               data-button-variant="info"
-              style="--mb: 4; --justify: space-between;"
+              style="
+                --justify: space-between;
+                --mb: 4;
+              "
             >
               {latest.data.title} <MoveRight />
             </a>

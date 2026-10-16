@@ -2,7 +2,7 @@
 
 /**
  * @fileoverview Button group: both forms join their children,
- * `data-button-group-orientation="vertical"` stacks them, and a `--rounded`
+ * `data-button-group-orientation="vertical"` stacks them, and a `--radius`
  * utility beats the hook.
  */
 
@@ -38,8 +38,8 @@ describe("button group", () => {
     expect(style(first, "border-start-end-radius")).not.toBe("0px");
   });
 
-  it("a --rounded utility beats the group hook", () => {
-    const group = mount(`<ui-button-group style="--rounded: 7px">${GROUP}</ui-button-group>`);
+  it("a --radius utility beats the group hook", () => {
+    const group = mount(`<ui-button-group style="--radius: 7px">${GROUP}</ui-button-group>`);
     expect(style(group, "border-radius")).toBe("7px");
   });
 

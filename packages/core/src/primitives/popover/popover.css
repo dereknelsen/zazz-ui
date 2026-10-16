@@ -19,8 +19,8 @@
   :root {
     /* Styles */
     --ui-popover-border-color: var(--color-border);
-    --ui-popover-rounded: var(--radius-md);
-    --ui-popover-button-rounded: var(--radius-sm);
+    --ui-popover-radius: var(--radius-md);
+    --ui-popover-button-radius: var(--radius-sm);
     --ui-popover-shadow: var(--shadow-md);
     --ui-popover-p: calc(var(--spacing) * 1.5);
     --ui-popover-min-w: var(--article-xs);
@@ -56,7 +56,11 @@
 
     align-content: start;
     transform-origin: var(--ui-popover-origin);
-    border-radius: var(--_rounded-resolved, var(--ui-popover-rounded));
+    --_radius-len: var(--_radius-resolved, var(--ui-popover-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-popover-radius));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
     box-shadow: var(--_shadow-resolved, var(--ui-popover-shadow));
     opacity: var(--ui-popover-opacity--start);
     transform: scale(var(--ui-popover-scale--start)) translate3d(var(--ui-popover-translate--start));
@@ -125,7 +129,7 @@
   }
 
   [popover] [data-ui~="button"] {
-    --ui-button-rounded: var(--ui-popover-button-rounded);
+    --ui-button-radius: var(--ui-popover-button-radius);
   }
 
   /* ===========================================================================

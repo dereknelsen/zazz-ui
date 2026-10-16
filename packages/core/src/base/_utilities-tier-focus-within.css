@@ -23,6 +23,10 @@
     --_border-r-focus-within: var(--border-r--focus-within);
     --_border-b-focus-within: var(--border-b--focus-within);
     --_opacity-focus-within: var(--opacity--focus-within);
+    --_filter-focus-within: var(--filter--focus-within);
+    --_elevation-focus-within: var(--elevation--focus-within);
+    --_backdrop-filter-focus-within: var(--backdrop-filter--focus-within);
+    --_mix-blend-focus-within: var(--mix-blend--focus-within);
     --_shadow-focus-within: var(--shadow--focus-within);
     --_shadow-angle-focus-within: var(--shadow-angle--focus-within);
     --_ring-focus-within: var(--ring--focus-within);
@@ -35,6 +39,7 @@
     --_transition-focus-within: var(--transition--focus-within);
     --_transition-duration-focus-within: var(--transition-duration--focus-within);
     --_transition-delay-focus-within: var(--transition-delay--focus-within);
+    --_radius-focus-within: var(--radius--focus-within);
   }
   :where([data-ui~="group"]:focus-within [style*="--group-"]) {
     --_anchor-name-g-focus-within: var(--group-anchor-name--focus-within);
@@ -57,6 +62,10 @@
     --_border-r-g-focus-within: var(--group-border-r--focus-within);
     --_border-b-g-focus-within: var(--group-border-b--focus-within);
     --_opacity-g-focus-within: var(--group-opacity--focus-within);
+    --_filter-g-focus-within: var(--group-filter--focus-within);
+    --_elevation-g-focus-within: var(--group-elevation--focus-within);
+    --_backdrop-filter-g-focus-within: var(--group-backdrop-filter--focus-within);
+    --_mix-blend-g-focus-within: var(--group-mix-blend--focus-within);
     --_shadow-g-focus-within: var(--group-shadow--focus-within);
     --_shadow-angle-g-focus-within: var(--group-shadow-angle--focus-within);
     --_ring-g-focus-within: var(--group-ring--focus-within);
@@ -69,5 +78,6 @@
     --_transition-g-focus-within: var(--group-transition--focus-within);
     --_transition-duration-g-focus-within: var(--group-transition-duration--focus-within);
     --_transition-delay-g-focus-within: var(--group-transition-delay--focus-within);
+    --_radius-g-focus-within: var(--group-radius--focus-within);
   }
 }

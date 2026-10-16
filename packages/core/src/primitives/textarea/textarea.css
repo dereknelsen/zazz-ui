@@ -22,7 +22,7 @@
     --ui-textarea-border-width: var(--ui-field-border-width);
     --ui-textarea-border-style: var(--ui-field-border-style);
     --ui-textarea-border-color: var(--ui-field-border-color);
-    --ui-textarea-rounded: var(--ui-field-rounded);
+    --ui-textarea-radius: var(--ui-field-radius);
     --ui-textarea-resize: vertical;
   }
 }
@@ -51,7 +51,11 @@
     border-width: var(--_border-width-resolved, var(--ui-textarea-border-width));
     border-style: var(--_border-style-resolved, var(--ui-textarea-border-style));
     border-color: var(--_border-color-resolved, var(--ui-textarea-border-color));
-    border-radius: var(--_rounded-resolved, var(--ui-textarea-rounded));
+    --_radius-len: var(--_radius-resolved, var(--ui-textarea-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-textarea-radius));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
     resize: var(--ui-textarea-resize);
 
     /* The ring is published to --_focus-shadow so a --shadow utility keeps

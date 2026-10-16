@@ -22,7 +22,7 @@
     --ui-toaster-bg: var(--color-popover);
     --ui-toaster-text: var(--color-popover-foreground);
     --ui-toaster-border-color: var(--color-border);
-    --ui-toaster-rounded: var(--radius-md);
+    --ui-toaster-radius: var(--radius-md);
     --ui-toaster-shadow: var(--shadow-md);
     /* status accent: icon color; variants reassign */
     --ui-toaster-accent: var(--color-popover-foreground);
@@ -134,7 +134,7 @@
     color: var(--ui-toaster-text);
     background-color: var(--ui-toaster-bg);
     border: 1px solid var(--ui-toaster-border-color);
-    border-radius: var(--ui-toaster-rounded);
+    border-radius: var(--ui-toaster-radius);
     box-shadow: var(--ui-toaster-shadow);
     overflow-wrap: anywhere;
 

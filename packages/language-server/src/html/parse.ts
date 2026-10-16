@@ -24,11 +24,21 @@ export interface ParsedHtml {
  * Parses `source` as HTML. For a templating language (`languageId` such as
  * `astro` or `razor`) its expressions are masked first, so offsets still
  * point into the source and the audit never reads template code as CSS.
+ *
+ * Markup the parser rejects (`<a href="#"` still being typed, with no `>`
+ * before the next tag) reads as a document with no tags, so every feature
+ * goes quiet until the tag is closed instead of failing the request.
  */
 export function parseHtml(source: string, languageId = "html"): ParsedHtml {
   const { text, holes } = maskTemplateHoles(source, languageId);
-  const { ast } = parseForESLint(text, {}) as unknown as { ast: { body: Node[] } };
   const parsed: ParsedHtml = { text, tags: [], comments: [], holes };
+  let ast: { body: Node[] };
+  try {
+    ({ ast } = parseForESLint(text, {}) as unknown as { ast: { body: Node[] } });
+  } catch (error) {
+    if (error instanceof SyntaxError) return parsed;
+    throw error;
+  }
   const visit = (node: Node, parent: Node | undefined) => {
     if (parent) node.parent = parent;
     if (isTag(node)) {

@@ -589,6 +589,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
 export const BASE_CSS_PRE: string[] = [
   "base/_layers.css",
   "base/_variables.css",
+  "base/_shadows.css",
   "base/_breakpoints.css",
   "base/_reset.css",
   "base/_typography.css",

@@ -57,7 +57,7 @@
     --ui-toggle-gap: var(--ui-button-gap);
     --ui-toggle-px: var(--ui-button-px);
     --ui-toggle-min-h: var(--ui-button-min-h);
-    --ui-toggle-rounded: var(--ui-button-rounded);
+    --ui-toggle-radius: var(--ui-button-radius);
 
     --ui-toggle-icon-size: var(--ui-button-icon-size);
 
@@ -180,7 +180,7 @@
   syntax: "*";
   inherits: false;
 }
-@property --_toggle-rounded {
+@property --_toggle-radius {
   syntax: "*";
   inherits: false;
 }
@@ -236,7 +236,11 @@
       --_border-color-resolved,
       var(--_toggle-border-color, var(--ui-toggle-border-color))
     );
-    border-radius: var(--_rounded-resolved, var(--_toggle-rounded, var(--ui-toggle-rounded)));
+    --_radius-len: var(--_radius-resolved, var(--_toggle-radius, var(--ui-toggle-radius)));
+    --_radius-num: var(--_radius-resolved, var(--_toggle-radius, var(--ui-toggle-radius)));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
 
     color: var(--_text-resolved, var(--_toggle-text, var(--ui-toggle-text)));
     background-color: var(--_bg-resolved, var(--_toggle-bg, var(--ui-toggle-bg)));
@@ -495,7 +499,7 @@
   :where([data-ui~="toggle"][data-toggle-size="sm"]) {
     --_toggle-min-h: calc(var(--spacing) * 6);
     --_toggle-px: calc(var(--spacing) * 2);
-    --_toggle-rounded: var(--radius-sm);
+    --_toggle-radius: var(--radius-sm);
   }
 
   :where([data-ui~="toggle"][data-toggle-size="icon"]) {
@@ -508,7 +512,7 @@
   :where([data-ui~="toggle"][data-toggle-size="icon-sm"]) {
     --_toggle-min-h: calc(var(--spacing) * 6);
     --_toggle-px: calc(var(--spacing) * 2);
-    --_toggle-rounded: var(--radius-sm);
+    --_toggle-radius: var(--radius-sm);
     /* the hook, not a private: it must inherit to reach the icon */
     --ui-toggle-icon-size: calc(var(--spacing) * 3.5);
 

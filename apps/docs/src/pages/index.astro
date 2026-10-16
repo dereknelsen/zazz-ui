@@ -1,163 +1,238 @@
 ---
-import Logo from '../components/Logo.astro';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { site } from '../site.config.ts';
-import { ArrowUpRight, BookOpenText } from '@lucide/astro';
+import Logo from "../components/Logo.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../site.config.ts";
+import { ArrowRight, BookOpenText } from "@lucide/astro";
 ---
 
 <BaseLayout title={site.name}>
   <main
-    id='main'
-    data-ui='layout'
-    style='
-      --py: 20;
-      --min-h: calc(100svh - (13 * var(--spacing)));
+    id="main"
+    data-ui="layout"
+    style="
       --position: relative;
-    '
+      --place-content: center stretch;
+      --py: 12;
+    "
   >
-    <div
-      aria-hidden='true'
-      style='
-          --band: layout-full;
-          --border-x: 3;
-          --border-style: double;
-          --border-color: oklch(from var(--color-border) l c h / 0.25);
-          --position: absolute;
-          --inset: 0;
-          --pointer-events: none;
-        '
-    >
-    </div>
-    <div
-      aria-hidden='true'
-      style='
-          --band: layout-2xl;
-          --border-x: 3;
-          --border-style: double;
-          --border-color: oklch(from var(--color-border) l c h / 0.25);
-          --position: absolute;
-          --inset: 0;
-          --pointer-events: none;
-        '
-    >
-    </div>
-    <div
-      aria-hidden='true'
-      style='
-          --band: layout-xl;
-          --border-x: 3;
-          --border-style: double;
-          --border-color: oklch(from var(--color-border) l c h / 0.25);
-          --position: absolute;
-          --inset: 0;
-          --pointer-events: none;
-        '
-    >
-    </div>
-    <div
-      aria-hidden='true'
-      style='
-          --band: layout-lg;
-          --border-x: 3;
-          --border-style: double;
-          --border-color: oklch(from var(--color-border) l c h / 0.25);
-          --position: absolute;
-          --inset: 0;
-          --pointer-events: none;
-        '
-    >
-    </div>
-    <div
-      aria-hidden='true'
-      style='
-          --band: layout-md;
-          --border-x: 3;
-          --border-style: double;
-          --border-color: oklch(from var(--color-border) l c h / 0.25);
-          --position: absolute;
-          --inset: 0;
-          --pointer-events: none;
-        '
-    >
-    </div>
-    <div
-      aria-hidden='true'
-      style='
-          --band: layout-sm;
-          --border-x: 3;
-          --border-style: double;
-          --border-color: oklch(from var(--color-border) l c h / 0.25);
-          --position: absolute;
-          --inset: 0;
-          --pointer-events: none;
-        '
-    >
-    </div>
-    <div
-      style='
-        --band: layout-bleed;
-        --display: flex-col;
-        --items: center;
-        --justify: center;
+    <script>
+      /**
+       * The hero's Unicorn Studio backdrop, one scene per color scheme. The scheme is
+       * dark when `<html>` pins `theme-dark`, or pins nothing and the OS prefers dark.
+       * A theme change loads the other scene in a layer on top, fades it in once it
+       * has drawn, then drops the old one, so the backdrop is never blank.
+       */
+      const SDK =
+        "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.4.2/dist/unicornStudio.umd.js";
+      const PROJECTS = {
+        light: "QhF8LCtm1oeNYHapN73Y",
+        dark: "SqorJz7TX5VWwkFzVEcC",
+      };
+      const LAYER = `
+        --position: absolute;
+        --inset: 0;
+        --opacity: 0;
+        --transition: opacity 0.4s;
+      `;
+
+      interface Scene {
+        destroy(): void;
+      }
+      interface UnicornStudio {
+        addScene(options: {
+          elementId: string;
+          projectId: string;
+        }): Promise<Scene>;
+      }
+      interface Shown {
+        scene: Scene;
+        layer: HTMLElement;
+      }
+
+      const root = document.documentElement;
+      const frame = document.getElementById("hero-scene")!;
+      const prefersDark = matchMedia("(prefers-color-scheme: dark)");
+
+      function scheme(): "light" | "dark" {
+        const tokens = (root.dataset.ui ?? "").split(/\s+/);
+        if (tokens.includes("theme-dark")) return "dark";
+        if (tokens.includes("theme-light")) return "light";
+        return prefersDark.matches ? "dark" : "light";
+      }
+
+      function loadSdk(): Promise<UnicornStudio> {
+        return new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = SDK;
+          script.onload = () =>
+            resolve(
+              (window as unknown as { UnicornStudio: UnicornStudio })
+                .UnicornStudio,
+            );
+          script.onerror = reject;
+          document.head.append(script);
+        });
+      }
+
+      const nextFrame = () =>
+        new Promise((resolve) => requestAnimationFrame(resolve));
+
+      /** Loads `scheme`'s scene into a new hidden layer and fades it in over `previous`. */
+      async function show(
+        scheme: "light" | "dark",
+        previous: Shown | undefined,
+      ): Promise<Shown> {
+        const layer = document.createElement("div");
+        layer.id = `hero-scene-${scheme}`;
+        layer.setAttribute("style", LAYER);
+        frame.append(layer);
+        let scene: Scene;
+        try {
+          scene = await (
+            await sdk
+          ).addScene({
+            elementId: layer.id,
+            projectId: PROJECTS[scheme],
+          });
+        } catch (error) {
+          layer.remove();
+          throw error;
+        }
+        // Let the scene draw before it shows.
+        await nextFrame();
+        await nextFrame();
+        layer.style.setProperty("--opacity", "1");
+        await Promise.all(layer.getAnimations().map((a) => a.finished));
+        previous?.scene.destroy();
+        previous?.layer.remove();
+        return { scene, layer };
+      }
+
+      const sdk = loadSdk();
+      let wanted: "light" | "dark" | undefined;
+      let current: Promise<Shown | undefined> = Promise.resolve(undefined);
+
+      function render(): void {
+        const next = scheme();
+        if (next === wanted) return;
+        wanted = next;
+        current = current.then((previous) =>
+          wanted === next
+            ? show(next, previous).catch(() => previous)
+            : previous,
+        );
+      }
+
+      render();
+      prefersDark.addEventListener("change", render);
+      new MutationObserver(render).observe(root, {
+        attributeFilter: ["data-ui"],
+      });
+    </script>
+    <section
+      style="
+        --display: grid;
+        --grid-cols: 8;
         --gap: 6;
-        --text-align: center;
-        --my: auto;
-        --px: var(--gutters);
-      '
+        --w: 100%;
+      "
     >
       <div
-        style='
-          --py: 12;
-          --display: flex-col;
-          --items: center;
-          --justify: center;
-          --gap: 6;
-          --z: 1;
-        '
-      >
-        <div>
-          <Logo variant='lockup' size={32} title='Zazz' />
-        </div>
-        <h1 data-ui='sr-only'>{site.title}</h1>
-        <p
-          data-ui='text-h5'
-          style='
-          --pt: 4;
-          --text-wrap: balance;
-        '
-        >
-          HTML&rsquo;s missing design system
-        </p>
-        <p
-          data-ui='text-lg'
-          style='--text: var(--color-muted-foreground); --font-weight: 300; --max-w: var(--article-sm); --w: 100%; --mx: auto; --text-wrap: balance;'
-        >
-          A markup-first, composable, accessible UI library and design system
-          for no-build, low-build, and vanilla web projects.
-        </p>
-        <div style='--display: flex-col; --gap: 6;'>
-          <div
-            style='
+        style="
           --display: grid;
-          --grid-cols: 2;
-          --justify: center;
-          --gap: 2;
-        '
+          --col-start: 1;
+          --col-end: 6;
+          --row-start: 1;
+          --row-end: 1;
+          --gap: 12;
+        "
+      >
+        <figure
+          style="
+            --display: grid;
+            --position: relative;
+            --place-items: center;
+            --w: 100%;
+            --h: auto;
+            --min-w: 0;
+            --aspect: 16 / 9;
+            --overflow: clip;
+            --radius: 5;
+          "
+        >
+          <div
+            aria-hidden="true"
+            id="hero-scene"
+            style="
+              --position: absolute;
+              --inset: 0;
+              --size: 100%;
+              --pointer-events: none;
+            "
           >
-            <a
-              href='/docs/quick-start/'
-              data-ui='button'
-              data-button-variant='primary'><BookOpenText /> Read the docs</a
-            >
-            <a href='/api/' data-ui='button' data-button-variant='outline'
-              >Explore the API</a
-            >
           </div>
-          <a href='/playground' data-ui='button' data-button-variant='link'
-            >Zazz playground <ArrowUpRight /></a
+        </figure>
+      </div>
+      <div
+        style="
+          --display: flex-col;
+          --position: relative;
+          --items: start;
+          --justify: center;
+          --col-start: 5;
+          --col-end: -1;
+          --row-start: 1;
+          --row-end: 1;
+          --gap: 12;
+          --text-align: start;
+        "
+      >
+        <hgroup
+          style="
+            --display: flex-col;
+            --gap: 7;
+          "
+        >
+          <div
+            style="
+              --display: flex-col;
+              --items: start;
+              --justify: center;
+              --gap: 4;
+              --text-align: start;
+            "
+          >
+            <h1
+              data-ui="text-eyebrow"
+              style="--text: var(--color-muted-foreground)"
+            >
+              {site.title}
+            </h1>
+            <p data-ui="text-h2" style="--text-wrap: balance">
+              The design system for the common web.
+            </p>
+          </div>
+          <p data-ui="text-lg" style="--text-wrap: balance">
+            A unified collection of web-native primitives, style utilities, and
+            design tokens for no-build, low-build, and legacy projects.
+          </p>
+        </hgroup>
+        <div
+          style="
+            --display: flex;
+            --gap: 2;
+          "
+        >
+          <a
+            href="/docs/quick-start/"
+            data-ui="button"
+            data-button-variant="primary">Get started</a
+          >
+          <a href="/playground" data-ui="button" data-button-variant="ghost"
+            >Try it out <ArrowRight /></a
           >
         </div>
       </div>
-    </div>
+    </section>
   </main>
 </BaseLayout>

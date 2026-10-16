@@ -75,7 +75,11 @@
     color: var(--_text-resolved, var(--ui-field-text));
     background-color: var(--_bg-resolved, var(--ui-field-bg));
     border: 1px solid var(--_border-color-resolved, var(--ui-field-border-color));
-    border-radius: var(--_rounded-resolved, var(--ui-field-rounded));
+    --_radius-len: var(--_radius-resolved, var(--ui-field-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-field-radius));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
 
     --_ring-offset-width: 0px;
     --_ring-width: 0px;

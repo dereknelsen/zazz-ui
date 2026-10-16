@@ -1,8 +1,8 @@
 /**
  * @fileoverview Inlay hints inside `style`: what a scale number comes to
  * (`--p: 4` → `≈ 0.9–1rem`, `--spacing` being fluid), a breakpoint tier's
- * threshold (`--px--md` → `≥ 48rem`), what a shorthand reads as (`--shadow: md`
- * → `var(--shadow-md)`), and a size token's range (`var(--space-md)`).
+ * threshold (`--px--md` → `≥ 48rem`), what a shorthand reads as (`--font-weight:
+ * strong` → `var(--font-weight-strong)`), and a size token's range (`var(--space-md)`).
  */
 
 import { scanDeclarations } from "@zazz-ui/core/base/style-format.ts";

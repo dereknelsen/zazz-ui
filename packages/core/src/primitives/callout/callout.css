@@ -26,7 +26,7 @@
   :root {
     --ui-callout-bg: var(--color-card);
     --ui-callout-text: var(--color-card-foreground);
-    --ui-callout-rounded: var(--radius-md);
+    --ui-callout-radius: var(--radius-md);
     --ui-callout-shadow: none;
 
     --ui-callout-border-width: 1px;
@@ -72,7 +72,11 @@
       --_border-color-resolved,
       var(--_callout-border-color, var(--ui-callout-border-color))
     );
-    border-radius: var(--_rounded-resolved, var(--ui-callout-rounded));
+    --_radius-len: var(--_radius-resolved, var(--ui-callout-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-callout-radius));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
     box-shadow: var(--_shadow-resolved, var(--ui-callout-shadow));
   }
 

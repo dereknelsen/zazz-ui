@@ -192,12 +192,17 @@ function isBorderValue(value: string, isColor: (value: string) => boolean): bool
   return false;
 }
 
+/** The words a dual utility takes besides numbers and lengths: its keywords and alias names (`full`). */
+function dualWords(utility: Utility): string[] {
+  return [...(utility.keywords ?? []), ...Object.keys(utility.aliases ?? {})];
+}
+
 function isDualValue(value: string, utility: Utility): boolean {
   return (
     NUMBER.test(value) ||
     DIMENSION.test(value) ||
     FUNCTION.test(value) ||
-    (utility.keywords ?? []).includes(value)
+    dualWords(utility).includes(value)
   );
 }
 
@@ -403,7 +408,9 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
       // the box-shadow composite (ring, shadow) works tier-only like a no-base utility;
       // the other feeds (`--bg-alpha`, `--focus-ring`, `--shadow-angle`) reach the
       // element through another utility or a token, and are not checked here
-      const composite = (BOX_SHADOW_COMPOSITE as readonly string[]).includes(utility.name);
+      const composite =
+        (BOX_SHADOW_COMPOSITE as readonly string[]).includes(utility.name) ||
+        utility.name === "elevation";
       const feedsComposite = !composite && (utility.emit === "none" || utility.emit === "px");
       // a tier alone works where the kit reads the utility through its own chain,
       // or where the tier-only rule (`@layer defaults`) applies: a no-base utility
@@ -432,7 +439,7 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
     if (utility.mode === "dual" && !isDualValue(value, utility)) {
       warn(
         "dual-value",
-        `\`${name}: ${value}\` is neither a scale number, a length, nor a keyword (${(utility.keywords ?? []).join(", ") || "none"}).`,
+        `\`${name}: ${value}\` is neither a scale number, a length, nor a keyword (${dualWords(utility).join(", ") || "none"}).`,
       );
     }
     if (utility.mode === "keyword" && NUMBER.test(value)) {

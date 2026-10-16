@@ -20,7 +20,7 @@
     --ui-input-border-width: var(--ui-field-border-width);
     --ui-input-border-style: var(--ui-field-border-style);
     --ui-input-border-color: var(--ui-field-border-color);
-    --ui-input-rounded: var(--ui-field-rounded);
+    --ui-input-radius: var(--ui-field-radius);
 
     --ui-input-calendar-picker-color: currentColor;
     --ui-input-calendar-picker-icon-size: calc(var(--spacing) * 4);
@@ -65,7 +65,11 @@
     border-width: var(--_border-width-resolved, var(--ui-input-border-width));
     border-style: var(--_border-style-resolved, var(--ui-input-border-style));
     border-color: var(--_border-color-resolved, var(--ui-input-border-color));
-    border-radius: var(--_rounded-resolved, var(--ui-input-rounded));
+    --_radius-len: var(--_radius-resolved, var(--ui-input-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-input-radius));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
 
     /* The ring is published to --_focus-shadow so a --shadow utility keeps
        it; the transparent outline twin keeps focus visible in forced-colors */

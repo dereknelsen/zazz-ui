@@ -23,6 +23,10 @@
     --_border-r-focus-visible: var(--border-r--focus-visible);
     --_border-b-focus-visible: var(--border-b--focus-visible);
     --_opacity-focus-visible: var(--opacity--focus-visible);
+    --_filter-focus-visible: var(--filter--focus-visible);
+    --_elevation-focus-visible: var(--elevation--focus-visible);
+    --_backdrop-filter-focus-visible: var(--backdrop-filter--focus-visible);
+    --_mix-blend-focus-visible: var(--mix-blend--focus-visible);
     --_shadow-focus-visible: var(--shadow--focus-visible);
     --_shadow-angle-focus-visible: var(--shadow-angle--focus-visible);
     --_ring-focus-visible: var(--ring--focus-visible);
@@ -35,6 +39,7 @@
     --_transition-focus-visible: var(--transition--focus-visible);
     --_transition-duration-focus-visible: var(--transition-duration--focus-visible);
     --_transition-delay-focus-visible: var(--transition-delay--focus-visible);
+    --_radius-focus-visible: var(--radius--focus-visible);
   }
   :where([data-ui~="group"]:focus-visible [style*="--group-"]) {
     --_anchor-name-g-focus-visible: var(--group-anchor-name--focus-visible);
@@ -57,6 +62,10 @@
     --_border-r-g-focus-visible: var(--group-border-r--focus-visible);
     --_border-b-g-focus-visible: var(--group-border-b--focus-visible);
     --_opacity-g-focus-visible: var(--group-opacity--focus-visible);
+    --_filter-g-focus-visible: var(--group-filter--focus-visible);
+    --_elevation-g-focus-visible: var(--group-elevation--focus-visible);
+    --_backdrop-filter-g-focus-visible: var(--group-backdrop-filter--focus-visible);
+    --_mix-blend-g-focus-visible: var(--group-mix-blend--focus-visible);
     --_shadow-g-focus-visible: var(--group-shadow--focus-visible);
     --_shadow-angle-g-focus-visible: var(--group-shadow-angle--focus-visible);
     --_ring-g-focus-visible: var(--group-ring--focus-visible);
@@ -69,5 +78,6 @@
     --_transition-g-focus-visible: var(--group-transition--focus-visible);
     --_transition-duration-g-focus-visible: var(--group-transition-duration--focus-visible);
     --_transition-delay-g-focus-visible: var(--group-transition-delay--focus-visible);
+    --_radius-g-focus-visible: var(--group-radius--focus-visible);
   }
 }

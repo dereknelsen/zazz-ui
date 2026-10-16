@@ -15,7 +15,7 @@
     --ui-tooltip-bg: var(--color-foreground);
     --ui-tooltip-text: var(--color-background);
     --ui-tooltip-border-color: transparent;
-    --ui-tooltip-rounded: var(--radius-sm);
+    --ui-tooltip-radius: var(--radius-sm);
     --ui-tooltip-shadow: var(--shadow-sm);
     --ui-tooltip-px: var(--space-xs);
     --ui-tooltip-py: var(--spacing);
@@ -151,7 +151,11 @@
     padding-block: calc(var(--_py-len) + var(--_py-num) * var(--spacing));
 
     border: 1px solid var(--_border-color-resolved, var(--ui-tooltip-border-color));
-    border-radius: var(--_rounded-resolved, var(--ui-tooltip-rounded));
+    --_radius-len: var(--_radius-resolved, var(--ui-tooltip-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-tooltip-radius));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
     box-shadow: var(--_shadow-resolved, var(--ui-tooltip-shadow));
 
     font-family: var(--_font-family-resolved, var(--ui-tooltip-font-family));

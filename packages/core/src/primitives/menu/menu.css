@@ -9,13 +9,13 @@
  * @uses       anchor-name, anchor-scope, position-anchor: tether panel to trigger
  * @uses       data-popover-side / data-popover-align: maps to --ui-popover-position-* in popover.css
  * @tokens     --ui-menu-* (@layer variables)
- * @consumedby select.css (--ui-menu-button-rounded), autocomplete.css, combobox.css, command.css (--ui-menu-shadow)
+ * @consumedby select.css (--ui-menu-button-radius), autocomplete.css, combobox.css, command.css (--ui-menu-shadow)
  * @see        menu.ts: optional arrow-key navigation; both forms stay no-JS
  */
 
 @layer variables {
   :root {
-    --ui-menu-button-rounded: var(--radius-sm);
+    --ui-menu-button-radius: var(--radius-sm);
     /* a scale number or a length */
     --ui-menu-min-w: calc(var(--spacing) * 52);
     --ui-menu-gap: var(--ui-field-option-gap);
@@ -55,6 +55,6 @@
   }
 
   :where(ui-menu, [data-ui~="menu"]) [data-menu-slot~="popover"] [data-ui~="button"] {
-    --ui-button-rounded: var(--ui-menu-button-rounded);
+    --ui-button-radius: var(--ui-menu-button-radius);
   }
 }

@@ -16,9 +16,9 @@ describe("pseudo-element utilities", () => {
     :where([style*="--registered-content:"])::before { content: var(--registered-content); }
   `);
 
-  it("--before-content, --before-w, --before-bg, and --before-rounded draw a dot", () => {
+  it("--before-content, --before-w, --before-bg, and --before-radius draw a dot", () => {
     const el = mount(
-      `<span style="--display: inline-flex; --before-content: ''; --before-w: 2; --before-h: 2; --before-rounded: 9999px; --before-bg: rgb(0, 128, 0)">Live</span>`,
+      `<span style="--display: inline-flex; --before-content: ''; --before-w: 2; --before-h: 2; --before-radius: 9999px; --before-bg: rgb(0, 128, 0)">Live</span>`,
     );
     expect(style(el, "content", "::before")).toBe('""');
     expect(Number.parseFloat(style(el, "inline-size", "::before"))).toBeCloseTo(scale(2), 1);
@@ -32,7 +32,7 @@ describe("pseudo-element utilities", () => {
 
   it("positions, lays out, and paints a ::before accent bar", () => {
     const el = mount(
-      `<div style="--position: relative; --p: 4; --before-content: ''; --before-position: absolute; --before-inset-y: 0; --before-left: 0; --before-w: 2; --before-display: block; --before-z: 2; --before-opacity: 0.5; --before-bg: rgb(0, 128, 0); --before-rounded: 4px">Note</div>`,
+      `<div style="--position: relative; --p: 4; --before-content: ''; --before-position: absolute; --before-inset-y: 0; --before-left: 0; --before-w: 2; --before-display: block; --before-z: 2; --before-opacity: 0.5; --before-bg: rgb(0, 128, 0); --before-radius: 4px">Note</div>`,
     );
     expect(style(el, "position", "::before")).toBe("absolute");
     expect(style(el, "inset-block-start", "::before")).toBe("0px");

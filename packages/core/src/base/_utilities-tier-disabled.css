@@ -23,6 +23,10 @@
     --_border-r-disabled: var(--border-r--disabled);
     --_border-b-disabled: var(--border-b--disabled);
     --_opacity-disabled: var(--opacity--disabled);
+    --_filter-disabled: var(--filter--disabled);
+    --_elevation-disabled: var(--elevation--disabled);
+    --_backdrop-filter-disabled: var(--backdrop-filter--disabled);
+    --_mix-blend-disabled: var(--mix-blend--disabled);
     --_shadow-disabled: var(--shadow--disabled);
     --_shadow-angle-disabled: var(--shadow-angle--disabled);
     --_ring-disabled: var(--ring--disabled);
@@ -35,6 +39,7 @@
     --_transition-disabled: var(--transition--disabled);
     --_transition-duration-disabled: var(--transition-duration--disabled);
     --_transition-delay-disabled: var(--transition-delay--disabled);
+    --_radius-disabled: var(--radius--disabled);
   }
   :where([data-ui~="group"]:is(:disabled, [aria-disabled="true"]) [style*="--group-"]) {
     --_anchor-name-g-disabled: var(--group-anchor-name--disabled);
@@ -57,6 +62,10 @@
     --_border-r-g-disabled: var(--group-border-r--disabled);
     --_border-b-g-disabled: var(--group-border-b--disabled);
     --_opacity-g-disabled: var(--group-opacity--disabled);
+    --_filter-g-disabled: var(--group-filter--disabled);
+    --_elevation-g-disabled: var(--group-elevation--disabled);
+    --_backdrop-filter-g-disabled: var(--group-backdrop-filter--disabled);
+    --_mix-blend-g-disabled: var(--group-mix-blend--disabled);
     --_shadow-g-disabled: var(--group-shadow--disabled);
     --_shadow-angle-g-disabled: var(--group-shadow-angle--disabled);
     --_ring-g-disabled: var(--group-ring--disabled);
@@ -69,5 +78,6 @@
     --_transition-g-disabled: var(--group-transition--disabled);
     --_transition-duration-g-disabled: var(--group-transition-duration--disabled);
     --_transition-delay-g-disabled: var(--group-transition-delay--disabled);
+    --_radius-g-disabled: var(--group-radius--disabled);
   }
 }

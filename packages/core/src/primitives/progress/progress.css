@@ -16,7 +16,7 @@
   :root {
     --ui-progress-w: 100%;
     --ui-progress-h: calc(var(--spacing) * 1.5);
-    --ui-progress-rounded: var(--radius-full);
+    --ui-progress-radius: var(--radius-full);
     --ui-progress-bg: var(--color-muted);
     --ui-progress-track-border: 1px solid transparent;
     --ui-progress-bar-bg: var(--color-primary);
@@ -41,7 +41,11 @@
     overflow: hidden;
     background-color: var(--_bg-resolved, var(--ui-progress-bg));
     border: var(--ui-progress-track-border);
-    border-radius: var(--_rounded-resolved, var(--ui-progress-rounded));
+    --_radius-len: var(--_radius-resolved, var(--ui-progress-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-progress-radius));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
   }
 
   :where([data-ui~="progress"])::-webkit-progress-bar {

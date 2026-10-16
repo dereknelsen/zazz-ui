@@ -11,12 +11,12 @@
 
 @layer variables {
   :root {
-    --ui-button-group-rounded: var(--ui-button-rounded);
+    --ui-button-group-radius: var(--ui-button-radius);
     --ui-button-group-bg: var(--color-card);
   }
 }
 
-@property --_button-group-rounded {
+@property --_button-group-radius {
   syntax: "*";
   inherits: false;
 }
@@ -31,7 +31,7 @@
   BUTTON GROUP
 
   Joins adjacent controls (buttons, and any child it wraps) into a single
-  segmented unit. Children keep their own --ui-button-rounded, so the outer corners
+  segmented unit. Children keep their own --ui-button-radius, so the outer corners
   follow the buttons' size preset automatically; only the *inner* corners are
   squared off and the doubled border is collapsed by dropping
   each later control's leading border (no overlap).
@@ -42,9 +42,16 @@
     inline-size: fit-content;
     /* stretch so mixed-height children share one edge */
     align-items: stretch;
-    border-radius: var(
-      --_rounded-resolved,
-      var(--_button-group-rounded, var(--ui-button-group-rounded))
+    --_radius-len: var(
+      --_radius-resolved,
+      var(--_button-group-radius, var(--ui-button-group-radius))
+    );
+    --_radius-num: var(
+      --_radius-resolved,
+      var(--_button-group-radius, var(--ui-button-group-radius))
+    );
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
     background-color: var(--_bg-resolved, var(--_button-group-bg, var(--ui-button-group-bg)));
     position: relative;

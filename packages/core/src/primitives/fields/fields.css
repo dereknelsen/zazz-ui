@@ -12,7 +12,7 @@
  * @consumedby input.css, textarea.css, select.css, input-group.css,
  *             password-group.css, otp.css, radio.css, checkbox.css,
  *             autocomplete.css, combobox.css, command.css,
- *             button.css (metrics: h/rounded/px/icon/ring/border width+style; not font-size
+ *             button.css (metrics: h/radius/px/icon/ring/border width+style; not font-size
  *             or leading, so the iOS 16px rule below reaches text controls only),
  *             toggle.css (via button.css), tabs.css (same metrics), badge.css (border/ring)
  *
@@ -43,7 +43,7 @@
 
     --ui-field-label-text: inherit;
     --ui-field-ring-color: var(--color-ring);
-    --ui-field-rounded: var(--radius-md);
+    --ui-field-radius: var(--radius-md);
     --ui-field-inset-child-radius: var(--radius-sm);
     --ui-field-h: calc(var(--spacing) * 8);
     --ui-field-font-size: var(--font-size-sm);
@@ -70,7 +70,7 @@
     --ui-field-group-p: 0;
     --ui-field-group-m: 0;
     --ui-field-group-gap: var(--space-xs);
-    --ui-field-group-rounded: var(--radius-lg);
+    --ui-field-group-radius: var(--radius-lg);
   }
 
   /* iOS zooms the page to any focused control that renders under 16px, so a
@@ -226,7 +226,11 @@
     --_gap-num: var(--_gap-resolved, var(--ui-field-group-gap));
     gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));
     border: var(--ui-field-group-border);
-    border-radius: var(--_rounded-resolved, var(--ui-field-group-rounded));
+    --_radius-len: var(--_radius-resolved, var(--ui-field-group-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-field-group-radius));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
     --_p-len: var(--_p-resolved, var(--ui-field-group-p));
     --_p-num: var(--_p-resolved, var(--ui-field-group-p));
     padding: calc(var(--_p-len) + var(--_p-num) * var(--spacing));

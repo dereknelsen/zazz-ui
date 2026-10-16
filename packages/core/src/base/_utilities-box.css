@@ -2,19 +2,191 @@
 
 /* box family */
 @layer ui.utilities {
-  :where([style*="--shadow-hue:"], [style*="--shadow-hue--"]) {
-    --_shadow-hue-resolved: var(--_shadow-hue);
+  :where([style*="--shadow-tint:"], [style*="--shadow-tint--"]) {
+    --_shadow-tint-resolved: var(--_shadow-tint);
   }
-  :where([style*="--shadow-hue:"]) {
-    --_shadow-hue: var(--shadow-hue);
+  :where([style*="--shadow-tint:"]) {
+    --_shadow-tint: var(--shadow-tint);
   }
 
-  :where([style*="--rounded:"], [style*="--rounded--"]) {
-    --_rounded-resolved: var(--_rounded);
+  :where([style*="--radius:"], [style*="--radius--"], [style*="--group-radius--"]) {
+    --_radius-resolved: var(--_radius-starting, var(--_radius-disabled, var(--_radius-active, var(--_radius-focus-visible, var(--_radius-focus-within, var(--_radius-hover, var(--_radius-checked, var(--_radius-current, var(--_radius-open, var(--_radius-g-disabled, var(--_radius-g-active, var(--_radius-g-focus-visible, var(--_radius-g-focus-within, var(--_radius-g-hover, var(--_radius-g-checked, var(--_radius-g-current, var(--_radius-g-open, var(--_radius-stuck, var(--_radius-2xl, var(--_radius-xl, var(--_radius-lg, var(--_radius-md, var(--_radius-sm, var(--_radius))))))))))))))))))))))));
   }
-  :where([style*="--rounded:"]) {
-    --_rounded: var(--rounded);
-    border-radius: var(--_rounded-resolved);
+  :where([style*="--radius:"]) {
+    --_radius: var(--radius);
+    --_radius-len: var(--_radius-resolved);
+    --_radius-num: var(--_radius-resolved);
+    border-radius: calc(var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier));
+  }
+  :where([style*="--radius: full"]) { --_radius: var(--radius-full); }
+  @starting-style {
+    :where([style*="--radius--starting: full"]) { --_radius-starting: var(--radius-full); }
+  }
+  :where(:is(:disabled, [aria-disabled="true"])[style*="--radius--disabled: full"]) { --_radius-disabled: var(--radius-full); }
+  :where([data-ui~="group"]:is(:disabled, [aria-disabled="true"]) [style*="--group-radius--disabled: full"]) { --_radius-g-disabled: var(--radius-full); }
+  :where(:active[style*="--radius--active: full"]) { --_radius-active: var(--radius-full); }
+  :where([data-ui~="group"]:active [style*="--group-radius--active: full"]) { --_radius-g-active: var(--radius-full); }
+  :where(:focus-visible[style*="--radius--focus-visible: full"]) { --_radius-focus-visible: var(--radius-full); }
+  :where([data-ui~="group"]:focus-visible [style*="--group-radius--focus-visible: full"]) { --_radius-g-focus-visible: var(--radius-full); }
+  :where(:focus-within[style*="--radius--focus-within: full"]) { --_radius-focus-within: var(--radius-full); }
+  :where([data-ui~="group"]:focus-within [style*="--group-radius--focus-within: full"]) { --_radius-g-focus-within: var(--radius-full); }
+  @media (hover: hover) {
+    :where(:hover[style*="--radius--hover: full"]) { --_radius-hover: var(--radius-full); }
+    :where([data-ui~="group"]:hover [style*="--group-radius--hover: full"]) { --_radius-g-hover: var(--radius-full); }
+  }
+  :where(:is(:checked, [aria-checked="true"])[style*="--radius--checked: full"]) { --_radius-checked: var(--radius-full); }
+  :where([data-ui~="group"]:is(:checked, [aria-checked="true"]) [style*="--group-radius--checked: full"]) { --_radius-g-checked: var(--radius-full); }
+  :where(:is([aria-current]:not([aria-current="false"]))[style*="--radius--current: full"]) { --_radius-current: var(--radius-full); }
+  :where([data-ui~="group"]:is([aria-current]:not([aria-current="false"])) [style*="--group-radius--current: full"]) { --_radius-g-current: var(--radius-full); }
+  :where(:is([open], :popover-open, [aria-expanded="true"])[style*="--radius--open: full"]) { --_radius-open: var(--radius-full); }
+  :where([data-ui~="group"]:is([open], :popover-open, [aria-expanded="true"]) [style*="--group-radius--open: full"]) { --_radius-g-open: var(--radius-full); }
+  :where([style*="--radius--stuck: full"]) { --_radius-stuck: var(--_stuck-on) var(--radius-full); }
+  @container (width >= 40rem) {
+    :where([style*="--radius--sm: full"]) { --_radius-sm: var(--radius-full); }
+  }
+  @container (width >= 48rem) {
+    :where([style*="--radius--md: full"]) { --_radius-md: var(--radius-full); }
+  }
+  @container (width >= 64rem) {
+    :where([style*="--radius--lg: full"]) { --_radius-lg: var(--radius-full); }
+  }
+  @container (width >= 80rem) {
+    :where([style*="--radius--xl: full"]) { --_radius-xl: var(--radius-full); }
+  }
+  @container (width >= 96rem) {
+    :where([style*="--radius--2xl: full"]) { --_radius-2xl: var(--radius-full); }
+  }
+
+  :where([style*="--radius-t:"], [style*="--radius-t--"]) {
+    --_radius-t-resolved: var(--_radius-t-2xl, var(--_radius-t-xl, var(--_radius-t-lg, var(--_radius-t-md, var(--_radius-t-sm, var(--_radius-t))))));
+  }
+  :where([style*="--radius-t:"]) {
+    --_radius-t: var(--radius-t);
+    --_radius-t-len: var(--_radius-t-resolved);
+    --_radius-t-num: var(--_radius-t-resolved);
+    border-start-start-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-multiplier));
+    border-start-end-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-multiplier));
+  }
+  :where(:is([style*="--radius:"]):is([style*="--radius-t--"], [style*="--group-radius-t--"])) {
+    --_radius-t-len: var(--_radius-t-resolved, var(--_radius-resolved, 0));
+    --_radius-t-num: var(--_radius-t-resolved, var(--_radius-resolved, 0));
+    border-start-start-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-multiplier));
+    border-start-end-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-multiplier));
+  }
+  :where([style*="--radius-t: full"]) { --_radius-t: var(--radius-full); }
+  @container (width >= 40rem) {
+    :where([style*="--radius-t--sm: full"]) { --_radius-t-sm: var(--radius-full); }
+  }
+  @container (width >= 48rem) {
+    :where([style*="--radius-t--md: full"]) { --_radius-t-md: var(--radius-full); }
+  }
+  @container (width >= 64rem) {
+    :where([style*="--radius-t--lg: full"]) { --_radius-t-lg: var(--radius-full); }
+  }
+  @container (width >= 80rem) {
+    :where([style*="--radius-t--xl: full"]) { --_radius-t-xl: var(--radius-full); }
+  }
+  @container (width >= 96rem) {
+    :where([style*="--radius-t--2xl: full"]) { --_radius-t-2xl: var(--radius-full); }
+  }
+
+  :where([style*="--radius-b:"], [style*="--radius-b--"]) {
+    --_radius-b-resolved: var(--_radius-b-2xl, var(--_radius-b-xl, var(--_radius-b-lg, var(--_radius-b-md, var(--_radius-b-sm, var(--_radius-b))))));
+  }
+  :where([style*="--radius-b:"]) {
+    --_radius-b: var(--radius-b);
+    --_radius-b-len: var(--_radius-b-resolved);
+    --_radius-b-num: var(--_radius-b-resolved);
+    border-end-start-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-multiplier));
+    border-end-end-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-multiplier));
+  }
+  :where(:is([style*="--radius:"]):is([style*="--radius-b--"], [style*="--group-radius-b--"])) {
+    --_radius-b-len: var(--_radius-b-resolved, var(--_radius-resolved, 0));
+    --_radius-b-num: var(--_radius-b-resolved, var(--_radius-resolved, 0));
+    border-end-start-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-multiplier));
+    border-end-end-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-multiplier));
+  }
+  :where([style*="--radius-b: full"]) { --_radius-b: var(--radius-full); }
+  @container (width >= 40rem) {
+    :where([style*="--radius-b--sm: full"]) { --_radius-b-sm: var(--radius-full); }
+  }
+  @container (width >= 48rem) {
+    :where([style*="--radius-b--md: full"]) { --_radius-b-md: var(--radius-full); }
+  }
+  @container (width >= 64rem) {
+    :where([style*="--radius-b--lg: full"]) { --_radius-b-lg: var(--radius-full); }
+  }
+  @container (width >= 80rem) {
+    :where([style*="--radius-b--xl: full"]) { --_radius-b-xl: var(--radius-full); }
+  }
+  @container (width >= 96rem) {
+    :where([style*="--radius-b--2xl: full"]) { --_radius-b-2xl: var(--radius-full); }
+  }
+
+  :where([style*="--radius-l:"], [style*="--radius-l--"]) {
+    --_radius-l-resolved: var(--_radius-l-2xl, var(--_radius-l-xl, var(--_radius-l-lg, var(--_radius-l-md, var(--_radius-l-sm, var(--_radius-l))))));
+  }
+  :where([style*="--radius-l:"]) {
+    --_radius-l: var(--radius-l);
+    --_radius-l-len: var(--_radius-l-resolved);
+    --_radius-l-num: var(--_radius-l-resolved);
+    border-start-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-multiplier));
+    border-end-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-multiplier));
+  }
+  :where(:is([style*="--radius:"]):is([style*="--radius-l--"], [style*="--group-radius-l--"])) {
+    --_radius-l-len: var(--_radius-l-resolved, var(--_radius-resolved, 0));
+    --_radius-l-num: var(--_radius-l-resolved, var(--_radius-resolved, 0));
+    border-start-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-multiplier));
+    border-end-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-multiplier));
+  }
+  :where([style*="--radius-l: full"]) { --_radius-l: var(--radius-full); }
+  @container (width >= 40rem) {
+    :where([style*="--radius-l--sm: full"]) { --_radius-l-sm: var(--radius-full); }
+  }
+  @container (width >= 48rem) {
+    :where([style*="--radius-l--md: full"]) { --_radius-l-md: var(--radius-full); }
+  }
+  @container (width >= 64rem) {
+    :where([style*="--radius-l--lg: full"]) { --_radius-l-lg: var(--radius-full); }
+  }
+  @container (width >= 80rem) {
+    :where([style*="--radius-l--xl: full"]) { --_radius-l-xl: var(--radius-full); }
+  }
+  @container (width >= 96rem) {
+    :where([style*="--radius-l--2xl: full"]) { --_radius-l-2xl: var(--radius-full); }
+  }
+
+  :where([style*="--radius-r:"], [style*="--radius-r--"]) {
+    --_radius-r-resolved: var(--_radius-r-2xl, var(--_radius-r-xl, var(--_radius-r-lg, var(--_radius-r-md, var(--_radius-r-sm, var(--_radius-r))))));
+  }
+  :where([style*="--radius-r:"]) {
+    --_radius-r: var(--radius-r);
+    --_radius-r-len: var(--_radius-r-resolved);
+    --_radius-r-num: var(--_radius-r-resolved);
+    border-start-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-multiplier));
+    border-end-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-multiplier));
+  }
+  :where(:is([style*="--radius:"]):is([style*="--radius-r--"], [style*="--group-radius-r--"])) {
+    --_radius-r-len: var(--_radius-r-resolved, var(--_radius-resolved, 0));
+    --_radius-r-num: var(--_radius-r-resolved, var(--_radius-resolved, 0));
+    border-start-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-multiplier));
+    border-end-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-multiplier));
+  }
+  :where([style*="--radius-r: full"]) { --_radius-r: var(--radius-full); }
+  @container (width >= 40rem) {
+    :where([style*="--radius-r--sm: full"]) { --_radius-r-sm: var(--radius-full); }
+  }
+  @container (width >= 48rem) {
+    :where([style*="--radius-r--md: full"]) { --_radius-r-md: var(--radius-full); }
+  }
+  @container (width >= 64rem) {
+    :where([style*="--radius-r--lg: full"]) { --_radius-r-lg: var(--radius-full); }
+  }
+  @container (width >= 80rem) {
+    :where([style*="--radius-r--xl: full"]) { --_radius-r-xl: var(--radius-full); }
+  }
+  @container (width >= 96rem) {
+    :where([style*="--radius-r--2xl: full"]) { --_radius-r-2xl: var(--radius-full); }
   }
 
   :where([style*="--overflow:"], [style*="--overflow--"]) {
@@ -110,6 +282,8 @@
     --_divide-w: calc(abs(var(--_divide-len)) + abs(var(--_divide-num)) * 1px + (1 - var(--_divide-is-num) - var(--_divide-is-len)) * 1px);
     --_divide-c: color-mix(in oklch, var(--_divide-clr) calc((1 - var(--_divide-is-num) - var(--_divide-is-len)) * 100%), var(--color-border));
   }
+
+
 
 
   :where([style*="--border:"], [style*="--border-x:"], [style*="--border-l:"]) {

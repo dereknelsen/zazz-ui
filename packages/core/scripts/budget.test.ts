@@ -55,13 +55,13 @@ describe("utilities layer budget", () => {
     // bought with substrings. 1,307 after the stuck setter rewrite; 1,141 without
     // the per-side border longhands, gradient tiers, and the rarely used keywords.
     // 1,249 at 0.6.2; 1,273 with padding and --bg on the no-base allowlist (+2 % initial
-    // style, inside the run-to-run spread); 1,287 with the anchor utilities; 1,294 with --position-area; 1,262 once the tier-only rules moved to `@layer defaults` (ADR-0017) and stopped matching the base; 1,300 with the shorthand-tier rules (`--p: 4; --px--md: 1`, and per breakpoint for `--basis` / `--shrink` under `--flex`). A no-space twin for every exact-value gate (`--w:auto`) measured
+    // style, inside the run-to-run spread); 1,287 with the anchor utilities; 1,294 with --position-area; 1,262 once the tier-only rules moved to `@layer defaults` (ADR-0017) and stopped matching the base; 1,300 with the shorthand-tier rules (`--p: 4; --px--md: 1`, and per breakpoint for `--basis` / `--shrink` under `--flex`); 1,324 with --filter, --backdrop-filter, and --mix-blend; 1,316 with --radius, --elevation, and the `none` / `full` aliases, less the --shadow size words. A no-space twin for every exact-value gate (`--w:auto`) measured
     // 2026-10-13 at 1,632 substrings and +20 % initial style (1.94 s to 2.33 s), and was dropped.
     const substrings = (all.match(/\[style\*=/g) ?? []).length;
     expect(substrings).toBeLessThanOrEqual(1350);
   });
 
-  it("claim 15 (ratchet): the generated layer stays under 22 KB with Brotli", () => {
+  it("claim 15 (ratchet): the generated layer stays under 24 KB with Brotli", () => {
     const raw = Buffer.byteLength(all);
     const compressed = brotli(all);
     console.log(`utilities layer bytes: raw ${raw}, brotli ${compressed}`);
@@ -75,6 +75,9 @@ describe("utilities layer budget", () => {
     // 20.6 KB at 0.6.2: rem breakpoints, --focus-ring, --shadow-angle, --transition-duration and -delay, breakpoint tiers on the rings.
     // 21.2 KB with --anchor-name and --position-anchor (states and breakpoints, for editor chrome); 21.4 KB with --position-area;
     // 21.6 KB with _defaults.css counted, its rules no longer carrying the primitive list (ADR-0017).
-    expect(compressed).toBeLessThan(22 * 1024);
+    // 22.0 KB with --filter, --backdrop-filter, and --mix-blend (states, tier-only, pseudo).
+    // 23.2 KB with --radius (states and breakpoints, four side utilities) and --elevation (a filter
+    // composite), less the --shadow size words: the shadow tokens moved to the generated _shadows.css.
+    expect(compressed).toBeLessThan(24 * 1024);
   });
 });

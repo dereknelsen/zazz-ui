@@ -19,7 +19,7 @@
     --ui-otp-cell-border-width: var(--ui-field-border-width);
     --ui-otp-cell-border-style: var(--ui-field-border-style);
     --ui-otp-cell-border-color: var(--ui-field-border-color);
-    --ui-otp-cell-rounded: var(--ui-field-rounded);
+    --ui-otp-cell-radius: var(--ui-field-radius);
     --ui-otp-cell-font-size: var(--font-size-md);
     --ui-otp-gap: calc(var(--spacing) * 1.5);
     --ui-otp-separator-text: var(--color-muted-foreground);
@@ -85,7 +85,11 @@
     background-color: var(--ui-otp-cell-bg);
     border: var(--ui-otp-cell-border-width) var(--ui-otp-cell-border-style)
       var(--ui-otp-cell-border-color);
-    border-radius: var(--ui-otp-cell-rounded);
+    --_radius-len: var(--_radius-resolved, var(--ui-otp-cell-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-otp-cell-radius));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
 
     transition: var(--default-transition);
   }

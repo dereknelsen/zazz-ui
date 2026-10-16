@@ -32,7 +32,7 @@
     --ui-combobox-border-width: var(--ui-select-border-width);
     --ui-combobox-border-style: var(--ui-select-border-style);
     --ui-combobox-border-color: var(--ui-select-border-color);
-    --ui-combobox-rounded: var(--ui-select-rounded);
+    --ui-combobox-radius: var(--ui-select-radius);
     --ui-combobox-icon-mask: var(--ui-select-picker-icon-mask);
     --ui-combobox-icon-size: var(--ui-select-picker-icon-size);
     --ui-combobox-icon-color: var(--ui-select-picker-icon-color);
@@ -58,7 +58,7 @@
     --ui-combobox-tag-remove-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cline x1='200' y1='56' x2='56' y2='200' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='200' y1='200' x2='56' y2='56' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3C/svg%3E");
     --ui-combobox-tag-remove-size: var(--ui-badge-icon-size);
     --ui-combobox-tag-remove-color: currentColor;
-    --ui-combobox-tag-remove-rounded: var(--radius-sm);
+    --ui-combobox-tag-remove-radius: var(--radius-sm);
     --ui-combobox-tag-remove-opacity: 0.65;
     --ui-combobox-tag-remove-opacity--hover: 1;
   }
@@ -118,7 +118,11 @@
     border-width: var(--_border-width-resolved, var(--ui-combobox-border-width));
     border-style: var(--_border-style-resolved, var(--ui-combobox-border-style));
     border-color: var(--_border-color-resolved, var(--ui-combobox-border-color));
-    border-radius: var(--_rounded-resolved, var(--ui-combobox-rounded));
+    --_radius-len: var(--_radius-resolved, var(--ui-combobox-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-combobox-radius));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
 
     /* Same ring recipe as [data-ui~="select"]: transparent outline twin keeps focus
        visible in forced-colors mode */
@@ -315,7 +319,7 @@
     flex-shrink: 0;
     inline-size: var(--ui-combobox-tag-remove-size);
     block-size: var(--ui-combobox-tag-remove-size);
-    border-radius: var(--ui-combobox-tag-remove-rounded);
+    border-radius: var(--ui-combobox-tag-remove-radius);
     opacity: var(--ui-combobox-tag-remove-opacity);
     cursor: pointer;
     transition: var(--default-transition);

@@ -22,6 +22,7 @@ import {
   keywordRules,
   noBaseRule,
   appliesAtRest,
+  elevationLayers,
   indexStyling,
   kitStyling,
   shorthandTierRule,
@@ -93,7 +94,7 @@ const GRID_FIT: Utility = {
   emit: "grid-fit",
 };
 const ROUNDED: Utility = {
-  name: "rounded",
+  name: "radius",
   properties: ["border-radius"],
   mode: "raw",
   family: "box",
@@ -438,12 +439,12 @@ describe("emission shapes", () => {
   it("a tier-less utility resolves straight to its base", () => {
     expect(squash(baseRule(ROUNDED, []))).toBe(
       squash(`
-        :where([style*="--rounded:"], [style*="--rounded--"]) {
-          --_rounded-resolved: var(--_rounded);
+        :where([style*="--radius:"], [style*="--radius--"]) {
+          --_radius-resolved: var(--_radius);
         }
-        :where([style*="--rounded:"]) {
-          --_rounded: var(--rounded);
-          border-radius: var(--_rounded-resolved);
+        :where([style*="--radius:"]) {
+          --_radius: var(--radius);
+          border-radius: var(--_radius-resolved);
         }
       `),
     );
@@ -775,6 +776,7 @@ describe("generated stylesheets", () => {
   it("are the breakpoints file, the defaults layer, the kit styling data, the registrations, one registration file per breakpoint, and one file per family", () => {
     expect([...generate().keys()]).toEqual([
       "_breakpoints.css",
+      "_shadows.css",
       "_defaults.css",
       "kit-styling.ts",
       "_properties.css",
@@ -802,6 +804,23 @@ describe("generated stylesheets", () => {
       if (committed !== text) stale.push(file);
     }
     expect(stale, "run `vp run generate`").toEqual([]);
+  });
+});
+
+describe("elevation formula", () => {
+  it("folds a literal height into numbers: four layers, opacity clamped per layer", () => {
+    const layers = elevationLayers(4, "box").split(",\n");
+    expect(layers).toHaveLength(4);
+    const alphas = layers.map((layer) => Number(/\/ ([\d.]+)\)$/.exec(layer)?.[1]));
+    expect(alphas).toEqual([0.08, 0.06, 0.03, 0]);
+    // layer k of 4 sits at n × 4 × (k/4)² spacing steps
+    expect(layers[3]).toContain("calc(var(--spacing) * 16 * var(--_shadow-y))");
+  });
+
+  it("leaves an expression to the browser, as drop-shadow() functions", () => {
+    const filter = elevationLayers("var(--_elevation-n)", "drop");
+    expect(filter.match(/drop-shadow\(/g)).toHaveLength(4);
+    expect(filter).toContain("calc((var(--_elevation-n) - 4) * 0.006)");
   });
 });
 

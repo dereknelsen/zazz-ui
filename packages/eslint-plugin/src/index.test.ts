@@ -117,11 +117,11 @@ describe("@zazz-ui/eslint-plugin", () => {
     const fixed = linter.verifyAndFix(`<div style="--w  : 4"></div>`, config, "page.html");
     expect(fixed.output).toBe(`<div style="--w: 4"></div>`);
     const after = linter.verifyAndFix(
-      `<div style="--w:auto; --shadow--hover:lg; --p:4"></div>`,
+      `<div style="--w:auto; --font-weight--md:strong; --p:4"></div>`,
       config,
       "page.html",
     );
-    expect(after.output).toBe(`<div style="--w: auto; --shadow--hover: lg; --p:4"></div>`);
+    expect(after.output).toBe(`<div style="--w: auto; --font-weight--md: strong; --p:4"></div>`);
     const [message] = lint(`<div style="--grid-cols: 1fr 1fr"></div>`);
     expect(message!.suggestions?.[0]?.desc).toBe("Write `--template-cols: 1fr 1fr`.");
     expect(message!.suggestions?.[0]?.fix.text).toBe("--template-cols: 1fr 1fr");

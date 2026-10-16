@@ -23,6 +23,10 @@
     --_border-r-open: var(--border-r--open);
     --_border-b-open: var(--border-b--open);
     --_opacity-open: var(--opacity--open);
+    --_filter-open: var(--filter--open);
+    --_elevation-open: var(--elevation--open);
+    --_backdrop-filter-open: var(--backdrop-filter--open);
+    --_mix-blend-open: var(--mix-blend--open);
     --_shadow-open: var(--shadow--open);
     --_shadow-angle-open: var(--shadow-angle--open);
     --_ring-open: var(--ring--open);
@@ -35,6 +39,7 @@
     --_transition-open: var(--transition--open);
     --_transition-duration-open: var(--transition-duration--open);
     --_transition-delay-open: var(--transition-delay--open);
+    --_radius-open: var(--radius--open);
   }
   :where([data-ui~="group"]:is([open], :popover-open, [aria-expanded="true"]) [style*="--group-"]) {
     --_anchor-name-g-open: var(--group-anchor-name--open);
@@ -57,6 +62,10 @@
     --_border-r-g-open: var(--group-border-r--open);
     --_border-b-g-open: var(--group-border-b--open);
     --_opacity-g-open: var(--group-opacity--open);
+    --_filter-g-open: var(--group-filter--open);
+    --_elevation-g-open: var(--group-elevation--open);
+    --_backdrop-filter-g-open: var(--group-backdrop-filter--open);
+    --_mix-blend-g-open: var(--group-mix-blend--open);
     --_shadow-g-open: var(--group-shadow--open);
     --_shadow-angle-g-open: var(--group-shadow-angle--open);
     --_ring-g-open: var(--group-ring--open);
@@ -69,5 +78,6 @@
     --_transition-g-open: var(--group-transition--open);
     --_transition-duration-g-open: var(--group-transition-duration--open);
     --_transition-delay-g-open: var(--group-transition-delay--open);
+    --_radius-g-open: var(--group-radius--open);
   }
 }

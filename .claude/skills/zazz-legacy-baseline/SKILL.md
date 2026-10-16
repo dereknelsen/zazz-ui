@@ -32,6 +32,11 @@ templates and includes, `<style>` blocks, `@import` chains, and CSS that scripts
 time (Font Awesome 5's SVG mode, jQuery plugins, widget loaders). Mark each one as _file_
 (it can be layered) or _injected_ (it stays unlayered and beats every layer, the kit's included).
 
+Also list the custom properties the legacy CSS sets on `:root` and reads in descendants. Zazz
+registers every utility name as non-inheriting, so a legacy one with the same name stops
+reaching descendants: shadcn/ui themes set `--radius` that way, and its `calc(var(--radius) - 4px)`
+breaks. Rename the legacy property in its stylesheet.
+
 Done when every stylesheet a representative page receives in the browser's network panel
 appears in the list.
 

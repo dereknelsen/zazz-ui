@@ -36,7 +36,7 @@ describe("callout", () => {
       1,
     );
     expect(Number.parseFloat(style(plain, "border-top-left-radius"))).toBeCloseTo(
-      lengthPx("var(--ui-callout-rounded)"),
+      lengthPx("var(--ui-callout-radius)"),
       1,
     );
     expect(style(plain, "background-color")).toBe(

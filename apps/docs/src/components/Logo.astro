@@ -8,9 +8,10 @@ interface Props {
   /** Block size in px; the width follows the viewBox ratio. */
   size?: number;
   title?: string;
+  style?: string;
 }
 
-const { variant = "lockup", size = 24, title = "Zazz" } = Astro.props;
+const { variant = "lockup", size = 24, title = "Zazz", style } = Astro.props;
 
 const cuts = {
   lockup: {
@@ -40,6 +41,7 @@ const width = Math.round((size * w) / h);
   fill="none"
   role="img"
   aria-label={title}
+  style={style as string}
 >
   <path fill="currentColor" d={cut.d}></path>
 </svg>

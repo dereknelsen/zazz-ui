@@ -103,8 +103,8 @@ describe("hover", () => {
     const result = hover(token.parsed, token.offset)!;
     expect(slice(token.text, result.range)).toBe("--space-md");
     expect(result.markdown).toMatch(/rem – .*rem/);
-    const alias = cursor(`<p style="--shadow: m|d">a</p>`);
-    expect(hover(alias.parsed, alias.offset)!.markdown).toContain("var(--shadow-md)");
+    const alias = cursor(`<p style="--font-weight: str|ong">a</p>`);
+    expect(hover(alias.parsed, alias.offset)!.markdown).toContain("var(--font-weight-strong)");
   });
 
   it("shows a hook's default", () => {

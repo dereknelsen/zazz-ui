@@ -33,7 +33,7 @@ The text-selection highlight is the `--color-selection` / `--color-selection-for
 Every primitive reads `--ui-<primitive>-<utility>` hooks that inherit, so a hook set on a region themes every instance inside it while each keeps its own states. Where a primitive has a state, it also reads a state hook.
 
 ```html
-<nav style="--ui-button-px: 2; --ui-button-rounded: var(--radius-full); --ui-button-bg--hover: var(--color-muted)">
+<nav style="--ui-button-px: 2; --ui-button-radius: var(--radius-full); --ui-button-bg--hover: var(--color-muted)">
   …every button in here…
 </nav>
 ```
@@ -42,7 +42,7 @@ The widest lever is the `--ui-field-*` family: inputs, selects, and textareas re
 
 ## 3. Utilities on one element
 
-A style utility is the escape hatch for one element: `style="--bg: var(--color-muted); --rounded: var(--radius-lg)"`. On a primitive it flattens the states it touches (`--bg` on a button is that color on hover too), so add the state tier or use the hook when the states matter.
+A style utility is the escape hatch for one element: `style="--bg: var(--color-muted); --radius: 4.5"`. On a primitive it flattens the states it touches (`--bg` on a button is that color on hover too), so add the state tier or use the hook when the states matter.
 
 ## Dark mode
 
@@ -64,7 +64,7 @@ function setTheme(value) {
 }
 ```
 
-Roles are deliberately unregistered properties so they re-resolve per element inside a pinned subtree. Shadows tint through `--color-shadow` globally or `--shadow-hue` on a subtree.
+Roles are deliberately unregistered properties so they re-resolve per element inside a pinned subtree. Shadows tint through `--color-shadow` globally or `--shadow-tint` on a subtree, and `--default-shadow-angle` sets the direction the light comes from.
 
 ## A brand block
 

@@ -255,7 +255,7 @@ organized in tiers (literal scales → semantic roles → component primitives):
 | Brand/literal scales | `--color-primary-600`, `--color-neutral-100`, `--color-shade-50`                                            | `_variables.css`    |
 | Semantic roles       | `--color-background`, `--color-foreground`, `--color-primary`, `--color-border`                             | `_variables.css`    |
 | Metrics & systems    | `--spacing`, `--space-*`, `--radius-*`, `--font-family-*`, `--font-size-*`, `--font-weight-*`, `--shadow-*` | `_variables.css`    |
-| **Component tokens** | `--ui-button-bg`, `--ui-field-border-color`, `--ui-dialog-rounded`                                          | each component file |
+| **Component tokens** | `--ui-button-bg`, `--ui-field-border-color`, `--ui-dialog-radius`                                           | each component file |
 
 Selected tokens are also **registered as typed `@property`**, inline in
 [`_variables.css`](./src/base/_variables.css), so they can be read by container `style()`
@@ -276,7 +276,7 @@ token **defaults to a global token**:
     --ui-button-bg: var(--color-card);
     --ui-button-bg--hover: var(--color-muted);
     --ui-button-min-h: calc(var(--spacing) * 8); /* dual-mode: a scale number or a length */
-    --ui-button-rounded: var(--radius-md);
+    --ui-button-radius: var(--radius-md);
   }
 }
 ```
@@ -285,7 +285,7 @@ Naming convention:
 
 - `--ui-{component}-{utility}`: **a hook is named after the utility it backs**:
   `--ui-button-bg`, `--ui-button-text`, `--ui-button-font-size`, `--ui-button-leading`,
-  `--ui-button-px`, `--ui-button-min-h`, `--ui-button-rounded`. A hook that backs no utility
+  `--ui-button-px`, `--ui-button-min-h`, `--ui-button-radius`. A hook that backs no utility
   keeps a descriptive name (`--ui-button-icon-size`, `--ui-tooltip-arrow-size`).
 - `--ui-{component}-{utility}--{state}`: a **double dash** before one of the seven states
   (`disabled`, `active`, `focus-visible`, `focus-within`, `hover`, `checked`, `open`):
@@ -316,8 +316,8 @@ Naming convention:
   the `--color` utility, paired with `-bg`); decoration tints keep descriptive names
   (`--ui-otp-caret-color`, `--ui-dialog-backdrop-color`, `--ui-tooltip-arrow-color`).
 - **Cross-component defaults are sanctioned**: a component token may default to
-  another component's token (`--ui-button-rounded: var(--ui-field-rounded)`,
-  `--ui-toggle-rounded: var(--ui-button-rounded)`) so families stay visually
+  another component's token (`--ui-button-radius: var(--ui-field-radius)`,
+  `--ui-toggle-radius: var(--ui-button-radius)`) so families stay visually
   coupled. Use a bare alias — never the two-arg `var(--x, fallback)` form; the
   owner file always defines the token. When adding one, update the owner's
   `@consumedby`, your `@requires`, and the `index.css` order (owner registers
@@ -403,7 +403,7 @@ rule:
 
   :where([data-ui~="button"][data-button-size="sm"]) {
     --_button-min-h: calc(var(--spacing) * 6);
-    --_button-rounded: var(--radius-sm);
+    --_button-radius: var(--radius-sm);
   }
 }
 ```
@@ -432,7 +432,7 @@ Because rules resolve tokens lazily, an app can intervene at any of three scopes
 
    ```css
    :root {
-     --ui-button-rounded: var(--radius-full);
+     --ui-button-radius: var(--radius-full);
    } /* all buttons go pill-shaped */
    ```
 
@@ -544,7 +544,7 @@ use case exists in an example fragment or docs page.
   descendant's highlight style whenever any custom property changes on an ancestor — on a
   Zazz page, every inline utility change (measured at 196 ms per restyle with 1,000 styled
   children; 0.4 ms on `:root`).
-- **Utility names track Tailwind**: `--p`, `--w`, `--bg`, `--leading`, `--rounded` where Tailwind
+- **Utility names track Tailwind**: `--p`, `--w`, `--bg`, `--leading` where Tailwind
   has a short name, the CSS property name otherwise. Token names do **not**
   follow Tailwind; they use the tiered `--font-family-*` / `--font-weight-*` (semantic) over
   `--font-family-body` / `--font-family-heading` / `--font-family-mono` (raw) scheme.
@@ -631,7 +631,7 @@ These deviate from the canonical shape on purpose: document the reason in-file:
        --ui-<component>-background: var(--color-card);
        --ui-<component>-background--hover: var(--color-muted);
        /* metrics */
-       --ui-<component>-rounded: var(--radius-md);
+       --ui-<component>-radius: var(--radius-md);
      }
    }
    ```

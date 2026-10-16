@@ -14,8 +14,8 @@
   :root {
     --ui-lightbox-aspect: 3 / 2;
     --ui-lightbox-object-fit: cover;
-    --ui-lightbox-slide-rounded: var(--radius-lg);
-    --ui-lightbox-thumb-rounded: var(--radius-md);
+    --ui-lightbox-slide-radius: var(--radius-lg);
+    --ui-lightbox-thumb-radius: var(--radius-md);
     --ui-lightbox-thumb-size: calc(var(--spacing) * 16);
     --ui-lightbox-thumb-opacity: 0.5;
     --ui-lightbox-thumb-opacity--active: 1;
@@ -31,10 +31,8 @@
     --ui-lightbox-img-scale: 1;
     --ui-lightbox-img-opacity: 1;
     --ui-lightbox-img-scale--hover: 1.03;
-    --ui-lightbox-img-filter--hover: brightness(0.8);
     --ui-lightbox-img-scale--active: 1;
-    --ui-lightbox-img-filter--active: brightness(0.5);
-    --ui-lightbox-img-transition-property: transform, filter;
+    --ui-lightbox-img-transition-property: transform;
     --ui-lightbox-img-transition-duration: calc(var(--default-transition-duration) * 3);
     --ui-lightbox-img-transition-timing-function: var(--default-transition-timing-function);
     --ui-lightbox-img-transition-delay: 0ms;
@@ -83,7 +81,7 @@
   :where(ui-lightbox, [data-ui~="lightbox"])
     [data-lightbox-slot~="stage"]
     > [data-carousel-slot~="viewport"] {
-    border-radius: var(--ui-lightbox-slide-rounded);
+    border-radius: var(--ui-lightbox-slide-radius);
     background: var(--color-card);
   }
 
@@ -91,7 +89,7 @@
     [data-lightbox-slot~="stage"]
     > [data-carousel-slot~="viewport"]
     > [data-carousel-slot~="container"] {
-    border-radius: var(--ui-lightbox-slide-rounded);
+    border-radius: var(--ui-lightbox-slide-radius);
     margin-inline-start: calc(var(--space-sm) * -1);
   }
 
@@ -121,7 +119,7 @@
     block-size: 100%;
     overflow: clip;
     position: relative;
-    border-radius: var(--ui-lightbox-slide-rounded);
+    border-radius: var(--ui-lightbox-slide-radius);
     border: var(--ui-lightbox-img-border);
 
     /* transparent twin of the inset ring for forced-colors / high-contrast modes */
@@ -185,7 +183,6 @@
       [data-lightbox-slot~="slide"]:hover
       img {
       transform: scale(var(--ui-lightbox-img-scale--hover));
-      filter: var(--ui-lightbox-img-filter--hover);
     }
   }
 
@@ -194,7 +191,6 @@
     [data-lightbox-slot~="slide"]:active
     img {
     transform: scale(var(--ui-lightbox-img-scale--active));
-    filter: var(--ui-lightbox-img-filter--active);
   }
 
   /* ---------------------------------------------------------------------------
@@ -220,7 +216,7 @@
     [data-carousel-slot~="viewport"] {
     flex: 1;
     min-inline-size: 0;
-    border-radius: var(--ui-lightbox-thumb-rounded);
+    border-radius: var(--ui-lightbox-thumb-radius);
   }
 
   :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="thumbs-prev"],
@@ -259,7 +255,7 @@
     cursor: pointer;
     position: relative;
     border: var(--ui-lightbox-img-border);
-    border-radius: var(--ui-lightbox-thumb-rounded);
+    border-radius: var(--ui-lightbox-thumb-radius);
     overflow: clip;
 
     /* transparent twin of the inset ring for forced-colors / high-contrast modes */
@@ -324,7 +320,7 @@
   --------------------------------------------------------------------------- */
 
   :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="dialog"] {
-    --ui-lightbox-thumb-rounded: var(--radius-sm);
+    --ui-lightbox-thumb-radius: var(--radius-sm);
     --ui-dialog-bg: transparent;
     --ui-dialog-border: none;
 
@@ -337,7 +333,7 @@
     [data-lightbox-slot~="dialog"]
     [data-lightbox-slot~="thumb"]
     img {
-    border-radius: var(--ui-lightbox-thumb-rounded);
+    border-radius: var(--ui-lightbox-thumb-radius);
   }
 
   :where(ui-lightbox, [data-ui~="lightbox"])
@@ -439,9 +435,9 @@
     [data-lightbox-slot~="dialog"]
     [data-lightbox-slot~="slide"]
     img {
-    --ui-lightbox-thumb-rounded: var(--radius-xs);
+    --ui-lightbox-thumb-radius: var(--radius-xs);
 
-    border-radius: var(--ui-lightbox-slide-rounded);
+    border-radius: var(--ui-lightbox-slide-radius);
     border: var(--ui-lightbox-img-border);
     overflow: clip;
     inline-size: 100%;

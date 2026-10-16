@@ -123,7 +123,7 @@ Pick the narrowest scope that works. **Do not edit `packages/core/src/`** unless
    theme roles `--color-primary`, `--color-background`, … are set here too; there are no bare
    `--primary`-style inputs).
 2. **Subtree** — set a hook on a region: `<nav style="--ui-button-px: 2">` or in a stylesheet
-   (`.sidebar { --ui-button-rounded: var(--radius-full) }`). The shared `--ui-field-*` family is
+   (`.sidebar { --ui-button-radius: var(--radius-full) }`). The shared `--ui-field-*` family is
    the widest lever: inputs/selects/textareas read it directly and button, toggle, tabs,
    checkbox/radio, and badge metrics default to it.
 3. **Instance** — a preset, an inline hook (keeps states), or a utility (flattens states).

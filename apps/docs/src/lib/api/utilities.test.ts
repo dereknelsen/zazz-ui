@@ -20,26 +20,27 @@ describe("utilityRows", () => {
   });
 
   it("names what a composite utility feeds and lists keyword shorthands", () => {
-    const [shadow, fontWeight, w] = utilityRows(["shadow", "font-weight", "w"]);
+    const [shadow, fontWeight, w, radius] = utilityRows(["shadow", "font-weight", "w", "radius"]);
     expect(shadow.properties).toBe("box-shadow");
-    expect(shadow.keywords).toEqual(["2xs", "xs", "sm", "md", "lg", "xl", "2xl"]);
+    expect(shadow.keywords).toEqual([]);
+    expect(radius.keywords).toEqual(["full"]);
     expect(fontWeight.keywords).toEqual(expect.arrayContaining(["strong", "heading", "body"]));
     expect(w.keywords).toEqual(["auto", "fit-content", "min-content", "max-content"]);
   });
 
   it("flags tier-only utilities and rejects unknown names", () => {
-    const [opacity, p, m, shadow, rounded] = utilityRows([
+    const [opacity, p, m, shadow, overflow] = utilityRows([
       "opacity",
       "p",
       "m",
       "shadow",
-      "rounded",
+      "overflow",
     ]);
     expect(opacity.tierOnly).toBe(true);
     expect(p.tierOnly).toBe(true);
     expect(m.tierOnly).toBe(false);
     expect(shadow.tierOnly).toBe(true);
-    expect(rounded.tierOnly).toBe(false); // no tiers at all
+    expect(overflow.tierOnly).toBe(false); // no tiers at all
     expect(() => utilityRows(["nope"])).toThrow(/not in the kit/);
   });
 });

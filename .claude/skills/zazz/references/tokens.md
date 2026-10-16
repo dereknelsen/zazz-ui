@@ -87,18 +87,21 @@ text-2xs`, `text-eyebrow`, `text-link` (an inline link outside prose). A role st
 
 `--radius-none|2xs|xs|sm|md|lg|xl|2xl|full`, scaled by `--radius-multiplier`. Conventions: **md** =
 buttons/inputs/cards, **lg** = dialogs, **sm** = badges, **full** = pills/circles. Utility:
-`--rounded` (raw `border-radius`, so per-corner values work:
-`--rounded: var(--radius-md) var(--radius-md) 0 0`).
+`--radius` takes a number on the same scale (`--radius: 2.5` is **md**; 0.5 2xs, 1 xs, 1.5 sm, 4.5 lg,
+7 xl, 10 2xl), a length, or `full`, at any state or breakpoint. `--radius-t` / `-b` / `-l` / `-r`
+round two corners (`--radius-t: 2.5` for a card's media).
 
 ## 6. Shadow & elevation
 
-`--shadow-2xs … 2xl` — soft, multi-layer. Surfaces are flat by default (a `floating` card takes a resting **sm**); apply
-elevation on purpose (**md** ≈ popovers/modals). Utility: `--shadow` takes the size by name at every tier
-(`--shadow: xs; --shadow--hover: md`), or any shadow / `var()`. Color: `--color-shadow` on `:root`
-tints every shadow; `--shadow-hue: var(--color-primary)` tints an element's and its subtree's
-shadows (keyword, `var()`, and primitive shadows alike). `--shadow-angle` turns the cast
-direction the same way (`0deg` down, `90deg` left, `180deg` up; takes breakpoints, so a bottom
-sheet can cast up on mobile). A shadow utility never removes a primitive's focus ring.
+`--shadow-2xs … 2xl`: soft, four layers, drawn with the elevation formula. Surfaces are flat by default (a `floating`
+card takes a resting **sm**); apply elevation on purpose (**md** ≈ popovers/modals). Two utilities:
+`--elevation: 4` is a height, drawn as four drop-shadows in `filter`, at any state or breakpoint
+(`--elevation: 1.5; --elevation--hover: 4`). A drop-shadow follows the painted shape, so give the element
+a background, and `filter` makes it a stacking context. `--shadow` is a box-shadow: a token
+(`--shadow: var(--shadow-md)`) or any shadow. Light: `--color-shadow` and `--default-shadow-angle` on `:root`
+set the color and direction of every shadow; `--shadow-tint: var(--color-primary)` and `--shadow-angle`
+change them for an element and its subtree (`0deg` down, `90deg` left, `180deg` up; the angle takes
+breakpoints, so a bottom sheet can cast up on mobile). A shadow utility never removes a primitive's focus ring.
 
 ## 7. Layout & breakpoints
 
@@ -173,6 +176,11 @@ Two separate systems — don't confuse them.
 - **Background channel alpha** (only the fill): `--bg: var(--color-primary); --bg-alpha: 0.1`.
   Multiplied into the token's own alpha, so shade/tint tokens keep their translucency.
 
+Filters and blending: `--filter` (any filter list: `grayscale(1)`, `blur(2px)`), `--backdrop-filter`
+(frosted glass over a translucent `--bg`: `--bg-alpha: 0.6; --backdrop-filter: blur(12px)`), and
+`--mix-blend` (`mix-blend-mode`: `multiply`, `screen`, `overlay`). Effects family: they take state
+tiers and work tier-only (`--filter--hover: blur(2px)` alone is unfiltered at rest).
+
 ## 11. Borders
 
 Shorthand: `--border`, `--border-x`, `--border-y`, `--border-{l,t,r,b}` take a color (1px solid in
@@ -201,7 +209,7 @@ Group tiers react to an ancestor with `data-ui="group"`:
 Pseudo-elements: `--before-content: ''` plus `--before-<utility>` / `--after-<utility>` for
 `--position`, `--display`, `--z`, `--inset` `--inset-x` `--inset-y` `--top` `--right` `--bottom` `--left`,
 padding, sizing and `--aspect`, `--text`, `--bg` (+ `--bg-alpha`), the border longhands,
-`--rounded`, `--outline`, `--opacity`, `--visibility`, `--pointer-events`, `--scale` `--translate`
+`--radius`, `--outline`, `--opacity`, `--filter` `--backdrop-filter` `--mix-blend`, `--visibility`, `--pointer-events`, `--scale` `--translate`
 `--rotate`, `--transition` `--transition-duration` `--transition-delay`, `--font-size`, `--font-weight`. They take no tiers. An accent bar:
 `--before-content: ''; --before-position: absolute; --before-inset-y: 0; --before-left: 0;
 --before-w: 1; --before-bg: var(--color-primary)`.

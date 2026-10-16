@@ -18,13 +18,13 @@
     --ui-slider-track-h: calc(var(--spacing) * 1.5);
     --ui-slider-track-bg: var(--color-muted);
     --ui-slider-track-border: 1px solid var(--color-muted);
-    --ui-slider-track-rounded: var(--radius-full);
+    --ui-slider-track-radius: var(--radius-full);
     --ui-slider-thumb-size: calc(var(--spacing) * 4);
     --ui-slider-thumb-bg: var(--color-background);
 
     --ui-slider-thumb-shadow: var(--shadow-xs);
     --ui-slider-thumb-border: 1px solid var(--color-border);
-    --ui-slider-thumb-rounded: var(--radius-full);
+    --ui-slider-thumb-radius: var(--radius-full);
   }
 }
 
@@ -38,7 +38,7 @@
     inline-size: 100%;
     background: transparent;
     cursor: grab;
-    border-radius: var(--ui-slider-track-rounded);
+    border-radius: var(--ui-slider-track-radius);
 
     /* transparent outline keeps focus visible in forced-colors / high-contrast
        modes; the visible focus ring lives on the thumb via --shadow-ring */
@@ -51,7 +51,7 @@
     inline-size: 100%;
     background: var(--ui-slider-track-bg);
     border: var(--ui-slider-track-border);
-    border-radius: var(--ui-slider-track-rounded);
+    border-radius: var(--ui-slider-track-radius);
   }
 
   :where(input[type="range"])::-moz-range-track {
@@ -59,7 +59,7 @@
     inline-size: 100%;
     background: var(--ui-slider-track-bg);
     border: var(--ui-slider-track-border);
-    border-radius: var(--ui-slider-track-rounded);
+    border-radius: var(--ui-slider-track-radius);
   }
 
   :where(input[type="range"])::-webkit-slider-thumb {
@@ -81,7 +81,7 @@
     block-size: var(--ui-slider-thumb-size);
     background-color: var(--ui-slider-thumb-bg);
     border: var(--ui-slider-thumb-border);
-    border-radius: var(--ui-slider-thumb-rounded);
+    border-radius: var(--ui-slider-thumb-radius);
 
     transition: var(--default-transition);
   }
@@ -98,7 +98,7 @@
     block-size: var(--ui-slider-thumb-size);
     background-color: var(--ui-slider-thumb-bg);
     border: var(--ui-slider-thumb-border);
-    border-radius: var(--ui-slider-thumb-rounded);
+    border-radius: var(--ui-slider-thumb-radius);
 
     box-shadow:
       0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),

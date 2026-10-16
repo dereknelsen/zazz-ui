@@ -21,7 +21,7 @@
     /* a bare card has no surface; the outline and floating variants paint --color-card */
     --ui-card-bg: transparent;
     --ui-card-text: var(--color-card-foreground);
-    --ui-card-rounded: var(--radius-lg);
+    --ui-card-radius: var(--radius-lg);
     --ui-card-shadow: none;
 
     --ui-card-border-width: 1px;
@@ -60,7 +60,7 @@
   inherits: false;
 }
 
-@property --_card-rounded {
+@property --_card-radius {
   syntax: "*";
   inherits: false;
 }
@@ -90,7 +90,11 @@
       --_border-color-resolved,
       var(--_card-border-color, var(--ui-card-border-color))
     );
-    border-radius: var(--_rounded-resolved, var(--_card-rounded, var(--ui-card-rounded)));
+    --_radius-len: var(--_radius-resolved, var(--_card-radius, var(--ui-card-radius)));
+    --_radius-num: var(--_radius-resolved, var(--_card-radius, var(--ui-card-radius)));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
     box-shadow: var(--_shadow-resolved, var(--_card-shadow, var(--ui-card-shadow)));
     overflow: clip;
     transition: var(--default-transition);
@@ -101,7 +105,7 @@
   =========================================================================== */
 
   :where([data-ui~="card"]:not([data-card-variant])) {
-    --_card-rounded: 0;
+    --_card-radius: 0;
   }
 
   :where([data-ui~="card"][data-card-variant="outline"]) {

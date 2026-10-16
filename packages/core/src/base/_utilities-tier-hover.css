@@ -24,6 +24,10 @@
       --_border-r-hover: var(--border-r--hover);
       --_border-b-hover: var(--border-b--hover);
       --_opacity-hover: var(--opacity--hover);
+      --_filter-hover: var(--filter--hover);
+      --_elevation-hover: var(--elevation--hover);
+      --_backdrop-filter-hover: var(--backdrop-filter--hover);
+      --_mix-blend-hover: var(--mix-blend--hover);
       --_shadow-hover: var(--shadow--hover);
       --_shadow-angle-hover: var(--shadow-angle--hover);
       --_ring-hover: var(--ring--hover);
@@ -36,6 +40,7 @@
       --_transition-hover: var(--transition--hover);
       --_transition-duration-hover: var(--transition-duration--hover);
       --_transition-delay-hover: var(--transition-delay--hover);
+      --_radius-hover: var(--radius--hover);
     }
     :where([data-ui~="group"]:hover [style*="--group-"]) {
       --_anchor-name-g-hover: var(--group-anchor-name--hover);
@@ -58,6 +63,10 @@
       --_border-r-g-hover: var(--group-border-r--hover);
       --_border-b-g-hover: var(--group-border-b--hover);
       --_opacity-g-hover: var(--group-opacity--hover);
+      --_filter-g-hover: var(--group-filter--hover);
+      --_elevation-g-hover: var(--group-elevation--hover);
+      --_backdrop-filter-g-hover: var(--group-backdrop-filter--hover);
+      --_mix-blend-g-hover: var(--group-mix-blend--hover);
       --_shadow-g-hover: var(--group-shadow--hover);
       --_shadow-angle-g-hover: var(--group-shadow-angle--hover);
       --_ring-g-hover: var(--group-ring--hover);
@@ -70,6 +79,7 @@
       --_transition-g-hover: var(--group-transition--hover);
       --_transition-duration-g-hover: var(--group-transition-duration--hover);
       --_transition-delay-g-hover: var(--group-transition-delay--hover);
+      --_radius-g-hover: var(--group-radius--hover);
     }
   }
 }

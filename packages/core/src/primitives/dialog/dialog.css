@@ -45,7 +45,7 @@
     --ui-dialog-h: fit-content;
     --ui-dialog-bg: var(--color-card);
     --ui-dialog-text: var(--color-card-foreground);
-    --ui-dialog-rounded: var(--radius-lg);
+    --ui-dialog-radius: var(--radius-lg);
   }
 }
 
@@ -128,7 +128,7 @@
   inherits: false;
 }
 
-@property --_dialog-rounded {
+@property --_dialog-radius {
   syntax: "*";
   inherits: false;
 }
@@ -152,7 +152,11 @@
     background-color: var(--_bg-resolved, var(--ui-dialog-bg));
     color: var(--_text-resolved, var(--ui-dialog-text));
     box-shadow: var(--_shadow-resolved, var(--_dialog-shadow, var(--ui-dialog-shadow)));
-    border-radius: var(--_rounded-resolved, var(--_dialog-rounded, var(--ui-dialog-rounded)));
+    --_radius-len: var(--_radius-resolved, var(--_dialog-radius, var(--ui-dialog-radius)));
+    --_radius-num: var(--_radius-resolved, var(--_dialog-radius, var(--ui-dialog-radius)));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
 
     anchor-name: --ui-dialog-root;
     container-type: inline-size;
@@ -245,7 +249,7 @@
   :where([data-ui~="dialog"][data-dialog-size="screen"]) {
     --_dialog-w: 100vi;
     --_dialog-h: 100svh;
-    --_dialog-rounded: 0;
+    --_dialog-radius: 0;
     --_dialog-shadow: none;
     max-inline-size: 100vi;
     max-block-size: 100svh;

@@ -5,9 +5,9 @@
 
 export const site = {
   name: "Zazz",
-  title: "Zazz Design Framework",
+  title: "Zazz Design System",
   description:
-    "A zero-build UI kit on modern web standards: identities, presets, and style utilities in plain HTML.",
+    "A unified collection of primitives, style utilities, and design tokens, for no-build, low-build, and legacy web projects.",
   url: "https://zazz.sh",
   stage: "alpha",
 } as const;

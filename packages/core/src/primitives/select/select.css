@@ -31,7 +31,7 @@
     --ui-select-border-width: var(--ui-field-border-width);
     --ui-select-border-style: var(--ui-field-border-style);
     --ui-select-border-color: var(--ui-field-border-color);
-    --ui-select-rounded: var(--ui-field-rounded);
+    --ui-select-radius: var(--ui-field-radius);
     --ui-select-option-gap: var(--ui-field-option-gap);
 
     /* Picker icon (trigger chevron) */
@@ -41,7 +41,7 @@
 
     /* Option (menu item): a ghost button rendered as a native <option>. Aliases
        --ui-button-*; only --ui-option-bg/--ui-option-border-color diverge
-       (no fill or border). Radius bridges to --ui-menu-button-rounded. */
+       (no fill or border). Radius bridges to --ui-menu-button-radius. */
     --ui-option-font-family: var(--ui-button-font-family);
     --ui-option-font-size: var(--ui-button-font-size);
     --ui-option-font-weight: var(--ui-button-font-weight);
@@ -50,7 +50,7 @@
     --ui-option-px: var(--ui-button-px);
     --ui-option-min-h: var(--ui-button-min-h);
     --ui-option-icon-size: var(--ui-button-icon-size);
-    --ui-option-rounded: var(--ui-menu-button-rounded);
+    --ui-option-radius: var(--ui-menu-button-radius);
     --ui-option-shadow: none;
 
     --ui-option-bg: transparent;
@@ -172,7 +172,11 @@
     border-width: var(--_border-width-resolved, var(--ui-select-border-width));
     border-style: var(--_border-style-resolved, var(--ui-select-border-style));
     border-color: var(--_border-color-resolved, var(--ui-select-border-color));
-    border-radius: var(--_rounded-resolved, var(--ui-select-rounded));
+    --_radius-len: var(--_radius-resolved, var(--ui-select-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-select-radius));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
     cursor: pointer;
 
     /* the transparent outline keeps focus visible in forced-colors */
@@ -260,7 +264,11 @@
     background-color: var(--color-popover);
     color: var(--color-popover-foreground);
     border: 1px solid var(--ui-popover-border-color);
-    border-radius: var(--ui-popover-rounded);
+    --_radius-len: var(--_radius-resolved, var(--ui-popover-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-popover-radius));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+    );
     box-shadow: var(--ui-popover-shadow);
   }
 
@@ -302,7 +310,7 @@
     background-color: var(--ui-option-bg);
     border: var(--ui-option-border-width) var(--ui-option-border-style)
       var(--ui-option-border-color);
-    border-radius: var(--ui-option-rounded);
+    border-radius: var(--ui-option-radius);
     box-shadow: var(--ui-option-shadow);
     cursor: pointer;
 
@@ -431,7 +439,7 @@
     background-color: var(--ui-option-bg);
     border: var(--ui-option-border-width) var(--ui-option-border-style)
       var(--ui-option-border-color);
-    border-radius: var(--ui-option-rounded);
+    border-radius: var(--ui-option-radius);
     cursor: pointer;
 
     transition: var(--default-transition);
