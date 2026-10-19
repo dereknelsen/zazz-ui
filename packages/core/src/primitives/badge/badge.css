@@ -284,9 +284,9 @@
   }
 
   :where([data-ui~="badge"]):is(button, a[href]):focus-visible:not(
-    :disabled,
-    [aria-disabled="true"]
-  ) {
+      :disabled,
+      [aria-disabled="true"]
+    ) {
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: abs(var(--_focus-ring-w, var(--ring-width)));
 

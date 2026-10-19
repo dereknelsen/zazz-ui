@@ -55,8 +55,8 @@ describe("families", () => {
       <div data-down style="--w: fit-content; --w--md: 4; --w--lg: 100%">x</div>
       <div data-grid style="--display: grid; --grid-cols: 2; --grid-cols--md: subgrid"><i></i><i></i></div>
     </div>`);
-    const [up, down, grid] = ["[data-up]", "[data-down]", "[data-grid]"].map(
-      (selector) => root.querySelector(selector)!,
+    const [up, down, grid] = ["[data-up]", "[data-down]", "[data-grid]"].map((selector) =>
+      root.querySelector(selector)!,
     ) as [Element, Element, Element];
     await atWidth(below("md"));
     expect(px(style(up, "inline-size"))).toBeCloseTo(scale(4), 1);

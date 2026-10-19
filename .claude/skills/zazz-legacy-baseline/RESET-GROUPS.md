@@ -72,7 +72,7 @@ the legacy CSS leaves the property unset.
 ## Media
 
 - **Reset:** `display: block; vertical-align: middle` on `img, svg, video, canvas, audio,
-iframe, embed, object`; `max-inline-size: 100%; block-size: auto` on `img, video`; `figure` is
+  iframe, embed, object`; `max-inline-size: 100%; block-size: auto` on `img, video`; `figure` is
   a flex column and a direct `figure > img` fills its width.
 - **Symptom:** inline icons and images break onto their own lines; `text-align: center` stops
   centering images. `block-size: auto` overrides the `height` attribute, so an image whose
@@ -159,7 +159,7 @@ iframe, embed, object`; `max-inline-size: 100%; block-size: auto` on `img, video
 - **Detect:** `css` for `appearance` on `select`; `tpl` for controls outside the classes the
   legacy CSS styles, and for `<progress`, `<meter`.
 - **Close:** `:where(select, progress, meter) { appearance: revert; }` (add `border: revert;
-background: revert;` for `progress` and `meter`), and for unstyled controls
+  background: revert;` for `progress` and `meter`), and for unstyled controls
   `:where(input, textarea, button) { border: revert; padding: revert; background-color: revert; }`.
 
 ## Kit-drawn native controls

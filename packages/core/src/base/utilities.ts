@@ -536,16 +536,14 @@ export const UTILITIES: readonly Utility[] = [
       ["pl", "padding-inline-start"],
       ["pr", "padding-inline-end"],
     ] as const
-  ).map(
-    ([name, property]): Utility => ({
-      name,
-      pseudo: true,
-      properties: [property],
-      mode: "dual",
-      family: "spacing",
-      noBase: "0",
-    }),
-  ),
+  ).map(([name, property]): Utility => ({
+    name,
+    pseudo: true,
+    properties: [property],
+    mode: "dual",
+    family: "spacing",
+    noBase: "0",
+  })),
   { name: "gap", properties: ["gap"], mode: "dual", family: "spacing", noBase: "0" },
   { name: "gap-x", properties: ["column-gap"], mode: "dual", family: "spacing", noBase: "0" },
   { name: "gap-y", properties: ["row-gap"], mode: "dual", family: "spacing", noBase: "0" },
@@ -776,16 +774,14 @@ export const UTILITIES: readonly Utility[] = [
   // into background-image. `--bg: none` also clears background-image.
   // No tiers: a gradient rarely changes per state or breakpoint, and every tier
   // of four utilities cost 1 KB; `--bg--<tier>: none` still clears one.
-  ...GRADIENT_TYPES.map(
-    (type): Utility => ({
-      name: `bg-${type}`,
-      properties: [],
-      mode: "raw",
-      family: "color",
-      emit: "none",
-      tiers: "none",
-    }),
-  ),
+  ...GRADIENT_TYPES.map((type): Utility => ({
+    name: `bg-${type}`,
+    properties: [],
+    mode: "raw",
+    family: "color",
+    emit: "none",
+    tiers: "none",
+  })),
   { name: "bg-stops", properties: [], mode: "raw", family: "color", emit: "none", tiers: "none" },
   {
     name: "border-color",
@@ -812,9 +808,13 @@ export const UTILITIES: readonly Utility[] = [
   // read them after the all-sides longhands, so --border-color beats --border.
   // A side takes only the shorthand (`--border-b: 1`, `--border-t: red`):
   // per-side width and color longhands were dropped as too rare for their cost
-  ...BORDER_SHORTHANDS.map(
-    (name): Utility => ({ name, properties: [], mode: "raw", family: "color", emit: "border" }),
-  ),
+  ...BORDER_SHORTHANDS.map((name): Utility => ({
+    name,
+    properties: [],
+    mode: "raw",
+    family: "color",
+    emit: "border",
+  })),
   // effects: states; ring* and shadow compose into one box-shadow
   {
     name: "opacity",
@@ -983,18 +983,16 @@ export const UTILITIES: readonly Utility[] = [
       ["radius-l", ["border-start-start-radius", "border-end-start-radius"]],
       ["radius-r", ["border-start-end-radius", "border-end-end-radius"]],
     ] as const
-  ).map(
-    ([name, properties]): Utility => ({
-      name,
-      properties,
-      mode: "dual",
-      family: "box",
-      tiers: "breakpoints",
-      noBase: "0",
-      scale: "var(--spacing) * var(--radius-multiplier)",
-      aliases: { full: "var(--radius-full)" },
-    }),
-  ),
+  ).map(([name, properties]): Utility => ({
+    name,
+    properties,
+    mode: "dual",
+    family: "box",
+    tiers: "breakpoints",
+    noBase: "0",
+    scale: "var(--spacing) * var(--radius-multiplier)",
+    aliases: { full: "var(--radius-full)" },
+  })),
   { name: "overflow", properties: ["overflow"], mode: "keyword", family: "box" },
   {
     name: "overflow-x",

@@ -39,18 +39,18 @@
     "prepublishOnly": "vp run --no-cache build"
   },
   "dependencies": {
-    "@clack/prompts": "^1.7.0",
-    "@npmcli/config": "^11.0.1",
-    "chalk": "^6.0.0",
-    "commander": "^15.0.0",
-    "diff": "^9.0.0",
-    "node-diff3": "^3.2.1",
-    "pacote": "^22.0.0"
+    "@clack/prompts": "catalog:",
+    "@npmcli/config": "catalog:",
+    "chalk": "catalog:",
+    "commander": "catalog:",
+    "diff": "catalog:",
+    "node-diff3": "catalog:",
+    "pacote": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",
-    "@types/pacote": "^11.1.8",
-    "tar": "^7.5.22",
+    "@types/pacote": "catalog:",
+    "tar": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:",

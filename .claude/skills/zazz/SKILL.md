@@ -44,7 +44,7 @@ Zazz markup needs **no classes**. Every styling decision is one of four channels
   tiers (`--bg--hover: …`) on color/effects and `--radius`. A tier
   needs a base unless the utility is on the tier-only list — see AUTHORING.md "Rules that bite".
   Utilities need the `style` attribute: under a strict CSP allow it with `style-src-attr
-'unsafe-inline'` (the kit falls back to the CSSOM otherwise); markup a sanitizer strips `style`
+  'unsafe-inline'` (the kit falls back to the CSSOM otherwise); markup a sanitizer strips `style`
   from uses presets, switches, and stylesheet hooks instead.
 
 Behind that:

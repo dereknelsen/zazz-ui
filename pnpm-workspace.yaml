@@ -6,17 +6,17 @@ packages:
 catalogMode: prefer
 
 catalog:
-  "@astrojs/markdoc": ^2.0.10
+  "@astrojs/markdoc": ^2.1.0
   "@astrojs/rss": ^4.0.19
-  "@lucide/astro": ^1.52.0
-  astro: ^7.3.6
+  "@lucide/astro": ^1.59.0
+  astro: ^7.4.0
   astro-pagefind: ^2.0.1
   monaco-editor: ^0.57.0
-  "@html-eslint/eslint-plugin": ^0.66.1
-  "@html-eslint/parser": ^0.66.1
-  "@types/node": ^26.2.0
+  "@html-eslint/eslint-plugin": ^0.67.0
+  "@html-eslint/parser": ^0.67.0
+  "@types/node": ^26.6.5
   "@types/vscode": 1.100.0
-  "@vitest/browser-playwright": 4.1.10
+  "@vitest/browser-playwright": 5.0.5
   "@vscode/test-cli": ^0.0.15
   "@vscode/test-electron": ^3.1.0
   "@vscode/vsce": ^4.0.0
@@ -25,19 +25,30 @@ catalog:
   embla-carousel-autoplay: ^8.6.0
   embla-carousel-class-names: ^8.6.0
   emmet: ^2.4.11
-  eslint: ^10.12.0
-  happy-dom: ^20.11.6
+  eslint: ^10.13.0
+  happy-dom: ^21.0.3
   jiti: ^2.7.0
-  playwright: 1.63.0
+  playwright: 1.64.1
   signal-polyfill: 0.2.2
   typescript: ^7.0.2
-  vite: npm:@voidzero-dev/vite-plus-core@0.2.4
-  vite-plus: 0.2.4
-  vitest: 4.1.10
+  vite: npm:@voidzero-dev/vite-plus-core@1.3.0
+  vite-plus: 1.3.0
+  vitest: 5.0.5
   vscode-jsonrpc: ^9.0.3
   vscode-languageclient: ^10.1.2
   vscode-languageserver: ^10.1.2
   vscode-languageserver-textdocument: ^1.0.15
+  "@astrojs/check": ^0.9.10
+  "@types/pacote": ^11.1.8
+  tar: ^7.5.22
+  "@clack/prompts": ^1.8.1
+  "@npmcli/config": ^11.2.0
+  chalk: ^6.0.1
+  commander: ^15.0.0
+  diff: ^9.0.0
+  node-diff3: ^3.2.1
+  pacote: ^22.0.0
+  bumpp: ^12.3.0
 overrides:
   vite: "catalog:"
 peerDependencyRules:

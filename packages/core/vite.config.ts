@@ -4,7 +4,11 @@ import { emulateTouch, mouseDown, mouseUp } from "./test/commands.ts";
 
 // Chromium always; ZAZZ_BROWSERS=webkit,firefox opts the other engines in
 // (after `pnpm exec playwright install webkit firefox`).
-const browsers = ["chromium", ...(process.env.ZAZZ_BROWSERS?.split(",").filter(Boolean) ?? [])];
+type Browser = "chromium" | "firefox" | "webkit";
+const browsers: Browser[] = [
+  "chromium",
+  ...((process.env.ZAZZ_BROWSERS?.split(",").filter(Boolean) ?? []) as Browser[]),
+];
 
 // ZAZZ_SKIP_BROWSER=1 runs only the unit project — deliberately, never silently.
 const skipBrowser = process.env.ZAZZ_SKIP_BROWSER === "1";
