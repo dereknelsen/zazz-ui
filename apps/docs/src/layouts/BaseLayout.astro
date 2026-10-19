@@ -45,6 +45,10 @@ const ogImage = new URL("/og.png", site.url);
     <meta property="og:image:alt" content="Zazz: HTML's missing design system" />
     <meta name="twitter:card" content="summary_large_image" />
     <slot name="head" />
+    <!-- Defined on every page: a swap navigation runs none of the new page's scripts. -->
+    <script src="../scripts/hero-scene.ts"></script>
+    <script src="../scripts/theme-builder.ts"></script>
+    <script src="../scripts/fieldnotes.ts"></script>
 
     <!-- Guestbook -->
     <script defer src="https://guestbook.meridian.design/guestbook.js" data-website-id="3aab8403-e8c4-4c9d-b90a-e630f8119697"></script>

@@ -1,0 +1,192 @@
+---
+import { species, todayByHour } from '../../lib/fieldnotes.ts';
+import CardHeader from './CardHeader.astro';
+
+const total = species.length;
+const peak = Math.max(...todayByHour.map((d) => d.count));
+const logged = todayByHour.reduce((sum, d) => sum + d.count, 0);
+const busiest = todayByHour.find((d) => d.count === peak)!;
+const oldest = Math.min(...species.map((s) => s.lastSeen));
+const newest = Math.max(...species.map((s) => s.lastSeen));
+
+const panels = [
+  {
+    id: 'today',
+    label: 'Today',
+    value: 0,
+    caption: `${logged} sightings logged, all pending review`,
+  },
+  {
+    id: 'season',
+    label: 'Season',
+    value: 0,
+    caption: 'Reviews are taking longer than usual',
+  },
+  {
+    id: 'all',
+    label: 'All time',
+    value: total,
+    caption: `Last confirmed between ${oldest} and ${newest}`,
+  },
+];
+---
+
+<section
+  data-ui='card'
+  data-card-variant='outline'
+  aria-labelledby='fn-life-title'
+  style='
+    --place-content: start stretch;
+    --col-span: 2;
+    --gap: 4;
+    --mb: 6;
+    --bg: var(--color-card);
+    --elevation: 1.5;
+  '
+>
+  <CardHeader
+    id='fn-life-title'
+    title='Life list'
+    description={`${total} species on your watch list`}
+  />
+
+  <div
+    style='
+      --display: grid;
+      --items: start;
+      --grid-cols: 2;
+      --gap: 6;
+    '
+  >
+    <ui-tabs style='--w: 100%'>
+      <div data-tabs-slot='list' role='tablist'>
+        <div data-tabs-slot='indicator' aria-hidden='true'></div>
+        {
+          panels.map((p, i) => (
+            <>
+              <input
+                type='radio'
+                role='tab'
+                name='fn-life-range'
+                id={`fn-life-${p.id}`}
+                checked={i === 0}
+              />
+              <label for={`fn-life-${p.id}`} data-tabs-slot='label'>
+                <span data-tabs-slot='label-text'>{p.label}</span>
+              </label>
+            </>
+          ))
+        }
+      </div>
+      {
+        panels.map((p) => (
+          <div
+            data-tabs-slot='panel'
+            role='tabpanel'
+            style='
+              --display: grid;
+              --pt: 4;
+              --gap: 3;
+            '
+          >
+            <p
+              style='
+                --display: flex;
+                --items: baseline;
+                --gap: 1;
+              '
+            >
+              <span class='fieldnotes__num' data-ui='text-h2'>
+                {p.value}
+              </span>
+              <span style='--text: var(--color-muted-foreground)'>
+                of {total} confirmed
+              </span>
+            </p>
+            <progress
+              data-ui='progress'
+              style='--w: 100%'
+              max={total}
+              value={p.value}
+              aria-label={`${p.label}: ${p.value} of ${total} species confirmed`}
+            >
+              {p.value} of {total}
+            </progress>
+            <p data-ui='text-sm' style='--text: var(--color-muted-foreground)'>
+              {p.caption}
+            </p>
+          </div>
+        ))
+      }
+    </ui-tabs>
+
+    <figure
+      style='
+        --display: grid;
+        --place-content: space-between stretch;
+        --self: stretch;
+        --gap: 3;
+      '
+    >
+      <figcaption
+        style='
+          --display: flex;
+          --justify: space-between;
+          --gap: 4;
+        '
+      >
+        <span data-ui='text-sm' style='--font-weight: strong'
+          >Today by hour</span
+        >
+        <span data-ui='text-sm' style='--text: var(--color-muted-foreground)'
+          >Busiest at {busiest.hour}m</span
+        >
+      </figcaption>
+      <div
+        role='img'
+        aria-label={`Sightings by hour today: ${todayByHour.map((d) => `${d.hour}m ${d.count}`).join(', ')}`}
+        style='--display: grid; --gap: 1'
+      >
+        <div
+          aria-hidden='true'
+          style={`
+            --display: grid;
+            --grid-cols: ${todayByHour.length};
+            --items: end;
+            --gap: 1;
+            --h: 28;
+          `}
+        >
+          {
+            todayByHour.map((d) => (
+              <div
+                style={`
+                  --h: ${Math.max(4, Math.round((d.count / peak) * 100))}%;
+                  --bg: ${
+                    d.count === peak ? 'var(--color-primary)'
+                    : d.count ? 'var(--color-primary-300)'
+                    : 'var(--color-muted)'
+                  };
+                  --radius-t: 1;
+                `}
+              />
+            ))
+          }
+        </div>
+        <div
+          aria-hidden='true'
+          data-ui='text-2xs'
+          style={`
+            --display: grid;
+            --grid-cols: ${todayByHour.length};
+            --gap: 1;
+            --text-align: center;
+            --text: var(--color-muted-foreground);
+          `}
+        >
+          {todayByHour.map((d, i) => <span>{i % 3 === 0 ? d.hour : ''}</span>)}
+        </div>
+      </div>
+    </figure>
+  </div>
+</section>

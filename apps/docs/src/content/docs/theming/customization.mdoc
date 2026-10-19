@@ -24,6 +24,8 @@ The kit's colors, type, spacing, radii, and shadows are custom properties on `:r
 }
 ```
 
+The theme builder on the [home page](/) writes this block for you: pick a primary and a neutral color, set the spacing, radius, and shadow angle, then copy the variables you changed.
+
 Write the block in `@layer overrides` (or import your stylesheet into it) so it outranks the kit's `variables` layer. Color roles are `light-dark()` pairs; keep them that way and dark mode keeps working with no extra rules.
 
 The text-selection highlight is the `--color-selection` / `--color-selection-foreground` pair, which defaults to the primary pair. Unlike the other roles, it only takes effect on `:root`: the kit styles `::selection` there once and every selection inherits it, so the pair set on a subtree changes nothing.
@@ -42,7 +44,7 @@ The widest lever is the `--ui-field-*` family: inputs, selects, and textareas re
 
 ## 3. Utilities on one element
 
-A style utility is the escape hatch for one element: `style="--bg: var(--color-muted); --radius: 4.5"`. On a primitive it flattens the states it touches (`--bg` on a button is that color on hover too), so add the state tier or use the hook when the states matter.
+A style utility is the escape hatch for one element: `style="--bg: var(--color-muted); --radius: 4.5"`. On a primitive it flattens the states it touches (`--bg` on a button is that color on hover too), so add the state tier or use the hook when the states matter. For a style no utility, hook, or preset expresses, write a BEM-style class (`.block__element--modifier`) in your stylesheet; keep custom `data-*` attributes for your scripts, and keep `style` to utilities and `--ui-*` hooks.
 
 ## Dark mode
 

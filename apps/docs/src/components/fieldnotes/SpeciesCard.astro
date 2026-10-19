@@ -1,0 +1,189 @@
+---
+import { X } from '@lucide/astro';
+import { RARITY_VARIANT, type Species } from '../../lib/fieldnotes.ts';
+import Avatars from './Avatars.astro';
+import Sprite from './Sprite.astro';
+
+interface Props {
+  species: Species;
+}
+const { species: s } = Astro.props;
+const dialog = `fn-species-${s.slug}`;
+---
+
+<article
+  data-ui='card'
+  data-card-variant='outline'
+  aria-labelledby={`${dialog}-title`}
+  style='
+    --mb: 6;
+    --place-content: start stretch;
+    --gap: 4;
+    --bg: var(--color-card);
+    --elevation: 1.5;
+  '
+>
+  <header
+    style='
+      --display: grid;
+      --items: center;
+      --template-cols: auto minmax(0, 1fr) auto;
+      --gap: 3;
+    '
+  >
+    <Sprite
+      slug={s.slug}
+      size={12}
+      alt={`Pixel sprite of a ${s.name.toLowerCase()}`}
+    />
+    <div
+      style='
+        --display: grid;
+        --gap: 0.5;
+        --min-w: 0;
+      '
+    >
+      <h3
+        id={`${dialog}-title`}
+        style='--font-size: var(--font-size-lg); --font-family: var(--font-family-heading)'
+      >
+        {s.name}
+      </h3>
+      <p data-ui='text-sm' style='--text: var(--color-muted-foreground)'>
+        <i>{s.scientific}</i>
+      </p>
+    </div>
+    <span
+      data-ui='badge'
+      data-badge-variant={RARITY_VARIANT[s.rarity]}
+      style='--self: start'>{s.rarity}</span
+    >
+  </header>
+
+  <dl
+    data-ui='text-sm'
+    style='
+      --display: grid;
+      --template-cols: auto 1fr;
+      --pt: 3;
+      --gap-x: 4;
+      --gap-y: 1;
+      --border-t: 1;
+    '
+  >
+    <dt style='--text: var(--color-muted-foreground)'>Range</dt>
+    <dd>{s.range}</dd>
+    <dt style='--text: var(--color-muted-foreground)'>Last seen</dt>
+    <dd class='fieldnotes__num'>{s.lastSeen}</dd>
+  </dl>
+
+  <footer
+    style='
+      --display: flex;
+      --items: center;
+      --justify: space-between;
+      --gap: 4;
+    '
+  >
+    <Avatars
+      initials={s.spotters}
+      label={`${s.spotters.length} naturalists on record`}
+    />
+    <button
+      data-ui='button'
+      data-button-variant='outline'
+      type='button'
+      command='show-modal'
+      commandfor={dialog}
+    >
+      Details
+    </button>
+  </footer>
+</article>
+
+<dialog
+  id={dialog}
+  data-ui='dialog'
+  closedby='any'
+  aria-labelledby={`${dialog}-heading`}
+>
+  <div data-dialog-slot='content'>
+    <header
+      data-dialog-slot='header'
+      style='
+        --display: grid;
+        --items: center;
+        --template-cols: auto 1fr;
+        --pr: 12;
+        --gap: 4;
+      '
+    >
+      <Sprite slug={s.slug} size={14} />
+      <div style='
+          --display: grid;
+          --gap: 1;
+        '>
+        <h2 id={`${dialog}-heading`} data-ui='text-h6'>{s.name}</h2>
+        <p data-ui='text-sm' style='--text: var(--color-muted-foreground)'>
+          <i>{s.scientific}</i>
+        </p>
+      </div>
+    </header>
+    <div
+      data-dialog-slot='body'
+      style='
+        --display: grid;
+        --place-content: start stretch;
+        --gap: 4;
+      '
+    >
+      <p>{s.note}</p>
+      <dl
+        data-ui='text-sm'
+        style='
+          --display: grid;
+          --items: center;
+          --template-cols: auto 1fr;
+          --pt: 4;
+          --gap-x: 6;
+          --gap-y: 2;
+          --border-t: 1;
+        '
+      >
+        <dt style='--text: var(--color-muted-foreground)'>Range</dt>
+        <dd>{s.range}</dd>
+        <dt style='--text: var(--color-muted-foreground)'>Last seen</dt>
+        <dd class='fieldnotes__num'>{s.lastSeen}</dd>
+        <dt style='--text: var(--color-muted-foreground)'>Status</dt>
+        <dd>
+          <span data-ui='badge' data-badge-variant={RARITY_VARIANT[s.rarity]}
+            >{s.rarity}</span
+          >
+        </dd>
+      </dl>
+    </div>
+    <footer data-dialog-slot='footer'>
+      <button
+        data-ui='button'
+        data-button-variant='primary'
+        type='button'
+        commandfor={dialog}
+        command='close'
+      >
+        Close
+      </button>
+    </footer>
+  </div>
+  <button
+    data-ui='button'
+    data-dialog-slot='close'
+    data-button-size='icon'
+    data-button-variant='ghost'
+    type='button'
+    commandfor={dialog}
+    command='close'
+    aria-label='Close'
+  >
+    <X aria-hidden='true' />
+  </button>
+</dialog>

@@ -365,15 +365,9 @@
   :where([style*="--before-filter:"])::before {
     filter: var(--before-filter);
   }
-  :where([style*="--before-filter: none"])::before {
-    filter: ;
-  }
 
   :where([style*="--after-filter:"])::after {
     filter: var(--after-filter);
-  }
-  :where([style*="--after-filter: none"])::after {
-    filter: ;
   }
 
   :where([style*="--before-backdrop-filter:"])::before {

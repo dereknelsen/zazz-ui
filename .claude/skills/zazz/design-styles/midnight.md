@@ -43,7 +43,7 @@ Borrow the confidence and negative space; skip the craft-narrative framing.
 - **Bordered cards on flat dark, atmosphere from tokens.** Cards are `data-ui="card"` with
   `--border-width: 1px; --border-color: var(--color-border)` on the dark surface — flat, hairline-defined, no drop shadows. Build
   depth from a subtle `--color-primary-*`-scale wash or grain in section backgrounds and decorative
-  `--color-border` dividers; reserve `--shadow-*` for genuine overlays (popovers, dialogs) only.
+  `--color-border` dividers; reserve shadows (`--elevation`, `--shadow-*`) for genuine overlays (popovers, dialogs) only; a frosted overlay can take `--backdrop-filter: blur(12px)`.
 - **Moody, in-context imagery.** When photography appears (blog cards, features), it's dark and
   atmospheric — night cityscapes, low-key product shots — framed in `--radius-lg` figures, not
   bright studio cut-outs. Duotone or a dark overlay keeps it consistent with the surface.

@@ -177,7 +177,6 @@
 
 
 
-
   :where([style*="--border:"], [style*="--border-x:"], [style*="--border-l:"]) {
     border-inline-start-width: var(--_border-width-resolved, var(--_border-l-w, var(--_border-x-w, var(--_border-w))));
     border-inline-start-style: var(--_border-style-resolved, solid);

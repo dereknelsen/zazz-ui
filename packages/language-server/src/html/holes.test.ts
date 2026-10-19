@@ -37,7 +37,26 @@ describe("maskTemplateHoles", () => {
   it("astro: a hole inside a style attribute hides the whole declaration", () => {
     const source = `<div style={\`--px: \${n}\`}></div>`;
     const { text } = maskTemplateHoles(source, "astro");
-    expect(text).toBe(`<div style=${" ".repeat(14)}></div>`);
+    expect(text).toBe(`<div style="${" ".repeat(12)}"></div>`);
+  });
+
+  it("a hole that is a whole attribute value masks to a quoted blank, so the next attribute keeps its name", () => {
+    const source = `<a\n  href={\`/blog/\${id}/\`}\n  data-ui='button'\n  data-button-variant='info'\n>x</a>`;
+    const masked = maskTemplateHoles(source, "astro");
+    expect(masked.text.length).toBe(source.length);
+    // the hole runs from `{` to the `}` that closes the expression, before the newline
+    expect(masked.text).toContain(
+      `href="${" ".repeat(source.indexOf("}\n") - source.indexOf("{") - 1)}"`,
+    );
+    const [a] = parseHtml(masked.text).tags;
+    expect(a.attributes.map((attr) => attr.key?.value)).toEqual([
+      "href",
+      "data-ui",
+      "data-button-variant",
+    ]);
+    expect(maskTemplateHoles(`<p title=<%= t %> data-ui="text-sm">x</p>`, "erb").text).toBe(
+      `<p title="      " data-ui="text-sm">x</p>`,
+    );
   });
 
   it("razor: masks comments, code blocks, explicit and implicit expressions, and block heads", () => {

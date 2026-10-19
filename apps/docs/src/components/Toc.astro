@@ -11,6 +11,7 @@ const headings = Astro.props.headings.filter((h) => h.depth === 2 || h.depth ===
 {
   headings.length > 0 && (
     <aside
+      class='toc'
       data-toc
       style="
         --display: none;
@@ -35,6 +36,7 @@ const headings = Astro.props.headings.filter((h) => h.depth === 2 || h.depth ===
           {headings.map((h) => (
             <li style={h.depth === 3 ? "--pl: 6" : "--pl: 3"}>
               <a
+                class="toc__link"
                 href={`#${h.slug}`}
                 style="
                   --text: var(--color-muted-foreground);

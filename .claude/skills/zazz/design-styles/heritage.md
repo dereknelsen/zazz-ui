@@ -51,7 +51,7 @@ tell lean Lifestyle. Default to **Lifestyle Brand** when unclear.
   over crisp catalog sterility.
 - **Atmosphere from tokens, surfaces flat.** Layer depth with a gradient wash across the brand
   scale (`--color-primary-600` → `--color-primary-900`) on the colored band, subtle grain, and decorative
-  `--color-border` rules as section separators. Reserve `--shadow-*` for genuine elevation — not on
+  `--color-border` rules as section separators. Reserve shadows (`--elevation`, `--shadow-*`) for genuine elevation — not on
   every card.
 - **Compose with tension.** Break the centered stack with the layout band system: full-bleed
   (`--band: layout-bleed` / `layout-full`) photography of product, fleet, warehouse, or craft

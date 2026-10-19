@@ -48,7 +48,7 @@ const FEEDS: Record<string, string> = {
   "ring-color": "box-shadow (ring color)",
   "ring-offset": "box-shadow (ring offset width)",
   "ring-offset-color": "box-shadow (ring offset color)",
-  elevation: "filter (four drop-shadows, after --filter)",
+  elevation: "box-shadow (four layers, after the rings; an explicit --shadow wins)",
   "shadow-tint": "the color of the --shadow-* tokens and --elevation on this subtree",
   "shadow-angle": "the light direction of the --shadow-* tokens and --elevation on this subtree",
   "focus-ring": "a primitive's focus ring and the focus outline (width, inside or out)",
@@ -117,7 +117,7 @@ function tiersFor(u: Utility): UtilityRow["tiers"] {
 export function utilityRow(u: Utility): UtilityRow {
   const keywords = [...(u.keywords ?? []), ...Object.keys(u.aliases ?? {})];
   const tiers = tiersFor(u);
-  // Shadow and the ring utilities compose into one box-shadow that ends in a
+  // Shadow, elevation, and the ring utilities compose into one box-shadow that ends in a
   // literal, so they need no base either (SPEC §3).
   const composesWithDefault = u.emit === "none" && u.family === "effects";
   return {

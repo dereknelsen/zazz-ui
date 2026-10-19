@@ -116,7 +116,7 @@ noted if the content model doesn't fit).>
 - **<Hierarchy>** — the `text-display`/`text-h1` moment vs. calm body; eyebrow labels.
 - **<Palette>** — mode, the dominant accent + where it lands, surface tokens, all via role tokens.
 - **<Imagery>** — photographic/illustrative, cinematic/studio, framing, any treatment.
-- **<Atmosphere>** — depth from tokens (washes, grain, borders); surfaces flat, `--shadow-*` reserved.
+- **<Atmosphere>** — depth from tokens (washes, grain, borders); surfaces flat, shadows (`--elevation`, `--shadow-*`) reserved.
 - **<Composition>** — band-system tension, asymmetry, `--gap` rhythm; the signature decoration/motif.
 - **<Motion>** — one orchestrated reveal; `data-reveal-*`, `--spring-easing`.
 

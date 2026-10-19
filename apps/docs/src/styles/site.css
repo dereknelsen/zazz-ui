@@ -2,8 +2,16 @@
  * site.css — the docs site's own rules. Everything the kit's utilities can
  * express is written in markup; this file holds only what needs a selector:
  * code blocks (Shiki's dual-theme output), state the client sets (`aria-current`
- * in the table of contents), and the full-viewport state of an example.
+ * in the table of contents), and the few properties the Fieldnotes demo needs
+ * that have no utility. Those hooks are BEM classes (`.block__element`); the
+ * site's `data-*` attributes are for its scripts, never for styling.
  */
+
+@layer zazz.variables {
+  :root {
+    --ui-header-height: calc(var(--spacing) * 14);
+  }
+}
 
 @layer overrides {
   /* Shiki emits both palettes as custom properties on the <pre>; follow the color scheme.
@@ -58,7 +66,7 @@
     }
   }
 
-  [data-toc] a[aria-current="true"] {
+  .toc__link[aria-current="true"] {
     color: var(--color-foreground);
   }
 }
@@ -72,5 +80,59 @@
 
   [data-ui~="table"] td {
     min-inline-size: 16ch;
+  }
+}
+
+@layer overrides {
+  /* Fieldnotes (components/fieldnotes/) and the theme builder: what the utilities can't say. */
+
+  /* Pixel art stays crisp at any size. */
+  .sprite {
+    image-rendering: pixelated;
+  }
+
+  /* Counts and dates line up digit for digit. */
+  .fieldnotes__num {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The demo's table holds short values; skip the reference tables' minimum. */
+  .fieldnotes__table td {
+    min-inline-size: 0;
+  }
+
+  /* The CSS preview: a block of code, not the kit's inline code chip (one line, ellipsized). */
+  .theme-builder__css {
+    display: block;
+    padding: 0;
+    border: 0;
+    background: none;
+    white-space: pre;
+    overflow: visible;
+  }
+
+  /* The native color picker as a bare swatch inside its input group. */
+  .theme-builder__swatch {
+    inline-size: calc(var(--spacing) * 6);
+    block-size: calc(var(--spacing) * 6);
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+
+    &::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    /* Separate rules: a vendor pseudo-element another engine doesn't know drops its whole list. */
+    &::-webkit-color-swatch {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+    }
+
+    &::-moz-color-swatch {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+    }
   }
 }

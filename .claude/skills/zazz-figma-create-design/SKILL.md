@@ -62,8 +62,8 @@ Only these values, applied as auto-layout gap and padding: **8 / 16 / 24 / 44 / 
 
 ## Radius, shadows, motion
 
-- **Radius scale** — 0 / 2 / 4 / 6 / 10 / 18 / 28 / 40px / pill. Convention: 6px badges, 10px buttons, inputs, and cards, 18px dialogs, 28px statement surfaces. Choose the brand's overall roundness, then stay on the scale.
-- **Shadows** — surfaces are flat by default; apply elevation intentionally, always via the `shadows/*` effect styles (shadow-none through shadow-xl) — never a hand-tuned drop shadow. They're whisper-soft stacks of near-black at 1–6% opacity (reference `shadow-md`, for modals/popovers: Y3 blur6 @5% + Y11 blur11 @4% + Y24 blur14 @3% + Y42 blur17 @1%).
+- **Radius scale** — 0 / 2 / 4 / 6 / 10 / 18 / 28 / 40px / pill. Convention: 6px badges, 10px buttons, inputs, and popovers, 18px cards and dialogs, 28px statement surfaces. Choose the brand's overall roundness, then stay on the scale.
+- **Shadows** — surfaces are flat by default; apply elevation intentionally, always via the `shadows/*` effect styles (shadow-none, then shadow-2xs through shadow-2xl), never a hand-tuned drop shadow. They're soft stacks of near-black lit from straight above: every layer has a negative spread, so the shadow never shows above the surface or past its sides (reference `shadow-md`, for modals and popovers: Y4 blur 4 spread −2 at 8% + Y16 blur 12.8 spread −6.4 at 6% + Y36 blur 21.6 spread −11.9 at 3% + Y64 blur 28.8 spread −17.3 at 0%).
 - **Motion** — springy easing, ~0.33s, unhurried. Spend it on one orchestrated staggered page-load reveal plus scroll reveals — not scattered micro-interactions.
 
 ## Layout
@@ -76,7 +76,7 @@ In Figma, buttons, badges, avatars, form fields, cards, and dialogs already exis
 
 - **Button** — height 32px, 10px inline padding, 10px radius, Body SM at weight 500, 4px icon–label gap. Variants: `default` (background fill + 1px border), `primary` (solid primary, white text), `secondary`, `tertiary`, `muted`, `ghost` (transparent, hover shows muted), `outline`, `link` (inline text, primary on hover, no underline, no padding), and the soft status variants `info`, `success`, `warning`, `destructive` (the role at 10% opacity as the fill, 20% in dark, with a darker shade of the role as text, 4.5:1 or better). Sizes: `sm` (24px tall, 6px radius), `icon` (square), `icon-sm`.
 - **Badge** — chip, 20px tall, 5px inline padding, 6px radius, Body XS at weight 500. Variants: `default`, `primary`, `secondary`, `tertiary`, `muted`, `ghost`, `link`, and the soft status variants `info`, `success`, `warning`, `destructive` (as on buttons).
-- **Card** — card surface, `shadow-sm`, 10px radius, 24px padding; card images 3:2. `muted` variant uses the muted surface.
+- **Card** — card surface, 18px radius, 24px padding in the `outline`, `muted`, and `floating` variants (the default card is bare, for edge-to-edge media); no shadow except `floating`, which takes `shadow-sm`. Card images 3:2. `muted` uses the muted surface.
 - **Form fields** — input fill, 1px border, 10px radius across input, textarea, select. Group control + label + hint + error together; error styling appears only after interaction, never in the resting state.
 - **Dialog** — card surface, 18px radius, `shadow-md`, shade-900 backdrop.
 - **Dropdown / menus** — popover surface; items look like ghost buttons.

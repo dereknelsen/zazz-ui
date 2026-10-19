@@ -25,8 +25,15 @@ export interface FromCssRow {
 const COMPOSITES: FromCssRow[] = [
   {
     property: "box-shadow",
-    utilities: ["--shadow", "--ring", "--ring-color", "--ring-offset", "--ring-offset-color"],
-    note: "one box-shadow: the shadow (by name, 2xs to 2xl, or any value) and the ring",
+    utilities: [
+      "--shadow",
+      "--elevation",
+      "--ring",
+      "--ring-color",
+      "--ring-offset",
+      "--ring-offset-color",
+    ],
+    note: "one box-shadow: the ring first, then the shadow (a token like var(--shadow-md) or any value), or else --elevation (a height)",
   },
   {
     property: "flex-direction",

@@ -1,237 +1,147 @@
 ---
-import Logo from "../components/Logo.astro";
-import BaseLayout from "../layouts/BaseLayout.astro";
-import { site } from "../site.config.ts";
-import { ArrowRight, BookOpenText } from "@lucide/astro";
+import Logo from '../components/Logo.astro';
+import ThemeBuilder from '../components/ThemeBuilder.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../site.config.ts';
+import { ArrowRight } from '@lucide/astro';
 ---
 
 <BaseLayout title={site.name}>
-  <main
-    id="main"
-    data-ui="layout"
-    style="
+  <main id='main' style='
+      --display: grid;
       --position: relative;
-      --place-content: center stretch;
-      --py: 12;
-    "
-  >
-    <script>
-      /**
-       * The hero's Unicorn Studio backdrop, one scene per color scheme. The scheme is
-       * dark when `<html>` pins `theme-dark`, or pins nothing and the OS prefers dark.
-       * A theme change loads the other scene in a layer on top, fades it in once it
-       * has drawn, then drops the old one, so the backdrop is never blank.
-       */
-      const SDK =
-        "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.4.2/dist/unicornStudio.umd.js";
-      const PROJECTS = {
-        light: "QhF8LCtm1oeNYHapN73Y",
-        dark: "SqorJz7TX5VWwkFzVEcC",
-      };
-      const LAYER = `
-        --position: absolute;
-        --inset: 0;
-        --opacity: 0;
-        --transition: opacity 0.4s;
-      `;
-
-      interface Scene {
-        destroy(): void;
-      }
-      interface UnicornStudio {
-        addScene(options: {
-          elementId: string;
-          projectId: string;
-        }): Promise<Scene>;
-      }
-      interface Shown {
-        scene: Scene;
-        layer: HTMLElement;
-      }
-
-      const root = document.documentElement;
-      const frame = document.getElementById("hero-scene")!;
-      const prefersDark = matchMedia("(prefers-color-scheme: dark)");
-
-      function scheme(): "light" | "dark" {
-        const tokens = (root.dataset.ui ?? "").split(/\s+/);
-        if (tokens.includes("theme-dark")) return "dark";
-        if (tokens.includes("theme-light")) return "light";
-        return prefersDark.matches ? "dark" : "light";
-      }
-
-      function loadSdk(): Promise<UnicornStudio> {
-        return new Promise((resolve, reject) => {
-          const script = document.createElement("script");
-          script.src = SDK;
-          script.onload = () =>
-            resolve(
-              (window as unknown as { UnicornStudio: UnicornStudio })
-                .UnicornStudio,
-            );
-          script.onerror = reject;
-          document.head.append(script);
-        });
-      }
-
-      const nextFrame = () =>
-        new Promise((resolve) => requestAnimationFrame(resolve));
-
-      /** Loads `scheme`'s scene into a new hidden layer and fades it in over `previous`. */
-      async function show(
-        scheme: "light" | "dark",
-        previous: Shown | undefined,
-      ): Promise<Shown> {
-        const layer = document.createElement("div");
-        layer.id = `hero-scene-${scheme}`;
-        layer.setAttribute("style", LAYER);
-        frame.append(layer);
-        let scene: Scene;
-        try {
-          scene = await (
-            await sdk
-          ).addScene({
-            elementId: layer.id,
-            projectId: PROJECTS[scheme],
-          });
-        } catch (error) {
-          layer.remove();
-          throw error;
-        }
-        // Let the scene draw before it shows.
-        await nextFrame();
-        await nextFrame();
-        layer.style.setProperty("--opacity", "1");
-        await Promise.all(layer.getAnimations().map((a) => a.finished));
-        previous?.scene.destroy();
-        previous?.layer.remove();
-        return { scene, layer };
-      }
-
-      const sdk = loadSdk();
-      let wanted: "light" | "dark" | undefined;
-      let current: Promise<Shown | undefined> = Promise.resolve(undefined);
-
-      function render(): void {
-        const next = scheme();
-        if (next === wanted) return;
-        wanted = next;
-        current = current.then((previous) =>
-          wanted === next
-            ? show(next, previous).catch(() => previous)
-            : previous,
-        );
-      }
-
-      render();
-      prefersDark.addEventListener("change", render);
-      new MutationObserver(render).observe(root, {
-        attributeFilter: ["data-ui"],
-      });
-    </script>
+    '>
     <section
-      style="
-        --display: grid;
-        --grid-cols: 8;
-        --gap: 6;
-        --w: 100%;
-      "
+      data-ui='layout'
+      data-layout-size='bleed'
+      style='
+        --place-content: start stretch;
+        --pb: 12;
+        --min-h: calc(100svh - var(--ui-header-height));
+      '
     >
       <div
-        style="
+        style='
           --display: grid;
-          --col-start: 1;
-          --col-end: 6;
-          --row-start: 1;
-          --row-end: 1;
-          --gap: 12;
-        "
+          --position: relative;
+          --place-items: center;
+          --grid-cols: subgrid;
+          --pt: 12;
+          --pb: 6;
+          --h: 112;
+          --max-h: 70svh;
+        '
       >
-        <figure
-          style="
-            --display: grid;
-            --position: relative;
-            --place-items: center;
-            --w: 100%;
-            --h: auto;
-            --min-w: 0;
-            --aspect: 16 / 9;
-            --overflow: clip;
-            --radius: 5;
-          "
+        <div
+          style='
+            --position: absolute;
+            --inset: 0;
+            --bg-linear: to bottom;
+            --bg-stops: transparent 0%, var(--color-background);
+            --z: 20;
+          '
         >
-          <div
-            aria-hidden="true"
-            id="hero-scene"
-            style="
+        </div>
+        <figure
+          style='
+            --display: grid;
+            --position: absolute;
+            --band: layout-bleed;
+            --inset: 0;
+            --z: 10;
+          '
+        >
+          <hero-scene
+            aria-hidden='true'
+            style='
               --position: absolute;
               --inset: 0;
               --size: 100%;
               --pointer-events: none;
-            "
+            '
           >
-          </div>
+          </hero-scene>
         </figure>
-      </div>
-      <div
-        style="
-          --display: flex-col;
-          --position: relative;
-          --items: start;
-          --justify: center;
-          --col-start: 5;
-          --col-end: -1;
-          --row-start: 1;
-          --row-end: 1;
-          --gap: 12;
-          --text-align: start;
-        "
-      >
-        <hgroup
-          style="
-            --display: flex-col;
-            --gap: 7;
-          "
-        >
-          <div
-            style="
-              --display: flex-col;
-              --items: start;
-              --justify: center;
-              --gap: 4;
-              --text-align: start;
-            "
-          >
-            <h1
-              data-ui="text-eyebrow"
-              style="--text: var(--color-muted-foreground)"
-            >
-              {site.title}
-            </h1>
-            <p data-ui="text-h2" style="--text-wrap: balance">
-              The design system for the common web.
-            </p>
-          </div>
-          <p data-ui="text-lg" style="--text-wrap: balance">
-            A unified collection of web-native primitives, style utilities, and
-            design tokens for no-build, low-build, and legacy projects.
-          </p>
-        </hgroup>
         <div
-          style="
-            --display: flex;
-            --gap: 2;
-          "
+          style='
+            --display: flex-col;
+            --position: relative;
+            --items: start;
+            --justify: start;
+            --band: layout-xl;
+            --pb: 12;
+            --gap: 12;
+            --z: 30;
+          '
         >
-          <a
-            href="/docs/quick-start/"
-            data-ui="button"
-            data-button-variant="primary">Get started</a
+          <hgroup
+            style='
+              --display: grid;
+              --place-items: start;
+              --place-content: stretch;
+              --template-cols--lg: 1.2fr 1fr;
+              --gap: 12;
+            '
           >
-          <a href="/playground" data-ui="button" data-button-variant="ghost"
-            >Try it out <ArrowRight /></a
-          >
+            <div
+              style='
+                --display: flex-col;
+                --gap: 4;
+                --text-align: start;
+              '
+            >
+              <h1
+                data-ui='sr-only'
+                style='--text: var(--color-muted-foreground)'
+              >
+                {site.title}
+              </h1>
+              <p data-ui='text-h1' style='--text-wrap: balance'>
+                A design system <br />for the baseline web.
+              </p>
+            </div>
+            <div
+              style='
+                --display: flex-col;
+                --justify: end;
+                --pb: 1;
+                --gap: 6;
+                --h: 100%;
+              '
+            >
+              <p data-ui='text-lg' style='--text-wrap: balance'>
+                A unified collection of web-native primitives, style utilities,
+                and design tokens for no-build, low-build, and legacy projects.
+              </p>
+              <div
+                style='
+                  --display: flex;
+                  --gap: 2;
+                '
+              >
+                <a
+                  href='/docs/quick-start/'
+                  data-ui='button'
+                  data-button-variant='primary'>Quick start</a
+                >
+                <a
+                  href='/playground'
+                  data-ui='button'
+                  data-button-variant='ghost'>Playground <ArrowRight /></a
+                >
+              </div>
+            </div>
+          </hgroup>
         </div>
+      </div>
+
+      <div
+        style='
+          --band: layout-xl;
+          --col-end: layout-2xl;
+        '
+      >
+        <ThemeBuilder />
       </div>
     </section>
   </main>

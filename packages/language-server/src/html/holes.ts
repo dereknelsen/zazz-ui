@@ -1,7 +1,9 @@
 /**
  * @fileoverview Template holes: the expressions a templating language embeds
  * in HTML (`{expr}`, `<%= %>`, `@Model.Name`, `{{ name }}`), masked to spaces
- * so the html parser and the audit see plain markup. Masking never moves a
+ * so the html parser and the audit see plain markup. A hole that is a whole
+ * attribute value masks to a quoted blank (`"   "`) instead, so the parser
+ * never reads the next attribute as its value. Masking never moves a
  * character (same length, newlines kept), so every offset the services
  * compute on the masked text is an offset in the real document.
  *
@@ -431,7 +433,23 @@ export function maskTemplateHoles(text: string, languageId: string): MaskedText 
   // Code units, not code points: LSP offsets are UTF-16 indices.
   const chars = text.split("");
   const holes = run(scanners, chars);
+  quoteAttributeValues(chars, holes);
   return { text: chars.join(""), holes };
+}
+
+/**
+ * A hole that is a whole attribute value (`href={url}`, `title=<%= t %>`) masks to
+ * a quoted blank, `"    "`, not bare spaces: after `=` an unquoted value may start
+ * past whitespace, so `href=` + spaces would take the next attribute as its value
+ * (`data-ui='button'` read as the href, and the element losing its identity).
+ */
+function quoteAttributeValues(chars: string[], holes: readonly Span[]): void {
+  for (const [start, end] of holes) {
+    if (end - start < 2 || chars[start - 1] !== "=") continue;
+    if (BLANKS.has(chars[start]!) || BLANKS.has(chars[end - 1]!)) continue;
+    chars[start] = '"';
+    chars[end - 1] = '"';
+  }
 }
 
 /** Whether `[start, end)` touches any hole. */

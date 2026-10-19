@@ -158,7 +158,7 @@ describe("editor custom data", () => {
     expect(language.identities["prose"]?.primitive).toBeNull();
     expect(language.tags["ui-carousel"]).toBe("carousel");
     expect(language.primitives["primitives/dialog/dialog.css"]?.tags["presets"]).toEqual([
-      'data-dialog-size="article | container | screen"',
+      'data-dialog-size="sm | md | lg | xl | 2xl | full | bleed" (the layout bands; sm when absent)',
     ]);
     expect(language.hooks["--ui-button-bg"]).toEqual({
       value: "var(--color-background)",

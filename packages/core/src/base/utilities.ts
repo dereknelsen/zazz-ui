@@ -204,9 +204,9 @@ export interface Utility {
 }
 
 /**
- * The utilities that compose into one `box-shadow` (ring and shadow): the
- * composite's chains all end in a literal, so a tier alone works on them, like
- * a no-base utility.
+ * The utilities that compose into one `box-shadow` (the rings, shadow, and
+ * elevation): the composite's chains all end in a literal, so a tier alone
+ * works on them, like a no-base utility.
  */
 export const BOX_SHADOW_COMPOSITE = [
   "shadow",
@@ -214,6 +214,7 @@ export const BOX_SHADOW_COMPOSITE = [
   "ring-color",
   "ring-offset",
   "ring-offset-color",
+  "elevation",
 ] as const;
 
 /**
@@ -237,12 +238,6 @@ export const SHORTHAND_OF: Readonly<Record<string, readonly string[]>> = {
   "radius-l": ["radius"],
   "radius-r": ["radius"],
 };
-
-/**
- * The utilities that compose into one `filter`: `--filter` and `--elevation`
- * (a height drawn as drop-shadows), so neither removes the other.
- */
-export const FILTER_COMPOSITE = ["filter", "elevation"] as const;
 
 /** Gradient types: `--bg-<type>` emits `<type>-gradient(<prelude>, <--bg-stops>)`. */
 export const GRADIENT_TYPES = ["linear", "radial", "conic"] as const;
@@ -320,6 +315,14 @@ export const BORDER_SIDES = [
 /** The four sizing keywords. Margin takes only `auto`. */
 export const SIZING_KEYWORDS = ["auto", "fit-content", "min-content", "max-content"] as const;
 export const MARGIN_KEYWORDS = ["auto"] as const;
+
+/**
+ * Keywords the side insets (`--top --right --bottom --left`) take besides a
+ * length: `auto` releases a side at a breakpoint (`--bottom: 0; --bottom--lg:
+ * auto` sticks to the bottom below lg only). Each keyword costs ~16 [style*=]
+ * substrings (SPEC claim 16), so the axis and `--inset` shorthands go without.
+ */
+export const INSET_KEYWORDS = ["auto"] as const;
 
 /**
  * Track-list keywords `--grid-cols` / `--grid-rows` take besides a count. `none`
@@ -546,17 +549,43 @@ export const UTILITIES: readonly Utility[] = [
   { name: "gap", properties: ["gap"], mode: "dual", family: "spacing", noBase: "0" },
   { name: "gap-x", properties: ["column-gap"], mode: "dual", family: "spacing", noBase: "0" },
   { name: "gap-y", properties: ["row-gap"], mode: "dual", family: "spacing", noBase: "0" },
-  { name: "inset", pseudo: true, properties: ["inset"], mode: "dual", family: "spacing" },
+  {
+    name: "inset",
+    pseudo: true,
+    properties: ["inset"],
+    mode: "dual",
+    family: "spacing",
+  },
   // axis insets: left + right and top + bottom (logical, like the sides)
-  { name: "inset-x", pseudo: true, properties: ["inset-inline"], mode: "dual", family: "spacing" },
-  { name: "inset-y", pseudo: true, properties: ["inset-block"], mode: "dual", family: "spacing" },
-  { name: "top", pseudo: true, properties: ["inset-block-start"], mode: "dual", family: "spacing" },
+  {
+    name: "inset-x",
+    pseudo: true,
+    properties: ["inset-inline"],
+    mode: "dual",
+    family: "spacing",
+  },
+  {
+    name: "inset-y",
+    pseudo: true,
+    properties: ["inset-block"],
+    mode: "dual",
+    family: "spacing",
+  },
+  {
+    name: "top",
+    pseudo: true,
+    properties: ["inset-block-start"],
+    mode: "dual",
+    family: "spacing",
+    keywords: INSET_KEYWORDS,
+  },
   {
     name: "bottom",
     pseudo: true,
     properties: ["inset-block-end"],
     mode: "dual",
     family: "spacing",
+    keywords: INSET_KEYWORDS,
   },
   {
     name: "left",
@@ -564,6 +593,7 @@ export const UTILITIES: readonly Utility[] = [
     properties: ["inset-inline-start"],
     mode: "dual",
     family: "spacing",
+    keywords: INSET_KEYWORDS,
   },
   {
     name: "right",
@@ -571,6 +601,7 @@ export const UTILITIES: readonly Utility[] = [
     properties: ["inset-inline-end"],
     mode: "dual",
     family: "spacing",
+    keywords: INSET_KEYWORDS,
   },
   // margin: dual mode plus `auto`
   { name: "m", properties: ["margin"], mode: "dual", family: "margin", keywords: MARGIN_KEYWORDS },
@@ -800,11 +831,10 @@ export const UTILITIES: readonly Utility[] = [
     mode: "raw",
     family: "effects",
     noBase: "none",
-    // `none` empties the filter, so the composite keeps --elevation's drop-shadows
-    aliases: { none: "" },
   },
-  // a height: four drop-shadows in `filter` (composited on the GPU), drawn with the
-  // elevation formula (generate-utilities.ts) in --shadow-angle's light and --shadow-tint
+  // a height: a four-layer box-shadow with a negative spread, drawn with the elevation
+  // formula (generate-utilities.ts) in --shadow-angle's light and --shadow-tint; shares
+  // one box-shadow with --ring* and --shadow (an explicit --shadow wins)
   {
     name: "elevation",
     properties: [],

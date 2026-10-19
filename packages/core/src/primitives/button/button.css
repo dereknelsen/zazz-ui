@@ -337,8 +337,8 @@
 
   :where([data-ui~="button"][data-button-variant="primary"]) {
     --_button-bg: var(--color-primary);
-    --_button-bg--hover: oklch(from var(--color-primary) l c h / 0.9);
-    --_button-bg--active: oklch(from var(--color-primary) l c h / 0.8);
+    --_button-bg--hover: oklch(from var(--color-primary) l c h / 0.8);
+    --_button-bg--active: oklch(from var(--color-primary) l c h / 0.7);
 
     --_button-text: var(--color-primary-foreground);
     --_button-text--hover: var(--color-primary-foreground);
@@ -353,8 +353,8 @@
 
   :where([data-ui~="button"][data-button-variant="secondary"]) {
     --_button-bg: var(--color-secondary);
-    --_button-bg--hover: oklch(from var(--color-secondary) l c h / 0.9);
-    --_button-bg--active: oklch(from var(--color-secondary) l c h / 0.8);
+    --_button-bg--hover: oklch(from var(--color-secondary) l c h / 0.8);
+    --_button-bg--active: oklch(from var(--color-secondary) l c h / 0.7);
 
     --_button-text: var(--color-secondary-foreground);
     --_button-text--hover: var(--color-secondary-foreground);
@@ -369,8 +369,8 @@
 
   :where([data-ui~="button"][data-button-variant="tertiary"]) {
     --_button-bg: var(--color-tertiary);
-    --_button-bg--hover: oklch(from var(--color-tertiary) l c h / 0.9);
-    --_button-bg--active: oklch(from var(--color-tertiary) l c h / 0.8);
+    --_button-bg--hover: oklch(from var(--color-tertiary) l c h / 0.8);
+    --_button-bg--active: oklch(from var(--color-tertiary) l c h / 0.7);
 
     --_button-text: var(--color-tertiary-foreground);
     --_button-text--hover: var(--color-tertiary-foreground);

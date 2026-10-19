@@ -6,10 +6,6 @@ sectionOrder: 3
 order: 7
 ---
 
-{% callout type="warning" title="Unreleased" %}
-`--radius` and its side utilities ship in 0.8.0, which is not on npm yet; the published 0.7.0 calls it `--rounded` and takes a raw value.
-{% /callout %}
-
 `--radius` is on the spacing scale: a number is that many `--spacing` steps times `--radius-multiplier`, so `--radius: 2.5` is `--radius-md`. A length passes through (`--radius: 1rem`) and `full` is a pill. It takes states and breakpoints (`--radius: 1; --radius--hover: 4`). `--radius-t`, `--radius-b`, `--radius-l`, and `--radius-r` round two corners each and follow the writing direction, so `--radius-t: 2.5` rounds a card's media along the top; they take breakpoints and win over `--radius`.
 
 The border shorthands sort one value into width and color: a color is a 1px solid border in that color, a number is that many pixels in `--color-border`, a length is the width in `--color-border`. The all-sides longhands (`--border-width`, `--border-color`, `--border-style`) win over a shorthand. Borders between direct children are the `divide-x` and `divide-y` switches, sized and colored by `--divide` on the container.

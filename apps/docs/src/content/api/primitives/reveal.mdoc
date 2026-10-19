@@ -15,6 +15,10 @@ primitive: reveal
 
 {% examples primitive="reveal" /%}
 
+## Timing
+
+A reveal runs for 1000ms and moves 2rem by default. In a `data-reveal-each` group the children start one after another, `--ui-reveal-global-stagger-step` (120ms) apart. Set that token on any ancestor to retime every group inside it, set `--ui-reveal-stagger-step` on one group, or put `data-reveal-step` on the group. `data-reveal-step` and `data-reveal-wait` take milliseconds (`120`) or a CSS time (`0.1s`).
+
 ## Attributes
 
 {% attributes primitive="reveal" /%}

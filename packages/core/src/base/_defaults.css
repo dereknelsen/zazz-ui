@@ -407,11 +407,7 @@
 
 
 
-  :where(:is(:is([style*="--shadow--"], [style*="--ring--"], [style*="--ring-color--"], [style*="--ring-offset--"], [style*="--ring-offset-color--"]), :is([style*="--group-shadow--"], [style*="--group-ring--"], [style*="--group-ring-color--"], [style*="--group-ring-offset--"], [style*="--group-ring-offset-color--"])):not([popover], dialog, input[role="switch"], input[type="checkbox"]:not([role="switch"]))) {
-    box-shadow: var(--_focus-shadow, 0 0 #0000), 0 0 0 calc(abs(var(--_ring-offset-w, 0px)) * (1 - max(0, -1 * sign(var(--_ring-w, 0px))))) var(--_ring-offset-color-resolved, transparent), 0 0 0 calc((abs(var(--_ring-offset-w, 0px)) + abs(var(--_ring-w, 0px))) * (1 - max(0, -1 * sign(var(--_ring-w, 0px))))) var(--_ring-color-resolved, var(--color-ring)), inset 0 0 0 calc(abs(var(--_ring-offset-w, 0px)) * max(0, -1 * sign(var(--_ring-w, 0px)))) var(--_ring-offset-color-resolved, transparent), inset 0 0 0 calc((abs(var(--_ring-offset-w, 0px)) + abs(var(--_ring-w, 0px))) * max(0, -1 * sign(var(--_ring-w, 0px)))) var(--_ring-color-resolved, var(--color-ring)), var(--_shadow-resolved, 0 0 #0000);
-  }
-
-  :where(:is(:is([style*="--filter--"], [style*="--elevation--"]), :is([style*="--group-filter--"], [style*="--group-elevation--"]))) {
-    filter: var(--_filter-resolved,) var(--_elevation-filter,);
+  :where(:is(:is([style*="--shadow--"], [style*="--ring--"], [style*="--ring-color--"], [style*="--ring-offset--"], [style*="--ring-offset-color--"], [style*="--elevation--"]), :is([style*="--group-shadow--"], [style*="--group-ring--"], [style*="--group-ring-color--"], [style*="--group-ring-offset--"], [style*="--group-ring-offset-color--"], [style*="--group-elevation--"])):not([popover], dialog, input[role="switch"], input[type="checkbox"]:not([role="switch"]))) {
+    box-shadow: var(--_focus-shadow, 0 0 #0000), 0 0 0 calc(abs(var(--_ring-offset-w, 0px)) * (1 - max(0, -1 * sign(var(--_ring-w, 0px))))) var(--_ring-offset-color-resolved, transparent), 0 0 0 calc((abs(var(--_ring-offset-w, 0px)) + abs(var(--_ring-w, 0px))) * (1 - max(0, -1 * sign(var(--_ring-w, 0px))))) var(--_ring-color-resolved, var(--color-ring)), inset 0 0 0 calc(abs(var(--_ring-offset-w, 0px)) * max(0, -1 * sign(var(--_ring-w, 0px)))) var(--_ring-offset-color-resolved, transparent), inset 0 0 0 calc((abs(var(--_ring-offset-w, 0px)) + abs(var(--_ring-w, 0px))) * max(0, -1 * sign(var(--_ring-w, 0px)))) var(--_ring-color-resolved, var(--color-ring)), var(--_shadow-resolved, var(--_elevation-shadow, 0 0 #0000));
   }
 }

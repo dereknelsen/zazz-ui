@@ -43,7 +43,7 @@ describe("utilities layer budget", () => {
     expect(gated).toBeGreaterThan(0);
   });
 
-  it("claim 16 (ratchet): the layer stays under 1,350 [style*=] substrings", () => {
+  it("claim 16 (ratchet): the layer stays under 1,400 [style*=] substrings", () => {
     // Style recalc cost is the substring count, not the byte count: every
     // [style*=] rule is tested on every element with a style attribute, and each
     // test scans the whole attribute (Blink's rolling-hash find, ~0.3 µs per
@@ -55,10 +55,10 @@ describe("utilities layer budget", () => {
     // bought with substrings. 1,307 after the stuck setter rewrite; 1,141 without
     // the per-side border longhands, gradient tiers, and the rarely used keywords.
     // 1,249 at 0.6.2; 1,273 with padding and --bg on the no-base allowlist (+2 % initial
-    // style, inside the run-to-run spread); 1,287 with the anchor utilities; 1,294 with --position-area; 1,262 once the tier-only rules moved to `@layer defaults` (ADR-0017) and stopped matching the base; 1,300 with the shorthand-tier rules (`--p: 4; --px--md: 1`, and per breakpoint for `--basis` / `--shrink` under `--flex`); 1,324 with --filter, --backdrop-filter, and --mix-blend; 1,316 with --radius, --elevation, and the `none` / `full` aliases, less the --shadow size words. A no-space twin for every exact-value gate (`--w:auto`) measured
+    // style, inside the run-to-run spread); 1,287 with the anchor utilities; 1,294 with --position-area; 1,262 once the tier-only rules moved to `@layer defaults` (ADR-0017) and stopped matching the base; 1,300 with the shorthand-tier rules (`--p: 4; --px--md: 1`, and per breakpoint for `--basis` / `--shrink` under `--flex`); 1,324 with --filter, --backdrop-filter, and --mix-blend; 1,316 with --radius, --elevation, and the `none` / `full` aliases, less the --shadow size words. 1,334 with `auto` on --top and --bottom; 1,376 with `auto` on all four side insets, and the limit raised to 1,400 (2026-10-18; the axis and --inset shorthands with it too measured 1,439). A no-space twin for every exact-value gate (`--w:auto`) measured
     // 2026-10-13 at 1,632 substrings and +20 % initial style (1.94 s to 2.33 s), and was dropped.
     const substrings = (all.match(/\[style\*=/g) ?? []).length;
-    expect(substrings).toBeLessThanOrEqual(1350);
+    expect(substrings).toBeLessThanOrEqual(1400);
   });
 
   it("claim 15 (ratchet): the generated layer stays under 24 KB with Brotli", () => {
@@ -78,6 +78,8 @@ describe("utilities layer budget", () => {
     // 22.0 KB with --filter, --backdrop-filter, and --mix-blend (states, tier-only, pseudo).
     // 23.2 KB with --radius (states and breakpoints, four side utilities) and --elevation (a filter
     // composite), less the --shadow size words: the shadow tokens moved to the generated _shadows.css.
+    // 23.1 KB with --elevation in the box-shadow composite (the filter composite and --filter's
+    // `none` alias gone) and a spread term on every shadow layer.
     expect(compressed).toBeLessThan(24 * 1024);
   });
 });

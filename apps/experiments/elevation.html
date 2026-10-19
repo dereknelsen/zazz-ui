@@ -30,9 +30,10 @@
         <h1 data-ui="text-h3">Elevation prototype</h1>
         <p style="--text: var(--color-muted-foreground)">
           Four layers per shadow (the first rows of the table). Layer k of N sits at
-          <code>n × spacing × 4 × (k/N)²</code>, blurs by <code>max(1px, d × r_k)</code>, and fades
-          in as <code>clamp(0, (n − t_k) × m_k, c_k)</code>. Tune the table, then copy the CSS at
-          the bottom.
+          <code>n × spacing × 4 × (k/N)²</code>, blurs by <code>max(1px, d × r_k)</code>, pulls in
+          by a spread of <code>−blur × s_k</code> (box form only), and fades in as
+          <code>clamp(0, (n − t_k) × m_k, c_k)</code>. Tune the table, then copy the CSS at the
+          bottom.
         </p>
       </header>
 
@@ -104,6 +105,7 @@
               <th>m (per n)</th>
               <th>c (cap)</th>
               <th>r (blur ratio)</th>
+              <th>s (spread ÷ blur)</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -134,7 +136,7 @@
             "
           >
             <div class="drop sample" style="--bg: var(--color-background)"></div>
-            <figcaption>drop-shadow chain (<code>--elevation</code>)</figcaption>
+            <figcaption>drop-shadow chain (the old <code>--elevation</code>, no spread)</figcaption>
           </figure>
           <figure
             style="
@@ -143,7 +145,9 @@
             "
           >
             <div class="box sample" style="--bg: var(--color-background)"></div>
-            <figcaption>box-shadow list (the tokens)</figcaption>
+            <figcaption>
+              box-shadow list with spread (<code>--elevation</code> and the tokens)
+            </figcaption>
           </figure>
           <figure
             style="

@@ -21,6 +21,9 @@ export default defineConfig({
       "packages/vscode/snippets/zazz.code-snippets",
       "packages/vscode/syntaxes/zazz.injection.tmLanguage.json",
       "packages/vscode/emmet/snippets.json",
+      // Vendored as shipped: the Unicorn Studio SDK and the hero scenes exported from it.
+      "apps/docs/public/unicorn/unicornStudio.umd.js",
+      "apps/docs/public/unicorn/*.json",
     ],
     overrides: [
       // Keep style="" exactly as authored (one utility per line stays one per line).
@@ -28,6 +31,7 @@ export default defineConfig({
     ],
   },
   lint: {
+    ignorePatterns: ["apps/docs/public/unicorn/unicornStudio.umd.js"],
     jsPlugins: [{ name: "vite-plus", specifier: "vite-plus/oxlint-plugin" }],
     rules: { "vite-plus/prefer-vite-plus-imports": "error" },
     options: { typeAware: true, typeCheck: true },

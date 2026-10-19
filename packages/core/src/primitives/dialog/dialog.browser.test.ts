@@ -2,12 +2,12 @@
 
 /**
  * @fileoverview The dialog: `data-dialog-slot` parts lay out the
- * surface, `data-dialog-size="screen"` fills the viewport, and a `--w` utility
+ * surface, `data-dialog-size="bleed"` fills the viewport, the band sizes cap the width, and a `--w` utility
  * beats the size hook.
  */
 
 import { describe, expect, it } from "vite-plus/test";
-import { mount, style, useCss, useKit } from "../../../test/browser.ts";
+import { atWidth, mount, style, useCss, useKit } from "../../../test/browser.ts";
 
 const PARTS = `<div data-dialog-slot="content">
     <header data-dialog-slot="header">h</header>
@@ -31,19 +31,52 @@ describe("dialog", () => {
     dialog.close();
   });
 
-  it("the screen size fills the viewport and a --w utility beats the size hook", () => {
+  it("the bleed size fills the viewport and a --w utility beats the size hook", () => {
     const root = mount(`<div>
-      <dialog data-ui="dialog" data-dialog-size="screen" data-screen>${PARTS}</dialog>
-      <dialog data-ui="dialog" data-dialog-size="screen" data-utility style="--w: 333px">${PARTS}</dialog>
+      <dialog data-ui="dialog" data-dialog-size="bleed" data-bleed>${PARTS}</dialog>
+      <dialog data-ui="dialog" data-dialog-size="bleed" data-utility style="--w: 333px">${PARTS}</dialog>
     </div>`);
-    const screen = root.querySelector("[data-screen]") as HTMLDialogElement;
+    const bleed = root.querySelector("[data-bleed]") as HTMLDialogElement;
     const utility = root.querySelector("[data-utility]") as HTMLDialogElement;
-    screen.showModal();
-    expect(Number.parseFloat(style(screen, "inline-size"))).toBeCloseTo(window.innerWidth, 0);
-    expect(style(screen, "border-radius")).toBe("0px");
-    screen.close();
+    bleed.showModal();
+    expect(Number.parseFloat(style(bleed, "inline-size"))).toBeCloseTo(window.innerWidth, 0);
+    expect(style(bleed, "border-radius")).toBe("0px");
+    bleed.close();
     utility.showModal();
     expect(style(utility, "inline-size")).toBe("333px");
     utility.close();
+  });
+
+  it("sm … 2xl follow the layout bands, capped by the viewport; full spans inside the gutters", async () => {
+    // wide enough that sm … xl each fit and 2xl meets the viewport cap
+    await atWidth(1440);
+    const sizes = ["sm", "md", "lg", "xl", "2xl", "full"];
+    const root = mount(
+      `<div>${sizes.map((s) => `<dialog data-ui="dialog" data-dialog-size="${s}" data-size="${s}">${PARTS}</dialog>`).join("")}<dialog data-ui="dialog" data-default>${PARTS}</dialog></div>`,
+    );
+    /** A length measured from a probe, so the expectations read the same tokens. */
+    const measure = (css: string) => {
+      const probe = document.createElement("div");
+      probe.style.cssText = `position: absolute; inline-size: ${css}`;
+      document.body.append(probe);
+      const px = probe.getBoundingClientRect().width;
+      probe.remove();
+      return px;
+    };
+    const width = (selector: string) => {
+      const dialog = root.querySelector(selector) as HTMLDialogElement;
+      dialog.showModal();
+      const value = dialog.getBoundingClientRect().width;
+      dialog.close();
+      return value;
+    };
+    const room = measure("calc(100vi - var(--gutters) * 2)");
+    for (const size of ["sm", "md", "lg", "xl", "2xl"]) {
+      const band = Math.min(measure(`var(--layout-${size})`), room);
+      expect(width(`[data-size="${size}"]`), size).toBeCloseTo(band, 0);
+    }
+    expect(width("[data-default]")).toBeCloseTo(width('[data-size="sm"]'), 0);
+    expect(width('[data-size="full"]')).toBeCloseTo(room, 0);
+    expect(width('[data-size="lg"]')).toBeGreaterThan(width('[data-size="md"]'));
   });
 });

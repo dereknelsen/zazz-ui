@@ -10,7 +10,7 @@
  * @tokens     --ui-dialog-* (@layer variables; --ui-dialog-h defaults to a keyword, so it is read
  *             raw: a --h length, or a tier carrying a length, applies; a scale
  *             number applies only as a base utility)
- * @presets    data-dialog-size="article | container | screen"
+ * @presets    data-dialog-size="sm | md | lg | xl | 2xl | full | bleed" (the layout bands; sm when absent)
  * @consumedby alert-dialog.css, mobile-menu.css
  */
 
@@ -24,7 +24,8 @@
     --ui-dialog-backdrop-filter: none;
     --ui-dialog-shadow: var(--shadow-lg);
     --ui-dialog-border: 1px solid var(--color-border);
-    --ui-dialog-w: min(var(--layout-md), 100% - var(--gutters) * 2);
+    /* the sm band, the default size */
+    --ui-dialog-w: min(var(--layout-sm), 100% - var(--gutters) * 2);
 
     /* Reveal transitions/animations */
     --ui-dialog-opacity--start: 0;
@@ -38,10 +39,8 @@
   }
 }
 
-/* Second variables block: overrides --ui-dialog-w above. */
 @layer variables {
   :root {
-    --ui-dialog-w: min(50ch, 100% - var(--space-md) * 2);
     --ui-dialog-h: fit-content;
     --ui-dialog-bg: var(--color-card);
     --ui-dialog-text: var(--color-card-foreground);
@@ -142,7 +141,7 @@
   :where([data-ui~="dialog"]) {
     /* Set the hook on the element (not :root) so a later consumer (alert-dialog)
        or a subtree hook still wins; --_dialog-shadow is written only by the
-       screen preset. */
+       bleed preset. */
     --ui-dialog-shadow: var(--shadow-md);
 
     --_w-len: var(--_w-resolved, var(--_dialog-w, var(--ui-dialog-w)));
@@ -238,15 +237,33 @@
     background-color: var(--ui-dialog-bg);
   }
 
-  :where([data-ui~="dialog"][data-dialog-size="article"]) {
-    --_dialog-w: var(--article-md);
+  /* Sizes follow the layout bands: sm … 2xl cap the width at the band (sm is the
+     default), full spans the viewport inside the gutters, bleed fills it edge to edge. */
+  :where([data-ui~="dialog"][data-dialog-size="sm"]) {
+    --_dialog-w: min(var(--layout-sm), 100% - var(--gutters) * 2);
   }
 
-  :where([data-ui~="dialog"][data-dialog-size="container"]) {
-    --_dialog-w: var(--layout-md);
+  :where([data-ui~="dialog"][data-dialog-size="md"]) {
+    --_dialog-w: min(var(--layout-md), 100% - var(--gutters) * 2);
   }
 
-  :where([data-ui~="dialog"][data-dialog-size="screen"]) {
+  :where([data-ui~="dialog"][data-dialog-size="lg"]) {
+    --_dialog-w: min(var(--layout-lg), 100% - var(--gutters) * 2);
+  }
+
+  :where([data-ui~="dialog"][data-dialog-size="xl"]) {
+    --_dialog-w: min(var(--layout-xl), 100% - var(--gutters) * 2);
+  }
+
+  :where([data-ui~="dialog"][data-dialog-size="2xl"]) {
+    --_dialog-w: min(var(--layout-2xl), 100% - var(--gutters) * 2);
+  }
+
+  :where([data-ui~="dialog"][data-dialog-size="full"]) {
+    --_dialog-w: calc(100% - var(--gutters) * 2);
+  }
+
+  :where([data-ui~="dialog"][data-dialog-size="bleed"]) {
     --_dialog-w: 100vi;
     --_dialog-h: 100svh;
     --_dialog-radius: 0;

@@ -1,23 +1,27 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
-## 0.8.0 (unreleased)
+## 0.8.0 (2026-10-19)
 
 ### base
 
-- New utilities `--filter`, `--backdrop-filter`, and `--mix-blend` set `filter`, `backdrop-filter`, and `mix-blend-mode`. They take state tiers (`--filter--hover`, `--group-mix-blend--hover`), work tier-only (`--filter--hover: blur(2px)` alone leaves the element unfiltered at rest), and have pseudo-element forms (`--before-filter`, `--after-mix-blend`). The generated layer is 22.0 KB with Brotli.
+- New utilities `--filter`, `--backdrop-filter`, and `--mix-blend` set `filter`, `backdrop-filter`, and `mix-blend-mode`. They take state tiers (`--filter--hover`, `--group-mix-blend--hover`), work tier-only (`--filter--hover: blur(2px)` alone leaves the element unfiltered at rest), and have pseudo-element forms (`--before-filter`, `--after-mix-blend`). With everything below, the generated utility layer is 23.4 KB with Brotli.
 - **BREAKING:** `--rounded` is now `--radius`. A number is a step on the spacing scale times `--radius-multiplier`, so `--radius: 2.5` is `--radius-md` (0.5 `2xs`, 1 `xs`, 1.5 `sm`, 4.5 `lg`, 7 `xl`, 10 `2xl`); a length passes through, and `full` is the pill. It takes states and breakpoints and works tier-only. A value with several corners no longer works: round two corners with the new `--radius-t`, `--radius-b`, `--radius-l`, and `--radius-r` (logical, breakpoint tiers), as in `--radius-t: 2.5` for a card's media. A primitive's main radius hook takes one number or length the same way, so a hook value with several corners (`8px 8px 0 0`) now renders square. **Migration:** rename `--rounded` to `--radius` (`--before-rounded` to `--before-radius`), and the `--ui-<primitive>-rounded` hooks to `--ui-<primitive>-radius` (listed under each primitive below).
 - **BREAKING:** `--shadow` takes a token or any box-shadow; the size words are gone. **Migration:** `--shadow: md` → `--shadow: var(--shadow-md)`, at every tier.
 - **BREAKING:** `--shadow-hue` is now `--shadow-tint`. **Migration:** rename it.
-- The `--shadow-2xs` … `2xl` tokens are redrawn as four layers from the same formula as `--elevation`, at heights 0.25 to 16, and generated into the new `base/_shadows.css`. Shadows across the kit change slightly; `xs` and `2xs` are lighter than before.
-- New utility `--elevation`: a height (a number) drawn as four soft drop-shadows in `filter`, which browsers usually composite on the GPU. `--elevation: 4` uses the same layers as `--shadow-md`; the far layers fade in and darken as the number rises. It composes with `--filter` in one `filter`, takes states and breakpoints, and works tier-only. A drop-shadow follows the painted shape, so an element with no background shadows its text, and `filter` makes the element a stacking context. A negative height draws like its absolute value; a word draws nothing. `--filter: none` now empties the filter, so `--filter: none; --elevation: 4` keeps the elevation.
+- The `--shadow-2xs` … `2xl` tokens are redrawn as four layers from the same formula as `--elevation`, at heights 0.25 to 16, and generated into the new `base/_shadows.css`. Every layer blurs by at most its distance and pulls in by a negative spread, so a shadow never shows above the element or past its sides: the light is overhead, and the higher the layer the more its sides draw in. Shadows across the kit change; `xs` and `2xs` are lighter than before.
+- New utility `--elevation`: a height (a number) drawn as a four-layer `box-shadow` with the elevation formula. `--elevation: 4` uses the same layers as `--shadow-md`; the far layers fade in and darken as the number rises. It shares one `box-shadow` with the `--ring*` utilities and `--shadow` (the rings first, behind a primitive's focus ring; an explicit `--shadow` wins), takes states and breakpoints, works tier-only on a plain element, and replaces a primitive's resting shadow where set. A negative height draws like its absolute value, and a word draws nothing. It doesn't touch `filter`, so `--filter` and `--elevation` never interfere.
 - New token `--default-shadow-angle` (`0deg`, down) sets the direction of every shadow on the page; `--shadow-angle` still turns it for an element and its subtree.
+- `--top`, `--right`, `--bottom`, and `--left` take `auto`, at any breakpoint, so a side can be released where it was set: `--bottom: 0; --bottom--lg: auto` sticks to the bottom below `lg` only. `--inset`, `--inset-x`, and `--inset-y` stay length-only (each keyword costs about 16 `[style*=]` substrings).
+- `--tracking-display` and `--tracking-h1` are looser: `-0.025em`, from `-0.05em`.
 
 ### badge
 
+- The `primary`, `secondary`, and `tertiary` variants show hover and press more clearly: the background drops to 80% opacity on hover (from 90%) and 70% when active (from 80%).
 - **BREAKING:** renamed with `--radius`: `--ui-badge-rounded` → `--ui-badge-radius`. `--ui-badge-radius` also takes a number (`2.5`).
 
 ### button
 
+- The `primary`, `secondary`, and `tertiary` variants show hover and press more clearly: the background drops to 80% opacity on hover (from 90%) and 70% when active (from 80%).
 - **BREAKING:** renamed with `--radius`: `--ui-button-rounded` → `--ui-button-radius`. `--ui-button-radius` also takes a number (`2.5`).
 
 ### button-group
@@ -43,10 +47,11 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 ### debug
 
 - `dual-value` accepts a dual utility's aliases (`--radius: full`).
-- `tier-without-base` checks `--elevation` like the ring and shadow tiers: on its own it does nothing where a primitive sets `filter` without reading it.
+- `tier-without-base` checks `--elevation` like the ring and shadow tiers: on its own it does nothing where a primitive sets `box-shadow` without reading it.
 
 ### dialog
 
+- **BREAKING:** sizes follow the layout bands: `data-dialog-size="sm | md | lg | xl | 2xl | full | bleed"`. `sm` … `2xl` cap the width at that `--layout-*` width (and at the viewport, inside the gutters). `full` spans the viewport inside the gutters, and `bleed` fills it edge to edge with no radius or shadow. With no size a dialog is `sm`: `--ui-dialog-w` is now `min(var(--layout-sm), 100% - var(--gutters) * 2)`, 40rem, where it was `min(50ch, 100% - var(--space-md) * 2)`, so default dialogs get wider. **Migration:** `article` → `sm` or no size, `container` → `md`, `screen` → `bleed`.
 - **BREAKING:** renamed with `--radius`: `--ui-dialog-rounded` → `--ui-dialog-radius`. `--ui-dialog-radius` also takes a number (`2.5`).
 
 ### fields
@@ -64,11 +69,16 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 ### lightbox
 
 - **BREAKING:** a hovered or pressed stage image no longer darkens. The `--ui-lightbox-img-filter--hover` and `--ui-lightbox-img-filter--active` hooks are removed, and `filter` is gone from `--ui-lightbox-img-transition-property`, so the primitive never sets `filter` and the new `--filter` utility applies. Migration: to keep the dimming, put `data-ui="group"` on the slide and `--group-filter--hover: brightness(0.8); --group-filter--active: brightness(0.5)` on its image (the image takes no pointer events, so its own `--filter--hover` never matches).
+- The example's fullscreen dialog uses `data-dialog-size="bleed"` (was `screen`; see dialog).
 - **BREAKING:** renamed with `--radius`: `--ui-lightbox-slide-rounded` → `--ui-lightbox-slide-radius`, `--ui-lightbox-thumb-rounded` → `--ui-lightbox-thumb-radius`.
 
 ### menu
 
 - **BREAKING:** renamed with `--radius`: `--ui-menu-button-rounded` → `--ui-menu-button-radius`.
+
+### mobile-menu
+
+- **BREAKING:** the mobile menu composes `data-dialog-size="bleed"` (was `screen`). **Migration:** on `<dialog data-ui="dialog mobile-menu">`, change `data-dialog-size="screen"` to `"bleed"`.
 
 ### meter
 
@@ -93,6 +103,11 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 ### radio
 
 - **BREAKING:** renamed with `--radius`: `--ui-radio-rounded` → `--ui-radio-radius`. `--ui-radio-radius` also takes a number (`2.5`).
+
+### reveal
+
+- New token `--ui-reveal-global-stagger-step` (`120ms`, was a fixed 80ms) sets the delay between a stagger group's children. Override it on any ancestor to retime every group inside, or set `--ui-reveal-stagger-step` on one group; `data-reveal-step` still wins. `data-reveal-step` and `data-reveal-wait` on a group now also take CSS times (`0.1s`), and `new Reveal({ config: { step } })` writes the global token.
+- Reveals run longer and travel farther by default: `--ui-reveal-global-duration` is `1000ms` (was `var(--default-transition-duration)`) and `--ui-reveal-global-distance` is `2rem` (was `1rem`).
 
 ### select
 

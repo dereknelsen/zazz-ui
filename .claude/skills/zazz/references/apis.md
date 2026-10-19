@@ -57,18 +57,18 @@ Put `data-reveal` on a single element, or `data-reveal-each` on a parent to stag
 **direct children**. The animation plays once when the element enters the viewport (the script
 writes `data-reveal-state="in-view"`).
 
-| Attribute                          | Values / unit                                                             | Notes                                                        |
-| ---------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| `data-reveal` / `data-reveal-each` | `slide-up` `slide-down` `slide-left` `slide-right` `fade` `grow` `shrink` | single vs. stagger-group                                     |
-| `data-reveal-duration`             | ms                                                                        | default: `--default-transition-duration` (JS fallback 400ms) |
-| `data-reveal-wait`                 | ms                                                                        | base delay before start (default 0)                          |
-| `data-reveal-step`                 | ms                                                                        | stagger between children (group only; default 80)            |
-| `data-reveal-ease`                 | CSS timing function                                                       | default: `--default-transition-timing-function`              |
-| `data-reveal-distance`             | CSS length                                                                | slide travel (default `1rem`)                                |
-| `data-reveal-scale`                | number                                                                    | grow/shrink factor (defaults grow 0.97, shrink 1.03)         |
-| `data-reveal-order`                | `reversed`                                                                | reverse stagger order (group only)                           |
-| `data-reveal-margin`               | rootMargin                                                                | IntersectionObserver margin (default `0px`)                  |
-| `data-reveal-threshold`            | 0–1                                                                       | visibility to trigger (default 0.2)                          |
+| Attribute                          | Values / unit                                                             | Notes                                                                                   |
+| ---------------------------------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `data-reveal` / `data-reveal-each` | `slide-up` `slide-down` `slide-left` `slide-right` `fade` `grow` `shrink` | single vs. stagger-group                                                                |
+| `data-reveal-duration`             | ms                                                                        | default: `--ui-reveal-global-duration`, 1000ms                                          |
+| `data-reveal-wait`                 | ms or a CSS time (`0.1s`)                                                 | base delay before start (default 0)                                                     |
+| `data-reveal-step`                 | ms or a CSS time (`0.1s`)                                                 | stagger between children (group only; default `--ui-reveal-global-stagger-step`, 120ms) |
+| `data-reveal-ease`                 | CSS timing function                                                       | default: `--default-transition-timing-function`                                         |
+| `data-reveal-distance`             | CSS length                                                                | slide travel (default `2rem`)                                                           |
+| `data-reveal-scale`                | number                                                                    | grow/shrink factor (defaults grow 0.97, shrink 1.03)                                    |
+| `data-reveal-order`                | `reversed`                                                                | reverse stagger order (group only)                                                      |
+| `data-reveal-margin`               | rootMargin                                                                | IntersectionObserver margin (default `0px`)                                             |
+| `data-reveal-threshold`            | 0–1                                                                       | visibility to trigger (default 0.2)                                                     |
 
 **Reveal owns `transition-*` on the element it's set on.** It drives the animation through
 `transition-duration`, `-delay` (the stagger), `-property`, and `-timing-function`, so don't

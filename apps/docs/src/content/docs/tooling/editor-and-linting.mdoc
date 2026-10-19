@@ -45,7 +45,7 @@ Settings: `zazz.languages`, `zazz.diagnostics.enable`, `zazz.inlayHints.enable`,
 
 ### Templating languages
 
-The features run in plain HTML by default. Add a language id to `zazz.languages` and they run in that language's files too: the server masks the language's own expressions before parsing, so `{expr}`, `<%= %>`, `@Model.Name`, and `{{ name }}` are never read as markup or as CSS, and nothing inside them is reported, completed, or reformatted.
+The features run in plain HTML by default. Add a language id to `zazz.languages` and they run in that language's files too: the server masks the language's own expressions before parsing, so `{expr}`, `<%= %>`, `@Model.Name`, and `{{ name }}` are never read as markup or as CSS, and nothing inside them is reported, completed, or reformatted. An expression that is a whole attribute value (`href={url}`) reads as an empty quoted value, so the attributes after it keep their names.
 
 ```json
 { "zazz.languages": ["html", "astro", "razor", "erb", "phoenix-heex"] }

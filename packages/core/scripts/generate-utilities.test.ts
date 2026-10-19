@@ -22,7 +22,9 @@ import {
   keywordRules,
   noBaseRule,
   appliesAtRest,
+  ELEVATION_LAYERS,
   elevationLayers,
+  elevationRule,
   indexStyling,
   kitStyling,
   shorthandTierRule,
@@ -504,23 +506,23 @@ describe("color and effects composition", () => {
     );
   });
 
-  it("ring and shadow compose into one box-shadow behind the focus-shadow placeholder, and tier-only on plain elements", () => {
+  it("ring, shadow, and elevation compose into one box-shadow behind the focus-shadow placeholder, and tier-only on plain elements", () => {
     const offset = "abs(var(--_ring-offset-w, 0px))";
     const band = `(${offset} + abs(var(--_ring-w, 0px)))`;
     const inset = "max(0, -1 * sign(var(--_ring-w, 0px)))";
     const offsetColor = "var(--_ring-offset-color-resolved, transparent)";
     const color = "var(--_ring-color-resolved, var(--color-ring))";
-    const emission = `box-shadow: var(--_focus-shadow, 0 0 #0000), 0 0 0 calc(${offset} * (1 - ${inset})) ${offsetColor}, 0 0 0 calc(${band} * (1 - ${inset})) ${color}, inset 0 0 0 calc(${offset} * ${inset}) ${offsetColor}, inset 0 0 0 calc(${band} * ${inset}) ${color}, var(--_shadow-resolved, 0 0 #0000);`;
+    const emission = `box-shadow: var(--_focus-shadow, 0 0 #0000), 0 0 0 calc(${offset} * (1 - ${inset})) ${offsetColor}, 0 0 0 calc(${band} * (1 - ${inset})) ${color}, inset 0 0 0 calc(${offset} * ${inset}) ${offsetColor}, inset 0 0 0 calc(${band} * ${inset}) ${color}, var(--_shadow-resolved, var(--_elevation-shadow, 0 0 #0000));`;
     expect(squash(compositeRule([RING, SHADOW]))).toBe(
       squash(`
-        :where(:is([style*="--shadow:"], [style*="--ring:"], [style*="--ring-color:"], [style*="--ring-offset:"], [style*="--ring-offset-color:"])) {
+        :where(:is([style*="--shadow:"], [style*="--ring:"], [style*="--ring-color:"], [style*="--ring-offset:"], [style*="--ring-offset-color:"], [style*="--elevation:"])) {
           ${emission}
         }
       `),
     );
     expect(squash(compositeRule([RING, SHADOW], { skips: ["hr"] }))).toBe(
       squash(`
-        :where(:is(:is([style*="--shadow--"], [style*="--ring--"], [style*="--ring-color--"], [style*="--ring-offset--"], [style*="--ring-offset-color--"]), :is([style*="--group-shadow--"], [style*="--group-ring--"], [style*="--group-ring-color--"], [style*="--group-ring-offset--"], [style*="--group-ring-offset-color--"])):not(hr)) {
+        :where(:is(:is([style*="--shadow--"], [style*="--ring--"], [style*="--ring-color--"], [style*="--ring-offset--"], [style*="--ring-offset-color--"], [style*="--elevation--"]), :is([style*="--group-shadow--"], [style*="--group-ring--"], [style*="--group-ring-color--"], [style*="--group-ring-offset--"], [style*="--group-ring-offset-color--"], [style*="--group-elevation--"])):not(hr)) {
           ${emission}
         }
       `),
@@ -809,7 +811,7 @@ describe("generated stylesheets", () => {
 
 describe("elevation formula", () => {
   it("folds a literal height into numbers: four layers, opacity clamped per layer", () => {
-    const layers = elevationLayers(4, "box").split(",\n");
+    const layers = elevationLayers(4).split(",\n");
     expect(layers).toHaveLength(4);
     const alphas = layers.map((layer) => Number(/\/ ([\d.]+)\)$/.exec(layer)?.[1]));
     expect(alphas).toEqual([0.08, 0.06, 0.03, 0]);
@@ -817,10 +819,36 @@ describe("elevation formula", () => {
     expect(layers[3]).toContain("calc(var(--spacing) * 16 * var(--_shadow-y))");
   });
 
-  it("leaves an expression to the browser, as drop-shadow() functions", () => {
-    const filter = elevationLayers("var(--_elevation-n)", "drop");
-    expect(filter.match(/drop-shadow\(/g)).toHaveLength(4);
-    expect(filter).toContain("calc((var(--_elevation-n) - 4) * 0.006)");
+  it("pulls each layer in by a negative spread that reads the layer's own blur", () => {
+    const [near] = elevationLayers(4).split(",\n");
+    expect(near).toContain(
+      "max(1px, calc(var(--spacing) * 1)) calc(max(1px, calc(var(--spacing) * 1)) * -0.5) oklch(",
+    );
+    expect(elevationLayers(4)).not.toContain("drop-shadow");
+  });
+
+  it("leaves an expression to the browser, as a box-shadow list", () => {
+    const list = elevationLayers("var(--_elevation-n)");
+    expect(list.split(",\n")).toHaveLength(4);
+    expect(list).toContain("calc((var(--_elevation-n) - 4) * 0.006)");
+    expect(list).toMatch(
+      /calc\(max\(1px, calc\(var\(--_elevation-n\) \* var\(--spacing\) \* 4 \* 0\.45\)\) \* -0\.6\)/,
+    );
+  });
+
+  it("keeps every layer inside the element's top and sides: blur ≤ distance, spread ≥ half the blur", () => {
+    for (const { r, s } of ELEVATION_LAYERS) {
+      expect(r).toBeLessThanOrEqual(1);
+      expect(s).toBeGreaterThanOrEqual(0.5);
+      expect(s).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it("emits the layers as --_elevation-shadow for the box-shadow composite, not a filter", () => {
+    const rule = elevationRule(UTILITIES);
+    expect(rule).toContain("--_elevation-n: abs(var(--_elevation-resolved));");
+    expect(rule).toContain("--_elevation-shadow: calc(var(--_elevation-n)");
+    expect(rule).not.toContain("filter");
   });
 });
 

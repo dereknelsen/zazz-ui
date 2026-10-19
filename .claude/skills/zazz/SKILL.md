@@ -30,7 +30,7 @@ adapt it. Never invent slot names or presets.
 
 ## How Zazz thinks (mental model)
 
-Zazz markup has **no classes**. Every styling decision is one of four channels:
+Zazz markup needs **no classes**. Every styling decision is one of four channels:
 
 - **Identity** — what it is: `data-ui="button"` (space-separated tokens: `data-ui="card group"`),
   or a tag form where the wrapper would be a plain div (`<ui-tabs>`, `<ui-layout>`). Natives keep
@@ -40,7 +40,8 @@ Zazz markup has **no classes**. Every styling decision is one of four channels:
 - **Slot** — a part inside it: `data-<identity>-slot` (`<header data-dialog-slot="header">`).
 - **Utility** — one value, in `style`: `style="--px: 6; --bg: var(--color-muted)"`. Spelling is
   exact (one space after each colon). Breakpoint tiers (`--grid-cols--md: 3`) on layout, spacing,
-  sizing, typography, and color utilities; state tiers (`--bg--hover: …`) on color/effects. A tier
+  sizing, typography, and color utilities, plus `--radius`, `--elevation`, and the rings; state
+  tiers (`--bg--hover: …`) on color/effects and `--radius`. A tier
   needs a base unless the utility is on the tier-only list — see AUTHORING.md "Rules that bite".
   Utilities need the `style` attribute: under a strict CSP allow it with `style-src-attr
 'unsafe-inline'` (the kit falls back to the CSSOM otherwise); markup a sanitizer strips `style`
@@ -80,7 +81,11 @@ Start at the most semantic layer; get specific only when nothing semantic fits.
   a visitor reads as a primary control stay at the regular size (`icon` for an icon-only one). If
   the smaller size is for "fitting in", fix the layout instead.
 - **Reuse over new CSS.** A preset, hook, or utility almost always exists. Reaching for a `<style>`
-  block or a class is a signal you skipped one — check `references/tokens.md` first.
+  block or a class is a signal you skipped one — check `references/tokens.md` first. When nothing
+  in the kit says it, write a BEM-style class (`.block__element--modifier`) in your stylesheet;
+  never invent a `data-*` attribute to style by, and never put anything in `style` but the kit's
+  utilities and `--ui-*` hooks (the editor flags the rest as `unknown-utility`). Custom `data-*` is
+  for your scripts' hooks and state.
 
 ## Design with intention
 
@@ -106,8 +111,8 @@ intensity, is the bar.** Zazz supplies the vocabulary; you supply the point of v
   real negative space. Asymmetry and whitespace are choices, not accidents.
 - **Build atmosphere, not flat fills.** Layer depth from tokens — gradient washes across a brand
   scale (`--color-primary-600` → `--color-primary-900`), `shade`/`tint` transparencies, subtle noise/grain,
-  decorative `--color-border` rules. Keep surfaces flat and reserve `--shadow-*` for genuine
-  elevation.
+  decorative `--color-border` rules. Keep surfaces flat and reserve shadows for genuine
+  elevation: `--elevation: n` (a height, `4` matches `--shadow-md`) or `--shadow: var(--shadow-md)`.
 - **Spend motion where it counts.** One orchestrated page-load — staggered reveals via
   `data-reveal`/`data-reveal-each` on the hero — delights more than scattered micro-interactions.
   Use `--spring-easing` for confident movement. `prefers-reduced-motion` is already respected.
@@ -172,8 +177,9 @@ live in `design-styles/`.
   invent tokens — every `var(--…)` must exist in the kit.
 - **Do** leave buttons and toggles at their default size; reach for `sm` / `icon-sm` only inside
   input groups, table rows, and tight toolbars. **Don't** shrink nav links or header actions.
-- **Do** write `data-ui="button" data-button-variant="primary"`. **Don't** write classes,
-  `data-variant`, `data-slot`, utility classes, or `class="dark"` (all 0.4).
+- **Do** write `data-ui="button" data-button-variant="primary"`. **Don't** write utility classes,
+  `data-variant`, `data-slot`, or `class="dark"` (all 0.4). **Do** give custom styling a BEM class;
+  **don't** hang it on a made-up `data-*` attribute or a non-utility custom property in `style`.
 - **Do** let `--color-*` roles handle dark mode; pin a scheme with the `theme-dark` / `theme-light` switch (`data-ui="theme-dark"`). **Don't**
   hand-write dark overrides for token-handled values.
 - **Do** preserve the loaded polyfill and modern-API markup. **Don't** edit `packages/core/src/`
@@ -181,13 +187,13 @@ live in `design-styles/`.
 
 ## Reference index
 
-| Read                                         | When                                                                          |
-| -------------------------------------------- | ----------------------------------------------------------------------------- |
-| `packages/core/AUTHORING.md`                 | The markup rules: identity, presets, slots, utilities, modifiers, hooks       |
-| `references/tokens.md`                       | Choosing spacing, color, type, radius, shadow, or layout tokens and utilities |
-| `references/components.md`                   | Picking a component: identity, presets, slots, docs link                      |
-| `references/apis.md`                         | Custom elements, popovers/dialogs/tooltips, carousels, reveals                |
-| `DESIGN.md`                                  | Brand colors, type scale, archetypes, motion, brand customization             |
-| `PATTERNS.md`                                | Page structure, sentence case, heading group + CTA composition                |
-| `packages/core/src/primitives/{name}/*.html` | The canonical example markup (single source)                                  |
-| `SPEC.md`                                    | The full contract, when AUTHORING.md doesn't settle a question                |
+| Read                                         | When                                                                                             |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `packages/core/AUTHORING.md`                 | The markup rules: identity, presets, slots, utilities, modifiers, hooks                          |
+| `references/tokens.md`                       | Choosing spacing, color, type, radius, shadow, elevation, filter, or layout tokens and utilities |
+| `references/components.md`                   | Picking a component: identity, presets, slots, docs link                                         |
+| `references/apis.md`                         | Custom elements, popovers/dialogs/tooltips, carousels, reveals                                   |
+| `DESIGN.md`                                  | Brand colors, type scale, archetypes, motion, brand customization                                |
+| `PATTERNS.md`                                | Page structure, sentence case, heading group + CTA composition                                   |
+| `packages/core/src/primitives/{name}/*.html` | The canonical example markup (single source)                                                     |
+| `SPEC.md`                                    | The full contract, when AUTHORING.md doesn't settle a question                                   |

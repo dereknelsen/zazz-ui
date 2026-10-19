@@ -17,29 +17,6 @@
     --_filter: var(--filter);
     filter: var(--_filter-resolved);
   }
-  :where([style*="--filter: none"]) { --_filter: ; }
-  @starting-style {
-    :where([style*="--filter--starting: none"]) { --_filter-starting: ; }
-  }
-  :where(:is(:disabled, [aria-disabled="true"])[style*="--filter--disabled: none"]) { --_filter-disabled: ; }
-  :where([data-ui~="group"]:is(:disabled, [aria-disabled="true"]) [style*="--group-filter--disabled: none"]) { --_filter-g-disabled: ; }
-  :where(:active[style*="--filter--active: none"]) { --_filter-active: ; }
-  :where([data-ui~="group"]:active [style*="--group-filter--active: none"]) { --_filter-g-active: ; }
-  :where(:focus-visible[style*="--filter--focus-visible: none"]) { --_filter-focus-visible: ; }
-  :where([data-ui~="group"]:focus-visible [style*="--group-filter--focus-visible: none"]) { --_filter-g-focus-visible: ; }
-  :where(:focus-within[style*="--filter--focus-within: none"]) { --_filter-focus-within: ; }
-  :where([data-ui~="group"]:focus-within [style*="--group-filter--focus-within: none"]) { --_filter-g-focus-within: ; }
-  @media (hover: hover) {
-    :where(:hover[style*="--filter--hover: none"]) { --_filter-hover: ; }
-    :where([data-ui~="group"]:hover [style*="--group-filter--hover: none"]) { --_filter-g-hover: ; }
-  }
-  :where(:is(:checked, [aria-checked="true"])[style*="--filter--checked: none"]) { --_filter-checked: ; }
-  :where([data-ui~="group"]:is(:checked, [aria-checked="true"]) [style*="--group-filter--checked: none"]) { --_filter-g-checked: ; }
-  :where(:is([aria-current]:not([aria-current="false"]))[style*="--filter--current: none"]) { --_filter-current: ; }
-  :where([data-ui~="group"]:is([aria-current]:not([aria-current="false"])) [style*="--group-filter--current: none"]) { --_filter-g-current: ; }
-  :where(:is([open], :popover-open, [aria-expanded="true"])[style*="--filter--open: none"]) { --_filter-open: ; }
-  :where([data-ui~="group"]:is([open], :popover-open, [aria-expanded="true"]) [style*="--group-filter--open: none"]) { --_filter-g-open: ; }
-  :where([style*="--filter--stuck: none"]) { --_filter-stuck: var(--_stuck-on) ; }
 
   :where([style*="--elevation:"], [style*="--elevation--"], [style*="--group-elevation--"]) {
     --_elevation-resolved: var(--_elevation-starting, var(--_elevation-disabled, var(--_elevation-active, var(--_elevation-focus-visible, var(--_elevation-focus-within, var(--_elevation-hover, var(--_elevation-checked, var(--_elevation-current, var(--_elevation-open, var(--_elevation-g-disabled, var(--_elevation-g-active, var(--_elevation-g-focus-visible, var(--_elevation-g-focus-within, var(--_elevation-g-hover, var(--_elevation-g-checked, var(--_elevation-g-current, var(--_elevation-g-open, var(--_elevation-stuck, var(--_elevation-2xl, var(--_elevation-xl, var(--_elevation-lg, var(--_elevation-md, var(--_elevation-sm, var(--_elevation))))))))))))))))))))))));
@@ -170,16 +147,15 @@
     transition-delay: var(--_transition-delay-resolved);
   }
 
-  :where(:is([style*="--shadow:"], [style*="--ring:"], [style*="--ring-color:"], [style*="--ring-offset:"], [style*="--ring-offset-color:"])) {
-    box-shadow: var(--_focus-shadow, 0 0 #0000), 0 0 0 calc(abs(var(--_ring-offset-w, 0px)) * (1 - max(0, -1 * sign(var(--_ring-w, 0px))))) var(--_ring-offset-color-resolved, transparent), 0 0 0 calc((abs(var(--_ring-offset-w, 0px)) + abs(var(--_ring-w, 0px))) * (1 - max(0, -1 * sign(var(--_ring-w, 0px))))) var(--_ring-color-resolved, var(--color-ring)), inset 0 0 0 calc(abs(var(--_ring-offset-w, 0px)) * max(0, -1 * sign(var(--_ring-w, 0px)))) var(--_ring-offset-color-resolved, transparent), inset 0 0 0 calc((abs(var(--_ring-offset-w, 0px)) + abs(var(--_ring-w, 0px))) * max(0, -1 * sign(var(--_ring-w, 0px)))) var(--_ring-color-resolved, var(--color-ring)), var(--_shadow-resolved, 0 0 #0000);
+  :where(:is([style*="--shadow:"], [style*="--ring:"], [style*="--ring-color:"], [style*="--ring-offset:"], [style*="--ring-offset-color:"], [style*="--elevation:"])) {
+    box-shadow: var(--_focus-shadow, 0 0 #0000), 0 0 0 calc(abs(var(--_ring-offset-w, 0px)) * (1 - max(0, -1 * sign(var(--_ring-w, 0px))))) var(--_ring-offset-color-resolved, transparent), 0 0 0 calc((abs(var(--_ring-offset-w, 0px)) + abs(var(--_ring-w, 0px))) * (1 - max(0, -1 * sign(var(--_ring-w, 0px))))) var(--_ring-color-resolved, var(--color-ring)), inset 0 0 0 calc(abs(var(--_ring-offset-w, 0px)) * max(0, -1 * sign(var(--_ring-w, 0px)))) var(--_ring-offset-color-resolved, transparent), inset 0 0 0 calc((abs(var(--_ring-offset-w, 0px)) + abs(var(--_ring-w, 0px))) * max(0, -1 * sign(var(--_ring-w, 0px)))) var(--_ring-color-resolved, var(--color-ring)), var(--_shadow-resolved, var(--_elevation-shadow, 0 0 #0000));
   }
 
   :where([style*="--elevation:"], [style*="--elevation--"], [style*="--group-elevation--"]) {
     --_elevation-n: abs(var(--_elevation-resolved));
-    --_elevation-filter: drop-shadow(oklch(from var(--_shadow-color) l c h / clamp(0, calc((var(--_elevation-n) - 0) * 0.04), 0.08)) calc(var(--_elevation-n) * var(--spacing) * 0.25 * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 0.25 * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 0.25 * 2.2))) drop-shadow(oklch(from var(--_shadow-color) l c h / clamp(0, calc((var(--_elevation-n) - 0.5) * 0.02), 0.06)) calc(var(--_elevation-n) * var(--spacing) * 1 * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 1 * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 1 * 1))) drop-shadow(oklch(from var(--_shadow-color) l c h / clamp(0, calc((var(--_elevation-n) - 1.5) * 0.012), 0.05)) calc(var(--_elevation-n) * var(--spacing) * 2.25 * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 2.25 * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 2.25 * 0.6))) drop-shadow(oklch(from var(--_shadow-color) l c h / clamp(0, calc((var(--_elevation-n) - 4) * 0.006), 0.04)) calc(var(--_elevation-n) * var(--spacing) * 4 * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 4 * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 4 * 0.4)));
-  }
-
-  :where(:is([style*="--filter:"], [style*="--elevation:"])) {
-    filter: var(--_filter-resolved,) var(--_elevation-filter,);
+    --_elevation-shadow: calc(var(--_elevation-n) * var(--spacing) * 0.25 * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 0.25 * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 0.25 * 1)) calc(max(1px, calc(var(--_elevation-n) * var(--spacing) * 0.25 * 1)) * -0.5) oklch(from var(--_shadow-color) l c h / clamp(0, calc((var(--_elevation-n) - 0) * 0.04), 0.08)),
+        calc(var(--_elevation-n) * var(--spacing) * 1 * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 1 * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 1 * 0.8)) calc(max(1px, calc(var(--_elevation-n) * var(--spacing) * 1 * 0.8)) * -0.5) oklch(from var(--_shadow-color) l c h / clamp(0, calc((var(--_elevation-n) - 0.5) * 0.02), 0.06)),
+        calc(var(--_elevation-n) * var(--spacing) * 2.25 * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 2.25 * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 2.25 * 0.6)) calc(max(1px, calc(var(--_elevation-n) * var(--spacing) * 2.25 * 0.6)) * -0.55) oklch(from var(--_shadow-color) l c h / clamp(0, calc((var(--_elevation-n) - 1.5) * 0.012), 0.05)),
+        calc(var(--_elevation-n) * var(--spacing) * 4 * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 4 * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 4 * 0.45)) calc(max(1px, calc(var(--_elevation-n) * var(--spacing) * 4 * 0.45)) * -0.6) oklch(from var(--_shadow-color) l c h / clamp(0, calc((var(--_elevation-n) - 4) * 0.006), 0.04));
   }
 }

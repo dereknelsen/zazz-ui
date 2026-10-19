@@ -578,7 +578,7 @@
           "--ui-dialog-* (@layer variables; --ui-dialog-h defaults to a keyword, so it is read raw: a --h length, or a tier carrying a length, applies; a scale number applies only as a base utility)"
         ],
         "presets": [
-          "data-dialog-size=\"article | container | screen\""
+          "data-dialog-size=\"sm | md | lg | xl | 2xl | full | bleed\" (the layout bands; sm when absent)"
         ],
         "consumedby": [
           "alert-dialog.css, mobile-menu.css"
@@ -765,7 +765,7 @@
           "_layers.css, _variables.css, dialog.css, accordion.css"
         ],
         "uses": [
-          "Composes [data-ui~=\"dialog\"][data-dialog-size=\"screen\"] — fullscreen native <dialog>",
+          "Composes [data-ui~=\"dialog\"][data-dialog-size=\"bleed\"] — fullscreen native <dialog>",
           "Invoker Commands (command=\"show-modal\") — open without JS (markup)",
           "view-transition-name — stable menu across navigations",
           "@starting-style — viewport enter animation",
@@ -920,7 +920,7 @@
           "Behaviour requires zazz/scripts/reveal.js (IntersectionObserver)"
         ],
         "tokens": [
-          "--ui-reveal-global-* (@layer variables); per-instance --ui-reveal-* set from data-* attributes by reveal.js; --ui-reveal-stagger-base / --ui-reveal-stagger-step written on stagger groups by reveal.js for the native sibling-index() path"
+          "--ui-reveal-global-* (@layer variables); per-instance --ui-reveal-* set from data-* attributes by reveal.js; --ui-reveal-stagger-base / --ui-reveal-stagger-step on a stagger group (written by reveal.js from data-reveal-wait / data-reveal-step, or set in CSS) override the global wait / stagger step"
         ],
         "example": [
           "Single element <div data-reveal=\"slide-up\">Content</div>",
@@ -2741,11 +2741,11 @@
       "file": "primitives/reveal/reveal.css"
     },
     "--ui-reveal-global-distance": {
-      "value": "1rem",
+      "value": "2rem",
       "file": "primitives/reveal/reveal.css"
     },
     "--ui-reveal-global-duration": {
-      "value": "var(--default-transition-duration)",
+      "value": "1000ms",
       "file": "primitives/reveal/reveal.css"
     },
     "--ui-reveal-global-grow": {
@@ -2754,6 +2754,10 @@
     },
     "--ui-reveal-global-shrink": {
       "value": "1.03",
+      "file": "primitives/reveal/reveal.css"
+    },
+    "--ui-reveal-global-stagger-step": {
+      "value": "120ms",
       "file": "primitives/reveal/reveal.css"
     },
     "--ui-reveal-global-timing-function": {
@@ -2765,7 +2769,7 @@
       "file": "primitives/reveal/reveal.css"
     },
     "--ui-reveal-wait": {
-      "value": "calc( var(--ui-reveal-stagger-base, var(--ui-reveal-global-wait)) + var(--ui-reveal-stagger-step, 80ms) * (sibling-index() - 1) )",
+      "value": "calc( var(--ui-reveal-stagger-base, var(--ui-reveal-global-wait)) + var(--ui-reveal-stagger-step, var(--ui-reveal-global-stagger-step)) * (sibling-index() - 1) )",
       "file": "primitives/reveal/reveal.css"
     },
     "--ui-scroll-fade-reveal": {
@@ -4878,11 +4882,39 @@
       "light": "3px",
       "dark": "3px"
     },
+    "--shadow-2xl": {
+      "value": "calc(var(--spacing) * 4 * var(--_shadow-x)) calc(var(--spacing) * 4 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 4)) calc(max(1px, calc(var(--spacing) * 4)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.08), calc(var(--spacing) * 16 * var(--_shadow-x)) calc(var(--spacing) * 16 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 12.8)) calc(max(1px, calc(var(--spacing) * 12.8)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.06), calc(var(--spacing) * 36 * var(--_shadow-x)) calc(var(--spacing) * 36 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 21.6)) calc(max(1px, calc(var(--spacing) * 21.6)) * -0.55) oklch(from var(--_shadow-color) l c h / 0.05), calc(var(--spacing) * 64 * var(--_shadow-x)) calc(var(--spacing) * 64 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 28.8)) calc(max(1px, calc(var(--spacing) * 28.8)) * -0.6) oklch(from var(--_shadow-color) l c h / 0.04)",
+      "file": "base/_shadows.css"
+    },
+    "--shadow-2xs": {
+      "value": "calc(var(--spacing) * 0.0625 * var(--_shadow-x)) calc(var(--spacing) * 0.0625 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.0625)) calc(max(1px, calc(var(--spacing) * 0.0625)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.01), calc(var(--spacing) * 0.25 * var(--_shadow-x)) calc(var(--spacing) * 0.25 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.2)) calc(max(1px, calc(var(--spacing) * 0.2)) * -0.5) oklch(from var(--_shadow-color) l c h / 0), calc(var(--spacing) * 0.5625 * var(--_shadow-x)) calc(var(--spacing) * 0.5625 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.3375)) calc(max(1px, calc(var(--spacing) * 0.3375)) * -0.55) oklch(from var(--_shadow-color) l c h / 0), calc(var(--spacing) * 1 * var(--_shadow-x)) calc(var(--spacing) * 1 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.45)) calc(max(1px, calc(var(--spacing) * 0.45)) * -0.6) oklch(from var(--_shadow-color) l c h / 0)",
+      "file": "base/_shadows.css"
+    },
+    "--shadow-lg": {
+      "value": "calc(var(--spacing) * 2 * var(--_shadow-x)) calc(var(--spacing) * 2 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 2)) calc(max(1px, calc(var(--spacing) * 2)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.08), calc(var(--spacing) * 8 * var(--_shadow-x)) calc(var(--spacing) * 8 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 6.4)) calc(max(1px, calc(var(--spacing) * 6.4)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.06), calc(var(--spacing) * 18 * var(--_shadow-x)) calc(var(--spacing) * 18 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 10.8)) calc(max(1px, calc(var(--spacing) * 10.8)) * -0.55) oklch(from var(--_shadow-color) l c h / 0.05), calc(var(--spacing) * 32 * var(--_shadow-x)) calc(var(--spacing) * 32 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 14.4)) calc(max(1px, calc(var(--spacing) * 14.4)) * -0.6) oklch(from var(--_shadow-color) l c h / 0.024)",
+      "file": "base/_shadows.css"
+    },
+    "--shadow-md": {
+      "value": "calc(var(--spacing) * 1 * var(--_shadow-x)) calc(var(--spacing) * 1 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 1)) calc(max(1px, calc(var(--spacing) * 1)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.08), calc(var(--spacing) * 4 * var(--_shadow-x)) calc(var(--spacing) * 4 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 3.2)) calc(max(1px, calc(var(--spacing) * 3.2)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.06), calc(var(--spacing) * 9 * var(--_shadow-x)) calc(var(--spacing) * 9 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 5.4)) calc(max(1px, calc(var(--spacing) * 5.4)) * -0.55) oklch(from var(--_shadow-color) l c h / 0.03), calc(var(--spacing) * 16 * var(--_shadow-x)) calc(var(--spacing) * 16 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 7.2)) calc(max(1px, calc(var(--spacing) * 7.2)) * -0.6) oklch(from var(--_shadow-color) l c h / 0)",
+      "file": "base/_shadows.css"
+    },
     "--shadow-ring": {
       "value": "var(--ring-offset-shadow), var(--ring-shadow)",
       "file": "base/_variables.css",
       "light": "0 0 0 0px oklch(1 0 0), 0 0 0 calc(0px + 3px) color-mix(in oklch, oklch(0.145 0 0) 20%, transparent)",
       "dark": "0 0 0 0px oklch(0.241 0.009 285.7), 0 0 0 calc(0px + 3px) color-mix(in oklch, oklch(0.985 0 0) 20%, transparent)"
+    },
+    "--shadow-sm": {
+      "value": "calc(var(--spacing) * 0.375 * var(--_shadow-x)) calc(var(--spacing) * 0.375 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.375)) calc(max(1px, calc(var(--spacing) * 0.375)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.06), calc(var(--spacing) * 1.5 * var(--_shadow-x)) calc(var(--spacing) * 1.5 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 1.2)) calc(max(1px, calc(var(--spacing) * 1.2)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.02), calc(var(--spacing) * 3.375 * var(--_shadow-x)) calc(var(--spacing) * 3.375 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 2.025)) calc(max(1px, calc(var(--spacing) * 2.025)) * -0.55) oklch(from var(--_shadow-color) l c h / 0), calc(var(--spacing) * 6 * var(--_shadow-x)) calc(var(--spacing) * 6 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 2.7)) calc(max(1px, calc(var(--spacing) * 2.7)) * -0.6) oklch(from var(--_shadow-color) l c h / 0)",
+      "file": "base/_shadows.css"
+    },
+    "--shadow-xl": {
+      "value": "calc(var(--spacing) * 3 * var(--_shadow-x)) calc(var(--spacing) * 3 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 3)) calc(max(1px, calc(var(--spacing) * 3)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.08), calc(var(--spacing) * 12 * var(--_shadow-x)) calc(var(--spacing) * 12 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 9.6)) calc(max(1px, calc(var(--spacing) * 9.6)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.06), calc(var(--spacing) * 27 * var(--_shadow-x)) calc(var(--spacing) * 27 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 16.2)) calc(max(1px, calc(var(--spacing) * 16.2)) * -0.55) oklch(from var(--_shadow-color) l c h / 0.05), calc(var(--spacing) * 48 * var(--_shadow-x)) calc(var(--spacing) * 48 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 21.6)) calc(max(1px, calc(var(--spacing) * 21.6)) * -0.6) oklch(from var(--_shadow-color) l c h / 0.04)",
+      "file": "base/_shadows.css"
+    },
+    "--shadow-xs": {
+      "value": "calc(var(--spacing) * 0.125 * var(--_shadow-x)) calc(var(--spacing) * 0.125 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.125)) calc(max(1px, calc(var(--spacing) * 0.125)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.02), calc(var(--spacing) * 0.5 * var(--_shadow-x)) calc(var(--spacing) * 0.5 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.4)) calc(max(1px, calc(var(--spacing) * 0.4)) * -0.5) oklch(from var(--_shadow-color) l c h / 0), calc(var(--spacing) * 1.125 * var(--_shadow-x)) calc(var(--spacing) * 1.125 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.675)) calc(max(1px, calc(var(--spacing) * 0.675)) * -0.55) oklch(from var(--_shadow-color) l c h / 0), calc(var(--spacing) * 2 * var(--_shadow-x)) calc(var(--spacing) * 2 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.9)) calc(max(1px, calc(var(--spacing) * 0.9)) * -0.6) oklch(from var(--_shadow-color) l c h / 0)",
+      "file": "base/_shadows.css"
     },
     "--space-2xl": {
       "value": "calc(var(--spacing) * 40)",
@@ -4957,10 +4989,10 @@
       "dark": "0em"
     },
     "--tracking-display": {
-      "value": "-0.05em",
+      "value": "-0.025em",
       "file": "base/_variables.css",
-      "light": "-0.05em",
-      "dark": "-0.05em"
+      "light": "-0.025em",
+      "dark": "-0.025em"
     },
     "--tracking-eyebrow": {
       "value": "0.05em",
@@ -4969,10 +5001,10 @@
       "dark": "0.05em"
     },
     "--tracking-h1": {
-      "value": "-0.05em",
+      "value": "-0.025em",
       "file": "base/_variables.css",
-      "light": "-0.05em",
-      "dark": "-0.05em"
+      "light": "-0.025em",
+      "dark": "-0.025em"
     },
     "--tracking-h2": {
       "value": "-0.025em",

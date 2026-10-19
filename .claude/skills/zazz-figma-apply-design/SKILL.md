@@ -64,7 +64,7 @@ Then walk every remaining node and replace each hardcoded value with a variable 
 - **Radius** — component shapes (buttons, inputs, badges, cards) bind to their `Radius/primitives` variable; everything else binds to `Radius/semantic`.
 - **Spacing** — auto-layout gaps and padding bind to `Spacing/semantic`.
 - **Type** — apply the matching `typography/*` **text style** to every text layer: `headings/` text-display–text-h6 and text-eyebrow, `body/` text-xl–text-xs, `bold/` strong-xl–strong-xs for emphasized body text, `primitives/` text-button and text-badge inside those components. Match by size/weight/leading; snap near-misses to the closest style. No text layer is left without a text style.
-- **Shadows** — apply the matching `shadows/*` **effect style** (shadow-none through shadow-xl) to every drop shadow; snap hand-tuned shadows to the closest style. Never leave a raw effect where a style fits.
+- **Shadows** — apply the matching `shadows/*` **effect style** (shadow-none, then shadow-2xs through shadow-2xl) to every drop shadow; snap hand-tuned shadows to the closest style. Never leave a raw effect where a style fits.
 - **Snapping** — a value within tolerance of a token (~2px numeric, near-identical color) is a rounding artifact: snap the layer to the token and bind it. A value far from every token gets bound to the nearest reasonable token **only if visually indistinguishable**; otherwise leave it hardcoded and report it — never silently distort the design.
 - Rebind **every** instance, including deep inside component instances and nested frames. Missed nodes are the most common failure of this task — sweep exhaustively, don't sample.
 

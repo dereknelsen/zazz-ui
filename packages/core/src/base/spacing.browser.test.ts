@@ -2,7 +2,8 @@
 
 /**
  * @fileoverview Spacing and margin utilities: dual mode on padding and gap, a gap
- * tier with no base (allowlisted), and margin's `auto` keyword.
+ * tier with no base (allowlisted), margin's `auto` keyword, and `auto` on the side
+ * insets.
  */
 
 import { describe, expect, it } from "vite-plus/test";
@@ -42,5 +43,30 @@ describe("spacing and margin", () => {
     const m = root.querySelector("[data-m]")!;
     expect(c.getBoundingClientRect().left - root.getBoundingClientRect().left).toBe(200);
     expect(px(style(m, "margin-inline-start"))).toBeCloseTo(scale(2), 1);
+  });
+
+  it("--top and --bottom take auto, and a breakpoint tier releases a side", async () => {
+    const el = mount(
+      `<div style="--position: sticky; --top: auto; --bottom: 0; --bottom--md: auto; --top--md: 4">x</div>`,
+    );
+    await atWidth(below("md"));
+    expect(style(el, "inset-block-start")).toBe("auto");
+    expect(style(el, "inset-block-end")).toBe("0px");
+    await atWidth(at("md"));
+    expect(style(el, "inset-block-end")).toBe("auto");
+    expect(px(style(el, "inset-block-start"))).toBeCloseTo(scale(4), 1);
+  });
+
+  it("--left and --right take auto too", async () => {
+    // sticky, as above: an absolute element reports an auto inset as its used length
+    const el = mount(
+      `<div style="--position: sticky; --left: 0; --left--md: auto; --right: auto; --right--md: 2">x</div>`,
+    );
+    await atWidth(below("md"));
+    expect(style(el, "inset-inline-start")).toBe("0px");
+    expect(style(el, "inset-inline-end")).toBe("auto");
+    await atWidth(at("md"));
+    expect(style(el, "inset-inline-start")).toBe("auto");
+    expect(px(style(el, "inset-inline-end"))).toBeCloseTo(scale(2), 1);
   });
 });

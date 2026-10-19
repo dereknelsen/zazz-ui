@@ -15,6 +15,14 @@ primitive: dialog
 
 {% examples primitive="dialog" /%}
 
+## Sizes
+
+`data-dialog-size` follows the [layout](/api/primitives/layout/) sizes. `sm`, `md`, `lg`, `xl`, and `2xl` cap the width at that band (40, 48, 64, 80, and 96rem) and at the screen, inside the gutters. `full` spans the screen inside the gutters. `bleed` fills it edge to edge, with no radius or shadow, which is what the mobile menu and the lightbox use. With no size a dialog is `sm`.
+
+```html
+<dialog data-ui="dialog" data-dialog-size="lg" closedby="any">…</dialog>
+```
+
 ## Light dismiss
 
 `closedby="any"` on the `<dialog>` lets a click on the backdrop close it, next to Esc. Chrome 134 and Firefox 141 do this natively. Safari 26 knows `closedby` but only its `none` and `closerequest` values, so `any` falls back to `closerequest` and the backdrop does nothing. The kit's dialog lifecycle script fills that gap: where `any` does not round-trip through the `closedBy` property, a press and release on the backdrop of a `closedby="any"` dialog calls `requestClose()`, which fires `cancel` as the native path does. Nothing in the markup changes, and the fallback stays idle where the browser handles it. A dialog that holds a form or a search still deserves a visible close button, for the people who find neither the backdrop nor Esc. `closedby="none"` (alert dialogs) and the default are left alone in both cases.

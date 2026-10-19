@@ -1,0 +1,70 @@
+---
+import { spotters } from '../../lib/fieldnotes.ts';
+import CardHeader from './CardHeader.astro';
+---
+
+<section
+  data-ui='card'
+  data-card-variant='outline'
+  aria-labelledby='fn-spotters-title'
+  style='
+    --place-content: start stretch;
+    --gap: 4;
+    --mb: 6;
+    --bg: var(--color-card);
+    --elevation: 1.5;
+  '
+>
+  <CardHeader
+    id='fn-spotters-title'
+    title='Spotters'
+    description='People on the record for your species.'
+  />
+  <ul data-ui='divide-y' style='--display: grid'>
+    {
+      spotters.map((p) => (
+        <li
+          style='
+            --display: flex;
+            --items: center;
+            --py: 3;
+            --gap: 3;
+          '
+        >
+          <span
+            aria-hidden='true'
+            data-ui='text-xs'
+            style='
+              --display: grid;
+              --place-items: center;
+              --shrink: 0;
+              --size: 9;
+              --font-weight: strong;
+              --text: var(--color-muted-foreground);
+              --bg: var(--color-muted);
+              --radius: full;
+            '
+          >
+            {p.initials}
+          </span>
+          <span
+            style='
+              --display: grid;
+              --min-w: 0;
+            '
+          >
+            <span data-ui='text-sm' style='--font-weight: strong'>
+              {p.name}
+            </span>
+            <span
+              data-ui='text-sm truncate'
+              style='--text: var(--color-muted-foreground)'
+            >
+              {p.detail}
+            </span>
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+</section>

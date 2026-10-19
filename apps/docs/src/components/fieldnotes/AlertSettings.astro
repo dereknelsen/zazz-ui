@@ -1,0 +1,174 @@
+---
+import { BellRing } from '@lucide/astro';
+import CardHeader from './CardHeader.astro';
+
+const alerts = [
+  {
+    name: 'alert-dodo',
+    label: 'Notify me when a dodo is spotted',
+    hint: 'Push and email',
+    checked: true,
+  },
+  {
+    name: 'alert-rare',
+    label: 'Rare species near me',
+    hint: 'Within 50 miles',
+    checked: true,
+  },
+  {
+    name: 'alert-confirmed',
+    label: 'Life list milestones',
+    hint: 'When a sighting of yours is confirmed',
+    checked: true,
+  },
+  {
+    name: 'alert-digest',
+    label: 'Weekly digest',
+    hint: 'Sundays at 8 a.m.',
+    checked: false,
+  },
+];
+---
+
+<section
+  data-ui='card'
+  data-card-variant='outline'
+  aria-labelledby='fn-alerts-title'
+  style='
+    --col-span: 2;
+    --mb: 6;
+    --place-content: start stretch;
+    --gap: 4;
+    --bg: var(--color-card);
+    --elevation: 1.5;
+  '
+>
+  <CardHeader
+    id='fn-alerts-title'
+    title='Alerts'
+    description='Choose what reaches your phone.'
+  />
+  <div
+    style='
+      --display: grid;
+      --items: start;
+      --grid-cols: 2;
+      --gap: 8;
+    '
+  >
+    <fieldset data-ui='field-group'>
+      <legend data-ui='sr-only'>Alerts</legend>
+      <div style='
+          --display: grid;
+          --gap: 4;
+        '>
+        {
+          alerts.map((a) => (
+            <div
+              data-ui='field'
+              data-field-orientation='horizontal'
+              style='
+                --justify: space-between;
+                --gap: 4;
+              '
+            >
+              <div style='--display: grid'>
+                <label data-field-slot='label' for={`fn-${a.name}`}>
+                  {a.label}
+                </label>
+                <span
+                  data-ui='text-sm'
+                  style='--text: var(--color-muted-foreground)'
+                >
+                  {a.hint}
+                </span>
+              </div>
+              <label
+                style='
+                  --display: inline-flex;
+                  --shrink: 0;
+                '
+              >
+                <input
+                  type='checkbox'
+                  role='switch'
+                  id={`fn-${a.name}`}
+                  name={a.name}
+                  checked={a.checked}
+                />
+              </label>
+            </div>
+          ))
+        }
+      </div>
+    </fieldset>
+
+    <div style='
+        --display: grid;
+        --gap: 4;
+      '>
+      <fieldset data-ui='field-group'>
+        <legend>Quiet hours</legend>
+        <div
+          style='
+            --display: grid;
+            --grid-cols: 2;
+            --gap: 4;
+          '
+        >
+          <div data-ui='field'>
+            <label data-field-slot='label' for='fn-quiet-from'>From</label>
+            <input
+              data-ui='input'
+              id='fn-quiet-from'
+              name='quiet-from'
+              type='time'
+              value='22:00'
+            />
+          </div>
+          <div data-ui='field'>
+            <label data-field-slot='label' for='fn-quiet-to'>To</label>
+            <input
+              data-ui='input'
+              id='fn-quiet-to'
+              name='quiet-to'
+              type='time'
+              value='06:00'
+            />
+          </div>
+        </div>
+        <p data-ui='text-sm' style='--text: var(--color-muted-foreground)'>
+          Anything spotted overnight waits for the morning.
+        </p>
+      </fieldset>
+      <aside
+        data-ui='callout'
+        data-callout-variant='info'
+        aria-labelledby='fn-alerts-quiet'
+      >
+        <p
+          id='fn-alerts-quiet'
+          data-ui='text-sm'
+          style='
+            --display: flex;
+            --items: center;
+            --gap: 2;
+            --font-weight: strong;
+          '
+        >
+          <BellRing
+            aria-hidden='true'
+            style='
+              --shrink: 0;
+              --size: 4;
+            '
+          />
+          All quiet
+        </p>
+        <p data-ui='text-sm'>
+          No alerts have fired since 1918. We'll keep listening.
+        </p>
+      </aside>
+    </div>
+  </div>
+</section>

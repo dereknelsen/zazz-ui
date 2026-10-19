@@ -1,7 +1,9 @@
 /**
  * @fileoverview Elevation prototype: writes the shadow formula as CSS from the
- * controls, so the browser evaluates the same math the generator will emit.
- * `elevationLayers()` is the function to port to `generate-utilities.ts`.
+ * controls, so the browser evaluates the same math the generator emits. The box
+ * form of `elevationLayers()` mirrors `elevationLayers()` and `ELEVATION_LAYERS`
+ * in packages/core/scripts/generate-utilities.ts; tune here, then copy the
+ * numbers there.
  */
 
 import "@zazz-ui/core/index.ts";
@@ -15,15 +17,22 @@ interface Layer {
   c: number;
   /** Blur as a share of the layer's distance. */
   r: number;
+  /** Spread as a share of the layer's blur, drawn negative (the box form only). */
+  s: number;
 }
 
-/** Derek's tuning (2026-10-15): four layers; blur ratios fitted to today's `--shadow-2xl`. */
+/**
+ * The first four rows are the generator's layers (the "Layers" select defaults to
+ * 4); the fifth is here to try. Distances are fitted to the old `--shadow-2xl`.
+ * With `r ≤ 1` and `s ≥ 0.5` a layer never shows above the element, and its
+ * sides sit flush or inward.
+ */
 const LAYERS: Layer[] = [
-  { t: 0, m: 0.04, c: 0.08, r: 2.2 },
-  { t: 0.5, m: 0.02, c: 0.06, r: 1 },
-  { t: 1.5, m: 0.012, c: 0.05, r: 0.6 },
-  { t: 4, m: 0.006, c: 0.04, r: 0.4 },
-  { t: 8, m: 0.003, c: 0.03, r: 0.28 },
+  { t: 0, m: 0.04, c: 0.08, r: 1, s: 0.5 },
+  { t: 0.5, m: 0.02, c: 0.06, r: 0.8, s: 0.5 },
+  { t: 1.5, m: 0.012, c: 0.05, r: 0.6, s: 0.55 },
+  { t: 4, m: 0.006, c: 0.04, r: 0.45, s: 0.6 },
+  { t: 8, m: 0.003, c: 0.03, r: 0.28, s: 0.6 },
 ];
 
 /**
@@ -48,16 +57,17 @@ export function elevationLayers(
       const blur = `max(1px, calc(${d} * ${layer.r}))`;
       const alpha = `clamp(0, calc((abs(${n}) - ${layer.t}) * ${layer.m}), ${layer.c})`;
       const color = `oklch(from ${tint} l c h / ${alpha})`;
+      // drop-shadow() has no spread: the old form, kept to compare against
       return form === "drop"
         ? `drop-shadow(${color} ${x} ${y} ${blur})`
-        : `${x} ${y} ${blur} 0 ${color}`;
+        : `${x} ${y} ${blur} calc(${blur} * -${layer.s}) ${color}`;
     })
     .join(form === "drop" ? " " : ", ");
 }
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const tbody = $("params").querySelector("tbody")!;
-const fields = ["t", "m", "c", "r"] as const;
+const fields = ["t", "m", "c", "r", "s"] as const;
 
 LAYERS.forEach((layer, i) => {
   const row = tbody.insertRow();

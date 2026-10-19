@@ -1,0 +1,39 @@
+---
+/**
+ * An overlapping row of initials avatars (the avatar fragment's fallback face).
+ * --color-muted is translucent, so it is layered over the card color as a flat
+ * gradient: an overlapped avatar never shows through.
+ */
+interface Props {
+  initials: string[];
+  label: string;
+}
+const { initials, label } = Astro.props;
+---
+
+<div role='img' aria-label={label} style='--display: flex'>
+  {
+    initials.map((text, i) => (
+      <span
+        aria-hidden='true'
+        data-ui='text-2xs'
+        style={`
+          --display: grid;
+          --place-items: center;
+          --size: 8;
+          --ml: ${i === 0 ? 0 : -2};
+          --font-weight: strong;
+          --text: var(--color-muted-foreground);
+          --bg: var(--color-card);
+          --bg-linear: to bottom;
+          --bg-stops: var(--color-muted), var(--color-muted);
+          --radius: full;
+          --ring: 2;
+          --ring-color: var(--color-card);
+        `}
+      >
+        {text}
+      </span>
+    ))
+  }
+</div>

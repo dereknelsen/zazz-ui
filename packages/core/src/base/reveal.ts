@@ -15,8 +15,8 @@ interface RevealConfig {
   wait: number;
   /** Default translation distance for slide animations. */
   distance: string;
-  /** Default delay between staggered elements in milliseconds. */
-  step: number;
+  /** Default delay between staggered elements (ms number or CSS time string). */
+  step: number | string;
   /** Scale factor for grow animations (< 1). */
   grow: number;
   /** Scale factor for shrink animations (> 1). */
@@ -43,6 +43,12 @@ interface RevealOptions {
  *   <div>Item 1</div>
  *   <div>Item 2</div>
  * </div>
+ *
+ * @example
+ * <!-- Stagger step from CSS: the group or any ancestor (theme, section) -->
+ * <section style="--ui-reveal-global-stagger-step: 60ms">
+ *   <ul data-reveal-each="slide-up">…</ul>
+ * </section>
  */
 
 /**
@@ -90,7 +96,7 @@ function parseCssTimeMs(value: string): number {
  *     ease: "ease-in-out",
  *     threshold: 0.3,
  *     margin: "100px",
- *     step: 40,
+ *     step: 40, // or "40ms"; sets --ui-reveal-global-stagger-step
  *   },
  * });
  */
@@ -114,11 +120,11 @@ class Reveal {
     return {
       margin: "0px",
       threshold: 0.2,
-      duration: getRootCssVar("--ui-reveal-global-duration") || "400ms",
+      duration: getRootCssVar("--ui-reveal-global-duration") || "1000ms",
       ease: getRootCssVar("--ui-reveal-global-timing-function") || "cubic-bezier(0.4, 0, 0.2, 1)",
       wait: parseCssTimeMs(getRootCssVar("--ui-reveal-global-wait")),
-      distance: getRootCssVar("--ui-reveal-global-distance") || "1rem",
-      step: 80,
+      distance: getRootCssVar("--ui-reveal-global-distance") || "2rem",
+      step: getRootCssVar("--ui-reveal-global-stagger-step") || "120ms",
       grow: parseFloat(getRootCssVar("--ui-reveal-global-grow")) || 0.97,
       shrink: parseFloat(getRootCssVar("--ui-reveal-global-shrink")) || 1.03,
     };
@@ -215,10 +221,13 @@ class Reveal {
    * @description Configures stagger animation properties and observes child elements.
    *
    * The stagger delay (`base + step × position`) is computed natively where
-   * possible: the group carries `--ui-reveal-stagger-base`/`--ui-reveal-stagger-step`
-   * and each child derives its own `--ui-reveal-wait` via `sibling-index()` in
-   * reveal.css (reversed groups count from the end via `sibling-count()`).
-   * Where unsupported (Firefox), the same math runs here and lands as a
+   * possible: each child derives its own `--ui-reveal-wait` via `sibling-index()`
+   * in reveal.css (reversed groups count from the end via `sibling-count()`),
+   * reading `--ui-reveal-stagger-base`/`--ui-reveal-stagger-step` from the
+   * cascade. Those are written inline only for `data-reveal-wait`/`data-reveal-step`,
+   * so CSS can set the step on the group or any ancestor (directly, or by
+   * overriding `--ui-reveal-global-stagger-step`). Where unsupported (Firefox),
+   * the same values are resolved from computed style and the math lands as a
    * per-child inline `--ui-reveal-wait`.
    *
    * @param groupElement - The parent stagger container.
@@ -228,13 +237,14 @@ class Reveal {
     const groupOptions = this.#getElementObserverOptions(groupElement);
     const groupObserver = this.#getObserver(groupOptions);
 
+    const stepAttr = dataset.revealStep ? Math.max(0, parseCssTimeMs(dataset.revealStep)) : null;
+    const waitAttr = dataset.revealWait ? Math.max(0, parseCssTimeMs(dataset.revealWait)) : null;
+
     const groupConfig = {
-      step: Math.max(0, parseInt(dataset.revealStep || this.config.step.toString(), 10) || 0),
       duration: dataset.revealDuration
         ? Math.max(0, parseInt(dataset.revealDuration, 10) || 0)
         : this.config.duration,
       ease: dataset.revealEase || this.config.ease,
-      baseWait: Math.max(0, parseInt(dataset.revealWait || this.config.wait.toString(), 10) || 0),
       distance: dataset.revealDistance || this.config.distance,
       order: dataset.revealOrder,
     };
@@ -242,11 +252,24 @@ class Reveal {
     const childrenArray = Array.from(groupElement.children);
     const sequence = groupConfig.order === "reversed" ? childrenArray.reverse() : childrenArray;
 
-    if (supportsSiblingIndex) {
-      this.#setRevealProperties(groupElement, {
-        "--ui-reveal-stagger-base": `${groupConfig.baseWait}ms`,
-        "--ui-reveal-stagger-step": `${groupConfig.step}ms`,
-      });
+    // Attributes win; otherwise the cascade (inline style, CSS, globals) decides.
+    this.#setRevealProperties(groupElement, {
+      "--ui-reveal-stagger-base": waitAttr !== null ? `${waitAttr}ms` : null,
+      "--ui-reveal-stagger-step": stepAttr !== null ? `${stepAttr}ms` : null,
+    });
+
+    // Fallback only: resolve the same cascade reveal.css uses natively.
+    let baseWait = 0;
+    let step = 0;
+    if (!supportsSiblingIndex) {
+      const computed = getComputedStyle(groupElement);
+      const cssTime = (local: string, global: string) =>
+        Math.max(
+          0,
+          parseCssTimeMs(computed.getPropertyValue(local) || computed.getPropertyValue(global)),
+        );
+      baseWait = cssTime("--ui-reveal-stagger-base", "--ui-reveal-global-wait");
+      step = cssTime("--ui-reveal-stagger-step", "--ui-reveal-global-stagger-step");
     }
 
     sequence.forEach((child, i) => {
@@ -256,9 +279,7 @@ class Reveal {
         "--ui-reveal-duration": this.#formatTime(groupConfig.duration),
         "--ui-reveal-ease": groupConfig.ease,
         // Fallback only: natively each child computes this in reveal.css.
-        "--ui-reveal-wait": supportsSiblingIndex
-          ? null
-          : `${groupConfig.baseWait + groupConfig.step * i}ms`,
+        "--ui-reveal-wait": supportsSiblingIndex ? null : `${baseWait + step * i}ms`,
         "--ui-reveal-distance": groupConfig.distance,
         "--ui-reveal-scale": dataset.revealScale || null,
       });
@@ -310,6 +331,7 @@ class Reveal {
     rootStyle.setProperty("--ui-reveal-global-distance", this.config.distance);
     rootStyle.setProperty("--ui-reveal-global-grow", this.config.grow.toString());
     rootStyle.setProperty("--ui-reveal-global-shrink", this.config.shrink.toString());
+    rootStyle.setProperty("--ui-reveal-global-stagger-step", this.#formatTime(this.config.step));
 
     document.querySelectorAll("[data-reveal]").forEach((element) => {
       if (element instanceof HTMLElement) this.#configureSingleElement(element);

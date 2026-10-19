@@ -4,7 +4,7 @@
  *
  * @layer      variables, components
  * @requires   _layers.css, _variables.css, dialog.css, accordion.css
- * @uses       Composes [data-ui~="dialog"][data-dialog-size="screen"] — fullscreen native <dialog>
+ * @uses       Composes [data-ui~="dialog"][data-dialog-size="bleed"] — fullscreen native <dialog>
  * @uses       Invoker Commands (command="show-modal") — open without JS (markup)
  * @uses       view-transition-name — stable menu across navigations
  * @uses       @starting-style — viewport enter animation
@@ -38,7 +38,7 @@
 @layer ui.components {
   /* ===========================================================================
   MOBILE MENU — full-screen dialog with accordion-based nested navigation
-  - Composes [data-ui~="dialog"][data-dialog-size="screen"] + the accordion for expand/collapse
+  - Composes [data-ui~="dialog"][data-dialog-size="bleed"] + the accordion for expand/collapse
   - No JavaScript — Invoker Commands to open, native dialog close, native details
   =========================================================================== */
 

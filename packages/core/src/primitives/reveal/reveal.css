@@ -11,8 +11,9 @@
  * @uses       Behaviour requires zazz/scripts/reveal.js (IntersectionObserver)
  * @tokens     --ui-reveal-global-* (@layer variables);
  *             per-instance --ui-reveal-* set from data-* attributes by reveal.js;
- *             --ui-reveal-stagger-base / --ui-reveal-stagger-step written on stagger
- *             groups by reveal.js for the native sibling-index() path
+ *             --ui-reveal-stagger-base / --ui-reveal-stagger-step on a stagger
+ *             group (written by reveal.js from data-reveal-wait / data-reveal-step,
+ *             or set in CSS) override the global wait / stagger step
  *
  * A lightweight, configurable animation system for scroll-based reveals. Focuses
  * on viewport entry animations for single elements and direct children of stagger
@@ -32,8 +33,10 @@
  *   data-reveal="animation-name"        single elements
  *   data-reveal-each="animation-name"   groups; applied to children
  *   data-reveal-duration="300"          ms
- *   data-reveal-wait="0"                ms, base delay
- *   data-reveal-step="80"               ms, stagger delay for groups
+ *   data-reveal-wait="0"                ms or a CSS time (0.1s), base delay
+ *   data-reveal-step="120"              ms or a CSS time, stagger delay for groups (or set
+ *                                       --ui-reveal-stagger-step on the group,
+ *                                       --ui-reveal-global-stagger-step on any ancestor)
  *   data-reveal-ease="ease-in-out"
  *   data-reveal-distance="2rem"         translation distance
  *   data-reveal-order="reversed"        stagger order for groups
@@ -44,12 +47,13 @@
 
 @layer variables {
   :root {
-    --ui-reveal-global-duration: var(--default-transition-duration);
+    --ui-reveal-global-duration: 1000ms;
     --ui-reveal-global-timing-function: var(--default-transition-timing-function);
     --ui-reveal-global-wait: 0ms;
-    --ui-reveal-global-distance: 1rem;
+    --ui-reveal-global-distance: 2rem;
     --ui-reveal-global-grow: 0.97;
     --ui-reveal-global-shrink: 1.03;
+    --ui-reveal-global-stagger-step: 120ms;
   }
 }
 
@@ -82,21 +86,23 @@
     }
 
     /* Native stagger: wait = base + step × (index − 1); reversed groups count
-       from the end. reveal.js writes the base/step on the group and skips its
-       per-child --ui-reveal-wait fallback here. The literal 80ms mirrors the JS
-       default step. */
+       from the end. Base/step come from the group (data-reveal-wait/-step via
+       reveal.js, or CSS) or the inherited globals; reveal.js skips its per-child
+       --ui-reveal-wait fallback here. */
     @supports (top: calc(sibling-index() * 1px)) {
       [data-reveal-each] > * {
         --ui-reveal-wait: calc(
           var(--ui-reveal-stagger-base, var(--ui-reveal-global-wait)) +
-            var(--ui-reveal-stagger-step, 80ms) * (sibling-index() - 1)
+            var(--ui-reveal-stagger-step, var(--ui-reveal-global-stagger-step)) *
+            (sibling-index() - 1)
         );
       }
 
       [data-reveal-each][data-reveal-order="reversed"] > * {
         --ui-reveal-wait: calc(
           var(--ui-reveal-stagger-base, var(--ui-reveal-global-wait)) +
-            var(--ui-reveal-stagger-step, 80ms) * (sibling-count() - sibling-index())
+            var(--ui-reveal-stagger-step, var(--ui-reveal-global-stagger-step)) *
+            (sibling-count() - sibling-index())
         );
       }
     }

@@ -3,6 +3,13 @@
   "framework": "astro",
   "buildCommand": "cd ../.. && pnpm exec vp run --no-cache core#build && pnpm exec vp run --no-cache docs#build",
   "outputDirectory": "dist",
+  "redirects": [
+    {
+      "source": "/api/utilities/from-css/?",
+      "destination": "/docs/concepts/utilities-reference/",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/zazz/(.*)",

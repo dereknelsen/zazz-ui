@@ -1,0 +1,232 @@
+---
+/**
+ * Recent sightings. Filtering, sorting, and paging run in `<fieldnotes-sightings>`
+ * (scripts/fieldnotes.ts) over the rows rendered here; without it the table
+ * still reads in full.
+ */
+import { ArrowUpDown } from '@lucide/astro';
+import {
+  STATUS_VARIANT,
+  bySlug,
+  sightings,
+  sprite,
+} from '../../lib/fieldnotes.ts';
+import CardHeader from './CardHeader.astro';
+import Sprite from './Sprite.astro';
+
+const PAGE_SIZE = 5;
+const formatDate = (date: string) =>
+  date.length === 4 ?
+    date
+  : new Date(`${date}T12:00:00Z`).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      timeZone: 'UTC',
+    });
+---
+
+<fieldnotes-sightings
+  data-ui='card'
+  data-card-variant='outline'
+  data-page-size={PAGE_SIZE}
+  aria-labelledby='fn-table-title'
+  style='
+    --display: grid;
+    --position: relative;
+    --place-content: start stretch;
+    --col-span: 3;
+    --gap: 4;
+    --mb: 6;
+    --min-w: 0;
+    --bg: var(--color-card);
+    --elevation: 1.5;
+  '
+>
+  <CardHeader
+    id='fn-table-title'
+    title='Recent sightings'
+    description='Yours and the historical record, newest first.'
+  >
+    <select
+      data-ui='select'
+      name='status'
+      aria-label='Filter by status'
+      data-fieldnotes-filter
+      style='--w: auto'
+    >
+      <button><selectedcontent></selectedcontent></button>
+      <option value='' selected>All sightings</option>
+      <option value='Confirmed'>Confirmed</option>
+      <option value='Pending review'>Pending review</option>
+      <option value='this-year'>Confirmed this year</option>
+    </select>
+  </CardHeader>
+
+  <div style='
+      --min-w: 0;
+      --overflow-x: auto;
+    '>
+    <table class='fieldnotes__table' data-ui='table'>
+      <thead>
+        <tr>
+          <th aria-sort='none' data-sort-key='species'>
+            <button
+              data-ui='button'
+              data-button-variant='ghost'
+              data-button-size='sm'
+              type='button'
+              style='--ml: -2'
+            >
+              Species <ArrowUpDown aria-hidden='true' />
+            </button>
+          </th>
+          <th>Location</th>
+          <th aria-sort='descending' data-sort-key='date'>
+            <button
+              data-ui='button'
+              data-button-variant='ghost'
+              data-button-size='sm'
+              type='button'
+              style='--ml: -2'
+            >
+              Date <ArrowUpDown aria-hidden='true' />
+            </button>
+          </th>
+          <th>Observer</th>
+          <th style='--text-align: end'>Count</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          sightings.map((row, i) => {
+            const s = bySlug[row.slug];
+            const tip = `fn-row-tip-${i}`;
+            return (
+              <tr
+                data-species={s.name}
+                data-date={row.date}
+                data-status={row.status}
+                data-year={row.date.slice(0, 4)}
+              >
+                <td>
+                  <span
+                    style='
+                      --display: flex;
+                      --items: center;
+                      --gap: 2;
+                      --whitespace: nowrap;
+                    '
+                  >
+                    <ui-tooltip>
+                      <button
+                        type='button'
+                        interestfor={tip}
+                        aria-label={`${s.name}, ${s.scientific}`}
+                        style='
+                          --display: grid;
+                          --p: 0;
+                          --bg: transparent;
+                          --radius: 1.5;
+                        '
+                      >
+                        <img
+                          class='sprite'
+                          src={sprite(s.slug)}
+                          alt=''
+                          width='512'
+                          height='512'
+                          loading='lazy'
+                          decoding='async'
+                          style='
+                            --size: 8;
+                            --object-fit: contain;
+                          '
+                        />
+                      </button>
+                      <div data-tooltip-slot='content' id={tip} popover='hint'>
+                        <i>{s.scientific}</i>
+                        <span data-tooltip-slot='arrow' aria-hidden='true' />
+                      </div>
+                    </ui-tooltip>
+                    {s.name}
+                  </span>
+                </td>
+                <td style='--whitespace: nowrap'>{row.location}</td>
+                <td class='fieldnotes__num' style='--whitespace: nowrap'>
+                  <time datetime={row.date}>{formatDate(row.date)}</time>
+                </td>
+                <td style='--whitespace: nowrap'>{row.observer}</td>
+                <td class='fieldnotes__num' style='--text-align: end'>
+                  {row.count}
+                </td>
+                <td>
+                  <span
+                    data-ui='badge'
+                    data-badge-variant={STATUS_VARIANT[row.status]}
+                    style='--whitespace: nowrap'
+                  >
+                    {row.status}
+                  </span>
+                </td>
+              </tr>
+            );
+          })
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div
+    data-fieldnotes-empty
+    hidden
+    style='
+      --display: grid;
+      --place-items: center;
+      --py: 6;
+      --gap: 2;
+      --text-align: center;
+    '
+  >
+    <Sprite slug='binoculars' size={32} />
+    <p style='--font-weight: strong'>No sightings match.</p>
+    <p data-ui='text-sm' style='--text: var(--color-muted-foreground)'>
+      Keep looking.
+    </p>
+  </div>
+
+  <footer
+    data-fieldnotes-pager
+    style='
+      --display: flex;
+      --flex-wrap: wrap;
+      --items: center;
+      --justify: space-between;
+      --gap: 4;
+    '
+  >
+    <p
+      data-ui='text-sm'
+      data-fieldnotes-range
+      aria-live='polite'
+      style='--text: var(--color-muted-foreground)'
+    >
+      {sightings.length} sightings
+    </p>
+    <ui-button-group role='group' aria-label='Pages'>
+      <button
+        data-ui='button'
+        data-button-variant='outline'
+        type='button'
+        data-fieldnotes-page='prev'>Previous</button
+      >
+      <button
+        data-ui='button'
+        data-button-variant='outline'
+        type='button'
+        data-fieldnotes-page='next'>Next</button
+      >
+    </ui-button-group>
+  </footer>
+</fieldnotes-sightings>

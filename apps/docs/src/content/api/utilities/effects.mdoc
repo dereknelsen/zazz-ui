@@ -6,13 +6,9 @@ sectionOrder: 3
 order: 8
 ---
 
-`--elevation` takes a height and draws it as four soft drop-shadows in `filter`: `--elevation: 4` uses the layers of `--shadow-md`, and the shadow grows and darkens as the number rises. A negative height draws like its absolute value, and a word draws nothing. It takes states and breakpoints (`--elevation: 1.5; --elevation--hover: 4`) and composes with `--filter` (`--filter: none` keeps it). A drop-shadow follows the element's painted shape, so an element with no background shadows its text, and `filter` makes the element a stacking context and the containing block for fixed and absolute descendants.
+`--elevation` takes a height and draws it as a four-layer `box-shadow`: `--elevation: 4` uses the layers of `--shadow-md`, and the shadow grows and darkens as the number rises. Every layer blurs by at most its distance and pulls in by a negative spread, so with the light overhead nothing shows above the element or past its sides. A negative height draws like its absolute value, and a word draws nothing. It takes states and breakpoints (`--elevation: 1.5; --elevation--hover: 4`), shares one `box-shadow` with the `--ring*` utilities (rings first) and `--shadow` (an explicit `--shadow` wins), and replaces a primitive's resting shadow where you set it.
 
 `--shadow` is the box-shadow form: a token (`--shadow: var(--shadow-md)`) or any box-shadow, and it never removes a primitive's focus ring. `--shadow-tint` colors every shadow in a subtree and `--shadow-angle` turns the light: `0deg` is down, `90deg` left, `180deg` up, at any breakpoint or state (`--shadow-angle: 180deg` on a bottom sheet, `--shadow-angle--md: 0deg` once it becomes a card). `--default-shadow-angle` on `:root` sets it for the page. `--opacity` fades the whole element; for a translucent fill, see `--bg-alpha`.
-
-{% callout type="warning" title="Unreleased" %}
-`--elevation`, `--shadow-tint`, `--default-shadow-angle`, `--filter`, `--backdrop-filter`, and `--mix-blend` ship in 0.8.0, which is not on npm yet; the published 0.7.0 ignores them.
-{% /callout %}
 
 `--filter` takes any CSS filter list (`--filter: grayscale(1); --filter--hover: none` colors a logo on hover). `--backdrop-filter` filters what shows through the element, so it needs a translucent `--bg` to read as frosted glass (`--bg: var(--color-background); --bg-alpha: 0.6; --backdrop-filter: blur(12px)`). `--mix-blend` sets `mix-blend-mode` (`multiply`, `screen`, `overlay`, …) to blend the element with what is behind it. All three take state tiers, work tier-only, and exist on `::before` and `::after` as `--before-filter`, `--after-mix-blend`, and so on. A `--filter` or `--backdrop-filter` other than `none` makes the element the containing block for its `position: fixed` descendants.
 

@@ -317,8 +317,8 @@
 
   :where([data-ui~="badge"][data-badge-variant="primary"]) {
     --_badge-bg: var(--color-primary);
-    --_badge-bg--hover: oklch(from var(--color-primary) l c h / 0.9);
-    --_badge-bg--active: oklch(from var(--color-primary) l c h / 0.8);
+    --_badge-bg--hover: oklch(from var(--color-primary) l c h / 0.8);
+    --_badge-bg--active: oklch(from var(--color-primary) l c h / 0.7);
 
     --_badge-text: var(--color-primary-foreground);
     --_badge-text--hover: var(--color-primary-foreground);
@@ -331,8 +331,8 @@
 
   :where([data-ui~="badge"][data-badge-variant="secondary"]) {
     --_badge-bg: var(--color-secondary);
-    --_badge-bg--hover: oklch(from var(--color-secondary) l c h / 0.9);
-    --_badge-bg--active: oklch(from var(--color-secondary) l c h / 0.8);
+    --_badge-bg--hover: oklch(from var(--color-secondary) l c h / 0.8);
+    --_badge-bg--active: oklch(from var(--color-secondary) l c h / 0.7);
 
     --_badge-text: var(--color-secondary-foreground);
     --_badge-text--hover: var(--color-secondary-foreground);
@@ -345,8 +345,8 @@
 
   :where([data-ui~="badge"][data-badge-variant="tertiary"]) {
     --_badge-bg: var(--color-tertiary);
-    --_badge-bg--hover: oklch(from var(--color-tertiary) l c h / 0.9);
-    --_badge-bg--active: oklch(from var(--color-tertiary) l c h / 0.8);
+    --_badge-bg--hover: oklch(from var(--color-tertiary) l c h / 0.8);
+    --_badge-bg--active: oklch(from var(--color-tertiary) l c h / 0.7);
 
     --_badge-text: var(--color-tertiary-foreground);
     --_badge-text--hover: var(--color-tertiary-foreground);

@@ -305,7 +305,12 @@ export function languageData(files: readonly string[], src: string): LanguageDat
     const file = definedIn.get(name)!;
     if (name.startsWith("--ui-")) {
       hooks[name] = { value, file };
-    } else if (basename(file).startsWith("_variables") || basename(file) === "_breakpoints.css") {
+    } else if (
+      basename(file).startsWith("_variables") ||
+      basename(file) === "_breakpoints.css" ||
+      // the --shadow-* tokens are generated into _shadows.css
+      basename(file) === "_shadows.css"
+    ) {
       tokens[name] = { value, file, ...resolveToken(value, defs) };
     }
   }

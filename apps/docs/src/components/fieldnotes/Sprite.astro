@@ -1,0 +1,28 @@
+---
+/**
+ * A static pixel sprite from `public/fieldnotes/`. The art is about 512×512 with the
+ * bird centered, so a small box still reads; `.sprite` keeps it pixelated
+ * (site.css).
+ */
+import { sprite } from "../../lib/fieldnotes.ts";
+
+interface Props {
+  slug: string;
+  /** Rendered size, a spacing-scale number. */
+  size?: number;
+  alt?: string;
+  eager?: boolean;
+}
+const { slug, size = 8, alt = "", eager = false } = Astro.props;
+---
+
+<img
+  class='sprite'
+  src={sprite(slug)}
+  alt={alt}
+  width='512'
+  height='512'
+  loading={eager ? "eager" : "lazy"}
+  decoding='async'
+  style={`--size: ${size}; --shrink: 0; --object-fit: contain`}
+/>

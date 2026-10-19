@@ -181,6 +181,49 @@
     --_top-num: var(--_top-resolved);
     inset-block-start: calc(var(--_top-len) + var(--_top-num) * var(--spacing));
   }
+  :where(:is([style*="--top: auto"])) {
+    inset-block-start: var(--_top-resolved);
+  }
+  @container (width >= 40rem) {
+    :where([style*="--top:"][style*="--top--sm:"]) {
+      inset-block-start: calc(var(--_top-len) + var(--_top-num) * var(--spacing));
+    }
+    :where([style*="--top:"]:is([style*="--top--sm: auto"])) {
+      inset-block-start: var(--_top-resolved);
+    }
+  }
+  @container (width >= 48rem) {
+    :where([style*="--top:"][style*="--top--md:"]) {
+      inset-block-start: calc(var(--_top-len) + var(--_top-num) * var(--spacing));
+    }
+    :where([style*="--top:"]:is([style*="--top--md: auto"])) {
+      inset-block-start: var(--_top-resolved);
+    }
+  }
+  @container (width >= 64rem) {
+    :where([style*="--top:"][style*="--top--lg:"]) {
+      inset-block-start: calc(var(--_top-len) + var(--_top-num) * var(--spacing));
+    }
+    :where([style*="--top:"]:is([style*="--top--lg: auto"])) {
+      inset-block-start: var(--_top-resolved);
+    }
+  }
+  @container (width >= 80rem) {
+    :where([style*="--top:"][style*="--top--xl:"]) {
+      inset-block-start: calc(var(--_top-len) + var(--_top-num) * var(--spacing));
+    }
+    :where([style*="--top:"]:is([style*="--top--xl: auto"])) {
+      inset-block-start: var(--_top-resolved);
+    }
+  }
+  @container (width >= 96rem) {
+    :where([style*="--top:"][style*="--top--2xl:"]) {
+      inset-block-start: calc(var(--_top-len) + var(--_top-num) * var(--spacing));
+    }
+    :where([style*="--top:"]:is([style*="--top--2xl: auto"])) {
+      inset-block-start: var(--_top-resolved);
+    }
+  }
 
   :where([style*="--bottom:"], [style*="--bottom--"]) {
     --_bottom-resolved: var(--_bottom-2xl, var(--_bottom-xl, var(--_bottom-lg, var(--_bottom-md, var(--_bottom-sm, var(--_bottom))))));
@@ -190,6 +233,49 @@
     --_bottom-len: var(--_bottom-resolved);
     --_bottom-num: var(--_bottom-resolved);
     inset-block-end: calc(var(--_bottom-len) + var(--_bottom-num) * var(--spacing));
+  }
+  :where(:is([style*="--bottom: auto"])) {
+    inset-block-end: var(--_bottom-resolved);
+  }
+  @container (width >= 40rem) {
+    :where([style*="--bottom:"][style*="--bottom--sm:"]) {
+      inset-block-end: calc(var(--_bottom-len) + var(--_bottom-num) * var(--spacing));
+    }
+    :where([style*="--bottom:"]:is([style*="--bottom--sm: auto"])) {
+      inset-block-end: var(--_bottom-resolved);
+    }
+  }
+  @container (width >= 48rem) {
+    :where([style*="--bottom:"][style*="--bottom--md:"]) {
+      inset-block-end: calc(var(--_bottom-len) + var(--_bottom-num) * var(--spacing));
+    }
+    :where([style*="--bottom:"]:is([style*="--bottom--md: auto"])) {
+      inset-block-end: var(--_bottom-resolved);
+    }
+  }
+  @container (width >= 64rem) {
+    :where([style*="--bottom:"][style*="--bottom--lg:"]) {
+      inset-block-end: calc(var(--_bottom-len) + var(--_bottom-num) * var(--spacing));
+    }
+    :where([style*="--bottom:"]:is([style*="--bottom--lg: auto"])) {
+      inset-block-end: var(--_bottom-resolved);
+    }
+  }
+  @container (width >= 80rem) {
+    :where([style*="--bottom:"][style*="--bottom--xl:"]) {
+      inset-block-end: calc(var(--_bottom-len) + var(--_bottom-num) * var(--spacing));
+    }
+    :where([style*="--bottom:"]:is([style*="--bottom--xl: auto"])) {
+      inset-block-end: var(--_bottom-resolved);
+    }
+  }
+  @container (width >= 96rem) {
+    :where([style*="--bottom:"][style*="--bottom--2xl:"]) {
+      inset-block-end: calc(var(--_bottom-len) + var(--_bottom-num) * var(--spacing));
+    }
+    :where([style*="--bottom:"]:is([style*="--bottom--2xl: auto"])) {
+      inset-block-end: var(--_bottom-resolved);
+    }
   }
 
   :where([style*="--left:"], [style*="--left--"]) {
@@ -201,6 +287,49 @@
     --_left-num: var(--_left-resolved);
     inset-inline-start: calc(var(--_left-len) + var(--_left-num) * var(--spacing));
   }
+  :where(:is([style*="--left: auto"])) {
+    inset-inline-start: var(--_left-resolved);
+  }
+  @container (width >= 40rem) {
+    :where([style*="--left:"][style*="--left--sm:"]) {
+      inset-inline-start: calc(var(--_left-len) + var(--_left-num) * var(--spacing));
+    }
+    :where([style*="--left:"]:is([style*="--left--sm: auto"])) {
+      inset-inline-start: var(--_left-resolved);
+    }
+  }
+  @container (width >= 48rem) {
+    :where([style*="--left:"][style*="--left--md:"]) {
+      inset-inline-start: calc(var(--_left-len) + var(--_left-num) * var(--spacing));
+    }
+    :where([style*="--left:"]:is([style*="--left--md: auto"])) {
+      inset-inline-start: var(--_left-resolved);
+    }
+  }
+  @container (width >= 64rem) {
+    :where([style*="--left:"][style*="--left--lg:"]) {
+      inset-inline-start: calc(var(--_left-len) + var(--_left-num) * var(--spacing));
+    }
+    :where([style*="--left:"]:is([style*="--left--lg: auto"])) {
+      inset-inline-start: var(--_left-resolved);
+    }
+  }
+  @container (width >= 80rem) {
+    :where([style*="--left:"][style*="--left--xl:"]) {
+      inset-inline-start: calc(var(--_left-len) + var(--_left-num) * var(--spacing));
+    }
+    :where([style*="--left:"]:is([style*="--left--xl: auto"])) {
+      inset-inline-start: var(--_left-resolved);
+    }
+  }
+  @container (width >= 96rem) {
+    :where([style*="--left:"][style*="--left--2xl:"]) {
+      inset-inline-start: calc(var(--_left-len) + var(--_left-num) * var(--spacing));
+    }
+    :where([style*="--left:"]:is([style*="--left--2xl: auto"])) {
+      inset-inline-start: var(--_left-resolved);
+    }
+  }
 
   :where([style*="--right:"], [style*="--right--"]) {
     --_right-resolved: var(--_right-2xl, var(--_right-xl, var(--_right-lg, var(--_right-md, var(--_right-sm, var(--_right))))));
@@ -211,7 +340,49 @@
     --_right-num: var(--_right-resolved);
     inset-inline-end: calc(var(--_right-len) + var(--_right-num) * var(--spacing));
   }
-
+  :where(:is([style*="--right: auto"])) {
+    inset-inline-end: var(--_right-resolved);
+  }
+  @container (width >= 40rem) {
+    :where([style*="--right:"][style*="--right--sm:"]) {
+      inset-inline-end: calc(var(--_right-len) + var(--_right-num) * var(--spacing));
+    }
+    :where([style*="--right:"]:is([style*="--right--sm: auto"])) {
+      inset-inline-end: var(--_right-resolved);
+    }
+  }
+  @container (width >= 48rem) {
+    :where([style*="--right:"][style*="--right--md:"]) {
+      inset-inline-end: calc(var(--_right-len) + var(--_right-num) * var(--spacing));
+    }
+    :where([style*="--right:"]:is([style*="--right--md: auto"])) {
+      inset-inline-end: var(--_right-resolved);
+    }
+  }
+  @container (width >= 64rem) {
+    :where([style*="--right:"][style*="--right--lg:"]) {
+      inset-inline-end: calc(var(--_right-len) + var(--_right-num) * var(--spacing));
+    }
+    :where([style*="--right:"]:is([style*="--right--lg: auto"])) {
+      inset-inline-end: var(--_right-resolved);
+    }
+  }
+  @container (width >= 80rem) {
+    :where([style*="--right:"][style*="--right--xl:"]) {
+      inset-inline-end: calc(var(--_right-len) + var(--_right-num) * var(--spacing));
+    }
+    :where([style*="--right:"]:is([style*="--right--xl: auto"])) {
+      inset-inline-end: var(--_right-resolved);
+    }
+  }
+  @container (width >= 96rem) {
+    :where([style*="--right:"][style*="--right--2xl:"]) {
+      inset-inline-end: calc(var(--_right-len) + var(--_right-num) * var(--spacing));
+    }
+    :where([style*="--right:"]:is([style*="--right--2xl: auto"])) {
+      inset-inline-end: var(--_right-resolved);
+    }
+  }
 
 
 }

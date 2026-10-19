@@ -436,7 +436,7 @@ Gently rounded chips (`--radius-sm`, ~6px). Height `--ui-badge-h`. Variants (`da
 
 ### Dialog
 
-Native `<dialog data-ui="dialog">` via Invoker Commands API. `--color-card` surface, `--shadow-md`, `--radius-lg`. Backdrop: `--color-shade-900`. Sizes (`data-dialog-size`): `article` (default width), `container`, `screen`.
+Native `<dialog data-ui="dialog">` via Invoker Commands API. `--color-card` surface, `--shadow-md`, `--radius-lg`. Backdrop: `--color-shade-900`. Sizes (`data-dialog-size`) follow the layout bands: `sm` (default), `md`, `lg`, `xl`, `2xl`, `full` (viewport inside the gutters), `bleed` (edge to edge, no radius or shadow).
 
 ### Menu & Navigation Menu
 
@@ -448,7 +448,7 @@ CSS-first grouped radio inputs wrapped in `<ui-tabs>`. Segmented control with sl
 
 ### Cards
 
-`data-ui="card"`: `--color-card` / `--color-card-foreground`, `--radius-md`, hooks `--ui-card-*`. The default card is bare (no padding, border, or shadow) for edge-to-edge media; pad its parts with utilities. `data-card-variant` adds `--space-md` padding plus one treatment: `outline` (a `--color-border` border), `muted` (`--color-muted` background), or `floating` (`--shadow-sm`). Card figures take `--aspect: 3 / 2`. Copy `primitives/card/card.html`.
+`data-ui="card"`: `--color-card` / `--color-card-foreground`, `--radius-lg`, hooks `--ui-card-*`. The default card is bare (no padding, border, or shadow) for edge-to-edge media; pad its parts with utilities. `data-card-variant` adds `--space-md` padding plus one treatment: `outline` (a `--color-border` border), `muted` (`--color-muted` background), or `floating` (`--shadow-sm`). Card figures take `--aspect: 3 / 2`. Copy `primitives/card/card.html`.
 
 ### Forms
 
@@ -485,19 +485,19 @@ _Values shown throughout (spacing, radius, type sizes) are **desktop maximums**.
 
 ### Radius
 
-| Token           | Computed    | Use For                |
-| --------------- | ----------- | ---------------------- |
-| `--radius-none` | 0           | Sharp edges            |
-| `--radius-2xs`  | ~2px        | Hairline softening     |
-| `--radius-xs`   | ~4px        | Subtle softening       |
-| `--radius-sm`   | ~6px        | Badges                 |
-| `--radius-md`   | ~10px       | Buttons, inputs, cards |
-| `--radius-lg`   | ~18px       | Dialogs                |
-| `--radius-xl`   | ~28px       | Statement surfaces     |
-| `--radius-2xl`  | ~40px       | Oversized surfaces     |
-| `--radius-full` | Pill-shaped | Circular/capsular      |
+| Token           | Computed    | Use For                   |
+| --------------- | ----------- | ------------------------- |
+| `--radius-none` | 0           | Sharp edges               |
+| `--radius-2xs`  | ~2px        | Hairline softening        |
+| `--radius-xs`   | ~4px        | Subtle softening          |
+| `--radius-sm`   | ~6px        | Badges                    |
+| `--radius-md`   | ~10px       | Buttons, inputs, popovers |
+| `--radius-lg`   | ~18px       | Dialogs                   |
+| `--radius-xl`   | ~28px       | Statement surfaces        |
+| `--radius-2xl`  | ~40px       | Oversized surfaces        |
+| `--radius-full` | Pill-shaped | Circular/capsular         |
 
-Utility: `--radius: 4.5`.
+Utility: `--radius` takes a step on the spacing scale (`--radius: 4.5` is `lg`) or `full`; `--radius-t` / `-b` / `-l` / `-r` round two corners.
 
 ### Shadows & Elevation
 
@@ -511,6 +511,8 @@ Whisper-soft, multi-layered diffused shadows. Surfaces are flat by default, and 
 | `--shadow-md` | Clear elevation (modals, popovers) |
 | `--shadow-lg` | Strong floating presence           |
 | `--shadow-xl` | Maximum drama (overlay-level)      |
+
+`--shadow-2xs` and `--shadow-2xl` sit at either end. Each token is four layers drawn for an overhead light: every layer pulls in by a negative spread, so a shadow never shows above an element or past its sides. `--elevation: n` draws the same shadow from a number (`--elevation: 4` matches `--shadow-md`) and takes states and breakpoints (`--elevation: 1.5; --elevation--hover: 4`). `--shadow` is the explicit form, a token or any box-shadow, and it wins over `--elevation`. `--shadow-tint` and `--shadow-angle` change the shadow's color and direction for a subtree; `--color-shadow` and `--default-shadow-angle` set them for the page.
 
 ### Focus Ring
 

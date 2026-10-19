@@ -120,7 +120,11 @@ const GROUPS: { id: string; title: string; test: RegExp }[] = [
   { id: "color-overlays", title: "Overlays", test: /^--color-(shade|tint)-/ },
   { id: "spacing", title: "Spacing", test: /^--spac(e|ing)/ },
   { id: "radius", title: "Radius", test: /^--radius-/ },
-  { id: "shadow", title: "Shadows, ring, and outline", test: /^--shadow-|^--ring-|^--outline-/ },
+  {
+    id: "shadow",
+    title: "Shadows, ring, and outline",
+    test: /^--shadow-|^--ring-|^--outline-|^--default-shadow-angle$/,
+  },
   { id: "font", title: "Type: families, sizes, weights", test: /^--font-/ },
   {
     id: "leading-tracking",

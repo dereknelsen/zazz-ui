@@ -405,12 +405,10 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
         BORDER_SHORTHANDS.some((name) => bases.has(name));
       // a shorthand's base is the base its longhand's tier overrides (`--p: 4; --px--md: 1`)
       const shorthandBase = (SHORTHAND_OF[baseName] ?? []).some((name) => bases.has(name));
-      // the box-shadow composite (ring, shadow) works tier-only like a no-base utility;
-      // the other feeds (`--bg-alpha`, `--focus-ring`, `--shadow-angle`) reach the
+      // the box-shadow composite (ring, shadow, elevation) works tier-only like a no-base
+      // utility; the other feeds (`--bg-alpha`, `--focus-ring`, `--shadow-angle`) reach the
       // element through another utility or a token, and are not checked here
-      const composite =
-        (BOX_SHADOW_COMPOSITE as readonly string[]).includes(utility.name) ||
-        utility.name === "elevation";
+      const composite = (BOX_SHADOW_COMPOSITE as readonly string[]).includes(utility.name);
       const feedsComposite = !composite && (utility.emit === "none" || utility.emit === "px");
       // a tier alone works where the kit reads the utility through its own chain,
       // or where the tier-only rule (`@layer defaults`) applies: a no-base utility

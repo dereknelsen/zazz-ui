@@ -154,7 +154,8 @@ describe("shadow tokens and tint", () => {
   /** The layers of a computed box-shadow (each starts with its color). */
   const layers = (value: string) => value.match(/(?:oklch|rgba?|color)\(/g)?.length ?? 0;
   /** The y offset of a shadow's last (farthest) layer, in px. */
-  const farY = (value: string) => Number(/(-?[\d.e-]+)px [\d.e-]+px 0px$/.exec(value)?.[1]);
+  const farY = (value: string) =>
+    Number(/(-?[\d.e-]+)px [\d.e-]+px -?[\d.e-]+px$/.exec(value)?.[1]);
 
   it("each token is the four-layer elevation shadow, deeper as the size grows", () => {
     expect(layers(probe("box-shadow: var(--shadow-md)"))).toBe(4);
@@ -269,7 +270,9 @@ describe("shadow angle", () => {
 
   /** The [x, y] offsets of a shadow's last (farthest) layer, in px. */
   const offsets = (el: Element) => {
-    const [, x, y] = /(-?[\d.e-]+)px (-?[\d.e-]+)px [\d.e-]+px 0px$/.exec(style(el, "box-shadow"))!;
+    const [, x, y] = /(-?[\d.e-]+)px (-?[\d.e-]+)px [\d.e-]+px -?[\d.e-]+px$/.exec(
+      style(el, "box-shadow"),
+    )!;
     return [Number(x), Number(y)];
   };
 
@@ -316,27 +319,42 @@ describe("shadow angle", () => {
 describe("elevation", () => {
   useKit();
 
-  /** The drop-shadow() functions in an element's computed filter. */
-  const drops = (el: Element) => style(el, "filter").match(/drop-shadow\([^)]*\)[^)]*\)/g) ?? [];
-  /** The y offset of the farthest (last) drop-shadow, in px. */
-  const farY = (el: Element) => {
-    const last = drops(el).at(-1) ?? "";
-    return Number(/\) (-?[\d.e-]+)px (-?[\d.e-]+)px/.exec(last)?.[2]);
+  /** The computed box-shadow's layers, less the composite's zero-size ring placeholders. */
+  const layers = (el: Element) =>
+    style(el, "box-shadow")
+      .split(/,(?![^(]*\))/)
+      .map((layer) => layer.trim())
+      .filter((layer) => layer !== "none" && !/ 0px 0px 0px 0px(?: inset)?$/.test(layer));
+  /** The [y offset, spread] of the farthest (last) layer, in px. */
+  const far = (el: Element) => {
+    const last = layers(el).at(-1) ?? "";
+    const [, y, spread] =
+      /\) (?:-?[\d.e-]+)px (-?[\d.e-]+)px (?:[\d.e-]+)px (-?[\d.e-]+)px$/.exec(last) ?? [];
+    return [Number(y), Number(spread)];
   };
-  /** True when every drop-shadow's color is fully transparent. */
+  const farY = (el: Element) => far(el)[0]!;
+  /** True when every layer's color is fully transparent. */
   const invisible = (el: Element) =>
-    drops(el).every((d) => /\/ 0\)|rgba\(0, 0, 0, 0\)|transparent/.test(d));
+    layers(el).every((layer) => /\/ 0\)|rgba\(0, 0, 0, 0\)|transparent/.test(layer));
 
-  it("--elevation: n is four drop-shadows in filter, deeper as n grows", () => {
+  it("--elevation: n is a four-layer box-shadow, deeper as n grows", () => {
     const root = mount(`<div>
       <div data-four style="--elevation: 4">x</div>
       <div data-eight style="--elevation: 8">x</div>
     </div>`);
     const four = root.querySelector("[data-four]")!;
-    expect(drops(four)).toHaveLength(4);
+    expect(layers(four)).toHaveLength(4);
     expect(invisible(four)).toBe(false);
     expect(farY(four)).toBeGreaterThan(0);
     expect(farY(root.querySelector("[data-eight]")!)).toBeGreaterThan(farY(four));
+  });
+
+  it("pulls every layer in from the sides: a negative spread, deeper with the blur", () => {
+    const el = mount(`<div style="--elevation: 8">x</div>`);
+    const [y, spread] = far(el);
+    expect(spread).toBeLessThan(0);
+    // the far layer blurs by 0.45 × its distance and draws in by 0.6 × that blur
+    expect(-spread!).toBeCloseTo(y! * 0.45 * 0.6, 0);
   });
 
   it("0 and a non-number draw nothing visible", () => {
@@ -349,40 +367,56 @@ describe("elevation", () => {
     }
   });
 
-  it("composes with --filter in one filter declaration", () => {
+  it("composes with --ring in one box-shadow, the ring first", () => {
+    const el = mount(`<div style="--ring: 2; --ring-color: rgb(1, 2, 3); --elevation: 4">x</div>`);
+    const [ring, ...rest] = layers(el);
+    expect(ring).toBe("rgb(1, 2, 3) 0px 0px 0px 2px");
+    expect(rest).toHaveLength(4);
+  });
+
+  it("an explicit --shadow wins over --elevation", () => {
+    const el = mount(`<div style="--shadow: 0 0 0 3px rgb(1, 2, 3); --elevation: 4">x</div>`);
+    expect(layers(el)).toEqual(["rgb(1, 2, 3) 0px 0px 0px 3px"]);
+  });
+
+  it("leaves --filter alone, and --filter: none keeps the elevation", () => {
     const root = mount(`<div>
-      <div data-both style="--filter: blur(2px); --elevation: 4">x</div>
-      <div data-filter style="--filter: blur(2px)">x</div>
+      <div data-blur style="--filter: blur(2px); --elevation: 4">x</div>
+      <div data-none style="--filter: none; --elevation: 4">x</div>
     </div>`);
-    const both = style(root.querySelector("[data-both]")!, "filter");
-    expect(both.startsWith("blur(2px)")).toBe(true);
-    expect(drops(root.querySelector("[data-both]")!)).toHaveLength(4);
-    expect(style(root.querySelector("[data-filter]")!, "filter")).toBe("blur(2px)");
+    const blur = root.querySelector("[data-blur]")!;
+    expect(style(blur, "filter")).toBe("blur(2px)");
+    expect(layers(blur)).toHaveLength(4);
+    const none = root.querySelector("[data-none]")!;
+    expect(style(none, "filter")).toBe("none");
+    expect(invisible(none)).toBe(false);
   });
 
-  it("stays on its element: a child's own --filter carries no inherited drop-shadows", () => {
+  it("stays on its element: a child's own shadow carries no inherited layers", () => {
     const root = mount(`<div style="--elevation: 4">
-      <div data-filter style="--filter: blur(1px)">x</div>
-      <div data-tier style="--filter--hover: blur(1px)">x</div>
+      <div data-shadow style="--shadow: 0 0 0 1px rgb(1, 2, 3)">x</div>
+      <div data-tier style="--ring--hover: 2">x</div>
     </div>`);
-    expect(style(root.querySelector("[data-filter]")!, "filter")).toBe("blur(1px)");
-    expect(drops(root.querySelector("[data-tier]")!)).toHaveLength(0);
-  });
-
-  it("--filter: none keeps the elevation", () => {
-    const el = mount(`<div style="--filter: none; --elevation: 4">x</div>`);
-    expect(drops(el)).toHaveLength(4);
-    expect(invisible(el)).toBe(false);
+    expect(layers(root.querySelector("[data-shadow]")!)).toEqual(["rgb(1, 2, 3) 0px 0px 0px 1px"]);
+    expect(layers(root.querySelector("[data-tier]")!)).toHaveLength(0);
   });
 
   it("takes a state tier alone on a plain element", async () => {
     const el = mount(
       `<div style="inline-size: 100px; block-size: 40px; --elevation--hover: 6">x</div>`,
     );
-    expect(drops(el).length === 0 || invisible(el)).toBe(true);
+    expect(layers(el).length === 0 || invisible(el)).toBe(true);
     await userEvent.hover(el);
     expect(invisible(el)).toBe(false);
     await userEvent.unhover(el);
+  });
+
+  it("replaces a card's resting shadow, and keeps its focus ring first", () => {
+    const el = mount(
+      `<div data-ui="card" data-card-variant="floating" style="--elevation: 8">x</div>`,
+    );
+    expect(layers(el)).toHaveLength(4);
+    expect(farY(el)).toBeGreaterThan(farY(mount(`<div style="--elevation: 1.5">x</div>`)));
   });
 
   it("follows --shadow-angle and the page's --default-shadow-angle, and --shadow-tint on an ancestor", () => {
@@ -393,7 +427,9 @@ describe("elevation", () => {
     </div>`);
     expect(farY(root.querySelector("[data-up]")!)).toBeLessThan(0);
     const plain = root.querySelector("[data-plain]")!;
-    expect(style(root.querySelector("[data-tinted]")!, "filter")).not.toBe(style(plain, "filter"));
+    expect(style(root.querySelector("[data-tinted]")!, "box-shadow")).not.toBe(
+      style(plain, "box-shadow"),
+    );
     document.documentElement.style.setProperty("--default-shadow-angle", "180deg");
     try {
       expect(farY(plain)).toBeLessThan(0);

@@ -1,0 +1,30 @@
+---
+/** A card's title row: heading, optional description, and an optional action on the right. */
+interface Props {
+  title: string;
+  description?: string;
+  id?: string;
+}
+const { title, description, id } = Astro.props;
+---
+
+<header
+  style='
+    --display: flex;
+    --items: start;
+    --justify: space-between;
+    --gap: 4;
+  '
+>
+  <div style='--display: grid; --gap: 1'>
+    <h3 id={id} style='--font-size: var(--font-size-lg); --font-family: var(--font-family-heading)'>{title}</h3>
+    {
+      description && (
+        <p data-ui='text-sm' style='--text: var(--color-muted-foreground)'>
+          {description}
+        </p>
+      )
+    }
+  </div>
+  <slot />
+</header>

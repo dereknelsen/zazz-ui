@@ -1,16 +1,16 @@
 ---
 title: "Zazz 0.8 alpha"
-description: "Zazz 0.8 alpha puts radius on the spacing scale, adds a numeric --elevation drawn as GPU drop-shadows, and adds filter and blend utilities."
-date: 2026-10-15
-draft: true
+description: "Zazz 0.8 alpha puts radius on the spacing scale, adds a numeric --elevation drawn as a layered box-shadow, and adds filter and blend utilities."
+date: 2026-10-19
+draft: false
 tags: ["release"]
 ---
 
-**Zazz 0.8 alpha puts radius on the spacing scale, adds an `--elevation` utility whose shadow is computed from a single number, and adds filter and blend utilities. Renaming `--rounded` and dropping the shadow size words make it a breaking release.**
+**Zazz 0.8 alpha puts radius on the spacing scale, adds an `--elevation` utility whose shadow is computed from a single number, and adds filter and blend utilities. It also renames `--rounded`, `--shadow-hue`, and every primitive's `-rounded` hook, and changes the dialog sizes, so this is a breaking release.**
 
 ## `--radius` takes a number
 
-`--rounded` was Tailwind's name for a raw `border-radius`. 0.8 renames it `--radius` and puts it on the same scale as spacing. A number is that many `--spacing` steps times `--radius-multiplier`, so `--radius: 2.5` is exactly `--radius-md`:
+`--rounded` was Tailwind's name for a raw `border-radius`. 0.8 renames it [`--radius`](/api/utilities/borders/) and puts it on the same scale as spacing. A number is that many `--spacing` steps times `--radius-multiplier`, so `--radius: 2.5` is exactly `--radius-md`:
 
 ```html
 <div style="--radius: 2.5"></div>           <!-- --radius-md -->
@@ -23,7 +23,7 @@ It takes states and breakpoints, and `--radius-multiplier` still squares or soft
 
 ## `--elevation`
 
-I wanted a shadow you set by height, the way you set padding by a number. `--elevation` draws four drop-shadow layers from one value:
+I wanted a shadow you set by height, the way you set padding by a number. [`--elevation`](/api/utilities/effects/) draws four box-shadow layers from one value:
 
 ```html
 <div style="--elevation: 1.5; --elevation--hover: 4"></div>
@@ -31,7 +31,7 @@ I wanted a shadow you set by height, the way you set padding by a number. `--ele
 
 Each layer sits farther out along the light than the one before it and blurs in proportion. As the number rises, the blurred far layers fade in and darken, so a low element has a tight contact shadow and a high one gets a soft, wide spread. The layer offsets and blur ratios come from the old `--shadow-2xl`, which was already a stack of scaled layers, and the opacities were tuned by eye in a prototype. `--elevation: 4` uses the same layers as `--shadow-md`.
 
-It's drawn in `filter`, which browsers usually composite on the GPU, and it shares that one declaration with the new `--filter` utility, so `--filter: blur(2px); --elevation: 4` keeps both. A drop-shadow follows the element's painted shape. An element with no background shadows its text instead of its box, and `filter` makes the element a stacking context and the containing block for fixed and absolute descendants.
+Each layer also pulls in by a negative spread, and blurs by no more than its distance, so with the light overhead a shadow never shows above the element or past its sides: a card sits on its shadow instead of being outlined by it. It shares one `box-shadow` with `--ring` and `--shadow`: a ring or a primitive's focus ring draws first and keeps the elevation, and an explicit `--shadow` replaces it.
 
 ## Shadow tokens and light
 
@@ -41,7 +41,23 @@ Two theme inputs set the light for the page: `--color-shadow` for the color and 
 
 ## Filters and blending
 
-`--filter`, `--backdrop-filter`, and `--mix-blend` set `filter`, `backdrop-filter`, and `mix-blend-mode`, with state tiers and pseudo-element forms.
+[`--filter`, `--backdrop-filter`, and `--mix-blend`](/api/utilities/effects/) set `filter`, `backdrop-filter`, and `mix-blend-mode`. They take state tiers and have pseudo-element forms, and a tier works on its own: `--filter: grayscale(1); --filter--hover: none` colors a logo when you hover it, and `--filter--hover: blur(2px)` by itself leaves the element sharp at rest.
+
+The lightbox used to darken a hovered stage image with its own `filter`, which would have fought the utility. It no longer sets `filter` at all; the migration list below has the two lines that bring the dimming back.
+
+## Dialog sizes follow the layout
+
+[`data-dialog-size`](/api/primitives/dialog/) takes the layout's sizes now: `sm`, `md`, `lg`, `xl`, and `2xl` cap a dialog at that band's width, `full` spans the screen inside the gutters, and `bleed` fills it edge to edge. With no size a dialog is `sm`, 40rem, which is a little wider than the old 50ch default.
+
+```html
+<dialog data-ui="dialog" data-dialog-size="lg">…</dialog>
+```
+
+## Smaller things
+
+`--top`, `--right`, `--bottom`, and `--left` take `auto`, so a side you set at one breakpoint can go back to `auto` at another. A bar can stick to the bottom on a phone and to the top on a desktop: `--bottom: 0; --bottom--lg: auto; --top: auto; --top--lg: 0`.
+
+Reveals run a bit slower and travel farther by default (1000ms and 2rem), and `--ui-reveal-global-stagger-step` sets the delay between a group's children for everything below it.
 
 ## Migrating
 
@@ -49,5 +65,7 @@ Two theme inputs set the light for the page: `--color-shadow` for the color and 
 - A multi-corner `--rounded` value or hook → the side utilities (`--radius-t: 2.5`), or a single value.
 - `--shadow: md` → `--shadow: var(--shadow-md)`, or `--elevation: 4`.
 - `--shadow-hue` → `--shadow-tint`.
+- `data-dialog-size="article"` → `"sm"` (or no size), `"container"` → `"md"`, and `"screen"` → `"bleed"`. The mobile menu uses `"bleed"` now.
+- The lightbox no longer darkens a hovered image. To keep it, put `data-ui="group"` on the slide and `--group-filter--hover: brightness(0.8)` on the image.
 
 The [changelog](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/CHANGELOG.md) lists every change, including the hook renames for each primitive.

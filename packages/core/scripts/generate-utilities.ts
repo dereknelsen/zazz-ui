@@ -13,7 +13,6 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   BOX_SHADOW_COMPOSITE,
-  FILTER_COMPOSITE,
   SHORTHAND_OF,
   BORDER_SIDES,
   type Breakpoint,
@@ -60,10 +59,10 @@ export function registrations(utility: Utility): string {
     out += register(`_${n}-len`, '"<length-percentage>"', "0px");
     out += register(`_${n}-num`, '"<number>"', "0");
   }
-  // --elevation's height as a number, so a word draws nothing instead of breaking the filter
-  // its drop-shadows stay on the element: an inherited list would reach a child's own --filter
+  // --elevation's height as a number, so a word draws nothing instead of breaking the list;
+  // its layers stay on the element: an inherited list would reach a child's own box-shadow
   if (utility.name === "elevation")
-    out += register(`_${n}-n`, '"<number>"', "0") + register(`_${n}-filter`);
+    out += register(`_${n}-n`, '"<number>"', "0") + register(`_${n}-shadow`);
   if (utility.emit === "px") {
     out += register(`_${n}-len`, '"<length>"', "0px");
     out += register(`_${n}-num`, '"<number>"', "0");
@@ -573,47 +572,25 @@ function stuckSetter(tier: string, inTier: readonly Utility[]): string {
 }
 
 /**
- * `--elevation`: its height as a registered number and its four drop-shadows,
- * on any element that sets it at the base or a tier. The filter composite reads
- * `--_elevation-filter`.
+ * `--elevation`: its height as a registered number and its four shadow layers,
+ * on any element that sets it at the base or a tier. The box-shadow composite
+ * reads `--_elevation-shadow` as the fallback of `--_shadow-resolved`.
  */
 export function elevationRule(utilities: readonly Utility[]): string {
   if (!utilities.some((utility) => utility.name === "elevation")) return "";
   return [
     `:where([style*="--elevation:"], [style*="--elevation--"], [style*="--group-elevation--"]) {`,
     `  --_elevation-n: abs(var(--_elevation-resolved));`,
-    `  --_elevation-filter: ${elevationLayers("var(--_elevation-n)", "drop")};`,
+    `  --_elevation-shadow: ${elevationLayers("var(--_elevation-n)")};`,
     `}`,
     ``,
   ].join("\n");
 }
 
 /**
- * The filter composite: `--filter` and `--elevation` share one `filter`, the
- * user's filters first, so neither removes the other. With a base, in the
- * utilities layer; on a tier alone, in `@layer defaults` (see {@link noBaseRule}).
- * An empty value (neither active) is invalid at computed time, so `filter` is `none`.
- */
-export function filterCompositeRule(
-  utilities: readonly Utility[],
-  defaults?: { skips: readonly string[] },
-): string {
-  const names = new Set(utilities.map((utility) => utility.name));
-  if (!names.has("elevation")) return "";
-  const gate = (prefix: string, suffix: string) =>
-    `:is(${FILTER_COMPOSITE.map((name) => `[style*="--${prefix}${name}${suffix}"]`).join(", ")})`;
-  const emission = `  filter: var(--_filter-resolved,) var(--_elevation-filter,);`;
-  const not = defaults?.skips.length ? `:not(${defaults.skips.join(", ")})` : "";
-  return (
-    defaults
-      ? [`:where(:is(${gate("", "--")}, ${gate("group-", "--")})${not}) {`, emission, `}`, ``]
-      : [`:where(${gate("", ":")}) {`, emission, `}`, ``]
-  ).join("\n");
-}
-
-/**
- * The effects composite: ring and shadow share one `box-shadow`,
- * behind the `--_focus-shadow` a primitive publishes on `:focus-visible`. Every
+ * The effects composite: the rings, `--shadow`, and `--elevation` share one
+ * `box-shadow`, behind the `--_focus-shadow` a primitive publishes on
+ * `:focus-visible`; an explicit `--shadow` wins over `--elevation`. Every
  * chain in it already ends in a literal, so the composite is also the
  * no-base rule for these utilities: a second copy gated on any tier, in
  * `@layer defaults` (see {@link noBaseRule}). The ring draws as an outset pair
@@ -634,7 +611,7 @@ export function compositeRule(
   const inset = "max(0, -1 * sign(var(--_ring-w, 0px)))";
   const offsetColor = "var(--_ring-offset-color-resolved, transparent)";
   const color = "var(--_ring-color-resolved, var(--color-ring))";
-  const emission = `  box-shadow: var(--_focus-shadow, 0 0 #0000), 0 0 0 calc(${offset} * (1 - ${inset})) ${offsetColor}, 0 0 0 calc(${band} * (1 - ${inset})) ${color}, inset 0 0 0 calc(${offset} * ${inset}) ${offsetColor}, inset 0 0 0 calc(${band} * ${inset}) ${color}, var(--_shadow-resolved, 0 0 #0000);`;
+  const emission = `  box-shadow: var(--_focus-shadow, 0 0 #0000), 0 0 0 calc(${offset} * (1 - ${inset})) ${offsetColor}, 0 0 0 calc(${band} * (1 - ${inset})) ${color}, inset 0 0 0 calc(${offset} * ${inset}) ${offsetColor}, inset 0 0 0 calc(${band} * ${inset}) ${color}, var(--_shadow-resolved, var(--_elevation-shadow, 0 0 #0000));`;
   // with a base, in the utilities layer; on a tier alone, in the defaults layer
   // (see noBaseRule), where a primitive's own box-shadow wins
   const not = defaults?.skips.length ? `:not(${defaults.skips.join(", ")})` : "";
@@ -774,7 +751,7 @@ function familyFile(family: Family, utilities: readonly Utility[]): string {
         (utility.name === "display" ? displayShorthandRules() : ""),
     )
     .concat(compositeRule(utilities))
-    .concat(elevationRule(utilities), filterCompositeRule(utilities))
+    .concat(elevationRule(utilities))
     .concat(utilities.some((utility) => utility.emit === "border") ? [borderSideRules()] : [])
     .concat(
       utilities.some((utility) => utility.name === "bg-stops")
@@ -803,11 +780,6 @@ function defaultsFile(
         keywordRules(utility, tiersOf(utility), { skips: skips[utility.name] ?? [] }),
     )
     .concat(compositeRule(utilities, { skips: [...new Set(RING.flatMap((n) => skips[n] ?? []))] }))
-    .concat(
-      filterCompositeRule(utilities, {
-        skips: [...new Set(FILTER_COMPOSITE.flatMap((n) => skips[n] ?? []))],
-      }),
-    )
     .join("\n")
     .replace(/^(?=.)/gm, "  ");
   return `${BANNER}\n/* Tier-only rules: below every component, vendor, and legacy layer */\n@layer defaults {\n${rules}}\n`;
@@ -1054,7 +1026,6 @@ function overlaps(declared: string, emitted: string): boolean {
 /** The properties a utility's no-base rule sets: its own, or `box-shadow` for the composite. */
 function emittedProperties(utility: Utility): readonly string[] {
   if (utility.properties.length) return utility.properties;
-  if (utility.name === "elevation") return ["filter"];
   return (BOX_SHADOW_COMPOSITE as readonly string[]).includes(utility.name) ? ["box-shadow"] : [];
 }
 
@@ -1085,6 +1056,9 @@ const INHERITED = new Set(["text-align", "text-wrap", "text-wrap-mode", "text-wr
  * literal is `1`), and so does `text-align: inherit` on a button.
  */
 function normalizes(utility: Utility, property: string, value: string): boolean {
+  // the box-shadow composite's rest value is `none`, whatever the utility's own input
+  // (--elevation's is a height)
+  if (value === "none" && emittedProperties(utility)[0] === "box-shadow") return true;
   // an integer utility's literal is its own input (`1` column), not a CSS value
   const literal = utility.mode === "integer" ? undefined : (utility.noBase ?? "none");
   const zero = /^(?:0(?:px|r?em|%)?\s*)+$/.test(value) ? "0" : value;
@@ -1295,20 +1269,26 @@ export interface ElevationLayer {
   c: number;
   /** Blur as a share of the layer's distance. */
   r: number;
+  /** Spread as a share of the layer's blur, drawn negative: pulls the layer in from the sides. */
+  s: number;
 }
 
 /**
- * The elevation shadow: four layers, with distances and blur ratios fitted to the
- * old `--shadow-2xl` and opacities chosen by eye (2026-10-15, in
- * `apps/experiments/elevation.html`). Layer k of N sits at `n × --spacing × 4 ×
- * (k/N)²` along the light direction, blurs by `max(1px, distance × r)`, and fades in as
- * `clamp(0, (n − t) × m, c)`, so the blurred far layers join as the element rises.
+ * The elevation shadow: four layers (distances and opacities from Derek's
+ * 2026-10-15 tuning in `apps/experiments/elevation.html`; blur and spread
+ * reworked 2026-10-17 so a shadow never bleeds past the element's top or sides).
+ * Layer k of N sits at `n × --spacing × 4 × (k/N)²` along the light direction,
+ * blurs by `max(1px, distance × r)`, pulls in by a spread of `−blur × s`, and
+ * fades in as `clamp(0, (n − t) × m, c)`, so the blurred far layers join as the
+ * element rises. With `r ≤ 1` and `s ≥ 0.5`, a layer's visible edge never rises
+ * above the element and its sides sit flush or inward, as a surface lit from
+ * above casts: the farther the layer, the more it draws in.
  */
 export const ELEVATION_LAYERS: readonly ElevationLayer[] = [
-  { t: 0, m: 0.04, c: 0.08, r: 2.2 },
-  { t: 0.5, m: 0.02, c: 0.06, r: 1 },
-  { t: 1.5, m: 0.012, c: 0.05, r: 0.6 },
-  { t: 4, m: 0.006, c: 0.04, r: 0.4 },
+  { t: 0, m: 0.04, c: 0.08, r: 1, s: 0.5 },
+  { t: 0.5, m: 0.02, c: 0.06, r: 0.8, s: 0.5 },
+  { t: 1.5, m: 0.012, c: 0.05, r: 0.6, s: 0.55 },
+  { t: 4, m: 0.006, c: 0.04, r: 0.45, s: 0.6 },
 ];
 
 /** The height each `--shadow-<size>` token is drawn at. */
@@ -1326,22 +1306,20 @@ export const SHADOW_HEIGHTS: Readonly<Record<string, number>> = {
 const round = (x: number) => Number(x.toFixed(4));
 
 /**
- * The elevation shadow's layers for a height `n`, as a box-shadow list or as
- * `drop-shadow()` filter functions. A literal height folds the math into
- * numbers (the tokens); an expression (`var(--_elevation-n)`, already
- * non-negative) is computed by the browser. `x` and `y` are the unitless light
- * direction.
+ * The elevation shadow's layers for a height `n`, as a box-shadow list. A
+ * literal height folds the math into numbers (the tokens); an expression
+ * (`var(--_elevation-n)`, already non-negative) is computed by the browser.
+ * `x` and `y` are the unitless light direction.
  */
 export function elevationLayers(
   n: number | string,
-  form: "box" | "drop",
   x = "var(--_shadow-x)",
   y = "var(--_shadow-y)",
   tint = "var(--_shadow-color)",
   layers: readonly ElevationLayer[] = ELEVATION_LAYERS,
 ): string {
   return layers
-    .map(({ t, m, c, r }, i) => {
+    .map(({ t, m, c, r, s }, i) => {
       const share = 4 * ((i + 1) / layers.length) ** 2;
       let distance: string;
       let blur: string;
@@ -1356,14 +1334,14 @@ export function elevationLayers(
         blur = `max(1px, calc(${distance} * ${r}))`;
         alpha = `clamp(0, calc((${n} - ${t}) * ${m}), ${c})`;
       }
+      // the spread reads the same blur expression, so it tracks the 1px floor too
+      const spread = s ? `calc(${blur} * -${s})` : "0";
       const color = `oklch(from ${tint} l c h / ${alpha})`;
       const ox = `calc(${distance} * ${x})`;
       const oy = `calc(${distance} * ${y})`;
-      return form === "box"
-        ? `${ox} ${oy} ${blur} 0 ${color}`
-        : `drop-shadow(${color} ${ox} ${oy} ${blur})`;
+      return `${ox} ${oy} ${blur} ${spread} ${color}`;
     })
-    .join(form === "box" ? ",\n      " : " ");
+    .join(",\n      ");
 }
 
 /**
@@ -1377,7 +1355,7 @@ export function elevationLayers(
 function shadowsFile(): string {
   const angle = "var(--_shadow-angle-resolved, var(--default-shadow-angle))";
   const tokens = Object.entries(SHADOW_HEIGHTS)
-    .map(([size, n]) => `    --shadow-${size}:\n      ${elevationLayers(n, "box")};`)
+    .map(([size, n]) => `    --shadow-${size}:\n      ${elevationLayers(n)};`)
     .join("\n");
   return `${BANNER}
 /* Shadow tokens: the elevation formula at fixed heights */

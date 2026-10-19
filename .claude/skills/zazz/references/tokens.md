@@ -12,8 +12,8 @@ Two rules govern every choice:
 
 1. **Never hardcode.** Every value is a `var(--…)` token that exists in the kit. Override at one
    of the scopes in `SKILL.md` (global → subtree hook → instance) instead of editing source.
-2. **Most semantic that fits.** a scale number (`--p: 4`) → `calc(var(--spacing) * 4)`,
-   in that order of preference. Spacing in `style` is always a number, never `var(--space-*)`.
+2. **Most semantic that fits.** For spacing that means a scale number (`--p: 4`, which is
+   `calc(var(--spacing) * 4)`), never `var(--space-*)` in `style`.
 
 ---
 
@@ -28,7 +28,7 @@ Two rules govern every choice:
 - **No numeric step scale.** Use a utility number (`--max-w: 96` is 96 × `--spacing`) or `calc(var(--spacing) * N)` in CSS; write `1px` and `100%` directly.
 - **Utilities:** padding `--p` `--px` `--py` `--pt` `--pb` `--pl` `--pr`; margin `--m` `--mx` `--my`
   `--mt` `--mb` `--ml` `--mr` (+ `auto`); gap `--gap` `--gap-x` `--gap-y`; inset `--inset` `--inset-x` `--inset-y` `--top`
-  `--bottom` `--left` `--right`.
+  `--bottom` `--left` `--right` (the four sides also take `auto`, at any breakpoint).
   Sides are `l`/`t`/`r`/`b`; they set logical properties, so `l` is the right side in RTL.
 - **Sizing utilities:** `--w --h --size --min-w --max-w --min-h --max-h` (dual: number or length,
   plus `auto`, `fit-content`, `min-content`, `max-content` — see AUTHORING.md rule 3), `--aspect`
@@ -86,19 +86,20 @@ text-2xs`, `text-eyebrow`, `text-link` (an inline link outside prose). A role st
 ## 5. Radius
 
 `--radius-none|2xs|xs|sm|md|lg|xl|2xl|full`, scaled by `--radius-multiplier`. Conventions: **md** =
-buttons/inputs/cards, **lg** = dialogs, **sm** = badges, **full** = pills/circles. Utility:
+buttons/inputs/popovers, **lg** = cards/dialogs, **sm** = badges, **full** = pills/circles. Utility:
 `--radius` takes a number on the same scale (`--radius: 2.5` is **md**; 0.5 2xs, 1 xs, 1.5 sm, 4.5 lg,
 7 xl, 10 2xl), a length, or `full`, at any state or breakpoint. `--radius-t` / `-b` / `-l` / `-r`
-round two corners (`--radius-t: 2.5` for a card's media).
+round two corners (`--radius-t: 2.5` for a card's media) and take breakpoints only.
 
 ## 6. Shadow & elevation
 
 `--shadow-2xs … 2xl`: soft, four layers, drawn with the elevation formula. Surfaces are flat by default (a `floating`
 card takes a resting **sm**); apply elevation on purpose (**md** ≈ popovers/modals). Two utilities:
-`--elevation: 4` is a height, drawn as four drop-shadows in `filter`, at any state or breakpoint
-(`--elevation: 1.5; --elevation--hover: 4`). A drop-shadow follows the painted shape, so give the element
-a background, and `filter` makes it a stacking context. `--shadow` is a box-shadow: a token
-(`--shadow: var(--shadow-md)`) or any shadow. Light: `--color-shadow` and `--default-shadow-angle` on `:root`
+`--elevation: 4` is a height, drawn as a four-layer box-shadow, at any state or breakpoint
+(`--elevation: 1.5; --elevation--hover: 4`); it shares the box-shadow with `--ring*`. `--shadow` is the
+explicit form: a token (`--shadow: var(--shadow-md)`) or any shadow, and it wins over `--elevation`.
+Every layer blurs by at most its distance and pulls in by a negative spread, so nothing shows above or
+beside the element. Light: `--color-shadow` and `--default-shadow-angle` on `:root`
 set the color and direction of every shadow; `--shadow-tint: var(--color-primary)` and `--shadow-angle`
 change them for an element and its subtree (`0deg` down, `90deg` left, `180deg` up; the angle takes
 breakpoints, so a bottom sheet can cast up on mobile). A shadow utility never removes a primitive's focus ring.
@@ -195,7 +196,8 @@ Separators between items are `<hr data-ui="separator">`.
 ## 12. Positioning & interaction
 
 `--position` (`relative`, `absolute`, `sticky`, …) with `--inset --top --bottom --left --right`
-(spacing values). `--cursor`, `--pointer-events`, `--outline`.
+(spacing values; the four sides also take `auto`, so `--bottom: 0; --bottom--lg: auto` releases a
+side at a breakpoint). `--cursor`, `--pointer-events`, `--outline`.
 
 ## 13. State tiers
 

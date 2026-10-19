@@ -1,0 +1,212 @@
+---
+import { species } from '../../lib/fieldnotes.ts';
+import CardHeader from './CardHeader.astro';
+import Sprite from './Sprite.astro';
+
+interface Props {
+  /** The `<ui-toaster>` the log button fires into. */
+  toaster: string;
+}
+const { toaster } = Astro.props;
+const weather = ['Clear', 'Overcast', 'Rain', 'Fog'];
+---
+
+<form
+  data-ui='card'
+  data-card-variant='outline'
+  data-fieldnotes-form
+  aria-labelledby='fn-log-title'
+  style='
+    --place-content: start stretch;
+    --gap: 6;
+    --mb: 6;
+    --bg: var(--color-card);
+    --elevation: 1.5;
+  '
+>
+  <CardHeader
+    id='fn-log-title'
+    title='Log a sighting'
+    description='Every report is reviewed before it counts toward your life list.'
+  />
+
+  <div data-ui='field'>
+    <label data-field-slot='label' for='fn-species'>Species</label>
+    <ui-combobox>
+      <input type='hidden' name='species' data-combobox-slot='value' value='' />
+      <div data-combobox-slot='control'>
+        <input
+          id='fn-species'
+          type='text'
+          placeholder='Search species…'
+          role='combobox'
+          aria-expanded='false'
+          aria-autocomplete='list'
+          autocomplete='off'
+        />
+        <button
+          type='button'
+          data-combobox-slot='trigger'
+          tabindex='-1'
+          aria-label='Show species'></button>
+      </div>
+      <div
+        data-combobox-slot='panel'
+        data-popover-side='bottom'
+        data-popover-align='start'
+        popover='manual'
+      >
+        <ul role='listbox' data-combobox-slot='list' aria-label='Species'>
+          {
+            species.map((s) => (
+              <li
+                role='option'
+                data-combobox-slot='item'
+                data-ui='button'
+                data-button-variant='ghost'
+                data-combobox-value={s.slug}
+                style='--justify: start'
+              >
+                <Sprite slug={s.slug} size={6} />
+                {s.name}
+              </li>
+            ))
+          }
+        </ul>
+        <p
+          data-combobox-slot='empty'
+          data-ui='text-sm'
+          style='--text: var(--color-muted-foreground)'
+        >
+          Not on the list yet. Describe it in the notes.
+        </p>
+      </div>
+    </ui-combobox>
+  </div>
+
+  <div style='
+      --display: grid;
+      --grid-cols: 2;
+      --gap: 4;
+    '>
+    <div data-ui='field'>
+      <label data-field-slot='label' for='fn-date'>Date</label>
+      <input
+        data-ui='input'
+        id='fn-date'
+        name='date'
+        type='date'
+        value='2026-10-16'
+      />
+    </div>
+    <div data-ui='field'>
+      <label data-field-slot='label' for='fn-time'>Time</label>
+      <input
+        data-ui='input'
+        id='fn-time'
+        name='time'
+        type='time'
+        value='06:10'
+      />
+    </div>
+  </div>
+
+  <fieldset data-ui='radio-group'>
+    <legend>Weather</legend>
+    <div
+      style='
+        --display: flex;
+        --flex-wrap: wrap;
+        --gap-x: 6;
+        --gap-y: 2;
+      '
+    >
+      {
+        weather.map((w, i) => (
+          <label data-ui='field' data-field-orientation='horizontal'>
+            <input
+              data-ui='radio'
+              type='radio'
+              name='weather'
+              value={w.toLowerCase()}
+              checked={i === 3}
+            />
+            <span data-field-slot='label'>{w}</span>
+          </label>
+        ))
+      }
+    </div>
+  </fieldset>
+
+  <div data-ui='field'>
+    <label
+      data-field-slot='label'
+      for='fn-count'
+      style='
+        --display: flex;
+        --items: center;
+        --justify: space-between;
+      '
+    >
+      <span>How many?</span>
+      <output
+        class='fieldnotes__num'
+        for='fn-count'
+        style='--text: var(--color-muted-foreground)'>0</output
+      >
+    </label>
+    <input
+      id='fn-count'
+      name='count'
+      type='range'
+      min='0'
+      max='20'
+      step='1'
+      value='0'
+    />
+  </div>
+
+  <div data-ui='field'>
+    <label data-field-slot='label' for='fn-notes'>Notes</label>
+    <textarea
+      data-ui='textarea'
+      id='fn-notes'
+      name='notes'
+      rows='3'
+      placeholder='Plumage, behavior, who else saw it…'></textarea>
+  </div>
+
+  <footer
+    style='
+      --display: flex;
+      --items: center;
+      --justify: space-between;
+      --gap: 4;
+    '
+  >
+    <span
+      data-ui='text-xs'
+      style='
+        --display: flex;
+        --items: center;
+        --gap: 2;
+        --text: var(--color-muted-foreground);
+      '
+    >
+      <ui-kbd-group><kbd>⌘</kbd><kbd>↵</kbd></ui-kbd-group> or
+      <ui-kbd-group><kbd>Ctrl</kbd><kbd>↵</kbd></ui-kbd-group>
+      to log
+    </span>
+    <button
+      data-ui='button'
+      data-button-variant='primary'
+      type='button'
+      commandfor={toaster}
+      command='--toast'
+      data-toaster-title='Sighting logged'
+      data-toaster-description='Pending review.'
+    >
+      Log sighting
+    </button>
+  </footer>
+</form>

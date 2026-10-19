@@ -21,7 +21,7 @@ describe("mobile menu", () => {
 
   it("lays out the viewport slots inside a screen dialog", () => {
     const dialog = mount(
-      `<dialog data-ui="dialog mobile-menu" data-dialog-size="screen">${PARTS}</dialog>`,
+      `<dialog data-ui="dialog mobile-menu" data-dialog-size="bleed">${PARTS}</dialog>`,
     ) as HTMLDialogElement;
     dialog.showModal();
     const slot = (name: string) => dialog.querySelector(`[data-mobile-menu-slot='${name}']`)!;
@@ -34,7 +34,7 @@ describe("mobile menu", () => {
 
   it("the slide-right preset anchors the motion at the left edge", () => {
     const dialog = mount(
-      `<dialog data-ui="dialog mobile-menu" data-dialog-size="screen" data-mobile-menu-animation="slide-right">${PARTS}</dialog>`,
+      `<dialog data-ui="dialog mobile-menu" data-dialog-size="bleed" data-mobile-menu-animation="slide-right">${PARTS}</dialog>`,
     ) as HTMLDialogElement;
     dialog.showModal();
     expect(style(dialog, "transform-origin")).toMatch(/^0px /);

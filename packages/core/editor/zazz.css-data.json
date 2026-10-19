@@ -4572,6 +4572,9 @@
       "description": "inset-block-start — a scale number (× --spacing) or any length; spacing family.",
       "values": [
         {
+          "name": "auto"
+        },
+        {
           "name": "1"
         },
         {
@@ -4598,6 +4601,9 @@
       "name": "--top--sm",
       "description": "--top at the sm breakpoint and up.",
       "values": [
+        {
+          "name": "auto"
+        },
         {
           "name": "1"
         },
@@ -4626,6 +4632,9 @@
       "description": "--top at the md breakpoint and up.",
       "values": [
         {
+          "name": "auto"
+        },
+        {
           "name": "1"
         },
         {
@@ -4652,6 +4661,9 @@
       "name": "--top--lg",
       "description": "--top at the lg breakpoint and up.",
       "values": [
+        {
+          "name": "auto"
+        },
         {
           "name": "1"
         },
@@ -4680,6 +4692,9 @@
       "description": "--top at the xl breakpoint and up.",
       "values": [
         {
+          "name": "auto"
+        },
+        {
           "name": "1"
         },
         {
@@ -4706,6 +4721,9 @@
       "name": "--top--2xl",
       "description": "--top at the 2xl breakpoint and up.",
       "values": [
+        {
+          "name": "auto"
+        },
         {
           "name": "1"
         },
@@ -4742,6 +4760,9 @@
       "description": "inset-block-end — a scale number (× --spacing) or any length; spacing family.",
       "values": [
         {
+          "name": "auto"
+        },
+        {
           "name": "1"
         },
         {
@@ -4768,6 +4789,9 @@
       "name": "--bottom--sm",
       "description": "--bottom at the sm breakpoint and up.",
       "values": [
+        {
+          "name": "auto"
+        },
         {
           "name": "1"
         },
@@ -4796,6 +4820,9 @@
       "description": "--bottom at the md breakpoint and up.",
       "values": [
         {
+          "name": "auto"
+        },
+        {
           "name": "1"
         },
         {
@@ -4822,6 +4849,9 @@
       "name": "--bottom--lg",
       "description": "--bottom at the lg breakpoint and up.",
       "values": [
+        {
+          "name": "auto"
+        },
         {
           "name": "1"
         },
@@ -4850,6 +4880,9 @@
       "description": "--bottom at the xl breakpoint and up.",
       "values": [
         {
+          "name": "auto"
+        },
+        {
           "name": "1"
         },
         {
@@ -4876,6 +4909,9 @@
       "name": "--bottom--2xl",
       "description": "--bottom at the 2xl breakpoint and up.",
       "values": [
+        {
+          "name": "auto"
+        },
         {
           "name": "1"
         },
@@ -4912,6 +4948,9 @@
       "description": "inset-inline-start — a scale number (× --spacing) or any length; spacing family.",
       "values": [
         {
+          "name": "auto"
+        },
+        {
           "name": "1"
         },
         {
@@ -4938,6 +4977,9 @@
       "name": "--left--sm",
       "description": "--left at the sm breakpoint and up.",
       "values": [
+        {
+          "name": "auto"
+        },
         {
           "name": "1"
         },
@@ -4966,6 +5008,9 @@
       "description": "--left at the md breakpoint and up.",
       "values": [
         {
+          "name": "auto"
+        },
+        {
           "name": "1"
         },
         {
@@ -4992,6 +5037,9 @@
       "name": "--left--lg",
       "description": "--left at the lg breakpoint and up.",
       "values": [
+        {
+          "name": "auto"
+        },
         {
           "name": "1"
         },
@@ -5020,6 +5068,9 @@
       "description": "--left at the xl breakpoint and up.",
       "values": [
         {
+          "name": "auto"
+        },
+        {
           "name": "1"
         },
         {
@@ -5046,6 +5097,9 @@
       "name": "--left--2xl",
       "description": "--left at the 2xl breakpoint and up.",
       "values": [
+        {
+          "name": "auto"
+        },
         {
           "name": "1"
         },
@@ -5082,6 +5136,9 @@
       "description": "inset-inline-end — a scale number (× --spacing) or any length; spacing family.",
       "values": [
         {
+          "name": "auto"
+        },
+        {
           "name": "1"
         },
         {
@@ -5108,6 +5165,9 @@
       "name": "--right--sm",
       "description": "--right at the sm breakpoint and up.",
       "values": [
+        {
+          "name": "auto"
+        },
         {
           "name": "1"
         },
@@ -5136,6 +5196,9 @@
       "description": "--right at the md breakpoint and up.",
       "values": [
         {
+          "name": "auto"
+        },
+        {
           "name": "1"
         },
         {
@@ -5162,6 +5225,9 @@
       "name": "--right--lg",
       "description": "--right at the lg breakpoint and up.",
       "values": [
+        {
+          "name": "auto"
+        },
         {
           "name": "1"
         },
@@ -5190,6 +5256,9 @@
       "description": "--right at the xl breakpoint and up.",
       "values": [
         {
+          "name": "auto"
+        },
+        {
           "name": "1"
         },
         {
@@ -5216,6 +5285,9 @@
       "name": "--right--2xl",
       "description": "--right at the 2xl breakpoint and up.",
       "values": [
+        {
+          "name": "auto"
+        },
         {
           "name": "1"
         },
@@ -102587,174 +102659,79 @@
     },
     {
       "name": "--filter",
-      "description": "filter — any value; effects family.",
-      "values": [
-        {
-          "name": "none"
-        }
-      ]
+      "description": "filter — any value; effects family."
     },
     {
       "name": "--filter--starting",
-      "description": "--filter in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none.",
-      "values": [
-        {
-          "name": "none"
-        }
-      ]
+      "description": "--filter in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none."
     },
     {
       "name": "--filter--disabled",
-      "description": "--filter in the disabled state.",
-      "values": [
-        {
-          "name": "none"
-        }
-      ]
+      "description": "--filter in the disabled state."
     },
     {
       "name": "--filter--active",
-      "description": "--filter in the active state.",
-      "values": [
-        {
-          "name": "none"
-        }
-      ]
+      "description": "--filter in the active state."
     },
     {
       "name": "--filter--focus-visible",
-      "description": "--filter in the focus-visible state.",
-      "values": [
-        {
-          "name": "none"
-        }
-      ]
+      "description": "--filter in the focus-visible state."
     },
     {
       "name": "--filter--focus-within",
-      "description": "--filter in the focus-within state.",
-      "values": [
-        {
-          "name": "none"
-        }
-      ]
+      "description": "--filter in the focus-within state."
     },
     {
       "name": "--filter--hover",
-      "description": "--filter in the hover state.",
-      "values": [
-        {
-          "name": "none"
-        }
-      ]
+      "description": "--filter in the hover state."
     },
     {
       "name": "--filter--checked",
-      "description": "--filter in the checked state.",
-      "values": [
-        {
-          "name": "none"
-        }
-      ]
+      "description": "--filter in the checked state."
     },
     {
       "name": "--filter--current",
-      "description": "--filter in the current state.",
-      "values": [
-        {
-          "name": "none"
-        }
-      ]
+      "description": "--filter in the current state."
     },
     {
       "name": "--filter--open",
-      "description": "--filter in the open state.",
-      "values": [
-        {
-          "name": "none"
-        }
-      ]
+      "description": "--filter in the open state."
     },
     {
       "name": "--filter--stuck",
-      "description": "--filter while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental.",
-      "values": [
-        {
-          "name": "none"
-        }
-      ]
+      "description": "--filter while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental."
     },
     {
       "name": "--group-filter--disabled",
-      "description": "--filter while an ancestor with data-ui=\"group\" is disabled.",
-      "values": [
-        {
-          "name": "none"
-        }
-      ]
+      "description": "--filter while an ancestor with data-ui=\"group\" is disabled."
     },
     {
       "name": "--group-filter--active",
-      "description": "--filter while an ancestor with data-ui=\"group\" is active.",
-      "values": [
-        {
-          "name": "none"
-        }
-      ]
+      "description": "--filter while an ancestor with data-ui=\"group\" is active."
     },
     {
       "name": "--group-filter--focus-visible",
-      "description": "--filter while an ancestor with data-ui=\"group\" is focus-visible.",
-      "values": [
-        {
-          "name": "none"
-        }
-      ]
+      "description": "--filter while an ancestor with data-ui=\"group\" is focus-visible."
     },
     {
       "name": "--group-filter--focus-within",
-      "description": "--filter while an ancestor with data-ui=\"group\" is focus-within.",
-      "values": [
-        {
-          "name": "none"
-        }
-      ]
+      "description": "--filter while an ancestor with data-ui=\"group\" is focus-within."
     },
     {
       "name": "--group-filter--hover",
-      "description": "--filter while an ancestor with data-ui=\"group\" is hover.",
-      "values": [
-        {
-          "name": "none"
-        }
-      ]
+      "description": "--filter while an ancestor with data-ui=\"group\" is hover."
     },
     {
       "name": "--group-filter--checked",
-      "description": "--filter while an ancestor with data-ui=\"group\" is checked.",
-      "values": [
-        {
-          "name": "none"
-        }
-      ]
+      "description": "--filter while an ancestor with data-ui=\"group\" is checked."
     },
     {
       "name": "--group-filter--current",
-      "description": "--filter while an ancestor with data-ui=\"group\" is current.",
-      "values": [
-        {
-          "name": "none"
-        }
-      ]
+      "description": "--filter while an ancestor with data-ui=\"group\" is current."
     },
     {
       "name": "--group-filter--open",
-      "description": "--filter while an ancestor with data-ui=\"group\" is open.",
-      "values": [
-        {
-          "name": "none"
-        }
-      ]
+      "description": "--filter while an ancestor with data-ui=\"group\" is open."
     },
     {
       "name": "--before-filter",
@@ -124602,6 +124579,10 @@
     },
     {
       "name": "--ui-reveal-global-shrink",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-reveal-global-stagger-step",
       "description": "Primitive hook: the public override surface."
     },
     {
