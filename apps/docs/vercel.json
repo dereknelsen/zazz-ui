@@ -5,7 +5,12 @@
   "outputDirectory": "dist",
   "redirects": [
     {
-      "source": "/api/utilities/from-css/?",
+      "source": "/api/utilities/from-css",
+      "destination": "/docs/concepts/utilities-reference/",
+      "permanent": true
+    },
+    {
+      "source": "/api/utilities/from-css/",
       "destination": "/docs/concepts/utilities-reference/",
       "permanent": true
     }
@@ -13,11 +18,21 @@
   "headers": [
     {
       "source": "/zazz/(.*)",
-      "headers": [{ "key": "Access-Control-Allow-Origin", "value": "*" }]
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
     },
     {
       "source": "/pagefind/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
     }
   ]
 }
