@@ -1,5 +1,11 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.8.1 (2026-10-19)
+
+### scroll-fade
+
+- Fix: the fades never ran from the single-file bundle (`dist/zazz.css`, which the CDN snippets load). The minifier folded `animation-timeline` into the `animation` shorthand (parcel-bundler/lightningcss#1369), browsers drop a shorthand that names a `scroll()` timeline, and the registered fade depths stayed at 0, so a scroller showed a hard edge. The timeline longhands now sit in a block of their own, and a bundle test guards the output. Vendored and `index.css` consumers were never affected.
+
 ## 0.8.0 (2026-10-19)
 
 ### base

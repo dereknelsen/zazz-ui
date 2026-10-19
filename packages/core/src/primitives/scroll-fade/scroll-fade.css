@@ -76,16 +76,27 @@
       animation:
         ui-scroll-fade-reveal-start 1ms ease-in-out,
         ui-scroll-fade-reveal-end 1ms ease-in-out;
-      animation-timeline: scroll(self block), scroll(self block);
-      animation-range:
-        0 var(--ui-scroll-fade-reveal),
-        calc(100% - var(--ui-scroll-fade-reveal)) 100%;
-      animation-fill-mode: both;
     }
 
     @supports not (animation-timeline: scroll()) {
       --_scroll-fade-start: var(--ui-scroll-fade-size);
       --_scroll-fade-end: var(--ui-scroll-fade-size);
+    }
+  }
+
+  /* The timeline longhands sit in their own block, apart from the `animation`
+     shorthand above. Lightning CSS, which minifies dist/zazz.css, folds the
+     longhands of a block into the shorthand, timeline included
+     (parcel-bundler/lightningcss#1369), and browsers drop an `animation` that
+     names a `scroll()` timeline, so the bundle's fades never ran. Fill mode
+     rides along so the shorthand stands alone and is not expanded either. */
+  @supports (animation-timeline: scroll()) {
+    :where([data-ui~="scroll-fade"]) {
+      animation-timeline: scroll(self block), scroll(self block);
+      animation-range:
+        0 var(--ui-scroll-fade-reveal),
+        calc(100% - var(--ui-scroll-fade-reveal)) 100%;
+      animation-fill-mode: both;
     }
   }
 
