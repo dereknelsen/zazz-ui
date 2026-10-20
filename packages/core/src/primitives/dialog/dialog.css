@@ -5,12 +5,17 @@
  * @layer      variables, reset, components
  * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved)
  * @uses       <dialog>, ::backdrop — native modal + backdrop
+ * @uses       :root:has(dialog:modal) — overflow: hidden + scrollbar-gutter: stable while a modal
+ *             is open (WebKit ignores overscroll-behavior on boxes that do not overflow)
  * @uses       @starting-style + allow-discrete — open/close opacity, transform, overlay
  * @uses       anchor-name, container-type — layout hooks for sized variants
  * @tokens     --ui-dialog-* (@layer variables; --ui-dialog-h defaults to a keyword, so it is read
  *             raw: a --h length, or a tier carrying a length, applies; a scale
  *             number applies only as a base utility)
  * @presets    data-dialog-size="sm | md | lg | xl | 2xl | full | bleed" (the layout bands; sm when absent)
+ * @uses       @media (width < 40rem) + @container style(--ui-dialog-mobile-size) — below the sm
+ *             band every dialog takes the hook's size (layout-bleed by default) over its preset;
+ *             style queries are Firefox 151+, Chrome 111+, Safari 18+, an older engine keeps the preset
  * @consumedby alert-dialog.css, mobile-menu.css
  */
 
@@ -26,6 +31,9 @@
     --ui-dialog-border: 1px solid var(--color-border);
     /* the sm band, the default size */
     --ui-dialog-w: min(var(--layout-sm), 100% - var(--gutters) * 2);
+    /* below the sm band, the size every dialog takes: layout-bleed (edge to edge, no page
+       behind it), layout-full (inside the gutters), or none (its own preset) */
+    --ui-dialog-mobile-size: layout-bleed;
 
     /* Reveal transitions/animations */
     --ui-dialog-opacity--start: 0;
@@ -114,6 +122,16 @@
       opacity: 0;
     }
   }
+
+  /* Chromium and Firefox contain page scroll through overscroll-behavior above; WebKit
+     ignores it on a box that does not overflow (the backdrop, a short dialog), so the root
+     locks while a modal is open. The gutter stays the width of the scrollbar it replaces,
+     so neither the page nor the centred dialog shifts on open or on close; the scroll
+     position survives. At rest no gutter is reserved. */
+  :root:has(dialog:modal) {
+    overflow: hidden;
+    scrollbar-gutter: stable;
+  }
 }
 
 /* Size privates: written by data-dialog-size, non-inheriting. */
@@ -164,7 +182,10 @@
     isolation: isolate;
   }
 
+  /* A one-row grid, so the content slot is capped by the dialog's height rather than
+     sizing it (display went missing with the --ui-dialog-display token in 0.2). */
   :where([data-ui~="dialog"][open]) {
+    display: grid;
     grid-template-rows: minmax(0, 1fr);
     min-block-size: 0;
   }
@@ -186,16 +207,22 @@
     padding: 0;
   }
 
+  /* Each slot owns a row, whatever the order and whichever are present: a body on its
+     own still takes the flexible row, so it is the part that scrolls, never the dialog,
+     and the close button keeps its corner. */
   :where([data-ui~="dialog"]) [data-dialog-slot~="content"] {
     display: grid;
     align-self: center;
     grid-template-rows: auto minmax(0, 1fr) auto;
     position: relative;
     min-block-size: 0;
+    /* a centred grid item sizes to its content; the cap is what hands the body its scroll */
+    max-block-size: 100%;
     overflow: clip;
   }
 
   :where([data-ui~="dialog"]) [data-dialog-slot~="header"] {
+    grid-row: 1;
     display: flex;
     flex-direction: column;
     padding-inline: var(--space-sm);
@@ -213,6 +240,7 @@
   }
 
   :where([data-ui~="dialog"]) [data-dialog-slot~="body"] {
+    grid-row: 2;
     display: grid;
     padding-inline: var(--space-sm);
     padding-block: var(--space-md);
@@ -224,6 +252,7 @@
   }
 
   :where([data-ui~="dialog"]) [data-dialog-slot~="footer"] {
+    grid-row: 3;
     block-size: fit-content;
     position: sticky;
     inset-block-end: 0;
@@ -270,5 +299,30 @@
     --_dialog-shadow: none;
     max-inline-size: 100vi;
     max-block-size: 100svh;
+  }
+
+  /* Below the sm band the viewport is a phone, and every dialog takes --ui-dialog-mobile-size
+     over its preset: layout-bleed by default, so there is no page to see behind it. A style
+     query reads the hook on the dialog's parent, never on the dialog itself: set it on :root
+     for the site, or on one dialog's parent for that dialog alone. A viewport query, not a
+     container one, because a top-layer dialog is sized by the viewport. Style queries are
+     Firefox 151+; an older engine keeps the preset. */
+  @media (width < 40rem) {
+    @container style(--ui-dialog-mobile-size: layout-bleed) {
+      :where([data-ui~="dialog"]) {
+        --_dialog-w: 100vi;
+        --_dialog-h: 100svh;
+        --_dialog-radius: 0;
+        --_dialog-shadow: none;
+        max-inline-size: 100vi;
+        max-block-size: 100svh;
+      }
+    }
+
+    @container style(--ui-dialog-mobile-size: layout-full) {
+      :where([data-ui~="dialog"]) {
+        --_dialog-w: calc(100% - var(--gutters) * 2);
+      }
+    }
   }
 }

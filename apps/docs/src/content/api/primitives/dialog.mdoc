@@ -23,9 +23,21 @@ primitive: dialog
 <dialog data-ui="dialog" data-dialog-size="lg" closedby="any">…</dialog>
 ```
 
+Below the `sm` band the viewport is a phone, and every dialog takes the size in `--ui-dialog-mobile-size` over its preset: `layout-bleed` by default, edge to edge, so there is no page to see behind it and nothing for a software keyboard to scroll into view. `layout-full` keeps the gutters, and `none` keeps the dialog's own preset. The hook is read on the dialog's parent, so set it on `:root` for the site, or on one dialog's parent element for that dialog alone.
+
+```css
+:root {
+  --ui-dialog-mobile-size: layout-full;
+}
+```
+
 ## Light dismiss
 
 `closedby="any"` on the `<dialog>` lets a click on the backdrop close it, next to Esc. Chrome 134 and Firefox 141 do this natively. Safari 26 knows `closedby` but only its `none` and `closerequest` values, so `any` falls back to `closerequest` and the backdrop does nothing. The kit's dialog lifecycle script fills that gap: where `any` does not round-trip through the `closedBy` property, a press and release on the backdrop of a `closedby="any"` dialog calls `requestClose()`, which fires `cancel` as the native path does. Nothing in the markup changes, and the fallback stays idle where the browser handles it. A dialog that holds a form or a search still deserves a visible close button, for the people who find neither the backdrop nor Esc. `closedby="none"` (alert dialogs) and the default are left alone in both cases.
+
+## Scrolling inside
+
+The content slot is a three-row grid, and each slot owns its row whatever the order it comes in: the header on top, the body in the flexible middle, the footer at the bottom. A tall body scrolls on its own, inside the dialog's height cap, so the header, the footer, and the close button hold still around it; that is true of a dialog with a body and nothing else too.
 
 ## Attributes
 

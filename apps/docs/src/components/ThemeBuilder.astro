@@ -84,7 +84,9 @@ const chips = [
  * reads a `var()`) on the preview wrapper makes them recompute there from the
  * live theme, while the rest of the page keeps the site's values. The shadow
  * tokens are re-declared by the kit itself wherever `--shadow-tint` is set, so
- * the wrapper carries a no-op tint instead (see its `style`).
+ * the wrapper carries a no-op tint instead (see its `style`). Re-declaring
+ * `--ui-field-font-size` also drops the kit's iOS-only 16px floor (fields.css),
+ * so the preview restores it after the rest, or a focused field zooms the page.
  */
 const derived = Object.entries({
   ...languageData.tokens,
@@ -93,7 +95,12 @@ const derived = Object.entries({
   .filter(([, { value }]) => value.includes('var('))
   .map(([name, { value }]) => `${name}: ${value};`)
   .join(' ');
-const previewScope = `@layer zazz.variables { .fieldnotes__preview { ${derived} } }`;
+const previewScope = `@layer zazz.variables {
+  .fieldnotes__preview { ${derived} }
+  @supports (-webkit-touch-callout: none) {
+    .fieldnotes__preview { --ui-field-font-size: max(16px, var(--font-size-sm)); }
+  }
+}`;
 ---
 
 <style is:inline set:html={previewScope}></style>
@@ -230,7 +237,7 @@ const previewScope = `@layer zazz.variables { .fieldnotes__preview { ${derived} 
         </button>
         <button
           data-ui='button'
-          data-button-variant='ghost'
+          data-button-variant='warning'
           type='button'
           data-theme-reset-proxy
         >

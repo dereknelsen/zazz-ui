@@ -1,5 +1,17 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.8.2 (2026-10-20)
+
+### dialog
+
+- The page holds still under a modal. Chromium 144 and Firefox 150 already contained wheel and touch scrolling through `overscroll-behavior: contain` on the dialog and its backdrop; WebKit only honours it on a box that overflows, which the backdrop and a short dialog never do. While a modal is open the root now also gets `overflow: hidden` with `scrollbar-gutter: stable`. The gutter is the width of the scrollbar it replaces, so nothing shifts on open or on close and the scroll position survives; where scrollbars take space, a strip the colour of the page background sits where the track did until the dialog closes. On a phone with the keyboard open, iOS can still scroll the page to reveal the focused control; the dialog is pinned to the viewport, so the page only shows through the backdrop.
+- Fix: the open dialog is `display: grid` again (it went missing with the `--ui-dialog-display` token in 0.2.0), so the content slot is capped by the dialog's height instead of sizing it, and each slot owns its row whatever the order it comes in. A tall body scrolls on its own inside the cap while the header, the footer, and the close button hold still. Before, a tall dialog scrolled as a whole and carried the close button away, and a dialog with a body and nothing else never got a cap at all.
+- New hook `--ui-dialog-mobile-size`: below the `sm` band every dialog takes its size over `data-dialog-size`. The default is `layout-bleed`, edge to edge with no page behind it, so **a dialog on a phone now opens full-screen unless you say otherwise**; `layout-full` keeps the gutters and `none` keeps the preset. It is read through a style query on the dialog's parent: set it on `:root` for the site, or on one dialog's parent for that dialog alone. Style queries are Chrome 111, Safari 18, and Firefox 151; an older engine keeps the preset.
+
+### input
+
+- Fix: on iOS, `date`, `time`, `datetime-local`, `month`, and `week` inputs drew their padding and border outside `width: 100%` (webkit.org/b/301648), so a full-width field overflowed its column by the padding and border. An iOS-only rule takes both back out of the inline size, and they line up with the text inputs beside them.
+
 ## 0.8.1 (2026-10-19)
 
 ### scroll-fade

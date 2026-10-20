@@ -571,8 +571,10 @@
         ],
         "uses": [
           "<dialog>, ::backdrop — native modal + backdrop",
+          ":root:has(dialog:modal) — overflow: hidden + scrollbar-gutter: stable while a modal is open (WebKit ignores overscroll-behavior on boxes that do not overflow)",
           "@starting-style + allow-discrete — open/close opacity, transform, overlay",
-          "anchor-name, container-type — layout hooks for sized variants"
+          "anchor-name, container-type — layout hooks for sized variants",
+          "@media (width < 40rem) + @container style(--ui-dialog-mobile-size) — below the sm band every dialog takes the hook's size (layout-bleed by default) over its preset; style queries are Firefox 151+, Chrome 111+, Safari 18+, an older engine keeps the preset"
         ],
         "tokens": [
           "--ui-dialog-* (@layer variables; --ui-dialog-h defaults to a keyword, so it is read raw: a --h length, or a tier carrying a length, applies; a scale number applies only as a base utility)"
@@ -641,7 +643,8 @@
         ],
         "uses": [
           "::-webkit-calendar-picker-indicator — date/time picker chrome (WebKit)",
-          "mask — calendar icon (not background-image, for color: currentColor)"
+          "mask — calendar icon (not background-image, for color: currentColor)",
+          "@supports (-webkit-touch-callout: none) — iOS-only width fix for temporal inputs (webkit.org/b/301648)"
         ],
         "tokens": [
           "--ui-input-* (@layer variables; surface colors and height read the --ui-field-* family directly)"
@@ -1706,6 +1709,10 @@
     },
     "--ui-dialog-h": {
       "value": "fit-content",
+      "file": "primitives/dialog/dialog.css"
+    },
+    "--ui-dialog-mobile-size": {
+      "value": "layout-bleed",
       "file": "primitives/dialog/dialog.css"
     },
     "--ui-dialog-opacity--end": {
