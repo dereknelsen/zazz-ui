@@ -12,7 +12,7 @@ export default defineConfig({
   // preview` gets it from Vite's `cors` here. (In `astro dev` the frame is
   // same-origin instead: Astro's dev server blocks cross-site subresources.)
   vite: {
-    server: { cors: { origin: "*" }, allowedHosts: [".ngrok-free.app"] },
+    server: { cors: { origin: "*" }, allowedHosts: [".ngrok-free.app", ".ngrok-free.dev"] },
     preview: { cors: { origin: "*" } },
   },
 });

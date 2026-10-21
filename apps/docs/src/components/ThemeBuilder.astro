@@ -12,7 +12,7 @@
  * `<fieldnotes-demo>` / `<fieldnotes-sightings>` (scripts/fieldnotes.ts), which BaseLayout defines
  * on every page, so the component works however its page is reached.
  */
-import languageData from '@zazz-ui/core/editor/zazz.language-data.json';
+import languageData from "@zazz-ui/core/editor/zazz.language-data.json";
 import {
   Check,
   Code,
@@ -20,17 +20,17 @@ import {
   RotateCcw,
   SlidersHorizontal,
   X,
-} from '@lucide/astro';
-import { species } from '../lib/fieldnotes.ts';
-import { STOPS, toHex } from '../lib/palette.ts';
-import AlertSettings from './fieldnotes/AlertSettings.astro';
-import LifeList from './fieldnotes/LifeList.astro';
-import SightingForm from './fieldnotes/SightingForm.astro';
-import SightingsTable from './fieldnotes/SightingsTable.astro';
-import SpeciesCard from './fieldnotes/SpeciesCard.astro';
-import Spotters from './fieldnotes/Spotters.astro';
+} from "@lucide/astro";
+import { species } from "../lib/fieldnotes.ts";
+import { STOPS, toHex } from "../lib/palette.ts";
+import AlertSettings from "./fieldnotes/AlertSettings.astro";
+import LifeList from "./fieldnotes/LifeList.astro";
+import SightingForm from "./fieldnotes/SightingForm.astro";
+import SightingsTable from "./fieldnotes/SightingsTable.astro";
+import SpeciesCard from "./fieldnotes/SpeciesCard.astro";
+import Spotters from "./fieldnotes/Spotters.astro";
 
-const TOASTER = 'fieldnotes-toaster';
+const TOASTER = "fieldnotes-toaster";
 
 /**
  * The controls' starting values, copied from the kit's tokens in
@@ -50,14 +50,14 @@ const defaults = {
 
 const palettes = [
   {
-    name: 'primary',
-    label: 'Primary',
-    hint: 'Buttons, links, focus rings, and selection.',
+    name: "primary",
+    label: "Primary",
+    hint: "Buttons, links, focus rings, and selection.",
   },
   {
-    name: 'neutral',
-    label: 'Neutral',
-    hint: 'Surfaces, borders, and body text.',
+    name: "neutral",
+    label: "Neutral",
+    hint: "Surfaces, borders, and body text.",
   },
 ] as const;
 
@@ -65,16 +65,16 @@ const [featured, ...rest] = species;
 
 /** The collapsed bar's chips (narrow screens): one per control, opening the sheet on that control. */
 const chips = [
-  { id: 'tb-primary-hex', label: 'Primary', swatch: 'var(--color-primary)' },
+  { id: "tb-primary-hex", label: "Primary", swatch: "var(--color-primary)" },
   {
-    id: 'tb-neutral-hex',
-    label: 'Neutral',
-    swatch: 'var(--color-neutral-500)',
+    id: "tb-neutral-hex",
+    label: "Neutral",
+    swatch: "var(--color-neutral-500)",
   },
-  { id: 'tb-spacing', label: 'Spacing' },
-  { id: 'tb-radius', label: 'Radius' },
-  { id: 'tb-elevation', label: 'Card elevation' },
-  { id: 'tb-shadow', label: 'Shadow angle' },
+  { id: "tb-spacing", label: "Spacing" },
+  { id: "tb-radius", label: "Radius" },
+  { id: "tb-elevation", label: "Card elevation" },
+  { id: "tb-shadow", label: "Shadow angle" },
 ];
 
 /**
@@ -92,9 +92,9 @@ const derived = Object.entries({
   ...languageData.tokens,
   ...languageData.hooks,
 })
-  .filter(([, { value }]) => value.includes('var('))
+  .filter(([, { value }]) => value.includes("var("))
   .map(([name, { value }]) => `${name}: ${value};`)
-  .join(' ');
+  .join(" ");
 const previewScope = `@layer zazz.variables {
   .fieldnotes__preview { ${derived} }
   @supports (-webkit-touch-callout: none) {
@@ -106,8 +106,8 @@ const previewScope = `@layer zazz.variables {
 <style is:inline set:html={previewScope}></style>
 
 <fieldnotes-demo
-  class='fieldnotes'
-  style='
+  class="fieldnotes"
+  style="
     --display: grid;
     --position: relative;
     --items: start;
@@ -115,7 +115,7 @@ const previewScope = `@layer zazz.variables {
     --template-cols: minmax(0, 1fr);
     --template-cols--lg: 20rem minmax(0, 1fr);
     --w: 100%;
-  '
+  "
 >
   <!--
     Narrow screens: a bar stuck to the bottom with one chip per control and the
@@ -123,56 +123,58 @@ const previewScope = `@layer zazz.variables {
     width changes (scripts/theme-builder.ts). Wide screens: the form inline, stuck below the header.
   -->
   <theme-builder
-    style='
+    style="
       --position: sticky;
       --order: 1;
       --order--lg: 0;
       --pt--lg: 6;
-      --pb: 3;
+      --pb: 0;
       --pb--lg: 6;
       --top: auto;
       --top--lg: calc(var(--ui-header-height, 0rem));
       --bottom: 0;
       --bottom--lg: auto;
       --z: 30;
-    '
+    "
   >
     <div
-      data-ui='card theme-dark'
-      data-card-variant='outline'
+      data-ui="card theme-dark"
+      data-card-variant="outline"
       data-theme-bar
-      style='
+      style="
         --display: grid;
         --display--lg: none;
-        --p: 3;
+        --p: 6;
+        --pb: 12;
         --gap: 3;
         --text: var(--color-card-foreground);
         --bg: var(--color-card);
-        --shadow: var(--shadow-lg);
-      '
+        --radius: 8;
+        --radius-b: 0;
+      "
     >
       <div
-        data-ui='scroll-fade'
-        data-scroll-fade-axis='x'
-        style='
+        data-ui="scroll-fade"
+        data-scroll-fade-axis="x"
+        style="
           --display: flex;
           --px: 3;
           --py: 0.5;
           --gap: 2;
           --mx: -3;
           --overflow-x: auto;
-        '
+        "
       >
         {
           chips.map((chip) => (
             <button
-              type='button'
-              data-ui='button'
-              data-button-variant='outline'
-              command='show-modal'
-              commandfor='tb-sheet'
+              type="button"
+              data-ui="button"
+              data-button-variant="outline"
+              command="show-modal"
+              commandfor="tb-sheet"
               data-theme-chip={chip.id}
-              style='
+              style="
                 --display: grid;
                 --place-items: start;
                 --shrink: 0;
@@ -181,29 +183,29 @@ const previewScope = `@layer zazz.variables {
                 --gap: 0.5;
                 --h: auto;
                 --text-align: start;
-              '
+              "
             >
               <span
-                data-ui='text-xs'
-                style='--text: var(--color-muted-foreground)'
+                data-ui="text-xs"
+                style="--text: var(--color-muted-foreground)"
               >
                 {chip.label}
               </span>
               <span
-                style='
+                style="
                   --display: flex;
                   --items: center;
                   --gap: 2;
-                '
+                "
               >
                 {chip.swatch && (
                   <span
-                    aria-hidden='true'
+                    aria-hidden="true"
                     data-theme-chip-swatch
                     style={`--size: 3; --bg: ${chip.swatch}; --radius: full; --ring: 1; --ring-color: var(--color-border)`}
                   />
                 )}
-                <span class='fieldnotes__num' data-theme-chip-value>
+                <span class="fieldnotes__num" data-theme-chip-value>
                   –
                 </span>
               </span>
@@ -212,96 +214,96 @@ const previewScope = `@layer zazz.variables {
         }
       </div>
       <div
-        style='
+        style="
           --display: grid;
           --grid-cols: 3;
           --gap: 2;
-        '
+        "
       >
         <button
-          data-ui='button'
-          data-button-variant='primary'
-          type='button'
+          data-ui="button"
+          data-button-variant="primary"
+          type="button"
           data-theme-copy-proxy
         >
-          <Copy size={16} aria-hidden='true' /> Copy
+          <Copy size={16} aria-hidden="true" /> Copy
         </button>
         <button
-          data-ui='button'
-          data-button-variant='outline'
-          type='button'
-          command='show-modal'
-          commandfor='tb-sheet'
+          data-ui="button"
+          data-button-variant="outline"
+          type="button"
+          command="show-modal"
+          commandfor="tb-sheet"
         >
-          <SlidersHorizontal size={16} aria-hidden='true' /> Edit
+          <SlidersHorizontal size={16} aria-hidden="true" /> Edit
         </button>
         <button
-          data-ui='button'
-          data-button-variant='warning'
-          type='button'
+          data-ui="button"
+          data-button-variant="warning"
+          type="button"
           data-theme-reset-proxy
         >
-          <RotateCcw size={16} aria-hidden='true' /> Reset
+          <RotateCcw size={16} aria-hidden="true" /> Reset
         </button>
       </div>
     </div>
 
     <dialog
-      id='tb-sheet'
-      data-ui='dialog theme-dark'
-      closedby='any'
-      aria-labelledby='tb-title'
+      id="tb-sheet"
+      data-ui="dialog theme-dark"
+      closedby="any"
+      aria-labelledby="tb-title"
     >
-      <div data-dialog-slot='content'>
-        <div data-dialog-slot='body' data-theme-sheet></div>
+      <div data-dialog-slot="content">
+        <div data-dialog-slot="body" data-theme-sheet></div>
       </div>
       <button
-        data-ui='button'
-        data-dialog-slot='close'
-        data-button-size='icon'
-        data-button-variant='ghost'
-        type='button'
-        commandfor='tb-sheet'
-        command='close'
-        aria-label='Close'
+        data-ui="button"
+        data-dialog-slot="close"
+        data-button-size="icon"
+        data-button-variant="ghost"
+        type="button"
+        commandfor="tb-sheet"
+        command="close"
+        aria-label="Close"
       >
-        <X aria-hidden='true' />
+        <X aria-hidden="true" />
       </button>
     </dialog>
 
     <div
       data-theme-panel
-      style='
+      style="
         --display: none;
         --display--lg: block;
-      '
+      "
     >
       <form
-        data-ui='card theme-dark'
-        data-card-variant='outline'
-        aria-labelledby='tb-title'
-        style='
+        data-ui="card theme-dark"
+        data-card-variant="outline"
+        aria-labelledby="tb-title"
+        style="
           --gap: 4;
           --text: var(--color-card-foreground);
           --bg: var(--color-card);
-        '
+        "
       >
         <header
-          style='
+          style="
             --display: grid;
             --gap: 1;
-          '
+          "
         >
           <h2
-            id='tb-title'
-            style='
+            id="tb-title"
+            style="
               --font-size: var(--font-size-lg);
               --font-family: var(--font-family-heading);
-            '
+            "
           >
             Theme
           </h2>
-          <p data-ui='text-sm' style='--text: var(--color-muted-foreground)'>
+          <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
             Changes apply to the preview. Copy them into your stylesheet when
             you're done.
           </p>
@@ -309,47 +311,47 @@ const previewScope = `@layer zazz.variables {
 
         {
           palettes.map((p) => (
-            <div data-ui='field'>
-              <label data-field-slot='label' for={`tb-${p.name}-hex`}>
+            <div data-ui="field">
+              <label data-field-slot="label" for={`tb-${p.name}-hex`}>
                 {p.label}
               </label>
               <div
-                style='
+                style="
                   --display: grid;
                   --gap: 2;
-                '
+                "
               >
-                <label data-ui='input-group'>
+                <label data-ui="input-group">
                   <input
-                    data-ui='input'
+                    data-ui="input"
                     id={`tb-${p.name}-hex`}
                     name={`${p.name}-hex`}
                     value={defaults[p.name]}
-                    spellcheck='false'
-                    autocomplete='off'
-                    pattern='#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})'
+                    spellcheck="false"
+                    autocomplete="off"
+                    pattern="#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})"
                     data-theme-hex={p.name}
                   />
-                  <span data-input-group-slot='addon'>
+                  <span data-input-group-slot="addon">
                     <input
-                      type='color'
+                      type="color"
                       name={`${p.name}-color`}
                       value={defaults[p.name]}
                       aria-label={`${p.label} color picker`}
-                      class='theme-builder__swatch'
+                      class="theme-builder__swatch"
                       data-theme-color={p.name}
                     />
                   </span>
                 </label>
                 <div
-                  role='img'
+                  role="img"
                   aria-label={`${p.label} palette, 50 to 950`}
                   data-theme-strip={p.name}
-                  style='
+                  style="
                     --display: grid;
                     --grid-cols: 11;
                     --gap: 1;
-                  '
+                  "
                 >
                   {STOPS.map((stop) => (
                     <span
@@ -369,8 +371,8 @@ const previewScope = `@layer zazz.variables {
                   ))}
                 </div>
               </div>
-              <div data-field-slot='description'>
-                <span data-field-slot='hint' data-theme-hint={p.name}>
+              <div data-field-slot="description">
+                <span data-field-slot="hint" data-theme-hint={p.name}>
                   {p.hint}
                 </span>
               </div>
@@ -378,247 +380,247 @@ const previewScope = `@layer zazz.variables {
           ))
         }
 
-        <div data-ui='field'>
-          <label data-field-slot='label' for='tb-spacing'>Spacing</label>
-          <label data-ui='input-group'>
+        <div data-ui="field">
+          <label data-field-slot="label" for="tb-spacing">Spacing</label>
+          <label data-ui="input-group">
             <input
-              data-ui='input'
-              id='tb-spacing'
-              name='spacing'
-              type='number'
-              min='0'
-              step='0.01'
+              data-ui="input"
+              id="tb-spacing"
+              name="spacing"
+              type="number"
+              min="0"
+              step="0.01"
               value={defaults.spacing}
               data-default={defaults.spacing}
-              data-theme-number='spacing'
+              data-theme-number="spacing"
             />
             <span
-              data-input-group-slot='addon'
-              data-input-group-align='inline-end'
+              data-input-group-slot="addon"
+              data-input-group-align="inline-end"
             >
-              <span data-input-group-slot='text'>rem</span>
+              <span data-input-group-slot="text">rem</span>
             </span>
           </label>
         </div>
 
-        <div data-ui='field'>
+        <div data-ui="field">
           <label
-            data-field-slot='label'
-            for='tb-radius'
-            style='
+            data-field-slot="label"
+            for="tb-radius"
+            style="
               --display: flex;
               --items: center;
               --justify: space-between;
-            '
+            "
           >
             <span>Radius</span>
             <output
-              class='fieldnotes__num'
-              for='tb-radius'
-              style='--text: var(--color-muted-foreground)'
+              class="fieldnotes__num"
+              for="tb-radius"
+              style="--text: var(--color-muted-foreground)"
             >
               {defaults.radius}×
             </output>
           </label>
           <input
-            id='tb-radius'
-            name='radius'
-            type='range'
-            min='0'
-            max='3'
-            step='0.25'
+            id="tb-radius"
+            name="radius"
+            type="range"
+            min="0"
+            max="3"
+            step="0.25"
             value={defaults.radius}
             data-default={defaults.radius}
-            data-theme-number='radius'
+            data-theme-number="radius"
           />
         </div>
 
-        <div data-ui='field'>
+        <div data-ui="field">
           <label
-            data-field-slot='label'
-            for='tb-elevation'
-            style='
+            data-field-slot="label"
+            for="tb-elevation"
+            style="
               --display: flex;
               --items: center;
               --justify: space-between;
-            '
+            "
           >
             <span>Card elevation</span>
             <output
-              class='fieldnotes__num'
-              for='tb-elevation'
-              style='--text: var(--color-muted-foreground)'
+              class="fieldnotes__num"
+              for="tb-elevation"
+              style="--text: var(--color-muted-foreground)"
             >
               1.5
             </output>
           </label>
           <input
-            id='tb-elevation'
-            name='card-elevation'
-            type='range'
-            min='0'
-            max='8'
-            step='0.5'
-            value='1.5'
+            id="tb-elevation"
+            name="card-elevation"
+            type="range"
+            min="0"
+            max="8"
+            step="0.5"
+            value="1.5"
             data-fieldnotes-elevation
           />
-          <div data-field-slot='description'>
-            <span data-field-slot='hint'
+          <div data-field-slot="description">
+            <span data-field-slot="hint"
               >Preview only: not part of the copied theme.</span
             >
           </div>
         </div>
 
-        <div data-ui='field'>
+        <div data-ui="field">
           <label
-            data-field-slot='label'
-            for='tb-shadow'
-            style='
+            data-field-slot="label"
+            for="tb-shadow"
+            style="
               --display: flex;
               --items: center;
               --justify: space-between;
-            '
+            "
           >
             <span>Shadow angle</span>
             <output
-              class='fieldnotes__num'
-              for='tb-shadow'
-              style='--text: var(--color-muted-foreground)'
+              class="fieldnotes__num"
+              for="tb-shadow"
+              style="--text: var(--color-muted-foreground)"
             >
               {defaults.shadow}°
             </output>
           </label>
           <input
-            id='tb-shadow'
-            name='shadow-angle'
-            type='range'
-            min='0'
-            max='360'
-            step='15'
+            id="tb-shadow"
+            name="shadow-angle"
+            type="range"
+            min="0"
+            max="360"
+            step="15"
             value={defaults.shadow}
             data-default={defaults.shadow}
-            data-theme-number='shadow'
+            data-theme-number="shadow"
           />
-          <div data-field-slot='description'>
-            <span data-field-slot='hint'
+          <div data-field-slot="description">
+            <span data-field-slot="hint"
               >0° casts down; the light turns clockwise from there.</span
             >
           </div>
         </div>
 
         <div
-          style='
+          style="
             --display: grid;
             --pb: 4;
             --gap: 2;
             --border-b: 1;
-          '
+          "
         >
           <button
-            data-ui='button'
-            data-button-variant='primary'
-            type='button'
+            data-ui="button"
+            data-button-variant="primary"
+            type="button"
             data-theme-copy
             disabled
           >
             <span
               data-copy-idle
-              style='
+              style="
                 --display: inline-flex;
                 --items: center;
                 --gap: 2;
-              '
+              "
             >
-              <Copy size={16} aria-hidden='true' /> Copy theme
+              <Copy size={16} aria-hidden="true" /> Copy theme
             </span>
             <span
               data-copy-done
               hidden
-              style='
+              style="
                 --display: inline-flex;
                 --items: center;
                 --gap: 2;
-              '
+              "
             >
-              <Check size={16} aria-hidden='true' /> Copied
+              <Check size={16} aria-hidden="true" /> Copied
             </span>
           </button>
           <button
-            data-ui='button'
-            data-button-variant='warning'
-            type='reset'
+            data-ui="button"
+            data-button-variant="warning"
+            type="reset"
             data-theme-reset
             disabled
           >
-            <RotateCcw size={16} aria-hidden='true' /> Reset
+            <RotateCcw size={16} aria-hidden="true" /> Reset
           </button>
         </div>
 
         <button
-          data-ui='button'
-          data-button-variant='outline'
-          type='button'
-          command='show-modal'
-          commandfor='tb-css'
+          data-ui="button"
+          data-button-variant="outline"
+          type="button"
+          command="show-modal"
+          commandfor="tb-css"
         >
-          <Code size={16} aria-hidden='true' /> Preview CSS
+          <Code size={16} aria-hidden="true" /> Preview CSS
         </button>
 
         <dialog
-          id='tb-css'
-          data-ui='dialog'
-          closedby='any'
-          aria-labelledby='tb-css-title'
+          id="tb-css"
+          data-ui="dialog"
+          closedby="any"
+          aria-labelledby="tb-css-title"
         >
-          <div data-dialog-slot='content'>
-            <header data-dialog-slot='header' style='--pr: 12'>
-              <h2 id='tb-css-title' data-ui='text-md'>Theme CSS</h2>
+          <div data-dialog-slot="content">
+            <header data-dialog-slot="header" style="--pr: 12">
+              <h2 id="tb-css-title" data-ui="text-md">Theme CSS</h2>
               <p
-                data-ui='text-sm'
-                style='--text: var(--color-muted-foreground)'
+                data-ui="text-sm"
+                style="--text: var(--color-muted-foreground)"
               >
                 Only the variables you changed. Paste it into your stylesheet.
               </p>
             </header>
-            <div data-dialog-slot='body'>
+            <div data-dialog-slot="body">
               <pre
-                data-ui='text-xs'
-                style='
+                data-ui="text-xs"
+                style="
                   --p: 3;
                   --font-family: var(--font-family-mono);
                   --bg: var(--color-muted);
                   --radius: 2.5;
                   --overflow: auto;
-                '><code class='theme-builder__css' data-theme-css>/* No changes yet */</code></pre>
+                "><code class='theme-builder__css' data-theme-css>/* No changes yet */</code></pre>
             </div>
-            <footer data-dialog-slot='footer'>
+            <footer data-dialog-slot="footer">
               <button
-                data-ui='button'
-                type='button'
-                commandfor='tb-css'
-                command='close'>Close</button
+                data-ui="button"
+                type="button"
+                commandfor="tb-css"
+                command="close">Close</button
               >
               <button
-                data-ui='button'
-                data-button-variant='primary'
-                type='button'
+                data-ui="button"
+                data-button-variant="primary"
+                type="button"
                 data-theme-copy-proxy
               >
-                <Copy size={16} aria-hidden='true' /> Copy
+                <Copy size={16} aria-hidden="true" /> Copy
               </button>
             </footer>
           </div>
           <button
-            data-ui='button'
-            data-dialog-slot='close'
-            data-button-size='icon'
-            data-button-variant='ghost'
-            type='button'
-            commandfor='tb-css'
-            command='close'
-            aria-label='Close'
+            data-ui="button"
+            data-dialog-slot="close"
+            data-button-size="icon"
+            data-button-variant="ghost"
+            type="button"
+            commandfor="tb-css"
+            command="close"
+            aria-label="Close"
           >
-            <X aria-hidden='true' />
+            <X aria-hidden="true" />
           </button>
         </dialog>
       </form>
@@ -628,23 +630,24 @@ const previewScope = `@layer zazz.variables {
 
   <!-- --shadow-tint at the kit's default makes the kit re-declare its shadow tokens here, so they follow the preview's spacing and light angle. -->
   <div
-    class='fieldnotes__preview'
-    data-ui='scroll-fade'
-    data-scroll-fade-axis='x'
-    style='
-      --px: 0;
-      --px--md: 6;
+    class="fieldnotes__preview"
+    data-ui="scroll-fade"
+    data-scroll-fade-axis="x"
+    style="
+      --px--lg: 6;
       --py: 6;
+      --pl: var(--gutters);
+      --pr: 0;
       --bg: var(--color-background);
       --shadow-tint: var(--color-shadow);
       --overflow-x: auto;
-    '
+    "
   >
     <!-- Packed like a masonry by <fieldnotes-demo>: it measures each card into a row span. -->
     <div
-      data-ui='container'
+      data-ui="container"
       data-fieldnotes-grid
-      style='
+      style="
         --display: grid;
         --grid-flow: dense;
         --items: start;
@@ -652,7 +655,7 @@ const previewScope = `@layer zazz.variables {
         --gap-x: 6;
         --gap-y: 0;
         --w: 84rem;
-      '
+      "
     >
       <SightingForm toaster={TOASTER} />
       <LifeList />
@@ -665,5 +668,5 @@ const previewScope = `@layer zazz.variables {
     </div>
   </div>
 
-  <ui-toaster id={TOASTER} popover='manual'></ui-toaster>
+  <ui-toaster id={TOASTER} popover="manual"></ui-toaster>
 </fieldnotes-demo>

@@ -1,27 +1,27 @@
 ---
-import Logo from '../components/Logo.astro';
-import ThemeBuilder from '../components/ThemeBuilder.astro';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { site } from '../site.config.ts';
-import { ArrowRight } from '@lucide/astro';
+import Logo from "../components/Logo.astro";
+import ThemeBuilder from "../components/ThemeBuilder.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../site.config.ts";
+import { ArrowRight, MoveRight } from "@lucide/astro";
 ---
 
 <BaseLayout title={site.name}>
-  <main id='main' style='
+  <main id="main" style="
       --display: grid;
       --position: relative;
-    '>
+    ">
     <section
-      data-ui='layout'
-      data-layout-size='bleed'
-      style='
+      data-ui="layout"
+      data-layout-size="bleed"
+      style="
         --place-content: start stretch;
         --pb: 12;
         --min-h: calc(100svh - var(--ui-header-height));
-      '
+      "
     >
       <div
-        style='
+        style="
           --display: grid;
           --position: relative;
           --place-items: center;
@@ -30,40 +30,40 @@ import { ArrowRight } from '@lucide/astro';
           --pb: 6;
           --h: 112;
           --max-h: 70svh;
-        '
+        "
       >
         <div
-          style='
+          style="
             --position: absolute;
             --inset: 0;
             --bg-linear: to bottom;
             --bg-stops: transparent 0%, var(--color-background);
             --z: 20;
-          '
+          "
         >
         </div>
         <figure
-          style='
+          style="
             --display: grid;
             --position: absolute;
             --band: layout-bleed;
             --inset: 0;
             --z: 10;
-          '
+          "
         >
           <hero-scene
-            aria-hidden='true'
-            style='
+            aria-hidden="true"
+            style="
               --position: absolute;
               --inset: 0;
               --size: 100%;
               --pointer-events: none;
-            '
+            "
           >
           </hero-scene>
         </figure>
         <div
-          style='
+          style="
             --display: flex-col;
             --position: relative;
             --items: start;
@@ -72,62 +72,62 @@ import { ArrowRight } from '@lucide/astro';
             --pb: 12;
             --gap: 12;
             --z: 30;
-          '
+          "
         >
           <hgroup
-            style='
+            style="
               --display: grid;
               --place-items: start;
               --place-content: stretch;
               --template-cols--lg: 1.2fr 1fr;
               --gap: 12;
-            '
+            "
           >
             <div
-              style='
+              style="
                 --display: flex-col;
                 --gap: 4;
                 --text-align: start;
-              '
+              "
             >
               <h1
-                data-ui='sr-only'
-                style='--text: var(--color-muted-foreground)'
+                data-ui="sr-only"
+                style="--text: var(--color-muted-foreground)"
               >
                 {site.title}
               </h1>
-              <p data-ui='text-h1' style='--text-wrap: balance'>
+              <p data-ui="text-h1" style="--text-wrap: balance">
                 A design system <br />for the baseline web.
               </p>
             </div>
             <div
-              style='
+              style="
                 --display: flex-col;
                 --justify: end;
                 --pb: 1;
                 --gap: 6;
                 --h: 100%;
-              '
+              "
             >
-              <p data-ui='text-lg' style='--text-wrap: balance'>
+              <p data-ui="text-lg" style="--text-wrap: balance">
                 A unified collection of web-native primitives, style utilities,
                 and design tokens for no-build, low-build, and legacy projects.
               </p>
               <div
-                style='
+                style="
                   --display: flex;
                   --gap: 2;
-                '
+                "
               >
                 <a
-                  href='/docs/quick-start/'
-                  data-ui='button'
-                  data-button-variant='primary'>Quick start</a
+                  href="/docs/quick-start/"
+                  data-ui="button"
+                  data-button-variant="primary">Quick start</a
                 >
                 <a
-                  href='/playground'
-                  data-ui='button'
-                  data-button-variant='ghost'>Playground <ArrowRight /></a
+                  href="/playground"
+                  data-ui="button"
+                  data-button-variant="ghost">Playground <ArrowRight /></a
                 >
               </div>
             </div>
@@ -135,11 +135,40 @@ import { ArrowRight } from '@lucide/astro';
         </div>
       </div>
 
+      <hr
+        data-ui="divider"
+        style="
+          --display: block;
+          --display--lg: none;
+        "
+      />
+
+      <hgroup
+        style="
+          --display: flex;
+          --display--lg: none;
+          --items: center;
+          --justify: space-between;
+          --px: var(--gutters);
+          --pt: 6;
+        "
+      >
+        <h2 data-ui="text-h6">Build a theme</h2>
+        <a
+          href="/docs/theme-builder/"
+          data-ui="badge text-eyebrow"
+          data-badge-variant="link"
+          style="--text: var(--color-muted-foreground)"
+          >Swipe for more <MoveRight /></a
+        >
+      </hgroup>
       <div
-        style='
-          --band: layout-xl;
-          --col-end: layout-2xl;
-        '
+        style="
+          --band: layout-bleed;
+          --band--lg: layout-xl;
+          --col-end: layout-bleed;
+          --col-end--lg: layout-2xl;
+        "
       >
         <ThemeBuilder />
       </div>
