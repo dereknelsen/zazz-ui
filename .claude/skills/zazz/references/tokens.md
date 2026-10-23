@@ -27,7 +27,7 @@ Two rules govern every choice:
   (`--px: 6`). `--spacing` is fluid (a `clamp()`).
 - **No numeric step scale.** Use a utility number (`--max-w: 96` is 96 × `--spacing`) or `calc(var(--spacing) * N)` in CSS; write `1px` and `100%` directly.
 - **Utilities:** padding `--p` `--px` `--py` `--pt` `--pb` `--pl` `--pr`; margin `--m` `--mx` `--my`
-  `--mt` `--mb` `--ml` `--mr` (+ `auto`); gap `--gap` `--gap-x` `--gap-y`; inset `--inset` `--inset-x` `--inset-y` `--top`
+  `--mt` `--mb` `--ml` `--mr` (+ `auto`); gap `--gap` `--gap-x` `--gap-y`; space between children `--space-x` `--space-y` (on the container, states and breakpoints; prefer `--gap` in flex and grid); inset `--inset` `--inset-x` `--inset-y` `--top`
   `--bottom` `--left` `--right` (the four sides also take `auto`, at any breakpoint).
   Sides are `l`/`t`/`r`/`b`; they set logical properties, so `l` is the right side in RTL.
 - **Sizing utilities:** `--w --h --size --min-w --max-w --min-h --max-h` (dual: number or length,
@@ -141,8 +141,9 @@ breakpoints, so a bottom sheet can cast up on mobile). A shadow utility never re
   `data-ui="divide-x"` / `"divide-y"` (a border between direct children; `--divide` on the container sizes or colors it, §11).
 - **Scroll fade:** `data-ui="scroll-fade"` (+ `data-scroll-fade-axis="x"`), hooks
   `--ui-scroll-fade-size`, `--ui-scroll-fade-reveal`.
-- **Box utilities (no tiers):** `--overflow --overflow-x --overflow-y`, `--object-fit --object-position`, `--z`,
+- **Box utilities (no tiers):** `--overflow --overflow-x --overflow-y`, `--object-fit --object-position`,
   `--visibility`.
+- **`--z`** takes state tiers and needs no base value: `--position: relative; --z--hover: 1`. Like any z-index, it does nothing on a static element that isn't a flex or grid item.
 
 ## 8. Focus ring
 

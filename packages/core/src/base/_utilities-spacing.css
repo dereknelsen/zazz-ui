@@ -142,6 +142,48 @@
     row-gap: calc(var(--_gap-y-len) + var(--_gap-y-num) * var(--spacing));
   }
 
+  :where([style*="--space-x:"], [style*="--space-x--"], [style*="--group-space-x--"]) {
+    --_space-x-resolved: var(--_space-x-starting, var(--_space-x-disabled, var(--_space-x-active, var(--_space-x-focus-visible, var(--_space-x-focus-within, var(--_space-x-hover, var(--_space-x-checked, var(--_space-x-current, var(--_space-x-open, var(--_space-x-g-disabled, var(--_space-x-g-active, var(--_space-x-g-focus-visible, var(--_space-x-g-focus-within, var(--_space-x-g-hover, var(--_space-x-g-checked, var(--_space-x-g-current, var(--_space-x-g-open, var(--_space-x-stuck, var(--_space-x-2xl, var(--_space-x-xl, var(--_space-x-lg, var(--_space-x-md, var(--_space-x-sm, var(--_space-x))))))))))))))))))))))));
+  }
+  :where([style*="--space-x:"]) {
+    --_space-x: var(--space-x);
+    --_space-x-len: var(--_space-x-resolved);
+    --_space-x-num: var(--_space-x-resolved);
+    --_space-x-a: calc(var(--_space-x-len) + var(--_space-x-num) * var(--spacing));
+    --_space-x-slot: a;
+  }
+  @container style(--_space-x-slot: a) {
+    :where([style*="--space-x:"]) {
+      --_space-x-b: calc(var(--_space-x-len) + var(--_space-x-num) * var(--spacing));
+      --_space-x-slot: b;
+    }
+    :where(:not(:last-child, dialog, [popover])) { --_space-x-a: inherit; margin-inline-end: var(--_space-x-a); }
+  }
+  @container style(--_space-x-slot: b) {
+    :where(:not(:last-child, dialog, [popover])) { --_space-x-b: inherit; margin-inline-end: var(--_space-x-b); }
+  }
+
+  :where([style*="--space-y:"], [style*="--space-y--"], [style*="--group-space-y--"]) {
+    --_space-y-resolved: var(--_space-y-starting, var(--_space-y-disabled, var(--_space-y-active, var(--_space-y-focus-visible, var(--_space-y-focus-within, var(--_space-y-hover, var(--_space-y-checked, var(--_space-y-current, var(--_space-y-open, var(--_space-y-g-disabled, var(--_space-y-g-active, var(--_space-y-g-focus-visible, var(--_space-y-g-focus-within, var(--_space-y-g-hover, var(--_space-y-g-checked, var(--_space-y-g-current, var(--_space-y-g-open, var(--_space-y-stuck, var(--_space-y-2xl, var(--_space-y-xl, var(--_space-y-lg, var(--_space-y-md, var(--_space-y-sm, var(--_space-y))))))))))))))))))))))));
+  }
+  :where([style*="--space-y:"]) {
+    --_space-y: var(--space-y);
+    --_space-y-len: var(--_space-y-resolved);
+    --_space-y-num: var(--_space-y-resolved);
+    --_space-y-a: calc(var(--_space-y-len) + var(--_space-y-num) * var(--spacing));
+    --_space-y-slot: a;
+  }
+  @container style(--_space-y-slot: a) {
+    :where([style*="--space-y:"]) {
+      --_space-y-b: calc(var(--_space-y-len) + var(--_space-y-num) * var(--spacing));
+      --_space-y-slot: b;
+    }
+    :where(:not(:last-child, dialog, [popover])) { --_space-y-a: inherit; margin-block-end: var(--_space-y-a); }
+  }
+  @container style(--_space-y-slot: b) {
+    :where(:not(:last-child, dialog, [popover])) { --_space-y-b: inherit; margin-block-end: var(--_space-y-b); }
+  }
+
   :where([style*="--inset:"], [style*="--inset--"]) {
     --_inset-resolved: var(--_inset-2xl, var(--_inset-xl, var(--_inset-lg, var(--_inset-md, var(--_inset-sm, var(--_inset))))));
   }

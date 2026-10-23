@@ -13,6 +13,15 @@ describe("utilityRows", () => {
     });
   });
 
+  it("names the children's margin a --space-* utility sets, with both tier kinds and a base", () => {
+    const [space] = utilityRows(["space-y"]);
+    expect(space).toMatchObject({
+      properties: "margin-block-end on each direct child but the last",
+      tiers: ["breakpoints", "states"],
+      tierOnly: false,
+    });
+  });
+
   it("describes a color utility with states and breakpoints and a pseudo form", () => {
     const [bg] = utilityRows(["bg"]);
     expect(bg.tiers).toEqual(["breakpoints", "states"]);

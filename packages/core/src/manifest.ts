@@ -568,6 +568,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/utilities/responsive-flex.html",
       "primitives/utilities/responsive-grid.html",
       "primitives/utilities/size.html",
+      "primitives/utilities/space.html",
       "primitives/utilities/width.html",
     ],
   },

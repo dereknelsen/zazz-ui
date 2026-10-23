@@ -15,12 +15,20 @@
   "dependencies": {
     "@astrojs/markdoc": "catalog:",
     "@astrojs/rss": "catalog:",
+    "@codemirror/autocomplete": "catalog:",
+    "@codemirror/commands": "catalog:",
+    "@codemirror/lang-html": "catalog:",
+    "@codemirror/language": "catalog:",
+    "@codemirror/lint": "catalog:",
+    "@codemirror/search": "catalog:",
+    "@codemirror/state": "catalog:",
+    "@codemirror/view": "catalog:",
+    "@lezer/highlight": "catalog:",
     "@lucide/astro": "catalog:",
     "@zazz-ui/core": "workspace:*",
     "@zazz-ui/language-server": "workspace:*",
     "astro": "catalog:",
-    "astro-pagefind": "catalog:",
-    "monaco-editor": "catalog:"
+    "astro-pagefind": "catalog:"
   },
   "devDependencies": {
     "@astrojs/check": "catalog:",

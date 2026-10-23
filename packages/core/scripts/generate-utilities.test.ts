@@ -24,6 +24,7 @@ import {
   appliesAtRest,
   ELEVATION_LAYERS,
   elevationLayers,
+  spaceRules,
   elevationRule,
   indexStyling,
   kitStyling,
@@ -60,8 +61,28 @@ describe("breakpoint queries", () => {
   it("leaves no page flags or style queries behind", () => {
     const all = [...generate().values()].join("\n");
     expect(all).not.toContain("--cqi-");
-    expect(all).not.toContain("@container style(");
     expect(all).not.toContain("@container html");
+    // breakpoints rest on size queries alone; the only bare style queries are
+    // --space-*'s slot flags (the stuck tier pairs one with scroll-state())
+    const queries = [...all.matchAll(/@container style\((--[\w-]+)/g)].map((m) => m[1]);
+    expect(new Set(queries)).toEqual(new Set(["--_space-x-slot", "--_space-y-slot"]));
+  });
+
+  it("gives --space-* children their parent's gap through alternating slots", () => {
+    const rules = spaceRules(UTILITIES.find((utility) => utility.name === "space-y")!);
+    expect(rules).toContain("@container style(--_space-y-slot: a) {");
+    expect(rules).toContain("--_space-y-slot: b;");
+    expect(rules).toContain(
+      ":where(:not(:last-child, dialog, [popover])) { --_space-y-b: inherit; margin-block-end: var(--_space-y-b); }",
+    );
+    // no rule names an ancestor gate (CONVENTIONS §6): every [style*=] is the subject
+    for (const [, selector] of rules.matchAll(/^\s*([^@\s][^{;\n]*)\{/gm))
+      if (selector!.includes("[style*="))
+        expect(selector!.trim(), selector).toMatch(/^:where\(\[style\*="[^"]*"\]\)$/);
+    // the slots don't inherit, so a gap change restyles only the children
+    expect(registrations(UTILITIES.find((utility) => utility.name === "space-y")!)).toContain(
+      '@property --_space-y-a { syntax: "*"; inherits: false; }',
+    );
   });
 });
 

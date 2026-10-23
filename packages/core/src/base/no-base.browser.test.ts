@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * @fileoverview The no-base allowlist for padding and `--bg`: a tier alone
+ * @fileoverview The no-base allowlist for padding, `--bg`, and `--z`: a tier alone
  * works on a plain element (the reset zeroes padding and paints nothing),
  * reaches a primitive only through the primitive's own chain, and keeps the
  * base's padding or paint on the elements the base styles (a list's indent,
@@ -9,6 +9,7 @@
  */
 
 import { describe, expect, it } from "vite-plus/test";
+import { userEvent } from "vite-plus/test/browser/context";
 import { KIT_SELECTORS } from "./kit-styling.ts";
 import { at, atWidth, below, mount, scale, style, useKit } from "../../test/browser.ts";
 
@@ -31,6 +32,50 @@ describe("no-base padding and background", () => {
   it("--bg--hover alone leaves a plain element transparent at rest", () => {
     const probe = mount(`<div data-probe style="--bg--hover: red">x</div>`);
     expect(transparent(style(probe, "background-color"))).toBe(true);
+  });
+
+  it("--z--hover alone lifts a plain element only while hovered", async () => {
+    const probe = mount(
+      `<div data-probe style="position: relative; inline-size: 100px; block-size: 40px; --z--hover: 5">x</div>`,
+    );
+    expect(style(probe, "z-index")).toBe("auto");
+    await userEvent.hover(probe);
+    expect(style(probe, "z-index")).toBe("5");
+    await userEvent.unhover(probe);
+    expect(style(probe, "z-index")).toBe("auto");
+  });
+
+  it("--z--hover overrides a base --z, and --group-z--hover follows the group", async () => {
+    const root = mount(`<div data-ui="group" style="inline-size: 100px; block-size: 40px">
+      <div data-own style="position: relative; --z: 1; --z--hover: 3">a</div>
+      <div data-member style="position: relative; --z: 1; --group-z--hover: 4">b</div>
+      <div data-bare style="position: relative; --group-z--hover: 2">c</div>
+    </div>`);
+    const own = root.querySelector("[data-own]")!;
+    const member = root.querySelector("[data-member]")!;
+    const bare = root.querySelector("[data-bare]")!;
+    expect(style(own, "z-index")).toBe("1");
+    expect(style(member, "z-index")).toBe("1");
+    expect(style(bare, "z-index")).toBe("auto");
+    await userEvent.hover(root);
+    expect(style(member, "z-index")).toBe("4");
+    expect(style(bare, "z-index")).toBe("2");
+    await userEvent.hover(own);
+    expect(style(own, "z-index")).toBe("3");
+    await userEvent.unhover(root);
+    expect(style(own, "z-index")).toBe("1");
+    expect(style(member, "z-index")).toBe("1");
+    expect(style(bare, "z-index")).toBe("auto");
+  });
+
+  it("--z--hover alone keeps a primitive's own z-index", async () => {
+    const root = mount(`<div data-ui="tabs"><div data-tabs-slot="list">
+      <button type="button" data-tabs-slot="label" style="--z--hover: 5">a</button>
+    </div></div>`);
+    const label = root.querySelector("[data-tabs-slot~='label']")!;
+    expect(style(label, "z-index")).toBe("1");
+    await userEvent.hover(label);
+    expect(style(label, "z-index")).toBe("1");
   });
 
   it("on a primitive reaches its own chain (SPEC §9), not the no-base rule", async () => {

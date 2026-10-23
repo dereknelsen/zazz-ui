@@ -8,6 +8,8 @@
     --_position-area-checked: var(--position-area--checked);
     --_template-cols-checked: var(--template-cols--checked);
     --_template-rows-checked: var(--template-rows--checked);
+    --_space-x-checked: var(--space-x--checked);
+    --_space-y-checked: var(--space-y--checked);
     --_text-decoration-checked: var(--text-decoration--checked);
     --_text-checked: var(--text--checked);
     --_bg-checked: var(--bg--checked);
@@ -40,6 +42,7 @@
     --_transition-duration-checked: var(--transition-duration--checked);
     --_transition-delay-checked: var(--transition-delay--checked);
     --_radius-checked: var(--radius--checked);
+    --_z-checked: var(--z--checked);
   }
   :where([data-ui~="group"]:is(:checked, [aria-checked="true"]) [style*="--group-"]) {
     --_anchor-name-g-checked: var(--group-anchor-name--checked);
@@ -47,6 +50,8 @@
     --_position-area-g-checked: var(--group-position-area--checked);
     --_template-cols-g-checked: var(--group-template-cols--checked);
     --_template-rows-g-checked: var(--group-template-rows--checked);
+    --_space-x-g-checked: var(--group-space-x--checked);
+    --_space-y-g-checked: var(--group-space-y--checked);
     --_text-decoration-g-checked: var(--group-text-decoration--checked);
     --_text-g-checked: var(--group-text--checked);
     --_bg-g-checked: var(--group-bg--checked);
@@ -79,5 +84,6 @@
     --_transition-duration-g-checked: var(--group-transition-duration--checked);
     --_transition-delay-g-checked: var(--group-transition-delay--checked);
     --_radius-g-checked: var(--group-radius--checked);
+    --_z-g-checked: var(--group-z--checked);
   }
 }

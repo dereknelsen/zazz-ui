@@ -77,7 +77,7 @@
           }
         },
         {
-          "match": "(--)(group-)?(before-|after-)?(inset-x|inset-y|bottom|gap-x|gap-y|inset|right|left|gap|top|pb|pl|pr|pt|px|py|p)(?:(--)(focus-visible|focus-within|disabled|starting|checked|current|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
+          "match": "(--)(group-)?(before-|after-)?(inset-x|inset-y|space-x|space-y|bottom|gap-x|gap-y|inset|right|left|gap|top|pb|pl|pr|pt|px|py|p)(?:(--)(focus-visible|focus-within|disabled|starting|checked|current|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
           "captures": {
             "1": {
               "name": "punctuation.definition.custom-property.css.zazz"

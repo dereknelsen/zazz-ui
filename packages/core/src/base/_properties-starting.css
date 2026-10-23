@@ -11,6 +11,10 @@
 @property --_template-cols-starting { syntax: "*"; inherits: false; }
 @property --template-rows--starting { syntax: "*"; inherits: false; }
 @property --_template-rows-starting { syntax: "*"; inherits: false; }
+@property --space-x--starting { syntax: "*"; inherits: false; }
+@property --_space-x-starting { syntax: "*"; inherits: false; }
+@property --space-y--starting { syntax: "*"; inherits: false; }
+@property --_space-y-starting { syntax: "*"; inherits: false; }
 @property --text-decoration--starting { syntax: "*"; inherits: false; }
 @property --_text-decoration-starting { syntax: "*"; inherits: false; }
 @property --text--starting { syntax: "*"; inherits: false; }
@@ -75,3 +79,5 @@
 @property --_transition-delay-starting { syntax: "*"; inherits: false; }
 @property --radius--starting { syntax: "*"; inherits: false; }
 @property --_radius-starting { syntax: "*"; inherits: false; }
+@property --z--starting { syntax: "*"; inherits: false; }
+@property --_z-starting { syntax: "*"; inherits: false; }

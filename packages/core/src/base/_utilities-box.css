@@ -245,8 +245,8 @@
     visibility: var(--_visibility-resolved);
   }
 
-  :where([style*="--z:"], [style*="--z--"]) {
-    --_z-resolved: var(--_z);
+  :where([style*="--z:"], [style*="--z--"], [style*="--group-z--"]) {
+    --_z-resolved: var(--_z-starting, var(--_z-disabled, var(--_z-active, var(--_z-focus-visible, var(--_z-focus-within, var(--_z-hover, var(--_z-checked, var(--_z-current, var(--_z-open, var(--_z-g-disabled, var(--_z-g-active, var(--_z-g-focus-visible, var(--_z-g-focus-within, var(--_z-g-hover, var(--_z-g-checked, var(--_z-g-current, var(--_z-g-open, var(--_z-stuck, var(--_z)))))))))))))))))));
   }
   :where([style*="--z:"]) {
     --_z: var(--z);

@@ -120,7 +120,7 @@ describe("audit warnings", () => {
     expect(warningsFor(`<div style="--grid-cols--md: 3"></div>`)).toEqual([]);
   });
 
-  it("flags a modifier on a family that has none, and a tier the family lacks", () => {
+  it("flags a tier the utility lacks", () => {
     expect(warningsFor(`<div style="--z: 4; --z--md: 8"></div>`)).toEqual([
       expect.stringMatching(/--z--md.*tier/),
     ]);
@@ -456,6 +456,16 @@ describe("navigation report", () => {
     expect(warningsFor(`<code style="--p--md: 2">x</code>`)).toEqual([
       expect.stringMatching(/--p--md.*no base/),
     ]);
+    expect(warningsFor(`<div style="--z--hover: 1"></div>`)).toEqual([]);
+    // --space-* publishes from its base, so a tier alone does nothing
+    expect(warningsFor(`<div style="--space-y--md: 4"></div>`)).toEqual([
+      expect.stringMatching(/--space-y--md.*base/),
+    ]);
+    expect(
+      warningsFor(
+        `<dialog data-ui="dialog"><button data-dialog-slot="close" style="--z--hover: 1">x</button></dialog>`,
+      ),
+    ).toEqual([expect.stringMatching(/--z--hover.*no base/)]);
   });
 
   it("a tier alone needs a base on a primitive root that does not read the utility", () => {

@@ -8,6 +8,7 @@ import {
   BREAKPOINT_REM,
   BREAKPOINTS,
   PSEUDO_ONLY,
+  SPACE_PROPERTIES,
   STATE_SELECTORS,
   STUCK_STATE,
   UTILITIES,
@@ -72,9 +73,12 @@ export function describeUtilityName(raw: string): string | undefined {
   if (!utility) return undefined;
   const lines = [`**\`${raw}\`** · ${utility.family} utility`, ""];
   const target = parsed.side ? ` on \`::${parsed.side}\`` : "";
-  const properties = utility.properties.length
-    ? utility.properties.map((property) => `\`${property}\``).join(", ")
-    : "`box-shadow` (shared with the other ring and shadow utilities)";
+  const space = SPACE_PROPERTIES[utility.name];
+  const properties = space
+    ? `\`${space}\` on each direct child but the last`
+    : utility.properties.length
+      ? utility.properties.map((property) => `\`${property}\``).join(", ")
+      : "`box-shadow` (shared with the other ring and shadow utilities)";
   lines.push(`Sets ${properties}${target}. Takes ${modeDescription(utility)}.`);
   if (parsed.tier) {
     lines.push("", `**${parsed.tier}**: applies ${tierDescription(parsed.tier, parsed.group)}.`);

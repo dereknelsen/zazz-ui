@@ -24,6 +24,12 @@ describe("style names", () => {
     expect(items.map((item) => item.label)).toContain("--group-");
   });
 
+  it("details --space-x as its children's margin", () => {
+    const { parsed, offset } = cursor(`<p style="--spa|">a</p>`);
+    const space = complete(parsed, offset).find((item) => item.label === "--space-x")!;
+    expect(space.detail).toBe("children's margin-inline-end · spacing");
+  });
+
   it("keeps the existing colon when renaming", () => {
     const { parsed, offset } = cursor(`<p style="--p|x: 4">a</p>`);
     expect(complete(parsed, offset).find((item) => item.label === "--px")!.insertText).toBe("--px");

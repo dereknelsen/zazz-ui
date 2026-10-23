@@ -141,6 +141,22 @@
 @property --_gap-y-resolved { syntax: "*"; inherits: false; }
 @property --_gap-y-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
 @property --_gap-y-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --space-x { syntax: "*"; inherits: false; }
+@property --_space-x { syntax: "*"; inherits: false; }
+@property --_space-x-resolved { syntax: "*"; inherits: false; }
+@property --_space-x-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_space-x-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_space-x-a { syntax: "*"; inherits: false; }
+@property --_space-x-b { syntax: "*"; inherits: false; }
+@property --_space-x-slot { syntax: "*"; inherits: false; }
+@property --space-y { syntax: "*"; inherits: false; }
+@property --_space-y { syntax: "*"; inherits: false; }
+@property --_space-y-resolved { syntax: "*"; inherits: false; }
+@property --_space-y-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --_space-y-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_space-y-a { syntax: "*"; inherits: false; }
+@property --_space-y-b { syntax: "*"; inherits: false; }
+@property --_space-y-slot { syntax: "*"; inherits: false; }
 @property --inset { syntax: "*"; inherits: false; }
 @property --_inset { syntax: "*"; inherits: false; }
 @property --_inset-resolved { syntax: "*"; inherits: false; }

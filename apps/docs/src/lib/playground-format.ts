@@ -1,8 +1,8 @@
 /**
  * The editor-side Zazz tooling for the playground: the same style formatter
  * and audit the VS Code extension and `eslint --fix` run, as plain edits and
- * findings over a document string. Monaco-agnostic, so it is unit-tested here
- * and adapted to Monaco's shapes in `scripts/playground.ts`.
+ * findings over a document string. Editor-agnostic, so it is unit-tested here;
+ * `scripts/playground.ts` hands the offsets straight to CodeMirror.
  */
 import { diagnose } from "@zazz-ui/language-server/diagnostics";
 import { styleEdits } from "@zazz-ui/language-server/format";

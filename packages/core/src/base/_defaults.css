@@ -277,6 +277,8 @@
 
 
 
+
+
   :where(:is([style*="--aspect--"], [style*="--group-aspect--"])) {
     aspect-ratio: var(--_aspect-resolved, auto);
   }
@@ -403,6 +405,9 @@
 
 
 
+  :where(:is([style*="--z--"], [style*="--group-z--"])) {
+    z-index: var(--_z-resolved, auto);
+  }
 
 
 

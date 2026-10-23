@@ -21,6 +21,14 @@
 @property --_template-rows-focus-within { syntax: "*"; inherits: false; }
 @property --group-template-rows--focus-within { syntax: "*"; inherits: false; }
 @property --_template-rows-g-focus-within { syntax: "*"; inherits: false; }
+@property --space-x--focus-within { syntax: "*"; inherits: false; }
+@property --_space-x-focus-within { syntax: "*"; inherits: false; }
+@property --group-space-x--focus-within { syntax: "*"; inherits: false; }
+@property --_space-x-g-focus-within { syntax: "*"; inherits: false; }
+@property --space-y--focus-within { syntax: "*"; inherits: false; }
+@property --_space-y-focus-within { syntax: "*"; inherits: false; }
+@property --group-space-y--focus-within { syntax: "*"; inherits: false; }
+@property --_space-y-g-focus-within { syntax: "*"; inherits: false; }
 @property --text-decoration--focus-within { syntax: "*"; inherits: false; }
 @property --_text-decoration-focus-within { syntax: "*"; inherits: false; }
 @property --group-text-decoration--focus-within { syntax: "*"; inherits: false; }
@@ -149,3 +157,7 @@
 @property --_radius-focus-within { syntax: "*"; inherits: false; }
 @property --group-radius--focus-within { syntax: "*"; inherits: false; }
 @property --_radius-g-focus-within { syntax: "*"; inherits: false; }
+@property --z--focus-within { syntax: "*"; inherits: false; }
+@property --_z-focus-within { syntax: "*"; inherits: false; }
+@property --group-z--focus-within { syntax: "*"; inherits: false; }
+@property --_z-g-focus-within { syntax: "*"; inherits: false; }

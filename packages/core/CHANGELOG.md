@@ -1,5 +1,27 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.8.3 (2026-10-23)
+
+### carousel
+
+- Fix: with the `autoplay` plugin, Next could move two slides. Prev/Next, the dots, the thumbs, and the arrow keys didn't count as interaction for Autoplay or Auto Scroll (the plugins only count a pointer-down on the viewport), so a timer tick landing just after a click moved a second slide. A manual step now stops the plugin, or restarts its delay with `data-carousel-autoplay-stop-on-interaction="false"`, as Embla's own examples do. Embla stays on 8.6.0, its latest stable release.
+- Fix: every DOM insertion on a page with the carousel stylesheet restyled the whole page. The page-wide grabbing cursor came from a `body:has(<dragging viewport>) *` rule, and a `:has()` anchored on `body` with a subject below it makes the engine re-evaluate every element on any insertion (12,307 elements, 103 ms, on a 12k-element test page; 7 elements without the rule). `embla.js` now writes `data-ui-dragging` on the root for the drag, and the rule reads that. A static test keeps the shape out of the kit.
+
+### popover
+
+- Fix: the shared surface chrome (border, padding, min and max width) matched `[popover]` at full specificity, so a primitive that is itself a popover lost its own overrides to it, whatever the import order. The toaster region showed a popover border and padding. The rule is now `:where([popover])`, like the rest of the kit's roots, so a later stylesheet's rule wins.
+
+### switch
+
+- The unchecked track is `--color-input` instead of `--color-muted`, so it matches the inputs beside it; set `--ui-switch-track-bg` to keep the old color.
+
+### base
+
+- `--color-shade-50` and `--color-tint-50` are 5% opacity instead of 4%.
+- New utilities `--space-x` and `--space-y`, Tailwind's `space-x` / `space-y`: on a container, a margin after each direct child but the last (inline end for `x`, block end for `y`). They take a scale number or a length, state and breakpoint tiers on the container (`--space-y: 2; --space-y--md: 4`, `--group-space-x--hover`), and need a base. A child's own margin utility wins, and a container nested on the same axis takes its parent's gap for its own margin. They read the container through a style query, so engines without style queries on custom properties (before Chrome 111, Safari 18, Firefox 151) show no space. With `--z` states, the generated layer is 24.7 KB with Brotli; the ratchet moves to 25 KB.
+- The small shadow tokens are visible now. `--shadow-2xs` and `--shadow-xs` were a single layer at 1–2% opacity, close to invisible. The heights are respread to 1 (`2xs`), 1.5 (`xs`), 2.5 (`sm`), 4 (`md`, unchanged), 7 (`lg`), 11 (`xl`), and 16 (`2xl`, unchanged). Everything below `md` is darker, including a `floating` card's resting `sm`; `lg` and `xl` are a little shallower. `--elevation` is unchanged, so `--elevation: 1.5` now matches `--shadow-xs`.
+- `--z` takes state tiers: `--z--hover`, `--z--focus-visible`, `--group-z--hover`, and the rest. A tier works without a base value (`--z--hover: 1` alone leaves `z-index` at `auto` at rest), and a primitive that sets its own `z-index` keeps it.
+
 ## 0.8.2 (2026-10-20)
 
 ### dialog

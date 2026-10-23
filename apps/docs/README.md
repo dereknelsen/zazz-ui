@@ -8,7 +8,7 @@ The documentation site for the [Zazz Design Framework](../../packages/core): Ast
 - **The API reference is generated.** `src/lib/api/*` reads the kit's own data — the utility table (`@zazz-ui/core/base/utilities.js`), the manifest, the editor JSON (`editor/*.json`), and each script's header — and the Markdoc tags `{% utilities %}`, `{% attributes %}`, `{% hooks %}`, `{% examples %}`, `{% behavior %}`, `{% tokens %}`, `{% switches %}`, `{% roles %}`, `{% globals %}` render it. Tests fail when a utility or primitive has no page or a hook lands nowhere.
 - **Previews** (`{% preview src="button/button" /%}`) render a kit fragment in an isolated iframe and show the same string as code; the iframe's head is the kit's `buildHead()`.
 - **`/zazz/*`** (`src/pages/zazz/[...path].ts`) serves the installed kit's `src/` and `dist/`; the site's own `<head>` is `buildHead()` too (`src/lib/head.ts`).
-- **Playground** (`/playground/`): Monaco over a sandboxed iframe, code in the URL hash.
+- **Playground** (`/playground/`): CodeMirror over a sandboxed iframe, code in the URL hash.
 - **LLM endpoints**: `/llms.txt`, `/llms-full.txt`, and an `index.md` twin next to every page (`src/lib/llms.ts`).
 
 ## Development

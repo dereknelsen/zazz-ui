@@ -505,4 +505,5 @@ export const TIER_BLOCKS: Readonly<Record<string, readonly number[]>> = {
   "text-decoration": [136, 140, 190, 237, 239, 248, 249],
   "text-wrap": [7, 8, 9, 10, 11, 12, 113, 133, 236, 251],
   translate: [66, 161, 162],
+  z: [65, 77, 78, 91, 111, 113, 151, 185],
 };

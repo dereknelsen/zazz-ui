@@ -123,6 +123,8 @@ role by carrying both slot attributes (`data-lightbox-slot="slide" data-carousel
 | `data-carousel-thumbs-*` (on the `thumbs` slot)      | `data-carousel-thumbs-contain-scroll="keepSnaps"`          | thumb carousel options (defaults: containScroll keepSnaps, dragFree true) |
 | `data-carousel-start` (on a trigger w/ `commandfor`) | `data-carousel-start="2"`                                  | open a dialog carousel at slide N                                         |
 
+Prev/Next, the dots, the thumbs, and the arrow keys stop Autoplay and Auto Scroll (Embla's `stopOnInteraction`, default true). Add `data-carousel-autoplay-stop-on-interaction="false"` to keep autoplay running; a manual step then restarts its delay.
+
 Script-managed (don't set by hand): `data-carousel-init`,
 `data-carousel-start-index`, and `data-carousel-state` (`active` on the current dot/thumb;
 `in-view`, `snapped`, `dragging` on slides). The script stores `_emblaApi` on the root. `<ui-carousel>` initializes on connect,

@@ -33,6 +33,10 @@
  * - `data-carousel-auto-scroll-*`: Auto scroll plugin options (requires `auto-scroll` in plugins)
  * - `data-carousel-class-names-*`: Class names plugin options (requires `class-names` in plugins)
  *
+ * Prev/Next, the dots, the thumbs, and the arrow keys count as interaction for
+ * Autoplay and Auto Scroll: they stop the plugin, or restart its delay with
+ * `data-carousel-autoplay-stop-on-interaction="false"`.
+ *
  * @see https://www.embla-carousel.com/docs/api/options#reference
  * @see https://www.embla-carousel.com/docs/plugins/autoplay#options
  * @see https://www.embla-carousel.com/docs/plugins/auto-scroll#options
@@ -133,6 +137,26 @@ const PLUGIN_BY_SLUG: Record<CarouselPluginSlug, (node: Element) => EmblaPluginT
  */
 function readCarouselOptions<T>(node: Element, prefix: string): T {
   return Utils.parseDataAttributes(node, prefix) as T;
+}
+
+// --- Manual navigation ---
+
+/**
+ * @description Treats a manual step (Prev/Next, a dot, a thumb, an arrow key) as
+ * user interaction for the Autoplay and Auto Scroll plugins, which on their own
+ * only count a pointer-down on the viewport. Without it the plugin's timer keeps
+ * running, and a tick that lands just after a click moves a second slide.
+ * `stopOnInteraction` (default true) stops the plugin; `false` restarts its delay.
+ * This is the pattern Embla's own examples use for navigation buttons.
+ * @private
+ */
+function onManualNavigation(emblaApi: EmblaCarouselType): void {
+  const { autoplay, autoScroll } = emblaApi.plugins();
+  for (const plugin of [autoplay, autoScroll]) {
+    if (!plugin) continue;
+    if (plugin.options.stopOnInteraction === false) plugin.reset();
+    else plugin.stop();
+  }
 }
 
 // --- Active-index sync ---
@@ -241,7 +265,14 @@ const addDotBtnsAndClickHandlers = (
       dotNodes.push(dot);
       dotsNode.appendChild(dot);
 
-      dot.addEventListener("click", () => emblaApi.scrollTo(i), { signal });
+      dot.addEventListener(
+        "click",
+        () => {
+          onManualNavigation(emblaApi);
+          emblaApi.scrollTo(i);
+        },
+        { signal },
+      );
     }
   };
 
@@ -284,7 +315,14 @@ const addThumbClickHandlers = (
   const slidesthumbs = emblaApiThumb.slideNodes();
 
   slidesthumbs.forEach((slideNode: HTMLElement, index: number) => {
-    slideNode.addEventListener("click", () => emblaApiMain.scrollTo(index), { signal });
+    slideNode.addEventListener(
+      "click",
+      () => {
+        onManualNavigation(emblaApiMain);
+        emblaApiMain.scrollTo(index);
+      },
+      { signal },
+    );
   });
 };
 
@@ -536,12 +574,17 @@ function initEmblaRoot(emblaNode: Element): void {
     apiOptions as EmblaOptionsType,
     plugins,
   );
-  // Drag state is a data-carousel-state token on the viewport.
+  // Drag state is a data-carousel-state token on the viewport, and
+  // data-ui-dragging on the root for the page-wide grabbing cursor (a
+  // `body:has(…) *` rule would restyle the whole page on every DOM insertion).
+  const root = emblaNode.ownerDocument.documentElement;
   emblaApi.on("pointerDown", () => {
     if (emblaViewportNode) setCarouselState(emblaViewportNode, "dragging", true);
+    root.setAttribute("data-ui-dragging", "");
   });
   emblaApi.on("pointerUp", () => {
     if (emblaViewportNode) setCarouselState(emblaViewportNode, "dragging", false);
+    root.removeAttribute("data-ui-dragging");
   });
   bindSlideStates(emblaApi);
 
@@ -555,11 +598,25 @@ function initEmblaRoot(emblaNode: Element): void {
   emblaNode._emblaController = controller;
 
   if (emblaPrevButtonNode) {
-    emblaPrevButtonNode.addEventListener("click", () => emblaApi.scrollPrev(), { signal });
+    emblaPrevButtonNode.addEventListener(
+      "click",
+      () => {
+        onManualNavigation(emblaApi);
+        emblaApi.scrollPrev();
+      },
+      { signal },
+    );
   }
 
   if (emblaNextButtonNode) {
-    emblaNextButtonNode.addEventListener("click", () => emblaApi.scrollNext(), { signal });
+    emblaNextButtonNode.addEventListener(
+      "click",
+      () => {
+        onManualNavigation(emblaApi);
+        emblaApi.scrollNext();
+      },
+      { signal },
+    );
   }
 
   if (emblaDotsNode) {
@@ -726,6 +783,7 @@ const initEmblaKeyboardNav: InitEmblaKeyboardNavFn = function () {
     if (!root) return;
 
     e.preventDefault();
+    onManualNavigation(root._emblaApi);
     if (e.key === "ArrowLeft") root._emblaApi.scrollPrev();
     else root._emblaApi.scrollNext();
   });

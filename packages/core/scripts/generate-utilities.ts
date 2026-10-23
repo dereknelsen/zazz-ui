@@ -13,6 +13,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   BOX_SHADOW_COMPOSITE,
+  SPACE_PROPERTIES,
   SHORTHAND_OF,
   BORDER_SIDES,
   type Breakpoint,
@@ -63,6 +64,13 @@ export function registrations(utility: Utility): string {
   // its layers stay on the element: an inherited list would reach a child's own box-shadow
   if (utility.name === "elevation")
     out += register(`_${n}-n`, '"<number>"', "0") + register(`_${n}-shadow`);
+  // the gap in two slots, and which one the children read; the slots don't
+  // inherit (a gap change would restyle the whole subtree): each child copies one
+  if (utility.emit === "space") {
+    out += register(`_${n}-a`);
+    out += register(`_${n}-b`);
+    out += register(`_${n}-slot`);
+  }
   if (utility.emit === "px") {
     out += register(`_${n}-len`, '"<length>"', "0px");
     out += register(`_${n}-num`, '"<number>"', "0");
@@ -151,6 +159,8 @@ export function baseRule(utility: Utility, tiers: readonly string[]): string {
         `  ${property}: calc(var(--_${n}-len) + var(--_${n}-num) * ${dualScale(utility)});`,
       );
     }
+    if (utility.emit === "space")
+      lines.push(`  --_${n}-a: ${spaceGap(utility)};`, `  --_${n}-slot: a;`);
   } else {
     const extra = companions(utility);
     lines.push(...extra.before.map((d) => `  ${d}`));
@@ -161,6 +171,42 @@ export function baseRule(utility: Utility, tiers: readonly string[]): string {
   }
   lines.push(`}`, ``);
   return lines.join("\n");
+}
+
+/** A `space` utility's gap, from its dual pair. */
+function spaceGap(utility: Utility): string {
+  const n = utility.name;
+  return `calc(var(--_${n}-len) + var(--_${n}-num) * ${dualScale(utility)})`;
+}
+
+/**
+ * A `space` utility's child rules. The container writes its gap into a slot
+ * and names the slot in a flag; each child reads its parent's flag through a
+ * style query (every element is a style container) and copies the slot with
+ * `inherit`, so no `[style*=]` gate sits in an ancestor compound (CONVENTIONS
+ * §6) and only the direct children restyle when the gap changes. A container
+ * whose parent is one too writes the other slot, so its own margin is its
+ * parent's gap and its children get its own: the slots alternate at any depth.
+ * Out-of-flow children (a dialog, a popover) keep their own margins.
+ */
+export function spaceRules(utility: Utility): string {
+  if (utility.emit !== "space") return "";
+  const n = utility.name;
+  const property = SPACE_PROPERTIES[n];
+  const child = `:where(:not(:last-child, dialog, [popover]))`;
+  return [
+    `@container style(--_${n}-slot: a) {`,
+    `  :where([style*="--${n}:"]) {`,
+    `    --_${n}-b: ${spaceGap(utility)};`,
+    `    --_${n}-slot: b;`,
+    `  }`,
+    `  ${child} { --_${n}-a: inherit; ${property}: var(--_${n}-a); }`,
+    `}`,
+    `@container style(--_${n}-slot: b) {`,
+    `  ${child} { --_${n}-b: inherit; ${property}: var(--_${n}-b); }`,
+    `}`,
+    ``,
+  ].join("\n");
 }
 
 /**
@@ -748,6 +794,7 @@ function familyFile(family: Family, utilities: readonly Utility[]): string {
         shorthandTierRule(utility) +
         keywordRules(utility, tiersOf(utility)) +
         aliasRules(utility, tiersOf(utility)) +
+        spaceRules(utility) +
         (utility.name === "display" ? displayShorthandRules() : ""),
     )
     .concat(compositeRule(utilities))
@@ -1293,12 +1340,12 @@ export const ELEVATION_LAYERS: readonly ElevationLayer[] = [
 
 /** The height each `--shadow-<size>` token is drawn at. */
 export const SHADOW_HEIGHTS: Readonly<Record<string, number>> = {
-  "2xs": 0.25,
-  xs: 0.5,
-  sm: 1.5,
+  "2xs": 1,
+  xs: 1.5,
+  sm: 2.5,
   md: 4,
-  lg: 8,
-  xl: 12,
+  lg: 7,
+  xl: 11,
   "2xl": 16,
 };
 

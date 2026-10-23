@@ -8,6 +8,8 @@
     --_position-area-focus-visible: var(--position-area--focus-visible);
     --_template-cols-focus-visible: var(--template-cols--focus-visible);
     --_template-rows-focus-visible: var(--template-rows--focus-visible);
+    --_space-x-focus-visible: var(--space-x--focus-visible);
+    --_space-y-focus-visible: var(--space-y--focus-visible);
     --_text-decoration-focus-visible: var(--text-decoration--focus-visible);
     --_text-focus-visible: var(--text--focus-visible);
     --_bg-focus-visible: var(--bg--focus-visible);
@@ -40,6 +42,7 @@
     --_transition-duration-focus-visible: var(--transition-duration--focus-visible);
     --_transition-delay-focus-visible: var(--transition-delay--focus-visible);
     --_radius-focus-visible: var(--radius--focus-visible);
+    --_z-focus-visible: var(--z--focus-visible);
   }
   :where([data-ui~="group"]:focus-visible [style*="--group-"]) {
     --_anchor-name-g-focus-visible: var(--group-anchor-name--focus-visible);
@@ -47,6 +50,8 @@
     --_position-area-g-focus-visible: var(--group-position-area--focus-visible);
     --_template-cols-g-focus-visible: var(--group-template-cols--focus-visible);
     --_template-rows-g-focus-visible: var(--group-template-rows--focus-visible);
+    --_space-x-g-focus-visible: var(--group-space-x--focus-visible);
+    --_space-y-g-focus-visible: var(--group-space-y--focus-visible);
     --_text-decoration-g-focus-visible: var(--group-text-decoration--focus-visible);
     --_text-g-focus-visible: var(--group-text--focus-visible);
     --_bg-g-focus-visible: var(--group-bg--focus-visible);
@@ -79,5 +84,6 @@
     --_transition-duration-g-focus-visible: var(--group-transition-duration--focus-visible);
     --_transition-delay-g-focus-visible: var(--group-transition-delay--focus-visible);
     --_radius-g-focus-visible: var(--group-radius--focus-visible);
+    --_z-g-focus-visible: var(--group-z--focus-visible);
   }
 }

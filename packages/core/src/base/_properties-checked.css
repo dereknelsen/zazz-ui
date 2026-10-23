@@ -21,6 +21,14 @@
 @property --_template-rows-checked { syntax: "*"; inherits: false; }
 @property --group-template-rows--checked { syntax: "*"; inherits: false; }
 @property --_template-rows-g-checked { syntax: "*"; inherits: false; }
+@property --space-x--checked { syntax: "*"; inherits: false; }
+@property --_space-x-checked { syntax: "*"; inherits: false; }
+@property --group-space-x--checked { syntax: "*"; inherits: false; }
+@property --_space-x-g-checked { syntax: "*"; inherits: false; }
+@property --space-y--checked { syntax: "*"; inherits: false; }
+@property --_space-y-checked { syntax: "*"; inherits: false; }
+@property --group-space-y--checked { syntax: "*"; inherits: false; }
+@property --_space-y-g-checked { syntax: "*"; inherits: false; }
 @property --text-decoration--checked { syntax: "*"; inherits: false; }
 @property --_text-decoration-checked { syntax: "*"; inherits: false; }
 @property --group-text-decoration--checked { syntax: "*"; inherits: false; }
@@ -149,3 +157,7 @@
 @property --_radius-checked { syntax: "*"; inherits: false; }
 @property --group-radius--checked { syntax: "*"; inherits: false; }
 @property --_radius-g-checked { syntax: "*"; inherits: false; }
+@property --z--checked { syntax: "*"; inherits: false; }
+@property --_z-checked { syntax: "*"; inherits: false; }
+@property --group-z--checked { syntax: "*"; inherits: false; }
+@property --_z-g-checked { syntax: "*"; inherits: false; }

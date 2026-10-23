@@ -537,6 +537,13 @@ use case exists in an example fragment or docs page.
   private read by a `style()` container query, or an inherited private the descendants copy),
   as `_utilities-tier-stuck.css` does. Put a pseudo-class before the gate in a compound
   (`:where(:hover[style*="--hover:"])`): the flag test short-circuits the scan.
+- **No `:has()` anchored on `:root`, `html`, or `body` with a subject below it.** Any DOM
+  insertion can change the anchor's match, so the engine restyles everything the subject can
+  be: `body:has(X) *` restyled every element on every insertion (12,307 elements, 103 ms, on a
+  12k-element page; 7 without it). A `:has()` whose subject is the anchor itself
+  (`:root:has(dialog:modal)`) restyles only the anchor. For a page-wide state, flag the root
+  from the script that owns it (`data-ui-dragging`) and select on the attribute; a static test
+  rejects the shape.
 - **No `var()` in a universal highlight pseudo-element rule.** `::selection`, `::target-text`,
   `::highlight()`, `::spelling-error`, `::grammar-error` inherit through the highlight chain,
   so style them on `:root` only (`:root::selection { background-color: var(--color-selection) }`).

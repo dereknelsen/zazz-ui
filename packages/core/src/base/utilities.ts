@@ -152,9 +152,20 @@ export interface Utility {
    * width and color channels, and the side rules emit them. `px` feeds a
    * composite too, as one signed length `--_<name>-w`: a number is that many
    * pixels, a length passes through, and the sign carries meaning (a negative
-   * ring is inset).
+   * ring is inset). `space` is a dual value the container publishes for its
+   * direct children, who take it as a margin (`SPACE_PROPERTIES`).
    */
-  emit?: "plain" | "repeat" | "span" | "grid-fit" | "line-clamp" | "bg" | "none" | "border" | "px";
+  emit?:
+    | "plain"
+    | "repeat"
+    | "span"
+    | "grid-fit"
+    | "line-clamp"
+    | "bg"
+    | "none"
+    | "border"
+    | "px"
+    | "space";
   /**
    * What the precedence chain ends in when neither the base nor an active tier
    * sets the utility: a `px` utility that stands in for a token (`--focus-ring`
@@ -202,6 +213,12 @@ export interface Utility {
    */
   aliases?: Readonly<Record<string, string>>;
 }
+
+/** The margin each `space` utility gives a container's children (all but the last). */
+export const SPACE_PROPERTIES: Readonly<Record<string, string>> = {
+  "space-x": "margin-inline-end",
+  "space-y": "margin-block-end",
+};
 
 /**
  * The utilities that compose into one `box-shadow` (the rings, shadow, and
@@ -547,6 +564,25 @@ export const UTILITIES: readonly Utility[] = [
   { name: "gap", properties: ["gap"], mode: "dual", family: "spacing", noBase: "0" },
   { name: "gap-x", properties: ["column-gap"], mode: "dual", family: "spacing", noBase: "0" },
   { name: "gap-y", properties: ["row-gap"], mode: "dual", family: "spacing", noBase: "0" },
+  // the margin between a container's direct children, Tailwind's space-x / space-y;
+  // states and breakpoints on the container. Before the margin family, so a
+  // child's own --mr / --mb wins.
+  {
+    name: "space-x",
+    properties: [],
+    mode: "dual",
+    family: "spacing",
+    emit: "space",
+    tiers: "both",
+  },
+  {
+    name: "space-y",
+    properties: [],
+    mode: "dual",
+    family: "spacing",
+    emit: "space",
+    tiers: "both",
+  },
   {
     name: "inset",
     pseudo: true,
@@ -960,7 +996,7 @@ export const UTILITIES: readonly Utility[] = [
     family: "effects",
     tiers: "both",
   },
-  // box: no tiers
+  // box: no tiers, except radius (breakpoints) and z (states)
   // a number is that many --spacing steps times --radius-multiplier, like the
   // --radius-* tokens (`--radius: 2.5` is --radius-md); `full` is the pill token
   {
@@ -1016,7 +1052,16 @@ export const UTILITIES: readonly Utility[] = [
     family: "box",
   },
   { name: "visibility", pseudo: true, properties: ["visibility"], mode: "keyword", family: "box" },
-  { name: "z", pseudo: true, properties: ["z-index"], mode: "raw", family: "box" },
+  // states, so a hovered, open, or focused item can sit above its neighbors
+  {
+    name: "z",
+    pseudo: true,
+    properties: ["z-index"],
+    mode: "raw",
+    family: "box",
+    tiers: "states",
+    noBase: "auto",
+  },
   { name: "object-fit", properties: ["object-fit"], mode: "keyword", family: "box" },
   { name: "object-position", properties: ["object-position"], mode: "raw", family: "box" },
   // the divider between children for the divide-x / divide-y switches: the

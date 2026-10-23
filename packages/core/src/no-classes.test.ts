@@ -265,6 +265,38 @@ describe("generated privates", () => {
   });
 });
 
+describe("style invalidation", () => {
+  /**
+   * A `:has()` anchored on the root, html, or body whose subject sits below the
+   * anchor (`body:has(X) *`): any DOM insertion can change the anchor's match,
+   * so the engine restyles everything the subject can be. Measured 2026-10-22
+   * in Chromium: one insertion restyled 12,307 elements (103 ms) instead of 7.
+   * Flag the anchor from JS instead (`data-ui-dragging`).
+   */
+  const highAnchorHas = /(?:^|[\s,(])(?:body|html|:root)[^\s,(]*:has\(/;
+
+  it("no stylesheet anchors a :has() on body, html, or :root with a subject below it", () => {
+    const offenders: string[] = [];
+    for (const path of stylesheetsUnder(SRC)) {
+      for (const prelude of selectors(read(path))) {
+        for (const part of prelude.split(/,(?![^(]*\))/)) {
+          const m = highAnchorHas.exec(part);
+          if (!m) continue;
+          // skip to the :has() argument's closing paren, then look for a combinator
+          let depth = 0;
+          let i = m.index + m[0].length - 1;
+          for (; i < part.length; i++) {
+            if (part[i] === "(") depth++;
+            else if (part[i] === ")" && --depth === 0) break;
+          }
+          if (/[\s>+~]\s*\S/.test(part.slice(i + 1))) offenders.push(`${path}: ${part.trim()}`);
+        }
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
+});
+
 describe("no class layer", () => {
   /** A class selector anywhere in a prelude: `.name` after a start, space, combinator, comma, or paren. */
   const classSelector = /(^|[\s,>+~(])\.[a-zA-Z_-]/;

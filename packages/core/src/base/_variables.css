@@ -162,7 +162,7 @@
 
     /* shade — darkened overlays (derived from neutral-950) */
     --color-shade-none: oklch(from var(--color-neutral-950) l c h / 0);
-    --color-shade-50: oklch(from var(--color-neutral-950) l c h / 0.04);
+    --color-shade-50: oklch(from var(--color-neutral-950) l c h / 0.05);
     --color-shade-100: oklch(from var(--color-neutral-950) l c h / 0.1);
     --color-shade-200: oklch(from var(--color-neutral-950) l c h / 0.2);
     --color-shade-300: oklch(from var(--color-neutral-950) l c h / 0.3);
@@ -177,7 +177,7 @@
 
     /* tint — faded overlays (derived from white) */
     --color-tint-none: oklch(from var(--color-white) l c h / 0);
-    --color-tint-50: oklch(from var(--color-white) l c h / 0.04);
+    --color-tint-50: oklch(from var(--color-white) l c h / 0.05);
     --color-tint-100: oklch(from var(--color-white) l c h / 0.1);
     --color-tint-200: oklch(from var(--color-white) l c h / 0.2);
     --color-tint-300: oklch(from var(--color-white) l c h / 0.3);

@@ -1,12 +1,14 @@
 ---
 title: "Spacing"
-description: "Padding and margin on the spacing scale."
+description: "Padding, margin, and the space between children, on the spacing scale."
 section: Utilities
 sectionOrder: 3
 order: 3
 ---
 
 A bare number is a step on the spacing scale (`--p: 4` is `4 × --spacing`). The named `--space-*` tokens map to 1, 2, 4, 6, 11, 24, and 40; use the number in `style`. Any length works too. Sides are `t`, `r`, `b`, `l` and set logical properties, so `l` is the right side in a right-to-left document. Margins also take `auto`.
+
+`--space-x` and `--space-y` go on a container and put a margin after each direct child but the last: on the inline end for `x`, the block end for `y`. They take states and breakpoints on the container and need a base (`--space-y: 2; --space-y--md: 4`). A child's own margin utility wins. A nested container on the same axis still gets its parent's margin; its own value spaces its children. Dialogs and popovers keep their own margins. A hidden last child still counts as the last, so the visible one before it keeps its margin, and `flex-direction: row-reverse` puts the margins on the wrong side. In flex and grid, use `--gap`; it wraps cleanly and leaves the children's margins alone.
 
 ## Reference
 
@@ -19,3 +21,5 @@ A bare number is a step on the spacing scale (`--p: 4` is `4 × --spacing`). The
 {% preview src="utilities/padding-compose" /%}
 
 {% preview src="utilities/margin-auto" /%}
+
+{% preview src="utilities/space" /%}

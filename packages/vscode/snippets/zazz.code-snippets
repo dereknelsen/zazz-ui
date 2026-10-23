@@ -13481,6 +13481,29 @@
     ],
     "description": "Zazz utilities example (primitives/utilities/size.html)."
   },
+  "Zazz: space": {
+    "prefix": "zazz-space",
+    "body": [
+      "<div style=\"--space-y: 6\">",
+      "  <div style=\"--space-y: 2\">",
+      "    <p>--space-y: 2 puts a margin after each paragraph.</p>",
+      "    <p>The last one gets none.</p>",
+      "    <p>A child's own margin utility wins.</p>",
+      "  </div>",
+      "  <div",
+      "    style=\"",
+      "      --space-x: 2;",
+      "      --space-x--md: 4;",
+      "    \"",
+      "  >",
+      "    <button type=\"button\" data-ui=\"button\">Save</button>",
+      "    <button type=\"button\" data-ui=\"button\" data-button-variant=\"outline\">Cancel</button>",
+      "    <button type=\"button\" data-ui=\"button\" data-button-variant=\"ghost\">Help</button>",
+      "  </div>",
+      "</div>"
+    ],
+    "description": "Zazz utilities example (primitives/utilities/space.html)."
+  },
   "Zazz: width": {
     "prefix": "zazz-width",
     "body": [

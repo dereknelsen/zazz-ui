@@ -115,7 +115,7 @@
   POPOVER SURFACE — shared chrome for every [popover] consumer
   =========================================================================== */
 
-  [popover] {
+  :where([popover]) {
     border: 1px solid var(--_border-color-resolved, var(--ui-popover-border-color));
     --_p-len: var(--_p-resolved, var(--ui-popover-p));
     --_p-num: var(--_p-resolved, var(--ui-popover-p));
@@ -128,7 +128,7 @@
     max-inline-size: calc(var(--_max-w-len) + var(--_max-w-num) * var(--spacing));
   }
 
-  [popover] [data-ui~="button"] {
+  :where([popover] [data-ui~="button"]) {
     --ui-button-radius: var(--ui-popover-button-radius);
   }
 

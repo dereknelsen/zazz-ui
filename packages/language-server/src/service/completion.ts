@@ -9,6 +9,7 @@
 import {
   BREAKPOINTS,
   PSEUDO_SIDES,
+  SPACE_PROPERTIES,
   STUCK_STATE,
   UTILITIES,
   hasGroup,
@@ -186,7 +187,12 @@ function styleNames(context: StyleContext): ZazzCompletion[] {
 }
 
 function utilityDetail(utility: Utility): string {
-  const properties = utility.properties.length ? utility.properties.join(", ") : "box-shadow";
+  const space = SPACE_PROPERTIES[utility.name];
+  const properties = space
+    ? `children's ${space}`
+    : utility.properties.length
+      ? utility.properties.join(", ")
+      : "box-shadow";
   return `${properties} · ${utility.family}`;
 }
 

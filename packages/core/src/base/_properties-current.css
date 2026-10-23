@@ -21,6 +21,14 @@
 @property --_template-rows-current { syntax: "*"; inherits: false; }
 @property --group-template-rows--current { syntax: "*"; inherits: false; }
 @property --_template-rows-g-current { syntax: "*"; inherits: false; }
+@property --space-x--current { syntax: "*"; inherits: false; }
+@property --_space-x-current { syntax: "*"; inherits: false; }
+@property --group-space-x--current { syntax: "*"; inherits: false; }
+@property --_space-x-g-current { syntax: "*"; inherits: false; }
+@property --space-y--current { syntax: "*"; inherits: false; }
+@property --_space-y-current { syntax: "*"; inherits: false; }
+@property --group-space-y--current { syntax: "*"; inherits: false; }
+@property --_space-y-g-current { syntax: "*"; inherits: false; }
 @property --text-decoration--current { syntax: "*"; inherits: false; }
 @property --_text-decoration-current { syntax: "*"; inherits: false; }
 @property --group-text-decoration--current { syntax: "*"; inherits: false; }
@@ -149,3 +157,7 @@
 @property --_radius-current { syntax: "*"; inherits: false; }
 @property --group-radius--current { syntax: "*"; inherits: false; }
 @property --_radius-g-current { syntax: "*"; inherits: false; }
+@property --z--current { syntax: "*"; inherits: false; }
+@property --_z-current { syntax: "*"; inherits: false; }
+@property --group-z--current { syntax: "*"; inherits: false; }
+@property --_z-g-current { syntax: "*"; inherits: false; }

@@ -44,6 +44,14 @@ export default defineConfig({
           environment: "happy-dom",
           include: ["src/**/*.test.ts", "scripts/**/*.test.ts"],
           exclude: ["src/**/*.browser.test.ts"],
+          // Keep Vite's dependency optimizer off for the node side. With it on,
+          // `vite-plus/test` resolved to a second copy of vitest (the one pnpm
+          // links as @vitest/browser-playwright's peer, not the one running the
+          // worker), and every file after the first few failed at its first
+          // describe() with "Cannot read properties of undefined (reading
+          // 'config')": that copy's runner is never set. Seen 2026-10-22 in
+          // `vp run -r test` and under CPU load; vitest's own default is off.
+          deps: { optimizer: { ssr: { enabled: false } } },
         },
       },
       ...(skipBrowser

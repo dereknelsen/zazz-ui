@@ -8,6 +8,8 @@
     --_position-area-disabled: var(--position-area--disabled);
     --_template-cols-disabled: var(--template-cols--disabled);
     --_template-rows-disabled: var(--template-rows--disabled);
+    --_space-x-disabled: var(--space-x--disabled);
+    --_space-y-disabled: var(--space-y--disabled);
     --_text-decoration-disabled: var(--text-decoration--disabled);
     --_text-disabled: var(--text--disabled);
     --_bg-disabled: var(--bg--disabled);
@@ -40,6 +42,7 @@
     --_transition-duration-disabled: var(--transition-duration--disabled);
     --_transition-delay-disabled: var(--transition-delay--disabled);
     --_radius-disabled: var(--radius--disabled);
+    --_z-disabled: var(--z--disabled);
   }
   :where([data-ui~="group"]:is(:disabled, [aria-disabled="true"]) [style*="--group-"]) {
     --_anchor-name-g-disabled: var(--group-anchor-name--disabled);
@@ -47,6 +50,8 @@
     --_position-area-g-disabled: var(--group-position-area--disabled);
     --_template-cols-g-disabled: var(--group-template-cols--disabled);
     --_template-rows-g-disabled: var(--group-template-rows--disabled);
+    --_space-x-g-disabled: var(--group-space-x--disabled);
+    --_space-y-g-disabled: var(--group-space-y--disabled);
     --_text-decoration-g-disabled: var(--group-text-decoration--disabled);
     --_text-g-disabled: var(--group-text--disabled);
     --_bg-g-disabled: var(--group-bg--disabled);
@@ -79,5 +84,6 @@
     --_transition-duration-g-disabled: var(--group-transition-duration--disabled);
     --_transition-delay-g-disabled: var(--group-transition-delay--disabled);
     --_radius-g-disabled: var(--group-radius--disabled);
+    --_z-g-disabled: var(--group-z--disabled);
   }
 }

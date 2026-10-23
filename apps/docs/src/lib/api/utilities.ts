@@ -53,6 +53,8 @@ const FEEDS: Record<string, string> = {
   "shadow-angle": "the light direction of the --shadow-* tokens and --elevation on this subtree",
   "focus-ring": "a primitive's focus ring and the focus outline (width, inside or out)",
   divide: "border between direct children (divide-x / divide-y)",
+  "space-x": "margin-inline-end on each direct child but the last",
+  "space-y": "margin-block-end on each direct child but the last",
   border: "border-width + border-color",
   "border-x": "border-inline width + color",
   "border-y": "border-block width + color",

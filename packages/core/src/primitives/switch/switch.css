@@ -20,8 +20,8 @@
     --ui-switch-thumb-shadow: var(--shadow-xs);
     --ui-switch-thumb-translate: var(--ui-switch-track-padding), -50%;
     --ui-switch-thumb-scale: 1;
-    --ui-switch-track-bg: var(--color-muted);
-    --ui-switch-track-bg--hover: oklch(from var(--color-muted) l c h / calc(alpha + 0.04));
+    --ui-switch-track-bg: var(--color-input);
+    --ui-switch-track-bg--hover: oklch(from var(--color-input) l c h / calc(alpha + 0.04));
     --ui-switch-track-bg--checked: var(--color-primary);
     --ui-switch-track-bg--checked-hover: var(--color-primary);
     --ui-switch-radius: var(--radius-full);

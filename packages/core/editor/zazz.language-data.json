@@ -480,6 +480,7 @@
         ],
         "uses": [
           "data-carousel attributes — layout hooks only; behaviour from zazz/scripts/embla.js",
+          "data-ui-dragging on :root — written by embla.js while a slide drags; the grabbing cursor page-wide",
           "container-type on viewport — basis-* / @sm:basis-* utils query [data-carousel-slot~=\"viewport\"] width"
         ],
         "tokens": [
@@ -2924,7 +2925,7 @@
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-track-bg": {
-      "value": "var(--color-muted)",
+      "value": "var(--color-input)",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-track-bg--checked": {
@@ -2936,7 +2937,7 @@
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-track-bg--hover": {
-      "value": "oklch(from var(--color-muted) l c h / calc(alpha + 0.04))",
+      "value": "oklch(from var(--color-input) l c h / calc(alpha + 0.04))",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-track-h": {
@@ -3638,7 +3639,7 @@
     "--color-muted": {
       "value": "light-dark(var(--color-shade-50), var(--color-tint-100))",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.04)",
+      "light": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.05)",
       "dark": "oklch(from oklch(1 0 0) l c h / 0.1)"
     },
     "--color-muted-foreground": {
@@ -3924,10 +3925,10 @@
       "dark": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.4)"
     },
     "--color-shade-50": {
-      "value": "oklch(from var(--color-neutral-950) l c h / 0.04)",
+      "value": "oklch(from var(--color-neutral-950) l c h / 0.05)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.04)",
-      "dark": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.04)"
+      "light": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.05)",
+      "dark": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.05)"
     },
     "--color-shade-500": {
       "value": "oklch(from var(--color-neutral-950) l c h / 0.5)",
@@ -4098,10 +4099,10 @@
       "dark": "oklch(from oklch(1 0 0) l c h / 0.4)"
     },
     "--color-tint-50": {
-      "value": "oklch(from var(--color-white) l c h / 0.04)",
+      "value": "oklch(from var(--color-white) l c h / 0.05)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 0.04)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 0.04)"
+      "light": "oklch(from oklch(1 0 0) l c h / 0.05)",
+      "dark": "oklch(from oklch(1 0 0) l c h / 0.05)"
     },
     "--color-tint-500": {
       "value": "oklch(from var(--color-white) l c h / 0.5)",
@@ -4894,11 +4895,11 @@
       "file": "base/_shadows.css"
     },
     "--shadow-2xs": {
-      "value": "calc(var(--spacing) * 0.0625 * var(--_shadow-x)) calc(var(--spacing) * 0.0625 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.0625)) calc(max(1px, calc(var(--spacing) * 0.0625)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.01), calc(var(--spacing) * 0.25 * var(--_shadow-x)) calc(var(--spacing) * 0.25 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.2)) calc(max(1px, calc(var(--spacing) * 0.2)) * -0.5) oklch(from var(--_shadow-color) l c h / 0), calc(var(--spacing) * 0.5625 * var(--_shadow-x)) calc(var(--spacing) * 0.5625 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.3375)) calc(max(1px, calc(var(--spacing) * 0.3375)) * -0.55) oklch(from var(--_shadow-color) l c h / 0), calc(var(--spacing) * 1 * var(--_shadow-x)) calc(var(--spacing) * 1 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.45)) calc(max(1px, calc(var(--spacing) * 0.45)) * -0.6) oklch(from var(--_shadow-color) l c h / 0)",
+      "value": "calc(var(--spacing) * 0.25 * var(--_shadow-x)) calc(var(--spacing) * 0.25 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.25)) calc(max(1px, calc(var(--spacing) * 0.25)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.04), calc(var(--spacing) * 1 * var(--_shadow-x)) calc(var(--spacing) * 1 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.8)) calc(max(1px, calc(var(--spacing) * 0.8)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.01), calc(var(--spacing) * 2.25 * var(--_shadow-x)) calc(var(--spacing) * 2.25 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 1.35)) calc(max(1px, calc(var(--spacing) * 1.35)) * -0.55) oklch(from var(--_shadow-color) l c h / 0), calc(var(--spacing) * 4 * var(--_shadow-x)) calc(var(--spacing) * 4 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 1.8)) calc(max(1px, calc(var(--spacing) * 1.8)) * -0.6) oklch(from var(--_shadow-color) l c h / 0)",
       "file": "base/_shadows.css"
     },
     "--shadow-lg": {
-      "value": "calc(var(--spacing) * 2 * var(--_shadow-x)) calc(var(--spacing) * 2 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 2)) calc(max(1px, calc(var(--spacing) * 2)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.08), calc(var(--spacing) * 8 * var(--_shadow-x)) calc(var(--spacing) * 8 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 6.4)) calc(max(1px, calc(var(--spacing) * 6.4)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.06), calc(var(--spacing) * 18 * var(--_shadow-x)) calc(var(--spacing) * 18 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 10.8)) calc(max(1px, calc(var(--spacing) * 10.8)) * -0.55) oklch(from var(--_shadow-color) l c h / 0.05), calc(var(--spacing) * 32 * var(--_shadow-x)) calc(var(--spacing) * 32 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 14.4)) calc(max(1px, calc(var(--spacing) * 14.4)) * -0.6) oklch(from var(--_shadow-color) l c h / 0.024)",
+      "value": "calc(var(--spacing) * 1.75 * var(--_shadow-x)) calc(var(--spacing) * 1.75 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 1.75)) calc(max(1px, calc(var(--spacing) * 1.75)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.08), calc(var(--spacing) * 7 * var(--_shadow-x)) calc(var(--spacing) * 7 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 5.6)) calc(max(1px, calc(var(--spacing) * 5.6)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.06), calc(var(--spacing) * 15.75 * var(--_shadow-x)) calc(var(--spacing) * 15.75 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 9.45)) calc(max(1px, calc(var(--spacing) * 9.45)) * -0.55) oklch(from var(--_shadow-color) l c h / 0.05), calc(var(--spacing) * 28 * var(--_shadow-x)) calc(var(--spacing) * 28 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 12.6)) calc(max(1px, calc(var(--spacing) * 12.6)) * -0.6) oklch(from var(--_shadow-color) l c h / 0.018)",
       "file": "base/_shadows.css"
     },
     "--shadow-md": {
@@ -4912,15 +4913,15 @@
       "dark": "0 0 0 0px oklch(0.241 0.009 285.7), 0 0 0 calc(0px + 3px) color-mix(in oklch, oklch(0.985 0 0) 20%, transparent)"
     },
     "--shadow-sm": {
-      "value": "calc(var(--spacing) * 0.375 * var(--_shadow-x)) calc(var(--spacing) * 0.375 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.375)) calc(max(1px, calc(var(--spacing) * 0.375)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.06), calc(var(--spacing) * 1.5 * var(--_shadow-x)) calc(var(--spacing) * 1.5 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 1.2)) calc(max(1px, calc(var(--spacing) * 1.2)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.02), calc(var(--spacing) * 3.375 * var(--_shadow-x)) calc(var(--spacing) * 3.375 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 2.025)) calc(max(1px, calc(var(--spacing) * 2.025)) * -0.55) oklch(from var(--_shadow-color) l c h / 0), calc(var(--spacing) * 6 * var(--_shadow-x)) calc(var(--spacing) * 6 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 2.7)) calc(max(1px, calc(var(--spacing) * 2.7)) * -0.6) oklch(from var(--_shadow-color) l c h / 0)",
+      "value": "calc(var(--spacing) * 0.625 * var(--_shadow-x)) calc(var(--spacing) * 0.625 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.625)) calc(max(1px, calc(var(--spacing) * 0.625)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.08), calc(var(--spacing) * 2.5 * var(--_shadow-x)) calc(var(--spacing) * 2.5 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 2)) calc(max(1px, calc(var(--spacing) * 2)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.04), calc(var(--spacing) * 5.625 * var(--_shadow-x)) calc(var(--spacing) * 5.625 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 3.375)) calc(max(1px, calc(var(--spacing) * 3.375)) * -0.55) oklch(from var(--_shadow-color) l c h / 0.012), calc(var(--spacing) * 10 * var(--_shadow-x)) calc(var(--spacing) * 10 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 4.5)) calc(max(1px, calc(var(--spacing) * 4.5)) * -0.6) oklch(from var(--_shadow-color) l c h / 0)",
       "file": "base/_shadows.css"
     },
     "--shadow-xl": {
-      "value": "calc(var(--spacing) * 3 * var(--_shadow-x)) calc(var(--spacing) * 3 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 3)) calc(max(1px, calc(var(--spacing) * 3)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.08), calc(var(--spacing) * 12 * var(--_shadow-x)) calc(var(--spacing) * 12 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 9.6)) calc(max(1px, calc(var(--spacing) * 9.6)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.06), calc(var(--spacing) * 27 * var(--_shadow-x)) calc(var(--spacing) * 27 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 16.2)) calc(max(1px, calc(var(--spacing) * 16.2)) * -0.55) oklch(from var(--_shadow-color) l c h / 0.05), calc(var(--spacing) * 48 * var(--_shadow-x)) calc(var(--spacing) * 48 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 21.6)) calc(max(1px, calc(var(--spacing) * 21.6)) * -0.6) oklch(from var(--_shadow-color) l c h / 0.04)",
+      "value": "calc(var(--spacing) * 2.75 * var(--_shadow-x)) calc(var(--spacing) * 2.75 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 2.75)) calc(max(1px, calc(var(--spacing) * 2.75)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.08), calc(var(--spacing) * 11 * var(--_shadow-x)) calc(var(--spacing) * 11 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 8.8)) calc(max(1px, calc(var(--spacing) * 8.8)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.06), calc(var(--spacing) * 24.75 * var(--_shadow-x)) calc(var(--spacing) * 24.75 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 14.85)) calc(max(1px, calc(var(--spacing) * 14.85)) * -0.55) oklch(from var(--_shadow-color) l c h / 0.05), calc(var(--spacing) * 44 * var(--_shadow-x)) calc(var(--spacing) * 44 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 19.8)) calc(max(1px, calc(var(--spacing) * 19.8)) * -0.6) oklch(from var(--_shadow-color) l c h / 0.04)",
       "file": "base/_shadows.css"
     },
     "--shadow-xs": {
-      "value": "calc(var(--spacing) * 0.125 * var(--_shadow-x)) calc(var(--spacing) * 0.125 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.125)) calc(max(1px, calc(var(--spacing) * 0.125)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.02), calc(var(--spacing) * 0.5 * var(--_shadow-x)) calc(var(--spacing) * 0.5 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.4)) calc(max(1px, calc(var(--spacing) * 0.4)) * -0.5) oklch(from var(--_shadow-color) l c h / 0), calc(var(--spacing) * 1.125 * var(--_shadow-x)) calc(var(--spacing) * 1.125 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.675)) calc(max(1px, calc(var(--spacing) * 0.675)) * -0.55) oklch(from var(--_shadow-color) l c h / 0), calc(var(--spacing) * 2 * var(--_shadow-x)) calc(var(--spacing) * 2 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.9)) calc(max(1px, calc(var(--spacing) * 0.9)) * -0.6) oklch(from var(--_shadow-color) l c h / 0)",
+      "value": "calc(var(--spacing) * 0.375 * var(--_shadow-x)) calc(var(--spacing) * 0.375 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.375)) calc(max(1px, calc(var(--spacing) * 0.375)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.06), calc(var(--spacing) * 1.5 * var(--_shadow-x)) calc(var(--spacing) * 1.5 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 1.2)) calc(max(1px, calc(var(--spacing) * 1.2)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.02), calc(var(--spacing) * 3.375 * var(--_shadow-x)) calc(var(--spacing) * 3.375 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 2.025)) calc(max(1px, calc(var(--spacing) * 2.025)) * -0.55) oklch(from var(--_shadow-color) l c h / 0), calc(var(--spacing) * 6 * var(--_shadow-x)) calc(var(--spacing) * 6 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 2.7)) calc(max(1px, calc(var(--spacing) * 2.7)) * -0.6) oklch(from var(--_shadow-color) l c h / 0)",
       "file": "base/_shadows.css"
     },
     "--space-2xl": {

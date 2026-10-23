@@ -9,6 +9,8 @@
       --_position-area-hover: var(--position-area--hover);
       --_template-cols-hover: var(--template-cols--hover);
       --_template-rows-hover: var(--template-rows--hover);
+      --_space-x-hover: var(--space-x--hover);
+      --_space-y-hover: var(--space-y--hover);
       --_text-decoration-hover: var(--text-decoration--hover);
       --_text-hover: var(--text--hover);
       --_bg-hover: var(--bg--hover);
@@ -41,6 +43,7 @@
       --_transition-duration-hover: var(--transition-duration--hover);
       --_transition-delay-hover: var(--transition-delay--hover);
       --_radius-hover: var(--radius--hover);
+      --_z-hover: var(--z--hover);
     }
     :where([data-ui~="group"]:hover [style*="--group-"]) {
       --_anchor-name-g-hover: var(--group-anchor-name--hover);
@@ -48,6 +51,8 @@
       --_position-area-g-hover: var(--group-position-area--hover);
       --_template-cols-g-hover: var(--group-template-cols--hover);
       --_template-rows-g-hover: var(--group-template-rows--hover);
+      --_space-x-g-hover: var(--group-space-x--hover);
+      --_space-y-g-hover: var(--group-space-y--hover);
       --_text-decoration-g-hover: var(--group-text-decoration--hover);
       --_text-g-hover: var(--group-text--hover);
       --_bg-g-hover: var(--group-bg--hover);
@@ -80,6 +85,7 @@
       --_transition-duration-g-hover: var(--group-transition-duration--hover);
       --_transition-delay-g-hover: var(--group-transition-delay--hover);
       --_radius-g-hover: var(--group-radius--hover);
+      --_z-g-hover: var(--group-z--hover);
     }
   }
 }

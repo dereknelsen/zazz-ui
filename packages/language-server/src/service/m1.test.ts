@@ -86,6 +86,13 @@ describe("hover", () => {
     expect(result.markdown).toContain("48rem");
   });
 
+  it("describes --space-* as its children's margin", () => {
+    const { parsed, offset } = cursor(`<div style="--spa|ce-y: 4"><p>a</p></div>`);
+    const markdown = hover(parsed, offset)!.markdown;
+    expect(markdown).toContain("`margin-block-end` on each direct child but the last");
+    expect(markdown).not.toContain("box-shadow");
+  });
+
   it("describes group and starting states", () => {
     const group = cursor(`<p style="--opacity: 1; --group-opa|city--hover: 0.5">a</p>`);
     expect(hover(group.parsed, group.offset)!.markdown).toMatch(/ancestor .*group.*:hover/);

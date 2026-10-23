@@ -21,6 +21,14 @@
 @property --_template-rows-open { syntax: "*"; inherits: false; }
 @property --group-template-rows--open { syntax: "*"; inherits: false; }
 @property --_template-rows-g-open { syntax: "*"; inherits: false; }
+@property --space-x--open { syntax: "*"; inherits: false; }
+@property --_space-x-open { syntax: "*"; inherits: false; }
+@property --group-space-x--open { syntax: "*"; inherits: false; }
+@property --_space-x-g-open { syntax: "*"; inherits: false; }
+@property --space-y--open { syntax: "*"; inherits: false; }
+@property --_space-y-open { syntax: "*"; inherits: false; }
+@property --group-space-y--open { syntax: "*"; inherits: false; }
+@property --_space-y-g-open { syntax: "*"; inherits: false; }
 @property --text-decoration--open { syntax: "*"; inherits: false; }
 @property --_text-decoration-open { syntax: "*"; inherits: false; }
 @property --group-text-decoration--open { syntax: "*"; inherits: false; }
@@ -149,3 +157,7 @@
 @property --_radius-open { syntax: "*"; inherits: false; }
 @property --group-radius--open { syntax: "*"; inherits: false; }
 @property --_radius-g-open { syntax: "*"; inherits: false; }
+@property --z--open { syntax: "*"; inherits: false; }
+@property --_z-open { syntax: "*"; inherits: false; }
+@property --group-z--open { syntax: "*"; inherits: false; }
+@property --_z-g-open { syntax: "*"; inherits: false; }

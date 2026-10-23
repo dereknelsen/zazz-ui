@@ -1,5 +1,5 @@
 /**
- * Playground client: Monaco (on demand) over a textarea fallback, a sandboxed
+ * Playground client: CodeMirror (on demand) over a textarea fallback, a sandboxed
  * iframe for the output. A docs preview's "Open in playground" link carries
  * its example in the URL hash, read once at boot.
  */
@@ -60,13 +60,13 @@ ${code}
     output.srcdoc = doc;
   };
 
-  // --- editor: textarea until Monaco arrives --------------------------------
+  // --- editor: textarea until CodeMirror arrives ----------------------------
   let getCode = (): string => textarea.value;
   let setCode = (code: string): void => {
     textarea.value = code;
   };
 
-  // Without Monaco, saving rewrites the textarea in place.
+  // Without CodeMirror, saving rewrites the textarea in place.
   let formatCode = (): void => {
     const code = getCode();
     const edits = formatEdits(code);
@@ -84,155 +84,180 @@ ${code}
   };
   textarea.addEventListener("input", changed);
 
-  const isDark = (): boolean => theme() === "dark";
-  let monacoContainer: HTMLElement | undefined;
+  let editorShell: HTMLElement | undefined;
 
-  async function mountMonaco(): Promise<void> {
-    // monaco-editor's export map serves `monaco-editor/<path>` from `esm/vs/<path>.js`;
-    // the ESM modules import their own CSS.
-    const [monaco, , htmlLanguage, { default: monacoCss }] = await Promise.all([
-      import("monaco-editor/editor/editor.api"),
-      import("monaco-editor/basic-languages/monaco.contribution"),
-      import("monaco-editor/language/html/monaco.contribution"),
-      // Not in the package exports map; the docs app depends on monaco-editor directly.
-      import("../../node_modules/monaco-editor/min/vs/editor/editor.main.css?inline"),
+  async function mountEditor(): Promise<void> {
+    const [
+      { EditorState },
+      {
+        EditorView,
+        keymap,
+        lineNumbers,
+        highlightActiveLine,
+        highlightActiveLineGutter,
+        drawSelection,
+      },
+      { defaultKeymap, history, historyKeymap, indentWithTab },
+      { HighlightStyle, bracketMatching, indentOnInput, indentUnit, syntaxHighlighting },
+      { html },
+      { linter, lintGutter, lintKeymap },
+      { autocompletion, closeBrackets, closeBracketsKeymap, completionKeymap },
+      { highlightSelectionMatches, searchKeymap },
+      { tags },
+    ] = await Promise.all([
+      import("@codemirror/state"),
+      import("@codemirror/view"),
+      import("@codemirror/commands"),
+      import("@codemirror/language"),
+      import("@codemirror/lang-html"),
+      import("@codemirror/lint"),
+      import("@codemirror/autocomplete"),
+      import("@codemirror/search"),
+      import("@lezer/highlight"),
     ]);
-    const [{ default: EditorWorker }, { default: HtmlWorker }] = await Promise.all([
-      import("monaco-editor/editor/editor.worker?worker"),
-      import("monaco-editor/language/html/html.worker?worker"),
-    ]);
-    (self as unknown as { MonacoEnvironment: unknown }).MonacoEnvironment = {
-      getWorker: (_: string, label: string) =>
-        label === "html" ? new HtmlWorker() : new EditorWorker(),
-    };
-    // Monaco lives in a shadow root. Its few hundred inline-styled nodes would
-    // otherwise be tested against every one of the page's `[style*=]` utility
-    // selectors on each keystroke and scroll: about 30x the restyle cost,
-    // shared with the preview frame's main thread in dev. Its stylesheet is
-    // adopted into the root; the codicon @font-face it carries only works from
-    // the document, where Monaco's own CSS imports already put it. Monaco puts
-    // its theme rules in the root itself once the container is attached.
+
+    // The editor lives in a shadow root. Its nodes would otherwise be tested
+    // against every one of the page's `[style*=]` utility selectors on each
+    // keystroke and scroll, and the kit's reset and typography would reach
+    // them. CodeMirror mounts its own styles into the root it is given; the
+    // site's custom properties inherit across the boundary, so the theme reads
+    // them and follows the page's light/dark scheme with no code of its own.
     const shell = document.createElement("div");
     shell.style.cssText = "position:absolute;inset:0";
     const shadow = shell.attachShadow({ mode: "open" });
-    const sheet = new CSSStyleSheet();
-    sheet.replaceSync(monacoCss);
-    shadow.adoptedStyleSheets = [sheet];
     const container = document.createElement("div");
     container.style.cssText = "position:absolute;inset:0";
     shadow.append(container);
-    editorHost.append(shell);
-    monacoContainer = shell;
-    const editor = monaco.editor.create(container, {
-      value: getCode(),
-      language: "html",
-      theme: isDark() ? "vs-dark" : "vs",
-      automaticLayout: true,
-      minimap: { enabled: false },
-      wordWrap: "on",
-      fontSize: 13,
-      tabSize: 2,
-      scrollBeyondLastLine: false,
-      lineNumbersMinChars: 3,
-      padding: { top: 12 },
-      formatOnPaste: true,
-    });
-    textarea.hidden = true;
-    getCode = () => editor.getValue();
-    setCode = (code) => editor.setValue(code);
-    editor.onDidChangeModelContent(changed);
-    const retheme = (): void => monaco.editor.setTheme(isDark() ? "vs-dark" : "vs");
 
-    // --- Zazz tooling inside the editor: the style formatter and the audit ---
-    const model = editor.getModel();
-    if (model) {
-      const toRange = (range: [number, number]) => {
-        const start = model.getPositionAt(range[0]);
-        const end = model.getPositionAt(range[1]);
-        return new monaco.Range(start.lineNumber, start.column, end.lineNumber, end.column);
-      };
-      // The HTML worker's own formatter would compete for Shift+Alt+F; the Zazz one wins.
-      const htmlDefaults = (
-        htmlLanguage as {
-          htmlDefaults: {
-            modeConfiguration: Record<string, boolean>;
-            setModeConfiguration(config: Record<string, boolean>): void;
-          };
-        }
-      ).htmlDefaults;
-      htmlDefaults.setModeConfiguration({
-        ...htmlDefaults.modeConfiguration,
-        documentFormattingEdits: false,
-        documentRangeFormattingEdits: false,
-      });
-      const toMonacoEdits = (text: string) => {
-        return formatEdits(text).map((edit) => ({
-          range: toRange(edit.range),
-          text: edit.newText,
-        }));
-      };
-      monaco.languages.registerDocumentFormattingEditProvider("html", {
-        displayName: "Zazz style utilities",
-        provideDocumentFormattingEdits: (target) => toMonacoEdits(target.getValue()),
-      });
-      // Format on paste asks for the pasted range only.
-      monaco.languages.registerDocumentRangeFormattingEditProvider("html", {
-        displayName: "Zazz style utilities",
-        provideDocumentRangeFormattingEdits: (target, range) =>
-          toMonacoEdits(target.getValue()).filter((edit) =>
-            monaco.Range.areIntersectingOrTouching(edit.range, range),
-          ),
-      });
-      // Cmd/Ctrl+S: there is no file, so "save" formats the styles and re-renders.
-      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => save());
-      // Saving applies the edits directly (as one undo step); Shift+Alt+F goes through the provider.
-      formatCode = () => {
-        const edits = formatEdits(model.getValue());
-        if (!edits.length) return;
-        editor.pushUndoStop();
-        editor.executeEdits(
-          "zazz",
-          edits.map((edit) => ({ range: toRange(edit.range), text: edit.newText })),
-        );
-        editor.pushUndoStop();
-      };
-      // The <ui-debug> audit as markers, on a short debounce.
-      let auditTimer: ReturnType<typeof setTimeout> | undefined;
-      const audit = (): void => {
-        const found = findings(model.getValue());
-        editorHost.dataset.markers = String(found.length); // readable by tests
-        monaco.editor.setModelMarkers(
-          model,
-          "zazz",
-          found.map((found) => {
-            const range = toRange(found.range);
-            return {
-              startLineNumber: range.startLineNumber,
-              startColumn: range.startColumn,
-              endLineNumber: range.endLineNumber,
-              endColumn: range.endColumn,
-              message: found.message,
-              code: `zazz/${found.rule}`,
-              source: "zazz",
-              severity:
-                found.severity === "info"
-                  ? monaco.MarkerSeverity.Info
-                  : monaco.MarkerSeverity.Warning,
-            };
-          }),
-        );
-      };
-      editor.onDidChangeModelContent(() => {
-        clearTimeout(auditTimer);
-        auditTimer = setTimeout(audit, 200);
-      });
-      audit();
-    }
-    new MutationObserver(retheme).observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["data-ui"],
+    const chrome = EditorView.theme({
+      "&": {
+        height: "100%",
+        color: "var(--color-foreground)",
+        backgroundColor: "var(--color-background)",
+      },
+      "&.cm-focused": { outline: "none" },
+      ".cm-scroller": {
+        overflow: "auto",
+        fontFamily: "var(--font-family-mono)",
+        fontSize: "13px",
+        lineHeight: "1.6",
+      },
+      // iOS zooms the page into any focused editable text smaller than 16px.
+      "@media (pointer: coarse)": { ".cm-scroller": { fontSize: "16px" } },
+      ".cm-content": { padding: "12px 0", caretColor: "var(--color-foreground)" },
+      ".cm-cursor, .cm-dropCursor": { borderLeftColor: "var(--color-foreground)" },
+      ".cm-gutters": {
+        color: "var(--color-muted-foreground)",
+        backgroundColor: "var(--color-background)",
+        borderRight: "1px solid var(--color-border)",
+      },
+      ".cm-activeLine, .cm-activeLineGutter": { backgroundColor: "var(--color-muted)" },
+      "&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, ::selection":
+        { backgroundColor: "color-mix(in oklch, var(--color-ring) 25%, transparent)" },
+      ".cm-tooltip": {
+        color: "var(--color-foreground)",
+        backgroundColor: "var(--color-card)",
+        border: "1px solid var(--color-border)",
+      },
     });
-    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", retheme);
+    // Fixed hues rather than the brand scales, which vary per site; each pair
+    // flips with the page's color-scheme.
+    const syntax = HighlightStyle.define([
+      { tag: [tags.tagName, tags.angleBracket], color: "light-dark(#116329, #7ee787)" },
+      { tag: tags.attributeName, color: "light-dark(#0550ae, #79c0ff)" },
+      { tag: [tags.attributeValue, tags.string], color: "light-dark(#0a3069, #a5d6ff)" },
+      { tag: tags.comment, color: "light-dark(#6e7781, #8b949e)", fontStyle: "italic" },
+      { tag: [tags.keyword, tags.propertyName], color: "light-dark(#cf222e, #ff7b72)" },
+      { tag: [tags.number, tags.atom, tags.bool], color: "light-dark(#953800, #ffa657)" },
+      { tag: tags.invalid, color: "light-dark(#82071e, #ffa198)" },
+    ]);
+
+    const toChanges = (edits: ReturnType<typeof formatEdits>) =>
+      edits.map((edit) => ({ from: edit.range[0], to: edit.range[1], insert: edit.newText }));
+
+    // Pasted markup is formatted in the same transaction, so one undo removes both.
+    const formatOnPaste = EditorState.transactionFilter.of((tr) => {
+      if (!tr.docChanged || !tr.isUserEvent("input.paste")) return tr;
+      const pasted: [number, number][] = [];
+      tr.changes.iterChangedRanges((_fromA, _toA, fromB, toB) => pasted.push([fromB, toB]));
+      const edits = formatEdits(tr.newDoc.toString()).filter((edit) =>
+        pasted.some(([from, to]) => edit.range[0] <= to && edit.range[1] >= from),
+      );
+      return edits.length ? [tr, { changes: toChanges(edits), sequential: true }] : tr;
+    });
+
+    // The <ui-debug> audit as diagnostics; the linter debounces it.
+    const audit = linter(
+      (view) => {
+        const found = findings(view.state.doc.toString());
+        editorHost.dataset.markers = String(found.length); // readable by tests
+        return found.map((finding) => ({
+          from: finding.range[0],
+          to: finding.range[1],
+          message: finding.message,
+          severity: finding.severity,
+          source: `zazz/${finding.rule}`,
+        }));
+      },
+      { delay: 200 },
+    );
+
+    const view = new EditorView({
+      parent: container,
+      root: shadow,
+      state: EditorState.create({
+        doc: getCode(),
+        extensions: [
+          lineNumbers(),
+          highlightActiveLineGutter(),
+          highlightActiveLine(),
+          history(),
+          drawSelection(),
+          indentOnInput(),
+          bracketMatching(),
+          closeBrackets(),
+          autocompletion(),
+          highlightSelectionMatches(),
+          EditorView.lineWrapping,
+          EditorState.tabSize.of(2),
+          indentUnit.of("  "),
+          html(),
+          chrome,
+          syntaxHighlighting(syntax),
+          audit,
+          lintGutter(),
+          formatOnPaste,
+          EditorView.updateListener.of((update) => {
+            if (update.docChanged) changed();
+          }),
+          keymap.of([
+            // Cmd/Ctrl+S: there is no file, so "save" formats the styles and re-renders.
+            { key: "Mod-s", run: () => (save(), true), preventDefault: true },
+            { key: "Shift-Alt-f", run: () => (formatCode(), true) },
+            ...closeBracketsKeymap,
+            ...defaultKeymap,
+            ...searchKeymap,
+            ...historyKeymap,
+            ...completionKeymap,
+            ...lintKeymap,
+            // Tab indents; Escape then Tab leaves the editor.
+            indentWithTab,
+          ]),
+        ],
+      }),
+    });
+
+    editorHost.append(shell);
+    editorShell = shell;
+    textarea.hidden = true;
+    getCode = () => view.state.doc.toString();
+    setCode = (code) =>
+      view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: code } });
+    // One transaction, so one undo step.
+    formatCode = () => {
+      const edits = formatEdits(getCode());
+      if (edits.length) view.dispatch({ changes: toChanges(edits) });
+    };
   }
 
   // --- wiring ----------------------------------------------------------------
@@ -244,12 +269,12 @@ ${code}
     render(getCode());
   };
   // The same shortcut over the textarea fallback (and anywhere else in the page): never the
-  // browser's Save dialog. Inside Monaco its own keybinding runs `save`.
+  // browser's Save dialog. Inside CodeMirror its own keybinding runs `save`.
   root.addEventListener("keydown", (event) => {
     if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== "s") return;
     event.preventDefault();
     // Events from inside the shadow root arrive retargeted to its host.
-    if (monacoContainer?.contains(event.target as Node)) return;
+    if (editorShell?.contains(event.target as Node)) return;
     save();
   });
 
@@ -347,9 +372,9 @@ ${code}
     if (shared) templateSelect.value = "blank";
     render(getCode());
     try {
-      await mountMonaco();
+      await mountEditor();
     } catch (error) {
-      console.warn("[playground] Monaco failed to load; using the plain editor.", error);
+      console.warn("[playground] CodeMirror failed to load; using the plain editor.", error);
     }
   })();
 }
