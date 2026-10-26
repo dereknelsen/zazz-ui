@@ -208,7 +208,7 @@ describe("renderIndexJs", () => {
     });
     const js = renderIndexJs({ kit, language: "js" });
     expect(js).toContain(`if (blockedInlineStyles()) void import("./base/csp.js");`);
-    expect(js).toContain(`el.style.length === 0`);
+    expect(js).toContain(`el instanceof HTMLElement && el.style.length === 0`);
     expect(js.indexOf("blockedInlineStyles")).toBeGreaterThan(js.indexOf("CSS.supports"));
     expect(js).not.toContain(`import "./base/csp.js";`);
     expect(renderIndexJs({ kit, language: "ts" })).toContain(`void import("./base/csp.ts");`);

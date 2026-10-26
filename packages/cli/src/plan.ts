@@ -4,10 +4,11 @@
  * @fileoverview Pure planning: manifest facts → the file lists to vendor.
  * @description Maps the kit's inventory to concrete `src/`-relative paths per
  * the recorded language (`.js` ships with its `.d.ts`; `--ts` swaps to the
- * TypeScript source). Manifest v1 exports no base inventory, so the v1 list
- * lives here, pinned to the manifest version the CLI declares support for;
- * newer kits that export `BASE_CSS_*`/`CORE_RUNTIME` take precedence, and
- * `CORE_POLYFILLS` (none in v1) vendor with the runtime.
+ * TypeScript source and adds the kit's ambient `globals.d.ts`). Manifest v1
+ * exports no base inventory, so the v1 list lives here, pinned to the
+ * manifest version the CLI declares support for; newer kits that export
+ * `BASE_CSS_*`/`CORE_RUNTIME` take precedence, and `CORE_POLYFILLS` (none in
+ * v1) vendor with the runtime.
  */
 
 import type { KitManifest, PrimitiveEntry, RuntimeFallback, RuntimePolyfill } from "./kit.ts";
@@ -65,9 +66,14 @@ export function scriptVariants(jsPath: string, language: Language): string[] {
   return [jsPath, jsPath.replace(/\.js$/, ".d.ts")];
 }
 
-/** Everything `init` vendors: base css + core runtime, its polyfills, and its fallbacks, per language. */
+/**
+ * Everything `init` vendors: base css + core runtime, its polyfills, and its
+ * fallbacks, per language. TypeScript also gets the ambient `globals.d.ts`
+ * the sources type-check against (the emitted `.d.ts` files don't need it).
+ */
 export function baseFiles(manifest: KitManifest, language: Language): string[] {
   return [
+    ...(language === "ts" ? ["globals.d.ts"] : []),
     ...baseCss(manifest),
     ...[
       ...coreRuntime(manifest),

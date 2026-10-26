@@ -104,7 +104,7 @@ const FALLBACK_SNIPPETS: Record<FallbackGate, (specifier: string) => string> = {
 function blockedInlineStyles() {
   for (const el of document.querySelectorAll("[style]")) {
     const text = el.getAttribute("style");
-    if (text && text.includes(":") && el.style.length === 0) return true;
+    if (text && text.includes(":") && el instanceof HTMLElement && el.style.length === 0) return true;
   }
   return false;
 }

@@ -2,6 +2,11 @@
 
 Notable changes to the `zazz-ui` CLI. The CLI versions independently of `@zazz-ui/core` (ADR-0010); the kit's own changelog is the one `update` and `diff` print.
 
+## 0.3.2 (2026-10-26)
+
+- `init --ts` vendors the kit's `globals.d.ts`, the ambient types the TypeScript sources check against (`window.Utils`, `Signals`, `Toaster`, `CommandEvent`). A full `update` adds it to an existing `--ts` project and keeps it current. If you copied the file in by hand, delete your copy after updating, or TypeScript reports a duplicate `EmblaCarouselType`.
+- The CSP fallback check in the generated `index.js`/`index.ts` reads `style` only after narrowing to `HTMLElement`, so a TypeScript entry (or `checkJs`) no longer flags `el.style` on an `Element`.
+
 ## 0.3.1 (2026-10-13)
 
 - `init` vendors the kit's runtime fallbacks (`CORE_FALLBACKS`, from core 0.6.3: the Content Security Policy fallback `base/csp.js` and the `style` parser it imports) and writes their document check into `index.js`, the way the kit's own entry does. A fallback with a gate this CLI does not know is skipped, so a newer kit still vendors.

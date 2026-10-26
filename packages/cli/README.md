@@ -13,7 +13,7 @@ pnpm dlx zazz-ui add button combobox
 
 `init` vendors the base platform into `zazz/` (or `--dir <path>`): the css layers (tokens, reset, typography, generated utilities), the core runtime scripts (plus the scroll-state polyfill, which `index.js` loads only in browsers without container scroll-state queries), an `index.css` and `index.js` entry pair, and a `head.html` snippet to paste into your `<head>` (fonts, import map, polyfills, theme persistence). It also writes `zazz.json`, which records the kit version and a hash of every vendored file's original bytes.
 
-Flags: `--dir <path>`, `--ts` (vendor TypeScript sources instead of compiled js), `--legacy <path>` (wire an existing stylesheet into the `legacy.imports` cascade sublayer), `--no-fonts`, `--no-theme-script`. Re-running `init` repairs the tree: missing files come back, files you edited are left alone.
+Flags: `--dir <path>`, `--ts` (vendor TypeScript sources instead of compiled js, plus the kit's ambient `globals.d.ts`), `--legacy <path>` (wire an existing stylesheet into the `legacy.imports` cascade sublayer), `--no-fonts`, `--no-theme-script`. Re-running `init` repairs the tree: missing files come back, files you edited are left alone.
 
 ## What add does
 
@@ -33,7 +33,7 @@ There is no runtime dependency on `@zazz-ui/core`. The files in `zazz/` are your
 
 ## Requirements
 
-Node 22.22+ (or 24.15+). Works with `@zazz-ui/core` 0.1 through 0.6 (manifest v1–v2); given a newer kit, the CLI tells you to upgrade it. Works offline once a kit version is cached; respects your `.npmrc` (registries, proxies, auth). `--registry`, `--offline`, and `--prefer-offline` are available on every command.
+Node 22.22+ (or 24.15+). Works with `@zazz-ui/core` 0.1 through 0.8 (manifest v1–v2); given a newer kit, the CLI tells you to upgrade it. Works offline once a kit version is cached; respects your `.npmrc` (registries, proxies, auth). `--registry`, `--offline`, and `--prefer-offline` are available on every command.
 
 ## License
 
