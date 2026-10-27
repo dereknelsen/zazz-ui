@@ -32,4 +32,4 @@ From the repo root:
   over stdio; `vp run zazz-vscode#test:e2e` runs the extension in a downloaded
   VS Code.
 - `vp run zazz-vscode#package` builds `dist/zazz.vsix`; install it with
-  `code --install-extension packages/vscode/dist/zazz.vsix`.
+  `code --install-extension packages/vscode/dist/zazz.vsix --force` and/or `cursor --install-extension packages/vscode/dist/zazz.vsix --force`.

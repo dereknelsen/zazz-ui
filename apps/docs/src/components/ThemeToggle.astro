@@ -1,16 +1,11 @@
 ---
 /**
- * Light / dark / system, icons only. A stored choice pins `theme-dark` / `theme-light` in `data-ui` on
- * `<html>` (the kit's head script restores it before first paint); "system"
- * clears both so the page follows the OS scheme.
+ * Light / dark / system, icons only. Behavior lives in scripts/theme-toggle.ts
+ * (`<theme-toggle>`, defined by BaseLayout), which names each instance's
+ * radios and checks the stored choice.
  */
 import { Monitor, Moon, Sun } from "@lucide/astro";
 
-interface Props {
-  /** Radio group name; distinct per instance when the toggle renders twice on a page. */
-  name?: string;
-}
-const { name = "theme" } = Astro.props;
 const options = [
   { value: "light", label: "Light theme", Icon: Sun },
   { value: "dark", label: "Dark theme", Icon: Moon },
@@ -18,74 +13,13 @@ const options = [
 ] as const;
 ---
 
-<ui-toggle-group role="group" aria-label="Color theme" data-theme-toggle>
+<theme-toggle data-ui="toggle-group" role="group" aria-label="Color theme">
   {
     options.map(({ value, label, Icon }) => (
       <label data-ui="toggle" data-toggle-size="icon">
-        <input
-          type="radio"
-          name={name}
-          value={value}
-          aria-label={label}
-          checked={value === "system"}
-        />
+        <input type="radio" name="theme" value={value} aria-label={label} />
         <Icon size={16} aria-hidden="true" />
       </label>
     ))
   }
-</ui-toggle-group>
-
-<script>
-  const KEY = "theme";
-  const root = document.documentElement;
-
-  function stored(): string {
-    try {
-      const value = localStorage.getItem(KEY);
-      return value === "light" || value === "dark" ? value : "system";
-    } catch {
-      return pinned() ?? "system";
-    }
-  }
-
-  /** The pinned scheme from a `theme-*` switch on `<html>`, if any. */
-  function pinned(): string | undefined {
-    return (root.dataset.ui ?? "")
-      .split(/\s+/)
-      .find((t) => t === "theme-light" || t === "theme-dark")
-      ?.slice("theme-".length);
-  }
-
-  function apply(value: string): void {
-    const tokens = (root.dataset.ui ?? "")
-      .split(/\s+/)
-      .filter((t) => t && !t.startsWith("theme-"));
-    if (value === "light" || value === "dark") tokens.push(`theme-${value}`);
-    if (tokens.length) root.dataset.ui = tokens.join(" ");
-    else delete root.dataset.ui;
-    try {
-      if (value === "system") localStorage.removeItem(KEY);
-      else localStorage.setItem(KEY, value);
-    } catch {
-      /* no storage: the choice lasts for this page */
-    }
-  }
-
-  function sync(value: string): void {
-    for (const input of document.querySelectorAll<HTMLInputElement>(
-      "[data-theme-toggle] input",
-    )) {
-      input.checked = input.value === value;
-    }
-  }
-
-  sync(stored());
-  for (const group of document.querySelectorAll("[data-theme-toggle]")) {
-    group.addEventListener("change", (event) => {
-      const input = event.target;
-      if (!(input instanceof HTMLInputElement)) return;
-      apply(input.value);
-      sync(input.value);
-    });
-  }
-</script>
+</theme-toggle>
