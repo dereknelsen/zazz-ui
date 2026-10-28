@@ -47,6 +47,7 @@
     --ui-button-px: var(--ui-field-px);
     --ui-button-min-h: var(--ui-field-h);
     --ui-button-radius: var(--ui-field-radius);
+    --ui-button-background-clip: padding-box;
 
     --ui-button-icon-size: var(--ui-field-icon-size);
 
@@ -157,6 +158,11 @@
   inherits: false;
 }
 
+@property --_button-background-clip {
+  syntax: "*";
+  inherits: false;
+}
+
 @property --_button-icon-size {
   syntax: "*";
   inherits: false;
@@ -218,7 +224,10 @@
 
     color: var(--_text-resolved, var(--_button-text, var(--ui-button-text)));
     background-color: var(--_bg-resolved, var(--_button-bg, var(--ui-button-bg)));
-    background-clip: padding-box;
+    background-clip: var(
+      --_background-clip-resolved,
+      var(--_button-background-clip, var(--ui-button-background-clip))
+    );
     white-space-collapse: collapse;
 
     /* The ring is published to --_focus-shadow so the utilities layer's
@@ -337,8 +346,14 @@
 
   :where([data-ui~="button"][data-button-variant="primary"]) {
     --_button-bg: var(--color-primary);
-    --_button-bg--hover: oklch(from var(--color-primary) l c h / 0.8);
-    --_button-bg--active: oklch(from var(--color-primary) l c h / 0.7);
+    --_button-bg--hover: light-dark(
+      oklch(from var(--color-primary) calc(l + (1 - l) * 0.2) c h),
+      oklch(from var(--color-primary) calc(l * 0.8) c h)
+    );
+    --_button-bg--active: light-dark(
+      oklch(from var(--color-primary) calc(l + (1 - l) * 0.3) c h),
+      oklch(from var(--color-primary) calc(l * 0.7) c h)
+    );
 
     --_button-text: var(--color-primary-foreground);
     --_button-text--hover: var(--color-primary-foreground);
@@ -353,8 +368,14 @@
 
   :where([data-ui~="button"][data-button-variant="secondary"]) {
     --_button-bg: var(--color-secondary);
-    --_button-bg--hover: oklch(from var(--color-secondary) l c h / 0.8);
-    --_button-bg--active: oklch(from var(--color-secondary) l c h / 0.7);
+    --_button-bg--hover: light-dark(
+      oklch(from var(--color-secondary) calc(l + (1 - l) * 0.2) c h),
+      oklch(from var(--color-secondary) calc(l * 0.8) c h)
+    );
+    --_button-bg--active: light-dark(
+      oklch(from var(--color-secondary) calc(l + (1 - l) * 0.3) c h),
+      oklch(from var(--color-secondary) calc(l * 0.7) c h)
+    );
 
     --_button-text: var(--color-secondary-foreground);
     --_button-text--hover: var(--color-secondary-foreground);
@@ -369,8 +390,14 @@
 
   :where([data-ui~="button"][data-button-variant="tertiary"]) {
     --_button-bg: var(--color-tertiary);
-    --_button-bg--hover: oklch(from var(--color-tertiary) l c h / 0.8);
-    --_button-bg--active: oklch(from var(--color-tertiary) l c h / 0.7);
+    --_button-bg--hover: light-dark(
+      oklch(from var(--color-tertiary) calc(l + (1 - l) * 0.2) c h),
+      oklch(from var(--color-tertiary) calc(l * 0.8) c h)
+    );
+    --_button-bg--active: light-dark(
+      oklch(from var(--color-tertiary) calc(l + (1 - l) * 0.3) c h),
+      oklch(from var(--color-tertiary) calc(l * 0.7) c h)
+    );
 
     --_button-text: var(--color-tertiary-foreground);
     --_button-text--hover: var(--color-tertiary-foreground);
@@ -384,9 +411,13 @@
   }
 
   :where([data-ui~="button"][data-button-variant="muted"]) {
-    --_button-bg: var(--color-muted);
-    --_button-bg--hover: oklch(from var(--color-muted) l c h / calc(alpha - 0.02));
-    --_button-bg--active: var(--color-muted);
+    /* --color-muted flattened onto the page so the surface stays opaque */
+    --_button-bg: light-dark(
+      color-mix(in srgb, var(--color-foreground) 5%, var(--color-background)),
+      color-mix(in srgb, var(--color-foreground) 10%, var(--color-background))
+    );
+    --_button-bg--hover: oklch(from var(--_button-bg) calc(l - 0.025) c h);
+    --_button-bg--active: oklch(from var(--_button-bg) calc(l - 0.05) c h);
 
     --_button-text: var(--color-foreground);
     --_button-text--hover: var(--color-foreground);
@@ -401,8 +432,12 @@
 
   :where([data-ui~="button"][data-button-variant="ghost"]) {
     --_button-bg: transparent;
-    --_button-bg--hover: var(--color-muted);
-    --_button-bg--active: oklch(from var(--color-muted) l c h / calc(alpha - 0.02));
+    /* the muted variant's opaque surface */
+    --_button-bg--hover: light-dark(
+      color-mix(in srgb, var(--color-foreground) 5%, var(--color-background)),
+      color-mix(in srgb, var(--color-foreground) 10%, var(--color-background))
+    );
+    --_button-bg--active: oklch(from var(--_button-bg--hover) calc(l - 0.025) c h);
 
     --_button-text: var(--color-foreground);
     --_button-text--hover: var(--color-foreground);
@@ -416,7 +451,8 @@
   }
 
   /* Status variants (info, success, warning, destructive) share one soft
-     design: the status color at 10% alpha (20% in dark) as the surface, and
+     design: the status color mixed 10% (20% in dark) into the page background
+     as an opaque surface, and
      the status hue as the text with its lightness clamped (at most 0.45 in
      light, at least 0.82 in dark) so it holds 4.5:1 on the tint and on the
      hover and active steps; status-contrast.browser.test.ts checks it. No border. One rule derives the states from the
@@ -429,8 +465,8 @@
       [data-button-variant="destructive"]
     )
   ) {
-    --_button-bg--hover: oklch(from var(--_button-bg) l c h / calc(alpha + 0.1));
-    --_button-bg--active: oklch(from var(--_button-bg) l c h / calc(alpha + 0.15));
+    --_button-bg--hover: oklch(from var(--_button-bg) calc(l - 0.025) c h);
+    --_button-bg--active: oklch(from var(--_button-bg) calc(l - 0.05) c h);
 
     --_button-text--hover: var(--_button-text);
     --_button-text--active: var(--_button-text);
@@ -445,8 +481,8 @@
   :where([data-ui~="button"][data-button-variant="info"]) {
     --_button-ring-color: var(--color-info);
     --_button-bg: light-dark(
-      oklch(from var(--color-info) l c h / 0.1),
-      oklch(from var(--color-info) l c h / 0.2)
+      color-mix(in srgb, var(--color-info) 10%, var(--color-background)),
+      color-mix(in srgb, var(--color-info) 20%, var(--color-background))
     );
     --_button-text: light-dark(
       oklch(from var(--color-info) min(l, 0.45) c h),
@@ -457,8 +493,8 @@
   :where([data-ui~="button"][data-button-variant="success"]) {
     --_button-ring-color: var(--color-success);
     --_button-bg: light-dark(
-      oklch(from var(--color-success) l c h / 0.1),
-      oklch(from var(--color-success) l c h / 0.2)
+      color-mix(in srgb, var(--color-success) 10%, var(--color-background)),
+      color-mix(in srgb, var(--color-success) 20%, var(--color-background))
     );
     --_button-text: light-dark(
       oklch(from var(--color-success) min(l, 0.45) c h),
@@ -469,8 +505,8 @@
   :where([data-ui~="button"][data-button-variant="warning"]) {
     --_button-ring-color: var(--color-warning);
     --_button-bg: light-dark(
-      oklch(from var(--color-warning) l c h / 0.1),
-      oklch(from var(--color-warning) l c h / 0.2)
+      color-mix(in srgb, var(--color-warning) 10%, var(--color-background)),
+      color-mix(in srgb, var(--color-warning) 20%, var(--color-background))
     );
     --_button-text: light-dark(
       oklch(from var(--color-warning) min(l, 0.45) c h),
@@ -481,8 +517,8 @@
   :where([data-ui~="button"][data-button-variant="destructive"]) {
     --_button-ring-color: var(--color-destructive);
     --_button-bg: light-dark(
-      oklch(from var(--color-destructive) l c h / 0.1),
-      oklch(from var(--color-destructive) l c h / 0.2)
+      color-mix(in srgb, var(--color-destructive) 10%, var(--color-background)),
+      color-mix(in srgb, var(--color-destructive) 20%, var(--color-background))
     );
     --_button-text: light-dark(
       oklch(from var(--color-destructive) min(l, 0.45) c h),
@@ -496,8 +532,14 @@
     --_button-bg--active: transparent;
 
     --_button-text: var(--color-foreground);
-    --_button-text--hover: oklch(from var(--color-primary) l c h / 0.6);
-    --_button-text--active: oklch(from var(--color-primary) l c h / 0.5);
+    --_button-text--hover: light-dark(
+      oklch(from var(--color-primary) calc(l + (1 - l) * 0.4) c h),
+      oklch(from var(--color-primary) calc(l * 0.6) c h)
+    );
+    --_button-text--active: light-dark(
+      oklch(from var(--color-primary) calc(l + (1 - l) * 0.5) c h),
+      oklch(from var(--color-primary) calc(l * 0.5) c h)
+    );
 
     --_button-border-style: none;
 

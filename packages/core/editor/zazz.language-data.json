@@ -439,7 +439,7 @@
           "_layers.css, _variables.css, _properties.css (--_*-resolved)"
         ],
         "uses": [
-          "oklch(from …): status tints"
+          "color-mix(), oklch(from …): status tints"
         ],
         "tokens": [
           "--ui-callout-* (@layer variables; named after the utilities they back)"
@@ -1196,16 +1196,20 @@
       "value": "var(--ui-menu-shadow)",
       "file": "primitives/autocomplete/autocomplete.css"
     },
+    "--ui-badge-background-clip": {
+      "value": "border-box",
+      "file": "primitives/badge/badge.css"
+    },
     "--ui-badge-bg": {
       "value": "var(--color-background)",
       "file": "primitives/badge/badge.css"
     },
     "--ui-badge-bg--active": {
-      "value": "oklch(from var(--color-muted) l c h / calc(alpha - 0.02))",
+      "value": "oklch(from var(--color-background) calc(l - 0.05) c h)",
       "file": "primitives/badge/badge.css"
     },
     "--ui-badge-bg--hover": {
-      "value": "var(--color-muted)",
+      "value": "oklch(from var(--color-background) calc(l - 0.025) c h)",
       "file": "primitives/badge/badge.css"
     },
     "--ui-badge-border-color": {
@@ -1283,6 +1287,10 @@
     "--ui-badge-text--hover": {
       "value": "var(--color-foreground)",
       "file": "primitives/badge/badge.css"
+    },
+    "--ui-button-background-clip": {
+      "value": "padding-box",
+      "file": "primitives/button/button.css"
     },
     "--ui-button-bg": {
       "value": "var(--color-background)",

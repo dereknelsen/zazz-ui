@@ -1,5 +1,22 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.8.4 (2026-10-28)
+
+### button
+
+- Hover and press change lightness instead of opacity, so a button floating over an image or another surface stays solid. `primary`, `secondary`, and `tertiary` move their lightness 20% (hover) and 30% (active) of the way toward the page: lighter in light mode, darker in dark. The `link` variant's text does the same at 40% and 50%.
+- The `muted`, `ghost`, and status (`info`, `success`, `warning`, `destructive`) surfaces are opaque: the old tint mixed into `--color-background`, so they look the same on the page and no longer show what is behind them. On a card they keep the page's tint instead of the card's. Hover and active step lightness down by 0.025 and 0.05, like the default variant. `muted` is built from `--color-foreground` (5%, 10% in dark), so it no longer follows a retheme of `--color-muted`. Status text still holds 4.5:1 in every state.
+- New hook `--ui-button-background-clip` (default `padding-box`, as before).
+
+### badge
+
+- Same state and surface changes as the button: lightness instead of opacity on hover and press, and opaque `muted`, `ghost`, and status surfaces.
+- New hook `--ui-badge-background-clip`. Its default is `border-box`, so a badge's background now runs under its border; set it to `padding-box` for the old look.
+
+### callout
+
+- The status variants' surfaces are opaque, matching badges and buttons: the status color mixed 10% (20% in dark) into `--color-background`. The faint status border is unchanged.
+
 ## 0.8.3 (2026-10-23)
 
 ### carousel

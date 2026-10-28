@@ -3,7 +3,7 @@
  *
  * @layer      variables, components
  * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved)
- * @uses       oklch(from …): status tints
+ * @uses       color-mix(), oklch(from …): status tints
  * @tokens     --ui-callout-* (@layer variables; named after the utilities they back)
  * @see        badge.css (status tint and border formulas; the test keeps them in sync)
  * @presets    data-callout-variant="muted" | "info" | "success" | "warning" | "destructive"
@@ -95,8 +95,8 @@
 
   :where([data-ui~="callout"][data-callout-variant="info"]) {
     --_callout-bg: light-dark(
-      oklch(from var(--color-info) l c h / 0.1),
-      oklch(from var(--color-info) l c h / 0.2)
+      color-mix(in srgb, var(--color-info) 10%, var(--color-background)),
+      color-mix(in srgb, var(--color-info) 20%, var(--color-background))
     );
     --_callout-text: light-dark(
       oklch(from var(--color-info) min(l, 0.45) c h),
@@ -107,8 +107,8 @@
 
   :where([data-ui~="callout"][data-callout-variant="success"]) {
     --_callout-bg: light-dark(
-      oklch(from var(--color-success) l c h / 0.1),
-      oklch(from var(--color-success) l c h / 0.2)
+      color-mix(in srgb, var(--color-success) 10%, var(--color-background)),
+      color-mix(in srgb, var(--color-success) 20%, var(--color-background))
     );
     --_callout-text: light-dark(
       oklch(from var(--color-success) min(l, 0.45) c h),
@@ -119,8 +119,8 @@
 
   :where([data-ui~="callout"][data-callout-variant="warning"]) {
     --_callout-bg: light-dark(
-      oklch(from var(--color-warning) l c h / 0.1),
-      oklch(from var(--color-warning) l c h / 0.2)
+      color-mix(in srgb, var(--color-warning) 10%, var(--color-background)),
+      color-mix(in srgb, var(--color-warning) 20%, var(--color-background))
     );
     --_callout-text: light-dark(
       oklch(from var(--color-warning) min(l, 0.45) c h),
@@ -131,8 +131,8 @@
 
   :where([data-ui~="callout"][data-callout-variant="destructive"]) {
     --_callout-bg: light-dark(
-      oklch(from var(--color-destructive) l c h / 0.1),
-      oklch(from var(--color-destructive) l c h / 0.2)
+      color-mix(in srgb, var(--color-destructive) 10%, var(--color-background)),
+      color-mix(in srgb, var(--color-destructive) 20%, var(--color-background))
     );
     --_callout-text: light-dark(
       oklch(from var(--color-destructive) min(l, 0.45) c h),
