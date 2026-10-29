@@ -141,8 +141,9 @@ components:
   # Variants below are shipped presets: data-button-variant / data-badge-variant / data-card-variant
   # (no attribute = default). The secondary and tertiary button and badge presets follow the
   # primary pattern with their own role and -foreground. The info, success, warning, and
-  # destructive presets are soft: a 10% tint of the role (20% in dark) with the role's hue
-  # as text, lightness clamped to hold 4.5:1.
+  # destructive presets are soft: the role mixed 10% into the background (20% in dark), opaque,
+  # with the role's hue as text, lightness clamped to hold 4.5:1. Every button and badge fill is
+  # opaque, and hover and press change lightness, never opacity.
   button-default:
     backgroundColor: "{colors.background}"
     textColor: "{colors.foreground}"
@@ -154,7 +155,7 @@ components:
     rounded: "{rounded.md}"
     padding: 10px
   button-muted:
-    backgroundColor: "{colors.muted}"
+    backgroundColor: "{colors.muted} flattened onto {colors.background}"
     textColor: "{colors.foreground}"
     rounded: "{rounded.md}"
     padding: 10px
@@ -169,7 +170,7 @@ components:
     rounded: "{rounded.md}"
     padding: 10px
   button-destructive:
-    backgroundColor: "{colors.destructive} at 10% (20% in dark)"
+    backgroundColor: "{colors.destructive} mixed 10% into {colors.background} (20% in dark)"
     textColor: "{colors.destructive}, lightness ≤ 0.45 (≥ 0.82 in dark)"
     rounded: "{rounded.md}"
     padding: 10px

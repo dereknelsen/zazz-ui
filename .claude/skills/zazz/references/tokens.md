@@ -49,8 +49,8 @@ Use the `--color-*` roles in utilities and CSS; they are also the **theme inputs
   the text-selection highlight. Set them on `:root` only; a subtree override does nothing.
 - **Status:** `--color-info` `--color-success` `--color-warning` `--color-destructive`
   (+ `-foreground` for text on the solid color). The status variants of button, badge, and
-  callout are soft: a 10% tint of the role (20% in dark) with the role's hue as text, its
-  lightness clamped to hold 4.5:1. For a status surface, use one of those variants rather than
+  callout are soft: the role mixed 10% into `--color-background` (20% in dark), opaque, with
+  the role's hue as text, its lightness clamped to hold 4.5:1. For a status surface, use one of those variants rather than
   mixing your own tint and text.
 - **Utilities:** `--text` (text color), `--bg` (+ `--bg-alpha` for channel alpha; `none` clears the
   color and any gradient), `--border-color` (or the `--border` shorthand, §11).

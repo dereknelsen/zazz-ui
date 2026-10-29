@@ -11,6 +11,7 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 ### badge
 
 - Same state and surface changes as the button: lightness instead of opacity on hover and press, and opaque `muted`, `ghost`, and status surfaces.
+- An interactive badge with no variant hovers and presses like the default button: `--ui-badge-bg--hover` and `--ui-badge-bg--active` step `--color-background` down by 0.025 and 0.05 in lightness, where they were `--color-muted` and a lighter muted. Set the two hooks back to `var(--color-muted)` to keep the old look.
 - New hook `--ui-badge-background-clip`. Its default is `border-box`, so a badge's background now runs under its border; set it to `padding-box` for the old look.
 
 ### callout
