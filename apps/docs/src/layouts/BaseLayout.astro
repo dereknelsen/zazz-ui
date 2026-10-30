@@ -3,6 +3,7 @@ import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import { siteHead } from "../lib/head.ts";
 import { site } from "../site.config.ts";
+import og from "../assets/og.png";
 import "../styles/site.css";
 
 interface Props {
@@ -12,7 +13,9 @@ interface Props {
 const { title, description = site.description } = Astro.props;
 const pageTitle = title === site.name ? site.title : `${title} · ${site.name}`;
 const canonical = new URL(Astro.url.pathname, site.url);
-const ogImage = new URL("/og.png?v=2", site.url);
+// Imported, not served from public/, so the URL carries a content hash and social
+// cards (X caches by image URL for about a week) refetch whenever the file changes.
+const ogImage = new URL(og.src, site.url);
 ---
 
 <!doctype html>
