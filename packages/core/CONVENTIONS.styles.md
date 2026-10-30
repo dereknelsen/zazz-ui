@@ -281,26 +281,48 @@ token **defaults to a global token**:
 }
 ```
 
-Naming convention:
+Naming convention. Every custom property name is one of three kinds, and the namespace says
+which to expect:
+
+| Kind                  | Spelling                                                              | Used by                                                                                                                        |
+| --------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Utility name**      | Tailwind's short form: `bg`, `text`, `px`, `items`, `radius`          | style utilities; every hook that backs a utility; global scales named after one (`--leading-md`, `--radius-md`, `--shadow-md`) |
+| **CSS property name** | full and logical: `background-clip`, `border-width`, `flex-direction` | hooks with no utility behind them                                                                                              |
+| **Role name**         | a plain word: `background`, `foreground`, `muted`, `card`             | `--color-<role>` and its `-foreground` pair                                                                                    |
+
+So `--bg` and `--ui-button-bg` are short because `bg` is a utility name, `--ui-button-background-clip`
+is long because no `--bg-clip` utility exists, and `--color-background` is spelled out because
+`background` there is the role a color plays, not the CSS property. "Is there a utility for
+this?" decides between the first two kinds; a role word never appears outside `--color-*`.
 
 - `--ui-{component}-{utility}`: **a hook is named after the utility it backs**:
   `--ui-button-bg`, `--ui-button-text`, `--ui-button-font-size`, `--ui-button-leading`,
-  `--ui-button-px`, `--ui-button-min-h`, `--ui-button-radius`. A hook that backs no utility
-  keeps a descriptive name (`--ui-button-icon-size`, `--ui-tooltip-arrow-size`).
+  `--ui-button-px`, `--ui-button-min-h`, `--ui-button-radius`, `--ui-field-horizontal-items`,
+  `--ui-layout-template-cols`. A hook that backs no utility takes the full property name
+  (`--ui-button-background-clip`) or, for a value no property owns, a descriptive one
+  (`--ui-button-icon-size`, `--ui-tooltip-arrow-size`, `--ui-lightbox-thumb-cols`). The name
+  follows the utility; the value is whatever the property accepts, so `--ui-mobile-menu-header-px`
+  holds a two-value `padding-inline` where the `--px` utility takes one.
+- `--ui-{component}-{part}-{utility}`: **parts come before the property**, and the part may be
+  several words (`thumb-bg`, `track-h`, `label-text`, `header-py`, `body-px`,
+  `group-label-p`). The utility or property name is always the last segment, which is what
+  makes `-background-clip` read as the `background-clip` property rather than a `background`
+  part with a `clip` property.
+- **Opposite pairs**: a surface's text color is `-text`, paired with `-bg`
+  (`--ui-card-bg` / `--ui-card-text`); a theme role's text color is `-foreground`, paired with
+  the role (`--color-card` / `--color-card-foreground`). Never `-fg`, and never `-foreground`
+  on a hook: a part's tint is `-color` (`--ui-checkbox-glyph-color`, `--ui-radio-dot-color`).
 - `--ui-{component}-{utility}--{state}`: a **double dash** before one of the seven states
   (`disabled`, `active`, `focus-visible`, `focus-within`, `hover`, `checked`, `open`):
   `--ui-button-bg--hover`, `--ui-field-bg--focus-within`, `--ui-button-bg--active`.
 - Theme colors are read through the `--color-*` aliases (`var(--color-primary)`), never a
   bare Shadcn role: `--ring` and friends are utility names and registered non-inheriting.
-- **A token is named after the CSS property it feeds, using the _logical_ property
-  name**: `-block-size` not `-height`, `-inline-size` not `-width`,
-  `-padding-inline` not `-padding-left`. Hooks that mirror a style utility take the
-  utility's name instead (`--ui-input-pl`, `--ui-button-px`, `--ui-field-h`). Exceptions: `-line-height` (that _is_ the
-  property name — there is no logical variant), and a bare `-size` for square /
-  single-value dimensions (`--ui-checkbox-size`, `--ui-button-icon-size`).
-- **Full property names, never abbreviations**: `-align-items` not `-align`,
-  `-flex-wrap` not `-wrap`, `-radius` (matching `border-radius`'s common short
-  form used throughout) — but never a truncated fragment of a multi-word property.
+- **A hook with no utility behind it uses the full _logical_ property name, never an
+  abbreviation**: `-flex-direction` not `-direction`, `-background-clip` not `-bg-clip`,
+  `-inset-inline-start` not `-left`. A truncated fragment of a multi-word property is never a
+  name. Exceptions: `-line-height` (there is no logical variant), and a bare `-size` for square
+  or single-value dimensions (`--ui-checkbox-size`, `--ui-button-icon-size`). Where a utility
+  exists, its short name wins: `-items` because `--items` is the utility, `-h` because `--h` is.
 - **Border tokens**: a hook named `-border` always holds a **full CSS shorthand** (it is
   not the `--border` style utility, which takes one color, number, or length)
   (`1px solid var(--color-border)`, or `none`) — fine for decorative, non-varying
@@ -312,9 +334,10 @@ Naming convention:
   substituted where it is _declared_, so a `:root`-composed shorthand would ignore
   the element-scoped part overrides that variants and states rely on. State rules
   set the `border-color` longhand from the `--{state}` color token.
-- **Text color**: `-color` is the text color of a component or part surface (it backs
-  the `--color` utility, paired with `-bg`); decoration tints keep descriptive names
-  (`--ui-otp-caret-color`, `--ui-dialog-backdrop-color`, `--ui-tooltip-arrow-color`).
+- **Text color**: `-text` is the text color of a component or part surface (it backs
+  the `--text` utility, paired with `-bg`); decoration and glyph tints are `-color` on the
+  part (`--ui-otp-caret-color`, `--ui-dialog-backdrop-color`, `--ui-tooltip-arrow-color`,
+  `--ui-checkbox-glyph-color`).
 - **Cross-component defaults are sanctioned**: a component token may default to
   another component's token (`--ui-button-radius: var(--ui-field-radius)`,
   `--ui-toggle-radius: var(--ui-button-radius)`) so families stay visually

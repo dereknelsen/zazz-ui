@@ -16,21 +16,24 @@ No model has current Zazz (0.5 and later) in its training data yet, and 0.4 look
 
 ## The authoring rules
 
-`packages/core/AUTHORING.md` is the one-page source for the markup rules: identities, presets, slots, utilities, modifiers, hooks, layout, typography, theme. It ships inside `@zazz-ui/core` and is what every other resource below points at. Paste it, or link it, before asking for any markup.
+`AUTHORING.md` is the one-page source for the markup rules: identities, presets, slots, utilities, modifiers, hooks, layout, typography, theme. It ships inside `@zazz-ui/core` (`node_modules/@zazz-ui/core/AUTHORING.md`, or [on jsDelivr](https://cdn.jsdelivr.net/npm/@zazz-ui/core/AUTHORING.md)) and is what every other resource below points at. Paste it, or link it, before asking for any markup.
 
 ## Agent skills and rules
 
-The repo carries the same guidance for three assistants:
+Two skills install into Claude Code, Cursor, Codex, and the other agents the [skills CLI](https://skills.sh) supports:
 
-- **Claude Code**: the `zazz` skill at [`.claude/skills/zazz/`](https://github.com/dereknelsen/zazz-ui/tree/main/.claude/skills/zazz): `SKILL.md` (mental model, golden rules, do/don't), `DESIGN.md` (visual theme, color roles, typography, component styling, layout principles), `PATTERNS.md` (page structure, sentence case, composition), and `references/` (tokens, components, APIs). Copy the folder into your project's `.claude/skills/`.
-- **Cursor**: `.cursor/rules/zazz-markup.mdc`, a rules file scoped to `**/*.html`.
-- **GitHub Copilot**: `.github/instructions/zazz-markup.instructions.md`.
+```bash
+npx skills add dereknelsen/zazz-ui
+```
 
-All three say the same thing: read `AUTHORING.md`, copy a primitive's anatomy from `src/primitives/<name>/<name>.html` instead of reconstructing it, use tokens, and never use 0.4 syntax.
+- **`zazz`**: the design system: how to install and update it, the VS Code extension, its markup model and design guidance, references for tokens, components, and APIs, and where each answer lives on this site.
+- **`install-zazz-in-legacy-app`**: for adding Zazz to an older app whose CSS must keep working. It interviews you one round of decisions at a time (delivery, rollout, layering, scripts, CSP, conflicts), each question with a recommended answer, then layers the old CSS and writes a scoped baseline that closes the gaps the Zazz reset opens.
+
+Add one with `--skill zazz` or `--skill install-zazz-in-legacy-app`. The `zazz` skill says what the Cursor and Copilot rules files in the repo (`.cursor/rules/zazz-markup.mdc`, `.github/instructions/zazz-markup.instructions.md`) say: read `AUTHORING.md`, copy a primitive's anatomy from its page (`/api/primitives/<name>/index.md`) instead of reconstructing it, use tokens, and never use 0.4 syntax.
 
 ## The editor data
 
-For an assistant that can read JSON, `editor/zazz.html-data.json` lists every `data-ui` token and every `data-<name>-*` attribute with its allowed values, and `editor/zazz.css-data.json` lists every utility, tier, and hook. `vp run core#generate` regenerates them from the kit, so they match the kit they ship with. `editor/zazz.language-data.json` adds each primitive's summary, hook defaults, and resolved tokens.
+For an assistant that can read JSON, `editor/zazz.html-data.json` lists every `data-ui` token and every `data-<name>-*` attribute with its allowed values, and `editor/zazz.css-data.json` lists every utility, tier, and hook. They are generated from the kit, so they match the version they ship with: `node_modules/@zazz-ui/core/editor/`, or `https://cdn.jsdelivr.net/npm/@zazz-ui/core@<version>/editor/` (the CLI doesn't vendor them). `editor/zazz.language-data.json` adds each primitive's summary, hook defaults, and resolved tokens.
 
 ## Checking the output
 

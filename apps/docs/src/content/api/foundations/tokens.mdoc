@@ -32,9 +32,15 @@ Translucent black (`shade`) and white (`tint`) for scrims and backdrops; `--colo
 
 {% tokens group="color-overlays" /%}
 
+## Fluid range
+
+Fluid type and spacing grow between two viewport widths, `--fluid-min` and `--fluid-max`. `--fluid` runs from 0 at the first to 1 at the second and holds outside them. It is a plain number, so any `calc()` can use it: `calc(1rem + var(--fluid) * 0.5rem)` grows from 1rem to 1.5rem.
+
+{% tokens group="fluid" /%}
+
 ## Spacing
 
-`--spacing` is the unit behind every scale number; the `--space-*` tokens are steps on it. All of them are fluid, so the table shows the range.
+`--spacing` is the unit behind every scale number; the `--space-*` tokens are steps on it. `--spacing` grows from `--spacing-min` to `--spacing-max` across the fluid range, so the table shows the range. Set the two equal for a fixed scale.
 
 {% tokens group="spacing" /%}
 
@@ -52,7 +58,7 @@ Soft, four-layer shadows drawn with the same formula as `--elevation`, and the f
 
 ## Type: families, sizes, weights
 
-Fluid sizes. The family tokens are system stacks by default; to use your own font, load it and set `--font-family-body: "Inter", var(--font-sans-fallback)`.
+Fluid sizes, built from a few controls. `md` is `--typeset-base`, and each step above it multiplies by `--typeset-scale`: `lg` is one step, `xl` and `h6` two, up to `display` at eight. Both grow across the fluid range, from their `-min` to their `-max` value, so the gaps between steps widen on large screens. `sm`, `xs`, and `2xs` are multiples of the base with their own `-min` and `-max`. Change the controls, not the sizes: `:root { --typeset-scale-max: 1.333 }` retunes every heading at once. The family tokens are system stacks by default; to use your own font, load it and set `--font-family-body: "Inter", var(--font-sans-fallback)`.
 
 {% tokens group="font" /%}
 

@@ -53,7 +53,7 @@ describe("lightbox", () => {
       <div data-ui="container" style="inline-size: 60rem"><ui-lightbox data-wide></ui-lightbox></div>
     </div>`);
     const columns = (selector: string) =>
-      style(root.querySelector(selector)!, "--ui-lightbox-thumb-columns").trim();
+      style(root.querySelector(selector)!, "--ui-lightbox-thumb-cols").trim();
     expect(columns("[data-narrow]")).toBe("4");
     expect(columns("[data-wide]")).toBe("6");
   });

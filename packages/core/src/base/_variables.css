@@ -2,7 +2,7 @@
  * _variables.css — Global design tokens (Tier 1).
  *
  * @layer      variables
- * @requires   _layers.css
+ * @requires   _layers.css, _typography.css (--fluid, which --spacing reads)
  * @uses       light-dark() — theme roles re-resolve per color-scheme (system,
  *             data-ui="theme-dark" | "theme-light"); tokens stay unregistered on purpose
  * @uses       oklch(from …) — shade/tint scales and shadow alphas
@@ -237,22 +237,27 @@
     --font-optical-sizing-heading: auto;
     --font-optical-sizing-body: auto;
 
-    /* font-size — fluid clamp() */
-    --font-size-eyebrow: clamp(0.512rem, 0.609rem + 0.1213vi, 0.5787rem);
-    --font-size-2xs: clamp(0.512rem, 0.609rem + 0.1213vi, 0.5787rem);
-    --font-size-xs: clamp(0.5787rem, 0.8584rem + 0.273vi, 0.64rem);
-    --font-size-sm: clamp(0.7901rem, 0.9293rem + 0.1616vi, 0.8rem);
-    --font-size-md: clamp(1rem, 1rem + 0vi, 1rem);
-    --font-size-lg: clamp(1.125rem, 1.0682rem + 0.2273vi, 1.25rem);
-    --font-size-xl: clamp(1.2656rem, 1.1307rem + 0.5398vi, 1.5625rem);
-    --font-size-2xl: clamp(1.4238rem, 1.1832rem + 0.9624vi, 1.9531rem);
-    --font-size-h6: clamp(1.2656rem, 1.1307rem + 0.5398vi, 1.5625rem);
-    --font-size-h5: clamp(1.4238rem, 1.1832rem + 0.9624vi, 1.9531rem);
-    --font-size-h4: clamp(1.6018rem, 1.2202rem + 1.5265vi, 2.4414rem);
-    --font-size-h3: clamp(1.802rem, 1.234rem + 2.2722vi, 3.0518rem);
-    --font-size-h2: clamp(2.0273rem, 1.2148rem + 3.2498vi, 3.8147rem);
-    --font-size-h1: clamp(2.2807rem, 1.1499rem + 4.523vi, 4.7684rem);
-    --font-size-display: clamp(2.5658rem, 1.0227rem + 6.1721vi, 5.9605rem);
+    /* fluid range — the viewport widths fluid type and spacing grow between;
+       below --fluid-min they hold their small end, above --fluid-max their large end */
+    --fluid-min: 25rem;
+    --fluid-max: 80rem;
+
+    /* typeset — the fluid type scale behind --font-size-*. md is the base; each step above it
+       multiplies by the scale (lg = 1 step, xl = 2, … display = 8). The base and
+       the scale each grow from -min to -max across the fluid range; the math
+       lives in _typography.css. */
+    --typeset-base-min: 1rem;
+    --typeset-base-max: 1rem;
+    --typeset-scale-min: 1.125;
+    --typeset-scale-max: 1.25;
+
+    /* sizes below md — multiples of the base at each end of the fluid range */
+    --typeset-sm-min: 0.8;
+    --typeset-sm-max: 0.8;
+    --typeset-xs-min: 0.64;
+    --typeset-xs-max: 0.64;
+    --typeset-2xs-min: 0.5787;
+    --typeset-2xs-max: 0.5787;
 
     /* font-weight */
     --font-weight-body: 400;
@@ -294,32 +299,36 @@
     --leading-2xs: 1.5;
     --leading-eyebrow: 1.2;
 
-    /* paragraph-spacing */
-    --_paragraph-spacing-multiplier: 1;
+    /* paragraph-spacing — the space above a block in prose; the multiplier
+       loosens or tightens every step at once (--ui-prose-flow scales it again per prose) */
+    --paragraph-spacing-multiplier: 1;
 
-    --paragraph-spacing-display: calc(3.5rlh * var(--_paragraph-spacing-multiplier));
-    --paragraph-spacing-h1: calc(3.5rlh * var(--_paragraph-spacing-multiplier));
-    --paragraph-spacing-h2: calc(3rlh * var(--_paragraph-spacing-multiplier));
-    --paragraph-spacing-h3: calc(3rlh * var(--_paragraph-spacing-multiplier));
-    --paragraph-spacing-h4: calc(2rlh * var(--_paragraph-spacing-multiplier));
-    --paragraph-spacing-h5: calc(2rlh * var(--_paragraph-spacing-multiplier));
-    --paragraph-spacing-h6: calc(2rlh * var(--_paragraph-spacing-multiplier));
-    --paragraph-spacing-2xl: calc(1rlh * var(--_paragraph-spacing-multiplier));
-    --paragraph-spacing-xl: calc(0.75rlh * var(--_paragraph-spacing-multiplier));
-    --paragraph-spacing-lg: calc(0.75rlh * var(--_paragraph-spacing-multiplier));
-    --paragraph-spacing-md: calc(0.75rlh * var(--_paragraph-spacing-multiplier));
-    --paragraph-spacing-sm: calc(0.5rlh * var(--_paragraph-spacing-multiplier));
-    --paragraph-spacing-xs: calc(0.5rlh * var(--_paragraph-spacing-multiplier));
-    --paragraph-spacing-2xs: calc(0.5rlh * var(--_paragraph-spacing-multiplier));
-    --paragraph-spacing-eyebrow: calc(1rlh * var(--_paragraph-spacing-multiplier));
+    --paragraph-spacing-display: calc(3.5rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-h1: calc(3.5rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-h2: calc(3rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-h3: calc(3rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-h4: calc(2rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-h5: calc(2rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-h6: calc(2rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-2xl: calc(1rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-xl: calc(0.75rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-lg: calc(0.75rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-md: calc(0.75rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-sm: calc(0.5rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-xs: calc(0.5rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-2xs: calc(0.5rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-eyebrow: calc(1rlh * var(--paragraph-spacing-multiplier));
 
     /* ==========================================================================
     * Spacing — the --spacing unit and the --space-* scale
     * ========================================================================== */
 
-    /* the utility scale unit: `--p: 4` is 4 × --spacing. Fluid between
-       0.225rem and 0.25rem; pin it with `:root { --spacing: 0.25rem }` for a fixed scale. */
-    --spacing: clamp(0.225rem, 0.2136rem + 0.0455vi, 0.25rem);
+    /* the utility scale unit: `--p: 4` is 4 × --spacing. Fluid between its
+       min and max across the fluid range (--fluid comes from _typography.css);
+       set them equal, or pin `:root { --spacing: 0.25rem }`, for a fixed scale. */
+    --spacing-min: 0.225rem;
+    --spacing-max: 0.25rem;
+    --spacing: calc(var(--spacing-min) + var(--fluid) * (var(--spacing-max) - var(--spacing-min)));
 
     /* named spacing scale — for CSS and component hooks. In style utilities write the
        number instead (`--gap: 6`, not `var(--space-md)`). */

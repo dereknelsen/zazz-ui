@@ -1,6 +1,8 @@
 ---
 name: zazz-version-bump
 description: Release checklist for publishing @zazz-ui/core or the zazz-ui CLI to npm. Use when the user wants to bump the version, cut a release, publish, or push a new version of either package.
+metadata:
+  internal: true
 ---
 
 # Zazz version bump & publish
@@ -28,7 +30,7 @@ Versioning and changelog rules live in their sources of truth — restate neithe
 
 4. **Clear the pre-release markers and write the release post.** Remove the `{% callout type="warning" title="Unreleased" %}` blocks (`rg -n 'title="Unreleased"' apps/docs/src/content`). For a minor release, write `apps/docs/src/content/blog/zazz-0-N.mdoc` in the shape and voice of the previous one (title `Zazz 0.N alpha`, a one-sentence description, `tags: ["release"]`), covering each changelog entry a reader would act on, with its migration; run it through the `humanizer` skill. The site's header banner and the blog index show the newest post, so skipping this leaves the previous version announced as current. Ask Derek before setting it to `draft: false`, unless he asked for the post.
 
-5. **Update the agent skills** to match the new changelog entry: `.claude/skills/zazz*` (the `zazz` skill and its `references/`, `zazz-new-design-style`, the `zazz-figma-*` pair, `zazz-legacy-baseline`). For every entry, find what an agent would now get wrong: a renamed or removed attribute, token, or hook (search the skills for the old name; the hit count must be zero), a new slot or required attribute (add it to `references/components.md`), a new utility (`references/tokens.md`). If the release touched `_reset.css`, re-check `zazz-legacy-baseline/RESET-GROUPS.md` and move its "reflects Zazz X.Y.Z" label. Done when no skill names anything the release renamed or removed, and every new markup requirement appears in the skills.
+5. **Update the agent skills** to match the new changelog entry: the public skills under `skills/` (the `zazz` skill with `DESIGN.md`, `PATTERNS.md`, and `references/`; `install-zazz-in-legacy-app` with `RESET-GROUPS.md`). They install into other people's projects (`npx skills add dereknelsen/zazz-ui`), so they cite public URLs and package paths, never this repo's `packages/` paths. For every entry, find what an agent would now get wrong: a renamed or removed attribute, token, or hook (search the skills for the old name; the hit count must be zero), a new slot or required attribute (add it to `references/components.md`), a new utility (`references/tokens.md`). If the release touched any `@layer reset` block (`_reset.css`, `_typography.css`, or a primitive's), re-check `skills/install-zazz-in-legacy-app/RESET-GROUPS.md` and move the version in its `# Reset groups (Zazz X.Y.Z)` heading. Done when no skill names anything the release renamed or removed, and every new markup requirement appears in the skills.
 
 6. **Audit the Markdown docs and the docs site** for content the release made wrong, and for stale version references. List the files with `find . -name '*.md' -not -path '*/node_modules/*' -not -path '*/dist/*' -not -path './.git/*' -not -path '*/.astro/*'`; skip `CHANGELOG.md` and `docs/adr/` (history), and the deliberate "don't write 0.4 syntax" examples. The ones that drift: the root, core, CLI, and vscode `README.md`s, `CONTEXT.md`, `SPEC.md` (its title and status line), `packages/core/AUTHORING.md`, the two `CONVENTIONS.*.md`, the Copilot files under `.github/`, and the docs home's status line (`Zazz is in alpha (0.N)` in `apps/docs/src/content/docs/index.mdoc`).
    - **Content:** for every changelog entry, search for the old name or value (breakpoint widths, renamed attributes and hooks, example output such as inlay hints). Check every relative file path still exists, and every `vp run <task>` against the `scripts` in the matching `package.json` (the root has no `generate`, `fmt`, or `lint`).
@@ -91,8 +93,11 @@ Versioning and changelog rules live in their sources of truth — restate neithe
       v=X.Y.Z
       awk -v v="$v" '$0 ~ "^## "v" " {on=1; next} /^## / {on=0} on' packages/core/CHANGELOG.md > /tmp/notes.md
       printf '\n---\n\nInstall: `npm install @zazz-ui/core@%s`, or `npx zazz-ui update` in a project that already vendors the kit. Full history in [`packages/core/CHANGELOG.md`](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/CHANGELOG.md).\n' "$v" >> /tmp/notes.md
-      gh release create "core-v$v" --verify-tag --title "@zazz-ui/core $v" --notes-file /tmp/notes.md --latest
+      vp run zazz-vscode#package   # the editor extension ships as a release asset until it is on the Marketplace
+      gh release create "core-v$v" packages/vscode/dist/zazz.vsix --verify-tag --title "@zazz-ui/core $v" --notes-file /tmp/notes.md --latest
       ```
+
+      Done when the release also lists `zazz.vsix` under its assets (`gh release view "core-v$v" --json assets`): the `zazz` skill and the editor docs tell users to download it from there.
 
     - The step 11 push rebuilt the docs. Done when `curl -sL "https://zazz.sh/llms-full.txt?t=$(date +%s)" | grep -o '@zazz-ui/core@[0-9.]*' | sort | uniq -c` lists only the new version (Vercel takes about two minutes; `-L` matters, because `zazz.sh` redirects to `www.zazz.sh`).
     - Run the published CLI against the release in an empty scratch directory with a stub `package.json`: `init -y`, `add` a primitive the release touched, then `diff -y` (no differences). Then upgrade from the previous release: `init <previous> -y`, `add` the same primitive, `diff @X.Y.Z -y` (it must print the new changelog slice, **BREAKING** notes included), and `update @X.Y.Z -y`. Done when all of them succeed. A failure, or a manifest shape change in step 7, means the CLI needs its own release; see the bottom of this file.

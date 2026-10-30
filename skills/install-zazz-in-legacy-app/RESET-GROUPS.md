@@ -1,4 +1,4 @@
-# Reset groups (Zazz 0.6.2)
+# Reset groups (Zazz 0.8.4)
 
 One section per group of the Zazz reset. **Detect** names what to grep in the legacy CSS (`css`)
 and the server templates (`tpl`). **Close** gives the lines that go inside the baseline's
@@ -167,14 +167,27 @@ the legacy CSS leaves the property unset.
 - **Reset:** the kit draws these bare elements itself: `input[type="checkbox"]`,
   `input[role="switch"]` and its wrapping `label`, `input[type="range"]`, `details`/`summary`,
   `dialog`, `[popover]`, `kbd`, and `option::checkmark`. The focus ring on `:focus-visible` is
-  the kit's outline too.
+  the kit's outline too. The checkbox, switch, and `kbd` radii follow the radius scale from
+  0.8.0; the off switch track takes `--color-input` rather than `--color-muted` from 0.8.3.
+  From 0.8.2, while a `<dialog>` is open as a modal, `html` gets `overflow: hidden;
+  scrollbar-gutter: stable`.
 - **Symptom:** legacy checkboxes, sliders, disclosures, and dialogs take the Zazz look. Often an
   improvement; it clashes where legacy CSS or a jQuery plugin positions custom skins over them.
+  A page that opens a native modal with `showModal()` can't scroll behind it, and a scrollbar
+  gutter stays reserved while it is open.
 - **Detect:** `tpl` for each element; `css` for skins (`appearance`, `::before` on checkbox
-  labels, iCheck or Uniform classes).
-- **Close:** this is an **adopt** decision for the user, the focus ring included. To opt out:
-  `:where(input[type="checkbox"], input[type="range"]) { appearance: revert; }` plus `revert`
-  for the properties the skin relies on.
+  labels, iCheck or Uniform classes); scripts for `showModal(`.
+- **Close:** this is an **adopt** decision for the user, the focus ring and the modal scroll
+  lock included. To opt out:
+  ```css
+  :where(input[type="checkbox"], input[type="range"]) {
+    appearance: revert;
+  } /* plus revert for the properties the skin relies on */
+  :where(html:has(dialog:modal)) {
+    overflow: revert;
+    scrollbar-gutter: revert;
+  }
+  ```
 
 ## Page transitions
 

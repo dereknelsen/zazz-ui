@@ -16,7 +16,7 @@
     /* surface + border follow --ui-field-* */
     --ui-checkbox-size: calc(var(--spacing) * 4.5);
     --ui-checkbox-bg: var(--ui-field-bg);
-    --ui-checkbox-foreground: var(--color-primary-foreground);
+    --ui-checkbox-glyph-color: var(--color-primary-foreground);
     --ui-checkbox-border-width: var(--ui-field-border-width);
     --ui-checkbox-border-style: var(--ui-field-border-style);
     --ui-checkbox-border-color: var(--ui-field-border-color);
@@ -103,7 +103,7 @@
   ) {
     background-color: var(--_bg-resolved, var(--ui-checkbox-bg--checked));
     border-color: var(--_border-color-resolved, var(--ui-checkbox-border-color--checked));
-    color: var(--ui-checkbox-foreground);
+    color: var(--ui-checkbox-glyph-color);
   }
 
   /* The glyph is a masked ::before painted in currentColor (pseudo-elements

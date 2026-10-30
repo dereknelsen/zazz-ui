@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * @fileoverview The design-token contract in `_variables.css`: one spacing
+ * @fileoverview The design-token contract in `_variables.css` (with `_typography.css`): one spacing
  * scale (`--space-2xs … --space-2xl`, each a multiple of `--spacing`), every
  * sized family spans 2xs–2xl, and retired names are gone from the kit.
  */
@@ -12,10 +12,12 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vite-plus/test";
 
 const SRC = join(dirname(fileURLToPath(import.meta.url)), "..");
-// the shadow tokens are generated into _shadows.css
+// the shadow tokens are generated into _shadows.css; the fluid type scale is
+// computed in _typography.css from controls in _variables.css
 const variables =
   readFileSync(join(SRC, "base/_variables.css"), "utf8") +
-  readFileSync(join(SRC, "base/_shadows.css"), "utf8");
+  readFileSync(join(SRC, "base/_shadows.css"), "utf8") +
+  readFileSync(join(SRC, "base/_typography.css"), "utf8");
 const declared = new Set([...variables.matchAll(/(--[\w-]+)\s*:/g)].map((m) => m[1]!));
 const SIZES = ["2xs", "xs", "sm", "md", "lg", "xl", "2xl"];
 
@@ -85,9 +87,9 @@ describe("design tokens", () => {
     expect([...new Set(offenders)]).toEqual([]);
   });
 
-  it("retires --step-*, --gap-<size>, the spacing interval, --font-body/heading/mono, and --is-breakpoint-* everywhere in the kit", () => {
+  it("retires --step-*, --gap-<size>, the spacing interval, --font-body/heading/mono, --is-breakpoint-*, and the private paragraph-spacing multiplier everywhere in the kit", () => {
     const retired =
-      /--step-\w+|--gap-(?:2xs|xs|sm|md|lg|xl|2xl)(?![\w-])|--_?spacing-interval|(?<!family)--font-(?:body|heading|mono)(?![\w-])|--is-breakpoint-/g;
+      /--step-\w+|--gap-(?:2xs|xs|sm|md|lg|xl|2xl)(?![\w-])|--_?spacing-interval|(?<!family)--font-(?:body|heading|mono)(?![\w-])|--is-breakpoint-|--_paragraph-spacing-multiplier/g;
     const offenders: string[] = [];
     for (const path of kitFiles()) {
       for (const m of readFileSync(path, "utf8").matchAll(retired)) {

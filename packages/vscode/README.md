@@ -31,5 +31,5 @@ From the repo root:
 - `vp run zazz-vscode#test` runs the unit tests and drives the bundled server
   over stdio; `vp run zazz-vscode#test:e2e` runs the extension in a downloaded
   VS Code.
-- `vp run zazz-vscode#package` builds `dist/zazz.vsix`; install it with
+- `vp run zazz-vscode#package` builds `dist/zazz.vsix` (each core release attaches it to its GitHub release, so users can skip the build); install it with
   `code --install-extension packages/vscode/dist/zazz.vsix --force` and/or `cursor --install-extension packages/vscode/dist/zazz.vsix --force`.

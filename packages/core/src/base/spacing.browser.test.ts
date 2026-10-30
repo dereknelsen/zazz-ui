@@ -6,13 +6,23 @@
  * insets.
  */
 
-import { describe, expect, it } from "vite-plus/test";
-import { at, atWidth, below, mount, scale, style, useKit } from "../../test/browser.ts";
+import { afterEach, describe, expect, it } from "vite-plus/test";
+import { at, atWidth, below, lengthPx, mount, scale, style, useKit } from "../../test/browser.ts";
 
 const px = (value: string) => Number.parseFloat(value);
 
 describe("spacing and margin", () => {
   useKit();
+  afterEach(() => document.documentElement.removeAttribute("style"));
+
+  it("--spacing runs from --spacing-min to --spacing-max across the fluid range", async () => {
+    await atWidth(400);
+    expect(lengthPx("var(--spacing)")).toBeCloseTo(16 * 0.225, 1);
+    await atWidth(1280);
+    expect(lengthPx("var(--spacing)")).toBeCloseTo(16 * 0.25, 1);
+    document.documentElement.style.setProperty("--spacing-max", "0.5rem");
+    expect(lengthPx("var(--spacing)")).toBeCloseTo(8, 1);
+  });
 
   it("--p and --px take scale numbers and lengths", () => {
     const root = mount(

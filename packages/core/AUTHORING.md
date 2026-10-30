@@ -124,7 +124,7 @@ Order of preference for changing how a primitive looks: preset, then hook on a s
 
 - `data-ui="layout"` (or `<ui-layout>`) makes the element a band grid. Children default to the `xl` band. Change the default with `data-layout-size="md"`; place one child with `--band: layout-bleed | layout-full | layout-2xl … layout-sm`, responsive with `--band--md: layout-sm`. A layout nested in a layout aligns to the parent's bands.
 - Native `h1`–`h6` carry their role automatically. Give any other element a role with `data-ui="text-h3"`, `text-display`, `text-eyebrow`, or a body size `text-2xs … text-2xl`. An inline link outside `prose` takes `text-link` (`data-ui="text-sm text-link"` stacks it with a size). Override one property with a utility (`--font-size`, `--leading`, `--font-weight`); never rebuild a role from utilities.
-- `data-ui="prose"` styles rich text inside it. Give a reading column `--max-w: var(--article-lg); --mx: auto`. `data-ui="not-prose"` on a wrapper stops prose styling for that subtree (a form or widget inside an article).
+- `data-ui="prose"` styles rich text inside it. Give a reading column `--max-w: var(--article-lg); --mx: auto`. `data-ui="not-prose"` on a wrapper stops prose styling for that subtree (a form or widget inside an article). `data-prose-size="sm"` (compact) or `"lg"` (reading) resizes one article's type and spacing; `--ui-prose-flow` scales only its spacing.
 
 ## Navigation
 

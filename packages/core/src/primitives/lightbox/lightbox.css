@@ -19,7 +19,7 @@
     --ui-lightbox-thumb-size: calc(var(--spacing) * 16);
     --ui-lightbox-thumb-opacity: 0.5;
     --ui-lightbox-thumb-opacity--active: 1;
-    --ui-lightbox-thumb-columns: 6;
+    --ui-lightbox-thumb-cols: 6;
     --ui-lightbox-thumb-gap: calc(var(--spacing) * 1.5);
     --ui-lightbox-img-border: 1px solid var(--color-faded);
 
@@ -59,7 +59,7 @@
 
   @container (width <= 40rem) {
     :where(ui-lightbox, [data-ui~="lightbox"]) {
-      --ui-lightbox-thumb-columns: 4;
+      --ui-lightbox-thumb-cols: 4;
     }
   }
 
@@ -242,8 +242,8 @@
     [data-lightbox-slot~="stage"]
     [data-lightbox-slot~="thumb"] {
     max-inline-size: calc(
-      (100% - (var(--ui-lightbox-thumb-gap) * (var(--ui-lightbox-thumb-columns) - 1))) /
-        var(--ui-lightbox-thumb-columns)
+      (100% - (var(--ui-lightbox-thumb-gap) * (var(--ui-lightbox-thumb-cols) - 1))) /
+        var(--ui-lightbox-thumb-cols)
     );
   }
 

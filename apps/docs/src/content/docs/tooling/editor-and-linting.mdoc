@@ -22,7 +22,13 @@ The [playground](/playground/) runs both inside its editor: findings appear as u
 
 ## VS Code and Cursor
 
-The Zazz extension runs the kit's code in a language server. It is not on the Marketplace yet; build it from the repo and install the `.vsix`:
+The Zazz extension runs the kit's code in a language server. It is not on the Marketplace yet. Download `zazz.vsix` from the latest `core-v*` [release on GitHub](https://github.com/dereknelsen/zazz-ui/releases) and install it:
+
+```bash
+code --install-extension zazz.vsix     # or: cursor --install-extension zazz.vsix
+```
+
+Releases from 0.9.0 carry the `.vsix`. To run the current `main` instead, build it from a clone of the repo:
 
 ```bash
 vp run zazz-vscode#package
@@ -59,10 +65,12 @@ The language server speaks standard LSP over stdio (`node packages/vscode/dist/s
 
 ```json
 {
-  "html.customData": ["./zazz/editor/zazz.html-data.json"],
-  "css.customData": ["./zazz/editor/zazz.css-data.json"]
+  "html.customData": ["./node_modules/@zazz-ui/core/editor/zazz.html-data.json"],
+  "css.customData": ["./node_modules/@zazz-ui/core/editor/zazz.css-data.json"]
 }
 ```
+
+The CLI doesn't vendor these files. On a CLI or CDN project, download both from `https://cdn.jsdelivr.net/npm/@zazz-ui/core@<version>/editor/` and point the settings at your copies.
 
 ## ESLint
 

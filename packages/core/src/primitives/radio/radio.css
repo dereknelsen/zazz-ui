@@ -12,7 +12,7 @@
     --ui-radio-size: calc(var(--spacing) * 4.5);
     --ui-radio-bg: var(--ui-field-bg);
     --ui-radio-bg--checked: var(--color-primary);
-    --ui-radio-dot-foreground: var(--color-primary-foreground);
+    --ui-radio-dot-color: var(--color-primary-foreground);
     --ui-radio-border-width: var(--ui-field-border-width);
     --ui-radio-border-style: var(--ui-field-border-style);
     --ui-radio-border-color: var(--ui-field-border-color);
@@ -29,7 +29,7 @@
   /* ===========================================================================
   RADIO — data-ui="radio" (+ data-ui="radio-group")
   - appearance: none redraws the circle from theme tokens; the checked dot is a
-    masked ::before so it tracks --ui-radio-dot-foreground, not color alone.
+    masked ::before so it tracks --ui-radio-dot-color, not color alone.
   - Group by shared `name` inside a <fieldset>/<legend> or [data-ui~="radio-group"].
   =========================================================================== */
 
@@ -97,7 +97,7 @@
   :where([data-ui~="radio"]):checked {
     background-color: var(--_bg-resolved, var(--ui-radio-bg--checked));
     border-color: var(--_border-color-resolved, var(--ui-radio-border-color--checked));
-    color: var(--ui-radio-dot-foreground);
+    color: var(--ui-radio-dot-color);
   }
 
   /* masked ::before dot painted in currentColor; the :where() closes before

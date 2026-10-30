@@ -1,11 +1,12 @@
 # Zazz token reference
 
 A **map** of which token and style utility to reach for and when. Authoritative _values_ live in
-`packages/core/src/base/_variables.css` (global tokens), `base/_breakpoints.css`, and each
-`packages/core/src/primitives/{name}/{name}.css` (the `--ui-<name>-*` hooks). Utility names live in
-`packages/core/src/base/utilities.ts` (`UTILITIES`); the editor completes them from
-`packages/core/editor/zazz.css-data.json`. The naming rule is Tailwind's names, CSS values (`--justify: space-between`, `--w: 100%`);
-the other syntax rules (spelling, tiers, the base requirement) are in `packages/core/AUTHORING.md`,
+the kit's `base/_variables.css` and `base/_typography.css` (global tokens and the fluid type scale),
+`base/_breakpoints.css`, and each `primitives/{name}/{name}.css` (the `--ui-<name>-*` hooks), under
+`zazz/` when vendored or `node_modules/@zazz-ui/core/src/` from npm. The token tables at
+`https://zazz.sh/api/foundations/tokens/` show every value; the editor completes utilities from
+`editor/zazz.css-data.json`. The naming rule is Tailwind's names, CSS values (`--justify: space-between`, `--w: 100%`);
+the other syntax rules (spelling, tiers, the base requirement) are in `AUTHORING.md`,
 and this file doesn't repeat them.
 
 Two rules govern every choice:
@@ -24,7 +25,7 @@ Two rules govern every choice:
   `xl` = 24, `2xl` = 40 (`style="--p: 6; --gap: 4"` is `--space-md` / `--space-sm`).
   The tokens stay for CSS and hooks.
 - **Scale numbers:** spacing, margin, and sizing utilities take a bare number as `n × --spacing`
-  (`--px: 6`). `--spacing` is fluid (a `clamp()`).
+  (`--px: 6`). `--spacing` is fluid: it grows from `--spacing-min` to `--spacing-max` across the fluid range (`--fluid-min` to `--fluid-max`).
 - **No numeric step scale.** Use a utility number (`--max-w: 96` is 96 × `--spacing`) or `calc(var(--spacing) * N)` in CSS; write `1px` and `100%` directly.
 - **Utilities:** padding `--p` `--px` `--py` `--pt` `--pb` `--pl` `--pr`; margin `--m` `--mx` `--my`
   `--mt` `--mb` `--ml` `--mr` (+ `auto`); gap `--gap` `--gap-x` `--gap-y`; space between children `--space-x` `--space-y` (on the container, states and breakpoints; prefer `--gap` in flex and grid); inset `--inset` `--inset-x` `--inset-y` `--top`
@@ -75,13 +76,20 @@ Use the `--color-*` roles in utilities and CSS; they are also the **theme inputs
   text-2xs`, `text-eyebrow`, `text-link` (an inline link outside prose). A role stacks with other tokens: `data-ui="badge text-xs"`.
 - **Override one property** with a utility: `--font-size`, `--font-weight`, `--font-family`,
   `--font-style`, `--leading`, `--tracking`, `--text-align`, `--text-transform`, `--text-wrap`,
-  `--text-decoration` (also takes states: `--text-decoration--hover: underline`), `--white-space`, `--line-clamp` (`1` = truncate).
+  `--text-decoration` (also takes states: `--text-decoration--hover: underline`), `--whitespace`, `--line-clamp` (`1` = truncate).
 - **Weights:** `--font-weight: strong` (also `heading`, `body`) reads the role weight token; otherwise
   a number (`500`; standard names like `medium` are not CSS).
 - **Tokens behind them:** `--font-size-*`, `--font-weight-body|heading|strong|eyebrow`,
   `--leading-*`, `--tracking-*`, `--paragraph-spacing-*`, families
   `--font-family-body|heading|mono`.
 - **Rich text:** `data-ui="prose"` (`--ui-prose-*` hooks); `data-ui="not-prose"` on a wrapper exempts a widget inside it.
+- **Fluid type controls** (0.9 and later; earlier releases use fixed `clamp()` sizes): tune the
+  scale on `:root`, never by redeclaring each `--font-size-*`. `--typeset-base-min`/`-max` set `md`;
+  `--typeset-scale-min`/`-max` set the ratio between steps (`lg` is one step, `display` eight);
+  `--typeset-sm|xs|2xs-min`/`-max` are multiples of the base for the small sizes; all of them grow
+  across `--fluid-min` to `--fluid-max`. `--fluid` is a plain 0-to-1 number over that range for any
+  `calc()`. One article: `data-prose-size="sm"` (compact) or `"lg"` (reading), and
+  `--ui-prose-flow` scales only the space between its blocks.
 
 ## 5. Radius
 

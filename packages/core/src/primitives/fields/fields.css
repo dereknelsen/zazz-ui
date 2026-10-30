@@ -49,7 +49,7 @@
     --ui-field-font-size: var(--font-size-sm);
     --ui-field-leading: 1;
     --ui-field-px: calc(var(--spacing) * 2.5);
-    --ui-field-addon-padding: var(--spacing);
+    --ui-field-addon-p: var(--spacing);
     --ui-field-gap: calc(var(--spacing) * 2);
     --ui-field-option-gap: 1px;
     --ui-field-icon-size: calc(var(--spacing) * 4);
@@ -255,14 +255,14 @@
   :where([data-ui~="field"][data-field-orientation="horizontal"]) {
     --ui-field-horizontal-display: flex;
     --ui-field-horizontal-flex-direction: row;
-    --ui-field-horizontal-align-items: center;
-    --ui-field-horizontal-justify-content: flex-start;
+    --ui-field-horizontal-items: center;
+    --ui-field-horizontal-justify: flex-start;
     --ui-field-horizontal-gap: var(--space-xs);
 
     display: var(--_display-resolved, var(--ui-field-horizontal-display));
     flex-direction: var(--_flex-direction-resolved, var(--ui-field-horizontal-flex-direction));
-    align-items: var(--_items-resolved, var(--ui-field-horizontal-align-items));
-    justify-content: var(--_justify-resolved, var(--ui-field-horizontal-justify-content));
+    align-items: var(--_items-resolved, var(--ui-field-horizontal-items));
+    justify-content: var(--_justify-resolved, var(--ui-field-horizontal-justify));
     --_gap-len: var(--_gap-resolved, var(--ui-field-horizontal-gap));
     --_gap-num: var(--_gap-resolved, var(--ui-field-horizontal-gap));
   }

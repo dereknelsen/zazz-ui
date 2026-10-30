@@ -15,6 +15,24 @@ primitive: prose
 
 {% examples primitive="prose" /%}
 
+## Size and rhythm
+
+Prose reads the global type controls, so retuning `--typeset-base-*`, `--typeset-scale-*`, or `--paragraph-spacing-multiplier` on `:root` changes every article. To size one article differently, give it a preset:
+
+- `data-prose-size="sm"`: compact. 0.875 times the base, leading 1.5, and three quarters of the space between blocks. For dense docs and sidebars.
+- `data-prose-size="lg"`: reading. 1.125 times the base, leading 1.8, and a quarter more space between blocks. For long-form articles.
+
+A preset scales the base and recomputes the type scale for that article, so its headings, body text, and roles grow or shrink together, and your `:root` controls still apply. Kit components inside it read the same tokens, so they scale too. `data-ui="not-prose"` stops the prose margins on a component but not its size; set its size utility to pin that.
+
+`--ui-prose-flow` multiplies the space between blocks without touching the type, on `:root` for every article or on one: `style="--ui-prose-flow: 1.5"`. It stacks on the preset's spacing and the global `--paragraph-spacing-multiplier`.
+
+```html
+<article data-ui="prose" data-prose-size="lg" style="--ui-prose-flow: 1.5">
+  <h2>Roomy article</h2>
+  <p>Larger text, looser leading, and the preset's spacing half again.</p>
+</article>
+```
+
 ## Opting out
 
 Prose styles everything inside it. To embed a widget in an article (a form, a menu, a demo) without prose margins and list styles, put `data-ui="not-prose"` on its wrapper; prose picks up again after it.

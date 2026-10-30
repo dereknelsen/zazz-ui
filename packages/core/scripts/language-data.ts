@@ -166,13 +166,18 @@ function substitute(
   return out.replace(/\s+/g, " ").trim();
 }
 
-/** Evaluates `calc()` arithmetic over numbers in one unit (`rem`, `px`, …), or `undefined`. */
+/**
+ * Evaluates `calc()` arithmetic over numbers in one unit (`rem`, `px`, …), and
+ * `pow()` of plain numbers, or `undefined`.
+ */
 export function evaluate(expression: string): string | undefined {
-  const tokens = expression.replace(/calc\(/g, "(").match(/\d*\.?\d+[a-z%]*|[-+*/()]|\S/gi) ?? [];
+  const tokens =
+    expression.replace(/calc\(/g, "(").match(/pow\(|\d*\.?\d+[a-z%]*|[-+*/(),]|\S/gi) ?? [];
   let unit = "";
+  let lengths = 0;
   let i = 0;
   // expression := term (("+" | "-") term)*; term := factor (("*" | "/") factor)*;
-  // factor := number | "(" expression ")" | "-" factor
+  // factor := number | "(" expression ")" | "pow(" expression "," expression ")" | "-" factor
   const factor = (): number => {
     const token = tokens[i++];
     if (token === "(") {
@@ -180,12 +185,22 @@ export function evaluate(expression: string): string | undefined {
       if (tokens[i++] !== ")") throw new Error("unbalanced");
       return value;
     }
+    if (token === "pow(") {
+      const before = lengths;
+      const base = sum();
+      if (tokens[i++] !== ",") throw new Error("pow takes two arguments");
+      const exponent = sum();
+      if (tokens[i++] !== ")") throw new Error("unbalanced");
+      if (lengths !== before) throw new Error("pow of a length");
+      return base ** exponent;
+    }
     if (token === "-") return -factor();
     const m = /^(\d*\.?\d+)([a-z%]*)$/i.exec(token ?? "");
     if (!m) throw new Error(`not a number: ${token}`);
     if (m[2]) {
       if (unit && unit !== m[2]) throw new Error("mixed units");
       unit = m[2];
+      lengths++;
     }
     return Number(m[1]);
   };
@@ -292,7 +307,14 @@ export function languageData(files: readonly string[], src: string): LanguageDat
 
   const defs = new Map<string, string>();
   const definedIn = new Map<string, string>();
-  for (const { path, css } of sheets) {
+  // the first declaration wins, so the global tokens come first: a preset that
+  // re-declares one for a subtree (data-prose-size) isn't its value
+  const tokensFirst = [...sheets].sort(
+    (a, b) =>
+      Number(!basename(a.path).startsWith("_variables")) -
+      Number(!basename(b.path).startsWith("_variables")),
+  );
+  for (const { path, css } of tokensFirst) {
     for (const [name, value] of customProperties(css)) {
       if (defs.has(name) || name.startsWith("--_")) continue;
       defs.set(name, value);
@@ -308,6 +330,8 @@ export function languageData(files: readonly string[], src: string): LanguageDat
     } else if (
       basename(file).startsWith("_variables") ||
       basename(file) === "_breakpoints.css" ||
+      // the fluid type scale is computed in _typography.css
+      basename(file) === "_typography.css" ||
       // the --shadow-* tokens are generated into _shadows.css
       basename(file) === "_shadows.css"
     ) {

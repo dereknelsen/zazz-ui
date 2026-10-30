@@ -24,6 +24,8 @@ The kit's colors, type, spacing, radii, and shadows are custom properties on `:r
 }
 ```
 
+`--spacing: 0.3rem` pins the spacing unit. To keep it fluid at a new size, set its two ends instead: `--spacing-min: 0.275rem; --spacing-max: 0.3rem`. The type scale works the same way through `--typeset-base-min`/`-max` and `--typeset-scale-min`/`-max`.
+
 The theme builder on the [home page](/) writes this block for you: pick a primary and a neutral color, set the spacing, radius, and shadow angle, then copy the variables you changed.
 
 Write the block in `@layer overrides` (or import your stylesheet into it) so it outranks the kit's `variables` layer. Color roles are `light-dark()` pairs; keep them that way and dark mode keeps working with no extra rules.

@@ -6,8 +6,8 @@
  * property at a time, and `data-ui="prose"` is the rich-text switch.
  */
 
-import { describe, expect, it } from "vite-plus/test";
-import { lengthPx, mount, style, useKit } from "../../test/browser.ts";
+import { afterEach, describe, expect, it } from "vite-plus/test";
+import { atWidth, lengthPx, mount, style, useKit } from "../../test/browser.ts";
 
 describe("typography roles", () => {
   useKit();
@@ -98,6 +98,115 @@ describe("typography roles", () => {
         style(root.querySelector('[data-size="md"]')!, "font-size"),
       );
     }
+  });
+});
+
+describe("fluid type scale", () => {
+  useKit();
+  afterEach(() => document.documentElement.removeAttribute("style"));
+
+  const size = (el: Element) => Number.parseFloat(style(el, "font-size"));
+  const roles = () =>
+    mount(
+      `<div><h1>a</h1><p data-ui="text-lg">b</p><p data-ui="text-sm">c</p><p data-ui="text-2xs">d</p></div>`,
+    );
+
+  it("each step sits at its small end at --fluid-min and its large end at --fluid-max", async () => {
+    const root = roles();
+    const [h1, lg, sm, xs2] = [...root.children];
+    await atWidth(400);
+    expect(size(h1)).toBeCloseTo(16 * 1.125 ** 7, 1);
+    expect(size(lg)).toBeCloseTo(16 * 1.125, 1);
+    expect(size(sm)).toBeCloseTo(16 * 0.8, 1);
+    expect(size(xs2)).toBeCloseTo(16 * 0.5787, 1);
+    await atWidth(1280);
+    expect(size(h1)).toBeCloseTo(16 * 1.25 ** 7, 1);
+    expect(size(lg)).toBeCloseTo(16 * 1.25, 1);
+    expect(size(sm)).toBeCloseTo(16 * 0.8, 1);
+    expect(size(xs2)).toBeCloseTo(16 * 0.5787, 1);
+  });
+
+  it("the scale interpolates linearly between the ends and holds outside them", async () => {
+    const root = roles();
+    const lg = root.children[1];
+    await atWidth(840);
+    expect(size(lg)).toBeCloseTo(16 * 1.1875, 1);
+    await atWidth(320);
+    expect(size(lg)).toBeCloseTo(16 * 1.125, 1);
+    await atWidth(1600);
+    expect(size(lg)).toBeCloseTo(16 * 1.25, 1);
+  });
+
+  it("a :root control retunes every step", async () => {
+    const root = roles();
+    await atWidth(1280);
+    document.documentElement.style.setProperty("--typeset-scale-max", "1.5");
+    document.documentElement.style.setProperty("--typeset-base-max", "1.125rem");
+    expect(size(root.children[0])).toBeCloseTo(18 * 1.5 ** 7, 0);
+    expect(size(root.children[1])).toBeCloseTo(18 * 1.5, 1);
+  });
+
+  it("data-prose-size resizes the prose it sits on, not the page around it", async () => {
+    await atWidth(1280);
+    const root = mount(`<div>
+      <article data-ui="prose" data-prose-size="lg"><h2 data-h2>a</h2><p data-p>b</p></article>
+      <article data-ui="prose"><h2 data-plain-h2>a</h2><p data-plain-p>b</p></article>
+    </div>`);
+    const at = (selector: string) => size(root.querySelector(selector)!);
+    expect(at("[data-p]")).toBeGreaterThan(at("[data-plain-p]"));
+    expect(at("[data-h2]")).toBeGreaterThan(at("[data-plain-h2]"));
+    expect(at("[data-plain-p]")).toBeCloseTo(16, 1);
+  });
+
+  it('data-prose-size="lg" sets an 18px base with 1.8 leading', async () => {
+    await atWidth(1280);
+    const p = mount(
+      `<article data-ui="prose" data-prose-size="lg"><p>a</p></article>`,
+    ).firstElementChild!;
+    expect(size(p)).toBeCloseTo(18, 1);
+    expect(Number.parseFloat(style(p, "line-height"))).toBeCloseTo(18 * 1.8, 0);
+  });
+
+  it(":root controls and hooks still reach a sized prose", async () => {
+    await atWidth(1280);
+    const mountLg = () =>
+      mount(`<article data-ui="prose" data-prose-size="lg"><h2>a</h2><p>b</p><p>c</p></article>`);
+    const before = mountLg();
+    const h2 = size(before.children[0]);
+    const margin = Number.parseFloat(style(before.children[2], "margin-block-start"));
+    document.documentElement.style.setProperty("--typeset-scale-max", "1.5");
+    document.documentElement.style.setProperty("--ui-prose-flow", "2");
+    const after = mountLg();
+    expect(size(after.children[0])).toBeGreaterThan(h2);
+    expect(Number.parseFloat(style(after.children[2], "margin-block-start"))).toBeCloseTo(
+      margin * 2,
+      1,
+    );
+  });
+
+  it('data-prose-size="sm" tightens size and flow', async () => {
+    await atWidth(1280);
+    const root = mount(`<div>
+      <article data-ui="prose" data-prose-size="sm"><p>a</p><p data-p>b</p></article>
+      <article data-ui="prose"><p>a</p><p data-plain>b</p></article>
+    </div>`);
+    const p = root.querySelector("[data-p]")!;
+    const plain = root.querySelector("[data-plain]")!;
+    expect(size(p)).toBeLessThan(size(plain));
+    expect(Number.parseFloat(style(p, "margin-block-start"))).toBeLessThan(
+      Number.parseFloat(style(plain, "margin-block-start")),
+    );
+  });
+
+  it("--ui-prose-flow scales the space between prose blocks", () => {
+    const root = mount(`<div>
+      <article data-ui="prose" style="--ui-prose-flow: 2"><p>a</p><p data-double>b</p></article>
+      <article data-ui="prose"><p>a</p><p data-single>b</p></article>
+    </div>`);
+    const margin = (selector: string) =>
+      Number.parseFloat(style(root.querySelector(selector)!, "margin-block-start"));
+    expect(margin("[data-single]")).toBeGreaterThan(0);
+    expect(margin("[data-double]")).toBeCloseTo(margin("[data-single]") * 2, 1);
   });
 });
 

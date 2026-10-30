@@ -118,6 +118,7 @@ const GROUPS: { id: string; title: string; test: RegExp }[] = [
     test: /^--color-(primary|secondary|tertiary|neutral)-\d|^--color-(white|black)$/,
   },
   { id: "color-overlays", title: "Overlays", test: /^--color-(shade|tint)-/ },
+  { id: "fluid", title: "Fluid range", test: /^--fluid(-|$)/ },
   { id: "spacing", title: "Spacing", test: /^--spac(e|ing)/ },
   { id: "radius", title: "Radius", test: /^--radius-/ },
   {
@@ -125,7 +126,7 @@ const GROUPS: { id: string; title: string; test: RegExp }[] = [
     title: "Shadows, ring, and outline",
     test: /^--shadow-|^--ring-|^--outline-|^--default-shadow-angle$/,
   },
-  { id: "font", title: "Type: families, sizes, weights", test: /^--font-/ },
+  { id: "font", title: "Type: families, sizes, weights", test: /^--font-|^--typeset-/ },
   {
     id: "leading-tracking",
     title: "Type: leading, tracking, rhythm, decoration",

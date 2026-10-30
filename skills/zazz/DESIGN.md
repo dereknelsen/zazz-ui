@@ -290,7 +290,7 @@ The token contract in the frontmatter is what lets you be bold without the resul
 **Discipline** — keeps it consistent:
 
 - **Never use generic AI aesthetics** — no cold tech minimalism, cliched startup palettes, sterile layouts, or the lazy violet-gradient-on-white centered hero. Designs must feel unique to the brand.
-- **Use Zazz tokens exclusively** — never hardcode colors, spacing, radii, shadows, or typography. Use `var(--token-name)` in style utilities (`style="--bg: var(--color-card)"`); markup rules are in `packages/core/AUTHORING.md`.
+- **Use Zazz tokens exclusively** — never hardcode colors, spacing, radii, shadows, or typography. Use `var(--token-name)` in style utilities (`style="--bg: var(--color-card)"`); markup rules are in `AUTHORING.md`.
 - **Typography via roles** — native `h1`–`h6` or `data-ui="text-*"`; override one property with a utility, never rebuild a role from utilities.
 - **Spacing via the `--space-*` semantic scale** — never use arbitrary px/rem values.
 - **Dark mode for free** — `--color-*` roles auto-swap; pin a scheme with the `theme-dark` / `theme-light` switch; never write separate dark-mode overrides for token-handled values.
@@ -389,7 +389,7 @@ sensible web-safe fallback stack). Never default to generic system fonts.
 
 ### Type Scale
 
-All sizes are fluid via `clamp()`, scaling between mobile and desktop viewports.
+The scale is fluid between mobile and desktop viewports (`sm`, `xs`, and `2xs` hold one size unless you lower their `-min`). `md` is `--typeset-base` and each step above it multiplies by `--typeset-scale` (`lg` one step, `display` eight); both grow from their `-min` to their `-max` value across `--fluid-min` to `--fluid-max`. Retune with those controls in `:root`, never by redeclaring a single `--font-size-*`. (0.9 and later; earlier releases compute each size with a fixed `clamp()`.)
 
 | Role (`data-ui`) | Size (desktop) | Leading | Tracking | Character                     |
 | ---------------- | -------------- | ------- | -------- | ----------------------------- |
@@ -424,7 +424,7 @@ that acts like a control is `data-ui="button" data-button-variant="link"`.
 
 **Two conventions:**
 
-- **Variants are presets:** `data-ui="button" data-button-variant="primary"` — never a class. Copy anatomy from `packages/core/src/primitives/{name}/*.html`.
+- **Variants are presets:** `data-ui="button" data-button-variant="primary"` — never a class. Copy anatomy from the fragment (`https://zazz.sh/api/primitives/{name}/index.md`).
 - **Theming via hooks:** primitives read `--ui-<name>-<utility>` hooks named after the utilities they back (`--ui-button-bg`, `--ui-button-radius`, `--ui-button-px`), defaulting to theme roles or to another family (button metrics default to `--ui-field-*`). Set a hook on a subtree to retheme and keep hover/active states; a utility on the element flattens them.
 
 ### Buttons
@@ -449,7 +449,7 @@ CSS-first grouped radio inputs wrapped in `<ui-tabs>`. Segmented control with sl
 
 ### Cards
 
-`data-ui="card"`: `--color-card` / `--color-card-foreground`, `--radius-lg`, hooks `--ui-card-*`. The default card is bare (no padding, border, or shadow) for edge-to-edge media; pad its parts with utilities. `data-card-variant` adds `--space-md` padding plus one treatment: `outline` (a `--color-border` border), `muted` (`--color-muted` background), or `floating` (`--shadow-sm`). Card figures take `--aspect: 3 / 2`. Copy `primitives/card/card.html`.
+`data-ui="card"`: `--color-card` / `--color-card-foreground`, `--radius-lg`, hooks `--ui-card-*`. The default card is bare (no padding, border, or shadow) for edge-to-edge media; pad its parts with utilities. `data-card-variant` adds `--space-md` padding plus one treatment: `outline` (a `--color-border` border), `muted` (`--color-muted` background), or `floating` (`--shadow-sm`). Card figures take `--aspect: 3 / 2`. Copy the fragment at `https://zazz.sh/api/primitives/card/index.md`.
 
 ### Forms
 
@@ -482,7 +482,7 @@ edge to edge. Change the default with `data-layout-size`; place one child with
 
 Write the utility value in `style` on `--gap`, `--p`, `--px`, `--py`, `--m`, `--mx`, `--my` (`style="--py: 24"`).
 
-_Values shown throughout (spacing, radius, type sizes) are **desktop maximums**. Spacing and radius derive from `--spacing` (`clamp(0.225rem, …, 0.25rem)`) and type from per-step `clamp()`s, so all three scale down fluidly on narrower viewports._
+_Values shown throughout (spacing, radius, type sizes) are **desktop maximums**. Spacing and radius derive from `--spacing` (0.225rem to 0.25rem, from `--spacing-min`/`-max`) and type from the fluid type scale, so all three scale down fluidly on narrower viewports._
 
 ### Radius
 

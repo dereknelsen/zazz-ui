@@ -45,6 +45,19 @@ Paste `zazz/head.html` into your `<head>`, then write markup:
 
 To try it without installing anything, the [quick start](https://zazz.sh/docs/quick-start/) loads the kit from a CDN, and the [playground](https://zazz.sh/playground/) runs in the browser.
 
+## Agent skills
+
+Two skills teach coding agents (Claude Code, Cursor, Codex, and others) to work with Zazz:
+
+```bash
+npx skills add dereknelsen/zazz-ui                                    # both
+npx skills add dereknelsen/zazz-ui --skill zazz                       # the design system
+npx skills add dereknelsen/zazz-ui --skill install-zazz-in-legacy-app # adding Zazz to an older app
+```
+
+- [`zazz`](skills/zazz/): install and update routes, the VS Code extension, the markup model, design guidance, and where to look things up on zazz.sh.
+- [`install-zazz-in-legacy-app`](skills/install-zazz-in-legacy-app/): an interview that settles the install plan one round of decisions at a time, then a procedure that keeps the old pages looking the same with Zazz loaded.
+
 ## Layout
 
 | Path                       | What it is                                                                                                                                                                                      |

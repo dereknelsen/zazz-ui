@@ -2,14 +2,14 @@
 
 The stable **API surface** only — identity, presets and their accepted values, slots, what
 powers the component, and where the canonical example lives. **No example markup is copied
-here** (that would duplicate the single source). To author a component, read
-`packages/core/src/primitives/{name}/*.html`, then adapt it.
+here** (that would duplicate the single source). To author a component, read its fragment at
+`https://zazz.sh/api/primitives/{name}/index.md`, then adapt it.
 
-Spelling (see `packages/core/AUTHORING.md`): identity `data-ui="<name>"` or the `<ui-<name>>`
+Spelling (see `AUTHORING.md`): identity `data-ui="<name>"` or the `<ui-<name>>`
 tag; presets `data-<name>-<key>="…"` (default = attribute absent); slots
 `data-<name>-slot="<part>"` (a token list — one element can carry two: `data-lightbox-slot="slide"
 data-carousel-slot="slide"`). Hooks are the `--ui-<name>-*` names declared at the top of each
-`src/primitives/<name>/<name>.css`. `[popover]` elements take `data-popover-side`
+the primitive's stylesheet (`primitives/<name>/<name>.css` in the kit). `[popover]` elements take `data-popover-side`
 (top, bottom, left, right) and `data-popover-align` (start, center, end).
 
 | Component         | Identity                                                                 | Presets (values)                                                                                                                                                             | Slots                                                                                                                                        | Powered by                                                         | Docs                               |
@@ -38,7 +38,7 @@ data-carousel-slot="slide"`). Hooks are the `--ui-<name>-*` names declared at th
 | Callout           | `data-ui="callout"` on `<aside>`, or a `<div role="status">`/`"alert"`   | `data-callout-variant`: muted, info, success, warning, destructive                                                                                                           | — (children are utility compositions)                                                                                                        | CSS + utilities                                                    | `/api/primitives/callout/`         |
 | Avatar            | utility composition with `data-ui="pile"`                                | —                                                                                                                                                                            | —                                                                                                                                            | Utilities only                                                     | `/api/primitives/avatar/`          |
 | Breadcrumbs       | `<nav>` › `<menu>` › link buttons                                        | current crumb `aria-disabled="true"`                                                                                                                                         | —                                                                                                                                            | Utilities only                                                     | `/api/primitives/breadcrumbs/`     |
-| Prose             | `data-ui="prose"`                                                        | —                                                                                                                                                                            | —                                                                                                                                            | Rich-text styles, `--ui-prose-*` hooks                             | `/api/primitives/prose/`           |
+| Prose             | `data-ui="prose"`                                                        | `data-prose-size`: sm, lg                                                                                                                                                    | —                                                                                                                                            | Rich-text styles, `--ui-prose-*` hooks                             | `/api/primitives/prose/`           |
 | Layout            | `data-ui="layout"` / `<ui-layout>`                                       | `data-layout-size`: sm, md, lg, xl, 2xl, full, bleed                                                                                                                         | — (place a child with `--band: layout-<band>`)                                                                                               | CSS grid bands + subgrid                                           | `/api/foundations/layout/`         |
 | Scroll fade       | `data-ui="scroll-fade"`                                                  | `data-scroll-fade-axis`: x                                                                                                                                                   | —                                                                                                                                            | Scroll-driven mask                                                 | `/api/primitives/scroll-fade/`     |
 | Table             | `data-ui="table"` on `<table>`                                           | `data-table-variant`: alternating, grid · `-size`: sm · `-layout`: fixed · caption `data-table-caption`: top                                                                 | row state `data-table-state="selected"`                                                                                                      | CSS only — `--ui-table-*` hooks                                    | `/api/primitives/table/`           |
@@ -73,6 +73,6 @@ for the label / control / hint / error layout. Validation surfaces via `:user-in
 - **Reveal** (`data-reveal` / `data-reveal-each`) and **Embla** (`data-carousel-*` config on the
   carousel root + `data-carousel-slot` parts) are data-attribute-driven. Catalogs in `apis.md`.
 
-> The editor data `packages/core/editor/zazz.html-data.json` lists every `data-ui` token and
+> The editor data `editor/zazz.html-data.json` (in the npm package, or on jsDelivr) lists every `data-ui` token and
 > every `data-<name>-*` attribute with its values; trust it and the fragments over this table.
 > If a fragment shows an attribute with no matching stylesheet selector, the selector wins.

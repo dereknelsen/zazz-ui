@@ -12,13 +12,13 @@
 @layer variables {
   :root {
     --ui-switch-track-w: calc(var(--spacing) * 7);
-    --ui-switch-track-padding: calc(var(--spacing) * 0.5);
-    --ui-switch-track-h: calc(var(--ui-switch-track-w) / 2 + var(--ui-switch-track-padding));
+    --ui-switch-track-p: calc(var(--spacing) * 0.5);
+    --ui-switch-track-h: calc(var(--ui-switch-track-w) / 2 + var(--ui-switch-track-p));
     --ui-switch-thumb-bg: var(--color-background);
     --ui-switch-thumb-bg--hover: var(--color-primary-foreground);
-    --ui-switch-thumb-size: calc((var(--ui-switch-track-w) / 2) - var(--ui-switch-track-padding));
+    --ui-switch-thumb-size: calc((var(--ui-switch-track-w) / 2) - var(--ui-switch-track-p));
     --ui-switch-thumb-shadow: var(--shadow-xs);
-    --ui-switch-thumb-translate: var(--ui-switch-track-padding), -50%;
+    --ui-switch-thumb-translate: var(--ui-switch-track-p), -50%;
     --ui-switch-thumb-scale: 1;
     --ui-switch-track-bg: var(--color-input);
     --ui-switch-track-bg--hover: oklch(from var(--color-input) l c h / calc(alpha + 0.04));
@@ -58,7 +58,7 @@
     &:has(> input[role="switch"]:checked)::after {
       background-color: var(--ui-switch-thumb-bg--hover);
       --ui-switch-thumb-translate:
-        calc(var(--ui-switch-track-padding) + var(--ui-switch-thumb-size)), -50%;
+        calc(var(--ui-switch-track-p) + var(--ui-switch-thumb-size)), -50%;
     }
 
     @media (hover: hover) {

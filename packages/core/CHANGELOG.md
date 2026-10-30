@@ -1,5 +1,57 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.9.0 (2026-10-30)
+
+### base
+
+- The type scale is computed from a few controls instead of Utopia-generated `clamp()`s. `--typeset-base-min`/`-max` set the md size and `--typeset-scale-min`/`-max` the ratio between steps (`lg` is one step, `display` eight), both growing across the new fluid range `--fluid-min` to `--fluid-max` (25rem to 80rem). `sm`, `xs`, and `2xs` take their own `-min`/`-max` multiples of the base. The defaults reproduce the old sizes at both ends of the range; between them, headings sit slightly smaller because the ratio interpolates, not each size. Retune by changing the controls. Redeclaring one `--font-size-*` on `:root` still works, except inside a `data-prose-size` article, which recomputes the scale.
+- `--fluid` is a plain 0-to-1 number across the fluid range, built with `tan(atan2())` (a stand-in for `progress()` that every engine supports), for use in any `calc()`.
+- `--spacing` is computed from `--spacing-min` and `--spacing-max` (0.225rem and 0.25rem, as before) on the same range. Pinning `--spacing` still works.
+- Fix: `--font-size-sm`, `-xs`, and `-2xs` were meant to grow with the viewport, but their clamps always resolved to the max (0.8, 0.64, and 0.5787rem). Those are now the defaults at both ends, so nothing changes on screen; set the `-min` controls to make them fluid.
+- `--_paragraph-spacing-multiplier` is now public as `--paragraph-spacing-multiplier`.
+- **BREAKING** Prose hook `--ui-prose-figcaption-margin` (a four-value shorthand) is `--ui-prose-figcaption-mt`, one length applied as `margin-block-start`. The default is unchanged. (Prose styles ship in `base/_typography.css`.)
+
+### prose
+
+- New presets `data-prose-size="sm"` (compact: 0.875 times the base, leading 1.5, three quarters of the spacing) and `"lg"` (reading: 1.125 times the base, leading 1.8, a quarter more spacing). A preset recomputes the type scale for that article and composes with the `:root` controls.
+- New hook `--ui-prose-flow` (default 1) multiplies the space between prose blocks.
+
+### fields
+
+- **BREAKING** Hooks renamed after the utilities they back: `--ui-field-horizontal-align-items→-horizontal-items`, `--ui-field-horizontal-justify-content→-horizontal-justify`, `--ui-field-addon-padding→-addon-p` (read by input-group and password-group).
+
+### checkbox
+
+- **BREAKING** Hook `--ui-checkbox-foreground` is `--ui-checkbox-glyph-color`: a role word belongs to `--color-*`; a part's tint is `-color`.
+
+### radio
+
+- **BREAKING** Hook `--ui-radio-dot-foreground` is `--ui-radio-dot-color`.
+
+### switch
+
+- **BREAKING** Hook `--ui-switch-track-padding` is `--ui-switch-track-p`.
+
+### tabs
+
+- **BREAKING** Hook `--ui-tabs-track-padding` is `--ui-tabs-track-p`.
+
+### command
+
+- **BREAKING** Hook `--ui-command-group-label-padding` is `--ui-command-group-label-p`.
+
+### mobile-menu
+
+- **BREAKING** Hook `--ui-mobile-menu-header-padding-inline` is `--ui-mobile-menu-header-px`, matching `-header-py` beside it.
+
+### layout
+
+- **BREAKING** Hook `--ui-layout-template-columns` is `--ui-layout-template-cols`, matching `--ui-field-template-cols` and the `--template-cols` utility.
+
+### lightbox
+
+- **BREAKING** Hook `--ui-lightbox-thumb-columns` is `--ui-lightbox-thumb-cols`.
+
 ## 0.8.4 (2026-10-28)
 
 ### button

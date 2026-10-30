@@ -1512,7 +1512,7 @@
       "value": "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' fill='none' stroke='currentColor' stroke-linecap='square' stroke-linejoin='square' stroke-width='3' viewBox='0 0 24 24'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E\") center / contain no-repeat",
       "file": "primitives/checkbox/checkbox.css"
     },
-    "--ui-checkbox-foreground": {
+    "--ui-checkbox-glyph-color": {
       "value": "var(--color-primary-foreground)",
       "file": "primitives/checkbox/checkbox.css"
     },
@@ -1664,7 +1664,7 @@
       "value": "calc(var(--spacing) * 2)",
       "file": "primitives/command/command.css"
     },
-    "--ui-command-group-label-padding": {
+    "--ui-command-group-label-p": {
       "value": "calc(var(--spacing) * 2) calc(var(--spacing) * 2) var(--spacing)",
       "file": "primitives/command/command.css"
     },
@@ -1780,7 +1780,7 @@
       "value": "var(--ui-alert-dialog-w)",
       "file": "primitives/alert-dialog/alert-dialog.css"
     },
-    "--ui-field-addon-padding": {
+    "--ui-field-addon-p": {
       "value": "var(--spacing)",
       "file": "primitives/fields/fields.css"
     },
@@ -1868,10 +1868,6 @@
       "value": "0 calc(var(--spacing) * -1)",
       "file": "primitives/fields/fields.css"
     },
-    "--ui-field-horizontal-align-items": {
-      "value": "center",
-      "file": "primitives/fields/fields.css"
-    },
     "--ui-field-horizontal-display": {
       "value": "flex",
       "file": "primitives/fields/fields.css"
@@ -1884,7 +1880,11 @@
       "value": "var(--space-xs)",
       "file": "primitives/fields/fields.css"
     },
-    "--ui-field-horizontal-justify-content": {
+    "--ui-field-horizontal-items": {
+      "value": "center",
+      "file": "primitives/fields/fields.css"
+    },
+    "--ui-field-horizontal-justify": {
       "value": "flex-start",
       "file": "primitives/fields/fields.css"
     },
@@ -2128,7 +2128,7 @@
       "value": "var(--gutters)",
       "file": "primitives/layout/layout.css"
     },
-    "--ui-layout-template-columns": {
+    "--ui-layout-template-cols": {
       "value": "[layout-bleed-start] var(--ui-layout-gutters) [layout-full-start] minmax(0, 1fr) [layout-2xl-start] clamp( 0rem, calc((var(--ui-layout-available) - var(--layout-xl)) / 2), calc((var(--layout-2xl) - var(--layout-xl)) / 2) ) [layout-xl-start] clamp( 0rem, calc((var(--ui-layout-available) - var(--layout-lg)) / 2), calc((var(--layout-xl) - var(--layout-lg)) / 2) ) [layout-lg-start] clamp( 0rem, calc((var(--ui-layout-available) - var(--layout-md)) / 2), calc((var(--layout-lg) - var(--layout-md)) / 2) ) [layout-md-start] clamp( 0rem, calc((var(--ui-layout-available) - var(--layout-sm)) / 2), calc((var(--layout-md) - var(--layout-sm)) / 2) ) [layout-sm-start] clamp(0rem, var(--ui-layout-available), var(--layout-sm)) [layout-sm-end] clamp( 0rem, calc((var(--ui-layout-available) - var(--layout-sm)) / 2), calc((var(--layout-md) - var(--layout-sm)) / 2) ) [layout-md-end] clamp( 0rem, calc((var(--ui-layout-available) - var(--layout-md)) / 2), calc((var(--layout-lg) - var(--layout-md)) / 2) ) [layout-lg-end] clamp( 0rem, calc((var(--ui-layout-available) - var(--layout-lg)) / 2), calc((var(--layout-xl) - var(--layout-lg)) / 2) ) [layout-xl-end] clamp( 0rem, calc((var(--ui-layout-available) - var(--layout-xl)) / 2), calc((var(--layout-2xl) - var(--layout-xl)) / 2) ) [layout-2xl-end] minmax(0, 1fr) [layout-full-end] var(--ui-layout-gutters) [layout-bleed-end]",
       "file": "primitives/layout/layout.css"
     },
@@ -2196,7 +2196,7 @@
       "value": "0.9",
       "file": "primitives/lightbox/lightbox.css"
     },
-    "--ui-lightbox-thumb-columns": {
+    "--ui-lightbox-thumb-cols": {
       "value": "6",
       "file": "primitives/lightbox/lightbox.css"
     },
@@ -2292,7 +2292,7 @@
       "value": "var(--space-sm)",
       "file": "primitives/mobile-menu/mobile-menu.css"
     },
-    "--ui-mobile-menu-header-padding-inline": {
+    "--ui-mobile-menu-header-px": {
       "value": "var(--space-md) var(--space-xs)",
       "file": "primitives/mobile-menu/mobile-menu.css"
     },
@@ -2680,8 +2680,12 @@
       "value": "0px",
       "file": "base/_typography.css"
     },
-    "--ui-prose-figcaption-margin": {
-      "value": "var(--space-xs) 0 0 0",
+    "--ui-prose-figcaption-mt": {
+      "value": "var(--space-xs)",
+      "file": "base/_typography.css"
+    },
+    "--ui-prose-flow": {
+      "value": "1",
       "file": "base/_typography.css"
     },
     "--ui-prose-img-border": {
@@ -2720,7 +2724,7 @@
       "value": "var(--ui-field-border-width)",
       "file": "primitives/radio/radio.css"
     },
-    "--ui-radio-dot-foreground": {
+    "--ui-radio-dot-color": {
       "value": "var(--color-primary-foreground)",
       "file": "primitives/radio/radio.css"
     },
@@ -2925,11 +2929,11 @@
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-thumb-size": {
-      "value": "calc((var(--ui-switch-track-w) / 2) - var(--ui-switch-track-padding))",
+      "value": "calc((var(--ui-switch-track-w) / 2) - var(--ui-switch-track-p))",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-thumb-translate": {
-      "value": "var(--ui-switch-track-padding), -50%",
+      "value": "var(--ui-switch-track-p), -50%",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-track-bg": {
@@ -2949,10 +2953,10 @@
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-track-h": {
-      "value": "calc(var(--ui-switch-track-w) / 2 + var(--ui-switch-track-padding))",
+      "value": "calc(var(--ui-switch-track-w) / 2 + var(--ui-switch-track-p))",
       "file": "primitives/switch/switch.css"
     },
-    "--ui-switch-track-padding": {
+    "--ui-switch-track-p": {
       "value": "calc(var(--spacing) * 0.5)",
       "file": "primitives/switch/switch.css"
     },
@@ -3053,7 +3057,7 @@
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-indicator-inset": {
-      "value": "var(--ui-tabs-track-padding)",
+      "value": "var(--ui-tabs-track-p)",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-indicator-radius": {
@@ -3124,7 +3128,7 @@
       "value": "calc(var(--spacing) * 0.5)",
       "file": "primitives/tabs/tabs.css"
     },
-    "--ui-tabs-track-padding": {
+    "--ui-tabs-track-p": {
       "value": "calc(var(--spacing) * 0.5)",
       "file": "primitives/tabs/tabs.css"
     },
@@ -4286,6 +4290,24 @@
       "light": "transform 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), translate 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), scale 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), rotate 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 )",
       "dark": "transform 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), translate 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), scale 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 ), rotate 0.333s linear( 0, 0.012 0.9%, 0.049 2%, 0.409 9.3%, 0.513 11.9%, 0.606 14.7%, 0.691 17.9%, 0.762 21.3%, 0.82 25%, 0.868 29.1%, 0.907 33.6%, 0.937 38.7%, 0.976 51.3%, 0.994 68.8%, 1 )"
     },
+    "--fluid": {
+      "value": "clamp(0, tan(atan2(100vi - var(--fluid-min), var(--fluid-max) - var(--fluid-min))), 1)",
+      "file": "base/_typography.css",
+      "min": "0",
+      "max": "1"
+    },
+    "--fluid-max": {
+      "value": "80rem",
+      "file": "base/_variables.css",
+      "light": "80rem",
+      "dark": "80rem"
+    },
+    "--fluid-min": {
+      "value": "25rem",
+      "file": "base/_variables.css",
+      "light": "25rem",
+      "dark": "25rem"
+    },
     "--font-alternates-body": {
       "value": "normal",
       "file": "base/_variables.css",
@@ -4467,15 +4489,15 @@
       "dark": "normal"
     },
     "--font-size-2xl": {
-      "value": "clamp(1.4238rem, 1.1832rem + 0.9624vi, 1.9531rem)",
-      "file": "base/_variables.css",
+      "value": "calc(var(--typeset-base) * pow(var(--typeset-scale), 3))",
+      "file": "base/_typography.css",
       "min": "1.4238rem",
       "max": "1.9531rem"
     },
     "--font-size-2xs": {
-      "value": "clamp(0.512rem, 0.609rem + 0.1213vi, 0.5787rem)",
-      "file": "base/_variables.css",
-      "min": "0.512rem",
+      "value": "calc( var(--typeset-base) * (var(--typeset-2xs-min) + var(--fluid) * (var(--typeset-2xs-max) - var(--typeset-2xs-min))) )",
+      "file": "base/_typography.css",
+      "min": "0.5787rem",
       "max": "0.5787rem"
     },
     "--font-size-adjust-body": {
@@ -4491,81 +4513,81 @@
       "dark": "none"
     },
     "--font-size-display": {
-      "value": "clamp(2.5658rem, 1.0227rem + 6.1721vi, 5.9605rem)",
-      "file": "base/_variables.css",
+      "value": "calc(var(--typeset-base) * pow(var(--typeset-scale), 8))",
+      "file": "base/_typography.css",
       "min": "2.5658rem",
       "max": "5.9605rem"
     },
     "--font-size-eyebrow": {
-      "value": "clamp(0.512rem, 0.609rem + 0.1213vi, 0.5787rem)",
-      "file": "base/_variables.css",
-      "min": "0.512rem",
+      "value": "var(--font-size-2xs)",
+      "file": "base/_typography.css",
+      "min": "0.5787rem",
       "max": "0.5787rem"
     },
     "--font-size-h1": {
-      "value": "clamp(2.2807rem, 1.1499rem + 4.523vi, 4.7684rem)",
-      "file": "base/_variables.css",
+      "value": "calc(var(--typeset-base) * pow(var(--typeset-scale), 7))",
+      "file": "base/_typography.css",
       "min": "2.2807rem",
       "max": "4.7684rem"
     },
     "--font-size-h2": {
-      "value": "clamp(2.0273rem, 1.2148rem + 3.2498vi, 3.8147rem)",
-      "file": "base/_variables.css",
+      "value": "calc(var(--typeset-base) * pow(var(--typeset-scale), 6))",
+      "file": "base/_typography.css",
       "min": "2.0273rem",
       "max": "3.8147rem"
     },
     "--font-size-h3": {
-      "value": "clamp(1.802rem, 1.234rem + 2.2722vi, 3.0518rem)",
-      "file": "base/_variables.css",
+      "value": "calc(var(--typeset-base) * pow(var(--typeset-scale), 5))",
+      "file": "base/_typography.css",
       "min": "1.802rem",
       "max": "3.0518rem"
     },
     "--font-size-h4": {
-      "value": "clamp(1.6018rem, 1.2202rem + 1.5265vi, 2.4414rem)",
-      "file": "base/_variables.css",
+      "value": "calc(var(--typeset-base) * pow(var(--typeset-scale), 4))",
+      "file": "base/_typography.css",
       "min": "1.6018rem",
       "max": "2.4414rem"
     },
     "--font-size-h5": {
-      "value": "clamp(1.4238rem, 1.1832rem + 0.9624vi, 1.9531rem)",
-      "file": "base/_variables.css",
+      "value": "var(--font-size-2xl)",
+      "file": "base/_typography.css",
       "min": "1.4238rem",
       "max": "1.9531rem"
     },
     "--font-size-h6": {
-      "value": "clamp(1.2656rem, 1.1307rem + 0.5398vi, 1.5625rem)",
-      "file": "base/_variables.css",
+      "value": "var(--font-size-xl)",
+      "file": "base/_typography.css",
       "min": "1.2656rem",
       "max": "1.5625rem"
     },
     "--font-size-lg": {
-      "value": "clamp(1.125rem, 1.0682rem + 0.2273vi, 1.25rem)",
-      "file": "base/_variables.css",
+      "value": "calc(var(--typeset-base) * var(--typeset-scale))",
+      "file": "base/_typography.css",
       "min": "1.125rem",
       "max": "1.25rem"
     },
     "--font-size-md": {
-      "value": "clamp(1rem, 1rem + 0vi, 1rem)",
-      "file": "base/_variables.css",
+      "value": "var(--typeset-base)",
+      "file": "base/_typography.css",
       "min": "1rem",
       "max": "1rem"
     },
     "--font-size-sm": {
-      "value": "clamp(0.7901rem, 0.9293rem + 0.1616vi, 0.8rem)",
-      "file": "base/_variables.css",
-      "min": "0.7901rem",
+      "value": "calc( var(--typeset-base) * (var(--typeset-sm-min) + var(--fluid) * (var(--typeset-sm-max) - var(--typeset-sm-min))) )",
+      "file": "base/_typography.css",
+      "min": "0.8rem",
       "max": "0.8rem"
     },
     "--font-size-xl": {
-      "value": "clamp(1.2656rem, 1.1307rem + 0.5398vi, 1.5625rem)",
-      "file": "base/_variables.css",
+      "value": "calc(var(--typeset-base) * pow(var(--typeset-scale), 2))",
+      "file": "base/_typography.css",
       "min": "1.2656rem",
       "max": "1.5625rem"
     },
     "--font-size-xs": {
-      "value": "clamp(0.5787rem, 0.8584rem + 0.273vi, 0.64rem)",
-      "file": "base/_variables.css",
-      "min": "0.5787rem",
+      "value": "calc( var(--typeset-base) * (var(--typeset-xs-min) + var(--fluid) * (var(--typeset-xs-max) - var(--typeset-xs-min))) )",
+      "file": "base/_typography.css",
+      "min": "0.64rem",
       "max": "0.64rem"
     },
     "--font-weight-body": {
@@ -4737,64 +4759,100 @@
       "max": "3px"
     },
     "--paragraph-spacing-2xl": {
-      "value": "calc(1rlh * var(--_paragraph-spacing-multiplier))",
-      "file": "base/_variables.css"
+      "value": "calc(1rlh * var(--paragraph-spacing-multiplier))",
+      "file": "base/_variables.css",
+      "min": "1rlh",
+      "max": "1rlh"
     },
     "--paragraph-spacing-2xs": {
-      "value": "calc(0.5rlh * var(--_paragraph-spacing-multiplier))",
-      "file": "base/_variables.css"
+      "value": "calc(0.5rlh * var(--paragraph-spacing-multiplier))",
+      "file": "base/_variables.css",
+      "min": "0.5rlh",
+      "max": "0.5rlh"
     },
     "--paragraph-spacing-display": {
-      "value": "calc(3.5rlh * var(--_paragraph-spacing-multiplier))",
-      "file": "base/_variables.css"
+      "value": "calc(3.5rlh * var(--paragraph-spacing-multiplier))",
+      "file": "base/_variables.css",
+      "min": "3.5rlh",
+      "max": "3.5rlh"
     },
     "--paragraph-spacing-eyebrow": {
-      "value": "calc(1rlh * var(--_paragraph-spacing-multiplier))",
-      "file": "base/_variables.css"
+      "value": "calc(1rlh * var(--paragraph-spacing-multiplier))",
+      "file": "base/_variables.css",
+      "min": "1rlh",
+      "max": "1rlh"
     },
     "--paragraph-spacing-h1": {
-      "value": "calc(3.5rlh * var(--_paragraph-spacing-multiplier))",
-      "file": "base/_variables.css"
+      "value": "calc(3.5rlh * var(--paragraph-spacing-multiplier))",
+      "file": "base/_variables.css",
+      "min": "3.5rlh",
+      "max": "3.5rlh"
     },
     "--paragraph-spacing-h2": {
-      "value": "calc(3rlh * var(--_paragraph-spacing-multiplier))",
-      "file": "base/_variables.css"
+      "value": "calc(3rlh * var(--paragraph-spacing-multiplier))",
+      "file": "base/_variables.css",
+      "min": "3rlh",
+      "max": "3rlh"
     },
     "--paragraph-spacing-h3": {
-      "value": "calc(3rlh * var(--_paragraph-spacing-multiplier))",
-      "file": "base/_variables.css"
+      "value": "calc(3rlh * var(--paragraph-spacing-multiplier))",
+      "file": "base/_variables.css",
+      "min": "3rlh",
+      "max": "3rlh"
     },
     "--paragraph-spacing-h4": {
-      "value": "calc(2rlh * var(--_paragraph-spacing-multiplier))",
-      "file": "base/_variables.css"
+      "value": "calc(2rlh * var(--paragraph-spacing-multiplier))",
+      "file": "base/_variables.css",
+      "min": "2rlh",
+      "max": "2rlh"
     },
     "--paragraph-spacing-h5": {
-      "value": "calc(2rlh * var(--_paragraph-spacing-multiplier))",
-      "file": "base/_variables.css"
+      "value": "calc(2rlh * var(--paragraph-spacing-multiplier))",
+      "file": "base/_variables.css",
+      "min": "2rlh",
+      "max": "2rlh"
     },
     "--paragraph-spacing-h6": {
-      "value": "calc(2rlh * var(--_paragraph-spacing-multiplier))",
-      "file": "base/_variables.css"
+      "value": "calc(2rlh * var(--paragraph-spacing-multiplier))",
+      "file": "base/_variables.css",
+      "min": "2rlh",
+      "max": "2rlh"
     },
     "--paragraph-spacing-lg": {
-      "value": "calc(0.75rlh * var(--_paragraph-spacing-multiplier))",
-      "file": "base/_variables.css"
+      "value": "calc(0.75rlh * var(--paragraph-spacing-multiplier))",
+      "file": "base/_variables.css",
+      "min": "0.75rlh",
+      "max": "0.75rlh"
     },
     "--paragraph-spacing-md": {
-      "value": "calc(0.75rlh * var(--_paragraph-spacing-multiplier))",
-      "file": "base/_variables.css"
+      "value": "calc(0.75rlh * var(--paragraph-spacing-multiplier))",
+      "file": "base/_variables.css",
+      "min": "0.75rlh",
+      "max": "0.75rlh"
+    },
+    "--paragraph-spacing-multiplier": {
+      "value": "1",
+      "file": "base/_variables.css",
+      "light": "1",
+      "dark": "1"
     },
     "--paragraph-spacing-sm": {
-      "value": "calc(0.5rlh * var(--_paragraph-spacing-multiplier))",
-      "file": "base/_variables.css"
+      "value": "calc(0.5rlh * var(--paragraph-spacing-multiplier))",
+      "file": "base/_variables.css",
+      "min": "0.5rlh",
+      "max": "0.5rlh"
     },
     "--paragraph-spacing-xl": {
-      "value": "calc(0.75rlh * var(--_paragraph-spacing-multiplier))",
-      "file": "base/_variables.css"
+      "value": "calc(0.75rlh * var(--paragraph-spacing-multiplier))",
+      "file": "base/_variables.css",
+      "min": "0.75rlh",
+      "max": "0.75rlh"
     },
     "--paragraph-spacing-xs": {
-      "value": "calc(0.5rlh * var(--_paragraph-spacing-multiplier))",
-      "file": "base/_variables.css"
+      "value": "calc(0.5rlh * var(--paragraph-spacing-multiplier))",
+      "file": "base/_variables.css",
+      "min": "0.5rlh",
+      "max": "0.5rlh"
     },
     "--radius-2xl": {
       "value": "calc(var(--spacing) * 10 * var(--radius-multiplier))",
@@ -4975,10 +5033,22 @@
       "max": "0.5rem"
     },
     "--spacing": {
-      "value": "clamp(0.225rem, 0.2136rem + 0.0455vi, 0.25rem)",
+      "value": "calc(var(--spacing-min) + var(--fluid) * (var(--spacing-max) - var(--spacing-min)))",
       "file": "base/_variables.css",
       "min": "0.225rem",
       "max": "0.25rem"
+    },
+    "--spacing-max": {
+      "value": "0.25rem",
+      "file": "base/_variables.css",
+      "light": "0.25rem",
+      "dark": "0.25rem"
+    },
+    "--spacing-min": {
+      "value": "0.225rem",
+      "file": "base/_variables.css",
+      "light": "0.225rem",
+      "dark": "0.225rem"
     },
     "--spring-duration": {
       "value": "0.333s",
@@ -5081,6 +5151,78 @@
       "file": "base/_variables.css",
       "light": "0em",
       "dark": "0em"
+    },
+    "--typeset-2xs-max": {
+      "value": "0.5787",
+      "file": "base/_variables.css",
+      "light": "0.5787",
+      "dark": "0.5787"
+    },
+    "--typeset-2xs-min": {
+      "value": "0.5787",
+      "file": "base/_variables.css",
+      "light": "0.5787",
+      "dark": "0.5787"
+    },
+    "--typeset-base": {
+      "value": "calc( ( var(--typeset-base-min) + var(--fluid) * (var(--typeset-base-max) - var(--typeset-base-min)) ) * var(--_prose-size, 1) )",
+      "file": "base/_typography.css",
+      "min": "1rem",
+      "max": "1rem"
+    },
+    "--typeset-base-max": {
+      "value": "1rem",
+      "file": "base/_variables.css",
+      "light": "1rem",
+      "dark": "1rem"
+    },
+    "--typeset-base-min": {
+      "value": "1rem",
+      "file": "base/_variables.css",
+      "light": "1rem",
+      "dark": "1rem"
+    },
+    "--typeset-scale": {
+      "value": "calc( var(--typeset-scale-min) + var(--fluid) * (var(--typeset-scale-max) - var(--typeset-scale-min)) )",
+      "file": "base/_typography.css",
+      "min": "1.125",
+      "max": "1.25"
+    },
+    "--typeset-scale-max": {
+      "value": "1.25",
+      "file": "base/_variables.css",
+      "light": "1.25",
+      "dark": "1.25"
+    },
+    "--typeset-scale-min": {
+      "value": "1.125",
+      "file": "base/_variables.css",
+      "light": "1.125",
+      "dark": "1.125"
+    },
+    "--typeset-sm-max": {
+      "value": "0.8",
+      "file": "base/_variables.css",
+      "light": "0.8",
+      "dark": "0.8"
+    },
+    "--typeset-sm-min": {
+      "value": "0.8",
+      "file": "base/_variables.css",
+      "light": "0.8",
+      "dark": "0.8"
+    },
+    "--typeset-xs-max": {
+      "value": "0.64",
+      "file": "base/_variables.css",
+      "light": "0.64",
+      "dark": "0.64"
+    },
+    "--typeset-xs-min": {
+      "value": "0.64",
+      "file": "base/_variables.css",
+      "light": "0.64",
+      "dark": "0.64"
     }
   }
 }

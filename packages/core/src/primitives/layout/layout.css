@@ -35,7 +35,7 @@
     /* each child's container type: inline-size so tiers inside a band follow it;
        set normal on a layout to opt its children out */
     --ui-layout-child-container: inline-size;
-    --ui-layout-template-columns: [layout-bleed-start] var(--ui-layout-gutters) [layout-full-start]
+    --ui-layout-template-cols: [layout-bleed-start] var(--ui-layout-gutters) [layout-full-start]
       minmax(0, 1fr) [layout-2xl-start]
       clamp(
         0rem,
@@ -91,7 +91,7 @@
 @layer ui.components {
   :where(ui-layout, [data-ui~="layout"]) {
     display: grid;
-    grid-template-columns: var(--ui-layout-template-columns);
+    grid-template-columns: var(--ui-layout-template-cols);
     /* the bands are positioned exactly by the template: no column gap */
     column-gap: 0;
     /* children sit at the block start and stretch across their band */

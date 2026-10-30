@@ -16,7 +16,7 @@
     /* metrics default to the shared --ui-field-* family so the track matches
        adjacent fields and buttons; --ui-tabs-label-min-h is deliberately shorter */
     --ui-tabs-gap: var(--space-xs);
-    --ui-tabs-track-padding: calc(var(--spacing) * 0.5);
+    --ui-tabs-track-p: calc(var(--spacing) * 0.5);
     --ui-tabs-track-radius: var(--ui-field-radius);
     --ui-tabs-track-gap: calc(var(--spacing) * 0.5);
     --ui-tabs-track-bg: var(--color-muted);
@@ -24,7 +24,7 @@
     --ui-tabs-indicator-bg: var(--color-card);
     --ui-tabs-indicator-radius: var(--ui-field-inset-child-radius);
     --ui-tabs-indicator-shadow: var(--shadow-xs);
-    --ui-tabs-indicator-inset: var(--ui-tabs-track-padding);
+    --ui-tabs-indicator-inset: var(--ui-tabs-track-p);
 
     --ui-tabs-label-font-family: var(--font-family-body);
     --ui-tabs-label-font-size: var(--font-size-sm);
@@ -61,7 +61,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--ui-tabs-track-gap);
-    padding: var(--ui-tabs-track-padding);
+    padding: var(--ui-tabs-track-p);
     --_radius-len: var(--_radius-resolved, var(--ui-tabs-track-radius));
     --_radius-num: var(--_radius-resolved, var(--ui-tabs-track-radius));
     border-radius: calc(

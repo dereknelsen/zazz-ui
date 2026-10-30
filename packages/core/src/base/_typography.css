@@ -1,25 +1,82 @@
 /**
- * _typography.css — Prose ([data-ui~="prose"]) and figcaption reset
+ * _typography.css — Fluid type scale, prose ([data-ui~="prose"]), and figcaption reset
  *
  * @layer      variables, reset, components
  * @requires   _layers.css, _variables.css, _reset.css (figcaption baseline)
- * @uses       Type tokens — consumes --font-family-*, --font-size-*,
- *             --font-weight-*, --leading-*, --tracking-* from _variables.css;
- *             exposes the data-ui="text-*" roles; weight, family, style,
+ * @uses       Type tokens — consumes --font-family-*, --font-weight-*,
+ *             --leading-*, --tracking-* and the type scale controls
+ *             (--fluid-*, --typeset-base-*, --typeset-scale-*, --typeset-<sm|xs|2xs>-*)
+ *             from _variables.css; exposes the data-ui="text-*" roles; weight, family, style,
  *             and decoration are utilities (--font-weight, --font-family, --font-style, --text-decoration)
+ * @uses       tan(atan2()) — divides two lengths into a plain number (a stand-in for
+ *             progress() that every engine supports); pow() — the type scale's steps
  * @uses       font-optical-sizing — heading optical size
  * @uses       @scope (prose) to (not-prose): prose rules stop at a not-prose
  *             element; a prose nested inside it starts its own scope
- * @tokens     --ui-prose-* (@layer variables)
+ * @tokens     --fluid, --typeset-base, --typeset-scale, --font-size-* (@layer variables);
+ *             --ui-prose-* (@layer variables); presets data-prose-size="sm" | "lg"
  */
 
 @layer variables {
   :root {
-    --ui-prose-figcaption-margin: var(--space-xs) 0 0 0;
-    /* 0 preserves the figcaption-margin spacing; a length adds flex gap on top */
+    /* multiplies the space between prose blocks, on top of
+       --paragraph-spacing-multiplier and a data-prose-size preset */
+    --ui-prose-flow: 1;
+    --ui-prose-figcaption-mt: var(--space-xs);
+    /* 0 preserves the figcaption-mt spacing; a length adds flex gap on top */
     --ui-prose-figcaption-gap: 0px;
     --ui-prose-img-radius: var(--radius-md);
     --ui-prose-img-border: none;
+  }
+
+  /* ===========================================================================
+  FLUID TYPE SCALE — calculations, don't touch; tune the controls in
+  _variables.css. A sized prose re-runs them, so its preset scales the base
+  and a :root control still reaches it.
+  =========================================================================== */
+
+  :where(:root, [data-ui~="prose"][data-prose-size]) {
+    /* 0 at --fluid-min, 1 at --fluid-max, linear between, clamped outside:
+       (100vi − min) ÷ (max − min). tan(atan2(a, b)) is a ÷ b as a plain number,
+       which calc() can't do with two lengths in every engine yet. Same result as
+       progress(100vi, var(--fluid-min), var(--fluid-max)). */
+    --fluid: clamp(0, tan(atan2(100vi - var(--fluid-min), var(--fluid-max) - var(--fluid-min))), 1);
+    --typeset-base: calc(
+      (
+          var(--typeset-base-min) + var(--fluid) *
+            (var(--typeset-base-max) - var(--typeset-base-min))
+        ) *
+        var(--_prose-size, 1)
+    );
+    --typeset-scale: calc(
+      var(--typeset-scale-min) + var(--fluid) *
+        (var(--typeset-scale-max) - var(--typeset-scale-min))
+    );
+
+    --font-size-2xs: calc(
+      var(--typeset-base) *
+        (var(--typeset-2xs-min) + var(--fluid) * (var(--typeset-2xs-max) - var(--typeset-2xs-min)))
+    );
+    --font-size-xs: calc(
+      var(--typeset-base) *
+        (var(--typeset-xs-min) + var(--fluid) * (var(--typeset-xs-max) - var(--typeset-xs-min)))
+    );
+    --font-size-sm: calc(
+      var(--typeset-base) *
+        (var(--typeset-sm-min) + var(--fluid) * (var(--typeset-sm-max) - var(--typeset-sm-min)))
+    );
+    --font-size-eyebrow: var(--font-size-2xs);
+    --font-size-md: var(--typeset-base);
+    --font-size-lg: calc(var(--typeset-base) * var(--typeset-scale));
+    --font-size-xl: calc(var(--typeset-base) * pow(var(--typeset-scale), 2));
+    --font-size-2xl: calc(var(--typeset-base) * pow(var(--typeset-scale), 3));
+    --font-size-h6: var(--font-size-xl);
+    --font-size-h5: var(--font-size-2xl);
+    --font-size-h4: calc(var(--typeset-base) * pow(var(--typeset-scale), 4));
+    --font-size-h3: calc(var(--typeset-base) * pow(var(--typeset-scale), 5));
+    --font-size-h2: calc(var(--typeset-base) * pow(var(--typeset-scale), 6));
+    --font-size-h1: calc(var(--typeset-base) * pow(var(--typeset-scale), 7));
+    --font-size-display: calc(var(--typeset-base) * pow(var(--typeset-scale), 8));
   }
 }
 
@@ -31,6 +88,26 @@
   :where([data-ui~="prose"]) {
     flex-direction: column;
     display: flex;
+  }
+
+  /* a sized prose sets its own body text; a plain one inherits the page's */
+  :where([data-ui~="prose"][data-prose-size]) {
+    font-size: var(--font-size-md);
+    line-height: var(--_prose-leading, var(--leading-md));
+  }
+
+  /* size presets: a multiple of the base, a body leading, and a multiple of
+     the space between blocks; each composes with the :root controls and hooks */
+  :where([data-ui~="prose"][data-prose-size="sm"]) {
+    --_prose-size: 0.875;
+    --_prose-leading: 1.5;
+    --_prose-flow: 0.75;
+  }
+
+  :where([data-ui~="prose"][data-prose-size="lg"]) {
+    --_prose-size: 1.125;
+    --_prose-leading: 1.8;
+    --_prose-flow: 1.25;
   }
 
   /* Prose styles its descendants up to a not-prose boundary; a prose nested
@@ -54,7 +131,7 @@
 
     :where(figure:has(img, video) > figcaption) {
       display: flex;
-      margin: var(--ui-prose-figcaption-margin);
+      margin-block-start: var(--ui-prose-figcaption-mt);
       font-style: italic;
       font-family: var(--font-family-body);
       font-size: var(--font-size-sm);
@@ -111,19 +188,27 @@
 
     :where(hgroup:not(:first-child)) {
       font-size: var(--font-size-xl);
-      margin-block-start: var(--paragraph-spacing-xl);
+      margin-block-start: calc(
+        var(--paragraph-spacing-xl) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where(ul:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-md);
+      margin-block-start: calc(
+        var(--paragraph-spacing-md) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where(ol:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-md);
+      margin-block-start: calc(
+        var(--paragraph-spacing-md) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where(dl:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-md);
+      margin-block-start: calc(
+        var(--paragraph-spacing-md) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where(li:not(:first-child)) {
@@ -150,95 +235,141 @@
     }
 
     :where([data-ui~="text-display"]:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-display);
+      margin-block-start: calc(
+        var(--paragraph-spacing-display) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where([data-ui~="text-h1"]:not(:first-child), h1:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-h1);
+      margin-block-start: calc(
+        var(--paragraph-spacing-h1) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where([data-ui~="text-h2"]:not(:first-child), h2:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-h2);
+      margin-block-start: calc(
+        var(--paragraph-spacing-h2) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where([data-ui~="text-h3"]:not(:first-child), h3:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-h3);
+      margin-block-start: calc(
+        var(--paragraph-spacing-h3) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where([data-ui~="text-h4"]:not(:first-child), h4:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-h4);
+      margin-block-start: calc(
+        var(--paragraph-spacing-h4) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where([data-ui~="text-h5"]:not(:first-child), h5:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-h5);
+      margin-block-start: calc(
+        var(--paragraph-spacing-h5) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where([data-ui~="text-h6"]:not(:first-child), h6:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-h6);
+      margin-block-start: calc(
+        var(--paragraph-spacing-h6) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where([data-ui~="text-2xl"]:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-2xl);
+      margin-block-start: calc(
+        var(--paragraph-spacing-2xl) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where([data-ui~="text-xl"]:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-xl);
+      margin-block-start: calc(
+        var(--paragraph-spacing-xl) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where([data-ui~="text-lg"]:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-lg);
+      margin-block-start: calc(
+        var(--paragraph-spacing-lg) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where([data-ui~="text-md"]:not(:first-child), :is(p, pre):not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-md);
+      margin-block-start: calc(
+        var(--paragraph-spacing-md) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where([data-ui~="text-sm"]:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-sm);
+      margin-block-start: calc(
+        var(--paragraph-spacing-sm) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where([data-ui~="text-xs"]:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-xs);
+      margin-block-start: calc(
+        var(--paragraph-spacing-xs) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where([data-ui~="text-2xs"]:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-2xs);
+      margin-block-start: calc(
+        var(--paragraph-spacing-2xs) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where([data-ui~="text-eyebrow"]:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-eyebrow);
+      margin-block-start: calc(
+        var(--paragraph-spacing-eyebrow) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where(hr:first-child) {
-      margin-block-end: calc(var(--space-md) * var(--_paragraph-spacing-multiplier));
+      margin-block-end: calc(
+        var(--space-md) * var(--paragraph-spacing-multiplier) * var(--ui-prose-flow)
+      );
     }
 
     :where(hr:not(:first-child)) {
-      margin-block: calc(var(--space-lg) * var(--_paragraph-spacing-multiplier));
+      margin-block: calc(
+        var(--space-lg) * var(--paragraph-spacing-multiplier) * var(--ui-prose-flow)
+      );
     }
 
     :where([data-ui~="text-eyebrow"] + *) {
-      margin-block-start: var(--paragraph-spacing-xs);
+      margin-block-start: calc(
+        var(--paragraph-spacing-xs) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where(figure:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-md);
+      margin-block-start: calc(
+        var(--paragraph-spacing-md) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where(figure:not(:first-child):has(:is(img, video))) {
-      margin-block-start: calc(var(--paragraph-spacing-md) * 2);
+      margin-block-start: calc(
+        var(--paragraph-spacing-md) * 2 * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where(dl > dt:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-md);
+      margin-block-start: calc(
+        var(--paragraph-spacing-md) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where(blockquote:not(:first-child)) {
-      margin-block-start: var(--paragraph-spacing-lg);
+      margin-block-start: calc(
+        var(--paragraph-spacing-lg) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
 
     :where(blockquote:not(:last-child)) {
-      margin-block-end: var(--paragraph-spacing-lg);
+      margin-block-end: calc(
+        var(--paragraph-spacing-lg) * var(--ui-prose-flow) * var(--_prose-flow, 1)
+      );
     }
   }
 }

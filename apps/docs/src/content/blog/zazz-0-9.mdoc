@@ -1,0 +1,81 @@
+---
+title: "Zazz 0.9 alpha"
+description: "Zazz 0.9 alpha computes the type scale and spacing from a few controls, adds prose size presets, and renames eleven hooks after the utilities they back."
+date: 2026-10-30
+draft: false
+tags: ["release"]
+---
+
+**Zazz 0.9 alpha replaces the generated `clamp()` type scale with a handful of controls you can actually tune, gives an article its own size, and renames eleven `--ui-*` hooks so every hook follows the utility it backs. The renames make this a breaking release.**
+
+## A type scale you can tune
+
+Until now the kit's font sizes were a column of `clamp()` expressions generated with Utopia. They looked right, but changing them meant regenerating the whole column, and the only knob that worked at runtime was redeclaring a single `--font-size-*`, which broke the ratio between the others.
+
+0.9 computes the scale from a few controls on `:root`. The main four: `--typeset-base-min` and `-max` set the `md` size at the small and large end of the viewport range. `--typeset-scale-min` and `-max` set the ratio between steps: `lg` is one step above the base, `display` is eight. Both interpolate across the new fluid range, `--fluid-min` (25rem) to `--fluid-max` (80rem).
+
+```css
+@layer overrides {
+  :root {
+    --typeset-base-max: 1.125rem;  /* a bigger body on wide screens */
+    --typeset-scale-max: 1.2;      /* and headings that grow a little less */
+  }
+}
+```
+
+The defaults reproduce the old sizes at both ends of the range. In between, headings sit slightly smaller than before, because the ratio interpolates rather than each size, and I think that's the better curve. The small sizes (`sm`, `xs`, `2xs`) are multiples of the base, each with its own `-min`/`-max` pair. They were always meant to grow with the viewport and never did (their clamps resolved to the max), so 0.9 makes the old values the defaults at both ends. Lower a `-min` if you want that size to grow.
+
+Redeclaring one `--font-size-*` on `:root` still works, except inside a sized prose article, which recomputes the scale.
+
+## `--fluid` and spacing on the same range
+
+`--fluid` is the number underneath: 0 at `--fluid-min`, 1 at `--fluid-max`, linear between, held outside. It's built with `tan(atan2())` as a stand-in for `progress()`, which not every engine has yet, and it's a plain number, so any `calc()` can use it:
+
+```css
+padding-block: calc(1rem + var(--fluid) * 2rem);  /* 1rem on a phone, 3rem on a desktop */
+```
+
+`--spacing` now runs on the same range, from `--spacing-min` (0.225rem) to `--spacing-max` (0.25rem). Those are the values it already had, so nothing moves on screen. Pin `--spacing` to a length if you want a fixed scale.
+
+`--_paragraph-spacing-multiplier` lost its underscore. It was private because I wasn't sure it would stay, and it has.
+
+## Prose sizes
+
+An article can now be sized without touching the global controls. `data-prose-size="sm"` is compact: 0.875 times the base, leading 1.5, three quarters of the space between blocks. `"lg"` is for reading: 1.125 times the base, leading 1.8, a quarter more space. A preset recomputes the type scale for that article, so its headings and body text scale together, and your `:root` controls still reach it.
+
+```html
+<article data-ui="prose" data-prose-size="lg">…</article>
+```
+
+`--ui-prose-flow` (default 1) multiplies only the space between blocks, for when the size is right and the rhythm isn't.
+
+## Hooks follow their utilities
+
+Zazz has had a naming rule for a while: a hook that backs a utility takes the utility's name (`--ui-button-px`), a hook with no utility behind it takes the full property name (`--ui-button-background-clip`), and role words like `background` and `foreground` belong to `--color-*` only. Eleven hooks had drifted from it. 0.9 renames them and writes the rule down in `CONVENTIONS.styles.md`, with a table of the three kinds of name.
+
+| 0.8                                       | 0.9                                 |
+| ----------------------------------------- | ----------------------------------- |
+| `--ui-field-horizontal-align-items`       | `--ui-field-horizontal-items`       |
+| `--ui-field-horizontal-justify-content`   | `--ui-field-horizontal-justify`     |
+| `--ui-field-addon-padding`                | `--ui-field-addon-p`                |
+| `--ui-checkbox-foreground`                | `--ui-checkbox-glyph-color`         |
+| `--ui-radio-dot-foreground`               | `--ui-radio-dot-color`              |
+| `--ui-switch-track-padding`               | `--ui-switch-track-p`               |
+| `--ui-tabs-track-padding`                 | `--ui-tabs-track-p`                 |
+| `--ui-command-group-label-padding`        | `--ui-command-group-label-p`        |
+| `--ui-mobile-menu-header-padding-inline`  | `--ui-mobile-menu-header-px`        |
+| `--ui-layout-template-columns`            | `--ui-layout-template-cols`         |
+| `--ui-lightbox-thumb-columns`             | `--ui-lightbox-thumb-cols`          |
+
+The two `-foreground` hooks are the interesting ones. A `--color-x` / `--color-x-foreground` pair describes a surface and the text on it. A checkbox glyph is a part with a tint, not text on a surface, and a part's tint is `-color`. The name follows the utility, but the value is still whatever the property accepts: `--ui-mobile-menu-header-px` takes two values, as `padding-inline` does.
+
+One prose hook changed shape as well as name. `--ui-prose-figcaption-margin` was a four-value shorthand with three zeros in it; it's now `--ui-prose-figcaption-mt`, a single length. The default is unchanged.
+
+## Migrating
+
+- Rename the hooks in the table above wherever you set them. The input group and password group read `--ui-field-addon-p`, so a value you set for them moves too.
+- `--ui-prose-figcaption-margin: 1rem 0 0 0` → `--ui-prose-figcaption-mt: 1rem`.
+- `--_paragraph-spacing-multiplier` → `--paragraph-spacing-multiplier`.
+- If you redeclared `--font-size-*` tokens on `:root` to retune the scale, they still work. The controls are the better lever now: `--typeset-base-*` for size, `--typeset-scale-*` for contrast between steps.
+
+The [changelog](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/CHANGELOG.md) lists every change by primitive, and `npx zazz-ui update` prints the slice for the files you've vendored.

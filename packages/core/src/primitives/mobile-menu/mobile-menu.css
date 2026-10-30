@@ -18,7 +18,7 @@
     --ui-mobile-menu-bg: var(--color-background);
     --ui-mobile-menu-text: var(--color-foreground);
     --ui-mobile-menu-backdrop-color: var(--color-faded-foreground);
-    --ui-mobile-menu-header-padding-inline: var(--space-md) var(--space-xs);
+    --ui-mobile-menu-header-px: var(--space-md) var(--space-xs);
     --ui-mobile-menu-header-py: var(--space-xs);
     --ui-mobile-menu-body-px: var(--space-sm);
     --ui-mobile-menu-body-py: var(--space-md);
@@ -88,7 +88,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-inline: var(--ui-mobile-menu-header-padding-inline);
+    padding-inline: var(--ui-mobile-menu-header-px);
     padding-block: var(--ui-mobile-menu-header-py);
     border-block-end: 1px solid var(--color-border);
     position: sticky;

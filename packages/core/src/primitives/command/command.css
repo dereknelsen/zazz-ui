@@ -19,8 +19,7 @@
     --ui-command-option-gap: var(--ui-field-option-gap);
     --ui-command-input-p: calc(var(--spacing) * 3);
     --ui-command-input-border: 1px solid var(--color-border);
-    --ui-command-group-label-padding: calc(var(--spacing) * 2) calc(var(--spacing) * 2)
-      var(--spacing);
+    --ui-command-group-label-p: calc(var(--spacing) * 2) calc(var(--spacing) * 2) var(--spacing);
     --ui-command-footer-p: calc(var(--spacing) * 2);
     --ui-command-footer-border: 1px solid var(--color-border);
     --ui-command-shadow: var(--ui-menu-shadow);
@@ -121,7 +120,7 @@
   }
 
   :where(ui-command, [data-ui~="command"]) [data-command-slot~="group-label"] {
-    padding: var(--ui-command-group-label-padding);
+    padding: var(--ui-command-group-label-p);
     /* Score ranking writes order -1000..0 on sibling items; keep the label first */
     order: -1001;
   }
