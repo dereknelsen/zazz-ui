@@ -5,8 +5,8 @@ describe("jsonld", () => {
   it("describes the site", () => {
     expect(websiteLd()).toMatchObject({
       "@type": "WebSite",
-      "@id": "https://zazz.sh/#website",
-      url: "https://zazz.sh/",
+      "@id": "https://www.zazz.sh/#website",
+      url: "https://www.zazz.sh/",
     });
   });
 
@@ -16,7 +16,7 @@ describe("jsonld", () => {
 
   it("makes article URLs absolute and omits a missing description", () => {
     const ld = articleLd({ title: "Install", url: "/docs/install/", section: "Docs" });
-    expect(ld).toMatchObject({ "@type": "TechArticle", url: "https://zazz.sh/docs/install/" });
+    expect(ld).toMatchObject({ "@type": "TechArticle", url: "https://www.zazz.sh/docs/install/" });
     expect(ld).not.toHaveProperty("description");
   });
 
@@ -32,7 +32,7 @@ describe("jsonld", () => {
     expect(ld).toMatchObject({
       datePublished: "2026-01-02T00:00:00.000Z",
       keywords: "release, css",
-      image: "https://zazz.sh/_astro/og.abc.png",
+      image: "https://www.zazz.sh/_astro/og.abc.png",
     });
   });
 
@@ -42,8 +42,8 @@ describe("jsonld", () => {
       { name: "Docs", url: "/docs/" },
     ]);
     expect(ld.itemListElement).toEqual([
-      { "@type": "ListItem", position: 1, name: "Zazz", item: "https://zazz.sh/" },
-      { "@type": "ListItem", position: 2, name: "Docs", item: "https://zazz.sh/docs/" },
+      { "@type": "ListItem", position: 1, name: "Zazz", item: "https://www.zazz.sh/" },
+      { "@type": "ListItem", position: 2, name: "Docs", item: "https://www.zazz.sh/docs/" },
     ]);
   });
 

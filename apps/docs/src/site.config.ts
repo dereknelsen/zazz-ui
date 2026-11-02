@@ -8,7 +8,8 @@ export const site = {
   title: "Zazz Design System",
   description:
     "Unified collection of primitives, style utilities, and design tokens, for no-build, low-build, and legacy web projects.",
-  url: "https://zazz.sh",
+  /** The canonical origin: Vercel 308-redirects the bare `zazz.sh` here. */
+  url: "https://www.zazz.sh",
   stage: "alpha",
 } as const;
 
