@@ -2,6 +2,7 @@
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import { siteHead } from "../lib/head.ts";
+import { ldJson, websiteLd } from "../lib/jsonld.ts";
 import { site } from "../site.config.ts";
 import og from "../assets/og.png";
 import "../styles/site.css";
@@ -9,8 +10,22 @@ import "../styles/site.css";
 interface Props {
   title: string;
   description?: string;
+  /** Schema.org objects for this page, after the site-wide `WebSite`. */
+  jsonLd?: Record<string, unknown>[];
+  /** `article` adds `article:published_time` from `published`. */
+  ogType?: "website" | "article";
+  published?: Date;
+  /** The page has a Markdown twin at `index.md` (every page in `allPages()`). */
+  markdown?: boolean;
 }
-const { title, description = site.description } = Astro.props;
+const {
+  title,
+  description = site.description,
+  jsonLd = [],
+  ogType = "website",
+  published,
+  markdown = false,
+} = Astro.props;
 const pageTitle = title === site.name ? site.title : `${title} · ${site.name}`;
 const canonical = new URL(Astro.url.pathname, site.url);
 // Imported, not served from public/, so the URL carries a content hash and social
@@ -33,10 +48,34 @@ const ogImage = new URL(og.src, site.url);
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="msapplication-config" content="/browserconfig.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${site.name} blog`}
+      href="/rss.xml"
+    />
+    {
+      markdown && (
+        <link
+          rel="alternate"
+          type="text/markdown"
+          href={`${Astro.url.pathname.replace(/\/?$/, "/")}index.md`}
+        />
+      )
+    }
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    {
+      ogType === "article" && published && (
+        <meta
+          property="article:published_time"
+          content={published.toISOString()}
+        />
+      )
+    }
     <meta property="og:site_name" content={site.title} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
@@ -46,6 +85,11 @@ const ogImage = new URL(og.src, site.url);
       content="Zazz: a design system for the baseline web"
     />
     <meta name="twitter:card" content="summary_large_image" />
+    {
+      [websiteLd(), ...jsonLd].map((ld) => (
+        <script type="application/ld+json" is:inline set:html={ldJson(ld)} />
+      ))
+    }
     <slot name="head" />
     <!-- Defined on every page: a swap navigation runs none of the new page's scripts. -->
     <script src="../scripts/hero-scene.ts"></script>

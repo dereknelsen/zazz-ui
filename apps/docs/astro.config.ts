@@ -1,11 +1,20 @@
 import markdoc from "@astrojs/markdoc";
+import sitemap from "@astrojs/sitemap";
 import { defineConfig } from "astro/config";
 import pagefind from "astro-pagefind";
 
 export default defineConfig({
   site: "https://zazz.sh",
   output: "static",
-  integrations: [markdoc(), pagefind()],
+  integrations: [
+    markdoc(),
+    pagefind(),
+    // Pages only: drafts are never built in production; the 404 page, the kit
+    // mirror under /zazz/, and the Markdown twins are not search results.
+    sitemap({
+      filter: (page) => !/\/(404|zazz)\/|\.md$/.test(new URL(page).pathname),
+    }),
+  ],
   // The playground renders user HTML in an opaque-origin (sandboxed) iframe in
   // production, which loads the kit's module scripts from `/zazz/*` cross-origin:
   // hosting sets `Access-Control-Allow-Origin` in `vercel.json`, and `astro

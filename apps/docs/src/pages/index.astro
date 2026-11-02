@@ -2,11 +2,13 @@
 import Logo from "../components/Logo.astro";
 import ThemeBuilder from "../components/ThemeBuilder.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { softwareLd } from "../lib/jsonld.ts";
+import { kitVersion } from "../lib/kit.ts";
 import { site } from "../site.config.ts";
 import { ArrowRight, MoveRight } from "@lucide/astro";
 ---
 
-<BaseLayout title={site.name}>
+<BaseLayout title={site.name} jsonLd={[softwareLd(kitVersion())]}>
   <main id="main" style="
       --display: grid;
       --position: relative;
@@ -154,12 +156,11 @@ import { ArrowRight, MoveRight } from "@lucide/astro";
         "
       >
         <h2 data-ui="text-h6">Build a theme</h2>
-        <a
-          href="/docs/theme-builder/"
+        <span
           data-ui="badge text-eyebrow"
           data-badge-variant="link"
           style="--text: var(--color-muted-foreground)"
-          >Swipe for more <MoveRight /></a
+          >Swipe for more <MoveRight /></span
         >
       </hgroup>
       <div

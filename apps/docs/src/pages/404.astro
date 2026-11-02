@@ -1,0 +1,30 @@
+---
+import { ArrowRight } from "@lucide/astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Page not found"
+  description="This page doesn't exist. It may have moved, or the link may be wrong."
+>
+  <meta slot="head" name="robots" content="noindex" />
+  <main id="main" data-ui="layout" style="--py: 16">
+    <div style="--band: layout-md; --display: flex-col; --gap: 4">
+      <p data-ui="text-eyebrow" style="--text: var(--color-muted-foreground)">
+        404
+      </p>
+      <h1 data-ui="text-h3">Page not found</h1>
+      <p data-ui="text-lg" style="--text: var(--color-muted-foreground)">
+        The page may have moved, or the link may be wrong. Search the docs, or
+        start from one of these.
+      </p>
+      <div style="--display: flex; --flex-wrap: wrap; --gap: 2; --mt: 4">
+        <a href="/docs/" data-ui="button" data-button-variant="primary">Docs</a>
+        <a href="/" data-ui="button" data-button-variant="outline">Home</a>
+        <a href="/playground/" data-ui="button" data-button-variant="ghost"
+          >Playground <ArrowRight /></a
+        >
+      </div>
+    </div>
+  </main>
+</BaseLayout>

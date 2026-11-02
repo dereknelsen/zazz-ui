@@ -6,7 +6,9 @@
 import type { MarkdownHeading } from "astro";
 import Sidebar from "../components/Sidebar.astro";
 import Toc from "../components/Toc.astro";
+import { articleLd, breadcrumbLd } from "../lib/jsonld.ts";
 import type { SidebarSection } from "../lib/sidebar.ts";
+import { site } from "../site.config.ts";
 import BaseLayout from "./BaseLayout.astro";
 
 interface Props {
@@ -18,9 +20,22 @@ interface Props {
   headings?: MarkdownHeading[];
 }
 const { title, description, section, sidebar, headings = [] } = Astro.props;
+
+const url = Astro.url.pathname;
+const sectionUrl = `/${section.toLowerCase()}/`;
+const group = sidebar.find((s) => s.links.some((link) => link.current))?.title;
+const trail = [
+  { name: site.name, url: "/" },
+  { name: section, url: sectionUrl },
+  ...(url === sectionUrl ? [] : [{ name: title, url }]),
+];
+const jsonLd = [
+  articleLd({ title, description, url, section: group ? `${section}: ${group}` : section }),
+  breadcrumbLd(trail),
+];
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} jsonLd={jsonLd} markdown>
   <main id="main" data-ui="layout" style="--py: 8">
     <div
       style="

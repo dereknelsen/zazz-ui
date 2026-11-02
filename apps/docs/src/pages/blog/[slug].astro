@@ -2,6 +2,9 @@
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { FilePen } from "@lucide/astro";
+import og from "../../assets/og.png";
+import { blogPostingLd, breadcrumbLd } from "../../lib/jsonld.ts";
+import { site } from "../../site.config.ts";
 
 export async function getStaticPaths() {
   const posts = await getCollection(
@@ -19,9 +22,32 @@ const date = post.data.date.toLocaleDateString("en-US", {
   day: "numeric",
   timeZone: "UTC",
 });
+const url = `/blog/${post.id}/`;
+const jsonLd = [
+  blogPostingLd({
+    title: post.data.title,
+    description: post.data.description,
+    url,
+    date: post.data.date,
+    tags: post.data.tags,
+    image: og.src,
+  }),
+  breadcrumbLd([
+    { name: site.name, url: "/" },
+    { name: "Blog", url: "/blog/" },
+    { name: post.data.title, url },
+  ]),
+];
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description}>
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  jsonLd={jsonLd}
+  ogType="article"
+  published={post.data.date}
+  markdown={!post.data.draft}
+>
   <main id="main" data-ui="layout" style="--py: 8">
     <div
       style="
