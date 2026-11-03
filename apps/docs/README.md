@@ -24,4 +24,6 @@ vp run docs#links    # broken internal links in dist/
 vp run docs#check    # tsc --noEmit (astro check does not support TypeScript 7)
 ```
 
+The theme builder on the homepage lists Google Fonts when `GOOGLE_FONTS_API_KEY` is set (see `.env.example`; the key is read at build time and never reaches the page). Without it the builder offers local font stacks only.
+
 Hosting needs one header: `Access-Control-Allow-Origin: *` on `/zazz/*`, because the playground's sandboxed iframe loads the kit's module scripts cross-origin. `vercel.json` sets it for Vercel; `astro.config.ts` sets it for dev and preview.

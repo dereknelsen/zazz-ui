@@ -31,6 +31,11 @@
  * this control is inert without its script (the hidden input still submits a
  * server-set value, but no tags render).
  *
+ * Scripts read and set the selection through the element's `value` property,
+ * which mirrors `<select>.value`: setting it moves the selection, the label,
+ * and the hidden input without focusing the input or dispatching `change`; an
+ * unknown value clears the selection.
+ *
  * Attributes on the root: `data-combobox-variant="multiselect"`, `data-combobox-sort="score"`,
  * `data-combobox-filter="none"` (another source filters; the engine only navigates),
  * `data-combobox-min-length="<n>"`, `data-combobox-label-remove="Remove {label}"`.
@@ -513,16 +518,60 @@ class UiCombobox extends TypeaheadElement {
   /**
    * @description Empties the committed state: label, hidden value, tags, and
    * `aria-selected` all clear together.
+   *
+   * @param notify - Whether to dispatch `change` (a script setting `value` stays silent).
    * @private
    */
-  #clearSelection(): void {
+  #clearSelection(notify = true): void {
     this.#committedLabel = "";
     const multiselect = this.#multiselect();
     for (const item of this.items()) {
       if (multiselect) item.setAttribute("aria-selected", "false");
       else item.removeAttribute("aria-selected");
     }
-    this.#syncSelection(true);
+    if (this.searchInput) this.searchInput.value = "";
+    this.query.set("");
+    this.#syncSelection(notify);
+  }
+
+  /**
+   * @description The selected item's form value (`data-combobox-value`, or its
+   * label), like `<select>.value`; the empty string when nothing is selected.
+   * In the multiselect variant it is the first selected value.
+   *
+   * @returns The committed form value.
+   */
+  get value(): string {
+    const selected = this.#selectedItems()[0];
+    return selected ? this.#itemFormValue(selected) : "";
+  }
+
+  /**
+   * @description Selects the item carrying this form value, as a script sets
+   * `<select>.value`: the label, the hidden input, and `aria-selected` follow,
+   * but no `change` is dispatched and focus stays where it was. A value no
+   * row carries clears the selection; in the multiselect variant the value
+   * becomes the whole selection, as `<select multiple>.value` does.
+   *
+   * @param value - The form value to select.
+   */
+  set value(value: string) {
+    const match = this.items().find((item) => this.#itemFormValue(item) === value);
+    if (!match) {
+      this.#clearSelection(false);
+      return;
+    }
+    const multiselect = this.#multiselect();
+    for (const other of this.items()) {
+      if (multiselect) other.setAttribute("aria-selected", "false");
+      else other.removeAttribute("aria-selected");
+    }
+    match.setAttribute("aria-selected", "true");
+    this.#committedLabel = multiselect ? "" : this.itemValue(match);
+    const input = this.searchInput;
+    if (input) input.value = this.#committedLabel;
+    this.query.set("");
+    this.#syncSelection(false);
   }
 
   /**

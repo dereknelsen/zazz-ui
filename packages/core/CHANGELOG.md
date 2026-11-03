@@ -1,5 +1,19 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.9.1 (2026-11-03)
+
+### base
+
+- Fix: the `zazz:dialog-open` and `zazz:dialog-close` events stopped firing after the first swap navigation (`data-ui-navigation="swap"`), which replaces the whole `<body>` the dialog observer was watching. The observer now watches the document root, which stays put for the page's lifetime.
+
+### debug
+
+- Fix: a `<ui-debug>` kept across a swap navigation went on watching the old `<body>`, so it never re-audited the new page. It now watches the document root and audits the current page on every run.
+
+### combobox
+
+- New `value` property on `<ui-combobox>`, mirroring `<select>.value`: reading it gives the selected row's form value (the empty string when nothing is selected); setting it moves the selection, the label, and the hidden input without focusing the input or dispatching `change`. A value no row carries clears the selection; in the multiselect variant the value becomes the whole selection.
+
 ## 0.9.0 (2026-10-30)
 
 ### base

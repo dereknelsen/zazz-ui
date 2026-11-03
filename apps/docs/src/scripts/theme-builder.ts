@@ -16,10 +16,16 @@
  * localStorage until the form is reset, so a reload or a trip to another page
  * keeps the theme being worked on.
  *
+ * Font: one combobox lists local stacks and, when the build had a Google
+ * Fonts key, the popular Google families; the choice goes to headings and
+ * body text alike. A Google family loads through one `<link>` in the head,
+ * and the copied CSS carries that tag in a comment above the `:root` block.
+ *
  * A custom element because swap navigation never runs a swapped-in page's
  * scripts; BaseLayout defines it on every page.
  */
 import { ZazzElement, defineZazzElement } from "@zazz-ui/core/base/zazz-element.ts";
+import { googleFontsHref } from "../lib/fonts.ts";
 import { createPalette, foregroundFor, normalizeHex } from "../lib/palette.ts";
 
 const STORAGE_KEY = "fieldnotes-theme";
@@ -28,6 +34,7 @@ const CHIP_FORMAT: Record<string, (value: string) => string> = {
   "tb-spacing": (v) => `${v}rem`,
   "tb-shadow": (v) => `${v}°`,
   "tb-radius": (v) => `${v}×`,
+  "tb-font": (v) => v.replace(/^Default.*/, "Default"),
 };
 
 /** The class on the preview wrapper the live theme is scoped to. */
@@ -41,7 +48,20 @@ const NUMBERS: Record<string, { token: string; unit: string }> = {
   spacing: { token: "--spacing", unit: "rem" },
   radius: { token: "--radius-multiplier", unit: "" },
   shadow: { token: "--default-shadow-angle", unit: "deg" },
+  "scale-min": { token: "--typeset-scale-min", unit: "" },
+  "scale-max": { token: "--typeset-scale-max", unit: "" },
 };
+
+/** A theme control: the inputs, the font combobox's hidden input, and the scale selects. */
+type Field = HTMLInputElement | HTMLSelectElement;
+
+/**
+ * The value a control shipped with. Selects and the comboboxes' hidden inputs
+ * carry it in `data-default` (a hidden input's `defaultValue` follows its
+ * value, so it can never tell a change); the other inputs in `defaultValue`.
+ */
+const defaultOf = (field: Field): string =>
+  field.dataset.default ?? (field instanceof HTMLInputElement ? field.defaultValue : "");
 
 class ThemeBuilder extends ZazzElement {
   protected setup(signal: AbortSignal): void {
@@ -54,6 +74,9 @@ class ThemeBuilder extends ZazzElement {
     const reset = q<HTMLButtonElement>("[data-theme-reset]");
     const preview = q<HTMLElement>("[data-theme-css]");
     const radiusOut = q<HTMLOutputElement>("output[for='tb-radius']");
+    const fontLink = document.createElement("link");
+    fontLink.rel = "stylesheet";
+    fontLink.setAttribute("data-theme-fonts", "");
     const shadowOut = q<HTMLOutputElement>("output[for='tb-shadow']");
     const panel = q<HTMLElement>("[data-theme-panel]");
     const sheet = q<HTMLElement>("[data-theme-sheet]");
@@ -84,11 +107,11 @@ class ThemeBuilder extends ZazzElement {
 
     /** The panel's controls, by `name`: the theme inputs and the preview's elevation slider. */
     const fields = () => [
-      ...form.querySelectorAll<HTMLInputElement>(
-        "[data-theme-hex], [data-theme-number], [data-fieldnotes-elevation]",
+      ...form.querySelectorAll<Field>(
+        "[data-theme-hex], [data-theme-number], [data-theme-font], [data-fieldnotes-elevation]",
       ),
     ];
-    const changed = (field: HTMLInputElement) => field.value !== field.defaultValue;
+    const changed = (field: Field) => field.value !== defaultOf(field);
     // Storage can be missing or blocked (a private window, cleared site data).
     const stored = (): Record<string, string> | null => {
       try {
@@ -125,6 +148,23 @@ class ThemeBuilder extends ZazzElement {
       for (const field of fields()) {
         const value = values[field.name];
         if (value === undefined || value === field.value) continue;
+        // A combobox is set through its element, which moves the label and the
+        // selection too. The kit may define <ui-combobox> after this element
+        // runs, and a value set before the upgrade would shadow the accessor,
+        // so the write waits for the definition and renders again.
+        const combobox = field.closest<HTMLElement & { value: string }>("ui-combobox");
+        if (combobox) {
+          // A stored family this build does not list (a fork without the key,
+          // a family that left the popular ten) keeps the default row.
+          if (!combobox.querySelector(`[data-combobox-value="${CSS.escape(value)}"]`)) continue;
+          void customElements.whenDefined("ui-combobox").then(() => {
+            if (!signal.aborted) {
+              combobox.value = value;
+              render();
+            }
+          });
+          continue;
+        }
         field.value = value;
         field.dispatchEvent(new Event("input", { bubbles: true }));
       }
@@ -168,7 +208,7 @@ class ThemeBuilder extends ZazzElement {
         if (hint) hint.textContent = changed ? `Your color is ${name}-${stop}.` : hints[name];
       }
 
-      for (const input of this.querySelectorAll<HTMLInputElement>("[data-theme-number]")) {
+      for (const input of this.querySelectorAll<Field>("[data-theme-number]")) {
         const { token, unit } = NUMBERS[input.dataset.themeNumber!];
         if (input.value === "" || !input.checkValidity()) continue;
         if (Number(input.value) !== Number(input.dataset.default)) {
@@ -176,7 +216,37 @@ class ThemeBuilder extends ZazzElement {
         }
       }
 
-      css = lines.length ? `:root {\n${lines.map((line) => `  ${line};`).join("\n")}\n}\n` : "";
+      // Font: the chosen row carries the stack to write and, for a Google
+      // family, what to load; headings and body text share it.
+      const hidden = q<HTMLInputElement>("[data-theme-font]");
+      const item = hidden
+        ?.closest("ui-combobox")
+        ?.querySelector<HTMLElement>('[data-combobox-slot~="item"][aria-selected="true"]');
+      const stack = item?.dataset.fontStack;
+      if (item && hidden?.value && stack) {
+        lines.push(`--font-family-heading: ${stack}`, `--font-family-body: ${stack}`);
+      }
+      const href = googleFontsHref(
+        item?.dataset.fontGoogle
+          ? [
+              {
+                google: item.dataset.fontGoogle,
+                weights: item.dataset.fontWeights?.split(";").map(Number),
+              },
+            ]
+          : [],
+      );
+      if (href) {
+        if (fontLink.href !== href) fontLink.href = href;
+        if (!fontLink.isConnected) document.head.append(fontLink);
+      } else {
+        fontLink.remove();
+      }
+
+      const load = href ? `/* Add to <head>: <link rel="stylesheet" href="${href}"> */\n` : "";
+      css = lines.length
+        ? `${load}:root {\n${lines.map((line) => `  ${line};`).join("\n")}\n}\n`
+        : "";
       // Live, the same block is scoped to the preview, which re-declares the kit's
       // derived tokens (ThemeBuilder.astro) so they recompute there; the copy stays :root.
       output.textContent = css.replace(":root", `.${PREVIEW}`);
@@ -193,7 +263,7 @@ class ThemeBuilder extends ZazzElement {
       if (shadowOut) shadowOut.value = `${q<HTMLInputElement>("#tb-shadow")?.value ?? 0}°`;
       // The collapsed bar's chips mirror the controls.
       for (const chip of this.querySelectorAll<HTMLElement>("[data-theme-chip]")) {
-        const input = q<HTMLInputElement>(`#${chip.dataset.themeChip}`);
+        const input = q<Field>(`#${chip.dataset.themeChip}`);
         if (!input) continue;
         const value = chip.querySelector<HTMLElement>("[data-theme-chip-value]");
         if (value) value.textContent = CHIP_FORMAT[input.id]?.(input.value) ?? input.value;
@@ -254,6 +324,16 @@ class ThemeBuilder extends ZazzElement {
       },
       { signal },
     );
+    // A combobox commits with `change` on its hidden input, not `input`, and
+    // a select driven by script may fire only `change` too.
+    form.addEventListener(
+      "change",
+      () => {
+        render();
+        save();
+      },
+      { signal },
+    );
     // A reset restores the fields after the event, so render on the next task.
     form.addEventListener(
       "reset",
@@ -294,6 +374,7 @@ class ThemeBuilder extends ZazzElement {
   protected teardown(): void {
     const output = this.querySelector("style[data-theme-output]");
     if (output) output.textContent = "";
+    document.head.querySelector("link[data-theme-fonts]")?.remove();
   }
 }
 

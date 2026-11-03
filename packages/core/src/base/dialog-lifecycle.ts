@@ -127,7 +127,10 @@ const initDialogLifecycle: InitDialogLifecycleFn = function () {
       }
     }
   });
-  observer.observe(document.body, {
+  // The root, not <body>: swap navigation (base/navigation.ts) replaces the
+  // whole <body>, and an observer on the old one would watch nothing after
+  // the first in-site navigation. <html> stays put for the page's lifetime.
+  observer.observe(document.documentElement, {
     attributes: true,
     attributeFilter: ["open"],
     subtree: true,

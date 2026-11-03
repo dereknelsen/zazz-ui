@@ -204,7 +204,10 @@ class UiDebug extends ZazzElement {
         report();
       });
     });
-    observer.observe(document.body, {
+    // The root, not <body>: swap navigation replaces the whole <body>, and a
+    // persisted <ui-debug> would otherwise watch the old one. `report` reads
+    // `document.body` on each run, so it always audits the current page.
+    observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["style", "data-ui"],
       childList: true,

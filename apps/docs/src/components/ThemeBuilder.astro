@@ -22,6 +22,14 @@ import {
   X,
 } from "@lucide/astro";
 import { species } from "../lib/fieldnotes.ts";
+import {
+  LOCAL_FONTS,
+  SCALE_STEPS,
+  pickGoogleFonts,
+  type FontCategory,
+  type FontOption,
+  type GoogleFontItem,
+} from "../lib/fonts.ts";
 import { STOPS, toHex } from "../lib/palette.ts";
 import AlertSettings from "./fieldnotes/AlertSettings.astro";
 import LifeList from "./fieldnotes/LifeList.astro";
@@ -46,7 +54,73 @@ const defaults = {
   spacing: 0.25,
   radius: 1,
   shadow: 0,
+  // --typeset-scale-min / --typeset-scale-max.
+  scaleMin: 1.125,
+  scaleMax: 1.25,
 };
+
+/**
+ * The Google families on offer: the ten most popular of each category the kit
+ * has a role for, fetched once at build with the server-side key. A fork
+ * without the key, or an API that fails, gets the local stacks only. The key
+ * is never logged and never reaches the page: only names and weights do.
+ */
+async function googleFonts(): Promise<FontOption[]> {
+  const key = import.meta.env.GOOGLE_FONTS_API_KEY;
+  if (!key) return [];
+  try {
+    const url = new URL("https://www.googleapis.com/webfonts/v1/webfonts");
+    url.searchParams.set("sort", "popularity");
+    url.searchParams.set("key", key);
+    // The key is restricted to the site's referrers, so the build introduces
+    // itself as the site (there is no browser here to do it).
+    const response = await fetch(url, {
+      headers: { Referer: Astro.site?.href ?? "" },
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = (await response.json()) as { items?: GoogleFontItem[] };
+    return pickGoogleFonts(data.items ?? []);
+  } catch (error) {
+    console.warn(
+      `ThemeBuilder: Google Fonts unavailable (${error instanceof Error ? error.message : "error"}); offering local fonts only.`,
+    );
+    return [];
+  }
+}
+
+const google = await googleFonts();
+
+/** The combobox groups: the Google families by category, or the local stacks when there are none. */
+const CATEGORY_LABEL: Record<FontCategory, string> = {
+  "sans-serif": "Sans serif",
+  serif: "Serif",
+  monospace: "Monospace",
+};
+const fontGroups =
+  google.length > 0
+    ? (["sans-serif", "serif", "monospace"] as const)
+        .map((category) => ({
+          label: CATEGORY_LABEL[category],
+          fonts: google.filter((f) => f.category === category),
+        }))
+        .filter((group) => group.fonts.length > 0)
+    : [{ label: "System", fonts: LOCAL_FONTS }];
+
+/** The one font control; its family goes to headings and body text alike. */
+const font = { label: "Font", default: "Default (system sans)" };
+
+const scales = [
+  {
+    name: "scale-min",
+    label: "Scale at narrow widths",
+    value: defaults.scaleMin,
+  },
+  {
+    name: "scale-max",
+    label: "Scale at wide widths",
+    value: defaults.scaleMax,
+  },
+] as const;
 
 const palettes = [
   {
@@ -71,6 +145,9 @@ const chips = [
     label: "Neutral",
     swatch: "var(--color-neutral-500)",
   },
+  { id: "tb-font", label: "Font" },
+  { id: "tb-scale-min", label: "Scale min" },
+  { id: "tb-scale-max", label: "Scale max" },
   { id: "tb-spacing", label: "Spacing" },
   { id: "tb-radius", label: "Radius" },
   { id: "tb-elevation", label: "Card elevation" },
@@ -275,7 +352,7 @@ const previewScope = `@layer zazz.variables {
       data-theme-panel
       style="
         --display: none;
-        --display--lg: block;
+        --display--lg: flex-col;
       "
     >
       <form
@@ -284,8 +361,10 @@ const previewScope = `@layer zazz.variables {
         aria-labelledby="tb-title"
         style="
           --gap: 4;
+          --h: calc(100vb - var(--ui-header-height, 0rem) - (12 * var(--spacing)));
           --text: var(--color-card-foreground);
           --bg: var(--color-card);
+          --overflow-y: auto;
         "
       >
         <header
@@ -380,6 +459,155 @@ const previewScope = `@layer zazz.variables {
           ))
         }
 
+        <hr data-ui="separator" style="--my: 2" />
+
+        <div data-ui="field">
+          <label data-field-slot="label" for="tb-font">
+            {font.label}
+          </label>
+          <ui-combobox>
+            <input
+              type="hidden"
+              name="font"
+              value=""
+              data-default=""
+              data-combobox-slot="value"
+              data-theme-font
+            />
+            <div data-combobox-slot="control">
+              <input
+                id="tb-font"
+                type="text"
+                role="combobox"
+                aria-expanded="false"
+                aria-autocomplete="list"
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <button
+                type="button"
+                data-combobox-slot="trigger"
+                tabindex="-1"
+                aria-label="Show fonts"></button>
+            </div>
+            <div
+              data-combobox-slot="panel"
+              data-popover-side="bottom"
+              data-popover-align="start"
+              popover="manual"
+            >
+              <div
+                role="listbox"
+                data-combobox-slot="list"
+                aria-label={`${font.label} options`}
+              >
+                <div
+                  role="option"
+                  data-combobox-slot="item"
+                  data-ui="button"
+                  data-button-variant="ghost"
+                  data-combobox-value=""
+                  aria-selected="true"
+                  style="--justify: start"
+                >
+                  {font.default}
+                </div>
+                {
+                  fontGroups.map((group, i) => (
+                    <div
+                      role="group"
+                      data-combobox-slot="group"
+                      aria-labelledby={`tb-font-group-${i}`}
+                    >
+                      <span
+                        id={`tb-font-group-${i}`}
+                        data-combobox-slot="group-label"
+                        data-ui="text-eyebrow"
+                        style="
+                          --pl: 3;
+                          --mt: 2;
+                          --text: var(--color-muted-foreground);
+                        "
+                      >
+                        {group.label}
+                      </span>
+                      {group.fonts.map((font) => (
+                        <div
+                          role="option"
+                          data-combobox-slot="item"
+                          data-ui="button"
+                          data-button-variant="ghost"
+                          data-combobox-value={font.value}
+                          data-font-stack={font.stack}
+                          data-font-google={font.google}
+                          data-font-weights={font.weights?.join(";")}
+                          style="--justify: start"
+                        >
+                          {font.label}
+                        </div>
+                      ))}
+                    </div>
+                  ))
+                }
+              </div>
+              <p
+                data-combobox-slot="empty"
+                data-ui="text-sm"
+                style="--text: var(--color-muted-foreground)"
+              >
+                No matches.
+              </p>
+            </div>
+          </ui-combobox>
+        </div>
+
+        {
+          scales.map((s) => (
+            <div data-ui="field">
+              <label data-field-slot="label" for={`tb-${s.name}`}>
+                {s.label}
+              </label>
+              <select
+                data-ui="select"
+                id={`tb-${s.name}`}
+                name={s.name}
+                data-default={s.value}
+                data-theme-number={s.name}
+              >
+                <button>
+                  <selectedcontent
+                    style="
+                      --display: flex;
+                      --items: center;
+                      --gap: 0.35em;
+                    "
+                  />
+                </button>
+                {SCALE_STEPS.map((step) => (
+                  <option value={step.value} selected={step.value === s.value}>
+                    <span class="fieldnotes__num">{step.value}</span>
+                    {step.name && (
+                      <span style="--text: var(--color-muted-foreground)">
+                        {step.name}
+                      </span>
+                    )}
+                  </option>
+                ))}
+              </select>
+              {s.name === "scale-max" && (
+                <div data-field-slot="description">
+                  <span data-field-slot="hint">
+                    Each heading step multiplies by the scale, which grows from
+                    the narrow value to the wide one across the fluid range.
+                  </span>
+                </div>
+              )}
+            </div>
+          ))
+        }
+
+        <hr data-ui="separator" style="--my: 2" />
+
         <div data-ui="field">
           <label data-field-slot="label" for="tb-spacing">Spacing</label>
           <label data-ui="input-group">
@@ -434,6 +662,8 @@ const previewScope = `@layer zazz.variables {
             data-theme-number="radius"
           />
         </div>
+
+        <hr data-ui="separator" style="--my: 2" />
 
         <div data-ui="field">
           <label
@@ -507,6 +737,8 @@ const previewScope = `@layer zazz.variables {
             >
           </div>
         </div>
+
+        <hr data-ui="separator" style="--my: 2" />
 
         <div
           style="
@@ -628,7 +860,7 @@ const previewScope = `@layer zazz.variables {
     <style is:inline data-theme-output></style>
   </theme-builder>
 
-  <!-- --shadow-tint at the kit's default makes the kit re-declare its shadow tokens here, so they follow the preview's spacing and light angle. -->
+  <!-- --shadow-tint at the kit's default makes the kit re-declare its shadow tokens here, so they follow the preview's spacing and light angle. The body family is applied on <html> and inherited resolved, so the wrapper reads the token again for the preview's font. -->
   <div
     class="fieldnotes__preview"
     data-ui="scroll-fade"
@@ -638,6 +870,7 @@ const previewScope = `@layer zazz.variables {
       --py: 6;
       --pl: var(--gutters);
       --pr: 0;
+      --font-family: var(--font-family-body);
       --bg: var(--color-background);
       --shadow-tint: var(--color-shadow);
       --overflow-x: auto;
@@ -652,6 +885,7 @@ const previewScope = `@layer zazz.variables {
         --grid-flow: dense;
         --items: start;
         --grid-cols: 4;
+        --pr: 6;
         --gap-x: 6;
         --gap-y: 0;
         --w: 84rem;

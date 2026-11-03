@@ -9,3 +9,5 @@ node_modules/
 .env.production
 # macOS-specific files
 .DS_Store
+# the example is tracked; the root .env* rule hides the real one
+!.env.example

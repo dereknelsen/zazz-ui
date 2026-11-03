@@ -161,6 +161,23 @@ describe("initDialogLifecycle", () => {
     });
   });
 
+  it("keeps watching after a swap navigation replaces the <body>", async () => {
+    // navigation.ts swaps the whole <body> (current.before(next); current.remove()).
+    const next = document.createElement("body");
+    const dialog = document.createElement("dialog");
+    next.append(dialog);
+    document.body.before(next);
+    document.body.nextElementSibling?.remove();
+    expect(document.body).toBe(next);
+
+    let count = 0;
+    dialog.addEventListener("zazz:dialog-open", () => count++);
+    dialog.setAttribute("open", "");
+    await flush();
+
+    expect(count).toBe(1);
+  });
+
   it("is idempotent: a second init does not double-emit", async () => {
     initDialogLifecycle();
     const { dialog } = mount();
