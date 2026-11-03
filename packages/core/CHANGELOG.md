@@ -10,6 +10,14 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 
 - Fix: a `<ui-debug>` kept across a swap navigation went on watching the old `<body>`, so it never re-audited the new page. It now watches the document root and audits the current page on every run.
 
+### button
+
+- Fix: the `ghost` variant's hover surface is `--color-muted` again, and its active state deepens that same tint (one and a half times its alpha) instead of an opaque mix of foreground into background. A ghost button over a card or an image now shows what is beneath it, and the tint follows a retheme of `--color-muted`.
+
+### badge
+
+- Fix: the `ghost` variant's hover and active surfaces match the button's: `--color-muted`, deepened on press, translucent over whatever is beneath.
+
 ### combobox
 
 - New `value` property on `<ui-combobox>`, mirroring `<select>.value`: reading it gives the selected row's form value (the empty string when nothing is selected); setting it moves the selection, the label, and the hidden input without focusing the input or dispatching `change`. A value no row carries clears the selection; in the multiselect variant the value becomes the whole selection.

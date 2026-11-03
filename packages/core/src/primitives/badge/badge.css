@@ -404,12 +404,9 @@
 
   :where([data-ui~="badge"][data-badge-variant="ghost"]) {
     --_badge-bg: transparent;
-    /* the muted variant's opaque surface */
-    --_badge-bg--hover: light-dark(
-      color-mix(in srgb, var(--color-foreground) 5%, var(--color-background)),
-      color-mix(in srgb, var(--color-foreground) 10%, var(--color-background))
-    );
-    --_badge-bg--active: oklch(from var(--_badge-bg--hover) calc(l - 0.025) c h);
+    /* the translucent muted role: shows the surface beneath and follows a retheme */
+    --_badge-bg--hover: var(--color-muted);
+    --_badge-bg--active: oklch(from var(--_badge-bg--hover) l c h / calc(alpha * 1.5));
 
     --_badge-text: var(--color-foreground);
     --_badge-text--hover: var(--color-foreground);
