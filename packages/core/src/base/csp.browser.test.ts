@@ -98,3 +98,49 @@ describe("CSP fallback", () => {
     expect(padding(doc.querySelector("[data-off]")!)).toBe(0);
   });
 });
+
+/** Before the runtime starts, or where it never loads: only rules that match the attribute's text apply. */
+describe("under a blocked style attribute, with no runtime", () => {
+  const computed = (selector: string, property: string) =>
+    doc.defaultView!.getComputedStyle(doc.querySelector(selector)!).getPropertyValue(property);
+
+  beforeEach(() =>
+    load(`
+      <div data-pile style="--display: grid-pile"><i data-kid>a</i><i>b</i></div>
+      <div data-pile-md style="--display: block; --display--md: grid-pile"><i data-kid-md>a</i></div>
+      <div data-pile-ended style="--display: grid-pile; --display--md: block"><i data-kid-ended>a</i></div>
+      <div data-cut style="--text-wrap: truncate">long text</div>
+      <div data-cut-md style="--text-wrap--md: truncate">long text</div>
+      <div data-cut-ended style="--text-wrap: truncate; --text-wrap--md: none">long text</div>
+      <span data-sr style="--sr: only">hidden</span>
+    `),
+  );
+  afterEach(() => frame.remove());
+
+  it("a pile applies at the base and at a tier, and ends at a tier", () => {
+    expect(computed("[data-pile]", "display")).toBe("grid");
+    expect(computed("[data-pile]", "align-items")).toBe("center");
+    expect(computed("[data-kid]", "grid-row-start")).toBe("1");
+    expect(computed("[data-pile-md]", "display")).toBe("grid");
+    expect(computed("[data-kid-md]", "grid-row-start")).toBe("1");
+    // the tier's own display is a value only the runtime can read; the pile still ends
+    expect(computed("[data-pile-ended]", "display")).toBe("grid");
+    expect(computed("[data-pile-ended]", "align-items")).toBe("normal");
+    expect(computed("[data-kid-ended]", "grid-row-start")).toBe("auto");
+  });
+
+  it("truncate applies whole at the base and at a tier, and ends at a tier", () => {
+    for (const selector of ["[data-cut]", "[data-cut-md]"]) {
+      expect(computed(selector, "text-wrap-mode"), selector).toBe("nowrap");
+      expect(computed(selector, "overflow-x"), selector).toBe("hidden");
+      expect(computed(selector, "text-overflow"), selector).toBe("ellipsis");
+    }
+    expect(computed("[data-cut-ended]", "text-wrap-mode")).toBe("wrap");
+    expect(computed("[data-cut-ended]", "overflow-x")).toBe("visible");
+  });
+
+  it("--sr hides", () => {
+    expect(computed("[data-sr]", "position")).toBe("absolute");
+    expect(computed("[data-sr]", "inline-size")).toBe("1px");
+  });
+});

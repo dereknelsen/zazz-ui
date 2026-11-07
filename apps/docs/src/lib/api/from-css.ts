@@ -56,6 +56,16 @@ const COMPOSITES: FromCssRow[] = [
     note: "a color, a number (px), or a length; --border-y, --border-t, --border-r, --border-b, --border-l for the other sides",
   },
   {
+    property: "border (between children)",
+    utilities: ["--divide", "--divide-x", "--divide-y"],
+    note: "on the container: a color, a number (px), a length, or none; a child's own border wins",
+  },
+  {
+    property: "text-overflow",
+    utilities: ["--text-wrap: truncate"],
+    note: "with overflow: hidden and no wrapping; --line-clamp clips to more lines",
+  },
+  {
     property: "outline (focus)",
     utilities: ["--focus-ring"],
     note: "a primitive's focus ring and a plain element's focus outline: a signed width, negative keeps it inside",

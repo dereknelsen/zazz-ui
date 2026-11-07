@@ -105,9 +105,9 @@ describe("breakpoint queries", () => {
     for (const [, selector] of rules.matchAll(/^\s*([^@\s][^{;\n]*)\{/gm))
       if (selector!.includes("[style*="))
         expect(selector!.trim(), selector).toMatch(/^:where\(\[style\*="[^"]*"\]\)$/);
-    // the slots don't inherit, so a gap change restyles only the children
+    // the slots inherit: WebKit reuses a non-inheriting `inherit` across parents
     expect(registrations(UTILITIES.find((utility) => utility.name === "space-y")!)).toContain(
-      '@property --_space-y-a { syntax: "*"; inherits: false; }',
+      '@property --_space-y-a { syntax: "*"; inherits: true; }',
     );
   });
 });

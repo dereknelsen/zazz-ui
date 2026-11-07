@@ -110,4 +110,15 @@ describe("--space-x and --space-y", () => {
     await userEvent.unhover(root);
     expect(margins(own, "margin-inline-end")[0]).toBeCloseTo(scale(1), 1);
   });
+
+  it("sibling containers each keep their own gap", () => {
+    const root = mount(`<div>
+      <div data-a style="--space-y: 2px"><p>a</p><p>b</p></div>
+      <div data-b style="--space-y: 3px"><p>a</p><p>b</p></div>
+      <div data-c style="--space-y: 7px"><p>a</p><p>b</p></div>
+    </div>`);
+    const gap = (selector: string) =>
+      style(root.querySelector(selector)!.firstElementChild!, "margin-block-end");
+    expect([gap("[data-a]"), gap("[data-b]"), gap("[data-c]")]).toEqual(["2px", "3px", "7px"]);
+  });
 });

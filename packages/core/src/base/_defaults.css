@@ -297,11 +297,6 @@
   :where(:is([style*="--text-wrap--"], [style*="--group-text-wrap--"]):not(:is(h1, [data-ui~="text-h1"]), :is(h2, [data-ui~="text-h2"]), :is(h3, [data-ui~="text-h3"]), :is(h4, [data-ui~="text-h4"]), :is(h5, [data-ui~="text-h5"]), :is(h6, [data-ui~="text-h6"]), [data-ui~="text-display"], body)) {
     text-wrap: var(--_text-wrap-b);
   }
-  :where([style*="text-wrap"][style*="truncate"]) {
-    --_text-wrap-clip: var(--_text-wrap-resolved, none);
-    overflow: var(--_text-wrap-clip);
-    text-overflow: ellipsis;
-  }
 
 
   :where(:is([style*="--text-decoration--"], [style*="--group-text-decoration--"]):not([data-ui~="text-link"], abbr[title])) {
@@ -431,13 +426,6 @@
 
 
 
-
-  :where([style*="grid-pile"]) {
-    place-items: var(--_place-items-resolved, var(--_pile-resolved));
-  }
-  :where([style*="grid-pile"][style*="--items--"]) {
-    align-items: var(--_items-resolved, var(--_pile-resolved));
-  }
 
   :where(:is(:is([style*="--shadow--"], [style*="--ring--"], [style*="--ring-color--"], [style*="--ring-offset--"], [style*="--ring-offset-color--"], [style*="--elevation--"]), :is([style*="--group-shadow--"], [style*="--group-ring--"], [style*="--group-ring-color--"], [style*="--group-ring-offset--"], [style*="--group-ring-offset-color--"], [style*="--group-elevation--"])):not([popover], dialog, input[role="switch"], input[type="checkbox"]:not([role="switch"]))) {
     box-shadow: var(--_focus-shadow, 0 0 #0000), 0 0 0 calc(abs(var(--_ring-offset-w, 0px)) * (1 - max(0, -1 * sign(var(--_ring-w, 0px))))) var(--_ring-offset-color-resolved, transparent), 0 0 0 calc((abs(var(--_ring-offset-w, 0px)) + abs(var(--_ring-w, 0px))) * (1 - max(0, -1 * sign(var(--_ring-w, 0px))))) var(--_ring-color-resolved, var(--color-ring)), inset 0 0 0 calc(abs(var(--_ring-offset-w, 0px)) * max(0, -1 * sign(var(--_ring-w, 0px)))) var(--_ring-offset-color-resolved, transparent), inset 0 0 0 calc((abs(var(--_ring-offset-w, 0px)) + abs(var(--_ring-w, 0px))) * max(0, -1 * sign(var(--_ring-w, 0px)))) var(--_ring-color-resolved, var(--color-ring)), var(--_shadow-resolved, var(--_elevation-shadow, 0 0 #0000));

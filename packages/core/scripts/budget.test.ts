@@ -43,7 +43,7 @@ describe("utilities layer budget", () => {
     expect(gated).toBeGreaterThan(0);
   });
 
-  it("claim 16 (ratchet): the layer stays under 1,400 [style*=] substrings", () => {
+  it("claim 16 (ratchet): the layer stays under 1,425 [style*=] substrings", () => {
     // Style recalc cost is the substring count, not the byte count: every
     // [style*=] rule is tested on every element with a style attribute, and each
     // test scans the whole attribute (Blink's rolling-hash find, ~0.3 µs per
@@ -58,7 +58,10 @@ describe("utilities layer budget", () => {
     // style, inside the run-to-run spread); 1,287 with the anchor utilities; 1,294 with --position-area; 1,262 once the tier-only rules moved to `@layer defaults` (ADR-0017) and stopped matching the base; 1,300 with the shorthand-tier rules (`--p: 4; --px--md: 1`, and per breakpoint for `--basis` / `--shrink` under `--flex`); 1,324 with --filter, --backdrop-filter, and --mix-blend; 1,316 with --radius, --elevation, and the `none` / `full` aliases, less the --shadow size words. 1,334 with `auto` on --top and --bottom; 1,376 with `auto` on all four side insets, and the limit raised to 1,400 (2026-10-18; the axis and --inset shorthands with it too measured 1,439). A no-space twin for every exact-value gate (`--w:auto`) measured
     // 2026-10-13 at 1,632 substrings and +20 % initial style (1.94 s to 2.33 s), and was dropped.
     const substrings = (all.match(/\[style\*=/g) ?? []).length;
-    expect(substrings).toBeLessThanOrEqual(1400);
+    // 1,424 with --text-wrap: truncate as exact-value rules at every tier, and the limit raised
+    // to 1,425 (2026-11-06): a var-based overflow would wipe a primitive's, and only literal rules
+    // apply under a blocked style attribute. Measured +2.3 % initial style on a 24k-element page.
+    expect(substrings).toBeLessThanOrEqual(1425);
   });
 
   it("claim 15 (ratchet): the generated layer stays under 26 KB with Brotli", () => {
@@ -81,7 +84,7 @@ describe("utilities layer budget", () => {
     // 23.1 KB with --elevation in the box-shadow composite (the filter composite and --filter's
     // `none` alias gone) and a spread term on every shadow layer.
     // 24.2 KB with state tiers on --z; 24.7 KB with --space-x and --space-y (states and breakpoints).
-    // 25.6 KB with --sr, --animation, --text-wrap states, --divide, and --container (the switches
+    // 25.9 KB with --sr, --animation, --text-wrap states, --divide, and --container (the switches
     // these replaced were never counted here: _switches.css alone was 0.4 KB of this).
     expect(compressed).toBeLessThan(26 * 1024);
   });

@@ -103,6 +103,264 @@
     --_text-wrap: var(--text-wrap);
     text-wrap: var(--_text-wrap-b);
   }
+  :where([style*="--text-wrap--stuck: truncate"]) {
+    --_text-wrap-stuck: var(--_stuck-on) truncate;
+    --_text-wrap-stuck-clip: var(--_stuck-on) hidden;
+    --_text-wrap-stuck-end: var(--_stuck-on) ellipsis;
+    overflow: var(--_text-wrap-stuck-clip, revert-layer);
+    text-overflow: var(--_text-wrap-stuck-end, revert-layer);
+  }
+  :where([style*="--text-wrap: truncate"]) {
+    --_text-wrap: truncate;
+    text-wrap: var(--_text-wrap-b);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  @container (width >= 40rem) {
+    :where([style*="--text-wrap--sm:"]) {
+      --_text-wrap-sm: var(--text-wrap--sm, wrap);
+      overflow: revert-layer;
+      text-overflow: revert-layer;
+    }
+    :where([style*="--text-wrap--sm: truncate"]) {
+      --_text-wrap-sm: truncate;
+      text-wrap: var(--_text-wrap-b);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  @container (width >= 48rem) {
+    :where([style*="--text-wrap--md:"]) {
+      --_text-wrap-md: var(--text-wrap--md, wrap);
+      overflow: revert-layer;
+      text-overflow: revert-layer;
+    }
+    :where([style*="--text-wrap--md: truncate"]) {
+      --_text-wrap-md: truncate;
+      text-wrap: var(--_text-wrap-b);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  @container (width >= 64rem) {
+    :where([style*="--text-wrap--lg:"]) {
+      --_text-wrap-lg: var(--text-wrap--lg, wrap);
+      overflow: revert-layer;
+      text-overflow: revert-layer;
+    }
+    :where([style*="--text-wrap--lg: truncate"]) {
+      --_text-wrap-lg: truncate;
+      text-wrap: var(--_text-wrap-b);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  @container (width >= 80rem) {
+    :where([style*="--text-wrap--xl:"]) {
+      --_text-wrap-xl: var(--text-wrap--xl, wrap);
+      overflow: revert-layer;
+      text-overflow: revert-layer;
+    }
+    :where([style*="--text-wrap--xl: truncate"]) {
+      --_text-wrap-xl: truncate;
+      text-wrap: var(--_text-wrap-b);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  @container (width >= 96rem) {
+    :where([style*="--text-wrap--2xl:"]) {
+      --_text-wrap-2xl: var(--text-wrap--2xl, wrap);
+      overflow: revert-layer;
+      text-overflow: revert-layer;
+    }
+    :where([style*="--text-wrap--2xl: truncate"]) {
+      --_text-wrap-2xl: truncate;
+      text-wrap: var(--_text-wrap-b);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  :where(:where(ui-group, [data-ui~="group"]):is([open], :popover-open, [aria-expanded="true"]) [style*="--group-text-wrap--open:"]) {
+    --_text-wrap-g-open: var(--group-text-wrap--open, wrap);
+    overflow: revert-layer;
+    text-overflow: revert-layer;
+  }
+  :where(:where(ui-group, [data-ui~="group"]):is([open], :popover-open, [aria-expanded="true"]) [style*="--group-text-wrap--open: truncate"]) {
+    --_text-wrap-g-open: truncate;
+    text-wrap: var(--_text-wrap-b);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  :where(:where(ui-group, [data-ui~="group"]):is([aria-current]:not([aria-current="false"])) [style*="--group-text-wrap--current:"]) {
+    --_text-wrap-g-current: var(--group-text-wrap--current, wrap);
+    overflow: revert-layer;
+    text-overflow: revert-layer;
+  }
+  :where(:where(ui-group, [data-ui~="group"]):is([aria-current]:not([aria-current="false"])) [style*="--group-text-wrap--current: truncate"]) {
+    --_text-wrap-g-current: truncate;
+    text-wrap: var(--_text-wrap-b);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  :where(:where(ui-group, [data-ui~="group"]):is(:checked, [aria-checked="true"]) [style*="--group-text-wrap--checked:"]) {
+    --_text-wrap-g-checked: var(--group-text-wrap--checked, wrap);
+    overflow: revert-layer;
+    text-overflow: revert-layer;
+  }
+  :where(:where(ui-group, [data-ui~="group"]):is(:checked, [aria-checked="true"]) [style*="--group-text-wrap--checked: truncate"]) {
+    --_text-wrap-g-checked: truncate;
+    text-wrap: var(--_text-wrap-b);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  @media (hover: hover) {
+    :where(:where(ui-group, [data-ui~="group"]):hover [style*="--group-text-wrap--hover:"]) {
+      --_text-wrap-g-hover: var(--group-text-wrap--hover, wrap);
+      overflow: revert-layer;
+      text-overflow: revert-layer;
+    }
+    :where(:where(ui-group, [data-ui~="group"]):hover [style*="--group-text-wrap--hover: truncate"]) {
+      --_text-wrap-g-hover: truncate;
+      text-wrap: var(--_text-wrap-b);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  :where(:where(ui-group, [data-ui~="group"]):focus-within [style*="--group-text-wrap--focus-within:"]) {
+    --_text-wrap-g-focus-within: var(--group-text-wrap--focus-within, wrap);
+    overflow: revert-layer;
+    text-overflow: revert-layer;
+  }
+  :where(:where(ui-group, [data-ui~="group"]):focus-within [style*="--group-text-wrap--focus-within: truncate"]) {
+    --_text-wrap-g-focus-within: truncate;
+    text-wrap: var(--_text-wrap-b);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  :where(:where(ui-group, [data-ui~="group"]):focus-visible [style*="--group-text-wrap--focus-visible:"]) {
+    --_text-wrap-g-focus-visible: var(--group-text-wrap--focus-visible, wrap);
+    overflow: revert-layer;
+    text-overflow: revert-layer;
+  }
+  :where(:where(ui-group, [data-ui~="group"]):focus-visible [style*="--group-text-wrap--focus-visible: truncate"]) {
+    --_text-wrap-g-focus-visible: truncate;
+    text-wrap: var(--_text-wrap-b);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  :where(:where(ui-group, [data-ui~="group"]):active [style*="--group-text-wrap--active:"]) {
+    --_text-wrap-g-active: var(--group-text-wrap--active, wrap);
+    overflow: revert-layer;
+    text-overflow: revert-layer;
+  }
+  :where(:where(ui-group, [data-ui~="group"]):active [style*="--group-text-wrap--active: truncate"]) {
+    --_text-wrap-g-active: truncate;
+    text-wrap: var(--_text-wrap-b);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  :where(:where(ui-group, [data-ui~="group"]):is(:disabled, [aria-disabled="true"]) [style*="--group-text-wrap--disabled:"]) {
+    --_text-wrap-g-disabled: var(--group-text-wrap--disabled, wrap);
+    overflow: revert-layer;
+    text-overflow: revert-layer;
+  }
+  :where(:where(ui-group, [data-ui~="group"]):is(:disabled, [aria-disabled="true"]) [style*="--group-text-wrap--disabled: truncate"]) {
+    --_text-wrap-g-disabled: truncate;
+    text-wrap: var(--_text-wrap-b);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  :where(:is([open], :popover-open, [aria-expanded="true"])[style*="--text-wrap--open:"]) {
+    --_text-wrap-open: var(--text-wrap--open, wrap);
+    overflow: revert-layer;
+    text-overflow: revert-layer;
+  }
+  :where(:is([open], :popover-open, [aria-expanded="true"])[style*="--text-wrap--open: truncate"]) {
+    --_text-wrap-open: truncate;
+    text-wrap: var(--_text-wrap-b);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  :where(:is([aria-current]:not([aria-current="false"]))[style*="--text-wrap--current:"]) {
+    --_text-wrap-current: var(--text-wrap--current, wrap);
+    overflow: revert-layer;
+    text-overflow: revert-layer;
+  }
+  :where(:is([aria-current]:not([aria-current="false"]))[style*="--text-wrap--current: truncate"]) {
+    --_text-wrap-current: truncate;
+    text-wrap: var(--_text-wrap-b);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  :where(:is(:checked, [aria-checked="true"])[style*="--text-wrap--checked:"]) {
+    --_text-wrap-checked: var(--text-wrap--checked, wrap);
+    overflow: revert-layer;
+    text-overflow: revert-layer;
+  }
+  :where(:is(:checked, [aria-checked="true"])[style*="--text-wrap--checked: truncate"]) {
+    --_text-wrap-checked: truncate;
+    text-wrap: var(--_text-wrap-b);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  @media (hover: hover) {
+    :where(:hover[style*="--text-wrap--hover:"]) {
+      --_text-wrap-hover: var(--text-wrap--hover, wrap);
+      overflow: revert-layer;
+      text-overflow: revert-layer;
+    }
+    :where(:hover[style*="--text-wrap--hover: truncate"]) {
+      --_text-wrap-hover: truncate;
+      text-wrap: var(--_text-wrap-b);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  :where(:focus-within[style*="--text-wrap--focus-within:"]) {
+    --_text-wrap-focus-within: var(--text-wrap--focus-within, wrap);
+    overflow: revert-layer;
+    text-overflow: revert-layer;
+  }
+  :where(:focus-within[style*="--text-wrap--focus-within: truncate"]) {
+    --_text-wrap-focus-within: truncate;
+    text-wrap: var(--_text-wrap-b);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  :where(:focus-visible[style*="--text-wrap--focus-visible:"]) {
+    --_text-wrap-focus-visible: var(--text-wrap--focus-visible, wrap);
+    overflow: revert-layer;
+    text-overflow: revert-layer;
+  }
+  :where(:focus-visible[style*="--text-wrap--focus-visible: truncate"]) {
+    --_text-wrap-focus-visible: truncate;
+    text-wrap: var(--_text-wrap-b);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  :where(:active[style*="--text-wrap--active:"]) {
+    --_text-wrap-active: var(--text-wrap--active, wrap);
+    overflow: revert-layer;
+    text-overflow: revert-layer;
+  }
+  :where(:active[style*="--text-wrap--active: truncate"]) {
+    --_text-wrap-active: truncate;
+    text-wrap: var(--_text-wrap-b);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  :where(:is(:disabled, [aria-disabled="true"])[style*="--text-wrap--disabled:"]) {
+    --_text-wrap-disabled: var(--text-wrap--disabled, wrap);
+    overflow: revert-layer;
+    text-overflow: revert-layer;
+  }
+  :where(:is(:disabled, [aria-disabled="true"])[style*="--text-wrap--disabled: truncate"]) {
+    --_text-wrap-disabled: truncate;
+    text-wrap: var(--_text-wrap-b);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
   :where([style*="--line-clamp:"], [style*="--line-clamp--"]) {
     --_line-clamp-resolved: var(--_line-clamp-2xl, var(--_line-clamp-xl, var(--_line-clamp-lg, var(--_line-clamp-md, var(--_line-clamp-sm, var(--_line-clamp))))));

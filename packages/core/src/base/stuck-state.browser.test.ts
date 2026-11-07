@@ -54,6 +54,25 @@ describe.skipIf(!supported)("stuck state", () => {
     expect(style(el, "opacity")).toBe("1");
   });
 
+  it("a stuck --text-wrap value ends truncation's wrapping", async () => {
+    const el = page("--top: 0", "--text-wrap: truncate; --text-wrap--stuck: balance");
+    expect(style(el, "text-wrap-mode")).toBe("nowrap");
+    await scrollTo(200);
+    expect(style(el, "text-wrap-mode")).toBe("wrap");
+    expect(style(el, "text-wrap-style")).toBe("balance");
+  });
+
+  it("--text-wrap--stuck: truncate clips only while stuck, leaving a primitive alone at rest", async () => {
+    const card = mount(`<div style="block-size: 300vh">
+      <header style="--position: sticky; --top: 0"><div data-ui="card" data-card style="--text-wrap--stuck: truncate">x</div></header>
+    </div>`).querySelector("[data-card]")!;
+    expect(style(card, "overflow-x")).toBe("clip");
+    await scrollTo(200);
+    expect(style(card, "overflow-x")).toBe("hidden");
+    expect(style(card, "text-overflow")).toBe("ellipsis");
+    expect(style(card, "text-wrap-mode")).toBe("nowrap");
+  });
+
   it("sits below every other state: hover beats stuck", async () => {
     const el = page(
       "--top: 0",

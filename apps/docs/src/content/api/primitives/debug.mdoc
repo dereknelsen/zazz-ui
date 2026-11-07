@@ -19,6 +19,8 @@ Add it once, at the end of `<body>`, in the pages you develop on. It audits the 
 <ui-debug data-debug-domains="localhost, staging.example.com"></ui-debug>
 ```
 
+When you upgrade, the audit also reports `data-ui` tokens the kit has retired and names each replacement. A leftover `data-ui="sr-only"` matches no rule, so without it the hidden text just appears on the page.
+
 ## Behavior
 
 {% behavior primitive="debug" /%}

@@ -1,6 +1,6 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
-## Unreleased
+## 0.10.0 (2026-11-06)
 
 ### base
 
@@ -22,13 +22,20 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 - **BREAKING** Content that loses its `style` attribute to a sanitizer loses these too: switches survived that, and utilities don't. Text marked `--sr: only` is visible on such a page, and nothing in the kit puts it back. Under a Content Security Policy that blocks the attribute, `--sr` and `--display: grid-pile` still apply, because their rules match the attribute text; the others wait for `base/csp.js` (ADR-0016 amendment).
 - The cascade gains a sublayer after `ui.utilities`: `@layer components, plugins, utilities, sr`. It holds `--sr` alone.
 - New `--sr`: `only` hides an element visually and keeps it in the accessibility tree, and a tier's `none` gives the element back its own styles (`--sr: only; --sr--md: none`). Breakpoints, no states.
-- New `grid-pile` keyword on `--display`: a grid with every direct child in one cell, centered. A child's own placement, `--place-items`, `--items`, and a primitive's own alignment win over it.
+- New `grid-pile` keyword on `--display`: a grid with every direct child in one cell, centered. It beats a primitive's own alignment while active; a child's own placement, `--place-items`, and `--items` win over it.
 - New `--isolation`: `isolate` or `auto`, with breakpoints.
-- `--text-wrap` takes `truncate` (one line, ending in an ellipsis) and `none` (plain wrapping), at breakpoints and states. A flex item also needs `--min-w: 0`, and a primitive keeps its own overflow. A multi-word value like `wrap balance` isn't supported.
+- `--text-wrap` takes `truncate` (one line, ending in an ellipsis) and `none` (plain wrapping), at breakpoints and states. It beats a primitive's own overflow while active, and `--overflow` wins over it. It also applies under a CSP that blocks `style`, with no JavaScript, as `--sr` and `grid-pile` do. A flex item also needs `--min-w: 0`. A multi-word value like `wrap balance` isn't supported.
 - New `--animation`, with breakpoints and states, takes any animation value. New tokens `--spin`, `--ping`, `--pulse`, `--bounce`, and `--default-animation` (`1s`, the default easing, `infinite`, so `spin var(--default-animation)` works). The keyframes `spin`, `ping`, `pulse`, and `bounce` sit in the lowest layer, so a page's own keyframes of the same name win. Reduced motion stops every `--animation` value.
 - **BREAKING** `--divide` no longer sizes a token; on its own it now draws both axes. `data-ui="divide-y" style="--divide: 2"` is `--divide-y: 2`.
 - New `--divide-x` and `--divide-y`. With `--divide`, all three take the `--border` grammar plus `none`, with breakpoints, and an axis beats `--divide`. A child's border utilities override the divider. `--divide: 1` on a single flex row draws a bottom border too, so use `--divide-x` there.
 - New `--container` (the `name / type` shorthand, or `none`), `--container-name`, and `--container-type`, with breakpoints. `--container: inline-size` sets a name, not a type. On a sticky element use the longhands: the shorthand drops the scroll-state type, and the audit warns.
+- `--space-x` and `--space-y` in Safari: sibling containers all took the first gap. The slots now inherit, so a gap change restyles the subtree.
+- **BREAKING** The status roles are surfaces now. `--color-info`, `--color-success`, `--color-warning`, and `--color-destructive` were solid inks with white `-foreground`; each is now a pale surface (dark in dark mode), and its `-foreground` is the same hue at 4.5:1 or better on it. Status text, borders, rings, and accents read `-foreground`. A solid status fill was `--bg: var(--color-destructive); --text: var(--color-destructive-foreground)`; for the same look now, use `--bg: var(--color-destructive-foreground); --text: var(--color-background)`.
+- The muted and faded foregrounds step one stop darker in dark mode (`--color-tint-700`, `--color-shade-700`), and the shade and tint alphas are solved for even perceived lightness steps, so a `--color-shade-500` backdrop is a touch lighter than before.
+- New `--radius-corner-shape` token (`superellipse(1.3)`), the curve every radius utility and primitive corner takes, and a `--corner-shape` utility for one element. `--radius: full` and the round controls (radio, switch, slider, progress, meter) stay `round`. Browsers without `corner-shape` keep plain rounded corners.
+- The spring easing is retuned to settle within 0.1% of its end, with `--spring-duration` at `0.25s` (was `0.333s`) and a closer `--bezier-easing` fallback; the fallback now applies through `@supports not (transition-timing-function: linear(0, 1))`, so the token holds one value per engine. Reduced motion eases out instead of in and out.
+- `h4` to `h6` take `text-wrap: pretty` only where the engine supports it (`@supports`), so Firefox keeps `wrap` instead of resetting the property.
+- The reset's inline `code` border is three hooks, `--code-border-width`, `--code-border-style`, and `--code-border-color`, in place of `--code-border`, and the chip has a hair of block padding.
 
 ### prose
 
@@ -37,6 +44,46 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 ### group
 
 - New primitive folder with a tag form, `<ui-group>`: a block by default, while `data-ui="group"` keeps its host's display. A custom element never matches `:disabled`, so `<ui-group>` takes `aria-disabled="true"` with a role that allows it.
+
+### button
+
+- Hooks `--ui-button-corner-shape` (defaults to the field's) and a `--_button-corner-shape` private a group can set. The disabled opacity is `0.6` (was `0.5`), and the default variant's hover is `--color-muted`, deepened on press, as the ghost variant's already was.
+
+### badge
+
+- Hook `--ui-badge-corner-shape`. A disabled badge (`disabled` or `aria-disabled="true"`) mutes like a disabled button, and the `outline` variant draws no shadow.
+
+### callout
+
+- Status variants use the role's surface and `-foreground` directly, like badge and button, instead of a tint mixed from the old solid ink. Hook `--ui-callout-corner-shape`.
+
+### switch
+
+- **BREAKING** `--ui-switch-thumb-bg--hover` is gone; the thumb no longer changes on hover. New `--ui-switch-thumb-bg--checked` colors it on. The thumb sits on `--color-card` with `--shadow-sm`, and the track's border and hover come from the `--ui-field-*` family, with hooks `--ui-switch-track-border-*`, `--ui-switch-track-radius`, `--ui-switch-thumb-radius`, `--ui-switch-corner-shape` (`round`), and `--ui-switch-cursor`.
+
+### tabs
+
+- The track and the indicator take a border: hooks `--ui-tabs-track-border-width` / `-style` / `-color` (1px solid `--color-border`) and `--ui-tabs-indicator-border-*` (transparent by default), with corner-shape hooks for both.
+
+### meter
+
+- The bar colors read the status `-foreground` roles, so they stay legible on the pale surfaces. Hook `--ui-meter-corner-shape` (round).
+
+### dialog
+
+- `--ui-dialog-h` keeps a keyword default while `--h` and its tiers take a scale number or a length; a keyword tier needs a base `--h`. Hook `--ui-dialog-corner-shape`.
+
+### textarea
+
+- `--ui-textarea-min-h` and `-max-h` take a scale number or a length, not a keyword. Hook `--ui-textarea-corner-shape`.
+
+### fields
+
+- Invalid fields show the destructive surface with `-foreground` text, border, and ring. New `--ui-field-corner-shape` and `--ui-field-group-corner-shape`, which input, select, textarea, otp, the input and password groups, tabs, and the switch default to.
+
+### card
+
+- Every other primitive with a radius gains a `--ui-<primitive>-corner-shape` hook too: card, kbd, tooltip, popover, menu, select, option, input, checkbox, otp, button group, toggle group, navigation menu, lightbox, toaster, slider, radio, and progress. Each defaults to `--radius-corner-shape` or to the family it follows.
 
 ### debug
 

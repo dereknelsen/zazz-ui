@@ -1,0 +1,69 @@
+---
+title: "Zazz 0.10 alpha"
+description: "Zazz 0.10 alpha retires switches in favor of style utilities, turns the status colors into surfaces, and gives every corner a superellipse curve."
+date: 2026-11-06
+draft: true
+tags: ["release"]
+---
+
+**Zazz 0.10 alpha removes the switches. `data-ui` now holds identities and nothing else, and every switch became a style utility, a prose slot, or `data-theme`. The status colors are surfaces instead of inks, and every corner in the kit takes a superellipse curve. The first two are breaking.**
+
+## Switches are gone
+
+A switch was a `data-ui` token that applied a fixed rule set: `sr-only`, `pile`, `truncate`, `theme-dark`, and ten more. The idea never sat right with me. They lived in the attribute reserved for identities, they couldn't take a breakpoint or a state, and nobody could tell from the markup which tokens were primitives and which were switches. So they're utilities now, and they get tiers like everything else.
+
+| Old `data-ui` token               | Replacement                                                                |
+| --------------------------------- | -------------------------------------------------------------------------- |
+| `sr-only`                         | `--sr: only`                                                               |
+| `pile`                            | `--display: grid-pile`                                                     |
+| `isolate`                         | `--isolation: isolate`                                                     |
+| `not-prose`                       | `data-prose-slot="end"`                                                    |
+| `truncate`                        | `--text-wrap: truncate`                                                    |
+| `spin`, `ping`, `pulse`, `bounce` | `--animation: var(--spin)`, `var(--ping)`, `var(--pulse)`, `var(--bounce)` |
+| `divide-x`, `divide-y`            | `--divide-x: 1`, `--divide-y: 1`                                           |
+| `container`                       | `--container-type: inline-size`                                            |
+| `theme-dark`, `theme-light`       | `data-theme="dark"`, `data-theme="light"`                                  |
+
+The tiers are the part I'm happiest about. A legend can hide on a phone and show from `md` up with `--sr: only; --sr--md: none`. A row of cards can divide vertically, then horizontally once there's room: `--divide-y: 1; --divide-y--md: none; --divide-x--md: 1`. A long file name can truncate at rest and wrap on hover. None of that was possible with a fixed token.
+
+`--animation` takes any animation value, not just the four tokens, and reduced motion stops all of it, including a raw `spin 1s infinite` you wrote yourself. `--divide` takes the same grammar as `--border`: a number is pixels, a length passes through, a color is one pixel of it, and `none` clears it. A child's own border utilities still win, which is how you clear one divider in a list.
+
+A leftover token won't fail loudly, because `data-ui="sr-only"` just matches nothing and the hidden text shows up. So the audit flags each retired token and names its replacement, in `<ui-debug>`, the ESLint plugin, and the editor.
+
+One thing got worse. Switches kept working when a sanitizer stripped the `style` attribute, and utilities can't. `--sr: only`, `--display: grid-pile`, and `--text-wrap: truncate` still apply under a policy that only blocks the attribute, since they match the attribute text and write literal values. But where `style` is gone, they're gone. The [security page](/docs/install/security/#sanitized-content) has the detail.
+
+## `data-theme` is back
+
+The scheme pin moved out of `data-ui` too. It's `data-theme="dark"` or `"light"` on any element, scopes nest, and the head script sets it on `<html>` before first paint. This attribute has moved twice before: 0.5 replaced `data-theme` with `data-ui-theme`, and 0.6 folded the pin into `data-ui` as a switch. Both times the argument was consistency with the rest of the markup. A pin has a value, though, and it isn't an identity, so it gets its own attribute back. Third time.
+
+## Status colors are surfaces
+
+`--color-info`, `--color-success`, `--color-warning`, and `--color-destructive` used to be solid inks with white text. That worked for a filled button and for nothing else: a callout had to mix its own tint, a border had to be derived, and the same hue came out three different ways across three primitives.
+
+Now each role is a pale surface (a dark one in dark mode), and its `-foreground` is the same hue at 4.5:1 or better on that surface. The foreground is also the ink for status text, borders, rings, and accents that sit on other surfaces. Badge, button, callout, and the invalid field all use the pair directly, so a warning reads the same everywhere.
+
+If you used a status role as a fill, swap the pair: `--bg: var(--color-destructive-foreground); --text: var(--color-background)` is the old solid red.
+
+## Superellipse corners
+
+Every radius in the kit now runs through `--radius-corner-shape`, which defaults to `superellipse(1.3)`. It's a slightly squircled corner, the kind you see on hardware and on iOS, and I like it more every day. Set the token to `round` on `:root` to turn it off, or use `--corner-shape` on one element. `--radius: full` stays round so circles are circles, and so do the radio, switch, slider, progress, and meter. Every primitive with a corner has a `--ui-<primitive>-corner-shape` hook. Browsers without `corner-shape` keep plain rounded corners.
+
+## Smaller things
+
+- `<ui-group>` is a tag now, for the ancestor the `--group-*` utilities follow. It's a block; `data-ui="group"` keeps its host's display.
+- The spring easing settles cleanly at the end of `--spring-duration`, which is `0.25s` now instead of `0.333s`.
+- The switch's thumb no longer changes on hover, and `--ui-switch-thumb-bg--hover` is gone. `--ui-switch-thumb-bg--checked` colors it on.
+- Tabs get a track border and an indicator border, with hooks for both.
+- `--space-x` and `--space-y` in Safari gave every sibling container the first one's gap. Fixed.
+- Headings only take `text-wrap: pretty` where the engine has it, so Firefox stops resetting the property.
+
+## Migrating
+
+- Replace each retired `data-ui` token with the row in the table above. Run the page with `<ui-debug>` in it, or lint it; every leftover gets named.
+- `--divide` on its own used to size the divider for `divide-x` or `divide-y`. Now it draws both axes. `data-ui="divide-y" style="--divide: 2"` becomes `--divide-y: 2`.
+- Anything that reads or writes the theme token: it's `document.documentElement.dataset.theme` now, `"dark"` or `"light"`.
+- Status roles used as fills take the swapped pair, `-foreground` as the background and `--color-background` as the text.
+- `--ui-switch-thumb-bg--hover` has no replacement; drop it.
+- To keep plain rounded corners, set `--radius-corner-shape: round` on `:root`.
+
+The [changelog](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/CHANGELOG.md) lists every change by primitive, and `npx zazz-ui update` prints the slice for the files you've vendored.

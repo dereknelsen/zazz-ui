@@ -8,7 +8,7 @@ order: 1
 
 Where an element sits and how it clips. `--display` also carries the flex shorthands (`flex-col`, `inline-flex-row`) that set the direction with the display, so there is no separate direction utility.
 
-`--display: grid-pile` is a grid with every direct child in one cell, centered, like layering with `position: absolute` but without taking anything out of flow. A child's own placement, `--place-items`, `--items`, and a primitive's own alignment win over the centering. Pair it with `--isolation: isolate` on a layered hero so the stacking context stays local. `--isolation` also takes `auto`, and both take breakpoints.
+`--display: grid-pile` is a grid with every direct child in one cell, centered, like layering with `position: absolute` but without taking anything out of flow. The centering beats a primitive's own alignment, and a child's own placement, `--place-items`, and `--items` win over it. Pair it with `--isolation: isolate` on a layered hero so the stacking context stays local. `--isolation` also takes `auto`, and both take breakpoints.
 
 `--container-type: inline-size` makes an element a query container, so the [breakpoint tiers](/api/foundations/breakpoints/) inside it follow its width. `--container-name` names it, and `--container` is the CSS `name / type` shorthand, or `none`. All three take breakpoints. Watch the shorthand: `--container: inline-size` sets a name, not a type. On a sticky element use `--container-type` with `--container-name`, because the shorthand drops the scroll-state type; the audit warns about it.
 

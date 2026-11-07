@@ -1,4 +1,4 @@
-# Reset groups (Zazz 0.8.4)
+# Reset groups (Zazz 0.10.0)
 
 One section per group of the Zazz reset. **Detect** names what to grep in the legacy CSS (`css`)
 and the server templates (`tpl`). **Close** gives the lines that go inside the baseline's
@@ -138,7 +138,7 @@ the legacy CSS leaves the property unset.
 
 - **Reset:** `a` inherits color and decoration; `h1` to `h6` take the kit's heading font, size, and
   `text-wrap: balance`; `b` and `strong` take the kit's strong weight; `code` is a nowrap,
-  ellipsis-truncated chip; `hr` is a 1px rule in the border color; `small`, `sub`, `sup`,
+  ellipsis-truncated chip with a 1px border (`--code-border-width` / `-style` / `-color`); `hr` is a 1px rule in the border color; `small`, `sub`, `sup`,
   `abbr[title]` are normalized.
 - **Symptom:** unstyled links read as body text; long inline `code` is cut off; headings the
   legacy CSS sizes still change font and wrapping.

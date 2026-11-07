@@ -146,16 +146,16 @@
 @property --_space-x-resolved { syntax: "*"; inherits: false; }
 @property --_space-x-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
 @property --_space-x-num { syntax: "<number>"; inherits: false; initial-value: 0; }
-@property --_space-x-a { syntax: "*"; inherits: false; }
-@property --_space-x-b { syntax: "*"; inherits: false; }
+@property --_space-x-a { syntax: "*"; inherits: true; }
+@property --_space-x-b { syntax: "*"; inherits: true; }
 @property --_space-x-slot { syntax: "*"; inherits: false; }
 @property --space-y { syntax: "*"; inherits: false; }
 @property --_space-y { syntax: "*"; inherits: false; }
 @property --_space-y-resolved { syntax: "*"; inherits: false; }
 @property --_space-y-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
 @property --_space-y-num { syntax: "<number>"; inherits: false; initial-value: 0; }
-@property --_space-y-a { syntax: "*"; inherits: false; }
-@property --_space-y-b { syntax: "*"; inherits: false; }
+@property --_space-y-a { syntax: "*"; inherits: true; }
+@property --_space-y-b { syntax: "*"; inherits: true; }
 @property --_space-y-slot { syntax: "*"; inherits: false; }
 @property --inset { syntax: "*"; inherits: false; }
 @property --_inset { syntax: "*"; inherits: false; }
@@ -294,7 +294,8 @@
 @property --_text-wrap-resolved { syntax: "*"; inherits: false; }
 @property --_text-wrap-a { syntax: "wrap | nowrap | auto | balance | pretty | stable | none"; inherits: false; initial-value: nowrap; }
 @property --_text-wrap-b { syntax: "wrap | nowrap | auto | balance | pretty | stable"; inherits: false; initial-value: wrap; }
-@property --_text-wrap-clip { syntax: "wrap | nowrap | auto | balance | pretty | stable | none | hidden"; inherits: false; initial-value: hidden; }
+@property --_text-wrap-stuck-clip { syntax: "*"; inherits: false; }
+@property --_text-wrap-stuck-end { syntax: "*"; inherits: false; }
 @property --line-clamp { syntax: "*"; inherits: false; }
 @property --_line-clamp { syntax: "*"; inherits: false; }
 @property --_line-clamp-resolved { syntax: "*"; inherits: false; }

@@ -153,6 +153,7 @@ function gatedValue(utility: Utility, value: string): boolean {
     (utility.keywords ?? []).includes(value) ||
     value in (utility.aliases ?? {}) ||
     (utility.name === "display" && (value in DISPLAY_SHORTHANDS || value === DISPLAY_PILE)) ||
+    (utility.emit === "text-wrap" && value === "truncate") ||
     (utility.name === "bg" && value === "none") ||
     (utility.name === "position" && value === "sticky")
   );

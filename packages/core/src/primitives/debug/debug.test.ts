@@ -32,6 +32,15 @@ function warningsFor(html: string, hooks: Record<string, string[]> = {}): string
   return audit(root, { hooks, identities: IDENTITIES }).map((warning) => warning.message);
 }
 
+describe("exact-value keywords", () => {
+  it.each(["--text-wrap:truncate", "--text-wrap--md:truncate", "--display:grid-pile"])(
+    "%s needs the space its gate matches",
+    (declaration) => {
+      expect(warningsFor(`<div style="${declaration}"></div>`).join()).toMatch(/space/);
+    },
+  );
+});
+
 describe("retired data-ui tokens", () => {
   it.each([
     ["sr-only", "--sr: only"],
