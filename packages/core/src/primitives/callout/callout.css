@@ -3,16 +3,17 @@
  *
  * @layer      variables, components
  * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved)
- * @uses       color-mix(), oklch(from …): status tints
+ * @uses       oklch(from …): faint status borders
+ * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
+ *             rounded corners
  * @tokens     --ui-callout-* (@layer variables; named after the utilities they back)
- * @see        badge.css (status tint and border formulas; the test keeps them in sync)
+ * @see        badge.css (same status surfaces and text; the test keeps them in sync)
  * @presets    data-callout-variant="muted" | "info" | "success" | "warning" | "destructive"
  *
  * A callout is an aside or alert: a padded grid with a gap, a border, and a
  * radius. The default matches an outline card and muted a muted card. Info,
- * success, and warning take the matching badge's tint and border, with the
- * role mixed toward --color-foreground for text; destructive is the badge's
- * solid fill.
+ * success, warning, and destructive use the role's surface and -foreground,
+ * like the matching badge, plus a faint border in the -foreground hue.
  * Every variant keeps the 1px border (muted makes it transparent), so every
  * variant is the same size.
  * Its parts are plain elements laid out with utilities. Use <aside> for a
@@ -27,6 +28,7 @@
     --ui-callout-bg: var(--color-card);
     --ui-callout-text: var(--color-card-foreground);
     --ui-callout-radius: var(--radius-md);
+    --ui-callout-corner-shape: var(--radius-corner-shape);
     --ui-callout-shadow: none;
 
     --ui-callout-border-width: 1px;
@@ -77,6 +79,7 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-callout-corner-shape));
     box-shadow: var(--_shadow-resolved, var(--ui-callout-shadow));
   }
 
@@ -90,54 +93,30 @@
     --_callout-border-color: transparent;
   }
 
-  /* status variants: the soft status colors buttons and badges use (see
-     button.css), plus a faint status border that outlines the block */
+  /* status variants: the role's surface and -foreground, as buttons and badges
+     use them, plus a faint status border that outlines the block */
 
   :where([data-ui~="callout"][data-callout-variant="info"]) {
-    --_callout-bg: light-dark(
-      color-mix(in srgb, var(--color-info) 10%, var(--color-background)),
-      color-mix(in srgb, var(--color-info) 20%, var(--color-background))
-    );
-    --_callout-text: light-dark(
-      oklch(from var(--color-info) min(l, 0.45) c h),
-      oklch(from var(--color-info) max(l, 0.82) c h)
-    );
-    --_callout-border-color: oklch(from var(--color-info) l c h / 0.2);
+    --_callout-bg: var(--color-info);
+    --_callout-text: var(--color-info-foreground);
+    --_callout-border-color: oklch(from var(--color-info-foreground) l c h / 0.2);
   }
 
   :where([data-ui~="callout"][data-callout-variant="success"]) {
-    --_callout-bg: light-dark(
-      color-mix(in srgb, var(--color-success) 10%, var(--color-background)),
-      color-mix(in srgb, var(--color-success) 20%, var(--color-background))
-    );
-    --_callout-text: light-dark(
-      oklch(from var(--color-success) min(l, 0.45) c h),
-      oklch(from var(--color-success) max(l, 0.82) c h)
-    );
-    --_callout-border-color: oklch(from var(--color-success) l c h / 0.2);
+    --_callout-bg: var(--color-success);
+    --_callout-text: var(--color-success-foreground);
+    --_callout-border-color: oklch(from var(--color-success-foreground) l c h / 0.2);
   }
 
   :where([data-ui~="callout"][data-callout-variant="warning"]) {
-    --_callout-bg: light-dark(
-      color-mix(in srgb, var(--color-warning) 10%, var(--color-background)),
-      color-mix(in srgb, var(--color-warning) 20%, var(--color-background))
-    );
-    --_callout-text: light-dark(
-      oklch(from var(--color-warning) min(l, 0.45) c h),
-      oklch(from var(--color-warning) max(l, 0.82) c h)
-    );
-    --_callout-border-color: oklch(from var(--color-warning) l c h / 0.2);
+    --_callout-bg: var(--color-warning);
+    --_callout-text: var(--color-warning-foreground);
+    --_callout-border-color: oklch(from var(--color-warning-foreground) l c h / 0.2);
   }
 
   :where([data-ui~="callout"][data-callout-variant="destructive"]) {
-    --_callout-bg: light-dark(
-      color-mix(in srgb, var(--color-destructive) 10%, var(--color-background)),
-      color-mix(in srgb, var(--color-destructive) 20%, var(--color-background))
-    );
-    --_callout-text: light-dark(
-      oklch(from var(--color-destructive) min(l, 0.45) c h),
-      oklch(from var(--color-destructive) max(l, 0.82) c h)
-    );
-    --_callout-border-color: oklch(from var(--color-destructive) l c h / 0.2);
+    --_callout-bg: var(--color-destructive);
+    --_callout-text: var(--color-destructive-foreground);
+    --_callout-border-color: oklch(from var(--color-destructive-foreground) l c h / 0.2);
   }
 }

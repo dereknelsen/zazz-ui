@@ -80,7 +80,7 @@ Every value in the kit resolves from a CSS custom property, which gives you thre
 <button data-ui="button" style="--ui-button-bg: var(--color-secondary)">One-off</button>
 ```
 
-Color roles resolve through `light-dark()`, so light and dark themes work out of the box and follow the OS preference (pin one with `data-ui="theme-dark"` on `<html>`). Styles live in cascade layers, so your own CSS can override anything without `!important` or specificity fights. The [theming guide](https://zazz.sh/docs/theming/customization/) covers tokens, hooks, dark mode, and brand blocks.
+Color roles resolve through `light-dark()`, so light and dark themes work out of the box and follow the OS preference (pin one with `data-theme="dark"` on `<html>`). Styles live in cascade layers, so your own CSS can override anything without `!important` or specificity fights. The [theming guide](https://zazz.sh/docs/theming/customization/) covers tokens, hooks, dark mode, and brand blocks.
 
 ## Layout
 

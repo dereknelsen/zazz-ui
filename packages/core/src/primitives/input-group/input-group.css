@@ -7,6 +7,8 @@
  * @uses       :focus-within — lifts shell ring/border as one field
  * @uses       :has() — restore padding when addons absent; invalid text color
  * @uses       data-input-group-align on the addon slot — inline-start/end, block-start/end
+ * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
+ *             rounded corners
  * @tokens     --ui-input-group-* (@layer variables)
  * @presets    data-input-group-align="inline-start | inline-end | block-start | block-end" on the addon slot
  */
@@ -80,6 +82,7 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-field-corner-shape));
 
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
@@ -238,12 +241,13 @@
   :where([data-ui~="input-group"]) [data-ui~="button"] {
     flex-shrink: 0;
     border-radius: var(--ui-field-inset-child-radius);
+    corner-shape: var(--ui-field-corner-shape);
   }
 
   :where([data-ui~="field"]:has(:user-invalid))
     :where([data-ui~="input-group"])
     [data-input-group-slot~="text"] {
-    --ui-input-group-text: var(--color-destructive);
+    --ui-input-group-text: var(--color-destructive-foreground);
   }
 }
 
@@ -257,13 +261,13 @@
   }
 
   :where([data-ui~="input-group"]):has(:user-invalid) {
-    --ui-field-bg: color-mix(in oklch, var(--color-destructive) 5%, var(--color-input));
-    --ui-field-bg--hover: color-mix(in oklch, var(--color-destructive) 10%, var(--color-input));
-    --ui-field-border-color: var(--color-destructive);
-    --ui-field-border-color--hover: var(--color-destructive);
-    --ui-field-border-color--focus-within: var(--color-destructive);
-    --ui-field-ring-color: var(--color-destructive);
+    --ui-field-bg: var(--color-destructive);
+    --ui-field-bg--hover: oklch(from var(--color-destructive) calc(l - 0.025) c h);
+    --ui-field-border-color: var(--color-destructive-foreground);
+    --ui-field-border-color--hover: var(--color-destructive-foreground);
+    --ui-field-border-color--focus-within: var(--color-destructive-foreground);
+    --ui-field-ring-color: var(--color-destructive-foreground);
 
-    border-color: var(--color-destructive);
+    border-color: var(--color-destructive-foreground);
   }
 }

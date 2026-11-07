@@ -1,6 +1,6 @@
 /**
  * `<hero-scene>`: the home hero's Unicorn Studio backdrop, one scene per color
- * scheme. The scheme is dark when `<html>` pins `theme-dark`, or pins nothing
+ * scheme. The scheme is dark when `<html>` pins `data-theme="dark"`, or pins nothing
  * and the OS prefers dark. A theme change loads the other scene in a layer on
  * top, fades it in once it has drawn, then drops the old one, so the backdrop
  * is never blank.
@@ -23,7 +23,7 @@ const LAYER = `
   --position: absolute;
   --inset: 0;
   --opacity: 0;
-  --transition: opacity var(--default-transition-duration);
+  --transition: var(--default-transition-property-effects);
 `;
 
 type Scheme = "light" | "dark";
@@ -36,9 +36,8 @@ const root = document.documentElement;
 const prefersDark = matchMedia("(prefers-color-scheme: dark)");
 
 function scheme(): Scheme {
-  const tokens = (root.dataset.ui ?? "").split(/\s+/);
-  if (tokens.includes("theme-dark")) return "dark";
-  if (tokens.includes("theme-light")) return "light";
+  const { theme } = root.dataset;
+  if (theme === "dark" || theme === "light") return theme;
   return prefersDark.matches ? "dark" : "light";
 }
 
@@ -64,7 +63,7 @@ class HeroScene extends ZazzElement {
     render();
     prefersDark.addEventListener("change", render, { signal });
     const observer = new MutationObserver(render);
-    observer.observe(root, { attributeFilter: ["data-ui"] });
+    observer.observe(root, { attributeFilter: ["data-theme"] });
     signal.addEventListener(
       "abort",
       () => {

@@ -64,9 +64,9 @@
   }
 </style>
 
-<!-- Light-only sample brand: pin the scheme for the page. `theme-light` is a
-     switch, an on/off token in data-ui: https://zazz.sh/api/switches/ -->
-<div data-ui="theme-light" style="--bg: var(--color-background)">
+<!-- Light-only sample brand: pin the scheme for the page. `data-theme` works
+     on any element: https://zazz.sh/docs/theming/customization/ -->
+<div data-theme="light" style="--bg: var(--color-background)">
   <!-- ================================================================== -->
   <!-- Hero: header overlaid on an autoplaying carousel                  -->
   <!-- ================================================================== -->
@@ -659,10 +659,16 @@
     </header>
   </div>
 
-  <!-- data-ui takes several switches at once: `pile` stacks children in one
-       grid cell, `isolate` starts a stacking context, `group` feeds the arrow
-       buttons' hover tiers: https://zazz.sh/api/switches/ -->
-  <div data-ui="pile isolate group">
+  <!-- `grid-pile` stacks children in one grid cell, `--isolation` starts a
+       stacking context, and `group` feeds the arrow buttons' hover tiers:
+       https://zazz.sh/api/utilities/layout/ -->
+  <div
+    data-ui="group"
+    style="
+      --display: grid-pile;
+      --isolation: isolate;
+    "
+  >
     <div
       style="
         --display: flex;
@@ -703,8 +709,8 @@
           --z: 1;
         "
       >
-        <!-- `sr-only`: visible to assistive tech only (a switch) -->
-        <h1 data-ui="sr-only">ACME furniture</h1>
+        <!-- `--sr: only`: visible to assistive tech only -->
+        <h1 style="--sr: only">ACME furniture</h1>
         <div data-carousel-slot="viewport" style="--size: 100%">
           <div data-carousel-slot="container" style="--size: 100%">
             <div
@@ -1235,8 +1241,8 @@
     <!-- Lookbooks + seating: full-bleed photo / dark panel pairs         -->
     <!-- ================================================================ -->
     <!-- `bleed` is the edge-to-edge band. The dark panel pins its scheme with
-         the `theme-dark` switch on a subtree, so the color roles inside it
-         swap and the light button opts back out with `theme-light`:
+         `data-theme="dark"` on a subtree, so the color roles inside it
+         swap and the light button opts back out with `data-theme="light"`:
          https://zazz.sh/docs/theming/customization/ -->
     <ui-layout data-layout-size="bleed">
       <section
@@ -1261,7 +1267,7 @@
           "
         />
         <div
-          data-ui="theme-dark"
+          data-theme="dark"
           style="
             --display: flex-col;
             --items: start;
@@ -1290,7 +1296,7 @@
             </p>
             <p>One set of pages for browsing and for buying.</p>
           </div>
-          <a href="#" data-ui="button theme-light" style="--mt: 2">Open lookbooks</a>
+          <a href="#" data-ui="button" data-theme="light" style="--mt: 2">Open lookbooks</a>
         </div>
       </section>
     </ui-layout>
@@ -1319,7 +1325,7 @@
         "
       />
       <div
-        data-ui="theme-dark"
+        data-theme="dark"
         style="
           --display: flex-col;
           --items: start;
@@ -1337,7 +1343,7 @@
             we will upholster to it.
           </p>
         </div>
-        <a href="#" data-ui="button theme-light" style="--mt: 2">Shop seating</a>
+        <a href="#" data-ui="button" data-theme="light" style="--mt: 2">Shop seating</a>
       </div>
     </section>
 
@@ -1496,12 +1502,11 @@
     <!-- ================================================================ -->
     <!-- About: wordmark beside a short statement                         -->
     <!-- ================================================================ -->
-    <!-- `divide-x` draws a border between direct children (a switch);
+    <!-- `--divide-x` draws a border between direct children;
          `--max-w: 40ch` is a length, so it passes through as written. -->
     <section aria-labelledby="about-title" style="--py: 24">
       <ui-layout data-layout-size="md">
         <div
-          data-ui="divide-x"
           data-reveal="fade"
           style="
             --display: grid;
@@ -1509,6 +1514,7 @@
             --grid-cols: 1;
             --grid-cols--md: 2;
             --gap: 11;
+            --divide-x: 1;
           "
         >
           <p
@@ -1864,7 +1870,7 @@
     </ui-layout>
 
     <!-- Legal bar: `full` band (gutters only) in a dark subtree -->
-    <div data-ui="theme-dark" style="--bg: var(--color-neutral-1117)">
+    <div data-theme="dark" style="--bg: var(--color-neutral-1117)">
       <ui-layout data-layout-size="full">
         <div
           data-ui="text-sm"

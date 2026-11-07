@@ -7,7 +7,7 @@
  */
 
 import { describe, expect, it } from "vite-plus/test";
-import { atWidth, mount, style, useCss, useKit } from "../../../test/browser.ts";
+import { atWidth, mount, scale, style, useCss, useKit } from "../../../test/browser.ts";
 
 const PARTS = `<div data-dialog-slot="content">
     <header data-dialog-slot="header">h</header>
@@ -19,6 +19,24 @@ const PARTS = `<div data-dialog-slot="content">
 describe("dialog", () => {
   useKit();
   useCss(`dialog, dialog::backdrop { transition: none; }`);
+
+  it("sizes to its content by default, and a tier-only --h takes a scale number, a length, or a percentage", async () => {
+    await atWidth(1440);
+    const root =
+      mount(`<div style="container-type: inline-size; inline-size: 1200px; block-size: 800px">
+      <dialog data-ui="dialog" open data-default>d</dialog>
+      <dialog data-ui="dialog" open data-scale style="--h--sm: 40">d</dialog>
+      <dialog data-ui="dialog" open data-length style="--h--sm: 120px">d</dialog>
+      <dialog data-ui="dialog" open data-percent style="--h--sm: 50%">d</dialog>
+    </div>`);
+    const height = (selector: string) =>
+      Number.parseFloat(style(root.querySelector(selector)!, "block-size"));
+    expect(height("[data-default]")).toBeGreaterThan(0);
+    expect(height("[data-default]")).toBeLessThan(scale(40));
+    expect(height("[data-scale]")).toBeCloseTo(scale(40), 1);
+    expect(height("[data-length]")).toBeCloseTo(120, 1);
+    expect(height("[data-percent]")).toBeGreaterThan(height("[data-default]"));
+  });
 
   it("lays out the slots: sticky footer, scrolling body, absolute close", () => {
     const dialog = mount(`<dialog data-ui="dialog">${PARTS}</dialog>`) as HTMLDialogElement;

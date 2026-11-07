@@ -50,21 +50,20 @@ A style utility is the escape hatch for one element: `style="--bg: var(--color-m
 
 ## Dark mode
 
-`:root` declares `color-scheme: light dark`, and every color role is a `light-dark()` pair, so the page follows the system scheme with no second stylesheet. The `theme-dark` or `theme-light` switch on any element (`data-ui="theme-dark"`) pins a scheme for that subtree by setting `color-scheme`; scopes nest, so a dark sidebar can hold a light card.
+`:root` declares `color-scheme: light dark`, and every color role is a `light-dark()` pair, so the page follows the system scheme with no second stylesheet. `data-theme="dark"` or `data-theme="light"` on any element pins a scheme for that subtree by setting `color-scheme`; scopes nest, so a dark sidebar can hold a light card.
 
-The head's theme script reads `localStorage.theme` and adds the matching switch to `<html>`'s `data-ui` before first paint. A toggle writes the same two things, keeping any other tokens on `<html>`:
+The head's theme script reads `localStorage.theme` and sets `data-theme` on `<html>` before first paint. A toggle writes the same two things:
 
 ```js
 function setTheme(value) {
   const root = document.documentElement;
-  const tokens = (root.dataset.ui ?? "").split(/\s+/).filter((t) => t && !t.startsWith("theme-"));
   if (value === "light" || value === "dark") {
-    tokens.push(`theme-${value}`);
+    root.dataset.theme = value;
     localStorage.setItem("theme", value);
   } else {
+    delete root.dataset.theme;
     localStorage.removeItem("theme"); // follow the system
   }
-  root.dataset.ui = tokens.join(" ");
 }
 ```
 

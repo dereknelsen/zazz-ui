@@ -1,0 +1,26 @@
+---
+title: "Group"
+description: "An ancestor whose state its descendants follow."
+section: Primitives
+sectionOrder: 5
+order: 0
+primitive: group
+---
+
+## Installation
+
+{% install primitive="group" /%}
+
+## Examples
+
+{% examples primitive="group" /%}
+
+## Tag or attribute
+
+`<ui-group>` is a block. `data-ui="group"` keeps its host's display, so use it on a link, a button, or a list item, and stack it on a primitive (`data-ui="card group"`). Descendants read the group's state with the [group modifier](/api/modifiers/group/).
+
+A custom element never matches `:disabled`, so `<ui-group>` takes `aria-disabled="true"` instead, with a role that allows it.
+
+## Attributes
+
+{% attributes primitive="group" /%}

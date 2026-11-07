@@ -24,11 +24,17 @@ describe("UTILITY_SECTIONS", () => {
       "color",
       "effects",
       "box",
+      "sr",
       "pseudo",
     ]
       .map((f) => readKitFile(`base/_utilities-${f}.css`) ?? "")
       .join("\n");
-    const ungated = filed.filter((n) => !new RegExp(`--(before-|after-)?${n}:`).test(css));
+    // the --divide utilities resolve together behind one prefix gate
+    const gated = (n: string) =>
+      n.startsWith("divide")
+        ? css.includes(`[style*="--divide"]`)
+        : new RegExp(`--(before-|after-)?${n}:`).test(css);
+    const ungated = filed.filter((n) => !gated(n));
     expect(ungated).toEqual([]);
   });
 

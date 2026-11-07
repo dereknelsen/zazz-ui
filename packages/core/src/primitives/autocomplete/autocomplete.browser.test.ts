@@ -6,7 +6,7 @@
  */
 
 import { describe, expect, it } from "vite-plus/test";
-import { lengthPx, mount, style, useCss, useKit } from "../../../test/browser.ts";
+import { lengthPx, mount, scale, style, useCss, useKit } from "../../../test/browser.ts";
 
 const PARTS = `<input data-ui="input" role="combobox" />
   <div data-autocomplete-slot="panel" popover="manual">
@@ -19,6 +19,17 @@ const PARTS = `<input data-ui="input" role="combobox" />
 describe("autocomplete", () => {
   useKit();
   useCss(`[data-ui~="button"] { transition: none; }`);
+
+  it("takes a scale number on a tier-only --max-h on the panel", () => {
+    const root = mount(`<div style="container-type: inline-size; inline-size: 1200px">
+      <ui-autocomplete>
+        <input data-ui="input" role="combobox" />
+        <div data-autocomplete-slot="panel" popover="manual" style="--max-h--sm: 40"></div>
+      </ui-autocomplete>
+    </div>`);
+    const panel = root.querySelector('[data-autocomplete-slot~="panel"]')!;
+    expect(Number.parseFloat(style(panel, "max-block-size"))).toBeCloseTo(scale(40), 1);
+  });
 
   it("styles the panel and the highlighted item in tag and attribute form", () => {
     const root = mount(`<div>

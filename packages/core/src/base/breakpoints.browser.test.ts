@@ -3,7 +3,7 @@
 /**
  * @fileoverview Breakpoint tiers query the nearest inline-size container, in
  * rem (the same in any font): html when nothing closer is, a layout band's
- * child, or any `data-ui="container"`. Body, main and the sectioning elements
+ * child, or any `--container-type`. Body, main and the sectioning elements
  * are not containers. The --layout-* widths use the same rem scale; html's
  * containment places boxes exactly where body's used to.
  */
@@ -42,11 +42,11 @@ describe("breakpoint tiers", () => {
     expect(getComputedStyle(document.body).containerType).toBe("normal");
   });
 
-  it('follow the nearest data-ui="container" instead of the page', async () => {
+  it("follow the nearest --container-type instead of the page", async () => {
     await atWidth(1400);
     const root = mount(`<div>
-      <div data-ui="container" style="inline-size: 300px"><div data-narrow style="--w: 1rem; --w--md: 2rem"></div></div>
-      <div data-ui="container" style="inline-size: 1000px"><div data-wide style="--w: 1rem; --w--md: 2rem"></div></div>
+      <div style="inline-size: 300px; --container-type: inline-size"><div data-narrow style="--w: 1rem; --w--md: 2rem"></div></div>
+      <div style="inline-size: 1000px; --container-type: inline-size"><div data-wide style="--w: 1rem; --w--md: 2rem"></div></div>
     </div>`);
     expect(width(root.querySelector("[data-narrow]")!)).toBe(16);
     expect(width(root.querySelector("[data-wide]")!)).toBe(32);
@@ -55,7 +55,7 @@ describe("breakpoint tiers", () => {
   it("on a container read the container above it, never itself", async () => {
     await atWidth(1400);
     const box = mount(
-      `<div data-ui="container" style="inline-size: 300px; --h: 1rem; --h--md: 2rem"></div>`,
+      `<div style="inline-size: 300px; --h: 1rem; --h--md: 2rem; --container-type: inline-size"></div>`,
     );
     // its own --h--md answers to the page (wide), not to its own 300px
     expect(box.getBoundingClientRect().height).toBe(32);
@@ -64,10 +64,10 @@ describe("breakpoint tiers", () => {
   it("flip at the same width in any container font", async () => {
     await atWidth(1400);
     const root = mount(`<div>
-      <div data-ui="container" style="inline-size: 768px; font-size: 2rem; font-family: monospace">
+      <div style="inline-size: 768px; font-size: 2rem; font-family: monospace; --container-type: inline-size">
         <div data-big style="--w: 1rem; --w--md: 2rem"></div>
       </div>
-      <div data-ui="container" style="inline-size: 767px; font-size: 0.75rem">
+      <div style="inline-size: 767px; font-size: 0.75rem; --container-type: inline-size">
         <div data-small style="--w: 1rem; --w--md: 2rem"></div>
       </div>
     </div>`);

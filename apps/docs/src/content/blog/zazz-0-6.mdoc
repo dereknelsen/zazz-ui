@@ -87,7 +87,7 @@ The new [`--shadow-angle`](/api/utilities/effects/) utility changes that directi
 0.6 has a handful of small breaking changes. Each one has a one-line migration in the changelog.
 
 - Breakpoints are measured in `rem` (see above). `sm` is the one most likely to move a layout.
-- The color scheme pin is now a [switch](/api/switches/). Replace `data-ui-theme="dark"` with `data-ui="theme-dark"`. A pin has no value, so it was always a switch in disguise. The `theme-` prefix also leaves room for named themes later. See [theming](/docs/theming/customization/).
+- The color scheme pin is now a [switch](/api/utilities/). Replace `data-ui-theme="dark"` with `data-ui="theme-dark"`. A pin has no value, so it was always a switch in disguise. The `theme-` prefix also leaves room for named themes later. See [theming](/docs/theming/customization/).
 - The accordion and navigation menu used to rotate any `svg` in a trigger, which also spun icons that weren't supposed to move. Mark the chevron with `data-accordion-slot="marker"` or `data-navigation-menu-slot="marker"`.
 - The [dialog](/api/primitives/dialog/) backdrop no longer blurs by default. `--ui-dialog-backdrop-blur` is now `--ui-dialog-backdrop-filter`, set to `none`; set it to `blur(5px)` to bring the blur back.
 

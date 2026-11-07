@@ -1,5 +1,7 @@
 # The docs site runs on Astro + Markdoc and generates its API reference from the kit
 
+> Amended 2026-11-06: the `switches` tag below is gone, with the `/api/switches/` page it rendered (ADR-0013 amendment 4).
+
 Status: accepted (2026-10-06). Replaces the Next.js + fumadocs app that documented 0.4.
 
 ## Context

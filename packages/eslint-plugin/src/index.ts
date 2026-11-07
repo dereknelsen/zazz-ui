@@ -161,6 +161,7 @@ const ERRORS: ReadonlySet<RuleId> = new Set<RuleId>([
   "group-needs-state",
   "tier-unsupported",
   "tier-without-base",
+  "retired-token",
   "whitespace-before-colon",
   "whitespace-after-colon",
 ]);

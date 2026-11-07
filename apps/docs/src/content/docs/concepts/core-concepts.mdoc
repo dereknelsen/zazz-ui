@@ -24,7 +24,7 @@ Every styling decision in Zazz markup is one of three things. The `class` attrib
 
 ## Identity
 
-`data-ui` is a space-separated token list. A primitive is one token (`button`, `card`, `dialog`); a specialization rides on its base (`data-ui="dialog alert-dialog"`); switches and typography roles stack on anything (`data-ui="badge text-xs"`, `data-ui="card group"`).
+`data-ui` is a space-separated token list. A primitive is one token (`button`, `card`, `dialog`); a specialization rides on its base (`data-ui="dialog alert-dialog"`); typography roles and `group` stack on anything (`data-ui="badge text-xs"`, `data-ui="card group"`). `data-ui` says what an element is, so it holds identities only.
 
 Native elements keep their meaning. A button is `<button data-ui="button">`, a dialog is `<dialog data-ui="dialog">`, an input is `<input data-ui="input">`. The tag form (`<ui-tabs>`, `<ui-layout>`, `<ui-carousel>`) exists only where the wrapper would otherwise be a meaningless `<div>`; `<ui-button>` never exists.
 
@@ -48,17 +48,13 @@ A hook is a public, inheriting custom property a primitive reads: `--ui-button-b
 
 Order of preference for changing how a primitive looks: a preset, then a hook on a subtree, then a utility on the one element.
 
-## Switches
-
-The smallest primitive: a fixed rule set with no slots, no presets, and no value. `sr-only`, `pile`, `isolate`, `divide-x`, `divide-y`, `container`, and `group` ride the `data-ui` list like any other token. See [switches](/api/switches/).
-
 ## Layers
 
 The kit's CSS lives entirely inside cascade layers: `variables, reset, defaults, vendors, legacy, ui, overrides`. Later layers win regardless of specificity, so utilities beat primitives without `!important`, and anything you write in `overrides` beats the kit. A tier written without its base (`--px--md: 8` alone) is the exception: it sits in `defaults`, so a primitive that sets the property keeps its own value. An existing app's CSS imports into `legacy.*`, below the kit. See [cascade layers](/api/foundations/layers/).
 
 ## Breakpoints read containers
 
-A breakpoint tier applies when the nearest inline-size container is at least as wide as a threshold in `rem`: `sm` 40, `md` 48, `lg` 64, `xl` 80, `2xl` 96. The page (`html`) and each child of a layout are containers; mark anything else `data-ui="container"`. Layout bands share the names and the widths, so `md` means "an md band fits here", but a band is a width cap, not a threshold. See [breakpoints](/api/foundations/breakpoints/) and [layout](/api/foundations/layout/).
+A breakpoint tier applies when the nearest inline-size container is at least as wide as a threshold in `rem`: `sm` 40, `md` 48, `lg` 64, `xl` 80, `2xl` 96. The page (`html`) and each child of a layout are containers; give anything else `--container-type: inline-size`. Layout bands share the names and the widths, so `md` means "an md band fits here", but a band is a width cap, not a threshold. See [breakpoints](/api/foundations/breakpoints/) and [layout](/api/foundations/layout/).
 
 ## Behavior
 

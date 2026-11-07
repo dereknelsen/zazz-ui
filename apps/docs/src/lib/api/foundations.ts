@@ -1,41 +1,10 @@
 /**
- * Foundations data: switches (from `_switches.css`'s header), typography roles
- * (from `_typography.css`), global `data-ui-*` attributes (from the HTML custom
+ * Foundations data: typography roles (from `_typography.css`), global `data-ui-*` attributes (from the HTML custom
  * data), and design tokens grouped by purpose (from the language data).
  */
 import htmlData from "@zazz-ui/core/editor/zazz.html-data.json";
 import languageData from "@zazz-ui/core/editor/zazz.language-data.json";
 import { readKitFile } from "../kit.ts";
-
-export interface Switch {
-  tokens: string[];
-  description: string;
-}
-
-/** Parses `@uses data-ui="x": description` lines (continuations indented) from a CSSDoc header. */
-export function parseSwitches(css: string): Switch[] {
-  const header = css.match(/\/\*\*([\s\S]*?)\*\//)?.[1] ?? "";
-  const lines = header.split("\n").map((l) => l.replace(/^\s*\*\s?/, ""));
-  const out: Switch[] = [];
-  for (const line of lines) {
-    const uses = line.match(/^@uses\s+(data-ui=.*)$/);
-    if (uses) {
-      const [, rest] = uses;
-      const tokens = [...rest.matchAll(/"([a-z0-9-]+)"/g)].map((m) => m[1]);
-      const description = rest.replace(/^data-ui=[^:]*:\s*/, "").trim();
-      out.push({ tokens, description });
-    } else if (out.length && /^\s+\S/.test(line) && !line.trim().startsWith("@")) {
-      out[out.length - 1].description += ` ${line.trim()}`;
-    } else if (line.startsWith("@")) {
-      // a different tag ends the continuation
-    }
-  }
-  return out;
-}
-
-export function switches(): Switch[] {
-  return parseSwitches(readKitFile("base/_switches.css") ?? "");
-}
 
 const ROLE_ORDER = [
   "text-display",
@@ -78,7 +47,7 @@ export function globalAttributes(): GlobalAttribute[] {
   return (
     htmlData.globalAttributes as { name: string; description: string; values: { name: string }[] }[]
   )
-    .filter((a) => a.name.startsWith("data-ui-"))
+    .filter((a) => a.name.startsWith("data-ui-") || a.name === "data-theme")
     .map((a) => ({
       name: a.name,
       description: a.description,
@@ -133,7 +102,11 @@ const GROUPS: { id: string; title: string; test: RegExp }[] = [
     test: /^--leading-|^--tracking-|^--paragraph-spacing-|^--decoration-/,
   },
   { id: "layout", title: "Layout widths", test: /^--layout-|^--article-|^--gutters$/ },
-  { id: "motion", title: "Motion", test: /^--spring-|^--bezier-|^--default-/ },
+  {
+    id: "motion",
+    title: "Motion",
+    test: /^--spring-|^--bezier-|^--default-|^--(spin|ping|pulse|bounce)$/,
+  },
 ];
 
 export function tokenGroups(): TokenGroup[] {

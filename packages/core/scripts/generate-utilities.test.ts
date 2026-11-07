@@ -10,7 +10,14 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vite-plus/test";
-import { BREAKPOINTS, type Utility, STATES, UTILITIES } from "../src/base/utilities.ts";
+import {
+  BREAKPOINTS,
+  isState,
+  STATES,
+  tiersOf,
+  type Utility,
+  UTILITIES,
+} from "../src/base/utilities.ts";
 import {
   baseRule,
   bgNoneRules,
@@ -58,14 +65,33 @@ describe("breakpoint queries", () => {
     );
   });
 
+  it("gates a tier on a group form only where the utility has one", () => {
+    const all = [...generate().values()].join("\n");
+    const breakpointOnly = UTILITIES.filter(
+      (utility) => tiersOf(utility).length && !tiersOf(utility).some(isState),
+    );
+    expect(breakpointOnly.length).toBeGreaterThan(0);
+    for (const { name } of breakpointOnly) expect(all).not.toContain(`"--group-${name}--"`);
+  });
+
   it("leaves no page flags or style queries behind", () => {
     const all = [...generate().values()].join("\n");
     expect(all).not.toContain("--cqi-");
     expect(all).not.toContain("@container html");
-    // breakpoints rest on size queries alone; the only bare style queries are
-    // --space-*'s slot flags (the stuck tier pairs one with scroll-state())
+    // breakpoints rest on size queries alone; the only bare style queries are the
+    // flags a parent publishes to its children: the --space-* and --divide-* slots
+    // and the pile (the
+    // stuck tier pairs one with scroll-state())
     const queries = [...all.matchAll(/@container style\((--[\w-]+)/g)].map((m) => m[1]);
-    expect(new Set(queries)).toEqual(new Set(["--_space-x-slot", "--_space-y-slot"]));
+    expect(new Set(queries)).toEqual(
+      new Set([
+        "--_space-x-slot",
+        "--_space-y-slot",
+        "--_pile-resolved",
+        "--_divide-x-slot",
+        "--_divide-y-slot",
+      ]),
+    );
   });
 
   it("gives --space-* children their parent's gap through alternating slots", () => {
@@ -241,7 +267,7 @@ describe("state tiers", () => {
           :where(:hover[style*="--hover:"]) {
             --_opacity-hover: var(--opacity--hover);
           }
-          :where([data-ui~="group"]:hover [style*="--group-"]) {
+          :where(:where(ui-group, [data-ui~="group"]):hover [style*="--group-"]) {
             --_opacity-g-hover: var(--group-opacity--hover);
           }
         }
@@ -255,7 +281,7 @@ describe("state tiers", () => {
         :where(:is(:disabled, [aria-disabled="true"])[style*="--disabled:"]) {
           --_opacity-disabled: var(--opacity--disabled);
         }
-        :where([data-ui~="group"]:is(:disabled, [aria-disabled="true"]) [style*="--group-"]) {
+        :where(:where(ui-group, [data-ui~="group"]):is(:disabled, [aria-disabled="true"]) [style*="--group-"]) {
           --_opacity-g-disabled: var(--group-opacity--disabled);
         }
       `),
@@ -307,7 +333,7 @@ describe("no-base rules", () => {
   it("emits a no-base rule for --grid-cols gated on any tier, ending in the literal 1, skipping what it is given", () => {
     expect(squash(noBaseRule(GRID_COLS, ["hr"]))).toBe(
       squash(`
-        :where(:is([style*="--grid-cols--"], [style*="--group-grid-cols--"]):not(hr)) {
+        :where([style*="--grid-cols--"]:not(hr)) {
           grid-template-columns: repeat(var(--_grid-cols-resolved, 1), minmax(0, 1fr));
         }
       `),
@@ -393,7 +419,7 @@ describe("no-base rules for dual utilities", () => {
   it("emits the --gap no-base rule through the typed pair with a zero fallback", () => {
     expect(squash(noBaseRule(GAP))).toBe(
       squash(`
-        :where(:is([style*="--gap--"], [style*="--group-gap--"])) {
+        :where([style*="--gap--"]) {
           --_gap-len: var(--_gap-resolved, 0);
           --_gap-num: var(--_gap-resolved, 0);
           gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));
@@ -613,12 +639,13 @@ describe("border shorthand", () => {
     );
   });
 
-  it("--divide registers inheriting width and color channels for the divide-x / divide-y switches", () => {
-    const divide = UTILITIES.find((utility) => utility.name === "divide")!;
-    const css = squash(registrations(divide));
-    expect(css).toContain(`@property --_divide-w { syntax: "*"; inherits: true; }`);
-    expect(css).toContain(`@property --_divide-c { syntax: "*"; inherits: true; }`);
-    expect(css).toContain(`@property --_divide-len { syntax: "<length>"; inherits: false;`);
+  it("gives each --divide axis the border's typed channels, inheriting slots, and a flag that stops at the children", () => {
+    const axis = registrations(UTILITIES.find((utility) => utility.name === "divide-x")!);
+    expect(axis).toContain(
+      '@property --_divide-x-clr { syntax: "<color>"; inherits: false; initial-value: transparent; }',
+    );
+    expect(axis).toContain('@property --_divide-x-a { syntax: "*"; inherits: true; }');
+    expect(axis).toContain('@property --_divide-x-slot { syntax: "*"; inherits: false; }');
   });
 });
 
@@ -629,7 +656,7 @@ describe("stuck state", () => {
     const text = squash(css());
     expect(text).toContain(
       squash(
-        `:where([style*=": sticky"], [style*="--stuck-state:"]) { container-type: scroll-state; --_stuck-side: var(--stuck-state, top); }`,
+        `:where([style*=": sticky"], [style*="--stuck-state:"]) { container-type: scroll-state; --_stuck-type: scroll-state; --_stuck-side: var(--stuck-state, top); }`,
       ),
     );
     expect(text).toContain(
@@ -816,6 +843,7 @@ describe("generated stylesheets", () => {
       "_utilities-color.css",
       "_utilities-effects.css",
       "_utilities-box.css",
+      "_utilities-sr.css",
       "_utilities-pseudo.css",
     ]);
   });
@@ -980,7 +1008,7 @@ describe("shorthand tiers", () => {
     const pt = UTILITIES.find((utility) => utility.name === "pt")!;
     expect(squash(shorthandTierRule(pt))).toBe(
       squash(`
-        :where(:is([style*="--py:"], [style*="--p:"]):is([style*="--pt--"], [style*="--group-pt--"])) {
+        :where(:is([style*="--py:"], [style*="--p:"])[style*="--pt--"]) {
           --_pt-len: var(--_pt-resolved, var(--_py-resolved, var(--_p-resolved, 0)));
           --_pt-num: var(--_pt-resolved, var(--_py-resolved, var(--_p-resolved, 0)));
           padding-block-start: calc(var(--_pt-len) + var(--_pt-num) * var(--spacing));

@@ -438,20 +438,24 @@
     --_before-radius-len: var(--before-radius);
     --_before-radius-num: var(--before-radius);
     border-radius: calc(var(--_before-radius-len) + var(--_before-radius-num) * var(--spacing) * var(--radius-multiplier));
+    corner-shape: var(--radius-corner-shape);
   }
   :where([style*="--before-radius: full"])::before {
     --_before-radius-len: var(--radius-full);
     --_before-radius-num: 0;
+    corner-shape: round;
   }
 
   :where([style*="--after-radius:"])::after {
     --_after-radius-len: var(--after-radius);
     --_after-radius-num: var(--after-radius);
     border-radius: calc(var(--_after-radius-len) + var(--_after-radius-num) * var(--spacing) * var(--radius-multiplier));
+    corner-shape: var(--radius-corner-shape);
   }
   :where([style*="--after-radius: full"])::after {
     --_after-radius-len: var(--radius-full);
     --_after-radius-num: 0;
+    corner-shape: round;
   }
 
   :where([style*="--before-outline:"])::before {

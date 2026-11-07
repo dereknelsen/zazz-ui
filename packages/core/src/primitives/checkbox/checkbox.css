@@ -5,6 +5,8 @@
  * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow), fields.css (--ui-field-* background/border)
  * @uses       appearance: none — redraws the native control from theme tokens
  * @uses       checked/indeterminate fill with --primary and layer a glyph (never color alone)
+ * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
+ *             rounded corners
  * @tokens     --ui-checkbox-* (@layer variables; named after the utilities they back;
  *             surface/border default to the --ui-field-* family)
  * @see        checkbox.ts: derives select-all group state (data-checkbox-controls)
@@ -24,6 +26,7 @@
     --ui-checkbox-bg--checked: var(--color-primary);
     --ui-checkbox-border-color--checked: var(--color-primary);
     --ui-checkbox-radius: var(--radius-xs);
+    --ui-checkbox-corner-shape: var(--radius-corner-shape);
     --ui-checkbox-glyph-size: 1em;
     --ui-checkbox-checkmark-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' fill='none' stroke='currentColor' stroke-linecap='square' stroke-linejoin='square' stroke-width='3' viewBox='0 0 24 24'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E")
       center / contain no-repeat;
@@ -53,6 +56,7 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-checkbox-corner-shape));
 
     /* centres the ::before glyph */
     display: inline-grid;

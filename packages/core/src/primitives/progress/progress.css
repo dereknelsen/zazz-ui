@@ -8,6 +8,7 @@
  *             ::-moz-progress-bar) — never combine the two vendors in one
  *             selector list (an unknown pseudo invalidates the whole rule)
  * @uses       :indeterminate — animated stripe on the element background
+ * @uses       corner-shape — round by default, so circles stay circles; a hook takes any shape
  * @tokens     --ui-progress-* (@layer variables)
  * @consumedby meter.css
  */
@@ -17,6 +18,7 @@
     --ui-progress-w: 100%;
     --ui-progress-h: calc(var(--spacing) * 1.5);
     --ui-progress-radius: var(--radius-full);
+    --ui-progress-corner-shape: round;
     --ui-progress-bg: var(--color-muted);
     --ui-progress-track-border: 1px solid transparent;
     --ui-progress-bar-bg: var(--color-primary);
@@ -46,6 +48,7 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-progress-corner-shape));
   }
 
   :where([data-ui~="progress"])::-webkit-progress-bar {
@@ -55,6 +58,7 @@
   :where([data-ui~="progress"])::-webkit-progress-value {
     background-color: var(--ui-progress-bar-bg);
     border-radius: inherit;
+    corner-shape: inherit;
     transition: inline-size var(--default-transition-duration)
       var(--default-transition-timing-function);
   }
@@ -62,6 +66,7 @@
   :where([data-ui~="progress"])::-moz-progress-bar {
     background-color: var(--ui-progress-bar-bg);
     border-radius: inherit;
+    corner-shape: inherit;
   }
 
   /* Stripe on the element itself so it renders the same in every engine; the

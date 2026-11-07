@@ -292,6 +292,9 @@
 @property --text-wrap { syntax: "*"; inherits: false; }
 @property --_text-wrap { syntax: "*"; inherits: false; }
 @property --_text-wrap-resolved { syntax: "*"; inherits: false; }
+@property --_text-wrap-a { syntax: "wrap | nowrap | auto | balance | pretty | stable | none"; inherits: false; initial-value: nowrap; }
+@property --_text-wrap-b { syntax: "wrap | nowrap | auto | balance | pretty | stable"; inherits: false; initial-value: wrap; }
+@property --_text-wrap-clip { syntax: "wrap | nowrap | auto | balance | pretty | stable | none | hidden"; inherits: false; initial-value: hidden; }
 @property --line-clamp { syntax: "*"; inherits: false; }
 @property --_line-clamp { syntax: "*"; inherits: false; }
 @property --_line-clamp-resolved { syntax: "*"; inherits: false; }
@@ -322,6 +325,35 @@
 @property --bg-stops { syntax: "*"; inherits: false; }
 @property --_bg-stops { syntax: "*"; inherits: false; }
 @property --_bg-stops-resolved { syntax: "*"; inherits: false; }
+@property --divide { syntax: "*"; inherits: false; }
+@property --_divide { syntax: "*"; inherits: false; }
+@property --_divide-resolved { syntax: "*"; inherits: false; }
+@property --divide-x { syntax: "*"; inherits: false; }
+@property --_divide-x { syntax: "*"; inherits: false; }
+@property --_divide-x-resolved { syntax: "*"; inherits: false; }
+@property --_divide-x-len { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --_divide-x-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_divide-x-is-len { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_divide-x-is-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_divide-x-clr { syntax: "<color>"; inherits: false; initial-value: transparent; }
+@property --_divide-x-w { syntax: "*"; inherits: false; }
+@property --_divide-x-c { syntax: "*"; inherits: false; }
+@property --_divide-x-a { syntax: "*"; inherits: true; }
+@property --_divide-x-b { syntax: "*"; inherits: true; }
+@property --_divide-x-slot { syntax: "*"; inherits: false; }
+@property --divide-y { syntax: "*"; inherits: false; }
+@property --_divide-y { syntax: "*"; inherits: false; }
+@property --_divide-y-resolved { syntax: "*"; inherits: false; }
+@property --_divide-y-len { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --_divide-y-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_divide-y-is-len { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_divide-y-is-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_divide-y-clr { syntax: "<color>"; inherits: false; initial-value: transparent; }
+@property --_divide-y-w { syntax: "*"; inherits: false; }
+@property --_divide-y-c { syntax: "*"; inherits: false; }
+@property --_divide-y-a { syntax: "*"; inherits: true; }
+@property --_divide-y-b { syntax: "*"; inherits: true; }
+@property --_divide-y-slot { syntax: "*"; inherits: false; }
 @property --border-color { syntax: "*"; inherits: false; }
 @property --_border-color { syntax: "*"; inherits: false; }
 @property --_border-color-resolved { syntax: "*"; inherits: false; }
@@ -460,6 +492,9 @@
 @property --rotate { syntax: "*"; inherits: false; }
 @property --_rotate { syntax: "*"; inherits: false; }
 @property --_rotate-resolved { syntax: "*"; inherits: false; }
+@property --animation { syntax: "*"; inherits: false; }
+@property --_animation { syntax: "*"; inherits: false; }
+@property --_animation-resolved { syntax: "*"; inherits: false; }
 @property --transition { syntax: "*"; inherits: false; }
 @property --_transition { syntax: "*"; inherits: false; }
 @property --_transition-resolved { syntax: "*"; inherits: false; }
@@ -494,6 +529,12 @@
 @property --_radius-r-resolved { syntax: "*"; inherits: false; }
 @property --_radius-r-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
 @property --_radius-r-num { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --corner-shape { syntax: "*"; inherits: false; }
+@property --_corner-shape { syntax: "*"; inherits: false; }
+@property --_corner-shape-resolved { syntax: "*"; inherits: false; }
+@property --isolation { syntax: "*"; inherits: false; }
+@property --_isolation { syntax: "*"; inherits: false; }
+@property --_isolation-resolved { syntax: "*"; inherits: false; }
 @property --overflow { syntax: "*"; inherits: false; }
 @property --_overflow { syntax: "*"; inherits: false; }
 @property --_overflow-resolved { syntax: "*"; inherits: false; }
@@ -524,16 +565,6 @@
 @property --object-position { syntax: "*"; inherits: false; }
 @property --_object-position { syntax: "*"; inherits: false; }
 @property --_object-position-resolved { syntax: "*"; inherits: false; }
-@property --divide { syntax: "*"; inherits: false; }
-@property --_divide { syntax: "*"; inherits: false; }
-@property --_divide-resolved { syntax: "*"; inherits: false; }
-@property --_divide-len { syntax: "<length>"; inherits: false; initial-value: 0px; }
-@property --_divide-num { syntax: "<number>"; inherits: false; initial-value: 0; }
-@property --_divide-is-len { syntax: "<number>"; inherits: false; initial-value: 0; }
-@property --_divide-is-num { syntax: "<number>"; inherits: false; initial-value: 0; }
-@property --_divide-clr { syntax: "<color>"; inherits: false; initial-value: transparent; }
-@property --_divide-w { syntax: "*"; inherits: true; }
-@property --_divide-c { syntax: "*"; inherits: true; }
 
 /* Dual pairs on pseudo-elements */
 @property --_before-p-len { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
@@ -630,15 +661,23 @@
 
 /* Stuck state */
 @property --_stuck-on { syntax: "*"; inherits: false; }
+@property --_stuck-type { syntax: "*"; inherits: false; }
 @property --_stuck-side { syntax: "top | right | bottom | left | block-start | block-end | inline-start | inline-end"; inherits: false; initial-value: top; }
 @property --_stuck-polyfill { syntax: "*"; inherits: true; }
 @property --stuck-state { syntax: "*"; inherits: false; }
 
-/* --display shorthands' flex-direction channel */
+/* --display shorthands' flex-direction and pile channels */
 @property --_flex-direction { syntax: "*"; inherits: false; }
+@property --_pile { syntax: "*"; inherits: false; }
 @property --_flex-direction-sm { syntax: "*"; inherits: false; }
+@property --_pile-sm { syntax: "*"; inherits: false; }
 @property --_flex-direction-md { syntax: "*"; inherits: false; }
+@property --_pile-md { syntax: "*"; inherits: false; }
 @property --_flex-direction-lg { syntax: "*"; inherits: false; }
+@property --_pile-lg { syntax: "*"; inherits: false; }
 @property --_flex-direction-xl { syntax: "*"; inherits: false; }
+@property --_pile-xl { syntax: "*"; inherits: false; }
 @property --_flex-direction-2xl { syntax: "*"; inherits: false; }
+@property --_pile-2xl { syntax: "*"; inherits: false; }
 @property --_flex-direction-resolved { syntax: "*"; inherits: false; }
+@property --_pile-resolved { syntax: "*"; inherits: false; }

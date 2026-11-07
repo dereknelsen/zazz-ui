@@ -49,8 +49,8 @@ describe("lightbox", () => {
 
   it("drops to four thumb columns in any narrow container, not only a section", () => {
     const root = mount(`<div>
-      <div data-ui="container" style="inline-size: 30rem"><ui-lightbox data-narrow></ui-lightbox></div>
-      <div data-ui="container" style="inline-size: 60rem"><ui-lightbox data-wide></ui-lightbox></div>
+      <div style="inline-size: 30rem; --container-type: inline-size"><ui-lightbox data-narrow></ui-lightbox></div>
+      <div style="inline-size: 60rem; --container-type: inline-size"><ui-lightbox data-wide></ui-lightbox></div>
     </div>`);
     const columns = (selector: string) =>
       style(root.querySelector(selector)!, "--ui-lightbox-thumb-cols").trim();

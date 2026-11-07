@@ -5,6 +5,16 @@
   "outputDirectory": "dist",
   "redirects": [
     {
+      "source": "/api/switches",
+      "destination": "/api/utilities/",
+      "permanent": true
+    },
+    {
+      "source": "/api/switches/",
+      "destination": "/api/utilities/",
+      "permanent": true
+    },
+    {
       "source": "/api/utilities/from-css",
       "destination": "/docs/concepts/utilities-reference/",
       "permanent": true

@@ -31,6 +31,7 @@
 
 /* Primitives */
 @import "./primitives/layout/layout.css";
+@import "./primitives/group/group.css";
 @import "./primitives/scroll-fade/scroll-fade.css";
 @import "./primitives/separator/separator.css";
 /* fields.css owns the shared --ui-field-* family; it registers before its
@@ -74,7 +75,7 @@
 @import "./primitives/toaster/toaster.css";
 @import "./primitives/reveal/reveal.css";
 
-/* Generated utilities (scripts/generate-utilities.ts) and switches: the last
+/* Generated utilities (scripts/generate-utilities.ts): the last
    normal Zazz layer. */
 @import "./base/_properties.css";
 @import "./base/_properties-sm.css";
@@ -118,7 +119,7 @@
 @import "./base/_utilities-box.css";
 @import "./base/_utilities-pseudo.css";
 @import "./base/_defaults.css";
-@import "./base/_switches.css";
+@import "./base/_utilities-sr.css";
 
 /* Migration shims: beat all other legacy sublayers; Zazz still wins. */
 /* @import "./migrations.css" layer(legacy.migrations); */

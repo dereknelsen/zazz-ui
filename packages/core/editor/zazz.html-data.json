@@ -37,6 +37,11 @@
       "attributes": []
     },
     {
+      "name": "ui-group",
+      "description": "Zazz group (tag form; the attribute form is data-ui=\"group\").",
+      "attributes": []
+    },
+    {
       "name": "ui-kbd-group",
       "description": "Zazz kbd-group (tag form; the attribute form is data-ui=\"kbd-group\").",
       "attributes": []
@@ -95,7 +100,7 @@
   "globalAttributes": [
     {
       "name": "data-ui",
-      "description": "Identity tokens: primitives, switches, and typography roles.",
+      "description": "Identity tokens: primitives and typography roles.",
       "values": [
         {
           "name": "accordion"
@@ -108,9 +113,6 @@
         },
         {
           "name": "badge"
-        },
-        {
-          "name": "bounce"
         },
         {
           "name": "button"
@@ -134,16 +136,7 @@
           "name": "command"
         },
         {
-          "name": "container"
-        },
-        {
           "name": "dialog"
-        },
-        {
-          "name": "divide-x"
-        },
-        {
-          "name": "divide-y"
         },
         {
           "name": "field"
@@ -159,9 +152,6 @@
         },
         {
           "name": "input-group"
-        },
-        {
-          "name": "isolate"
         },
         {
           "name": "kbd-group"
@@ -188,28 +178,16 @@
           "name": "navigation-menu"
         },
         {
-          "name": "not-prose"
-        },
-        {
           "name": "otp"
         },
         {
           "name": "password-group"
         },
         {
-          "name": "pile"
-        },
-        {
-          "name": "ping"
-        },
-        {
           "name": "progress"
         },
         {
           "name": "prose"
-        },
-        {
-          "name": "pulse"
         },
         {
           "name": "radio"
@@ -225,12 +203,6 @@
         },
         {
           "name": "separator"
-        },
-        {
-          "name": "spin"
-        },
-        {
-          "name": "sr-only"
         },
         {
           "name": "table"
@@ -290,12 +262,6 @@
           "name": "textarea"
         },
         {
-          "name": "theme-dark"
-        },
-        {
-          "name": "theme-light"
-        },
-        {
           "name": "toaster"
         },
         {
@@ -306,9 +272,18 @@
         },
         {
           "name": "tooltip"
+        }
+      ]
+    },
+    {
+      "name": "data-theme",
+      "description": "Pins the color scheme for this element and everything inside it; scopes nest. Without it the system setting applies.",
+      "values": [
+        {
+          "name": "dark"
         },
         {
-          "name": "truncate"
+          "name": "light"
         }
       ]
     },
@@ -448,6 +423,9 @@
         },
         {
           "name": "muted"
+        },
+        {
+          "name": "outline"
         },
         {
           "name": "primary"
@@ -1309,6 +1287,18 @@
         },
         {
           "name": "sm"
+        }
+      ]
+    },
+    {
+      "name": "data-prose-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "end"
+        },
+        {
+          "name": "start"
         }
       ]
     },

@@ -141,9 +141,9 @@ components:
   # Variants below are shipped presets: data-button-variant / data-badge-variant / data-card-variant
   # (no attribute = default). The secondary and tertiary button and badge presets follow the
   # primary pattern with their own role and -foreground. The info, success, warning, and
-  # destructive presets are soft: the role mixed 10% into the background (20% in dark), opaque,
-  # with the role's hue as text, lightness clamped to hold 4.5:1. Every button and badge fill is
-  # opaque, and hover and press change lightness, never opacity.
+  # destructive presets do too. Each role is a pale surface, and its -foreground is the same hue
+  # at 4.5:1 or better. Every button and badge fill is opaque, and hover and press change
+  # lightness, never opacity.
   button-default:
     backgroundColor: "{colors.background}"
     textColor: "{colors.foreground}"
@@ -170,8 +170,8 @@ components:
     rounded: "{rounded.md}"
     padding: 10px
   button-destructive:
-    backgroundColor: "{colors.destructive} mixed 10% into {colors.background} (20% in dark)"
-    textColor: "{colors.destructive}, lightness ≤ 0.45 (≥ 0.82 in dark)"
+    backgroundColor: "{colors.destructive}"
+    textColor: "{colors.destructive-foreground}"
     rounded: "{rounded.md}"
     padding: 10px
   button-link:
@@ -293,7 +293,7 @@ The token contract in the frontmatter is what lets you be bold without the resul
 - **Use Zazz tokens exclusively** — never hardcode colors, spacing, radii, shadows, or typography. Use `var(--token-name)` in style utilities (`style="--bg: var(--color-card)"`); markup rules are in `AUTHORING.md`.
 - **Typography via roles** — native `h1`–`h6` or `data-ui="text-*"`; override one property with a utility, never rebuild a role from utilities.
 - **Spacing via the `--space-*` semantic scale** — never use arbitrary px/rem values.
-- **Dark mode for free** — `--color-*` roles auto-swap; pin a scheme with the `theme-dark` / `theme-light` switch; never write separate dark-mode overrides for token-handled values.
+- **Dark mode for free** — `--color-*` roles auto-swap; pin a scheme with `data-theme="dark"` or `"light"`; never write separate dark-mode overrides for token-handled values.
 
 ---
 
@@ -354,14 +354,14 @@ subtle cast of the brand hue rather than pure gray. Generate the scale via [Tint
 
 ### Status Colors
 
-| Token                 | Character                                 |
-| --------------------- | ----------------------------------------- |
-| `--color-info`        | Cerulean blue — informational notices     |
-| `--color-success`     | Teal green — positive confirmations       |
-| `--color-warning`     | Amber gold — cautionary alerts            |
-| `--color-destructive` | Vivid red-orange — errors, danger actions |
+| Token                 | Character                           |
+| --------------------- | ----------------------------------- |
+| `--color-info`        | Blue — informational notices        |
+| `--color-success`     | Teal green — positive confirmations |
+| `--color-warning`     | Amber — cautionary alerts           |
+| `--color-destructive` | Red-orange — errors, danger actions |
 
-All status foregrounds are white. Status steps **darker** in dark mode (opposite of brand).
+Each role is a pale surface (a dark surface in dark mode), and its `-foreground` is the same hue at 4.5:1 or better on that surface. Use `-foreground` for status text, borders, rings, and accents on any other surface; the role itself is too faint to read there.
 
 ---
 
@@ -429,11 +429,11 @@ that acts like a control is `data-ui="button" data-button-variant="link"`.
 
 ### Buttons
 
-Subtly rounded (`--radius-md`, ~10px). Height from `--ui-button-min-h` (= `--ui-field-h`). Variants (`data-button-variant`): **default** (no attribute — bordered, `--color-background`), **primary** (solid `--color-primary`), **secondary** / **tertiary** (solid brand roles), **muted** (`--color-muted` fill), **ghost** (transparent, hover reveals `--color-muted`), **outline** (transparent, bordered), **link** (inline text, primary on hover, no underline), and the soft status variants **info**, **success**, **warning**, **destructive** (a tint of the role with its hue as text, held at 4.5:1). Sizes (`data-button-size`): `sm`, `icon`, `icon-sm`.
+Subtly rounded (`--radius-md`, ~10px). Height from `--ui-button-min-h` (= `--ui-field-h`). Variants (`data-button-variant`): **default** (no attribute — bordered, `--color-background`), **primary** (solid `--color-primary`), **secondary** / **tertiary** (solid brand roles), **muted** (`--color-muted` fill), **ghost** (transparent, hover reveals `--color-muted`), **outline** (transparent, bordered), **link** (inline text, primary on hover, no underline), and the status variants **info**, **success**, **warning**, **destructive** (the role as the surface, its `-foreground` as text). Sizes (`data-button-size`): `sm`, `icon`, `icon-sm`.
 
 ### Badges
 
-Gently rounded chips (`--radius-sm`, ~6px). Height `--ui-badge-h`. Variants (`data-badge-variant`): default, `primary`, `secondary`, `tertiary`, `muted`, `ghost`, `link`, and the soft status variants `info`, `success`, `warning`, `destructive` (as on buttons). Size (`data-badge-size`): `icon`. `--font-size-xs`, `--font-weight-strong`.
+Gently rounded chips (`--radius-sm`, ~6px). Height `--ui-badge-h`. Variants (`data-badge-variant`): default, `primary`, `secondary`, `tertiary`, `muted`, `ghost`, `link`, and the status variants `info`, `success`, `warning`, `destructive` (as on buttons). Size (`data-badge-size`): `icon`. `--font-size-xs`, `--font-weight-strong`.
 
 ### Dialog
 
@@ -521,7 +521,7 @@ Box-shadow-based, Tailwind/shadcn-compatible: set `--color-ring` on `:root` (bas
 
 ### Animation
 
-Spring easing (`--spring-easing`) with 0.333s duration. Fallback: `cubic-bezier(0.17, 0.84, 0.44, 1)`.
+Spring easing (`--spring-easing`, no bounce) with 0.25s duration. Fallback: `cubic-bezier(0.32, 0.66, 0.1, 1)`.
 
 ### Section Layout Patterns
 

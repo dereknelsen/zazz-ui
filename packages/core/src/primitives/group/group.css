@@ -1,0 +1,18 @@
+/**
+ * group.css: Group (ui-group | [data-ui~="group"]), the ancestor whose state
+ * its descendants' `--group-*` utilities follow (`--group-bg--hover`)
+ *
+ * @layer      components
+ * @requires   _layers.css
+ *
+ * The state selectors live in the generated tier setters. This file only gives
+ * the tag a display: the attribute form sits on a link, a button, a list item,
+ * and keeps what its host has. A custom element never matches `:disabled`, so
+ * `<ui-group>` takes `aria-disabled="true"` (with a role that allows it).
+ */
+
+@layer ui.components {
+  :where(ui-group) {
+    display: block;
+  }
+}

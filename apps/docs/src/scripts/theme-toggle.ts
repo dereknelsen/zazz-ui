@@ -1,8 +1,8 @@
 /**
  * `<theme-toggle>`: the light / dark / system radios in
- * components/ThemeToggle.astro. A stored choice pins `theme-dark` /
- * `theme-light` in `data-ui` on `<html>` (the kit's head script restores it
- * before first paint); "system" clears both so the page follows the OS scheme.
+ * components/ThemeToggle.astro. A stored choice pins `data-theme` on `<html>`
+ * (the kit's head script restores it before first paint); "system" clears it so
+ * the page follows the OS scheme.
  *
  * Each instance names its radios uniquely on setup. A swap navigation connects
  * the destination's body beside the live one before moving the persisted
@@ -19,28 +19,22 @@ const KEY = "theme";
 const root = document.documentElement;
 let instances = 0;
 
-/** The pinned scheme from a `theme-*` switch on `<html>`, if any. */
-function pinned(): string | undefined {
-  return (root.dataset.ui ?? "")
-    .split(/\s+/)
-    .find((t) => t === "theme-light" || t === "theme-dark")
-    ?.slice("theme-".length);
-}
+/** `*` alone misses pseudo-elements, which would keep fading between schemes. */
+const noTransitions = document.createElement("style");
+noTransitions.textContent = "*, ::before, ::after { transition: none !important; }";
 
 function stored(): string {
   try {
     const value = localStorage.getItem(KEY);
     return value === "light" || value === "dark" ? value : "system";
   } catch {
-    return pinned() ?? "system";
+    return root.dataset.theme ?? "system";
   }
 }
 
 function apply(value: string): void {
-  const tokens = (root.dataset.ui ?? "").split(/\s+/).filter((t) => t && !t.startsWith("theme-"));
-  if (value === "light" || value === "dark") tokens.push(`theme-${value}`);
-  if (tokens.length) root.dataset.ui = tokens.join(" ");
-  else delete root.dataset.ui;
+  if (value === "light" || value === "dark") root.dataset.theme = value;
+  else delete root.dataset.theme;
   try {
     if (value === "system") localStorage.removeItem(KEY);
     else localStorage.setItem(KEY, value);
@@ -56,6 +50,18 @@ function sync(value: string): void {
   }
 }
 
+/**
+ * Runs `change` with transitions off, so the new scheme lands in one frame.
+ * Reading a computed style flushes the pending style change while the sheet
+ * still applies; removed without that flush, the browser would never see it.
+ */
+function withoutTransitions(change: () => void): void {
+  document.head.append(noTransitions);
+  change();
+  void getComputedStyle(root).colorScheme;
+  noTransitions.remove();
+}
+
 class ThemeToggle extends ZazzElement {
   protected setup(signal: AbortSignal): void {
     const name = `theme-toggle-${++instances}`;
@@ -68,8 +74,10 @@ class ThemeToggle extends ZazzElement {
       (event) => {
         const input = event.target;
         if (!(input instanceof HTMLInputElement)) return;
-        apply(input.value);
-        sync(input.value);
+        withoutTransitions(() => {
+          apply(input.value);
+          sync(input.value);
+        });
       },
       { signal },
     );

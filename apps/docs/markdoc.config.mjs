@@ -58,7 +58,6 @@ export default defineMarkdocConfig({
       attributes: { primitive: { type: String, required: true } },
     },
     "from-css": { render: component("./src/components/api/FromCssTable.astro"), selfClosing: true },
-    switches: { render: component("./src/components/api/SwitchesTable.astro"), selfClosing: true },
     roles: { render: component("./src/components/api/RolesTable.astro"), selfClosing: true },
     globals: { render: component("./src/components/api/GlobalsTable.astro"), selfClosing: true },
     tokens: {

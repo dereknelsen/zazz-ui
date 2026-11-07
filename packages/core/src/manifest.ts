@@ -260,6 +260,15 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/input-group/input-group-password-group.html",
     ],
   },
+  group: {
+    tags: ["ui-group"],
+    css: ["primitives/group/group.css"],
+    js: [],
+    base: [],
+    primitives: [],
+    bare: [],
+    examples: ["primitives/group/group.html"],
+  },
   kbd: {
     tags: ["ui-kbd-group"],
     css: ["primitives/kbd/kbd.css"],
@@ -417,7 +426,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     css: ["primitives/select/select.css"],
     js: ["primitives/select/multiselect.js"],
     base: [],
-    primitives: ["fields", "popover", "button"],
+    primitives: ["fields", "popover", "button", "menu"],
     bare: SIGNALS_BARE,
     examples: [
       "primitives/select/select.html",
@@ -446,7 +455,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     css: ["primitives/switch/switch.css"],
     js: [],
     base: [],
-    primitives: [],
+    primitives: ["fields"],
     bare: [],
     examples: ["primitives/switch/switch.html"],
   },
@@ -641,7 +650,7 @@ export const BASE_CSS_POST: string[] = [
   "base/_utilities-box.css",
   "base/_utilities-pseudo.css",
   "base/_defaults.css",
-  "base/_switches.css",
+  "base/_utilities-sr.css",
 ];
 
 /**
@@ -707,6 +716,7 @@ export const TAG_FORMS: string[] = Object.values(PRIMITIVES)
 
 export const CSS_CASCADE_ORDER: string[] = [
   "layout",
+  "group",
   "scroll-fade",
   "separator",
   "fields",

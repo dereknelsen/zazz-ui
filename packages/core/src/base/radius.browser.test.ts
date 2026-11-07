@@ -117,3 +117,178 @@ describe("--radius", () => {
     expect(radius(root.querySelector("[data-otp-slot~='cell']")!)).toBeCloseTo(scale(3), 0);
   });
 });
+
+describe("corner shape", () => {
+  useKit();
+
+  const shape = (el: Element, pseudo?: "::before") => style(el, "corner-shape", pseudo);
+  /** A value's computed form: Chromium serializes keywords as superellipse(). Mounts, so
+   * it replaces the fixture: read it before mounting the element under test. */
+  const computed = (value: string) => shape(mount(`<i style="corner-shape: ${value}"></i>`));
+  const token = () => computed("var(--radius-corner-shape)");
+  const round = () => computed("round");
+  const bevel = () => computed("bevel");
+
+  it("--radius and its corner forms pick up the token", () => {
+    const expected = token();
+    expect(expected).not.toBe(round());
+    const root = mount(
+      `<div><i data-all style="${BOX} --radius: 2"></i><i data-top style="${BOX} --radius-t: 2"></i></div>`,
+    );
+    expect(shape(root.querySelector("[data-all]")!)).toBe(expected);
+    expect(shape(root.querySelector("[data-top]")!)).toBe(expected);
+  });
+
+  it("a tier-only radius picks up the token", () => {
+    const el = mount(`<div><i style="${BOX} --radius--md: 2"></i></div>`).firstElementChild!;
+    expect(shape(el)).toBe(token());
+  });
+
+  it("an element with no radius utility keeps the initial shape", () => {
+    expect(shape(mount(`<i style="${BOX}"></i>`))).toBe(round());
+  });
+
+  it("--radius: full stays round", () => {
+    expect(shape(mount(`<i style="${BOX} --radius: full"></i>`))).toBe(round());
+  });
+
+  it("--radius: full beats a primitive's hook, and --corner-shape beats full", () => {
+    const [expectedRound, expectedBevel] = [round(), bevel()];
+    expect(shape(mount(`<span data-ui="badge" style="--radius: full">a</span>`))).toBe(
+      expectedRound,
+    );
+    expect(shape(mount(`<i style="${BOX} --radius: full; --corner-shape: bevel"></i>`))).toBe(
+      expectedBevel,
+    );
+  });
+
+  it("a tier's full stays round while it applies", async () => {
+    const expected = round();
+    await atWidth(at("md"));
+    expect(shape(mount(`<i style="${BOX} --radius: 2; --radius--md: full"></i>`))).toBe(expected);
+  });
+
+  it("--corner-shape wins over the token, on a plain element and on a primitive", () => {
+    const expected = bevel();
+    const root = mount(
+      `<div><i data-plain style="${BOX} --radius: 2; --corner-shape: bevel"></i><button data-ui="button" style="--corner-shape: bevel">a</button></div>`,
+    );
+    expect(shape(root.querySelector("[data-plain]")!)).toBe(expected);
+    expect(shape(root.querySelector("button")!)).toBe(expected);
+  });
+
+  it("--before-radius shapes the pseudo-element, and full keeps it round", () => {
+    const pseudo = (radius: string) =>
+      `<span style="--display: inline-block; --before-content: ''; --before-display: block; --before-w: 4; --before-h: 4; --before-radius: ${radius}"></span>`;
+    expect(shape(mount(pseudo("2")), "::before")).toBe(token());
+    expect(shape(mount(pseudo("full")), "::before")).toBe(round());
+  });
+
+  it("a --radius utility does not override a primitive's hook", () => {
+    const el = mount(
+      `<button data-ui="button" style="--radius: 2; --ui-button-corner-shape: bevel">a</button>`,
+    );
+    expect(shape(el)).toBe(bevel());
+  });
+
+  /** Each part with a radius: the fixture, and the selector of the part inside it. */
+  const SHAPED: readonly (readonly [string, string, string?])[] = [
+    ["badge", `<span data-ui="badge">a</span>`],
+    ["button", `<button data-ui="button">a</button>`],
+    ["button-group", `<div data-ui="button-group"></div>`],
+    ["callout", `<div data-ui="callout"></div>`],
+    ["card", `<div data-ui="card"></div>`],
+    ["checkbox", `<input type="checkbox" />`],
+    [
+      "combobox",
+      `<div data-ui="combobox"><div data-combobox-slot="control"></div></div>`,
+      "[data-combobox-slot]",
+    ],
+    ["dialog", `<dialog data-ui="dialog"></dialog>`],
+    ["field-group", `<div data-ui="field-group"></div>`],
+    ["input", `<input data-ui="input" />`],
+    ["input-group", `<div data-ui="input-group"></div>`],
+    ["kbd", `<kbd>a</kbd>`],
+    [
+      "lightbox thumb",
+      `<div data-ui="lightbox"><button data-lightbox-slot="thumb-content"></button></div>`,
+      "[data-lightbox-slot]",
+    ],
+    ["otp cell", `<div data-ui="otp"><span data-otp-slot="cell"></span></div>`, "[data-otp-slot]"],
+    ["password-group", `<div data-ui="password-group"></div>`],
+    ["popover", `<div popover></div>`],
+    ["select", `<select data-ui="select"></select>`],
+    [
+      "tabs track",
+      `<div data-ui="tabs"><div data-tabs-slot="list"></div></div>`,
+      "[data-tabs-slot]",
+    ],
+    [
+      "tabs indicator",
+      `<div data-ui="tabs"><div data-tabs-slot="indicator"></div></div>`,
+      "[data-tabs-slot]",
+    ],
+    ["textarea", `<textarea data-ui="textarea"></textarea>`],
+    [
+      "toaster",
+      `<div data-ui="toaster"><div data-toaster-slot="toast"></div></div>`,
+      "[data-toaster-slot]",
+    ],
+    ["toggle", `<button data-ui="toggle">a</button>`],
+    ["toggle-group", `<div data-ui="toggle-group"></div>`],
+    [
+      "tooltip",
+      `<div data-ui="tooltip"><div data-tooltip-slot="content"></div></div>`,
+      "[data-tooltip-slot]",
+    ],
+  ];
+
+  /** Circles and pills: their hooks default to round. */
+  const ROUND: readonly (readonly [string, string])[] = [
+    ["meter", `<meter data-ui="meter"></meter>`],
+    ["progress", `<progress data-ui="progress"></progress>`],
+    ["radio", `<input data-ui="radio" type="radio" />`],
+    ["slider", `<input type="range" />`],
+    ["switch", `<input type="checkbox" role="switch" />`],
+  ];
+
+  const part = (html: string, selector?: string): Element => {
+    const root = mount(html);
+    return selector ? root.querySelector(selector)! : root;
+  };
+
+  it.each(SHAPED)("%s takes the token", (_name, html, selector) => {
+    const expected = token();
+    expect(shape(part(html!, selector))).toBe(expected);
+  });
+
+  it.each(ROUND)("%s stays round, with or without a --radius", (_name, html) => {
+    const expected = round();
+    expect(shape(mount(html))).toBe(expected);
+    expect(shape(mount(html.replace(/ ?\/?>/, ` style="--radius: 3"$&`)))).toBe(expected);
+  });
+
+  it("a primitive hook overrides the token", () => {
+    const expected = bevel();
+    const el = mount(
+      `<div style="--ui-card-corner-shape: bevel"><div data-ui="card"></div></div>`,
+    ).firstElementChild!;
+    expect(shape(el)).toBe(expected);
+  });
+
+  it("an inset button follows the field shape, and a menu button its hook", () => {
+    const expected = bevel();
+    const root = mount(`<div>
+      <div data-ui="input-group" style="--ui-field-corner-shape: bevel"><button data-ui="button">a</button></div>
+      <div data-ui="menu" style="--ui-menu-button-corner-shape: bevel"><div data-menu-slot="popover"><button data-ui="button">a</button></div></div>
+    </div>`);
+    for (const button of root.querySelectorAll("button")) expect(shape(button)).toBe(expected);
+  });
+
+  it("--corner-shape reaches a round primitive too", () => {
+    const expected = bevel();
+    expect(
+      shape(mount(`<input data-ui="radio" type="radio" style="--corner-shape: bevel" />`)),
+    ).toBe(expected);
+  });
+});

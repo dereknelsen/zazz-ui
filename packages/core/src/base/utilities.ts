@@ -119,7 +119,8 @@ export type Family =
   | "typography"
   | "color"
   | "effects"
-  | "box";
+  | "box"
+  | "sr";
 
 /** A family's tiers: breakpoints, states, both (paint that also changes per breakpoint), or none. */
 export type Tiers = "breakpoints" | "states" | "both" | "none";
@@ -134,6 +135,7 @@ export const FAMILY_TIERS: Record<Family, Tiers> = {
   color: "both",
   effects: "states",
   box: "none",
+  sr: "breakpoints",
 };
 
 export interface Utility {
@@ -153,7 +155,13 @@ export interface Utility {
    * composite too, as one signed length `--_<name>-w`: a number is that many
    * pixels, a length passes through, and the sign carries meaning (a negative
    * ring is inset). `space` is a dual value the container publishes for its
-   * direct children, who take it as a margin (`SPACE_PROPERTIES`).
+   * direct children, who take it as a margin (`SPACE_PROPERTIES`). `direct` skips
+   * the resolver chain: exact rules per breakpoint, ascending, declare the
+   * properties themselves, so a higher tier wins by source order and a tier below
+   * the first one set declares nothing. `text-wrap` reads its value through typed
+   * channels, which turn `truncate` and `none` into real `text-wrap` values.
+   * `animation` yields to `--_motion-off`, so reduced motion stops any value.
+   * `divide` is a border between the element's direct children (`divideRules`).
    */
   emit?:
     | "plain"
@@ -165,7 +173,11 @@ export interface Utility {
     | "none"
     | "border"
     | "px"
-    | "space";
+    | "space"
+    | "direct"
+    | "text-wrap"
+    | "animation"
+    | "divide";
   /**
    * What the precedence chain ends in when neither the base nor an active tier
    * sets the utility: a `px` utility that stands in for a token (`--focus-ring`
@@ -175,11 +187,6 @@ export interface Utility {
   chainEnd?: string;
   /** Overrides the family's tier kind (`none` for a utility that is base-only). */
   tiers?: Tiers;
-  /**
-   * The `border` emission's width and color channels (`--_<name>-w`, `--_<name>-c`)
-   * inherit, for a switch that draws them on the element's children (`--divide`).
-   */
-  inherits?: true;
   /**
    * What a dual utility's number multiplies (default `var(--spacing)`):
    * `--radius: 2` is two steps of `--spacing` times `--radius-multiplier`.
@@ -289,6 +296,38 @@ export const FONT_WEIGHT_NAMES: Readonly<Record<string, number>> = {
   black: 900,
   heavy: 900,
 };
+
+/**
+ * `data-ui` tokens that are gone, and what replaces each. `data-ui` holds
+ * identities only; a leftover token matches nothing, so an element it hid or
+ * clipped would change without a word. The audit reports them by this table.
+ */
+export const RETIRED_TOKENS: Readonly<Record<string, string>> = {
+  "sr-only": "`--sr: only`",
+  pile: "`--display: grid-pile`",
+  isolate: "`--isolation: isolate`",
+  "not-prose": '`data-prose-slot="end"`',
+  truncate: "`--text-wrap: truncate`",
+  spin: "`--animation: var(--spin)`",
+  ping: "`--animation: var(--ping)`",
+  pulse: "`--animation: var(--pulse)`",
+  bounce: "`--animation: var(--bounce)`",
+  "divide-x": "`--divide-x: 1`",
+  "divide-y": "`--divide-y: 1`",
+  container: "`--container-type: inline-size`",
+  "theme-dark": '`data-theme="dark"`',
+  "theme-light": '`data-theme="light"`',
+};
+
+/** The kit's looping animations: each is a keyframe name and a token (`--spin`). */
+export const ANIMATION_TOKENS = ["spin", "ping", "pulse", "bounce"] as const;
+
+/**
+ * The `--display` keyword for a pile: a grid whose direct children share one
+ * cell, centered. Not a `DISPLAY_SHORTHANDS` entry, which pairs a display with
+ * a flex direction.
+ */
+export const DISPLAY_PILE = "grid-pile";
 
 /**
  * `--display` shorthands that set the flex direction with the display (there
@@ -773,6 +812,8 @@ export const UTILITIES: readonly Utility[] = [
     properties: ["text-wrap"],
     mode: "keyword",
     family: "typography",
+    emit: "text-wrap",
+    tiers: "both",
     noBase: "wrap",
   },
   {
@@ -819,6 +860,15 @@ export const UTILITIES: readonly Utility[] = [
     tiers: "none",
   })),
   { name: "bg-stops", properties: [], mode: "raw", family: "color", emit: "none", tiers: "none" },
+  // before the border utilities: a child's own border loads later and wins
+  ...["divide", "divide-x", "divide-y"].map((name) => ({
+    name,
+    properties: [],
+    mode: "raw" as const,
+    family: "color" as const,
+    emit: "divide" as const,
+    tiers: "breakpoints" as const,
+  })),
   {
     name: "border-color",
     properties: ["border-color"],
@@ -977,6 +1027,15 @@ export const UTILITIES: readonly Utility[] = [
     family: "effects",
     noBase: "none",
   },
+  {
+    name: "animation",
+    properties: ["animation"],
+    mode: "raw",
+    family: "effects",
+    emit: "animation",
+    tiers: "both",
+    noBase: "none",
+  },
   { name: "transition", pseudo: true, properties: ["transition"], mode: "raw", family: "effects" },
   // longhands after the shorthand, so they win over --transition and over a
   // primitive's transition: retime one element without restating its property list
@@ -1029,6 +1088,25 @@ export const UTILITIES: readonly Utility[] = [
     scale: "var(--spacing) * var(--radius-multiplier)",
     aliases: { full: "var(--radius-full)" },
   })),
+  // the radius rules leave corner-shape to the defaults layer (see generate-utilities.ts);
+  // this is the per-element override
+  { name: "corner-shape", properties: ["corner-shape"], mode: "raw", family: "box" },
+  // visually hidden, in its own layer above every other utility (`srRules`)
+  {
+    name: "sr",
+    properties: [],
+    mode: "keyword",
+    family: "sr",
+    emit: "direct",
+    keywords: ["only", "none"],
+  },
+  {
+    name: "isolation",
+    properties: ["isolation"],
+    mode: "keyword",
+    family: "flow",
+    noBase: "auto",
+  },
   { name: "overflow", properties: ["overflow"], mode: "keyword", family: "box" },
   {
     name: "overflow-x",
@@ -1064,9 +1142,15 @@ export const UTILITIES: readonly Utility[] = [
   },
   { name: "object-fit", properties: ["object-fit"], mode: "keyword", family: "box" },
   { name: "object-position", properties: ["object-position"], mode: "raw", family: "box" },
-  // the divider between children for the divide-x / divide-y switches: the
-  // border shorthand's grammar, emitting only its (inherited) width and color channels
-  { name: "divide", properties: [], mode: "raw", family: "box", emit: "border", inherits: true },
+  // the shorthand first: each tier's longhands load after it (`containerRules`)
+  ...["container", "container-name", "container-type"].map((name) => ({
+    name,
+    properties: [name],
+    mode: "raw" as const,
+    family: "box" as const,
+    emit: "direct" as const,
+    tiers: "breakpoints" as const,
+  })),
 ];
 
 /** Utilities that exist only on pseudo-elements. */

@@ -29,6 +29,10 @@
 @property --_space-y-focus-within { syntax: "*"; inherits: false; }
 @property --group-space-y--focus-within { syntax: "*"; inherits: false; }
 @property --_space-y-g-focus-within { syntax: "*"; inherits: false; }
+@property --text-wrap--focus-within { syntax: "*"; inherits: false; }
+@property --_text-wrap-focus-within { syntax: "*"; inherits: false; }
+@property --group-text-wrap--focus-within { syntax: "*"; inherits: false; }
+@property --_text-wrap-g-focus-within { syntax: "*"; inherits: false; }
 @property --text-decoration--focus-within { syntax: "*"; inherits: false; }
 @property --_text-decoration-focus-within { syntax: "*"; inherits: false; }
 @property --group-text-decoration--focus-within { syntax: "*"; inherits: false; }
@@ -141,6 +145,10 @@
 @property --_rotate-focus-within { syntax: "*"; inherits: false; }
 @property --group-rotate--focus-within { syntax: "*"; inherits: false; }
 @property --_rotate-g-focus-within { syntax: "*"; inherits: false; }
+@property --animation--focus-within { syntax: "*"; inherits: false; }
+@property --_animation-focus-within { syntax: "*"; inherits: false; }
+@property --group-animation--focus-within { syntax: "*"; inherits: false; }
+@property --_animation-g-focus-within { syntax: "*"; inherits: false; }
 @property --transition--focus-within { syntax: "*"; inherits: false; }
 @property --_transition-focus-within { syntax: "*"; inherits: false; }
 @property --group-transition--focus-within { syntax: "*"; inherits: false; }

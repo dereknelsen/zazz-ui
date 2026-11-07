@@ -8,6 +8,8 @@
  * @uses       anchor-name, position-anchor, position-area, position-try-fallbacks:
  *             anchor positioning (gated behind @supports; Safari 26.x falls
  *             back to the UA-centered popover)
+ * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
+ *             rounded corners
  * @tokens     --ui-popover-* (Tier 3 owner; @layer variables)
  * @presets    data-popover-side="top | bottom | left | right", data-popover-align="start | center | end"
  *             on the [popover] element (the identity is the native attribute)
@@ -20,7 +22,9 @@
     /* Styles */
     --ui-popover-border-color: var(--color-border);
     --ui-popover-radius: var(--radius-md);
+    --ui-popover-corner-shape: var(--radius-corner-shape);
     --ui-popover-button-radius: var(--radius-sm);
+    --ui-popover-button-corner-shape: var(--radius-corner-shape);
     --ui-popover-shadow: var(--shadow-md);
     --ui-popover-p: calc(var(--spacing) * 1.5);
     --ui-popover-min-w: var(--article-xs);
@@ -61,6 +65,7 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-popover-corner-shape));
     box-shadow: var(--_shadow-resolved, var(--ui-popover-shadow));
     opacity: var(--ui-popover-opacity--start);
     transform: scale(var(--ui-popover-scale--start)) translate3d(var(--ui-popover-translate--start));
@@ -130,6 +135,7 @@
 
   :where([popover] [data-ui~="button"]) {
     --ui-button-radius: var(--ui-popover-button-radius);
+    --ui-button-corner-shape: var(--ui-popover-button-corner-shape);
   }
 
   /* ===========================================================================

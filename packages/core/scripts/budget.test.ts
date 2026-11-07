@@ -61,7 +61,7 @@ describe("utilities layer budget", () => {
     expect(substrings).toBeLessThanOrEqual(1400);
   });
 
-  it("claim 15 (ratchet): the generated layer stays under 25 KB with Brotli", () => {
+  it("claim 15 (ratchet): the generated layer stays under 26 KB with Brotli", () => {
     const raw = Buffer.byteLength(all);
     const compressed = brotli(all);
     console.log(`utilities layer bytes: raw ${raw}, brotli ${compressed}`);
@@ -81,6 +81,8 @@ describe("utilities layer budget", () => {
     // 23.1 KB with --elevation in the box-shadow composite (the filter composite and --filter's
     // `none` alias gone) and a spread term on every shadow layer.
     // 24.2 KB with state tiers on --z; 24.7 KB with --space-x and --space-y (states and breakpoints).
-    expect(compressed).toBeLessThan(25 * 1024);
+    // 25.6 KB with --sr, --animation, --text-wrap states, --divide, and --container (the switches
+    // these replaced were never counted here: _switches.css alone was 0.4 KB of this).
+    expect(compressed).toBeLessThan(26 * 1024);
   });
 });

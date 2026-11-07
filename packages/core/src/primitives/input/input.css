@@ -7,6 +7,8 @@
  * @uses       mask — calendar icon (not background-image, for color: currentColor)
  * @uses       @supports (-webkit-touch-callout: none) — iOS-only width fix for temporal
  *             inputs (webkit.org/b/301648)
+ * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
+ *             rounded corners
  * @tokens     --ui-input-* (@layer variables; surface colors and height read the
  *             --ui-field-* family directly)
  */
@@ -23,11 +25,13 @@
     --ui-input-border-style: var(--ui-field-border-style);
     --ui-input-border-color: var(--ui-field-border-color);
     --ui-input-radius: var(--ui-field-radius);
+    --ui-input-corner-shape: var(--ui-field-corner-shape);
 
     --ui-input-calendar-picker-color: currentColor;
     --ui-input-calendar-picker-icon-size: calc(var(--spacing) * 4);
     --ui-input-calendar-picker-size: calc(var(--spacing) * 6);
     --ui-input-calendar-picker-radius: var(--ui-field-inset-child-radius);
+    --ui-input-calendar-picker-corner-shape: var(--ui-field-corner-shape);
     --ui-input-calendar-picker-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Crect x='40' y='40' width='176' height='176' rx='8' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='176' y1='24' x2='176' y2='56' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='80' y1='24' x2='80' y2='56' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='40' y1='88' x2='216' y2='88' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3C/svg%3E");
   }
 }
@@ -72,6 +76,7 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-input-corner-shape));
 
     /* The ring is published to --_focus-shadow so a --shadow utility keeps
        it; the transparent outline twin keeps focus visible in forced-colors */
@@ -147,6 +152,7 @@
     inline-size: var(--ui-input-calendar-picker-size);
     block-size: var(--ui-input-calendar-picker-size);
     border-radius: var(--ui-input-calendar-picker-radius);
+    corner-shape: var(--ui-input-calendar-picker-corner-shape);
 
     transition:
       opacity var(--default-transition-duration) var(--default-transition-timing-function),
@@ -175,13 +181,13 @@
   }
 
   :where([data-ui~="input"]):user-invalid {
-    --ui-field-bg: color-mix(in oklch, var(--color-destructive) 5%, var(--color-input));
-    --ui-field-bg--hover: color-mix(in oklch, var(--color-destructive) 10%, var(--color-input));
-    --ui-field-border-color: var(--color-destructive);
-    --ui-field-border-color--hover: var(--color-destructive);
-    --ui-field-border-color--focus-within: var(--color-destructive);
-    --ui-field-ring-color: var(--color-destructive);
+    --ui-field-bg: var(--color-destructive);
+    --ui-field-bg--hover: oklch(from var(--color-destructive) calc(l - 0.025) c h);
+    --ui-field-border-color: var(--color-destructive-foreground);
+    --ui-field-border-color--hover: var(--color-destructive-foreground);
+    --ui-field-border-color--focus-within: var(--color-destructive-foreground);
+    --ui-field-ring-color: var(--color-destructive-foreground);
 
-    border-color: var(--color-destructive);
+    border-color: var(--color-destructive-foreground);
   }
 }

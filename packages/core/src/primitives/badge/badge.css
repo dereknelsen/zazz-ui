@@ -5,12 +5,19 @@
  * @requires   _layers.css, _variables.css, _reset.css, _properties.css (--_*-resolved, --_focus-shadow), fields.css (--ui-field-* border/ring)
  * @uses       color-mix(), oklch(from …): variant hover/active tints
  * @uses       text-box: vertical trim (patchy browser support)
+ * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
+ *             rounded corners
  * @tokens     --ui-badge-* (@layer variables; hooks are named after the utilities they back)
  * @consumedby combobox.css (selection tags)
  *
  * Every utility-backed declaration reads one chain, highest first:
  *   var(--_<utility>-resolved, var(--_badge-<utility>, var(--ui-badge-<utility>)))
  * States apply only to interactive badges (button, a[href]).
+ *
+ * States step one way and active goes further than hover. Unfilled surfaces (the
+ * default, outline, ghost) gain the muted role; filled ones fade toward the page;
+ * status surfaces darken. Button and badge resolve the same in every variant
+ * (badge-button-parity.browser.test.ts).
  */
 
 @layer variables {
@@ -24,8 +31,8 @@
     --ui-badge-leading: 1;
 
     --ui-badge-bg: var(--color-background);
-    --ui-badge-bg--hover: oklch(from var(--color-background) calc(l - 0.025) c h);
-    --ui-badge-bg--active: oklch(from var(--color-background) calc(l - 0.05) c h);
+    --ui-badge-bg--hover: var(--color-muted);
+    --ui-badge-bg--active: oklch(from var(--ui-badge-bg--hover) l c h / calc(alpha * 1.5));
 
     --ui-badge-text: var(--color-foreground);
     --ui-badge-text--hover: var(--color-foreground);
@@ -42,6 +49,7 @@
     --ui-badge-px: calc(var(--spacing) * 1.25);
     --ui-badge-h: calc(var(--spacing) * 5);
     --ui-badge-radius: var(--radius-sm);
+    --ui-badge-corner-shape: var(--radius-corner-shape);
     --ui-badge-background-clip: border-box;
 
     --ui-badge-icon-size: calc(var(--spacing) * 3);
@@ -215,6 +223,7 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-badge-corner-shape));
 
     color: var(--_text-resolved, var(--_badge-text, var(--ui-badge-text)));
     background-color: var(--_bg-resolved, var(--_badge-bg, var(--ui-badge-bg)));
@@ -302,6 +311,18 @@
     outline-color: transparent;
   }
 
+  /* before the variants at the same specificity: a disabled primary keeps its color */
+  :where([data-ui~="badge"]:is(:disabled, [aria-disabled="true"])) {
+    --_badge-text: var(--color-muted-foreground);
+    --_badge-bg: var(--color-muted);
+    --_badge-shadow: 0 0 transparent;
+    --decoration-line: none;
+
+    cursor: default;
+    opacity: 0.6;
+    outline: none;
+  }
+
   :where([data-ui~="badge"]):is(button, a[href])[aria-busy="true"] {
     cursor: progress;
   }
@@ -324,6 +345,12 @@
   BADGE VARIANTS — data-badge-variant writes the privates
   =========================================================================== */
 
+  :where([data-ui~="badge"][data-badge-variant="outline"]) {
+    --_badge-bg: transparent;
+
+    --_badge-shadow: 0 0 transparent;
+  }
+
   :where([data-ui~="badge"][data-badge-variant="primary"]) {
     --_badge-bg: var(--color-primary);
     --_badge-bg--hover: light-dark(
@@ -342,6 +369,8 @@
     --_badge-border-color: transparent;
     --_badge-border-color--hover: transparent;
     --_badge-border-color--active: transparent;
+
+    --_badge-shadow: 0 0 transparent;
   }
 
   :where([data-ui~="badge"][data-badge-variant="secondary"]) {
@@ -362,6 +391,8 @@
     --_badge-border-color: transparent;
     --_badge-border-color--hover: transparent;
     --_badge-border-color--active: transparent;
+
+    --_badge-shadow: 0 0 transparent;
   }
 
   :where([data-ui~="badge"][data-badge-variant="tertiary"]) {
@@ -382,16 +413,15 @@
     --_badge-border-color: transparent;
     --_badge-border-color--hover: transparent;
     --_badge-border-color--active: transparent;
+
+    --_badge-shadow: 0 0 transparent;
   }
 
   :where([data-ui~="badge"][data-badge-variant="muted"]) {
-    /* --color-muted flattened onto the page so the surface stays opaque */
-    --_badge-bg: light-dark(
-      color-mix(in srgb, var(--color-foreground) 5%, var(--color-background)),
-      color-mix(in srgb, var(--color-foreground) 10%, var(--color-background))
-    );
-    --_badge-bg--hover: oklch(from var(--_badge-bg) calc(l - 0.025) c h);
-    --_badge-bg--active: oklch(from var(--_badge-bg) calc(l - 0.05) c h);
+    /* the translucent muted role: fades toward the surface beneath */
+    --_badge-bg: var(--color-muted);
+    --_badge-bg--hover: oklch(from var(--_badge-bg) l c h / calc(alpha * 0.66));
+    --_badge-bg--active: oklch(from var(--_badge-bg) l c h / calc(alpha * 0.33));
 
     --_badge-text: var(--color-foreground);
     --_badge-text--hover: var(--color-foreground);
@@ -400,6 +430,8 @@
     --_badge-border-color: transparent;
     --_badge-border-color--hover: transparent;
     --_badge-border-color--active: transparent;
+
+    --_badge-shadow: 0 0 transparent;
   }
 
   :where([data-ui~="badge"][data-badge-variant="ghost"]) {
@@ -415,15 +447,14 @@
     --_badge-border-color: transparent;
     --_badge-border-color--hover: transparent;
     --_badge-border-color--active: transparent;
+
+    --_badge-shadow: 0 0 transparent;
   }
 
-  /* Status variants (info, success, warning, destructive) share one soft
-     design: the status color mixed 10% (20% in dark) into the page background
-     as an opaque surface, and
-     the status hue as the text with its lightness clamped (at most 0.45 in
-     light, at least 0.82 in dark) so it holds 4.5:1 on the tint and on the
-     hover and active steps; status-contrast.browser.test.ts checks it. No border. One rule derives the states from the
-     surface; each variant names only its colors. */
+  /* Status variants (info, success, warning, destructive) pair the role's
+     surface with its -foreground. No border. One rule derives the states from
+     the surface; each variant names only its role. status-contrast.browser.test.ts
+     checks 4.5:1 at rest, hover, and active. */
   :where(
     [data-ui~="badge"]:is(
       [data-badge-variant="info"],
@@ -446,51 +477,27 @@
   }
 
   :where([data-ui~="badge"][data-badge-variant="info"]) {
-    --_badge-ring-color: var(--color-info);
-    --_badge-bg: light-dark(
-      color-mix(in srgb, var(--color-info) 10%, var(--color-background)),
-      color-mix(in srgb, var(--color-info) 20%, var(--color-background))
-    );
-    --_badge-text: light-dark(
-      oklch(from var(--color-info) min(l, 0.45) c h),
-      oklch(from var(--color-info) max(l, 0.82) c h)
-    );
+    --_badge-ring-color: var(--color-info-foreground);
+    --_badge-bg: var(--color-info);
+    --_badge-text: var(--color-info-foreground);
   }
 
   :where([data-ui~="badge"][data-badge-variant="success"]) {
-    --_badge-ring-color: var(--color-success);
-    --_badge-bg: light-dark(
-      color-mix(in srgb, var(--color-success) 10%, var(--color-background)),
-      color-mix(in srgb, var(--color-success) 20%, var(--color-background))
-    );
-    --_badge-text: light-dark(
-      oklch(from var(--color-success) min(l, 0.45) c h),
-      oklch(from var(--color-success) max(l, 0.82) c h)
-    );
+    --_badge-ring-color: var(--color-success-foreground);
+    --_badge-bg: var(--color-success);
+    --_badge-text: var(--color-success-foreground);
   }
 
   :where([data-ui~="badge"][data-badge-variant="warning"]) {
-    --_badge-ring-color: var(--color-warning);
-    --_badge-bg: light-dark(
-      color-mix(in srgb, var(--color-warning) 10%, var(--color-background)),
-      color-mix(in srgb, var(--color-warning) 20%, var(--color-background))
-    );
-    --_badge-text: light-dark(
-      oklch(from var(--color-warning) min(l, 0.45) c h),
-      oklch(from var(--color-warning) max(l, 0.82) c h)
-    );
+    --_badge-ring-color: var(--color-warning-foreground);
+    --_badge-bg: var(--color-warning);
+    --_badge-text: var(--color-warning-foreground);
   }
 
   :where([data-ui~="badge"][data-badge-variant="destructive"]) {
-    --_badge-ring-color: var(--color-destructive);
-    --_badge-bg: light-dark(
-      color-mix(in srgb, var(--color-destructive) 10%, var(--color-background)),
-      color-mix(in srgb, var(--color-destructive) 20%, var(--color-background))
-    );
-    --_badge-text: light-dark(
-      oklch(from var(--color-destructive) min(l, 0.45) c h),
-      oklch(from var(--color-destructive) max(l, 0.82) c h)
-    );
+    --_badge-ring-color: var(--color-destructive-foreground);
+    --_badge-bg: var(--color-destructive);
+    --_badge-text: var(--color-destructive-foreground);
   }
 
   :where([data-ui~="badge"][data-badge-variant="link"]) {
@@ -500,12 +507,12 @@
 
     --_badge-text: var(--color-foreground);
     --_badge-text--hover: light-dark(
-      oklch(from var(--color-primary) calc(l + (1 - l) * 0.4) c h),
-      oklch(from var(--color-primary) calc(l * 0.6) c h)
+      oklch(from var(--color-primary) calc(l + (1 - l) * 0.2) c h),
+      oklch(from var(--color-primary) calc(l * 0.8) c h)
     );
     --_badge-text--active: light-dark(
-      oklch(from var(--color-primary) calc(l + (1 - l) * 0.5) c h),
-      oklch(from var(--color-primary) calc(l * 0.5) c h)
+      oklch(from var(--color-primary) calc(l + (1 - l) * 0.3) c h),
+      oklch(from var(--color-primary) calc(l * 0.7) c h)
     );
 
     --_badge-border-style: none;

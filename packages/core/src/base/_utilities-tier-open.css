@@ -10,6 +10,7 @@
     --_template-rows-open: var(--template-rows--open);
     --_space-x-open: var(--space-x--open);
     --_space-y-open: var(--space-y--open);
+    --_text-wrap-open: var(--text-wrap--open);
     --_text-decoration-open: var(--text-decoration--open);
     --_text-open: var(--text--open);
     --_bg-open: var(--bg--open);
@@ -38,13 +39,14 @@
     --_scale-open: var(--scale--open);
     --_translate-open: var(--translate--open);
     --_rotate-open: var(--rotate--open);
+    --_animation-open: var(--animation--open);
     --_transition-open: var(--transition--open);
     --_transition-duration-open: var(--transition-duration--open);
     --_transition-delay-open: var(--transition-delay--open);
     --_radius-open: var(--radius--open);
     --_z-open: var(--z--open);
   }
-  :where([data-ui~="group"]:is([open], :popover-open, [aria-expanded="true"]) [style*="--group-"]) {
+  :where(:where(ui-group, [data-ui~="group"]):is([open], :popover-open, [aria-expanded="true"]) [style*="--group-"]) {
     --_anchor-name-g-open: var(--group-anchor-name--open);
     --_position-anchor-g-open: var(--group-position-anchor--open);
     --_position-area-g-open: var(--group-position-area--open);
@@ -52,6 +54,7 @@
     --_template-rows-g-open: var(--group-template-rows--open);
     --_space-x-g-open: var(--group-space-x--open);
     --_space-y-g-open: var(--group-space-y--open);
+    --_text-wrap-g-open: var(--group-text-wrap--open);
     --_text-decoration-g-open: var(--group-text-decoration--open);
     --_text-g-open: var(--group-text--open);
     --_bg-g-open: var(--group-bg--open);
@@ -80,6 +83,7 @@
     --_scale-g-open: var(--group-scale--open);
     --_translate-g-open: var(--group-translate--open);
     --_rotate-g-open: var(--group-rotate--open);
+    --_animation-g-open: var(--group-animation--open);
     --_transition-g-open: var(--group-transition--open);
     --_transition-duration-g-open: var(--group-transition-duration--open);
     --_transition-delay-g-open: var(--group-transition-delay--open);

@@ -8,6 +8,10 @@ order: 1
 
 Where an element sits and how it clips. `--display` also carries the flex shorthands (`flex-col`, `inline-flex-row`) that set the direction with the display, so there is no separate direction utility.
 
+`--display: grid-pile` is a grid with every direct child in one cell, centered, like layering with `position: absolute` but without taking anything out of flow. A child's own placement, `--place-items`, `--items`, and a primitive's own alignment win over the centering. Pair it with `--isolation: isolate` on a layered hero so the stacking context stays local. `--isolation` also takes `auto`, and both take breakpoints.
+
+`--container-type: inline-size` makes an element a query container, so the [breakpoint tiers](/api/foundations/breakpoints/) inside it follow its width. `--container-name` names it, and `--container` is the CSS `name / type` shorthand, or `none`. All three take breakpoints. Watch the shorthand: `--container: inline-size` sets a name, not a type. On a sticky element use `--container-type` with `--container-name`, because the shorthand drops the scroll-state type; the audit warns about it.
+
 `--anchor-name` and `--position-anchor` take states and breakpoints, so the anchor can move with interaction: put `--anchor-name--hover: --block` on every block of an editor, and a toolbar with `--position: absolute; --position-anchor: --block` follows the hovered one. `--position-area` places it: `--position-area: block-start span-inline-end` puts the toolbar above the block, aligned to its start. For finer placement write `anchor()` in plain CSS. The inset utilities take numbers, lengths, and (on the four sides) `auto`, nothing else, so `--top: anchor(bottom)` computes to `0`.
 
 `--top`, `--right`, `--bottom`, and `--left` take `auto` at any breakpoint, which lets a side you set at one width go back to `auto` at another. A bar that sticks to the bottom of a phone screen and to the top of a desktop one is `--position: sticky; --bottom: 0; --bottom--lg: auto; --top: auto; --top--lg: 0`. `--inset`, `--inset-x`, and `--inset-y` take lengths only.
@@ -17,6 +21,8 @@ Where an element sits and how it clips. `--display` also carries the flex shorth
 {% utilities section="layout" /%}
 
 ## Examples
+
+{% preview src="utilities/pile" /%}
 
 {% preview src="utilities/position" /%}
 

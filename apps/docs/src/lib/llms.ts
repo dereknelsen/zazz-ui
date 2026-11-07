@@ -5,7 +5,7 @@
  * (a fenced fragment, a table, a blockquote) from the same kit data.
  */
 import { buildHead } from "@zazz-ui/core/head.ts";
-import { globalAttributes, switches, tokenGroup, typographyRoles } from "./api/foundations.ts";
+import { globalAttributes, tokenGroup, typographyRoles } from "./api/foundations.ts";
 import { primitiveApi } from "./api/primitives.ts";
 import { installApi } from "./api/install.ts";
 import { utilityRows } from "./api/utilities.ts";
@@ -186,11 +186,6 @@ export function expandTag(name: string, attrs: Attrs): string {
       return tokensMarkdown(str("group"));
     case "head":
       return headMarkdown(attrs);
-    case "switches":
-      return table(
-        ["Token", "Effect"],
-        switches().map((s) => [s.tokens.map((t) => `\`data-ui="${t}"\``).join(" "), s.description]),
-      );
     case "roles":
       return typographyRoles()
         .map((r) => `- \`${r}\``)

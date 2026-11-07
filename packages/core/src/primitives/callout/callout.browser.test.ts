@@ -2,8 +2,8 @@
 
 /**
  * @fileoverview Callout: the default is an outline card's surface, muted a muted
- * card's, and the status variants share the soft status tokens with badges and
- * buttons.
+ * card's, and the status variants use each role's surface and foreground, as badges
+ * and buttons do.
  */
 
 import { describe, expect, it } from "vite-plus/test";
@@ -62,13 +62,13 @@ describe("callout", () => {
   });
 
   it.each(STATUS)(
-    "%s shares the soft status surface and text with badges and buttons, plus a faint status border",
+    "%s shares the status surface and foreground with badges and buttons, plus a faint status border",
     (variant) => {
       const root = mount(`<div>
       <aside data-ui="callout" data-callout-variant="${variant}" data-callout>c</aside>
       <span data-ui="badge" data-badge-variant="${variant}" data-badge>b</span>
       <button data-ui="button" data-button-variant="${variant}" type="button" data-button>b</button>
-      <span data-swatch style="background-color: light-dark(color-mix(in srgb, var(--color-${variant}) 10%, var(--color-background)), color-mix(in srgb, var(--color-${variant}) 20%, var(--color-background))); color: light-dark(oklch(from var(--color-${variant}) min(l, 0.45) c h), oklch(from var(--color-${variant}) max(l, 0.82) c h)); border-top-color: oklch(from var(--color-${variant}) l c h / 0.2)">s</span>
+      <span data-swatch style="background-color: var(--color-${variant}); color: var(--color-${variant}-foreground); border-top-color: oklch(from var(--color-${variant}-foreground) l c h / 0.2)"></span>
     </div>`);
       const at = (selector: string) => root.querySelector(selector)!;
       const swatch = at("[data-swatch]");

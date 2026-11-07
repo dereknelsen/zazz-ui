@@ -30,6 +30,9 @@
           "name": "inline-flex-col-reverse"
         },
         {
+          "name": "grid-pile"
+        },
+        {
           "name": "block"
         },
         {
@@ -85,6 +88,9 @@
         },
         {
           "name": "inline-flex-col-reverse"
+        },
+        {
+          "name": "grid-pile"
         },
         {
           "name": "block"
@@ -144,6 +150,9 @@
           "name": "inline-flex-col-reverse"
         },
         {
+          "name": "grid-pile"
+        },
+        {
           "name": "block"
         },
         {
@@ -199,6 +208,9 @@
         },
         {
           "name": "inline-flex-col-reverse"
+        },
+        {
+          "name": "grid-pile"
         },
         {
           "name": "block"
@@ -258,6 +270,9 @@
           "name": "inline-flex-col-reverse"
         },
         {
+          "name": "grid-pile"
+        },
+        {
           "name": "block"
         },
         {
@@ -313,6 +328,9 @@
         },
         {
           "name": "inline-flex-col-reverse"
+        },
+        {
+          "name": "grid-pile"
         },
         {
           "name": "block"
@@ -11314,6 +11332,9 @@
           "name": "nowrap"
         },
         {
+          "name": "auto"
+        },
+        {
           "name": "balance"
         },
         {
@@ -11321,6 +11342,312 @@
         },
         {
           "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--text-wrap--starting",
+      "description": "--text-wrap in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none.",
+      "values": [
+        {
+          "name": "wrap"
+        },
+        {
+          "name": "nowrap"
+        },
+        {
+          "name": "auto"
+        },
+        {
+          "name": "balance"
+        },
+        {
+          "name": "pretty"
+        },
+        {
+          "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--text-wrap--disabled",
+      "description": "--text-wrap in the disabled state.",
+      "values": [
+        {
+          "name": "wrap"
+        },
+        {
+          "name": "nowrap"
+        },
+        {
+          "name": "auto"
+        },
+        {
+          "name": "balance"
+        },
+        {
+          "name": "pretty"
+        },
+        {
+          "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--text-wrap--active",
+      "description": "--text-wrap in the active state.",
+      "values": [
+        {
+          "name": "wrap"
+        },
+        {
+          "name": "nowrap"
+        },
+        {
+          "name": "auto"
+        },
+        {
+          "name": "balance"
+        },
+        {
+          "name": "pretty"
+        },
+        {
+          "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--text-wrap--focus-visible",
+      "description": "--text-wrap in the focus-visible state.",
+      "values": [
+        {
+          "name": "wrap"
+        },
+        {
+          "name": "nowrap"
+        },
+        {
+          "name": "auto"
+        },
+        {
+          "name": "balance"
+        },
+        {
+          "name": "pretty"
+        },
+        {
+          "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--text-wrap--focus-within",
+      "description": "--text-wrap in the focus-within state.",
+      "values": [
+        {
+          "name": "wrap"
+        },
+        {
+          "name": "nowrap"
+        },
+        {
+          "name": "auto"
+        },
+        {
+          "name": "balance"
+        },
+        {
+          "name": "pretty"
+        },
+        {
+          "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--text-wrap--hover",
+      "description": "--text-wrap in the hover state.",
+      "values": [
+        {
+          "name": "wrap"
+        },
+        {
+          "name": "nowrap"
+        },
+        {
+          "name": "auto"
+        },
+        {
+          "name": "balance"
+        },
+        {
+          "name": "pretty"
+        },
+        {
+          "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--text-wrap--checked",
+      "description": "--text-wrap in the checked state.",
+      "values": [
+        {
+          "name": "wrap"
+        },
+        {
+          "name": "nowrap"
+        },
+        {
+          "name": "auto"
+        },
+        {
+          "name": "balance"
+        },
+        {
+          "name": "pretty"
+        },
+        {
+          "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--text-wrap--current",
+      "description": "--text-wrap in the current state.",
+      "values": [
+        {
+          "name": "wrap"
+        },
+        {
+          "name": "nowrap"
+        },
+        {
+          "name": "auto"
+        },
+        {
+          "name": "balance"
+        },
+        {
+          "name": "pretty"
+        },
+        {
+          "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--text-wrap--open",
+      "description": "--text-wrap in the open state.",
+      "values": [
+        {
+          "name": "wrap"
+        },
+        {
+          "name": "nowrap"
+        },
+        {
+          "name": "auto"
+        },
+        {
+          "name": "balance"
+        },
+        {
+          "name": "pretty"
+        },
+        {
+          "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--text-wrap--stuck",
+      "description": "--text-wrap while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental.",
+      "values": [
+        {
+          "name": "wrap"
+        },
+        {
+          "name": "nowrap"
+        },
+        {
+          "name": "auto"
+        },
+        {
+          "name": "balance"
+        },
+        {
+          "name": "pretty"
+        },
+        {
+          "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
         }
       ]
     },
@@ -11335,6 +11662,9 @@
           "name": "nowrap"
         },
         {
+          "name": "auto"
+        },
+        {
           "name": "balance"
         },
         {
@@ -11342,6 +11672,12 @@
         },
         {
           "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
         }
       ]
     },
@@ -11356,6 +11692,9 @@
           "name": "nowrap"
         },
         {
+          "name": "auto"
+        },
+        {
           "name": "balance"
         },
         {
@@ -11363,6 +11702,12 @@
         },
         {
           "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
         }
       ]
     },
@@ -11377,6 +11722,9 @@
           "name": "nowrap"
         },
         {
+          "name": "auto"
+        },
+        {
           "name": "balance"
         },
         {
@@ -11384,6 +11732,12 @@
         },
         {
           "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
         }
       ]
     },
@@ -11398,6 +11752,9 @@
           "name": "nowrap"
         },
         {
+          "name": "auto"
+        },
+        {
           "name": "balance"
         },
         {
@@ -11405,6 +11762,12 @@
         },
         {
           "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
         }
       ]
     },
@@ -11419,6 +11782,9 @@
           "name": "nowrap"
         },
         {
+          "name": "auto"
+        },
+        {
           "name": "balance"
         },
         {
@@ -11426,6 +11792,252 @@
         },
         {
           "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--group-text-wrap--disabled",
+      "description": "--text-wrap while an ancestor with data-ui=\"group\" is disabled.",
+      "values": [
+        {
+          "name": "wrap"
+        },
+        {
+          "name": "nowrap"
+        },
+        {
+          "name": "auto"
+        },
+        {
+          "name": "balance"
+        },
+        {
+          "name": "pretty"
+        },
+        {
+          "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--group-text-wrap--active",
+      "description": "--text-wrap while an ancestor with data-ui=\"group\" is active.",
+      "values": [
+        {
+          "name": "wrap"
+        },
+        {
+          "name": "nowrap"
+        },
+        {
+          "name": "auto"
+        },
+        {
+          "name": "balance"
+        },
+        {
+          "name": "pretty"
+        },
+        {
+          "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--group-text-wrap--focus-visible",
+      "description": "--text-wrap while an ancestor with data-ui=\"group\" is focus-visible.",
+      "values": [
+        {
+          "name": "wrap"
+        },
+        {
+          "name": "nowrap"
+        },
+        {
+          "name": "auto"
+        },
+        {
+          "name": "balance"
+        },
+        {
+          "name": "pretty"
+        },
+        {
+          "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--group-text-wrap--focus-within",
+      "description": "--text-wrap while an ancestor with data-ui=\"group\" is focus-within.",
+      "values": [
+        {
+          "name": "wrap"
+        },
+        {
+          "name": "nowrap"
+        },
+        {
+          "name": "auto"
+        },
+        {
+          "name": "balance"
+        },
+        {
+          "name": "pretty"
+        },
+        {
+          "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--group-text-wrap--hover",
+      "description": "--text-wrap while an ancestor with data-ui=\"group\" is hover.",
+      "values": [
+        {
+          "name": "wrap"
+        },
+        {
+          "name": "nowrap"
+        },
+        {
+          "name": "auto"
+        },
+        {
+          "name": "balance"
+        },
+        {
+          "name": "pretty"
+        },
+        {
+          "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--group-text-wrap--checked",
+      "description": "--text-wrap while an ancestor with data-ui=\"group\" is checked.",
+      "values": [
+        {
+          "name": "wrap"
+        },
+        {
+          "name": "nowrap"
+        },
+        {
+          "name": "auto"
+        },
+        {
+          "name": "balance"
+        },
+        {
+          "name": "pretty"
+        },
+        {
+          "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--group-text-wrap--current",
+      "description": "--text-wrap while an ancestor with data-ui=\"group\" is current.",
+      "values": [
+        {
+          "name": "wrap"
+        },
+        {
+          "name": "nowrap"
+        },
+        {
+          "name": "auto"
+        },
+        {
+          "name": "balance"
+        },
+        {
+          "name": "pretty"
+        },
+        {
+          "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--group-text-wrap--open",
+      "description": "--text-wrap while an ancestor with data-ui=\"group\" is open.",
+      "values": [
+        {
+          "name": "wrap"
+        },
+        {
+          "name": "nowrap"
+        },
+        {
+          "name": "auto"
+        },
+        {
+          "name": "balance"
+        },
+        {
+          "name": "pretty"
+        },
+        {
+          "name": "stable"
+        },
+        {
+          "name": "truncate"
+        },
+        {
+          "name": "none"
         }
       ]
     },
@@ -27210,6 +27822,5730 @@
     {
       "name": "--bg-stops",
       "description": "the color stops for --bg-linear, --bg-radial, or --bg-conic (normal gradient stop syntax); color family.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-selection)"
+        },
+        {
+          "name": "var(--color-selection-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--divide",
+      "description": "a border between direct children — a color (1px wide), a number (that many px), a length (in --color-border), or `none`; a child's own border wins; color family.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-selection)"
+        },
+        {
+          "name": "var(--color-selection-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--divide--sm",
+      "description": "--divide at the sm breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-selection)"
+        },
+        {
+          "name": "var(--color-selection-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--divide--md",
+      "description": "--divide at the md breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-selection)"
+        },
+        {
+          "name": "var(--color-selection-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--divide--lg",
+      "description": "--divide at the lg breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-selection)"
+        },
+        {
+          "name": "var(--color-selection-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--divide--xl",
+      "description": "--divide at the xl breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-selection)"
+        },
+        {
+          "name": "var(--color-selection-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--divide--2xl",
+      "description": "--divide at the 2xl breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-selection)"
+        },
+        {
+          "name": "var(--color-selection-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--divide-x",
+      "description": "a border between direct children — a color (1px wide), a number (that many px), a length (in --color-border), or `none`; a child's own border wins; color family.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-selection)"
+        },
+        {
+          "name": "var(--color-selection-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--divide-x--sm",
+      "description": "--divide-x at the sm breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-selection)"
+        },
+        {
+          "name": "var(--color-selection-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--divide-x--md",
+      "description": "--divide-x at the md breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-selection)"
+        },
+        {
+          "name": "var(--color-selection-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--divide-x--lg",
+      "description": "--divide-x at the lg breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-selection)"
+        },
+        {
+          "name": "var(--color-selection-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--divide-x--xl",
+      "description": "--divide-x at the xl breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-selection)"
+        },
+        {
+          "name": "var(--color-selection-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--divide-x--2xl",
+      "description": "--divide-x at the 2xl breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-selection)"
+        },
+        {
+          "name": "var(--color-selection-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--divide-y",
+      "description": "a border between direct children — a color (1px wide), a number (that many px), a length (in --color-border), or `none`; a child's own border wins; color family.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-selection)"
+        },
+        {
+          "name": "var(--color-selection-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--divide-y--sm",
+      "description": "--divide-y at the sm breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-selection)"
+        },
+        {
+          "name": "var(--color-selection-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--divide-y--md",
+      "description": "--divide-y at the md breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-selection)"
+        },
+        {
+          "name": "var(--color-selection-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--divide-y--lg",
+      "description": "--divide-y at the lg breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-selection)"
+        },
+        {
+          "name": "var(--color-selection-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--divide-y--xl",
+      "description": "--divide-y at the xl breakpoint and up.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-selection)"
+        },
+        {
+          "name": "var(--color-selection-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
+      "name": "--divide-y--2xl",
+      "description": "--divide-y at the 2xl breakpoint and up.",
       "values": [
         {
           "name": "var(--color-shade-full)"
@@ -121711,6 +128047,510 @@
       "description": "--rotate on the ::after pseudo-element."
     },
     {
+      "name": "--animation",
+      "description": "animation — any value; effects family.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--animation--starting",
+      "description": "--animation in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--animation--disabled",
+      "description": "--animation in the disabled state.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--animation--active",
+      "description": "--animation in the active state.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--animation--focus-visible",
+      "description": "--animation in the focus-visible state.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--animation--focus-within",
+      "description": "--animation in the focus-within state.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--animation--hover",
+      "description": "--animation in the hover state.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--animation--checked",
+      "description": "--animation in the checked state.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--animation--current",
+      "description": "--animation in the current state.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--animation--open",
+      "description": "--animation in the open state.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--animation--stuck",
+      "description": "--animation while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--animation--sm",
+      "description": "--animation at the sm breakpoint and up.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--animation--md",
+      "description": "--animation at the md breakpoint and up.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--animation--lg",
+      "description": "--animation at the lg breakpoint and up.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--animation--xl",
+      "description": "--animation at the xl breakpoint and up.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--animation--2xl",
+      "description": "--animation at the 2xl breakpoint and up.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--group-animation--disabled",
+      "description": "--animation while an ancestor with data-ui=\"group\" is disabled.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--group-animation--active",
+      "description": "--animation while an ancestor with data-ui=\"group\" is active.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--group-animation--focus-visible",
+      "description": "--animation while an ancestor with data-ui=\"group\" is focus-visible.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--group-animation--focus-within",
+      "description": "--animation while an ancestor with data-ui=\"group\" is focus-within.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--group-animation--hover",
+      "description": "--animation while an ancestor with data-ui=\"group\" is hover.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--group-animation--checked",
+      "description": "--animation while an ancestor with data-ui=\"group\" is checked.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--group-animation--current",
+      "description": "--animation while an ancestor with data-ui=\"group\" is current.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
+      "name": "--group-animation--open",
+      "description": "--animation while an ancestor with data-ui=\"group\" is open.",
+      "values": [
+        {
+          "name": "none"
+        },
+        {
+          "name": "var(--spin)"
+        },
+        {
+          "name": "var(--ping)"
+        },
+        {
+          "name": "var(--pulse)"
+        },
+        {
+          "name": "var(--bounce)"
+        }
+      ]
+    },
+    {
       "name": "--transition",
       "description": "transition — any value; effects family."
     },
@@ -122034,6 +128874,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -122068,6 +128911,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -122106,6 +128952,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -122140,6 +128989,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -122178,6 +129030,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -122212,6 +129067,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -122250,6 +129108,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -122284,6 +129145,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -122322,6 +129186,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -122356,6 +129223,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -122394,6 +129264,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -122428,6 +129301,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -122466,6 +129342,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -122500,6 +129379,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -122538,6 +129420,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -122572,6 +129457,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -122610,6 +129498,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -122644,6 +129535,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -122682,6 +129576,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -122716,6 +129613,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -122754,6 +129654,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -122788,6 +129691,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -122826,6 +129732,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -122860,6 +129769,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -122906,6 +129818,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -122940,6 +129855,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -122978,6 +129896,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -123012,6 +129933,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -123050,6 +129974,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -123084,6 +130011,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -123122,6 +130052,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -123156,6 +130089,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -123194,6 +130130,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -123228,6 +130167,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -123266,6 +130208,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -123300,6 +130245,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -123338,6 +130286,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -123372,6 +130323,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -123410,6 +130364,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -123444,6 +130401,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -123482,6 +130442,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -123516,6 +130479,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -123554,6 +130520,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -123588,6 +130557,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -123626,6 +130598,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -123660,6 +130635,9 @@
         },
         {
           "name": "var(--radius-full)"
+        },
+        {
+          "name": "var(--radius-corner-shape)"
         },
         {
           "name": "var(--radius-none)"
@@ -123698,6 +130676,9 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
         }
       ]
@@ -123734,7 +130715,158 @@
           "name": "var(--radius-full)"
         },
         {
+          "name": "var(--radius-corner-shape)"
+        },
+        {
           "name": "var(--radius-none)"
+        }
+      ]
+    },
+    {
+      "name": "--corner-shape",
+      "description": "corner-shape — any value; box family."
+    },
+    {
+      "name": "--sr",
+      "description": "visually hidden, still in the accessibility tree — `only`, or `none` at a tier to hand the element back its own styles.",
+      "values": [
+        {
+          "name": "only"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--sr--sm",
+      "description": "--sr at the sm breakpoint and up.",
+      "values": [
+        {
+          "name": "only"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--sr--md",
+      "description": "--sr at the md breakpoint and up.",
+      "values": [
+        {
+          "name": "only"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--sr--lg",
+      "description": "--sr at the lg breakpoint and up.",
+      "values": [
+        {
+          "name": "only"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--sr--xl",
+      "description": "--sr at the xl breakpoint and up.",
+      "values": [
+        {
+          "name": "only"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--sr--2xl",
+      "description": "--sr at the 2xl breakpoint and up.",
+      "values": [
+        {
+          "name": "only"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--isolation",
+      "description": "isolation — a keyword; flow family.",
+      "values": [
+        {
+          "name": "auto"
+        },
+        {
+          "name": "isolate"
+        }
+      ]
+    },
+    {
+      "name": "--isolation--sm",
+      "description": "--isolation at the sm breakpoint and up.",
+      "values": [
+        {
+          "name": "auto"
+        },
+        {
+          "name": "isolate"
+        }
+      ]
+    },
+    {
+      "name": "--isolation--md",
+      "description": "--isolation at the md breakpoint and up.",
+      "values": [
+        {
+          "name": "auto"
+        },
+        {
+          "name": "isolate"
+        }
+      ]
+    },
+    {
+      "name": "--isolation--lg",
+      "description": "--isolation at the lg breakpoint and up.",
+      "values": [
+        {
+          "name": "auto"
+        },
+        {
+          "name": "isolate"
+        }
+      ]
+    },
+    {
+      "name": "--isolation--xl",
+      "description": "--isolation at the xl breakpoint and up.",
+      "values": [
+        {
+          "name": "auto"
+        },
+        {
+          "name": "isolate"
+        }
+      ]
+    },
+    {
+      "name": "--isolation--2xl",
+      "description": "--isolation at the 2xl breakpoint and up.",
+      "values": [
+        {
+          "name": "auto"
+        },
+        {
+          "name": "isolate"
         }
       ]
     },
@@ -124002,322 +131134,76 @@
       "description": "object-position — any value; box family."
     },
     {
-      "name": "--divide",
-      "description": "border shorthand — a color (1px wide), a number (that many px), or a length (in --color-border); --border-width and --border-color win; box family.",
-      "values": [
-        {
-          "name": "var(--color-shade-full)"
-        },
-        {
-          "name": "var(--color-tint-full)"
-        },
-        {
-          "name": "var(--color-background)"
-        },
-        {
-          "name": "var(--color-black)"
-        },
-        {
-          "name": "var(--color-border)"
-        },
-        {
-          "name": "var(--color-border-foreground)"
-        },
-        {
-          "name": "var(--color-card)"
-        },
-        {
-          "name": "var(--color-card-foreground)"
-        },
-        {
-          "name": "var(--color-destructive)"
-        },
-        {
-          "name": "var(--color-destructive-foreground)"
-        },
-        {
-          "name": "var(--color-faded)"
-        },
-        {
-          "name": "var(--color-faded-foreground)"
-        },
-        {
-          "name": "var(--color-foreground)"
-        },
-        {
-          "name": "var(--color-info)"
-        },
-        {
-          "name": "var(--color-info-foreground)"
-        },
-        {
-          "name": "var(--color-input)"
-        },
-        {
-          "name": "var(--color-input-foreground)"
-        },
-        {
-          "name": "var(--color-muted)"
-        },
-        {
-          "name": "var(--color-muted-foreground)"
-        },
-        {
-          "name": "var(--color-neutral-100)"
-        },
-        {
-          "name": "var(--color-neutral-200)"
-        },
-        {
-          "name": "var(--color-neutral-300)"
-        },
-        {
-          "name": "var(--color-neutral-400)"
-        },
-        {
-          "name": "var(--color-neutral-50)"
-        },
-        {
-          "name": "var(--color-neutral-500)"
-        },
-        {
-          "name": "var(--color-neutral-600)"
-        },
-        {
-          "name": "var(--color-neutral-700)"
-        },
-        {
-          "name": "var(--color-neutral-800)"
-        },
-        {
-          "name": "var(--color-neutral-900)"
-        },
-        {
-          "name": "var(--color-neutral-950)"
-        },
-        {
-          "name": "var(--color-popover)"
-        },
-        {
-          "name": "var(--color-popover-foreground)"
-        },
-        {
-          "name": "var(--color-primary)"
-        },
-        {
-          "name": "var(--color-primary-100)"
-        },
-        {
-          "name": "var(--color-primary-200)"
-        },
-        {
-          "name": "var(--color-primary-300)"
-        },
-        {
-          "name": "var(--color-primary-400)"
-        },
-        {
-          "name": "var(--color-primary-50)"
-        },
-        {
-          "name": "var(--color-primary-500)"
-        },
-        {
-          "name": "var(--color-primary-600)"
-        },
-        {
-          "name": "var(--color-primary-700)"
-        },
-        {
-          "name": "var(--color-primary-800)"
-        },
-        {
-          "name": "var(--color-primary-900)"
-        },
-        {
-          "name": "var(--color-primary-950)"
-        },
-        {
-          "name": "var(--color-primary-foreground)"
-        },
-        {
-          "name": "var(--color-ring)"
-        },
-        {
-          "name": "var(--color-secondary)"
-        },
-        {
-          "name": "var(--color-secondary-100)"
-        },
-        {
-          "name": "var(--color-secondary-200)"
-        },
-        {
-          "name": "var(--color-secondary-300)"
-        },
-        {
-          "name": "var(--color-secondary-400)"
-        },
-        {
-          "name": "var(--color-secondary-50)"
-        },
-        {
-          "name": "var(--color-secondary-500)"
-        },
-        {
-          "name": "var(--color-secondary-600)"
-        },
-        {
-          "name": "var(--color-secondary-700)"
-        },
-        {
-          "name": "var(--color-secondary-800)"
-        },
-        {
-          "name": "var(--color-secondary-900)"
-        },
-        {
-          "name": "var(--color-secondary-950)"
-        },
-        {
-          "name": "var(--color-secondary-foreground)"
-        },
-        {
-          "name": "var(--color-selection)"
-        },
-        {
-          "name": "var(--color-selection-foreground)"
-        },
-        {
-          "name": "var(--color-shade-100)"
-        },
-        {
-          "name": "var(--color-shade-200)"
-        },
-        {
-          "name": "var(--color-shade-300)"
-        },
-        {
-          "name": "var(--color-shade-400)"
-        },
-        {
-          "name": "var(--color-shade-50)"
-        },
-        {
-          "name": "var(--color-shade-500)"
-        },
-        {
-          "name": "var(--color-shade-600)"
-        },
-        {
-          "name": "var(--color-shade-700)"
-        },
-        {
-          "name": "var(--color-shade-800)"
-        },
-        {
-          "name": "var(--color-shade-900)"
-        },
-        {
-          "name": "var(--color-shade-950)"
-        },
-        {
-          "name": "var(--color-shade-none)"
-        },
-        {
-          "name": "var(--color-shadow)"
-        },
-        {
-          "name": "var(--color-success)"
-        },
-        {
-          "name": "var(--color-success-foreground)"
-        },
-        {
-          "name": "var(--color-tertiary)"
-        },
-        {
-          "name": "var(--color-tertiary-100)"
-        },
-        {
-          "name": "var(--color-tertiary-200)"
-        },
-        {
-          "name": "var(--color-tertiary-300)"
-        },
-        {
-          "name": "var(--color-tertiary-400)"
-        },
-        {
-          "name": "var(--color-tertiary-50)"
-        },
-        {
-          "name": "var(--color-tertiary-500)"
-        },
-        {
-          "name": "var(--color-tertiary-600)"
-        },
-        {
-          "name": "var(--color-tertiary-700)"
-        },
-        {
-          "name": "var(--color-tertiary-800)"
-        },
-        {
-          "name": "var(--color-tertiary-900)"
-        },
-        {
-          "name": "var(--color-tertiary-950)"
-        },
-        {
-          "name": "var(--color-tertiary-foreground)"
-        },
-        {
-          "name": "var(--color-tint-100)"
-        },
-        {
-          "name": "var(--color-tint-200)"
-        },
-        {
-          "name": "var(--color-tint-300)"
-        },
-        {
-          "name": "var(--color-tint-400)"
-        },
-        {
-          "name": "var(--color-tint-50)"
-        },
-        {
-          "name": "var(--color-tint-500)"
-        },
-        {
-          "name": "var(--color-tint-600)"
-        },
-        {
-          "name": "var(--color-tint-700)"
-        },
-        {
-          "name": "var(--color-tint-800)"
-        },
-        {
-          "name": "var(--color-tint-900)"
-        },
-        {
-          "name": "var(--color-tint-950)"
-        },
-        {
-          "name": "var(--color-tint-none)"
-        },
-        {
-          "name": "var(--color-warning)"
-        },
-        {
-          "name": "var(--color-warning-foreground)"
-        },
-        {
-          "name": "var(--color-white)"
-        }
-      ]
+      "name": "--container",
+      "description": "container — any value; box family."
+    },
+    {
+      "name": "--container--sm",
+      "description": "--container at the sm breakpoint and up."
+    },
+    {
+      "name": "--container--md",
+      "description": "--container at the md breakpoint and up."
+    },
+    {
+      "name": "--container--lg",
+      "description": "--container at the lg breakpoint and up."
+    },
+    {
+      "name": "--container--xl",
+      "description": "--container at the xl breakpoint and up."
+    },
+    {
+      "name": "--container--2xl",
+      "description": "--container at the 2xl breakpoint and up."
+    },
+    {
+      "name": "--container-name",
+      "description": "container-name — any value; box family."
+    },
+    {
+      "name": "--container-name--sm",
+      "description": "--container-name at the sm breakpoint and up."
+    },
+    {
+      "name": "--container-name--md",
+      "description": "--container-name at the md breakpoint and up."
+    },
+    {
+      "name": "--container-name--lg",
+      "description": "--container-name at the lg breakpoint and up."
+    },
+    {
+      "name": "--container-name--xl",
+      "description": "--container-name at the xl breakpoint and up."
+    },
+    {
+      "name": "--container-name--2xl",
+      "description": "--container-name at the 2xl breakpoint and up."
+    },
+    {
+      "name": "--container-type",
+      "description": "container-type — any value; box family."
+    },
+    {
+      "name": "--container-type--sm",
+      "description": "--container-type at the sm breakpoint and up."
+    },
+    {
+      "name": "--container-type--md",
+      "description": "--container-type at the md breakpoint and up."
+    },
+    {
+      "name": "--container-type--lg",
+      "description": "--container-type at the lg breakpoint and up."
+    },
+    {
+      "name": "--container-type--xl",
+      "description": "--container-type at the xl breakpoint and up."
+    },
+    {
+      "name": "--container-type--2xl",
+      "description": "--container-type at the 2xl breakpoint and up."
     },
     {
       "name": "--before-content",
@@ -124422,6 +131308,10 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-badge-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-badge-font-family",
       "description": "Primitive hook: the public override surface."
     },
@@ -124514,6 +131404,10 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-button-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-button-font-family",
       "description": "Primitive hook: the public override surface."
     },
@@ -124531,6 +131425,10 @@
     },
     {
       "name": "--ui-button-group-bg",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-button-group-corner-shape",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -124594,6 +131492,10 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-callout-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-callout-gap",
       "description": "Primitive hook: the public override surface."
     },
@@ -124627,6 +131529,10 @@
     },
     {
       "name": "--ui-card-border-width",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-card-corner-shape",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -124702,6 +131608,10 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-checkbox-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-checkbox-glyph-color",
       "description": "Primitive hook: the public override surface."
     },
@@ -124755,6 +131665,10 @@
     },
     {
       "name": "--ui-combobox-control-py",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-combobox-corner-shape",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -124819,6 +131733,10 @@
     },
     {
       "name": "--ui-combobox-tag-remove-color",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-combobox-tag-remove-corner-shape",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -124903,6 +131821,10 @@
     },
     {
       "name": "--ui-dialog-border",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-dialog-corner-shape",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -125006,6 +131928,10 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-field-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-field-display",
       "description": "Primitive hook: the public override surface."
     },
@@ -125023,6 +131949,10 @@
     },
     {
       "name": "--ui-field-group-border",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-field-group-corner-shape",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -125142,6 +132072,10 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-input-calendar-picker-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-input-calendar-picker-icon-size",
       "description": "Primitive hook: the public override surface."
     },
@@ -125155,6 +132089,10 @@
     },
     {
       "name": "--ui-input-calendar-picker-size",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-input-corner-shape",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -125251,6 +132189,10 @@
     },
     {
       "name": "--ui-kbd-border",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-kbd-corner-shape",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -125366,6 +132308,10 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-lightbox-slide-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-lightbox-slide-opacity--end",
       "description": "Primitive hook: the public override surface."
     },
@@ -125390,6 +132336,10 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-lightbox-thumb-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-lightbox-thumb-gap",
       "description": "Primitive hook: the public override surface."
     },
@@ -125407,6 +132357,10 @@
     },
     {
       "name": "--ui-lightbox-thumb-size",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-menu-button-corner-shape",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -125439,6 +132393,10 @@
     },
     {
       "name": "--ui-meter-bg",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-meter-corner-shape",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -125530,6 +132488,10 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-navigation-menu-popover-child-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-navigation-menu-popover-child-radius",
       "description": "Primitive hook: the public override surface."
     },
@@ -125614,6 +132576,10 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-option-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-option-font-family",
       "description": "Primitive hook: the public override surface."
     },
@@ -125683,6 +132649,10 @@
     },
     {
       "name": "--ui-otp-cell-border-width",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-otp-cell-corner-shape",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -125770,7 +132740,15 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-popover-button-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-popover-button-radius",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-popover-corner-shape",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -125846,6 +132824,10 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-progress-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-progress-h",
       "description": "Primitive hook: the public override surface."
     },
@@ -125911,6 +132893,10 @@
     },
     {
       "name": "--ui-radio-border-width",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-radio-corner-shape",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -126002,6 +132988,10 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-select-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-select-font-size",
       "description": "Primitive hook: the public override surface."
     },
@@ -126066,6 +133056,10 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-slider-thumb-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-slider-thumb-offset",
       "description": "Primitive hook: the public override surface."
     },
@@ -126090,11 +133084,23 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-slider-track-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-slider-track-h",
       "description": "Primitive hook: the public override surface."
     },
     {
       "name": "--ui-slider-track-radius",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-switch-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-switch-cursor",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -126106,7 +133112,15 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-switch-thumb-bg--hover",
+      "name": "--ui-switch-thumb-bg--checked",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-switch-thumb-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-switch-thumb-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -126142,11 +133156,43 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-switch-track-border-color",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-switch-track-border-color--checked",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-switch-track-border-color--checked-hover",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-switch-track-border-color--hover",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-switch-track-border-style",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-switch-track-border-width",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-switch-track-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-switch-track-h",
       "description": "Primitive hook: the public override surface."
     },
     {
       "name": "--ui-switch-track-p",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-switch-track-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -126246,6 +133292,22 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-tabs-indicator-border-color",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-tabs-indicator-border-style",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-tabs-indicator-border-width",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-tabs-indicator-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-tabs-indicator-inset",
       "description": "Primitive hook: the public override surface."
     },
@@ -126314,6 +133376,22 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-tabs-track-border-color",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-tabs-track-border-style",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-tabs-track-border-width",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-tabs-track-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-tabs-track-gap",
       "description": "Primitive hook: the public override surface."
     },
@@ -126335,6 +133413,10 @@
     },
     {
       "name": "--ui-textarea-border-width",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-textarea-corner-shape",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -126383,6 +133465,10 @@
     },
     {
       "name": "--ui-toaster-border-color",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-toaster-corner-shape",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -126510,6 +133596,10 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-toggle-corner-shape",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-toggle-font-family",
       "description": "Primitive hook: the public override surface."
     },
@@ -126527,6 +133617,10 @@
     },
     {
       "name": "--ui-toggle-group-bg",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-toggle-group-corner-shape",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -126603,6 +133697,10 @@
     },
     {
       "name": "--ui-tooltip-border-color",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-tooltip-corner-shape",
       "description": "Primitive hook: the public override surface."
     },
     {

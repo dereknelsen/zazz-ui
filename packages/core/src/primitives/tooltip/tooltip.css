@@ -7,6 +7,8 @@
  * @uses       data-tooltip-slot="content": hint popover (light dismiss, auto-hides sibling hints)
  * @uses       anchor-name, position-anchor, position-area, position-try-fallbacks:
  *             explicit anchors for polyfill; data-popover-side maps to --ui-popover-position-*
+ * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
+ *             rounded corners
  * @tokens     --ui-tooltip-* (@layer variables; read on the content slot)
  */
 
@@ -16,6 +18,7 @@
     --ui-tooltip-text: var(--color-background);
     --ui-tooltip-border-color: transparent;
     --ui-tooltip-radius: var(--radius-sm);
+    --ui-tooltip-corner-shape: var(--radius-corner-shape);
     --ui-tooltip-shadow: var(--shadow-sm);
     --ui-tooltip-px: var(--space-xs);
     --ui-tooltip-py: var(--spacing);
@@ -156,6 +159,7 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-tooltip-corner-shape));
     box-shadow: var(--_shadow-resolved, var(--ui-tooltip-shadow));
 
     font-family: var(--_font-family-resolved, var(--ui-tooltip-font-family));

@@ -39,13 +39,13 @@ Cascade order is declared once, in [`_layers.css`](./src/base/_layers.css), and 
 }
 
 @layer ui {
-  @layer components, plugins, utilities;
+  @layer components, plugins, utilities, sr;
 }
 ```
 
 Load order lives in [`index.css`](./src/index.css): it `@import`s `_layers.css` first,
 then the base partials, every `primitives/<name>/<name>.css`, the generated utility files
-(`_properties*.css`, `_utilities-*.css`, and `_defaults.css`), and `_switches.css` last.
+(`_properties*.css`, `_utilities-*.css`, and `_defaults.css`), and `_utilities-sr.css` last.
 Everything slots into one of these layers.
 Layering (not selector specificity or BEM) is how we control the cascade, so a
 plain `[data-ui~="button"]` rule in `components` is overridden by a style utility set in
@@ -140,8 +140,9 @@ The four layers, by responsibility:
 - **`legacy.migrations`**: temporary shims that map old class names to Zazz tokens while you rewrite markup. Delete each rule once the corresponding markup is updated. Lives in an optional `migrations.css` you add and import at the commented slot in [`index.css`](./src/index.css) via `layer(legacy.migrations)`.
 - **`utilities`**: the utilities layer, generated from [`utilities.ts`](./src/base/utilities.ts) into
   `_utilities-*.css` (`vp run core#generate`): attribute-gated rules that read `--p`, `--w--md`,
-  `--bg--hover`, … from `style=""`, written with `:where()` for zero specificity. The
-  `data-ui` switches (`sr-only`, `pile`) live here too.
+  `--bg--hover`, … from `style=""`, written with `:where()` for zero specificity.
+- **`sr`**: `--sr` alone (`_utilities-sr.css`), after `utilities`, so `only` wins over them and a
+  tier's `none` (`all: revert-layer`) rolls back to exactly what they set.
 
 ---
 
@@ -498,8 +499,8 @@ use case exists in an example fragment or docs page.
 
 - `color-scheme: light dark` on `:root` enables system dark mode; semantic tokens use
   `light-dark(<light>, <dark>)` so they resolve per `color-scheme`.
-- The `theme-dark` / `theme-light` switches (`[data-ui~="theme-dark"]`) are a pure `color-scheme` pin on any element — no
-  token re-declaration (ADR-0013 amendment 3: a switch, no `.dark` class). Because theme tokens are unregistered, their `light-dark()`
+- `data-theme="dark"` / `"light"` (`[data-theme="dark"]`) is a pure `color-scheme` pin on any element — no
+  token re-declaration (ADR-0013 amendment 4: its own attribute, no `.dark` class). Because theme tokens are unregistered, their `light-dark()`
   expressions re-resolve under the pinned scheme, and scopes nest (a light island
   inside a dark section re-lightens its subtree). Each scope re-asserts
   `color: var(--color-foreground)`: built-in inherited `<color>` properties resolve at the
@@ -530,7 +531,8 @@ use case exists in an example fragment or docs page.
   (`data-carousel-state="active"`, `data-otp-state="filled active"`,
   `data-toaster-state="front visible"`); CSS keys on `[data-x-state~="token"]`. Native state
   stays native (`:checked`, `:open`, `:popover-open`, `[aria-expanded]`).
-- **Globals stay `data-ui-*`**: `data-ui-guard`. The color scheme is a switch (`data-ui="theme-dark"`), not a global.
+- **Globals stay `data-ui-*`**: `data-ui-guard`. The exception is the color scheme, `data-theme="dark"` / `"light"`.
+- **`data-ui` holds identities only**: primitives, specializations, typography roles, and `group`. A fixed rule set with no identity is a utility with a keyword (`--sr: only`), never a token.
 - **Zero-specificity where overridable**: roots and presets sit inside `:where()` so a utility
   (the `utilities` layer) or a consumer rule wins without `!important`. Order matters
   between equal-specificity rules: a disabled block that must beat a variant comes after it.
@@ -612,12 +614,16 @@ These deviate from the canonical shape on purpose: document the reason in-file:
   `@example` plus a data-attribute table because it is a configurable subsystem, not a
   single component.
 - **`--_` coordination var in `@layer variables`**: [`toaster.css`](./src/primitives/toaster/toaster.css)
-  declares `--_gap` on `:root` inside its variables block. It is the one `--_` var that lives
-  in a variables layer: an _inheriting_ coordination default (set on a container, read by
+  declares `--_gap` on `:root` inside its variables block. It is one of two `--_` vars that live
+  in a variables layer (`--_motion-off`, below, is the other): an _inheriting_ coordination default (set on a container, read by
   descendants for `gap`), left unregistered so default inheritance applies. The §5 rule
   ("private internals live next to their rule, never in `@layer variables`") governs
   component hooks; the utilities composition/coordination system is system plumbing, not a
   component. Keep the in-file comment explaining the two `--_` kinds.
+- **`--_motion-off` in `@layer variables`**: `prefers-reduced-motion: reduce` sets this private on
+  `:root` in [`_variables.css`](./src/base/_variables.css), and every `--animation` rule reads it
+  first (`animation: var(--_motion-off, …)`), so reduced motion stops any value. Like `--_gap`, it
+  has to inherit, so it stays unregistered, and it is set in one place only.
 - **Legacy isolation during migration**: bring an existing codebase along by importing its
   stylesheet into the `legacy.imports` sublayer (`@import "./your-legacy.css" layer(legacy.imports)`
   at the commented slot in [`index.css`](./src/index.css)); because `legacy` sits below `ui`, the
@@ -676,7 +682,9 @@ These deviate from the canonical shape on purpose: document the reason in-file:
    (`@property --_<component>-<utility> { syntax: "*"; inherits: false; }`) above the layer.
 6. Name interior parts `data-<component>-slot="<part>"` and match them with
    `:where([data-ui~="<component>"]) [data-<component>-slot~="<part>"]`, never part classes.
-   Roots are never stamped with a slot.
+   Roots are never stamped with a slot. One exception: `data-prose-slot="start"` is a scope
+   root that carries a slot, because it turns prose back on inside an `end` slot
+   (`@scope` in [`_typography.css`](./src/base/_typography.css)).
 7. Add presets as `[data-ui~="<component>"][data-<component>-variant="…"]` (or `-size`,
    `-orientation`, …) that **only write privates**; hooks read on a descendant are set as
    hooks instead. JS config and state keep the same prefix (`data-<component>-loop`,

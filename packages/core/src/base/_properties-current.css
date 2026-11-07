@@ -29,6 +29,10 @@
 @property --_space-y-current { syntax: "*"; inherits: false; }
 @property --group-space-y--current { syntax: "*"; inherits: false; }
 @property --_space-y-g-current { syntax: "*"; inherits: false; }
+@property --text-wrap--current { syntax: "*"; inherits: false; }
+@property --_text-wrap-current { syntax: "*"; inherits: false; }
+@property --group-text-wrap--current { syntax: "*"; inherits: false; }
+@property --_text-wrap-g-current { syntax: "*"; inherits: false; }
 @property --text-decoration--current { syntax: "*"; inherits: false; }
 @property --_text-decoration-current { syntax: "*"; inherits: false; }
 @property --group-text-decoration--current { syntax: "*"; inherits: false; }
@@ -141,6 +145,10 @@
 @property --_rotate-current { syntax: "*"; inherits: false; }
 @property --group-rotate--current { syntax: "*"; inherits: false; }
 @property --_rotate-g-current { syntax: "*"; inherits: false; }
+@property --animation--current { syntax: "*"; inherits: false; }
+@property --_animation-current { syntax: "*"; inherits: false; }
+@property --group-animation--current { syntax: "*"; inherits: false; }
+@property --_animation-g-current { syntax: "*"; inherits: false; }
 @property --transition--current { syntax: "*"; inherits: false; }
 @property --_transition-current { syntax: "*"; inherits: false; }
 @property --group-transition--current { syntax: "*"; inherits: false; }

@@ -8,6 +8,12 @@ order: 5
 
 Reach for a role first (`data-ui="text-lg"`, native headings), then override one property with a utility. `--font-weight` takes a number or the role weights `strong`, `heading`, and `body`; standard names such as `medium` are not CSS, so write `500`. Text color is `--text`, with state tiers.
 
+`--text-wrap: truncate` keeps text on one line and ends the overflow with an ellipsis. It needs a width to overflow: a block element, a sized one (`--w: 48`), or a flex item with `--min-w: 0`, since a flex item can't shrink below its content otherwise. `none` means plain wrapping, so `--text-wrap: truncate; --text-wrap--md: none` wraps from `md` up. It takes breakpoints and states. A primitive keeps its own overflow. A multi-word value like `wrap balance` isn't supported. To clamp to more than one line, use `--line-clamp`.
+
+```html
+<p style="--text-wrap: truncate">A file name far too long for its column.pdf</p>
+```
+
 ## Reference
 
 {% utilities section="typography" /%}

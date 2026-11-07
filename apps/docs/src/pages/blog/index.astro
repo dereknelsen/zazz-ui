@@ -51,7 +51,7 @@ const format = (date: Date) =>
             Nothing published yet.
           </p>
         ) : (
-          <ul style="--display: flex-col; --gap: 6" data-ui="divide-y">
+          <ul style="--display: flex-col; --gap: 6; --divide-y: 1">
             {posts.map((post) => (
               <li data-ui="card">
                 <a

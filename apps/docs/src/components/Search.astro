@@ -197,10 +197,10 @@ import { Search as SearchIcon, X } from "@lucide/astro";
           const title = document.createElement("span");
           title.textContent = item.title;
           const excerpt = document.createElement("span");
-          excerpt.setAttribute("data-ui", "text-xs truncate");
+          excerpt.setAttribute("data-ui", "text-xs");
           excerpt.setAttribute(
             "style",
-            "--text: var(--color-muted-foreground); --font-weight: body; --text-align: start; --min-w: 0; --w: 100%;",
+            "--text: var(--color-muted-foreground); --font-weight: body; --text-align: start; --text-wrap: truncate; --min-w: 0; --w: 100%;",
           );
           excerpt.innerHTML = item.excerpt; // Pagefind marks matches with <mark>; the rest is escaped text
           a.append(title, excerpt);

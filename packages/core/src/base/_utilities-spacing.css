@@ -21,7 +21,7 @@
     --_px-num: var(--_px-resolved);
     padding-inline: calc(var(--_px-len) + var(--_px-num) * var(--spacing));
   }
-  :where(:is([style*="--p:"]):is([style*="--px--"], [style*="--group-px--"])) {
+  :where(:is([style*="--p:"])[style*="--px--"]) {
     --_px-len: var(--_px-resolved, var(--_p-resolved, 0));
     --_px-num: var(--_px-resolved, var(--_p-resolved, 0));
     padding-inline: calc(var(--_px-len) + var(--_px-num) * var(--spacing));
@@ -36,7 +36,7 @@
     --_py-num: var(--_py-resolved);
     padding-block: calc(var(--_py-len) + var(--_py-num) * var(--spacing));
   }
-  :where(:is([style*="--p:"]):is([style*="--py--"], [style*="--group-py--"])) {
+  :where(:is([style*="--p:"])[style*="--py--"]) {
     --_py-len: var(--_py-resolved, var(--_p-resolved, 0));
     --_py-num: var(--_py-resolved, var(--_p-resolved, 0));
     padding-block: calc(var(--_py-len) + var(--_py-num) * var(--spacing));
@@ -51,7 +51,7 @@
     --_pt-num: var(--_pt-resolved);
     padding-block-start: calc(var(--_pt-len) + var(--_pt-num) * var(--spacing));
   }
-  :where(:is([style*="--py:"], [style*="--p:"]):is([style*="--pt--"], [style*="--group-pt--"])) {
+  :where(:is([style*="--py:"], [style*="--p:"])[style*="--pt--"]) {
     --_pt-len: var(--_pt-resolved, var(--_py-resolved, var(--_p-resolved, 0)));
     --_pt-num: var(--_pt-resolved, var(--_py-resolved, var(--_p-resolved, 0)));
     padding-block-start: calc(var(--_pt-len) + var(--_pt-num) * var(--spacing));
@@ -66,7 +66,7 @@
     --_pb-num: var(--_pb-resolved);
     padding-block-end: calc(var(--_pb-len) + var(--_pb-num) * var(--spacing));
   }
-  :where(:is([style*="--py:"], [style*="--p:"]):is([style*="--pb--"], [style*="--group-pb--"])) {
+  :where(:is([style*="--py:"], [style*="--p:"])[style*="--pb--"]) {
     --_pb-len: var(--_pb-resolved, var(--_py-resolved, var(--_p-resolved, 0)));
     --_pb-num: var(--_pb-resolved, var(--_py-resolved, var(--_p-resolved, 0)));
     padding-block-end: calc(var(--_pb-len) + var(--_pb-num) * var(--spacing));
@@ -81,7 +81,7 @@
     --_pl-num: var(--_pl-resolved);
     padding-inline-start: calc(var(--_pl-len) + var(--_pl-num) * var(--spacing));
   }
-  :where(:is([style*="--px:"], [style*="--p:"]):is([style*="--pl--"], [style*="--group-pl--"])) {
+  :where(:is([style*="--px:"], [style*="--p:"])[style*="--pl--"]) {
     --_pl-len: var(--_pl-resolved, var(--_px-resolved, var(--_p-resolved, 0)));
     --_pl-num: var(--_pl-resolved, var(--_px-resolved, var(--_p-resolved, 0)));
     padding-inline-start: calc(var(--_pl-len) + var(--_pl-num) * var(--spacing));
@@ -96,7 +96,7 @@
     --_pr-num: var(--_pr-resolved);
     padding-inline-end: calc(var(--_pr-len) + var(--_pr-num) * var(--spacing));
   }
-  :where(:is([style*="--px:"], [style*="--p:"]):is([style*="--pr--"], [style*="--group-pr--"])) {
+  :where(:is([style*="--px:"], [style*="--p:"])[style*="--pr--"]) {
     --_pr-len: var(--_pr-resolved, var(--_px-resolved, var(--_p-resolved, 0)));
     --_pr-num: var(--_pr-resolved, var(--_px-resolved, var(--_p-resolved, 0)));
     padding-inline-end: calc(var(--_pr-len) + var(--_pr-num) * var(--spacing));
@@ -121,7 +121,7 @@
     --_gap-x-num: var(--_gap-x-resolved);
     column-gap: calc(var(--_gap-x-len) + var(--_gap-x-num) * var(--spacing));
   }
-  :where(:is([style*="--gap:"]):is([style*="--gap-x--"], [style*="--group-gap-x--"])) {
+  :where(:is([style*="--gap:"])[style*="--gap-x--"]) {
     --_gap-x-len: var(--_gap-x-resolved, var(--_gap-resolved, 0));
     --_gap-x-num: var(--_gap-x-resolved, var(--_gap-resolved, 0));
     column-gap: calc(var(--_gap-x-len) + var(--_gap-x-num) * var(--spacing));
@@ -136,7 +136,7 @@
     --_gap-y-num: var(--_gap-y-resolved);
     row-gap: calc(var(--_gap-y-len) + var(--_gap-y-num) * var(--spacing));
   }
-  :where(:is([style*="--gap:"]):is([style*="--gap-y--"], [style*="--group-gap-y--"])) {
+  :where(:is([style*="--gap:"])[style*="--gap-y--"]) {
     --_gap-y-len: var(--_gap-y-resolved, var(--_gap-resolved, 0));
     --_gap-y-num: var(--_gap-y-resolved, var(--_gap-resolved, 0));
     row-gap: calc(var(--_gap-y-len) + var(--_gap-y-num) * var(--spacing));

@@ -223,7 +223,7 @@ describe("buildHead cdn mode", () => {
   it("mirrors index.css's base imports around the primitives", () => {
     const head = buildHead({ cdn: { version: "0.4.1", primitives: ["button"] } });
     const links = [...head.matchAll(/src\/base\/(_[a-z0-9-]+\.css)/g)].map((m) => m[1]);
-    expect(head).toContain('" theme-" + storedTheme');
+    expect(head).toContain("document.documentElement.dataset.theme = storedTheme");
     expect(links).toEqual([
       "_layers.css",
       "_variables.css",
@@ -274,7 +274,7 @@ describe("buildHead cdn mode", () => {
       "_utilities-box.css",
       "_utilities-pseudo.css",
       "_defaults.css",
-      "_switches.css",
+      "_utilities-sr.css",
     ]);
   });
 });

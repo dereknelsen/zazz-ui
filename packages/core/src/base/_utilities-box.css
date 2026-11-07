@@ -18,43 +18,43 @@
     --_radius-num: var(--_radius-resolved);
     border-radius: calc(var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier));
   }
-  :where([style*="--radius: full"]) { --_radius: var(--radius-full); }
+  :where([style*="--radius: full"]) { --_radius: var(--radius-full); corner-shape: round; }
   @starting-style {
     :where([style*="--radius--starting: full"]) { --_radius-starting: var(--radius-full); }
   }
-  :where(:is(:disabled, [aria-disabled="true"])[style*="--radius--disabled: full"]) { --_radius-disabled: var(--radius-full); }
-  :where([data-ui~="group"]:is(:disabled, [aria-disabled="true"]) [style*="--group-radius--disabled: full"]) { --_radius-g-disabled: var(--radius-full); }
-  :where(:active[style*="--radius--active: full"]) { --_radius-active: var(--radius-full); }
-  :where([data-ui~="group"]:active [style*="--group-radius--active: full"]) { --_radius-g-active: var(--radius-full); }
-  :where(:focus-visible[style*="--radius--focus-visible: full"]) { --_radius-focus-visible: var(--radius-full); }
-  :where([data-ui~="group"]:focus-visible [style*="--group-radius--focus-visible: full"]) { --_radius-g-focus-visible: var(--radius-full); }
-  :where(:focus-within[style*="--radius--focus-within: full"]) { --_radius-focus-within: var(--radius-full); }
-  :where([data-ui~="group"]:focus-within [style*="--group-radius--focus-within: full"]) { --_radius-g-focus-within: var(--radius-full); }
+  :where(:is(:disabled, [aria-disabled="true"])[style*="--radius--disabled: full"]) { --_radius-disabled: var(--radius-full); corner-shape: round; }
+  :where(:where(ui-group, [data-ui~="group"]):is(:disabled, [aria-disabled="true"]) [style*="--group-radius--disabled: full"]) { --_radius-g-disabled: var(--radius-full); corner-shape: round; }
+  :where(:active[style*="--radius--active: full"]) { --_radius-active: var(--radius-full); corner-shape: round; }
+  :where(:where(ui-group, [data-ui~="group"]):active [style*="--group-radius--active: full"]) { --_radius-g-active: var(--radius-full); corner-shape: round; }
+  :where(:focus-visible[style*="--radius--focus-visible: full"]) { --_radius-focus-visible: var(--radius-full); corner-shape: round; }
+  :where(:where(ui-group, [data-ui~="group"]):focus-visible [style*="--group-radius--focus-visible: full"]) { --_radius-g-focus-visible: var(--radius-full); corner-shape: round; }
+  :where(:focus-within[style*="--radius--focus-within: full"]) { --_radius-focus-within: var(--radius-full); corner-shape: round; }
+  :where(:where(ui-group, [data-ui~="group"]):focus-within [style*="--group-radius--focus-within: full"]) { --_radius-g-focus-within: var(--radius-full); corner-shape: round; }
   @media (hover: hover) {
-    :where(:hover[style*="--radius--hover: full"]) { --_radius-hover: var(--radius-full); }
-    :where([data-ui~="group"]:hover [style*="--group-radius--hover: full"]) { --_radius-g-hover: var(--radius-full); }
+    :where(:hover[style*="--radius--hover: full"]) { --_radius-hover: var(--radius-full); corner-shape: round; }
+    :where(:where(ui-group, [data-ui~="group"]):hover [style*="--group-radius--hover: full"]) { --_radius-g-hover: var(--radius-full); corner-shape: round; }
   }
-  :where(:is(:checked, [aria-checked="true"])[style*="--radius--checked: full"]) { --_radius-checked: var(--radius-full); }
-  :where([data-ui~="group"]:is(:checked, [aria-checked="true"]) [style*="--group-radius--checked: full"]) { --_radius-g-checked: var(--radius-full); }
-  :where(:is([aria-current]:not([aria-current="false"]))[style*="--radius--current: full"]) { --_radius-current: var(--radius-full); }
-  :where([data-ui~="group"]:is([aria-current]:not([aria-current="false"])) [style*="--group-radius--current: full"]) { --_radius-g-current: var(--radius-full); }
-  :where(:is([open], :popover-open, [aria-expanded="true"])[style*="--radius--open: full"]) { --_radius-open: var(--radius-full); }
-  :where([data-ui~="group"]:is([open], :popover-open, [aria-expanded="true"]) [style*="--group-radius--open: full"]) { --_radius-g-open: var(--radius-full); }
+  :where(:is(:checked, [aria-checked="true"])[style*="--radius--checked: full"]) { --_radius-checked: var(--radius-full); corner-shape: round; }
+  :where(:where(ui-group, [data-ui~="group"]):is(:checked, [aria-checked="true"]) [style*="--group-radius--checked: full"]) { --_radius-g-checked: var(--radius-full); corner-shape: round; }
+  :where(:is([aria-current]:not([aria-current="false"]))[style*="--radius--current: full"]) { --_radius-current: var(--radius-full); corner-shape: round; }
+  :where(:where(ui-group, [data-ui~="group"]):is([aria-current]:not([aria-current="false"])) [style*="--group-radius--current: full"]) { --_radius-g-current: var(--radius-full); corner-shape: round; }
+  :where(:is([open], :popover-open, [aria-expanded="true"])[style*="--radius--open: full"]) { --_radius-open: var(--radius-full); corner-shape: round; }
+  :where(:where(ui-group, [data-ui~="group"]):is([open], :popover-open, [aria-expanded="true"]) [style*="--group-radius--open: full"]) { --_radius-g-open: var(--radius-full); corner-shape: round; }
   :where([style*="--radius--stuck: full"]) { --_radius-stuck: var(--_stuck-on) var(--radius-full); }
   @container (width >= 40rem) {
-    :where([style*="--radius--sm: full"]) { --_radius-sm: var(--radius-full); }
+    :where([style*="--radius--sm: full"]) { --_radius-sm: var(--radius-full); corner-shape: round; }
   }
   @container (width >= 48rem) {
-    :where([style*="--radius--md: full"]) { --_radius-md: var(--radius-full); }
+    :where([style*="--radius--md: full"]) { --_radius-md: var(--radius-full); corner-shape: round; }
   }
   @container (width >= 64rem) {
-    :where([style*="--radius--lg: full"]) { --_radius-lg: var(--radius-full); }
+    :where([style*="--radius--lg: full"]) { --_radius-lg: var(--radius-full); corner-shape: round; }
   }
   @container (width >= 80rem) {
-    :where([style*="--radius--xl: full"]) { --_radius-xl: var(--radius-full); }
+    :where([style*="--radius--xl: full"]) { --_radius-xl: var(--radius-full); corner-shape: round; }
   }
   @container (width >= 96rem) {
-    :where([style*="--radius--2xl: full"]) { --_radius-2xl: var(--radius-full); }
+    :where([style*="--radius--2xl: full"]) { --_radius-2xl: var(--radius-full); corner-shape: round; }
   }
 
   :where([style*="--radius-t:"], [style*="--radius-t--"]) {
@@ -67,7 +67,7 @@
     border-start-start-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-multiplier));
     border-start-end-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-multiplier));
   }
-  :where(:is([style*="--radius:"]):is([style*="--radius-t--"], [style*="--group-radius-t--"])) {
+  :where(:is([style*="--radius:"])[style*="--radius-t--"]) {
     --_radius-t-len: var(--_radius-t-resolved, var(--_radius-resolved, 0));
     --_radius-t-num: var(--_radius-t-resolved, var(--_radius-resolved, 0));
     border-start-start-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-multiplier));
@@ -100,7 +100,7 @@
     border-end-start-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-multiplier));
     border-end-end-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-multiplier));
   }
-  :where(:is([style*="--radius:"]):is([style*="--radius-b--"], [style*="--group-radius-b--"])) {
+  :where(:is([style*="--radius:"])[style*="--radius-b--"]) {
     --_radius-b-len: var(--_radius-b-resolved, var(--_radius-resolved, 0));
     --_radius-b-num: var(--_radius-b-resolved, var(--_radius-resolved, 0));
     border-end-start-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-multiplier));
@@ -133,7 +133,7 @@
     border-start-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-multiplier));
     border-end-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-multiplier));
   }
-  :where(:is([style*="--radius:"]):is([style*="--radius-l--"], [style*="--group-radius-l--"])) {
+  :where(:is([style*="--radius:"])[style*="--radius-l--"]) {
     --_radius-l-len: var(--_radius-l-resolved, var(--_radius-resolved, 0));
     --_radius-l-num: var(--_radius-l-resolved, var(--_radius-resolved, 0));
     border-start-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-multiplier));
@@ -166,7 +166,7 @@
     border-start-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-multiplier));
     border-end-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-multiplier));
   }
-  :where(:is([style*="--radius:"]):is([style*="--radius-r--"], [style*="--group-radius-r--"])) {
+  :where(:is([style*="--radius:"])[style*="--radius-r--"]) {
     --_radius-r-len: var(--_radius-r-resolved, var(--_radius-resolved, 0));
     --_radius-r-num: var(--_radius-r-resolved, var(--_radius-resolved, 0));
     border-start-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-multiplier));
@@ -187,6 +187,14 @@
   }
   @container (width >= 96rem) {
     :where([style*="--radius-r--2xl: full"]) { --_radius-r-2xl: var(--radius-full); }
+  }
+
+  :where([style*="--corner-shape:"], [style*="--corner-shape--"]) {
+    --_corner-shape-resolved: var(--_corner-shape);
+  }
+  :where([style*="--corner-shape:"]) {
+    --_corner-shape: var(--corner-shape);
+    corner-shape: var(--_corner-shape-resolved);
   }
 
   :where([style*="--overflow:"], [style*="--overflow--"]) {
@@ -269,40 +277,36 @@
     object-position: var(--_object-position-resolved);
   }
 
-  :where([style*="--divide:"], [style*="--divide--"]) {
-    --_divide-resolved: var(--_divide);
+  :where([style*="--container:"]) { container: var(--container); }
+  :where([style*="--container-name:"]) { container-name: var(--container-name); }
+  :where([style*="--container-type:"]) { container-type: var(--container-type) var(--_stuck-type,); }
+  @container (width >= 40rem) {
+    :where([style*="--container--sm:"]) { container: var(--container--sm); }
+    :where([style*="--container-name--sm:"]) { container-name: var(--container-name--sm); }
+    :where([style*="--container-type--sm:"]) { container-type: var(--container-type--sm) var(--_stuck-type,); }
   }
-  :where([style*="--divide:"]) {
-    --_divide: var(--divide);
-    --_divide-len: var(--_divide-resolved);
-    --_divide-num: var(--_divide-resolved);
-    --_divide-is-len: calc(sin(atan2(var(--_divide-resolved), 1px)) * 0 + 1);
-    --_divide-is-num: calc(var(--_divide-resolved) * 0 + 1);
-    --_divide-clr: var(--_divide-resolved);
-    --_divide-w: calc(abs(var(--_divide-len)) + abs(var(--_divide-num)) * 1px + (1 - var(--_divide-is-num) - var(--_divide-is-len)) * 1px);
-    --_divide-c: color-mix(in oklch, var(--_divide-clr) calc((1 - var(--_divide-is-num) - var(--_divide-is-len)) * 100%), var(--color-border));
+  @container (width >= 48rem) {
+    :where([style*="--container--md:"]) { container: var(--container--md); }
+    :where([style*="--container-name--md:"]) { container-name: var(--container-name--md); }
+    :where([style*="--container-type--md:"]) { container-type: var(--container-type--md) var(--_stuck-type,); }
+  }
+  @container (width >= 64rem) {
+    :where([style*="--container--lg:"]) { container: var(--container--lg); }
+    :where([style*="--container-name--lg:"]) { container-name: var(--container-name--lg); }
+    :where([style*="--container-type--lg:"]) { container-type: var(--container-type--lg) var(--_stuck-type,); }
+  }
+  @container (width >= 80rem) {
+    :where([style*="--container--xl:"]) { container: var(--container--xl); }
+    :where([style*="--container-name--xl:"]) { container-name: var(--container-name--xl); }
+    :where([style*="--container-type--xl:"]) { container-type: var(--container-type--xl) var(--_stuck-type,); }
+  }
+  @container (width >= 96rem) {
+    :where([style*="--container--2xl:"]) { container: var(--container--2xl); }
+    :where([style*="--container-name--2xl:"]) { container-name: var(--container-name--2xl); }
+    :where([style*="--container-type--2xl:"]) { container-type: var(--container-type--2xl) var(--_stuck-type,); }
   }
 
 
 
-  :where([style*="--border:"], [style*="--border-x:"], [style*="--border-l:"]) {
-    border-inline-start-width: var(--_border-width-resolved, var(--_border-l-w, var(--_border-x-w, var(--_border-w))));
-    border-inline-start-style: var(--_border-style-resolved, solid);
-    border-inline-start-color: var(--_border-color-resolved, var(--_border-l-c, var(--_border-x-c, var(--_border-c))));
-  }
-  :where([style*="--border:"], [style*="--border-y:"], [style*="--border-t:"]) {
-    border-block-start-width: var(--_border-width-resolved, var(--_border-t-w, var(--_border-y-w, var(--_border-w))));
-    border-block-start-style: var(--_border-style-resolved, solid);
-    border-block-start-color: var(--_border-color-resolved, var(--_border-t-c, var(--_border-y-c, var(--_border-c))));
-  }
-  :where([style*="--border:"], [style*="--border-x:"], [style*="--border-r:"]) {
-    border-inline-end-width: var(--_border-width-resolved, var(--_border-r-w, var(--_border-x-w, var(--_border-w))));
-    border-inline-end-style: var(--_border-style-resolved, solid);
-    border-inline-end-color: var(--_border-color-resolved, var(--_border-r-c, var(--_border-x-c, var(--_border-c))));
-  }
-  :where([style*="--border:"], [style*="--border-y:"], [style*="--border-b:"]) {
-    border-block-end-width: var(--_border-width-resolved, var(--_border-b-w, var(--_border-y-w, var(--_border-w))));
-    border-block-end-style: var(--_border-style-resolved, solid);
-    border-block-end-color: var(--_border-color-resolved, var(--_border-b-c, var(--_border-y-c, var(--_border-c))));
-  }
+
 }

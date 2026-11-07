@@ -123,6 +123,14 @@
     rotate: var(--_rotate-resolved);
   }
 
+  :where([style*="--animation:"], [style*="--animation--"], [style*="--group-animation--"]) {
+    --_animation-resolved: var(--_animation-starting, var(--_animation-disabled, var(--_animation-active, var(--_animation-focus-visible, var(--_animation-focus-within, var(--_animation-hover, var(--_animation-checked, var(--_animation-current, var(--_animation-open, var(--_animation-g-disabled, var(--_animation-g-active, var(--_animation-g-focus-visible, var(--_animation-g-focus-within, var(--_animation-g-hover, var(--_animation-g-checked, var(--_animation-g-current, var(--_animation-g-open, var(--_animation-stuck, var(--_animation-2xl, var(--_animation-xl, var(--_animation-lg, var(--_animation-md, var(--_animation-sm, var(--_animation))))))))))))))))))))))));
+  }
+  :where([style*="--animation:"]) {
+    --_animation: var(--animation);
+    animation: var(--_motion-off, var(--_animation-resolved));
+  }
+
   :where([style*="--transition:"], [style*="--transition--"], [style*="--group-transition--"]) {
     --_transition-resolved: var(--_transition-starting, var(--_transition-disabled, var(--_transition-active, var(--_transition-focus-visible, var(--_transition-focus-within, var(--_transition-hover, var(--_transition-checked, var(--_transition-current, var(--_transition-open, var(--_transition-g-disabled, var(--_transition-g-active, var(--_transition-g-focus-visible, var(--_transition-g-focus-within, var(--_transition-g-hover, var(--_transition-g-checked, var(--_transition-g-current, var(--_transition-g-open, var(--_transition-stuck, var(--_transition)))))))))))))))))));
   }

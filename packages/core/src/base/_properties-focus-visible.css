@@ -29,6 +29,10 @@
 @property --_space-y-focus-visible { syntax: "*"; inherits: false; }
 @property --group-space-y--focus-visible { syntax: "*"; inherits: false; }
 @property --_space-y-g-focus-visible { syntax: "*"; inherits: false; }
+@property --text-wrap--focus-visible { syntax: "*"; inherits: false; }
+@property --_text-wrap-focus-visible { syntax: "*"; inherits: false; }
+@property --group-text-wrap--focus-visible { syntax: "*"; inherits: false; }
+@property --_text-wrap-g-focus-visible { syntax: "*"; inherits: false; }
 @property --text-decoration--focus-visible { syntax: "*"; inherits: false; }
 @property --_text-decoration-focus-visible { syntax: "*"; inherits: false; }
 @property --group-text-decoration--focus-visible { syntax: "*"; inherits: false; }
@@ -141,6 +145,10 @@
 @property --_rotate-focus-visible { syntax: "*"; inherits: false; }
 @property --group-rotate--focus-visible { syntax: "*"; inherits: false; }
 @property --_rotate-g-focus-visible { syntax: "*"; inherits: false; }
+@property --animation--focus-visible { syntax: "*"; inherits: false; }
+@property --_animation-focus-visible { syntax: "*"; inherits: false; }
+@property --group-animation--focus-visible { syntax: "*"; inherits: false; }
+@property --_animation-g-focus-visible { syntax: "*"; inherits: false; }
 @property --transition--focus-visible { syntax: "*"; inherits: false; }
 @property --_transition-focus-visible { syntax: "*"; inherits: false; }
 @property --group-transition--focus-visible { syntax: "*"; inherits: false; }

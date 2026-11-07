@@ -10,6 +10,7 @@
     --_template-rows-focus-within: var(--template-rows--focus-within);
     --_space-x-focus-within: var(--space-x--focus-within);
     --_space-y-focus-within: var(--space-y--focus-within);
+    --_text-wrap-focus-within: var(--text-wrap--focus-within);
     --_text-decoration-focus-within: var(--text-decoration--focus-within);
     --_text-focus-within: var(--text--focus-within);
     --_bg-focus-within: var(--bg--focus-within);
@@ -38,13 +39,14 @@
     --_scale-focus-within: var(--scale--focus-within);
     --_translate-focus-within: var(--translate--focus-within);
     --_rotate-focus-within: var(--rotate--focus-within);
+    --_animation-focus-within: var(--animation--focus-within);
     --_transition-focus-within: var(--transition--focus-within);
     --_transition-duration-focus-within: var(--transition-duration--focus-within);
     --_transition-delay-focus-within: var(--transition-delay--focus-within);
     --_radius-focus-within: var(--radius--focus-within);
     --_z-focus-within: var(--z--focus-within);
   }
-  :where([data-ui~="group"]:focus-within [style*="--group-"]) {
+  :where(:where(ui-group, [data-ui~="group"]):focus-within [style*="--group-"]) {
     --_anchor-name-g-focus-within: var(--group-anchor-name--focus-within);
     --_position-anchor-g-focus-within: var(--group-position-anchor--focus-within);
     --_position-area-g-focus-within: var(--group-position-area--focus-within);
@@ -52,6 +54,7 @@
     --_template-rows-g-focus-within: var(--group-template-rows--focus-within);
     --_space-x-g-focus-within: var(--group-space-x--focus-within);
     --_space-y-g-focus-within: var(--group-space-y--focus-within);
+    --_text-wrap-g-focus-within: var(--group-text-wrap--focus-within);
     --_text-decoration-g-focus-within: var(--group-text-decoration--focus-within);
     --_text-g-focus-within: var(--group-text--focus-within);
     --_bg-g-focus-within: var(--group-bg--focus-within);
@@ -80,6 +83,7 @@
     --_scale-g-focus-within: var(--group-scale--focus-within);
     --_translate-g-focus-within: var(--group-translate--focus-within);
     --_rotate-g-focus-within: var(--group-rotate--focus-within);
+    --_animation-g-focus-within: var(--group-animation--focus-within);
     --_transition-g-focus-within: var(--group-transition--focus-within);
     --_transition-duration-g-focus-within: var(--group-transition-duration--focus-within);
     --_transition-delay-g-focus-within: var(--group-transition-delay--focus-within);

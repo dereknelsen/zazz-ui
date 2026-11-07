@@ -16,7 +16,7 @@ The kit declares its layers once, in `base/_layers.css`, and every stylesheet wr
 }
 
 @layer ui {
-  @layer components, plugins, utilities;
+  @layer components, plugins, utilities, sr;
 }
 ```
 
@@ -29,7 +29,8 @@ The kit declares its layers once, in `base/_layers.css`, and every stylesheet wr
 | `legacy.*` | an existing app's stylesheets during a migration, in the order they used to cascade |
 | `ui.components` | the primitives |
 | `ui.plugins` | kit additions that extend a primitive |
-| `ui.utilities` | style utilities and switches, at zero specificity |
+| `ui.utilities` | style utilities, at zero specificity |
+| `ui.sr` | `--sr` alone, so `only` beats every other utility and a tier's `none` rolls back to what they set |
 | `overrides` | your rules; they beat everything above |
 
 A later layer wins regardless of selector specificity, so a utility beats a primitive rule without `!important`, and a one-line rule in `overrides` beats a utility. Never import a stylesheet into bare `legacy` or `ui`: un-sublayered rules form an implicit final sublayer that outranks the named ones.

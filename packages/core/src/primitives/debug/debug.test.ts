@@ -32,6 +32,66 @@ function warningsFor(html: string, hooks: Record<string, string[]> = {}): string
   return audit(root, { hooks, identities: IDENTITIES }).map((warning) => warning.message);
 }
 
+describe("retired data-ui tokens", () => {
+  it.each([
+    ["sr-only", "--sr: only"],
+    ["pile", "--display: grid-pile"],
+    ["isolate", "--isolation: isolate"],
+    ["not-prose", 'data-prose-slot="end"'],
+    ["truncate", "--text-wrap: truncate"],
+    ["spin", "--animation: var(--spin)"],
+    ["ping", "--animation: var(--ping)"],
+    ["pulse", "--animation: var(--pulse)"],
+    ["bounce", "--animation: var(--bounce)"],
+    ["divide-x", "--divide-x: 1"],
+    ["divide-y", "--divide-y: 1"],
+    ["container", "--container-type: inline-size"],
+    ["theme-dark", 'data-theme="dark"'],
+    ["theme-light", 'data-theme="light"'],
+  ])("%s names its replacement", (token, replacement) => {
+    expect(warningsFor(`<div data-ui="${token}"></div>`)).toEqual([
+      expect.stringContaining(replacement),
+    ]);
+  });
+
+  it("finds a token beside an identity, and leaves identities alone", () => {
+    expect(warningsFor(`<a data-ui="button theme-light"></a>`)).toEqual([
+      expect.stringContaining('data-theme="light"'),
+    ]);
+    expect(warningsFor(`<a data-ui="group"></a>`)).toEqual([]);
+  });
+});
+
+describe("utilities outside the tier chain", () => {
+  it.each([
+    "--sr--md: only",
+    "--container--md: a / size",
+    "--container-name--md: a",
+    "--divide--md: 2",
+    "--divide-y--md: 1",
+  ])("%s needs no base", (declaration) => {
+    expect(warningsFor(`<div style="${declaration}"></div>`)).toEqual([]);
+  });
+
+  it.each([
+    "--position: sticky; --container: panel / inline-size",
+    "--position: sticky; --container--md: panel / size",
+    "--stuck-state: top; --container: panel",
+    "--position: sticky; --container-type: scroll-state",
+    "--position: sticky; --container-type: normal",
+  ])("warns that %s loses the stuck state", (declarations) => {
+    expect(warningsFor(`<div style="${declarations}"></div>`)).toEqual([
+      expect.stringMatching(/stuck state.*--container-type: inline-size/),
+    ]);
+  });
+
+  it("a sticky --container-type: inline-size keeps the stuck state", () => {
+    expect(
+      warningsFor(`<div style="--position: sticky; --container-type: inline-size"></div>`),
+    ).toEqual([]);
+  });
+});
+
 describe("<ui-debug> domain gating (claim 25)", () => {
   afterEach(() => {
     document.body.innerHTML = "";

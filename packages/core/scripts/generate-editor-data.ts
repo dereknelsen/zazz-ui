@@ -15,6 +15,8 @@ import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   BREAKPOINTS,
+  ANIMATION_TOKENS,
+  DISPLAY_PILE,
   DISPLAY_SHORTHANDS,
   hasGroup,
   isState,
@@ -79,6 +81,12 @@ function filesUnder(dir: string, test: (path: string) => boolean): string[] {
 }
 
 const GLOBALS: HtmlAttribute[] = [
+  {
+    name: "data-theme",
+    description:
+      "Pins the color scheme for this element and everything inside it; scopes nest. Without it the system setting applies.",
+    values: [{ name: "dark" }, { name: "light" }],
+  },
   {
     name: "data-ui-navigation",
     description: "On <html>: swap the body in place on navigations between opted-in pages.",
@@ -256,6 +264,12 @@ function describeUtility(utility: Utility): string {
   if (utility.emit === "border") {
     return `border shorthand — a color (1px wide), a number (that many px), or a length (in --color-border); --border-width and --border-color win; ${utility.family} family.`;
   }
+  if (utility.emit === "divide") {
+    return `a border between direct children — a color (1px wide), a number (that many px), a length (in --color-border), or \`none\`; a child's own border wins; ${utility.family} family.`;
+  }
+  if (utility.name === "sr") {
+    return "visually hidden, still in the accessibility tree — `only`, or `none` at a tier to hand the element back its own styles.";
+  }
   const mode =
     utility.mode === "dual"
       ? "a scale number (× --spacing) or any length"
@@ -281,6 +295,7 @@ function tierDescription(tier: string): string {
 
 /** CSS keywords for keyword-mode utilities, by the CSS property they set. */
 const KEYWORDS: Record<string, readonly string[]> = {
+  isolation: ["auto", "isolate"],
   "mix-blend-mode": [
     "normal",
     "multiply",
@@ -330,7 +345,7 @@ const KEYWORDS: Record<string, readonly string[]> = {
   "font-style": ["normal", "italic", "oblique"],
   "text-align": ["start", "center", "end", "justify"],
   "text-transform": ["none", "uppercase", "lowercase", "capitalize"],
-  "text-wrap": ["wrap", "nowrap", "balance", "pretty", "stable"],
+  "text-wrap": ["wrap", "nowrap", "auto", "balance", "pretty", "stable", "truncate", "none"],
   "white-space": ["normal", "nowrap", "pre", "pre-wrap", "pre-line", "break-spaces"],
   "text-decoration-line": ["none", "underline", "overline", "line-through"],
   "border-style": ["solid", "dashed", "dotted", "double", "none"],
@@ -363,7 +378,7 @@ function tokenFamilies(utility: Utility): string[] {
   if (["font-size", "font-weight", "font-family", "aspect"].includes(utility.name))
     return [utility.name];
   if (utility.name === "max-w" || utility.name === "w") return ["breakpoint", "article"];
-  if (utility.emit === "border") return ["color"];
+  if (utility.emit === "border" || utility.emit === "divide") return ["color"];
   if (
     utility.family === "color" &&
     !["bg-alpha", "bg-linear", "bg-radial", "bg-conic"].includes(utility.name)
@@ -405,7 +420,8 @@ function valuesFor(utility: Utility, tokens: Map<string, string[]>): HtmlValue[]
   // keyword shorthands first (--font-weight: strong, --radius: full), then the display ones
   for (const alias of Object.keys(utility.aliases ?? {})) names.add(alias);
   if (utility.name === "display")
-    for (const shorthand of Object.keys(DISPLAY_SHORTHANDS)) names.add(shorthand);
+    for (const shorthand of [...Object.keys(DISPLAY_SHORTHANDS), DISPLAY_PILE])
+      names.add(shorthand);
   if (utility.mode === "keyword")
     for (const property of utility.properties)
       for (const k of KEYWORDS[property] ?? []) names.add(k);
@@ -413,6 +429,10 @@ function valuesFor(utility: Utility, tokens: Map<string, string[]>): HtmlValue[]
     for (const band of ["sm", "md", "lg", "xl", "2xl", "full", "bleed"])
       names.add(`layout-${band}`);
   if (utility.name === "bg") names.add("none");
+  if (utility.name === "animation") {
+    names.add("none");
+    for (const token of ANIMATION_TOKENS) names.add(`var(--${token})`);
+  }
   for (const prelude of GRADIENT_PRELUDES[utility.name] ?? []) names.add(prelude);
   if (takesSpaceSteps(utility)) for (const step of SPACE_STEPS) names.add(step);
   for (const family of tokenFamilies(utility))
@@ -575,7 +595,7 @@ export function generateEditorData(): {
       globalAttributes: [
         {
           name: "data-ui",
-          description: "Identity tokens: primitives, switches, and typography roles.",
+          description: "Identity tokens: primitives and typography roles.",
           values: tokens.map((token) => ({ name: token })),
         },
         ...GLOBALS,

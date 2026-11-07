@@ -8,6 +8,8 @@
  *             (@supports gated; checked-label fallback paints card fill without pill)
  * @uses       anchor-scope — isolates --active-tab inside nested menus
  * @uses       text-box, color-mix() — label trim and focus ring
+ * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
+ *             rounded corners
  * @tokens     --ui-tabs-* (@layer variables)
  */
 
@@ -18,13 +20,21 @@
     --ui-tabs-gap: var(--space-xs);
     --ui-tabs-track-p: calc(var(--spacing) * 0.5);
     --ui-tabs-track-radius: var(--ui-field-radius);
+    --ui-tabs-track-corner-shape: var(--ui-field-corner-shape);
     --ui-tabs-track-gap: calc(var(--spacing) * 0.5);
     --ui-tabs-track-bg: var(--color-muted);
+    --ui-tabs-track-border-width: 1px;
+    --ui-tabs-track-border-style: solid;
+    --ui-tabs-track-border-color: var(--color-border);
 
     --ui-tabs-indicator-bg: var(--color-card);
     --ui-tabs-indicator-radius: var(--ui-field-inset-child-radius);
+    --ui-tabs-indicator-corner-shape: var(--ui-field-corner-shape);
     --ui-tabs-indicator-shadow: var(--shadow-xs);
     --ui-tabs-indicator-inset: var(--ui-tabs-track-p);
+    --ui-tabs-indicator-border-width: 1px;
+    --ui-tabs-indicator-border-style: solid;
+    --ui-tabs-indicator-border-color: transparent;
 
     --ui-tabs-label-font-family: var(--font-family-body);
     --ui-tabs-label-font-size: var(--font-size-sm);
@@ -67,7 +77,10 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-tabs-track-corner-shape));
     background-color: var(--ui-tabs-track-bg);
+    border: var(--ui-tabs-track-border-width) var(--ui-tabs-track-border-style)
+      var(--ui-tabs-track-border-color);
 
     /* Scoped so [data-tabs-slot~="indicator"] can resolve --active-tab even when an ancestor
        (e.g. [data-navigation-menu-slot~="item"]) sets anchor-scope to its own trigger name. */
@@ -78,7 +91,10 @@
     position: absolute;
     z-index: 0;
     pointer-events: none;
+    border: var(--ui-tabs-indicator-border-width) var(--ui-tabs-indicator-border-style)
+      var(--ui-tabs-indicator-border-color);
     border-radius: var(--ui-tabs-indicator-radius);
+    corner-shape: var(--ui-tabs-indicator-corner-shape);
     background-color: var(--ui-tabs-indicator-bg);
     box-shadow: var(--ui-tabs-indicator-shadow);
     transition-property: left, right, top, bottom;
@@ -118,6 +134,7 @@
     text-box: trim-both ex alphabetic;
 
     border-radius: var(--ui-tabs-indicator-radius);
+    corner-shape: var(--ui-tabs-indicator-corner-shape);
 
     /* ring renders as box-shadow so it composes with the indicator shadow in
        the no-anchor fallback below; the ring widths animate from 0 so the
@@ -211,6 +228,7 @@
       input[type="radio"]:checked
       + [data-tabs-slot~="label"] {
       border-radius: var(--ui-tabs-indicator-radius);
+      corner-shape: var(--ui-tabs-indicator-corner-shape);
       background-color: var(--ui-tabs-indicator-bg);
       box-shadow:
         0 0 0 calc(var(--_ring-offset-width) * (1 - var(--_focus-in)))

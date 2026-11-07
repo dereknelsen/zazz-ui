@@ -10,6 +10,7 @@ describe("installApi", () => {
       "kbd",
       "button",
       "popover",
+      "menu",
       "select",
     ]);
   });

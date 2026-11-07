@@ -1,0 +1,30 @@
+---
+title: "Accessibility"
+description: "Content for assistive technology only."
+section: Utilities
+sectionOrder: 3
+order: 12
+---
+
+`--sr: only` hides an element on screen and keeps it in the accessibility tree, so a screen reader still announces it. Use it for a name the layout makes obvious to anyone looking: a `<legend>`, a page's only `<h1>`, the label on an icon button.
+
+```html
+<button data-ui="button" data-button-size="icon">
+  <svg aria-hidden="true">…</svg>
+  <span style="--sr: only">Close</span>
+</button>
+```
+
+It takes breakpoints and no states. `--sr: none` changes nothing at the base; at a tier it gives the element back its own styles, so a label can stay hidden on a phone and appear from `md` up:
+
+```html
+<span style="--sr: only; --sr--md: none">Filters</span>
+```
+
+`--sr` has a cascade layer to itself, [`ui.sr`](/api/foundations/layers/), after the utilities. So `only` beats any other utility on the element, and a tier's `none` restores exactly what those utilities and the primitive set.
+
+Like every utility, it needs the `style` attribute. A policy that blocks the attribute leaves it working, but a sanitizer that strips `style` leaves the text visible. See [sanitized content](/docs/install/security/#sanitized-content).
+
+## Reference
+
+{% utilities section="accessibility" /%}

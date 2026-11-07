@@ -1,6 +1,6 @@
 ---
 title: "Transitions"
-description: "Animate between states."
+description: "Animate between states, or loop."
 section: Utilities
 sectionOrder: 3
 order: 10
@@ -19,6 +19,22 @@ To animate fewer properties, use one of the groups `--default-transition` is bui
 Like every tiered utility, a tier needs the base value: `--transition-delay--md` alone does nothing.
 
 `prefers-reduced-motion: reduce` sets `--default-transition-duration` to `0s`, but a literal `--transition-duration` keeps its value. To respect the setting, write the duration in terms of the token, for example `--transition-duration: calc(var(--default-transition-duration) * 2)`.
+
+## Animation
+
+`--animation` takes any animation value, with breakpoints and states. The kit ships Tailwind's four loops as tokens: `--spin` for a spinner, `--ping` for a dot that scales out and fades (put it on a copy stacked behind the dot), `--pulse` for a skeleton loader's slow fade, and `--bounce` for a scroll hint.
+
+```html
+<svg style="--animation: var(--spin)" aria-hidden="true">…</svg>
+<span style="--display: grid-pile">
+  <i style="--size: 2; --bg: var(--color-primary); --radius: full; --animation: var(--ping)"></i>
+  <i style="--size: 2; --bg: var(--color-primary); --radius: full"></i>
+</span>
+```
+
+`--spin` runs linear. `--pulse` takes 2s on the default easing. `--ping` and `--bounce` use `--default-animation`, which is `1s`, the default easing, and `infinite`, so a keyframe name composes with it: `--animation: spin var(--default-animation)`. The loops that animate `transform` leave `--rotate`, `--scale`, and `--translate` working on top.
+
+The keyframes are named `spin`, `ping`, `pulse`, and `bounce`, and they sit in the lowest layer, so a page's own keyframes of the same name win. `prefers-reduced-motion: reduce` stops every `--animation` value, your own included.
 
 ## Reference
 

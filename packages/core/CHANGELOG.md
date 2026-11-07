@@ -1,5 +1,47 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## Unreleased
+
+### base
+
+- **BREAKING** Switches are gone: `data-ui` holds identities only, and `base/_switches.css` is deleted (ADR-0013 amendment 4). The old tokens match no rule, so migrate each one:
+
+  | Old `data-ui` token               | Replacement                                                                |
+  | --------------------------------- | -------------------------------------------------------------------------- |
+  | `sr-only`                         | `--sr: only`                                                               |
+  | `pile`                            | `--display: grid-pile`                                                     |
+  | `isolate`                         | `--isolation: isolate`                                                     |
+  | `not-prose`                       | `data-prose-slot="end"`                                                    |
+  | `truncate`                        | `--text-wrap: truncate`                                                    |
+  | `spin`, `ping`, `pulse`, `bounce` | `--animation: var(--spin)`, `var(--ping)`, `var(--pulse)`, `var(--bounce)` |
+  | `divide-x`, `divide-y`            | `--divide-x: 1`, `--divide-y: 1`                                           |
+  | `container`                       | `--container-type: inline-size`                                            |
+  | `theme-dark`, `theme-light`       | `data-theme="dark"`, `data-theme="light"`                                  |
+
+- **BREAKING** The color scheme pin is `data-theme="dark" | "light"` on any element, and scopes nest. The head's theme script sets `document.documentElement.dataset.theme`; a toggle that edited `data-ui` must do the same.
+- **BREAKING** Content that loses its `style` attribute to a sanitizer loses these too: switches survived that, and utilities don't. Text marked `--sr: only` is visible on such a page, and nothing in the kit puts it back. Under a Content Security Policy that blocks the attribute, `--sr` and `--display: grid-pile` still apply, because their rules match the attribute text; the others wait for `base/csp.js` (ADR-0016 amendment).
+- The cascade gains a sublayer after `ui.utilities`: `@layer components, plugins, utilities, sr`. It holds `--sr` alone.
+- New `--sr`: `only` hides an element visually and keeps it in the accessibility tree, and a tier's `none` gives the element back its own styles (`--sr: only; --sr--md: none`). Breakpoints, no states.
+- New `grid-pile` keyword on `--display`: a grid with every direct child in one cell, centered. A child's own placement, `--place-items`, `--items`, and a primitive's own alignment win over it.
+- New `--isolation`: `isolate` or `auto`, with breakpoints.
+- `--text-wrap` takes `truncate` (one line, ending in an ellipsis) and `none` (plain wrapping), at breakpoints and states. A flex item also needs `--min-w: 0`, and a primitive keeps its own overflow. A multi-word value like `wrap balance` isn't supported.
+- New `--animation`, with breakpoints and states, takes any animation value. New tokens `--spin`, `--ping`, `--pulse`, `--bounce`, and `--default-animation` (`1s`, the default easing, `infinite`, so `spin var(--default-animation)` works). The keyframes `spin`, `ping`, `pulse`, and `bounce` sit in the lowest layer, so a page's own keyframes of the same name win. Reduced motion stops every `--animation` value.
+- **BREAKING** `--divide` no longer sizes a token; on its own it now draws both axes. `data-ui="divide-y" style="--divide: 2"` is `--divide-y: 2`.
+- New `--divide-x` and `--divide-y`. With `--divide`, all three take the `--border` grammar plus `none`, with breakpoints, and an axis beats `--divide`. A child's border utilities override the divider. `--divide: 1` on a single flex row draws a bottom border too, so use `--divide-x` there.
+- New `--container` (the `name / type` shorthand, or `none`), `--container-name`, and `--container-type`, with breakpoints. `--container: inline-size` sets a name, not a type. On a sticky element use the longhands: the shorthand drops the scroll-state type, and the audit warns.
+
+### prose
+
+- **BREAKING** `data-ui="not-prose"` is `data-prose-slot="end"`, which ends prose for a subtree. `data-prose-slot="start"` inside one turns prose back on. Both work only inside `data-ui="prose"`, and `data-prose-size` on a start slot does nothing.
+
+### group
+
+- New primitive folder with a tag form, `<ui-group>`: a block by default, while `data-ui="group"` keeps its host's display. A custom element never matches `:disabled`, so `<ui-group>` takes `aria-disabled="true"` with a role that allows it.
+
+### debug
+
+- New `retired-token` audit rule flags each old `data-ui` token and names the replacement, in `<ui-debug>`, the ESLint plugin, and the language server.
+
 ## 0.9.1 (2026-11-03)
 
 ### base

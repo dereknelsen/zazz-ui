@@ -11,8 +11,9 @@
  * @uses       tan(atan2()) — divides two lengths into a plain number (a stand-in for
  *             progress() that every engine supports); pow() — the type scale's steps
  * @uses       font-optical-sizing — heading optical size
- * @uses       @scope (prose) to (not-prose): prose rules stop at a not-prose
- *             element; a prose nested inside it starts its own scope
+ * @uses       text-wrap: pretty — h4–h6, @supports gated (Firefox lacks it; wrap fallback)
+ * @uses       @scope (prose, a start slot) to (an end slot): prose rules stop at
+ *             `data-prose-slot="end"`; a start slot or a prose inside it is a new root
  * @tokens     --fluid, --typeset-base, --typeset-scale, --font-size-* (@layer variables);
  *             --ui-prose-* (@layer variables); presets data-prose-size="sm" | "lg"
  */
@@ -85,7 +86,7 @@
   TYPOGRAPHY — prose component styles
   =========================================================================== */
 
-  :where([data-ui~="prose"]) {
+  :where([data-ui~="prose"], [data-ui~="prose"] [data-prose-slot~="start"]) {
     flex-direction: column;
     display: flex;
   }
@@ -110,9 +111,9 @@
     --_prose-flow: 1.25;
   }
 
-  /* Prose styles its descendants up to a not-prose boundary; a prose nested
-     inside not-prose starts its own scope, so the nearest root wins. */
-  @scope ([data-ui~="prose"]) to ([data-ui~="not-prose"]) {
+  /* Prose styles its descendants up to an `end` slot. A `start` slot inside one,
+     or a nested prose, is a root of its own, so the nearest root wins. */
+  @scope ([data-ui~="prose"], [data-ui~="prose"] [data-prose-slot~="start"]) to ([data-prose-slot~="end"]) {
     :where(figure) {
       inline-size: 100%;
       max-inline-size: 100%;
@@ -126,6 +127,7 @@
 
     :where(img, video) {
       border-radius: var(--ui-prose-img-radius);
+      corner-shape: var(--radius-corner-shape);
       border: var(--ui-prose-img-border);
     }
 
@@ -474,7 +476,14 @@
     line-height: var(--leading-h4);
     font-weight: var(--font-weight-heading);
     letter-spacing: var(--tracking-h4);
-    text-wrap: var(--text-wrap-heading, pretty);
+    text-wrap: var(--text-wrap-heading, wrap);
+    /* pretty can't be a var() fallback: a var() value is only checked at
+       computed-value time, so Firefox (no pretty) would reset text-wrap.
+       Drop the gate once web-features text-wrap-pretty is Baseline widely
+       available (not yet Baseline as of 2026-11). */
+    @supports (text-wrap: pretty) {
+      text-wrap: var(--text-wrap-heading, pretty);
+    }
     font-feature-settings: var(--font-feature-heading);
     font-kerning: var(--font-kerning-heading);
     font-language-override: var(--font-language-heading);
@@ -496,7 +505,11 @@
     line-height: var(--leading-h5);
     font-weight: var(--font-weight-heading);
     letter-spacing: var(--tracking-h5);
-    text-wrap: var(--text-wrap-heading, pretty);
+    text-wrap: var(--text-wrap-heading, wrap);
+    /* gated like h4 above */
+    @supports (text-wrap: pretty) {
+      text-wrap: var(--text-wrap-heading, pretty);
+    }
     font-feature-settings: var(--font-feature-heading);
     font-kerning: var(--font-kerning-heading);
     font-language-override: var(--font-language-heading);
@@ -518,7 +531,11 @@
     line-height: var(--leading-h6);
     font-weight: var(--font-weight-heading);
     letter-spacing: var(--tracking-h6);
-    text-wrap: var(--text-wrap-heading, pretty);
+    text-wrap: var(--text-wrap-heading, wrap);
+    /* gated like h4 above */
+    @supports (text-wrap: pretty) {
+      text-wrap: var(--text-wrap-heading, pretty);
+    }
     font-feature-settings: var(--font-feature-heading);
     font-kerning: var(--font-kerning-heading);
     font-language-override: var(--font-language-heading);

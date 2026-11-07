@@ -6,7 +6,7 @@ sectionOrder: 2
 order: 1
 ---
 
-Every style utility is a custom property in a `style` attribute. A Content Security Policy that forbids inline styles forbids that attribute, and with it every utility on the page. Primitives, presets, switches, and hooks set in a stylesheet keep working; only the `style` channel goes dark. This page gives the policy to write so it does not, what the kit does when it does anyway, and what to use in content a sanitizer has been through.
+Every style utility is a custom property in a `style` attribute. A Content Security Policy that forbids inline styles forbids that attribute, and with it nearly every utility on the page. Primitives, presets, and hooks set in a stylesheet keep working; only the `style` channel goes dark. This page gives the policy to write so it does not, what the kit does when it does anyway, and what to use in content a sanitizer has been through.
 
 ## The policy to write
 
@@ -31,7 +31,7 @@ For a static site with a fixed set of pages, there is a stricter option: `'unsaf
 
 ## When the attribute is blocked anyway
 
-Some policies forbid `'unsafe-inline'` on attributes outright. The attribute text still arrives in the DOM; the browser parses the markup, keeps the attribute, and declines to apply it. The kit's rules still match (`[style*="--p:"]` reads the attribute text), but the values never reach the element.
+Some policies forbid `'unsafe-inline'` on attributes outright. The attribute text still arrives in the DOM; the browser parses the markup, keeps the attribute, and declines to apply it. The kit's rules still match (`[style*="--p:"]` reads the attribute text), but the values never reach the element. Two utilities are exceptions: `--sr: only` and `--display: grid-pile` match the attribute text and write fixed declarations, so they apply with no help, at every tier.
 
 The kit notices. On load, `index.js` looks for a styled element whose declaration block is empty, which is what a blocked attribute looks like, and if it finds one it loads `base/csp.js`. That module reads each attribute and writes its declarations one by one with `style.setProperty()`. The policy does not govern writes through the CSSOM, so the values land, the rules read them, and the page looks as it should. The module keeps watching for attributes written or inserted later, including pages that arrive through swap navigation. `data-ui-guard="off"` on an element opts it out, as it does for the style guard. No probe element is written, so the kit never raises a violation report of its own.
 
@@ -51,4 +51,6 @@ The import map tag and the theme script tag then carry `nonce="…"`, and nothin
 
 ## Sanitized content
 
-A sanitizer that strips `style` strips the utility channel, and nothing in the kit can put it back. What survives a sanitizer that keeps `data-*` attributes, as DOMPurify does by default, is everything else the kit reads: identities and switches in `data-ui`, presets and slots in `data-<name>-*`. So content that goes through a sanitizer uses those, and takes its spacing and color from the stylesheet: `data-ui="prose"` for text, presets for primitives, and hooks (`--ui-card-px`) set in a stylesheet for anything the presets do not cover. Check what your sanitizer keeps before relying on either; the defaults differ between libraries, and some strip custom properties out of a `style` they otherwise keep.
+A sanitizer that strips `style` strips the utility channel, and nothing in the kit can put it back. That includes `--sr: only`, so text marked with it shows on the page. Through 0.9, the `data-ui` tokens such as `sr-only` survived a sanitizer; the utilities that replaced them do not. If sanitized content needs visually hidden text, keep a class through your sanitizer and write the rule in your own stylesheet.
+
+What survives a sanitizer that keeps `data-*` attributes, as DOMPurify does by default, is everything else the kit reads: identities in `data-ui`, presets and slots in `data-<name>-*`, and `data-theme`. So content that goes through a sanitizer uses those, and takes its spacing and color from the stylesheet: `data-ui="prose"` for text, presets for primitives, and hooks (`--ui-card-px`) set in a stylesheet for anything the presets do not cover. Check what your sanitizer keeps before relying on either; the defaults differ between libraries, and some strip custom properties out of a `style` they otherwise keep.

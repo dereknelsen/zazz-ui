@@ -49,10 +49,10 @@ Use the `--color-*` roles in utilities and CSS; they are also the **theme inputs
 - **Selection:** `--color-selection`/`--color-selection-foreground` (default: the primary pair),
   the text-selection highlight. Set them on `:root` only; a subtree override does nothing.
 - **Status:** `--color-info` `--color-success` `--color-warning` `--color-destructive`
-  (+ `-foreground` for text on the solid color). The status variants of button, badge, and
-  callout are soft: the role mixed 10% into `--color-background` (20% in dark), opaque, with
-  the role's hue as text, its lightness clamped to hold 4.5:1. For a status surface, use one of those variants rather than
-  mixing your own tint and text.
+  (+ `-foreground`). Each role is a pale surface (a dark surface in dark mode), and its
+  `-foreground` is the same hue, holding 4.5:1 on it. Pair them like any other role; the status
+  variants of button, badge, and callout do. For status text, borders, or accents on another
+  surface, use `-foreground`: the role itself is too faint there.
 - **Utilities:** `--text` (text color), `--bg` (+ `--bg-alpha` for channel alpha; `none` clears the
   color and any gradient), `--border-color` (or the `--border` shorthand, §11).
 - **Gradients:** a type plus stops, built from role tokens: `--bg-linear: to bottom; --bg-stops:
@@ -82,7 +82,7 @@ Use the `--color-*` roles in utilities and CSS; they are also the **theme inputs
 - **Tokens behind them:** `--font-size-*`, `--font-weight-body|heading|strong|eyebrow`,
   `--leading-*`, `--tracking-*`, `--paragraph-spacing-*`, families
   `--font-family-body|heading|mono`.
-- **Rich text:** `data-ui="prose"` (`--ui-prose-*` hooks); `data-ui="not-prose"` on a wrapper exempts a widget inside it.
+- **Rich text:** `data-ui="prose"` (`--ui-prose-*` hooks); `data-prose-slot="end"` on a wrapper exempts a widget inside it, and `data-prose-slot="start"` inside that turns prose back on.
 - **Fluid type controls** (0.9 and later; earlier releases use fixed `clamp()` sizes): tune the
   scale on `:root`, never by redeclaring each `--font-size-*`. `--typeset-base-min`/`-max` set `md`;
   `--typeset-scale-min`/`-max` set the ratio between steps (`lg` is one step, `display` eight);
@@ -98,6 +98,11 @@ buttons/inputs/popovers, **lg** = cards/dialogs, **sm** = badges, **full** = pil
 `--radius` takes a number on the same scale (`--radius: 2.5` is **md**; 0.5 2xs, 1 xs, 1.5 sm, 4.5 lg,
 7 xl, 10 2xl), a length, or `full`, at any state or breakpoint. `--radius-t` / `-b` / `-l` / `-r`
 round two corners (`--radius-t: 2.5` for a card's media) and take breakpoints only.
+
+`--radius-corner-shape` (default `superellipse(1.3)`) is the curve of every radius. Set it on `:root`
+to re-skin the kit; `round` turns it off. Primitives expose `--ui-*-corner-shape` hooks. Radio, switch,
+slider, progress, meter, and `--radius: full` stay `round`. `--corner-shape` overrides one element
+and takes no states or breakpoints.
 
 ## 6. Shadow & elevation
 
@@ -124,8 +129,8 @@ breakpoints, so a bottom sheet can cast up on mobile). A shadow utility never re
 - **Breakpoints:** Tailwind's five names in rem, the same scale as the layout widths:
   `sm` 40rem · `md` 48rem · `lg` 64rem · `xl` 80rem · `2xl` 96rem (640/768/1024/1280/1536px;
   `--layout-sm` … `--layout-2xl` for bands and dialogs). Breakpoint tiers (`--<utility>--md`) are mobile-first and
-  track the **nearest inline-size container** (the page by default, or the band inside a layout; mark a card, sidebar, or slot
-  `data-ui="container"` to make what's inside respond to it; an element never queries itself).
+  track the **nearest inline-size container** (the page by default, or the band inside a layout; give a card, sidebar, or slot
+  `--container-type: inline-size` to make what's inside respond to it; an element never queries itself).
 - **Flow utilities:** `--display` (plus `flex-row`, `flex-col`, `-reverse`, and `inline-flex-…`
   shorthands that set the direction; no `--flex-direction`), `--flex-wrap`, `--flex`, `--shrink`,
   `--basis`, `--order`, `--items`, `--justify`, `--self`, and for grids `--place-items`, `--place-content`
@@ -141,12 +146,12 @@ breakpoints, so a bottom sheet can cast up on mobile). A shadow utility never re
   Placement: `--col-span` / `--row-span` (integer → `span n / span n`), `--col-start`,
   `--col-end`, `--row-start`, `--row-end` (line numbers; `--col-start: 1; --col-end: -1` spans
   every track). `--band: layout-md` places a layout child.
-- **Switches:** `data-ui="pile"` (stack children in one cell), `data-ui="container"` (inline-size query container), `data-ui="isolate"` (new stacking
-  context; pairs with pile for layered heroes: `data-ui="pile isolate"`), `data-ui="sr-only"`,
-  `data-ui="not-prose"` (a prose ancestor skips this subtree),
-  `data-ui="truncate"` (one line, overflow ends in an ellipsis; a flex item also needs `--min-w: 0`),
-  `data-ui="spin"` / `"ping"` / `"pulse"` / `"bounce"` (Tailwind's looping animations on the default easing; off under reduced motion),
-  `data-ui="divide-x"` / `"divide-y"` (a border between direct children; `--divide` on the container sizes or colors it, §11).
+- **Fixed-word utilities:** `--display: grid-pile` (stack children in one centered cell), `--container-type: inline-size` (query container; `--container` is the `name / type` shorthand, so `--container: inline-size` sets a name),
+  `--isolation: isolate` (new stacking context; pairs with a pile for layered heroes: `--display: grid-pile; --isolation: isolate`),
+  `--sr: only` (visually hidden, still read aloud; breakpoints, no states, and a tier's `none` restores the element),
+  `--text-wrap: truncate` (one line, overflow ends in an ellipsis; `none` wraps again; a flex item also needs `--min-w: 0`),
+  `--animation: var(--spin)` / `var(--ping)` / `var(--pulse)` / `var(--bounce)` (Tailwind's looping animations: `--spin` is linear, the rest use the default easing; `--animation` takes any value, and reduced motion stops them all),
+  `--divide-x: 1` / `--divide-y: 1` / `--divide: 1` (a border between direct children, §11).
 - **Scroll fade:** `data-ui="scroll-fade"` (+ `data-scroll-fade-axis="x"`), hooks
   `--ui-scroll-fade-size`, `--ui-scroll-fade-reveal`.
 - **Box utilities (no tiers):** `--overflow --overflow-x --overflow-y`, `--object-fit --object-position`,
@@ -168,8 +173,8 @@ unset, it is `--ring-width`.
 
 ## 9. Motion
 
-`--spring-easing` (natural spring) with `--bezier-easing` fallback; `--spring-duration`
-(~0.333s). `--default-transition` bundles the commonly animated properties:
+`--spring-easing` (a spring with no bounce) with `--bezier-easing` fallback; `--spring-duration`
+(0.25s). `--default-transition` bundles the commonly animated properties:
 `--transition: var(--default-transition)`. Narrow it with one of its groups:
 `--default-transition-colors`, `-transforms`, `-effects` (opacity, filters, shadow) or `-content`
 (discrete properties with `allow-discrete`); each has a `--default-transition-property-*` name list.
@@ -198,8 +203,9 @@ that color), a number (that many px in `--color-border`), or a length (that widt
 `--color-border`). The all-sides longhands win over it: `--border-width`, `--border-style`,
 `--border-color`. A side takes only the shorthand (there is no `--border-b-width`): a one-line
 divider is `--border-b: 1`, an accent edge `--border-l: var(--color-primary)`. Borders between
-direct children: `data-ui="divide-x"` / `"divide-y"` on the container, 1px `--color-border` by
-default, or `--divide: 2` / `--divide: var(--color-primary)` on the container (same grammar).
+direct children: `--divide-x`, `--divide-y`, or `--divide` (both axes) on the container, with the
+same grammar plus `none` (`--divide-y: 1`, `--divide-x: var(--color-primary)`). An axis beats
+`--divide`, and on a single flex row use `--divide-x`, because `--divide` draws a bottom border too.
 Separators between items are `<hr data-ui="separator">`.
 
 ## 12. Positioning & interaction

@@ -23,7 +23,7 @@ describe("toaster", () => {
     const root = mount(`<div>
       <ui-toaster data-tag popover="manual">${LIST}</ui-toaster>
       <div data-ui="toaster" data-attr popover="manual">${LIST}</div>
-      <div data-success-color style="--text: var(--color-success)"></div>
+      <div data-success-color style="--text: var(--color-success-foreground)"></div>
     </div>`);
     for (const selector of ["[data-tag]", "[data-attr]"]) {
       const region = root.querySelector(selector) as HTMLElement;

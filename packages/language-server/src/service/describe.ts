@@ -76,9 +76,13 @@ export function describeUtilityName(raw: string): string | undefined {
   const space = SPACE_PROPERTIES[utility.name];
   const properties = space
     ? `\`${space}\` on each direct child but the last`
-    : utility.properties.length
-      ? utility.properties.map((property) => `\`${property}\``).join(", ")
-      : "`box-shadow` (shared with the other ring and shadow utilities)";
+    : utility.emit === "divide"
+      ? "a border on each direct child but the last"
+      : utility.name === "sr"
+        ? "the visually hidden styles"
+        : utility.properties.length
+          ? utility.properties.map((property) => `\`${property}\``).join(", ")
+          : "`box-shadow` (shared with the other ring and shadow utilities)";
   lines.push(`Sets ${properties}${target}. Takes ${modeDescription(utility)}.`);
   if (parsed.tier) {
     lines.push("", `**${parsed.tier}**: applies ${tierDescription(parsed.tier, parsed.group)}.`);

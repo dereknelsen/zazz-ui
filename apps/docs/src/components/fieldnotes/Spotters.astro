@@ -20,7 +20,7 @@ import CardHeader from './CardHeader.astro';
     title='Spotters'
     description='People on the record for your species.'
   />
-  <ul data-ui='divide-y' style='--display: grid'>
+  <ul style='--display: grid; --divide-y: 1'>
     {
       spotters.map((p) => (
         <li
@@ -57,8 +57,8 @@ import CardHeader from './CardHeader.astro';
               {p.name}
             </span>
             <span
-              data-ui='text-sm truncate'
-              style='--text: var(--color-muted-foreground)'
+              data-ui='text-sm'
+              style='--text: var(--color-muted-foreground); --text-wrap: truncate'
             >
               {p.detail}
             </span>

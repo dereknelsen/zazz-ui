@@ -14,6 +14,7 @@
  * @uses       Engines without typed attr() keep the vendor-pseudo fill;
  *             recorded degradation in Blink pre-133: themed track + thin
  *             centered fill (browser policy exception)
+ * @uses       corner-shape — round by default, so circles stay circles; a hook takes any shape
  * @tokens     --ui-meter-* (@layer variables); geometry aliases --ui-progress-*
  */
 
@@ -24,13 +25,14 @@
     --ui-meter-w: var(--ui-progress-w);
     --ui-meter-h: var(--ui-progress-h);
     --ui-meter-radius: var(--ui-progress-radius);
+    --ui-meter-corner-shape: var(--ui-progress-corner-shape);
     --ui-meter-bg: var(--ui-progress-bg);
     --ui-meter-track-border: var(--ui-progress-track-border);
 
     /* Fills are semantic: a meter communicates good/bad, not completion */
-    --ui-meter-bar-bg: var(--color-success);
-    --ui-meter-bar-bg--suboptimum: var(--color-warning);
-    --ui-meter-bar-bg--even-less-good: var(--color-destructive);
+    --ui-meter-bar-bg: var(--color-success-foreground);
+    --ui-meter-bar-bg--suboptimum: var(--color-warning-foreground);
+    --ui-meter-bar-bg--even-less-good: var(--color-destructive-foreground);
   }
 }
 
@@ -57,6 +59,7 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-meter-corner-shape));
   }
 
   :where([data-ui~="meter"])::-webkit-meter-bar {
@@ -70,23 +73,27 @@
     block-size: 100%;
     background: var(--ui-meter-bar-bg);
     border-radius: inherit;
+    corner-shape: inherit;
   }
 
   :where([data-ui~="meter"])::-webkit-meter-suboptimum-value {
     block-size: 100%;
     background: var(--ui-meter-bar-bg--suboptimum);
     border-radius: inherit;
+    corner-shape: inherit;
   }
 
   :where([data-ui~="meter"])::-webkit-meter-even-less-good-value {
     block-size: 100%;
     background: var(--ui-meter-bar-bg--even-less-good);
     border-radius: inherit;
+    corner-shape: inherit;
   }
 
   :where([data-ui~="meter"])::-moz-meter-bar {
     block-size: 100%;
     border-radius: inherit;
+    corner-shape: inherit;
   }
 
   :where([data-ui~="meter"]:-moz-meter-optimum)::-moz-meter-bar {

@@ -3,7 +3,7 @@
 /**
  * @fileoverview `data-ui="text-*"` roles set the type
  * system, native headings get their role without a token, utilities override one
- * property at a time, and `data-ui="prose"` is the rich-text switch.
+ * property at a time, and `data-ui="prose"` is the rich-text primitive.
  */
 
 import { afterEach, describe, expect, it } from "vite-plus/test";
@@ -55,10 +55,10 @@ describe("typography roles", () => {
     ).toBeGreaterThan(0);
   });
 
-  it("not-prose stops prose styling for its subtree", () => {
+  it("an end slot stops prose styling for its subtree", () => {
     const root = mount(`<article data-ui="prose">
       <p>one</p>
-      <div data-ui="not-prose" data-out><p>a</p><p data-p>b</p><ul data-ul><li>x</li></ul></div>
+      <div data-prose-slot="end" data-out><p>a</p><p data-p>b</p><ul data-ul><li>x</li></ul></div>
       <p data-after>two</p>
     </article>`);
     const px = (selector: string, property: string) =>
@@ -70,9 +70,29 @@ describe("typography roles", () => {
     expect(px("[data-after]", "margin-block-start")).toBeGreaterThan(0);
   });
 
-  it("a prose nested inside not-prose styles its own content again", () => {
+  it("a start slot inside an end slot turns prose back on", () => {
     const root = mount(`<article data-ui="prose">
-      <div data-ui="not-prose"><div data-ui="prose"><p>a</p><p data-inner>b</p></div></div>
+      <div data-prose-slot="end">
+        <p data-off>a</p><p data-still-off>b</p>
+        <div data-prose-slot="start" data-on><p>c</p><p data-resumed>d</p></div>
+      </div>
+    </article>`);
+    const margin = (selector: string) =>
+      Number.parseFloat(style(root.querySelector(selector)!, "margin-block-start"));
+    expect(margin("[data-still-off]")).toBe(0);
+    expect(margin("[data-resumed]")).toBeGreaterThan(0);
+    expect(style(root.querySelector("[data-on]")!, "display")).toBe("flex");
+  });
+
+  it("a start slot outside prose does nothing", () => {
+    const root = mount(`<div data-prose-slot="start"><p>a</p><p data-p>b</p></div>`);
+    expect(Number.parseFloat(style(root.querySelector("[data-p]")!, "margin-block-start"))).toBe(0);
+    expect(style(root, "display")).toBe("block");
+  });
+
+  it("a prose nested inside an end slot styles its own content again", () => {
+    const root = mount(`<article data-ui="prose">
+      <div data-prose-slot="end"><div data-ui="prose"><p>a</p><p data-inner>b</p></div></div>
     </article>`);
     expect(
       Number.parseFloat(style(root.querySelector("[data-inner]")!, "margin-block-start")),

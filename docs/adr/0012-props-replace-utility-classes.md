@@ -6,6 +6,8 @@
 >
 > Amended 2026-10-05 (breakpoints): five breakpoints (`sm`–`2xl`) in `ch`, chosen for legibility; breakpoint tiers query the nearest inline-size container directly instead of page flags (the container and viewport flags below are retired), and layout widths are a separate rem scale (`--layout-*`). SPEC §8 has the current model.
 
+> Amended 2026-11-06: the "switch" bucket below is retired. A fixed rule set with no value is now a utility with a keyword (`--sr: only`), and `data-ui` holds identities only; ADR-0013 amendment 4 has the table.
+
 Status: accepted (2026-09-25). Supersedes [ADR-0008](./0008-instance-override-escape-hatch.md).
 
 The utilities layer of class-per-value rules is removed. Values are carried by **props**: custom properties set in an element's `style` attribute (`--p: 4`, `--w--md: fit-content`, `--opacity--hover: .65`) and read by one attribute-gated rule per prop. Primitives read the same props, falling back to a `:root` hook, so a variant, an inline override, and global theming all go through one vocabulary. Ships as `@zazz-ui/core` 0.5.0 (breaking under the ADR-0010 0.x contract); no 0.4.2 deprecation release.

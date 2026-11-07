@@ -4,6 +4,7 @@
  * @layer      variables, components
  * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow), fields.css (field-group layout, --ui-field-* surface/border)
  * @uses       appearance: none — custom circle + masked ::before dot when :checked
+ * @uses       corner-shape — round by default, so circles stay circles; a hook takes any shape
  * @tokens     --ui-radio-* (@layer variables)
  */
 
@@ -19,6 +20,7 @@
     --ui-radio-border-color--hover: var(--ui-field-border-color--hover);
     --ui-radio-border-color--checked: var(--color-primary);
     --ui-radio-radius: var(--radius-full);
+    --ui-radio-corner-shape: round;
     --ui-radio-dot-size: 1em;
     --ui-radio-dot-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' fill='currentColor' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3C/svg%3E")
       center / contain no-repeat;
@@ -51,6 +53,7 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-radio-corner-shape));
 
     /* centres the ::before dot */
     display: inline-grid;

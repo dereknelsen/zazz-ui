@@ -6,7 +6,7 @@
  * @uses       appearance: none — select chevron reset
  * @uses       ::details-content — accordion open/close (see accordion.css for :where(ui-accordion, [data-ui~="accordion"]))
  * @uses       container-type — html is the page's inline-size container, the one breakpoint
- *             tiers read when nothing closer is (layout children and data-ui="container" are closer)
+ *             tiers read when nothing closer is (layout children and any `--container-type` are closer)
  * @uses       view-transition-name via the <main> tag - main-content and [data-transition-layer] —
  *             global (animated in _view-transitions.css)
  * @uses       text-box — vertical trim on headings
@@ -191,9 +191,11 @@
   :where(code) {
     --code-display: inline;
     --code-background: var(--color-muted);
-    --code-border: 1px solid var(--color-muted);
+    --code-border-width: 1px;
+    --code-border-style: solid;
+    --code-border-color: var(--color-muted);
     --code-padding-inline: var(--spacing);
-    --code-padding-block: 0em;
+    --code-padding-block: 0.025em;
     --code-radius: var(--radius-xs);
     --code-color: var(--color-foreground);
 
@@ -201,8 +203,9 @@
     background-color: var(--code-background);
     padding-inline: var(--code-padding-inline);
     padding-block: var(--code-padding-block);
-    border: var(--code-border);
+    border: var(--code-border-width) var(--code-border-style) var(--code-border-color);
     border-radius: var(--code-radius);
+    corner-shape: var(--radius-corner-shape);
     color: var(--code-color);
     white-space: nowrap;
     overflow: hidden;
@@ -344,6 +347,7 @@
     inline-size: var(--search-cancel-size);
     block-size: var(--search-cancel-size);
     border-radius: var(--search-cancel-radius);
+    corner-shape: var(--radius-corner-shape);
 
     transition:
       opacity var(--default-transition-duration) var(--default-transition-timing-function),

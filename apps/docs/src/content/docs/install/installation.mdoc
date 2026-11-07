@@ -64,7 +64,7 @@ Keep the kit's stylesheet out of CSS minifiers that rewrite modern syntax. `@pro
 
 ## The head contract
 
-Whichever route you take, a Zazz page's `<head>` has the same parts, in this order: the meta tags, any font links, the stylesheet link(s), the import map, a `modulepreload` hint, the interest-invokers polyfill, the module script, and the theme script. `buildHead()` from `@zazz-ui/core/head` writes it; the CLI's `head.html` is that output; this site's own head is too. The theme script must stay inline and last so the `theme-*` switch lands before first paint. Under a strict Content Security Policy, the two inline scripts take a nonce (`buildHead({ nonce })`) and the `style` attribute needs `style-src-attr 'unsafe-inline'`; the [security page](/docs/install/security/) has the policy and what the kit does without it.
+Whichever route you take, a Zazz page's `<head>` has the same parts, in this order: the meta tags, any font links, the stylesheet link(s), the import map, a `modulepreload` hint, the interest-invokers polyfill, the module script, and the theme script. `buildHead()` from `@zazz-ui/core/head` writes it; the CLI's `head.html` is that output; this site's own head is too. The theme script must stay inline and last so `data-theme` lands before first paint. Under a strict Content Security Policy, the two inline scripts take a nonce (`buildHead({ nonce })`) and the `style` attribute needs `style-src-attr 'unsafe-inline'`; the [security page](/docs/install/security/) has the policy and what the kit does without it.
 
 For a vendored copy at `./zazz/`:
 

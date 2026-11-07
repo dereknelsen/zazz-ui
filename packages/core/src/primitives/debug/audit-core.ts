@@ -13,6 +13,8 @@ import {
   BORDER_SHORTHANDS,
   BOX_SHADOW_COMPOSITE,
   SHORTHAND_OF,
+  DISPLAY_PILE,
+  RETIRED_TOKENS,
   DISPLAY_SHORTHANDS,
   GRADIENT_TYPES,
   UTILITIES,
@@ -45,6 +47,7 @@ export type RuleId =
   | "whitespace-before-colon"
   | "whitespace-after-colon"
   | "attribute-outside-identity"
+  | "retired-token"
   | "field-id-or-name"
   | "persist";
 
@@ -66,6 +69,7 @@ export const RULE_IDS: readonly RuleId[] = [
   "whitespace-before-colon",
   "whitespace-after-colon",
   "attribute-outside-identity",
+  "retired-token",
   "field-id-or-name",
   "persist",
 ];
@@ -148,7 +152,7 @@ function gatedValue(utility: Utility, value: string): boolean {
   return (
     (utility.keywords ?? []).includes(value) ||
     value in (utility.aliases ?? {}) ||
-    (utility.name === "display" && value in DISPLAY_SHORTHANDS) ||
+    (utility.name === "display" && (value in DISPLAY_SHORTHANDS || value === DISPLAY_PILE)) ||
     (utility.name === "bg" && value === "none") ||
     (utility.name === "position" && value === "sticky")
   );
@@ -266,6 +270,21 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
     if (!parsed.tier) bases.add((parsed.side ? `${parsed.side}-` : "") + parsed.name);
   }
   const tokens = (node.getAttribute("data-ui") ?? "").split(/\s+/).filter(Boolean);
+  for (const token of tokens) {
+    const replacement = RETIRED_TOKENS[token];
+    if (replacement) {
+      found.push({
+        rule: "retired-token",
+        message: `\`data-ui="${token}"\` is gone: \`data-ui\` holds identities only. Use ${replacement}.`,
+        attribute: "data-ui",
+      });
+    }
+  }
+  const sticky = parsedPairs.some(
+    ([parsed, , declaration]) =>
+      parsed.name === STUCK_STATE.modifier ||
+      (parsed.name === "position" && declaration.value === "sticky"),
+  );
   for (const [parsed, name, declaration] of parsedPairs) {
     const { value, span } = declaration;
     const warn = (rule: RuleId, message: string, suggestion?: Suggestion) =>
@@ -326,6 +345,18 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
       continue;
     }
     if (!parsed.side && gatedValue(utility, value)) spacing();
+    // only --container-type keeps the scroll-state type beside its own, and only
+    // beside a size type: the kit cannot read a part of a raw shorthand
+    if (
+      sticky &&
+      (utility.name === "container" ||
+        (utility.name === "container-type" && /normal|scroll-state/.test(value)))
+    ) {
+      warn(
+        "scroll-state",
+        `\`${name}: ${value}\` replaces this sticky element's container type, so its stuck state stops working. Use \`--container-name\` with \`--container-type: inline-size\`.`,
+      );
+    }
     const baseName = (parsed.side ? `${parsed.side}-` : "") + utility.name;
     if (parsed.group && parsed.tier === "stuck") {
       warn(
@@ -357,6 +388,9 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
         `\`${name}\` needs a state tier: group utilities take \`--group-${utility.name}--<state>\`.`,
       );
       continue;
+    }
+    if (utility.emit === "divide" && value !== "none" && !isBorderValue(value, context.isColor)) {
+      warn("border-value", `\`${name}: ${value}\` is not one color, number, length, or \`none\`.`);
     }
     if (utility.emit === "border" && !isBorderValue(value, context.isColor)) {
       warn(
@@ -410,6 +444,8 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
       // element through another utility or a token, and are not checked here
       const composite = (BOX_SHADOW_COMPOSITE as readonly string[]).includes(utility.name);
       const feedsComposite = !composite && (utility.emit === "none" || utility.emit === "px");
+      // each of these declares its own property or resolves on its own gate
+      const standalone = utility.emit === "direct" || utility.emit === "divide";
       // a tier alone works where the kit reads the utility through its own chain,
       // or where the tier-only rule (`@layer defaults`) applies: a no-base utility
       // whose property no kit rule above that layer sets on this element
@@ -425,7 +461,8 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
         !bases.has(baseName) &&
         !borderBase &&
         !shorthandBase &&
-        !feedsComposite
+        !feedsComposite &&
+        !standalone
       ) {
         warn(
           "tier-without-base",

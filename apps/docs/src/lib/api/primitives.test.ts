@@ -66,7 +66,7 @@ describe("primitiveApi", () => {
     expect([...seenHooks].filter(([, owners]) => owners.length > 1)).toEqual([]);
     const primitiveAttrs = (htmlData.globalAttributes as { name: string }[])
       .map((a) => a.name)
-      .filter((n) => /^data-(?!ui\b|ui-|debug-)/.test(n));
+      .filter((n) => /^data-(?!ui\b|ui-|debug-|theme\b)/.test(n));
     expect(primitiveAttrs.filter((n) => !seenAttrs.has(n))).toEqual([]);
   });
 

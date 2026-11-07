@@ -2,11 +2,13 @@
  * switch.css — Switch (input[type="checkbox"][role="switch"])
  *
  * @layer      variables, reset
- * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow)
+ * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow), fields.css (--ui-field-* border/ring)
  * @uses       appearance: none on input[role="switch"]
  * @uses       label:has(> input[role="switch"])::after — thumb drawn on label (no JS)
  * @uses       oklch(from …) — checked/hover track tints
- * @tokens     --ui-switch-* (@layer variables; consumed in @layer reset)
+ * @uses       corner-shape — round by default, so circles stay circles; a hook takes any shape
+ * @tokens     --ui-switch-* (@layer variables; consumed in @layer reset; border and
+ *             ring default to the --ui-field-* family)
  */
 
 @layer variables {
@@ -14,17 +16,34 @@
     --ui-switch-track-w: calc(var(--spacing) * 7);
     --ui-switch-track-p: calc(var(--spacing) * 0.5);
     --ui-switch-track-h: calc(var(--ui-switch-track-w) / 2 + var(--ui-switch-track-p));
-    --ui-switch-thumb-bg: var(--color-background);
-    --ui-switch-thumb-bg--hover: var(--color-primary-foreground);
+
+    --ui-switch-thumb-bg: var(--color-card);
+    --ui-switch-thumb-bg--checked: var(--color-primary-foreground);
     --ui-switch-thumb-size: calc((var(--ui-switch-track-w) / 2) - var(--ui-switch-track-p));
-    --ui-switch-thumb-shadow: var(--shadow-xs);
+    --ui-switch-thumb-shadow: var(--shadow-sm);
     --ui-switch-thumb-translate: var(--ui-switch-track-p), -50%;
     --ui-switch-thumb-scale: 1;
+
     --ui-switch-track-bg: var(--color-input);
-    --ui-switch-track-bg--hover: oklch(from var(--color-input) l c h / calc(alpha + 0.04));
+    --ui-switch-track-bg--hover: oklch(from var(--color-muted) l c h / calc(alpha * 1.5));
     --ui-switch-track-bg--checked: var(--color-primary);
     --ui-switch-track-bg--checked-hover: var(--color-primary);
+    --ui-switch-track-border-width: var(--ui-field-border-width);
+    --ui-switch-track-border-style: var(--ui-field-border-style);
+    --ui-switch-track-border-color: var(--ui-field-border-color);
+    --ui-switch-track-border-color--hover: var(--ui-field-border-color--hover);
+    --ui-switch-track-border-color--checked: var(--ui-switch-track-bg--checked);
+    --ui-switch-track-border-color--checked-hover: var(--ui-switch-track-bg--checked-hover);
+
+    /* dual-mode hooks: a scale number or a length */
     --ui-switch-radius: var(--radius-full);
+    --ui-switch-corner-shape: round;
+    --ui-switch-track-radius: var(--ui-switch-radius);
+    --ui-switch-track-corner-shape: var(--ui-switch-corner-shape);
+    --ui-switch-thumb-radius: var(--ui-switch-radius);
+    --ui-switch-thumb-corner-shape: var(--ui-switch-corner-shape);
+
+    --ui-switch-cursor: pointer;
   }
 }
 
@@ -44,30 +63,35 @@
       inset-inline-start: 0;
       inline-size: var(--ui-switch-thumb-size);
       block-size: var(--ui-switch-thumb-size);
-      border-radius: var(--radius-full);
+      /* The thumb hangs off the label, out of reach of a --radius on the input,
+         so it reads the hook alone */
+      --_radius-len: var(--ui-switch-thumb-radius);
+      --_radius-num: var(--ui-switch-thumb-radius);
+      border-radius: calc(
+        var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+      );
+      corner-shape: var(--ui-switch-thumb-corner-shape);
       background-color: var(--ui-switch-thumb-bg);
       box-shadow: var(--ui-switch-thumb-shadow);
       pointer-events: none;
       transform: translate(var(--ui-switch-thumb-translate)) scale(var(--ui-switch-thumb-scale));
-      transition:
-        box-shadow var(--default-transition-duration) var(--default-transition-timing-function),
-        transform var(--default-transition-duration) var(--default-transition-timing-function);
+      transition: var(--default-transition);
       z-index: 1;
     }
 
     &:has(> input[role="switch"]:checked)::after {
-      background-color: var(--ui-switch-thumb-bg--hover);
+      background-color: var(--ui-switch-thumb-bg--checked);
       --ui-switch-thumb-translate:
         calc(var(--ui-switch-track-p) + var(--ui-switch-thumb-size)), -50%;
     }
 
     @media (hover: hover) {
-      &:has(> input[role="switch"]:hover):after {
+      &:has(> input[role="switch"]:hover:not(:disabled))::after {
         --ui-switch-thumb-scale: 1.1;
       }
     }
 
-    &:has(> input[role="switch"]:active):after {
+    &:has(> input[role="switch"]:active:not(:disabled))::after {
       --ui-switch-thumb-shadow: none;
       --ui-switch-thumb-scale: 0.98;
     }
@@ -93,18 +117,23 @@
     block-size: calc(var(--_h-len) + var(--_h-num) * var(--spacing));
 
     background-color: var(--_bg-resolved, var(--ui-switch-track-bg));
-
-    --_radius-len: var(--_radius-resolved, var(--ui-switch-radius));
-    --_radius-num: var(--_radius-resolved, var(--ui-switch-radius));
+    border-width: var(--_border-width-resolved, var(--ui-switch-track-border-width));
+    border-style: var(--_border-style-resolved, var(--ui-switch-track-border-style));
+    border-color: var(--_border-color-resolved, var(--ui-switch-track-border-color));
+    --_radius-len: var(--_radius-resolved, var(--ui-switch-track-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-switch-track-radius));
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
-    cursor: pointer;
+    corner-shape: var(--_corner-shape-resolved, var(--ui-switch-track-corner-shape));
+    cursor: var(--_cursor-resolved, var(--ui-switch-cursor));
 
-    /* the transparent outline keeps focus visible in forced-colors */
+    /* The ring is published to --_focus-shadow so a --shadow utility keeps
+       it; the transparent outline twin keeps focus visible in forced-colors */
     --_ring-offset-width: 0px;
     --_ring-width: 0px;
     --_focus-in: max(0, -1 * sign(var(--_focus-ring-w, 1px)));
+    --_ring-fill: color-mix(in oklch, var(--ui-field-ring-color) var(--ring-opacity), transparent);
     --_focus-shadow:
       0 0 0 calc(var(--_ring-offset-width) * (1 - var(--_focus-in))) var(--ring-offset-shadow-color),
       0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * (1 - var(--_focus-in)))
@@ -123,22 +152,29 @@
   }
 
   @media (hover: hover) {
-    :where(input[role="switch"]:hover) {
+    :where(input[role="switch"]:hover:not(:disabled)) {
       background-color: var(--_bg-resolved, var(--ui-switch-track-bg--hover));
+      border-color: var(--_border-color-resolved, var(--ui-switch-track-border-color--hover));
     }
   }
 
   :where(input[role="switch"]:checked) {
     background-color: var(--_bg-resolved, var(--ui-switch-track-bg--checked));
+    border-color: var(--_border-color-resolved, var(--ui-switch-track-border-color--checked));
   }
 
   @media (hover: hover) {
-    :where(input[role="switch"]:hover:checked) {
+    :where(input[role="switch"]:hover:checked:not(:disabled)) {
       background-color: var(--_bg-resolved, var(--ui-switch-track-bg--checked-hover));
+      border-color: var(
+        --_border-color-resolved,
+        var(--ui-switch-track-border-color--checked-hover)
+      );
     }
   }
 
   :where(input[role="switch"]:focus-visible) {
+    border-color: var(--_border-color-resolved, var(--ui-field-border-color--focus-within));
     --_ring-offset-width: var(--ring-offset-width);
     --_ring-width: abs(var(--_focus-ring-w, var(--ring-width)));
     outline-color: transparent;

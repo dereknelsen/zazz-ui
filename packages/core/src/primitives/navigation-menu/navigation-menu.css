@@ -9,6 +9,8 @@
  * @uses       :has(:popover-open): rotates the trigger's data-navigation-menu-slot="marker"
  *             chevron without JS
  * @uses       @starting-style: slide-down viewport reveal
+ * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
+ *             rounded corners
  * @tokens     --ui-navigation-menu-* (@layer variables)
  * @presets    on the popover slot: data-navigation-menu-variant="submenu",
  *             data-navigation-menu-size="container | root | screen",
@@ -23,6 +25,7 @@
 
     --ui-navigation-menu-popover-shadow: var(--shadow-md);
     --ui-navigation-menu-popover-child-radius: var(--radius-sm);
+    --ui-navigation-menu-popover-child-corner-shape: var(--radius-corner-shape);
     --ui-navigation-menu-popover-gap: calc(var(--spacing) * 1.5);
     --ui-navigation-menu-popover-w: min(var(--article-sm), 100% - var(--space-md));
     --ui-navigation-menu-popover-viewport-display: grid;
@@ -136,6 +139,7 @@
     padding: var(--ui-navigation-menu-popover-gap);
     border: 0;
     border-radius: var(--ui-navigation-menu-popover-child-radius);
+    corner-shape: var(--ui-navigation-menu-popover-child-corner-shape);
     color: inherit;
     font: inherit;
     text-align: start;
@@ -194,6 +198,7 @@
     flex-direction: column;
     padding: var(--ui-navigation-menu-popover-gap);
     border-radius: var(--ui-navigation-menu-popover-child-radius);
+    corner-shape: var(--ui-navigation-menu-popover-child-corner-shape);
     text-decoration: none;
     transition: background-color var(--default-transition-duration)
       var(--default-transition-timing-function);

@@ -42,7 +42,7 @@
   pre.astro-code > code {
     --code-display: block;
     --code-background: transparent;
-    --code-border: 0;
+    --code-border-width: 0;
     --code-padding-inline: 0;
     --code-padding-block: 0;
     --code-radius: 0;
@@ -51,13 +51,17 @@
     white-space: inherit;
   }
 
-  @scope ([data-ui~="prose"]) to ([data-ui~="not-prose"]) {
+  @scope ([data-ui~="prose"], [data-ui~="prose"] [data-prose-slot~="start"]) to ([data-prose-slot~="end"]) {
     /* The reset keeps a chip on one line; in prose a long one breaks rather
        than running past a phone's edge. */
     :not(pre) > code {
-      padding: 0.1em 0.35em;
-      border-radius: var(--radius-sm);
-      background: var(--color-muted);
+      display: var(--code-display);
+      background-color: var(--code-background);
+      padding-inline: var(--code-padding-inline);
+      padding-block: var(--code-padding-block);
+      border: var(--code-border-width) var(--code-border-style) var(--code-border-color);
+      border-radius: var(--code-radius);
+      color: var(--code-color);
       font-size: 0.9em;
       white-space: normal;
       overflow-wrap: break-word;

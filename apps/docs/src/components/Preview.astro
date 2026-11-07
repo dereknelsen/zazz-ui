@@ -3,7 +3,7 @@
  * `{% preview src="button/button" /%}`: one example fragment from the kit,
  * rendered inline (the site loads the whole kit) and shown as code (HTML, the
  * primitive's CSS, and its scripts) from that same string, so the two can never
- * drift. The stage is `not-prose`, so the article's prose styles stop at it, and
+ * drift. The stage is a prose `end` slot, so the article's prose styles stop at it, and
  * a container, so breakpoint tiers inside follow the stage's width.
  */
 import { Code } from "astro:components";
@@ -61,11 +61,11 @@ const themes = { light: "github-light", dark: "github-dark" } as const;
     >
       <div
         data-preview-stage
-        data-ui="not-prose container"
+        data-prose-slot="end"
         data-pagefind-ignore
         role="region"
         aria-label={title ?? `Example: ${src}`}
-        style={`--display: grid; --place-items: ${place}; --gap: 6; --p: 6; --pb: 12; --min-h: 40; --overflow-x: auto`}
+        style={`--display: grid; --place-items: ${place}; --gap: 6; --p: 6; --pb: 12; --min-h: 40; --overflow-x: auto; --container-type: inline-size`}
       >
         {meta.diagram === "bands" ? <BandDiagram /> : <Fragment set:html={liveHtml(html)} />}
       </div>

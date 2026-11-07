@@ -9,9 +9,11 @@
  *             is open (WebKit ignores overscroll-behavior on boxes that do not overflow)
  * @uses       @starting-style + allow-discrete — open/close opacity, transform, overlay
  * @uses       anchor-name, container-type — layout hooks for sized variants
- * @tokens     --ui-dialog-* (@layer variables; --ui-dialog-h defaults to a keyword, so it is read
- *             raw: a --h length, or a tier carrying a length, applies; a scale
- *             number applies only as a base utility)
+ * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
+ *             rounded corners
+ * @tokens     --ui-dialog-* (@layer variables; --ui-dialog-h defaults to a keyword, so the hook
+ *             is read raw and takes a length or keyword; a --h utility or tier takes a scale
+ *             number or a length; a keyword tier needs a base --h, or it renders as auto)
  * @presets    data-dialog-size="sm | md | lg | xl | 2xl | full | bleed" (the layout bands; sm when absent)
  * @uses       @media (width < 40rem) + @container style(--ui-dialog-mobile-size) — below the sm
  *             band every dialog takes the hook's size (layout-bleed by default) over its preset;
@@ -53,6 +55,7 @@
     --ui-dialog-bg: var(--color-card);
     --ui-dialog-text: var(--color-card-foreground);
     --ui-dialog-radius: var(--radius-lg);
+    --ui-dialog-corner-shape: var(--radius-corner-shape);
   }
 }
 
@@ -140,6 +143,10 @@
   inherits: false;
 }
 
+@property --_dialog-h-typed {
+  syntax: "*";
+  inherits: false;
+}
 @property --_dialog-h {
   syntax: "*";
   inherits: false;
@@ -165,7 +172,14 @@
     --_w-len: var(--_w-resolved, var(--_dialog-w, var(--ui-dialog-w)));
     --_w-num: var(--_w-resolved, var(--_dialog-w, var(--ui-dialog-w)));
     inline-size: calc(var(--_w-len) + var(--_w-num) * var(--spacing));
-    block-size: var(--_h-resolved, var(--_dialog-h, var(--ui-dialog-h)));
+    /* The typed pair can't carry the hook's keyword. sign() adds nothing to the sum:
+       its var() leaves --_dialog-h-typed unset without a --h, so the chain reaches the hook */
+    --_h-len: var(--_h-resolved);
+    --_h-num: var(--_h-resolved);
+    --_dialog-h-typed: calc(
+      var(--_h-len) + var(--_h-num) * var(--spacing) + 0px * sign(var(--_h-resolved))
+    );
+    block-size: var(--_dialog-h-typed, var(--_dialog-h, var(--ui-dialog-h)));
     background-color: var(--_bg-resolved, var(--ui-dialog-bg));
     color: var(--_text-resolved, var(--ui-dialog-text));
     box-shadow: var(--_shadow-resolved, var(--_dialog-shadow, var(--ui-dialog-shadow)));
@@ -174,6 +188,7 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-dialog-corner-shape));
 
     anchor-name: --ui-dialog-root;
     container-type: inline-size;

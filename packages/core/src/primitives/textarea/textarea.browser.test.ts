@@ -12,6 +12,23 @@ describe("textarea", () => {
   useKit();
   useCss(`[data-ui~="textarea"] { transition: none; }`);
 
+  it("takes a scale number or a length on a tier-only --min-h and --max-h", () => {
+    const root = mount(`<div style="container-type: inline-size; inline-size: 1200px">
+      <textarea data-ui="textarea" data-scale style="--min-h--sm: 30; --max-h--sm: 40"></textarea>
+      <textarea data-ui="textarea" data-length style="--min-h--sm: 30px"></textarea>
+    </div>`);
+    const at = (selector: string) => root.querySelector(selector)!;
+    expect(Number.parseFloat(style(at("[data-scale]"), "min-block-size"))).toBeCloseTo(
+      scale(30),
+      1,
+    );
+    expect(Number.parseFloat(style(at("[data-scale]"), "max-block-size"))).toBeCloseTo(
+      scale(40),
+      1,
+    );
+    expect(style(at("[data-length]"), "min-block-size")).toBe("30px");
+  });
+
   it("takes the field padding and a scale-number --p utility", () => {
     const root = mount(`<div>
       <textarea data-ui="textarea" data-default></textarea>

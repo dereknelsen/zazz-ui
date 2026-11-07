@@ -190,9 +190,13 @@ function utilityDetail(utility: Utility): string {
   const space = SPACE_PROPERTIES[utility.name];
   const properties = space
     ? `children's ${space}`
-    : utility.properties.length
-      ? utility.properties.join(", ")
-      : "box-shadow";
+    : utility.emit === "divide"
+      ? "children's border"
+      : utility.name === "sr"
+        ? "visually hidden"
+        : utility.properties.length
+          ? utility.properties.join(", ")
+          : "box-shadow";
   return `${properties} · ${utility.family}`;
 }
 

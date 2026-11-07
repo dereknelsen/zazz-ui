@@ -168,7 +168,7 @@ Copy the `fields` fragment. The parts carry the meaning the kit and the browser 
 - Every control has a `name`, search boxes and demos included. Radios in one group share a
   `name`; each checkbox and radio has a meaningful `value`.
 - Group radios and related checkboxes in `<fieldset data-ui="field-group">` (or
-  `data-ui="radio-group"`) with a `<legend>`. Hide a legend visually with `data-ui="sr-only"`,
+  `data-ui="radio-group"`) with a `<legend>`. Hide a legend visually with `--sr: only`,
   never by dropping it.
 - Use the most specific `type` (`email`, `tel`, `url`, `number`, `date`) and the matching
   `autocomplete` token. The mobile keyboard and the browser's autofill both read them.

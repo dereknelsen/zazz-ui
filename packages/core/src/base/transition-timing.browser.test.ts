@@ -7,10 +7,18 @@
  */
 
 import { describe, expect, it } from "vite-plus/test";
-import { mount, style, useKit } from "../../test/browser.ts";
+import { frame, mount, style, useKit } from "../../test/browser.ts";
 
 describe("transition timing utilities", () => {
   useKit();
+
+  it("runs the default transition on the spring", async () => {
+    const el = mount(`<button data-ui="button">x</button>`);
+    await Promise.all(document.documentElement.getAnimations().map((a) => a.finished));
+    await frame();
+    expect(style(el, "transition-timing-function")).toMatch(/^linear\(/);
+    expect(style(el, "transition-duration").split(", ")[0]).toBe("0.25s");
+  });
 
   it("retimes --transition without restating its property list", () => {
     const el = mount(
@@ -28,11 +36,11 @@ describe("transition timing utilities", () => {
   });
 
   it("takes breakpoint tiers from the nearest container", () => {
-    const root = mount(`<div data-ui="container" style="inline-size: 100ch">
+    const root = mount(`<div style="inline-size: 100ch; --container-type: inline-size">
       <p style="--transition-duration: 1s; --transition-duration--md: 3s">x</p>
     </div>`);
     expect(style(root.querySelector("p")!, "transition-duration")).toBe("3s");
-    const narrow = mount(`<div data-ui="container" style="inline-size: 10ch">
+    const narrow = mount(`<div style="inline-size: 10ch; --container-type: inline-size">
       <p style="--transition-duration: 1s; --transition-duration--md: 3s">x</p>
     </div>`);
     expect(style(narrow.querySelector("p")!, "transition-duration")).toBe("1s");

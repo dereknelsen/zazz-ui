@@ -17,12 +17,8 @@ The custom-tag spelling of a primitive (`<ui-tooltip>`). Exists only where the r
 _Avoid_: element version, web component form, `<ui-button>`
 
 **Attribute form**:
-The `data-ui` spelling of a primitive (`<div data-ui="tooltip">`, `<button data-ui="button">`). Every primitive has an attribute form; primitives rooted on semantic native elements have only this form. `data-ui` is a space-separated token list: a specialization rides on its base (`data-ui="dialog alert-dialog"`), and switches and typography roles stack on anything.
+The `data-ui` spelling of a primitive (`<div data-ui="tooltip">`, `<button data-ui="button">`). Every primitive has an attribute form; primitives rooted on semantic native elements have only this form. `data-ui` is a space-separated token list: a specialization rides on its base (`data-ui="dialog alert-dialog"`), and typography roles and `group` stack on anything. It holds identities only: a value goes in a utility, and a color scheme goes in `data-theme`.
 _Avoid_: class form, `.ui-button`, expanded version, raw form
-
-**Switch**:
-A primitive that is only a fixed rule set: no slots, no tag form, no presets, no value (`data-ui="sr-only"`, `data-ui="pile"`). It rides the same `data-ui` token list as any primitive (`data-ui="badge sr-only"`).
-_Avoid_: utility class, helper class, modifier class, boolean attribute
 
 **Slot**:
 An interior part of a primitive, identified by `data-<primitive>-slot="<part>"` (`data-dialog-slot="header"`). A part that serves two primitives carries two attributes (`data-lightbox-slot="slide" data-carousel-slot="slide"`). Slots replace BEM element classes.
@@ -37,7 +33,7 @@ A named text preset (`text-h1`–`text-h6`, `text-display`, `text-eyebrow`, `tex
 _Avoid_: text class, heading style, type scale entry, `text-h1` (as a class), `data-ui-text`
 
 **Group**:
-An ancestor marked `data-ui="group"` whose interaction state drives group-context utilities on its descendants (`--group-opacity--hover`). Any marked ancestor counts, nearest or not; named groups (`data-group-name`) are reserved and not yet implemented.
+An ancestor marked `data-ui="group"` or written `<ui-group>` whose interaction state drives group-context utilities on its descendants (`--group-opacity--hover`). Any marked ancestor counts, nearest or not; named groups (`data-group-name`) are reserved and not yet implemented.
 _Avoid_: parent hover, container state
 
 ### Values
@@ -65,7 +61,7 @@ One of the named column spans of a layout: `layout-sm`–`layout-2xl` cap and ce
 _Avoid_: column, container size, breakpoint
 
 **Breakpoint**:
-One of five named inline-size thresholds (`sm` 40rem, `md` 48rem, `lg` 64rem, `xl` 80rem, `2xl` 96rem) at or above which a responsive modifier applies. They are the same widths as the `--layout-*` bands, so `md` means "an md band fits here". Tiers read the nearest inline-size container (`html`, a layout band's child, or any `data-ui="container"`), in `rem`, so siblings set in different fonts flip at the same width.
+One of five named inline-size thresholds (`sm` 40rem, `md` 48rem, `lg` 64rem, `xl` 80rem, `2xl` 96rem) at or above which a responsive modifier applies. They are the same widths as the `--layout-*` bands, so `md` means "an md band fits here". Tiers read the nearest inline-size container (`html`, a layout band's child, or any element with `--container-type: inline-size`), in `rem`, so siblings set in different fonts flip at the same width.
 _Avoid_: media query, screen size, band, `--is-breakpoint-*`, `--bp-*`
 
 ### Distribution

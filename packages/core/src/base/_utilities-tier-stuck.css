@@ -5,6 +5,7 @@
   @supports (container-type: scroll-state) {
     :where([style*=": sticky"], [style*="--stuck-state:"]) {
       container-type: scroll-state;
+      --_stuck-type: scroll-state;
       --_stuck-side: var(--stuck-state, top);
     }
     :where(ui-layout > *, [data-ui~="layout"] > *):where([style*=": sticky"], [style*="--stuck-state:"]) {
@@ -91,6 +92,7 @@
     --_template-rows-stuck: var(--_stuck-on) var(--template-rows--stuck);
     --_space-x-stuck: var(--_stuck-on) var(--space-x--stuck);
     --_space-y-stuck: var(--_stuck-on) var(--space-y--stuck);
+    --_text-wrap-stuck: var(--_stuck-on) var(--text-wrap--stuck);
     --_text-decoration-stuck: var(--_stuck-on) var(--text-decoration--stuck);
     --_text-stuck: var(--_stuck-on) var(--text--stuck);
     --_bg-stuck: var(--_stuck-on) var(--bg--stuck);
@@ -119,6 +121,7 @@
     --_scale-stuck: var(--_stuck-on) var(--scale--stuck);
     --_translate-stuck: var(--_stuck-on) var(--translate--stuck);
     --_rotate-stuck: var(--_stuck-on) var(--rotate--stuck);
+    --_animation-stuck: var(--_stuck-on) var(--animation--stuck);
     --_transition-stuck: var(--_stuck-on) var(--transition--stuck);
     --_transition-duration-stuck: var(--_stuck-on) var(--transition-duration--stuck);
     --_transition-delay-stuck: var(--_stuck-on) var(--transition-delay--stuck);

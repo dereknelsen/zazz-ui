@@ -29,6 +29,10 @@
 @property --_space-y-disabled { syntax: "*"; inherits: false; }
 @property --group-space-y--disabled { syntax: "*"; inherits: false; }
 @property --_space-y-g-disabled { syntax: "*"; inherits: false; }
+@property --text-wrap--disabled { syntax: "*"; inherits: false; }
+@property --_text-wrap-disabled { syntax: "*"; inherits: false; }
+@property --group-text-wrap--disabled { syntax: "*"; inherits: false; }
+@property --_text-wrap-g-disabled { syntax: "*"; inherits: false; }
 @property --text-decoration--disabled { syntax: "*"; inherits: false; }
 @property --_text-decoration-disabled { syntax: "*"; inherits: false; }
 @property --group-text-decoration--disabled { syntax: "*"; inherits: false; }
@@ -141,6 +145,10 @@
 @property --_rotate-disabled { syntax: "*"; inherits: false; }
 @property --group-rotate--disabled { syntax: "*"; inherits: false; }
 @property --_rotate-g-disabled { syntax: "*"; inherits: false; }
+@property --animation--disabled { syntax: "*"; inherits: false; }
+@property --_animation-disabled { syntax: "*"; inherits: false; }
+@property --group-animation--disabled { syntax: "*"; inherits: false; }
+@property --_animation-g-disabled { syntax: "*"; inherits: false; }
 @property --transition--disabled { syntax: "*"; inherits: false; }
 @property --_transition-disabled { syntax: "*"; inherits: false; }
 @property --group-transition--disabled { syntax: "*"; inherits: false; }

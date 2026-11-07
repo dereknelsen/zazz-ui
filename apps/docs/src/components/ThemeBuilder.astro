@@ -215,7 +215,7 @@ const previewScope = `@layer zazz.variables {
     "
   >
     <div
-      data-ui="card theme-dark"
+      data-ui="card" data-theme="dark"
       data-card-variant="outline"
       data-theme-bar
       style="
@@ -327,7 +327,7 @@ const previewScope = `@layer zazz.variables {
 
     <dialog
       id="tb-sheet"
-      data-ui="dialog theme-dark"
+      data-ui="dialog" data-theme="dark"
       closedby="any"
       aria-labelledby="tb-title"
     >
@@ -356,7 +356,7 @@ const previewScope = `@layer zazz.variables {
       "
     >
       <form
-        data-ui="card theme-dark"
+        data-ui="card" data-theme="dark"
         data-card-variant="outline"
         aria-labelledby="tb-title"
         style="
@@ -442,7 +442,7 @@ const previewScope = `@layer zazz.variables {
                       --radius: 1;
                       --ring: 0;
                       --ring--current: 2;
-                      --ring-color: var(--color-success);
+                      --ring-color: var(--color-success-foreground);
                       --ring-offset: 1;
                       --ring-offset-color: var(--color-card);
                     `}
@@ -878,7 +878,6 @@ const previewScope = `@layer zazz.variables {
   >
     <!-- Packed like a masonry by <fieldnotes-demo>: it measures each card into a row span. -->
     <div
-      data-ui="container"
       data-fieldnotes-grid
       style="
         --display: grid;
@@ -889,6 +888,7 @@ const previewScope = `@layer zazz.variables {
         --gap-x: 6;
         --gap-y: 0;
         --w: 84rem;
+        --container-type: inline-size;
       "
     >
       <SightingForm toaster={TOASTER} />

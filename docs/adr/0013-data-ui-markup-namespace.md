@@ -51,3 +51,26 @@ Dropping the `data-ui-` prefix from primitive-owned attributes reopened collisio
 ## Amendment 3 (2026-10-09): the color scheme is a switch
 
 `data-ui-theme="dark" | "light"` becomes the `theme-dark` / `theme-light` switches (`data-ui="theme-dark"`). A scheme pin is a fixed rule set with no value, which is what a switch is, and a second attribute shape for it bought nothing. It also leaves room for named themes as `theme-<name>`. The theme rules stay in `_variables.css` beside the tokens they re-resolve, and `_switches.css` lists them. Scripts that pin a scheme edit that one token in `data-ui` and keep the rest. The `data-ui-theme` entries above are superseded; `data-ui-*` globals are now only the navigation and guard attributes.
+
+## Amendment 4 (2026-11-06): `data-ui` holds identities only
+
+This reverses Amendment 3 and retires switches. The "Switches" decision above and the "switches and typography roles stack on anything" clause in the first amendment no longer apply. `base/_switches.css` and the `/api/switches/` page are gone; that URL redirects to `/api/utilities/`.
+
+A switch was a token with no identity behind it: `data-ui="sr-only"` says how an element looks, not what it is. Switches also could not take a breakpoint or a state. `data-ui` now holds primitives, specializations, typography roles, and `group`. Every other token moved to the channel that fits it:
+
+| Retired token                     | Replacement                                                                  |
+| --------------------------------- | ---------------------------------------------------------------------------- |
+| `sr-only`                         | `--sr: only`                                                                 |
+| `pile`                            | `--display: grid-pile`                                                       |
+| `isolate`                         | `--isolation: isolate`                                                       |
+| `not-prose`                       | `data-prose-slot="end"`, and `data-prose-slot="start"` to turn prose back on |
+| `truncate`                        | `--text-wrap: truncate`                                                      |
+| `spin`, `ping`, `pulse`, `bounce` | `--animation: var(--spin)` and its siblings                                  |
+| `divide-x`, `divide-y`            | `--divide-x: 1`, `--divide-y: 1`, and `--divide: 1` for both axes            |
+| `container`                       | `--container-type: inline-size`                                              |
+| `theme-dark`, `theme-light`       | `data-theme="dark"`, `data-theme="light"`                                    |
+
+- **`data-theme` comes back.** 0.5.0 removed it in favor of `data-ui-theme` (the changelog records that), and Amendment 3 then moved the pin into `data-ui`. A pin has a value, and it is not an identity, so it gets its own attribute again. It sits outside the `data-ui-*` prefix, as `data-reveal` does. The rules stay in `_variables.css`, setting `color-scheme` and re-asserting `color`, and the head's theme script sets `document.documentElement.dataset.theme`. Amendment 3's room for `theme-<name>` goes with it; nothing shipped there.
+- **`group` stays** because it is an identity, and it is now a primitive with a tag form, `<ui-group>`.
+- **`retired-token`** is a new audit rule in `<ui-debug>`, the ESLint plugin, and the language server. It flags each old token and names the replacement.
+- **The `style` attribute now carries what switches did.** Utilities don't survive a sanitizer that strips `style`, and switches did. See the [ADR-0016](./0016-csp-directive-first-cssom-fallback.md) amendment for what that costs.

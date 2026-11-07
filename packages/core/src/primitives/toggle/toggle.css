@@ -13,6 +13,8 @@
  * @uses       :has(): drive label state from the nested input (checked/focus/disabled)
  * @uses       oklch(from …): variant hover/active tints (inherited from --ui-button-*)
  * @uses       text-box: vertical trim (patchy browser support)
+ * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
+ *             rounded corners
  * @tokens     --ui-toggle-* (@layer variables;
  *             default to the --ui-button-* family)
  * @consumedby toggle-group.css
@@ -58,6 +60,7 @@
     --ui-toggle-px: var(--ui-button-px);
     --ui-toggle-min-h: var(--ui-button-min-h);
     --ui-toggle-radius: var(--ui-button-radius);
+    --ui-toggle-corner-shape: var(--ui-button-corner-shape);
 
     --ui-toggle-icon-size: var(--ui-button-icon-size);
 
@@ -241,6 +244,7 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-toggle-corner-shape));
 
     color: var(--_text-resolved, var(--_toggle-text, var(--ui-toggle-text)));
     background-color: var(--_bg-resolved, var(--_toggle-bg, var(--ui-toggle-bg)));
@@ -464,19 +468,19 @@
   }
 
   :where([data-ui~="toggle"][data-toggle-variant="destructive"]) {
-    --_toggle-ring-color: var(--color-destructive);
+    --_toggle-ring-color: var(--color-destructive-foreground);
 
     --_toggle-bg: var(--color-destructive);
-    --_toggle-bg--hover: oklch(from var(--color-destructive) l c h / 0.9);
-    --_toggle-bg--active: oklch(from var(--color-destructive) l c h / 0.8);
+    --_toggle-bg--hover: oklch(from var(--color-destructive) calc(l - 0.025) c h);
+    --_toggle-bg--active: oklch(from var(--color-destructive) calc(l - 0.05) c h);
 
     --_toggle-text: var(--color-destructive-foreground);
     --_toggle-text--hover: var(--color-destructive-foreground);
     --_toggle-text--active: var(--color-destructive-foreground);
 
-    --_toggle-border-color: var(--color-destructive);
-    --_toggle-border-color--hover: var(--color-destructive);
-    --_toggle-border-color--active: var(--color-destructive);
+    --_toggle-border-color: transparent;
+    --_toggle-border-color--hover: transparent;
+    --_toggle-border-color--active: transparent;
 
     --_toggle-shadow: 0 0 transparent;
   }

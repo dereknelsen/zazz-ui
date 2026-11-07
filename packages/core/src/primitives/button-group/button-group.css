@@ -6,12 +6,15 @@
  * @uses       :not(): first/last edge selection for shared-border collapse
  * @uses       logical border-radius longhands: RTL-safe corner rounding per orientation
  * @uses       flex-item z-index: raise the active control so its border/ring isn't clipped
+ * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
+ *             rounded corners
  * @tokens     --ui-button-group-* (@layer variables; named after the utilities they back)
  */
 
 @layer variables {
   :root {
     --ui-button-group-radius: var(--ui-button-radius);
+    --ui-button-group-corner-shape: var(--ui-button-corner-shape);
     --ui-button-group-bg: var(--color-card);
   }
 }
@@ -53,6 +56,7 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-button-group-corner-shape));
     background-color: var(--_bg-resolved, var(--_button-group-bg, var(--ui-button-group-bg)));
     position: relative;
     isolation: isolate;

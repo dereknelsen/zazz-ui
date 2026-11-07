@@ -85,5 +85,6 @@ describe("language data", () => {
       identityOwner("radio-group", ["primitives/fields/fields.css", "primitives/radio/radio.css"]),
     ).toBe("radio");
     expect(identityOwner("prose", ["base/_typography.css"])).toBeNull();
+    expect(identityOwner("group", ["base/_utilities-box.css"])).toBe("group");
   });
 });

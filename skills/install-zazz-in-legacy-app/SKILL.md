@@ -167,7 +167,7 @@ naming its evidence:
 ```css
 /* legacy/baseline.css: closes gaps between the legacy CSS and the Zazz reset.
    Delete a line once no legacy page needs it. */
-@scope (html[data-legacy]) to ([data-ui]:not(html), ui-layout) {
+@scope (html[data-legacy]) to ([data-ui]:not(html), [data-theme]:not(html), ui-layout, ui-group) {
 }
 ```
 
@@ -177,10 +177,11 @@ naming its evidence:
   (Bootstrap 3's `* { box-sizing: border-box }`, say) on scope proximity, and the legacy CSS
   would lose.
 - Wrap each whole selector in `:where()` so it adds no specificity inside the baseline either.
-- Add any other tag-form element that roots a converted region to the `to (…)` list. The
-  `:not(html)` matters: the theme script writes `theme-dark` or `theme-light` into
-  `<html data-ui>`, and without it the root could match its own limit and the baseline would
-  apply nowhere.
+- Add any other tag-form element that roots a converted region to the `to (…)` list. A wrapper
+  that only carries style utilities (`--display: grid-pile`, `--container-type: inline-size`)
+  is not a limit, so give a converted region a root that is.
+- The `:not(html)` is a guard: the theme script sets `data-theme` on `<html>`, and without the
+  guard the root would match its own limit and the baseline would apply nowhere.
 - `revert` returns the browser default. HTML presentational attributes (`cellpadding`, `border`,
   `<img height>`) are author styles, so `revert` can't restore them; the catalog's attribute
   groups write explicit values, one rule per distinct attribute value in the templates.

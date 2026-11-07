@@ -7,6 +7,8 @@
  *             stamped cell rail with transparent text/caret so autofill,
  *             paste, and focus stay native; never display:none
  * @uses       :focus-within: active-cell ring only while the input has focus
+ * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
+ *             rounded corners
  * @tokens     --ui-otp-* (@layer variables; aliases --ui-field-*)
  * @see        otp.ts: stamps the rail and mirrors value/caret into the cells
  */
@@ -20,6 +22,7 @@
     --ui-otp-cell-border-style: var(--ui-field-border-style);
     --ui-otp-cell-border-color: var(--ui-field-border-color);
     --ui-otp-cell-radius: var(--ui-field-radius);
+    --ui-otp-cell-corner-shape: var(--ui-field-corner-shape);
     --ui-otp-cell-font-size: var(--font-size-md);
     --ui-otp-gap: calc(var(--spacing) * 1.5);
     --ui-otp-separator-text: var(--color-muted-foreground);
@@ -90,6 +93,7 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-otp-cell-corner-shape));
 
     transition: var(--default-transition);
   }

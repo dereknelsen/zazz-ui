@@ -32,6 +32,7 @@ export const RULE_DESCRIPTIONS: Record<RuleId, string> = {
   "attribute-outside-identity": "A `data-<name>-*` attribute on an element outside that identity.",
   "field-id-or-name":
     "An `<input>`, `<select>`, or `<textarea>` with neither `id` nor `name`, which Chrome reports as an issue.",
+  "retired-token": "A `data-ui` token that is gone, with what replaces it.",
   persist: "`data-ui-persist` that cannot work as written.",
 };
 

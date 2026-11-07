@@ -15,6 +15,20 @@ const tracks = (el: Element) => style(el, "grid-template-columns").trim().split(
 describe("families", () => {
   useKit();
 
+  it("--isolation starts a stacking context, from a breakpoint up", async () => {
+    const root = mount(`<div style="--isolation: auto; --isolation--md: isolate"></div>`);
+    await atWidth(below("md"));
+    expect(style(root, "isolation")).toBe("auto");
+    await atWidth(at("md"));
+    expect(style(root, "isolation")).toBe("isolate");
+  });
+
+  it("--isolation applies at a tier with no base", async () => {
+    const root = mount(`<div style="--isolation--md: isolate"></div>`);
+    await atWidth(at("md"));
+    expect(style(root, "isolation")).toBe("isolate");
+  });
+
   it("--inset-x sets left and right, --inset-y top and bottom, with tiers", async () => {
     const root = mount(`<div style="position: relative; inline-size: 400px; block-size: 400px">
       <i data-x style="position: absolute; --inset-x: 4; --inset-y: 0; --inset-y--md: var(--space-sm)"></i>

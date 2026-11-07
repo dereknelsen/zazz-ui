@@ -33,10 +33,8 @@ if (root && dataNode && output && host && fallback && templateSelect && resetBut
 
   // --- the document the output renders -----------------------------------
   const theme = (): string | null => {
-    const pinned = (document.documentElement.dataset.ui ?? "")
-      .split(/\s+/)
-      .find((t) => t === "theme-dark" || t === "theme-light");
-    if (pinned) return pinned.slice("theme-".length);
+    const pinned = document.documentElement.dataset.theme;
+    if (pinned) return pinned;
     return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   };
 
@@ -46,7 +44,7 @@ if (root && dataNode && output && host && fallback && templateSelect && resetBut
   const render = (code: string): void => {
     const scheme = theme();
     const doc = `<!doctype html>
-<html lang="en"${scheme ? ` data-ui="theme-${scheme}"` : ""}>
+<html lang="en"${scheme ? ` data-theme="${scheme}"` : ""}>
 <head>
 ${data.head}
 <title>Playground output</title>
@@ -348,7 +346,7 @@ ${code}
   // Theme changes re-render the output (the sandbox has no shared document to mirror into).
   new MutationObserver(() => render(getCode())).observe(document.documentElement, {
     attributes: true,
-    attributeFilter: ["data-ui"],
+    attributeFilter: ["data-theme"],
   });
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => render(getCode()));
 

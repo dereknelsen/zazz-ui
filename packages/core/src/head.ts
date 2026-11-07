@@ -215,7 +215,7 @@ function nonceAttr(nonce?: string): string {
 
 /**
  * The theme-persistence script. Runs inline (no `defer`) while the parser is
- * still in `<head>`, so the `theme-*` switch lands on `<html>` before first paint. The
+ * still in `<head>`, so `data-theme` lands on `<html>` before first paint. The
  * try/catch covers contexts where storage access throws (sandboxed iframes,
  * blocked site data).
  */
@@ -225,12 +225,11 @@ const themeScript = (
 <script${nonceAttr(nonce)}>
   (() => {
     try {
-      // A stored choice pins the scheme with the theme-dark / theme-light
-      // switch; with no choice the page follows the system scheme.
+      // A stored choice pins the scheme with data-theme; with no choice the
+      // page follows the system scheme.
       const storedTheme = localStorage.getItem("theme");
       if (storedTheme === "dark" || storedTheme === "light") {
-        const root = document.documentElement;
-        root.dataset.ui = ((root.dataset.ui || "") + " theme-" + storedTheme).trim();
+        document.documentElement.dataset.theme = storedTheme;
       }
     } catch {
       /* no storage access: follow the system scheme */

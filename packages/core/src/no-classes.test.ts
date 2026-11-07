@@ -67,6 +67,7 @@ const MIGRATED = [
   "toolbar",
   "prose",
   "layout",
+  "group",
   "scroll-fade",
 ] as const;
 

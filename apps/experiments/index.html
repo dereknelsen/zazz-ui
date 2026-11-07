@@ -14,8 +14,7 @@
         try {
           const storedTheme = localStorage.getItem("theme");
           if (storedTheme === "dark" || storedTheme === "light") {
-            const root = document.documentElement;
-            root.dataset.ui = ((root.dataset.ui || "") + " theme-" + storedTheme).trim();
+            document.documentElement.dataset.theme = storedTheme;
           }
         } catch {
           /* no storage access: follow the system scheme */
@@ -84,7 +83,7 @@
 
   <!-- Light-only sample brand: pin the scheme for the page -->
 
-  <body data-ui="theme-light" style="--bg: var(--color-background)">
+  <body data-theme="light" style="--bg: var(--color-background)">
     <!-- ================================================================== -->
     <!-- Hero: header overlaid on an autoplaying carousel                  -->
     <!-- ================================================================== -->
@@ -652,7 +651,13 @@
       </header>
     </div>
 
-    <div data-ui="pile isolate group">
+    <div
+      data-ui="group"
+      style="
+        --display: grid-pile;
+        --isolation: isolate;
+      "
+    >
       <div
         style="
           --display: flex;
@@ -688,7 +693,7 @@
             --z: 1;
           "
         >
-          <h1 data-ui="sr-only">ACME furniture</h1>
+          <h1 style="--sr: only">ACME furniture</h1>
           <div data-carousel-slot="viewport" style="--size: 100%">
             <div data-carousel-slot="container" style="--size: 100%">
               <div
@@ -1224,7 +1229,7 @@
             "
           />
           <div
-            data-ui="theme-dark"
+            data-theme="dark"
             style="
               --display: flex-col;
               --items: start;
@@ -1260,7 +1265,7 @@
               </p>
               <p>One set of pages for browsing and for buying.</p>
             </div>
-            <a href="#" data-ui="button theme-light" style="--mt: 2">Open lookbooks</a>
+            <a href="#" data-ui="button" data-theme="light" style="--mt: 2">Open lookbooks</a>
           </div>
         </section>
       </ui-layout>
@@ -1288,7 +1293,7 @@
           "
         />
         <div
-          data-ui="theme-dark"
+          data-theme="dark"
           style="
             --display: flex-col;
             --items: start;
@@ -1315,7 +1320,7 @@
               and we will upholster to it.
             </p>
           </div>
-          <a href="#" data-ui="button theme-light" style="--mt: 2">Shop seating</a>
+          <a href="#" data-ui="button" data-theme="light" style="--mt: 2">Shop seating</a>
         </div>
       </section>
 
@@ -1472,7 +1477,6 @@
       <section aria-labelledby="about-title" style="--py: 24">
         <ui-layout data-layout-size="md">
           <div
-            data-ui="divide-x"
             data-reveal="fade"
             style="
               --display: grid;
@@ -1480,6 +1484,7 @@
               --grid-cols: 1;
               --grid-cols--md: 2;
               --gap: 11;
+              --divide-x: 1;
             "
           >
             <p
@@ -1828,7 +1833,7 @@
         </div>
       </ui-layout>
 
-      <div data-ui="theme-dark" style="--bg: var(--color-neutral-1117)">
+      <div data-theme="dark" style="--bg: var(--color-neutral-1117)">
         <ui-layout data-layout-size="full">
           <div
             data-ui="text-sm"

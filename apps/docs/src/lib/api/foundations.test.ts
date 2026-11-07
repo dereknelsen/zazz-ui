@@ -1,43 +1,5 @@
 import { describe, expect, it } from "vite-plus/test";
-import {
-  globalAttributes,
-  parseSwitches,
-  switches,
-  tokenGroups,
-  typographyRoles,
-} from "./foundations.ts";
-
-describe("parseSwitches", () => {
-  it("reads tokens and joins continuation lines", () => {
-    const list = parseSwitches(`/**
- * x
- * @layer utilities
- * @uses       data-ui="sr-only": hidden
- * @uses       data-ui="divide-x" / "divide-y": a border,
- *             sized by --divide
- */`);
-    expect(list).toEqual([
-      { tokens: ["sr-only"], description: "hidden" },
-      { tokens: ["divide-x", "divide-y"], description: "a border, sized by --divide" },
-    ]);
-  });
-
-  it("finds the kit's switches", () => {
-    const tokens = switches().flatMap((s) => s.tokens);
-    expect(tokens).toEqual(
-      expect.arrayContaining([
-        "sr-only",
-        "pile",
-        "isolate",
-        "divide-x",
-        "divide-y",
-        "container",
-        "theme-dark",
-        "theme-light",
-      ]),
-    );
-  });
-});
+import { globalAttributes, tokenGroups, typographyRoles } from "./foundations.ts";
 
 describe("typographyRoles", () => {
   it("lists headings first, then body sizes", () => {

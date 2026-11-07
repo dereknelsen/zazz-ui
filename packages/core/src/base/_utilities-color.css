@@ -53,6 +53,53 @@
     --_bg-stops: var(--bg-stops);
   }
 
+  :where([style*="--divide"]) {
+    --_divide: var(--divide);
+    --_divide-resolved: var(--_divide-2xl, var(--_divide-xl, var(--_divide-lg, var(--_divide-md, var(--_divide-sm, var(--_divide, none))))));
+    --_divide-x: var(--divide-x);
+    --_divide-x-resolved: var(--_divide-x-2xl, var(--_divide-x-xl, var(--_divide-x-lg, var(--_divide-x-md, var(--_divide-x-sm, var(--_divide-x, var(--_divide-resolved)))))));
+    --_divide-x-len: var(--_divide-x-resolved);
+    --_divide-x-num: var(--_divide-x-resolved);
+    --_divide-x-is-len: calc(sin(atan2(var(--_divide-x-resolved), 1px)) * 0 + 1);
+    --_divide-x-is-num: calc(var(--_divide-x-resolved) * 0 + 1);
+    --_divide-x-clr: var(--_divide-x-resolved);
+    --_divide-x-w: calc(abs(var(--_divide-x-len)) + abs(var(--_divide-x-num)) * 1px + (1 - var(--_divide-x-is-num) - var(--_divide-x-is-len)) * 1px);
+    --_divide-x-c: color-mix(in oklch, var(--_divide-x-clr) calc((1 - var(--_divide-x-is-num) - var(--_divide-x-is-len)) * 100%), var(--color-border));
+    --_divide-x-a: var(--_divide-x-w) solid var(--_divide-x-c);
+    --_divide-x-slot: a;
+    --_divide-y: var(--divide-y);
+    --_divide-y-resolved: var(--_divide-y-2xl, var(--_divide-y-xl, var(--_divide-y-lg, var(--_divide-y-md, var(--_divide-y-sm, var(--_divide-y, var(--_divide-resolved)))))));
+    --_divide-y-len: var(--_divide-y-resolved);
+    --_divide-y-num: var(--_divide-y-resolved);
+    --_divide-y-is-len: calc(sin(atan2(var(--_divide-y-resolved), 1px)) * 0 + 1);
+    --_divide-y-is-num: calc(var(--_divide-y-resolved) * 0 + 1);
+    --_divide-y-clr: var(--_divide-y-resolved);
+    --_divide-y-w: calc(abs(var(--_divide-y-len)) + abs(var(--_divide-y-num)) * 1px + (1 - var(--_divide-y-is-num) - var(--_divide-y-is-len)) * 1px);
+    --_divide-y-c: color-mix(in oklch, var(--_divide-y-clr) calc((1 - var(--_divide-y-is-num) - var(--_divide-y-is-len)) * 100%), var(--color-border));
+    --_divide-y-a: var(--_divide-y-w) solid var(--_divide-y-c);
+    --_divide-y-slot: a;
+  }
+  @container style(--_divide-x-slot: a) {
+    :where([style*="--divide"]) { --_divide-x-b: var(--_divide-x-w) solid var(--_divide-x-c); --_divide-x-slot: b; }
+  }
+  @container style(--_divide-x-slot: a) and (not style(--_divide-x-resolved: none)) {
+    :where(:not(:last-child, dialog, [popover])) { --_divide-x-a: inherit; border-inline-end: var(--_divide-x-a); }
+  }
+  @container style(--_divide-x-slot: b) and (not style(--_divide-x-resolved: none)) {
+    :where(:not(:last-child, dialog, [popover])) { --_divide-x-b: inherit; border-inline-end: var(--_divide-x-b); }
+  }
+  @container style(--_divide-y-slot: a) {
+    :where([style*="--divide"]) { --_divide-y-b: var(--_divide-y-w) solid var(--_divide-y-c); --_divide-y-slot: b; }
+  }
+  @container style(--_divide-y-slot: a) and (not style(--_divide-y-resolved: none)) {
+    :where(:not(:last-child, dialog, [popover])) { --_divide-y-a: inherit; border-block-end: var(--_divide-y-a); }
+  }
+  @container style(--_divide-y-slot: b) and (not style(--_divide-y-resolved: none)) {
+    :where(:not(:last-child, dialog, [popover])) { --_divide-y-b: inherit; border-block-end: var(--_divide-y-b); }
+  }
+
+
+
   :where([style*="--border-color:"], [style*="--border-color--"], [style*="--group-border-color--"]) {
     --_border-color-resolved: var(--_border-color-starting, var(--_border-color-disabled, var(--_border-color-active, var(--_border-color-focus-visible, var(--_border-color-focus-within, var(--_border-color-hover, var(--_border-color-checked, var(--_border-color-current, var(--_border-color-open, var(--_border-color-g-disabled, var(--_border-color-g-active, var(--_border-color-g-focus-visible, var(--_border-color-g-focus-within, var(--_border-color-g-hover, var(--_border-color-g-checked, var(--_border-color-g-current, var(--_border-color-g-open, var(--_border-color-stuck, var(--_border-color-2xl, var(--_border-color-xl, var(--_border-color-lg, var(--_border-color-md, var(--_border-color-sm, var(--_border-color))))))))))))))))))))))));
   }
@@ -236,30 +283,30 @@
       background-image: none;
     }
   }
-  :where([data-ui~="group"]:is([open], :popover-open, [aria-expanded="true"]) [style*="--group-bg--open: none"]) {
+  :where(:where(ui-group, [data-ui~="group"]):is([open], :popover-open, [aria-expanded="true"]) [style*="--group-bg--open: none"]) {
     background-image: none;
   }
-  :where([data-ui~="group"]:is([aria-current]:not([aria-current="false"])) [style*="--group-bg--current: none"]) {
+  :where(:where(ui-group, [data-ui~="group"]):is([aria-current]:not([aria-current="false"])) [style*="--group-bg--current: none"]) {
     background-image: none;
   }
-  :where([data-ui~="group"]:is(:checked, [aria-checked="true"]) [style*="--group-bg--checked: none"]) {
+  :where(:where(ui-group, [data-ui~="group"]):is(:checked, [aria-checked="true"]) [style*="--group-bg--checked: none"]) {
     background-image: none;
   }
   @media (hover: hover) {
-    :where([data-ui~="group"]:hover [style*="--group-bg--hover: none"]) {
+    :where(:where(ui-group, [data-ui~="group"]):hover [style*="--group-bg--hover: none"]) {
       background-image: none;
     }
   }
-  :where([data-ui~="group"]:focus-within [style*="--group-bg--focus-within: none"]) {
+  :where(:where(ui-group, [data-ui~="group"]):focus-within [style*="--group-bg--focus-within: none"]) {
     background-image: none;
   }
-  :where([data-ui~="group"]:focus-visible [style*="--group-bg--focus-visible: none"]) {
+  :where(:where(ui-group, [data-ui~="group"]):focus-visible [style*="--group-bg--focus-visible: none"]) {
     background-image: none;
   }
-  :where([data-ui~="group"]:active [style*="--group-bg--active: none"]) {
+  :where(:where(ui-group, [data-ui~="group"]):active [style*="--group-bg--active: none"]) {
     background-image: none;
   }
-  :where([data-ui~="group"]:is(:disabled, [aria-disabled="true"]) [style*="--group-bg--disabled: none"]) {
+  :where(:where(ui-group, [data-ui~="group"]):is(:disabled, [aria-disabled="true"]) [style*="--group-bg--disabled: none"]) {
     background-image: none;
   }
   :where(:is([open], :popover-open, [aria-expanded="true"])[style*="--bg--open: none"]) {

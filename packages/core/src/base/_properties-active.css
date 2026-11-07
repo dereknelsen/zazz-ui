@@ -29,6 +29,10 @@
 @property --_space-y-active { syntax: "*"; inherits: false; }
 @property --group-space-y--active { syntax: "*"; inherits: false; }
 @property --_space-y-g-active { syntax: "*"; inherits: false; }
+@property --text-wrap--active { syntax: "*"; inherits: false; }
+@property --_text-wrap-active { syntax: "*"; inherits: false; }
+@property --group-text-wrap--active { syntax: "*"; inherits: false; }
+@property --_text-wrap-g-active { syntax: "*"; inherits: false; }
 @property --text-decoration--active { syntax: "*"; inherits: false; }
 @property --_text-decoration-active { syntax: "*"; inherits: false; }
 @property --group-text-decoration--active { syntax: "*"; inherits: false; }
@@ -141,6 +145,10 @@
 @property --_rotate-active { syntax: "*"; inherits: false; }
 @property --group-rotate--active { syntax: "*"; inherits: false; }
 @property --_rotate-g-active { syntax: "*"; inherits: false; }
+@property --animation--active { syntax: "*"; inherits: false; }
+@property --_animation-active { syntax: "*"; inherits: false; }
+@property --group-animation--active { syntax: "*"; inherits: false; }
+@property --_animation-g-active { syntax: "*"; inherits: false; }
 @property --transition--active { syntax: "*"; inherits: false; }
 @property --_transition-active { syntax: "*"; inherits: false; }
 @property --group-transition--active { syntax: "*"; inherits: false; }

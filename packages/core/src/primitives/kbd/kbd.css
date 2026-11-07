@@ -4,6 +4,8 @@
  * @layer      variables, reset, components
  * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved)
  * @uses       text-box: vertical trim (patchy browser support)
+ * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
+ *             rounded corners
  * @tokens     --ui-kbd-*, --ui-kbd-group-* (@layer variables)
  * @consumedby button.css, tooltip.css (reassign --ui-kbd-* in scope), command.css (selects the group)
  *
@@ -27,6 +29,7 @@
     --ui-kbd-text: var(--color-muted-foreground);
     --ui-kbd-border: 1px solid transparent;
     --ui-kbd-radius: var(--radius-xs);
+    --ui-kbd-corner-shape: var(--radius-corner-shape);
 
     /* metrics (dual-mode: a scale number or a length) */
     --ui-kbd-px: var(--spacing);
@@ -70,6 +73,7 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-kbd-corner-shape));
     overflow: hidden;
     --_min-w-len: var(--_min-w-resolved, var(--ui-kbd-min-w));
     --_min-w-num: var(--_min-w-resolved, var(--ui-kbd-min-w));

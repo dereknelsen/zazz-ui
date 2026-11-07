@@ -94,12 +94,14 @@
     text-transform: var(--_text-transform-resolved);
   }
 
-  :where([style*="--text-wrap:"], [style*="--text-wrap--"]) {
-    --_text-wrap-resolved: var(--_text-wrap-2xl, var(--_text-wrap-xl, var(--_text-wrap-lg, var(--_text-wrap-md, var(--_text-wrap-sm, var(--_text-wrap))))));
+  :where([style*="--text-wrap:"], [style*="--text-wrap--"], [style*="--group-text-wrap--"]) {
+    --_text-wrap-resolved: var(--_text-wrap-starting, var(--_text-wrap-disabled, var(--_text-wrap-active, var(--_text-wrap-focus-visible, var(--_text-wrap-focus-within, var(--_text-wrap-hover, var(--_text-wrap-checked, var(--_text-wrap-current, var(--_text-wrap-open, var(--_text-wrap-g-disabled, var(--_text-wrap-g-active, var(--_text-wrap-g-focus-visible, var(--_text-wrap-g-focus-within, var(--_text-wrap-g-hover, var(--_text-wrap-g-checked, var(--_text-wrap-g-current, var(--_text-wrap-g-open, var(--_text-wrap-stuck, var(--_text-wrap-2xl, var(--_text-wrap-xl, var(--_text-wrap-lg, var(--_text-wrap-md, var(--_text-wrap-sm, var(--_text-wrap))))))))))))))))))))))));
+    --_text-wrap-a: var(--_text-wrap-resolved, wrap);
+    --_text-wrap-b: var(--_text-wrap-a);
   }
   :where([style*="--text-wrap:"]) {
     --_text-wrap: var(--text-wrap);
-    text-wrap: var(--_text-wrap-resolved);
+    text-wrap: var(--_text-wrap-b);
   }
 
   :where([style*="--line-clamp:"], [style*="--line-clamp--"]) {

@@ -5,6 +5,7 @@
  */
 import {
   BREAKPOINTS,
+  DISPLAY_PILE,
   DISPLAY_SHORTHANDS,
   PSEUDO_ONLY,
   STATES,
@@ -52,7 +53,10 @@ const FEEDS: Record<string, string> = {
   "shadow-tint": "the color of the --shadow-* tokens and --elevation on this subtree",
   "shadow-angle": "the light direction of the --shadow-* tokens and --elevation on this subtree",
   "focus-ring": "a primitive's focus ring and the focus outline (width, inside or out)",
-  divide: "border between direct children (divide-x / divide-y)",
+  divide: "a border between direct children, on both axes",
+  "divide-x": "a border between direct children, on the inline axis",
+  "divide-y": "a border between direct children, on the block axis",
+  sr: "visually hidden, still in the accessibility tree",
   "space-x": "margin-inline-end on each direct child but the last",
   "space-y": "margin-block-end on each direct child but the last",
   border: "border-width + border-color",
@@ -66,7 +70,7 @@ const FEEDS: Record<string, string> = {
 
 /** Value notes for utilities whose accepted values go beyond their mode. */
 const VALUE_NOTES: Record<string, string> = {
-  display: `keyword, plus flex shorthands that set the direction: ${Object.keys(DISPLAY_SHORTHANDS).join(", ")}`,
+  display: `keyword, plus flex shorthands that set the direction (${Object.keys(DISPLAY_SHORTHANDS).join(", ")}) and ${DISPLAY_PILE}, which stacks the children in one cell`,
   "grid-cols": "track count (equal tracks) or subgrid",
   "grid-rows": "track count (equal tracks) or subgrid",
   "col-span": "span count",
@@ -81,6 +85,7 @@ const VALUE_NOTES: Record<string, string> = {
   "radius-b": "number, length, or full: the two block-end corners",
   "radius-l": "number, length, or full: the two inline-start corners",
   "radius-r": "number, length, or full: the two inline-end corners",
+  "corner-shape": "round, squircle, bevel, or any corner-shape value",
   border: "color (1px solid), number (px wide, --color-border), or length",
   "border-x": "color, number (px), or length",
   "border-y": "color, number (px), or length",
@@ -88,7 +93,13 @@ const VALUE_NOTES: Record<string, string> = {
   "border-r": "color, number (px), or length",
   "border-t": "color, number (px), or length",
   "border-b": "color, number (px), or length",
-  divide: "color, number (px), or length; set on the container",
+  divide: "color, number (px), length, or none; set on the container",
+  "divide-x": "color, number (px), length, or none; beats --divide",
+  "divide-y": "color, number (px), length, or none; beats --divide",
+  sr: "only, or none (at a tier: back to the element's own styles)",
+  animation:
+    "any animation value, or a token: var(--spin), var(--ping), var(--pulse), var(--bounce)",
+  "text-wrap": "keyword, plus truncate (one line, ellipsis) and none (wraps normally)",
   ring: "number (px) or length; negative draws it inset",
   "ring-offset": "number (px) or length",
   "focus-ring": "number (px) or length; negative draws it inset (default --ring-width)",

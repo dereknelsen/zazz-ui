@@ -111,7 +111,7 @@ describe("no-base state tiers", () => {
     await userEvent.unhover(el);
   });
 
-  it("--opacity--hover alone works on roles, switches, and prose (only primitives need a base)", async () => {
+  it("--opacity--hover alone works on roles, groups, and prose (only primitives need a base)", async () => {
     for (const token of ["text-2xl", "group", "prose", "group text-sm"]) {
       const el = mount(`<a href="#" data-ui="${token}" style="${BOX} --opacity--hover: .8">x</a>`);
       expect(style(el, "opacity"), token).toBe("1");

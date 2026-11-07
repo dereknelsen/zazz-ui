@@ -10,6 +10,7 @@
     --_template-rows-active: var(--template-rows--active);
     --_space-x-active: var(--space-x--active);
     --_space-y-active: var(--space-y--active);
+    --_text-wrap-active: var(--text-wrap--active);
     --_text-decoration-active: var(--text-decoration--active);
     --_text-active: var(--text--active);
     --_bg-active: var(--bg--active);
@@ -38,13 +39,14 @@
     --_scale-active: var(--scale--active);
     --_translate-active: var(--translate--active);
     --_rotate-active: var(--rotate--active);
+    --_animation-active: var(--animation--active);
     --_transition-active: var(--transition--active);
     --_transition-duration-active: var(--transition-duration--active);
     --_transition-delay-active: var(--transition-delay--active);
     --_radius-active: var(--radius--active);
     --_z-active: var(--z--active);
   }
-  :where([data-ui~="group"]:active [style*="--group-"]) {
+  :where(:where(ui-group, [data-ui~="group"]):active [style*="--group-"]) {
     --_anchor-name-g-active: var(--group-anchor-name--active);
     --_position-anchor-g-active: var(--group-position-anchor--active);
     --_position-area-g-active: var(--group-position-area--active);
@@ -52,6 +54,7 @@
     --_template-rows-g-active: var(--group-template-rows--active);
     --_space-x-g-active: var(--group-space-x--active);
     --_space-y-g-active: var(--group-space-y--active);
+    --_text-wrap-g-active: var(--group-text-wrap--active);
     --_text-decoration-g-active: var(--group-text-decoration--active);
     --_text-g-active: var(--group-text--active);
     --_bg-g-active: var(--group-bg--active);
@@ -80,6 +83,7 @@
     --_scale-g-active: var(--group-scale--active);
     --_translate-g-active: var(--group-translate--active);
     --_rotate-g-active: var(--group-rotate--active);
+    --_animation-g-active: var(--group-animation--active);
     --_transition-g-active: var(--group-transition--active);
     --_transition-duration-g-active: var(--group-transition-duration--active);
     --_transition-delay-g-active: var(--group-transition-delay--active);

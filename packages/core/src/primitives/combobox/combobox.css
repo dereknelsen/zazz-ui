@@ -4,7 +4,8 @@
  * @layer      variables, components
  * @requires   _layers.css, _variables.css, popover.css, button.css, fields.css,
  *             badge.css (--ui-badge-* for the default tag template [data-ui~="badge"]),
- *             select.css (--ui-option-*, --ui-select-picker-icon-*)
+ *             select.css (--ui-option-*, --ui-select-picker-icon-*),
+ *             menu.css (--ui-menu-shadow)
  * @uses       [popover="manual"]: panel opened/closed by combobox.ts
  * @uses       anchor-name, anchor-scope, position-anchor: tether panel to the control
  * @uses       anchor-size(width): match panel width to the control (Baseline 2026)
@@ -16,6 +17,8 @@
  *             <template data-combobox-slot="tag-template"> (or its muted-badge
  *             default) per option carrying aria-selected="true". Tag rules key
  *             off the slots, so a custom template keeps this styling.
+ * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
+ *             rounded corners
  * @tokens     --ui-combobox-* (@layer variables); control mirrors --ui-select-*,
  *             items alias --ui-option-*, tags alias --ui-badge-*
  * @see        combobox.ts: filtering, commit/revert, tags, and keyboard behavior
@@ -33,6 +36,7 @@
     --ui-combobox-border-style: var(--ui-select-border-style);
     --ui-combobox-border-color: var(--ui-select-border-color);
     --ui-combobox-radius: var(--ui-select-radius);
+    --ui-combobox-corner-shape: var(--ui-select-corner-shape);
     --ui-combobox-icon-mask: var(--ui-select-picker-icon-mask);
     --ui-combobox-icon-size: var(--ui-select-picker-icon-size);
     --ui-combobox-icon-color: var(--ui-select-picker-icon-color);
@@ -59,6 +63,7 @@
     --ui-combobox-tag-remove-size: var(--ui-badge-icon-size);
     --ui-combobox-tag-remove-color: currentColor;
     --ui-combobox-tag-remove-radius: var(--radius-sm);
+    --ui-combobox-tag-remove-corner-shape: var(--radius-corner-shape);
     --ui-combobox-tag-remove-opacity: 0.65;
     --ui-combobox-tag-remove-opacity--hover: 1;
   }
@@ -123,6 +128,7 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-combobox-corner-shape));
 
     /* Same ring recipe as [data-ui~="select"]: transparent outline twin keeps focus
        visible in forced-colors mode */
@@ -320,6 +326,7 @@
     inline-size: var(--ui-combobox-tag-remove-size);
     block-size: var(--ui-combobox-tag-remove-size);
     border-radius: var(--ui-combobox-tag-remove-radius);
+    corner-shape: var(--ui-combobox-tag-remove-corner-shape);
     opacity: var(--ui-combobox-tag-remove-opacity);
     cursor: pointer;
     transition: var(--default-transition);

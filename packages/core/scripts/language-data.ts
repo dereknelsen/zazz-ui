@@ -4,7 +4,7 @@
  * `generate-editor-data.ts`, and kept fresh by its test.
  *
  * - `identities`: each `data-ui` token's owning primitive (`null` for the
- *   base layers: typography roles, switches, prose), so a page can import it.
+ *   base layers: typography roles, prose), so a page can import it.
  * - `tags`: each `ui-*` tag form's primitive.
  * - `primitives`: each stylesheet's CSSDoc header (summary line and tags).
  * - `hooks`: each `--ui-*` hook's default and the file declaring it.
@@ -254,10 +254,12 @@ export function resolveToken(
 
 /** The primitive owning `token`: its manifest key, a manifest key it extends, its only stylesheet, or `OWNERS`. */
 export function identityOwner(token: string, declaredIn: readonly string[]): string | null {
+  // first: `group`'s selectors are generated into the base layers, but its own
+  // stylesheet still needs loading. `prose` has none, so the base layers own it.
+  if (PRIMITIVES[token]?.css.length && !OWNERS[token]) return token;
   const primitives = declaredIn.filter((file) => file.startsWith("primitives/"));
   if (primitives.length === 0) return null;
   if (OWNERS[token]) return OWNERS[token];
-  if (PRIMITIVES[token]) return token;
   const prefix = Object.keys(PRIMITIVES)
     .filter((key) => token.startsWith(`${key}-`))
     .sort((a, b) => b.length - a.length)[0];
@@ -290,7 +292,8 @@ export function languageData(files: readonly string[], src: string): LanguageDat
     const files = declaredIn.get(token)!;
     const primitive = identityOwner(token, files);
     const own = primitive && files.find((file) => file.startsWith(`primitives/${primitive}/`));
-    identities[token] = { primitive, file: own ?? files[0]! };
+    const stylesheet = primitive ? PRIMITIVES[primitive]?.css[0] : undefined;
+    identities[token] = { primitive, file: own ?? stylesheet ?? files[0]! };
   }
 
   const tags: Record<string, string> = {};

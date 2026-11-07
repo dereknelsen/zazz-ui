@@ -3,7 +3,7 @@
  *
  * @layer      variables, components
  * @requires   _layers.css, _variables.css, popover.css, button.css, fields.css,
- *             select.css (--ui-option-*), input.css
+ *             select.css (--ui-option-*), input.css, menu.css (--ui-menu-shadow)
  * @uses       [popover="manual"] — panel opened/closed by autocomplete.ts
  * @uses       anchor-name, anchor-scope, position-anchor — tether panel to the input
  * @uses       anchor-size(width) — match panel width to the input (Baseline 2026)
@@ -42,7 +42,9 @@
     position-anchor: --ui-autocomplete-trigger;
     /* ungated so the close fade keeps the column layout */
     flex-direction: column;
-    max-block-size: var(--_max-h-resolved, var(--ui-autocomplete-panel-max-h));
+    --_max-h-len: var(--_max-h-resolved, var(--ui-autocomplete-panel-max-h));
+    --_max-h-num: var(--_max-h-resolved, var(--ui-autocomplete-panel-max-h));
+    max-block-size: calc(var(--_max-h-len) + var(--_max-h-num) * var(--spacing));
     overflow: auto;
     box-shadow: var(--_shadow-resolved, var(--ui-autocomplete-shadow));
   }

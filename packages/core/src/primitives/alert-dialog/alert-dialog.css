@@ -13,7 +13,7 @@
   :root {
     /* narrower than the base dialog: an alert is a single question */
     --ui-alert-dialog-w: min(45ch, 100% - var(--space-md) * 2);
-    --ui-alert-dialog-accent: var(--color-destructive);
+    --ui-alert-dialog-accent: var(--color-destructive-foreground);
     --ui-alert-dialog-shadow: var(--ui-dialog-shadow);
   }
 }

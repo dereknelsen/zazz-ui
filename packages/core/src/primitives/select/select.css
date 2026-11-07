@@ -2,7 +2,7 @@
  * select.css: Select (:where([data-ui~="select"]) on customizable <select>)
  *
  * @layer      variables, reset, components
- * @requires   _layers.css, _variables.css, fields.css, _reset.css, popover.css (--ui-popover-*), button.css (--ui-button-*)
+ * @requires   _layers.css, _variables.css, fields.css, _reset.css, popover.css (--ui-popover-*), button.css (--ui-button-*), menu.css (--ui-menu-*)
  * @uses       appearance: base-select: customizable select
  * @uses       ::picker(select), ::picker-icon, selectedcontent, option::checkmark
  * @uses       @starting-style + allow-discrete: picker open animation
@@ -13,6 +13,8 @@
  * @uses       ui-multiselect (multiselect.ts): JS-projected dropdown for
  *             <select multiple> (base-select has no stable multi-select);
  *             degrades to the native multi listbox without JS
+ * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
+ *             rounded corners
  * @tokens     --ui-select-* (@layer variables); picker panel reuses --ui-popover-* (owned in popover.css)
  * @consumedby autocomplete.css, combobox.css, command.css (--ui-option-*, --ui-select-picker-icon-*)
  */
@@ -32,6 +34,7 @@
     --ui-select-border-style: var(--ui-field-border-style);
     --ui-select-border-color: var(--ui-field-border-color);
     --ui-select-radius: var(--ui-field-radius);
+    --ui-select-corner-shape: var(--ui-field-corner-shape);
     --ui-select-option-gap: var(--ui-field-option-gap);
 
     /* Picker icon (trigger chevron) */
@@ -51,6 +54,7 @@
     --ui-option-min-h: var(--ui-button-min-h);
     --ui-option-icon-size: var(--ui-button-icon-size);
     --ui-option-radius: var(--ui-menu-button-radius);
+    --ui-option-corner-shape: var(--ui-menu-button-corner-shape);
     --ui-option-shadow: none;
 
     --ui-option-bg: transparent;
@@ -177,6 +181,7 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-select-corner-shape));
     cursor: pointer;
 
     /* the transparent outline keeps focus visible in forced-colors */
@@ -269,6 +274,7 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-popover-corner-shape));
     box-shadow: var(--ui-popover-shadow);
   }
 
@@ -311,6 +317,7 @@
     border: var(--ui-option-border-width) var(--ui-option-border-style)
       var(--ui-option-border-color);
     border-radius: var(--ui-option-radius);
+    corner-shape: var(--ui-option-corner-shape);
     box-shadow: var(--ui-option-shadow);
     cursor: pointer;
 
@@ -440,6 +447,7 @@
     border: var(--ui-option-border-width) var(--ui-option-border-style)
       var(--ui-option-border-color);
     border-radius: var(--ui-option-radius);
+    corner-shape: var(--ui-option-corner-shape);
     cursor: pointer;
 
     transition: var(--default-transition);
@@ -503,14 +511,14 @@
   }
 
   :where([data-ui~="select"]):user-invalid {
-    --ui-field-bg: color-mix(in oklch, var(--color-destructive) 5%, var(--color-input));
-    --ui-field-bg--hover: color-mix(in oklch, var(--color-destructive) 10%, var(--color-input));
-    --ui-field-border-color: var(--color-destructive);
-    --ui-field-border-color--hover: var(--color-destructive);
-    --ui-field-border-color--focus-within: var(--color-destructive);
-    --ui-field-ring-color: var(--color-destructive);
+    --ui-field-bg: var(--color-destructive);
+    --ui-field-bg--hover: oklch(from var(--color-destructive) calc(l - 0.025) c h);
+    --ui-field-border-color: var(--color-destructive-foreground);
+    --ui-field-border-color--hover: var(--color-destructive-foreground);
+    --ui-field-border-color--focus-within: var(--color-destructive-foreground);
+    --ui-field-ring-color: var(--color-destructive-foreground);
 
-    border-color: var(--color-destructive);
+    border-color: var(--color-destructive-foreground);
   }
 }
 

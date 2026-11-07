@@ -134,12 +134,12 @@ Zazz markup needs no classes. Every styling decision is one of four channels:
   needs a base unless the utility is on the tier-only list (AUTHORING.md, "Rules that bite").
   Utilities need the `style` attribute. A strict CSP must allow `style-src-attr 'unsafe-inline'`
   (otherwise the kit falls back to the CSSOM). If a sanitizer strips `style` from your markup,
-  use presets, switches, and stylesheet hooks instead.
+  use presets, slots, and stylesheet hooks instead.
 
 Behind the channels:
 
 - **Cascade layers, not specificity.** `@layer variables, reset, defaults, vendors, legacy, ui, overrides`,
-  where `ui` nests `components, plugins, utilities`. Utilities sit in `ui.utilities` at zero
+  where `ui` nests `components, plugins, utilities, sr`. Utilities sit in `ui.utilities` at zero
   specificity and beat component rules. A tier written without its base lands in `defaults`, so
   a primitive's own value beats it unless the primitive reads that utility. Typography roles
   sit in `reset`. Put your own overrides in `@layer overrides` and don't fight the cascade with
@@ -148,7 +148,7 @@ Behind the channels:
   inherit and take the same modifiers. Prefer preset, then a hook on a subtree, then a utility
   on the one element. A utility on a primitive flattens its states (hover, active, and the
   rest all take the one value); a hook keeps them.
-- **Kit JS writes state** (`data-<identity>-state`, the `theme-*` switch in `data-ui`). Read it
+- **Kit JS writes state** (`data-<identity>-state`, `data-theme` on `<html>`). Read it
   in selectors; never author it.
 - **Modern APIs do the work.** Popover, native `<dialog>`, Invoker Commands, View Transitions,
   and `<details>` are native across the support floor (latest Chrome, Firefox, and Safari, two
@@ -200,7 +200,7 @@ Minimal or maximal both work; what fails is not choosing.
   dark mode comes free, and replace the kit's neutral placeholder scales with the brand's.
 - **Compose with tension.** Break the centered stack. Play `--band: layout-bleed` or
   `layout-full` imagery against capped `lg` or reading-width text, use the left-label layout,
-  overlap layers with `data-ui="pile"`, and let big section padding (`--py: 24`) open real
+  overlap layers with `--display: grid-pile`, and let big section padding (`--py: 24`) open real
   negative space.
 - **Add depth with tokens.** Gradient washes across a brand scale (`--color-primary-600` to
   `--color-primary-900`), `shade` and `tint` transparencies, subtle grain, decorative
@@ -208,7 +208,7 @@ Minimal or maximal both work; what fails is not choosing.
   `--elevation: n` (a height; `4` matches `--shadow-md`) or `--shadow: var(--shadow-md)`.
 - **Spend motion where it counts.** One orchestrated page load, with staggered reveals via
   `data-reveal` or `data-reveal-each` on the hero, beats scattered micro-interactions. Use
-  `--spring-easing` for movement that overshoots slightly and settles. `prefers-reduced-motion` is already respected.
+  `--spring-easing` for movement that eases to a stop without bouncing. `prefers-reduced-motion` is already respected.
 
 Never ship generic AI aesthetics: Inter-style system fonts, the violet-gradient-on-white
 centered hero, predictable layouts, cookie-cutter cards.
@@ -292,8 +292,8 @@ the sentence-case house rule, and composition patterns live in `PATTERNS.md`.
   classes, `data-variant`, `data-slot`, or `class="dark"` (all 0.4 syntax). **Do** give custom
   styling a BEM class; **don't** hang it on a made-up `data-*` attribute or a non-utility custom
   property in `style`.
-- **Do** let `--color-*` roles handle dark mode and pin a scheme with the `theme-dark` or
-  `theme-light` switch (`data-ui="theme-dark"`). **Don't** hand-write dark overrides for
+- **Do** let `--color-*` roles handle dark mode and pin a scheme with `data-theme="dark"`
+  or `data-theme="light"`. **Don't** hand-write dark overrides for
   token-handled values.
 - **Do** keep the loaded polyfill and the modern-API markup. **Don't** edit the kit's files
   unless asked.
@@ -312,7 +312,7 @@ was built from. Every page has a Markdown version: append `index.md` to its path
 | Tokens, typography, layout, breakpoints, layers         | `https://zazz.sh/api/foundations/{tokens,typography,layout,breakpoints,layers,globals}/`                                                     |
 | Utilities by family                                     | `https://zazz.sh/api/utilities/` and `/api/utilities/{spacing,sizing,typography,backgrounds,…}/`                                             |
 | Modifiers (states, breakpoints, group, stuck, starting) | `https://zazz.sh/api/modifiers/{states,responsive,group,stuck,starting}/`                                                                    |
-| Switches (`sr-only`, `not-prose`, `theme-dark`, …)      | `https://zazz.sh/api/switches/`                                                                                                              |
+| Visually hidden text (`--sr: only`)                     | `https://zazz.sh/api/utilities/accessibility/`                                                                                               |
 | Custom elements, events, hotkeys, signals               | `https://zazz.sh/api/javascript/`                                                                                                            |
 | Install, CSP, theming, editor setup                     | `https://zazz.sh/docs/install/installation/`, `/docs/install/security/`, `/docs/theming/customization/`, `/docs/tooling/editor-and-linting/` |
 | Changelog and migrations                                | `CHANGELOG.md` in the package; `https://zazz.sh/docs/concepts/migrating/`                                                                    |

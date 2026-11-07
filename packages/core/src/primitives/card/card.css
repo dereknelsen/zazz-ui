@@ -3,6 +3,8 @@
  *
  * @layer      variables, components
  * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved)
+ * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
+ *             rounded corners
  * @tokens     --ui-card-* (@layer variables; named after the utilities they back)
  * @presets    data-card-variant="outline" | "muted" | "floating"
  *
@@ -22,6 +24,7 @@
     --ui-card-bg: transparent;
     --ui-card-text: var(--color-card-foreground);
     --ui-card-radius: var(--radius-lg);
+    --ui-card-corner-shape: var(--radius-corner-shape);
     --ui-card-shadow: none;
 
     --ui-card-border-width: 1px;
@@ -95,6 +98,7 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
+    corner-shape: var(--_corner-shape-resolved, var(--ui-card-corner-shape));
     box-shadow: var(--_shadow-resolved, var(--_card-shadow, var(--ui-card-shadow)));
     overflow: clip;
     transition: var(--default-transition);

@@ -134,7 +134,7 @@ for (const id of ["n", "angle", "tint", "tint-on", "layers"])
   $(id).addEventListener("input", render);
 $("theme").addEventListener("click", () => {
   const root = document.documentElement;
-  const dark = root.dataset.ui?.includes("theme-dark");
-  root.dataset.ui = dark ? "" : "theme-dark";
+  if (root.dataset.theme === "dark") delete root.dataset.theme;
+  else root.dataset.theme = "dark";
 });
 render();
