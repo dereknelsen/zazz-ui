@@ -13,5 +13,6 @@ The short version:
 - Shadows: `--elevation: 4` (a height) or `--shadow: var(--shadow-md)` (a token or any box-shadow). There are no size words (`--shadow: md` does nothing). A tier needs its base: `--text: currentColor; --text--hover: …`.
 - Use tokens (`var(--space-*)`, `var(--color-<role>)`, `var(--radius-*)`, `var(--font-size-*)`); every `var(--…)` must exist in `packages/core/src/base/_variables.css`.
 - Every `<input>`, `<select>`, and `<textarea>` gets a `name` (or, when it must not submit, an `id`); Chrome reports a field with neither.
+- Controls stay at their default size. `data-button-size="sm"` / `"icon-sm"` (and the toggle forms) only in table cells, inside input groups, and receding chrome such as a floating editor toolbar. One size per row: when one control in a row or group is small, all are, and a field matches with `style="--h: 6; --radius: 1.5"`.
 - Retheme primitives with inheriting hooks (`--ui-button-bg--hover`) rather than utilities, which flatten states.
 - Reference: the docs site at https://zazz.sh (API tables generated from the kit at `/api/`, Markdown twins at `…/index.md`, `https://zazz.sh/llms.txt` for an index).

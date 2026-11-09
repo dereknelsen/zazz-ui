@@ -170,11 +170,17 @@ Start at the most semantic layer and get specific only when nothing semantic fit
   `text-link`, `text-xs … text-xl`. Override one property with a utility; never rebuild a role
   from utilities. A smaller role on a native heading changes its size, not its level
   (`<h2 data-ui="text-h5">`); a larger one doesn't win, so size up with `--font-size`.
-- **Size** is the default. `data-button-size="sm"` / `"icon-sm"` and the toggle equivalents are
-  for dense chrome only: a control inside an input group, a row action in a table, a tight
-  toolbar. Navigation links, header and footer actions, dialog and form buttons, and anything a
-  visitor reads as a primary control stay regular (`icon` for an icon-only one). If the smaller
-  size is for "fitting in", fix the layout instead.
+- **Size** is the default. Use `data-button-size="sm"` / `"icon-sm"` and the toggle equivalents
+  sparingly and on purpose, in three places only: a table cell, inside an input group, and
+  chrome that should recede behind the content (a floating editor toolbar, a panel header).
+  Navigation links, header and footer actions, dialog and form buttons, card actions, and
+  anything a visitor reads as a primary control stay regular (`icon` for an icon-only one). If
+  the smaller size is for "fitting in", fix the layout instead.
+- **One size per row.** When one control in a toolbar, row, or group is small, every control
+  in it is: buttons and toggles take `sm` / `icon-sm`, and an input, select, or combobox takes
+  `style="--h: 6; --radius: 1.5"` (fields have no size preset). After writing markup, check
+  every row that has a small control and fix any sibling left at regular size. The table and a
+  worked toolbar are in `PATTERNS.md` under "Control sizes".
 - **Reuse over new CSS.** A preset, hook, or utility almost always exists; reaching for a
   `<style>` block or a class means you skipped one, so check `references/tokens.md` first. When
   the kit truly has no word for it, write a BEM-style class (`.block__element--modifier`) in your
@@ -286,8 +292,10 @@ the sentence-case house rule, and composition patterns live in `PATTERNS.md`.
   (the eyebrow's caps come from the `text-eyebrow` role).
 - **Do** use `var(--token)` in utilities. **Don't** hardcode colors, spacing, radii, or type, or
   invent tokens; every `var(--…)` must exist in the kit.
-- **Do** leave buttons and toggles at their default size; use `sm` and `icon-sm` only inside
-  input groups, table rows, and tight toolbars. **Don't** shrink nav links or header actions.
+- **Do** leave controls at their default size; use `sm` and `icon-sm` only in table cells,
+  input groups, and receding chrome. **Don't** shrink nav links, header actions, or dialog,
+  form, and card buttons, and **don't** mix sizes in one row: shrink every control in it or
+  none.
 - **Do** write `data-ui="button" data-button-variant="primary"`. **Don't** write utility
   classes, `data-variant`, `data-slot`, or `class="dark"` (all 0.4 syntax). **Do** give custom
   styling a BEM class; **don't** hang it on a made-up `data-*` attribute or a non-utility custom

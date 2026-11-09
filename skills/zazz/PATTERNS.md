@@ -312,12 +312,82 @@ Long-form copy goes in `data-ui="prose"` with a reading measure:
 
 ## Control sizes
 
-The regular size is the answer nearly every time. `data-button-size="sm"` and `"icon-sm"` (and
-the toggle equivalents) are for dense chrome where the control is secondary to the content
-around it: an addon inside an input group, a per-row action in a table, a crowded toolbar.
-Header and footer actions, navigation links, dialog footers, form submits, and card actions
-stay regular; an icon-only one of those is `data-button-size="icon"`. Mixing sizes in one row
-reads as a mistake, so when one control in a group must be small, make the group small.
+The regular size is the answer nearly every time. The small size is a deliberate choice that
+makes a control recede, and it fits in three places only:
+
+- **Table cells**: a per-row action or status toggle, so the row reads as data, not buttons.
+- **Input groups**: an addon button inside the field (copy, clear, show password). The field
+  stays regular; the button is small because it sits inside it.
+- **Receding chrome**: a control set that serves the content and should stay out of its way,
+  such as a floating text-editor toolbar or a panel header's actions.
+
+Header and footer actions, navigation links, dialog footers, form submits, card actions, and
+hero calls to action stay regular; an icon-only one of those is `data-button-size="icon"`. A
+small size used to squeeze something into a row is a layout problem, so fix the layout.
+
+### One size per row
+
+Mixed sizes in one row read as a mistake. When one control in a toolbar, row, or group is
+small, all of them are. Only buttons and toggles have a size preset, so fields match by height:
+
+| Control                     | Regular                 | Small (24px)                          |
+| --------------------------- | ----------------------- | ------------------------------------- |
+| Button                      | (none) · `icon`         | `data-button-size="sm"` · `"icon-sm"` |
+| Toggle                      | (none) · `icon`         | `data-toggle-size="sm"` · `"icon-sm"` |
+| Toggle group / button group | the size on every child | `sm` / `icon-sm` on every child       |
+| Input, select, combobox     | (none, `--ui-field-h`)  | `style="--h: 6; --radius: 1.5"`       |
+
+A floating editor toolbar with every control small (font select, size input, a standalone
+toggle, a toggle group, a close button):
+
+```html
+<div
+  role="toolbar"
+  aria-label="Text formatting"
+  style="--display: flex; --items: center; --gap: 1; --p: 1; --bg: var(--color-popover); --border: 1; --radius: 2.5; --elevation: 4"
+>
+  <select data-ui="select" name="font" aria-label="Font" style="--h: 6; --radius: 1.5; --w: auto">
+    <button><selectedcontent></selectedcontent></button>
+    <option value="sans" selected>Sans</option>
+    <option value="serif">Serif</option>
+  </select>
+  <input
+    data-ui="input"
+    type="number"
+    name="font-size"
+    aria-label="Font size"
+    value="16"
+    style="--h: 6; --radius: 1.5; --w: 14"
+  />
+  <label data-ui="toggle" data-toggle-size="icon-sm">
+    <input type="checkbox" name="bold" aria-label="Bold" />
+    <span aria-hidden="true" style="--font-weight: strong">B</span>
+  </label>
+  <ui-toggle-group role="group" aria-label="Alignment">
+    <label data-ui="toggle" data-toggle-size="icon-sm">
+      <input type="radio" name="align" value="left" aria-label="Align left" checked />
+      <span aria-hidden="true">L</span>
+    </label>
+    <label data-ui="toggle" data-toggle-size="icon-sm">
+      <input type="radio" name="align" value="center" aria-label="Align center" />
+      <span aria-hidden="true">C</span>
+    </label>
+  </ui-toggle-group>
+  <button
+    data-ui="button"
+    data-button-variant="ghost"
+    data-button-size="icon-sm"
+    type="button"
+    aria-label="Close"
+  >
+    ×
+  </button>
+</div>
+```
+
+**Check before you finish.** For every toolbar, row, and group, list its controls. If any
+one has `sm`, `icon-sm`, or `--h: 6`, every sibling needs its small form from the table. If the
+row doesn't meet the three cases above, remove the small size from all of them instead.
 
 ## Everything else
 
