@@ -624,6 +624,13 @@ These deviate from the canonical shape on purpose: document the reason in-file:
   `:root` in [`_variables.css`](./src/base/_variables.css), and every `--animation` rule reads it
   first (`animation: var(--_motion-off, …)`), so reduced motion stops any value. Like `--_gap`, it
   has to inherit, so it stays unregistered, and it is set in one place only.
+- **`--_touch-min` in `@layer variables`**: the same shape for touch targets. `_variables.css`
+  declares it `0px` on `:root` and sets it to `--spacing-touch-min` (44px) under
+  `@media (not (hover: hover))`; `--spacing-min` adds a tenth of it so padding loosens with
+  the floor. Visible controls floor their size with it
+  (`min-block-size: max(<size>, var(--_touch-min))`); small indicators keep their box and
+  draw an invisible `::after` hit area with `inset: min(0px, calc((100% - var(--_touch-min)) / 2))`.
+  Read it, never set it anywhere else.
 - **Legacy isolation during migration**: bring an existing codebase along by importing its
   stylesheet into the `legacy.imports` sublayer (`@import "./your-legacy.css" layer(legacy.imports)`
   at the commented slot in [`index.css`](./src/index.css)); because `legacy` sits below `ui`, the

@@ -8,6 +8,7 @@
  *             (@supports gated; checked-label fallback paints card fill without pill)
  * @uses       anchor-scope — isolates --active-tab inside nested menus
  * @uses       text-box, color-mix() — label trim and focus ring
+ * @uses       --_touch-min (touch screens) — labels grow to the touch floor
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
  * @tokens     --ui-tabs-* (@layer variables)
@@ -122,7 +123,7 @@
     font-weight: var(--ui-tabs-label-font-weight);
     line-height: var(--ui-tabs-label-leading);
 
-    min-block-size: var(--ui-tabs-label-min-h);
+    min-block-size: max(var(--ui-tabs-label-min-h), var(--_touch-min));
     padding-inline: var(--ui-tabs-label-px);
 
     color: var(--ui-tabs-label-text);

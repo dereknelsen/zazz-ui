@@ -23,7 +23,7 @@ primitive: dialog
 <dialog data-ui="dialog" data-dialog-size="lg" closedby="any">…</dialog>
 ```
 
-Below the `sm` band the viewport is a phone, and every dialog takes the size in `--ui-dialog-mobile-size` over its preset: `layout-bleed` by default, edge to edge, so there is no page to see behind it, and on iOS the page holds still behind it while the software keyboard is up. `layout-full` keeps the gutters, and `none` keeps the dialog's own preset. The hook is read on the dialog's parent, so set it on `:root` for the site, or on one dialog's parent element for that dialog alone.
+Below the `sm` band on a touch screen (a narrow desktop window keeps its preset), every dialog takes the size in `--ui-dialog-mobile-size` over its preset: `layout-bleed` by default, edge to edge and full height, with the content slot stretched to the bottom of the screen above the home indicator and only the body scrolling. `layout-full` keeps the gutters, and `none` keeps the dialog's own preset. The hook is read on the dialog's parent, so set it on `:root` for the site, or on one dialog's parent element for that dialog alone.
 
 ```css
 :root {

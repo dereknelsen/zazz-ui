@@ -5,6 +5,7 @@
  * @requires   _layers.css, _variables.css, fields.css, input.css,
  *             textarea.css, button.css
  * @uses       :focus-within — lifts shell ring/border as one field
+ * @uses       --_touch-min (touch screens) — the shell and its addons grow to the touch floor
  * @uses       :has() — restore padding when addons absent; invalid text color
  * @uses       data-input-group-align on the addon slot — inline-start/end, block-start/end
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
@@ -65,7 +66,10 @@
     inline-size: calc(var(--_w-len) + var(--_w-num) * var(--spacing));
     --_min-h-len: var(--_min-h-resolved, var(--ui-input-group-min-h));
     --_min-h-num: var(--_min-h-resolved, var(--ui-input-group-min-h));
-    min-block-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
+    min-block-size: max(
+      calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing)),
+      var(--_touch-min)
+    );
     --_p-len: var(--_p-resolved, var(--ui-input-group-p));
     --_p-num: var(--_p-resolved, var(--ui-input-group-p));
     padding: calc(var(--_p-len) + var(--_p-num) * var(--spacing));
@@ -182,8 +186,8 @@
     gap: var(--spacing);
     color: var(--color-muted-foreground);
     white-space: nowrap;
-    block-size: var(--ui-field-h);
-    min-inline-size: var(--ui-field-h);
+    block-size: max(var(--ui-field-h), var(--_touch-min));
+    min-inline-size: max(var(--ui-field-h), var(--_touch-min));
     padding-inline: var(--ui-field-addon-p);
   }
 

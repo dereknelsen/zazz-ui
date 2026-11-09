@@ -26,6 +26,7 @@ Two rules govern every choice:
   The tokens stay for CSS and hooks.
 - **Scale numbers:** spacing, margin, and sizing utilities take a bare number as `n × --spacing`
   (`--px: 6`). `--spacing` is fluid: it grows from `--spacing-min` to `--spacing-max` across the fluid range (`--fluid-min` to `--fluid-max`).
+- **Touch targets are built in.** `--spacing-touch-min` (44px) floors every interactive primitive on touch screens (`not (hover: hover)`): buttons, fields and tabs grow to it; checkbox, radio, switch, clickable badges and `sm` buttons keep their size and gain an invisible hit area; and `--spacing-min` grows by a tenth of it, so phone padding loosens too. Don't pad controls by hand for mobile; set the token to `0px` to opt out.
 - **No numeric step scale.** Use a utility number (`--max-w: 96` is 96 × `--spacing`) or `calc(var(--spacing) * N)` in CSS; write `1px` and `100%` directly.
 - **Utilities:** padding `--p` `--px` `--py` `--pt` `--pb` `--pl` `--pr`; margin `--m` `--mx` `--my`
   `--mt` `--mb` `--ml` `--mr` (+ `auto`); gap `--gap` `--gap-x` `--gap-y`; space between children `--space-x` `--space-y` (on the container, states and breakpoints; prefer `--gap` in flex and grid); inset `--inset` `--inset-x` `--inset-y` `--top`

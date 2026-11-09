@@ -52,8 +52,8 @@
   closedby="any"
   style="--border-width: 0"
 >
-  <div data-mobile-menu-slot="viewport">
-    <div data-mobile-menu-slot="header">
+  <div data-mobile-menu-slot="viewport" data-dialog-slot="content">
+    <div data-mobile-menu-slot="header" data-dialog-slot="header">
       <span
         style="
           --font-size: var(--font-size-md);
@@ -98,7 +98,7 @@
       </button>
     </div>
 
-    <div data-mobile-menu-slot="body">
+    <div data-mobile-menu-slot="body" data-dialog-slot="body">
       <ui-accordion>
         <!-- Platform -->
         <details>
@@ -1895,7 +1895,7 @@
       </ui-accordion>
     </div>
 
-    <div data-mobile-menu-slot="footer">
+    <div data-mobile-menu-slot="footer" data-dialog-slot="footer">
       <button data-ui="button" type="button" style="--flex: 1">
         Sign in
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">

@@ -9,19 +9,18 @@
  *             is open (WebKit ignores overscroll-behavior on boxes that do not overflow)
  * @uses       @starting-style + allow-discrete — open/close opacity, transform, overlay
  * @uses       anchor-name, container-type — layout hooks for sized variants
- * @uses       @supports (-webkit-touch-callout: none) — iOS-only: body is a fixed box at its
- *             recorded scroll offset while a modal is open, since iOS scrolls the document
- *             behind a modal under the keyboard whatever the root's overflow
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
  * @tokens     --ui-dialog-* (@layer variables; --ui-dialog-h defaults to a keyword, so the hook
  *             is read raw and takes a length or keyword; a --h utility or tier takes a scale
  *             number or a length; a keyword tier needs a base --h, or it renders as auto)
  * @presets    data-dialog-size="sm | md | lg | xl | 2xl | full | bleed" (the layout bands; sm when absent)
- * @uses       @media (width < 40rem) + @container style(--ui-dialog-mobile-size) — below the sm
- *             band every dialog takes the hook's size (layout-bleed by default) over its preset;
- *             style queries are Firefox 151+, Chrome 111+, Safari 18+, an older engine keeps the preset
- * @consumedby alert-dialog.css, mobile-menu.css
+ * @uses       @media (width < 40rem) and (not (hover: hover)) + @container style(--ui-dialog-mobile-size)
+ *             — below the sm band on a touch screen every dialog takes the hook's size (layout-bleed
+ *             by default) over its preset; a narrow window with a mouse keeps the preset; style
+ *             queries are Firefox 151+, Chrome 111+, Safari 18+, an older engine keeps the preset
+ * @uses       env(safe-area-inset-bottom) — the full-height content slot clears the home indicator
+ * @consumedby alert-dialog.css, command.css, lightbox.css, mobile-menu.css
  */
 
 @layer variables {
@@ -236,6 +235,24 @@
      own still takes the flexible row, so it is the part that scrolls, never the dialog,
      and the close button keeps its corner. */
   :where([data-ui~="dialog"]) [data-dialog-slot~="content"] {
+    display: grid;
+    align-self: center;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    position: relative;
+    min-block-size: 0;
+    max-block-size: 100%;
+    overscroll-behavior: contain;
+  }
+
+  :where([data-ui~="dialog"]) [data-dialog-slot~="header"] {
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    padding-inline: var(--space-sm);
+    padding-block-start: var(--space-sm);
+  }
+
+  :where([data-ui~="dialog"]) [data-dialog-slot~="body"] {
     --_scroll-fade-gradient: linear-gradient(
       to bottom,
       transparent 0,
@@ -244,14 +261,14 @@
       transparent 100%
     );
 
+    grid-row: 2;
     display: grid;
-    align-self: center;
-    grid-template-rows: auto minmax(0, 1fr) auto;
-    position: relative;
-    min-block-size: 0;
+    padding-inline: var(--space-sm);
+    padding-block: var(--space-md);
+    min-block-size: fit-content;
     max-block-size: 100%;
-    overflow: auto;
     overscroll-behavior: contain;
+    overflow-y: auto;
 
     -webkit-mask-image: var(--ui-scroll-fade-mask, var(--_scroll-fade-gradient));
     mask-image: var(--ui-scroll-fade-mask, var(--_scroll-fade-gradient));
@@ -270,23 +287,6 @@
       --_scroll-fade-start: var(--ui-scroll-fade-size);
       --_scroll-fade-end: var(--ui-scroll-fade-size);
     }
-  }
-
-  :where([data-ui~="dialog"]) [data-dialog-slot~="header"] {
-    grid-row: 1;
-    display: flex;
-    flex-direction: column;
-    padding-inline: var(--space-sm);
-    padding-block-start: var(--space-sm);
-  }
-
-  :where([data-ui~="dialog"]) [data-dialog-slot~="body"] {
-    grid-row: 2;
-    display: grid;
-    padding-inline: var(--space-sm);
-    padding-block: var(--space-md);
-    min-block-size: 0;
-    min-block-size: var(--space-xl);
   }
 
   :where([data-ui~="dialog"]) [data-dialog-slot~="footer"] {
@@ -346,11 +346,19 @@
      Firefox 151+; an older engine keeps the preset. */
   @media (width < 40rem) and (not (hover: hover)) {
     @container style(--ui-dialog-mobile-size: layout-bleed) {
-      :where([data-ui~="dialog"][data-dialog-slot~="content"]) {
-        overflow: auto;
-        overscroll-behavior: contain;
-        scrollbar-gutter: stable both-edges;
-        min-block-size: 100%;
+      /* Not :where(): the viewport decides the height here, over a consumer's own cap
+         on the same element (command's list max-block-size loads later at equal
+         specificity). Utilities still win through the layer order. */
+      [data-ui~="dialog"] [data-dialog-slot~="content"] {
+        place-content: start stretch;
+        block-size: 100%;
+        padding-block-end: env(safe-area-inset-bottom, 0px);
+      }
+
+      [data-ui~="dialog"] [data-dialog-slot~="body"] {
+        block-size: 100%;
+        max-block-size: 100%;
+        margin-block-end: auto;
       }
 
       :where([data-ui~="dialog"]) {
@@ -361,13 +369,13 @@
         --_dialog-radius: 0;
 
         margin: 0;
-        background-clip: padding-box;
         max-inline-size: 100dvi;
         max-block-size: 100dvb;
         overflow: scroll;
         overscroll-behavior: contain;
         container: none;
       }
+
       :where(dialog)::backdrop {
         inline-size: 100dvi;
         block-size: 100dvb;

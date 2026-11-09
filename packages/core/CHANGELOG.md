@@ -2,9 +2,31 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 
 ## 0.10.1 (unreleased)
 
+### base
+
+- Touch targets: `--spacing-touch-min` (44px, the WCAG 2.5.5 AAA size and Apple's minimum; 2.5.8 AA asks for 24px) is the smallest tappable box on a touch screen. Under `@media (not (hover: hover))` it feeds `--_touch-min`, which every interactive primitive reads, and `--spacing-min` grows by a tenth of it (a phone step goes 3.6px to 4.15px) so padding loosens with the floor; on a mouse it is `0px`, so desktop layouts are unchanged. Buttons and toggles (default and `icon` sizes), inputs, selects and their option rows, the combobox control, OTP cells, input-group and password-group shells and addons, tabs labels, accordion summaries and the range input grow to the floor. Checkboxes, radios, switches, clickable badges, `sm` / `icon-sm` buttons and toggles and the combobox tag-remove keep their size and extend an invisible `::after` hit area to it instead (a `--after-*` utility on one of these replaces that hit area). Hit areas of tightly packed small controls overlap on touch; the later sibling wins. `variant="link"` buttons stay text-sized. Set `--spacing-touch-min: 0px` to opt out.
+- `--gutters` defaults to `--space-sm` (was `--space-md`), so layout bands and `full` dialogs sit closer to the screen edge. Set `:root { --gutters: var(--space-md) }` to keep the old width.
+
 ### dialog
 
-- Fix: on iOS the page no longer scrolls behind a modal while the software keyboard is up (the 0.8.2 note left this open). iOS scrolls the document under the keyboard whatever the root's `overflow` says, so there (and only there, gated on `-webkit-touch-callout`) `<body>` is a fixed box at the scroll offset the kit's script records on open; the position comes back when the last modal closes. The backdrop is twice the viewport tall, so the strip iOS paints behind its keyboard chrome shows no page. No change elsewhere.
+- The phone model is reworked. Below the `sm` band the full-screen size now applies on touch screens only (`(not (hover: hover))`), so a narrow desktop window keeps its preset. The dialog is `100dvi × 100dvb` with no margin; the content slot stretches to the full height and clears the home indicator (`env(safe-area-inset-bottom)`); the body slot fills the middle row, so a footer sits at the bottom of the screen and only the body scrolls. These two slot rules outrank a consumer's own cap on the same element (they are not wrapped in `:where()`), so a palette's list limit gives way to the screen; utilities still win through the layer order.
+- The backdrop is clipped and contains overscroll, and `--ui-dialog-border` split into `--ui-dialog-border-width`, `--ui-dialog-border-style`, and `--ui-dialog-border-color`.
+
+### command
+
+- The dialog form rides the dialog: in `command-dialog.html` the panel's parts carry `data-dialog-slot="content | header | body | footer"` beside their `data-command-slot`, so the dialog owns the grid, the body scroller (the list, which also gets the scroll-fade mask), and the phone's full-height model: the footer sits at the bottom of the screen and the list grows to fill it, where before it stopped at `--ui-command-max-h` with empty space below. The list contains overscroll in both forms. Add the dialog slots to an existing palette dialog to get the same.
+
+### mobile-menu
+
+- The slots carry `data-dialog-slot="content | header | body | footer"` beside `data-mobile-menu-slot`, so the dialog owns the grid, the body scroller, and the safe-area padding. Fix: the viewport capped itself at `100svh` inside a `100dvb` dialog, which left a gap under the footer when the browser bars collapsed. Dead `position: sticky` on the header and footer, a duplicate `overflow: clip`, and a redundant `inline-size` are gone.
+
+### lightbox
+
+- Fix: the content and carousel sized themselves with `100svh` inside a `100dvb` dialog; they take `100%` now. The dialog form sets `--ui-dialog-border-width: 0` instead of the retired `--ui-dialog-border`.
+
+### alert-dialog
+
+- The example's footer moves inside the content slot, as in the dialog's own example, so it takes the content grid's last row.
 
 ## 0.10.0 (2026-11-06)
 

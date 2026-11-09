@@ -7,8 +7,10 @@
  */
 
 import { describe, expect, it } from "vite-plus/test";
-import { initDialogLifecycle } from "../../base/dialog-lifecycle.ts";
-import { atWidth, mount, scale, style, useCss, useKit } from "../../../test/browser.ts";
+import { commands, server } from "vite-plus/test/browser/context";
+import { atWidth, below, mount, scale, style, useCss, useKit } from "../../../test/browser.ts";
+
+const held = commands as unknown as { emulateTouch(enabled: boolean): Promise<void> };
 
 const PARTS = `<div data-dialog-slot="content">
     <header data-dialog-slot="header">h</header>
@@ -39,12 +41,12 @@ describe("dialog", () => {
     expect(height("[data-percent]")).toBeGreaterThan(height("[data-default]"));
   });
 
-  it("lays out the slots: sticky footer, scrolling body, absolute close", () => {
+  it("lays out the slots: footer in the last row, scrolling body, absolute close", () => {
     const dialog = mount(`<dialog data-ui="dialog">${PARTS}</dialog>`) as HTMLDialogElement;
     dialog.showModal();
     const slot = (name: string) => dialog.querySelector(`[data-dialog-slot='${name}']`)!;
     expect(style(slot("content"), "display")).toBe("grid");
-    expect(style(slot("footer"), "position")).toBe("sticky");
+    expect(style(slot("footer"), "grid-row-start")).toBe("3");
     expect(style(slot("body"), "overflow-y")).toBe("auto");
     expect(style(slot("close"), "position")).toBe("absolute");
     dialog.close();
@@ -64,18 +66,6 @@ describe("dialog", () => {
     utility.showModal();
     expect(style(utility, "inline-size")).toBe("333px");
     utility.close();
-  });
-
-  it("the lifecycle script records the scroll offset on the body while a modal is open", async () => {
-    initDialogLifecycle();
-    const dialog = mount(`<dialog data-ui="dialog">d</dialog>`) as HTMLDialogElement;
-    dialog.showModal();
-    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
-    await tick(); // the open event is a microtask
-    expect(document.body.style.getPropertyValue("--_scroll-y")).toBe(`${window.scrollY}px`);
-    dialog.close();
-    await tick(); // the native close event is a queued task
-    expect(document.body.style.getPropertyValue("--_scroll-y")).toBe("");
   });
 
   it("sm … 2xl follow the layout bands, capped by the viewport; full spans inside the gutters", async () => {
@@ -110,4 +100,27 @@ describe("dialog", () => {
     expect(width('[data-size="full"]')).toBeCloseTo(room, 0);
     expect(width('[data-size="lg"]')).toBeGreaterThan(width('[data-size="md"]'));
   });
+
+  // Touch emulation is a CDP session: Chromium only.
+  it.skipIf(server.browser !== "chromium")(
+    "below the sm band on a touch screen every dialog is full-height and its content reaches the bottom",
+    async () => {
+      await atWidth(below("sm"));
+      await held.emulateTouch(true);
+      try {
+        const dialog = mount(`<dialog data-ui="dialog">${PARTS}</dialog>`) as HTMLDialogElement;
+        dialog.showModal();
+        const box = dialog.getBoundingClientRect();
+        expect(box.width).toBeCloseTo(window.innerWidth, 0);
+        expect(box.height).toBeCloseTo(window.innerHeight, 0);
+        expect(style(dialog, "border-radius")).toBe("0px");
+        const content = dialog.querySelector("[data-dialog-slot~='content']")!;
+        // within the 1px border, transparent on a phone but still laid out
+        expect(Math.abs(content.getBoundingClientRect().bottom - box.bottom)).toBeLessThan(1.5);
+        dialog.close();
+      } finally {
+        await held.emulateTouch(false);
+      }
+    },
+  );
 });

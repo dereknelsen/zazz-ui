@@ -9,10 +9,10 @@
 import { describe, expect, it } from "vite-plus/test";
 import { mount, style, useCss, useKit } from "../../../test/browser.ts";
 
-const PARTS = `<div data-mobile-menu-slot="viewport">
-    <div data-mobile-menu-slot="header">h</div>
-    <div data-mobile-menu-slot="body">b</div>
-    <div data-mobile-menu-slot="footer">f</div>
+const PARTS = `<div data-mobile-menu-slot="viewport" data-dialog-slot="content">
+    <div data-mobile-menu-slot="header" data-dialog-slot="header">h</div>
+    <div data-mobile-menu-slot="body" data-dialog-slot="body">b</div>
+    <div data-mobile-menu-slot="footer" data-dialog-slot="footer">f</div>
   </div>`;
 
 describe("mobile menu", () => {
@@ -25,10 +25,15 @@ describe("mobile menu", () => {
     ) as HTMLDialogElement;
     dialog.showModal();
     const slot = (name: string) => dialog.querySelector(`[data-mobile-menu-slot='${name}']`)!;
+    // the dialog's content slot supplies the grid; the body is the scroller; the
+    // footer reaches the bottom of the full-height dialog
     expect(style(slot("viewport"), "display")).toBe("grid");
-    expect(style(slot("header"), "position")).toBe("sticky");
-    expect(style(slot("footer"), "position")).toBe("sticky");
     expect(style(slot("body"), "overflow-y")).toBe("auto");
+    expect(
+      Math.abs(
+        slot("footer").getBoundingClientRect().bottom - dialog.getBoundingClientRect().bottom,
+      ),
+    ).toBeLessThan(1.5);
     dialog.close();
   });
 

@@ -23,7 +23,8 @@ const latest = (
       --items: center;
       --top: 0;
       --w: 100%;
-      --h: var(--ui-header-height);
+      --py: 3;
+      --min-h: var(--ui-header-height);
       --bg: var(--color-background);
       --border-b: 1;
       --z: 20;
@@ -191,7 +192,11 @@ const latest = (
                 data-ui='button'
                 data-button-variant='ghost'
                 aria-current={isCurrent(item.href) ? 'page' : undefined}
-                style='--justify: start; --w: 100%; --bg--current: var(--color-muted)'
+                style='
+                  --justify: start;
+                  --w: 100%;
+                  --bg--current: var(--color-muted);
+                '
               >
                 {item.label}
               </a>

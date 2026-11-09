@@ -3,7 +3,7 @@
 /* Tier-only rules: below every component, vendor, and legacy layer */
 @layer defaults {
 
-  :where([style*="--position--"]:not(:is(header, footer, section, article), :is(sub, sup), [popover], body, dialog, input[type="checkbox"]:not([role="switch"]), label:has(> input[role="switch"]), main)) {
+  :where([style*="--position--"]:not(:is(header, footer, section, article), :is(sub, sup), [popover], body, dialog, input[role="switch"], input[type="checkbox"]:not([role="switch"]), label:has(> input[role="switch"]), main)) {
     position: var(--_position-resolved, static);
   }
 

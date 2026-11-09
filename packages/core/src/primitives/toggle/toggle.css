@@ -15,6 +15,8 @@
  * @uses       text-box: vertical trim (patchy browser support)
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
+ * @uses       --_touch-min (touch screens) — the default and icon sizes grow to the touch
+ *             floor; sm and icon-sm keep their box and extend an invisible ::after hit area
  * @tokens     --ui-toggle-* (@layer variables;
  *             default to the --ui-button-* family)
  * @consumedby toggle-group.css
@@ -220,7 +222,12 @@
 
     --_min-h-len: var(--_min-h-resolved, var(--_toggle-min-h, var(--ui-toggle-min-h)));
     --_min-h-num: var(--_min-h-resolved, var(--_toggle-min-h, var(--ui-toggle-min-h)));
-    min-block-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
+    /* the touch floor: 0 on a mouse; a size that must stay small sets it to 0px */
+    --_touch-floor: var(--_touch-min);
+    min-block-size: max(
+      calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing)),
+      var(--_touch-floor)
+    );
     min-inline-size: max-content;
 
     --_px-len: var(--_px-resolved, var(--_toggle-px, var(--ui-toggle-px)));
@@ -504,11 +511,19 @@
     --_toggle-min-h: calc(var(--spacing) * 6);
     --_toggle-px: calc(var(--spacing) * 2);
     --_toggle-radius: var(--radius-sm);
+    /* dense by choice: the box stays small and ::after takes the touch floor */
+    --_touch-floor: 0px;
   }
 
   :where([data-ui~="toggle"][data-toggle-size="icon"]) {
-    block-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
-    inline-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
+    block-size: max(
+      calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing)),
+      var(--_touch-floor)
+    );
+    inline-size: max(
+      calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing)),
+      var(--_touch-floor)
+    );
     padding: 0;
     aspect-ratio: 1 / 1;
   }
@@ -519,10 +534,19 @@
     --_toggle-radius: var(--radius-sm);
     /* the hook, not a private: it must inherit to reach the icon */
     --ui-toggle-icon-size: calc(var(--spacing) * 3.5);
+    --_touch-floor: 0px;
 
     block-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
     inline-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
     padding: 0;
     aspect-ratio: 1 / 1;
+  }
+
+  /* touch: sm and icon-sm keep their box; a transparent ::after centred on the toggle
+     (already position: relative) is at least --_touch-min square */
+  :where([data-ui~="toggle"]:is([data-toggle-size="sm"], [data-toggle-size="icon-sm"]))::after {
+    content: "";
+    position: absolute;
+    inset: min(0px, calc((100% - var(--_touch-min)) / 2));
   }
 }

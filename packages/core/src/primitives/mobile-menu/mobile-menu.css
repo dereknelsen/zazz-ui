@@ -4,7 +4,9 @@
  *
  * @layer      variables, components
  * @requires   _layers.css, _variables.css, dialog.css, accordion.css
- * @uses       Composes [data-ui~="dialog"][data-dialog-size="bleed"] — fullscreen native <dialog>
+ * @uses       Composes [data-ui~="dialog"][data-dialog-size="bleed"] — fullscreen native <dialog>;
+ *             the slots carry data-dialog-slot="content | header | body | footer" beside their own,
+ *             so dialog.css owns the grid, the body scroller, and the safe-area padding
  * @uses       Invoker Commands (command="show-modal") — open without JS (markup)
  * @uses       view-transition-name — stable menu across navigations
  * @uses       @starting-style — viewport enter animation
@@ -46,7 +48,6 @@
   :where([data-ui~="mobile-menu"]) {
     /* View transitions - keeps the menu stable when navigating between pages */
     view-transition-name: global-mobile-menu;
-    inline-size: 100%;
 
     --ui-dialog-bg: var(--ui-mobile-menu-bg);
     --ui-dialog-text: var(--ui-mobile-menu-text);
@@ -58,15 +59,12 @@
     background-color: var(--ui-mobile-menu-backdrop-color);
   }
 
+  /* The dialog's content slot supplies the grid; a menu is full-screen at every width,
+     so it fills the dialog here too (the dialog does that only below the sm band) */
   :where([data-ui~="mobile-menu"]) [data-mobile-menu-slot~="viewport"] {
-    display: grid;
-    position: relative;
-    grid-template-rows: auto 1fr auto;
+    block-size: 100%;
     overflow: clip;
     align-items: start;
-    inline-size: 100%;
-    block-size: 100%;
-    max-block-size: 100svh;
     transition: var(--default-transition);
     transition-duration: var(--ui-dialog-transition-duration);
     transition-delay: calc(var(--ui-dialog-transition-duration) / 1.5);
@@ -92,31 +90,26 @@
     padding-inline: var(--ui-mobile-menu-header-px);
     padding-block: var(--ui-mobile-menu-header-py);
     border-block-end: 1px solid var(--color-border);
-    position: sticky;
-    inset-block-start: 0;
     background-color: var(--ui-mobile-menu-bg);
     z-index: 1;
   }
 
+  /* The dialog's body slot scrolls; this shapes the interior */
   :where([data-ui~="mobile-menu"]) [data-mobile-menu-slot~="body"] {
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-    overflow-x: clip;
     padding-inline: var(--ui-mobile-menu-body-px);
     padding-block: var(--ui-mobile-menu-body-py);
-    max-block-size: 100%;
     scrollbar-gutter: stable both-edges;
   }
 
   :where([data-ui~="mobile-menu"]) [data-mobile-menu-slot~="footer"] {
     display: flex;
     flex-wrap: wrap;
+    justify-content: flex-start;
     gap: var(--ui-mobile-menu-footer-gap);
     padding: var(--ui-mobile-menu-footer-p);
     border-block-start: 1px solid var(--color-border);
-    position: sticky;
-    inset-block-end: 0;
     background-color: var(--ui-mobile-menu-bg);
   }
 
@@ -147,7 +140,6 @@
     --ui-dialog-translate--start: -100%, 0, 0;
     --ui-dialog-translate--end: 0, 0, 0;
 
-    overflow: clip;
     transform-origin: left center;
   }
 

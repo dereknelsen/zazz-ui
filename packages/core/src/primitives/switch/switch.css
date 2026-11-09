@@ -4,6 +4,8 @@
  * @layer      variables, reset
  * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow), fields.css (--ui-field-* border/ring)
  * @uses       appearance: none on input[role="switch"]
+ * @uses       --_touch-min (touch screens) — the track keeps its size; an invisible ::after
+ *             on the input, centred on it, is at least the touch floor square
  * @uses       label:has(> input[role="switch"])::after — thumb drawn on label (no JS)
  * @uses       oklch(from …) — checked/hover track tints
  * @uses       corner-shape — round by default, so circles stay circles; a hook takes any shape
@@ -107,8 +109,17 @@
   }
 
   :where(input[role="switch"]) {
+    position: relative;
     appearance: none;
     flex-shrink: 0;
+
+    /* touch: the hit area, --_touch-min square at least; collapses to the track on a mouse
+       (the thumb is the label's ::after, so the input's own is free) */
+    &::after {
+      content: "";
+      position: absolute;
+      inset: min(0px, calc((100% - var(--_touch-min)) / 2));
+    }
     --_w-len: var(--_w-resolved, var(--ui-switch-track-w));
     --_w-num: var(--_w-resolved, var(--ui-switch-track-w));
     inline-size: calc(var(--_w-len) + var(--_w-num) * var(--spacing));

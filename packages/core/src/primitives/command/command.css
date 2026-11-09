@@ -5,7 +5,9 @@
  * @requires   _layers.css, _variables.css, popover.css, button.css, fields.css,
  *             dialog.css, menu.css, select.css (--ui-option-*), kbd.css (--ui-kbd-group-*)
  * @uses       popovertarget + [popover="auto"]: dropdown surface, native light dismiss
- * @uses       <dialog data-ui="dialog"> + command="show-modal": focused surface
+ * @uses       <dialog data-ui="dialog"> + command="show-modal": focused surface; its parts carry
+ *             data-dialog-slot="content | header | body | footer" beside the command slots, so
+ *             dialog.css owns layout, scrolling, and the phone's full-height model
  * @uses       anchor-name, anchor-scope, position-anchor: tether the popover form
  * @uses       :has(): group + empty-state visibility without JavaScript
  * @tokens     --ui-command-* (@layer variables); items alias --ui-option-*
@@ -44,24 +46,23 @@
   }
 
   :where(ui-command, [data-ui~="command"]) [data-command-slot~="panel"] {
-    /* flex-direction stays ungated so the close fade (display held by the
-       allow-discrete transition) keeps the column layout to the last frame */
-    flex-direction: column;
     --_min-w-len: var(--_min-w-resolved, var(--ui-command-min-w));
     --_min-w-num: var(--_min-w-resolved, var(--ui-command-min-w));
     min-inline-size: calc(var(--_min-w-len) + var(--_min-w-num) * var(--spacing));
     box-shadow: var(--ui-command-shadow);
   }
 
-  /* Only display is gated; unconditional it would defeat the UA's
-     display: none on closed popovers and dialogs */
-  :where(ui-command, [data-ui~="command"])
-    [data-command-slot~="panel"]:where(:popover-open, [open]) {
+  /* Popover form only: the dialog form keeps dialog.css's grid. Display is gated on
+     the open state (unconditional, it would defeat the UA's display: none on a
+     closed popover); flex-direction stays ungated so the close fade (display held
+     by the allow-discrete transition) keeps the column layout to the last frame */
+  :where(ui-command, [data-ui~="command"]) [data-command-slot~="panel"]:where(:popover-open) {
     display: flex;
   }
 
   :where(ui-command, [data-ui~="command"]) [data-command-slot~="panel"]:where([popover]) {
     position-anchor: --ui-command-trigger;
+    flex-direction: column;
     padding: 0;
   }
 
@@ -76,7 +77,9 @@
   /* Search input: borderless over a hairline; the panel is the surface */
   :where(ui-command, [data-ui~="command"]) [data-command-slot~="header"] {
     display: flex;
+    flex-direction: row;
     align-items: center;
+    padding: 0; /* the input carries the padding, not the dialog's header */
     border-block-end: var(--ui-command-input-border);
   }
 
@@ -101,6 +104,9 @@
     outline: none;
   }
 
+  /* The scroller in both forms. In the dialog form it is also the dialog's body slot,
+     so it inherits the scroll-fade mask, and below the sm band the dialog's
+     full-height rule lifts the cap. */
   :where(ui-command, [data-ui~="command"]) [data-command-slot~="list"] {
     display: flex;
     flex-direction: column;
@@ -110,6 +116,7 @@
     margin: 0;
     overflow-y: auto;
     overflow-x: clip;
+    overscroll-behavior: contain;
     list-style: none;
   }
 
@@ -145,6 +152,7 @@
 
   :where(ui-command, [data-ui~="command"]) [data-command-slot~="footer"] {
     display: flex;
+    justify-content: flex-start; /* hints read left to right; the dialog's footer ends */
     align-items: center;
     gap: calc(var(--spacing) * 2);
     padding: var(--ui-command-footer-p);

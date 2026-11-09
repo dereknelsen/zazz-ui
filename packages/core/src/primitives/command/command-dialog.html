@@ -21,117 +21,119 @@
     <ui-kbd-group><kbd>⌘</kbd><kbd>⇧</kbd><kbd>K</kbd></ui-kbd-group>
   </button>
   <dialog id="command-example-dialog-1" data-ui="dialog" data-command-slot="panel" closedby="any">
-    <header data-command-slot="header">
-      <input
-        data-command-slot="input"
-        name="search"
-        type="text"
-        placeholder="Type a command or search..."
-        role="combobox"
-        aria-expanded="false"
-        aria-autocomplete="list"
-        autocomplete="off"
-        aria-label="Search commands"
-      />
-      <button
-        data-ui="button"
-        data-button-variant="ghost"
-        data-button-size="icon"
-        type="button"
-        command="close"
-        commandfor="command-example-dialog-1"
-        aria-label="Close"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-          <rect width="256" height="256" fill="none" />
-          <line
-            x1="200"
-            y1="56"
-            x2="56"
-            y2="200"
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="16"
-          />
-          <line
-            x1="200"
-            y1="200"
-            x2="56"
-            y2="56"
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="16"
-          />
-        </svg>
-      </button>
-    </header>
-    <div role="listbox" data-command-slot="list" aria-label="Commands">
-      <div role="group" data-command-slot="group" aria-labelledby="command-example-dialog-1-nav">
-        <span
-          data-command-slot="group-label"
-          id="command-example-dialog-1-nav"
-          style="
-            --display: inline-flex;
-            --font-size: var(--font-size-eyebrow);
-            --font-weight: strong;
-            --font-weight: var(--font-weight-eyebrow);
-            --leading: var(--leading-eyebrow);
-            --tracking: var(--tracking-eyebrow);
-            --text-transform: uppercase;
-            --text: var(--color-muted-foreground);
-          "
-          >Navigation</span
-        >
-        <a
-          role="option"
-          data-command-slot="item"
+    <div data-dialog-slot="content">
+      <header data-command-slot="header" data-dialog-slot="header">
+        <input
+          data-command-slot="input"
+          name="search"
+          type="text"
+          placeholder="Type a command or search..."
+          role="combobox"
+          aria-expanded="false"
+          aria-autocomplete="list"
+          autocomplete="off"
+          aria-label="Search commands"
+        />
+        <button
           data-ui="button"
           data-button-variant="ghost"
-          href="#home"
-          tabindex="-1"
-          style="--justify: start"
+          data-button-size="icon"
+          type="button"
+          command="close"
+          commandfor="command-example-dialog-1"
+          aria-label="Close"
         >
-          Go home
-        </a>
-        <a
-          role="option"
-          data-command-slot="item"
-          data-ui="button"
-          data-button-variant="ghost"
-          href="#projects"
-          tabindex="-1"
-          data-command-keywords="work portfolio"
-          style="--justify: start"
-        >
-          Go to projects
-        </a>
-        <a
-          role="option"
-          data-command-slot="item"
-          data-ui="button"
-          data-button-variant="ghost"
-          href="#team"
-          tabindex="-1"
-          data-command-keywords="people members"
-          style="--justify: start"
-        >
-          Go to team
-        </a>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+            <rect width="256" height="256" fill="none" />
+            <line
+              x1="200"
+              y1="56"
+              x2="56"
+              y2="200"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="16"
+            />
+            <line
+              x1="200"
+              y1="200"
+              x2="56"
+              y2="56"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="16"
+            />
+          </svg>
+        </button>
+      </header>
+      <div role="listbox" data-command-slot="list" data-dialog-slot="body" aria-label="Commands">
+        <div role="group" data-command-slot="group" aria-labelledby="command-example-dialog-1-nav">
+          <span
+            data-command-slot="group-label"
+            id="command-example-dialog-1-nav"
+            style="
+              --display: inline-flex;
+              --font-size: var(--font-size-eyebrow);
+              --font-weight: strong;
+              --font-weight: var(--font-weight-eyebrow);
+              --leading: var(--leading-eyebrow);
+              --tracking: var(--tracking-eyebrow);
+              --text-transform: uppercase;
+              --text: var(--color-muted-foreground);
+            "
+            >Navigation</span
+          >
+          <a
+            role="option"
+            data-command-slot="item"
+            data-ui="button"
+            data-button-variant="ghost"
+            href="#home"
+            tabindex="-1"
+            style="--justify: start"
+          >
+            Go home
+          </a>
+          <a
+            role="option"
+            data-command-slot="item"
+            data-ui="button"
+            data-button-variant="ghost"
+            href="#projects"
+            tabindex="-1"
+            data-command-keywords="work portfolio"
+            style="--justify: start"
+          >
+            Go to projects
+          </a>
+          <a
+            role="option"
+            data-command-slot="item"
+            data-ui="button"
+            data-button-variant="ghost"
+            href="#team"
+            tabindex="-1"
+            data-command-keywords="people members"
+            style="--justify: start"
+          >
+            Go to team
+          </a>
+        </div>
       </div>
+      <p data-command-slot="empty" style="--text: var(--color-muted-foreground)">
+        No commands found.
+      </p>
+      <footer data-command-slot="footer" data-dialog-slot="footer">
+        <span
+          ><ui-kbd-group><kbd>↑</kbd><kbd>↓</kbd></ui-kbd-group> navigate</span
+        >
+        <span><kbd>↵</kbd> select</span>
+        <span><kbd>esc</kbd> close</span>
+      </footer>
     </div>
-    <p data-command-slot="empty" style="--text: var(--color-muted-foreground)">
-      No commands found.
-    </p>
-    <footer data-command-slot="footer">
-      <span
-        ><ui-kbd-group><kbd>↑</kbd><kbd>↓</kbd></ui-kbd-group> navigate</span
-      >
-      <span><kbd>↵</kbd> select</span>
-      <span><kbd>esc</kbd> close</span>
-    </footer>
   </dialog>
 </ui-command>

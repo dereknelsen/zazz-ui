@@ -13,6 +13,7 @@
  * @uses       ui-multiselect (multiselect.ts): JS-projected dropdown for
  *             <select multiple> (base-select has no stable multi-select);
  *             degrades to the native multi listbox without JS
+ * @uses       --_touch-min (touch screens) — the trigger and every option row grow to the touch floor
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
  * @tokens     --ui-select-* (@layer variables); picker panel reuses --ui-popover-* (owned in popover.css)
@@ -170,7 +171,7 @@
     min-inline-size: calc(var(--_min-w-len) + var(--_min-w-num) * var(--spacing));
     --_h-len: var(--_h-resolved, var(--ui-field-h));
     --_h-num: var(--_h-resolved, var(--ui-field-h));
-    block-size: calc(var(--_h-len) + var(--_h-num) * var(--spacing));
+    block-size: max(calc(var(--_h-len) + var(--_h-num) * var(--spacing)), var(--_touch-min));
     --_pl-len: var(--_pl-resolved, var(--ui-select-pl));
     --_pl-num: var(--_pl-resolved, var(--ui-select-pl));
     padding-inline-start: calc(var(--_pl-len) + var(--_pl-num) * var(--spacing));
@@ -316,7 +317,7 @@
     display: flex;
     align-items: center;
     gap: var(--ui-option-gap);
-    min-block-size: var(--ui-option-min-h);
+    min-block-size: max(var(--ui-option-min-h), var(--_touch-min));
     padding-inline: var(--ui-option-px);
 
     font-family: var(--ui-option-font-family);
@@ -446,7 +447,7 @@
     display: flex;
     align-items: center;
     gap: var(--ui-option-gap);
-    min-block-size: var(--ui-option-min-h);
+    min-block-size: max(var(--ui-option-min-h), var(--_touch-min));
     padding-inline: var(--ui-option-px);
 
     font-family: var(--ui-option-font-family);

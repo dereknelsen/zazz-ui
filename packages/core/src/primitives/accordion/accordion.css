@@ -5,6 +5,7 @@
  * @layer      variables, reset, components
  * @requires   _layers.css, _variables.css, _properties.css (--_focus-shadow)
  * @uses       ::details-content: native open/close block-size transition (reset layer)
+ * @uses       --_touch-min (touch screens): the summary row grows to the touch floor
  * @uses       interpolate-size: allow-keywords (from _variables.css; required for
  *             block-size: 0 -> auto transitions)
  * @tokens     --ui-accordion-* (@layer variables; none backs a utility)
@@ -64,6 +65,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    /* the padding sits on <details>, so on touch the row itself takes the floor */
+    min-block-size: var(--_touch-min);
 
     /* The ring is published to --_focus-shadow so a --shadow utility on the
        summary keeps it; the ring widths grow from 0 so the ring eases in. */

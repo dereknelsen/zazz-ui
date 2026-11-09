@@ -333,7 +333,7 @@
   :where(ui-lightbox, [data-ui~="lightbox"]) [data-lightbox-slot~="dialog"] {
     --ui-lightbox-thumb-radius: var(--radius-sm);
     --ui-dialog-bg: transparent;
-    --ui-dialog-border: none;
+    --ui-dialog-border-width: 0;
 
     overflow: clip;
     pointer-events: none;
@@ -352,8 +352,8 @@
     [data-lightbox-slot~="dialog"]
     [data-dialog-slot~="content"] {
     grid-template-rows: 1fr;
-    max-block-size: 100svh;
-    block-size: 100svh;
+    max-block-size: 100%;
+    block-size: 100%;
     overflow: clip;
   }
 
@@ -363,7 +363,7 @@
     display: grid;
     grid-template-rows: 1fr auto;
     block-size: 100%;
-    max-block-size: 100svh;
+    max-block-size: 100%;
   }
 
   :where(ui-lightbox, [data-ui~="lightbox"])

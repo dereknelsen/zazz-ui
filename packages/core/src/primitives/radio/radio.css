@@ -4,6 +4,8 @@
  * @layer      variables, components
  * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow), fields.css (field-group layout, --ui-field-* surface/border)
  * @uses       appearance: none — custom circle + masked ::before dot when :checked
+ * @uses       --_touch-min (touch screens) — the circle keeps its size; an invisible ::after
+ *             centred on it is at least the touch floor square
  * @uses       corner-shape — round by default, so circles stay circles; a hook takes any shape
  * @tokens     --ui-radio-* (@layer variables)
  */
@@ -21,7 +23,7 @@
     --ui-radio-border-color--checked: var(--color-primary);
     --ui-radio-radius: var(--radius-full);
     --ui-radio-corner-shape: round;
-    --ui-radio-dot-size: 1em;
+    --ui-radio-dot-size: 1.125em;
     --ui-radio-dot-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' fill='currentColor' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3C/svg%3E")
       center / contain no-repeat;
   }
@@ -45,6 +47,14 @@
     block-size: calc(var(--_size-len) + var(--_size-num) * var(--spacing));
 
     background-color: var(--_bg-resolved, var(--ui-radio-bg));
+
+    /* touch: the hit area, --_touch-min square at least; collapses to the box on a mouse */
+    &::after {
+      content: "";
+      position: absolute;
+      inset: min(0px, calc((100% - var(--_touch-min)) / 2));
+    }
+
     border-width: var(--_border-width-resolved, var(--ui-radio-border-width));
     border-style: var(--_border-style-resolved, var(--ui-radio-border-style));
     border-color: var(--_border-color-resolved, var(--ui-radio-border-color));
@@ -58,7 +68,7 @@
     /* centres the ::before dot */
     display: inline-grid;
     place-items: center;
-    background-clip: padding-box;
+    background-clip: border-box;
 
     cursor: pointer;
 

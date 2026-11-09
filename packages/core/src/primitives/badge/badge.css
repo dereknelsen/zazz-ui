@@ -5,6 +5,8 @@
  * @requires   _layers.css, _variables.css, _reset.css, _properties.css (--_*-resolved, --_focus-shadow), fields.css (--ui-field-* border/ring)
  * @uses       color-mix(), oklch(from …): variant hover/active tints
  * @uses       text-box: vertical trim (patchy browser support)
+ * @uses       --_touch-min (touch screens): an interactive badge keeps its size and extends an
+ *             invisible ::after hit area to the touch floor
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
  * @tokens     --ui-badge-* (@layer variables; hooks are named after the utilities they back)
@@ -280,6 +282,18 @@
   /* ===========================================================================
   BADGE STATES — interactive badges only (button, a[href])
   =========================================================================== */
+
+  /* touch: the badge keeps its box; a transparent ::after centred on it is at least
+     --_touch-min square (it collapses to the box on a mouse) */
+  :where([data-ui~="badge"]):is(button, a[href]) {
+    position: relative;
+  }
+
+  :where([data-ui~="badge"]:is(button, a[href]))::after {
+    content: "";
+    position: absolute;
+    inset: min(0px, calc((100% - var(--_touch-min)) / 2));
+  }
 
   @media (hover: hover) {
     :where([data-ui~="badge"]):is(button, a[href]):hover:not(:disabled, [aria-disabled="true"]) {

@@ -7,6 +7,7 @@
  *             stamped cell rail with transparent text/caret so autofill,
  *             paste, and focus stay native; never display:none
  * @uses       :focus-within: active-cell ring only while the input has focus
+ * @uses       --_touch-min (touch screens): each cell grows to the touch floor
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
  * @tokens     --ui-otp-* (@layer variables; aliases --ui-field-*)
@@ -78,8 +79,8 @@
   :where(ui-otp, [data-ui~="otp"]) [data-otp-slot~="cell"] {
     display: grid;
     place-items: center;
-    inline-size: var(--ui-otp-cell-w);
-    block-size: var(--ui-otp-cell-h);
+    inline-size: max(var(--ui-otp-cell-w), var(--_touch-min));
+    block-size: max(var(--ui-otp-cell-h), var(--_touch-min));
 
     font-family: var(--font-family-mono);
     font-size: var(--ui-otp-cell-font-size);

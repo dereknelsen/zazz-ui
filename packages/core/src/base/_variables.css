@@ -8,8 +8,10 @@
  * @uses       oklch(from …) — shade/tint scales and shadow alphas
  * @uses       color-mix() — focus ring (--color-ring)
  * @uses       interpolate-size: allow-keywords — discrete block-size animations (details, etc.)
+ * @uses       @media (not (hover: hover)) — --_touch-min carries --spacing-touch-min (44px) to
+ *             the primitives on touch screens and loosens --spacing-min; 0px on a mouse
  * @tokens     Global token tiers (the root override hooks) — Theme roles, brand
- *             scales (50–950), grayscale/shade/tint, typography, spacing, radius,
+ *             scales (50–950), grayscale/shade/tint, typography, spacing (incl. the touch floor), radius,
  *             layout, effects, animations. Sized families run 2xs–2xl. Re-declare any of these to re-skin the
  *             whole system; see CONVENTIONS.styles.md.
  */
@@ -330,9 +332,19 @@
     * Spacing — the --spacing unit and the --space-* scale
     * ========================================================================== */
 
+    /* touch targets — the minimum tappable box on a touch screen (WCAG 2.5.8 AA is 24px;
+       Apple's 44pt is the AAA figure). Primitives read --_touch-min, which is 0 unless the
+       primary pointer cannot hover (a touch screen), so mouse layouts keep their sizes.
+       Visible controls (buttons, fields, tabs) grow to it; small indicators (checkbox,
+       radio, switch) extend an invisible ::after hit area instead; and --spacing-min takes
+       a tenth of it (below), so padding loosens with the floor. 0px opts out of all three. */
+    --spacing-touch-min: 44px;
+    --_touch-min: 0px;
+
     /* the utility scale unit: `--p: 4` is 4 × --spacing. Fluid between its
        min and max across the fluid range (--fluid comes from _typography.css);
-       set them equal, or pin `:root { --spacing: 0.25rem }`, for a fixed scale. */
+       set them equal, or pin `:root { --spacing: 0.25rem }`, for a fixed scale.
+       On a touch screen the floor adds a tenth of itself (the media block below). */
     --spacing-min: 0.225rem;
     --spacing-max: 0.25rem;
     --spacing: calc(var(--spacing-min) + var(--fluid) * (var(--spacing-max) - var(--spacing-min)));
@@ -371,7 +383,7 @@
     * ========================================================================== */
 
     /* semantic */
-    --gutters: var(--space-md);
+    --gutters: var(--space-sm);
 
     /* --layout-* tokens are generated into _breakpoints.css; breakpoint
        tiers query the nearest inline-size container (_utilities-tier-*.css). */
@@ -563,6 +575,19 @@
 
       /* `--animation` reads this first, so reduced motion stops any value */
       --_motion-off: none;
+    }
+  }
+
+  /* a primary pointer that cannot hover is a touch screen (the dialog's phone query uses
+     the same test): every primitive's touch floor turns on, and the spacing floor takes a
+     tenth of it spread over an 8-step control (44px makes a phone step 3.6px -> 4.15px, so
+     button and field padding grow with the floor, not just their height). The literal
+     repeats the declaration above: a var() would be a cycle, and the editor data reads
+     the first declaration for the fluid range. */
+  @media (not (hover: hover)) {
+    :root {
+      --_touch-min: var(--spacing-touch-min);
+      --spacing-min: calc(0.225rem + var(--spacing-touch-min) / 80);
     }
   }
 

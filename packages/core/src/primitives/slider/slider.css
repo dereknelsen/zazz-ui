@@ -4,6 +4,8 @@
  * @layer      variables, reset
  * @requires   _layers.css, _variables.css
  * @uses       appearance: none — redraws track + thumb from theme tokens
+ * @uses       --_touch-min (touch screens) — the transparent input grows to the touch
+ *             floor; the track stays --ui-slider-track-h and the thumb centred on it
  * @uses       corner-shape — round by default, so circles stay circles; a hook takes any shape
  * @tokens     --ui-slider-* (@layer variables, on :root so subtree hooks work)
  *
@@ -39,6 +41,7 @@
     -webkit-appearance: none;
     appearance: none;
     inline-size: 100%;
+    min-block-size: var(--_touch-min);
     background: transparent;
     cursor: grab;
     border-radius: var(--ui-slider-track-radius);

@@ -4,6 +4,8 @@
  * @layer      variables, reset
  * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow), fields.css (--ui-field-* background/border)
  * @uses       appearance: none — redraws the native control from theme tokens
+ * @uses       --_touch-min (touch screens) — the box keeps its size; an invisible ::after
+ *             centred on it is at least the touch floor square
  * @uses       checked/indeterminate fill with --primary and layer a glyph (never color alone)
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
@@ -48,6 +50,13 @@
     block-size: calc(var(--_size-len) + var(--_size-num) * var(--spacing));
 
     background-color: var(--_bg-resolved, var(--ui-checkbox-bg));
+
+    /* touch: the hit area, --_touch-min square at least; collapses to the box on a mouse */
+    &::after {
+      content: "";
+      position: absolute;
+      inset: min(0px, calc((100% - var(--_touch-min)) / 2));
+    }
     border-width: var(--_border-width-resolved, var(--ui-checkbox-border-width));
     border-style: var(--_border-style-resolved, var(--ui-checkbox-border-style));
     border-color: var(--_border-color-resolved, var(--ui-checkbox-border-color));

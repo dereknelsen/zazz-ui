@@ -53,7 +53,8 @@ import { Search as SearchIcon, X } from "@lucide/astro";
     data-command-slot="panel"
     closedby="any"
   >
-    <header data-command-slot="header">
+    <div data-dialog-slot="content">
+    <header data-command-slot="header" data-dialog-slot="header">
       <input
         data-command-slot="input"
         type="text"
@@ -81,6 +82,7 @@ import { Search as SearchIcon, X } from "@lucide/astro";
     <div
       role="listbox"
       data-command-slot="list"
+      data-dialog-slot="body"
       aria-label="Results"
       data-search-results
       style="--min-h: 60; --position: relative;"
@@ -102,12 +104,13 @@ import { Search as SearchIcon, X } from "@lucide/astro";
         Type to search the docs, API, and blog.
       </p>
     </div>
-    <footer data-command-slot="footer">
+    <footer data-command-slot="footer" data-dialog-slot="footer">
       <span><ui-kbd-group><kbd>↑</kbd><kbd>↓</kbd></ui-kbd-group> navigate</span
       >
       <span><kbd>↵</kbd> open</span>
       <span><kbd>esc</kbd> close</span>
     </footer>
+    </div>
   </dialog>
 </ui-command>
 

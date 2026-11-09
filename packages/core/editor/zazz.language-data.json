@@ -261,6 +261,7 @@
         ],
         "uses": [
           "::details-content: native open/close block-size transition (reset layer)",
+          "--_touch-min (touch screens): the summary row grows to the touch floor",
           "interpolate-size: allow-keywords (from _variables.css; required for block-size: 0 -> auto transitions)"
         ],
         "tokens": [
@@ -325,6 +326,7 @@
         "uses": [
           "color-mix(), oklch(from …): variant hover/active tints",
           "text-box: vertical trim (patchy browser support)",
+          "--_touch-min (touch screens): an interactive badge keeps its size and extends an invisible ::after hit area to the touch floor",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
         ],
         "tokens": [
@@ -367,7 +369,8 @@
         "uses": [
           "color-mix(), oklch(from …) — variant hover/active tints",
           "text-box — vertical trim (patchy browser support)",
-          "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
+          "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners",
+          "--_touch-min (touch screens) — the default and icon sizes grow to the touch floor; sm and icon-sm keep their box and extend an invisible ::after hit area"
         ],
         "tokens": [
           "--ui-button-* (@layer variables; hooks are named after the utilities they back; metrics default to the --ui-field-* family)"
@@ -454,6 +457,7 @@
         ],
         "uses": [
           "appearance: none — redraws the native control from theme tokens",
+          "--_touch-min (touch screens) — the box keeps its size; an invisible ::after centred on it is at least the touch floor square",
           "checked/indeterminate fill with --primary and layer a glyph (never color alone)",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
         ],
@@ -476,6 +480,7 @@
         ],
         "uses": [
           "[popover=\"manual\"]: panel opened/closed by combobox.ts",
+          "--_touch-min (touch screens): the control grows to the touch floor; tag-remove keeps its box and extends an invisible ::after hit area (the trigger needs none: the whole control is one hit target)",
           "anchor-name, anchor-scope, position-anchor: tether panel to the control",
           "anchor-size(width): match panel width to the control (Baseline 2026)",
           ":has(): chevron rotation, group + empty-state visibility",
@@ -503,7 +508,7 @@
         ],
         "uses": [
           "popovertarget + [popover=\"auto\"]: dropdown surface, native light dismiss",
-          "<dialog data-ui=\"dialog\"> + command=\"show-modal\": focused surface",
+          "<dialog data-ui=\"dialog\"> + command=\"show-modal\": focused surface; its parts carry data-dialog-slot=\"content | header | body | footer\" beside the command slots, so dialog.css owns layout, scrolling, and the phone's full-height model",
           "anchor-name, anchor-scope, position-anchor: tether the popover form",
           ":has(): group + empty-state visibility without JavaScript"
         ],
@@ -529,9 +534,9 @@
           ":root:has(dialog:modal) — overflow: hidden + scrollbar-gutter: stable while a modal is open (WebKit ignores overscroll-behavior on boxes that do not overflow)",
           "@starting-style + allow-discrete — open/close opacity, transform, overlay",
           "anchor-name, container-type — layout hooks for sized variants",
-          "@supports (-webkit-touch-callout: none) — iOS-only: body is a fixed box at its recorded scroll offset while a modal is open, since iOS scrolls the document behind a modal under the keyboard whatever the root's overflow",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners",
-          "@media (width < 40rem) + @container style(--ui-dialog-mobile-size) — below the sm band every dialog takes the hook's size (layout-bleed by default) over its preset; style queries are Firefox 151+, Chrome 111+, Safari 18+, an older engine keeps the preset"
+          "@media (width < 40rem) and (not (hover: hover)) + @container style(--ui-dialog-mobile-size) — below the sm band on a touch screen every dialog takes the hook's size (layout-bleed by default) over its preset; a narrow window with a mouse keeps the preset; style queries are Firefox 151+, Chrome 111+, Safari 18+, an older engine keeps the preset",
+          "env(safe-area-inset-bottom) — the full-height content slot clears the home indicator"
         ],
         "tokens": [
           "--ui-dialog-* (@layer variables; --ui-dialog-h defaults to a keyword, so the hook is read raw and takes a length or keyword; a --h utility or tier takes a scale number or a length; a keyword tier needs a base --h, or it renders as auto)"
@@ -540,7 +545,7 @@
           "data-dialog-size=\"sm | md | lg | xl | 2xl | full | bleed\" (the layout bands; sm when absent)"
         ],
         "consumedby": [
-          "alert-dialog.css, mobile-menu.css"
+          "alert-dialog.css, command.css, lightbox.css, mobile-menu.css"
         ]
       }
     },
@@ -590,6 +595,7 @@
         ],
         "uses": [
           ":focus-within — lifts shell ring/border as one field",
+          "--_touch-min (touch screens) — the shell and its addons grow to the touch floor",
           ":has() — restore padding when addons absent; invalid text color",
           "data-input-group-align on the addon slot — inline-start/end, block-start/end",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
@@ -615,7 +621,8 @@
           "::-webkit-calendar-picker-indicator — date/time picker chrome (WebKit)",
           "mask — calendar icon (not background-image, for color: currentColor)",
           "@supports (-webkit-touch-callout: none) — iOS-only width fix for temporal inputs (webkit.org/b/301648)",
-          "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
+          "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners",
+          "--_touch-min (touch screens) — the field grows to the touch floor"
         ],
         "tokens": [
           "--ui-input-* (@layer variables; surface colors and height read the --ui-field-* family directly)"
@@ -742,7 +749,7 @@
           "_layers.css, _variables.css, dialog.css, accordion.css"
         ],
         "uses": [
-          "Composes [data-ui~=\"dialog\"][data-dialog-size=\"bleed\"] — fullscreen native <dialog>",
+          "Composes [data-ui~=\"dialog\"][data-dialog-size=\"bleed\"] — fullscreen native <dialog>; the slots carry data-dialog-slot=\"content | header | body | footer\" beside their own, so dialog.css owns the grid, the body scroller, and the safe-area padding",
           "Invoker Commands (command=\"show-modal\") — open without JS (markup)",
           "view-transition-name — stable menu across navigations",
           "@starting-style — viewport enter animation",
@@ -793,6 +800,7 @@
         "uses": [
           "Invisible-overlay input: the real input stretches over the stamped cell rail with transparent text/caret so autofill, paste, and focus stay native; never display:none",
           ":focus-within: active-cell ring only while the input has focus",
+          "--_touch-min (touch screens): each cell grows to the touch floor",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
         ],
         "tokens": [
@@ -814,6 +822,7 @@
         ],
         "uses": [
           ":focus-within, :has: shell focus ring and padding (as input-group.css)",
+          "--_touch-min (touch screens): the shell and its addons grow to the touch floor",
           "aria-pressed on toggle — show/hide icon swap via CSS (JS sets type + aria in password-group.ts)",
           "Native reveal suppressed in _reset.css (::-ms-reveal, etc.)",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
@@ -883,6 +892,7 @@
         ],
         "uses": [
           "appearance: none — custom circle + masked ::before dot when :checked",
+          "--_touch-min (touch screens) — the circle keeps its size; an invisible ::after centred on it is at least the touch floor square",
           "corner-shape — round by default, so circles stay circles; a hook takes any shape"
         ],
         "tokens": [
@@ -950,6 +960,7 @@
           "position-area, position-try-fallbacks: placement tokens come from popover.css's shared matrix (@supports gated)",
           "Degrades to native OS dropdown where base-select is unsupported",
           "ui-multiselect (multiselect.ts): JS-projected dropdown for <select multiple> (base-select has no stable multi-select); degrades to the native multi listbox without JS",
+          "--_touch-min (touch screens) — the trigger and every option row grow to the touch floor",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
         ],
         "tokens": [
@@ -989,6 +1000,7 @@
         ],
         "uses": [
           "appearance: none — redraws track + thumb from theme tokens",
+          "--_touch-min (touch screens) — the transparent input grows to the touch floor; the track stays --ui-slider-track-h and the thumb centred on it",
           "corner-shape — round by default, so circles stay circles; a hook takes any shape"
         ],
         "tokens": [
@@ -1007,6 +1019,7 @@
         ],
         "uses": [
           "appearance: none on input[role=\"switch\"]",
+          "--_touch-min (touch screens) — the track keeps its size; an invisible ::after on the input, centred on it, is at least the touch floor square",
           "label:has(> input[role=\"switch\"])::after — thumb drawn on label (no JS)",
           "oklch(from …) — checked/hover track tints",
           "corner-shape — round by default, so circles stay circles; a hook takes any shape"
@@ -1047,6 +1060,7 @@
           "anchor-name, position-anchor, anchor() — sliding indicator pill (@supports gated; checked-label fallback paints card fill without pill)",
           "anchor-scope — isolates --active-tab inside nested menus",
           "text-box, color-mix() — label trim and focus ring",
+          "--_touch-min (touch screens) — labels grow to the touch floor",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
         ],
         "tokens": [
@@ -1126,7 +1140,8 @@
           ":has(): drive label state from the nested input (checked/focus/disabled)",
           "oklch(from …): variant hover/active tints (inherited from --ui-button-*)",
           "text-box: vertical trim (patchy browser support)",
-          "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
+          "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners",
+          "--_touch-min (touch screens) — the default and icon sizes grow to the touch floor; sm and icon-sm keep their box and extend an invisible ::after hit area"
         ],
         "tokens": [
           "--ui-toggle-* (@layer variables; default to the --ui-button-* family)"
@@ -1734,10 +1749,6 @@
     "--ui-dialog-bg": {
       "value": "var(--color-card)",
       "file": "primitives/dialog/dialog.css"
-    },
-    "--ui-dialog-border": {
-      "value": "none",
-      "file": "primitives/lightbox/lightbox.css"
     },
     "--ui-dialog-border-color": {
       "value": "var(--color-border)",
@@ -2836,7 +2847,7 @@
       "file": "primitives/radio/radio.css"
     },
     "--ui-radio-dot-size": {
-      "value": "1em",
+      "value": "1.125em",
       "file": "primitives/radio/radio.css"
     },
     "--ui-radio-radius": {
@@ -4842,10 +4853,10 @@
       "dark": "500"
     },
     "--gutters": {
-      "value": "var(--space-md)",
+      "value": "var(--space-sm)",
       "file": "base/_variables.css",
-      "min": "1.35rem",
-      "max": "1.5rem"
+      "min": "0.9rem",
+      "max": "1rem"
     },
     "--layout-2xl": {
       "value": "96rem",
@@ -5294,6 +5305,12 @@
       "file": "base/_variables.css",
       "light": "0.225rem",
       "dark": "0.225rem"
+    },
+    "--spacing-touch-min": {
+      "value": "44px",
+      "file": "base/_variables.css",
+      "light": "44px",
+      "dark": "44px"
     },
     "--spin": {
       "value": "spin 1s linear infinite",

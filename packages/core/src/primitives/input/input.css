@@ -9,6 +9,7 @@
  *             inputs (webkit.org/b/301648)
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
+ * @uses       --_touch-min (touch screens) — the field grows to the touch floor
  * @tokens     --ui-input-* (@layer variables; surface colors and height read the
  *             --ui-field-* family directly)
  */
@@ -55,7 +56,7 @@
     min-inline-size: calc(var(--_min-w-len) + var(--_min-w-num) * var(--spacing));
     --_h-len: var(--_h-resolved, var(--ui-field-h));
     --_h-num: var(--_h-resolved, var(--ui-field-h));
-    block-size: calc(var(--_h-len) + var(--_h-num) * var(--spacing));
+    block-size: max(calc(var(--_h-len) + var(--_h-num) * var(--spacing)), var(--_touch-min));
     --_pl-len: var(--_pl-resolved, var(--ui-input-pl));
     --_pl-num: var(--_pl-resolved, var(--ui-input-pl));
     padding-inline-start: calc(var(--_pl-len) + var(--_pl-num) * var(--spacing));

@@ -49,19 +49,19 @@
         dialog by clicking outside the dialog or pressing the Escape key.
       </p>
     </div>
+    <footer data-dialog-slot="footer">
+      <button data-ui="button" type="button" commandfor="alert-dialog-example-1" command="close">
+        Cancel
+      </button>
+      <button
+        data-ui="button"
+        data-button-variant="destructive"
+        type="button"
+        commandfor="alert-dialog-example-1"
+        command="close"
+      >
+        Delete account
+      </button>
+    </footer>
   </div>
-  <footer data-dialog-slot="footer">
-    <button data-ui="button" type="button" commandfor="alert-dialog-example-1" command="close">
-      Cancel
-    </button>
-    <button
-      data-ui="button"
-      data-button-variant="destructive"
-      type="button"
-      commandfor="alert-dialog-example-1"
-      command="close"
-    >
-      Delete account
-    </button>
-  </footer>
 </dialog>

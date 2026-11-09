@@ -7,6 +7,9 @@
  *             select.css (--ui-option-*, --ui-select-picker-icon-*),
  *             menu.css (--ui-menu-shadow)
  * @uses       [popover="manual"]: panel opened/closed by combobox.ts
+ * @uses       --_touch-min (touch screens): the control grows to the touch floor; tag-remove
+ *             keeps its box and extends an invisible ::after hit area (the trigger needs none:
+ *             the whole control is one hit target)
  * @uses       anchor-name, anchor-scope, position-anchor: tether panel to the control
  * @uses       anchor-size(width): match panel width to the control (Baseline 2026)
  * @uses       :has(): chevron rotation, group + empty-state visibility
@@ -104,7 +107,10 @@
     block-size: calc(var(--_h-len) + var(--_h-num) * var(--spacing));
     --_min-h-len: var(--_min-h-resolved, var(--ui-combobox-control-min-h));
     --_min-h-num: var(--_min-h-resolved, var(--ui-combobox-control-min-h));
-    min-block-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
+    min-block-size: max(
+      calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing)),
+      var(--_touch-min)
+    );
     --_py-len: var(--_py-resolved, var(--ui-combobox-control-py));
     --_py-num: var(--_py-resolved, var(--ui-combobox-control-py));
     padding-block: calc(var(--_py-len) + var(--_py-num) * var(--spacing));
@@ -320,6 +326,7 @@
   }
 
   :where(ui-combobox, [data-ui~="combobox"]) [data-combobox-slot~="tag-remove"] {
+    position: relative;
     display: grid;
     place-items: center;
     flex-shrink: 0;
@@ -330,6 +337,15 @@
     opacity: var(--ui-combobox-tag-remove-opacity);
     cursor: pointer;
     transition: var(--default-transition);
+  }
+
+  /* touch: the remove glyph is ~12px; ::after extends its hit area to the touch floor
+     block-wise and to 24px (WCAG 2.5.8) inline, so the tag's own text stays tappable */
+  :where(ui-combobox, [data-ui~="combobox"]) [data-combobox-slot~="tag-remove"]::after {
+    content: "";
+    position: absolute;
+    inset-block: min(0px, calc((100% - var(--_touch-min)) / 2));
+    inset-inline: min(0px, calc((100% - min(24px, var(--_touch-min))) / 2));
   }
 
   :where(ui-combobox, [data-ui~="combobox"]) [data-combobox-slot~="tag-remove"]::before {
