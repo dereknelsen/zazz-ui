@@ -10,6 +10,8 @@
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
  * @uses       :dir(rtl): inline-side origins and slide-in mirror; the arrow uses logical insets
+ * @uses       @media not (hover: hover) — hidden on touch screens (no hover to show it, and a
+ *             tap would cover the trigger's own action); keep essential text visible
  * @tokens     --ui-tooltip-* (@layer variables; read on the content slot)
  */
 

@@ -1165,7 +1165,8 @@
           "data-tooltip-slot=\"content\": hint popover (light dismiss, auto-hides sibling hints)",
           "anchor-name, position-anchor, position-area, position-try-fallbacks: explicit anchors for polyfill; data-popover-side maps to --ui-popover-position-*",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners",
-          ":dir(rtl): inline-side origins and slide-in mirror; the arrow uses logical insets"
+          ":dir(rtl): inline-side origins and slide-in mirror; the arrow uses logical insets",
+          "@media not (hover: hover) — hidden on touch screens (no hover to show it, and a tap would cover the trigger's own action); keep essential text visible"
         ],
         "tokens": [
           "--ui-tooltip-* (@layer variables; read on the content slot)"

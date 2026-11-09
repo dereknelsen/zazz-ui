@@ -1,0 +1,54 @@
+---
+title: "Zazz 0.11 alpha"
+description: "Zazz 0.11 alpha gives every control a 44px touch target on phones, makes phone dialogs truly full screen, and mirrors popovers and tooltips in right-to-left pages."
+date: 2026-11-09
+draft: true
+tags: ["release"]
+---
+
+**Zazz 0.11 alpha is a phone release. Every interactive primitive meets a 44px touch target on a touch screen, dialogs on a phone fill the screen with a footer that stays put, and popovers, tooltips, and menus mirror correctly in right-to-left pages. Two changes are breaking: the mobile menu needs the dialog's slots, and `--ui-dialog-border` is split in three.**
+
+## Touch targets
+
+The kit's controls were sized for a mouse. A 16px checkbox is fine under a cursor and easy to miss with a thumb.
+
+`--spacing-touch-min` is the new floor: 44px, the size WCAG's AAA target rule and Apple's guidelines both ask for. It only turns on when the primary pointer can't hover (`@media (not (hover: hover))`), so a desktop layout doesn't move by a pixel.
+
+What it does depends on the control:
+
+- Buttons, toggles, inputs, selects and their options, the combobox, OTP cells, tabs, accordion summaries, and the range input grow to 44px.
+- Checkboxes, radios, switches, clickable badges, and `sm` buttons and toggles keep their size. Each one gets an invisible hit area around it instead, so the visual design stays the same and the tap still lands.
+- The spacing unit grows a little too (a phone step goes from 3.6px to 4.15px), so padding loosens along with the controls instead of everything looking crammed into taller boxes.
+
+You shouldn't need to pad anything by hand for mobile anymore. If you'd rather handle it yourself, `:root { --spacing-touch-min: 0px }` turns all of it off.
+
+## Phone dialogs
+
+0.8 made dialogs full screen on phones. That held up until the software keyboard came out on iOS, which scrolls the page behind a modal no matter what `overflow` says. Pinning the body in place with a script fought the browser, so that approach is gone.
+
+0.11 takes a simpler route. Below the `sm` band, on a touch screen, a dialog is `100dvi × 100dvb` with no margin. The content slot runs the full height and clears the home indicator, the body slot takes the middle, and only the body scrolls. A footer sits at the bottom of the screen where a thumb can reach it. A narrow desktop window keeps the dialog's normal size now, since it has a mouse.
+
+The command palette and the mobile menu are built on the same slots. The palette's dialog form now carries `data-dialog-slot` beside its own slots, so on a phone the list fills the screen instead of stopping short with empty space below. An older palette without the dialog slots still works; it just doesn't get the full-height list.
+
+The mobile menu does need them. Its viewport used to be its own grid and scroller, and that job moved to the dialog, so a menu without the slots loses its footer position and stops scrolling.
+
+## Right to left
+
+Transform origins have no logical keywords, so every popover, select, submenu, and tooltip grew from the wrong corner in an Arabic or Hebrew page. The placement rules now name the inline edge through two private properties that flip under `:dir(rtl)`. The tooltip arrow uses logical insets, the mobile menu's `slide-right` animation comes in from the correct edge, and the scroll fade follows the inherited direction instead of only a `dir` attribute.
+
+## Smaller things
+
+- Tooltips are hidden on touch screens. There's no hover to show one, and a tap would open it over the control's own action. Anything a phone user needs belongs in visible text.
+- `--gutters` defaults to `--space-sm`, down from `--space-md`, so content sits closer to the screen edge on a phone. Set it back on `:root` if you liked the old width.
+- The radio dot is a little larger (`1.125em`).
+- The dialog backdrop contains overscroll, so a flick at the end of a dialog's body no longer scrolls the page.
+- The `zazz` agent skill is stricter about `sm` buttons and toggles: only in table cells, input groups, and chrome that should recede, and never mixed with regular sizes in one row.
+
+## Migrating
+
+- Mobile menus: add `data-dialog-slot="content"` to the viewport, and `header`, `body`, and `footer` to the matching slots. The [mobile menu example](/api/primitives/mobile-menu/) shows the pairs.
+- `--ui-dialog-border: none` becomes `--ui-dialog-border-width: 0`. A full shorthand becomes `--ui-dialog-border-width`, `--ui-dialog-border-style`, and `--ui-dialog-border-color`.
+- Command palettes in a dialog: optional, but add the same four dialog slots (the list is the `body`) to get the full-height phone layout.
+- If a design depended on the wider gutters, set `:root { --gutters: var(--space-md) }`.
+
+The [changelog](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/CHANGELOG.md) lists every change by primitive, and `npx zazz-ui update` prints the slice for the files you've vendored.

@@ -1,6 +1,6 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
-## 0.10.1 (unreleased)
+## 0.11.0 (2026-11-09)
 
 ### base
 
@@ -10,7 +10,8 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 ### dialog
 
 - The phone model is reworked. Below the `sm` band the full-screen size now applies on touch screens only (`(not (hover: hover))`), so a narrow desktop window keeps its preset. The dialog is `100dvi × 100dvb` with no margin; the content slot stretches to the full height and clears the home indicator (`env(safe-area-inset-bottom)`); the body slot fills the middle row, so a footer sits at the bottom of the screen and only the body scrolls. These two slot rules outrank a consumer's own cap on the same element (they are not wrapped in `:where()`), so a palette's list limit gives way to the screen; utilities still win through the layer order.
-- The backdrop is clipped and contains overscroll, and `--ui-dialog-border` split into `--ui-dialog-border-width`, `--ui-dialog-border-style`, and `--ui-dialog-border-color`.
+- The backdrop is clipped and contains overscroll.
+- **BREAKING** `--ui-dialog-border` is split into `--ui-dialog-border-width`, `--ui-dialog-border-style`, and `--ui-dialog-border-color`; the old hook matches nothing. Migrate `--ui-dialog-border: none` to `--ui-dialog-border-width: 0`, and a full shorthand to the three hooks.
 
 ### command
 
@@ -18,7 +19,8 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 
 ### mobile-menu
 
-- The slots carry `data-dialog-slot="content | header | body | footer"` beside `data-mobile-menu-slot`, so the dialog owns the grid, the body scroller, and the safe-area padding. Fix: the viewport capped itself at `100svh` inside a `100dvb` dialog, which left a gap under the footer when the browser bars collapsed. Dead `position: sticky` on the header and footer, a duplicate `overflow: clip`, and a redundant `inline-size` are gone.
+- **BREAKING** The slots carry `data-dialog-slot` beside `data-mobile-menu-slot` (viewport = `content`, then `header`, `body`, `footer`), so the dialog owns the grid, the body scroller, and the safe-area padding. A menu without them loses its layout: the footer no longer sits at the bottom and a long menu doesn't scroll. Add the four `data-dialog-slot` attributes to your menu's slots. Fix: the viewport capped itself at `100svh` inside a `100dvb` dialog, which left a gap under the footer when the browser bars collapsed. Dead `position: sticky` on the header and footer, a duplicate `overflow: clip`, and a redundant `inline-size` are gone.
+- The `slide-right` animation enters from the inline-start edge in RTL.
 
 ### lightbox
 
@@ -27,6 +29,31 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 ### alert-dialog
 
 - The example's footer moves inside the content slot, as in the dialog's own example, so it takes the content grid's last row.
+
+### popover
+
+- Transform origins on the inline sides mirror in RTL. `transform-origin` has no logical keywords, so the placement matrix names the inline edge through two private properties that `:dir(rtl)` swaps. Origins follow the declared side, not an active position-try fallback.
+
+### tooltip
+
+- Hidden on touch screens (`not (hover: hover)`): there is no hover to show one, and a tap would open it on top of the control's own action. Keep anything a phone user needs in visible text.
+- RTL: `data-popover-side="left | right"` origins, slide-in, and the arrow mirror; the arrow is placed with logical insets.
+
+### navigation-menu
+
+- Submenu transform origins mirror in RTL, as in popover.
+
+### select
+
+- Picker transform origins mirror in RTL, as in popover.
+
+### scroll-fade
+
+- The RTL fade direction reads `:dir(rtl)`, so it follows an inherited or auto direction, not only a `dir="rtl"` attribute.
+
+### radio
+
+- The dot is `1.125em` (was `1em`), and the indicator paints to the border box.
 
 ## 0.10.0 (2026-11-06)
 
