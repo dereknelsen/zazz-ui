@@ -204,13 +204,17 @@ const previewScope = `@layer zazz.variables {
       --position: sticky;
       --order: 1;
       --order--lg: 0;
+      --p: var(--gutters);
+      --pt: calc(var(--gutters) * 5);
       --pt--lg: 6;
-      --pb: 0;
       --pb--lg: 6;
       --top: auto;
       --top--lg: calc(var(--ui-header-height, 0rem));
       --bottom: 0;
       --bottom--lg: auto;
+      --bg-linear: to bottom;
+      --bg-stops: transparent 0%, var(--color-background) 50%;
+      --pointer-events: none;
       --z: 30;
     '
   >
@@ -222,13 +226,12 @@ const previewScope = `@layer zazz.variables {
       style='
         --display: grid;
         --display--lg: none;
-        --p: 6;
-        --pb: 12;
-        --gap: 3;
+        --p: 3;
+        --gap: 2;
         --text: var(--color-card-foreground);
         --bg: var(--color-card);
-        --radius: 8;
-        --radius-b: 0;
+        --radius: 6;
+        --pointer-events: auto;
       '
     >
       <div
@@ -263,12 +266,7 @@ const previewScope = `@layer zazz.variables {
                 --text-align: start;
               '
             >
-              <span
-                data-ui='text-xs'
-                style='--text: var(--color-muted-foreground)'
-              >
-                {chip.label}
-              </span>
+              <span data-ui='text-xs'>{chip.label}</span>
               <span
                 style='
                   --display: flex;
@@ -284,7 +282,7 @@ const previewScope = `@layer zazz.variables {
                   />
                 )}
                 <span class='fieldnotes__num' data-theme-chip-value>
-                  –
+                  #000000
                 </span>
               </span>
             </button>
@@ -300,7 +298,7 @@ const previewScope = `@layer zazz.variables {
       >
         <button
           data-ui='button'
-          data-button-variant='primary'
+          data-button-variant='muted'
           type='button'
           data-theme-copy-proxy
         >
@@ -308,7 +306,7 @@ const previewScope = `@layer zazz.variables {
         </button>
         <button
           data-ui='button'
-          data-button-variant='outline'
+          data-button-variant='muted'
           type='button'
           command='show-modal'
           commandfor='tb-sheet'

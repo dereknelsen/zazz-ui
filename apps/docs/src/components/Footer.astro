@@ -14,7 +14,7 @@ import Logo from './Logo.astro';
         --place-items: center;
         --place-items--sm: start;
         --template-cols: 1fr;
-        --template-cols--md: auto 1fr 1fr;
+        --template-cols--md: 1fr 1fr 2fr;
         --gap: 8;
         --gap--md: 16;
       '
@@ -92,36 +92,83 @@ import Logo from './Logo.astro';
           '
         >
           <p>
-            Zazz is heavily inspired by tailwindcss, shadcn/ui, base-ui, and
-            Emil Kowalski. Thank you for your incredible work.
+            Zazz is heavily inspired by <a
+              data-ui='text-link'
+              href='https://tailwindcss.com/'
+              target='_blank'
+              rel='noopener'>Tailwind</a
+            >, <a
+              data-ui='text-link'
+              href='https://ui.shadcn.com/'
+              target='_blank'
+              rel='noopener'>Shadcn</a
+            >, <a
+              data-ui='text-link'
+              href='https://base-ui.org/'
+              target='_blank'
+              rel='noopener'>Base UI</a
+            >, the <a
+              data-ui='text-link'
+              href='https://snapmarket.co/'
+              target='_blank'
+              rel='noopener'>Snapmarket</a
+            > team, <a
+              data-ui='text-link'
+              href='https://cimcloud.com/'
+              target='_blank'
+              rel='noopener'>Cimcloud</a
+            > (the volunteer alpha test subject), <a
+              data-ui='text-link'
+              href='https://emilkowal.ski/'
+              target='_blank'
+              rel='noopener'>Emil Kowalski</a
+            >, <a
+              data-ui='text-link'
+              href='https://www.kevinpowell.co/'
+              target='_blank'
+              rel='noopener'>Kevin Powell</a
+            >, <a
+              data-ui='text-link'
+              href='https://www.joshwcomeau.com/'
+              target='_blank'
+              rel='noopener'>Josh Comeau</a
+            > and many others. Thank you all for your incredible work, support, and
+            inspiration.
           </p>
         </div>
       </section>
-    </div>
-  </ui-layout>
 
-  <ui-layout data-layout-size='bleed'>
-    <section
-      data-ui='text-xs'
-      style='
-        --display: grid;
-        --items: center;
-        --justify: center;
-        --grid-cols: subgrid;
-        --py: 6;
-        --gap: 2;
-        --mt: 6;
-        --text-align: center;
-        --text: var(--color-muted-foreground);
-        --border-t: 1;
-        --border-t--sm: 0;
-      '
-    >
-      <p style='--band: layout-full'>
-        Built and maintained by Derek Nelsen. Licensed under the MIT License.
-        Source code available on{' '}
-        <a data-ui='text-link' href={links.github} rel='noopener'>GitHub</a>.
-      </p>
-    </section>
+      <section
+        data-ui='text-xs'
+        style='
+          --display: flex-col;
+          --items: center;
+          --justify: center;
+          --col-start: 1;
+          --col-end: -1;
+          --grid-cols: subgrid;
+          --pt: 6;
+          --pt--sm: 0;
+          --pb: 6;
+          --gap: 2;
+          --w: 100%;
+          --text-align: center;
+          --text: var(--color-muted-foreground);
+          --border-t: 1;
+          --border-t--sm: 0;
+        '
+      >
+        <p
+          style='
+            --max-w: 50ch;
+            --text-wrap: balance;
+          '
+        >
+          Built and maintained by Derek Nelsen. Licensed under the MIT License.
+          Source code available on{' '}
+          <a data-ui='text-link' href={links.github} rel='noopener'>GitHub</a>.
+        </p>
+      </section>
+    </div>
   </ui-layout>
 </footer>
