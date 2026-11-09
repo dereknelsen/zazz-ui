@@ -407,7 +407,7 @@
 
 
 
-  :where([style*="--isolation--"]:not(main)) {
+  :where([style*="--isolation--"]:not(dialog, main)) {
     isolation: var(--_isolation-resolved, auto);
   }
 

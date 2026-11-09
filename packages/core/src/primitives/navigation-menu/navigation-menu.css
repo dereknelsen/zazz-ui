@@ -93,7 +93,7 @@
     --ui-popover-min-w: 0;
 
     --ui-popover-position-area: block-end span-inline-end;
-    --ui-popover-origin: top center;
+    --ui-popover-origin: top var(--_origin-inline-start);
     --ui-popover-my: calc(var(--spacing) * 1.5);
   }
 
@@ -115,7 +115,7 @@
   :where([data-ui~="navigation-menu"])
     [data-navigation-menu-slot~="popover"][data-popover-align="end"] {
     --ui-popover-position-area: block-end span-inline-start;
-    --ui-popover-origin: top right;
+    --ui-popover-origin: top var(--_origin-inline-end);
   }
 
   /* ===========================================================================
@@ -174,7 +174,7 @@
     position-anchor: --ui-navigation-menu-menu-subtrigger;
 
     --ui-popover-position-area: inline-end span-block-start;
-    --ui-popover-origin: left top;
+    --ui-popover-origin: bottom var(--_origin-inline-start);
     --ui-popover-my: 0;
     --ui-popover-mx: calc(var(--spacing) * 1.5);
     --ui-popover-position-try-fallbacks: flip-inline, flip-block, flip-inline flip-block;

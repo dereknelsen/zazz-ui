@@ -529,6 +529,7 @@
           ":root:has(dialog:modal) — overflow: hidden + scrollbar-gutter: stable while a modal is open (WebKit ignores overscroll-behavior on boxes that do not overflow)",
           "@starting-style + allow-discrete — open/close opacity, transform, overlay",
           "anchor-name, container-type — layout hooks for sized variants",
+          "@supports (-webkit-touch-callout: none) — iOS-only: body is a fixed box at its recorded scroll offset while a modal is open, since iOS scrolls the document behind a modal under the keyboard whatever the root's overflow",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners",
           "@media (width < 40rem) + @container style(--ui-dialog-mobile-size) — below the sm band every dialog takes the hook's size (layout-bleed by default) over its preset; style queries are Firefox 151+, Chrome 111+, Safari 18+, an older engine keeps the preset"
         ],
@@ -745,7 +746,8 @@
           "Invoker Commands (command=\"show-modal\") — open without JS (markup)",
           "view-transition-name — stable menu across navigations",
           "@starting-style — viewport enter animation",
-          "Overrides --ui-dialog-* motion tokens for slide-right variant"
+          "Overrides --ui-dialog-* motion tokens for slide-right variant",
+          ":dir(rtl): slide-right mirrors to enter from the inline-start (right) edge"
         ],
         "tokens": [
           "--ui-mobile-menu-* (@layer variables)"
@@ -834,7 +836,8 @@
           "[popover], popovertarget, :popover-open: Popover API (native, no polyfill)",
           "@starting-style + allow-discrete: enter/exit opacity/transform",
           "anchor-name, position-anchor, position-area, position-try-fallbacks: anchor positioning (gated behind @supports; Safari 26.x falls back to the UA-centered popover)",
-          "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
+          "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners",
+          ":dir(rtl): inline-side transform origins mirror in RTL (transform-origin has no logical keywords); origins follow the declared side, not an active position-try fallback"
         ],
         "tokens": [
           "--ui-popover-* (Tier 3 owner; @layer variables)"
@@ -1146,7 +1149,8 @@
           "interestfor: Interest Invokers API (Chromium 142+; polyfill via invokers)",
           "data-tooltip-slot=\"content\": hint popover (light dismiss, auto-hides sibling hints)",
           "anchor-name, position-anchor, position-area, position-try-fallbacks: explicit anchors for polyfill; data-popover-side maps to --ui-popover-position-*",
-          "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
+          "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners",
+          ":dir(rtl): inline-side origins and slide-in mirror; the arrow uses logical insets"
         ],
         "tokens": [
           "--ui-tooltip-* (@layer variables; read on the content slot)"
@@ -1720,11 +1724,11 @@
       "file": "primitives/dialog/dialog.css"
     },
     "--ui-dialog-backdrop-transition-duration": {
-      "value": "calc(var(--ui-dialog-transition-duration) - 100ms)",
+      "value": "calc(var(--ui-dialog-transition-duration) / 2)",
       "file": "primitives/dialog/dialog.css"
     },
     "--ui-dialog-backdrop-transition-timing-function": {
-      "value": "ease",
+      "value": "var(--bezier-easing)",
       "file": "primitives/dialog/dialog.css"
     },
     "--ui-dialog-bg": {
@@ -1732,7 +1736,19 @@
       "file": "primitives/dialog/dialog.css"
     },
     "--ui-dialog-border": {
-      "value": "1px solid var(--color-border)",
+      "value": "none",
+      "file": "primitives/lightbox/lightbox.css"
+    },
+    "--ui-dialog-border-color": {
+      "value": "var(--color-border)",
+      "file": "primitives/dialog/dialog.css"
+    },
+    "--ui-dialog-border-style": {
+      "value": "solid",
+      "file": "primitives/dialog/dialog.css"
+    },
+    "--ui-dialog-border-width": {
+      "value": "1px",
       "file": "primitives/dialog/dialog.css"
     },
     "--ui-dialog-corner-shape": {
@@ -2688,7 +2704,7 @@
       "file": "primitives/popover/popover.css"
     },
     "--ui-popover-origin": {
-      "value": "top center",
+      "value": "top var(--_origin-inline-start)",
       "file": "primitives/navigation-menu/navigation-menu.css"
     },
     "--ui-popover-p": {

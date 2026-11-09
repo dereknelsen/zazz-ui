@@ -7,7 +7,7 @@
  */
 
 import { describe, expect, it } from "vite-plus/test";
-import { mount, style, useKit } from "../../../test/browser.ts";
+import { mount, style, useCss, useKit } from "../../../test/browser.ts";
 
 const TIP = (
   id: string,
@@ -17,6 +17,7 @@ const TIP = (
 
 describe("tooltip", () => {
   useKit();
+  useCss(`[data-tooltip-slot="content"] { transition: none; }`);
 
   it("styles the content and arrow in tag and attribute form", () => {
     const root = mount(`<div>
@@ -50,4 +51,40 @@ describe("tooltip", () => {
     expect(style(content, "position-area")).toBe(area);
     expect(style(content, "background-color")).toBe(plainBackground);
   });
+
+  /** Within the content's 1px border: the arrow insets from the padding box. */
+  const expectNear = (actual: number, expected: number) =>
+    expect(Math.abs(actual - expected)).toBeLessThan(1.5);
+
+  /** The open content's box and its arrow's center (rotation keeps the center). */
+  const arrowGeometry = (content: HTMLElement) => {
+    content.showPopover();
+    const box = content.getBoundingClientRect();
+    const a = content.querySelector("[data-tooltip-slot='arrow']")!.getBoundingClientRect();
+    content.hidePopover();
+    return { box, x: a.left + a.width / 2, y: a.top + a.height / 2 };
+  };
+
+  it("puts the arrow on the anchor-facing edge, mirrored in RTL", () => {
+    // Centered in the viewport so every side has room and no fallback applies.
+    const root = mount(`<div style="position: fixed; inset: 40vh 40vw">
+      <ui-tooltip data-ltr>${TIP("d", 'data-popover-side="left"')}</ui-tooltip>
+      <ui-tooltip dir="rtl" data-rtl>${TIP("e", 'data-popover-side="left"')}</ui-tooltip>
+      <ui-tooltip data-bottom>${TIP("f", 'data-popover-side="bottom"')}</ui-tooltip>
+    </div>`);
+    const geometry = (selector: string) =>
+      arrowGeometry(root.querySelector<HTMLElement>(`${selector} [data-tooltip-slot='content']`)!);
+    // side=left is the inline-start side: the arrow straddles the inline-end edge.
+    const ltr = geometry("[data-ltr]");
+    expectNear(ltr.x, ltr.box.right);
+    expectNear(ltr.y, ltr.box.top + ltr.box.height / 2);
+    const rtl = geometry("[data-rtl]");
+    expectNear(rtl.x, rtl.box.left);
+    const bottom = geometry("[data-bottom]");
+    expectNear(bottom.y, bottom.box.top);
+    expectNear(bottom.x, bottom.box.left + bottom.box.width / 2);
+  });
+
+  // Waits on Lightning CSS parsing @container anchored(): see the arrow rules in tooltip.css.
+  it.todo("moves the arrow when a position-try fallback flips the tooltip");
 });

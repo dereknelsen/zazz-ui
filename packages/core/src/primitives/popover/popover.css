@@ -10,6 +10,9 @@
  *             back to the UA-centered popover)
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
+ * @uses       :dir(rtl): inline-side transform origins mirror in RTL (transform-origin
+ *             has no logical keywords); origins follow the declared side, not an
+ *             active position-try fallback
  * @tokens     --ui-popover-* (Tier 3 owner; @layer variables)
  * @presets    data-popover-side="top | bottom | left | right", data-popover-align="start | center | end"
  *             on the [popover] element (the identity is the native attribute)
@@ -59,6 +62,11 @@
     background-color: var(--color-popover);
 
     align-content: start;
+    /* transform-origin has no logical keywords: the placement matrix names the
+       inline edge through these, resolved per element so RTL mirrors them.
+       Origins track the declared side, not the active position-try fallback. */
+    --_origin-inline-start: left;
+    --_origin-inline-end: right;
     transform-origin: var(--ui-popover-origin);
     --_radius-len: var(--_radius-resolved, var(--ui-popover-radius));
     --_radius-num: var(--_radius-resolved, var(--ui-popover-radius));
@@ -79,6 +87,11 @@
         allow-discrete,
       display var(--default-transition-duration) var(--default-transition-timing-function)
         allow-discrete;
+  }
+
+  :where([popover]:dir(rtl)) {
+    --_origin-inline-start: right;
+    --_origin-inline-end: left;
   }
 
   /* Anchor positioning tethers the popover to its trigger and flips it away
@@ -152,7 +165,7 @@
   :where([popover])[data-popover-side="bottom"]:not([data-popover-align]),
   :where([popover])[data-popover-side="bottom"][data-popover-align="start"] {
     --ui-popover-position-area: block-end span-inline-end;
-    --ui-popover-origin: top center;
+    --ui-popover-origin: top var(--_origin-inline-start);
     --ui-popover-my: calc(var(--spacing) * 1.5);
     --ui-popover-mx: 0;
   }
@@ -166,7 +179,7 @@
 
   :where([popover])[data-popover-side="bottom"][data-popover-align="end"] {
     --ui-popover-position-area: block-end span-inline-start;
-    --ui-popover-origin: top center;
+    --ui-popover-origin: top var(--_origin-inline-end);
     --ui-popover-my: calc(var(--spacing) * 1.5);
     --ui-popover-mx: 0;
   }
@@ -174,7 +187,7 @@
   :where([popover])[data-popover-side="top"]:not([data-popover-align]),
   :where([popover])[data-popover-side="top"][data-popover-align="start"] {
     --ui-popover-position-area: block-start span-inline-end;
-    --ui-popover-origin: bottom center;
+    --ui-popover-origin: bottom var(--_origin-inline-start);
     --ui-popover-my: calc(var(--spacing) * 1.5);
     --ui-popover-mx: 0;
   }
@@ -188,7 +201,7 @@
 
   :where([popover])[data-popover-side="top"][data-popover-align="end"] {
     --ui-popover-position-area: block-start span-inline-start;
-    --ui-popover-origin: bottom center;
+    --ui-popover-origin: bottom var(--_origin-inline-end);
     --ui-popover-my: calc(var(--spacing) * 1.5);
     --ui-popover-mx: 0;
   }
@@ -196,21 +209,21 @@
   :where([popover])[data-popover-side="right"]:not([data-popover-align]),
   :where([popover])[data-popover-side="right"][data-popover-align="start"] {
     --ui-popover-position-area: inline-end span-block-end;
-    --ui-popover-origin: bottom left;
+    --ui-popover-origin: top var(--_origin-inline-start);
     --ui-popover-my: 0;
     --ui-popover-mx: calc(var(--spacing) * 1.5);
   }
 
   :where([popover])[data-popover-side="right"][data-popover-align="center"] {
     --ui-popover-position-area: inline-end span-all;
-    --ui-popover-origin: center left;
+    --ui-popover-origin: center var(--_origin-inline-start);
     --ui-popover-my: 0;
     --ui-popover-mx: calc(var(--spacing) * 1.5);
   }
 
   :where([popover])[data-popover-side="right"][data-popover-align="end"] {
     --ui-popover-position-area: inline-end span-block-start;
-    --ui-popover-origin: top left;
+    --ui-popover-origin: bottom var(--_origin-inline-start);
     --ui-popover-my: 0;
     --ui-popover-mx: calc(var(--spacing) * 1.5);
   }
@@ -218,21 +231,21 @@
   :where([popover])[data-popover-side="left"]:not([data-popover-align]),
   :where([popover])[data-popover-side="left"][data-popover-align="start"] {
     --ui-popover-position-area: inline-start span-block-end;
-    --ui-popover-origin: bottom right;
+    --ui-popover-origin: top var(--_origin-inline-end);
     --ui-popover-my: 0;
     --ui-popover-mx: calc(var(--spacing) * 1.5);
   }
 
   :where([popover])[data-popover-side="left"][data-popover-align="center"] {
     --ui-popover-position-area: inline-start span-all;
-    --ui-popover-origin: center right;
+    --ui-popover-origin: center var(--_origin-inline-end);
     --ui-popover-my: 0;
     --ui-popover-mx: calc(var(--spacing) * 1.5);
   }
 
   :where([popover])[data-popover-side="left"][data-popover-align="end"] {
     --ui-popover-position-area: inline-start span-block-start;
-    --ui-popover-origin: top right;
+    --ui-popover-origin: bottom var(--_origin-inline-end);
     --ui-popover-my: 0;
     --ui-popover-mx: calc(var(--spacing) * 1.5);
   }

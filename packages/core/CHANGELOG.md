@@ -1,5 +1,11 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.10.1 (unreleased)
+
+### dialog
+
+- Fix: on iOS the page no longer scrolls behind a modal while the software keyboard is up (the 0.8.2 note left this open). iOS scrolls the document under the keyboard whatever the root's `overflow` says, so there (and only there, gated on `-webkit-touch-callout`) `<body>` is a fixed box at the scroll offset the kit's script records on open; the position comes back when the last modal closes. The backdrop is twice the viewport tall, so the strip iOS paints behind its keyboard chrome shows no page. No change elsewhere.
+
 ## 0.10.0 (2026-11-06)
 
 ### base

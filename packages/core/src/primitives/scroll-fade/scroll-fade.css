@@ -109,7 +109,7 @@
       transparent 100%
     );
 
-    &:where([dir="rtl"], [dir="rtl"] *) {
+    &:where(:dir(rtl)) {
       --_scroll-fade-gradient: linear-gradient(
         to left,
         transparent 0,

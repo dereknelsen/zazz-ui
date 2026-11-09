@@ -145,6 +145,23 @@ const initDialogLifecycle: InitDialogLifecycleFn = function () {
     true,
   );
 
+  // iOS also scrolls the document behind a modal while the keyboard is up, whatever
+  // the root's overflow says. dialog.css pins <body> as a fixed box at the offset
+  // recorded here (iOS only), and the position comes back when the last modal closes.
+  let lockedScrollY = -1;
+  document.addEventListener("zazz:dialog-open", (e) => {
+    if (lockedScrollY >= 0 || !(e.target as Element).matches(":modal")) return;
+    lockedScrollY = window.scrollY;
+    document.body.style.setProperty("--_scroll-y", `${lockedScrollY}px`);
+  });
+  document.addEventListener("zazz:dialog-close", () => {
+    if (lockedScrollY < 0 || document.querySelector("dialog:modal")) return;
+    const y = lockedScrollY;
+    lockedScrollY = -1;
+    document.body.style.removeProperty("--_scroll-y");
+    window.scrollTo({ top: y, behavior: "instant" });
+  });
+
   if (!hasNativeLightDismiss()) bindLightDismissFallback();
 };
 

@@ -9,6 +9,7 @@
  *             explicit anchors for polyfill; data-popover-side maps to --ui-popover-position-*
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
+ * @uses       :dir(rtl): inline-side origins and slide-in mirror; the arrow uses logical insets
  * @tokens     --ui-tooltip-* (@layer variables; read on the content slot)
  */
 
@@ -211,7 +212,7 @@
     [data-tooltip-slot~="content"][data-popover-side="left"][data-popover-align="center"] {
     --ui-tooltip-translate--start: 0.25em, 0, 0;
     --ui-popover-position-area: inline-start span-all;
-    --ui-popover-origin: center right;
+    --ui-popover-origin: center var(--_origin-inline-end);
     --ui-tooltip-mx: var(--spacing);
     --ui-tooltip-my: 0;
   }
@@ -222,19 +223,34 @@
     [data-tooltip-slot~="content"][data-popover-side="right"][data-popover-align="center"] {
     --ui-tooltip-translate--start: 0.25em, 0, 0;
     --ui-popover-position-area: inline-end span-all;
-    --ui-popover-origin: center left;
+    --ui-popover-origin: center var(--_origin-inline-start);
     --ui-tooltip-mx: var(--spacing);
     --ui-tooltip-my: 0;
   }
 
-  /* Tooltip arrow */
+  /* translate3d is physical: mirror the inline sides' slide-in for RTL */
+  :where(ui-tooltip, [data-ui~="tooltip"])
+    [data-tooltip-slot~="content"]:is([data-popover-side="left"], [data-popover-side="right"]):is(
+      :not([data-popover-align]),
+      [data-popover-align="center"]
+    ):dir(rtl) {
+    --ui-tooltip-translate--start: -0.25em, 0, 0;
+  }
+
+  /* Tooltip arrow: logical insets throughout, so the inline sides mirror in RTL
+     (data-popover-side="left | right" place on the inline-start | inline-end
+     side). Fixed size + auto margins center it along its edge in any direction.
+     It stays on the declared side when a position-try fallback flips the tooltip:
+     container-type: anchored + @container anchored(fallback: …) would move it
+     (Chromium 143+), but Lightning CSS 1.33 (vp pack, Vite 8's CSS minifier)
+     cannot parse anchored(). Add it once it can. */
   :where(ui-tooltip, [data-ui~="tooltip"]) [data-tooltip-slot~="arrow"] {
+    --_arrow-offset: calc(var(--ui-tooltip-arrow-size) / -2);
     position: absolute;
-    /* physical top/left/right/bottom throughout the arrow rules: they pair with
-       the physical [data-popover-side] placement semantics from anchor positioning */
-    top: calc(100% - var(--ui-tooltip-arrow-size) / 2);
-    left: 50%;
-    transform: translate(-50%, 0%) rotate(45deg);
+    inset-block: auto var(--_arrow-offset);
+    inset-inline: 0;
+    margin: 0 auto;
+    transform: rotate(45deg);
     inline-size: var(--ui-tooltip-arrow-size);
     block-size: var(--ui-tooltip-arrow-size);
     background-color: var(--ui-tooltip-arrow-color);
@@ -242,35 +258,32 @@
     pointer-events: none;
   }
 
-  /* Tooltip arrow position */
-  :where(ui-tooltip, [data-ui~="tooltip"])
-    [data-tooltip-slot~="content"][data-popover-side="top"]
-    [data-tooltip-slot~="arrow"] {
-    bottom: calc((var(--ui-tooltip-arrow-size) / 2) * -1);
-    left: 50%;
-  }
-
+  /* Tooltip arrow position (the base rule above is the top side) */
   :where(ui-tooltip, [data-ui~="tooltip"])
     [data-tooltip-slot~="content"][data-popover-side="bottom"]
     [data-tooltip-slot~="arrow"] {
-    top: calc((var(--ui-tooltip-arrow-size) / 2) * -1);
-    left: 50%;
+    inset-block: var(--_arrow-offset) auto;
   }
 
   :where(ui-tooltip, [data-ui~="tooltip"])
     [data-tooltip-slot~="content"][data-popover-side="left"]
     [data-tooltip-slot~="arrow"] {
-    left: calc(100% - var(--ui-tooltip-arrow-size) / 2);
-    top: 50%;
-    transform: translate(0%, -50%) rotate(45deg);
+    inset-block: 0;
+    inset-inline: auto var(--_arrow-offset);
+    margin: auto 0;
   }
 
   :where(ui-tooltip, [data-ui~="tooltip"])
     [data-tooltip-slot~="content"][data-popover-side="right"]
     [data-tooltip-slot~="arrow"] {
-    right: calc(100% - var(--ui-tooltip-arrow-size) / 2);
-    left: auto;
-    top: 50%;
-    transform: translate(0%, -50%) rotate(45deg);
+    inset-block: 0;
+    inset-inline: var(--_arrow-offset) auto;
+    margin: auto 0;
+  }
+
+  @media not (hover: hover) {
+    :where(ui-tooltip, [data-ui~="tooltip"]) {
+      display: none !important;
+    }
   }
 }

@@ -33,6 +33,32 @@ describe("popover", () => {
     expect(area("[data-right]")).toBe(computed("inline-end span-block-end"));
   });
 
+  it("anchors the transform origin at the aligned corner, mirrored in RTL", () => {
+    const root = mount(`<div>
+      <div popover="manual" data-popover-side="right" data-popover-align="start" data-ltr>a</div>
+      <div dir="rtl"><div popover="manual" data-popover-side="right" data-popover-align="start" data-rtl>b</div></div>
+      <div popover="manual" data-popover-side="bottom" data-popover-align="end" data-bottom-end>c</div>
+    </div>`);
+    const origin = (selector: string) => {
+      const el = root.querySelector<HTMLElement>(selector)!;
+      el.showPopover();
+      const [x, y] = style(el, "transform-origin").split(" ").map(Number.parseFloat);
+      const width = el.offsetWidth;
+      el.hidePopover();
+      return { x, y, width };
+    };
+    // side=right align=start top-aligns the surface: origin at block-start, inline-start.
+    const ltr = origin("[data-ltr]");
+    expect([ltr.x, ltr.y]).toEqual([0, 0]);
+    const rtl = origin("[data-rtl]");
+    expect(rtl.y).toBe(0);
+    expect(rtl.x).toBeCloseTo(rtl.width, 0);
+    // side=bottom align=end: top, inline-end.
+    const bottomEnd = origin("[data-bottom-end]");
+    expect(bottomEnd.y).toBe(0);
+    expect(bottomEnd.x).toBeCloseTo(bottomEnd.width, 0);
+  });
+
   it("an open popover takes a scale-number --p utility over the padding hook", () => {
     const el = mount(`<div popover="manual" style="--p: 4">x</div>`) as HTMLElement;
     el.showPopover();

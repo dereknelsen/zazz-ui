@@ -40,4 +40,14 @@ describe("mobile menu", () => {
     expect(style(dialog, "transform-origin")).toMatch(/^0px /);
     dialog.close();
   });
+
+  it("the slide-right preset mirrors to the right edge in RTL", () => {
+    const dialog = mount(
+      `<dialog dir="rtl" data-ui="dialog mobile-menu" data-dialog-size="bleed" data-mobile-menu-animation="slide-right">${PARTS}</dialog>`,
+    ) as HTMLDialogElement;
+    dialog.showModal();
+    const [x] = style(dialog, "transform-origin").split(" ").map(Number.parseFloat);
+    expect(x).toBeCloseTo(dialog.getBoundingClientRect().width, 0);
+    dialog.close();
+  });
 });

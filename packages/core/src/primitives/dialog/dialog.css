@@ -9,6 +9,9 @@
  *             is open (WebKit ignores overscroll-behavior on boxes that do not overflow)
  * @uses       @starting-style + allow-discrete — open/close opacity, transform, overlay
  * @uses       anchor-name, container-type — layout hooks for sized variants
+ * @uses       @supports (-webkit-touch-callout: none) — iOS-only: body is a fixed box at its
+ *             recorded scroll offset while a modal is open, since iOS scrolls the document
+ *             behind a modal under the keyboard whatever the root's overflow
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
  * @tokens     --ui-dialog-* (@layer variables; --ui-dialog-h defaults to a keyword, so the hook
@@ -26,11 +29,13 @@
     --ui-dialog-backdrop-color: var(--color-shade-900);
     --ui-dialog-transition-duration: var(--default-transition-duration);
     --ui-dialog-transition-timing-function: var(--default-transition-timing-function);
-    --ui-dialog-backdrop-transition-duration: calc(var(--ui-dialog-transition-duration) - 100ms);
-    --ui-dialog-backdrop-transition-timing-function: ease;
+    --ui-dialog-backdrop-transition-duration: calc(var(--ui-dialog-transition-duration) / 2);
+    --ui-dialog-backdrop-transition-timing-function: var(--bezier-easing);
     --ui-dialog-backdrop-filter: none;
     --ui-dialog-shadow: var(--shadow-lg);
-    --ui-dialog-border: 1px solid var(--color-border);
+    --ui-dialog-border-width: 1px;
+    --ui-dialog-border-style: solid;
+    --ui-dialog-border-color: var(--color-border);
     /* the sm band, the default size */
     --ui-dialog-w: min(var(--layout-sm), 100% - var(--gutters) * 2);
     /* below the sm band, the size every dialog takes: layout-bleed (edge to edge, no page
@@ -67,15 +72,17 @@
 
   /* Spring-eased open/close */
   :where(dialog) {
+    isolation: isolate;
     margin: auto;
     max-inline-size: calc(100% - var(--space-md));
     max-block-size: calc(100% - var(--space-md));
-    border: var(--ui-dialog-border);
+    border: var(--ui-dialog-border-width) var(--ui-dialog-border-style)
+      var(--ui-dialog-border-color);
     contain: layout style;
     opacity: var(--ui-dialog-opacity--start);
     box-shadow: var(--ui-dialog-shadow);
     overscroll-behavior: contain;
-    overflow: auto;
+    overflow: hidden;
     transform: translate3d(var(--ui-dialog-translate--start)) scale(var(--ui-dialog-scale--start));
     transition:
       opacity var(--ui-dialog-transition-duration) var(--ui-dialog-transition-timing-function),
@@ -102,16 +109,17 @@
     }
   }
 
-  /* Backdrop fades via a discrete transition */
+  /* Backdrop fades via a discrete transition. Twice the viewport tall: with the
+     software keyboard up, iOS shows the page below the rect fixed boxes fill, and a
+     fixed box past the viewport edge creates no scroll. */
   :where(dialog)::backdrop {
     position: fixed;
     inline-size: 100%;
     block-size: 100%;
     inset: 0;
-    z-index: 1000;
     opacity: 0;
     overscroll-behavior: contain;
-    overflow: auto;
+    overflow: clip;
     background-color: var(--ui-dialog-backdrop-color);
     backdrop-filter: var(--ui-dialog-backdrop-filter);
     transition: opacity var(--ui-dialog-backdrop-transition-duration)
@@ -195,6 +203,8 @@
     container-name: dialog;
     font-size: var(--font-size-md);
     isolation: isolate;
+    overflow: auto;
+    overscroll-behavior: contain;
   }
 
   /* A one-row grid, so the content slot is capped by the dialog's height rather than
@@ -226,14 +236,40 @@
      own still takes the flexible row, so it is the part that scrolls, never the dialog,
      and the close button keeps its corner. */
   :where([data-ui~="dialog"]) [data-dialog-slot~="content"] {
+    --_scroll-fade-gradient: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--_scroll-fade-start),
+      #000 calc(100% - var(--_scroll-fade-end)),
+      transparent 100%
+    );
+
     display: grid;
     align-self: center;
     grid-template-rows: auto minmax(0, 1fr) auto;
     position: relative;
     min-block-size: 0;
-    /* a centred grid item sizes to its content; the cap is what hands the body its scroll */
     max-block-size: 100%;
-    overflow: clip;
+    overflow: auto;
+    overscroll-behavior: contain;
+
+    -webkit-mask-image: var(--ui-scroll-fade-mask, var(--_scroll-fade-gradient));
+    mask-image: var(--ui-scroll-fade-mask, var(--_scroll-fade-gradient));
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    @supports (animation-timeline: scroll()) {
+      animation:
+        ui-scroll-fade-reveal-start 1ms ease-in-out,
+        ui-scroll-fade-reveal-end 1ms ease-in-out;
+    }
+
+    @supports not (animation-timeline: scroll()) {
+      --_scroll-fade-start: var(--ui-scroll-fade-size);
+      --_scroll-fade-end: var(--ui-scroll-fade-size);
+    }
   }
 
   :where([data-ui~="dialog"]) [data-dialog-slot~="header"] {
@@ -244,16 +280,6 @@
     padding-block-start: var(--space-sm);
   }
 
-  :where([data-ui~="dialog"]) [data-dialog-slot~="header"]::after {
-    content: "";
-    display: block;
-    position: absolute;
-    inset-block-start: 100%;
-    inline-size: 100%;
-    block-size: var(--space-md);
-    background: linear-gradient(to top, transparent, var(--ui-dialog-bg));
-  }
-
   :where([data-ui~="dialog"]) [data-dialog-slot~="body"] {
     grid-row: 2;
     display: grid;
@@ -261,15 +287,11 @@
     padding-block: var(--space-md);
     min-block-size: 0;
     min-block-size: var(--space-xl);
-    overflow-x: clip;
-    overflow-y: auto;
-    scrollbar-gutter: stable both-edges;
   }
 
   :where([data-ui~="dialog"]) [data-dialog-slot~="footer"] {
     grid-row: 3;
     block-size: fit-content;
-    position: sticky;
     inset-block-end: 0;
     display: flex;
     justify-content: flex-end;
@@ -308,12 +330,12 @@
   }
 
   :where([data-ui~="dialog"][data-dialog-size="bleed"]) {
-    --_dialog-w: 100vi;
-    --_dialog-h: 100svh;
+    --_dialog-w: 100dvi;
+    --_dialog-h: 100dvb;
     --_dialog-radius: 0;
     --_dialog-shadow: none;
-    max-inline-size: 100vi;
-    max-block-size: 100svh;
+    max-inline-size: 100dvi;
+    max-block-size: 100dvb;
   }
 
   /* Below the sm band the viewport is a phone, and every dialog takes --ui-dialog-mobile-size
@@ -322,21 +344,43 @@
      for the site, or on one dialog's parent for that dialog alone. A viewport query, not a
      container one, because a top-layer dialog is sized by the viewport. Style queries are
      Firefox 151+; an older engine keeps the preset. */
-  @media (width < 40rem) {
+  @media (width < 40rem) and (not (hover: hover)) {
     @container style(--ui-dialog-mobile-size: layout-bleed) {
+      :where([data-ui~="dialog"][data-dialog-slot~="content"]) {
+        overflow: auto;
+        overscroll-behavior: contain;
+        scrollbar-gutter: stable both-edges;
+        min-block-size: 100%;
+      }
+
       :where([data-ui~="dialog"]) {
-        --_dialog-w: 100vi;
-        --_dialog-h: 100svh;
+        --ui-dialog-border-color: transparent;
+
+        --_dialog-w: 100dvi;
+        --_dialog-h: 100dvb;
         --_dialog-radius: 0;
-        --_dialog-shadow: none;
-        max-inline-size: 100vi;
-        max-block-size: 100svh;
+
+        margin: 0;
+        background-clip: padding-box;
+        max-inline-size: 100dvi;
+        max-block-size: 100dvb;
+        overflow: scroll;
+        overscroll-behavior: contain;
+        container: none;
+      }
+      :where(dialog)::backdrop {
+        inline-size: 100dvi;
+        block-size: 100dvb;
+        inset: 0;
+        opacity: 0;
+        overscroll-behavior: contain;
+        overflow: clip;
       }
     }
 
     @container style(--ui-dialog-mobile-size: layout-full) {
       :where([data-ui~="dialog"]) {
-        --_dialog-w: calc(100% - var(--gutters) * 2);
+        --_dialog-w: calc(100dvi - var(--gutters) * 2);
       }
     }
   }

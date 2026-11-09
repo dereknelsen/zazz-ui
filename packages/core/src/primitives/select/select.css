@@ -89,6 +89,18 @@
     appearance: base-select;
   }
 
+  /* Inline-edge names for the placement matrix's origins, resolved on the
+     select (where the matrix sets them) so RTL mirrors them; see popover.css. */
+  :where([data-ui~="select"]) {
+    --_origin-inline-start: left;
+    --_origin-inline-end: right;
+  }
+
+  :where([data-ui~="select"]:dir(rtl)) {
+    --_origin-inline-start: right;
+    --_origin-inline-end: left;
+  }
+
   :where([data-ui~="select"])::picker(select) {
     transform-origin: var(--ui-popover-origin);
     opacity: var(--ui-popover-opacity--start);
@@ -530,7 +542,7 @@
   :where([data-ui~="select"]:not([data-select-side]):not([data-select-align])),
   :where([data-ui~="select"]:not([data-select-side])[data-select-align="start"]) {
     --ui-popover-position-area: block-end span-inline-end;
-    --ui-popover-origin: top center;
+    --ui-popover-origin: top var(--_origin-inline-start);
     --ui-popover-my: calc(var(--spacing) * 1.5);
     --ui-popover-mx: 0;
   }
@@ -546,7 +558,7 @@
   :where([data-ui~="select"])[data-select-side="bottom"][data-select-align="end"],
   :where([data-ui~="select"]:not([data-select-side])[data-select-align="end"]) {
     --ui-popover-position-area: block-end span-inline-start;
-    --ui-popover-origin: top center;
+    --ui-popover-origin: top var(--_origin-inline-end);
     --ui-popover-my: calc(var(--spacing) * 1.5);
     --ui-popover-mx: 0;
   }
@@ -554,7 +566,7 @@
   :where([data-ui~="select"])[data-select-side="top"]:not([data-select-align]),
   :where([data-ui~="select"])[data-select-side="top"][data-select-align="start"] {
     --ui-popover-position-area: block-start span-inline-end;
-    --ui-popover-origin: bottom center;
+    --ui-popover-origin: bottom var(--_origin-inline-start);
     --ui-popover-my: calc(var(--spacing) * 1.5);
     --ui-popover-mx: 0;
   }
@@ -568,7 +580,7 @@
 
   :where([data-ui~="select"])[data-select-side="top"][data-select-align="end"] {
     --ui-popover-position-area: block-start span-inline-start;
-    --ui-popover-origin: bottom center;
+    --ui-popover-origin: bottom var(--_origin-inline-end);
     --ui-popover-my: calc(var(--spacing) * 1.5);
     --ui-popover-mx: 0;
   }
@@ -576,21 +588,21 @@
   :where([data-ui~="select"])[data-select-side="right"]:not([data-select-align]),
   :where([data-ui~="select"])[data-select-side="right"][data-select-align="start"] {
     --ui-popover-position-area: inline-end span-block-end;
-    --ui-popover-origin: bottom left;
+    --ui-popover-origin: top var(--_origin-inline-start);
     --ui-popover-my: 0;
     --ui-popover-mx: calc(var(--spacing) * 1.5);
   }
 
   :where([data-ui~="select"])[data-select-side="right"][data-select-align="center"] {
     --ui-popover-position-area: inline-end span-all;
-    --ui-popover-origin: center left;
+    --ui-popover-origin: center var(--_origin-inline-start);
     --ui-popover-my: 0;
     --ui-popover-mx: calc(var(--spacing) * 1.5);
   }
 
   :where([data-ui~="select"])[data-select-side="right"][data-select-align="end"] {
     --ui-popover-position-area: inline-end span-block-start;
-    --ui-popover-origin: top left;
+    --ui-popover-origin: bottom var(--_origin-inline-start);
     --ui-popover-my: 0;
     --ui-popover-mx: calc(var(--spacing) * 1.5);
   }
@@ -598,21 +610,21 @@
   :where([data-ui~="select"])[data-select-side="left"]:not([data-select-align]),
   :where([data-ui~="select"])[data-select-side="left"][data-select-align="start"] {
     --ui-popover-position-area: inline-start span-block-end;
-    --ui-popover-origin: bottom right;
+    --ui-popover-origin: top var(--_origin-inline-end);
     --ui-popover-my: 0;
     --ui-popover-mx: calc(var(--spacing) * 1.5);
   }
 
   :where([data-ui~="select"])[data-select-side="left"][data-select-align="center"] {
     --ui-popover-position-area: inline-start span-all;
-    --ui-popover-origin: center right;
+    --ui-popover-origin: center var(--_origin-inline-end);
     --ui-popover-my: 0;
     --ui-popover-mx: calc(var(--spacing) * 1.5);
   }
 
   :where([data-ui~="select"])[data-select-side="left"][data-select-align="end"] {
     --ui-popover-position-area: inline-start span-block-start;
-    --ui-popover-origin: top right;
+    --ui-popover-origin: bottom var(--_origin-inline-end);
     --ui-popover-my: 0;
     --ui-popover-mx: calc(var(--spacing) * 1.5);
   }

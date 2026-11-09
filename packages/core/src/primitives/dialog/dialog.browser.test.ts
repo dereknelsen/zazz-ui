@@ -7,6 +7,7 @@
  */
 
 import { describe, expect, it } from "vite-plus/test";
+import { initDialogLifecycle } from "../../base/dialog-lifecycle.ts";
 import { atWidth, mount, scale, style, useCss, useKit } from "../../../test/browser.ts";
 
 const PARTS = `<div data-dialog-slot="content">
@@ -63,6 +64,18 @@ describe("dialog", () => {
     utility.showModal();
     expect(style(utility, "inline-size")).toBe("333px");
     utility.close();
+  });
+
+  it("the lifecycle script records the scroll offset on the body while a modal is open", async () => {
+    initDialogLifecycle();
+    const dialog = mount(`<dialog data-ui="dialog">d</dialog>`) as HTMLDialogElement;
+    dialog.showModal();
+    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+    await tick(); // the open event is a microtask
+    expect(document.body.style.getPropertyValue("--_scroll-y")).toBe(`${window.scrollY}px`);
+    dialog.close();
+    await tick(); // the native close event is a queued task
+    expect(document.body.style.getPropertyValue("--_scroll-y")).toBe("");
   });
 
   it("sm … 2xl follow the layout bands, capped by the viewport; full spans inside the gutters", async () => {

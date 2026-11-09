@@ -9,6 +9,7 @@
  * @uses       view-transition-name — stable menu across navigations
  * @uses       @starting-style — viewport enter animation
  * @uses       Overrides --ui-dialog-* motion tokens for slide-right variant
+ * @uses       :dir(rtl): slide-right mirrors to enter from the inline-start (right) edge
  * @tokens     --ui-mobile-menu-* (@layer variables)
  * @presets    data-mobile-menu-animation="slide-right"
  */
@@ -148,5 +149,13 @@
 
     overflow: clip;
     transform-origin: left center;
+  }
+
+  /* Translate and transform-origin are physical: in RTL the menu enters from
+     the inline-start (right) edge instead. */
+  :where([data-ui~="mobile-menu"][data-mobile-menu-animation="slide-right"]:dir(rtl)) {
+    --ui-dialog-translate--start: 100%, 0, 0;
+    --ui-mobile-menu-viewport-translate--start: 2rem, 1rem, 0;
+    transform-origin: right center;
   }
 }
