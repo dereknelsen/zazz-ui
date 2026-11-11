@@ -717,7 +717,7 @@ export const CORE_FALLBACKS: RuntimeFallback[] = [
   { file: "base/csp.js", requires: ["base/declarations.js"], gate: "blocked-inline-styles" },
 ];
 
-/** Every tag form in the kit; the generator excludes them from no-base emissions. */
+/** Every tag form in the kit; the generator keeps them out of the grid place-content default, as it does `[data-ui]`. */
 export const TAG_FORMS: string[] = Object.values(PRIMITIVES)
   .flatMap((entry) => entry.tags ?? [])
   .sort();

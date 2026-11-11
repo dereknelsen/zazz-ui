@@ -18,6 +18,7 @@ import {
   type Utility,
   UTILITIES,
 } from "../src/base/utilities.ts";
+import { TAG_FORMS } from "../src/manifest.ts";
 import {
   baseRule,
   bgNoneRules,
@@ -462,6 +463,8 @@ describe("grid placement (Tailwind col-span / col-start / col-end)", () => {
       '[style*="--place-items"]',
       '[style*="--items"]',
       "[data-ui]",
+      // tag forms are primitives too: ui-accordion, ui-card, ...
+      ...TAG_FORMS,
     ])
       expect(rule.slice(0, rule.indexOf("{")), skip).toContain(skip);
     expect(rule).toContain("place-content: var(--_place-content-resolved, start stretch);");

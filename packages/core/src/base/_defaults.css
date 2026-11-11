@@ -437,7 +437,7 @@
     corner-shape: var(--radius-corner-shape);
   }
 
-  :where(:is([style*="--display: grid"], [style*="--display: inline-grid"]):not([style*="grid-pile"], [style*="--place-items"], [style*="--items"], [data-ui], [popover], kbd)) {
+  :where(:is([style*="--display: grid"], [style*="--display: inline-grid"]):not([style*="grid-pile"], [style*="--place-items"], [style*="--items"], [data-ui], ui-accordion, ui-autocomplete, ui-button-group, ui-card, ui-carousel, ui-combobox, ui-command, ui-group, ui-kbd-group, ui-layout, ui-lightbox, ui-menu, ui-multiselect, ui-otp, ui-password, ui-tabs, ui-toaster, ui-toggle-group, ui-tooltip, [popover], kbd)) {
     place-content: var(--_place-content-resolved, start stretch);
   }
 }
