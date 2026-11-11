@@ -6,8 +6,8 @@
   "scripts": {
     "ready": "vp check && vp run --no-cache lint:html && vp run --no-cache -r build && vp run --no-cache -r test",
     "dev": "vp run core#build && vp run --parallel --log labeled -F docs -F experiments dev",
-    "fmt:html": "vp lint --fix \"**/*.html\"",
-    "lint:html": "vp lint \"**/*.html\"",
+    "fmt:html": "eslint --fix \"**/*.html\"",
+    "lint:html": "eslint \"**/*.html\"",
     "playground": "vp run experiments#dev",
     "prepare": "vp config"
   },
@@ -15,6 +15,7 @@
     "@html-eslint/eslint-plugin": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "@zazz-ui/eslint-plugin": "workspace:*",
+    "eslint": "catalog:",
     "jiti": "catalog:",
     "playwright": "catalog:",
     "vite": "catalog:",

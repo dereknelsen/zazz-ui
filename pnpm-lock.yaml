@@ -335,6 +335,9 @@ importers:
       '@zazz-ui/eslint-plugin':
         specifier: workspace:*
         version: link:packages/eslint-plugin
+      eslint:
+        specifier: 'catalog:'
+        version: 10.14.0(jiti@2.7.0)(supports-color@10.2.2)
       jiti:
         specifier: 'catalog:'
         version: 2.7.0
