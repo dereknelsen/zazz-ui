@@ -327,7 +327,7 @@ this?" decides between the first two kinds; a role word never appears outside `-
 - **Border tokens**: a hook named `-border` always holds a **full CSS shorthand** (it is
   not the `--border` style utility, which takes one color, number, or length)
   (`1px solid var(--color-border)`, or `none`) — fine for decorative, non-varying
-  borders (`--ui-table-border`, `--ui-dialog-border`). Interactive controls
+  borders (`--ui-table-border`). Interactive controls
   decompose into `-border-width` / `-border-style` / `-border-color`
   (+ `-border-color--{state}`), and the rule composes them:
   `border: var(--ui-x-border-width) var(--ui-x-border-style) var(--ui-x-border-color)`.
@@ -354,11 +354,11 @@ this?" decides between the first two kinds; a role word never appears outside `-
 A component file declares two kinds of custom property, and the distinction is
 load-bearing: do not blur them:
 
-| Kind                    | Looks like                                                             | Lives in                                                        | Declared on              | Apps override?                                          |
-| ----------------------- | ---------------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------ | ------------------------------------------------------- |
-| **Public theming hook** | `--ui-accordion-summary-padding-block` (`--ui-` + component namespace) | `@layer variables`                                              | `:root`                  | **yes**: the API                                        |
-| **Private internal**    | `--_ring-width`, `--_ring-fill` (leading `--_`)                        | the rule that uses it (`components`/`reset`)                    | the element              | **no**: plumbing                                        |
-| **Variant private**     | `--_button-bg`, `--_card-bg` (`--_{component}-{utility}`)              | registered `@property … inherits: false` at the top of the file | the element, by a preset | **no**: written by `data-{component}-variant` / `-size` |
+| Kind                    | Looks like                                                     | Lives in                                                        | Declared on              | Apps override?                                          |
+| ----------------------- | -------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------ | ------------------------------------------------------- |
+| **Public theming hook** | `--ui-accordion-summary-min-h` (`--ui-` + component namespace) | `@layer variables`                                              | `:root`                  | **yes**: the API                                        |
+| **Private internal**    | `--_ring-width`, `--_ring-fill` (leading `--_`)                | the rule that uses it (`components`/`reset`)                    | the element              | **no**: plumbing                                        |
+| **Variant private**     | `--_button-bg`, `--_card-bg` (`--_{component}-{utility}`)      | registered `@property … inherits: false` at the top of the file | the element, by a preset | **no**: written by `data-{component}-variant` / `-size` |
 
 **Public hooks** are the override API. They default to a global token, are read by the
 component (often on a descendant), and apps re-skin by reassigning them. Two rules keep
@@ -367,8 +367,8 @@ them overridable:
 - **Declare them on `:root`, never on the element.** A custom property declared _directly
   on_ an element (even via a zero-specificity `:where(details)`) beats a value
   _inherited_ from `:root`, because inheritance only fills in when the element has no
-  declared value of its own. So `:where(details) { --ui-accordion-summary-padding-block: … }`
-  would shadow an app's `:root { --ui-accordion-summary-padding-block: … }` and silently kill
+  declared value of its own. So `:where(details) { --ui-accordion-summary-min-h: … }`
+  would shadow an app's `:root { --ui-accordion-summary-min-h: … }` and silently kill
   the "component default" override surface (redefine the token on `:root` to re-skin every
   instance: see below). Locality is already covered: each component declares its hooks at
   the top of its own file.

@@ -38,9 +38,9 @@ npx zazz-ui add button card # adds primitives and their dependencies
 Paste `zazz/head.html` into your `<head>`, then write markup:
 
 ```html
-<div data-ui="card" data-card-variant="outline" style="--p: 6">
+<ui-card data-card-variant="outline" style="--p: 6">
   <button data-ui="button" data-button-variant="primary">Save</button>
-</div>
+</ui-card>
 ```
 
 To try it without installing anything, the [quick start](https://zazz.sh/docs/quick-start/) loads the kit from a CDN, and the [playground](https://zazz.sh/playground/) runs in the browser.

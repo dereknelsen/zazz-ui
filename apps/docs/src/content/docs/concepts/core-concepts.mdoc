@@ -12,7 +12,7 @@ Every styling decision in Zazz markup is one of three things. The `class` attrib
 
 | Channel | Says | Spelled as |
 | --- | --- | --- |
-| Identity | what the element *is* | `data-ui="button"`, or a tag form such as `<ui-tabs>` |
+| Identity | what the element *is* | `data-ui="button"`, or a tag form such as `<ui-card>` |
 | Preset | which named bundle applies | `data-button-variant="primary"`, `data-layout-size="md"` |
 | Value | one number, length, color, or keyword | a style utility in `style`: `--px: 6` |
 
@@ -26,7 +26,7 @@ Every styling decision in Zazz markup is one of three things. The `class` attrib
 
 `data-ui` is a space-separated token list. A primitive is one token (`button`, `card`, `dialog`); a specialization rides on its base (`data-ui="dialog alert-dialog"`); typography roles and `group` stack on anything (`data-ui="badge text-xs"`, `data-ui="card group"`). `data-ui` says what an element is, so it holds identities only.
 
-Native elements keep their meaning. A button is `<button data-ui="button">`, a dialog is `<dialog data-ui="dialog">`, an input is `<input data-ui="input">`. The tag form (`<ui-tabs>`, `<ui-layout>`, `<ui-carousel>`) exists only where the wrapper would otherwise be a meaningless `<div>`; `<ui-button>` never exists.
+Native elements keep their meaning. A button is `<button data-ui="button">`, a dialog is `<dialog data-ui="dialog">`, an input is `<input data-ui="input">`. The tag form (`<ui-card>`, `<ui-tabs>`, `<ui-layout>`, `<ui-carousel>`) exists only where the wrapper would otherwise be a meaningless `<div>`. A card that is an `<article>` or a `<form>` keeps `data-ui="card"`, and `<ui-button>` never exists.
 
 ## Presets and slots
 

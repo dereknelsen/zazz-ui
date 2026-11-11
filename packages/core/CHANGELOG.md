@@ -10,8 +10,8 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 - The CSP fallback (`Csp.start`), started on another document such as an iframe's, now also applies the root element's own style and elements added or changed later. Before, it applied only the elements already inside the root.
 - `--pointer-events` takes breakpoint tiers (`--pointer-events: none; --pointer-events--md: auto`).
 - New `--mask-linear` and `--mask-stops`: the mask twin of `--bg-linear` / `--bg-stops`, composed into an unrepeated `mask-image: linear-gradient(…)` that replaces any other mask on the element. No tiers or states. `<ui-debug>` and the lint rules flag one without the other.
-- `--display: grid` and `--display: inline-grid` default to `place-content: start stretch`, so a grid taller than its content keeps its rows at the top at their content height, where the browser's `normal` stretched them to fill. `--place-content` at any tier still wins. The default stays off on an element with `--place-items` or `--items`, on a `grid-pile` at any tier, and on primitives, so centering through item alignment works as before. The default follows the base `--display` only: a grid named only at a breakpoint (`--display--md: grid`) keeps `normal`, and `--display: grid; --display--md: flex-row` keeps `start` on its wrapped flex lines at `md`. A child's `--self: center` or `--self: end` in a sized grid now needs `--place-content: normal` on the grid.
-- Touch screens: `--spacing-min` no longer grows by a tenth of `--spacing-touch-min`, so the spacing scale on a phone is the same as on a mouse (a step is 3.6px again, not 4.15px). Control padding grows on its own instead (below).
+- **BREAKING** `--display: grid` and `--display: inline-grid` default to `place-content: start stretch`, so a grid taller than its content keeps its rows at the top at their content height, where the browser's `normal` stretched them to fill. `--place-content` at any tier still wins. The default stays off on an element with `--place-items` or `--items`, on a `grid-pile` at any tier, and on primitives (`data-ui` or a tag form such as `<ui-accordion>`), so centering through item alignment works as before. The default follows the base `--display` only: a grid named only at a breakpoint (`--display--md: grid`) keeps `normal`, and `--display: grid; --display--md: flex-row` keeps `start` on its wrapped flex lines at `md`. Migrate a child's `--self: center` or `--self: end` in a sized grid by adding `--place-content: normal` to the grid.
+- Touch screens: `--spacing-min` no longer grows by a tenth of `--spacing-touch-min`, so the spacing scale on a phone is the same as on a mouse (a step is 3.6px again, not 4.15px). Each control grows its own padding instead; its entry has the details.
 - New `--spacing-control-min` (1rem): the smallest a checkbox, radio, switch, slider thumb, or combobox tag remove button gets, however small `--spacing` is.
 
 ### card
@@ -19,28 +19,85 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 - New tag form, `<ui-card>`, for a card whose wrapper would otherwise be a `div`. `data-ui="card"` still works, and stays the form for `<article>` and `<form>` cards.
 - New slots: `data-card-slot="header"`, `"body"`, and `"footer"` on a card's direct children. A header bleeds over the card's padding to its rounded edge when it is an `img`, `picture`, or `video`, a `figure` without a `figcaption`, or an element holding only an `img`, `picture`, or `video`. The bleed follows `--p` / `--ui-card-p`, not the per-side padding utilities.
 - New `data-card-orientation="horizontal"`: the header takes a start column (`--ui-card-header-w`, default `40%`) spanning the rows, with the body above the footer in the end column. It needs a `header` slot, applies once the card's nearest container is at least 40rem (`sm`) wide, and stacks below that width. `"vertical"` names the default.
+- New hooks `--ui-card-display` (`grid`) and `--ui-card-place-content` (`start stretch`). A card taller than its content, such as one stretched by its grid row, keeps its rows at the top instead of stretching them to fill. Set `--ui-card-place-content: normal` for the old behavior.
 - A card's grid column is now `minmax(0, 1fr)`, so wide content no longer stretches it past its width.
 
-### button, toggle, input, select, combobox, tabs, input-group, password-group
+### fields
 
-- On a touch screen, a control that grows to the 44px floor adds half of that growth to each inline side, so the label sits evenly in the taller box (a default button gains about 6px a side). Nothing changes on a mouse, or on `sm`, `icon`, `icon-sm`, and link buttons.
+- New `--ui-field-py` (`calc(var(--spacing) * 1.75)`, a length) keeps text off the border when `--spacing` is small. Buttons, toggles, tab labels, inputs, selects, the combobox, and OTP cells pad top and bottom by it or by a share of it.
 
-### fields, button, toggle, badge, tabs, input, select, textarea, combobox, password-group, otp
+### button
 
-- New `--ui-field-py` (`calc(var(--spacing) * 1.75)`, a length) keeps text off the border when `--spacing` is small. Buttons, toggles, and select options pad top and bottom by it (`--ui-button-py`, `--ui-toggle-py`, `--ui-option-py`); the `sm` sizes use `calc(var(--spacing) * 0.75)` so a 16px icon still fits 24px. Tab labels take half of it (`--ui-tabs-label-py`) and badges `calc(var(--spacing) * 0.75)` (`--ui-badge-py`), small enough to fit their default height in a browser without `text-box` trim.
-- Inputs, selects, the combobox control, and OTP cells keep their fixed height but never get shorter than one line (one digit, for OTP) plus `--ui-field-py` and the border above and below (`--ui-input-py`, `--ui-select-py`; OTP cells take half of it in `--ui-otp-cell-py`). At the default spacing the floor sits below the height, so they look the same.
+- New `--ui-button-py` (`var(--ui-field-py)`) pads the top and bottom. The `sm` sizes use `calc(var(--spacing) * 0.75)`, so a 16px icon still fits 24px.
+- On a touch screen, a button that grows to the 44px floor adds half of that growth to each inline side, so the label sits evenly in the taller box (a default button gains about 6px a side). Nothing changes on a mouse, or on `sm`, `icon`, `icon-sm`, and link buttons.
+- A link button's hover and pressed text are `--color-muted-foreground`. They were lighter and darker steps of `--color-primary`.
+
+### toggle
+
+- New `--ui-toggle-py` (`var(--ui-button-py)`) pads the top and bottom; the `sm` size uses `calc(var(--spacing) * 0.75)`.
+- On a touch screen, a toggle that grows to the 44px floor adds half of that growth to each inline side. Nothing changes on a mouse or on the `sm` sizes.
+
+### badge
+
+- New `--ui-badge-py` (`calc(var(--spacing) * 0.75)`) pads the top and bottom, small enough to fit the default height in a browser without `text-box` trim.
 - A badge's `--h` is now a minimum (`block-size: fit-content` over `min-block-size`), so the label and its padding can outgrow it. A flex row still doesn't stretch it.
+- A link badge's hover and pressed text are `--color-muted-foreground`. They were lighter and darker steps of `--color-primary`.
+
+### tabs
+
+- New `--ui-tabs-label-py` (half of `--ui-field-py`) pads a label's top and bottom.
+- On a touch screen, a label that grows to the 44px floor adds half of that growth to each inline side.
+
+### input
+
+- An input keeps its fixed height but never gets shorter than one line plus `--ui-input-py` (`var(--ui-field-py)`) and the border above and below. At the default spacing the floor sits below the height, so inputs look the same.
+- On a touch screen, an input that grows to the 44px floor adds half of that growth to each inline side.
+
+### select
+
+- A select keeps its fixed height but never gets shorter than one line plus `--ui-select-py` (`var(--ui-field-py)`) and the border above and below. Options pad top and bottom by the new `--ui-option-py` (`var(--ui-button-py)`).
+- On a touch screen, a select that grows to the 44px floor adds half of that growth to each inline side.
+
+### combobox
+
+- The control keeps its fixed height but never gets shorter than one line plus `--ui-field-py` and the border above and below.
+- On a touch screen, the control adds half of its growth to the 44px floor to each inline side.
+- A tag's remove button is at least `--spacing-control-min` square, and its glyph keeps `--ui-combobox-tag-remove-size` inside it. The button's added height overlaps the tag's padding, so the tag keeps its height.
+
+### input-group
+
+- On a touch screen, a group that grows to the 44px floor adds half of that growth to each inline side of its input. A group with its own `--ui-input-group-min-h` pads by the growth past that height.
+
+### password-group
+
+- On a touch screen, a group that grows to the 44px floor adds half of that growth to each inline side of its input.
+- The group never gets shorter than one line plus its input's top and bottom padding.
+
+### otp
+
+- A cell keeps its size but never gets smaller than one digit plus `--ui-otp-cell-py` (half of `--ui-field-py`) and its border on each side, so it stays square at a small `--spacing`.
+
+### textarea
+
 - **BREAKING** `--ui-textarea-p` is split into `--ui-textarea-px` (`var(--ui-field-px)`, as before) and `--ui-textarea-py` (`var(--ui-field-py)`); the old hook matches nothing, and top and bottom padding drop from 10px to 7px at the default spacing. Migrate `--ui-textarea-p: X` to `--ui-textarea-px: X; --ui-textarea-py: X`.
 
-### callout, dialog, layout
+### callout
 
-- A callout, a dialog's body, and a layout keep their rows at the top when they are taller than their content (`align-content: start`), as a card now does. A callout stretched by its row, a full-screen phone dialog, and a `--min-h` layout no longer stretch their rows to fill. Set `--place-content: normal` for the old behavior; a tier-only `--place-content--md` on them now needs a base value.
+- **BREAKING** A callout taller than its content, such as one stretched by its row, keeps its rows at the top (`align-content: start`) instead of stretching them to fill. A tier-only `--place-content--md` on a callout now needs a base value. Set `--place-content: normal` for the old behavior.
+
+### dialog
+
+- **BREAKING** A dialog's body keeps its rows at the top (`align-content: start`) when it is taller than its content, as in the full-screen phone dialog. A tier-only `--place-content--md` on the body now needs a base value. Set `--place-content: normal` for the old behavior.
+
+### layout
+
+- **BREAKING** A layout taller than its content, such as one with `--min-h`, keeps its rows at the top (`align-content: start`) instead of stretching them to fill. A tier-only `--place-content--md` on a layout now needs a base value. Set `--place-content: normal` for the old behavior.
 
 ### accordion
 
-- New layout hooks, named after the utilities they back and read behind them: `--ui-accordion-display`, `--ui-accordion-flex-direction`, `--ui-accordion-flex`, and `--ui-accordion-w` on the root; `--ui-accordion-item-display`, `--ui-accordion-item-flex-direction`, and `--ui-accordion-item-flex` on each `<details>`; `--ui-accordion-summary-display`, `--ui-accordion-summary-items`, `--ui-accordion-summary-justify`, and `--ui-accordion-summary-min-h` on the summary. Redefine one on `:root` to re-skin every accordion; a utility on the element (`style="--justify: start"`) still wins. The summary's touch floor sits under `--ui-accordion-summary-min-h` rather than replacing it.
+- New layout hooks, each read behind the utility of the same name: `--ui-accordion-display`, `--ui-accordion-flex-direction`, `--ui-accordion-flex`, and `--ui-accordion-w` on the root; `--ui-accordion-item-display`, `--ui-accordion-item-flex-direction`, and `--ui-accordion-item-flex` on each `<details>`; `--ui-accordion-summary-display`, `--ui-accordion-summary-items`, `--ui-accordion-summary-justify`, and `--ui-accordion-summary-min-h` on the summary. Redefine one on `:root` to re-skin every accordion; a utility on the element (`style="--justify: start"`) still wins. The summary's touch floor sits under `--ui-accordion-summary-min-h` rather than replacing it.
 - A `<summary data-ui="button">` keeps the button's own min height and touch padding; the accordion's summary floor applies only to a plain summary.
-- The root and each item are a flex column (was a grid). Grid utilities on them (`--template-cols`, `--place-items`, `--auto-rows`) no longer apply, wide content can no longer stretch the column, and spare height in a fixed-height flex parent lands below each item's content instead of stretching its summary row. A bare `--display: flex` on the root lays its items out in a row, as on any element; use `--display: flex-col` to restate the column.
+- **BREAKING** The root and each item are a flex column (they were a grid). Grid utilities on them (`--template-cols`, `--place-items`, `--auto-rows`) no longer apply, wide content can no longer stretch the column, and spare height in a fixed-height flex parent lands below each item's content instead of stretching its summary row. A bare `--display: flex` keeps the column; use `--display: flex-row` to lay the items out in a row. Migrate a grid layout on the root by moving it to a wrapper, or set `--display: grid` with the grid utilities on the root.
 - The reset-layer private `--details-content-transition` is now `--_details-content-transition`, the prefix every private carries. It was never a hook.
 
 ### slider
@@ -51,10 +108,17 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 - **BREAKING** `--ui-slider-thumb-border` is split into `--ui-slider-thumb-border-width` and `--ui-slider-thumb-border-color`, and `--ui-slider-track-border` into `--ui-slider-track-border-width` and `--ui-slider-track-border-color`; the old hooks match nothing. Migrate `--ui-slider-thumb-border: 2px solid red` to `--ui-slider-thumb-border-width: 2px; --ui-slider-thumb-border-color: red`.
 - **BREAKING** `--ui-slider-thumb-shadow` must be a shadow, never `none`: it now shares a `box-shadow` list with the thumb's border and ring, and `none` drops all three. Use `0 0 transparent`.
 
-### checkbox, radio, switch, combobox
+### checkbox
 
-- Checkbox and radio are never smaller than `--spacing-control-min`, even with a `--size` utility. The switch track is never shorter than it (`--ui-switch-track-w` and `--ui-switch-track-p` floor with `max()`), so at the default spacing on a narrow screen the switch is 16px tall, up from about 14.4px.
-- A combobox tag's remove button is at least `--spacing-control-min` square, and its glyph keeps `--ui-combobox-tag-remove-size` inside it. The button's added height overlaps the tag's padding, so the tag keeps its height.
+- A checkbox is never smaller than `--spacing-control-min`, even with a `--size` utility.
+
+### radio
+
+- A radio is never smaller than `--spacing-control-min`, even with a `--size` utility.
+
+### switch
+
+- The track is never shorter than `--spacing-control-min` (`--ui-switch-track-w` and `--ui-switch-track-p` floor with `max()`), so at the default spacing on a narrow screen the switch is 16px tall, up from about 14.4px.
 
 ## 0.11.0 (2026-11-09)
 

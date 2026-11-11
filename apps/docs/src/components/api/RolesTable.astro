@@ -2,7 +2,7 @@
 import { typographyRoles } from "../../lib/api/foundations.ts";
 ---
 
-<div data-ui="card" style="--p: 6; --display: flex-col; --gap: 4; --my: 4">
+<ui-card style="--p: 6; --display: flex-col; --gap: 4; --my: 4">
   {
     typographyRoles().map((role) => (
       <div style="--display: flex; --items: baseline; --gap: 4; --flex-wrap: wrap">
@@ -11,4 +11,4 @@ import { typographyRoles } from "../../lib/api/foundations.ts";
       </div>
     ))
   }
-</div>
+</ui-card>

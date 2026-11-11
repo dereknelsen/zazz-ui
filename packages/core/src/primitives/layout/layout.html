@@ -1,16 +1,14 @@
 <ui-layout style="--gap: 4">
-  <div data-ui="card" style="--p: 4">Default band (xl)</div>
-  <div
-    data-ui="card"
+  <ui-card style="--p: 4">Default band (xl)</ui-card>
+  <ui-card
     style="
       --band: layout-md;
       --p: 4;
     "
   >
     --band: layout-md
-  </div>
-  <div
-    data-ui="card"
+  </ui-card>
+  <ui-card
     style="
       --band: layout-bleed;
       --p: 4;
@@ -18,9 +16,8 @@
     "
   >
     --band: layout-bleed
-  </div>
-  <div
-    data-ui="card"
+  </ui-card>
+  <ui-card
     style="
       --band: layout-sm;
       --band--lg: layout-xl;
@@ -28,8 +25,8 @@
     "
   >
     --band: layout-sm, --band--lg: layout-xl
-  </div>
+  </ui-card>
   <ui-layout data-layout-size="md" style="--band: layout-bleed">
-    <div data-ui="card" style="--p: 4">nested layout, data-layout-size="md"</div>
+    <ui-card style="--p: 4">nested layout, data-layout-size="md"</ui-card>
   </ui-layout>
 </ui-layout>
