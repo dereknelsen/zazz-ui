@@ -21,7 +21,7 @@ Mark its direct children with `data-card-slot`:
 - `body`: the card's main content.
 - `footer`: actions, a price, or an author.
 
-`data-card-orientation="horizontal"` puts the header in a start column spanning the card's rows, with the body above the footer in the end column, and needs a `header` slot. It applies once the card's nearest container is at least 40rem wide (the `sm` breakpoint) and stacks below that, so give the card's parent `--container-type: inline-size` to follow the parent's width instead of the page's (a `data-ui="layout"` child already is one). Set the column's width with `--ui-card-header-w` (default `40%`; `auto` fits an avatar). `data-card-orientation="vertical"` names the default, stacked layout.
+`data-card-orientation="horizontal"` puts the header in a start column spanning the card's rows, with the body above the footer in the end column, and needs a `header` slot. It applies once the card's nearest container is at least 40rem wide (the `sm` breakpoint) and stacks below that, so give the card's parent `--container-type: inline-size` to follow the parent's width instead of the page's (a `data-ui="layout"` child already is one). Set the column's width with `--ui-card-header-w` (default `40%`; `auto` fits an avatar). A media header (an `img` or `video`, bare or alone in a `figure` or wrapper) fills the column's height and crops to it with `object-fit: cover`. `data-card-orientation="vertical"` names the default, stacked layout.
 
 ## Examples
 

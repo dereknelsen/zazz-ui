@@ -234,6 +234,48 @@ describe("card (claim 26)", () => {
     );
   });
 
+  it("a horizontal card's media header fills the card's height and crops to cover", () => {
+    // a 2:1 image in a card made tall by its body: at its own ratio it would leave a gap
+    const img = `<img width="400" height="200" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'/%3E">`;
+    const card = (name: string, header: string) => `
+      <div style="--container-type: inline-size; width: 48rem">
+        <ui-card data-card-variant="outline" data-card-orientation="horizontal" data-${name}>
+          ${header}
+          <div data-card-slot="body" style="--h: 24rem">b</div>
+        </ui-card>
+      </div>`;
+    const root = mount(`<div>
+      ${card("bare", img.replace("<img", '<img data-card-slot="header"'))}
+      ${card("figure", `<figure data-card-slot="header">${img}</figure>`)}
+      ${card("wrapped", `<div data-card-slot="header">${img}</div>`)}
+      <div style="--container-type: inline-size; width: 20rem">
+        <ui-card data-card-variant="outline" data-card-orientation="horizontal" data-narrow>
+          ${img.replace("<img", '<img data-card-slot="header"')}
+          <div data-card-slot="body">b</div>
+        </ui-card>
+      </div>
+    </div>`);
+    for (const name of ["bare", "figure", "wrapped"]) {
+      const cardEl = root.querySelector(`[data-${name}]`)!;
+      const image = cardEl.querySelector("img")!;
+      const cardBox = cardEl.getBoundingClientRect();
+      const box = image.getBoundingClientRect();
+      const border = Number.parseFloat(style(cardEl, "border-top-width"));
+      expect(box.top - cardBox.top, name).toBeCloseTo(border, 0);
+      expect(cardBox.bottom - box.bottom, name).toBeCloseTo(border, 0);
+      expect(box.height / box.width, name).toBeGreaterThan(1);
+      expect(style(image, "object-fit"), name).toBe("cover");
+    }
+    // the bare image spans its column like the wrapped forms
+    const right = (name: string) =>
+      root.querySelector(`[data-${name}] img`)!.getBoundingClientRect().right;
+    expect(right("bare")).toBeCloseTo(right("figure"), 0);
+    expect(right("bare")).toBeCloseTo(right("wrapped"), 0);
+    // stacked below sm, a bare image keeps its own ratio
+    const narrow = root.querySelector("[data-narrow] > img")!.getBoundingClientRect();
+    expect(narrow.width / narrow.height).toBeCloseTo(2, 1);
+  });
+
   it('names the default with data-card-orientation="vertical"', () => {
     const root = mount(`<div style="width: 320px">
       <ui-card data-plain><div data-card-slot="body">b</div></ui-card>

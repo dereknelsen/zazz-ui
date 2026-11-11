@@ -268,5 +268,46 @@
       margin-block: calc(var(--_card-inset) * -1);
       margin-inline-end: 0;
     }
+
+    /* the media fills the column's height and crops to it. A bare img or video
+       is sized to its grid area plus the bleed (WebKit won't stretch a replaced
+       grid item), and the media inside a wrapper takes the wrapper's full box */
+    :where(
+      :is(
+          ui-card[data-card-orientation="horizontal"],
+          [data-ui~="card"][data-card-orientation="horizontal"]
+        )
+        > [data-card-slot~="header"]:is(img, video)
+    ) {
+      inline-size: calc(100% + var(--_card-inset));
+      max-inline-size: none;
+      block-size: calc(100% + 2 * var(--_card-inset));
+      object-fit: cover;
+    }
+
+    :where(
+      :is(
+          ui-card[data-card-orientation="horizontal"],
+          [data-ui~="card"][data-card-orientation="horizontal"]
+        )
+        > [data-card-slot~="header"]:is(
+          picture,
+          figure:not(:has(> figcaption)),
+          :has(> :is(img, picture, video):only-child)
+        )
+        > :is(img, video, picture),
+      :is(
+          ui-card[data-card-orientation="horizontal"],
+          [data-ui~="card"][data-card-orientation="horizontal"]
+        )
+        > [data-card-slot~="header"]
+        > picture
+        > img
+    ) {
+      display: block;
+      inline-size: 100%;
+      block-size: 100%;
+      object-fit: cover;
+    }
   }
 }
