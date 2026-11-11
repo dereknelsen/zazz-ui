@@ -115,6 +115,14 @@
     overflow: visible;
   }
 
+  /* Without corner-shape the superellipse slider would change nothing: drop it and its chip. */
+  @supports not (corner-shape: round) {
+    .theme-builder__corner-shape,
+    [data-theme-chip="tb-corner-shape"] {
+      display: none;
+    }
+  }
+
   /* The native color picker as a bare swatch inside its input group. */
   .theme-builder__swatch {
     inline-size: calc(var(--spacing) * 6);

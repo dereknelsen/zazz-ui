@@ -12,3 +12,5 @@ declare namespace astroHTML.JSX {
     interestfor?: string | undefined | null;
   }
 }
+
+/// <reference types="astro/client" />

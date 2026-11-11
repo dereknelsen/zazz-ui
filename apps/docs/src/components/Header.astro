@@ -1,21 +1,21 @@
 ---
-import { Menu, X, MoveRight } from '@lucide/astro';
-import { getCollection } from 'astro:content';
-import { links, nav } from '../site.config.ts';
-import GithubIcon from './GithubIcon.astro';
-import Logo from './Logo.astro';
-import Search from './Search.astro';
-import ThemeToggle from './ThemeToggle.astro';
+import { Menu, X, MoveRight } from "@lucide/astro";
+import { getCollection } from "astro:content";
+import { links, nav } from "../site.config.ts";
+import GithubIcon from "./GithubIcon.astro";
+import Logo from "./Logo.astro";
+import Search from "./Search.astro";
+import ThemeToggle from "./ThemeToggle.astro";
 
 const path = Astro.url.pathname;
 const isCurrent = (href: string) => path === href || path.startsWith(href);
 const latest = (
-  await getCollection('blog', ({ data }) => import.meta.env.DEV || !data.draft)
+  await getCollection("blog", ({ data }) => import.meta.env.DEV || !data.draft)
 ).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())[0];
 ---
 
 <header
-  data-ui-persist='header'
+  data-ui-persist="header"
   style={`
       --pointer-events: auto;
       --display: flex;
@@ -30,53 +30,53 @@ const latest = (
       --z: 20;
     `}
 >
-  <ui-layout style='--w: 100%'>
+  <ui-layout style="--w: 100%">
     <div
-      style='
+      style="
         --display: flex;
         --items: center;
         --gap: 1;
-      '
+      "
     >
       <a
-        href='/'
-        aria-label='Zazz home'
-        style='
+        href="/"
+        aria-label="Zazz home"
+        style="
           --display: inline-flex;
           --items: center;
           --mr: 3;
           --text: var(--color-foreground);
           --opacity--hover: 0.8;
           --transition: opacity var(--default-transition-duration) var(--default-transition-timing-function);
-        '
+        "
       >
-        <Logo size={20} variant='mark' />
+        <Logo size={20} variant="mark" />
       </a>
 
       <nav
-        aria-label='Primary'
-        data-ui='navigation-menu'
-        style='
+        aria-label="Primary"
+        data-ui="navigation-menu"
+        style="
           --display: none;
           --display--md: inline-flex;
           --items: center;
           --gap: 2;
-        '
+        "
       >
-        <menu data-navigation-menu-slot='list'>
+        <menu data-navigation-menu-slot="list">
           {
             nav.map((item) => (
-              <li data-navigation-menu-slot='item'>
+              <li data-navigation-menu-slot="item">
                 <a
                   href={item.href}
-                  data-ui='button'
-                  data-button-variant='ghost'
-                  aria-current={isCurrent(item.href) ? 'page' : undefined}
-                  style='
+                  data-ui="button"
+                  data-button-variant="ghost"
+                  aria-current={isCurrent(item.href) ? "page" : undefined}
+                  style="
                     --text: var(--color-muted-foreground);
                     --text--hover: var(--color-foreground);
                     --text--current: var(--color-foreground);
-                  '
+                  "
                 >
                   {item.label}
                 </a>
@@ -88,8 +88,8 @@ const latest = (
           latest && (
             <a
               href={`/blog/${latest.id}/`}
-              data-ui='badge'
-              data-badge-variant='info'
+              data-ui="badge"
+              data-badge-variant="info"
             >
               {latest.data.title} <MoveRight />
             </a>
@@ -98,50 +98,54 @@ const latest = (
       </nav>
 
       <div
-        style='
+        style="
           --display: flex;
           --items: center;
           --flex: 1;
           --gap: 2;
           --ml: auto;
-        '
+        "
       >
         <Search />
 
         <div
-          style='
+          style="
             --display: none;
             --display--md: block;
-          '
+          "
         >
           <ThemeToggle />
         </div>
         <a
           href={links.github}
-          data-ui='button'
-          data-button-variant='ghost'
-          data-button-size='icon'
-          aria-label='Zazz on GitHub'
-          target='_blank'
-          rel='noopener noreferrer'
+          data-ui="button"
+          data-button-variant="ghost"
+          data-button-size="icon"
+          aria-label="Zazz on GitHub"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="
+            --display: none;
+            --display--md: flex;
+          "
         >
           <GithubIcon size={16} />
         </a>
 
         <button
-          data-ui='button'
-          data-button-variant='ghost'
-          data-button-size='icon'
-          type='button'
-          command='show-modal'
-          commandfor='site-menu'
-          aria-label='Open menu'
-          style='
+          data-ui="button"
+          data-button-variant="ghost"
+          data-button-size="icon"
+          type="button"
+          command="show-modal"
+          commandfor="site-menu"
+          aria-label="Open menu"
+          style="
             --display: inline-flex;
             --display--md: none;
-          '
+          "
         >
-          <Menu size={18} aria-hidden='true' />
+          <Menu size={18} aria-hidden="true" />
         </button>
       </div>
     </div>
@@ -149,54 +153,54 @@ const latest = (
 </header>
 
 <dialog
-  id='site-menu'
-  data-ui='dialog mobile-menu'
-  data-dialog-size='bleed'
-  data-mobile-menu-animation='slide-right'
-  closedby='any'
-  style='--border-width: 0'
+  id="site-menu"
+  data-ui="dialog mobile-menu"
+  data-dialog-size="bleed"
+  data-mobile-menu-animation="slide-right"
+  closedby="any"
+  style="--border-width: 0"
 >
-  <div data-mobile-menu-slot='viewport'>
-    <div data-mobile-menu-slot='header'>
+  <div data-mobile-menu-slot="viewport">
+    <div data-mobile-menu-slot="header">
       <Logo size={18} />
 
       <button
-        data-ui='button'
-        data-button-variant='ghost'
-        data-button-size='icon'
-        type='button'
-        commandfor='site-menu'
-        command='close'
-        aria-label='Close menu'
+        data-ui="button"
+        data-button-variant="ghost"
+        data-button-size="icon"
+        type="button"
+        commandfor="site-menu"
+        command="close"
+        aria-label="Close menu"
       >
-        <X size={18} aria-hidden='true' />
+        <X size={18} aria-hidden="true" />
       </button>
     </div>
 
-    <div data-mobile-menu-slot='body'>
-      <div style='
+    <div data-mobile-menu-slot="body">
+      <div style="
           --display: flex-col;
           --gap: 1;
-        '>
+        ">
         <nav
-          aria-label='Menu'
-          style='
+          aria-label="Menu"
+          style="
             --display: flex-col;
             --gap: 1;
-          '
+          "
         >
           {
             nav.map((item) => (
               <a
                 href={item.href}
-                data-ui='button'
-                data-button-variant='ghost'
-                aria-current={isCurrent(item.href) ? 'page' : undefined}
-                style='
+                data-ui="button"
+                data-button-variant="ghost"
+                aria-current={isCurrent(item.href) ? "page" : undefined}
+                style="
                   --justify: start;
                   --w: 100%;
                   --bg--current: var(--color-muted);
-                '
+                "
               >
                 {item.label}
               </a>
@@ -207,12 +211,12 @@ const latest = (
           latest && (
             <a
               href={`/blog/${latest.id}/`}
-              data-ui='button'
-              data-button-variant='info'
-              style='
+              data-ui="button"
+              data-button-variant="info"
+              style="
                 --justify: space-between;
                 --mb: 4;
-              '
+              "
             >
               {latest.data.title} <MoveRight />
             </a>
@@ -221,22 +225,22 @@ const latest = (
       </div>
     </div>
     <div
-      data-mobile-menu-slot='footer'
-      style='
+      data-mobile-menu-slot="footer"
+      style="
         --display: flex;
         --items: center;
         --justify: space-between;
-      '
+      "
     >
       <a
         href={links.github}
-        data-ui='button'
-        data-button-variant='ghost'
-        data-button-size='icon'
-        aria-label='Zazz on GitHub'
-        target='_blank'
-        rel='noopener noreferrer'
-        rel='noopener'
+        data-ui="button"
+        data-button-variant="outline"
+        data-button-size="icon"
+        aria-label="Zazz on GitHub"
+        target="_blank"
+        rel="noopener noreferrer"
+        rel="noopener"
       >
         <GithubIcon size={16} />
       </a>

@@ -34,6 +34,9 @@ const CHIP_FORMAT: Record<string, (value: string) => string> = {
   "tb-spacing": (v) => `${v}rem`,
   "tb-shadow": (v) => `${v}°`,
   "tb-radius": (v) => `${v}×`,
+  "tb-shadow-intensity": (v) => `${v}×`,
+  "tb-shadow-blur": (v) => `${v}×`,
+  "tb-shadow-distance": (v) => `${v}×`,
   "tb-font": (v) => v.replace(/^Default.*/, "Default"),
 };
 
@@ -43,11 +46,19 @@ const PREVIEW = "fieldnotes__preview";
 const PALETTES = ["primary", "neutral"] as const;
 type PaletteName = (typeof PALETTES)[number];
 
-/** Number controls: the token each writes and how its value is spelled. */
-const NUMBERS: Record<string, { token: string; unit: string }> = {
+/** Number controls: the token each writes and how its value is spelled (`format` wins over `unit`). */
+const NUMBERS: Record<string, { token: string; unit: string; format?: (n: number) => string }> = {
   spacing: { token: "--spacing", unit: "rem" },
   radius: { token: "--radius-multiplier", unit: "" },
+  "corner-shape": {
+    token: "--radius-corner-shape",
+    unit: "",
+    format: (n) => `superellipse(${n})`,
+  },
   shadow: { token: "--default-shadow-angle", unit: "deg" },
+  "shadow-intensity": { token: "--default-shadow-intensity", unit: "" },
+  "shadow-blur": { token: "--default-shadow-blur", unit: "" },
+  "shadow-distance": { token: "--default-shadow-distance", unit: "" },
   "scale-min": { token: "--typeset-scale-min", unit: "" },
   "scale-max": { token: "--typeset-scale-max", unit: "" },
 };
@@ -73,11 +84,9 @@ class ThemeBuilder extends ZazzElement {
     const copy = q<HTMLButtonElement>("[data-theme-copy]");
     const reset = q<HTMLButtonElement>("[data-theme-reset]");
     const preview = q<HTMLElement>("[data-theme-css]");
-    const radiusOut = q<HTMLOutputElement>("output[for='tb-radius']");
     const fontLink = document.createElement("link");
     fontLink.rel = "stylesheet";
     fontLink.setAttribute("data-theme-fonts", "");
-    const shadowOut = q<HTMLOutputElement>("output[for='tb-shadow']");
     const panel = q<HTMLElement>("[data-theme-panel]");
     const sheet = q<HTMLElement>("[data-theme-sheet]");
     const dialog = q<HTMLDialogElement>("dialog#tb-sheet");
@@ -108,7 +117,7 @@ class ThemeBuilder extends ZazzElement {
     /** The panel's controls, by `name`: the theme inputs and the preview's elevation slider. */
     const fields = () => [
       ...form.querySelectorAll<Field>(
-        "[data-theme-hex], [data-theme-number], [data-theme-font], [data-fieldnotes-elevation]",
+        "[data-theme-hex], [data-theme-number], [data-theme-token], [data-theme-font], [data-fieldnotes-elevation]",
       ),
     ];
     const changed = (field: Field) => field.value !== defaultOf(field);
@@ -209,10 +218,19 @@ class ThemeBuilder extends ZazzElement {
       }
 
       for (const input of this.querySelectorAll<Field>("[data-theme-number]")) {
-        const { token, unit } = NUMBERS[input.dataset.themeNumber!];
+        const { token, unit, format } = NUMBERS[input.dataset.themeNumber!];
         if (input.value === "" || !input.checkValidity()) continue;
-        if (Number(input.value) !== Number(input.dataset.default)) {
-          lines.push(`${token}: ${Number(input.value)}${unit}`);
+        const n = Number(input.value);
+        if (n !== Number(input.dataset.default)) {
+          lines.push(`${token}: ${format ? format(n) : `${n}${unit}`}`);
+        }
+      }
+
+      // Single colors (the shadow color): a hex field that writes its token as is.
+      for (const input of this.querySelectorAll<HTMLInputElement>("[data-theme-token]")) {
+        const hex = normalizeHex(input.value);
+        if (hex && hex !== normalizeHex(defaultOf(input))) {
+          lines.push(`${input.dataset.themeToken}: ${hex}`);
         }
       }
 
@@ -259,15 +277,19 @@ class ThemeBuilder extends ZazzElement {
       for (const proxy of this.querySelectorAll<HTMLButtonElement>("[data-theme-reset-proxy]")) {
         proxy.disabled = !css && !fields().some(changed);
       }
-      if (radiusOut) radiusOut.value = `${q<HTMLInputElement>("#tb-radius")?.value ?? 1}×`;
-      if (shadowOut) shadowOut.value = `${q<HTMLInputElement>("#tb-shadow")?.value ?? 0}°`;
+      // A number control's readout, where it has one, prints like its chip.
+      for (const input of this.querySelectorAll<HTMLInputElement>("input[data-theme-number]")) {
+        const out = q<HTMLOutputElement>(`output[for='${input.id}']`);
+        if (out) out.value = CHIP_FORMAT[input.id]?.(input.value) ?? input.value;
+      }
       // The collapsed bar's chips mirror the controls.
       for (const chip of this.querySelectorAll<HTMLElement>("[data-theme-chip]")) {
         const input = q<Field>(`#${chip.dataset.themeChip}`);
         if (!input) continue;
         const value = chip.querySelector<HTMLElement>("[data-theme-chip-value]");
         if (value) value.textContent = CHIP_FORMAT[input.id]?.(input.value) ?? input.value;
-        const hex = input.dataset.themeHex ? normalizeHex(input.value) : null;
+        const colored = input.dataset.themeHex ?? input.dataset.themeToken;
+        const hex = colored ? normalizeHex(input.value) : null;
         if (hex)
           chip
             .querySelector<HTMLElement>("[data-theme-chip-swatch]")
@@ -301,7 +323,19 @@ class ThemeBuilder extends ZazzElement {
         const chip = target.closest<HTMLElement>("[data-theme-chip]");
         if (chip) {
           const input = q<HTMLInputElement>(`#${chip.dataset.themeChip}`);
-          requestAnimationFrame(() => input?.focus());
+          // The control may sit in a closed accordion section: open it, focus without
+          // scrolling (the section is still 0 tall), and bring the control into view
+          // once the open transition ends, or after a beat if nothing animates.
+          const section = input?.closest("details");
+          const opening = section && !section.open;
+          if (section) section.open = true;
+          requestAnimationFrame(() => {
+            input?.focus({ preventScroll: opening ?? false });
+            if (!opening || !input) return;
+            const reveal = () => input.scrollIntoView({ block: "nearest" });
+            section.addEventListener("transitionend", reveal, { once: true, signal });
+            setTimeout(reveal, 400);
+          });
         }
         if (target.closest("[data-theme-copy-proxy]")) copy?.click();
         if (target.closest("[data-theme-reset-proxy]")) form.reset();
@@ -319,6 +353,11 @@ class ThemeBuilder extends ZazzElement {
         const typed = target.dataset.themeHex;
         const hex = typed ? normalizeHex(target.value) : null;
         if (typed && hex) q<HTMLInputElement>(`[data-theme-color="${typed}"]`)!.value = hex;
+        // Same for a single color: keep its picker and hex field in step.
+        const pickFor = target.dataset.themePickFor;
+        if (pickFor) q<HTMLInputElement>(`#${pickFor}`)!.value = target.value;
+        const token = target.dataset.themeToken ? normalizeHex(target.value) : null;
+        if (token) q<HTMLInputElement>(`[data-theme-pick-for="${target.id}"]`)!.value = token;
         render();
         save();
       },
