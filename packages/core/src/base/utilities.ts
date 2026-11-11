@@ -162,6 +162,9 @@ export interface Utility {
    * channels, which turn `truncate` and `none` into real `text-wrap` values.
    * `animation` yields to `--_motion-off`, so reduced motion stops any value.
    * `divide` is a border between the element's direct children (`divideRules`).
+   * `corner-shape` reads its value with a `round` fallback: WebKit drops a registered
+   * property substituted into `corner-shape` without one (Safari 27.2), and `round` is
+   * the initial value an invalid one would give anyway.
    */
   emit?:
     | "plain"
@@ -177,7 +180,8 @@ export interface Utility {
     | "direct"
     | "text-wrap"
     | "animation"
-    | "divide";
+    | "divide"
+    | "corner-shape";
   /**
    * What the precedence chain ends in when neither the base nor an active tier
    * sets the utility: a `px` utility that stands in for a token (`--focus-ring`
@@ -860,6 +864,25 @@ export const UTILITIES: readonly Utility[] = [
     tiers: "none",
   })),
   { name: "bg-stops", properties: [], mode: "raw", family: "color", emit: "none", tiers: "none" },
+  // the mask twin of the bg gradients: --mask-linear carries the prelude, --mask-stops
+  // the stops (opaque shows, transparent hides); they compose into mask-image. No
+  // tiers, like the bg gradients.
+  {
+    name: "mask-linear",
+    properties: [],
+    mode: "raw",
+    family: "effects",
+    emit: "none",
+    tiers: "none",
+  },
+  {
+    name: "mask-stops",
+    properties: [],
+    mode: "raw",
+    family: "effects",
+    emit: "none",
+    tiers: "none",
+  },
   // before the border utilities: a child's own border loads later and wins
   ...["divide", "divide-x", "divide-y"].map((name) => ({
     name,
@@ -1090,7 +1113,13 @@ export const UTILITIES: readonly Utility[] = [
   })),
   // the radius rules leave corner-shape to the defaults layer (see generate-utilities.ts);
   // this is the per-element override
-  { name: "corner-shape", properties: ["corner-shape"], mode: "raw", family: "box" },
+  {
+    name: "corner-shape",
+    properties: ["corner-shape"],
+    mode: "raw",
+    family: "box",
+    emit: "corner-shape",
+  },
   // visually hidden, in its own layer above every other utility (`srRules`)
   {
     name: "sr",
@@ -1122,12 +1151,14 @@ export const UTILITIES: readonly Utility[] = [
   },
   { name: "outline", pseudo: true, properties: ["outline"], mode: "raw", family: "box" },
   { name: "cursor", properties: ["cursor"], mode: "keyword", family: "box" },
+  // breakpoints: a layer that blocks taps on a phone often passes them through on desktop
   {
     name: "pointer-events",
     pseudo: true,
     properties: ["pointer-events"],
     mode: "keyword",
     family: "box",
+    tiers: "breakpoints",
   },
   { name: "visibility", pseudo: true, properties: ["visibility"], mode: "keyword", family: "box" },
   // states, so a hovered, open, or focused item can sit above its neighbors

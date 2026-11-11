@@ -3,16 +3,45 @@
  *                slot data-accordion-slot="marker" on the summary icon that rotates open)
  *
  * @layer      variables, reset, components
- * @requires   _layers.css, _variables.css, _properties.css (--_focus-shadow)
+ * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow)
  * @uses       ::details-content: native open/close block-size transition (reset layer)
  * @uses       --_touch-min (touch screens): the summary row grows to the touch floor
  * @uses       interpolate-size: allow-keywords (from _variables.css; required for
  *             block-size: 0 -> auto transitions)
- * @tokens     --ui-accordion-* (@layer variables; none backs a utility)
+ * @tokens     --ui-accordion-* (@layer variables; named after the utilities they back)
+ *
+ * The accordion is a column of native <details> items. Its parts are the item
+ * (each <details>), the summary (the row that toggles it), and the marker slot
+ * on the summary icon. The root, item, and summary read every layout
+ * declaration from a hook behind the matching utility, so
+ * --ui-accordion-summary-justify re-skins every summary and
+ * style="--justify: start" retunes one. A summary that is a button keeps the
+ * button's min height and touch padding.
  */
 
 @layer variables {
   :root {
+    /* root: a column of items that fills its flex parent */
+    --ui-accordion-display: flex;
+    --ui-accordion-flex-direction: column;
+    --ui-accordion-flex: 1;
+    /* dual-mode: a scale number or a length */
+    --ui-accordion-w: 100%;
+
+    /* item: each <details> */
+    --ui-accordion-item-display: flex;
+    --ui-accordion-item-flex-direction: column;
+    --ui-accordion-item-flex: 1 0 auto;
+
+    /* summary: the toggling row; its padding sits on the item in the example
+       fragment, so on touch the row itself takes the floor */
+    --ui-accordion-summary-display: flex;
+    --ui-accordion-summary-items: center;
+    --ui-accordion-summary-justify: space-between;
+    /* dual-mode: a scale number or a length; the touch floor is applied on top */
+    --ui-accordion-summary-min-h: 0;
+
+    /* marker: the summary icon */
     --ui-accordion-icon-size: calc(var(--spacing) * 4);
     --ui-accordion-icon-transform--open: rotate(-180deg);
   }
@@ -24,7 +53,7 @@
   =========================================================================== */
 
   :where(details)::details-content {
-    --details-content-transition:
+    --_details-content-transition:
       opacity var(--default-transition-duration) var(--default-transition-timing-function),
       transform var(--default-transition-duration) var(--default-transition-timing-function),
       block-size var(--default-transition-duration) var(--default-transition-timing-function),
@@ -33,7 +62,7 @@
 
     block-size: 0;
     overflow: hidden;
-    transition: var(--details-content-transition);
+    transition: var(--_details-content-transition);
     will-change: opacity, transform, block-size, content-visibility;
   }
 
@@ -51,22 +80,24 @@
 
 @layer ui.components {
   :where(ui-accordion, [data-ui~="accordion"]) {
-    display: grid;
-    inline-size: 100%;
-    flex: 1;
+    display: var(--_display-resolved, var(--ui-accordion-display));
+    flex-direction: var(--_flex-direction-resolved, var(--ui-accordion-flex-direction));
+    flex: var(--_flex-resolved, var(--ui-accordion-flex));
+    --_w-len: var(--_w-resolved, var(--ui-accordion-w));
+    --_w-num: var(--_w-resolved, var(--ui-accordion-w));
+    inline-size: calc(var(--_w-len) + var(--_w-num) * var(--spacing));
   }
 
   :where(ui-accordion, [data-ui~="accordion"]) > details {
-    display: grid;
-    flex: 1 0 auto;
+    display: var(--_display-resolved, var(--ui-accordion-item-display));
+    flex-direction: var(--_flex-direction-resolved, var(--ui-accordion-item-flex-direction));
+    flex: var(--_flex-resolved, var(--ui-accordion-item-flex));
   }
 
   :where(ui-accordion, [data-ui~="accordion"]) > details > summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    /* the padding sits on <details>, so on touch the row itself takes the floor */
-    min-block-size: var(--_touch-min);
+    display: var(--_display-resolved, var(--ui-accordion-summary-display));
+    align-items: var(--_items-resolved, var(--ui-accordion-summary-items));
+    justify-content: var(--_justify-resolved, var(--ui-accordion-summary-justify));
 
     /* The ring is published to --_focus-shadow so a --shadow utility on the
        summary keeps it; the ring widths grow from 0 so the ring eases in. */
@@ -90,6 +121,21 @@
     );
 
     transition: var(--default-transition);
+  }
+
+  /* A summary that is a button keeps the button's own floor and touch padding,
+     which read the same --_min-h-len/-num pair; this rule would overwrite them.
+     :where(:not()) keeps the specificity of the rule above. */
+  :where(ui-accordion, [data-ui~="accordion"])
+    > details
+    > summary:where(:not([data-ui~="button"])) {
+    --_min-h-len: var(--_min-h-resolved, var(--ui-accordion-summary-min-h));
+    --_min-h-num: var(--_min-h-resolved, var(--ui-accordion-summary-min-h));
+    /* the touch floor (0 on a mouse) sits under whatever the hook or utility asks for */
+    min-block-size: max(
+      calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing)),
+      var(--_touch-min)
+    );
   }
 
   :where(ui-accordion, [data-ui~="accordion"]) > details > summary:focus-visible {

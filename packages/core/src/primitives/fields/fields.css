@@ -52,6 +52,8 @@
     --ui-field-h: calc(var(--spacing) * 8);
     --ui-field-font-size: var(--font-size-sm);
     --ui-field-leading: 1;
+    /* a length, like --ui-field-px: several controls read it raw */
+    --ui-field-py: calc(var(--spacing) * 1.75);
     --ui-field-px: calc(var(--spacing) * 2.5);
     --ui-field-addon-p: var(--spacing);
     --ui-field-gap: calc(var(--spacing) * 2);

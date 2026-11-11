@@ -233,6 +233,7 @@
     "ui-accordion": "accordion",
     "ui-autocomplete": "autocomplete",
     "ui-button-group": "button-group",
+    "ui-card": "card",
     "ui-carousel": "carousel",
     "ui-combobox": "combobox",
     "ui-command": "command",
@@ -257,7 +258,7 @@
           "variables, reset, components"
         ],
         "requires": [
-          "_layers.css, _variables.css, _properties.css (--_focus-shadow)"
+          "_layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow)"
         ],
         "uses": [
           "::details-content: native open/close block-size transition (reset layer)",
@@ -265,7 +266,7 @@
           "interpolate-size: allow-keywords (from _variables.css; required for block-size: 0 -> auto transitions)"
         ],
         "tokens": [
-          "--ui-accordion-* (@layer variables; none backs a utility)"
+          "--ui-accordion-* (@layer variables; named after the utilities they back)"
         ]
       }
     },
@@ -370,7 +371,7 @@
           "color-mix(), oklch(from …) — variant hover/active tints",
           "text-box — vertical trim (patchy browser support)",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners",
-          "--_touch-min (touch screens) — the default and icon sizes grow to the touch floor; sm and icon-sm keep their box and extend an invisible ::after hit area"
+          "--_touch-min (touch screens) — the default and icon sizes grow to the touch floor, and each inline side gains half of what the height grew; sm and icon-sm keep their box and extend an invisible ::after hit area"
         ],
         "tokens": [
           "--ui-button-* (@layer variables; hooks are named after the utilities they back; metrics default to the --ui-field-* family)"
@@ -405,7 +406,7 @@
       }
     },
     "primitives/card/card.css": {
-      "summary": "card.css — Card ([data-ui~=\"card\"])",
+      "summary": "card.css: Card (ui-card | [data-ui~=\"card\"])",
       "tags": {
         "layer": [
           "variables, components"
@@ -414,13 +415,16 @@
           "_layers.css, _variables.css, _properties.css (--_*-resolved)"
         ],
         "uses": [
-          "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
+          "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners",
+          ":has() — a header that holds only media bleeds to the card's edge; a horizontal card needs a header slot",
+          "@container (width >= 40rem) — a horizontal card lays out in two columns once its nearest container reaches sm, and stacks below that"
         ],
         "tokens": [
           "--ui-card-* (@layer variables; named after the utilities they back)"
         ],
         "presets": [
-          "data-card-variant=\"outline\" | \"muted\" | \"floating\""
+          "data-card-variant=\"outline\" | \"muted\" | \"floating\"",
+          "data-card-orientation=\"vertical\" | \"horizontal\""
         ]
       }
     },
@@ -480,7 +484,7 @@
         ],
         "uses": [
           "[popover=\"manual\"]: panel opened/closed by combobox.ts",
-          "--_touch-min (touch screens): the control grows to the touch floor; tag-remove keeps its box and extends an invisible ::after hit area (the trigger needs none: the whole control is one hit target)",
+          "--_touch-min (touch screens): the control grows to the touch floor (each inline side gains half of what its height grew); tag-remove keeps its box and extends an invisible ::after hit area (the trigger needs none: the whole control is one hit target)",
           "anchor-name, anchor-scope, position-anchor: tether panel to the control",
           "anchor-size(width): match panel width to the control (Baseline 2026)",
           ":has(): chevron rotation, group + empty-state visibility",
@@ -595,7 +599,7 @@
         ],
         "uses": [
           ":focus-within — lifts shell ring/border as one field",
-          "--_touch-min (touch screens) — the shell and its addons grow to the touch floor",
+          "--_touch-min (touch screens) — the shell and its addons grow to the touch floor, and the input's inline sides gain half of what the height grew",
           ":has() — restore padding when addons absent; invalid text color",
           "data-input-group-align on the addon slot — inline-start/end, block-start/end",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
@@ -622,7 +626,7 @@
           "mask — calendar icon (not background-image, for color: currentColor)",
           "@supports (-webkit-touch-callout: none) — iOS-only width fix for temporal inputs (webkit.org/b/301648)",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners",
-          "--_touch-min (touch screens) — the field grows to the touch floor"
+          "--_touch-min (touch screens) — the field grows to the touch floor, and each inline side gains half of what the height grew"
         ],
         "tokens": [
           "--ui-input-* (@layer variables; surface colors and height read the --ui-field-* family directly)"
@@ -822,7 +826,7 @@
         ],
         "uses": [
           ":focus-within, :has: shell focus ring and padding (as input-group.css)",
-          "--_touch-min (touch screens): the shell and its addons grow to the touch floor",
+          "--_touch-min (touch screens): the shell and its addons grow to the touch floor, and the input's inline sides gain half of what the height grew",
           "aria-pressed on toggle — show/hide icon swap via CSS (JS sets type + aria in password-group.ts)",
           "Native reveal suppressed in _reset.css (::-ms-reveal, etc.)",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
@@ -960,7 +964,7 @@
           "position-area, position-try-fallbacks: placement tokens come from popover.css's shared matrix (@supports gated)",
           "Degrades to native OS dropdown where base-select is unsupported",
           "ui-multiselect (multiselect.ts): JS-projected dropdown for <select multiple> (base-select has no stable multi-select); degrades to the native multi listbox without JS",
-          "--_touch-min (touch screens) — the trigger and every option row grow to the touch floor",
+          "--_touch-min (touch screens) — the trigger and every option row grow to the touch floor; the trigger's inline sides each gain half of what its height grew",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
         ],
         "tokens": [
@@ -1000,11 +1004,12 @@
         ],
         "uses": [
           "appearance: none — redraws track + thumb from theme tokens",
-          "--_touch-min (touch screens) — the transparent input grows to the touch floor; the track stays --ui-slider-track-h and the thumb centred on it",
+          "--_touch-min (touch screens): the transparent input grows to the touch floor and so does the thumb's box, through a transparent border, while the visible thumb keeps its size. A thumb can't have an ::after, so on touch screens its border and ring draw inset, it loses its drop shadow, and the visible thumb stops a border's width short of each track end.",
+          "sign(): switches the ring inset once the thumb has a hit border",
           "corner-shape — round by default, so circles stay circles; a hook takes any shape"
         ],
         "tokens": [
-          "--ui-slider-* (@layer variables, on :root so subtree hooks work)"
+          "--ui-slider-* (@layer variables, on :root so subtree hooks work); the thumb and track sizes floor at --spacing-control-min"
         ]
       }
     },
@@ -1060,7 +1065,7 @@
           "anchor-name, position-anchor, anchor() — sliding indicator pill (@supports gated; checked-label fallback paints card fill without pill)",
           "anchor-scope — isolates --active-tab inside nested menus",
           "text-box, color-mix() — label trim and focus ring",
-          "--_touch-min (touch screens) — labels grow to the touch floor",
+          "--_touch-min (touch screens) — labels grow to the touch floor, and each inline side gains half of what the height grew",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
         ],
         "tokens": [
@@ -1141,7 +1146,7 @@
           "oklch(from …): variant hover/active tints (inherited from --ui-button-*)",
           "text-box: vertical trim (patchy browser support)",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners",
-          "--_touch-min (touch screens) — the default and icon sizes grow to the touch floor; sm and icon-sm keep their box and extend an invisible ::after hit area"
+          "--_touch-min (touch screens) — the default and icon sizes grow to the touch floor, and each inline side gains half of what the height grew; sm and icon-sm keep their box and extend an invisible ::after hit area"
         ],
         "tokens": [
           "--ui-toggle-* (@layer variables; default to the --ui-button-* family)"
@@ -1175,12 +1180,56 @@
     }
   },
   "hooks": {
+    "--ui-accordion-display": {
+      "value": "flex",
+      "file": "primitives/accordion/accordion.css"
+    },
+    "--ui-accordion-flex": {
+      "value": "1",
+      "file": "primitives/accordion/accordion.css"
+    },
+    "--ui-accordion-flex-direction": {
+      "value": "column",
+      "file": "primitives/accordion/accordion.css"
+    },
     "--ui-accordion-icon-size": {
       "value": "calc(var(--spacing) * 4)",
       "file": "primitives/accordion/accordion.css"
     },
     "--ui-accordion-icon-transform--open": {
       "value": "rotate(-180deg)",
+      "file": "primitives/accordion/accordion.css"
+    },
+    "--ui-accordion-item-display": {
+      "value": "flex",
+      "file": "primitives/accordion/accordion.css"
+    },
+    "--ui-accordion-item-flex": {
+      "value": "1 0 auto",
+      "file": "primitives/accordion/accordion.css"
+    },
+    "--ui-accordion-item-flex-direction": {
+      "value": "column",
+      "file": "primitives/accordion/accordion.css"
+    },
+    "--ui-accordion-summary-display": {
+      "value": "flex",
+      "file": "primitives/accordion/accordion.css"
+    },
+    "--ui-accordion-summary-items": {
+      "value": "center",
+      "file": "primitives/accordion/accordion.css"
+    },
+    "--ui-accordion-summary-justify": {
+      "value": "space-between",
+      "file": "primitives/accordion/accordion.css"
+    },
+    "--ui-accordion-summary-min-h": {
+      "value": "0",
+      "file": "primitives/accordion/accordion.css"
+    },
+    "--ui-accordion-w": {
+      "value": "100%",
       "file": "primitives/accordion/accordion.css"
     },
     "--ui-alert-dialog-accent": {
@@ -1273,6 +1322,10 @@
     },
     "--ui-badge-px": {
       "value": "calc(var(--spacing) * 1.25)",
+      "file": "primitives/badge/badge.css"
+    },
+    "--ui-badge-py": {
+      "value": "calc(var(--spacing) * 0.75)",
       "file": "primitives/badge/badge.css"
     },
     "--ui-badge-radius": {
@@ -1383,6 +1436,10 @@
       "value": "var(--ui-field-px)",
       "file": "primitives/button/button.css"
     },
+    "--ui-button-py": {
+      "value": "var(--ui-field-py)",
+      "file": "primitives/button/button.css"
+    },
     "--ui-button-radius": {
       "value": "var(--ui-field-radius)",
       "file": "primitives/button/button.css"
@@ -1467,12 +1524,24 @@
       "value": "var(--radius-corner-shape)",
       "file": "primitives/card/card.css"
     },
+    "--ui-card-display": {
+      "value": "grid",
+      "file": "primitives/card/card.css"
+    },
     "--ui-card-gap": {
       "value": "var(--space-sm)",
       "file": "primitives/card/card.css"
     },
+    "--ui-card-header-w": {
+      "value": "40%",
+      "file": "primitives/card/card.css"
+    },
     "--ui-card-p": {
       "value": "0",
+      "file": "primitives/card/card.css"
+    },
+    "--ui-card-place-content": {
+      "value": "start stretch",
       "file": "primitives/card/card.css"
     },
     "--ui-card-radius": {
@@ -1971,6 +2040,10 @@
       "value": "calc(var(--spacing) * 2.5)",
       "file": "primitives/fields/fields.css"
     },
+    "--ui-field-py": {
+      "value": "calc(var(--spacing) * 1.75)",
+      "file": "primitives/fields/fields.css"
+    },
     "--ui-field-radius": {
       "value": "var(--radius-md)",
       "file": "primitives/fields/fields.css"
@@ -2113,6 +2186,10 @@
     },
     "--ui-input-pr": {
       "value": "var(--ui-field-px)",
+      "file": "primitives/input/input.css"
+    },
+    "--ui-input-py": {
+      "value": "var(--ui-field-py)",
       "file": "primitives/input/input.css"
     },
     "--ui-input-radius": {
@@ -2551,6 +2628,10 @@
       "value": "var(--ui-button-px)",
       "file": "primitives/select/select.css"
     },
+    "--ui-option-py": {
+      "value": "var(--ui-button-py)",
+      "file": "primitives/select/select.css"
+    },
     "--ui-option-radius": {
       "value": "var(--ui-menu-button-radius)",
       "file": "primitives/select/select.css"
@@ -2601,6 +2682,10 @@
     },
     "--ui-otp-cell-h": {
       "value": "var(--ui-field-h)",
+      "file": "primitives/otp/otp.css"
+    },
+    "--ui-otp-cell-py": {
+      "value": "calc(var(--ui-field-py) / 2)",
       "file": "primitives/otp/otp.css"
     },
     "--ui-otp-cell-radius": {
@@ -2967,6 +3052,10 @@
       "value": "calc(var(--spacing) * 2)",
       "file": "primitives/select/select.css"
     },
+    "--ui-select-py": {
+      "value": "var(--ui-field-py)",
+      "file": "primitives/select/select.css"
+    },
     "--ui-select-radius": {
       "value": "var(--ui-field-radius)",
       "file": "primitives/select/select.css"
@@ -2991,8 +3080,12 @@
       "value": "var(--color-background)",
       "file": "primitives/slider/slider.css"
     },
-    "--ui-slider-thumb-border": {
-      "value": "1px solid var(--color-border)",
+    "--ui-slider-thumb-border-color": {
+      "value": "var(--color-border)",
+      "file": "primitives/slider/slider.css"
+    },
+    "--ui-slider-thumb-border-width": {
+      "value": "1px",
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-thumb-corner-shape": {
@@ -3000,7 +3093,7 @@
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-thumb-offset": {
-      "value": "calc(var(--ui-slider-track-h) * -1)",
+      "value": "calc( (var(--ui-slider-track-h) - var(--ui-slider-thumb-size)) / 2 - var(--_slider-thumb-hit) - var(--ui-slider-track-border-width) )",
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-thumb-radius": {
@@ -3012,15 +3105,19 @@
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-thumb-size": {
-      "value": "calc(var(--spacing) * 4)",
+      "value": "max(calc(var(--spacing) * 4), var(--spacing-control-min))",
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-track-bg": {
       "value": "var(--color-muted)",
       "file": "primitives/slider/slider.css"
     },
-    "--ui-slider-track-border": {
-      "value": "1px solid var(--color-muted)",
+    "--ui-slider-track-border-color": {
+      "value": "var(--color-muted)",
+      "file": "primitives/slider/slider.css"
+    },
+    "--ui-slider-track-border-width": {
+      "value": "1px",
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-track-corner-shape": {
@@ -3028,7 +3125,7 @@
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-track-h": {
-      "value": "calc(var(--spacing) * 1.5)",
+      "value": "max(calc(var(--spacing) * 1.5), calc(var(--spacing-control-min) * 0.375))",
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-track-radius": {
@@ -3128,7 +3225,7 @@
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-track-p": {
-      "value": "calc(var(--spacing) * 0.5)",
+      "value": "max(calc(var(--spacing) * 0.5), calc(var(--spacing-control-min) * 0.125))",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-track-radius": {
@@ -3136,7 +3233,7 @@
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-track-w": {
-      "value": "calc(var(--spacing) * 7)",
+      "value": "max(calc(var(--spacing) * 7), calc(var(--spacing-control-min) * 1.75))",
       "file": "primitives/switch/switch.css"
     },
     "--ui-table-alternating-bg": {
@@ -3295,6 +3392,10 @@
       "value": "var(--ui-field-px)",
       "file": "primitives/tabs/tabs.css"
     },
+    "--ui-tabs-label-py": {
+      "value": "calc(var(--ui-field-py) / 2)",
+      "file": "primitives/tabs/tabs.css"
+    },
     "--ui-tabs-label-ring-color": {
       "value": "var(--ui-field-ring-color)",
       "file": "primitives/tabs/tabs.css"
@@ -3379,8 +3480,12 @@
       "value": "0",
       "file": "primitives/textarea/textarea.css"
     },
-    "--ui-textarea-p": {
+    "--ui-textarea-px": {
       "value": "var(--ui-field-px)",
+      "file": "primitives/textarea/textarea.css"
+    },
+    "--ui-textarea-py": {
+      "value": "var(--ui-field-py)",
       "file": "primitives/textarea/textarea.css"
     },
     "--ui-textarea-radius": {
@@ -3581,6 +3686,10 @@
     },
     "--ui-toggle-px": {
       "value": "var(--ui-button-px)",
+      "file": "primitives/toggle/toggle.css"
+    },
+    "--ui-toggle-py": {
+      "value": "var(--ui-button-py)",
       "file": "primitives/toggle/toggle.css"
     },
     "--ui-toggle-radius": {
@@ -4457,6 +4566,24 @@
       "light": "0deg",
       "dark": "0deg"
     },
+    "--default-shadow-blur": {
+      "value": "1",
+      "file": "base/_variables.css",
+      "light": "1",
+      "dark": "1"
+    },
+    "--default-shadow-distance": {
+      "value": "1",
+      "file": "base/_variables.css",
+      "light": "1",
+      "dark": "1"
+    },
+    "--default-shadow-intensity": {
+      "value": "1",
+      "file": "base/_variables.css",
+      "light": "1",
+      "dark": "1"
+    },
     "--default-transition": {
       "value": "var(--default-transition-colors), var(--default-transition-transforms), var(--default-transition-effects), var(--default-transition-content)",
       "file": "base/_variables.css",
@@ -5214,19 +5341,19 @@
       "dark": "3px"
     },
     "--shadow-2xl": {
-      "value": "calc(var(--spacing) * 4 * var(--_shadow-x)) calc(var(--spacing) * 4 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 4)) calc(max(1px, calc(var(--spacing) * 4)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.08), calc(var(--spacing) * 16 * var(--_shadow-x)) calc(var(--spacing) * 16 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 12.8)) calc(max(1px, calc(var(--spacing) * 12.8)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.06), calc(var(--spacing) * 36 * var(--_shadow-x)) calc(var(--spacing) * 36 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 21.6)) calc(max(1px, calc(var(--spacing) * 21.6)) * -0.55) oklch(from var(--_shadow-color) l c h / 0.05), calc(var(--spacing) * 64 * var(--_shadow-x)) calc(var(--spacing) * 64 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 28.8)) calc(max(1px, calc(var(--spacing) * 28.8)) * -0.6) oklch(from var(--_shadow-color) l c h / 0.04)",
+      "value": "calc(var(--spacing) * 4 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 4 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 4 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 4 * var(--default-shadow-blur))) * -0.5) oklch(from var(--_shadow-color) l c h / calc(0.08 * var(--default-shadow-intensity))), calc(var(--spacing) * 16 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 16 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 12.8 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 12.8 * var(--default-shadow-blur))) * -0.5) oklch(from var(--_shadow-color) l c h / calc(0.06 * var(--default-shadow-intensity))), calc(var(--spacing) * 36 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 36 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 21.6 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 21.6 * var(--default-shadow-blur))) * -0.55) oklch(from var(--_shadow-color) l c h / calc(0.05 * var(--default-shadow-intensity))), calc(var(--spacing) * 64 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 64 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 28.8 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 28.8 * var(--default-shadow-blur))) * -0.6) oklch(from var(--_shadow-color) l c h / calc(0.04 * var(--default-shadow-intensity)))",
       "file": "base/_shadows.css"
     },
     "--shadow-2xs": {
-      "value": "calc(var(--spacing) * 0.25 * var(--_shadow-x)) calc(var(--spacing) * 0.25 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.25)) calc(max(1px, calc(var(--spacing) * 0.25)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.04), calc(var(--spacing) * 1 * var(--_shadow-x)) calc(var(--spacing) * 1 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.8)) calc(max(1px, calc(var(--spacing) * 0.8)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.01), calc(var(--spacing) * 2.25 * var(--_shadow-x)) calc(var(--spacing) * 2.25 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 1.35)) calc(max(1px, calc(var(--spacing) * 1.35)) * -0.55) oklch(from var(--_shadow-color) l c h / 0), calc(var(--spacing) * 4 * var(--_shadow-x)) calc(var(--spacing) * 4 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 1.8)) calc(max(1px, calc(var(--spacing) * 1.8)) * -0.6) oklch(from var(--_shadow-color) l c h / 0)",
+      "value": "calc(var(--spacing) * 0.25 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 0.25 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.25 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 0.25 * var(--default-shadow-blur))) * -0.5) oklch(from var(--_shadow-color) l c h / calc(0.04 * var(--default-shadow-intensity))), calc(var(--spacing) * 1 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 1 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.8 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 0.8 * var(--default-shadow-blur))) * -0.5) oklch(from var(--_shadow-color) l c h / calc(0.01 * var(--default-shadow-intensity))), calc(var(--spacing) * 2.25 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 2.25 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 1.35 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 1.35 * var(--default-shadow-blur))) * -0.55) oklch(from var(--_shadow-color) l c h / calc(0 * var(--default-shadow-intensity))), calc(var(--spacing) * 4 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 4 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 1.8 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 1.8 * var(--default-shadow-blur))) * -0.6) oklch(from var(--_shadow-color) l c h / calc(0 * var(--default-shadow-intensity)))",
       "file": "base/_shadows.css"
     },
     "--shadow-lg": {
-      "value": "calc(var(--spacing) * 1.75 * var(--_shadow-x)) calc(var(--spacing) * 1.75 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 1.75)) calc(max(1px, calc(var(--spacing) * 1.75)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.08), calc(var(--spacing) * 7 * var(--_shadow-x)) calc(var(--spacing) * 7 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 5.6)) calc(max(1px, calc(var(--spacing) * 5.6)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.06), calc(var(--spacing) * 15.75 * var(--_shadow-x)) calc(var(--spacing) * 15.75 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 9.45)) calc(max(1px, calc(var(--spacing) * 9.45)) * -0.55) oklch(from var(--_shadow-color) l c h / 0.05), calc(var(--spacing) * 28 * var(--_shadow-x)) calc(var(--spacing) * 28 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 12.6)) calc(max(1px, calc(var(--spacing) * 12.6)) * -0.6) oklch(from var(--_shadow-color) l c h / 0.018)",
+      "value": "calc(var(--spacing) * 1.75 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 1.75 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 1.75 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 1.75 * var(--default-shadow-blur))) * -0.5) oklch(from var(--_shadow-color) l c h / calc(0.08 * var(--default-shadow-intensity))), calc(var(--spacing) * 7 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 7 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 5.6 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 5.6 * var(--default-shadow-blur))) * -0.5) oklch(from var(--_shadow-color) l c h / calc(0.06 * var(--default-shadow-intensity))), calc(var(--spacing) * 15.75 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 15.75 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 9.45 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 9.45 * var(--default-shadow-blur))) * -0.55) oklch(from var(--_shadow-color) l c h / calc(0.05 * var(--default-shadow-intensity))), calc(var(--spacing) * 28 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 28 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 12.6 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 12.6 * var(--default-shadow-blur))) * -0.6) oklch(from var(--_shadow-color) l c h / calc(0.018 * var(--default-shadow-intensity)))",
       "file": "base/_shadows.css"
     },
     "--shadow-md": {
-      "value": "calc(var(--spacing) * 1 * var(--_shadow-x)) calc(var(--spacing) * 1 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 1)) calc(max(1px, calc(var(--spacing) * 1)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.08), calc(var(--spacing) * 4 * var(--_shadow-x)) calc(var(--spacing) * 4 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 3.2)) calc(max(1px, calc(var(--spacing) * 3.2)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.06), calc(var(--spacing) * 9 * var(--_shadow-x)) calc(var(--spacing) * 9 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 5.4)) calc(max(1px, calc(var(--spacing) * 5.4)) * -0.55) oklch(from var(--_shadow-color) l c h / 0.03), calc(var(--spacing) * 16 * var(--_shadow-x)) calc(var(--spacing) * 16 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 7.2)) calc(max(1px, calc(var(--spacing) * 7.2)) * -0.6) oklch(from var(--_shadow-color) l c h / 0)",
+      "value": "calc(var(--spacing) * 1 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 1 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 1 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 1 * var(--default-shadow-blur))) * -0.5) oklch(from var(--_shadow-color) l c h / calc(0.08 * var(--default-shadow-intensity))), calc(var(--spacing) * 4 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 4 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 3.2 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 3.2 * var(--default-shadow-blur))) * -0.5) oklch(from var(--_shadow-color) l c h / calc(0.06 * var(--default-shadow-intensity))), calc(var(--spacing) * 9 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 9 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 5.4 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 5.4 * var(--default-shadow-blur))) * -0.55) oklch(from var(--_shadow-color) l c h / calc(0.03 * var(--default-shadow-intensity))), calc(var(--spacing) * 16 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 16 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 7.2 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 7.2 * var(--default-shadow-blur))) * -0.6) oklch(from var(--_shadow-color) l c h / calc(0 * var(--default-shadow-intensity)))",
       "file": "base/_shadows.css"
     },
     "--shadow-ring": {
@@ -5236,15 +5363,15 @@
       "dark": "0 0 0 0px oklch(0.241 0.009 285.7), 0 0 0 calc(0px + 3px) color-mix(in oklch, oklch(0.985 0 0) 20%, transparent)"
     },
     "--shadow-sm": {
-      "value": "calc(var(--spacing) * 0.625 * var(--_shadow-x)) calc(var(--spacing) * 0.625 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.625)) calc(max(1px, calc(var(--spacing) * 0.625)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.08), calc(var(--spacing) * 2.5 * var(--_shadow-x)) calc(var(--spacing) * 2.5 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 2)) calc(max(1px, calc(var(--spacing) * 2)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.04), calc(var(--spacing) * 5.625 * var(--_shadow-x)) calc(var(--spacing) * 5.625 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 3.375)) calc(max(1px, calc(var(--spacing) * 3.375)) * -0.55) oklch(from var(--_shadow-color) l c h / 0.012), calc(var(--spacing) * 10 * var(--_shadow-x)) calc(var(--spacing) * 10 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 4.5)) calc(max(1px, calc(var(--spacing) * 4.5)) * -0.6) oklch(from var(--_shadow-color) l c h / 0)",
+      "value": "calc(var(--spacing) * 0.625 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 0.625 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.625 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 0.625 * var(--default-shadow-blur))) * -0.5) oklch(from var(--_shadow-color) l c h / calc(0.08 * var(--default-shadow-intensity))), calc(var(--spacing) * 2.5 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 2.5 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 2 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 2 * var(--default-shadow-blur))) * -0.5) oklch(from var(--_shadow-color) l c h / calc(0.04 * var(--default-shadow-intensity))), calc(var(--spacing) * 5.625 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 5.625 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 3.375 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 3.375 * var(--default-shadow-blur))) * -0.55) oklch(from var(--_shadow-color) l c h / calc(0.012 * var(--default-shadow-intensity))), calc(var(--spacing) * 10 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 10 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 4.5 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 4.5 * var(--default-shadow-blur))) * -0.6) oklch(from var(--_shadow-color) l c h / calc(0 * var(--default-shadow-intensity)))",
       "file": "base/_shadows.css"
     },
     "--shadow-xl": {
-      "value": "calc(var(--spacing) * 2.75 * var(--_shadow-x)) calc(var(--spacing) * 2.75 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 2.75)) calc(max(1px, calc(var(--spacing) * 2.75)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.08), calc(var(--spacing) * 11 * var(--_shadow-x)) calc(var(--spacing) * 11 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 8.8)) calc(max(1px, calc(var(--spacing) * 8.8)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.06), calc(var(--spacing) * 24.75 * var(--_shadow-x)) calc(var(--spacing) * 24.75 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 14.85)) calc(max(1px, calc(var(--spacing) * 14.85)) * -0.55) oklch(from var(--_shadow-color) l c h / 0.05), calc(var(--spacing) * 44 * var(--_shadow-x)) calc(var(--spacing) * 44 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 19.8)) calc(max(1px, calc(var(--spacing) * 19.8)) * -0.6) oklch(from var(--_shadow-color) l c h / 0.04)",
+      "value": "calc(var(--spacing) * 2.75 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 2.75 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 2.75 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 2.75 * var(--default-shadow-blur))) * -0.5) oklch(from var(--_shadow-color) l c h / calc(0.08 * var(--default-shadow-intensity))), calc(var(--spacing) * 11 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 11 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 8.8 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 8.8 * var(--default-shadow-blur))) * -0.5) oklch(from var(--_shadow-color) l c h / calc(0.06 * var(--default-shadow-intensity))), calc(var(--spacing) * 24.75 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 24.75 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 14.85 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 14.85 * var(--default-shadow-blur))) * -0.55) oklch(from var(--_shadow-color) l c h / calc(0.05 * var(--default-shadow-intensity))), calc(var(--spacing) * 44 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 44 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 19.8 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 19.8 * var(--default-shadow-blur))) * -0.6) oklch(from var(--_shadow-color) l c h / calc(0.04 * var(--default-shadow-intensity)))",
       "file": "base/_shadows.css"
     },
     "--shadow-xs": {
-      "value": "calc(var(--spacing) * 0.375 * var(--_shadow-x)) calc(var(--spacing) * 0.375 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.375)) calc(max(1px, calc(var(--spacing) * 0.375)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.06), calc(var(--spacing) * 1.5 * var(--_shadow-x)) calc(var(--spacing) * 1.5 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 1.2)) calc(max(1px, calc(var(--spacing) * 1.2)) * -0.5) oklch(from var(--_shadow-color) l c h / 0.02), calc(var(--spacing) * 3.375 * var(--_shadow-x)) calc(var(--spacing) * 3.375 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 2.025)) calc(max(1px, calc(var(--spacing) * 2.025)) * -0.55) oklch(from var(--_shadow-color) l c h / 0), calc(var(--spacing) * 6 * var(--_shadow-x)) calc(var(--spacing) * 6 * var(--_shadow-y)) max(1px, calc(var(--spacing) * 2.7)) calc(max(1px, calc(var(--spacing) * 2.7)) * -0.6) oklch(from var(--_shadow-color) l c h / 0)",
+      "value": "calc(var(--spacing) * 0.375 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 0.375 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 0.375 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 0.375 * var(--default-shadow-blur))) * -0.5) oklch(from var(--_shadow-color) l c h / calc(0.06 * var(--default-shadow-intensity))), calc(var(--spacing) * 1.5 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 1.5 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 1.2 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 1.2 * var(--default-shadow-blur))) * -0.5) oklch(from var(--_shadow-color) l c h / calc(0.02 * var(--default-shadow-intensity))), calc(var(--spacing) * 3.375 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 3.375 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 2.025 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 2.025 * var(--default-shadow-blur))) * -0.55) oklch(from var(--_shadow-color) l c h / calc(0 * var(--default-shadow-intensity))), calc(var(--spacing) * 6 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--spacing) * 6 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--spacing) * 2.7 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 2.7 * var(--default-shadow-blur))) * -0.6) oklch(from var(--_shadow-color) l c h / calc(0 * var(--default-shadow-intensity)))",
       "file": "base/_shadows.css"
     },
     "--space-2xl": {
@@ -5294,6 +5421,12 @@
       "file": "base/_variables.css",
       "min": "0.225rem",
       "max": "0.25rem"
+    },
+    "--spacing-control-min": {
+      "value": "1rem",
+      "file": "base/_variables.css",
+      "light": "1rem",
+      "dark": "1rem"
     },
     "--spacing-max": {
       "value": "0.25rem",

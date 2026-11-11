@@ -19,6 +19,7 @@
     border-radius: calc(var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier));
   }
   :where([style*="--radius: full"]) { --_radius: var(--radius-full); corner-shape: round; }
+  :where([style*="--radius: var(--radius-full)"]) { --_corner-shape-resolved: round; corner-shape: round; }
   @starting-style {
     :where([style*="--radius--starting: full"]) { --_radius-starting: var(--radius-full); }
   }
@@ -194,7 +195,7 @@
   }
   :where([style*="--corner-shape:"]) {
     --_corner-shape: var(--corner-shape);
-    corner-shape: var(--_corner-shape-resolved);
+    corner-shape: var(--_corner-shape-resolved, round);
   }
 
   :where([style*="--overflow:"], [style*="--overflow--"]) {
@@ -238,7 +239,7 @@
   }
 
   :where([style*="--pointer-events:"], [style*="--pointer-events--"]) {
-    --_pointer-events-resolved: var(--_pointer-events);
+    --_pointer-events-resolved: var(--_pointer-events-2xl, var(--_pointer-events-xl, var(--_pointer-events-lg, var(--_pointer-events-md, var(--_pointer-events-sm, var(--_pointer-events))))));
   }
   :where([style*="--pointer-events:"]) {
     --_pointer-events: var(--pointer-events);

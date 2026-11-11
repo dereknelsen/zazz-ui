@@ -17,6 +17,11 @@
       "attributes": []
     },
     {
+      "name": "ui-card",
+      "description": "Zazz card (tag form; the attribute form is data-ui=\"card\").",
+      "attributes": []
+    },
+    {
       "name": "ui-carousel",
       "description": "Zazz carousel (tag form; the attribute form is data-ui=\"carousel\").",
       "attributes": []
@@ -525,6 +530,33 @@
         },
         {
           "name": "warning"
+        }
+      ]
+    },
+    {
+      "name": "data-card-orientation",
+      "description": "Preset or config of the card primitive.",
+      "values": [
+        {
+          "name": "horizontal"
+        },
+        {
+          "name": "vertical"
+        }
+      ]
+    },
+    {
+      "name": "data-card-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "body"
+        },
+        {
+          "name": "footer"
+        },
+        {
+          "name": "header"
         }
       ]
     },

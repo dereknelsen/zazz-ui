@@ -16,7 +16,8 @@
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
  * @uses       --_touch-min (touch screens) — the default and icon sizes grow to the touch
- *             floor; sm and icon-sm keep their box and extend an invisible ::after hit area
+ *             floor, and each inline side gains half of what the height grew; sm and
+ *             icon-sm keep their box and extend an invisible ::after hit area
  * @tokens     --ui-toggle-* (@layer variables;
  *             default to the --ui-button-* family)
  * @consumedby toggle-group.css
@@ -59,6 +60,7 @@
 
     /* dual-mode hooks: a scale number or a length */
     --ui-toggle-gap: var(--ui-button-gap);
+    --ui-toggle-py: var(--ui-button-py);
     --ui-toggle-px: var(--ui-button-px);
     --ui-toggle-min-h: var(--ui-button-min-h);
     --ui-toggle-radius: var(--ui-button-radius);
@@ -177,6 +179,12 @@
   syntax: "*";
   inherits: false;
 }
+
+@property --_toggle-py {
+  syntax: "*";
+  inherits: false;
+}
+
 @property --_toggle-px {
   syntax: "*";
   inherits: false;
@@ -230,9 +238,21 @@
     );
     min-inline-size: max-content;
 
+    --_py-len: var(--_py-resolved, var(--_toggle-py, var(--ui-toggle-py)));
+    --_py-num: var(--_py-resolved, var(--_toggle-py, var(--ui-toggle-py)));
+    padding-block: calc(var(--_py-len) + var(--_py-num) * var(--spacing));
+
     --_px-len: var(--_px-resolved, var(--_toggle-px, var(--ui-toggle-px)));
     --_px-num: var(--_px-resolved, var(--_toggle-px, var(--ui-toggle-px)));
-    padding-inline: calc(var(--_px-len) + var(--_px-num) * var(--spacing));
+    /* each inline side gains half of what the touch floor added to the height, so the
+       label's margins grow evenly */
+    padding-inline: calc(
+      var(--_px-len) + var(--_px-num) * var(--spacing) +
+        max(
+          0px,
+          (var(--_touch-floor) - calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing))) / 2
+        )
+    );
 
     border-width: var(
       --_border-width-resolved,
@@ -509,6 +529,8 @@
 
   :where([data-ui~="toggle"][data-toggle-size="sm"]) {
     --_toggle-min-h: calc(var(--spacing) * 6);
+    /* a 16px icon, this, and the border fit the 24px box */
+    --_toggle-py: calc(var(--spacing) * 0.75);
     --_toggle-px: calc(var(--spacing) * 2);
     --_toggle-radius: var(--radius-sm);
     /* dense by choice: the box stays small and ::after takes the touch floor */

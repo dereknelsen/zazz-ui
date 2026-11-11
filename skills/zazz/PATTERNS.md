@@ -58,7 +58,7 @@ Each landmark appears once per page unless noted, and `<main>` exactly once.
 | `<nav>`     | A group of links; several per page, each labeled                        | `data-ui="navigation-menu"` for the global one, plain `<nav>` elsewhere |
 | `<main>`    | The page's own content                                                  | A column of `<section data-ui="layout">` bands                          |
 | `<section>` | A thematic group with its own heading                                   | `data-ui="layout"` plus `--py` for vertical rhythm                      |
-| `<article>` | Self-contained and reusable elsewhere: a post, a product, a card        | `<article data-ui="card">` when the card is one                         |
+| `<article>` | Self-contained and reusable elsewhere: a post, a product, a card        | `<article data-ui="card">` when the card is one, else `<ui-card>`       |
 | `<aside>`   | Tangential content: a sidebar, a related-links box                      | A band child placed with `--band`, or a column in a grid                |
 | `<footer>`  | Site footer as a child of `<body>`; otherwise a section's footer        | `data-transition-layer="global-footer"`; put contact in `<address>`     |
 

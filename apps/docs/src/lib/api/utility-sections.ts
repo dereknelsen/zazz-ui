@@ -171,7 +171,7 @@ export const UTILITY_SECTIONS: readonly UtilitySection[] = [
   {
     id: "effects",
     title: "Effects",
-    description: "Shadows, opacity, filters, and blending.",
+    description: "Shadows, opacity, filters, blending, and masks.",
     utilities: [
       "shadow",
       "elevation",
@@ -181,6 +181,8 @@ export const UTILITY_SECTIONS: readonly UtilitySection[] = [
       "filter",
       "backdrop-filter",
       "mix-blend",
+      "mask-linear",
+      "mask-stops",
     ],
   },
   {

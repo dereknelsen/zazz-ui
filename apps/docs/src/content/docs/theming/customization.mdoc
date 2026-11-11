@@ -37,10 +37,12 @@ The text-selection highlight is the `--color-selection` / `--color-selection-for
 Every primitive reads `--ui-<primitive>-<utility>` hooks that inherit, so a hook set on a region themes every instance inside it while each keeps its own states. Where a primitive has a state, it also reads a state hook.
 
 ```html
-<nav style="--ui-button-px: 2; --ui-button-radius: var(--radius-full); --ui-button-bg--hover: var(--color-muted)">
+<nav style="--ui-button-px: 2; --ui-button-radius: var(--radius-full); --ui-button-corner-shape: round; --ui-button-bg--hover: var(--color-muted)">
   …every button in here…
 </nav>
 ```
+
+A pill radius set through a hook needs `--ui-button-corner-shape: round` next to it, or the buttons keep the theme's superellipse corners. On one element, `--radius: full` or `--radius: var(--radius-full)` switches the corner shape by itself.
 
 The widest lever is the `--ui-field-*` family: inputs, selects, and textareas read it directly, and button, tabs, checkbox, radio, badge, menu, and command metrics default to it, so `--ui-field-h: 2.75rem` retunes a whole form row. Each primitive's hooks, with defaults, are on its [API page](/api/).
 
@@ -67,7 +69,7 @@ function setTheme(value) {
 }
 ```
 
-Roles are deliberately unregistered properties so they re-resolve per element inside a pinned subtree. Shadows tint through `--color-shadow` globally or `--shadow-tint` on a subtree, and `--default-shadow-angle` sets the direction the light comes from.
+Roles are deliberately unregistered properties so they re-resolve per element inside a pinned subtree. Shadows tint through `--color-shadow` globally or `--shadow-tint` on a subtree, and `--default-shadow-angle` sets the direction the light comes from. `--default-shadow-intensity`, `--default-shadow-blur`, and `--default-shadow-distance` are multipliers on every shadow (`1` is the default).
 
 ## A brand block
 

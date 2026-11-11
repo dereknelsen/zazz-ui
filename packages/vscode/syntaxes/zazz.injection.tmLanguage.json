@@ -192,7 +192,7 @@
           }
         },
         {
-          "match": "(--)(group-)?(before-|after-)?(transition-duration|ring-offset-color|transition-delay|backdrop-filter|shadow-angle|ring-offset|focus-ring|ring-color|transition|animation|elevation|mix-blend|translate|opacity|filter|rotate|shadow|scale|ring)(?:(--)(focus-visible|focus-within|disabled|starting|checked|current|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
+          "match": "(--)(group-)?(before-|after-)?(transition-duration|ring-offset-color|transition-delay|backdrop-filter|shadow-angle|mask-linear|ring-offset|focus-ring|mask-stops|ring-color|transition|animation|elevation|mix-blend|translate|opacity|filter|rotate|shadow|scale|ring)(?:(--)(focus-visible|focus-within|disabled|starting|checked|current|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
           "captures": {
             "1": {
               "name": "punctuation.definition.custom-property.css.zazz"

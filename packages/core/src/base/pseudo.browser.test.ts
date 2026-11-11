@@ -46,8 +46,9 @@ describe("pseudo-element utilities", () => {
   });
 
   it("spaces and transforms a pseudo-element", () => {
+    // inline-block: an inline box is not transformable, and WebKit then reports `translate: none`
     const el = mount(
-      `<span style="--display: inline-block; --after-content: '→'; --after-p: 2; --after-pl: 1; --after-translate: 0 2px; --after-transition: translate 0.2s; --after-font-size: 12px">Go</span>`,
+      `<span style="--display: inline-block; --after-content: '→'; --after-display: inline-block; --after-p: 2; --after-pl: 1; --after-translate: 0 2px; --after-transition: translate 0.2s; --after-font-size: 12px">Go</span>`,
     );
     expect(Number.parseFloat(style(el, "padding-inline-end", "::after"))).toBeCloseTo(scale(2), 1);
     expect(Number.parseFloat(style(el, "padding-inline-start", "::after"))).toBeCloseTo(

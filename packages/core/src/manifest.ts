@@ -164,12 +164,20 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     examples: ["primitives/callout/callout.html"],
   },
   card: {
+    tags: ["ui-card"],
     css: ["primitives/card/card.css"],
     js: [],
     base: [],
     primitives: [],
     bare: [],
-    examples: ["primitives/card/card.html", "primitives/card/card-subgrid.html"],
+    examples: [
+      "primitives/card/card.html",
+      "primitives/card/card-horizontal.html",
+      "primitives/card/card-product.html",
+      "primitives/card/card-login.html",
+      "primitives/card/card-article.html",
+      "primitives/card/card-subgrid.html",
+    ],
   },
   carousel: {
     tags: ["ui-carousel"],

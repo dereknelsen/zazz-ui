@@ -60,6 +60,8 @@
 @layer ui.components {
   :where([data-ui~="callout"]) {
     display: grid;
+    /* rows stay together at the top when a row of callouts stretches this one */
+    align-content: start;
     --_gap-len: var(--_gap-resolved, var(--ui-callout-gap));
     --_gap-num: var(--_gap-resolved, var(--ui-callout-gap));
     gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));

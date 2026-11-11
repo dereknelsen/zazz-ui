@@ -1,173 +1,136 @@
-<a
-  href="#"
+<div
   style="
     --display: grid;
-    --cursor: pointer;
+    --template-cols: repeat(auto-fit, minmax(min(100%, max(14rem, 40%)), 1fr));
+    --gap: 6;
+    --w: 100%;
   "
 >
-  <div data-ui="card">
+  <ui-card>
     <figure
+      data-card-slot="header"
       style="
-        --display: grid;
         --aspect: 3 / 2;
-        --radius-t: 2.5;
-        --overflow: clip;
+        --radius: var(--ui-card-radius);
+        --overflow: hidden;
       "
     >
       <img
-        width="300"
-        height="200"
+        width="600"
+        height="400"
         loading="lazy"
-        src="https://images.unsplash.com/photo-1564760055775-d63b17a55c44?auto=format&fit=crop&w=300&h=200&q=60"
+        src="https://images.unsplash.com/photo-1564760055775-d63b17a55c44?auto=format&fit=crop&w=600&h=400&q=60"
         alt="Elephants crossing a dusty riverbed"
         style="
           --size: 100%;
-          --opacity: 1;
-          --opacity--hover: 0.75;
-          --scale: 1;
-          --scale--hover: 1.02;
-          --transition: var(--default-transition);
           --object-fit: cover;
         "
       />
     </figure>
-    <div
+    <hgroup
+      data-card-slot="body"
       style="
         --display: grid;
-        --px: 4;
-        --pb: 4;
-        --gap: 4;
+        --gap: 1;
       "
     >
-      <header
+      <h3 data-ui="text-lg">Default</h3>
+      <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+        Bare: no padding, radius, or surface, so media runs edge to edge.
+      </p>
+    </hgroup>
+    <footer data-card-slot="footer">
+      <a href="#" data-ui="button" data-button-variant="outline">Read field notes</a>
+    </footer>
+  </ui-card>
+  <ui-card data-card-variant="outline">
+    <figure data-card-slot="header" style="--aspect: 3 / 2">
+      <img
+        width="600"
+        height="400"
+        loading="lazy"
+        src="https://images.unsplash.com/photo-1564760055775-d63b17a55c44?auto=format&fit=crop&w=600&h=400&q=60"
+        alt="Elephants crossing a dusty riverbed"
         style="
-          --display: grid;
-          --gap: 2;
+          --size: 100%;
+          --object-fit: cover;
         "
-      >
-        <div
-          style="
-            --display: flex;
-            --items: center;
-            --gap: 2;
-          "
-        >
-          <span data-ui="badge" data-badge-variant="muted">Research</span>
-        </div>
-        <hgroup
-          style="
-            --display: grid;
-            --gap: 2;
-          "
-        >
-          <h3
-            style="
-              --font-size: var(--font-size-lg);
-              --font-family: var(--font-family-heading);
-              --leading: var(--leading-lg);
-              --tracking: var(--tracking-lg);
-            "
-          >
-            Migration patterns
-          </h3>
-          <p
-            style="
-              --font-size: var(--font-size-sm);
-              --leading: var(--leading-sm);
-              --tracking: var(--tracking-sm);
-              --line-clamp: 2;
-              --text: var(--color-muted-foreground);
-            "
-          >
-            Satellite collars reveal ancient routes herds still follow each dry season across the
-            floodplain.
-          </p>
-        </hgroup>
-      </header>
-      <footer
+      />
+    </figure>
+    <hgroup
+      data-card-slot="body"
+      style="
+        --display: grid;
+        --gap: 1;
+      "
+    >
+      <h3 data-ui="text-lg">Outline</h3>
+      <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+        Padding, the radius, and a border. The header image bleeds to the card's edges.
+      </p>
+    </hgroup>
+    <footer data-card-slot="footer">
+      <a href="#" data-ui="button" data-button-variant="outline">Read field notes</a>
+    </footer>
+  </ui-card>
+  <ui-card data-card-variant="muted">
+    <figure data-card-slot="header" style="--aspect: 3 / 2">
+      <img
+        width="600"
+        height="400"
+        loading="lazy"
+        src="https://images.unsplash.com/photo-1564760055775-d63b17a55c44?auto=format&fit=crop&w=600&h=400&q=60"
+        alt="Elephants crossing a dusty riverbed"
         style="
-          --display: grid;
-          --justify: start;
-          --pt: 4;
-          --gap: 4;
-          --border-t: 1;
+          --size: 100%;
+          --object-fit: cover;
         "
-      >
-        <div
-          style="
-            --display: flex;
-            --items: center;
-            --gap: 2;
-          "
-        >
-          <figure
-            role="img"
-            style="
-              --display: grid-pile;
-              --size: 11;
-              --border-color: var(--color-border);
-              --border-width: 1px;
-              --radius: full;
-              --overflow: clip;
-            "
-          >
-            <img
-              width="64"
-              height="64"
-              loading="lazy"
-              src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=facearea&facepad=2&w=64&h=64&q=90"
-              alt="John Doe"
-              aria-hidden="true"
-              style="
-                --order: 9999;
-                --size: 100%;
-                --bg: transparent;
-                --object-fit: cover;
-              "
-            />
-            <figcaption
-              style="
-                --display: flex;
-                --items: center;
-                --justify: center;
-                --order: -9999;
-                --size: 100%;
-                --font-size: var(--font-size-md);
-                --font-weight: strong;
-                --leading: var(--leading-md);
-                --tracking: var(--tracking-md);
-                --text-align: center;
-                --text: var(--color-primary-foreground);
-                --bg: var(--color-primary);
-              "
-            >
-              <span style="--sr: only">John Doe</span>
-              <span aria-hidden="true">JD</span>
-            </figcaption>
-          </figure>
-          <div style="--display: flex-col">
-            <span
-              style="
-                --font-size: var(--font-size-sm);
-                --font-weight: strong;
-                --leading: var(--leading-sm);
-                --leading: 1;
-                --tracking: var(--tracking-sm);
-              "
-              >John Doe</span
-            >
-            <span
-              style="
-                --font-size: var(--font-size-xs);
-                --leading: var(--leading-xs);
-                --tracking: var(--tracking-xs);
-                --text: var(--color-muted-foreground);
-              "
-              >Founder, ACME Inc.</span
-            >
-          </div>
-        </div>
-      </footer>
-    </div>
-  </div>
-</a>
+      />
+    </figure>
+    <hgroup
+      data-card-slot="body"
+      style="
+        --display: grid;
+        --gap: 1;
+      "
+    >
+      <h3 data-ui="text-lg">Muted</h3>
+      <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+        Padding, the radius, and the muted surface, for quieter groupings.
+      </p>
+    </hgroup>
+    <footer data-card-slot="footer">
+      <a href="#" data-ui="button" data-button-variant="primary">Read field notes</a>
+    </footer>
+  </ui-card>
+  <ui-card data-card-variant="floating">
+    <figure data-card-slot="header" style="--aspect: 3 / 2">
+      <img
+        width="600"
+        height="400"
+        loading="lazy"
+        src="https://images.unsplash.com/photo-1564760055775-d63b17a55c44?auto=format&fit=crop&w=600&h=400&q=60"
+        alt="Elephants crossing a dusty riverbed"
+        style="
+          --size: 100%;
+          --object-fit: cover;
+        "
+      />
+    </figure>
+    <hgroup
+      data-card-slot="body"
+      style="
+        --display: grid;
+        --gap: 1;
+      "
+    >
+      <h3 data-ui="text-lg">Floating</h3>
+      <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+        Padding, the radius, the card surface, a border, and a small shadow.
+      </p>
+    </hgroup>
+    <footer data-card-slot="footer">
+      <a href="#" data-ui="button" data-button-variant="primary">Read field notes</a>
+    </footer>
+  </ui-card>
+</div>

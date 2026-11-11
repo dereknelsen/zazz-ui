@@ -1,0 +1,56 @@
+<form
+  data-ui="card"
+  data-card-variant="floating"
+  aria-labelledby="card-login-title"
+  style="
+    --w: 100%;
+    --max-w: 96;
+  "
+>
+  <hgroup
+    data-card-slot="header"
+    style="
+      --display: grid;
+      --gap: 1;
+    "
+  >
+    <h3 id="card-login-title" data-ui="text-lg">Sign in</h3>
+    <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+      Log sightings and sync your field notes.
+    </p>
+  </hgroup>
+  <div
+    data-card-slot="body"
+    style="
+      --display: grid;
+      --gap: 4;
+    "
+  >
+    <div data-ui="field">
+      <label data-field-slot="label" for="card-login-email">Email</label>
+      <input
+        data-ui="input"
+        id="card-login-email"
+        name="card-login-email"
+        type="email"
+        required
+        placeholder="you@example.com"
+        autocomplete="email"
+      />
+    </div>
+  </div>
+  <footer
+    data-card-slot="footer"
+    style="
+      --display: grid;
+      --gap: 3;
+      --text-align: center;
+    "
+  >
+    <button type="submit" data-ui="button" data-button-variant="primary">Send a login code</button>
+    <p data-ui="text-sm">
+      New here?
+      <a href="#" data-ui="text-link">Create an account</a>
+    </p>
+  </footer>
+</form>

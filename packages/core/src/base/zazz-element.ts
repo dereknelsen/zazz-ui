@@ -13,7 +13,7 @@
  * **`defineZazzElement(tag, cls)`** is the registration guard (safe under
  * double script loads). Only behavioral components register; the CSS-only
  * tag forms (`ui-tooltip`, `ui-accordion`, `ui-button-group`,
- * `ui-toggle-group`) stay unregistered.
+ * `ui-toggle-group`, `ui-card`) stay unregistered.
  *
  * **The refresh registry** lets navigation.ts re-scan swapped content without
  * naming components: a module whose work is scoped to page content (reveal observer, class-form

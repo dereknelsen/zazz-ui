@@ -327,6 +327,8 @@
 
 
 
+
+
   :where(:is([style*="--opacity--"], [style*="--group-opacity--"]):not([data-tooltip-slot~="content"], [popover], dialog, dialog[open], input[type="range"], label:has(> input[role="switch"]))) {
     opacity: var(--_opacity-resolved, 1);
   }
@@ -433,5 +435,9 @@
 
   :where(:is([style*="--radius"], [style*="--group-radius"]):not([data-ui~="meter"], [data-ui~="progress"], [popover], code, input[role="switch"], input[type="checkbox"]:not([role="switch"]), input[type="range"], kbd)) {
     corner-shape: var(--radius-corner-shape);
+  }
+
+  :where(:is([style*="--display: grid"], [style*="--display: inline-grid"]):not([style*="grid-pile"], [style*="--place-items"], [style*="--items"], [data-ui], [popover], kbd)) {
+    place-content: var(--_place-content-resolved, start stretch);
   }
 }

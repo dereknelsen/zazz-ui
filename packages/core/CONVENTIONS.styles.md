@@ -382,7 +382,7 @@ them overridable:
 
 **Private internals** are transient plumbing: the ring widths flipped on `:focus-visible`
 (`--_ring-width`, `--_ring-offset-width`, `--_ring-fill`), or a value composed and reused within
-one rule (`--details-content-transition`). They carry the `--_` prefix and are declared
+one rule (`--_details-content-transition`). They carry the `--_` prefix and are declared
 _inside the rule that consumes them_, in `@layer ui.components` or `reset`, **never** in
 `@layer variables`. They are not hooks; apps do not touch them. Scoping these to the element
 (or `:where(el)`) is correct precisely _because_ they are not meant to be overridden from
@@ -626,11 +626,15 @@ These deviate from the canonical shape on purpose: document the reason in-file:
   has to inherit, so it stays unregistered, and it is set in one place only.
 - **`--_touch-min` in `@layer variables`**: the same shape for touch targets. `_variables.css`
   declares it `0px` on `:root` and sets it to `--spacing-touch-min` (44px) under
-  `@media (not (hover: hover))`; `--spacing-min` adds a tenth of it so padding loosens with
-  the floor. Visible controls floor their size with it
-  (`min-block-size: max(<size>, var(--_touch-min))`); small indicators keep their box and
+  `@media (not (hover: hover))`. Visible controls floor their size with it
+  (`min-block-size: max(<size>, var(--_touch-min))`) and add half of the growth to each inline
+  padding (`max(0px, (var(--_touch-min) - <size>) / 2)`); small indicators keep their box and
   draw an invisible `::after` hit area with `inset: min(0px, calc((100% - var(--_touch-min)) / 2))`.
-  Read it, never set it anywhere else.
+  The slider thumb can't have an `::after`, so its box grows through a transparent border
+  instead, and its border and ring draw as inset shadows. Read it, never set it anywhere else.
+  Those small controls also floor at `--spacing-control-min` (1rem) whatever `--spacing` is: a
+  plain box takes `min-inline-size` and `min-block-size`; where other parts derive from the size
+  (the switch track and thumb, the slider), the hook default takes a `max()` instead.
 - **Legacy isolation during migration**: bring an existing codebase along by importing its
   stylesheet into the `legacy.imports` sublayer (`@import "./your-legacy.css" layer(legacy.imports)`
   at the commented slot in [`index.css`](./src/index.css)); because `legacy` sits below `ui`, the

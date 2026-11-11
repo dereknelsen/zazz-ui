@@ -263,6 +263,8 @@
 
     grid-row: 2;
     display: grid;
+    /* a full-height body keeps its rows at the top rather than spreading them */
+    align-content: start;
     padding-inline: var(--space-sm);
     padding-block: var(--space-md);
     min-block-size: fit-content;

@@ -4,9 +4,9 @@
  * @fileoverview The scroll-state polyfill (`base/scroll-state.ts`) for the
  * `stuck` state: it writes the sides a sticky container is stuck to, physical
  * and logical, to its `data-ui-stuck`, and the generated `@supports not` rules
- * turn that into `--<utility>--stuck` on its descendants. Run in Chromium with
- * `force`, with the native stuck rules left out of the kit so only the polyfill
- * can switch the state.
+ * turn that into `--<utility>--stuck` on its descendants. Run with `force` (Chromium supports
+ * scroll-state natively; WebKit starts the polyfill on its own), with the native
+ * stuck rules left out of the kit so only the polyfill can switch the state.
  */
 
 import { afterEach, beforeEach, describe, expect, it } from "vite-plus/test";
@@ -43,6 +43,9 @@ describe("scroll-state polyfill (stuck)", () => {
     reader = root.querySelector("[data-reader]")!;
     bottom = root.querySelector("[data-footer]")!;
     await scrollTo(0);
+    // where scroll-state is unsupported the module started itself on import, before this
+    // markup existed; restart so it scans the page as mounted
+    ScrollState.stop();
     ScrollState.start({ force: true });
     for (let i = 0; i < 3; i++) await frame();
   });
@@ -51,12 +54,16 @@ describe("scroll-state polyfill (stuck)", () => {
     await scrollTo(0);
   });
 
-  it("does not start on its own where scroll-state is supported", async () => {
-    ScrollState.stop();
-    ScrollState.start();
-    await scrollTo(200);
-    expect(header.hasAttribute(STUCK_STATE.polyfill)).toBe(false);
-  });
+  // a precondition, not a gap: an engine without scroll-state is where the polyfill runs
+  it.skipIf(!CSS.supports(STUCK_STATE.supports))(
+    "does not start on its own where scroll-state is supported",
+    async () => {
+      ScrollState.stop();
+      ScrollState.start();
+      await scrollTo(200);
+      expect(header.hasAttribute(STUCK_STATE.polyfill)).toBe(false);
+    },
+  );
 
   it("marks a top-sticky header stuck once scrolled, not while it rests at its offset", async () => {
     expect(header.getAttribute(STUCK_STATE.polyfill)).toBeNull();

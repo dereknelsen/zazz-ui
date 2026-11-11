@@ -61,7 +61,11 @@ describe("utilities layer budget", () => {
     // 1,424 with --text-wrap: truncate as exact-value rules at every tier, and the limit raised
     // to 1,425 (2026-11-06): a var-based overflow would wipe a primitive's, and only literal rules
     // apply under a blocked style attribute. Measured +2.3 % initial style on a 24k-element page.
-    expect(substrings).toBeLessThanOrEqual(1425);
+    // 1,432 with --mask-linear / --mask-stops, the `var(--radius-full)` round gate, and
+    // --pointer-events breakpoint tiers (2026-11-10; not re-measured, +0.5 %).
+    // 1,437 with the `--display: grid` / `inline-grid` place-content default, which skips a
+    // pile and `--place-items` / `--items` (2026-11-11; one defaults-layer rule).
+    expect(substrings).toBeLessThanOrEqual(1437);
   });
 
   it("claim 15 (ratchet): the generated layer stays under 27 KB with Brotli", () => {

@@ -19,7 +19,8 @@
     --ui-textarea-min-w: 0;
     --ui-textarea-min-h: 5lh;
     --ui-textarea-max-h: 12lh;
-    --ui-textarea-p: var(--ui-field-px);
+    --ui-textarea-px: var(--ui-field-px);
+    --ui-textarea-py: var(--ui-field-py);
     --ui-textarea-font-size: var(--ui-field-font-size);
     --ui-textarea-leading: var(--leading-sm);
     --ui-textarea-border-width: var(--ui-field-border-width);
@@ -47,9 +48,12 @@
     --_max-h-len: var(--_max-h-resolved, var(--ui-textarea-max-h));
     --_max-h-num: var(--_max-h-resolved, var(--ui-textarea-max-h));
     max-block-size: calc(var(--_max-h-len) + var(--_max-h-num) * var(--spacing));
-    --_p-len: var(--_p-resolved, var(--ui-textarea-p));
-    --_p-num: var(--_p-resolved, var(--ui-textarea-p));
-    padding: calc(var(--_p-len) + var(--_p-num) * var(--spacing));
+    --_px-len: var(--_px-resolved, var(--ui-textarea-px));
+    --_px-num: var(--_px-resolved, var(--ui-textarea-px));
+    padding-inline: calc(var(--_px-len) + var(--_px-num) * var(--spacing));
+    --_py-len: var(--_py-resolved, var(--ui-textarea-py));
+    --_py-num: var(--_py-resolved, var(--ui-textarea-py));
+    padding-block: calc(var(--_py-len) + var(--_py-num) * var(--spacing));
 
     font-size: var(--_font-size-resolved, var(--ui-textarea-font-size));
     line-height: var(--_leading-resolved, var(--ui-textarea-leading));

@@ -15,8 +15,9 @@
 
 @layer variables {
   :root {
-    --ui-switch-track-w: calc(var(--spacing) * 7);
-    --ui-switch-track-p: calc(var(--spacing) * 0.5);
+    /* floored so the track stays at least --spacing-control-min tall */
+    --ui-switch-track-w: max(calc(var(--spacing) * 7), calc(var(--spacing-control-min) * 1.75));
+    --ui-switch-track-p: max(calc(var(--spacing) * 0.5), calc(var(--spacing-control-min) * 0.125));
     --ui-switch-track-h: calc(var(--ui-switch-track-w) / 2 + var(--ui-switch-track-p));
 
     --ui-switch-thumb-bg: var(--color-card);

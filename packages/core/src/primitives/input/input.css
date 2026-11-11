@@ -9,7 +9,8 @@
  *             inputs (webkit.org/b/301648)
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
- * @uses       --_touch-min (touch screens) — the field grows to the touch floor
+ * @uses       --_touch-min (touch screens) — the field grows to the touch floor,
+ *             and each inline side gains half of what the height grew
  * @tokens     --ui-input-* (@layer variables; surface colors and height read the
  *             --ui-field-* family directly)
  */
@@ -20,6 +21,7 @@
     --ui-input-min-w: 16ch;
     --ui-input-pl: var(--ui-field-px);
     --ui-input-pr: var(--ui-field-px);
+    --ui-input-py: var(--ui-field-py);
     --ui-input-font-size: var(--ui-field-font-size);
     --ui-input-leading: var(--ui-field-leading);
     --ui-input-border-width: var(--ui-field-border-width);
@@ -56,13 +58,34 @@
     min-inline-size: calc(var(--_min-w-len) + var(--_min-w-num) * var(--spacing));
     --_h-len: var(--_h-resolved, var(--ui-field-h));
     --_h-num: var(--_h-resolved, var(--ui-field-h));
-    block-size: max(calc(var(--_h-len) + var(--_h-num) * var(--spacing)), var(--_touch-min));
+    /* never shorter than one line plus --ui-input-py and the border above and below,
+       so a small --spacing can't squeeze the text against the border. The browser
+       centers the text in the box; a --py utility replaces --ui-input-py here and
+       also pads the block axis, so the line still fits. */
+    --_py-len: var(--_py-resolved, var(--ui-input-py));
+    --_py-num: var(--_py-resolved, var(--ui-input-py));
+    block-size: max(
+      calc(var(--_h-len) + var(--_h-num) * var(--spacing)),
+      var(--_touch-min),
+      calc(
+        1lh + 2 *
+          (
+            var(--_py-len) + var(--_py-num) * var(--spacing) +
+              var(--_border-width-resolved, var(--ui-input-border-width))
+          )
+      )
+    );
+    /* half of what the touch floor added to the height, on each inline side */
+    --_touch-px: max(
+      0px,
+      (var(--_touch-min) - calc(var(--_h-len) + var(--_h-num) * var(--spacing))) / 2
+    );
     --_pl-len: var(--_pl-resolved, var(--ui-input-pl));
     --_pl-num: var(--_pl-resolved, var(--ui-input-pl));
-    padding-inline-start: calc(var(--_pl-len) + var(--_pl-num) * var(--spacing));
+    padding-inline-start: calc(var(--_pl-len) + var(--_pl-num) * var(--spacing) + var(--_touch-px));
     --_pr-len: var(--_pr-resolved, var(--ui-input-pr));
     --_pr-num: var(--_pr-resolved, var(--ui-input-pr));
-    padding-inline-end: calc(var(--_pr-len) + var(--_pr-num) * var(--spacing));
+    padding-inline-end: calc(var(--_pr-len) + var(--_pr-num) * var(--spacing) + var(--_touch-px));
 
     font-size: var(--_font-size-resolved, var(--ui-input-font-size));
     line-height: var(--_leading-resolved, var(--ui-input-leading));

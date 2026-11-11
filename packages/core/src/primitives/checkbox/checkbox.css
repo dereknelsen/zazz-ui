@@ -48,6 +48,8 @@
     --_size-num: var(--_size-resolved, var(--ui-checkbox-size));
     inline-size: calc(var(--_size-len) + var(--_size-num) * var(--spacing));
     block-size: calc(var(--_size-len) + var(--_size-num) * var(--spacing));
+    min-inline-size: var(--spacing-control-min);
+    min-block-size: var(--spacing-control-min);
 
     background-color: var(--_bg-resolved, var(--ui-checkbox-bg));
 

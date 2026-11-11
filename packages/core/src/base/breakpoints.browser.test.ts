@@ -26,6 +26,16 @@ describe("breakpoint tiers", () => {
     expect(width(probe)).toBe(32);
   });
 
+  it("--pointer-events takes breakpoint tiers", async () => {
+    const probe = mount(
+      `<div><div data-probe style="--pointer-events: none; --pointer-events--md: auto"></div></div>`,
+    ).querySelector("[data-probe]")!;
+    await atWidth(767);
+    expect(getComputedStyle(probe).pointerEvents).toBe("none");
+    await atWidth(768);
+    expect(getComputedStyle(probe).pointerEvents).toBe("auto");
+  });
+
   it("follow the page past body, main and sectioning elements, however narrow", async () => {
     await atWidth(1400);
     const root = mount(`<div>

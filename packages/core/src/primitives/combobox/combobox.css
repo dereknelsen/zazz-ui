@@ -7,7 +7,8 @@
  *             select.css (--ui-option-*, --ui-select-picker-icon-*),
  *             menu.css (--ui-menu-shadow)
  * @uses       [popover="manual"]: panel opened/closed by combobox.ts
- * @uses       --_touch-min (touch screens): the control grows to the touch floor; tag-remove
+ * @uses       --_touch-min (touch screens): the control grows to the touch floor (each inline
+ *             side gains half of what its height grew); tag-remove
  *             keeps its box and extends an invisible ::after hit area (the trigger needs none:
  *             the whole control is one hit target)
  * @uses       anchor-name, anchor-scope, position-anchor: tether panel to the control
@@ -107,19 +108,39 @@
     block-size: calc(var(--_h-len) + var(--_h-num) * var(--spacing));
     --_min-h-len: var(--_min-h-resolved, var(--ui-combobox-control-min-h));
     --_min-h-num: var(--_min-h-resolved, var(--ui-combobox-control-min-h));
+    /* the last term keeps one line plus --ui-field-py and the border above and below at a small
+       --spacing (see input.css) */
     min-block-size: max(
       calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing)),
-      var(--_touch-min)
+      var(--_touch-min),
+      calc(
+        1lh + 2 *
+          (var(--ui-field-py) + var(--_border-width-resolved, var(--ui-combobox-border-width)))
+      )
+    );
+    /* half of what the touch floor added to the height, on each inline side. The height
+       is the larger of --h and --min-h: the single control sets one and the multiselect
+       the other, and the unset one (auto) reads as 0 */
+    --_touch-px: max(
+      0px,
+      (
+          var(--_touch-min) -
+            max(
+              calc(var(--_h-len) + var(--_h-num) * var(--spacing)),
+              calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing))
+            )
+        ) /
+        2
     );
     --_py-len: var(--_py-resolved, var(--ui-combobox-control-py));
     --_py-num: var(--_py-resolved, var(--ui-combobox-control-py));
     padding-block: calc(var(--_py-len) + var(--_py-num) * var(--spacing));
     --_pl-len: var(--_pl-resolved, var(--ui-combobox-pl));
     --_pl-num: var(--_pl-resolved, var(--ui-combobox-pl));
-    padding-inline-start: calc(var(--_pl-len) + var(--_pl-num) * var(--spacing));
+    padding-inline-start: calc(var(--_pl-len) + var(--_pl-num) * var(--spacing) + var(--_touch-px));
     --_pr-len: var(--_pr-resolved, var(--ui-combobox-pr));
     --_pr-num: var(--_pr-resolved, var(--ui-combobox-pr));
-    padding-inline-end: calc(var(--_pr-len) + var(--_pr-num) * var(--spacing));
+    padding-inline-end: calc(var(--_pr-len) + var(--_pr-num) * var(--spacing) + var(--_touch-px));
 
     font-size: var(--_font-size-resolved, var(--ui-field-font-size));
     line-height: var(--_leading-resolved, var(--ui-field-leading));
@@ -332,6 +353,10 @@
     flex-shrink: 0;
     inline-size: var(--ui-combobox-tag-remove-size);
     block-size: var(--ui-combobox-tag-remove-size);
+    min-inline-size: var(--spacing-control-min);
+    min-block-size: var(--spacing-control-min);
+    /* the floor never makes the tag taller: what it adds hangs into the tag's padding */
+    margin-block: min(0px, (var(--ui-combobox-tag-remove-size) - var(--spacing-control-min)) / 2);
     border-radius: var(--ui-combobox-tag-remove-radius);
     corner-shape: var(--ui-combobox-tag-remove-corner-shape);
     opacity: var(--ui-combobox-tag-remove-opacity);
@@ -350,8 +375,9 @@
 
   :where(ui-combobox, [data-ui~="combobox"]) [data-combobox-slot~="tag-remove"]::before {
     content: "";
-    inline-size: 100%;
-    block-size: 100%;
+    /* the glyph keeps its own size inside the floored button */
+    inline-size: var(--ui-combobox-tag-remove-size);
+    block-size: var(--ui-combobox-tag-remove-size);
     background-color: var(--ui-combobox-tag-remove-color);
     mask: var(--ui-combobox-tag-remove-mask) center / contain no-repeat;
   }

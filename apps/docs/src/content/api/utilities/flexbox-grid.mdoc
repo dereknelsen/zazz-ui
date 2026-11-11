@@ -8,6 +8,11 @@ order: 2
 
 Grid tracks take a count (`--grid-cols: 3` is three equal tracks) or `subgrid`; a raw track list goes in `--template-cols`. Place with `--col-span`, `--col-start`, `--col-end` and the `--row-*` twins, or write `--col-start: 1; --col-end: -1` to span every track. Inside a layout, `--band: layout-md` places a child in a band.
 
+`--display: grid` (and `inline-grid`) packs its rows at the top: it defaults to `place-content: start stretch`, so a grid taller than its content keeps its rows at their content height instead of stretching them to fill the extra height. Rows sized with `fr` fill it either way. Any `--place-content`, at the base or a breakpoint, replaces the default (`--place-content: center`). It also stays off where the rows need that extra height to center something: on an element with `--place-items` or `--items`, on a `grid-pile`, and on primitives, which keep the browser's `normal`. Two cases keep `normal` too and may need the pair written out:
+
+- A grid set only at a breakpoint (`--display--md: grid`). Add `--place-content: start stretch` if its rows stretch.
+- A child placed with `--self: center` or `--self: end`. Add `--place-content: normal` to its grid so the row fills the height again.
+
 ## Reference
 
 {% utilities section="flexbox-grid" /%}

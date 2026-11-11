@@ -96,6 +96,8 @@
     column-gap: 0;
     /* children sit at the block start and stretch across their band */
     place-items: start stretch;
+    /* and the rows pack at the top of a layout taller than its content */
+    align-content: start;
     /* a container context would break a nested subgrid */
     container-type: normal;
   }

@@ -122,7 +122,8 @@ unnamed form fields, and removes itself on any other hostname.
 Zazz markup needs no classes. Every styling decision is one of four channels:
 
 - **Identity**: what it is. `data-ui="button"` (space-separated: `data-ui="card group"`), or a
-  tag form where the wrapper would otherwise be a plain div (`<ui-tabs>`, `<ui-layout>`).
+  tag form where the wrapper would otherwise be a plain div (`<ui-tabs>`, `<ui-layout>`,
+  `<ui-card>`).
   Natives keep their tag: `<button data-ui="button">`, `<dialog data-ui="dialog">`.
 - **Preset**: a named variant, `data-<identity>-<key>` (`data-button-variant="primary"`). The
   default is the absence of the attribute.
@@ -265,8 +266,9 @@ Forms share `--ui-field-*` hooks and validate via `:user-invalid` (after blur or
 while typing). Give every `<input>`, `<select>`, and `<textarea>` a `name`, search boxes and
 demos included. A field that must not submit gets an `id` instead. Chrome warns about a field
 that has neither.
-Cards are `data-ui="card"`; avatars and breadcrumbs are utility compositions (copy the
-fragments). Tables are `data-ui="table"` on a semantic `<table>`. Rich text goes in
+Cards are `<ui-card>` (or `data-ui="card"` on an `<article>` or `<form>`), with
+`data-card-slot="header"`, `"body"`, and `"footer"` on their parts; avatars and
+breadcrumbs are utility compositions (copy the fragments). Tables are `data-ui="table"` on a semantic `<table>`. Rich text goes in
 `data-ui="prose"`.
 
 ## Modern APIs and JS behaviors

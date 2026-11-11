@@ -23,7 +23,7 @@ describe("emmet snippets", () => {
   });
 
   it("composes with Emmet operators", () => {
-    expect(html("ui-card>h2")).toBe('<div data-ui="card">\n  <h2></h2>\n</div>');
+    expect(html("ui-callout>p")).toBe('<div data-ui="callout">\n  <p></p>\n</div>');
   });
 
   it("leaves tag forms to Emmet's default", () => {

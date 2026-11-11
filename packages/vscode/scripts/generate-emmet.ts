@@ -1,7 +1,7 @@
 /**
  * @fileoverview Generates `emmet/snippets.json`: an Emmet abbreviation per
  * `data-ui` identity, `ui-<identity>` → the element the kit's own fragments put
- * it on (`ui-dialog` → `dialog[data-ui=dialog]`), so `ui-card>h2` builds Zazz
+ * it on (`ui-dialog` → `dialog[data-ui=dialog]`), so `ui-callout>p` builds Zazz
  * markup. The repo points `emmet.extensionsPath` here. Identities with a tag
  * form (`<ui-carousel>`) keep Emmet's default, which already writes the tag.
  * HTML only: Emmet's stylesheet expansion appends `px` to numbers (`4px`),

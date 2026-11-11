@@ -93,7 +93,7 @@ const GROUPS: { id: string; title: string; test: RegExp }[] = [
   {
     id: "shadow",
     title: "Shadows, ring, and outline",
-    test: /^--shadow-|^--ring-|^--outline-|^--default-shadow-angle$/,
+    test: /^--shadow-|^--ring-|^--outline-|^--default-shadow-/,
   },
   { id: "font", title: "Type: families, sizes, weights", test: /^--font-|^--typeset-/ },
   {

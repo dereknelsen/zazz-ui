@@ -26,6 +26,7 @@ import {
   compositeRule,
   generate,
   gradientRules,
+  maskRules,
   keywordRules,
   noBaseRule,
   appliesAtRest,
@@ -446,6 +447,31 @@ describe("grid placement (Tailwind col-span / col-start / col-end)", () => {
     );
   });
 
+  it("--corner-shape reads its value with a fallback, which WebKit needs to apply it", () => {
+    const box = generate().get("_utilities-box.css")!;
+    expect(box).toContain("corner-shape: var(--_corner-shape-resolved, round);");
+    expect(box).not.toContain("corner-shape: var(--_corner-shape-resolved);");
+  });
+
+  it("--display: grid defaults to place-content: start stretch below the components", () => {
+    const css = generate().get("_defaults.css")!;
+    const rule = css.slice(css.indexOf('[style*="--display: inline-grid"]'));
+    // a pile at any tier, item alignment, and primitives keep the free space to center in
+    for (const skip of [
+      '[style*="grid-pile"]',
+      '[style*="--place-items"]',
+      '[style*="--items"]',
+      "[data-ui]",
+    ])
+      expect(rule.slice(0, rule.indexOf("{")), skip).toContain(skip);
+    expect(rule).toContain("place-content: var(--_place-content-resolved, start stretch);");
+    // after the tier-only place-content rule, so its `normal` fallback can't undo the default
+    expect(css.indexOf("start stretch);")).toBeGreaterThan(
+      css.indexOf("--_place-content-resolved, normal"),
+    );
+    expect(generate().get("_utilities-flow.css")!).not.toContain("start stretch");
+  });
+
   it("start and end follow span in source so they combine like Tailwind's", () => {
     const css = flow();
     expect(css.indexOf("grid-column-start:")).toBeGreaterThan(css.indexOf("--_col-span: var"));
@@ -723,6 +749,19 @@ describe("gradients", () => {
     );
   });
 
+  it("composes --mask-linear with --mask-stops into one unrepeated, intersected mask-image", () => {
+    expect(squash(maskRules())).toBe(
+      squash(`
+        :where([style*="--mask-linear:"]) {
+          mask-image: linear-gradient(var(--_mask-linear-resolved), var(--_mask-stops-resolved));
+          -webkit-mask-composite: source-in;
+          mask-composite: intersect;
+          mask-repeat: no-repeat;
+        }
+      `),
+    );
+  });
+
   it("--bg: none drops background-image at the base and each state, hover behind its media guard", () => {
     const css = squash(bgNoneRules());
     expect(
@@ -862,16 +901,18 @@ describe("elevation formula", () => {
   it("folds a literal height into numbers: four layers, opacity clamped per layer", () => {
     const layers = elevationLayers(4).split(",\n");
     expect(layers).toHaveLength(4);
-    const alphas = layers.map((layer) => Number(/\/ ([\d.]+)\)$/.exec(layer)?.[1]));
+    const alphas = layers.map((layer) => Number(/\/ calc\(([\d.]+) \*/.exec(layer)?.[1]));
     expect(alphas).toEqual([0.08, 0.06, 0.03, 0]);
     // layer k of 4 sits at n × 4 × (k/4)² spacing steps
-    expect(layers[3]).toContain("calc(var(--spacing) * 16 * var(--_shadow-y))");
+    expect(layers[3]).toContain(
+      "calc(var(--spacing) * 16 * var(--default-shadow-distance) * var(--_shadow-y))",
+    );
   });
 
   it("pulls each layer in by a negative spread that reads the layer's own blur", () => {
     const [near] = elevationLayers(4).split(",\n");
     expect(near).toContain(
-      "max(1px, calc(var(--spacing) * 1)) calc(max(1px, calc(var(--spacing) * 1)) * -0.5) oklch(",
+      "max(1px, calc(var(--spacing) * 1 * var(--default-shadow-blur))) calc(max(1px, calc(var(--spacing) * 1 * var(--default-shadow-blur))) * -0.5) oklch(",
     );
     expect(elevationLayers(4)).not.toContain("drop-shadow");
   });
@@ -881,7 +922,28 @@ describe("elevation formula", () => {
     expect(list.split(",\n")).toHaveLength(4);
     expect(list).toContain("calc((var(--_elevation-n) - 4) * 0.006)");
     expect(list).toMatch(
-      /calc\(max\(1px, calc\(var\(--_elevation-n\) \* var\(--spacing\) \* 4 \* 0\.45\)\) \* -0\.6\)/,
+      /calc\(max\(1px, calc\(var\(--_elevation-n\) \* var\(--spacing\) \* 4 \* 0\.45 \* var\(--default-shadow-blur\)\)\) \* -0\.6\)/,
+    );
+  });
+
+  it("scales offsets, blur, and alpha by the three --default-shadow-* knobs", () => {
+    const [near] = elevationLayers(4).split(",\n");
+    expect(near).toBe(
+      "calc(var(--spacing) * 1 * var(--default-shadow-distance) * var(--_shadow-x)) " +
+        "calc(var(--spacing) * 1 * var(--default-shadow-distance) * var(--_shadow-y)) " +
+        "max(1px, calc(var(--spacing) * 1 * var(--default-shadow-blur))) " +
+        "calc(max(1px, calc(var(--spacing) * 1 * var(--default-shadow-blur))) * -0.5) " +
+        "oklch(from var(--_shadow-color) l c h / calc(0.08 * var(--default-shadow-intensity)))",
+    );
+    const list = elevationLayers("var(--_elevation-n)");
+    expect(list).toContain(
+      "calc(var(--_elevation-n) * var(--spacing) * 4 * var(--default-shadow-distance) * var(--_shadow-y))",
+    );
+    expect(list).toContain(
+      "max(1px, calc(var(--_elevation-n) * var(--spacing) * 4 * 0.45 * var(--default-shadow-blur)))",
+    );
+    expect(list).toContain(
+      "calc(clamp(0, calc((var(--_elevation-n) - 4) * 0.006), 0.04) * var(--default-shadow-intensity))",
     );
   });
 
@@ -927,7 +989,7 @@ describe("kit-styling.ts", () => {
   it("maps each tier-only utility to the elements the kit sets its property on", () => {
     // a popover paints itself; a card pads itself; inline code is padded by the reset
     expect(styling.blocks.bg).toContain("[popover]");
-    expect(styling.blocks.p).toContain('[data-ui~="card"]');
+    expect(styling.blocks.p).toContain(':is(ui-card, [data-ui~="card"])');
     expect(styling.blocks.px).toContain("code");
     // the reset's normalizing (universal zeroing, a link's inherited decoration)
     // is what the defaults layer beats
@@ -940,7 +1002,7 @@ describe("kit-styling.ts", () => {
     // the browser's own styling sits below the defaults layer too
     expect(styling.blocks.position).toContain("dialog");
     // a card sets no opacity, so --opacity--hover works on it alone
-    expect(styling.blocks.opacity).not.toContain('[data-ui~="card"]');
+    expect(styling.blocks.opacity).not.toContain(':is(ui-card, [data-ui~="card"])');
   });
 
   it("skips in the defaults layer only the reset's and the browser's deliberate styling", () => {
@@ -948,7 +1010,7 @@ describe("kit-styling.ts", () => {
     expect(skips.px).toContain("code");
     expect(skips.position).toContain("dialog");
     expect(skips.p).not.toContain("*");
-    expect(skips.p ?? []).not.toContain('[data-ui~="card"]');
+    expect(skips.p ?? []).not.toContain(':is(ui-card, [data-ui~="card"])');
     // a switch styles the label that has it, not every label
     expect(Object.values(skips).flat()).not.toContain("label");
     expect(Object.values(skips).flat()).not.toContain(":not([data-gjs-type])");

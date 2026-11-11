@@ -35,7 +35,7 @@ Implement the optional `teardown()` only for resources an abort cannot release: 
 
 Two conventions keep elements configurable in plain HTML: read configuration from `data-<name>-*` attributes (with [`Utils.parseDataAttributes`](/api/javascript/utils/) when there are several), and enhance the light DOM instead of replacing it.
 
-`defineZazzElement(tag, cls)` guards `customElements.define`, so loading a script twice does not throw. Only behavioral primitives register; the CSS-only tag forms (`ui-tooltip`, `ui-accordion`, `ui-button-group`, `ui-toggle-group`, `ui-kbd-group`, `ui-layout`) stay unregistered.
+`defineZazzElement(tag, cls)` guards `customElements.define`, so loading a script twice does not throw. Only behavioral primitives register; the CSS-only tag forms (`ui-tooltip`, `ui-accordion`, `ui-button-group`, `ui-toggle-group`, `ui-kbd-group`, `ui-layout`, `ui-card`) stay unregistered.
 
 ## The refresh registry
 

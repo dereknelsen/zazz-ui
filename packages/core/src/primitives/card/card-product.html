@@ -1,0 +1,78 @@
+<ui-card data-card-variant="outline" style="--max-w: 80">
+  <figure
+    data-card-slot="header"
+    style="
+      --aspect: 1;
+      --bg: var(--color-muted);
+    "
+  >
+    <img
+      width="480"
+      height="480"
+      loading="lazy"
+      src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=480&h=480&q=60"
+      alt="Over-ear headphones on a yellow background"
+      style="
+        --size: 100%;
+        --object-fit: cover;
+      "
+    />
+  </figure>
+  <div
+    data-card-slot="body"
+    style="
+      --display: grid;
+      --gap: 2;
+    "
+  >
+    <div
+      style="
+        --display: flex;
+        --items: center;
+        --gap: 2;
+      "
+    >
+      <span data-ui="badge" data-badge-variant="success">In stock</span>
+      <span data-ui="badge" data-badge-variant="muted">Free shipping</span>
+    </div>
+    <h3 data-ui="text-lg">Field monitor headphones</h3>
+    <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+      Closed-back, 40 hours of battery, and a fold-flat frame for the trail.
+    </p>
+    <p data-ui="text-xl" style="--font-weight: strong">$189</p>
+  </div>
+  <footer
+    data-card-slot="footer"
+    style="
+      --display: flex;
+      --gap: 2;
+    "
+  >
+    <button type="button" data-ui="button" data-button-variant="primary" style="--flex: 1">
+      Add to cart
+    </button>
+    <button
+      type="button"
+      data-ui="button"
+      data-button-variant="outline"
+      data-button-size="icon"
+      aria-label="Save to wishlist"
+      aria-pressed="false"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path
+          d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+        />
+      </svg>
+    </button>
+  </footer>
+</ui-card>

@@ -551,6 +551,22 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
       span: stops[2].span,
     });
   }
+  // a mask needs --mask-linear and --mask-stops, both at the base
+  const maskType = declared("mask-linear");
+  const maskStops = declared("mask-stops");
+  if (maskType && !maskStops) {
+    found.push({
+      rule: "gradient-incomplete",
+      message: `\`${maskType[1]}\` masks nothing without \`--mask-stops\` (the mask's stops).`,
+      span: maskType[2].span,
+    });
+  } else if (maskStops && !maskType) {
+    found.push({
+      rule: "gradient-incomplete",
+      message: "`--mask-stops` masks nothing without `--mask-linear` (the mask's direction).",
+      span: maskStops[2].span,
+    });
+  }
   if (types.length > 1) {
     found.push({
       rule: "gradient-incomplete",

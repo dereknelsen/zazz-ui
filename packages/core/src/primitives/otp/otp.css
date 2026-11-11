@@ -18,6 +18,8 @@
   :root {
     --ui-otp-cell-w: var(--ui-field-h);
     --ui-otp-cell-h: var(--ui-field-h);
+    /* half the field value: the digit is larger than field text */
+    --ui-otp-cell-py: calc(var(--ui-field-py) / 2);
     --ui-otp-cell-bg: var(--ui-field-bg);
     --ui-otp-cell-border-width: var(--ui-field-border-width);
     --ui-otp-cell-border-style: var(--ui-field-border-style);
@@ -79,8 +81,18 @@
   :where(ui-otp, [data-ui~="otp"]) [data-otp-slot~="cell"] {
     display: grid;
     place-items: center;
-    inline-size: max(var(--ui-otp-cell-w), var(--_touch-min));
-    block-size: max(var(--ui-otp-cell-h), var(--_touch-min));
+    /* never smaller than its digit plus --ui-otp-cell-py around it, both ways, so
+       the cell stays square at a small --spacing */
+    inline-size: max(
+      var(--ui-otp-cell-w),
+      var(--_touch-min),
+      calc(1em + 2 * (var(--ui-otp-cell-py) + var(--ui-otp-cell-border-width)))
+    );
+    block-size: max(
+      var(--ui-otp-cell-h),
+      var(--_touch-min),
+      calc(1em + 2 * (var(--ui-otp-cell-py) + var(--ui-otp-cell-border-width)))
+    );
 
     font-family: var(--font-family-mono);
     font-size: var(--ui-otp-cell-font-size);

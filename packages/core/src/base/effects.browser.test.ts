@@ -157,6 +157,26 @@ describe("shadow tokens and tint", () => {
   const farY = (value: string) =>
     Number(/(-?[\d.e-]+)px [\d.e-]+px -?[\d.e-]+px$/.exec(value)?.[1]);
 
+  it("the --default-shadow-* knobs reach the tokens from :root, or a subtree that sets the tint", () => {
+    /** The nearest layer's alpha. */
+    const alpha = (value: string) => Number(/\/ ([\d.e-]+)\)/.exec(value)?.[1] ?? 1);
+    const token = (el: Element) => alpha(style(el, "box-shadow"));
+    const base = alpha(probe("box-shadow: var(--shadow-md)"));
+    document.documentElement.style.setProperty("--default-shadow-intensity", "2");
+    try {
+      expect(alpha(probe("box-shadow: var(--shadow-md)"))).toBeCloseTo(base * 2, 3);
+    } finally {
+      document.documentElement.style.removeProperty("--default-shadow-intensity");
+    }
+    const root = mount(`<div>
+      <div style="--default-shadow-intensity: 2"><i data-plain style="display: block; box-shadow: var(--shadow-md)"></i></div>
+      <div style="--default-shadow-intensity: 2; --shadow-tint: var(--color-shadow)"><i data-tinted style="display: block; box-shadow: var(--shadow-md)"></i></div>
+    </div>`);
+    // the tokens resolve where they are declared: :root, unless the subtree re-declares them
+    expect(token(root.querySelector("[data-plain]")!)).toBeCloseTo(base, 3);
+    expect(token(root.querySelector("[data-tinted]")!)).toBeCloseTo(base * 2, 3);
+  });
+
   it("each token is the four-layer elevation shadow, deeper as the size grows", () => {
     expect(layers(probe("box-shadow: var(--shadow-md)"))).toBe(4);
     const sizes = ["2xs", "xs", "sm", "md", "lg", "xl", "2xl"];
@@ -355,6 +375,35 @@ describe("elevation", () => {
     expect(spread).toBeLessThan(0);
     // the far layer blurs by 0.45 × its distance and draws in by 0.6 × that blur
     expect(-spread!).toBeCloseTo(y! * 0.45 * 0.6, 0);
+  });
+
+  it("--default-shadow-intensity, -blur, and -distance scale alpha, blur, and offset", () => {
+    /** The first layer's y offset, blur, and alpha: `<color> <x> <y> <blur> <spread>`. */
+    const near = (el: Element) => {
+      const layer = layers(el)[0] ?? "";
+      const lengths = layer
+        .slice(layer.lastIndexOf(")") + 1)
+        .trim()
+        .split(" ")
+        .map(parseFloat);
+      const alpha = Number(/\/ ([\d.e-]+)\)/.exec(layer)?.[1] ?? 1);
+      return { y: lengths[1]!, blur: lengths[2]!, alpha };
+    };
+    const root = mount(`<div>
+      <div style="--elevation: 4" data-base>x</div>
+      <div style="--default-shadow-intensity: 2"><div style="--elevation: 4" data-intensity>x</div></div>
+      <div style="--default-shadow-blur: 2"><div style="--elevation: 4" data-blur>x</div></div>
+      <div style="--default-shadow-distance: 2"><div style="--elevation: 4" data-distance>x</div></div>
+    </div>`);
+    const at = (selector: string) => near(root.querySelector(selector)!);
+    const base = at("[data-base]");
+    expect(base.alpha).toBeCloseTo(0.08, 3);
+    expect(at("[data-intensity]").alpha).toBeCloseTo(base.alpha * 2, 3);
+    expect(at("[data-intensity]").y).toBeCloseTo(base.y, 1);
+    expect(at("[data-blur]").blur).toBeCloseTo(base.blur * 2, 1);
+    expect(at("[data-blur]").y).toBeCloseTo(base.y, 1);
+    expect(at("[data-distance]").y).toBeCloseTo(base.y * 2, 1);
+    expect(at("[data-distance]").blur).toBeCloseTo(base.blur, 1);
   });
 
   it("0 and a non-number draw nothing visible", () => {

@@ -1,332 +1,133 @@
 <div
   style="
     --display: grid;
-    --grid-cols: 2;
-    --grid-rows: 3;
+    --template-cols: repeat(auto-fit, minmax(min(100%, max(14rem, 40%)), 1fr));
     --gap: 6;
+    --w: 100%;
   "
 >
-  <a
-    href="#"
+  <ui-card
+    data-card-variant="outline"
     style="
-      --display: grid;
       --row-span: 3;
       --template-rows: subgrid;
-      --cursor: pointer;
     "
   >
+    <figure data-card-slot="header" style="--aspect: 3 / 2">
+      <img
+        width="600"
+        height="400"
+        loading="lazy"
+        src="https://images.unsplash.com/photo-1564760055775-d63b17a55c44?auto=format&fit=crop&w=600&h=400&q=60"
+        alt="Elephants crossing a dusty riverbed"
+        style="
+          --size: 100%;
+          --object-fit: cover;
+        "
+      />
+    </figure>
     <div
-      data-ui="card"
+      data-card-slot="body"
       style="
-        --row-span: 3;
-        --template-rows: subgrid;
+        --display: grid;
+        --place-content: start;
+        --gap: 2;
       "
     >
-      <figure
-        style="
-          --display: grid;
-          --row-span: 1;
-          --template-rows: subgrid;
-          --aspect: 3 / 2;
-          --radius-t: 2.5;
-          --overflow: clip;
-        "
-      >
-        <img
-          width="300"
-          height="200"
-          loading="lazy"
-          src="https://images.unsplash.com/photo-1564760055775-d63b17a55c44?auto=format&fit=crop&w=300&h=200&q=60"
-          alt="Elephants crossing a dusty riverbed"
-          style="
-            --size: 100%;
-            --opacity: 1;
-            --opacity--hover: 0.75;
-            --scale: 1;
-            --scale--hover: 1.02;
-            --transition: var(--default-transition);
-            --object-fit: cover;
-          "
-        />
-      </figure>
       <div
         style="
-          --display: grid;
-          --row-span: 2;
-          --template-rows: subgrid;
-          --px: 4;
-          --pb: 4;
-          --gap: 4;
+          --display: flex;
+          --items: center;
+          --gap: 2;
         "
       >
-        <header
-          style="
-            --display: grid;
-            --gap: 2;
-          "
-        >
-          <div
-            style="
-              --display: flex;
-              --items: center;
-              --gap: 2;
-            "
-          >
-            <span data-ui="badge" data-badge-variant="muted">Research</span>
-          </div>
-          <hgroup
-            style="
-              --display: grid;
-              --gap: 2;
-            "
-          >
-            <h3
-              style="
-                --font-size: var(--font-size-lg);
-                --font-family: var(--font-family-heading);
-                --leading: var(--leading-lg);
-                --tracking: var(--tracking-lg);
-              "
-            >
-              Migration patterns
-            </h3>
-            <p
-              style="
-                --font-size: var(--font-size-sm);
-                --leading: var(--leading-sm);
-                --tracking: var(--tracking-sm);
-                --line-clamp: 2;
-                --text: var(--color-muted-foreground);
-              "
-            >
-              Satellite collars reveal ancient routes herds still follow each dry season across the
-              floodplain.
-            </p>
-          </hgroup>
-        </header>
-        <footer
-          style="
-            --display: grid;
-            --justify: start;
-            --pt: 4;
-            --gap: 4;
-            --border-t: 1;
-          "
-        >
-          <div
-            style="
-              --display: flex;
-              --items: center;
-              --gap: 2;
-            "
-          >
-            <figure
-              role="img"
-              style="
-                --display: grid-pile;
-                --size: 11;
-                --border-color: var(--color-border);
-                --border-width: 1px;
-                --radius: full;
-                --overflow: clip;
-              "
-            >
-              <img
-                width="64"
-                height="64"
-                loading="lazy"
-                src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=facearea&facepad=2&w=64&h=64&q=90"
-                alt="John Doe"
-                aria-hidden="true"
-                style="
-                  --order: 9999;
-                  --size: 100%;
-                  --bg: transparent;
-                  --object-fit: cover;
-                "
-              />
-              <figcaption
-                style="
-                  --display: flex;
-                  --items: center;
-                  --justify: center;
-                  --order: -9999;
-                  --size: 100%;
-                  --font-size: var(--font-size-md);
-                  --font-weight: strong;
-                  --leading: var(--leading-md);
-                  --tracking: var(--tracking-md);
-                  --text-align: center;
-                  --text: var(--color-primary-foreground);
-                  --bg: var(--color-primary);
-                "
-              >
-                <span style="--sr: only">John Doe</span>
-                <span aria-hidden="true">JD</span>
-              </figcaption>
-            </figure>
-            <div style="--display: flex-col">
-              <span
-                style="
-                  --font-size: var(--font-size-sm);
-                  --font-weight: strong;
-                  --leading: var(--leading-sm);
-                  --leading: 1;
-                  --tracking: var(--tracking-sm);
-                "
-                >John Doe</span
-              >
-              <span
-                style="
-                  --font-size: var(--font-size-xs);
-                  --leading: var(--leading-xs);
-                  --tracking: var(--tracking-xs);
-                  --text: var(--color-muted-foreground);
-                "
-                >Founder, ACME Inc.</span
-              >
-            </div>
-          </div>
-        </footer>
+        <span data-ui="badge" data-badge-variant="muted">Research</span>
       </div>
+      <h3 data-ui="text-lg">Migration patterns</h3>
+      <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+        Satellite collars reveal ancient routes herds still follow each dry season across the
+        floodplain.
+      </p>
     </div>
-  </a>
-
-  <a
-    href="#"
+    <footer
+      data-card-slot="footer"
+      style="
+        --pt: 4;
+        --border-t: 1;
+      "
+    >
+      <a
+        href="#"
+        data-ui="button"
+        data-button-variant="link"
+        style="
+          --justify: end;
+          --text-align: end;
+        "
+        >Read article &rarr;</a
+      >
+    </footer>
+  </ui-card>
+  <ui-card
+    data-card-variant="outline"
     style="
-      --display: grid;
       --row-span: 3;
       --template-rows: subgrid;
-      --cursor: pointer;
     "
   >
+    <figure data-card-slot="header" style="--aspect: 3 / 2">
+      <img
+        width="600"
+        height="400"
+        loading="lazy"
+        src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=600&h=400&q=60"
+        alt="Zebras grazing at dawn on the savanna"
+        style="
+          --size: 100%;
+          --object-fit: cover;
+        "
+      />
+    </figure>
     <div
-      data-ui="card"
+      data-card-slot="body"
       style="
-        --row-span: 3;
-        --template-rows: subgrid;
+        --display: grid;
+        --place-content: start;
+        --gap: 2;
       "
     >
-      <figure
-        style="
-          --display: grid;
-          --row-span: 1;
-          --template-rows: subgrid;
-          --aspect: 3 / 2;
-          --radius-t: 2.5;
-          --overflow: clip;
-        "
-      >
-        <img
-          width="300"
-          height="200"
-          loading="lazy"
-          src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=300&h=200&q=60"
-          alt="Zebras grazing at dawn on the savanna"
-          style="
-            --size: 100%;
-            --opacity: 1;
-            --opacity--hover: 0.75;
-            --scale: 1;
-            --scale--hover: 1.02;
-            --transition: var(--default-transition);
-            --object-fit: cover;
-          "
-        />
-      </figure>
       <div
         style="
-          --display: grid;
-          --row-span: 2;
-          --template-rows: subgrid;
-          --px: 4;
-          --pb: 4;
-          --gap: 4;
+          --display: flex;
+          --items: center;
+          --gap: 2;
         "
       >
-        <header
-          style="
-            --display: grid;
-            --gap: 2;
-          "
-        >
-          <div
-            style="
-              --display: flex;
-              --items: center;
-              --gap: 2;
-            "
-          >
-            <span data-ui="badge" data-badge-variant="muted">Field notes</span>
-          </div>
-          <hgroup
-            style="
-              --display: grid;
-              --gap: 2;
-            "
-          >
-            <h3
-              style="
-                --font-size: var(--font-size-lg);
-                --font-family: var(--font-family-heading);
-                --leading: var(--leading-lg);
-                --tracking: var(--tracking-lg);
-              "
-            >
-              How quickly zebras jump
-            </h3>
-            <p
-              style="
-                --font-size: var(--font-size-sm);
-                --leading: var(--leading-sm);
-                --tracking: var(--tracking-sm);
-                --line-clamp: 2;
-                --text: var(--color-muted-foreground);
-              "
-            >
-              Striped coats and sudden bursts of speed help herds evade predators when the
-              grasslands go quiet at dusk.
-            </p>
-          </hgroup>
-        </header>
-        <footer
-          style="
-            --display: grid;
-            --justify: end;
-            --pt: 4;
-            --pb: 2;
-            --gap: 4;
-            --border-t: 1;
-          "
-        >
-          <div data-ui="button" data-button-variant="link">
-            Read article
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-              <rect width="256" height="256" fill="none" />
-              <line
-                x1="40"
-                y1="128"
-                x2="216"
-                y2="128"
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="16"
-              />
-              <polyline
-                points="144 56 216 128 144 200"
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="16"
-              />
-            </svg>
-          </div>
-        </footer>
+        <span data-ui="badge" data-badge-variant="muted">Field notes</span>
       </div>
+      <h3 data-ui="text-lg">How quickly zebras jump</h3>
+      <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+        Striped coats and sudden bursts of speed help herds evade predators when the grasslands go
+        quiet at dusk, long after the light fades from the plain.
+      </p>
     </div>
-  </a>
+    <footer
+      data-card-slot="footer"
+      style="
+        --pt: 4;
+        --border-t: 1;
+      "
+    >
+      <a
+        href="#"
+        data-ui="button"
+        data-button-variant="link"
+        style="
+          --justify: end;
+          --text-align: end;
+        "
+        >Read article &rarr;</a
+      >
+    </footer>
+  </ui-card>
 </div>

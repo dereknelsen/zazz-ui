@@ -26,7 +26,7 @@ Two rules govern every choice:
   The tokens stay for CSS and hooks.
 - **Scale numbers:** spacing, margin, and sizing utilities take a bare number as `n × --spacing`
   (`--px: 6`). `--spacing` is fluid: it grows from `--spacing-min` to `--spacing-max` across the fluid range (`--fluid-min` to `--fluid-max`).
-- **Touch targets are built in.** `--spacing-touch-min` (44px) floors every interactive primitive on touch screens (`not (hover: hover)`): buttons, fields and tabs grow to it; checkbox, radio, switch, clickable badges and `sm` buttons keep their size and gain an invisible hit area; and `--spacing-min` grows by a tenth of it, so phone padding loosens too. Don't pad controls by hand for mobile; set the token to `0px` to opt out.
+- **Touch targets are built in.** `--spacing-touch-min` (44px) floors every interactive primitive on touch screens (`not (hover: hover)`): buttons, fields and tabs grow to it; checkbox, radio, switch, the slider thumb, clickable badges and `sm` buttons keep their size and gain an invisible hit area; and a grown control adds half the extra height to each side's inline padding, so the label sits evenly in the taller box. Don't pad controls by hand for mobile; set the token to `0px` to opt out. `--spacing-control-min` (1rem) is the smallest a checkbox, radio, switch, slider thumb or tag remove button gets, so a small `--spacing` can't shrink them past it.
 - **No numeric step scale.** Use a utility number (`--max-w: 96` is 96 × `--spacing`) or `calc(var(--spacing) * N)` in CSS; write `1px` and `100%` directly.
 - **Utilities:** padding `--p` `--px` `--py` `--pt` `--pb` `--pl` `--pr`; margin `--m` `--mx` `--my`
   `--mt` `--mb` `--ml` `--mr` (+ `auto`); gap `--gap` `--gap-x` `--gap-y`; space between children `--space-x` `--space-y` (on the container, states and breakpoints; prefer `--gap` in flex and grid); inset `--inset` `--inset-x` `--inset-y` `--top`
@@ -60,6 +60,8 @@ Use the `--color-*` roles in utilities and CSS; they are also the **theme inputs
   var(--color-shade-600), transparent 20%` (scrim over a photo); `--bg-radial: circle at top` and
   `--bg-conic: from 45deg` work the same. The type value is the CSS prelude (direction, shape,
   position, `in oklch [longer hue]`); the `--bg` color shows underneath. One gradient per element.
+- **Masks:** `--mask-linear: to bottom; --mask-stops: black 70%, transparent` fades an element out
+  through a linear-gradient `mask-image` (only the stops' alpha counts). Both are needed; no tiers.
 
 ## 3. Color — scales & overlays (escape hatch only)
 
@@ -102,8 +104,9 @@ round two corners (`--radius-t: 2.5` for a card's media) and take breakpoints on
 
 `--radius-corner-shape` (default `superellipse(1.3)`) is the curve of every radius. Set it on `:root`
 to re-skin the kit; `round` turns it off. Primitives expose `--ui-*-corner-shape` hooks. Radio, switch,
-slider, progress, meter, and `--radius: full` stay `round`. `--corner-shape` overrides one element
-and takes no states or breakpoints.
+slider, progress, meter, `--radius: full`, and `--radius: var(--radius-full)` stay `round`. A
+radius hook doesn't switch the shape, so pair it: `--ui-button-radius: var(--radius-full);
+--ui-button-corner-shape: round`. `--corner-shape` overrides one element and takes no states or breakpoints.
 
 ## 6. Shadow & elevation
 
@@ -116,7 +119,9 @@ Every layer blurs by at most its distance and pulls in by a negative spread, so 
 beside the element. Light: `--color-shadow` and `--default-shadow-angle` on `:root`
 set the color and direction of every shadow; `--shadow-tint: var(--color-primary)` and `--shadow-angle`
 change them for an element and its subtree (`0deg` down, `90deg` left, `180deg` up; the angle takes
-breakpoints, so a bottom sheet can cast up on mobile). A shadow utility never removes a primitive's focus ring.
+breakpoints, so a bottom sheet can cast up on mobile). `--default-shadow-intensity`, `--default-shadow-blur`,
+and `--default-shadow-distance` on `:root` (all `1`) scale every shadow's alpha, blur, and offset for
+a theme. A shadow utility never removes a primitive's focus ring.
 
 ## 7. Layout & breakpoints
 
@@ -135,7 +140,11 @@ breakpoints, so a bottom sheet can cast up on mobile). A shadow utility never re
 - **Flow utilities:** `--display` (plus `flex-row`, `flex-col`, `-reverse`, and `inline-flex-…`
   shorthands that set the direction; no `--flex-direction`), `--flex-wrap`, `--flex`, `--shrink`,
   `--basis`, `--order`, `--items`, `--justify`, `--self`, and for grids `--place-items`, `--place-content`
-  (alignment keywords only: `center`, `start`, `safe end`, `space-between`…).
+  (alignment keywords only: `center`, `start`, `safe end`, `space-between`…). `--display: grid` already
+  packs its rows at the top (`place-content: start stretch`), so write `--place-content` only for
+  another alignment. `--place-items` or `--items` turns the default off, so
+  `--display: grid; --place-items: center` still centers in a sized box; a child's `--self: center`
+  or `--self: end` needs `--place-content: normal` on its grid.
 - **Anchors:** `--anchor-name` / `--position-anchor` (dashed idents) and `--position-area` take states
   and breakpoints. Put `--anchor-name--hover: --block` on each block and this on the toolbar, which then
   sits above the hovered block:
@@ -213,7 +222,7 @@ Separators between items are `<hr data-ui="separator">`.
 
 `--position` (`relative`, `absolute`, `sticky`, …) with `--inset --top --bottom --left --right`
 (spacing values; the four sides also take `auto`, so `--bottom: 0; --bottom--lg: auto` releases a
-side at a breakpoint). `--cursor`, `--pointer-events`, `--outline`.
+side at a breakpoint). `--cursor`, `--pointer-events` (takes breakpoint tiers), `--outline`.
 
 ## 13. State tiers
 

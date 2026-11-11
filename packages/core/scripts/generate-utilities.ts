@@ -520,6 +520,14 @@ export function aliasRules(utility: Utility, tiers: readonly string[]): string {
   ) =>
     aliases.map(([keyword, v]) => `:where(${gate(keyword)}) { --_${layer}: ${value(v)};${extra} }`);
   const lines = each((k) => `[style*="--${n}: ${k}"]`, n);
+  // the token written out (`--radius: var(--radius-full)`) is a pill too: the resolver
+  // reaches a primitive's corner-shape chain, the declaration a plain element. Only the
+  // base utility: a radius hook names its consumers, not the element it sits on (a card
+  // setting --ui-button-radius stays square), so a hook pairs with its corner-shape hook.
+  if (n === "radius")
+    lines.push(
+      `:where([style*="--radius: var(--radius-full)"]) { --_corner-shape-resolved: round; corner-shape: round; }`,
+    );
   const indent = (body: string[]) => body.map((line) => `  ${line}`);
   for (const tier of tiers) {
     const own = (k: string) => `[style*="--${n}--${tier}: ${k}"]`;
@@ -663,6 +671,14 @@ function emission(utility: Utility, resolved: string): string {
   if (utility.emit === "grid-fit") return `repeat(auto-fit, minmax(min(${resolved}, 100%), 1fr))`;
   if (utility.emit === "text-wrap") return `var(--_${utility.name}-b)`;
   if (utility.emit === "animation") return `var(--_motion-off, ${resolved})`;
+  // WebKit drops a registered property in corner-shape unless the var() has a fallback
+  if (utility.emit === "corner-shape") {
+    if (!/^var\(--[\w-]+\)$/.test(resolved))
+      throw new Error(
+        `--${utility.name}: expected a bare var() to add the fallback to, got ${resolved}`,
+      );
+    return `${resolved.slice(0, -1)}, round)`;
+  }
   if (utility.emit === "bg")
     return `oklch(from ${resolved} l c h / calc(alpha * var(--_bg-alpha-resolved, 1)))`;
   return resolved;
@@ -963,6 +979,23 @@ export function gradientRules(): string {
 }
 
 /**
+ * Masks: `--mask-linear` composes `mask-image` from its prelude and `--mask-stops`,
+ * unrepeated. It is one layer, so it replaces any other mask on the element; the
+ * composite lines only matter to a stylesheet that adds layers of its own.
+ */
+export function maskRules(): string {
+  return [
+    `:where([style*="--mask-linear:"]) {`,
+    `  mask-image: linear-gradient(var(--_mask-linear-resolved), var(--_mask-stops-resolved));`,
+    `  -webkit-mask-composite: source-in;`,
+    `  mask-composite: intersect;`,
+    `  mask-repeat: no-repeat;`,
+    `}`,
+    ``,
+  ].join("\n");
+}
+
+/**
  * `--bg: none` clears the background: the color falls out on its own (`none`
  * is not a color, so the `--bg` emission is invalid and resolves to
  * transparent, in a primitive too), and these rules drop background-image at the
@@ -1088,6 +1121,7 @@ function familyFile(family: Family, utilities: readonly Utility[]): string {
         ? [gradientRules(), bgNoneRules()]
         : [],
     )
+    .concat(utilities.some((utility) => utility.name === "mask-stops") ? [maskRules()] : [])
     .join("\n")
     .replace(/^(?=.)/gm, "  ");
   const layer = family === "sr" ? "ui.sr" : "ui.utilities";
@@ -1113,6 +1147,33 @@ function cornerShapeRule(skips: readonly string[]): string {
 }
 
 /**
+ * A grid's rows pack at the block start: `--display: grid` and `inline-grid` default
+ * to `place-content: start stretch`, so a container taller than its content keeps its
+ * auto rows at their content height instead of stretching them. It is a fallback in
+ * `@layer defaults`, so any `--place-content` (base or tier, which fill the resolved
+ * variable) and a primitive's own `place-content` win. Item alignment needs the free
+ * space the rows would lose, so a pile (at any tier), an element with `--place-items` or
+ * `--items`, and every primitive (a button centers its label with `align-items`) are left
+ * out. The gate reads the base value only: a grid named at a breakpoint alone keeps
+ * `normal`, and a child's `--self` still needs `--place-content: normal` on its grid.
+ */
+function gridContentRule(skips: readonly string[]): string {
+  const not = [
+    `[style*="${DISPLAY_PILE}"]`,
+    `[style*="--place-items"]`,
+    `[style*="--items"]`,
+    `[data-ui]`,
+    ...skips,
+  ].join(", ");
+  return [
+    `:where(:is([style*="--display: grid"], [style*="--display: inline-grid"]):not(${not})) {`,
+    `  place-content: var(--_place-content-resolved, start stretch);`,
+    `}`,
+    ``,
+  ].join("\n");
+}
+
+/**
  * `_defaults.css`: every tier-only rule (the no-base rules, their keyword tier
  * rules, the composite's tier copy) in `@layer defaults`, each skipping the
  * reset-layer elements that style its property on purpose.
@@ -1130,6 +1191,7 @@ function defaultsFile(
     )
     .concat(compositeRule(utilities, { skips: [...new Set(RING.flatMap((n) => skips[n] ?? []))] }))
     .concat(cornerShapeRule(skips.radius ?? []))
+    .concat(gridContentRule(skips["place-content"] ?? []))
     .join("\n")
     .replace(/^(?=.)/gm, "  ");
   return `${BANNER}\n/* Tier-only rules: below every component, vendor, and legacy layer */\n@layer defaults {\n${rules}}\n`;
@@ -1632,7 +1694,9 @@ export interface ElevationLayer {
  * fades in as `clamp(0, (n − t) × m, c)`, so the blurred far layers join as the
  * element rises. With `r ≤ 1` and `s ≥ 0.5`, a layer's visible edge never rises
  * above the element and its sides sit flush or inward, as a surface lit from
- * above casts: the farther the layer, the more it draws in.
+ * above casts: the farther the layer, the more it draws in. That holds while
+ * `--default-shadow-blur` ÷ `--default-shadow-distance` stays at 2 or under;
+ * pushed past it, the top edge glows.
  */
 export const ELEVATION_LAYERS: readonly ElevationLayer[] = [
   { t: 0, m: 0.04, c: 0.08, r: 1, s: 0.5 },
@@ -1659,7 +1723,10 @@ const round = (x: number) => Number(x.toFixed(4));
  * The elevation shadow's layers for a height `n`, as a box-shadow list. A
  * literal height folds the math into numbers (the tokens); an expression
  * (`var(--_elevation-n)`, already non-negative) is computed by the browser.
- * `x` and `y` are the unitless light direction.
+ * `x` and `y` are the unitless light direction. The three theme knobs multiply
+ * the result: `distance` the offsets, `blur` the blur (and with it the inward
+ * spread), `intensity` the alpha. Blur reads the unscaled distance, so the
+ * knobs stay independent.
  */
 export function elevationLayers(
   n: number | string,
@@ -1667,6 +1734,11 @@ export function elevationLayers(
   y = "var(--_shadow-y)",
   tint = "var(--_shadow-color)",
   layers: readonly ElevationLayer[] = ELEVATION_LAYERS,
+  knobs = {
+    distance: "var(--default-shadow-distance)",
+    blur: "var(--default-shadow-blur)",
+    intensity: "var(--default-shadow-intensity)",
+  },
 ): string {
   return layers
     .map(({ t, m, c, r, s }, i) => {
@@ -1677,18 +1749,18 @@ export function elevationLayers(
       if (typeof n === "number") {
         const d = round(n * share);
         distance = `var(--spacing) * ${d}`;
-        blur = `max(1px, calc(var(--spacing) * ${round(d * r)}))`;
+        blur = `max(1px, calc(var(--spacing) * ${round(d * r)} * ${knobs.blur}))`;
         alpha = String(round(Math.min(c, Math.max(0, (n - t) * m))));
       } else {
         distance = `${n} * var(--spacing) * ${round(share)}`;
-        blur = `max(1px, calc(${distance} * ${r}))`;
+        blur = `max(1px, calc(${distance} * ${r} * ${knobs.blur}))`;
         alpha = `clamp(0, calc((${n} - ${t}) * ${m}), ${c})`;
       }
       // the spread reads the same blur expression, so it tracks the 1px floor too
       const spread = s ? `calc(${blur} * -${s})` : "0";
-      const color = `oklch(from ${tint} l c h / ${alpha})`;
-      const ox = `calc(${distance} * ${x})`;
-      const oy = `calc(${distance} * ${y})`;
+      const color = `oklch(from ${tint} l c h / calc(${alpha} * ${knobs.intensity}))`;
+      const ox = `calc(${distance} * ${knobs.distance} * ${x})`;
+      const oy = `calc(${distance} * ${knobs.distance} * ${y})`;
       return `${ox} ${oy} ${blur} ${spread} ${color}`;
     })
     .join(",\n      ");
@@ -1700,7 +1772,10 @@ export function elevationLayers(
  * them wherever `--shadow-tint` or `--shadow-angle` is set: a token's `var()`
  * resolves where it is declared, so that element and its subtree get shadows
  * tinted and cast that way. The light comes from `--default-shadow-angle`
- * (`0deg` casts down, clockwise).
+ * (`0deg` casts down, clockwise); `--default-shadow-intensity`, `-blur`, and
+ * `-distance` scale it, and like the angle they reach the tokens only where the
+ * block is declared (`:root`, or an element that sets the tint or angle);
+ * `--elevation` reads them on its own element, so it follows them anywhere.
  */
 function shadowsFile(): string {
   const angle = "var(--_shadow-angle-resolved, var(--default-shadow-angle))";

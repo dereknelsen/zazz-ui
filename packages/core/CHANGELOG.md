@@ -1,5 +1,61 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## Unreleased
+
+### base
+
+- `--radius: var(--radius-full)` now switches the corner shape to `round`, like `--radius: full`; an explicit `--corner-shape` still wins. A radius hook (`--ui-button-radius: var(--radius-full)`) doesn't, so pair it with `--ui-button-corner-shape: round`.
+- New shadow knobs on `:root`: `--default-shadow-intensity`, `--default-shadow-blur`, and `--default-shadow-distance` multiply every `--shadow-*` token and `--elevation` layer's alpha, blur, and offset. All three are `1`, so nothing changes until a theme sets them. `--elevation` follows a knob set on any subtree; like `--default-shadow-angle`, the `--shadow-*` tokens follow it on a subtree only where `--shadow-tint` or `--shadow-angle` is also set.
+- `--corner-shape` now works in Safari, which ignored it and drew round corners.
+- The CSP fallback (`Csp.start`), started on another document such as an iframe's, now also applies the root element's own style and elements added or changed later. Before, it applied only the elements already inside the root.
+- `--pointer-events` takes breakpoint tiers (`--pointer-events: none; --pointer-events--md: auto`).
+- New `--mask-linear` and `--mask-stops`: the mask twin of `--bg-linear` / `--bg-stops`, composed into an unrepeated `mask-image: linear-gradient(…)` that replaces any other mask on the element. No tiers or states. `<ui-debug>` and the lint rules flag one without the other.
+- `--display: grid` and `--display: inline-grid` default to `place-content: start stretch`, so a grid taller than its content keeps its rows at the top at their content height, where the browser's `normal` stretched them to fill. `--place-content` at any tier still wins. The default stays off on an element with `--place-items` or `--items`, on a `grid-pile` at any tier, and on primitives, so centering through item alignment works as before. The default follows the base `--display` only: a grid named only at a breakpoint (`--display--md: grid`) keeps `normal`, and `--display: grid; --display--md: flex-row` keeps `start` on its wrapped flex lines at `md`. A child's `--self: center` or `--self: end` in a sized grid now needs `--place-content: normal` on the grid.
+- Touch screens: `--spacing-min` no longer grows by a tenth of `--spacing-touch-min`, so the spacing scale on a phone is the same as on a mouse (a step is 3.6px again, not 4.15px). Control padding grows on its own instead (below).
+- New `--spacing-control-min` (1rem): the smallest a checkbox, radio, switch, slider thumb, or combobox tag remove button gets, however small `--spacing` is.
+
+### card
+
+- New tag form, `<ui-card>`, for a card whose wrapper would otherwise be a `div`. `data-ui="card"` still works, and stays the form for `<article>` and `<form>` cards.
+- New slots: `data-card-slot="header"`, `"body"`, and `"footer"` on a card's direct children. A header bleeds over the card's padding to its rounded edge when it is an `img`, `picture`, or `video`, a `figure` without a `figcaption`, or an element holding only an `img`, `picture`, or `video`. The bleed follows `--p` / `--ui-card-p`, not the per-side padding utilities.
+- New `data-card-orientation="horizontal"`: the header takes a start column (`--ui-card-header-w`, default `40%`) spanning the rows, with the body above the footer in the end column. It needs a `header` slot, applies once the card's nearest container is at least 40rem (`sm`) wide, and stacks below that width. `"vertical"` names the default.
+- A card's grid column is now `minmax(0, 1fr)`, so wide content no longer stretches it past its width.
+
+### button, toggle, input, select, combobox, tabs, input-group, password-group
+
+- On a touch screen, a control that grows to the 44px floor adds half of that growth to each inline side, so the label sits evenly in the taller box (a default button gains about 6px a side). Nothing changes on a mouse, or on `sm`, `icon`, `icon-sm`, and link buttons.
+
+### fields, button, toggle, badge, tabs, input, select, textarea, combobox, password-group, otp
+
+- New `--ui-field-py` (`calc(var(--spacing) * 1.75)`, a length) keeps text off the border when `--spacing` is small. Buttons, toggles, and select options pad top and bottom by it (`--ui-button-py`, `--ui-toggle-py`, `--ui-option-py`); the `sm` sizes use `calc(var(--spacing) * 0.75)` so a 16px icon still fits 24px. Tab labels take half of it (`--ui-tabs-label-py`) and badges `calc(var(--spacing) * 0.75)` (`--ui-badge-py`), small enough to fit their default height in a browser without `text-box` trim.
+- Inputs, selects, the combobox control, and OTP cells keep their fixed height but never get shorter than one line (one digit, for OTP) plus `--ui-field-py` and the border above and below (`--ui-input-py`, `--ui-select-py`; OTP cells take half of it in `--ui-otp-cell-py`). At the default spacing the floor sits below the height, so they look the same.
+- A badge's `--h` is now a minimum (`block-size: fit-content` over `min-block-size`), so the label and its padding can outgrow it. A flex row still doesn't stretch it.
+- **BREAKING** `--ui-textarea-p` is split into `--ui-textarea-px` (`var(--ui-field-px)`, as before) and `--ui-textarea-py` (`var(--ui-field-py)`); the old hook matches nothing, and top and bottom padding drop from 10px to 7px at the default spacing. Migrate `--ui-textarea-p: X` to `--ui-textarea-px: X; --ui-textarea-py: X`.
+
+### callout, dialog, layout
+
+- A callout, a dialog's body, and a layout keep their rows at the top when they are taller than their content (`align-content: start`), as a card now does. A callout stretched by its row, a full-screen phone dialog, and a `--min-h` layout no longer stretch their rows to fill. Set `--place-content: normal` for the old behavior; a tier-only `--place-content--md` on them now needs a base value.
+
+### accordion
+
+- New layout hooks, named after the utilities they back and read behind them: `--ui-accordion-display`, `--ui-accordion-flex-direction`, `--ui-accordion-flex`, and `--ui-accordion-w` on the root; `--ui-accordion-item-display`, `--ui-accordion-item-flex-direction`, and `--ui-accordion-item-flex` on each `<details>`; `--ui-accordion-summary-display`, `--ui-accordion-summary-items`, `--ui-accordion-summary-justify`, and `--ui-accordion-summary-min-h` on the summary. Redefine one on `:root` to re-skin every accordion; a utility on the element (`style="--justify: start"`) still wins. The summary's touch floor sits under `--ui-accordion-summary-min-h` rather than replacing it.
+- A `<summary data-ui="button">` keeps the button's own min height and touch padding; the accordion's summary floor applies only to a plain summary.
+- The root and each item are a flex column (was a grid). Grid utilities on them (`--template-cols`, `--place-items`, `--auto-rows`) no longer apply, wide content can no longer stretch the column, and spare height in a fixed-height flex parent lands below each item's content instead of stretching its summary row. A bare `--display: flex` on the root lays its items out in a row, as on any element; use `--display: flex-col` to restate the column.
+- The reset-layer private `--details-content-transition` is now `--_details-content-transition`, the prefix every private carries. It was never a hook.
+
+### slider
+
+- On a touch screen the thumb takes a 44px hit area, as checkbox, radio, and switch already do. The visible thumb keeps its size inside a transparent border that fills out the rest. On touch, the thumb's border and focus ring draw inside it, it loses its drop shadow, and at either end of its range it stops as far short of the track end as that border is wide (14px at the default size). Nothing changes on a mouse.
+- The thumb now sits centered on the track at any size. It used to sit centered only at the default `--spacing`.
+- The thumb (`--ui-slider-thumb-size`) and track (`--ui-slider-track-h`) floor at `--spacing-control-min`, so at the default spacing they stay 16px and 6px instead of shrinking with the fluid scale.
+- **BREAKING** `--ui-slider-thumb-border` is split into `--ui-slider-thumb-border-width` and `--ui-slider-thumb-border-color`, and `--ui-slider-track-border` into `--ui-slider-track-border-width` and `--ui-slider-track-border-color`; the old hooks match nothing. Migrate `--ui-slider-thumb-border: 2px solid red` to `--ui-slider-thumb-border-width: 2px; --ui-slider-thumb-border-color: red`.
+- **BREAKING** `--ui-slider-thumb-shadow` must be a shadow, never `none`: it now shares a `box-shadow` list with the thumb's border and ring, and `none` drops all three. Use `0 0 transparent`.
+
+### checkbox, radio, switch, combobox
+
+- Checkbox and radio are never smaller than `--spacing-control-min`, even with a `--size` utility. The switch track is never shorter than it (`--ui-switch-track-w` and `--ui-switch-track-p` floor with `max()`), so at the default spacing on a narrow screen the switch is 16px tall, up from about 14.4px.
+- A combobox tag's remove button is at least `--spacing-control-min` square, and its glyph keeps `--ui-combobox-tag-remove-size` inside it. The button's added height overlaps the tag's padding, so the tag keeps its height.
+
 ## 0.11.0 (2026-11-09)
 
 ### base

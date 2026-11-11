@@ -9,7 +9,7 @@
  * @uses       color-mix() — focus ring (--color-ring)
  * @uses       interpolate-size: allow-keywords — discrete block-size animations (details, etc.)
  * @uses       @media (not (hover: hover)) — --_touch-min carries --spacing-touch-min (44px) to
- *             the primitives on touch screens and loosens --spacing-min; 0px on a mouse
+ *             the primitives on touch screens; 0px on a mouse
  * @tokens     Global token tiers (the root override hooks) — Theme roles, brand
  *             scales (50–950), grayscale/shade/tint, typography, spacing (incl. the touch floor), radius,
  *             layout, effects, animations. Sized families run 2xs–2xl. Re-declare any of these to re-skin the
@@ -89,6 +89,12 @@
     /* the light direction every --shadow-* token is cast from (0deg down, clockwise);
        --shadow-angle turns it for an element and its subtree */
     --default-shadow-angle: 0deg;
+    /* multipliers on every --shadow-* token and --elevation: intensity scales the
+       alpha (2 doubles it), blur the softness, distance how far each layer falls
+       along the light; 1 leaves the shadows unchanged */
+    --default-shadow-intensity: 1;
+    --default-shadow-blur: 1;
+    --default-shadow-distance: 1;
 
     /* status: each role is a pale surface, and its -foreground the same hue at
        AA contrast on that surface. -foreground is also the ink for status text,
@@ -336,15 +342,19 @@
        Apple's 44pt is the AAA figure). Primitives read --_touch-min, which is 0 unless the
        primary pointer cannot hover (a touch screen), so mouse layouts keep their sizes.
        Visible controls (buttons, fields, tabs) grow to it; small indicators (checkbox,
-       radio, switch) extend an invisible ::after hit area instead; and --spacing-min takes
-       a tenth of it (below), so padding loosens with the floor. 0px opts out of all three. */
+       radio, switch) extend an invisible ::after hit area instead (the slider thumb grows
+       its own box), and a grown control's
+       inline padding gains half of what its height grew. 0px opts out of all of it. */
     --spacing-touch-min: 44px;
     --_touch-min: 0px;
 
+    /* the smallest a checkbox, radio, switch, slider thumb, or tag remove button gets,
+       however small --spacing is */
+    --spacing-control-min: 1rem;
+
     /* the utility scale unit: `--p: 4` is 4 × --spacing. Fluid between its
        min and max across the fluid range (--fluid comes from _typography.css);
-       set them equal, or pin `:root { --spacing: 0.25rem }`, for a fixed scale.
-       On a touch screen the floor adds a tenth of itself (the media block below). */
+       set them equal, or pin `:root { --spacing: 0.25rem }`, for a fixed scale. */
     --spacing-min: 0.225rem;
     --spacing-max: 0.25rem;
     --spacing: calc(var(--spacing-min) + var(--fluid) * (var(--spacing-max) - var(--spacing-min)));
@@ -579,15 +589,10 @@
   }
 
   /* a primary pointer that cannot hover is a touch screen (the dialog's phone query uses
-     the same test): every primitive's touch floor turns on, and the spacing floor takes a
-     tenth of it spread over an 8-step control (44px makes a phone step 3.6px -> 4.15px, so
-     button and field padding grow with the floor, not just their height). The literal
-     repeats the declaration above: a var() would be a cycle, and the editor data reads
-     the first declaration for the fluid range. */
+     the same test): every primitive's touch floor turns on */
   @media (not (hover: hover)) {
     :root {
       --_touch-min: var(--spacing-touch-min);
-      --spacing-min: calc(0.225rem + var(--spacing-touch-min) / 80);
     }
   }
 

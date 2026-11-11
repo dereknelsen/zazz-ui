@@ -1,0 +1,83 @@
+<div
+  style="
+    --display: grid;
+    --gap: 6;
+  "
+>
+  <ui-card data-card-variant="outline" data-card-orientation="horizontal">
+    <figure data-card-slot="header">
+      <img
+        width="600"
+        height="400"
+        loading="lazy"
+        src="https://images.unsplash.com/photo-1564760055775-d63b17a55c44?auto=format&fit=crop&w=600&h=400&q=60"
+        alt="Elephants crossing a dusty riverbed"
+        style="
+          --size: 100%;
+          --object-fit: cover;
+        "
+      />
+    </figure>
+    <hgroup
+      data-card-slot="body"
+      style="
+        --display: grid;
+        --gap: 1;
+      "
+    >
+      <h3 data-ui="text-lg">Horizontal</h3>
+      <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+        The header takes the start column, with the body above the footer in the end column. Below a
+        40rem container, the card stacks.
+      </p>
+    </hgroup>
+    <footer data-card-slot="footer">
+      <a href="#" data-ui="button" data-button-variant="outline">Read field notes</a>
+    </footer>
+  </ui-card>
+  <ui-card
+    data-card-variant="floating"
+    data-card-orientation="horizontal"
+    style="--ui-card-header-w: auto"
+  >
+    <div data-card-slot="header">
+      <figure
+        role="img"
+        aria-label="John Doe"
+        style="
+          --display: grid-pile;
+          --size: 12;
+          --text: var(--color-primary-foreground);
+          --bg: var(--color-primary);
+          --radius: full;
+          --overflow: clip;
+        "
+      >
+        <span aria-hidden="true" style="--font-weight: strong">AO</span>
+      </figure>
+    </div>
+    <hgroup
+      data-card-slot="body"
+      style="
+        --display: grid;
+        --gap: 1;
+      "
+    >
+      <h3 data-ui="text-lg">John Doe</h3>
+      <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+        Lead tracker, Okavango survey. A header that isn't media keeps the card's padding, and
+        <code>--ui-card-header-w: auto</code> sizes its column to the avatar.
+      </p>
+    </hgroup>
+    <footer
+      data-card-slot="footer"
+      style="
+        --display: flex;
+        --gap: 2;
+      "
+    >
+      <button type="button" data-ui="button" data-button-variant="primary">Follow</button>
+      <button type="button" data-ui="button" data-button-variant="ghost">Message</button>
+    </footer>
+  </ui-card>
+</div>

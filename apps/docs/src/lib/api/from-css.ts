@@ -46,6 +46,11 @@ const COMPOSITES: FromCssRow[] = [
     note: "a gradient: the type carries the prelude, --bg-stops the color stops; --bg: none clears it",
   },
   {
+    property: "mask-image",
+    utilities: ["--mask-linear", "--mask-stops"],
+    note: "a linear-gradient mask: --mask-linear carries the direction, --mask-stops the stops",
+  },
+  {
     property: "border",
     utilities: ["--border"],
     note: "a color (1px solid), a number (px wide in --color-border), or a length",

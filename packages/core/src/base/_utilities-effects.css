@@ -2,6 +2,20 @@
 
 /* effects family */
 @layer ui.utilities {
+  :where([style*="--mask-linear:"], [style*="--mask-linear--"]) {
+    --_mask-linear-resolved: var(--_mask-linear);
+  }
+  :where([style*="--mask-linear:"]) {
+    --_mask-linear: var(--mask-linear);
+  }
+
+  :where([style*="--mask-stops:"], [style*="--mask-stops--"]) {
+    --_mask-stops-resolved: var(--_mask-stops);
+  }
+  :where([style*="--mask-stops:"]) {
+    --_mask-stops: var(--mask-stops);
+  }
+
   :where([style*="--opacity:"], [style*="--opacity--"], [style*="--group-opacity--"]) {
     --_opacity-resolved: var(--_opacity-starting, var(--_opacity-disabled, var(--_opacity-active, var(--_opacity-focus-visible, var(--_opacity-focus-within, var(--_opacity-hover, var(--_opacity-checked, var(--_opacity-current, var(--_opacity-open, var(--_opacity-g-disabled, var(--_opacity-g-active, var(--_opacity-g-focus-visible, var(--_opacity-g-focus-within, var(--_opacity-g-hover, var(--_opacity-g-checked, var(--_opacity-g-current, var(--_opacity-g-open, var(--_opacity-stuck, var(--_opacity)))))))))))))))))));
   }
@@ -161,9 +175,16 @@
 
   :where([style*="--elevation:"], [style*="--elevation--"], [style*="--group-elevation--"]) {
     --_elevation-n: abs(var(--_elevation-resolved));
-    --_elevation-shadow: calc(var(--_elevation-n) * var(--spacing) * 0.25 * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 0.25 * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 0.25 * 1)) calc(max(1px, calc(var(--_elevation-n) * var(--spacing) * 0.25 * 1)) * -0.5) oklch(from var(--_shadow-color) l c h / clamp(0, calc((var(--_elevation-n) - 0) * 0.04), 0.08)),
-        calc(var(--_elevation-n) * var(--spacing) * 1 * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 1 * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 1 * 0.8)) calc(max(1px, calc(var(--_elevation-n) * var(--spacing) * 1 * 0.8)) * -0.5) oklch(from var(--_shadow-color) l c h / clamp(0, calc((var(--_elevation-n) - 0.5) * 0.02), 0.06)),
-        calc(var(--_elevation-n) * var(--spacing) * 2.25 * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 2.25 * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 2.25 * 0.6)) calc(max(1px, calc(var(--_elevation-n) * var(--spacing) * 2.25 * 0.6)) * -0.55) oklch(from var(--_shadow-color) l c h / clamp(0, calc((var(--_elevation-n) - 1.5) * 0.012), 0.05)),
-        calc(var(--_elevation-n) * var(--spacing) * 4 * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 4 * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 4 * 0.45)) calc(max(1px, calc(var(--_elevation-n) * var(--spacing) * 4 * 0.45)) * -0.6) oklch(from var(--_shadow-color) l c h / clamp(0, calc((var(--_elevation-n) - 4) * 0.006), 0.04));
+    --_elevation-shadow: calc(var(--_elevation-n) * var(--spacing) * 0.25 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 0.25 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 0.25 * 1 * var(--default-shadow-blur))) calc(max(1px, calc(var(--_elevation-n) * var(--spacing) * 0.25 * 1 * var(--default-shadow-blur))) * -0.5) oklch(from var(--_shadow-color) l c h / calc(clamp(0, calc((var(--_elevation-n) - 0) * 0.04), 0.08) * var(--default-shadow-intensity))),
+        calc(var(--_elevation-n) * var(--spacing) * 1 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 1 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 1 * 0.8 * var(--default-shadow-blur))) calc(max(1px, calc(var(--_elevation-n) * var(--spacing) * 1 * 0.8 * var(--default-shadow-blur))) * -0.5) oklch(from var(--_shadow-color) l c h / calc(clamp(0, calc((var(--_elevation-n) - 0.5) * 0.02), 0.06) * var(--default-shadow-intensity))),
+        calc(var(--_elevation-n) * var(--spacing) * 2.25 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 2.25 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 2.25 * 0.6 * var(--default-shadow-blur))) calc(max(1px, calc(var(--_elevation-n) * var(--spacing) * 2.25 * 0.6 * var(--default-shadow-blur))) * -0.55) oklch(from var(--_shadow-color) l c h / calc(clamp(0, calc((var(--_elevation-n) - 1.5) * 0.012), 0.05) * var(--default-shadow-intensity))),
+        calc(var(--_elevation-n) * var(--spacing) * 4 * var(--default-shadow-distance) * var(--_shadow-x)) calc(var(--_elevation-n) * var(--spacing) * 4 * var(--default-shadow-distance) * var(--_shadow-y)) max(1px, calc(var(--_elevation-n) * var(--spacing) * 4 * 0.45 * var(--default-shadow-blur))) calc(max(1px, calc(var(--_elevation-n) * var(--spacing) * 4 * 0.45 * var(--default-shadow-blur))) * -0.6) oklch(from var(--_shadow-color) l c h / calc(clamp(0, calc((var(--_elevation-n) - 4) * 0.006), 0.04) * var(--default-shadow-intensity)));
+  }
+
+  :where([style*="--mask-linear:"]) {
+    mask-image: linear-gradient(var(--_mask-linear-resolved), var(--_mask-stops-resolved));
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    mask-repeat: no-repeat;
   }
 }

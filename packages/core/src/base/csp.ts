@@ -81,8 +81,13 @@ function applyInlineStyles(el: Element): void {
   for (const [name, [value, priority]] of wanted) styled.style.setProperty(name, value, priority);
 }
 
+/** An element from any realm (an iframe's nodes fail `instanceof Element` here). */
+function isElement(node: Node | ParentNode): node is Element {
+  return (node as Node).nodeType === 1;
+}
+
 function applyAll(root: ParentNode): void {
-  if (root instanceof Element) applyInlineStyles(root);
+  if (isElement(root)) applyInlineStyles(root);
   for (const el of root.querySelectorAll("[style]")) applyInlineStyles(el);
 }
 
@@ -92,8 +97,9 @@ let observer: MutationObserver | null = null;
 
 function onMutations(mutations: MutationRecord[]): void {
   for (const mutation of mutations) {
-    if (mutation.type === "attributes") applyInlineStyles(mutation.target as Element);
-    for (const node of mutation.addedNodes) if (node instanceof Element) applyAll(node);
+    if (mutation.type === "attributes" && isElement(mutation.target))
+      applyInlineStyles(mutation.target);
+    for (const node of mutation.addedNodes) if (isElement(node)) applyAll(node);
   }
 }
 

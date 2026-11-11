@@ -24,7 +24,7 @@ export const RULE_DESCRIPTIONS: Record<RuleId, string> = {
   "font-weight-name":
     "A standard weight name (`medium`, `semibold`) on `--font-weight`, which only takes numbers, `normal`, `bold`, and the `heading` / `body` / `strong` keywords.",
   "gradient-incomplete":
-    "A gradient type without `--bg-stops`, stops without a type, or more than one type.",
+    "A gradient type without `--bg-stops`, stops without a type, or more than one type; or `--mask-linear` and `--mask-stops` without each other.",
   "whitespace-before-colon":
     "Whitespace between a utility name and its colon, which the gates cannot match.",
   "whitespace-after-colon":

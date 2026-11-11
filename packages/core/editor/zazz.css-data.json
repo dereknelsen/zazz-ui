@@ -28138,6 +28138,14 @@
       ]
     },
     {
+      "name": "--mask-linear",
+      "description": " — any value; effects family."
+    },
+    {
+      "name": "--mask-stops",
+      "description": " — any value; effects family."
+    },
+    {
       "name": "--divide",
       "description": "a border between direct children — a color (1px wide), a number (that many px), a length (in --color-border), or `none`; a child's own border wins; color family.",
       "values": [
@@ -130994,6 +131002,66 @@
       ]
     },
     {
+      "name": "--pointer-events--sm",
+      "description": "--pointer-events at the sm breakpoint and up.",
+      "values": [
+        {
+          "name": "auto"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--pointer-events--md",
+      "description": "--pointer-events at the md breakpoint and up.",
+      "values": [
+        {
+          "name": "auto"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--pointer-events--lg",
+      "description": "--pointer-events at the lg breakpoint and up.",
+      "values": [
+        {
+          "name": "auto"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--pointer-events--xl",
+      "description": "--pointer-events at the xl breakpoint and up.",
+      "values": [
+        {
+          "name": "auto"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
+      "name": "--pointer-events--2xl",
+      "description": "--pointer-events at the 2xl breakpoint and up.",
+      "values": [
+        {
+          "name": "auto"
+        },
+        {
+          "name": "none"
+        }
+      ]
+    },
+    {
       "name": "--before-pointer-events",
       "description": "--pointer-events on the ::before pseudo-element."
     },
@@ -131244,11 +131312,55 @@
       ]
     },
     {
+      "name": "--ui-accordion-display",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-accordion-flex",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-accordion-flex-direction",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-accordion-icon-size",
       "description": "Primitive hook: the public override surface."
     },
     {
       "name": "--ui-accordion-icon-transform--open",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-accordion-item-display",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-accordion-item-flex",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-accordion-item-flex-direction",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-accordion-summary-display",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-accordion-summary-items",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-accordion-summary-justify",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-accordion-summary-min-h",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-accordion-w",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -131341,6 +131453,10 @@
     },
     {
       "name": "--ui-badge-px",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-badge-py",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -131452,6 +131568,10 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-button-py",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-button-radius",
       "description": "Primitive hook: the public override surface."
     },
@@ -131536,11 +131656,23 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-card-display",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-card-gap",
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-card-header-w",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-card-p",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-card-place-content",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -132040,6 +132172,10 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-field-py",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-field-radius",
       "description": "Primitive hook: the public override surface."
     },
@@ -132181,6 +132317,10 @@
     },
     {
       "name": "--ui-input-pr",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-input-py",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -132620,6 +132760,10 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-option-py",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-option-radius",
       "description": "Primitive hook: the public override surface."
     },
@@ -132669,6 +132813,10 @@
     },
     {
       "name": "--ui-otp-cell-h",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-otp-cell-py",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -133036,6 +133184,10 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-select-py",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-select-radius",
       "description": "Primitive hook: the public override surface."
     },
@@ -133060,7 +133212,11 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-slider-thumb-border",
+      "name": "--ui-slider-thumb-border-color",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-slider-thumb-border-width",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -133088,7 +133244,11 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-slider-track-border",
+      "name": "--ui-slider-track-border-color",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-slider-track-border-width",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -133364,6 +133524,10 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-tabs-label-py",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-tabs-label-ring-color",
       "description": "Primitive hook: the public override surface."
     },
@@ -133448,7 +133612,11 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-textarea-p",
+      "name": "--ui-textarea-px",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-textarea-py",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -133649,6 +133817,10 @@
     },
     {
       "name": "--ui-toggle-px",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-toggle-py",
       "description": "Primitive hook: the public override surface."
     },
     {

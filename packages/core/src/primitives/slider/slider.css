@@ -4,10 +4,15 @@
  * @layer      variables, reset
  * @requires   _layers.css, _variables.css
  * @uses       appearance: none — redraws track + thumb from theme tokens
- * @uses       --_touch-min (touch screens) — the transparent input grows to the touch
- *             floor; the track stays --ui-slider-track-h and the thumb centred on it
+ * @uses       --_touch-min (touch screens): the transparent input grows to the touch floor
+ *             and so does the thumb's box, through a transparent border, while the visible
+ *             thumb keeps its size. A thumb can't have an ::after, so on touch screens its
+ *             border and ring draw inset, it loses its drop shadow, and the visible thumb
+ *             stops a border's width short of each track end.
+ * @uses       sign(): switches the ring inset once the thumb has a hit border
  * @uses       corner-shape — round by default, so circles stay circles; a hook takes any shape
- * @tokens     --ui-slider-* (@layer variables, on :root so subtree hooks work)
+ * @tokens     --ui-slider-* (@layer variables, on :root so subtree hooks work); the thumb
+ *             and track sizes floor at --spacing-control-min
  *
  * Note: The active region is NOT filled (parity across engines); add a paint
  * via JS if a filled track is needed. The thumb is centered on the track with a
@@ -18,25 +23,56 @@
   :root {
     --ui-slider-ring-color: var(--color-ring);
 
-    --ui-slider-track-h: calc(var(--spacing) * 1.5);
+    --ui-slider-track-h: max(calc(var(--spacing) * 1.5), calc(var(--spacing-control-min) * 0.375));
     --ui-slider-track-bg: var(--color-muted);
-    --ui-slider-track-border: 1px solid var(--color-muted);
+    --ui-slider-track-border-width: 1px;
+    --ui-slider-track-border-color: var(--color-muted);
     --ui-slider-track-radius: var(--radius-full);
     --ui-slider-track-corner-shape: round;
-    --ui-slider-thumb-size: calc(var(--spacing) * 4);
+    --ui-slider-thumb-size: max(calc(var(--spacing) * 4), var(--spacing-control-min));
     --ui-slider-thumb-bg: var(--color-background);
 
+    /* composes into the thumb's box-shadow list with its border and ring: use a
+       transparent shadow, never `none` */
     --ui-slider-thumb-shadow: var(--shadow-xs);
-    --ui-slider-thumb-border: 1px solid var(--color-border);
+    --ui-slider-thumb-border-width: 1px;
+    --ui-slider-thumb-border-color: var(--color-border);
     --ui-slider-thumb-radius: var(--radius-full);
     --ui-slider-thumb-corner-shape: round;
   }
 }
 
+/* Thumb plumbing, set on the input and inherited by the thumb pseudo-elements */
+@property --_slider-thumb-hit {
+  syntax: "*";
+  inherits: true;
+}
+@property --_slider-thumb-in {
+  syntax: "*";
+  inherits: true;
+}
+@property --_slider-thumb-drop {
+  syntax: "*";
+  inherits: true;
+}
+
 @layer reset {
   :where(input[type="range"]) {
-    /* derived on the element so a subtree --ui-slider-track-h keeps the thumb centered */
-    --ui-slider-thumb-offset: calc(var(--ui-slider-track-h) * -1);
+    /* the transparent border that grows the thumb's box to the touch floor; 0 on a mouse */
+    --_slider-thumb-hit: max(0px, (var(--_touch-min) - var(--ui-slider-thumb-size)) / 2);
+    /* 1 once the thumb has a hit border: the ring then draws inside the visible thumb */
+    --_slider-thumb-in: sign(var(--_slider-thumb-hit));
+    --_slider-thumb-drop: var(--ui-slider-thumb-shadow);
+    /* derived on the element so a subtree hook keeps the thumb centered on the track */
+    --ui-slider-thumb-offset: calc(
+      (var(--ui-slider-track-h) - var(--ui-slider-thumb-size)) / 2 - var(--_slider-thumb-hit) -
+        var(--ui-slider-track-border-width)
+    );
+
+    /* the ring widths grow from 0 on focus and press, so the ring eases in */
+    --_ring-offset-width: 0px;
+    --_ring-width: 0px;
+    --_ring-fill: color-mix(in oklch, var(--ui-slider-ring-color) var(--ring-opacity), transparent);
 
     -webkit-appearance: none;
     appearance: none;
@@ -48,16 +84,22 @@
     corner-shape: var(--ui-slider-track-corner-shape);
 
     /* transparent outline keeps focus visible in forced-colors / high-contrast
-       modes; the visible focus ring lives on the thumb via --shadow-ring */
+       modes; the visible focus ring lives on the thumb */
     outline: var(--outline-width) var(--outline-style) transparent;
     outline-offset: var(--outline-offset);
   }
 
+  /* An outer shadow would paint at the edge of the grown thumb box, not the visible thumb */
+  @media (not (hover: hover)) {
+    :where(input[type="range"]) {
+      --_slider-thumb-drop: 0 0 transparent;
+    }
+  }
   :where(input[type="range"])::-webkit-slider-runnable-track {
     block-size: var(--ui-slider-track-h);
     inline-size: 100%;
     background: var(--ui-slider-track-bg);
-    border: var(--ui-slider-track-border);
+    border: var(--ui-slider-track-border-width) solid var(--ui-slider-track-border-color);
     border-radius: var(--ui-slider-track-radius);
     corner-shape: var(--ui-slider-track-corner-shape);
   }
@@ -66,74 +108,82 @@
     block-size: var(--ui-slider-track-h);
     inline-size: 100%;
     background: var(--ui-slider-track-bg);
-    border: var(--ui-slider-track-border);
+    border: var(--ui-slider-track-border-width) solid var(--ui-slider-track-border-color);
     border-radius: var(--ui-slider-track-radius);
     corner-shape: var(--ui-slider-track-corner-shape);
   }
 
   :where(input[type="range"])::-webkit-slider-thumb {
-    /* the ring is a box-shadow so it composes with --ui-slider-thumb-shadow;
-       widths animate from 0 so it grows in on focus */
-    --_ring-offset-width: 0px;
-    --_ring-width: 0px;
-    --_ring-fill: color-mix(in oklch, var(--ui-slider-ring-color) var(--ring-opacity), transparent);
-    box-shadow:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
-        var(--_ring-fill, var(--ring-shadow-color)),
-      var(--ui-slider-thumb-shadow);
-
     -webkit-appearance: none;
     appearance: none;
     margin-block-start: var(--ui-slider-thumb-offset);
+    box-sizing: content-box;
     inline-size: var(--ui-slider-thumb-size);
     block-size: var(--ui-slider-thumb-size);
+    /* the padding box is the visible thumb; the transparent border is the extra hit area */
+    border: var(--_slider-thumb-hit) solid transparent;
     background-color: var(--ui-slider-thumb-bg);
-    border: var(--ui-slider-thumb-border);
-    border-radius: var(--ui-slider-thumb-radius);
+    background-clip: padding-box;
+    border-radius: calc(var(--ui-slider-thumb-radius) + var(--_slider-thumb-hit));
     corner-shape: var(--ui-slider-thumb-corner-shape);
+    /* the visible border, then the ring outside the thumb (or inside it once the box has
+       grown), then the drop shadow */
+    box-shadow:
+      inset 0 0 0 var(--ui-slider-thumb-border-width) var(--ui-slider-thumb-border-color),
+      0 0 0 calc(var(--_ring-offset-width) * (1 - var(--_slider-thumb-in)))
+        var(--ring-offset-shadow-color),
+      0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * (1 - var(--_slider-thumb-in)))
+        var(--_ring-fill, var(--ring-shadow-color)),
+      inset 0 0 0 calc(var(--_ring-offset-width) * var(--_slider-thumb-in))
+        var(--ring-offset-shadow-color),
+      inset 0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * var(--_slider-thumb-in))
+        var(--_ring-fill, var(--ring-shadow-color)),
+      var(--_slider-thumb-drop);
 
     transition: var(--default-transition);
   }
 
   :where(input[type="range"])::-moz-range-thumb {
-    /* the ring is a box-shadow so it composes with --ui-slider-thumb-shadow;
-       widths animate from 0 so it grows in on focus */
-    --_ring-offset-width: 0px;
-    --_ring-width: 0px;
-    --_ring-fill: color-mix(in oklch, var(--ui-slider-ring-color) var(--ring-opacity), transparent);
-
     appearance: none;
+    box-sizing: content-box;
     inline-size: var(--ui-slider-thumb-size);
     block-size: var(--ui-slider-thumb-size);
+    /* the padding box is the visible thumb; the transparent border is the extra hit area */
+    border: var(--_slider-thumb-hit) solid transparent;
     background-color: var(--ui-slider-thumb-bg);
-    border: var(--ui-slider-thumb-border);
-    border-radius: var(--ui-slider-thumb-radius);
+    background-clip: padding-box;
+    border-radius: calc(var(--ui-slider-thumb-radius) + var(--_slider-thumb-hit));
     corner-shape: var(--ui-slider-thumb-corner-shape);
-
+    /* the visible border, then the ring outside the thumb (or inside it once the box has
+       grown), then the drop shadow */
     box-shadow:
-      0 0 0 var(--_ring-offset-width) var(--ring-offset-shadow-color),
-      0 0 0 calc(var(--_ring-offset-width) + var(--_ring-width))
+      inset 0 0 0 var(--ui-slider-thumb-border-width) var(--ui-slider-thumb-border-color),
+      0 0 0 calc(var(--_ring-offset-width) * (1 - var(--_slider-thumb-in)))
+        var(--ring-offset-shadow-color),
+      0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * (1 - var(--_slider-thumb-in)))
         var(--_ring-fill, var(--ring-shadow-color)),
-      var(--ui-slider-thumb-shadow);
+      inset 0 0 0 calc(var(--_ring-offset-width) * var(--_slider-thumb-in))
+        var(--ring-offset-shadow-color),
+      inset 0 0 0 calc((var(--_ring-offset-width) + var(--_ring-width)) * var(--_slider-thumb-in))
+        var(--_ring-fill, var(--ring-shadow-color)),
+      var(--_slider-thumb-drop);
 
     transition: var(--default-transition);
   }
 
   @media (hover: hover) {
     :where(input[type="range"]:hover) {
-      --ui-slider-thumb-border: 1px solid var(--color-primary);
+      --ui-slider-thumb-border-color: var(--color-primary);
     }
   }
 
-  :where(input[type="range"]:active) {
-    --ui-slider-thumb-shadow: var(--shadow-xs), var(--shadow-ring);
-
-    cursor: grabbing;
+  :where(input[type="range"]:is(:active, :focus-visible)) {
+    --_ring-offset-width: var(--ring-offset-width);
+    --_ring-width: var(--ring-width);
   }
 
-  :where(input[type="range"]:focus-visible) {
-    --ui-slider-thumb-shadow: var(--shadow-xs), var(--shadow-ring);
+  :where(input[type="range"]:active) {
+    cursor: grabbing;
   }
 
   :where(input[type="range"]:disabled) {

@@ -492,6 +492,18 @@ describe("navigation report", () => {
     expect(warningsFor(`<div style="--bg: none"></div>`)).toEqual([]);
   });
 
+  it("flags an incomplete mask: --mask-linear without --mask-stops, or the reverse", () => {
+    expect(
+      warningsFor(`<div style="--mask-linear: to bottom; --mask-stops: black, transparent"></div>`),
+    ).toEqual([]);
+    expect(warningsFor(`<div style="--mask-linear: to bottom"></div>`)).toEqual([
+      expect.stringMatching(/--mask-linear.*--mask-stops/),
+    ]);
+    expect(warningsFor(`<div style="--mask-stops: black, transparent"></div>`)).toEqual([
+      expect.stringMatching(/--mask-stops.*--mask-linear/),
+    ]);
+  });
+
   it("knows the stuck state and its --stuck-state modifier", () => {
     expect(
       warningsFor(

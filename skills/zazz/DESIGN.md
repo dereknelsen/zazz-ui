@@ -449,7 +449,9 @@ CSS-first grouped radio inputs wrapped in `<ui-tabs>`. Segmented control with sl
 
 ### Cards
 
-`data-ui="card"`: `--color-card` / `--color-card-foreground`, `--radius-lg`, hooks `--ui-card-*`. The default card is bare (no padding, border, or shadow) for edge-to-edge media; pad its parts with utilities. `data-card-variant` adds `--space-md` padding plus one treatment: `outline` (a `--color-border` border), `muted` (`--color-muted` background), or `floating` (`--shadow-sm`). Card figures take `--aspect: 3 / 2`. Copy the fragment at `https://zazz.sh/api/primitives/card/index.md`.
+`<ui-card>` or `data-ui="card"`: `--color-card` / `--color-card-foreground`, `--radius-lg`, hooks `--ui-card-*`. The default card is bare (no padding, radius, surface, or shadow; it keeps a transparent 1px border) for edge-to-edge media; pad its parts with utilities. `data-card-variant` adds `--space-md` padding plus one treatment: `outline` (a `--color-border` border), `muted` (`--color-muted` background), or `floating` (`--shadow-sm`). Mark the parts with `data-card-slot="header"`, `"body"`, and `"footer"`. A header that is an `img`, `picture`, or `video`, a `<figure>` without a `figcaption`, or an element holding only one of those bleeds over the padding to the card's edges, so a padded card can still lead with full-width media. The bleed tracks `--p` / `--ui-card-p`, not `--pt` or `--px`. Card figures take `--aspect: 3 / 2`.
+
+`data-card-orientation="horizontal"` puts the header in a start column, with the body above the footer beside it: use it for list rows, search results, and profile or media cards in a wide column. It needs a `header` slot, applies once the card's nearest container is at least 40rem (`sm`) wide, and stacks below that, so the same markup works on a phone. `"vertical"` names the default. Size the column with `--ui-card-header-w` (default `40%`; `auto` fits an avatar or icon). Copy the fragment at `https://zazz.sh/api/primitives/card/index.md`.
 
 ### Forms
 
@@ -513,7 +515,7 @@ Whisper-soft, multi-layered diffused shadows. Surfaces are flat by default, and 
 | `--shadow-lg` | Strong floating presence           |
 | `--shadow-xl` | Maximum drama (overlay-level)      |
 
-`--shadow-2xs` and `--shadow-2xl` sit at either end. Each token is four layers drawn for an overhead light: every layer pulls in by a negative spread, so a shadow never shows above an element or past its sides. `--elevation: n` draws the same shadow from a number (`--elevation: 4` matches `--shadow-md`) and takes states and breakpoints (`--elevation: 1.5; --elevation--hover: 4`). `--shadow` is the explicit form, a token or any box-shadow, and it wins over `--elevation`. `--shadow-tint` and `--shadow-angle` change the shadow's color and direction for a subtree; `--color-shadow` and `--default-shadow-angle` set them for the page.
+`--shadow-2xs` and `--shadow-2xl` sit at either end. Each token is four layers drawn for an overhead light: every layer pulls in by a negative spread, so a shadow never shows above an element or past its sides. `--elevation: n` draws the same shadow from a number (`--elevation: 4` matches `--shadow-md`) and takes states and breakpoints (`--elevation: 1.5; --elevation--hover: 4`). `--shadow` is the explicit form, a token or any box-shadow, and it wins over `--elevation`. `--shadow-tint` and `--shadow-angle` change the shadow's color and direction for a subtree; `--color-shadow` and `--default-shadow-angle` set them for the page. To make every shadow darker, softer, or longer for a theme, set `--default-shadow-intensity`, `--default-shadow-blur`, or `--default-shadow-distance` on `:root` (multipliers, all `1`).
 
 ### Focus Ring
 

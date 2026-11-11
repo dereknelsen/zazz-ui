@@ -8,7 +8,8 @@
  *             (@supports gated; checked-label fallback paints card fill without pill)
  * @uses       anchor-scope — isolates --active-tab inside nested menus
  * @uses       text-box, color-mix() — label trim and focus ring
- * @uses       --_touch-min (touch screens) — labels grow to the touch floor
+ * @uses       --_touch-min (touch screens) — labels grow to the touch floor,
+ *             and each inline side gains half of what the height grew
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
  * @tokens     --ui-tabs-* (@layer variables)
@@ -51,6 +52,9 @@
     --ui-tabs-label-text--active: var(--color-foreground);
 
     --ui-tabs-label-px: var(--ui-field-px);
+    /* half the field value: labels sit inside the track's padding, and in a browser
+       without text-box trim the full line plus this still fits the default height */
+    --ui-tabs-label-py: calc(var(--ui-field-py) / 2);
     --ui-tabs-label-min-h: calc(var(--spacing) * 7);
     --ui-tabs-label-ring-color: var(--ui-field-ring-color);
   }
@@ -124,7 +128,11 @@
     line-height: var(--ui-tabs-label-leading);
 
     min-block-size: max(var(--ui-tabs-label-min-h), var(--_touch-min));
-    padding-inline: var(--ui-tabs-label-px);
+    padding-block: var(--ui-tabs-label-py);
+    /* each side gains half of what the touch floor added to the height */
+    padding-inline: calc(
+      var(--ui-tabs-label-px) + max(0px, (var(--_touch-min) - var(--ui-tabs-label-min-h)) / 2)
+    );
 
     color: var(--ui-tabs-label-text);
     background-color: var(--ui-tabs-label-bg);

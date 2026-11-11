@@ -90,6 +90,24 @@ describe("color and effects", () => {
     expect(style(at("[data-under]"), "background-image")).toMatch(/^linear-gradient/);
   });
 
+  it("--mask-linear composes mask-image with --mask-stops, unrepeated and intersected", () => {
+    const root = mount(`
+      <div>
+        <div data-mask style="${BOX} --bg: red; --mask-linear: to bottom; --mask-stops: black 60%, transparent"></div>
+        <div data-probe style="${BOX} mask-image: linear-gradient(to bottom, black 60%, transparent)"></div>
+        <div data-type-only style="${BOX} --mask-linear: to bottom"></div>
+      </div>
+    `);
+    const at = (selector: string) => root.querySelector(selector)!;
+    const mask = at("[data-mask]");
+    expect(style(mask, "mask-image")).toBe(style(at("[data-probe]"), "mask-image"));
+    expect(style(mask, "mask-image")).toMatch(/^linear-gradient/);
+    expect(style(mask, "mask-repeat")).toBe("no-repeat");
+    expect(style(mask, "mask-composite")).toBe("intersect");
+    // no stops: the gradient is invalid and nothing is masked
+    expect(style(at("[data-type-only]"), "mask-image")).toBe("none");
+  });
+
   it("--bg: none clears the color and the image, on a primitive too, and per state", async () => {
     const root = mount(`
       <div>

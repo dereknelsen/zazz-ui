@@ -1,19 +1,39 @@
 /**
- * card.css — Card ([data-ui~="card"])
+ * card.css: Card (ui-card | [data-ui~="card"])
  *
  * @layer      variables, components
  * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved)
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
+ * @uses       :has() — a header that holds only media bleeds to the card's edge;
+ *             a horizontal card needs a header slot
+ * @uses       @container (width >= 40rem) — a horizontal card lays out in two columns
+ *             once its nearest container reaches sm, and stacks below that
  * @tokens     --ui-card-* (@layer variables; named after the utilities they back)
  * @presets    data-card-variant="outline" | "muted" | "floating"
+ * @presets    data-card-orientation="vertical" | "horizontal"
  *
  * The card is a surface: a grid with a gap, the card colors, a radius, and
  * clipped overflow. The default card is bare (no padding, radius, or shadow), so
  * media can run edge to edge; each variant adds padding, the radius, and one
  * treatment. Every card keeps a 1px border, transparent unless a variant colors
  * it, so cards line up whatever their variant.
- * Its parts are plain elements laid out with utilities.
+ *
+ * Its parts are plain elements laid out with utilities, or the slots
+ * data-card-slot="header" | "body" | "footer" on direct children. A header that
+ * is an img/picture/video, a figure without a figcaption, or an element holding
+ * only an img/picture/video bleeds: negative margins pull it over the card's
+ * padding to the clipped, rounded edge. The bleed follows --p and --ui-card-p,
+ * not the per-side padding utilities.
+ *
+ * data-card-orientation="horizontal" puts the header in a start column
+ * (--ui-card-header-w, default 40%) spanning the rows, with the body above the footer in the
+ * end column. It applies when the nearest container is at least sm (40rem) wide,
+ * like the --*--sm utilities, and the card stacks below that; give the card's
+ * parent --container-type: inline-size to follow the parent's width. Don't make
+ * a horizontal card a container itself: its slots would query it, not the parent.
+ * Vertical is the default; the attribute only names it.
+ *
  * Every utility-backed declaration reads one chain, highest first:
  *   var(--_<utility>-resolved, var(--_card-<utility>, var(--ui-card-<utility>)))
  */
@@ -21,6 +41,8 @@
 @layer variables {
   :root {
     /* a bare card has no surface; the outline and floating variants paint --color-card */
+    --ui-card-display: grid;
+    --ui-card-place-content: start stretch;
     --ui-card-bg: transparent;
     --ui-card-text: var(--color-card-foreground);
     --ui-card-radius: var(--radius-lg);
@@ -34,6 +56,9 @@
     /* dual-mode: a scale number or a length */
     --ui-card-gap: var(--space-sm);
     --ui-card-p: 0;
+
+    /* horizontal: the header column's width */
+    --ui-card-header-w: 40%;
   }
 }
 
@@ -73,15 +98,25 @@
   inherits: false;
 }
 
+/* The resolved padding, inherited so a media header can bleed over it. Every card
+   sets its own, so it never carries into a nested card. */
+@property --_card-inset {
+  syntax: "*";
+  inherits: true;
+}
+
 @layer ui.components {
-  :where([data-ui~="card"]) {
-    display: grid;
+  :where(ui-card, [data-ui~="card"]) {
+    display: var(--ui-card-display);
+    place-content: var(--ui-card-place-content);
+    grid-template-columns: minmax(0, 1fr);
     --_gap-len: var(--_gap-resolved, var(--ui-card-gap));
     --_gap-num: var(--_gap-resolved, var(--ui-card-gap));
     gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));
     --_p-len: var(--_p-resolved, var(--_card-p, var(--ui-card-p)));
     --_p-num: var(--_p-resolved, var(--_card-p, var(--ui-card-p)));
-    padding: calc(var(--_p-len) + var(--_p-num) * var(--spacing));
+    --_card-inset: calc(var(--_p-len) + var(--_p-num) * var(--spacing));
+    padding: var(--_card-inset);
     color: var(--_text-resolved, var(--_card-text, var(--ui-card-text)));
     background-color: var(--_bg-resolved, var(--_card-bg, var(--ui-card-bg)));
     border-width: var(
@@ -108,26 +143,130 @@
   CARD VARIANTS — data-card-variant writes the privates
   =========================================================================== */
 
-  :where([data-ui~="card"]:not([data-card-variant])) {
+  :where(ui-card:not([data-card-variant]), [data-ui~="card"]:not([data-card-variant])) {
     --_card-radius: 0;
   }
 
-  :where([data-ui~="card"][data-card-variant="outline"]) {
+  :where(ui-card[data-card-variant="outline"], [data-ui~="card"][data-card-variant="outline"]) {
     --_card-p: var(--space-md);
     --_card-border-color: var(--color-border);
   }
 
-  :where([data-ui~="card"][data-card-variant="muted"]) {
+  :where(ui-card[data-card-variant="muted"], [data-ui~="card"][data-card-variant="muted"]) {
     --_card-p: var(--space-md);
     --_card-bg: var(--color-muted);
     --_card-text: var(--color-foreground);
   }
 
-  :where([data-ui~="card"][data-card-variant="floating"]) {
+  :where(ui-card[data-card-variant="floating"], [data-ui~="card"][data-card-variant="floating"]) {
     --_card-p: var(--space-md);
     --_card-bg: var(--color-card);
     --_card-border-color: var(--color-border);
     --_card-text: var(--color-card-foreground);
     --_card-shadow: var(--shadow-sm);
+  }
+
+  /* ===========================================================================
+  CARD SLOTS — header, body, footer on direct children
+  =========================================================================== */
+
+  /* a media header bleeds over the card's padding to its clipped edge */
+  :where(
+    :is(ui-card, [data-ui~="card"])
+      > [data-card-slot~="header"]:is(
+        img,
+        picture,
+        video,
+        figure:not(:has(> figcaption)),
+        :has(> :is(img, picture, video):only-child)
+      )
+  ) {
+    margin-inline: calc(var(--_card-inset) * -1);
+    margin-block-start: calc(var(--_card-inset) * -1);
+  }
+
+  /* ===========================================================================
+  CARD ORIENTATION — data-card-orientation; vertical is the default
+  =========================================================================== */
+
+  :where(
+    ui-card[data-card-orientation="vertical"],
+    [data-ui~="card"][data-card-orientation="vertical"]
+  ) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @container (width >= 40rem) {
+    :where(
+      :is(
+        ui-card[data-card-orientation="horizontal"],
+        [data-ui~="card"][data-card-orientation="horizontal"]
+      ):has(> [data-card-slot~="header"])
+    ) {
+      grid-template-columns: var(--ui-card-header-w) minmax(0, 1fr);
+      grid-template-rows: 1fr auto;
+    }
+
+    :where(
+      :is(
+          ui-card[data-card-orientation="horizontal"],
+          [data-ui~="card"][data-card-orientation="horizontal"]
+        ):has(> [data-card-slot~="header"]):not(:has(> [data-card-slot~="footer"]))
+    ) {
+      grid-template-rows: 1fr;
+    }
+
+    :where(
+      :is(
+          ui-card[data-card-orientation="horizontal"],
+          [data-ui~="card"][data-card-orientation="horizontal"]
+        ):has(> [data-card-slot~="header"])
+        > [data-card-slot~="header"]
+    ) {
+      grid-column: 1;
+      grid-row: 1 / -1;
+    }
+
+    :where(
+      :is(
+          ui-card[data-card-orientation="horizontal"],
+          [data-ui~="card"][data-card-orientation="horizontal"]
+        ):has(> [data-card-slot~="header"])
+        > [data-card-slot~="body"]
+    ) {
+      grid-column: 2;
+      grid-row: 1;
+      /* the row stretches to the header; keep the body's own rows at the top */
+      align-content: start;
+    }
+
+    :where(
+      :is(
+          ui-card[data-card-orientation="horizontal"],
+          [data-ui~="card"][data-card-orientation="horizontal"]
+        ):has(> [data-card-slot~="header"])
+        > [data-card-slot~="footer"]
+    ) {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    /* the media header bleeds on its three outer sides */
+    :where(
+      :is(
+          ui-card[data-card-orientation="horizontal"],
+          [data-ui~="card"][data-card-orientation="horizontal"]
+        )
+        > [data-card-slot~="header"]:is(
+          img,
+          picture,
+          video,
+          figure:not(:has(> figcaption)),
+          :has(> :is(img, picture, video):only-child)
+        )
+    ) {
+      margin-block: calc(var(--_card-inset) * -1);
+      margin-inline-end: 0;
+    }
   }
 }

@@ -326,6 +326,12 @@
 @property --bg-stops { syntax: "*"; inherits: false; }
 @property --_bg-stops { syntax: "*"; inherits: false; }
 @property --_bg-stops-resolved { syntax: "*"; inherits: false; }
+@property --mask-linear { syntax: "*"; inherits: false; }
+@property --_mask-linear { syntax: "*"; inherits: false; }
+@property --_mask-linear-resolved { syntax: "*"; inherits: false; }
+@property --mask-stops { syntax: "*"; inherits: false; }
+@property --_mask-stops { syntax: "*"; inherits: false; }
+@property --_mask-stops-resolved { syntax: "*"; inherits: false; }
 @property --divide { syntax: "*"; inherits: false; }
 @property --_divide { syntax: "*"; inherits: false; }
 @property --_divide-resolved { syntax: "*"; inherits: false; }

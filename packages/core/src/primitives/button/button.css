@@ -8,7 +8,8 @@
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
  * @uses       --_touch-min (touch screens) — the default and icon sizes grow to the touch
- *             floor; sm and icon-sm keep their box and extend an invisible ::after hit area
+ *             floor, and each inline side gains half of what the height grew; sm and
+ *             icon-sm keep their box and extend an invisible ::after hit area
  * @tokens     --ui-button-* (@layer variables; hooks are named after the utilities they back; metrics default to the --ui-field-* family)
  * @consumedby toggle.css, select.css, button-group.css, autocomplete.css, combobox.css,
  *             command.css, lightbox.css, menu.css, navigation-menu.css, popover.css
@@ -53,6 +54,7 @@
 
     /* dual-mode: a scale number or a length */
     --ui-button-gap: var(--spacing);
+    --ui-button-py: var(--ui-field-py);
     --ui-button-px: var(--ui-field-px);
     --ui-button-min-h: var(--ui-field-h);
     --ui-button-radius: var(--ui-field-radius);
@@ -153,6 +155,11 @@
   inherits: false;
 }
 
+@property --_button-py {
+  syntax: "*";
+  inherits: false;
+}
+
 @property --_button-px {
   syntax: "*";
   inherits: false;
@@ -220,9 +227,19 @@
     );
     min-inline-size: max-content;
 
+    --_py-len: var(--_py-resolved, var(--_button-py, var(--ui-button-py)));
+    --_py-num: var(--_py-resolved, var(--_button-py, var(--ui-button-py)));
+    padding-block: calc(var(--_py-len) + var(--_py-num) * var(--spacing));
+
     --_px-len: var(--_px-resolved, var(--_button-px, var(--ui-button-px)));
     --_px-num: var(--_px-resolved, var(--_button-px, var(--ui-button-px)));
-    padding-inline: calc(var(--_px-len) + var(--_px-num) * var(--spacing));
+    /* each inline side gains half of what the touch floor added to the height, so the
+       label's margins grow evenly; the kbd ends below add it too */
+    --_touch-px: max(
+      0px,
+      (var(--_touch-floor) - calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing))) / 2
+    );
+    padding-inline: calc(var(--_px-len) + var(--_px-num) * var(--spacing) + var(--_touch-px));
 
     border-width: var(
       --_border-width-resolved,
@@ -523,14 +540,8 @@
     --_button-bg--active: transparent;
 
     --_button-text: var(--color-foreground);
-    --_button-text--hover: light-dark(
-      oklch(from var(--color-primary) calc(l + (1 - l) * 0.2) c h),
-      oklch(from var(--color-primary) calc(l * 0.8) c h)
-    );
-    --_button-text--active: light-dark(
-      oklch(from var(--color-primary) calc(l + (1 - l) * 0.3) c h),
-      oklch(from var(--color-primary) calc(l * 0.7) c h)
-    );
+    --_button-text--hover: var(--color-muted-foreground);
+    --_button-text--active: var(--color-muted-foreground);
 
     --_button-border-style: none;
 
@@ -549,6 +560,8 @@
 
   :where([data-ui~="button"][data-button-size="sm"]) {
     --_button-min-h: calc(var(--spacing) * 6);
+    /* a 16px icon, this, and the border fit the 24px box */
+    --_button-py: calc(var(--spacing) * 0.75);
     --_button-px: calc(var(--spacing) * 2);
     --_button-radius: var(--radius-sm);
     --_button-font-size: var(--font-size-xs);
@@ -613,24 +626,24 @@
   :where([data-ui~="button"]):has(
     > :where(kbd, ui-kbd-group, [data-ui~="kbd-group"]):last-child:not(:only-child)
   ) {
-    padding-inline-end: calc(var(--spacing) * 1.5);
+    padding-inline-end: calc(var(--spacing) * 1.5 + var(--_touch-px));
   }
 
   :where([data-ui~="button"]):has(
     > :where(kbd, ui-kbd-group, [data-ui~="kbd-group"]):first-child:not(:only-child)
   ) {
-    padding-inline-start: calc(var(--spacing) * 1.5);
+    padding-inline-start: calc(var(--spacing) * 1.5 + var(--_touch-px));
   }
 
   :where([data-ui~="button"][data-button-size="sm"]):has(
     > :where(kbd, ui-kbd-group, [data-ui~="kbd-group"]):last-child:not(:only-child)
   ) {
-    padding-inline-end: calc(var(--spacing) * 0.5);
+    padding-inline-end: calc(var(--spacing) * 0.5 + var(--_touch-px));
   }
 
   :where([data-ui~="button"][data-button-size="sm"]):has(
     > :where(kbd, ui-kbd-group, [data-ui~="kbd-group"]):first-child:not(:only-child)
   ) {
-    padding-inline-start: calc(var(--spacing) * 0.5);
+    padding-inline-start: calc(var(--spacing) * 0.5 + var(--_touch-px));
   }
 }

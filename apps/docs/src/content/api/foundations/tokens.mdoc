@@ -42,7 +42,7 @@ Fluid type and spacing grow between two viewport widths, `--fluid-min` and `--fl
 
 `--spacing` is the unit behind every scale number; the `--space-*` tokens are steps on it. `--spacing` grows from `--spacing-min` to `--spacing-max` across the fluid range, so the table shows the range. Set the two equal for a fixed scale.
 
-`--spacing-touch-min` is the smallest tappable box (44px, the WCAG 2.5.5 AAA size; 2.5.8 AA asks for 24px). It applies on touch screens only, through `@media (not (hover: hover))`: buttons, fields, option rows, tabs, toggles and accordion summaries grow to it, checkboxes, radios, switches, clickable badges and `sm` buttons keep their size and gain an invisible hit area around them, and `--spacing-min` grows by a tenth of it, so a phone step goes from 3.6px to 4.15px and padding loosens with the floor. A mouse layout is unchanged. Set it to `0px` to opt out.
+`--spacing-touch-min` is the smallest tappable box (44px, the WCAG 2.5.5 AAA size; 2.5.8 AA asks for 24px). It applies on touch screens only, through `@media (not (hover: hover))`: buttons, fields, option rows, tabs, toggles and accordion summaries grow to it, checkboxes, radios, switches, clickable badges and `sm` buttons keep their size and gain an invisible hit area around them, and a control that grows adds half of the growth to each inline side, so the label sits evenly in the taller box. A mouse layout is unchanged. Set it to `0px` to opt out.
 
 {% tokens group="spacing" /%}
 
@@ -56,7 +56,7 @@ Fluid type and spacing grow between two viewport widths, `--fluid-min` and `--fl
 
 ## Shadows and ring
 
-Soft, four-layer shadows drawn with the same formula as `--elevation`, and the focus ring's geometry. `--color-shadow` and `--default-shadow-angle` set their color and light.
+Soft, four-layer shadows drawn with the same formula as `--elevation`, and the focus ring's geometry. `--color-shadow` and `--default-shadow-angle` set their color and light. Three multipliers (all `1`) scale every shadow: `--default-shadow-intensity` the alpha, `--default-shadow-blur` the blur, and `--default-shadow-distance` the offset.
 
 {% tokens group="shadow" /%}
 

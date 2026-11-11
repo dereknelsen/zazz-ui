@@ -1,0 +1,115 @@
+<article data-ui="card" data-card-variant="floating" style="--max-w: 96">
+  <figure data-card-slot="header" style="--aspect: 3 / 2">
+    <img
+      width="600"
+      height="400"
+      loading="lazy"
+      src="https://images.unsplash.com/photo-1564760055775-d63b17a55c44?auto=format&fit=crop&w=600&h=400&q=60"
+      alt="Elephants crossing a dusty riverbed"
+      style="
+        --size: 100%;
+        --opacity: 1;
+        --opacity--hover: 0.75;
+        --scale: 1;
+        --scale--hover: 1.02;
+        --transition: var(--default-transition);
+        --object-fit: cover;
+      "
+    />
+  </figure>
+  <div
+    data-card-slot="body"
+    style="
+      --display: grid;
+      --gap: 2;
+    "
+  >
+    <div
+      style="
+        --display: flex;
+        --items: center;
+        --gap: 2;
+      "
+    >
+      <span data-ui="badge" data-badge-variant="muted">Research</span>
+    </div>
+    <hgroup
+      style="
+        --display: grid;
+        --gap: 2;
+      "
+    >
+      <h3 data-ui="text-lg">
+        <a href="#">Migration patterns</a>
+      </h3>
+      <p
+        data-ui="text-sm"
+        style="
+          --line-clamp: 2;
+          --text: var(--color-muted-foreground);
+        "
+      >
+        Satellite collars reveal ancient routes herds still follow each dry season across the
+        floodplain.
+      </p>
+    </hgroup>
+  </div>
+  <footer
+    data-card-slot="footer"
+    style="
+      --display: flex;
+      --items: center;
+      --pt: 4;
+      --gap: 2;
+      --border-t: 1;
+    "
+  >
+    <figure
+      role="img"
+      style="
+        --display: grid-pile;
+        --size: 11;
+        --border-color: var(--color-border);
+        --border-width: 1px;
+        --radius: full;
+        --overflow: clip;
+      "
+    >
+      <img
+        width="64"
+        height="64"
+        loading="lazy"
+        src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=facearea&facepad=2&w=64&h=64&q=90"
+        alt="John Doe"
+        aria-hidden="true"
+        style="
+          --order: 9999;
+          --size: 100%;
+          --bg: transparent;
+          --object-fit: cover;
+        "
+      />
+      <figcaption
+        style="
+          --display: flex;
+          --items: center;
+          --justify: center;
+          --order: -9999;
+          --size: 100%;
+          --font-weight: strong;
+          --text: var(--color-primary-foreground);
+          --bg: var(--color-primary);
+        "
+      >
+        <span style="--sr: only">John Doe</span>
+        <span aria-hidden="true">JD</span>
+      </figcaption>
+    </figure>
+    <div style="--display: flex-col">
+      <span data-ui="text-sm" style="--font-weight: strong">John Doe</span>
+      <span data-ui="text-xs" style="--text: var(--color-muted-foreground)"
+        >Founder, ACME Inc.</span
+      >
+    </div>
+  </footer>
+</article>

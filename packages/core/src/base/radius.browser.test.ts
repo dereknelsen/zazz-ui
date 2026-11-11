@@ -162,6 +162,31 @@ describe("corner shape", () => {
     );
   });
 
+  it("--radius: var(--radius-full) is round too, on a plain element and on a primitive", () => {
+    const [expectedRound, expectedBevel, expectedToken] = [round(), bevel(), token()];
+    const root = mount(
+      `<div><i data-plain style="${BOX} --radius: var(--radius-full)"></i><button data-ui="button" data-utility style="--radius: var(--radius-full)">a</button><div data-ui="card" data-region style="--ui-button-radius: var(--radius-full)"></div></div>`,
+    );
+    expect(shape(root.querySelector("[data-plain]")!)).toBe(expectedRound);
+    expect(shape(root.querySelector("[data-utility]")!)).toBe(expectedRound);
+    // a hook for the buttons inside leaves the element it sits on alone
+    expect(shape(root.querySelector("[data-region]")!)).toBe(expectedToken);
+    expect(
+      shape(
+        mount(
+          `<button data-ui="button" style="--radius: var(--radius-full); --corner-shape: bevel">a</button>`,
+        ),
+      ),
+    ).toBe(expectedBevel);
+  });
+
+  it("--radius: full is round on a button", () => {
+    const expected = round();
+    expect(shape(mount(`<button data-ui="button" style="--radius: full">a</button>`))).toBe(
+      expected,
+    );
+  });
+
   it("a tier's full stays round while it applies", async () => {
     const expected = round();
     await atWidth(at("md"));

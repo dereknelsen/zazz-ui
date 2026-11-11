@@ -11,6 +11,18 @@ primitive: card
 
 {% install primitive="card" /%}
 
+## Anatomy
+
+Use `<ui-card>` when the card would otherwise be a `div`, and `data-ui="card"` when it has a better element of its own: `<article data-ui="card">` for a post or a product, `<form data-ui="card">` for a sign-in form.
+
+Mark its direct children with `data-card-slot`:
+
+- `header`: an image, a `<figure>`, or an `<hgroup>`. A header that is an `img`, `picture`, or `video`, a `figure` without a `figcaption`, or an element holding only an `img`, `picture`, or `video` bleeds over the card's padding to its rounded edge. The bleed follows `--p` (and `--ui-card-p`), not the per-side padding utilities like `--pt` or `--px`.
+- `body`: the card's main content.
+- `footer`: actions, a price, or an author.
+
+`data-card-orientation="horizontal"` puts the header in a start column spanning the card's rows, with the body above the footer in the end column, and needs a `header` slot. It applies once the card's nearest container is at least 40rem wide (the `sm` breakpoint) and stacks below that, so give the card's parent `--container-type: inline-size` to follow the parent's width instead of the page's (a `data-ui="layout"` child already is one). Set the column's width with `--ui-card-header-w` (default `40%`; `auto` fits an avatar). `data-card-orientation="vertical"` names the default, stacked layout.
+
 ## Examples
 
 {% examples primitive="card" /%}

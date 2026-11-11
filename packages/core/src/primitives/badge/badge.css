@@ -48,6 +48,10 @@
 
     /* dual-mode: a scale number or a length */
     --ui-badge-gap: var(--spacing);
+    /* smaller than --ui-field-py: in a browser without text-box trim, the full line,
+       this, and the border still fit the default height (to
+       within a fraction of a pixel at the smallest fluid --spacing) */
+    --ui-badge-py: calc(var(--spacing) * 0.75);
     --ui-badge-px: calc(var(--spacing) * 1.25);
     --ui-badge-h: calc(var(--spacing) * 5);
     --ui-badge-radius: var(--radius-sm);
@@ -147,6 +151,11 @@
   inherits: false;
 }
 
+@property --_badge-py {
+  syntax: "*";
+  inherits: false;
+}
+
 @property --_badge-px {
   syntax: "*";
   inherits: false;
@@ -201,8 +210,15 @@
 
     --_h-len: var(--_h-resolved, var(--_badge-h, var(--ui-badge-h)));
     --_h-num: var(--_h-resolved, var(--_badge-h, var(--ui-badge-h)));
-    block-size: calc(var(--_h-len) + var(--_h-num) * var(--spacing));
+    /* --h is a floor: the label plus --ui-badge-py on each side can outgrow it at a
+       small --spacing. fit-content, not auto, so a flex row never stretches it. */
+    block-size: fit-content;
+    min-block-size: calc(var(--_h-len) + var(--_h-num) * var(--spacing));
     min-inline-size: max-content;
+
+    --_py-len: var(--_py-resolved, var(--_badge-py, var(--ui-badge-py)));
+    --_py-num: var(--_py-resolved, var(--_badge-py, var(--ui-badge-py)));
+    padding-block: calc(var(--_py-len) + var(--_py-num) * var(--spacing));
 
     --_px-len: var(--_px-resolved, var(--_badge-px, var(--ui-badge-px)));
     --_px-num: var(--_px-resolved, var(--_badge-px, var(--ui-badge-px)));
@@ -520,14 +536,8 @@
     --_badge-bg--active: transparent;
 
     --_badge-text: var(--color-foreground);
-    --_badge-text--hover: light-dark(
-      oklch(from var(--color-primary) calc(l + (1 - l) * 0.2) c h),
-      oklch(from var(--color-primary) calc(l * 0.8) c h)
-    );
-    --_badge-text--active: light-dark(
-      oklch(from var(--color-primary) calc(l + (1 - l) * 0.3) c h),
-      oklch(from var(--color-primary) calc(l * 0.7) c h)
-    );
+    --_badge-text--hover: var(--color-muted-foreground);
+    --_badge-text--active: var(--color-muted-foreground);
 
     --_badge-border-style: none;
 
