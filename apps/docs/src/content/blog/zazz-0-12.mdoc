@@ -1,0 +1,62 @@
+---
+title: "Zazz 0.12 alpha"
+description: "Zazz 0.12 alpha gives cards a tag, slots, and a horizontal layout, adds theme-wide shadow controls, and fixes touch spacing so phones use the same scale as desktop."
+date: 2026-11-11
+draft: false
+tags: ["release"]
+---
+
+**Zazz 0.12 alpha is mostly about cards and the follow-through on 0.11's touch work. Cards get a `<ui-card>` tag, header, body, and footer slots, and a horizontal layout. Themes get three shadow controls. On phones the spacing scale goes back to its desktop size, and each control grows its own padding instead. Six changes need attention when you update; the migration list at the end covers them.**
+
+## Cards
+
+A card used to be a `<div data-ui="card">` with whatever you put inside it. Now it has a tag and a shape.
+
+`<ui-card>` is the tag form, for the usual case where the card's wrapper would be a plain `div`. A card that is an `<article>` or a `<form>` keeps `data-ui="card"`, since those elements mean something.
+
+Three slots go on the card's direct children: `data-card-slot="header"`, `"body"`, and `"footer"`. A header that is only media (an `img`, `picture`, or `video`, a `figure` without a caption, or a wrapper around one image) bleeds over the card's padding to the rounded edge, so a photo card no longer needs negative margins.
+
+`data-card-orientation="horizontal"` moves the header into a start column, with the body above the footer beside it. It's built for list rows, search results, and profile or product cards. It reads the width of the card's container, not the page: from 40rem up it's two columns, and below that it stacks, so the same markup works on a phone. `--ui-card-header-w` sizes the column (40% by default; `auto` fits an avatar). An image in that column fills its height and crops to it, so any ratio works.
+
+There are new card examples to copy: an article, a product, a login form, and the horizontal layout. The [card reference](/api/primitives/card/) has all of them.
+
+## Shadow controls
+
+`--default-shadow-intensity`, `--default-shadow-blur`, and `--default-shadow-distance` multiply every shadow token and `--elevation` layer. All three start at `1`. Set intensity to `0.6` and every shadow in the kit gets lighter; set distance to `1.5` and they all drop further. The theme builder on the home page has sliders for them, plus a shadow color picker and a superellipse corner control for browsers that support `corner-shape`.
+
+## Touch spacing, take two
+
+0.11 grew the spacing unit on touch screens by a tenth of the 44px floor, so padding would loosen along with the taller controls. In practice it also loosened every gap and margin on the page, which wasn't the point. That's reverted: a spacing step is 3.6px on a phone again, the same as on a mouse.
+
+The controls make up for it themselves. A button, toggle, input, select, tab, or combobox that grows to 44px adds half of that growth to each side, so its label sits evenly in the taller box. Nothing changes with a mouse.
+
+A related fix: at small `--spacing` values, text could end up pressed against a control's border. `--ui-field-py` now sets a floor for the top and bottom padding, and checkboxes, radios, switches, and slider thumbs never get smaller than `--spacing-control-min` (1rem).
+
+The slider thumb gets a 44px hit area on touch, like the checkbox did in 0.11, and now sits centered on its track at any size.
+
+## Grids start at the top
+
+A `--display: grid` element that's taller than its content used to stretch its rows to fill the extra height. That's the browser's default, and it's rarely what you want from a card grid or a sidebar. Grids now default to `place-content: start stretch`: rows sit at the top at their natural height. Cards, callouts, dialog bodies, and layouts do the same.
+
+`--place-content` still wins at any tier, and primitives and anything using `--place-items` or `--items` are left alone, so centering a single item still works.
+
+## Smaller things
+
+- `--mask-linear` and `--mask-stops` build a gradient mask, the same way `--bg-linear` and `--bg-stops` build a background. The lint rules flag one without the other.
+- `--pointer-events` takes breakpoint tiers.
+- `--corner-shape` works in Safari, and `--radius: var(--radius-full)` switches to round corners like `--radius: full` does.
+- Accordions are a flex column instead of a grid, with layout hooks (`--ui-accordion-display`, `--ui-accordion-summary-min-h`, and others) you can redefine on `:root`.
+- Link buttons and link badges use the muted foreground color on hover and press.
+- The CSP fallback now picks up changes after it starts when it runs on an iframe's document.
+
+## Migrating
+
+- `--ui-textarea-p: X` becomes `--ui-textarea-px: X; --ui-textarea-py: X`. A textarea's top and bottom padding drop from 10px to 7px by default.
+- `--ui-slider-thumb-border` and `--ui-slider-track-border` are split into `-width` and `-color` hooks. `--ui-slider-thumb-border: 2px solid red` becomes `--ui-slider-thumb-border-width: 2px; --ui-slider-thumb-border-color: red`.
+- `--ui-slider-thumb-shadow: none` now removes the thumb's border and focus ring too. Use `0 0 transparent`.
+- A grid child with `--self: center` or `--self: end` in a grid taller than its content needs `--place-content: normal` on the grid.
+- An accordion that used grid utilities on its root or items (`--template-cols`, `--place-items`, `--auto-rows`) needs `--display: grid` set alongside them, or a wrapper.
+- A tier-only `--place-content--md` on a callout, dialog body, or layout needs a base `--place-content` value. Set `--place-content: normal` anywhere you want the old stretching back.
+- Optional: change `<div data-ui="card">` to `<ui-card>`. Both work.
+
+The [changelog](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/CHANGELOG.md) lists every change by primitive, and `npx zazz-ui update` prints the slice for the files you've vendored.

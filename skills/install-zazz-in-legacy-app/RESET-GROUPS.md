@@ -1,4 +1,4 @@
-# Reset groups (Zazz 0.10.0)
+# Reset groups (Zazz 0.12.0)
 
 One section per group of the Zazz reset. **Detect** names what to grep in the legacy CSS (`css`)
 and the server templates (`tpl`). **Close** gives the lines that go inside the baseline's
