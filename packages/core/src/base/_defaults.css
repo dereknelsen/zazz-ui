@@ -196,13 +196,13 @@
   }
 
 
-  :where([style*="--p--"]:not(code, kbd, select:is([multiple], [size]) optgroup option)) {
+  :where([style*="--p--"]:not(code, input[type="range"], kbd, select:is([multiple], [size]) optgroup option)) {
     --_p-len: var(--_p-resolved, 0);
     --_p-num: var(--_p-resolved, 0);
     padding: calc(var(--_p-len) + var(--_p-num) * var(--spacing));
   }
 
-  :where([style*="--px--"]:not(code, kbd, select:is([multiple], [size]) optgroup option)) {
+  :where([style*="--px--"]:not(code, input[type="range"], kbd, select:is([multiple], [size]) optgroup option)) {
     --_px-len: var(--_px-resolved, 0);
     --_px-num: var(--_px-resolved, 0);
     padding-inline: calc(var(--_px-len) + var(--_px-num) * var(--spacing));
@@ -226,13 +226,13 @@
     padding-block-end: calc(var(--_pb-len) + var(--_pb-num) * var(--spacing));
   }
 
-  :where([style*="--pl--"]:not(code, kbd, select:is([multiple], [size]) optgroup option)) {
+  :where([style*="--pl--"]:not(code, input[type="range"], kbd, select:is([multiple], [size]) optgroup option)) {
     --_pl-len: var(--_pl-resolved, 0);
     --_pl-num: var(--_pl-resolved, 0);
     padding-inline-start: calc(var(--_pl-len) + var(--_pl-num) * var(--spacing));
   }
 
-  :where([style*="--pr--"]:not(code, kbd)) {
+  :where([style*="--pr--"]:not(code, input[type="range"], kbd)) {
     --_pr-len: var(--_pr-resolved, 0);
     --_pr-num: var(--_pr-resolved, 0);
     padding-inline-end: calc(var(--_pr-len) + var(--_pr-num) * var(--spacing));

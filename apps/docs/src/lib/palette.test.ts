@@ -85,6 +85,28 @@ describe("createPalette", () => {
     }
   });
 
+  it("tapers a neutral's chroma toward the light end, like Tailwind's grays", () => {
+    // Tailwind's slate-500.
+    const hex = toHex({ l: 0.554, c: 0.046, h: 257.417 });
+    const { stop, colors } = createPalette(hex, { neutral: true });
+    expect(stop).toBe(500);
+    const light = STOPS.filter((s) => s < stop);
+    for (let i = 1; i < light.length; i++) {
+      expect(colors[light[i]].c).toBeGreaterThan(colors[light[i - 1]].c);
+    }
+    expect(colors[50].c).toBeLessThan(0.01);
+    expect(colors[50].c).toBeGreaterThan(0);
+    // The input's own stop and the dark end keep the input's chroma.
+    expect(colors[500].c).toBeCloseTo(0.046, 3);
+    expect(colors[900].c).toBeCloseTo(createPalette(hex).colors[900].c, 6);
+  });
+
+  it("keeps the chroma at the light end unless asked to taper", () => {
+    const { colors } = createPalette(toHex({ l: 0.554, c: 0.046, h: 257.417 }));
+    // At 300 the color is still inside sRGB, so nothing clips it either.
+    expect(colors[300].c).toBeCloseTo(0.046, 3);
+  });
+
   it("writes every swatch as an oklch() value", () => {
     const { swatches } = createPalette("#71717a");
     for (const stop of STOPS) expect(swatches[stop]).toMatch(/^oklch\([\d.]+ [\d.]+ [\d.]+\)$/);

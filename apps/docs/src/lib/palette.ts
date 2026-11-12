@@ -150,7 +150,18 @@ export interface Palette {
   swatches: Record<Stop, string>;
 }
 
-export function createPalette(hex: string): Palette {
+/**
+ * The least of the input's chroma a tapered neutral keeps at its 50. Tailwind's
+ * grays keep about a tenth (slate-50 is 0.003 against slate-500's 0.046).
+ */
+const NEUTRAL_CHROMA_FLOOR = 0.08;
+
+/**
+ * The palette for `hex`. With `neutral`, the stops lighter than the input lose
+ * chroma toward the 50 the way Tailwind's grays do, so the pale surfaces read
+ * as near white with a hint of the tint rather than as pastels.
+ */
+export function createPalette(hex: string, { neutral = false } = {}): Palette {
   const base = toOklch(hex);
   const stop = nearestStop(hex);
   const anchor = BASELINE_L[stop];
@@ -170,7 +181,11 @@ export function createPalette(hex: string): Palette {
       s < stop
         ? base.l + (L_MAX - base.l) * ((BASELINE_L[s] - anchor) / (L_MAX - anchor))
         : base.l + (L_MIN - base.l) * ((anchor - BASELINE_L[s]) / (anchor - L_MIN));
-    colors[s] = clampChroma({ l, c: base.c, h: base.h });
+    // A neutral's chroma falls with the square root of how far the stop sits
+    // toward L_MAX, which tracks Tailwind's grays (slate 400 keeps ~0.87, 200 ~0.28).
+    const toward = s < stop ? (l - base.l) / (L_MAX - base.l) : 0;
+    const c = neutral ? base.c * Math.max(NEUTRAL_CHROMA_FLOOR, Math.sqrt(1 - toward)) : base.c;
+    colors[s] = clampChroma({ l, c, h: base.h });
     swatches[s] = formatOklch(colors[s]);
   }
   return { stop, colors, swatches };

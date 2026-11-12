@@ -313,7 +313,7 @@ Markup reads `--color-<role>`, and a theme sets the same `--color-<role>` on `:r
 | `--color-card-foreground`      | Text on cards                                 | Rich charcoal                | Pure white                   |
 | `--color-popover`              | Popover / menu surface                        | Pure white                   | Near-black (neutral-950)     |
 | `--color-popover-foreground`   | Text on popovers and menus                    | Rich charcoal                | Pure white                   |
-| `--color-input`                | Input field background                        | Near-white (neutral-50)      | Faint tint (tint-100)        |
+| `--color-input`                | Input field background                        | Near-white (neutral-50)      | Near-black (neutral-950)     |
 | `--color-input-foreground`     | Input text                                    | Rich charcoal                | Pure white                   |
 | `--color-selection`            | Text-selection highlight (`:root` only)       | Primary                      | Primary                      |
 | `--color-selection-foreground` | Selected text                                 | Primary foreground           | Primary foreground           |
@@ -445,7 +445,7 @@ Popover API + CSS anchor positioning. Native light-dismiss. Menu items are `data
 
 ### Tabs
 
-CSS-first grouped radio inputs wrapped in `<ui-tabs>`. Segmented control with sliding card pill indicator. Panel order must match radio order. The element adds orientation-aware arrow keys, Home/End, and wrap-around; radios still work without JS.
+CSS-first grouped radio inputs wrapped in `<ui-tabs>`. Segmented control with a sliding muted pill indicator. Panel order must match radio order. The element adds orientation-aware arrow keys, Home/End, and wrap-around; radios still work without JS.
 
 ### Cards
 

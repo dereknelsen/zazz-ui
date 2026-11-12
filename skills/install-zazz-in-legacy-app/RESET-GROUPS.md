@@ -1,4 +1,4 @@
-# Reset groups (Zazz 0.12.0)
+# Reset groups (Zazz 0.12.2)
 
 One section per group of the Zazz reset. **Detect** names what to grep in the legacy CSS (`css`)
 and the server templates (`tpl`). **Close** gives the lines that go inside the baseline's
@@ -169,7 +169,8 @@ the legacy CSS leaves the property unset.
   `dialog`, `[popover]`, `kbd`, and `option::checkmark`. The focus ring on `:focus-visible` is
   the kit's outline too. The checkbox, switch, and `kbd` radii follow the radius scale from
   0.8.0; the off switch track takes `--color-input` rather than `--color-muted` from 0.8.3.
-  From 0.8.2, while a `<dialog>` is open as a modal, `html` gets `overflow: hidden;
+  From 0.12.2 a range input fills its track up to the thumb, and in Chromium and Safari it
+  clips its overflow, pads its inline ends, and stands at least about 30px tall. From 0.8.2, while a `<dialog>` is open as a modal, `html` gets `overflow: hidden;
   scrollbar-gutter: stable`.
 - **Symptom:** legacy checkboxes, sliders, disclosures, and dialogs take the Zazz look. Often an
   improvement; it clashes where legacy CSS or a jQuery plugin positions custom skins over them.
@@ -183,6 +184,11 @@ the legacy CSS leaves the property unset.
   :where(input[type="checkbox"], input[type="range"]) {
     appearance: revert;
   } /* plus revert for the properties the skin relies on */
+  :where(input[type="range"]) {
+    overflow: revert;
+    padding-inline: revert;
+    min-block-size: revert;
+  }
   :where(html:has(dialog:modal)) {
     overflow: revert;
     scrollbar-gutter: revert;

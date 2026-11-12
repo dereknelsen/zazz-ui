@@ -11,12 +11,23 @@
  *             stops a border's width short of each track end.
  * @uses       sign(): switches the ring inset once the thumb has a hit border
  * @uses       corner-shape — round by default, so circles stay circles; a hook takes any shape
+ * @uses       the track fill: ::-moz-range-progress in Firefox. Chromium and Safari have no
+ *             progress part, so a view timeline on the thumb (view-timeline + timeline-scope)
+ *             animates --_slider-progress on the track, which paints the fill as a gradient.
+ *             The timeline needs the input to be a scroll container, so there it clips its
+ *             overflow and pads its inline ends to keep the thumb's ring in view, so a
+ *             padding utility on the input moves the fill off the thumb there.
+ *             @supports-gated: an engine without view timelines shows no fill. Nor does
+ *             a right-to-left slider there: Chromium measures an inline view timeline from
+ *             the left in RTL and Safari from the right, and CSS can't tell which it got.
+ * @uses       @container style(--ui-slider-fill-side: end) — the fill runs from the thumb
+ *             to the end; Firefox 151+ (style queries), older engines fill from the start.
  * @tokens     --ui-slider-* (@layer variables, on :root so subtree hooks work); the thumb
  *             and track sizes floor at --spacing-control-min
  *
- * Note: The active region is NOT filled (parity across engines); add a paint
- * via JS if a filled track is needed. The thumb is centered on the track with a
- * calc'd negative margin so retuning either size keeps it aligned.
+ * Note: The thumb is centered on the track with a calc'd negative margin so retuning
+ * either size keeps it aligned. The gradient fill runs left to right; a vertical writing
+ * mode isn't handled.
  */
 
 @layer variables {
@@ -24,13 +35,18 @@
     --ui-slider-ring-color: var(--color-ring);
 
     --ui-slider-track-h: max(calc(var(--spacing) * 1.5), calc(var(--spacing-control-min) * 0.375));
-    --ui-slider-track-bg: var(--color-muted);
-    --ui-slider-track-border-width: 1px;
-    --ui-slider-track-border-color: var(--color-muted);
+    --ui-slider-track-bg: var(--ui-field-bg);
+    --ui-slider-track-border-width: var(--ui-field-border-width);
+    --ui-slider-track-border-color: var(--ui-field-border-color);
     --ui-slider-track-radius: var(--radius-full);
     --ui-slider-track-corner-shape: round;
+    /* the part of the track between its start and the thumb; `end` fills from the thumb
+       to the end of the track instead */
+    --ui-slider-fill-bg: var(--color-primary);
+    --ui-slider-fill-side: start;
+
     --ui-slider-thumb-size: max(calc(var(--spacing) * 4), var(--spacing-control-min));
-    --ui-slider-thumb-bg: var(--color-background);
+    --ui-slider-thumb-bg: var(--color-card);
 
     /* composes into the thumb's box-shadow list with its border and ring: use a
        transparent shadow, never `none` */
@@ -55,6 +71,39 @@
   syntax: "*";
   inherits: true;
 }
+@property --_slider-thumb-box {
+  syntax: "*";
+  inherits: true;
+}
+@property --_slider-bleed {
+  syntax: "*";
+  inherits: true;
+}
+@property --_slider-fill-before {
+  syntax: "*";
+  inherits: true;
+}
+@property --_slider-fill-after {
+  syntax: "*";
+  inherits: true;
+}
+/* 0 with the thumb at the start, 1 at the end; registered so the timeline can animate it */
+@property --_slider-progress {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+/* A view timeline counts up as its subject moves toward the start of the scroller, so
+   the keyframes run backward. */
+@keyframes ui-slider-progress {
+  from {
+    --_slider-progress: 1;
+  }
+  to {
+    --_slider-progress: 0;
+  }
+}
 
 @layer reset {
   :where(input[type="range"]) {
@@ -62,7 +111,16 @@
     --_slider-thumb-hit: max(0px, (var(--_touch-min) - var(--ui-slider-thumb-size)) / 2);
     /* 1 once the thumb has a hit border: the ring then draws inside the visible thumb */
     --_slider-thumb-in: sign(var(--_slider-thumb-hit));
+    /* the thumb's whole box, hit border included: what travels along the track */
+    --_slider-thumb-box: calc(var(--ui-slider-thumb-size) + 2 * var(--_slider-thumb-hit));
     --_slider-thumb-drop: var(--ui-slider-thumb-shadow);
+    /* how far the ring reaches past the thumb, which the scroll container must keep in view */
+    --_slider-bleed: calc(
+      (var(--ring-offset-width) + var(--ring-width)) * (1 - var(--_slider-thumb-in))
+    );
+    /* the fill: from the start to the thumb, or from the thumb to the end */
+    --_slider-fill-before: var(--ui-slider-fill-bg);
+    --_slider-fill-after: transparent;
     /* derived on the element so a subtree hook keeps the thumb centered on the track */
     --ui-slider-thumb-offset: calc(
       (var(--ui-slider-track-h) - var(--ui-slider-thumb-size)) / 2 - var(--_slider-thumb-hit) -
@@ -89,6 +147,54 @@
     outline-offset: var(--outline-offset);
   }
 
+  /* The view timeline needs the input as its scroller: it clips, so the inline padding
+     and the block size leave room for the thumb's ring and shadow, and the timeline's
+     inset takes the padding back out so the thumb's ends of travel are 0 and 1. */
+  @supports (animation-timeline: view()) {
+    :where(input[type="range"]) {
+      overflow: hidden;
+      padding-inline: var(--_slider-bleed);
+      min-block-size: max(
+        var(--_touch-min),
+        var(--ui-slider-thumb-size) + 2 * var(--_slider-bleed) + 2 * var(--spacing)
+      );
+      timeline-scope: --ui-slider-thumb;
+    }
+
+    :where(input[type="range"])::-webkit-slider-thumb {
+      view-timeline: --ui-slider-thumb inline;
+      view-timeline-inset: var(--_slider-bleed);
+    }
+
+    /* On the track, not the input: Safari's timeline doesn't reach the input itself. */
+    :where(input[type="range"])::-webkit-slider-runnable-track {
+      animation: ui-slider-progress 1ms linear both;
+      animation-timeline: --ui-slider-thumb;
+      animation-range: contain;
+    }
+  }
+
+  @container style(--ui-slider-fill-side: end) {
+    :where(input[type="range"])::-webkit-slider-runnable-track {
+      --_slider-fill-before: transparent;
+      --_slider-fill-after: var(--ui-slider-fill-bg);
+    }
+
+    :where(input[type="range"])::-moz-range-track {
+      background: var(--ui-slider-fill-bg);
+    }
+
+    :where(input[type="range"])::-moz-range-progress {
+      background: var(--ui-slider-track-bg);
+    }
+  }
+
+  /* No gradient fill right to left (see the header); after the side query, so it wins */
+  :where(input[type="range"]:dir(rtl))::-webkit-slider-runnable-track {
+    --_slider-fill-before: transparent;
+    --_slider-fill-after: transparent;
+  }
+
   /* An outer shadow would paint at the edge of the grown thumb box, not the visible thumb */
   @media (not (hover: hover)) {
     :where(input[type="range"]) {
@@ -98,10 +204,30 @@
   :where(input[type="range"])::-webkit-slider-runnable-track {
     block-size: var(--ui-slider-track-h);
     inline-size: 100%;
-    background: var(--ui-slider-track-bg);
+    /* the fill's edge sits at the thumb's center, which travels half a thumb in from
+       each end of the track's content box */
+    background:
+      linear-gradient(
+          to right,
+          var(--_slider-fill-before)
+            calc(
+              var(--_slider-thumb-box) / 2 + var(--_slider-progress) *
+                (100% - var(--_slider-thumb-box))
+            ),
+          var(--_slider-fill-after) 0
+        )
+        content-box no-repeat,
+      var(--ui-slider-track-bg);
     border: var(--ui-slider-track-border-width) solid var(--ui-slider-track-border-color);
     border-radius: var(--ui-slider-track-radius);
     corner-shape: var(--ui-slider-track-corner-shape);
+  }
+
+  /* Without a view timeline the progress never moves off 0, so the track stays plain */
+  @supports not (animation-timeline: view()) {
+    :where(input[type="range"])::-webkit-slider-runnable-track {
+      background: var(--ui-slider-track-bg);
+    }
   }
 
   :where(input[type="range"])::-moz-range-track {
@@ -141,6 +267,14 @@
       var(--_slider-thumb-drop);
 
     transition: var(--default-transition);
+  }
+
+  :where(input[type="range"])::-moz-range-progress {
+    /* inside the track's border, as the gradient fill is in the other engines */
+    block-size: var(--ui-slider-track-h);
+    background: var(--ui-slider-fill-bg);
+    border-radius: var(--ui-slider-track-radius);
+    corner-shape: var(--ui-slider-track-corner-shape);
   }
 
   :where(input[type="range"])::-moz-range-thumb {

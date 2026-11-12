@@ -19,12 +19,12 @@
  * back at its default.
  *
  * Fonts: two comboboxes, one for headings and one for body text, list local
- * stacks and, when the build had a Google Fonts key, the most popular Google
- * families of each category. The chosen Google families load through one
+ * stacks and, when the build had a Google Fonts key, the curated Google
+ * families of each category (`CURATED_FONTS`). The chosen Google families load through one
  * `<link>` in the head, and the copied CSS carries that tag in a comment above
  * the `:root` block. Each combobox has a wand button that picks a font pairing
- * with the other one (`pairFont`), and the header's dice button randomizes
- * every control at once (lib/randomize.ts).
+ * with the other one (`pairFont`, favoring `FONT_PAIRINGS`), and the header's
+ * dice button randomizes every control at once (lib/randomize.ts).
  *
  * A custom element because swap navigation never runs a swapped-in page's
  * scripts; BaseLayout defines it on every page.
@@ -33,10 +33,12 @@ import { ZazzElement, defineZazzElement } from "@zazz-ui/core/base/zazz-element.
 import {
   googleFontsHref,
   pairFont,
+  randomPairing,
   type FontCategory,
   type FontOption,
   type FontRole,
 } from "../lib/fonts.ts";
+import { cornerShape, cornerShapeLabel } from "../lib/corner-shape.ts";
 import { backgroundToken, createPalette, foregroundFor, normalizeHex } from "../lib/palette.ts";
 import { decodePreset, encodePreset } from "../lib/preset.ts";
 import {
@@ -56,6 +58,7 @@ const CHIP_FORMAT: Record<string, (value: string) => string> = {
   "tb-spacing": (v) => `${v}rem`,
   "tb-shadow": (v) => `${v}°`,
   "tb-radius": (v) => `${v}×`,
+  "tb-corner-shape": (v) => cornerShapeLabel(Number(v)),
   "tb-shadow-intensity": (v) => `${v}×`,
   "tb-shadow-blur": (v) => `${v}×`,
   "tb-shadow-distance": (v) => `${v}×`,
@@ -73,18 +76,15 @@ function backgroundName(pick: string): string {
 /** The class on the preview wrapper the live theme is scoped to. */
 const PREVIEW = "fieldnotes__preview";
 
-const PALETTES = ["primary", "neutral"] as const;
+/** The palettes the form sets, in its order. Every one but neutral is also a role color. */
+const PALETTES = ["neutral", "primary", "secondary", "tertiary"] as const;
 type PaletteName = (typeof PALETTES)[number];
 
 /** Number controls: the token each writes and how its value is spelled (`format` wins over `unit`). */
 const NUMBERS: Record<string, { token: string; unit: string; format?: (n: number) => string }> = {
   spacing: { token: "--spacing", unit: "rem" },
   radius: { token: "--radius-multiplier", unit: "" },
-  "corner-shape": {
-    token: "--radius-corner-shape",
-    unit: "",
-    format: (n) => `superellipse(${n})`,
-  },
+  "corner-shape": { token: "--radius-corner-shape", unit: "", format: cornerShape },
   shadow: { token: "--default-shadow-angle", unit: "deg" },
   "shadow-intensity": { token: "--default-shadow-intensity", unit: "" },
   "shadow-blur": { token: "--default-shadow-blur", unit: "" },
@@ -264,8 +264,7 @@ class ThemeBuilder extends ZazzElement {
     const randomize = () => {
       const random = Math.random;
       const colors = randomColors(random);
-      put(q(`[data-theme-hex="primary"]`), colors.primary);
-      put(q(`[data-theme-hex="neutral"]`), colors.neutral);
+      for (const name of PALETTES) put(q(`[data-theme-hex="${name}"]`), colors[name]);
       put(q("[data-theme-token='--color-shadow']"), colors.shadow);
       for (const scheme of ["light", "dark"] as const) {
         const picks = RANDOM_BACKGROUNDS[scheme];
@@ -282,12 +281,11 @@ class ThemeBuilder extends ZazzElement {
         if (!ranges || (input.name === "corner-shape" && !corners)) continue;
         put(input, String(randomInRanges(ranges, Number(input.step) || 1, random)));
       }
-      // A heading from any category, then a body that pairs with it.
-      const headings = fontOptions("heading");
-      const heading = headings[Math.floor(random() * headings.length)];
-      if (heading) {
-        setFont("heading", heading.value);
-        pair("body");
+      // Usually a recommended pairing; otherwise any heading and a body that pairs with it.
+      const fonts = randomPairing(fontOptions("heading"), random);
+      if (fonts) {
+        setFont("heading", fonts.heading.value);
+        if (fonts.body) setFont("body", fonts.body.value);
       }
       render();
       share();
@@ -303,17 +301,17 @@ class ThemeBuilder extends ZazzElement {
         let stop: number | undefined;
         let swatches: Record<string, string> | undefined;
         if (changed) {
-          const palette = createPalette(hex);
+          const palette = createPalette(hex, { neutral: name === "neutral" });
           stop = palette.stop;
           swatches = palette.swatches;
           for (const [s, value] of Object.entries(palette.swatches)) {
             lines.push(`--color-${name}-${s}: ${value}`);
           }
           // The input becomes the role color in both schemes (the kit's default
-          // flips primary to its 50 in dark mode; a picked brand color shouldn't).
-          if (name === "primary") {
-            lines.push(`--color-primary: var(--color-primary-${stop})`);
-            lines.push(`--color-primary-foreground: ${foregroundFor(palette, "primary")}`);
+          // flips a role to its 50 in dark mode; a picked brand color shouldn't).
+          if (name !== "neutral") {
+            lines.push(`--color-${name}: var(--color-${name}-${stop})`);
+            lines.push(`--color-${name}-foreground: ${foregroundFor(palette, name)}`);
           }
         }
         for (const swatch of this.querySelectorAll<HTMLElement>(
@@ -334,7 +332,7 @@ class ThemeBuilder extends ZazzElement {
           }
         }
         const hint = q<HTMLElement>(`[data-theme-hint="${name}"]`);
-        if (hint) hint.textContent = changed ? `Your color is ${name}-${stop}.` : hints[name];
+        if (hint) hint.textContent = changed ? `Color pinned to ${name}-${stop}.` : hints[name];
       }
 
       for (const input of this.querySelectorAll<Field>("[data-theme-number]")) {

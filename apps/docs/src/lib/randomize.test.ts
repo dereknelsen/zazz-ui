@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vite-plus/test";
-import { toOklch } from "./palette.ts";
+import { STOPS, toHex, toOklch, type Stop } from "./palette.ts";
+import {
+  TAILWIND_NEUTRALS,
+  TAILWIND_PALETTES,
+  tailwindColor,
+  type TailwindPalette,
+} from "./tailwind-colors.ts";
 import { SCALE_STEPS } from "./fonts.ts";
 import {
   RANDOM_BACKGROUNDS,
@@ -34,13 +40,54 @@ describe("randomStep", () => {
 });
 
 describe("randomColors", () => {
-  it("keeps the neutral near gray and the primary colorful", () => {
+  /** Every Tailwind color in `palettes`, as hex. */
+  const hexes = (palettes: readonly TailwindPalette[]) =>
+    new Set(palettes.flatMap((p) => STOPS.map((s) => toHex(tailwindColor(p, s)))));
+  const any = hexes(TAILWIND_PALETTES);
+  const grays = hexes(TAILWIND_NEUTRALS);
+
+  it("draws every color from Tailwind's palettes, the neutral from a gray one", () => {
     for (const random of seeds) {
-      const { primary, neutral, shadow } = randomColors(random);
-      expect(toOklch(neutral).c).toBeLessThan(0.04);
-      expect(toOklch(primary).c).toBeGreaterThan(0.05);
+      const { primary, secondary, tertiary, neutral, shadow } = randomColors(random);
+      for (const color of [primary, secondary, tertiary]) expect(any).toContain(color);
+      expect(grays).toContain(neutral);
       expect(toOklch(shadow).l).toBeLessThan(0.35);
     }
+  });
+
+  it("takes the shadow color from the neutral's palette", () => {
+    for (const random of seeds) {
+      const { neutral, shadow } = randomColors(random);
+      const palette = TAILWIND_NEUTRALS.find((p) => toHex(tailwindColor(p, 500)) === neutral)!;
+      expect([900, 950].map((s) => toHex(tailwindColor(palette, s as Stop)))).toContain(shadow);
+    }
+  });
+
+  it("gives the accents three different colors", () => {
+    for (const random of seeds) {
+      const { primary, secondary, tertiary } = randomColors(random);
+      expect(new Set([primary, secondary, tertiary]).size).toBe(3);
+    }
+  });
+
+  it("keeps the accents dark enough to read on white", () => {
+    for (const random of seeds) {
+      const { primary, secondary, tertiary } = randomColors(random);
+      for (const color of [primary, secondary, tertiary]) {
+        expect(toOklch(color).l).toBeLessThanOrEqual(0.71);
+      }
+    }
+    // Yellow is the first palette whose 500 is too light: it starts at 600.
+    for (let i = 0; i < 10; i++) {
+      const yellow = TAILWIND_PALETTES.indexOf("yellow") / TAILWIND_PALETTES.length + 0.001;
+      const { primary } = randomColors(() => (i === 0 ? yellow : i / 10));
+      expect(toOklch(primary).l).toBeLessThanOrEqual(0.71);
+    }
+  });
+
+  it("can pick a gray primary", () => {
+    const { primary } = randomColors(() => 0.99);
+    expect(grays).toContain(primary);
   });
 });
 
@@ -76,7 +123,7 @@ describe("randomInRanges", () => {
 describe("RANDOM_RANGES", () => {
   it("keeps each slider in its tasteful slice", () => {
     expect(RANDOM_RANGES).toEqual({
-      spacing: [[0.2, 0.3]],
+      spacing: [[0.15, 0.35]],
       radius: [[0, 2.5]],
       "corner-shape": [[1, 3]],
       "card-elevation": [[0, 4]],

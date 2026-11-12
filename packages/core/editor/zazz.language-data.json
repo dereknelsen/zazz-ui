@@ -1006,7 +1006,9 @@
           "appearance: none — redraws track + thumb from theme tokens",
           "--_touch-min (touch screens): the transparent input grows to the touch floor and so does the thumb's box, through a transparent border, while the visible thumb keeps its size. A thumb can't have an ::after, so on touch screens its border and ring draw inset, it loses its drop shadow, and the visible thumb stops a border's width short of each track end.",
           "sign(): switches the ring inset once the thumb has a hit border",
-          "corner-shape — round by default, so circles stay circles; a hook takes any shape"
+          "corner-shape — round by default, so circles stay circles; a hook takes any shape",
+          "the track fill: ::-moz-range-progress in Firefox. Chromium and Safari have no progress part, so a view timeline on the thumb (view-timeline + timeline-scope) animates --_slider-progress on the track, which paints the fill as a gradient. The timeline needs the input to be a scroll container, so there it clips its overflow and pads its inline ends to keep the thumb's ring in view, so a padding utility on the input moves the fill off the thumb there. @supports-gated: an engine without view timelines shows no fill. Nor does a right-to-left slider there: Chromium measures an inline view timeline from the left in RTL and Safari from the right, and CSS can't tell which it got.",
+          "@container style(--ui-slider-fill-side: end) — the fill runs from the thumb to the end; Firefox 151+ (style queries), older engines fill from the start."
         ],
         "tokens": [
           "--ui-slider-* (@layer variables, on :root so subtree hooks work); the thumb and track sizes floor at --spacing-control-min"
@@ -1168,7 +1170,7 @@
         "uses": [
           "interestfor: Interest Invokers API (Chromium 142+; polyfill via invokers)",
           "data-tooltip-slot=\"content\": hint popover (light dismiss, auto-hides sibling hints)",
-          "anchor-name, position-anchor, position-area, position-try-fallbacks: explicit anchors for polyfill; data-popover-side maps to --ui-popover-position-*",
+          "anchor-name, position-anchor, position-area, position-try-fallbacks: explicit anchors for polyfill; data-popover-side maps to --ui-popover-position-*. Chromium (151) draws one of a newly opened anchored element's first two frames without its scroll compensation, so in a scrolled container or page the tooltip flashes far from its trigger. Opening, the fade starts 34ms (two 60Hz frames) late, so that frame paints transparent; a later one would be nearly so. A custom --ui-tooltip-transition keeps the delay on its first entry.",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners",
           ":dir(rtl): inline-side origins and slide-in mirror; the arrow uses logical insets",
           "@media not (hover: hover) — hidden on touch screens (no hover to show it, and a tap would cover the trigger's own action); keep essential text visible"
@@ -1925,7 +1927,7 @@
       "file": "primitives/fields/fields.css"
     },
     "--ui-field-border-color--hover": {
-      "value": "color-mix( in oklch, var(--color-border) 90%, var(--color-primary) 10% )",
+      "value": "color-mix( in oklch, var(--color-border) 90%, var(--color-foreground) 10% )",
       "file": "primitives/fields/fields.css"
     },
     "--ui-field-border-style": {
@@ -3072,12 +3074,20 @@
       "value": "1px",
       "file": "primitives/separator/separator.css"
     },
+    "--ui-slider-fill-bg": {
+      "value": "var(--color-primary)",
+      "file": "primitives/slider/slider.css"
+    },
+    "--ui-slider-fill-side": {
+      "value": "start",
+      "file": "primitives/slider/slider.css"
+    },
     "--ui-slider-ring-color": {
       "value": "var(--color-ring)",
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-thumb-bg": {
-      "value": "var(--color-background)",
+      "value": "var(--color-card)",
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-thumb-border-color": {
@@ -3109,15 +3119,15 @@
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-track-bg": {
-      "value": "var(--color-muted)",
+      "value": "var(--ui-field-bg)",
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-track-border-color": {
-      "value": "var(--color-muted)",
+      "value": "var(--ui-field-border-color)",
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-track-border-width": {
-      "value": "1px",
+      "value": "var(--ui-field-border-width)",
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-track-corner-shape": {
@@ -3321,11 +3331,11 @@
       "file": "primitives/table/table.css"
     },
     "--ui-tabs-gap": {
-      "value": "var(--space-xs)",
+      "value": "0",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-indicator-bg": {
-      "value": "var(--color-card)",
+      "value": "var(--color-muted)",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-indicator-border-color": {
@@ -3353,7 +3363,7 @@
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-indicator-shadow": {
-      "value": "var(--shadow-xs)",
+      "value": "none",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-label-bg": {
@@ -3433,11 +3443,11 @@
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-track-gap": {
-      "value": "calc(var(--spacing) * 0.5)",
+      "value": "calc(var(--spacing) * 0.35)",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-track-p": {
-      "value": "calc(var(--spacing) * 0.5)",
+      "value": "calc(var(--spacing) * 0.35)",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-track-radius": {
@@ -3979,10 +3989,10 @@
       "dark": "oklch(0.82 0.09 242)"
     },
     "--color-input": {
-      "value": "light-dark(var(--color-neutral-50), var(--color-tint-100))",
+      "value": "light-dark(var(--color-neutral-50), var(--color-neutral-950))",
       "file": "base/_variables.css",
       "light": "oklch(0.973 0.001 287.31)",
-      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.085)"
+      "dark": "oklch(0.198 0.008 285.68)"
     },
     "--color-input-foreground": {
       "value": "light-dark(var(--color-neutral-900), var(--color-white))",

@@ -5,8 +5,11 @@ import {
   SCALE_STEPS,
   fontStack,
   googleFontsHref,
+  CURATED_FONTS,
+  FONT_PAIRINGS,
   pairFont,
   pickGoogleFonts,
+  randomPairing,
   type FontOption,
 } from "./fonts.ts";
 
@@ -40,70 +43,78 @@ describe("LOCAL_FONTS", () => {
   });
 });
 
+describe("CURATED_FONTS", () => {
+  it("offers seven unique families in each category", () => {
+    for (const category of FONT_CATEGORIES) {
+      expect(new Set(CURATED_FONTS[category]).size).toBe(7);
+    }
+  });
+
+  it("pairs every curated family it recommends from the same list", () => {
+    const all = FONT_CATEGORIES.flatMap((c) => CURATED_FONTS[c]);
+    for (const [heading, body] of FONT_PAIRINGS) {
+      expect(all).toContain(heading);
+      expect(all).toContain(body);
+    }
+  });
+
+  it("puts every sans and serif in at least one recommended pairing", () => {
+    const paired = new Set(FONT_PAIRINGS.flat());
+    for (const family of [...CURATED_FONTS["sans-serif"], ...CURATED_FONTS.serif]) {
+      expect(paired).toContain(family);
+    }
+  });
+});
+
 describe("pickGoogleFonts", () => {
-  it("takes the first N of each offered category, in the API's order", () => {
+  const curated = {
+    "sans-serif": ["Inter", "Roboto"],
+    serif: ["Lora"],
+    monospace: ["Fira Code"],
+  };
+
+  it("takes only the curated families, in curated order, with the curated category", () => {
     const items = [
       item("Roboto", "sans-serif"),
       item("Lobster", "display"),
       item("Lora", "serif"),
-      item("Pacifico", "handwriting"),
       item("Inter", "sans-serif"),
-      item("Fira Code", "monospace"),
+      item("Fira Code", "display"),
       item("Open Sans", "sans-serif"),
-      item("Caveat", "handwriting"),
-      item("Bebas Neue", "display"),
-      item("Anton", "display"),
     ];
-    const picked = pickGoogleFonts(items, 2);
-    expect(picked.map((f) => f.google)).toEqual([
-      "Roboto",
-      "Lobster",
-      "Lora",
-      "Inter",
-      "Fira Code",
-      "Bebas Neue",
-    ]);
+    const picked = pickGoogleFonts(items, curated);
+    expect(picked.map((f) => f.google)).toEqual(["Inter", "Roboto", "Lora", "Fira Code"]);
     expect(picked[0]).toMatchObject({
-      value: "Roboto",
-      label: "Roboto",
+      value: "Inter",
+      label: "Inter",
       category: "sans-serif",
-      google: "Roboto",
-      stack: '"Roboto", var(--font-sans-fallback)',
+      google: "Inter",
+      stack: '"Inter", var(--font-sans-fallback)',
     });
+    expect(picked.at(-1)?.category).toBe("monospace");
   });
 
-  it("takes seven of each category by default", () => {
-    const items = FONT_CATEGORIES.flatMap((category) =>
-      Array.from({ length: 9 }, (_, i) => item(`${category} ${i}`, category)),
-    );
-    const picked = pickGoogleFonts(items);
-    for (const category of FONT_CATEGORIES) {
-      expect(picked.filter((f) => f.category === category)).toHaveLength(7);
-    }
-  });
-
-  it("skips handwriting and any category the builder has no group for", () => {
-    expect(pickGoogleFonts([item("Caveat", "handwriting"), item("Odd", "symbols")])).toEqual([]);
+  it("leaves out a curated family the API does not list", () => {
+    expect(pickGoogleFonts([item("Lora", "serif")], curated).map((f) => f.google)).toEqual([
+      "Lora",
+    ]);
   });
 
   it("requests only the kit's weights the family ships, with regular as 400", () => {
-    const [font] = pickGoogleFonts([
-      item("Inter", "sans-serif", ["regular", "500", "italic", "900"]),
-    ]);
+    const [font] = pickGoogleFonts(
+      [item("Inter", "sans-serif", ["regular", "500", "italic", "900"])],
+      curated,
+    );
     expect(font.weights).toEqual([400, 500]);
   });
 
-  it("skips icon fonts that the API files under monospace", () => {
-    const picked = pickGoogleFonts([
-      item("Material Icons", "monospace"),
-      item("Material Symbols Outlined", "monospace"),
-      item("Roboto Mono", "monospace"),
-    ]);
-    expect(picked.map((f) => f.google)).toEqual(["Roboto Mono"]);
+  it("drops a family that ships none of the wanted weights", () => {
+    expect(pickGoogleFonts([item("Lora", "serif", ["100", "italic"])], curated)).toEqual([]);
   });
 
-  it("drops a family that ships none of the wanted weights", () => {
-    expect(pickGoogleFonts([item("Thin", "serif", ["100", "italic"])])).toEqual([]);
+  it("defaults to CURATED_FONTS", () => {
+    const items = FONT_CATEGORIES.flatMap((c) => CURATED_FONTS[c].map((f) => item(f, c)));
+    expect(pickGoogleFonts(items)).toHaveLength(21);
   });
 });
 
@@ -111,7 +122,6 @@ describe("fontStack", () => {
   it("quotes the family ahead of the category's fallback", () => {
     expect(fontStack("Fira Code", "monospace")).toBe('"Fira Code", var(--font-mono-fallback)');
     expect(fontStack("Lora", "serif")).toBe('"Lora", var(--font-serif-fallback)');
-    expect(fontStack("Lobster", "display")).toBe('"Lobster", var(--font-sans-fallback)');
   });
 });
 
@@ -146,8 +156,9 @@ describe("pairFont", () => {
     font("Roboto", "sans-serif"),
     font("Lora", "serif"),
     font("Roboto Slab", "serif"),
-    font("Lobster", "display"),
     font("Fira Code", "monospace"),
+    font("Outfit", "sans-serif"),
+    font("Castoro", "serif"),
   ];
   const byName = (name: string) => options.find((f) => f.value === name)!;
   /** Every font `pairFont` can return across the whole random range. */
@@ -159,24 +170,38 @@ describe("pairFont", () => {
       ),
     );
 
-  it("never gives body text a display face", () => {
-    for (const heading of [...options, null]) {
-      const bodies = reachable("body", heading);
-      expect(bodies.has("Lobster")).toBe(false);
+  it("never gives body text a monospace face over a sans or serif heading", () => {
+    for (const heading of [...options.filter((f) => f.category !== "monospace"), null]) {
+      expect(reachable("body", heading).has("Fira Code")).toBe(false);
     }
   });
 
   it("contrasts the classification: a serif heading gets a sans body", () => {
-    const bodies = reachable("body", byName("Lora"));
+    const bodies = reachable("body", byName("Castoro"));
     expect(bodies.has("Inter")).toBe(true);
-    expect(bodies.has("Lora")).toBe(false);
+    expect(bodies.has("Castoro")).toBe(false);
   });
 
-  it("puts a serif or a display face over the default sans body", () => {
+  it("puts a serif over the default sans body, never a monospace", () => {
     const headings = reachable("heading", null);
     expect(headings.has("Lora")).toBe(true);
-    expect(headings.has("Lobster")).toBe(true);
     expect(headings.has("Fira Code")).toBe(false);
+  });
+
+  it("favors the recommended pairings, in both directions", () => {
+    const tally = (role: "heading" | "body", other: string) => {
+      const counts = new Map<string, number>();
+      for (let i = 0; i < 400; i++) {
+        const pick = pairFont(role, byName(other), options, undefined, () => i / 400)!;
+        counts.set(pick.value, (counts.get(pick.value) ?? 0) + 1);
+      }
+      return counts;
+    };
+    // Lora + Outfit and Castoro + Inter are recommended.
+    const underLora = tally("body", "Lora");
+    expect(underLora.get("Outfit")!).toBeGreaterThan(200);
+    const overInter = tally("heading", "Inter");
+    expect(overInter.get("Castoro")!).toBeGreaterThan(200);
   });
 
   it("favors the other font's superfamily", () => {
@@ -192,13 +217,7 @@ describe("pairFont", () => {
     const cuts = [font("Redaction 10", "serif"), font("Inter", "sans-serif")];
     const counts = { kin: 0, other: 0 };
     for (let i = 0; i < 200; i++) {
-      const pick = pairFont(
-        "body",
-        font("Redaction 35", "display"),
-        cuts,
-        undefined,
-        () => i / 200,
-      );
+      const pick = pairFont("body", font("Redaction 35", "serif"), cuts, undefined, () => i / 200);
       counts[pick!.value === "Inter" ? "other" : "kin"]++;
     }
     expect(counts.kin).toBeGreaterThan(counts.other);
@@ -213,6 +232,51 @@ describe("pairFont", () => {
   });
 
   it("is null when nothing pairs", () => {
-    expect(pairFont("body", null, [font("Lobster", "display")], undefined)).toBeNull();
+    expect(pairFont("body", null, [font("Fira Code", "monospace")], undefined)).toBeNull();
+  });
+});
+
+describe("randomPairing", () => {
+  const font = (family: string, category: FontOption["category"]): FontOption => ({
+    value: family,
+    label: family,
+    category,
+    stack: fontStack(family, category),
+    google: family,
+  });
+  const options = [
+    font("Lora", "serif"),
+    font("Outfit", "sans-serif"),
+    font("Inter", "sans-serif"),
+    font("Fira Code", "monospace"),
+  ];
+  /** A random source that hands out `values` in turn. */
+  const sequence = (...values: number[]) => {
+    let i = 0;
+    return () => values[i++ % values.length];
+  };
+
+  it("takes a recommended pairing most of the time", () => {
+    let recommended = 0;
+    for (let i = 0; i < 100; i++) {
+      const pick = randomPairing(options, sequence(i / 100, 0.5, 0.5));
+      if (pick?.heading.value === "Lora" && pick.body?.value === "Outfit") recommended++;
+    }
+    expect(recommended).toBeGreaterThanOrEqual(75);
+  });
+
+  it("otherwise pairs a random heading", () => {
+    const pick = randomPairing(options, sequence(0.9, 0.99, 0.5));
+    expect(pick?.heading.value).toBe("Fira Code");
+    expect(pick?.body?.category).toBe("sans-serif");
+  });
+
+  it("skips pairings whose fonts are not on offer", () => {
+    const pick = randomPairing([font("Inter", "sans-serif"), font("Lora", "serif")], () => 0);
+    expect(pick?.heading.value).toBe("Inter");
+  });
+
+  it("is null with nothing on offer", () => {
+    expect(randomPairing([])).toBeNull();
   });
 });

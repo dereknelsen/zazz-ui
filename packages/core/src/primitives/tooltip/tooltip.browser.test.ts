@@ -88,3 +88,18 @@ describe("tooltip", () => {
   // Waits on Lightning CSS parsing @container anchored(): see the arrow rules in tooltip.css.
   it.todo("moves the arrow when a position-try fallback flips the tooltip");
 });
+
+describe("tooltip opening fade", () => {
+  useKit();
+
+  // Chromium misplaces one of an opening tooltip's first two frames inside a scrolled
+  // container (tooltip.css header), so the fade starts two frames late.
+  it("delays only the opening fade, not the transform, overlay, display, or closing", () => {
+    const root = mount(`<ui-tooltip>${TIP("g")}</ui-tooltip>`);
+    const content = root.querySelector<HTMLElement>("[data-tooltip-slot='content']")!;
+    expect(style(content, "transition-delay")).toBe("0s");
+    content.showPopover();
+    expect(style(content, "transition-delay")).toBe("0.034s, 0s, 0s, 0s");
+    content.hidePopover();
+  });
+});

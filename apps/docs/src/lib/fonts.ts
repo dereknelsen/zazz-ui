@@ -27,21 +27,55 @@ export const SCALE_STEPS: readonly ScaleStep[] = [
   { value: 2, name: "Octave" },
 ];
 
-/**
- * The Google Fonts API categories the builder offers, in the order it groups
- * them. Handwriting is left out.
- */
-export const FONT_CATEGORIES = ["sans-serif", "serif", "display", "monospace"] as const;
+/** The font categories the builder offers, in the order it groups them. */
+export const FONT_CATEGORIES = ["sans-serif", "serif", "monospace"] as const;
 
 export type FontCategory = (typeof FONT_CATEGORIES)[number];
 
-/** The kit's fallback stack for each category. The kit has no display stack, so display faces fall back to sans. */
+/** The kit's fallback stack for each category. */
 const FALLBACK: Record<FontCategory, string> = {
   "sans-serif": "var(--font-sans-fallback)",
   serif: "var(--font-serif-fallback)",
-  display: "var(--font-sans-fallback)",
   monospace: "var(--font-mono-fallback)",
 };
+
+/**
+ * The Google families on offer, seven per category, curated from the
+ * recommendations of Typewolf ("The 40 Best Free Fonts Available on Google
+ * Fonts", 2026), SaaS Landing Page ("The 12 Most Popular Google Fonts for
+ * Landing Pages", 2026), Leadpages ("The Best Google Font Pairings for 2026"),
+ * and Lexington Themes ("Best Monospaced Google Fonts for 2026"). Every sans and
+ * serif here is in at least one of `FONT_PAIRINGS`. Listed in combobox order.
+ */
+export const CURATED_FONTS: Readonly<Record<FontCategory, readonly string[]>> = {
+  "sans-serif": ["Inter", "DM Sans", "Outfit", "Figtree", "Manrope", "Raleway", "Poppins"],
+  serif: ["Lora", "Playfair Display", "Fraunces", "Bodoni Moda", "Prata", "Castoro", "Zilla Slab"],
+  monospace: [
+    "Space Mono",
+    "Inconsolata",
+    "Azeret Mono",
+    "SUSE Mono",
+    "Atkinson Hyperlegible Mono",
+    "Google Sans Code",
+    "Geist Mono",
+  ],
+};
+
+/**
+ * The heading-over-body pairings the same sources recommend, among
+ * `CURATED_FONTS`. The wand and the dice favor these over any other match.
+ */
+export const FONT_PAIRINGS: readonly (readonly [heading: string, body: string])[] = [
+  ["Lora", "Outfit"],
+  ["Lora", "DM Sans"],
+  ["Castoro", "Inter"],
+  ["Castoro", "Figtree"],
+  ["Playfair Display", "Raleway"],
+  ["Bodoni Moda", "Raleway"],
+  ["Fraunces", "Poppins"],
+  ["Prata", "Manrope"],
+  ["Outfit", "Zilla Slab"],
+];
 
 /** A font the builder can offer: a local stack or a Google family. */
 export interface FontOption {
@@ -85,36 +119,35 @@ export interface GoogleFontItem {
 const WANTED_WEIGHTS = [400, 500, 600, 700];
 
 /**
- * Picks the first families of each category. The API sorts its list when
- * asked (ThemeBuilder.astro asks for `sort=popularity`), so the first matches
- * win. Only the weights the family ships are requested.
+ * The `CURATED_FONTS` the API lists, in curated order, with the curated
+ * category (the API files some monospace families elsewhere). Only the
+ * weights the family ships are requested, and a family the API does not list,
+ * or that ships none of the wanted weights, is left out.
  */
-export function pickGoogleFonts(items: readonly GoogleFontItem[], perCategory = 7): FontOption[] {
-  const picked: FontOption[] = [];
-  const counts = Object.fromEntries(FONT_CATEGORIES.map((c) => [c, 0])) as Record<
-    FontCategory,
-    number
-  >;
-  for (const item of items) {
-    const category = item.category as FontCategory;
-    if (!(category in counts) || counts[category] >= perCategory) continue;
-    // Icon fonts (Material Icons, Material Symbols) list as monospace.
-    if (/\b(Icons|Symbols)\b/.test(item.family)) continue;
-    const weights = WANTED_WEIGHTS.filter((w) =>
-      item.variants.includes(w === 400 ? "regular" : String(w)),
-    );
-    if (weights.length === 0) continue;
-    counts[category]++;
-    picked.push({
-      value: item.family,
-      label: item.family,
-      category,
-      stack: fontStack(item.family, category),
-      google: item.family,
-      weights,
-    });
-  }
-  return picked;
+export function pickGoogleFonts(
+  items: readonly GoogleFontItem[],
+  curated: Readonly<Record<FontCategory, readonly string[]>> = CURATED_FONTS,
+): FontOption[] {
+  const byFamily = new Map(items.map((item) => [item.family, item]));
+  return FONT_CATEGORIES.flatMap((category) =>
+    curated[category].flatMap((family) => {
+      const item = byFamily.get(family);
+      const weights = WANTED_WEIGHTS.filter((w) =>
+        item?.variants.includes(w === 400 ? "regular" : String(w)),
+      );
+      if (!item || weights.length === 0) return [];
+      return [
+        {
+          value: family,
+          label: family,
+          category,
+          stack: fontStack(family, category),
+          google: family,
+          weights,
+        },
+      ];
+    }),
+  );
 }
 
 /** The token value for a Google family: the quoted name ahead of the kit's fallback stack. */
@@ -151,22 +184,19 @@ export type FontRole = "heading" | "body";
 /**
  * The categories that pair with the other role's font, best first, after
  * Google's "Pairing typefaces" guidance: contrast the classification (a serif
- * over a sans, or the reverse), keep display faces to headings over
- * a plain body, and set code-like monospace against a sans.
+ * over a sans, or the reverse), and set code-like monospace against a sans.
  */
 const PAIRS: Record<FontRole, Record<FontCategory, readonly FontCategory[]>> = {
   // A body to go under a heading in this category.
   body: {
     serif: ["sans-serif", "serif"],
     "sans-serif": ["serif", "sans-serif"],
-    display: ["sans-serif", "serif"],
     monospace: ["sans-serif", "serif"],
   },
   // A heading to go over a body in this category.
   heading: {
-    serif: ["sans-serif", "display", "serif"],
-    "sans-serif": ["serif", "display"],
-    display: ["sans-serif", "serif"],
+    serif: ["sans-serif", "serif"],
+    "sans-serif": ["serif", "sans-serif"],
     monospace: ["sans-serif", "monospace"],
   },
 };
@@ -175,6 +205,15 @@ const PAIRS: Record<FontRole, Record<FontCategory, readonly FontCategory[]>> = {
 const TIER_WEIGHTS = [4, 2, 1];
 /** How much more likely a font from the other's superfamily is. */
 const SUPERFAMILY_WEIGHT = 3;
+/** How much more likely a recommended pairing (`FONT_PAIRINGS`) is. */
+const PAIRING_WEIGHT = 12;
+
+/** Whether `FONT_PAIRINGS` recommends `font` in `role` with `other` in the other role. */
+function recommended(role: FontRole, font: string, other: string): boolean {
+  return FONT_PAIRINGS.some(([heading, body]) =>
+    role === "heading" ? heading === font && body === other : body === font && heading === other,
+  );
+}
 
 /**
  * A family name without its classification words and cut numbers: "Roboto
@@ -190,9 +229,10 @@ function superfamily(label: string): string {
 
 /**
  * A font for `role` that pairs with `other`, the other role's font (null is
- * the kit's default, a system sans). The pick is random, weighted toward the
- * better categories in `PAIRS` and toward the other font's superfamily (Roboto
- * with Roboto Slab), which the guide calls the safest pairing. It never
+ * the kit's default, a system sans). The pick is random, weighted heavily
+ * toward the recommended `FONT_PAIRINGS`, then toward the better categories in
+ * `PAIRS` and the other font's superfamily (Roboto with Roboto Slab), which
+ * the guide calls the safest pairing. It never
  * returns `other` itself or `current`, so each call moves to a new font. Null
  * when no option fits.
  */
@@ -211,7 +251,11 @@ export function pairFont(
     const tier = tiers.indexOf(option.category);
     if (tier < 0) continue;
     const kin = family !== "" && superfamily(option.label) === family;
-    weighted.push([option, TIER_WEIGHTS[tier] * (kin ? SUPERFAMILY_WEIGHT : 1)]);
+    const paired = other !== null && recommended(role, option.value, other.value);
+    weighted.push([
+      option,
+      TIER_WEIGHTS[tier] * (kin ? SUPERFAMILY_WEIGHT : 1) * (paired ? PAIRING_WEIGHT : 1),
+    ]);
   }
   const total = weighted.reduce((sum, [, w]) => sum + w, 0);
   let at = random() * total;
@@ -220,4 +264,31 @@ export function pairFont(
     if (at < 0) return option;
   }
   return weighted.at(-1)?.[0] ?? null;
+}
+
+/** How often the dice take a recommended pairing outright rather than pairing a random heading. */
+const RECOMMENDED_SHARE = 0.75;
+
+/**
+ * A heading and a body for the dice. Most of the time one of the
+ * `FONT_PAIRINGS` whose fonts are both on offer; otherwise a heading from any
+ * category and a body that pairs with it (`pairFont`, which still favors the
+ * recommendations). Null when nothing is on offer.
+ */
+export function randomPairing(
+  options: readonly FontOption[],
+  random: () => number = Math.random,
+): { heading: FontOption; body: FontOption | null } | null {
+  const find = (value: string) => options.find((o) => o.value === value);
+  const offered = FONT_PAIRINGS.flatMap(([h, b]) => {
+    const heading = find(h);
+    const body = find(b);
+    return heading && body ? [{ heading, body }] : [];
+  });
+  if (offered.length > 0 && random() < RECOMMENDED_SHARE) {
+    return offered[Math.min(offered.length - 1, Math.floor(random() * offered.length))];
+  }
+  if (options.length === 0) return null;
+  const heading = options[Math.min(options.length - 1, Math.floor(random() * options.length))];
+  return { heading, body: pairFont("body", heading, options, undefined, random) };
 }

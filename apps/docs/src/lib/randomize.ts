@@ -1,15 +1,19 @@
 /**
  * The theme builder's randomizer: pure pickers for the values that need more
- * care than "anywhere on the slider". Colors stay usable (a colorful primary,
- * a near-gray neutral, a dark shadow) and the type scale never shrinks from
- * narrow to wide. scripts/theme-builder.ts applies them to the form.
+ * care than "anywhere on the slider". Colors come from Tailwind's palettes (a
+ * gray one for the neutral), and the type scale never shrinks from narrow to
+ * wide. scripts/theme-builder.ts applies them to the form.
  */
 import { SCALE_STEPS } from "./fonts.ts";
-import { toHex } from "./palette.ts";
+import { toHex, type Stop } from "./palette.ts";
+import {
+  TAILWIND_NEUTRALS,
+  TAILWIND_PALETTES,
+  tailwindColor,
+  type TailwindPalette,
+} from "./tailwind-colors.ts";
 
 export type Random = () => number;
-
-const between = (min: number, max: number, random: Random) => min + random() * (max - min);
 
 /** Every value on the `step` grid from `min` to `max`, both ends included. */
 function grid(min: number, max: number, step: number): number[] {
@@ -28,23 +32,60 @@ export function randomStep(min: number, max: number, step: number, random: Rando
   return pick(grid(min, max, step), random);
 }
 
-/** A primary, a neutral tinted toward a hue of its own, and a shadow color. */
+/** The stops a primary, secondary, or tertiary takes: mid-tones, or the dark end of a gray. */
+const ACCENT_STOPS: readonly Stop[] = [500, 600, 700];
+const GRAY_ACCENT_STOPS: readonly Stop[] = [800, 900, 950];
+
+/** The stops a shadow color takes from the neutral's palette: dark enough to read as shadow. */
+const SHADOW_STOPS: readonly Stop[] = [900, 950];
+
+const isNeutral = (palette: TailwindPalette) =>
+  (TAILWIND_NEUTRALS as readonly string[]).includes(palette);
+
+/** The lightest an accent may be and still read as a link or focus ring on white. */
+const MAX_ACCENT_L = 0.7;
+
+/**
+ * A Tailwind accent color: a mid stop of a hue, or a dark stop of a gray.
+ * Stops lighter than `MAX_ACCENT_L` are skipped, so yellow, lime, and amber
+ * start at their 600.
+ */
+function accent(palette: TailwindPalette, random: Random): string {
+  const stops = (isNeutral(palette) ? GRAY_ACCENT_STOPS : ACCENT_STOPS).filter(
+    (s) => tailwindColor(palette, s).l <= MAX_ACCENT_L,
+  );
+  return toHex(tailwindColor(palette, pick(stops, random)));
+}
+
+/**
+ * Theme colors from Tailwind's default palettes: a primary, a secondary, and
+ * a tertiary from any three different palettes, a neutral from a gray one
+ * (its 500, where the kit's neutral sits), and a shadow color from a dark stop
+ * of that same gray palette.
+ */
 export function randomColors(random: Random): {
   primary: string;
+  secondary: string;
+  tertiary: string;
   neutral: string;
   shadow: string;
 } {
-  const hue = between(0, 360, random);
-  // The neutral leans toward the primary's hue most of the time, like the kit's zinc.
-  const neutralHue = random() < 0.7 ? hue : between(0, 360, random);
+  const primary = pick(TAILWIND_PALETTES, random);
+  const secondary = pick(
+    TAILWIND_PALETTES.filter((p) => p !== primary),
+    random,
+  );
+  const tertiary = pick(
+    TAILWIND_PALETTES.filter((p) => p !== primary && p !== secondary),
+    random,
+  );
+  const neutral = pick(TAILWIND_NEUTRALS, random);
   return {
-    primary: toHex({ l: between(0.45, 0.7, random), c: between(0.1, 0.2, random), h: hue }),
-    neutral: toHex({ l: between(0.55, 0.65, random), c: between(0, 0.03, random), h: neutralHue }),
-    // Black half the time; otherwise a deep tint of the primary's hue.
-    shadow:
-      random() < 0.5
-        ? "#000000"
-        : toHex({ l: between(0.15, 0.3, random), c: between(0.02, 0.08, random), h: hue }),
+    primary: accent(primary, random),
+    secondary: accent(secondary, random),
+    tertiary: accent(tertiary, random),
+    neutral: toHex(tailwindColor(neutral, 500)),
+    shadow: toHex(tailwindColor(neutral, pick(SHADOW_STOPS, random))),
   };
 }
 
@@ -72,7 +113,7 @@ type Span = readonly [number, number];
  * The shadow angle has two slices so the light always comes from above.
  */
 export const RANDOM_RANGES: Record<string, readonly Span[]> = {
-  spacing: [[0.2, 0.3]],
+  spacing: [[0.15, 0.35]],
   radius: [[0, 2.5]],
   "corner-shape": [[1, 3]],
   "card-elevation": [[0, 4]],

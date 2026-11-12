@@ -130,6 +130,36 @@ gets `aria-label`, and its `<svg>` gets `aria-hidden="true"`, as the fragments s
 a `<form>` need an explicit `type`: `submit` for the one that submits, `button` for the rest,
 or every button submits.
 
+Every icon-only control also gets a tooltip, whether it's a button, a toggle, a link, or a
+badge, so sighted mouse and keyboard users can learn what it does without trying it. Wrap it
+in `<ui-tooltip>` and point `interestfor` at a `popover="hint"` content slot. Write a few
+words, at most about 16 characters so the tooltip stays on one line. The `aria-label` can
+match it or say more. The tooltip only adds a description and never names the control, so
+the `aria-label` stays in every case. Chromium skips a description that repeats the name, so
+matching text isn't read twice there.
+
+```html
+<ui-tooltip>
+  <button
+    type="button"
+    data-ui="button"
+    data-button-size="icon"
+    aria-label="Delete draft"
+    interestfor="delete-draft-tip"
+  >
+    <svg aria-hidden="true"><!-- trash icon --></svg>
+  </button>
+  <div data-tooltip-slot="content" id="delete-draft-tip" popover="hint">
+    Delete draft
+    <span data-tooltip-slot="arrow" aria-hidden="true"></span>
+  </div>
+</ui-tooltip>
+```
+
+`interestfor` only works on `<button>`, `<a>`, and `<area>`, so a badge can't trigger a
+tooltip on its own. Give an icon-only badge a text label hidden with `style="--sr: only"`, and
+if it needs a tooltip too, wrap it in a `<button type="button">` that takes the `interestfor`.
+
 ### Lists
 
 `<ul>` when order doesn't matter, `<ol>` when it does, `<dl>` for term-and-value pairs (specs,

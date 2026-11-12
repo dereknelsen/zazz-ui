@@ -26,7 +26,8 @@ function brotli(text: string): number {
   }).length;
 }
 
-describe("utilities layer budget", () => {
+// Reading, parsing, and Brotli-compressing ~470 KB take several seconds while the whole suite runs.
+describe("utilities layer budget", { timeout: 20_000 }, () => {
   const files = GENERATED.map((path) => [path, read(path)] as const);
   const all = files.map(([, css]) => css).join("\n");
 

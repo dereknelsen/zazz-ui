@@ -298,6 +298,10 @@ the sentence-case house rule, and composition patterns live in `PATTERNS.md`.
   input groups, and receding chrome. **Don't** shrink nav links, header actions, or dialog,
   form, and card buttons, and **don't** mix sizes in one row: shrink every control in it or
   none.
+- **Do** give every icon-only button, toggle, link, or badge a `<ui-tooltip>` that says in a
+  few words what it does (`PATTERNS.md`, "Links and buttons"). **Don't** rely on the icon
+  alone, and don't let the tooltip stand in for the `aria-label`, because it only describes
+  the control and doesn't name it.
 - **Do** write `data-ui="button" data-button-variant="primary"`. **Don't** write utility
   classes, `data-variant`, `data-slot`, or `class="dark"` (all 0.4 syntax). **Do** give custom
   styling a BEM class; **don't** hang it on a made-up `data-*` attribute or a non-utility custom

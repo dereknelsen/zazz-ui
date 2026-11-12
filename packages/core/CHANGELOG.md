@@ -1,5 +1,32 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.12.2 (2026-11-12)
+
+### base
+
+- `--color-input` in dark mode is the solid `--color-neutral-950`, where it was the `--color-tint-100` overlay.
+- A padding tier written without its base (`--px--md: 4` with no `--px`) no longer applies to a slider, so it can't override the inline padding the slider's fill depends on.
+
+### fields
+
+- A field's hover border mixes 10% of `--color-foreground` into the border, where it mixed `--color-primary`.
+
+### slider
+
+- The track takes the field look: `--ui-slider-track-bg`, `--ui-slider-track-border-width`, and `--ui-slider-track-border-color` default to the matching `--ui-field-*` hooks, where they were `--color-muted` with a 1px muted border. The thumb is `--color-card` (was `--color-background`).
+- The track fills from the start to the thumb in `--color-primary`. Set the color with `--ui-slider-fill-bg`, and fill from the thumb to the end instead with `--ui-slider-fill-side: end`.
+- In Chromium and Safari, the fill needs the input to clip its overflow. A slider used with a mouse is now about 30px tall, and its track ends sit 3px in from each side to leave room for the focus ring. A thumb shadow larger than the default gets clipped, and padding utilities on the slider move the fill off the thumb.
+- Right-to-left sliders have no fill in Chromium or Safari, because the two engines disagree on which way it should run. Firefox fills them.
+
+### tabs
+
+- The indicator is `--color-muted` with no shadow (`--ui-tabs-indicator-bg`, `--ui-tabs-indicator-shadow`), where it was `--color-card` with `--shadow-xs`.
+- The track is tighter: `--ui-tabs-track-p` and `--ui-tabs-track-gap` are `0.35 * --spacing` (were `0.5`), and `--ui-tabs-gap`, between the tab list and the panels, is `0` (was `--space-xs`).
+
+### tooltip
+
+- An opening tooltip no longer flashes far from its trigger in Chromium when the page or a container around it is scrolled. Chromium misplaces one of the first two frames, so the opening fade now starts 34ms late and that frame is transparent. Closing is unchanged. A custom `--ui-tooltip-transition` gets the delay on its first entry.
+
 ## 0.12.1 (2026-11-12)
 
 ### base

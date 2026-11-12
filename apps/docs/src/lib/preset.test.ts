@@ -4,6 +4,8 @@ import { decodePreset, encodePreset, fontHash } from "./preset.ts";
 /** Every control at the kit's default, as the form reports it. */
 const DEFAULTS: Record<string, string> = {
   "primary-hex": "#0a0a0a",
+  "secondary-hex": "#030712",
+  "tertiary-hex": "#0c0a09",
   "neutral-hex": "#8b8b95",
   "bg-light": "white",
   "bg-dark": "900",
@@ -25,6 +27,8 @@ const DEFAULTS: Record<string, string> = {
 const THEME: Record<string, string> = {
   ...DEFAULTS,
   "primary-hex": "#9a6420",
+  "secondary-hex": "#0d9488",
+  "tertiary-hex": "#e11d48",
   "neutral-hex": "#b08850",
   "bg-light": "50",
   "bg-dark": "black",
@@ -54,7 +58,7 @@ describe("encodePreset / decodePreset", () => {
   it("is a short, URL-safe code", () => {
     const code = encodePreset(THEME);
     expect(code).toMatch(/^[0-9A-Za-z]+$/);
-    expect(code.length).toBeLessThanOrEqual(28);
+    expect(code.length).toBeLessThanOrEqual(36);
   });
 
   it("spells the same theme the same way", () => {
@@ -76,6 +80,19 @@ describe("encodePreset / decodePreset", () => {
     const decoded = decodePreset(encodePreset(THEME), ["Inter"]);
     expect(decoded?.["font-heading"]).toBe("");
     expect(decoded?.["font-body"]).toBe("");
+  });
+
+  it("still reads a version 1 link, which had no secondary or tertiary", () => {
+    // THEME without those two, as the builder encoded it before the pickers existed.
+    const { "secondary-hex": _s, "tertiary-hex": _t, ...rest } = THEME;
+    expect(decodePreset("13CISn6wOKPlcdZcheFd370cs296", FONTS)).toEqual(rest);
+  });
+
+  it("keeps the corner shape's infinite ends", () => {
+    for (const end of ["3.1", "-2.1"]) {
+      const code = encodePreset({ ...THEME, "corner-shape": end });
+      expect(decodePreset(code, FONTS)?.["corner-shape"]).toBe(end);
+    }
   });
 
   it("rejects codes it cannot read", () => {

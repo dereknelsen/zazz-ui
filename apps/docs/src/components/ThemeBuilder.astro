@@ -25,6 +25,7 @@ import {
   WandSparkles,
   X,
 } from "@lucide/astro";
+import { CORNER_SHAPE } from "../lib/corner-shape.ts";
 import { species } from "../lib/fieldnotes.ts";
 import {
   FONT_CATEGORIES,
@@ -59,6 +60,10 @@ const TOASTER = "fieldnotes-toaster";
 const defaults = {
   // --color-primary is --color-primary-950 in light mode: oklch(0.145 0 0).
   primary: toHex({ l: 0.145, c: 0, h: 0 }),
+  // --color-secondary is --color-secondary-950 in light mode: oklch(13% 0.028 261.692).
+  secondary: toHex({ l: 0.13, c: 0.028, h: 261.692 }),
+  // --color-tertiary is --color-tertiary-950 in light mode: oklch(0.147 0.004 49.3).
+  tertiary: toHex({ l: 0.147, c: 0.004, h: 49.3 }),
   // --color-neutral-500: oklch(0.629 0.012 286.12).
   neutral: toHex({ l: 0.629, c: 0.012, h: 286.12 }),
   spacing: 0.25,
@@ -76,8 +81,9 @@ const defaults = {
 };
 
 /**
- * The Google families on offer: the seven most popular families of each offered
- * category, fetched once at build with the server-side key. A fork
+ * The Google families on offer: the curated seven of each category
+ * (`CURATED_FONTS`), checked against the API once at build with the
+ * server-side key, which also says which weights each family ships. A fork
  * without the key, or an API that fails, gets the local stacks only. The key
  * is never logged and never reaches the page: only names and weights do.
  */
@@ -86,7 +92,6 @@ async function googleFonts(): Promise<FontOption[]> {
   if (!key) return [];
   try {
     const url = new URL("https://www.googleapis.com/webfonts/v1/webfonts");
-    url.searchParams.set("sort", "popularity");
     url.searchParams.set("key", key);
     // The key is restricted to the site's referrers, so the build introduces
     // itself as the site (there is no browser here to do it).
@@ -110,7 +115,6 @@ const google = await googleFonts();
 const CATEGORY_LABEL: Record<FontCategory, string> = {
   "sans-serif": "Sans serif",
   serif: "Serif",
-  display: "Display",
   monospace: "Monospace",
 };
 const fontGroups =
@@ -143,14 +147,24 @@ const scales = [
 
 const palettes = [
   {
+    name: "neutral",
+    label: "Neutral",
+    hint: "Surfaces, borders, and body text.",
+  },
+  {
     name: "primary",
     label: "Primary",
     hint: "Buttons, links, focus rings, and selection.",
   },
   {
-    name: "neutral",
-    label: "Neutral",
-    hint: "Surfaces, borders, and body text.",
+    name: "secondary",
+    label: "Secondary",
+    hint: "Secondary buttons, badges, and toggles.",
+  },
+  {
+    name: "tertiary",
+    label: "Tertiary",
+    hint: "Tertiary buttons, badges, and toggles.",
   },
 ] as const;
 
@@ -170,11 +184,21 @@ const [featured, ...rest] = species;
 
 /** The collapsed bar's chips (narrow screens): one per control, opening the sheet on that control. */
 const chips = [
-  { id: "tb-primary-hex", label: "Primary", swatch: "var(--color-primary)" },
   {
     id: "tb-neutral-hex",
     label: "Neutral",
     swatch: "var(--color-neutral-500)",
+  },
+  { id: "tb-primary-hex", label: "Primary", swatch: "var(--color-primary)" },
+  {
+    id: "tb-secondary-hex",
+    label: "Secondary",
+    swatch: "var(--color-secondary)",
+  },
+  {
+    id: "tb-tertiary-hex",
+    label: "Tertiary",
+    swatch: "var(--color-tertiary)",
   },
   { id: "tb-bg-light", label: "Light background" },
   { id: "tb-bg-dark", label: "Dark background" },
@@ -389,18 +413,25 @@ const previewScope = `@layer zazz.variables {
       <div data-dialog-slot="content">
         <div data-dialog-slot="body" data-theme-sheet></div>
       </div>
-      <button
-        data-ui="button"
-        data-dialog-slot="close"
-        data-button-size="icon"
-        data-button-variant="ghost"
-        type="button"
-        commandfor="tb-sheet"
-        command="close"
-        aria-label="Close"
-      >
-        <X aria-hidden="true" />
-      </button>
+      <ui-tooltip>
+        <button
+          data-ui="button"
+          data-dialog-slot="close"
+          data-button-size="icon"
+          data-button-variant="ghost"
+          type="button"
+          commandfor="tb-sheet"
+          command="close"
+          aria-label="Close"
+          interestfor="tb-sheet-close-tip"
+        >
+          <X aria-hidden="true" />
+        </button>
+        <div data-tooltip-slot="content" id="tb-sheet-close-tip" popover="hint">
+          Close
+          <span data-tooltip-slot="arrow" aria-hidden="true"></span>
+        </div>
+      </ui-tooltip>
     </dialog>
 
     <div
@@ -420,7 +451,7 @@ const previewScope = `@layer zazz.variables {
         style="
           --place-items: start stretch;
           --template-rows: auto 1fr auto;
-          --gap: 3;
+          --gap: 0;
           --h: calc(100vb - var(--ui-header-height, 0rem) - (12 * var(--spacing)));
           --text: var(--color-card-foreground);
           --bg: var(--color-card);
@@ -434,8 +465,9 @@ const previewScope = `@layer zazz.variables {
             --p: 5;
             --gap: 3;
             --top: 0;
-            --bg: var(--color-card);
+            --bg: var(--color-shade-800);
             --border-b: 1;
+            --backdrop-filter: blur(6px);
             --z: 10;
           "
         >
@@ -448,16 +480,23 @@ const previewScope = `@layer zazz.variables {
             "
           >
             <h2 id="tb-title" data-ui="text-lg">Zazz theme builder</h2>
-            <button
-              data-ui="button"
-              data-button-size="icon"
-              data-button-variant="primary"
-              type="button"
-              aria-label="Randomize the theme"
-              data-theme-randomize
-            >
-              <Dices aria-hidden="true" />
-            </button>
+            <ui-tooltip>
+              <button
+                data-ui="button"
+                data-button-size="icon"
+                data-button-variant="primary"
+                type="button"
+                aria-label="Randomize the theme"
+                interestfor="tb-randomize-tip"
+                data-theme-randomize
+              >
+                <Dices aria-hidden="true" />
+              </button>
+              <div data-tooltip-slot="content" id="tb-randomize-tip" popover="hint">
+                Randomize the theme
+                <span data-tooltip-slot="arrow" aria-hidden="true"></span>
+              </div>
+            </ui-tooltip>
           </div>
         </header>
 
@@ -467,7 +506,7 @@ const previewScope = `@layer zazz.variables {
             open
             style="
               --py: 3;
-              --border-style: dotted;
+              --border-style: dashed;
             "
           >
             <summary
@@ -613,7 +652,7 @@ const previewScope = `@layer zazz.variables {
             open
             style="
               --py: 3;
-              --border-style: dotted;
+              --border-style: dashed;
               --border-t: 1;
             "
           >
@@ -746,16 +785,27 @@ const previewScope = `@layer zazz.variables {
                           </p>
                         </div>
                       </ui-combobox>
-                      <button
-                        data-ui="button"
-                        data-button-size="icon"
-                        data-button-variant="outline"
-                        type="button"
-                        aria-label={`Pick a ${f.label.toLowerCase()} that pairs with the ${f.other}`}
-                        data-theme-pair={f.role}
-                      >
-                        <WandSparkles aria-hidden="true" />
-                      </button>
+                      <ui-tooltip>
+                        <button
+                          data-ui="button"
+                          data-button-size="icon"
+                          data-button-variant="outline"
+                          type="button"
+                          aria-label={`Pick a ${f.label.toLowerCase()} that pairs with the ${f.other}`}
+                          interestfor={`tb-pair-${f.role}-tip`}
+                          data-theme-pair={f.role}
+                        >
+                          <WandSparkles aria-hidden="true" />
+                        </button>
+                        <div
+                          data-tooltip-slot="content"
+                          id={`tb-pair-${f.role}-tip`}
+                          popover="hint"
+                        >
+                          Pair a font
+                          <span data-tooltip-slot="arrow" aria-hidden="true"></span>
+                        </div>
+                      </ui-tooltip>
                     </div>
                   </div>
                 ))
@@ -817,7 +867,7 @@ const previewScope = `@layer zazz.variables {
             open
             style="
               --py: 3;
-              --border-style: dotted;
+              --border-style: dashed;
               --border-t: 1;
             "
           >
@@ -917,9 +967,9 @@ const previewScope = `@layer zazz.variables {
                   id="tb-corner-shape"
                   name="corner-shape"
                   type="range"
-                  min="-2"
-                  max="4"
-                  step="0.1"
+                  min={CORNER_SHAPE.min}
+                  max={CORNER_SHAPE.max}
+                  step={CORNER_SHAPE.step}
                   value={defaults.cornerShape}
                   data-default={defaults.cornerShape}
                   data-theme-number="corner-shape"
@@ -927,7 +977,8 @@ const previewScope = `@layer zazz.variables {
                 <div data-field-slot="description">
                   <span data-field-slot="hint"
                     >1 is round and higher is squarer. 0 is a bevel, and below 0
-                    the corners scoop in.</span
+                    the corners scoop in. The far ends are a square corner (∞)
+                    and a notch (−∞).</span
                   >
                 </div>
               </div>
@@ -937,7 +988,7 @@ const previewScope = `@layer zazz.variables {
             open
             style="
               --py: 3;
-              --border-style: dotted;
+              --border-style: dashed;
               --border-t: 1;
             "
           >
@@ -1113,9 +1164,9 @@ const previewScope = `@layer zazz.variables {
             --gap: 2;
             --bottom: 0;
             --mt: auto;
-            --bg: var(--color-card);
-            --border-style: dotted;
+            --bg: var(--color-shade-800);
             --border-t: 1;
+            --backdrop-filter: blur(6px);
           "
         >
           <button
@@ -1211,18 +1262,25 @@ const previewScope = `@layer zazz.variables {
                 </button>
               </footer>
             </div>
-            <button
-              data-ui="button"
-              data-dialog-slot="close"
-              data-button-size="icon"
-              data-button-variant="ghost"
-              type="button"
-              commandfor="tb-css"
-              command="close"
-              aria-label="Close"
-            >
-              <X aria-hidden="true" />
-            </button>
+            <ui-tooltip>
+              <button
+                data-ui="button"
+                data-dialog-slot="close"
+                data-button-size="icon"
+                data-button-variant="ghost"
+                type="button"
+                commandfor="tb-css"
+                command="close"
+                aria-label="Close"
+                interestfor="tb-css-close-tip"
+              >
+                <X aria-hidden="true" />
+              </button>
+              <div data-tooltip-slot="content" id="tb-css-close-tip" popover="hint">
+                Close
+                <span data-tooltip-slot="arrow" aria-hidden="true"></span>
+              </div>
+            </ui-tooltip>
           </dialog>
         </section>
       </form>
@@ -1235,6 +1293,7 @@ const previewScope = `@layer zazz.variables {
     style="
       --min-h: 100%;
       --bg: var(--color-background);
+      --border-style: dashed;
       --border-l: 0;
       --border-l--lg: 1;
       --border-t: 1;

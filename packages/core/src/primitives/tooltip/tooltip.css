@@ -6,7 +6,13 @@
  * @uses       interestfor: Interest Invokers API (Chromium 142+; polyfill via invokers)
  * @uses       data-tooltip-slot="content": hint popover (light dismiss, auto-hides sibling hints)
  * @uses       anchor-name, position-anchor, position-area, position-try-fallbacks:
- *             explicit anchors for polyfill; data-popover-side maps to --ui-popover-position-*
+ *             explicit anchors for polyfill; data-popover-side maps to --ui-popover-position-*.
+ *             Chromium (151) draws one of a newly opened anchored element's first two frames
+ *             without its scroll compensation, so in a scrolled container or page the
+ *             tooltip flashes far from its trigger. Opening, the fade starts 34ms (two
+ *             60Hz frames) late, so that frame paints transparent; a later one would be
+ *             nearly so. A custom --ui-tooltip-transition keeps
+ *             the delay on its first entry.
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
  * @uses       :dir(rtl): inline-side origins and slide-in mirror; the arrow uses logical insets
@@ -110,6 +116,11 @@
     display: flex;
     opacity: var(--ui-tooltip-opacity--end);
     transform: scale(var(--ui-tooltip-scale--end)) translate3d(var(--ui-tooltip-translate--end));
+    /* opening, the fade waits out the frames Chromium may misplace (see the header);
+       one delay per --ui-tooltip-transition entry: opacity, transform, overlay, display */
+    transition-delay:
+      calc(var(--ui-tooltip-transition-delay) + 34ms), var(--ui-tooltip-transition-delay),
+      var(--ui-tooltip-transition-delay), var(--ui-tooltip-transition-delay);
 
     @starting-style {
       opacity: var(--ui-tooltip-opacity--start);

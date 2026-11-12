@@ -6,13 +6,14 @@
  * slider step, a hex color's 24 bits, a font's 16-bit hash), the numbers are
  * packed into one big integer in a fixed order (mixed radix), and that is
  * written in base 62 after a version character. The order and the sizes are
- * the format: changing either means a new `VERSION`, so old links fail to
- * decode (and the builder starts from the defaults) rather than misread.
+ * the format: changing either means a new `VERSION`, with the old schema kept
+ * in `SCHEMAS` so old links still decode rather than misread.
  *
  * Fonts are stored by a hash of their family name, not their place in the
- * list, so a link keeps its fonts when a later build's popular list reorders;
+ * list, so a link keeps its fonts when a later build's font list changes;
  * a family no longer on offer comes back as the default.
  */
+import { CORNER_SHAPE } from "./corner-shape.ts";
 import { SCALE_STEPS } from "./fonts.ts";
 import { BACKGROUNDS, normalizeHex } from "./palette.ts";
 
@@ -67,9 +68,13 @@ const font: Codec = {
 
 const scale = list(SCALE_STEPS.map((s) => String(s.value)));
 
+type Schema = readonly (readonly [string, Codec])[];
+
 /** The controls by form field name, in packing order. Part of the format: see `VERSION`. */
-const SCHEMA: readonly (readonly [string, Codec])[] = [
+const SCHEMA: Schema = [
   ["primary-hex", hex],
+  ["secondary-hex", hex],
+  ["tertiary-hex", hex],
   ["neutral-hex", hex],
   ["bg-light", list(BACKGROUNDS.light)],
   ["bg-dark", list(BACKGROUNDS.dark)],
@@ -79,7 +84,7 @@ const SCHEMA: readonly (readonly [string, Codec])[] = [
   ["scale-max", scale],
   ["spacing", grid(0, 2, 0.01)],
   ["radius", grid(0, 3, 0.25)],
-  ["corner-shape", grid(-2, 4, 0.1)],
+  ["corner-shape", grid(CORNER_SHAPE.min, CORNER_SHAPE.max, CORNER_SHAPE.step)],
   ["card-elevation", grid(0, 8, 0.5)],
   ["shadow-angle", grid(0, 360, 15)],
   ["shadow-intensity", grid(0, 3, 0.1)],
@@ -89,11 +94,25 @@ const SCHEMA: readonly (readonly [string, Codec])[] = [
 ];
 
 /** The format's version, the code's first character. */
-const VERSION = "1";
+const VERSION = "2";
+
+/**
+ * Every schema a code may have been written with, by version. Version 1 had
+ * no secondary or tertiary color (the form keeps those two at their defaults)
+ * and a corner-shape slider from -2 to 4 (a value past 3 now reads as infinity).
+ */
+const SCHEMAS: Readonly<Record<string, Schema>> = {
+  "1": SCHEMA.filter(([name]) => name !== "secondary-hex" && name !== "tertiary-hex").map(
+    ([name, codec]) => [name, name === "corner-shape" ? grid(-2, 4, 0.1) : codec] as const,
+  ),
+  [VERSION]: SCHEMA,
+};
+
 const DIGITS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 const BASE = BigInt(DIGITS.length);
-/** One past the largest packed number: a bigger one is not a code this version wrote. */
-const LIMIT = SCHEMA.reduce((total, [, codec]) => total * BigInt(codec.size), 1n);
+/** One past the largest packed number: a bigger one is not a code that schema wrote. */
+const limit = (schema: Schema) =>
+  schema.reduce((total, [, codec]) => total * BigInt(codec.size), 1n);
 
 /** Packs the form's values (by field name) into a share code. */
 export function encodePreset(values: Readonly<Record<string, string>>): string {
@@ -111,23 +130,24 @@ export function encodePreset(values: Readonly<Record<string, string>>): string {
 
 /**
  * The form's values (by field name) from a share code, or null when the code
- * is not one this version wrote. `fonts` are the font values on offer, to
+ * is not one a known version wrote. `fonts` are the font values on offer, to
  * match the stored hashes against.
  */
 export function decodePreset(
   code: string,
   fonts: readonly string[],
 ): Record<string, string> | null {
-  if (code.length < 2 || code[0] !== VERSION) return null;
+  const schema = SCHEMAS[code[0]];
+  if (code.length < 2 || !schema) return null;
   let n = 0n;
   for (const char of code.slice(1)) {
     const digit = DIGITS.indexOf(char);
     if (digit < 0) return null;
     n = n * BASE + BigInt(digit);
   }
-  if (n >= LIMIT) return null;
+  if (n >= limit(schema)) return null;
   const values: Record<string, string> = {};
-  for (const [name, codec] of [...SCHEMA].reverse()) {
+  for (const [name, codec] of [...schema].reverse()) {
     const size = BigInt(codec.size);
     values[name] = codec.fromInt(Number(n % size), fonts);
     n /= size;
