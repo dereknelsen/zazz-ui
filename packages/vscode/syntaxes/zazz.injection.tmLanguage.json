@@ -169,7 +169,7 @@
           }
         },
         {
-          "match": "(--)(group-)?(before-|after-)?(border-color|border-style|border-width|bg-linear|bg-radial|bg-alpha|bg-conic|bg-stops|border-b|border-l|border-r|border-t|border-x|border-y|divide-x|divide-y|border|divide|text|bg)(?:(--)(focus-visible|focus-within|disabled|starting|checked|current|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
+          "match": "(--)(group-)?(before-|after-)?(border-color|border-style|border-width|bg-linear|bg-radial|bg-alpha|bg-conic|bg-stops|border-b|border-l|border-r|border-t|border-x|border-y|divide-x|divide-y|bg-clip|border|divide|text|bg)(?:(--)(focus-visible|focus-within|disabled|starting|checked|current|active|hover|stuck|open|2xl|lg|md|sm|xl))?(?=\\s*:)",
           "captures": {
             "1": {
               "name": "punctuation.definition.custom-property.css.zazz"

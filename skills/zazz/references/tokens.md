@@ -62,6 +62,9 @@ Use the `--color-*` roles in utilities and CSS; they are also the **theme inputs
   position, `in oklch [longer hue]`); the `--bg` color shows underneath. One gradient per element.
 - **Masks:** `--mask-linear: to bottom; --mask-stops: black 70%, transparent` fades an element out
   through a linear-gradient `mask-image` (only the stops' alpha counts). Both are needed; no tiers.
+- **Background clip:** `--bg-clip` sets `background-clip` (`border-box`, `padding-box`,
+  `content-box`, `text`). Gradient text: `--bg-linear: to right; --bg-stops: …; --bg-clip: text;
+  --text: transparent`. No tiers or states.
 
 ## 3. Color — scales & overlays (escape hatch only)
 

@@ -303,24 +303,24 @@ The token contract in the frontmatter is what lets you be bold without the resul
 
 Markup reads `--color-<role>`, and a theme sets the same `--color-<role>` on `:root` (there are no bare `--<role>` inputs).
 
-| Token                          | Role                                          | Light Character              | Dark Character           |
-| ------------------------------ | --------------------------------------------- | ---------------------------- | ------------------------ |
-| `--color-background`           | Page surface                                  | White / warm off-white       | Near-black (brand-cast)  |
-| `--color-foreground`           | Default text                                  | Rich charcoal (neutral-900)  | Pure white               |
-| `--color-border`               | 1px lines and dividers                        | Soft cool gray (neutral-100) | Deep gray                |
-| `--color-border-foreground`    | Text on outlined/bordered elements            | Near-opaque white (tint-950) | Half black (shade-500)   |
-| `--color-card`                 | Card surface, elevated from background        | Pure white                   | Dark charcoal            |
-| `--color-card-foreground`      | Text on cards                                 | Rich charcoal                | Pure white               |
-| `--color-popover`              | Popover / menu surface                        | Pure white                   | Near-black (neutral-950) |
-| `--color-popover-foreground`   | Text on popovers and menus                    | Rich charcoal                | Pure white               |
-| `--color-input`                | Input field background                        | Near-white (neutral-50)      | Faint tint (tint-100)    |
-| `--color-input-foreground`     | Input text                                    | Rich charcoal                | Pure white               |
-| `--color-selection`            | Text-selection highlight (`:root` only)       | Primary                      | Primary                  |
-| `--color-selection-foreground` | Selected text                                 | Primary foreground           | Primary foreground       |
-| `--color-muted`                | Subtle dim — always darker than its surface   | shade-100                    | tint-100                 |
-| `--color-muted-foreground`     | De-emphasized text, helper copy               | shade-600                    | tint-600                 |
-| `--color-faded`                | Subtle fade — always lighter than its surface | tint-400                     | shade-100                |
-| `--color-faded-foreground`     | Text on faded surfaces                        | tint-600                     | shade-600                |
+| Token                          | Role                                          | Light Character              | Dark Character               |
+| ------------------------------ | --------------------------------------------- | ---------------------------- | ---------------------------- |
+| `--color-background`           | Page surface                                  | White / warm off-white       | Near-black (brand-cast)      |
+| `--color-foreground`           | Default text                                  | Rich charcoal (neutral-900)  | Pure white                   |
+| `--color-border`               | 1px lines and dividers                        | Translucent dim (shade-50)   | Translucent light (tint-200) |
+| `--color-border-foreground`    | Text on outlined/bordered elements            | Near-opaque white (tint-950) | Half black (shade-500)       |
+| `--color-card`                 | Card surface, elevated from background        | Pure white                   | Dark charcoal                |
+| `--color-card-foreground`      | Text on cards                                 | Rich charcoal                | Pure white                   |
+| `--color-popover`              | Popover / menu surface                        | Pure white                   | Near-black (neutral-950)     |
+| `--color-popover-foreground`   | Text on popovers and menus                    | Rich charcoal                | Pure white                   |
+| `--color-input`                | Input field background                        | Near-white (neutral-50)      | Faint tint (tint-100)        |
+| `--color-input-foreground`     | Input text                                    | Rich charcoal                | Pure white                   |
+| `--color-selection`            | Text-selection highlight (`:root` only)       | Primary                      | Primary                      |
+| `--color-selection-foreground` | Selected text                                 | Primary foreground           | Primary foreground           |
+| `--color-muted`                | Subtle dim — always darker than its surface   | shade-50                     | tint-100                     |
+| `--color-muted-foreground`     | De-emphasized text, helper copy               | shade-600                    | tint-700                     |
+| `--color-faded`                | Subtle fade — always lighter than its surface | tint-400                     | shade-100                    |
+| `--color-faded-foreground`     | Text on faded surfaces                        | tint-700                     | shade-700                    |
 
 ### Brand Colors
 

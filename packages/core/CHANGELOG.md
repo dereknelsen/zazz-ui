@@ -1,5 +1,32 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.12.1 (2026-11-12)
+
+### base
+
+- `--color-border` is an overlay now: `--color-shade-50` in light mode and `--color-tint-200` in dark, where it was the solid `--color-neutral-100` / `--color-neutral-800`. A border takes on the surface under it and the theme's neutral; on white it looks as before.
+- `--color-shade-50` is a step darker (alpha 0.065, was 0.055), so `--color-muted` and the light-mode border read a little stronger.
+- The tints (`--color-tint-*`) derive from `--color-neutral-50` instead of white, so a tinted neutral reaches the dark-mode overlays (`--color-muted`, `--color-muted-foreground`, `--color-faded`, `--color-input`, the border) the way the shades carry it in light mode. With the stock neutral, dark-mode overlays are a touch dimmer.
+- New `--bg-clip` sets `background-clip` (`border-box`, `padding-box`, `content-box`, or `text`); `--bg-clip: text; --text: transparent` shows a background, such as a gradient, through the text. No tiers or states.
+- Swap navigation leaves `history.pushState()` and `history.replaceState()` to the page. A script updating its own URL (a filter, a share code) no longer refetches and swaps the page and moves focus to its heading. Back and Forward still swap.
+- The utilities layer is a little lighter: a utility without tiers resolves in its base rule, 31 fewer attribute selectors in all. Nothing renders differently.
+
+### button
+
+- `--bg-clip` on a button now beats its own `--ui-button-background-clip`.
+
+### badge
+
+- `--bg-clip` on a badge now beats its own `--ui-badge-background-clip`.
+
+### card
+
+- A card sets `background-clip: border-box`, so its background fills under a translucent border; `--bg-clip` overrides it.
+
+### tabs
+
+- The track's background is the field background (`--ui-tabs-track-bg: var(--ui-field-bg)`), so the tab list matches the inputs beside it.
+
 ## 0.12.0 (2026-11-11)
 
 ### base
