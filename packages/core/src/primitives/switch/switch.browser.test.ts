@@ -99,6 +99,63 @@ describe("switch", () => {
     expect(thumb(root, "background-color")).toBe("rgb(255, 0, 0)");
   });
 
+  // The thumb is content-box, so its border sits outside --ui-switch-thumb-size; the
+  // track's height takes one border width so the gap is the same on every side.
+  it("leaves the same gap around the thumb on every side, off and on", () => {
+    const root = mount(`<div style="--ui-switch-thumb-border-width: 1px">
+      <label data-ui="field" data-field-orientation="horizontal">
+        <input type="checkbox" role="switch" name="a" data-off /><span data-field-slot="label">Off</span>
+      </label>
+      <label data-ui="field" data-field-orientation="horizontal">
+        <input type="checkbox" role="switch" name="b" data-on checked /><span data-field-slot="label">On</span>
+      </label>
+    </div>`);
+    const gaps = (selector: string) => {
+      const input = root.querySelector<HTMLInputElement>(selector)!;
+      const label = input.parentElement!;
+      const track = input.getBoundingClientRect();
+      const box = label.getBoundingClientRect();
+      const border = Number.parseFloat(style(input, "border-top-width"));
+      const after = getComputedStyle(label, "::after");
+      const outer = Number.parseFloat(after.height) + 2 * Number.parseFloat(after.borderTopWidth);
+      const left = box.left + new DOMMatrix(after.transform).m41;
+      const top = box.top + box.height / 2 - outer / 2;
+      return {
+        top: top - (track.top + border),
+        bottom: track.bottom - border - (top + outer),
+        start: left - (track.left + border),
+        end: track.right - border - (left + outer),
+      };
+    };
+    const off = gaps("[data-off]");
+    expect(off.bottom).toBeCloseTo(off.top, 1);
+    expect(off.start).toBeCloseTo(off.top, 1);
+    const on = gaps("[data-on]");
+    expect(on.bottom).toBeCloseTo(on.top, 1);
+    expect(on.end).toBeCloseTo(on.top, 1);
+  });
+
+  it("borders the thumb from its hooks: at rest, checked, and hovered", async () => {
+    const root = mount(`<div style="
+      --ui-switch-thumb-border-color: rgb(1, 1, 1);
+      --ui-switch-thumb-border-color--hover: rgb(2, 2, 2);
+      --ui-switch-thumb-border-color--checked: rgb(3, 3, 3);
+      --ui-switch-thumb-border-color--checked-hover: rgb(4, 4, 4);
+    ">
+      <label data-off><input type="checkbox" role="switch" /></label>
+      <label data-on><input type="checkbox" role="switch" checked /></label>
+    </div>`);
+    const off = root.querySelector("[data-off]")!;
+    const on = root.querySelector("[data-on]")!;
+    expect(thumb(off, "border-top-color")).toBe("rgb(1, 1, 1)");
+    expect(thumb(on, "border-top-color")).toBe("rgb(3, 3, 3)");
+    await userEvent.hover(off.querySelector("input")!);
+    expect(thumb(off, "border-top-color")).toBe("rgb(2, 2, 2)");
+    await userEvent.hover(on.querySelector("input")!);
+    expect(thumb(on, "border-top-color")).toBe("rgb(4, 4, 4)");
+    await userEvent.unhover(on.querySelector("input")!);
+  });
+
   it("swaps the track border on hover and focus", async () => {
     const root = mount(`<div>
       <label><input type="checkbox" role="switch" /></label>

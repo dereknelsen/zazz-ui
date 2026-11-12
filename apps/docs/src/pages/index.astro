@@ -4,7 +4,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { softwareLd } from "../lib/jsonld.ts";
 import { kitVersion } from "../lib/kit.ts";
 import { site } from "../site.config.ts";
-import { ArrowRight, MoveRight } from "@lucide/astro";
+import { MoveRight } from "@lucide/astro";
 ---
 
 <BaseLayout title={site.name} jsonLd={[softwareLd(kitVersion())]}>
@@ -25,8 +25,10 @@ import { ArrowRight, MoveRight } from "@lucide/astro";
           --grid-cols: subgrid;
           --pt: 12;
           --pb: 6;
-          --h: 112;
-          --max-h: 70svh;
+          --h: auto;
+          --h--lg: 112;
+          --max-h: 100%;
+          --max-h--lg: 70svh;
         "
       >
         <div
@@ -74,17 +76,22 @@ import { ArrowRight, MoveRight } from "@lucide/astro";
           <hgroup
             style="
               --display: grid;
-              --place-items: start;
+              --place-items: center;
+              --place-items--lg: start;
               --place-content: stretch;
               --template-cols--lg: 1.2fr 1fr;
-              --gap: 12;
+              --gap: 6;
+              --gap--lg: 12;
+              --text-align: center;
+              --text-align--lg: start;
             "
           >
             <div
               style="
                 --display: flex-col;
                 --gap: 4;
-                --text-align: start;
+                --text-align: center;
+                --text-align--lg: start;
               "
             >
               <h1
@@ -102,7 +109,8 @@ import { ArrowRight, MoveRight } from "@lucide/astro";
             <div
               style="
                 --display: flex-col;
-                --justify: end;
+                --justify: center;
+                --justify--lg: end;
                 --pb: 1;
                 --gap: 6;
                 --h: 100%;
@@ -115,6 +123,8 @@ import { ArrowRight, MoveRight } from "@lucide/astro";
               <div
                 style="
                   --display: flex;
+                  --justify: center;
+                  --justify--lg: start;
                   --gap: 2;
                 "
               >
@@ -126,7 +136,7 @@ import { ArrowRight, MoveRight } from "@lucide/astro";
                 <a
                   href="/playground"
                   data-ui="button"
-                  data-button-variant="ghost">Playground <ArrowRight /></a
+                  data-button-variant="ghost">Code playground <MoveRight /></a
                 >
               </div>
             </div>
@@ -134,32 +144,6 @@ import { ArrowRight, MoveRight } from "@lucide/astro";
         </div>
       </div>
 
-      <hr
-        data-ui="divider"
-        style="
-          --display: block;
-          --display--lg: none;
-        "
-      />
-
-      <hgroup
-        style="
-          --display: flex;
-          --display--lg: none;
-          --items: center;
-          --justify: space-between;
-          --px: var(--gutters);
-          --py: 6;
-        "
-      >
-        <h2 data-ui="text-h6">Build a theme</h2>
-        <span
-          data-ui="badge text-eyebrow"
-          data-badge-variant="link"
-          style="--text: var(--color-muted-foreground)"
-          >Swipe for more <MoveRight /></span
-        >
-      </hgroup>
       <div style="--band: layout-bleed">
         <ThemeBuilder />
       </div>

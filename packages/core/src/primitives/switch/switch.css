@@ -18,12 +18,20 @@
     /* floored so the track stays at least --spacing-control-min tall */
     --ui-switch-track-w: max(calc(var(--spacing) * 7), calc(var(--spacing-control-min) * 1.75));
     --ui-switch-track-p: max(calc(var(--spacing) * 0.5), calc(var(--spacing-control-min) * 0.125));
-    --ui-switch-track-h: calc(var(--ui-switch-track-w) / 2 + var(--ui-switch-track-p));
+    --ui-switch-track-h: calc(
+      var(--ui-switch-track-w) / 2 + var(--ui-switch-track-p) + var(--ui-switch-track-border-width)
+    );
 
     --ui-switch-thumb-bg: var(--color-card);
     --ui-switch-thumb-bg--checked: var(--color-primary-foreground);
+    --ui-switch-thumb-border-width: var(--ui-field-border-width);
+    --ui-switch-thumb-border-style: var(--ui-field-border-style);
+    --ui-switch-thumb-border-color: transparent;
+    --ui-switch-thumb-border-color--hover: transparent;
+    --ui-switch-thumb-border-color--checked: transparent;
+    --ui-switch-thumb-border-color--checked-hover: transparent;
     --ui-switch-thumb-size: calc((var(--ui-switch-track-w) / 2) - var(--ui-switch-track-p));
-    --ui-switch-thumb-shadow: var(--shadow-sm);
+    --ui-switch-thumb-shadow: var(--shadow-xs);
     --ui-switch-thumb-translate: var(--ui-switch-track-p), -50%;
     --ui-switch-thumb-scale: 1;
 
@@ -74,6 +82,9 @@
         var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
       );
       corner-shape: var(--ui-switch-thumb-corner-shape);
+      border-width: var(--ui-switch-thumb-border-width);
+      border-style: var(--ui-switch-thumb-border-style);
+      border-color: var(--ui-switch-thumb-border-color);
       background-color: var(--ui-switch-thumb-bg);
       box-shadow: var(--ui-switch-thumb-shadow);
       pointer-events: none;
@@ -84,13 +95,20 @@
 
     &:has(> input[role="switch"]:checked)::after {
       background-color: var(--ui-switch-thumb-bg--checked);
+      border-color: var(--ui-switch-thumb-border-color--checked);
       --ui-switch-thumb-translate:
         calc(var(--ui-switch-track-p) + var(--ui-switch-thumb-size)), -50%;
     }
 
     @media (hover: hover) {
       &:has(> input[role="switch"]:hover:not(:disabled))::after {
+        border-color: var(--ui-switch-thumb-border-color--hover);
         --ui-switch-thumb-scale: 1.1;
+      }
+
+      /* more specific than the plain hover, so a checked thumb keeps its own color */
+      &:has(> input[role="switch"]:hover:checked:not(:disabled))::after {
+        border-color: var(--ui-switch-thumb-border-color--checked-hover);
       }
     }
 

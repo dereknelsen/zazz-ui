@@ -276,6 +276,7 @@ const previewScope = `@layer zazz.variables {
     --template-cols: minmax(0, 1fr);
     --template-cols--lg: 36ch minmax(0, 1fr);
     --w: 100%;
+    --border-t: 1;
   "
 >
   <!--
@@ -289,17 +290,20 @@ const previewScope = `@layer zazz.variables {
       --order: 1;
       --order--lg: 0;
       --p: 5;
-      --pt--lg: 0;
-      --pb--lg: 6;
+      --px--lg: 0;
+      --py--lg: 0;
       --top: auto;
-      --top--lg: calc(var(--ui-header-height, 0rem) + 6 * var(--spacing));
+      --top--lg: calc(var(--ui-header-height, 0rem));
       --bottom: 0;
       --bottom--lg: auto;
+      --h: auto;
+      --h--lg: calc(100dvb - var(--ui-header-height, 0rem));
       --bg-linear: to bottom;
       --bg-stops: transparent 0%, var(--color-background) 50%;
       --z: 30;
     "
   >
+  <!-- MOBILE THEME BUILDER BAR -->
     <ui-card
       data-theme="dark"
       data-card-variant="outline"
@@ -436,25 +440,25 @@ const previewScope = `@layer zazz.variables {
       </ui-tooltip>
     </dialog>
 
+    <!-- DESKTOP THEME BUILDER PANEL -->
     <div
       data-theme-panel
-      data-theme="dark"
       style="
         --display: none;
         --display--lg: flex-col;
-        --bg: var(--color-card);
-        --radius: var(--ui-card-radius);
+        --h: 100%;
+        --border-style: double;
+        --border-r: 3;
         --overflow: clip;
       "
     >
       <form
-        data-ui="card"
         aria-labelledby="tb-title"
         style="
-          --place-items: start stretch;
-          --template-rows: auto 1fr auto;
+          --display: flex-col;
+          --justify: start;
           --gap: 0;
-          --h: calc(100vb - var(--ui-header-height, 0rem) - (12 * var(--spacing)));
+          --h: 100%;
           --text: var(--color-card-foreground);
           --bg: var(--color-card);
           --overflow-y: auto;
@@ -464,10 +468,11 @@ const previewScope = `@layer zazz.variables {
           style="
             --display: flex-col;
             --position: sticky;
-            --p: 5;
+            --px: 5;
+            --py: 3;
             --gap: 3;
             --top: 0;
-            --bg: var(--color-shade-800);
+            --bg: oklch(from var(--color-card) l c h / 0.95);
             --border-b: 1;
             --backdrop-filter: blur(6px);
             --z: 10;
@@ -481,40 +486,36 @@ const previewScope = `@layer zazz.variables {
               --gap: 2;
             "
           >
-            <h2 id="tb-title" data-ui="text-lg">Zazz theme builder</h2>
-            <ui-tooltip>
+            <h2 id="tb-title" data-ui="text-md">Theme builder</h2>
               <button
                 data-ui="button"
-                data-button-size="icon"
                 data-button-variant="primary"
                 type="button"
                 aria-label="Randomize the theme"
-                interestfor="tb-randomize-tip"
                 data-theme-randomize
               >
-                <Dices aria-hidden="true" />
+                <Dices aria-hidden="true" /> Generate
               </button>
-              <div data-tooltip-slot="content" id="tb-randomize-tip" popover="hint">
-                Randomize the theme
-                <span data-tooltip-slot="arrow" aria-hidden="true"></span>
-              </div>
-            </ui-tooltip>
           </div>
         </header>
 
         <!-- Each section is a disclosure: color and type start open, the rest closed. -->
-        <ui-accordion>
+        <ui-accordion style="
+            --justify: start;
+            --flex: 0 0 auto;
+            --gap: 0;
+          ">
           <details
             open
-            style="
-              --py: 3;
-              --border-style: dashed;
-            "
+            style="--border-style: dashed"
           >
             <summary
+              data-ui="text-eyebrow"
               style="
                 --px: 5;
-                --font-weight: strong;
+                --py: 3;
+                --text: var(--color-muted-foreground);
+                --text--hover: var(--color-foreground);
               "
             >
               Color
@@ -653,15 +654,17 @@ const previewScope = `@layer zazz.variables {
           <details
             open
             style="
-              --py: 3;
               --border-style: dashed;
               --border-t: 1;
             "
           >
             <summary
+              data-ui="text-eyebrow"
               style="
                 --px: 5;
-                --font-weight: strong;
+                --py: 3;
+                --text: var(--color-muted-foreground);
+                --text--hover: var(--color-foreground);
               "
             >
               Type
@@ -868,16 +871,18 @@ const previewScope = `@layer zazz.variables {
           <details
             open
             style="
-              --py: 3;
               --border-style: dashed;
               --border-t: 1;
             "
           >
             <summary
+              data-ui="text-eyebrow"
               style="
                 --px: 5;
-                --font-weight: strong;
-              "
+                --py: 3;
+                --text: var(--color-muted-foreground);
+                --text--hover: var(--color-foreground);
+              ";
             >
               Size &amp; shape
               <ChevronDown data-accordion-slot="marker" aria-hidden="true" />
@@ -989,15 +994,17 @@ const previewScope = `@layer zazz.variables {
           <details
             open
             style="
-              --py: 3;
               --border-style: dashed;
               --border-t: 1;
             "
           >
             <summary
+              data-ui="text-eyebrow"
               style="
                 --px: 5;
-                --font-weight: strong;
+                --py: 3;
+                --text: var(--color-muted-foreground);
+                --text--hover: var(--color-foreground);
               "
             >
               Shadows
@@ -1158,7 +1165,7 @@ const previewScope = `@layer zazz.variables {
           </details>
         </ui-accordion>
 
-        <section
+        <footer
           style="
             --display: grid;
             --position: sticky;
@@ -1166,7 +1173,7 @@ const previewScope = `@layer zazz.variables {
             --gap: 2;
             --bottom: 0;
             --mt: auto;
-            --bg: var(--color-shade-800);
+            --bg: oklch(from var(--color-card) l c h / 0.95);
             --border-t: 1;
             --backdrop-filter: blur(6px);
           "
@@ -1284,7 +1291,7 @@ const previewScope = `@layer zazz.variables {
               </div>
             </ui-tooltip>
           </dialog>
-        </section>
+        </footer>
       </form>
     </div>
     <style is:inline data-theme-output></style>
@@ -1295,12 +1302,6 @@ const previewScope = `@layer zazz.variables {
     style="
       --min-h: 100%;
       --bg: var(--color-background);
-      --border-style: dashed;
-      --border-l: 0;
-      --border-l--lg: 1;
-      --border-t: 1;
-      --radius-t--lg: var(--ui-card-radius);
-      --radius-r: 0;
       --overflow: clip;
     "
   >
