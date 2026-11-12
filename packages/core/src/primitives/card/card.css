@@ -135,6 +135,7 @@
     );
     corner-shape: var(--_corner-shape-resolved, var(--ui-card-corner-shape));
     box-shadow: var(--_shadow-resolved, var(--_card-shadow, var(--ui-card-shadow)));
+    background-clip: border-box;
     overflow: clip;
     transition: var(--default-transition);
   }

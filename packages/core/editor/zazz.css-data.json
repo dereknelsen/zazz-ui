@@ -28138,6 +28138,324 @@
       ]
     },
     {
+      "name": "--bg-clip",
+      "description": "background-clip — a keyword; color family.",
+      "values": [
+        {
+          "name": "var(--color-shade-full)"
+        },
+        {
+          "name": "var(--color-tint-full)"
+        },
+        {
+          "name": "var(--color-background)"
+        },
+        {
+          "name": "var(--color-black)"
+        },
+        {
+          "name": "var(--color-border)"
+        },
+        {
+          "name": "var(--color-border-foreground)"
+        },
+        {
+          "name": "var(--color-card)"
+        },
+        {
+          "name": "var(--color-card-foreground)"
+        },
+        {
+          "name": "var(--color-destructive)"
+        },
+        {
+          "name": "var(--color-destructive-foreground)"
+        },
+        {
+          "name": "var(--color-faded)"
+        },
+        {
+          "name": "var(--color-faded-foreground)"
+        },
+        {
+          "name": "var(--color-foreground)"
+        },
+        {
+          "name": "var(--color-info)"
+        },
+        {
+          "name": "var(--color-info-foreground)"
+        },
+        {
+          "name": "var(--color-input)"
+        },
+        {
+          "name": "var(--color-input-foreground)"
+        },
+        {
+          "name": "var(--color-muted)"
+        },
+        {
+          "name": "var(--color-muted-foreground)"
+        },
+        {
+          "name": "var(--color-neutral-100)"
+        },
+        {
+          "name": "var(--color-neutral-200)"
+        },
+        {
+          "name": "var(--color-neutral-300)"
+        },
+        {
+          "name": "var(--color-neutral-400)"
+        },
+        {
+          "name": "var(--color-neutral-50)"
+        },
+        {
+          "name": "var(--color-neutral-500)"
+        },
+        {
+          "name": "var(--color-neutral-600)"
+        },
+        {
+          "name": "var(--color-neutral-700)"
+        },
+        {
+          "name": "var(--color-neutral-800)"
+        },
+        {
+          "name": "var(--color-neutral-900)"
+        },
+        {
+          "name": "var(--color-neutral-950)"
+        },
+        {
+          "name": "var(--color-popover)"
+        },
+        {
+          "name": "var(--color-popover-foreground)"
+        },
+        {
+          "name": "var(--color-primary)"
+        },
+        {
+          "name": "var(--color-primary-100)"
+        },
+        {
+          "name": "var(--color-primary-200)"
+        },
+        {
+          "name": "var(--color-primary-300)"
+        },
+        {
+          "name": "var(--color-primary-400)"
+        },
+        {
+          "name": "var(--color-primary-50)"
+        },
+        {
+          "name": "var(--color-primary-500)"
+        },
+        {
+          "name": "var(--color-primary-600)"
+        },
+        {
+          "name": "var(--color-primary-700)"
+        },
+        {
+          "name": "var(--color-primary-800)"
+        },
+        {
+          "name": "var(--color-primary-900)"
+        },
+        {
+          "name": "var(--color-primary-950)"
+        },
+        {
+          "name": "var(--color-primary-foreground)"
+        },
+        {
+          "name": "var(--color-ring)"
+        },
+        {
+          "name": "var(--color-secondary)"
+        },
+        {
+          "name": "var(--color-secondary-100)"
+        },
+        {
+          "name": "var(--color-secondary-200)"
+        },
+        {
+          "name": "var(--color-secondary-300)"
+        },
+        {
+          "name": "var(--color-secondary-400)"
+        },
+        {
+          "name": "var(--color-secondary-50)"
+        },
+        {
+          "name": "var(--color-secondary-500)"
+        },
+        {
+          "name": "var(--color-secondary-600)"
+        },
+        {
+          "name": "var(--color-secondary-700)"
+        },
+        {
+          "name": "var(--color-secondary-800)"
+        },
+        {
+          "name": "var(--color-secondary-900)"
+        },
+        {
+          "name": "var(--color-secondary-950)"
+        },
+        {
+          "name": "var(--color-secondary-foreground)"
+        },
+        {
+          "name": "var(--color-selection)"
+        },
+        {
+          "name": "var(--color-selection-foreground)"
+        },
+        {
+          "name": "var(--color-shade-100)"
+        },
+        {
+          "name": "var(--color-shade-200)"
+        },
+        {
+          "name": "var(--color-shade-300)"
+        },
+        {
+          "name": "var(--color-shade-400)"
+        },
+        {
+          "name": "var(--color-shade-50)"
+        },
+        {
+          "name": "var(--color-shade-500)"
+        },
+        {
+          "name": "var(--color-shade-600)"
+        },
+        {
+          "name": "var(--color-shade-700)"
+        },
+        {
+          "name": "var(--color-shade-800)"
+        },
+        {
+          "name": "var(--color-shade-900)"
+        },
+        {
+          "name": "var(--color-shade-950)"
+        },
+        {
+          "name": "var(--color-shade-none)"
+        },
+        {
+          "name": "var(--color-shadow)"
+        },
+        {
+          "name": "var(--color-success)"
+        },
+        {
+          "name": "var(--color-success-foreground)"
+        },
+        {
+          "name": "var(--color-tertiary)"
+        },
+        {
+          "name": "var(--color-tertiary-100)"
+        },
+        {
+          "name": "var(--color-tertiary-200)"
+        },
+        {
+          "name": "var(--color-tertiary-300)"
+        },
+        {
+          "name": "var(--color-tertiary-400)"
+        },
+        {
+          "name": "var(--color-tertiary-50)"
+        },
+        {
+          "name": "var(--color-tertiary-500)"
+        },
+        {
+          "name": "var(--color-tertiary-600)"
+        },
+        {
+          "name": "var(--color-tertiary-700)"
+        },
+        {
+          "name": "var(--color-tertiary-800)"
+        },
+        {
+          "name": "var(--color-tertiary-900)"
+        },
+        {
+          "name": "var(--color-tertiary-950)"
+        },
+        {
+          "name": "var(--color-tertiary-foreground)"
+        },
+        {
+          "name": "var(--color-tint-100)"
+        },
+        {
+          "name": "var(--color-tint-200)"
+        },
+        {
+          "name": "var(--color-tint-300)"
+        },
+        {
+          "name": "var(--color-tint-400)"
+        },
+        {
+          "name": "var(--color-tint-50)"
+        },
+        {
+          "name": "var(--color-tint-500)"
+        },
+        {
+          "name": "var(--color-tint-600)"
+        },
+        {
+          "name": "var(--color-tint-700)"
+        },
+        {
+          "name": "var(--color-tint-800)"
+        },
+        {
+          "name": "var(--color-tint-900)"
+        },
+        {
+          "name": "var(--color-tint-950)"
+        },
+        {
+          "name": "var(--color-tint-none)"
+        },
+        {
+          "name": "var(--color-warning)"
+        },
+        {
+          "name": "var(--color-warning-foreground)"
+        },
+        {
+          "name": "var(--color-white)"
+        }
+      ]
+    },
+    {
       "name": "--mask-linear",
       "description": " — any value; effects family."
     },

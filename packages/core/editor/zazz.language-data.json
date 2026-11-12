@@ -3413,7 +3413,7 @@
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-track-bg": {
-      "value": "var(--color-muted)",
+      "value": "var(--ui-field-bg)",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-track-border-color": {
@@ -3913,15 +3913,15 @@
       "dark": "oklch(0 0 0)"
     },
     "--color-border": {
-      "value": "light-dark(var(--color-neutral-100), var(--color-neutral-800))",
+      "value": "light-dark(var(--color-shade-50), var(--color-tint-200))",
       "file": "base/_variables.css",
-      "light": "oklch(0.949 0.001 287.28)",
-      "dark": "oklch(0.336 0.014 285.66)"
+      "light": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.065)",
+      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.17)"
     },
     "--color-border-foreground": {
       "value": "light-dark(var(--color-tint-950), var(--color-shade-500))",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 0.945)",
+      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.945)",
       "dark": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.545)"
     },
     "--color-card": {
@@ -3951,13 +3951,13 @@
     "--color-faded": {
       "value": "light-dark(var(--color-tint-400), var(--color-shade-100))",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 0.36)",
+      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.36)",
       "dark": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.115)"
     },
     "--color-faded-foreground": {
       "value": "light-dark(var(--color-tint-700), var(--color-shade-700))",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 0.67)",
+      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.67)",
       "dark": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.74)"
     },
     "--color-foreground": {
@@ -3982,7 +3982,7 @@
       "value": "light-dark(var(--color-neutral-50), var(--color-tint-100))",
       "file": "base/_variables.css",
       "light": "oklch(0.973 0.001 287.31)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 0.085)"
+      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.085)"
     },
     "--color-input-foreground": {
       "value": "light-dark(var(--color-neutral-900), var(--color-white))",
@@ -3993,14 +3993,14 @@
     "--color-muted": {
       "value": "light-dark(var(--color-shade-50), var(--color-tint-100))",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.055)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 0.085)"
+      "light": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.065)",
+      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.085)"
     },
     "--color-muted-foreground": {
       "value": "light-dark(var(--color-shade-600), var(--color-tint-700))",
       "file": "base/_variables.css",
       "light": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.645)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 0.67)"
+      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.67)"
     },
     "--color-neutral-100": {
       "value": "oklch(0.949 0.001 287.28)",
@@ -4279,10 +4279,10 @@
       "dark": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.44)"
     },
     "--color-shade-50": {
-      "value": "oklch(from var(--color-neutral-950) l c h / 0.055)",
+      "value": "oklch(from var(--color-neutral-950) l c h / 0.065)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.055)",
-      "dark": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.055)"
+      "light": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.065)",
+      "dark": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.065)"
     },
     "--color-shade-500": {
       "value": "oklch(from var(--color-neutral-950) l c h / 0.545)",
@@ -4429,82 +4429,82 @@
       "dark": "oklch(0.147 0.004 49.3)"
     },
     "--color-tint-100": {
-      "value": "oklch(from var(--color-white) l c h / 0.085)",
+      "value": "oklch(from var(--color-neutral-50) l c h / 0.085)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 0.085)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 0.085)"
+      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.085)",
+      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.085)"
     },
     "--color-tint-200": {
-      "value": "oklch(from var(--color-white) l c h / 0.17)",
+      "value": "oklch(from var(--color-neutral-50) l c h / 0.17)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 0.17)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 0.17)"
+      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.17)",
+      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.17)"
     },
     "--color-tint-300": {
-      "value": "oklch(from var(--color-white) l c h / 0.265)",
+      "value": "oklch(from var(--color-neutral-50) l c h / 0.265)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 0.265)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 0.265)"
+      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.265)",
+      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.265)"
     },
     "--color-tint-400": {
-      "value": "oklch(from var(--color-white) l c h / 0.36)",
+      "value": "oklch(from var(--color-neutral-50) l c h / 0.36)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 0.36)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 0.36)"
+      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.36)",
+      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.36)"
     },
     "--color-tint-50": {
-      "value": "oklch(from var(--color-white) l c h / 0.04)",
+      "value": "oklch(from var(--color-neutral-50) l c h / 0.04)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 0.04)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 0.04)"
+      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.04)",
+      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.04)"
     },
     "--color-tint-500": {
-      "value": "oklch(from var(--color-white) l c h / 0.46)",
+      "value": "oklch(from var(--color-neutral-50) l c h / 0.46)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 0.46)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 0.46)"
+      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.46)",
+      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.46)"
     },
     "--color-tint-600": {
-      "value": "oklch(from var(--color-white) l c h / 0.56)",
+      "value": "oklch(from var(--color-neutral-50) l c h / 0.56)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 0.56)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 0.56)"
+      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.56)",
+      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.56)"
     },
     "--color-tint-700": {
-      "value": "oklch(from var(--color-white) l c h / 0.67)",
+      "value": "oklch(from var(--color-neutral-50) l c h / 0.67)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 0.67)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 0.67)"
+      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.67)",
+      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.67)"
     },
     "--color-tint-800": {
-      "value": "oklch(from var(--color-white) l c h / 0.775)",
+      "value": "oklch(from var(--color-neutral-50) l c h / 0.775)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 0.775)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 0.775)"
+      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.775)",
+      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.775)"
     },
     "--color-tint-900": {
-      "value": "oklch(from var(--color-white) l c h / 0.885)",
+      "value": "oklch(from var(--color-neutral-50) l c h / 0.885)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 0.885)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 0.885)"
+      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.885)",
+      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.885)"
     },
     "--color-tint-950": {
-      "value": "oklch(from var(--color-white) l c h / 0.945)",
+      "value": "oklch(from var(--color-neutral-50) l c h / 0.945)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 0.945)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 0.945)"
+      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.945)",
+      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.945)"
     },
     "--color-tint-full": {
-      "value": "oklch(from var(--color-white) l c h / 1)",
+      "value": "oklch(from var(--color-neutral-50) l c h / 1)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 1)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 1)"
+      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 1)",
+      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 1)"
     },
     "--color-tint-none": {
-      "value": "oklch(from var(--color-white) l c h / 0)",
+      "value": "oklch(from var(--color-neutral-50) l c h / 0)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(1 0 0) l c h / 0)",
-      "dark": "oklch(from oklch(1 0 0) l c h / 0)"
+      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0)",
+      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0)"
     },
     "--color-warning": {
       "value": "light-dark(oklch(0.955 0.03 58), oklch(0.34 0.06 58))",

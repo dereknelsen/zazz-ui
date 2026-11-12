@@ -1,15 +1,15 @@
 ---
-import { links, nav, site } from '../site.config.ts';
-import Logo from './Logo.astro';
+import { links, nav, site } from "../site.config.ts";
+import Logo from "./Logo.astro";
 ---
 
-<footer style='
+<footer style="
     --pt: 11;
     --border-t: 1;
-  '>
+  ">
   <ui-layout>
     <div
-      style='
+      style="
         --display: grid;
         --place-items: center;
         --place-items--sm: start;
@@ -17,50 +17,50 @@ import Logo from './Logo.astro';
         --template-cols--md: 1fr 1fr 2fr;
         --gap: 8;
         --gap--md: 16;
-      '
+      "
     >
-      <a href='/' aria-label='Zazz home'>
-        <Logo size={40} variant='mark' />
+      <a href="/" aria-label="Zazz home">
+        <Logo size={40} variant="lockup" />
       </a>
 
       <nav
-        aria-label='Footer'
-        style='
+        aria-label="Footer"
+        style="
           --display: flex-col;
           --justify: center;
           --justify--sm: start;
           --gap: 2;
           --text-align: center;
           --text-align--sm: left;
-        '
+        "
       >
         <h2
-          id='navigation'
-          data-ui='text-eyebrow'
-          style='--text: var(--color-foreground)'
+          id="navigation"
+          data-ui="text-eyebrow"
+          style="--text: var(--color-foreground)"
         >
           Navigation
         </h2>
         <ul
-          style='
+          style="
             --display: flex;
             --flex-wrap: balance;
             --justify: center;
             --justify--sm: start;
             --gap: 5;
-          '
+          "
         >
           {
             nav.map((item) => (
               <li>
-                <a href={item.href} data-ui='text-sm text-link'>
+                <a href={item.href} data-ui="text-sm text-link">
                   {item.label}
                 </a>
               </li>
             ))
           }
           <li>
-            <a href={links.github} data-ui='text-sm text-link' rel='noopener'
+            <a href={links.github} data-ui="text-sm text-link" rel="noopener"
               >GitHub</a
             >
           </li>
@@ -68,70 +68,70 @@ import Logo from './Logo.astro';
       </nav>
 
       <section
-        aria-labelledby='acknowledgements'
-        data-ui='text-sm'
-        style='
+        aria-labelledby="acknowledgements"
+        data-ui="text-sm"
+        style="
           --display: flex-col;
           --justify: center;
           --justify--sm: start;
           --gap: 2;
           --text-align: center;
           --text-align--sm: left;
-        '
+        "
       >
-        <h2 id='acknowledgements' data-ui='text-eyebrow' style='--mb: 1.5'>
+        <h2 id="acknowledgements" data-ui="text-eyebrow" style="--mb: 1.5">
           Acknowledgements
         </h2>
         <div
-          style='
+          style="
             --display: flex-col;
             --gap: 2;
             --font-style: italic;
             --text-wrap: balance;
             --text: var(--color-muted-foreground);
-          '
+          "
         >
           <p>
             Zazz is heavily inspired by <a
-              data-ui='text-link'
-              href='https://tailwindcss.com/'
-              target='_blank'
-              rel='noopener'>Tailwind</a
+              data-ui="text-link"
+              href="https://tailwindcss.com/"
+              target="_blank"
+              rel="noopener">Tailwind</a
             >, <a
-              data-ui='text-link'
-              href='https://ui.shadcn.com/'
-              target='_blank'
-              rel='noopener'>Shadcn</a
+              data-ui="text-link"
+              href="https://ui.shadcn.com/"
+              target="_blank"
+              rel="noopener">Shadcn</a
             >, <a
-              data-ui='text-link'
-              href='https://base-ui.org/'
-              target='_blank'
-              rel='noopener'>Base UI</a
+              data-ui="text-link"
+              href="https://base-ui.org/"
+              target="_blank"
+              rel="noopener">Base UI</a
             >, the <a
-              data-ui='text-link'
-              href='https://snapmarket.co/'
-              target='_blank'
-              rel='noopener'>Snapmarket</a
+              data-ui="text-link"
+              href="https://snapmarket.co/"
+              target="_blank"
+              rel="noopener">Snapmarket</a
             > team, <a
-              data-ui='text-link'
-              href='https://cimcloud.com/'
-              target='_blank'
-              rel='noopener'>Cimcloud</a
+              data-ui="text-link"
+              href="https://cimcloud.com/"
+              target="_blank"
+              rel="noopener">Cimcloud</a
             > (the volunteer alpha test subject), <a
-              data-ui='text-link'
-              href='https://emilkowal.ski/'
-              target='_blank'
-              rel='noopener'>Emil Kowalski</a
+              data-ui="text-link"
+              href="https://emilkowal.ski/"
+              target="_blank"
+              rel="noopener">Emil Kowalski</a
             >, <a
-              data-ui='text-link'
-              href='https://www.kevinpowell.co/'
-              target='_blank'
-              rel='noopener'>Kevin Powell</a
+              data-ui="text-link"
+              href="https://www.kevinpowell.co/"
+              target="_blank"
+              rel="noopener">Kevin Powell</a
             >, <a
-              data-ui='text-link'
-              href='https://www.joshwcomeau.com/'
-              target='_blank'
-              rel='noopener'>Josh Comeau</a
+              data-ui="text-link"
+              href="https://www.joshwcomeau.com/"
+              target="_blank"
+              rel="noopener">Josh Comeau</a
             > and many others. Thank you all for your incredible work, support, and
             inspiration.
           </p>
@@ -139,8 +139,8 @@ import Logo from './Logo.astro';
       </section>
 
       <section
-        data-ui='text-xs'
-        style='
+        data-ui="text-xs"
+        style="
           --display: flex-col;
           --items: center;
           --justify: center;
@@ -156,17 +156,17 @@ import Logo from './Logo.astro';
           --text: var(--color-muted-foreground);
           --border-t: 1;
           --border-t--sm: 0;
-        '
+        "
       >
         <p
-          style='
+          style="
             --max-w: 50ch;
             --text-wrap: balance;
-          '
+          "
         >
           Built and maintained by Derek Nelsen. Licensed under the MIT License.
-          Source code available on{' '}
-          <a data-ui='text-link' href={links.github} rel='noopener'>GitHub</a>.
+          Source code available on{" "}
+          <a data-ui="text-link" href={links.github} rel="noopener">GitHub</a>.
         </p>
       </section>
     </div>

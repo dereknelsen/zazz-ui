@@ -57,7 +57,7 @@
     /* base */
     --color-background: light-dark(var(--color-white), var(--color-neutral-900));
     --color-foreground: light-dark(var(--color-neutral-900), var(--color-white));
-    --color-border: light-dark(var(--color-neutral-100), var(--color-neutral-800));
+    --color-border: light-dark(var(--color-shade-50), var(--color-tint-200));
     --color-border-foreground: light-dark(var(--color-tint-950), var(--color-shade-500));
     --color-card: light-dark(var(--color-white), var(--color-neutral-950));
     --color-card-foreground: light-dark(var(--color-neutral-900), var(--color-white));
@@ -175,7 +175,7 @@
        numbers; browsers composite in gamma-encoded sRGB, where even alpha steps
        look uneven. */
     --color-shade-none: oklch(from var(--color-neutral-950) l c h / 0);
-    --color-shade-50: oklch(from var(--color-neutral-950) l c h / 0.055);
+    --color-shade-50: oklch(from var(--color-neutral-950) l c h / 0.065);
     --color-shade-100: oklch(from var(--color-neutral-950) l c h / 0.115);
     --color-shade-200: oklch(from var(--color-neutral-950) l c h / 0.225);
     --color-shade-300: oklch(from var(--color-neutral-950) l c h / 0.335);
@@ -188,22 +188,23 @@
     --color-shade-950: oklch(from var(--color-neutral-950) l c h / 0.96);
     --color-shade-full: oklch(from var(--color-neutral-950) l c h / 1);
 
-    /* tint — faded overlays (derived from white). Solved the same way over the dark
-       background; the curve differs from shade's because lightening runs the other
-       way up the same lightness response. */
-    --color-tint-none: oklch(from var(--color-white) l c h / 0);
-    --color-tint-50: oklch(from var(--color-white) l c h / 0.04);
-    --color-tint-100: oklch(from var(--color-white) l c h / 0.085);
-    --color-tint-200: oklch(from var(--color-white) l c h / 0.17);
-    --color-tint-300: oklch(from var(--color-white) l c h / 0.265);
-    --color-tint-400: oklch(from var(--color-white) l c h / 0.36);
-    --color-tint-500: oklch(from var(--color-white) l c h / 0.46);
-    --color-tint-600: oklch(from var(--color-white) l c h / 0.56);
-    --color-tint-700: oklch(from var(--color-white) l c h / 0.67);
-    --color-tint-800: oklch(from var(--color-white) l c h / 0.775);
-    --color-tint-900: oklch(from var(--color-white) l c h / 0.885);
-    --color-tint-950: oklch(from var(--color-white) l c h / 0.945);
-    --color-tint-full: oklch(from var(--color-white) l c h / 1);
+    /* tint — faded overlays (derived from neutral-50, so a tinted neutral reaches
+       dark-mode muted, faded, and input the way it reaches light mode through the
+       shades). Solved the same way over the dark background; the curve differs from
+       shade's because lightening runs the other way up the same lightness response. */
+    --color-tint-none: oklch(from var(--color-neutral-50) l c h / 0);
+    --color-tint-50: oklch(from var(--color-neutral-50) l c h / 0.04);
+    --color-tint-100: oklch(from var(--color-neutral-50) l c h / 0.085);
+    --color-tint-200: oklch(from var(--color-neutral-50) l c h / 0.17);
+    --color-tint-300: oklch(from var(--color-neutral-50) l c h / 0.265);
+    --color-tint-400: oklch(from var(--color-neutral-50) l c h / 0.36);
+    --color-tint-500: oklch(from var(--color-neutral-50) l c h / 0.46);
+    --color-tint-600: oklch(from var(--color-neutral-50) l c h / 0.56);
+    --color-tint-700: oklch(from var(--color-neutral-50) l c h / 0.67);
+    --color-tint-800: oklch(from var(--color-neutral-50) l c h / 0.775);
+    --color-tint-900: oklch(from var(--color-neutral-50) l c h / 0.885);
+    --color-tint-950: oklch(from var(--color-neutral-50) l c h / 0.945);
+    --color-tint-full: oklch(from var(--color-neutral-50) l c h / 1);
 
     /* ==========================================================================
     * Typography — typefaces, sizes, weights, tracking, leading

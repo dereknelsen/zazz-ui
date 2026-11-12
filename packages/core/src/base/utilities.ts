@@ -864,6 +864,15 @@ export const UTILITIES: readonly Utility[] = [
     tiers: "none",
   })),
   { name: "bg-stops", properties: [], mode: "raw", family: "color", emit: "none", tiers: "none" },
+  // background-clip, base only: `text` paints the background (a gradient) through the
+  // glyphs, with `--text: transparent`; border-box / padding-box / content-box too.
+  {
+    name: "bg-clip",
+    properties: ["background-clip"],
+    mode: "keyword",
+    family: "color",
+    tiers: "none",
+  },
   // the mask twin of the bg gradients: --mask-linear carries the prelude, --mask-stops
   // the stops (opaque shows, transparent hides); they compose into mask-image. No
   // tiers, like the bg gradients.

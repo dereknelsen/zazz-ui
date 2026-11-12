@@ -329,6 +329,7 @@
 
 
 
+
   :where(:is([style*="--opacity--"], [style*="--group-opacity--"]):not([data-tooltip-slot~="content"], [popover], dialog, dialog[open], input[type="range"], label:has(> input[role="switch"]))) {
     opacity: var(--_opacity-resolved, 1);
   }

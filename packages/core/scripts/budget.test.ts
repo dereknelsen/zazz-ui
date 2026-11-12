@@ -65,7 +65,9 @@ describe("utilities layer budget", () => {
     // --pointer-events breakpoint tiers (2026-11-10; not re-measured, +0.5 %).
     // 1,437 with the `--display: grid` / `inline-grid` place-content default, which skips a
     // pile and `--place-items` / `--items` (2026-11-11; one defaults-layer rule).
-    expect(substrings).toBeLessThanOrEqual(1437);
+    // 1,406 with --bg-clip, once a tier-less utility's resolver rides its base rule's gate
+    // (2026-11-12; 13 utilities, two substrings each), and the limit lowered to match.
+    expect(substrings).toBeLessThanOrEqual(1406);
   });
 
   it("claim 15 (ratchet): the generated layer stays under 27 KB with Brotli", () => {

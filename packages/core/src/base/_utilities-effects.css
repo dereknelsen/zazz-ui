@@ -2,18 +2,14 @@
 
 /* effects family */
 @layer ui.utilities {
-  :where([style*="--mask-linear:"], [style*="--mask-linear--"]) {
-    --_mask-linear-resolved: var(--_mask-linear);
-  }
   :where([style*="--mask-linear:"]) {
     --_mask-linear: var(--mask-linear);
+    --_mask-linear-resolved: var(--_mask-linear);
   }
 
-  :where([style*="--mask-stops:"], [style*="--mask-stops--"]) {
-    --_mask-stops-resolved: var(--_mask-stops);
-  }
   :where([style*="--mask-stops:"]) {
     --_mask-stops: var(--mask-stops);
+    --_mask-stops-resolved: var(--_mask-stops);
   }
 
   :where([style*="--opacity:"], [style*="--opacity--"], [style*="--group-opacity--"]) {

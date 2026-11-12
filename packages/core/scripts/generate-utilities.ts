@@ -158,11 +158,8 @@ export function baseRule(utility: Utility, tiers: readonly string[]): string {
         ...breakpoints,
       ]
     : breakpoints;
-  const gates = [`[style*="--${n}:"]`, `[style*="--${n}--"]`];
-  if (stateTiers) gates.push(`[style*="--group-${n}--"]`);
   const end = utility.chainEnd ? `var(--_${n}, ${utility.chainEnd})` : `var(--_${n})`;
-  const lines = [
-    `:where(${gates.join(", ")}) {`,
+  const resolver = [
     `  --_${n}-resolved: ${chain(n, chainTiers, end)};`,
     // a number fails the <length> half and a length the <number> half (each
     // then takes its 0 initial), so one signed length remains
@@ -176,10 +173,20 @@ export function baseRule(utility: Utility, tiers: readonly string[]): string {
     ...(utility.emit === "text-wrap"
       ? [`  --_${n}-a: var(--_${n}-resolved, wrap);`, `  --_${n}-b: var(--_${n}-a);`]
       : []),
-    `}`,
-    `:where([style*="--${n}:"]) {`,
-    `  --_${n}: var(--${n});`,
   ];
+  const gates = [`[style*="--${n}:"]`, `[style*="--${n}--"]`];
+  if (stateTiers) gates.push(`[style*="--group-${n}--"]`);
+  // Without tiers the resolver reads only the base, so it rides the base rule's
+  // one gate: two [style*=] substrings fewer than a separate resolver.
+  const lines = tiers.length
+    ? [
+        `:where(${gates.join(", ")}) {`,
+        ...resolver,
+        `}`,
+        `:where([style*="--${n}:"]) {`,
+        `  --_${n}: var(--${n});`,
+      ]
+    : [`:where([style*="--${n}:"]) {`, `  --_${n}: var(--${n});`, ...resolver];
   if (utility.emit === "border") {
     lines.push(...borderChannels(n).map((d) => `  ${d}`));
   } else if (utility.mode === "dual") {

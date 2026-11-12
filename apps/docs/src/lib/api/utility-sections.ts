@@ -133,8 +133,8 @@ export const UTILITY_SECTIONS: readonly UtilitySection[] = [
   {
     id: "backgrounds",
     title: "Backgrounds",
-    description: "Background color, alpha, and gradients.",
-    utilities: ["bg", "bg-alpha", "bg-linear", "bg-radial", "bg-conic", "bg-stops"],
+    description: "Background color, alpha, gradients, and clipping.",
+    utilities: ["bg", "bg-alpha", "bg-linear", "bg-radial", "bg-conic", "bg-stops", "bg-clip"],
   },
   {
     id: "borders",

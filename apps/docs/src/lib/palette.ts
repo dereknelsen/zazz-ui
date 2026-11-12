@@ -199,3 +199,25 @@ export function foregroundFor(palette: Palette, name: string): string {
     ? "var(--color-white)"
     : `var(--color-${name}-950)`;
 }
+
+/**
+ * The page backgrounds the builder offers, by scheme: white or the five
+ * lightest neutrals for light mode, the five darkest neutrals or black for
+ * dark.
+ */
+export const BACKGROUNDS = {
+  light: ["white", "50", "100", "200", "300", "400"],
+  dark: ["600", "700", "800", "900", "950", "black"],
+} as const;
+
+/** The kit's `--color-background` picks: white in light mode, neutral-900 in dark. */
+export const DEFAULT_BACKGROUND = { light: "white", dark: "900" } as const;
+
+const backgroundVar = (pick: string) =>
+  pick === "white" || pick === "black" ? `var(--color-${pick})` : `var(--color-neutral-${pick})`;
+
+/** The `--color-background` declaration for a light and a dark pick; null at the kit's default. */
+export function backgroundToken(light: string, dark: string): string | null {
+  if (light === DEFAULT_BACKGROUND.light && dark === DEFAULT_BACKGROUND.dark) return null;
+  return `--color-background: light-dark(${backgroundVar(light)}, ${backgroundVar(dark)})`;
+}

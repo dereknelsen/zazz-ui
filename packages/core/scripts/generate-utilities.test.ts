@@ -517,11 +517,9 @@ describe("emission shapes", () => {
   it("a tier-less utility resolves straight to its base", () => {
     expect(squash(baseRule(ROUNDED, []))).toBe(
       squash(`
-        :where([style*="--radius:"], [style*="--radius--"]) {
-          --_radius-resolved: var(--_radius);
-        }
         :where([style*="--radius:"]) {
           --_radius: var(--radius);
+          --_radius-resolved: var(--_radius);
           border-radius: var(--_radius-resolved);
         }
       `),
@@ -635,11 +633,9 @@ describe("border shorthand", () => {
   it("derives width (1px for a color, abs(n) px for a number, the length itself) and color (--color-border unless a color)", () => {
     expect(squash(baseRule(BORDER, []))).toBe(
       squash(`
-        :where([style*="--border:"], [style*="--border--"]) {
-          --_border-resolved: var(--_border);
-        }
         :where([style*="--border:"]) {
           --_border: var(--border);
+          --_border-resolved: var(--_border);
           --_border-len: var(--_border-resolved);
           --_border-num: var(--_border-resolved);
           --_border-is-len: calc(sin(atan2(var(--_border-resolved), 1px)) * 0 + 1);

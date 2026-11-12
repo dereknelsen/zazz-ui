@@ -2,11 +2,9 @@
 
 /* box family */
 @layer ui.utilities {
-  :where([style*="--shadow-tint:"], [style*="--shadow-tint--"]) {
-    --_shadow-tint-resolved: var(--_shadow-tint);
-  }
   :where([style*="--shadow-tint:"]) {
     --_shadow-tint: var(--shadow-tint);
+    --_shadow-tint-resolved: var(--_shadow-tint);
   }
 
   :where([style*="--radius:"], [style*="--radius--"], [style*="--group-radius--"]) {
@@ -190,51 +188,39 @@
     :where([style*="--radius-r--2xl: full"]) { --_radius-r-2xl: var(--radius-full); }
   }
 
-  :where([style*="--corner-shape:"], [style*="--corner-shape--"]) {
-    --_corner-shape-resolved: var(--_corner-shape);
-  }
   :where([style*="--corner-shape:"]) {
     --_corner-shape: var(--corner-shape);
+    --_corner-shape-resolved: var(--_corner-shape);
     corner-shape: var(--_corner-shape-resolved, round);
   }
 
-  :where([style*="--overflow:"], [style*="--overflow--"]) {
-    --_overflow-resolved: var(--_overflow);
-  }
   :where([style*="--overflow:"]) {
     --_overflow: var(--overflow);
+    --_overflow-resolved: var(--_overflow);
     overflow: var(--_overflow-resolved);
   }
 
-  :where([style*="--overflow-x:"], [style*="--overflow-x--"]) {
-    --_overflow-x-resolved: var(--_overflow-x);
-  }
   :where([style*="--overflow-x:"]) {
     --_overflow-x: var(--overflow-x);
+    --_overflow-x-resolved: var(--_overflow-x);
     overflow-x: var(--_overflow-x-resolved);
   }
 
-  :where([style*="--overflow-y:"], [style*="--overflow-y--"]) {
-    --_overflow-y-resolved: var(--_overflow-y);
-  }
   :where([style*="--overflow-y:"]) {
     --_overflow-y: var(--overflow-y);
+    --_overflow-y-resolved: var(--_overflow-y);
     overflow-y: var(--_overflow-y-resolved);
   }
 
-  :where([style*="--outline:"], [style*="--outline--"]) {
-    --_outline-resolved: var(--_outline);
-  }
   :where([style*="--outline:"]) {
     --_outline: var(--outline);
+    --_outline-resolved: var(--_outline);
     outline: var(--_outline-resolved);
   }
 
-  :where([style*="--cursor:"], [style*="--cursor--"]) {
-    --_cursor-resolved: var(--_cursor);
-  }
   :where([style*="--cursor:"]) {
     --_cursor: var(--cursor);
+    --_cursor-resolved: var(--_cursor);
     cursor: var(--_cursor-resolved);
   }
 
@@ -246,11 +232,9 @@
     pointer-events: var(--_pointer-events-resolved);
   }
 
-  :where([style*="--visibility:"], [style*="--visibility--"]) {
-    --_visibility-resolved: var(--_visibility);
-  }
   :where([style*="--visibility:"]) {
     --_visibility: var(--visibility);
+    --_visibility-resolved: var(--_visibility);
     visibility: var(--_visibility-resolved);
   }
 
@@ -262,19 +246,15 @@
     z-index: var(--_z-resolved);
   }
 
-  :where([style*="--object-fit:"], [style*="--object-fit--"]) {
-    --_object-fit-resolved: var(--_object-fit);
-  }
   :where([style*="--object-fit:"]) {
     --_object-fit: var(--object-fit);
+    --_object-fit-resolved: var(--_object-fit);
     object-fit: var(--_object-fit-resolved);
   }
 
-  :where([style*="--object-position:"], [style*="--object-position--"]) {
-    --_object-position-resolved: var(--_object-position);
-  }
   :where([style*="--object-position:"]) {
     --_object-position: var(--object-position);
+    --_object-position-resolved: var(--_object-position);
     object-position: var(--_object-position-resolved);
   }
 

@@ -40,6 +40,7 @@ const alerts = [
     --gap: 4;
     --bg: var(--color-card);
     --elevation: 1.5;
+    --template-cols: minmax(min-content, 1fr);
   '
 >
   <CardHeader
@@ -51,7 +52,7 @@ const alerts = [
     style='
       --display: grid;
       --items: start;
-      --grid-cols: 2;
+      --template-cols: repeat(2, minmax(min-content, 1fr));
       --gap: 8;
     '
   >
@@ -111,7 +112,7 @@ const alerts = [
         <div
           style='
             --display: grid;
-            --grid-cols: 2;
+            --template-cols: repeat(2, minmax(min-content, 1fr));
             --gap: 4;
           '
         >

@@ -12,23 +12,45 @@
  * wrapper sets `--shadow-tint`, which makes the kit re-declare them. The `<style>` lives
  * inside the element, so leaving the page (a swap navigation) drops the theme.
  *
- * The panel's values (the preview's card elevation included) persist in
- * localStorage until the form is reset, so a reload or a trip to another page
- * keeps the theme being worked on.
+ * The panel's values (the preview's card elevation included) live in the
+ * page's URL as `?preset=<code>` (lib/preset.ts), so a reload keeps the theme
+ * and the address is a link that shares it. The URL is rewritten in place
+ * (no history entries), and the parameter goes away when every control is
+ * back at its default.
  *
- * Font: one combobox lists local stacks and, when the build had a Google
- * Fonts key, the popular Google families; the choice goes to headings and
- * body text alike. A Google family loads through one `<link>` in the head,
- * and the copied CSS carries that tag in a comment above the `:root` block.
+ * Fonts: two comboboxes, one for headings and one for body text, list local
+ * stacks and, when the build had a Google Fonts key, the most popular Google
+ * families of each category. The chosen Google families load through one
+ * `<link>` in the head, and the copied CSS carries that tag in a comment above
+ * the `:root` block. Each combobox has a wand button that picks a font pairing
+ * with the other one (`pairFont`), and the header's dice button randomizes
+ * every control at once (lib/randomize.ts).
  *
  * A custom element because swap navigation never runs a swapped-in page's
  * scripts; BaseLayout defines it on every page.
  */
 import { ZazzElement, defineZazzElement } from "@zazz-ui/core/base/zazz-element.ts";
-import { googleFontsHref } from "../lib/fonts.ts";
-import { createPalette, foregroundFor, normalizeHex } from "../lib/palette.ts";
+import {
+  googleFontsHref,
+  pairFont,
+  type FontCategory,
+  type FontOption,
+  type FontRole,
+} from "../lib/fonts.ts";
+import { backgroundToken, createPalette, foregroundFor, normalizeHex } from "../lib/palette.ts";
+import { decodePreset, encodePreset } from "../lib/preset.ts";
+import {
+  RANDOM_BACKGROUNDS,
+  RANDOM_RANGES,
+  randomColors,
+  randomInRanges,
+  randomScales,
+} from "../lib/randomize.ts";
 
-const STORAGE_KEY = "fieldnotes-theme";
+/** The query parameter holding the share code. */
+const PARAM = "preset";
+/** How long the URL waits for input to settle: Safari throttles history updates, and a slider drag fires an input per step. */
+const SHARE_DELAY = 300;
 /** How the collapsed bar's chips print each control's value. */
 const CHIP_FORMAT: Record<string, (value: string) => string> = {
   "tb-spacing": (v) => `${v}rem`,
@@ -37,8 +59,16 @@ const CHIP_FORMAT: Record<string, (value: string) => string> = {
   "tb-shadow-intensity": (v) => `${v}×`,
   "tb-shadow-blur": (v) => `${v}×`,
   "tb-shadow-distance": (v) => `${v}×`,
-  "tb-font": (v) => v.replace(/^Default.*/, "Default"),
+  "tb-bg-light": (v) => backgroundName(v),
+  "tb-bg-dark": (v) => backgroundName(v),
+  "tb-font-heading": (v) => v.replace(/^Default.*/, "Default"),
+  "tb-font-body": (v) => v.replace(/^Default.*/, "Default"),
 };
+
+/** A background pick as the chips print it: White, Black, or the neutral stop. */
+function backgroundName(pick: string): string {
+  return pick === "white" ? "White" : pick === "black" ? "Black" : `Neutral ${pick}`;
+}
 
 /** The class on the preview wrapper the live theme is scoped to. */
 const PREVIEW = "fieldnotes__preview";
@@ -63,8 +93,24 @@ const NUMBERS: Record<string, { token: string; unit: string; format?: (n: number
   "scale-max": { token: "--typeset-scale-max", unit: "" },
 };
 
-/** A theme control: the inputs, the font combobox's hidden input, and the scale selects. */
+const FONT_ROLES = ["heading", "body"] as const satisfies readonly FontRole[];
+
+/** A theme control: the inputs, the font comboboxes' hidden inputs, and the scale selects. */
 type Field = HTMLInputElement | HTMLSelectElement;
+
+type Combobox = HTMLElement & { value: string };
+
+/** A font row as the pairing reads it; the default row (no value) is not a font. */
+const fontOf = (item: HTMLElement): FontOption | null => {
+  const { comboboxValue: value, fontCategory, fontStack } = item.dataset;
+  if (!value || !fontCategory || !fontStack) return null;
+  return {
+    value,
+    label: item.textContent?.trim() ?? value,
+    category: fontCategory as FontCategory,
+    stack: fontStack,
+  };
+};
 
 /**
  * The value a control shipped with. Selects and the comboboxes' hidden inputs
@@ -117,45 +163,43 @@ class ThemeBuilder extends ZazzElement {
     /** The panel's controls, by `name`: the theme inputs and the preview's elevation slider. */
     const fields = () => [
       ...form.querySelectorAll<Field>(
-        "[data-theme-hex], [data-theme-number], [data-theme-token], [data-theme-font], [data-fieldnotes-elevation]",
+        "[data-theme-hex], [data-theme-number], [data-theme-token], [data-theme-font], [data-theme-bg], [data-fieldnotes-elevation]",
       ),
     ];
     const changed = (field: Field) => field.value !== defaultOf(field);
-    // Storage can be missing or blocked (a private window, cleared site data).
-    const stored = (): Record<string, string> | null => {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        return raw ? (JSON.parse(raw) as Record<string, string>) : null;
-      } catch {
-        return null;
-      }
-    };
-    const save = () => {
-      const values = Object.fromEntries(
-        fields()
-          .filter(changed)
-          .map((f) => [f.name, f.value]),
+    /** Every control's value by name; one not holding a valid value yet (a half-typed hex) counts as its default. */
+    const values = () =>
+      Object.fromEntries(
+        fields().map((f) => [f.name, f.value !== "" && f.checkValidity() ? f.value : defaultOf(f)]),
       );
-      try {
-        if (Object.keys(values).length) localStorage.setItem(STORAGE_KEY, JSON.stringify(values));
-        else localStorage.removeItem(STORAGE_KEY);
-      } catch {
-        /* nothing to keep */
-      }
+    /** Writes the theme into the URL once input settles, or drops the parameter at the defaults. */
+    let shareTimer: ReturnType<typeof setTimeout> | undefined;
+    const page = location.pathname;
+    const share = () => {
+      clearTimeout(shareTimer);
+      shareTimer = setTimeout(() => {
+        // A swap navigation moves the URL before it swaps the page out: never
+        // write onto the next page's address.
+        if (signal.aborted || location.pathname !== page) return;
+        const url = new URL(location.href);
+        if (fields().some(changed)) url.searchParams.set(PARAM, encodePreset(values()));
+        else url.searchParams.delete(PARAM);
+        if (url.href !== location.href) history.replaceState(history.state, "", url);
+      }, SHARE_DELAY);
     };
-    const forget = () => {
-      try {
-        localStorage.removeItem(STORAGE_KEY);
-      } catch {
-        /* nothing kept */
-      }
-    };
-    /** Puts the stored values back into the fields; each then announces itself as an input. */
+    signal.addEventListener("abort", () => clearTimeout(shareTimer), { once: true });
+    /** Puts the URL's preset into the fields; each then announces itself as an input. */
     const restore = () => {
-      const values = stored();
-      if (!values) return;
+      const code = new URLSearchParams(location.search).get(PARAM);
+      const preset = code
+        ? decodePreset(
+            code,
+            fontOptions("heading").map((f) => f.value),
+          )
+        : null;
+      if (!preset) return;
       for (const field of fields()) {
-        const value = values[field.name];
+        const value = preset[field.name];
         if (value === undefined || value === field.value) continue;
         // A combobox is set through its element, which moves the label and the
         // selection too. The kit may define <ui-combobox> after this element
@@ -163,8 +207,7 @@ class ThemeBuilder extends ZazzElement {
         // so the write waits for the definition and renders again.
         const combobox = field.closest<HTMLElement & { value: string }>("ui-combobox");
         if (combobox) {
-          // A stored family this build does not list (a fork without the key,
-          // a family that left the popular ten) keeps the default row.
+          // A family this build does not list (a fork without the key) keeps the default row.
           if (!combobox.querySelector(`[data-combobox-value="${CSS.escape(value)}"]`)) continue;
           void customElements.whenDefined("ui-combobox").then(() => {
             if (!signal.aborted) {
@@ -180,6 +223,75 @@ class ThemeBuilder extends ZazzElement {
     };
 
     let css = "";
+
+    const combobox = (role: FontRole) =>
+      q<HTMLInputElement>(`[data-theme-font="${role}"]`)?.closest<Combobox>("ui-combobox") ?? null;
+    /** The role's chosen row, the default row included. */
+    const selectedFont = (role: FontRole) =>
+      combobox(role)?.querySelector<HTMLElement>(
+        '[data-combobox-slot~="item"][aria-selected="true"]',
+      ) ?? null;
+    /** Every font the role's combobox lists, the default row left out. */
+    const fontOptions = (role: FontRole) =>
+      [
+        ...(combobox(role)?.querySelectorAll<HTMLElement>('[data-combobox-slot~="item"]') ?? []),
+      ].flatMap((item) => fontOf(item) ?? []);
+    /** Selects a font in the role's combobox; the caller renders and saves. */
+    const setFont = (role: FontRole, value: string) => {
+      const box = combobox(role);
+      if (box) box.value = value;
+    };
+    /** The wand: a font for `role` that pairs with the other role's font. */
+    const pair = (role: FontRole) => {
+      const other = FONT_ROLES.find((r) => r !== role)!;
+      const otherItem = selectedFont(other);
+      const pick = pairFont(
+        role,
+        otherItem ? fontOf(otherItem) : null,
+        fontOptions(role),
+        combobox(role)?.value,
+      );
+      if (pick) setFont(role, pick.value);
+    };
+
+    /** Sets a field the way typing would, so its picker, readout, and listeners follow. */
+    const put = (field: Field | null, value: string) => {
+      if (!field) return;
+      field.value = value;
+      field.dispatchEvent(new Event("input", { bubbles: true }));
+    };
+    /** The dice: a fresh value for every control, fonts paired, colors kept usable. */
+    const randomize = () => {
+      const random = Math.random;
+      const colors = randomColors(random);
+      put(q(`[data-theme-hex="primary"]`), colors.primary);
+      put(q(`[data-theme-hex="neutral"]`), colors.neutral);
+      put(q("[data-theme-token='--color-shadow']"), colors.shadow);
+      for (const scheme of ["light", "dark"] as const) {
+        const picks = RANDOM_BACKGROUNDS[scheme];
+        put(q(`[data-theme-bg="${scheme}"]`), picks[Math.floor(random() * picks.length)]);
+      }
+      const scales = randomScales(random);
+      put(q("[data-theme-number='scale-min']"), String(scales.min));
+      put(q("[data-theme-number='scale-max']"), String(scales.max));
+      const corners = CSS.supports("corner-shape", "round");
+      for (const input of form.querySelectorAll<HTMLInputElement>(
+        "input[type=range], input[type=number]",
+      )) {
+        const ranges = RANDOM_RANGES[input.name];
+        if (!ranges || (input.name === "corner-shape" && !corners)) continue;
+        put(input, String(randomInRanges(ranges, Number(input.step) || 1, random)));
+      }
+      // A heading from any category, then a body that pairs with it.
+      const headings = fontOptions("heading");
+      const heading = headings[Math.floor(random() * headings.length)];
+      if (heading) {
+        setFont("heading", heading.value);
+        pair("body");
+      }
+      render();
+      share();
+    };
 
     const render = () => {
       const lines: string[] = [];
@@ -213,6 +325,14 @@ class ThemeBuilder extends ZazzElement {
           const at = swatch.dataset.stop!;
           swatch.style.setProperty("--bg", swatches?.[at] ?? `var(--color-${name}-${at})`);
         }
+        // The background selects' swatches are neutral stops: paint them the same way.
+        if (name === "neutral") {
+          for (const swatch of this.querySelectorAll<HTMLElement>("[data-theme-bg-swatch]")) {
+            const at = swatch.dataset.themeBgSwatch!;
+            if (at === "white" || at === "black") continue;
+            swatch.style.setProperty("--bg", swatches?.[at] ?? `var(--color-neutral-${at})`);
+          }
+        }
         const hint = q<HTMLElement>(`[data-theme-hint="${name}"]`);
         if (hint) hint.textContent = changed ? `Your color is ${name}-${stop}.` : hints[name];
       }
@@ -226,6 +346,13 @@ class ThemeBuilder extends ZazzElement {
         }
       }
 
+      // Background: a light and a dark pick from the neutral ends, in one light-dark().
+      const background = backgroundToken(
+        q<HTMLSelectElement>('[data-theme-bg="light"]')?.value ?? "",
+        q<HTMLSelectElement>('[data-theme-bg="dark"]')?.value ?? "",
+      );
+      if (background) lines.push(background);
+
       // Single colors (the shadow color): a hex field that writes its token as is.
       for (const input of this.querySelectorAll<HTMLInputElement>("[data-theme-token]")) {
         const hex = normalizeHex(input.value);
@@ -234,26 +361,20 @@ class ThemeBuilder extends ZazzElement {
         }
       }
 
-      // Font: the chosen row carries the stack to write and, for a Google
-      // family, what to load; headings and body text share it.
-      const hidden = q<HTMLInputElement>("[data-theme-font]");
-      const item = hidden
-        ?.closest("ui-combobox")
-        ?.querySelector<HTMLElement>('[data-combobox-slot~="item"][aria-selected="true"]');
-      const stack = item?.dataset.fontStack;
-      if (item && hidden?.value && stack) {
-        lines.push(`--font-family-heading: ${stack}`, `--font-family-body: ${stack}`);
+      // Fonts: each chosen row carries the stack to write and, for a Google
+      // family, what to load; both roles load through the one link.
+      const loads: { google: string; weights?: number[] }[] = [];
+      for (const role of FONT_ROLES) {
+        const item = selectedFont(role);
+        const stack = item?.dataset.fontStack;
+        if (!item?.dataset.comboboxValue || !stack) continue;
+        lines.push(`--font-family-${role}: ${stack}`);
+        const google = item.dataset.fontGoogle;
+        if (google) {
+          loads.push({ google, weights: item.dataset.fontWeights?.split(";").map(Number) });
+        }
       }
-      const href = googleFontsHref(
-        item?.dataset.fontGoogle
-          ? [
-              {
-                google: item.dataset.fontGoogle,
-                weights: item.dataset.fontWeights?.split(";").map(Number),
-              },
-            ]
-          : [],
-      );
+      const href = googleFontsHref(loads);
       if (href) {
         if (fontLink.href !== href) fontLink.href = href;
         if (!fontLink.isConnected) document.head.append(fontLink);
@@ -337,6 +458,13 @@ class ThemeBuilder extends ZazzElement {
             setTimeout(reveal, 400);
           });
         }
+        const wand = target.closest<HTMLElement>("[data-theme-pair]");
+        if (wand) {
+          pair(wand.dataset.themePair as FontRole);
+          render();
+          share();
+        }
+        if (target.closest("[data-theme-randomize]")) randomize();
         if (target.closest("[data-theme-copy-proxy]")) copy?.click();
         if (target.closest("[data-theme-reset-proxy]")) form.reset();
       },
@@ -359,7 +487,7 @@ class ThemeBuilder extends ZazzElement {
         const token = target.dataset.themeToken ? normalizeHex(target.value) : null;
         if (token) q<HTMLInputElement>(`[data-theme-pick-for="${target.id}"]`)!.value = token;
         render();
-        save();
+        share();
       },
       { signal },
     );
@@ -369,7 +497,7 @@ class ThemeBuilder extends ZazzElement {
       "change",
       () => {
         render();
-        save();
+        share();
       },
       { signal },
     );
@@ -377,8 +505,10 @@ class ThemeBuilder extends ZazzElement {
     form.addEventListener(
       "reset",
       () => {
-        forget();
-        setTimeout(render);
+        setTimeout(() => {
+          render();
+          share();
+        });
       },
       { signal },
     );

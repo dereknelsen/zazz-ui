@@ -19,6 +19,7 @@ type FakeNavigate = Event & {
 function navigate(
   navigationType: "push" | "replace" | "reload" | "traverse",
   url = new URL("/next", location.href).href,
+  sameDocument = false,
 ): FakeNavigate {
   const controller = new AbortController();
   const event = Object.assign(new Event("navigate"), {
@@ -29,7 +30,7 @@ function navigate(
     hashChange: false,
     downloadRequest: null,
     formData: null,
-    destination: { url },
+    destination: { url, sameDocument },
     scroll: vi.fn(),
   }) as unknown as FakeNavigate;
   event.intercept = vi.fn((options: { handler: Handler }) => {
@@ -89,6 +90,21 @@ describe("navigation", () => {
     const event = navigate("reload");
     navigation.dispatchEvent(event);
     expect(event.intercept).not.toHaveBeenCalled();
+  });
+
+  it("leaves history.pushState and replaceState to the page, which is updating its own URL", () => {
+    const url = new URL("?preset=1abc", location.href).href;
+    for (const type of ["push", "replace"] as const) {
+      const event = navigate(type, url, true);
+      navigation.dispatchEvent(event);
+      expect(event.intercept).not.toHaveBeenCalled();
+    }
+  });
+
+  it("still swaps Back and Forward between swapped pages, which share the document", () => {
+    const event = navigate("traverse", undefined, true);
+    navigation.dispatchEvent(event);
+    expect(event.intercept).toHaveBeenCalledOnce();
   });
 
   it("swaps the whole body and the title, so the header updates too", async () => {

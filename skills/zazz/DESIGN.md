@@ -350,7 +350,7 @@ subtle cast of the brand hue rather than pure gray. Generate the scale via [Tint
 ### Overlays
 
 - **Shade** (`--color-shade-50` through `--color-shade-950`): Alpha-based dim derived from neutral-950. Use for backdrops and darkening. `--color-shade-900` for modal backdrops (not `--color-muted`).
-- **Tint** (`--color-tint-50` through `--color-tint-950`): Alpha-based fade derived from white. Use for lightening over dark surfaces.
+- **Tint** (`--color-tint-50` through `--color-tint-950`): Alpha-based fade derived from neutral-50, so it carries the neutral's hue. Use for lightening over dark surfaces.
 
 ### Status Colors
 

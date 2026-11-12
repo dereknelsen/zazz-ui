@@ -27,12 +27,19 @@ export const SCALE_STEPS: readonly ScaleStep[] = [
   { value: 2, name: "Octave" },
 ];
 
-export type FontCategory = "sans-serif" | "serif" | "monospace";
+/**
+ * The Google Fonts API categories the builder offers, in the order it groups
+ * them. Handwriting is left out.
+ */
+export const FONT_CATEGORIES = ["sans-serif", "serif", "display", "monospace"] as const;
 
-/** The kit's fallback stack for each category. */
+export type FontCategory = (typeof FONT_CATEGORIES)[number];
+
+/** The kit's fallback stack for each category. The kit has no display stack, so display faces fall back to sans. */
 const FALLBACK: Record<FontCategory, string> = {
   "sans-serif": "var(--font-sans-fallback)",
   serif: "var(--font-serif-fallback)",
+  display: "var(--font-sans-fallback)",
   monospace: "var(--font-mono-fallback)",
 };
 
@@ -78,13 +85,16 @@ export interface GoogleFontItem {
 const WANTED_WEIGHTS = [400, 500, 600, 700];
 
 /**
- * Picks the most popular families of each category the kit has a role for.
- * The API lists families by popularity when asked (`sort=popularity`), so the
- * first matches win. Only the weights the family ships are requested.
+ * Picks the first families of each category. The API sorts its list when
+ * asked (ThemeBuilder.astro asks for `sort=popularity`), so the first matches
+ * win. Only the weights the family ships are requested.
  */
-export function pickGoogleFonts(items: readonly GoogleFontItem[], perCategory = 10): FontOption[] {
+export function pickGoogleFonts(items: readonly GoogleFontItem[], perCategory = 7): FontOption[] {
   const picked: FontOption[] = [];
-  const counts: Record<FontCategory, number> = { "sans-serif": 0, serif: 0, monospace: 0 };
+  const counts = Object.fromEntries(FONT_CATEGORIES.map((c) => [c, 0])) as Record<
+    FontCategory,
+    number
+  >;
   for (const item of items) {
     const category = item.category as FontCategory;
     if (!(category in counts) || counts[category] >= perCategory) continue;
@@ -134,4 +144,80 @@ export function googleFontsHref(
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([family, weights]) => `family=${family.replaceAll(" ", "+")}:wght@${weights.join(";")}`);
   return `https://fonts.googleapis.com/css2?${params.join("&")}&display=swap`;
+}
+
+export type FontRole = "heading" | "body";
+
+/**
+ * The categories that pair with the other role's font, best first, after
+ * Google's "Pairing typefaces" guidance: contrast the classification (a serif
+ * over a sans, or the reverse), keep display faces to headings over
+ * a plain body, and set code-like monospace against a sans.
+ */
+const PAIRS: Record<FontRole, Record<FontCategory, readonly FontCategory[]>> = {
+  // A body to go under a heading in this category.
+  body: {
+    serif: ["sans-serif", "serif"],
+    "sans-serif": ["serif", "sans-serif"],
+    display: ["sans-serif", "serif"],
+    monospace: ["sans-serif", "serif"],
+  },
+  // A heading to go over a body in this category.
+  heading: {
+    serif: ["sans-serif", "display", "serif"],
+    "sans-serif": ["serif", "display"],
+    display: ["sans-serif", "serif"],
+    monospace: ["sans-serif", "monospace"],
+  },
+};
+
+/** How much more likely each tier of `PAIRS` is than the next. */
+const TIER_WEIGHTS = [4, 2, 1];
+/** How much more likely a font from the other's superfamily is. */
+const SUPERFAMILY_WEIGHT = 3;
+
+/**
+ * A family name without its classification words and cut numbers: "Roboto
+ * Slab" and "Roboto" share "Roboto", "Redaction 10" and "Redaction 35" share
+ * "Redaction".
+ */
+function superfamily(label: string): string {
+  return label
+    .replace(/\b(Sans|Serif|Slab|Mono|Display|Text|Code|Condensed|\d+)\b/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * A font for `role` that pairs with `other`, the other role's font (null is
+ * the kit's default, a system sans). The pick is random, weighted toward the
+ * better categories in `PAIRS` and toward the other font's superfamily (Roboto
+ * with Roboto Slab), which the guide calls the safest pairing. It never
+ * returns `other` itself or `current`, so each call moves to a new font. Null
+ * when no option fits.
+ */
+export function pairFont(
+  role: FontRole,
+  other: FontOption | null,
+  options: readonly FontOption[],
+  current?: string,
+  random: () => number = Math.random,
+): FontOption | null {
+  const tiers = PAIRS[role][other?.category ?? "sans-serif"];
+  const family = other ? superfamily(other.label) : "";
+  const weighted: [FontOption, number][] = [];
+  for (const option of options) {
+    if (option.value === other?.value || option.value === current) continue;
+    const tier = tiers.indexOf(option.category);
+    if (tier < 0) continue;
+    const kin = family !== "" && superfamily(option.label) === family;
+    weighted.push([option, TIER_WEIGHTS[tier] * (kin ? SUPERFAMILY_WEIGHT : 1)]);
+  }
+  const total = weighted.reduce((sum, [, w]) => sum + w, 0);
+  let at = random() * total;
+  for (const [option, weight] of weighted) {
+    at -= weight;
+    if (at < 0) return option;
+  }
+  return weighted.at(-1)?.[0] ?? null;
 }

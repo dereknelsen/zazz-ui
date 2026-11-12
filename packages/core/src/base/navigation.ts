@@ -216,11 +216,15 @@ if ("navigation" in window) {
       return;
     }
 
-    // A reload re-renders the whole document; it is never a swap.
+    // A reload re-renders the whole document; it is never a swap. A same-document
+    // push or replace is history.pushState() / replaceState(): the page is
+    // updating its own URL (a filter, a share code), not leaving. Back and
+    // Forward stay swaps: after one, every entry shares this document.
     if (
       !optedIn(document) ||
       !e.canIntercept ||
       e.navigationType === "reload" ||
+      (e.destination.sameDocument && e.navigationType !== "traverse") ||
       e.hashChange ||
       e.downloadRequest !== null ||
       e.formData !== null ||

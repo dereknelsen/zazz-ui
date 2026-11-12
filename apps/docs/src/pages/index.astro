@@ -1,26 +1,24 @@
 ---
-import ThemeBuilder from '../components/ThemeBuilder.astro';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { softwareLd } from '../lib/jsonld.ts';
-import { kitVersion } from '../lib/kit.ts';
-import { site } from '../site.config.ts';
-import { ArrowRight, MoveRight } from '@lucide/astro';
+import ThemeBuilder from "../components/ThemeBuilder.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { softwareLd } from "../lib/jsonld.ts";
+import { kitVersion } from "../lib/kit.ts";
+import { site } from "../site.config.ts";
+import { ArrowRight, MoveRight } from "@lucide/astro";
 ---
 
 <BaseLayout title={site.name} jsonLd={[softwareLd(kitVersion())]}>
-  <main id='main' style='
+  <main id="main" style="
       --display: grid;
       --position: relative;
-    '>
+    ">
     <section
-      data-ui='layout'
-      data-layout-size='bleed'
-      style='
-        --min-h: calc(100svh - var(--ui-header-height));
-      '
+      data-ui="layout"
+      data-layout-size="bleed"
+      style="--min-h: calc(100svh - var(--ui-header-height))"
     >
       <div
-        style='
+        style="
           --display: grid;
           --position: relative;
           --place-items: center;
@@ -29,40 +27,40 @@ import { ArrowRight, MoveRight } from '@lucide/astro';
           --pb: 6;
           --h: 112;
           --max-h: 70svh;
-        '
+        "
       >
         <div
-          style='
+          style="
             --position: absolute;
             --inset: 0;
             --bg-linear: to bottom;
             --bg-stops: transparent 0%, var(--color-background);
             --z: 20;
-          '
+          "
         >
         </div>
         <figure
-          style='
+          style="
             --display: grid;
             --position: absolute;
             --band: layout-bleed;
             --inset: 0;
             --z: 10;
-          '
+          "
         >
           <hero-scene
-            aria-hidden='true'
-            style='
+            aria-hidden="true"
+            style="
               --position: absolute;
               --inset: 0;
               --size: 100%;
               --pointer-events: none;
-            '
+            "
           >
           </hero-scene>
         </figure>
         <div
-          style='
+          style="
             --display: flex-col;
             --position: relative;
             --items: start;
@@ -71,64 +69,64 @@ import { ArrowRight, MoveRight } from '@lucide/astro';
             --pb: 12;
             --gap: 12;
             --z: 30;
-          '
+          "
         >
           <hgroup
-            style='
+            style="
               --display: grid;
               --place-items: start;
               --place-content: stretch;
               --template-cols--lg: 1.2fr 1fr;
               --gap: 12;
-            '
+            "
           >
             <div
-              style='
+              style="
                 --display: flex-col;
                 --gap: 4;
                 --text-align: start;
-              '
+              "
             >
               <h1
-                style='
+                style="
                   --text: var(--color-muted-foreground);
                   --sr: only;
-                '
+                "
               >
                 {site.title}
               </h1>
-              <p data-ui='text-h1' style='--text-wrap: balance'>
+              <p data-ui="text-h1" style="--text-wrap: balance">
                 A design system <br />for the baseline web.
               </p>
             </div>
             <div
-              style='
+              style="
                 --display: flex-col;
                 --justify: end;
                 --pb: 1;
                 --gap: 6;
                 --h: 100%;
-              '
+              "
             >
-              <p data-ui='text-lg' style='--text-wrap: balance'>
+              <p data-ui="text-lg" style="--text-wrap: balance">
                 Unified collection of web-native primitives, style utilities,
                 and design tokens for no-build, low-build, and legacy projects.
               </p>
               <div
-                style='
+                style="
                   --display: flex;
                   --gap: 2;
-                '
+                "
               >
                 <a
-                  href='/docs/quick-start/'
-                  data-ui='button'
-                  data-button-variant='primary'>Quick start</a
+                  href="/docs/quick-start/"
+                  data-ui="button"
+                  data-button-variant="primary">Quick start</a
                 >
                 <a
-                  href='/playground'
-                  data-ui='button'
-                  data-button-variant='ghost'>Playground <ArrowRight /></a
+                  href="/playground"
+                  data-ui="button"
+                  data-button-variant="ghost">Playground <ArrowRight /></a
                 >
               </div>
             </div>
@@ -137,39 +135,32 @@ import { ArrowRight, MoveRight } from '@lucide/astro';
       </div>
 
       <hr
-        data-ui='divider'
-        style='
+        data-ui="divider"
+        style="
           --display: block;
           --display--lg: none;
-        '
+        "
       />
 
       <hgroup
-        style='
+        style="
           --display: flex;
           --display--lg: none;
           --items: center;
           --justify: space-between;
           --px: var(--gutters);
-          --pt: 6;
-        '
+          --py: 6;
+        "
       >
-        <h2 data-ui='text-h6'>Build a theme</h2>
+        <h2 data-ui="text-h6">Build a theme</h2>
         <span
-          data-ui='badge text-eyebrow'
-          data-badge-variant='link'
-          style='--text: var(--color-muted-foreground)'
+          data-ui="badge text-eyebrow"
+          data-badge-variant="link"
+          style="--text: var(--color-muted-foreground)"
           >Swipe for more <MoveRight /></span
         >
       </hgroup>
-      <div
-        style='
-          --band: layout-bleed;
-          --band--lg: layout-xl;
-          --col-end: layout-bleed;
-          --col-end--lg: layout-full;
-        '
-      >
+      <div style="--band: layout-bleed">
         <ThemeBuilder />
       </div>
     </section>

@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vite-plus/test";
 import {
+  BACKGROUNDS,
   STOPS,
+  backgroundToken,
   createPalette,
   foregroundFor,
   inGamut,
@@ -93,5 +95,30 @@ describe("foregroundFor", () => {
   it("puts white on dark fills and the palette's 950 on light ones", () => {
     expect(foregroundFor(createPalette("#1e3a8a"), "primary")).toBe("var(--color-white)");
     expect(foregroundFor(createPalette("#fef08a"), "primary")).toBe("var(--color-primary-950)");
+  });
+});
+
+describe("BACKGROUNDS", () => {
+  it("offers white and the five lightest neutrals for light mode", () => {
+    expect(BACKGROUNDS.light).toEqual(["white", "50", "100", "200", "300", "400"]);
+  });
+
+  it("offers the five darkest neutrals and black for dark mode", () => {
+    expect(BACKGROUNDS.dark).toEqual(["600", "700", "800", "900", "950", "black"]);
+  });
+});
+
+describe("backgroundToken", () => {
+  it("is null at the kit's own background", () => {
+    expect(backgroundToken("white", "900")).toBeNull();
+  });
+
+  it("pairs the light and dark picks in one light-dark()", () => {
+    expect(backgroundToken("100", "900")).toBe(
+      "--color-background: light-dark(var(--color-neutral-100), var(--color-neutral-900))",
+    );
+    expect(backgroundToken("white", "black")).toBe(
+      "--color-background: light-dark(var(--color-white), var(--color-black))",
+    );
   });
 });

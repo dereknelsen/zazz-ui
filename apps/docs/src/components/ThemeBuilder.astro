@@ -4,7 +4,8 @@
  * primitives) and a theme form. On wide screens the form is a sticky column on
  * the left; on narrow ones it collapses to a bar at the bottom of the screen,
  * and the form opens in a sheet. Changes apply live to the cards only (the
- * `.fieldnotes__preview` wrapper), persist in localStorage until reset, and
+ * `.fieldnotes__preview` wrapper), live in the URL as a `?preset=` share code
+ * until reset (scripts/theme-builder.ts, lib/preset.ts), and
  * copy as a `:root { … }` block of the variables that changed. The card
  * elevation slider restyles the preview but is never part of the copied CSS.
  *
@@ -18,12 +19,15 @@ import {
   ChevronDown,
   Code,
   Copy,
+  Dices,
   RotateCcw,
   SlidersHorizontal,
+  WandSparkles,
   X,
 } from "@lucide/astro";
 import { species } from "../lib/fieldnotes.ts";
 import {
+  FONT_CATEGORIES,
   LOCAL_FONTS,
   SCALE_STEPS,
   pickGoogleFonts,
@@ -31,7 +35,12 @@ import {
   type FontOption,
   type GoogleFontItem,
 } from "../lib/fonts.ts";
-import { STOPS, toHex } from "../lib/palette.ts";
+import {
+  BACKGROUNDS,
+  DEFAULT_BACKGROUND,
+  STOPS,
+  toHex,
+} from "../lib/palette.ts";
 import AlertSettings from "./fieldnotes/AlertSettings.astro";
 import LifeList from "./fieldnotes/LifeList.astro";
 import SightingForm from "./fieldnotes/SightingForm.astro";
@@ -67,8 +76,8 @@ const defaults = {
 };
 
 /**
- * The Google families on offer: the ten most popular of each category the kit
- * has a role for, fetched once at build with the server-side key. A fork
+ * The Google families on offer: the seven most popular families of each offered
+ * category, fetched once at build with the server-side key. A fork
  * without the key, or an API that fails, gets the local stacks only. The key
  * is never logged and never reaches the page: only names and weights do.
  */
@@ -101,20 +110,23 @@ const google = await googleFonts();
 const CATEGORY_LABEL: Record<FontCategory, string> = {
   "sans-serif": "Sans serif",
   serif: "Serif",
+  display: "Display",
   monospace: "Monospace",
 };
 const fontGroups =
   google.length > 0
-    ? (["sans-serif", "serif", "monospace"] as const)
-        .map((category) => ({
-          label: CATEGORY_LABEL[category],
-          fonts: google.filter((f) => f.category === category),
-        }))
-        .filter((group) => group.fonts.length > 0)
+    ? FONT_CATEGORIES.map((category) => ({
+        label: CATEGORY_LABEL[category],
+        fonts: google.filter((f) => f.category === category),
+      })).filter((group) => group.fonts.length > 0)
     : [{ label: "System", fonts: LOCAL_FONTS }];
 
-/** The one font control; its family goes to headings and body text alike. */
-const font = { label: "Font", default: "Default (system sans)" };
+/** The font controls: one family for headings, one for body text. */
+const fontRoles = [
+  { role: "heading", label: "Heading font", other: "body font" },
+  { role: "body", label: "Body font", other: "heading font" },
+] as const;
+const fontDefault = "Default (system sans)";
 
 const scales = [
   {
@@ -142,6 +154,18 @@ const palettes = [
   },
 ] as const;
 
+/** The background selects: one per scheme, each limited to its end of the neutral scale. */
+const backgrounds = [
+  { scheme: "light", label: "Light background" },
+  { scheme: "dark", label: "Dark background" },
+] as const;
+const backgroundLabel = (pick: string) =>
+  pick === "white" ? "White" : pick === "black" ? "Black" : `Neutral ${pick}`;
+const backgroundSwatch = (pick: string) =>
+  pick === "white" || pick === "black"
+    ? `var(--color-${pick})`
+    : `var(--color-neutral-${pick})`;
+
 const [featured, ...rest] = species;
 
 /** The collapsed bar's chips (narrow screens): one per control, opening the sheet on that control. */
@@ -152,7 +176,10 @@ const chips = [
     label: "Neutral",
     swatch: "var(--color-neutral-500)",
   },
-  { id: "tb-font", label: "Font" },
+  { id: "tb-bg-light", label: "Light background" },
+  { id: "tb-bg-dark", label: "Dark background" },
+  { id: "tb-font-heading", label: "Heading font" },
+  { id: "tb-font-body", label: "Body font" },
   { id: "tb-scale-min", label: "Scale min" },
   { id: "tb-scale-max", label: "Scale max" },
   { id: "tb-spacing", label: "Spacing" },
@@ -236,10 +263,10 @@ const previewScope = `@layer zazz.variables {
       --order: 1;
       --order--lg: 0;
       --p: 5;
-      --pt--lg: 6;
+      --pt--lg: 0;
       --pb--lg: 6;
       --top: auto;
-      --top--lg: calc(var(--ui-header-height, 0rem));
+      --top--lg: calc(var(--ui-header-height, 0rem) + 6 * var(--spacing));
       --bottom: 0;
       --bottom--lg: auto;
       --bg-linear: to bottom;
@@ -403,18 +430,35 @@ const previewScope = `@layer zazz.variables {
         <header
           style="
             --display: flex-col;
+            --position: sticky;
             --p: 5;
             --gap: 3;
+            --top: 0;
+            --bg: var(--color-card);
+            --border-b: 1;
+            --z: 10;
           "
         >
-          <h2 id="tb-title" data-ui="text-h6">Zazz theme builder</h2>
-          <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
-            A simplified theme generator that outputs CSS for you to copy and
-            paste anywhere. Check out the <a
-              href="/playground"
-              data-ui="text-link">Playground</a
-            > for more example code.
-          </p>
+          <div
+            style="
+              --display: flex;
+              --items: center;
+              --justify: space-between;
+              --gap: 2;
+            "
+          >
+            <h2 id="tb-title" data-ui="text-lg">Zazz theme builder</h2>
+            <button
+              data-ui="button"
+              data-button-size="icon"
+              data-button-variant="primary"
+              type="button"
+              aria-label="Randomize the theme"
+              data-theme-randomize
+            >
+              <Dices aria-hidden="true" />
+            </button>
+          </div>
         </header>
 
         <!-- Each section is a disclosure: color and type start open, the rest closed. -->
@@ -424,7 +468,6 @@ const previewScope = `@layer zazz.variables {
             style="
               --py: 3;
               --border-style: dotted;
-              --border-t: 1;
             "
           >
             <summary
@@ -514,6 +557,56 @@ const previewScope = `@layer zazz.variables {
                   </div>
                 ))
               }
+
+              {
+                backgrounds.map((b) => (
+                  <div data-ui="field">
+                    <label data-field-slot="label" for={`tb-bg-${b.scheme}`}>
+                      {b.label}
+                    </label>
+                    <select
+                      data-ui="select"
+                      data-select-align="center"
+                      data-select-side="right"
+                      id={`tb-bg-${b.scheme}`}
+                      name={`bg-${b.scheme}`}
+                      data-default={DEFAULT_BACKGROUND[b.scheme]}
+                      data-theme-bg={b.scheme}
+                    >
+                      <button>
+                        <selectedcontent
+                          style="
+                            --display: flex;
+                            --items: center;
+                            --gap: 2;
+                          "
+                        />
+                      </button>
+                      {BACKGROUNDS[b.scheme].map((pick) => (
+                        <option
+                          value={pick}
+                          selected={pick === DEFAULT_BACKGROUND[b.scheme]}
+                        >
+                          <span
+                            aria-hidden="true"
+                            data-theme-bg-swatch={pick}
+                            style={`--size: 3; --shrink: 0; --bg: ${backgroundSwatch(pick)}; --radius: full; --ring: 1; --ring-color: var(--color-border)`}
+                          />
+                          {backgroundLabel(pick)}
+                        </option>
+                      ))}
+                    </select>
+                    {b.scheme === "dark" && (
+                      <div data-field-slot="description">
+                        <span data-field-slot="hint">
+                          The preview shows the one for the page's current mode.
+                          Text colors come from the neutral palette.
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ))
+              }
             </div>
           </details>
           <details
@@ -541,105 +634,132 @@ const previewScope = `@layer zazz.variables {
                 --gap: 3;
               "
             >
-              <div data-ui="field">
-                <label data-field-slot="label" for="tb-font">
-                  {font.label}
-                </label>
-                <ui-combobox>
-                  <input
-                    type="hidden"
-                    name="font"
-                    value=""
-                    data-default=""
-                    data-combobox-slot="value"
-                    data-theme-font
-                  />
-                  <div data-combobox-slot="control">
-                    <input
-                      id="tb-font"
-                      type="text"
-                      role="combobox"
-                      aria-expanded="false"
-                      aria-autocomplete="list"
-                      autocomplete="off"
-                      spellcheck="false"
-                    />
-                    <button
-                      type="button"
-                      data-combobox-slot="trigger"
-                      tabindex="-1"
-                      aria-label="Show fonts"></button>
-                  </div>
-                  <div
-                    data-combobox-slot="panel"
-                    data-popover-side="bottom"
-                    data-popover-align="start"
-                    popover="manual"
-                  >
+              {
+                fontRoles.map((f) => (
+                  <div data-ui="field">
+                    <label data-field-slot="label" for={`tb-font-${f.role}`}>
+                      {f.label}
+                    </label>
                     <div
-                      role="listbox"
-                      data-combobox-slot="list"
-                      aria-label={`${font.label} options`}
+                      style="
+                        --display: flex;
+                        --items: center;
+                        --gap: 2;
+                      "
                     >
-                      <div
-                        role="option"
-                        data-combobox-slot="item"
-                        data-ui="button"
-                        data-button-variant="ghost"
-                        data-combobox-value=""
-                        aria-selected="true"
-                        style="--justify: start"
+                      <ui-combobox
+                        style="
+                          --flex: 1;
+                          --min-w: 0;
+                        "
                       >
-                        {font.default}
-                      </div>
-                      {
-                        fontGroups.map((group, i) => (
+                        <input
+                          type="hidden"
+                          name={`font-${f.role}`}
+                          value=""
+                          data-default=""
+                          data-combobox-slot="value"
+                          data-theme-font={f.role}
+                        />
+                        <div data-combobox-slot="control">
+                          <input
+                            id={`tb-font-${f.role}`}
+                            type="text"
+                            role="combobox"
+                            aria-expanded="false"
+                            aria-autocomplete="list"
+                            autocomplete="off"
+                            spellcheck="false"
+                          />
+                          <button
+                            type="button"
+                            data-combobox-slot="trigger"
+                            tabindex="-1"
+                            aria-label="Show fonts"
+                          />
+                        </div>
+                        <div
+                          data-combobox-slot="panel"
+                          data-popover-side="right"
+                          data-popover-align="start"
+                          popover="manual"
+                        >
                           <div
-                            role="group"
-                            data-combobox-slot="group"
-                            aria-labelledby={`tb-font-group-${i}`}
+                            role="listbox"
+                            data-combobox-slot="list"
+                            aria-label={`${f.label} options`}
                           >
-                            <span
-                              id={`tb-font-group-${i}`}
-                              data-combobox-slot="group-label"
-                              data-ui="text-eyebrow"
-                              style="
-                                --pl: 3;
-                                --mt: 2;
-                                --text: var(--color-muted-foreground);
-                              "
+                            <div
+                              role="option"
+                              data-combobox-slot="item"
+                              data-ui="button"
+                              data-button-variant="ghost"
+                              data-combobox-value=""
+                              aria-selected="true"
+                              style="--justify: start"
                             >
-                              {group.label}
-                            </span>
-                            {group.fonts.map((font) => (
+                              {fontDefault}
+                            </div>
+                            {fontGroups.map((group, i) => (
                               <div
-                                role="option"
-                                data-combobox-slot="item"
-                                data-ui="button"
-                                data-button-variant="ghost"
-                                data-combobox-value={font.value}
-                                data-font-stack={font.stack}
-                                data-font-google={font.google}
-                                data-font-weights={font.weights?.join(";")}
-                                style="--justify: start"
+                                role="group"
+                                data-combobox-slot="group"
+                                aria-labelledby={`tb-font-${f.role}-group-${i}`}
                               >
-                                {font.label}
+                                <span
+                                  id={`tb-font-${f.role}-group-${i}`}
+                                  data-combobox-slot="group-label"
+                                  data-ui="text-eyebrow"
+                                  style="
+                                    --pl: 3;
+                                    --mt: 2;
+                                    --text: var(--color-muted-foreground);
+                                  "
+                                >
+                                  {group.label}
+                                </span>
+                                {group.fonts.map((font) => (
+                                  <div
+                                    role="option"
+                                    data-combobox-slot="item"
+                                    data-ui="button"
+                                    data-button-variant="ghost"
+                                    data-combobox-value={font.value}
+                                    data-font-category={font.category}
+                                    data-font-stack={font.stack}
+                                    data-font-google={font.google}
+                                    data-font-weights={font.weights?.join(";")}
+                                    style="--justify: start"
+                                  >
+                                    {font.label}
+                                  </div>
+                                ))}
                               </div>
                             ))}
                           </div>
-                        ))
-                      }
+                          <p
+                            data-combobox-slot="empty"
+                            data-ui="text-sm"
+                            style="--text: var(--color-muted-foreground)"
+                          >
+                            No matches.
+                          </p>
+                        </div>
+                      </ui-combobox>
+                      <button
+                        data-ui="button"
+                        data-button-size="icon"
+                        data-button-variant="outline"
+                        type="button"
+                        aria-label={`Pick a ${f.label.toLowerCase()} that pairs with the ${f.other}`}
+                        data-theme-pair={f.role}
+                      >
+                        <WandSparkles aria-hidden="true" />
+                      </button>
                     </div>
-                    <p
-                      data-combobox-slot="empty"
-                      data-ui="text-sm"
-                      style="--text: var(--color-muted-foreground)"
-                    >
-                      No matches.
-                    </p>
                   </div>
-                </ui-combobox>
-              </div>
+                ))
+              }
 
               {
                 scales.map((s) => (
@@ -649,6 +769,8 @@ const previewScope = `@layer zazz.variables {
                     </label>
                     <select
                       data-ui="select"
+                      data-select-align="center"
+                      data-select-side="right"
                       id={`tb-${s.name}`}
                       name={s.name}
                       data-default={s.value}
@@ -692,6 +814,7 @@ const previewScope = `@layer zazz.variables {
             </div>
           </details>
           <details
+            open
             style="
               --py: 3;
               --border-style: dotted;
@@ -724,6 +847,7 @@ const previewScope = `@layer zazz.variables {
                     name="spacing"
                     type="number"
                     min="0"
+                    max="2"
                     step="0.01"
                     value={defaults.spacing}
                     data-default={defaults.spacing}
@@ -810,6 +934,7 @@ const previewScope = `@layer zazz.variables {
             </div>
           </details>
           <details
+            open
             style="
               --py: 3;
               --border-style: dotted;
@@ -833,6 +958,38 @@ const previewScope = `@layer zazz.variables {
                 --gap: 3;
               "
             >
+              <div data-ui="field">
+                <label data-field-slot="label" for="tb-shadow-color"
+                  >Shadow color</label
+                >
+                <label data-ui="input-group">
+                  <input
+                    data-ui="input"
+                    id="tb-shadow-color"
+                    name="shadow-color"
+                    value={defaults.shadowColor}
+                    data-default={defaults.shadowColor}
+                    spellcheck="false"
+                    autocomplete="off"
+                    pattern="#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})"
+                    data-theme-token="--color-shadow"
+                  />
+                  <span data-input-group-slot="addon">
+                    <input
+                      type="color"
+                      value={defaults.shadowColor}
+                      aria-label="Shadow color picker"
+                      class="theme-builder__swatch"
+                      data-theme-pick-for="tb-shadow-color"
+                    />
+                  </span>
+                </label>
+                <div data-field-slot="description">
+                  <span data-field-slot="hint"
+                    >Tints every shadow. Each layer keeps its own opacity.</span
+                  >
+                </div>
+              </div>
               <div data-ui="field">
                 <label
                   data-field-slot="label"
@@ -944,39 +1101,6 @@ const previewScope = `@layer zazz.variables {
                   </div>
                 ))
               }
-
-              <div data-ui="field">
-                <label data-field-slot="label" for="tb-shadow-color"
-                  >Shadow color</label
-                >
-                <label data-ui="input-group">
-                  <input
-                    data-ui="input"
-                    id="tb-shadow-color"
-                    name="shadow-color"
-                    value={defaults.shadowColor}
-                    data-default={defaults.shadowColor}
-                    spellcheck="false"
-                    autocomplete="off"
-                    pattern="#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})"
-                    data-theme-token="--color-shadow"
-                  />
-                  <span data-input-group-slot="addon">
-                    <input
-                      type="color"
-                      value={defaults.shadowColor}
-                      aria-label="Shadow color picker"
-                      class="theme-builder__swatch"
-                      data-theme-pick-for="tb-shadow-color"
-                    />
-                  </span>
-                </label>
-                <div data-field-slot="description">
-                  <span data-field-slot="hint"
-                    >Tints every shadow. Each layer keeps its own opacity.</span
-                  >
-                </div>
-              </div>
             </div>
           </details>
         </ui-accordion>
@@ -1106,46 +1230,64 @@ const previewScope = `@layer zazz.variables {
     <style is:inline data-theme-output></style>
   </theme-builder>
 
-  <!-- --shadow-tint at the kit's default makes the kit re-declare its shadow tokens here, so they follow the preview's spacing and light angle. The body family is applied on <html> and inherited resolved, so the wrapper reads the token again for the preview's font. -->
-  <div
-    class="fieldnotes__preview"
-    data-ui="scroll-fade"
-    data-scroll-fade-axis="x"
+  <!-- --shadow-tint at the kit's default makes the kit re-declare its shadow tokens here, so they follow the preview's spacing and light angle. The body family and text color are applied on <html> and inherited resolved, so the wrapper reads those tokens again, and paints the theme's background. -->
+  <section
     style="
-      --px--lg: 5;
-      --pt: 6;
-      --pl: 5;
-      --pr: 0;
-      --font-family: var(--font-family-body);
-      --shadow-tint: var(--color-shadow);
-      --overflow-x: auto;
+      --min-h: 100%;
+      --bg: var(--color-background);
+      --border-l: 0;
+      --border-l--lg: 1;
+      --border-t: 1;
+      --radius-t--lg: var(--ui-card-radius);
+      --radius-r: 0;
+      --overflow: clip;
     "
   >
-    <!-- Packed like a masonry by <fieldnotes-demo>: it measures each card into a row span. -->
     <div
-      data-fieldnotes-grid
+      class="fieldnotes__preview"
+      data-ui="scroll-fade"
+      data-scroll-fade-axis="x"
       style="
-        --display: grid;
-        --grid-flow: dense;
-        --items: start;
-        --grid-cols: 4;
-        --pr: 5;
-        --gap-x: 5;
-        --gap-y: 0;
-        --min-w: 84rem;
-        --container-type: inline-size;
+        --px--lg: 5;
+        --pt: 6;
+        --pl: 5;
+        --pr: 0;
+        --min-h: 100%;
+        --font-family: var(--font-family-body);
+        --text: var(--color-foreground);
+        --bg: var(--color-background);
+        --shadow-tint: var(--color-shadow);
+        --overflow-x: auto;
       "
     >
-      <SightingForm toaster={TOASTER} />
-      <LifeList />
-      <SpeciesCard species={featured} />
-      <AlertSettings />
-      {rest.slice(0, 2).map((s) => <SpeciesCard species={s} />)}
-      <SightingsTable />
-      <Spotters />
-      {rest.slice(2).map((s) => <SpeciesCard species={s} />)}
+      <!-- Packed like a masonry by <fieldnotes-demo>: it measures each card into a row span.
+           Columns floor at min-content (and each card overrides the card's minmax(0, 1fr)
+           track) so a large spacing widens the columns instead of clipping the cards. -->
+      <div
+        data-fieldnotes-grid
+        style="
+          --display: grid;
+          --grid-flow: dense;
+          --items: start;
+          --template-cols: repeat(4, minmax(min-content, 1fr));
+          --pr: 5;
+          --gap-x: 5;
+          --gap-y: 0;
+          --min-w: 84rem;
+          --container-type: inline-size;
+        "
+      >
+        <SightingForm toaster={TOASTER} />
+        <LifeList />
+        <SpeciesCard species={featured} />
+        <AlertSettings />
+        {rest.slice(0, 2).map((s) => <SpeciesCard species={s} />)}
+        <SightingsTable />
+        <Spotters />
+        {rest.slice(2).map((s) => <SpeciesCard species={s} />)}
+      </div>
     </div>
-  </div>
+  </section>
 
   <ui-toaster id={TOASTER} popover="manual"></ui-toaster>
 </fieldnotes-demo>

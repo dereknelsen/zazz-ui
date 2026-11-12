@@ -25,32 +25,30 @@
     --_bg-alpha: var(--bg-alpha);
   }
 
-  :where([style*="--bg-linear:"], [style*="--bg-linear--"]) {
-    --_bg-linear-resolved: var(--_bg-linear);
-  }
   :where([style*="--bg-linear:"]) {
     --_bg-linear: var(--bg-linear);
+    --_bg-linear-resolved: var(--_bg-linear);
   }
 
-  :where([style*="--bg-radial:"], [style*="--bg-radial--"]) {
-    --_bg-radial-resolved: var(--_bg-radial);
-  }
   :where([style*="--bg-radial:"]) {
     --_bg-radial: var(--bg-radial);
+    --_bg-radial-resolved: var(--_bg-radial);
   }
 
-  :where([style*="--bg-conic:"], [style*="--bg-conic--"]) {
-    --_bg-conic-resolved: var(--_bg-conic);
-  }
   :where([style*="--bg-conic:"]) {
     --_bg-conic: var(--bg-conic);
+    --_bg-conic-resolved: var(--_bg-conic);
   }
 
-  :where([style*="--bg-stops:"], [style*="--bg-stops--"]) {
-    --_bg-stops-resolved: var(--_bg-stops);
-  }
   :where([style*="--bg-stops:"]) {
     --_bg-stops: var(--bg-stops);
+    --_bg-stops-resolved: var(--_bg-stops);
+  }
+
+  :where([style*="--bg-clip:"]) {
+    --_bg-clip: var(--bg-clip);
+    --_bg-clip-resolved: var(--_bg-clip);
+    background-clip: var(--_bg-clip-resolved);
   }
 
   :where([style*="--divide"]) {
