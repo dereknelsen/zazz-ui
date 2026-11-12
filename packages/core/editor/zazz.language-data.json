@@ -3162,19 +3162,7 @@
       "value": "var(--color-primary-foreground)",
       "file": "primitives/switch/switch.css"
     },
-    "--ui-switch-thumb-border-width": {
-      "value": "var(--ui-field-border-width)",
-      "file": "primitives/switch/switch.css"
-    },
-    "--ui-switch-thumb-border-style": {
-      "value": "var(--ui-field-border-style)",
-      "file": "primitives/switch/switch.css"
-    },
     "--ui-switch-thumb-border-color": {
-      "value": "transparent",
-      "file": "primitives/switch/switch.css"
-    },
-    "--ui-switch-thumb-border-color--hover": {
       "value": "transparent",
       "file": "primitives/switch/switch.css"
     },
@@ -3184,6 +3172,18 @@
     },
     "--ui-switch-thumb-border-color--checked-hover": {
       "value": "transparent",
+      "file": "primitives/switch/switch.css"
+    },
+    "--ui-switch-thumb-border-color--hover": {
+      "value": "transparent",
+      "file": "primitives/switch/switch.css"
+    },
+    "--ui-switch-thumb-border-style": {
+      "value": "var(--ui-field-border-style)",
+      "file": "primitives/switch/switch.css"
+    },
+    "--ui-switch-thumb-border-width": {
+      "value": "var(--ui-field-border-width)",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-thumb-corner-shape": {
@@ -3199,15 +3199,15 @@
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-thumb-shadow": {
-      "value": "var(--shadow-sm)",
+      "value": "var(--shadow-xs)",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-thumb-size": {
-      "value": "calc((var(--ui-switch-track-w) / 2) - var(--ui-switch-track-p) - var(--ui-switch-thumb-border-width))",
+      "value": "calc( (var(--ui-switch-track-w) / 2) - var(--ui-switch-track-p) - var(--ui-switch-thumb-border-width) )",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-thumb-translate": {
-      "value": "calc(var(--ui-switch-track-p)), -50%",
+      "value": "var(--ui-switch-track-p), -50%",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-track-bg": {
@@ -3231,7 +3231,7 @@
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-track-border-color--checked": {
-      "value": "var(--color-border)",
+      "value": "var(--ui-switch-track-bg--checked)",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-track-border-color--checked-hover": {
@@ -3255,7 +3255,7 @@
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-track-h": {
-      "value": "calc(var(--ui-switch-track-w) / 2 + var(--ui-switch-track-p) + var(--ui-switch-track-border-width))",
+      "value": "calc( var(--ui-switch-track-w) / 2 + var(--ui-switch-track-p) + var(--ui-switch-track-border-width) )",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-track-p": {

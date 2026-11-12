@@ -189,6 +189,7 @@ export const AVATAR_ROLES = ["secondary", "tertiary", "primary"] as const;
 
 /** A person's avatar role, from their initials: the same person matches on every card. */
 export function avatarRole(initials: string): (typeof AVATAR_ROLES)[number] {
-  const sum = [...initials].reduce((total, char) => total + char.charCodeAt(0), 0);
+  let sum = 0;
+  for (let i = 0; i < initials.length; i++) sum += initials.charCodeAt(i);
   return AVATAR_ROLES[sum % AVATAR_ROLES.length];
 }

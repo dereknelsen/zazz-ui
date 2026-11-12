@@ -30,7 +30,12 @@
     --ui-switch-thumb-border-color--hover: transparent;
     --ui-switch-thumb-border-color--checked: transparent;
     --ui-switch-thumb-border-color--checked-hover: transparent;
-    --ui-switch-thumb-size: calc((var(--ui-switch-track-w) / 2) - var(--ui-switch-track-p));
+    /* the thumb is content-box: its border sits outside this size, so take it back out
+       and the gap around the thumb is the same on every side */
+    --ui-switch-thumb-size: calc(
+      (var(--ui-switch-track-w) / 2) - var(--ui-switch-track-p) -
+        var(--ui-switch-thumb-border-width)
+    );
     --ui-switch-thumb-shadow: var(--shadow-xs);
     --ui-switch-thumb-translate: var(--ui-switch-track-p), -50%;
     --ui-switch-thumb-scale: 1;
