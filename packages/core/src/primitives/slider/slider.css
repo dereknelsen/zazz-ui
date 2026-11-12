@@ -166,9 +166,14 @@
       view-timeline-inset: var(--_slider-bleed);
     }
 
-    /* On the track, not the input: Safari's timeline doesn't reach the input itself. */
+    /* On the track, not the input: Safari's timeline doesn't reach the input itself.
+       Longhands only: with the `animation` shorthand, the build's minifier folds the
+       timeline into it, which no browser parses, and the fill never moves. */
     :where(input[type="range"])::-webkit-slider-runnable-track {
-      animation: ui-slider-progress 1ms linear both;
+      animation-name: ui-slider-progress;
+      animation-duration: 1ms;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
       animation-timeline: --ui-slider-thumb;
       animation-range: contain;
     }

@@ -1,5 +1,11 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.12.3 (2026-11-12)
+
+### slider
+
+- The track fill moves again in Chromium and Safari. In 0.12.2's built `dist/zazz.css` the minifier folded the fill's named timeline into the `animation` shorthand, which browsers reject, so the fill stayed at the start. Only the built file was affected (CDN links and the package's `style` entry); `@zazz-ui/core/index.css` imports and `zazz-ui` vendored copies use the source and were fine.
+
 ## 0.12.2 (2026-11-12)
 
 ### base
