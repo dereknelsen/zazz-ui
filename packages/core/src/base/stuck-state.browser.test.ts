@@ -86,6 +86,8 @@ describe.skipIf(!supported)("stuck state", () => {
       p.remove();
       return value;
     };
+    // the pointer stays wherever an earlier test left it, which can be over a new mount
+    await userEvent.unhover(el);
     await scrollTo(200);
     expect(style(el, "background-color")).toBe(probe("rgb(0, 255, 0)"));
     await userEvent.hover(el);

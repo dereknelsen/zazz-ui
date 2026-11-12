@@ -6,6 +6,11 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 
 - The track fill moves again in Chromium and Safari. In 0.12.2's built `dist/zazz.css` the minifier folded the fill's named timeline into the `animation` shorthand, which browsers reject, so the fill stayed at the start. Only the built file was affected (CDN links and the package's `style` entry); `@zazz-ui/core/index.css` imports and `zazz-ui` vendored copies use the source and were fine.
 
+### switch
+
+- The thumb takes a border: `--ui-switch-thumb-border-width` and `--ui-switch-thumb-border-style` default to the field's, and `--ui-switch-thumb-border-color`, `--ui-switch-thumb-border-color--hover`, `--ui-switch-thumb-border-color--checked`, and `--ui-switch-thumb-border-color--checked-hover` default to `transparent`.
+- The track is one border width taller, so the gap around the thumb is the same on every side, on and off. The thumb casts `--shadow-xs` (was `--shadow-sm`).
+
 ## 0.12.2 (2026-11-12)
 
 ### base

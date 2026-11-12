@@ -118,7 +118,10 @@ import { Search as SearchIcon, X } from "@lucide/astro";
         Type to search the docs, API, and blog.
       </p>
     </div>
-    <footer data-command-slot="footer" data-dialog-slot="footer">
+    <footer data-command-slot="footer" data-dialog-slot="footer" style="
+        --display: none;
+        --display--lg: flex;
+      ">
       <span><ui-kbd-group><kbd>↑</kbd><kbd>↓</kbd></ui-kbd-group> navigate</span
       >
       <span><kbd>↵</kbd> open</span>

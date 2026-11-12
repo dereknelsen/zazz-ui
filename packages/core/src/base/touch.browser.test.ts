@@ -59,7 +59,11 @@ describe("at a very small --spacing", () => {
       expect(box(at(selector)).height, selector).toBeCloseTo(rem, 1);
     }
     const track = box(at("[data-switch]"));
-    expect(track.height).toBeCloseTo(rem, 1);
+    // the floored track plus one border width, which keeps the thumb's gap even (0.12.3)
+    expect(track.height).toBeCloseTo(
+      rem + Number.parseFloat(style(at("[data-switch]"), "border-top-width")),
+      1,
+    );
     expect(track.width).toBeGreaterThan(track.height);
     const label = at("[data-switch-label]");
     const thumb = px(style(label, "inline-size", "::after"));

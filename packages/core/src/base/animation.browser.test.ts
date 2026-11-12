@@ -55,6 +55,8 @@ describe("--animation", () => {
     const el = mount(
       `<button style="--animation: none; --animation--hover: var(--spin); --animation--md: var(--ping)">x</button>`,
     );
+    // the pointer stays wherever an earlier test left it, which can be over a new mount
+    await userEvent.unhover(el);
     await atWidth(below("md"));
     expect(style(el, "animation-name")).toBe("none");
     await atWidth(at("md"));
