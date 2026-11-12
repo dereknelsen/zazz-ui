@@ -1,9 +1,11 @@
 ---
 /**
- * An overlapping row of initials avatars (the avatar fragment's fallback face).
- * --color-muted is translucent, so it is layered over the card color as a flat
- * gradient: an overlapped avatar never shows through.
+ * An overlapping row of initials avatars (the avatar fragment's fallback face),
+ * each in its person's accent role (`avatarRole`). The roles are solid, so an
+ * overlapped avatar never shows through.
  */
+import { avatarRole } from '../../lib/fieldnotes.ts';
+
 interface Props {
   initials: string[];
   label: string;
@@ -23,10 +25,8 @@ const { initials, label } = Astro.props;
           --size: 8;
           --ml: ${i === 0 ? 0 : -2};
           --font-weight: strong;
-          --text: var(--color-muted-foreground);
-          --bg: var(--color-card);
-          --bg-linear: to bottom;
-          --bg-stops: var(--color-muted), var(--color-muted);
+          --text: var(--color-${avatarRole(text)}-foreground);
+          --bg: var(--color-${avatarRole(text)});
           --radius: full;
           --ring: 2;
           --ring-color: var(--color-card);

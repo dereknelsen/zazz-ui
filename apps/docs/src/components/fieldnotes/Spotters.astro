@@ -1,5 +1,5 @@
 ---
-import { spotters } from '../../lib/fieldnotes.ts';
+import { avatarRole, spotters } from '../../lib/fieldnotes.ts';
 import CardHeader from './CardHeader.astro';
 ---
 
@@ -34,16 +34,16 @@ import CardHeader from './CardHeader.astro';
           <span
             aria-hidden='true'
             data-ui='text-xs'
-            style='
+            style={`
               --display: grid;
               --place-items: center;
               --shrink: 0;
               --size: 9;
               --font-weight: strong;
-              --text: var(--color-muted-foreground);
-              --bg: var(--color-muted);
+              --text: var(--color-${avatarRole(p.initials)}-foreground);
+              --bg: var(--color-${avatarRole(p.initials)});
               --radius: full;
-            '
+            `}
           >
             {p.initials}
           </span>

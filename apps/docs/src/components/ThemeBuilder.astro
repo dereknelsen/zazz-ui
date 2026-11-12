@@ -43,7 +43,9 @@ import {
   toHex,
 } from "../lib/palette.ts";
 import AlertSettings from "./fieldnotes/AlertSettings.astro";
+import FieldBadges from "./fieldnotes/FieldBadges.astro";
 import LifeList from "./fieldnotes/LifeList.astro";
+import NextTrip from "./fieldnotes/NextTrip.astro";
 import SightingForm from "./fieldnotes/SightingForm.astro";
 import SightingsTable from "./fieldnotes/SightingsTable.astro";
 import SpeciesCard from "./fieldnotes/SpeciesCard.astro";
@@ -1343,6 +1345,8 @@ const previewScope = `@layer zazz.variables {
         {rest.slice(0, 2).map((s) => <SpeciesCard species={s} />)}
         <SightingsTable />
         <Spotters />
+        <NextTrip />
+        <FieldBadges />
         {rest.slice(2).map((s) => <SpeciesCard species={s} />)}
       </div>
     </div>

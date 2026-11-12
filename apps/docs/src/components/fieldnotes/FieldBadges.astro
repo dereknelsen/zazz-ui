@@ -1,0 +1,68 @@
+---
+/**
+ * Badges earned on the record, adapted from the badge fragments: earned ones
+ * alternate the secondary and tertiary variants, the next ones wait in outline.
+ */
+import { BadgeCheck, Feather, Lock, Moon, Share2, Sunrise } from '@lucide/astro';
+import CardHeader from './CardHeader.astro';
+
+const earned = [
+  { label: 'Dodo finder', icon: Feather, variant: 'secondary' },
+  { label: 'First confirmed', icon: BadgeCheck, variant: 'tertiary' },
+  { label: 'Early riser', icon: Sunrise, variant: 'secondary' },
+  { label: 'Night watch', icon: Moon, variant: 'tertiary' },
+];
+const next = ['Island hopper', 'Full life list'];
+---
+
+<section
+  data-ui='card'
+  data-card-variant='outline'
+  aria-labelledby='fn-badges-title'
+  style='
+    --gap: 4;
+    --mb: 6;
+    --bg: var(--color-card);
+    --elevation: 1.5;
+    --template-cols: minmax(min-content, 1fr);
+  '
+>
+  <CardHeader
+    id='fn-badges-title'
+    title='Field badges'
+    description='Four earned. Two left on the list.'
+  />
+  <div style='--display: grid; --gap: 2'>
+    <h4 data-ui='text-eyebrow' style='--text: var(--color-muted-foreground)'>Earned</h4>
+    <ul style='--display: flex; --flex-wrap: wrap; --gap: 2'>
+      {
+        earned.map(({ label, icon: Icon, variant }) => (
+          <li>
+            <span data-ui='badge' data-badge-variant={variant}>
+              <Icon aria-hidden='true' />
+              {label}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+  <div style='--display: grid; --gap: 2'>
+    <h4 data-ui='text-eyebrow' style='--text: var(--color-muted-foreground)'>Next up</h4>
+    <ul style='--display: flex; --flex-wrap: wrap; --gap: 2'>
+      {
+        next.map((label) => (
+          <li>
+            <span data-ui='badge' data-badge-variant='outline'>
+              <Lock aria-hidden='true' />
+              {label}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+  <button data-ui='button' data-button-variant='tertiary' type='button'>
+    <Share2 aria-hidden='true' /> Share badges
+  </button>
+</section>

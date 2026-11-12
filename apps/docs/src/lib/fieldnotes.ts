@@ -183,3 +183,12 @@ export const spotters: Spotter[] = [
   { initials: "JB", name: "Jón Brandsson", detail: "Last confirmed great auk, 1844" },
   { initials: "VE", name: "Volkert Evertsz", detail: "Last confirmed dodo, 1662" },
 ];
+
+/** The theme roles avatars are colored with, so the preview shows every accent. */
+export const AVATAR_ROLES = ["secondary", "tertiary", "primary"] as const;
+
+/** A person's avatar role, from their initials: the same person matches on every card. */
+export function avatarRole(initials: string): (typeof AVATAR_ROLES)[number] {
+  const sum = [...initials].reduce((total, char) => total + char.charCodeAt(0), 0);
+  return AVATAR_ROLES[sum % AVATAR_ROLES.length];
+}
