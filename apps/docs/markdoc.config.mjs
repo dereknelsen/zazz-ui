@@ -76,6 +76,11 @@ export default defineMarkdocConfig({
         fonts: { type: Boolean, default: false },
       },
     },
+    // Feature clips for release posts: looping mock UI in plain HTML and CSS.
+    "gallery-clip": {
+      render: component("./src/components/clips/GalleryClip.astro"),
+      selfClosing: true,
+    },
     callout: {
       render: component("./src/components/Callout.astro"),
       attributes: {

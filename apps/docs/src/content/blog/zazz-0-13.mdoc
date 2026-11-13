@@ -1,0 +1,67 @@
+---
+title: "Zazz 0.13 alpha"
+description: "Zazz 0.13 alpha adds a grid that picks its own column count, makes subgrid a display, moves the carousel to Embla v9, and gives tabs an underline variant."
+date: 2026-11-13
+draft: false
+tags: ["release"]
+---
+
+**Zazz 0.13 alpha is mostly about grids. `--display: grid-gallery` picks its column count from the number of children, and subgrid is now a display keyword instead of a `--grid-cols` value. The carousel moves to Embla v9, tabs get an underline variant, and toggles follow the button more closely. Three changes need attention when you update; the migration list at the end covers them.**
+
+## A grid that counts its children
+
+A row of logos, stats, or cards usually wants a column count that depends on how many items there are. You often don't know that number when you write the markup. `--display: grid-gallery` works it out. It puts as many children in a row as fit, up to six, and it skips any count that would leave one child alone in the last row.
+
+{% gallery-clip /%}
+
+Seven children could sit as 6 + 1. The gallery picks 5 + 2 instead. As the space narrows, six children go 6, then 4 + 2, then 3 + 3, and never 5 + 1.
+
+A child is at least `--ui-gallery-min-w` wide (`20ch` by default). Set it on the gallery to change how soon the columns drop: `12rem` suits cards, and something like `5rem` suits logos. The keyword takes breakpoints, so `--display: flex-col; --display--md: grid-gallery` is a stack on a phone and a gallery from `md` up.
+
+It can't always avoid a lone child. At two columns an odd count still ends on one, and a few counts (13, 21, 25, 31) do at some widths. The [display reference](/api/foundations/display/) lists the limits.
+
+## Subgrid is a display
+
+`--grid-cols: subgrid` put a display in a column count, and it needed `--display: grid` beside it every time. Now there are three display keywords:
+
+- `--display: subgrid` takes both the columns and the rows from the parent grid.
+- `--display: subgrid-col` takes the columns. Use it for a row that lines up with the grid above it.
+- `--display: subgrid-row` takes the rows. Put it on each card in a grid, with `--row-span: 3`, and the titles, text, and footers stay level across the row.
+
+Each takes breakpoints, and the axis a keyword doesn't take keeps its own `--grid-cols` or `--grid-rows`. `--template-cols: subgrid` and `--template-rows: subgrid` still work.
+
+## Carousel on Embla v9
+
+The carousel now runs on Embla v9 (`9.0.0-rc04`, pinned in the import map). Embla's option attributes pass straight through, so the v8 names changed with it: `data-carousel-watch-drag` is `data-carousel-draggable`, the `startIndex` option is `data-carousel-start-snap`, and the rest are in the migration list. `data-carousel-drag-free="snap"` and `data-carousel-in-view-margin` are new.
+
+Autoplay and Auto Scroll behave as they did. Embla v9 dropped `playOnInit` and `stopOnInteraction`, so the kit implements them itself: both plugins play on init, and a drag or slide focus stops them. With `data-carousel-autoplay-stop-on-interaction="false"`, a drag or focus holds the plugin and it resumes after. `-play-on-init="false"` still leaves a plugin stopped, and a playing one keeps playing through a resize. One thing is different from v8: once an interaction has stopped a plugin, a resize no longer restarts it.
+
+## Underline tabs
+
+`data-tabs-variant="underline"` draws tabs without a track. The indicator is a 2px line under the checked label, or at its start edge on vertical tabs, and the labels use `--font-size-md`. `--ui-tabs-underline-width` and `--ui-tabs-underline-color` set the line.
+
+Tabs nested inside a panel also work now. The outer tabs used to lose their panels, because the rule that hides an unchecked panel matched any tab list inside the root.
+
+## Toggles follow the button
+
+- A disabled toggle with a variant keeps that variant's color at 60% opacity. It used to go muted, whatever the variant.
+- The `primary`, `secondary`, and `tertiary` variants hover and press with the button's lightness steps.
+- A `<kbd>` at either end of a toggle's content tightens that side's padding, the same as on a button.
+- The checked border is `--color-border`, with the fill painted under it.
+
+## Fewer tiers
+
+Some utilities had breakpoint or state tiers that did nothing useful, such as `--font-family--md` and `--z--starting`. They're gone, which takes about 10 KB off the built CSS (1 KB gzipped). The editor and `<ui-debug>` report each one as a tier the utility doesn't take, and the warning now names the utility.
+
+## Migrating
+
+- `--display: grid; --grid-cols: subgrid` becomes `--display: subgrid-col`. Both axes become `--display: subgrid`, and a tier such as `--grid-cols--md: subgrid` becomes `--display--md: subgrid-col`. The editor and `vp run lint:html` suggest the rewrite.
+- Rename the carousel's v8 option attributes: `-watch-drag` to `-draggable`, `-watch-resize` to `-resize`, `-watch-slides` to `-slide-changes`, `-watch-focus` to `-focus`, the `startIndex` option to `data-carousel-start-snap` (`data-carousel-start-index` is the kit's own dialog attribute now), `-autoplay-jump` to `-autoplay-instant`, and `-class-names-dragging` to `-class-names-pointer-down`. `-stop-on-mouse-enter` and `-stop-on-focus-in` are gone. Code on `_emblaApi` or `<ui-carousel>.api` uses the v9 names (`goTo`, `goToNext`, `selectedSnap`, lowercase events such as `reinit`). If you wrote your import map by hand, update the four Embla entries and their SRI hashes.
+- Remove the tiers that no longer exist:
+  - `--isolation`, `--font-family`, and `--font-style` take no breakpoints. Set the base value.
+  - `--container-name` takes no breakpoints. Name the container at the base and switch it on with `--container-type--md`, or put the name in the shorthand (`--container--md: panel / inline-size`).
+  - `--border-style` takes no breakpoints. Change the width instead (`--border--md: 0`). `--border-style--hover` still works.
+  - `--shadow-angle` takes no states. Use `--shadow--hover` or `--elevation--hover`. `--shadow-angle--md` still works.
+  - `--starting` is gone from the transition, animation, and anchor utilities, and from `--text-wrap`, `--text-decoration`, `--border-style`, `--mix-blend`, and `--z`. Delete the declaration.
+
+The [changelog](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/CHANGELOG.md) lists every change by primitive, and `npx zazz-ui update` prints the slice for the files you've vendored.
