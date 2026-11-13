@@ -1,0 +1,26 @@
+---
+/**
+ * The home hero's animated backdrop: a Unicorn Studio WebGL scene that follows
+ * the color scheme (day in light, night in dark). Decorative, so it is hidden
+ * from assistive technology and takes no pointer events.
+ *
+ * Behavior lives in `<hero-scene>` (scripts/hero-scene.ts). The script below
+ * ships only with pages that render this component; scripts/islands.ts loads
+ * the same module when the page is reached by a swap navigation instead.
+ */
+---
+
+<hero-scene
+  aria-hidden="true"
+  style="
+    --position: absolute;
+    --inset: 0;
+    --size: 100%;
+    --pointer-events: none;
+  "
+>
+</hero-scene>
+
+<script>
+  import "../scripts/hero-scene.ts";
+</script>

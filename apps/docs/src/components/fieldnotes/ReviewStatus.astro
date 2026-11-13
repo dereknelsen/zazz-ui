@@ -1,0 +1,204 @@
+---
+/**
+ * Where a pending report stands: a popover explains the wait, a menu holds the
+ * report's actions, and withdrawing it asks first in an alert dialog. Adapted
+ * from the popover, menu, and alert-dialog fragments. The dialog is the card's
+ * sibling, like the species cards' (the grid's packing skips dialogs).
+ */
+import { ChevronDown, CircleCheck, CircleDashed, TriangleAlert } from '@lucide/astro';
+import Card from './Card.astro';
+import CardHeader from './CardHeader.astro';
+
+const steps = [
+  { label: 'Submitted', detail: 'October 14', done: true },
+  { label: 'Photo check', detail: 'No photo attached', done: false },
+  { label: 'Committee vote', detail: 'Next meeting in January', done: false },
+];
+const WHY = 'fn-review-why';
+const MENU = 'fn-review-menu';
+const WITHDRAW = 'fn-review-withdraw';
+---
+
+<Card labelledby='fn-review-title'>
+  <CardHeader
+    id='fn-review-title'
+    title='Pending review'
+    description='Your dodo report from the backyard feeder.'
+  />
+  <ol style='
+      --display: grid;
+      --divide-y: 1;
+    '>
+    {
+      steps.map(({ label, detail, done }) => {
+        const Icon = done ? CircleCheck : CircleDashed;
+        return (
+          <li
+            style='
+              --display: flex;
+              --items: center;
+              --py: 3;
+              --gap: 3;
+            '
+          >
+            <Icon
+              aria-hidden='true'
+              style={`
+                --shrink: 0;
+                --size: 5;
+                --text: var(--color-${done ? 'success-foreground' : 'muted-foreground'});
+              `}
+            />
+            <span style='--display: grid'>
+              <span data-ui='text-sm' style='--font-weight: strong'>
+                {label}
+                <span style='--sr: only'>{done ? '(done)' : '(waiting)'}</span>
+              </span>
+              <span data-ui='text-sm' style='--text: var(--color-muted-foreground)'>
+                {detail}
+              </span>
+            </span>
+          </li>
+        );
+      })
+    }
+  </ol>
+  <footer
+    style='
+      --display: flex;
+      --flex-wrap: wrap;
+      --items: center;
+      --justify: space-between;
+      --gap: 2;
+    '
+  >
+    <div>
+      <button data-ui='button' data-button-variant='ghost' type='button' popovertarget={WHY}>
+        Why the wait?
+      </button>
+      <div id={WHY} popover='auto' data-popover-side='top' data-popover-align='start'>
+        <div
+          style='
+            --display: flex-col;
+            --p: 3;
+            --gap: 2;
+            --max-w: 72;
+          '
+        >
+          <strong>Two reviewers per record</strong>
+          <p data-ui='text-sm' style='--text: var(--color-muted-foreground)'>
+            Each must have seen the species in person. For the dodo, the last
+            one retired in 1662.
+          </p>
+        </div>
+      </div>
+    </div>
+    <ui-menu>
+      <button data-ui='button' data-button-variant='outline' type='button' popovertarget={MENU}>
+        Manage <ChevronDown aria-hidden='true' />
+      </button>
+      <div
+        id={MENU}
+        data-menu-slot='popover'
+        data-popover-side='bottom'
+        data-popover-align='end'
+        popover='auto'
+      >
+        <menu>
+          <li>
+            <button
+              data-ui='button'
+              data-button-variant='ghost'
+              type='button'
+              popovertarget={MENU}
+              popovertargetaction='hide'
+              style='--justify: start'
+            >
+              Edit report
+            </button>
+          </li>
+          <li>
+            <button
+              data-ui='button'
+              data-button-variant='ghost'
+              type='button'
+              popovertarget={MENU}
+              popovertargetaction='hide'
+              style='--justify: start'
+            >
+              Add a photo
+            </button>
+          </li>
+          <hr data-ui='separator' style='--my: 2' />
+          <li>
+            <button
+              data-ui='button'
+              data-button-variant='ghost'
+              type='button'
+              command='show-modal'
+              commandfor={WITHDRAW}
+              style='
+                --justify: start;
+                --text: var(--color-destructive-foreground);
+              '
+            >
+              Withdraw report…
+            </button>
+          </li>
+        </menu>
+      </div>
+    </ui-menu>
+  </footer>
+</Card>
+
+<dialog
+  id={WITHDRAW}
+  data-ui='dialog alert-dialog'
+  role='alertdialog'
+  aria-labelledby={`${WITHDRAW}-title`}
+  aria-describedby={`${WITHDRAW}-body`}
+  closedby='none'
+>
+  <div data-dialog-slot='content'>
+    <header
+      data-dialog-slot='header'
+      style='
+        --display: flex;
+        --items: center;
+        --gap: 2;
+      '
+    >
+      <TriangleAlert aria-hidden='true' style='--size: 6' />
+      <h2
+        id={`${WITHDRAW}-title`}
+        style='
+          --font-size: var(--font-size-lg);
+          --font-weight: strong;
+          --font-family: var(--font-family-heading);
+        '
+      >
+        Withdraw this report?
+      </h2>
+    </header>
+    <div data-dialog-slot='body'>
+      <p id={`${WITHDRAW}-body`}>
+        The sighting comes off your record and your notes are deleted. You
+        can't undo this.
+      </p>
+    </div>
+    <footer data-dialog-slot='footer'>
+      <button data-ui='button' type='button' commandfor={WITHDRAW} command='close'>
+        Keep report
+      </button>
+      <button
+        data-ui='button'
+        data-button-variant='destructive'
+        type='button'
+        commandfor={WITHDRAW}
+        command='close'
+      >
+        Withdraw report
+      </button>
+    </footer>
+  </div>
+</dialog>

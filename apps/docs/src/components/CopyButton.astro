@@ -1,13 +1,14 @@
 ---
 /**
  * An icon button that copies `text` to the clipboard and shows a check for a
- * moment. Hidden where the clipboard API is missing (an insecure context), so
+ * moment. With no `text` it copies the code block in the nearest
+ * `[data-copy-scope]`, so a long file is in the page once. Hidden where the clipboard API is missing (an insecure context), so
  * the page never shows a button that cannot work.
  */
 import { Check, Copy } from "@lucide/astro";
 
 interface Props {
-  text: string;
+  text?: string;
   label?: string;
 }
 const { text, label = "Copy to clipboard" } = Astro.props;
@@ -18,7 +19,7 @@ const { text, label = "Copy to clipboard" } = Astro.props;
   data-ui="button"
   data-button-variant="ghost"
   data-button-size="icon-sm"
-  data-copy={text}
+  data-copy={text ?? ""}
   aria-label={label}
   hidden
 >
@@ -39,20 +40,26 @@ const { text, label = "Copy to clipboard" } = Astro.props;
       const button = (event.target as Element | null)?.closest<HTMLButtonElement>("[data-copy]");
       if (!button) return;
       try {
-        await navigator.clipboard.writeText(button.dataset.copy ?? "");
+        const text =
+          button.dataset.copy ||
+          button.closest("[data-copy-scope]")?.querySelector("pre")?.textContent ||
+          "";
+        await navigator.clipboard.writeText(text);
       } catch {
         return;
       }
       const idle = button.querySelector<HTMLElement>("[data-copy-idle]");
       const done = button.querySelector<HTMLElement>("[data-copy-done]");
-      if (!idle || !done) return;
+      // already showing the check: the first click's timer restores the label
+      if (!idle || !done || !done.hidden) return;
+      const label = button.getAttribute("aria-label") ?? "Copy to clipboard";
       idle.hidden = true;
       done.hidden = false;
       button.setAttribute("aria-label", "Copied");
       setTimeout(() => {
         idle.hidden = false;
         done.hidden = true;
-        button.setAttribute("aria-label", "Copy to clipboard");
+        button.setAttribute("aria-label", label);
       }, 1500);
     });
   }

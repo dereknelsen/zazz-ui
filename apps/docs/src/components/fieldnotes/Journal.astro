@@ -1,0 +1,104 @@
+---
+/**
+ * The day's journal entry under a formatting toolbar, adapted from the toolbar
+ * fragment: a button group, a toggle group, and a select in one row, split by
+ * vertical separators.
+ */
+import Card from './Card.astro';
+import CardHeader from './CardHeader.astro';
+
+interface Props {
+  /** The `<ui-toaster>` the save button fires into. */
+  toaster: string;
+}
+const { toaster } = Astro.props;
+const entry = `6:10 a.m. Fog. Something large and flightless at the feeder. Gray, hooked bill, in no hurry. It stayed when I opened the door.
+
+No photo. The phone was inside.`;
+---
+
+<Card as='form' labelledby='fn-journal-title' span={2}>
+  <CardHeader id='fn-journal-title' title='Field journal' description='Wednesday, October 14' />
+  <div
+    role='group'
+    aria-label='Formatting'
+    style='
+      --display: flex;
+      --flex-wrap: wrap;
+      --items: center;
+      --p: 2;
+      --gap: 2;
+      --border-color: var(--color-border);
+      --border-width: 1px;
+      --radius: 4.5;
+    '
+  >
+    <ui-button-group role='group' aria-label='History'>
+      <button data-ui='button' data-button-variant='outline' type='button'>Undo</button>
+      <button data-ui='button' data-button-variant='outline' type='button'>Redo</button>
+    </ui-button-group>
+    <hr
+      data-ui='separator'
+      data-separator-orientation='vertical'
+      aria-orientation='vertical'
+      style='--mx: 2'
+    />
+    <ui-toggle-group role='group' aria-label='Text formatting'>
+      <label data-ui='toggle' data-toggle-size='icon'>
+        <input type='checkbox' name='journal-format' value='bold' aria-label='Bold' />
+        <span aria-hidden='true' style='--font-weight: strong'>B</span>
+      </label>
+      <label data-ui='toggle' data-toggle-size='icon'>
+        <input type='checkbox' name='journal-format' value='italic' aria-label='Italic' />
+        <span aria-hidden='true' style='--font-style: italic'>I</span>
+      </label>
+      <label data-ui='toggle' data-toggle-size='icon'>
+        <input type='checkbox' name='journal-format' value='underline' aria-label='Underline' />
+        <u aria-hidden='true'>U</u>
+      </label>
+    </ui-toggle-group>
+    <hr
+      data-ui='separator'
+      data-separator-orientation='vertical'
+      aria-orientation='vertical'
+      style='--mx: 2'
+    />
+    <select data-ui='select' name='journal-style' aria-label='Paragraph style' style='--w: auto'>
+      <button><selectedcontent></selectedcontent></button>
+      <option value='entry' selected>Entry</option>
+      <option value='heading'>Heading</option>
+      <option value='sketch-note'>Sketch note</option>
+    </select>
+  </div>
+  <textarea
+    data-ui='textarea'
+    id='fn-journal-entry'
+    name='journal-entry'
+    rows='6'
+    aria-label="Today's entry">{entry}</textarea
+  >
+  <footer
+    style='
+      --display: flex;
+      --flex-wrap: wrap;
+      --items: center;
+      --justify: space-between;
+      --gap: 4;
+    '
+  >
+    <span data-ui='text-sm' style='--text: var(--color-muted-foreground)'>
+      Saved at 6:14 a.m.
+    </span>
+    <button
+      data-ui='button'
+      data-button-variant='secondary'
+      type='button'
+      commandfor={toaster}
+      command='--toast'
+      data-toaster-title='Entry attached'
+      data-toaster-description='Added to your dodo report.'
+    >
+      Attach to report
+    </button>
+  </footer>
+</Card>

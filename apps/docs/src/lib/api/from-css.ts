@@ -41,6 +41,21 @@ const COMPOSITES: FromCssRow[] = [
     note: "the direction rides on --display; a plain flex at a tier resets it to row",
   },
   {
+    property: "grid-template-columns (subgrid)",
+    utilities: ["--display: subgrid-col", "--display: subgrid"],
+    note: "a grid that takes its columns from its parent grid; subgrid takes the rows too",
+  },
+  {
+    property: "grid-template-rows (subgrid)",
+    utilities: ["--display: subgrid-row", "--display: subgrid"],
+    note: "a grid that takes its rows from its parent grid; subgrid takes the columns too",
+  },
+  {
+    property: "grid-template-columns (by item count)",
+    utilities: ["--display: grid-gallery"],
+    note: "as many columns as fit, up to six, skipping a count that would leave one item alone in the last row (two columns excepted)",
+  },
+  {
     property: "background-image",
     utilities: ["--bg-linear", "--bg-radial", "--bg-conic", "--bg-stops"],
     note: "a gradient: the type carries the prelude, --bg-stops the color stops; --bg: none clears it",

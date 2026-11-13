@@ -1,5 +1,6 @@
 ---
 import { species } from '../../lib/fieldnotes.ts';
+import Card from './Card.astro';
 import CardHeader from './CardHeader.astro';
 import Sprite from './Sprite.astro';
 
@@ -11,19 +12,7 @@ const { toaster } = Astro.props;
 const weather = ['Clear', 'Overcast', 'Rain', 'Fog'];
 ---
 
-<form
-  data-ui='card'
-  data-card-variant='outline'
-  data-fieldnotes-form
-  aria-labelledby='fn-log-title'
-  style='
-    --gap: 6;
-    --mb: 6;
-    --bg: var(--color-card);
-    --elevation: 1.5;
-    --template-cols: minmax(min-content, 1fr);
-  '
->
+<Card as='form' labelledby='fn-log-title' gap={6} data-fieldnotes-form>
   <CardHeader
     id='fn-log-title'
     title='Log a sighting'
@@ -210,4 +199,4 @@ const weather = ['Clear', 'Overcast', 'Rain', 'Fog'];
       Log sighting
     </button>
   </footer>
-</form>
+</Card>

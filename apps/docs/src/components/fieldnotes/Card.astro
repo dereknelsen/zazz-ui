@@ -1,0 +1,37 @@
+---
+/**
+ * The shell every Fieldnotes card shares: the kit's outline card on the card
+ * surface, lifted a little (the theme panel's elevation slider restyles it,
+ * scripts/fieldnotes.ts). Its one track floors at min-content, overriding the
+ * card's `minmax(0, 1fr)`, so a large spacing widens the grid's columns
+ * instead of clipping the card. `as` picks the element: a `section` unless the
+ * card is a form or an article.
+ */
+interface Props {
+  as?: string;
+  /** The id of the card's heading. */
+  labelledby: string;
+  /** Columns the card spans in the demo grid. */
+  span?: number;
+  /** Gap between the card's parts, a spacing-scale number. */
+  gap?: number;
+  [attribute: `data-${string}`]: string | number | boolean | undefined;
+}
+const { as: Tag = 'section', labelledby, span = 1, gap = 4, ...attributes } = Astro.props;
+---
+
+<Tag
+  data-ui='card'
+  data-card-variant='outline'
+  aria-labelledby={labelledby}
+  {...attributes}
+  style={`
+    ${span > 1 ? `--col-span: ${span};` : ''}
+    --template-cols: minmax(min-content, 1fr);
+    --gap: ${gap};
+    --bg: var(--color-card);
+    --elevation: 1.5;
+  `}
+>
+  <slot />
+</Tag>

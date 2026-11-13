@@ -1,0 +1,53 @@
+---
+/**
+ * A lock toggle for the theme builder (scripts/theme-builder.ts): pressed, the
+ * field named by `field` keeps its value on the next Generate. With `section`
+ * it locks or unlocks every field in its accordion section at once. Both lock
+ * icons render and the pressed state picks one (`.theme-builder__lock`,
+ * site.css), so the button reads right before any script runs.
+ */
+import { Lock, LockOpen } from "@lucide/astro";
+
+interface Props {
+  /** The `name` of the form field this locks. */
+  field?: string;
+  /** Locks the whole section instead: the id suffix that keeps the tooltip unique. */
+  section?: string;
+  /** What the lock holds, lowercase: "primary color", "all color fields". */
+  label: string;
+  /** `icon-sm` beside a slider, which is thinner than an input. */
+  size?: "icon" | "icon-sm";
+}
+const { field, section, label, size = "icon" } = Astro.props;
+const tip = `tb-lock-${field ?? `all-${section}`}-tip`;
+---
+
+<!-- In a summary the lock sits at the end of the row, beside the chevron. -->
+<ui-tooltip style={section ? "--display: inline-flex; --ml: auto; --mr: 2" : "--display: inline-flex"}>
+  <button
+    class="theme-builder__lock"
+    data-ui="button"
+    data-button-size={size}
+    data-button-variant="ghost"
+    type="button"
+    aria-pressed="false"
+    aria-label={`Lock ${label}`}
+    interestfor={tip}
+    data-theme-lock={field}
+    data-theme-lock-all={section}
+  >
+    <LockOpen class="theme-builder__lock-open" aria-hidden="true" />
+    <Lock class="theme-builder__lock-closed" aria-hidden="true" />
+  </button>
+  <!-- A section's lock sits in the summary, an eyebrow: the tip is plain text again. -->
+  <div
+    data-tooltip-slot="content"
+    data-ui="text-xs"
+    id={tip}
+    popover="hint"
+    style="--text-transform: none"
+  >
+    {section ? "Keep these when generating" : "Keep when generating"}
+    <span data-tooltip-slot="arrow" aria-hidden="true"></span>
+  </div>
+</ui-tooltip>

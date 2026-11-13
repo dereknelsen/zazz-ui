@@ -1,5 +1,6 @@
 ---
 import { BellRing } from '@lucide/astro';
+import Card from './Card.astro';
 import CardHeader from './CardHeader.astro';
 
 const alerts = [
@@ -30,19 +31,7 @@ const alerts = [
 ];
 ---
 
-<section
-  data-ui='card'
-  data-card-variant='outline'
-  aria-labelledby='fn-alerts-title'
-  style='
-    --col-span: 2;
-    --mb: 6;
-    --gap: 4;
-    --bg: var(--color-card);
-    --elevation: 1.5;
-    --template-cols: minmax(min-content, 1fr);
-  '
->
+<Card labelledby='fn-alerts-title' span={2}>
   <CardHeader
     id='fn-alerts-title'
     title='Alerts'
@@ -171,4 +160,4 @@ const alerts = [
       </aside>
     </div>
   </div>
-</section>
+</Card>

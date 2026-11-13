@@ -4,6 +4,7 @@
  * alternate the secondary and tertiary variants, the next ones wait in outline.
  */
 import { BadgeCheck, Feather, Lock, Moon, Share2, Sunrise } from '@lucide/astro';
+import Card from './Card.astro';
 import CardHeader from './CardHeader.astro';
 
 const earned = [
@@ -15,26 +16,22 @@ const earned = [
 const next = ['Island hopper', 'Full life list'];
 ---
 
-<section
-  data-ui='card'
-  data-card-variant='outline'
-  aria-labelledby='fn-badges-title'
-  style='
-    --gap: 4;
-    --mb: 6;
-    --bg: var(--color-card);
-    --elevation: 1.5;
-    --template-cols: minmax(min-content, 1fr);
-  '
->
+<Card labelledby='fn-badges-title'>
   <CardHeader
     id='fn-badges-title'
     title='Field badges'
     description='Four earned. Two left on the list.'
   />
-  <div style='--display: grid; --gap: 2'>
+  <div style='
+      --display: grid;
+      --gap: 2;
+    '>
     <h4 data-ui='text-eyebrow' style='--text: var(--color-muted-foreground)'>Earned</h4>
-    <ul style='--display: flex; --flex-wrap: wrap; --gap: 2'>
+    <ul style='
+        --display: flex;
+        --flex-wrap: wrap;
+        --gap: 2;
+      '>
       {
         earned.map(({ label, icon: Icon, variant }) => (
           <li>
@@ -47,9 +44,16 @@ const next = ['Island hopper', 'Full life list'];
       }
     </ul>
   </div>
-  <div style='--display: grid; --gap: 2'>
+  <div style='
+      --display: grid;
+      --gap: 2;
+    '>
     <h4 data-ui='text-eyebrow' style='--text: var(--color-muted-foreground)'>Next up</h4>
-    <ul style='--display: flex; --flex-wrap: wrap; --gap: 2'>
+    <ul style='
+        --display: flex;
+        --flex-wrap: wrap;
+        --gap: 2;
+      '>
       {
         next.map((label) => (
           <li>
@@ -65,4 +69,4 @@ const next = ['Island hopper', 'Full life list'];
   <button data-ui='button' data-button-variant='tertiary' type='button'>
     <Share2 aria-hidden='true' /> Share badges
   </button>
-</section>
+</Card>

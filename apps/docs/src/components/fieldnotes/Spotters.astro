@@ -1,26 +1,20 @@
 ---
-import { avatarRole, spotters } from '../../lib/fieldnotes.ts';
+import { spotters } from '../../lib/fieldnotes.ts';
+import Avatar from './Avatar.astro';
+import Card from './Card.astro';
 import CardHeader from './CardHeader.astro';
 ---
 
-<section
-  data-ui='card'
-  data-card-variant='outline'
-  aria-labelledby='fn-spotters-title'
-  style='
-    --gap: 4;
-    --mb: 6;
-    --bg: var(--color-card);
-    --elevation: 1.5;
-    --template-cols: minmax(min-content, 1fr);
-  '
->
+<Card labelledby='fn-spotters-title'>
   <CardHeader
     id='fn-spotters-title'
     title='Spotters'
     description='People on the record for your species.'
   />
-  <ul style='--display: grid; --divide-y: 1'>
+  <ul style='
+      --display: grid;
+      --divide-y: 1;
+    '>
     {
       spotters.map((p) => (
         <li
@@ -31,22 +25,7 @@ import CardHeader from './CardHeader.astro';
             --gap: 3;
           '
         >
-          <span
-            aria-hidden='true'
-            data-ui='text-xs'
-            style={`
-              --display: grid;
-              --place-items: center;
-              --shrink: 0;
-              --size: 9;
-              --font-weight: strong;
-              --text: var(--color-${avatarRole(p.initials)}-foreground);
-              --bg: var(--color-${avatarRole(p.initials)});
-              --radius: full;
-            `}
-          >
-            {p.initials}
-          </span>
+          <Avatar initials={p.initials} size={9} />
           <span
             style='
               --display: grid;
@@ -58,7 +37,10 @@ import CardHeader from './CardHeader.astro';
             </span>
             <span
               data-ui='text-sm'
-              style='--text: var(--color-muted-foreground); --text-wrap: truncate'
+              style='
+                --text-wrap: truncate;
+                --text: var(--color-muted-foreground);
+              '
             >
               {p.detail}
             </span>
@@ -67,4 +49,4 @@ import CardHeader from './CardHeader.astro';
       ))
     }
   </ul>
-</section>
+</Card>

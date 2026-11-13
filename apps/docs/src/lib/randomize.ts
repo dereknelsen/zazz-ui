@@ -1,11 +1,11 @@
 /**
  * The theme builder's randomizer: pure pickers for the values that need more
  * care than "anywhere on the slider". Colors come from Tailwind's palettes (a
- * gray one for the neutral), and the type scale never shrinks from narrow to
- * wide. scripts/theme-builder.ts applies them to the form.
+ * gray one for the neutral), the accents related by a color harmony, and the
+ * type scale never shrinks from narrow to wide. scripts/theme-builder.ts applies them to the form.
  */
 import { SCALE_STEPS } from "./fonts.ts";
-import { toHex, type Stop } from "./palette.ts";
+import { normalizeHex, toHex, toOklch, type Stop } from "./palette.ts";
 import {
   TAILWIND_NEUTRALS,
   TAILWIND_PALETTES,
@@ -45,47 +45,120 @@ const isNeutral = (palette: TailwindPalette) =>
 /** The lightest an accent may be and still read as a link or focus ring on white. */
 const MAX_ACCENT_L = 0.7;
 
+/** The stops an accent falls back to when a palette has to give more colors than its mid stops hold. */
+const DEEP_ACCENT_STOPS: readonly Stop[] = [800, 900];
+
 /**
  * A Tailwind accent color: a mid stop of a hue, or a dark stop of a gray.
  * Stops lighter than `MAX_ACCENT_L` are skipped, so yellow, lime, and amber
- * start at their 600.
+ * start at their 600. A color already in `used` is skipped too, so one palette
+ * can give several accents; when its mid stops run out it goes deeper.
  */
-function accent(palette: TailwindPalette, random: Random): string {
-  const stops = (isNeutral(palette) ? GRAY_ACCENT_STOPS : ACCENT_STOPS).filter(
-    (s) => tailwindColor(palette, s).l <= MAX_ACCENT_L,
-  );
-  return toHex(tailwindColor(palette, pick(stops, random)));
+function accent(palette: TailwindPalette, random: Random, used: ReadonlySet<string>): string {
+  const free = (stops: readonly Stop[]) =>
+    stops
+      .filter((s) => tailwindColor(palette, s).l <= MAX_ACCENT_L)
+      .map((s) => toHex(tailwindColor(palette, s)))
+      .filter((hex) => !used.has(hex));
+  const mid = free(isNeutral(palette) ? GRAY_ACCENT_STOPS : ACCENT_STOPS);
+  return pick(mid.length ? mid : free(DEEP_ACCENT_STOPS), random);
 }
 
 /**
- * Theme colors from Tailwind's default palettes: a primary, a secondary, and
- * a tertiary from any three different palettes, a neutral from a gray one
- * (its 500, where the kit's neutral sits), and a shadow color from a dark stop
- * of that same gray palette.
+ * How the secondary and tertiary relate to the primary: the hue each sits at,
+ * in degrees around the wheel from the primary's. A 0 stays in the primary's
+ * palette and takes another stop of it.
  */
-export function randomColors(random: Random): {
+export const HARMONIES = {
+  monochromatic: [0, 0],
+  analogous: [30, -30],
+  complementary: [180, 0],
+  "split-complementary": [150, 210],
+  triadic: [120, 240],
+} as const satisfies Record<string, readonly [number, number]>;
+export type Harmony = keyof typeof HARMONIES;
+
+/** The palettes with a hue of their own, and that hue (their 500's). */
+const HUED = TAILWIND_PALETTES.filter((p) => !isNeutral(p)).map((palette) => ({
+  palette,
+  hue: tailwindColor(palette, 500).h,
+}));
+
+/** Degrees between two hues, the short way around. */
+const hueDistance = (a: number, b: number) => Math.abs(((a - b + 540) % 360) - 180);
+
+/** The hued palette closest to `hue`, leaving out the ones in `skip`. */
+function nearestPalette(hue: number, skip: readonly TailwindPalette[] = []): TailwindPalette {
+  return HUED.filter(({ palette }) => !skip.includes(palette)).reduce((a, b) =>
+    hueDistance(b.hue, hue) < hueDistance(a.hue, hue) ? b : a,
+  ).palette;
+}
+
+/** Below this chroma a color has no hue to build a harmony on. */
+const MIN_HUED_C = 0.04;
+
+/**
+ * Theme colors from Tailwind's default palettes. The primary comes from any
+ * palette; the secondary and tertiary follow it by a color harmony picked at
+ * random (`HARMONIES`), each from the palette nearest the harmony's hue. A
+ * gray primary has no hue to turn, so its theme is monochromatic. The neutral
+ * is a gray palette's 500 (where the kit's neutral sits), and the shadow color
+ * a dark stop of that same gray.
+ *
+ * `keep.primary` is a primary to build on instead of picking one (the theme
+ * builder's locked field): it comes back as is, and the others harmonize with
+ * its hue. `keep.avoid` lists colors no accent may repeat (a locked secondary
+ * or tertiary).
+ */
+export function randomColors(
+  random: Random,
+  keep: { primary?: string; avoid?: readonly string[] } = {},
+): {
   primary: string;
   secondary: string;
   tertiary: string;
   neutral: string;
   shadow: string;
+  harmony: Harmony;
 } {
-  const primary = pick(TAILWIND_PALETTES, random);
-  const secondary = pick(
-    TAILWIND_PALETTES.filter((p) => p !== primary),
-    random,
-  );
-  const tertiary = pick(
-    TAILWIND_PALETTES.filter((p) => p !== primary && p !== secondary),
-    random,
-  );
+  const keptHex = keep.primary ? normalizeHex(keep.primary) : null;
+  const kept = keptHex ? toOklch(keptHex) : null;
+  let palette: TailwindPalette;
+  let hue: number | null;
+  if (kept) {
+    hue = kept.c >= MIN_HUED_C ? kept.h : null;
+    palette = hue === null ? pick(TAILWIND_NEUTRALS, random) : nearestPalette(hue);
+  } else {
+    palette = pick(TAILWIND_PALETTES, random);
+    hue = isNeutral(palette) ? null : tailwindColor(palette, 500).h;
+  }
+  const harmony: Harmony =
+    hue === null ? "monochromatic" : pick(Object.keys(HARMONIES) as Harmony[], random);
+
+  const used = new Set(keep.avoid?.flatMap((hex) => normalizeHex(hex) ?? []));
+  const take = (from: TailwindPalette) => {
+    const hex = accent(from, random, used);
+    used.add(hex);
+    return hex;
+  };
+  const primary = keptHex ?? take(palette);
+  used.add(primary);
+  const taken: TailwindPalette[] = [palette];
+  const [secondary, tertiary] = HARMONIES[harmony].map((turn) => {
+    if (turn === 0 || hue === null) return take(palette);
+    const other = nearestPalette(hue + turn, taken);
+    taken.push(other);
+    return take(other);
+  });
+
   const neutral = pick(TAILWIND_NEUTRALS, random);
   return {
-    primary: accent(primary, random),
-    secondary: accent(secondary, random),
-    tertiary: accent(tertiary, random),
+    primary,
+    secondary,
+    tertiary,
     neutral: toHex(tailwindColor(neutral, 500)),
     shadow: toHex(tailwindColor(neutral, pick(SHADOW_STOPS, random))),
+    harmony,
   };
 }
 
@@ -97,11 +170,19 @@ const scaleSteps = (min: number, max: number) =>
  * Narrow and wide type-scale ratios from `SCALE_STEPS`: narrow from the minor
  * second to the major third, wide from the major third to the augmented
  * fourth, so the wide one is never smaller and headings never outgrow the cards.
+ * A ratio in `keep` (a locked field) comes back as is, and the other one is
+ * drawn from the part of its range that keeps narrow at or below wide.
  */
-export function randomScales(random: Random): { min: number; max: number } {
-  const low = scaleSteps(1.067, 1.25);
-  const high = scaleSteps(1.25, 1.414);
-  return { min: pick(low, random), max: pick(high, random) };
+export function randomScales(
+  random: Random,
+  keep: { min?: number; max?: number } = {},
+): { min: number; max: number } {
+  const low = scaleSteps(1.067, Math.min(1.25, keep.max ?? 1.25));
+  const high = scaleSteps(Math.max(1.25, keep.min ?? 1.25), 1.414);
+  return {
+    min: keep.min ?? (low.length ? pick(low, random) : keep.max!),
+    max: keep.max ?? (high.length ? pick(high, random) : keep.min!),
+  };
 }
 
 /** A span of a slider, both ends included. */

@@ -2,6 +2,7 @@
 import { X } from '@lucide/astro';
 import { RARITY_VARIANT, type Species } from '../../lib/fieldnotes.ts';
 import Avatars from './Avatars.astro';
+import Card from './Card.astro';
 import Sprite from './Sprite.astro';
 
 interface Props {
@@ -11,18 +12,7 @@ const { species: s } = Astro.props;
 const dialog = `fn-species-${s.slug}`;
 ---
 
-<article
-  data-ui='card'
-  data-card-variant='outline'
-  aria-labelledby={`${dialog}-title`}
-  style='
-    --mb: 6;
-    --gap: 4;
-    --bg: var(--color-card);
-    --elevation: 1.5;
-    --template-cols: minmax(min-content, 1fr);
-  '
->
+<Card as='article' labelledby={`${dialog}-title`}>
   <header
     style='
       --display: grid;
@@ -45,7 +35,10 @@ const dialog = `fn-species-${s.slug}`;
     >
       <h3
         id={`${dialog}-title`}
-        style='--font-size: var(--font-size-lg); --font-family: var(--font-family-heading)'
+        style='
+          --font-size: var(--font-size-lg);
+          --font-family: var(--font-family-heading);
+        '
       >
         {s.name}
       </h3>
@@ -99,7 +92,7 @@ const dialog = `fn-species-${s.slug}`;
       Details
     </button>
   </footer>
-</article>
+</Card>
 
 <dialog
   id={dialog}

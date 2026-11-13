@@ -1,13 +1,19 @@
 ---
 /**
- * `{% install primitive="button" /%}`: the `zazz-ui add` command for a
- * primitive, one tab per package manager, with a copy button, and the
- * primitives that command also vendors (from the kit's own closure resolver).
- * The chosen package manager is remembered across pages.
+ * `{% install primitive="button" /%}`: two ways to get a primitive, as
+ * underlined tabs, with a link to its source folder beside them. Command is the `zazz-ui add` command, one tab per package
+ * manager (the choice is remembered across pages), with the primitives it also
+ * vendors (from the kit's own closure resolver). CDN is `buildHead()`'s granular
+ * head for the primitive.
  */
 import { Code } from "astro:components";
+import { buildHead } from "@zazz-ui/core/head.ts";
 import CopyButton from "../CopyButton.astro";
 import { installApi } from "../../lib/api/install.ts";
+import { PRIMITIVES } from "@zazz-ui/core/manifest.ts";
+import GithubIcon from "../GithubIcon.astro";
+import { kitVersion } from "../../lib/kit.ts";
+import { links } from "../../site.config.ts";
 
 interface Props {
   primitive: string;
@@ -16,65 +22,156 @@ const { primitive } = Astro.props;
 const { commands, dependencies } = installApi(primitive);
 const uid = `install-${primitive}`;
 const themes = { light: "github-light", dark: "github-dark" } as const;
+
+const version = kitVersion();
+const head = buildHead({ cdn: { version, primitives: [primitive] }, fontDisplay: false });
+/** Markup-only primitives (avatar, toolbar) have no stylesheet of their own. */
+const ownCss = (PRIMITIVES[primitive]?.css.length ?? 0) > 0;
+const source = `${links.github}/tree/main/packages/core/src/primitives/${primitive}`;
+const loads = ownCss
+  ? `the base layers and ${primitive}${dependencies.length > 0 ? " with its dependencies" : ""}`
+  : `the base layers${dependencies.length > 0 ? ` and what ${primitive} depends on` : ""}`;
+const cdnNote = `that loads ${loads} from jsDelivr, pinned to ${version}.${
+  ownCss ? "" : ` ${primitive} has no stylesheet of its own.`
+}`;
+const methods = [
+  { id: "command", label: "Command" },
+  { id: "cdn", label: "CDN" },
+];
 ---
 
-<div data-prose-slot="end" style="--my: 6">
-  <ui-tabs style="--w: 100%">
-    <div data-tabs-slot="list" role="tablist">
+<div data-prose-slot="end" style="
+    --position: relative;
+    --my: 6;
+  ">
+  <ui-tabs data-tabs-variant="underline" style="
+      --space-y: 4;
+      --w: 100%;
+    ">
+    <div data-tabs-slot="list" role="tablist" aria-label="Install method">
       <div data-tabs-slot="indicator" aria-hidden="true"></div>
       {
-        commands.map(({ id }, i) => (
+        methods.map(({ id, label }, i) => (
           <>
-            <input
-              type="radio"
-              role="tab"
-              name={uid}
-              id={`${uid}-${id}`}
-              value={id}
-              data-install-manager
-              checked={i === 0}
-            />
-            <label for={`${uid}-${id}`} data-tabs-slot="label">
-              <span data-tabs-slot="label-text">{id}</span>
+            <input type="radio" role="tab" name={`${uid}-method`} id={`${uid}-method-${id}`} checked={i === 0} />
+            <label for={`${uid}-method-${id}`} data-tabs-slot="label">
+              <span data-tabs-slot="label-text">{label}</span>
             </label>
           </>
         ))
       }
     </div>
-    {
-      commands.map(({ command }) => (
-        <div data-tabs-slot="panel" role="tabpanel" style="--w: 100%">
-          <div style="--position: relative">
-            <Code code={command} lang="bash" themes={themes} defaultColor={false} />
-            <div style="--position: absolute; --right: 2; --top: 2">
-              <CopyButton text={command} label="Copy the command" />
-            </div>
-          </div>
+
+    <div data-tabs-slot="panel" role="tabpanel" style="--w: 100%">
+      <ui-tabs style="
+          --space-y: 2;
+          --w: 100%;
+        ">
+        <div data-tabs-slot="list" role="tablist" aria-label="Package manager">
+          <div data-tabs-slot="indicator" aria-hidden="true"></div>
+          {
+            commands.map(({ id }, i) => (
+              <>
+                <input
+                  type="radio"
+                  role="tab"
+                  name={uid}
+                  id={`${uid}-${id}`}
+                  value={id}
+                  data-install-manager
+                  checked={i === 0}
+                />
+                <label for={`${uid}-${id}`} data-tabs-slot="label">
+                  <span data-tabs-slot="label-text">{id}</span>
+                </label>
+              </>
+            ))
+          }
         </div>
-      ))
-    }
-  </ui-tabs>
-  <p data-ui="text-sm" style="--mt: 2; --text: var(--color-muted-foreground)">
-    {
-      dependencies.length > 0 && (
-        <>
-          Also adds{" "}
-          {dependencies.map((dep, i) => (
+        {
+          commands.map(({ command }) => (
+            <div data-tabs-slot="panel" role="tabpanel" style="--w: 100%">
+              <div style="--position: relative">
+                <Code code={command} lang="bash" themes={themes} defaultColor={false} />
+                <div style="
+                    --position: absolute;
+                    --top: 2;
+                    --right: 2;
+                  ">
+                  <CopyButton text={command} label="Copy the command" />
+                </div>
+              </div>
+            </div>
+          ))
+        }
+      </ui-tabs>
+      <p data-ui="text-sm" style="
+          --mt: 2;
+          --text: var(--color-muted-foreground);
+        ">
+        {
+          dependencies.length > 0 && (
             <>
-              <a href={`/api/primitives/${dep}/`} data-ui="text-link">
-                {dep}
-              </a>
-              {i < dependencies.length - 1 ? ", " : ""}
+              Also adds{" "}
+              {dependencies.map((dep, i) => (
+                <>
+                  <a href={`/api/primitives/${dep}/`} data-ui="text-link">
+                    {dep}
+                  </a>
+                  {i < dependencies.length - 1 ? ", " : ""}
+                </>
+              ))}
+              , which it depends on.{" "}
             </>
-          ))}
-          , which it depends on.{" "}
-        </>
-      )
-    }
-    Run <a href="/docs/install/installation/#cli" data-ui="text-link">
-      <code>zazz-ui init</code>
-    </a> first if the project has no <code>zazz/</code> folder yet.
-  </p>
+          )
+        }
+        Run <a href="/docs/install/installation/#cli" data-ui="text-link">
+          <code>zazz-ui init</code>
+        </a> first if the project has no <code>zazz/</code> folder yet.
+      </p>
+    </div>
+
+    <div data-tabs-slot="panel" role="tabpanel" data-pagefind-ignore style="--w: 100%">
+      <div data-copy-scope style="--position: relative">
+        <Code code={head} lang="html" themes={themes} defaultColor={false} wrap />
+        <div style="
+            --position: absolute;
+            --top: 2;
+            --right: 2;
+          ">
+          <CopyButton label="Copy the head" />
+        </div>
+      </div>
+      <p data-ui="text-sm" style="
+          --mt: 2;
+          --text: var(--color-muted-foreground);
+        ">
+        A <code>&lt;head&gt;</code> {cdnNote} To load
+        the whole kit in two requests, see <a href="/docs/install/installation/#cdn" data-ui="text-link">
+          the CDN install
+        </a>.
+      </p>
+    </div>
+  </ui-tabs>
+  <a
+    href={source}
+    data-ui="text-sm"
+    rel="noopener"
+    style="
+      --position: absolute;
+      --top: 0;
+      --right: 0;
+      --display: inline-flex;
+      --items: center;
+      --gap: 1.5;
+      --h: 7;
+      --text: var(--color-muted-foreground);
+      --text--hover: var(--color-foreground);
+    "
+  >
+    <GithubIcon size={14} />
+    Source
+  </a>
 </div>
 
 <script>

@@ -24,10 +24,19 @@
  * `<link>` in the head, and the copied CSS carries that tag in a comment above
  * the `:root` block. Each combobox has a wand button that picks a font pairing
  * with the other one (`pairFont`, favoring `FONT_PAIRINGS`), and the header's
- * dice button randomizes every control at once (lib/randomize.ts).
+ * dice button randomizes every control at once (lib/randomize.ts): the three
+ * accent colors by a color harmony, the rest within tasteful ranges.
+ *
+ * Locks: each control has a lock button (ThemeLock.astro, `aria-pressed`), and
+ * a locked control keeps its value through a randomize. What is drawn fresh
+ * still fits what was kept: the accents harmonize with a locked primary, an
+ * unlocked font pairs with a locked one, and the type scales stay in order. A
+ * section's summary has a lock for all of its controls. Locks last until the
+ * page is left; they are not part of the share code, and a reset ignores them.
  *
  * A custom element because swap navigation never runs a swapped-in page's
- * scripts; BaseLayout defines it on every page.
+ * scripts. ThemeBuilder.astro loads this module on its own page and
+ * scripts/islands.ts loads it after a swap.
  */
 import { ZazzElement, defineZazzElement } from "@zazz-ui/core/base/zazz-element.ts";
 import {
@@ -260,32 +269,74 @@ class ThemeBuilder extends ZazzElement {
       field.value = value;
       field.dispatchEvent(new Event("input", { bubbles: true }));
     };
-    /** The dice: a fresh value for every control, fonts paired, colors kept usable. */
+    /** Whether the control named `name` has its lock pressed. */
+    const locked = (name: string) =>
+      q(`[data-theme-lock="${CSS.escape(name)}"]`)?.getAttribute("aria-pressed") === "true";
+    /** `put`, unless the field is locked. */
+    const roll = (field: Field | null, value: string) => {
+      if (field && !locked(field.name)) put(field, value);
+    };
+    const corners = CSS.supports("corner-shape", "round");
+    /** A section's lock is pressed while every lock in the section is. */
+    const syncSectionLocks = () => {
+      for (const all of this.querySelectorAll<HTMLElement>("[data-theme-lock-all]")) {
+        // The corner-shape field is hidden where the property is unsupported: its lock doesn't count.
+        const locks = [
+          ...(all.closest("details")?.querySelectorAll("[data-theme-lock]") ?? []),
+        ].filter((l) => corners || !l.closest(".theme-builder__corner-shape"));
+        all.setAttribute(
+          "aria-pressed",
+          String(locks.length > 0 && locks.every((l) => l.getAttribute("aria-pressed") === "true")),
+        );
+      }
+    };
+    /** The dice: a fresh value for every unlocked control, fitted to the locked ones. */
     const randomize = () => {
       const random = Math.random;
-      const colors = randomColors(random);
-      for (const name of PALETTES) put(q(`[data-theme-hex="${name}"]`), colors[name]);
-      put(q("[data-theme-token='--color-shadow']"), colors.shadow);
+      // A locked primary is what the others harmonize with (a half-typed one counts
+      // as the default, which is what the preview shows); a locked secondary or
+      // tertiary is a color the fresh ones must not repeat.
+      const hexOf = (name: PaletteName) =>
+        normalizeHex(q<HTMLInputElement>(`[data-theme-hex="${name}"]`)?.value ?? "") ??
+        normalizeHex(defaults[name]);
+      const colors = randomColors(random, {
+        primary: locked("primary-hex") ? (hexOf("primary") ?? undefined) : undefined,
+        avoid: (["secondary", "tertiary"] as const)
+          .filter((name) => locked(`${name}-hex`))
+          .flatMap((name) => hexOf(name) ?? []),
+      });
+      for (const name of PALETTES) roll(q(`[data-theme-hex="${name}"]`), colors[name]);
+      roll(q("[data-theme-token='--color-shadow']"), colors.shadow);
       for (const scheme of ["light", "dark"] as const) {
         const picks = RANDOM_BACKGROUNDS[scheme];
-        put(q(`[data-theme-bg="${scheme}"]`), picks[Math.floor(random() * picks.length)]);
+        roll(q(`[data-theme-bg="${scheme}"]`), picks[Math.floor(random() * picks.length)]);
       }
-      const scales = randomScales(random);
-      put(q("[data-theme-number='scale-min']"), String(scales.min));
-      put(q("[data-theme-number='scale-max']"), String(scales.max));
-      const corners = CSS.supports("corner-shape", "round");
+      const scaleMin = q<Field>("[data-theme-number='scale-min']");
+      const scaleMax = q<Field>("[data-theme-number='scale-max']");
+      const scales = randomScales(random, {
+        min: locked("scale-min") && scaleMin ? Number(scaleMin.value) : undefined,
+        max: locked("scale-max") && scaleMax ? Number(scaleMax.value) : undefined,
+      });
+      roll(scaleMin, String(scales.min));
+      roll(scaleMax, String(scales.max));
       for (const input of form.querySelectorAll<HTMLInputElement>(
         "input[type=range], input[type=number]",
       )) {
         const ranges = RANDOM_RANGES[input.name];
         if (!ranges || (input.name === "corner-shape" && !corners)) continue;
-        put(input, String(randomInRanges(ranges, Number(input.step) || 1, random)));
+        roll(input, String(randomInRanges(ranges, Number(input.step) || 1, random)));
       }
-      // Usually a recommended pairing; otherwise any heading and a body that pairs with it.
-      const fonts = randomPairing(fontOptions("heading"), random);
-      if (fonts) {
-        setFont("heading", fonts.heading.value);
-        if (fonts.body) setFont("body", fonts.body.value);
+      // Usually a recommended pairing; otherwise any heading and a body that pairs
+      // with it. With one font locked, the other is paired to it.
+      const free = FONT_ROLES.filter((role) => !locked(`font-${role}`));
+      if (free.length === 1) {
+        pair(free[0]);
+      } else if (free.length === 2) {
+        const fonts = randomPairing(fontOptions("heading"), random);
+        if (fonts) {
+          setFont("heading", fonts.heading.value);
+          if (fonts.body) setFont("body", fonts.body.value);
+        }
       }
       render();
       share();
@@ -463,6 +514,21 @@ class ThemeBuilder extends ZazzElement {
           share();
         }
         if (target.closest("[data-theme-randomize]")) randomize();
+        const lock = target.closest<HTMLElement>("[data-theme-lock]");
+        if (lock) {
+          lock.setAttribute("aria-pressed", String(lock.getAttribute("aria-pressed") !== "true"));
+          syncSectionLocks();
+        }
+        const lockAll = target.closest<HTMLElement>("[data-theme-lock-all]");
+        if (lockAll) {
+          // The button sits in the section's summary: locking must not fold the section.
+          event.preventDefault();
+          const on = lockAll.getAttribute("aria-pressed") !== "true";
+          for (const l of lockAll.closest("details")?.querySelectorAll("[data-theme-lock]") ?? []) {
+            l.setAttribute("aria-pressed", String(on));
+          }
+          lockAll.setAttribute("aria-pressed", String(on));
+        }
         if (target.closest("[data-theme-copy-proxy]")) copy?.click();
         if (target.closest("[data-theme-reset-proxy]")) form.reset();
       },

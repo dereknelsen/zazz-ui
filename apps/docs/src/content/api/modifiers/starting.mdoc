@@ -22,4 +22,6 @@ order: 3
 </div>
 ```
 
-It outranks every other state, has no `--group-*` form, and works without a base where the utility has a default (`--opacity`, `--filter`, `--backdrop-filter`, `--mix-blend`, `--scale`, `--translate`, `--rotate`). The formatter writes it first among its utility's lines.
+It outranks every other state, has no `--group-*` form, and works without a base where the utility has a default (`--opacity`, `--filter`, `--backdrop-filter`, `--scale`, `--translate`, `--rotate`). The formatter writes it first among its utility's lines.
+
+Some utilities have no starting tier, because an entry value has no use there. Their property is discrete or not animatable: `--transition`, `--transition-duration`, `--transition-delay`, `--animation`, the anchor utilities, `--text-wrap`, `--text-decoration`, `--border-style`, and `--mix-blend`. `--z` has none either: an element enters in the stacking order it rests in.

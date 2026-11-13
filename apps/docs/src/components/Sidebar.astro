@@ -17,6 +17,8 @@ const { label, sections } = Astro.props;
   /* Wide: sticky column, rendered fresh on each page; navigations keep its scroll offset */
 }
 <aside
+  data-ui="scroll-fade"
+  data-scroll-fade-axis="y"
   data-ui-persist-scroll={`sidebar-${label.toLowerCase().replace(/\s+/g, "-")}`}
   style="
     --display: none;

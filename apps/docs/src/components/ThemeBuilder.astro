@@ -8,10 +8,13 @@
  * until reset (scripts/theme-builder.ts, lib/preset.ts), and
  * copy as a `:root { … }` block of the variables that changed. The card
  * elevation slider restyles the preview but is never part of the copied CSS.
+ * Generate randomizes every control but the ones whose lock is pressed
+ * (ThemeLock.astro); a section's summary holds a lock for all of its fields.
  *
  * Behavior lives in `<theme-builder>` (scripts/theme-builder.ts) and in
- * `<fieldnotes-demo>` / `<fieldnotes-sightings>` (scripts/fieldnotes.ts), which BaseLayout defines
- * on every page, so the component works however its page is reached.
+ * `<fieldnotes-demo>` / `<fieldnotes-sightings>` (scripts/fieldnotes.ts). The script at the end
+ * of this file ships them only with pages that render the component; scripts/islands.ts loads the
+ * same modules when the page is reached by a swap navigation instead.
  */
 import languageData from "@zazz-ui/core/editor/zazz.language-data.json";
 import {
@@ -43,13 +46,20 @@ import {
   toHex,
 } from "../lib/palette.ts";
 import AlertSettings from "./fieldnotes/AlertSettings.astro";
+import Conditions from "./fieldnotes/Conditions.astro";
 import FieldBadges from "./fieldnotes/FieldBadges.astro";
+import Journal from "./fieldnotes/Journal.astro";
 import LifeList from "./fieldnotes/LifeList.astro";
 import NextTrip from "./fieldnotes/NextTrip.astro";
+import PackList from "./fieldnotes/PackList.astro";
+import Plates from "./fieldnotes/Plates.astro";
+import ReviewStatus from "./fieldnotes/ReviewStatus.astro";
 import SightingForm from "./fieldnotes/SightingForm.astro";
 import SightingsTable from "./fieldnotes/SightingsTable.astro";
 import SpeciesCard from "./fieldnotes/SpeciesCard.astro";
 import Spotters from "./fieldnotes/Spotters.astro";
+import ThemeLock from "./ThemeLock.astro";
+import VerifyCode from "./fieldnotes/VerifyCode.astro";
 
 const TOASTER = "fieldnotes-toaster";
 
@@ -447,8 +457,7 @@ const previewScope = `@layer zazz.variables {
         --display: none;
         --display--lg: flex-col;
         --h: 100%;
-        --border-style: double;
-        --border-r: 3;
+        --border-r: 1;
         --overflow: clip;
       "
     >
@@ -519,6 +528,7 @@ const previewScope = `@layer zazz.variables {
               "
             >
               Color
+              <ThemeLock section="color" label="all color fields" size="icon-sm" />
               <ChevronDown data-accordion-slot="marker" aria-hidden="true" />
             </summary>
             <div
@@ -541,28 +551,38 @@ const previewScope = `@layer zazz.variables {
                         --gap: 2;
                       "
                     >
-                      <label data-ui="input-group">
-                        <input
-                          data-ui="input"
-                          id={`tb-${p.name}-hex`}
-                          name={`${p.name}-hex`}
-                          value={defaults[p.name]}
-                          spellcheck="false"
-                          autocomplete="off"
-                          pattern="#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})"
-                          data-theme-hex={p.name}
-                        />
-                        <span data-input-group-slot="addon">
+                      <div
+                        style="
+                          --display: grid;
+                          --items: center;
+                          --template-cols: minmax(0, 1fr) auto;
+                          --gap: 2;
+                        "
+                      >
+                        <label data-ui="input-group">
                           <input
-                            type="color"
-                            name={`${p.name}-color`}
+                            data-ui="input"
+                            id={`tb-${p.name}-hex`}
+                            name={`${p.name}-hex`}
                             value={defaults[p.name]}
-                            aria-label={`${p.label} color picker`}
-                            class="theme-builder__swatch"
-                            data-theme-color={p.name}
+                            spellcheck="false"
+                            autocomplete="off"
+                            pattern="#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})"
+                            data-theme-hex={p.name}
                           />
-                        </span>
-                      </label>
+                          <span data-input-group-slot="addon">
+                            <input
+                              type="color"
+                              name={`${p.name}-color`}
+                              value={defaults[p.name]}
+                              aria-label={`${p.label} color picker`}
+                              class="theme-builder__swatch"
+                              data-theme-color={p.name}
+                            />
+                          </span>
+                        </label>
+                        <ThemeLock field={`${p.name}-hex`} label={`${p.label.toLowerCase()} color`} />
+                      </div>
                       <div
                         role="img"
                         aria-label={`${p.label} palette, 50 to 950`}
@@ -606,38 +626,48 @@ const previewScope = `@layer zazz.variables {
                     <label data-field-slot="label" for={`tb-bg-${b.scheme}`}>
                       {b.label}
                     </label>
-                    <select
-                      data-ui="select"
-                      data-select-align="center"
-                      data-select-side="right"
-                      id={`tb-bg-${b.scheme}`}
-                      name={`bg-${b.scheme}`}
-                      data-default={DEFAULT_BACKGROUND[b.scheme]}
-                      data-theme-bg={b.scheme}
+                    <div
+                      style="
+                        --display: grid;
+                        --items: center;
+                        --template-cols: minmax(0, 1fr) auto;
+                        --gap: 2;
+                      "
                     >
-                      <button>
-                        <selectedcontent
-                          style="
-                            --display: flex;
-                            --items: center;
-                            --gap: 2;
-                          "
-                        />
-                      </button>
-                      {BACKGROUNDS[b.scheme].map((pick) => (
-                        <option
-                          value={pick}
-                          selected={pick === DEFAULT_BACKGROUND[b.scheme]}
-                        >
-                          <span
-                            aria-hidden="true"
-                            data-theme-bg-swatch={pick}
-                            style={`--size: 3; --shrink: 0; --bg: ${backgroundSwatch(pick)}; --radius: full; --ring: 1; --ring-color: var(--color-border)`}
+                      <select
+                        data-ui="select"
+                        data-select-align="center"
+                        data-select-side="right"
+                        id={`tb-bg-${b.scheme}`}
+                        name={`bg-${b.scheme}`}
+                        data-default={DEFAULT_BACKGROUND[b.scheme]}
+                        data-theme-bg={b.scheme}
+                      >
+                        <button>
+                          <selectedcontent
+                            style="
+                              --display: flex;
+                              --items: center;
+                              --gap: 2;
+                            "
                           />
-                          {backgroundLabel(pick)}
-                        </option>
-                      ))}
-                    </select>
+                        </button>
+                        {BACKGROUNDS[b.scheme].map((pick) => (
+                          <option
+                            value={pick}
+                            selected={pick === DEFAULT_BACKGROUND[b.scheme]}
+                          >
+                            <span
+                              aria-hidden="true"
+                              data-theme-bg-swatch={pick}
+                              style={`--size: 3; --shrink: 0; --bg: ${backgroundSwatch(pick)}; --radius: full; --ring: 1; --ring-color: var(--color-border)`}
+                            />
+                            {backgroundLabel(pick)}
+                          </option>
+                        ))}
+                      </select>
+                      <ThemeLock field={`bg-${b.scheme}`} label={b.label.toLowerCase()} />
+                    </div>
                     {b.scheme === "dark" && (
                       <div data-field-slot="description">
                         <span data-field-slot="hint">
@@ -668,6 +698,7 @@ const previewScope = `@layer zazz.variables {
               "
             >
               Type
+              <ThemeLock section="type" label="all type fields" size="icon-sm" />
               <ChevronDown data-accordion-slot="marker" aria-hidden="true" />
             </summary>
             <div
@@ -811,6 +842,7 @@ const previewScope = `@layer zazz.variables {
                           <span data-tooltip-slot="arrow" aria-hidden="true"></span>
                         </div>
                       </ui-tooltip>
+                      <ThemeLock field={`font-${f.role}`} label={f.label.toLowerCase()} />
                     </div>
                   </div>
                 ))
@@ -822,38 +854,48 @@ const previewScope = `@layer zazz.variables {
                     <label data-field-slot="label" for={`tb-${s.name}`}>
                       {s.label}
                     </label>
-                    <select
-                      data-ui="select"
-                      data-select-align="center"
-                      data-select-side="right"
-                      id={`tb-${s.name}`}
-                      name={s.name}
-                      data-default={s.value}
-                      data-theme-number={s.name}
+                    <div
+                      style="
+                        --display: grid;
+                        --items: center;
+                        --template-cols: minmax(0, 1fr) auto;
+                        --gap: 2;
+                      "
                     >
-                      <button>
-                        <selectedcontent
-                          style="
-                            --display: flex;
-                            --items: center;
-                            --gap: 0.35em;
-                          "
-                        />
-                      </button>
-                      {SCALE_STEPS.map((step) => (
-                        <option
-                          value={step.value}
-                          selected={step.value === s.value}
-                        >
-                          <span class="fieldnotes__num">{step.value}</span>
-                          {step.name && (
-                            <span style="--text: var(--color-muted-foreground)">
-                              {step.name}
-                            </span>
-                          )}
-                        </option>
-                      ))}
-                    </select>
+                      <select
+                        data-ui="select"
+                        data-select-align="center"
+                        data-select-side="right"
+                        id={`tb-${s.name}`}
+                        name={s.name}
+                        data-default={s.value}
+                        data-theme-number={s.name}
+                      >
+                        <button>
+                          <selectedcontent
+                            style="
+                              --display: flex;
+                              --items: center;
+                              --gap: 0.35em;
+                            "
+                          />
+                        </button>
+                        {SCALE_STEPS.map((step) => (
+                          <option
+                            value={step.value}
+                            selected={step.value === s.value}
+                          >
+                            <span class="fieldnotes__num">{step.value}</span>
+                            {step.name && (
+                              <span style="--text: var(--color-muted-foreground)">
+                                {step.name}
+                              </span>
+                            )}
+                          </option>
+                        ))}
+                      </select>
+                      <ThemeLock field={s.name} label={s.label.toLowerCase()} />
+                    </div>
                     {s.name === "scale-max" && (
                       <div data-field-slot="description">
                         <span data-field-slot="hint">
@@ -885,6 +927,7 @@ const previewScope = `@layer zazz.variables {
               ";
             >
               Size &amp; shape
+              <ThemeLock section="size-shape" label="all size and shape fields" size="icon-sm" />
               <ChevronDown data-accordion-slot="marker" aria-hidden="true" />
             </summary>
             <div
@@ -897,26 +940,36 @@ const previewScope = `@layer zazz.variables {
             >
               <div data-ui="field">
                 <label data-field-slot="label" for="tb-spacing">Spacing</label>
-                <label data-ui="input-group">
-                  <input
-                    data-ui="input"
-                    id="tb-spacing"
-                    name="spacing"
-                    type="number"
-                    min="0"
-                    max="2"
-                    step="0.01"
-                    value={defaults.spacing}
-                    data-default={defaults.spacing}
-                    data-theme-number="spacing"
-                  />
-                  <span
-                    data-input-group-slot="addon"
-                    data-input-group-align="inline-end"
-                  >
-                    <span data-input-group-slot="text">rem</span>
-                  </span>
-                </label>
+                <div
+                  style="
+                    --display: grid;
+                    --items: center;
+                    --template-cols: minmax(0, 1fr) auto;
+                    --gap: 2;
+                  "
+                >
+                  <label data-ui="input-group">
+                    <input
+                      data-ui="input"
+                      id="tb-spacing"
+                      name="spacing"
+                      type="number"
+                      min="0"
+                      max="2"
+                      step="0.01"
+                      value={defaults.spacing}
+                      data-default={defaults.spacing}
+                      data-theme-number="spacing"
+                    />
+                    <span
+                      data-input-group-slot="addon"
+                      data-input-group-align="inline-end"
+                    >
+                      <span data-input-group-slot="text">rem</span>
+                    </span>
+                  </label>
+                  <ThemeLock field="spacing" label="spacing" />
+                </div>
               </div>
 
               <div data-ui="field">
@@ -938,17 +991,27 @@ const previewScope = `@layer zazz.variables {
                     {defaults.radius}×
                   </output>
                 </label>
-                <input
-                  id="tb-radius"
-                  name="radius"
-                  type="range"
-                  min="0"
-                  max="3"
-                  step="0.25"
-                  value={defaults.radius}
-                  data-default={defaults.radius}
-                  data-theme-number="radius"
-                />
+                <div
+                  style="
+                    --display: grid;
+                    --items: center;
+                    --template-cols: minmax(0, 1fr) auto;
+                    --gap: 2;
+                  "
+                >
+                  <input
+                    id="tb-radius"
+                    name="radius"
+                    type="range"
+                    min="0"
+                    max="3"
+                    step="0.25"
+                    value={defaults.radius}
+                    data-default={defaults.radius}
+                    data-theme-number="radius"
+                  />
+                  <ThemeLock field="radius" label="radius" size="icon-sm" />
+                </div>
               </div>
 
               <div data-ui="field" class="theme-builder__corner-shape">
@@ -970,17 +1033,27 @@ const previewScope = `@layer zazz.variables {
                     {defaults.cornerShape}
                   </output>
                 </label>
-                <input
-                  id="tb-corner-shape"
-                  name="corner-shape"
-                  type="range"
-                  min={CORNER_SHAPE.min}
-                  max={CORNER_SHAPE.max}
-                  step={CORNER_SHAPE.step}
-                  value={defaults.cornerShape}
-                  data-default={defaults.cornerShape}
-                  data-theme-number="corner-shape"
-                />
+                <div
+                  style="
+                    --display: grid;
+                    --items: center;
+                    --template-cols: minmax(0, 1fr) auto;
+                    --gap: 2;
+                  "
+                >
+                  <input
+                    id="tb-corner-shape"
+                    name="corner-shape"
+                    type="range"
+                    min={CORNER_SHAPE.min}
+                    max={CORNER_SHAPE.max}
+                    step={CORNER_SHAPE.step}
+                    value={defaults.cornerShape}
+                    data-default={defaults.cornerShape}
+                    data-theme-number="corner-shape"
+                  />
+                  <ThemeLock field="corner-shape" label="corner shape" size="icon-sm" />
+                </div>
                 <div data-field-slot="description">
                   <span data-field-slot="hint"
                     >1 is round and higher is squarer. 0 is a bevel, and below 0
@@ -1008,6 +1081,7 @@ const previewScope = `@layer zazz.variables {
               "
             >
               Shadows
+              <ThemeLock section="shadows" label="all shadow fields" size="icon-sm" />
               <ChevronDown data-accordion-slot="marker" aria-hidden="true" />
             </summary>
             <div
@@ -1022,28 +1096,38 @@ const previewScope = `@layer zazz.variables {
                 <label data-field-slot="label" for="tb-shadow-color"
                   >Shadow color</label
                 >
-                <label data-ui="input-group">
-                  <input
-                    data-ui="input"
-                    id="tb-shadow-color"
-                    name="shadow-color"
-                    value={defaults.shadowColor}
-                    data-default={defaults.shadowColor}
-                    spellcheck="false"
-                    autocomplete="off"
-                    pattern="#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})"
-                    data-theme-token="--color-shadow"
-                  />
-                  <span data-input-group-slot="addon">
+                <div
+                  style="
+                    --display: grid;
+                    --items: center;
+                    --template-cols: minmax(0, 1fr) auto;
+                    --gap: 2;
+                  "
+                >
+                  <label data-ui="input-group">
                     <input
-                      type="color"
+                      data-ui="input"
+                      id="tb-shadow-color"
+                      name="shadow-color"
                       value={defaults.shadowColor}
-                      aria-label="Shadow color picker"
-                      class="theme-builder__swatch"
-                      data-theme-pick-for="tb-shadow-color"
+                      data-default={defaults.shadowColor}
+                      spellcheck="false"
+                      autocomplete="off"
+                      pattern="#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})"
+                      data-theme-token="--color-shadow"
                     />
-                  </span>
-                </label>
+                    <span data-input-group-slot="addon">
+                      <input
+                        type="color"
+                        value={defaults.shadowColor}
+                        aria-label="Shadow color picker"
+                        class="theme-builder__swatch"
+                        data-theme-pick-for="tb-shadow-color"
+                      />
+                    </span>
+                  </label>
+                  <ThemeLock field="shadow-color" label="shadow color" />
+                </div>
                 <div data-field-slot="description">
                   <span data-field-slot="hint"
                     >Tints every shadow. Each layer keeps its own opacity.</span
@@ -1069,16 +1153,26 @@ const previewScope = `@layer zazz.variables {
                     1.5
                   </output>
                 </label>
-                <input
-                  id="tb-elevation"
-                  name="card-elevation"
-                  type="range"
-                  min="0"
-                  max="8"
-                  step="0.5"
-                  value="1.5"
-                  data-fieldnotes-elevation
-                />
+                <div
+                  style="
+                    --display: grid;
+                    --items: center;
+                    --template-cols: minmax(0, 1fr) auto;
+                    --gap: 2;
+                  "
+                >
+                  <input
+                    id="tb-elevation"
+                    name="card-elevation"
+                    type="range"
+                    min="0"
+                    max="8"
+                    step="0.5"
+                    value="1.5"
+                    data-fieldnotes-elevation
+                  />
+                  <ThemeLock field="card-elevation" label="card elevation" size="icon-sm" />
+                </div>
                 <div data-field-slot="description">
                   <span data-field-slot="hint"
                     >Preview only: not part of the copied theme.</span
@@ -1105,17 +1199,27 @@ const previewScope = `@layer zazz.variables {
                     {defaults.shadow}°
                   </output>
                 </label>
-                <input
-                  id="tb-shadow"
-                  name="shadow-angle"
-                  type="range"
-                  min="0"
-                  max="360"
-                  step="15"
-                  value={defaults.shadow}
-                  data-default={defaults.shadow}
-                  data-theme-number="shadow"
-                />
+                <div
+                  style="
+                    --display: grid;
+                    --items: center;
+                    --template-cols: minmax(0, 1fr) auto;
+                    --gap: 2;
+                  "
+                >
+                  <input
+                    id="tb-shadow"
+                    name="shadow-angle"
+                    type="range"
+                    min="0"
+                    max="360"
+                    step="15"
+                    value={defaults.shadow}
+                    data-default={defaults.shadow}
+                    data-theme-number="shadow"
+                  />
+                  <ThemeLock field="shadow-angle" label="shadow angle" size="icon-sm" />
+                </div>
                 <div data-field-slot="description">
                   <span data-field-slot="hint"
                     >0° casts down; the light turns clockwise from there.</span
@@ -1144,17 +1248,27 @@ const previewScope = `@layer zazz.variables {
                         {defaults.shadowKnob}×
                       </output>
                     </label>
-                    <input
-                      id={`tb-shadow-${key}`}
-                      name={`shadow-${key}`}
-                      type="range"
-                      min="0"
-                      max="3"
-                      step="0.1"
-                      value={defaults.shadowKnob}
-                      data-default={defaults.shadowKnob}
-                      data-theme-number={`shadow-${key}`}
-                    />
+                    <div
+                      style="
+                        --display: grid;
+                        --items: center;
+                        --template-cols: minmax(0, 1fr) auto;
+                        --gap: 2;
+                      "
+                    >
+                      <input
+                        id={`tb-shadow-${key}`}
+                        name={`shadow-${key}`}
+                        type="range"
+                        min="0"
+                        max="3"
+                        step="0.1"
+                        value={defaults.shadowKnob}
+                        data-default={defaults.shadowKnob}
+                        data-theme-number={`shadow-${key}`}
+                      />
+                      <ThemeLock field={`shadow-${key}`} label={`shadow ${label.toLowerCase()}`} size="icon-sm" />
+                    </div>
                     <div data-field-slot="description">
                       <span data-field-slot="hint">{hint}</span>
                     </div>
@@ -1300,6 +1414,8 @@ const previewScope = `@layer zazz.variables {
   <!-- --shadow-tint at the kit's default makes the kit re-declare its shadow tokens here, so they follow the preview's spacing and light angle. The body family and text color are applied on <html> and inherited resolved, so the wrapper reads those tokens again, and paints the theme's background. -->
   <section
     style="
+      --display: grid;
+      --place-content: stretch;
       --min-h: 100%;
       --bg: var(--color-background);
       --overflow: clip;
@@ -1310,10 +1426,9 @@ const previewScope = `@layer zazz.variables {
       data-ui="scroll-fade"
       data-scroll-fade-axis="x"
       style="
-        --px--lg: 5;
-        --pt: 6;
+        --pt: 8;
         --pl: 5;
-        --pr: 0;
+        --pl--lg: 8;
         --min-h: 100%;
         --font-family: var(--font-family-body);
         --text: var(--color-foreground);
@@ -1331,10 +1446,14 @@ const previewScope = `@layer zazz.variables {
           --display: grid;
           --grid-flow: dense;
           --items: start;
-          --template-cols: repeat(4, minmax(min-content, 1fr));
+          --template-cols: repeat(4, minmax(30ch, 1fr));
           --pr: 5;
+          --pr--lg: 8;
           --gap-x: 5;
+          --gap-x--lg: 8;
           --gap-y: 0;
+          --space-y: 5;
+          --space-y--lg: 8;
           --min-w: 84rem;
           --container-type: inline-size;
         "
@@ -1347,7 +1466,13 @@ const previewScope = `@layer zazz.variables {
         <SightingsTable />
         <Spotters />
         <NextTrip />
+        <ReviewStatus />
         <FieldBadges />
+        <Journal toaster={TOASTER} />
+        <Conditions />
+        <PackList />
+        <Plates />
+        <VerifyCode />
         {rest.slice(2).map((s) => <SpeciesCard species={s} />)}
       </div>
     </div>
@@ -1355,3 +1480,8 @@ const previewScope = `@layer zazz.variables {
 
   <ui-toaster id={TOASTER} popover="manual"></ui-toaster>
 </fieldnotes-demo>
+
+<script>
+  import "../scripts/theme-builder.ts";
+  import "../scripts/fieldnotes.ts";
+</script>

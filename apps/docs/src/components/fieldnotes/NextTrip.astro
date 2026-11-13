@@ -1,13 +1,12 @@
 ---
 /**
- * The next trip: habitat filters adapted from the multiple toggle-group fragment,
- * with the checked state themed to the secondary role through the toggle's
- * `--ui-toggle-*--checked` hooks; the party in the avatar pile; secondary and
- * tertiary actions.
+ * The next trip: habitat filters adapted from the multiple toggle-group
+ * fragment, the party in the avatar pile, and secondary and tertiary actions.
  */
 import { Bookmark, UserPlus } from '@lucide/astro';
 import { spotters } from '../../lib/fieldnotes.ts';
 import Avatars from './Avatars.astro';
+import Card from './Card.astro';
 import CardHeader from './CardHeader.astro';
 
 const habitats = [
@@ -19,40 +18,18 @@ const habitats = [
 const party = spotters.filter((s) => ['YO', 'JA', 'VE'].includes(s.initials));
 ---
 
-<section
-  data-ui='card'
-  data-card-variant='outline'
-  aria-labelledby='fn-trip-title'
-  style='
-    --gap: 5;
-    --mb: 6;
-    --bg: var(--color-card);
-    --elevation: 1.5;
-    --template-cols: minmax(min-content, 1fr);
-  '
->
+<Card labelledby='fn-trip-title' gap={5}>
   <CardHeader
     id='fn-trip-title'
     title='Next trip'
-    description='Mauritius, 14 to 21 March. Dodo country.'
+    description='Mauritius, March 14 to 21. Dodo country.'
   />
-  <div style='--display: grid; --gap: 2'>
+  <div style='
+      --display: grid;
+      --gap: 2;
+    '>
     <span id='fn-trip-habitats' data-ui='text-sm' style='--font-weight: strong'>Habitats</span>
-    <ui-toggle-group
-      role='group'
-      aria-labelledby='fn-trip-habitats'
-      style='
-        --ui-toggle-bg--checked: var(--color-secondary);
-        --ui-toggle-bg--checked-hover: oklch(from var(--color-secondary) l c h / 0.9);
-        --ui-toggle-bg--checked-active: oklch(from var(--color-secondary) l c h / 0.8);
-        --ui-toggle-text--checked: var(--color-secondary-foreground);
-        --ui-toggle-text--checked-hover: var(--color-secondary-foreground);
-        --ui-toggle-text--checked-active: var(--color-secondary-foreground);
-        --ui-toggle-border-color--checked: var(--color-secondary);
-        --ui-toggle-border-color--checked-hover: var(--color-secondary);
-        --ui-toggle-border-color--checked-active: var(--color-secondary);
-      '
-    >
+    <ui-toggle-group role='group' aria-labelledby='fn-trip-habitats'>
       {
         habitats.map((h) => (
           <label data-ui='toggle'>
@@ -63,7 +40,11 @@ const party = spotters.filter((s) => ['YO', 'JA', 'VE'].includes(s.initials));
       }
     </ui-toggle-group>
   </div>
-  <div style='--display: flex; --items: center; --gap: 3'>
+  <div style='
+      --display: flex;
+      --items: center;
+      --gap: 3;
+    '>
     <Avatars
       initials={party.map((p) => p.initials)}
       label={`Going: ${party.map((p) => p.name).join(', ')}`}
@@ -72,7 +53,11 @@ const party = spotters.filter((s) => ['YO', 'JA', 'VE'].includes(s.initials));
       {party.length} going
     </span>
   </div>
-  <div style='--display: grid; --grid-cols: 2; --gap: 2'>
+  <div style='
+      --display: grid;
+      --grid-cols: 2;
+      --gap: 2;
+    '>
     <button data-ui='button' data-button-variant='secondary' type='button'>
       <Bookmark aria-hidden='true' /> Save trip
     </button>
@@ -80,4 +65,4 @@ const party = spotters.filter((s) => ['YO', 'JA', 'VE'].includes(s.initials));
       <UserPlus aria-hidden='true' /> Invite
     </button>
   </div>
-</section>
+</Card>

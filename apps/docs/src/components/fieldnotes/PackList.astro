@@ -1,0 +1,48 @@
+---
+/**
+ * The trip's packing list, adapted from the checkbox fragment: the first box
+ * controls the group (`data-checkbox-controls`) and shows as mixed while only
+ * some of it is packed.
+ */
+import Card from './Card.astro';
+import CardHeader from './CardHeader.astro';
+
+const items = [
+  { value: 'binoculars', label: 'Binoculars', packed: true },
+  { value: 'notebook', label: 'Field notebook and two pencils', packed: true },
+  { value: 'waterproofs', label: 'Waterproofs', packed: true },
+  { value: 'batteries', label: 'Spare batteries', packed: false },
+  { value: 'repellent', label: 'Insect repellent', packed: false },
+];
+---
+
+<Card labelledby='fn-pack-title'>
+  <CardHeader
+    id='fn-pack-title'
+    title='Packing list'
+    description='Mauritius, March 14 to 21.'
+  />
+  <fieldset data-ui='field-group'>
+    <legend style='--sr: only'>Packing list</legend>
+    <div style='
+        --display: flex-col;
+        --gap: 3;
+      '>
+      <label data-ui='field' data-field-orientation='horizontal'>
+        <input type='checkbox' name='trip-pack-all' data-checkbox-controls='trip-pack' />
+        <span data-field-slot='label'>Everything packed</span>
+      </label>
+      <hr data-ui='separator' />
+      {
+        items.map((item) => (
+          <label data-ui='field' data-field-orientation='horizontal'>
+            <input type='checkbox' name='trip-pack' value={item.value} checked={item.packed} />
+            <span data-field-slot='label' style='--font-weight: body'>
+              {item.label}
+            </span>
+          </label>
+        ))
+      }
+    </div>
+  </fieldset>
+</Card>

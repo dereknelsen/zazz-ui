@@ -6,7 +6,9 @@ sectionOrder: 3
 order: 2
 ---
 
-Grid tracks take a count (`--grid-cols: 3` is three equal tracks) or `subgrid`; a raw track list goes in `--template-cols`. Place with `--col-span`, `--col-start`, `--col-end` and the `--row-*` twins, or write `--col-start: 1; --col-end: -1` to span every track. Inside a layout, `--band: layout-md` places a child in a band.
+Grid tracks take a count (`--grid-cols: 3` is three equal tracks); a raw track list goes in `--template-cols`. Place with `--col-span`, `--col-start`, `--col-end` and the `--row-*` twins, or write `--col-start: 1; --col-end: -1` to span every track. Inside a layout, `--band: layout-md` places a child in a band.
+
+Four `--display` keywords are grids that bring their own tracks: `subgrid`, `subgrid-col`, and `subgrid-row` take them from the parent grid, and `grid-gallery` works out its column count from its child count. The flex directions are display keywords too (`flex-col`, `flex-row-reverse`). The [display](/api/foundations/display/) page has the rules and an example of each.
 
 `--display: grid` (and `inline-grid`) packs its rows at the top: it defaults to `place-content: start stretch`, so a grid taller than its content keeps its rows at their content height instead of stretching them to fill the extra height. Rows sized with `fr` fill it either way. Any `--place-content`, at the base or a breakpoint, replaces the default (`--place-content: center`). It also stays off where the rows need that extra height to center something: on an element with `--place-items` or `--items`, on a `grid-pile`, and on primitives, which keep the browser's `normal`. Two cases keep `normal` too and may need the pair written out:
 

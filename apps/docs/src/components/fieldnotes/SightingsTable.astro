@@ -1,20 +1,23 @@
 ---
 /**
  * Recent sightings. Filtering, sorting, and paging run in `<fieldnotes-sightings>`
- * (scripts/fieldnotes.ts) over the rows rendered here; without it the table
- * still reads in full.
+ * (scripts/fieldnotes.ts) over the rows rendered here. The rows are rendered
+ * already in that element's opening state (newest first, the first page shown,
+ * the rest `hidden`), so nothing moves when it upgrades.
  */
 import { ArrowUpDown } from '@lucide/astro';
 import {
   STATUS_VARIANT,
   bySlug,
   sightings,
-  sprite,
 } from '../../lib/fieldnotes.ts';
 import CardHeader from './CardHeader.astro';
 import Sprite from './Sprite.astro';
 
 const PAGE_SIZE = 5;
+// The order and page <fieldnotes-sightings> opens on: date, descending, page one.
+const rows = sightings.toSorted((a, b) => b.date.localeCompare(a.date));
+const paged = rows.length > PAGE_SIZE;
 const formatDate = (date: string) =>
   date.length === 4 ?
     date
@@ -36,7 +39,6 @@ const formatDate = (date: string) =>
     --position: relative;
     --col-span: 3;
     --gap: 4;
-    --mb: 6;
     --min-w: 0;
     --bg: var(--color-card);
     --elevation: 1.5;
@@ -100,11 +102,12 @@ const formatDate = (date: string) =>
       </thead>
       <tbody>
         {
-          sightings.map((row, i) => {
+          rows.map((row, i) => {
             const s = bySlug[row.slug];
             const tip = `fn-row-tip-${i}`;
             return (
               <tr
+                hidden={i >= PAGE_SIZE}
                 data-species={s.name}
                 data-date={row.date}
                 data-status={row.status}
@@ -131,19 +134,7 @@ const formatDate = (date: string) =>
                           --radius: 1.5;
                         '
                       >
-                        <img
-                          class='sprite'
-                          src={sprite(s.slug)}
-                          alt=''
-                          width='512'
-                          height='512'
-                          loading='lazy'
-                          decoding='async'
-                          style='
-                            --size: 8;
-                            --object-fit: contain;
-                          '
-                        />
+                        <Sprite slug={s.slug} />
                       </button>
                       <div data-tooltip-slot='content' id={tip} popover='hint'>
                         <i>{s.scientific}</i>
@@ -212,19 +203,25 @@ const formatDate = (date: string) =>
       aria-live='polite'
       style='--text: var(--color-muted-foreground)'
     >
-      {sightings.length} sightings
+      {
+        paged ?
+          `1–${PAGE_SIZE} of ${rows.length} sightings`
+        : `${rows.length} sightings`
+      }
     </p>
     <ui-button-group role='group' aria-label='Pages'>
       <button
         data-ui='button'
         data-button-variant='outline'
         type='button'
+        disabled
         data-fieldnotes-page='prev'>Previous</button
       >
       <button
         data-ui='button'
         data-button-variant='outline'
         type='button'
+        disabled={!paged}
         data-fieldnotes-page='next'>Next</button
       >
     </ui-button-group>

@@ -95,6 +95,27 @@
     image-rendering: pixelated;
   }
 
+  /* The card grid is packed by script (scripts/fieldnotes.ts), so the cards wait
+     for it out of sight and fade in packed instead of jumping into place. Only
+     where scripts run, and only for so long: if the script never arrives, the
+     plain row-aligned grid shows itself. */
+  [data-fieldnotes-grid] {
+    transition: opacity 0.3s ease-out;
+  }
+
+  @media (scripting: enabled) {
+    fieldnotes-demo:not([data-fieldnotes-packed]) [data-fieldnotes-grid] {
+      opacity: 0;
+      animation: fieldnotes-unpacked 0.3s 4s forwards;
+    }
+  }
+
+  @keyframes fieldnotes-unpacked {
+    to {
+      opacity: 1;
+    }
+  }
+
   /* Counts and dates line up digit for digit. */
   .fieldnotes__num {
     font-variant-numeric: tabular-nums;
@@ -113,6 +134,28 @@
     background: none;
     white-space: pre;
     overflow: visible;
+  }
+
+  /* A field's lock (components/ThemeLock.astro): quiet and open until pressed,
+     then the closed lock on a filled chip. Both icons are in the markup. */
+  .theme-builder__lock {
+    &:not([aria-pressed="true"]) {
+      &:not(:hover, :focus-visible) {
+        color: var(--color-muted-foreground);
+      }
+
+      & .theme-builder__lock-closed {
+        display: none;
+      }
+    }
+
+    &[aria-pressed="true"] {
+      background-color: var(--color-muted);
+
+      & .theme-builder__lock-open {
+        display: none;
+      }
+    }
   }
 
   /* Without corner-shape the superellipse slider would change nothing: drop it and its chip. */

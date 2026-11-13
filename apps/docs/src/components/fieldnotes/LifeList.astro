@@ -1,5 +1,6 @@
 ---
 import { species, todayByHour } from '../../lib/fieldnotes.ts';
+import Card from './Card.astro';
 import CardHeader from './CardHeader.astro';
 
 const total = species.length;
@@ -31,19 +32,7 @@ const panels = [
 ];
 ---
 
-<section
-  data-ui='card'
-  data-card-variant='outline'
-  aria-labelledby='fn-life-title'
-  style='
-    --col-span: 2;
-    --gap: 4;
-    --mb: 6;
-    --bg: var(--color-card);
-    --elevation: 1.5;
-    --template-cols: minmax(min-content, 1fr);
-  '
->
+<Card labelledby='fn-life-title' span={2}>
   <CardHeader
     id='fn-life-title'
     title='Life list'
@@ -145,7 +134,10 @@ const panels = [
       <div
         role='img'
         aria-label={`Sightings by hour today: ${todayByHour.map((d) => `${d.hour}m ${d.count}`).join(', ')}`}
-        style='--display: grid; --gap: 1'
+        style='
+          --display: grid;
+          --gap: 1;
+        '
       >
         <div
           aria-hidden='true'
@@ -189,4 +181,4 @@ const panels = [
       </div>
     </figure>
   </div>
-</section>
+</Card>

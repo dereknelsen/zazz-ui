@@ -1,0 +1,55 @@
+---
+/**
+ * The reviewer sign-in step, adapted from the OTP fragment: one input drawn as
+ * six cells in two groups. The card is the form, so the button validates it.
+ */
+import Card from './Card.astro';
+import CardHeader from './CardHeader.astro';
+---
+
+<Card as='form' labelledby='fn-verify-title'>
+  <CardHeader
+    id='fn-verify-title'
+    title='Check your email'
+    description='Reviewers sign in with a code. We sent yours to you@fieldnotes.example.'
+  />
+  <div data-ui='field'>
+    <label data-field-slot='label' for='fn-verify-code'>Sign-in code</label>
+    <ui-otp data-otp-groups='3-3'>
+      <input
+        data-ui='input'
+        data-otp-slot='input'
+        id='fn-verify-code'
+        name='code'
+        type='text'
+        autocomplete='one-time-code'
+        inputmode='numeric'
+        pattern='\d{6}'
+        maxlength='6'
+        required
+        spellcheck='false'
+        autocapitalize='off'
+      />
+    </ui-otp>
+    <div data-field-slot='description'>
+      <span data-field-slot='hint'>The code works for 10 minutes.</span>
+      <span data-field-slot='error'>Enter all 6 digits.</span>
+    </div>
+  </div>
+  <footer
+    style='
+      --display: flex;
+      --flex-wrap: wrap;
+      --items: center;
+      --justify: space-between;
+      --gap: 2;
+    '
+  >
+    <button data-ui='button' data-button-variant='ghost' type='button'>
+      Send a new code
+    </button>
+    <button data-ui='button' data-button-variant='primary' type='submit'>
+      Sign in
+    </button>
+  </footer>
+</Card>

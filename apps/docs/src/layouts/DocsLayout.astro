@@ -36,15 +36,18 @@ const jsonLd = [
 ---
 
 <BaseLayout title={title} description={description} jsonLd={jsonLd} markdown>
-  <main id="main" data-ui="layout" style="--py: 8">
+  <main id="main" data-ui="layout" style="
+      --py: 8;
+      --py--lg: 16;
+    ">
     <div
       style="
         --display: grid;
+        --items: start;
         --template-cols: minmax(0, 1fr);
         --template-cols--lg: 15rem minmax(0, 1fr);
         --template-cols--xl: 15rem minmax(0, 1fr) 13rem;
         --gap: 6;
-        --items: start;
       "
     >
       <Sidebar label={section} sections={sidebar} />
@@ -72,7 +75,10 @@ const jsonLd = [
             description && (
               <p
                 data-ui="text-lg"
-                style="--mt: 2; --text: var(--color-muted-foreground)"
+                style="
+                  --mt: 2;
+                  --text: var(--color-muted-foreground);
+                "
               >
                 {description}
               </p>

@@ -1,0 +1,39 @@
+---
+/**
+ * One initials avatar (the avatar fragment's fallback face) in its person's
+ * accent role (`avatarRole`). Decorative: the name is always written beside
+ * it, or carried by the pile's label (Avatars.astro).
+ */
+import { avatarRole } from '../../lib/fieldnotes.ts';
+
+interface Props {
+  initials: string;
+  /** Rendered size, a spacing-scale number. */
+  size?: number;
+  /** In a pile: ringed in the card's color, so overlapped avatars read apart. */
+  stacked?: boolean;
+  /** Overlaps the avatar before it. */
+  overlap?: boolean;
+}
+const { initials, size = 8, stacked = false, overlap = false } = Astro.props;
+const role = avatarRole(initials);
+---
+
+<span
+  aria-hidden='true'
+  data-ui={size > 8 ? 'text-xs' : 'text-2xs'}
+  style={`
+    --display: grid;
+    --place-items: center;
+    --shrink: 0;
+    --size: ${size};
+    ${overlap ? '--ml: -2;' : ''}
+    --font-weight: strong;
+    --text: var(--color-${role}-foreground);
+    --bg: var(--color-${role});
+    --radius: full;
+    ${stacked ? '--ring: 2; --ring-color: var(--color-card);' : ''}
+  `}
+>
+  {initials}
+</span>

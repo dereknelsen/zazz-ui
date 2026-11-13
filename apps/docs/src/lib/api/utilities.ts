@@ -5,8 +5,10 @@
  */
 import {
   BREAKPOINTS,
+  DISPLAY_GALLERY,
   DISPLAY_PILE,
   DISPLAY_SHORTHANDS,
+  DISPLAY_SUBGRIDS,
   PSEUDO_ONLY,
   STATES,
   UTILITIES,
@@ -72,9 +74,9 @@ const FEEDS: Record<string, string> = {
 
 /** Value notes for utilities whose accepted values go beyond their mode. */
 const VALUE_NOTES: Record<string, string> = {
-  display: `keyword, plus flex shorthands that set the direction (${Object.keys(DISPLAY_SHORTHANDS).join(", ")}) and ${DISPLAY_PILE}, which stacks the children in one cell`,
-  "grid-cols": "track count (equal tracks) or subgrid",
-  "grid-rows": "track count (equal tracks) or subgrid",
+  display: `keyword, plus flex shorthands that set the direction (${Object.keys(DISPLAY_SHORTHANDS).join(", ")}), ${DISPLAY_PILE}, which stacks the children in one cell, ${DISPLAY_GALLERY}, which picks its column count from its child count, and ${Object.keys(DISPLAY_SUBGRIDS).join(", ")}, which take the parent grid's tracks`,
+  "grid-cols": "track count (equal tracks)",
+  "grid-rows": "track count (equal tracks)",
   "col-span": "span count",
   "row-span": "span count",
   "grid-fit": "minimum track length (auto-fit columns)",

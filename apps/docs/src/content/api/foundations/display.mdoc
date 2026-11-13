@@ -1,0 +1,100 @@
+---
+title: "Display"
+description: "The --display utility and the keywords the kit adds to it: flex directions, the pile, the gallery, and subgrids."
+section: Foundations
+sectionOrder: 1
+order: 2.5
+---
+
+`--display` writes the CSS `display` property, so it takes whatever `display` takes: `block`, `flex`, `grid`, `none`, `contents`. The kit adds thirteen keywords of its own. Each sets a display and the thing you would otherwise set right after it: a flex direction, a shared cell, or a set of grid tracks.
+
+| Keyword | What you get |
+| --- | --- |
+| `flex-row`, `flex-col` | a flex container and its direction |
+| `flex-row-reverse`, `flex-col-reverse` | the same, laid out from the far end |
+| `inline-flex-row`, `inline-flex-col`, and their `-reverse` forms | an inline flex container and its direction |
+| `grid-pile` | a grid with every direct child in one cell, centered |
+| `grid-gallery` | a grid that picks its column count from its child count |
+| `subgrid` | a grid on its parent grid's columns and rows |
+| `subgrid-col` | a grid on its parent grid's columns |
+| `subgrid-row` | a grid on its parent grid's rows |
+
+## Breakpoints and spelling
+
+`--display` takes breakpoints and no states. A tier needs a base, so write `--display: none; --display--md: flex` to hide something below `md`; `--display--md: flex` alone does nothing. Every keyword works at every breakpoint: `--display: flex-col; --display--md: grid-gallery` is a stack on a phone and a gallery from `md` up.
+
+The kit matches the keywords as text, so they need exactly [one space after the colon](/api/utilities/#one-space-after-the-colon). `--display:flex-col` is not a flex container. The editor and `<ui-debug>` flag it.
+
+## Flex direction
+
+The direction is part of the display, and there is no `--flex-direction` utility. A plain `flex` or `inline-flex` at a breakpoint goes back to a row.
+
+{% preview src="utilities/flex-direction" /%}
+
+The `-reverse` forms lay the children out from the far end. Only the picture changes. A screen reader and the Tab key still follow the order in the markup, so don't reverse anything a person has to move through in sequence.
+
+{% preview src="utilities/flex-reverse" /%}
+
+The `inline-flex-` forms sit in a line of text, the way `inline-flex` does.
+
+{% preview src="utilities/inline-flex" /%}
+
+For wrapping, growing, and alignment, see [flexbox and grid](/api/utilities/flexbox-grid/).
+
+## Pile
+
+`--display: grid-pile` puts every direct child in the same grid cell and centers it. It does what `position: absolute` layering does, except that the children stay in flow and the tallest one sets the height.
+
+{% preview src="utilities/pile" /%}
+
+The centering beats a primitive's own alignment. A child's own placement wins over it, and so do `--place-items` and `--items` on the pile. On a layered hero, add `--isolation: isolate` so the layers' `--z` values stay inside it.
+
+## Gallery
+
+`--display: grid-gallery` works out its own column count. It puts as many children in a row as fit, up to six, and it won't pick a count that leaves one child alone in the last row. Six children go 6, then 4 + 2, then 3 + 3 as the space narrows. They never go 5 + 1.
+
+{% preview src="utilities/gallery" /%}
+
+A child is at least `--ui-gallery-min-w` wide, `20ch` by default. Set it on the gallery to change how soon the columns drop: `--ui-gallery-min-w: 12rem` suits cards, and something like `5rem` suits logos.
+
+It can't always avoid a lone child:
+
+- At two columns an odd count still ends on one. The only alternative is a single column, which is worse.
+- 13, 21, 25, and 31 children end on one at some widths, because the next count down leaves one alone too.
+
+A few things to know before you rely on it:
+
+- It counts the children that take a cell. Children with `hidden`, and `<template>`, `<script>`, and `<style>`, are left out.
+- It reads the gap from `--gap` or `--gap-x`. It can't see a gap set in a stylesheet or by a primitive, and near a width where the count changes that can let a lone child through.
+- A child that spans columns with `--col-span` is still counted once, so keep each child to one cell.
+- A `--grid-cols` on the gallery at the same breakpoint is ignored. At a higher one it takes over: `--display: grid-gallery; --grid-cols--lg: 4` is a gallery up to `lg` and four columns after.
+
+## Subgrid
+
+A subgrid is a grid item that lays its own children out on its parent grid's tracks. It needs to be a direct child of a grid, and it needs to span the tracks it wants with `--col-span` or `--row-span`.
+
+`--display: subgrid-col` takes the parent's columns, so a nested row lines up with the cells above it:
+
+{% preview src="utilities/subgrid-col" /%}
+
+`--display: subgrid-row` takes the parent's rows. Give each card three rows and the titles, text, and footers stay level, however long one of them runs:
+
+{% preview src="utilities/subgrid-row" /%}
+
+`--display: subgrid` takes both, and the children land on the parent's cells:
+
+{% preview src="utilities/subgrid" /%}
+
+If the number of children varies, use `subgrid-col` or `subgrid-row`. A two-axis subgrid has no spare tracks for the extra ones.
+
+The axis a subgrid does not take keeps its own `--grid-cols` or `--grid-rows`. Across breakpoints, the highest one that names a display or a count decides:
+
+- `--display: grid; --grid-cols: 2; --display--md: subgrid-col` is two columns below `md` and the parent's columns from there up.
+- `--display: subgrid-col; --grid-cols--lg: 3` is the parent's columns up to `lg` and three columns after.
+- At the same breakpoint the display wins, so `--display: subgrid-col; --grid-cols: 3` ignores the count.
+
+`--grid-cols: subgrid` and `--grid-rows: subgrid` no longer exist. The editor and `vp run lint:html` suggest the rewrite. `--template-cols: subgrid` and `--template-rows: subgrid` still work, for an element whose display you can't change.
+
+## Plain grid
+
+`--display: grid` and `inline-grid` pack their rows at the top instead of stretching them, and `--place-content` changes that. The [flexbox and grid](/api/utilities/flexbox-grid/) page has the details, along with tracks, placement, and gaps.

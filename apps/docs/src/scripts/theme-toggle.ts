@@ -10,8 +10,8 @@
  * the incoming copy would uncheck the live header's choice.
  *
  * A custom element because swap navigation never runs a swapped-in page's
- * scripts (the mobile menu's toggle is re-rendered on every page); BaseLayout
- * defines it on every page.
+ * scripts (the mobile menu's toggle is re-rendered on every page).
+ * ThemeToggle.astro loads this module, and the header puts it on every page.
  */
 import { ZazzElement, defineZazzElement } from "@zazz-ui/core/base/zazz-element.ts";
 

@@ -91,11 +91,8 @@ const ogImage = new URL(og.src, site.url);
       ))
     }
     <slot name="head" />
-    <!-- Defined on every page: a swap navigation runs none of the new page's scripts. -->
-    <script src="../scripts/hero-scene.ts"></script>
-    <script src="../scripts/theme-builder.ts"></script>
-    <script src="../scripts/fieldnotes.ts"></script>
-    <script src="../scripts/theme-toggle.ts"></script>
+    <!-- Components ship their own scripts; this loads them after a swap navigation, which runs none. -->
+    <script src="../scripts/islands.ts"></script>
 
     <!-- Guestbook -->
     <script

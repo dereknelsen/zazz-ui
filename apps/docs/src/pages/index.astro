@@ -1,4 +1,5 @@
 ---
+import HeroScene from "../components/HeroScene.astro";
 import ThemeBuilder from "../components/ThemeBuilder.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { softwareLd } from "../lib/jsonld.ts";
@@ -19,28 +20,15 @@ import { MoveRight } from "@lucide/astro";
     >
       <div
         style="
-          --display: grid;
+          --display: subgrid-col;
           --position: relative;
-          --place-items: center;
-          --grid-cols: subgrid;
-          --pt: 12;
-          --pb: 6;
           --h: auto;
           --h--lg: 112;
           --max-h: 100%;
           --max-h--lg: 70svh;
+          --overflow: clip;
         "
       >
-        <div
-          style="
-            --position: absolute;
-            --inset: 0;
-            --bg-linear: to bottom;
-            --bg-stops: transparent 0%, var(--color-background);
-            --z: 20;
-          "
-        >
-        </div>
         <figure
           style="
             --display: grid;
@@ -50,26 +38,22 @@ import { MoveRight } from "@lucide/astro";
             --z: 10;
           "
         >
-          <hero-scene
-            aria-hidden="true"
-            style="
-              --position: absolute;
-              --inset: 0;
-              --size: 100%;
-              --pointer-events: none;
-            "
-          >
-          </hero-scene>
+          <HeroScene />
         </figure>
         <div
           style="
-            --display: flex-col;
-            --position: relative;
-            --items: start;
-            --justify: start;
+            --display: grid;
+            --place-items: center;
+            --place-content: center;
+            --self: center;
+            --self--lg: start;
             --band: layout-xl;
-            --pb: 12;
-            --gap: 12;
+            --py: 11;
+            --py--lg: 0;
+            --top: var(--ui-header-height);
+            --mb: 0;
+            --h: auto;
+            --h--lg: 100%;
             --z: 30;
           "
         >
@@ -78,7 +62,6 @@ import { MoveRight } from "@lucide/astro";
               --display: grid;
               --place-items: center;
               --place-items--lg: start;
-              --place-content: stretch;
               --template-cols--lg: 1.2fr 1fr;
               --gap: 6;
               --gap--lg: 12;
@@ -136,7 +119,7 @@ import { MoveRight } from "@lucide/astro";
                 <a
                   href="/playground"
                   data-ui="button"
-                  data-button-variant="ghost">Code playground <MoveRight /></a
+                  data-button-variant="muted" style="--backdrop-filter: brightness(1.5)">Code playground <MoveRight /></a
                 >
               </div>
             </div>

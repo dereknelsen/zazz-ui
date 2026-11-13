@@ -4,14 +4,17 @@
  * - `<fieldnotes-demo>`: packs the card grid like a masonry (each card's row span
  *   is measured, on a 1px row track, so cards of any height and column span sit
  *   tight under `grid-auto-flow: dense`; without the script the grid stays a
- *   plain row-aligned grid), range inputs update their `<output for>`, the
- *   theme panel's card-elevation slider restyles the cards (preview only), and
- *   ⌘/Ctrl+Enter in the sighting form presses its log button.
+ *   plain row-aligned grid; with it the cards stay invisible until the first
+ *   pack, then fade in, see `[data-fieldnotes-packed]` in site.css), range inputs update their `<output for>`, the
+ *   theme panel's card-elevation slider restyles the cards (preview only),
+ *   ⌘/Ctrl+Enter in the sighting form presses its log button, and no form in
+ *   the demo submits.
  * - `<fieldnotes-sightings>`: filters, sorts, and pages the rendered table rows,
  *   showing the empty state when a filter matches nothing.
  *
  * Custom elements because swap navigation never runs a swapped-in page's
- * scripts; BaseLayout defines them on every page.
+ * scripts. ThemeBuilder.astro loads this module on its own page and
+ * scripts/islands.ts loads it after a swap.
  */
 import { ZazzElement, defineZazzElement } from "@zazz-ui/core/base/zazz-element.ts";
 
@@ -44,6 +47,8 @@ class FieldnotesDemo extends ZazzElement {
       },
       { signal },
     );
+    // The cards' forms are for show: a submit validates, and goes nowhere.
+    this.addEventListener("submit", (event) => event.preventDefault(), { signal });
     this.addEventListener(
       "keydown",
       (event) => {
@@ -86,6 +91,7 @@ class FieldnotesDemo extends ZazzElement {
 
     let frame = 0;
     const pack = () => {
+      cancelAnimationFrame(frame);
       frame = 0;
       // Measured unstretched: a box shorter than its content collapses the rows
       // that hold scroll containers (the table), so a stretched card can't be read.
@@ -113,12 +119,22 @@ class FieldnotesDemo extends ZazzElement {
         if (hole > 1) span(card, height + gap + hole);
       });
     };
+    // Packed before the first paint this element takes part in, so the grid is
+    // never seen row-aligned or on its bare 1px tracks.
+    pack();
     // One pass per frame however many cards resized; a pass ends at the same
     // sizes it started from, so it does not re-trigger itself.
     const observer = new ResizeObserver(() => {
       frame ||= requestAnimationFrame(pack);
     });
     for (const card of cards) observer.observe(card);
+    // The cards are invisible until now (site.css). They show a frame later:
+    // by then a theme restored from the URL has applied and been packed too.
+    requestAnimationFrame(() => {
+      if (signal.aborted) return;
+      pack();
+      this.setAttribute("data-fieldnotes-packed", "");
+    });
     signal.addEventListener(
       "abort",
       () => {

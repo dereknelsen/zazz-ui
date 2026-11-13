@@ -1,5 +1,5 @@
 /**
- * The Unicorn Studio SDK, loaded once per document (`<hero-scene>`).
+ * The Unicorn Studio SDK (v2.6.0), loaded once per document (`<hero-scene>`).
  */
 
 // Self-hosted copy of the SDK, so the site makes no CDN request for it. It
@@ -8,14 +8,16 @@
 const SDK = "/unicorn/unicornStudio.umd.js";
 
 export interface Scene {
+  /** Sets an authored variable; an unknown name logs a warning and changes nothing. */
+  setVariable(name: string, value: number | boolean): Scene;
   destroy(): void;
 }
 export interface SceneOptions {
-  elementId: string;
+  element: HTMLElement;
   /** A scene exported as JSON, fetched from this URL instead of by project id. */
   filePath: string;
-  /** Serve the scene from Unicorn Studio's production CDN. */
-  production?: boolean;
+  /** Starting values for the scene's variables, over their authored defaults. */
+  initialVariables?: Record<string, number | boolean>;
 }
 export interface UnicornStudio {
   addScene(options: SceneOptions): Promise<Scene>;

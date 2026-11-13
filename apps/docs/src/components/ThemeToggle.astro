@@ -1,8 +1,9 @@
 ---
 /**
  * Light / dark / system, icons only. Behavior lives in scripts/theme-toggle.ts
- * (`<theme-toggle>`, defined by BaseLayout), which names each instance's
- * radios and checks the stored choice.
+ * (`<theme-toggle>`), which names each instance's radios and checks the
+ * stored choice. The header renders this on every page, so the script below
+ * is on every page too.
  */
 import { Monitor, Moon, Sun } from "@lucide/astro";
 
@@ -23,3 +24,7 @@ const options = [
     ))
   }
 </theme-toggle>
+
+<script>
+  import "../scripts/theme-toggle.ts";
+</script>

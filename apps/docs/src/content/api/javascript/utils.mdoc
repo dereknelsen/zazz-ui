@@ -28,9 +28,9 @@ Utils.parseValue("hello"); // "hello"
 Collects every attribute under a prefix, camel-cases the names, and parses the values:
 
 ```js
-// <ui-carousel data-carousel-loop="true" data-carousel-start-index="2">
+// <ui-carousel data-carousel-loop="true" data-carousel-start-snap="2">
 Utils.parseDataAttributes(element, "data-carousel-");
-// { loop: true, startIndex: 2 }
+// { loop: true, startSnap: 2 }
 ```
 
 The result is untyped; narrow it yourself when you need a typed shape.

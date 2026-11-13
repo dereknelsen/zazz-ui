@@ -1,0 +1,72 @@
+---
+/**
+ * Tomorrow's conditions at the feeder, adapted from the meter fragment. Each
+ * meter's `low`, `high`, and `optimum` put its value in the good, middling, or
+ * poor region, so the card shows the success, warning, and destructive roles.
+ */
+import Card from './Card.astro';
+import CardHeader from './CardHeader.astro';
+
+const readings = [
+  { id: 'visibility', label: 'Visibility', reading: '2 km, fog', max: 10, low: 3, high: 7, optimum: 9, value: 2 },
+  { id: 'wind', label: 'Wind', reading: '9 knots', max: 40, low: 12, high: 25, optimum: 5, value: 9 },
+  { id: 'feeder', label: 'Feeder stock', reading: 'Half full', max: 100, low: 25, high: 60, optimum: 90, value: 50 },
+  { id: 'dodo', label: 'Chance of a dodo', reading: '0%', max: 100, low: 20, high: 60, optimum: 100, value: 0 },
+];
+---
+
+<Card labelledby='fn-conditions-title'>
+  <CardHeader
+    id='fn-conditions-title'
+    title='Dawn conditions'
+    description='Backyard feeder, tomorrow at 6:10 a.m.'
+  />
+  <div style='
+      --display: grid;
+      --gap: 4;
+    '>
+    {
+      readings.map((r) => (
+        <div data-ui='field'>
+          <label
+            data-field-slot='label'
+            for={`fn-conditions-${r.id}`}
+            style='
+              --display: flex;
+              --items: center;
+              --justify: space-between;
+              --gap: 4;
+            '
+          >
+            <span>{r.label}</span>
+            <span
+              class='fieldnotes__num'
+              data-ui='text-sm'
+              style='
+                --font-weight: body;
+                --text: var(--color-muted-foreground);
+              '
+            >
+              {r.reading}
+            </span>
+          </label>
+          <meter
+            data-ui='meter'
+            id={`fn-conditions-${r.id}`}
+            min='0'
+            max={r.max}
+            low={r.low}
+            high={r.high}
+            optimum={r.optimum}
+            value={r.value}
+          >
+            {r.reading}
+          </meter>
+        </div>
+      ))
+    }
+  </div>
+  <p data-ui='text-sm' style='--text: var(--color-muted-foreground)'>
+    Fog should lift by 8 a.m.
+  </p>
+</Card>

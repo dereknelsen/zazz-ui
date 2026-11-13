@@ -93,4 +93,4 @@ export default defineConfig([
 ]);
 ```
 
-`configs.recommended` sets a rule to `error` when the finding means the declaration does nothing at all (an unknown utility, a tier the family has no setter for or that has no base, a pseudo or group form the utility lacks, and a whitespace form the gates cannot match), and the rest to `warn`. Run it with `eslint "**/*.html"`; `eslint --fix` applies the formatter. In this repo that is `vp run lint:html` and `vp run fmt:html`, and the staged-files hook formats HTML on commit. The plugin is private to the monorepo for now.
+`configs.recommended` sets a rule to `error` when the finding means the declaration does nothing at all (an unknown utility, a tier the utility does not take or that has no base, a pseudo or group form the utility lacks, and a whitespace form the gates cannot match), and the rest to `warn`. Run it with `eslint "**/*.html"`; `eslint --fix` applies the formatter. In this repo that is `vp run lint:html` and `vp run fmt:html`, and the staged-files hook formats HTML on commit. The plugin is private to the monorepo for now.
