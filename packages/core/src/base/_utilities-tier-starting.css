@@ -4,21 +4,15 @@
 @layer ui.utilities {
   @starting-style {
     :where([style*="--starting:"]) {
-      --_anchor-name-starting: var(--anchor-name--starting);
-      --_position-anchor-starting: var(--position-anchor--starting);
-      --_position-area-starting: var(--position-area--starting);
       --_template-cols-starting: var(--template-cols--starting);
       --_template-rows-starting: var(--template-rows--starting);
       --_space-x-starting: var(--space-x--starting);
       --_space-y-starting: var(--space-y--starting);
-      --_text-wrap-starting: var(--text-wrap--starting);
-      --_text-decoration-starting: var(--text-decoration--starting);
       --_text-starting: var(--text--starting);
       --_bg-starting: var(--bg--starting);
       --_bg-alpha-starting: var(--bg-alpha--starting);
       --_border-color-starting: var(--border-color--starting);
       --_border-width-starting: var(--border-width--starting);
-      --_border-style-starting: var(--border-style--starting);
       --_border-starting: var(--border--starting);
       --_border-x-starting: var(--border-x--starting);
       --_border-y-starting: var(--border-y--starting);
@@ -30,9 +24,7 @@
       --_filter-starting: var(--filter--starting);
       --_elevation-starting: var(--elevation--starting);
       --_backdrop-filter-starting: var(--backdrop-filter--starting);
-      --_mix-blend-starting: var(--mix-blend--starting);
       --_shadow-starting: var(--shadow--starting);
-      --_shadow-angle-starting: var(--shadow-angle--starting);
       --_ring-starting: var(--ring--starting);
       --_ring-color-starting: var(--ring-color--starting);
       --_ring-offset-starting: var(--ring-offset--starting);
@@ -40,12 +32,7 @@
       --_scale-starting: var(--scale--starting);
       --_translate-starting: var(--translate--starting);
       --_rotate-starting: var(--rotate--starting);
-      --_animation-starting: var(--animation--starting);
-      --_transition-starting: var(--transition--starting);
-      --_transition-duration-starting: var(--transition-duration--starting);
-      --_transition-delay-starting: var(--transition-delay--starting);
       --_radius-starting: var(--radius--starting);
-      --_z-starting: var(--z--starting);
     }
   }
 }

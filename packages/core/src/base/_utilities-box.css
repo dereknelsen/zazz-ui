@@ -239,7 +239,7 @@
   }
 
   :where([style*="--z:"], [style*="--z--"], [style*="--group-z--"]) {
-    --_z-resolved: var(--_z-starting, var(--_z-disabled, var(--_z-active, var(--_z-focus-visible, var(--_z-focus-within, var(--_z-hover, var(--_z-checked, var(--_z-current, var(--_z-open, var(--_z-g-disabled, var(--_z-g-active, var(--_z-g-focus-visible, var(--_z-g-focus-within, var(--_z-g-hover, var(--_z-g-checked, var(--_z-g-current, var(--_z-g-open, var(--_z-stuck, var(--_z)))))))))))))))))));
+    --_z-resolved: var(--_z-disabled, var(--_z-active, var(--_z-focus-visible, var(--_z-focus-within, var(--_z-hover, var(--_z-checked, var(--_z-current, var(--_z-open, var(--_z-g-disabled, var(--_z-g-active, var(--_z-g-focus-visible, var(--_z-g-focus-within, var(--_z-g-hover, var(--_z-g-checked, var(--_z-g-current, var(--_z-g-open, var(--_z-stuck, var(--_z))))))))))))))))));
   }
   :where([style*="--z:"]) {
     --_z: var(--z);
@@ -263,27 +263,22 @@
   :where([style*="--container-type:"]) { container-type: var(--container-type) var(--_stuck-type,); }
   @container (width >= 40rem) {
     :where([style*="--container--sm:"]) { container: var(--container--sm); }
-    :where([style*="--container-name--sm:"]) { container-name: var(--container-name--sm); }
     :where([style*="--container-type--sm:"]) { container-type: var(--container-type--sm) var(--_stuck-type,); }
   }
   @container (width >= 48rem) {
     :where([style*="--container--md:"]) { container: var(--container--md); }
-    :where([style*="--container-name--md:"]) { container-name: var(--container-name--md); }
     :where([style*="--container-type--md:"]) { container-type: var(--container-type--md) var(--_stuck-type,); }
   }
   @container (width >= 64rem) {
     :where([style*="--container--lg:"]) { container: var(--container--lg); }
-    :where([style*="--container-name--lg:"]) { container-name: var(--container-name--lg); }
     :where([style*="--container-type--lg:"]) { container-type: var(--container-type--lg) var(--_stuck-type,); }
   }
   @container (width >= 80rem) {
     :where([style*="--container--xl:"]) { container: var(--container--xl); }
-    :where([style*="--container-name--xl:"]) { container-name: var(--container-name--xl); }
     :where([style*="--container-type--xl:"]) { container-type: var(--container-type--xl) var(--_stuck-type,); }
   }
   @container (width >= 96rem) {
     :where([style*="--container--2xl:"]) { container: var(--container--2xl); }
-    :where([style*="--container-name--2xl:"]) { container-name: var(--container-name--2xl); }
     :where([style*="--container-type--2xl:"]) { container-type: var(--container-type--2xl) var(--_stuck-type,); }
   }
 

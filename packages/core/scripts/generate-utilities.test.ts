@@ -20,6 +20,7 @@ import {
 } from "../src/base/utilities.ts";
 import { TAG_FORMS } from "../src/manifest.ts";
 import {
+  displayTrackRules,
   baseRule,
   bgNoneRules,
   borderSideRules,
@@ -305,6 +306,68 @@ describe("state tiers", () => {
   });
 });
 
+describe("trimmed tiers", () => {
+  const tiers = (name: string) => tiersOf(UTILITIES.find((utility) => utility.name === name)!);
+
+  it.each(["isolation", "font-family", "font-style", "container-name"])(
+    "--%s takes no tiers",
+    (name) => {
+      expect(tiers(name)).toEqual([]);
+    },
+  );
+
+  it("--border-style takes states only, --shadow-angle breakpoints only", () => {
+    expect(tiers("border-style")).toEqual(STATES.filter((state) => state !== "starting"));
+    expect(tiers("shadow-angle")).toEqual(BREAKPOINTS);
+  });
+
+  it.each([
+    "anchor-name",
+    "position-anchor",
+    "position-area",
+    "text-wrap",
+    "text-decoration",
+    "border-style",
+    "mix-blend",
+    "animation",
+    "transition",
+    "transition-duration",
+    "transition-delay",
+    "z",
+  ])("--%s has no starting tier, and keeps its other states", (name) => {
+    expect(tiers(name)).not.toContain("starting");
+    expect(tiers(name)).toEqual(expect.arrayContaining(["hover", "disabled", "stuck"]));
+  });
+
+  it("emits nothing for a trimmed tier", () => {
+    const all = [...generate().values()].join("\n");
+    for (const gone of [
+      "--isolation--md",
+      "--font-family--md",
+      "--font-style--md",
+      "--border-style--md",
+      "--container-name--md",
+      "--shadow-angle--hover",
+      "--group-shadow-angle--hover",
+      "--z--starting",
+      "--transition--starting",
+      "--animation--starting",
+      "--anchor-name--starting",
+    ]) {
+      expect(all, gone).not.toContain(gone);
+    }
+    // their neighbors stay
+    for (const kept of [
+      "--shadow-angle--md",
+      "--border-style--hover",
+      "--container-type--md",
+      "--z--hover",
+    ]) {
+      expect(all, kept).toContain(kept);
+    }
+  });
+});
+
 describe("starting state", () => {
   it("copies --<utility>--starting inside @starting-style, with no group form", () => {
     expect(squash(setterRule("starting", [OPACITY]))).toBe(
@@ -363,7 +426,7 @@ describe("keyword rules", () => {
   });
 
   it("gates a no-base utility's tiers on a base, and its defaults copy on the tier alone", () => {
-    const GRID_KW: Utility = { ...GRID_COLS, keywords: ["subgrid"] };
+    const GRID_KW: Utility = { ...GRID_COLS, keywords: ["none"] };
     expect(squash(keywordRules(GRID_KW, ["md"]))).toContain(
       squash(`
         :where([style*="--grid-cols:"][style*="--grid-cols--md:"]) {
@@ -380,17 +443,23 @@ describe("keyword rules", () => {
       `),
     );
     // the base keyword rule lives in the utilities copy only
-    expect(defaults).not.toContain('[style*="--grid-cols: subgrid"]');
+    expect(defaults).not.toContain('[style*="--grid-cols: none"]');
   });
 
-  it("orders keyword rules after the no-base rule and the tiers ascending", () => {
-    const css = generate().get("_defaults.css")!;
-    const noBase = css.indexOf("grid-template-columns: repeat(var(--_grid-cols-resolved, 1)");
-    const sm = css.indexOf('[style*="--grid-cols--sm: subgrid"]');
-    const md = css.indexOf('[style*="--grid-cols--md: subgrid"]');
-    expect(noBase).toBeGreaterThan(-1);
-    expect(sm).toBeGreaterThan(noBase);
+  it("orders keyword rules after the typed rule and the tiers ascending", () => {
+    const css = generate().get("_utilities-sizing.css")!;
+    const typed = css.indexOf("inline-size: calc(var(--_w-len)");
+    const sm = css.indexOf('[style*="--w--sm: auto"]');
+    const md = css.indexOf('[style*="--w--md: auto"]');
+    expect(typed).toBeGreaterThan(-1);
+    expect(sm).toBeGreaterThan(typed);
     expect(md).toBeGreaterThan(sm);
+  });
+
+  it("the count utilities take no keyword: subgrid is a display", () => {
+    const files = generate();
+    for (const file of ["_utilities-grid.css", "_defaults.css"])
+      expect(files.get(file)!).not.toMatch(/--grid-(cols|rows)(--\w+)?: subgrid/);
   });
 
   it("keeps keyword gates per utility, so --h never reads --w's forms", () => {
@@ -479,6 +548,81 @@ describe("grid placement (Tailwind col-span / col-start / col-end)", () => {
     const css = flow();
     expect(css.indexOf("grid-column-start:")).toBeGreaterThan(css.indexOf("--_col-span: var"));
     expect(css.indexOf("grid-row-end:")).toBeGreaterThan(css.indexOf("--_row-span: var"));
+  });
+});
+
+describe("track-bringing displays", () => {
+  const flowCss = () => generate().get("_utilities-flow.css")!;
+  const gridCss = () => generate().get("_utilities-grid.css")!;
+
+  it("subgrid sets both channels, and its one-axis forms give the other back, in that order", () => {
+    const css = flowCss();
+    const both = css.indexOf(
+      ':where([style*="--display: subgrid"]) { --_display: grid; --_display-cols: subgrid; --_display-rows: subgrid; }',
+    );
+    const col = css.indexOf(
+      ':where([style*="--display: subgrid-col"]) { --_display-rows: var(--_grid-rows-tracks, none); }',
+    );
+    const row = css.indexOf(
+      ':where([style*="--display: subgrid-row"]) { --_display-cols: var(--_grid-cols-tracks, none); }',
+    );
+    expect(both).toBeGreaterThan(-1);
+    expect(col).toBeGreaterThan(both);
+    expect(row).toBeGreaterThan(both);
+  });
+
+  it("a tier naming any display resets both channels before a keyword at that tier sets them", () => {
+    const css = flowCss();
+    const reset = css.indexOf(
+      "--_display-cols-md: var(--_grid-cols-tracks, none); --_display-rows-md: var(--_grid-rows-tracks, none); }",
+    );
+    expect(reset).toBeGreaterThan(-1);
+    expect(css.lastIndexOf(':where([style*="--display--md:"])', reset)).toBeGreaterThan(-1);
+    expect(css.indexOf('[style*="--display--md: grid-gallery"]')).toBeGreaterThan(reset);
+    expect(css.indexOf('[style*="--display--md: subgrid"]')).toBeGreaterThan(reset);
+    // a count at the tier takes its axis back first, so a display at the same tier still wins
+    const count = css.indexOf(
+      ':where([style*="--grid-cols--md:"]) { --_display-cols-md: var(--_grid-cols-tracks, none); }',
+    );
+    expect(count).toBeGreaterThan(-1);
+    expect(count).toBeLessThan(reset);
+  });
+
+  it("emits the tracks once, after the counts and before the raw templates", () => {
+    const css = squash(gridCss());
+    const rule = squash(displayTrackRules());
+    expect(css.split(rule)).toHaveLength(2);
+    expect(rule).toContain(
+      "grid-template-rows: var(--_display-rows-2xl, var(--_display-rows-xl, var(--_display-rows-lg, var(--_display-rows-md, var(--_display-rows-sm, var(--_display-rows, var(--_grid-rows-tracks, revert-layer)))))));",
+    );
+    expect(css.indexOf(rule)).toBeGreaterThan(css.indexOf("--_grid-rows: var(--grid-rows);"));
+    expect(css.indexOf(rule)).toBeLessThan(css.indexOf("--_template-cols: var(--template-cols);"));
+  });
+
+  it("the gallery flags each count that would orphan a child, three to six", () => {
+    const css = flowCss();
+    for (const d of [3, 4, 5, 6])
+      expect(css).toContain(
+        `:where([style*="grid-gallery"]:has(> :nth-child(${d}n + 1 of :not([hidden], template, script, style)):nth-last-child(1 of :not([hidden], template, script, style)))) { --_gallery-o${d}: 1; }`,
+      );
+    expect(css).not.toContain("nth-child(2n + 1 of");
+    expect(css).not.toContain("nth-child(7n + 1 of");
+    expect(css).toContain("--_gallery-min: min(var(--ui-gallery-min-w, 20ch), 100%);");
+    // capped at six: a seventh of the width, less the gaps, is always too wide for seven
+    expect(css).toContain("(100% - 6 * var(--_gallery-gap)) / 7 + 1px");
+  });
+
+  it("registers the channels and the gallery's variables, non-inheriting", () => {
+    const css = generate().get("_properties.css")!;
+    for (const name of [
+      "_display-cols",
+      "_display-rows-2xl",
+      "_grid-cols-tracks",
+      "_gallery-cols",
+      "_gallery-o3",
+      "_gallery-o6",
+    ])
+      expect(css).toContain(`@property --${name} { syntax: "*"; inherits: false; }`);
   });
 });
 

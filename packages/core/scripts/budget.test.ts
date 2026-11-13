@@ -68,10 +68,13 @@ describe("utilities layer budget", { timeout: 20_000 }, () => {
     // pile and `--place-items` / `--items` (2026-11-11; one defaults-layer rule).
     // 1,406 with --bg-clip, once a tier-less utility's resolver rides its base rule's gate
     // (2026-11-12; 13 utilities, two substrings each), and the limit lowered to match.
-    expect(substrings).toBeLessThanOrEqual(1406);
+    // 1,393 without the tiers that had no use (2026-11-13): breakpoints on --isolation,
+    // --font-family, --font-style, and --container-name, and the group gate on --shadow-angle;
+    // the limit lowered again.
+    expect(substrings).toBeLessThanOrEqual(1393);
   });
 
-  it("claim 15 (ratchet): the generated layer stays under 27 KB with Brotli", () => {
+  it("claim 15 (ratchet): the generated layer stays under 26.5 KB with Brotli", () => {
     const raw = Buffer.byteLength(all);
     const compressed = brotli(all);
     console.log(`utilities layer bytes: raw ${raw}, brotli ${compressed}`);
@@ -95,6 +98,8 @@ describe("utilities layer budget", { timeout: 20_000 }, () => {
     // these replaced were never counted here: _switches.css alone was 0.4 KB of this).
     // 26.2 KB (0.10.1): the switch sets `position` for its touch hit area, so `input[role="switch"]`
     // joins the --position tier-only exclusions; limit raised to 27 KB.
-    expect(compressed).toBeLessThan(27 * 1024);
+    // 25.9 KB without the tiers that had no use (2026-11-13): the breakpoints above, states on
+    // --shadow-angle, and --starting on twelve utilities where an entry value has no use; limit 26.5 KB.
+    expect(compressed).toBeLessThan(26.5 * 1024);
   });
 });

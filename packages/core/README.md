@@ -25,10 +25,10 @@ From a CDN, the script needs an import map for its dependencies and the Interest
   {
     "imports": {
       "signal-polyfill": "https://cdn.jsdelivr.net/npm/signal-polyfill@0.2.2/dist/index.js",
-      "embla-carousel": "https://cdn.jsdelivr.net/npm/embla-carousel@8.6.0/esm/embla-carousel.esm.js",
-      "embla-carousel-autoplay": "https://cdn.jsdelivr.net/npm/embla-carousel-autoplay@8.6.0/esm/embla-carousel-autoplay.esm.js",
-      "embla-carousel-auto-scroll": "https://cdn.jsdelivr.net/npm/embla-carousel-auto-scroll@8.6.0/esm/embla-carousel-auto-scroll.esm.js",
-      "embla-carousel-class-names": "https://cdn.jsdelivr.net/npm/embla-carousel-class-names@8.6.0/esm/embla-carousel-class-names.esm.js"
+      "embla-carousel": "https://cdn.jsdelivr.net/npm/embla-carousel@9.0.0-rc04/esm/embla-carousel.esm.js",
+      "embla-carousel-autoplay": "https://cdn.jsdelivr.net/npm/embla-carousel-autoplay@9.0.0-rc04/esm/embla-carousel-autoplay.esm.js",
+      "embla-carousel-auto-scroll": "https://cdn.jsdelivr.net/npm/embla-carousel-auto-scroll@9.0.0-rc04/esm/embla-carousel-auto-scroll.esm.js",
+      "embla-carousel-class-names": "https://cdn.jsdelivr.net/npm/embla-carousel-class-names@9.0.0-rc04/esm/embla-carousel-class-names.esm.js"
     }
   }
 </script>
@@ -107,6 +107,8 @@ pnpm exec playwright install chromium
 ```
 
 `vp test --project unit` is the fast loop. `ZAZZ_BROWSERS=webkit,firefox vp test --project "browser*"` runs the other engines after `pnpm exec playwright install webkit firefox`. `ZAZZ_SKIP_BROWSER=1` omits the browser project and says so.
+
+On macOS, if Firefox exits with "Could not find profile folder", `~/Library/Application Support/Firefox` is missing: a Firefox started as a child of the editor (seen with Cursor on macOS 27) could not create it. Open an installed Firefox once from Finder (or `open -a Firefox`) to create it, then rerun.
 
 ## Browser support
 

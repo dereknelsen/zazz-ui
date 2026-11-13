@@ -122,7 +122,9 @@ role by carrying both slot attributes (`data-lightbox-slot="slide" data-carousel
 | `data-carousel-thumbs-*` (on the `thumbs` slot)      | `data-carousel-thumbs-contain-scroll="keepSnaps"`          | thumb carousel options (defaults: containScroll keepSnaps, dragFree true) |
 | `data-carousel-start` (on a trigger w/ `commandfor`) | `data-carousel-start="2"`                                  | open a dialog carousel at slide N                                         |
 
-Prev/Next, the dots, the thumbs, and the arrow keys stop Autoplay and Auto Scroll (Embla's `stopOnInteraction`, default true). Add `data-carousel-autoplay-stop-on-interaction="false"` to keep autoplay running; a manual step then restarts its delay.
+Embla is v9: core option attributes use its v9 names (`data-carousel-start-snap`, `data-carousel-draggable`, `data-carousel-drag-free="snap"`), and code on `_emblaApi` calls `goTo` / `goToNext` / `selectedSnap` with lowercase events (`reinit`, `pointerdown`).
+
+A drag, slide focus, Prev/Next, the dots, the thumbs, and the arrow keys stop Autoplay and Auto Scroll. Add `data-carousel-autoplay-stop-on-interaction="false"` to keep autoplay running: a drag or focus holds it and resumes after, and a manual step restarts its delay. `data-carousel-autoplay-play-on-init="false"` leaves it stopped until `play()`. These two are kit options; they work the same under `data-carousel-auto-scroll-`.
 
 Script-managed (don't set by hand): `data-carousel-init`,
 `data-carousel-start-index`, and `data-carousel-state` (`active` on the current dot/thumb;

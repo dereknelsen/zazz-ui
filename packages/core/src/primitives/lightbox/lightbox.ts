@@ -84,7 +84,7 @@ class UiLightbox extends ZazzElement {
 
     const galleryApi = this.#galleryRoot()?._emblaApi;
     if (dialogRoot._emblaApi && galleryApi) {
-      dialogRoot._emblaApi.scrollTo(galleryApi.selectedScrollSnap(), true);
+      dialogRoot._emblaApi.goTo(galleryApi.selectedSnap(), true);
     }
 
     const viewport = dialogRoot.querySelector('[data-carousel-slot~="viewport"]');
@@ -102,7 +102,7 @@ class UiLightbox extends ZazzElement {
     const dialogApi = dialog.querySelector(':is(ui-carousel, [data-ui~="carousel"])')?._emblaApi;
     const galleryApi = this.#galleryRoot()?._emblaApi;
     if (dialogApi && galleryApi) {
-      galleryApi.scrollTo(dialogApi.selectedScrollSnap());
+      galleryApi.goTo(dialogApi.selectedSnap());
     }
   }
 }

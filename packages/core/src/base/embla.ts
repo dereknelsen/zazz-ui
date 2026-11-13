@@ -33,15 +33,24 @@
  * - `data-carousel-auto-scroll-*`: Auto scroll plugin options (requires `auto-scroll` in plugins)
  * - `data-carousel-class-names-*`: Class names plugin options (requires `class-names` in plugins)
  *
- * Prev/Next, the dots, the thumbs, and the arrow keys count as interaction for
- * Autoplay and Auto Scroll: they stop the plugin, or restart its delay with
- * `data-carousel-autoplay-stop-on-interaction="false"`.
+ * Built on Embla v9 (`9.0.0-rc04`). Core options pass straight through, so they
+ * use Embla's v9 names (`data-carousel-start-snap`, `data-carousel-draggable`,
+ * `data-carousel-drag-free="snap"`, …).
  *
- * @see https://www.embla-carousel.com/docs/api/options#reference
- * @see https://www.embla-carousel.com/docs/plugins/autoplay#options
- * @see https://www.embla-carousel.com/docs/plugins/auto-scroll#options
- * @see https://www.embla-carousel.com/docs/plugins/class-names#options
- * @see https://www.embla-carousel.com/docs/plugins/ssr#options
+ * Autoplay and Auto Scroll: the kit owns their interaction handling (it sets
+ * Embla's `defaultInteraction: false`) and adds two kit-level options, read
+ * from the plugin's own prefix (`data-carousel-autoplay-*`, `data-carousel-auto-scroll-*`):
+ * - `…-play-on-init`: `"false"` leaves the plugin stopped until `play()` (default plays)
+ * - `…-stop-on-interaction`: `"false"` holds the plugin during a drag or slide focus and
+ *   resumes it after; Prev/Next, the dots, the thumbs, and the arrow keys restart its
+ *   delay. By default (`true`) any of those stops it for good.
+ * The kit also restarts a playing plugin after Embla's `reinit` (a resize or a
+ * breakpoint change re-creates plugins, which Embla v9 leaves stopped).
+ *
+ * @see https://www.embla-carousel.com/api/options/
+ * @see https://www.embla-carousel.com/plugins/autoplay/
+ * @see https://www.embla-carousel.com/plugins/auto-scroll/
+ * @see https://www.embla-carousel.com/plugins/class-names/
  *
  * @example
  * data-carousel-loop="true"
@@ -81,9 +90,9 @@ import { registerRefresh } from "./zazz-element.ts";
 import EmblaCarousel from "embla-carousel";
 import type { EmblaCarouselType, EmblaOptionsType, EmblaPluginType } from "embla-carousel";
 import EmblaCarouselAutoplay from "embla-carousel-autoplay";
-import type { AutoplayOptionsType } from "embla-carousel-autoplay";
+import type { AutoplayOptionsType, AutoplayType } from "embla-carousel-autoplay";
 import EmblaCarouselAutoScroll from "embla-carousel-auto-scroll";
-import type { AutoScrollOptionsType } from "embla-carousel-auto-scroll";
+import type { AutoScrollOptionsType, AutoScrollType } from "embla-carousel-auto-scroll";
 import EmblaCarouselClassNames from "embla-carousel-class-names";
 import type { ClassNamesOptionsType } from "embla-carousel-class-names";
 
@@ -111,11 +120,11 @@ function parseCarouselPlugins(value: string | null): string[] {
 const PLUGIN_BY_SLUG: Record<CarouselPluginSlug, (node: Element) => EmblaPluginType> = {
   autoplay: (node) =>
     EmblaCarouselAutoplay(
-      readCarouselOptions<AutoplayOptionsType>(node, "data-carousel-autoplay-"),
+      readAutoPluginOptions<AutoplayOptionsType>(node, "data-carousel-autoplay-"),
     ),
   "auto-scroll": (node) =>
     EmblaCarouselAutoScroll(
-      readCarouselOptions<AutoScrollOptionsType>(node, "data-carousel-auto-scroll-"),
+      readAutoPluginOptions<AutoScrollOptionsType>(node, "data-carousel-auto-scroll-"),
     ),
   "class-names": (node) =>
     EmblaCarouselClassNames(
@@ -139,6 +148,200 @@ function readCarouselOptions<T>(node: Element, prefix: string): T {
   return Utils.parseDataAttributes(node, prefix) as T;
 }
 
+// --- Autoplay and Auto Scroll ---
+
+/** Kit-level options of the Autoplay and Auto Scroll plugins (not Embla's). */
+type AutoPluginKitOptions = { playOnInit?: boolean; stopOnInteraction?: boolean };
+
+/** The two plugins the kit drives: their `plugins()` key, attribute prefix, and interaction event. */
+const AUTO_PLUGINS = [
+  {
+    key: "autoplay",
+    prefix: "data-carousel-autoplay-",
+    interaction: "autoplay:interaction",
+  },
+  {
+    key: "autoScroll",
+    prefix: "data-carousel-auto-scroll-",
+    interaction: "autoscroll:interaction",
+  },
+] as const;
+
+/**
+ * @description Reads an Autoplay / Auto Scroll plugin's attributes as Embla
+ * options: drops the kit-level `playOnInit` / `stopOnInteraction` and sets
+ * `defaultInteraction: false`, so the plugin reports interactions
+ * (`autoplay:interaction`) and `bindAutoPlugins` decides what they do.
+ * @private
+ */
+function readAutoPluginOptions<T>(node: Element, prefix: string): T {
+  const options = Utils.parseDataAttributes(node, prefix);
+  delete options.playOnInit;
+  delete options.stopOnInteraction;
+  return { ...options, defaultInteraction: false } as T;
+}
+
+/** Per-carousel manual-step handlers, one per driven plugin (see onManualNavigation). */
+const manualStepHandlers = new WeakMap<EmblaCarouselType, Array<() => void>>();
+
+/** Form fields Embla never starts a drag on (its DragHandler `focusNodes`). */
+const NON_DRAG_TARGETS = ["INPUT", "SELECT", "TEXTAREA"];
+
+/**
+ * @description Whether a pointer down starts an Embla drag. Embla v9 emits
+ * `pointerdown` before its own checks, then ignores a non-primary mouse button
+ * or a press in a form field, and no `pointerup` follows; state set on such a
+ * pointer down would never clear.
+ * @private
+ */
+function startsDrag(evt: Event): boolean {
+  if (evt instanceof MouseEvent && evt.button !== 0) return false;
+  return !(evt.target instanceof Element && NON_DRAG_TARGETS.includes(evt.target.nodeName));
+}
+
+/**
+ * @description Drives the Autoplay and Auto Scroll plugins the way the kit
+ * documents them, on top of Embla v9's bare plugins (which neither start on
+ * their own nor survive a `reinit`):
+ * - plays on init unless `…-play-on-init="false"`;
+ * - a pointer down or slide focus stops the plugin; with
+ *   `…-stop-on-interaction="false"` it only holds it, and the pointer up or
+ *   focus leaving the slides resumes it;
+ * - after a `reinit` (resize, breakpoint change, `reInit()`), which re-creates
+ *   the plugin stopped, resumes it if it was playing, or is still waiting to
+ *   play (no second snap yet, or the carousel was inactive at a breakpoint);
+ * - registers the manual-step handler `onManualNavigation` runs.
+ *
+ * Takes the plugin instances themselves: `plugins()` is empty while the
+ * carousel is inactive (`active: false` at the current breakpoint).
+ * @private
+ */
+function bindAutoPlugins(
+  emblaApi: EmblaCarouselType,
+  node: Element,
+  plugins: readonly EmblaPluginType[],
+): void {
+  const handlers: Array<() => void> = [];
+
+  for (const { key, prefix, interaction } of AUTO_PLUGINS) {
+    const plugin = plugins.find((p) => p.name === key) as AutoplayType | AutoScrollType | undefined;
+    if (!plugin) continue;
+
+    const { playOnInit, stopOnInteraction } = readCarouselOptions<AutoPluginKitOptions>(
+      node,
+      prefix,
+    );
+    const holds = stopOnInteraction === false;
+    // `pending`: should play as soon as it can. `held`: what paused it with
+    // stop-on-interaction false (its end resumes it), or "" when nothing does.
+    let pending = playOnInit !== false;
+    let held: "" | "pointer" | "focus" = "";
+    let wasPlaying = false;
+
+    const playIfPending = () => {
+      if (!pending || emblaApi.snapList().length <= 1) return;
+      // An inactive carousel never inits its plugins, and play() before init throws.
+      if (!emblaApi.internalEngine().options.active) return;
+      plugin.play();
+      // play() does nothing while the plugin itself is inactive; keep waiting then.
+      pending = !plugin.isPlaying();
+    };
+
+    // Embla re-creates plugins on reinit by calling destroy() then init() on the
+    // same object, and destroy() stops it; note whether it was playing first.
+    const destroy = plugin.destroy;
+    plugin.destroy = () => {
+      wasPlaying = plugin.isPlaying();
+      destroy();
+    };
+
+    emblaApi.on("reinit", () => {
+      pending ||= wasPlaying;
+      wasPlaying = false;
+      // A reinit mid-drag drops the drag, so its pointer up never comes.
+      if (held === "pointer") {
+        held = "";
+        pending = true;
+      }
+      if (!held) playIfPending();
+    });
+
+    emblaApi.on(interaction, (_api, { detail }) => {
+      const { interaction: type, originalEvent } = detail;
+      if (type === "pointerdown" || type === "slidefocus") {
+        // A pointerdown's originalEvent is Embla's event model; its detail is the DOM event.
+        const pointer = originalEvent instanceof Event ? null : originalEvent.detail;
+        if (type === "pointerdown" && pointer && !startsDrag(pointer)) return;
+        if (!plugin.isPlaying() && !held) return;
+        held = holds ? (type === "pointerdown" ? "pointer" : "focus") : "";
+        pending = false;
+        plugin.stop();
+      } else if (
+        (type === "pointerup" && held === "pointer") ||
+        (type === "slidefocusout" && held === "focus")
+      ) {
+        held = "";
+        plugin.play();
+      }
+    });
+
+    handlers.push(() => {
+      pending = false;
+      if (holds) plugin.reset();
+      else plugin.stop();
+    });
+
+    playIfPending();
+  }
+
+  if (handlers.length) manualStepHandlers.set(emblaApi, handlers);
+}
+
+/**
+ * @description The kit's own Embla plugin, placed first in the plugin list so
+ * its `pointerdown` listener runs before any other plugin's, on init and
+ * after every reinit (Embla re-registers plugins in list order):
+ * - vetoes a drag when every slide already fits (one snap): Embla would still
+ *   rubber-band. Returning false cancels Embla's drag and the later listeners
+ *   (Class Names' pointer-down class, the plugins' interactions). Skipped when
+ *   the author set `data-carousel-draggable`.
+ * - marks a drag as a `dragging` token on the viewport, and `data-ui-dragging`
+ *   on the document root for the page-wide grabbing cursor (a `body:has(…) *`
+ *   rule would restyle the whole page on every DOM insertion). Cleared on
+ *   pointer up and on destroy (a reinit mid-drag drops the pointer up).
+ * @private
+ */
+function KitDragPlugin(viewport: Element, vetoesDrag: boolean): EmblaPluginType {
+  const root = viewport.ownerDocument.documentElement;
+  let api: EmblaCarouselType | undefined;
+
+  const setDragging = (on: boolean) => {
+    setCarouselState(viewport, "dragging", on);
+    root.toggleAttribute("data-ui-dragging", on);
+  };
+  const onPointerDown = (
+    emblaApi: EmblaCarouselType,
+    { detail }: { detail: Event },
+  ): false | void => {
+    if (vetoesDrag && !emblaApi.canGoToPrev() && !emblaApi.canGoToNext()) return false;
+    if (startsDrag(detail)) setDragging(true);
+  };
+  const onPointerUp = () => setDragging(false);
+
+  return {
+    name: "zazzDrag",
+    options: {},
+    init(emblaApi) {
+      api = emblaApi;
+      emblaApi.on("pointerdown", onPointerDown).on("pointerup", onPointerUp);
+    },
+    destroy() {
+      api?.off("pointerdown", onPointerDown).off("pointerup", onPointerUp);
+      setDragging(false);
+    },
+  };
+}
+
 // --- Manual navigation ---
 
 /**
@@ -146,17 +349,12 @@ function readCarouselOptions<T>(node: Element, prefix: string): T {
  * user interaction for the Autoplay and Auto Scroll plugins, which on their own
  * only count a pointer-down on the viewport. Without it the plugin's timer keeps
  * running, and a tick that lands just after a click moves a second slide.
- * `stopOnInteraction` (default true) stops the plugin; `false` restarts its delay.
+ * `stop-on-interaction` (default true) stops the plugin; `false` restarts its delay.
  * This is the pattern Embla's own examples use for navigation buttons.
  * @private
  */
 function onManualNavigation(emblaApi: EmblaCarouselType): void {
-  const { autoplay, autoScroll } = emblaApi.plugins();
-  for (const plugin of [autoplay, autoScroll]) {
-    if (!plugin) continue;
-    if (plugin.options.stopOnInteraction === false) plugin.reset();
-    else plugin.stop();
-  }
+  for (const handler of manualStepHandlers.get(emblaApi) ?? []) handler();
 }
 
 // --- Active-index sync ---
@@ -184,14 +382,15 @@ function bindSlideStates(emblaApi: EmblaCarouselType): void {
     const slides = emblaApi.slideNodes();
     const inView = new Set(emblaApi.slidesInView());
     const snapped = new Set(
-      emblaApi.internalEngine().slideRegistry[emblaApi.selectedScrollSnap()] ?? [],
+      emblaApi.internalEngine().scrollSnapList.slidesBySnap[emblaApi.selectedSnap()] ?? [],
     );
     slides.forEach((slide, index) => {
       setCarouselState(slide, "in-view", inView.has(index));
       setCarouselState(slide, "snapped", snapped.has(index));
     });
   };
-  emblaApi.on("init", update).on("reInit", update).on("select", update).on("slidesInView", update);
+  emblaApi.on("reinit", update).on("select", update).on("slidesinview", update);
+  update();
 }
 
 /**
@@ -250,7 +449,7 @@ const addDotBtnsAndClickHandlers = (
    * @private
    */
   const addDotBtnsWithClickHandlers = () => {
-    const snapCount = emblaApi.scrollSnapList().length;
+    const snapCount = emblaApi.snapList().length;
 
     dotsNode.innerHTML = "";
 
@@ -269,7 +468,7 @@ const addDotBtnsAndClickHandlers = (
         "click",
         () => {
           onManualNavigation(emblaApi);
-          emblaApi.scrollTo(i);
+          emblaApi.goTo(i);
         },
         { signal },
       );
@@ -283,15 +482,15 @@ const addDotBtnsAndClickHandlers = (
    */
   const toggleDotBtnsActive = () => {
     if (!dotNodes.length) return;
-    setActiveIndex(dotNodes, emblaApi.selectedScrollSnap());
+    setActiveIndex(dotNodes, emblaApi.selectedSnap());
   };
 
   emblaApi
-    .on("init", addDotBtnsWithClickHandlers)
-    .on("reInit", addDotBtnsWithClickHandlers)
-    .on("init", toggleDotBtnsActive)
-    .on("reInit", toggleDotBtnsActive)
+    .on("reinit", addDotBtnsWithClickHandlers)
+    .on("reinit", toggleDotBtnsActive)
     .on("select", toggleDotBtnsActive);
+  addDotBtnsWithClickHandlers();
+  toggleDotBtnsActive();
 
   return () => {
     dotsNode.innerHTML = "";
@@ -319,7 +518,7 @@ const addThumbClickHandlers = (
       "click",
       () => {
         onManualNavigation(emblaApiMain);
-        emblaApiMain.scrollTo(index);
+        emblaApiMain.goTo(index);
       },
       { signal },
     );
@@ -344,8 +543,8 @@ const addTogglethumbsActive = (
    * @private
    */
   const toggleThumbBtnsActive = () => {
-    const selected = emblaApiMain.selectedScrollSnap();
-    emblaApiThumb.scrollTo(selected);
+    const selected = emblaApiMain.selectedSnap();
+    emblaApiThumb.goTo(selected);
     setActiveIndex(slidesthumbs, selected, { ariaCurrent: true });
   };
 
@@ -411,7 +610,7 @@ function bindDragClickSuppression(
       startY = e.clientY;
       lastX = e.clientX;
       lastY = e.clientY;
-      snapAtDown = emblaApi.selectedScrollSnap();
+      snapAtDown = emblaApi.selectedSnap();
     },
     { passive: true, signal },
   );
@@ -440,7 +639,7 @@ function bindDragClickSuppression(
 
   root.addEventListener("pointerup", finalizePointer, { passive: true, signal });
   root.addEventListener("pointercancel", finalizePointer, { passive: true, signal });
-  emblaApi.on("pointerUp", finalizePointer);
+  emblaApi.on("pointerup", finalizePointer);
 
   // Touch/trackpad drags can move with tiny deltas. Treat Embla scroll as drag intent,
   // but lightbox openers need extra tolerance so minor carousel settle does not block clicks.
@@ -448,7 +647,7 @@ function bindDragClickSuppression(
     if (!pointerDown) return;
 
     if (guardsCommands) {
-      if (pointerDistance() >= DRAG_THRESHOLD_PX || emblaApi.selectedScrollSnap() !== snapAtDown) {
+      if (pointerDistance() >= DRAG_THRESHOLD_PX || emblaApi.selectedSnap() !== snapAtDown) {
         moved = true;
       }
       return;
@@ -551,17 +750,12 @@ function initEmblaRoot(emblaNode: Element): void {
     }
   });
 
-  // Veto drag gestures when every slide already fits in the viewport: with a
-  // single snap Embla still rubber-bands on drag, which feels broken. The
-  // callback re-evaluates on every pointer down, so it stays correct across
-  // resizes/reInit. Respect an explicit data-carousel-watch-drag override.
-  if (!("watchDrag" in apiOptions)) {
-    apiOptions.watchDrag = (api: EmblaCarouselType) => api.canScrollPrev() || api.canScrollNext();
-  }
-
   // Plugins load only when listed in data-carousel-plugins; option attrs alone
   // do not enable them. Unknown slugs are ignored.
-  const plugins: EmblaPluginType[] = [];
+  // The kit's drag plugin goes first (see KitDragPlugin).
+  const plugins: EmblaPluginType[] = [
+    KitDragPlugin(emblaViewportNode, !("draggable" in apiOptions)),
+  ];
   for (const slug of parseCarouselPlugins(emblaNode.getAttribute("data-carousel-plugins"))) {
     const create = PLUGIN_BY_SLUG[slug as CarouselPluginSlug];
     if (!create) continue;
@@ -574,19 +768,8 @@ function initEmblaRoot(emblaNode: Element): void {
     apiOptions as EmblaOptionsType,
     plugins,
   );
-  // Drag state is a data-carousel-state token on the viewport, and
-  // data-ui-dragging on the root for the page-wide grabbing cursor (a
-  // `body:has(…) *` rule would restyle the whole page on every DOM insertion).
-  const root = emblaNode.ownerDocument.documentElement;
-  emblaApi.on("pointerDown", () => {
-    if (emblaViewportNode) setCarouselState(emblaViewportNode, "dragging", true);
-    root.setAttribute("data-ui-dragging", "");
-  });
-  emblaApi.on("pointerUp", () => {
-    if (emblaViewportNode) setCarouselState(emblaViewportNode, "dragging", false);
-    root.removeAttribute("data-ui-dragging");
-  });
   bindSlideStates(emblaApi);
+  bindAutoPlugins(emblaApi, emblaNode, plugins);
 
   emblaNode._emblaApi = emblaApi;
 
@@ -602,7 +785,7 @@ function initEmblaRoot(emblaNode: Element): void {
       "click",
       () => {
         onManualNavigation(emblaApi);
-        emblaApi.scrollPrev();
+        emblaApi.goToPrev();
       },
       { signal },
     );
@@ -613,7 +796,7 @@ function initEmblaRoot(emblaNode: Element): void {
       "click",
       () => {
         onManualNavigation(emblaApi);
-        emblaApi.scrollNext();
+        emblaApi.goToNext();
       },
       { signal },
     );
@@ -709,7 +892,7 @@ function initDialogOpenSubscription(): void {
     roots.forEach(function (root) {
       const startIndex = root.getAttribute("data-carousel-start-index");
       if (startIndex != null && root._emblaApi) {
-        root._emblaApi.scrollTo(Number(startIndex), true);
+        root._emblaApi.goTo(Number(startIndex), true);
         root.removeAttribute("data-carousel-start-index");
       }
 
@@ -784,8 +967,8 @@ const initEmblaKeyboardNav: InitEmblaKeyboardNavFn = function () {
 
     e.preventDefault();
     onManualNavigation(root._emblaApi);
-    if (e.key === "ArrowLeft") root._emblaApi.scrollPrev();
-    else root._emblaApi.scrollNext();
+    if (e.key === "ArrowLeft") root._emblaApi.goToPrev();
+    else root._emblaApi.goToNext();
   });
 };
 
@@ -829,7 +1012,7 @@ function initEmblaStartLinks(): void {
     if (index == null && trigger.hasAttribute("commandfor")) {
       const emblaRoot = trigger.closest(':is(ui-carousel, [data-ui~="carousel"])');
       if (emblaRoot?._emblaApi) {
-        index = String(emblaRoot._emblaApi.selectedScrollSnap());
+        index = String(emblaRoot._emblaApi.selectedSnap());
       }
     }
 
@@ -843,7 +1026,7 @@ function initEmblaStartLinks(): void {
     if (!root) return;
 
     if (root._emblaApi) {
-      root._emblaApi.scrollTo(Number(index), true);
+      root._emblaApi.goTo(Number(index), true);
     } else if (index != null) {
       root.setAttribute("data-carousel-start-index", index);
     }

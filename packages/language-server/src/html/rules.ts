@@ -12,7 +12,7 @@ export const RULE_DESCRIPTIONS: Record<RuleId, string> = {
   "group-needs-state": "A `--group-*` utility without a state tier.",
   "border-value": "A border shorthand value that is not one color, number, or length.",
   "not-integer": "A non-integer value on an integer utility (grid tracks, spans, line clamp).",
-  "tier-unsupported": "A breakpoint or state tier the utility's family has no setter for.",
+  "tier-unsupported": "A breakpoint or state tier the utility does not take.",
   "tier-without-base": "A tier override with no base utility to override.",
   "dual-value":
     "A value that is neither a scale number, a length, nor one of the utility's keywords.",

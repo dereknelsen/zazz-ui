@@ -44,7 +44,7 @@
   }
 
   :where([style*="--mix-blend:"], [style*="--mix-blend--"], [style*="--group-mix-blend--"]) {
-    --_mix-blend-resolved: var(--_mix-blend-starting, var(--_mix-blend-disabled, var(--_mix-blend-active, var(--_mix-blend-focus-visible, var(--_mix-blend-focus-within, var(--_mix-blend-hover, var(--_mix-blend-checked, var(--_mix-blend-current, var(--_mix-blend-open, var(--_mix-blend-g-disabled, var(--_mix-blend-g-active, var(--_mix-blend-g-focus-visible, var(--_mix-blend-g-focus-within, var(--_mix-blend-g-hover, var(--_mix-blend-g-checked, var(--_mix-blend-g-current, var(--_mix-blend-g-open, var(--_mix-blend-stuck, var(--_mix-blend)))))))))))))))))));
+    --_mix-blend-resolved: var(--_mix-blend-disabled, var(--_mix-blend-active, var(--_mix-blend-focus-visible, var(--_mix-blend-focus-within, var(--_mix-blend-hover, var(--_mix-blend-checked, var(--_mix-blend-current, var(--_mix-blend-open, var(--_mix-blend-g-disabled, var(--_mix-blend-g-active, var(--_mix-blend-g-focus-visible, var(--_mix-blend-g-focus-within, var(--_mix-blend-g-hover, var(--_mix-blend-g-checked, var(--_mix-blend-g-current, var(--_mix-blend-g-open, var(--_mix-blend-stuck, var(--_mix-blend))))))))))))))))));
   }
   :where([style*="--mix-blend:"]) {
     --_mix-blend: var(--mix-blend);
@@ -58,8 +58,8 @@
     --_shadow: var(--shadow);
   }
 
-  :where([style*="--shadow-angle:"], [style*="--shadow-angle--"], [style*="--group-shadow-angle--"]) {
-    --_shadow-angle-resolved: var(--_shadow-angle-starting, var(--_shadow-angle-disabled, var(--_shadow-angle-active, var(--_shadow-angle-focus-visible, var(--_shadow-angle-focus-within, var(--_shadow-angle-hover, var(--_shadow-angle-checked, var(--_shadow-angle-current, var(--_shadow-angle-open, var(--_shadow-angle-g-disabled, var(--_shadow-angle-g-active, var(--_shadow-angle-g-focus-visible, var(--_shadow-angle-g-focus-within, var(--_shadow-angle-g-hover, var(--_shadow-angle-g-checked, var(--_shadow-angle-g-current, var(--_shadow-angle-g-open, var(--_shadow-angle-stuck, var(--_shadow-angle-2xl, var(--_shadow-angle-xl, var(--_shadow-angle-lg, var(--_shadow-angle-md, var(--_shadow-angle-sm, var(--_shadow-angle))))))))))))))))))))))));
+  :where([style*="--shadow-angle:"], [style*="--shadow-angle--"]) {
+    --_shadow-angle-resolved: var(--_shadow-angle-2xl, var(--_shadow-angle-xl, var(--_shadow-angle-lg, var(--_shadow-angle-md, var(--_shadow-angle-sm, var(--_shadow-angle))))));
   }
   :where([style*="--shadow-angle:"]) {
     --_shadow-angle: var(--shadow-angle);
@@ -134,7 +134,7 @@
   }
 
   :where([style*="--animation:"], [style*="--animation--"], [style*="--group-animation--"]) {
-    --_animation-resolved: var(--_animation-starting, var(--_animation-disabled, var(--_animation-active, var(--_animation-focus-visible, var(--_animation-focus-within, var(--_animation-hover, var(--_animation-checked, var(--_animation-current, var(--_animation-open, var(--_animation-g-disabled, var(--_animation-g-active, var(--_animation-g-focus-visible, var(--_animation-g-focus-within, var(--_animation-g-hover, var(--_animation-g-checked, var(--_animation-g-current, var(--_animation-g-open, var(--_animation-stuck, var(--_animation-2xl, var(--_animation-xl, var(--_animation-lg, var(--_animation-md, var(--_animation-sm, var(--_animation))))))))))))))))))))))));
+    --_animation-resolved: var(--_animation-disabled, var(--_animation-active, var(--_animation-focus-visible, var(--_animation-focus-within, var(--_animation-hover, var(--_animation-checked, var(--_animation-current, var(--_animation-open, var(--_animation-g-disabled, var(--_animation-g-active, var(--_animation-g-focus-visible, var(--_animation-g-focus-within, var(--_animation-g-hover, var(--_animation-g-checked, var(--_animation-g-current, var(--_animation-g-open, var(--_animation-stuck, var(--_animation-2xl, var(--_animation-xl, var(--_animation-lg, var(--_animation-md, var(--_animation-sm, var(--_animation)))))))))))))))))))))));
   }
   :where([style*="--animation:"]) {
     --_animation: var(--animation);
@@ -142,7 +142,7 @@
   }
 
   :where([style*="--transition:"], [style*="--transition--"], [style*="--group-transition--"]) {
-    --_transition-resolved: var(--_transition-starting, var(--_transition-disabled, var(--_transition-active, var(--_transition-focus-visible, var(--_transition-focus-within, var(--_transition-hover, var(--_transition-checked, var(--_transition-current, var(--_transition-open, var(--_transition-g-disabled, var(--_transition-g-active, var(--_transition-g-focus-visible, var(--_transition-g-focus-within, var(--_transition-g-hover, var(--_transition-g-checked, var(--_transition-g-current, var(--_transition-g-open, var(--_transition-stuck, var(--_transition)))))))))))))))))));
+    --_transition-resolved: var(--_transition-disabled, var(--_transition-active, var(--_transition-focus-visible, var(--_transition-focus-within, var(--_transition-hover, var(--_transition-checked, var(--_transition-current, var(--_transition-open, var(--_transition-g-disabled, var(--_transition-g-active, var(--_transition-g-focus-visible, var(--_transition-g-focus-within, var(--_transition-g-hover, var(--_transition-g-checked, var(--_transition-g-current, var(--_transition-g-open, var(--_transition-stuck, var(--_transition))))))))))))))))));
   }
   :where([style*="--transition:"]) {
     --_transition: var(--transition);
@@ -150,7 +150,7 @@
   }
 
   :where([style*="--transition-duration:"], [style*="--transition-duration--"], [style*="--group-transition-duration--"]) {
-    --_transition-duration-resolved: var(--_transition-duration-starting, var(--_transition-duration-disabled, var(--_transition-duration-active, var(--_transition-duration-focus-visible, var(--_transition-duration-focus-within, var(--_transition-duration-hover, var(--_transition-duration-checked, var(--_transition-duration-current, var(--_transition-duration-open, var(--_transition-duration-g-disabled, var(--_transition-duration-g-active, var(--_transition-duration-g-focus-visible, var(--_transition-duration-g-focus-within, var(--_transition-duration-g-hover, var(--_transition-duration-g-checked, var(--_transition-duration-g-current, var(--_transition-duration-g-open, var(--_transition-duration-stuck, var(--_transition-duration-2xl, var(--_transition-duration-xl, var(--_transition-duration-lg, var(--_transition-duration-md, var(--_transition-duration-sm, var(--_transition-duration))))))))))))))))))))))));
+    --_transition-duration-resolved: var(--_transition-duration-disabled, var(--_transition-duration-active, var(--_transition-duration-focus-visible, var(--_transition-duration-focus-within, var(--_transition-duration-hover, var(--_transition-duration-checked, var(--_transition-duration-current, var(--_transition-duration-open, var(--_transition-duration-g-disabled, var(--_transition-duration-g-active, var(--_transition-duration-g-focus-visible, var(--_transition-duration-g-focus-within, var(--_transition-duration-g-hover, var(--_transition-duration-g-checked, var(--_transition-duration-g-current, var(--_transition-duration-g-open, var(--_transition-duration-stuck, var(--_transition-duration-2xl, var(--_transition-duration-xl, var(--_transition-duration-lg, var(--_transition-duration-md, var(--_transition-duration-sm, var(--_transition-duration)))))))))))))))))))))));
   }
   :where([style*="--transition-duration:"]) {
     --_transition-duration: var(--transition-duration);
@@ -158,7 +158,7 @@
   }
 
   :where([style*="--transition-delay:"], [style*="--transition-delay--"], [style*="--group-transition-delay--"]) {
-    --_transition-delay-resolved: var(--_transition-delay-starting, var(--_transition-delay-disabled, var(--_transition-delay-active, var(--_transition-delay-focus-visible, var(--_transition-delay-focus-within, var(--_transition-delay-hover, var(--_transition-delay-checked, var(--_transition-delay-current, var(--_transition-delay-open, var(--_transition-delay-g-disabled, var(--_transition-delay-g-active, var(--_transition-delay-g-focus-visible, var(--_transition-delay-g-focus-within, var(--_transition-delay-g-hover, var(--_transition-delay-g-checked, var(--_transition-delay-g-current, var(--_transition-delay-g-open, var(--_transition-delay-stuck, var(--_transition-delay-2xl, var(--_transition-delay-xl, var(--_transition-delay-lg, var(--_transition-delay-md, var(--_transition-delay-sm, var(--_transition-delay))))))))))))))))))))))));
+    --_transition-delay-resolved: var(--_transition-delay-disabled, var(--_transition-delay-active, var(--_transition-delay-focus-visible, var(--_transition-delay-focus-within, var(--_transition-delay-hover, var(--_transition-delay-checked, var(--_transition-delay-current, var(--_transition-delay-open, var(--_transition-delay-g-disabled, var(--_transition-delay-g-active, var(--_transition-delay-g-focus-visible, var(--_transition-delay-g-focus-within, var(--_transition-delay-g-hover, var(--_transition-delay-g-checked, var(--_transition-delay-g-current, var(--_transition-delay-g-open, var(--_transition-delay-stuck, var(--_transition-delay-2xl, var(--_transition-delay-xl, var(--_transition-delay-lg, var(--_transition-delay-md, var(--_transition-delay-sm, var(--_transition-delay)))))))))))))))))))))));
   }
   :where([style*="--transition-delay:"]) {
     --_transition-delay: var(--transition-delay);

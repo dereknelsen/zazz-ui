@@ -129,9 +129,13 @@ Zazz markup needs no classes. Every styling decision is one of four channels:
   default is the absence of the attribute.
 - **Slot**: a part inside it, `data-<identity>-slot` (`<header data-dialog-slot="header">`).
 - **Utility**: one value, in `style`: `style="--px: 6; --bg: var(--color-muted)"`. Spelling is
-  exact, one space after each colon. Breakpoint tiers (`--grid-cols--md: 3`) work on layout,
+  exact, one space after each colon. `--display` also takes the kit's keywords: `flex-col` and
+  `flex-row` (with `-reverse` and `inline-flex-` forms), `grid-pile`, `grid-gallery`, `subgrid`,
+  `subgrid-col`, and `subgrid-row` (`references/tokens.md`). Breakpoint tiers (`--grid-cols--md: 3`) work on layout,
   spacing, sizing, typography, and color utilities, plus `--radius`, `--elevation`, and the
-  rings; state tiers (`--bg--hover: …`) on color and effects utilities and `--radius`. A tier
+  rings; state tiers (`--bg--hover: …`) on color and effects utilities and `--radius`. `--isolation`,
+  `--font-family`, `--font-style`, and `--container-name` take no tiers; `--border-style` takes
+  states only and `--shadow-angle` breakpoints only. A tier
   needs a base unless the utility is on the tier-only list (AUTHORING.md, "Rules that bite").
   Utilities need the `style` attribute. A strict CSP must allow `style-src-attr 'unsafe-inline'`
   (otherwise the kit falls back to the CSSOM). If a sanitizer strips `style` from your markup,

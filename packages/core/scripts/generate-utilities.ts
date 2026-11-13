@@ -19,8 +19,12 @@ import {
   type Breakpoint,
   BREAKPOINT_REM,
   BREAKPOINTS,
+  DISPLAY_GALLERY,
   DISPLAY_PILE,
   DISPLAY_SHORTHANDS,
+  DISPLAY_SUBGRIDS,
+  GALLERY_MAX,
+  GALLERY_MIN,
   type Family,
   GRADIENT_TYPES,
   hasGroup,
@@ -269,7 +273,7 @@ const TRUNCATE = [
  * Stuck has no selector, so `--_stuck-on` toggles its clip, with `revert-layer`
  * while unstuck. It comes first so that revert can't cancel a lower tier's
  * truncation. A stuck value other than `truncate` changes the wrapping and leaves
- * any clip in place. `starting` changes the wrapping only.
+ * any clip in place.
  */
 export function textWrapRules(utility: Utility): string {
   if (utility.emit !== "text-wrap") return "";
@@ -405,13 +409,18 @@ export function containerRules(utility: Utility): string {
     name === "container-type"
       ? `var(--${name}${suffix}) var(--_stuck-type,)`
       : `var(--${name}${suffix})`;
-  const rules = (suffix: string) =>
-    ["container", "container-name", "container-type"].map(
-      (name) => `:where([style*="--${name}${suffix}:"]) { ${name}: ${value(name, suffix)}; }`,
-    );
+  const forms = UTILITIES.filter((form) =>
+    ["container", "container-name", "container-type"].includes(form.name),
+  );
+  const rules = (suffix: string, tier?: string) =>
+    forms
+      .filter((form) => tier === undefined || tiersOf(form).includes(tier))
+      .map(
+        ({ name }) => `:where([style*="--${name}${suffix}:"]) { ${name}: ${value(name, suffix)}; }`,
+      );
   const lines = rules("");
   for (const bp of BREAKPOINTS) {
-    lines.push(`${breakpointQuery(bp)} {`, ...rules(`--${bp}`).map((line) => `  ${line}`), `}`);
+    lines.push(`${breakpointQuery(bp)} {`, ...rules(`--${bp}`, bp).map((line) => `  ${line}`), `}`);
   }
   lines.push(``);
   return lines.join("\n");
@@ -584,6 +593,13 @@ export function aliasRules(utility: Utility, tiers: readonly string[]): string {
  * an active one beats it. A tier naming any other display ends it with
  * `revert-layer`, and every later `--place-items` or `--items` still wins. These
  * rules read no utility value, so they also apply under a CSP that blocks `style`.
+ *
+ * `subgrid`, `subgrid-col`, `subgrid-row`, and `grid-gallery` are grids that bring
+ * their own tracks. Each writes a per-tier channel (`--_display-cols-*`,
+ * `--_display-rows-*`), and a tier naming any other display writes the element's
+ * own `--grid-cols` / `--grid-rows` tracks there, and so does a tier naming a count,
+ * so the highest tier that names a display or a count decides (`displayTrackRules`
+ * emits the two properties).
  */
 export function displayShorthandRules(): string {
   const entries = Object.entries(DISPLAY_SHORTHANDS);
@@ -591,12 +607,26 @@ export function displayShorthandRules(): string {
     const suffix = tier ? `--${tier}` : "";
     const layer = tier ? `-${tier}` : "";
     return [
-      `:where([style*="--display${suffix}:"]) { --_flex-direction${layer}: row;${tier ? ` --_pile${layer}: normal; place-items: revert-layer;` : ""} }`,
+      // a count at a tier takes its axis back from a lower tier's display; a display at the same tier follows and wins
+      ...(tier
+        ? (["cols", "rows"] as const).map(
+            (axis) =>
+              `:where([style*="--grid-${axis}${suffix}:"]) { --_display-${axis}${layer}: ${OWN_TRACKS[axis]}; }`,
+          )
+        : []),
+      `:where([style*="--display${suffix}:"]) { --_flex-direction${layer}: row;${tier ? ` --_pile${layer}: normal; place-items: revert-layer; --_display-cols${layer}: ${OWN_TRACKS.cols}; --_display-rows${layer}: ${OWN_TRACKS.rows};` : ""} }`,
       ...entries.map(
         ([keyword, [display, direction]]) =>
           `:where([style*="--display${suffix}: ${keyword}"]) { --_display${layer}: ${display}; --_flex-direction${layer}: ${direction}; }`,
       ),
       `:where([style*="--display${suffix}: ${DISPLAY_PILE}"]) { --_display${layer}: grid; --_pile${layer}: center; ${PILE_CENTERING} }`,
+      `:where([style*="--display${suffix}: ${DISPLAY_GALLERY}"]) { --_display${layer}: grid; --_display-cols${layer}: var(--_gallery-cols); }`,
+      // the bare keyword first: it is a prefix of the other two, which give one axis back
+      ...Object.entries(DISPLAY_SUBGRIDS).map(([keyword, [cols, rows]]) =>
+        cols && rows
+          ? `:where([style*="--display${suffix}: ${keyword}"]) { --_display${layer}: grid; --_display-cols${layer}: subgrid; --_display-rows${layer}: subgrid; }`
+          : `:where([style*="--display${suffix}: ${keyword}"]) { --_display-${cols ? "rows" : "cols"}${layer}: ${cols ? OWN_TRACKS.rows : OWN_TRACKS.cols}; }`,
+      ),
     ];
   };
   const lines = block("");
@@ -619,8 +649,96 @@ export function displayShorthandRules(): string {
     `@container style(--_pile-resolved: center) {`,
     `  :where(*) { grid-area: 1 / 1; }`,
     `}`,
+    ...galleryRules(),
   );
   return lines.join("\n") + "\n";
+}
+
+/** What a display channel holds where the display brings no tracks: the element's own count, or none. */
+const OWN_TRACKS = {
+  cols: "var(--_grid-cols-tracks, none)",
+  rows: "var(--_grid-rows-tracks, none)",
+} as const;
+
+/** The elements that name a track-bringing display at any tier. */
+function trackDisplayGate(): string {
+  const subgrids = ["", ...BREAKPOINTS.map((bp) => `--${bp}`)].map(
+    (suffix) => `[style*="--display${suffix}: subgrid"]`,
+  );
+  return [`[style*="${DISPLAY_GALLERY}"]`, ...subgrids].join(", ");
+}
+
+/**
+ * `--display: grid-gallery` picks its columns from its child count: as many as fit
+ * at the minimum width (`--ui-gallery-min-w`, read through a fallback: no primitive
+ * owns it, so it is not a declared hook), up to `GALLERY_MAX`, skipping a count
+ * that would leave one child alone in the last row.
+ *
+ * The count is `auto-fit` over a track minimum, so the grid needs no container
+ * query on itself. The minimum is the largest of: the author's minimum; a
+ * `GALLERY_MAX + 1`th of the width, which caps the count; and, for each count `d`
+ * that would orphan a child (`n ≡ 1 mod d` rendered children, a `:has()` flag), just over a `d`th
+ * of the width while `d` is the most that fits, which drops to `d - 1`. Two
+ * columns stay allowed for an odd count: one orphan beats a single column. When
+ * `d` and `d - 1` both orphan (13 children at four columns) it lands on `d - 1`.
+ * The math reads the column gap from the gap utilities' typed pair; a gap set in
+ * a stylesheet is unknown here and can let an orphan through near a threshold.
+ */
+function galleryRules(): string[] {
+  /** The children that take a cell: not the hidden ones or the ones that never render. */
+  const GALLERY_ITEM = ":not([hidden], template, script, style)";
+  const gate = `[style*="${DISPLAY_GALLERY}"]`;
+  const min = "var(--_gallery-min)";
+  const gap = "var(--_gallery-gap)";
+  const counts = Array.from({ length: GALLERY_MAX - 2 }, (_, i) => i + 3);
+  /** Just too wide for `d` columns. */
+  const over = (d: number) => `(100% - ${d - 1} * ${gap}) / ${d} + 1px`;
+  /** Positive while `d + 1` columns do not fit at the minimum. */
+  const below = (d: number) => `(${d + 1} * ${min} + ${d} * ${gap} - 100%) * 99999`;
+  const terms = [
+    min,
+    over(GALLERY_MAX + 1),
+    ...counts.map((d) =>
+      d === GALLERY_MAX
+        ? `var(--_gallery-o${d}, 0) * (${over(d)})`
+        : `var(--_gallery-o${d}, 0) * min(${over(d)}, ${below(d)})`,
+    ),
+  ];
+  const pair = "var(--_gap-x-resolved, var(--_gap-resolved, 0))";
+  return [
+    `:where(${gate}) {`,
+    `  --_gallery-min: min(var(--ui-gallery-min-w, ${GALLERY_MIN}), 100%);`,
+    // --gap-x's pair, filled from --gap when --gap-x is absent (its own rules come later)
+    `  --_gap-x-len: ${pair};`,
+    `  --_gap-x-num: ${pair};`,
+    `  --_gallery-gap: calc(var(--_gap-x-len) + var(--_gap-x-num) * var(--spacing));`,
+    `  --_gallery-cols: repeat(auto-fit, minmax(max(${terms.join(", ")}), 1fr));`,
+    `}`,
+    ...counts.map(
+      (d) =>
+        `:where(${gate}:has(> :nth-child(${d}n + 1 of ${GALLERY_ITEM}):nth-last-child(1 of ${GALLERY_ITEM}))) { --_gallery-o${d}: 1; }`,
+    ),
+  ];
+}
+
+/**
+ * The track properties of a track-bringing display (`displayShorthandRules`):
+ * the highest tier's channel, else the element's own `--grid-cols` / `--grid-rows`
+ * tracks, else whatever a lower layer set. After the count utilities, so the
+ * display wins over a count at the same tier; before the raw templates, which win.
+ */
+export function displayTrackRules(): string {
+  const axis = (name: "cols" | "rows", property: string) =>
+    `  ${property}: ${chain(`display-${name}`, [...BREAKPOINTS].reverse(), `var(--_display-${name}, var(--_grid-${name}-tracks, revert-layer))`)};`;
+  return [
+    `:where(${trackDisplayGate()}) {`,
+    `  --_grid-cols-tracks: repeat(var(--_grid-cols-resolved), minmax(0, 1fr));`,
+    `  --_grid-rows-tracks: repeat(var(--_grid-rows-resolved), minmax(0, 1fr));`,
+    axis("cols", "grid-template-columns"),
+    axis("rows", "grid-template-rows"),
+    `}`,
+    ``,
+  ].join("\n");
 }
 
 /**
@@ -1119,7 +1237,8 @@ function familyFile(family: Family, utilities: readonly Utility[]): string {
         textWrapRules(utility) +
         divideRules(utility) +
         containerRules(utility) +
-        (utility.name === "display" ? displayShorthandRules() : ""),
+        (utility.name === "display" ? displayShorthandRules() : "") +
+        (utility.name === "grid-rows" ? displayTrackRules() : ""),
     )
     .concat(compositeRule(utilities))
     .concat(elevationRule(utilities))
@@ -1828,7 +1947,7 @@ export function generate(
     register(STUCK_STATE.modifier);
   files.set(
     "_properties.css",
-    `${BANNER}\n/* Registrations: utility, layer variable, resolver, dual pair */\n${utilities.map(registrations).join("")}\n/* Dual pairs on pseudo-elements */\n${utilities.map(pseudoRegistrations).join("")}\n/* Focus ring, published by primitives */\n${register("_focus-shadow")}\n/* Stuck state */\n${stuckRegistrations}\n/* --display shorthands' flex-direction and pile channels */\n${["", ...BREAKPOINTS.map((bp) => `-${bp}`), "-resolved"].map((suffix) => register(`_flex-direction${suffix}`) + register(`_pile${suffix}`)).join("")}`,
+    `${BANNER}\n/* Registrations: utility, layer variable, resolver, dual pair */\n${utilities.map(registrations).join("")}\n/* Dual pairs on pseudo-elements */\n${utilities.map(pseudoRegistrations).join("")}\n/* Focus ring, published by primitives */\n${register("_focus-shadow")}\n/* Stuck state */\n${stuckRegistrations}\n/* --display shorthands' flex-direction and pile channels */\n${["", ...BREAKPOINTS.map((bp) => `-${bp}`), "-resolved"].map((suffix) => register(`_flex-direction${suffix}`) + register(`_pile${suffix}`)).join("")}\n/* Track-bringing displays: per-tier channels, own tracks, gallery */\n${["", ...BREAKPOINTS.map((bp) => `-${bp}`)].map((suffix) => register(`_display-cols${suffix}`) + register(`_display-rows${suffix}`)).join("")}${["_grid-cols-tracks", "_grid-rows-tracks", "_gallery-min", "_gallery-gap", "_gallery-cols", ...Array.from({ length: GALLERY_MAX - 2 }, (_, i) => `_gallery-o${i + 3}`)].map((name) => register(name)).join("")}`,
   );
   for (const tier of [...BREAKPOINTS, ...STATES]) {
     const inTier = utilities.filter((utility) => tiersOf(utility).includes(tier));

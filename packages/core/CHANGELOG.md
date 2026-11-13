@@ -1,5 +1,45 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.13.0 (unreleased)
+
+### base
+
+- **BREAKING** Tiers with no use are gone, which takes about 10 KB off the built CSS (1 KB gzipped). The editor and `<ui-debug>` report each one as a tier the utility does not take. Migrate as follows:
+  - `--isolation`, `--font-family`, and `--font-style` take no breakpoints. Set the base value.
+  - `--border-style` takes no breakpoints. A border that changes with width changes its width: `--border--md: 0` or `--border-width--md`.
+  - `--container-name` takes no breakpoints. Name the container at the base and switch it on with `--container-type--md`, or put the name in the shorthand (`--container--md: panel / inline-size`).
+  - `--shadow-angle` takes no states. `--shadow--hover` or `--elevation--hover` changes one element's shadow; `--shadow-angle--md` still works.
+  - No `--starting` tier where it had no practical use: on `--transition`, `--transition-duration`, `--transition-delay`, `--animation`, `--anchor-name`, `--position-anchor`, `--position-area`, `--text-wrap`, `--text-decoration`, `--border-style`, `--mix-blend`, and `--z`. Delete the declaration.
+- **BREAKING** `--grid-cols: subgrid` and `--grid-rows: subgrid` are gone: subgrid is a display. `--display: subgrid` takes both axes' tracks from the parent grid, `--display: subgrid-col` the columns, and `--display: subgrid-row` the rows; each takes breakpoints, and the axis it does not take keeps its own `--grid-cols` or `--grid-rows`. Across breakpoints the highest tier that names a display or a count decides. Migrate `--display: grid; --grid-cols: subgrid` to `--display: subgrid-col`, both axes to `--display: subgrid`, and a tier (`--grid-cols--md: subgrid`) to `--display--md: subgrid-col`; the editor and `vp run lint:html` suggest the rewrite. `--template-cols: subgrid` and `--template-rows: subgrid` work as before.
+- `--display: grid-gallery` is a grid that picks its column count from its child count: as many as fit in a row, up to six, each at least `--ui-gallery-min-w` wide (`20ch` by default), skipping a count that would leave one child alone in the last row. It takes breakpoints (`--display: flex-col; --display--md: grid-gallery`).
+
+### carousel
+
+- **BREAKING** The carousel runs on Embla v9 (`9.0.0-rc04`, pinned in the import map with new SRI hashes; update a hand-written import map to match). Core options pass straight through, so rename any v8 option attribute: the `startIndex` option is `data-carousel-start-snap`, `-watch-drag` → `-draggable`, `-watch-resize` → `-resize`, `-watch-slides` → `-slide-changes`, `-watch-focus` → `-focus`. `data-carousel-start-index` stays the kit's own dialog attribute (don't set it by hand). `data-carousel-drag-free="snap"` and `data-carousel-in-view-margin` are new. On Autoplay, `data-carousel-autoplay-jump` is now `-instant`; on Class Names, `data-carousel-class-names-dragging` is now `-pointer-down`. Code that calls `_emblaApi` / `<ui-carousel>.api` uses the v9 names: `goTo`, `goToNext`, `goToPrev`, `canGoToNext`, `canGoToPrev`, `selectedSnap`, `snapList`, and lowercase events (`reinit`, `pointerdown`, `slidesinview`); `init` is gone.
+- Autoplay and Auto Scroll keep the kit's documented behavior, which the kit now implements itself because Embla v9 dropped the options. They play on init, and a drag or slide focus stops them. With `data-carousel-autoplay-stop-on-interaction="false"` (or `-auto-scroll-`), a drag or focus holds them and they resume after. `-play-on-init="false"` still leaves the plugin stopped. `-stop-on-mouse-enter` and `-stop-on-focus-in` are gone. A playing plugin keeps playing after a resize or breakpoint change, which re-creates it; on its own, v9 would leave it stopped. One change from v8: once an interaction has stopped a plugin, a resize no longer restarts it.
+
+### tabs
+
+- `data-tabs-variant="underline"` draws tabs without a track: the indicator is a 2px line under the checked label, or at its start edge with `data-tabs-orientation="vertical"`, and the labels use `--font-size-md`. `--ui-tabs-underline-width` and `--ui-tabs-underline-color` set the line.
+- Tabs nested in a panel no longer hide the outer tabs' panels. The panel rules matched any tab list inside the root; they now match only the root's own list.
+
+### toggle
+
+- A disabled toggle with a variant keeps that variant's color, at 60% opacity as on the button. Every disabled toggle used to take the muted surface at 50%; now only the default one does.
+- The `primary`, `secondary`, and `tertiary` variants hover and press with the button's lightness steps. They used to fade the fill to 90% and 80% alpha. `muted` fades toward the surface beneath, and `ghost` deepens its hover fill on press.
+- The checked border is `--color-border` (was `--color-primary`), and the fill paints under it: `--ui-toggle-background-clip` defaults to `border-box`, and `--bg-clip` overrides it per element.
+- A `<kbd>` in a toggle takes the compact key size, and one at either end of the content (a kbd group too) tightens that side's padding, as on the button.
+- `data-toggle-size="sm"` uses `--font-size-xs`, and the cursor is `default` to match the button.
+
+### utilities
+
+- New example fragments for the display keywords: `gallery`, `subgrid`, `subgrid-col`, `subgrid-row`, `flex-reverse`, and `inline-flex`.
+
+### debug
+
+- `--grid-cols: subgrid` and `--grid-rows: subgrid` are reported under `not-integer`, with a suggestion that folds the keyword into the element's `--display`.
+- The `tier-unsupported` warning names the utility, where it named the family: "`--z--md` uses a tier `--z` does not take".
+
 ## 0.12.3 (2026-11-12)
 
 ### slider

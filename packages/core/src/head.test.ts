@@ -36,7 +36,8 @@ describe("dependency manifest", () => {
       // Static package files only — jsDelivr regenerates /+esm bundles, which
       // would invalidate the SRI hashes.
       expect(dep.file).not.toContain("+esm");
-      expect(dep.version).toMatch(/^\d+\.\d+\.\d+$/);
+      // An exact version (a prerelease such as Embla's 9.0.0-rc04 counts), never a range or tag.
+      expect(dep.version).toMatch(/^\d+\.\d+\.\d+(-[0-9A-Za-z.]+)?$/);
     }
   });
 

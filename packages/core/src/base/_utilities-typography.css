@@ -46,19 +46,15 @@
     :where([style*="--font-weight--2xl: strong"]) { --_font-weight-2xl: var(--font-weight-strong); }
   }
 
-  :where([style*="--font-family:"], [style*="--font-family--"]) {
-    --_font-family-resolved: var(--_font-family-2xl, var(--_font-family-xl, var(--_font-family-lg, var(--_font-family-md, var(--_font-family-sm, var(--_font-family))))));
-  }
   :where([style*="--font-family:"]) {
     --_font-family: var(--font-family);
+    --_font-family-resolved: var(--_font-family);
     font-family: var(--_font-family-resolved);
   }
 
-  :where([style*="--font-style:"], [style*="--font-style--"]) {
-    --_font-style-resolved: var(--_font-style-2xl, var(--_font-style-xl, var(--_font-style-lg, var(--_font-style-md, var(--_font-style-sm, var(--_font-style))))));
-  }
   :where([style*="--font-style:"]) {
     --_font-style: var(--font-style);
+    --_font-style-resolved: var(--_font-style);
     font-style: var(--_font-style-resolved);
   }
 
@@ -95,7 +91,7 @@
   }
 
   :where([style*="--text-wrap:"], [style*="--text-wrap--"], [style*="--group-text-wrap--"]) {
-    --_text-wrap-resolved: var(--_text-wrap-starting, var(--_text-wrap-disabled, var(--_text-wrap-active, var(--_text-wrap-focus-visible, var(--_text-wrap-focus-within, var(--_text-wrap-hover, var(--_text-wrap-checked, var(--_text-wrap-current, var(--_text-wrap-open, var(--_text-wrap-g-disabled, var(--_text-wrap-g-active, var(--_text-wrap-g-focus-visible, var(--_text-wrap-g-focus-within, var(--_text-wrap-g-hover, var(--_text-wrap-g-checked, var(--_text-wrap-g-current, var(--_text-wrap-g-open, var(--_text-wrap-stuck, var(--_text-wrap-2xl, var(--_text-wrap-xl, var(--_text-wrap-lg, var(--_text-wrap-md, var(--_text-wrap-sm, var(--_text-wrap))))))))))))))))))))))));
+    --_text-wrap-resolved: var(--_text-wrap-disabled, var(--_text-wrap-active, var(--_text-wrap-focus-visible, var(--_text-wrap-focus-within, var(--_text-wrap-hover, var(--_text-wrap-checked, var(--_text-wrap-current, var(--_text-wrap-open, var(--_text-wrap-g-disabled, var(--_text-wrap-g-active, var(--_text-wrap-g-focus-visible, var(--_text-wrap-g-focus-within, var(--_text-wrap-g-hover, var(--_text-wrap-g-checked, var(--_text-wrap-g-current, var(--_text-wrap-g-open, var(--_text-wrap-stuck, var(--_text-wrap-2xl, var(--_text-wrap-xl, var(--_text-wrap-lg, var(--_text-wrap-md, var(--_text-wrap-sm, var(--_text-wrap)))))))))))))))))))))));
     --_text-wrap-a: var(--_text-wrap-resolved, wrap);
     --_text-wrap-b: var(--_text-wrap-a);
   }
@@ -374,7 +370,7 @@
   }
 
   :where([style*="--text-decoration:"], [style*="--text-decoration--"], [style*="--group-text-decoration--"]) {
-    --_text-decoration-resolved: var(--_text-decoration-starting, var(--_text-decoration-disabled, var(--_text-decoration-active, var(--_text-decoration-focus-visible, var(--_text-decoration-focus-within, var(--_text-decoration-hover, var(--_text-decoration-checked, var(--_text-decoration-current, var(--_text-decoration-open, var(--_text-decoration-g-disabled, var(--_text-decoration-g-active, var(--_text-decoration-g-focus-visible, var(--_text-decoration-g-focus-within, var(--_text-decoration-g-hover, var(--_text-decoration-g-checked, var(--_text-decoration-g-current, var(--_text-decoration-g-open, var(--_text-decoration-stuck, var(--_text-decoration-2xl, var(--_text-decoration-xl, var(--_text-decoration-lg, var(--_text-decoration-md, var(--_text-decoration-sm, var(--_text-decoration))))))))))))))))))))))));
+    --_text-decoration-resolved: var(--_text-decoration-disabled, var(--_text-decoration-active, var(--_text-decoration-focus-visible, var(--_text-decoration-focus-within, var(--_text-decoration-hover, var(--_text-decoration-checked, var(--_text-decoration-current, var(--_text-decoration-open, var(--_text-decoration-g-disabled, var(--_text-decoration-g-active, var(--_text-decoration-g-focus-visible, var(--_text-decoration-g-focus-within, var(--_text-decoration-g-hover, var(--_text-decoration-g-checked, var(--_text-decoration-g-current, var(--_text-decoration-g-open, var(--_text-decoration-stuck, var(--_text-decoration-2xl, var(--_text-decoration-xl, var(--_text-decoration-lg, var(--_text-decoration-md, var(--_text-decoration-sm, var(--_text-decoration)))))))))))))))))))))));
   }
   :where([style*="--text-decoration:"]) {
     --_text-decoration: var(--text-decoration);

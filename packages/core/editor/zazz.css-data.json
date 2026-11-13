@@ -33,6 +33,18 @@
           "name": "grid-pile"
         },
         {
+          "name": "grid-gallery"
+        },
+        {
+          "name": "subgrid"
+        },
+        {
+          "name": "subgrid-col"
+        },
+        {
+          "name": "subgrid-row"
+        },
+        {
           "name": "block"
         },
         {
@@ -91,6 +103,18 @@
         },
         {
           "name": "grid-pile"
+        },
+        {
+          "name": "grid-gallery"
+        },
+        {
+          "name": "subgrid"
+        },
+        {
+          "name": "subgrid-col"
+        },
+        {
+          "name": "subgrid-row"
         },
         {
           "name": "block"
@@ -153,6 +177,18 @@
           "name": "grid-pile"
         },
         {
+          "name": "grid-gallery"
+        },
+        {
+          "name": "subgrid"
+        },
+        {
+          "name": "subgrid-col"
+        },
+        {
+          "name": "subgrid-row"
+        },
+        {
           "name": "block"
         },
         {
@@ -211,6 +247,18 @@
         },
         {
           "name": "grid-pile"
+        },
+        {
+          "name": "grid-gallery"
+        },
+        {
+          "name": "subgrid"
+        },
+        {
+          "name": "subgrid-col"
+        },
+        {
+          "name": "subgrid-row"
         },
         {
           "name": "block"
@@ -273,6 +321,18 @@
           "name": "grid-pile"
         },
         {
+          "name": "grid-gallery"
+        },
+        {
+          "name": "subgrid"
+        },
+        {
+          "name": "subgrid-col"
+        },
+        {
+          "name": "subgrid-row"
+        },
+        {
           "name": "block"
         },
         {
@@ -331,6 +391,18 @@
         },
         {
           "name": "grid-pile"
+        },
+        {
+          "name": "grid-gallery"
+        },
+        {
+          "name": "subgrid"
+        },
+        {
+          "name": "subgrid-col"
+        },
+        {
+          "name": "subgrid-row"
         },
         {
           "name": "block"
@@ -508,10 +580,6 @@
       "description": "anchor-name — any value; flow family."
     },
     {
-      "name": "--anchor-name--starting",
-      "description": "--anchor-name in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none."
-    },
-    {
       "name": "--anchor-name--disabled",
       "description": "--anchor-name in the disabled state."
     },
@@ -604,10 +672,6 @@
       "description": "position-anchor — any value; flow family."
     },
     {
-      "name": "--position-anchor--starting",
-      "description": "--position-anchor in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none."
-    },
-    {
       "name": "--position-anchor--disabled",
       "description": "--position-anchor in the disabled state."
     },
@@ -698,10 +762,6 @@
     {
       "name": "--position-area",
       "description": "position-area — any value; flow family."
-    },
-    {
-      "name": "--position-area--starting",
-      "description": "--position-area in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none."
     },
     {
       "name": "--position-area--disabled",
@@ -2077,111 +2137,51 @@
     },
     {
       "name": "--grid-cols",
-      "description": "grid-template-columns — an integer; grid family.",
-      "values": [
-        {
-          "name": "subgrid"
-        }
-      ]
+      "description": "grid-template-columns — an integer; grid family."
     },
     {
       "name": "--grid-cols--sm",
-      "description": "--grid-cols at the sm breakpoint and up.",
-      "values": [
-        {
-          "name": "subgrid"
-        }
-      ]
+      "description": "--grid-cols at the sm breakpoint and up."
     },
     {
       "name": "--grid-cols--md",
-      "description": "--grid-cols at the md breakpoint and up.",
-      "values": [
-        {
-          "name": "subgrid"
-        }
-      ]
+      "description": "--grid-cols at the md breakpoint and up."
     },
     {
       "name": "--grid-cols--lg",
-      "description": "--grid-cols at the lg breakpoint and up.",
-      "values": [
-        {
-          "name": "subgrid"
-        }
-      ]
+      "description": "--grid-cols at the lg breakpoint and up."
     },
     {
       "name": "--grid-cols--xl",
-      "description": "--grid-cols at the xl breakpoint and up.",
-      "values": [
-        {
-          "name": "subgrid"
-        }
-      ]
+      "description": "--grid-cols at the xl breakpoint and up."
     },
     {
       "name": "--grid-cols--2xl",
-      "description": "--grid-cols at the 2xl breakpoint and up.",
-      "values": [
-        {
-          "name": "subgrid"
-        }
-      ]
+      "description": "--grid-cols at the 2xl breakpoint and up."
     },
     {
       "name": "--grid-rows",
-      "description": "grid-template-rows — an integer; grid family.",
-      "values": [
-        {
-          "name": "subgrid"
-        }
-      ]
+      "description": "grid-template-rows — an integer; grid family."
     },
     {
       "name": "--grid-rows--sm",
-      "description": "--grid-rows at the sm breakpoint and up.",
-      "values": [
-        {
-          "name": "subgrid"
-        }
-      ]
+      "description": "--grid-rows at the sm breakpoint and up."
     },
     {
       "name": "--grid-rows--md",
-      "description": "--grid-rows at the md breakpoint and up.",
-      "values": [
-        {
-          "name": "subgrid"
-        }
-      ]
+      "description": "--grid-rows at the md breakpoint and up."
     },
     {
       "name": "--grid-rows--lg",
-      "description": "--grid-rows at the lg breakpoint and up.",
-      "values": [
-        {
-          "name": "subgrid"
-        }
-      ]
+      "description": "--grid-rows at the lg breakpoint and up."
     },
     {
       "name": "--grid-rows--xl",
-      "description": "--grid-rows at the xl breakpoint and up.",
-      "values": [
-        {
-          "name": "subgrid"
-        }
-      ]
+      "description": "--grid-rows at the xl breakpoint and up."
     },
     {
       "name": "--grid-rows--2xl",
-      "description": "--grid-rows at the 2xl breakpoint and up.",
-      "values": [
-        {
-          "name": "subgrid"
-        }
-      ]
+      "description": "--grid-rows at the 2xl breakpoint and up."
     },
     {
       "name": "--template-cols",
@@ -10329,158 +10329,8 @@
       ]
     },
     {
-      "name": "--font-family--sm",
-      "description": "--font-family at the sm breakpoint and up.",
-      "values": [
-        {
-          "name": "var(--font-family-body)"
-        },
-        {
-          "name": "var(--font-family-heading)"
-        },
-        {
-          "name": "var(--font-family-mono)"
-        }
-      ]
-    },
-    {
-      "name": "--font-family--md",
-      "description": "--font-family at the md breakpoint and up.",
-      "values": [
-        {
-          "name": "var(--font-family-body)"
-        },
-        {
-          "name": "var(--font-family-heading)"
-        },
-        {
-          "name": "var(--font-family-mono)"
-        }
-      ]
-    },
-    {
-      "name": "--font-family--lg",
-      "description": "--font-family at the lg breakpoint and up.",
-      "values": [
-        {
-          "name": "var(--font-family-body)"
-        },
-        {
-          "name": "var(--font-family-heading)"
-        },
-        {
-          "name": "var(--font-family-mono)"
-        }
-      ]
-    },
-    {
-      "name": "--font-family--xl",
-      "description": "--font-family at the xl breakpoint and up.",
-      "values": [
-        {
-          "name": "var(--font-family-body)"
-        },
-        {
-          "name": "var(--font-family-heading)"
-        },
-        {
-          "name": "var(--font-family-mono)"
-        }
-      ]
-    },
-    {
-      "name": "--font-family--2xl",
-      "description": "--font-family at the 2xl breakpoint and up.",
-      "values": [
-        {
-          "name": "var(--font-family-body)"
-        },
-        {
-          "name": "var(--font-family-heading)"
-        },
-        {
-          "name": "var(--font-family-mono)"
-        }
-      ]
-    },
-    {
       "name": "--font-style",
       "description": "font-style — a keyword; typography family.",
-      "values": [
-        {
-          "name": "normal"
-        },
-        {
-          "name": "italic"
-        },
-        {
-          "name": "oblique"
-        }
-      ]
-    },
-    {
-      "name": "--font-style--sm",
-      "description": "--font-style at the sm breakpoint and up.",
-      "values": [
-        {
-          "name": "normal"
-        },
-        {
-          "name": "italic"
-        },
-        {
-          "name": "oblique"
-        }
-      ]
-    },
-    {
-      "name": "--font-style--md",
-      "description": "--font-style at the md breakpoint and up.",
-      "values": [
-        {
-          "name": "normal"
-        },
-        {
-          "name": "italic"
-        },
-        {
-          "name": "oblique"
-        }
-      ]
-    },
-    {
-      "name": "--font-style--lg",
-      "description": "--font-style at the lg breakpoint and up.",
-      "values": [
-        {
-          "name": "normal"
-        },
-        {
-          "name": "italic"
-        },
-        {
-          "name": "oblique"
-        }
-      ]
-    },
-    {
-      "name": "--font-style--xl",
-      "description": "--font-style at the xl breakpoint and up.",
-      "values": [
-        {
-          "name": "normal"
-        },
-        {
-          "name": "italic"
-        },
-        {
-          "name": "oblique"
-        }
-      ]
-    },
-    {
-      "name": "--font-style--2xl",
-      "description": "--font-style at the 2xl breakpoint and up.",
       "values": [
         {
           "name": "normal"
@@ -11352,36 +11202,6 @@
       ]
     },
     {
-      "name": "--text-wrap--starting",
-      "description": "--text-wrap in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none.",
-      "values": [
-        {
-          "name": "wrap"
-        },
-        {
-          "name": "nowrap"
-        },
-        {
-          "name": "auto"
-        },
-        {
-          "name": "balance"
-        },
-        {
-          "name": "pretty"
-        },
-        {
-          "name": "stable"
-        },
-        {
-          "name": "truncate"
-        },
-        {
-          "name": "none"
-        }
-      ]
-    },
-    {
       "name": "--text-wrap--disabled",
       "description": "--text-wrap in the disabled state.",
       "values": [
@@ -12068,10 +11888,6 @@
     {
       "name": "--text-decoration",
       "description": "text-decoration-line — any value; typography family."
-    },
-    {
-      "name": "--text-decoration--starting",
-      "description": "--text-decoration in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none."
     },
     {
       "name": "--text-decoration--disabled",
@@ -49786,324 +49602,6 @@
       ]
     },
     {
-      "name": "--border-style--starting",
-      "description": "--border-style in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none.",
-      "values": [
-        {
-          "name": "var(--color-shade-full)"
-        },
-        {
-          "name": "var(--color-tint-full)"
-        },
-        {
-          "name": "var(--color-background)"
-        },
-        {
-          "name": "var(--color-black)"
-        },
-        {
-          "name": "var(--color-border)"
-        },
-        {
-          "name": "var(--color-border-foreground)"
-        },
-        {
-          "name": "var(--color-card)"
-        },
-        {
-          "name": "var(--color-card-foreground)"
-        },
-        {
-          "name": "var(--color-destructive)"
-        },
-        {
-          "name": "var(--color-destructive-foreground)"
-        },
-        {
-          "name": "var(--color-faded)"
-        },
-        {
-          "name": "var(--color-faded-foreground)"
-        },
-        {
-          "name": "var(--color-foreground)"
-        },
-        {
-          "name": "var(--color-info)"
-        },
-        {
-          "name": "var(--color-info-foreground)"
-        },
-        {
-          "name": "var(--color-input)"
-        },
-        {
-          "name": "var(--color-input-foreground)"
-        },
-        {
-          "name": "var(--color-muted)"
-        },
-        {
-          "name": "var(--color-muted-foreground)"
-        },
-        {
-          "name": "var(--color-neutral-100)"
-        },
-        {
-          "name": "var(--color-neutral-200)"
-        },
-        {
-          "name": "var(--color-neutral-300)"
-        },
-        {
-          "name": "var(--color-neutral-400)"
-        },
-        {
-          "name": "var(--color-neutral-50)"
-        },
-        {
-          "name": "var(--color-neutral-500)"
-        },
-        {
-          "name": "var(--color-neutral-600)"
-        },
-        {
-          "name": "var(--color-neutral-700)"
-        },
-        {
-          "name": "var(--color-neutral-800)"
-        },
-        {
-          "name": "var(--color-neutral-900)"
-        },
-        {
-          "name": "var(--color-neutral-950)"
-        },
-        {
-          "name": "var(--color-popover)"
-        },
-        {
-          "name": "var(--color-popover-foreground)"
-        },
-        {
-          "name": "var(--color-primary)"
-        },
-        {
-          "name": "var(--color-primary-100)"
-        },
-        {
-          "name": "var(--color-primary-200)"
-        },
-        {
-          "name": "var(--color-primary-300)"
-        },
-        {
-          "name": "var(--color-primary-400)"
-        },
-        {
-          "name": "var(--color-primary-50)"
-        },
-        {
-          "name": "var(--color-primary-500)"
-        },
-        {
-          "name": "var(--color-primary-600)"
-        },
-        {
-          "name": "var(--color-primary-700)"
-        },
-        {
-          "name": "var(--color-primary-800)"
-        },
-        {
-          "name": "var(--color-primary-900)"
-        },
-        {
-          "name": "var(--color-primary-950)"
-        },
-        {
-          "name": "var(--color-primary-foreground)"
-        },
-        {
-          "name": "var(--color-ring)"
-        },
-        {
-          "name": "var(--color-secondary)"
-        },
-        {
-          "name": "var(--color-secondary-100)"
-        },
-        {
-          "name": "var(--color-secondary-200)"
-        },
-        {
-          "name": "var(--color-secondary-300)"
-        },
-        {
-          "name": "var(--color-secondary-400)"
-        },
-        {
-          "name": "var(--color-secondary-50)"
-        },
-        {
-          "name": "var(--color-secondary-500)"
-        },
-        {
-          "name": "var(--color-secondary-600)"
-        },
-        {
-          "name": "var(--color-secondary-700)"
-        },
-        {
-          "name": "var(--color-secondary-800)"
-        },
-        {
-          "name": "var(--color-secondary-900)"
-        },
-        {
-          "name": "var(--color-secondary-950)"
-        },
-        {
-          "name": "var(--color-secondary-foreground)"
-        },
-        {
-          "name": "var(--color-selection)"
-        },
-        {
-          "name": "var(--color-selection-foreground)"
-        },
-        {
-          "name": "var(--color-shade-100)"
-        },
-        {
-          "name": "var(--color-shade-200)"
-        },
-        {
-          "name": "var(--color-shade-300)"
-        },
-        {
-          "name": "var(--color-shade-400)"
-        },
-        {
-          "name": "var(--color-shade-50)"
-        },
-        {
-          "name": "var(--color-shade-500)"
-        },
-        {
-          "name": "var(--color-shade-600)"
-        },
-        {
-          "name": "var(--color-shade-700)"
-        },
-        {
-          "name": "var(--color-shade-800)"
-        },
-        {
-          "name": "var(--color-shade-900)"
-        },
-        {
-          "name": "var(--color-shade-950)"
-        },
-        {
-          "name": "var(--color-shade-none)"
-        },
-        {
-          "name": "var(--color-shadow)"
-        },
-        {
-          "name": "var(--color-success)"
-        },
-        {
-          "name": "var(--color-success-foreground)"
-        },
-        {
-          "name": "var(--color-tertiary)"
-        },
-        {
-          "name": "var(--color-tertiary-100)"
-        },
-        {
-          "name": "var(--color-tertiary-200)"
-        },
-        {
-          "name": "var(--color-tertiary-300)"
-        },
-        {
-          "name": "var(--color-tertiary-400)"
-        },
-        {
-          "name": "var(--color-tertiary-50)"
-        },
-        {
-          "name": "var(--color-tertiary-500)"
-        },
-        {
-          "name": "var(--color-tertiary-600)"
-        },
-        {
-          "name": "var(--color-tertiary-700)"
-        },
-        {
-          "name": "var(--color-tertiary-800)"
-        },
-        {
-          "name": "var(--color-tertiary-900)"
-        },
-        {
-          "name": "var(--color-tertiary-950)"
-        },
-        {
-          "name": "var(--color-tertiary-foreground)"
-        },
-        {
-          "name": "var(--color-tint-100)"
-        },
-        {
-          "name": "var(--color-tint-200)"
-        },
-        {
-          "name": "var(--color-tint-300)"
-        },
-        {
-          "name": "var(--color-tint-400)"
-        },
-        {
-          "name": "var(--color-tint-50)"
-        },
-        {
-          "name": "var(--color-tint-500)"
-        },
-        {
-          "name": "var(--color-tint-600)"
-        },
-        {
-          "name": "var(--color-tint-700)"
-        },
-        {
-          "name": "var(--color-tint-800)"
-        },
-        {
-          "name": "var(--color-tint-900)"
-        },
-        {
-          "name": "var(--color-tint-950)"
-        },
-        {
-          "name": "var(--color-tint-none)"
-        },
-        {
-          "name": "var(--color-warning)"
-        },
-        {
-          "name": "var(--color-warning-foreground)"
-        },
-        {
-          "name": "var(--color-white)"
-        }
-      ]
-    },
-    {
       "name": "--border-style--disabled",
       "description": "--border-style in the disabled state.",
       "values": [
@@ -52650,1596 +52148,6 @@
     {
       "name": "--border-style--stuck",
       "description": "--border-style while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental.",
-      "values": [
-        {
-          "name": "var(--color-shade-full)"
-        },
-        {
-          "name": "var(--color-tint-full)"
-        },
-        {
-          "name": "var(--color-background)"
-        },
-        {
-          "name": "var(--color-black)"
-        },
-        {
-          "name": "var(--color-border)"
-        },
-        {
-          "name": "var(--color-border-foreground)"
-        },
-        {
-          "name": "var(--color-card)"
-        },
-        {
-          "name": "var(--color-card-foreground)"
-        },
-        {
-          "name": "var(--color-destructive)"
-        },
-        {
-          "name": "var(--color-destructive-foreground)"
-        },
-        {
-          "name": "var(--color-faded)"
-        },
-        {
-          "name": "var(--color-faded-foreground)"
-        },
-        {
-          "name": "var(--color-foreground)"
-        },
-        {
-          "name": "var(--color-info)"
-        },
-        {
-          "name": "var(--color-info-foreground)"
-        },
-        {
-          "name": "var(--color-input)"
-        },
-        {
-          "name": "var(--color-input-foreground)"
-        },
-        {
-          "name": "var(--color-muted)"
-        },
-        {
-          "name": "var(--color-muted-foreground)"
-        },
-        {
-          "name": "var(--color-neutral-100)"
-        },
-        {
-          "name": "var(--color-neutral-200)"
-        },
-        {
-          "name": "var(--color-neutral-300)"
-        },
-        {
-          "name": "var(--color-neutral-400)"
-        },
-        {
-          "name": "var(--color-neutral-50)"
-        },
-        {
-          "name": "var(--color-neutral-500)"
-        },
-        {
-          "name": "var(--color-neutral-600)"
-        },
-        {
-          "name": "var(--color-neutral-700)"
-        },
-        {
-          "name": "var(--color-neutral-800)"
-        },
-        {
-          "name": "var(--color-neutral-900)"
-        },
-        {
-          "name": "var(--color-neutral-950)"
-        },
-        {
-          "name": "var(--color-popover)"
-        },
-        {
-          "name": "var(--color-popover-foreground)"
-        },
-        {
-          "name": "var(--color-primary)"
-        },
-        {
-          "name": "var(--color-primary-100)"
-        },
-        {
-          "name": "var(--color-primary-200)"
-        },
-        {
-          "name": "var(--color-primary-300)"
-        },
-        {
-          "name": "var(--color-primary-400)"
-        },
-        {
-          "name": "var(--color-primary-50)"
-        },
-        {
-          "name": "var(--color-primary-500)"
-        },
-        {
-          "name": "var(--color-primary-600)"
-        },
-        {
-          "name": "var(--color-primary-700)"
-        },
-        {
-          "name": "var(--color-primary-800)"
-        },
-        {
-          "name": "var(--color-primary-900)"
-        },
-        {
-          "name": "var(--color-primary-950)"
-        },
-        {
-          "name": "var(--color-primary-foreground)"
-        },
-        {
-          "name": "var(--color-ring)"
-        },
-        {
-          "name": "var(--color-secondary)"
-        },
-        {
-          "name": "var(--color-secondary-100)"
-        },
-        {
-          "name": "var(--color-secondary-200)"
-        },
-        {
-          "name": "var(--color-secondary-300)"
-        },
-        {
-          "name": "var(--color-secondary-400)"
-        },
-        {
-          "name": "var(--color-secondary-50)"
-        },
-        {
-          "name": "var(--color-secondary-500)"
-        },
-        {
-          "name": "var(--color-secondary-600)"
-        },
-        {
-          "name": "var(--color-secondary-700)"
-        },
-        {
-          "name": "var(--color-secondary-800)"
-        },
-        {
-          "name": "var(--color-secondary-900)"
-        },
-        {
-          "name": "var(--color-secondary-950)"
-        },
-        {
-          "name": "var(--color-secondary-foreground)"
-        },
-        {
-          "name": "var(--color-selection)"
-        },
-        {
-          "name": "var(--color-selection-foreground)"
-        },
-        {
-          "name": "var(--color-shade-100)"
-        },
-        {
-          "name": "var(--color-shade-200)"
-        },
-        {
-          "name": "var(--color-shade-300)"
-        },
-        {
-          "name": "var(--color-shade-400)"
-        },
-        {
-          "name": "var(--color-shade-50)"
-        },
-        {
-          "name": "var(--color-shade-500)"
-        },
-        {
-          "name": "var(--color-shade-600)"
-        },
-        {
-          "name": "var(--color-shade-700)"
-        },
-        {
-          "name": "var(--color-shade-800)"
-        },
-        {
-          "name": "var(--color-shade-900)"
-        },
-        {
-          "name": "var(--color-shade-950)"
-        },
-        {
-          "name": "var(--color-shade-none)"
-        },
-        {
-          "name": "var(--color-shadow)"
-        },
-        {
-          "name": "var(--color-success)"
-        },
-        {
-          "name": "var(--color-success-foreground)"
-        },
-        {
-          "name": "var(--color-tertiary)"
-        },
-        {
-          "name": "var(--color-tertiary-100)"
-        },
-        {
-          "name": "var(--color-tertiary-200)"
-        },
-        {
-          "name": "var(--color-tertiary-300)"
-        },
-        {
-          "name": "var(--color-tertiary-400)"
-        },
-        {
-          "name": "var(--color-tertiary-50)"
-        },
-        {
-          "name": "var(--color-tertiary-500)"
-        },
-        {
-          "name": "var(--color-tertiary-600)"
-        },
-        {
-          "name": "var(--color-tertiary-700)"
-        },
-        {
-          "name": "var(--color-tertiary-800)"
-        },
-        {
-          "name": "var(--color-tertiary-900)"
-        },
-        {
-          "name": "var(--color-tertiary-950)"
-        },
-        {
-          "name": "var(--color-tertiary-foreground)"
-        },
-        {
-          "name": "var(--color-tint-100)"
-        },
-        {
-          "name": "var(--color-tint-200)"
-        },
-        {
-          "name": "var(--color-tint-300)"
-        },
-        {
-          "name": "var(--color-tint-400)"
-        },
-        {
-          "name": "var(--color-tint-50)"
-        },
-        {
-          "name": "var(--color-tint-500)"
-        },
-        {
-          "name": "var(--color-tint-600)"
-        },
-        {
-          "name": "var(--color-tint-700)"
-        },
-        {
-          "name": "var(--color-tint-800)"
-        },
-        {
-          "name": "var(--color-tint-900)"
-        },
-        {
-          "name": "var(--color-tint-950)"
-        },
-        {
-          "name": "var(--color-tint-none)"
-        },
-        {
-          "name": "var(--color-warning)"
-        },
-        {
-          "name": "var(--color-warning-foreground)"
-        },
-        {
-          "name": "var(--color-white)"
-        }
-      ]
-    },
-    {
-      "name": "--border-style--sm",
-      "description": "--border-style at the sm breakpoint and up.",
-      "values": [
-        {
-          "name": "var(--color-shade-full)"
-        },
-        {
-          "name": "var(--color-tint-full)"
-        },
-        {
-          "name": "var(--color-background)"
-        },
-        {
-          "name": "var(--color-black)"
-        },
-        {
-          "name": "var(--color-border)"
-        },
-        {
-          "name": "var(--color-border-foreground)"
-        },
-        {
-          "name": "var(--color-card)"
-        },
-        {
-          "name": "var(--color-card-foreground)"
-        },
-        {
-          "name": "var(--color-destructive)"
-        },
-        {
-          "name": "var(--color-destructive-foreground)"
-        },
-        {
-          "name": "var(--color-faded)"
-        },
-        {
-          "name": "var(--color-faded-foreground)"
-        },
-        {
-          "name": "var(--color-foreground)"
-        },
-        {
-          "name": "var(--color-info)"
-        },
-        {
-          "name": "var(--color-info-foreground)"
-        },
-        {
-          "name": "var(--color-input)"
-        },
-        {
-          "name": "var(--color-input-foreground)"
-        },
-        {
-          "name": "var(--color-muted)"
-        },
-        {
-          "name": "var(--color-muted-foreground)"
-        },
-        {
-          "name": "var(--color-neutral-100)"
-        },
-        {
-          "name": "var(--color-neutral-200)"
-        },
-        {
-          "name": "var(--color-neutral-300)"
-        },
-        {
-          "name": "var(--color-neutral-400)"
-        },
-        {
-          "name": "var(--color-neutral-50)"
-        },
-        {
-          "name": "var(--color-neutral-500)"
-        },
-        {
-          "name": "var(--color-neutral-600)"
-        },
-        {
-          "name": "var(--color-neutral-700)"
-        },
-        {
-          "name": "var(--color-neutral-800)"
-        },
-        {
-          "name": "var(--color-neutral-900)"
-        },
-        {
-          "name": "var(--color-neutral-950)"
-        },
-        {
-          "name": "var(--color-popover)"
-        },
-        {
-          "name": "var(--color-popover-foreground)"
-        },
-        {
-          "name": "var(--color-primary)"
-        },
-        {
-          "name": "var(--color-primary-100)"
-        },
-        {
-          "name": "var(--color-primary-200)"
-        },
-        {
-          "name": "var(--color-primary-300)"
-        },
-        {
-          "name": "var(--color-primary-400)"
-        },
-        {
-          "name": "var(--color-primary-50)"
-        },
-        {
-          "name": "var(--color-primary-500)"
-        },
-        {
-          "name": "var(--color-primary-600)"
-        },
-        {
-          "name": "var(--color-primary-700)"
-        },
-        {
-          "name": "var(--color-primary-800)"
-        },
-        {
-          "name": "var(--color-primary-900)"
-        },
-        {
-          "name": "var(--color-primary-950)"
-        },
-        {
-          "name": "var(--color-primary-foreground)"
-        },
-        {
-          "name": "var(--color-ring)"
-        },
-        {
-          "name": "var(--color-secondary)"
-        },
-        {
-          "name": "var(--color-secondary-100)"
-        },
-        {
-          "name": "var(--color-secondary-200)"
-        },
-        {
-          "name": "var(--color-secondary-300)"
-        },
-        {
-          "name": "var(--color-secondary-400)"
-        },
-        {
-          "name": "var(--color-secondary-50)"
-        },
-        {
-          "name": "var(--color-secondary-500)"
-        },
-        {
-          "name": "var(--color-secondary-600)"
-        },
-        {
-          "name": "var(--color-secondary-700)"
-        },
-        {
-          "name": "var(--color-secondary-800)"
-        },
-        {
-          "name": "var(--color-secondary-900)"
-        },
-        {
-          "name": "var(--color-secondary-950)"
-        },
-        {
-          "name": "var(--color-secondary-foreground)"
-        },
-        {
-          "name": "var(--color-selection)"
-        },
-        {
-          "name": "var(--color-selection-foreground)"
-        },
-        {
-          "name": "var(--color-shade-100)"
-        },
-        {
-          "name": "var(--color-shade-200)"
-        },
-        {
-          "name": "var(--color-shade-300)"
-        },
-        {
-          "name": "var(--color-shade-400)"
-        },
-        {
-          "name": "var(--color-shade-50)"
-        },
-        {
-          "name": "var(--color-shade-500)"
-        },
-        {
-          "name": "var(--color-shade-600)"
-        },
-        {
-          "name": "var(--color-shade-700)"
-        },
-        {
-          "name": "var(--color-shade-800)"
-        },
-        {
-          "name": "var(--color-shade-900)"
-        },
-        {
-          "name": "var(--color-shade-950)"
-        },
-        {
-          "name": "var(--color-shade-none)"
-        },
-        {
-          "name": "var(--color-shadow)"
-        },
-        {
-          "name": "var(--color-success)"
-        },
-        {
-          "name": "var(--color-success-foreground)"
-        },
-        {
-          "name": "var(--color-tertiary)"
-        },
-        {
-          "name": "var(--color-tertiary-100)"
-        },
-        {
-          "name": "var(--color-tertiary-200)"
-        },
-        {
-          "name": "var(--color-tertiary-300)"
-        },
-        {
-          "name": "var(--color-tertiary-400)"
-        },
-        {
-          "name": "var(--color-tertiary-50)"
-        },
-        {
-          "name": "var(--color-tertiary-500)"
-        },
-        {
-          "name": "var(--color-tertiary-600)"
-        },
-        {
-          "name": "var(--color-tertiary-700)"
-        },
-        {
-          "name": "var(--color-tertiary-800)"
-        },
-        {
-          "name": "var(--color-tertiary-900)"
-        },
-        {
-          "name": "var(--color-tertiary-950)"
-        },
-        {
-          "name": "var(--color-tertiary-foreground)"
-        },
-        {
-          "name": "var(--color-tint-100)"
-        },
-        {
-          "name": "var(--color-tint-200)"
-        },
-        {
-          "name": "var(--color-tint-300)"
-        },
-        {
-          "name": "var(--color-tint-400)"
-        },
-        {
-          "name": "var(--color-tint-50)"
-        },
-        {
-          "name": "var(--color-tint-500)"
-        },
-        {
-          "name": "var(--color-tint-600)"
-        },
-        {
-          "name": "var(--color-tint-700)"
-        },
-        {
-          "name": "var(--color-tint-800)"
-        },
-        {
-          "name": "var(--color-tint-900)"
-        },
-        {
-          "name": "var(--color-tint-950)"
-        },
-        {
-          "name": "var(--color-tint-none)"
-        },
-        {
-          "name": "var(--color-warning)"
-        },
-        {
-          "name": "var(--color-warning-foreground)"
-        },
-        {
-          "name": "var(--color-white)"
-        }
-      ]
-    },
-    {
-      "name": "--border-style--md",
-      "description": "--border-style at the md breakpoint and up.",
-      "values": [
-        {
-          "name": "var(--color-shade-full)"
-        },
-        {
-          "name": "var(--color-tint-full)"
-        },
-        {
-          "name": "var(--color-background)"
-        },
-        {
-          "name": "var(--color-black)"
-        },
-        {
-          "name": "var(--color-border)"
-        },
-        {
-          "name": "var(--color-border-foreground)"
-        },
-        {
-          "name": "var(--color-card)"
-        },
-        {
-          "name": "var(--color-card-foreground)"
-        },
-        {
-          "name": "var(--color-destructive)"
-        },
-        {
-          "name": "var(--color-destructive-foreground)"
-        },
-        {
-          "name": "var(--color-faded)"
-        },
-        {
-          "name": "var(--color-faded-foreground)"
-        },
-        {
-          "name": "var(--color-foreground)"
-        },
-        {
-          "name": "var(--color-info)"
-        },
-        {
-          "name": "var(--color-info-foreground)"
-        },
-        {
-          "name": "var(--color-input)"
-        },
-        {
-          "name": "var(--color-input-foreground)"
-        },
-        {
-          "name": "var(--color-muted)"
-        },
-        {
-          "name": "var(--color-muted-foreground)"
-        },
-        {
-          "name": "var(--color-neutral-100)"
-        },
-        {
-          "name": "var(--color-neutral-200)"
-        },
-        {
-          "name": "var(--color-neutral-300)"
-        },
-        {
-          "name": "var(--color-neutral-400)"
-        },
-        {
-          "name": "var(--color-neutral-50)"
-        },
-        {
-          "name": "var(--color-neutral-500)"
-        },
-        {
-          "name": "var(--color-neutral-600)"
-        },
-        {
-          "name": "var(--color-neutral-700)"
-        },
-        {
-          "name": "var(--color-neutral-800)"
-        },
-        {
-          "name": "var(--color-neutral-900)"
-        },
-        {
-          "name": "var(--color-neutral-950)"
-        },
-        {
-          "name": "var(--color-popover)"
-        },
-        {
-          "name": "var(--color-popover-foreground)"
-        },
-        {
-          "name": "var(--color-primary)"
-        },
-        {
-          "name": "var(--color-primary-100)"
-        },
-        {
-          "name": "var(--color-primary-200)"
-        },
-        {
-          "name": "var(--color-primary-300)"
-        },
-        {
-          "name": "var(--color-primary-400)"
-        },
-        {
-          "name": "var(--color-primary-50)"
-        },
-        {
-          "name": "var(--color-primary-500)"
-        },
-        {
-          "name": "var(--color-primary-600)"
-        },
-        {
-          "name": "var(--color-primary-700)"
-        },
-        {
-          "name": "var(--color-primary-800)"
-        },
-        {
-          "name": "var(--color-primary-900)"
-        },
-        {
-          "name": "var(--color-primary-950)"
-        },
-        {
-          "name": "var(--color-primary-foreground)"
-        },
-        {
-          "name": "var(--color-ring)"
-        },
-        {
-          "name": "var(--color-secondary)"
-        },
-        {
-          "name": "var(--color-secondary-100)"
-        },
-        {
-          "name": "var(--color-secondary-200)"
-        },
-        {
-          "name": "var(--color-secondary-300)"
-        },
-        {
-          "name": "var(--color-secondary-400)"
-        },
-        {
-          "name": "var(--color-secondary-50)"
-        },
-        {
-          "name": "var(--color-secondary-500)"
-        },
-        {
-          "name": "var(--color-secondary-600)"
-        },
-        {
-          "name": "var(--color-secondary-700)"
-        },
-        {
-          "name": "var(--color-secondary-800)"
-        },
-        {
-          "name": "var(--color-secondary-900)"
-        },
-        {
-          "name": "var(--color-secondary-950)"
-        },
-        {
-          "name": "var(--color-secondary-foreground)"
-        },
-        {
-          "name": "var(--color-selection)"
-        },
-        {
-          "name": "var(--color-selection-foreground)"
-        },
-        {
-          "name": "var(--color-shade-100)"
-        },
-        {
-          "name": "var(--color-shade-200)"
-        },
-        {
-          "name": "var(--color-shade-300)"
-        },
-        {
-          "name": "var(--color-shade-400)"
-        },
-        {
-          "name": "var(--color-shade-50)"
-        },
-        {
-          "name": "var(--color-shade-500)"
-        },
-        {
-          "name": "var(--color-shade-600)"
-        },
-        {
-          "name": "var(--color-shade-700)"
-        },
-        {
-          "name": "var(--color-shade-800)"
-        },
-        {
-          "name": "var(--color-shade-900)"
-        },
-        {
-          "name": "var(--color-shade-950)"
-        },
-        {
-          "name": "var(--color-shade-none)"
-        },
-        {
-          "name": "var(--color-shadow)"
-        },
-        {
-          "name": "var(--color-success)"
-        },
-        {
-          "name": "var(--color-success-foreground)"
-        },
-        {
-          "name": "var(--color-tertiary)"
-        },
-        {
-          "name": "var(--color-tertiary-100)"
-        },
-        {
-          "name": "var(--color-tertiary-200)"
-        },
-        {
-          "name": "var(--color-tertiary-300)"
-        },
-        {
-          "name": "var(--color-tertiary-400)"
-        },
-        {
-          "name": "var(--color-tertiary-50)"
-        },
-        {
-          "name": "var(--color-tertiary-500)"
-        },
-        {
-          "name": "var(--color-tertiary-600)"
-        },
-        {
-          "name": "var(--color-tertiary-700)"
-        },
-        {
-          "name": "var(--color-tertiary-800)"
-        },
-        {
-          "name": "var(--color-tertiary-900)"
-        },
-        {
-          "name": "var(--color-tertiary-950)"
-        },
-        {
-          "name": "var(--color-tertiary-foreground)"
-        },
-        {
-          "name": "var(--color-tint-100)"
-        },
-        {
-          "name": "var(--color-tint-200)"
-        },
-        {
-          "name": "var(--color-tint-300)"
-        },
-        {
-          "name": "var(--color-tint-400)"
-        },
-        {
-          "name": "var(--color-tint-50)"
-        },
-        {
-          "name": "var(--color-tint-500)"
-        },
-        {
-          "name": "var(--color-tint-600)"
-        },
-        {
-          "name": "var(--color-tint-700)"
-        },
-        {
-          "name": "var(--color-tint-800)"
-        },
-        {
-          "name": "var(--color-tint-900)"
-        },
-        {
-          "name": "var(--color-tint-950)"
-        },
-        {
-          "name": "var(--color-tint-none)"
-        },
-        {
-          "name": "var(--color-warning)"
-        },
-        {
-          "name": "var(--color-warning-foreground)"
-        },
-        {
-          "name": "var(--color-white)"
-        }
-      ]
-    },
-    {
-      "name": "--border-style--lg",
-      "description": "--border-style at the lg breakpoint and up.",
-      "values": [
-        {
-          "name": "var(--color-shade-full)"
-        },
-        {
-          "name": "var(--color-tint-full)"
-        },
-        {
-          "name": "var(--color-background)"
-        },
-        {
-          "name": "var(--color-black)"
-        },
-        {
-          "name": "var(--color-border)"
-        },
-        {
-          "name": "var(--color-border-foreground)"
-        },
-        {
-          "name": "var(--color-card)"
-        },
-        {
-          "name": "var(--color-card-foreground)"
-        },
-        {
-          "name": "var(--color-destructive)"
-        },
-        {
-          "name": "var(--color-destructive-foreground)"
-        },
-        {
-          "name": "var(--color-faded)"
-        },
-        {
-          "name": "var(--color-faded-foreground)"
-        },
-        {
-          "name": "var(--color-foreground)"
-        },
-        {
-          "name": "var(--color-info)"
-        },
-        {
-          "name": "var(--color-info-foreground)"
-        },
-        {
-          "name": "var(--color-input)"
-        },
-        {
-          "name": "var(--color-input-foreground)"
-        },
-        {
-          "name": "var(--color-muted)"
-        },
-        {
-          "name": "var(--color-muted-foreground)"
-        },
-        {
-          "name": "var(--color-neutral-100)"
-        },
-        {
-          "name": "var(--color-neutral-200)"
-        },
-        {
-          "name": "var(--color-neutral-300)"
-        },
-        {
-          "name": "var(--color-neutral-400)"
-        },
-        {
-          "name": "var(--color-neutral-50)"
-        },
-        {
-          "name": "var(--color-neutral-500)"
-        },
-        {
-          "name": "var(--color-neutral-600)"
-        },
-        {
-          "name": "var(--color-neutral-700)"
-        },
-        {
-          "name": "var(--color-neutral-800)"
-        },
-        {
-          "name": "var(--color-neutral-900)"
-        },
-        {
-          "name": "var(--color-neutral-950)"
-        },
-        {
-          "name": "var(--color-popover)"
-        },
-        {
-          "name": "var(--color-popover-foreground)"
-        },
-        {
-          "name": "var(--color-primary)"
-        },
-        {
-          "name": "var(--color-primary-100)"
-        },
-        {
-          "name": "var(--color-primary-200)"
-        },
-        {
-          "name": "var(--color-primary-300)"
-        },
-        {
-          "name": "var(--color-primary-400)"
-        },
-        {
-          "name": "var(--color-primary-50)"
-        },
-        {
-          "name": "var(--color-primary-500)"
-        },
-        {
-          "name": "var(--color-primary-600)"
-        },
-        {
-          "name": "var(--color-primary-700)"
-        },
-        {
-          "name": "var(--color-primary-800)"
-        },
-        {
-          "name": "var(--color-primary-900)"
-        },
-        {
-          "name": "var(--color-primary-950)"
-        },
-        {
-          "name": "var(--color-primary-foreground)"
-        },
-        {
-          "name": "var(--color-ring)"
-        },
-        {
-          "name": "var(--color-secondary)"
-        },
-        {
-          "name": "var(--color-secondary-100)"
-        },
-        {
-          "name": "var(--color-secondary-200)"
-        },
-        {
-          "name": "var(--color-secondary-300)"
-        },
-        {
-          "name": "var(--color-secondary-400)"
-        },
-        {
-          "name": "var(--color-secondary-50)"
-        },
-        {
-          "name": "var(--color-secondary-500)"
-        },
-        {
-          "name": "var(--color-secondary-600)"
-        },
-        {
-          "name": "var(--color-secondary-700)"
-        },
-        {
-          "name": "var(--color-secondary-800)"
-        },
-        {
-          "name": "var(--color-secondary-900)"
-        },
-        {
-          "name": "var(--color-secondary-950)"
-        },
-        {
-          "name": "var(--color-secondary-foreground)"
-        },
-        {
-          "name": "var(--color-selection)"
-        },
-        {
-          "name": "var(--color-selection-foreground)"
-        },
-        {
-          "name": "var(--color-shade-100)"
-        },
-        {
-          "name": "var(--color-shade-200)"
-        },
-        {
-          "name": "var(--color-shade-300)"
-        },
-        {
-          "name": "var(--color-shade-400)"
-        },
-        {
-          "name": "var(--color-shade-50)"
-        },
-        {
-          "name": "var(--color-shade-500)"
-        },
-        {
-          "name": "var(--color-shade-600)"
-        },
-        {
-          "name": "var(--color-shade-700)"
-        },
-        {
-          "name": "var(--color-shade-800)"
-        },
-        {
-          "name": "var(--color-shade-900)"
-        },
-        {
-          "name": "var(--color-shade-950)"
-        },
-        {
-          "name": "var(--color-shade-none)"
-        },
-        {
-          "name": "var(--color-shadow)"
-        },
-        {
-          "name": "var(--color-success)"
-        },
-        {
-          "name": "var(--color-success-foreground)"
-        },
-        {
-          "name": "var(--color-tertiary)"
-        },
-        {
-          "name": "var(--color-tertiary-100)"
-        },
-        {
-          "name": "var(--color-tertiary-200)"
-        },
-        {
-          "name": "var(--color-tertiary-300)"
-        },
-        {
-          "name": "var(--color-tertiary-400)"
-        },
-        {
-          "name": "var(--color-tertiary-50)"
-        },
-        {
-          "name": "var(--color-tertiary-500)"
-        },
-        {
-          "name": "var(--color-tertiary-600)"
-        },
-        {
-          "name": "var(--color-tertiary-700)"
-        },
-        {
-          "name": "var(--color-tertiary-800)"
-        },
-        {
-          "name": "var(--color-tertiary-900)"
-        },
-        {
-          "name": "var(--color-tertiary-950)"
-        },
-        {
-          "name": "var(--color-tertiary-foreground)"
-        },
-        {
-          "name": "var(--color-tint-100)"
-        },
-        {
-          "name": "var(--color-tint-200)"
-        },
-        {
-          "name": "var(--color-tint-300)"
-        },
-        {
-          "name": "var(--color-tint-400)"
-        },
-        {
-          "name": "var(--color-tint-50)"
-        },
-        {
-          "name": "var(--color-tint-500)"
-        },
-        {
-          "name": "var(--color-tint-600)"
-        },
-        {
-          "name": "var(--color-tint-700)"
-        },
-        {
-          "name": "var(--color-tint-800)"
-        },
-        {
-          "name": "var(--color-tint-900)"
-        },
-        {
-          "name": "var(--color-tint-950)"
-        },
-        {
-          "name": "var(--color-tint-none)"
-        },
-        {
-          "name": "var(--color-warning)"
-        },
-        {
-          "name": "var(--color-warning-foreground)"
-        },
-        {
-          "name": "var(--color-white)"
-        }
-      ]
-    },
-    {
-      "name": "--border-style--xl",
-      "description": "--border-style at the xl breakpoint and up.",
-      "values": [
-        {
-          "name": "var(--color-shade-full)"
-        },
-        {
-          "name": "var(--color-tint-full)"
-        },
-        {
-          "name": "var(--color-background)"
-        },
-        {
-          "name": "var(--color-black)"
-        },
-        {
-          "name": "var(--color-border)"
-        },
-        {
-          "name": "var(--color-border-foreground)"
-        },
-        {
-          "name": "var(--color-card)"
-        },
-        {
-          "name": "var(--color-card-foreground)"
-        },
-        {
-          "name": "var(--color-destructive)"
-        },
-        {
-          "name": "var(--color-destructive-foreground)"
-        },
-        {
-          "name": "var(--color-faded)"
-        },
-        {
-          "name": "var(--color-faded-foreground)"
-        },
-        {
-          "name": "var(--color-foreground)"
-        },
-        {
-          "name": "var(--color-info)"
-        },
-        {
-          "name": "var(--color-info-foreground)"
-        },
-        {
-          "name": "var(--color-input)"
-        },
-        {
-          "name": "var(--color-input-foreground)"
-        },
-        {
-          "name": "var(--color-muted)"
-        },
-        {
-          "name": "var(--color-muted-foreground)"
-        },
-        {
-          "name": "var(--color-neutral-100)"
-        },
-        {
-          "name": "var(--color-neutral-200)"
-        },
-        {
-          "name": "var(--color-neutral-300)"
-        },
-        {
-          "name": "var(--color-neutral-400)"
-        },
-        {
-          "name": "var(--color-neutral-50)"
-        },
-        {
-          "name": "var(--color-neutral-500)"
-        },
-        {
-          "name": "var(--color-neutral-600)"
-        },
-        {
-          "name": "var(--color-neutral-700)"
-        },
-        {
-          "name": "var(--color-neutral-800)"
-        },
-        {
-          "name": "var(--color-neutral-900)"
-        },
-        {
-          "name": "var(--color-neutral-950)"
-        },
-        {
-          "name": "var(--color-popover)"
-        },
-        {
-          "name": "var(--color-popover-foreground)"
-        },
-        {
-          "name": "var(--color-primary)"
-        },
-        {
-          "name": "var(--color-primary-100)"
-        },
-        {
-          "name": "var(--color-primary-200)"
-        },
-        {
-          "name": "var(--color-primary-300)"
-        },
-        {
-          "name": "var(--color-primary-400)"
-        },
-        {
-          "name": "var(--color-primary-50)"
-        },
-        {
-          "name": "var(--color-primary-500)"
-        },
-        {
-          "name": "var(--color-primary-600)"
-        },
-        {
-          "name": "var(--color-primary-700)"
-        },
-        {
-          "name": "var(--color-primary-800)"
-        },
-        {
-          "name": "var(--color-primary-900)"
-        },
-        {
-          "name": "var(--color-primary-950)"
-        },
-        {
-          "name": "var(--color-primary-foreground)"
-        },
-        {
-          "name": "var(--color-ring)"
-        },
-        {
-          "name": "var(--color-secondary)"
-        },
-        {
-          "name": "var(--color-secondary-100)"
-        },
-        {
-          "name": "var(--color-secondary-200)"
-        },
-        {
-          "name": "var(--color-secondary-300)"
-        },
-        {
-          "name": "var(--color-secondary-400)"
-        },
-        {
-          "name": "var(--color-secondary-50)"
-        },
-        {
-          "name": "var(--color-secondary-500)"
-        },
-        {
-          "name": "var(--color-secondary-600)"
-        },
-        {
-          "name": "var(--color-secondary-700)"
-        },
-        {
-          "name": "var(--color-secondary-800)"
-        },
-        {
-          "name": "var(--color-secondary-900)"
-        },
-        {
-          "name": "var(--color-secondary-950)"
-        },
-        {
-          "name": "var(--color-secondary-foreground)"
-        },
-        {
-          "name": "var(--color-selection)"
-        },
-        {
-          "name": "var(--color-selection-foreground)"
-        },
-        {
-          "name": "var(--color-shade-100)"
-        },
-        {
-          "name": "var(--color-shade-200)"
-        },
-        {
-          "name": "var(--color-shade-300)"
-        },
-        {
-          "name": "var(--color-shade-400)"
-        },
-        {
-          "name": "var(--color-shade-50)"
-        },
-        {
-          "name": "var(--color-shade-500)"
-        },
-        {
-          "name": "var(--color-shade-600)"
-        },
-        {
-          "name": "var(--color-shade-700)"
-        },
-        {
-          "name": "var(--color-shade-800)"
-        },
-        {
-          "name": "var(--color-shade-900)"
-        },
-        {
-          "name": "var(--color-shade-950)"
-        },
-        {
-          "name": "var(--color-shade-none)"
-        },
-        {
-          "name": "var(--color-shadow)"
-        },
-        {
-          "name": "var(--color-success)"
-        },
-        {
-          "name": "var(--color-success-foreground)"
-        },
-        {
-          "name": "var(--color-tertiary)"
-        },
-        {
-          "name": "var(--color-tertiary-100)"
-        },
-        {
-          "name": "var(--color-tertiary-200)"
-        },
-        {
-          "name": "var(--color-tertiary-300)"
-        },
-        {
-          "name": "var(--color-tertiary-400)"
-        },
-        {
-          "name": "var(--color-tertiary-50)"
-        },
-        {
-          "name": "var(--color-tertiary-500)"
-        },
-        {
-          "name": "var(--color-tertiary-600)"
-        },
-        {
-          "name": "var(--color-tertiary-700)"
-        },
-        {
-          "name": "var(--color-tertiary-800)"
-        },
-        {
-          "name": "var(--color-tertiary-900)"
-        },
-        {
-          "name": "var(--color-tertiary-950)"
-        },
-        {
-          "name": "var(--color-tertiary-foreground)"
-        },
-        {
-          "name": "var(--color-tint-100)"
-        },
-        {
-          "name": "var(--color-tint-200)"
-        },
-        {
-          "name": "var(--color-tint-300)"
-        },
-        {
-          "name": "var(--color-tint-400)"
-        },
-        {
-          "name": "var(--color-tint-50)"
-        },
-        {
-          "name": "var(--color-tint-500)"
-        },
-        {
-          "name": "var(--color-tint-600)"
-        },
-        {
-          "name": "var(--color-tint-700)"
-        },
-        {
-          "name": "var(--color-tint-800)"
-        },
-        {
-          "name": "var(--color-tint-900)"
-        },
-        {
-          "name": "var(--color-tint-950)"
-        },
-        {
-          "name": "var(--color-tint-none)"
-        },
-        {
-          "name": "var(--color-warning)"
-        },
-        {
-          "name": "var(--color-warning-foreground)"
-        },
-        {
-          "name": "var(--color-white)"
-        }
-      ]
-    },
-    {
-      "name": "--border-style--2xl",
-      "description": "--border-style at the 2xl breakpoint and up.",
       "values": [
         {
           "name": "var(--color-shade-full)"
@@ -110937,63 +108845,6 @@
       ]
     },
     {
-      "name": "--mix-blend--starting",
-      "description": "--mix-blend in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none.",
-      "values": [
-        {
-          "name": "normal"
-        },
-        {
-          "name": "multiply"
-        },
-        {
-          "name": "screen"
-        },
-        {
-          "name": "overlay"
-        },
-        {
-          "name": "darken"
-        },
-        {
-          "name": "lighten"
-        },
-        {
-          "name": "color-dodge"
-        },
-        {
-          "name": "color-burn"
-        },
-        {
-          "name": "hard-light"
-        },
-        {
-          "name": "soft-light"
-        },
-        {
-          "name": "difference"
-        },
-        {
-          "name": "exclusion"
-        },
-        {
-          "name": "hue"
-        },
-        {
-          "name": "saturation"
-        },
-        {
-          "name": "color"
-        },
-        {
-          "name": "luminosity"
-        },
-        {
-          "name": "plus-lighter"
-        }
-      ]
-    },
-    {
       "name": "--mix-blend--disabled",
       "description": "--mix-blend in the disabled state.",
       "values": [
@@ -112549,46 +110400,6 @@
       "description": " — any value; effects family."
     },
     {
-      "name": "--shadow-angle--starting",
-      "description": "--shadow-angle in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none."
-    },
-    {
-      "name": "--shadow-angle--disabled",
-      "description": "--shadow-angle in the disabled state."
-    },
-    {
-      "name": "--shadow-angle--active",
-      "description": "--shadow-angle in the active state."
-    },
-    {
-      "name": "--shadow-angle--focus-visible",
-      "description": "--shadow-angle in the focus-visible state."
-    },
-    {
-      "name": "--shadow-angle--focus-within",
-      "description": "--shadow-angle in the focus-within state."
-    },
-    {
-      "name": "--shadow-angle--hover",
-      "description": "--shadow-angle in the hover state."
-    },
-    {
-      "name": "--shadow-angle--checked",
-      "description": "--shadow-angle in the checked state."
-    },
-    {
-      "name": "--shadow-angle--current",
-      "description": "--shadow-angle in the current state."
-    },
-    {
-      "name": "--shadow-angle--open",
-      "description": "--shadow-angle in the open state."
-    },
-    {
-      "name": "--shadow-angle--stuck",
-      "description": "--shadow-angle while the nearest sticky ancestor is stuck to its --stuck-state side (default top); descendants only; experimental."
-    },
-    {
       "name": "--shadow-angle--sm",
       "description": "--shadow-angle at the sm breakpoint and up."
     },
@@ -112607,38 +110418,6 @@
     {
       "name": "--shadow-angle--2xl",
       "description": "--shadow-angle at the 2xl breakpoint and up."
-    },
-    {
-      "name": "--group-shadow-angle--disabled",
-      "description": "--shadow-angle while an ancestor with data-ui=\"group\" is disabled."
-    },
-    {
-      "name": "--group-shadow-angle--active",
-      "description": "--shadow-angle while an ancestor with data-ui=\"group\" is active."
-    },
-    {
-      "name": "--group-shadow-angle--focus-visible",
-      "description": "--shadow-angle while an ancestor with data-ui=\"group\" is focus-visible."
-    },
-    {
-      "name": "--group-shadow-angle--focus-within",
-      "description": "--shadow-angle while an ancestor with data-ui=\"group\" is focus-within."
-    },
-    {
-      "name": "--group-shadow-angle--hover",
-      "description": "--shadow-angle while an ancestor with data-ui=\"group\" is hover."
-    },
-    {
-      "name": "--group-shadow-angle--checked",
-      "description": "--shadow-angle while an ancestor with data-ui=\"group\" is checked."
-    },
-    {
-      "name": "--group-shadow-angle--current",
-      "description": "--shadow-angle while an ancestor with data-ui=\"group\" is current."
-    },
-    {
-      "name": "--group-shadow-angle--open",
-      "description": "--shadow-angle while an ancestor with data-ui=\"group\" is open."
     },
     {
       "name": "--ring",
@@ -128394,27 +126173,6 @@
       ]
     },
     {
-      "name": "--animation--starting",
-      "description": "--animation in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none.",
-      "values": [
-        {
-          "name": "none"
-        },
-        {
-          "name": "var(--spin)"
-        },
-        {
-          "name": "var(--ping)"
-        },
-        {
-          "name": "var(--pulse)"
-        },
-        {
-          "name": "var(--bounce)"
-        }
-      ]
-    },
-    {
       "name": "--animation--disabled",
       "description": "--animation in the disabled state.",
       "values": [
@@ -128881,10 +126639,6 @@
       "description": "transition — any value; effects family."
     },
     {
-      "name": "--transition--starting",
-      "description": "--transition in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none."
-    },
-    {
       "name": "--transition--disabled",
       "description": "--transition in the disabled state."
     },
@@ -128963,10 +126717,6 @@
     {
       "name": "--transition-duration",
       "description": "transition-duration — any value; effects family."
-    },
-    {
-      "name": "--transition-duration--starting",
-      "description": "--transition-duration in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none."
     },
     {
       "name": "--transition-duration--disabled",
@@ -129067,10 +126817,6 @@
     {
       "name": "--transition-delay",
       "description": "transition-delay — any value; effects family."
-    },
-    {
-      "name": "--transition-delay--starting",
-      "description": "--transition-delay in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none."
     },
     {
       "name": "--transition-delay--disabled",
@@ -131137,66 +128883,6 @@
       ]
     },
     {
-      "name": "--isolation--sm",
-      "description": "--isolation at the sm breakpoint and up.",
-      "values": [
-        {
-          "name": "auto"
-        },
-        {
-          "name": "isolate"
-        }
-      ]
-    },
-    {
-      "name": "--isolation--md",
-      "description": "--isolation at the md breakpoint and up.",
-      "values": [
-        {
-          "name": "auto"
-        },
-        {
-          "name": "isolate"
-        }
-      ]
-    },
-    {
-      "name": "--isolation--lg",
-      "description": "--isolation at the lg breakpoint and up.",
-      "values": [
-        {
-          "name": "auto"
-        },
-        {
-          "name": "isolate"
-        }
-      ]
-    },
-    {
-      "name": "--isolation--xl",
-      "description": "--isolation at the xl breakpoint and up.",
-      "values": [
-        {
-          "name": "auto"
-        },
-        {
-          "name": "isolate"
-        }
-      ]
-    },
-    {
-      "name": "--isolation--2xl",
-      "description": "--isolation at the 2xl breakpoint and up.",
-      "values": [
-        {
-          "name": "auto"
-        },
-        {
-          "name": "isolate"
-        }
-      ]
-    },
-    {
       "name": "--overflow",
       "description": "overflow — a keyword; box family.",
       "values": [
@@ -131415,10 +129101,6 @@
       "description": "z-index — any value; box family."
     },
     {
-      "name": "--z--starting",
-      "description": "--z in the element's starting style (@starting-style): the value a --transition animates from on first render or when leaving display: none."
-    },
-    {
       "name": "--z--disabled",
       "description": "--z in the disabled state."
     },
@@ -131546,26 +129228,6 @@
     {
       "name": "--container-name",
       "description": "container-name — any value; box family."
-    },
-    {
-      "name": "--container-name--sm",
-      "description": "--container-name at the sm breakpoint and up."
-    },
-    {
-      "name": "--container-name--md",
-      "description": "--container-name at the md breakpoint and up."
-    },
-    {
-      "name": "--container-name--lg",
-      "description": "--container-name at the lg breakpoint and up."
-    },
-    {
-      "name": "--container-name--xl",
-      "description": "--container-name at the xl breakpoint and up."
-    },
-    {
-      "name": "--container-name--2xl",
-      "description": "--container-name at the 2xl breakpoint and up."
     },
     {
       "name": "--container-type",
@@ -133926,6 +131588,14 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-tabs-underline-color",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-tabs-underline-width",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-textarea-border-color",
       "description": "Primitive hook: the public override surface."
     },
@@ -134063,6 +131733,10 @@
     },
     {
       "name": "--ui-toaster-w",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-toggle-background-clip",
       "description": "Primitive hook: the public override surface."
     },
     {

@@ -141,7 +141,8 @@ a theme. A shadow utility never removes a primitive's focus ring.
   track the **nearest inline-size container** (the page by default, or the band inside a layout; give a card, sidebar, or slot
   `--container-type: inline-size` to make what's inside respond to it; an element never queries itself).
 - **Flow utilities:** `--display` (plus `flex-row`, `flex-col`, `-reverse`, and `inline-flex-…`
-  shorthands that set the direction; no `--flex-direction`), `--flex-wrap`, `--flex`, `--shrink`,
+  shorthands that set the direction; no `--flex-direction`; the grid keywords `grid-pile`,
+  `grid-gallery`, `subgrid`, `subgrid-col`, `subgrid-row` are below), `--flex-wrap`, `--flex`, `--shrink`,
   `--basis`, `--order`, `--items`, `--justify`, `--self`, and for grids `--place-items`, `--place-content`
   (alignment keywords only: `center`, `start`, `safe end`, `space-between`…). `--display: grid` already
   packs its rows at the top (`place-content: start stretch`), so write `--place-content` only for
@@ -153,12 +154,21 @@ a theme. A shadow utility never removes a primitive's focus ring.
   sits above the hovered block:
   `--position: absolute; --position-anchor: --block; --position-area: block-start span-inline-end`. For finer placement write `anchor()` in plain CSS (the inset utilities do
   not take it).
-- **Grid utilities (Tailwind's set):** `--grid-cols` / `--grid-rows` (integer → equal tracks, or
-  `subgrid`; `none` is `--template-cols: none`), `--template-cols` / `--template-rows` (raw track list),
+- **Grid utilities (Tailwind's set):** `--grid-cols` / `--grid-rows` (integer → equal tracks;
+  `none` is `--template-cols: none`), `--template-cols` / `--template-rows` (raw track list),
   `--grid-fit` (length → auto-fit columns), `--grid-flow`, `--auto-cols`, `--auto-rows`.
   Placement: `--col-span` / `--row-span` (integer → `span n / span n`), `--col-start`,
   `--col-end`, `--row-start`, `--row-end` (line numbers; `--col-start: 1; --col-end: -1` spans
   every track). `--band: layout-md` places a layout child.
+- **Display grids** (examples at `https://zazz.sh/api/foundations/display/`): `--display: subgrid` takes both axes' tracks from the parent grid, `subgrid-col` the columns, `subgrid-row` the rows (span the parent's tracks with `--col-span` / `--row-span`; there is no `--grid-cols: subgrid`); the highest tier that names a display or a count decides the tracks. `--display: grid-gallery` picks its column count from its child count: up to six in a row, each at least `--ui-gallery-min-w` (`20ch`), skipping a count that would leave one child alone in the last row (at two columns an odd count still does, and so do 13, 21, 25, and 31 children at some widths).
+  Pick by what decides the columns:
+  - you do (`--display: grid; --grid-cols: 1; --grid-cols--md: 3`);
+  - the number of items, as in a logo row, a stat row, or a set of cards whose count varies
+    (`<ul style="--display: grid-gallery; --gap: 6">`; set `--ui-gallery-min-w: 12rem` for wider items);
+  - the parent grid (`subgrid-col` for a row that lines up with the grid above it, `subgrid-row` on
+    each card so titles, text, and footers stay level:
+    `<li style="--display: subgrid-row; --row-span: 3">`).
+    Keep a gallery's children to one cell each (no `--col-span`), and give it its gap with `--gap`.
 - **Fixed-word utilities:** `--display: grid-pile` (stack children in one centered cell), `--container-type: inline-size` (query container; `--container` is the `name / type` shorthand, so `--container: inline-size` sets a name),
   `--isolation: isolate` (new stacking context; pairs with a pile for layered heroes: `--display: grid-pile; --isolation: isolate`),
   `--sr: only` (visually hidden, still read aloud; breakpoints, no states, and a tier's `none` restores the element),
@@ -247,6 +257,8 @@ padding, sizing and `--aspect`, `--text`, `--bg` (+ `--bg-alpha`), the border lo
 `--<utility>--starting` is the `@starting-style` value: an element starts there when it first
 renders or leaves `display: none`, and a `--transition` animates it in; e.g.
 `--opacity--starting: 0; --opacity: 1; --transition: opacity 0.3s` fades in. No group form.
+No starting tier where an entry value has no use: the `--transition*` and anchor utilities,
+`--animation`, `--text-wrap`, `--text-decoration`, `--border-style`, `--mix-blend`, `--z`.
 
 Experimental `--<utility>--stuck` applies while the nearest sticky ancestor is stuck (to its
 `--stuck-state` side, default `top`), below every other state, on that element's descendants only:

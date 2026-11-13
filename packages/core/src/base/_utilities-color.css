@@ -115,7 +115,7 @@
   }
 
   :where([style*="--border-style:"], [style*="--border-style--"], [style*="--group-border-style--"]) {
-    --_border-style-resolved: var(--_border-style-starting, var(--_border-style-disabled, var(--_border-style-active, var(--_border-style-focus-visible, var(--_border-style-focus-within, var(--_border-style-hover, var(--_border-style-checked, var(--_border-style-current, var(--_border-style-open, var(--_border-style-g-disabled, var(--_border-style-g-active, var(--_border-style-g-focus-visible, var(--_border-style-g-focus-within, var(--_border-style-g-hover, var(--_border-style-g-checked, var(--_border-style-g-current, var(--_border-style-g-open, var(--_border-style-stuck, var(--_border-style-2xl, var(--_border-style-xl, var(--_border-style-lg, var(--_border-style-md, var(--_border-style-sm, var(--_border-style))))))))))))))))))))))));
+    --_border-style-resolved: var(--_border-style-disabled, var(--_border-style-active, var(--_border-style-focus-visible, var(--_border-style-focus-within, var(--_border-style-hover, var(--_border-style-checked, var(--_border-style-current, var(--_border-style-open, var(--_border-style-g-disabled, var(--_border-style-g-active, var(--_border-style-g-focus-visible, var(--_border-style-g-focus-within, var(--_border-style-g-hover, var(--_border-style-g-checked, var(--_border-style-g-current, var(--_border-style-g-open, var(--_border-style-stuck, var(--_border-style))))))))))))))))));
   }
   :where([style*="--border-style:"]) {
     --_border-style: var(--border-style);

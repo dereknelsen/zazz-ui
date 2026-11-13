@@ -102,89 +102,9 @@
   :where([style*="--grid-cols--"]) {
     grid-template-columns: repeat(var(--_grid-cols-resolved, 1), minmax(0, 1fr));
   }
-  @container (width >= 40rem) {
-    :where([style*="--grid-cols--sm:"]) {
-      grid-template-columns: repeat(var(--_grid-cols-resolved), minmax(0, 1fr));
-    }
-    :where(:is([style*="--grid-cols--sm: subgrid"])) {
-      grid-template-columns: var(--_grid-cols-resolved);
-    }
-  }
-  @container (width >= 48rem) {
-    :where([style*="--grid-cols--md:"]) {
-      grid-template-columns: repeat(var(--_grid-cols-resolved), minmax(0, 1fr));
-    }
-    :where(:is([style*="--grid-cols--md: subgrid"])) {
-      grid-template-columns: var(--_grid-cols-resolved);
-    }
-  }
-  @container (width >= 64rem) {
-    :where([style*="--grid-cols--lg:"]) {
-      grid-template-columns: repeat(var(--_grid-cols-resolved), minmax(0, 1fr));
-    }
-    :where(:is([style*="--grid-cols--lg: subgrid"])) {
-      grid-template-columns: var(--_grid-cols-resolved);
-    }
-  }
-  @container (width >= 80rem) {
-    :where([style*="--grid-cols--xl:"]) {
-      grid-template-columns: repeat(var(--_grid-cols-resolved), minmax(0, 1fr));
-    }
-    :where(:is([style*="--grid-cols--xl: subgrid"])) {
-      grid-template-columns: var(--_grid-cols-resolved);
-    }
-  }
-  @container (width >= 96rem) {
-    :where([style*="--grid-cols--2xl:"]) {
-      grid-template-columns: repeat(var(--_grid-cols-resolved), minmax(0, 1fr));
-    }
-    :where(:is([style*="--grid-cols--2xl: subgrid"])) {
-      grid-template-columns: var(--_grid-cols-resolved);
-    }
-  }
 
   :where([style*="--grid-rows--"]) {
     grid-template-rows: repeat(var(--_grid-rows-resolved, 1), minmax(0, 1fr));
-  }
-  @container (width >= 40rem) {
-    :where([style*="--grid-rows--sm:"]) {
-      grid-template-rows: repeat(var(--_grid-rows-resolved), minmax(0, 1fr));
-    }
-    :where(:is([style*="--grid-rows--sm: subgrid"])) {
-      grid-template-rows: var(--_grid-rows-resolved);
-    }
-  }
-  @container (width >= 48rem) {
-    :where([style*="--grid-rows--md:"]) {
-      grid-template-rows: repeat(var(--_grid-rows-resolved), minmax(0, 1fr));
-    }
-    :where(:is([style*="--grid-rows--md: subgrid"])) {
-      grid-template-rows: var(--_grid-rows-resolved);
-    }
-  }
-  @container (width >= 64rem) {
-    :where([style*="--grid-rows--lg:"]) {
-      grid-template-rows: repeat(var(--_grid-rows-resolved), minmax(0, 1fr));
-    }
-    :where(:is([style*="--grid-rows--lg: subgrid"])) {
-      grid-template-rows: var(--_grid-rows-resolved);
-    }
-  }
-  @container (width >= 80rem) {
-    :where([style*="--grid-rows--xl:"]) {
-      grid-template-rows: repeat(var(--_grid-rows-resolved), minmax(0, 1fr));
-    }
-    :where(:is([style*="--grid-rows--xl: subgrid"])) {
-      grid-template-rows: var(--_grid-rows-resolved);
-    }
-  }
-  @container (width >= 96rem) {
-    :where([style*="--grid-rows--2xl:"]) {
-      grid-template-rows: repeat(var(--_grid-rows-resolved), minmax(0, 1fr));
-    }
-    :where(:is([style*="--grid-rows--2xl: subgrid"])) {
-      grid-template-rows: var(--_grid-rows-resolved);
-    }
   }
 
   :where(:is([style*="--template-cols--"], [style*="--group-template-cols--"])) {
@@ -410,9 +330,6 @@
 
 
 
-  :where([style*="--isolation--"]:not(dialog, main)) {
-    isolation: var(--_isolation-resolved, auto);
-  }
 
 
 

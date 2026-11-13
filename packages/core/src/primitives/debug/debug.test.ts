@@ -75,7 +75,7 @@ describe("utilities outside the tier chain", () => {
   it.each([
     "--sr--md: only",
     "--container--md: a / size",
-    "--container-name--md: a",
+    "--container-type--md: size",
     "--divide--md: 2",
     "--divide-y--md: 1",
   ])("%s needs no base", (declaration) => {
@@ -205,6 +205,22 @@ describe("audit warnings", () => {
     ).toEqual([expect.stringMatching(/--group-bg--md.*state/)]);
   });
 
+  it.each([
+    ["--isolation: auto; --isolation--md: isolate", "--isolation--md"],
+    ["--font-family: serif; --font-family--lg: monospace", "--font-family--lg"],
+    ["--font-style: normal; --font-style--sm: italic", "--font-style--sm"],
+    ["--border-style: solid; --border-style--md: dashed", "--border-style--md"],
+    ["--container-name: a; --container-name--md: b", "--container-name--md"],
+    ["--shadow-angle: 0deg; --shadow-angle--hover: 90deg", "--shadow-angle--hover"],
+    ["--z: 1; --z--starting: 2", "--z--starting"],
+    ["--transition: opacity 1s; --transition--starting: none", "--transition--starting"],
+    ["--animation: none; --animation--starting: var(--spin)", "--animation--starting"],
+  ])("flags the trimmed tier in %s", (declarations, name) => {
+    expect(warningsFor(`<div style="${declarations}"></div>`)).toEqual([
+      expect.stringMatching(new RegExp(`${name}.*does not take`)),
+    ]);
+  });
+
   it("flags a base utility that flattens a state a primitive hook covers (claim 27)", () => {
     const hooks = { button: ["bg--hover"] };
     expect(warningsFor(`<button data-ui="button" style="--bg: red"></button>`, hooks)).toEqual([
@@ -294,10 +310,17 @@ describe("audit warnings", () => {
   it("accepts grid track keywords and the span utilities", () => {
     expect(
       warningsFor(
-        `<div style="--display: grid; --grid-cols: subgrid; --grid-rows: 2; --col-span: 2; --col-start: 1; --row-span--md: 3"></div>`,
+        `<div style="--display: subgrid-col; --grid-rows: 2; --col-span: 2; --col-start: 1; --row-span--md: 3"></div>`,
       ),
     ).toEqual([]);
-    expect(warningsFor(`<div style="--grid-cols: 1; --grid-cols--md: subgrid"></div>`)).toEqual([]);
+    expect(
+      warningsFor(
+        `<div style="--display: grid-gallery; --display--md: subgrid; --display--lg: subgrid-row"></div>`,
+      ),
+    ).toEqual([]);
+    expect(warningsFor(`<div style="--display: grid; --grid-cols: subgrid"></div>`)).toEqual([
+      "`--grid-cols: subgrid` is gone: subgrid is a display. Write `--display: subgrid-col`.",
+    ]);
     expect(warningsFor(`<div style="--col-span: full"></div>`)).toEqual([
       expect.stringMatching(/--col-span: full.*integer.*--col-start: 1; --col-end: -1/),
     ]);

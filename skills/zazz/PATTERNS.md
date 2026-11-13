@@ -164,7 +164,8 @@ if it needs a tooltip too, wrap it in a `<button type="button">` that takes the 
 
 `<ul>` when order doesn't matter, `<ol>` when it does, `<dl>` for term-and-value pairs (specs,
 metadata, FAQs), `<menu>` for a toolbar or nav list of actions. A grid of cards is a `<ul>`
-with `--display: grid` on it, not a `<table>` and not a run of `<div>`s.
+with `--display: grid` on it (or `--display: grid-gallery` when the number of cards varies, which
+picks the column count from the item count), not a `<table>` and not a run of `<div>`s.
 
 The reset sets `list-style: none` on every list. Inside `data-ui="prose"` the markers come
 back on `ul` and `ol`; outside it, a content list that should still announce as a list (so the reader hears

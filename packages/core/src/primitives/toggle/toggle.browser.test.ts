@@ -25,7 +25,7 @@ describe("toggle", () => {
     const at = (selector: string) => root.querySelector(selector)!;
     expect(background(at("[data-on]"))).toBe(background(at("[data-primary]")));
     expect(background(at("[data-off]"))).not.toBe(background(at("[data-on]")));
-    expect(style(at("[data-disabled]"), "opacity")).toBe("0.5");
+    expect(style(at("[data-disabled]"), "opacity")).toBe("0.6");
     expect(style(at("[data-off]"), "opacity")).toBe("1");
   });
 
@@ -40,5 +40,27 @@ describe("toggle", () => {
     expect(px("[data-utility]")).toBeCloseTo(scale(4), 1);
     expect(px("[data-both]")).toBeCloseTo(scale(4), 1);
     expect(px("[data-sm]")).not.toBeCloseTo(scale(4), 1);
+  });
+
+  it("a kbd at an end of the visible content tightens that side, as on the button", () => {
+    const root = mount(`<div>
+      <button data-ui="button" data-button><span>Bold</span><kbd>B</kbd></button>
+      <label data-ui="toggle" data-end><input type="checkbox" /><span>Bold</span><kbd>B</kbd></label>
+      <label data-ui="toggle" data-start><input type="checkbox" /><kbd>B</kbd><span>Bold</span></label>
+      <label data-ui="toggle" data-only><input type="checkbox" /><kbd>B</kbd></label>
+      <label data-ui="toggle" data-plain><input type="checkbox" /><span>Bold</span></label>
+    </div>`);
+    const pad = (selector: string, side: "start" | "end") =>
+      style(root.querySelector(selector)!, `padding-inline-${side}`);
+    expect(pad("[data-end]", "end")).toBe(pad("[data-button]", "end"));
+    expect(pad("[data-end]", "start")).toBe(pad("[data-plain]", "start"));
+    expect(pad("[data-start]", "start")).toBe(pad("[data-button]", "end"));
+    expect(pad("[data-start]", "end")).toBe(pad("[data-plain]", "end"));
+    expect(pad("[data-end]", "end")).not.toBe(pad("[data-plain]", "end"));
+    expect(pad("[data-only]", "start")).toBe(pad("[data-plain]", "start"));
+    expect(pad("[data-only]", "end")).toBe(pad("[data-plain]", "end"));
+    expect(style(root.querySelector("[data-plain]")!, "cursor")).toBe(
+      style(root.querySelector("[data-button]")!, "cursor"),
+    );
   });
 });

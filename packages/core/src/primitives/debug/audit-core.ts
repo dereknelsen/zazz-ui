@@ -13,9 +13,8 @@ import {
   BORDER_SHORTHANDS,
   BOX_SHADOW_COMPOSITE,
   SHORTHAND_OF,
-  DISPLAY_PILE,
   RETIRED_TOKENS,
-  DISPLAY_SHORTHANDS,
+  DISPLAY_WORDS,
   GRADIENT_TYPES,
   UTILITIES,
   PSEUDO_ONLY,
@@ -152,7 +151,7 @@ function gatedValue(utility: Utility, value: string): boolean {
   return (
     (utility.keywords ?? []).includes(value) ||
     value in (utility.aliases ?? {}) ||
-    (utility.name === "display" && (value in DISPLAY_SHORTHANDS || value === DISPLAY_PILE)) ||
+    (utility.name === "display" && DISPLAY_WORDS.includes(value)) ||
     (utility.emit === "text-wrap" && value === "truncate") ||
     (utility.name === "bg" && value === "none") ||
     (utility.name === "position" && value === "sticky")
@@ -399,8 +398,58 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
         `\`${name}: ${value}\` is not one color, number, or length; it draws a 1px transparent border. Use \`--border: 2\`, \`--border: var(--color-primary)\`, or set \`--border-style\` separately.`,
       );
     }
+    // subgrid moved from the count utilities to the display
+    const subgridAxis =
+      value === "subgrid" && !parsed.side && !parsed.group
+        ? /^grid-(col|row)s$/.exec(utility.name)?.[1]
+        : undefined;
+    if (subgridAxis) {
+      const tier = parsed.tier ? `--${parsed.tier}` : "";
+      const word = `subgrid-${subgridAxis}`;
+      const other = subgridAxis === "col" ? "subgrid-row" : "subgrid-col";
+      // the last one: a repeated declaration's later value is the one that applies
+      const display = [...parsedPairs]
+        .reverse()
+        .find(
+          ([pair]) =>
+            pair.name === "display" && !pair.side && !pair.group && pair.tier === parsed.tier,
+        )?.[2];
+      const text = node.getAttribute("style") ?? "";
+      // the edit: this declaration alone, or one edit over it and the display it folds into
+      let edit: { span: Span; text: string } | undefined;
+      if (!display) {
+        edit = { span, text: `--display${tier}: ${word}` };
+      } else if (["grid", other, word, "subgrid"].includes(display.value)) {
+        // a display that already takes this axis stays as it is, and the count just goes
+        const value =
+          display.value === "grid" ? word : display.value === other ? "subgrid" : display.value;
+        const merged = `--display${tier}: ${value}`;
+        const displayFirst = display.span[0] < span[0];
+        const [first, second] = displayFirst ? [display.span, span] : [span, display.span];
+        const between = text.slice(first[1], second[0]);
+        edit = {
+          span: [first[0], second[1]],
+          text: displayFirst
+            ? merged + between.replace(/;\s*$/, "")
+            : between.replace(/^;\s*/, "") + merged,
+        };
+      }
+      // beside another display (inline-grid, a tier's flex) only the raw template says it
+      const template = `--${utility.name.replace(/^grid-/, "template-")}${tier}: subgrid`;
+      const rewrite = edit ? `--display${tier}: ${word}` : template;
+      warn(
+        "not-integer",
+        `\`${name}: subgrid\` is gone: subgrid is a display. Write \`${rewrite}\`.`,
+        {
+          description: `Write \`${rewrite}\`.`,
+          span: edit?.span ?? span,
+          text: edit?.text ?? template,
+        },
+      );
+    }
     // an integer utility emits `repeat(n, …)`, `span n`, or a count, so anything else silently does nothing
     if (
+      !subgridAxis &&
       utility.mode === "integer" &&
       !/^\d+$/.test(value) &&
       !FUNCTION.test(value) &&
@@ -430,7 +479,7 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
       if (!tiers.includes(parsed.tier)) {
         warn(
           "tier-unsupported",
-          `\`${name}\` uses a tier the ${utility.family} family has no setter for; \`--${utility.name}\` takes ${tiers.length ? tiers.join(", ") : "no tiers"}.`,
+          `\`${name}\` uses a tier \`--${utility.name}\` does not take; it takes ${tiers.length ? tiers.join(", ") : "no tiers"}.`,
         );
         continue;
       }

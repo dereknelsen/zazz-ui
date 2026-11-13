@@ -192,6 +192,12 @@ export interface Utility {
   /** Overrides the family's tier kind (`none` for a utility that is base-only). */
   tiers?: Tiers;
   /**
+   * Single tiers the utility leaves out of its kind. `starting` is the usual
+   * one: `@starting-style` is the style an element transitions from, so on a
+   * property that cannot transition the tier would do nothing.
+   */
+  omitTiers?: readonly (Breakpoint | State)[];
+  /**
    * What a dual utility's number multiplies (default `var(--spacing)`):
    * `--radius: 2` is two steps of `--spacing` times `--radius-multiplier`.
    */
@@ -350,6 +356,34 @@ export const DISPLAY_SHORTHANDS: Readonly<Record<string, readonly [string, strin
   "inline-flex-col-reverse": ["inline-flex", "column-reverse"],
 };
 
+/**
+ * `--display: grid-gallery`: a grid that picks its column count from its
+ * child count, up to `GALLERY_MAX` in a row where they fit at the minimum
+ * width (`--ui-gallery-min-w`, `GALLERY_MIN` by default).
+ */
+export const DISPLAY_GALLERY = "grid-gallery";
+export const GALLERY_MAX = 6;
+export const GALLERY_MIN = "20ch";
+
+/**
+ * `--display` keywords for a grid that takes its tracks from the parent grid:
+ * `[columns, rows]`, true where the axis is `subgrid`. They follow `flex`,
+ * `flex-col`, `flex-row`; the bare keyword, a prefix of the others, comes first.
+ */
+export const DISPLAY_SUBGRIDS: Readonly<Record<string, readonly [boolean, boolean]>> = {
+  subgrid: [true, true],
+  "subgrid-col": [true, false],
+  "subgrid-row": [false, true],
+};
+
+/** Every `--display` value the kit matches as text, besides the CSS keywords. */
+export const DISPLAY_WORDS: readonly string[] = [
+  ...Object.keys(DISPLAY_SHORTHANDS),
+  DISPLAY_PILE,
+  DISPLAY_GALLERY,
+  ...Object.keys(DISPLAY_SUBGRIDS),
+];
+
 /** The border shorthands, all sides first. */
 export const BORDER_SHORTHANDS = [
   "border",
@@ -384,13 +418,6 @@ export const MARGIN_KEYWORDS = ["auto"] as const;
  */
 export const INSET_KEYWORDS = ["auto"] as const;
 
-/**
- * Track-list keywords `--grid-cols` / `--grid-rows` take besides a count. `none`
- * is not one: `--template-cols: none` says the same, and every keyword
- * costs a rule per breakpoint (SPEC claim 16).
- */
-export const GRID_TEMPLATE_KEYWORDS = ["subgrid"] as const;
-
 /** The utility table. Order within a family is emission order (shorthands first). */
 export const UTILITIES: readonly Utility[] = [
   // flow: keywords and raw values; most are on the no-base allowlist
@@ -408,13 +435,15 @@ export const UTILITIES: readonly Utility[] = [
   // current) element can claim the anchor a toolbar or popover is tethered to.
   // `normal` is position-anchor's initial value. Engines on the older draft
   // don't know it, so the declaration is invalid at computed-value time and
-  // falls back to their initial value, `auto`.
+  // falls back to their initial value, `auto`. No starting tier on the three:
+  // they are discrete, so there is nothing to transition from.
   {
     name: "anchor-name",
     properties: ["anchor-name"],
     mode: "raw",
     family: "flow",
     tiers: "both",
+    omitTiers: ["starting"],
     noBase: "none",
   },
   {
@@ -423,6 +452,7 @@ export const UTILITIES: readonly Utility[] = [
     mode: "raw",
     family: "flow",
     tiers: "both",
+    omitTiers: ["starting"],
     noBase: "normal",
   },
   // where the tethered element sits on its anchor's 3×3 grid (`block-start
@@ -433,6 +463,7 @@ export const UTILITIES: readonly Utility[] = [
     mode: "raw",
     family: "flow",
     tiers: "both",
+    omitTiers: ["starting"],
     noBase: "none",
   },
   {
@@ -540,7 +571,7 @@ export const UTILITIES: readonly Utility[] = [
     noBase: "auto",
   },
   { name: "row-end", properties: ["grid-row-end"], mode: "raw", family: "flow", noBase: "auto" },
-  // grid: integers become repeat() (plus subgrid); templates are raw;
+  // grid: integers become repeat() (subgrid is a --display keyword); templates are raw;
   // grid-fit packs auto-fit columns
   {
     name: "grid-cols",
@@ -549,7 +580,6 @@ export const UTILITIES: readonly Utility[] = [
     family: "grid",
     emit: "repeat",
     noBase: "1",
-    keywords: GRID_TEMPLATE_KEYWORDS,
   },
   {
     name: "grid-rows",
@@ -558,7 +588,6 @@ export const UTILITIES: readonly Utility[] = [
     family: "grid",
     emit: "repeat",
     noBase: "1",
-    keywords: GRID_TEMPLATE_KEYWORDS,
   },
   // raw track lists take states too, for the 0fr → 1fr expand (`--template-rows--open: 1fr`)
   {
@@ -799,8 +828,21 @@ export const UTILITIES: readonly Utility[] = [
     family: "typography",
     aliases: FONT_WEIGHTS,
   },
-  { name: "font-family", properties: ["font-family"], mode: "raw", family: "typography" },
-  { name: "font-style", properties: ["font-style"], mode: "keyword", family: "typography" },
+  // base only: a typeface and its slant do not change with the container's width
+  {
+    name: "font-family",
+    properties: ["font-family"],
+    mode: "raw",
+    family: "typography",
+    tiers: "none",
+  },
+  {
+    name: "font-style",
+    properties: ["font-style"],
+    mode: "keyword",
+    family: "typography",
+    tiers: "none",
+  },
   { name: "leading", properties: ["line-height"], mode: "raw", family: "typography" },
   { name: "tracking", properties: ["letter-spacing"], mode: "raw", family: "typography" },
   {
@@ -818,6 +860,7 @@ export const UTILITIES: readonly Utility[] = [
     family: "typography",
     emit: "text-wrap",
     tiers: "both",
+    omitTiers: ["starting"],
     noBase: "wrap",
   },
   {
@@ -828,12 +871,14 @@ export const UTILITIES: readonly Utility[] = [
     emit: "line-clamp",
   },
   // states too, for the link pattern `--text-decoration--hover: underline`
+  // (not starting: a decoration line is discrete)
   {
     name: "text-decoration",
     properties: ["text-decoration-line"],
     mode: "raw",
     family: "typography",
     tiers: "both",
+    omitTiers: ["starting"],
     noBase: "none",
   },
   { name: "whitespace", properties: ["white-space"], mode: "keyword", family: "typography" },
@@ -915,11 +960,15 @@ export const UTILITIES: readonly Utility[] = [
     family: "color",
     pseudo: true,
   },
+  // states only, and not starting: a style is discrete, and a border that comes
+  // and goes by width changes its width (`--border--md: 0`)
   {
     name: "border-style",
     properties: ["border-style"],
     mode: "raw",
     family: "color",
+    tiers: "states",
+    omitTiers: ["starting"],
     pseudo: true,
   },
   // border shorthands: a color, a number (px), or a length; the side rules
@@ -976,6 +1025,8 @@ export const UTILITIES: readonly Utility[] = [
     properties: ["mix-blend-mode"],
     mode: "keyword",
     family: "effects",
+    // a blend mode is discrete
+    omitTiers: ["starting"],
     noBase: "normal",
   },
   {
@@ -989,14 +1040,16 @@ export const UTILITIES: readonly Utility[] = [
   // --shadow-* tokens wherever this is set, so var() and primitive shadows follow
   { name: "shadow-tint", properties: [], mode: "raw", family: "box", emit: "none" },
   // the shadow's cast direction: the --shadow-* tokens rotate their offsets by it
-  // (0deg casts down, clockwise), re-declared where it is set (_shadows.css)
+  // (0deg casts down, clockwise), re-declared where it is set (_shadows.css).
+  // Breakpoints only: the light is the scene's, and `--shadow--hover` or
+  // `--elevation--hover` moves one element's shadow per state
   {
     name: "shadow-angle",
     properties: [],
     mode: "raw",
     family: "effects",
     emit: "none",
-    tiers: "both",
+    tiers: "breakpoints",
   },
   // ring widths are signed: a number is pixels, and a negative ring is inset
   { name: "ring", properties: [], mode: "raw", family: "effects", emit: "px", tiers: "both" },
@@ -1066,9 +1119,20 @@ export const UTILITIES: readonly Utility[] = [
     family: "effects",
     emit: "animation",
     tiers: "both",
+    // an animation cannot transition; one that runs on entry is the base value
+    omitTiers: ["starting"],
     noBase: "none",
   },
-  { name: "transition", pseudo: true, properties: ["transition"], mode: "raw", family: "effects" },
+  // no starting tier on the three: a transition's timing is read from the style
+  // the element lands in, never from its starting style
+  {
+    name: "transition",
+    pseudo: true,
+    properties: ["transition"],
+    mode: "raw",
+    family: "effects",
+    omitTiers: ["starting"],
+  },
   // longhands after the shorthand, so they win over --transition and over a
   // primitive's transition: retime one element without restating its property list
   {
@@ -1078,6 +1142,7 @@ export const UTILITIES: readonly Utility[] = [
     mode: "raw",
     family: "effects",
     tiers: "both",
+    omitTiers: ["starting"],
   },
   {
     name: "transition-delay",
@@ -1086,8 +1151,10 @@ export const UTILITIES: readonly Utility[] = [
     mode: "raw",
     family: "effects",
     tiers: "both",
+    omitTiers: ["starting"],
   },
-  // box: no tiers, except radius (breakpoints) and z (states)
+  // box: no tiers, except radius (both), its corners, pointer-events, --container
+  // and --container-type (breakpoints), and z (states)
   // a number is that many --spacing steps times --radius-multiplier, like the
   // --radius-* tokens (`--radius: 2.5` is --radius-md); `full` is the pill token
   {
@@ -1138,12 +1205,13 @@ export const UTILITIES: readonly Utility[] = [
     emit: "direct",
     keywords: ["only", "none"],
   },
+  // base only: a stacking context paints nothing, so no width needs it switched
   {
     name: "isolation",
     properties: ["isolation"],
     mode: "keyword",
     family: "flow",
-    noBase: "auto",
+    tiers: "none",
   },
   { name: "overflow", properties: ["overflow"], mode: "keyword", family: "box" },
   {
@@ -1171,6 +1239,7 @@ export const UTILITIES: readonly Utility[] = [
   },
   { name: "visibility", pseudo: true, properties: ["visibility"], mode: "keyword", family: "box" },
   // states, so a hovered, open, or focused item can sit above its neighbors
+  // (not starting: the order an element enters in is the order it rests in)
   {
     name: "z",
     pseudo: true,
@@ -1178,18 +1247,21 @@ export const UTILITIES: readonly Utility[] = [
     mode: "raw",
     family: "box",
     tiers: "states",
+    omitTiers: ["starting"],
     noBase: "auto",
   },
   { name: "object-fit", properties: ["object-fit"], mode: "keyword", family: "box" },
   { name: "object-position", properties: ["object-position"], mode: "raw", family: "box" },
-  // the shorthand first: each tier's longhands load after it (`containerRules`)
+  // the shorthand first: each tier's longhands load after it (`containerRules`).
+  // The name is base only: what changes with width is whether the element is a
+  // container, which the type (or the shorthand) says
   ...["container", "container-name", "container-type"].map((name) => ({
     name,
     properties: [name],
     mode: "raw" as const,
     family: "box" as const,
     emit: "direct" as const,
-    tiers: "breakpoints" as const,
+    tiers: name === "container-name" ? ("none" as const) : ("breakpoints" as const),
   })),
 ];
 
@@ -1201,13 +1273,19 @@ export const PSEUDO_ONLY: readonly Utility[] = [
 export const PSEUDO_SIDES = ["before", "after"] as const;
 export type PseudoSide = (typeof PSEUDO_SIDES)[number];
 
-/** Tier names a utility's family allows, in setter order. */
-export function tiersOf(utility: Utility): readonly string[] {
-  const kind = utility.tiers ?? FAMILY_TIERS[utility.family];
+/** Tier names of a kind, in setter order. */
+function tiersOfKind(kind: Tiers): readonly string[] {
   if (kind === "breakpoints") return BREAKPOINTS;
   if (kind === "states") return STATES;
   if (kind === "both") return [...STATES, ...BREAKPOINTS];
   return [];
+}
+
+/** Tier names a utility takes, in setter order: its kind (its own, else its family's) less `omitTiers`. */
+export function tiersOf(utility: Utility): readonly string[] {
+  const tiers = tiersOfKind(utility.tiers ?? FAMILY_TIERS[utility.family]);
+  const omit: readonly string[] | undefined = utility.omitTiers;
+  return omit ? tiers.filter((tier) => !omit.includes(tier)) : tiers;
 }
 
 /** A utility property name, split into its parts. */

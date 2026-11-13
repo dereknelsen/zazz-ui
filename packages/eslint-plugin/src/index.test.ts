@@ -127,6 +127,59 @@ describe("@zazz-ui/eslint-plugin", () => {
     expect(message!.suggestions?.[0]?.fix.text).toBe("--template-cols: 1fr 1fr");
   });
 
+  describe("--grid-cols: subgrid moved to the display", () => {
+    /** The style attribute after the one finding's suggestion is applied. */
+    function rewritten(style: string): string {
+      const code = `<div style="${style}"></div>`;
+      const messages = lint(code);
+      expect(messages.map((message) => message.ruleId)).toEqual(["zazz/not-integer"]);
+      const { range, text } = messages[0]!.suggestions![0]!.fix;
+      const fixed = code.slice(0, range[0]) + text + code.slice(range[1]);
+      return fixed.slice(`<div style="`.length, -`"></div>`.length);
+    }
+
+    it("folds the keyword into a grid display, in either order", () => {
+      expect(rewritten("--display: grid; --grid-cols: subgrid; --col-span: 3")).toBe(
+        "--display: subgrid-col; --col-span: 3",
+      );
+      expect(rewritten("--display: grid; --gap: 4; --grid-rows: subgrid")).toBe(
+        "--display: subgrid-row; --gap: 4",
+      );
+      expect(rewritten("--grid-cols: subgrid; --gap: 4; --display: grid")).toBe(
+        "--gap: 4; --display: subgrid-col",
+      );
+    });
+
+    it("joins the second axis into subgrid", () => {
+      expect(rewritten("--display: subgrid-col; --grid-rows: subgrid")).toBe("--display: subgrid");
+    });
+
+    it("drops the count where the display already takes that axis, and folds into the last display", () => {
+      expect(rewritten("--display: subgrid-col; --grid-cols: subgrid; --gap: 4")).toBe(
+        "--display: subgrid-col; --gap: 4",
+      );
+      expect(rewritten("--display: subgrid; --grid-rows: subgrid")).toBe("--display: subgrid");
+      expect(rewritten("--display: block; --display: grid; --grid-cols: subgrid")).toBe(
+        "--display: block; --display: subgrid-col",
+      );
+    });
+
+    it("writes the display at the tier the count named", () => {
+      expect(rewritten("--display: grid; --grid-cols: 2; --grid-cols--md: subgrid")).toBe(
+        "--display: grid; --grid-cols: 2; --display--md: subgrid-col",
+      );
+      expect(rewritten("--display: block; --grid-cols--md: subgrid; --display--md: grid")).toBe(
+        "--display: block; --display--md: subgrid-col",
+      );
+    });
+
+    it("falls back to the raw template beside another display", () => {
+      expect(rewritten("--display: inline-grid; --grid-cols: subgrid")).toBe(
+        "--display: inline-grid; --template-cols: subgrid",
+      );
+    });
+  });
+
   it("checks data-ui-persist-scroll on whole pages too", () => {
     expect(
       findings(

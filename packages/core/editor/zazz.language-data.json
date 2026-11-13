@@ -438,7 +438,7 @@
           "_layers.css, _variables.css"
         ],
         "uses": [
-          "data-carousel attributes — layout hooks only; behaviour from zazz/scripts/embla.js",
+          "data-carousel attributes — layout hooks only; behavior from base/embla.js (Embla v9)",
           "data-ui-dragging on :root — written by embla.js while a slide drags; the grabbing cursor page-wide",
           "container-type on viewport — basis-* / @sm:basis-* utils query [data-carousel-slot~=\"viewport\"] width"
         ],
@@ -1068,7 +1068,8 @@
           "anchor-scope — isolates --active-tab inside nested menus",
           "text-box, color-mix() — label trim and focus ring",
           "--_touch-min (touch screens) — labels grow to the touch floor, and each inline side gains half of what the height grew",
-          "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
+          "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners",
+          "data-tabs-variant=\"underline\" — no track; the indicator is a line under the checked label (at its start edge when vertical)"
         ],
         "tokens": [
           "--ui-tabs-* (@layer variables)"
@@ -1135,17 +1136,17 @@
       }
     },
     "primitives/toggle/toggle.css": {
-      "summary": "toggle.css: Toggle ([data-ui~=\"toggle\"]), a button-styled checkbox/radio Same look as the button (hooks default to the --ui-button-* family), but it wraps a native checkbox or radio inside a <label>. State is driven from the nested input via :has(): the checked state reuses the button's *active* token values, so an \"on\" toggle reads like a pressed button. Because the state lives on the input, the label's own state tiers (`--bg--checked`) do not fire; theme the checked look through the `--ui-toggle-*--checked` hooks.",
+      "summary": "toggle.css: Toggle ([data-ui~=\"toggle\"]), a button-styled checkbox/radio Same look as the button (hooks default to the --ui-button-* family), but it wraps a native checkbox or radio inside a <label>. State is driven from the nested input via :has(): the checked state takes the primary role, so an \"on\" toggle reads like a primary button. Because the state lives on the input, the label's own state tiers (`--bg--checked`) do not fire; theme the checked look through the `--ui-toggle-*--checked` hooks.",
       "tags": {
         "layer": [
           "variables, components"
         ],
         "requires": [
-          "_layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow), button.css"
+          "_layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow), button.css, kbd.css (--ui-kbd-*)"
         ],
         "uses": [
           ":has(): drive label state from the nested input (checked/focus/disabled)",
-          "oklch(from …): variant hover/active tints (inherited from --ui-button-*)",
+          "color-mix(), oklch(from …): variant hover/active tints, the same steps as the button's variants",
           "text-box: vertical trim (patchy browser support)",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners",
           "--_touch-min (touch screens) — the default and icon sizes grow to the touch floor, and each inline side gains half of what the height grew; sm and icon-sm keep their box and extend an invisible ::after hit area"
@@ -3478,6 +3479,14 @@
       "value": "var(--ui-field-radius)",
       "file": "primitives/tabs/tabs.css"
     },
+    "--ui-tabs-underline-color": {
+      "value": "var(--color-foreground)",
+      "file": "primitives/tabs/tabs.css"
+    },
+    "--ui-tabs-underline-width": {
+      "value": "2px",
+      "file": "primitives/tabs/tabs.css"
+    },
     "--ui-textarea-border-color": {
       "value": "var(--ui-field-border-color)",
       "file": "primitives/textarea/textarea.css"
@@ -3618,6 +3627,10 @@
       "value": "min(356px, calc(100vi - var(--gutters) * 2))",
       "file": "primitives/toaster/toaster.css"
     },
+    "--ui-toggle-background-clip": {
+      "value": "border-box",
+      "file": "primitives/toggle/toggle.css"
+    },
     "--ui-toggle-bg": {
       "value": "var(--ui-button-bg)",
       "file": "primitives/toggle/toggle.css"
@@ -3651,15 +3664,15 @@
       "file": "primitives/toggle/toggle.css"
     },
     "--ui-toggle-border-color--checked": {
-      "value": "var(--color-primary)",
+      "value": "var(--color-border)",
       "file": "primitives/toggle/toggle.css"
     },
     "--ui-toggle-border-color--checked-active": {
-      "value": "var(--color-primary)",
+      "value": "var(--color-border)",
       "file": "primitives/toggle/toggle.css"
     },
     "--ui-toggle-border-color--checked-hover": {
-      "value": "var(--color-primary)",
+      "value": "var(--color-border)",
       "file": "primitives/toggle/toggle.css"
     },
     "--ui-toggle-border-color--hover": {

@@ -3,15 +3,16 @@
  *
  * Same look as the button (hooks default to the --ui-button-* family), but it wraps a
  * native checkbox or radio inside a <label>. State is driven from the nested input
- * via :has(): the checked state reuses the button's *active* token values, so an
- * "on" toggle reads like a pressed button. Because the state lives on the input,
+ * via :has(): the checked state takes the primary role, so an "on" toggle reads
+ * like a primary button. Because the state lives on the input,
  * the label's own state tiers (`--bg--checked`) do not fire; theme the checked
  * look through the `--ui-toggle-*--checked` hooks.
  *
  * @layer      variables, components
- * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow), button.css
+ * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved, --_focus-shadow), button.css, kbd.css (--ui-kbd-*)
  * @uses       :has(): drive label state from the nested input (checked/focus/disabled)
- * @uses       oklch(from …): variant hover/active tints (inherited from --ui-button-*)
+ * @uses       color-mix(), oklch(from …): variant hover/active tints, the same steps
+ *             as the button's variants
  * @uses       text-box: vertical trim (patchy browser support)
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
@@ -54,9 +55,9 @@
     --ui-toggle-border-color--hover: var(--ui-button-border-color--hover);
     --ui-toggle-border-color--active: var(--ui-button-border-color--active);
 
-    --ui-toggle-border-color--checked: var(--color-primary);
-    --ui-toggle-border-color--checked-hover: var(--color-primary);
-    --ui-toggle-border-color--checked-active: var(--color-primary);
+    --ui-toggle-border-color--checked: var(--color-border);
+    --ui-toggle-border-color--checked-hover: var(--color-border);
+    --ui-toggle-border-color--checked-active: var(--color-border);
 
     /* dual-mode hooks: a scale number or a length */
     --ui-toggle-gap: var(--ui-button-gap);
@@ -65,6 +66,7 @@
     --ui-toggle-min-h: var(--ui-button-min-h);
     --ui-toggle-radius: var(--ui-button-radius);
     --ui-toggle-corner-shape: var(--ui-button-corner-shape);
+    --ui-toggle-background-clip: border-box;
 
     --ui-toggle-icon-size: var(--ui-button-icon-size);
 
@@ -79,102 +81,127 @@
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-font-family {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-font-size {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-font-weight {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-leading {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-bg {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-bg--hover {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-bg--active {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-bg--checked {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-bg--checked-hover {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-bg--checked-active {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-text {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-text--hover {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-text--active {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-text--checked {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-text--checked-hover {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-text--checked-active {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-border-width {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-border-style {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-border-color {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-border-color--hover {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-border-color--active {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-border-color--checked {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-border-color--checked-hover {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-border-color--checked-active {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-gap {
   syntax: "*";
   inherits: false;
@@ -189,14 +216,27 @@
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-min-h {
   syntax: "*";
   inherits: false;
 }
+
 @property --_toggle-radius {
   syntax: "*";
   inherits: false;
 }
+
+@property --_toggle-corner-shape {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_toggle-background-clip {
+  syntax: "*";
+  inherits: false;
+}
+
 @property --_toggle-shadow {
   syntax: "*";
   inherits: false;
@@ -245,14 +285,12 @@
     --_px-len: var(--_px-resolved, var(--_toggle-px, var(--ui-toggle-px)));
     --_px-num: var(--_px-resolved, var(--_toggle-px, var(--ui-toggle-px)));
     /* each inline side gains half of what the touch floor added to the height, so the
-       label's margins grow evenly */
-    padding-inline: calc(
-      var(--_px-len) + var(--_px-num) * var(--spacing) +
-        max(
-          0px,
-          (var(--_touch-floor) - calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing))) / 2
-        )
+       label's margins grow evenly; the kbd ends below add it too */
+    --_touch-px: max(
+      0px,
+      (var(--_touch-floor) - calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing))) / 2
     );
+    padding-inline: calc(var(--_px-len) + var(--_px-num) * var(--spacing) + var(--_touch-px));
 
     border-width: var(
       --_border-width-resolved,
@@ -271,10 +309,18 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
     );
-    corner-shape: var(--_corner-shape-resolved, var(--ui-toggle-corner-shape));
+    corner-shape: var(
+      --_corner-shape-resolved,
+      var(--_toggle-corner-shape, var(--ui-toggle-corner-shape))
+    );
 
     color: var(--_text-resolved, var(--_toggle-text, var(--ui-toggle-text)));
     background-color: var(--_bg-resolved, var(--_toggle-bg, var(--ui-toggle-bg)));
+    background-clip: var(
+      --_bg-clip-resolved,
+      var(--_toggle-background-clip, var(--ui-toggle-background-clip))
+    );
+    white-space-collapse: collapse;
 
     /* published to --_focus-shadow so a --shadow or --ring utility keeps it; the
        widths grow from 0 on :focus-visible so the ring eases in */
@@ -298,7 +344,7 @@
       var(--_focus-shadow, 0 0 #0000),
       var(--_shadow-resolved, var(--_toggle-shadow, var(--ui-toggle-shadow)));
 
-    cursor: pointer;
+    cursor: default;
     text-decoration: none;
 
     /* transparent twin of the ring for forced-colors / high-contrast modes */
@@ -395,6 +441,18 @@
     outline-color: transparent;
   }
 
+  /* before the variants at the same specificity: a disabled primary keeps its color; only the default surface goes muted */
+  :where([data-ui~="toggle"]:has(> input:disabled)) {
+    --_toggle-text: var(--color-muted-foreground);
+    --_toggle-bg: var(--color-muted);
+    --_toggle-shadow: 0 0 transparent;
+    --decoration-line: none;
+
+    cursor: default;
+    opacity: 0.6;
+    outline: none;
+  }
+
   /* ===========================================================================
   ICONS
   =========================================================================== */
@@ -415,8 +473,14 @@
 
   :where([data-ui~="toggle"][data-toggle-variant="primary"]) {
     --_toggle-bg: var(--color-primary);
-    --_toggle-bg--hover: oklch(from var(--color-primary) l c h / 0.9);
-    --_toggle-bg--active: oklch(from var(--color-primary) l c h / 0.8);
+    --_toggle-bg--hover: light-dark(
+      oklch(from var(--color-primary) calc(l + (1 - l) * 0.2) c h),
+      oklch(from var(--color-primary) calc(l * 0.8) c h)
+    );
+    --_toggle-bg--active: light-dark(
+      oklch(from var(--color-primary) calc(l + (1 - l) * 0.3) c h),
+      oklch(from var(--color-primary) calc(l * 0.7) c h)
+    );
 
     --_toggle-text: var(--color-primary-foreground);
     --_toggle-text--hover: var(--color-primary-foreground);
@@ -431,8 +495,14 @@
 
   :where([data-ui~="toggle"][data-toggle-variant="secondary"]) {
     --_toggle-bg: var(--color-secondary);
-    --_toggle-bg--hover: oklch(from var(--color-secondary) l c h / 0.9);
-    --_toggle-bg--active: oklch(from var(--color-secondary) l c h / 0.8);
+    --_toggle-bg--hover: light-dark(
+      oklch(from var(--color-secondary) calc(l + (1 - l) * 0.2) c h),
+      oklch(from var(--color-secondary) calc(l * 0.8) c h)
+    );
+    --_toggle-bg--active: light-dark(
+      oklch(from var(--color-secondary) calc(l + (1 - l) * 0.3) c h),
+      oklch(from var(--color-secondary) calc(l * 0.7) c h)
+    );
 
     --_toggle-text: var(--color-secondary-foreground);
     --_toggle-text--hover: var(--color-secondary-foreground);
@@ -447,8 +517,14 @@
 
   :where([data-ui~="toggle"][data-toggle-variant="tertiary"]) {
     --_toggle-bg: var(--color-tertiary);
-    --_toggle-bg--hover: oklch(from var(--color-tertiary) l c h / 0.9);
-    --_toggle-bg--active: oklch(from var(--color-tertiary) l c h / 0.8);
+    --_toggle-bg--hover: light-dark(
+      oklch(from var(--color-tertiary) calc(l + (1 - l) * 0.2) c h),
+      oklch(from var(--color-tertiary) calc(l * 0.8) c h)
+    );
+    --_toggle-bg--active: light-dark(
+      oklch(from var(--color-tertiary) calc(l + (1 - l) * 0.3) c h),
+      oklch(from var(--color-tertiary) calc(l * 0.7) c h)
+    );
 
     --_toggle-text: var(--color-tertiary-foreground);
     --_toggle-text--hover: var(--color-tertiary-foreground);
@@ -462,9 +538,10 @@
   }
 
   :where([data-ui~="toggle"][data-toggle-variant="muted"]) {
+    /* the translucent muted role: fades toward the surface beneath */
     --_toggle-bg: var(--color-muted);
-    --_toggle-bg--hover: oklch(from var(--color-muted) l c h / calc(alpha - 0.02));
-    --_toggle-bg--active: var(--color-muted);
+    --_toggle-bg--hover: oklch(from var(--_toggle-bg) l c h / calc(alpha * 0.66));
+    --_toggle-bg--active: oklch(from var(--_toggle-bg) l c h / calc(alpha * 0.33));
 
     --_toggle-text: var(--color-foreground);
     --_toggle-text--hover: var(--color-foreground);
@@ -480,8 +557,9 @@
   /* the "ghost" toggle reads as bare until on/hovered */
   :where([data-ui~="toggle"][data-toggle-variant="ghost"]) {
     --_toggle-bg: transparent;
+    /* the translucent muted role: shows the surface beneath and follows a retheme */
     --_toggle-bg--hover: var(--color-muted);
-    --_toggle-bg--active: oklch(from var(--color-muted) l c h / calc(alpha - 0.02));
+    --_toggle-bg--active: oklch(from var(--_toggle-bg--hover) l c h / calc(alpha * 1.5));
 
     --_toggle-text: var(--color-foreground);
     --_toggle-text--hover: var(--color-foreground);
@@ -498,29 +576,18 @@
     --_toggle-ring-color: var(--color-destructive-foreground);
 
     --_toggle-bg: var(--color-destructive);
-    --_toggle-bg--hover: oklch(from var(--color-destructive) calc(l - 0.025) c h);
-    --_toggle-bg--active: oklch(from var(--color-destructive) calc(l - 0.05) c h);
+    --_toggle-bg--hover: oklch(from var(--_toggle-bg) calc(l - 0.025) c h);
+    --_toggle-bg--active: oklch(from var(--_toggle-bg) calc(l - 0.05) c h);
 
     --_toggle-text: var(--color-destructive-foreground);
-    --_toggle-text--hover: var(--color-destructive-foreground);
-    --_toggle-text--active: var(--color-destructive-foreground);
+    --_toggle-text--hover: var(--_toggle-text);
+    --_toggle-text--active: var(--_toggle-text);
 
     --_toggle-border-color: transparent;
     --_toggle-border-color--hover: transparent;
     --_toggle-border-color--active: transparent;
 
     --_toggle-shadow: 0 0 transparent;
-  }
-
-  /* disabled comes after the variants so a disabled toggle is muted whatever its variant */
-  :where([data-ui~="toggle"]:has(> input:disabled)) {
-    --_toggle-text: var(--color-muted-foreground);
-    --_toggle-bg: var(--color-muted);
-    --_toggle-shadow: 0 0 transparent;
-
-    cursor: default;
-    opacity: 0.5;
-    outline: none;
   }
 
   /* ===========================================================================
@@ -533,6 +600,7 @@
     --_toggle-py: calc(var(--spacing) * 0.75);
     --_toggle-px: calc(var(--spacing) * 2);
     --_toggle-radius: var(--radius-sm);
+    --_toggle-font-size: var(--font-size-xs);
     /* dense by choice: the box stays small and ::after takes the touch floor */
     --_touch-floor: 0px;
   }
@@ -570,5 +638,50 @@
     content: "";
     position: absolute;
     inset: min(0px, calc((100% - var(--_touch-min)) / 2));
+  }
+
+  /* ===========================================================================
+  KBD
+  =========================================================================== */
+
+  /* Descendant (not child) so keys wrapped in a ui-kbd-group still resize */
+  :where([data-ui~="toggle"]) :where(kbd) {
+    --ui-kbd-min-w: calc(var(--spacing) * 4.5);
+    --ui-kbd-min-h: calc(var(--spacing) * 4.5);
+    --ui-kbd-icon-size: calc(var(--spacing) * 3);
+  }
+
+  /* the button's kbd ends, counted without the hidden input: a kbd at either end
+     of the visible content, but not alone, tightens that side */
+  :where([data-ui~="toggle"]):has(
+    > :where(kbd, ui-kbd-group, [data-ui~="kbd-group"]):nth-last-child(1 of :not(input)):not(
+        :nth-child(1 of :not(input))
+      )
+  ) {
+    padding-inline-end: calc(var(--spacing) * 1.5 + var(--_touch-px));
+  }
+
+  :where([data-ui~="toggle"]):has(
+    > :where(kbd, ui-kbd-group, [data-ui~="kbd-group"]):nth-child(1 of :not(input)):not(
+        :nth-last-child(1 of :not(input))
+      )
+  ) {
+    padding-inline-start: calc(var(--spacing) * 1.5 + var(--_touch-px));
+  }
+
+  :where([data-ui~="toggle"][data-toggle-size="sm"]):has(
+    > :where(kbd, ui-kbd-group, [data-ui~="kbd-group"]):nth-last-child(1 of :not(input)):not(
+        :nth-child(1 of :not(input))
+      )
+  ) {
+    padding-inline-end: calc(var(--spacing) * 0.5 + var(--_touch-px));
+  }
+
+  :where([data-ui~="toggle"][data-toggle-size="sm"]):has(
+    > :where(kbd, ui-kbd-group, [data-ui~="kbd-group"]):nth-child(1 of :not(input)):not(
+        :nth-last-child(1 of :not(input))
+      )
+  ) {
+    padding-inline-start: calc(var(--spacing) * 0.5 + var(--_touch-px));
   }
 }

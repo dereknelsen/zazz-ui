@@ -16,8 +16,7 @@ import { fileURLToPath } from "node:url";
 import {
   BREAKPOINTS,
   ANIMATION_TOKENS,
-  DISPLAY_PILE,
-  DISPLAY_SHORTHANDS,
+  DISPLAY_WORDS,
   hasGroup,
   isState,
   UTILITIES,
@@ -419,9 +418,7 @@ function valuesFor(utility: Utility, tokens: Map<string, string[]>): HtmlValue[]
   const names = new Set<string>(utility.keywords ?? []);
   // keyword shorthands first (--font-weight: strong, --radius: full), then the display ones
   for (const alias of Object.keys(utility.aliases ?? {})) names.add(alias);
-  if (utility.name === "display")
-    for (const shorthand of [...Object.keys(DISPLAY_SHORTHANDS), DISPLAY_PILE])
-      names.add(shorthand);
+  if (utility.name === "display") for (const word of DISPLAY_WORDS) names.add(word);
   if (utility.mode === "keyword")
     for (const property of utility.properties)
       for (const k of KEYWORDS[property] ?? []) names.add(k);

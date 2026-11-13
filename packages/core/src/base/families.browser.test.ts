@@ -15,18 +15,22 @@ const tracks = (el: Element) => style(el, "grid-template-columns").trim().split(
 describe("families", () => {
   useKit();
 
-  it("--isolation starts a stacking context, from a breakpoint up", async () => {
-    const root = mount(`<div style="--isolation: auto; --isolation--md: isolate"></div>`);
-    await atWidth(below("md"));
-    expect(style(root, "isolation")).toBe("auto");
-    await atWidth(at("md"));
-    expect(style(root, "isolation")).toBe("isolate");
+  it("--isolation starts a stacking context, and takes no tiers", () => {
+    const root = mount(`<div>
+      <i data-base style="--isolation: isolate"></i>
+      <i data-plain></i>
+    </div>`);
+    expect(style(root.querySelector("[data-base]")!, "isolation")).toBe("isolate");
+    expect(style(root.querySelector("[data-plain]")!, "isolation")).toBe("auto");
+    expect(tiersOf(UTILITIES.find((u) => u.name === "isolation")!)).toEqual([]);
   });
 
-  it("--isolation applies at a tier with no base", async () => {
-    const root = mount(`<div style="--isolation--md: isolate"></div>`);
+  it("--flex-wrap applies at a tier with no base", async () => {
+    const root = mount(`<div style="--flex-wrap--md: wrap"></div>`);
+    await atWidth(below("md"));
+    expect(style(root, "flex-wrap")).toBe("nowrap");
     await atWidth(at("md"));
-    expect(style(root, "isolation")).toBe("isolate");
+    expect(style(root, "flex-wrap")).toBe("wrap");
   });
 
   it("--inset-x sets left and right, --inset-y top and bottom, with tiers", async () => {
@@ -67,7 +71,7 @@ describe("families", () => {
     const root = mount(`<div style="inline-size: 800px">
       <div data-up style="--w: 4; --w--md: fit-content">x</div>
       <div data-down style="--w: fit-content; --w--md: 4; --w--lg: 100%">x</div>
-      <div data-grid style="--display: grid; --grid-cols: 2; --grid-cols--md: subgrid"><i></i><i></i></div>
+      <div data-grid style="--display: grid; --grid-cols: 2; --display--md: subgrid-col"><i></i><i></i></div>
     </div>`);
     const [up, down, grid] = ["[data-up]", "[data-down]", "[data-grid]"].map((selector) =>
       root.querySelector(selector)!,
@@ -85,10 +89,10 @@ describe("families", () => {
     expect(px(style(down, "inline-size"))).toBeCloseTo(800, 0);
   });
 
-  it("--grid-cols takes subgrid besides a count; none is --template-cols: none", async () => {
+  it("--display: subgrid-col takes the parent's columns; none is --template-cols: none", async () => {
     await atWidth(at("md"));
     const parent = mount(
-      `<div style="inline-size: 600px; --display: grid; --grid-cols: 3"><div style="--col-span: 3; --display: grid; --grid-cols: subgrid"><i></i><i></i><i></i></div></div>`,
+      `<div style="inline-size: 600px; --display: grid; --grid-cols: 3"><div style="--col-span: 3; --display: subgrid-col"><i></i><i></i><i></i></div></div>`,
     );
     const child = parent.firstElementChild!;
     expect(style(child, "grid-template-columns")).toMatch(/^subgrid/);

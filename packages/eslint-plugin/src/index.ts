@@ -151,7 +151,7 @@ const plugin = {
 
 /**
  * A finding that means a declaration does nothing at all is an error: the
- * utility is unknown, its tier has no setter or no base, or its spelling misses
+ * utility is unknown, its tier is one the utility does not take or has no base, or its spelling misses
  * the gate. The rest flag likely mistakes and stay warnings; the layout is
  * fixed on save.
  */

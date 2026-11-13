@@ -70,7 +70,8 @@ class UiCarouselElement extends ZazzElement {
   }
 
   /**
-   * @returns The Embla API, or null before initialization.
+   * @returns The Embla v9 API (`goTo`, `goToNext`, `selectedSnap`, lowercase
+   * events such as `reinit`), or null before initialization.
    */
   get api(): EmblaCarouselType | null {
     return this._emblaApi ?? null;

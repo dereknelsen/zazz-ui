@@ -54,7 +54,15 @@ describe("--container", () => {
   });
 
   it("a tier applies with no base", async () => {
-    const el = mount(`<div style="--container-name--md: panel"></div>`);
+    const el = mount(`<div style="--container-type--md: inline-size"></div>`);
+    await atWidth(below("md"));
+    expect(style(el, "container-type")).toBe("normal");
+    await atWidth(at("md"));
+    expect(style(el, "container-type")).toBe("inline-size");
+  });
+
+  it("--container-name is base only: a tier declares nothing", async () => {
+    const el = mount(`<div style="--container-name: panel; --container-name--md: other"></div>`);
     await atWidth(at("md"));
     expect(style(el, "container-name")).toBe("panel");
   });

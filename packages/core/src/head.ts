@@ -106,27 +106,27 @@ const ESM_DEPENDENCIES: readonly CdnDependency[] = [
   },
   {
     name: "embla-carousel",
-    version: "8.6.0",
+    version: "9.0.0-rc04",
     file: "esm/embla-carousel.esm.js",
-    integrity: "sha384-GXjfyU1fSHHeweoYd3rwo7OBKYtkq+JcsDoe8VDRc6znCty2ZTzyVvX1DwqCE+9t",
+    integrity: "sha384-Qcz5VJ/iRhG3zPRMT8li6rYNSsXcCeSQ6URxPlQh7joEd/nNxRRkCZxlJoTZr3Ch",
   },
   {
     name: "embla-carousel-autoplay",
-    version: "8.6.0",
+    version: "9.0.0-rc04",
     file: "esm/embla-carousel-autoplay.esm.js",
-    integrity: "sha384-AX49yBc7zd/CT8ZqNMRiiqqVSV9xfxb27VwEGziPioT3wL4k4C5BW2qwefdWuN4J",
+    integrity: "sha384-dsPLKoLTpj/hIVD1I1zYA1kDCI32uRH4seU3ly+s7Lm9MdWVsj1OmE8HELhZ/Fm4",
   },
   {
     name: "embla-carousel-auto-scroll",
-    version: "8.6.0",
+    version: "9.0.0-rc04",
     file: "esm/embla-carousel-auto-scroll.esm.js",
-    integrity: "sha384-SPdnL1eic73WfM72zFEf0RJ5PdUC7TL3Yb5jOl1JC3/l4D7EsVxwO8wFnnezlMSu",
+    integrity: "sha384-bOWyJNYHSsncAhdIgavN6TjY6Bb/NRLV9fAon5xy9HquiFZbNYTjq2JZ5bq5nyb5",
   },
   {
     name: "embla-carousel-class-names",
-    version: "8.6.0",
+    version: "9.0.0-rc04",
     file: "esm/embla-carousel-class-names.esm.js",
-    integrity: "sha384-ZWno/FqzYeWE5Ils19GIhep1AZ5bMl0mp9wmm6baTJE4+pjMjOdTnE55SjUQAdVh",
+    integrity: "sha384-y8wWJW7HPdqr5guB+ZdF/o9FIRGg2KtH9TdoAttP7jjEU9bQlAzY0Fc5FiIMYQN1",
   },
 ];
 
