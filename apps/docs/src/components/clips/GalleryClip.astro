@@ -4,6 +4,11 @@
  * gaining children. The column counts are the kit's own (5, 6, then 5 + 2 for
  * seven children), measured in a browser at a width that fits six columns.
  * Plain HTML and CSS keyframes on a 10s loop; the base styles are the last frame.
+ *
+ * Two constraints shape the CSS. Every `animation` names its keyframes in the
+ * shorthand: the build's minifier turns a nameless shorthand into `none`. And the
+ * tiles are placed by hand from two registered numbers, because WebKit does not
+ * animate `display` in keyframes, so a late child can't join a real grid.
  */
 ---
 
@@ -27,13 +32,13 @@
         <span class="fc-gal-label fc-gal-label-3">7 children: 5 + 2, never 6 + 1</span>
       </div>
       <div class="fc-gal-grid">
-        <span class="fc-gal-tile">1</span>
-        <span class="fc-gal-tile">2</span>
-        <span class="fc-gal-tile">3</span>
-        <span class="fc-gal-tile">4</span>
-        <span class="fc-gal-tile">5</span>
-        <span class="fc-gal-tile fc-gal-in-30">6</span>
-        <span class="fc-gal-tile fc-gal-in-55">7</span>
+        <span class="fc-gal-tile"><b>1</b></span>
+        <span class="fc-gal-tile"><b>2</b></span>
+        <span class="fc-gal-tile"><b>3</b></span>
+        <span class="fc-gal-tile"><b>4</b></span>
+        <span class="fc-gal-tile"><b>5</b></span>
+        <span class="fc-gal-tile fc-gal-tile-6 fc-gal-in-30"><b>6</b></span>
+        <span class="fc-gal-tile fc-gal-tile-7 fc-gal-in-55"><b>7</b></span>
       </div>
     </div>
   </div>
@@ -100,52 +105,98 @@
   .fc-gal-label {
     grid-area: 1 / 1;
     opacity: 0;
-    animation: 10s step-end infinite;
   }
 
   .fc-gal-label-1 {
-    animation-name: fc-gal-label-1;
+    animation: fc-gal-label-1 10s step-end infinite;
   }
 
   .fc-gal-label-2 {
-    animation-name: fc-gal-label-2;
+    animation: fc-gal-label-2 10s step-end infinite;
   }
 
   .fc-gal-label-3 {
     opacity: 1;
-    animation-name: fc-gal-label-3;
+    animation: fc-gal-label-3 10s step-end infinite;
   }
 
+  /* --fc-gal-n is the column count and --fc-gal-wrap whether child 6 is on row
+     two; both step, and every tile works out its own box from them */
   .fc-gal-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-auto-rows: 5.6em;
-    align-content: start;
-    gap: 1em;
+    --fc-gal-n: 5;
+    --fc-gal-wrap: 1;
+    --fc-gal-gap: 1em;
+    --fc-gal-row: 5.6em;
+    --fc-gal-w: calc((100% - (var(--fc-gal-n) - 1) * var(--fc-gal-gap)) / var(--fc-gal-n));
+    position: relative;
+    height: calc(var(--fc-gal-row) * 2 + var(--fc-gal-gap));
     animation: fc-gal-cols 10s step-end infinite;
   }
 
   .fc-gal-tile {
+    position: absolute;
+    top: 0;
+    left: calc(var(--fc-i, 0) * (var(--fc-gal-w) + var(--fc-gal-gap)));
     display: grid;
     place-items: center;
-    font-size: 1.3em;
-    font-weight: 600;
+    width: var(--fc-gal-w);
+    height: var(--fc-gal-row);
     color: var(--color-primary-foreground, #fff);
     background-color: var(--color-primary, #4f46e5);
-    border-radius: calc(var(--fc-radius) * 0.6 / 1.3);
+    border-radius: calc(var(--fc-radius) * 0.6);
   }
 
-  /* a child that arrives takes no cell until its beat, then pops in */
+  .fc-gal-tile:nth-child(2) {
+    --fc-i: 1;
+  }
+
+  .fc-gal-tile:nth-child(3) {
+    --fc-i: 2;
+  }
+
+  .fc-gal-tile:nth-child(4) {
+    --fc-i: 3;
+  }
+
+  .fc-gal-tile:nth-child(5) {
+    --fc-i: 4;
+  }
+
+  .fc-gal-tile b {
+    font-size: 1.3em;
+    font-weight: 600;
+  }
+
+  /* child 6 ends a row of six, or starts row two under a row of five */
+  .fc-gal-tile-6 {
+    top: calc(var(--fc-gal-wrap) * (var(--fc-gal-row) + var(--fc-gal-gap)));
+    left: calc((1 - var(--fc-gal-wrap)) * 5 * (var(--fc-gal-w) + var(--fc-gal-gap)));
+  }
+
+  .fc-gal-tile-7 {
+    top: calc(var(--fc-gal-row) + var(--fc-gal-gap));
+    left: calc(var(--fc-gal-w) + var(--fc-gal-gap));
+  }
+
+  /* a child that arrives is invisible until its beat, then pops in */
   .fc-gal-in-30 {
-    animation:
-      fc-gal-show-30 10s step-end infinite,
-      fc-gal-pop-30 10s ease-out infinite;
+    animation: fc-gal-pop-30 10s ease-out infinite;
   }
 
   .fc-gal-in-55 {
-    animation:
-      fc-gal-show-55 10s step-end infinite,
-      fc-gal-pop-55 10s ease-out infinite;
+    animation: fc-gal-pop-55 10s ease-out infinite;
+  }
+
+  @property --fc-gal-n {
+    syntax: "<number>";
+    inherits: true;
+    initial-value: 5;
+  }
+
+  @property --fc-gal-wrap {
+    syntax: "<number>";
+    inherits: true;
+    initial-value: 1;
   }
 
   @keyframes fc-gal-loop {
@@ -162,15 +213,18 @@
 
   @keyframes fc-gal-cols {
     0% {
-      grid-template-columns: repeat(5, 1fr);
+      --fc-gal-n: 5;
+      --fc-gal-wrap: 0;
     }
 
     30% {
-      grid-template-columns: repeat(6, 1fr);
+      --fc-gal-n: 6;
+      --fc-gal-wrap: 0;
     }
 
     55% {
-      grid-template-columns: repeat(5, 1fr);
+      --fc-gal-n: 5;
+      --fc-gal-wrap: 1;
     }
   }
 
@@ -205,26 +259,6 @@
 
     55% {
       opacity: 1;
-    }
-  }
-
-  @keyframes fc-gal-show-30 {
-    0% {
-      display: none;
-    }
-
-    30% {
-      display: grid;
-    }
-  }
-
-  @keyframes fc-gal-show-55 {
-    0% {
-      display: none;
-    }
-
-    55% {
-      display: grid;
     }
   }
 
