@@ -8,7 +8,9 @@
  * Two constraints shape the CSS. Every `animation` names its keyframes in the
  * shorthand: the build's minifier turns a nameless shorthand into `none`. And the
  * tiles are placed by hand from two registered numbers, because WebKit does not
- * animate `display` in keyframes, so a late child can't join a real grid.
+ * animate `display` in keyframes, so a late child can't join a real grid. The
+ * numbers are `<number>`s, so they interpolate: when a child arrives, the tiles
+ * slide and resize into the new layout the way the real grid reflows.
  */
 ---
 
@@ -51,6 +53,7 @@
     width: 100%;
     aspect-ratio: 740 / 415;
     margin: 0;
+    margin-block: 2rem;
   }
 
   .fc-gal-stage {
@@ -121,16 +124,17 @@
   }
 
   /* --fc-gal-n is the column count and --fc-gal-wrap whether child 6 is on row
-     two; both step, and every tile works out its own box from them */
+     two. Both glide between beats, and every tile works out its own box from
+     them, so the row reflows instead of jumping. Two rows fill the grid's height. */
   .fc-gal-grid {
     --fc-gal-n: 5;
     --fc-gal-wrap: 1;
     --fc-gal-gap: 1em;
-    --fc-gal-row: 5.6em;
+    --fc-gal-row: calc((100% - var(--fc-gal-gap)) / 2);
     --fc-gal-w: calc((100% - (var(--fc-gal-n) - 1) * var(--fc-gal-gap)) / var(--fc-gal-n));
     position: relative;
-    height: calc(var(--fc-gal-row) * 2 + var(--fc-gal-gap));
-    animation: fc-gal-cols 10s step-end infinite;
+    min-height: 0;
+    animation: fc-gal-cols 10s linear infinite;
   }
 
   .fc-gal-tile {
@@ -212,17 +216,22 @@
   }
 
   @keyframes fc-gal-cols {
-    0% {
+    0%,
+    30% {
       --fc-gal-n: 5;
       --fc-gal-wrap: 0;
+      animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
-    30% {
+    35%,
+    55% {
       --fc-gal-n: 6;
       --fc-gal-wrap: 0;
+      animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
-    55% {
+    61%,
+    100% {
       --fc-gal-n: 5;
       --fc-gal-wrap: 1;
     }
@@ -266,10 +275,10 @@
     0%,
     30% {
       opacity: 0;
-      transform: scale(0.85);
+      transform: scale(0.6);
     }
 
-    34%,
+    35%,
     100% {
       opacity: 1;
       transform: scale(1);
@@ -278,12 +287,12 @@
 
   @keyframes fc-gal-pop-55 {
     0%,
-    55% {
+    57% {
       opacity: 0;
-      transform: scale(0.85);
+      transform: scale(0.6);
     }
 
-    59%,
+    61%,
     100% {
       opacity: 1;
       transform: scale(1);
