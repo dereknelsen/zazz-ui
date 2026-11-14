@@ -587,15 +587,15 @@ class ThemeBuilder extends ZazzElement {
         } catch {
           return;
         }
-        const idle = copy.querySelector<HTMLElement>("[data-copy-idle]");
-        const done = copy.querySelector<HTMLElement>("[data-copy-done]");
-        if (!idle || !done) return;
-        idle.hidden = true;
-        done.hidden = false;
-        setTimeout(() => {
-          idle.hidden = false;
-          done.hidden = true;
-        }, 1500);
+        // Every copy button with a label pair says so: the panel's, and the sheet's proxy.
+        const flip = (copied: boolean) => {
+          for (const idle of this.querySelectorAll<HTMLElement>("[data-copy-idle]"))
+            idle.hidden = copied;
+          for (const done of this.querySelectorAll<HTMLElement>("[data-copy-done]"))
+            done.hidden = !copied;
+        };
+        flip(true);
+        setTimeout(() => flip(false), 1500);
       },
       { signal },
     );

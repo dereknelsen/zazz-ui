@@ -393,11 +393,12 @@ const previewScope = `@layer zazz.variables {
       >
         <button
           data-ui="button"
-          data-button-variant="muted"
+          data-button-variant="primary"
           type="button"
-          data-theme-copy-proxy
+          aria-label="Randomize the theme"
+          data-theme-randomize
         >
-          <Copy size={16} aria-hidden="true" /> Copy
+          <Dices size={16} aria-hidden="true" /> Generate
         </button>
         <button
           data-ui="button"
@@ -424,30 +425,76 @@ const previewScope = `@layer zazz.variables {
       data-ui="dialog"
       data-theme="dark"
       closedby="any"
-      aria-labelledby="tb-title"
+      aria-labelledby="tb-sheet-title"
     >
+      <!-- The sheet's own header row: the form's header (title + Generate) is
+           wide-screen only, and Generate lives in the bar. Copy and Close sit in
+           the row rather than in the absolute close slot, so the form's sticky
+           header can never cover them. -->
       <div data-dialog-slot="content">
+        <header
+          data-dialog-slot="header"
+          style="
+            --display: flex;
+            --items: center;
+            --justify: space-between;
+            --gap: 2;
+            --pb: 3;
+            --border-b: 1;
+          "
+        >
+          <h2 id="tb-sheet-title" data-ui="text-md">Theme builder</h2>
+          <div
+            style="
+              --display: flex;
+              --items: center;
+              --gap: 1;
+            "
+          >
+            <button
+              data-ui="button"
+              data-button-variant="primary"
+              type="button"
+              data-theme-copy-proxy
+              disabled
+            >
+              <span
+                data-copy-idle
+                style="
+                  --display: inline-flex;
+                  --items: center;
+                  --gap: 2;
+                "
+              >
+                <Copy size={16} aria-hidden="true" /> Copy CSS
+              </span>
+              <span
+                data-copy-done
+                hidden
+                style="
+                  --display: inline-flex;
+                  --items: center;
+                  --gap: 2;
+                "
+              >
+                <Check size={16} aria-hidden="true" /> Copied
+              </span>
+            </button>
+            <button
+              data-ui="button"
+              data-button-size="icon"
+              data-button-variant="ghost"
+              type="button"
+              commandfor="tb-sheet"
+              command="close"
+              aria-label="Close"
+            >
+              <X aria-hidden="true" />
+            </button>
+          </div>
+        </header>
         <div data-dialog-slot="body" data-theme-sheet></div>
       </div>
-      <ui-tooltip>
-        <button
-          data-ui="button"
-          data-dialog-slot="close"
-          data-button-size="icon"
-          data-button-variant="ghost"
-          type="button"
-          commandfor="tb-sheet"
-          command="close"
-          aria-label="Close"
-          interestfor="tb-sheet-close-tip"
-        >
-          <X aria-hidden="true" />
-        </button>
-        <div data-tooltip-slot="content" id="tb-sheet-close-tip" popover="hint">
-          Close
-          <span data-tooltip-slot="arrow" aria-hidden="true"></span>
-        </div>
-      </ui-tooltip>
     </dialog>
 
     <!-- DESKTOP THEME BUILDER PANEL -->
@@ -475,7 +522,8 @@ const previewScope = `@layer zazz.variables {
       >
         <header
           style="
-            --display: flex-col;
+            --display: none;
+            --display--lg: flex-col;
             --position: sticky;
             --px: 5;
             --py: 3;
@@ -1298,6 +1346,10 @@ const previewScope = `@layer zazz.variables {
             type="button"
             data-theme-copy
             disabled
+            style="
+              --display: none;
+              --display--lg: inline-flex;
+            "
           >
             <span
               data-copy-idle
@@ -1439,14 +1491,17 @@ const previewScope = `@layer zazz.variables {
     >
       <!-- Packed like a masonry by <fieldnotes-demo>: it measures each card into a row span.
            Columns floor at min-content (and each card overrides the card's minmax(0, 1fr)
-           track) so a large spacing widens the columns instead of clipping the cards. -->
+           track) so a large spacing widens the columns instead of clipping the cards.
+           Below lg the floor is 22rem, not 30ch: touch screens' 16px field text and
+           44px targets need the room, and a phone scrolls the row sideways anyway. -->
       <div
         data-fieldnotes-grid
         style="
           --display: grid;
           --grid-flow: dense;
           --items: start;
-          --template-cols: repeat(4, minmax(30ch, 1fr));
+          --template-cols: repeat(4, minmax(22rem, 1fr));
+          --template-cols--lg: repeat(4, minmax(30ch, 1fr));
           --pr: 5;
           --pr--lg: 8;
           --gap-x: 5;
@@ -1454,7 +1509,8 @@ const previewScope = `@layer zazz.variables {
           --gap-y: 0;
           --space-y: 5;
           --space-y--lg: 8;
-          --min-w: 84rem;
+          --min-w: 92rem;
+          --min-w--lg: 84rem;
           --container-type: inline-size;
         "
       >
