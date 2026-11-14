@@ -148,7 +148,8 @@
 
   /* iOS WebKit adds a temporal input's padding and border on top of its inline size,
      whatever box-sizing says (webkit.org/b/301648), so a full-width field overflows;
-     -webkit-touch-callout is iOS-only, so the correction lands there alone */
+     -webkit-touch-callout is iOS-only, so the correction lands there alone. The
+     padding includes the touch-target widening (--_touch-px) on both sides. */
   @supports (-webkit-touch-callout: none) {
     :where([data-ui~="input"]):is(
       [type="date"],
@@ -160,7 +161,7 @@
       inline-size: calc(
         var(--_w-len) + var(--_w-num) * var(--spacing) -
           (var(--_pl-len) + var(--_pl-num) * var(--spacing)) -
-          (var(--_pr-len) + var(--_pr-num) * var(--spacing)) - 2 *
+          (var(--_pr-len) + var(--_pr-num) * var(--spacing)) - 2 * var(--_touch-px) - 2 *
           var(--_border-width-resolved, var(--ui-input-border-width))
       );
     }
