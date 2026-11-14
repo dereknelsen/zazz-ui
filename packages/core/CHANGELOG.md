@@ -1,5 +1,11 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.13.1 (2026-11-14)
+
+### input
+
+- A full-width date, time, `datetime-local`, month, or week input no longer overflows its container in iOS Safari. The iOS correction for WebKit's sizing bug subtracted the field's padding and border but not the extra inline padding a touch screen adds to reach the touch-target height.
+
 ## 0.13.0 (2026-11-13)
 
 ### base
