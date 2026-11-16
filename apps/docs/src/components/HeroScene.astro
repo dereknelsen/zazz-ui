@@ -7,11 +7,20 @@
  * Behavior lives in `<hero-scene>` (scripts/hero-scene.ts). The script below
  * ships only with pages that render this component; scripts/islands.ts loads
  * the same module when the page is reached by a swap navigation instead.
+ *
+ * The SDK and scene URLs are content-hashed (lib/unicorn.ts); a page that
+ * shows this in its first viewport should also start them from `<head>`
+ * (pages/index.astro). Until the scene draws, its sky shows (`.hero-scene`
+ * in site.css).
  */
+import { SCENE_URL, SDK_URL } from '../lib/unicorn.ts';
 ---
 
 <hero-scene
+  class="hero-scene"
   aria-hidden="true"
+  data-sdk={SDK_URL}
+  data-scene={SCENE_URL}
   style="
     --position: absolute;
     --inset: 0;

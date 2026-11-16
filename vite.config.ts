@@ -22,8 +22,8 @@ export default defineConfig({
       "packages/vscode/syntaxes/zazz.injection.tmLanguage.json",
       "packages/vscode/emmet/snippets.json",
       // Vendored as shipped: the Unicorn Studio SDK and the hero scenes exported from it.
-      "apps/docs/public/unicorn/unicornStudio.umd.js",
-      "apps/docs/public/unicorn/*.json",
+      "apps/docs/src/assets/unicorn/unicornStudio.umd.js",
+      "apps/docs/src/assets/unicorn/*.json",
     ],
     overrides: [
       // Keep style="" exactly as authored (one utility per line stays one per line).
@@ -31,7 +31,7 @@ export default defineConfig({
     ],
   },
   lint: {
-    ignorePatterns: ["apps/docs/public/unicorn/unicornStudio.umd.js"],
+    ignorePatterns: ["apps/docs/src/assets/unicorn/unicornStudio.umd.js"],
     jsPlugins: [{ name: "vite-plus", specifier: "vite-plus/oxlint-plugin" }],
     rules: { "vite-plus/prefer-vite-plus-imports": "error" },
     options: { typeAware: true, typeCheck: true },
@@ -40,6 +40,6 @@ export default defineConfig({
     cache: true,
   },
   server: {
-    allowedHosts: ["localhost", "127.0.0.1", "0.0.0.0", ".ngrok-free.app"],
+    allowedHosts: ["localhost", "127.0.0.1", "0.0.0.0", ".ngrok-free.app", ".shares.zrok.io"],
   },
 });

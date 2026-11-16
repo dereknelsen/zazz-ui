@@ -22,19 +22,25 @@
  * (`data-ui-navigation="swap"`), and a swapped-in page's scripts never run:
  * the element sets up on every connect and destroys its scene on disconnect.
  * HeroScene.astro loads this module on its own page and scripts/islands.ts
- * loads it after a swap; the SDK loads on first connect.
+ * loads it after a swap. The SDK and scene URLs come from `data-sdk` and
+ * `data-scene` (content-hashed, lib/unicorn.ts); the home page starts both
+ * loading from `<head>`, so they are usually ready by the time this runs.
+ * Until the scene draws, the element shows its sky (`.hero-scene` in
+ * site.css), which also stays if the scene fails to load.
  */
 import { ZazzElement, defineZazzElement } from "@zazz-ui/core/base/zazz-element.ts";
 import { loadSdk, nextFrame, type Scene } from "./unicorn-sdk.ts";
 
-/** The scene exported from Unicorn Studio, served from `public/unicorn/`. */
-const SCENE = "/unicorn/unicorn-hero-day-night.json";
-/** The scene's canvas: hidden until it has drawn, then faded in. */
+/**
+ * The scene's canvas: hidden until it has drawn, then faded in over the sky,
+ * slowly enough that the sun, moon, and clouds arrive rather than pop in.
+ */
 const LAYER = `
   --position: absolute;
   --inset: 0;
   --opacity: 0;
   --transition: var(--default-transition-property-effects);
+  --transition-duration: 1s;
 `;
 /** A full day-to-night change; a change caught halfway takes half as long. */
 const NIGHT_MS = 2400;
@@ -82,17 +88,21 @@ class HeroScene extends ZazzElement {
   }
 
   async #run(signal: AbortSignal): Promise<void> {
+    const { sdk: sdkUrl, scene: sceneUrl } = this.dataset;
+    if (!sdkUrl || !sceneUrl) return;
     const layer = document.createElement("div");
     layer.setAttribute("style", LAYER);
     this.append(layer);
     signal.addEventListener("abort", () => layer.remove(), { once: true });
 
     let progress: number = night();
-    const sdk = await loadSdk();
+    const sdk = await loadSdk(sdkUrl);
     if (signal.aborted) return;
     const scene = await sdk.addScene({
       element: layer,
-      filePath: SCENE,
+      filePath: sceneUrl,
+      // Only changes where a project id's scene is fetched from; set for production builds regardless.
+      production: import.meta.env.PROD,
       initialVariables: {
         nightProgress: progress,
         abductProgress: 0,
