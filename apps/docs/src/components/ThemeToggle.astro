@@ -1,29 +1,109 @@
 ---
 /**
- * Light / dark / system, icons only. Behavior lives in scripts/theme-toggle.ts
- * (`<theme-toggle>`), which names each instance's radios and checks the
- * stored choice. The header renders this on every page, so the script below
- * is on every page too.
+ * Light / dark / system. The default is a toggle group of icons; `variant="menu"`
+ * is one icon button (the current choice's icon) opening a menu of the three,
+ * for the narrow header. Behavior lives in scripts/theme-toggle.ts
+ * (`<theme-toggle>`), which names each instance's radios, checks the stored
+ * choice, and keeps every instance in step. The header renders this on every
+ * page, so the script below is on every page too.
+ *
+ * No flash on load: the kit's head script sets `data-theme` on `<html>` before
+ * first paint, so the menu's icon and check marks follow it in CSS
+ * (`.theme-toggle__*` in styles/site.css), and an inline script checks the
+ * group's radio as soon as it is parsed, before the deferred module runs.
  */
-import { Monitor, Moon, Sun } from "@lucide/astro";
+import { Check, Monitor, Moon, Sun } from "@lucide/astro";
+
+interface Props {
+  variant?: "group" | "menu";
+}
+
+const { variant = "group" } = Astro.props;
 
 const options = [
-  { value: "light", label: "Light theme", Icon: Sun },
-  { value: "dark", label: "Dark theme", Icon: Moon },
-  { value: "system", label: "System theme", Icon: Monitor },
+  { value: "light", label: "Light", Icon: Sun },
+  { value: "dark", label: "Dark", Icon: Moon },
+  { value: "system", label: "System", Icon: Monitor },
 ] as const;
 ---
 
-<theme-toggle data-ui="toggle-group" role="group" aria-label="Color theme">
-  {
-    options.map(({ value, label, Icon }) => (
-      <label data-ui="toggle" data-toggle-size="icon">
-        <input type="radio" name="theme" value={value} aria-label={label} />
-        <Icon size={16} aria-hidden="true" />
-      </label>
-    ))
-  }
-</theme-toggle>
+{
+  variant === "menu" ? (
+    <theme-toggle>
+      <ui-menu>
+        <button
+          data-ui="button"
+          data-button-variant="outline"
+          data-button-size="icon"
+          type="button"
+          popovertarget="theme-menu"
+          aria-label="Color theme"
+        >
+          {options.map(({ value, Icon }) => (
+            <Icon
+              size={18}
+              aria-hidden="true"
+              class={`theme-toggle__icon theme-toggle__icon--${value}`}
+            />
+          ))}
+        </button>
+        <div
+          id="theme-menu"
+          data-menu-slot="popover"
+          data-popover-side="bottom"
+          data-popover-align="end"
+          popover="auto"
+        >
+          <menu>
+            {options.map(({ value, label, Icon }) => (
+              <li>
+                <button
+                  data-ui="button"
+                  data-button-variant="ghost"
+                  type="button"
+                  data-theme-option={value}
+                  aria-pressed="false"
+                  style="
+                    --justify: start;
+                    --w: 100%;
+                  "
+                >
+                  <Icon size={16} aria-hidden="true" />
+                  {label}
+                  <Check
+                    size={16}
+                    aria-hidden="true"
+                    class={`theme-toggle__check theme-toggle__check--${value}`}
+                    style="--ml: auto"
+                  />
+                </button>
+              </li>
+            ))}
+          </menu>
+        </div>
+      </ui-menu>
+    </theme-toggle>
+  ) : (
+    <Fragment>
+      <theme-toggle data-ui="toggle-group" role="group" aria-label="Color theme">
+        {options.map(({ value, label, Icon }) => (
+          <label data-ui="toggle" data-toggle-size="icon">
+            <input type="radio" name="theme" value={value} aria-label={`${label} theme`} />
+            <Icon size={16} aria-hidden="true" />
+          </label>
+        ))}
+      </theme-toggle>
+      <script is:inline>
+        // Check the stored choice before first paint; theme-toggle.ts takes over once it loads.
+        (function () {
+          var group = document.currentScript.previousElementSibling;
+          var value = document.documentElement.dataset.theme || "system";
+          for (var input of group.querySelectorAll("input")) input.checked = input.value === value;
+        })();
+      </script>
+    </Fragment>
+  )
+}
 
 <script>
   import "../scripts/theme-toggle.ts";

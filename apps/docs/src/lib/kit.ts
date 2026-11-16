@@ -42,6 +42,26 @@ export function resolveWithin(root: string, relative: string): string | null {
 
 const SERVED_EXTENSIONS = new Set([".css", ".js", ".json"]);
 
+/** Whether a file name is one the site serves: a stylesheet, emitted script, or data file. */
+function isServed(name: string): boolean {
+  return SERVED_EXTENSIONS.has(path.extname(name)) && !/\.(test|d)\.[cm]?[jt]s$/.test(name);
+}
+
+/**
+ * One served kit file by its `/zazz`-relative path, read from disk at call
+ * time: `src/` first, then `dist/`. The dev server uses it so a file created
+ * after start (a new primitive's emitted script) is served without a restart;
+ * the build goes through `servedFiles()`.
+ */
+export function servedFile(relative: string): string | null {
+  if (!isServed(relative) || relative.split("/").includes("__screenshots__")) return null;
+  for (const root of [SRC_ROOT, DIST_ROOT]) {
+    const file = resolveWithin(root, relative);
+    if (file && existsSync(file) && statSync(file).isFile()) return file;
+  }
+  return null;
+}
+
 /**
  * Every file served at `/zazz/*`: the kit's `src/` stylesheets and emitted
  * scripts (what `buildHead({ base: "/zazz" })` links in previews) and, when
@@ -56,12 +76,7 @@ export function servedFiles(): { path: string; file: string }[] {
       const abs = path.join(dir, entry.name);
       const rel = prefix ? `${prefix}/${entry.name}` : entry.name;
       if (entry.isDirectory()) walk(abs, rel);
-      else if (
-        SERVED_EXTENSIONS.has(path.extname(entry.name)) &&
-        !/\.(test|d)\.[cm]?[jt]s$/.test(entry.name)
-      ) {
-        out.push({ path: rel, file: abs });
-      }
+      else if (isServed(entry.name)) out.push({ path: rel, file: abs });
     }
   };
   walk(SRC_ROOT, "");

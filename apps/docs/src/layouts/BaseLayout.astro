@@ -1,11 +1,22 @@
 ---
+import { Font } from "astro:assets";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import { siteHead } from "../lib/head.ts";
 import { ldJson, websiteLd } from "../lib/jsonld.ts";
 import { site } from "../site.config.ts";
 import og from "../assets/og.png";
+import languageData from "@zazz-ui/core/editor/zazz.language-data.json";
+import { stageScope } from "../lib/stage-scope.ts";
+import siteLook from "../styles/site-look.css?raw";
 import "../styles/site.css";
+import "../styles/site-look.css";
+
+// Examples show the kit as shipped: the stage re-declares what the site's look changes.
+const stageReset = stageScope(siteLook, {
+  ...languageData.tokens,
+  ...languageData.hooks,
+});
 
 interface Props {
   title: string;
@@ -37,6 +48,8 @@ const ogImage = new URL(og.src, site.url);
 <html lang="en" data-ui-navigation="swap">
   <head>
     <Fragment set:html={siteHead()} />
+    <Font cssVariable="--font-areal" />
+    <style is:inline set:html={stageReset}></style>
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -116,8 +129,10 @@ const ogImage = new URL(og.src, site.url);
     >
       Skip to content
     </a>
+    <ui-drawer-indent>
     <Header />
     <slot />
     <Footer />
+    </ui-drawer-indent>
   </body>
 </html>

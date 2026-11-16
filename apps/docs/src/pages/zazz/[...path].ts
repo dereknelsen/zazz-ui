@@ -2,7 +2,8 @@
  * Serves the installed kit at `/zazz/*`: `src/` for the preview iframes
  * (`buildHead({ base: "/zazz" })` links `/zazz/index.css`, `/zazz/index.js`,
  * and the per-primitive files) and `dist/` for the site's own stylesheet and
- * script. Prerendered at build; read live in `astro dev`.
+ * script. Prerendered at build. In `astro dev` the `zazz-kit-from-disk` plugin
+ * (astro.config.ts) answers first, so files created after start are served too.
  */
 import type { APIRoute, GetStaticPaths } from "astro";
 import { readFileSync } from "node:fs";

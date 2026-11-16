@@ -1,0 +1,85 @@
+---
+/**
+ * The section link lists shared by the wide sidebar and the narrow drawer.
+ * `showAnchors` adds the current page's headings under its link; `autofocusCurrent`
+ * focuses the current link when a modal opens, which scrolls it into view.
+ */
+import type { SidebarSection } from "../lib/sidebar.ts";
+
+interface Props {
+  sections: SidebarSection[];
+  showAnchors?: boolean;
+  autofocusCurrent?: boolean;
+}
+const { sections, showAnchors = false, autofocusCurrent = false } = Astro.props;
+---
+
+{
+  sections.map((section) => (
+    <section>
+      <h2
+        data-ui="text-eyebrow"
+        style="
+          --px: 3;
+          --mb: 1;
+          --text: var(--color-muted-foreground);
+        "
+      >
+        {section.title}
+      </h2>
+      <ul
+        style="
+          --display: flex-col;
+          --gap: 0.5;
+        "
+        aria-label={section.title}
+      >
+        {section.links.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              data-ui="button"
+              data-button-variant={link.current ? "muted" : "ghost"}
+              aria-current={link.current ? "page" : undefined}
+              autofocus={autofocusCurrent && link.current ? true : undefined}
+              style="
+                --justify: start;
+                --w: 100%;
+              "
+            >
+              {link.title}
+            </a>
+            {showAnchors && link.current && link.anchors.length > 0 && (
+              <ul
+                style="
+                  --display: flex-col;
+                  --pl: 3;
+                  --gap: 0.5;
+                  --mt: 0.5;
+                  --ml: 3;
+                  --border-l: 1;
+                "
+              >
+                {link.anchors.map((anchor) => (
+                  <li>
+                    <a
+                      href={anchor.href}
+                      data-ui="button"
+                      data-button-variant="ghost"
+                      style="
+                        --justify: start;
+                        --w: 100%;
+                      "
+                    >
+                      {anchor.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))
+}

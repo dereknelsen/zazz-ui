@@ -1,0 +1,163 @@
+/*
+ * site-look.css — the docs site's own look: its typeface, sharp corners, and
+ * tight headings.
+ *
+ * Everything declared here stops at the examples: lib/stage-scope.ts reads this
+ * file and puts the kit's defaults back on `[data-preview-stage]` and on the
+ * theme builder's preview, so both show the kit as shipped. A token that should
+ * reach the examples too belongs in site.css instead. Only kit tokens and hooks
+ * can be put back: a property of the site's own still inherits into them.
+ */
+
+@layer zazz.variables {
+  :root {
+    /* Areal's axes: MONO 0–100 (proportional → fully monospaced), wght 400–700,
+       slnt, DRKM. Headings sit halfway between (semi-mono) at the kit's heading
+       weight; body is the proportional default at regular weight. */
+    --font-family-heading: var(--font-areal), var(--font-sans-fallback);
+    --font-family-body: var(--font-areal), var(--font-sans-fallback);
+    --font-family-mono: var(--font-areal), var(--font-mono-fallback);
+    --font-settings-heading: "MONO" 20;
+    --font-settings-body: "MONO" 0;
+    --font-settings-mono: "MONO" 100;
+    --font-weight-heading: 500;
+
+    --radius-multiplier: 0.35;
+    --radius-corner-shape: superellipse(-infinity);
+
+    --tracking-heading-modifier: -0.04em;
+
+    --ui-switch-radius: 0;
+    --ui-slider-track-radius: 0;
+    --ui-slider-thumb-radius: 0;
+  }
+}
+
+@layer overrides {
+  /* The theme builder's Generate button: a rainbow runs along its bottom edge
+     and glows beneath it (after Magic UI's RainbowButton). */
+  .theme-builder__generate-button {
+    --_rainbow:
+      hsl(0 100% 63%), hsl(90 100% 63%), hsl(210 100% 63%), hsl(195 100% 63%), hsl(270 100% 63%);
+    --_fill: var(--color-foreground);
+    --_border-color: light-dark(var(--color-neutral-700), var(--color-neutral-200));
+
+    color: var(--color-background);
+    position: relative;
+    border: 1px solid transparent;
+    background:
+      linear-gradient(var(--_fill), var(--_fill)) padding-box,
+      /* The regular border on top, fading out toward the bottom edge so the
+         rainbow under it shows through. */
+      linear-gradient(var(--_border-color) 30%, oklch(from var(--_border-color) l c h / 0) 90%)
+        border-box,
+      linear-gradient(90deg, var(--_rainbow)) border-box;
+    background-origin: border-box;
+    background-size: 200%;
+    animation: theme-builder-rainbow 2s linear infinite;
+  }
+
+  /* The glow: under the button's face, so it shows only below it. */
+  .theme-builder__generate-button::before {
+    content: "";
+    position: absolute;
+    inset-block-end: -20%;
+    inset-inline-start: 50%;
+    z-index: -1;
+    block-size: 20%;
+    inline-size: 60%;
+    translate: -50% 0;
+    background: linear-gradient(90deg, var(--_rainbow));
+    background-size: 200%;
+    filter: blur(0.75rem);
+    animation: inherit;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* The icon and label carry the rainbow all along, hidden under their own
+     color; hovering the button fades that color out to show it. Both read one
+     shift, which the button animates, so the rainbow runs on from the icon into
+     the text. The icon is Lucide's Dices as a mask, since an inline SVG can't
+     take background-clip: text. */
+  .theme-builder__generate-button {
+    --_rainbow-size: 20rem;
+
+    animation:
+      theme-builder-rainbow 2s linear infinite,
+      theme-builder-rainbow-shift 2s linear infinite;
+  }
+
+  .theme-builder__generate-icon,
+  .theme-builder__generate-label {
+    background: linear-gradient(90deg, var(--_rainbow));
+    background-size: var(--_rainbow-size) 100%;
+    background-position-x: var(--_rainbow-shift);
+  }
+
+  .theme-builder__generate-icon {
+    inline-size: var(--ui-button-icon-size);
+    block-size: var(--ui-button-icon-size);
+    flex-shrink: 0;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='12' height='12' x='2' y='10' rx='2' ry='2'/%3E%3Cpath d='m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6M6 18h.01M10 14h.01M15 6h.01M18 9h.01'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    /* The icon's resting color: a fill over the rainbow that fades on hover. */
+    box-shadow: inset 0 0 0 1em currentColor;
+    transition: box-shadow 0.2s ease-out;
+  }
+
+  .theme-builder__generate-label {
+    /* Picks up where the icon leaves off. */
+    background-position-x: calc(var(--_rainbow-shift) - var(--ui-button-icon-size));
+    background-clip: text;
+    transition: color var(--default-transition-duration) var(--default-transition-timing-function);
+  }
+
+  @media (hover: hover) {
+    .theme-builder__generate-button:hover .theme-builder__generate-icon {
+      box-shadow: inset 0 0 0 1em transparent;
+    }
+
+    .theme-builder__generate-button:hover .theme-builder__generate-label {
+      color: transparent;
+    }
+  }
+
+  .theme-builder__generate-button:focus-visible .theme-builder__generate-icon {
+    box-shadow: inset 0 0 0 1em transparent;
+  }
+
+  .theme-builder__generate-button:focus-visible .theme-builder__generate-label {
+    color: transparent;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .theme-builder__generate-button,
+    .theme-builder__generate-button::before {
+      animation: none;
+    }
+  }
+
+  @keyframes theme-builder-rainbow {
+    from {
+      background-position: 0%;
+    }
+
+    to {
+      background-position: 200%;
+    }
+  }
+
+  @keyframes theme-builder-rainbow-shift {
+    to {
+      --_rainbow-shift: calc(-1 * var(--_rainbow-size));
+    }
+  }
+}
+
+/* Registered so the shift interpolates; unregistered it would jump. */
+@property --_rainbow-shift {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}

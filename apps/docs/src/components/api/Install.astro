@@ -48,6 +48,7 @@ const methods = [
       --space-y: 4;
       --w: 100%;
     ">
+
     <div data-tabs-slot="list" role="tablist" aria-label="Install method">
       <div data-tabs-slot="indicator" aria-hidden="true"></div>
       {
@@ -60,7 +61,23 @@ const methods = [
           </>
         ))
       }
-    </div>
+     <a
+    href={source}
+    data-ui="text-sm"
+    rel="noopener"
+    style="
+      --display: inline-flex;
+      --items: center;
+      --gap: 1.5;
+      --h: 7;
+      --text: var(--color-muted-foreground);
+      --text--hover: var(--color-foreground);
+    "
+  >
+    <GithubIcon size={14} />
+    Source
+  </a>
+  </div>
 
     <div data-tabs-slot="panel" role="tabpanel" style="--w: 100%">
       <ui-tabs style="
@@ -153,25 +170,7 @@ const methods = [
       </p>
     </div>
   </ui-tabs>
-  <a
-    href={source}
-    data-ui="text-sm"
-    rel="noopener"
-    style="
-      --position: absolute;
-      --top: 0;
-      --right: 0;
-      --display: inline-flex;
-      --items: center;
-      --gap: 1.5;
-      --h: 7;
-      --text: var(--color-muted-foreground);
-      --text--hover: var(--color-foreground);
-    "
-  >
-    <GithubIcon size={14} />
-    Source
-  </a>
+
 </div>
 
 <script>

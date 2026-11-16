@@ -2,9 +2,11 @@
 /**
  * The three-column reading layout shared by Docs and API: section sidebar,
  * the article (a `prose` block Pagefind indexes), and the page's own outline.
+ * Below `lg` the sidebar becomes a sticky bottom button that opens a drawer.
  */
 import type { MarkdownHeading } from "astro";
 import Sidebar from "../components/Sidebar.astro";
+import SidebarDrawer from "../components/SidebarDrawer.astro";
 import Toc from "../components/Toc.astro";
 import { articleLd, breadcrumbLd } from "../lib/jsonld.ts";
 import type { SidebarSection } from "../lib/sidebar.ts";
@@ -90,5 +92,7 @@ const jsonLd = [
 
       <Toc headings={headings} />
     </div>
+
+    <SidebarDrawer label={section} sections={sidebar} />
   </main>
 </BaseLayout>

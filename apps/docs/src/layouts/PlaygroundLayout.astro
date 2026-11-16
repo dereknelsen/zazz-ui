@@ -1,4 +1,5 @@
 ---
+import { Font } from "astro:assets";
 import { siteHead } from "../lib/head.ts";
 import { site } from "../site.config.ts";
 import og from "../assets/og.png";
@@ -21,6 +22,7 @@ const ogImage = new URL(og.src, site.url);
   <head>
     <Fragment set:html={siteHead()} />
     <title>{pageTitle}</title>
+    <Font cssVariable="--font-areal" />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />

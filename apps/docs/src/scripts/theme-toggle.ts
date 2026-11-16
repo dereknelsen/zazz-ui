@@ -1,6 +1,7 @@
 /**
- * `<theme-toggle>`: the light / dark / system radios in
- * components/ThemeToggle.astro. A stored choice pins `data-theme` on `<html>`
+ * `<theme-toggle>`: the light / dark / system choice in
+ * components/ThemeToggle.astro, as radios (the toggle group) or as a menu of
+ * buttons (`variant="menu"`, the narrow header). A stored choice pins `data-theme` on `<html>`
  * (the kit's head script restores it before first paint); "system" clears it so
  * the page follows the OS scheme.
  *
@@ -43,10 +44,17 @@ function apply(value: string): void {
   }
 }
 
-/** Checks `value` in every toggle on the page. */
+/**
+ * Shows `value` as the choice in every toggle on the page: the radio and the
+ * menu item's pressed state. The trigger's icon and the check marks follow
+ * `data-theme` in CSS (styles/site.css), so they are right before this runs.
+ */
 function sync(value: string): void {
   for (const input of document.querySelectorAll<HTMLInputElement>("theme-toggle input")) {
     input.checked = input.value === value;
+  }
+  for (const option of document.querySelectorAll<HTMLElement>("theme-toggle [data-theme-option]")) {
+    option.setAttribute("aria-pressed", String(option.dataset.themeOption === value));
   }
 }
 
@@ -67,8 +75,7 @@ class ThemeToggle extends ZazzElement {
     const name = `theme-toggle-${++instances}`;
     const inputs = this.querySelectorAll<HTMLInputElement>("input[type='radio']");
     for (const input of inputs) input.name = name;
-    const value = stored();
-    for (const input of inputs) input.checked = input.value === value;
+    sync(stored());
     this.addEventListener(
       "change",
       (event) => {
@@ -78,6 +85,21 @@ class ThemeToggle extends ZazzElement {
           apply(input.value);
           sync(input.value);
         });
+      },
+      { signal },
+    );
+    // The menu variant: an item sets the theme and closes the menu.
+    this.addEventListener(
+      "click",
+      (event) => {
+        const option = (event.target as Element).closest<HTMLElement>("[data-theme-option]");
+        const value = option?.dataset.themeOption;
+        if (!value) return;
+        withoutTransitions(() => {
+          apply(value);
+          sync(value);
+        });
+        option.closest<HTMLElement>("[popover]")?.hidePopover();
       },
       { signal },
     );

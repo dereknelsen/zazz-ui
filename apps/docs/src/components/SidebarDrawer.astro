@@ -1,0 +1,84 @@
+---
+/**
+ * Section navigation for Docs and API below `lg`: a menu button stuck to the
+ * bottom of the viewport that opens the links in a drawer. Render it as a child
+ * of `<main>`, not inside a grid, so it sticks for the length of the page.
+ */
+import { ChartNoAxesGantt, X } from "@lucide/astro";
+import type { SidebarSection } from "../lib/sidebar.ts";
+import SidebarNav from "./SidebarNav.astro";
+
+interface Props {
+  label: string;
+  sections: SidebarSection[];
+}
+const { label, sections } = Astro.props;
+---
+
+<div
+  style="
+    --display: block;
+    --display--lg: none;
+    --position: sticky;
+    --bottom: calc(env(safe-area-inset-bottom, 0px) + var(--space-sm));
+    --mt: 8;
+    --z: 10;
+  "
+>
+  <button
+    type="button"
+    data-ui="button"
+    data-button-variant="primary"
+    command="show-modal"
+    commandfor="section-nav"
+    style="
+      --justify: start;
+      --gap: 2;
+      --w: 100%;
+      --elevation: 4;
+    "
+  >
+    <ChartNoAxesGantt size={16} aria-hidden="true" />
+    {label} navigation
+  </button>
+</div>
+
+<dialog id="section-nav" data-ui="drawer" closedby="any" aria-labelledby="section-nav-title">
+  <div data-drawer-slot="handle"></div>
+  <div data-drawer-slot="content">
+    <header data-drawer-slot="header" style="
+        --pb: 3;
+        --border-b: 1;
+      ">
+      <h2
+        id="section-nav-title"
+        style="
+          --font-size: var(--font-size-lg);
+          --font-weight: strong;
+          --font-family: var(--font-family-heading);
+        "
+      >
+        {label}
+      </h2>
+    </header>
+    <nav
+      data-drawer-slot="body"
+      aria-label={`${label} (mobile)`}
+      style="--gap: 4"
+    >
+      <SidebarNav sections={sections} autofocusCurrent />
+    </nav>
+    <button
+      type="button"
+      data-ui="button"
+      data-drawer-slot="close"
+      data-button-size="icon"
+      data-button-variant="ghost"
+      commandfor="section-nav"
+      command="close"
+      aria-label="Close navigation"
+    >
+      <X size={16} aria-hidden="true" />
+    </button>
+  </div>
+</dialog>

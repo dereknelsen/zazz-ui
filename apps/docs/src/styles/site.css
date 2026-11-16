@@ -11,9 +11,27 @@
   :root {
     --ui-header-height: calc(var(--spacing) * 14);
   }
+
+  @media (not (hover: hover)) {
+    :root {
+      --ui-header-height: calc(var(--spacing) * 6 + var(--spacing-touch-min));
+    }
+  }
+
+  /* The site's typeface, sharp corners, and tight headings live in site-look.css:
+     those stop at the examples, while the tokens above reach them too. */
 }
 
 @layer overrides {
+  /* The kit has no variation-settings token for mono (only heading and body), so
+     code takes the axis directly: fully monospaced. */
+  code,
+  kbd,
+  samp,
+  pre {
+    font-variation-settings: "MONO" 100;
+  }
+
   /* Shiki emits both palettes as custom properties on the <pre>; follow the color scheme.
      Tokens take only their color: the background belongs to the block. */
   pre.astro-code {
@@ -73,6 +91,44 @@
   .toc__link[aria-current="true"] {
     color: var(--color-foreground);
   }
+
+  /* The theme menu's trigger icon and check mark (components/ThemeToggle.astro)
+     follow data-theme, which the head script sets before first paint; none is
+     "system". Driven from CSS so the right one shows before any script runs. */
+  .theme-toggle__icon,
+  .theme-toggle__check {
+    display: none;
+  }
+
+  :root:not([data-theme]) :is(.theme-toggle__icon--system, .theme-toggle__check--system),
+  :root[data-theme="light"] :is(.theme-toggle__icon--light, .theme-toggle__check--light),
+  :root[data-theme="dark"] :is(.theme-toggle__icon--dark, .theme-toggle__check--dark) {
+    display: revert-layer;
+  }
+}
+
+@layer overrides {
+  /* The home hero's backdrop (components/HeroScene.astro): the scene's sky,
+     sampled from stills of it, shows from first paint, and the live canvas
+     fades in over it once it has drawn (scripts/hero-scene.ts); it stays if
+     the scene never loads. Only the sky, not a still of the whole scene: the
+     scene places the sun, moon, and clouds by fractions of the viewport and
+     sizes them by its height, so no one image lines up at every size. Day or
+     night follows the same scheme test as the scene: a pinned data-theme, else
+     the OS preference. */
+  .hero-scene {
+    background: linear-gradient(#3797df, #56a4e5 30%, #9dc8f3 60%, #b8e7f7);
+  }
+
+  :root[data-theme="dark"] .hero-scene {
+    background: linear-gradient(#081030, #101039 30%, #181851 60%, #202160);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .hero-scene {
+      background: linear-gradient(#081030, #101039 30%, #181851 60%, #202160);
+    }
+  }
 }
 
 @layer overrides {
@@ -95,9 +151,12 @@
     image-rendering: pixelated;
   }
 
-  /* The card grid is packed by script (scripts/fieldnotes.ts), so the cards wait
-     for it out of sight and fade in packed instead of jumping into place. Only
-     where scripts run, and only for so long: if the script never arrives, the
+  /* The card grid is packed by script (scripts/fieldnotes-pack.ts), so the cards
+     wait for it out of sight and show packed instead of jumping into place.
+     Usually the inline pass in ThemeBuilder.astro marks them shown before they
+     ever paint hidden; they wait for <fieldnotes-demo> (scripts/fieldnotes.ts)
+     and fade in after a swap navigation or while a ?preset= theme restores.
+     Only where scripts run, and only for so long: if no script arrives, the
      plain row-aligned grid shows itself. */
   [data-fieldnotes-grid] {
     transition: opacity 0.3s ease-out;
@@ -158,10 +217,29 @@
     }
   }
 
-  /* Without corner-shape the superellipse slider would change nothing: drop it and its chip. */
+  /* In the narrow-screen sheet the form shows one section, opened from the bar:
+     the others hide, and the shown one drops its accordion row and border. */
+  .theme-builder__form--sheet {
+    & .theme-builder__section:not(.theme-builder__section--active) {
+      display: none;
+    }
+
+    & .theme-builder__section {
+      border: 0;
+
+      & > summary {
+        display: none;
+      }
+
+      &::details-content {
+        transition: none;
+      }
+    }
+  }
+
+  /* Without corner-shape the superellipse slider would change nothing: drop it. */
   @supports not (corner-shape: round) {
-    .theme-builder__corner-shape,
-    [data-theme-chip="tb-corner-shape"] {
+    .theme-builder__corner-shape {
       display: none;
     }
   }
