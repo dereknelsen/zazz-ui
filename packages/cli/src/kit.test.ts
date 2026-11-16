@@ -9,8 +9,9 @@
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import pacote from "pacote";
 import * as tar from "tar";
-import { afterAll, describe, expect, it } from "vite-plus/test";
+import { afterAll, afterEach, describe, expect, it, vi } from "vite-plus/test";
 import { ZazzError } from "./errors.ts";
 import { loadKitFromDir, resolveKit } from "./kit.ts";
 
@@ -175,5 +176,36 @@ describe("resolveKit with a file: tarball", () => {
     expect(kit.manifest.manifestVersion).toBe(1);
     expect(kit.manifest.resolveClosure(["button"])).toEqual(["kbd", "button"]);
     expect(kit.has("primitives/button/button.css")).toBe(true);
+  });
+});
+
+describe("resolveKit with an exact registry version", () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it("asks the registry once when a version list cached before the release lacks it", async () => {
+    const scratch = await tmpDir();
+    const manifest = vi
+      .spyOn(pacote, "manifest")
+      .mockRejectedValueOnce(new Error("No matching version found for @zazz-ui/core@9.9.9."))
+      .mockResolvedValueOnce({ version: "9.9.9", dist: { integrity: "sha512-x" } } as never);
+    const extract = vi.spyOn(pacote, "extract").mockRejectedValue(new Error("extract reached"));
+
+    await expect(
+      resolveKit("@zazz-ui/core@9.9.9", { cache: path.join(scratch, "cache") }),
+    ).rejects.toThrow("extract reached");
+    expect(manifest).toHaveBeenCalledTimes(2);
+    expect(manifest.mock.calls[0]![1]).toMatchObject({ preferOffline: true });
+    expect(manifest.mock.calls[1]![1]).toMatchObject({ preferOffline: false, preferOnline: true });
+    // the tarball's lookup must not fall back to the stale list either
+    expect(extract.mock.calls[0]![2]).toMatchObject({ preferOnline: true });
+  });
+
+  it("does not go online under --offline; the miss says so", async () => {
+    const scratch = await tmpDir();
+    const manifest = vi.spyOn(pacote, "manifest").mockRejectedValue(new Error("ENOTCACHED"));
+    await expect(
+      resolveKit("@zazz-ui/core@9.9.9", { cache: path.join(scratch, "cache"), offline: true }),
+    ).rejects.toThrow(ZazzError);
+    expect(manifest).toHaveBeenCalledTimes(1);
   });
 });

@@ -121,14 +121,23 @@ export async function resolveKit(spec: string, fetch: FetchOptions): Promise<Res
   // Exact published versions are immutable — a stale cache entry is correct
   // by definition. Tags and ranges re-resolve against the registry.
   const exact = !fileSpec && EXACT_VERSION.test(spec.slice(KIT_PACKAGE.length + 1));
-  const options = { ...fetch, preferOffline: exact || fetch.offline === true };
+  let options: FetchOptions = { ...fetch, preferOffline: exact || fetch.offline === true };
 
   let manifest: { version: string; dist?: { integrity?: string }; _integrity?: string };
   try {
     manifest = (await pacote.manifest(spec, options)) as typeof manifest;
   } catch (error) {
     if (fetch.offline || fetch.preferOffline) throw offlineMiss(spec);
-    throw new ZazzError(`could not resolve ${spec}: ${(error as Error).message}`);
+    if (!exact) throw new ZazzError(`could not resolve ${spec}: ${(error as Error).message}`);
+    // The version list pacote cached may predate this release, and preferOffline
+    // never revalidates it, so a version published since then looks missing.
+    // Ask the registry once (the tarball's lookup below goes online too).
+    options = { ...fetch, preferOffline: false, preferOnline: true };
+    try {
+      manifest = (await pacote.manifest(spec, options)) as typeof manifest;
+    } catch (retry) {
+      throw new ZazzError(`could not resolve ${spec}: ${(retry as Error).message}`);
+    }
   }
 
   const version = manifest.version;
