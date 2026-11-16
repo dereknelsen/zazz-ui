@@ -39,10 +39,10 @@
   .theme-builder__generate-button {
     --_rainbow:
       hsl(0 100% 63%), hsl(90 100% 63%), hsl(210 100% 63%), hsl(195 100% 63%), hsl(270 100% 63%);
-    --_fill: var(--color-foreground);
-    --_border-color: light-dark(var(--color-neutral-700), var(--color-neutral-200));
+    --_fill: var(--color-background);
+    --_border-color: light-dark(var(--color-neutral-100), var(--color-neutral-700));
 
-    color: var(--color-background);
+    color: var(--color-foreground);
     position: relative;
     border: 1px solid transparent;
     background:
