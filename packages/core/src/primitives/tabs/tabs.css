@@ -230,10 +230,10 @@
     :where(ui-tabs, [data-ui~="tabs"]) [data-tabs-slot~="indicator"] {
       position-anchor: --active-tab;
       /* physical top/left/right/bottom: anchor() only accepts physical side keywords */
-      top: calc(anchor(--active-tab top) + var(--ui-tabs-indicator-inset));
-      left: calc(anchor(--active-tab left) + var(--ui-tabs-indicator-inset));
-      right: calc(anchor(--active-tab right) + var(--ui-tabs-indicator-inset));
-      bottom: calc(anchor(--active-tab bottom) + var(--ui-tabs-indicator-inset));
+      top: calc(anchor(--active-tab top) + var(--ui-tabs-track-p) / 2);
+      left: calc(anchor(--active-tab left) + var(--ui-tabs-track-p) / 2);
+      right: calc(anchor(--active-tab right) + var(--ui-tabs-track-p) / 2);
+      bottom: calc(anchor(--active-tab bottom) + var(--ui-tabs-track-p) / 2);
     }
 
     :where(ui-tabs, [data-ui~="tabs"])

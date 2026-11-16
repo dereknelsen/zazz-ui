@@ -20,22 +20,29 @@ const { label, sections } = Astro.props;
     --display: block;
     --display--lg: none;
     --position: sticky;
-    --bottom: calc(env(safe-area-inset-bottom, 0px) + var(--space-sm));
-    --mt: 8;
+    --band: layout-bleed;
+    --pt: 8;
+    --bottom: 0;
     --z: 10;
+    --stuck-state: bottom;
   "
 >
   <button
     type="button"
     data-ui="button"
-    data-button-variant="primary"
     command="show-modal"
     commandfor="section-nav"
     style="
-      --justify: start;
+      --position: static;
+      --pb: calc(env(safe-area-inset-bottom, 0px) + var(--ui-button-py));
       --gap: 2;
       --w: 100%;
-      --elevation: 4;
+      --border-t: 1;
+      --border-t--active: 1;
+      --border-t--hover: 1;
+      --shadow-angle: 180deg;
+      --radius: 0;
+      --ui-button-border-width: 0;
     "
   >
     <ChartNoAxesGantt size={16} aria-hidden="true" />
@@ -68,17 +75,5 @@ const { label, sections } = Astro.props;
     >
       <SidebarNav sections={sections} autofocusCurrent />
     </nav>
-    <button
-      type="button"
-      data-ui="button"
-      data-drawer-slot="close"
-      data-button-size="icon"
-      data-button-variant="ghost"
-      commandfor="section-nav"
-      command="close"
-      aria-label="Close navigation"
-    >
-      <X size={16} aria-hidden="true" />
-    </button>
   </div>
 </dialog>
