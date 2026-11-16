@@ -2,6 +2,11 @@
 
 Notable changes to the `zazz-ui` CLI. The CLI versions independently of `@zazz-ui/core` (ADR-0010); the kit's own changelog is the one `update` and `diff` print.
 
+## 0.3.3 (2026-11-16)
+
+- An exact version (`update @0.14.1`, `diff @0.14.1`, `init 0.14.1`) resolves right after it is published. The CLI reads an exact version from npm's cache, and when the cached version list predated the release, it reported "No matching version found" until something like `@latest` refreshed the list. A cache miss now asks the registry once. `--offline` still never goes online.
+- The README lists `@zazz-ui/core` 0.1 through 0.14 as supported.
+
 ## 0.3.2 (2026-10-26)
 
 - `init --ts` vendors the kit's `globals.d.ts`, the ambient types the TypeScript sources check against (`window.Utils`, `Signals`, `Toaster`, `CommandEvent`). A full `update` adds it to an existing `--ts` project and keeps it current. If you copied the file in by hand, delete your copy after updating, or TypeScript reports a duplicate `EmblaCarouselType`.
