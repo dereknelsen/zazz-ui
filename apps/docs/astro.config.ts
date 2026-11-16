@@ -3,14 +3,18 @@ import sitemap from "@astrojs/sitemap";
 import { defineConfig, fontProviders } from "astro/config";
 import pagefind from "astro-pagefind";
 import { readFileSync } from "node:fs";
-import type { Plugin } from "vite";
+import type { AstroUserConfig } from "astro";
 import { ZAZZ_URL_BASE, contentType, servedFile } from "./src/lib/kit.ts";
 
 // `astro dev` computes the `/zazz/*` route's static paths once, at start, so a
 // kit file created later (a new primitive's emitted script) would 404 until a
 // restart. In dev this answers `/zazz/*` from disk first; the build still goes
 // through `src/pages/zazz/[...path].ts`.
-const kitFromDisk: Plugin = {
+// Typed from Astro's own config: the workspace's `vite` is Vite+, and checking a plugin
+// typed against it against Astro's Vite types overflows the checker (ts2321).
+type VitePlugin = NonNullable<NonNullable<AstroUserConfig["vite"]>["plugins"]>[number];
+
+const kitFromDisk: VitePlugin = {
   name: "zazz-kit-from-disk",
   apply: "serve",
   configureServer(server) {

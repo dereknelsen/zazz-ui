@@ -57,6 +57,15 @@ catalog:
 overrides:
   vite@*: "catalog:"
   vitest@*: "catalog:"
+# astro2tsx (under @astrojs/check) is WASM-only and pins @emnapi/core 1.x, but leaves
+# @napi-rs/wasm-runtime's @emnapi/runtime peer to resolution, which picks the 2.0 beta that
+# rolldown's WASM fallback brings in. The 1.x core and 2.0 runtime don't share a bridge API
+# (`this.bridge.deleteEnv is not a function`), so `astro check` crashed on load. Give it the
+# runtime that matches its core.
+packageExtensions:
+  "@astrojs/astro2tsx@0.1.3":
+    dependencies:
+      "@emnapi/runtime": 1.11.3
 peerDependencyRules:
   allowAny:
     - vite
