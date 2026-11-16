@@ -71,77 +71,87 @@
 </figure>
 
 <style>
+  /* Zazz tokens and the drawer's own hooks, except where a value has to scale with the
+     clip: the stage sizes in em (2.2cqw), and the kit's spacing and radii are rem, so
+     --fc-spacing is an em copy of --spacing and every length is a kit multiple of it.
+     The radii read the theme's --radius-multiplier, so a square theme gets a square clip. */
   .fc-dr {
-    --fc-radius: 1em;
+    --fc-spacing: 0.25em;
+    --fc-radius-sm: calc(var(--fc-spacing) * 1.5 * var(--radius-multiplier));
+    --fc-radius-md: calc(var(--fc-spacing) * 2.5 * var(--radius-multiplier));
+    --fc-radius: calc(var(--fc-spacing) * 4.5 * var(--radius-multiplier));
+    --fc-radius-xl: calc(var(--fc-spacing) * 7 * var(--radius-multiplier));
     container-type: inline-size;
     width: 100%;
     aspect-ratio: 740 / 415;
     margin: 0;
-    margin-block: 2rem;
+    margin-block: var(--space-lg);
   }
 
   .fc-dr-stage {
     position: relative;
     height: 100%;
     overflow: hidden;
+    font-family: var(--font-family-body);
     font-size: 2.2cqw;
-    color: var(--color-foreground, #18181b);
-    background-color: var(--color-muted, #f4f4f5);
-    border: 0.08em solid var(--color-border, #e4e4e7);
+    color: var(--color-foreground);
+    background-color: var(--color-muted);
+    border: 0.08em solid var(--color-border);
     border-radius: var(--fc-radius);
   }
 
   .fc-dr-body {
     display: grid;
-    grid-template-columns: 1fr 13em;
-    gap: 2em;
+    grid-template-columns: 1fr calc(var(--fc-spacing) * 52);
+    gap: calc(var(--fc-spacing) * 8);
     box-sizing: border-box;
     height: 100%;
-    padding: 1.5em 2.5em 1.5em 1.6em;
+    padding: calc(var(--fc-spacing) * 6) calc(var(--fc-spacing) * 10) calc(var(--fc-spacing) * 6)
+      calc(var(--fc-spacing) * 6);
     animation: fc-dr-loop 10s linear infinite;
   }
 
   .fc-dr-side {
     display: grid;
     align-content: center;
-    gap: 1.3em;
+    gap: calc(var(--fc-spacing) * 5);
     min-width: 0;
   }
 
   .fc-dr-code {
-    padding: 0.8em 1.1em;
-    font-family: var(--font-family-mono, ui-monospace, monospace);
+    padding: calc(var(--fc-spacing) * 3) calc(var(--fc-spacing) * 4);
+    font-family: var(--font-family-mono);
     font-size: 1em;
-    line-height: 1.5;
+    line-height: var(--leading-md);
     white-space: nowrap;
-    background-color: var(--color-card, #fff);
-    border: 0.08em solid var(--color-border, #e4e4e7);
-    border-radius: calc(var(--fc-radius) * 0.6);
+    background-color: var(--color-card);
+    border: 0.08em solid var(--color-border);
+    border-radius: var(--fc-radius-md);
   }
 
   .fc-dr-punct,
   .fc-dr-attr {
-    color: var(--color-muted-foreground, #71717a);
+    color: var(--color-muted-foreground);
   }
 
   .fc-dr-value {
-    font-weight: 600;
+    font-weight: var(--font-weight-strong);
   }
 
   /* one chip per snap point; the current one fills in */
   .fc-dr-stops {
     display: flex;
-    gap: 0.6em;
+    gap: calc(var(--fc-spacing) * 2);
   }
 
   .fc-dr-stop {
-    padding: 0.3em 0.8em;
-    font-family: var(--font-family-mono, ui-monospace, monospace);
+    padding: var(--fc-spacing) calc(var(--fc-spacing) * 3);
+    font-family: var(--font-family-mono);
     font-size: 0.95em;
-    color: var(--color-muted-foreground, #71717a);
-    background-color: var(--color-card, #fff);
-    border: 0.08em solid var(--color-border, #e4e4e7);
-    border-radius: calc(var(--fc-radius) * 0.5);
+    color: var(--color-muted-foreground);
+    background-color: var(--color-card);
+    border: 0.08em solid var(--color-border);
+    border-radius: var(--fc-radius-sm);
   }
 
   .fc-dr-stop-1 {
@@ -159,9 +169,11 @@
   /* the labels share one cell and swap instantly, never mid-fade */
   .fc-dr-labels {
     display: grid;
+    font-family: var(--font-family-heading);
     font-size: 1.15em;
-    font-weight: 600;
-    line-height: 1.3;
+    font-weight: var(--font-weight-heading);
+    line-height: var(--leading-2xl);
+    letter-spacing: var(--tracking-h5);
   }
 
   .fc-dr-label {
@@ -186,128 +198,134 @@
     animation: fc-dr-label-4 10s step-end infinite;
   }
 
-  /* the phone: bezel and screen radii are concentric, inside the stage's */
+  /* the phone: the drawer's xl radius, with the screen concentric inside the bezel */
   .fc-dr-phone {
-    --fc-dr-bezel: 0.35em;
-    --fc-dr-phone-radius: calc(var(--fc-radius) * 0.9);
+    --fc-dr-bezel: calc(var(--fc-spacing) * 1.4);
+    --fc-dr-phone-radius: var(--fc-radius-xl);
     box-sizing: border-box;
     height: 100%;
     padding: var(--fc-dr-bezel);
     /* a phone frame is near-black in either theme; the hairline lifts it off a dark stage */
-    background-color: #111113;
+    background-color: var(--color-neutral-950);
     border-radius: var(--fc-dr-phone-radius);
-    box-shadow: 0 0 0 0.06em var(--color-border, #e4e4e7);
+    box-shadow: 0 0 0 0.06em var(--color-border);
   }
 
   .fc-dr-screen {
-    --fc-dr-screen-radius: calc(var(--fc-dr-phone-radius) - var(--fc-dr-bezel));
+    --fc-dr-screen-radius: max(0em, calc(var(--fc-dr-phone-radius) - var(--fc-dr-bezel)));
     position: relative;
     height: 100%;
     overflow: hidden;
-    background-color: var(--color-background, #fff);
+    background-color: var(--color-background);
     border-radius: var(--fc-dr-screen-radius);
   }
 
   .fc-dr-page {
     display: grid;
     align-content: start;
-    gap: 0.7em;
-    padding: 1em 0.9em;
+    gap: calc(var(--fc-spacing) * 3);
+    padding: calc(var(--fc-spacing) * 4) calc(var(--fc-spacing) * 3.5);
   }
 
   .fc-dr-bar {
-    height: 0.9em;
-    margin-block-end: 0.5em;
-    background-color: var(--color-muted, #f4f4f5);
-    border-radius: 0.3em;
+    height: calc(var(--fc-spacing) * 3.5);
+    margin-block-end: calc(var(--fc-spacing) * 2);
+    background-color: var(--color-muted);
+    border-radius: var(--fc-radius-sm);
   }
 
+  /* a primary button, read through the button's hooks */
   .fc-dr-button {
     justify-self: start;
-    padding: 0.45em 0.8em;
+    padding: calc(var(--fc-spacing) * 1.8) calc(var(--fc-spacing) * 3.2);
     font-size: 0.8em;
-    font-weight: 600;
-    color: var(--color-primary-foreground, #fff);
-    background-color: var(--color-primary, #4f46e5);
-    border-radius: 0.45em;
+    font-weight: var(--font-weight-strong);
+    color: var(--color-primary-foreground);
+    background-color: var(--color-primary);
+    border-radius: var(--fc-radius-md);
   }
 
   .fc-dr-line {
-    height: 0.55em;
-    background-color: var(--color-muted, #f4f4f5);
-    border-radius: 0.3em;
+    height: calc(var(--fc-spacing) * 2.2);
+    background-color: var(--color-muted);
+    border-radius: var(--fc-radius-sm);
   }
 
   .fc-dr-line-short {
     width: 60%;
   }
 
+  /* the dialog's own backdrop color; opacity follows how much of the sheet shows */
   .fc-dr-backdrop {
     position: absolute;
     inset: 0;
-    background-color: #000;
+    background-color: var(--ui-dialog-backdrop-color);
     opacity: 0;
     animation: fc-dr-backdrop 10s linear infinite;
   }
 
-  /* 92% of the screen tall, like --ui-drawer-max-h; translate is a share of that */
+  /* 92% of the screen tall, like --ui-drawer-max-h; translate is a share of that.
+     Surface, text, and shadow are the drawer's hooks. */
   .fc-dr-sheet {
     position: absolute;
     inset-inline: 0;
     bottom: 0;
     display: grid;
     align-content: start;
-    gap: 0.55em;
+    gap: calc(var(--fc-spacing) * 2.2);
     box-sizing: border-box;
     height: 92%;
-    padding: 0.6em 0.9em;
-    background-color: var(--color-card, #fff);
+    padding: calc(var(--fc-spacing) * 2.4) calc(var(--fc-spacing) * 3.5);
+    color: var(--ui-drawer-text);
+    background-color: var(--ui-drawer-bg);
     border-radius: calc(var(--fc-dr-screen-radius) * 0.9) calc(var(--fc-dr-screen-radius) * 0.9) 0
       0;
-    border-top: 0.06em solid var(--color-border, #e4e4e7);
-    box-shadow: 0 -0.3em 1.2em rgb(0 0 0 / 0.18);
+    border-top: 0.06em solid var(--color-border);
+    box-shadow: var(--ui-drawer-shadow);
     translate: 0 100%;
     animation: fc-dr-sheet 10s linear infinite;
   }
 
+  /* the handle's size and colors are the drawer's; it darkens while dragged */
   .fc-dr-handle {
     justify-self: center;
-    width: 2.6em;
-    height: 0.28em;
-    margin-block-end: 0.35em;
-    background-color: var(--color-muted-foreground, #71717a);
-    border-radius: 1em;
-    opacity: 0.5;
+    width: calc(var(--fc-spacing) * 12);
+    height: calc(var(--fc-spacing) * 1.25);
+    margin-block-end: calc(var(--fc-spacing) * 1.2);
+    background-color: var(--ui-drawer-handle-bg);
+    border-radius: var(--radius-full);
+    animation: fc-dr-handle 10s step-end infinite;
   }
 
   .fc-dr-title {
+    font-family: var(--font-family-heading);
     font-size: 0.95em;
-    font-weight: 600;
+    font-weight: var(--font-weight-heading);
   }
 
   .fc-dr-hint {
-    margin-block-end: 0.3em;
+    margin-block-end: var(--fc-spacing);
     font-size: 0.7em;
-    color: var(--color-muted-foreground, #71717a);
+    color: var(--color-muted-foreground);
   }
 
   .fc-dr-row {
-    height: 2em;
-    background-color: var(--color-muted, #f4f4f5);
-    border-radius: 0.45em;
+    height: calc(var(--fc-spacing) * 8);
+    background-color: var(--color-muted);
+    border-radius: var(--fc-radius-md);
   }
 
-  /* a fingertip: top/left place its center */
+  /* a fingertip: top/left place its center. A real finger, so not themed. */
   .fc-dr-finger {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 1.7em;
-    height: 1.7em;
+    width: calc(var(--fc-spacing) * 6.8);
+    height: calc(var(--fc-spacing) * 6.8);
     background-color: rgb(120 120 128 / 0.45);
     border: 0.12em solid rgb(255 255 255 / 0.85);
-    border-radius: 50%;
-    box-shadow: 0 0.15em 0.5em rgb(0 0 0 / 0.25);
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-md);
     opacity: 0;
     translate: -50% -50%;
     animation: fc-dr-finger 10s linear infinite;
@@ -325,7 +343,9 @@
     }
   }
 
-  /* 0.7 = the first stop (30% showing), 0.5 the second, 0 full height */
+  /* 0.7 = the first stop (30% showing), 0.5 the second, 0 full height. The settle curve is
+     --ui-drawer-transition-timing-function, written out because a keyframe's
+     animation-timing-function ignores var(). */
   @keyframes fc-dr-sheet {
     0%,
     8% {
@@ -381,26 +401,26 @@
 
     14%,
     25% {
-      opacity: 0.2;
+      opacity: 0.3;
       animation-timing-function: linear;
     }
 
     37% {
-      opacity: 0.3;
+      opacity: 0.58;
     }
 
     43%,
     49% {
-      opacity: 0.28;
+      opacity: 0.5;
     }
 
     57%,
     68% {
-      opacity: 0.45;
+      opacity: 1;
     }
 
     70% {
-      opacity: 0.38;
+      opacity: 0.78;
       animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
     }
 
@@ -556,54 +576,84 @@
     }
   }
 
+  @keyframes fc-dr-handle {
+    0% {
+      background-color: var(--ui-drawer-handle-bg);
+    }
+
+    25% {
+      background-color: var(--ui-drawer-handle-bg--dragging);
+    }
+
+    37% {
+      background-color: var(--ui-drawer-handle-bg);
+    }
+
+    49% {
+      background-color: var(--ui-drawer-handle-bg--dragging);
+    }
+
+    51% {
+      background-color: var(--ui-drawer-handle-bg);
+    }
+
+    68% {
+      background-color: var(--ui-drawer-handle-bg--dragging);
+    }
+
+    70% {
+      background-color: var(--ui-drawer-handle-bg);
+    }
+  }
+
   @keyframes fc-dr-stop-1 {
     0% {
-      color: var(--color-muted-foreground, #71717a);
-      background-color: var(--color-card, #fff);
+      color: var(--color-muted-foreground);
+      background-color: var(--color-card);
     }
 
     14% {
-      color: var(--color-primary-foreground, #fff);
-      background-color: var(--color-primary, #4f46e5);
+      color: var(--color-primary-foreground);
+      background-color: var(--color-primary);
     }
 
     43% {
-      color: var(--color-muted-foreground, #71717a);
-      background-color: var(--color-card, #fff);
+      color: var(--color-muted-foreground);
+      background-color: var(--color-card);
     }
   }
 
   @keyframes fc-dr-stop-2 {
     0% {
-      color: var(--color-muted-foreground, #71717a);
-      background-color: var(--color-card, #fff);
+      color: var(--color-muted-foreground);
+      background-color: var(--color-card);
     }
 
     43% {
-      color: var(--color-primary-foreground, #fff);
-      background-color: var(--color-primary, #4f46e5);
+      color: var(--color-primary-foreground);
+      background-color: var(--color-primary);
     }
 
     57% {
-      color: var(--color-muted-foreground, #71717a);
-      background-color: var(--color-card, #fff);
+      color: var(--color-muted-foreground);
+      background-color: var(--color-card);
     }
   }
 
   @keyframes fc-dr-stop-3 {
     0% {
-      color: var(--color-muted-foreground, #71717a);
-      background-color: var(--color-card, #fff);
+      color: var(--color-muted-foreground);
+      background-color: var(--color-card);
     }
 
     57% {
-      color: var(--color-primary-foreground, #fff);
-      background-color: var(--color-primary, #4f46e5);
+      color: var(--color-primary-foreground);
+      background-color: var(--color-primary);
     }
 
     76% {
-      color: var(--color-muted-foreground, #71717a);
-      background-color: var(--color-card, #fff);
+      color: var(--color-muted-foreground);
+      background-color: var(--color-card);
     }
   }
 
@@ -671,12 +721,12 @@
     }
 
     .fc-dr-backdrop {
-      opacity: 0.28;
+      opacity: 0.5;
     }
 
     .fc-dr-stop-2 {
-      color: var(--color-primary-foreground, #fff);
-      background-color: var(--color-primary, #4f46e5);
+      color: var(--color-primary-foreground);
+      background-color: var(--color-primary);
     }
 
     .fc-dr-label-2 {
