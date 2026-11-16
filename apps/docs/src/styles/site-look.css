@@ -33,15 +33,35 @@
   }
 }
 
+@property --_fill {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --_border-color {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+
+/* Registered so the shift interpolates; unregistered it would jump. */
+@property --_rainbow-shift {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
 @layer overrides {
   /* The theme builder's Generate button: a rainbow runs along its bottom edge
      and glows beneath it (after Magic UI's RainbowButton). */
   .theme-builder__generate-button {
     --_rainbow:
       hsl(0 100% 63%), hsl(90 100% 63%), hsl(210 100% 63%), hsl(195 100% 63%), hsl(270 100% 63%);
-    --_fill: var(--color-background);
     --_border-color: light-dark(var(--color-neutral-100), var(--color-neutral-700));
+    --_fill: var(--color-background);
 
+    isolation: isolate;
     color: var(--color-foreground);
     position: relative;
     border: 1px solid transparent;
@@ -49,12 +69,23 @@
       linear-gradient(var(--_fill), var(--_fill)) padding-box,
       /* The regular border on top, fading out toward the bottom edge so the
          rainbow under it shows through. */
-      linear-gradient(var(--_border-color) 30%, oklch(from var(--_border-color) l c h / 0) 90%)
+      linear-gradient(var(--_border-color) 10%, oklch(from var(--_border-color) l c h / 0) 90%)
         border-box,
       linear-gradient(90deg, var(--_rainbow)) border-box;
     background-origin: border-box;
     background-size: 200%;
     animation: theme-builder-rainbow 2s linear infinite;
+    transition-duration: calc(var(--default-transition-duration) * 2);
+    transition-timing-function: var(--default-transition-timing-function);
+    transition-property: --_fill, --_border-color, background-color, border-color;
+  }
+
+  .theme-builder__generate-button:hover {
+    --_fill: oklch(from var(--color-background) l c h / 0.9);
+  }
+
+  .theme-builder__generate-button:active {
+    --_fill: oklch(from var(--color-background) l c h / 0.75);
   }
 
   /* The glow: under the button's face, so it shows only below it. */
@@ -63,16 +94,15 @@
     position: absolute;
     inset-block-end: -20%;
     inset-inline-start: 50%;
-    z-index: -1;
+    z-index: -10;
     block-size: 20%;
-    inline-size: 60%;
+    inline-size: 75%;
     translate: -50% 0;
     background: linear-gradient(90deg, var(--_rainbow));
     background-size: 200%;
     filter: blur(0.75rem);
     animation: inherit;
     pointer-events: none;
-    z-index: 10;
   }
 
   /* The icon and label carry the rainbow all along, hidden under their own
@@ -110,7 +140,8 @@
     /* Picks up where the icon leaves off. */
     background-position-x: calc(var(--_rainbow-shift) - var(--ui-button-icon-size));
     background-clip: text;
-    transition: color var(--default-transition-duration) var(--default-transition-timing-function);
+    transition: color calc(var(--default-transition-duration) * 2)
+      var(--default-transition-timing-function);
   }
 
   @media (hover: hover) {
@@ -121,6 +152,14 @@
     .theme-builder__generate-button:hover .theme-builder__generate-label {
       color: transparent;
     }
+  }
+
+  .theme-builder__generate-button:active .theme-builder__generate-icon {
+    box-shadow: inset 0 0 0 1em transparent;
+  }
+
+  .theme-builder__generate-button:active .theme-builder__generate-label {
+    color: transparent;
   }
 
   .theme-builder__generate-button:focus-visible .theme-builder__generate-icon {
@@ -153,11 +192,4 @@
       --_rainbow-shift: calc(-1 * var(--_rainbow-size));
     }
   }
-}
-
-/* Registered so the shift interpolates; unregistered it would jump. */
-@property --_rainbow-shift {
-  syntax: "<length>";
-  inherits: true;
-  initial-value: 0px;
 }
