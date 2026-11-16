@@ -17,6 +17,9 @@ import { CORNER_SHAPE } from "./corner-shape.ts";
 import { SCALE_STEPS } from "./fonts.ts";
 import { BACKGROUNDS, normalizeHex } from "./palette.ts";
 
+/** The query parameter holding the share code. */
+export const PRESET_PARAM = "preset";
+
 /** How one control turns into a number below `size` and back. */
 interface Codec {
   size: number;

@@ -226,13 +226,24 @@ export const BACKGROUNDS = {
 } as const;
 
 /** The kit's `--color-background` picks: white in light mode, neutral-900 in dark. */
-export const DEFAULT_BACKGROUND = { light: "white", dark: "900" } as const;
+export const KIT_BACKGROUND = { light: "white", dark: "900" } as const;
+
+/**
+ * The picks the builder starts on: neutral-50 in light mode, black in dark.
+ * They aren't the kit's, so a theme built from them still writes its background.
+ */
+export const DEFAULT_BACKGROUND = { light: "50", dark: "black" } as const;
 
 const backgroundVar = (pick: string) =>
   pick === "white" || pick === "black" ? `var(--color-${pick})` : `var(--color-neutral-${pick})`;
 
-/** The `--color-background` declaration for a light and a dark pick; null at the kit's default. */
-export function backgroundToken(light: string, dark: string): string | null {
-  if (light === DEFAULT_BACKGROUND.light && dark === DEFAULT_BACKGROUND.dark) return null;
+/** The `--color-background` declaration for a light and a dark pick. */
+export function backgroundDeclaration(light: string, dark: string): string {
   return `--color-background: light-dark(${backgroundVar(light)}, ${backgroundVar(dark)})`;
+}
+
+/** The `--color-background` declaration for a theme; null at the kit's own background. */
+export function backgroundToken(light: string, dark: string): string | null {
+  if (light === KIT_BACKGROUND.light && dark === KIT_BACKGROUND.dark) return null;
+  return backgroundDeclaration(light, dark);
 }

@@ -48,8 +48,14 @@ import {
   type FontRole,
 } from "../lib/fonts.ts";
 import { cornerShape, cornerShapeLabel } from "../lib/corner-shape.ts";
-import { backgroundToken, createPalette, foregroundFor, normalizeHex } from "../lib/palette.ts";
-import { decodePreset, encodePreset } from "../lib/preset.ts";
+import {
+  backgroundDeclaration,
+  backgroundToken,
+  createPalette,
+  foregroundFor,
+  normalizeHex,
+} from "../lib/palette.ts";
+import { PRESET_PARAM as PARAM, decodePreset, encodePreset } from "../lib/preset.ts";
 import {
   RANDOM_BACKGROUNDS,
   RANDOM_RANGES,
@@ -58,12 +64,10 @@ import {
   randomScales,
 } from "../lib/randomize.ts";
 
-/** The query parameter holding the share code. */
-const PARAM = "preset";
 /** How long the URL waits for input to settle: Safari throttles history updates, and a slider drag fires an input per step. */
 const SHARE_DELAY = 300;
-/** How the collapsed bar's chips print each control's value. */
-const CHIP_FORMAT: Record<string, (value: string) => string> = {
+/** How a number control's readout prints its value, where it differs from the raw value. */
+const READOUT_FORMAT: Record<string, (value: string) => string> = {
   "tb-spacing": (v) => `${v}rem`,
   "tb-shadow": (v) => `${v}°`,
   "tb-radius": (v) => `${v}×`,
@@ -71,16 +75,7 @@ const CHIP_FORMAT: Record<string, (value: string) => string> = {
   "tb-shadow-intensity": (v) => `${v}×`,
   "tb-shadow-blur": (v) => `${v}×`,
   "tb-shadow-distance": (v) => `${v}×`,
-  "tb-bg-light": (v) => backgroundName(v),
-  "tb-bg-dark": (v) => backgroundName(v),
-  "tb-font-heading": (v) => v.replace(/^Default.*/, "Default"),
-  "tb-font-body": (v) => v.replace(/^Default.*/, "Default"),
 };
-
-/** A background pick as the chips print it: White, Black, or the neutral stop. */
-function backgroundName(pick: string): string {
-  return pick === "white" ? "White" : pick === "black" ? "Black" : `Neutral ${pick}`;
-}
 
 /** The class on the preview wrapper the live theme is scoped to. */
 const PREVIEW = "fieldnotes__preview";
@@ -145,6 +140,7 @@ class ThemeBuilder extends ZazzElement {
     const panel = q<HTMLElement>("[data-theme-panel]");
     const sheet = q<HTMLElement>("[data-theme-sheet]");
     const dialog = q<HTMLDialogElement>("dialog#tb-sheet");
+    const title = q<HTMLElement>("[data-theme-sheet-title]");
 
     // The hex fields' initial values are the defaults (ThemeBuilder.astro copies them from _variables.css).
     const defaults = Object.fromEntries(
@@ -370,7 +366,8 @@ class ThemeBuilder extends ZazzElement {
         )) {
           swatch.toggleAttribute("aria-current", Number(swatch.dataset.stop) === stop);
           // The panel sits outside the preview's scope, so the strip is painted from
-          // the generated palette itself, and from the kit's tokens when unchanged.
+          // the generated palette itself, and from the kit's tokens when unchanged
+          // (ThemeBuilder.astro puts the kit's colors back on the strips).
           const at = swatch.dataset.stop!;
           swatch.style.setProperty("--bg", swatches?.[at] ?? `var(--color-${name}-${at})`);
         }
@@ -396,10 +393,9 @@ class ThemeBuilder extends ZazzElement {
       }
 
       // Background: a light and a dark pick from the neutral ends, in one light-dark().
-      const background = backgroundToken(
-        q<HTMLSelectElement>('[data-theme-bg="light"]')?.value ?? "",
-        q<HTMLSelectElement>('[data-theme-bg="dark"]')?.value ?? "",
-      );
+      const bgLight = q<HTMLSelectElement>('[data-theme-bg="light"]')?.value ?? "";
+      const bgDark = q<HTMLSelectElement>('[data-theme-bg="dark"]')?.value ?? "";
+      const background = backgroundToken(bgLight, bgDark);
       if (background) lines.push(background);
 
       // Single colors (the shadow color): a hex field that writes its token as is.
@@ -437,33 +433,23 @@ class ThemeBuilder extends ZazzElement {
         : "";
       // Live, the same block is scoped to the preview, which re-declares the kit's
       // derived tokens (ThemeBuilder.astro) so they recompute there; the copy stays :root.
-      output.textContent = css.replace(":root", `.${PREVIEW}`);
+      // The preview starts on the builder's default background (ThemeBuilder.astro),
+      // so it's told the background even when the theme leaves the kit's in place.
+      output.textContent = `${css.replace(":root", `.${PREVIEW}`)}.${PREVIEW} { ${backgroundDeclaration(bgLight, bgDark)}; }\n`;
       if (preview) preview.textContent = css || "/* No changes yet */";
       if (copy) copy.disabled = !css;
-      if (reset) reset.disabled = !css && !fields().some(changed);
+      // The default background writes a line too, so css alone doesn't mean a change.
+      if (reset) reset.disabled = !fields().some(changed);
       for (const proxy of this.querySelectorAll<HTMLButtonElement>("[data-theme-copy-proxy]")) {
         proxy.disabled = !css;
       }
       for (const proxy of this.querySelectorAll<HTMLButtonElement>("[data-theme-reset-proxy]")) {
-        proxy.disabled = !css && !fields().some(changed);
+        proxy.disabled = !fields().some(changed);
       }
-      // A number control's readout, where it has one, prints like its chip.
+      // A number control's readout, where it has one.
       for (const input of this.querySelectorAll<HTMLInputElement>("input[data-theme-number]")) {
         const out = q<HTMLOutputElement>(`output[for='${input.id}']`);
-        if (out) out.value = CHIP_FORMAT[input.id]?.(input.value) ?? input.value;
-      }
-      // The collapsed bar's chips mirror the controls.
-      for (const chip of this.querySelectorAll<HTMLElement>("[data-theme-chip]")) {
-        const input = q<Field>(`#${chip.dataset.themeChip}`);
-        if (!input) continue;
-        const value = chip.querySelector<HTMLElement>("[data-theme-chip-value]");
-        if (value) value.textContent = CHIP_FORMAT[input.id]?.(input.value) ?? input.value;
-        const colored = input.dataset.themeHex ?? input.dataset.themeToken;
-        const hex = colored ? normalizeHex(input.value) : null;
-        if (hex)
-          chip
-            .querySelector<HTMLElement>("[data-theme-chip-swatch]")
-            ?.style.setProperty("--bg", hex);
+        if (out) out.value = READOUT_FORMAT[input.id]?.(input.value) ?? input.value;
       }
     };
 
@@ -475,6 +461,8 @@ class ThemeBuilder extends ZazzElement {
       const host = inline ? panel : sheet;
       if (form.parentElement === host) return;
       host.append(form);
+      // Inline, every section shows again as an accordion.
+      if (inline) form.classList.remove("theme-builder__form--sheet");
       // Inside the sheet the dialog is the surface: the card loses its outline and padding.
       form.toggleAttribute("data-card-variant", inline);
       if (inline) form.setAttribute("data-card-variant", "outline");
@@ -485,27 +473,27 @@ class ThemeBuilder extends ZazzElement {
     resized.observe(this);
     signal.addEventListener("abort", () => resized.disconnect(), { once: true });
 
-    // A chip opens the sheet on its control; the bar's actions drive the form's.
+    // A section button opens the sheet on that section; the bar's actions drive the form's.
     this.addEventListener(
       "click",
       (event) => {
         const target = event.target as Element;
-        const chip = target.closest<HTMLElement>("[data-theme-chip]");
-        if (chip) {
-          const input = q<HTMLInputElement>(`#${chip.dataset.themeChip}`);
-          // The control may sit in a closed accordion section: open it, focus without
-          // scrolling (the section is still 0 tall), and bring the control into view
-          // once the open transition ends, or after a beat if nothing animates.
-          const section = input?.closest("details");
-          const opening = section && !section.open;
-          if (section) section.open = true;
-          requestAnimationFrame(() => {
-            input?.focus({ preventScroll: opening ?? false });
-            if (!opening || !input) return;
-            const reveal = () => input.scrollIntoView({ block: "nearest" });
-            section.addEventListener("transitionend", reveal, { once: true, signal });
-            setTimeout(reveal, 400);
-          });
+        const opener = target.closest<HTMLElement>("[data-theme-section-open]");
+        if (opener) {
+          // The sheet shows just the chosen section, titled with its name and
+          // without its accordion row (site.css): the section opens so its
+          // fields show, and the body starts at the top.
+          const id = opener.dataset.themeSectionOpen;
+          form.classList.add("theme-builder__form--sheet");
+          for (const section of form.querySelectorAll<HTMLDetailsElement>(
+            "details[data-theme-section]",
+          )) {
+            const active = section.dataset.themeSection === id;
+            section.classList.toggle("theme-builder__section--active", active);
+            if (active) section.open = true;
+          }
+          if (title) title.textContent = opener.textContent?.trim() ?? title.textContent;
+          sheet?.scrollTo({ top: 0 });
         }
         const wand = target.closest<HTMLElement>("[data-theme-pair]");
         if (wand) {

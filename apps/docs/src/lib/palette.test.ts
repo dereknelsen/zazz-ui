@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vite-plus/test";
 import {
   BACKGROUNDS,
+  DEFAULT_BACKGROUND,
   STOPS,
   backgroundToken,
   createPalette,
@@ -133,6 +134,12 @@ describe("BACKGROUNDS", () => {
 describe("backgroundToken", () => {
   it("is null at the kit's own background", () => {
     expect(backgroundToken("white", "900")).toBeNull();
+  });
+
+  it("writes the builder's default, since it isn't the kit's", () => {
+    expect(backgroundToken(DEFAULT_BACKGROUND.light, DEFAULT_BACKGROUND.dark)).toBe(
+      "--color-background: light-dark(var(--color-neutral-50), var(--color-black))",
+    );
   });
 
   it("pairs the light and dark picks in one light-dark()", () => {

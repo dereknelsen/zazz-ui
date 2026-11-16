@@ -1,11 +1,13 @@
 /**
  * Behavior for the Fieldnotes demo cards (components/fieldnotes/):
  *
- * - `<fieldnotes-demo>`: packs the card grid like a masonry (each card's row span
- *   is measured, on a 1px row track, so cards of any height and column span sit
- *   tight under `grid-auto-flow: dense`; without the script the grid stays a
- *   plain row-aligned grid; with it the cards stay invisible until the first
- *   pack, then fade in, see `[data-fieldnotes-packed]` in site.css), range inputs update their `<output for>`, the
+ * - `<fieldnotes-demo>`: keeps the card grid packed like a masonry (each card's
+ *   row span is measured, on a 1px row track, so cards of any height and column
+ *   span sit tight under `grid-auto-flow: dense`; scripts/fieldnotes-pack.ts).
+ *   The first pack runs inline, before the cards paint (ThemeBuilder.astro);
+ *   this element repacks as cards resize, and shows the grid after restoring a
+ *   `?preset=` theme, which the inline pass leaves hidden (`[data-fieldnotes-packed]`
+ *   in site.css). It also makes range inputs update their `<output for>`, the
  *   theme panel's card-elevation slider restyles the cards (preview only),
  *   ⌘/Ctrl+Enter in the sighting form presses its log button, and no form in
  *   the demo submits.
@@ -17,6 +19,7 @@
  * scripts/islands.ts loads it after a swap.
  */
 import { ZazzElement, defineZazzElement } from "@zazz-ui/core/base/zazz-element.ts";
+import { packGrid } from "./fieldnotes-pack.ts";
 
 class FieldnotesDemo extends ZazzElement {
   protected setup(signal: AbortSignal): void {
@@ -71,13 +74,7 @@ class FieldnotesDemo extends ZazzElement {
     }
   }
 
-  /**
-   * Measures every card into a row span (the card's bottom margin is the row
-   * gap), then closes the holes dense placement leaves: a wide card waits for
-   * every column it spans, so the card above a hole grows down to the next
-   * card in its columns (each card's `--place-content` keeps its parts at the
-   * top of the extra height).
-   */
+  /** Keeps the grid packed (scripts/fieldnotes-pack.ts) as its cards resize. */
   #pack(signal: AbortSignal): void {
     const grid = this.querySelector<HTMLElement>("[data-fieldnotes-grid]");
     if (!grid) return;
@@ -85,42 +82,15 @@ class FieldnotesDemo extends ZazzElement {
     const cards = [...grid.children].filter(
       (child): child is HTMLElement => child instanceof HTMLElement && child.tagName !== "DIALOG",
     );
-    grid.style.setProperty("--auto-rows", "1px");
-    const span = (card: HTMLElement, rows: number) =>
-      card.style.setProperty("--row-span", String(Math.max(1, Math.ceil(rows))));
 
     let frame = 0;
     const pack = () => {
       cancelAnimationFrame(frame);
       frame = 0;
-      // Measured unstretched: a box shorter than its content collapses the rows
-      // that hold scroll containers (the table), so a stretched card can't be read.
-      for (const card of cards) card.style.setProperty("--self", "start");
-      const sizes = cards.map((card) => ({
-        card,
-        height: card.getBoundingClientRect().height,
-        gap: Number.parseFloat(getComputedStyle(card).marginBlockEnd) || 0,
-      }));
-      for (const { card, height, gap } of sizes) {
-        span(card, height + gap);
-        card.style.setProperty("--self", "stretch");
-      }
-      // Placed at their natural heights; now extend each down to the card below it.
-      const rects = sizes.map(({ card }) => card.getBoundingClientRect());
-      sizes.forEach(({ card, height, gap }, i) => {
-        const a = rects[i]!;
-        let next = Infinity;
-        rects.forEach((b, j) => {
-          const below = j !== i && b.top >= a.bottom - 1;
-          const overlaps = b.left < a.right - 1 && a.left < b.right - 1;
-          if (below && overlaps) next = Math.min(next, b.top);
-        });
-        const hole = next === Infinity ? 0 : next - a.bottom - gap;
-        if (hole > 1) span(card, height + gap + hole);
-      });
+      packGrid(grid);
     };
-    // Packed before the first paint this element takes part in, so the grid is
-    // never seen row-aligned or on its bare 1px tracks.
+    // Usually packed already, inline; again here in case fonts or the kit's
+    // upgrades changed a card since.
     pack();
     // One pass per frame however many cards resized; a pass ends at the same
     // sizes it started from, so it does not re-trigger itself.
@@ -128,8 +98,13 @@ class FieldnotesDemo extends ZazzElement {
       frame ||= requestAnimationFrame(pack);
     });
     for (const card of cards) observer.observe(card);
-    // The cards are invisible until now (site.css). They show a frame later:
-    // by then a theme restored from the URL has applied and been packed too.
+    // A pass holds the columns at fixed widths, so a wider or narrower grid
+    // reaches no card until the next pass sizes them again.
+    observer.observe(grid);
+    // Unless the inline pass showed them, the cards are invisible until now
+    // (site.css): after a swap navigation, which runs no inline scripts, or
+    // with a `?preset=`. They show a frame later: by then a restored theme has
+    // applied and been packed too.
     requestAnimationFrame(() => {
       if (signal.aborted) return;
       pack();
