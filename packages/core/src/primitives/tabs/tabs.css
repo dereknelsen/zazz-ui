@@ -46,7 +46,7 @@
     --ui-tabs-indicator-radius: calc(var(--ui-tabs-track-radius) - var(--ui-tabs-track-p));
     --ui-tabs-indicator-corner-shape: var(--ui-field-corner-shape);
     --ui-tabs-indicator-shadow: none;
-    --ui-tabs-indicator-inset: var(--ui-tabs-track-p);
+    --ui-tabs-indicator-inset: calc(var(--ui-tabs-track-p) / 2);
     --ui-tabs-indicator-border-width: var(--ui-field-border-width);
     --ui-tabs-indicator-border-style: var(--ui-field-border-style);
     --ui-tabs-indicator-border-color: transparent;
@@ -230,10 +230,10 @@
     :where(ui-tabs, [data-ui~="tabs"]) [data-tabs-slot~="indicator"] {
       position-anchor: --active-tab;
       /* physical top/left/right/bottom: anchor() only accepts physical side keywords */
-      top: calc(anchor(--active-tab top) + var(--ui-tabs-track-p) / 2);
-      left: calc(anchor(--active-tab left) + var(--ui-tabs-track-p) / 2);
-      right: calc(anchor(--active-tab right) + var(--ui-tabs-track-p) / 2);
-      bottom: calc(anchor(--active-tab bottom) + var(--ui-tabs-track-p) / 2);
+      top: calc(anchor(--active-tab top) + var(--ui-tabs-indicator-inset));
+      left: calc(anchor(--active-tab left) + var(--ui-tabs-indicator-inset));
+      right: calc(anchor(--active-tab right) + var(--ui-tabs-indicator-inset));
+      bottom: calc(anchor(--active-tab bottom) + var(--ui-tabs-indicator-inset));
     }
 
     :where(ui-tabs, [data-ui~="tabs"])

@@ -3522,7 +3522,7 @@
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-indicator-inset": {
-      "value": "var(--ui-tabs-track-p)",
+      "value": "calc(var(--ui-tabs-track-p) / 2)",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-indicator-radius": {

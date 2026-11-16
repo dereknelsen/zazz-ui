@@ -61,6 +61,32 @@ describe("tabs", () => {
     );
   });
 
+  it("insets the default indicator by --ui-tabs-indicator-inset; the underline sits flush", () => {
+    const root = mount(`<div>
+      <ui-tabs data-default>${TABS("i")}</ui-tabs>
+      <ui-tabs data-underline data-tabs-variant="underline">${TABS("j")}</ui-tabs>
+      <i data-half style="display: block; width: calc(var(--ui-tabs-track-p) / 2)"></i>
+    </div>`);
+    const half =
+      Math.round(root.querySelector("[data-half]")!.getBoundingClientRect().width * 10) / 10;
+    expect(half).toBeGreaterThan(0);
+    const gaps = (selector: string) => {
+      const tabs = root.querySelector(selector)!;
+      const indicator = tabs.querySelector("[data-tabs-slot='indicator']")!.getBoundingClientRect();
+      const label = tabs.querySelector("[data-on]")!.getBoundingClientRect();
+      return [
+        indicator.top - label.top,
+        indicator.left - label.left,
+        label.right - indicator.right,
+        label.bottom - indicator.bottom,
+      ].map((gap) => Math.round(gap * 10) / 10);
+    };
+    // the default: half the track padding on every side
+    expect(gaps("[data-default]")).toEqual([half, half, half, half]);
+    // the underline: on the label's own edges, so the line meets the label's bottom
+    expect(gaps("[data-underline]")).toEqual([0, 0, 0, 0]);
+  });
+
   it("the underline variant moves the border to the start edge when vertical", () => {
     const tabs = mount(
       `<ui-tabs data-tabs-variant="underline" data-tabs-orientation="vertical">${TABS("e")}</ui-tabs>`,

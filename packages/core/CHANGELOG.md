@@ -67,7 +67,7 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 
 ### tabs
 
-- The track takes the field family's metrics: `--ui-tabs-track-p` is `--ui-field-inset-p`, `--ui-tabs-track-gap` is `--ui-field-gap`, `--ui-tabs-gap` is `--ui-field-option-gap`, and the track and indicator borders read `--ui-field-border-*`. The indicator radius is the track radius minus the track padding.
+- The track takes the field family's metrics: `--ui-tabs-track-p` is `--ui-field-inset-p`, `--ui-tabs-track-gap` is `--ui-field-gap`, `--ui-tabs-gap` is `--ui-field-option-gap`, and the track and indicator borders read `--ui-field-border-*`. The indicator radius is the track radius minus the track padding, and `--ui-tabs-indicator-inset` defaults to half the track padding, so the indicator sits just inside the checked label.
 
 ### switch
 
