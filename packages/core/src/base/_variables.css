@@ -281,39 +281,51 @@
     --font-weight-strong: 500;
     --font-weight-eyebrow: 600;
 
-    /* letter-spacing */
-    --tracking-display: -0.025em;
-    --tracking-h1: -0.025em;
-    --tracking-h2: -0.025em;
-    --tracking-h3: -0.025em;
-    --tracking-h4: -0.015em;
-    --tracking-h5: -0.01em;
-    --tracking-h6: -0.005em;
-    --tracking-2xl: -0.01em;
-    --tracking-xl: 0em;
-    --tracking-lg: 0em;
-    --tracking-md: 0em;
-    --tracking-sm: 0em;
-    --tracking-xs: 0em;
-    --tracking-2xs: 0em;
-    --tracking-eyebrow: 0.05em;
+    /* letter spacing modifiers — additive shifts, lengths with a unit (a bare 0 would
+       invalidate the calc() below). --tracking-modifier moves every role; set the
+       heading or body one to move just that group. */
+    --tracking-modifier: 0em;
+    --tracking-heading-modifier: var(--tracking-modifier);
+    --tracking-body-modifier: var(--tracking-modifier);
 
+    /* letter-spacing */
+    --tracking-display: calc(-0.025em + var(--tracking-heading-modifier));
+    --tracking-h1: calc(-0.025em + var(--tracking-heading-modifier));
+    --tracking-h2: calc(-0.025em + var(--tracking-heading-modifier));
+    --tracking-h3: calc(-0.025em + var(--tracking-heading-modifier));
+    --tracking-h4: calc(-0.015em + var(--tracking-heading-modifier));
+    --tracking-h5: calc(-0.01em + var(--tracking-heading-modifier));
+    --tracking-h6: calc(-0.005em + var(--tracking-heading-modifier));
+    --tracking-2xl: calc(-0.01em + var(--tracking-body-modifier));
+    --tracking-xl: calc(0em + var(--tracking-body-modifier));
+    --tracking-lg: calc(0em + var(--tracking-body-modifier));
+    --tracking-md: calc(0em + var(--tracking-body-modifier));
+    --tracking-sm: calc(0em + var(--tracking-body-modifier));
+    --tracking-xs: calc(0em + var(--tracking-body-modifier));
+    --tracking-2xs: calc(0em + var(--tracking-body-modifier));
+    --tracking-eyebrow: calc(0.05em + var(--tracking-body-modifier));
+
+    /* leading multipliers */
+    --leading-heading-multiplier: 1;
+    --leading-body-multiplier: 1;
+
+    /* leading */
+    --leading-display: calc(0.95 * var(--leading-heading-multiplier));
+    --leading-h1: calc(0.95 * var(--leading-heading-multiplier));
+    --leading-h2: calc(0.95 * var(--leading-heading-multiplier));
+    --leading-h3: calc(1 * var(--leading-heading-multiplier));
+    --leading-h4: calc(1 * var(--leading-heading-multiplier));
+    --leading-h5: calc(1 * var(--leading-heading-multiplier));
+    --leading-h6: calc(1 * var(--leading-heading-multiplier));
+    --leading-2xl: calc(1.25 * var(--leading-body-multiplier));
+    --leading-xl: calc(1.5 * var(--leading-body-multiplier));
+    --leading-lg: calc(1.5 * var(--leading-body-multiplier));
+    --leading-md: calc(1.6 * var(--leading-body-multiplier));
+    --leading-sm: calc(1.5 * var(--leading-body-multiplier));
+    --leading-xs: calc(1.5 * var(--leading-body-multiplier));
+    --leading-2xs: calc(1.5 * var(--leading-body-multiplier));
     /* line-height */
-    --leading-display: 0.95;
-    --leading-h1: 0.95;
-    --leading-h2: 0.95;
-    --leading-h3: 1;
-    --leading-h4: 1;
-    --leading-h5: 1;
-    --leading-h6: 1;
-    --leading-2xl: 1.25;
-    --leading-xl: 1.5;
-    --leading-lg: 1.5;
-    --leading-md: 1.6;
-    --leading-sm: 1.5;
-    --leading-xs: 1.5;
-    --leading-2xs: 1.5;
-    --leading-eyebrow: 1.2;
+    --leading-eyebrow: calc(1.2 * var(--leading-body-multiplier));
 
     /* paragraph-spacing — the space above a block in prose; the multiplier
        loosens or tightens every step at once (--ui-prose-flow scales it again per prose) */

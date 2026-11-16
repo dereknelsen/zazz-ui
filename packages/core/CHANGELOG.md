@@ -4,7 +4,10 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 
 ### base
 
+- Letter spacing has one global knob. `--tracking-modifier` (default `0em`) shifts every `--tracking-*` token by that length; `--tracking-heading-modifier` (display, h1–h6) and `--tracking-body-modifier` (2xl–2xs, eyebrow) default to it and override just their group. Give each a length with a unit.
 - New `base/gesture.ts`, the drag tracking behind toast swipes and the drawer: `trackDrag` follows one pointer on a locked axis and reports its offset and velocity, and `shouldDismiss`, `pickSnap`, `rubberBand`, and `flickDuration` decide and time the release. It ships with the primitives that use it, not in the core runtime. `data-ui-no-drag` on any element keeps a press inside it from starting a drag.
+- Line height has the same kind of knob. `--leading-heading-multiplier` and `--leading-body-multiplier` (default `1`) scale every `--leading-*` token in their group.
+- `body` applies every `--font-*-body` role token (feature settings, kerning, optical sizing, the `font-variant-*` group, variation settings, weight), so setting one on `:root` reaches all body text.
 
 ### carousel
 
@@ -38,6 +41,51 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 - `translate` and `scale` join the `<dialog>` transition list, so a dialog moved with them (the drawer's drag, a drawer stacked behind another) eases back.
 - The phone size (`--ui-dialog-mobile-size`) skips a dialog that is also a drawer.
 - `--ui-dialog-transition-delay--end` defaults to `0ms` (was `150ms`), so a dialog starts closing as soon as it is dismissed.
+
+### radio
+
+- The checked dot is centered exactly. It used to sit up to a pixel off at fractional sizes, because its own box and mask tile snapped to the pixel grid separately from the circle. The dot is now a `radial-gradient` drawn over the whole circle, at the same size as before.
+- **BREAKING** `--ui-radio-dot-mask` now covers the circle's whole padding box, not a `--ui-radio-dot-size` box. Migration: give a custom mask its own position and size, e.g. `url(star.svg) center / 50% no-repeat`.
+- `--ui-radio-border-color--checked` defaults to `--ui-field-border-color--hover` (was `--color-primary`), and `--ui-radio-dot-size` follows `--ui-radio-size` (`calc(var(--ui-radio-size) * 0.85)`).
+
+### fields
+
+- **BREAKING** `--ui-field-inset-child-radius` is now `--ui-field-inset-radius`. It is computed from the field it sits in (`--ui-field-radius` minus `--ui-field-inset-p` and the border width) instead of `--radius-sm`, so inset parts stay concentric at any radius. Migration: rename the hook.
+- **BREAKING** `--ui-field-addon-p` is now `--ui-field-inset-p`, and its default drops from `var(--spacing)` to `calc(var(--spacing) * 0.85)`. Input groups, password groups, the date picker button, and the tabs track all read it. Migration: rename the hook.
+
+### input-group
+
+- Addons, the password toggle, and the calendar picker button use `--ui-field-inset-p` and `--ui-field-inset-radius`.
+
+### password-group
+
+- The toggle uses `--ui-field-inset-p` and `--ui-field-inset-radius`.
+
+### input
+
+- `--ui-input-calendar-picker-radius` defaults to `--ui-field-inset-radius`.
+
+### tabs
+
+- The track takes the field family's metrics: `--ui-tabs-track-p` is `--ui-field-inset-p`, `--ui-tabs-track-gap` is `--ui-field-gap`, `--ui-tabs-gap` is `--ui-field-option-gap`, and the track and indicator borders read `--ui-field-border-*`. The indicator radius is the track radius minus the track padding.
+
+### switch
+
+- The thumb has a border in the field colors (it was transparent), and the checked track's border uses the field border colors instead of the track fill.
+
+### slider
+
+- The thumb is filled with `--color-primary` (was `--color-card`), with a `--ui-field-border-color` border.
+
+### button
+
+- `--ui-button-background-clip` defaults to `border-box` (was `padding-box`), so a translucent border sits over the fill instead of the page.
+
+### tooltip
+
+- The tooltip is outlined instead of shadowed: new `--ui-tooltip-border-width` (`1px`) and `--ui-tooltip-border-style` (`solid`), `--ui-tooltip-border-color` defaults to `--color-background`, and `--ui-tooltip-shadow` to `none`. Border utilities on the content apply to the arrow too.
+- The arrow is hidden by default. Set `--ui-tooltip-display: block` to show it. It is square with only its tip rounded (`--ui-tooltip-arrow-radius`, default `0`), it continues the content's border, and it points the right way in RTL.
+- The text uses the mono family (`--ui-tooltip-font-family`), and the new `--ui-tooltip-font-settings` hook sets its variation settings.
 
 ## 0.13.1 (2026-11-14)
 

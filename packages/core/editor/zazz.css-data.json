@@ -10675,6 +10675,9 @@
           "name": "var(--tracking-2xl)"
         },
         {
+          "name": "var(--tracking-body-modifier)"
+        },
+        {
           "name": "var(--tracking-display)"
         },
         {
@@ -10697,6 +10700,12 @@
         },
         {
           "name": "var(--tracking-h6)"
+        },
+        {
+          "name": "var(--tracking-heading-modifier)"
+        },
+        {
+          "name": "var(--tracking-modifier)"
         }
       ]
     },
@@ -10726,6 +10735,9 @@
           "name": "var(--tracking-2xl)"
         },
         {
+          "name": "var(--tracking-body-modifier)"
+        },
+        {
           "name": "var(--tracking-display)"
         },
         {
@@ -10748,6 +10760,12 @@
         },
         {
           "name": "var(--tracking-h6)"
+        },
+        {
+          "name": "var(--tracking-heading-modifier)"
+        },
+        {
+          "name": "var(--tracking-modifier)"
         }
       ]
     },
@@ -10777,6 +10795,9 @@
           "name": "var(--tracking-2xl)"
         },
         {
+          "name": "var(--tracking-body-modifier)"
+        },
+        {
           "name": "var(--tracking-display)"
         },
         {
@@ -10799,6 +10820,12 @@
         },
         {
           "name": "var(--tracking-h6)"
+        },
+        {
+          "name": "var(--tracking-heading-modifier)"
+        },
+        {
+          "name": "var(--tracking-modifier)"
         }
       ]
     },
@@ -10828,6 +10855,9 @@
           "name": "var(--tracking-2xl)"
         },
         {
+          "name": "var(--tracking-body-modifier)"
+        },
+        {
           "name": "var(--tracking-display)"
         },
         {
@@ -10850,6 +10880,12 @@
         },
         {
           "name": "var(--tracking-h6)"
+        },
+        {
+          "name": "var(--tracking-heading-modifier)"
+        },
+        {
+          "name": "var(--tracking-modifier)"
         }
       ]
     },
@@ -10879,6 +10915,9 @@
           "name": "var(--tracking-2xl)"
         },
         {
+          "name": "var(--tracking-body-modifier)"
+        },
+        {
           "name": "var(--tracking-display)"
         },
         {
@@ -10901,6 +10940,12 @@
         },
         {
           "name": "var(--tracking-h6)"
+        },
+        {
+          "name": "var(--tracking-heading-modifier)"
+        },
+        {
+          "name": "var(--tracking-modifier)"
         }
       ]
     },
@@ -10930,6 +10975,9 @@
           "name": "var(--tracking-2xl)"
         },
         {
+          "name": "var(--tracking-body-modifier)"
+        },
+        {
           "name": "var(--tracking-display)"
         },
         {
@@ -10952,6 +11000,12 @@
         },
         {
           "name": "var(--tracking-h6)"
+        },
+        {
+          "name": "var(--tracking-heading-modifier)"
+        },
+        {
+          "name": "var(--tracking-modifier)"
         }
       ]
     },
@@ -130112,10 +130166,6 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-field-addon-p",
-      "description": "Primitive hook: the public override surface."
-    },
-    {
       "name": "--ui-field-bg",
       "description": "Primitive hook: the public override surface."
     },
@@ -130232,7 +130282,11 @@
       "description": "Primitive hook: the public override surface."
     },
     {
-      "name": "--ui-field-inset-child-radius",
+      "name": "--ui-field-inset-p",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-field-inset-radius",
       "description": "Primitive hook: the public override surface."
     },
     {
@@ -132004,11 +132058,27 @@
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-tooltip-border-style",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-tooltip-border-width",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-tooltip-corner-shape",
       "description": "Primitive hook: the public override surface."
     },
     {
+      "name": "--ui-tooltip-display",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
       "name": "--ui-tooltip-font-family",
+      "description": "Primitive hook: the public override surface."
+    },
+    {
+      "name": "--ui-tooltip-font-settings",
       "description": "Primitive hook: the public override surface."
     },
     {

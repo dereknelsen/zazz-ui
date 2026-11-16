@@ -567,7 +567,7 @@ use case exists in an example fragment or docs page.
   be: `body:has(X) *` restyled every element on every insertion (12,307 elements, 103 ms, on a
   12k-element page; 7 without it). A `:has()` whose subject is the anchor itself
   (`:root:has(dialog:modal)`) restyles only the anchor. For a page-wide state, flag the root
-  from the script that owns it (`data-ui-dragging`) and select on the attribute; a static test
+  from the script that owns it with a `data-*` attribute and select on that; a static test
   rejects the shape.
 - **No `var()` in a universal highlight pseudo-element rule.** `::selection`, `::target-text`,
   `::highlight()`, `::spelling-error`, `::grammar-error` inherit through the highlight chain,

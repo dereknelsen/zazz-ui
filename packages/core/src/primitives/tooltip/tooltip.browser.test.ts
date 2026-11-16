@@ -65,9 +65,15 @@ describe("tooltip", () => {
     return { box, x: a.left + a.width / 2, y: a.top + a.height / 2 };
   };
 
+  it("hides the arrow unless --ui-tooltip-display turns it on", () => {
+    const root = mount(`<ui-tooltip>${TIP("g")}</ui-tooltip>`);
+    expect(style(root.querySelector("[data-tooltip-slot='arrow']")!, "display")).toBe("none");
+  });
+
   it("puts the arrow on the anchor-facing edge, mirrored in RTL", () => {
     // Centered in the viewport so every side has room and no fallback applies.
-    const root = mount(`<div style="position: fixed; inset: 40vh 40vw">
+    // The arrow is opt-in (hidden by default), so the wrapper turns it on.
+    const root = mount(`<div style="position: fixed; inset: 40vh 40vw; --ui-tooltip-display: block">
       <ui-tooltip data-ltr>${TIP("d", 'data-popover-side="left"')}</ui-tooltip>
       <ui-tooltip dir="rtl" data-rtl>${TIP("e", 'data-popover-side="left"')}</ui-tooltip>
       <ui-tooltip data-bottom>${TIP("f", 'data-popover-side="bottom"')}</ui-tooltip>
@@ -85,6 +91,29 @@ describe("tooltip", () => {
     expectNear(bottom.x, bottom.box.left + bottom.box.width / 2);
   });
 
+  it("outlines the arrow's outer edges with the content's border, utilities included", () => {
+    const root = mount(`<div>
+      <ui-tooltip data-default>${TIP("h")}</ui-tooltip>
+      <ui-tooltip data-utility>${TIP("i", 'style="--border-color: rgb(1, 2, 3); --border-width: 2px"')}</ui-tooltip>
+    </div>`);
+    for (const selector of ["[data-default]", "[data-utility]"]) {
+      const content = root.querySelector(`${selector} [data-tooltip-slot='content']`)!;
+      const arrow = root.querySelector(`${selector} [data-tooltip-slot='arrow']`)!;
+      for (const side of ["right", "bottom"]) {
+        for (const part of ["color", "style", "width"]) {
+          expect(style(arrow, `border-${side}-${part}`), `${selector} ${side} ${part}`).toBe(
+            style(content, `border-top-${part}`),
+          );
+        }
+      }
+      expect(style(arrow, "border-top-style"), selector).toBe("none");
+      expect(style(arrow, "border-left-style"), selector).toBe("none");
+    }
+    const utility = root.querySelector("[data-utility] [data-tooltip-slot='arrow']")!;
+    expect(style(utility, "border-bottom-color")).toBe("rgb(1, 2, 3)");
+    expect(style(utility, "border-bottom-width")).toBe("2px");
+  });
+
   // Waits on Lightning CSS parsing @container anchored(): see the arrow rules in tooltip.css.
   it.todo("moves the arrow when a position-try fallback flips the tooltip");
 });
@@ -97,7 +126,8 @@ describe("tooltip opening fade", () => {
   it("delays only the opening fade, not the transform, overlay, display, or closing", () => {
     const root = mount(`<ui-tooltip>${TIP("g")}</ui-tooltip>`);
     const content = root.querySelector<HTMLElement>("[data-tooltip-slot='content']")!;
-    expect(style(content, "transition-delay")).toBe("0s");
+    // closed, no property is delayed; WebKit serializes one entry per transitioned property
+    expect(new Set(style(content, "transition-delay").split(", "))).toEqual(new Set(["0s"]));
     content.showPopover();
     expect(style(content, "transition-delay")).toBe("0.034s, 0s, 0s, 0s");
     content.hidePopover();

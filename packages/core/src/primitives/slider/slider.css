@@ -46,13 +46,13 @@
     --ui-slider-fill-side: start;
 
     --ui-slider-thumb-size: max(calc(var(--spacing) * 4), var(--spacing-control-min));
-    --ui-slider-thumb-bg: var(--color-card);
+    --ui-slider-thumb-bg: var(--color-primary);
 
     /* composes into the thumb's box-shadow list with its border and ring: use a
        transparent shadow, never `none` */
     --ui-slider-thumb-shadow: var(--shadow-xs);
     --ui-slider-thumb-border-width: 1px;
-    --ui-slider-thumb-border-color: var(--color-border);
+    --ui-slider-thumb-border-color: var(--ui-field-border-color);
     --ui-slider-thumb-radius: var(--radius-full);
     --ui-slider-thumb-corner-shape: round;
   }

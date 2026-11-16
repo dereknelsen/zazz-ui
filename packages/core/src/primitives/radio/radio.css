@@ -20,12 +20,18 @@
     --ui-radio-border-style: var(--ui-field-border-style);
     --ui-radio-border-color: var(--ui-field-border-color);
     --ui-radio-border-color--hover: var(--ui-field-border-color--hover);
-    --ui-radio-border-color--checked: var(--color-primary);
+    --ui-radio-border-color--checked: var(--ui-field-border-color--hover);
     --ui-radio-radius: var(--radius-full);
     --ui-radio-corner-shape: round;
-    --ui-radio-dot-size: 1.125em;
-    --ui-radio-dot-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' fill='currentColor' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3C/svg%3E")
-      center / contain no-repeat;
+    --ui-radio-dot-size: calc(var(--ui-radio-size) * 0.85);
+    /* Drawn over the whole circle, centred: the dot's diameter is half
+       --ui-radio-dot-size (as the 24-unit icon it replaced drew it). A
+       replacement covers the circle too, e.g. `url(star.svg) center / 50% no-repeat`. */
+    --ui-radio-dot-mask: radial-gradient(
+      circle calc(var(--ui-radio-dot-size) / 4),
+      #000 calc(100% - 0.5px),
+      #0000 calc(100% + 0.5px)
+    );
   }
 }
 
@@ -116,16 +122,16 @@
   }
 
   /* masked ::before dot painted in currentColor; the :where() closes before
-     the pseudo-element, which is invalid inside it */
+     the pseudo-element, which is invalid inside it. The pseudo and its mask
+     cover the circle's whole padding box, so they snap to the pixel grid with
+     it: a dot-sized box or mask tile snaps on its own and lands up to a pixel
+     off centre at fractional sizes. */
   :where([data-ui~="radio"]:checked)::before {
     content: "";
     position: absolute;
+    inset: 0;
     pointer-events: none;
     background-color: currentColor;
-    inline-size: var(--ui-radio-dot-size);
-    block-size: var(--ui-radio-dot-size);
-    max-inline-size: 100%;
-    max-block-size: 100%;
     mask: var(--ui-radio-dot-mask);
     transition-property: background-color, opacity, transform;
     transition-duration: calc(var(--default-transition-duration) * 0.75);
@@ -133,7 +139,6 @@
     transition-timing-function: var(--default-transition-timing-function);
     transform: scale(1);
     opacity: 1;
-    will-change: transform;
 
     @starting-style {
       transform: scale(0);

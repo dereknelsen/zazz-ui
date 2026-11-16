@@ -61,7 +61,8 @@ describe("language data", () => {
     const { tokens, hooks } = languageData(sheets, SRC);
     expect(tokens["--font-size-h1"]).toMatchObject({ min: "2.2807rem", max: "4.7684rem" });
     expect(tokens["--font-size-md"]).toMatchObject({ min: "1rem", max: "1rem" });
-    expect(tokens["--leading-md"]?.value).toBe("1.6");
+    expect(tokens["--leading-md"]).toMatchObject({ min: "1.6", max: "1.6" });
+    expect(tokens["--tracking-h1"]).toMatchObject({ min: "-0.025em", max: "-0.025em" });
     expect(hooks["--ui-prose-flow"]?.value).toBe("1");
     expect(tokens["--spacing"]).toMatchObject({ min: "0.225rem", max: "0.25rem" });
   });

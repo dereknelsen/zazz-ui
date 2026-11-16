@@ -32,23 +32,23 @@
   :root {
     /* metrics default to the shared --ui-field-* family so the track matches
        adjacent fields and buttons; --ui-tabs-label-min-h is deliberately shorter */
-    --ui-tabs-gap: 0;
-    --ui-tabs-track-p: calc(var(--spacing) * 0.35);
+    --ui-tabs-gap: var(--ui-field-option-gap);
+    --ui-tabs-track-p: var(--ui-field-inset-p);
     --ui-tabs-track-radius: var(--ui-field-radius);
     --ui-tabs-track-corner-shape: var(--ui-field-corner-shape);
-    --ui-tabs-track-gap: calc(var(--spacing) * 0.35);
+    --ui-tabs-track-gap: var(--ui-field-gap);
     --ui-tabs-track-bg: var(--ui-field-bg);
-    --ui-tabs-track-border-width: 1px;
-    --ui-tabs-track-border-style: solid;
-    --ui-tabs-track-border-color: var(--color-border);
+    --ui-tabs-track-border-width: var(--ui-field-border-width);
+    --ui-tabs-track-border-style: var(--ui-field-border-style);
+    --ui-tabs-track-border-color: var(--ui-field-border-color);
 
     --ui-tabs-indicator-bg: var(--color-muted);
-    --ui-tabs-indicator-radius: var(--ui-field-inset-child-radius);
+    --ui-tabs-indicator-radius: calc(var(--ui-tabs-track-radius) - var(--ui-tabs-track-p));
     --ui-tabs-indicator-corner-shape: var(--ui-field-corner-shape);
     --ui-tabs-indicator-shadow: none;
     --ui-tabs-indicator-inset: var(--ui-tabs-track-p);
-    --ui-tabs-indicator-border-width: 1px;
-    --ui-tabs-indicator-border-style: solid;
+    --ui-tabs-indicator-border-width: var(--ui-field-border-width);
+    --ui-tabs-indicator-border-style: var(--ui-field-border-style);
     --ui-tabs-indicator-border-color: transparent;
 
     --ui-tabs-label-font-family: var(--font-family-body);

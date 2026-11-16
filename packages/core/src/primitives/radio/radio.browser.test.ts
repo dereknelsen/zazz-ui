@@ -29,10 +29,15 @@ describe("radio", () => {
       style(at("[data-primary]"), "background-color"),
     );
     // the dot is a masked ::before painted in the dot foreground
-    const dot = getComputedStyle(at("[data-checked]"), "::before");
+    const checked = at("[data-checked]") as HTMLElement;
+    const dot = getComputedStyle(checked, "::before");
     expect(dot.content).toBe('""');
-    expect(dot.maskImage).toContain("data:image/svg+xml");
-    expect(dot.backgroundColor).toBe(style(at("[data-checked]"), "color"));
+    expect(dot.maskImage).toContain("radial-gradient");
+    expect(dot.backgroundColor).toBe(style(checked, "color"));
+    // it covers the circle's padding box, so it snaps to pixels with the circle
+    // and stays centred at fractional sizes
+    expect(Number.parseFloat(dot.inlineSize)).toBeCloseTo(checked.clientWidth, 0);
+    expect(Number.parseFloat(dot.blockSize)).toBeCloseTo(checked.clientHeight, 0);
   });
 
   it("the focus ring survives a --shadow utility", async () => {

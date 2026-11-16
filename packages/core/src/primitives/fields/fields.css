@@ -48,14 +48,16 @@
     --ui-field-ring-color: var(--color-ring);
     --ui-field-radius: var(--radius-md);
     --ui-field-corner-shape: var(--radius-corner-shape);
-    --ui-field-inset-child-radius: var(--radius-sm);
+    --ui-field-inset-radius: calc(
+      var(--ui-field-radius) - var(--ui-field-inset-p) - var(--ui-field-border-width)
+    );
+    --ui-field-inset-p: calc(var(--spacing) * 0.85);
     --ui-field-h: calc(var(--spacing) * 8);
     --ui-field-font-size: var(--font-size-sm);
     --ui-field-leading: 1;
     /* a length, like --ui-field-px: several controls read it raw */
     --ui-field-py: calc(var(--spacing) * 1.75);
     --ui-field-px: calc(var(--spacing) * 2.5);
-    --ui-field-addon-p: var(--spacing);
     --ui-field-gap: calc(var(--spacing) * 2);
     --ui-field-option-gap: 1px;
     --ui-field-icon-size: calc(var(--spacing) * 4);

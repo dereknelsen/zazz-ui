@@ -15,7 +15,10 @@
  *             the delay on its first entry.
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
- * @uses       :dir(rtl): inline-side origins and slide-in mirror; the arrow uses logical insets
+ * @uses       :dir(rtl): inline-side origins, slide-in, and arrow turn mirror; the arrow uses
+ *             logical insets
+ * @uses       border-*: inherit — the arrow's two outer edges take the content's computed
+ *             border (utilities included), so it stays outlined over a matching background
  * @uses       @media not (hover: hover) — hidden on touch screens (no hover to show it, and a
  *             tap would cover the trigger's own action); keep essential text visible
  * @tokens     --ui-tooltip-* (@layer variables; read on the content slot)
@@ -25,23 +28,28 @@
   :root {
     --ui-tooltip-bg: var(--color-foreground);
     --ui-tooltip-text: var(--color-background);
-    --ui-tooltip-border-color: transparent;
+    --ui-tooltip-border-width: 1px;
+    --ui-tooltip-border-style: solid;
+    --ui-tooltip-border-color: var(--color-background);
     --ui-tooltip-radius: var(--radius-sm);
     --ui-tooltip-corner-shape: var(--radius-corner-shape);
-    --ui-tooltip-shadow: var(--shadow-sm);
+    --ui-tooltip-shadow: none;
     --ui-tooltip-px: var(--space-xs);
     --ui-tooltip-py: var(--spacing);
     --ui-tooltip-gap: var(--spacing);
     --ui-tooltip-font-family: var(--font-family-mono);
+    --ui-tooltip-font-weight: var(--font-weight-body);
+    --ui-tooltip-font-settings: var(--font-settings-body);
+
     --ui-tooltip-font-size: var(--font-size-xs);
     --ui-tooltip-leading: var(--leading-xs);
-    --ui-tooltip-font-weight: var(--font-weight-body);
     --ui-tooltip-max-w: 16ch;
 
     /* Arrow */
+    --ui-tooltip-display: none;
     --ui-tooltip-arrow-size: calc(var(--spacing) * 2);
     --ui-tooltip-arrow-color: var(--ui-tooltip-bg);
-    --ui-tooltip-arrow-radius: calc(var(--spacing) * 0.5);
+    --ui-tooltip-arrow-radius: 0;
 
     /* Reveal transitions: lighter than popover */
     --ui-tooltip-transition-duration: calc(var(--default-transition-duration) / 2);
@@ -67,6 +75,32 @@
     --ui-tooltip-my: var(--spacing);
     --ui-tooltip-mx: 0;
   }
+}
+
+@property --_tooltip-border-width {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_tooltip-border-style {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_tooltip-border-color {
+  syntax: "*";
+  inherits: false;
+}
+
+/* set on the content, read by its arrow */
+@property --_tooltip-arrow-edge {
+  syntax: "*";
+  inherits: true;
+}
+
+@property --_tooltip-arrow-turn {
+  syntax: "*";
+  inherits: false;
 }
 
 /* Popover overrides, on the tooltip content (declared on :root they would retheme
@@ -167,7 +201,23 @@
     --_py-num: var(--_py-resolved, var(--ui-tooltip-py));
     padding-block: calc(var(--_py-len) + var(--_py-num) * var(--spacing));
 
-    border: 1px solid var(--_border-color-resolved, var(--ui-tooltip-border-color));
+    border-width: var(
+      --_border-width-resolved,
+      var(--_tooltip-border-width, var(--ui-tooltip-border-width))
+    );
+    border-style: var(
+      --_border-style-resolved,
+      var(--_tooltip-border-style, var(--ui-tooltip-border-style))
+    );
+    border-color: var(
+      --_border-color-resolved,
+      var(--_tooltip-border-color, var(--ui-tooltip-border-color))
+    );
+    /* inherits: the arrow centers on the border's outer edge */
+    --_tooltip-arrow-edge: var(
+      --_border-width-resolved,
+      var(--_tooltip-border-width, var(--ui-tooltip-border-width))
+    );
     --_radius-len: var(--_radius-resolved, var(--ui-tooltip-radius));
     --_radius-num: var(--_radius-resolved, var(--ui-tooltip-radius));
     border-radius: calc(
@@ -180,6 +230,7 @@
     font-size: var(--_font-size-resolved, var(--ui-tooltip-font-size));
     line-height: var(--_leading-resolved, var(--ui-tooltip-leading));
     font-weight: var(--_font-weight-resolved, var(--ui-tooltip-font-weight));
+    font-variation-settings: var(--ui-tooltip-font-settings);
     text-wrap: balance;
   }
 
@@ -256,18 +307,34 @@
      It stays on the declared side when a position-try fallback flips the tooltip:
      container-type: anchored + @container anchored(fallback: …) would move it
      (Chromium 143+), but Lightning CSS 1.33 (vp pack, Vite 8's CSS minifier)
-     cannot parse anchored(). Add it once it can. */
+     cannot parse anchored(). Add it once it can.
+     The border: a rotated square whose physical right and bottom sides inherit the
+     content's computed border, turned so that corner (the tip) points at the anchor.
+     Its borderless inner half covers the content's border across the base, so the two
+     outlines join. clip-path / shape() would clip the border away instead. */
   :where(ui-tooltip, [data-ui~="tooltip"]) [data-tooltip-slot~="arrow"] {
-    --_arrow-offset: calc(var(--ui-tooltip-arrow-size) / -2);
+    --_arrow-offset: calc(var(--ui-tooltip-arrow-size) / -2 - var(--_tooltip-arrow-edge, 0px));
+    --_tooltip-arrow-turn: 45deg;
+    display: var(--ui-tooltip-display);
     position: absolute;
     inset-block: auto var(--_arrow-offset);
     inset-inline: 0;
     margin: 0 auto;
-    transform: rotate(45deg);
+    transform: rotate(var(--_tooltip-arrow-turn));
+    box-sizing: border-box;
     inline-size: var(--ui-tooltip-arrow-size);
     block-size: var(--ui-tooltip-arrow-size);
     background-color: var(--ui-tooltip-arrow-color);
-    border-radius: var(--ui-tooltip-arrow-radius);
+    border-top: none;
+    border-left: none;
+    border-right-width: inherit;
+    border-right-style: inherit;
+    border-right-color: inherit;
+    border-bottom-width: inherit;
+    border-bottom-style: inherit;
+    border-bottom-color: inherit;
+    /* only the tip: rounded side corners would gap where the arrow meets the edge */
+    border-radius: 0 0 var(--ui-tooltip-arrow-radius) 0;
     pointer-events: none;
   }
 
@@ -275,12 +342,14 @@
   :where(ui-tooltip, [data-ui~="tooltip"])
     [data-tooltip-slot~="content"][data-popover-side="bottom"]
     [data-tooltip-slot~="arrow"] {
+    --_tooltip-arrow-turn: 225deg;
     inset-block: var(--_arrow-offset) auto;
   }
 
   :where(ui-tooltip, [data-ui~="tooltip"])
     [data-tooltip-slot~="content"][data-popover-side="left"]
     [data-tooltip-slot~="arrow"] {
+    --_tooltip-arrow-turn: -45deg;
     inset-block: 0;
     inset-inline: auto var(--_arrow-offset);
     margin: auto 0;
@@ -289,9 +358,23 @@
   :where(ui-tooltip, [data-ui~="tooltip"])
     [data-tooltip-slot~="content"][data-popover-side="right"]
     [data-tooltip-slot~="arrow"] {
+    --_tooltip-arrow-turn: 135deg;
     inset-block: 0;
     inset-inline: var(--_arrow-offset) auto;
     margin: auto 0;
+  }
+
+  /* rotate() is physical: the inline sides' tips point the other way in RTL */
+  :where(ui-tooltip, [data-ui~="tooltip"])
+    [data-tooltip-slot~="content"][data-popover-side="left"]:dir(rtl)
+    [data-tooltip-slot~="arrow"] {
+    --_tooltip-arrow-turn: 135deg;
+  }
+
+  :where(ui-tooltip, [data-ui~="tooltip"])
+    [data-tooltip-slot~="content"][data-popover-side="right"]:dir(rtl)
+    [data-tooltip-slot~="arrow"] {
+    --_tooltip-arrow-turn: -45deg;
   }
 
   @media not (hover: hover) {

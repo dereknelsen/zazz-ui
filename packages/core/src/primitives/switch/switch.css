@@ -26,10 +26,10 @@
     --ui-switch-thumb-bg--checked: var(--color-primary-foreground);
     --ui-switch-thumb-border-width: var(--ui-field-border-width);
     --ui-switch-thumb-border-style: var(--ui-field-border-style);
-    --ui-switch-thumb-border-color: transparent;
-    --ui-switch-thumb-border-color--hover: transparent;
-    --ui-switch-thumb-border-color--checked: transparent;
-    --ui-switch-thumb-border-color--checked-hover: transparent;
+    --ui-switch-thumb-border-color: var(--ui-field-border-color);
+    --ui-switch-thumb-border-color--hover: var(--ui-field-border-color--hover);
+    --ui-switch-thumb-border-color--checked: var(--ui-field-border-color--hover);
+    --ui-switch-thumb-border-color--checked-hover: var(--ui-field-border-color--hover);
     /* the thumb is content-box: its border sits outside this size, so take it back out
        and the gap around the thumb is the same on every side */
     --ui-switch-thumb-size: calc(
@@ -48,8 +48,8 @@
     --ui-switch-track-border-style: var(--ui-field-border-style);
     --ui-switch-track-border-color: var(--ui-field-border-color);
     --ui-switch-track-border-color--hover: var(--ui-field-border-color--hover);
-    --ui-switch-track-border-color--checked: var(--ui-switch-track-bg--checked);
-    --ui-switch-track-border-color--checked-hover: var(--ui-switch-track-bg--checked-hover);
+    --ui-switch-track-border-color--checked: var(--ui-field-border-color--hover);
+    --ui-switch-track-border-color--checked-hover: var(--ui-field-border-color);
 
     /* dual-mode hooks: a scale number or a length */
     --ui-switch-radius: var(--radius-full);

@@ -194,7 +194,7 @@
     white-space: nowrap;
     block-size: max(var(--ui-field-h), var(--_touch-min));
     min-inline-size: max(var(--ui-field-h), var(--_touch-min));
-    padding-inline: var(--ui-field-addon-p);
+    padding-inline: var(--ui-field-inset-p);
   }
 
   :where([data-ui~="input-group"]) [data-input-group-slot~="addon"] > svg {
@@ -218,7 +218,7 @@
     [data-input-group-slot~="addon"][data-input-group-align="block-start"] {
     order: -2;
     flex-basis: 100%;
-    padding-block: var(--ui-field-addon-p);
+    padding-block: var(--ui-field-inset-p);
     align-items: flex-start;
   }
 
@@ -226,7 +226,7 @@
     [data-input-group-slot~="addon"][data-input-group-align="block-end"] {
     order: 2;
     flex-basis: 100%;
-    padding-block: var(--ui-field-addon-p);
+    padding-block: var(--ui-field-inset-p);
     align-items: flex-end;
   }
 
@@ -235,7 +235,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-xs);
-    padding-inline: var(--ui-field-addon-p);
+    padding-inline: var(--ui-field-inset-p);
     font-size: var(--ui-input-group-font-size);
     font-weight: var(--ui-input-group-font-weight);
     color: var(--ui-input-group-text);
@@ -250,7 +250,7 @@
   /* Buttons embedded in a group shrink to nest cleanly inside the shell */
   :where([data-ui~="input-group"]) [data-ui~="button"] {
     flex-shrink: 0;
-    border-radius: var(--ui-field-inset-child-radius);
+    border-radius: var(--ui-field-inset-radius);
     corner-shape: var(--ui-field-corner-shape);
   }
 

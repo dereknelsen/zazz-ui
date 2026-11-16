@@ -1214,7 +1214,8 @@
           "data-tooltip-slot=\"content\": hint popover (light dismiss, auto-hides sibling hints)",
           "anchor-name, position-anchor, position-area, position-try-fallbacks: explicit anchors for polyfill; data-popover-side maps to --ui-popover-position-*. Chromium (151) draws one of a newly opened anchored element's first two frames without its scroll compensation, so in a scrolled container or page the tooltip flashes far from its trigger. Opening, the fade starts 34ms (two 60Hz frames) late, so that frame paints transparent; a later one would be nearly so. A custom --ui-tooltip-transition keeps the delay on its first entry.",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners",
-          ":dir(rtl): inline-side origins and slide-in mirror; the arrow uses logical insets",
+          ":dir(rtl): inline-side origins, slide-in, and arrow turn mirror; the arrow uses logical insets",
+          "border-*: inherit — the arrow's two outer edges take the content's computed border (utilities included), so it stays outlined over a matching background",
           "@media not (hover: hover) — hidden on touch screens (no hover to show it, and a tap would cover the trigger's own action); keep essential text visible"
         ],
         "tokens": [
@@ -1397,7 +1398,7 @@
       "file": "primitives/badge/badge.css"
     },
     "--ui-button-background-clip": {
-      "value": "padding-box",
+      "value": "border-box",
       "file": "primitives/button/button.css"
     },
     "--ui-button-bg": {
@@ -2044,10 +2045,6 @@
       "value": "100%",
       "file": "primitives/drawer/drawer.css"
     },
-    "--ui-field-addon-p": {
-      "value": "var(--spacing)",
-      "file": "primitives/fields/fields.css"
-    },
     "--ui-field-bg": {
       "value": "var(--color-input)",
       "file": "primitives/fields/fields.css"
@@ -2164,8 +2161,12 @@
       "value": "calc(var(--spacing) * 4)",
       "file": "primitives/fields/fields.css"
     },
-    "--ui-field-inset-child-radius": {
-      "value": "var(--radius-sm)",
+    "--ui-field-inset-p": {
+      "value": "calc(var(--spacing) * 0.85)",
+      "file": "primitives/fields/fields.css"
+    },
+    "--ui-field-inset-radius": {
+      "value": "calc( var(--ui-field-radius) - var(--ui-field-inset-p) - var(--ui-field-border-width) )",
       "file": "primitives/fields/fields.css"
     },
     "--ui-field-label-text": {
@@ -2241,7 +2242,7 @@
       "file": "primitives/input/input.css"
     },
     "--ui-input-calendar-picker-radius": {
-      "value": "var(--ui-field-inset-child-radius)",
+      "value": "var(--ui-field-inset-radius)",
       "file": "primitives/input/input.css"
     },
     "--ui-input-calendar-picker-size": {
@@ -3049,7 +3050,7 @@
       "file": "primitives/radio/radio.css"
     },
     "--ui-radio-border-color--checked": {
-      "value": "var(--color-primary)",
+      "value": "var(--ui-field-border-color--hover)",
       "file": "primitives/radio/radio.css"
     },
     "--ui-radio-border-color--hover": {
@@ -3073,11 +3074,11 @@
       "file": "primitives/radio/radio.css"
     },
     "--ui-radio-dot-mask": {
-      "value": "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' fill='currentColor' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3C/svg%3E\") center / contain no-repeat",
+      "value": "radial-gradient( circle calc(var(--ui-radio-dot-size) / 4), #000 calc(100% - 0.5px), #0000 calc(100% + 0.5px) )",
       "file": "primitives/radio/radio.css"
     },
     "--ui-radio-dot-size": {
-      "value": "1.125em",
+      "value": "calc(var(--ui-radio-size) * 0.85)",
       "file": "primitives/radio/radio.css"
     },
     "--ui-radio-radius": {
@@ -3229,11 +3230,11 @@
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-thumb-bg": {
-      "value": "var(--color-card)",
+      "value": "var(--color-primary)",
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-thumb-border-color": {
-      "value": "var(--color-border)",
+      "value": "var(--ui-field-border-color)",
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-thumb-border-width": {
@@ -3305,19 +3306,19 @@
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-thumb-border-color": {
-      "value": "transparent",
+      "value": "var(--ui-field-border-color)",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-thumb-border-color--checked": {
-      "value": "transparent",
+      "value": "var(--ui-field-border-color--hover)",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-thumb-border-color--checked-hover": {
-      "value": "transparent",
+      "value": "var(--ui-field-border-color--hover)",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-thumb-border-color--hover": {
-      "value": "transparent",
+      "value": "var(--ui-field-border-color--hover)",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-thumb-border-style": {
@@ -3373,11 +3374,11 @@
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-track-border-color--checked": {
-      "value": "var(--ui-switch-track-bg--checked)",
+      "value": "var(--ui-field-border-color--hover)",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-track-border-color--checked-hover": {
-      "value": "var(--ui-switch-track-bg--checked-hover)",
+      "value": "var(--ui-field-border-color)",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-track-border-color--hover": {
@@ -3497,7 +3498,7 @@
       "file": "primitives/table/table.css"
     },
     "--ui-tabs-gap": {
-      "value": "0",
+      "value": "var(--ui-field-option-gap)",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-indicator-bg": {
@@ -3509,11 +3510,11 @@
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-indicator-border-style": {
-      "value": "solid",
+      "value": "var(--ui-field-border-style)",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-indicator-border-width": {
-      "value": "1px",
+      "value": "var(--ui-field-border-width)",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-indicator-corner-shape": {
@@ -3525,7 +3526,7 @@
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-indicator-radius": {
-      "value": "var(--ui-field-inset-child-radius)",
+      "value": "calc(var(--ui-tabs-track-radius) - var(--ui-tabs-track-p))",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-indicator-shadow": {
@@ -3593,15 +3594,15 @@
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-track-border-color": {
-      "value": "var(--color-border)",
+      "value": "var(--ui-field-border-color)",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-track-border-style": {
-      "value": "solid",
+      "value": "var(--ui-field-border-style)",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-track-border-width": {
-      "value": "1px",
+      "value": "var(--ui-field-border-width)",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-track-corner-shape": {
@@ -3609,11 +3610,11 @@
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-track-gap": {
-      "value": "calc(var(--spacing) * 0.35)",
+      "value": "var(--ui-field-gap)",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-track-p": {
-      "value": "calc(var(--spacing) * 0.35)",
+      "value": "var(--ui-field-inset-p)",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-track-radius": {
@@ -3921,7 +3922,7 @@
       "file": "primitives/tooltip/tooltip.css"
     },
     "--ui-tooltip-arrow-radius": {
-      "value": "calc(var(--spacing) * 0.5)",
+      "value": "0",
       "file": "primitives/tooltip/tooltip.css"
     },
     "--ui-tooltip-arrow-size": {
@@ -3933,15 +3934,31 @@
       "file": "primitives/tooltip/tooltip.css"
     },
     "--ui-tooltip-border-color": {
-      "value": "transparent",
+      "value": "var(--color-background)",
+      "file": "primitives/tooltip/tooltip.css"
+    },
+    "--ui-tooltip-border-style": {
+      "value": "solid",
+      "file": "primitives/tooltip/tooltip.css"
+    },
+    "--ui-tooltip-border-width": {
+      "value": "1px",
       "file": "primitives/tooltip/tooltip.css"
     },
     "--ui-tooltip-corner-shape": {
       "value": "var(--radius-corner-shape)",
       "file": "primitives/tooltip/tooltip.css"
     },
+    "--ui-tooltip-display": {
+      "value": "none",
+      "file": "primitives/tooltip/tooltip.css"
+    },
     "--ui-tooltip-font-family": {
       "value": "var(--font-family-mono)",
+      "file": "primitives/tooltip/tooltip.css"
+    },
+    "--ui-tooltip-font-settings": {
+      "value": "var(--font-settings-body)",
       "file": "primitives/tooltip/tooltip.css"
     },
     "--ui-tooltip-font-size": {
@@ -4001,7 +4018,7 @@
       "file": "primitives/tooltip/tooltip.css"
     },
     "--ui-tooltip-shadow": {
-      "value": "var(--shadow-sm)",
+      "value": "none",
       "file": "primitives/tooltip/tooltip.css"
     },
     "--ui-tooltip-text": {
@@ -5205,94 +5222,106 @@
       "dark": "80rem"
     },
     "--leading-2xl": {
-      "value": "1.25",
+      "value": "calc(1.25 * var(--leading-body-multiplier))",
       "file": "base/_variables.css",
-      "light": "1.25",
-      "dark": "1.25"
+      "min": "1.25",
+      "max": "1.25"
     },
     "--leading-2xs": {
-      "value": "1.5",
+      "value": "calc(1.5 * var(--leading-body-multiplier))",
       "file": "base/_variables.css",
-      "light": "1.5",
-      "dark": "1.5"
+      "min": "1.5",
+      "max": "1.5"
+    },
+    "--leading-body-multiplier": {
+      "value": "1",
+      "file": "base/_variables.css",
+      "light": "1",
+      "dark": "1"
     },
     "--leading-display": {
-      "value": "0.95",
+      "value": "calc(0.95 * var(--leading-heading-multiplier))",
       "file": "base/_variables.css",
-      "light": "0.95",
-      "dark": "0.95"
+      "min": "0.95",
+      "max": "0.95"
     },
     "--leading-eyebrow": {
-      "value": "1.2",
+      "value": "calc(1.2 * var(--leading-body-multiplier))",
       "file": "base/_variables.css",
-      "light": "1.2",
-      "dark": "1.2"
+      "min": "1.2",
+      "max": "1.2"
     },
     "--leading-h1": {
-      "value": "0.95",
+      "value": "calc(0.95 * var(--leading-heading-multiplier))",
       "file": "base/_variables.css",
-      "light": "0.95",
-      "dark": "0.95"
+      "min": "0.95",
+      "max": "0.95"
     },
     "--leading-h2": {
-      "value": "0.95",
+      "value": "calc(0.95 * var(--leading-heading-multiplier))",
       "file": "base/_variables.css",
-      "light": "0.95",
-      "dark": "0.95"
+      "min": "0.95",
+      "max": "0.95"
     },
     "--leading-h3": {
-      "value": "1",
+      "value": "calc(1 * var(--leading-heading-multiplier))",
       "file": "base/_variables.css",
-      "light": "1",
-      "dark": "1"
+      "min": "1",
+      "max": "1"
     },
     "--leading-h4": {
-      "value": "1",
+      "value": "calc(1 * var(--leading-heading-multiplier))",
       "file": "base/_variables.css",
-      "light": "1",
-      "dark": "1"
+      "min": "1",
+      "max": "1"
     },
     "--leading-h5": {
-      "value": "1",
+      "value": "calc(1 * var(--leading-heading-multiplier))",
       "file": "base/_variables.css",
-      "light": "1",
-      "dark": "1"
+      "min": "1",
+      "max": "1"
     },
     "--leading-h6": {
+      "value": "calc(1 * var(--leading-heading-multiplier))",
+      "file": "base/_variables.css",
+      "min": "1",
+      "max": "1"
+    },
+    "--leading-heading-multiplier": {
       "value": "1",
       "file": "base/_variables.css",
       "light": "1",
       "dark": "1"
     },
     "--leading-lg": {
-      "value": "1.5",
+      "value": "calc(1.5 * var(--leading-body-multiplier))",
       "file": "base/_variables.css",
-      "light": "1.5",
-      "dark": "1.5"
+      "min": "1.5",
+      "max": "1.5"
     },
     "--leading-md": {
-      "value": "1.6",
+      "value": "calc(1.6 * var(--leading-body-multiplier))",
       "file": "base/_variables.css",
-      "light": "1.6",
-      "dark": "1.6"
+      "min": "1.6",
+      "max": "1.6"
     },
     "--leading-sm": {
-      "value": "1.5",
+      "value": "calc(1.5 * var(--leading-body-multiplier))",
       "file": "base/_variables.css",
-      "light": "1.5",
-      "dark": "1.5"
+      "min": "1.5",
+      "max": "1.5"
     },
     "--leading-xl": {
-      "value": "1.5",
+      "value": "calc(1.5 * var(--leading-body-multiplier))",
       "file": "base/_variables.css",
-      "light": "1.5",
-      "dark": "1.5"
+      "min": "1.5",
+      "max": "1.5"
     },
     "--leading-xs": {
-      "value": "1.5",
+      "value": "calc(1.5 * var(--leading-body-multiplier))",
       "file": "base/_variables.css",
-      "light": "1.5",
-      "dark": "1.5"
+      "min": "1.5",
+      "max": "1.5"
     },
     "--outline-offset": {
       "value": "var(--ring-offset-width)",
@@ -5653,94 +5682,112 @@
       "dark": "linear( 0, 0.005 1.1%, 0.02 2.3%, 0.044 3.6%, 0.082 5.1%, 0.16 7.7%, 0.364 13.8%, 0.462 16.9%, 0.556 20.2%, 0.637 23.4%, 0.706 26.8%, 0.766 30.1%, 0.818 33.8%, 0.861 37.5%, 0.899 42%, 0.93 46.9%, 0.954 52.3%, 0.971 58.6%, 0.983 65.5%, 0.991 73.8%, 1 )"
     },
     "--tracking-2xl": {
-      "value": "-0.01em",
+      "value": "calc(-0.01em + var(--tracking-body-modifier))",
       "file": "base/_variables.css",
-      "light": "-0.01em",
-      "dark": "-0.01em"
+      "min": "-0.01em",
+      "max": "-0.01em"
     },
     "--tracking-2xs": {
-      "value": "0em",
+      "value": "calc(0em + var(--tracking-body-modifier))",
       "file": "base/_variables.css",
-      "light": "0em",
-      "dark": "0em"
+      "min": "0em",
+      "max": "0em"
+    },
+    "--tracking-body-modifier": {
+      "value": "var(--tracking-modifier)",
+      "file": "base/_variables.css",
+      "min": "0em",
+      "max": "0em"
     },
     "--tracking-display": {
-      "value": "-0.025em",
+      "value": "calc(-0.025em + var(--tracking-heading-modifier))",
       "file": "base/_variables.css",
-      "light": "-0.025em",
-      "dark": "-0.025em"
+      "min": "-0.025em",
+      "max": "-0.025em"
     },
     "--tracking-eyebrow": {
-      "value": "0.05em",
+      "value": "calc(0.05em + var(--tracking-body-modifier))",
       "file": "base/_variables.css",
-      "light": "0.05em",
-      "dark": "0.05em"
+      "min": "0.05em",
+      "max": "0.05em"
     },
     "--tracking-h1": {
-      "value": "-0.025em",
+      "value": "calc(-0.025em + var(--tracking-heading-modifier))",
       "file": "base/_variables.css",
-      "light": "-0.025em",
-      "dark": "-0.025em"
+      "min": "-0.025em",
+      "max": "-0.025em"
     },
     "--tracking-h2": {
-      "value": "-0.025em",
+      "value": "calc(-0.025em + var(--tracking-heading-modifier))",
       "file": "base/_variables.css",
-      "light": "-0.025em",
-      "dark": "-0.025em"
+      "min": "-0.025em",
+      "max": "-0.025em"
     },
     "--tracking-h3": {
-      "value": "-0.025em",
+      "value": "calc(-0.025em + var(--tracking-heading-modifier))",
       "file": "base/_variables.css",
-      "light": "-0.025em",
-      "dark": "-0.025em"
+      "min": "-0.025em",
+      "max": "-0.025em"
     },
     "--tracking-h4": {
-      "value": "-0.015em",
+      "value": "calc(-0.015em + var(--tracking-heading-modifier))",
       "file": "base/_variables.css",
-      "light": "-0.015em",
-      "dark": "-0.015em"
+      "min": "-0.015em",
+      "max": "-0.015em"
     },
     "--tracking-h5": {
-      "value": "-0.01em",
+      "value": "calc(-0.01em + var(--tracking-heading-modifier))",
       "file": "base/_variables.css",
-      "light": "-0.01em",
-      "dark": "-0.01em"
+      "min": "-0.01em",
+      "max": "-0.01em"
     },
     "--tracking-h6": {
-      "value": "-0.005em",
+      "value": "calc(-0.005em + var(--tracking-heading-modifier))",
       "file": "base/_variables.css",
-      "light": "-0.005em",
-      "dark": "-0.005em"
+      "min": "-0.005em",
+      "max": "-0.005em"
+    },
+    "--tracking-heading-modifier": {
+      "value": "var(--tracking-modifier)",
+      "file": "base/_variables.css",
+      "min": "0em",
+      "max": "0em"
     },
     "--tracking-lg": {
-      "value": "0em",
+      "value": "calc(0em + var(--tracking-body-modifier))",
       "file": "base/_variables.css",
-      "light": "0em",
-      "dark": "0em"
+      "min": "0em",
+      "max": "0em"
     },
     "--tracking-md": {
+      "value": "calc(0em + var(--tracking-body-modifier))",
+      "file": "base/_variables.css",
+      "min": "0em",
+      "max": "0em"
+    },
+    "--tracking-modifier": {
       "value": "0em",
       "file": "base/_variables.css",
       "light": "0em",
       "dark": "0em"
     },
     "--tracking-sm": {
-      "value": "0em",
+      "value": "calc(0em + var(--tracking-body-modifier))",
       "file": "base/_variables.css",
-      "light": "0em",
-      "dark": "0em"
+      "min": "0em",
+      "max": "0em"
     },
     "--tracking-xl": {
-      "value": "0em",
+      "value": "calc(0em + var(--tracking-body-modifier))",
       "file": "base/_variables.css",
-      "light": "0em",
-      "dark": "0em"
+      "min": "0em",
+      "max": "0em"
     },
     "--tracking-xs": {
-      "value": "0em",
+      "value": "calc(0em + var(--tracking-body-modifier))",
       "file": "base/_variables.css",
-      "light": "0em",
-      "dark": "0em"
+      "min": "0em",
+      "max": "0em"
     },
     "--typeset-2xs-max": {
       "value": "0.5787",

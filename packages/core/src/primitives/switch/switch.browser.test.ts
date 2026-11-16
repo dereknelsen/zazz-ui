@@ -68,16 +68,19 @@ describe("switch", () => {
     ).toBeCloseTo(scale(1), 1);
   });
 
-  it("borders the track from the hooks, matching the fill when checked", () => {
+  it("borders the track from the hooks, in the field's hover color when checked", () => {
     const root = mount(`<div>
       <label><input type="checkbox" role="switch" data-off /></label>
       <label><input type="checkbox" role="switch" data-on checked /></label>
+      <i data-probe style="color: var(--ui-field-border-color--hover)"></i>
     </div>`);
     const off = root.querySelector("[data-off]")!;
     const on = root.querySelector("[data-on]")!;
     expect(style(off, "border-block-start-width")).toBe("1px");
     expect(style(off, "border-block-start-style")).toBe("solid");
-    expect(style(on, "border-block-start-color")).toBe(style(on, "background-color"));
+    expect(style(on, "border-block-start-color")).toBe(
+      style(root.querySelector("[data-probe]")!, "color"),
+    );
   });
 
   it.each(["light", "dark"])("keeps the track visible on hover (%s)", (theme) => {
