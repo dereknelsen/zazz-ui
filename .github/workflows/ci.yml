@@ -1,0 +1,44 @@
+# Runs the repo's own gate (`vp run ready`: format, lint, type check, build,
+# and tests in Chromium and WebKit) on every push to main and on pull requests.
+# Firefox runs beside it without blocking until the suite is known green there.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ready:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: voidzero-dev/setup-vp@v1
+        with:
+          cache: true
+      - run: vp install
+      - run: pnpm exec playwright install --with-deps chromium webkit
+      - run: vp run ready
+
+  firefox:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: voidzero-dev/setup-vp@v1
+        with:
+          cache: true
+      - run: vp install
+      - run: pnpm exec playwright install --with-deps chromium firefox
+      - run: vp run core#test
+        env:
+          ZAZZ_BROWSERS: firefox

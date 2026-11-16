@@ -34,6 +34,11 @@ release. Add a tool name to select part of the graph. For example, run
 
 Target: latest Chrome, Firefox, and Safari, two versions back. For features below that floor: feature-detect and conditionally load a polyfill if one exists; otherwise design a graceful fallback (e.g. customizable `<select>` degrades to the native picker); if neither is practical, the feature is not viable yet. Exceptions are allowed but must be recorded (in an ADR or the component's CSS header). As of 2026-08, `sibling-index()`/`sibling-count()` is _not_ yet an exception (no stable Safari support; requires an `@supports` fallback).
 
+# Generated files and engines
+
+- After changing a primitive's CSS header, a script's `@fileoverview`, or example HTML, run `vp run generate` (the kit's editor data, then the VS Code grammar, Emmet, and snippets). Their tests compare bytes, so stale output fails `vp run ready`.
+- `vp test` runs browser tests in Chromium only. `vp run ready` adds WebKit; run a touched primitive there before calling it done: `ZAZZ_BROWSERS=webkit vp test run <path>` in `packages/core`.
+
 # Repository layout
 
 - `packages/core`: `@zazz-ui/core`, the Zazz Design Framework (published to npm; releases follow the `zazz-version-bump` skill). Components are co-located under `src/primitives/<name>/` (css + ts + example html); base layers and shared runtime under `src/base/`; entries `src/index.css` / `src/index.ts`. Scripts are TypeScript compiled in-place to readable `.js` + `.d.ts` (gitignored, published). Authoring rules: `packages/core/CONVENTIONS.styles.md` and `packages/core/CONVENTIONS.scripts.md`.

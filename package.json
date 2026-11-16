@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "ready": "vp check && vp run --no-cache lint:html && vp run --no-cache -r build && vp run --no-cache -r test",
-    "dev": "vp run core#build && vp run --parallel --log labeled -F docs -F experiments dev",
+    "ready": "vp check && vp run --no-cache lint:html && vp run --no-cache -r build && ZAZZ_BROWSERS=webkit vp run --no-cache -r test",
+    "dev": "vp run core#build && vp run --parallel --log labeled -F @zazz-ui/core -F docs -F experiments dev",
+    "generate": "vp run core#generate && vp run zazz-vscode#generate",
     "fmt:html": "eslint --fix \"**/*.html\"",
     "lint:html": "eslint \"**/*.html\"",
     "playground": "vp run experiments#dev",

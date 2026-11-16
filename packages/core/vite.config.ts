@@ -3,7 +3,8 @@ import { defineConfig } from "vite-plus";
 import { emulateTouch, mouseDown, mouseUp } from "./test/commands.ts";
 
 // Chromium always; ZAZZ_BROWSERS=webkit,firefox opts the other engines in
-// (after `pnpm exec playwright install webkit firefox`).
+// (after `pnpm exec playwright install webkit firefox`). The root `ready`
+// script adds WebKit; CI runs Firefox as a separate, non-blocking job.
 type Browser = "chromium" | "firefox" | "webkit";
 const browsers: Browser[] = [
   "chromium",
