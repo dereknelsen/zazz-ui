@@ -119,6 +119,27 @@ describe("navigation", () => {
     expect(document.activeElement).toBe(document.querySelector("h1"));
   });
 
+  it("brings the destination's head styles along, once each, before the swap", async () => {
+    const shared = document.createElement("style");
+    shared.textContent = ".shared{}";
+    document.head.append(shared);
+    try {
+      serve(
+        `<!doctype html><html data-ui-navigation="swap"><head><title>Next</title>` +
+          `<style>.shared{}</style>` +
+          `<style>.fc-clip{color:red}</style></head><body><main><h1>new</h1></main></body></html>`,
+      );
+      const event = navigate("push");
+      navigation.dispatchEvent(event);
+      await event.handler!();
+      const styles = [...document.head.querySelectorAll("style")].map((el) => el.textContent);
+      expect(styles.filter((text) => text === ".fc-clip{color:red}")).toHaveLength(1);
+      expect(styles.filter((text) => text === ".shared{}")).toHaveLength(1);
+    } finally {
+      for (const el of document.head.querySelectorAll("style")) el.remove();
+    }
+  });
+
   it("scrolls the window instantly, even under scroll-behavior: smooth, then restores it", async () => {
     document.documentElement.style.scrollBehavior = "smooth";
     serve(page(`<main><h1>new</h1></main>`));

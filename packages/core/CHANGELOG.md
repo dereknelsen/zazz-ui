@@ -1,5 +1,11 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## Unreleased
+
+### base
+
+- `data-ui-navigation="swap"` brings the destination page's stylesheets along. A `<link rel="stylesheet">` or `<style>` in its `<head>` that the current page lacks is added before the swap, and the swap waits for new links to load (up to three seconds). Per-page CSS, such as a framework's scoped component styles, used to be missing after in-page navigation until a reload. Stylesheets are never removed, so keep page-specific CSS scoped to that page's markup.
+
 ## 0.14.0 (2026-11-16)
 
 ### base

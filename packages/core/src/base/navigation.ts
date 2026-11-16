@@ -18,6 +18,14 @@ import { refreshAll } from "./zazz-element.ts";
  * element keeps its scroll offsets, and its links take `aria-current` from the
  * destination's copy, so a kept header still marks the current page.
  *
+ * The destination's stylesheets come along: a `<link rel="stylesheet">` or
+ * `<style>` in its `<head>` that this document lacks is added (a link by its
+ * URL, a style by its text), and the swap waits for new links to load, up to
+ * three seconds, so the page never shows unstyled. A framework's per-page CSS
+ * (Astro's scoped component styles) therefore applies after a swap as it does
+ * after a full load. Nothing is removed: a stylesheet a later page doesn't list
+ * stays, so keep page-specific CSS scoped to that page's markup.
+ *
  * An element whose content depends on the page (a section sidebar, a table of
  * contents) should not persist; `data-ui-persist-scroll="<id>"` renders it from
  * the destination and carries only its scroll offset. The window itself
@@ -144,6 +152,59 @@ function swapBody(next: HTMLElement): HTMLElement {
   return body;
 }
 
+/** How long a swap waits for a new stylesheet before showing the page anyway. */
+const STYLESHEET_WAIT = 3000;
+
+/**
+ * @description Adds the stylesheets in `doc`'s `<head>` that this document
+ * doesn't have: a `<link rel="stylesheet">` by its URL (resolved against `url`),
+ * a `<style>` by its text. Resolves once every added link has loaded or failed,
+ * or after {@link STYLESHEET_WAIT}.
+ *
+ * @param doc - The destination's parsed document.
+ * @param url - The destination's URL, for resolving relative `href`s.
+ * @private
+ */
+async function adoptStyles(doc: Document, url: string): Promise<void> {
+  const head = document.head;
+  const hrefs = new Set<string>();
+  for (const link of head.querySelectorAll<HTMLLinkElement>('link[rel~="stylesheet"][href]')) {
+    hrefs.add(link.href);
+  }
+  const texts = new Set<string>();
+  for (const style of head.querySelectorAll("style")) texts.add(style.textContent ?? "");
+
+  const loads: Promise<void>[] = [];
+  for (const el of doc.head.querySelectorAll('link[rel~="stylesheet"][href], style')) {
+    if (el.localName === "style") {
+      const text = el.textContent ?? "";
+      if (texts.has(text)) continue;
+      texts.add(text);
+      head.append(document.importNode(el, true));
+      continue;
+    }
+    const href = new URL(el.getAttribute("href") ?? "", url).href;
+    if (hrefs.has(href)) continue;
+    hrefs.add(href);
+    const link = document.importNode(el, true) as HTMLLinkElement;
+    link.href = href;
+    loads.push(
+      new Promise((done) => {
+        link.addEventListener("load", () => done(), { once: true });
+        link.addEventListener("error", () => done(), { once: true });
+      }),
+    );
+    head.append(link);
+  }
+  if (loads.length === 0) return;
+  let timer = 0;
+  await Promise.race([
+    Promise.all(loads),
+    new Promise<void>((done) => (timer = window.setTimeout(done, STYLESHEET_WAIT))),
+  ]);
+  window.clearTimeout(timer);
+}
+
 /**
  * @description Moves focus to the new page's primary heading so screen readers
  * announce the navigation.
@@ -256,6 +317,10 @@ if ("navigation" in window) {
           return;
         }
 
+        // The destination's own stylesheets load before it is shown.
+        await adoptStyles(doc, e.destination.url);
+        if (e.signal.aborted) return;
+
         let body = document.body;
         const update = () => {
           body = swapBody(doc.body);
@@ -295,4 +360,4 @@ if ("navigation" in window) {
   console.warn("Navigation API not supported: data-ui-navigation falls back to full page loads.");
 }
 
-export { swapBody };
+export { adoptStyles, swapBody };

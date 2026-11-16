@@ -3,12 +3,13 @@
 /**
  * @fileoverview The body swap in a real browser: a persisted element
  * is moved, not re-created, and a persisted Zazz element keeps its setup (no
- * teardown and re-setup) where `moveBefore()` exists.
+ * teardown and re-setup) where `moveBefore()` exists. The destination's head
+ * stylesheets have loaded by the time the swap shows the page.
  */
 
 import { describe, expect, it } from "vite-plus/test";
 import { ZazzElement, defineZazzElement } from "./zazz-element.ts";
-import { swapBody } from "./navigation.ts";
+import { adoptStyles, swapBody } from "./navigation.ts";
 
 const calls = new WeakMap<Element, { setup: number; teardown: number }>();
 class PersistProbe extends ZazzElement {
@@ -109,4 +110,26 @@ describe("swapBody", () => {
       expect(calls.get(live)).toEqual({ setup: 1, teardown: 0 });
     },
   );
+});
+
+describe("adoptStyles", () => {
+  it("loads a stylesheet only the destination links, and resolves once it applies", async () => {
+    const css = encodeURIComponent("[data-adopt-probe] { color: rgb(1, 2, 3) }");
+    const doc = new DOMParser().parseFromString(
+      `<head><link rel="stylesheet" href="data:text/css,${css}"></head><body></body>`,
+      "text/html",
+    );
+    document.body.innerHTML = `<p data-adopt-probe>probe</p>`;
+    const probe = document.querySelector("[data-adopt-probe]")!;
+    try {
+      await adoptStyles(doc, location.href);
+      expect(getComputedStyle(probe).color).toBe("rgb(1, 2, 3)");
+      // a second swap to a page with the same link adds nothing
+      await adoptStyles(doc, location.href);
+      expect(document.head.querySelectorAll('link[href^="data:text/css"]')).toHaveLength(1);
+    } finally {
+      for (const link of document.head.querySelectorAll('link[href^="data:text/css"]'))
+        link.remove();
+    }
+  });
 });
