@@ -6,8 +6,10 @@ This document defines how to write and structure Zazz component scripts. Follow 
 
 Applies to all script files in `src/`. Shared runtime modules live in `src/base/`:
 
+- `carousel.ts`
+- `carousel-scroll.ts`
 - `dialog-lifecycle.ts`
-- `embla.ts`
+- `gesture.ts`
 - `navigation.ts`
 - `reveal.ts`
 - `signals.ts`
@@ -18,6 +20,7 @@ Component scripts are co-located with their CSS and example HTML in `src/primiti
 
 - `carousel/carousel.ts`
 - `checkbox/checkbox.ts`
+- `drawer/drawer.ts`
 - `lightbox/lightbox.ts`
 - `password-group/password-group.ts`
 - `tabs/tabs.ts`
@@ -33,7 +36,7 @@ The compiler is configured in `tsconfig.json`: strict, `erasableSyntaxOnly`, `ve
 
 ### Philosophy
 
-- **Browser-native modules.** No framework, no bundler: TypeScript in, native ES modules out. `erasableSyntaxOnly` keeps the emitted JS line-for-line close to the source: types erase, nothing else is transformed (one deliberate exception: `using` declarations; see [Scoped resources](#scoped-resources-using)). Cross-script dependencies use `import`; npm runtime dependencies (`signal-polyfill`, the Embla packages) are imported by bare specifier and resolved by the page import map in browsers (pinned, SRI-checked jsDelivr URLs from `head.ts`) and by `node_modules` in tests/bundlers. No UMD globals, no script-tag-order contracts.
+- **Browser-native modules.** No framework, no bundler: TypeScript in, native ES modules out. `erasableSyntaxOnly` keeps the emitted JS line-for-line close to the source: types erase, nothing else is transformed (one deliberate exception: `using` declarations; see [Scoped resources](#scoped-resources-using)). Cross-script dependencies use `import`; the one npm runtime dependency (`signal-polyfill`) is imported by bare specifier and resolved by the page import map in browsers (pinned, SRI-checked jsDelivr URLs from `head.ts`) and by `node_modules` in tests/bundlers. No UMD globals, no script-tag-order contracts.
 - **HTML-first.** Markup and data attributes drive behavior. Authors configure components in HTML; scripts discover and enhance the DOM.
 - **Progressive enhancement.** Feature-detect APIs before use. When unsupported, degrade gracefully (e.g. `navigation.ts` falls back to full page loads).
 - **Minimal surface area.** Export a small public API. Keep helpers private with `@private` JSDoc or class private fields (`#method`).
@@ -80,26 +83,28 @@ export { MyExport };
 
 Attach a named export object or class to `window` for the documented public API, then `export` it for module consumers (the `index.ts` entry and any sibling script that imports it).
 
-| File                                  | Global              | Export shape                                                                                                                                                                                             |
-| ------------------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `base/utils.ts`                       | `window.Utils`      | `{ parseValue, parseDataAttributes }`                                                                                                                                                                    |
-| `base/signals.ts`                     | `window.Signals`    | `{ state, computed, effect }`                                                                                                                                                                            |
-| `base/reveal.ts`                      | `window.Reveal`     | `Reveal` class                                                                                                                                                                                           |
-| `base/dialog-lifecycle.ts`            | _(none)_            | Emits `zazz:dialog-open` / `zazz:dialog-close` on every `<dialog>` (ADR-0003); the events are the public API                                                                                             |
-| `base/embla.ts`                       | `window.EmblaInit`  | `{ init, initRoot, ... }`                                                                                                                                                                                |
-| `base/zazz-element.ts`                | _(none)_            | `ZazzElement` base + `defineZazzElement` + refresh registry (`registerRefresh` / `refreshAll`)                                                                                                           |
-| `ui/carousel/carousel.ts`             | _(none)_            | `<ui-carousel>` element class (module export only)                                                                                                                                                       |
-| `ui/checkbox/checkbox.ts`             | _(none)_            | `initCheckboxes`, `deriveTriState` (module exports only); signal-derived select-all groups                                                                                                               |
-| `ui/lightbox/lightbox.ts`             | _(none)_            | `<ui-lightbox>` element class (module export only)                                                                                                                                                       |
-| `ui/password-group/password-group.ts` | _(none)_            | `<ui-password>` element class (module export only)                                                                                                                                                       |
-| `ui/tabs/tabs.ts`                     | _(none)_            | `<ui-tabs>` element class (module export only)                                                                                                                                                           |
-| `ui/toaster/toaster.ts`               | `window.Toaster`    | Imperative toast API + `<ui-toaster>` element class                                                                                                                                                      |
-| `base/navigation.ts`                  | _(none)_            | Side effect: opt-in body swap (`data-ui-navigation="swap"`); exports `swapBody` for tests                                                                                                                |
-| `base/scroll-state.ts`                | _(none)_            | Polyfill for the `stuck` utility state (container scroll-state queries); `index.ts` imports it only where `scroll-state()` is unsupported. exports `ScrollState` `{ start, stop, isSupported, refresh }` |
-| `base/csp.ts`                         | _(none)_            | CSP fallback: copies blocked `style` attributes into the CSSOM; `index.ts` imports it only after finding a blocked attribute. exports `Csp` `{ blockedInlineStyles, applyInlineStyles, start, stop }`    |
-| `base/declarations.ts`                | _(none)_            | `scanDeclarations`, `splitDeclarations`, `plainValue`: the one `style` attribute parser (no imports), shared by the formatter, the language server, and the CSP fallback                                 |
-| `ui/debug/debug.ts`                   | _(none)_            | `<ui-debug>` element class + `audit(root)` (module exports only); development tooling                                                                                                                    |
-| `ui/style-guard/style-guard.ts`       | `window.StyleGuard` | `{ start, stop, restore }` — optional; restores utilities a legacy `style` rewrite dropped                                                                                                               |
+| File                                  | Global              | Export shape                                                                                                                                                                                                    |
+| ------------------------------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `base/utils.ts`                       | `window.Utils`      | `{ parseValue, parseDataAttributes }`                                                                                                                                                                           |
+| `base/signals.ts`                     | `window.Signals`    | `{ state, computed, effect }`                                                                                                                                                                                   |
+| `base/reveal.ts`                      | `window.Reveal`     | `Reveal` class                                                                                                                                                                                                  |
+| `base/dialog-lifecycle.ts`            | _(none)_            | Emits `zazz:dialog-open` / `zazz:dialog-close` on every `<dialog>` (ADR-0003); the events are the public API                                                                                                    |
+| `base/carousel.ts`                    | `window.Carousel`   | `{ init, initRoot }`                                                                                                                                                                                            |
+| `base/zazz-element.ts`                | _(none)_            | `ZazzElement` base + `defineZazzElement` + refresh registry (`registerRefresh` / `refreshAll`)                                                                                                                  |
+| `base/gesture.ts`                     | _(none)_            | `trackDrag` (pointer tracking on a locked axis) + the release math `shouldDismiss`, `pickSnap`, `rubberBand`, `flickDuration`, `createVelocityTracker`; module exports only                                     |
+| `ui/carousel/carousel.ts`             | `base/carousel.ts`  | `<ui-carousel>` calls `Carousel.initRoot`                                                                                                                                                                       |
+| `ui/drawer/drawer.ts`                 | _(none)_            | `initDrawers`, `bindDrawer`, `snapDrawer` (module exports only); drag-to-dismiss, snap points, stacking, and the `<ui-drawer-indent>` page indent for `<dialog data-ui~="drawer">`, bound on `zazz:dialog-open` |
+| `ui/checkbox/checkbox.ts`             | _(none)_            | `initCheckboxes`, `deriveTriState` (module exports only); signal-derived select-all groups                                                                                                                      |
+| `ui/lightbox/lightbox.ts`             | _(none)_            | `<ui-lightbox>` element class (module export only)                                                                                                                                                              |
+| `ui/password-group/password-group.ts` | _(none)_            | `<ui-password>` element class (module export only)                                                                                                                                                              |
+| `ui/tabs/tabs.ts`                     | _(none)_            | `<ui-tabs>` element class (module export only)                                                                                                                                                                  |
+| `ui/toaster/toaster.ts`               | `window.Toaster`    | Imperative toast API + `<ui-toaster>` element class                                                                                                                                                             |
+| `base/navigation.ts`                  | _(none)_            | Side effect: opt-in body swap (`data-ui-navigation="swap"`); exports `swapBody` for tests                                                                                                                       |
+| `base/scroll-state.ts`                | _(none)_            | Polyfill for the `stuck` utility state (container scroll-state queries); `index.ts` imports it only where `scroll-state()` is unsupported. exports `ScrollState` `{ start, stop, isSupported, refresh }`        |
+| `base/csp.ts`                         | _(none)_            | CSP fallback: copies blocked `style` attributes into the CSSOM; `index.ts` imports it only after finding a blocked attribute. exports `Csp` `{ blockedInlineStyles, applyInlineStyles, start, stop }`           |
+| `base/declarations.ts`                | _(none)_            | `scanDeclarations`, `splitDeclarations`, `plainValue`: the one `style` attribute parser (no imports), shared by the formatter, the language server, and the CSP fallback                                        |
+| `ui/debug/debug.ts`                   | _(none)_            | `<ui-debug>` element class + `audit(root)` (module exports only); development tooling                                                                                                                           |
+| `ui/style-guard/style-guard.ts`       | `window.StyleGuard` | `{ start, stop, restore }` — optional; restores utilities a legacy `style` rewrite dropped                                                                                                                      |
 
 Document export objects with `@namespace` JSDoc and `@property` for each key.
 
@@ -135,7 +140,7 @@ Interactive components ship as **light-DOM custom elements** that augment existi
 - **Custom elements are `display: inline` by default**: add a `display` rule in the component stylesheet.
 - **Degrade gracefully.** Without JS the markup must still render sensibly (a password field stays masked; tabs keep native radio behavior).
 - **Element options are `data-*` attributes** (`data-label-show`, `data-label-hide`), not bare attributes, even though the tag is its own namespace. One attribute system across the kit.
-- Do not attach element classes to `window`; `export` them for module consumers. `window` is reserved for genuine imperative APIs (`window.Toaster`, `window.Reveal`, `window.EmblaInit`, `window.Utils`, `window.Signals`).
+- Do not attach element classes to `window`; `export` them for module consumers. `window` is reserved for genuine imperative APIs (`window.Toaster`, `window.Reveal`, `window.Carousel`, `window.Utils`, `window.Signals`).
 
 ### Reactive state (signals)
 
@@ -151,7 +156,7 @@ Zazz bets on the [TC39 Signals proposal](https://github.com/tc39/proposal-signal
 Component scripts read configuration from HTML data attributes rather than JS options objects.
 
 - Use a consistent prefix per component: `data-carousel-*`, `data-reveal-*`.
-- Parse attributes with `Utils.parseDataAttributes(node, "data-carousel-")`, which converts kebab-case to camelCase and coerces types via `Utils.parseValue`. It returns `Record<string, unknown>`; when a caller needs a typed shape, wrap it once at its own boundary (see `readCarouselOptions` in `base/embla.ts`) rather than asserting at each call site. Parse for a single expected type directly instead (the toaster reads `data-toaster-duration` with `Number`).
+- Parse attributes with `Utils.parseDataAttributes(node, "data-carousel-")`, which converts kebab-case to camelCase and coerces types via `Utils.parseValue`. It returns `Record<string, unknown>`; when a caller needs a typed shape, wrap it once at its own boundary (see the `NativeOptions` read in `base/carousel-scroll.ts`) rather than asserting at each call site. Parse for a single expected type directly instead (the toaster reads `data-toaster-duration` with `Number`).
 - Document the full attribute reference in the file's `@fileoverview` block.
 - Set lifecycle attributes on the DOM (`data-carousel-init`) so scripts can detect already-initialized elements.
 - Keep the attribute families straight (ADR-0013): identity is `data-ui="<name>"` (a token list, matched with `~=`); **everything a primitive owns** is `data-<primitive>-<key>`: config (`data-carousel-loop`, `data-reveal-duration`), variants and states (`data-button-variant`, `data-tabs-state`), and **interior parts** (`data-<primitive>-slot="<part>"`). Globals that belong to no primitive are `data-ui-*` (`data-ui-navigation`); the color scheme is the exception, `data-theme="dark"` / `"light"`, so a script sets `document.documentElement.dataset.theme` and leaves `data-ui` alone. Selectors on `data-<primitive>-*` compound with the identity, and `parseDataAttributes` runs only on elements that carry it. The one exception is a custom-command invoker: the toaster reads `data-toaster-*` off any `command="--toast*"` button, and `<ui-debug>` accepts an identity's attributes on an invoker whose command names it. Kit JS never reads or writes `class`.
@@ -162,41 +167,44 @@ Enable carousel plugins with a space-separated token list (`data-carousel-plugin
 
 Scripts declare dependencies with ES imports so the module graph resolves order: the entry module (`index.ts`, loaded as the emitted `index.js`) is the only tag a page loads.
 
-| Script                                | Imports                                                    | Notes                                                                                                       |
-| ------------------------------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `base/utils.ts`                       | none                                                       | Provides `window.Utils`                                                                                     |
-| `base/signals.ts`                     | `signal-polyfill` (npm)                                    | The **only** file allowed to import the polyfill                                                            |
-| `base/zazz-element.ts`                | none                                                       | `ZazzElement` base + refresh registry                                                                       |
-| `base/reveal.ts`                      | `base/zazz-element.ts`                                     | Registers a refresh hook                                                                                    |
-| `base/dialog-lifecycle.ts`            | none                                                       | Owns `<dialog>` visibility; components subscribe to its events                                              |
-| `base/embla.ts`                       | `base/utils.ts`, `base/zazz-element.ts`, Embla (npm)       | Imports Embla as ES modules; subscribes to `zazz:dialog-open`; registers a refresh hook                     |
-| `ui/carousel/carousel.ts`             | `base/embla.ts`                                            | `<ui-carousel>` calls `EmblaInit.initRoot`                                                                  |
-| `ui/checkbox/checkbox.ts`             | `base/signals.ts`, `base/zazz-element.ts`                  | Derives select-all group state via signals; refresh hook                                                    |
-| `ui/lightbox/lightbox.ts`             | `ui/carousel/carousel.ts`                                  | `<ui-lightbox>` coordinates carousel elements                                                               |
-| `ui/password-group/password-group.ts` | `base/signals.ts`                                          | Standalone (`<ui-password>`)                                                                                |
-| `ui/tabs/tabs.ts`                     | none                                                       | Standalone (`<ui-tabs>`)                                                                                    |
-| `ui/toaster/toaster.ts`               | `base/utils.ts`, `base/signals.ts`                         | `<ui-toaster>` + `window.Toaster` toast API                                                                 |
-| `base/navigation.ts`                  | `base/zazz-element.ts`                                     | Opt-in per page; drains the refresh registry after a body swap                                              |
-| `base/declarations.ts`                | none                                                       | The `style` attribute parser                                                                                |
-| `base/csp.ts`                         | `base/declarations.ts`                                     | Dynamic import from `index.ts` when the page's CSP blocks inline style attributes                           |
-| `ui/debug/debug.ts`                   | `base/zazz-element.ts`, `base/utilities.ts`, `manifest.ts` | Development only; not in `index.ts` — `zazz-ui add debug`                                                   |
-| `ui/style-guard/style-guard.ts`       | none                                                       | Optional; not in `index.ts` — a page adds it (or `zazz-ui add style-guard`) when legacy JS rewrites `style` |
+| Script                                | Imports                                                      | Notes                                                                                                       |
+| ------------------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| `base/utils.ts`                       | none                                                         | Provides `window.Utils`                                                                                     |
+| `base/signals.ts`                     | `signal-polyfill` (npm)                                      | The **only** file allowed to import the polyfill                                                            |
+| `base/zazz-element.ts`                | none                                                         | `ZazzElement` base + refresh registry                                                                       |
+| `base/reveal.ts`                      | `base/zazz-element.ts`                                       | Registers a refresh hook                                                                                    |
+| `base/dialog-lifecycle.ts`            | none                                                         | Owns `<dialog>` visibility; components subscribe to its events                                              |
+| `base/carousel-scroll.ts`             | `base/gesture.ts`, `base/utils.ts`                           | The scroll-snap engine: mouse drag, loop, thumbs, autoplay; stores `_carousel` on the root                  |
+| `base/carousel.ts`                    | `base/carousel-scroll.ts`, `base/zazz-element.ts`            | Provides `window.Carousel`; subscribes to `zazz:dialog-open`; registers a refresh hook                      |
+| `base/gesture.ts`                     | none                                                         | Drag tracking; the consumer writes `translate` while tracking and releases into CSS transitions (ADR-0018)  |
+| `ui/carousel/carousel.ts`             | `base/carousel.ts`                                           | `<ui-carousel>` calls `Carousel.initRoot`                                                                   |
+| `ui/drawer/drawer.ts`                 | `base/gesture.ts`                                            | Subscribes to `zazz:dialog-open` / `zazz:dialog-close` (needs `base/dialog-lifecycle.ts` on the page)       |
+| `ui/checkbox/checkbox.ts`             | `base/signals.ts`, `base/zazz-element.ts`                    | Derives select-all group state via signals; refresh hook                                                    |
+| `ui/lightbox/lightbox.ts`             | `ui/carousel/carousel.ts`                                    | `<ui-lightbox>` coordinates carousel elements                                                               |
+| `ui/password-group/password-group.ts` | `base/signals.ts`                                            | Standalone (`<ui-password>`)                                                                                |
+| `ui/tabs/tabs.ts`                     | none                                                         | Standalone (`<ui-tabs>`)                                                                                    |
+| `ui/toaster/toaster.ts`               | `base/signals.ts`, `base/zazz-element.ts`, `base/gesture.ts` | `<ui-toaster>` + `window.Toaster` toast API; swipe-to-dismiss                                               |
+| `base/navigation.ts`                  | `base/zazz-element.ts`                                       | Opt-in per page; drains the refresh registry after a body swap                                              |
+| `base/declarations.ts`                | none                                                         | The `style` attribute parser                                                                                |
+| `base/csp.ts`                         | `base/declarations.ts`                                       | Dynamic import from `index.ts` when the page's CSP blocks inline style attributes                           |
+| `ui/debug/debug.ts`                   | `base/zazz-element.ts`, `base/utilities.ts`, `manifest.ts`   | Development only; not in `index.ts` — `zazz-ui add debug`                                                   |
+| `ui/style-guard/style-guard.ts`       | none                                                         | Optional; not in `index.ts` — a page adds it (or `zazz-ui add style-guard`) when legacy JS rewrites `style` |
 
-When a script needs `Utils`, `import { Utils } from "../../base/utils.ts"` (from a `src/primitives/<name>/` folder) rather than duplicating parsing logic. Embla ships as real ES modules imported by bare specifier; the page import map (generated by `head.ts`, pinned + SRI-checked) resolves them, so the module graph orders everything and pages load exactly one script tag.
+When a script needs `Utils`, `import { Utils } from "../../base/utils.ts"` (from a `src/primitives/<name>/` folder) rather than duplicating parsing logic. `signal-polyfill` ships as a real ES module imported by bare specifier; the page import map (generated by `head.ts`, pinned + SRI-checked) resolves it, so the module graph orders everything and pages load exactly one script tag.
 
 ### DOM interaction patterns
 
-- **Query within scope.** Accept an optional root element (`initEmblaCarousels(scope)`) so init can target a subtree (e.g. an opened dialog).
+- **Query within scope.** Accept an optional root element (`initCarousels(scope)`) so init can target a subtree (e.g. an opened dialog).
 - **Early returns for guards.** Check required elements and skip gracefully rather than throwing.
-- **Store instances on DOM nodes** when external access is needed: `emblaNode._emblaApi = emblaApi`. Use a leading underscore to signal internal state.
+- **Store instances on DOM nodes** when external access is needed: `root._carousel = api`. Use a leading underscore to signal internal state.
 - **Observe DOM changes** with `MutationObserver` when elements are hidden at init time (closed dialogs).
-- **Delegate events** at `document` level when triggers can appear anywhere (`initEmblaStartLinks`).
+- **Delegate events** at `document` level when triggers can appear anywhere (`initStartLinks`).
 - **Respect focus and input context.** Skip keyboard handlers when focus is in form fields or contenteditable elements.
 
 ### Classes vs functions
 
 - Use a **class** when the module manages persistent instance state (`Reveal` with observers and config).
-- Use **functions** for stateless init and helpers (`initEmblaCarousels`, `parseValue`).
+- Use **functions** for stateless init and helpers (`initCarousels`, `parseValue`).
 - Use **private class fields** (`#observers`, `#getObserver`) for encapsulation.
 - Use **`const` arrow functions** for callbacks and short helpers; **`function` declarations** for hoisted init functions called before definition in the file.
 
@@ -232,6 +240,7 @@ Rules:
 - **Erasable syntax only**: no enums, namespaces, or parameter properties; nothing that requires tsc to generate code (`erasableSyntaxOnly` enforces this). Use `import type` / `export type` for type-only imports (`verbatimModuleSyntax`).
 - Import sibling modules with explicit `.ts` extensions (`rewriteRelativeImportExtensions` emits them as `.js`).
 - Run `pnpm --filter @zazz-ui/core test` after editing to validate types.
+- **Test the motion a script waits on.** Browser tests often switch transitions off for speed (`useCss("dialog { transition: none }")`). A primitive whose script times anything off a transition (a `transitionend` listener, a duration read with `maxTransitionMs`) also gets at least one browser test with transitions on, run in WebKit as well as Chromium (`ZAZZ_BROWSERS=webkit`). The drawer's swipe dismissal passed every transition-free Chromium test while WebKit dropped the closed dialog with no exit motion.
 
 ---
 
@@ -265,17 +274,17 @@ For file-level blocks, `@fileoverview` comes first, then `@description`, then `@
 
 ### Required vs optional tags
 
-| Tag             | Required on                           | Notes                                                                |
-| --------------- | ------------------------------------- | -------------------------------------------------------------------- |
-| `@fileoverview` | Every file                            | Module-level summary                                                 |
-| `@description`  | Every JSDoc block                     | One-line summary; extended prose below if needed                     |
-| `@param`        | Functions with parameters             | Hyphen description only; the type lives in the signature             |
-| `@returns`      | Functions that return a value         | Prose description; omit for `void` functions                         |
-| `@private`      | Non-exported helpers                  | Module-scoped functions not on the export object                     |
-| `@namespace`    | Export objects (`Utils`, `EmblaInit`) | Document each exported key with `@property` (name + prose, no types) |
-| `@see`          | External references                   | MDN, library docs, related APIs                                      |
-| `@example`      | Usage demonstrations                  | Runnable code or HTML snippets                                       |
-| `@class`        | Classes                               | Optional; use with `@description` on the class block                 |
+| Tag             | Required on                          | Notes                                                                |
+| --------------- | ------------------------------------ | -------------------------------------------------------------------- |
+| `@fileoverview` | Every file                           | Module-level summary                                                 |
+| `@description`  | Every JSDoc block                    | One-line summary; extended prose below if needed                     |
+| `@param`        | Functions with parameters            | Hyphen description only; the type lives in the signature             |
+| `@returns`      | Functions that return a value        | Prose description; omit for `void` functions                         |
+| `@private`      | Non-exported helpers                 | Module-scoped functions not on the export object                     |
+| `@namespace`    | Export objects (`Utils`, `Carousel`) | Document each exported key with `@property` (name + prose, no types) |
+| `@see`          | External references                  | MDN, library docs, related APIs                                      |
+| `@example`      | Usage demonstrations                 | Runnable code or HTML snippets                                       |
+| `@class`        | Classes                              | Optional; use with `@description` on the class block                 |
 
 Config/option object shapes are TypeScript `interface`s, not `@typedef` blocks: give each field a `/** ... */` doc comment (see the template below).
 
@@ -423,7 +432,7 @@ const Utils = { parseValue, parseDataAttributes };
 function parseValue(value: string): boolean | number | unknown[] | string {}
 ```
 
-#### Section divider (embla.ts)
+#### Section divider (carousel.ts)
 
 **Before:**
 
@@ -439,7 +448,7 @@ function parseValue(value: string): boolean | number | unknown[] | string {}
 // --- Dot navigation ---
 ```
 
-#### Private helper (embla.ts)
+#### Private helper (carousel-scroll.ts)
 
 **Before:**
 

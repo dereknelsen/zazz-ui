@@ -20,7 +20,10 @@
  *             by default) over its preset; a narrow window with a mouse keeps the preset; style
  *             queries are Firefox 151+, Chrome 111+, Safari 18+, an older engine keeps the preset
  * @uses       env(safe-area-inset-bottom) — the full-height content slot clears the home indicator
- * @consumedby alert-dialog.css, command.css, lightbox.css, mobile-menu.css
+ * @uses       translate, scale — in the transition list for consumers that move a dialog with
+ *             them (drawer.js drags with an inline translate and releases into these
+ *             transitions; a drawer behind another is scaled back)
+ * @consumedby alert-dialog.css, command.css, drawer.css, lightbox.css, mobile-menu.css
  */
 
 @layer variables {
@@ -49,7 +52,7 @@
     --ui-dialog-translate--start: 0, 0, 0;
     --ui-dialog-translate--end: 0, 0, 0;
     --ui-dialog-transition-delay--start: 0ms;
-    --ui-dialog-transition-delay--end: 150ms;
+    --ui-dialog-transition-delay--end: 0ms;
   }
 }
 
@@ -86,6 +89,8 @@
     transition:
       opacity var(--ui-dialog-transition-duration) var(--ui-dialog-transition-timing-function),
       transform var(--ui-dialog-transition-duration) var(--ui-dialog-transition-timing-function),
+      translate var(--ui-dialog-transition-duration) var(--ui-dialog-transition-timing-function),
+      scale var(--ui-dialog-transition-duration) var(--ui-dialog-transition-timing-function),
       padding var(--ui-dialog-transition-duration) var(--ui-dialog-transition-timing-function),
       block-size var(--ui-dialog-transition-duration) var(--ui-dialog-transition-timing-function),
       inline-size var(--ui-dialog-transition-duration) var(--ui-dialog-transition-timing-function),
@@ -345,25 +350,26 @@
      query reads the hook on the dialog's parent, never on the dialog itself: set it on :root
      for the site, or on one dialog's parent for that dialog alone. A viewport query, not a
      container one, because a top-layer dialog is sized by the viewport. Style queries are
-     Firefox 151+; an older engine keeps the preset. */
+     Firefox 151+; an older engine keeps the preset. A drawer (drawer.css) is a bottom sheet
+     here instead, so every rule steps aside for it. */
   @media (width < 40rem) and (not (hover: hover)) {
     @container style(--ui-dialog-mobile-size: layout-bleed) {
       /* Not :where(): the viewport decides the height here, over a consumer's own cap
          on the same element (command's list max-block-size loads later at equal
          specificity). Utilities still win through the layer order. */
-      [data-ui~="dialog"] [data-dialog-slot~="content"] {
+      [data-ui~="dialog"]:where(:not([data-ui~="drawer"])) [data-dialog-slot~="content"] {
         place-content: start stretch;
         block-size: 100%;
         padding-block-end: env(safe-area-inset-bottom, 0px);
       }
 
-      [data-ui~="dialog"] [data-dialog-slot~="body"] {
+      [data-ui~="dialog"]:where(:not([data-ui~="drawer"])) [data-dialog-slot~="body"] {
         block-size: 100%;
         max-block-size: 100%;
         margin-block-end: auto;
       }
 
-      :where([data-ui~="dialog"]) {
+      :where([data-ui~="dialog"]:not([data-ui~="drawer"])) {
         --ui-dialog-border-color: transparent;
 
         --_dialog-w: 100dvi;
@@ -378,7 +384,7 @@
         container: none;
       }
 
-      :where(dialog)::backdrop {
+      :where(dialog:not([data-ui~="drawer"]))::backdrop {
         inline-size: 100dvi;
         block-size: 100dvb;
         inset: 0;
@@ -389,7 +395,7 @@
     }
 
     @container style(--ui-dialog-mobile-size: layout-full) {
-      :where([data-ui~="dialog"]) {
+      :where([data-ui~="dialog"]:not([data-ui~="drawer"])) {
         --_dialog-w: calc(100dvi - var(--gutters) * 2);
       }
     }

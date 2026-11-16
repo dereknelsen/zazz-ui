@@ -1,0 +1,120 @@
+---
+title: "Drawer"
+description: "A bottom sheet on the native `<dialog>`, dragged down to dismiss."
+section: Primitives
+sectionOrder: 5
+order: 0
+primitive: drawer
+---
+
+## Installation
+
+{% install primitive="drawer" /%}
+
+## Examples
+
+{% examples primitive="drawer" /%}
+
+## Behavior
+
+{% behavior primitive="drawer" /%}
+
+## Drawer everywhere, or only on a phone
+
+`data-ui="drawer"` on a `<dialog>` is a drawer on every device: it rises from the bottom edge, spans the full width of the screen, and can be dragged with a mouse as well as a finger. It has its own slots, `data-drawer-slot="content"`, `header`, `body`, `footer`, and `close`, which lay out as the dialog's do.
+
+`data-ui="dialog drawer"` is a [dialog](/api/primitives/dialog/) that turns into a drawer below the `sm` band on a touch screen, the same test the dialog uses for its phone size. Everywhere else it is the plain dialog at the width its `data-dialog-size` gives it, and it does not drag. Keep the dialog's slots (`data-dialog-slot`), and add the handle:
+
+```html
+<dialog id="confirm" data-ui="dialog drawer" closedby="any">
+  <div data-drawer-slot="handle"></div>
+  <div data-dialog-slot="content">…</div>
+</dialog>
+```
+
+In drawer mode both forms run edge to edge. To float a narrower sheet, cap `--ui-drawer-w` with a layout band: `--ui-drawer-w: min(var(--layout-sm), 100%)`.
+
+A drawer takes the place of the dialog's phone size, so `--ui-dialog-mobile-size` does not apply to it. The handle is optional and shows only in drawer mode.
+
+## Dragging and scrolling
+
+The whole drawer is the drag surface. Letting go past a quarter of its height closes it, and so does a quick downward flick over any distance; less than that and it returns to rest. Closing goes through `requestClose()`, so a `cancel` listener can keep the drawer open, as it can for Esc.
+
+Content that scrolls takes the gesture first. A pull moves the drawer only once the content under the finger is scrolled to the top, and only downward; the handle drags the drawer wherever the content is. Form fields and selected text never start a drag. To keep the drawer still under something else that needs the pointer (a map, a slider, a canvas), mark it:
+
+```html
+<div data-ui-no-drag>…</div>
+```
+
+The open and close motion is the dialog's transition with the drawer's own timing: `--ui-drawer-transition-duration` (twice the default duration) and `--ui-drawer-transition-timing-function`. With `prefers-reduced-motion` the duration is zero, as it is for every dialog; the drawer still follows the pointer while it is dragged.
+
+## Forms and the on-screen keyboard
+
+On a phone, the keyboard covers the bottom of the screen without making the page any shorter, so a drawer would sit partly under it. While a field in the front drawer has the keyboard up, the drawer's content ends at the keyboard's top edge, with its surface carrying on underneath, and the focused field scrolls into the part that is still visible. The page behind keeps its scroll position. There is nothing to author.
+
+## Snap points
+
+`data-drawer-snap` gives a drawer more than one resting height. List them smallest first, separated by spaces: a number up to `1` is a share of the drawer's full height, and a `px` or `rem` length is a visible height.
+
+```html
+<dialog id="places" data-ui="drawer" data-drawer-snap="12rem 0.5 1" closedby="any">
+  <button type="button" data-drawer-slot="handle" aria-label="Resize drawer"></button>
+  <div data-drawer-slot="content">…</div>
+</dialog>
+```
+
+The drawer opens at the first stop. Letting go settles it on the nearest one; a flick moves it one stop in the flick's direction, and a very fast flick goes all the way open or closed. Add `data-drawer-snap-sequential` to make a fast flick move one stop as well. From the smallest stop, a downward flick or enough travel closes the drawer.
+
+Below its largest stop the drawer takes every vertical drag and its content does not scroll; at the largest stop content scrolls first, as it does without snap points. A click on the handle steps to the next stop and wraps to the first. Make the handle a `<button>` with an `aria-label`, as above, so the keyboard can do the same.
+
+The backdrop stays full at every stop, because the drawer is a modal dialog and the page behind it is inert. It fades only as the drawer is dragged below the smallest stop.
+
+| Read or write | How |
+| --- | --- |
+| The drawer reached a stop | `zazz:drawer-snap` on the dialog, bubbling; `event.detail.index` and `event.detail.value` (visible height in px) |
+| It is at the largest stop | `data-drawer-state~="expanded"` (otherwise `partial`) |
+| Move it from script | `import { snapDrawer } from "@zazz-ui/core/primitives/drawer/drawer.js"`, then `snapDrawer(dialog, index)` |
+
+## Stacked drawers
+
+A drawer opened while another is open sits in front of it. The one behind scales back and lifts so its top edge shows, and it follows as the front drawer is dragged down. Esc and the backdrop close the front drawer first. There is nothing to author: open the second drawer from the first with the usual `command="show-modal"`.
+
+`--ui-drawer-stack-scale` (default `0.05`) is how much each drawer in front shrinks the one behind, and `--ui-drawer-stack-lift` how far it lifts. The second drawer adds no dimming of its own; set `--ui-drawer-nested-backdrop-color` to give it some.
+
+## Indenting the page
+
+Wrap the page in `<ui-drawer-indent>` (or put `data-ui="drawer-indent"` on the element that already wraps it), and the page scales back behind any open drawer, with rounded top corners, and follows the last drawer as it is dragged down.
+
+```html
+<body>
+  <ui-drawer-indent>
+    <header>…</header>
+    <main>…</main>
+  </ui-drawer-indent>
+
+  <dialog id="share" data-ui="drawer" closedby="any">…</dialog>
+</body>
+```
+
+Drawers can sit inside the wrapper or beside it. The wrapper paints the page background (`--ui-drawer-indent-bg`), and the `<body>` takes the backing color (`--ui-drawer-indent-backing`, black by default) while the page is indented. Set the indent hooks on `:root`, since the body reads the backing color too.
+
+| Hook | What it sets | Default |
+| --- | --- | --- |
+| `--ui-drawer-indent-inset` | How far each side of the page pulls in | 3 spacing units |
+| `--ui-drawer-indent-offset` | How far the page drops from the top | the top safe-area inset plus `--space-sm` |
+| `--ui-drawer-indent-radius` | The radius of the page's top corners | `--ui-drawer-radius` |
+
+Only `scale` and `translate` animate. The corner radius is two small corner pieces that grow from the corners, so no `border-radius` or clip is animated and the page is not repainted as it moves. The corners follow `--radius-corner-shape` in browsers that support `corner-shape` and are round elsewhere.
+
+Two limits come with scaling the page:
+
+- While a drawer is open the wrapper is transformed, so a `position: fixed` element inside it is positioned against the wrapper and moves with the page. Use `position: sticky` for headers, or keep fixed elements outside the wrapper.
+- A `dialog drawer` indents the page only in drawer mode, never as a desktop dialog.
+
+## Attributes
+
+{% attributes primitive="drawer" /%}
+
+## Hooks
+
+{% hooks primitive="drawer" /%}

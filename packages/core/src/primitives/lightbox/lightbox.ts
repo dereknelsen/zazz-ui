@@ -13,9 +13,9 @@
  * - On dialog close: scrolls the inline gallery to the last viewed slide.
  *
  * Opening and closing the dialog itself needs no JavaScript — slides carry
- * `command="show-modal"` / `command="close"` (Invoker Commands). Drag-aware
- * click suppression on the stage and thumbs is wired by `initRoot` in
- * embla.js (keyed generically on command-bearing `carousel-slide` slots).
+ * `command="show-modal"` / `command="close"` (Invoker Commands). A mouse
+ * drag on the stage or the thumbs never also clicks: the gesture layer
+ * (base/gesture.js) swallows the click that ends a drag.
  *
  * @example
  * <ui-lightbox>
@@ -82,9 +82,10 @@ class UiLightbox extends ZazzElement {
       dialogRoot.init();
     }
 
-    const galleryApi = this.#galleryRoot()?._emblaApi;
-    if (dialogRoot._emblaApi && galleryApi) {
-      dialogRoot._emblaApi.goTo(galleryApi.selectedSnap(), true);
+    const dialogApi = dialogRoot._carousel;
+    const galleryApi = this.#galleryRoot()?._carousel;
+    if (dialogApi && galleryApi) {
+      dialogApi.goTo(galleryApi.selectedSnap(), true);
     }
 
     const viewport = dialogRoot.querySelector('[data-carousel-slot~="viewport"]');
@@ -99,8 +100,8 @@ class UiLightbox extends ZazzElement {
    * @param dialog - The lightbox dialog.
    */
   #syncGalleryToDialog(dialog: HTMLDialogElement): void {
-    const dialogApi = dialog.querySelector(':is(ui-carousel, [data-ui~="carousel"])')?._emblaApi;
-    const galleryApi = this.#galleryRoot()?._emblaApi;
+    const dialogApi = dialog.querySelector(':is(ui-carousel, [data-ui~="carousel"])')?._carousel;
+    const galleryApi = this.#galleryRoot()?._carousel;
     if (dialogApi && galleryApi) {
       galleryApi.goTo(dialogApi.selectedSnap());
     }

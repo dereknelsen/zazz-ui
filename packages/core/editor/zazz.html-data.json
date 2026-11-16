@@ -42,6 +42,11 @@
       "attributes": []
     },
     {
+      "name": "ui-drawer-indent",
+      "description": "Zazz drawer-indent (tag form; the attribute form is data-ui=\"drawer-indent\").",
+      "attributes": []
+    },
+    {
       "name": "ui-group",
       "description": "Zazz group (tag form; the attribute form is data-ui=\"group\").",
       "attributes": []
@@ -142,6 +147,12 @@
         },
         {
           "name": "dialog"
+        },
+        {
+          "name": "drawer"
+        },
+        {
+          "name": "drawer-indent"
         },
         {
           "name": "field"
@@ -576,6 +587,36 @@
       ]
     },
     {
+      "name": "data-carousel-align",
+      "description": "Preset or config of the carousel primitive.",
+      "values": [
+        {
+          "name": "center"
+        },
+        {
+          "name": "end"
+        }
+      ]
+    },
+    {
+      "name": "data-carousel-axis",
+      "description": "Preset or config of the carousel primitive.",
+      "values": [
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "data-carousel-draggable",
+      "description": "Preset or config of the carousel primitive.",
+      "values": [
+        {
+          "name": "false"
+        }
+      ]
+    },
+    {
       "name": "data-carousel-init",
       "description": "Preset or config of the carousel primitive.",
       "values": []
@@ -646,10 +687,31 @@
           "name": "dragging"
         },
         {
+          "name": "free"
+        },
+        {
+          "name": "gliding"
+        },
+        {
           "name": "in-view"
         },
         {
+          "name": "jumping"
+        },
+        {
+          "name": "settling"
+        },
+        {
           "name": "snapped"
+        }
+      ]
+    },
+    {
+      "name": "data-carousel-thumbs-axis",
+      "description": "Preset or config of the carousel primitive.",
+      "values": [
+        {
+          "name": "y"
         }
       ]
     },
@@ -876,6 +938,76 @@
         },
         {
           "name": "header"
+        }
+      ]
+    },
+    {
+      "name": "data-drawer-indent-state",
+      "description": "State: tokens the primitive's script writes.",
+      "values": [
+        {
+          "name": "active"
+        },
+        {
+          "name": "dragging"
+        },
+        {
+          "name": "on"
+        }
+      ]
+    },
+    {
+      "name": "data-drawer-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "body"
+        },
+        {
+          "name": "close"
+        },
+        {
+          "name": "content"
+        },
+        {
+          "name": "footer"
+        },
+        {
+          "name": "handle"
+        },
+        {
+          "name": "header"
+        }
+      ]
+    },
+    {
+      "name": "data-drawer-snap",
+      "description": "Preset or config of the drawer primitive.",
+      "values": []
+    },
+    {
+      "name": "data-drawer-snap-sequential",
+      "description": "Preset or config of the drawer primitive.",
+      "values": []
+    },
+    {
+      "name": "data-drawer-state",
+      "description": "State: tokens the primitive's script writes.",
+      "values": [
+        {
+          "name": "dragging"
+        },
+        {
+          "name": "following"
+        },
+        {
+          "name": "nested"
+        },
+        {
+          "name": "partial"
+        },
+        {
+          "name": "stacked"
         }
       ]
     },
@@ -1651,6 +1783,12 @@
         },
         {
           "name": "removed"
+        },
+        {
+          "name": "swiped"
+        },
+        {
+          "name": "swiping"
         },
         {
           "name": "visible"

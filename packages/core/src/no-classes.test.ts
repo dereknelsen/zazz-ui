@@ -38,6 +38,7 @@ const MIGRATED = [
   "tooltip",
   "dialog",
   "alert-dialog",
+  "drawer",
   "menu",
   "navigation-menu",
   "mobile-menu",
@@ -77,6 +78,8 @@ const MIGRATED = [
  * identity is the native attribute.
  */
 const IDENTITY: Record<string, { prefix: string; selectors: string[] }> = {
+  // the page wrapper a drawer indents is a second identity in the drawer's stylesheet
+  drawer: { prefix: "drawer", selectors: ['[data-ui~="drawer"]', '[data-ui~="drawer-indent"]'] },
   fields: {
     prefix: "field",
     selectors: ['[data-ui~="field"]', '[data-ui~="field-group"]', '[data-ui~="radio-group"]'],
@@ -272,7 +275,10 @@ describe("style invalidation", () => {
    * anchor (`body:has(X) *`): any DOM insertion can change the anchor's match,
    * so the engine restyles everything the subject can be. Measured 2026-10-22
    * in Chromium: one insertion restyled 12,307 elements (103 ms) instead of 7.
-   * Flag the anchor from JS instead (`data-ui-dragging`).
+   * Flag the element that needs the style from JS instead (a state token on
+   * it). Flagging the root and styling `:root[flag] *` is no better: toggling
+   * it restyles every element too (≈105 ms on a 280-node page at 4× CPU
+   * throttling, measured 2026-11-15; the carousel dropped it for that).
    */
   const highAnchorHas = /(?:^|[\s,(])(?:body|html|:root)[^\s,(]*:has\(/;
 

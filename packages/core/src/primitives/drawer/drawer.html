@@ -1,0 +1,42 @@
+<button data-ui="button" type="button" command="show-modal" commandfor="drawer-example-1">
+  Open drawer
+</button>
+<dialog id="drawer-example-1" data-ui="drawer" closedby="any">
+  <div data-drawer-slot="handle"></div>
+  <div data-drawer-slot="content">
+    <header data-drawer-slot="header">
+      <h2
+        style="
+          --font-size: var(--font-size-lg);
+          --font-weight: strong;
+          --font-family: var(--font-family-heading);
+        "
+      >
+        Notification settings
+      </h2>
+      <p style="--text: var(--color-muted-foreground)">
+        Drag the drawer down, or flick it, to dismiss it.
+      </p>
+    </header>
+    <div data-drawer-slot="body">
+      <p>
+        Scrolling content scrolls first. Once it is at the top, pulling down moves the drawer; the
+        handle always does.
+      </p>
+    </div>
+    <footer data-drawer-slot="footer">
+      <button data-ui="button" type="button" commandfor="drawer-example-1" command="close">
+        Cancel
+      </button>
+      <button
+        data-ui="button"
+        data-button-variant="primary"
+        type="button"
+        commandfor="drawer-example-1"
+        command="close"
+      >
+        Save
+      </button>
+    </footer>
+  </div>
+</dialog>

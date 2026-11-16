@@ -1,5 +1,44 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## Unreleased
+
+### base
+
+- New `base/gesture.ts`, the drag tracking behind toast swipes and the drawer: `trackDrag` follows one pointer on a locked axis and reports its offset and velocity, and `shouldDismiss`, `pickSnap`, `rubberBand`, and `flickDuration` decide and time the release. It ships with the primitives that use it, not in the core runtime. `data-ui-no-drag` on any element keeps a press inside it from starting a drag.
+
+### carousel
+
+- **BREAKING** The carousel no longer uses Embla. It is a native scroll-snap container: touch, trackpad, and wheel scroll it on the compositor, and it scrolls without JavaScript. The script (`base/carousel.js` and `base/carousel-scroll.js`, on `base/gesture.js`) adds mouse drag, loop, controls, thumbs, autoplay, auto-scroll, and state. Remove the four `embla-carousel*` entries from a hand-written import map; `signal-polyfill` is the only one left. See ADR-0019.
+- **BREAKING** `window.EmblaInit` is now `window.Carousel` (`init`, `initRoot`). The API on a root moved from `_emblaApi` to `_carousel`, also returned by `<ui-carousel>.api`: `goTo(index, instant?)`, `goToNext()`, `goToPrev()`, `selectedSnap()`, `snapList()`, `play()`, `stop()`, `isPlaying()`. Listen for `zazz:carousel-select` (`detail.index`) on the root in place of Embla's `select` event.
+- **BREAKING** Supported options: `data-carousel-loop`, `-align`, `-axis`, `-draggable`, `-drag-free`, `-skip-snaps`, `-start-snap`, `-keyboard`, and the `autoplay` and `auto-scroll` plugins with their `delay`, `speed`, `start-delay`, `direction`, `play-on-init`, `stop-on-interaction`, `stop-on-mouse-enter`, and `stop-on-last-snap` options. Other Embla options are ignored, among them `slides-to-scroll`, `contain-scroll`, `duration`, `breakpoints`, `active`, and `watch-*`. The `class-names` plugin is gone: style the `snapped` and `in-view` state tokens.
+- **BREAKING** `--ui-carousel-touch-action` and the `data-ui-dragging` flag on `:root` are removed. The pointer is captured during a mouse drag, so the grabbing cursor comes from the viewport's `dragging` state alone. Slides no longer force `transition: none`.
+- Right to left needs no option: the track follows the inherited `dir` (drop `data-carousel-direction`). `data-carousel-axis="y"` now lays the track out vertically by itself; give the viewport a height. `data-carousel-thumbs-axis="y"` does the same for a thumb strip.
+- The arrow keys follow the track: Left and Right mirror in RTL, and Up and Down step a vertical carousel.
+- Autoplay and auto-scroll pause while the carousel is off screen or the tab is hidden. Auto-scroll does not start on its own under `prefers-reduced-motion: reduce`. A root that is playing carries the `playing` state token.
+- New hooks: `--ui-carousel-snap-align`, `--ui-carousel-settle-duration`, `--ui-carousel-settle-ease`.
+- A slide that only touches the viewport's edge is no longer marked `in-view`.
+- The viewport hides its scrollbar, scrolls smoothly unless `prefers-reduced-motion: reduce` is set, and sets `user-select: none` while it can be dragged.
+
+### drawer
+
+- New primitive: a bottom sheet on the native `<dialog>` that is dragged down, or flicked, to dismiss. `data-ui="drawer"` is a drawer on every device, with `data-drawer-slot="handle | content | header | body | footer | close"`. `data-ui="dialog drawer"` is a dialog that becomes a drawer below the `sm` band on a touch screen and keeps its dialog slots. Scrolling content scrolls before the drawer moves, and the backdrop fades with the drag. Hooks: `--ui-drawer-*`.
+- Snap points: `data-drawer-snap="12rem 0.5 1"` gives a drawer resting heights (a share of its height, or a `px`/`rem` length). It opens at the first, settles on the nearest, and a flick moves one stop; `data-drawer-snap-sequential` stops a fast flick from skipping. The handle steps through them on click, `zazz:drawer-snap` reports each change, `data-drawer-state` carries `expanded` or `partial`, and `snapDrawer(dialog, index)` moves it from script.
+- Stacked drawers: a drawer opened over another scales the one behind back and lifts it, and that one follows the front drawer's drag. Hooks: `--ui-drawer-stack-scale`, `--ui-drawer-stack-lift`, `--ui-drawer-nested-backdrop-color`.
+- Page indent: wrap the page in `<ui-drawer-indent>` (or `data-ui="drawer-indent"`) and it scales back behind an open drawer with rounded top corners, following the last drawer's drag. Only `scale` and `translate` animate. Hooks: `--ui-drawer-indent-inset`, `-offset`, `-radius`, `-bg`, `-backing`. While indented, `position: fixed` elements inside the wrapper move with the page.
+- The software keyboard: on a phone the keyboard covers the bottom of the screen without shrinking the layout a drawer is placed against. While a field in the front drawer has the keyboard up, the drawer's content ends at the keyboard's top edge (its surface runs on underneath, so no page shows below it), the focused field scrolls into the part still visible, and the page behind holds its scroll position. Nothing to author.
+
+### toaster
+
+- Toasts swipe to dismiss, with a finger or the mouse: toward the edge they entered from, or sideways toward the nearest inline edge (either way when centered). A swipe of 45px or a quick flick dismisses; less returns the toast to rest. Timers pause during a swipe.
+- Toast text is no longer selectable (`user-select: none`), so a mouse drag swipes the toast and does not start a selection.
+- The toaster now loads `base/gesture.js`. `zazz-ui update` vendors it; a hand-written page that lists scripts one by one needs it too.
+
+### dialog
+
+- `translate` and `scale` join the `<dialog>` transition list, so a dialog moved with them (the drawer's drag, a drawer stacked behind another) eases back.
+- The phone size (`--ui-dialog-mobile-size`) skips a dialog that is also a drawer.
+- `--ui-dialog-transition-delay--end` defaults to `0ms` (was `150ms`), so a dialog starts closing as soon as it is dismissed.
+
 ## 0.13.1 (2026-11-14)
 
 ### input

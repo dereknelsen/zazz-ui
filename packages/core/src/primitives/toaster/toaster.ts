@@ -3,7 +3,8 @@
 /**
  * @fileoverview `<ui-toaster>`: HTML web component for stacked toast notifications.
  * @description Light-DOM custom element that hosts a top-layer toast stack, plus
- * the `window.Toaster` imperative API. Timers pause on hover and in hidden tabs.
+ * the `window.Toaster` imperative API. Timers pause on hover, during a swipe,
+ * and in hidden tabs.
  *
  * The region is a `popover="manual"` element: it enters the top layer via
  * `showPopover()` when the first toast arrives and leaves it after the last
@@ -19,6 +20,13 @@
  * - Imperatively: `window.Toaster.toast({ title, description, variant, … })`
  *   and the `.success()/.info()/.warning()/.error()` shorthands.
  *
+ * Swipe a toast to dismiss it, with a finger or the mouse: toward the edge it
+ * entered from (down for the bottom positions, up for the top ones), or
+ * sideways toward the nearest inline edge (either way when centered). A swipe
+ * past 45px dismisses, and so does a quick flick; anything less springs back,
+ * and the other directions resist. In the collapsed stack only the front toast
+ * swipes.
+ *
  * Region attributes:
  * - `data-toaster-position`: `top-start | top-center | top-end | bottom-start |
  *   bottom-center | bottom-end` (logical; default `bottom-end`).
@@ -28,6 +36,15 @@
  * <button commandfor="toaster" command="--toast" data-toaster-title="Saved">Save</button>
  */
 
+import {
+  currentTranslate,
+  flickDuration,
+  maxTransitionMs,
+  rubberBand,
+  shouldDismiss,
+  trackDrag,
+} from "../../base/gesture.ts";
+import type { DragAxis } from "../../base/gesture.ts";
 import { computed, effect, state } from "../../base/signals.ts";
 import { ZazzElement, defineZazzElement } from "../../base/zazz-element.ts";
 
@@ -43,6 +60,15 @@ const VISIBLE_TOASTS = 3;
 
 /** Safety net for node removal when no exit `transitionend` fires. */
 const EXIT_FALLBACK_MS = 600;
+
+/** Swipe travel that dismisses a toast on its own, in px. */
+const SWIPE_DISTANCE = 45;
+
+/** Swipe speed that dismisses a toast on its own, in px/ms. */
+const SWIPE_VELOCITY = 0.11;
+
+/** The most a toast follows a swipe in a direction that does not dismiss, in px. */
+const SWIPE_RESIST_LIMIT = 24;
 
 const VARIANTS: ReadonlyArray<string> = ["success", "info", "warning", "destructive"];
 
@@ -173,7 +199,8 @@ function computeStackLayout(heights: number[]): {
 
 /**
  * @description Adds or removes one token of an element's `data-toaster-state`
- * list: `expanded` on the region; `front`, `visible`, `removed` on a toast.
+ * list: `expanded` on the region; `front`, `visible`, `removed`, `swiping`,
+ * `swiped` on a toast.
  */
 function setToasterState(node: Element, token: string, on: boolean): void {
   const tokens = (node.getAttribute("data-toaster-state") ?? "").split(/\s+/).filter(Boolean);
@@ -206,8 +233,14 @@ class UiToaster extends ZazzElement {
   /** Whether the tab is hidden (mirrors `document.hidden`). */
   #hidden = state(typeof document !== "undefined" ? document.hidden : false);
 
-  /** Timers run only while neither expanded nor hidden. */
-  #paused = computed(() => this.#expanded.get() || this.#hidden.get());
+  /** Whether a toast is being swiped. */
+  #swiping = state(false);
+
+  /** Timers run only while not expanded, not hidden, and not mid-swipe. */
+  #paused = computed(() => this.#expanded.get() || this.#hidden.get() || this.#swiping.get());
+
+  /** The connected lifetime's signal: toasts bind their swipe tracking to it. */
+  #signal: AbortSignal | null = null;
 
   /** Measured stack (oldest first): written by `#reindex`'s measure pass. */
   #stack = state<ToastStackEntry[]>([]);
@@ -216,6 +249,8 @@ class UiToaster extends ZazzElement {
   #layout = computed(() => computeStackLayout(this.#stack.get().map((entry) => entry.height)));
 
   protected setup(signal: AbortSignal): void {
+    this.#signal = signal;
+
     // Region baseline: manual popover (no light dismiss), reachable landmark.
     if (!this.hasAttribute("popover")) this.setAttribute("popover", "manual");
     if (!this.hasAttribute("role")) this.setAttribute("role", "region");
@@ -326,7 +361,9 @@ class UiToaster extends ZazzElement {
     // toast's @starting-style enter transition runs inside an open region.
     this.#showRegion();
 
-    list.append(this.#buildToast(options, id));
+    const toast = this.#buildToast(options, id);
+    list.append(toast);
+    this.#bindSwipe(toast, id);
     this.#reindex();
     this.#startTimer(id, options.duration ?? TOAST_LIFETIME);
 
@@ -511,6 +548,99 @@ class UiToaster extends ZazzElement {
   }
 
   /**
+   * @description Binds swipe-to-dismiss to one toast. While the pointer is
+   * down the toast follows it 1:1 through its inline `translate` (transitions
+   * off via the `swiping` state); on release the CSS transitions take over,
+   * flying the toast out (`swiped`, then the normal dismissal) or returning it
+   * to rest.
+   *
+   * @param toast - The toast element.
+   * @param id - Its toast id.
+   */
+  #bindSwipe(toast: HTMLElement, id: string): void {
+    if (!this.#signal) return;
+
+    // where the toast was when the swipe caught it (mid snap-back, usually 0)
+    let base = 0;
+
+    const place = (axis: DragAxis, px: number | string) => {
+      const value = typeof px === "number" ? `${px}px` : px;
+      toast.style.translate = axis === "x" ? `${value} 0` : `0 ${value}`;
+    };
+
+    const rest = () => {
+      setToasterState(toast, "swiping", false);
+      toast.style.removeProperty("translate");
+      this.#swiping.set(false);
+      this.#requestCollapse();
+    };
+
+    trackDrag(toast, {
+      axis: "both",
+      signal: this.#signal,
+      canStart: () =>
+        !isRemoved(toast) &&
+        (this.#expanded.get() || toast.matches('[data-toaster-state~="front"]')),
+      onStart: ({ axis }) => {
+        const at = currentTranslate(toast);
+        base = axis === "x" ? at.x : at.y;
+        setToasterState(toast, "swiping", true);
+        this.#swiping.set(true);
+      },
+      onMove: ({ axis, offset }) => {
+        const travel = base + offset;
+        const direction = this.#swipeDirection(axis);
+        const dismissing = direction === 0 || Math.sign(travel) === direction;
+        place(axis, dismissing ? travel : rubberBand(travel, SWIPE_RESIST_LIMIT));
+      },
+      onEnd: ({ axis, offset, velocity }) => {
+        const travel = base + offset;
+        const direction = this.#swipeDirection(axis) || Math.sign(travel) || 1;
+        const dismiss = shouldDismiss({
+          offset: travel * direction,
+          velocity: velocity * direction,
+          distance: SWIPE_DISTANCE,
+          velocityThreshold: SWIPE_VELOCITY,
+        });
+        if (!dismiss) {
+          rest();
+          return;
+        }
+
+        // Transitions back on, then one more toast-length out in the swipe
+        // direction; the `removed` fade runs alongside. `swiped` keeps the
+        // exit from also sliding the toast back toward its entry edge.
+        setToasterState(toast, "swiped", true);
+        setToasterState(toast, "swiping", false);
+        const length = axis === "x" ? toast.offsetWidth : toast.offsetHeight;
+        const duration = flickDuration(length, velocity, maxTransitionMs(toast));
+        toast.style.transitionDuration = `${duration}ms`;
+        place(axis, `calc(${travel}px + ${direction * 100}%)`);
+        this.#swiping.set(false);
+        this.dismiss(id);
+        this.#requestCollapse();
+      },
+      onCancel: rest,
+    });
+  }
+
+  /**
+   * @description The direction a swipe on `axis` dismisses in, from the
+   * region's position: toward the entry edge on the block axis, toward the
+   * nearest inline edge on the inline axis.
+   *
+   * @param axis - The swipe's locked axis.
+   * @returns `1` (down / right), `-1` (up / left), or `0` for either way.
+   */
+  #swipeDirection(axis: DragAxis): -1 | 0 | 1 {
+    const position = this.getAttribute("data-toaster-position") ?? "bottom-end";
+    if (axis === "y") return position.startsWith("top") ? -1 : 1;
+    if (position.endsWith("center")) return 0;
+    const towardEnd = position.endsWith("start") ? -1 : 1;
+    return getComputedStyle(this).direction === "rtl" ? (-towardEnd as -1 | 1) : towardEnd;
+  }
+
+  /**
    * @description Remeasures the stack: the measure half of the stacking
    * model. Batch-reads every live toast's natural height and writes the
    * result into `#stack`; `#layout` derives the placement purely
@@ -675,10 +805,7 @@ class UiToaster extends ZazzElement {
     // Safety net for when no transitionend fires (reduced motion → duration 0).
     // Scaled to the computed duration so retuned --ui-toaster-transition-duration
     // themes aren't yanked out mid-exit.
-    const duration = getComputedStyle(toast)
-      .transitionDuration.split(",")
-      .reduce((max, value) => Math.max(max, Number.parseFloat(value) || 0), 0);
-    window.setTimeout(remove, Math.max(EXIT_FALLBACK_MS, duration * 1000 + 100));
+    window.setTimeout(remove, Math.max(EXIT_FALLBACK_MS, maxTransitionMs(toast) + 100));
   }
 }
 

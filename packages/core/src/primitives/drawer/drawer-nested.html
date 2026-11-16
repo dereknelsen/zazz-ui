@@ -1,0 +1,72 @@
+<button data-ui="button" type="button" command="show-modal" commandfor="drawer-nested-1">
+  Open drawer
+</button>
+<dialog id="drawer-nested-1" data-ui="drawer" closedby="any">
+  <div data-drawer-slot="handle"></div>
+  <div data-drawer-slot="content">
+    <header data-drawer-slot="header">
+      <h2
+        style="
+          --font-size: var(--font-size-lg);
+          --font-weight: strong;
+          --font-family: var(--font-family-heading);
+        "
+      >
+        Your order
+      </h2>
+      <p style="--text: var(--color-muted-foreground)">
+        Open the second drawer: this one steps back behind it.
+      </p>
+    </header>
+    <div data-drawer-slot="body">
+      <p>Two items, arriving Thursday.</p>
+    </div>
+    <footer data-drawer-slot="footer">
+      <button data-ui="button" type="button" commandfor="drawer-nested-1" command="close">
+        Close
+      </button>
+      <button
+        data-ui="button"
+        data-button-variant="primary"
+        type="button"
+        command="show-modal"
+        commandfor="drawer-nested-2"
+      >
+        Change address
+      </button>
+    </footer>
+  </div>
+</dialog>
+<dialog id="drawer-nested-2" data-ui="drawer" closedby="any">
+  <div data-drawer-slot="handle"></div>
+  <div data-drawer-slot="content">
+    <header data-drawer-slot="header">
+      <h2
+        style="
+          --font-size: var(--font-size-lg);
+          --font-weight: strong;
+          --font-family: var(--font-family-heading);
+        "
+      >
+        Delivery address
+      </h2>
+      <p style="--text: var(--color-muted-foreground)">
+        Drag this drawer down and the one behind follows it back.
+      </p>
+    </header>
+    <div data-drawer-slot="body">
+      <p>14 Harbour Street, Flat 3.</p>
+    </div>
+    <footer data-drawer-slot="footer">
+      <button
+        data-ui="button"
+        data-button-variant="primary"
+        type="button"
+        commandfor="drawer-nested-2"
+        command="close"
+      >
+        Done
+      </button>
+    </footer>
+  </div>
+</dialog>

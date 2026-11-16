@@ -1,10 +1,10 @@
 /**
- * carousel.css — Embla carousel (ui-carousel | [data-ui~="carousel"] + data-carousel-slot="carousel-*" hooks)
+ * carousel.css — scroll-snap carousel (ui-carousel | [data-ui~="carousel"] + data-carousel-slot hooks)
  *
  * @layer      variables, components
  * @requires   _layers.css, _variables.css
- * @uses       data-carousel attributes — layout hooks only; behavior from base/embla.js (Embla v9)
- * @uses       data-ui-dragging on :root — written by embla.js while a slide drags; the grabbing cursor page-wide
+ * @uses       data-carousel attributes — the viewport is a native scroll-snap container; base/carousel.js adds mouse drag, loop, controls, and state
+ * @uses       data-carousel-state on the viewport — free | gliding | settling | jumping | dragging, written by base/carousel-scroll.js
  * @uses       container-type on viewport — basis-* / @sm:basis-* utils query [data-carousel-slot~="viewport"] width
  * @tokens     --ui-carousel-* (@layer variables)
  * @consumedby lightbox.css
@@ -16,8 +16,12 @@
     --ui-carousel-gap: 0px;
     --ui-carousel-slide-basis: calc(100% - var(--ui-carousel-gap));
     --ui-carousel-slide-min-w: 0;
-    --ui-carousel-touch-action: pan-y pinch-zoom;
     --ui-carousel-cursor--grabbing: grabbing;
+    /* where slides rest (data-carousel-align sets it), and the rubber band's
+       return after a mouse drag past an end (0s under reduced motion) */
+    --ui-carousel-snap-align: start;
+    --ui-carousel-settle-duration: calc(var(--default-transition-duration) * 2);
+    --ui-carousel-settle-ease: var(--default-transition-timing-function);
   }
 }
 
@@ -27,25 +31,76 @@
     display: block;
   }
 
-  /* The grabbing cursor holds page-wide while a slide drags, since the pointer
-     leaves the viewport mid-drag. embla.js flags the root; a `body:has(…) *`
-     rule here made every DOM insertion restyle the whole page. */
-  :where(ui-carousel, [data-ui~="carousel"])
-    [data-carousel-slot~="viewport"][data-carousel-state~="dragging"],
-  :root[data-ui-dragging],
-  :root[data-ui-dragging] * {
-    cursor: var(--ui-carousel-cursor--grabbing);
-  }
-
   :where(ui-carousel, [data-ui~="carousel"]) {
     position: relative;
     isolation: isolate;
   }
 
+  /* The viewport is a real scroll container: touch, wheel, trackpad, and keys
+     scroll it natively, and it still scrolls with no script at all. RTL needs
+     nothing here: the track follows the inherited direction. */
   :where(ui-carousel, [data-ui~="carousel"]) [data-carousel-slot~="viewport"] {
-    overflow: clip;
     max-block-size: 100%;
     max-inline-size: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: var(--_snap-axis, x) mandatory;
+    scrollbar-width: none;
+  }
+
+  /* vertical: data-carousel-axis="y" on the root (data-carousel-thumbs-axis="y"
+     on a thumbs slot). Give the viewport a block size; slides fill it by basis. */
+  :where(ui-carousel, [data-ui~="carousel"])
+    :is(
+      [data-carousel-axis="y"]
+        [data-carousel-slot~="viewport"]:not([data-carousel-slot~="thumbs"] *),
+      [data-carousel-thumbs-axis="y"] [data-carousel-slot~="viewport"]
+    ) {
+    --_snap-axis: y;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-x: auto;
+    overscroll-behavior-y: contain;
+  }
+
+  /* free: drag-free (thumb strips by default), no snapping at all.
+     gliding: a mouse drag, its release scroll, or auto-scroll; snapping off
+     until it lands. settling: a loop rotation's compensating scroll, with the
+     axis locked too (iOS Safari otherwise paints the reordered frame before
+     the scroll lands). */
+  :where(ui-carousel, [data-ui~="carousel"])
+    [data-carousel-slot~="viewport"]:is(
+      [data-carousel-state~="free"],
+      [data-carousel-state~="gliding"],
+      [data-carousel-state~="settling"]
+    ) {
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+  }
+
+  /* jumping: an instant scroll the script makes (start position, dialog start) */
+  :where(ui-carousel, [data-ui~="carousel"])
+    [data-carousel-slot~="viewport"][data-carousel-state~="jumping"] {
+    scroll-behavior: auto;
+  }
+
+  :where(ui-carousel, [data-ui~="carousel"])
+    [data-carousel-slot~="viewport"][data-carousel-state~="settling"] {
+    overflow: hidden;
+  }
+
+  /* a mouse drag would otherwise select the slides' text before the slop */
+  :where(ui-carousel, [data-ui~="carousel"]):not([data-carousel-draggable="false"])
+    [data-carousel-slot~="viewport"] {
+    user-select: none;
+  }
+
+  /* The pointer is captured for the whole drag, so this one rule keeps the
+     grabbing cursor wherever the pointer goes; no page-wide flag. */
+  :where(ui-carousel, [data-ui~="carousel"])
+    [data-carousel-slot~="viewport"][data-carousel-state~="dragging"] {
+    cursor: var(--ui-carousel-cursor--grabbing);
   }
 
   :where(ui-carousel, [data-ui~="carousel"]) [data-carousel-slot~="container"] {
@@ -53,21 +108,49 @@
     --_gap-len: var(--_gap-resolved, var(--ui-carousel-gap));
     --_gap-num: var(--_gap-resolved, var(--ui-carousel-gap));
     gap: calc(var(--_gap-len) + var(--_gap-num) * var(--spacing));
-    touch-action: var(--ui-carousel-touch-action);
+    /* the rubber band past an end, springing back on release */
+    transition: translate var(--ui-carousel-settle-duration) var(--ui-carousel-settle-ease);
+  }
+
+  :where(ui-carousel, [data-ui~="carousel"])
+    [data-carousel-state~="dragging"]
+    > [data-carousel-slot~="container"] {
+    transition: none;
+  }
+
+  :where(ui-carousel, [data-ui~="carousel"])
+    :is(
+      [data-carousel-axis="y"]
+        [data-carousel-slot~="container"]:not([data-carousel-slot~="thumbs"] *),
+      [data-carousel-thumbs-axis="y"] [data-carousel-slot~="container"]
+    ) {
+    flex-direction: column;
+    block-size: 100%;
   }
 
   :where(ui-carousel, [data-ui~="carousel"]) [data-carousel-slot~="slide"] {
     flex: 0 0 var(--ui-carousel-slide-basis);
     min-inline-size: var(--ui-carousel-slide-min-w);
-    /* Embla moves the container with transform, and with loop on also the slides
-       it wraps; a transition on a slide (a link's default, say) sweeps it across
-       the viewport. Animate a slide's child. */
-    transition: none;
+    scroll-snap-align: var(--ui-carousel-snap-align);
   }
 
   :where(ui-carousel, [data-ui~="carousel"])
     [data-carousel-slot~="thumbs"]
     [data-carousel-slot~="slide"] {
     flex: 0 0 auto;
+  }
+
+  :where(ui-carousel, [data-ui~="carousel"])[data-carousel-align="center"] {
+    --ui-carousel-snap-align: center;
+  }
+
+  :where(ui-carousel, [data-ui~="carousel"])[data-carousel-align="end"] {
+    --ui-carousel-snap-align: end;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :where(ui-carousel, [data-ui~="carousel"]) [data-carousel-slot~="viewport"] {
+      scroll-behavior: smooth;
+    }
   }
 }

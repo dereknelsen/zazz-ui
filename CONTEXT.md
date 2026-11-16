@@ -20,6 +20,21 @@ _Avoid_: element version, web component form, `<ui-button>`
 The `data-ui` spelling of a primitive (`<div data-ui="tooltip">`, `<button data-ui="button">`). Every primitive has an attribute form; primitives rooted on semantic native elements have only this form. `data-ui` is a space-separated token list: a specialization rides on its base (`data-ui="dialog alert-dialog"`), and typography roles and `group` stack on anything. It holds identities only: a value goes in a utility, and a color scheme goes in `data-theme`.
 _Avoid_: class form, `.ui-button`, expanded version, raw form
 
+**Drawer**:
+A modal `<dialog>` that rises from the bottom edge and is dragged down to dismiss. `data-ui="drawer"` is one everywhere; `data-ui="dialog drawer"` is a dialog that becomes one on a touch phone ("drawer mode"). Attribute form only: its root is a `<dialog>`.
+_Avoid_: sheet, bottom sheet (as the primitive's name), `<ui-drawer>`
+
+**Snap point**:
+One of the heights a drawer rests at, listed in `data-drawer-snap`, smallest first. In code a snap point is a "stop": the px the drawer is pushed down to rest there.
+_Avoid_: detent, breakpoint
+
+**Stacked drawer**:
+A drawer with another drawer open in front of it; it is scaled back and lifted. The one in front is "nested". The script counts open drawers, so neither is authored.
+
+**Drawer indent**:
+The page wrapper (`<ui-drawer-indent>`, `data-ui="drawer-indent"`) that scales back behind an open drawer, and the effect itself. Its rounded corners are "corner pieces": two scaled elements, not a `border-radius`.
+_Avoid_: scale background, background scaling
+
 **Slot**:
 An interior part of a primitive, identified by `data-<primitive>-slot="<part>"` (`data-dialog-slot="header"`). A part that serves two primitives carries two attributes (`data-lightbox-slot="slide" data-carousel-slot="slide"`). Slots replace BEM element classes.
 _Avoid_: part, fragment, segment, sub-component, BEM element, `data-slot`, `data-ui-slot`

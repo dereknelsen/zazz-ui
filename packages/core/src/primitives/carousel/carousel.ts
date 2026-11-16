@@ -3,18 +3,18 @@
 /**
  * @fileoverview `<ui-carousel>` — HTML web component for carousels.
  * @description Light-DOM custom element that wraps standard carousel markup
- * and owns the Embla lifecycle: it initializes on connect (via
- * `EmblaInit.initRoot`) and destroys its instances on disconnect, so
- * dynamically inserted or SPA-swapped carousels need no manual wiring.
+ * and owns the carousel's lifecycle: it initializes on connect (via
+ * `Carousel.initRoot`) and tears down on disconnect, so dynamically inserted
+ * or SPA-swapped carousels need no manual wiring.
  *
- * The element *is* the carousel root — CSS and `embla.js` target
+ * The element *is* the carousel root — CSS and `base/carousel.js` target
  * `:is(ui-carousel, [data-ui~="carousel"])` directly, and `data-carousel-*`
- * configuration attributes are read off the element (see embla.js for the
- * full attribute reference). No shadow DOM; children are regular markup.
+ * configuration attributes are read off the element (see base/carousel.js for
+ * the full attribute reference). No shadow DOM; children are regular markup.
  *
  * Carousels inside a closed `<dialog>` defer initialization until the dialog
- * first opens (a closed dialog is `display: none`, so Embla cannot measure
- * the viewport).
+ * first opens (a closed dialog is `display: none`, so the viewport cannot be
+ * measured).
  *
  * @example
  * <ui-carousel data-carousel-loop="true">
@@ -22,6 +22,7 @@
  *     <div data-carousel-slot="container">
  *       <div data-carousel-slot="slide">Slide 1</div>
  *       <div data-carousel-slot="slide">Slide 2</div>
+ *       <div data-carousel-slot="slide">Slide 3</div>
  *     </div>
  *   </div>
  *   <button type="button" data-carousel-slot="prev">Prev</button>
@@ -29,15 +30,15 @@
  * </ui-carousel>
  */
 
-import type { EmblaCarouselType } from "embla-carousel";
-import { EmblaInit } from "../../base/embla.ts";
+import { Carousel } from "../../base/carousel.ts";
+import type { CarouselApi } from "../../base/carousel-scroll.ts";
 import { ZazzElement, defineZazzElement } from "../../base/zazz-element.ts";
 
 class UiCarouselElement extends ZazzElement {
   protected setup(signal: AbortSignal): void {
     const dialog = this.closest("dialog");
     if (dialog && !dialog.open) {
-      // Closed dialogs are display:none — Embla can't measure the viewport.
+      // Closed dialogs are display:none — the viewport can't be measured.
       // Initialize on the dialog's open instead (zazz:dialog-open).
       dialog.addEventListener("zazz:dialog-open", () => this.init(), { signal });
       return;
@@ -47,15 +48,10 @@ class UiCarouselElement extends ZazzElement {
   }
 
   protected teardown(): void {
-    // Abort first so the per-carousel DOM listeners (prev/next, dots, thumbs,
-    // drag-click suppression) are removed before the Embla instances are torn down.
-    this._emblaController?.abort();
-    delete this._emblaController;
-
-    this._emblaApi?.destroy();
-    this._emblaApiThumb?.destroy();
-    delete this._emblaApi;
-    delete this._emblaApiThumb;
+    // Aborting removes every listener and observer the engine bound and
+    // restores the markup (slide order, the template dot, state tokens).
+    this._carouselController?.abort();
+    delete this._carouselController;
 
     // Allow re-initialization if the element is re-inserted.
     this.removeAttribute("data-carousel-init");
@@ -66,15 +62,15 @@ class UiCarouselElement extends ZazzElement {
    * roots and roots inside closed dialogs are skipped by `initRoot`.
    */
   init(): void {
-    EmblaInit.initRoot(this);
+    Carousel.initRoot(this);
   }
 
   /**
-   * @returns The Embla v9 API (`goTo`, `goToNext`, `selectedSnap`, lowercase
-   * events such as `reinit`), or null before initialization.
+   * @returns The carousel API (`goTo`, `goToNext`, `goToPrev`, `selectedSnap`,
+   * `play`, `stop`), or null before initialization.
    */
-  get api(): EmblaCarouselType | null {
-    return this._emblaApi ?? null;
+  get api(): CarouselApi | null {
+    return this._carousel ?? null;
   }
 }
 

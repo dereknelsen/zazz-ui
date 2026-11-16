@@ -97,7 +97,7 @@ export async function runAdd(names: string[], flags: AddFlags, global: GlobalFla
     config.primitives[name] = { version: kit.version, files: hashes };
   }
 
-  // Base scripts the closure needs that init didn't vendor (typeahead, embla…).
+  // Base scripts the closure needs that init didn't vendor (typeahead, carousel…).
   const freshEntries = fresh.flatMap((name) => kit.manifest.primitives[name] ?? []);
   const neededBase = baseScriptFiles(freshEntries, config.language).filter(
     (file) => !(file in config.base.files),

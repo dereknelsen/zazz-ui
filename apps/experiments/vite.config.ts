@@ -107,7 +107,7 @@ export default defineConfig({
   // Plain pages, not a single-page app: a missing file is a 404 instead of
   // index.html (Lighthouse read the SPA fallback as an 87-line robots.txt).
   appType: "mpa",
-  // Pre-bundled dependencies (embla, the signals polyfill) are served minified
+  // Pre-bundled dependencies (the signals polyfill) are served minified
   // in dev, as the kit ships its scripts (dist/zazz.js is minified; the kit is
   // not a framework anyone steps through). The kit's own modules are served as
   // Vite transpiles them, with source maps: Vite 8 has no per-module minify in

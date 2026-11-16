@@ -1,0 +1,27 @@
+<ui-drawer-indent style="--p: 6">
+  <button data-ui="button" type="button" command="show-modal" commandfor="drawer-indent-1">
+    Open drawer
+  </button>
+</ui-drawer-indent>
+<dialog id="drawer-indent-1" data-ui="drawer" closedby="any">
+  <div data-drawer-slot="handle"></div>
+  <div data-drawer-slot="content">
+    <header data-drawer-slot="header">
+      <h2
+        style="
+          --font-size: var(--font-size-lg);
+          --font-weight: strong;
+          --font-family: var(--font-family-heading);
+        "
+      >
+        Share this page
+      </h2>
+      <p style="--text: var(--color-muted-foreground)">
+        The page behind steps back while the drawer is open, and follows as you drag it down.
+      </p>
+    </header>
+    <div data-drawer-slot="body">
+      <p>Wrap the page in the indent element once; every drawer on the page uses it.</p>
+    </div>
+  </div>
+</dialog>

@@ -9,7 +9,7 @@
  * idiom need this exact parser to match kit behaviour.
  *
  * Callers that need a typed result should wrap it at their own boundary (see
- * `readCarouselOptions` in embla.ts).
+ * the carousel options in carousel-scroll.ts).
  */
 
 // --- Data type conversion ---
@@ -86,7 +86,7 @@ const Utils = {
 };
 
 // Attach to window for the documented public API (`window.Utils`), and export
-// for module consumers (embla.js imports it via the index.js entry).
+// for module consumers (carousel-scroll.js imports it).
 if (typeof window !== "undefined") {
   window.Utils = Utils;
 }

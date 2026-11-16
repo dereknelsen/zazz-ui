@@ -13,7 +13,7 @@
  * Components subscribe instead of running their own observers: a carousel
  * inside a closed dialog listens on the dialog it found via `closest("dialog")`;
  * `<ui-lightbox>` listens on itself (its dialog is a descendant, so the events
- * bubble through it); embla.js listens on `document` for class-form roots.
+ * bubble through it); carousel.js listens on `document` for class-form roots.
  * Dispatch order is the DOM order: dialog listeners, then ancestors, then
  * document, so init-on-open (dialog level) always precedes scroll/focus
  * choreography (ancestor and document level).

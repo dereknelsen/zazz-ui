@@ -16,7 +16,7 @@ enhances markup; you rarely touch it.
 | Invoker Commands                      | dialog, lightbox, toaster               | `command="show-modal"` / `command="close"` / custom `command="--toast[-variant]"`, `commandfor="<id>"`                                                                                                                                         | — (native; Baseline 2026)               |
 | Interest Invokers                     | tooltip, menu, menubar, navigation-menu | `interestfor="<id>"` (hover/focus/long-press → hint, wires ARIA)                                                                                                                                                                               | **`invokers/interest`** (Chromium-only) |
 | CSS Anchor Positioning                | popover/tooltip placement               | `data-popover-side`, `data-popover-align` on the `[popover]` (drive `position-area`)                                                                                                                                                           | `@supports`-gated; UA-centered fallback |
-| Native `<dialog>`                     | dialog, lightbox, mobile-menu           | `<dialog>`, `::backdrop`, `closedby="any"` (backdrop dismiss; `dialog-lifecycle.ts` fills it in for Safari)                                                                                                                                    | —                                       |
+| Native `<dialog>`                     | dialog, drawer, lightbox, mobile-menu   | `<dialog>`, `::backdrop`, `closedby="any"` (backdrop dismiss; `dialog-lifecycle.ts` fills it in for Safari)                                                                                                                                    | —                                       |
 | Native `<details>`                    | accordion                               | `<details>`/`<summary>`, `::details-content`, `interpolate-size: allow-keywords`                                                                                                                                                               | —                                       |
 | View Transitions                      | cross-page nav                          | `@view-transition { navigation: auto }` (in the site's own CSS; the kit never enables it, and `var()` can't toggle it), `data-transition-layer="global-header"` / `="global-footer"` (`<main>` is automatic), `document.startViewTransition()` | —                                       |
 | Navigation API                        | SPA-style nav                           | `navigation.js`, opt-in: `<html data-ui-navigation="swap">`, `data-ui-persist="<id>"` to keep an element, `data-ui-persist-scroll="<id>"` to keep only its scroll                                                                              | falls back to full page load            |
@@ -31,7 +31,7 @@ Configure entirely in markup. Don't edit the kit's scripts (vendored `zazz/` or 
 unless the task is explicitly about framework internals. Every behavior ships in one ES module,
 `index.js` (`dist/zazz.js` on the CDN), loaded with a single
 `<script type="module" src="…/index.js">`; its `import` graph orders the rest.
-Embla-backed components resolve the Embla ESM builds through the head's import map (pinned,
+The one bare dependency (`signal-polyfill`) resolves through the head's import map (pinned,
 SRI-checked); keep the import map above the module.
 
 ### Light-DOM web components
@@ -41,7 +41,7 @@ so the `data-ui`, preset, slot, and utility markup inside them keeps working.
 
 | Element         | Script              | Use for                                     | Notes                                                                                                                                                                                                      |
 | --------------- | ------------------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `<ui-carousel>` | `carousel.js`       | Component carousels and carousel roots      | The element is the Embla root; put `data-carousel-*` options on it                                                                                                                                         |
+| `<ui-carousel>` | `carousel.js`       | Component carousels and carousel roots      | The element is the carousel root; put `data-carousel-*` options on it                                                                                                                                      |
 | `<ui-lightbox>` | `lightbox.js`       | Inline gallery + fullscreen dialog lightbox | Coordinates gallery/dialog slide state; opening/closing still uses Invoker Commands                                                                                                                        |
 | `<ui-password>` | `password-group.js` | Password show/hide toggle                   | Wrap `data-ui="password-group"`; optional `data-password-group-label-show` / `-label-hide`; icons swap via ARIA                                                                                            |
 | `<ui-tabs>`     | `tabs.js`           | Radio-driven tabs with richer keyboard nav  | Enhances the CSS-only radio tabs with orientation-aware arrows, Home/End, and wrap-around                                                                                                                  |
@@ -99,37 +99,49 @@ example), wrap it: put the reveal on an outer `div` and keep `--transition` on t
 >
 ```
 
-### Embla carousel — `embla.js` (`window.EmblaInit`) — Embla via the import map
+### Carousel — `carousel.js` (`window.Carousel`)
+
+A native scroll-snap carousel with no dependency: the viewport is a real scroll container, so
+touch, trackpad, and wheel scroll it natively and it still scrolls without JavaScript. The
+script adds mouse drag, loop, controls, thumbs, autoplay, and state.
 
 The root is `<ui-carousel>` (or `data-ui="carousel"`); put config on that element. Mark up
 child roles as slots: `data-carousel-slot="<role>"`. A lightbox element doubles as a carousel
 role by carrying both slot attributes (`data-lightbox-slot="slide" data-carousel-slot="slide"`).
 
 **Role slots:** `viewport` (required) · `container` · `slide` · `prev` · `next` · `dots` ·
-`dot` (template, cloned per snap) · `thumbs` (linked thumb carousel).
+`dot` (template, cloned per snap) · `thumbs` (linked thumb strip).
 
-**Config on the carousel root** (kebab-case → Embla options via
-`Utils.parseDataAttributes`):
+**Config on the carousel root:**
 
-| Attribute                                            | Example                                                    | Purpose                                                                   |
-| ---------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------- |
-| any core Embla option                                | `data-carousel-loop="true"`, `data-carousel-align="start"` | passed straight to Embla                                                  |
-| `data-carousel-keyboard`                             | `"false"`                                                  | disable ArrowLeft/Right navigation                                        |
-| `data-carousel-plugins`                              | `"class-names autoplay"`                                   | space-separated plugin slugs to load                                      |
-| `data-carousel-autoplay-*`                           | `data-carousel-autoplay-delay="3000"`                      | Autoplay plugin options (requires `autoplay` in plugins)                  |
-| `data-carousel-auto-scroll-*`                        | `data-carousel-auto-scroll-speed="2"`                      | AutoScroll plugin options (requires `auto-scroll` in plugins)             |
-| `data-carousel-class-names-*`                        | `data-carousel-class-names-snapped="is-snapped"`           | ClassNames plugin options (requires `class-names` in plugins)             |
-| `data-carousel-thumbs-*` (on the `thumbs` slot)      | `data-carousel-thumbs-contain-scroll="keepSnaps"`          | thumb carousel options (defaults: containScroll keepSnaps, dragFree true) |
-| `data-carousel-start` (on a trigger w/ `commandfor`) | `data-carousel-start="2"`                                  | open a dialog carousel at slide N                                         |
+| Attribute                                            | Example                               | Purpose                                                            |
+| ---------------------------------------------------- | ------------------------------------- | ------------------------------------------------------------------ |
+| `data-carousel-loop`                                 | `"true"`                              | wrap from the last slide to the first (needs three slides)         |
+| `data-carousel-align`                                | `"center"`                            | where slides rest: `start` (default), `center`, `end`              |
+| `data-carousel-axis`                                 | `"y"`                                 | vertical track; give the viewport a height                         |
+| `data-carousel-draggable`                            | `"false"`                             | turn mouse dragging off (touch still scrolls)                      |
+| `data-carousel-drag-free`                            | `"true"`                              | free scrolling with momentum, no snapping                          |
+| `data-carousel-skip-snaps`                           | `"true"`                              | a mouse flick may pass several snaps (default: one)                |
+| `data-carousel-start-snap`                           | `"2"`                                 | index to start on                                                  |
+| `data-carousel-keyboard`                             | `"false"`                             | leave the arrow keys to native scrolling                           |
+| `data-carousel-plugins`                              | `"autoplay"` or `"auto-scroll"`       | timed steps, or continuous scrolling                               |
+| `data-carousel-autoplay-*`                           | `data-carousel-autoplay-delay="3000"` | `delay` (ms), `stop-on-last-snap`                                  |
+| `data-carousel-auto-scroll-*`                        | `data-carousel-auto-scroll-speed="2"` | `speed` (px per frame), `start-delay` (ms), `direction="backward"` |
+| `data-carousel-thumbs-*` (on the `thumbs` slot)      | `data-carousel-thumbs-axis="y"`       | the same options for the thumb strip (default: drag-free)          |
+| `data-carousel-start` (on a trigger w/ `commandfor`) | `data-carousel-start="2"`             | open a dialog carousel at slide N                                  |
 
-Embla is v9: core option attributes use its v9 names (`data-carousel-start-snap`, `data-carousel-draggable`, `data-carousel-drag-free="snap"`), and code on `_emblaApi` calls `goTo` / `goToNext` / `selectedSnap` with lowercase events (`reinit`, `pointerdown`).
+Right to left needs no option: the track follows the inherited `dir`. Arrow keys step the
+focused carousel (Left/Right, mirrored in RTL; Up/Down when vertical).
 
-A drag, slide focus, Prev/Next, the dots, the thumbs, and the arrow keys stop Autoplay and Auto Scroll. Add `data-carousel-autoplay-stop-on-interaction="false"` to keep autoplay running: a drag or focus holds it and resumes after, and a manual step restarts its delay. `data-carousel-autoplay-play-on-init="false"` leaves it stopped until `play()`. These two are kit options; they work the same under `data-carousel-auto-scroll-`.
+A drag, a scroll, slide focus, Prev/Next, the dots, the thumbs, and the arrow keys stop autoplay and auto-scroll. Add `data-carousel-autoplay-stop-on-interaction="false"` to keep it running: a drag or focus holds it and resumes after, and a manual step restarts its delay. `…-play-on-init="false"` leaves it stopped until `play()`; `…-stop-on-mouse-enter="true"` pauses on hover. Both pause while the carousel is off screen or the tab is hidden, and auto-scroll does not start on its own under reduced motion.
 
 Script-managed (don't set by hand): `data-carousel-init`,
 `data-carousel-start-index`, and `data-carousel-state` (`active` on the current dot/thumb;
-`in-view`, `snapped`, `dragging` on slides). The script stores `_emblaApi` on the root. `<ui-carousel>` initializes on connect,
-defers while inside a closed `<dialog>`, and destroys its Embla instances on disconnect.
+`in-view` and `snapped` on slides; `dragging` on the viewport; `playing` on the root). The root
+dispatches `zazz:carousel-select` (`detail.index`). The script stores its API on the root as
+`_carousel` (`<ui-carousel>.api`): `goTo(index, instant?)`, `goToNext()`, `goToPrev()`,
+`selectedSnap()`, `play()`, `stop()`, `isPlaying()`. `<ui-carousel>` initializes on connect,
+defers while inside a closed `<dialog>`, and tears down on disconnect.
 
 ### Helpers and app glue
 
@@ -140,7 +152,7 @@ defers while inside a closed `<dialog>`, and destroys its Embla instances on dis
   `<body>` between opted-in pages, keeps only `data-ui-persist="<id>"` elements (with their
   scroll offsets; their links take `aria-current` from the new page), carries the scroll offset
   of `data-ui-persist-scroll="<id>"` elements rendered fresh (a section sidebar), runs a View
-  Transition, and refreshes Reveal/Embla (see `AUTHORING.md`, Navigation). App-level only. Custom elements initialize themselves when connected, so SPA swaps
+  Transition, and refreshes Reveal and carousels (see `AUTHORING.md`, Navigation). App-level only. Custom elements initialize themselves when connected, so SPA swaps
   do not need a separate init call for them.
 
 ## 3. The page head's one polyfill (keep it)
@@ -153,6 +165,5 @@ no `interestfor` at all.
 
 The Popover API and Invoker Commands were polyfilled through 0.3.x and are not any more; they
 are native across the support floor. Anchor positioning is below the floor but `@supports`-gated
-rather than polyfilled. The Embla Carousel ESM builds also load from the CDN, but through the
-import map as ordinary dependencies, not polyfills. Copy the exact tags and SRI hashes from the
+rather than polyfilled. Copy the exact tags and SRI hashes from the
 CLI's `zazz/head.html` or `https://zazz.sh/docs/install/installation/`; don't write them by hand.

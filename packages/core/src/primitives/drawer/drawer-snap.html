@@ -1,0 +1,26 @@
+<button data-ui="button" type="button" command="show-modal" commandfor="drawer-snap-1">
+  Open drawer
+</button>
+<dialog id="drawer-snap-1" data-ui="drawer" data-drawer-snap="12rem 0.5 1" closedby="any">
+  <button type="button" data-drawer-slot="handle" aria-label="Resize drawer"></button>
+  <div data-drawer-slot="content">
+    <header data-drawer-slot="header">
+      <h2
+        style="
+          --font-size: var(--font-size-lg);
+          --font-weight: strong;
+          --font-family: var(--font-family-heading);
+        "
+      >
+        Nearby places
+      </h2>
+      <p style="--text: var(--color-muted-foreground)">
+        Drag up for more, or press the handle to step through the sizes.
+      </p>
+    </header>
+    <div data-drawer-slot="body">
+      <p>The drawer rests at three heights. Its content scrolls once it is fully open.</p>
+      <p>Flick down from the smallest height to close it.</p>
+    </div>
+  </div>
+</dialog>

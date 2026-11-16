@@ -104,30 +104,6 @@ const ESM_DEPENDENCIES: readonly CdnDependency[] = [
     file: "dist/index.js",
     integrity: "sha384-0OqM7OXGT6Oz1z98u/geiFn/FUyz4iWexkXHCvbIGXRRDXl6bp6IKc0j78AQ6DEK",
   },
-  {
-    name: "embla-carousel",
-    version: "9.0.0-rc04",
-    file: "esm/embla-carousel.esm.js",
-    integrity: "sha384-Qcz5VJ/iRhG3zPRMT8li6rYNSsXcCeSQ6URxPlQh7joEd/nNxRRkCZxlJoTZr3Ch",
-  },
-  {
-    name: "embla-carousel-autoplay",
-    version: "9.0.0-rc04",
-    file: "esm/embla-carousel-autoplay.esm.js",
-    integrity: "sha384-dsPLKoLTpj/hIVD1I1zYA1kDCI32uRH4seU3ly+s7Lm9MdWVsj1OmE8HELhZ/Fm4",
-  },
-  {
-    name: "embla-carousel-auto-scroll",
-    version: "9.0.0-rc04",
-    file: "esm/embla-carousel-auto-scroll.esm.js",
-    integrity: "sha384-bOWyJNYHSsncAhdIgavN6TjY6Bb/NRLV9fAon5xy9HquiFZbNYTjq2JZ5bq5nyb5",
-  },
-  {
-    name: "embla-carousel-class-names",
-    version: "9.0.0-rc04",
-    file: "esm/embla-carousel-class-names.esm.js",
-    integrity: "sha384-y8wWJW7HPdqr5guB+ZdF/o9FIRGg2KtH9TdoAttP7jjEU9bQlAzY0Fc5FiIMYQN1",
-  },
 ];
 
 /**
@@ -173,7 +149,7 @@ function fontsBlock(display: "swap" | "optional"): string {
 
 /**
  * @description Renders the import map that resolves the kit's bare specifiers
- * (`signal-polyfill`, `embla-carousel`, …) to pinned jsDelivr URLs, with an
+ * (`signal-polyfill`) to pinned jsDelivr URLs, with an
  * `integrity` section covering every mapped file.
  *
  * @returns The import-map script tag.

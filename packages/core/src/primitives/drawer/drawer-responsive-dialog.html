@@ -1,0 +1,44 @@
+<button data-ui="button" type="button" command="show-modal" commandfor="drawer-responsive-dialog-1">
+  Open dialog
+</button>
+<dialog id="drawer-responsive-dialog-1" data-ui="dialog drawer" closedby="any">
+  <div data-drawer-slot="handle"></div>
+  <div data-dialog-slot="content">
+    <header data-dialog-slot="header">
+      <h2
+        style="
+          --font-size: var(--font-size-lg);
+          --font-weight: strong;
+          --font-family: var(--font-family-heading);
+        "
+      >
+        Confirm your order
+      </h2>
+      <p style="--text: var(--color-muted-foreground)">
+        A dialog on a desktop, and a drawer you can swipe away on a phone.
+      </p>
+    </header>
+    <div data-dialog-slot="body">
+      <p>The markup is a dialog with its usual slots, plus the drawer identity and a handle.</p>
+    </div>
+    <footer data-dialog-slot="footer">
+      <button
+        data-ui="button"
+        type="button"
+        commandfor="drawer-responsive-dialog-1"
+        command="close"
+      >
+        Cancel
+      </button>
+      <button
+        data-ui="button"
+        data-button-variant="primary"
+        type="button"
+        commandfor="drawer-responsive-dialog-1"
+        command="close"
+      >
+        Confirm
+      </button>
+    </footer>
+  </div>
+</dialog>

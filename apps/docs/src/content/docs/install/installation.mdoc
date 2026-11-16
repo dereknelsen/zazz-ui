@@ -56,7 +56,7 @@ import "@zazz-ui/core/index.css";
 import "@zazz-ui/core"; // the behavior
 ```
 
-The package also exports the single-file bundles (`@zazz-ui/core/zazz.css`, `@zazz-ui/core/zazz.js`), individual files (`@zazz-ui/core/primitives/dialog/dialog.css`, `@zazz-ui/core/base/signals.js`), the editor data (`@zazz-ui/core/editor/*`), and the head builder (`@zazz-ui/core/head`). Bundlers resolve the kit's bare dependencies (`signal-polyfill` and four Embla packages) from `node_modules`, so no import map is needed.
+The package also exports the single-file bundles (`@zazz-ui/core/zazz.css`, `@zazz-ui/core/zazz.js`), individual files (`@zazz-ui/core/primitives/dialog/dialog.css`, `@zazz-ui/core/base/signals.js`), the editor data (`@zazz-ui/core/editor/*`), and the head builder (`@zazz-ui/core/head`). Bundlers resolve the kit's one bare dependency (`signal-polyfill`) from `node_modules`, so no import map is needed.
 
 {% callout %}
 Keep the kit's stylesheet out of CSS minifiers that rewrite modern syntax. `@property` registrations, `light-dark()`, and relative `oklch(from …)` colors are load-bearing; the published `dist/zazz.css` is already minified with them intact.

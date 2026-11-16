@@ -6,7 +6,7 @@
  * @uses       command="show-modal" — Invoker Commands open fullscreen dialog (no JS)
  * @uses       @container — thumb column count at narrow widths
  * @uses       @starting-style — dialog slide scale/opacity on snap
- * @uses       Embla sync — requires zazz/scripts/embla.js for carousel behaviour
+ * @uses       carousel sync — requires base/carousel.js for carousel behaviour
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
  * @tokens     --ui-lightbox-* (@layer variables)
@@ -46,7 +46,7 @@
 @layer ui.components {
   /* ===========================================================================
   LIGHTBOX — image gallery with fullscreen dialog slideshow
-  - Inline gallery: main Embla carousel + linked thumb strip.
+  - Inline gallery: main carousel + linked thumb strip.
   - Gallery slides are <button command="show-modal"> — opens dialog at current index.
   - Dialog repeats main carousel + thumbs with prev/next navigation.
   - No JavaScript required for open/close — uses Invoker Commands API.

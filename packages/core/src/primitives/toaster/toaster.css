@@ -2,7 +2,7 @@
  * toaster.css: Toaster (ui-toaster | [data-ui~="toaster"], [data-toaster-slot~="toast"])
  *
  * Stacked toast notifications: newest toast in front, older toasts peeking
- * behind, expand on hover.
+ * behind, expand on hover, swipe to dismiss.
  *
  * @layer      variables, components
  * @requires   _layers.css, _variables.css, popover.css, button.css
@@ -13,6 +13,9 @@
  *             _view-transitions.css so page transitions never repaint the stack
  * @uses       JS-maintained custom properties (--toasts-before, --offset, --initial-height,
  *             --front-toast-height + inline z-index): stack math from toaster.js
+ * @uses       translate + touch-action: none: swipe-to-dismiss; toaster.js writes the
+ *             inline translate while a pointer drags a toast (state `swiping`, transitions
+ *             off) and these transitions finish the release (`swiped` = flying out)
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
  * @tokens     --ui-toaster-* (@layer variables)
@@ -142,12 +145,19 @@
     box-shadow: var(--ui-toaster-shadow);
     overflow-wrap: anywhere;
 
+    /* the whole toast is a swipe surface: no native panning, no text selection
+       starting under the drag */
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+
     --_y: translateY(calc(var(--_lift) * var(--offset, 0px)));
     transform: var(--_y);
     opacity: var(--ui-toaster-opacity--end);
     transition:
       transform var(--ui-toaster-transition-duration) var(--ui-toaster-transition-timing-function),
       opacity var(--ui-toaster-transition-duration) var(--ui-toaster-transition-timing-function),
+      translate var(--ui-toaster-transition-duration) var(--ui-toaster-transition-timing-function),
       block-size var(--ui-toaster-transition-duration) var(--ui-toaster-transition-timing-function);
 
     /* slide in from the region's edge (JS opens the region before appending) */
@@ -245,6 +255,24 @@
     [data-toaster-slot~="toast"][data-toaster-state~="removed"]:not([data-toaster-state~="front"]) {
     --_y: translateY(calc(var(--_lift) * var(--ui-toaster-gap) * var(--toasts-before, 0)))
       scale(calc(1 - var(--ui-toaster-scale-step) * var(--toasts-before, 0)));
+  }
+
+  /* ===========================================================================
+  SWIPE: while a pointer drags a toast, toaster.js writes its inline translate
+  and nothing may ease it: the toast is the pointer. On release the state
+  drops and the transitions above finish the motion. A swiped-out toast keeps
+  its stack position and fades, flying on along the swipe instead of sliding
+  back toward the entry edge.
+  =========================================================================== */
+
+  :where(ui-toaster, [data-ui~="toaster"])
+    [data-toaster-slot~="toast"][data-toaster-state~="swiping"] {
+    transition: none;
+  }
+
+  :where(ui-toaster, [data-ui~="toaster"])
+    [data-toaster-slot~="toast"][data-toaster-state~="removed"][data-toaster-state~="swiped"] {
+    --_y: translateY(calc(var(--_lift) * var(--offset, 0px)));
   }
 
   :where(ui-toaster, [data-ui~="toaster"]) [data-toaster-slot~="icon"] {

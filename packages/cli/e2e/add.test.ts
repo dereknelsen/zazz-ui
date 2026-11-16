@@ -106,8 +106,9 @@ describe("zazz-ui add (e2e, packed kit)", () => {
   it("copies examples only for requested primitives with --examples", async () => {
     await runAdd(["carousel"], { examples: true }, { cwd: project, silent: true });
     expect(existsSync(path.join(project, "zazz/primitives/carousel/carousel.html"))).toBe(true);
-    // carousel's embla base dep landed too.
-    expect(existsSync(path.join(project, "zazz/base/embla.js"))).toBe(true);
+    // carousel's base deps landed too.
+    expect(existsSync(path.join(project, "zazz/base/carousel.js"))).toBe(true);
+    expect(existsSync(path.join(project, "zazz/base/carousel-scroll.js"))).toBe(true);
   });
 
   it("records markup-only primitives without css imports", async () => {

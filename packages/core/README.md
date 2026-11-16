@@ -17,18 +17,14 @@ import "@zazz-ui/core/index.css"; // all styles, imported in cascade order
 import "@zazz-ui/core"; // custom elements and shared behaviors
 ```
 
-From a CDN, the script needs an import map for its dependencies and the Interest Invokers polyfill:
+From a CDN, the script needs an import map for its one dependency and the Interest Invokers polyfill:
 
 ```html
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zazz-ui/core@0.13.1/dist/zazz.css" />
 <script type="importmap">
   {
     "imports": {
-      "signal-polyfill": "https://cdn.jsdelivr.net/npm/signal-polyfill@0.2.2/dist/index.js",
-      "embla-carousel": "https://cdn.jsdelivr.net/npm/embla-carousel@9.0.0-rc04/esm/embla-carousel.esm.js",
-      "embla-carousel-autoplay": "https://cdn.jsdelivr.net/npm/embla-carousel-autoplay@9.0.0-rc04/esm/embla-carousel-autoplay.esm.js",
-      "embla-carousel-auto-scroll": "https://cdn.jsdelivr.net/npm/embla-carousel-auto-scroll@9.0.0-rc04/esm/embla-carousel-auto-scroll.esm.js",
-      "embla-carousel-class-names": "https://cdn.jsdelivr.net/npm/embla-carousel-class-names@9.0.0-rc04/esm/embla-carousel-class-names.esm.js"
+      "signal-polyfill": "https://cdn.jsdelivr.net/npm/signal-polyfill@0.2.2/dist/index.js"
     }
   }
 </script>

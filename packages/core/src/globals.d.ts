@@ -4,28 +4,16 @@
  * checkJs can validate files that reference them across module boundaries.
  */
 
-// Scripts import Embla types directly from "embla-carousel" (so emitted .d.ts
-// files stay self-contained for consumers); this alias exists only for the
-// ambient interface merges below, which cannot use top-level imports.
-type EmblaCarouselType = import("embla-carousel").EmblaCarouselType;
-
 interface UtilsNamespace {
   parseValue(value: string): boolean | number | unknown[] | string;
   parseDataAttributes(node: Element, prefix: string): Record<string, unknown>;
 }
 
 interface Element {
-  /** @internal Set by embla.js on carousel root elements. */
-  _emblaApi?: EmblaCarouselType;
-  /** @internal Set by embla.js when a thumb carousel is linked. */
-  _emblaApiThumb?: EmblaCarouselType;
-  /** @internal Set by embla.js; aborts all per-carousel listeners on teardown. */
-  _emblaController?: AbortController;
-}
-
-interface InitEmblaKeyboardNavFn {
-  (): void;
-  _bound?: boolean;
+  /** @internal Set by carousel-scroll.js on carousel roots and thumb strips: the carousel API. */
+  _carousel?: import("./base/carousel-scroll.ts").CarouselApi;
+  /** @internal Set by carousel.js; aborting it tears the carousel down. */
+  _carouselController?: AbortController;
 }
 
 /** @see https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API */
@@ -129,20 +117,9 @@ interface Window {
   Reveal: RevealConstructor;
   /** Set by toaster.js — the imperative toast API. */
   Toaster: ToasterNamespace;
-  EmblaInit: {
+  /** Set by carousel.js — carousel initialization. */
+  Carousel: {
     init: (scope?: Document | Element) => void;
-    initRoot: (emblaNode: Element) => void;
-    addDotBtnsAndClickHandlers: (
-      emblaApi: EmblaCarouselType,
-      dotsNode: Element,
-    ) => (() => void) | undefined;
-    addThumbClickHandlers: (
-      emblaApiMain: EmblaCarouselType,
-      emblaApiThumb: EmblaCarouselType,
-    ) => void;
-    addTogglethumbsActive: (
-      emblaApiMain: EmblaCarouselType,
-      emblaApiThumb: EmblaCarouselType,
-    ) => void;
+    initRoot: (root: Element) => void;
   };
 }

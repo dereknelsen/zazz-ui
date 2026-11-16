@@ -1,0 +1,528 @@
+/**
+ * drawer.css: Drawer ([data-ui~="drawer"] on native <dialog>; slots
+ *             data-drawer-slot="handle | content | header | body | footer | close";
+ *             <ui-drawer-indent> / [data-ui~="drawer-indent"], the page wrapper that
+ *             scales back behind an open drawer)
+ *
+ * A bottom sheet: a modal dialog that rises from the bottom edge and is dragged
+ * back down to dismiss. Alone (`data-ui="drawer"`) it is a drawer everywhere;
+ * on a dialog (`data-ui="dialog drawer"`) it is a drawer below the sm band on a
+ * touch screen and the plain dialog otherwise. `data-drawer-snap` gives it
+ * resting heights; a drawer opened over another pushes that one back.
+ *
+ * @layer      variables, components
+ * @requires   _layers.css, _variables.css, dialog.css (the native <dialog> motion, backdrop, and
+ *             scroll lock in its reset layer; the surface and slots in the combined form)
+ * @uses       Overrides --ui-dialog-* motion tokens: the dialog's open/close transition becomes a
+ *             rise from the bottom edge, with the backdrop on the same duration and curve
+ * @uses       translate — drawer.js writes the inline translate while a pointer drags the drawer
+ *             (state `dragging`, transitions off); the dialog's transitions finish the release
+ * @uses       Web Animations on ::backdrop — drawer.js scrubs a paused opacity animation so the
+ *             backdrop fades with the drag without restyling the drawer's content on every move
+ * @uses       @property (inherits: false) + `inherit` on ::backdrop — the same link in CSS, for
+ *             an engine that cannot animate ::backdrop from script; where neither works the
+ *             backdrop stays opaque until release
+ * @uses       @media (width < 40rem) and (not (hover: hover)) — the combined form's drawer mode,
+ *             the same phone test as dialog.css
+ * @uses       scale, translate — the only properties the stack and the indent animate; the
+ *             indent's corner radius is two corner pieces that scale up, so no border-radius or
+ *             clip is animated and the page is never repainted for it
+ * @uses       clip-path: inset() — a fixed rectangle while the page is indented, so the part of
+ *             the page above and below the viewport stays out of the gaps the scale opens
+ * @uses       :has() — the body takes the backing color while its page wrapper is indented
+ * @uses       @starting-style — the corner pieces grow from nothing when they are generated
+ * @uses       corner-shape — the corner pieces follow --radius-corner-shape where it is
+ *             supported and are round elsewhere
+ * @uses       env(safe-area-inset-top) — the indented page clears the status bar
+ * @uses       env(safe-area-inset-bottom) — content clears the home indicator
+ * @uses       visualViewport — drawer.js writes --_drawer-keyboard (the software
+ *             keyboard's height) on the front drawer, and the sheet's bottom padding takes it,
+ *             so content ends at the keyboard's top edge while the surface runs on under it
+ * @uses       --_touch-min — the handle's hit area on touch screens
+ * @tokens     --ui-drawer-* (@layer variables)
+ */
+
+@layer variables {
+  :root {
+    /* surface */
+    --ui-drawer-bg: var(--ui-dialog-bg);
+    --ui-drawer-text: var(--ui-dialog-text);
+    --ui-drawer-radius: var(--radius-xl);
+    --ui-drawer-corner-shape: var(--ui-dialog-corner-shape);
+    --ui-drawer-shadow: var(--shadow-lg);
+
+    /* metrics: edge to edge, the layout-bleed band; cap it with a band to float a
+       narrower sheet, e.g. min(var(--layout-sm), 100%) */
+    --ui-drawer-w: 100%;
+    --ui-drawer-max-h: calc(100dvb - var(--space-lg));
+
+    /* stack: how much each drawer in front shrinks and lifts the one behind */
+    --ui-drawer-stack-scale: 0.05;
+    --ui-drawer-stack-lift: var(--space-sm);
+    /* the page is already dimmed by the first drawer's backdrop */
+    --ui-drawer-nested-backdrop-color: transparent;
+
+    /* indent: how far each side of the page pulls in, how far it drops, the radius of
+       its top corners, and the color behind it. Set these on :root: the body reads the
+       backing color too. */
+    --ui-drawer-indent-inset: calc(var(--spacing) * 3);
+    --ui-drawer-indent-offset: calc(env(safe-area-inset-top, 0px) + var(--space-sm));
+    --ui-drawer-indent-radius: var(--ui-drawer-radius);
+    --ui-drawer-indent-bg: var(--color-background);
+    --ui-drawer-indent-backing: var(--color-black);
+
+    /* handle */
+    --ui-drawer-handle-w: calc(var(--spacing) * 12);
+    --ui-drawer-handle-h: calc(var(--spacing) * 1.25);
+    --ui-drawer-handle-bg: var(--color-muted);
+    --ui-drawer-handle-bg--hover: var(--color-muted-foreground);
+    --ui-drawer-handle-bg--active: var(--color-muted-foreground);
+    --ui-drawer-handle-bg--dragging: var(--color-foreground);
+
+    /* motion: the iOS sheet curve, steep at the start so twice the default
+       duration still reads as quick; 0s under reduced motion like the default */
+    --ui-drawer-transition-duration: calc(var(--default-transition-duration) * 2);
+    --ui-drawer-transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+  }
+}
+
+/* Drawer mode flag, read by drawer.js; and the backdrop's drag opacity, written by it.
+   Non-inheriting, so neither restyles the drawer's content. */
+@property --_drawer-mode {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_drawer-backdrop {
+  syntax: "*";
+  inherits: false;
+}
+
+/* Where a drawer with snap points rests, and how many drawers sit in front of it:
+   both written by drawer.js when they change (the depth also while the front drawer
+   is dragged), and non-inheriting, so neither restyles the drawer's content. */
+@property --_drawer-snap {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_drawer-depth {
+  syntax: "*";
+  inherits: false;
+}
+
+/* The software keyboard's height while the drawer is the front one, written by
+   drawer.js from the visual viewport; the sheet's bottom padding takes it. */
+@property --_drawer-keyboard {
+  syntax: "*";
+  inherits: false;
+}
+
+/* The indent's measurements, written by drawer.js when a drawer opens, and how
+   indented the page is (0 to 1): 1 from the `active` state, or the drag's own
+   value while the last drawer is dragged. The corner pieces take them by explicit
+   inheritance. The inset is typed so the script reads the hook in px. */
+@property --_drawer-indent-amount {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_drawer-indent-scale {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_drawer-indent-top {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_drawer-indent-bottom {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_drawer-indent-inset {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@layer ui.components {
+  /* ===========================================================================
+  DRAWER MODE: the declarations that make a dialog a bottom sheet. Written
+  twice, because the two forms enter it under different conditions: the
+  standalone form always, the combined form on a phone. Keep the two blocks
+  identical apart from the --_dialog-* lines, which feed the dialog's own
+  read chain in the combined form.
+
+  The sheet extends --_bleed past the bottom edge (padding inside,
+  an equal negative margin outside), so pulling it up against its resistance
+  never opens a gap under it.
+  =========================================================================== */
+
+  :where([data-ui~="drawer"]:not([data-ui~="dialog"])) {
+    --_drawer-mode: 1;
+    --_bleed: calc(var(--spacing) * 12);
+    --_handle-display: block;
+    --_content-row: 2;
+    --_header-select: none;
+
+    --ui-dialog-transition-duration: var(--ui-drawer-transition-duration);
+    --ui-dialog-transition-timing-function: var(--ui-drawer-transition-timing-function);
+    --ui-dialog-backdrop-transition-duration: var(--ui-dialog-transition-duration);
+    --ui-dialog-backdrop-transition-timing-function: var(--ui-drawer-transition-timing-function);
+    --ui-dialog-transition-delay--end: 0ms;
+    --ui-dialog-opacity--start: 1;
+    --ui-dialog-scale--start: 1;
+    --ui-dialog-translate--start: 0, 100%, 0;
+
+    margin-block: auto calc(var(--_bleed) * -1);
+    margin-inline: auto;
+    /* the keyboard covers the home indicator: the larger of the two, not both */
+    padding-block-end: calc(
+      var(--_bleed) + max(env(safe-area-inset-bottom, 0px), var(--_drawer-keyboard, 0px))
+    );
+    max-inline-size: 100%;
+    max-block-size: calc(var(--ui-drawer-max-h) + var(--_bleed));
+    grid-template-rows: auto minmax(0, 1fr);
+    border-block-end-width: 0;
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+    /* a stacked drawer shrinks toward its top edge, the part that stays in view */
+    transform-origin: 50% 0;
+  }
+
+  @media (width < 40rem) and (not (hover: hover)) {
+    :where([data-ui~="dialog"][data-ui~="drawer"]) {
+      --_drawer-mode: 1;
+      --_bleed: calc(var(--spacing) * 12);
+      --_handle-display: block;
+      --_content-row: 2;
+      --_header-select: none;
+
+      --_dialog-w: var(--ui-drawer-w);
+      --_dialog-radius: var(--ui-drawer-radius);
+      --_dialog-shadow: var(--ui-drawer-shadow);
+
+      --ui-dialog-transition-duration: var(--ui-drawer-transition-duration);
+      --ui-dialog-transition-timing-function: var(--ui-drawer-transition-timing-function);
+      --ui-dialog-backdrop-transition-duration: var(--ui-dialog-transition-duration);
+      --ui-dialog-backdrop-transition-timing-function: var(--ui-drawer-transition-timing-function);
+      --ui-dialog-transition-delay--end: 0ms;
+      --ui-dialog-opacity--start: 1;
+      --ui-dialog-scale--start: 1;
+      --ui-dialog-translate--start: 0, 100%, 0;
+
+      margin-block: auto calc(var(--_bleed) * -1);
+      margin-inline: auto;
+      /* the keyboard covers the home indicator: the larger of the two, not both */
+      padding-block-end: calc(
+        var(--_bleed) + max(env(safe-area-inset-bottom, 0px), var(--_drawer-keyboard, 0px))
+      );
+      max-inline-size: 100%;
+      max-block-size: calc(var(--ui-drawer-max-h) + var(--_bleed));
+      grid-template-rows: auto minmax(0, 1fr);
+      border-block-end-width: 0;
+      border-end-start-radius: 0;
+      border-end-end-radius: 0;
+      transform-origin: 50% 0;
+    }
+  }
+
+  /* ===========================================================================
+  STANDALONE SURFACE: without the dialog identity the drawer paints itself.
+  The combined form takes all of this from dialog.css.
+  =========================================================================== */
+
+  :where([data-ui~="drawer"]:not([data-ui~="dialog"])) {
+    inline-size: var(--ui-drawer-w);
+    block-size: fit-content;
+    background-color: var(--_bg-resolved, var(--ui-drawer-bg));
+    color: var(--_text-resolved, var(--ui-drawer-text));
+    box-shadow: var(--_shadow-resolved, var(--ui-drawer-shadow));
+    /* the top corners only: the bottom edge sits past the viewport */
+    border-start-start-radius: var(--ui-drawer-radius);
+    border-start-end-radius: var(--ui-drawer-radius);
+    corner-shape: var(--_corner-shape-resolved, var(--ui-drawer-corner-shape));
+    font-size: var(--font-size-md);
+    overflow: hidden;
+    overscroll-behavior: contain;
+  }
+
+  :where([data-ui~="drawer"]:not([data-ui~="dialog"])[open]) {
+    display: grid;
+    min-block-size: 0;
+  }
+
+  /* ===========================================================================
+  SNAP POINTS: a drawer with data-drawer-snap is as tall as a drawer may be and
+  rests pushed down by --_drawer-snap, which drawer.js writes when the stop
+  changes. The height is set per form, like drawer mode itself.
+  =========================================================================== */
+
+  :where([data-ui~="drawer"]:not([data-ui~="dialog"])[data-drawer-snap]) {
+    block-size: calc(var(--ui-drawer-max-h) + var(--_bleed));
+  }
+
+  @media (width < 40rem) and (not (hover: hover)) {
+    :where([data-ui~="dialog"][data-ui~="drawer"][data-drawer-snap]) {
+      --_dialog-h: calc(var(--ui-drawer-max-h) + var(--_bleed));
+    }
+  }
+
+  :where([data-ui~="drawer"][data-drawer-snap]) {
+    translate: 0 var(--_drawer-snap, 0px);
+  }
+
+  /* ===========================================================================
+  STACK: a drawer with others open in front of it shrinks toward its top edge
+  and lifts, once per drawer in front. drawer.js writes the count, and while
+  the front drawer is dragged a fraction of it (state `following`, transitions
+  off). A drawer opened over another dims nothing more.
+  =========================================================================== */
+
+  :where([data-ui~="drawer"][data-drawer-state~="stacked"]) {
+    scale: calc(1 - var(--_drawer-depth, 0) * var(--ui-drawer-stack-scale));
+    translate: 0
+      calc(var(--_drawer-snap, 0px) - var(--_drawer-depth, 0) * var(--ui-drawer-stack-lift));
+  }
+
+  :where([data-ui~="drawer"][data-drawer-state~="following"]) {
+    transition: none;
+  }
+
+  :where([data-ui~="drawer"][data-drawer-state~="nested"])::backdrop {
+    background-color: var(--ui-drawer-nested-backdrop-color);
+    backdrop-filter: none;
+  }
+
+  /* Each slot owns a row, as in the dialog: the body is the part that scrolls */
+  :where([data-ui~="drawer"]) [data-drawer-slot~="content"] {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    position: relative;
+    min-block-size: 0;
+    max-block-size: 100%;
+  }
+
+  :where([data-ui~="drawer"]) [data-drawer-slot~="header"] {
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    padding-inline: var(--space-sm);
+    padding-block-start: var(--space-sm);
+  }
+
+  :where([data-ui~="drawer"]) [data-drawer-slot~="body"] {
+    grid-row: 2;
+    display: grid;
+    align-content: start;
+    padding-inline: var(--space-sm);
+    padding-block: var(--space-md);
+    min-block-size: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  :where([data-ui~="drawer"]) [data-drawer-slot~="footer"] {
+    grid-row: 3;
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-xs);
+    padding: var(--space-sm);
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  :where([data-ui~="drawer"]) [data-drawer-slot~="close"] {
+    position: absolute;
+    inset-block-start: var(--space-xs);
+    inset-inline-end: var(--space-xs);
+    z-index: 50;
+  }
+
+  /* ===========================================================================
+  PARTS IN DRAWER MODE: the handle shows and takes the first row; the content
+  slot (the drawer's own or the dialog's) takes the flexible second row, with
+  or without a handle before it. Both read the mode privates set above, so
+  neither rule is repeated per form.
+  =========================================================================== */
+
+  :where([data-ui~="drawer"]) :where([data-drawer-slot~="content"], [data-dialog-slot~="content"]) {
+    grid-row: var(--_content-row, auto);
+  }
+
+  /* The header is where a mouse grabs the drawer: a press on its text drags
+     instead of selecting. Body text stays selectable. */
+  :where([data-ui~="drawer"]) :where([data-drawer-slot~="header"], [data-dialog-slot~="header"]) {
+    -webkit-user-select: var(--_header-select, auto);
+    user-select: var(--_header-select, auto);
+  }
+
+  /* A pill, with a hit area that reaches the touch-target height. It always
+     drags, even over a scrolled body, so it opts out of native panning. */
+  :where([data-ui~="drawer"]) [data-drawer-slot~="handle"] {
+    display: var(--_handle-display, none);
+    grid-row: 1;
+    justify-self: center;
+    position: relative;
+    inline-size: var(--ui-drawer-handle-w);
+    block-size: var(--ui-drawer-handle-h);
+    margin-block: calc(var(--spacing) * 2.5) calc(var(--spacing) * 1);
+    border-radius: var(--radius-full);
+    background-color: var(--ui-drawer-handle-bg);
+    cursor: grab;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: background-color var(--default-transition-duration)
+      var(--default-transition-timing-function);
+  }
+
+  :where([data-ui~="drawer"]) [data-drawer-slot~="handle"]:hover {
+    background-color: var(--ui-drawer-handle-bg--hover);
+  }
+
+  :where([data-ui~="drawer"]) [data-drawer-slot~="handle"]:active {
+    background-color: var(--ui-drawer-handle-bg--active);
+    cursor: grabbing;
+  }
+
+  :where([data-ui~="drawer"]) [data-drawer-slot~="handle"]::before {
+    content: "";
+    position: absolute;
+    inset-inline: calc(var(--ui-drawer-handle-w) * -1);
+    inset-block: min(calc(var(--spacing) * -2), calc((100% - var(--_touch-min, 0px)) / 2));
+  }
+
+  /* Below its largest snap point a drawer's content does not scroll: the drawer
+     moves first. After the slot rules, which it has to beat. */
+  :where([data-ui~="drawer"][data-drawer-state~="partial"])
+    :is([data-drawer-slot~="body"], [data-dialog-slot~="body"]) {
+    overflow-y: hidden;
+  }
+
+  /* ===========================================================================
+  DRAG: while a pointer drags the drawer, drawer.js writes its inline
+  translate and nothing may ease it: the drawer is the pointer. The backdrop
+  fades with the drag: drawer.js scrubs an animation on it, or, where
+  ::backdrop cannot be animated from script, writes --_drawer-backdrop, which
+  the backdrop takes from the dialog by explicit inheritance. On release the state drops and the dialog's
+  own transitions finish the motion, to closed or back to rest.
+  =========================================================================== */
+
+  :where([data-ui~="drawer"][data-drawer-state~="dragging"]) [data-drawer-slot~="handle"] {
+    background-color: var(--ui-drawer-handle-bg--dragging);
+  }
+
+  :where([data-ui~="drawer"][data-drawer-state~="dragging"]) {
+    transition: none;
+    cursor: grabbing;
+    /* a mouse drag that began beside text must not start selecting it */
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  :where([data-ui~="drawer"][data-drawer-state~="dragging"])::backdrop {
+    --_drawer-backdrop: inherit;
+    opacity: var(--_drawer-backdrop, 1);
+    transition: none;
+  }
+
+  /* ===========================================================================
+  INDENT: the page wrapper scales back behind an open drawer. drawer.js sets the
+  state (`on` while the machinery is engaged, `active` while a drawer is open,
+  `dragging` while the last drawer is dragged) and measures, once, the scale and
+  where the viewport sits inside the wrapper.
+
+  Only scale and translate animate. The wrapper is clipped to the viewport's
+  rectangle, a fixed clip, so the page above and below it stays out of the gaps;
+  the body paints the backing color there. The rounded top corners are two
+  corner pieces that grow from the corners, not a border-radius: nothing is
+  repainted while the page moves.
+
+  While `on` the wrapper is transformed, so it is the containing block of its
+  fixed and absolute descendants.
+  =========================================================================== */
+
+  :where(ui-drawer-indent, [data-ui~="drawer-indent"]) {
+    --_drawer-indent-inset: var(--ui-drawer-indent-inset);
+    display: block;
+    background-color: var(--ui-drawer-indent-bg);
+    transition:
+      scale var(--ui-drawer-transition-duration) var(--ui-drawer-transition-timing-function),
+      translate var(--ui-drawer-transition-duration) var(--ui-drawer-transition-timing-function);
+  }
+
+  :where(ui-drawer-indent, [data-ui~="drawer-indent"])[data-drawer-indent-state~="on"] {
+    position: relative;
+    transform-origin: 50% var(--_drawer-indent-top, 0px);
+    scale: calc(1 - (1 - var(--_drawer-indent-scale, 1)) * var(--_drawer-indent-amount, 0));
+    translate: 0 calc(var(--ui-drawer-indent-offset) * var(--_drawer-indent-amount, 0));
+    clip-path: inset(var(--_drawer-indent-top, 0px) 0 var(--_drawer-indent-bottom, 0px) 0);
+    will-change: scale, translate;
+  }
+
+  :where(ui-drawer-indent, [data-ui~="drawer-indent"])[data-drawer-indent-state~="active"] {
+    --_drawer-indent-amount: 1;
+  }
+
+  /* The backing shows in the gaps around the indented page. Important, because a
+     page's own <body style="--bg: …"> is a utility and would otherwise win; it holds
+     only while the wrapper is `on`. */
+  :where(body):has(
+    :is(ui-drawer-indent, [data-ui~="drawer-indent"])[data-drawer-indent-state~="on"]
+  ) {
+    background-color: var(--ui-drawer-indent-backing) !important;
+  }
+
+  /* A corner piece: a square the size of the radius whose outer corner is rounded
+     and whose spread shadow, cut off at the square, paints only the notch outside
+     the curve. Scaling it from that corner is the radius growing. */
+  :where(ui-drawer-indent, [data-ui~="drawer-indent"])[data-drawer-indent-state~="on"]::before,
+  :where(ui-drawer-indent, [data-ui~="drawer-indent"])[data-drawer-indent-state~="on"]::after {
+    --_drawer-indent-amount: inherit;
+    --_drawer-indent-top: inherit;
+    content: "";
+    position: absolute;
+    z-index: 2147483647;
+    inset-block-start: var(--_drawer-indent-top, 0px);
+    inline-size: var(--ui-drawer-indent-radius);
+    block-size: var(--ui-drawer-indent-radius);
+    box-shadow: 0 0 0 var(--ui-drawer-indent-radius) var(--ui-drawer-indent-backing);
+    clip-path: inset(0);
+    corner-shape: var(--radius-corner-shape);
+    scale: var(--_drawer-indent-amount, 0);
+    pointer-events: none;
+    transition: scale var(--ui-drawer-transition-duration)
+      var(--ui-drawer-transition-timing-function);
+
+    @starting-style {
+      scale: 0;
+    }
+  }
+
+  :where(ui-drawer-indent, [data-ui~="drawer-indent"])[data-drawer-indent-state~="on"]::before {
+    left: 0;
+    border-top-left-radius: 100%;
+    transform-origin: 0 0;
+  }
+
+  :where(ui-drawer-indent, [data-ui~="drawer-indent"])[data-drawer-indent-state~="on"]::after {
+    right: 0;
+    border-top-right-radius: 100%;
+    transform-origin: 100% 0;
+  }
+
+  :where(ui-drawer-indent, [data-ui~="drawer-indent"])[data-drawer-indent-state~="dragging"],
+  :where(
+      ui-drawer-indent,
+      [data-ui~="drawer-indent"]
+    )[data-drawer-indent-state~="dragging"]::before,
+  :where(
+      ui-drawer-indent,
+      [data-ui~="drawer-indent"]
+    )[data-drawer-indent-state~="dragging"]::after {
+    transition: none;
+  }
+}

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Carousel playground</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/src/zazz.css" />
+    <script type="module" src="/src/carousel-native.ts"></script>
+  </head>
+  <body>
+    <main
+      style="
+        --display: flex-col;
+        --p: 6;
+        --gap: 10;
+        --mx: auto;
+        --max-w: var(--layout-lg);
+      "
+    >
+      <header
+        style="
+          --display: flex-col;
+          --gap: 2;
+        "
+      >
+        <h1 data-ui="text-h3">Carousel playground</h1>
+        <p style="--text: muted">
+          One carousel per configuration. Try mouse drag and flicks, a trackpad, touch (device mode
+          or the iOS simulator), the arrow keys, and clicking a slide right after a drag.
+        </p>
+      </header>
+      <div
+        id="rows"
+        style="
+          --display: flex-col;
+          --gap: 12;
+        "
+      ></div>
+    </main>
+  </body>
+</html>

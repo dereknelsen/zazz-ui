@@ -60,13 +60,8 @@ export interface PrimitiveEntry {
 /** Bare specifiers pulled in by `base/signals.ts` (core runtime). */
 const SIGNALS_BARE = ["signal-polyfill"];
 
-/** Bare specifiers pulled in by `base/embla.ts`. */
-const EMBLA_BARE = [
-  "embla-carousel",
-  "embla-carousel-autoplay",
-  "embla-carousel-auto-scroll",
-  "embla-carousel-class-names",
-];
+/** The carousel stack: the gesture layer, the scroll-snap engine, and the page wiring. */
+const CAROUSEL_BASE = ["base/gesture.js", "base/carousel-scroll.js", "base/carousel.js"];
 
 /** The typeahead engine stack shared by autocomplete, combobox, and command. */
 const TYPEAHEAD_BASE = ["base/command-score.js", "base/hotkeys.js", "base/typeahead.js"];
@@ -183,9 +178,9 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     tags: ["ui-carousel"],
     css: ["primitives/carousel/carousel.css"],
     js: ["primitives/carousel/carousel.js"],
-    base: ["base/embla.js"],
+    base: CAROUSEL_BASE,
     primitives: [],
-    bare: EMBLA_BARE,
+    bare: [],
     examples: ["primitives/carousel/carousel.html"],
   },
   checkbox: {
@@ -236,6 +231,21 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: [],
     bare: [],
     examples: ["primitives/dialog/dialog.html", "primitives/dialog/dialog-with-form.html"],
+  },
+  drawer: {
+    css: ["primitives/drawer/drawer.css"],
+    js: ["primitives/drawer/drawer.js"],
+    base: ["base/gesture.js"],
+    primitives: ["dialog", "button"],
+    bare: [],
+    tags: ["ui-drawer-indent"],
+    examples: [
+      "primitives/drawer/drawer.html",
+      "primitives/drawer/drawer-responsive-dialog.html",
+      "primitives/drawer/drawer-snap.html",
+      "primitives/drawer/drawer-nested.html",
+      "primitives/drawer/drawer-indent.html",
+    ],
   },
   fields: {
     css: ["primitives/fields/fields.css"],
@@ -299,9 +309,9 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     tags: ["ui-lightbox"],
     css: ["primitives/lightbox/lightbox.css"],
     js: ["primitives/lightbox/lightbox.js"],
-    base: ["base/embla.js"],
+    base: CAROUSEL_BASE,
     primitives: ["dialog", "carousel", "button"],
-    bare: EMBLA_BARE,
+    bare: [],
     examples: ["primitives/lightbox/lightbox.html"],
   },
   menu: {
@@ -501,7 +511,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     tags: ["ui-toaster"],
     css: ["primitives/toaster/toaster.css"],
     js: ["primitives/toaster/toaster.js"],
-    base: [],
+    base: ["base/gesture.js"],
     primitives: ["popover", "button"],
     bare: SIGNALS_BARE,
     examples: ["primitives/toaster/toaster.html"],
@@ -750,6 +760,7 @@ export const CSS_CASCADE_ORDER: string[] = [
   "tooltip",
   "dialog",
   "alert-dialog",
+  "drawer",
   "menu",
   "navigation-menu",
   "mobile-menu",
@@ -817,7 +828,7 @@ export type ExampleScript =
   | "combobox"
   | "command"
   | "command-actions"
-  | "embla"
+  | "drawer"
   | "reveal"
   | "carousel"
   | "checkbox"
@@ -866,11 +877,12 @@ export const WEB_COMPONENT_SCRIPT_FILES: Partial<Record<ExampleScript, string[]>
   ],
   carousel: ["primitives/carousel/carousel.js"],
   checkbox: ["primitives/checkbox/checkbox.js"],
+  drawer: ["base/gesture.js", "primitives/drawer/drawer.js"],
   lightbox: ["primitives/carousel/carousel.js", "primitives/lightbox/lightbox.js"],
   menu: ["primitives/menu/menu.js"],
   multiselect: ["primitives/select/multiselect.js"],
   otp: ["primitives/otp/otp.js"],
   password: ["primitives/password-group/password-group.js"],
   tabs: ["primitives/tabs/tabs.js"],
-  toaster: ["primitives/toaster/toaster.js"],
+  toaster: ["base/gesture.js", "primitives/toaster/toaster.js"],
 };
