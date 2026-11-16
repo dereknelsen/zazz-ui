@@ -1,0 +1,690 @@
+---
+/**
+ * Feature clip for the 0.14 release post: a drawer with three snap points
+ * (`data-drawer-snap="12rem 0.5 1"`, the kit's `drawer-snap` example). It opens
+ * at the first stop, a slow drag settles on the nearest stop (0.5), a flick moves
+ * one stop (to 1), and a hard flick down closes it. The behavior is the kit's
+ * `pickSnap` in `base/gesture.ts`: a fling toward dismissal closes from any stop.
+ * Plain HTML and CSS keyframes on a 10s loop; the base styles are the last frame.
+ *
+ * As in GalleryClip: every `animation` names its keyframes in the shorthand (the
+ * minifier turns a nameless one into `none`), and nothing animates `display`
+ * (WebKit doesn't). The sheet moves with `translate`, a percentage of its own
+ * height, so 0.7 means 30% of it is showing.
+ */
+---
+
+<figure class="fc-dr">
+  <div
+    class="fc-dr-stage"
+    role="img"
+    aria-label="A phone opens a drawer with three snap points. It rises to its first stop, 12rem. A finger drags the handle up and lets go, and the drawer settles on the nearest stop, half its height. A quick flick up moves it one stop, to full height. A hard flick down closes it."
+  >
+    <div class="fc-dr-body" aria-hidden="true">
+      <div class="fc-dr-side">
+        <div class="fc-dr-code">
+          <span class="fc-dr-punct">&lt;</span>dialog <span class="fc-dr-attr">data-ui</span><span
+            class="fc-dr-punct">="</span
+          ><span class="fc-dr-value">drawer</span><span class="fc-dr-punct">"</span><br />
+          &nbsp;&nbsp;<span class="fc-dr-attr">data-drawer-snap</span><span class="fc-dr-punct"
+            >="</span
+          ><span class="fc-dr-value">12rem 0.5 1</span><span class="fc-dr-punct">"&gt;</span>
+        </div>
+        <div class="fc-dr-stops">
+          <span class="fc-dr-stop fc-dr-stop-1">12rem</span>
+          <span class="fc-dr-stop fc-dr-stop-2">0.5</span>
+          <span class="fc-dr-stop fc-dr-stop-3">1</span>
+        </div>
+        <div class="fc-dr-labels">
+          <span class="fc-dr-label fc-dr-label-1">It opens at the first stop.</span>
+          <span class="fc-dr-label fc-dr-label-2">Let go, and it settles on the nearest stop.</span>
+          <span class="fc-dr-label fc-dr-label-3">A flick moves one stop.</span>
+          <span class="fc-dr-label fc-dr-label-4">A hard flick down closes it.</span>
+        </div>
+      </div>
+      <div class="fc-dr-phone">
+        <div class="fc-dr-screen">
+          <div class="fc-dr-page">
+            <span class="fc-dr-bar"></span>
+            <span class="fc-dr-button">Open drawer</span>
+            <span class="fc-dr-line"></span>
+            <span class="fc-dr-line fc-dr-line-short"></span>
+            <span class="fc-dr-line"></span>
+            <span class="fc-dr-line fc-dr-line-short"></span>
+          </div>
+          <span class="fc-dr-backdrop"></span>
+          <div class="fc-dr-sheet">
+            <span class="fc-dr-handle"></span>
+            <b class="fc-dr-title">Nearby places</b>
+            <span class="fc-dr-hint">Drag up for more</span>
+            <span class="fc-dr-row"></span>
+            <span class="fc-dr-row"></span>
+            <span class="fc-dr-row"></span>
+            <span class="fc-dr-row"></span>
+            <span class="fc-dr-row"></span>
+          </div>
+          <span class="fc-dr-finger"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</figure>
+
+<style>
+  .fc-dr {
+    --fc-radius: 1em;
+    container-type: inline-size;
+    width: 100%;
+    aspect-ratio: 740 / 415;
+    margin: 0;
+    margin-block: 2rem;
+  }
+
+  .fc-dr-stage {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    font-size: 2.2cqw;
+    color: var(--color-foreground, #18181b);
+    background-color: var(--color-muted, #f4f4f5);
+    border: 0.08em solid var(--color-border, #e4e4e7);
+    border-radius: var(--fc-radius);
+  }
+
+  .fc-dr-body {
+    display: grid;
+    grid-template-columns: 1fr 13em;
+    gap: 2em;
+    box-sizing: border-box;
+    height: 100%;
+    padding: 1.5em 2.5em 1.5em 1.6em;
+    animation: fc-dr-loop 10s linear infinite;
+  }
+
+  .fc-dr-side {
+    display: grid;
+    align-content: center;
+    gap: 1.3em;
+    min-width: 0;
+  }
+
+  .fc-dr-code {
+    padding: 0.8em 1.1em;
+    font-family: var(--font-family-mono, ui-monospace, monospace);
+    font-size: 1em;
+    line-height: 1.5;
+    white-space: nowrap;
+    background-color: var(--color-card, #fff);
+    border: 0.08em solid var(--color-border, #e4e4e7);
+    border-radius: calc(var(--fc-radius) * 0.6);
+  }
+
+  .fc-dr-punct,
+  .fc-dr-attr {
+    color: var(--color-muted-foreground, #71717a);
+  }
+
+  .fc-dr-value {
+    font-weight: 600;
+  }
+
+  /* one chip per snap point; the current one fills in */
+  .fc-dr-stops {
+    display: flex;
+    gap: 0.6em;
+  }
+
+  .fc-dr-stop {
+    padding: 0.3em 0.8em;
+    font-family: var(--font-family-mono, ui-monospace, monospace);
+    font-size: 0.95em;
+    color: var(--color-muted-foreground, #71717a);
+    background-color: var(--color-card, #fff);
+    border: 0.08em solid var(--color-border, #e4e4e7);
+    border-radius: calc(var(--fc-radius) * 0.5);
+  }
+
+  .fc-dr-stop-1 {
+    animation: fc-dr-stop-1 10s step-end infinite;
+  }
+
+  .fc-dr-stop-2 {
+    animation: fc-dr-stop-2 10s step-end infinite;
+  }
+
+  .fc-dr-stop-3 {
+    animation: fc-dr-stop-3 10s step-end infinite;
+  }
+
+  /* the labels share one cell and swap instantly, never mid-fade */
+  .fc-dr-labels {
+    display: grid;
+    font-size: 1.15em;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .fc-dr-label {
+    grid-area: 1 / 1;
+    opacity: 0;
+  }
+
+  .fc-dr-label-1 {
+    animation: fc-dr-label-1 10s step-end infinite;
+  }
+
+  .fc-dr-label-2 {
+    animation: fc-dr-label-2 10s step-end infinite;
+  }
+
+  .fc-dr-label-3 {
+    animation: fc-dr-label-3 10s step-end infinite;
+  }
+
+  .fc-dr-label-4 {
+    opacity: 1;
+    animation: fc-dr-label-4 10s step-end infinite;
+  }
+
+  /* the phone: bezel and screen radii are concentric, inside the stage's */
+  .fc-dr-phone {
+    --fc-dr-bezel: 0.35em;
+    --fc-dr-phone-radius: calc(var(--fc-radius) * 0.9);
+    box-sizing: border-box;
+    height: 100%;
+    padding: var(--fc-dr-bezel);
+    /* a phone frame is near-black in either theme; the hairline lifts it off a dark stage */
+    background-color: #111113;
+    border-radius: var(--fc-dr-phone-radius);
+    box-shadow: 0 0 0 0.06em var(--color-border, #e4e4e7);
+  }
+
+  .fc-dr-screen {
+    --fc-dr-screen-radius: calc(var(--fc-dr-phone-radius) - var(--fc-dr-bezel));
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--color-background, #fff);
+    border-radius: var(--fc-dr-screen-radius);
+  }
+
+  .fc-dr-page {
+    display: grid;
+    align-content: start;
+    gap: 0.7em;
+    padding: 1em 0.9em;
+  }
+
+  .fc-dr-bar {
+    height: 0.9em;
+    margin-block-end: 0.5em;
+    background-color: var(--color-muted, #f4f4f5);
+    border-radius: 0.3em;
+  }
+
+  .fc-dr-button {
+    justify-self: start;
+    padding: 0.45em 0.8em;
+    font-size: 0.8em;
+    font-weight: 600;
+    color: var(--color-primary-foreground, #fff);
+    background-color: var(--color-primary, #4f46e5);
+    border-radius: 0.45em;
+  }
+
+  .fc-dr-line {
+    height: 0.55em;
+    background-color: var(--color-muted, #f4f4f5);
+    border-radius: 0.3em;
+  }
+
+  .fc-dr-line-short {
+    width: 60%;
+  }
+
+  .fc-dr-backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: #000;
+    opacity: 0;
+    animation: fc-dr-backdrop 10s linear infinite;
+  }
+
+  /* 92% of the screen tall, like --ui-drawer-max-h; translate is a share of that */
+  .fc-dr-sheet {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    display: grid;
+    align-content: start;
+    gap: 0.55em;
+    box-sizing: border-box;
+    height: 92%;
+    padding: 0.6em 0.9em;
+    background-color: var(--color-card, #fff);
+    border-radius: calc(var(--fc-dr-screen-radius) * 0.9) calc(var(--fc-dr-screen-radius) * 0.9) 0
+      0;
+    border-top: 0.06em solid var(--color-border, #e4e4e7);
+    box-shadow: 0 -0.3em 1.2em rgb(0 0 0 / 0.18);
+    translate: 0 100%;
+    animation: fc-dr-sheet 10s linear infinite;
+  }
+
+  .fc-dr-handle {
+    justify-self: center;
+    width: 2.6em;
+    height: 0.28em;
+    margin-block-end: 0.35em;
+    background-color: var(--color-muted-foreground, #71717a);
+    border-radius: 1em;
+    opacity: 0.5;
+  }
+
+  .fc-dr-title {
+    font-size: 0.95em;
+    font-weight: 600;
+  }
+
+  .fc-dr-hint {
+    margin-block-end: 0.3em;
+    font-size: 0.7em;
+    color: var(--color-muted-foreground, #71717a);
+  }
+
+  .fc-dr-row {
+    height: 2em;
+    background-color: var(--color-muted, #f4f4f5);
+    border-radius: 0.45em;
+  }
+
+  /* a fingertip: top/left place its center */
+  .fc-dr-finger {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1.7em;
+    height: 1.7em;
+    background-color: rgb(120 120 128 / 0.45);
+    border: 0.12em solid rgb(255 255 255 / 0.85);
+    border-radius: 50%;
+    box-shadow: 0 0.15em 0.5em rgb(0 0 0 / 0.25);
+    opacity: 0;
+    translate: -50% -50%;
+    animation: fc-dr-finger 10s linear infinite;
+  }
+
+  @keyframes fc-dr-loop {
+    0%,
+    100% {
+      opacity: 0;
+    }
+
+    3%,
+    96% {
+      opacity: 1;
+    }
+  }
+
+  /* 0.7 = the first stop (30% showing), 0.5 the second, 0 full height */
+  @keyframes fc-dr-sheet {
+    0%,
+    8% {
+      translate: 0 100%;
+      animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    14%,
+    25% {
+      translate: 0 70%;
+      animation-timing-function: linear;
+    }
+
+    37% {
+      translate: 0 42%;
+      animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    43%,
+    49% {
+      translate: 0 50%;
+      animation-timing-function: linear;
+    }
+
+    51% {
+      translate: 0 36%;
+      animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    57%,
+    68% {
+      translate: 0 0%;
+      animation-timing-function: linear;
+    }
+
+    70% {
+      translate: 0 22%;
+      animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    76%,
+    100% {
+      translate: 0 100%;
+    }
+  }
+
+  @keyframes fc-dr-backdrop {
+    0%,
+    8% {
+      opacity: 0;
+      animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    14%,
+    25% {
+      opacity: 0.2;
+      animation-timing-function: linear;
+    }
+
+    37% {
+      opacity: 0.3;
+    }
+
+    43%,
+    49% {
+      opacity: 0.28;
+    }
+
+    57%,
+    68% {
+      opacity: 0.45;
+    }
+
+    70% {
+      opacity: 0.38;
+      animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    76%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* the finger's center tracks the button, then the sheet's handle (sheet top =
+     8% + translate × 92%, handle about 3.4% below that) */
+  @keyframes fc-dr-finger {
+    0%,
+    4% {
+      top: 18.7%;
+      left: 33%;
+      opacity: 0;
+      scale: 1;
+    }
+
+    5% {
+      top: 18.7%;
+      left: 33%;
+      opacity: 1;
+      scale: 1;
+    }
+
+    7% {
+      top: 18.7%;
+      left: 33%;
+      opacity: 1;
+      scale: 0.8;
+    }
+
+    9% {
+      top: 18.7%;
+      left: 33%;
+      opacity: 1;
+      scale: 1;
+    }
+
+    12% {
+      top: 18.7%;
+      left: 33%;
+      opacity: 0;
+      scale: 1;
+    }
+
+    20% {
+      top: 75.8%;
+      left: 50%;
+      opacity: 0;
+      scale: 1;
+    }
+
+    22% {
+      top: 75.8%;
+      left: 50%;
+      opacity: 1;
+      scale: 1;
+    }
+
+    25% {
+      top: 75.8%;
+      left: 50%;
+      opacity: 1;
+      scale: 0.8;
+    }
+
+    37% {
+      top: 50%;
+      left: 50%;
+      opacity: 1;
+      scale: 0.8;
+    }
+
+    39% {
+      top: 49%;
+      left: 50%;
+      opacity: 0;
+      scale: 1;
+    }
+
+    46% {
+      top: 57.4%;
+      left: 50%;
+      opacity: 0;
+      scale: 1;
+    }
+
+    47% {
+      top: 57.4%;
+      left: 50%;
+      opacity: 1;
+      scale: 1;
+    }
+
+    49% {
+      top: 57.4%;
+      left: 50%;
+      opacity: 1;
+      scale: 0.8;
+    }
+
+    51% {
+      top: 44.5%;
+      left: 50%;
+      opacity: 1;
+      scale: 0.8;
+    }
+
+    54% {
+      top: 36%;
+      left: 50%;
+      opacity: 0;
+      scale: 1;
+    }
+
+    64% {
+      top: 11.4%;
+      left: 50%;
+      opacity: 0;
+      scale: 1;
+    }
+
+    65% {
+      top: 11.4%;
+      left: 50%;
+      opacity: 1;
+      scale: 1;
+    }
+
+    68% {
+      top: 11.4%;
+      left: 50%;
+      opacity: 1;
+      scale: 0.8;
+    }
+
+    70% {
+      top: 31.6%;
+      left: 50%;
+      opacity: 1;
+      scale: 0.8;
+    }
+
+    73%,
+    100% {
+      top: 48%;
+      left: 50%;
+      opacity: 0;
+      scale: 1;
+    }
+  }
+
+  @keyframes fc-dr-stop-1 {
+    0% {
+      color: var(--color-muted-foreground, #71717a);
+      background-color: var(--color-card, #fff);
+    }
+
+    14% {
+      color: var(--color-primary-foreground, #fff);
+      background-color: var(--color-primary, #4f46e5);
+    }
+
+    43% {
+      color: var(--color-muted-foreground, #71717a);
+      background-color: var(--color-card, #fff);
+    }
+  }
+
+  @keyframes fc-dr-stop-2 {
+    0% {
+      color: var(--color-muted-foreground, #71717a);
+      background-color: var(--color-card, #fff);
+    }
+
+    43% {
+      color: var(--color-primary-foreground, #fff);
+      background-color: var(--color-primary, #4f46e5);
+    }
+
+    57% {
+      color: var(--color-muted-foreground, #71717a);
+      background-color: var(--color-card, #fff);
+    }
+  }
+
+  @keyframes fc-dr-stop-3 {
+    0% {
+      color: var(--color-muted-foreground, #71717a);
+      background-color: var(--color-card, #fff);
+    }
+
+    57% {
+      color: var(--color-primary-foreground, #fff);
+      background-color: var(--color-primary, #4f46e5);
+    }
+
+    76% {
+      color: var(--color-muted-foreground, #71717a);
+      background-color: var(--color-card, #fff);
+    }
+  }
+
+  @keyframes fc-dr-label-1 {
+    0% {
+      opacity: 1;
+    }
+
+    20% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fc-dr-label-2 {
+    0% {
+      opacity: 0;
+    }
+
+    20% {
+      opacity: 1;
+    }
+
+    46% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fc-dr-label-3 {
+    0% {
+      opacity: 0;
+    }
+
+    46% {
+      opacity: 1;
+    }
+
+    64% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fc-dr-label-4 {
+    0% {
+      opacity: 0;
+    }
+
+    64% {
+      opacity: 1;
+    }
+  }
+
+  /* Without motion, show the drawer resting at its middle stop, not a closed one. */
+  @media (prefers-reduced-motion: reduce) {
+    .fc-dr-body,
+    .fc-dr-body * {
+      animation: none !important;
+    }
+
+    .fc-dr-finger {
+      display: none;
+    }
+
+    .fc-dr-sheet {
+      translate: 0 50%;
+    }
+
+    .fc-dr-backdrop {
+      opacity: 0.28;
+    }
+
+    .fc-dr-stop-2 {
+      color: var(--color-primary-foreground, #fff);
+      background-color: var(--color-primary, #4f46e5);
+    }
+
+    .fc-dr-label-2 {
+      opacity: 1;
+    }
+
+    .fc-dr-label-4 {
+      opacity: 0;
+    }
+  }
+</style>

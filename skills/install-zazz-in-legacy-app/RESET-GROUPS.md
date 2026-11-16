@@ -1,4 +1,4 @@
-# Reset groups (Zazz 0.13.0)
+# Reset groups (Zazz 0.14.0)
 
 One section per group of the Zazz reset. **Detect** names what to grep in the legacy CSS (`css`)
 and the server templates (`tpl`). **Close** gives the lines that go inside the baseline's
@@ -103,8 +103,8 @@ the legacy CSS leaves the property unset.
 - **Reset:**
   - `html`: `font-size: 16px`, `line-height: 1.5`, `scroll-behavior: smooth`, kit background.
   - `body`: `display: flex; flex-direction: column`, `min-block-size: 100svh`,
-    `position: relative`, `overflow-x: clip`, `text-wrap: pretty`, kit font, color, and
-    background.
+    `position: relative`, `overflow-x: clip`, `text-wrap: pretty`, kit font (family, weight,
+    and the `--font-*-body` feature, variant, and variation tokens), color, and background.
   - `main`: `isolation: isolate`, `position: relative`, `flex: 1 0 auto`, `overflow: clip`.
   - `header, footer, section, article`: `position: relative`.
 - **Symptom:** floats that are direct children of `body` stop floating, and margins between

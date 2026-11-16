@@ -81,6 +81,14 @@ export default defineMarkdocConfig({
       render: component("./src/components/clips/GalleryClip.astro"),
       selfClosing: true,
     },
+    "drawer-clip": {
+      render: component("./src/components/clips/DrawerClip.astro"),
+      selfClosing: true,
+    },
+    "toast-clip": {
+      render: component("./src/components/clips/ToastClip.astro"),
+      selfClosing: true,
+    },
     callout: {
       render: component("./src/components/Callout.astro"),
       attributes: {

@@ -1,0 +1,85 @@
+---
+title: "Zazz 0.14 alpha"
+description: "Zazz 0.14 alpha drops Embla for a carousel built on native scroll snap, adds a drawer you drag to dismiss, lets toasts be swiped away, and adds one token each for a type group's letter spacing and line height."
+date: 2026-11-16
+draft: false
+tags: ["release"]
+---
+
+**Zazz 0.14 alpha is about things you drag. The carousel no longer uses a library: it is a scroll-snap container, so it scrolls before any script loads. There is a new drawer, a bottom sheet you pull down to close, and toasts can be swiped away. Most of the breaking changes are in the carousel's script API. The migration list at the end covers them, plus two renamed field hooks.**
+
+## A carousel without a library
+
+The carousel ran on Embla through 0.13. Embla moves slides with transforms in JavaScript, so nothing scrolled until the script ran, and a touch scroll went through the main thread. In 0.14 the viewport is a native scroll-snap container. Touch, trackpad, and wheel scroll it on the compositor, and the slides scroll even on a page that never loads the script.
+
+The script now only adds what scroll snap can't do on its own: mouse drag, looping, the previous and next buttons, dots, thumbs, autoplay, and auto-scroll. Some behavior comes free from the platform. Right to left follows the inherited `dir`, so `data-carousel-direction` is gone. `data-carousel-axis="y"` lays the track out vertically (give the viewport a height). The arrow keys follow the track too: Left and Right swap in RTL, and Up and Down step a vertical carousel.
+
+Autoplay and auto-scroll pause while the carousel is off screen or the tab is hidden. Auto-scroll doesn't start at all under `prefers-reduced-motion: reduce`. A playing root carries the `playing` state token, so you can style a pause button from CSS.
+
+The four Embla packages are gone from the import map, which leaves `signal-polyfill` as the kit's only dependency. The reasoning is written up in ADR-0019.
+
+## Drawers
+
+`<dialog data-ui="drawer">` is a bottom sheet. You open and close it like any dialog, with `command="show-modal"`, `command="close"`, Esc, or the backdrop when `closedby="any"` is set. The script adds the drag. The drawer follows your finger, and letting go past a quarter of its height, or flicking it down, closes it. A scrolling body scrolls first, and the drawer starts moving only once the body is at the top.
+
+{% drawer-clip /%}
+
+Snap points give it resting heights. `data-drawer-snap="12rem 0.5 1"` opens at 12rem, then stops at half and full height. Letting go settles on the nearest stop. A flick moves one stop, and a very hard flick goes all the way (add `data-drawer-snap-sequential` if it should only ever move one). Pressing the handle steps through the stops, and `zazz:drawer-snap` tells you which stop it's on.
+
+A dialog can also become a drawer only on phones. `data-ui="dialog drawer"` is a normal dialog on a desktop and a drawer below the `sm` band on a touch screen, and it keeps its dialog slots either way. It's usually the better choice: filters, pickers, and short forms work well as a sheet on a phone and as a centered dialog on a larger screen.
+
+A few more things work without any extra markup:
+
+- A drawer opened over another one pushes the first one back, and the one behind follows the drag.
+- Wrap the page in `<ui-drawer-indent>` and it scales back behind an open drawer with rounded corners, the way iOS sheets do.
+- When a field inside a drawer opens the phone's keyboard, the drawer's content stops at the keyboard's top edge, the field scrolls into view, and the page behind stays where it was.
+
+The [drawer reference](/api/primitives/drawer/) has all five examples.
+
+## Swipe a toast away
+
+Drag a toast toward the edge it came from, or sideways, with a finger or the mouse. In the default `bottom-end` corner that's down or to the right. A centered toaster takes either side. A swipe of 45px dismisses, and so does a quick flick over a shorter distance. Anything less springs back. Its timer pauses while you hold it.
+
+{% toast-clip /%}
+
+The drawer and the toaster share the same drag code, `base/gesture.js`. Script follows the pointer, and the release is a CSS transition, which is why a toast can be caught again partway back (ADR-0018). If something inside a drawer or a toast needs its own drag, a slider for example, put `data-ui-no-drag` on it.
+
+## One knob for letter spacing
+
+Changing the typeface usually means nudging every `--tracking-*` token by the same amount. Now you set one. `--tracking-modifier` is a length added to all of them. `--tracking-heading-modifier` and `--tracking-body-modifier` default to it, so you can move headings and body text separately:
+
+```css
+:root {
+  --tracking-heading-modifier: -0.015em;
+  --leading-body-multiplier: 1.05;
+}
+```
+
+Give them a unit. A bare `0` breaks the `calc()` behind the tokens. Line height gets the same treatment as a multiplier: `--leading-heading-multiplier` and `--leading-body-multiplier` scale every `--leading-*` token in their group.
+
+`body` also applies every `--font-*-body` role token now, from feature settings to optical sizing. Set one on `:root` and all body text picks it up.
+
+## Fields, tabs, and tooltips line up
+
+The controls that sit next to fields now use the field family's numbers:
+
+- Anything inside a field's border (input-group addons, the password toggle, the date picker button, the tabs indicator) uses `--ui-field-inset-p` for its gap to the edge. Its radius, `--ui-field-inset-radius`, is computed from the field's radius, so the corners stay concentric at any size.
+- Tabs take their padding, gap, and borders from the field hooks.
+- The switch thumb gets a border, and the slider thumb is filled with the primary color.
+- The radio dot is drawn as a gradient over the whole circle, which puts it exactly in the center. At fractional sizes it used to sit up to a pixel off.
+- Tooltips are outlined instead of shadowed and use the mono font. The arrow is now opt-in (`--ui-tooltip-display: block`), and when it's on it continues the tooltip's border.
+
+## Migrating
+
+- Carousel scripts:
+  - `window.EmblaInit` is now `window.Carousel` (`init`, `initRoot`).
+  - The API on a root moved from `_emblaApi` to `_carousel`, which is also what `<ui-carousel>.api` returns. It has `goTo(index, instant?)`, `goToNext()`, `goToPrev()`, `selectedSnap()`, `snapList()`, `play()`, `stop()`, and `isPlaying()`.
+  - Listen for `zazz:carousel-select` (`detail.index`) on the root instead of Embla's `select` event.
+- Carousel options: `loop`, `align`, `axis`, `draggable`, `drag-free`, `skip-snaps`, `start-snap`, `keyboard`, and the autoplay and auto-scroll options still work. Other Embla options are ignored, including `slides-to-scroll`, `contain-scroll`, `duration`, `breakpoints`, and `watch-*`. The `class-names` plugin is gone, so style the `snapped` and `in-view` state tokens instead. Remove `data-carousel-direction`, since the track follows `dir`.
+- `--ui-carousel-touch-action` and the `data-ui-dragging` flag on `:root` are removed. The grabbing cursor comes from the viewport's `dragging` state.
+- If you wrote your import map by hand, delete the four `embla-carousel*` entries.
+- Rename `--ui-field-inset-child-radius` to `--ui-field-inset-radius`, and `--ui-field-addon-p` to `--ui-field-inset-p`. The padding default drops from `var(--spacing)` to `calc(var(--spacing) * 0.85)`.
+- A custom `--ui-radio-dot-mask` now covers the whole circle, so give it its own position and size: `url(star.svg) center / 50% no-repeat`.
+- A vendored toaster needs `base/gesture.js`. `npx zazz-ui update` adds it.
+
+The [changelog](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/CHANGELOG.md) lists every change by primitive, and `npx zazz-ui update` prints the slice for the files you've vendored.
