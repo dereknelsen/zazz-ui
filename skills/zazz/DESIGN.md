@@ -439,6 +439,10 @@ Gently rounded chips (`--radius-sm`, ~6px). Height `--ui-badge-h`. Variants (`da
 
 Native `<dialog data-ui="dialog">` via Invoker Commands API. `--color-card` surface, `--shadow-md`, `--radius-lg`. Backdrop: `--color-shade-900`. Sizes (`data-dialog-size`) follow the layout bands: `sm` (default), `md`, `lg`, `xl`, `2xl`, `full` (viewport inside the gutters), `bleed` (edge to edge, no radius or shadow).
 
+### Drawer
+
+A bottom sheet on the same `<dialog>`, rising from the bottom edge with only its top corners rounded and a short grab handle. It follows the finger 1:1 and settles with the dialog's easing. Snap points (`data-drawer-snap`) give it a peek height and a full height. A drawer stacked over another scales the one behind back, and wrapping the page in `<ui-drawer-indent>` gives the iOS sheet look where the page recedes. Use it for mobile filters, pickers, and short forms. On desktop, keep a dialog (`data-ui="dialog drawer"` does both).
+
 ### Menu & Navigation Menu
 
 Popover API + CSS anchor positioning. Native light-dismiss. Menu items are `data-ui="button" data-button-variant="ghost"`. Navigation menu supports mega-panels with a `data-navigation-menu-slot="viewport"` grid and rich `data-navigation-menu-slot="link"` rows (title + description); featured panels are built from utilities (`--bg: var(--color-muted); --radius: 1.5; --p: 4`) plus a `text-eyebrow`.

@@ -96,6 +96,12 @@ Use the `--color-*` roles in utilities and CSS; they are also the **theme inputs
   across `--fluid-min` to `--fluid-max`. `--fluid` is a plain 0-to-1 number over that range for any
   `calc()`. One article: `data-prose-size="sm"` (compact) or `"lg"` (reading), and
   `--ui-prose-flow` scales only the space between its blocks.
+- **Spacing and leading knobs** (0.14 and later): `--tracking-modifier` is a length (`0.01em`, never
+  a bare `0`) added to every `--tracking-*` token; `--tracking-heading-modifier` (display, h1–h6)
+  and `--tracking-body-modifier` (2xl–2xs, eyebrow) default to it and move one group.
+  `--leading-heading-multiplier` and `--leading-body-multiplier` (default `1`) scale every
+  `--leading-*` in their group. Set them on `:root` or on a section, instead of redeclaring each
+  token.
 
 ## 5. Radius
 

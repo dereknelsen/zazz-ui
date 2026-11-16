@@ -239,6 +239,11 @@ will read across rows.
   it; add it to a plain dialog too). `closedby="any"` allows backdrop
   dismiss. A confirmation that needs an answer is `data-ui="dialog alert-dialog"` with
   `role="alertdialog"` and `closedby="none"`; copy the `alert-dialog` fragment.
+- On a phone, a dialog that holds a list, filters, or a short form reads better as a bottom
+  sheet: add `drawer` (`data-ui="dialog drawer"`) and it becomes one below `sm` on a touch
+  screen, with the same slots. A sheet on every device is `data-ui="drawer"` with
+  `data-drawer-slot` parts; copy the `drawer` fragment. Give it `closedby="any"` so the
+  backdrop and the drag both dismiss it.
 - Never open a dialog without a user action; modal dialogs interrupt, so use them for things
   that need a decision. A hint or a menu is a `[popover]`, not a dialog.
 - An accordion is `<ui-accordion>` over native `<details>` and `<summary>`, with `<summary>`

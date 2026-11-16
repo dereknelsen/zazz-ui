@@ -279,7 +279,9 @@ breadcrumbs are utility compositions (copy the fragments). Tables are `data-ui="
 
 Author behavior in HTML; the scripts enhance light-DOM markup. `<ui-carousel>`, `<ui-lightbox>`,
 `<ui-password>`, `<ui-tabs>`, `<ui-toaster>` (fired via `command="--toast"` or `window.Toaster`)
-and friends take their parts as slots (`data-carousel-slot="viewport"`). Tooltips
+and friends take their parts as slots (`data-carousel-slot="viewport"`). A bottom sheet is a
+`<dialog data-ui="drawer">` (drag to dismiss, optional snap points); `data-ui="dialog drawer"`
+is a dialog that turns into one on phones. Tooltips
 (`interestfor`), dialogs (`command`/`commandfor`), and popovers (`popovertarget`) use the
 native invoker and popover APIs; only `interestfor` is polyfilled. The custom elements and the
 `data-carousel-*` and `data-reveal-*` catalogs are in `references/apis.md`.

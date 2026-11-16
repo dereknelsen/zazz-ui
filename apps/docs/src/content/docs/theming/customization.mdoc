@@ -24,7 +24,7 @@ The kit's colors, type, spacing, radii, and shadows are custom properties on `:r
 }
 ```
 
-`--spacing: 0.3rem` pins the spacing unit. To keep it fluid at a new size, set its two ends instead: `--spacing-min: 0.275rem; --spacing-max: 0.3rem`. The type scale works the same way through `--typeset-base-min`/`-max` and `--typeset-scale-min`/`-max`.
+`--spacing: 0.3rem` pins the spacing unit. To keep it fluid at a new size, set its two ends instead: `--spacing-min: 0.275rem; --spacing-max: 0.3rem`. The type scale works the same way through `--typeset-base-min`/`-max` and `--typeset-scale-min`/`-max`. To fit a new typeface's spacing, shift every role at once with `--tracking-modifier` (a length such as `-0.01em`) and the `--leading-heading-multiplier` and `--leading-body-multiplier` factors. The [typography](/api/foundations/typography/) page has the details.
 
 The theme builder on the [home page](/) writes this block for you: pick neutral, primary, secondary, and tertiary colors, set the spacing, radius, and shadow angle, then copy the variables you changed.
 

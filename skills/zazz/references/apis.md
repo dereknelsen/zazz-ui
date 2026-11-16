@@ -39,13 +39,14 @@ SRI-checked); keep the import map above the module.
 These custom elements augment regular child markup; they do not use shadow DOM or templates,
 so the `data-ui`, preset, slot, and utility markup inside them keeps working.
 
-| Element         | Script              | Use for                                     | Notes                                                                                                                                                                                                      |
-| --------------- | ------------------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `<ui-carousel>` | `carousel.js`       | Component carousels and carousel roots      | The element is the carousel root; put `data-carousel-*` options on it                                                                                                                                      |
-| `<ui-lightbox>` | `lightbox.js`       | Inline gallery + fullscreen dialog lightbox | Coordinates gallery/dialog slide state; opening/closing still uses Invoker Commands                                                                                                                        |
-| `<ui-password>` | `password-group.js` | Password show/hide toggle                   | Wrap `data-ui="password-group"`; optional `data-password-group-label-show` / `-label-hide`; icons swap via ARIA                                                                                            |
-| `<ui-tabs>`     | `tabs.js`           | Radio-driven tabs with richer keyboard nav  | Enhances the CSS-only radio tabs with orientation-aware arrows, Home/End, and wrap-around                                                                                                                  |
-| `<ui-toaster>`  | `toaster.js`        | Stacked toast notifications (top layer)     | Needs `popover="manual"`; fire via `command="--toast"` on any button (content from `data-toaster-title`, `-description`, `-variant`, `-duration`, `-close-button`) or `window.Toaster.toast()/success()/…` |
+| Element              | Script              | Use for                                               | Notes                                                                                                                                                                                                                                                                              |
+| -------------------- | ------------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `<ui-carousel>`      | `carousel.js`       | Component carousels and carousel roots                | The element is the carousel root; put `data-carousel-*` options on it                                                                                                                                                                                                              |
+| `<ui-lightbox>`      | `lightbox.js`       | Inline gallery + fullscreen dialog lightbox           | Coordinates gallery/dialog slide state; opening/closing still uses Invoker Commands                                                                                                                                                                                                |
+| `<ui-password>`      | `password-group.js` | Password show/hide toggle                             | Wrap `data-ui="password-group"`; optional `data-password-group-label-show` / `-label-hide`; icons swap via ARIA                                                                                                                                                                    |
+| `<ui-tabs>`          | `tabs.js`           | Radio-driven tabs with richer keyboard nav            | Enhances the CSS-only radio tabs with orientation-aware arrows, Home/End, and wrap-around                                                                                                                                                                                          |
+| `<ui-toaster>`       | `toaster.js`        | Stacked toast notifications (top layer)               | Needs `popover="manual"`; fire via `command="--toast"` on any button (content from `data-toaster-title`, `-description`, `-variant`, `-duration`, `-close-button`) or `window.Toaster.toast()/success()/…`. Toasts swipe to dismiss (finger or mouse); timers pause during a swipe |
+| `<ui-drawer-indent>` | `drawer.js`         | A page wrapper that scales back behind an open drawer | Not a registered element: the script finds it (or `data-ui="drawer-indent"`) by selector. Wrap the page content, not the drawers. `position: fixed` children move with the page while it is indented                                                                               |
 
 Custom elements are `display: inline` by default, so their component
 styles define the needed block/flex display.
@@ -142,6 +143,30 @@ dispatches `zazz:carousel-select` (`detail.index`). The script stores its API on
 `_carousel` (`<ui-carousel>.api`): `goTo(index, instant?)`, `goToNext()`, `goToPrev()`,
 `selectedSnap()`, `play()`, `stop()`, `isPlaying()`. `<ui-carousel>` initializes on connect,
 defers while inside a closed `<dialog>`, and tears down on disconnect.
+
+### Drawer — `drawer.js`
+
+A drawer is a native modal `<dialog>`, opened and closed like a dialog (`command="show-modal"`,
+`command="close"`, Esc, `closedby="any"`). The script binds it when it opens; there is nothing
+to initialize. `data-ui="drawer"` is a bottom sheet everywhere, with
+`data-drawer-slot="handle | content | header | body | footer | close"`.
+`data-ui="dialog drawer"` stays a dialog (with dialog slots) and becomes a drawer below the
+`sm` band on a touch screen.
+
+- Dragging down past a quarter of its height, or a quick flick, dismisses it through
+  `requestClose()` (`cancel` and `close` fire as for Esc). Scrolling content scrolls first; the
+  handle always drags. Form fields, selected text, and anything inside `[data-ui-no-drag]`
+  never start a drag.
+- `data-drawer-snap="12rem 0.5 1"`: resting heights, smallest first (a share of the full
+  height up to `1`, or a `px`/`rem` length). It opens at the first; a flick moves one stop, a
+  very fast one jumps to the end unless `data-drawer-snap-sequential` is set. Make the handle a
+  `<button>` so the keyboard can step through stops. Each change fires `zazz:drawer-snap`
+  (`detail.index`, `detail.value` in px); `data-drawer-state` carries `expanded` at the top
+  stop; `snapDrawer(dialog, index)` (an export of `drawer.js`) moves it from script.
+- A drawer opened over another scales the one behind back. The software keyboard is handled:
+  nothing to author.
+
+`data-ui-no-drag` also applies to toast swipes.
 
 ### Helpers and app glue
 
