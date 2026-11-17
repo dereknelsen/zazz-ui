@@ -1,5 +1,11 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.14.2 (2026-11-17)
+
+### drawer
+
+- A drawer removed from the page while open lets go of the page. With `data-ui-navigation="swap"`, following a link inside an open drawer replaces the body without closing it, and the drawer kept holding the page at its old scroll position: the next page could not be scrolled, and jittered on iOS, until a reload. The drawer now unbinds as soon as it is gone.
+
 ## 0.14.1 (2026-11-16)
 
 ### base
