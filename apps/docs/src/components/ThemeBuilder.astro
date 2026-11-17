@@ -25,6 +25,7 @@ import {
   ChevronDown,
   Code,
   Copy,
+  Share,
   Dices,
   Palette,
   RotateCcw,
@@ -387,6 +388,82 @@ const packScript = await inlineScript(
         style='
           --display: grid;
           --position: relative;
+          --grid-cols: 3;
+          --gap: 2;
+          --z: 10;
+        '
+      >
+        <button
+          data-ui='button'
+          data-button-variant='muted'
+          type='button'
+          data-theme-copy-proxy
+          disabled
+        >
+          <span
+            data-copy-idle
+            style='
+              --display: inline-flex;
+              --items: center;
+              --gap: 2;
+            '
+          >
+            <Copy size={16} aria-hidden='true' /> Copy
+          </span>
+          <span
+            data-copy-done
+            hidden
+            style='
+              --display: inline-flex;
+              --items: center;
+              --gap: 2;
+            '
+          >
+            <Check size={16} aria-hidden='true' /> Copied
+          </span>
+        </button>
+        <button
+          data-ui='button'
+          data-button-variant='muted'
+          type='button'
+          command='show-modal'
+          commandfor='tb-css'
+        >
+          <Code size={16} aria-hidden='true' /> Preview
+        </button>
+        <button
+          data-ui='button'
+          data-button-variant='muted'
+          type='button'
+          data-theme-share
+        >
+          <span
+            data-share-idle
+            style='
+              --display: inline-flex;
+              --items: center;
+              --gap: 2;
+            '
+          >
+            <Share size={16} aria-hidden='true' /> Share
+          </span>
+          <span
+            data-share-done
+            hidden
+            style='
+              --display: inline-flex;
+              --items: center;
+              --gap: 2;
+            '
+          >
+            <Check size={16} aria-hidden='true' /> Copied
+          </span>
+        </button>
+      </div>
+      <div
+        style='
+          --display: grid;
+          --position: relative;
           --grid-cols: 4;
           --gap: 2;
           --z: 20;
@@ -459,6 +536,77 @@ const packScript = await inlineScript(
       </div>
     </dialog>
 
+    <!-- Outside the form: on narrow screens the form sits in the closed sheet,
+         where a dialog inside it could not be shown. -->
+    <dialog
+      id='tb-css'
+      data-ui='dialog'
+      closedby='any'
+      aria-labelledby='tb-css-title'
+    >
+      <div data-dialog-slot='content'>
+        <header data-dialog-slot='header' style='--pr: 12'>
+          <h2 id='tb-css-title' data-ui='text-md'>Theme CSS</h2>
+          <p
+            data-ui='text-sm'
+            style='--text: var(--color-muted-foreground)'
+          >
+            Only the variables you changed. Paste it into your stylesheet.
+          </p>
+        </header>
+        <div data-dialog-slot='body'>
+          <pre
+            data-ui='text-xs'
+            style='
+              --p: 3;
+              --font-family: var(--font-family-mono);
+              --bg: var(--color-muted);
+              --radius: 2.5;
+              --overflow: auto;
+            '><code class='theme-builder__css' data-theme-css>/* No changes yet */</code></pre>
+        </div>
+        <footer data-dialog-slot='footer'>
+          <button
+            data-ui='button'
+            type='button'
+            commandfor='tb-css'
+            command='close'>Close</button
+          >
+          <button
+            data-ui='button'
+            data-button-variant='primary'
+            type='button'
+            data-theme-copy-proxy
+          >
+            <Copy size={16} aria-hidden='true' /> Copy
+          </button>
+        </footer>
+      </div>
+      <ui-tooltip>
+        <button
+          data-ui='button'
+          data-dialog-slot='close'
+          data-button-size='icon'
+          data-button-variant='ghost'
+          type='button'
+          commandfor='tb-css'
+          command='close'
+          aria-label='Close'
+          interestfor='tb-css-close-tip'
+        >
+          <X aria-hidden='true' />
+        </button>
+        <div
+          data-tooltip-slot='content'
+          id='tb-css-close-tip'
+          popover='hint'
+        >
+          Close
+          <span data-tooltip-slot='arrow' aria-hidden='true'></span>
+        </div>
+      </ui-tooltip>
+    </dialog>
+
     <!-- DESKTOP THEME BUILDER PANEL -->
     <div
       data-theme-panel
@@ -520,6 +668,95 @@ const packScript = await inlineScript(
             >
               <span class='theme-builder__generate-icon' aria-hidden='true'></span>
               <span class='theme-builder__generate-label'>{GENERATE_BUTTON_LABEL}</span>
+            </button>
+          </div>
+          <!-- The theme's actions, under Generate. Copy and Reset here are the real
+               controls; the bar's are proxies for them (scripts/theme-builder.ts). -->
+          <div
+            style='
+              --display: grid;
+              --template-cols: 1fr 1fr 1fr auto;
+              --gap: 2;
+            '
+          >
+            <button
+              data-ui='button'
+              data-button-variant='muted'
+              type='button'
+              data-theme-copy
+              disabled
+              style='--px: 2'
+            >
+              <span
+                data-copy-idle
+                style='
+                  --display: inline-flex;
+                  --items: center;
+                  --gap: 2;
+                '
+              >
+                <Copy size={16} aria-hidden='true' /> Copy
+              </span>
+              <span
+                data-copy-done
+                hidden
+                style='
+                  --display: inline-flex;
+                  --items: center;
+                  --gap: 2;
+                '
+              >
+                <Check size={16} aria-hidden='true' /> Copied
+              </span>
+            </button>
+            <button
+              data-ui='button'
+              data-button-variant='muted'
+              type='button'
+              command='show-modal'
+              commandfor='tb-css'
+              style='--px: 2'
+            >
+              <Code size={16} aria-hidden='true' /> Preview
+            </button>
+            <button
+              data-ui='button'
+              data-button-variant='muted'
+              type='button'
+              data-theme-share
+              style='--px: 2'
+            >
+              <span
+                data-share-idle
+                style='
+                  --display: inline-flex;
+                  --items: center;
+                  --gap: 2;
+                '
+              >
+                <Share size={16} aria-hidden='true' /> Share
+              </span>
+              <span
+                data-share-done
+                hidden
+                style='
+                  --display: inline-flex;
+                  --items: center;
+                  --gap: 2;
+                '
+              >
+                <Check size={16} aria-hidden='true' /> Copied
+              </span>
+            </button>
+            <button
+              data-ui='button'
+              data-button-variant='warning'
+              data-button-size='icon'
+              type='reset'
+              data-theme-reset
+              disabled
+            >
+              <RotateCcw size={16} aria-hidden='true' /> <span style='--sr: only'>Reset theme</span>
             </button>
           </div>
         </header>
@@ -1350,143 +1587,6 @@ const packScript = await inlineScript(
           </details>
         </ui-accordion>
 
-        <footer
-          style='
-            --display: grid;
-            --position: sticky;
-            --template-cols: 1fr 1fr auto;
-            --px: 0;
-            --px--lg: 5;
-            --py: 5;
-            --gap: 2;
-            --bottom: 0;
-            --mt: auto;
-            --w: 100%;
-            --bg: oklch(from var(--color-card) l c h / 0.95);
-            --border-t: 1;
-            --backdrop-filter: blur(6px);
-          '
-        >
-          <button
-            data-ui='button'
-            data-button-variant='muted'
-            type='button'
-            data-theme-copy
-            disabled
-            style='--display: inline-flex'
-          >
-            <span
-              data-copy-idle
-              style='
-                --display: inline-flex;
-                --items: center;
-                --gap: 2;
-              '
-            >
-              <Copy size={16} aria-hidden='true' /> Copy CSS
-            </span>
-            <span
-              data-copy-done
-              hidden
-              style='
-                --display: inline-flex;
-                --items: center;
-                --gap: 2;
-              '
-            >
-              <Check size={16} aria-hidden='true' /> Copied
-            </span>
-          </button>
-
-          <button
-            data-ui='button'
-            data-button-variant='muted'
-            type='button'
-            command='show-modal'
-            commandfor='tb-css'
-          >
-            <Code size={16} aria-hidden='true' /> Preview CSS
-          </button>
-          <button
-            data-ui='button'
-            data-button-variant='warning'
-            data-button-size='icon'
-            type='reset'
-            data-theme-reset
-            disabled
-          >
-            <RotateCcw size={16} aria-hidden='true' /> <span style='--sr: only'>Reset theme</span>
-          </button>
-
-          <dialog
-            id='tb-css'
-            data-ui='dialog'
-            closedby='any'
-            aria-labelledby='tb-css-title'
-          >
-            <div data-dialog-slot='content'>
-              <header data-dialog-slot='header' style='--pr: 12'>
-                <h2 id='tb-css-title' data-ui='text-md'>Theme CSS</h2>
-                <p
-                  data-ui='text-sm'
-                  style='--text: var(--color-muted-foreground)'
-                >
-                  Only the variables you changed. Paste it into your stylesheet.
-                </p>
-              </header>
-              <div data-dialog-slot='body'>
-                <pre
-                  data-ui='text-xs'
-                  style='
-                    --p: 3;
-                    --font-family: var(--font-family-mono);
-                    --bg: var(--color-muted);
-                    --radius: 2.5;
-                    --overflow: auto;
-                  '><code class='theme-builder__css' data-theme-css>/* No changes yet */</code></pre>
-              </div>
-              <footer data-dialog-slot='footer'>
-                <button
-                  data-ui='button'
-                  type='button'
-                  commandfor='tb-css'
-                  command='close'>Close</button
-                >
-                <button
-                  data-ui='button'
-                  data-button-variant='primary'
-                  type='button'
-                  data-theme-copy-proxy
-                >
-                  <Copy size={16} aria-hidden='true' /> Copy
-                </button>
-              </footer>
-            </div>
-            <ui-tooltip>
-              <button
-                data-ui='button'
-                data-dialog-slot='close'
-                data-button-size='icon'
-                data-button-variant='ghost'
-                type='button'
-                commandfor='tb-css'
-                command='close'
-                aria-label='Close'
-                interestfor='tb-css-close-tip'
-              >
-                <X aria-hidden='true' />
-              </button>
-              <div
-                data-tooltip-slot='content'
-                id='tb-css-close-tip'
-                popover='hint'
-              >
-                Close
-                <span data-tooltip-slot='arrow' aria-hidden='true'></span>
-              </div>
-            </ui-tooltip>
-          </dialog>
-        </footer>
       </form>
     </div>
     <style is:inline data-theme-output></style>

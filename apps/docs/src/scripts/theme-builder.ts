@@ -156,14 +156,27 @@ class ThemeBuilder extends ZazzElement {
       ]),
     ) as Record<PaletteName, string>;
 
-    // No clipboard outside a secure context: hide the copy buttons, which cannot work.
-    if (!navigator.clipboard?.writeText) {
-      for (const button of this.querySelectorAll<HTMLElement>(
-        "[data-theme-copy], [data-theme-copy-proxy]",
-      )) {
-        button.hidden = true;
-      }
-    }
+    // No clipboard outside a secure context: hide the copy buttons, which cannot work,
+    // and the share buttons too where there is no share sheet to fall back on.
+    const canCopy = typeof navigator.clipboard?.writeText === "function";
+    const canShare = typeof navigator.share === "function";
+    const dead = [
+      ...(canCopy ? [] : ["[data-theme-copy], [data-theme-copy-proxy]"]),
+      ...(canCopy || canShare ? [] : ["[data-theme-share]"]),
+    ].join(", ");
+    if (dead) for (const button of this.querySelectorAll<HTMLElement>(dead)) button.hidden = true;
+
+    /** Swaps a button's label pair (`data-<kind>-idle` / `-done`) to "done" for a moment. */
+    const flash = (kind: "copy" | "share") => {
+      const flip = (done: boolean) => {
+        for (const el of this.querySelectorAll<HTMLElement>(`[data-${kind}-idle]`))
+          el.hidden = done;
+        for (const el of this.querySelectorAll<HTMLElement>(`[data-${kind}-done]`))
+          el.hidden = !done;
+      };
+      flip(true);
+      setTimeout(() => flip(false), 1500);
+    };
 
     /** The panel's controls, by `name`: the theme inputs and the preview's elevation slider. */
     const fields = () => [
@@ -177,6 +190,13 @@ class ThemeBuilder extends ZazzElement {
       Object.fromEntries(
         fields().map((f) => [f.name, f.value !== "" && f.checkValidity() ? f.value : defaultOf(f)]),
       );
+    /** This page's address carrying the theme: the preset parameter, dropped at the defaults. */
+    const shareUrl = () => {
+      const url = new URL(location.href);
+      if (fields().some(changed)) url.searchParams.set(PARAM, encodePreset(values()));
+      else url.searchParams.delete(PARAM);
+      return url;
+    };
     /** Writes the theme into the URL once input settles, or drops the parameter at the defaults. */
     let shareTimer: ReturnType<typeof setTimeout> | undefined;
     const page = location.pathname;
@@ -186,11 +206,32 @@ class ThemeBuilder extends ZazzElement {
         // A swap navigation moves the URL before it swaps the page out: never
         // write onto the next page's address.
         if (signal.aborted || location.pathname !== page) return;
-        const url = new URL(location.href);
-        if (fields().some(changed)) url.searchParams.set(PARAM, encodePreset(values()));
-        else url.searchParams.delete(PARAM);
+        const url = shareUrl();
         if (url.href !== location.href) history.replaceState(history.state, "", url);
       }, SHARE_DELAY);
+    };
+    /**
+     * The Share button: the theme's link goes to the system share sheet, or to
+     * the clipboard where there is none. Built now, not read from the address,
+     * which trails the fields by `SHARE_DELAY`.
+     */
+    const shareLink = async () => {
+      const url = shareUrl().href;
+      if (canShare) {
+        try {
+          await navigator.share({ title: document.title, url });
+          return;
+        } catch (error) {
+          // Dismissing the sheet is an answer; anything else falls back to the clipboard.
+          if (error instanceof DOMException && error.name === "AbortError") return;
+        }
+      }
+      try {
+        await navigator.clipboard.writeText(url);
+      } catch {
+        return;
+      }
+      flash("share");
     };
     signal.addEventListener("abort", () => clearTimeout(shareTimer), { once: true });
     /** Puts the URL's preset into the fields; each then announces itself as an input. */
@@ -519,6 +560,7 @@ class ThemeBuilder extends ZazzElement {
         }
         if (target.closest("[data-theme-copy-proxy]")) copy?.click();
         if (target.closest("[data-theme-reset-proxy]")) form.reset();
+        if (target.closest("[data-theme-share]")) void shareLink();
       },
       { signal },
     );
@@ -575,15 +617,8 @@ class ThemeBuilder extends ZazzElement {
         } catch {
           return;
         }
-        // Every copy button with a label pair says so: the panel's, and the sheet's proxy.
-        const flip = (copied: boolean) => {
-          for (const idle of this.querySelectorAll<HTMLElement>("[data-copy-idle]"))
-            idle.hidden = copied;
-          for (const done of this.querySelectorAll<HTMLElement>("[data-copy-done]"))
-            done.hidden = !copied;
-        };
-        flip(true);
-        setTimeout(() => flip(false), 1500);
+        // Every copy button with a label pair says so: the panel's, and the bar's proxy.
+        flash("copy");
       },
       { signal },
     );
