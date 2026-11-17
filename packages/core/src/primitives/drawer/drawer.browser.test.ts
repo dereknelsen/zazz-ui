@@ -11,6 +11,8 @@ import { commands, server } from "vite-plus/test/browser/context";
 import { atWidth, below, frame, mount, style, useCss, useKit } from "../../../test/browser.ts";
 import { drag, pointerUp } from "../../../test/pointer.ts";
 import "../../base/dialog-lifecycle.ts";
+import { swapBody } from "../../base/navigation.ts";
+import { refreshAll } from "../../base/zazz-element.ts";
 import { snapDrawer } from "./drawer.ts";
 
 const held = commands as unknown as { emulateTouch(enabled: boolean): Promise<void> };
@@ -735,5 +737,84 @@ describe("drawer and the software keyboard", () => {
     window.scrollTo({ top: 600, behavior: "instant" });
     expect(window.scrollY).toBe(600);
     window.scrollTo(0, 0);
+  });
+});
+
+describe("a drawer that leaves the page while open", () => {
+  useKit();
+
+  const TALL_PAGE = `<div><div style="block-size: 4000px"></div>${STANDALONE}</div>`;
+
+  /** Scrolls the page and reports where it ends up once any listener has answered. */
+  async function scrollPage(top: number): Promise<number> {
+    window.scrollTo({ top, behavior: "instant" });
+    await frame();
+    await frame();
+    return window.scrollY;
+  }
+
+  it("lets go of the page when it is removed", async () => {
+    await atWidth(1280);
+    const root = mount(TALL_PAGE);
+    const dialog = root.querySelector("dialog")!;
+    window.scrollTo({ top: 200, behavior: "instant" });
+    dialog.showModal();
+    await frame();
+    dialog.remove();
+    expect(await scrollPage(600)).toBe(600);
+    window.scrollTo(0, 0);
+  });
+
+  it("lets go of the page when swap navigation replaces the body", async () => {
+    await atWidth(1280);
+    const root = mount(TALL_PAGE);
+    window.scrollTo({ top: 200, behavior: "instant" });
+    root.querySelector("dialog")!.showModal();
+    await frame();
+    const next = document.createElement("body");
+    next.innerHTML = `<div style="block-size: 4000px"></div>`;
+    swapBody(next);
+    expect(await scrollPage(600)).toBe(600);
+    window.scrollTo(0, 0);
+  });
+
+  it("lets go of the page when it is removed on its way out", async () => {
+    await atWidth(1280);
+    const root = mount(TALL_PAGE);
+    const dialog = root.querySelector("dialog")!;
+    window.scrollTo({ top: 200, behavior: "instant" });
+    dialog.showModal();
+    await sleep(700);
+    const own = Number.parseFloat(style(dialog, "transition-duration")) * 1000;
+    await drag(part(dialog, "header"), { dy: 120, steps: 4, interval: 6 });
+    await sleep(40);
+    expect(dialog.open).toBe(true);
+    dialog.remove();
+    await sleep(own + 300);
+    expect(await scrollPage(600)).toBe(600);
+    window.scrollTo(0, 0);
+  });
+
+  it("is unbound by the refresh a navigation swap runs, before anything scrolls", async () => {
+    await atWidth(1280);
+    const dialog = await open(SNAP);
+    expect(dialog.getAttribute("data-drawer-state")).toBe("partial");
+    const next = document.createElement("body");
+    next.innerHTML = `<p>Next page</p>`;
+    refreshAll(swapBody(next));
+    expect(dialog.hasAttribute("data-drawer-state")).toBe(false);
+  });
+
+  it("is not counted behind the next drawer to open", async () => {
+    await atWidth(1280);
+    const root = mount(`<div>${STANDALONE}${STANDALONE}</div>`);
+    const [first, second] = [...root.querySelectorAll("dialog")];
+    first!.showModal();
+    await frame();
+    first!.remove();
+    second!.showModal();
+    await frame();
+    expect(second!.getAttribute("data-drawer-state") ?? "").not.toContain("nested");
+    second!.close();
   });
 });

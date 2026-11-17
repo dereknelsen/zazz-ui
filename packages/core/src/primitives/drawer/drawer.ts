@@ -74,6 +74,7 @@ import {
   trackDrag,
 } from "../../base/gesture.ts";
 import type { DragState } from "../../base/gesture.ts";
+import { registerRefresh } from "../../base/zazz-element.ts";
 
 // --- Tuning ---
 
@@ -240,14 +241,17 @@ const stack: HTMLDialogElement[] = [];
 /**
  * @description Writes each open drawer's place in the stack: how many drawers
  * sit in front of it (`--_drawer-depth`, `stacked`) and whether it opened over
- * another (`nested`). Runs when a drawer opens or closes, never per frame.
+ * another (`nested`). Runs when a drawer opens or closes and after a
+ * navigation swap, never per frame.
  * @private
  */
 function restack(): void {
   // a drawer removed from the page while open never reports its close
   for (let index = stack.length - 1; index >= 0; index--) {
     const dialog = stack[index]!;
-    if (!dialog.isConnected || !dialog.open) stack.splice(index, 1);
+    if (dialog.isConnected && dialog.open) continue;
+    stack.splice(index, 1);
+    release(dialog);
   }
   stack.forEach((dialog, index) => {
     const depth = stack.length - 1 - index;
@@ -415,17 +419,24 @@ function keyboardInset(): number {
  * to `--_drawer-keyboard` (drawer.css pads the sheet by it, so its
  * content ends at the keyboard's top edge), holds the page at its scroll
  * position, and scrolls a focused field into the part of its scrolling slot
- * that is still visible.
+ * that is still visible. All of it stops once `alive` says the drawer is gone:
+ * a hold on the page that outlived its drawer would pin the next page.
  *
  * @param dialog - The drawer.
  * @param signal - Aborts when the drawer closes.
+ * @param alive - Whether the drawer is still open on the page; unbinds it when not.
  * @param onChange - Runs after the inset changes, once the new padding is in place.
  * @private
  */
-function trackKeyboard(dialog: HTMLDialogElement, signal: AbortSignal, onChange: () => void): void {
+function trackKeyboard(
+  dialog: HTMLDialogElement,
+  signal: AbortSignal,
+  alive: () => boolean,
+  onChange: () => void,
+): void {
   const viewport = window.visualViewport;
   if (!viewport) return;
-  const front = () => stack[stack.length - 1] === dialog;
+  const front = () => alive() && stack[stack.length - 1] === dialog;
   const pageX = window.scrollX;
   const pageY = window.scrollY;
   let frame = 0;
@@ -658,13 +669,24 @@ function bindDrawer(dialog: HTMLDialogElement): void {
     };
   };
 
+  /**
+   * Whether the drawer is still open on the page. A drawer removed while open
+   * (a navigation swap replaces the body) fires no `close`, so whatever it
+   * bound outside itself asks this first, and the first to ask unbinds it.
+   */
+  const alive = () => {
+    if (dialog.isConnected && dialog.open) return true;
+    unbindDrawer(dialog);
+    return false;
+  };
+
   bound.set(dialog, { controller, snapTo });
   if (inDrawerMode(dialog)) {
     measure();
     place();
     stack.push(dialog);
     restack();
-    trackKeyboard(dialog, signal, () => {
+    trackKeyboard(dialog, signal, alive, () => {
       measure();
       place();
     });
@@ -700,7 +722,7 @@ function bindDrawer(dialog: HTMLDialogElement): void {
   window.addEventListener(
     "resize",
     () => {
-      if (!stack.includes(dialog)) return;
+      if (!alive() || !stack.includes(dialog)) return;
       measure();
       place();
     },
@@ -757,12 +779,17 @@ function bindDrawer(dialog: HTMLDialogElement): void {
   });
 }
 
-/** Unbinds a drawer that closed. */
-function unbindDrawer(dialog: HTMLDialogElement): void {
+/** Drops everything a drawer bound and wrote; its place in the stack is the caller's. */
+function release(dialog: HTMLDialogElement): void {
   bound.get(dialog)?.controller.abort();
   bound.delete(dialog);
   dialog.removeAttribute("data-drawer-state");
   dialog.style.removeProperty("--_drawer-depth");
+}
+
+/** Unbinds a drawer that closed or left the page. */
+function unbindDrawer(dialog: HTMLDialogElement): void {
+  release(dialog);
   const index = stack.indexOf(dialog);
   if (index < 0) return;
   stack.splice(index, 1);
@@ -804,6 +831,9 @@ const initDrawers: InitDrawersFn = function () {
   window.addEventListener("resize", () => {
     if (indented) measureIndent(indented);
   });
+
+  // a navigation swap removes open drawers without a close: let go of them
+  registerRefresh(() => restack());
 
   // drawers that were already open when the script loaded
   for (const dialog of document.querySelectorAll<HTMLDialogElement>(`${DRAWER}[open]`)) {

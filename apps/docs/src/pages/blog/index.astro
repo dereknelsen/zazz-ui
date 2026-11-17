@@ -21,17 +21,21 @@ const format = (date: Date) =>
   description="Releases, announcements, and engineering notes from Zazz."
 >
   <main id="main" data-ui="layout" style="--py: 8">
-    <div style="--band: layout-md; --display: flex-col; --gap: 11">
+    <div style="
+        --display: flex-col;
+        --band: layout-md;
+        --gap: 11;
+      ">
       <header>
         <div
           style="
             --display: flex;
             --items: center;
             --justify: space-between;
-            --gap: 2;
             --pb: 3;
-            --border-b: 1;
+            --gap: 2;
             --w: 100%;
+            --border-b: 1;
           "
         >
           <p
@@ -51,15 +55,29 @@ const format = (date: Date) =>
             Nothing published yet.
           </p>
         ) : (
-          <ul style="--display: flex-col; --gap: 6; --divide-y: 1">
+          <ul style="
+              --display: flex-col;
+              --gap: 6;
+              --divide-y: 1;
+            ">
             {posts.map((post) => (
-              <li data-ui="card">
+              <li data-ui="card" style="--pb: 6">
                 <a
                   href={`/blog/${post.id}/`}
-                  style="--opacity--hover: 0.8; --transition: var(--default-transition)"
+                  style="
+                    --opacity--hover: 0.8;
+                    --transition: var(--default-transition);
+                  "
                 >
-                  <article style="--display: flex-col; --gap: 2">
-                    <div style="--display: flex; --items: center; --gap: 2">
+                  <article style="
+                      --display: flex-col;
+                      --gap: 2;
+                    ">
+                    <div style="
+                        --display: flex;
+                        --items: center;
+                        --gap: 2;
+                      ">
                       {post.data.draft && (
                         <span data-ui="badge" data-badge-variant="warning">
                           <FilePen />
@@ -77,7 +95,10 @@ const format = (date: Date) =>
                     </div>
 
                     <h2 data-ui="text-lg">
-                      <span style="--text: var(--color-foreground); --text-decoration: none">
+                      <span style="
+                          --text-decoration: none;
+                          --text: var(--color-foreground);
+                        ">
                         {post.data.title}
                       </span>
                     </h2>

@@ -36,8 +36,8 @@ catalog:
   playwright: 1.64.1
   signal-polyfill: 0.2.2
   typescript: ^7.0.2
-  vite: npm:@voidzero-dev/vite-plus-core@1.5.1
-  vite-plus: 1.5.1
+  vite: npm:@voidzero-dev/vite-plus-core@8.3.8000
+  vite-plus: 1.7.0
   vscode-jsonrpc: ^9.0.3
   vscode-languageclient: ^10.1.2
   vscode-languageserver: ^10.1.2
@@ -68,10 +68,8 @@ packageExtensions:
       "@emnapi/runtime": 1.11.3
 peerDependencyRules:
   allowAny:
-    - vite
     - vitest
   allowedVersions:
-    vite: "*"
     vitest: "*"
 allowBuilds:
   "@vscode/vsce-sign": true
@@ -84,3 +82,13 @@ minimumReleaseAgeExclude:
   - "@astrojs/markdoc@2.0.10"
   - "@astrojs/markdown-satteri@0.4.3"
   - astro@7.3.6
+  - "@voidzero-dev/vite-plus-core@8.3.8000"
+  - "@voidzero-dev/vite-plus-darwin-arm64@1.7.0"
+  - "@voidzero-dev/vite-plus-darwin-x64@1.7.0"
+  - "@voidzero-dev/vite-plus-linux-arm64-gnu@1.7.0"
+  - "@voidzero-dev/vite-plus-linux-arm64-musl@1.7.0"
+  - "@voidzero-dev/vite-plus-linux-x64-gnu@1.7.0"
+  - "@voidzero-dev/vite-plus-linux-x64-musl@1.7.0"
+  - "@voidzero-dev/vite-plus-win32-arm64-msvc@1.7.0"
+  - "@voidzero-dev/vite-plus-win32-x64-msvc@1.7.0"
+  - vite-plus@1.7.0

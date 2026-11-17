@@ -21,8 +21,12 @@ const { label, sections } = Astro.props;
     --display--lg: none;
     --position: sticky;
     --band: layout-bleed;
+    --px: var(--gutters);
     --pt: 8;
+    --pb: var(--gutters);
     --bottom: 0;
+    --bg-linear: to bottom;
+    --bg-stops: transparent 0%, var(--color-background) 50%;
     --z: 10;
     --stuck-state: bottom;
   "
@@ -30,18 +34,17 @@ const { label, sections } = Astro.props;
   <button
     type="button"
     data-ui="button"
+    data-button-variant="primary"
     command="show-modal"
     commandfor="section-nav"
     style="
       --position: static;
-      --pb: calc(env(safe-area-inset-bottom, 0px) + var(--ui-button-py));
       --gap: 2;
       --w: 100%;
       --border-t: 1;
       --border-t--active: 1;
       --border-t--hover: 1;
       --shadow-angle: 180deg;
-      --radius: 0;
       --ui-button-border-width: 0;
     "
   >

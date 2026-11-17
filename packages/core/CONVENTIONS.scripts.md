@@ -167,28 +167,28 @@ Enable carousel plugins with a space-separated token list (`data-carousel-plugin
 
 Scripts declare dependencies with ES imports so the module graph resolves order: the entry module (`index.ts`, loaded as the emitted `index.js`) is the only tag a page loads.
 
-| Script                                | Imports                                                      | Notes                                                                                                       |
-| ------------------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| `base/utils.ts`                       | none                                                         | Provides `window.Utils`                                                                                     |
-| `base/signals.ts`                     | `signal-polyfill` (npm)                                      | The **only** file allowed to import the polyfill                                                            |
-| `base/zazz-element.ts`                | none                                                         | `ZazzElement` base + refresh registry                                                                       |
-| `base/reveal.ts`                      | `base/zazz-element.ts`                                       | Registers a refresh hook                                                                                    |
-| `base/dialog-lifecycle.ts`            | none                                                         | Owns `<dialog>` visibility; components subscribe to its events                                              |
-| `base/carousel-scroll.ts`             | `base/gesture.ts`, `base/utils.ts`                           | The scroll-snap engine: mouse drag, loop, thumbs, autoplay; stores `_carousel` on the root                  |
-| `base/carousel.ts`                    | `base/carousel-scroll.ts`, `base/zazz-element.ts`            | Provides `window.Carousel`; subscribes to `zazz:dialog-open`; registers a refresh hook                      |
-| `base/gesture.ts`                     | none                                                         | Drag tracking; the consumer writes `translate` while tracking and releases into CSS transitions (ADR-0018)  |
-| `ui/carousel/carousel.ts`             | `base/carousel.ts`                                           | `<ui-carousel>` calls `Carousel.initRoot`                                                                   |
-| `ui/drawer/drawer.ts`                 | `base/gesture.ts`                                            | Subscribes to `zazz:dialog-open` / `zazz:dialog-close` (needs `base/dialog-lifecycle.ts` on the page)       |
-| `ui/checkbox/checkbox.ts`             | `base/signals.ts`, `base/zazz-element.ts`                    | Derives select-all group state via signals; refresh hook                                                    |
-| `ui/lightbox/lightbox.ts`             | `ui/carousel/carousel.ts`                                    | `<ui-lightbox>` coordinates carousel elements                                                               |
-| `ui/password-group/password-group.ts` | `base/signals.ts`                                            | Standalone (`<ui-password>`)                                                                                |
-| `ui/tabs/tabs.ts`                     | none                                                         | Standalone (`<ui-tabs>`)                                                                                    |
-| `ui/toaster/toaster.ts`               | `base/signals.ts`, `base/zazz-element.ts`, `base/gesture.ts` | `<ui-toaster>` + `window.Toaster` toast API; swipe-to-dismiss                                               |
-| `base/navigation.ts`                  | `base/zazz-element.ts`                                       | Opt-in per page; drains the refresh registry after a body swap                                              |
-| `base/declarations.ts`                | none                                                         | The `style` attribute parser                                                                                |
-| `base/csp.ts`                         | `base/declarations.ts`                                       | Dynamic import from `index.ts` when the page's CSP blocks inline style attributes                           |
-| `ui/debug/debug.ts`                   | `base/zazz-element.ts`, `base/utilities.ts`, `manifest.ts`   | Development only; not in `index.ts` — `zazz-ui add debug`                                                   |
-| `ui/style-guard/style-guard.ts`       | none                                                         | Optional; not in `index.ts` — a page adds it (or `zazz-ui add style-guard`) when legacy JS rewrites `style` |
+| Script                                | Imports                                                      | Notes                                                                                                               |
+| ------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| `base/utils.ts`                       | none                                                         | Provides `window.Utils`                                                                                             |
+| `base/signals.ts`                     | `signal-polyfill` (npm)                                      | The **only** file allowed to import the polyfill                                                                    |
+| `base/zazz-element.ts`                | none                                                         | `ZazzElement` base + refresh registry                                                                               |
+| `base/reveal.ts`                      | `base/zazz-element.ts`                                       | Registers a refresh hook                                                                                            |
+| `base/dialog-lifecycle.ts`            | none                                                         | Owns `<dialog>` visibility; components subscribe to its events                                                      |
+| `base/carousel-scroll.ts`             | `base/gesture.ts`, `base/utils.ts`                           | The scroll-snap engine: mouse drag, loop, thumbs, autoplay; stores `_carousel` on the root                          |
+| `base/carousel.ts`                    | `base/carousel-scroll.ts`, `base/zazz-element.ts`            | Provides `window.Carousel`; subscribes to `zazz:dialog-open`; registers a refresh hook                              |
+| `base/gesture.ts`                     | none                                                         | Drag tracking; the consumer writes `translate` while tracking and releases into CSS transitions (ADR-0018)          |
+| `ui/carousel/carousel.ts`             | `base/carousel.ts`                                           | `<ui-carousel>` calls `Carousel.initRoot`                                                                           |
+| `ui/drawer/drawer.ts`                 | `base/gesture.ts`, `base/zazz-element.ts`                    | Subscribes to `zazz:dialog-open` / `zazz:dialog-close` (needs `base/dialog-lifecycle.ts` on the page); refresh hook |
+| `ui/checkbox/checkbox.ts`             | `base/signals.ts`, `base/zazz-element.ts`                    | Derives select-all group state via signals; refresh hook                                                            |
+| `ui/lightbox/lightbox.ts`             | `ui/carousel/carousel.ts`                                    | `<ui-lightbox>` coordinates carousel elements                                                                       |
+| `ui/password-group/password-group.ts` | `base/signals.ts`                                            | Standalone (`<ui-password>`)                                                                                        |
+| `ui/tabs/tabs.ts`                     | none                                                         | Standalone (`<ui-tabs>`)                                                                                            |
+| `ui/toaster/toaster.ts`               | `base/signals.ts`, `base/zazz-element.ts`, `base/gesture.ts` | `<ui-toaster>` + `window.Toaster` toast API; swipe-to-dismiss                                                       |
+| `base/navigation.ts`                  | `base/zazz-element.ts`                                       | Opt-in per page; drains the refresh registry after a body swap                                                      |
+| `base/declarations.ts`                | none                                                         | The `style` attribute parser                                                                                        |
+| `base/csp.ts`                         | `base/declarations.ts`                                       | Dynamic import from `index.ts` when the page's CSP blocks inline style attributes                                   |
+| `ui/debug/debug.ts`                   | `base/zazz-element.ts`, `base/utilities.ts`, `manifest.ts`   | Development only; not in `index.ts` — `zazz-ui add debug`                                                           |
+| `ui/style-guard/style-guard.ts`       | none                                                         | Optional; not in `index.ts` — a page adds it (or `zazz-ui add style-guard`) when legacy JS rewrites `style`         |
 
 When a script needs `Utils`, `import { Utils } from "../../base/utils.ts"` (from a `src/primitives/<name>/` folder) rather than duplicating parsing logic. `signal-polyfill` ships as a real ES module imported by bare specifier; the page import map (generated by `head.ts`, pinned + SRI-checked) resolves it, so the module graph orders everything and pages load exactly one script tag.
 
@@ -198,6 +198,7 @@ When a script needs `Utils`, `import { Utils } from "../../base/utils.ts"` (from
 - **Early returns for guards.** Check required elements and skip gracefully rather than throwing.
 - **Store instances on DOM nodes** when external access is needed: `root._carousel = api`. Use a leading underscore to signal internal state.
 - **Observe DOM changes** with `MutationObserver` when elements are hidden at init time (closed dialogs).
+- **A listener outside the element does not rely on `close` to be removed.** Swap navigation replaces the `<body>`, and a dialog or popover removed while open fires no `close` or `toggle` that reaches the document. A script that binds `window`, `document`, or `visualViewport` for an element's open state checks `isConnected` in the listener and unbinds when it fails, and registers a refresh hook to let go right after a swap. Custom elements get this from `ZazzElement`'s signal. The drawer once held the page's scroll position from a `window` listener that only `close` removed, so after a navigation from inside an open drawer the next page could not scroll.
 - **Delegate events** at `document` level when triggers can appear anywhere (`initStartLinks`).
 - **Respect focus and input context.** Skip keyboard handlers when focus is in form fields or contenteditable elements.
 
