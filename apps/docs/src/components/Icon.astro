@@ -1,0 +1,37 @@
+---
+/**
+ * An icon from the site's set (Font Awesome Pixel Regular, lib/icons.ts),
+ * inlined as an `<svg>` at build time.
+ *
+ * `name` is the icon's Font Awesome name (`arrow-right`, `magnifying-glass`). `size`
+ * sets the width and height (a number is pixels; 16 unless given); a Zazz
+ * component that sizes its own icon (a button, a badge) overrides it in CSS.
+ * Every other attribute lands on the `<svg>`: `class`, `style` utilities,
+ * `data-ui`, slots, ARIA.
+ *
+ * The icon is decorative (`aria-hidden`) unless it is given a name with
+ * `aria-label` or `aria-labelledby`, which makes it an image.
+ */
+import type { HTMLAttributes } from 'astro/types';
+import { icon } from '../lib/icons.ts';
+
+interface Props extends HTMLAttributes<'svg'> {
+  name: string;
+  size?: number | string;
+}
+
+const { name, size = 16, ...attrs } = Astro.props;
+const { viewBox, body } = icon(name);
+const named = attrs['aria-label'] !== undefined || attrs['aria-labelledby'] !== undefined;
+// One object, so an attribute the caller passes replaces the default instead of repeating it.
+const svg = {
+  xmlns: 'http://www.w3.org/2000/svg',
+  viewBox,
+  width: size,
+  height: size,
+  ...(named ? { role: 'img' as const } : { 'aria-hidden': 'true' as const }),
+  ...attrs,
+};
+---
+
+<svg {...svg} set:html={body} />

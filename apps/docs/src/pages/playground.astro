@@ -5,7 +5,7 @@
  * stylesheet, import map, polyfill, script, theme script) around the editor's
  * body. A docs preview opens here with its example in the URL hash.
  */
-import { ArrowLeft, Code, RotateCcw } from '@lucide/astro';
+import Icon from '../components/Icon.astro';
 import PlaygroundLayout from '../layouts/PlaygroundLayout.astro';
 import { siteHead } from '../lib/head.ts';
 import { kitchenSink } from '../lib/kitchen-sink.ts';
@@ -66,7 +66,7 @@ const sandbox =
         '
       >
         <a href='/' data-ui='button' data-button-variant='outline'>
-          <ArrowLeft aria-hidden='true' />
+          <Icon name='arrow-left' aria-hidden='true' />
           <span>Home</span>
         </a>
         <label
@@ -105,7 +105,7 @@ const sandbox =
               --display--lg: none;
             '
           >
-            <Code aria-hidden='true' />
+            <Icon name='code' aria-hidden='true' />
             <span data-playground-toggle-label>Hide code</span>
           </button>
           <button
@@ -114,7 +114,7 @@ const sandbox =
             data-button-variant='ghost'
             data-playground-reset
           >
-            <RotateCcw aria-hidden='true' /> Reset
+            <Icon name='arrow-rotate-left' aria-hidden='true' /> Reset
           </button>
         </div>
       </div>

@@ -57,7 +57,7 @@ describe("stageScope", () => {
       if (name in kitData) expect(rule).toContain(`${name}: ${kitData[name]!.value};`);
     }
     expect(rule).toContain("--radius-md: ");
-    expect(rule).toContain("--tracking-h1: ");
+    expect(rule).toContain("--ui-button-radius: var(--ui-field-radius);");
     expect(rule).toContain("--ui-card-corner-shape: var(--radius-corner-shape);");
     // Nothing the look sets feeds the spacing unit.
     expect(rule).not.toContain("--spacing: ");

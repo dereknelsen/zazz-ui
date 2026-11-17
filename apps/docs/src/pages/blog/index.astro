@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { FilePen, Rss } from "@lucide/astro";
+import Icon from "../../components/Icon.astro";
 
 const posts = (
   await getCollection("blog", ({ data }) => import.meta.env.DEV || !data.draft)
@@ -45,7 +45,7 @@ const format = (date: Date) =>
             The Zazz Blog
           </p>
           <a href="/rss.xml" data-ui="badge" data-badge-variant="outline"
-            ><Rss /> <span>RSS feed</span></a
+            ><Icon name="newspaper" /> <span>RSS feed</span></a
           >
         </div>
       </header>
@@ -80,7 +80,7 @@ const format = (date: Date) =>
                       ">
                       {post.data.draft && (
                         <span data-ui="badge" data-badge-variant="warning">
-                          <FilePen />
+                          <Icon name="pencil" />
                           <span>Draft</span>
                         </span>
                       )}

@@ -68,5 +68,30 @@ export default defineConfig({
         ],
       },
     },
+    {
+      provider: fontProviders.local(),
+      name: "Geist Pixel",
+      cssVariable: "--font-geist-pixel",
+      options: {
+        variants: [
+          {
+            src: ["./src/assets/fonts/GeistPixelVF.woff2"],
+          },
+        ],
+      },
+    },
+    {
+      provider: fontProviders.local(),
+      name: "Everyday",
+      cssVariable: "--font-everyday",
+      options: {
+        variants: [
+          {
+            src: ["./src/assets/fonts/Everyday_Ample_Black.woff2"],
+            weight: "100 900",
+          },
+        ],
+      },
+    },
   ],
 });

@@ -12,7 +12,7 @@
  * (`.theme-toggle__*` in styles/site.css), and an inline script checks the
  * group's radio as soon as it is parsed, before the deferred module runs.
  */
-import { Check, Monitor, Moon, Sun } from "@lucide/astro";
+import Icon from "./Icon.astro";
 
 interface Props {
   variant?: "group" | "menu";
@@ -21,9 +21,9 @@ interface Props {
 const { variant = "group" } = Astro.props;
 
 const options = [
-  { value: "light", label: "Light", Icon: Sun },
-  { value: "dark", label: "Dark", Icon: Moon },
-  { value: "system", label: "System", Icon: Monitor },
+  { value: "light", label: "Light", icon: "sun" },
+  { value: "dark", label: "Dark", icon: "moon" },
+  { value: "system", label: "System", icon: "desktop" },
 ] as const;
 ---
 
@@ -39,8 +39,9 @@ const options = [
           popovertarget="theme-menu"
           aria-label="Color theme"
         >
-          {options.map(({ value, Icon }) => (
+          {options.map(({ value, icon }) => (
             <Icon
+              name={icon}
               size={18}
               aria-hidden="true"
               class={`theme-toggle__icon theme-toggle__icon--${value}`}
@@ -55,7 +56,7 @@ const options = [
           popover="auto"
         >
           <menu>
-            {options.map(({ value, label, Icon }) => (
+            {options.map(({ value, label, icon }) => (
               <li>
                 <button
                   data-ui="button"
@@ -68,9 +69,10 @@ const options = [
                     --w: 100%;
                   "
                 >
-                  <Icon size={16} aria-hidden="true" />
+                  <Icon name={icon}  />
                   {label}
-                  <Check
+                  <Icon
+                    name="check"
                     size={16}
                     aria-hidden="true"
                     class={`theme-toggle__check theme-toggle__check--${value}`}
@@ -86,10 +88,10 @@ const options = [
   ) : (
     <Fragment>
       <theme-toggle data-ui="toggle-group" role="group" aria-label="Color theme">
-        {options.map(({ value, label, Icon }) => (
+        {options.map(({ value, label, icon }) => (
           <label data-ui="toggle" data-toggle-size="icon">
             <input type="radio" name="theme" value={value} aria-label={`${label} theme`} />
-            <Icon size={16} aria-hidden="true" />
+            <Icon name={icon}  />
           </label>
         ))}
       </theme-toggle>

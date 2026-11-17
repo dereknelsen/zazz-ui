@@ -9,7 +9,6 @@ catalog:
   "@astrojs/markdoc": ^2.1.0
   "@astrojs/rss": ^4.0.19
   "@astrojs/sitemap": ^3.7.4
-  "@lucide/astro": ^1.59.0
   astro: ^7.4.0
   astro-pagefind: ^2.0.1
   "@codemirror/state": ^6.7.6
@@ -54,6 +53,7 @@ catalog:
   pacote: ^22.0.0
   bumpp: ^12.3.0
   vitest: 5.1.0
+  "@awesome.me/kit-73088f7c71": ^1.0.2
 overrides:
   vite@*: "catalog:"
   vitest@*: "catalog:"
@@ -92,3 +92,4 @@ minimumReleaseAgeExclude:
   - "@voidzero-dev/vite-plus-win32-arm64-msvc@1.7.0"
   - "@voidzero-dev/vite-plus-win32-x64-msvc@1.7.0"
   - vite-plus@1.7.0
+  - "@awesome.me/kit-73088f7c71@1.0.2"

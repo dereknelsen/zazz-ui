@@ -3,7 +3,7 @@
  * The next trip: habitat filters adapted from the multiple toggle-group
  * fragment, the party in the avatar pile, and secondary and tertiary actions.
  */
-import { Bookmark, UserPlus } from '@lucide/astro';
+import Icon from '../Icon.astro';
 import { spotters } from '../../lib/fieldnotes.ts';
 import Avatars from './Avatars.astro';
 import Card from './Card.astro';
@@ -59,10 +59,10 @@ const party = spotters.filter((s) => ['YO', 'JA', 'VE'].includes(s.initials));
       --gap: 2;
     '>
     <button data-ui='button' data-button-variant='secondary' type='button'>
-      <Bookmark aria-hidden='true' /> Save trip
+      <Icon name='bookmark' aria-hidden='true' /> Save trip
     </button>
     <button data-ui='button' data-button-variant='tertiary' type='button'>
-      <UserPlus aria-hidden='true' /> Invite
+      <Icon name='users' aria-hidden='true' /> Invite
     </button>
   </div>
 </Card>

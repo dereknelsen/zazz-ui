@@ -23,6 +23,8 @@ const ogImage = new URL(og.src, site.url);
     <Fragment set:html={siteHead()} />
     <title>{pageTitle}</title>
     <Font cssVariable="--font-areal" />
+    <Font cssVariable="--font-geist-pixel" />
+    <Font cssVariable="--font-everyday" preload />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />

@@ -5,7 +5,7 @@
  * `[data-copy-scope]`, so a long file is in the page once. Hidden where the clipboard API is missing (an insecure context), so
  * the page never shows a button that cannot work.
  */
-import { Check, Copy } from "@lucide/astro";
+import Icon from "./Icon.astro";
 
 interface Props {
   text?: string;
@@ -24,10 +24,10 @@ const { text, label = "Copy to clipboard" } = Astro.props;
   hidden
 >
   <span data-copy-idle style="--display: inline-flex">
-    <Copy size={14} aria-hidden="true" />
+    <Icon name="clone" size={14} aria-hidden="true" />
   </span>
   <span data-copy-done hidden style="--display: inline-flex">
-    <Check size={14} aria-hidden="true" />
+    <Icon name="check" size={14} aria-hidden="true" />
   </span>
 </button>
 

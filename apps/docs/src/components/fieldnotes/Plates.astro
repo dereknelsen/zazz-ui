@@ -4,15 +4,15 @@
  * plates to a view, stepped with the header's buttons or dragged. A plate
  * opens that species' dialog (SpeciesCard.astro renders it).
  */
-import { ChevronLeft, ChevronRight } from '@lucide/astro';
+import Icon from '../Icon.astro';
 import { species } from '../../lib/fieldnotes.ts';
 import Card from './Card.astro';
 import CardHeader from './CardHeader.astro';
 import Sprite from './Sprite.astro';
 
 const steps = [
-  { slot: 'prev', label: 'Previous plate', icon: ChevronLeft },
-  { slot: 'next', label: 'Next plate', icon: ChevronRight },
+  { slot: 'prev', label: 'Previous plate', icon: 'angle-left' },
+  { slot: 'next', label: 'Next plate', icon: 'angle-right' },
 ];
 ---
 
@@ -33,7 +33,7 @@ const steps = [
           --gap: 2;
         '>
         {
-          steps.map(({ slot, label, icon: Icon }) => (
+          steps.map(({ slot, label, icon }) => (
             <ui-tooltip>
               <button
                 data-ui='button'
@@ -44,7 +44,7 @@ const steps = [
                 interestfor={`fn-plates-${slot}`}
                 aria-label={label}
               >
-                <Icon aria-hidden='true' />
+                <Icon name={icon} aria-hidden='true' />
               </button>
               <div data-tooltip-slot='content' id={`fn-plates-${slot}`} popover='hint'>
                 {label}

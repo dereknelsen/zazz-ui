@@ -66,6 +66,12 @@ import {
 
 /** How long the URL waits for input to settle: Safari throttles history updates, and a slider drag fires an input per step. */
 const SHARE_DELAY = 300;
+/**
+ * How long the preview waits for input to settle. Retheming it restyles every
+ * element inside (tens of milliseconds, all on the main thread), and doing that
+ * per input event freezes the slider or picker being dragged.
+ */
+const RENDER_DELAY = 80;
 /** How a number control's readout prints its value, where it differs from the raw value. */
 const READOUT_FORMAT: Record<string, (value: string) => string> = {
   "tb-spacing": (v) => `${v}rem`,
@@ -379,7 +385,22 @@ class ThemeBuilder extends ZazzElement {
       share();
     };
 
+    /** Prints a number control's readout, where it has one. */
+    const readout = (input: HTMLInputElement) => {
+      const out = q<HTMLOutputElement>(`output[for='${input.id}']`);
+      if (out) out.value = READOUT_FORMAT[input.id]?.(input.value) ?? input.value;
+    };
+
+    let renderTimer: ReturnType<typeof setTimeout> | undefined;
+    /** Renders once input settles; a `change` (a slider let go, a committed field) renders at once. */
+    const renderSoon = () => {
+      clearTimeout(renderTimer);
+      renderTimer = setTimeout(render, RENDER_DELAY);
+    };
+    signal.addEventListener("abort", () => clearTimeout(renderTimer), { once: true });
+
     const render = () => {
+      clearTimeout(renderTimer);
       const lines: string[] = [];
 
       for (const name of PALETTES) {
@@ -487,10 +508,8 @@ class ThemeBuilder extends ZazzElement {
       for (const proxy of this.querySelectorAll<HTMLButtonElement>("[data-theme-reset-proxy]")) {
         proxy.disabled = !fields().some(changed);
       }
-      // A number control's readout, where it has one.
       for (const input of this.querySelectorAll<HTMLInputElement>("input[data-theme-number]")) {
-        const out = q<HTMLOutputElement>(`output[for='${input.id}']`);
-        if (out) out.value = READOUT_FORMAT[input.id]?.(input.value) ?? input.value;
+        readout(input);
       }
     };
 
@@ -580,7 +599,9 @@ class ThemeBuilder extends ZazzElement {
         if (pickFor) q<HTMLInputElement>(`#${pickFor}`)!.value = target.value;
         const token = target.dataset.themeToken ? normalizeHex(target.value) : null;
         if (token) q<HTMLInputElement>(`[data-theme-pick-for="${target.id}"]`)!.value = token;
-        render();
+        // The readout follows the drag; the preview catches up when it pauses.
+        if (target.matches("input[data-theme-number]")) readout(target);
+        renderSoon();
         share();
       },
       { signal },

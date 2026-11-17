@@ -5,7 +5,7 @@
  * by the client script below, so the palette opts out of its own filtering
  * (`data-command-filter="none"`) and only navigates, highlights, and announces.
  */
-import { Search as SearchIcon, X } from "@lucide/astro";
+import Icon from "./Icon.astro";
 ---
 
 <ui-command
@@ -45,7 +45,7 @@ import { Search as SearchIcon, X } from "@lucide/astro";
         --text: var(--color-muted-foreground);
       "
     >
-      <SearchIcon size={16} aria-hidden="true" />
+      <Icon name="magnifying-glass"  />
       Search…
     </span>
     <ui-kbd-group
@@ -86,7 +86,7 @@ import { Search as SearchIcon, X } from "@lucide/astro";
         commandfor="site-search"
         aria-label="Close search"
       >
-        <X size={16} aria-hidden="true" />
+        <Icon name="xmark"  />
       </button>
     </header>
 

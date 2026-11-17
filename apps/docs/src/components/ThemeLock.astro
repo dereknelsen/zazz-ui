@@ -6,7 +6,7 @@
  * icons render and the pressed state picks one (`.theme-builder__lock`,
  * site.css), so the button reads right before any script runs.
  */
-import { Lock, LockOpen } from "@lucide/astro";
+import Icon from "./Icon.astro";
 
 interface Props {
   /** The `name` of the form field this locks. */
@@ -36,8 +36,8 @@ const tip = `tb-lock-${field ?? `all-${section}`}-tip`;
     data-theme-lock={field}
     data-theme-lock-all={section}
   >
-    <LockOpen class="theme-builder__lock-open" aria-hidden="true" />
-    <Lock class="theme-builder__lock-closed" aria-hidden="true" />
+    <Icon name="lock-open" class="theme-builder__lock-open" aria-hidden="true" />
+    <Icon name="lock" class="theme-builder__lock-closed" aria-hidden="true" />
   </button>
   <!-- A section's lock sits in the summary, an eyebrow: the tip is plain text again. -->
   <div

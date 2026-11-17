@@ -176,6 +176,9 @@ catalogs:
     '@astrojs/sitemap':
       specifier: ^3.7.4
       version: 3.7.4
+    '@awesome.me/kit-73088f7c71':
+      specifier: ^1.0.2
+      version: 1.0.2
     '@clack/prompts':
       specifier: ^1.8.1
       version: 1.8.1
@@ -212,9 +215,6 @@ catalogs:
     '@lezer/highlight':
       specifier: ^1.2.5
       version: 1.2.5
-    '@lucide/astro':
-      specifier: ^1.59.0
-      version: 1.70.0
     '@npmcli/config':
       specifier: ^11.2.0
       version: 11.2.0
@@ -355,6 +355,9 @@ importers:
       '@astrojs/sitemap':
         specifier: 'catalog:'
         version: 3.7.4
+      '@awesome.me/kit-73088f7c71':
+        specifier: 'catalog:'
+        version: 1.0.2
       '@codemirror/autocomplete':
         specifier: 'catalog:'
         version: 6.20.4
@@ -382,9 +385,6 @@ importers:
       '@lezer/highlight':
         specifier: 'catalog:'
         version: 1.2.5
-      '@lucide/astro':
-        specifier: 'catalog:'
-        version: 1.70.0(astro@7.4.7(@azure/identity@4.14.1(supports-color@10.2.2))(@types/node@26.6.6)(@volar/typescript@2.4.30(typescript@6.0.3))(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.1))
       '@zazz-ui/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -717,6 +717,10 @@ packages:
   '@astrojs/yaml2ts@0.2.4':
     resolution: {integrity: sha512-8oddpOae35pJsXPQXhTkM0ypfKPskVsh2bCxRtbf7e+/Epw2nReakFYpLKjZMEr75CsoF203PMnCocpfz0s69A==}
 
+  '@awesome.me/kit-73088f7c71@1.0.2':
+    resolution: {integrity: sha512-lSHXNMNHqplMSWdNbOSkb7PDwiag/76SIQevYE576WUBiV60s/qwHdBuIuqECeB3w96xbd+TMGJWQBpzGhj8Pw==}
+    engines: {node: '>=16'}
+
   '@azure/abort-controller@2.2.0':
     resolution: {integrity: sha512-fNAjWnA/nZ2jz31kxR/AqRaUT8ewHBw/WuBIosK0moMy1C9e5ValbDfFdIxJzVOOYaYkV/b2F1S4H/aHiqfVQg==}
     engines: {node: '>=22.0.0'}
@@ -993,6 +997,10 @@ packages:
     resolution: {integrity: sha512-IkO+/KEUvwbVpiURZg+P7zF74z5Jxe0UgJxVni+RtoHQ6IZieXaO02kmadomap/q+l6bc/jdPGGqTjhuZnuz1Q==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
+  '@fortawesome/fontawesome-common-types@7.3.1':
+    resolution: {integrity: sha512-k0C0sdHmZtAo6dRDtd1Z/qcpyHbL0CKsjV8seMY/21xGhY5Wsv0XRmiI/xEEH4y2c9b1+jvgNs/3EqhV27yUEA==}
+    engines: {node: '>=6'}
+
   '@gar/promise-retry@1.0.3':
     resolution: {integrity: sha512-GmzA9ckNokPypTg10pgpeHNQe7ph+iIKKmhKu3Ob9ANkswreCx7R3cKmY781K8QK3AqVL3xVh9A42JvIAbkkSA==}
     engines: {node: ^20.17.0 || >=22.9.0}
@@ -1249,11 +1257,6 @@ packages:
 
   '@lezer/lr@1.4.12':
     resolution: {integrity: sha512-On9HU4oMMiHPMkQDgoTnGahjgG5n/MkN38CgG77sMraKLL+3JBbeQNi1FcCXV9QRqwF9/BUXP3caHyJC1fBOTQ==}
-
-  '@lucide/astro@1.70.0':
-    resolution: {integrity: sha512-GkD59zeFP350rqF+Rc/k1Yc92tuSTG8duXZ1d5BK5xT3wLPiMqKpqFtosQxopYvP/tBHW9D1mqdhzGjoRSLsYA==}
-    peerDependencies:
-      astro: ^4 || ^5 || ^6 || ^7
 
   '@marijn/find-cluster-break@1.0.4':
     resolution: {integrity: sha512-Wy0V7+SGUjnF9/TkiM1hKVDPj7jKXduPNboMVtHTA8dySMURWqfg/JZ9E2Sq8JgSJmkl7k7Qe9FLeMSrSraWmQ==}
@@ -5076,6 +5079,10 @@ snapshots:
     dependencies:
       yaml: 2.9.1
 
+  '@awesome.me/kit-73088f7c71@1.0.2':
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 7.3.1
+
   '@azure/abort-controller@2.2.0':
     dependencies:
       tslib: 2.9.1
@@ -5507,6 +5514,8 @@ snapshots:
       '@eslint/core': 1.2.1
       levn: 0.4.1
 
+  '@fortawesome/fontawesome-common-types@7.3.1': {}
+
   '@gar/promise-retry@1.0.3': {}
 
   '@html-eslint/core@0.67.0':
@@ -5730,10 +5739,6 @@ snapshots:
   '@lezer/lr@1.4.12':
     dependencies:
       '@lezer/common': 1.5.5
-
-  '@lucide/astro@1.70.0(astro@7.4.7(@azure/identity@4.14.1(supports-color@10.2.2))(@types/node@26.6.6)(@volar/typescript@2.4.30(typescript@6.0.3))(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.1))':
-    dependencies:
-      astro: 7.4.7(@azure/identity@4.14.1(supports-color@10.2.2))(@types/node@26.6.6)(@volar/typescript@2.4.30(typescript@6.0.3))(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.1)
 
   '@marijn/find-cluster-break@1.0.4': {}
 

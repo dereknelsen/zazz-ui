@@ -4,7 +4,7 @@
  * bottom of the viewport that opens the links in a drawer. Render it as a child
  * of `<main>`, not inside a grid, so it sticks for the length of the page.
  */
-import { ChartNoAxesGantt } from "@lucide/astro";
+import Icon from "./Icon.astro";
 import type { SidebarSection } from "../lib/sidebar.ts";
 import SidebarNav from "./SidebarNav.astro";
 
@@ -48,7 +48,7 @@ const { label, sections } = Astro.props;
       --ui-button-border-width: 0;
     "
   >
-    <ChartNoAxesGantt size={16} aria-hidden="true" />
+    <Icon name="list"  />
     {label} navigation
   </button>
 </div>

@@ -5,7 +5,7 @@
  * from the popover, menu, and alert-dialog fragments. The dialog is the card's
  * sibling, like the species cards' (the grid's packing skips dialogs).
  */
-import { ChevronDown, CircleCheck, CircleDashed, TriangleAlert } from '@lucide/astro';
+import Icon from '../Icon.astro';
 import Card from './Card.astro';
 import CardHeader from './CardHeader.astro';
 
@@ -31,7 +31,7 @@ const WITHDRAW = 'fn-review-withdraw';
     '>
     {
       steps.map(({ label, detail, done }) => {
-        const Icon = done ? CircleCheck : CircleDashed;
+        const icon = done ? 'circle-check' : 'circle';
         return (
           <li
             style='
@@ -42,6 +42,7 @@ const WITHDRAW = 'fn-review-withdraw';
             '
           >
             <Icon
+              name={icon}
               aria-hidden='true'
               style={`
                 --shrink: 0;
@@ -95,7 +96,7 @@ const WITHDRAW = 'fn-review-withdraw';
     </div>
     <ui-menu>
       <button data-ui='button' data-button-variant='outline' type='button' popovertarget={MENU}>
-        Manage <ChevronDown aria-hidden='true' />
+        Manage <Icon name='angle-down' aria-hidden='true' />
       </button>
       <div
         id={MENU}
@@ -175,7 +176,7 @@ const WITHDRAW = 'fn-review-withdraw';
         --gap: 2;
       '
     >
-      <TriangleAlert aria-hidden='true' style='--size: 6' />
+      <Icon name='triangle-exclamation' aria-hidden='true' style='--size: 6' />
       <h2
         id={`${WITHDRAW}-title`}
         style='

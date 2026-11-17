@@ -6,7 +6,7 @@ import { softwareLd } from '../lib/jsonld.ts';
 import { kitVersion } from '../lib/kit.ts';
 import { SCENE_URL, SDK_URL } from '../lib/unicorn.ts';
 import { site } from '../site.config.ts';
-import { MoveRight } from '@lucide/astro';
+import Icon from '../components/Icon.astro';
 ---
 
 <BaseLayout title={site.name} jsonLd={[softwareLd(kitVersion())]}>
@@ -64,10 +64,7 @@ import { MoveRight } from '@lucide/astro';
         <div
           style='
             --display: grid;
-            --place-items: center;
-            --place-content: center;
-            --self: center;
-            --self--lg: start;
+            --place-items: center stretch;
             --band: layout-xl;
             --py: 11;
             --py--lg: 0;
@@ -80,14 +77,9 @@ import { MoveRight } from '@lucide/astro';
         >
           <hgroup
             style='
-              --display: grid;
-              --place-items: center;
-              --place-items--lg: start;
-              --template-cols--lg: 1.2fr 1fr;
+              --display: flex-col;
               --gap: 6;
-              --gap--lg: 12;
-              --text-align: center;
-              --text-align--lg: start;
+              --w: 100%;
             '
           >
             <div
@@ -95,40 +87,46 @@ import { MoveRight } from '@lucide/astro';
                 --display: flex-col;
                 --gap: 4;
                 --text-align: center;
-                --text-align--lg: start;
               '
             >
               <h1
                 style='
+                  --text-align: center;
                   --text: var(--color-muted-foreground);
                   --sr: only;
                 '
               >
                 {site.title}
               </h1>
-              <p data-ui='text-h1' style='--text-wrap: balance'>
+              <p data-ui='text-h2' style='
+                  --text-align: center;
+                  --text-wrap: balance;
+                '>
                 A design system <br />for the baseline web.
               </p>
             </div>
             <div
               style='
                 --display: flex-col;
+                --items: center;
                 --justify: center;
-                --justify--lg: end;
                 --pb: 1;
                 --gap: 6;
                 --h: 100%;
               '
             >
-              <p data-ui='text-lg' style='--text-wrap: balance'>
+              <p data-ui='text-lg' style='
+                  --max-w: 65ch;
+                  --text-align: center;
+                  --text-wrap: balance;
+                '>
                 Unified collection of web-native primitives, style utilities,
-                and design tokens for no-build, low-build, and legacy projects.
+                and design tokens for no-build, low-build, and legacy UI migrations.
               </p>
               <div
                 style='
                   --display: flex;
                   --justify: center;
-                  --justify--lg: start;
                   --gap: 2;
                 '
               >
@@ -140,13 +138,8 @@ import { MoveRight } from '@lucide/astro';
                 <a
                   href='/playground'
                   data-ui='button'
-                  data-button-variant='muted'
-                  style='
-                    --bg: var(--color-faded-foreground);
-                    --bg--lg: var(--color-faded);
-                    --bg--hover: var(--color-faded-foreground);
-                  '
-                  >Code playground <MoveRight /></a
+                  data-button-variant='secondary'
+                  >Code playground <Icon name='arrow-right' /></a
                 >
               </div>
             </div>

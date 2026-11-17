@@ -20,22 +20,9 @@
  * paint packed instead of waiting, hidden, for those modules.
  */
 import languageData from '@zazz-ui/core/editor/zazz.language-data.json';
-import {
-  Check,
-  ChevronDown,
-  Code,
-  Copy,
-  Share,
-  Dices,
-  Palette,
-  RotateCcw,
-  Shapes,
-  Sparkles,
-  Type,
-  WandSparkles,
-  X,
-} from '@lucide/astro';
+import Icon from './Icon.astro';
 import { CORNER_SHAPE } from '../lib/corner-shape.ts';
+import { iconMask } from '../lib/icons.ts';
 import { inlineScript } from '../lib/inline-script.ts';
 import { PRESET_PARAM } from '../lib/preset.ts';
 import { declaredProperties, stageScope } from '../lib/stage-scope.ts';
@@ -77,6 +64,8 @@ import VerifyCode from './fieldnotes/VerifyCode.astro';
 const TOASTER = 'fieldnotes-toaster';
 
 const GENERATE_BUTTON_LABEL = 'Generate a new theme';
+/** The Generate button's icon, as the mask its rainbow shows through (site-look.css). */
+const generateIcon = iconMask('burst');
 
 /**
  * The controls' starting values, copied from the kit's tokens in
@@ -213,10 +202,10 @@ const [featured, ...rest] = species;
 
 /** The collapsed bar's buttons (narrow screens): one per form section, opening the sheet on it. */
 const sections = [
-  { id: 'palette', label: 'Palette', icon: Palette },
-  { id: 'typeset', label: 'Typeset', icon: Type },
-  { id: 'styles', label: 'Styles', icon: Shapes },
-  { id: 'effects', label: 'Effects', icon: Sparkles },
+  { id: 'palette', label: 'Palette', icon: 'palette' },
+  { id: 'typeset', label: 'Typeset', icon: 'font' },
+  { id: 'styles', label: 'Styles', icon: 'sliders' },
+  { id: 'effects', label: 'Effects', icon: 'layer-group' },
 ] as const;
 
 /** The shadow multipliers: one slider each, 0 to 3 times the kit's shadow. */
@@ -370,7 +359,7 @@ const packScript = await inlineScript(
                 --h--lg: calc(var(--ui-button-min-h) + var(--spacing) * 2);
               '
             >
-              <span class='theme-builder__generate-icon' aria-hidden='true'></span>
+              <span class='theme-builder__generate-icon' style={`--_icon: ${generateIcon}`} aria-hidden='true'></span>
               <span class='theme-builder__generate-label'>{GENERATE_BUTTON_LABEL}</span>
             </button>
         <button
@@ -380,7 +369,7 @@ const packScript = await inlineScript(
           type='button'
           data-theme-reset-proxy
         >
-          <RotateCcw size={16} aria-hidden='true' />
+          <Icon name='arrow-rotate-left' size={16} aria-hidden='true' />
           <span style="--sr: only">Reset the theme</span>
         </button>
       </div>
@@ -408,7 +397,7 @@ const packScript = await inlineScript(
               --gap: 2;
             '
           >
-            <Copy size={16} aria-hidden='true' /> Copy
+            <Icon name='clone' size={16} aria-hidden='true' /> Copy
           </span>
           <span
             data-copy-done
@@ -419,7 +408,7 @@ const packScript = await inlineScript(
               --gap: 2;
             '
           >
-            <Check size={16} aria-hidden='true' /> Copied
+            <Icon name='check' size={16} aria-hidden='true' /> Copied
           </span>
         </button>
         <button
@@ -429,7 +418,7 @@ const packScript = await inlineScript(
           command='show-modal'
           commandfor='tb-css'
         >
-          <Code size={16} aria-hidden='true' /> Preview
+          <Icon name='code' size={16} aria-hidden='true' /> Preview
         </button>
         <button
           data-ui='button'
@@ -445,7 +434,7 @@ const packScript = await inlineScript(
               --gap: 2;
             '
           >
-            <Share size={16} aria-hidden='true' /> Share
+            <Icon name='arrow-up-from-bracket' size={16} aria-hidden='true' /> Share
           </span>
           <span
             data-share-done
@@ -456,7 +445,7 @@ const packScript = await inlineScript(
               --gap: 2;
             '
           >
-            <Check size={16} aria-hidden='true' /> Copied
+            <Icon name='check' size={16} aria-hidden='true' /> Copied
           </span>
         </button>
       </div>
@@ -470,7 +459,7 @@ const packScript = await inlineScript(
         '
       >
         {
-          sections.map(({ id, label, icon: Icon }) => (
+          sections.map(({ id, label, icon }) => (
             <button
               type='button'
               data-ui='button'
@@ -488,7 +477,7 @@ const packScript = await inlineScript(
                 --bg: var(--color-faded);
               '
             >
-              <Icon size={16} aria-hidden='true' />
+              <Icon name={icon} size={16} aria-hidden='true' />
               <span data-ui='text-xs'>{label}</span>
             </button>
           ))
@@ -578,7 +567,7 @@ const packScript = await inlineScript(
             type='button'
             data-theme-copy-proxy
           >
-            <Copy size={16} aria-hidden='true' /> Copy
+            <Icon name='clone' size={16} aria-hidden='true' /> Copy
           </button>
         </footer>
       </div>
@@ -594,7 +583,7 @@ const packScript = await inlineScript(
           aria-label='Close'
           interestfor='tb-css-close-tip'
         >
-          <X aria-hidden='true' />
+          <Icon name='xmark' aria-hidden='true' />
         </button>
         <div
           data-tooltip-slot='content'
@@ -637,7 +626,8 @@ const packScript = await inlineScript(
             --display--lg: flex-col;
             --position: sticky;
             --px: 5;
-            --py: 5;
+            --pt: 5;
+            --pb: 3;
             --gap: 3;
             --top: 0;
             --bg: oklch(from var(--color-card) l c h / 0.95);
@@ -666,7 +656,7 @@ const packScript = await inlineScript(
                 --h: calc(var(--ui-button-min-h) + var(--spacing) * 2);
               '
             >
-              <span class='theme-builder__generate-icon' aria-hidden='true'></span>
+              <span class='theme-builder__generate-icon' style={`--_icon: ${generateIcon}`} aria-hidden='true'></span>
               <span class='theme-builder__generate-label'>{GENERATE_BUTTON_LABEL}</span>
             </button>
           </div>
@@ -675,17 +665,19 @@ const packScript = await inlineScript(
           <div
             style='
               --display: grid;
+              --position: relative;
               --template-cols: 1fr 1fr 1fr auto;
               --gap: 2;
+              --z: 10;
             '
           >
             <button
               data-ui='button'
-              data-button-variant='muted'
+              data-button-variant='outline'
               type='button'
               data-theme-copy
               disabled
-              style='--px: 2'
+              style='--bg: var(--color-card)'
             >
               <span
                 data-copy-idle
@@ -695,7 +687,7 @@ const packScript = await inlineScript(
                   --gap: 2;
                 '
               >
-                <Copy size={16} aria-hidden='true' /> Copy
+                <Icon name='clone' size={16} aria-hidden='true' /> Copy
               </span>
               <span
                 data-copy-done
@@ -706,25 +698,25 @@ const packScript = await inlineScript(
                   --gap: 2;
                 '
               >
-                <Check size={16} aria-hidden='true' /> Copied
+                <Icon name='check' size={16} aria-hidden='true' /> Copied
               </span>
             </button>
             <button
               data-ui='button'
-              data-button-variant='muted'
+              data-button-variant='outline'
               type='button'
               command='show-modal'
               commandfor='tb-css'
-              style='--px: 2'
+              style='--bg: var(--color-card)'
             >
-              <Code size={16} aria-hidden='true' /> Preview
+              <Icon name='code' size={16} aria-hidden='true' /> Preview
             </button>
             <button
               data-ui='button'
-              data-button-variant='muted'
+              data-button-variant='outline'
               type='button'
               data-theme-share
-              style='--px: 2'
+              style='--bg: var(--color-card)'
             >
               <span
                 data-share-idle
@@ -734,7 +726,7 @@ const packScript = await inlineScript(
                   --gap: 2;
                 '
               >
-                <Share size={16} aria-hidden='true' /> Share
+                <Icon name='arrow-up-from-bracket' size={16} aria-hidden='true' /> Share
               </span>
               <span
                 data-share-done
@@ -745,7 +737,7 @@ const packScript = await inlineScript(
                   --gap: 2;
                 '
               >
-                <Check size={16} aria-hidden='true' /> Copied
+                <Icon name='check' size={16} aria-hidden='true' /> Copied
               </span>
             </button>
             <button
@@ -756,7 +748,7 @@ const packScript = await inlineScript(
               data-theme-reset
               disabled
             >
-              <RotateCcw size={16} aria-hidden='true' /> <span style='--sr: only'>Reset theme</span>
+              <Icon name='arrow-rotate-left' size={16} aria-hidden='true' /> <span style='--sr: only'>Reset theme</span>
             </button>
           </div>
         </header>
@@ -790,7 +782,7 @@ const packScript = await inlineScript(
                 label='all palette fields'
                 size='icon-sm'
               />
-              <ChevronDown data-accordion-slot='marker' aria-hidden='true' />
+              <Icon name='angle-down' data-accordion-slot='marker' aria-hidden='true' />
             </summary>
             <div
               style='
@@ -973,7 +965,7 @@ const packScript = await inlineScript(
                 label='all typeset fields'
                 size='icon-sm'
               />
-              <ChevronDown data-accordion-slot='marker' aria-hidden='true' />
+              <Icon name='angle-down' data-accordion-slot='marker' aria-hidden='true' />
             </summary>
             <div
               style='
@@ -1106,7 +1098,7 @@ const packScript = await inlineScript(
                           interestfor={`tb-pair-${f.role}-tip`}
                           data-theme-pair={f.role}
                         >
-                          <WandSparkles aria-hidden='true' />
+                          <Icon name='wand-magic-sparkles' aria-hidden='true' />
                         </button>
                         <div
                           data-tooltip-slot='content'
@@ -1212,7 +1204,7 @@ const packScript = await inlineScript(
                 label='all style fields'
                 size='icon-sm'
               />
-              <ChevronDown data-accordion-slot='marker' aria-hidden='true' />
+              <Icon name='angle-down' data-accordion-slot='marker' aria-hidden='true' />
             </summary>
             <div
               style='
@@ -1377,7 +1369,7 @@ const packScript = await inlineScript(
                 label='all effect fields'
                 size='icon-sm'
               />
-              <ChevronDown data-accordion-slot='marker' aria-hidden='true' />
+              <Icon name='angle-down' data-accordion-slot='marker' aria-hidden='true' />
             </summary>
             <div
               style='

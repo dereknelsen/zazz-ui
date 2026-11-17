@@ -1,5 +1,5 @@
 ---
-import { Info, Lightbulb, TriangleAlert } from "@lucide/astro";
+import Icon from "./Icon.astro";
 
 interface Props {
   type?: "note" | "tip" | "warning";
@@ -7,9 +7,9 @@ interface Props {
 }
 const { type = "note", title } = Astro.props;
 const kinds = {
-  note: { Icon: Info, label: "Note", variant: "info" },
-  tip: { Icon: Lightbulb, label: "Tip", variant: "success" },
-  warning: { Icon: TriangleAlert, label: "Warning", variant: "warning" },
+  note: { icon: "circle-info", label: "Note", variant: "info" },
+  tip: { icon: "lightbulb", label: "Tip", variant: "success" },
+  warning: { icon: "triangle-exclamation", label: "Warning", variant: "warning" },
 } as const;
 const kind = kinds[type];
 const heading = title ?? kind.label;
@@ -21,8 +21,13 @@ const heading = title ?? kind.label;
   aria-label={heading}
   style="--my: 6"
 >
-  <p style="--display: flex; --items: center; --gap: 2; --font-weight: strong">
-    <kind.Icon size={16} aria-hidden="true" />
+  <p style="
+      --display: flex;
+      --items: center;
+      --gap: 2;
+      --font-weight: strong;
+    ">
+    <Icon name={kind.icon}  />
     {heading}
   </p>
   <div><slot /></div>

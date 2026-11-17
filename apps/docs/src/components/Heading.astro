@@ -4,7 +4,7 @@
  * sizes run large for documentation). The text is its own anchor, so the
  * heading's accessible name stays the text; a link icon appears on hover.
  */
-import { Link } from "@lucide/astro";
+import Icon from "./Icon.astro";
 
 interface Props {
   level: 1 | 2 | 3 | 4 | 5 | 6;
@@ -29,7 +29,8 @@ const role = { 1: "text-h4", 2: "text-h6", 3: "text-lg", 4: "text-md", 5: "text-
         "
       >
         <slot />
-        <Link
+        <Icon
+          name="link"
           size={14}
           aria-hidden="true"
           style="
