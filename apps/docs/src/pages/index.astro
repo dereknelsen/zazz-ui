@@ -57,7 +57,7 @@ import Icon from '../components/Icon.astro';
             --display--lg: none;
             --position: absolute;
             --inset: 0;
-            --bg: light-dark(var(--color-tint-400), var(--color-shade-400));
+            --bg: light-dark(var(--color-tint-300), var(--color-shade-400));
             --pointer-events: none;
             --z: 20;
           "></div>
@@ -102,7 +102,7 @@ import Icon from '../components/Icon.astro';
                   --text-align: center;
                   --text-wrap: balance;
                 '>
-                A design system <br />for the baseline web.
+                A design system for the baseline web.
               </p>
             </div>
             <div
@@ -115,7 +115,7 @@ import Icon from '../components/Icon.astro';
                 --h: 100%;
               '
             >
-              <p data-ui='text-lg' style='
+              <p data-ui='text-xl' style='
                   --max-w: 65ch;
                   --text-align: center;
                   --text-wrap: balance;
@@ -139,6 +139,7 @@ import Icon from '../components/Icon.astro';
                   href='/playground'
                   data-ui='button'
                   data-button-variant='secondary'
+                  style='--elevation: 2'
                   >Code playground <Icon name='arrow-right' /></a
                 >
               </div>
