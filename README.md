@@ -1,22 +1,11 @@
 # Zazz
 
-> [!WARNING]
-> Author's note: Zazz is still in an early alpha stage. While it is publicly available I hesitate to call it "beta" since much of the syntax and DX tools are in flux. That said, Zazz UI is being adopted by projects right now and is in a usable state. I welcome any and all feedback and plan to open Zazz up to contributions down the road. Be sure to check the changelogs for breaking changes even between minor version bumps.
+> [!NOTE]
+> Welcome to Zazz! We're nearing the first beta release. The library is being put through some rigorous testing to make sure it's ready for more general adoption. The syntax, patterns, and apis are starting to settle. I don't expect any more large reworks of the syntax. Once that is settled, we'll be in comfortable position for the first beta release.
 
 ## Roadmap to 1.0.0
 
-For Zazz UI to hit 1.0.0 and be considered stable, `if()` css conditionals must become widely adopted by browsers. We are getting close! This will _significantly_ simplify much of the implementation that currently relies on `@property` types for the style utilities. `if()` and `@functions` will reduce the number of tradeoffs between features and file size and likely improve performance.
-
-> [!NOTE]
-> Author's note: I want to be transparent upfront about the use of LLMs in this project. While the concept of Zazz and the initial implementation were all developed by hand, LLMs have proven to be invaluable in two specific ways:
->
-> First, the docs are 99% LLM generated. This is not the long-term goal. Personally, I prefer a human touch for written content as I have come to appreciate the unique and personal voice of individuals in contrast to the uncanny valley of LLM writing. That said, this is a one-man project at the moment and LLMs have taken the burden of keeping the docs current until I (or someone else) can rework them.
->
-> Second, most of the code used to test and output the Zazz UI builds are generated from the concepts and code I originally developed by hand. I mention this to (hopefully) assure you that I actually know how Zazz works.
->
-> As they say on X/Twitter, "Trust me bro."
->
-> — Derek
+For Zazz UI to hit 1.0.0 and be considered stable, `if()` css conditionals must become widely adopted by browsers. We are getting close! This will _significantly_ simplify much of the implementation that currently relies on `@property` type magic for the style utilities to work with multiple types of values. `if()` and `@functions` will reduce the number of tradeoffs between features and file size and likely improve performance.
 
 ## Introduction
 
@@ -26,13 +15,13 @@ Monorepo for the Zazz Design Framework: a UI kit for plain HTML, built on modern
 
 Docs: [zazz.sh](https://zazz.sh). Quick start: [zazz.sh/docs/quick-start](https://zazz.sh/docs/quick-start/).
 
-[![Zazz: HTML's missing design system](.github/assets/readme-hero.webp)](https://zazz.sh)
+[![Zazz UI: A web-native design system and primitive library.](.github/assets/readme-hero.webp)](https://zazz.sh)
 
 ## Quick start
 
 ```bash
-npx zazz-ui init            # vendors the base into ./zazz and writes zazz/head.html
-npx zazz-ui add button card # adds primitives and their dependencies
+pnpm dlx zazz-ui init            # vendors the base into ./zazz and writes zazz/head.html
+pnpm dlx zazz-ui add button card # adds primitives and their dependencies
 ```
 
 Paste `zazz/head.html` into your `<head>`, then write markup:
@@ -50,9 +39,9 @@ To try it without installing anything, the [quick start](https://zazz.sh/docs/qu
 Two skills teach coding agents (Claude Code, Cursor, Codex, and others) to work with Zazz:
 
 ```bash
-npx skills add dereknelsen/zazz-ui                                    # both
-npx skills add dereknelsen/zazz-ui --skill zazz                       # the design system
-npx skills add dereknelsen/zazz-ui --skill install-zazz-in-legacy-app # adding Zazz to an older app
+pnpm dlx skills add dereknelsen/zazz-ui                                    # both
+pnpm dlx skills add dereknelsen/zazz-ui --skill zazz                       # the design system
+pnpm dlx skills add dereknelsen/zazz-ui --skill install-zazz-in-legacy-app # adding Zazz to an older app
 ```
 
 - [`zazz`](skills/zazz/): install and update routes, the VS Code extension, the markup model, design guidance, and where to look things up on zazz.sh.

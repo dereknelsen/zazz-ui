@@ -516,7 +516,8 @@ export function findHeadBlock(html: string): HeadBlock | undefined {
       return undefined;
     }
   }
-  const indent = /(?:^|\n)([ \t]*)$/.exec(html.slice(0, open.index))?.[1] ?? "";
+  const before = html.slice(html.lastIndexOf("\n", open.index - 1) + 1, open.index);
+  const indent = /^[ \t]*$/.test(before) ? before : "";
   return { markerStart: open.index, start, end, options, indent };
 }
 
@@ -525,11 +526,13 @@ export function findHeadBlock(html: string): HeadBlock | undefined {
  * void elements, and those differences don't make a head block out of date.
  */
 function normalizeHead(html: string): string {
-  return html
-    .replace(/\s+/g, " ")
-    .replace(/\s*\/>/g, ">")
-    .replace(/\s+>/g, ">")
-    .trim();
+  return (
+    html
+      .replace(/\s+/g, " ")
+      // Whitespace is one space by now, so ` ?` covers what `\s*` would.
+      .replace(/ ?\/?>/g, ">")
+      .trim()
+  );
 }
 
 /**

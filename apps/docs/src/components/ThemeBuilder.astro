@@ -295,7 +295,7 @@ const packScript = await inlineScript(
     --items: start;
     --justify: center;
     --template-cols: minmax(0, 1fr);
-    --template-cols--lg: 36ch minmax(0, 1fr);
+    --template-cols--lg: minmax(min-content, 45ch) minmax(0, 1fr);
     --w: 100%;
   '
 >
@@ -316,13 +316,17 @@ const packScript = await inlineScript(
       --bottom: auto;
       --h: auto;
       --h--lg: calc(100dvb - var(--ui-header-height, 0rem));
+      --bg: light-dark(var(--color-neutral-50), var(--color-black));
       --border-x: 0;
+      --border-r: 0;
+      --border-r--lg: 1;
       --z: 30;
     '
   >
     <!-- MOBILE THEME BUILDER BAR -->
     <ui-card
       data-card-variant='outline'
+      data-theme='dark'
       data-theme-bar
       style='
         --display: grid;
@@ -489,7 +493,6 @@ const packScript = await inlineScript(
     <dialog
       id='tb-sheet'
       data-ui='drawer'
-      data-theme='dark'
       closedby='any'
       aria-labelledby='tb-sheet-title'
     >
@@ -602,14 +605,15 @@ const packScript = await inlineScript(
       style='
         --display: none;
         --display--lg: flex-col;
+        --p--lg: 8;
         --h: 100%;
-        --border-r: 1;
         --overflow: clip;
       '
     >
       <form
         class='theme-builder__form'
         aria-labelledby='tb-title'
+        data-theme='dark'
         style='
           --display: flex-col;
           --justify: start;
@@ -617,22 +621,22 @@ const packScript = await inlineScript(
           --h: 100%;
           --text: var(--color-card-foreground);
           --bg: var(--color-card);
-          --overflow-y: auto;
+          --border: 1;
+          --elevation: 5;
+          --radius: var(--ui-card-radius);
+          --overflow: hidden;
         '
       >
         <header
           style='
             --display: none;
             --display--lg: flex-col;
-            --position: sticky;
             --px: 5;
             --pt: 5;
             --pb: 3;
             --gap: 3;
             --top: 0;
-            --bg: oklch(from var(--color-card) l c h / 0.95);
             --border-b: 1;
-            --backdrop-filter: blur(6px);
             --z: 10;
           '
         >
@@ -660,13 +664,13 @@ const packScript = await inlineScript(
               <span class='theme-builder__generate-label'>{GENERATE_BUTTON_LABEL}</span>
             </button>
           </div>
-          <!-- The theme's actions, under Generate. Copy and Reset here are the real
-               controls; the bar's are proxies for them (scripts/theme-builder.ts). -->
+          <!-- The theme's actions, under Generate. Reset here is the real control; the
+               bar's Copy and Reset (and the CSS dialog's Copy) are proxies (scripts/theme-builder.ts). -->
           <div
             style='
               --display: grid;
               --position: relative;
-              --template-cols: 1fr 1fr 1fr auto;
+              --template-cols: 1fr auto auto auto;
               --gap: 2;
               --z: 10;
             '
@@ -674,85 +678,107 @@ const packScript = await inlineScript(
             <button
               data-ui='button'
               type='button'
-              data-theme-copy
-              disabled
-            >
-              <span
-                data-copy-idle
-                style='
-                  --display: inline-flex;
-                  --items: center;
-                  --gap: 2;
-                '
-              >
-                <Icon name='clone' size={16} aria-hidden='true' /> Copy
-              </span>
-              <span
-                data-copy-done
-                hidden
-                style='
-                  --display: inline-flex;
-                  --items: center;
-                  --gap: 2;
-                '
-              >
-                <Icon name='check' size={16} aria-hidden='true' /> Copied
-              </span>
-            </button>
-            <button
-              data-ui='button'
-              type='button'
               command='show-modal'
               commandfor='tb-css'
             >
-              <Icon name='code' size={16} aria-hidden='true' /> Preview
+              <Icon name='code' size={16} aria-hidden='true' /> View CSS
             </button>
-            <button
-              data-ui='button'
-              type='button'
-              data-theme-share
-            >
-              <span
-                data-share-idle
-                style='
-                  --display: inline-flex;
-                  --items: center;
-                  --gap: 2;
-                '
+            <ui-tooltip>
+              <button
+                data-ui='button'
+                interestfor='tb-download-tip'
+                type='button'
+                data-button-size='icon'
+                data-theme-download
+                disabled
               >
-                <Icon name='arrow-up-from-bracket' size={16} aria-hidden='true' /> Share
-              </span>
-              <span
-                data-share-done
-                hidden
-                style='
-                  --display: inline-flex;
-                  --items: center;
-                  --gap: 2;
-                '
+                <Icon name='arrow-down-to-bracket' size={16} aria-hidden='true' /> <span style='--sr: only'>Download CSS file</span>
+              </button>
+              <div
+                data-tooltip-slot='content'
+                id='tb-download-tip'
+                popover='hint'
               >
-                <Icon name='check' size={16} aria-hidden='true' /> Copied
-              </span>
-            </button>
-            <button
-              data-ui='button'
-              data-button-variant='warning'
-              data-button-size='icon'
-              type='reset'
-              data-theme-reset
-              disabled
-            >
-              <Icon name='arrow-rotate-left' size={16} aria-hidden='true' /> <span style='--sr: only'>Reset theme</span>
-            </button>
+                Download CSS file
+                <span data-tooltip-slot='arrow' aria-hidden='true'></span>
+              </div>
+            </ui-tooltip>
+            <ui-tooltip>
+              <button
+                data-ui='button'
+                interestfor='tb-share-tip'
+                type='button'
+                data-button-size='icon'
+                data-theme-share
+                style='--position: relative'
+              >
+                <span
+                  data-share-idle
+                  style='
+                    --display: inline-flex;
+                    --items: center;
+                    --gap: 2;
+                  '
+                >
+                  <Icon name='share-nodes' size={16} aria-hidden='true' /> <span style='--sr: only'>Share</span>
+                </span>
+                <span
+                  data-share-done
+                  hidden
+                  style='
+                    --display: inline-flex;
+                    --items: center;
+                    --gap: 2;
+                  '
+                >
+                  <Icon name='check' size={16} aria-hidden='true' /> <span style='--sr: only'>Copied</span>
+                </span>
+              </button>
+              <div
+                data-tooltip-slot='content'
+                id='tb-share-tip'
+                popover='hint'
+              >
+                Share theme link
+                <span data-tooltip-slot='arrow' aria-hidden='true'></span>
+              </div>
+            </ui-tooltip>
+            <ui-tooltip>
+              <button
+                data-ui='button'
+                interestfor='tb-reset-tip'
+                data-button-variant='warning'
+                data-button-size='icon'
+                type='reset'
+                data-theme-reset
+                disabled
+              >
+                <Icon name='arrow-rotate-left' size={16} aria-hidden='true' /> <span style='--sr: only'>Reset theme</span>
+              </button>
+              <div
+                data-tooltip-slot='content'
+                id='tb-reset-tip'
+                popover='hint'
+              >
+                Reset theme
+                <span data-tooltip-slot='arrow' aria-hidden='true'></span>
+              </div>
+            </ui-tooltip>
           </div>
         </header>
 
         <!-- Each section is a disclosure; the bar's section buttons open the sheet on one (data-theme-section). -->
         <ui-accordion
+          data-ui="scroll-fade"
+          data-scroll-fade-axis='y'
           style='
+            --display: flex-col;
             --justify: start;
-            --flex: 0 0 auto;
+            --flex: 0 1 auto;
+            --pb: 6;
             --gap: 0;
+            --max-h: 100%;
+            --overflow-y: auto;
           '
         >
           <details
@@ -936,7 +962,6 @@ const packScript = await inlineScript(
             </div>
           </details>
           <details
-            open
             data-theme-section='typeset'
             class='theme-builder__section'
             style='
@@ -1175,7 +1200,6 @@ const packScript = await inlineScript(
             </div>
           </details>
           <details
-            open
             data-theme-section='styles'
             class='theme-builder__section'
             style='
@@ -1340,7 +1364,6 @@ const packScript = await inlineScript(
             </div>
           </details>
           <details
-            open
             data-theme-section='effects'
             class='theme-builder__section'
             style='

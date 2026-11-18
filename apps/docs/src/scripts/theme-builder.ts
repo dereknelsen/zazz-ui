@@ -137,7 +137,7 @@ class ThemeBuilder extends ZazzElement {
     if (!form || !output) return;
 
     const q = <T extends Element>(selector: string) => this.querySelector<T>(selector);
-    const copy = q<HTMLButtonElement>("[data-theme-copy]");
+    const download = q<HTMLButtonElement>("[data-theme-download]");
     const reset = q<HTMLButtonElement>("[data-theme-reset]");
     const preview = q<HTMLElement>("[data-theme-css]");
     const fontLink = document.createElement("link");
@@ -167,7 +167,7 @@ class ThemeBuilder extends ZazzElement {
     const canCopy = typeof navigator.clipboard?.writeText === "function";
     const canShare = typeof navigator.share === "function";
     const dead = [
-      ...(canCopy ? [] : ["[data-theme-copy], [data-theme-copy-proxy]"]),
+      ...(canCopy ? [] : ["[data-theme-copy-proxy]"]),
       ...(canCopy || canShare ? [] : ["[data-theme-share]"]),
     ].join(", ");
     if (dead) for (const button of this.querySelectorAll<HTMLElement>(dead)) button.hidden = true;
@@ -240,6 +240,17 @@ class ThemeBuilder extends ZazzElement {
       flash("share");
     };
     signal.addEventListener("abort", () => clearTimeout(shareTimer), { once: true });
+    /** The Copy buttons (the bar's and the CSS dialog's): the theme's CSS to the clipboard. */
+    const copyCss = async () => {
+      if (!css) return;
+      try {
+        await navigator.clipboard.writeText(css);
+      } catch {
+        return;
+      }
+      // Every copy button with a label pair says so.
+      flash("copy");
+    };
     /** Puts the URL's preset into the fields; each then announces itself as an input. */
     const restore = () => {
       const code = new URLSearchParams(location.search).get(PARAM);
@@ -402,6 +413,7 @@ class ThemeBuilder extends ZazzElement {
     const render = () => {
       clearTimeout(renderTimer);
       const lines: string[] = [];
+      let neutralSwatches: Record<string, string> | undefined;
 
       for (const name of PALETTES) {
         const hex = normalizeHex(q<HTMLInputElement>(`[data-theme-hex="${name}"]`)!.value);
@@ -435,6 +447,7 @@ class ThemeBuilder extends ZazzElement {
         }
         // The background selects' swatches are neutral stops: paint them the same way.
         if (name === "neutral") {
+          neutralSwatches = swatches;
           for (const swatch of this.querySelectorAll<HTMLElement>("[data-theme-bg-swatch]")) {
             const at = swatch.dataset.themeBgSwatch!;
             if (at === "white" || at === "black") continue;
@@ -459,6 +472,13 @@ class ThemeBuilder extends ZazzElement {
       const bgDark = q<HTMLSelectElement>('[data-theme-bg="dark"]')?.value ?? "";
       const background = backgroundToken(bgLight, bgDark);
       if (background) lines.push(background);
+      // The builder itself takes the theme's background (only that: the rest of the
+      // panel keeps the site's look), painted from the generated neutrals like the swatches.
+      const paint = (pick: string) =>
+        pick === "white" || pick === "black"
+          ? `var(--color-${pick})`
+          : (neutralSwatches?.[pick] ?? `var(--color-neutral-${pick})`);
+      this.style.setProperty("--bg", `light-dark(${paint(bgLight)}, ${paint(bgDark)})`);
 
       // Single colors (the shadow color): a hex field that writes its token as is.
       for (const input of this.querySelectorAll<HTMLInputElement>("[data-theme-token]")) {
@@ -499,7 +519,7 @@ class ThemeBuilder extends ZazzElement {
       // so it's told the background even when the theme leaves the kit's in place.
       output.textContent = `${css.replace(":root", `.${PREVIEW}`)}.${PREVIEW} { ${backgroundDeclaration(bgLight, bgDark)}; }\n`;
       if (preview) preview.textContent = css || "/* No changes yet */";
-      if (copy) copy.disabled = !css;
+      if (download) download.disabled = !css;
       // The default background writes a line too, so css alone doesn't mean a change.
       if (reset) reset.disabled = !fields().some(changed);
       for (const proxy of this.querySelectorAll<HTMLButtonElement>("[data-theme-copy-proxy]")) {
@@ -577,7 +597,7 @@ class ThemeBuilder extends ZazzElement {
           }
           lockAll.setAttribute("aria-pressed", String(on));
         }
-        if (target.closest("[data-theme-copy-proxy]")) copy?.click();
+        if (target.closest("[data-theme-copy-proxy]")) void copyCss();
         if (target.closest("[data-theme-reset-proxy]")) form.reset();
         if (target.closest("[data-theme-share]")) void shareLink();
       },
@@ -629,17 +649,16 @@ class ThemeBuilder extends ZazzElement {
     );
     form.addEventListener("submit", (event) => event.preventDefault(), { signal });
 
-    copy?.addEventListener(
+    download?.addEventListener(
       "click",
-      async () => {
+      () => {
         if (!css) return;
-        try {
-          await navigator.clipboard.writeText(css);
-        } catch {
-          return;
-        }
-        // Every copy button with a label pair says so: the panel's, and the bar's proxy.
-        flash("copy");
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(new Blob([css], { type: "text/css" }));
+        link.download = "theme.css";
+        link.click();
+        // Revoked on the next task: the click has started the download by then.
+        setTimeout(() => URL.revokeObjectURL(link.href));
       },
       { signal },
     );

@@ -24,6 +24,11 @@ jobs:
       - uses: voidzero-dev/setup-vp@v1.21.2
         with:
           cache: true
+          run-install: false
+      - name: Authenticate to the Font Awesome registry
+        run: pnpm config set //npm.fontawesome.com/:_authToken "$FONTAWESOME_NPM_AUTH_TOKEN"
+        env:
+          FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
       - run: vp install
       - run: pnpm exec playwright install --with-deps chromium webkit
       - run: vp run ready
@@ -37,6 +42,11 @@ jobs:
       - uses: voidzero-dev/setup-vp@v1.21.2
         with:
           cache: true
+          run-install: false
+      - name: Authenticate to the Font Awesome registry
+        run: pnpm config set //npm.fontawesome.com/:_authToken "$FONTAWESOME_NPM_AUTH_TOKEN"
+        env:
+          FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
       - run: vp install
       - run: pnpm exec playwright install --with-deps chromium firefox
       - run: vp run core#test

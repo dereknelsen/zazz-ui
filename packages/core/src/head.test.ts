@@ -313,4 +313,23 @@ describe("head blocks", () => {
     expect(html).toContain('\n  <link rel="stylesheet" href="./zazz/primitives/card/card.css">');
     expect(replaceHeadBlock(html, buildHead(options), options)).toBe(html);
   });
+
+  it("takes the marker's indent only when whitespace alone precedes it on its line", () => {
+    const marker = "<!-- zazz:head --><!-- /zazz:head -->";
+    expect(findHeadBlock(`<head>\n\t  ${marker}`)?.indent).toBe("\t  ");
+    expect(findHeadBlock(`    ${marker}`)?.indent).toBe("    ");
+    expect(findHeadBlock(`<head>  ${marker}`)?.indent).toBe("");
+  });
+
+  it("treats re-wrapped and self-closed tags as current", () => {
+    const head = buildHead();
+    const reformatted = head.replace(/>/g, " />").replace(/ /g, "\n    ");
+    const html = replaceHeadBlock(
+      "<head>\n  <!-- zazz:head -->\n<!-- /zazz:head -->\n</head>",
+      head,
+    );
+    const block = findHeadBlock(html)!;
+    const edited = html.slice(0, block.start) + reformatted + html.slice(block.end);
+    expect(replaceHeadBlock(edited, head)).toBe(edited);
+  });
 });

@@ -119,7 +119,7 @@ const latest = (
         <a
           href={links.github}
           data-ui='button'
-          data-button-variant='ghost'
+          data-button-variant='outline'
           data-button-size='icon'
           aria-label='Zazz on GitHub'
           target='_blank'
@@ -129,7 +129,11 @@ const latest = (
             --display--lg: flex;
           '
         >
-          <GithubIcon size={16} />
+        <svg style="--size: 4.55" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 10.5 13">
+          <path d="M0 0h12v12H0z" fill="none" />
+          <path fill="currentColor" d="M2 12h2v-1H3v-1H2V9H1V8h1v1h1v1h1V9h1V8H3V7H2V4h1V2h1v1h3V2h1v2h1v3H8v1H6v1h1v3h2v-1h1v-1h1V3h-1V2H9V1H2v1H1v1H0v7h1v1h1Zm0 0" />
+        </svg>
+        
         </a>
 
         <div
