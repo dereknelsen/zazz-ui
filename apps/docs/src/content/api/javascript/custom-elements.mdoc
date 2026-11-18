@@ -50,3 +50,5 @@ registerRefresh((scope) => {
 ```
 
 Hooks must be idempotent: mark initialized nodes with a data attribute and skip them on later runs. Custom elements need no hook; the swap fires their `connectedCallback` natively.
+
+Markup that another library inserts (htmx, Turbo, your own `fetch`) reaches the same hooks through `Zazz.refresh(element)`, also `window.Zazz`. It runs every hook over the element and its descendants, or over the whole body with no argument. See [navigation](/api/javascript/navigation/#alongside-htmx-and-client-routers).

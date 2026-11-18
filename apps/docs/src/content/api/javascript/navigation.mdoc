@@ -67,3 +67,21 @@ The window scrolls as the browser decides: to the top (or the link's target) for
 Reloads, hash changes, downloads, and form posts are never intercepted. `<ui-debug>` lists the persisted elements on each page and warns about a missing or duplicate id, nested persisted elements, and `data-ui-persist` on a page without the opt-in. It checks `data-ui-persist-scroll` the same way, and flags one on or inside a persisted element, which keeps its scroll already.
 
 Content-scoped modules re-scan the new body through the [refresh registry](/api/javascript/custom-elements/).
+
+## Alongside htmx and client routers
+
+htmx, Turbo, and client routers run their own navigation. They can share a page with the swap as long as each one knows which links and history entries belong to it.
+
+- **Opt a region out.** A link or form inside `data-ui-navigation="off"` is never swapped: it gets a full page load, unless the library handles the click first. The nearest `data-ui-navigation` ancestor decides, so `data-ui-navigation="swap"` inside an opted-out region opts back in.
+- **History the library pushes is left alone.** When the library adds an entry with `history.pushState()` (htmx's `hx-push-url` or `hx-boost`), Back and Forward into or out of that entry aren't swapped; the library restores it on `popstate`. Back and Forward between two swapped pages still swap, after a reload too, unless a script has since given the entry `history.state`. That script restores it instead: htmx stamps the first entry it swaps on with `{ htmx: true }` and restores it on Back by fetching the page again, so persisted elements don't survive that one navigation.
+- **Refresh what the library inserts.** The refresh hooks (reveal, attribute-form carousels, select-all checkboxes) run on their own only after a Zazz swap. When the library inserts markup, pass the new element to `Zazz.refresh`, which the entry module also exports by name. With no argument it refreshes the whole body.
+
+```html
+<script type="module">
+  htmx.onLoad((element) => Zazz.refresh(element));
+</script>
+```
+
+A select-all checkbox counts only the boxes inside the element you pass, so when htmx replaces the rows under a header checkbox, pass the table. Custom elements need no refresh: they set themselves up when they connect.
+
+In browsers without `NavigateEvent.sourceElement`, `data-ui-navigation="off"` has no effect. Boosted htmx links still work there: htmx calls `preventDefault()` on the click, so no navigation reaches the swap.

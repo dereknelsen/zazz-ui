@@ -36,6 +36,10 @@ import "./primitives/tabs/tabs.ts";
 import "./primitives/toaster/toaster.ts";
 import "./base/navigation.ts";
 
+// The runtime API (also `window.Zazz`): `Zazz.refresh(scope)` after another
+// library swaps content in.
+export { Zazz } from "./base/zazz-element.ts";
+
 // The experimental `stuck` utility state reads container scroll-state queries;
 // where they are unsupported (Safari, Firefox), load the polyfill. Chromium never fetches it.
 if (typeof CSS !== "undefined" && !CSS.supports("container-type", "scroll-state")) {

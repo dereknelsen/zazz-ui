@@ -133,3 +133,31 @@ describe("adoptStyles", () => {
     }
   });
 });
+
+describe("history.state during a traversal", () => {
+  // The swap leaves an entry with script state to that script. It reads
+  // `history.state` one task into its handler: WebKit sets it only at popstate.
+  it("is the destination's one task into the intercept handler", async () => {
+    if (!("navigation" in window)) return;
+    history.replaceState({ probe: "a" }, "");
+    history.pushState(null, "", "?navigation-probe");
+    let state: unknown = "unread";
+    const read = new Promise<void>((resolve) => {
+      const onNavigate = (e: NavigateEvent) => {
+        window.navigation.removeEventListener("navigate", onNavigate);
+        e.intercept({
+          async handler() {
+            await new Promise((settled) => setTimeout(settled, 0));
+            state = history.state;
+            resolve();
+          },
+        });
+      };
+      window.navigation.addEventListener("navigate", onNavigate);
+    });
+    await window.navigation.back().finished;
+    await read;
+    history.replaceState(null, "");
+    expect(state).toEqual({ probe: "a" });
+  });
+});

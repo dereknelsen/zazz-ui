@@ -37,6 +37,17 @@ import { refreshAll } from "./zazz-element.ts";
  * `_view-transitions.css` then styles. Reloads, hash changes, downloads and
  * form posts are never intercepted.
  *
+ * Another library that drives navigation (htmx, Turbo, a client router) keeps
+ * its own. A link or form inside `data-ui-navigation="off"` gets the browser's
+ * default, and the nearest `data-ui-navigation` ancestor decides. Entries the
+ * page pushed with `history.pushState()` stay the page's: Back or Forward into
+ * or out of one is never swapped, so the library restores it on `popstate`.
+ * So does an entry the swap made once a script gives it `history.state` (htmx
+ * stamps the entry it first swaps on with `{ htmx: true }`): its Back and
+ * Forward are left to that script.
+ * Markup the library swaps in reaches the refresh hooks through
+ * `Zazz.refresh(scope)` (`base/zazz-element.ts`).
+ *
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API
  * @see https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent/scroll
  */
@@ -266,6 +277,37 @@ if ("navigation" in window) {
    */
   let bypassUrl: string | null = null;
 
+  /**
+   * Keys of the history entries this module made: each one a document loaded
+   * into, and each one a swap committed. A same-document entry with any other
+   * key came from the page's own `history.pushState()` (htmx's `hx-push-url`,
+   * a router), and the page restores those itself on `popstate`. The keys live
+   * in `sessionStorage` because a reload keeps the older entries same-document
+   * with the new page; where storage is blocked they last as long as the page.
+   */
+  const ENTRIES = "zazz:navigation-entries";
+  const ownEntries = new Set<string>();
+  const owns = (key: string | undefined): boolean => {
+    if (!key) return false;
+    if (ownEntries.has(key)) return true;
+    try {
+      return (JSON.parse(sessionStorage.getItem(ENTRIES) ?? "[]") as string[]).includes(key);
+    } catch {
+      return false;
+    }
+  };
+  const own = (key: string | undefined): void => {
+    if (!key || owns(key)) return;
+    ownEntries.add(key);
+    try {
+      const keys = JSON.parse(sessionStorage.getItem(ENTRIES) ?? "[]") as string[];
+      sessionStorage.setItem(ENTRIES, JSON.stringify([...keys, key]));
+    } catch {
+      // Blocked or full storage: the in-memory set still covers this page.
+    }
+  };
+  own(window.navigation.currentEntry?.key);
+
   function fullLoad(url: string): void {
     bypassUrl = url;
     location.replace(url);
@@ -281,8 +323,17 @@ if ("navigation" in window) {
     // push or replace is history.pushState() / replaceState(): the page is
     // updating its own URL (a filter, a share code), not leaving. Back and
     // Forward stay swaps: after one, every entry shares this document.
+    // Back and Forward are ours only between entries we made: a traversal into
+    // or out of an entry the page pushed is the page's to restore. A link,
+    // form or region under `data-ui-navigation="off"` (an htmx-boosted area, a
+    // client router's outlet) always gets the browser's default.
     if (
       !optedIn(document) ||
+      e.sourceElement?.closest("[data-ui-navigation]")?.getAttribute("data-ui-navigation") ===
+        "off" ||
+      (e.destination.sameDocument &&
+        e.navigationType === "traverse" &&
+        !(owns(e.destination.key) && owns(window.navigation.currentEntry?.key))) ||
       !e.canIntercept ||
       e.navigationType === "reload" ||
       (e.destination.sameDocument && e.navigationType !== "traverse") ||
@@ -297,6 +348,19 @@ if ("navigation" in window) {
 
     e.intercept({
       async handler() {
+        // The navigation has committed: the current entry is the destination.
+        own(window.navigation.currentEntry?.key);
+
+        // Back or Forward to an entry carrying `history.state` goes to the script
+        // that wrote it. The swap never writes any, so a script stamped this
+        // entry to restore it: htmx's `{ htmx: true }`, which its own navigate
+        // handler swaps in. Swapping too would race it. WebKit updates
+        // `history.state` only at `popstate`, after the handler starts, so read
+        // it one task later.
+        if (e.navigationType === "traverse") {
+          await new Promise((settled) => setTimeout(settled, 0));
+          if (e.signal.aborted || history.state != null) return;
+        }
         let doc: Document;
         try {
           const res = await fetch(e.destination.url, { signal: e.signal });

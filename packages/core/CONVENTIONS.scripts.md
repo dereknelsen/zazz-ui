@@ -90,7 +90,7 @@ Attach a named export object or class to `window` for the documented public API,
 | `base/reveal.ts`                      | `window.Reveal`     | `Reveal` class                                                                                                                                                                                                  |
 | `base/dialog-lifecycle.ts`            | _(none)_            | Emits `zazz:dialog-open` / `zazz:dialog-close` on every `<dialog>` (ADR-0003); the events are the public API                                                                                                    |
 | `base/carousel.ts`                    | `window.Carousel`   | `{ init, initRoot }`                                                                                                                                                                                            |
-| `base/zazz-element.ts`                | _(none)_            | `ZazzElement` base + `defineZazzElement` + refresh registry (`registerRefresh` / `refreshAll`)                                                                                                                  |
+| `base/zazz-element.ts`                | `window.Zazz`       | `ZazzElement` base + `defineZazzElement` + refresh registry (`registerRefresh` / `refreshAll`); `Zazz` `{ refresh }` for content other libraries swap in                                                        |
 | `base/gesture.ts`                     | _(none)_            | `trackDrag` (pointer tracking on a locked axis) + the release math `shouldDismiss`, `pickSnap`, `rubberBand`, `flickDuration`, `createVelocityTracker`; module exports only                                     |
 | `ui/carousel/carousel.ts`             | `base/carousel.ts`  | `<ui-carousel>` calls `Carousel.initRoot`                                                                                                                                                                       |
 | `ui/drawer/drawer.ts`                 | _(none)_            | `initDrawers`, `bindDrawer`, `snapDrawer` (module exports only); drag-to-dismiss, snap points, stacking, and the `<ui-drawer-indent>` page indent for `<dialog data-ui~="drawer">`, bound on `zazz:dialog-open` |
@@ -140,7 +140,7 @@ Interactive components ship as **light-DOM custom elements** that augment existi
 - **Custom elements are `display: inline` by default**: add a `display` rule in the component stylesheet.
 - **Degrade gracefully.** Without JS the markup must still render sensibly (a password field stays masked; tabs keep native radio behavior).
 - **Element options are `data-*` attributes** (`data-label-show`, `data-label-hide`), not bare attributes, even though the tag is its own namespace. One attribute system across the kit.
-- Do not attach element classes to `window`; `export` them for module consumers. `window` is reserved for genuine imperative APIs (`window.Toaster`, `window.Reveal`, `window.Carousel`, `window.Utils`, `window.Signals`).
+- Do not attach element classes to `window`; `export` them for module consumers. `window` is reserved for genuine imperative APIs (`window.Toaster`, `window.Reveal`, `window.Carousel`, `window.Utils`, `window.Signals`, `window.Zazz`).
 
 ### Reactive state (signals)
 
@@ -171,7 +171,7 @@ Scripts declare dependencies with ES imports so the module graph resolves order:
 | ------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
 | `base/utils.ts`                       | none                                                         | Provides `window.Utils`                                                                                             |
 | `base/signals.ts`                     | `signal-polyfill` (npm)                                      | The **only** file allowed to import the polyfill                                                                    |
-| `base/zazz-element.ts`                | none                                                         | `ZazzElement` base + refresh registry                                                                               |
+| `base/zazz-element.ts`                | none                                                         | `ZazzElement` base + refresh registry; provides `window.Zazz`                                                       |
 | `base/reveal.ts`                      | `base/zazz-element.ts`                                       | Registers a refresh hook                                                                                            |
 | `base/dialog-lifecycle.ts`            | none                                                         | Owns `<dialog>` visibility; components subscribe to its events                                                      |
 | `base/carousel-scroll.ts`             | `base/gesture.ts`, `base/utils.ts`                           | The scroll-snap engine: mouse drag, loop, thumbs, autoplay; stores `_carousel` on the root                          |

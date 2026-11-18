@@ -16,25 +16,6 @@ interface Element {
   _carouselController?: AbortController;
 }
 
-/** @see https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API */
-interface NavigationDestination {
-  url: string;
-}
-
-interface NavigateEvent extends Event {
-  canIntercept: boolean;
-  hashChange: boolean;
-  downloadRequest: unknown;
-  formData: FormData | null;
-  destination: NavigationDestination;
-  intercept(options: { handler: () => Promise<void> }): void;
-  scroll(): void;
-}
-
-interface Navigation extends EventTarget {
-  addEventListener(type: "navigate", listener: (event: NavigateEvent) => void): void;
-}
-
 /**
  * Invoker Commands API (command/commandfor). Native in Chromium 135+; the
  * invokers polyfill dispatches a compatible event. Declared here (as interface
@@ -109,8 +90,14 @@ interface SignalsNamespace {
   effect(callback: () => void | (() => void), options?: { signal?: AbortSignal }): () => void;
 }
 
+interface ZazzNamespace {
+  /** Runs every refresh hook over `scope` and its descendants (the body without one): markup inserted without a Zazz navigation. */
+  refresh(scope?: Element): void;
+}
+
 interface Window {
-  navigation: Navigation;
+  /** Set by zazz-element.js — the runtime API for content other libraries swap in. */
+  Zazz: ZazzNamespace;
   Utils: UtilsNamespace;
   /** Set by signals.js — the TC39 signals wrapper (state/computed/effect). */
   Signals: SignalsNamespace;

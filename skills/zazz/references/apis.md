@@ -178,7 +178,9 @@ to initialize. `data-ui="drawer"` is a bottom sheet everywhere, with
   scroll offsets; their links take `aria-current` from the new page), carries the scroll offset
   of `data-ui-persist-scroll="<id>"` elements rendered fresh (a section sidebar), runs a View
   Transition, and refreshes Reveal and carousels (see `AUTHORING.md`, Navigation). App-level only. Custom elements initialize themselves when connected, so SPA swaps
-  do not need a separate init call for them.
+  do not need a separate init call for them. With htmx or a client router on the page, put `data-ui-navigation="off"`
+  on the regions it drives and call `Zazz.refresh(element)` (`window.Zazz`) after it inserts markup.
+  Entries the page pushes with `history.pushState()` belong to the page, Back and Forward included.
 
 ## 3. The page head's one polyfill (keep it)
 

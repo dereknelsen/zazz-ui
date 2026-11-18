@@ -147,6 +147,8 @@ A region whose content depends on the page, such as a section sidebar, should no
 </html>
 ```
 
+If the page also runs htmx or a client router, put `data-ui-navigation="off"` on the regions that library drives (the nearest `data-ui-navigation` ancestor wins), and call `Zazz.refresh(element)` after it inserts markup (`htmx.onLoad((el) => Zazz.refresh(el))`). Back and Forward into or out of an entry the page pushed with `history.pushState()`, or to one a script gave `history.state` (htmx's `{ htmx: true }`), are left to the page.
+
 `<ui-debug>` lists the persisted elements on each page and warns about a missing or duplicate id, nested persisted elements, and `data-ui-persist` on a page without the opt-in. It checks `data-ui-persist-scroll` the same way, and flags one that sits on or inside a `data-ui-persist` element, which already keeps its scroll.
 
 ## Theme

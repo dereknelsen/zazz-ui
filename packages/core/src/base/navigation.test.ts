@@ -16,10 +16,15 @@ type FakeNavigate = Event & {
   abort: () => void;
 };
 
+/** The fake Navigation: an event target with the entry the page is on. */
+const navigation = Object.assign(new EventTarget(), { currentEntry: { key: "initial" } });
+let keys = 0;
+
 function navigate(
   navigationType: "push" | "replace" | "reload" | "traverse",
   url = new URL("/next", location.href).href,
   sameDocument = false,
+  { key = "", sourceElement = null as Element | null } = {},
 ): FakeNavigate {
   const controller = new AbortController();
   const event = Object.assign(new Event("navigate"), {
@@ -30,10 +35,16 @@ function navigate(
     hashChange: false,
     downloadRequest: null,
     formData: null,
-    destination: { url, sameDocument },
+    destination: { url, sameDocument, key },
+    sourceElement,
     scroll: vi.fn(),
   }) as unknown as FakeNavigate;
+  // Intercepting commits the navigation: the destination becomes the current
+  // entry before the handler runs. A traversal lands on its own key and a push
+  // gets a fresh one (so does a replace here, which in a browser keeps its key;
+  // no test depends on it).
   event.intercept = vi.fn((options: { handler: Handler }) => {
+    navigation.currentEntry = { key: key || `entry-${++keys}` };
     event.handler = options.handler;
   });
   return event;
@@ -56,7 +67,6 @@ const page = (body: string, { swap = true, title = "Next" } = {}) =>
   `<!doctype html><html${swap ? ' data-ui-navigation="swap"' : ""}><head><title>${title}</title></head><body>${body}</body></html>`;
 
 describe("navigation", () => {
-  const navigation = new EventTarget();
   let assign: ReturnType<typeof vi.fn<(url: string | URL) => void>>;
 
   beforeAll(async () => {
@@ -68,6 +78,7 @@ describe("navigation", () => {
     assign = vi.fn<(url: string | URL) => void>();
     vi.spyOn(window.location, "replace").mockImplementation(assign);
     document.documentElement.setAttribute("data-ui-navigation", "swap");
+    navigation.currentEntry = { key: "initial" };
     document.title = "Current";
     document.body.innerHTML = `<header>old header</header><main><h1>old</h1></main>`;
   });
@@ -101,8 +112,74 @@ describe("navigation", () => {
     }
   });
 
-  it("still swaps Back and Forward between swapped pages, which share the document", () => {
-    const event = navigate("traverse", undefined, true);
+  it("still swaps Back and Forward between swapped pages, which share the document", async () => {
+    // "initial" is the entry the module loaded into; the push swap makes the second.
+    serve(page(`<main><h1>new</h1></main>`));
+    const push = navigate("push");
+    navigation.dispatchEvent(push);
+    await push.handler!();
+    const back = navigate("traverse", location.href, true, { key: "initial" });
+    navigation.dispatchEvent(back);
+    expect(back.intercept).toHaveBeenCalledOnce();
+  });
+
+  it("still swaps Back and Forward between swapped pages after a reload", () => {
+    // A reload keeps the older entries same-document with the reloaded page, so
+    // the entries a previous document swapped into are still ours.
+    sessionStorage.setItem("zazz:navigation-entries", JSON.stringify(["before-a", "before-b"]));
+    navigation.currentEntry = { key: "before-b" };
+    const back = navigate("traverse", location.href, true, { key: "before-a" });
+    navigation.dispatchEvent(back);
+    expect(back.intercept).toHaveBeenCalledOnce();
+    sessionStorage.removeItem("zazz:navigation-entries");
+  });
+
+  it("leaves Back and Forward into or out of an entry the page pushed itself to the page", () => {
+    // htmx's hx-push-url: history.pushState() made the entry, and htmx restores it on popstate.
+    const into = navigate("traverse", location.href, true, { key: "pushed-by-page" });
+    navigation.dispatchEvent(into);
+    expect(into.intercept).not.toHaveBeenCalled();
+
+    navigation.currentEntry = { key: "pushed-by-page" };
+    const outOf = navigate("traverse", location.href, true, { key: "initial" });
+    navigation.dispatchEvent(outOf);
+    expect(outOf.intercept).not.toHaveBeenCalled();
+  });
+
+  it("leaves Back and Forward to an entry a script stamped with history state to that script", async () => {
+    // htmx stamps the entry it first swaps on with replaceState({ htmx: true })
+    // and restores it from its own navigate handler; a second swap would race it.
+    const fetchSpy = vi.fn();
+    vi.stubGlobal("fetch", fetchSpy);
+    const back = navigate("traverse", location.href, true, { key: "initial" });
+    navigation.dispatchEvent(back);
+    history.replaceState({ htmx: true }, "");
+    try {
+      await back.handler?.();
+    } finally {
+      history.replaceState(null, "");
+    }
+    expect(fetchSpy).not.toHaveBeenCalled();
+    expect(document.querySelector("header")!.textContent).toBe("old header");
+  });
+
+  it('leaves a navigation from inside data-ui-navigation="off" to the browser', () => {
+    document.body.innerHTML = `<div data-ui-navigation="off"><a href="/next">next</a></div><a href="/next">swap</a>`;
+    const [off, on] = document.querySelectorAll("a");
+    const skipped = navigate("push", undefined, false, { sourceElement: off });
+    navigation.dispatchEvent(skipped);
+    expect(skipped.intercept).not.toHaveBeenCalled();
+
+    const swapped = navigate("push", undefined, false, { sourceElement: on });
+    navigation.dispatchEvent(swapped);
+    expect(swapped.intercept).toHaveBeenCalledOnce();
+  });
+
+  it('swaps again inside data-ui-navigation="swap" nested in an opted-out region', () => {
+    document.body.innerHTML = `<div data-ui-navigation="off"><form data-ui-navigation="swap"><button>go</button></form></div>`;
+    const event = navigate("push", undefined, false, {
+      sourceElement: document.querySelector("button"),
+    });
     navigation.dispatchEvent(event);
     expect(event.intercept).toHaveBeenCalledOnce();
   });

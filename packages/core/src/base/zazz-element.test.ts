@@ -7,7 +7,13 @@
  */
 
 import { describe, expect, it } from "vite-plus/test";
-import { ZazzElement, defineZazzElement, registerRefresh, refreshAll } from "./zazz-element.ts";
+import {
+  Zazz,
+  ZazzElement,
+  defineZazzElement,
+  registerRefresh,
+  refreshAll,
+} from "./zazz-element.ts";
 
 class ProbeElement extends ZazzElement {
   setupCalls = 0;
@@ -76,5 +82,28 @@ describe("refresh registry", () => {
     refreshAll(scope);
 
     expect(seen).toEqual([scope, scope]);
+  });
+
+  it("is public as Zazz.refresh, and covers the element it is given", () => {
+    // htmx's outerHTML swap hands over the new element itself: a carousel root,
+    // say, which a hook's querySelectorAll(scope) would otherwise miss.
+    const found: Element[] = [];
+    registerRefresh((scope) => found.push(...scope.querySelectorAll("[data-probe]")));
+
+    document.body.innerHTML = `<section data-probe><p data-probe></p></section>`;
+    const section = document.querySelector("section")!;
+    window.Zazz.refresh(section);
+
+    expect(found).toEqual([section, section.firstElementChild]);
+    expect(window.Zazz).toBe(Zazz);
+  });
+
+  it("refreshes the whole body without a scope", () => {
+    const seen: Element[] = [];
+    registerRefresh((scope) => seen.push(scope));
+
+    Zazz.refresh();
+
+    expect(seen.at(-1)).toBe(document.body);
   });
 });
