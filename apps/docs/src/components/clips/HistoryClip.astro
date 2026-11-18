@@ -1,0 +1,835 @@
+---
+/**
+ * Feature clip for the 0.15 release post: who restores each history entry when
+ * `data-ui-navigation="swap"` shares a page with htmx. Four beats on a 10s loop:
+ * a link swaps the body (the swap's entry); a tab with `hx-push-url` swaps only
+ * its panel, and htmx stamps the entry it swapped on (`replaceState({ htmx: true })`
+ * before its first swap) and pushes its own; Back from htmx's entry is htmx's to
+ * restore; Back again, to an entry with no `history.state`, is the swap's.
+ * The ownership rules are navigation.ts's; the stamping is htmx 4.0.2's
+ * `#handleHistoryUpdate`. The site is an Acme sample.
+ *
+ * Simplified: htmx restores by fetching the page again, shown here as the panel
+ * returning to npm. Positions are in stage em so the pointer tracks its targets
+ * at any width. As in GalleryClip, every `animation` names its keyframes, and
+ * nothing animates `display`.
+ */
+---
+
+<figure class="fc-hs">
+  <div
+    class="fc-hs-stage"
+    role="img"
+    aria-label="A browser with a history list beside it. Clicking a link swaps the page, and Zazz owns the new history entry. Clicking a tab that pushes a URL with htmx swaps only the tab panel; htmx takes over that entry and adds its own. Pressing Back from the htmx entry leaves it to htmx to restore. Pressing Back again, to the first entry, swaps the page with Zazz."
+  >
+    <div class="fc-hs-body" aria-hidden="true">
+      <div class="fc-hs-labels">
+        <span class="fc-hs-label fc-hs-label-1">A link: Zazz swaps the body.</span>
+        <span class="fc-hs-label fc-hs-label-2">A tab with hx-push-url: htmx takes the entry.</span>
+        <span class="fc-hs-label fc-hs-label-3">Back: htmx restores what it owns.</span>
+        <span class="fc-hs-label fc-hs-label-4">Back again: Zazz swaps the body.</span>
+      </div>
+
+      <span class="fc-hs-caption">History</span>
+      <div class="fc-hs-marker"></div>
+      <div class="fc-hs-row fc-hs-row-1">
+        <code>/docs</code>
+        <span class="fc-hs-owners"><span class="fc-hs-pill fc-hs-pill-zazz">Zazz</span></span>
+      </div>
+      <div class="fc-hs-row fc-hs-row-2">
+        <code>/docs/install</code>
+        <span class="fc-hs-owners">
+          <span class="fc-hs-pill fc-hs-pill-zazz fc-hs-claimed">Zazz</span>
+          <span class="fc-hs-pill fc-hs-pill-htmx fc-hs-claim">htmx</span>
+        </span>
+      </div>
+      <div class="fc-hs-row fc-hs-row-3">
+        <code>/docs/install?tab=cdn</code>
+        <span class="fc-hs-owners"><span class="fc-hs-pill fc-hs-pill-htmx">htmx</span></span>
+      </div>
+
+      <div class="fc-hs-window">
+        <div class="fc-hs-toolbar">
+          <span class="fc-hs-back">
+            <svg viewBox="0 0 16 16"
+              ><path
+                d="M10 3 5 8l5 5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"></path></svg
+            >
+          </span>
+          <span class="fc-hs-url">
+            <span class="fc-hs-url-docs">acme.dev/docs</span>
+            <span class="fc-hs-url-install">acme.dev/docs/install</span>
+            <span class="fc-hs-url-cdn">acme.dev/docs/install?tab=cdn</span>
+          </span>
+        </div>
+
+        <div class="fc-hs-page fc-hs-page-docs">
+          <b class="fc-hs-h">Docs</b>
+          <span class="fc-hs-line"></span>
+          <span class="fc-hs-line fc-hs-line-short"></span>
+          <span class="fc-hs-link">Install →</span>
+        </div>
+
+        <div class="fc-hs-page fc-hs-page-install">
+          <b class="fc-hs-h">Install</b>
+          <span class="fc-hs-tab fc-hs-tab-npm">npm</span>
+          <span class="fc-hs-tab fc-hs-tab-cdn">CDN</span>
+          <span class="fc-hs-indicator"></span>
+          <span class="fc-hs-panel">
+            <code class="fc-hs-npm">pnpm add @acme/ui</code>
+            <code class="fc-hs-cdn">&lt;script src="acme.js"&gt;</code>
+          </span>
+        </div>
+      </div>
+
+      <svg class="fc-hs-cursor" viewBox="0 0 16 22">
+        <path
+          d="M1 1v17.5l4.6-4.4 3 6.6 3-1.4-3-6.4h6.3z"
+          fill="#fff"
+          stroke="#18181b"
+          stroke-width="1.3"
+          stroke-linejoin="round"></path>
+      </svg>
+    </div>
+  </div>
+</figure>
+
+<style>
+  /* Zazz tokens wherever a value has one. The stage sizes in em (2.2cqw), so
+     --fc-spacing is an em copy of --spacing and lengths are kit multiples of it;
+     radii read the theme's --radius-multiplier. Element positions are stage em
+     (the stage is 45.45em by 25.5em), so the pointer's em path lands on them. */
+  .fc-hs {
+    --fc-spacing: 0.25em;
+    --fc-radius-sm: calc(var(--fc-spacing) * 1.5 * var(--radius-multiplier));
+    --fc-radius-md: calc(var(--fc-spacing) * 2.5 * var(--radius-multiplier));
+    --fc-radius: calc(var(--fc-spacing) * 4.5 * var(--radius-multiplier));
+    --fc-row: 2.3em;
+    container-type: inline-size;
+    width: 100%;
+    aspect-ratio: 740 / 415;
+    margin: 0;
+    margin-block: var(--space-lg);
+  }
+
+  .fc-hs-stage {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    font-family: var(--font-family-body);
+    font-size: 2.2cqw;
+    color: var(--color-foreground);
+    background-color: var(--color-muted);
+    border: 0.08em solid var(--color-border);
+    border-radius: var(--fc-radius);
+  }
+
+  .fc-hs-body {
+    position: relative;
+    height: 100%;
+    animation: fc-hs-loop 10s linear infinite;
+  }
+
+  /* --- Left: the beat label and the history list --- */
+
+  .fc-hs-labels {
+    position: absolute;
+    top: 3em;
+    left: 2.5em;
+    width: 13.5em;
+    display: grid;
+    font-family: var(--font-family-heading);
+    font-size: 1.2em;
+    font-weight: var(--font-weight-heading);
+    line-height: var(--leading-2xl);
+    letter-spacing: var(--tracking-h5);
+  }
+
+  .fc-hs-label {
+    grid-area: 1 / 1;
+    opacity: 0;
+  }
+
+  .fc-hs-label-1 {
+    animation: fc-hs-label-1 10s step-end infinite;
+  }
+
+  .fc-hs-label-2 {
+    animation: fc-hs-label-2 10s step-end infinite;
+  }
+
+  .fc-hs-label-3 {
+    animation: fc-hs-label-3 10s step-end infinite;
+  }
+
+  .fc-hs-label-4 {
+    opacity: 1;
+    animation: fc-hs-label-4 10s step-end infinite;
+  }
+
+  .fc-hs-caption {
+    position: absolute;
+    top: 10em;
+    left: 2.5em;
+    font-size: 0.8em;
+    color: var(--color-muted-foreground);
+  }
+
+  .fc-hs-marker,
+  .fc-hs-row {
+    position: absolute;
+    left: 2.5em;
+    width: 16.5em;
+    height: var(--fc-row);
+  }
+
+  .fc-hs-marker {
+    top: 11.4em;
+    background-color: var(--color-card);
+    border: 0.08em solid var(--color-border);
+    border-radius: var(--fc-radius-md);
+    box-shadow: var(--shadow-sm);
+    animation: fc-hs-marker 10s step-end infinite;
+  }
+
+  .fc-hs-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: calc(var(--fc-spacing) * 3);
+  }
+
+  .fc-hs-row-1 {
+    top: 11.4em;
+  }
+
+  .fc-hs-row-2 {
+    top: calc(11.4em + var(--fc-row));
+    animation: fc-hs-row-2 10s step-end infinite;
+  }
+
+  .fc-hs-row-3 {
+    top: calc(11.4em + 2 * var(--fc-row));
+    animation: fc-hs-row-3 10s step-end infinite;
+  }
+
+  .fc-hs-row code,
+  .fc-hs-url,
+  .fc-hs-panel code {
+    font-family: var(--font-family-mono);
+  }
+
+  .fc-hs-row code {
+    font-size: 0.75em;
+  }
+
+  .fc-hs-body code {
+    padding: 0;
+    background: none;
+    border: 0;
+  }
+
+  .fc-hs-owners {
+    display: grid;
+    justify-items: end;
+  }
+
+  .fc-hs-pill {
+    grid-area: 1 / 1;
+    padding: 0.15em 0.6em;
+    font-size: 0.7em;
+    font-weight: var(--font-weight-strong);
+    border-radius: var(--radius-full);
+  }
+
+  .fc-hs-pill-zazz {
+    color: var(--color-primary-foreground);
+    background-color: var(--color-primary);
+  }
+
+  .fc-hs-pill-htmx {
+    color: var(--color-foreground);
+    border: 0.1em solid var(--color-foreground);
+  }
+
+  /* Row 2 is the swap's until htmx stamps it at the tab click */
+  .fc-hs-claimed {
+    opacity: 0;
+    animation: fc-hs-claimed 10s step-end infinite;
+  }
+
+  .fc-hs-claim {
+    animation: fc-hs-claim 10s step-end infinite;
+  }
+
+  /* --- Right: the browser --- */
+
+  .fc-hs-window {
+    position: absolute;
+    top: 3em;
+    left: 21em;
+    width: 21.5em;
+    height: 19.5em;
+    overflow: hidden;
+    background-color: var(--color-card);
+    border: 0.08em solid var(--color-border);
+    border-radius: var(--fc-radius);
+    box-shadow: var(--shadow-md);
+  }
+
+  .fc-hs-toolbar {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 2.6em;
+    border-bottom: 0.08em solid var(--color-border);
+  }
+
+  .fc-hs-back {
+    position: absolute;
+    top: 0.6em;
+    left: 0.8em;
+    width: 1.4em;
+    height: 1.4em;
+    display: grid;
+    place-items: center;
+    color: var(--color-foreground);
+    border-radius: var(--fc-radius-sm);
+    animation: fc-hs-back 10s linear infinite;
+  }
+
+  .fc-hs-back svg {
+    width: 0.9em;
+  }
+
+  .fc-hs-url {
+    position: absolute;
+    top: 0.6em;
+    left: 2.8em;
+    right: 0.8em;
+    height: 1.4em;
+    display: grid;
+    align-items: center;
+    padding-inline: 0.7em;
+    color: var(--color-muted-foreground);
+    background-color: var(--color-muted);
+    border-radius: var(--radius-full);
+  }
+
+  .fc-hs-url > span {
+    grid-area: 1 / 1;
+    font-size: 0.72em;
+    opacity: 0;
+  }
+
+  .fc-hs-url > .fc-hs-url-docs {
+    opacity: 1;
+    animation: fc-hs-url-docs 10s step-end infinite;
+  }
+
+  .fc-hs-url > .fc-hs-url-install {
+    animation: fc-hs-url-install 10s step-end infinite;
+  }
+
+  .fc-hs-url > .fc-hs-url-cdn {
+    animation: fc-hs-url-cdn 10s step-end infinite;
+  }
+
+  .fc-hs-page {
+    position: absolute;
+    inset: 2.6em 0 0;
+  }
+
+  .fc-hs-page > * {
+    position: absolute;
+    left: 1.2em;
+  }
+
+  .fc-hs-page-docs {
+    animation: fc-hs-page-docs 10s linear infinite;
+  }
+
+  .fc-hs-page-install {
+    opacity: 0;
+    animation: fc-hs-page-install 10s linear infinite;
+  }
+
+  .fc-hs-h {
+    top: 1em;
+    font-family: var(--font-family-heading);
+    font-size: 1.3em;
+    font-weight: var(--font-weight-heading);
+    letter-spacing: var(--tracking-h4);
+  }
+
+  .fc-hs-line {
+    top: 3.4em;
+    width: 16em;
+    height: 0.5em;
+    background-color: var(--color-muted);
+    border-radius: var(--radius-full);
+  }
+
+  .fc-hs-line-short {
+    top: 4.4em;
+    width: 11em;
+  }
+
+  /* Its center, (24.45em, 11.8em) on the stage, is the first press */
+  .fc-hs-link {
+    top: 5.6em;
+    width: 4.5em;
+    white-space: nowrap;
+    height: 1.2em;
+    display: grid;
+    align-items: center;
+    color: var(--color-primary);
+    font-weight: var(--font-weight-strong);
+  }
+
+  .fc-hs-tab {
+    top: 3.8em;
+    width: 3em;
+    height: 1.6em;
+    display: grid;
+    place-items: center;
+    font-size: 1em;
+    color: var(--color-muted-foreground);
+  }
+
+  .fc-hs-tab-cdn {
+    left: 4.6em;
+  }
+
+  /* Under the active tab: npm, then CDN (its center, (27.1em, 10.2em), is the second press) */
+  .fc-hs-indicator {
+    top: 5.4em;
+    width: 3em;
+    height: 0.15em;
+    background-color: var(--color-foreground);
+    border-radius: var(--radius-full);
+    animation: fc-hs-indicator 10s step-end infinite;
+  }
+
+  .fc-hs-panel {
+    top: 6.6em;
+    width: 19.1em;
+    height: 3.2em;
+    display: grid;
+    align-items: center;
+    padding-inline: 1em;
+    background-color: var(--color-muted);
+    border-radius: var(--fc-radius-md);
+  }
+
+  .fc-hs-panel code {
+    grid-area: 1 / 1;
+    font-size: 0.8em;
+  }
+
+  .fc-hs-npm {
+    animation: fc-hs-npm 10s step-end infinite;
+  }
+
+  .fc-hs-cdn {
+    opacity: 0;
+    animation: fc-hs-cdn 10s step-end infinite;
+  }
+
+  .fc-hs-cursor {
+    position: absolute;
+    top: 20em;
+    left: 31em;
+    width: 1.1em;
+    opacity: 0;
+    transform-origin: 0 0;
+    animation: fc-hs-cursor 10s linear infinite;
+  }
+
+  /* --- Timeline: link at 12%, tab at 36%, Back at 61% and 84% --- */
+
+  @keyframes fc-hs-loop {
+    0%,
+    100% {
+      opacity: 0;
+    }
+
+    3%,
+    96% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fc-hs-label-1 {
+    0% {
+      opacity: 1;
+    }
+
+    25% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fc-hs-label-2 {
+    0% {
+      opacity: 0;
+    }
+
+    25% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fc-hs-label-3 {
+    0% {
+      opacity: 0;
+    }
+
+    50% {
+      opacity: 1;
+    }
+
+    75% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fc-hs-label-4 {
+    0% {
+      opacity: 0;
+    }
+
+    75% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fc-hs-marker {
+    0% {
+      translate: 0 0;
+    }
+
+    12% {
+      translate: 0 var(--fc-row);
+    }
+
+    36% {
+      translate: 0 calc(2 * var(--fc-row));
+    }
+
+    61% {
+      translate: 0 var(--fc-row);
+    }
+
+    84% {
+      translate: 0 0;
+    }
+  }
+
+  @keyframes fc-hs-row-2 {
+    0% {
+      opacity: 0;
+    }
+
+    12% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fc-hs-row-3 {
+    0% {
+      opacity: 0;
+    }
+
+    36% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fc-hs-claimed {
+    0% {
+      opacity: 1;
+    }
+
+    36% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fc-hs-claim {
+    0% {
+      opacity: 0;
+    }
+
+    36% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fc-hs-url-docs {
+    0% {
+      opacity: 1;
+    }
+
+    12% {
+      opacity: 0;
+    }
+
+    84% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fc-hs-url-install {
+    0% {
+      opacity: 0;
+    }
+
+    12% {
+      opacity: 1;
+    }
+
+    36% {
+      opacity: 0;
+    }
+
+    61% {
+      opacity: 1;
+    }
+
+    84% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fc-hs-url-cdn {
+    0% {
+      opacity: 0;
+    }
+
+    36% {
+      opacity: 1;
+    }
+
+    61% {
+      opacity: 0;
+    }
+  }
+
+  /* The swap's crossfade (the view transition) */
+  @keyframes fc-hs-page-docs {
+    0%,
+    12% {
+      opacity: 1;
+    }
+
+    14%,
+    84% {
+      opacity: 0;
+    }
+
+    86%,
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fc-hs-page-install {
+    0%,
+    12% {
+      opacity: 0;
+    }
+
+    14%,
+    84% {
+      opacity: 1;
+    }
+
+    86%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fc-hs-indicator {
+    0% {
+      translate: 0 0;
+    }
+
+    36% {
+      translate: 3.4em 0;
+    }
+
+    61% {
+      translate: 0 0;
+    }
+  }
+
+  @keyframes fc-hs-npm {
+    0% {
+      opacity: 1;
+    }
+
+    36% {
+      opacity: 0;
+    }
+
+    61% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fc-hs-cdn {
+    0% {
+      opacity: 0;
+    }
+
+    36% {
+      opacity: 1;
+    }
+
+    61% {
+      opacity: 0;
+    }
+  }
+
+  /* The Back button darkens under each press */
+  @keyframes fc-hs-back {
+    0%,
+    58.5%,
+    60.5%,
+    81.5%,
+    83.5%,
+    100% {
+      background-color: transparent;
+    }
+
+    59%,
+    60%,
+    82%,
+    83% {
+      background-color: var(--color-muted);
+    }
+  }
+
+  /* The tip (top-left) lands on the link (24.45, 11.8), the CDN tab (27.1, 10.2),
+     then Back (22.5, 4.3), in stage em */
+  @keyframes fc-hs-cursor {
+    0% {
+      top: 20em;
+      left: 31em;
+      opacity: 0;
+      scale: 1;
+    }
+
+    3% {
+      top: 20em;
+      left: 31em;
+      opacity: 1;
+    }
+
+    8%,
+    26% {
+      top: 11.8em;
+      left: 24.45em;
+    }
+
+    10%,
+    11.5%,
+    33.5%,
+    35%,
+    58.5%,
+    60%,
+    81.5%,
+    83% {
+      scale: 1;
+    }
+
+    10.5%,
+    34%,
+    59%,
+    82% {
+      scale: 0.8;
+    }
+
+    32%,
+    51% {
+      top: 10.2em;
+      left: 27.1em;
+    }
+
+    57%,
+    96% {
+      top: 4.3em;
+      left: 22.5em;
+      opacity: 1;
+    }
+
+    100% {
+      top: 4.3em;
+      left: 22.5em;
+      opacity: 0;
+      scale: 1;
+    }
+  }
+
+  /* Reduced motion: hold the second beat, where htmx has taken the entry */
+  @media (prefers-reduced-motion: reduce) {
+    .fc-hs-body,
+    .fc-hs-body * {
+      animation: none !important;
+    }
+
+    .fc-hs-cursor {
+      display: none;
+    }
+
+    .fc-hs-label-2 {
+      opacity: 1;
+    }
+
+    .fc-hs-label-4 {
+      opacity: 0;
+    }
+
+    .fc-hs-marker {
+      translate: 0 calc(2 * var(--fc-row));
+    }
+
+    .fc-hs-page-docs {
+      opacity: 0;
+    }
+
+    .fc-hs-page-install {
+      opacity: 1;
+    }
+
+    .fc-hs-url > .fc-hs-url-docs {
+      opacity: 0;
+    }
+
+    .fc-hs-url > .fc-hs-url-cdn {
+      opacity: 1;
+    }
+
+    .fc-hs-indicator {
+      translate: 3.4em 0;
+    }
+
+    .fc-hs-npm {
+      opacity: 0;
+    }
+
+    .fc-hs-cdn {
+      opacity: 1;
+    }
+  }
+</style>

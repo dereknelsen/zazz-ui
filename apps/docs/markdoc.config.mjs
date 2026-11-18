@@ -89,6 +89,10 @@ export default defineMarkdocConfig({
       render: component("./src/components/clips/ToastClip.astro"),
       selfClosing: true,
     },
+    "history-clip": {
+      render: component("./src/components/clips/HistoryClip.astro"),
+      selfClosing: true,
+    },
     callout: {
       render: component("./src/components/Callout.astro"),
       attributes: {

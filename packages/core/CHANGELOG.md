@@ -1,5 +1,14 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.15.0 (2026-11-18)
+
+### base
+
+- **BREAKING** With `data-ui-navigation="swap"`, Back and Forward swap only between entries the swap made. An entry the page pushed with `history.pushState()` (htmx's `hx-push-url` and `hx-boost`, a client router) is left to the page, going into it and coming out of it, and so is any entry a script gave `history.state` (htmx stamps the first entry it swaps on with `{ htmx: true }`). Swapping those raced the library's own restore. A page that pushes URLs without restoring them on `popstate` must now restore them itself.
+- `data-ui-navigation="off"` on an ancestor of a link or form leaves its navigation to the browser (a full load, unless another library handles the click first). The nearest `data-ui-navigation` ancestor decides, so `swap` inside an opted-out region opts back in. It needs `NavigateEvent.sourceElement`; without it the attribute has no effect.
+- New `Zazz.refresh(element)`, also `window.Zazz` and a named export of the entry module: runs the refresh hooks (reveal, attribute-form carousels, select-all checkboxes, sticky states, the drawer page indent) over markup another library inserted, the element itself included. With no argument it refreshes the whole body. For htmx: `htmx.onLoad((el) => Zazz.refresh(el))`.
+- The swap remembers its history entries in `sessionStorage` (`zazz:navigation-entries`), so Back and Forward between swapped pages still swap after a reload.
+
 ## 0.14.3 (2026-11-18)
 
 ### base

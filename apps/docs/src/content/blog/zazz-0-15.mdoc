@@ -1,0 +1,51 @@
+---
+title: "Zazz 0.15 alpha"
+description: "Zazz 0.15 alpha lets in-page navigation share a page with htmx and client routers: an opt-out for the regions they drive, Back and Forward left to whoever made the entry, and Zazz.refresh for markup they insert."
+date: 2026-11-18
+draft: false
+tags: ["release"]
+---
+
+**Zazz 0.15 alpha is a small release. In-page navigation (`data-ui-navigation="swap"`) can now share a page with htmx, Turbo, or a client router, and the two no longer fight over a click or the Back button. One change breaks pages that push their own URLs; the migration note at the end covers it.**
+
+## Two handlers, one Back button
+
+The swap listens for the browser's `navigate` event, which link clicks, form submits, Back, and Forward all fire. It already ignored a page pushing its own URL, but through 0.14 it swapped every Back and Forward within the page, including the ones htmx had pushed. htmx restores those entries itself, so pressing Back redrew the page twice, and whichever finished last won.
+
+## Back and Forward have one owner
+
+In 0.15 each history entry belongs to whoever made it. Entries the swap created, by loading a page or swapping one in, are the swap's. Entries the page pushed with `history.pushState()` are the page's, and the swap leaves Back and Forward into or out of them alone. The swap keeps its list in `sessionStorage`, so it still recognizes its entries after a reload.
+
+An entry can also change hands. htmx stamps the entry it first swaps on with `history.state` (`{ htmx: true }`) so it can restore it later, and the swap steps aside from any entry a script has written state to. htmx restores those by fetching the page again, so persisted elements don't survive that one navigation.
+
+{% history-clip /%}
+
+## Opt a region out
+
+`data-ui-navigation="off"` on any ancestor of a link or form keeps the swap out of it. The navigation goes to the browser, or to the library if it handles the click first. The nearest `data-ui-navigation` ancestor decides, so `data-ui-navigation="swap"` inside an opted-out region opts back in.
+
+```html
+<nav data-ui-navigation="off">
+  <a href="/inbox">Inbox</a>
+</nav>
+```
+
+The opt-out reads `NavigateEvent.sourceElement`. In a browser without it, the attribute does nothing. Boosted htmx links still work there, because htmx cancels the click before it becomes a navigation.
+
+## Zazz.refresh
+
+After a swap, Zazz re-scans the new body for the parts that aren't custom elements: reveal, attribute-form carousels, select-all checkboxes, sticky states, and the drawer page indent. Markup another library inserted never got that scan. Now you can ask for one:
+
+```html
+<script type="module">
+  htmx.onLoad((element) => Zazz.refresh(element));
+</script>
+```
+
+`Zazz.refresh(element)` covers the element and everything inside it. With no argument it covers the whole body. It's also `window.Zazz`, and a named export of the entry module. A select-all checkbox only counts the boxes inside the element you pass, so when htmx replaces the rows under a header checkbox, pass the table.
+
+The [navigation reference](/api/javascript/navigation/#alongside-htmx-and-client-routers) has the details.
+
+## Migrating
+
+- If a page on `data-ui-navigation="swap"` calls `history.pushState()` and doesn't listen for `popstate`, Back to those entries used to fetch and swap the page. Now it changes the URL and leaves the page as it is. Restore the page in a `popstate` listener, or navigate with a link (or `navigation.navigate()`) so the swap makes the entry.
