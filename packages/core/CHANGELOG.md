@@ -1,5 +1,11 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## 0.14.3 (2026-11-18)
+
+### base
+
+- `findHeadBlock` and the head-block comparison in `head.ts` (behind the language server's head-block fixes and the CLI) no longer use regexes that CodeQL flags as polynomial on long whitespace runs. Results are unchanged.
+
 ## 0.14.2 (2026-11-17)
 
 ### drawer
