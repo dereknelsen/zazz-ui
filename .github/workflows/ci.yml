@@ -49,6 +49,8 @@ jobs:
           FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
       - run: vp install
       - run: pnpm exec playwright install --with-deps chromium firefox
+      # bundle.test.ts reads dist/, which only the build writes
+      - run: vp run --no-cache core#build
       - run: vp run core#test
         env:
           ZAZZ_BROWSERS: firefox

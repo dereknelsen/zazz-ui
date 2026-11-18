@@ -11,6 +11,21 @@ const browsers: Browser[] = [
   ...((process.env.ZAZZ_BROWSERS?.split(",").filter(Boolean) ?? []) as Browser[]),
 ];
 
+// Headless Firefox on Linux (CI) reports no hovering, fine pointer, so every
+// hover tier and the touch floor misbehave, and it draws 15px classic
+// scrollbars that narrow every viewport-wide box. These prefs give it the
+// mouse and overlay scrollbars that Chromium, WebKit, and macOS Firefox have.
+// Capability bits: 2 is a fine pointer, 4 is hover. `accessibility.tabfocus: 7`
+// lets Tab reach every control, as Chromium's does (macOS Firefox's default
+// stops only at text fields).
+const firefoxUserPrefs = {
+  "accessibility.tabfocus": 7,
+  "ui.primaryPointerCapabilities": 6,
+  "ui.allPointerCapabilities": 6,
+  "ui.useOverlayScrollbars": 1,
+  "widget.gtk.overlay-scrollbars.enabled": true,
+};
+
 // ZAZZ_SKIP_BROWSER=1 runs only the unit project — deliberately, never silently.
 const skipBrowser = process.env.ZAZZ_SKIP_BROWSER === "1";
 if (skipBrowser) console.warn("[zazz] ZAZZ_SKIP_BROWSER=1: browser tests are not running.");
@@ -66,7 +81,11 @@ export default defineConfig({
                   enabled: true,
                   headless: true,
                   provider: playwright(),
-                  instances: browsers.map((browser) => ({ browser })),
+                  instances: browsers.map((browser) =>
+                    browser === "firefox"
+                      ? { browser, provider: playwright({ launchOptions: { firefoxUserPrefs } }) }
+                      : { browser },
+                  ),
                   commands: { emulateTouch, mouseDown, mouseUp },
                 },
               },
