@@ -120,6 +120,26 @@ Then, with `agent-browser` on the harness page (`agent-browser eval`):
 
 6. **The build keeps the animations**: after `vp run docs#build`, count the clip's named animations in `apps/docs/dist/_astro/*.css` and compare with the source.
 
+### Then check the built post page
+
+The harness loads only the kit's CSS, so it can't show what the site adds, and a clip that passes there can still break on the post (the 0.15 clip did):
+
+- **Astro scoping** puts `[data-astro-cid-…]` on every compound selector, so `.a > *` outranks a later `.b`. Never lay out with a child or descendant catch-all; give each element its own single-class rule.
+- **The site's fonts** (a wide pixel heading face, Areal for mono) take more room than the kit defaults. Stack text in flow rather than at fixed `top`s, so a wrapped label pushes content down.
+- **Prose styles** apply to `code`, `b`, and the like inside a post. Use spans.
+
+Set the post to `draft: false` locally (a draft is not built as a page), run `vp run --no-cache docs#build`, then from the repo root:
+
+```bash
+vp node $S/built.mjs --post zazz-0-15 --prefix fc-hs --clip HistoryClip --out $OUT/built \
+  --frames 10,45,59,70,92 \
+  --hits 10.5:.fc-hs-link,34:.fc-hs-tab-cdn,59:.fc-hs-back \
+  --apart ".fc-hs-label|.fc-hs-caption,.fc-hs-tab-npm|.fc-hs-tab-cdn"
+$S/sheet.sh $OUT/built HistoryClip sheet.png
+```
+
+It serves `apps/docs/dist` itself and loads the post in Chromium, WebKit, and Firefox, light and dark. It fails on a pointer more than 2px off a press target (`--hits`, tip or `--fingertip` center), on visible boxes that overlap (`--apart`, checked at every frame; list grouped labels by their shared class so each one is checked), on horizontal scroll at 390px, and on anything running or a visible pointer under reduced motion. Look at its contact sheet too. Done when the script prints `All built-page checks passed.` and the frames read in every engine.
+
 ## Deliver
 
-Report the flow, the beat timeline, where each number and label came from, any simplification, and the check results, with the contact sheet's path. Write the post's prose around the clip with the `humanizer` skill.
+Report the flow, the beat timeline, where each number and label came from, any simplification, and the check results (harness and built page), with both contact sheets' paths. Write the post's prose around the clip with the `humanizer` skill.
