@@ -47,7 +47,7 @@ const tip = `tb-lock-${field ?? `all-${section}`}-tip`;
     popover="hint"
     style="--text-transform: none"
   >
-    {section ? "Keep these when generating" : "Keep when generating"}
+    {section ? `Lock all ${section} styles` : "Lock style"}
     <span data-tooltip-slot="arrow" aria-hidden="true"></span>
   </div>
 </ui-tooltip>

@@ -70,25 +70,12 @@ export default defineConfig({
     },
     {
       provider: fontProviders.local(),
-      name: "Geist Pixel",
-      cssVariable: "--font-geist-pixel",
+      name: "Funnel Display",
+      cssVariable: "--font-funnel-display",
       options: {
         variants: [
           {
-            src: ["./src/assets/fonts/GeistPixelVF.woff2"],
-          },
-        ],
-      },
-    },
-    {
-      provider: fontProviders.local(),
-      name: "Everyday",
-      cssVariable: "--font-everyday",
-      options: {
-        variants: [
-          {
-            src: ["./src/assets/fonts/Everyday_Ample_Black.woff2"],
-            weight: "100 900",
+            src: ["./src/assets/fonts/FunnelDisplayVF.woff2"],
           },
         ],
       },

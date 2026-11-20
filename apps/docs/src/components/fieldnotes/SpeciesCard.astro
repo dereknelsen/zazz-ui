@@ -1,5 +1,5 @@
 ---
-import Icon from '../Icon.astro';
+import { X } from '@lucide/astro';
 import { RARITY_VARIANT, type Species } from '../../lib/fieldnotes.ts';
 import Avatars from './Avatars.astro';
 import Card from './Card.astro';
@@ -176,6 +176,6 @@ const dialog = `fn-species-${s.slug}`;
     command='close'
     aria-label='Close'
   >
-    <Icon name='xmark' aria-hidden='true' />
+    <X aria-hidden='true' />
   </button>
 </dialog>

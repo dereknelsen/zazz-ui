@@ -16,16 +16,15 @@
        Body and code are Areal, whose axes are MONO 0–100 (proportional → fully
        monospaced), wght 400–700, slnt, DRKM: body is the proportional default at
        regular weight. */
-    --font-family-heading: var(--font-everyday), var(--font-geist-pixel), var(--font-sans-fallback);
+    --font-family-heading: var(--font-funnel-display), var(--font-sans-fallback);
     --font-family-body: var(--font-areal), var(--font-sans-fallback);
     --font-family-mono: var(--font-areal), var(--font-mono-fallback);
-    --font-settings-heading: "ELSH" 0;
     --font-settings-body: "MONO" 0;
     --font-feature-body: "ss01" on; /* Areal's single-story a */
     --font-settings-mono: "MONO" 100;
-    --font-weight-heading: 700;
+    --font-weight-heading: 500;
 
-    --leading-heading-multiplier: 1.35;
+    --leading-heading-multiplier: 1.1;
     --tracking-eyebrow: 0.15em;
 
     --radius-multiplier: 0.35;

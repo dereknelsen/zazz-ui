@@ -215,6 +215,9 @@ catalogs:
     '@lezer/highlight':
       specifier: ^1.2.5
       version: 1.2.5
+    '@lucide/astro':
+      specifier: ^1.76.0
+      version: 1.76.0
     '@npmcli/config':
       specifier: ^11.2.0
       version: 11.2.0
@@ -266,6 +269,9 @@ catalogs:
     jiti:
       specifier: ^2.7.0
       version: 2.7.0
+    lucide-static:
+      specifier: ^1.76.0
+      version: 1.76.0
     node-diff3:
       specifier: ^3.2.1
       version: 3.2.1
@@ -385,6 +391,9 @@ importers:
       '@lezer/highlight':
         specifier: 'catalog:'
         version: 1.2.5
+      '@lucide/astro':
+        specifier: 'catalog:'
+        version: 1.76.0(astro@7.4.7(@azure/identity@4.14.1(supports-color@10.2.2))(@types/node@26.6.6)(@volar/typescript@2.4.30(typescript@6.0.3))(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.1))
       '@zazz-ui/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -397,6 +406,9 @@ importers:
       astro-pagefind:
         specifier: 'catalog:'
         version: 2.0.1(astro@7.4.7(@azure/identity@4.14.1(supports-color@10.2.2))(@types/node@26.6.6)(@volar/typescript@2.4.30(typescript@6.0.3))(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.1))
+      lucide-static:
+        specifier: 'catalog:'
+        version: 1.76.0
     devDependencies:
       '@astrojs/check':
         specifier: 'catalog:'
@@ -1257,6 +1269,11 @@ packages:
 
   '@lezer/lr@1.4.12':
     resolution: {integrity: sha512-On9HU4oMMiHPMkQDgoTnGahjgG5n/MkN38CgG77sMraKLL+3JBbeQNi1FcCXV9QRqwF9/BUXP3caHyJC1fBOTQ==}
+
+  '@lucide/astro@1.76.0':
+    resolution: {integrity: sha512-+jgka4XCCdzb5LOLN2tDRH5Y1lut84T1BaWkZzzt49c0ZaXfCeDF2nqxl5vrnI+L4kByPlQOz+yu9jeqjZhwjw==}
+    peerDependencies:
+      astro: ^4 || ^5 || ^6 || ^7
 
   '@marijn/find-cluster-break@1.0.4':
     resolution: {integrity: sha512-Wy0V7+SGUjnF9/TkiM1hKVDPj7jKXduPNboMVtHTA8dySMURWqfg/JZ9E2Sq8JgSJmkl7k7Qe9FLeMSrSraWmQ==}
@@ -3654,6 +3671,9 @@ packages:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
 
+  lucide-static@1.76.0:
+    resolution: {integrity: sha512-8izOkC4xBdjtiIF641S1a21rEZP2DXiAcaRFYMXxwxnaFmgUUqLgelmRMxrNenjuW2pUJZIXEpOMuUcVyadF5Q==}
+
   lz-string@1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
     hasBin: true
@@ -5739,6 +5759,10 @@ snapshots:
   '@lezer/lr@1.4.12':
     dependencies:
       '@lezer/common': 1.5.5
+
+  '@lucide/astro@1.76.0(astro@7.4.7(@azure/identity@4.14.1(supports-color@10.2.2))(@types/node@26.6.6)(@volar/typescript@2.4.30(typescript@6.0.3))(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.1))':
+    dependencies:
+      astro: 7.4.7(@azure/identity@4.14.1(supports-color@10.2.2))(@types/node@26.6.6)(@volar/typescript@2.4.30(typescript@6.0.3))(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.1)
 
   '@marijn/find-cluster-break@1.0.4': {}
 
@@ -8015,6 +8039,8 @@ snapshots:
   lru-cache@6.0.0:
     dependencies:
       yallist: 4.0.0
+
+  lucide-static@1.76.0: {}
 
   lz-string@1.5.0: {}
 

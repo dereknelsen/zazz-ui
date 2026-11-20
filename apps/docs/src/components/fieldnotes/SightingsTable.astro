@@ -5,7 +5,7 @@
  * already in that element's opening state (newest first, the first page shown,
  * the rest `hidden`), so nothing moves when it upgrades.
  */
-import Icon from '../Icon.astro';
+import { ArrowUpDown } from '@lucide/astro';
 import {
   STATUS_VARIANT,
   bySlug,
@@ -80,7 +80,7 @@ const formatDate = (date: string) =>
               type='button'
               style='--ml: -2'
             >
-              Species <Icon name='sort' aria-hidden='true' />
+              Species <ArrowUpDown aria-hidden='true' />
             </button>
           </th>
           <th>Location</th>
@@ -92,7 +92,7 @@ const formatDate = (date: string) =>
               type='button'
               style='--ml: -2'
             >
-              Date <Icon name='sort' aria-hidden='true' />
+              Date <ArrowUpDown aria-hidden='true' />
             </button>
           </th>
           <th>Observer</th>

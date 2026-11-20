@@ -48,9 +48,8 @@ const ogImage = new URL(og.src, site.url);
 <html lang="en" data-ui-navigation="swap">
   <head>
     <Fragment set:html={siteHead()} />
-    <Font cssVariable="--font-areal" />
-    <Font cssVariable="--font-everyday" preload />
-    <Font cssVariable="--font-geist-pixel" preload />
+    <Font cssVariable="--font-areal" preload />
+    <Font cssVariable="--font-funnel-display" preload />
     <style is:inline set:html={stageReset}></style>
     <title>{pageTitle}</title>
     <meta name="description" content={description} />

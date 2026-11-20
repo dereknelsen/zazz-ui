@@ -3,15 +3,15 @@
  * Badges earned on the record, adapted from the badge fragments: earned ones
  * alternate the secondary and tertiary variants, the next ones wait in outline.
  */
-import Icon from '../Icon.astro';
+import { AlarmClock, CircleCheck, Lock, Moon, PawPrint, Share2 } from '@lucide/astro';
 import Card from './Card.astro';
 import CardHeader from './CardHeader.astro';
 
 const earned = [
-  { label: 'Dodo finder', icon: 'paw', variant: 'secondary' },
-  { label: 'First confirmed', icon: 'circle-check', variant: 'tertiary' },
-  { label: 'Early riser', icon: 'alarm-clock', variant: 'secondary' },
-  { label: 'Night watch', icon: 'moon', variant: 'tertiary' },
+  { label: 'Dodo finder', icon: PawPrint, variant: 'secondary' },
+  { label: 'First confirmed', icon: CircleCheck, variant: 'tertiary' },
+  { label: 'Early riser', icon: AlarmClock, variant: 'secondary' },
+  { label: 'Night watch', icon: Moon, variant: 'tertiary' },
 ];
 const next = ['Island hopper', 'Full life list'];
 ---
@@ -33,10 +33,10 @@ const next = ['Island hopper', 'Full life list'];
         --gap: 2;
       '>
       {
-        earned.map(({ label, icon, variant }) => (
+        earned.map(({ label, icon: Icon, variant }) => (
           <li>
             <span data-ui='badge' data-badge-variant={variant}>
-              <Icon name={icon} aria-hidden='true' />
+              <Icon aria-hidden='true' />
               {label}
             </span>
           </li>
@@ -58,7 +58,7 @@ const next = ['Island hopper', 'Full life list'];
         next.map((label) => (
           <li>
             <span data-ui='badge' data-badge-variant='outline'>
-              <Icon name='lock' aria-hidden='true' />
+              <Lock aria-hidden='true' />
               {label}
             </span>
           </li>
@@ -67,6 +67,6 @@ const next = ['Island hopper', 'Full life list'];
     </ul>
   </div>
   <button data-ui='button' data-button-variant='tertiary' type='button'>
-    <Icon name='share-nodes' aria-hidden='true' /> Share badges
+    <Share2 aria-hidden='true' /> Share badges
   </button>
 </Card>
