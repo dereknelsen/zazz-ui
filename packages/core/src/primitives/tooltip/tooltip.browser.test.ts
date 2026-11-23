@@ -7,7 +7,10 @@
  */
 
 import { describe, expect, it } from "vite-plus/test";
+import { commands, server } from "vite-plus/test/browser/context";
 import { mount, style, useCss, useKit } from "../../../test/browser.ts";
+
+const held = commands as unknown as { emulateTouch(enabled: boolean): Promise<void> };
 
 const TIP = (
   id: string,
@@ -132,4 +135,27 @@ describe("tooltip opening fade", () => {
     expect(style(content, "transition-delay")).toBe("0.034s, 0s, 0s, 0s");
     content.hidePopover();
   });
+});
+
+describe("tooltip on a touch screen", () => {
+  useKit();
+
+  // Touch emulation is a CDP session: Chromium only.
+  it.skipIf(server.browser !== "chromium")(
+    "hides the content but keeps the trigger it wraps",
+    async () => {
+      await held.emulateTouch(true);
+      try {
+        const root = mount(`<ui-tooltip>${TIP("h")}</ui-tooltip>`);
+        const content = root.querySelector<HTMLElement>("[data-tooltip-slot='content']")!;
+        const trigger = root.querySelector("button")!;
+        expect(trigger.getBoundingClientRect().width).toBeGreaterThan(0);
+        content.showPopover();
+        expect(style(content, "display")).toBe("none");
+        content.hidePopover();
+      } finally {
+        await held.emulateTouch(false);
+      }
+    },
+  );
 });

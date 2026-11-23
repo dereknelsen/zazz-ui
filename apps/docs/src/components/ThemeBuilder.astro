@@ -338,7 +338,6 @@ const packScript = await inlineScript(
     <!-- MOBILE THEME BUILDER BAR -->
     <ui-card
       data-card-variant='outline'
-      data-theme='dark'
       data-theme-bar
       style='
         --display: grid;
@@ -614,18 +613,18 @@ const packScript = await inlineScript(
     <!-- DESKTOP THEME BUILDER PANEL -->
     <div
       data-theme-panel
+      data-theme='dark'
+
       style='
         --display: none;
         --display--lg: flex-col;
         --p--lg: 8;
         --h: 100%;
-        --overflow: clip;
       '
     >
       <form
         class='theme-builder__form'
         aria-labelledby='tb-title'
-        data-theme='dark'
         style='
           --display: flex-col;
           --justify: start;
@@ -633,10 +632,8 @@ const packScript = await inlineScript(
           --h: 100%;
           --text: var(--color-card-foreground);
           --bg: var(--color-card);
-          --border: 1;
-          --elevation: 5;
+          --elevation--lg: 5;
           --radius: var(--ui-card-radius);
-          --overflow: hidden;
         '
       >
         <header
@@ -813,13 +810,13 @@ const packScript = await inlineScript(
               <ThemeLock
                 section='palette'
                 label='all palette fields'
-                size='icon-sm'
               />
               <Icon name='angle-down' size={16} data-accordion-slot='marker' aria-hidden='true' />
             </summary>
             <div
               style='
                 --display: grid;
+                --template-cols: minmax(0, 1fr);
                 --px: 0;
                 --px--lg: 5;
                 --py: 3;
@@ -995,13 +992,13 @@ const packScript = await inlineScript(
               <ThemeLock
                 section='typeset'
                 label='all typeset fields'
-                size='icon-sm'
               />
               <Icon name='angle-down' size={16} data-accordion-slot='marker' aria-hidden='true' />
             </summary>
             <div
               style='
                 --display: grid;
+                --template-cols: minmax(0, 1fr);
                 --px: 0;
                 --px--lg: 5;
                 --py: 3;
@@ -1019,6 +1016,7 @@ const packScript = await inlineScript(
                         --display: flex;
                         --items: center;
                         --gap: 2;
+                        --min-w: 0;
                       '
                     >
                       <ui-combobox
@@ -1233,13 +1231,13 @@ const packScript = await inlineScript(
               <ThemeLock
                 section='styles'
                 label='all style fields'
-                size='icon-sm'
               />
               <Icon name='angle-down' size={16} data-accordion-slot='marker' aria-hidden='true' />
             </summary>
             <div
               style='
                 --display: grid;
+                --template-cols: minmax(0, 1fr);
                 --px: 0;
                 --px--lg: 5;
                 --py: 3;
@@ -1318,7 +1316,7 @@ const packScript = await inlineScript(
                     data-default={defaults.radius}
                     data-theme-number='radius'
                   />
-                  <ThemeLock field='radius' label='radius' size='icon-sm' />
+                  <ThemeLock field='radius' label='radius' />
                 </div>
               </div>
 
@@ -1363,7 +1361,6 @@ const packScript = await inlineScript(
                   <ThemeLock
                     field='corner-shape'
                     label='corner shape'
-                    size='icon-sm'
                   />
                 </div>
                 <div data-field-slot='description'>
@@ -1397,13 +1394,13 @@ const packScript = await inlineScript(
               <ThemeLock
                 section='effects'
                 label='all effect fields'
-                size='icon-sm'
               />
               <Icon name='angle-down' size={16} data-accordion-slot='marker' aria-hidden='true' />
             </summary>
             <div
               style='
                 --display: grid;
+                --template-cols: minmax(0, 1fr);
                 --px: 0;
                 --px--lg: 5;
                 --py: 3;
@@ -1492,7 +1489,6 @@ const packScript = await inlineScript(
                   <ThemeLock
                     field='card-elevation'
                     label='card elevation'
-                    size='icon-sm'
                   />
                 </div>
                 <div data-field-slot='description'>
@@ -1543,7 +1539,6 @@ const packScript = await inlineScript(
                   <ThemeLock
                     field='shadow-angle'
                     label='shadow angle'
-                    size='icon-sm'
                   />
                 </div>
                 <div data-field-slot='description'>
@@ -1596,7 +1591,6 @@ const packScript = await inlineScript(
                       <ThemeLock
                         field={`shadow-${key}`}
                         label={`shadow ${label.toLowerCase()}`}
-                        size='icon-sm'
                       />
                     </div>
                     <div data-field-slot='description'>
@@ -1621,7 +1615,6 @@ const packScript = await inlineScript(
       --place-content: stretch;
       --min-h: 100%;
       --bg: var(--color-background);
-      --overflow: clip;
     '
   >
     <div

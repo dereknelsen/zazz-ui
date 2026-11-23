@@ -1,5 +1,11 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## Unreleased
+
+### tooltip
+
+- On a touch screen the tooltip hides only its content, not the whole `ui-tooltip`. Since 0.11.0 the trigger inside it was hidden too, so an icon button with a tooltip disappeared on phones.
+
 ## 0.15.0 (2026-11-18)
 
 ### base

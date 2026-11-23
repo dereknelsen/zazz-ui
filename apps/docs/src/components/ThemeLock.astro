@@ -15,20 +15,18 @@ interface Props {
   section?: string;
   /** What the lock holds, lowercase: "primary color", "all color fields". */
   label: string;
-  /** `icon-sm` beside a slider, which is thinner than an input. */
-  size?: "icon" | "icon-sm";
 }
-const { field, section, label, size = "icon" } = Astro.props;
+const { field, section, label } = Astro.props;
 const tip = `tb-lock-${field ?? `all-${section}`}-tip`;
 ---
 
 <!-- In a summary the lock sits at the end of the row, beside the chevron. -->
-<ui-tooltip style={section ? "--display: inline-flex; --ml: auto; --mr: 2" : "--display: inline-flex"}>
+<ui-tooltip style={section ? "--display: inline-flex; --mr: 2;" : "--display: inline-flex;"}>
   <button
     class="theme-builder__lock"
     data-ui="button"
-    data-button-size={size}
-    data-button-variant="ghost"
+    data-button-size="icon"
+    data-button-variant="outline"
     type="button"
     aria-pressed="false"
     aria-label={`Lock ${label}`}

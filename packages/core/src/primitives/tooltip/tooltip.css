@@ -19,8 +19,9 @@
  *             logical insets
  * @uses       border-*: inherit — the arrow's two outer edges take the content's computed
  *             border (utilities included), so it stays outlined over a matching background
- * @uses       @media not (hover: hover) — hidden on touch screens (no hover to show it, and a
- *             tap would cover the trigger's own action); keep essential text visible
+ * @uses       @media not (hover: hover) — the content is hidden on touch screens (no hover to
+ *             show it, and a tap would cover the trigger's own action); the trigger stays.
+ *             Keep essential text visible
  * @tokens     --ui-tooltip-* (@layer variables; read on the content slot)
  */
 
@@ -377,8 +378,9 @@
     --_tooltip-arrow-turn: -45deg;
   }
 
+  /* Only the content: the wrapper holds the trigger, which stays. */
   @media not (hover: hover) {
-    :where(ui-tooltip, [data-ui~="tooltip"]) {
+    :where(ui-tooltip, [data-ui~="tooltip"]) [data-tooltip-slot~="content"] {
       display: none !important;
     }
   }

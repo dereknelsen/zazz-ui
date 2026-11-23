@@ -1216,7 +1216,7 @@
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners",
           ":dir(rtl): inline-side origins, slide-in, and arrow turn mirror; the arrow uses logical insets",
           "border-*: inherit — the arrow's two outer edges take the content's computed border (utilities included), so it stays outlined over a matching background",
-          "@media not (hover: hover) — hidden on touch screens (no hover to show it, and a tap would cover the trigger's own action); keep essential text visible"
+          "@media not (hover: hover) — the content is hidden on touch screens (no hover to show it, and a tap would cover the trigger's own action); the trigger stays. Keep essential text visible"
         ],
         "tokens": [
           "--ui-tooltip-* (@layer variables; read on the content slot)"

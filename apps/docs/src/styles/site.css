@@ -220,6 +220,15 @@
   /* In the narrow-screen sheet the form shows one section, opened from the bar:
      the others hide, and the shown one drops its accordion row and border. */
   .theme-builder__form--sheet {
+    /* The drawer body scrolls here, so the accordion does not. As a scroll
+       container, under its scroll-fade mask, or through the section's clipped
+       ::details-content (below), it would cut off the fields' focus rings
+       where they sit flush with its edges. */
+    & > ui-accordion {
+      overflow: visible;
+      --ui-scroll-fade-mask: none;
+    }
+
     & .theme-builder__section:not(.theme-builder__section--active) {
       display: none;
     }
@@ -231,7 +240,9 @@
         display: none;
       }
 
+      /* Always open here, so nothing animates and nothing needs clipping. */
       &::details-content {
+        overflow: visible;
         transition: none;
       }
     }
