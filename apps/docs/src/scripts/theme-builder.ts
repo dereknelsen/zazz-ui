@@ -31,7 +31,8 @@
  * a locked control keeps its value through a randomize. What is drawn fresh
  * still fits what was kept: the accents harmonize with a locked primary, an
  * unlocked font pairs with a locked one, and the type scales stay in order. A
- * section's summary has a lock for all of its controls. Locks last until the
+ * section has a lock for all of its controls (`data-theme-lock-all`, named for
+ * its `data-theme-section`). Locks last until the
  * page is left; they are not part of the share code, and a reset ignores them.
  *
  * A custom element because swap navigation never runs a swapped-in page's
@@ -331,13 +332,16 @@ class ThemeBuilder extends ZazzElement {
       if (field && !locked(field.name)) put(field, value);
     };
     const corners = CSS.supports("corner-shape", "round");
+    /** The section a lock-all button holds: it sits beside its <details>, not inside. */
+    const sectionOf = (lockAll: HTMLElement) =>
+      this.querySelector(`details[data-theme-section="${lockAll.dataset.themeLockAll}"]`);
     /** A section's lock is pressed while every lock in the section is. */
     const syncSectionLocks = () => {
       for (const all of this.querySelectorAll<HTMLElement>("[data-theme-lock-all]")) {
         // The corner-shape field is hidden where the property is unsupported: its lock doesn't count.
-        const locks = [
-          ...(all.closest("details")?.querySelectorAll("[data-theme-lock]") ?? []),
-        ].filter((l) => corners || !l.closest(".theme-builder__corner-shape"));
+        const locks = [...(sectionOf(all)?.querySelectorAll("[data-theme-lock]") ?? [])].filter(
+          (l) => corners || !l.closest(".theme-builder__corner-shape"),
+        );
         all.setAttribute(
           "aria-pressed",
           String(locks.length > 0 && locks.every((l) => l.getAttribute("aria-pressed") === "true")),
@@ -589,10 +593,8 @@ class ThemeBuilder extends ZazzElement {
         }
         const lockAll = target.closest<HTMLElement>("[data-theme-lock-all]");
         if (lockAll) {
-          // The button sits in the section's summary: locking must not fold the section.
-          event.preventDefault();
           const on = lockAll.getAttribute("aria-pressed") !== "true";
-          for (const l of lockAll.closest("details")?.querySelectorAll("[data-theme-lock]") ?? []) {
+          for (const l of sectionOf(lockAll)?.querySelectorAll("[data-theme-lock]") ?? []) {
             l.setAttribute("aria-pressed", String(on));
           }
           lockAll.setAttribute("aria-pressed", String(on));

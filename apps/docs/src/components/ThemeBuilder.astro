@@ -10,7 +10,8 @@
  * copy as a `:root { … }` block of the variables that changed. The card
  * elevation slider restyles the preview but is never part of the copied CSS.
  * Generate randomizes every control but the ones whose lock is pressed
- * (ThemeLock.astro); a section's summary holds a lock for all of its fields.
+ * (ThemeLock.astro); each section has a lock for all of its fields, stacked
+ * over the start of its summary row.
  *
  * Behavior lives in `<theme-builder>` (scripts/theme-builder.ts) and in
  * `<fieldnotes-demo>` / `<fieldnotes-sightings>` (scripts/fieldnotes.ts). The script at the end
@@ -433,7 +434,7 @@ const packScript = await inlineScript(
           command='show-modal'
           commandfor='tb-css'
         >
-          <Code size={16} aria-hidden='true' /> Preview
+          <Code size={16} aria-hidden='true' /> Code
         </button>
         <button
           data-ui='button'
@@ -777,13 +778,15 @@ const packScript = await inlineScript(
           </div>
         </header>
 
-        <!-- Each section is a disclosure; the bar's section buttons open the sheet on one (data-theme-section). -->
+        <!-- Each section is a disclosure; the bar's section buttons open the sheet on one (data-theme-section).
+             A grid: each section's lock shares its row and sits over the summary (ThemeLock.astro). -->
         <ui-accordion
+          class='theme-builder__sections'
           data-ui="scroll-fade"
           data-scroll-fade-axis='y'
           style='
-            --display: flex-col;
-            --justify: start;
+            --display: grid;
+            --template-cols: minmax(0, 1fr);
             --flex: 0 1 auto;
             --pb: 6;
             --gap: 0;
@@ -791,11 +794,12 @@ const packScript = await inlineScript(
             --overflow-y: auto;
           '
         >
+          <ThemeLock section='palette' row={1} label='all palette fields' />
           <details
             open
             data-theme-section='palette'
             class='theme-builder__section'
-            style='--border-style: dashed'
+            style='--row-start: 1; --border-style: dashed'
           >
             <summary
               data-ui='text-eyebrow'
@@ -807,10 +811,6 @@ const packScript = await inlineScript(
               '
             >
               Palette
-              <ThemeLock
-                section='palette'
-                label='all palette fields'
-              />
               <Icon name='angle-down' size={16} data-accordion-slot='marker' aria-hidden='true' />
             </summary>
             <div
@@ -971,10 +971,12 @@ const packScript = await inlineScript(
               }
             </div>
           </details>
+          <ThemeLock section='typeset' row={2} label='all typeset fields' />
           <details
             data-theme-section='typeset'
             class='theme-builder__section'
             style='
+              --row-start: 2;
               --border-style: dashed;
               --border-t: 1;
             '
@@ -989,10 +991,6 @@ const packScript = await inlineScript(
               '
             >
               Typeset
-              <ThemeLock
-                section='typeset'
-                label='all typeset fields'
-              />
               <Icon name='angle-down' size={16} data-accordion-slot='marker' aria-hidden='true' />
             </summary>
             <div
@@ -1210,10 +1208,12 @@ const packScript = await inlineScript(
               }
             </div>
           </details>
+          <ThemeLock section='styles' row={3} label='all style fields' />
           <details
             data-theme-section='styles'
             class='theme-builder__section'
             style='
+              --row-start: 3;
               --border-style: dashed;
               --border-t: 1;
             '
@@ -1228,10 +1228,6 @@ const packScript = await inlineScript(
               '
             >
               Styles
-              <ThemeLock
-                section='styles'
-                label='all style fields'
-              />
               <Icon name='angle-down' size={16} data-accordion-slot='marker' aria-hidden='true' />
             </summary>
             <div
@@ -1373,10 +1369,12 @@ const packScript = await inlineScript(
               </div>
             </div>
           </details>
+          <ThemeLock section='effects' row={4} label='all effect fields' />
           <details
             data-theme-section='effects'
             class='theme-builder__section'
             style='
+              --row-start: 4;
               --border-style: dashed;
               --border-t: 1;
             '
@@ -1391,10 +1389,6 @@ const packScript = await inlineScript(
               '
             >
               Effects
-              <ThemeLock
-                section='effects'
-                label='all effect fields'
-              />
               <Icon name='angle-down' size={16} data-accordion-slot='marker' aria-hidden='true' />
             </summary>
             <div

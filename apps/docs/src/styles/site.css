@@ -217,6 +217,40 @@
     }
   }
 
+  /* A section's lock (ThemeLock.astro) sits outside its <details>, since a button
+     can't go in a summary. It shares the section's grid row (--row-start on both),
+     drawn above the details at the start of the summary row, and the summary
+     makes room for it. Every section after the first has a 1px top border. The
+     lock comes first in the source, so focus reaches it before its summary. */
+  .theme-builder__sections {
+    --_tb-lock: max(var(--ui-field-h), var(--_touch-min));
+
+    /* Both in column 1: with only a row set, auto-placement would find the cell
+       taken by the lock and open a second column. */
+    & > .theme-builder__section {
+      grid-column: 1;
+    }
+
+    & > .theme-builder__section > summary {
+      min-block-size: calc(var(--_tb-lock) + var(--spacing) * 6);
+      padding-inline-start: calc(var(--_tb-lock) + var(--spacing) * 7);
+    }
+  }
+
+  .theme-builder__section-lock {
+    grid-column: 1;
+    z-index: 1;
+    display: inline-flex;
+    align-self: start;
+    justify-self: start;
+    margin-block-start: calc(var(--spacing) * 3);
+    margin-inline-start: calc(var(--spacing) * 5);
+
+    &:not(:first-child) {
+      margin-block-start: calc(var(--spacing) * 3 + 1px);
+    }
+  }
+
   /* In the narrow-screen sheet the form shows one section, opened from the bar:
      the others hide, and the shown one drops its accordion row and border. */
   .theme-builder__form--sheet {
@@ -229,7 +263,8 @@
       --ui-scroll-fade-mask: none;
     }
 
-    & .theme-builder__section:not(.theme-builder__section--active) {
+    & .theme-builder__section:not(.theme-builder__section--active),
+    & .theme-builder__section-lock {
       display: none;
     }
 
