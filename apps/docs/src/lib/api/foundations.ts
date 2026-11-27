@@ -1,5 +1,5 @@
 /**
- * Foundations data: typography roles (from `_typography.css`), global `data-ui-*` attributes (from the HTML custom
+ * Foundations data: typography roles (from `font.css`), global `data-ui-*` attributes (from the HTML custom
  * data), and design tokens grouped by purpose (from the language data).
  */
 import htmlData from "@zazz-ui/core/editor/zazz.html-data.json";
@@ -7,29 +7,27 @@ import languageData from "@zazz-ui/core/editor/zazz.language-data.json";
 import { readKitFile } from "../kit.ts";
 
 const ROLE_ORDER = [
-  "text-display",
-  "text-h1",
-  "text-h2",
-  "text-h3",
-  "text-h4",
-  "text-h5",
-  "text-h6",
-  "text-eyebrow",
-  "text-lead",
-  "text-link",
-  "text-2xl",
-  "text-xl",
-  "text-lg",
-  "text-md",
-  "text-sm",
-  "text-xs",
-  "text-2xs",
+  "display",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "eyebrow",
+  "2xl",
+  "xl",
+  "lg",
+  "md",
+  "sm",
+  "xs",
+  "2xs",
 ];
 
-/** Typography role tokens the kit styles, in display order. */
+/** The typography roles the kit styles (the values of `data-font`), in display order. */
 export function typographyRoles(): string[] {
-  const css = readKitFile("base/_typography.css") ?? "";
-  const found = new Set([...css.matchAll(/data-ui~="(text-[a-z0-9-]+)"/g)].map((m) => m[1]));
+  const css = readKitFile("primitives/font/font.css") ?? "";
+  const found = new Set([...css.matchAll(/\[data-font="([a-z0-9]+)"\]/g)].map((m) => m[1]!));
   return [
     ...ROLE_ORDER.filter((r) => found.has(r)),
     ...[...found].filter((r) => !ROLE_ORDER.includes(r)).sort(),
@@ -42,12 +40,14 @@ export interface GlobalAttribute {
   values: string[];
 }
 
-/** `data-ui-*` attributes with no owning primitive (theme, navigation, persistence, guard). */
+const PAGE_LEVEL = /^data-(?:draggable|navigation(?:-persist(?:-mode)?)?|style-guard|theme)$/;
+
+/** The page-level attributes: navigation, the color scheme, the drag opt-out, and the style guard opt-out. */
 export function globalAttributes(): GlobalAttribute[] {
   return (
     htmlData.globalAttributes as { name: string; description: string; values: { name: string }[] }[]
   )
-    .filter((a) => a.name.startsWith("data-ui-") || a.name === "data-theme")
+    .filter((a) => PAGE_LEVEL.test(a.name))
     .map((a) => ({
       name: a.name,
       description: a.description,

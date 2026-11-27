@@ -14,7 +14,7 @@ The kit matches the attribute text, so spelling is exact: `--<utility>: <value>`
 
 ## What a value can be
 
-- **A scale number** on spacing, margin, sizing, and radius utilities: `--px: 6` is `6 × --spacing`, and `--radius: 2.5` is the same step times `--radius-multiplier` (`--radius-md`). The space tokens sit on this scale (2xs 1, xs 2, sm 4, md 6, lg 11, xl 24, 2xl 40), so write the number and skip the `var()`.
+- **A scale number** on spacing, margin, sizing, and radius utilities: `--px: 6` is `6 × --spacing`, and `--radius: 2.5` is the same step times `--radius-coefficient` (`--radius-md`). The space tokens sit on this scale (2xs 1, xs 2, sm 4, md 6, lg 11, xl 24, 2xl 40), so write the number and skip the `var()`.
 - **A length or any CSS value**: `--w: 100%`, `--radius: 1rem`, `--shadow: 0 1px 2px black`.
 - **A token by name**, on a few utilities, at every tier: `--font-weight: strong`, `--radius: full`, `--display: flex-col`. Other tokens take the `var()` form: `--shadow: var(--shadow-md)`.
 - **A keyword** where the property takes one: `--position: sticky`, `--w: fit-content`, `--display: subgrid`.

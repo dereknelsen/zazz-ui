@@ -19,7 +19,7 @@
  * abduction never plays.
  *
  * A custom element because the site navigates by swapping `<body>`
- * (`data-ui-navigation="swap"`), and a swapped-in page's scripts never run:
+ * (`data-navigation="swap"`), and a swapped-in page's scripts never run:
  * the element sets up on every connect and destroys its scene on disconnect.
  * HeroScene.astro loads this module on its own page and scripts/islands.ts
  * loads it after a swap. The SDK and scene URLs come from `data-sdk` and

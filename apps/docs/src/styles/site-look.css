@@ -24,10 +24,10 @@
     --font-settings-mono: "MONO" 100;
     --font-weight-heading: 500;
 
-    --leading-heading-multiplier: 1.1;
+    --leading-heading-coefficient: 1.1;
     --tracking-eyebrow: 0.15em;
 
-    --radius-multiplier: 0.35;
+    --radius-coefficient: 0.35;
     --radius-corner-shape: superellipse(-infinity);
 
     --ui-switch-radius: 0;
@@ -59,7 +59,7 @@
 }
 
 @layer overrides {
-  :where([data-ui~="text-eyebrow"]) {
+  :where([data-font="eyebrow"]) {
     font-family: var(--font-family-mono);
     text-transform: uppercase;
     font-feature-settings: var(--font-feature-mono);

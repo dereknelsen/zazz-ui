@@ -68,11 +68,11 @@
   /* Zazz tokens and the toaster's own hooks, except where a value has to scale with the
      clip: the stage sizes in em (2.2cqw), and the kit's spacing and radii are rem, so
      --fc-spacing is an em copy of --spacing and every length is a kit multiple of it.
-     The radii read the theme's --radius-multiplier. */
+     The radii read the theme's --radius-coefficient. */
   .fc-ts {
     --fc-spacing: 0.25em;
-    --fc-radius-md: calc(var(--fc-spacing) * 2.5 * var(--radius-multiplier));
-    --fc-radius: calc(var(--fc-spacing) * 4.5 * var(--radius-multiplier));
+    --fc-radius-md: calc(var(--fc-spacing) * 2.5 * var(--radius-coefficient));
+    --fc-radius: calc(var(--fc-spacing) * 4.5 * var(--radius-coefficient));
     container-type: inline-size;
     width: 100%;
     aspect-ratio: 740 / 415;

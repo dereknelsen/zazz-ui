@@ -199,7 +199,7 @@ export interface Utility {
   omitTiers?: readonly (Breakpoint | State)[];
   /**
    * What a dual utility's number multiplies (default `var(--spacing)`):
-   * `--radius: 2` is two steps of `--spacing` times `--radius-multiplier`.
+   * `--radius: 2` is two steps of `--spacing` times `--radius-coefficient`.
    */
   scale?: string;
   /**
@@ -327,6 +327,22 @@ export const RETIRED_TOKENS: Readonly<Record<string, string>> = {
   container: "`--container-type: inline-size`",
   "theme-dark": '`data-theme="dark"`',
   "theme-light": '`data-theme="light"`',
+  "text-display": '`data-font="display"`',
+  "text-h1": '`data-font="h1"`',
+  "text-h2": '`data-font="h2"`',
+  "text-h3": '`data-font="h3"`',
+  "text-h4": '`data-font="h4"`',
+  "text-h5": '`data-font="h5"`',
+  "text-h6": '`data-font="h6"`',
+  "text-2xl": '`data-font="2xl"`',
+  "text-xl": '`data-font="xl"`',
+  "text-lg": '`data-font="lg"`',
+  "text-md": '`data-font="md"`',
+  "text-sm": '`data-font="sm"`',
+  "text-xs": '`data-font="xs"`',
+  "text-2xs": '`data-font="2xs"`',
+  "text-eyebrow": '`data-font="eyebrow"`',
+  "text-link": '`data-ui="link"`',
 };
 
 /** The kit's looping animations: each is a keyframe name and a token (`--spin`). */
@@ -818,7 +834,7 @@ export const UTILITIES: readonly Utility[] = [
     family: "sizing",
     noBase: "auto",
   },
-  // typography: one utility per property; roles live in _typography.css
+  // typography: one utility per property; roles live in primitives/font/font.css
   { name: "font-size", pseudo: true, properties: ["font-size"], mode: "raw", family: "typography" },
   {
     name: "font-weight",
@@ -1155,7 +1171,7 @@ export const UTILITIES: readonly Utility[] = [
   },
   // box: no tiers, except radius (both), its corners, pointer-events, --container
   // and --container-type (breakpoints), and z (states)
-  // a number is that many --spacing steps times --radius-multiplier, like the
+  // a number is that many --spacing steps times --radius-coefficient, like the
   // --radius-* tokens (`--radius: 2.5` is --radius-md); `full` is the pill token
   {
     name: "radius",
@@ -1165,7 +1181,7 @@ export const UTILITIES: readonly Utility[] = [
     tiers: "both",
     noBase: "0",
     pseudo: true,
-    scale: "var(--spacing) * var(--radius-multiplier)",
+    scale: "var(--spacing) * var(--radius-coefficient)",
     aliases: { full: "var(--radius-full)" },
   },
   // two logical corners each (Tailwind's rounded-t/-b/-l/-r), after --radius so they
@@ -1184,7 +1200,7 @@ export const UTILITIES: readonly Utility[] = [
     family: "box",
     tiers: "breakpoints",
     noBase: "0",
-    scale: "var(--spacing) * var(--radius-multiplier)",
+    scale: "var(--spacing) * var(--radius-coefficient)",
     aliases: { full: "var(--radius-full)" },
   })),
   // the radius rules leave corner-shape to the defaults layer (see generate-utilities.ts);

@@ -2,7 +2,7 @@
 
 /**
  * @fileoverview `--radius`: a number is that many `--spacing` steps times
- * `--radius-multiplier`, a length passes through, `full` is a pill; it takes
+ * `--radius-coefficient`, a length passes through, `full` is a pill; it takes
  * states and breakpoints, works tier-only, and a primitive's radius hook takes
  * a number too.
  */
@@ -27,9 +27,9 @@ describe("--radius", () => {
     );
   });
 
-  it("follows --radius-multiplier", () => {
+  it("follows --radius-coefficient", () => {
     const el = mount(
-      `<div style="--radius-multiplier: 2"><i style="${BOX} --radius: 2"></i></div>`,
+      `<div style="--radius-coefficient: 2"><i style="${BOX} --radius: 2"></i></div>`,
     ).firstElementChild!;
     expect(radius(el)).toBeCloseTo(scale(4), 1);
   });

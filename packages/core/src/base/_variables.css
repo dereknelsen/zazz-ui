@@ -2,11 +2,14 @@
  * _variables.css — Global design tokens (Tier 1).
  *
  * @layer      variables
- * @requires   _layers.css, _typography.css (--fluid, which --spacing reads)
+ * @requires   _layers.css
  * @uses       light-dark() — theme roles re-resolve per color-scheme (system,
  *             data-theme="dark" | "light"); tokens stay unregistered on purpose
  * @uses       oklch(from …) — shade/tint scales and shadow alphas
  * @uses       color-mix() — focus ring (--color-ring)
+ * @uses       tan(atan2()) — divides two lengths into a plain number (a stand-in for
+ *             progress() that every engine supports)
+ * @uses       pow() — the type scale's steps
  * @uses       interpolate-size: allow-keywords — discrete block-size animations (details, etc.)
  * @uses       @media (not (hover: hover)) — --_touch-min carries --spacing-touch-min (44px) to
  *             the primitives on touch screens; 0px on a mouse
@@ -261,7 +264,7 @@
     /* typeset — the fluid type scale behind --font-size-*. md is the base; each step above it
        multiplies by the scale (lg = 1 step, xl = 2, … display = 8). The base and
        the scale each grow from -min to -max across the fluid range; the math
-       lives in _typography.css. */
+       is the FLUID TYPE SCALE block below. */
     --typeset-base-min: 1rem;
     --typeset-base-max: 1rem;
     --typeset-scale-min: 1.125;
@@ -305,47 +308,47 @@
     --tracking-2xs: calc(0em + var(--tracking-body-modifier));
     --tracking-eyebrow: calc(0.05em + var(--tracking-body-modifier));
 
-    /* leading multipliers */
-    --leading-heading-multiplier: 1;
-    --leading-body-multiplier: 1;
+    /* leading coefficients */
+    --leading-heading-coefficient: 1;
+    --leading-body-coefficient: 1;
 
     /* leading */
-    --leading-display: calc(0.95 * var(--leading-heading-multiplier));
-    --leading-h1: calc(0.95 * var(--leading-heading-multiplier));
-    --leading-h2: calc(0.95 * var(--leading-heading-multiplier));
-    --leading-h3: calc(1 * var(--leading-heading-multiplier));
-    --leading-h4: calc(1 * var(--leading-heading-multiplier));
-    --leading-h5: calc(1 * var(--leading-heading-multiplier));
-    --leading-h6: calc(1 * var(--leading-heading-multiplier));
-    --leading-2xl: calc(1.25 * var(--leading-body-multiplier));
-    --leading-xl: calc(1.5 * var(--leading-body-multiplier));
-    --leading-lg: calc(1.5 * var(--leading-body-multiplier));
-    --leading-md: calc(1.6 * var(--leading-body-multiplier));
-    --leading-sm: calc(1.5 * var(--leading-body-multiplier));
-    --leading-xs: calc(1.5 * var(--leading-body-multiplier));
-    --leading-2xs: calc(1.5 * var(--leading-body-multiplier));
+    --leading-display: calc(0.95 * var(--leading-heading-coefficient));
+    --leading-h1: calc(0.95 * var(--leading-heading-coefficient));
+    --leading-h2: calc(0.95 * var(--leading-heading-coefficient));
+    --leading-h3: calc(1 * var(--leading-heading-coefficient));
+    --leading-h4: calc(1 * var(--leading-heading-coefficient));
+    --leading-h5: calc(1 * var(--leading-heading-coefficient));
+    --leading-h6: calc(1 * var(--leading-heading-coefficient));
+    --leading-2xl: calc(1.25 * var(--leading-body-coefficient));
+    --leading-xl: calc(1.5 * var(--leading-body-coefficient));
+    --leading-lg: calc(1.5 * var(--leading-body-coefficient));
+    --leading-md: calc(1.6 * var(--leading-body-coefficient));
+    --leading-sm: calc(1.5 * var(--leading-body-coefficient));
+    --leading-xs: calc(1.5 * var(--leading-body-coefficient));
+    --leading-2xs: calc(1.5 * var(--leading-body-coefficient));
     /* line-height */
-    --leading-eyebrow: calc(1.2 * var(--leading-body-multiplier));
+    --leading-eyebrow: calc(1.2 * var(--leading-body-coefficient));
 
-    /* paragraph-spacing — the space above a block in prose; the multiplier
+    /* paragraph-spacing — the space above a block in prose; the coefficient
        loosens or tightens every step at once (--ui-prose-flow scales it again per prose) */
-    --paragraph-spacing-multiplier: 1;
+    --paragraph-spacing-coefficient: 1;
 
-    --paragraph-spacing-display: calc(3.5rlh * var(--paragraph-spacing-multiplier));
-    --paragraph-spacing-h1: calc(3.5rlh * var(--paragraph-spacing-multiplier));
-    --paragraph-spacing-h2: calc(3rlh * var(--paragraph-spacing-multiplier));
-    --paragraph-spacing-h3: calc(3rlh * var(--paragraph-spacing-multiplier));
-    --paragraph-spacing-h4: calc(2rlh * var(--paragraph-spacing-multiplier));
-    --paragraph-spacing-h5: calc(2rlh * var(--paragraph-spacing-multiplier));
-    --paragraph-spacing-h6: calc(2rlh * var(--paragraph-spacing-multiplier));
-    --paragraph-spacing-2xl: calc(1rlh * var(--paragraph-spacing-multiplier));
-    --paragraph-spacing-xl: calc(0.75rlh * var(--paragraph-spacing-multiplier));
-    --paragraph-spacing-lg: calc(0.75rlh * var(--paragraph-spacing-multiplier));
-    --paragraph-spacing-md: calc(0.75rlh * var(--paragraph-spacing-multiplier));
-    --paragraph-spacing-sm: calc(0.5rlh * var(--paragraph-spacing-multiplier));
-    --paragraph-spacing-xs: calc(0.5rlh * var(--paragraph-spacing-multiplier));
-    --paragraph-spacing-2xs: calc(0.5rlh * var(--paragraph-spacing-multiplier));
-    --paragraph-spacing-eyebrow: calc(1rlh * var(--paragraph-spacing-multiplier));
+    --paragraph-spacing-display: calc(3.5rlh * var(--paragraph-spacing-coefficient));
+    --paragraph-spacing-h1: calc(3.5rlh * var(--paragraph-spacing-coefficient));
+    --paragraph-spacing-h2: calc(3rlh * var(--paragraph-spacing-coefficient));
+    --paragraph-spacing-h3: calc(3rlh * var(--paragraph-spacing-coefficient));
+    --paragraph-spacing-h4: calc(2rlh * var(--paragraph-spacing-coefficient));
+    --paragraph-spacing-h5: calc(2rlh * var(--paragraph-spacing-coefficient));
+    --paragraph-spacing-h6: calc(2rlh * var(--paragraph-spacing-coefficient));
+    --paragraph-spacing-2xl: calc(1rlh * var(--paragraph-spacing-coefficient));
+    --paragraph-spacing-xl: calc(0.75rlh * var(--paragraph-spacing-coefficient));
+    --paragraph-spacing-lg: calc(0.75rlh * var(--paragraph-spacing-coefficient));
+    --paragraph-spacing-md: calc(0.75rlh * var(--paragraph-spacing-coefficient));
+    --paragraph-spacing-sm: calc(0.5rlh * var(--paragraph-spacing-coefficient));
+    --paragraph-spacing-xs: calc(0.5rlh * var(--paragraph-spacing-coefficient));
+    --paragraph-spacing-2xs: calc(0.5rlh * var(--paragraph-spacing-coefficient));
+    --paragraph-spacing-eyebrow: calc(1rlh * var(--paragraph-spacing-coefficient));
 
     /* ==========================================================================
     * Spacing — the --spacing unit and the --space-* scale
@@ -366,7 +369,7 @@
     --spacing-control-min: 1rem;
 
     /* the utility scale unit: `--p: 4` is 4 × --spacing. Fluid between its
-       min and max across the fluid range (--fluid comes from _typography.css);
+       min and max across the fluid range (--fluid comes from the FLUID TYPE SCALE block below);
        set them equal, or pin `:root { --spacing: 0.25rem }`, for a fixed scale. */
     --spacing-min: 0.225rem;
     --spacing-max: 0.25rem;
@@ -383,22 +386,22 @@
     --space-2xl: calc(var(--spacing) * 40);
 
     /* ==========================================================================
-    * Radius — multiplier, semantic scale, component primitives
+    * Radius — coefficient, semantic scale, component primitives
     * ========================================================================== */
 
     /* modifiers */
-    --radius-multiplier: 1;
+    --radius-coefficient: 1;
     --radius-corner-shape: superellipse(1.3);
 
     /* semantic */
     --radius-none: 0rem;
-    --radius-2xs: calc(var(--spacing) * 0.5 * var(--radius-multiplier));
-    --radius-xs: calc(var(--spacing) * var(--radius-multiplier));
-    --radius-sm: calc(var(--spacing) * 1.5 * var(--radius-multiplier));
-    --radius-md: calc(var(--spacing) * 2.5 * var(--radius-multiplier));
-    --radius-lg: calc(var(--spacing) * 4.5 * var(--radius-multiplier));
-    --radius-xl: calc(var(--spacing) * 7 * var(--radius-multiplier));
-    --radius-2xl: calc(var(--spacing) * 10 * var(--radius-multiplier));
+    --radius-2xs: calc(var(--spacing) * 0.5 * var(--radius-coefficient));
+    --radius-xs: calc(var(--spacing) * var(--radius-coefficient));
+    --radius-sm: calc(var(--spacing) * 1.5 * var(--radius-coefficient));
+    --radius-md: calc(var(--spacing) * 2.5 * var(--radius-coefficient));
+    --radius-lg: calc(var(--spacing) * 4.5 * var(--radius-coefficient));
+    --radius-xl: calc(var(--spacing) * 7 * var(--radius-coefficient));
+    --radius-2xl: calc(var(--spacing) * 10 * var(--radius-coefficient));
     --radius-full: 9999rem;
 
     /* ==========================================================================
@@ -525,14 +528,7 @@
     --bezier-easing: cubic-bezier(0.32, 0.66, 0.1, 1);
     --spring-duration: 0.25s;
 
-    /* the spring is declared first: the editor data reads the first definition */
     --default-transition-timing-function: var(--spring-easing);
-
-    /* falls back to cubic-bezier when linear() easing is unsupported */
-    @supports not (transition-timing-function: linear(0, 1)) {
-      --default-transition-timing-function: var(--bezier-easing);
-    }
-
     --default-transition-duration: var(--spring-duration);
     --default-transition-property-colors:
       text-decoration-color, background-color, border-color, color, fill, stroke;
@@ -589,6 +585,56 @@
     --ping: ping var(--default-animation);
     --pulse: pulse 2s var(--default-transition-timing-function) infinite;
     --bounce: bounce var(--default-animation);
+  }
+
+  /* ===========================================================================
+  FLUID TYPE SCALE — calculations, don't touch; tune the typeset controls
+  above. A sized prose (prose.css) re-runs them, so its preset scales the base
+  and a :root control still reaches it; the math stays here, in one place.
+  =========================================================================== */
+
+  :where(:root, [data-ui~="prose"][data-prose-size]) {
+    /* 0 at --fluid-min, 1 at --fluid-max, linear between, clamped outside:
+       (100vi − min) ÷ (max − min). tan(atan2(a, b)) is a ÷ b as a plain number,
+       which calc() can't do with two lengths in every engine yet. Same result as
+       progress(100vi, var(--fluid-min), var(--fluid-max)). */
+    --fluid: clamp(0, tan(atan2(100vi - var(--fluid-min), var(--fluid-max) - var(--fluid-min))), 1);
+    --typeset-base: calc(
+      (
+          var(--typeset-base-min) + var(--fluid) *
+            (var(--typeset-base-max) - var(--typeset-base-min))
+        ) *
+        var(--_prose-size, 1)
+    );
+    --typeset-scale: calc(
+      var(--typeset-scale-min) + var(--fluid) *
+        (var(--typeset-scale-max) - var(--typeset-scale-min))
+    );
+
+    --font-size-2xs: calc(
+      var(--typeset-base) *
+        (var(--typeset-2xs-min) + var(--fluid) * (var(--typeset-2xs-max) - var(--typeset-2xs-min)))
+    );
+    --font-size-xs: calc(
+      var(--typeset-base) *
+        (var(--typeset-xs-min) + var(--fluid) * (var(--typeset-xs-max) - var(--typeset-xs-min)))
+    );
+    --font-size-sm: calc(
+      var(--typeset-base) *
+        (var(--typeset-sm-min) + var(--fluid) * (var(--typeset-sm-max) - var(--typeset-sm-min)))
+    );
+    --font-size-eyebrow: var(--font-size-2xs);
+    --font-size-md: var(--typeset-base);
+    --font-size-lg: calc(var(--typeset-base) * var(--typeset-scale));
+    --font-size-xl: calc(var(--typeset-base) * pow(var(--typeset-scale), 2));
+    --font-size-2xl: calc(var(--typeset-base) * pow(var(--typeset-scale), 3));
+    --font-size-h6: var(--font-size-xl);
+    --font-size-h5: var(--font-size-2xl);
+    --font-size-h4: calc(var(--typeset-base) * pow(var(--typeset-scale), 4));
+    --font-size-h3: calc(var(--typeset-base) * pow(var(--typeset-scale), 5));
+    --font-size-h2: calc(var(--typeset-base) * pow(var(--typeset-scale), 6));
+    --font-size-h1: calc(var(--typeset-base) * pow(var(--typeset-scale), 7));
+    --font-size-display: calc(var(--typeset-base) * pow(var(--typeset-scale), 8));
   }
 
   @media (prefers-reduced-motion: reduce) {

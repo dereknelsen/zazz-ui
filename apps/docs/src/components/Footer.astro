@@ -38,7 +38,7 @@ import Logo from "./Logo.astro";
       >
         <h2
           id="navigation"
-          data-ui="text-eyebrow"
+          data-font="eyebrow"
           style="--text: var(--color-foreground)"
         >
           Navigation
@@ -55,14 +55,14 @@ import Logo from "./Logo.astro";
           {
             nav.map((item) => (
               <li>
-                <a href={item.href} data-ui="text-sm text-link">
+                <a href={item.href} data-ui="link" data-font="sm">
                   {item.label}
                 </a>
               </li>
             ))
           }
           <li>
-            <a href={links.github} data-ui="text-sm text-link" rel="noopener"
+            <a href={links.github} data-ui="link" data-font="sm" rel="noopener"
               >GitHub</a
             >
           </li>
@@ -71,7 +71,7 @@ import Logo from "./Logo.astro";
 
       <section
         aria-labelledby="acknowledgements"
-        data-ui="text-sm"
+        data-font="sm"
         style="
           --display: flex-col;
           --justify: center;
@@ -81,7 +81,7 @@ import Logo from "./Logo.astro";
           --text-align--sm: left;
         "
       >
-        <h2 id="acknowledgements" data-ui="text-eyebrow" style="--mb: 1.5">
+        <h2 id="acknowledgements" data-font="eyebrow" style="--mb: 1.5">
           Acknowledgements
         </h2>
         <div
@@ -95,27 +95,27 @@ import Logo from "./Logo.astro";
         >
           <p>
             Zazz is heavily inspired by <a
-              data-ui="text-link"
+              data-ui="link"
               href="https://tailwindcss.com/"
               target="_blank"
               rel="noopener">Tailwind</a
             >, <a
-              data-ui="text-link"
+              data-ui="link"
               href="https://ui.shadcn.com/"
               target="_blank"
               rel="noopener">Shadcn</a
             >, <a
-              data-ui="text-link"
+              data-ui="link"
               href="https://base-ui.org/"
               target="_blank"
               rel="noopener">Base UI</a
             >, <a
-              data-ui="text-link"
+              data-ui="link"
               href="https://www.kevinpowell.co/"
               target="_blank"
               rel="noopener">Kevin Powell</a
             >, <a
-              data-ui="text-link"
+              data-ui="link"
               href="https://www.joshwcomeau.com/"
               target="_blank"
               rel="noopener">Josh Comeau</a
@@ -126,7 +126,7 @@ import Logo from "./Logo.astro";
       </section>
 
       <section
-        data-ui="text-xs"
+        data-font="xs"
         style="
           --display: flex-col;
           --items: center;
@@ -152,7 +152,7 @@ import Logo from "./Logo.astro";
         >
           Built and maintained by Derek Nelsen. Licensed under the MIT License.
           Source code available on{" "}
-          <a data-ui="text-link" href={links.github} rel="noopener">GitHub</a>.
+          <a data-ui="link" href={links.github} rel="noopener">GitHub</a>.
         </p>
       </section>
     </div>

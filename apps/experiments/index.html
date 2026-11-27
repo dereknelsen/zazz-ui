@@ -41,7 +41,7 @@
           --tracking-h3: -0.01em;
 
           /* square corners throughout */
-          --radius-multiplier: 0;
+          --radius-coefficient: 0;
 
           /* achromatic neutrals (the kit default carries a violet cast) */
           --color-neutral-50: oklch(0.985 0 0);
@@ -132,7 +132,7 @@
           >
             <a
               href="/"
-              data-ui="text-2xl"
+              data-font="2xl"
               style="
                 --mr: auto;
                 --font-weight: 300;
@@ -901,7 +901,7 @@
       <div data-mobile-menu-slot="viewport">
         <div data-mobile-menu-slot="header">
           <span
-            data-ui="text-xl"
+            data-font="xl"
             style="
               --font-weight: 300;
               --tracking: var(--tracking-eyebrow);
@@ -1029,7 +1029,7 @@
             >
               <h2
                 id="loft-edit"
-                data-ui="text-h3"
+                data-font="h3"
                 style="
                   --font-weight: 400;
                   --text-transform: uppercase;
@@ -1038,7 +1038,7 @@
                 Loft edit<br />just arrived
               </h2>
               <p
-                data-ui="text-sm"
+                data-font="sm"
                 style="
                   --max-w: 40ch;
                   --text: var(--color-muted-foreground);
@@ -1086,7 +1086,7 @@
         <ui-layout>
           <h2
             id="pieces-title"
-            data-ui="text-h4"
+            data-font="h4"
             style="
               --mb: 11;
               --font-weight: 300;
@@ -1133,7 +1133,7 @@
                     --object-fit: cover;
                   "
                 />
-                <b data-ui="text-lg" style="--text-transform: uppercase">Sofas</b>
+                <b data-font="lg" style="--text-transform: uppercase">Sofas</b>
               </a>
             </li>
             <li>
@@ -1164,7 +1164,7 @@
                     --object-fit: cover;
                   "
                 />
-                <b data-ui="text-lg" style="--text-transform: uppercase">Chairs</b>
+                <b data-font="lg" style="--text-transform: uppercase">Chairs</b>
               </a>
             </li>
             <li>
@@ -1195,7 +1195,7 @@
                     --object-fit: cover;
                   "
                 />
-                <b data-ui="text-lg" style="--text-transform: uppercase">Tables</b>
+                <b data-font="lg" style="--text-transform: uppercase">Tables</b>
               </a>
             </li>
             <li>
@@ -1226,7 +1226,7 @@
                     --object-fit: cover;
                   "
                 />
-                <b data-ui="text-lg" style="--text-transform: uppercase">Shelves</b>
+                <b data-font="lg" style="--text-transform: uppercase">Shelves</b>
               </a>
             </li>
           </ul>
@@ -1271,7 +1271,7 @@
           >
             <h2
               id="lookbooks-title"
-              data-ui="text-h3"
+              data-font="h3"
               style="
                 --font-weight: strong;
                 --text-transform: uppercase;
@@ -1335,7 +1335,7 @@
         >
           <h2
             id="seating-title"
-            data-ui="text-h3"
+            data-font="h3"
             style="
               --font-weight: strong;
               --text-transform: uppercase;
@@ -1361,7 +1361,7 @@
         <ui-layout>
           <h2
             id="lines-title"
-            data-ui="text-h3"
+            data-font="h3"
             style="
               --mb: 20;
               --text-align: center;
@@ -1399,7 +1399,7 @@
                 "
               >
                 <span
-                  data-ui="text-2xl"
+                  data-font="2xl"
                   style="
                     --font-weight: 300;
                     --tracking: var(--tracking-eyebrow);
@@ -1438,7 +1438,7 @@
                 "
               >
                 <span
-                  data-ui="text-2xl"
+                  data-font="2xl"
                   style="
                     --font-weight: 300;
                     --tracking: var(--tracking-eyebrow);
@@ -1477,7 +1477,7 @@
                 "
               >
                 <span
-                  data-ui="text-2xl"
+                  data-font="2xl"
                   style="
                     --font-weight: 300;
                     --tracking: var(--tracking-eyebrow);
@@ -1518,7 +1518,7 @@
             "
           >
             <p
-              data-ui="text-h2"
+              data-font="h2"
               style="
                 --display: inline-flex;
                 --items: center;
@@ -1539,7 +1539,7 @@
                 --max-w: 40ch;
               "
             >
-              <h2 id="about-title" data-ui="text-lg">Furniture that moves with you</h2>
+              <h2 id="about-title" data-font="lg">Furniture that moves with you</h2>
               <p style="--text: var(--color-muted-foreground)">
                 ACME builds sofas, tables, and cabinets meant to come apart, ship, and be repaired.
                 Solid wood, replaceable cushions, and finishes you can spot-sand.
@@ -1572,7 +1572,7 @@
           >
             <h2
               id="footer-explore"
-              data-ui="text-md"
+              data-font="md"
               style="
                 --font-weight: strong;
                 --text-transform: uppercase;
@@ -1581,7 +1581,7 @@
               Explore
             </h2>
             <ul
-              data-ui="text-sm"
+              data-font="sm"
               style="
                 --display: grid;
                 --gap: 2;
@@ -1632,7 +1632,7 @@
           >
             <h2
               id="footer-help"
-              data-ui="text-md"
+              data-font="md"
               style="
                 --font-weight: strong;
                 --text-transform: uppercase;
@@ -1641,7 +1641,7 @@
               Help
             </h2>
             <ul
-              data-ui="text-sm"
+              data-font="sm"
               style="
                 --display: grid;
                 --gap: 2;
@@ -1714,7 +1714,7 @@
           >
             <h2
               id="footer-notes"
-              data-ui="text-md"
+              data-font="md"
               style="
                 --font-weight: strong;
                 --text-transform: uppercase;
@@ -1866,7 +1866,7 @@
       <div data-theme="dark" style="--bg: var(--color-neutral-1117)">
         <ui-layout data-layout-size="full">
           <div
-            data-ui="text-sm"
+            data-font="sm"
             style="
               --display: flex;
               --flex-wrap: wrap;

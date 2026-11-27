@@ -1,5 +1,90 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
+## Unreleased
+
+### base
+
+- **BREAKING** The `*-multiplier` tokens are now `*-coefficient`: `--radius-multiplier` is `--radius-coefficient`, `--leading-heading-multiplier` is `--leading-heading-coefficient`, `--leading-body-multiplier` is `--leading-body-coefficient`, and `--paragraph-spacing-multiplier` is `--paragraph-spacing-coefficient`. The defaults and what they scale are unchanged. **Migration:** rename each token where your theme sets it. An old name still parses but does nothing.
+
+### font
+
+- **BREAKING** Typography roles moved from `data-ui` tokens to the value of `data-font`: `data-ui="text-h3"` is now `data-font="h3"`, and the same for `display`, `h1`–`h6`, `2xl`–`2xs`, and `eyebrow`. Replace each `text-<role>` token with `data-font="<role>"`; an element that also has an identity keeps it (`data-ui="badge text-xs"` becomes `data-ui="badge" data-font="xs"`). One role per element. `npx zazz-ui codemod data-font` rewrites a project's markup and selectors and vendors the new primitives. The `retired-token` rule in `<ui-debug>` and the ESLint plugin names the replacement for each, and `eslint --fix` applies it where the element has one role, plain tokens, and no `data-font` yet.
+- **BREAKING** The roles are a primitive, `font`, with its own stylesheet (`primitives/font/font.css`) in `ui.components`, where they were in the reset. A page that loads the kit per primitive adds it; `npx zazz-ui add font` vendors it.
+- A role now beats the font of the primitive it sits on, where the primitive used to win: `data-font="sm"` on a badge, button, tooltip, or dialog takes effect. It also beats the font a primitive gives a slot (a tooltip's content, a field label). A `--font-size` utility still beats both. A role on a native heading wins whether it is larger or smaller than the heading (`<h5 data-font="h2">`). A larger role lost before.
+
+### link
+
+- **BREAKING** `data-ui="text-link"` is now the `link` identity, with its own stylesheet (`primitives/link/link.css`). Replace the token with `link`; with a size, `data-ui="text-sm text-link"` becomes `data-ui="link" data-font="sm"`.
+
+### prose
+
+- **BREAKING** Prose has its own stylesheet (`primitives/prose/prose.css`), where its rules were in `base/_typography.css`. A page that loads the kit per primitive adds `prose`, and `npx zazz-ui add prose` vendors it (with `font`, which it needs).
+- A paragraph with a role takes the role's spacing (`<p data-font="h3">` is spaced as a heading). It took a paragraph's spacing before.
+- A `data-font` role on a figure caption, a blockquote's `cite`, or an `hgroup` replaces the font prose gives it. Prose kept its own font before.
+- `data-prose-size="sm"` reads its leading from `--leading-sm`, so `--leading-body-multiplier` reaches it. The default is still 1.5.
+
+### tabs
+
+- In a right-to-left page the horizontal arrow keys follow the writing direction: ArrowLeft moves to the next tab and ArrowRight to the previous one. They were not mirrored, so the keys moved against the visual order.
+- The keys the script handles (the arrows along the list, Home, End) skip a tab marked `aria-disabled="true"`. The browser's own radio keys and a click still reach it, so use `disabled` to take a tab out.
+- A vendored tabs script needs `behaviors/list-navigation.js`. `npx zazz-ui update` adds it.
+
+### lightbox
+
+- The counter centers with logical insets and auto margins, where it used `left: 50%` and a translate. It sits in the same place, and a long count may now use the full width of the stage before it wraps, where it was held to half.
+
+### menu
+
+- The arrow keys skip a button disabled by an ancestor `<fieldset disabled>`. They stopped on it before, and it could not take focus.
+- A vendored menu script needs `behaviors/list-navigation.js`. `npx zazz-ui update` adds it.
+
+### drawer
+
+- **BREAKING** `data-drawer-snap-sequential` is now `data-drawer-snap-behavior="sequential"`. Replace the attribute; any other value, or none, keeps the default, where a very fast flick goes all the way.
+
+### command
+
+- **BREAKING** `data-command-stay-open` on an item is now `data-command-select-behavior="persist"`. Replace the attribute; without it, activating the item closes the panel as before.
+
+### otp
+
+- **BREAKING** `data-otp-auto-submit` is now `data-otp-submit-behavior="auto"`. Replace the attribute; without it, the form is submitted by its own button as before.
+- **BREAKING** `data-otp-mask` needs a value: `data-otp-mask="true"` masks the cells. A bare `data-otp-mask` no longer does; add `="true"`.
+
+### style-guard
+
+- **BREAKING** `data-ui-guard="off"` is now `data-style-guard="off"`. Rename the attribute; it opts an element out of the style guard and of the CSP fallback (`base/csp.js`) as before.
+
+### carousel
+
+- **BREAKING** `data-carousel-drag-free="true"` is now `data-carousel-snap="free"`, and the default is `slide`. A thumb strip is still free by default; `data-carousel-thumbs-snap="slide"` makes it snap, where `data-carousel-thumbs-drag-free="false"` did.
+- The drag opt-out (`data-draggable="false"`, formerly `data-ui-no-drag`; see base) applies inside a slide: a mouse press there does not drag the track. It did before, and is now documented and tested.
+
+### toaster
+
+- The drag opt-out (`data-draggable="false"`, formerly `data-ui-no-drag`; see base) on `<ui-toaster>` keeps its toasts from being swiped away. It did before, and is now documented and tested.
+
+### debug
+
+- New rule, `font-role`: a `data-font` value that is not exactly one role the kit styles. It reports an unknown role (`data-font="huge"`), two roles (`data-font="sm lg"`), an old token spelling (`data-font="text-sm"`), and a page that sets `data-font` without `primitives/font/font.css` loaded. `<ui-debug>` reads the roles from the page's stylesheets, and skips the rule when it cannot read one of them (a cross-origin sheet without `crossorigin`).
+- `<ui-debug>` follows `@import` when it reads the page's stylesheets, so a page that loads `index.css` unbundled gets its identities, hooks, and roles. It found none there before, which silenced `attribute-outside-identity` and `flattens-state`.
+- `auditNode` in `audit-core.js` takes the roles in its context (`roles`), and `audit()` in `debug.js` takes them as an option. `roles` is `null` when the roles are unknown. A finding can carry `attributes`, the attribute values that resolve it; the first `retired-token` finding for an element's `text-*` tokens does, when the rewrite is safe.
+- The persistence checks read the renamed navigation attributes (see base). `auditPersistence` in `audit-core.js` takes a mode, `"element"` or `"scroll"`, in place of the attribute name, and its owner callback returns the carrying element's id.
+
+### base
+
+- **BREAKING** `base/_typography.css` holds only the native `h1`–`h6` baselines. The fluid type scale (`--fluid`, `--typeset-base`, `--typeset-scale`, and every `--font-size-*`) is computed in `base/_variables.css`, so `_variables.css` no longer needs `_typography.css` loaded for `--spacing`. The values are unchanged.
+- **BREAKING** The navigation attributes drop the `data-ui-` prefix: `data-ui-navigation="swap"` and `"off"` are now `data-navigation="swap"` and `"off"`, and `data-ui-persist="<id>"` is now `data-navigation-persist="<id>"`. Rename them on every page; a page left on the old names navigates with full loads.
+- **BREAKING** `data-ui-persist-scroll="<id>"` is now `data-navigation-persist="<id>"` with `data-navigation-persist-mode="scroll"` on the same element. An element in scroll mode still comes from the new page and keeps only its scroll offset.
+- **BREAKING** `data-ui-no-drag` is now `data-draggable="false"`. It still keeps a press inside the element from dragging a drawer, swiping a toast, or dragging a carousel. Replace it with `data-draggable="false"`; a bare `data-draggable` does nothing.
+- Every primitive has a data file beside its stylesheet, `primitives/<name>/<name>.json`: its `data-ui` identities, tag forms, `--ui-*` hooks with their defaults (grouped by CSS property category), `data-*` attributes with their values, slots, states, the primitives it requires, and its files. The typography roles are the `data-font` values in `primitives/font/font.json`. The files are generated from the stylesheets, scripts, and examples. `npx zazz-ui add` and `update` vendor them with the `zazz-ui` release that follows 0.3.3.
+- The manifest lists the data files: `data` on each `PRIMITIVES` entry, and a new `BASE_DATA` export for data files no primitive owns (empty today).
+- New `src/css-properties.json`: every standard CSS property that is not deprecated, grouped by category. The data files take their hook categories from it.
+- `editor/zazz.language-data.json` gives a hook the default from the primitive it is named for. A hook another primitive overrides (for example `--ui-dialog-shadow` in the alert dialog, nine `--ui-popover-*` hooks in the navigation menu, three `--ui-kbd-*` hooks in the button) reported the override and that primitive's stylesheet.
+- **BREAKING** Shared interaction scripts move from `base/` to a new `behaviors/` folder: `base/gesture.js`, `base/hotkeys.js`, `base/typeahead.js`, and `base/command-score.js` are now `behaviors/gesture.js`, `behaviors/hotkeys.js`, `behaviors/typeahead.js`, and `behaviors/command-score.js`. Their exports are unchanged. Change `base/` to `behaviors/` in any import of them (`import { bindHotkey } from "@zazz-ui/core/behaviors/hotkeys.js"`) and in any `<script>` tag or `modulepreload` that names one. In a vendored project, `npx zazz-ui update` vendors the new files, rewrites the entry script, and deletes the old ones. A file you edited is kept where it is (unless you pass `--theirs`) and no longer loaded, so copy your edits to its new path. Update the CLI first: a narrowed update (`update toaster`) needs the `zazz-ui` release that follows 0.3.3 to vendor the new files.
+- New `behaviors/list-navigation.js`: `listStep` maps a key to a step through a list (by orientation and writing direction), `stepIndex` gives the index a step lands on, and `isDisabledItem` tests an item the keys skip. The tabs, the menu, and `behaviors/typeahead.js` use it; `nextActiveIndex` is unchanged. Vendored autocomplete, combobox, and command scripts need the file too, and `npx zazz-ui update` adds it.
+- New package export `@zazz-ui/core/behaviors/*`.
+
 ## 0.15.1 (2026-11-23)
 
 ### tooltip

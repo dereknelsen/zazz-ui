@@ -4,11 +4,11 @@ import { describe, expect, it } from "vite-plus/test";
 import { declaredProperties, stageScope } from "./stage-scope.ts";
 
 const kit = {
-  "--multiplier": { value: "1" },
-  "--radius-md": { value: "calc(0.5rem * var(--multiplier))" },
+  "--coefficient": { value: "1" },
+  "--radius-md": { value: "calc(0.5rem * var(--coefficient))" },
   "--ui-card-radius": { value: "var( --radius-md )" },
-  "--multiplier-other": { value: "2" },
-  "--ui-button-gap": { value: "var(--multiplier-other)" },
+  "--coefficient-other": { value: "2" },
+  "--ui-button-gap": { value: "var(--coefficient-other)" },
 };
 
 describe("declaredProperties", () => {
@@ -20,22 +20,22 @@ describe("declaredProperties", () => {
 
 describe("stageScope", () => {
   it("restores the property and everything that reads it, however indirectly", () => {
-    expect(stageScope(":root { --multiplier: 0.3 }", kit)).toBe(
+    expect(stageScope(":root { --coefficient: 0.3 }", kit)).toBe(
       "@layer zazz.variables { [data-preview-stage] { " +
-        "--multiplier: 1; --radius-md: calc(0.5rem * var(--multiplier)); " +
+        "--coefficient: 1; --radius-md: calc(0.5rem * var(--coefficient)); " +
         "--ui-card-radius: var( --radius-md ); } }",
     );
   });
 
   it("targets another selector when given one", () => {
-    expect(stageScope(":root { --multiplier-other: 3 }", kit, ".preview")).toBe(
-      "@layer zazz.variables { .preview { --multiplier-other: 2; --ui-button-gap: var(--multiplier-other); } }",
+    expect(stageScope(":root { --coefficient-other: 3 }", kit, ".preview")).toBe(
+      "@layer zazz.variables { .preview { --coefficient-other: 2; --ui-button-gap: var(--coefficient-other); } }",
     );
   });
 
   it("takes property names in place of a stylesheet", () => {
-    expect(stageScope(["--multiplier-other"], kit, ".preview")).toBe(
-      stageScope(":root { --multiplier-other: 3 }", kit, ".preview"),
+    expect(stageScope(["--coefficient-other"], kit, ".preview")).toBe(
+      stageScope(":root { --coefficient-other: 3 }", kit, ".preview"),
     );
   });
 

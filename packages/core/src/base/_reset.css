@@ -338,10 +338,6 @@
     height: auto;
   }
 
-  ::-webkit-search-decoration {
-    -webkit-appearance: none;
-  }
-
   ::-webkit-details-marker {
     display: none;
   }
@@ -353,8 +349,6 @@
     --search-cancel-icon-size: calc(var(--spacing) * 4);
     --search-cancel-size: calc(var(--spacing) * 6);
     --search-cancel-radius: var(--radius-sm);
-
-    -webkit-appearance: none;
 
     margin: 0;
     padding: 0;
@@ -439,8 +433,6 @@
     padding: unset;
     margin: unset;
     appearance: none;
-    -moz-appearance: none;
-    -webkit-appearance: none;
     background-repeat: no-repeat;
     background-position: right center;
   }
@@ -463,8 +455,6 @@
 
   /* Strip UA chrome so progress.css / meter.css can redraw track and fill. */
   :where(progress, meter) {
-    -webkit-appearance: none;
-    -moz-appearance: none;
     appearance: none;
     border: none;
     background: none;

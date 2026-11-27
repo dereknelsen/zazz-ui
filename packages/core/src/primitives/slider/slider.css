@@ -132,7 +132,6 @@
     --_ring-width: 0px;
     --_ring-fill: color-mix(in oklch, var(--ui-slider-ring-color) var(--ring-opacity), transparent);
 
-    -webkit-appearance: none;
     appearance: none;
     inline-size: 100%;
     min-block-size: var(--_touch-min);
@@ -245,7 +244,6 @@
   }
 
   :where(input[type="range"])::-webkit-slider-thumb {
-    -webkit-appearance: none;
     appearance: none;
     margin-block-start: var(--ui-slider-thumb-offset);
     box-sizing: content-box;

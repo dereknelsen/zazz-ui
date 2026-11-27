@@ -531,16 +531,33 @@ use case exists in an example fragment or docs page.
   (`data-carousel-state="active"`, `data-otp-state="filled active"`,
   `data-toaster-state="front visible"`); CSS keys on `[data-x-state~="token"]`. Native state
   stays native (`:checked`, `:open`, `:popover-open`, `[aria-expanded]`).
-- **Globals stay `data-ui-*`**: `data-ui-guard`. The exception is the color scheme, `data-theme="dark"` / `"light"`.
-- **`data-ui` holds identities only**: primitives, specializations, typography roles, and `group`. A fixed rule set with no identity is a utility with a keyword (`--sr: only`), never a token.
+- **Put the choice in the value, not the name**: a data attribute is
+  `data-<identity-or-setting>="<value>"`. Never put the value in the name:
+  `data-draggable="false"`, not `data-ui-no-drag`; `data-carousel-snap="free"`, not
+  `data-carousel-drag-free`. A flag that is on by presence alone breaks this too, since
+  `="false"` would still turn it on: `data-otp-submit-behavior="auto"`, not
+  `data-otp-auto-submit`.
+- **Globals name their own setting**: an attribute no primitive owns is named for what it sets,
+  under the same rule: `data-theme="dark"` / `"light"`, `data-draggable="false"`,
+  `data-style-guard="off"`, and navigation's `data-navigation="swap"`,
+  `data-navigation-persist="<id>"`, and `data-navigation-persist-mode="scroll"`. No authored
+  attribute starts with `data-ui-`.
+- **A primitive with no `data-ui` identity is named for its setting too**: `data-font="h3"`
+  (the `font` primitive's typography roles) and `data-reveal="fade"`. The attribute is
+  `data-<primitive>`, so the generators treat it as owned. `font.css` leaves its selectors
+  out of `:where()` on purpose (its header says why).
+- **`data-ui` holds identities only**: primitives, specializations, and `group`. A typography
+  role carries its value in the attribute, `data-font="<role>"`, never in a `text-*` token. A fixed rule set with no identity is a utility with a keyword (`--sr: only`), never a token.
 - **Zero-specificity where overridable**: roots and presets sit inside `:where()` so a utility
   (the `utilities` layer) or a consumer rule wins without `!important`. Order matters
   between equal-specificity rules: a disabled block that must beat a variant comes after it.
 - **Logical properties**: prefer `inline-size`/`block-size`, `padding-inline`/`margin-block`,
   `inset-inline-start` so components flip in RTL. **Hook names follow the utility names**
-  (`--ui-field-h`, `--ui-field-px`, never `-height`; see §5). Physical `top`/`left` stay only
-  where the platform demands them (`anchor()` side keywords) or in direction-neutral
-  centering idioms — leave a comment saying why.
+  (`--ui-field-h`, `--ui-field-px`, never `-height`; see §5). Physical sides stay only
+  where the direction belongs to the screen or to a physical transform (a rotated arrow's
+  border sides, a mirrored pair pinned to both top corners); leave a comment saying why.
+  `anchor()` takes `start`/`end`, and centering uses `inset-inline: 0` with
+  `margin-inline: auto`, so neither needs `left`.
 - **Focus**: rings render as box-shadows from the ring tokens (`--ring` is the theme input,
   read through `--color-ring`, `--ring-shadow-color`, `--ring-offset-shadow-color`), composed
   on the element as `--_focus-shadow` and placed first in the `box-shadow` list:
@@ -695,7 +712,7 @@ These deviate from the canonical shape on purpose: document the reason in-file:
    `:where([data-ui~="<component>"]) [data-<component>-slot~="<part>"]`, never part classes.
    Roots are never stamped with a slot. One exception: `data-prose-slot="start"` is a scope
    root that carries a slot, because it turns prose back on inside an `end` slot
-   (`@scope` in [`_typography.css`](./src/base/_typography.css)).
+   (`@scope` in [`prose.css`](./src/primitives/prose/prose.css)).
 7. Add presets as `[data-ui~="<component>"][data-<component>-variant="…"]` (or `-size`,
    `-orientation`, …) that **only write privates**; hooks read on a descendant are set as
    hooks instead. JS config and state keep the same prefix (`data-<component>-loop`,

@@ -6,30 +6,30 @@ sectionOrder: 1
 order: 1
 ---
 
-Native `h1`–`h6` carry their role by default. Any other element takes a role as an identity token: `data-ui="text-h4"`, `data-ui="badge text-xs"`. A role stacks with other tokens, and a utility overrides one property of it (`--font-size`, `--leading`, `--font-weight`); never rebuild a role from utilities.
+Native `h1`–`h6` carry their role by default. Any other element takes one with `data-font`: `data-font="h4"`, `data-ui="badge" data-font="xs"`. A role beats the font of the primitive it sits on, and a utility overrides one property of it (`--font-size`, `--leading`, `--font-weight`); never rebuild a role from utilities. The [font](/api/primitives/font/) page lists the attribute.
 
 {% roles /%}
 
 ## Sizes
 
-The body sizes `text-2xs` to `text-2xl` are the `--font-size-*` tokens with matching leading and tracking. Every size comes from a fluid type scale: a base size and a scale ratio, each growing between a small-screen and a large-screen value, with per-step multipliers below the base. Tune those controls (on the [tokens](/api/foundations/tokens/) page), not the sizes. `text-eyebrow` is a small label: uppercase, tracked, and muted by convention. `text-display` is the one size above `h1`, for a hero headline.
+The body sizes `2xs` to `2xl` are the `--font-size-*` tokens with matching leading and tracking. Every size comes from a fluid type scale: a base size and a scale ratio, each growing between a small-screen and a large-screen value, with per-step multipliers below the base. Tune those controls (on the [tokens](/api/foundations/tokens/) page), not the sizes. `eyebrow` is a small label: uppercase, tracked, and muted by convention. `display` is the one size above `h1`, for a hero headline.
 
 ## Letter spacing and line height
 
 A typeface with wide or tight default spacing needs every role adjusted by the same amount. Do it with one token instead of thirteen. `--tracking-modifier` is a length added to every `--tracking-*` token. `--tracking-heading-modifier` covers `display` and `h1`–`h6`, and `--tracking-body-modifier` covers `2xl`–`2xs` and the eyebrow. Both default to `--tracking-modifier`, so set the global one and override a group only when it needs something different. Give each a unit (`0.01em`). A bare `0` would break the `calc()` behind the tokens.
 
-Line height works the same way with multipliers. `--leading-heading-multiplier` and `--leading-body-multiplier` (both `1` by default) scale every `--leading-*` token in their group.
+Line height works the same way with coefficients. `--leading-heading-coefficient` and `--leading-body-coefficient` (both `1` by default) scale every `--leading-*` token in their group.
 
 ```css
 :root {
   --tracking-modifier: -0.01em;
-  --leading-body-multiplier: 1.05;
+  --leading-body-coefficient: 1.05;
 }
 ```
 
 ## Links
 
-Links inside `prose` are underlined for you. Anywhere else, an inline link takes the `text-link` role: `<a href="/docs/" data-ui="text-link">`. It underlines in the text's own color at the `--decoration-thickness` and `--decoration-offset` tokens and fades the underline on hover. It stacks with a size role (`data-ui="text-sm text-link"`). A link that acts like a control is a button with the `link` variant.
+Links inside `prose` are underlined for you. Anywhere else, an inline link takes the [link](/api/primitives/link/) identity: `<a href="/docs/" data-ui="link">`. It underlines in the text's own color at the `--decoration-thickness` and `--decoration-offset` tokens and fades the underline on hover. Add a role for its size (`data-ui="link" data-font="sm"`). A link that acts like a control is a button with the `link` variant.
 
 ## Rich text
 

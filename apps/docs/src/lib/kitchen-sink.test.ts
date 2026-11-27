@@ -34,7 +34,7 @@ describe("kitchenSink", () => {
   });
 
   it("titles each section and includes the primitive's main example", () => {
-    expect(html).toContain(`<h2 data-ui="text-h6">Alert dialog</h2>`);
+    expect(html).toContain(`<h2 data-font="h6">Alert dialog</h2>`);
     const button = readExample("button/button")!.trim().split("\n")[0];
     expect(html).toContain(button);
   });

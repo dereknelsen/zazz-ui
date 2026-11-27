@@ -49,7 +49,7 @@ function blocks(lines: string[]): { kind: "p" | "ul"; items: string[] }[] {
   ) : (
     api.behavior.map((doc) => (
       <section>
-        <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+        <p data-font="sm" style="--text: var(--color-muted-foreground)">
           <code>{doc.file.replace(/\.ts$/, ".js")}</code>
         </p>
         {blocks(doc.lines).map((block) =>

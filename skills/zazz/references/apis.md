@@ -10,20 +10,20 @@ enhances markup; you rarely touch it.
 
 ## 1. Platform APIs and their markup hooks
 
-| API                                   | Used by                                 | Markup hook                                                                                                                                                                                                                                                                                    | Polyfill                                |
-| ------------------------------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
-| Popover API                           | tooltip, menu, navigation-menu, toaster | `popover="auto"` / `popover="hint"` / `popover="manual"` (toaster region — no light dismiss), `popovertarget="<id>"`, `:popover-open`                                                                                                                                                          | — (native; Baseline 2025)               |
-| Invoker Commands                      | dialog, lightbox, toaster               | `command="show-modal"` / `command="close"` / custom `command="--toast[-variant]"`, `commandfor="<id>"`                                                                                                                                                                                         | — (native; Baseline 2026)               |
-| Interest Invokers                     | tooltip, menu, menubar, navigation-menu | `interestfor="<id>"` (hover/focus/long-press → hint, wires ARIA)                                                                                                                                                                                                                               | **`invokers/interest`** (Chromium-only) |
-| CSS Anchor Positioning                | popover/tooltip placement               | `data-popover-side`, `data-popover-align` on the `[popover]` (drive `position-area`)                                                                                                                                                                                                           | `@supports`-gated; UA-centered fallback |
-| Native `<dialog>`                     | dialog, drawer, lightbox, mobile-menu   | `<dialog>`, `::backdrop`, `closedby="any"` (backdrop dismiss; `dialog-lifecycle.ts` fills it in for Safari)                                                                                                                                                                                    | —                                       |
-| Native `<details>`                    | accordion                               | `<details>`/`<summary>`, `::details-content`, `interpolate-size: allow-keywords`                                                                                                                                                                                                               | —                                       |
-| View Transitions                      | cross-page nav                          | `@view-transition { navigation: auto }` (in the site's own CSS; the kit never enables it, and `var()` can't toggle it), `data-transition-layer="global-header"` / `="global-footer"` (`<main>` is automatic), `document.startViewTransition()`                                                 | —                                       |
-| Navigation API                        | SPA-style nav                           | `navigation.js`, opt-in: `<html data-ui-navigation="swap">`, `data-ui-persist="<id>"` to keep an element, `data-ui-persist-scroll="<id>"` to keep only its scroll, `data-ui-navigation="off"` on a region another library drives; the destination's head stylesheets are added before the swap | falls back to full page load            |
-| `light-dark()`                        | theming, dark mode                      | `data-theme="dark"` / `"light"` on any element pins `color-scheme`; `--color-*` tokens re-resolve                                                                                                                                                                                              | —                                       |
-| IntersectionObserver                  | scroll reveals                          | `[data-reveal]` / `[data-reveal-each]` (via `reveal.js`)                                                                                                                                                                                                                                       | —                                       |
-| `sibling-index()` / `sibling-count()` | reveal stagger delays                   | `[data-reveal-each]` children compute `--ui-reveal-wait` natively                                                                                                                                                                                                                              | `@supports`-gated; JS fallback          |
-| `:user-invalid` / `:has()`            | form validation                         | surfaces error state after commit, not while typing                                                                                                                                                                                                                                            | —                                       |
+| API                                   | Used by                                 | Markup hook                                                                                                                                                                                                                                                                                                        | Polyfill                                |
+| ------------------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- |
+| Popover API                           | tooltip, menu, navigation-menu, toaster | `popover="auto"` / `popover="hint"` / `popover="manual"` (toaster region — no light dismiss), `popovertarget="<id>"`, `:popover-open`                                                                                                                                                                              | — (native; Baseline 2025)               |
+| Invoker Commands                      | dialog, lightbox, toaster               | `command="show-modal"` / `command="close"` / custom `command="--toast[-variant]"`, `commandfor="<id>"`                                                                                                                                                                                                             | — (native; Baseline 2026)               |
+| Interest Invokers                     | tooltip, menu, menubar, navigation-menu | `interestfor="<id>"` (hover/focus/long-press → hint, wires ARIA)                                                                                                                                                                                                                                                   | **`invokers/interest`** (Chromium-only) |
+| CSS Anchor Positioning                | popover/tooltip placement               | `data-popover-side`, `data-popover-align` on the `[popover]` (drive `position-area`)                                                                                                                                                                                                                               | `@supports`-gated; UA-centered fallback |
+| Native `<dialog>`                     | dialog, drawer, lightbox, mobile-menu   | `<dialog>`, `::backdrop`, `closedby="any"` (backdrop dismiss; `dialog-lifecycle.ts` fills it in for Safari)                                                                                                                                                                                                        | —                                       |
+| Native `<details>`                    | accordion                               | `<details>`/`<summary>`, `::details-content`, `interpolate-size: allow-keywords`                                                                                                                                                                                                                                   | —                                       |
+| View Transitions                      | cross-page nav                          | `@view-transition { navigation: auto }` (in the site's own CSS; the kit never enables it, and `var()` can't toggle it), `data-transition-layer="global-header"` / `="global-footer"` (`<main>` is automatic), `document.startViewTransition()`                                                                     | —                                       |
+| Navigation API                        | SPA-style nav                           | `navigation.js`, opt-in: `<html data-navigation="swap">`, `data-navigation-persist="<id>"` to keep an element, `data-navigation-persist-mode="scroll"` beside it to keep only its scroll, `data-navigation="off"` on a region another library drives; the destination's head stylesheets are added before the swap | falls back to full page load            |
+| `light-dark()`                        | theming, dark mode                      | `data-theme="dark"` / `"light"` on any element pins `color-scheme`; `--color-*` tokens re-resolve                                                                                                                                                                                                                  | —                                       |
+| IntersectionObserver                  | scroll reveals                          | `[data-reveal]` / `[data-reveal-each]` (via `reveal.js`)                                                                                                                                                                                                                                                           | —                                       |
+| `sibling-index()` / `sibling-count()` | reveal stagger delays                   | `[data-reveal-each]` children compute `--ui-reveal-wait` natively                                                                                                                                                                                                                                                  | `@supports`-gated; JS fallback          |
+| `:user-invalid` / `:has()`            | form validation                         | surfaces error state after commit, not while typing                                                                                                                                                                                                                                                                | —                                       |
 
 ## 2. Zazz JS behaviors (data-attribute driven)
 
@@ -121,14 +121,14 @@ role by carrying both slot attributes (`data-lightbox-slot="slide" data-carousel
 | `data-carousel-align`                                | `"center"`                            | where slides rest: `start` (default), `center`, `end`              |
 | `data-carousel-axis`                                 | `"y"`                                 | vertical track; give the viewport a height                         |
 | `data-carousel-draggable`                            | `"false"`                             | turn mouse dragging off (touch still scrolls)                      |
-| `data-carousel-drag-free`                            | `"true"`                              | free scrolling with momentum, no snapping                          |
+| `data-carousel-snap`                                 | `"free"`                              | free scrolling with momentum, no snapping (default `slide`)        |
 | `data-carousel-skip-snaps`                           | `"true"`                              | a mouse flick may pass several snaps (default: one)                |
 | `data-carousel-start-snap`                           | `"2"`                                 | index to start on                                                  |
 | `data-carousel-keyboard`                             | `"false"`                             | leave the arrow keys to native scrolling                           |
 | `data-carousel-plugins`                              | `"autoplay"` or `"auto-scroll"`       | timed steps, or continuous scrolling                               |
 | `data-carousel-autoplay-*`                           | `data-carousel-autoplay-delay="3000"` | `delay` (ms), `stop-on-last-snap`                                  |
 | `data-carousel-auto-scroll-*`                        | `data-carousel-auto-scroll-speed="2"` | `speed` (px per frame), `start-delay` (ms), `direction="backward"` |
-| `data-carousel-thumbs-*` (on the `thumbs` slot)      | `data-carousel-thumbs-axis="y"`       | the same options for the thumb strip (default: drag-free)          |
+| `data-carousel-thumbs-*` (on the `thumbs` slot)      | `data-carousel-thumbs-axis="y"`       | the same options for the thumb strip (default: `snap="free"`)      |
 | `data-carousel-start` (on a trigger w/ `commandfor`) | `data-carousel-start="2"`             | open a dialog carousel at slide N                                  |
 
 Right to left needs no option: the track follows the inherited `dir`. Arrow keys step the
@@ -155,30 +155,30 @@ to initialize. `data-ui="drawer"` is a bottom sheet everywhere, with
 
 - Dragging down past a quarter of its height, or a quick flick, dismisses it through
   `requestClose()` (`cancel` and `close` fire as for Esc). Scrolling content scrolls first; the
-  handle always drags. Form fields, selected text, and anything inside `[data-ui-no-drag]`
-  never start a drag.
+  handle always drags. Form fields, selected text, and anything inside
+  `[data-draggable="false"]` never start a drag.
 - `data-drawer-snap="12rem 0.5 1"`: resting heights, smallest first (a share of the full
   height up to `1`, or a `px`/`rem` length). It opens at the first; a flick moves one stop, a
-  very fast one jumps to the end unless `data-drawer-snap-sequential` is set. Make the handle a
+  very fast one jumps to the end unless `data-drawer-snap-behavior="sequential"` is set. Make the handle a
   `<button>` so the keyboard can step through stops. Each change fires `zazz:drawer-snap`
   (`detail.index`, `detail.value` in px); `data-drawer-state` carries `expanded` at the top
   stop; `snapDrawer(dialog, index)` (an export of `drawer.js`) moves it from script.
 - A drawer opened over another scales the one behind back. The software keyboard is handled:
   nothing to author.
 
-`data-ui-no-drag` also applies to toast swipes.
+`data-draggable="false"` works for the other drags too: on `<ui-toaster>` its toasts cannot be swiped away, and inside a carousel slide a mouse press does not drag the track.
 
 ### Helpers and app glue
 
 - **`utils.js` (`window.Utils`)** — `parseValue` and `parseDataAttributes(node, "data-carousel-")`
   convert kebab-case `data-*` to a typed options object. It runs only on elements carrying the
   identity, so a third-party `data-carousel-*` attribute elsewhere is ignored.
-- **`navigation.js`** — opt-in with `<html data-ui-navigation="swap">`: swaps the whole
-  `<body>` between opted-in pages, keeps only `data-ui-persist="<id>"` elements (with their
+- **`navigation.js`** — opt-in with `<html data-navigation="swap">`: swaps the whole
+  `<body>` between opted-in pages, keeps only `data-navigation-persist="<id>"` elements (with their
   scroll offsets; their links take `aria-current` from the new page), carries the scroll offset
-  of `data-ui-persist-scroll="<id>"` elements rendered fresh (a section sidebar), runs a View
+  of the ones that add `data-navigation-persist-mode="scroll"` and are rendered fresh (a section sidebar), runs a View
   Transition, and refreshes Reveal and carousels (see `AUTHORING.md`, Navigation). App-level only. Custom elements initialize themselves when connected, so SPA swaps
-  do not need a separate init call for them. With htmx or a client router on the page, put `data-ui-navigation="off"`
+  do not need a separate init call for them. With htmx or a client router on the page, put `data-navigation="off"`
   on the regions it drives and call `Zazz.refresh(element)` (`window.Zazz`) after it inserts markup.
   Entries the page pushes with `history.pushState()` belong to the page, Back and Forward included.
 

@@ -17,7 +17,7 @@ const titleOf = (id: string) => {
 {
   api.examples.map((id) => (
     <>
-      {api.examples.length > 1 && <h3 id={`example-${id.split("/")[1]}`} data-ui="text-lg">{titleOf(id)}</h3>}
+      {api.examples.length > 1 && <h3 id={`example-${id.split("/")[1]}`} data-font="lg">{titleOf(id)}</h3>}
       <Preview src={id} title={`${api.name}: ${titleOf(id)}`} />
     </>
   ))

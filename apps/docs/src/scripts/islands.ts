@@ -1,6 +1,6 @@
 /**
  * Loads a page-specific custom element's module when the page was reached by a
- * swap navigation (`data-ui-navigation="swap"`).
+ * swap navigation (`data-navigation="swap"`).
  *
  * Each component ships its own `<script>`, so a full page load fetches only
  * what that page renders. A swap replaces `<body>` and runs none of the

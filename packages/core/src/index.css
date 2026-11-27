@@ -30,6 +30,8 @@
 /* @import "./your-legacy.css" layer(legacy.imports); */
 
 /* Primitives */
+/* prose.css loads first: a primitive inside prose keeps its own rules */
+@import "./primitives/prose/prose.css";
 @import "./primitives/layout/layout.css";
 @import "./primitives/group/group.css";
 @import "./primitives/scroll-fade/scroll-fade.css";
@@ -75,6 +77,10 @@
 @import "./primitives/lightbox/lightbox.css";
 @import "./primitives/toaster/toaster.css";
 @import "./primitives/reveal/reveal.css";
+@import "./primitives/link/link.css";
+/* font.css loads after every primitive that sets a font, so a data-font role
+   beats the primitive it sits on */
+@import "./primitives/font/font.css";
 
 /* Generated utilities (scripts/generate-utilities.ts): the last
    normal Zazz layer. */

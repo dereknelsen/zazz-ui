@@ -14,7 +14,7 @@
     --_radius: var(--radius);
     --_radius-len: var(--_radius-resolved);
     --_radius-num: var(--_radius-resolved);
-    border-radius: calc(var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier));
+    border-radius: calc(var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-coefficient));
   }
   :where([style*="--radius: full"]) { --_radius: var(--radius-full); corner-shape: round; }
   :where([style*="--radius: var(--radius-full)"]) { --_corner-shape-resolved: round; corner-shape: round; }
@@ -63,14 +63,14 @@
     --_radius-t: var(--radius-t);
     --_radius-t-len: var(--_radius-t-resolved);
     --_radius-t-num: var(--_radius-t-resolved);
-    border-start-start-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-multiplier));
-    border-start-end-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-multiplier));
+    border-start-start-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-coefficient));
+    border-start-end-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-coefficient));
   }
   :where(:is([style*="--radius:"])[style*="--radius-t--"]) {
     --_radius-t-len: var(--_radius-t-resolved, var(--_radius-resolved, 0));
     --_radius-t-num: var(--_radius-t-resolved, var(--_radius-resolved, 0));
-    border-start-start-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-multiplier));
-    border-start-end-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-multiplier));
+    border-start-start-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-coefficient));
+    border-start-end-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-coefficient));
   }
   :where([style*="--radius-t: full"]) { --_radius-t: var(--radius-full); }
   @container (width >= 40rem) {
@@ -96,14 +96,14 @@
     --_radius-b: var(--radius-b);
     --_radius-b-len: var(--_radius-b-resolved);
     --_radius-b-num: var(--_radius-b-resolved);
-    border-end-start-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-multiplier));
-    border-end-end-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-multiplier));
+    border-end-start-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-coefficient));
+    border-end-end-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-coefficient));
   }
   :where(:is([style*="--radius:"])[style*="--radius-b--"]) {
     --_radius-b-len: var(--_radius-b-resolved, var(--_radius-resolved, 0));
     --_radius-b-num: var(--_radius-b-resolved, var(--_radius-resolved, 0));
-    border-end-start-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-multiplier));
-    border-end-end-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-multiplier));
+    border-end-start-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-coefficient));
+    border-end-end-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-coefficient));
   }
   :where([style*="--radius-b: full"]) { --_radius-b: var(--radius-full); }
   @container (width >= 40rem) {
@@ -129,14 +129,14 @@
     --_radius-l: var(--radius-l);
     --_radius-l-len: var(--_radius-l-resolved);
     --_radius-l-num: var(--_radius-l-resolved);
-    border-start-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-multiplier));
-    border-end-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-multiplier));
+    border-start-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-coefficient));
+    border-end-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-coefficient));
   }
   :where(:is([style*="--radius:"])[style*="--radius-l--"]) {
     --_radius-l-len: var(--_radius-l-resolved, var(--_radius-resolved, 0));
     --_radius-l-num: var(--_radius-l-resolved, var(--_radius-resolved, 0));
-    border-start-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-multiplier));
-    border-end-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-multiplier));
+    border-start-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-coefficient));
+    border-end-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-coefficient));
   }
   :where([style*="--radius-l: full"]) { --_radius-l: var(--radius-full); }
   @container (width >= 40rem) {
@@ -162,14 +162,14 @@
     --_radius-r: var(--radius-r);
     --_radius-r-len: var(--_radius-r-resolved);
     --_radius-r-num: var(--_radius-r-resolved);
-    border-start-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-multiplier));
-    border-end-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-multiplier));
+    border-start-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-coefficient));
+    border-end-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-coefficient));
   }
   :where(:is([style*="--radius:"])[style*="--radius-r--"]) {
     --_radius-r-len: var(--_radius-r-resolved, var(--_radius-resolved, 0));
     --_radius-r-num: var(--_radius-r-resolved, var(--_radius-resolved, 0));
-    border-start-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-multiplier));
-    border-end-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-multiplier));
+    border-start-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-coefficient));
+    border-end-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-coefficient));
   }
   :where([style*="--radius-r: full"]) { --_radius-r: var(--radius-full); }
   @container (width >= 40rem) {

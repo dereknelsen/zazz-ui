@@ -17,14 +17,14 @@ The kit's colors, type, spacing, radii, and shadows are custom properties on `:r
   :root {
     --color-primary: light-dark(oklch(0.35 0.12 260), oklch(0.85 0.1 260));
     --color-primary-foreground: light-dark(white, oklch(0.2 0.05 260));
-    --radius-multiplier: 0;
+    --radius-coefficient: 0;
     --font-family-heading: "Fraunces", var(--font-sans-fallback);
     --spacing: 0.3rem;
   }
 }
 ```
 
-`--spacing: 0.3rem` pins the spacing unit. To keep it fluid at a new size, set its two ends instead: `--spacing-min: 0.275rem; --spacing-max: 0.3rem`. The type scale works the same way through `--typeset-base-min`/`-max` and `--typeset-scale-min`/`-max`. To fit a new typeface's spacing, shift every role at once with `--tracking-modifier` (a length such as `-0.01em`) and the `--leading-heading-multiplier` and `--leading-body-multiplier` factors. The [typography](/api/foundations/typography/) page has the details.
+`--spacing: 0.3rem` pins the spacing unit. To keep it fluid at a new size, set its two ends instead: `--spacing-min: 0.275rem; --spacing-max: 0.3rem`. The type scale works the same way through `--typeset-base-min`/`-max` and `--typeset-scale-min`/`-max`. To fit a new typeface's spacing, shift every role at once with `--tracking-modifier` (a length such as `-0.01em`) and the `--leading-heading-coefficient` and `--leading-body-coefficient` factors. The [typography](/api/foundations/typography/) page has the details.
 
 The theme builder on the [home page](/) writes this block for you: pick neutral, primary, secondary, and tertiary colors, set the spacing, radius, and shadow angle, then copy the variables you changed.
 
@@ -88,7 +88,7 @@ A complete brand is a few dozen lines: the role colors, the scales they draw fro
     --color-secondary: var(--color-secondary-500);
 
     /* shape and type */
-    --radius-multiplier: 0;
+    --radius-coefficient: 0;
     --font-family-heading: "Fraunces", var(--font-sans-fallback);
 
     /* primitives */

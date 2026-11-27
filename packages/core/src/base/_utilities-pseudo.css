@@ -437,7 +437,7 @@
   :where([style*="--before-radius:"])::before {
     --_before-radius-len: var(--before-radius);
     --_before-radius-num: var(--before-radius);
-    border-radius: calc(var(--_before-radius-len) + var(--_before-radius-num) * var(--spacing) * var(--radius-multiplier));
+    border-radius: calc(var(--_before-radius-len) + var(--_before-radius-num) * var(--spacing) * var(--radius-coefficient));
     corner-shape: var(--radius-corner-shape);
   }
   :where([style*="--before-radius: full"])::before {
@@ -449,7 +449,7 @@
   :where([style*="--after-radius:"])::after {
     --_after-radius-len: var(--after-radius);
     --_after-radius-num: var(--after-radius);
-    border-radius: calc(var(--_after-radius-len) + var(--_after-radius-num) * var(--spacing) * var(--radius-multiplier));
+    border-radius: calc(var(--_after-radius-len) + var(--_after-radius-num) * var(--spacing) * var(--radius-coefficient));
     corner-shape: var(--radius-corner-shape);
   }
   :where([style*="--after-radius: full"])::after {

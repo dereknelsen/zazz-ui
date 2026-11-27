@@ -1,410 +1,25 @@
 /**
- * _typography.css — Fluid type scale, prose ([data-ui~="prose"]), and figcaption reset
+ * _typography.css — Native headings (h1–h6)
  *
- * @layer      variables, reset, components
- * @requires   _layers.css, _variables.css, _reset.css (figcaption baseline)
- * @uses       Type tokens — consumes --font-family-*, --font-weight-*,
- *             --leading-*, --tracking-* and the type scale controls
- *             (--fluid-*, --typeset-base-*, --typeset-scale-*, --typeset-<sm|xs|2xs>-*)
- *             from _variables.css; exposes the data-ui="text-*" roles; weight, family, style,
- *             and decoration are utilities (--font-weight, --font-family, --font-style, --text-decoration)
- * @uses       tan(atan2()) — divides two lengths into a plain number (a stand-in for
- *             progress() that every engine supports); pow() — the type scale's steps
+ * @layer      reset
+ * @requires   _layers.css, _variables.css
+ * @uses       Type tokens — consumes --font-family-heading, --font-weight-heading,
+ *             --font-size-h*, --leading-h*, --tracking-h*, and the heading OpenType
+ *             controls from _variables.css
  * @uses       font-optical-sizing — heading optical size
  * @uses       text-wrap: pretty — h4–h6, @supports gated (Firefox lacks it; wrap fallback)
- * @uses       @scope (prose, a start slot) to (an end slot): prose rules stop at
- *             `data-prose-slot="end"`; a start slot or a prose inside it is a new root
- * @tokens     --fluid, --typeset-base, --typeset-scale, --font-size-* (@layer variables);
- *             --ui-prose-* (@layer variables); presets data-prose-size="sm" | "lg"
+ * @consumedby font.css (data-font="h1"–"h6" restate these roles for any element),
+ *             prose.css (heading spacing)
  */
-
-@layer variables {
-  :root {
-    /* multiplies the space between prose blocks, on top of
-       --paragraph-spacing-multiplier and a data-prose-size preset */
-    --ui-prose-flow: 1;
-    --ui-prose-figcaption-mt: var(--space-xs);
-    /* 0 preserves the figcaption-mt spacing; a length adds flex gap on top */
-    --ui-prose-figcaption-gap: 0px;
-    --ui-prose-img-radius: var(--radius-md);
-    --ui-prose-img-border: none;
-  }
-
-  /* ===========================================================================
-  FLUID TYPE SCALE — calculations, don't touch; tune the controls in
-  _variables.css. A sized prose re-runs them, so its preset scales the base
-  and a :root control still reaches it.
-  =========================================================================== */
-
-  :where(:root, [data-ui~="prose"][data-prose-size]) {
-    /* 0 at --fluid-min, 1 at --fluid-max, linear between, clamped outside:
-       (100vi − min) ÷ (max − min). tan(atan2(a, b)) is a ÷ b as a plain number,
-       which calc() can't do with two lengths in every engine yet. Same result as
-       progress(100vi, var(--fluid-min), var(--fluid-max)). */
-    --fluid: clamp(0, tan(atan2(100vi - var(--fluid-min), var(--fluid-max) - var(--fluid-min))), 1);
-    --typeset-base: calc(
-      (
-          var(--typeset-base-min) + var(--fluid) *
-            (var(--typeset-base-max) - var(--typeset-base-min))
-        ) *
-        var(--_prose-size, 1)
-    );
-    --typeset-scale: calc(
-      var(--typeset-scale-min) + var(--fluid) *
-        (var(--typeset-scale-max) - var(--typeset-scale-min))
-    );
-
-    --font-size-2xs: calc(
-      var(--typeset-base) *
-        (var(--typeset-2xs-min) + var(--fluid) * (var(--typeset-2xs-max) - var(--typeset-2xs-min)))
-    );
-    --font-size-xs: calc(
-      var(--typeset-base) *
-        (var(--typeset-xs-min) + var(--fluid) * (var(--typeset-xs-max) - var(--typeset-xs-min)))
-    );
-    --font-size-sm: calc(
-      var(--typeset-base) *
-        (var(--typeset-sm-min) + var(--fluid) * (var(--typeset-sm-max) - var(--typeset-sm-min)))
-    );
-    --font-size-eyebrow: var(--font-size-2xs);
-    --font-size-md: var(--typeset-base);
-    --font-size-lg: calc(var(--typeset-base) * var(--typeset-scale));
-    --font-size-xl: calc(var(--typeset-base) * pow(var(--typeset-scale), 2));
-    --font-size-2xl: calc(var(--typeset-base) * pow(var(--typeset-scale), 3));
-    --font-size-h6: var(--font-size-xl);
-    --font-size-h5: var(--font-size-2xl);
-    --font-size-h4: calc(var(--typeset-base) * pow(var(--typeset-scale), 4));
-    --font-size-h3: calc(var(--typeset-base) * pow(var(--typeset-scale), 5));
-    --font-size-h2: calc(var(--typeset-base) * pow(var(--typeset-scale), 6));
-    --font-size-h1: calc(var(--typeset-base) * pow(var(--typeset-scale), 7));
-    --font-size-display: calc(var(--typeset-base) * pow(var(--typeset-scale), 8));
-  }
-}
-
-@layer ui.components {
-  /* ===========================================================================
-  TYPOGRAPHY — prose component styles
-  =========================================================================== */
-
-  :where([data-ui~="prose"], [data-ui~="prose"] [data-prose-slot~="start"]) {
-    flex-direction: column;
-    display: flex;
-  }
-
-  /* a sized prose sets its own body text; a plain one inherits the page's */
-  :where([data-ui~="prose"][data-prose-size]) {
-    font-size: var(--font-size-md);
-    line-height: var(--_prose-leading, var(--leading-md));
-  }
-
-  /* size presets: a multiple of the base, a body leading, and a multiple of
-     the space between blocks; each composes with the :root controls and hooks */
-  :where([data-ui~="prose"][data-prose-size="sm"]) {
-    --_prose-size: 0.875;
-    --_prose-leading: 1.5;
-    --_prose-flow: 0.75;
-  }
-
-  :where([data-ui~="prose"][data-prose-size="lg"]) {
-    --_prose-size: 1.125;
-    --_prose-leading: 1.8;
-    --_prose-flow: 1.25;
-  }
-
-  /* Prose styles its descendants up to an `end` slot. A `start` slot inside one,
-     or a nested prose, is a root of its own, so the nearest root wins. */
-  @scope ([data-ui~="prose"], [data-ui~="prose"] [data-prose-slot~="start"]) to ([data-prose-slot~="end"]) {
-    :where(figure) {
-      inline-size: 100%;
-      max-inline-size: 100%;
-      display: flex;
-      flex-direction: column;
-    }
-
-    :where(figure:has(img, video)) {
-      gap: var(--ui-prose-figcaption-gap);
-    }
-
-    :where(img, video) {
-      border-radius: var(--ui-prose-img-radius);
-      corner-shape: var(--radius-corner-shape);
-      border: var(--ui-prose-img-border);
-    }
-
-    :where(figure:has(img, video) > figcaption) {
-      display: flex;
-      margin-block-start: var(--ui-prose-figcaption-mt);
-      font-style: italic;
-      font-family: var(--font-family-body);
-      font-size: var(--font-size-sm);
-      line-height: var(--leading-md);
-      font-weight: var(--font-weight-body);
-      letter-spacing: var(--tracking-md);
-    }
-
-    :where(figcaption:has(+ :where(ul, ol, dl))) {
-      font-weight: var(--font-weight-strong);
-    }
-
-    :where(ul) {
-      list-style: disc;
-      padding-inline-start: var(--space-md);
-    }
-
-    :where(ol) {
-      list-style: decimal;
-      padding-inline-start: var(--space-md);
-    }
-
-    :where(dl > dd) {
-      padding-inline-start: var(--space-md);
-    }
-
-    :where(dl > dt) {
-      font-weight: var(--font-weight-strong);
-
-      &::after {
-        content: ":";
-      }
-    }
-
-    :where(blockquote) {
-      padding-inline-start: var(--space-sm);
-      border-inline-start: 1px solid var(--color-border);
-      font-style: italic;
-    }
-
-    :where(blockquote > cite) {
-      color: var(--color-muted-foreground);
-      padding-inline-start: var(--space-xs);
-      font-style: normal;
-      font-size: var(--font-size-sm);
-      line-height: var(--leading-sm);
-      font-weight: var(--font-weight-body);
-      letter-spacing: var(--tracking-sm);
-    }
-
-    /* ===========================================================================
-    PARAGRAPH RHYTHM — top margin on non-first blocks within [data-ui~="prose"]
-    =========================================================================== */
-
-    :where(hgroup:not(:first-child)) {
-      font-size: var(--font-size-xl);
-      margin-block-start: calc(
-        var(--paragraph-spacing-xl) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where(ul:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-md) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where(ol:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-md) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where(dl:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-md) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where(li:not(:first-child)) {
-      margin-block-start: 0.5lh;
-    }
-
-    :where(a[href]:not([data-ui~="button"])) {
-      text-decoration: underline;
-      text-decoration-thickness: var(--decoration-thickness);
-      text-underline-offset: var(--decoration-offset);
-      transition: text-decoration-color var(--default-transition-duration)
-        var(--default-transition-timing-function);
-    }
-
-    :where(a[href]:not([data-ui~="button"]):hover) {
-      text-decoration-color: oklch(from currentColor l c h / 0.3);
-    }
-
-    :where(
-      figure :where(ul, ol, dl):first-child,
-      figure > figcaption + :where(ul, ol, dl):nth-child(2)
-    ) {
-      margin-block-start: 0rem;
-    }
-
-    :where([data-ui~="text-display"]:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-display) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where([data-ui~="text-h1"]:not(:first-child), h1:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-h1) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where([data-ui~="text-h2"]:not(:first-child), h2:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-h2) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where([data-ui~="text-h3"]:not(:first-child), h3:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-h3) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where([data-ui~="text-h4"]:not(:first-child), h4:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-h4) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where([data-ui~="text-h5"]:not(:first-child), h5:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-h5) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where([data-ui~="text-h6"]:not(:first-child), h6:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-h6) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where([data-ui~="text-2xl"]:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-2xl) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where([data-ui~="text-xl"]:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-xl) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where([data-ui~="text-lg"]:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-lg) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where([data-ui~="text-md"]:not(:first-child), :is(p, pre):not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-md) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where([data-ui~="text-sm"]:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-sm) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where([data-ui~="text-xs"]:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-xs) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where([data-ui~="text-2xs"]:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-2xs) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where([data-ui~="text-eyebrow"]:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-eyebrow) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where(hr:first-child) {
-      margin-block-end: calc(
-        var(--space-md) * var(--paragraph-spacing-multiplier) * var(--ui-prose-flow)
-      );
-    }
-
-    :where(hr:not(:first-child)) {
-      margin-block: calc(
-        var(--space-lg) * var(--paragraph-spacing-multiplier) * var(--ui-prose-flow)
-      );
-    }
-
-    :where([data-ui~="text-eyebrow"] + *) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-xs) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where(figure:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-md) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where(figure:not(:first-child):has(:is(img, video))) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-md) * 2 * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where(dl > dt:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-md) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where(blockquote:not(:first-child)) {
-      margin-block-start: calc(
-        var(--paragraph-spacing-lg) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-
-    :where(blockquote:not(:last-child)) {
-      margin-block-end: calc(
-        var(--paragraph-spacing-lg) * var(--ui-prose-flow) * var(--_prose-flow, 1)
-      );
-    }
-  }
-}
 
 @layer reset {
   /* ===========================================================================
-  TYPOGRAPHY ROLES — native headings and data-ui="text-*" tokens.
-  Reset-level: a component rule beats a role; a utility beats both.
+  NATIVE HEADINGS — h1–h6 carry their role without an attribute.
+  Reset-level: a component rule beats a heading, data-font (font.css) among
+  them; a utility beats both.
   =========================================================================== */
 
-  :where([data-ui~="text-display"]) {
-    font-family: var(--font-family-heading);
-    font-size: var(--font-size-display);
-    line-height: var(--leading-display);
-    font-weight: var(--font-weight-heading);
-    letter-spacing: var(--tracking-display);
-    text-wrap: var(--text-wrap-heading, balance);
-    font-feature-settings: var(--font-feature-heading);
-    font-kerning: var(--font-kerning-heading);
-    font-language-override: var(--font-language-heading);
-    font-optical-sizing: var(--font-optical-sizing-heading, auto);
-    font-size-adjust: var(--font-size-adjust-heading);
-    font-variant-alternates: var(--font-alternates-heading);
-    font-variant-caps: var(--font-caps-heading);
-    font-variant-east-asian: var(--font-east-asian-heading);
-    font-variant-emoji: var(--font-emoji-heading);
-    font-variant-ligatures: var(--font-ligatures-heading);
-    font-variant-numeric: var(--font-numeric-heading);
-    font-variant-position: var(--font-position-heading);
-    font-variation-settings: var(--font-settings-heading);
-  }
-
-  :where(h1, [data-ui~="text-h1"]) {
+  :where(h1) {
     font-family: var(--font-family-heading);
     font-size: var(--font-size-h1);
     line-height: var(--leading-h1);
@@ -426,7 +41,7 @@
     font-variation-settings: var(--font-settings-heading);
   }
 
-  :where(h2, [data-ui~="text-h2"]) {
+  :where(h2) {
     font-family: var(--font-family-heading);
     font-size: var(--font-size-h2);
     line-height: var(--leading-h2);
@@ -448,7 +63,7 @@
     font-variation-settings: var(--font-settings-heading);
   }
 
-  :where(h3, [data-ui~="text-h3"]) {
+  :where(h3) {
     font-family: var(--font-family-heading);
     font-size: var(--font-size-h3);
     line-height: var(--leading-h3);
@@ -470,7 +85,7 @@
     font-variation-settings: var(--font-settings-heading);
   }
 
-  :where(h4, [data-ui~="text-h4"]) {
+  :where(h4) {
     font-family: var(--font-family-heading);
     font-size: var(--font-size-h4);
     line-height: var(--leading-h4);
@@ -499,7 +114,7 @@
     font-variation-settings: var(--font-settings-heading);
   }
 
-  :where(h5, [data-ui~="text-h5"]) {
+  :where(h5) {
     font-family: var(--font-family-heading);
     font-size: var(--font-size-h5);
     line-height: var(--leading-h5);
@@ -525,7 +140,7 @@
     font-variation-settings: var(--font-settings-heading);
   }
 
-  :where(h6, [data-ui~="text-h6"]) {
+  :where(h6) {
     font-family: var(--font-family-heading);
     font-size: var(--font-size-h6);
     line-height: var(--leading-h6);
@@ -549,171 +164,5 @@
     font-variant-numeric: var(--font-numeric-heading);
     font-variant-position: var(--font-position-heading);
     font-variation-settings: var(--font-settings-heading);
-  }
-
-  :where([data-ui~="text-2xl"]) {
-    font-size: var(--font-size-2xl);
-    line-height: var(--leading-2xl);
-    letter-spacing: var(--tracking-2xl);
-    font-feature-settings: var(--font-feature-body);
-    font-kerning: var(--font-kerning-body);
-    font-language-override: var(--font-language-body);
-    font-optical-sizing: var(--font-optical-sizing-body, auto);
-    font-size-adjust: var(--font-size-adjust-body);
-    font-variant-alternates: var(--font-alternates-body);
-    font-variant-caps: var(--font-caps-body);
-    font-variant-east-asian: var(--font-east-asian-body);
-    font-variant-emoji: var(--font-emoji-body);
-    font-variant-ligatures: var(--font-ligatures-body);
-    font-variant-numeric: var(--font-numeric-body);
-    font-variant-position: var(--font-position-body);
-    font-variation-settings: var(--font-settings-body);
-  }
-
-  :where([data-ui~="text-xl"]) {
-    font-size: var(--font-size-xl);
-    line-height: var(--leading-xl);
-    letter-spacing: var(--tracking-xl);
-    font-feature-settings: var(--font-feature-body);
-    font-kerning: var(--font-kerning-body);
-    font-language-override: var(--font-language-body);
-    font-optical-sizing: var(--font-optical-sizing-body, auto);
-    font-size-adjust: var(--font-size-adjust-body);
-    font-variant-alternates: var(--font-alternates-body);
-    font-variant-caps: var(--font-caps-body);
-    font-variant-east-asian: var(--font-east-asian-body);
-    font-variant-emoji: var(--font-emoji-body);
-    font-variant-ligatures: var(--font-ligatures-body);
-    font-variant-numeric: var(--font-numeric-body);
-    font-variant-position: var(--font-position-body);
-    font-variation-settings: var(--font-settings-body);
-  }
-
-  :where([data-ui~="text-lg"]) {
-    font-size: var(--font-size-lg);
-    line-height: var(--leading-lg);
-    letter-spacing: var(--tracking-lg);
-    font-feature-settings: var(--font-feature-body);
-    font-kerning: var(--font-kerning-body);
-    font-language-override: var(--font-language-body);
-    font-optical-sizing: var(--font-optical-sizing-body, auto);
-    font-size-adjust: var(--font-size-adjust-body);
-    font-variant-alternates: var(--font-alternates-body);
-    font-variant-caps: var(--font-caps-body);
-    font-variant-east-asian: var(--font-east-asian-body);
-    font-variant-emoji: var(--font-emoji-body);
-    font-variant-ligatures: var(--font-ligatures-body);
-    font-variant-numeric: var(--font-numeric-body);
-    font-variant-position: var(--font-position-body);
-    font-variation-settings: var(--font-settings-body);
-  }
-
-  :where([data-ui~="text-md"]) {
-    font-size: var(--font-size-md);
-    line-height: var(--leading-md);
-    letter-spacing: var(--tracking-md);
-    font-feature-settings: var(--font-feature-body);
-    font-kerning: var(--font-kerning-body);
-    font-language-override: var(--font-language-body);
-    font-optical-sizing: var(--font-optical-sizing-body, auto);
-    font-size-adjust: var(--font-size-adjust-body);
-    font-variant-alternates: var(--font-alternates-body);
-    font-variant-caps: var(--font-caps-body);
-    font-variant-east-asian: var(--font-east-asian-body);
-    font-variant-emoji: var(--font-emoji-body);
-    font-variant-ligatures: var(--font-ligatures-body);
-    font-variant-numeric: var(--font-numeric-body);
-    font-variant-position: var(--font-position-body);
-    font-variation-settings: var(--font-settings-body);
-  }
-
-  :where([data-ui~="text-sm"]) {
-    font-size: var(--font-size-sm);
-    line-height: var(--leading-sm);
-    letter-spacing: var(--tracking-sm);
-    font-feature-settings: var(--font-feature-body);
-    font-kerning: var(--font-kerning-body);
-    font-language-override: var(--font-language-body);
-    font-optical-sizing: var(--font-optical-sizing-body, auto);
-    font-size-adjust: var(--font-size-adjust-body);
-    font-variant-alternates: var(--font-alternates-body);
-    font-variant-caps: var(--font-caps-body);
-    font-variant-east-asian: var(--font-east-asian-body);
-    font-variant-emoji: var(--font-emoji-body);
-    font-variant-ligatures: var(--font-ligatures-body);
-    font-variant-numeric: var(--font-numeric-body);
-    font-variant-position: var(--font-position-body);
-    font-variation-settings: var(--font-settings-body);
-  }
-
-  :where([data-ui~="text-xs"]) {
-    font-size: var(--font-size-xs);
-    line-height: var(--leading-xs);
-    letter-spacing: var(--tracking-xs);
-    font-feature-settings: var(--font-feature-body);
-    font-kerning: var(--font-kerning-body);
-    font-language-override: var(--font-language-body);
-    font-optical-sizing: var(--font-optical-sizing-body, auto);
-    font-size-adjust: var(--font-size-adjust-body);
-    font-variant-alternates: var(--font-alternates-body);
-    font-variant-caps: var(--font-caps-body);
-    font-variant-east-asian: var(--font-east-asian-body);
-    font-variant-emoji: var(--font-emoji-body);
-    font-variant-ligatures: var(--font-ligatures-body);
-    font-variant-numeric: var(--font-numeric-body);
-    font-variant-position: var(--font-position-body);
-    font-variation-settings: var(--font-settings-body);
-  }
-
-  :where([data-ui~="text-2xs"]) {
-    font-size: var(--font-size-2xs);
-    line-height: var(--leading-2xs);
-    letter-spacing: var(--tracking-2xs);
-    font-feature-settings: var(--font-feature-body);
-    font-kerning: var(--font-kerning-body);
-    font-language-override: var(--font-language-body);
-    font-optical-sizing: var(--font-optical-sizing-body, auto);
-    font-size-adjust: var(--font-size-adjust-body);
-    font-variant-alternates: var(--font-alternates-body);
-    font-variant-caps: var(--font-caps-body);
-    font-variant-east-asian: var(--font-east-asian-body);
-    font-variant-emoji: var(--font-emoji-body);
-    font-variant-ligatures: var(--font-ligatures-body);
-    font-variant-numeric: var(--font-numeric-body);
-    font-variant-position: var(--font-position-body);
-    font-variation-settings: var(--font-settings-body);
-  }
-
-  :where([data-ui~="text-eyebrow"]) {
-    font-size: var(--font-size-eyebrow);
-    line-height: var(--leading-eyebrow);
-    font-weight: var(--font-weight-eyebrow);
-    letter-spacing: var(--tracking-eyebrow);
-    text-transform: uppercase;
-    font-feature-settings: var(--font-feature-body);
-    font-kerning: var(--font-kerning-body);
-    font-language-override: var(--font-language-body);
-    font-optical-sizing: var(--font-optical-sizing-body, auto);
-    font-size-adjust: var(--font-size-adjust-body);
-    font-variant-alternates: var(--font-alternates-body);
-    font-variant-caps: var(--font-caps-body);
-    font-variant-east-asian: var(--font-east-asian-body);
-    font-variant-emoji: var(--font-emoji-body);
-    font-variant-ligatures: var(--font-ligatures-body);
-    font-variant-numeric: var(--font-numeric-body);
-    font-variant-position: var(--font-position-body);
-    font-variation-settings: var(--font-settings-body);
-  }
-
-  :where([data-ui~="text-link"]) {
-    text-decoration: underline;
-    text-decoration-thickness: var(--decoration-thickness);
-    text-underline-offset: var(--decoration-offset);
-    transition: text-decoration-color var(--default-transition-duration)
-      var(--default-transition-timing-function);
-  }
-
-  :where([data-ui~="text-link"]:hover) {
-    text-decoration-color: oklch(from currentColor l c h / 0.3);
   }
 }

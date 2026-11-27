@@ -63,7 +63,7 @@ const methods = [
       }
      <a
     href={source}
-    data-ui="text-sm"
+    data-font="sm"
     rel="noopener"
     style="
       --display: inline-flex;
@@ -122,7 +122,7 @@ const methods = [
           ))
         }
       </ui-tabs>
-      <p data-ui="text-sm" style="
+      <p data-font="sm" style="
           --mt: 2;
           --text: var(--color-muted-foreground);
         ">
@@ -132,7 +132,7 @@ const methods = [
               Also adds{" "}
               {dependencies.map((dep, i) => (
                 <>
-                  <a href={`/api/primitives/${dep}/`} data-ui="text-link">
+                  <a href={`/api/primitives/${dep}/`} data-ui="link">
                     {dep}
                   </a>
                   {i < dependencies.length - 1 ? ", " : ""}
@@ -142,7 +142,7 @@ const methods = [
             </>
           )
         }
-        Run <a href="/docs/install/installation/#cli" data-ui="text-link">
+        Run <a href="/docs/install/installation/#cli" data-ui="link">
           <code>zazz-ui init</code>
         </a> first if the project has no <code>zazz/</code> folder yet.
       </p>
@@ -159,12 +159,12 @@ const methods = [
           <CopyButton label="Copy the head" />
         </div>
       </div>
-      <p data-ui="text-sm" style="
+      <p data-font="sm" style="
           --mt: 2;
           --text: var(--color-muted-foreground);
         ">
         A <code>&lt;head&gt;</code> {cdnNote} To load
-        the whole kit in two requests, see <a href="/docs/install/installation/#cdn" data-ui="text-link">
+        the whole kit in two requests, see <a href="/docs/install/installation/#cdn" data-ui="link">
           the CDN install
         </a>.
       </p>

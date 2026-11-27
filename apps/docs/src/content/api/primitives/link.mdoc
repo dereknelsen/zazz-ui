@@ -1,0 +1,27 @@
+---
+title: "Link"
+description: "An underlined inline link for text outside prose."
+section: Primitives
+sectionOrder: 5
+order: 0
+primitive: link
+---
+
+## Installation
+
+{% install primitive="link" /%}
+
+## Examples
+
+{% examples primitive="link" /%}
+
+## Usage
+
+Links inside [prose](/api/primitives/prose/) are underlined for you. Anywhere else, give an inline link the `link` identity. It underlines in the text's own color, at the `--decoration-thickness` and `--decoration-offset` tokens, and fades the underline on hover.
+
+```html
+<a href="/docs/" data-ui="link">Read the docs</a>
+<a href="/terms/" data-ui="link" data-font="sm">Terms</a>
+```
+
+Set the color with the `--text` utility, and remove the underline with `--text-decoration: none`. A link that acts like a control is a [button](/api/primitives/button/) with the `link` variant.

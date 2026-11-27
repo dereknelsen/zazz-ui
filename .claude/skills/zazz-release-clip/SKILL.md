@@ -7,7 +7,7 @@ metadata:
 
 # Zazz release clip
 
-A looping product clip for a release post: mock UI in plain HTML and CSS keyframes, with no video, GIF, or JavaScript. It lives in the docs site as an Astro component and is placed in a post as a Markdoc tag. It is styled with the kit, so it follows the theme, dark mode, and `--radius-multiplier` the way the real primitive does.
+A looping product clip for a release post: mock UI in plain HTML and CSS keyframes, with no video, GIF, or JavaScript. It lives in the docs site as an Astro component and is placed in a post as a Markdoc tag. It is styled with the kit, so it follows the theme, dark mode, and `--radius-coefficient` the way the real primitive does.
 
 Existing clips to copy from: `apps/docs/src/components/clips/GalleryClip.astro` (0.13), `DrawerClip.astro` and `ToastClip.astro` (0.14).
 
@@ -50,10 +50,10 @@ Use the kit wherever a value has a token or hook, and fall back to a literal onl
 ```css
 .fc-xx {
   --fc-spacing: 0.25em; /* --spacing is 0.25rem; 1em ≈ 1rem at full width */
-  --fc-radius-sm: calc(var(--fc-spacing) * 1.5 * var(--radius-multiplier));
-  --fc-radius-md: calc(var(--fc-spacing) * 2.5 * var(--radius-multiplier));
-  --fc-radius: calc(var(--fc-spacing) * 4.5 * var(--radius-multiplier)); /* the stage: radius-lg */
-  --fc-radius-xl: calc(var(--fc-spacing) * 7 * var(--radius-multiplier));
+  --fc-radius-sm: calc(var(--fc-spacing) * 1.5 * var(--radius-coefficient));
+  --fc-radius-md: calc(var(--fc-spacing) * 2.5 * var(--radius-coefficient));
+  --fc-radius: calc(var(--fc-spacing) * 4.5 * var(--radius-coefficient)); /* the stage: radius-lg */
+  --fc-radius-xl: calc(var(--fc-spacing) * 7 * var(--radius-coefficient));
   container-type: inline-size;
   width: 100%;
   aspect-ratio: 740 / 415;
@@ -62,7 +62,7 @@ Use the kit wherever a value has a token or hook, and fall back to a literal onl
 }
 ```
 
-The multiples are the kit's: `--radius-md` is `--spacing × 2.5`, `--ui-toaster-p` is `× 4`, `--ui-drawer-handle-w` is `× 12`. Reading `--radius-multiplier` means a square theme gets a square clip. Nest radii concentrically, inner = outer minus the padding between them (`max(0em, …)`), or a little smaller when the gap is large.
+The multiples are the kit's: `--radius-md` is `--spacing × 2.5`, `--ui-toaster-p` is `× 4`, `--ui-drawer-handle-w` is `× 12`. Reading `--radius-coefficient` means a square theme gets a square clip. Nest radii concentrically, inner = outer minus the padding between them (`max(0em, …)`), or a little smaller when the gap is large.
 
 Copy the primitive's real behavior too. A collapsed toast stack hides the content of the toasts behind the front one. A drawer's backdrop is `--ui-dialog-backdrop-color` and darkens with how much of the sheet shows.
 

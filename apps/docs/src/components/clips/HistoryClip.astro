@@ -1,7 +1,7 @@
 ---
 /**
  * Feature clip for the 0.15 release post: who restores each history entry when
- * `data-ui-navigation="swap"` shares a page with htmx. Four beats on a 10s loop:
+ * `data-navigation="swap"` shares a page with htmx. Four beats on a 10s loop:
  * a link swaps the body (the swap's entry); a tab with `hx-push-url` swaps only
  * its panel, and htmx stamps the entry it swapped on (`replaceState({ htmx: true })`
  * before its first swap) and pushes its own; Back from htmx's entry is htmx's to
@@ -106,14 +106,14 @@
 <style>
   /* Zazz tokens wherever a value has one. The stage sizes in em (2.2cqw), so
      --fc-spacing is an em copy of --spacing and lengths are kit multiples of it;
-     radii read the theme's --radius-multiplier. Element positions are stage em
+     radii read the theme's --radius-coefficient. Element positions are stage em
      (the stage is 45.45em by 25.5em), so the pointer's em path lands on them. */
   .fc-hs {
     --fc-spacing: 0.25em;
     --fc-radius-corner-shape: var(--radius-corner-shape);
-    --fc-radius-sm: calc(var(--fc-spacing) * 1.5 * var(--radius-multiplier));
-    --fc-radius-md: calc(var(--fc-spacing) * 2.5 * var(--radius-multiplier));
-    --fc-radius: calc(var(--fc-spacing) * 4.5 * var(--radius-multiplier));
+    --fc-radius-sm: calc(var(--fc-spacing) * 1.5 * var(--radius-coefficient));
+    --fc-radius-md: calc(var(--fc-spacing) * 2.5 * var(--radius-coefficient));
+    --fc-radius: calc(var(--fc-spacing) * 4.5 * var(--radius-coefficient));
     --fc-row: 2.3em;
     container-type: inline-size;
     width: 100%;

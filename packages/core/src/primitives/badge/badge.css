@@ -239,7 +239,7 @@
     --_radius-len: var(--_radius-resolved, var(--_badge-radius, var(--ui-badge-radius)));
     --_radius-num: var(--_radius-resolved, var(--_badge-radius, var(--ui-badge-radius)));
     border-radius: calc(
-      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-coefficient)
     );
     corner-shape: var(--_corner-shape-resolved, var(--ui-badge-corner-shape));
 

@@ -9,12 +9,19 @@ Applies to all script files in `src/`. Shared runtime modules live in `src/base/
 - `carousel.ts`
 - `carousel-scroll.ts`
 - `dialog-lifecycle.ts`
-- `gesture.ts`
 - `navigation.ts`
 - `reveal.ts`
 - `signals.ts`
 - `utils.ts`
 - `zazz-element.ts`
+
+Behaviors, the interaction logic more than one primitive shares, live in `src/behaviors/` (see [Behaviors](#behaviors)):
+
+- `command-score.ts`
+- `gesture.ts`
+- `hotkeys.ts`
+- `list-navigation.ts`
+- `typeahead.ts`
 
 Component scripts are co-located with their CSS and example HTML in `src/primitives/<name>/`:
 
@@ -22,6 +29,7 @@ Component scripts are co-located with their CSS and example HTML in `src/primiti
 - `checkbox/checkbox.ts`
 - `drawer/drawer.ts`
 - `lightbox/lightbox.ts`
+- `menu/menu.ts`
 - `password-group/password-group.ts`
 - `tabs/tabs.ts`
 - `toaster/toaster.ts`
@@ -91,7 +99,11 @@ Attach a named export object or class to `window` for the documented public API,
 | `base/dialog-lifecycle.ts`            | _(none)_            | Emits `zazz:dialog-open` / `zazz:dialog-close` on every `<dialog>` (ADR-0003); the events are the public API                                                                                                    |
 | `base/carousel.ts`                    | `window.Carousel`   | `{ init, initRoot }`                                                                                                                                                                                            |
 | `base/zazz-element.ts`                | `window.Zazz`       | `ZazzElement` base + `defineZazzElement` + refresh registry (`registerRefresh` / `refreshAll`); `Zazz` `{ refresh }` for content other libraries swap in                                                        |
-| `base/gesture.ts`                     | _(none)_            | `trackDrag` (pointer tracking on a locked axis) + the release math `shouldDismiss`, `pickSnap`, `rubberBand`, `flickDuration`, `createVelocityTracker`; module exports only                                     |
+| `behaviors/gesture.ts`                | _(none)_            | `trackDrag` (pointer tracking on a locked axis) + the release math `shouldDismiss`, `pickSnap`, `rubberBand`, `flickDuration`, `createVelocityTracker`; module exports only                                     |
+| `behaviors/typeahead.ts`              | _(none)_            | `TypeaheadElement` (the filter-as-you-type base class), `rankItems`, `nextActiveIndex`; module exports only                                                                                                     |
+| `behaviors/command-score.ts`          | _(none)_            | `commandScore`: the fuzzy ranking function (ADR-0007); module export only                                                                                                                                       |
+| `behaviors/hotkeys.ts`                | _(none)_            | `bindHotkey`, `parseHotkey`, `matchesHotkey`, `isEditableTarget`, `isBareKey`; module exports only                                                                                                              |
+| `behaviors/list-navigation.ts`        | _(none)_            | `listStep` (key to step, by orientation and writing direction), `stepIndex` (step to index, wrapping), `isDisabledItem`; module exports only                                                                    |
 | `ui/carousel/carousel.ts`             | `base/carousel.ts`  | `<ui-carousel>` calls `Carousel.initRoot`                                                                                                                                                                       |
 | `ui/drawer/drawer.ts`                 | _(none)_            | `initDrawers`, `bindDrawer`, `snapDrawer` (module exports only); drag-to-dismiss, snap points, stacking, and the `<ui-drawer-indent>` page indent for `<dialog data-ui~="drawer">`, bound on `zazz:dialog-open` |
 | `ui/checkbox/checkbox.ts`             | _(none)_            | `initCheckboxes`, `deriveTriState` (module exports only); signal-derived select-all groups                                                                                                                      |
@@ -99,7 +111,7 @@ Attach a named export object or class to `window` for the documented public API,
 | `ui/password-group/password-group.ts` | _(none)_            | `<ui-password>` element class (module export only)                                                                                                                                                              |
 | `ui/tabs/tabs.ts`                     | _(none)_            | `<ui-tabs>` element class (module export only)                                                                                                                                                                  |
 | `ui/toaster/toaster.ts`               | `window.Toaster`    | Imperative toast API + `<ui-toaster>` element class                                                                                                                                                             |
-| `base/navigation.ts`                  | _(none)_            | Side effect: opt-in body swap (`data-ui-navigation="swap"`); exports `swapBody` for tests                                                                                                                       |
+| `base/navigation.ts`                  | _(none)_            | Side effect: opt-in body swap (`data-navigation="swap"`); exports `swapBody` for tests                                                                                                                          |
 | `base/scroll-state.ts`                | _(none)_            | Polyfill for the `stuck` utility state (container scroll-state queries); `index.ts` imports it only where `scroll-state()` is unsupported. exports `ScrollState` `{ start, stop, isSupported, refresh }`        |
 | `base/csp.ts`                         | _(none)_            | CSP fallback: copies blocked `style` attributes into the CSSOM; `index.ts` imports it only after finding a blocked attribute. exports `Csp` `{ blockedInlineStyles, applyInlineStyles, start, stop }`           |
 | `base/declarations.ts`                | _(none)_            | `scanDeclarations`, `splitDeclarations`, `plainValue`: the one `style` attribute parser (no imports), shared by the formatter, the language server, and the CSP fallback                                        |
@@ -159,38 +171,75 @@ Component scripts read configuration from HTML data attributes rather than JS op
 - Parse attributes with `Utils.parseDataAttributes(node, "data-carousel-")`, which converts kebab-case to camelCase and coerces types via `Utils.parseValue`. It returns `Record<string, unknown>`; when a caller needs a typed shape, wrap it once at its own boundary (see the `NativeOptions` read in `base/carousel-scroll.ts`) rather than asserting at each call site. Parse for a single expected type directly instead (the toaster reads `data-toaster-duration` with `Number`).
 - Document the full attribute reference in the file's `@fileoverview` block.
 - Set lifecycle attributes on the DOM (`data-carousel-init`) so scripts can detect already-initialized elements.
-- Keep the attribute families straight (ADR-0013): identity is `data-ui="<name>"` (a token list, matched with `~=`); **everything a primitive owns** is `data-<primitive>-<key>`: config (`data-carousel-loop`, `data-reveal-duration`), variants and states (`data-button-variant`, `data-tabs-state`), and **interior parts** (`data-<primitive>-slot="<part>"`). Globals that belong to no primitive are `data-ui-*` (`data-ui-navigation`); the color scheme is the exception, `data-theme="dark"` / `"light"`, so a script sets `document.documentElement.dataset.theme` and leaves `data-ui` alone. Selectors on `data-<primitive>-*` compound with the identity, and `parseDataAttributes` runs only on elements that carry it. The one exception is a custom-command invoker: the toaster reads `data-toaster-*` off any `command="--toast*"` button, and `<ui-debug>` accepts an identity's attributes on an invoker whose command names it. Kit JS never reads or writes `class`.
+- Keep the attribute families straight (ADR-0013): identity is `data-ui="<name>"` (a token list, matched with `~=`); **everything a primitive owns** is `data-<primitive>-<key>`: config (`data-carousel-loop`, `data-reveal-duration`), variants and states (`data-button-variant`, `data-tabs-state`), and **interior parts** (`data-<primitive>-slot="<part>"`). Globals that belong to no primitive are named for what they set: navigation's `data-navigation="swap"` and `data-navigation-persist="<id>"`, the drag opt-out, `data-draggable="false"`, and the color scheme, `data-theme="dark"` / `"light"`, so a script sets `document.documentElement.dataset.theme` and leaves `data-ui` alone. Selectors on `data-<primitive>-*` compound with the identity, and `parseDataAttributes` runs only on elements that carry it. The one exception is a custom-command invoker: the toaster reads `data-toaster-*` off any `command="--toast*"` button, and `<ui-debug>` accepts an identity's attributes on an invoker whose command names it. Kit JS never reads or writes `class`.
 
 Enable carousel plugins with a space-separated token list (`data-carousel-plugins="autoplay"`). Boolean flags can use explicit values (`data-carousel-keyboard="false"`).
+
+Name a data attribute for the setting and put the choice in its value: `data-<identity-or-setting>="<value>"`. Never put the value in the name (`data-draggable="false"`, not `data-ui-no-drag`), and never read a setting by presence alone, or `="false"` would turn it on: compare the value (`data-otp-submit-behavior="auto"`).
 
 ### Dependencies and load order
 
 Scripts declare dependencies with ES imports so the module graph resolves order: the entry module (`index.ts`, loaded as the emitted `index.js`) is the only tag a page loads.
 
-| Script                                | Imports                                                      | Notes                                                                                                               |
-| ------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
-| `base/utils.ts`                       | none                                                         | Provides `window.Utils`                                                                                             |
-| `base/signals.ts`                     | `signal-polyfill` (npm)                                      | The **only** file allowed to import the polyfill                                                                    |
-| `base/zazz-element.ts`                | none                                                         | `ZazzElement` base + refresh registry; provides `window.Zazz`                                                       |
-| `base/reveal.ts`                      | `base/zazz-element.ts`                                       | Registers a refresh hook                                                                                            |
-| `base/dialog-lifecycle.ts`            | none                                                         | Owns `<dialog>` visibility; components subscribe to its events                                                      |
-| `base/carousel-scroll.ts`             | `base/gesture.ts`, `base/utils.ts`                           | The scroll-snap engine: mouse drag, loop, thumbs, autoplay; stores `_carousel` on the root                          |
-| `base/carousel.ts`                    | `base/carousel-scroll.ts`, `base/zazz-element.ts`            | Provides `window.Carousel`; subscribes to `zazz:dialog-open`; registers a refresh hook                              |
-| `base/gesture.ts`                     | none                                                         | Drag tracking; the consumer writes `translate` while tracking and releases into CSS transitions (ADR-0018)          |
-| `ui/carousel/carousel.ts`             | `base/carousel.ts`                                           | `<ui-carousel>` calls `Carousel.initRoot`                                                                           |
-| `ui/drawer/drawer.ts`                 | `base/gesture.ts`, `base/zazz-element.ts`                    | Subscribes to `zazz:dialog-open` / `zazz:dialog-close` (needs `base/dialog-lifecycle.ts` on the page); refresh hook |
-| `ui/checkbox/checkbox.ts`             | `base/signals.ts`, `base/zazz-element.ts`                    | Derives select-all group state via signals; refresh hook                                                            |
-| `ui/lightbox/lightbox.ts`             | `ui/carousel/carousel.ts`                                    | `<ui-lightbox>` coordinates carousel elements                                                                       |
-| `ui/password-group/password-group.ts` | `base/signals.ts`                                            | Standalone (`<ui-password>`)                                                                                        |
-| `ui/tabs/tabs.ts`                     | none                                                         | Standalone (`<ui-tabs>`)                                                                                            |
-| `ui/toaster/toaster.ts`               | `base/signals.ts`, `base/zazz-element.ts`, `base/gesture.ts` | `<ui-toaster>` + `window.Toaster` toast API; swipe-to-dismiss                                                       |
-| `base/navigation.ts`                  | `base/zazz-element.ts`                                       | Opt-in per page; drains the refresh registry after a body swap                                                      |
-| `base/declarations.ts`                | none                                                         | The `style` attribute parser                                                                                        |
-| `base/csp.ts`                         | `base/declarations.ts`                                       | Dynamic import from `index.ts` when the page's CSP blocks inline style attributes                                   |
-| `ui/debug/debug.ts`                   | `base/zazz-element.ts`, `base/utilities.ts`, `manifest.ts`   | Development only; not in `index.ts` — `zazz-ui add debug`                                                           |
-| `ui/style-guard/style-guard.ts`       | none                                                         | Optional; not in `index.ts` — a page adds it (or `zazz-ui add style-guard`) when legacy JS rewrites `style`         |
+| Script                                | Imports                                                                                                 | Notes                                                                                                               |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `base/utils.ts`                       | none                                                                                                    | Provides `window.Utils`                                                                                             |
+| `base/signals.ts`                     | `signal-polyfill` (npm)                                                                                 | The **only** file allowed to import the polyfill                                                                    |
+| `base/zazz-element.ts`                | none                                                                                                    | `ZazzElement` base + refresh registry; provides `window.Zazz`                                                       |
+| `base/reveal.ts`                      | `base/zazz-element.ts`                                                                                  | Registers a refresh hook                                                                                            |
+| `base/dialog-lifecycle.ts`            | none                                                                                                    | Owns `<dialog>` visibility; components subscribe to its events                                                      |
+| `base/carousel-scroll.ts`             | `behaviors/gesture.ts`, `base/utils.ts`                                                                 | The scroll-snap engine: mouse drag, loop, thumbs, autoplay; stores `_carousel` on the root                          |
+| `base/carousel.ts`                    | `base/carousel-scroll.ts`, `base/zazz-element.ts`                                                       | Provides `window.Carousel`; subscribes to `zazz:dialog-open`; registers a refresh hook                              |
+| `behaviors/gesture.ts`                | none                                                                                                    | Drag tracking; the consumer writes `translate` while tracking and releases into CSS transitions (ADR-0018)          |
+| `ui/carousel/carousel.ts`             | `base/carousel.ts`                                                                                      | `<ui-carousel>` calls `Carousel.initRoot`                                                                           |
+| `ui/drawer/drawer.ts`                 | `behaviors/gesture.ts`, `base/zazz-element.ts`                                                          | Subscribes to `zazz:dialog-open` / `zazz:dialog-close` (needs `base/dialog-lifecycle.ts` on the page); refresh hook |
+| `ui/checkbox/checkbox.ts`             | `base/signals.ts`, `base/zazz-element.ts`                                                               | Derives select-all group state via signals; refresh hook                                                            |
+| `ui/lightbox/lightbox.ts`             | `ui/carousel/carousel.ts`                                                                               | `<ui-lightbox>` coordinates carousel elements                                                                       |
+| `ui/password-group/password-group.ts` | `base/signals.ts`                                                                                       | Standalone (`<ui-password>`)                                                                                        |
+| `behaviors/list-navigation.ts`        | none                                                                                                    | Arrow-key, Home, and End steps through a list; used by tabs, menu, and `behaviors/typeahead.ts`                     |
+| `behaviors/command-score.ts`          | none                                                                                                    | Fuzzy ranking                                                                                                       |
+| `behaviors/hotkeys.ts`                | none                                                                                                    | Hotkey parsing and binding                                                                                          |
+| `behaviors/typeahead.ts`              | `behaviors/command-score.ts`, `behaviors/list-navigation.ts`, `base/zazz-element.ts`, `base/signals.ts` | Base class for autocomplete, combobox, and command                                                                  |
+| `ui/tabs/tabs.ts`                     | `base/zazz-element.ts`, `behaviors/list-navigation.ts`                                                  | `<ui-tabs>`                                                                                                         |
+| `ui/menu/menu.ts`                     | `base/zazz-element.ts`, `behaviors/list-navigation.ts`                                                  | `<ui-menu>`                                                                                                         |
+| `ui/toaster/toaster.ts`               | `base/signals.ts`, `base/zazz-element.ts`, `behaviors/gesture.ts`                                       | `<ui-toaster>` + `window.Toaster` toast API; swipe-to-dismiss                                                       |
+| `base/navigation.ts`                  | `base/zazz-element.ts`                                                                                  | Opt-in per page; drains the refresh registry after a body swap                                                      |
+| `base/declarations.ts`                | none                                                                                                    | The `style` attribute parser                                                                                        |
+| `base/csp.ts`                         | `base/declarations.ts`                                                                                  | Dynamic import from `index.ts` when the page's CSP blocks inline style attributes                                   |
+| `ui/debug/debug.ts`                   | `base/zazz-element.ts`, `base/utilities.ts`, `manifest.ts`                                              | Development only; not in `index.ts` — `zazz-ui add debug`                                                           |
+| `ui/style-guard/style-guard.ts`       | none                                                                                                    | Optional; not in `index.ts` — a page adds it (or `zazz-ui add style-guard`) when legacy JS rewrites `style`         |
 
 When a script needs `Utils`, `import { Utils } from "../../base/utils.ts"` (from a `src/primitives/<name>/` folder) rather than duplicating parsing logic. `signal-polyfill` ships as a real ES module imported by bare specifier; the page import map (generated by `head.ts`, pinned + SRI-checked) resolves it, so the module graph orders everything and pages load exactly one script tag.
+
+### Behaviors
+
+A behavior is interaction logic that more than one primitive needs: the keys that move through a list, a drag that follows the pointer. It lives in `src/behaviors/<name>.ts`, with its tests beside it in `<name>.test.ts`.
+
+`src/base/` holds the core runtime and the kit's own machinery (signals, the element base, navigation, the utility tables), along with older shared engines such as the carousel's and reveal. `src/primitives/<name>/` owns one identity: its markup, CSS, and script. A behavior is neither: it has no identity and no CSS, and a page loads it only because a script that needs it imports it.
+
+**When to add one.** Extract a behavior when a second primitive needs the same logic, not before. One consumer keeps its logic in its own file. If the shared function would need a separate option for each consumer, the primitives are not doing the same thing, so leave the logic where it is.
+
+**What a behavior file is:**
+
+- **Named for the interaction**, as a noun: `list-navigation`, never `tabs-keys` or `menu-utils`. A tree's keys would be `tree-navigation.ts`, a grid's `grid-navigation.ts`.
+- **Module exports only.** It does not attach to `window`, define a custom element, auto-initialize, or read a `data-ui` identity. A consumer calls it.
+- **Decisions apart from DOM writes.** Where it can be, the decision is a pure function that takes plain values and returns one (`listStep(key, layout)`, `stepIndex(current, step, count)`), so the unit project can test it without a page. A helper that has to read an element (`isDisabledItem`) only reads it. The primitive finds its own items and does its own writes (focus, `checked`, state attributes), because those differ per primitive and are part of its markup contract.
+- **Never imports a primitive.** A behavior imports from `base/` or from another behavior. A `base/` module may import a behavior, as `base/carousel-scroll.ts` imports `behaviors/gesture.ts`.
+- **A header that lists its consumers.** The `@fileoverview` says which scripts use it. A new consumer's header names the behavior file, as the tabs' and the menu's do.
+
+**Wiring a behavior in.** Import it by relative path with the `.ts` extension, then list the emitted `.js` in the consumer's `base` array and in its `WEB_COMPONENT_SCRIPT_FILES` entry in `src/manifest.ts`, so the CLI vendors it and the granular head loads it. Add rows to the two tables above.
+
+A behavior may be a base class when the shared logic owns state and listeners: `behaviors/typeahead.ts` exports `TypeaheadElement`, which autocomplete, combobox, and command extend. It still defines no element of its own. `behaviors/command-score.ts` is the ranking function behind it, vendored under ADR-0007.
+
+### Patterns scripts share
+
+Some logic repeats without being worth a behavior. Write it the same way each time:
+
+- **Ignore a nested instance.** An element handles an event only when it owns the target: `target.closest('ui-menu, [data-ui~="menu"]') === this`. Name both the tag and the attribute form in the selector.
+- **Read the writing direction when the event happens**, from the element the direction applies to: `getComputedStyle(list).direction === "rtl"`. Never read `dir` attributes, and never cache the answer at setup.
+- **Skip disabled items with `isDisabledItem()`** from `behaviors/list-navigation.ts`, which covers both `:disabled` and `aria-disabled="true"`.
+- **A form reset applies after its event.** Listen on the control's form and re-read in a microtask: `form.addEventListener("reset", () => queueMicrotask(sync), { signal })`.
+- **Find the step before preventing the key.** A key handler returns on a key it does not handle, and calls `preventDefault()` only once it knows it will act.
 
 ### DOM interaction patterns
 
@@ -394,8 +443,8 @@ const Utils = { parseValue, parseDataAttributes };
 ```javascript
 /**
  * @fileoverview Opt-in in-page navigation via the Navigation API.
- * @description On pages with `data-ui-navigation="swap"`, swaps the body in
- * place, keeping only `data-ui-persist` elements.
+ * @description On pages with `data-navigation="swap"`, swaps the body in
+ * place, keeping only `data-navigation-persist` elements.
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API
  */

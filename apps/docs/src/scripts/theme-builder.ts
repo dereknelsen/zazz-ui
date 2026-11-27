@@ -94,7 +94,7 @@ type PaletteName = (typeof PALETTES)[number];
 /** Number controls: the token each writes and how its value is spelled (`format` wins over `unit`). */
 const NUMBERS: Record<string, { token: string; unit: string; format?: (n: number) => string }> = {
   spacing: { token: "--spacing", unit: "rem" },
-  radius: { token: "--radius-multiplier", unit: "" },
+  radius: { token: "--radius-coefficient", unit: "" },
   "corner-shape": { token: "--radius-corner-shape", unit: "", format: cornerShape },
   shadow: { token: "--default-shadow-angle", unit: "deg" },
   "shadow-intensity": { token: "--default-shadow-intensity", unit: "" },

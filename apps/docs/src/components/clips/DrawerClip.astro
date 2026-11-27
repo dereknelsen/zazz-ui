@@ -4,7 +4,7 @@
  * (`data-drawer-snap="12rem 0.5 1"`, the kit's `drawer-snap` example). It opens
  * at the first stop, a slow drag settles on the nearest stop (0.5), a flick moves
  * one stop (to 1), and a hard flick down closes it. The behavior is the kit's
- * `pickSnap` in `base/gesture.ts`: a fling toward dismissal closes from any stop.
+ * `pickSnap` in `behaviors/gesture.ts`: a fling toward dismissal closes from any stop.
  * Plain HTML and CSS keyframes on a 10s loop; the base styles are the last frame.
  *
  * As in GalleryClip: every `animation` names its keyframes in the shorthand (the
@@ -74,14 +74,14 @@
   /* Zazz tokens and the drawer's own hooks, except where a value has to scale with the
      clip: the stage sizes in em (2.2cqw), and the kit's spacing and radii are rem, so
      --fc-spacing is an em copy of --spacing and every length is a kit multiple of it.
-     The radii read the theme's --radius-multiplier, so a square theme gets a square clip. */
+     The radii read the theme's --radius-coefficient, so a square theme gets a square clip. */
   .fc-dr {
     --fc-spacing: 0.25em;
     --fc-radius-corner-shape: var(--radius-corner-shape);
-    --fc-radius-sm: calc(var(--fc-spacing) * 1.5 * var(--radius-multiplier));
-    --fc-radius-md: calc(var(--fc-spacing) * 2.5 * var(--radius-multiplier));
-    --fc-radius: calc(var(--fc-spacing) * 4.5 * var(--radius-multiplier));
-    --fc-radius-xl: calc(var(--fc-spacing) * 7 * var(--radius-multiplier));
+    --fc-radius-sm: calc(var(--fc-spacing) * 1.5 * var(--radius-coefficient));
+    --fc-radius-md: calc(var(--fc-spacing) * 2.5 * var(--radius-coefficient));
+    --fc-radius: calc(var(--fc-spacing) * 4.5 * var(--radius-coefficient));
+    --fc-radius-xl: calc(var(--fc-spacing) * 7 * var(--radius-coefficient));
     container-type: inline-size;
     width: 100%;
     aspect-ratio: 740 / 415;

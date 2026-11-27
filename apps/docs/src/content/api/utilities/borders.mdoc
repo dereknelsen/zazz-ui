@@ -6,7 +6,7 @@ sectionOrder: 3
 order: 7
 ---
 
-`--radius` is on the spacing scale: a number is that many `--spacing` steps times `--radius-multiplier`, so `--radius: 2.5` is `--radius-md`. A length passes through (`--radius: 1rem`) and `full` is a pill. It takes states and breakpoints (`--radius: 1; --radius--hover: 4`). `--radius-t`, `--radius-b`, `--radius-l`, and `--radius-r` round two corners each and follow the writing direction, so `--radius-t: 2.5` rounds a card's media along the top; they take breakpoints and win over `--radius`.
+`--radius` is on the spacing scale: a number is that many `--spacing` steps times `--radius-coefficient`, so `--radius: 2.5` is `--radius-md`. A length passes through (`--radius: 1rem`) and `full` is a pill. It takes states and breakpoints (`--radius: 1; --radius--hover: 4`). `--radius-t`, `--radius-b`, `--radius-l`, and `--radius-r` round two corners each and follow the writing direction, so `--radius-t: 2.5` rounds a card's media along the top; they take breakpoints and win over `--radius`.
 
 Every radius utility picks up `--radius-corner-shape`, except `--radius: full`, which stays round. `--corner-shape` overrides the shape on one element: `--corner-shape: bevel`. It takes no states or breakpoints, and on a primitive it reaches the root element only.
 

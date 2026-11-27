@@ -29,6 +29,8 @@ pnpm dlx zazz-ui add button card dialog
 
 `update [@version] [names…]` moves the project, or the named primitives, to a new version. Because `zazz.json` knows which files you edited, untouched files take the new version silently, your edits survive where upstream did not move, and non-overlapping changes merge. On a real conflict the CLI asks you to choose: write conflict markers, keep yours, take theirs, or skip (`--markers`, `--keep`, `--theirs` answer for non-interactive runs). The relevant slice of the changelog prints first, breaking changes flagged. `diff` shows the same read-only.
 
+`codemod data-font` moves a project's markup to typography roles in `data-font`: `data-ui="text-sm"` becomes `data-font="sm"`. It updates the kit first if the vendored version predates `data-font`, then vendors `font`. `--dry-run` lists the files it would change.
+
 There is no runtime dependency on the package. Edit the files, delete what you do not need, commit them.
 
 ## CDN

@@ -188,7 +188,7 @@ export function expandTag(name: string, attrs: Attrs): string {
       return headMarkdown(attrs);
     case "roles":
       return typographyRoles()
-        .map((r) => `- \`${r}\``)
+        .map((r) => `- \`data-font="${r}"\``)
         .join("\n");
     case "globals":
       return table(

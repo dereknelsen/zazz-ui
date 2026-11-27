@@ -74,3 +74,25 @@ A switch was a token with no identity behind it: `data-ui="sr-only"` says how an
 - **`group` stays** because it is an identity, and it is now a primitive with a tag form, `<ui-group>`.
 - **`retired-token`** is a new audit rule in `<ui-debug>`, the ESLint plugin, and the language server. It flags each old token and names the replacement.
 - **The `style` attribute now carries what switches did.** Utilities don't survive a sanitizer that strips `style`, and switches did. See the [ADR-0016](./0016-csp-directive-first-cssom-fallback.md) amendment for what that costs.
+
+## Amendment 5 (2026-11-24): the choice goes in the value, and globals name their setting
+
+A data attribute is `data-<identity-or-setting>="<value>"`. The name says what is being set and the value says which choice. Two older shapes are withdrawn:
+
+- **A value or mode in the name.** `data-ui-no-drag` is `data-draggable="false"`, `data-carousel-drag-free="true"` is `data-carousel-snap="free"`, and `data-ui-persist-scroll="<id>"` is `data-navigation-persist="<id>"` with `data-navigation-persist-mode="scroll"`.
+- **A setting read by presence.** Under that shape, `="false"` still turned the setting on. `data-drawer-snap-sequential` is `data-drawer-snap-behavior="sequential"`, `data-command-stay-open` is `data-command-select-behavior="persist"`, `data-otp-auto-submit` is `data-otp-submit-behavior="auto"`, and `data-otp-mask` needs `="true"`. Scripts compare the value.
+
+The `data-ui-*` prefix for globals is withdrawn too. A global is named for what it sets, as `data-theme` already was: `data-navigation`, `data-navigation-persist`, `data-navigation-persist-mode`, `data-draggable`, and `data-style-guard` (was `data-ui-guard`). No authored attribute starts with `data-ui-` now; the rule from the first amendment becomes "it is `data-ui`, `data-<primitive>-*`, or a global named for its setting". This supersedes the globals clause in the first amendment and the last sentence of Amendment 3. The one `data-ui-*` attribute left is `data-ui-stuck`, which a script writes and no author does.
+
+The cost is a breaking rename for each attribute, with no aliases. The new shape leaves room for more values on a setting, and editor data could list them; today it lists values only for the globals and for attributes a stylesheet selects.
+
+## Amendment 6 (2026-11-24): typography roles are the value of `data-font`
+
+A role was the last token that carried a value in its name: `text-h3` is the setting "text" and the choice "h3". Amendment 5 put the choice in the value everywhere else, so roles follow: `data-ui="text-h3"` is now `data-font="h3"`. This withdraws the "typography roles are identity tokens" clause in the first amendment and takes roles out of Amendment 4's list. `data-ui` now holds primitives, specializations, and `group`.
+
+- **The attribute is `data-font`.** The scoped spelling, `data-ui="text" data-text-size="h3"`, is too long for something written on most text elements, and almost every role was the only token on its element. `font` names what a role sets (what the CSS `font` shorthand sets); `data-text` would read as the `--text` color utility. A role is one value, matched with `=`.
+- **`font` is a primitive selected by its own attribute**, as `reveal` is by `data-reveal`. Its stylesheet sits in `ui.components`, loads last, and gives each role one attribute of specificity, so a role beats the font of the primitive or slot it sits on, where before a component rule beat a role. A utility still beats both. Native `h1`–`h6` keep their baseline in the reset.
+- **`text-link` is the `link` identity** (`data-ui="link"`). A link is what an element is, and it sets an underline, not a font.
+- **Prose is a primitive with its own stylesheet.** The type-scale math moves to `_variables.css`, which re-runs it for a sized prose; `_typography.css` keeps the native headings.
+
+The cost is a breaking rename with no aliases. The `retired-token` audit rule names the replacement for each `text-*` token.

@@ -85,7 +85,7 @@ const panels = [
                 --gap: 1;
               '
             >
-              <span class='fieldnotes__num' data-ui='text-h2'>
+              <span class='fieldnotes__num' data-font='h2'>
                 {p.value}
               </span>
               <span style='--text: var(--color-muted-foreground)'>
@@ -101,7 +101,7 @@ const panels = [
             >
               {p.value} of {total}
             </progress>
-            <p data-ui='text-sm' style='--text: var(--color-muted-foreground)'>
+            <p data-font='sm' style='--text: var(--color-muted-foreground)'>
               {p.caption}
             </p>
           </div>
@@ -124,10 +124,10 @@ const panels = [
           --gap: 4;
         '
       >
-        <span data-ui='text-sm' style='--font-weight: strong'
+        <span data-font='sm' style='--font-weight: strong'
           >Today by hour</span
         >
-        <span data-ui='text-sm' style='--text: var(--color-muted-foreground)'
+        <span data-font='sm' style='--text: var(--color-muted-foreground)'
           >Busiest at {busiest.hour}m</span
         >
       </figcaption>
@@ -167,7 +167,7 @@ const panels = [
         </div>
         <div
           aria-hidden='true'
-          data-ui='text-2xs'
+          data-font='2xs'
           style={`
             --display: grid;
             --grid-cols: ${todayByHour.length};

@@ -6,8 +6,8 @@ import { typographyRoles } from "../../lib/api/foundations.ts";
   {
     typographyRoles().map((role) => (
       <div style="--display: flex; --items: baseline; --gap: 4; --flex-wrap: wrap">
-        <code style="--min-w: 14ch">{role}</code>
-        <span data-ui={role}>The quick brown fox</span>
+        <code style="--min-w: 20ch">{`data-font="${role}"`}</code>
+        <span data-font={role}>The quick brown fox</span>
       </div>
     ))
   }

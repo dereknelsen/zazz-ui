@@ -198,7 +198,7 @@
     --_radius-len: var(--_radius-resolved, var(--_dialog-radius, var(--ui-dialog-radius)));
     --_radius-num: var(--_radius-resolved, var(--_dialog-radius, var(--ui-dialog-radius)));
     border-radius: calc(
-      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-coefficient)
     );
     corner-shape: var(--_corner-shape-resolved, var(--ui-dialog-corner-shape));
 
@@ -277,11 +277,8 @@
     overscroll-behavior: contain;
     overflow-y: auto;
 
-    -webkit-mask-image: var(--ui-scroll-fade-mask, var(--_scroll-fade-gradient));
     mask-image: var(--ui-scroll-fade-mask, var(--_scroll-fade-gradient));
-    -webkit-mask-composite: source-in;
     mask-composite: intersect;
-    -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
 
     @supports (animation-timeline: scroll()) {

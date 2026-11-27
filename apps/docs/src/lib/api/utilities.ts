@@ -84,7 +84,7 @@ const VALUE_NOTES: Record<string, string> = {
   "font-weight": "number, or strong / heading / body (the role weight tokens)",
   shadow: "a token (var(--shadow-md)) or any box-shadow",
   elevation: "a height: a number (0 is flat; 4 uses the layers of --shadow-md)",
-  radius: "number (× --spacing × --radius-multiplier), length, or full",
+  radius: "number (× --spacing × --radius-coefficient), length, or full",
   "radius-t": "number, length, or full: the two block-start corners",
   "radius-b": "number, length, or full: the two block-end corners",
   "radius-l": "number, length, or full: the two inline-start corners",

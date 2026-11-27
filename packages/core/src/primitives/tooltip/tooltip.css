@@ -222,7 +222,7 @@
     --_radius-len: var(--_radius-resolved, var(--ui-tooltip-radius));
     --_radius-num: var(--_radius-resolved, var(--ui-tooltip-radius));
     border-radius: calc(
-      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-coefficient)
     );
     corner-shape: var(--_corner-shape-resolved, var(--ui-tooltip-corner-shape));
     box-shadow: var(--_shadow-resolved, var(--ui-tooltip-shadow));

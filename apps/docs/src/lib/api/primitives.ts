@@ -191,7 +191,7 @@ export function primitiveApi(name: string): PrimitiveApi {
 
   // A hook belongs to the primitive it is named for, wherever it is declared
   // (navigation-menu.css declares --ui-popover-*; button.css sizes --ui-kbd-*
-  // for the kbd inside a button; _typography.css holds --ui-prose-*). A hook
+  // for the kbd inside a button). A hook
   // with an unknown prefix (--ui-option-*) belongs to the file that declares it.
   const hookRows: HookRow[] = Object.entries(hooks)
     .filter(([hook, h]) => {

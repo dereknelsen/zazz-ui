@@ -46,7 +46,7 @@ const tip = `tb-lock-${field ?? `all-${section}`}-tip`;
     <Icon name="lock-open" class="theme-builder__lock-open" aria-hidden="true" />
     <Icon name="lock" class="theme-builder__lock-closed" aria-hidden="true" />
   </button>
-  <div data-tooltip-slot="content" data-ui="text-xs" id={tip} popover="hint">
+  <div data-tooltip-slot="content" data-font="xs" id={tip} popover="hint">
     {section ? `Lock all ${section} styles` : "Lock style"}
     <span data-tooltip-slot="arrow" aria-hidden="true"></span>
   </div>

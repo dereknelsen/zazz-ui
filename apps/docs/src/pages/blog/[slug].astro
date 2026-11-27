@@ -74,15 +74,15 @@ const jsonLd = [
                 </span>
               )
             }
-            <p data-ui="text-xs" style="--text: var(--color-muted-foreground)">
+            <p data-font="xs" style="--text: var(--color-muted-foreground)">
               <time datetime={post.data.date.toISOString()}>{date}</time>
             </p>
           </div>
-          <h1 data-ui="text-h4" style="--mt: 4" data-pagefind-meta="title">
+          <h1 data-font="h4" style="--mt: 4" data-pagefind-meta="title">
             {post.data.title}
           </h1>
           <p
-            data-ui="text-lg"
+            data-font="lg"
             style="--mt: 2; --text: var(--color-muted-foreground)"
           >
             {post.data.description}

@@ -28,7 +28,7 @@ const party = spotters.filter((s) => ['YO', 'JA', 'VE'].includes(s.initials));
       --display: grid;
       --gap: 2;
     '>
-    <span id='fn-trip-habitats' data-ui='text-sm' style='--font-weight: strong'>Habitats</span>
+    <span id='fn-trip-habitats' data-font='sm' style='--font-weight: strong'>Habitats</span>
     <ui-toggle-group role='group' aria-labelledby='fn-trip-habitats'>
       {
         habitats.map((h) => (
@@ -49,7 +49,7 @@ const party = spotters.filter((s) => ['YO', 'JA', 'VE'].includes(s.initials));
       initials={party.map((p) => p.initials)}
       label={`Going: ${party.map((p) => p.name).join(', ')}`}
     />
-    <span data-ui='text-sm' style='--text: var(--color-muted-foreground)'>
+    <span data-font='sm' style='--text: var(--color-muted-foreground)'>
       {party.length} going
     </span>
   </div>

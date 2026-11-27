@@ -140,7 +140,7 @@ through the entry and the only unlayered CSS left is the _injected_ list.
 ### 3. Audit every reset group
 
 First compare the catalog with the kit you installed: the `@layer reset` blocks in
-`base/_reset.css`, `base/_typography.css`, and the primitive stylesheets (under `zazz/` when
+`base/_reset.css`, `base/_typography.css` (the native headings), and the primitive stylesheets (under `zazz/` when
 vendored, `node_modules/@zazz-ui/core/src/` from npm, or
 `https://cdn.jsdelivr.net/npm/@zazz-ui/core@<version>/src/` for the CDN). A reset rule the
 catalog doesn't cover is a new group; audit it the same way.

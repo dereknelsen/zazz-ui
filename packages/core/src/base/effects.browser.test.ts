@@ -112,11 +112,16 @@ describe("no-base state tiers", () => {
   });
 
   it("--opacity--hover alone works on roles, groups, and prose (only primitives need a base)", async () => {
-    for (const token of ["text-2xl", "group", "prose", "group text-sm"]) {
-      const el = mount(`<a href="#" data-ui="${token}" style="${BOX} --opacity--hover: .8">x</a>`);
-      expect(style(el, "opacity"), token).toBe("1");
+    for (const attributes of [
+      `data-font="2xl"`,
+      `data-ui="group"`,
+      `data-ui="prose"`,
+      `data-ui="group" data-font="sm"`,
+    ]) {
+      const el = mount(`<a href="#" ${attributes} style="${BOX} --opacity--hover: .8">x</a>`);
+      expect(style(el, "opacity"), attributes).toBe("1");
       await userEvent.hover(el);
-      expect(style(el, "opacity"), token).toBe("0.8");
+      expect(style(el, "opacity"), attributes).toBe("0.8");
       await userEvent.unhover(el);
     }
   });

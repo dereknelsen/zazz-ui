@@ -36,13 +36,13 @@ Target: latest Chrome, Firefox, and Safari, two versions back. For features belo
 
 # Generated files and engines
 
-- After changing a primitive's CSS header, a script's `@fileoverview`, or example HTML, run `vp run generate` (the kit's editor data, then the VS Code grammar, Emmet, and snippets). Their tests compare bytes, so stale output fails `vp run ready`.
+- After changing a primitive's CSS header, a script's `@fileoverview`, or example HTML, run `vp run generate` (the kit's editor data and each primitive's `src/primitives/<name>/<name>.json`, then the VS Code grammar, Emmet, and snippets). A new or changed `--ui-*` hook or `data-*` attribute needs it too. The generated files' tests compare bytes, so stale output fails `vp run ready`.
 - `vp test` runs browser tests in Chromium only. `vp run ready` adds WebKit; run a touched primitive there before calling it done: `ZAZZ_BROWSERS=webkit vp test run <path>` in `packages/core`.
 
 # Repository layout
 
 - `packages/core`: `@zazz-ui/core`, the Zazz Design Framework (published to npm; releases follow the `zazz-version-bump` skill). Components are co-located under `src/primitives/<name>/` (css + ts + example html); base layers and shared runtime under `src/base/`; entries `src/index.css` / `src/index.ts`. Scripts are TypeScript compiled in-place to readable `.js` + `.d.ts` (gitignored, published). Authoring rules: `packages/core/CONVENTIONS.styles.md` and `packages/core/CONVENTIONS.scripts.md`.
-- `packages/cli`: `zazz-ui`, the CLI that vendors the kit into a project (`init`, `add`, `update`, `diff`); ADR-0006 and ADR-0009.
+- `packages/cli`: `zazz-ui`, the CLI that vendors the kit into a project (`init`, `add`, `update`, `diff`, `codemod`); ADR-0006 and ADR-0009.
 - `packages/eslint-plugin`: `@zazz-ui/eslint-plugin` (private), the `<ui-debug>` audit as html lint rules. Both share `packages/core/src/primitives/debug/audit-core.ts`; identities and hooks come from the generated `packages/core/editor/zazz.lint-data.json`. Wired up in the root `eslint.config.ts` (HTML only; Oxlint owns JS/TS) and run with `vp run lint:html`.
 - `packages/language-server`: `@zazz-ui/language-server` (private), an LSP server for Zazz in HTML. `src/html/` is the html-eslint adapter the ESLint plugin also uses; `src/service/` holds one pure module per feature (diagnostics, completion, hover, inlay hints, folding, imports, head-block auto-imports), reading `packages/core/editor/zazz.language-data.json` (identity owners, CSSDoc headers, hook defaults, resolved tokens).
 - `packages/vscode`: `zazz-vscode` (private), the VS Code extension: a thin client over the server, plus a generated TextMate injection grammar, fragment snippets, Emmet abbreviations, color swatches, and page templates. `vp run zazz-vscode#package` builds a `.vsix`; the repo's `.vscode/settings.json` assumes it is installed (Zazz squiggles and `source.fixAll.zazz` on save come from it). The `zazz.languages` setting extends the features to templating languages (`astro`, `razor`, `erb`, `phoenix-heex`, …); the server masks their expressions before parsing (`packages/language-server/src/html/holes.ts`).

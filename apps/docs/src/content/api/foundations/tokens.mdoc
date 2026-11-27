@@ -6,11 +6,11 @@ sectionOrder: 1
 order: 0
 ---
 
-Tokens are custom properties on `:root` in `base/_variables.css`. Primitives read them through `var()`, utilities take them as values, and you theme by redefining them: on `:root` for the whole page, on a subtree for a region. A token built from other tokens (`--space-md` from `--spacing`, `--radius-md` from `--radius-multiplier`) is worked out once on `:root`, so changing `--spacing` on a subtree doesn't resize that subtree's `--space-*`. Redefine the derived tokens there too, or change the inputs on `:root`. Color roles are `light-dark()` pairs, so `data-theme="dark"` flips every one of them without a second stylesheet.
+Tokens are custom properties on `:root` in `base/_variables.css`. Primitives read them through `var()`, utilities take them as values, and you theme by redefining them: on `:root` for the whole page, on a subtree for a region. A token built from other tokens (`--space-md` from `--spacing`, `--radius-md` from `--radius-coefficient`) is worked out once on `:root`, so changing `--spacing` on a subtree doesn't resize that subtree's `--space-*`. Redefine the derived tokens there too, or change the inputs on `:root`. Color roles are `light-dark()` pairs, so `data-theme="dark"` flips every one of them without a second stylesheet.
 
 Three places to change how something looks, narrowest last:
 
-1. **A token on `:root`**: `--radius-multiplier: 0` squares every scaled radius (`--radius-full` and `--radius-none` stay fixed); `--color-primary: light-dark(…, …)` recolors every primary surface.
+1. **A token on `:root`**: `--radius-coefficient: 0` squares every scaled radius (`--radius-full` and `--radius-none` stay fixed); `--color-primary: light-dark(…, …)` recolors every primary surface.
 2. **A hook on a subtree**: `<nav style="--ui-button-px: 2">` retunes every button inside. Hooks are listed on each primitive's page.
 3. **A utility on one element**: `--bg: var(--color-muted)`, which also flattens the element's states.
 
@@ -48,7 +48,7 @@ Fluid type and spacing grow between two viewport widths, `--fluid-min` and `--fl
 
 ## Radius
 
-`xs` to `xl` scale with `--radius-multiplier`; `none` and `full` are fixed. `--radius` takes the same steps as numbers: `--radius: 2.5` is `md`. Conventions: `md` for buttons and inputs, `lg` for cards and dialogs, `sm` for badges, `full` for pills.
+`xs` to `xl` scale with `--radius-coefficient`; `none` and `full` are fixed. `--radius` takes the same steps as numbers: `--radius: 2.5` is `md`. Conventions: `md` for buttons and inputs, `lg` for cards and dialogs, `sm` for badges, `full` for pills.
 
 `--radius-corner-shape` sets the curve of every radius: `superellipse(1.3)` by default, `round` for plain circular corners. Primitives read it through their `--ui-*-corner-shape` hooks. Circular parts (radio, switch, slider, progress, meter) and `--radius: full` stay `round`. Browsers without `corner-shape` draw ordinary rounded corners.
 

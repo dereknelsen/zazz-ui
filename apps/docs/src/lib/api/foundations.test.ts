@@ -4,16 +4,26 @@ import { globalAttributes, tokenGroups, typographyRoles } from "./foundations.ts
 describe("typographyRoles", () => {
   it("lists headings first, then body sizes", () => {
     const roles = typographyRoles();
-    expect(roles[0]).toBe("text-display");
-    expect(roles).toEqual(expect.arrayContaining(["text-h1", "text-eyebrow", "text-sm"]));
-    expect(roles.indexOf("text-h6")).toBeLessThan(roles.indexOf("text-sm"));
+    expect(roles[0]).toBe("display");
+    expect(roles).toHaveLength(15);
+    expect(roles).toEqual(expect.arrayContaining(["h1", "eyebrow", "sm"]));
+    expect(roles.indexOf("h6")).toBeLessThan(roles.indexOf("sm"));
   });
 });
 
 describe("globalAttributes", () => {
-  it("lists the data-ui-* globals with values", () => {
+  it("lists the page-level globals with values", () => {
     const names = globalAttributes().map((a) => a.name);
-    expect(names).toContain("data-ui-persist");
+    expect(names).toEqual(
+      expect.arrayContaining([
+        "data-draggable",
+        "data-navigation",
+        "data-navigation-persist",
+        "data-navigation-persist-mode",
+        "data-theme",
+        "data-style-guard",
+      ]),
+    );
     expect(names).not.toContain("data-ui-theme");
   });
 });

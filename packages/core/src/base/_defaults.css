@@ -214,12 +214,12 @@
   }
 
 
-  :where(:is([style*="--text-wrap--"], [style*="--group-text-wrap--"]):not(:is(h1, [data-ui~="text-h1"]), :is(h2, [data-ui~="text-h2"]), :is(h3, [data-ui~="text-h3"]), :is(h4, [data-ui~="text-h4"]), :is(h5, [data-ui~="text-h5"]), :is(h6, [data-ui~="text-h6"]), [data-ui~="text-display"], body)) {
+  :where(:is([style*="--text-wrap--"], [style*="--group-text-wrap--"]):not(body, h1, h2, h3, h4, h5, h6)) {
     text-wrap: var(--_text-wrap-b);
   }
 
 
-  :where(:is([style*="--text-decoration--"], [style*="--group-text-decoration--"]):not([data-ui~="text-link"], abbr[title])) {
+  :where(:is([style*="--text-decoration--"], [style*="--group-text-decoration--"]):not(abbr[title])) {
     text-decoration-line: var(--_text-decoration-resolved, none);
   }
 
@@ -297,35 +297,35 @@
   :where(:is([style*="--radius--"], [style*="--group-radius--"]):not([data-ui~="meter"], [data-ui~="progress"], [popover], code, input[role="switch"], input[type="checkbox"]:not([role="switch"]), input[type="range"], kbd)) {
     --_radius-len: var(--_radius-resolved, 0);
     --_radius-num: var(--_radius-resolved, 0);
-    border-radius: calc(var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier));
+    border-radius: calc(var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-coefficient));
   }
 
   :where([style*="--radius-t--"]:not([data-ui~="meter"], [data-ui~="progress"], [popover], code, input[role="switch"], input[type="checkbox"]:not([role="switch"]), input[type="range"], kbd)) {
     --_radius-t-len: var(--_radius-t-resolved, 0);
     --_radius-t-num: var(--_radius-t-resolved, 0);
-    border-start-start-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-multiplier));
-    border-start-end-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-multiplier));
+    border-start-start-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-coefficient));
+    border-start-end-radius: calc(var(--_radius-t-len) + var(--_radius-t-num) * var(--spacing) * var(--radius-coefficient));
   }
 
   :where([style*="--radius-b--"]:not([data-ui~="meter"], [data-ui~="progress"], [popover], code, input[role="switch"], input[type="checkbox"]:not([role="switch"]), input[type="range"], kbd)) {
     --_radius-b-len: var(--_radius-b-resolved, 0);
     --_radius-b-num: var(--_radius-b-resolved, 0);
-    border-end-start-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-multiplier));
-    border-end-end-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-multiplier));
+    border-end-start-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-coefficient));
+    border-end-end-radius: calc(var(--_radius-b-len) + var(--_radius-b-num) * var(--spacing) * var(--radius-coefficient));
   }
 
   :where([style*="--radius-l--"]:not([data-ui~="meter"], [data-ui~="progress"], [popover], code, input[role="switch"], input[type="checkbox"]:not([role="switch"]), input[type="range"], kbd)) {
     --_radius-l-len: var(--_radius-l-resolved, 0);
     --_radius-l-num: var(--_radius-l-resolved, 0);
-    border-start-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-multiplier));
-    border-end-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-multiplier));
+    border-start-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-coefficient));
+    border-end-start-radius: calc(var(--_radius-l-len) + var(--_radius-l-num) * var(--spacing) * var(--radius-coefficient));
   }
 
   :where([style*="--radius-r--"]:not([data-ui~="meter"], [data-ui~="progress"], [popover], code, input[role="switch"], input[type="checkbox"]:not([role="switch"]), input[type="range"], kbd)) {
     --_radius-r-len: var(--_radius-r-resolved, 0);
     --_radius-r-num: var(--_radius-r-resolved, 0);
-    border-start-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-multiplier));
-    border-end-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-multiplier));
+    border-start-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-coefficient));
+    border-end-end-radius: calc(var(--_radius-r-len) + var(--_radius-r-num) * var(--spacing) * var(--radius-coefficient));
   }
 
 

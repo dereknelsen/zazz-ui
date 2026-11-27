@@ -494,7 +494,7 @@ const packScript = await inlineScript(
               '
             >
               <SectionIcon size={16} aria-hidden='true' />
-              <span data-ui='text-xs'>{label}</span>
+              <span data-font='xs'>{label}</span>
             </button>
           ))
         }
@@ -528,7 +528,7 @@ const packScript = await inlineScript(
         >
           <h2
             id='tb-sheet-title'
-            data-ui='text-md'
+            data-font='md'
             data-theme-sheet-title
             style='--text-align: start'
           >
@@ -550,9 +550,9 @@ const packScript = await inlineScript(
     >
       <div data-dialog-slot='content'>
         <header data-dialog-slot='header' style='--pr: 12'>
-          <h2 id='tb-css-title' data-ui='text-md'>Theme CSS</h2>
+          <h2 id='tb-css-title' data-font='md'>Theme CSS</h2>
           <p
-            data-ui='text-sm'
+            data-font='sm'
             style='--text: var(--color-muted-foreground)'
           >
             Only the variables you changed. Paste it into your stylesheet.
@@ -560,7 +560,7 @@ const packScript = await inlineScript(
         </header>
         <div data-dialog-slot='body'>
           <pre
-            data-ui='text-xs'
+            data-font='xs'
             style='
               --p: 3;
               --font-family: var(--font-family-mono);
@@ -658,7 +658,7 @@ const packScript = await inlineScript(
               --gap: 2;
             '
           >
-            <h2 id='tb-title' data-ui='text-lg' style="--sr: only">Theme builder</h2>
+            <h2 id='tb-title' data-font='lg' style="--sr: only">Theme builder</h2>
             <button
               class="theme-builder__generate-button"
               data-ui='button'
@@ -802,7 +802,7 @@ const packScript = await inlineScript(
             style='--row-start: 1; --border-style: dashed'
           >
             <summary
-              data-ui='text-eyebrow'
+              data-font='eyebrow'
               style='
                 --px: 5;
                 --py: 3;
@@ -982,7 +982,7 @@ const packScript = await inlineScript(
             '
           >
             <summary
-              data-ui='text-eyebrow'
+              data-font='eyebrow'
               style='
                 --px: 5;
                 --py: 3;
@@ -1079,7 +1079,7 @@ const packScript = await inlineScript(
                                 <span
                                   id={`tb-font-${f.role}-group-${i}`}
                                   data-combobox-slot='group-label'
-                                  data-ui='text-eyebrow'
+                                  data-font='eyebrow'
                                   style='
                                     --pl: 3;
                                     --mt: 2;
@@ -1109,7 +1109,7 @@ const packScript = await inlineScript(
                           </div>
                           <p
                             data-combobox-slot='empty'
-                            data-ui='text-sm'
+                            data-font='sm'
                             style='--text: var(--color-muted-foreground)'
                           >
                             No matches.
@@ -1219,7 +1219,7 @@ const packScript = await inlineScript(
             '
           >
             <summary
-              data-ui='text-eyebrow'
+              data-font='eyebrow'
               style='
                 --px: 5;
                 --py: 3;
@@ -1380,7 +1380,7 @@ const packScript = await inlineScript(
             '
           >
             <summary
-              data-ui='text-eyebrow'
+              data-font='eyebrow'
               style='
                 --px: 5;
                 --py: 3;

@@ -1,7 +1,7 @@
 # Zazz token reference
 
 A **map** of which token and style utility to reach for and when. Authoritative _values_ live in
-the kit's `base/_variables.css` and `base/_typography.css` (global tokens and the fluid type scale),
+the kit's `base/_variables.css` (global tokens and the fluid type scale),
 `base/_breakpoints.css`, and each `primitives/{name}/{name}.css` (the `--ui-<name>-*` hooks), under
 `zazz/` when vendored or `node_modules/@zazz-ui/core/src/` from npm. The token tables at
 `https://zazz.sh/api/foundations/tokens/` show every value; the editor completes utilities from
@@ -77,9 +77,10 @@ Use the `--color-*` roles in utilities and CSS; they are also the **theme inputs
 
 ## 4. Typography — roles first; never compose a role from parts
 
-- **Roles (size + weight + leading + tracking bundled, all fluid):** native `h1`–`h6`, or
-  `data-ui="text-display"`, `text-h1 … text-h6`, `text-2xl text-xl text-lg text-md text-sm text-xs
-  text-2xs`, `text-eyebrow`, `text-link` (an inline link outside prose). A role stacks with other tokens: `data-ui="badge text-xs"`.
+- **Roles (size + leading + tracking bundled, all fluid; heading roles add family and weight):**
+  native `h1`–`h6`, or `data-font` with one of `display`, `h1 … h6`, `2xl xl lg md sm xs 2xs`,
+  `eyebrow`. A role sits beside an identity and beats its font: `data-ui="badge" data-font="xs"`.
+  An inline link outside prose is the `link` identity: `data-ui="link"`.
 - **Override one property** with a utility: `--font-size`, `--font-weight`, `--font-family`,
   `--font-style`, `--leading`, `--tracking`, `--text-align`, `--text-transform`, `--text-wrap`,
   `--text-decoration` (also takes states: `--text-decoration--hover: underline`), `--whitespace`, `--line-clamp` (`1` = truncate).
@@ -99,13 +100,13 @@ Use the `--color-*` roles in utilities and CSS; they are also the **theme inputs
 - **Spacing and leading knobs** (0.14 and later): `--tracking-modifier` is a length (`0.01em`, never
   a bare `0`) added to every `--tracking-*` token; `--tracking-heading-modifier` (display, h1–h6)
   and `--tracking-body-modifier` (2xl–2xs, eyebrow) default to it and move one group.
-  `--leading-heading-multiplier` and `--leading-body-multiplier` (default `1`) scale every
+  `--leading-heading-coefficient` and `--leading-body-coefficient` (default `1`) scale every
   `--leading-*` in their group. Set them on `:root` or on a section, instead of redeclaring each
   token.
 
 ## 5. Radius
 
-`--radius-none|2xs|xs|sm|md|lg|xl|2xl|full`, scaled by `--radius-multiplier`. Conventions: **md** =
+`--radius-none|2xs|xs|sm|md|lg|xl|2xl|full`, scaled by `--radius-coefficient`. Conventions: **md** =
 buttons/inputs/popovers, **lg** = cards/dialogs, **sm** = badges, **full** = pills/circles. Utility:
 `--radius` takes a number on the same scale (`--radius: 2.5` is **md**; 0.5 2xs, 1 xs, 1.5 sm, 4.5 lg,
 7 xl, 10 2xl), a length, or `full`, at any state or breakpoint. `--radius-t` / `-b` / `-l` / `-r`

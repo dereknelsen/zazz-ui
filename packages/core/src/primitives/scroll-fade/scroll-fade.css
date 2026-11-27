@@ -65,11 +65,8 @@
       #000 calc(100% - var(--_scroll-fade-end)),
       transparent 100%
     );
-    -webkit-mask-image: var(--ui-scroll-fade-mask, var(--_scroll-fade-gradient));
     mask-image: var(--ui-scroll-fade-mask, var(--_scroll-fade-gradient));
-    -webkit-mask-composite: source-in;
     mask-composite: intersect;
-    -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
 
     @supports (animation-timeline: scroll()) {

@@ -47,6 +47,22 @@ describe("lightbox", () => {
     }
   });
 
+  it("centers the counter in its box, in both writing directions", () => {
+    const root = mount(`<div>
+      <ui-lightbox data-ltr style="display: block; position: relative; inline-size: 400px; block-size: 100px"><span data-lightbox-slot="counter">2 / 12</span></ui-lightbox>
+      <ui-lightbox data-rtl dir="rtl" style="display: block; position: relative; inline-size: 400px; block-size: 100px"><span data-lightbox-slot="counter">2 / 12</span></ui-lightbox>
+    </div>`);
+    for (const selector of ["[data-ltr]", "[data-rtl]"]) {
+      const box = root.querySelector(selector)!.getBoundingClientRect();
+      const counter = root
+        .querySelector(`${selector} [data-lightbox-slot='counter']`)!
+        .getBoundingClientRect();
+      expect(counter.width, selector).toBeGreaterThan(0);
+      expect(counter.width, selector).toBeLessThan(200);
+      expect(counter.left + counter.width / 2, selector).toBeCloseTo(box.left + box.width / 2, 0);
+    }
+  });
+
   it("drops to four thumb columns in any narrow container, not only a section", () => {
     const root = mount(`<div>
       <div style="inline-size: 30rem; --container-type: inline-size"><ui-lightbox data-narrow></ui-lightbox></div>

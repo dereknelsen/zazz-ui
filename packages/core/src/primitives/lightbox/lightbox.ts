@@ -15,7 +15,7 @@
  * Opening and closing the dialog itself needs no JavaScript — slides carry
  * `command="show-modal"` / `command="close"` (Invoker Commands). A mouse
  * drag on the stage or the thumbs never also clicks: the gesture layer
- * (base/gesture.js) swallows the click that ends a drag.
+ * (behaviors/gesture.js) swallows the click that ends a drag.
  *
  * @example
  * <ui-lightbox>

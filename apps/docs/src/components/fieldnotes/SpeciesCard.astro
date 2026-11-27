@@ -42,7 +42,7 @@ const dialog = `fn-species-${s.slug}`;
       >
         {s.name}
       </h3>
-      <p data-ui='text-sm' style='--text: var(--color-muted-foreground)'>
+      <p data-font='sm' style='--text: var(--color-muted-foreground)'>
         <i>{s.scientific}</i>
       </p>
     </div>
@@ -54,7 +54,7 @@ const dialog = `fn-species-${s.slug}`;
   </header>
 
   <dl
-    data-ui='text-sm'
+    data-font='sm'
     style='
       --display: grid;
       --template-cols: auto 1fr;
@@ -116,8 +116,8 @@ const dialog = `fn-species-${s.slug}`;
           --display: grid;
           --gap: 1;
         '>
-        <h2 id={`${dialog}-heading`} data-ui='text-h6'>{s.name}</h2>
-        <p data-ui='text-sm' style='--text: var(--color-muted-foreground)'>
+        <h2 id={`${dialog}-heading`} data-font='h6'>{s.name}</h2>
+        <p data-font='sm' style='--text: var(--color-muted-foreground)'>
           <i>{s.scientific}</i>
         </p>
       </div>
@@ -131,7 +131,7 @@ const dialog = `fn-species-${s.slug}`;
     >
       <p>{s.note}</p>
       <dl
-        data-ui='text-sm'
+        data-font='sm'
         style='
           --display: grid;
           --items: center;

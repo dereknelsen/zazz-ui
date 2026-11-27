@@ -35,7 +35,7 @@ export function kitchenSink(): string {
       const example = readExample(`${name}/${name}`);
       if (example === null) return [];
       return `  <section id="${name}" style="--mt: 12; --pt: 12; --border-t: 1">
-    <h2 data-ui="text-h6">${primitiveLabel(name)}</h2>
+    <h2 data-font="h6">${primitiveLabel(name)}</h2>
     <div style="--mt: 6; --display: flex; --flex-wrap: wrap; --gap: 6">
 ${indent(example, "      ")}
     </div>

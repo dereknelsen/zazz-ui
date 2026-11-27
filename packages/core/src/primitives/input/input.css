@@ -98,7 +98,7 @@
     --_radius-len: var(--_radius-resolved, var(--ui-input-radius));
     --_radius-num: var(--_radius-resolved, var(--ui-input-radius));
     border-radius: calc(
-      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-coefficient)
     );
     corner-shape: var(--_corner-shape-resolved, var(--ui-input-corner-shape));
 
@@ -170,7 +170,6 @@
   /* Native date/time controls keep their picker indicator tinted to the text */
   :where([data-ui~="input"])::-webkit-calendar-picker-indicator {
     cursor: pointer;
-    -webkit-appearance: none;
 
     margin: 0;
     padding: 0;

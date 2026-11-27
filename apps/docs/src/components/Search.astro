@@ -103,7 +103,7 @@ import Icon from "./Icon.astro";
     >
       <p
         data-command-slot="empty"
-        data-ui="text-sm"
+        data-font="sm"
         style="
           --position: absolute;
           --py: 4;
@@ -197,7 +197,7 @@ import Icon from "./Icon.astro";
         const label = document.createElement("span");
         label.id = labelId;
         label.setAttribute("data-command-slot", "group-label");
-        label.setAttribute("data-ui", "text-eyebrow");
+        label.setAttribute("data-font", "eyebrow");
         label.setAttribute("style", "--text: var(--color-muted-foreground)");
         label.textContent = name || "Pages";
         group.append(label);
@@ -217,7 +217,7 @@ import Icon from "./Icon.astro";
           const title = document.createElement("span");
           title.textContent = item.title;
           const excerpt = document.createElement("span");
-          excerpt.setAttribute("data-ui", "text-xs");
+          excerpt.setAttribute("data-font", "xs");
           excerpt.setAttribute(
             "style",
             "--text: var(--color-muted-foreground); --font-weight: body; --text-align: start; --text-wrap: truncate; --min-w: 0; --w: 100%;",

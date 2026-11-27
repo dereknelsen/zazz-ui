@@ -119,6 +119,7 @@ src/
 ├── index.css        stylesheet entry: @imports base + every primitive in cascade order
 ├── index.js         script entry: registers every custom element / behavior
 ├── base/            tokens, reset, typography, utilities, layout + shared runtime
+├── behaviors/       interaction logic primitives share: list navigation, gestures, typeahead, hotkeys
 └── primitives/<name>/       one folder per primitive: <name>.css, <name>.ts, examples (.html)
 dist/
 ├── zazz.css         flattened single-file bundle (loaded by CDN tags)

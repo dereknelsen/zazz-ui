@@ -14,7 +14,7 @@ const api = primitiveApi(Astro.props.primitive);
     <p>No hooks: this primitive has no stylesheet of its own.</p>
   ) : (
     <>
-      <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+      <p data-font="sm" style="--text: var(--color-muted-foreground)">
         Set a hook on <code>:root</code>, on a subtree, or inline on one element. A state hook
         (<code>--…--hover</code>) themes that state only; the primitive keeps its other states.
       </p>

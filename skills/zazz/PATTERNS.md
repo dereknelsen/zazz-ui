@@ -12,7 +12,7 @@ Capitalize the first word and proper nouns only.
 - "Add to cart", not "Add To Cart"
 - "The art of typography", not "The Art Of Typography"
 
-Deviate only when the user asks. An eyebrow's caps come from the `text-eyebrow` role's
+Deviate only when the user asks. An eyebrow's caps come from the `eyebrow` role's
 `text-transform`, so author it in sentence case too.
 
 ## Semantic HTML in Zazz
@@ -74,10 +74,10 @@ subdivides a section, with no skipped levels. Screen reader users move between t
 table of contents, so a level that's off by one is a navigation bug, not a style choice.
 
 Level is structure; size is a role. Native `h1` to `h6` take their level's size, and a
-smaller `text-h*` role overrides it: `<h2 data-ui="text-h5">` is still a level-two heading,
+smaller `text-h*` role overrides it: `<h2 data-font="h5">` is still a level-two heading,
 just smaller. A larger role does not win (the heading rules come later in the cascade), so
 size a heading up with `--font-size: var(--font-size-h2)`. Never pick the tag for its size,
-and never pair a tag with its own role (`<h2 data-ui="text-h2">` is a no-op). Don't use a
+and never pair a tag with its own role (`<h2 data-font="h2">` is a no-op). Don't use a
 heading as bold text; use `--font-weight: strong`.
 
 ### Navigation
@@ -325,11 +325,11 @@ of the outline.
 
 ```html
 <hgroup style="--display: flex-col; --gap: 4; --text-align: center; --text-align--md: start">
-  <p data-ui="text-eyebrow">Featured</p>
+  <p data-font="eyebrow">Featured</p>
   <h1 style="--font-size: var(--font-size-display); --leading: var(--leading-display)">
     The art of typography
   </h1>
-  <p data-ui="text-xl" style="--text: var(--color-muted-foreground)">
+  <p data-font="xl" style="--text: var(--color-muted-foreground)">
     How vexingly quick daft zebras jump.
   </p>
   <div style="--display: flex; --gap: 2; --mt: 4; --justify: center; --justify--md: start">

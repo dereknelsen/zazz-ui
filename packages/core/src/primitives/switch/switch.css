@@ -84,7 +84,7 @@
       --_radius-len: var(--ui-switch-thumb-radius);
       --_radius-num: var(--ui-switch-thumb-radius);
       border-radius: calc(
-        var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+        var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-coefficient)
       );
       corner-shape: var(--ui-switch-thumb-corner-shape);
       border-width: var(--ui-switch-thumb-border-width);
@@ -158,7 +158,7 @@
     --_radius-len: var(--_radius-resolved, var(--ui-switch-track-radius));
     --_radius-num: var(--_radius-resolved, var(--ui-switch-track-radius));
     border-radius: calc(
-      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-coefficient)
     );
     corner-shape: var(--_corner-shape-resolved, var(--ui-switch-track-corner-shape));
     cursor: var(--_cursor-resolved, var(--ui-switch-cursor));

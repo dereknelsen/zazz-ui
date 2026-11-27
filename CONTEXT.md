@@ -17,7 +17,7 @@ The custom-tag spelling of a primitive (`<ui-tooltip>`). Exists only where the r
 _Avoid_: element version, web component form, `<ui-button>`
 
 **Attribute form**:
-The `data-ui` spelling of a primitive (`<div data-ui="tooltip">`, `<button data-ui="button">`). Every primitive has an attribute form; primitives rooted on semantic native elements have only this form. `data-ui` is a space-separated token list: a specialization rides on its base (`data-ui="dialog alert-dialog"`), and typography roles and `group` stack on anything. It holds identities only: a value goes in a utility, and a color scheme goes in `data-theme`.
+The `data-ui` spelling of a primitive (`<div data-ui="tooltip">`, `<button data-ui="button">`). Every primitive has an attribute form; primitives rooted on semantic native elements have only this form. `data-ui` is a space-separated token list: a specialization rides on its base (`data-ui="dialog alert-dialog"`), and `group` stacks on anything. It holds identities only: a value goes in a utility, a color scheme goes in `data-theme`, and a typography role goes in `data-font`.
 _Avoid_: class form, `.ui-button`, expanded version, raw form
 
 **Drawer**:
@@ -44,8 +44,8 @@ An enumerated preset on a primitive, chosen with `data-<primitive>-variant` or `
 _Avoid_: modifier, flavor, theme, BEM modifier, `data-variant`, `data-ui-variant`
 
 **Typography role**:
-A named text preset (`text-h1`–`text-h6`, `text-display`, `text-eyebrow`, `text-link`, `text-2xs`–`text-2xl`) that bundles family, size, weight, leading, tracking, and case. Native headings carry their role by default; any element takes a role as an identity token (`data-ui="text-h4"`). Utilities override a role one property at a time.
-_Avoid_: text class, heading style, type scale entry, `text-h1` (as a class), `data-ui-text`
+A named text preset (`display`, `h1`–`h6`, `2xl`–`2xs`, `eyebrow`) that bundles size, leading, tracking, and case; the heading roles also set family and weight. Native headings carry their role by default; any element takes one role as the value of `data-font` (`data-font="h4"`), which the `font` primitive styles. A role beats the font of the primitive it sits on, and utilities override a role one property at a time. An inline link is the `link` identity (`data-ui="link"`), separate from the roles.
+_Avoid_: text class, heading style, type scale entry, `text-h1` (as a class or a `data-ui` token), `data-ui-text`, `text-link`
 
 **Group**:
 An ancestor marked `data-ui="group"` or written `<ui-group>` whose interaction state drives group-context utilities on its descendants (`--group-opacity--hover`). Any marked ancestor counts, nearest or not; named groups (`data-group-name`) are reserved and not yet implemented.

@@ -1,0 +1,36 @@
+---
+title: "Font"
+description: "Typography roles: a step of the type scale on any element."
+section: Primitives
+sectionOrder: 5
+order: 0
+primitive: font
+---
+
+## Installation
+
+{% install primitive="font" /%}
+
+## Examples
+
+{% examples primitive="font" /%}
+
+## Roles
+
+`data-font` takes one role. Each sets the size, leading, and tracking of its step in the type scale. The heading roles (`display`, `h1`–`h6`) also set the heading family and weight, and match the native headings. The body sizes leave family and weight alone, so `<h3 data-font="lg">` is a smaller heading and not body text. The eyebrow sets its own weight.
+
+{% roles /%}
+
+A role beats the font of the primitive or slot it sits on: `<span data-ui="badge" data-font="sm">` is a badge with larger text. A utility still overrides one property of a role (`--font-size`, `--leading`, `--font-weight`).
+
+```html
+<span data-font="eyebrow">Release notes</span>
+<h2 data-font="h4">A second-level heading at the h4 size</h2>
+<p data-font="sm" style="--text: var(--color-muted-foreground)">Supporting text.</p>
+```
+
+The sizes, leading, and tracking behind each role are tokens. Tune them on the [typography](/api/foundations/typography/) page.
+
+## Attributes
+
+{% attributes primitive="font" /%}

@@ -238,7 +238,7 @@
     --_radius-len: var(--_radius-resolved, var(--ui-field-group-radius));
     --_radius-num: var(--_radius-resolved, var(--ui-field-group-radius));
     border-radius: calc(
-      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-coefficient)
     );
     corner-shape: var(--_corner-shape-resolved, var(--ui-field-group-corner-shape));
     --_p-len: var(--_p-resolved, var(--ui-field-group-p));

@@ -280,7 +280,7 @@ The token contract in the frontmatter is what lets you be bold without the resul
 **Creative ambition** — bring a point of view:
 
 - **Commit to a direction** — one cohesive, opinionated aesthetic true to the brand, not a safe average. Vary between light and dark, different type pairings, different atmospheres across generations.
-- **Distinctive typography** — pair the brand's sans with a classic serif italic (Playfair Display Italic, Cormorant Garamond Italic) on emphasis words ("_quality_", "_trusted_") for editorial cadence, and use the full scale for real hierarchy: a genuine `text-display`/`text-h1` moment against calm body copy, not five near-identical sizes. Always adopt the brand's real typefaces — never default to generic system fonts.
+- **Distinctive typography** — pair the brand's sans with a classic serif italic (Playfair Display Italic, Cormorant Garamond Italic) on emphasis words ("_quality_", "_trusted_") for editorial cadence, and use the full scale for real hierarchy: a genuine `display`/`h1` moment against calm body copy, not five near-identical sizes. Always adopt the brand's real typefaces — never default to generic system fonts.
 - **Commit to the palette** — a dominant surface with sharp brand accents reads as _designed_; timid, evenly-distributed grays read as slop. The frontmatter ships no default palette — fill it from the brand and make its colors the point.
 - **Compose with tension** — break the centered stack. Play full-bleed imagery against capped text columns, use the left-label layout, overlap layers, and let section rhythm (`--py: 24`, 96px) open real negative space. Asymmetry and generous whitespace are choices, not accidents.
 - **Build atmosphere, not flat fills** — layer depth from tokens: gradient washes across a brand scale (`--color-primary-600` → `--color-primary-900`), `shade`/`tint` transparencies, subtle noise/grain, decorative `--color-border` rules, and emotive photography. (Keep surfaces flat and reserve `--shadow-*` for genuine elevation — atmosphere lives in the background, not on every card.)
@@ -291,7 +291,7 @@ The token contract in the frontmatter is what lets you be bold without the resul
 
 - **Never use generic AI aesthetics** — no cold tech minimalism, cliched startup palettes, sterile layouts, or the lazy violet-gradient-on-white centered hero. Designs must feel unique to the brand.
 - **Use Zazz tokens exclusively** — never hardcode colors, spacing, radii, shadows, or typography. Use `var(--token-name)` in style utilities (`style="--bg: var(--color-card)"`); markup rules are in `AUTHORING.md`.
-- **Typography via roles** — native `h1`–`h6` or `data-ui="text-*"`; override one property with a utility, never rebuild a role from utilities.
+- **Typography via roles** — native `h1`–`h6` or `data-font="<role>"`; override one property with a utility, never rebuild a role from utilities.
 - **Spacing via the `--space-*` semantic scale** — never use arbitrary px/rem values.
 - **Dark mode for free** — `--color-*` roles auto-swap; pin a scheme with `data-theme="dark"` or `"light"`; never write separate dark-mode overrides for token-handled values.
 
@@ -391,30 +391,30 @@ sensible web-safe fallback stack). Never default to generic system fonts.
 
 The scale is fluid between mobile and desktop viewports (`sm`, `xs`, and `2xs` hold one size unless you lower their `-min`). `md` is `--typeset-base` and each step above it multiplies by `--typeset-scale` (`lg` one step, `display` eight); both grow from their `-min` to their `-max` value across `--fluid-min` to `--fluid-max`. Retune with those controls in `:root`, never by redeclaring a single `--font-size-*`. (0.9 and later; earlier releases compute each size with a fixed `clamp()`.)
 
-| Role (`data-ui`) | Size (desktop) | Leading | Tracking | Character                     |
-| ---------------- | -------------- | ------- | -------- | ----------------------------- |
-| `text-display`   | 5.96rem        | 0.95    | -0.05em  | Massive hero statement        |
-| `text-h1`        | 4.77rem        | 0.95    | -0.05em  | Primary page heading          |
-| `text-h2`        | 3.81rem        | 0.95    | -0.025em | Section heading               |
-| `text-h3`        | 3.05rem        | 1       | -0.025em | Subsection heading            |
-| `text-h4`        | 2.44rem        | 1       | -0.015em | Component heading             |
-| `text-h5`        | 1.95rem        | 1       | -0.01em  | Small heading                 |
-| `text-h6`        | 1.56rem        | 1       | -0.005em | Minor heading                 |
-| `text-xl`        | 1.56rem        | 1.5     | 0        | Large body / intro paragraph  |
-| `text-lg`        | 1.25rem        | 1.5     | 0        | Lead text                     |
-| `text-md`        | 1rem           | 1.6     | 0        | Default body text             |
-| `text-sm`        | 0.8rem         | 1.5     | 0        | Small UI labels               |
-| `text-xs`        | 0.64rem        | 1.5     | 0        | Captions, fine print          |
-| `text-eyebrow`   | 0.58rem        | 1.2     | 0.05em   | Uppercase label, wide-tracked |
+| Role (`data-font`) | Size (desktop) | Leading | Tracking | Character                     |
+| ------------------ | -------------- | ------- | -------- | ----------------------------- |
+| `display`          | 5.96rem        | 0.95    | -0.05em  | Massive hero statement        |
+| `h1`               | 4.77rem        | 0.95    | -0.05em  | Primary page heading          |
+| `h2`               | 3.81rem        | 0.95    | -0.025em | Section heading               |
+| `h3`               | 3.05rem        | 1       | -0.025em | Subsection heading            |
+| `h4`               | 2.44rem        | 1       | -0.015em | Component heading             |
+| `h5`               | 1.95rem        | 1       | -0.01em  | Small heading                 |
+| `h6`               | 1.56rem        | 1       | -0.005em | Minor heading                 |
+| `xl`               | 1.56rem        | 1.5     | 0        | Large body / intro paragraph  |
+| `lg`               | 1.25rem        | 1.5     | 0        | Lead text                     |
+| `md`               | 1rem           | 1.6     | 0        | Default body text             |
+| `sm`               | 0.8rem         | 1.5     | 0        | Small UI labels               |
+| `xs`               | 0.64rem        | 1.5     | 0        | Captions, fine print          |
+| `eyebrow`          | 0.58rem        | 1.2     | 0.05em   | Uppercase label, wide-tracked |
 
 Display and `h1`–`h3` headings use `text-wrap: balance`; `h4`–`h6` and body use `text-wrap: pretty`. Tight-leading on large text, generous-leading on body.
 
-Native `h1`–`h6` carry their heading role without a token.
+Native `h1`–`h6` carry their heading role without an attribute. Any other element takes one with `data-font` (`<p data-font="h4">`), one role per element, and a role beats the font of the primitive it sits on.
 
 ### Text Link
 
 Links inside `data-ui="prose"` are underlined for you. Anywhere else, give an inline link the
-`text-link` role (`<a href data-ui="text-link">`): an underline in the text's own color, at the
+`link` identity (`<a href data-ui="link">`): an underline in the text's own color, at the
 `--decoration-thickness` and `--decoration-offset` tokens, that fades on hover. A standalone link
 that acts like a control is `data-ui="button" data-button-variant="link"`.
 

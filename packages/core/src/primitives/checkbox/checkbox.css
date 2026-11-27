@@ -40,7 +40,6 @@
 @layer reset {
   :where(input[type="checkbox"]:not([role="switch"])) {
     position: relative;
-    -webkit-appearance: none;
     appearance: none;
     flex-shrink: 0;
     /* dual-mode: --size is a scale number or a length */
@@ -65,7 +64,7 @@
     --_radius-len: var(--_radius-resolved, var(--ui-checkbox-radius));
     --_radius-num: var(--_radius-resolved, var(--ui-checkbox-radius));
     border-radius: calc(
-      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-coefficient)
     );
     corner-shape: var(--_corner-shape-resolved, var(--ui-checkbox-corner-shape));
 

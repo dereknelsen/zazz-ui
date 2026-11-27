@@ -1,6 +1,6 @@
 /**
  * @fileoverview Carousel playground: one carousel per configuration (loop,
- * alignment, drag-free, RTL, vertical, thumbs, autoplay, auto-scroll), for
+ * alignment, free scrolling, RTL, vertical, thumbs, autoplay, auto-scroll), for
  * checking the feel by hand. Slides are links, to check that a drag never
  * also follows one.
  */
@@ -33,7 +33,7 @@ const ROWS: Row[] = [
     basis: "70%",
     slides: 6,
   },
-  { title: "Drag free", attrs: 'data-carousel-drag-free="true"', basis: "40%", slides: 10 },
+  { title: "Free scrolling", attrs: 'data-carousel-snap="free"', basis: "40%", slides: 10 },
   {
     title: "Right to left, loop",
     attrs: 'data-carousel-loop="true"',
@@ -102,7 +102,7 @@ if (rows) {
   rows.innerHTML = ROWS.map(
     (row) => `
     <section style="--display: flex-col; --gap: 4">
-      <h2 data-ui="text-h5">${row.title}</h2>
+      <h2 data-font="h5">${row.title}</h2>
       ${carousel(row)}
     </section>`,
   ).join("");

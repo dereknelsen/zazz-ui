@@ -1,0 +1,28 @@
+/**
+ * link.css: Link ([data-ui~="link"])
+ *
+ * @layer      components
+ * @requires   _layers.css, _variables.css
+ * @uses       oklch(from currentColor …): the hover underline fades with the text color
+ * @uses       Decoration tokens: consumes --decoration-thickness, --decoration-offset,
+ *             and the default transition tokens from _variables.css
+ */
+
+@layer ui.components {
+  /* ===========================================================================
+  LINK: the underline prose gives its anchors, for a link outside prose
+  - The color is the surrounding text's; set it with the --text utility.
+  =========================================================================== */
+
+  :where([data-ui~="link"]) {
+    text-decoration: underline;
+    text-decoration-thickness: var(--decoration-thickness);
+    text-underline-offset: var(--decoration-offset);
+    transition: text-decoration-color var(--default-transition-duration)
+      var(--default-transition-timing-function);
+  }
+
+  :where([data-ui~="link"]:hover) {
+    text-decoration-color: oklch(from currentColor l c h / 0.3);
+  }
+}

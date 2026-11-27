@@ -26,7 +26,7 @@ Add a header and a main region. `data-ui="layout"` turns an element into the ban
 <body>
   <header data-ui="layout" style="--py: 4; --border-b: 1">
     <div style="--display: flex; --items: center; --justify: space-between">
-      <a href="/" data-ui="text-lg" style="--font-weight: strong">Northwind</a>
+      <a href="/" data-font="lg" style="--font-weight: strong">Northwind</a>
       <nav style="--display: flex; --gap: 1">
         <a href="#menu" data-ui="button" data-button-variant="ghost">Menu</a>
         <a href="#signup" data-ui="button" data-button-variant="primary">Join</a>
@@ -45,15 +45,15 @@ Inside `<main>`:
 
 ```html
 <section style="--py: 24; --text-align: center">
-  <p data-ui="text-eyebrow">Small-batch roasting since 2019</p>
-  <h1 data-ui="text-h4" style="--mt: 2; --text-wrap: balance">Coffee worth slowing down for</h1>
-  <p data-ui="text-lg" style="--mt: 4; --mx: auto; --max-w: var(--article-sm); --text: var(--color-muted-foreground)">
+  <p data-font="eyebrow">Small-batch roasting since 2019</p>
+  <h1 data-font="h4" style="--mt: 2; --text-wrap: balance">Coffee worth slowing down for</h1>
+  <p data-font="lg" style="--mt: 4; --mx: auto; --max-w: var(--article-sm); --text: var(--color-muted-foreground)">
     Beans roasted every morning, shipped the same day.
   </p>
 </section>
 ```
 
-`text-eyebrow`, `text-h4`, and `text-lg` are typography roles: each bundles family, size, weight, leading, tracking, and case, and every size is fluid. Write the text in sentence case; the eyebrow's capitals come from the role.
+`eyebrow`, `h4`, and `lg` are typography roles, set with `data-font`: each bundles family, size, weight, leading, tracking, and case, and every size is fluid. Write the text in sentence case; the eyebrow's capitals come from the role.
 
 ## 4. Cards in a grid
 
@@ -62,8 +62,8 @@ Inside `<main>`:
   <div style="--display: grid; --grid-cols: 1; --grid-cols--md: 3; --gap: 4">
     <article data-ui="card" style="--p: 6; --display: flex-col; --gap: 2">
       <span data-ui="badge" data-badge-variant="muted">Espresso</span>
-      <h2 data-ui="text-lg">The classic</h2>
-      <p data-ui="text-sm" style="--text: var(--color-muted-foreground)">
+      <h2 data-font="lg">The classic</h2>
+      <p data-font="sm" style="--text: var(--color-muted-foreground)">
         A Honduran single origin with notes of dark chocolate and orange peel.
       </p>
     </article>
@@ -83,7 +83,7 @@ Open the page. The text uses the system fonts, and the colors and form controls 
   @layer overrides {
     :root {
       --color-primary: light-dark(oklch(0.45 0.15 30), oklch(0.8 0.12 30));
-      --radius-multiplier: 0.5;
+      --radius-coefficient: 0.5;
       --ui-button-font-weight: 600;
     }
   }

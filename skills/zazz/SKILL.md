@@ -74,6 +74,9 @@ Read the changelog first (`CHANGELOG.md` in the package, or
 carries at least one breaking change, marked **BREAKING** with a one-line migration; patches
 are additive.
 
+- **Moving to `data-font`:** `npx zazz-ui codemod data-font` rewrites `data-ui="text-sm"` to
+  `data-font="sm"` and `data-ui="text-link"` to `data-ui="link"` across a project, and updates a
+  vendored kit first. Run it with `--dry-run` to see the changes.
 - **CLI:** `npx zazz-ui diff` shows what would change and prints the changelog slice for the
   primitives you vendored. Then `npx zazz-ui update` (or `update @0.9.0`, or
   `update @0.9.0 button` for one primitive). Files you never edited take the new version; edited
@@ -171,10 +174,12 @@ Start at the most semantic layer and get specific only when nothing semantic fit
   `--color-primary`, `--color-border`, `--color-destructive`, …) so light and dark swap for free.
   Literal scales (`--color-primary-600`, `--color-neutral-100`, `--color-shade-800`) are a last
   resort.
-- **Type** is a role: native `h1` to `h6`, or `data-ui="text-h3"`, `text-display`, `text-eyebrow`,
-  `text-link`, `text-xs … text-xl`. Override one property with a utility; never rebuild a role
-  from utilities. A smaller role on a native heading changes its size, not its level
-  (`<h2 data-ui="text-h5">`); a larger one doesn't win, so size up with `--font-size`.
+- **Type** is a role: native `h1` to `h6`, or `data-font` on any element with `display`,
+  `h1 … h6`, `eyebrow`, or a body size `2xs … 2xl` (`data-font="h3"`). One role per element.
+  Override one property with a utility; never rebuild a role from utilities. A role on a native
+  heading changes its size, not its level (`<h2 data-font="h5">`), and a role beats the font of
+  the primitive it sits on (`data-ui="badge" data-font="sm"`). An inline link outside prose is
+  `data-ui="link"`.
 - **Size** is the default. Use `data-button-size="sm"` / `"icon-sm"` and the toggle equivalents
   sparingly and on purpose, in three places only: a table cell, inside an input group, and
   chrome that should recede behind the content (a floating editor toolbar, a panel header).
@@ -204,7 +209,7 @@ Minimal or maximal both work; what fails is not choosing.
   remember? Let those answers set density, imagery, and rhythm before you place a section.
 - **Type.** Pair Geist with a classic serif italic (Playfair Display, Cormorant Garamond) on
   emphasis words ("the art of _quality_") for editorial cadence. Use the full scale for real
-  hierarchy: one genuine `text-display` or `text-h1` moment against calm body copy, not five
+  hierarchy: one genuine `display` or `h1` moment against calm body copy, not five
   near-identical sizes. Matching a brand? Adopt its real typefaces, not generic system fonts.
 - **Commit to the palette.** Give one surface color most of the page and use the brand accents
   sharply; evenly spread grays look unfinished. Route everything through `--color-*` roles so
@@ -297,7 +302,7 @@ the sentence-case house rule, and composition patterns live in `PATTERNS.md`.
 - **Do** commit to one bold, cohesive aesthetic. **Don't** default to a timid centered stack of
   evenly spread grays.
 - **Do** write all UI text in sentence case. **Don't** Title-Case or UPPERCASE unless asked
-  (the eyebrow's caps come from the `text-eyebrow` role).
+  (the eyebrow's caps come from the `eyebrow` role).
 - **Do** use `var(--token)` in utilities. **Don't** hardcode colors, spacing, radii, or type, or
   invent tokens; every `var(--…)` must exist in the kit.
 - **Do** leave controls at their default size; use `sm` and `icon-sm` only in table cells,

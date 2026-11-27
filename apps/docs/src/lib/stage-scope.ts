@@ -3,7 +3,7 @@
  *
  * The kit resolves its tokens on `:root`: `--radius-md` is a length and
  * `--ui-card-corner-shape` a shape by the time a preview stage inherits them,
- * so resetting `--radius-multiplier` on the stage alone would change nothing.
+ * so resetting `--radius-coefficient` on the stage alone would change nothing.
  * The stage therefore re-declares, with the kit's own values, every property
  * the look sets and every token or hook that reads one of them (directly or
  * through another token), and they recompute there. The theme builder's

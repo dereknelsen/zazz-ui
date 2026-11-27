@@ -49,15 +49,15 @@ pnpm dlx skills add dereknelsen/zazz-ui --skill install-zazz-in-legacy-app # add
 
 ## Layout
 
-| Path                       | What it is                                                                                                                                                                                      |
-| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `packages/core`            | [`@zazz-ui/core`](packages/core): the kit. Primitives co-located under `src/primitives/<name>/` (css + ts + example html), base layers and runtime under `src/base/`, editor data in `editor/`. |
-| `packages/cli`             | [`zazz-ui`](packages/cli): vendors the kit into a project (`init`, `add`, `update`, `diff`) with provenance, so updates merge instead of overwrite.                                             |
-| `packages/language-server` | `@zazz-ui/language-server` (private): LSP for Zazz in HTML; the `<ui-debug>` audit, completions, hover, formatting.                                                                             |
-| `packages/eslint-plugin`   | `@zazz-ui/eslint-plugin` (private): the same audit as html-eslint rules; `vp run lint:html`.                                                                                                    |
-| `packages/vscode`          | `zazz-vscode` (private): the VS Code extension, a client over the server plus grammar, snippets, Emmet, templates. `vp run zazz-vscode#package` builds the `.vsix`.                             |
-| `apps/docs`                | The documentation site (Astro + Markdoc + Pagefind, styled with Zazz). Its API reference is generated from the kit's data at build time.                                                        |
-| `apps/experiments`         | A Vite app for authoring UI against the kit's sources with hot reload and `<ui-debug>`.                                                                                                         |
+| Path                       | What it is                                                                                                                                                                                                                               |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `packages/core`            | [`@zazz-ui/core`](packages/core): the kit. Primitives co-located under `src/primitives/<name>/` (css + ts + example html), base layers and runtime under `src/base/`, shared behaviors under `src/behaviors/`, editor data in `editor/`. |
+| `packages/cli`             | [`zazz-ui`](packages/cli): vendors the kit into a project (`init`, `add`, `update`, `diff`, `codemod`) with provenance, so updates merge instead of overwrite.                                                                           |
+| `packages/language-server` | `@zazz-ui/language-server` (private): LSP for Zazz in HTML; the `<ui-debug>` audit, completions, hover, formatting.                                                                                                                      |
+| `packages/eslint-plugin`   | `@zazz-ui/eslint-plugin` (private): the same audit as html-eslint rules; `vp run lint:html`.                                                                                                                                             |
+| `packages/vscode`          | `zazz-vscode` (private): the VS Code extension, a client over the server plus grammar, snippets, Emmet, templates. `vp run zazz-vscode#package` builds the `.vsix`.                                                                      |
+| `apps/docs`                | The documentation site (Astro + Markdoc + Pagefind, styled with Zazz). Its API reference is generated from the kit's data at build time.                                                                                                 |
+| `apps/experiments`         | A Vite app for authoring UI against the kit's sources with hot reload and `<ui-debug>`.                                                                                                                                                  |
 
 Vocabulary is in [`CONTEXT.md`](CONTEXT.md), the markup contract in [`SPEC.md`](SPEC.md), decisions in [`docs/adr/`](docs/adr/), and the markup rules in [`packages/core/AUTHORING.md`](packages/core/AUTHORING.md).
 

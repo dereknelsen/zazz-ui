@@ -1,0 +1,188 @@
+/**
+ * font.css: Typography roles ([data-font])
+ *
+ * @layer      components
+ * @requires   _layers.css, _variables.css, _typography.css (the native headings
+ *             these roles restyle); loads after every primitive that sets a font
+ * @uses       data-font="display | h1–h6 | 2xl–2xs | eyebrow": one role per element;
+ *             each sets the size, leading, and tracking of its step in the type scale
+ * @uses       font-optical-sizing: heading optical size
+ * @uses       text-wrap: pretty (h4–h6), @supports gated (Firefox lacks it; wrap fallback)
+ * @uses       Type tokens: consumes --font-size-*, --leading-*, --tracking-*,
+ *             --font-family-*, --font-weight-*, and the per-group OpenType controls
+ *             (--font-<feature>-heading | -body) from _variables.css
+ * @uses       Bare attribute selectors, no :where(): a role is an explicit choice, so it
+ *             carries one attribute of specificity. That beats a primitive's zero-specificity
+ *             root and prose's scoped rules, and ties a slot rule, which it follows in
+ *             load order. Utilities sit in a later layer and still win.
+ */
+
+@layer ui.components {
+  /* ===========================================================================
+  FONT ROLES: a step of the type scale on any element
+  - Heading roles (display, h1–h6) match the native headings in _typography.css
+    and also set the heading family and weight.
+  - Body roles (2xl–2xs) leave family and weight alone, so <h3 data-font="lg">
+    is a smaller heading, not body text. The eyebrow sets its own weight.
+  - A utility (--font-size, --font-weight, …) overrides one property of a role.
+  =========================================================================== */
+
+  [data-font="display"],
+  [data-font="h1"],
+  [data-font="h2"],
+  [data-font="h3"],
+  [data-font="h4"],
+  [data-font="h5"],
+  [data-font="h6"] {
+    font-family: var(--font-family-heading);
+    font-weight: var(--font-weight-heading);
+    font-feature-settings: var(--font-feature-heading);
+    font-kerning: var(--font-kerning-heading);
+    font-language-override: var(--font-language-heading);
+    font-optical-sizing: var(--font-optical-sizing-heading, auto);
+    font-size-adjust: var(--font-size-adjust-heading);
+    font-variant-alternates: var(--font-alternates-heading);
+    font-variant-caps: var(--font-caps-heading);
+    font-variant-east-asian: var(--font-east-asian-heading);
+    font-variant-emoji: var(--font-emoji-heading);
+    font-variant-ligatures: var(--font-ligatures-heading);
+    font-variant-numeric: var(--font-numeric-heading);
+    font-variant-position: var(--font-position-heading);
+    font-variation-settings: var(--font-settings-heading);
+  }
+
+  [data-font="display"],
+  [data-font="h1"],
+  [data-font="h2"],
+  [data-font="h3"] {
+    text-wrap: var(--text-wrap-heading, balance);
+  }
+
+  [data-font="h4"],
+  [data-font="h5"],
+  [data-font="h6"] {
+    text-wrap: var(--text-wrap-heading, wrap);
+    /* pretty can't be a var() fallback: a var() value is only checked at
+       computed-value time, so Firefox (no pretty) would reset text-wrap.
+       Drop the gate once web-features text-wrap-pretty is Baseline widely
+       available (not yet Baseline as of 2026-11). */
+    @supports (text-wrap: pretty) {
+      text-wrap: var(--text-wrap-heading, pretty);
+    }
+  }
+
+  [data-font="2xl"],
+  [data-font="xl"],
+  [data-font="lg"],
+  [data-font="md"],
+  [data-font="sm"],
+  [data-font="xs"],
+  [data-font="2xs"],
+  [data-font="eyebrow"] {
+    font-feature-settings: var(--font-feature-body);
+    font-kerning: var(--font-kerning-body);
+    font-language-override: var(--font-language-body);
+    font-optical-sizing: var(--font-optical-sizing-body, auto);
+    font-size-adjust: var(--font-size-adjust-body);
+    font-variant-alternates: var(--font-alternates-body);
+    font-variant-caps: var(--font-caps-body);
+    font-variant-east-asian: var(--font-east-asian-body);
+    font-variant-emoji: var(--font-emoji-body);
+    font-variant-ligatures: var(--font-ligatures-body);
+    font-variant-numeric: var(--font-numeric-body);
+    font-variant-position: var(--font-position-body);
+    font-variation-settings: var(--font-settings-body);
+  }
+
+  [data-font="display"] {
+    font-size: var(--font-size-display);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-display);
+  }
+
+  [data-font="h1"] {
+    font-size: var(--font-size-h1);
+    line-height: var(--leading-h1);
+    letter-spacing: var(--tracking-h1);
+  }
+
+  [data-font="h2"] {
+    font-size: var(--font-size-h2);
+    line-height: var(--leading-h2);
+    letter-spacing: var(--tracking-h2);
+  }
+
+  [data-font="h3"] {
+    font-size: var(--font-size-h3);
+    line-height: var(--leading-h3);
+    letter-spacing: var(--tracking-h3);
+  }
+
+  [data-font="h4"] {
+    font-size: var(--font-size-h4);
+    line-height: var(--leading-h4);
+    letter-spacing: var(--tracking-h4);
+  }
+
+  [data-font="h5"] {
+    font-size: var(--font-size-h5);
+    line-height: var(--leading-h5);
+    letter-spacing: var(--tracking-h5);
+  }
+
+  [data-font="h6"] {
+    font-size: var(--font-size-h6);
+    line-height: var(--leading-h6);
+    letter-spacing: var(--tracking-h6);
+  }
+
+  [data-font="2xl"] {
+    font-size: var(--font-size-2xl);
+    line-height: var(--leading-2xl);
+    letter-spacing: var(--tracking-2xl);
+  }
+
+  [data-font="xl"] {
+    font-size: var(--font-size-xl);
+    line-height: var(--leading-xl);
+    letter-spacing: var(--tracking-xl);
+  }
+
+  [data-font="lg"] {
+    font-size: var(--font-size-lg);
+    line-height: var(--leading-lg);
+    letter-spacing: var(--tracking-lg);
+  }
+
+  [data-font="md"] {
+    font-size: var(--font-size-md);
+    line-height: var(--leading-md);
+    letter-spacing: var(--tracking-md);
+  }
+
+  [data-font="sm"] {
+    font-size: var(--font-size-sm);
+    line-height: var(--leading-sm);
+    letter-spacing: var(--tracking-sm);
+  }
+
+  [data-font="xs"] {
+    font-size: var(--font-size-xs);
+    line-height: var(--leading-xs);
+    letter-spacing: var(--tracking-xs);
+  }
+
+  [data-font="2xs"] {
+    font-size: var(--font-size-2xs);
+    line-height: var(--leading-2xs);
+    letter-spacing: var(--tracking-2xs);
+  }
+
+  [data-font="eyebrow"] {
+    font-size: var(--font-size-eyebrow);
+    line-height: var(--leading-eyebrow);
+    font-weight: var(--font-weight-eyebrow);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+  }
+}
