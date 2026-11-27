@@ -96,11 +96,15 @@ export async function runDiff(
     const lines: string[] = [];
     for (const spec of files) {
       const theirs = await spec.theirs();
+      // A base file vendored from another version (`base.sources`) is
+      // pristine there, not at the base's own version.
+      const source = unit === "base" ? config.base.sources?.[spec.file] : undefined;
+      const fromKit = source !== undefined && oldKit !== null ? await kitAt(source) : oldKit;
       const mine =
         flags.upstream === true
-          ? oldKit === null
+          ? fromKit === null
             ? null
-            : await upstreamSource(spec, oldKit, { config, target: oldKit })
+            : await upstreamSource(spec, fromKit, { config, target: fromKit })
           : await localSource(spec, root, config);
       const rendered = renderFileDiff(spec.file, mine, theirs, {
         editedLocally:

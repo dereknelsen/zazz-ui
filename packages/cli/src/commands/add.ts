@@ -95,6 +95,8 @@ export async function runAdd(names: string[], flags: AddFlags, global: GlobalFla
     const { writes, hashes } = await vendorFiles(kit, files, destRoot);
     vendorWrites.push(...writes);
     config.primitives[name] = { version: kit.version, files: hashes };
+    // Entries a skipped update left behind gain this primitive's imports below.
+    if (config.base.entries) config.base.entries[name] = kit.version;
   }
 
   // Base scripts the closure needs that init didn't vendor (typeahead, carousel…).
@@ -105,6 +107,13 @@ export async function runAdd(names: string[], flags: AddFlags, global: GlobalFla
   const base = await vendorFiles(kit, neededBase, destRoot);
   vendorWrites.push(...base.writes);
   Object.assign(config.base.files, base.hashes);
+  // A base left behind by a skipped update is older than the kit these came from.
+  if (kit.version !== (config.base.version ?? config.kit.version)) {
+    config.base.sources = {
+      ...config.base.sources,
+      ...Object.fromEntries(Object.keys(base.hashes).map((file) => [file, kit.version])),
+    };
+  }
 
   // Unexpected pre-existing files: prompt / --force / skip (still recorded).
   const { kept, skipped } = await filterCollisions(vendorWrites, {

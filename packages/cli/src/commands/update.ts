@@ -14,6 +14,14 @@
  * entries (index.css / index.js / head.html) belong to the base unit; their
  * merge ancestor and target are regenerated, not read from the tarball.
  * head.html is CLI-owned: it always takes the regenerated version.
+ *
+ * A base file can come from a version other than the base's own (a shared
+ * script a moved primitive needs before the base catches up); `base.sources`
+ * records that version so the file keeps its merge ancestor. No update deletes
+ * a file the resulting entry script still imports: it stays, tracked by the
+ * base unit, until the entry lets go. When the base unit is skipped,
+ * `base.entries` records the primitive versions the entries on disk were
+ * generated for, so a re-run has work to do and a true ancestor to merge from.
  */
 
 import { existsSync } from "node:fs";
@@ -74,6 +82,17 @@ interface UnitPlan {
   notes: string[];
   /** New upstream files that kept a stray on-disk file instead (exit 2). */
   straySkips: number;
+  /**
+   * Base unit only: brand-new shared scripts the updated primitives import.
+   * They are written even when the unit is skipped, because a primitive that
+   * moved imports them directly and nothing on disk can conflict with them.
+   */
+  required?: { file: string; hash: string; source: string; write: Write }[];
+  /**
+   * Base unit only: the kit version each recorded file's bytes come from,
+   * where that is not the version the base lands on (`base.sources`).
+   */
+  sources?: Record<string, string>;
 }
 
 export async function runUpdate(
@@ -131,28 +150,6 @@ export async function runUpdate(
   const closure = target.manifest.resolveClosure(survivors);
   const freshDeps = closure.filter((name) => !config.primitives[name]);
 
-  const pending =
-    freshDeps.length > 0 ||
-    scopeNames.some((name) => config.primitives[name]?.version !== target.version) ||
-    (wholeKit &&
-      (config.kit.version !== target.version ||
-        (config.base.version ?? config.kit.version) !== target.version));
-  if (!pending) {
-    ui.outro(`Already at ${target.version} — nothing to update.`);
-    return;
-  }
-
-  // The relevant changelog slice, before any prompts.
-  const changelog = await readChangelog(target);
-  if (changelog && compareVersions(target.version, config.kit.version) > 0) {
-    const slice = sliceChangelog(
-      changelog,
-      { from: config.kit.version, to: target.version },
-      new Set([...vendoredNames, ...freshDeps]),
-    );
-    if (slice) ui.step(slice);
-  }
-
   // Kits at recorded versions are the merge ancestors; cache by version.
   const kitCache = new Map<string, Promise<ResolvedKit>>();
   kitCache.set(target.version, Promise.resolve(target));
@@ -174,6 +171,32 @@ export async function runUpdate(
     strategy,
     interactive: ui.interactive,
   };
+
+  const pending =
+    // An earlier run skipped the base unit: the entries are behind.
+    config.base.entries !== undefined ||
+    freshDeps.length > 0 ||
+    scopeNames.some((name) => config.primitives[name]?.version !== target.version) ||
+    (wholeKit &&
+      (config.kit.version !== target.version ||
+        (config.base.version ?? config.kit.version) !== target.version ||
+        // A removed file the entry script was still importing: check it again.
+        Object.keys(config.base.sources ?? {}).length > 0));
+  if (!pending) {
+    ui.outro(`Already at ${target.version} — nothing to update.`);
+    return;
+  }
+
+  // The relevant changelog slice, before any prompts.
+  const changelog = await readChangelog(target);
+  if (changelog && compareVersions(target.version, config.kit.version) > 0) {
+    const slice = sliceChangelog(
+      changelog,
+      { from: config.kit.version, to: target.version },
+      new Set([...vendoredNames, ...freshDeps]),
+    );
+    if (slice) ui.step(slice);
+  }
 
   // Primitives first (their outcomes decide what the entries import), base last.
   const units: UnitPlan[] = [];
@@ -208,6 +231,9 @@ export async function runUpdate(
 
   const baseUnit = await planBaseUnit(context, {
     wholeKit,
+    claimed: new Set(
+      units.filter((unit) => !unit.skipped).flatMap((unit) => Object.keys(unit.hashes)),
+    ),
     primitiveVersionAfter,
     removedPrimitives: units.filter((unit) => unit.removedFromKit && !unit.skipped),
   });
@@ -219,9 +245,56 @@ export async function runUpdate(
     force: flags.force === true,
   });
 
-  // Commit bookkeeping: apply per-unit outcomes to the config.
+  const entriesBefore = Object.fromEntries(
+    Object.entries(config.primitives).map(([name, entry]) => [name, entry.version]),
+  );
   const applied = units.filter((unit) => !unit.skipped);
   const skippedUnits = units.filter((unit) => unit.skipped);
+  const baseVersionBefore = config.base.version ?? config.kit.version;
+  const baseVersionAfter = wholeKit && !baseUnit.skipped ? target.version : baseVersionBefore;
+
+  // The entry script this run leaves behind can still import a file a unit
+  // would delete: you kept your entry through a conflict, or the base unit was
+  // skipped and the old entry stays. A module graph with one dead import loads
+  // nothing, so the file stays, and the base unit (which owns the entry) keeps
+  // tracking it. A later update deletes it once the entry lets go.
+  const entryScript = config.language === "ts" ? "index.ts" : "index.js";
+  const entryDest = path.join(root, config.dir, entryScript);
+  const stagedEntry = baseUnit.skipped
+    ? undefined
+    : baseUnit.writes.findLast((write) => write.dest === entryDest)?.content;
+  const imported = importedStems(
+    stagedEntry !== undefined
+      ? stagedEntry.toString()
+      : existsSync(entryDest)
+        ? await readFile(entryDest, "utf8")
+        : "",
+  );
+  const kitRoot = path.join(root, config.dir);
+  const held: { file: string; hash: string; source: string }[] = [];
+  for (const unit of applied) {
+    unit.deletes = unit.deletes.filter((dest) => {
+      const file = path.relative(kitRoot, dest).split(path.sep).join("/");
+      const stem = file.replace(/\.d\.ts$|\.js$|\.ts$/, "");
+      if (stem === file || !imported.has(stem)) return true;
+      const rel = path.relative(root, dest);
+      unit.notes = unit.notes.filter((note) => !note.startsWith(`${rel}: removed upstream`));
+      unit.notes.push(
+        `${rel}: removed upstream — kept, because your ${entryScript} still imports it. ` +
+          `Remove the import and run \`zazz-ui update\` again to delete it`,
+      );
+      const hash =
+        unit.unit === "base" ? config.base.files[file] : config.primitives[unit.unit]?.files[file];
+      const source =
+        unit.unit === "base"
+          ? (config.base.sources?.[file] ?? baseVersionBefore)
+          : unit.fromVersion;
+      if (hash !== undefined) held.push({ file, hash, source });
+      return false;
+    });
+  }
+
+  // Commit bookkeeping: apply per-unit outcomes to the config.
   for (const unit of applied) {
     if (unit.unit === "base") continue;
     if (unit.removedFromKit) {
@@ -230,20 +303,44 @@ export async function runUpdate(
       config.primitives[unit.unit] = { version: target.version, files: unit.hashes };
     }
   }
+  const required = baseUnit.skipped ? (baseUnit.required ?? []) : [];
+  const sources: Record<string, string> = baseUnit.skipped
+    ? { ...config.base.sources }
+    : { ...baseUnit.sources };
   if (!baseUnit.skipped) {
     config.base.files = baseUnit.hashes;
   }
+  if (baseUnit.skipped) {
+    // A file a primitive took back this run leaves the base's record too.
+    for (const unit of applied) {
+      for (const file of Object.keys(unit.hashes)) delete config.base.files[file];
+    }
+  }
+  for (const { file, hash, source } of [...required, ...held]) {
+    config.base.files[file] = hash;
+    sources[file] = source;
+  }
+  for (const [file, source] of Object.entries(sources)) {
+    if (source === baseVersionAfter || !(file in config.base.files)) delete sources[file];
+  }
+  if (baseUnit.skipped) config.base.entries ??= entriesBefore;
+  else delete config.base.entries;
+  if (Object.keys(sources).length > 0) config.base.sources = sources;
+  else delete config.base.sources;
   for (const dep of freshDeps) {
     config.primitives[dep] = { version: target.version, files: freshHashes.get(dep) ?? {} };
   }
   if (wholeKit) {
-    const oldBaseVersion = config.base.version ?? config.kit.version;
     config.kit = { version: target.version, integrity: target.integrity };
-    if (baseUnit.skipped) config.base.version = oldBaseVersion;
+    if (baseUnit.skipped) config.base.version = baseVersionBefore;
     else delete config.base.version;
   }
 
-  const writes = [...applied.flatMap((unit) => unit.writes), ...keptFresh];
+  const writes = [
+    ...applied.flatMap((unit) => unit.writes),
+    ...required.map(({ write }) => write),
+    ...keptFresh,
+  ];
   const deletes = applied.flatMap((unit) => unit.deletes);
   const tx: Transaction = { root, writes, deletes, config };
 
@@ -256,6 +353,13 @@ export async function runUpdate(
 
   for (const unit of applied) {
     for (const note of unit.notes) ui.step(note);
+  }
+  if (required.length > 0) {
+    ui.step(
+      `base was skipped, but the shared scripts the updated primitives import were still vendored:\n  ${required
+        .map(({ write }) => path.relative(root, write.dest))
+        .join("\n  ")}`,
+    );
   }
   if (freshDeps.length > 0) {
     ui.step(`New dependencies vendored at ${target.version}: ${freshDeps.join(", ")}`);
@@ -339,10 +443,16 @@ async function planPrimitiveUnit(name: string, context: UpdateContext): Promise<
   const files = [...new Set([...Object.keys(record.files), ...needed])];
 
   for (const file of files) {
+    // A file the base unit held for the entry script (see runUpdate) comes
+    // back to its primitive, with the record it was held under.
+    const held = file in record.files ? undefined : config.base.files[file];
+    const heldVersion = config.base.sources?.[file] ?? config.base.version ?? config.kit.version;
     const resolved = await resolveFile(unit, context, {
       file,
-      recordedHash: record.files[file] ?? null,
-      base: () => readKitFile(oldKit, file),
+      recordedHash: record.files[file] ?? held ?? null,
+      base: async () =>
+        readKitFile(held === undefined ? oldKit : await context.kitAt(heldVersion), file),
+      ...(held === undefined ? {} : { baseLabel: heldVersion }),
       theirs: () => readKitFile(target, file),
     });
     if (!resolved) return unit; // unit skipped
@@ -359,6 +469,8 @@ async function planBaseUnit(
   context: UpdateContext,
   options: {
     wholeKit: boolean;
+    /** Files a primitive unit recorded this run; the base unit lets go of them. */
+    claimed: Set<string>;
     primitiveVersionAfter: Map<string, string>;
     removedPrimitives: UnitPlan[];
   },
@@ -369,6 +481,8 @@ async function planBaseUnit(
   // The kit whose base platform the entries reference after this run.
   const entriesKit = options.wholeKit ? target : oldKit;
 
+  const required: NonNullable<UnitPlan["required"]> = [];
+  const sources: Record<string, string> = {};
   const unit: UnitPlan = {
     unit: "base",
     fromVersion: baseVersion,
@@ -379,6 +493,8 @@ async function planBaseUnit(
     removedFromKit: false,
     notes: [],
     straySkips: 0,
+    required,
+    sources,
   };
 
   const entryScript = config.language === "ts" ? "index.ts" : "index.js";
@@ -386,8 +502,15 @@ async function planBaseUnit(
 
   // Vendored primitive set before/after, for entry regeneration.
   const removed = new Set(options.removedPrimitives.map((plan) => plan.unit));
+  // After a run that skipped this unit, the entries on disk are still the
+  // ones for the versions that run started from (`base.entries`).
   const beforeVersions = new Map<string, string>(
-    Object.entries(config.primitives).map(([name, entry]) => [name, entry.version]),
+    Object.entries(
+      config.base.entries ??
+        Object.fromEntries(
+          Object.entries(config.primitives).map(([name, entry]) => [name, entry.version]),
+        ),
+    ),
   );
   const afterVersions = new Map(
     [...options.primitiveVersionAfter].filter(([name]) => !removed.has(name)),
@@ -396,14 +519,27 @@ async function planBaseUnit(
   const entriesBefore = await entrySources(context, oldKit, beforeVersions);
   const entriesAfter = await entrySources(context, entriesKit, afterVersions);
 
-  // The base scripts the post-update primitive set needs (per language).
+  // The base scripts the post-update primitive set needs (per language), and
+  // the kit each comes from: a primitive that stays behind (skipped, or out of
+  // a narrowed update's scope) still imports its own version's scripts.
   const afterEntries = [];
+  const neededFrom = new Map<string, ResolvedKit>();
   for (const [name, primitiveVersion] of afterVersions) {
     const kit = await context.kitAt(primitiveVersion);
     const entry = kit.manifest.primitives[name];
-    if (entry) afterEntries.push(entry);
+    if (!entry) continue;
+    afterEntries.push(entry);
+    for (const file of baseScriptFiles([entry], config.language)) {
+      if (!neededFrom.has(file) || kit === target) neededFrom.set(file, kit);
+    }
   }
   const neededScripts = baseScriptFiles(afterEntries, config.language);
+
+  // A file's recorded bytes are its merge ancestor. They come from the base's
+  // own version unless `base.sources` names another.
+  const ancestorVersion = (file: string): string => config.base.sources?.[file] ?? baseVersion;
+  const ancestor = async (file: string): Promise<Buffer | null> =>
+    readKitFile(await context.kitAt(ancestorVersion(file)), file);
 
   const vendorable = options.wholeKit
     ? [
@@ -412,24 +548,60 @@ async function planBaseUnit(
           ...baseFiles(target.manifest, config.language),
           ...neededScripts,
         ]),
-      ]
+      ].filter((file) => !options.claimed.has(file))
     : neededScripts.filter((file) => !(file in config.base.files));
 
   // Untouched base files keep their records in narrowed mode.
   if (!options.wholeKit) {
     for (const [file, hash] of Object.entries(config.base.files)) {
-      if (!generated.has(file)) unit.hashes[file] = hash;
+      if (!generated.has(file) && !options.claimed.has(file)) unit.hashes[file] = hash;
     }
+    Object.assign(sources, config.base.sources);
+  }
+
+  // Whole-kit: the target's copy, or, for a script the target dropped that a
+  // primitive left behind still imports, that primitive's copy (so it is kept,
+  // not deleted). Narrowed: the base stays at its recorded version, so a newly
+  // needed script comes from that version, unless the target introduced it.
+  // `origin` remembers the version each file was read from.
+  const origin = new Map<string, string>();
+  const theirs = async (file: string): Promise<Buffer | null> => {
+    const kits = options.wholeKit ? [target, neededFrom.get(file)] : [oldKit, target];
+    for (const kit of kits) {
+      const content = kit ? await readKitFile(kit, file) : null;
+      if (content !== null) {
+        origin.set(file, kit?.version ?? baseVersion);
+        return content;
+      }
+    }
+    return null;
+  };
+
+  // Brand-new shared scripts: staged apart so a skipped unit still writes them.
+  for (const file of neededScripts) {
+    const dest = destPath(context, file);
+    if (file in config.base.files || existsSync(dest)) continue;
+    const content = await theirs(file);
+    if (content === null) continue;
+    required.push({
+      file,
+      hash: sha256(content),
+      source: origin.get(file) ?? baseVersion,
+      write: { dest, content, note: "vendor" },
+    });
   }
 
   for (const file of vendorable) {
     const resolved = await resolveFile(unit, context, {
       file,
       recordedHash: config.base.files[file] ?? null,
-      base: () => readKitFile(oldKit, file),
-      theirs: () => readKitFile(options.wholeKit ? target : oldKit, file),
+      base: () => ancestor(file),
+      baseLabel: ancestorVersion(file),
+      theirs: () => theirs(file),
     });
     if (!resolved) return unit;
+    const source = origin.get(file);
+    if (file in unit.hashes && source !== undefined) sources[file] = source;
   }
 
   // Generated entries: ancestor and target are regenerated, never read.
@@ -501,6 +673,8 @@ async function resolveFile(
     file: string;
     recordedHash: string | null;
     base: () => Promise<Buffer | string | null>;
+    /** The version `base` was read from, when it is not the unit's own. */
+    baseLabel?: string;
     theirs: () => Promise<Buffer | string | null>;
   },
 ): Promise<boolean> {
@@ -513,7 +687,7 @@ async function resolveFile(
 
   const labels = {
     ours: "yours",
-    base: unit.fromVersion,
+    base: input.baseLabel ?? unit.fromVersion,
     theirs: context.target.version,
   };
   const disposition = classify({ ours, base, theirs, recordedHash: input.recordedHash, labels });
@@ -691,6 +865,22 @@ async function resolveConflict(
     default:
       return true;
   }
+}
+
+/**
+ * @description The kit files a script imports, without their extension
+ * (`base/engine`). Block comments and commented-out lines do not count; both
+ * sides of an unresolved conflict do, so nothing either side needs is deleted.
+ */
+export function importedStems(source: string): Set<string> {
+  const code = source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+  const stems = new Set<string>();
+  for (const match of code.matchAll(
+    /\b(?:import|from)\s*\(?\s*["']\.\/([^"']+?)(?:\.d\.ts|\.js|\.ts)["']/g,
+  )) {
+    if (match[1] !== undefined) stems.add(match[1]);
+  }
+  return stems;
 }
 
 function destPath(context: UpdateContext, file: string): string {

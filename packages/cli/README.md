@@ -27,6 +27,24 @@ Naming primitives narrows the update (`update @0.5.0 button`): only those move, 
 
 `diff [@version] [name...]` shows all of it read-only: your files against the target version's exact bytes, plus the changelog slice. `--upstream` compares pristine-to-pristine instead, ignoring your edits.
 
+## What codemod does
+
+`codemod data-font [@version] [paths...]` moves a project to typography roles in `data-font`. It rewrites `data-ui="text-sm"` to `data-font="sm"` and `data-ui="text-link"` to `data-ui="link"`, keeps any identity that shared the attribute (`data-ui="badge text-xs"` becomes `data-ui="badge" data-font="xs"`), and rewrites quoted selectors (`[data-ui~="text-sm"]` becomes `[data-font="sm"]`).
+
+It reads markup, templates, scripts, and stylesheets under the project root, or under the paths you name. It skips every vendored kit directory, `node_modules` and other dependency and build folders, dot-directories, a top-level `vendor` or `tmp`, minified files, and plain Markdown. Name a file to rewrite it anyway; a vendored kit file is never rewritten.
+
+In a vendored project it handles the kit as well. If the recorded kit predates `data-font`, it runs `update` first, to latest or to the `@version` you pass. That update brings the new `_variables.css` and `_typography.css`, and `--keep`, `--theirs`, and `--markers` answer its conflicts. Then it runs `add` for the primitives your markup uses: `font`, and `link` and `prose` where they appear. Without a `zazz.json` it rewrites the markup and leaves the kit to you.
+
+It only moves what it can move safely. It leaves these as written, lists the ones it finds, and exits with code 2:
+
+- an element with two roles, or one that already has `data-font`
+- a value with template syntax among its tokens (`data-ui="text-sm {{ extra }}"`)
+- a role set from script (`el.setAttribute("data-ui", "text-xs")`, `data-ui={…}`)
+- an unquoted selector (`[data-ui~=text-sm]`)
+- a file that is not UTF-8 or is over 2 MB
+
+The list covers the common ways a role is set, not every one; search for `text-` afterward if your templates build `data-ui` in unusual ways. `--dry-run` prints the files and counts and writes nothing. A second run changes nothing.
+
 ## Owning the code
 
 There is no runtime dependency on `@zazz-ui/core`. The files in `zazz/` are yours: edit them, delete what you don't want, commit them like any other source. `zazz.json` is what makes that safe, and `update` is what makes it cheap.

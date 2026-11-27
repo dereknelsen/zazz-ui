@@ -39,6 +39,21 @@ describe("validateConfig", () => {
     ["bad language", (c: ZazzConfig) => Object.assign(c, { language: "jsx" }), /language/],
     ["bad legacy", (c: ZazzConfig) => Object.assign(c, { legacy: 4 }), /legacy/],
     ["missing head", (c: ZazzConfig) => Reflect.deleteProperty(c, "head"), /head\.fonts/],
+    [
+      "bad sources",
+      (c: ZazzConfig) => Object.assign(c.base, { sources: { "behaviors/x.js": 1 } }),
+      /base\.sources/,
+    ],
+    [
+      "sources as a list",
+      (c: ZazzConfig) => Object.assign(c.base, { sources: [] }),
+      /base\.sources/,
+    ],
+    [
+      "bad entries",
+      (c: ZazzConfig) => Object.assign(c.base, { entries: { x: 1 } }),
+      /base\.entries/,
+    ],
     ["bad primitive", (c: ZazzConfig) => Object.assign(c.primitives, { x: {} }), /primitives\.x/],
   ])("rejects %s with a pointed message", (_label, mutate, pattern) => {
     const config = validConfig();
@@ -84,6 +99,18 @@ describe("serializeConfig", () => {
     a.base.files = Object.fromEntries(Object.entries(a.base.files).reverse());
     expect(serializeConfig(a)).toBe(serializeConfig(b));
     expect(serializeConfig(a).endsWith("\n")).toBe(true);
+  });
+
+  it("keeps base.sources in stable order and omits it when empty", () => {
+    const config = validConfig();
+    config.base.sources = { "behaviors/b.js": "0.2.0", "behaviors/a.js": "0.2.0" };
+    const written = serializeConfig(config);
+    expect(written.indexOf("behaviors/a.js")).toBeLessThan(written.indexOf("behaviors/b.js"));
+    expect(validateConfig(JSON.parse(written), "zazz.json").base.sources).toEqual(
+      config.base.sources,
+    );
+    config.base.sources = {};
+    expect(serializeConfig(config)).not.toContain("sources");
   });
 
   it("writes no $schema (no schema is published) and drops one from older files", () => {

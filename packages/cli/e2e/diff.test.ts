@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * @fileoverview E2e for `zazz-ui diff` against the two-version fixture kit:
+ * @fileoverview E2e for `zazz-ui diff` against the fixture kit:
  * read-only, prints per-unit patches and the changelog slice.
  */
 
@@ -12,7 +12,8 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vite-p
 import { runAdd } from "../src/commands/add.ts";
 import { runDiff } from "../src/commands/diff.ts";
 import { runInit } from "../src/commands/init.ts";
-import { V1, V1_VARIABLES, V2, buildFixtureKits } from "./fixture-kit.ts";
+import { runUpdate } from "../src/commands/update.ts";
+import { V1, V1_VARIABLES, V2, V3, buildFixtureKits } from "./fixture-kit.ts";
 
 const tmpDirs: string[] = [];
 let previousKitEnv: string | undefined;
@@ -97,6 +98,26 @@ describe("zazz-ui diff (e2e, fixture kit)", () => {
     } finally {
       await writeFile(file, pristine);
     }
+  });
+
+  it("--upstream reads a shared script vendored ahead of the base from its own version", async () => {
+    const project = await mkdtemp(path.join(os.tmpdir(), "zazz-e2e-diff-ahead-"));
+    tmpDirs.push(project);
+    await runInit(
+      `@${V1}`,
+      { dir: "zazz", fonts: true, themeScript: true },
+      { cwd: project, silent: true },
+    );
+    await runAdd(["beta"], {}, { cwd: project, silent: true });
+    // alpha at V2 brings behaviors/steps.js, which V1 (the base's version) never had.
+    await runUpdate([`@${V2}`, "alpha"], {}, { cwd: project, silent: true });
+
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    await runDiff([`@${V3}`, "base"], { upstream: true }, { cwd: project });
+    const output = log.mock.calls.map((call) => call.join(" ")).join("\n");
+
+    expect(output).toContain(`-export const steps = "${V2}";`);
+    expect(output).toContain(`+export const steps = "${V3}";`);
   });
 
   it("reports nothing to show at the recorded version", async () => {

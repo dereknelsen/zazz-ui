@@ -36,6 +36,8 @@ export interface PrimitiveEntry {
   primitives: string[];
   bare: string[];
   examples: string[];
+  /** Its generated data file (hooks, attributes, slots); absent in kits that predate them. */
+  data?: string;
 }
 
 /** A runtime polyfill the entry loads only where `CSS.supports(property, value)` is false. */
@@ -67,6 +69,8 @@ export interface KitManifest {
   baseCssPre?: string[];
   /** Base stylesheets after the primitives (the override layer), when exported. */
   baseCssPost?: string[];
+  /** Data files of the definitions (data-only folders under `primitives/`), when the kit exports them. */
+  baseData?: string[];
   /** Core runtime scripts, when the kit exports them. */
   coreRuntime?: string[];
   /** CSS-gated runtime polyfills, when the kit exports them. */
@@ -245,6 +249,7 @@ export async function loadKitFromDir(
   // fallback (or, for polyfills, none).
   const baseCssPre = manifestModule.BASE_CSS_PRE;
   const baseCssPost = manifestModule.BASE_CSS_POST;
+  const baseData = manifestModule.BASE_DATA;
   const coreRuntime = manifestModule.CORE_RUNTIME;
   const corePolyfills = manifestModule.CORE_POLYFILLS;
   // a fallback whose gate this CLI does not know is left out, not an error: the
@@ -264,6 +269,7 @@ export async function loadKitFromDir(
       resolveClosure: resolveClosure as (names: string[]) => string[],
       ...(Array.isArray(baseCssPre) ? { baseCssPre: baseCssPre as string[] } : {}),
       ...(Array.isArray(baseCssPost) ? { baseCssPost: baseCssPost as string[] } : {}),
+      ...(Array.isArray(baseData) ? { baseData: baseData as string[] } : {}),
       ...(Array.isArray(coreRuntime) ? { coreRuntime: coreRuntime as string[] } : {}),
       ...(Array.isArray(corePolyfills) && corePolyfills.every(isRuntimePolyfill)
         ? { corePolyfills }

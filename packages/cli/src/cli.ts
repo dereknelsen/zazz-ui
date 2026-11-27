@@ -104,6 +104,39 @@ program
     await runAdd(names, options as AddParams[1], program.opts() as AddParams[2]);
   });
 
+program
+  .command("codemod")
+  .description("rewrite your markup for a breaking kit change (data-font)")
+  .argument("<name>", "the codemod to run: data-font")
+  .argument(
+    "[args...]",
+    "files or directories to rewrite (default the whole project), and/or the kit version to update to first, @-prefixed (default @latest)",
+  )
+  .addOption(
+    new Option("--keep", "if the kit updates first: keep your version on every conflict").conflicts(
+      ["theirs", "markers"],
+    ),
+  )
+  .addOption(
+    new Option(
+      "--theirs",
+      "if the kit updates first: take the new version on every conflict",
+    ).conflicts(["keep", "markers"]),
+  )
+  .addOption(
+    new Option(
+      "--markers",
+      "if the kit updates first: write diff3 conflict markers on every conflict",
+    ).conflicts(["keep", "theirs"]),
+  )
+  .option("--force", "overwrite existing files when vendoring without asking")
+  .option("--dry-run", "list what would change without writing")
+  .action(async (name: string, args: string[], options: unknown) => {
+    const { runCodemod } = await import("./commands/codemod.ts");
+    type CodemodParams = Parameters<typeof runCodemod>;
+    await runCodemod(name, args, options as CodemodParams[2], program.opts() as CodemodParams[3]);
+  });
+
 try {
   await program.parseAsync();
 } catch (error) {

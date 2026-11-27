@@ -65,7 +65,7 @@ describe("zazz-ui init (e2e, packed kit)", () => {
     expect(Object.keys(config.base.files)).toHaveLength(baseCssCount + 8 * 2 + 3);
 
     // The stuck-state polyfill vendors and loads behind the kit's own CSS.supports gate;
-    // navigation loads everywhere and stays inert until <html data-ui-navigation="swap">.
+    // navigation loads everywhere and stays inert until <html data-navigation="swap">.
     expect(indexCss).toContain(`@import "./base/_utilities-tier-stuck.css";`);
     expect(existsSync(path.join(project, "zazz/base/scroll-state.js"))).toBe(true);
     // The CSP fallback vendors with its parser and loads behind the kit's document check.

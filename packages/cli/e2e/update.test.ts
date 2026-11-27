@@ -11,12 +11,12 @@ import { existsSync } from "node:fs";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { afterAll, afterEach, beforeAll, describe, expect, it } from "vite-plus/test";
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vite-plus/test";
 import type { ZazzConfig } from "../src/config.ts";
 import { sha256 } from "../src/vendor.ts";
 import { runAdd } from "../src/commands/add.ts";
 import { runInit } from "../src/commands/init.ts";
-import { runUpdate, splitVersionArgs } from "../src/commands/update.ts";
+import { importedStems, runUpdate, splitVersionArgs } from "../src/commands/update.ts";
 import {
   V1,
   V1_VARIABLES,
@@ -231,6 +231,335 @@ describe("zazz-ui update (e2e, fixture kit)", () => {
     expect(existsSync(at(root, "primitives/beta/beta-old.css"))).toBe(true);
   });
 
+  it("narrowed update vendors a shared script the target version introduced", async () => {
+    const root = await project();
+    await runUpdate([`@${V2}`, "alpha"], {}, { cwd: root, silent: true });
+
+    // alpha at V2 imports behaviors/steps.js, which V1 (the base's version) never had.
+    expect(await readFile(at(root, "behaviors/steps.js"), "utf8")).toContain(V2);
+    const config = await readConfig(root);
+    expect(config.base.files["behaviors/steps.js"]).toBeDefined();
+    expect(await readFile(at(root, "index.js"), "utf8")).toContain(
+      `import "./behaviors/steps.js";`,
+    );
+    expect(process.exitCode ?? 0).toBe(0);
+  });
+
+  it("keeps a moved shared script that a skipped primitive still imports", async () => {
+    const root = await project();
+    // beta.js changes in V2; a local edit to the same line conflicts, so beta is skipped
+    await writeFile(at(root, "primitives/beta/beta.js"), `export const beta = "mine";\n`);
+
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      await runUpdate([`@${V2}`], {}, { cwd: root });
+      // It is beta's script at beta's version, not a removed file the entry holds on to.
+      const printed = log.mock.calls.map((call) => String(call[0])).join("\n");
+      expect(printed).not.toContain("engine.js: removed upstream");
+    } finally {
+      log.mockRestore();
+      warn.mockRestore();
+    }
+
+    expect(process.exitCode).toBe(2);
+    let config = await readConfig(root);
+    expect(config.primitives.beta?.version).toBe(V1);
+    // beta at V1 imports base/engine.js, which V2 moved to behaviors/
+    expect(existsSync(at(root, "base/engine.js"))).toBe(true);
+    expect(config.base.files["base/engine.js"]).toBeDefined();
+    expect(await readFile(at(root, "index.js"), "utf8")).toContain(`import "./base/engine.js";`);
+
+    // Resolving the conflict moves beta, and the old script goes with it.
+    process.exitCode = 0;
+    await runUpdate([`@${V2}`], { theirs: true }, { cwd: root, silent: true });
+    config = await readConfig(root);
+    expect(config.primitives.beta?.version).toBe(V2);
+    expect(existsSync(at(root, "base/engine.js"))).toBe(false);
+    expect(config.base.files["base/engine.js"]).toBeUndefined();
+    expect(existsSync(at(root, "behaviors/engine.js"))).toBe(true);
+    expect(process.exitCode ?? 0).toBe(0);
+  });
+
+  it("vendors the shared scripts moved primitives import when the base unit is skipped", async () => {
+    const root = await project();
+    await writeFile(
+      at(root, "base/_variables.css"),
+      V1_VARIABLES.replace("--beta: 2;", "--beta: 3;"),
+    );
+
+    await runUpdate([`@${V2}`], {}, { cwd: root, silent: true });
+
+    expect(process.exitCode).toBe(2);
+    let config = await readConfig(root);
+    expect(config.base.version).toBe(V1);
+    expect(config.primitives.alpha?.version).toBe(V2);
+    expect(config.primitives.beta?.version).toBe(V2);
+    // alpha and beta at V2 import these; without them no script on the page loads
+    expect(existsSync(at(root, "behaviors/steps.js"))).toBe(true);
+    expect(existsSync(at(root, "behaviors/engine.js"))).toBe(true);
+    expect(config.base.files["behaviors/engine.js"]).toBeDefined();
+    // the skipped base unit deleted nothing
+    expect(existsSync(at(root, "base/engine.js"))).toBe(true);
+
+    // The re-run finishes the base unit without tripping over the files it already wrote.
+    process.exitCode = 0;
+    await runUpdate([`@${V2}`], { theirs: true }, { cwd: root, silent: true });
+    config = await readConfig(root);
+    expect(config.base.version).toBeUndefined();
+    expect(existsSync(at(root, "base/engine.js"))).toBe(false);
+    expect(await readFile(at(root, "index.js"), "utf8")).toContain(
+      `import "./behaviors/engine.js";`,
+    );
+    expect(process.exitCode ?? 0).toBe(0);
+  });
+
+  it("keeps a moved shared script while a kept entry script still imports it", async () => {
+    const root = await project();
+    const entry = at(root, "index.js");
+    const line = `import "./base/engine.js";`;
+    const edited = (await readFile(entry, "utf8")).replace(line, `${line} // mine`);
+    expect(edited).toContain("// mine");
+    await writeFile(entry, edited);
+
+    await runUpdate([`@${V2}`], { keep: true }, { cwd: root, silent: true });
+
+    expect(await readFile(entry, "utf8")).toContain(`${line} // mine`);
+    // The entry you kept still imports it, so it stays on disk, and stays tracked.
+    expect(existsSync(at(root, "base/engine.js"))).toBe(true);
+    expect(existsSync(at(root, "behaviors/engine.js"))).toBe(true);
+    let config = await readConfig(root);
+    expect(config.base.files["base/engine.js"]).toBeDefined();
+    expect(config.base.sources?.["base/engine.js"]).toBe(V1);
+
+    // Once the entry stops importing it, the next update removes it.
+    await writeFile(entry, edited.replace(`${line} // mine\n`, ""));
+    await runUpdate([`@${V2}`], {}, { cwd: root, silent: true });
+    expect(existsSync(at(root, "base/engine.js"))).toBe(false);
+    config = await readConfig(root);
+    expect(config.base.files["base/engine.js"]).toBeUndefined();
+    // (the V1 entry kept here still imports beta-legacy.js, which stays held)
+    expect(config.base.sources?.["base/engine.js"]).toBeUndefined();
+    expect(process.exitCode ?? 0).toBe(0);
+  });
+
+  it("keeps a script a primitive dropped while a kept entry script still imports it", async () => {
+    const root = await project();
+    const entry = at(root, "index.js");
+    const line = `import "./primitives/beta/beta-legacy.js";`;
+    const edited = (await readFile(entry, "utf8")).replace(line, `${line} // mine`);
+    expect(edited).toContain("// mine");
+    await writeFile(entry, edited);
+
+    await runUpdate([`@${V2}`], { keep: true }, { cwd: root, silent: true });
+
+    expect(existsSync(at(root, "primitives/beta/beta-legacy.js"))).toBe(true);
+    expect(existsSync(at(root, "primitives/beta/beta-legacy.d.ts"))).toBe(true);
+    let config = await readConfig(root);
+    expect(config.primitives.beta?.version).toBe(V2);
+    expect(config.primitives.beta?.files["primitives/beta/beta-legacy.js"]).toBeUndefined();
+    // The base unit owns the entry, so it tracks what the entry holds on to.
+    expect(config.base.sources?.["primitives/beta/beta-legacy.js"]).toBe(V1);
+
+    await writeFile(entry, edited.replace(`${line} // mine\n`, ""));
+    await runUpdate([`@${V2}`], {}, { cwd: root, silent: true });
+    expect(existsSync(at(root, "primitives/beta/beta-legacy.js"))).toBe(false);
+    expect(existsSync(at(root, "primitives/beta/beta-legacy.d.ts"))).toBe(false);
+    config = await readConfig(root);
+    expect(config.base.files["primitives/beta/beta-legacy.js"]).toBeUndefined();
+  });
+
+  it("keeps a dropped primitive script the entry imports when the base unit is skipped", async () => {
+    const root = await project();
+    await writeFile(
+      at(root, "base/_variables.css"),
+      V1_VARIABLES.replace("--beta: 2;", "--beta: 3;"),
+    );
+
+    await runUpdate([`@${V2}`], {}, { cwd: root, silent: true });
+
+    expect(process.exitCode).toBe(2);
+    // The base unit was skipped, so index.js is the old one and still imports it.
+    expect(await readFile(at(root, "index.js"), "utf8")).toContain("beta-legacy.js");
+    expect(existsSync(at(root, "primitives/beta/beta-legacy.js"))).toBe(true);
+
+    process.exitCode = 0;
+    await runUpdate([`@${V2}`], { theirs: true }, { cwd: root, silent: true });
+    expect(await readFile(at(root, "index.js"), "utf8")).not.toContain("beta-legacy.js");
+    expect(existsSync(at(root, "primitives/beta/beta-legacy.js"))).toBe(false);
+    expect((await readConfig(root)).base.sources).toBeUndefined();
+  });
+
+  it("hands a held script back to its primitive when the kit ships it again", async () => {
+    const root = await project();
+    const entry = at(root, "index.js");
+    const line = `import "./primitives/beta/beta-legacy.js";`;
+    await writeFile(entry, (await readFile(entry, "utf8")).replace(line, `${line} // mine`));
+    await runUpdate([`@${V2}`], { keep: true }, { cwd: root, silent: true });
+
+    await runUpdate([`@${V3}`], { keep: true }, { cwd: root, silent: true });
+
+    const file = "primitives/beta/beta-legacy.js";
+    expect(await readFile(at(root, file), "utf8")).toContain(V3);
+    const config = await readConfig(root);
+    expect(config.primitives.beta?.files[file]).toBeDefined();
+    expect(config.base.files[file]).toBeUndefined();
+    expect(config.base.sources?.[file]).toBeUndefined();
+    expect(process.exitCode ?? 0).toBe(0);
+  });
+
+  it("add records where a shared script came from when the base is behind the kit", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "zazz-e2e-update-add-"));
+    tmpDirs.push(root);
+    await runInit(
+      `@${V1}`,
+      { dir: "zazz", fonts: true, themeScript: true },
+      { cwd: root, silent: true },
+    );
+    await runAdd(["alpha"], {}, { cwd: root, silent: true });
+    const variables = at(root, "base/_variables.css");
+    await writeFile(variables, V1_VARIABLES.replace("--beta: 2;", "--beta: 3;"));
+    await runUpdate([`@${V2}`], {}, { cwd: root, silent: true });
+    process.exitCode = 0;
+
+    // The kit is at V2 and the base at V1: beta's engine script comes from V2.
+    await runAdd(["beta"], {}, { cwd: root, silent: true });
+    const config = await readConfig(root);
+    expect(config.base.sources?.["behaviors/engine.js"]).toBe(V2);
+    // add wrote beta into the entries, so the record of what they hold follows.
+    expect(config.base.entries).toEqual({ alpha: V1, beta: V2, gamma: V2 });
+
+    const file = at(root, "behaviors/engine.js");
+    const mine = `${await readFile(file, "utf8")}// mine\n`;
+    await writeFile(file, mine);
+    await writeFile(variables, V1_VARIABLES);
+    await runUpdate([`@${V2}`], {}, { cwd: root, silent: true });
+
+    expect(process.exitCode ?? 0).toBe(0);
+    expect(await readFile(file, "utf8")).toBe(mine);
+  });
+
+  it("does not keep a script for an import the entry has commented out", async () => {
+    const root = await project();
+    const entry = at(root, "index.js");
+    const line = `import "./base/engine.js";`;
+    await writeFile(entry, (await readFile(entry, "utf8")).replace(line, `// ${line}`));
+
+    await runUpdate([`@${V2}`], { keep: true }, { cwd: root, silent: true });
+
+    expect(await readFile(entry, "utf8")).toContain(`// ${line}`);
+    expect(existsSync(at(root, "base/engine.js"))).toBe(false);
+  });
+
+  it("reports the shared scripts it vendors while the base unit is skipped", async () => {
+    const root = await project();
+    await writeFile(
+      at(root, "base/_variables.css"),
+      V1_VARIABLES.replace("--beta: 2;", "--beta: 3;"),
+    );
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      await runUpdate([`@${V2}`], {}, { cwd: root });
+      const printed = log.mock.calls.map((call) => String(call[0])).join("\n");
+      expect(printed).toMatch(/vendored[^\n]*:\n(?:.*\n)*.*behaviors\/engine\.js/);
+    } finally {
+      log.mockRestore();
+      warn.mockRestore();
+    }
+  });
+
+  it("merges an edited shared script that a narrowed update vendored from a newer kit", async () => {
+    const root = await project();
+    await runUpdate([`@${V2}`, "alpha"], {}, { cwd: root, silent: true });
+    const file = at(root, "behaviors/steps.js");
+    const mine = `${await readFile(file, "utf8")}// mine\n`;
+    await writeFile(file, mine);
+
+    // The base is still at V1, which never had the file: its ancestor is V2's copy.
+    await runUpdate([`@${V2}`], {}, { cwd: root, silent: true });
+
+    expect(process.exitCode ?? 0).toBe(0);
+    expect(await readFile(file, "utf8")).toBe(mine);
+    expect((await readConfig(root)).base.version).toBeUndefined();
+  });
+
+  it("merges an edited shared script after its primitive moved on again", async () => {
+    const root = await project();
+    await runUpdate([`@${V2}`, "alpha"], {}, { cwd: root, silent: true });
+    const file = at(root, "behaviors/steps.js");
+    await writeFile(file, `${await readFile(file, "utf8")}// mine\n`);
+    expect((await readConfig(root)).base.sources?.["behaviors/steps.js"]).toBe(V2);
+
+    // alpha moves to V3: no primitive is recorded at V2 any more, and the base is still at V1.
+    await runUpdate([`@${V3}`, "alpha"], {}, { cwd: root, silent: true });
+    await runUpdate([`@${V3}`], {}, { cwd: root, silent: true });
+
+    expect(process.exitCode ?? 0).toBe(0);
+    const merged = await readFile(file, "utf8");
+    expect(merged).toContain(V3);
+    expect(merged).toContain("// mine");
+    const config = await readConfig(root);
+    expect(config.base.version).toBeUndefined();
+    expect(config.base.sources).toBeUndefined();
+  });
+
+  it("re-running a narrowed update finishes a skipped base unit", async () => {
+    const root = await project();
+    const entry = at(root, "index.js");
+    const line = `import "./primitives/alpha/alpha.js";`;
+    await writeFile(entry, (await readFile(entry, "utf8")).replace(line, `${line} // mine`));
+
+    // alpha at V2 adds an import next to the edited line: the entry conflicts, base is skipped.
+    await runUpdate([`@${V2}`, "alpha"], {}, { cwd: root, silent: true });
+    expect(process.exitCode).toBe(2);
+    expect((await readConfig(root)).primitives.alpha?.version).toBe(V2);
+    expect(await readFile(entry, "utf8")).not.toContain("behaviors/steps.js");
+
+    expect((await readConfig(root)).base.entries).toEqual({ alpha: V1, beta: V1 });
+
+    process.exitCode = 0;
+    await runUpdate([`@${V2}`, "alpha"], { theirs: true }, { cwd: root, silent: true });
+    expect((await readConfig(root)).base.entries).toBeUndefined();
+    expect(await readFile(entry, "utf8")).toContain(`import "./behaviors/steps.js";`);
+    expect(await readFile(at(root, "index.css"), "utf8")).toContain("alpha-extra.css");
+    expect(process.exitCode ?? 0).toBe(0);
+
+    // With the entries current, the same command has nothing left to do.
+    const before = await readFile(path.join(root, "zazz.json"), "utf8");
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    try {
+      await runUpdate([`@${V2}`, "alpha"], {}, { cwd: root });
+      expect(log.mock.calls.map((call) => String(call[0])).join("\n")).toContain("Already at");
+    } finally {
+      log.mockRestore();
+    }
+    expect(await readFile(path.join(root, "zazz.json"), "utf8")).toBe(before);
+  });
+
+  it("a re-run merges an edited entry against the one the skipped run left behind", async () => {
+    const root = await project();
+    const entry = at(root, "index.js");
+    await writeFile(entry, `// mine\n${await readFile(entry, "utf8")}`);
+    const variables = at(root, "base/_variables.css");
+    await writeFile(variables, V1_VARIABLES.replace("--beta: 2;", "--beta: 3;"));
+
+    await runUpdate([`@${V2}`], {}, { cwd: root, silent: true });
+    expect(process.exitCode).toBe(2);
+    expect((await readConfig(root)).base.entries).toEqual({ alpha: V1, beta: V1 });
+
+    process.exitCode = 0;
+    await writeFile(variables, V1_VARIABLES);
+    await runUpdate([`@${V2}`], {}, { cwd: root, silent: true });
+
+    expect(process.exitCode ?? 0).toBe(0);
+    const merged = await readFile(entry, "utf8");
+    expect(merged).toContain("// mine");
+    expect(merged).toContain(`import "./behaviors/steps.js";`);
+    expect(merged).not.toContain("base/engine.js");
+    expect((await readConfig(root)).base.entries).toBeUndefined();
+  });
+
   it("is a no-op when already at the target", async () => {
     const root = await project();
     const before = await readFile(path.join(root, "zazz.json"), "utf8");
@@ -318,5 +647,34 @@ describe("splitVersionArgs", () => {
 
   it("rejects two versions", () => {
     expect(() => splitVersionArgs(["@0.1.0", "@0.2.0"])).toThrow(/two version arguments/);
+  });
+});
+
+describe("importedStems", () => {
+  it("reads static, from, and dynamic imports of kit files", () => {
+    const stems = importedStems(
+      [
+        `import "./base/engine.js";`,
+        `import { a } from './primitives/a/a.ts';`,
+        `void import("./base/scroll-state.js");`,
+        `import "signal-polyfill";`,
+      ].join("\n"),
+    );
+    expect([...stems].sort()).toEqual(["base/engine", "base/scroll-state", "primitives/a/a"]);
+  });
+
+  it("ignores commented-out imports and counts both sides of a conflict", () => {
+    const stems = importedStems(
+      [
+        `// import "./base/gone.js";`,
+        `/* import "./base/also-gone.js"; */`,
+        `<<<<<<< yours`,
+        `import "./base/mine.js";`,
+        `=======`,
+        `import "./behaviors/theirs.js";`,
+        `>>>>>>> 0.9.1`,
+      ].join("\n"),
+    );
+    expect([...stems].sort()).toEqual(["base/mine", "behaviors/theirs"]);
   });
 });

@@ -67,14 +67,16 @@ export function scriptVariants(jsPath: string, language: Language): string[] {
 }
 
 /**
- * Everything `init` vendors: base css + core runtime, its polyfills, and its
- * fallbacks, per language. TypeScript also gets the ambient `globals.d.ts`
- * the sources type-check against (the emitted `.d.ts` files don't need it).
+ * Everything `init` vendors: base css, the definitions' data files, the core
+ * runtime, its polyfills, and its fallbacks, per language. TypeScript also gets
+ * the ambient `globals.d.ts` the sources type-check against (the emitted
+ * `.d.ts` files don't need it).
  */
 export function baseFiles(manifest: KitManifest, language: Language): string[] {
   return [
     ...(language === "ts" ? ["globals.d.ts"] : []),
     ...baseCss(manifest),
+    ...(manifest.baseData ?? []),
     ...[
       ...coreRuntime(manifest),
       ...corePolyfills(manifest).map((polyfill) => polyfill.file),
@@ -92,6 +94,7 @@ export function primitiveFiles(
   return [
     ...entry.css,
     ...entry.js.flatMap((jsPath) => scriptVariants(jsPath, language)),
+    ...(entry.data ? [entry.data] : []),
     ...(options.examples ? entry.examples : []),
   ];
 }

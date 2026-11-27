@@ -5,7 +5,10 @@
  * e2e. Unlike the packed real kit (global-setup), these tarballs give the
  * tests control over every upstream event: a changed base file (merge and
  * conflict target), a changed primitive file, an added file, a removed file,
- * a new primitive that joins a dependency closure, and a changelog with a
+ * a new primitive that joins a dependency closure, a shared script that is
+ * new in V2 (`behaviors/steps.js`, needed by alpha), a shared script that
+ * moves in V2 (beta's `base/engine.js` becomes `behaviors/engine.js`), a
+ * primitive script that V2 drops and V3 ships again (`beta-legacy.js`), and a changelog with a
  * breaking entry. V1 → V2 is a manifest-v1 update (0.4-shaped: the class
  * layer `_utilities.css` / `_layout.css`); V3 is manifest v2 (0.5-shaped: the
  * generated utilities layer, exported base inventory, runtime, and polyfills).
@@ -119,15 +122,15 @@ export const PRIMITIVES = {
   alpha: {
     css: ["primitives/alpha/alpha.css"${v2 ? ', "primitives/alpha/alpha-extra.css"' : ""}],
     js: ["primitives/alpha/alpha.js"],
-    base: [],
+    base: [${v2 ? '"behaviors/steps.js"' : ""}],
     primitives: [],
     bare: [],
     examples: ["primitives/alpha/alpha.html"],
   },
   beta: {
     css: ["primitives/beta/beta.css"${v2 ? "" : ', "primitives/beta/beta-old.css"'}],
-    js: ["primitives/beta/beta.js"],
-    base: ["base/engine.js"],
+    js: ["primitives/beta/beta.js"${version === V2 ? "" : ', "primitives/beta/beta-legacy.js"'}],
+    base: [${v2 ? '"behaviors/engine.js"' : '"base/engine.js"'}],
     primitives: ["alpha"${v2 ? ', "gamma"' : ""}],
     bare: [],
     examples: [],
@@ -199,9 +202,6 @@ function commonFiles(version: string): Record<string, string> {
     "src/base/dialog-lifecycle.js": stubScript("dialogLifecycle"),
     "src/base/dialog-lifecycle.d.ts": stubTypes("dialogLifecycle"),
     "src/base/dialog-lifecycle.ts": stubScript("dialogLifecycle"),
-    "src/base/engine.js": stubScript("engine"),
-    "src/base/engine.d.ts": stubTypes("engine"),
-    "src/base/engine.ts": stubScript("engine"),
     "src/primitives/alpha/alpha.js": stubScript("alpha"),
     "src/primitives/alpha/alpha.d.ts": stubTypes("alpha"),
     "src/primitives/alpha/alpha.html": '<div class="ui-alpha">alpha</div>\n',
@@ -240,16 +240,31 @@ function versionFiles(version: string): Record<string, string> {
     files["src/base/_utilities.css"] = "/* fixture utilities */\n";
     files["src/base/_layout.css"] = "/* fixture layout */\n";
   }
+  // The shared engine beta imports: in base/ at V1, moved to behaviors/ from V2.
+  const engineDir = version === V1 ? "base" : "behaviors";
+  files[`src/${engineDir}/engine.js`] = `export const engine = "${version}";\n`;
+  files[`src/${engineDir}/engine.d.ts`] = "export declare const engine: string;\n";
+  files[`src/${engineDir}/engine.ts`] = `export const engine = "${version}";\n`;
+  // A primitive script V2 drops and V3 ships again.
+  if (version !== V2) {
+    files["src/primitives/beta/beta-legacy.js"] = `export const betaLegacy = "${version}";\n`;
+    files["src/primitives/beta/beta-legacy.d.ts"] = "export declare const betaLegacy: string;\n";
+    files["src/primitives/beta/beta-legacy.ts"] = `export const betaLegacy = "${version}";\n`;
+  }
   if (version === V1) {
     files["src/base/_variables.css"] = V1_VARIABLES;
     files["src/primitives/alpha/alpha.css"] = V1_ALPHA_CSS;
     files["src/primitives/beta/beta-old.css"] = ".ui-beta-old {\n  opacity: 1;\n}\n";
-    files["CHANGELOG.md"] =
-      `# Changelog\n\n## ${V1} (2026-08-01)\n\n### base\n\n- Fixture first release.\n`;
   } else {
     files["src/base/_variables.css"] = V2_VARIABLES;
     files["src/primitives/alpha/alpha.css"] = V2_ALPHA_CSS;
     files["src/primitives/alpha/alpha-extra.css"] = ".ui-alpha-extra {\n  color: teal;\n}\n";
+    // A shared script that is new in V2: alpha needs it, and V1 never shipped it.
+    // The version is on the first line only, so an edit at the end merges cleanly.
+    const steps = `export const steps = "${version}";\n\nexport const first = 1;\n\nexport const second = 2;\n\nexport const third = 3;\n`;
+    files["src/behaviors/steps.js"] = steps;
+    files["src/behaviors/steps.d.ts"] = "export declare const steps: string;\n";
+    files["src/behaviors/steps.ts"] = steps;
     files["src/primitives/gamma/gamma.css"] = ".ui-gamma {\n  display: flex;\n}\n";
     files["CHANGELOG.md"] = version === V3 ? CHANGELOG_V3 : CHANGELOG_V2;
   }

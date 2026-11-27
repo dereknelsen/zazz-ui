@@ -135,10 +135,10 @@ describe("appendJsImports", () => {
     const entry = renderIndexJs({ kit: fakeKit(), language: "js" });
     const once = appendJsImports(
       entry,
-      ["base/typeahead.js", "primitives/combobox/combobox.js"],
+      ["behaviors/typeahead.js", "primitives/combobox/combobox.js"],
       "js",
     );
-    expect(once).toContain(`import "./base/typeahead.js";`);
+    expect(once).toContain(`import "./behaviors/typeahead.js";`);
     expect(once.indexOf("typeahead")).toBeLessThan(once.indexOf("combobox"));
     expect(appendJsImports(once, ["primitives/combobox/combobox.js"], "js")).toBe(once);
   });

@@ -8,12 +8,13 @@
  */
 
 import { existsSync } from "node:fs";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { afterAll, beforeAll, describe, expect, it } from "vite-plus/test";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vite-plus/test";
 import { runAdd } from "../src/commands/add.ts";
 import { runInit } from "../src/commands/init.ts";
+import { runUpdate } from "../src/commands/update.ts";
 import type { ZazzConfig } from "../src/config.ts";
 
 const tmpDirs: string[] = [];
@@ -55,14 +56,14 @@ describe("zazz-ui add (e2e, packed kit)", () => {
       "zazz/primitives/combobox/combobox.d.ts",
       "zazz/primitives/select/select.css",
       "zazz/primitives/button/button.css",
-      "zazz/base/typeahead.js",
-      "zazz/base/command-score.js",
-      "zazz/base/hotkeys.js",
+      "zazz/behaviors/typeahead.js",
+      "zazz/behaviors/command-score.js",
+      "zazz/behaviors/hotkeys.js",
     ]) {
       expect(existsSync(path.join(project, file)), file).toBe(true);
     }
     // The engine stack rode into base provenance, not a primitive's.
-    expect(config.base.files["base/typeahead.js"]).toBeDefined();
+    expect(config.base.files["behaviors/typeahead.js"]).toBeDefined();
 
     // No examples without --examples.
     expect(existsSync(path.join(project, "zazz/primitives/combobox/combobox.html"))).toBe(false);
@@ -83,8 +84,8 @@ describe("zazz-ui add (e2e, packed kit)", () => {
     expect(css.indexOf("combobox")).toBeLessThan(css.indexOf("base/_properties.css"));
 
     const entry = await readFile(path.join(project, "zazz/index.js"), "utf8");
-    expect(entry.indexOf(`import "./base/typeahead.js";`)).toBeGreaterThan(-1);
-    expect(entry.indexOf("base/typeahead.js")).toBeLessThan(
+    expect(entry.indexOf(`import "./behaviors/typeahead.js";`)).toBeGreaterThan(-1);
+    expect(entry.indexOf("behaviors/typeahead.js")).toBeLessThan(
       entry.indexOf("primitives/combobox/combobox.js"),
     );
   });
@@ -130,5 +131,32 @@ describe("zazz-ui add (e2e, packed kit)", () => {
     await expect(runAdd(["button"], {}, { cwd: empty, silent: true })).rejects.toThrow(
       /isn't initialized/,
     );
+  });
+});
+
+describe("zazz-ui update after add (e2e, packed kit)", () => {
+  it("has nothing to do at the vendored version, and leaves an edited entry alone", async () => {
+    const dir = await tmpDir();
+    await runInit(undefined, BASE_FLAGS, { cwd: dir, silent: true });
+    const entry = path.join(dir, "zazz/index.js");
+    await writeFile(entry, `${await readFile(entry, "utf8")}import "../js/app.js";\n`);
+    // Out of cascade order, and after an edit: the entry add records is not
+    // the one update would regenerate.
+    await runAdd(["tabs"], {}, { cwd: dir, silent: true });
+    await runAdd(["checkbox"], {}, { cwd: dir, silent: true });
+    const before = await readFile(entry, "utf8");
+    const { version } = (await readConfig(dir)).kit;
+
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    try {
+      await runUpdate([`@${version}`], {}, { cwd: dir });
+      await runUpdate([`@${version}`, "tabs"], {}, { cwd: dir });
+      const printed = log.mock.calls.map((call) => String(call[0]));
+      expect(printed.filter((line) => line.includes("Already at"))).toHaveLength(2);
+    } finally {
+      log.mockRestore();
+    }
+    expect(await readFile(entry, "utf8")).toBe(before);
+    expect(process.exitCode ?? 0).toBe(0);
   });
 });
