@@ -25,7 +25,8 @@
  * sideways toward the nearest inline edge (either way when centered). A swipe
  * past 45px dismisses, and so does a quick flick; anything less springs back,
  * and the other directions resist. In the collapsed stack only the front toast
- * swipes.
+ * swipes. `data-draggable="false"` on the region turns swiping off for its
+ * toasts.
  *
  * Region attributes:
  * - `data-toaster-position`: `top-start | top-center | top-end | bottom-start |
@@ -43,8 +44,8 @@ import {
   rubberBand,
   shouldDismiss,
   trackDrag,
-} from "../../base/gesture.ts";
-import type { DragAxis } from "../../base/gesture.ts";
+} from "../../behaviors/gesture.ts";
+import type { DragAxis } from "../../behaviors/gesture.ts";
 import { computed, effect, state } from "../../base/signals.ts";
 import { ZazzElement, defineZazzElement } from "../../base/zazz-element.ts";
 

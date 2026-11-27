@@ -21,28 +21,28 @@ Once it's on, `base/_view-transitions.css` styles the transition. `<main>` anima
 Opt into in-page navigation when state must survive a page change: a toast stack, a playing video, an open mini-cart.
 
 ```html
-<html data-ui-navigation="swap">
+<html data-navigation="swap">
   …
   <body>
     <header>…</header>
     <main>…</main>
-    <ui-toaster data-ui-persist="toaster"></ui-toaster>
+    <ui-toaster data-navigation-persist="toaster"></ui-toaster>
   </body>
 </html>
 ```
 
-With `data-ui-navigation="swap"` on both the current and the destination page, `base/navigation.js` fetches the destination and swaps the whole `<body>` in place, inside a view transition. The browser still owns the URL and history: one `navigate` listener covers link clicks, back/forward, and programmatic navigations.
+With `data-navigation="swap"` on both the current and the destination page, `base/navigation.js` fetches the destination and swaps the whole `<body>` in place, inside a view transition. The browser still owns the URL and history: one `navigate` listener covers link clicks, back/forward, and programmatic navigations.
 
 ## Persistence is explicit
 
-Nothing survives a swap unless it carries `data-ui-persist="<id>"` on both pages. Then the live element takes the new one's place (with `moveBefore()` where supported, so it keeps its state and its `ZazzElement` setup). It keeps its scroll offsets in every browser. Everything else comes from the new page.
+Nothing survives a swap unless it carries `data-navigation-persist="<id>"` on both pages. Then the live element takes the new one's place (with `moveBefore()` where supported, so it keeps its state and its `ZazzElement` setup). It keeps its scroll offsets in every browser. Everything else comes from the new page.
 
 ## Current-page links in persisted chrome
 
 A persisted header still has to mark the page you navigated to. Its links take `aria-current` from the matching links in the new page's copy (paired by `href`), so render `aria-current` on the server as usual and style it with the `current` [state](/api/modifiers/states/):
 
 ```html
-<header data-ui-persist="header">
+<header data-navigation-persist="header">
   <a href="/docs/" data-ui="button" data-button-variant="ghost" aria-current="page"
      style="--bg--current: var(--color-muted)">Docs</a>
 </header>
@@ -52,10 +52,13 @@ Only `aria-current` is updated, and it is overwritten on every swap (a scroll-sp
 
 ## Keep the scroll, not the element
 
-A region whose content depends on the page (a section sidebar that lists the current page's headings, a table of contents) should not persist: it would keep the first page's markup. Mark it `data-ui-persist-scroll="<id>"` instead. It renders from the new page like everything else and takes the scroll offset of the old page's element with the same id.
+A region whose content depends on the page (a section sidebar that lists the current page's headings, a table of contents) should not persist: it would keep the first page's markup. Add `data-navigation-persist-mode="scroll"` beside its id instead. It renders from the new page like everything else and takes the scroll offset of the old page's element with the same id.
 
 ```html
-<aside data-ui-persist-scroll="sidebar-docs" style="--position: sticky; --overflow-y: auto">…</aside>
+<aside
+  data-navigation-persist="sidebar-docs"
+  data-navigation-persist-mode="scroll"
+  style="--position: sticky; --overflow-y: auto">…</aside>
 ```
 
 Use a different id where the content differs (one per section), so one sidebar's position never carries into another.
@@ -64,7 +67,7 @@ Use a different id where the content differs (one per section), so one sidebar's
 
 The window scrolls as the browser decides: to the top (or the link's target) for a new page, back to the saved position on back and forward. The jump is instant even though the reset sets `scroll-behavior: smooth`, and every restored offset is applied in the same task as the swap, before the view transition captures the new page. A navigation that a newer click supersedes is dropped before it swaps.
 
-Reloads, hash changes, downloads, and form posts are never intercepted. `<ui-debug>` lists the persisted elements on each page and warns about a missing or duplicate id, nested persisted elements, and `data-ui-persist` on a page without the opt-in. It checks `data-ui-persist-scroll` the same way, and flags one on or inside a persisted element, which keeps its scroll already.
+Reloads, hash changes, downloads, and form posts are never intercepted. `<ui-debug>` lists the persisted elements on each page and warns about a missing or duplicate id, nested persisted elements, and `data-navigation-persist` on a page without the opt-in. It checks scroll mode the same way, and flags one inside a persisted element, which keeps its scroll already.
 
 Content-scoped modules re-scan the new body through the [refresh registry](/api/javascript/custom-elements/).
 
@@ -72,7 +75,7 @@ Content-scoped modules re-scan the new body through the [refresh registry](/api/
 
 htmx, Turbo, and client routers run their own navigation. They can share a page with the swap as long as each one knows which links and history entries belong to it.
 
-- **Opt a region out.** A link or form inside `data-ui-navigation="off"` is never swapped: it gets a full page load, unless the library handles the click first. The nearest `data-ui-navigation` ancestor decides, so `data-ui-navigation="swap"` inside an opted-out region opts back in.
+- **Opt a region out.** A link or form inside `data-navigation="off"` is never swapped: it gets a full page load, unless the library handles the click first. The nearest `data-navigation` ancestor decides, so `data-navigation="swap"` inside an opted-out region opts back in.
 - **History the library pushes is left alone.** When the library adds an entry with `history.pushState()` (htmx's `hx-push-url` or `hx-boost`), Back and Forward into or out of that entry aren't swapped; the library restores it on `popstate`. Back and Forward between two swapped pages still swap, after a reload too, unless a script has since given the entry `history.state`. That script restores it instead: htmx stamps the first entry it swaps on with `{ htmx: true }` and restores it on Back by fetching the page again, so persisted elements don't survive that one navigation.
 - **Refresh what the library inserts.** The refresh hooks (reveal, attribute-form carousels, select-all checkboxes) run on their own only after a Zazz swap. When the library inserts markup, pass the new element to `Zazz.refresh`, which the entry module also exports by name. With no argument it refreshes the whole body.
 
@@ -84,4 +87,4 @@ htmx, Turbo, and client routers run their own navigation. They can share a page 
 
 A select-all checkbox counts only the boxes inside the element you pass, so when htmx replaces the rows under a header checkbox, pass the table. Custom elements need no refresh: they set themselves up when they connect.
 
-In browsers without `NavigateEvent.sourceElement`, `data-ui-navigation="off"` has no effect. Boosted htmx links still work there: htmx calls `preventDefault()` on the click, so no navigation reaches the swap.
+In browsers without `NavigateEvent.sourceElement`, `data-navigation="off"` has no effect. Boosted htmx links still work there: htmx calls `preventDefault()` on the click, so no navigation reaches the swap.

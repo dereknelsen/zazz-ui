@@ -19,7 +19,7 @@ Status: accepted (2026-11-15).
 - **One progress value fans out.** The drawer computes how far it is toward closed (0 at its lowest snap point, 1 gone) once per move, and everything linked to it reads that number: its backdrop, the drawers stacked behind it, and the indented page. Each linked element gets one write per move, of a registered, non-inheriting custom property on that element, with transitions off through a state token (`following`, `dragging`); its own CSS turns the number into `scale` and `translate`. Non-inheriting keeps the write from restyling the element's content. On release the property is removed or set to its resting value and the element's transitions finish.
 - **Where a drawer rests is a property, not an inline `translate`.** A snap point is `--_drawer-snap`, written when the stop changes and read by the drawer's `translate` in CSS, so the open transition lands on it and a release eases to it once the inline `translate` is removed.
 - **A radius that must animate with a gesture is a scaled corner piece.** The indented page's top corners are two pseudo-elements, each a rounded box whose spread shadow is cut off at its own square, scaled from the corner. Animating `border-radius` on a clipped page repaints it every frame; scaling does not. The page is clipped to the viewport by a fixed `clip-path` rectangle that is set once and never animated.
-- **`data-ui-no-drag`** is the global opt-out for a region inside a draggable surface.
+- **`data-draggable="false"`** is the global opt-out for a region inside a draggable surface. (It shipped as `data-ui-no-drag` and was renamed on 2026-11-24: [ADR-0013](./0013-data-ui-markup-namespace.md), Amendment 5.)
 
 ## Considered options
 

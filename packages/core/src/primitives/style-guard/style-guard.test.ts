@@ -2,7 +2,7 @@
 
 /**
  * @fileoverview Style guard: utilities survive a `style` rewrite; a single
- * removeProperty stays removed; `data-ui-guard="off"` opts out; a per-frame
+ * removeProperty stays removed; `data-style-guard="off"` opts out; a per-frame
  * writer never loops the guard.
  */
 
@@ -54,8 +54,8 @@ describe("style guard", () => {
     expect(el.style.getPropertyValue("--display")).toBe("grid");
   });
 
-  it('skips an element with data-ui-guard="off"', async () => {
-    const el = mount(`<div data-ui-guard="off" style="--p: 4">x</div>`);
+  it('skips an element with data-style-guard="off"', async () => {
+    const el = mount(`<div data-style-guard="off" style="--p: 4">x</div>`);
     await flush();
     el.setAttribute("style", "display: none");
     await flush();

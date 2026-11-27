@@ -8,6 +8,7 @@
 
 import { describe, expect, it } from "vite-plus/test";
 import { lengthPx, mount, settled, style, tabTo, useCss, useKit } from "../../../test/browser.ts";
+import "./otp.ts";
 
 const OTP = () => `<input data-ui="input" data-otp-slot="input" inputmode="numeric" />
   <div data-otp-slot="rail">
@@ -42,5 +43,38 @@ describe("otp", () => {
     await tabTo(root.querySelector("input")!);
     await settled(active);
     expect(style(active, "border-color")).not.toBe(style(idle, "border-color"));
+  });
+
+  it('submits the form once the code is complete with data-otp-submit-behavior="auto"', async () => {
+    const submits = (attributes: string) => {
+      const form = mount(
+        `<form><ui-otp ${attributes}><input data-ui="input" data-otp-slot="input" maxlength="2" /></ui-otp></form>`,
+      ) as HTMLFormElement;
+      let count = 0;
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        count++;
+      });
+      const input = form.querySelector("input")!;
+      input.value = "12";
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      return settled(form).then(() => count);
+    };
+    expect(await submits("")).toBe(0);
+    expect(await submits('data-otp-submit-behavior="manual"')).toBe(0);
+    expect(await submits('data-otp-submit-behavior="auto"')).toBe(1);
+  });
+
+  it('masks the cells only with data-otp-mask="true"', async () => {
+    const shown = async (attributes: string) => {
+      const root = mount(
+        `<ui-otp ${attributes}><input data-ui="input" data-otp-slot="input" maxlength="2" value="12" /></ui-otp>`,
+      );
+      await settled(root);
+      return root.querySelector("[data-otp-index]")!.textContent;
+    };
+    expect(await shown("")).toBe("1");
+    expect(await shown('data-otp-mask="false"')).toBe("1");
+    expect(await shown('data-otp-mask="true"')).toBe("•");
   });
 });

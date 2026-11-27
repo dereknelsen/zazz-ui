@@ -89,10 +89,10 @@ describe("CSP fallback", () => {
     expect(padding(doc.querySelector("[data-late]")!)).toBeCloseTo(scale(2), 1);
   });
 
-  it('leaves data-ui-guard="off" alone', () => {
+  it('leaves data-style-guard="off" alone', () => {
     doc.body.insertAdjacentHTML(
       "beforeend",
-      `<p data-off data-ui-guard="off" style="--px: 2">z</p>`,
+      `<p data-off data-style-guard="off" style="--px: 2">z</p>`,
     );
     Csp.start(doc.body);
     expect(padding(doc.querySelector("[data-off]")!)).toBe(0);

@@ -2,8 +2,8 @@
 
 /**
  * @fileoverview navigation.ts: in-page navigation is
- * opt-in with `data-ui-navigation="swap"` on <html>, swaps the whole body, and
- * keeps only elements marked `data-ui-persist` in both pages.
+ * opt-in with `data-navigation="swap"` on <html>, swaps the whole body, and
+ * keeps only elements marked `data-navigation-persist` in both pages.
  */
 
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vite-plus/test";
@@ -64,7 +64,7 @@ async function frames(n: number): Promise<void> {
 }
 
 const page = (body: string, { swap = true, title = "Next" } = {}) =>
-  `<!doctype html><html${swap ? ' data-ui-navigation="swap"' : ""}><head><title>${title}</title></head><body>${body}</body></html>`;
+  `<!doctype html><html${swap ? ' data-navigation="swap"' : ""}><head><title>${title}</title></head><body>${body}</body></html>`;
 
 describe("navigation", () => {
   let assign: ReturnType<typeof vi.fn<(url: string | URL) => void>>;
@@ -77,7 +77,7 @@ describe("navigation", () => {
   beforeEach(() => {
     assign = vi.fn<(url: string | URL) => void>();
     vi.spyOn(window.location, "replace").mockImplementation(assign);
-    document.documentElement.setAttribute("data-ui-navigation", "swap");
+    document.documentElement.setAttribute("data-navigation", "swap");
     navigation.currentEntry = { key: "initial" };
     document.title = "Current";
     document.body.innerHTML = `<header>old header</header><main><h1>old</h1></main>`;
@@ -87,11 +87,11 @@ describe("navigation", () => {
     await frames(2); // let a swap's instant-scroll release run
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
-    document.documentElement.removeAttribute("data-ui-navigation");
+    document.documentElement.removeAttribute("data-navigation");
   });
 
   it("leaves every navigation to the browser without the opt-in", () => {
-    document.documentElement.removeAttribute("data-ui-navigation");
+    document.documentElement.removeAttribute("data-navigation");
     const event = navigate("push");
     navigation.dispatchEvent(event);
     expect(event.intercept).not.toHaveBeenCalled();
@@ -163,8 +163,8 @@ describe("navigation", () => {
     expect(document.querySelector("header")!.textContent).toBe("old header");
   });
 
-  it('leaves a navigation from inside data-ui-navigation="off" to the browser', () => {
-    document.body.innerHTML = `<div data-ui-navigation="off"><a href="/next">next</a></div><a href="/next">swap</a>`;
+  it('leaves a navigation from inside data-navigation="off" to the browser', () => {
+    document.body.innerHTML = `<div data-navigation="off"><a href="/next">next</a></div><a href="/next">swap</a>`;
     const [off, on] = document.querySelectorAll("a");
     const skipped = navigate("push", undefined, false, { sourceElement: off });
     navigation.dispatchEvent(skipped);
@@ -175,8 +175,8 @@ describe("navigation", () => {
     expect(swapped.intercept).toHaveBeenCalledOnce();
   });
 
-  it('swaps again inside data-ui-navigation="swap" nested in an opted-out region', () => {
-    document.body.innerHTML = `<div data-ui-navigation="off"><form data-ui-navigation="swap"><button>go</button></form></div>`;
+  it('swaps again inside data-navigation="swap" nested in an opted-out region', () => {
+    document.body.innerHTML = `<div data-navigation="off"><form data-navigation="swap"><button>go</button></form></div>`;
     const event = navigate("push", undefined, false, {
       sourceElement: document.querySelector("button"),
     });
@@ -202,7 +202,7 @@ describe("navigation", () => {
     document.head.append(shared);
     try {
       serve(
-        `<!doctype html><html data-ui-navigation="swap"><head><title>Next</title>` +
+        `<!doctype html><html data-navigation="swap"><head><title>Next</title>` +
           `<style>.shared{}</style>` +
           `<style>.fc-clip{color:red}</style></head><body><main><h1>new</h1></main></body></html>`,
       );
@@ -258,20 +258,22 @@ describe("navigation", () => {
   });
 
   it("keeps a persisted element's live node where the new page places it", async () => {
-    document.body.innerHTML = `<header><div data-ui-persist="cart">3 items</div></header><main></main><aside data-ui-persist="gone">x</aside>`;
-    const live = document.querySelector('[data-ui-persist="cart"]')!;
+    document.body.innerHTML = `<header><div data-navigation-persist="cart">3 items</div></header><main></main><aside data-navigation-persist="gone">x</aside>`;
+    const live = document.querySelector('[data-navigation-persist="cart"]')!;
     serve(
-      page(`<main><h1>new</h1></main><footer><div data-ui-persist="cart">0 items</div></footer>`),
+      page(
+        `<main><h1>new</h1></main><footer><div data-navigation-persist="cart">0 items</div></footer>`,
+      ),
     );
     const event = navigate("push");
     navigation.dispatchEvent(event);
     await event.handler!();
-    const cart = document.querySelector('[data-ui-persist="cart"]')!;
+    const cart = document.querySelector('[data-navigation-persist="cart"]')!;
     expect(cart).toBe(live);
     expect(cart.textContent).toBe("3 items");
     expect(cart.parentElement!.tagName).toBe("FOOTER");
-    expect(document.querySelectorAll('[data-ui-persist="cart"]')).toHaveLength(1);
-    expect(document.querySelector('[data-ui-persist="gone"]')).toBeNull();
+    expect(document.querySelectorAll('[data-navigation-persist="cart"]')).toHaveLength(1);
+    expect(document.querySelector('[data-navigation-persist="gone"]')).toBeNull();
   });
 
   it("hands a destination without the opt-in back to the browser for a full load", async () => {

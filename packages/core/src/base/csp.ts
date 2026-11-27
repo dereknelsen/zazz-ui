@@ -11,7 +11,7 @@
  * `cssText` or `setAttribute`, which the policy blocks), then watches for
  * attributes written later. Utilities then need JavaScript and apply after the
  * module runs; a policy that allows attributes (`style-src-attr
- * 'unsafe-inline'`) needs none of this. `data-ui-guard="off"` opts an element
+ * 'unsafe-inline'`) needs none of this. `data-style-guard="off"` opts an element
  * out, as it does for the style guard.
  *
  * Detection never writes a probe: it looks for an element whose attribute
@@ -72,7 +72,7 @@ function inSync(el: Styled, wanted: Map<string, [string, string]>): boolean {
 
 /** Writes `el`'s `style` attribute into its declaration block through the CSSOM. No-op when the block already matches. */
 function applyInlineStyles(el: Element): void {
-  if (!("style" in el) || el.getAttribute("data-ui-guard") === "off") return;
+  if (!("style" in el) || el.getAttribute("data-style-guard") === "off") return;
   const styled = el as Styled;
   const wanted = declared(el.getAttribute("style") ?? "");
   if (inSync(styled, wanted)) return;

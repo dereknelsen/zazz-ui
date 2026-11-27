@@ -102,6 +102,16 @@ describe("toaster", () => {
       region.dismissAll();
     });
 
+    it('data-draggable="false" on the region keeps its toasts from swiping', async () => {
+      const { region, toast } = withToast();
+      region.setAttribute("data-draggable", "false");
+      await frame();
+      await drag(toast, { dy: 90, hold: 150 });
+      expect(has(toast, "removed")).toBe(false);
+      expect(toast.style.translate).toBe("");
+      region.dismissAll();
+    });
+
     it("a short slow swipe returns to rest", async () => {
       const { region, toast } = withToast();
       await frame();

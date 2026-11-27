@@ -34,7 +34,7 @@ abstract class ZazzElement extends HTMLElement {
   }
 
   /**
-   * A `moveBefore()` move (a `data-ui-persist` element riding a navigation swap)
+   * A `moveBefore()` move (a `data-navigation-persist` element riding a navigation swap)
    * keeps the element connected: without this, the browser would fire
    * disconnect + connect and the element would tear down and set up again.
    */

@@ -478,14 +478,16 @@
 
   /* A corner piece: a square the size of the radius whose outer corner is rounded
      and whose spread shadow, cut off at the square, paints only the notch outside
-     the curve. Scaling it from that corner is the radius growing. */
+     the curve. Scaling it from that corner is the radius growing.
+     The two pieces are a mirrored pair on the screen's own corners, and each scales
+     from a physical transform-origin, so their sides stay physical. */
   :where(ui-drawer-indent, [data-ui~="drawer-indent"])[data-drawer-indent-state~="on"]::before,
   :where(ui-drawer-indent, [data-ui~="drawer-indent"])[data-drawer-indent-state~="on"]::after {
     --_drawer-indent-amount: inherit;
     --_drawer-indent-top: inherit;
     content: "";
     position: absolute;
-    z-index: 2147483647;
+    z-index: 999;
     inset-block-start: var(--_drawer-indent-top, 0px);
     inline-size: var(--ui-drawer-indent-radius);
     block-size: var(--ui-drawer-indent-radius);

@@ -132,6 +132,15 @@ describe("carousel engine", () => {
     expect(api.selectedSnap()).toBe(0);
   });
 
+  it('a press inside data-draggable="false" never drags the track', async () => {
+    const { viewport, slides, api } = setup();
+    slides[0]!.setAttribute("data-draggable", "false");
+    await drag(slides[0]!, { dx: -80, steps: 4, interval: 8 });
+    await frame();
+    expect(viewport.scrollLeft).toBe(0);
+    expect(api.selectedSnap()).toBe(0);
+  });
+
   it("leaves a touch press to native scrolling", async () => {
     const { viewport } = setup();
     await drag(viewport, { dx: -80, pointerType: "touch", keepDown: false });
@@ -462,8 +471,27 @@ describe("carousel engine", () => {
     expect(slides).toHaveLength(SLIDES);
   });
 
-  it("drag-free: a flick coasts on from the release speed, slows steadily, and rests on the end", async () => {
-    const { viewport } = setup('data-carousel-drag-free="true"');
+  it('data-carousel-snap: "free" turns snapping off; a thumb strip is free unless it sets "slide"', () => {
+    const free = (el: Element) => (el.getAttribute("data-carousel-state") ?? "").includes("free");
+    const strip = (root: Element) =>
+      root.querySelector("[data-carousel-slot='thumbs'] [data-carousel-slot='viewport']")!;
+
+    const plain = setup("", thumbsHtml);
+    expect(free(plain.viewport)).toBe(false);
+    expect(free(strip(plain.root))).toBe(true);
+    plain.root._carouselController?.abort();
+
+    const swapped = setup(
+      'data-carousel-snap="free"',
+      thumbsHtml.replace("<div", '<div data-carousel-thumbs-snap="slide"'),
+    );
+    expect(free(swapped.viewport)).toBe(true);
+    expect(style(swapped.viewport, "scroll-snap-type")).toBe("none");
+    expect(free(strip(swapped.root))).toBe(false);
+  });
+
+  it("free: a flick coasts on from the release speed, slows steadily, and rests on the end", async () => {
+    const { viewport } = setup('data-carousel-snap="free"');
     const max = viewport.scrollWidth - viewport.clientWidth;
     const resting = () => !(viewport.getAttribute("data-carousel-state") ?? "").includes("gliding");
 

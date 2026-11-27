@@ -29,15 +29,15 @@ const parse = (html: string) =>
 
 describe("swapBody", () => {
   it("moves a persisted element into the new page without re-creating it", () => {
-    document.body.innerHTML = `<header>old</header><div data-ui-persist="cart">live</div>`;
-    const live = document.querySelector('[data-ui-persist="cart"]')!;
+    document.body.innerHTML = `<header>old</header><div data-navigation-persist="cart">live</div>`;
+    const live = document.querySelector('[data-navigation-persist="cart"]')!;
     const body = swapBody(
-      parse(`<header>new</header><main><div data-ui-persist="cart">fresh</div></main>`),
+      parse(`<header>new</header><main><div data-navigation-persist="cart">fresh</div></main>`),
     );
     expect(document.body).toBe(body);
     expect(document.querySelectorAll("body")).toHaveLength(1);
     expect(document.querySelector("header")!.textContent).toBe("new");
-    expect(document.querySelector('[data-ui-persist="cart"]')).toBe(live);
+    expect(document.querySelector('[data-navigation-persist="cart"]')).toBe(live);
     expect(live.textContent).toBe("live");
     expect(live.parentElement!.tagName).toBe("MAIN");
   });
@@ -46,7 +46,7 @@ describe("swapBody", () => {
     const scroller = (tag: string) =>
       `<${tag} style="display: block; block-size: 100px; overflow: auto"><div style="block-size: 1000px; inline-size: 1000px"></div></${tag}>`;
     const side = (inner: string) =>
-      `<aside data-ui-persist="side" style="display: block; block-size: 100px; overflow: auto"><div style="block-size: 1000px">${inner}</div></aside>`;
+      `<aside data-navigation-persist="side" style="display: block; block-size: 100px; overflow: auto"><div style="block-size: 1000px">${inner}</div></aside>`;
     document.body.innerHTML = side(scroller("nav"));
     const live = document.querySelector<HTMLElement>("aside")!;
     const inner = live.querySelector<HTMLElement>("nav")!;
@@ -59,9 +59,9 @@ describe("swapBody", () => {
     expect([inner.scrollTop, inner.scrollLeft]).toEqual([120, 40]);
   });
 
-  it("renders a data-ui-persist-scroll element fresh, at the old element's scroll offset", () => {
+  it('renders a data-navigation-persist-mode="scroll" element fresh, at the old element\'s scroll offset', () => {
     const side = (label: string, id = "side") =>
-      `<aside data-ui-persist-scroll="${id}" style="display: block; block-size: 100px; overflow: auto"><div style="block-size: 1000px">${label}</div></aside>`;
+      `<aside data-navigation-persist="${id}" data-navigation-persist-mode="scroll" style="display: block; block-size: 100px; overflow: auto"><div style="block-size: 1000px">${label}</div></aside>`;
     document.body.innerHTML = side("old") + side("other", "other");
     const [old, other] = document.querySelectorAll<HTMLElement>("aside");
     old!.scrollTop = 300;
@@ -76,7 +76,7 @@ describe("swapBody", () => {
 
   it("takes aria-current on its links from the destination's copy", () => {
     const nav = (a: string, b: string, extra = "") =>
-      `<nav data-ui-persist="nav"><a href="/" ${a}>Logo</a><a href="/">Home</a><a href="/docs/" ${b}>Docs</a>${extra}</nav>`;
+      `<nav data-navigation-persist="nav"><a href="/" ${a}>Logo</a><a href="/">Home</a><a href="/docs/" ${b}>Docs</a>${extra}</nav>`;
     document.body.innerHTML = nav(
       'aria-current="page"',
       "",
@@ -102,10 +102,12 @@ describe("swapBody", () => {
   it.skipIf(!("moveBefore" in Element.prototype))(
     "keeps a persisted Zazz element set up across the swap",
     () => {
-      document.body.innerHTML = `<persist-probe data-ui-persist="probe"></persist-probe>`;
+      document.body.innerHTML = `<persist-probe data-navigation-persist="probe"></persist-probe>`;
       const live = document.querySelector("persist-probe")!;
       expect(calls.get(live)).toEqual({ setup: 1, teardown: 0 });
-      swapBody(parse(`<main><persist-probe data-ui-persist="probe"></persist-probe></main>`));
+      swapBody(
+        parse(`<main><persist-probe data-navigation-persist="probe"></persist-probe></main>`),
+      );
       expect(document.querySelector("persist-probe")).toBe(live);
       expect(calls.get(live)).toEqual({ setup: 1, teardown: 0 });
     },

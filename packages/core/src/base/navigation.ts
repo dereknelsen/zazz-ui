@@ -4,14 +4,14 @@ import { refreshAll } from "./zazz-element.ts";
 
 /**
  * @fileoverview Opt-in in-page navigation via the Navigation API.
- * @description With `<html data-ui-navigation="swap">` on both the current and
+ * @description With `<html data-navigation="swap">` on both the current and
  * the destination page, a same-origin navigation fetches the destination and
  * swaps the whole `<body>` in place instead of loading a new document. The
  * browser still owns the URL and history; one `navigate` listener covers link
  * clicks, back/forward, and programmatic navigations.
  *
  * Nothing persists implicitly. An element survives a swap only when it carries
- * `data-ui-persist="<id>"` and the destination has an element with the same id:
+ * `data-navigation-persist="<id>"` and the destination has an element with the same id:
  * the live element takes the new one's place, keeping its DOM and state (a toast
  * stack, a playing video, an open mini-cart). Everything else comes from the new
  * page, so headers, footers and current-page links are never stale. A carried
@@ -27,8 +27,9 @@ import { refreshAll } from "./zazz-element.ts";
  * stays, so keep page-specific CSS scoped to that page's markup.
  *
  * An element whose content depends on the page (a section sidebar, a table of
- * contents) should not persist; `data-ui-persist-scroll="<id>"` renders it from
- * the destination and carries only its scroll offset. The window itself
+ * contents) should not persist; adding `data-navigation-persist-mode="scroll"`
+ * beside the id renders it from the destination and carries only its scroll
+ * offset. The window itself
  * scrolls as the browser decides: to the top or the target for a new entry,
  * restored on back/forward.
  *
@@ -38,8 +39,8 @@ import { refreshAll } from "./zazz-element.ts";
  * form posts are never intercepted.
  *
  * Another library that drives navigation (htmx, Turbo, a client router) keeps
- * its own. A link or form inside `data-ui-navigation="off"` gets the browser's
- * default, and the nearest `data-ui-navigation` ancestor decides. Entries the
+ * its own. A link or form inside `data-navigation="off"` gets the browser's
+ * default, and the nearest `data-navigation` ancestor decides. Entries the
  * page pushed with `history.pushState()` stay the page's: Back or Forward into
  * or out of one is never swapped, so the library restores it on `popstate`.
  * So does an entry the swap made once a script gives it `history.state` (htmx
@@ -55,9 +56,15 @@ import { refreshAll } from "./zazz-element.ts";
 /** The opt-in, on `<html>` of both pages. */
 const SWAP = "swap";
 
+/** A carried element: `data-navigation-persist="<id>"` in the default mode. */
+const PERSIST = '[data-navigation-persist]:not([data-navigation-persist-mode="scroll"])';
+
+/** An element rendered fresh that takes the old one's scroll offset. */
+const PERSIST_SCROLL = '[data-navigation-persist][data-navigation-persist-mode="scroll"]';
+
 /** True when `doc` opted in to in-page navigation. */
 function optedIn(doc: Document): boolean {
-  return doc.documentElement.getAttribute("data-ui-navigation") === SWAP;
+  return doc.documentElement.getAttribute("data-navigation") === SWAP;
 }
 
 /** `Element.moveBefore` keeps iframes, media and custom elements live; not in every browser yet. */
@@ -105,9 +112,9 @@ function adoptCurrent(keep: Element, slot: Element): void {
 
 /**
  * @description Replaces the current body with `next`, carrying over every
- * `data-ui-persist` element whose id appears in both, scroll offsets included;
+ * `data-navigation-persist` element whose id appears in both, scroll offsets included;
  * links in a carried element take `aria-current` from the destination. A
- * `data-ui-persist-scroll` element comes from `next` and takes the scroll
+ * `data-navigation-persist-mode="scroll"` element comes from `next` and takes the scroll
  * offset of the current element with the same id. Returns the new body.
  *
  * @param next - The destination's parsed `<body>`.
@@ -119,25 +126,25 @@ function swapBody(next: HTMLElement): HTMLElement {
   // both bodies are connected would lay out the doubled document.
   const live = new Map<string, Element>();
   const offsets: [Element, number, number][] = [];
-  for (const el of current.querySelectorAll("[data-ui-persist]")) {
-    const id = el.getAttribute("data-ui-persist");
+  for (const el of current.querySelectorAll(PERSIST)) {
+    const id = el.getAttribute("data-navigation-persist");
     if (id && !live.has(id)) live.set(id, el);
   }
   for (const keep of live.values()) offsets.push(...scrollOffsets(keep));
   const scrolled = new Map<string, [number, number]>();
-  for (const el of current.querySelectorAll("[data-ui-persist-scroll]")) {
-    const id = el.getAttribute("data-ui-persist-scroll");
+  for (const el of current.querySelectorAll(PERSIST_SCROLL)) {
+    const id = el.getAttribute("data-navigation-persist");
     if (id && !scrolled.has(id)) scrolled.set(id, [el.scrollTop, el.scrollLeft]);
   }
 
   const body = document.importNode(next, true);
   const placeholders: [Element, Element][] = [];
-  for (const slot of body.querySelectorAll("[data-ui-persist]")) {
-    const keep = live.get(slot.getAttribute("data-ui-persist") ?? "");
+  for (const slot of body.querySelectorAll(PERSIST)) {
+    const keep = live.get(slot.getAttribute("data-navigation-persist") ?? "");
     if (keep) placeholders.push([slot, keep]);
   }
-  for (const el of body.querySelectorAll("[data-ui-persist-scroll]")) {
-    const id = el.getAttribute("data-ui-persist-scroll") ?? "";
+  for (const el of body.querySelectorAll(PERSIST_SCROLL)) {
+    const id = el.getAttribute("data-navigation-persist") ?? "";
     const offset = scrolled.get(id);
     scrolled.delete(id);
     if (offset) offsets.push([el, ...offset]);
@@ -325,12 +332,11 @@ if ("navigation" in window) {
     // Forward stay swaps: after one, every entry shares this document.
     // Back and Forward are ours only between entries we made: a traversal into
     // or out of an entry the page pushed is the page's to restore. A link,
-    // form or region under `data-ui-navigation="off"` (an htmx-boosted area, a
+    // form or region under `data-navigation="off"` (an htmx-boosted area, a
     // client router's outlet) always gets the browser's default.
     if (
       !optedIn(document) ||
-      e.sourceElement?.closest("[data-ui-navigation]")?.getAttribute("data-ui-navigation") ===
-        "off" ||
+      e.sourceElement?.closest("[data-navigation]")?.getAttribute("data-navigation") === "off" ||
       (e.destination.sameDocument &&
         e.navigationType === "traverse" &&
         !(owns(e.destination.key) && owns(window.navigation.currentEntry?.key))) ||
@@ -421,7 +427,7 @@ if ("navigation" in window) {
     });
   });
 } else if (optedIn(document)) {
-  console.warn("Navigation API not supported: data-ui-navigation falls back to full page loads.");
+  console.warn("Navigation API not supported: data-navigation falls back to full page loads.");
 }
 
 export { adoptStyles, swapBody };

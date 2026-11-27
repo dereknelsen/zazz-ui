@@ -43,7 +43,7 @@ The whole drawer is the drag surface. Letting go past a quarter of its height cl
 Content that scrolls takes the gesture first. A pull moves the drawer only once the content under the finger is scrolled to the top, and only downward; the handle drags the drawer wherever the content is. Form fields and selected text never start a drag. To keep the drawer still under something else that needs the pointer (a map, a slider, a canvas), mark it:
 
 ```html
-<div data-ui-no-drag>…</div>
+<div data-draggable="false">…</div>
 ```
 
 The open and close motion is the dialog's transition with the drawer's own timing: `--ui-drawer-transition-duration` (twice the default duration) and `--ui-drawer-transition-timing-function`. With `prefers-reduced-motion` the duration is zero, as it is for every dialog; the drawer still follows the pointer while it is dragged.
@@ -63,7 +63,7 @@ On a phone, the keyboard covers the bottom of the screen without making the page
 </dialog>
 ```
 
-The drawer opens at the first stop. Letting go settles it on the nearest one; a flick moves it one stop in the flick's direction, and a very fast flick goes all the way open or closed. Add `data-drawer-snap-sequential` to make a fast flick move one stop as well. From the smallest stop, a downward flick or enough travel closes the drawer.
+The drawer opens at the first stop. Letting go settles it on the nearest one; a flick moves it one stop in the flick's direction, and a very fast flick goes all the way open or closed. Add `data-drawer-snap-behavior="sequential"` to make a fast flick move one stop as well. From the smallest stop, a downward flick or enough travel closes the drawer.
 
 Below its largest stop the drawer takes every vertical drag and its content does not scroll; at the largest stop content scrolls first, as it does without snap points. A click on the handle steps to the next stop and wraps to the first. Make the handle a `<button>` with an `aria-label`, as above, so the keyboard can do the same.
 

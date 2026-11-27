@@ -19,7 +19,7 @@
  * past its resting place meets resistance.
  *
  * A drag starts anywhere on the drawer except on form fields, selected text,
- * and anything inside `[data-ui-no-drag]`. Inside scrolling content it starts
+ * and anything inside `[data-draggable="false"]`. Inside scrolling content it starts
  * only once that content is scrolled to the top and the pointer moves down,
  * so the body scrolls first and the drawer follows; the handle
  * (`data-drawer-slot="handle"`) always drags. There is no custom element and
@@ -30,7 +30,7 @@
  * height, a `px` or `rem` length is a visible height. It opens at the first.
  * Letting go settles on the nearest; a flick moves one stop in its direction,
  * a very fast one goes all the way (or one stop, with
- * `data-drawer-snap-sequential`), and from the lowest stop a flick or enough
+ * `data-drawer-snap-behavior="sequential"`), and from the lowest stop a flick or enough
  * travel downward closes the drawer. Below the largest stop the drawer takes
  * every vertical drag and its content does not scroll. A click on the handle
  * steps to the next stop; make the handle a `<button>` to give the keyboard
@@ -72,8 +72,8 @@ import {
   pickSnap,
   rubberBand,
   trackDrag,
-} from "../../base/gesture.ts";
-import type { DragState } from "../../base/gesture.ts";
+} from "../../behaviors/gesture.ts";
+import type { DragState } from "../../behaviors/gesture.ts";
 import { registerRefresh } from "../../base/zazz-element.ts";
 
 // --- Tuning ---
@@ -768,7 +768,7 @@ function bindDrawer(dialog: HTMLDialogElement): void {
         closeRatio: CLOSE_RATIO,
         flick: FLICK_VELOCITY,
         fling: FLING_VELOCITY,
-        sequential: dialog.hasAttribute("data-drawer-snap-sequential"),
+        sequential: dialog.getAttribute("data-drawer-snap-behavior") === "sequential",
       });
       // transitions back on: the inline translate now eases to wherever it is set
       setDragging(dialog, false);

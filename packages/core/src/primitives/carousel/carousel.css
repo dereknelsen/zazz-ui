@@ -64,7 +64,7 @@
     overscroll-behavior-y: contain;
   }
 
-  /* free: drag-free (thumb strips by default), no snapping at all.
+  /* free: `data-carousel-snap="free"` (thumb strips by default), no snapping at all.
      gliding: a mouse drag, its release scroll, or auto-scroll; snapping off
      until it lands. settling: a loop rotation's compensating scroll, with the
      axis locked too (iOS Safari otherwise paints the reordered frame before

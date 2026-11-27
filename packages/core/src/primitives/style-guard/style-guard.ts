@@ -8,7 +8,7 @@
  * jQuery `.attr('style', …)` signature. A single `removeProperty('--p')` is a
  * choice and stays removed (with a single utility, "all" and "one" coincide: the guard
  * tells them apart by whether the other declarations survived the write).
- * `data-ui-guard="off"` opts an element out. A template
+ * `data-style-guard="off"` opts an element out. A template
  * that emits two `style` attributes cannot be repaired (the parser keeps the
  * first); that is an authoring error.
  * @example
@@ -66,7 +66,7 @@ function rawOf(text: string | null): string {
 }
 
 function isGuarded(el: Node): el is Styled {
-  return el instanceof Element && "style" in el && el.getAttribute("data-ui-guard") !== "off";
+  return el instanceof Element && "style" in el && el.getAttribute("data-style-guard") !== "off";
 }
 
 let observer: MutationObserver | null = null;

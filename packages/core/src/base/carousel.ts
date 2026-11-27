@@ -22,7 +22,8 @@
  * - `data-carousel-align`: `start` (default) | `center` | `end`
  * - `data-carousel-axis`: `x` (default) | `y`; a vertical viewport needs a block size
  * - `data-carousel-draggable`: `"false"` turns mouse dragging off (touch still scrolls)
- * - `data-carousel-drag-free`: `"true"` scrolls freely with momentum, no snapping
+ * - `data-carousel-snap`: `slide` (default) | `free`, which scrolls freely with momentum
+ *   and never snaps
  * - `data-carousel-skip-snaps`: `"true"` lets a mouse flick pass several snaps
  * - `data-carousel-start-snap`: Index to start on
  * - `data-carousel-keyboard`: `"false"` leaves the arrow keys to native scrolling
@@ -36,8 +37,11 @@
  *   stops it for good), `…-stop-on-mouse-enter`
  * - Right to left: no option; the track follows the inherited `dir`
  *
+ * Drag opt-out: a mouse press inside `data-draggable="false"` (on a slide, or on
+ * anything in one) never drags the track, so text there can be selected.
+ *
  * Thumb strip (on `data-carousel-slot="thumbs"`):
- * - `data-carousel-thumbs-*`: the options above for the strip (default: drag-free)
+ * - `data-carousel-thumbs-*`: the options above for the strip (default: `snap="free"`)
  *
  * Lifecycle and dialog start index:
  * - `data-carousel-init`: Set by script when a carousel is initialized

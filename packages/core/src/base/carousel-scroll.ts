@@ -8,7 +8,7 @@
  * the browser's own: compositor-driven, no script per frame, and the content
  * stays scrollable without JS. This module adds what the platform lacks:
  *
- * - **Mouse drag** (`base/gesture.ts`): a mouse press drags the track 1:1 with
+ * - **Mouse drag** (`behaviors/gesture.ts`): a mouse press drags the track 1:1 with
  *   snapping off, rubber-bands past the ends, and on release projects the
  *   flick's velocity to a snap and scrolls there. Touch and pen are left to
  *   native scrolling (`canStart` rejects them).
@@ -23,7 +23,7 @@
  * - **Axis and direction**: every position is logical (px from the track's
  *   start edge), so a vertical track (`data-carousel-axis="y"`) and a
  *   right-to-left one (`dir="rtl"` anywhere above it) run the same code.
- * - **Thumbs** (`linkThumbs`): a second engine on the thumb strip, drag-free
+ * - **Thumbs** (`linkThumbs`): a second engine on the thumb strip, free-scrolling
  *   by default, that keeps the selected thumb in view.
  * - **Autoplay / auto-scroll** (`data-carousel-plugins="autoplay"` or
  *   `"auto-scroll"`), with the kit's interaction rules (see `readAutoOptions`).
@@ -33,12 +33,12 @@
  *
  * Supported options (on the root): `data-carousel-loop`, `-align`
  * (`start` | `center` | `end`), `-axis` (`x` | `y`), `-draggable="false"`,
- * `-drag-free`, `-skip-snaps` (a flick may pass several snaps; default one),
+ * `-snap` (`slide` | `free`), `-skip-snaps` (a flick may pass several snaps; default one),
  * `-start-snap`. Thumb strips read the same names under
  * `data-carousel-thumbs-*` on the thumbs slot.
  */
 
-import { rubberBand, trackDrag } from "./gesture.ts";
+import { rubberBand, trackDrag } from "../behaviors/gesture.ts";
 import { Utils } from "./utils.ts";
 
 // --- Types ---
@@ -312,7 +312,7 @@ function createCarousel(
     // loop needs a neighbour on each side of the current slide
     loop: flag(raw.loop, defaults.loop ?? false) && slides.length >= 3,
     draggable: flag(raw.draggable, true),
-    dragFree: flag(raw.dragFree, defaults.dragFree ?? false),
+    dragFree: raw.snap === "free" || (raw.snap !== "slide" && (defaults.dragFree ?? false)),
     skipSnaps: flag(raw.skipSnaps, false),
     startSnap: typeof raw.startSnap === "number" ? raw.startSnap : 0,
     vertical: raw.axis === "y",
@@ -1146,7 +1146,7 @@ function createCarousel(
 
 /**
  * @description Runs a thumb strip on its own engine (options from
- * `data-carousel-thumbs-*` on the thumbs slot; drag-free by default) and links
+ * `data-carousel-thumbs-*` on the thumbs slot; `snap="free"` by default) and links
  * it to the main carousel: a thumb click steps the main carousel there, and
  * each main selection marks its thumb (`active` token and `aria-current`) and
  * scrolls the strip just enough to show it.

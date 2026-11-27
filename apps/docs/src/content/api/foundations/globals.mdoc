@@ -1,23 +1,27 @@
 ---
 title: "Global attributes"
-description: "The data-ui-* attributes no primitive owns."
+description: "The attributes no primitive owns."
 section: Foundations
 sectionOrder: 1
 order: 5
 ---
 
-Everything a primitive owns is `data-<primitive>-*`. Four attributes belong to the page instead and keep the `data-ui-` prefix.
+Everything a primitive owns is `data-<primitive>-*`. A few attributes belong to the page instead. Each is named for what it sets and takes the choice as its value.
 
 {% globals /%}
 
 ## Theme
 
-`data-theme="dark"` or `data-theme="light"` is the one page-level attribute without the `data-ui-` prefix. On any element it pins that scheme for the subtree; it only sets `color-scheme`, so scopes nest and every `light-dark()` token follows. Without one, the page follows the system. The head's theme script sets it on `<html>` from `localStorage.theme` before first paint.
+On any element, `data-theme="dark"` or `data-theme="light"` pins that scheme for the subtree; it only sets `color-scheme`, so scopes nest and every `light-dark()` token follows. Without one, the page follows the system. The head's theme script sets it on `<html>` from `localStorage.theme` before first paint.
 
 ## Navigation and persistence
 
-With `data-ui-navigation="swap"` on `<html>`, a same-origin navigation between two opted-in pages fetches the destination and swaps the whole `<body>` in place. Nothing survives the swap unless it carries `data-ui-persist="<id>"` on both pages; then the live element moves into the new page with its state and scroll offsets, and its links take `aria-current` from the new page. `data-ui-persist-scroll="<id>"` renders an element from the new page but keeps its scroll offset, for a region whose content changes per page, such as a sidebar. Reloads, hash changes, downloads, and form posts are never intercepted, nor is a link or form inside `data-ui-navigation="off"`. See [navigation](/api/javascript/navigation/).
+With `data-navigation="swap"` on `<html>`, a same-origin navigation between two opted-in pages fetches the destination and swaps the whole `<body>` in place. Nothing survives the swap unless it carries `data-navigation-persist="<id>"` on both pages; then the live element moves into the new page with its state and scroll offsets, and its links take `aria-current` from the new page. Adding `data-navigation-persist-mode="scroll"` renders the element from the new page and keeps only its scroll offset, for a region whose content changes per page, such as a sidebar. Reloads, hash changes, downloads, and form posts are never intercepted, nor is a link or form inside `data-navigation="off"`. See [navigation](/api/javascript/navigation/).
+
+## Drag opt-out
+
+`data-draggable="false"` keeps a press inside the element from starting a drag: a [drawer](/api/primitives/drawer/) stays still, a [toast](/api/primitives/toaster/) is not swiped away, and a [carousel](/api/primitives/carousel/) track does not follow the mouse. Use it on a region that needs the pointer for itself, such as a map or selectable text. A bare `data-draggable` does nothing.
 
 ## Style guard
 
-`data-ui-guard="off"` opts an element out of the [style guard](/api/primitives/style-guard/), which otherwise restores style utilities a legacy script overwrites.
+`data-style-guard="off"` opts an element out of the [style guard](/api/primitives/style-guard/), which otherwise restores style utilities a legacy script overwrites, and of the CSP fallback.

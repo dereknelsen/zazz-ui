@@ -20,9 +20,9 @@
  * - `data-otp-type`: sanitization charset: `numeric` (default), `alpha`,
  *   `alphanumeric`, `none`. Keep it in agreement with the input `pattern`
  *   and `inputmode`, which carry the no-JS validation.
- * - `data-otp-mask`: render `•` in the cells instead of characters.
- * - `data-otp-auto-submit`: request the owning form submission once when
- *   the code is complete.
+ * - `data-otp-mask="true"`: render `•` in the cells instead of characters.
+ * - `data-otp-submit-behavior="auto"`: request the owning form submission once
+ *   when the code is complete (default: leave submitting to the form).
  *
  * Stamped state: cells are `[data-otp-slot~="cell"]` with a `data-otp-state`
  * token list (`filled`, `active`); separators are `[data-otp-slot~="separator"]`; the root
@@ -142,7 +142,7 @@ class UiOtp extends ZazzElement {
 
     const length = input.maxLength > 0 ? input.maxLength : 6;
     const type = (this.getAttribute("data-otp-type") ?? "numeric") as OtpType;
-    const mask = this.hasAttribute("data-otp-mask");
+    const mask = this.getAttribute("data-otp-mask") === "true";
     const groups = parseGroups(this.getAttribute("data-otp-groups"), length);
 
     const rail = this.#stampRail(groups);
@@ -211,7 +211,7 @@ class UiOtp extends ZazzElement {
         if (complete) this.setAttribute("data-otp-complete", "");
         else this.removeAttribute("data-otp-complete");
 
-        if (complete && this.hasAttribute("data-otp-auto-submit")) {
+        if (complete && this.getAttribute("data-otp-submit-behavior") === "auto") {
           // Once per distinct complete value, so corrections can resubmit
           if (this.#lastSubmitted !== value.get()) {
             this.#lastSubmitted = value.get();

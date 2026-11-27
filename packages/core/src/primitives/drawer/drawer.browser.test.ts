@@ -24,7 +24,7 @@ const STANDALONE = `<dialog data-ui="drawer" closedby="any">
       <div data-drawer-slot="body">
         <p>Body</p>
         <input name="field" />
-        <div data-ui-no-drag data-nodrag style="block-size: 40px">no drag</div>
+        <div data-draggable="false" style="block-size: 40px">no drag</div>
       </div>
       <footer data-drawer-slot="footer"><button type="button">Done</button></footer>
     </div>
@@ -228,12 +228,12 @@ describe("drawer", () => {
       expect(dialog.open).toBe(false);
     });
 
-    it("form fields, [data-ui-no-drag], and the backdrop never start a drag", async () => {
+    it('form fields, [data-draggable="false"], and the backdrop never start a drag', async () => {
       await atWidth(1280);
       const dialog = await open(STANDALONE);
       for (const target of [
         dialog.querySelector("input")!,
-        dialog.querySelector("[data-nodrag]")!,
+        dialog.querySelector('[data-draggable="false"]')!,
       ]) {
         const down = await drag(target, { dy: 80, keepDown: true });
         expect(dialog.hasAttribute("data-drawer-state")).toBe(false);
@@ -332,7 +332,9 @@ describe("drawer snap points", () => {
     dialog.close();
     await frame();
 
-    const sequential = await open(SNAP.replace("closedby", "data-drawer-snap-sequential closedby"));
+    const sequential = await open(
+      SNAP.replace("closedby", 'data-drawer-snap-behavior="sequential" closedby'),
+    );
     await drag(part(sequential, "header"), { dy: -120, steps: 3, interval: 4 });
     expect(visible(sequential)).toBeCloseTo(full / 2, 0);
     sequential.close();
