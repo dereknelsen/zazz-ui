@@ -54,7 +54,9 @@ describe("zazz-ui add (e2e, packed kit)", () => {
       "zazz/primitives/combobox/combobox.css",
       "zazz/primitives/combobox/combobox.js",
       "zazz/primitives/combobox/combobox.d.ts",
+      "zazz/primitives/combobox/combobox.json",
       "zazz/primitives/select/select.css",
+      "zazz/primitives/select/select.json",
       "zazz/primitives/button/button.css",
       "zazz/behaviors/typeahead.js",
       "zazz/behaviors/command-score.js",
@@ -62,6 +64,8 @@ describe("zazz-ui add (e2e, packed kit)", () => {
     ]) {
       expect(existsSync(path.join(project, file)), file).toBe(true);
     }
+    // A data file is the primitive's own, hashed like its stylesheet.
+    expect(config.primitives["combobox"]?.files["primitives/combobox/combobox.json"]).toBeDefined();
     // The engine stack rode into base provenance, not a primitive's.
     expect(config.base.files["behaviors/typeahead.js"]).toBeDefined();
 
@@ -113,11 +117,11 @@ describe("zazz-ui add (e2e, packed kit)", () => {
   });
 
   it("records markup-only primitives without css imports", async () => {
-    await runAdd(["avatar"], {}, { cwd: project, silent: true });
+    await runAdd(["breadcrumbs"], {}, { cwd: project, silent: true });
     const config = await readConfig(project);
-    expect(config.primitives.avatar).toBeDefined();
+    expect(config.primitives.breadcrumbs).toBeDefined();
     const css = await readFile(path.join(project, "zazz/index.css"), "utf8");
-    expect(css).not.toContain("primitives/avatar/");
+    expect(css).not.toContain("primitives/breadcrumbs/");
   });
 
   it("rejects unknown primitives with the valid list", async () => {

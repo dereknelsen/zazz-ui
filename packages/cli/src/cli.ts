@@ -106,8 +106,8 @@ program
 
 program
   .command("codemod")
-  .description("rewrite your markup for a breaking kit change (data-font)")
-  .argument("<name>", "the codemod to run: data-font")
+  .description("rewrite your markup for a breaking kit change (data-font, small-sizes)")
+  .argument("<name>", "the codemod to run: data-font, small-sizes")
   .argument(
     "[args...]",
     "files or directories to rewrite (default the whole project), and/or the kit version to update to first, @-prefixed (default @latest)",
@@ -130,6 +130,10 @@ program
     ).conflicts(["keep", "theirs"]),
   )
   .option("--force", "overwrite existing files when vendoring without asking")
+  .option(
+    "--restore",
+    "small-sizes: keep the small sizes, adding their rules back, instead of removing them",
+  )
   .option("--dry-run", "list what would change without writing")
   .action(async (name: string, args: string[], options: unknown) => {
     const { runCodemod } = await import("./commands/codemod.ts");

@@ -17,7 +17,7 @@ Flags: `--dir <path>`, `--ts` (vendor TypeScript sources instead of compiled js,
 
 ## What add does
 
-`add <primitive...>` resolves the primitives you ask for plus everything they depend on (adding `combobox` brings `select`, `fields`, `popover`, `button`, `kbd`, and `badge`), copies the files at your project's recorded kit version, and inserts the entry imports at the right cascade position. Your edits to vendored files are never touched. `--examples` also copies the primitive's example markup.
+`add <primitive...>` resolves the primitives you ask for plus everything they depend on (adding `combobox` brings `select`, `fields`, `popover`, `button`, `kbd`, and `badge`), copies the files at your project's recorded kit version (with each primitive's data file, `primitives/<name>/<name>.json`, from kits that ship one), and inserts the entry imports at the right cascade position. Your edits to vendored files are never touched. `--examples` also copies the primitive's example markup.
 
 ## What update does
 
@@ -44,6 +44,15 @@ It only moves what it can move safely. It leaves these as written, lists the one
 - a file that is not UTF-8 or is over 2 MB
 
 The list covers the common ways a role is set, not every one; search for `text-` afterward if your templates build `data-ui` in unusual ways. `--dry-run` prints the files and counts and writes nothing. A second run changes nothing.
+
+### small-sizes
+
+`codemod small-sizes [paths...]` handles the small control sizes the kit removed: `data-button-size` and `data-toggle-size` no longer take `"sm"` or `"icon-sm"`. It asks what to do; removing them is the default, and it is the answer under `-y` or without a terminal.
+
+- **Remove**: rewrites the markup. `"sm"` is dropped and `"icon-sm"` becomes `"icon"`, quoted or not, with or without spaces around `=`. A selector (`[data-button-size="sm"]`), a size set from script, or a template value is listed for review, left as written, and the command exits with code 2.
+- **Keep** (`--restore`, or pick it at the prompt): leaves the markup alone and adds the removed rules back. In a vendored project they go at the end of the vendored `button.css` and `toggle.css`, where `update` merges them like any edit of yours. Without a `zazz.json`, and for button or toggle when it isn't vendored, they go in `zazz-small-sizes.css` at the project root (added to the end if the file exists), which you load after the kit's stylesheet. It recognizes its own rules by their header, so running it again adds nothing twice, and on a vendored kit old enough to still have the sizes it adds them anyway, so the next `update` can't drop them. Inside an input group or a password group a small size wins over the size the group gives its buttons.
+
+Fields never had a small size and are not touched. `--dry-run` writes nothing.
 
 ## Owning the code
 
