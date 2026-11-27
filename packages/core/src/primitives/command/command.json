@@ -1,0 +1,86 @@
+{
+  "name": "command",
+  "summary": "command.css: Command (ui-command | [data-ui~=\"command\"], [data-command-slot~=\"panel\"])",
+  "identities": [
+    "command"
+  ],
+  "tags": [
+    "ui-command"
+  ],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-command-option-gap": "var(--ui-field-option-gap)"
+    },
+    "Box Model & Sizing": {
+      "--ui-command-footer-p": "calc(var(--spacing) * 2)",
+      "--ui-command-group-label-p": "calc(var(--spacing) * 2) calc(var(--spacing) * 2) var(--spacing)",
+      "--ui-command-input-p": "calc(var(--spacing) * 3)",
+      "--ui-command-max-h": "calc(var(--spacing) * 96)",
+      "--ui-command-min-w": "calc(var(--spacing) * 96)"
+    },
+    "Borders & Outlines": {
+      "--ui-command-footer-border": "1px solid var(--color-border)",
+      "--ui-command-input-border": "1px solid var(--color-border)"
+    },
+    "Visual Effects": {
+      "--ui-command-shadow": "var(--ui-menu-shadow)"
+    }
+  },
+  "attributes": {
+    "data-command-filter": [],
+    "data-command-hotkey": [],
+    "data-command-keywords": [],
+    "data-command-min-length": [],
+    "data-command-select-behavior": [],
+    "data-command-sort": [],
+    "data-command-value": []
+  },
+  "slots": {
+    "data-command-slot": [
+      "empty",
+      "footer",
+      "group",
+      "group-label",
+      "header",
+      "input",
+      "item",
+      "list",
+      "open",
+      "panel"
+    ]
+  },
+  "states": {
+    "data-command-state": [
+      "highlighted"
+    ]
+  },
+  "requires": [
+    "popover",
+    "button",
+    "fields",
+    "dialog",
+    "menu",
+    "select",
+    "kbd"
+  ],
+  "files": {
+    "css": [
+      "primitives/command/command.css"
+    ],
+    "js": [
+      "primitives/command/command.js",
+      "primitives/command/command-actions.js"
+    ],
+    "base": [
+      "behaviors/list-navigation.js",
+      "behaviors/command-score.js",
+      "behaviors/hotkeys.js",
+      "behaviors/typeahead.js"
+    ],
+    "examples": [
+      "primitives/command/command.html",
+      "primitives/command/command-dialog.html",
+      "primitives/command/command-actions.html"
+    ]
+  }
+}

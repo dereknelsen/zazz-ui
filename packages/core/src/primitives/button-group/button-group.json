@@ -1,0 +1,40 @@
+{
+  "name": "button-group",
+  "summary": "button-group.css: Button group (ui-button-group | [data-ui~=\"button-group\"])",
+  "identities": [
+    "button-group"
+  ],
+  "tags": [
+    "ui-button-group"
+  ],
+  "hooks": {
+    "Color & Backgrounds": {
+      "--ui-button-group-bg": "var(--color-card)"
+    },
+    "Borders & Outlines": {
+      "--ui-button-group-corner-shape": "var(--ui-button-corner-shape)",
+      "--ui-button-group-radius": "var(--ui-button-radius)"
+    }
+  },
+  "attributes": {
+    "data-button-group-orientation": [
+      "vertical"
+    ]
+  },
+  "slots": {},
+  "states": {},
+  "requires": [
+    "button"
+  ],
+  "files": {
+    "css": [
+      "primitives/button-group/button-group.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/button-group/button-group.html",
+      "primitives/button-group/button-group-vertical.html"
+    ]
+  }
+}

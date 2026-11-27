@@ -1,0 +1,101 @@
+{
+  "name": "toaster",
+  "summary": "toaster.css: Toaster (ui-toaster | [data-ui~=\"toaster\"], [data-toaster-slot~=\"toast\"]) Stacked toast notifications: newest toast in front, older toasts peeking behind, expand on hover, swipe to dismiss.",
+  "identities": [
+    "toaster"
+  ],
+  "tags": [
+    "ui-toaster"
+  ],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-toaster-gap": "calc(var(--spacing) * 3.5)",
+      "--ui-toaster-inset": "var(--gutters)"
+    },
+    "Box Model & Sizing": {
+      "--ui-toaster-icon-size": "calc(var(--spacing) * 5)",
+      "--ui-toaster-p": "calc(var(--spacing) * 4)",
+      "--ui-toaster-w": "min(356px, calc(100vi - var(--gutters) * 2))"
+    },
+    "Typography": {
+      "--ui-toaster-description-font-size": "var(--font-size-sm)",
+      "--ui-toaster-title-font-size": "var(--font-size-sm)",
+      "--ui-toaster-title-font-weight": "var(--font-weight-strong)"
+    },
+    "Color & Backgrounds": {
+      "--ui-toaster-accent": "var(--color-popover-foreground)",
+      "--ui-toaster-bg": "var(--color-popover)",
+      "--ui-toaster-description-text": "var(--color-muted-foreground)",
+      "--ui-toaster-text": "var(--color-popover-foreground)"
+    },
+    "Borders & Outlines": {
+      "--ui-toaster-border-color": "var(--color-border)",
+      "--ui-toaster-corner-shape": "var(--radius-corner-shape)",
+      "--ui-toaster-radius": "var(--radius-md)"
+    },
+    "Visual Effects": {
+      "--ui-toaster-opacity--end": "1",
+      "--ui-toaster-opacity--start": "0",
+      "--ui-toaster-shadow": "var(--shadow-md)"
+    },
+    "Transforms & Animation": {
+      "--ui-toaster-scale-step": "0.05",
+      "--ui-toaster-transition-duration": "calc(var(--default-transition-duration) * 1.5)",
+      "--ui-toaster-transition-timing-function": "var(--default-transition-timing-function)"
+    }
+  },
+  "attributes": {
+    "data-toaster-close-button": [],
+    "data-toaster-description": [],
+    "data-toaster-duration": [],
+    "data-toaster-id": [],
+    "data-toaster-position": [],
+    "data-toaster-title": [],
+    "data-toaster-variant": [
+      "destructive",
+      "info",
+      "success",
+      "warning"
+    ]
+  },
+  "slots": {
+    "data-toaster-slot": [
+      "action",
+      "close",
+      "content",
+      "description",
+      "icon",
+      "list",
+      "title",
+      "toast"
+    ]
+  },
+  "states": {
+    "data-toaster-state": [
+      "expanded",
+      "front",
+      "removed",
+      "swiped",
+      "swiping",
+      "visible"
+    ]
+  },
+  "requires": [
+    "popover",
+    "button"
+  ],
+  "files": {
+    "css": [
+      "primitives/toaster/toaster.css"
+    ],
+    "js": [
+      "primitives/toaster/toaster.js"
+    ],
+    "base": [
+      "behaviors/gesture.js"
+    ],
+    "examples": [
+      "primitives/toaster/toaster.html"
+    ]
+  }
+}

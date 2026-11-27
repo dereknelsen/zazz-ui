@@ -1,0 +1,68 @@
+{
+  "name": "switch",
+  "summary": "switch.css — Switch (input[type=\"checkbox\"][role=\"switch\"])",
+  "identities": [],
+  "tags": [],
+  "hooks": {
+    "Box Model & Sizing": {
+      "--ui-switch-thumb-size": "calc( (var(--ui-switch-track-w) / 2) - var(--ui-switch-track-p) - var(--ui-switch-thumb-border-width) )",
+      "--ui-switch-track-h": "calc( var(--ui-switch-track-w) / 2 + var(--ui-switch-track-p) + var(--ui-switch-track-border-width) )",
+      "--ui-switch-track-p": "max(calc(var(--spacing) * 0.5), calc(var(--spacing-control-min) * 0.125))",
+      "--ui-switch-track-w": "max(calc(var(--spacing) * 7), calc(var(--spacing-control-min) * 1.75))"
+    },
+    "Color & Backgrounds": {
+      "--ui-switch-thumb-bg": "var(--color-card)",
+      "--ui-switch-thumb-bg--checked": "var(--color-primary-foreground)",
+      "--ui-switch-track-bg": "var(--color-input)",
+      "--ui-switch-track-bg--checked": "var(--color-primary)",
+      "--ui-switch-track-bg--checked-hover": "var(--color-primary)",
+      "--ui-switch-track-bg--hover": "oklch(from var(--color-muted) l c h / calc(alpha * 1.5))"
+    },
+    "Borders & Outlines": {
+      "--ui-switch-corner-shape": "round",
+      "--ui-switch-radius": "var(--radius-full)",
+      "--ui-switch-thumb-border-color": "var(--ui-field-border-color)",
+      "--ui-switch-thumb-border-color--checked": "var(--ui-field-border-color--hover)",
+      "--ui-switch-thumb-border-color--checked-hover": "var(--ui-field-border-color--hover)",
+      "--ui-switch-thumb-border-color--hover": "var(--ui-field-border-color--hover)",
+      "--ui-switch-thumb-border-style": "var(--ui-field-border-style)",
+      "--ui-switch-thumb-border-width": "var(--ui-field-border-width)",
+      "--ui-switch-thumb-corner-shape": "var(--ui-switch-corner-shape)",
+      "--ui-switch-thumb-radius": "var(--ui-switch-radius)",
+      "--ui-switch-track-border-color": "var(--ui-field-border-color)",
+      "--ui-switch-track-border-color--checked": "var(--ui-field-border-color--hover)",
+      "--ui-switch-track-border-color--checked-hover": "var(--ui-field-border-color)",
+      "--ui-switch-track-border-color--hover": "var(--ui-field-border-color--hover)",
+      "--ui-switch-track-border-style": "var(--ui-field-border-style)",
+      "--ui-switch-track-border-width": "var(--ui-field-border-width)",
+      "--ui-switch-track-corner-shape": "var(--ui-switch-corner-shape)",
+      "--ui-switch-track-radius": "var(--ui-switch-radius)"
+    },
+    "Visual Effects": {
+      "--ui-switch-thumb-shadow": "var(--shadow-xs)"
+    },
+    "Transforms & Animation": {
+      "--ui-switch-thumb-scale": "1",
+      "--ui-switch-thumb-translate": "var(--ui-switch-track-p), -50%"
+    },
+    "Interaction & UI": {
+      "--ui-switch-cursor": "pointer"
+    }
+  },
+  "attributes": {},
+  "slots": {},
+  "states": {},
+  "requires": [
+    "fields"
+  ],
+  "files": {
+    "css": [
+      "primitives/switch/switch.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/switch/switch.html"
+    ]
+  }
+}

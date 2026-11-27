@@ -1,0 +1,93 @@
+{
+  "name": "tabs",
+  "summary": "tabs.css — Tabs (ui-tabs | [data-ui~=\"tabs\"]) — CSS-only radio tab panels",
+  "identities": [
+    "tabs"
+  ],
+  "tags": [
+    "ui-tabs"
+  ],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-tabs-gap": "var(--ui-field-option-gap)",
+      "--ui-tabs-indicator-inset": "calc(var(--ui-tabs-track-p) / 2)",
+      "--ui-tabs-track-gap": "var(--ui-field-gap)"
+    },
+    "Box Model & Sizing": {
+      "--ui-tabs-label-min-h": "calc(var(--spacing) * 7)",
+      "--ui-tabs-label-px": "var(--ui-field-px)",
+      "--ui-tabs-label-py": "calc(var(--ui-field-py) / 2)",
+      "--ui-tabs-track-p": "var(--ui-field-inset-p)"
+    },
+    "Typography": {
+      "--ui-tabs-label-font-family": "var(--font-family-body)",
+      "--ui-tabs-label-font-size": "var(--font-size-sm)",
+      "--ui-tabs-label-font-weight": "var(--font-weight-strong)",
+      "--ui-tabs-label-leading": "var(--leading-sm)"
+    },
+    "Color & Backgrounds": {
+      "--ui-tabs-indicator-bg": "var(--color-muted)",
+      "--ui-tabs-label-bg": "transparent",
+      "--ui-tabs-label-bg--active": "transparent",
+      "--ui-tabs-label-bg--hover": "transparent",
+      "--ui-tabs-label-text": "var(--color-muted-foreground)",
+      "--ui-tabs-label-text--active": "var(--color-foreground)",
+      "--ui-tabs-label-text--hover": "var(--color-foreground)",
+      "--ui-tabs-track-bg": "var(--ui-field-bg)",
+      "--ui-tabs-underline-color": "var(--color-foreground)"
+    },
+    "Borders & Outlines": {
+      "--ui-tabs-indicator-border-color": "transparent",
+      "--ui-tabs-indicator-border-style": "var(--ui-field-border-style)",
+      "--ui-tabs-indicator-border-width": "var(--ui-field-border-width)",
+      "--ui-tabs-indicator-corner-shape": "var(--ui-field-corner-shape)",
+      "--ui-tabs-indicator-radius": "calc(var(--ui-tabs-track-radius) - var(--ui-tabs-track-p))",
+      "--ui-tabs-track-border-color": "var(--ui-field-border-color)",
+      "--ui-tabs-track-border-style": "var(--ui-field-border-style)",
+      "--ui-tabs-track-border-width": "var(--ui-field-border-width)",
+      "--ui-tabs-track-corner-shape": "var(--ui-field-corner-shape)",
+      "--ui-tabs-track-radius": "var(--ui-field-radius)",
+      "--ui-tabs-underline-width": "2px"
+    },
+    "Visual Effects": {
+      "--ui-tabs-indicator-shadow": "none",
+      "--ui-tabs-label-ring-color": "var(--ui-field-ring-color)"
+    }
+  },
+  "attributes": {
+    "data-tabs-orientation": [
+      "vertical"
+    ],
+    "data-tabs-variant": [
+      "underline"
+    ]
+  },
+  "slots": {
+    "data-tabs-slot": [
+      "indicator",
+      "label",
+      "label-text",
+      "list",
+      "panel"
+    ]
+  },
+  "states": {},
+  "requires": [
+    "fields"
+  ],
+  "files": {
+    "css": [
+      "primitives/tabs/tabs.css"
+    ],
+    "js": [
+      "primitives/tabs/tabs.js"
+    ],
+    "base": [
+      "behaviors/list-navigation.js"
+    ],
+    "examples": [
+      "primitives/tabs/tabs.html",
+      "primitives/tabs/tabs-underline.html"
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "scroll-fade",
+  "summary": "scroll-fade.css — Scroll fade ([data-ui~=\"scroll-fade\"]): edge masks on a scroller",
+  "identities": [
+    "scroll-fade"
+  ],
+  "tags": [],
+  "hooks": {
+    "Box Model & Sizing": {
+      "--ui-scroll-fade-size": "min(12%, calc(var(--spacing) * 10))"
+    },
+    "Transforms & Animation": {
+      "--ui-scroll-fade-reveal": "calc(var(--spacing) * 24)"
+    }
+  },
+  "attributes": {
+    "data-scroll-fade-axis": [
+      "x"
+    ]
+  },
+  "slots": {},
+  "states": {},
+  "requires": [],
+  "files": {
+    "css": [
+      "primitives/scroll-fade/scroll-fade.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/scroll-fade/scroll-fade.html"
+    ]
+  }
+}

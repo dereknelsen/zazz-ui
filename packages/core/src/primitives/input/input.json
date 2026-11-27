@@ -1,0 +1,56 @@
+{
+  "name": "input",
+  "summary": "input.css — Text input ([data-ui~=\"input\"])",
+  "identities": [
+    "input"
+  ],
+  "tags": [],
+  "hooks": {
+    "Box Model & Sizing": {
+      "--ui-input-calendar-picker-icon-size": "calc(var(--spacing) * 4)",
+      "--ui-input-calendar-picker-size": "calc(var(--spacing) * 6)",
+      "--ui-input-min-w": "16ch",
+      "--ui-input-pl": "var(--ui-field-px)",
+      "--ui-input-pr": "var(--ui-field-px)",
+      "--ui-input-py": "var(--ui-field-py)",
+      "--ui-input-w": "100%"
+    },
+    "Typography": {
+      "--ui-input-font-size": "var(--ui-field-font-size)",
+      "--ui-input-leading": "var(--ui-field-leading)"
+    },
+    "Color & Backgrounds": {
+      "--ui-input-calendar-picker-color": "currentColor"
+    },
+    "Borders & Outlines": {
+      "--ui-input-border-color": "var(--ui-field-border-color)",
+      "--ui-input-border-style": "var(--ui-field-border-style)",
+      "--ui-input-border-width": "var(--ui-field-border-width)",
+      "--ui-input-calendar-picker-corner-shape": "var(--ui-field-corner-shape)",
+      "--ui-input-calendar-picker-radius": "var(--ui-field-inset-radius)",
+      "--ui-input-corner-shape": "var(--ui-field-corner-shape)",
+      "--ui-input-radius": "var(--ui-field-radius)"
+    },
+    "Visual Effects": {
+      "--ui-input-calendar-picker-mask": "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Crect x='40' y='40' width='176' height='176' rx='8' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='176' y1='24' x2='176' y2='56' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='80' y1='24' x2='80' y2='56' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='40' y1='88' x2='216' y2='88' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3C/svg%3E\")"
+    }
+  },
+  "attributes": {},
+  "slots": {},
+  "states": {},
+  "requires": [
+    "fields"
+  ],
+  "files": {
+    "css": [
+      "primitives/input/input.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/input/input.html",
+      "primitives/input/input-icon-leading.html",
+      "primitives/input/input-icon-trailing.html"
+    ]
+  }
+}

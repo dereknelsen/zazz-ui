@@ -1,0 +1,41 @@
+{
+  "name": "toggle-group",
+  "summary": "toggle-group.css: Toggle group (ui-toggle-group | [data-ui~=\"toggle-group\"])",
+  "identities": [
+    "toggle-group"
+  ],
+  "tags": [
+    "ui-toggle-group"
+  ],
+  "hooks": {
+    "Color & Backgrounds": {
+      "--ui-toggle-group-bg": "var(--color-card)"
+    },
+    "Borders & Outlines": {
+      "--ui-toggle-group-corner-shape": "var(--ui-toggle-corner-shape)",
+      "--ui-toggle-group-radius": "var(--ui-toggle-radius)"
+    }
+  },
+  "attributes": {
+    "data-toggle-group-orientation": [
+      "vertical"
+    ]
+  },
+  "slots": {},
+  "states": {},
+  "requires": [
+    "toggle"
+  ],
+  "files": {
+    "css": [
+      "primitives/toggle-group/toggle-group.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/toggle-group/toggle-group.html",
+      "primitives/toggle-group/toggle-group-multiple.html",
+      "primitives/toggle-group/toggle-group-vertical.html"
+    ]
+  }
+}

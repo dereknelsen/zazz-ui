@@ -37,7 +37,7 @@ export interface PrimitiveEntry {
   /** Scripts owned by the primitive, in load order. */
   js: string[];
   /**
-   * Non-core `base/` scripts its behavior needs, in load order. The core
+   * Non-core shared scripts (`base/` and `behaviors/`) its behavior needs, in load order. The core
    * runtime (`CORE_RUNTIME`) is assumed present (vendored by `init`, bundled
    * in `dist/zazz.js`) and is never listed here.
    */
@@ -53,6 +53,11 @@ export interface PrimitiveEntry {
   bare: string[];
   /** Example fragments (`--examples`, docs previews). */
   examples: string[];
+  /**
+   * The primitive's generated data file (`scripts/primitive-data.ts`): its identities, tag forms,
+   * hooks, attributes, slots, and states. Kits from before the data files have none.
+   */
+  data?: string;
   /** Tag forms the primitive is styled or registered under (`ui-tabs`); absent = attribute form only. */
   tags?: string[];
 }
@@ -60,17 +65,23 @@ export interface PrimitiveEntry {
 /** Bare specifiers pulled in by `base/signals.ts` (core runtime). */
 const SIGNALS_BARE = ["signal-polyfill"];
 
-/** The carousel stack: the gesture layer, the scroll-snap engine, and the page wiring. */
-const CAROUSEL_BASE = ["base/gesture.js", "base/carousel-scroll.js", "base/carousel.js"];
+/** The carousel stack: the gesture behavior, the scroll-snap engine, and the page wiring. */
+const CAROUSEL_BASE = ["behaviors/gesture.js", "base/carousel-scroll.js", "base/carousel.js"];
 
 /** The typeahead engine stack shared by autocomplete, combobox, and command. */
-const TYPEAHEAD_BASE = ["base/command-score.js", "base/hotkeys.js", "base/typeahead.js"];
+const TYPEAHEAD_BASE = [
+  "behaviors/list-navigation.js",
+  "behaviors/command-score.js",
+  "behaviors/hotkeys.js",
+  "behaviors/typeahead.js",
+];
 
 /**
  * Every primitive in the kit, keyed by directory name under `src/primitives/`.
  * `primitives` dependencies mirror each stylesheet's `@requires` header (the
- * authoritative record of cross-primitive contracts); markup-only primitives
- * list the primitives their canonical example composes.
+ * authoritative record of cross-primitive contracts), plus the primitives its
+ * example fragments compose: a `data-font` role needs `font`, a `data-ui="link"`
+ * needs `link`. Markup-only primitives list only the latter.
  */
 export const PRIMITIVES: Record<string, PrimitiveEntry> = {
   accordion: {
@@ -81,6 +92,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: [],
     bare: [],
     examples: ["primitives/accordion/accordion.html"],
+    data: "primitives/accordion/accordion.json",
   },
   "alert-dialog": {
     css: ["primitives/alert-dialog/alert-dialog.css"],
@@ -89,6 +101,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: ["dialog"],
     bare: [],
     examples: ["primitives/alert-dialog/alert-dialog.html"],
+    data: "primitives/alert-dialog/alert-dialog.json",
   },
   autocomplete: {
     tags: ["ui-autocomplete"],
@@ -101,6 +114,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/autocomplete/autocomplete.html",
       "primitives/autocomplete/autocomplete-groups.html",
     ],
+    data: "primitives/autocomplete/autocomplete.json",
   },
   avatar: {
     css: [],
@@ -109,6 +123,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: [],
     bare: [],
     examples: ["primitives/avatar/avatar.html"],
+    data: "primitives/avatar/avatar.json",
   },
   badge: {
     css: ["primitives/badge/badge.css"],
@@ -117,6 +132,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: ["fields"],
     bare: [],
     examples: ["primitives/badge/badge.html", "primitives/badge/badge-icon.html"],
+    data: "primitives/badge/badge.json",
   },
   breadcrumbs: {
     css: [],
@@ -125,6 +141,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: ["button"],
     bare: [],
     examples: ["primitives/breadcrumbs/breadcrumbs.html"],
+    data: "primitives/breadcrumbs/breadcrumbs.json",
   },
   button: {
     css: ["primitives/button/button.css"],
@@ -137,6 +154,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/button/button-icon.html",
       "primitives/button/button-icon-only.html",
     ],
+    data: "primitives/button/button.json",
   },
   "button-group": {
     tags: ["ui-button-group"],
@@ -149,21 +167,23 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/button-group/button-group.html",
       "primitives/button-group/button-group-vertical.html",
     ],
+    data: "primitives/button-group/button-group.json",
   },
   callout: {
     css: ["primitives/callout/callout.css"],
     js: [],
     base: [],
-    primitives: [],
+    primitives: ["font"],
     bare: [],
     examples: ["primitives/callout/callout.html"],
+    data: "primitives/callout/callout.json",
   },
   card: {
     tags: ["ui-card"],
     css: ["primitives/card/card.css"],
     js: [],
     base: [],
-    primitives: [],
+    primitives: ["font", "link"],
     bare: [],
     examples: [
       "primitives/card/card.html",
@@ -173,6 +193,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/card/card-article.html",
       "primitives/card/card-subgrid.html",
     ],
+    data: "primitives/card/card.json",
   },
   carousel: {
     tags: ["ui-carousel"],
@@ -182,6 +203,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: [],
     bare: [],
     examples: ["primitives/carousel/carousel.html"],
+    data: "primitives/carousel/carousel.json",
   },
   checkbox: {
     css: ["primitives/checkbox/checkbox.css"],
@@ -190,6 +212,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: ["fields"],
     bare: SIGNALS_BARE,
     examples: ["primitives/checkbox/checkbox.html", "primitives/checkbox/checkbox-tasklist.html"],
+    data: "primitives/checkbox/checkbox.json",
   },
   combobox: {
     tags: ["ui-combobox"],
@@ -202,6 +225,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/combobox/combobox.html",
       "primitives/combobox/combobox-multiselect.html",
     ],
+    data: "primitives/combobox/combobox.json",
   },
   command: {
     tags: ["ui-command"],
@@ -215,6 +239,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/command/command-dialog.html",
       "primitives/command/command-actions.html",
     ],
+    data: "primitives/command/command.json",
   },
   debug: {
     css: [],
@@ -223,6 +248,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: [],
     bare: [],
     examples: [],
+    data: "primitives/debug/debug.json",
   },
   dialog: {
     css: ["primitives/dialog/dialog.css"],
@@ -231,11 +257,12 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: [],
     bare: [],
     examples: ["primitives/dialog/dialog.html", "primitives/dialog/dialog-with-form.html"],
+    data: "primitives/dialog/dialog.json",
   },
   drawer: {
     css: ["primitives/drawer/drawer.css"],
     js: ["primitives/drawer/drawer.js"],
-    base: ["base/gesture.js"],
+    base: ["behaviors/gesture.js"],
     primitives: ["dialog", "button"],
     bare: [],
     tags: ["ui-drawer-indent"],
@@ -246,6 +273,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/drawer/drawer-nested.html",
       "primitives/drawer/drawer-indent.html",
     ],
+    data: "primitives/drawer/drawer.json",
   },
   fields: {
     css: ["primitives/fields/fields.css"],
@@ -254,6 +282,16 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: [],
     bare: [],
     examples: ["primitives/fields/fields.html"],
+    data: "primitives/fields/fields.json",
+  },
+  font: {
+    css: ["primitives/font/font.css"],
+    js: [],
+    base: [],
+    primitives: [],
+    bare: [],
+    examples: ["primitives/font/font.html"],
+    data: "primitives/font/font.json",
   },
   input: {
     css: ["primitives/input/input.css"],
@@ -266,6 +304,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/input/input-icon-leading.html",
       "primitives/input/input-icon-trailing.html",
     ],
+    data: "primitives/input/input.json",
   },
   "input-group": {
     css: ["primitives/input-group/input-group.css"],
@@ -277,6 +316,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/input-group/input-group.html",
       "primitives/input-group/input-group-password-group.html",
     ],
+    data: "primitives/input-group/input-group.json",
   },
   group: {
     tags: ["ui-group"],
@@ -286,6 +326,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: [],
     bare: [],
     examples: ["primitives/group/group.html"],
+    data: "primitives/group/group.json",
   },
   kbd: {
     tags: ["ui-kbd-group"],
@@ -295,6 +336,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: [],
     bare: [],
     examples: ["primitives/kbd/kbd.html", "primitives/kbd/kbd-group.html"],
+    data: "primitives/kbd/kbd.json",
   },
   layout: {
     tags: ["ui-layout"],
@@ -304,6 +346,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: [],
     bare: [],
     examples: ["primitives/layout/layout.html"],
+    data: "primitives/layout/layout.json",
   },
   lightbox: {
     tags: ["ui-lightbox"],
@@ -313,15 +356,26 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: ["dialog", "carousel", "button"],
     bare: [],
     examples: ["primitives/lightbox/lightbox.html"],
+    data: "primitives/lightbox/lightbox.json",
+  },
+  link: {
+    css: ["primitives/link/link.css"],
+    js: [],
+    base: [],
+    primitives: [],
+    bare: [],
+    examples: ["primitives/link/link.html"],
+    data: "primitives/link/link.json",
   },
   menu: {
     tags: ["ui-menu"],
     css: ["primitives/menu/menu.css"],
     js: ["primitives/menu/menu.js"],
-    base: [],
+    base: ["behaviors/list-navigation.js"],
     primitives: ["popover", "button"],
     bare: [],
     examples: ["primitives/menu/menu.html", "primitives/menu/menu-interest.html"],
+    data: "primitives/menu/menu.json",
   },
   menubar: {
     css: [],
@@ -330,6 +384,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: ["menu", "button", "separator"],
     bare: [],
     examples: ["primitives/menubar/menubar.html", "primitives/menubar/menubar-help-search.html"],
+    data: "primitives/menubar/menubar.json",
   },
   meter: {
     css: ["primitives/meter/meter.css"],
@@ -338,6 +393,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: ["progress"],
     bare: [],
     examples: ["primitives/meter/meter.html"],
+    data: "primitives/meter/meter.json",
   },
   "mobile-menu": {
     css: ["primitives/mobile-menu/mobile-menu.css"],
@@ -346,6 +402,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: ["dialog", "accordion"],
     bare: [],
     examples: ["primitives/mobile-menu/mobile-menu.html"],
+    data: "primitives/mobile-menu/mobile-menu.json",
   },
   "navigation-menu": {
     css: ["primitives/navigation-menu/navigation-menu.css"],
@@ -361,6 +418,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/navigation-menu/navigation-menu-icon-grid.html",
       "primitives/navigation-menu/navigation-menu-megamenu.html",
     ],
+    data: "primitives/navigation-menu/navigation-menu.json",
   },
   otp: {
     tags: ["ui-otp"],
@@ -370,6 +428,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: ["fields", "input"],
     bare: SIGNALS_BARE,
     examples: ["primitives/otp/otp.html"],
+    data: "primitives/otp/otp.json",
   },
   "password-group": {
     tags: ["ui-password"],
@@ -379,6 +438,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: ["fields", "input", "button"],
     bare: SIGNALS_BARE,
     examples: ["primitives/password-group/password-group.html"],
+    data: "primitives/password-group/password-group.json",
   },
   popover: {
     css: ["primitives/popover/popover.css"],
@@ -387,6 +447,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: [],
     bare: [],
     examples: ["primitives/popover/popover.html"],
+    data: "primitives/popover/popover.json",
   },
   progress: {
     css: ["primitives/progress/progress.css"],
@@ -398,14 +459,16 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/progress/progress.html",
       "primitives/progress/progress-indeterminate.html",
     ],
+    data: "primitives/progress/progress.json",
   },
   prose: {
-    css: [],
+    css: ["primitives/prose/prose.css"],
     js: [],
     base: [],
-    primitives: [],
+    primitives: ["font"],
     bare: [],
     examples: ["primitives/prose/prose.html"],
+    data: "primitives/prose/prose.json",
   },
   radio: {
     css: ["primitives/radio/radio.css"],
@@ -414,6 +477,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: ["fields"],
     bare: [],
     examples: ["primitives/radio/radio.html"],
+    data: "primitives/radio/radio.json",
   },
   reveal: {
     css: ["primitives/reveal/reveal.css"],
@@ -422,6 +486,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: [],
     bare: [],
     examples: ["primitives/reveal/reveal.html"],
+    data: "primitives/reveal/reveal.json",
   },
   "style-guard": {
     css: [],
@@ -430,6 +495,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: [],
     bare: [],
     examples: [],
+    data: "primitives/style-guard/style-guard.json",
   },
   "scroll-fade": {
     css: ["primitives/scroll-fade/scroll-fade.css"],
@@ -438,6 +504,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: [],
     bare: [],
     examples: ["primitives/scroll-fade/scroll-fade.html"],
+    data: "primitives/scroll-fade/scroll-fade.json",
   },
   select: {
     tags: ["ui-multiselect"],
@@ -452,6 +519,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/select/select-sides.html",
       "primitives/select/select-multiple.html",
     ],
+    data: "primitives/select/select.json",
   },
   separator: {
     css: ["primitives/separator/separator.css"],
@@ -460,6 +528,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: [],
     bare: [],
     examples: ["primitives/separator/separator.html"],
+    data: "primitives/separator/separator.json",
   },
   slider: {
     css: ["primitives/slider/slider.css"],
@@ -468,6 +537,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: [],
     bare: [],
     examples: ["primitives/slider/slider.html"],
+    data: "primitives/slider/slider.json",
   },
   switch: {
     css: ["primitives/switch/switch.css"],
@@ -476,6 +546,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: ["fields"],
     bare: [],
     examples: ["primitives/switch/switch.html"],
+    data: "primitives/switch/switch.json",
   },
   table: {
     css: ["primitives/table/table.css"],
@@ -489,15 +560,17 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/table/table-alternating.html",
       "primitives/table/table-size-sm.html",
     ],
+    data: "primitives/table/table.json",
   },
   tabs: {
     tags: ["ui-tabs"],
     css: ["primitives/tabs/tabs.css"],
     js: ["primitives/tabs/tabs.js"],
-    base: [],
+    base: ["behaviors/list-navigation.js"],
     primitives: ["fields"],
     bare: [],
     examples: ["primitives/tabs/tabs.html", "primitives/tabs/tabs-underline.html"],
+    data: "primitives/tabs/tabs.json",
   },
   textarea: {
     css: ["primitives/textarea/textarea.css"],
@@ -506,15 +579,17 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: ["fields"],
     bare: [],
     examples: ["primitives/textarea/textarea.html"],
+    data: "primitives/textarea/textarea.json",
   },
   toaster: {
     tags: ["ui-toaster"],
     css: ["primitives/toaster/toaster.css"],
     js: ["primitives/toaster/toaster.js"],
-    base: ["base/gesture.js"],
+    base: ["behaviors/gesture.js"],
     primitives: ["popover", "button"],
     bare: SIGNALS_BARE,
     examples: ["primitives/toaster/toaster.html"],
+    data: "primitives/toaster/toaster.json",
   },
   toggle: {
     css: ["primitives/toggle/toggle.css"],
@@ -523,6 +598,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     primitives: ["button"],
     bare: [],
     examples: ["primitives/toggle/toggle.html"],
+    data: "primitives/toggle/toggle.json",
   },
   "toggle-group": {
     tags: ["ui-toggle-group"],
@@ -536,6 +612,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/toggle-group/toggle-group-multiple.html",
       "primitives/toggle-group/toggle-group-vertical.html",
     ],
+    data: "primitives/toggle-group/toggle-group.json",
   },
   toolbar: {
     css: [],
@@ -552,6 +629,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     ],
     bare: [],
     examples: ["primitives/toolbar/toolbar.html"],
+    data: "primitives/toolbar/toolbar.json",
   },
   tooltip: {
     tags: ["ui-tooltip"],
@@ -566,12 +644,13 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/tooltip/tooltip-sides.html",
       "primitives/tooltip/tooltip-disabled.html",
     ],
+    data: "primitives/tooltip/tooltip.json",
   },
   utilities: {
     css: [],
     js: [],
     base: [],
-    primitives: [],
+    primitives: ["font"],
     bare: [],
     examples: [
       "primitives/utilities/aspect-ratio.html",
@@ -604,18 +683,18 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
       "primitives/utilities/space.html",
       "primitives/utilities/width.html",
     ],
+    data: "primitives/utilities/utilities.json",
   },
 };
 
 // --- Canonical cascade order ---
 
 /**
- * Primitive names in the exact `@import` order of `src/index.css`. Anything
- * assembling a stylesheet subset (the CLI's `add`, the granular CDN head)
- * must emit primitive css in this order so component scopes cascade the way
- * the kit was designed and tested. Markup-only primitives (no css) do not
- * appear. `manifest.test.ts` asserts this list matches `index.css` exactly.
+ * Data files for definitions: folders under `primitives/` that hold only a
+ * generated data file, with no primitive behind them. None today.
  */
+export const BASE_DATA: string[] = [];
+
 /**
  * Base stylesheets that load before the primitives, in `index.css` order.
  * `_layers.css` declares the cascade layers and must stay first.
@@ -681,7 +760,7 @@ export const BASE_CSS_POST: string[] = [
  * Core runtime scripts, in load order: always present (the CLI's `init`
  * vendors and imports them, `dist/zazz.js` bundles them), so no primitive
  * lists them in `base`. `navigation` is inert until a page opts in with
- * `<html data-ui-navigation="swap">` (ADR-0014), so it loads everywhere, as
+ * `<html data-navigation="swap">` (ADR-0014), so it loads everywhere, as
  * in `index.ts`.
  */
 export const CORE_RUNTIME: string[] = [
@@ -738,7 +817,15 @@ export const TAG_FORMS: string[] = Object.values(PRIMITIVES)
   .flatMap((entry) => entry.tags ?? [])
   .sort();
 
+/**
+ * Primitive names in the exact `@import` order of `src/index.css`. Anything
+ * assembling a stylesheet subset (the CLI's `add`, the granular CDN head)
+ * must emit primitive css in this order so component scopes cascade the way
+ * the kit was designed and tested. Markup-only primitives (no css) do not
+ * appear. `manifest.test.ts` asserts this list matches `index.css` exactly.
+ */
 export const CSS_CASCADE_ORDER: string[] = [
+  "prose",
   "layout",
   "group",
   "scroll-fade",
@@ -782,6 +869,8 @@ export const CSS_CASCADE_ORDER: string[] = [
   "lightbox",
   "toaster",
   "reveal",
+  "link",
+  "font",
 ];
 
 // --- Dependency resolution ---
@@ -851,38 +940,42 @@ export type ExampleScript =
  */
 export const WEB_COMPONENT_SCRIPT_FILES: Partial<Record<ExampleScript, string[]>> = {
   autocomplete: [
-    "base/command-score.js",
-    "base/hotkeys.js",
-    "base/typeahead.js",
+    "behaviors/list-navigation.js",
+    "behaviors/command-score.js",
+    "behaviors/hotkeys.js",
+    "behaviors/typeahead.js",
     "primitives/autocomplete/autocomplete.js",
   ],
   combobox: [
-    "base/command-score.js",
-    "base/hotkeys.js",
-    "base/typeahead.js",
+    "behaviors/list-navigation.js",
+    "behaviors/command-score.js",
+    "behaviors/hotkeys.js",
+    "behaviors/typeahead.js",
     "primitives/combobox/combobox.js",
   ],
   command: [
-    "base/command-score.js",
-    "base/hotkeys.js",
-    "base/typeahead.js",
+    "behaviors/list-navigation.js",
+    "behaviors/command-score.js",
+    "behaviors/hotkeys.js",
+    "behaviors/typeahead.js",
     "primitives/command/command.js",
   ],
   "command-actions": [
-    "base/command-score.js",
-    "base/hotkeys.js",
-    "base/typeahead.js",
+    "behaviors/list-navigation.js",
+    "behaviors/command-score.js",
+    "behaviors/hotkeys.js",
+    "behaviors/typeahead.js",
     "primitives/command/command.js",
     "primitives/command/command-actions.js",
   ],
   carousel: ["primitives/carousel/carousel.js"],
   checkbox: ["primitives/checkbox/checkbox.js"],
-  drawer: ["base/gesture.js", "primitives/drawer/drawer.js"],
+  drawer: ["behaviors/gesture.js", "primitives/drawer/drawer.js"],
   lightbox: ["primitives/carousel/carousel.js", "primitives/lightbox/lightbox.js"],
-  menu: ["primitives/menu/menu.js"],
+  menu: ["behaviors/list-navigation.js", "primitives/menu/menu.js"],
   multiselect: ["primitives/select/multiselect.js"],
   otp: ["primitives/otp/otp.js"],
   password: ["primitives/password-group/password-group.js"],
-  tabs: ["primitives/tabs/tabs.js"],
-  toaster: ["base/gesture.js", "primitives/toaster/toaster.js"],
+  tabs: ["behaviors/list-navigation.js", "primitives/tabs/tabs.js"],
+  toaster: ["behaviors/gesture.js", "primitives/toaster/toaster.js"],
 };

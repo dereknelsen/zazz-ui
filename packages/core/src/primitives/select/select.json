@@ -1,0 +1,119 @@
+{
+  "name": "select",
+  "summary": "select.css: Select (:where([data-ui~=\"select\"]) on customizable <select>)",
+  "identities": [
+    "multiselect",
+    "select"
+  ],
+  "tags": [
+    "ui-multiselect"
+  ],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-option-gap": "var(--ui-button-gap)",
+      "--ui-select-option-gap": "var(--ui-field-option-gap)"
+    },
+    "Box Model & Sizing": {
+      "--ui-option-checkmark-size": "var(--ui-field-icon-size)",
+      "--ui-option-icon-size": "var(--ui-button-icon-size)",
+      "--ui-option-min-h": "var(--ui-button-min-h)",
+      "--ui-option-px": "var(--ui-button-px)",
+      "--ui-option-py": "var(--ui-button-py)",
+      "--ui-select-min-w": "16ch",
+      "--ui-select-picker-icon-size": "var(--ui-field-icon-size)",
+      "--ui-select-pl": "var(--ui-field-px)",
+      "--ui-select-pr": "calc(var(--spacing) * 2)",
+      "--ui-select-py": "var(--ui-field-py)",
+      "--ui-select-w": "100%"
+    },
+    "Typography": {
+      "--ui-option-font-family": "var(--ui-button-font-family)",
+      "--ui-option-font-size": "var(--ui-button-font-size)",
+      "--ui-option-font-weight": "var(--ui-button-font-weight)",
+      "--ui-option-leading": "var(--ui-button-leading)",
+      "--ui-select-font-size": "var(--ui-field-font-size)",
+      "--ui-select-leading": "var(--ui-field-leading)"
+    },
+    "Color & Backgrounds": {
+      "--ui-option-bg": "transparent",
+      "--ui-option-bg--active": "var(--ui-button-bg--active)",
+      "--ui-option-bg--hover": "var(--ui-button-bg--hover)",
+      "--ui-option-checkmark-color": "currentColor",
+      "--ui-option-text": "var(--ui-button-text)",
+      "--ui-option-text--active": "var(--ui-button-text--active)",
+      "--ui-option-text--hover": "var(--ui-button-text--hover)",
+      "--ui-select-picker-icon-color": "currentColor"
+    },
+    "Borders & Outlines": {
+      "--ui-option-border-color": "transparent",
+      "--ui-option-border-color--active": "transparent",
+      "--ui-option-border-color--hover": "transparent",
+      "--ui-option-border-style": "var(--ui-button-border-style)",
+      "--ui-option-border-width": "var(--ui-button-border-width)",
+      "--ui-option-corner-shape": "var(--ui-menu-button-corner-shape)",
+      "--ui-option-radius": "var(--ui-menu-button-radius)",
+      "--ui-select-border-color": "var(--ui-field-border-color)",
+      "--ui-select-border-style": "var(--ui-field-border-style)",
+      "--ui-select-border-width": "var(--ui-field-border-width)",
+      "--ui-select-corner-shape": "var(--ui-field-corner-shape)",
+      "--ui-select-radius": "var(--ui-field-radius)"
+    },
+    "Visual Effects": {
+      "--ui-option-checkmark-mask": "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cpolyline points='40 144 96 200 224 72' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3C/svg%3E\")",
+      "--ui-option-shadow": "none",
+      "--ui-select-picker-icon-mask": "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cpolyline points='80 176 128 224 176 176' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cpolyline points='80 80 128 32 176 80' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3C/svg%3E\")"
+    }
+  },
+  "attributes": {
+    "data-multiselect-align": [],
+    "data-multiselect-label-more": [],
+    "data-multiselect-placeholder": [],
+    "data-multiselect-side": [],
+    "data-select-align": [
+      "center",
+      "end",
+      "start"
+    ],
+    "data-select-side": [
+      "bottom",
+      "left",
+      "right",
+      "top"
+    ]
+  },
+  "slots": {
+    "data-multiselect-slot": [
+      "icon",
+      "label",
+      "option",
+      "panel",
+      "trigger"
+    ]
+  },
+  "states": {
+    "data-multiselect-state": [
+      "enhanced"
+    ]
+  },
+  "requires": [
+    "fields",
+    "popover",
+    "button",
+    "menu"
+  ],
+  "files": {
+    "css": [
+      "primitives/select/select.css"
+    ],
+    "js": [
+      "primitives/select/multiselect.js"
+    ],
+    "base": [],
+    "examples": [
+      "primitives/select/select.html",
+      "primitives/select/select-align.html",
+      "primitives/select/select-sides.html",
+      "primitives/select/select-multiple.html"
+    ]
+  }
+}

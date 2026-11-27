@@ -1,0 +1,64 @@
+{
+  "name": "popover",
+  "summary": "popover.css: Shared [popover] primitive (Tier 3 owner for --ui-popover-*)",
+  "identities": [],
+  "tags": [],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-popover-position-area": "block-end inline-start",
+      "--ui-popover-position-try-fallbacks": "flip-block, flip-inline, flip-block flip-inline"
+    },
+    "Box Model & Sizing": {
+      "--ui-popover-max-w": "100vi",
+      "--ui-popover-min-w": "var(--article-xs)",
+      "--ui-popover-mx": "0",
+      "--ui-popover-my": "calc(var(--spacing) * 1.5)",
+      "--ui-popover-p": "calc(var(--spacing) * 1.5)"
+    },
+    "Borders & Outlines": {
+      "--ui-popover-border-color": "var(--color-border)",
+      "--ui-popover-button-corner-shape": "var(--radius-corner-shape)",
+      "--ui-popover-button-radius": "var(--radius-sm)",
+      "--ui-popover-corner-shape": "var(--radius-corner-shape)",
+      "--ui-popover-radius": "var(--radius-md)"
+    },
+    "Visual Effects": {
+      "--ui-popover-opacity--end": "1",
+      "--ui-popover-opacity--start": "0",
+      "--ui-popover-shadow": "var(--shadow-md)"
+    },
+    "Transforms & Animation": {
+      "--ui-popover-origin": "top center",
+      "--ui-popover-scale--end": "1",
+      "--ui-popover-scale--start": "0.98",
+      "--ui-popover-translate--end": "0, 0, 0",
+      "--ui-popover-translate--start": "0, 0, 0"
+    }
+  },
+  "attributes": {
+    "data-popover-align": [
+      "center",
+      "end",
+      "start"
+    ],
+    "data-popover-side": [
+      "bottom",
+      "left",
+      "right",
+      "top"
+    ]
+  },
+  "slots": {},
+  "states": {},
+  "requires": [],
+  "files": {
+    "css": [
+      "primitives/popover/popover.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/popover/popover.html"
+    ]
+  }
+}

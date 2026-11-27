@@ -1,0 +1,41 @@
+{
+  "name": "progress",
+  "summary": "progress.css — Progress ([data-ui~=\"progress\"] on native <progress>)",
+  "identities": [
+    "progress"
+  ],
+  "tags": [],
+  "hooks": {
+    "Box Model & Sizing": {
+      "--ui-progress-h": "calc(var(--spacing) * 1.5)",
+      "--ui-progress-w": "100%"
+    },
+    "Color & Backgrounds": {
+      "--ui-progress-bar-bg": "var(--color-primary)",
+      "--ui-progress-bg": "var(--color-muted)"
+    },
+    "Borders & Outlines": {
+      "--ui-progress-corner-shape": "round",
+      "--ui-progress-radius": "var(--radius-full)",
+      "--ui-progress-track-border": "1px solid transparent"
+    },
+    "Transforms & Animation": {
+      "--ui-progress-indeterminate-duration": "1s"
+    }
+  },
+  "attributes": {},
+  "slots": {},
+  "states": {},
+  "requires": [],
+  "files": {
+    "css": [
+      "primitives/progress/progress.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/progress/progress.html",
+      "primitives/progress/progress-indeterminate.html"
+    ]
+  }
+}

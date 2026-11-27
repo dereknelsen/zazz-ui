@@ -1,0 +1,54 @@
+{
+  "name": "callout",
+  "summary": "callout.css — Callout ([data-ui~=\"callout\"])",
+  "identities": [
+    "callout"
+  ],
+  "tags": [],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-callout-gap": "var(--space-xs)"
+    },
+    "Box Model & Sizing": {
+      "--ui-callout-p": "var(--space-sm)"
+    },
+    "Color & Backgrounds": {
+      "--ui-callout-bg": "var(--color-card)",
+      "--ui-callout-text": "var(--color-card-foreground)"
+    },
+    "Borders & Outlines": {
+      "--ui-callout-border-color": "var(--color-border)",
+      "--ui-callout-border-style": "solid",
+      "--ui-callout-border-width": "1px",
+      "--ui-callout-corner-shape": "var(--radius-corner-shape)",
+      "--ui-callout-radius": "var(--radius-md)"
+    },
+    "Visual Effects": {
+      "--ui-callout-shadow": "none"
+    }
+  },
+  "attributes": {
+    "data-callout-variant": [
+      "destructive",
+      "info",
+      "muted",
+      "success",
+      "warning"
+    ]
+  },
+  "slots": {},
+  "states": {},
+  "requires": [
+    "font"
+  ],
+  "files": {
+    "css": [
+      "primitives/callout/callout.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/callout/callout.html"
+    ]
+  }
+}

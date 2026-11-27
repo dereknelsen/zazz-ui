@@ -1,0 +1,41 @@
+{
+  "name": "meter",
+  "summary": "meter.css: Meter ([data-ui~=\"meter\"] on native <meter>)",
+  "identities": [
+    "meter"
+  ],
+  "tags": [],
+  "hooks": {
+    "Box Model & Sizing": {
+      "--ui-meter-h": "var(--ui-progress-h)",
+      "--ui-meter-w": "var(--ui-progress-w)"
+    },
+    "Color & Backgrounds": {
+      "--ui-meter-bar-bg": "var(--color-success-foreground)",
+      "--ui-meter-bar-bg--even-less-good": "var(--color-destructive-foreground)",
+      "--ui-meter-bar-bg--suboptimum": "var(--color-warning-foreground)",
+      "--ui-meter-bg": "var(--ui-progress-bg)"
+    },
+    "Borders & Outlines": {
+      "--ui-meter-corner-shape": "var(--ui-progress-corner-shape)",
+      "--ui-meter-radius": "var(--ui-progress-radius)",
+      "--ui-meter-track-border": "var(--ui-progress-track-border)"
+    }
+  },
+  "attributes": {},
+  "slots": {},
+  "states": {},
+  "requires": [
+    "progress"
+  ],
+  "files": {
+    "css": [
+      "primitives/meter/meter.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/meter/meter.html"
+    ]
+  }
+}

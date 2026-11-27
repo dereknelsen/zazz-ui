@@ -4,7 +4,7 @@
  * `generate-editor-data.ts`, and kept fresh by its test.
  *
  * - `identities`: each `data-ui` token's owning primitive (`null` for the
- *   base layers: typography roles, prose), so a page can import it.
+ *   base layers: prose), so a page can import it.
  * - `tags`: each `ui-*` tag form's primitive.
  * - `primitives`: each stylesheet's CSSDoc header (summary line and tags).
  * - `hooks`: each `--ui-*` hook's default and the file declaring it.
@@ -255,7 +255,7 @@ export function resolveToken(
 /** The primitive owning `token`: its manifest key, a manifest key it extends, its only stylesheet, or `OWNERS`. */
 export function identityOwner(token: string, declaredIn: readonly string[]): string | null {
   // first: `group`'s selectors are generated into the base layers, but its own
-  // stylesheet still needs loading. `prose` has none, so the base layers own it.
+  // stylesheet still needs loading.
   if (PRIMITIVES[token]?.css.length && !OWNERS[token]) return token;
   const primitives = declaredIn.filter((file) => file.startsWith("primitives/"));
   if (primitives.length === 0) return null;
@@ -269,6 +269,46 @@ export function identityOwner(token: string, declaredIn: readonly string[]): str
   throw new Error(
     `language data: data-ui="${token}" is declared by ${[...owners].join(", ")}; add it to OWNERS`,
   );
+}
+
+/**
+ * The primitive owning a name such as `card-variant` or `button-group-orientation`:
+ * the longest identity, tag form, or manifest key the name equals or starts with.
+ */
+export function ownerOf(
+  stem: string,
+  language: Pick<LanguageData, "identities" | "tags">,
+): string | undefined {
+  const prefixes = prefixesOf(language);
+  let match: string | undefined;
+  for (const prefix of prefixes.keys()) {
+    if (stem !== prefix && !stem.startsWith(`${prefix}-`)) continue;
+    if (match === undefined || prefix.length > match.length) match = prefix;
+  }
+  return match === undefined ? undefined : prefixes.get(match);
+}
+
+/** The last lookup built for each `identities` object, with the `tags` it was built from. */
+const PREFIXES = new WeakMap<object, { tags: object; prefixes: Map<string, string> }>();
+
+/** Every identity, tag form, and manifest key with its primitive; a name two primitives claim throws. */
+function prefixesOf(language: Pick<LanguageData, "identities" | "tags">): Map<string, string> {
+  const cached = PREFIXES.get(language.identities);
+  if (cached?.tags === language.tags) return cached.prefixes;
+  const prefixes = new Map<string, string>();
+  const claim = (name: string, primitive: string) => {
+    const other = prefixes.get(name);
+    if (other !== undefined && other !== primitive)
+      throw new Error(`language data: "${name}" is claimed by both ${other} and ${primitive}`);
+    prefixes.set(name, primitive);
+  };
+  for (const [tag, primitive] of Object.entries(language.tags))
+    claim(tag.replace(/^ui-/, ""), primitive);
+  for (const [token, { primitive }] of Object.entries(language.identities))
+    if (primitive) claim(token, primitive);
+  for (const key of Object.keys(PRIMITIVES)) claim(key, key);
+  PREFIXES.set(language.identities, { tags: language.tags, prefixes });
+  return prefixes;
 }
 
 // --- Generate ---
@@ -317,9 +357,16 @@ export function languageData(files: readonly string[], src: string): LanguageDat
       Number(!basename(a.path).startsWith("_variables")) -
       Number(!basename(b.path).startsWith("_variables")),
   );
+  // a hook's default is the one in the primitive it is named for, not an
+  // override another primitive sets on it (alert-dialog's --ui-dialog-shadow)
+  const inOwner = (name: string, path: string) => {
+    const owner = name.startsWith("--ui-") && ownerOf(name.slice(5), { identities, tags });
+    return Boolean(owner) && path.startsWith(`primitives/${owner}/`);
+  };
   for (const { path, css } of tokensFirst) {
     for (const [name, value] of customProperties(css)) {
-      if (defs.has(name) || name.startsWith("--_")) continue;
+      if (name.startsWith("--_")) continue;
+      if (defs.has(name) && (inOwner(name, definedIn.get(name)!) || !inOwner(name, path))) continue;
       defs.set(name, value);
       definedIn.set(name, path);
     }
@@ -333,8 +380,6 @@ export function languageData(files: readonly string[], src: string): LanguageDat
     } else if (
       basename(file).startsWith("_variables") ||
       basename(file) === "_breakpoints.css" ||
-      // the fluid type scale is computed in _typography.css
-      basename(file) === "_typography.css" ||
       // the --shadow-* tokens are generated into _shadows.css
       basename(file) === "_shadows.css"
     ) {

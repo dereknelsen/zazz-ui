@@ -1,0 +1,49 @@
+{
+  "name": "slider",
+  "summary": "slider.css — Range input (input[type=\"range\"])",
+  "identities": [],
+  "tags": [],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-slider-thumb-offset": "calc( (var(--ui-slider-track-h) - var(--ui-slider-thumb-size)) / 2 - var(--_slider-thumb-hit) - var(--ui-slider-track-border-width) )"
+    },
+    "Box Model & Sizing": {
+      "--ui-slider-thumb-size": "max(calc(var(--spacing) * 4), var(--spacing-control-min))",
+      "--ui-slider-track-h": "max(calc(var(--spacing) * 1.5), calc(var(--spacing-control-min) * 0.375))"
+    },
+    "Color & Backgrounds": {
+      "--ui-slider-fill-bg": "var(--color-primary)",
+      "--ui-slider-fill-side": "start",
+      "--ui-slider-thumb-bg": "var(--color-primary)",
+      "--ui-slider-track-bg": "var(--ui-field-bg)"
+    },
+    "Borders & Outlines": {
+      "--ui-slider-thumb-border-color": "var(--ui-field-border-color)",
+      "--ui-slider-thumb-border-width": "1px",
+      "--ui-slider-thumb-corner-shape": "round",
+      "--ui-slider-thumb-radius": "var(--radius-full)",
+      "--ui-slider-track-border-color": "var(--ui-field-border-color)",
+      "--ui-slider-track-border-width": "var(--ui-field-border-width)",
+      "--ui-slider-track-corner-shape": "round",
+      "--ui-slider-track-radius": "var(--radius-full)"
+    },
+    "Visual Effects": {
+      "--ui-slider-ring-color": "var(--color-ring)",
+      "--ui-slider-thumb-shadow": "var(--shadow-xs)"
+    }
+  },
+  "attributes": {},
+  "slots": {},
+  "states": {},
+  "requires": [],
+  "files": {
+    "css": [
+      "primitives/slider/slider.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/slider/slider.html"
+    ]
+  }
+}

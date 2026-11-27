@@ -1,0 +1,34 @@
+{
+  "name": "separator",
+  "summary": "separator.css: Separator ([data-ui~=\"separator\"] on native <hr>)",
+  "identities": [
+    "separator"
+  ],
+  "tags": [],
+  "hooks": {
+    "Box Model & Sizing": {
+      "--ui-separator-thickness": "1px"
+    },
+    "Color & Backgrounds": {
+      "--ui-separator-bg": "var(--color-border)"
+    }
+  },
+  "attributes": {
+    "data-separator-orientation": [
+      "vertical"
+    ]
+  },
+  "slots": {},
+  "states": {},
+  "requires": [],
+  "files": {
+    "css": [
+      "primitives/separator/separator.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/separator/separator.html"
+    ]
+  }
+}

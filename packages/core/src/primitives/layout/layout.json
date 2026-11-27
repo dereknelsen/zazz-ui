@@ -1,0 +1,45 @@
+{
+  "name": "layout",
+  "summary": "layout.css — Layout (ui-layout | [data-ui~=\"layout\"]): the band grid",
+  "identities": [
+    "layout"
+  ],
+  "tags": [
+    "ui-layout"
+  ],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-layout-band": "layout-xl",
+      "--ui-layout-child-container": "inline-size",
+      "--ui-layout-gutters": "var(--gutters)",
+      "--ui-layout-template-cols": "[layout-bleed-start] var(--ui-layout-gutters) [layout-full-start] minmax(0, 1fr) [layout-2xl-start] clamp( 0rem, calc((var(--ui-layout-available) - var(--layout-xl)) / 2), calc((var(--layout-2xl) - var(--layout-xl)) / 2) ) [layout-xl-start] clamp( 0rem, calc((var(--ui-layout-available) - var(--layout-lg)) / 2), calc((var(--layout-xl) - var(--layout-lg)) / 2) ) [layout-lg-start] clamp( 0rem, calc((var(--ui-layout-available) - var(--layout-md)) / 2), calc((var(--layout-lg) - var(--layout-md)) / 2) ) [layout-md-start] clamp( 0rem, calc((var(--ui-layout-available) - var(--layout-sm)) / 2), calc((var(--layout-md) - var(--layout-sm)) / 2) ) [layout-sm-start] clamp(0rem, var(--ui-layout-available), var(--layout-sm)) [layout-sm-end] clamp( 0rem, calc((var(--ui-layout-available) - var(--layout-sm)) / 2), calc((var(--layout-md) - var(--layout-sm)) / 2) ) [layout-md-end] clamp( 0rem, calc((var(--ui-layout-available) - var(--layout-md)) / 2), calc((var(--layout-lg) - var(--layout-md)) / 2) ) [layout-lg-end] clamp( 0rem, calc((var(--ui-layout-available) - var(--layout-lg)) / 2), calc((var(--layout-xl) - var(--layout-lg)) / 2) ) [layout-xl-end] clamp( 0rem, calc((var(--ui-layout-available) - var(--layout-xl)) / 2), calc((var(--layout-2xl) - var(--layout-xl)) / 2) ) [layout-2xl-end] minmax(0, 1fr) [layout-full-end] var(--ui-layout-gutters) [layout-bleed-end]"
+    },
+    "Box Model & Sizing": {
+      "--ui-layout-available": "calc(100% - var(--ui-layout-gutters) * 2)"
+    }
+  },
+  "attributes": {
+    "data-layout-size": [
+      "2xl",
+      "bleed",
+      "full",
+      "lg",
+      "md",
+      "sm",
+      "xl"
+    ]
+  },
+  "slots": {},
+  "states": {},
+  "requires": [],
+  "files": {
+    "css": [
+      "primitives/layout/layout.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/layout/layout.html"
+    ]
+  }
+}

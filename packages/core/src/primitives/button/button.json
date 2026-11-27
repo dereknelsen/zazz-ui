@@ -1,0 +1,85 @@
+{
+  "name": "button",
+  "summary": "button.css — Button ([data-ui~=\"button\"])",
+  "identities": [
+    "button"
+  ],
+  "tags": [],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-button-gap": "var(--spacing)"
+    },
+    "Box Model & Sizing": {
+      "--ui-button-icon-size": "var(--ui-field-icon-size)",
+      "--ui-button-min-h": "var(--ui-field-h)",
+      "--ui-button-px": "var(--ui-field-px)",
+      "--ui-button-py": "var(--ui-field-py)"
+    },
+    "Typography": {
+      "--ui-button-font-family": "var(--font-family-body)",
+      "--ui-button-font-size": "var(--font-size-sm)",
+      "--ui-button-font-weight": "var(--font-weight-strong)",
+      "--ui-button-leading": "1"
+    },
+    "Color & Backgrounds": {
+      "--ui-button-background-clip": "border-box",
+      "--ui-button-bg": "var(--color-background)",
+      "--ui-button-bg--active": "oklch(from var(--ui-button-bg--hover) l c h / calc(alpha * 1.5))",
+      "--ui-button-bg--hover": "var(--color-muted)",
+      "--ui-button-text": "var(--color-foreground)",
+      "--ui-button-text--active": "var(--color-foreground)",
+      "--ui-button-text--hover": "var(--color-foreground)"
+    },
+    "Borders & Outlines": {
+      "--ui-button-border-color": "var(--ui-field-border-color)",
+      "--ui-button-border-color--active": "var(--ui-field-border-color)",
+      "--ui-button-border-color--hover": "var(--ui-field-border-color)",
+      "--ui-button-border-style": "var(--ui-field-border-style)",
+      "--ui-button-border-width": "var(--ui-field-border-width)",
+      "--ui-button-corner-shape": "var(--ui-field-corner-shape)",
+      "--ui-button-radius": "var(--ui-field-radius)"
+    },
+    "Visual Effects": {
+      "--ui-button-ring-color": "var(--ui-field-ring-color)",
+      "--ui-button-shadow": "0 0 transparent"
+    }
+  },
+  "attributes": {
+    "data-button-size": [
+      "icon",
+      "icon-sm",
+      "sm"
+    ],
+    "data-button-variant": [
+      "destructive",
+      "ghost",
+      "info",
+      "link",
+      "muted",
+      "outline",
+      "primary",
+      "secondary",
+      "success",
+      "tertiary",
+      "warning"
+    ]
+  },
+  "slots": {},
+  "states": {},
+  "requires": [
+    "kbd",
+    "fields"
+  ],
+  "files": {
+    "css": [
+      "primitives/button/button.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/button/button.html",
+      "primitives/button/button-icon.html",
+      "primitives/button/button-icon-only.html"
+    ]
+  }
+}

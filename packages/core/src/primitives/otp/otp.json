@@ -1,0 +1,75 @@
+{
+  "name": "otp",
+  "summary": "otp.css: OTP (ui-otp wrapping :where(ui-otp, [data-ui~=\"otp\"]) [data-otp-slot~=\"input\"] on one real <input>)",
+  "identities": [
+    "otp"
+  ],
+  "tags": [
+    "ui-otp"
+  ],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-otp-gap": "calc(var(--spacing) * 1.5)"
+    },
+    "Box Model & Sizing": {
+      "--ui-otp-cell-h": "var(--ui-field-h)",
+      "--ui-otp-cell-py": "calc(var(--ui-field-py) / 2)",
+      "--ui-otp-cell-w": "var(--ui-field-h)"
+    },
+    "Typography": {
+      "--ui-otp-cell-font-size": "var(--font-size-md)"
+    },
+    "Color & Backgrounds": {
+      "--ui-otp-cell-bg": "var(--ui-field-bg)",
+      "--ui-otp-separator-text": "var(--color-muted-foreground)"
+    },
+    "Borders & Outlines": {
+      "--ui-otp-cell-border-color": "var(--ui-field-border-color)",
+      "--ui-otp-cell-border-style": "var(--ui-field-border-style)",
+      "--ui-otp-cell-border-width": "var(--ui-field-border-width)",
+      "--ui-otp-cell-corner-shape": "var(--ui-field-corner-shape)",
+      "--ui-otp-cell-radius": "var(--ui-field-radius)"
+    },
+    "Interaction & UI": {
+      "--ui-otp-caret-color": "var(--ui-field-border-color--focus-within)"
+    }
+  },
+  "attributes": {
+    "data-otp-complete": [],
+    "data-otp-groups": [],
+    "data-otp-index": [],
+    "data-otp-mask": [],
+    "data-otp-ready": [],
+    "data-otp-submit-behavior": [],
+    "data-otp-type": []
+  },
+  "slots": {
+    "data-otp-slot": [
+      "cell",
+      "input",
+      "rail",
+      "separator"
+    ]
+  },
+  "states": {
+    "data-otp-state": [
+      "active"
+    ]
+  },
+  "requires": [
+    "fields",
+    "input"
+  ],
+  "files": {
+    "css": [
+      "primitives/otp/otp.css"
+    ],
+    "js": [
+      "primitives/otp/otp.js"
+    ],
+    "base": [],
+    "examples": [
+      "primitives/otp/otp.html"
+    ]
+  }
+}

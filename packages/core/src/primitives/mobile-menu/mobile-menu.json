@@ -1,0 +1,64 @@
+{
+  "name": "mobile-menu",
+  "summary": "mobile-menu.css — Mobile menu ([data-ui~=\"mobile-menu\"] on a [data-ui~=\"dialog\"] <dialog>; slots data-mobile-menu-slot=\"viewport | header | body | footer\")",
+  "identities": [
+    "mobile-menu"
+  ],
+  "tags": [],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-mobile-menu-footer-gap": "var(--space-xs)"
+    },
+    "Box Model & Sizing": {
+      "--ui-mobile-menu-body-px": "var(--space-sm)",
+      "--ui-mobile-menu-body-py": "var(--space-md)",
+      "--ui-mobile-menu-footer-p": "var(--space-sm)",
+      "--ui-mobile-menu-header-px": "var(--space-md) var(--space-xs)",
+      "--ui-mobile-menu-header-py": "var(--space-xs)",
+      "--ui-mobile-menu-nested-accordion-pl": "var(--space-sm)"
+    },
+    "Color & Backgrounds": {
+      "--ui-mobile-menu-backdrop-color": "var(--color-faded-foreground)",
+      "--ui-mobile-menu-bg": "var(--color-background)",
+      "--ui-mobile-menu-text": "var(--color-foreground)"
+    },
+    "Visual Effects": {
+      "--ui-mobile-menu-viewport-opacity--end": "1",
+      "--ui-mobile-menu-viewport-opacity--start": "0"
+    },
+    "Transforms & Animation": {
+      "--ui-mobile-menu-viewport-scale--end": "1",
+      "--ui-mobile-menu-viewport-scale--start": "0.98",
+      "--ui-mobile-menu-viewport-translate--end": "0, 0, 0",
+      "--ui-mobile-menu-viewport-translate--start": "-2rem, 1rem, 0"
+    }
+  },
+  "attributes": {
+    "data-mobile-menu-animation": [
+      "slide-right"
+    ]
+  },
+  "slots": {
+    "data-mobile-menu-slot": [
+      "body",
+      "footer",
+      "header",
+      "viewport"
+    ]
+  },
+  "states": {},
+  "requires": [
+    "dialog",
+    "accordion"
+  ],
+  "files": {
+    "css": [
+      "primitives/mobile-menu/mobile-menu.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/mobile-menu/mobile-menu.html"
+    ]
+  }
+}

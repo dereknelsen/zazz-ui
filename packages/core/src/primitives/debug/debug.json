@@ -1,0 +1,29 @@
+{
+  "name": "debug",
+  "identities": [],
+  "tags": [
+    "ui-debug"
+  ],
+  "hooks": {},
+  "attributes": {
+    "data-debug-domains": [],
+    "data-debug-warnings": [
+      "false"
+    ]
+  },
+  "slots": {},
+  "states": {},
+  "requires": [],
+  "files": {
+    "css": [],
+    "js": [
+      "primitives/debug/audit-core.js",
+      "primitives/debug/debug.js"
+    ],
+    "base": [
+      "base/kit-styling.js",
+      "base/utilities.js"
+    ],
+    "examples": []
+  }
+}

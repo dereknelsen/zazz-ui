@@ -1,0 +1,48 @@
+{
+  "name": "radio",
+  "summary": "radio.css — Radio ([data-ui~=\"radio\"] on input[type=\"radio\"]; groups wear [data-ui~=\"radio-group\"])",
+  "identities": [
+    "radio",
+    "radio-group"
+  ],
+  "tags": [],
+  "hooks": {
+    "Box Model & Sizing": {
+      "--ui-radio-dot-size": "calc(var(--ui-radio-size) * 0.85)",
+      "--ui-radio-size": "calc(var(--spacing) * 4.5)"
+    },
+    "Color & Backgrounds": {
+      "--ui-radio-bg": "var(--ui-field-bg)",
+      "--ui-radio-bg--checked": "var(--color-primary)",
+      "--ui-radio-dot-color": "var(--color-primary-foreground)"
+    },
+    "Borders & Outlines": {
+      "--ui-radio-border-color": "var(--ui-field-border-color)",
+      "--ui-radio-border-color--checked": "var(--ui-field-border-color--hover)",
+      "--ui-radio-border-color--hover": "var(--ui-field-border-color--hover)",
+      "--ui-radio-border-style": "var(--ui-field-border-style)",
+      "--ui-radio-border-width": "var(--ui-field-border-width)",
+      "--ui-radio-corner-shape": "round",
+      "--ui-radio-radius": "var(--radius-full)"
+    },
+    "Visual Effects": {
+      "--ui-radio-dot-mask": "radial-gradient( circle calc(var(--ui-radio-dot-size) / 4), #000 calc(100% - 0.5px), #0000 calc(100% + 0.5px) )"
+    }
+  },
+  "attributes": {},
+  "slots": {},
+  "states": {},
+  "requires": [
+    "fields"
+  ],
+  "files": {
+    "css": [
+      "primitives/radio/radio.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/radio/radio.html"
+    ]
+  }
+}

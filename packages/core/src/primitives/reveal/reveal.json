@@ -1,0 +1,72 @@
+{
+  "name": "reveal",
+  "summary": "reveal.css — Scroll reveals ([data-reveal] / [data-reveal-each]; the script marks revealed targets data-reveal-state=\"in-view\")",
+  "identities": [],
+  "tags": [],
+  "hooks": {
+    "Transforms & Animation": {
+      "--ui-reveal-effective-distance": "var(--ui-reveal-distance, var(--ui-reveal-global-distance))",
+      "--ui-reveal-effective-duration": "var(--ui-reveal-duration, var(--ui-reveal-global-duration))",
+      "--ui-reveal-effective-ease": "var(--ui-reveal-ease, var(--ui-reveal-global-timing-function))",
+      "--ui-reveal-effective-wait": "var(--ui-reveal-wait, var(--ui-reveal-global-wait))",
+      "--ui-reveal-global-distance": "2rem",
+      "--ui-reveal-global-duration": "1000ms",
+      "--ui-reveal-global-grow": "0.97",
+      "--ui-reveal-global-shrink": "1.03",
+      "--ui-reveal-global-stagger-step": "120ms",
+      "--ui-reveal-global-timing-function": "var(--default-transition-timing-function)",
+      "--ui-reveal-global-wait": "0ms",
+      "--ui-reveal-wait": "calc( var(--ui-reveal-stagger-base, var(--ui-reveal-global-wait)) + var(--ui-reveal-stagger-step, var(--ui-reveal-global-stagger-step)) * (sibling-index() - 1) )"
+    }
+  },
+  "attributes": {
+    "data-reveal": [
+      "fade",
+      "grow",
+      "shrink",
+      "slide-down",
+      "slide-left",
+      "slide-right",
+      "slide-up"
+    ],
+    "data-reveal-distance": [],
+    "data-reveal-duration": [],
+    "data-reveal-each": [
+      "fade",
+      "grow",
+      "shrink",
+      "slide-down",
+      "slide-left",
+      "slide-right",
+      "slide-up"
+    ],
+    "data-reveal-ease": [],
+    "data-reveal-margin": [],
+    "data-reveal-order": [
+      "reversed"
+    ],
+    "data-reveal-scale": [],
+    "data-reveal-step": [],
+    "data-reveal-threshold": [],
+    "data-reveal-wait": []
+  },
+  "slots": {},
+  "states": {
+    "data-reveal-state": [
+      "in-view"
+    ]
+  },
+  "requires": [],
+  "files": {
+    "css": [
+      "primitives/reveal/reveal.css"
+    ],
+    "js": [],
+    "base": [
+      "base/reveal.js"
+    ],
+    "examples": [
+      "primitives/reveal/reveal.html"
+    ]
+  }
+}

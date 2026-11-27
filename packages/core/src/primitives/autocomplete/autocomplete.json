@@ -1,0 +1,65 @@
+{
+  "name": "autocomplete",
+  "summary": "autocomplete.css — Autocomplete (ui-autocomplete | [data-ui~=\"autocomplete\"], [data-autocomplete-slot~=\"panel\"])",
+  "identities": [
+    "autocomplete"
+  ],
+  "tags": [
+    "ui-autocomplete"
+  ],
+  "hooks": {
+    "Box Model & Sizing": {
+      "--ui-autocomplete-panel-max-h": "calc(var(--spacing) * 72)"
+    },
+    "Visual Effects": {
+      "--ui-autocomplete-shadow": "var(--ui-menu-shadow)"
+    }
+  },
+  "attributes": {
+    "data-autocomplete-filter": [],
+    "data-autocomplete-keywords": [],
+    "data-autocomplete-min-length": [],
+    "data-autocomplete-sort": [],
+    "data-autocomplete-value": []
+  },
+  "slots": {
+    "data-autocomplete-slot": [
+      "empty",
+      "group",
+      "group-label",
+      "item",
+      "list",
+      "panel"
+    ]
+  },
+  "states": {
+    "data-autocomplete-state": [
+      "highlighted"
+    ]
+  },
+  "requires": [
+    "popover",
+    "button",
+    "fields",
+    "select",
+    "input"
+  ],
+  "files": {
+    "css": [
+      "primitives/autocomplete/autocomplete.css"
+    ],
+    "js": [
+      "primitives/autocomplete/autocomplete.js"
+    ],
+    "base": [
+      "behaviors/list-navigation.js",
+      "behaviors/command-score.js",
+      "behaviors/hotkeys.js",
+      "behaviors/typeahead.js"
+    ],
+    "examples": [
+      "primitives/autocomplete/autocomplete.html",
+      "primitives/autocomplete/autocomplete-groups.html"
+    ]
+  }
+}

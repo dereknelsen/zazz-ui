@@ -1,0 +1,51 @@
+{
+  "name": "menu",
+  "summary": "menu.css: Menu (ui-menu | [data-ui~=\"menu\"]; slot data-menu-slot=\"popover\")",
+  "identities": [
+    "menu"
+  ],
+  "tags": [
+    "ui-menu"
+  ],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-menu-gap": "var(--ui-field-option-gap)"
+    },
+    "Box Model & Sizing": {
+      "--ui-menu-min-w": "calc(var(--spacing) * 52)"
+    },
+    "Borders & Outlines": {
+      "--ui-menu-button-corner-shape": "var(--radius-corner-shape)",
+      "--ui-menu-button-radius": "var(--radius-sm)"
+    },
+    "Visual Effects": {
+      "--ui-menu-shadow": "var(--shadow-sm)"
+    }
+  },
+  "attributes": {},
+  "slots": {
+    "data-menu-slot": [
+      "popover"
+    ]
+  },
+  "states": {},
+  "requires": [
+    "popover",
+    "button"
+  ],
+  "files": {
+    "css": [
+      "primitives/menu/menu.css"
+    ],
+    "js": [
+      "primitives/menu/menu.js"
+    ],
+    "base": [
+      "behaviors/list-navigation.js"
+    ],
+    "examples": [
+      "primitives/menu/menu.html",
+      "primitives/menu/menu-interest.html"
+    ]
+  }
+}

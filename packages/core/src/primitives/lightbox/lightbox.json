@@ -1,0 +1,87 @@
+{
+  "name": "lightbox",
+  "summary": "lightbox.css — Lightbox gallery (ui-lightbox | [data-ui~=\"lightbox\"])",
+  "identities": [
+    "lightbox"
+  ],
+  "tags": [
+    "ui-lightbox"
+  ],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-lightbox-thumb-cols": "6",
+      "--ui-lightbox-thumb-gap": "calc(var(--spacing) * 1.5)"
+    },
+    "Box Model & Sizing": {
+      "--ui-lightbox-aspect": "3 / 2",
+      "--ui-lightbox-thumb-size": "calc(var(--spacing) * 16)"
+    },
+    "Borders & Outlines": {
+      "--ui-lightbox-img-border": "1px solid var(--color-faded)",
+      "--ui-lightbox-slide-corner-shape": "var(--radius-corner-shape)",
+      "--ui-lightbox-slide-radius": "var(--radius-lg)",
+      "--ui-lightbox-thumb-corner-shape": "var(--radius-corner-shape)",
+      "--ui-lightbox-thumb-radius": "var(--radius-md)"
+    },
+    "Visual Effects": {
+      "--ui-lightbox-img-opacity": "1",
+      "--ui-lightbox-object-fit": "cover",
+      "--ui-lightbox-slide-opacity--end": "1",
+      "--ui-lightbox-slide-opacity--start": "0",
+      "--ui-lightbox-thumb-opacity": "0.5",
+      "--ui-lightbox-thumb-opacity--active": "1"
+    },
+    "Transforms & Animation": {
+      "--ui-lightbox-img-scale": "1",
+      "--ui-lightbox-img-scale--active": "1",
+      "--ui-lightbox-img-scale--hover": "1.03",
+      "--ui-lightbox-img-transition-delay": "0ms",
+      "--ui-lightbox-img-transition-duration": "calc(var(--default-transition-duration) * 3)",
+      "--ui-lightbox-img-transition-property": "transform",
+      "--ui-lightbox-img-transition-timing-function": "var(--default-transition-timing-function)",
+      "--ui-lightbox-slide-scale--end": "1",
+      "--ui-lightbox-slide-scale--start": "0.9"
+    }
+  },
+  "attributes": {},
+  "slots": {
+    "data-lightbox-slot": [
+      "close",
+      "content",
+      "counter",
+      "dialog",
+      "gallery",
+      "next",
+      "prev",
+      "slide",
+      "stage",
+      "thumb",
+      "thumb-content",
+      "thumbs",
+      "thumbs-next",
+      "thumbs-prev"
+    ]
+  },
+  "states": {},
+  "requires": [
+    "dialog",
+    "carousel",
+    "button"
+  ],
+  "files": {
+    "css": [
+      "primitives/lightbox/lightbox.css"
+    ],
+    "js": [
+      "primitives/lightbox/lightbox.js"
+    ],
+    "base": [
+      "behaviors/gesture.js",
+      "base/carousel-scroll.js",
+      "base/carousel.js"
+    ],
+    "examples": [
+      "primitives/lightbox/lightbox.html"
+    ]
+  }
+}

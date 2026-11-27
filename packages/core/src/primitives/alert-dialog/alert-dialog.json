@@ -1,0 +1,35 @@
+{
+  "name": "alert-dialog",
+  "summary": "alert-dialog.css: Alert dialog ([data-ui~=\"alert-dialog\"] on a [data-ui~=\"dialog\"] <dialog>)",
+  "identities": [
+    "alert-dialog"
+  ],
+  "tags": [],
+  "hooks": {
+    "Box Model & Sizing": {
+      "--ui-alert-dialog-w": "min(45ch, 100% - var(--space-md) * 2)"
+    },
+    "Color & Backgrounds": {
+      "--ui-alert-dialog-accent": "var(--color-destructive-foreground)"
+    },
+    "Visual Effects": {
+      "--ui-alert-dialog-shadow": "var(--ui-dialog-shadow)"
+    }
+  },
+  "attributes": {},
+  "slots": {},
+  "states": {},
+  "requires": [
+    "dialog"
+  ],
+  "files": {
+    "css": [
+      "primitives/alert-dialog/alert-dialog.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/alert-dialog/alert-dialog.html"
+    ]
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "name": "toggle",
+  "summary": "toggle.css: Toggle ([data-ui~=\"toggle\"]), a button-styled checkbox/radio Same look as the button (hooks default to the --ui-button-* family), but it wraps a native checkbox or radio inside a <label>. State is driven from the nested input via :has(): the checked state takes the primary role, so an \"on\" toggle reads like a primary button. Because the state lives on the input, the label's own state tiers (`--bg--checked`) do not fire; theme the checked look through the `--ui-toggle-*--checked` hooks.",
+  "identities": [
+    "toggle"
+  ],
+  "tags": [],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-toggle-gap": "var(--ui-button-gap)"
+    },
+    "Box Model & Sizing": {
+      "--ui-toggle-icon-size": "var(--ui-button-icon-size)",
+      "--ui-toggle-min-h": "var(--ui-button-min-h)",
+      "--ui-toggle-px": "var(--ui-button-px)",
+      "--ui-toggle-py": "var(--ui-button-py)"
+    },
+    "Typography": {
+      "--ui-toggle-font-family": "var(--ui-button-font-family)",
+      "--ui-toggle-font-size": "var(--ui-button-font-size)",
+      "--ui-toggle-font-weight": "var(--ui-button-font-weight)",
+      "--ui-toggle-leading": "var(--ui-button-leading)"
+    },
+    "Color & Backgrounds": {
+      "--ui-toggle-background-clip": "border-box",
+      "--ui-toggle-bg": "var(--ui-button-bg)",
+      "--ui-toggle-bg--active": "var(--ui-button-bg--active)",
+      "--ui-toggle-bg--checked": "var(--color-primary)",
+      "--ui-toggle-bg--checked-active": "oklch(from var(--color-primary) l c h / 0.8)",
+      "--ui-toggle-bg--checked-hover": "oklch(from var(--color-primary) l c h / 0.9)",
+      "--ui-toggle-bg--hover": "var(--ui-button-bg--hover)",
+      "--ui-toggle-text": "var(--ui-button-text)",
+      "--ui-toggle-text--active": "var(--ui-button-text--active)",
+      "--ui-toggle-text--checked": "var(--color-primary-foreground)",
+      "--ui-toggle-text--checked-active": "var(--color-primary-foreground)",
+      "--ui-toggle-text--checked-hover": "var(--color-primary-foreground)",
+      "--ui-toggle-text--hover": "var(--ui-button-text--hover)"
+    },
+    "Borders & Outlines": {
+      "--ui-toggle-border-color": "var(--ui-button-border-color)",
+      "--ui-toggle-border-color--active": "var(--ui-button-border-color--active)",
+      "--ui-toggle-border-color--checked": "var(--color-border)",
+      "--ui-toggle-border-color--checked-active": "var(--color-border)",
+      "--ui-toggle-border-color--checked-hover": "var(--color-border)",
+      "--ui-toggle-border-color--hover": "var(--ui-button-border-color--hover)",
+      "--ui-toggle-border-style": "var(--ui-button-border-style)",
+      "--ui-toggle-border-width": "var(--ui-button-border-width)",
+      "--ui-toggle-corner-shape": "var(--ui-button-corner-shape)",
+      "--ui-toggle-radius": "var(--ui-button-radius)"
+    },
+    "Visual Effects": {
+      "--ui-toggle-ring-color": "var(--ui-button-ring-color)",
+      "--ui-toggle-shadow": "var(--ui-button-shadow)"
+    }
+  },
+  "attributes": {
+    "data-toggle-size": [
+      "icon",
+      "icon-sm",
+      "sm"
+    ],
+    "data-toggle-variant": [
+      "destructive",
+      "ghost",
+      "muted",
+      "primary",
+      "secondary",
+      "tertiary"
+    ]
+  },
+  "slots": {},
+  "states": {},
+  "requires": [
+    "button"
+  ],
+  "files": {
+    "css": [
+      "primitives/toggle/toggle.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/toggle/toggle.html"
+    ]
+  }
+}

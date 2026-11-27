@@ -1,0 +1,92 @@
+{
+  "name": "fields",
+  "summary": "fields.css: Shared form field family (Tier 3 owner for --ui-field-*)",
+  "identities": [
+    "field",
+    "field-group"
+  ],
+  "tags": [],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-field-display": "grid",
+      "--ui-field-gap": "calc(var(--spacing) * 2)",
+      "--ui-field-group-display": "grid",
+      "--ui-field-group-gap": "var(--space-xs)",
+      "--ui-field-horizontal-display": "flex",
+      "--ui-field-horizontal-flex-direction": "row",
+      "--ui-field-horizontal-gap": "var(--space-xs)",
+      "--ui-field-horizontal-items": "center",
+      "--ui-field-horizontal-justify": "flex-start",
+      "--ui-field-option-gap": "1px",
+      "--ui-field-self": "flex-start",
+      "--ui-field-template-cols": "1fr"
+    },
+    "Box Model & Sizing": {
+      "--ui-field-group-m": "0",
+      "--ui-field-group-p": "0",
+      "--ui-field-h": "calc(var(--spacing) * 8)",
+      "--ui-field-icon-size": "calc(var(--spacing) * 4)",
+      "--ui-field-inset-p": "calc(var(--spacing) * 0.85)",
+      "--ui-field-px": "calc(var(--spacing) * 2.5)",
+      "--ui-field-py": "calc(var(--spacing) * 1.75)",
+      "--ui-field-w": "100%"
+    },
+    "Typography": {
+      "--ui-field-font-size": "var(--font-size-sm)",
+      "--ui-field-leading": "1"
+    },
+    "Color & Backgrounds": {
+      "--ui-field-bg": "var(--color-input)",
+      "--ui-field-bg--focus-within": "var(--color-background)",
+      "--ui-field-bg--hover": "var(--color-input)",
+      "--ui-field-group-bg": "transparent",
+      "--ui-field-label-text": "inherit",
+      "--ui-field-text": "var(--color-input-foreground)"
+    },
+    "Borders & Outlines": {
+      "--ui-field-border-color": "var(--color-border)",
+      "--ui-field-border-color--focus-within": "var(--color-primary)",
+      "--ui-field-border-color--hover": "color-mix( in oklch, var(--color-border) 90%, var(--color-foreground) 10% )",
+      "--ui-field-border-style": "solid",
+      "--ui-field-border-width": "1px",
+      "--ui-field-corner-shape": "var(--radius-corner-shape)",
+      "--ui-field-group-border": "1px solid transparent",
+      "--ui-field-group-corner-shape": "var(--ui-field-corner-shape)",
+      "--ui-field-group-radius": "var(--radius-lg)",
+      "--ui-field-inset-radius": "calc( var(--ui-field-radius) - var(--ui-field-inset-p) - var(--ui-field-border-width) )",
+      "--ui-field-radius": "var(--radius-md)"
+    },
+    "Visual Effects": {
+      "--ui-field-ring-color": "var(--color-ring)"
+    },
+    "Transforms & Animation": {
+      "--ui-field-hint-translate--end": "0 0",
+      "--ui-field-hint-translate--start": "0 calc(var(--spacing) * -1)"
+    }
+  },
+  "attributes": {
+    "data-field-orientation": [
+      "horizontal"
+    ]
+  },
+  "slots": {
+    "data-field-slot": [
+      "description",
+      "error",
+      "hint",
+      "label"
+    ]
+  },
+  "states": {},
+  "requires": [],
+  "files": {
+    "css": [
+      "primitives/fields/fields.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/fields/fields.html"
+    ]
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "name": "table",
+  "summary": "table.css — Table ([data-ui~=\"table\"])",
+  "identities": [
+    "table"
+  ],
+  "tags": [],
+  "hooks": {
+    "Box Model & Sizing": {
+      "--ui-table-caption-px": "var(--space-xs)",
+      "--ui-table-caption-py": "var(--space-xs)",
+      "--ui-table-cell-px": "calc(var(--spacing) * 2)",
+      "--ui-table-cell-py": "calc(var(--spacing) * 2)",
+      "--ui-table-head-h": "calc(var(--spacing) * 10)"
+    },
+    "Typography": {
+      "--ui-table-font-family": "var(--font-family-body)",
+      "--ui-table-font-size": "var(--font-size-sm)",
+      "--ui-table-foot-font-weight": "var(--font-weight-strong)",
+      "--ui-table-head-font-weight": "var(--font-weight-strong)"
+    },
+    "Color & Backgrounds": {
+      "--ui-table-alternating-bg": "var(--color-muted)",
+      "--ui-table-bg": "transparent",
+      "--ui-table-caption-text": "var(--color-muted-foreground)",
+      "--ui-table-foot-bg": "oklch(from var(--color-muted) l c h / calc(alpha / 2))",
+      "--ui-table-head-text": "var(--color-foreground)",
+      "--ui-table-row-bg--hover": "oklch(from var(--color-muted) l c h / calc(alpha / 2))",
+      "--ui-table-row-bg--selected": "var(--color-muted)",
+      "--ui-table-text": "var(--color-foreground)"
+    },
+    "Borders & Outlines": {
+      "--ui-table-border": "1px solid var(--color-border)",
+      "--ui-table-column-border": "none",
+      "--ui-table-head-border": "var(--ui-table-border)",
+      "--ui-table-row-border": "var(--ui-table-border)"
+    }
+  },
+  "attributes": {
+    "data-table-caption": [
+      "top"
+    ],
+    "data-table-layout": [
+      "fixed"
+    ],
+    "data-table-size": [
+      "sm"
+    ],
+    "data-table-variant": [
+      "alternating",
+      "grid"
+    ]
+  },
+  "slots": {},
+  "states": {
+    "data-table-state": [
+      "selected"
+    ]
+  },
+  "requires": [],
+  "files": {
+    "css": [
+      "primitives/table/table.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/table/table.html",
+      "primitives/table/table-grid.html",
+      "primitives/table/table-alternating.html",
+      "primitives/table/table-size-sm.html"
+    ]
+  }
+}

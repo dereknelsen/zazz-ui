@@ -31,7 +31,7 @@ describe("editor custom data", () => {
   });
 
   it("lists every data-ui token the kit declares or its fragments use", () => {
-    for (const token of ["button", "layout", "prose", "text-h2", "group", "scroll-fade", "card"]) {
+    for (const token of ["button", "layout", "prose", "link", "group", "scroll-fade", "card"]) {
       expect(uiTokens).toContain(token);
     }
     for (const token of Object.keys(RETIRED_TOKENS)) expect(uiTokens).not.toContain(token);
@@ -42,7 +42,7 @@ describe("editor custom data", () => {
     expect(attribute("data-layout-size")?.values.map((v) => v.name)).toContain("xl");
     expect(attribute("data-dialog-slot")?.values.map((v) => v.name)).toContain("header");
     expect(attribute("data-carousel-state")?.values.map((v) => v.name)).toContain("active");
-    expect(attribute("data-ui-guard")?.values.map((v) => v.name)).toEqual(["off"]);
+    expect(attribute("data-style-guard")?.values.map((v) => v.name)).toEqual(["off"]);
     expect(html.tags.map((tag) => tag.name)).toContain("ui-carousel");
   });
 
@@ -113,6 +113,15 @@ describe("editor custom data", () => {
     expect(cssNames).toContain("--after-content");
   });
 
+  it("lists each attribute once, the page-level globals included", () => {
+    const names = html.globalAttributes.map((a) => a.name);
+    expect(names.filter((name, index) => names.indexOf(name) !== index)).toEqual([]);
+    expect(attribute("data-navigation-persist-mode")?.values).toEqual([
+      { name: "element" },
+      { name: "scroll" },
+    ]);
+  });
+
   it("harvests no free-text values and no 0.4 names from prose", () => {
     const names = html.globalAttributes.map((a) => a.name);
     for (const stale of [
@@ -144,7 +153,7 @@ describe("editor custom data", () => {
     });
     expect(language.identities["radio-group"]?.primitive).toBe("radio");
     expect(language.identities["field"]?.primitive).toBe("fields");
-    expect(language.identities["prose"]?.primitive).toBeNull();
+    expect(language.identities["prose"]?.primitive).toBe("prose");
     expect(language.identities["group"]).toEqual({
       primitive: "group",
       file: "primitives/group/group.css",

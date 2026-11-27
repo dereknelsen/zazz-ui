@@ -110,7 +110,7 @@
   "globalAttributes": [
     {
       "name": "data-ui",
-      "description": "Identity tokens: primitives and typography roles.",
+      "description": "Identity tokens: the primitives an element is.",
       "values": [
         {
           "name": "accordion"
@@ -179,6 +179,9 @@
           "name": "lightbox"
         },
         {
+          "name": "link"
+        },
+        {
           "name": "menu"
         },
         {
@@ -227,54 +230,6 @@
           "name": "tabs"
         },
         {
-          "name": "text-2xl"
-        },
-        {
-          "name": "text-2xs"
-        },
-        {
-          "name": "text-display"
-        },
-        {
-          "name": "text-eyebrow"
-        },
-        {
-          "name": "text-h1"
-        },
-        {
-          "name": "text-h2"
-        },
-        {
-          "name": "text-h3"
-        },
-        {
-          "name": "text-h4"
-        },
-        {
-          "name": "text-h5"
-        },
-        {
-          "name": "text-h6"
-        },
-        {
-          "name": "text-lg"
-        },
-        {
-          "name": "text-link"
-        },
-        {
-          "name": "text-md"
-        },
-        {
-          "name": "text-sm"
-        },
-        {
-          "name": "text-xl"
-        },
-        {
-          "name": "text-xs"
-        },
-        {
           "name": "textarea"
         },
         {
@@ -304,26 +259,45 @@
       ]
     },
     {
-      "name": "data-ui-navigation",
-      "description": "On <html>: swap the body in place on navigations between opted-in pages.",
+      "name": "data-navigation",
+      "description": "On <html>, swap: replace the body in place on navigations between opted-in pages. On a region, off: leave its links and forms to the browser.",
       "values": [
         {
           "name": "swap"
+        },
+        {
+          "name": "off"
         }
       ]
     },
     {
-      "name": "data-ui-persist",
+      "name": "data-navigation-persist",
       "description": "Keep this element's live DOM, state and scroll offsets across in-page navigations; its links take aria-current from the next page. The value is an id both pages share.",
       "values": []
     },
     {
-      "name": "data-ui-persist-scroll",
-      "description": "Render this element from the next page but keep its scroll offset across in-page navigations (a section sidebar, a table of contents). The value is an id both pages share.",
-      "values": []
+      "name": "data-navigation-persist-mode",
+      "description": "Used with data-navigation-persist. \"scroll\" renders this element from the next page and keeps only its scroll offset (a section sidebar, a table of contents); \"element\", the default, keeps the element itself.",
+      "values": [
+        {
+          "name": "element"
+        },
+        {
+          "name": "scroll"
+        }
+      ]
     },
     {
-      "name": "data-ui-guard",
+      "name": "data-draggable",
+      "description": "Keeps a press inside this element from dragging the drawer, toast, or carousel around it.",
+      "values": [
+        {
+          "name": "false"
+        }
+      ]
+    },
+    {
+      "name": "data-style-guard",
       "description": "Opts an element out of the style guard.",
       "values": [
         {
@@ -834,6 +808,11 @@
       "values": []
     },
     {
+      "name": "data-command-select-behavior",
+      "description": "Preset or config of the command primitive.",
+      "values": []
+    },
+    {
       "name": "data-command-slot",
       "description": "Slot: a part inside the primitive.",
       "values": [
@@ -882,11 +861,6 @@
           "name": "highlighted"
         }
       ]
-    },
-    {
-      "name": "data-command-stay-open",
-      "description": "Preset or config of the command primitive.",
-      "values": []
     },
     {
       "name": "data-command-value",
@@ -986,7 +960,7 @@
       "values": []
     },
     {
-      "name": "data-drawer-snap-sequential",
+      "name": "data-drawer-snap-behavior",
       "description": "Preset or config of the drawer primitive.",
       "values": []
     },
@@ -1035,6 +1009,57 @@
         },
         {
           "name": "label"
+        }
+      ]
+    },
+    {
+      "name": "data-font",
+      "description": "Typography role: one step of the type scale (size, leading, tracking); beats the font of the primitive it sits on.",
+      "values": [
+        {
+          "name": "2xl"
+        },
+        {
+          "name": "2xs"
+        },
+        {
+          "name": "display"
+        },
+        {
+          "name": "eyebrow"
+        },
+        {
+          "name": "h1"
+        },
+        {
+          "name": "h2"
+        },
+        {
+          "name": "h3"
+        },
+        {
+          "name": "h4"
+        },
+        {
+          "name": "h5"
+        },
+        {
+          "name": "h6"
+        },
+        {
+          "name": "lg"
+        },
+        {
+          "name": "md"
+        },
+        {
+          "name": "sm"
+        },
+        {
+          "name": "xl"
+        },
+        {
+          "name": "xs"
         }
       ]
     },
@@ -1296,11 +1321,6 @@
       ]
     },
     {
-      "name": "data-otp-auto-submit",
-      "description": "Preset or config of the otp primitive.",
-      "values": []
-    },
-    {
       "name": "data-otp-complete",
       "description": "Preset or config of the otp primitive.",
       "values": []
@@ -1351,6 +1371,11 @@
           "name": "active"
         }
       ]
+    },
+    {
+      "name": "data-otp-submit-behavior",
+      "description": "Preset or config of the otp primitive.",
+      "values": []
     },
     {
       "name": "data-otp-type",

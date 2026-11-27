@@ -1,0 +1,81 @@
+{
+  "name": "badge",
+  "summary": "badge.css: Badge ([data-ui~=\"badge\"])",
+  "identities": [
+    "badge"
+  ],
+  "tags": [],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-badge-gap": "var(--spacing)"
+    },
+    "Box Model & Sizing": {
+      "--ui-badge-h": "calc(var(--spacing) * 5)",
+      "--ui-badge-icon-size": "calc(var(--spacing) * 3)",
+      "--ui-badge-px": "calc(var(--spacing) * 1.25)",
+      "--ui-badge-py": "calc(var(--spacing) * 0.75)"
+    },
+    "Typography": {
+      "--ui-badge-font-family": "var(--font-family-body)",
+      "--ui-badge-font-size": "var(--font-size-xs)",
+      "--ui-badge-font-weight": "var(--font-weight-strong)",
+      "--ui-badge-leading": "1"
+    },
+    "Color & Backgrounds": {
+      "--ui-badge-background-clip": "border-box",
+      "--ui-badge-bg": "var(--color-background)",
+      "--ui-badge-bg--active": "oklch(from var(--ui-badge-bg--hover) l c h / calc(alpha * 1.5))",
+      "--ui-badge-bg--hover": "var(--color-muted)",
+      "--ui-badge-text": "var(--color-foreground)",
+      "--ui-badge-text--active": "var(--color-foreground)",
+      "--ui-badge-text--hover": "var(--color-foreground)"
+    },
+    "Borders & Outlines": {
+      "--ui-badge-border-color": "var(--ui-field-border-color)",
+      "--ui-badge-border-color--active": "var(--ui-field-border-color)",
+      "--ui-badge-border-color--hover": "var(--ui-field-border-color)",
+      "--ui-badge-border-style": "var(--ui-field-border-style)",
+      "--ui-badge-border-width": "var(--ui-field-border-width)",
+      "--ui-badge-corner-shape": "var(--radius-corner-shape)",
+      "--ui-badge-radius": "var(--radius-sm)"
+    },
+    "Visual Effects": {
+      "--ui-badge-ring-color": "var(--ui-field-ring-color)",
+      "--ui-badge-shadow": "0 0 transparent"
+    }
+  },
+  "attributes": {
+    "data-badge-size": [
+      "icon"
+    ],
+    "data-badge-variant": [
+      "destructive",
+      "ghost",
+      "info",
+      "link",
+      "muted",
+      "outline",
+      "primary",
+      "secondary",
+      "success",
+      "tertiary",
+      "warning"
+    ]
+  },
+  "slots": {},
+  "states": {},
+  "requires": [
+    "fields"
+  ],
+  "files": {
+    "css": [
+      "primitives/badge/badge.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/badge/badge.html",
+      "primitives/badge/badge-icon.html"
+    ]
+  }
+}

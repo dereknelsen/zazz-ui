@@ -1,0 +1,85 @@
+{
+  "name": "tooltip",
+  "summary": "tooltip.css: Tooltip (ui-tooltip | [data-ui~=\"tooltip\"]; slots data-tooltip-slot=\"trigger | content | arrow\")",
+  "identities": [
+    "tooltip"
+  ],
+  "tags": [
+    "ui-tooltip"
+  ],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-tooltip-display": "none",
+      "--ui-tooltip-gap": "var(--spacing)"
+    },
+    "Box Model & Sizing": {
+      "--ui-tooltip-arrow-size": "calc(var(--spacing) * 2)",
+      "--ui-tooltip-max-w": "16ch",
+      "--ui-tooltip-mx": "0",
+      "--ui-tooltip-my": "var(--spacing)",
+      "--ui-tooltip-px": "var(--space-xs)",
+      "--ui-tooltip-py": "var(--spacing)"
+    },
+    "Typography": {
+      "--ui-tooltip-font-family": "var(--font-family-mono)",
+      "--ui-tooltip-font-settings": "var(--font-settings-body)",
+      "--ui-tooltip-font-size": "var(--font-size-xs)",
+      "--ui-tooltip-font-weight": "var(--font-weight-body)",
+      "--ui-tooltip-leading": "var(--leading-xs)"
+    },
+    "Color & Backgrounds": {
+      "--ui-tooltip-arrow-color": "var(--ui-tooltip-bg)",
+      "--ui-tooltip-bg": "var(--color-foreground)",
+      "--ui-tooltip-text": "var(--color-background)"
+    },
+    "Borders & Outlines": {
+      "--ui-tooltip-arrow-radius": "0",
+      "--ui-tooltip-border-color": "var(--color-background)",
+      "--ui-tooltip-border-style": "solid",
+      "--ui-tooltip-border-width": "1px",
+      "--ui-tooltip-corner-shape": "var(--radius-corner-shape)",
+      "--ui-tooltip-radius": "var(--radius-sm)"
+    },
+    "Visual Effects": {
+      "--ui-tooltip-opacity--end": "1",
+      "--ui-tooltip-opacity--start": "0",
+      "--ui-tooltip-shadow": "none"
+    },
+    "Transforms & Animation": {
+      "--ui-tooltip-scale--end": "1",
+      "--ui-tooltip-scale--start": "0.94",
+      "--ui-tooltip-transition": "opacity var(--ui-tooltip-transition-duration) var(--ui-tooltip-transition-timing-function) var(--ui-tooltip-transition-delay), transform var(--ui-tooltip-transition-duration) var(--ui-tooltip-transition-timing-function) var(--ui-tooltip-transition-delay), overlay var(--ui-tooltip-transition-duration) var(--ui-tooltip-transition-timing-function) var(--ui-tooltip-transition-delay) allow-discrete, display var(--ui-tooltip-transition-duration) var(--ui-tooltip-transition-timing-function) var(--ui-tooltip-transition-delay) allow-discrete",
+      "--ui-tooltip-transition-delay": "0ms",
+      "--ui-tooltip-transition-duration": "calc(var(--default-transition-duration) / 2)",
+      "--ui-tooltip-transition-timing-function": "var(--default-transition-timing-function)",
+      "--ui-tooltip-translate--end": "0, 0, 0",
+      "--ui-tooltip-translate--start": "0, 0.25em, 0"
+    }
+  },
+  "attributes": {},
+  "slots": {
+    "data-tooltip-slot": [
+      "arrow",
+      "content",
+      "trigger"
+    ]
+  },
+  "states": {},
+  "requires": [
+    "popover",
+    "kbd"
+  ],
+  "files": {
+    "css": [
+      "primitives/tooltip/tooltip.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/tooltip/tooltip.html",
+      "primitives/tooltip/tooltip-with-kbd.html",
+      "primitives/tooltip/tooltip-sides.html",
+      "primitives/tooltip/tooltip-disabled.html"
+    ]
+  }
+}

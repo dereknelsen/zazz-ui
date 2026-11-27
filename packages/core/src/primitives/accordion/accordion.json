@@ -1,0 +1,49 @@
+{
+  "name": "accordion",
+  "summary": "accordion.css: Accordion (ui-accordion | [data-ui~=\"accordion\"] on <details>/<summary>; slot data-accordion-slot=\"marker\" on the summary icon that rotates open)",
+  "identities": [
+    "accordion"
+  ],
+  "tags": [
+    "ui-accordion"
+  ],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-accordion-display": "flex",
+      "--ui-accordion-flex": "1",
+      "--ui-accordion-flex-direction": "column",
+      "--ui-accordion-item-display": "flex",
+      "--ui-accordion-item-flex": "1 0 auto",
+      "--ui-accordion-item-flex-direction": "column",
+      "--ui-accordion-summary-display": "flex",
+      "--ui-accordion-summary-items": "center",
+      "--ui-accordion-summary-justify": "space-between"
+    },
+    "Box Model & Sizing": {
+      "--ui-accordion-icon-size": "calc(var(--spacing) * 4)",
+      "--ui-accordion-summary-min-h": "0",
+      "--ui-accordion-w": "100%"
+    },
+    "Transforms & Animation": {
+      "--ui-accordion-icon-transform--open": "rotate(-180deg)"
+    }
+  },
+  "attributes": {},
+  "slots": {
+    "data-accordion-slot": [
+      "marker"
+    ]
+  },
+  "states": {},
+  "requires": [],
+  "files": {
+    "css": [
+      "primitives/accordion/accordion.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/accordion/accordion.html"
+    ]
+  }
+}

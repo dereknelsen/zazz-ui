@@ -4,7 +4,8 @@
  * attribute with its values, the tag forms) and `editor/zazz.css-data.json`
  * (every utility and tier form, the pseudo forms, the `--ui-*` hooks), and
  * `editor/zazz.lint-data.json` (the identities and state hooks the html lint
- * rules read where `<ui-debug>` reads the page's stylesheets).
+ * rules read where `<ui-debug>` reads the page's stylesheets), and each
+ * primitive's own `src/primitives/<name>/<name>.json` (`primitive-data.ts`).
  * Sources: `src/base/utilities.ts`, `src/manifest.ts`, and the kit's own
  * stylesheets, fragments, and scripts. Run: `vp run generate` (also writes the
  * utilities); the freshness test pins the committed files to this generator.
@@ -29,6 +30,7 @@ import {
 import { PRIMITIVES } from "../src/manifest.ts";
 import { indexStyling, kitStyling } from "./generate-utilities.ts";
 import { languageData, type LanguageData } from "./language-data.ts";
+import { PRIMITIVE_FILES, primitiveData } from "./primitive-data.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SRC = join(ROOT, "src");
@@ -61,6 +63,8 @@ export interface CssData {
 /** What `<ui-debug>` reads from the page's stylesheets, plus where the kit reads or sets each utility, for the linter. */
 export interface LintData {
   identities: string[];
+  /** Typography roles: the values of `data-font` the kit styles. */
+  roles: string[];
   hooks: Record<string, string[]>;
   /** The selectors `reads` and `blocks` index (`KIT_SELECTORS`). */
   selectors: string[];
@@ -87,24 +91,31 @@ const GLOBALS: HtmlAttribute[] = [
     values: [{ name: "dark" }, { name: "light" }],
   },
   {
-    name: "data-ui-navigation",
-    description: "On <html>: swap the body in place on navigations between opted-in pages.",
-    values: [{ name: "swap" }],
+    name: "data-navigation",
+    description:
+      "On <html>, swap: replace the body in place on navigations between opted-in pages. On a region, off: leave its links and forms to the browser.",
+    values: [{ name: "swap" }, { name: "off" }],
   },
   {
-    name: "data-ui-persist",
+    name: "data-navigation-persist",
     description:
       "Keep this element's live DOM, state and scroll offsets across in-page navigations; its links take aria-current from the next page. The value is an id both pages share.",
     values: [],
   },
   {
-    name: "data-ui-persist-scroll",
+    name: "data-navigation-persist-mode",
     description:
-      "Render this element from the next page but keep its scroll offset across in-page navigations (a section sidebar, a table of contents). The value is an id both pages share.",
-    values: [],
+      'Used with data-navigation-persist. "scroll" renders this element from the next page and keeps only its scroll offset (a section sidebar, a table of contents); "element", the default, keeps the element itself.',
+    values: [{ name: "element" }, { name: "scroll" }],
   },
   {
-    name: "data-ui-guard",
+    name: "data-draggable",
+    description:
+      "Keeps a press inside this element from dragging the drawer, toast, or carousel around it.",
+    values: [{ name: "false" }],
+  },
+  {
+    name: "data-style-guard",
     description: "Opts an element out of the style guard.",
     values: [{ name: "off" }],
   },
@@ -151,6 +162,8 @@ function dataAttributes(
   const values = new Map<string, Set<string>>();
   const add = (name: string, value?: string) => {
     if (name === "data-ui" || name.startsWith("data-ui-") || name.startsWith("data-debug-")) return;
+    // page-level globals are hand-written above; `data-navigation-*` shares a prefix with the navigation menu
+    if (GLOBALS.some((global) => global.name === name)) return;
     const set = values.get(name) ?? new Set<string>();
     if (value !== undefined) for (const v of value.split(/\s+/).filter(Boolean)) set.add(v);
     values.set(name, set);
@@ -228,6 +241,8 @@ function describeAttribute(name: string): string {
         name.startsWith(`data-${primitive}-`) ||
         name.startsWith(`data-${primitive.replace(/s$/, "")}-`),
     );
+  if (name === "data-font")
+    return "Typography role: one step of the type scale (size, leading, tracking); beats the font of the primitive it sits on.";
   return owner ? `Preset or config of the ${owner} primitive.` : "Data attribute the kit reads.";
 }
 
@@ -464,7 +479,7 @@ function designTokens(css: string[]): Map<string, string[]> {
         .sort((a, b) => b.length - a.length)[0];
       if (!family || name.startsWith("--_")) continue;
       if (family === "color" && name.endsWith("-color")) continue;
-      if (name.endsWith("-multiplier")) continue;
+      if (name.endsWith("-coefficient")) continue;
       (tokens.get(family) ?? tokens.set(family, new Set()).get(family)!).add(name);
     }
   }
@@ -547,11 +562,13 @@ function blocksAndReads(): Pick<LintData, "selectors" | "reads" | "blocks"> {
  */
 function lintData(css: string[]): LintData {
   const identities = new Set<string>();
+  const roles = new Set<string>();
   const hooks = new Map<string, Set<string>>();
   const hookPattern =
     /--ui-([a-z]+(?:-[a-z]+)*?)-([a-z-]+?)--(hover|active|focus-visible|focus-within|checked|open|disabled)\b/g;
   for (const text of css) {
     for (const m of text.matchAll(/\[data-ui~="([^"]+)"\]/g)) identities.add(m[1]!);
+    for (const m of text.matchAll(/\[data-font="([^"]+)"\]/g)) roles.add(m[1]!);
     for (const m of text.matchAll(hookPattern)) {
       const set = hooks.get(m[1]!) ?? new Set<string>();
       set.add(`${m[2]}--${m[3]}`);
@@ -560,6 +577,7 @@ function lintData(css: string[]): LintData {
   }
   return {
     identities: [...identities].sort(),
+    roles: [...roles].sort(),
     hooks: Object.fromEntries(
       [...hooks].sort(([a], [b]) => a.localeCompare(b)).map(([id, set]) => [id, [...set].sort()]),
     ),
@@ -592,7 +610,7 @@ export function generateEditorData(): {
       globalAttributes: [
         {
           name: "data-ui",
-          description: "Identity tokens: primitives and typography roles.",
+          description: "Identity tokens: the primitives an element is.",
           values: tokens.map((token) => ({ name: token })),
         },
         ...GLOBALS,
@@ -624,6 +642,7 @@ export function EDITOR_FILES(data: {
     "editor/zazz.css-data.json": `${JSON.stringify(data.css, null, 2)}\n`,
     "editor/zazz.lint-data.json": `${JSON.stringify(data.lint, null, 2)}\n`,
     "editor/zazz.language-data.json": `${JSON.stringify(data.language, null, 2)}\n`,
+    ...PRIMITIVE_FILES(primitiveData(data.html, data.language)),
   };
 }
 

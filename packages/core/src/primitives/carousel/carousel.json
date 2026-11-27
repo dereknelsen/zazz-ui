@@ -1,0 +1,89 @@
+{
+  "name": "carousel",
+  "summary": "carousel.css — scroll-snap carousel (ui-carousel | [data-ui~=\"carousel\"] + data-carousel-slot hooks)",
+  "identities": [
+    "carousel"
+  ],
+  "tags": [
+    "ui-carousel"
+  ],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-carousel-gap": "0px",
+      "--ui-carousel-slide-basis": "calc(100% - var(--ui-carousel-gap))"
+    },
+    "Box Model & Sizing": {
+      "--ui-carousel-slide-min-w": "0"
+    },
+    "Transforms & Animation": {
+      "--ui-carousel-settle-duration": "calc(var(--default-transition-duration) * 2)",
+      "--ui-carousel-settle-ease": "var(--default-transition-timing-function)"
+    },
+    "Interaction & UI": {
+      "--ui-carousel-cursor--grabbing": "grabbing",
+      "--ui-carousel-snap-align": "start"
+    }
+  },
+  "attributes": {
+    "data-carousel-align": [
+      "center",
+      "end"
+    ],
+    "data-carousel-axis": [
+      "y"
+    ],
+    "data-carousel-draggable": [
+      "false"
+    ],
+    "data-carousel-init": [],
+    "data-carousel-keyboard": [],
+    "data-carousel-loop": [],
+    "data-carousel-plugins": [],
+    "data-carousel-start": [],
+    "data-carousel-start-index": [],
+    "data-carousel-thumbs-axis": [
+      "y"
+    ]
+  },
+  "slots": {
+    "data-carousel-slot": [
+      "container",
+      "dot",
+      "dots",
+      "next",
+      "prev",
+      "slide",
+      "thumbs",
+      "viewport"
+    ]
+  },
+  "states": {
+    "data-carousel-state": [
+      "active",
+      "dragging",
+      "free",
+      "gliding",
+      "in-view",
+      "jumping",
+      "settling",
+      "snapped"
+    ]
+  },
+  "requires": [],
+  "files": {
+    "css": [
+      "primitives/carousel/carousel.css"
+    ],
+    "js": [
+      "primitives/carousel/carousel.js"
+    ],
+    "base": [
+      "behaviors/gesture.js",
+      "base/carousel-scroll.js",
+      "base/carousel.js"
+    ],
+    "examples": [
+      "primitives/carousel/carousel.html"
+    ]
+  }
+}

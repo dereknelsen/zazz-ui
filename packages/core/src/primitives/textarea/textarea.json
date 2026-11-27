@@ -1,0 +1,48 @@
+{
+  "name": "textarea",
+  "summary": "textarea.css — Textarea ([data-ui~=\"textarea\"])",
+  "identities": [
+    "textarea"
+  ],
+  "tags": [],
+  "hooks": {
+    "Box Model & Sizing": {
+      "--ui-textarea-max-h": "12lh",
+      "--ui-textarea-min-h": "5lh",
+      "--ui-textarea-min-w": "0",
+      "--ui-textarea-px": "var(--ui-field-px)",
+      "--ui-textarea-py": "var(--ui-field-py)",
+      "--ui-textarea-w": "100%"
+    },
+    "Typography": {
+      "--ui-textarea-font-size": "var(--ui-field-font-size)",
+      "--ui-textarea-leading": "var(--leading-sm)"
+    },
+    "Borders & Outlines": {
+      "--ui-textarea-border-color": "var(--ui-field-border-color)",
+      "--ui-textarea-border-style": "var(--ui-field-border-style)",
+      "--ui-textarea-border-width": "var(--ui-field-border-width)",
+      "--ui-textarea-corner-shape": "var(--ui-field-corner-shape)",
+      "--ui-textarea-radius": "var(--ui-field-radius)"
+    },
+    "Interaction & UI": {
+      "--ui-textarea-resize": "vertical"
+    }
+  },
+  "attributes": {},
+  "slots": {},
+  "states": {},
+  "requires": [
+    "fields"
+  ],
+  "files": {
+    "css": [
+      "primitives/textarea/textarea.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/textarea/textarea.html"
+    ]
+  }
+}

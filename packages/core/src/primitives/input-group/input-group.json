@@ -1,0 +1,69 @@
+{
+  "name": "input-group",
+  "summary": "input-group.css — Input group ([data-ui~=\"input-group\"])",
+  "identities": [
+    "input-group"
+  ],
+  "tags": [],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-input-group-display": "flex",
+      "--ui-input-group-flex-wrap": "wrap",
+      "--ui-input-group-gap": "var(--spacing)",
+      "--ui-input-group-items": "center"
+    },
+    "Box Model & Sizing": {
+      "--ui-input-group-min-h": "var(--ui-field-h)",
+      "--ui-input-group-p": "0",
+      "--ui-input-group-textarea-min-h": "3lh",
+      "--ui-input-group-textarea-px": "calc(var(--spacing) * 2)",
+      "--ui-input-group-textarea-py": "calc(var(--spacing) * 1.5)",
+      "--ui-input-group-w": "100%"
+    },
+    "Typography": {
+      "--ui-input-group-font-size": "var(--font-size-sm)",
+      "--ui-input-group-font-weight": "var(--font-weight-strong)"
+    },
+    "Color & Backgrounds": {
+      "--ui-input-group-text": "var(--color-muted-foreground)"
+    },
+    "Visual Effects": {
+      "--ui-input-group-shadow": "0 0 transparent"
+    },
+    "Interaction & UI": {
+      "--ui-input-group-cursor": "text"
+    }
+  },
+  "attributes": {
+    "data-input-group-align": [
+      "block-end",
+      "block-start",
+      "inline-end",
+      "inline-start"
+    ]
+  },
+  "slots": {
+    "data-input-group-slot": [
+      "addon",
+      "text"
+    ]
+  },
+  "states": {},
+  "requires": [
+    "fields",
+    "input",
+    "textarea",
+    "button"
+  ],
+  "files": {
+    "css": [
+      "primitives/input-group/input-group.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/input-group/input-group.html",
+      "primitives/input-group/input-group-password-group.html"
+    ]
+  }
+}

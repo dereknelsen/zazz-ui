@@ -1,0 +1,98 @@
+{
+  "name": "drawer",
+  "summary": "drawer.css: Drawer ([data-ui~=\"drawer\"] on native <dialog>; slots data-drawer-slot=\"handle | content | header | body | footer | close\"; <ui-drawer-indent> / [data-ui~=\"drawer-indent\"], the page wrapper that scales back behind an open drawer) A bottom sheet: a modal dialog that rises from the bottom edge and is dragged back down to dismiss. Alone (`data-ui=\"drawer\"`) it is a drawer everywhere; on a dialog (`data-ui=\"dialog drawer\"`) it is a drawer below the sm band on a touch screen and the plain dialog otherwise. `data-drawer-snap` gives it resting heights; a drawer opened over another pushes that one back.",
+  "identities": [
+    "drawer",
+    "drawer-indent"
+  ],
+  "tags": [
+    "ui-drawer-indent"
+  ],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-drawer-indent-inset": "calc(var(--spacing) * 3)"
+    },
+    "Box Model & Sizing": {
+      "--ui-drawer-handle-h": "calc(var(--spacing) * 1.25)",
+      "--ui-drawer-handle-w": "calc(var(--spacing) * 12)",
+      "--ui-drawer-max-h": "calc(100dvb - var(--space-lg))",
+      "--ui-drawer-w": "100%"
+    },
+    "Color & Backgrounds": {
+      "--ui-drawer-bg": "var(--ui-dialog-bg)",
+      "--ui-drawer-handle-bg": "var(--color-muted)",
+      "--ui-drawer-handle-bg--active": "var(--color-muted-foreground)",
+      "--ui-drawer-handle-bg--dragging": "var(--color-foreground)",
+      "--ui-drawer-handle-bg--hover": "var(--color-muted-foreground)",
+      "--ui-drawer-indent-backing": "var(--color-black)",
+      "--ui-drawer-indent-bg": "var(--color-background)",
+      "--ui-drawer-nested-backdrop-color": "transparent",
+      "--ui-drawer-text": "var(--ui-dialog-text)"
+    },
+    "Borders & Outlines": {
+      "--ui-drawer-corner-shape": "var(--ui-dialog-corner-shape)",
+      "--ui-drawer-indent-radius": "var(--ui-drawer-radius)",
+      "--ui-drawer-radius": "var(--radius-xl)"
+    },
+    "Visual Effects": {
+      "--ui-drawer-shadow": "var(--shadow-lg)"
+    },
+    "Transforms & Animation": {
+      "--ui-drawer-indent-offset": "calc(env(safe-area-inset-top, 0px) + var(--space-sm))",
+      "--ui-drawer-stack-lift": "var(--space-sm)",
+      "--ui-drawer-stack-scale": "0.05",
+      "--ui-drawer-transition-duration": "calc(var(--default-transition-duration) * 2)",
+      "--ui-drawer-transition-timing-function": "cubic-bezier(0.32, 0.72, 0, 1)"
+    }
+  },
+  "attributes": {
+    "data-drawer-snap": [],
+    "data-drawer-snap-behavior": []
+  },
+  "slots": {
+    "data-drawer-slot": [
+      "body",
+      "close",
+      "content",
+      "footer",
+      "handle",
+      "header"
+    ]
+  },
+  "states": {
+    "data-drawer-indent-state": [
+      "active",
+      "dragging",
+      "on"
+    ],
+    "data-drawer-state": [
+      "dragging",
+      "following",
+      "nested",
+      "partial",
+      "stacked"
+    ]
+  },
+  "requires": [
+    "dialog",
+    "button"
+  ],
+  "files": {
+    "css": [
+      "primitives/drawer/drawer.css"
+    ],
+    "js": [
+      "primitives/drawer/drawer.js"
+    ],
+    "base": [
+      "behaviors/gesture.js"
+    ],
+    "examples": [
+      "primitives/drawer/drawer.html",
+      "primitives/drawer/drawer-responsive-dialog.html",
+      "primitives/drawer/drawer-snap.html",
+      "primitives/drawer/drawer-nested.html",
+      "primitives/drawer/drawer-indent.html"
+    ]
+  }
+}

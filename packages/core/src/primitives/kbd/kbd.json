@@ -1,0 +1,52 @@
+{
+  "name": "kbd",
+  "summary": "kbd.css: Kbd (native <kbd>) + Kbd group (ui-kbd-group | [data-ui~=\"kbd-group\"])",
+  "identities": [
+    "kbd-group"
+  ],
+  "tags": [
+    "ui-kbd-group"
+  ],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-kbd-gap": "var(--spacing)",
+      "--ui-kbd-group-gap": "var(--spacing)"
+    },
+    "Box Model & Sizing": {
+      "--ui-kbd-icon-size": "calc(var(--spacing) * 3.5)",
+      "--ui-kbd-min-h": "calc(var(--spacing) * 5)",
+      "--ui-kbd-min-w": "calc(var(--spacing) * 5)",
+      "--ui-kbd-px": "var(--spacing)",
+      "--ui-kbd-py": "0"
+    },
+    "Typography": {
+      "--ui-kbd-font-family": "var(--font-family-mono)",
+      "--ui-kbd-font-size": "var(--font-size-xs)",
+      "--ui-kbd-leading": "1"
+    },
+    "Color & Backgrounds": {
+      "--ui-kbd-bg": "var(--color-muted)",
+      "--ui-kbd-text": "var(--color-muted-foreground)"
+    },
+    "Borders & Outlines": {
+      "--ui-kbd-border": "1px solid transparent",
+      "--ui-kbd-corner-shape": "var(--radius-corner-shape)",
+      "--ui-kbd-radius": "var(--radius-xs)"
+    }
+  },
+  "attributes": {},
+  "slots": {},
+  "states": {},
+  "requires": [],
+  "files": {
+    "css": [
+      "primitives/kbd/kbd.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/kbd/kbd.html",
+      "primitives/kbd/kbd-group.html"
+    ]
+  }
+}

@@ -23,7 +23,9 @@ import {
   CSS_CASCADE_ORDER,
   MANIFEST_VERSION,
   PRIMITIVES,
+  resolveClosure,
   WEB_COMPONENT_SCRIPT_FILES,
+  BASE_DATA,
 } from "./manifest.ts";
 
 const SRC = dirname(fileURLToPath(import.meta.url));
@@ -56,7 +58,18 @@ describe("primitive coverage", () => {
     .sort();
 
   it("has one entry per src/primitives/ directory, and no orphans", () => {
-    expect(Object.keys(PRIMITIVES).sort()).toEqual(dirs);
+    // a definition is a folder holding only its generated data file
+    const definitions = BASE_DATA.map((path) => path.split("/")[1]!);
+    expect([...Object.keys(PRIMITIVES), ...definitions].sort()).toEqual(dirs);
+  });
+
+  it("lists each primitive's generated data file, and the definitions'", () => {
+    for (const [name, entry] of Object.entries(PRIMITIVES)) {
+      expect(entry.data, name).toBe(`primitives/${name}/${name}.json`);
+      expect(existsSync(join(SRC, entry.data!)), entry.data).toBe(true);
+    }
+    expect(BASE_DATA).toEqual([]);
+    for (const path of BASE_DATA) expect(existsSync(join(SRC, path)), path).toBe(true);
   });
 
   it("lists every file the primitive owns (nothing missing, nothing phantom)", () => {
@@ -97,6 +110,21 @@ describe("dependency graph", () => {
       for (const dep of entry.primitives) {
         expect(PRIMITIVES[dep], `${name} -> ${dep}`).toBeDefined();
         expect(dep, `${name} depends on itself`).not.toBe(name);
+      }
+    }
+  });
+
+  it("covers the font roles, links, and prose its example fragments use", () => {
+    for (const [name, entry] of Object.entries(PRIMITIVES)) {
+      const closure = resolveClosure([name]);
+      for (const example of entry.examples) {
+        const html = readFileSync(join(SRC, example), "utf8");
+        const uses = [
+          ...(html.includes("data-font=") ? ["font"] : []),
+          ...(/data-ui="[^"]*\blink\b/.test(html) ? ["link"] : []),
+          ...(/data-ui="[^"]*\bprose\b/.test(html) ? ["prose"] : []),
+        ];
+        for (const used of uses) expect(closure, `${example} uses ${used}`).toContain(used);
       }
     }
   });

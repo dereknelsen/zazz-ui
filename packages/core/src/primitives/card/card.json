@@ -1,0 +1,73 @@
+{
+  "name": "card",
+  "summary": "card.css: Card (ui-card | [data-ui~=\"card\"])",
+  "identities": [
+    "card"
+  ],
+  "tags": [
+    "ui-card"
+  ],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-card-display": "grid",
+      "--ui-card-gap": "var(--space-sm)",
+      "--ui-card-place-content": "start stretch"
+    },
+    "Box Model & Sizing": {
+      "--ui-card-header-w": "40%",
+      "--ui-card-p": "0"
+    },
+    "Color & Backgrounds": {
+      "--ui-card-bg": "transparent",
+      "--ui-card-text": "var(--color-card-foreground)"
+    },
+    "Borders & Outlines": {
+      "--ui-card-border-color": "transparent",
+      "--ui-card-border-style": "solid",
+      "--ui-card-border-width": "1px",
+      "--ui-card-corner-shape": "var(--radius-corner-shape)",
+      "--ui-card-radius": "var(--radius-lg)"
+    },
+    "Visual Effects": {
+      "--ui-card-shadow": "none"
+    }
+  },
+  "attributes": {
+    "data-card-orientation": [
+      "horizontal",
+      "vertical"
+    ],
+    "data-card-variant": [
+      "floating",
+      "muted",
+      "outline"
+    ]
+  },
+  "slots": {
+    "data-card-slot": [
+      "body",
+      "footer",
+      "header"
+    ]
+  },
+  "states": {},
+  "requires": [
+    "font",
+    "link"
+  ],
+  "files": {
+    "css": [
+      "primitives/card/card.css"
+    ],
+    "js": [],
+    "base": [],
+    "examples": [
+      "primitives/card/card.html",
+      "primitives/card/card-horizontal.html",
+      "primitives/card/card-product.html",
+      "primitives/card/card-login.html",
+      "primitives/card/card-article.html",
+      "primitives/card/card-subgrid.html"
+    ]
+  }
+}

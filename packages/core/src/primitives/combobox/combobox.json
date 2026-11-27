@@ -1,0 +1,113 @@
+{
+  "name": "combobox",
+  "summary": "combobox.css: Combobox (ui-combobox | [data-ui~=\"combobox\"], [data-combobox-slot~=\"control\"])",
+  "identities": [
+    "combobox"
+  ],
+  "tags": [
+    "ui-combobox"
+  ],
+  "hooks": {
+    "Layout & Positioning": {
+      "--ui-combobox-control-flex-wrap": "nowrap",
+      "--ui-combobox-control-gap": "var(--ui-field-gap)",
+      "--ui-combobox-control-items": "center",
+      "--ui-combobox-option-gap": "var(--ui-field-option-gap)",
+      "--ui-combobox-tag-gap": "var(--spacing)"
+    },
+    "Box Model & Sizing": {
+      "--ui-combobox-control-h": "var(--ui-field-h)",
+      "--ui-combobox-control-min-h": "auto",
+      "--ui-combobox-control-py": "0",
+      "--ui-combobox-icon-size": "var(--ui-select-picker-icon-size)",
+      "--ui-combobox-input-min-h": "auto",
+      "--ui-combobox-input-min-w": "0",
+      "--ui-combobox-min-w": "var(--ui-select-min-w)",
+      "--ui-combobox-panel-max-h": "calc(var(--spacing) * 72)",
+      "--ui-combobox-pl": "var(--ui-select-pl)",
+      "--ui-combobox-pr": "var(--ui-select-pr)",
+      "--ui-combobox-tag-max-w": "100%",
+      "--ui-combobox-tag-py": "var(--spacing)",
+      "--ui-combobox-tag-remove-size": "var(--ui-badge-icon-size)",
+      "--ui-combobox-w": "var(--ui-select-w)"
+    },
+    "Color & Backgrounds": {
+      "--ui-combobox-icon-color": "var(--ui-select-picker-icon-color)",
+      "--ui-combobox-tag-remove-color": "currentColor"
+    },
+    "Borders & Outlines": {
+      "--ui-combobox-border-color": "var(--ui-select-border-color)",
+      "--ui-combobox-border-style": "var(--ui-select-border-style)",
+      "--ui-combobox-border-width": "var(--ui-select-border-width)",
+      "--ui-combobox-corner-shape": "var(--ui-select-corner-shape)",
+      "--ui-combobox-radius": "var(--ui-select-radius)",
+      "--ui-combobox-tag-remove-corner-shape": "var(--radius-corner-shape)",
+      "--ui-combobox-tag-remove-radius": "var(--radius-sm)"
+    },
+    "Visual Effects": {
+      "--ui-combobox-icon-mask": "var(--ui-select-picker-icon-mask)",
+      "--ui-combobox-shadow": "var(--ui-menu-shadow)",
+      "--ui-combobox-tag-remove-mask": "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cline x1='200' y1='56' x2='56' y2='200' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cline x1='200' y1='200' x2='56' y2='56' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3C/svg%3E\")",
+      "--ui-combobox-tag-remove-opacity": "0.65",
+      "--ui-combobox-tag-remove-opacity--hover": "1"
+    }
+  },
+  "attributes": {
+    "data-combobox-filter": [],
+    "data-combobox-keywords": [],
+    "data-combobox-label-remove": [],
+    "data-combobox-min-length": [],
+    "data-combobox-sort": [],
+    "data-combobox-value": [],
+    "data-combobox-variant": [
+      "multiselect"
+    ]
+  },
+  "slots": {
+    "data-combobox-slot": [
+      "control",
+      "empty",
+      "group",
+      "group-label",
+      "item",
+      "list",
+      "panel",
+      "tag",
+      "tag-label",
+      "tag-remove",
+      "tag-template",
+      "trigger",
+      "value"
+    ]
+  },
+  "states": {
+    "data-combobox-state": [
+      "highlighted"
+    ]
+  },
+  "requires": [
+    "popover",
+    "button",
+    "fields",
+    "badge",
+    "select"
+  ],
+  "files": {
+    "css": [
+      "primitives/combobox/combobox.css"
+    ],
+    "js": [
+      "primitives/combobox/combobox.js"
+    ],
+    "base": [
+      "behaviors/list-navigation.js",
+      "behaviors/command-score.js",
+      "behaviors/hotkeys.js",
+      "behaviors/typeahead.js"
+    ],
+    "examples": [
+      "primitives/combobox/combobox.html",
+      "primitives/combobox/combobox-multiselect.html"
+    ]
+  }
+}
