@@ -5,11 +5,13 @@
   "tags": [],
   "hooks": {
     "Box Model & Sizing": {
+      "--ui-switch-h-coefficient": "1",
       "--ui-switch-thumb-h": "calc( var(--ui-switch-track-h) - 2 * var(--ui-switch-track-p) - 2 * var(--ui-switch-thumb-border-width) )",
       "--ui-switch-thumb-w": "calc( (var(--ui-switch-track-w) / 2) - var(--ui-switch-track-p) - var(--ui-switch-thumb-border-width) )",
       "--ui-switch-track-h": "calc( var(--ui-switch-track-w) / 2 + var(--ui-switch-track-p) + var(--ui-switch-track-border-width) )",
       "--ui-switch-track-p": "max(calc(var(--spacing) * 0.5), calc(var(--spacing-control-min) * 0.125))",
-      "--ui-switch-track-w": "max(calc(var(--spacing) * 7), calc(var(--spacing-control-min) * 1.75))"
+      "--ui-switch-track-w": "max(calc(var(--spacing) * 7), calc(var(--spacing-control-min) * 1.75))",
+      "--ui-switch-w-coefficient": "1"
     },
     "Color & Backgrounds": {
       "--ui-switch-thumb-bg": "var(--color-card)",
@@ -48,10 +50,6 @@
     },
     "Interaction & UI": {
       "--ui-switch-cursor": "pointer"
-    },
-    "Misc": {
-      "--ui-switch-h-coefficient": "1",
-      "--ui-switch-w-coefficient": "1"
     }
   },
   "attributes": {},

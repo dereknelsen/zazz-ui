@@ -405,13 +405,15 @@
 
   :where([data-ui~="badge"][data-badge-variant="secondary"]) {
     --_badge-bg: var(--color-secondary);
+    /* with the default palette, a light fill in light mode and a dark one in dark, so
+       it steps the other way from primary: darker in light, lighter in dark */
     --_badge-bg--hover: light-dark(
-      oklch(from var(--color-secondary) calc(l + (1 - l) * 0.2) c h),
-      oklch(from var(--color-secondary) calc(l * 0.8) c h)
+      oklch(from var(--color-secondary) calc(l * 0.95) c h),
+      oklch(from var(--color-secondary) calc(l + (1 - l) * 0.1) c h)
     );
     --_badge-bg--active: light-dark(
-      oklch(from var(--color-secondary) calc(l + (1 - l) * 0.3) c h),
-      oklch(from var(--color-secondary) calc(l * 0.7) c h)
+      oklch(from var(--color-secondary) calc(l * 0.9) c h),
+      oklch(from var(--color-secondary) calc(l + (1 - l) * 0.2) c h)
     );
 
     --_badge-text: var(--color-secondary-foreground);
@@ -448,9 +450,10 @@
   }
 
   :where([data-ui~="badge"][data-badge-variant="neutral"]) {
-    --_badge-bg: light-dark(var(--color-neutral-50), var(--color-neutral-950));
-    --_badge-bg--hover: light-dark(var(--color-neutral-100), var(--color-neutral-900));
-    --_badge-bg--active: light-dark(var(--color-neutral-200), var(--color-neutral-800));
+    /* a solid near-page surface that steps one neutral shade at a time */
+    --_badge-bg: light-dark(var(--color-white), var(--color-neutral-950));
+    --_badge-bg--hover: light-dark(var(--color-neutral-50), var(--color-neutral-900));
+    --_badge-bg--active: light-dark(var(--color-neutral-100), var(--color-neutral-800));
 
     --_badge-text: var(--color-foreground);
     --_badge-text--hover: var(--color-foreground);

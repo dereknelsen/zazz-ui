@@ -410,13 +410,15 @@
 
   :where([data-ui~="button"][data-button-variant="secondary"]) {
     --_button-bg: var(--color-secondary);
+    /* with the default palette, a light fill in light mode and a dark one in dark, so
+       it steps the other way from primary: darker in light, lighter in dark */
     --_button-bg--hover: light-dark(
-      oklch(from var(--color-secondary) calc(l + (1 - l) * 0.2) c h),
-      oklch(from var(--color-secondary) calc(l * 0.8) c h)
+      oklch(from var(--color-secondary) calc(l * 0.95) c h),
+      oklch(from var(--color-secondary) calc(l + (1 - l) * 0.1) c h)
     );
     --_button-bg--active: light-dark(
-      oklch(from var(--color-secondary) calc(l + (1 - l) * 0.3) c h),
-      oklch(from var(--color-secondary) calc(l * 0.7) c h)
+      oklch(from var(--color-secondary) calc(l * 0.9) c h),
+      oklch(from var(--color-secondary) calc(l + (1 - l) * 0.2) c h)
     );
 
     --_button-text: var(--color-secondary-foreground);

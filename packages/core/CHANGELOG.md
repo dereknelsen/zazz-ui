@@ -5,6 +5,13 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 ### button
 
 - **BREAKING** The small sizes are gone: `data-button-size="sm"` and `"icon-sm"` no longer exist, so a button keeps the default size or `icon`. Remove `data-button-size="sm"` and change `"icon-sm"` to `"icon"`; `npx zazz-ui codemod small-sizes` does it for a whole project, or, if you'd rather keep the small sizes, adds their rules back (`--restore`). A button inside an input group or a password group needs no size: the group sizes it (below). A button that was `sm` in a table, toolbar, or row now takes the default height, so check those layouts. Nothing at runtime flags a leftover `"sm"`: the attribute is ignored and the button renders at the default size. For another size, add a size preset (a new `data-button-size` value); the zazz skill's "Control sizes" covers where it can live.
+- New variants: `data-button-variant="neutral"` is a solid surface (white in light mode, `--color-neutral-950` in dark) raised by `--shadow-xs`, and steps one neutral shade at hover and again at active. `"faded"` is the translucent `--color-faded` overlay, for a button over an image or a colored surface; over the page itself it barely shows.
+- `muted` deepens at hover and active (its alpha is multiplied by 1.66 at hover and 2 at active), where it used to fade toward the surface beneath. `faded` does the same.
+- `secondary` steps darker at hover and active in light mode and lighter in dark, the reverse of `primary`, because the default palette now makes it a light fill in light mode (see base). A light secondary used to lighten by a step too small to see. A theme whose light-mode secondary is dark gets almost no hover step now, so it should set `--ui-button-bg--hover` and `--ui-button-bg--active` (and the badge's) itself.
+
+### badge
+
+- New `neutral` and `faded` variants, matching the button's. Badge and button resolve the same in every variant, these two included, so the badge's `muted` and `secondary` states change as the button's do (above).
 
 ### toggle
 
@@ -38,6 +45,11 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 - A paragraph with a role takes the role's spacing (`<p data-font="h3">` is spaced as a heading). It took a paragraph's spacing before.
 - A `data-font` role on a figure caption, a blockquote's `cite`, or an `hgroup` replaces the font prose gives it. Prose kept its own font before.
 - `data-prose-size="sm"` reads its leading from `--leading-sm`, so `--leading-body-coefficient` reaches it. The default is still 1.5.
+
+### navigation-menu
+
+- The panel's links and submenu triggers take their padding and gap from new hooks: `--ui-navigation-menu-popover-child-px` and `--ui-navigation-menu-popover-child-py` (both `--space-xs`) and `--ui-navigation-menu-popover-child-gap` (one `--spacing` step: between a link's title and description, and between a submenu trigger's label and chevron). They used to be padded by `--ui-navigation-menu-popover-gap`.
+- `--ui-navigation-menu-popover-gap` and `--ui-navigation-menu-popover-viewport-gap` default to `--space-xs`, where they were one and a half `--spacing` steps.
 
 ### tabs
 
@@ -95,6 +107,11 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 
 - Avatar is a primitive with its own stylesheet (`primitives/avatar/avatar.css`), where it was a utility composition. Put `data-ui="avatar"` on the root, `data-avatar-slot="image"` on the `<img>`, and `data-avatar-slot="fallback"` on the initials. The image covers the fallback, so the initials show when the markup has no image. A page that loads the kit per primitive adds it; `npx zazz-ui add avatar` vendors it. The old utility composition still renders, so existing markup keeps working until you move it over.
 - Hooks: `--ui-avatar-size` (a scale number or a length), `--ui-avatar-radius`, `--ui-avatar-corner-shape`, `--ui-avatar-bg`, `--ui-avatar-border-width`, `--ui-avatar-border-style`, `--ui-avatar-border-color`, `--ui-avatar-font-size`, `--ui-avatar-font-weight`, `--ui-avatar-fallback-bg`, and `--ui-avatar-fallback-text`. The `--size`, `--radius`, `--bg`, border, and font utilities work on the root.
+- The primitive defaults to 10 spacing steps (`--ui-avatar-size`) and `--font-size-sm`, where the old composition's examples used `--size: 11` and the inherited font size. Add `style="--size: 11"` to keep the old size.
+
+### fields
+
+- `--ui-field-inset-radius` (the radius of a part inset in a field, such as a tabs label or an input-group button) stops at `0px`. With a small field radius it used to go negative, so a part that subtracts from it, such as the tabs indicator's corners, came out wrong.
 
 ### slider
 
@@ -105,6 +122,9 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 
 - The track and thumb follow the field shape: `--ui-switch-corner-shape` defaults to `--ui-field-corner-shape` instead of `round`. Set it back to `round` for the old look.
 - The track and thumb keep a convex shape from the slider's list, so a concave theme shape can't hide the thumb.
+- **BREAKING** `--ui-switch-thumb-size` is gone, split into `--ui-switch-thumb-w` and `--ui-switch-thumb-h`. Set both where you set the one; the thumb height used to follow the width.
+- New `--ui-switch-w-coefficient` and `--ui-switch-h-coefficient` (both `1`) stretch the track and thumb together, so the gap around the thumb holds. A `--w` or `--h` utility on the switch still sets the size outright.
+- The checked thumb has no border color: `--ui-switch-thumb-border-color--checked` and `--checked-hover` default to `transparent`, where they were the field's hover border color.
 
 ### progress
 
@@ -116,6 +136,8 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 
 ### base
 
+- The default `secondary` and `tertiary` palettes change. `--color-secondary-*` is a gray scale that runs from dark at `50` to light at `950`, the reverse of the other scales, and `--color-secondary` is `secondary-900` in light mode and `secondary-200` in dark, so it is a light fill in light mode, and `--color-secondary-foreground` is `secondary-50` (near black) in light mode and white in dark. `--color-tertiary-*` is a violet scale, and `--color-tertiary` is `tertiary-500` in light mode and `tertiary-600` in dark, with white text in both. A theme that sets its own palettes is unaffected.
+- The `--color-tint-*` overlays are white at each alpha, where they were `--color-neutral-50`, so a tinted neutral no longer reaches the dark-mode muted, faded, and input overlays.
 - **BREAKING** The `*-multiplier` tokens are now `*-coefficient`: `--radius-multiplier` is `--radius-coefficient`, `--leading-heading-multiplier` is `--leading-heading-coefficient`, `--leading-body-multiplier` is `--leading-body-coefficient`, and `--paragraph-spacing-multiplier` is `--paragraph-spacing-coefficient`. The defaults and what they scale are unchanged. **Migration:** rename each token where your theme sets it. An old name still parses but does nothing.
 - **BREAKING** `base/_typography.css` holds only the native `h1`–`h6` baselines. The fluid type scale (`--fluid`, `--typeset-base`, `--typeset-scale`, and every `--font-size-*`) is computed in `base/_variables.css`, so `_variables.css` no longer needs `_typography.css` loaded for `--spacing`. The values are unchanged.
 - **BREAKING** The navigation attributes drop the `data-ui-` prefix: `data-ui-navigation="swap"` and `"off"` are now `data-navigation="swap"` and `"off"`, and `data-ui-persist="<id>"` is now `data-navigation-persist="<id>"`. Rename them on every page; a page left on the old names navigates with full loads.

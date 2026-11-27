@@ -2714,7 +2714,7 @@
       "file": "primitives/navigation-menu/navigation-menu.css"
     },
     "--ui-navigation-menu-popover-child-gap": {
-      "value": "1",
+      "value": "var(--spacing)",
       "file": "primitives/navigation-menu/navigation-menu.css"
     },
     "--ui-navigation-menu-popover-child-px": {
@@ -3306,7 +3306,7 @@
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-thumb-border-color": {
-      "value": "var(--ui-field-border-color)",
+      "value": "var(--color-faded)",
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-thumb-border-width": {
@@ -3334,11 +3334,11 @@
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-track-bg": {
-      "value": "var(--ui-field-bg)",
+      "value": "var(--color-muted)",
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-track-border-color": {
-      "value": "var(--ui-field-border-color)",
+      "value": "transparent",
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-track-border-width": {
@@ -4458,10 +4458,10 @@
       "dark": "oklch(0.985 0 0)"
     },
     "--color-secondary": {
-      "value": "light-dark(var(--color-secondary-900), var(--color-secondary-50))",
+      "value": "light-dark(var(--color-secondary-900), var(--color-secondary-200))",
       "file": "base/_variables.css",
       "light": "oklch(0.967 0.001 0)",
-      "dark": "oklch(0.145 0 0)"
+      "dark": "oklch(0.269 0 0)"
     },
     "--color-secondary-100": {
       "value": "oklch(0.205 0 0)",

@@ -15,6 +15,7 @@ const VARIANTS = [
   "primary",
   "secondary",
   "tertiary",
+  "neutral",
   "muted",
   "faded",
   "ghost",
@@ -102,7 +103,9 @@ describe("button and badge states", () => {
       }
     });
 
-    it.each(VARIANTS.filter((variant) => variant !== "link"))(
+    // faded is the inverse overlay (white in light, black in dark) for use over media,
+    // so over the page itself it can't show a step
+    it.each(VARIANTS.filter((variant) => variant !== "link" && variant !== "faded"))(
       `%s moves a visible step at hover and again at active (${theme})`,
       (variant) => {
         const { page, resolve } = mountPair(theme, variant);

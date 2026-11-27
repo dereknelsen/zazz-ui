@@ -41,9 +41,9 @@
     --ui-slider-ring-color: var(--color-ring);
 
     --ui-slider-track-h: max(calc(var(--spacing) * 1.5), calc(var(--spacing-control-min) * 0.375));
-    --ui-slider-track-bg: var(--ui-field-bg);
+    --ui-slider-track-bg: var(--color-muted);
     --ui-slider-track-border-width: var(--ui-field-border-width);
-    --ui-slider-track-border-color: var(--ui-field-border-color);
+    --ui-slider-track-border-color: transparent;
     --ui-slider-track-radius: var(--radius-full);
     --ui-slider-track-corner-shape: var(--ui-field-corner-shape);
     /* the part of the track between its start and the thumb; `end` fills from the thumb
@@ -58,7 +58,7 @@
        transparent shadow, never `none` */
     --ui-slider-thumb-shadow: var(--shadow-xs);
     --ui-slider-thumb-border-width: 1px;
-    --ui-slider-thumb-border-color: var(--ui-field-border-color);
+    --ui-slider-thumb-border-color: var(--color-faded);
     --ui-slider-thumb-radius: var(--radius-full);
     --ui-slider-thumb-corner-shape: var(--ui-field-corner-shape);
   }
