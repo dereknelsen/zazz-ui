@@ -115,6 +115,7 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 
 ### slider
 
+- The track has no visible border and a `--color-muted` fill: `--ui-slider-track-border-color` defaults to `transparent` and `--ui-slider-track-bg` to `--color-muted`, where both followed the field (`--ui-field-border-color`, `--ui-field-bg`). The border keeps its width, so the track's size doesn't change. The thumb's border is `--color-faded` (`--ui-slider-thumb-border-color`), where it was the field's border color. Set the hooks back to the `--ui-field-*` values for the old look.
 - The track and thumb follow the field shape (`--ui-field-corner-shape`, which defaults to `--radius-corner-shape`). They were round before.
 - A concave corner shape can no longer hide the thumb. `notch` or `superellipse(-2)` at a full radius cut a circle down to nothing. CSS can't read the number in `superellipse()`, so the track and thumb keep only the convex shapes they can name (`round`, `squircle`, `square`, `superellipse(1)`, `superellipse(1.3)`, `superellipse(2)`, `superellipse(infinity)`) and draw anything else round, including a convex value like `superellipse(2.5)` or a theme builder value between the listed steps. Matching is exact, so `superellipse(1.30)` draws round too. Only Chromium and Safari draw `corner-shape`, and both support the `if()` the check uses. A `--corner-shape` utility on the input now sets any shape on the track; it didn't reach the track before.
 
