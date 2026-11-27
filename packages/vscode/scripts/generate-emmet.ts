@@ -4,6 +4,7 @@
  * it on (`ui-dialog` → `dialog[data-ui=dialog]`), so `ui-callout>p` builds Zazz
  * markup. The repo points `emmet.extensionsPath` here. Identities with a tag
  * form (`<ui-carousel>`) keep Emmet's default, which already writes the tag.
+ * Each typography role gets `ui-font-<role>` → `p[data-font=<role>]`.
  * HTML only: Emmet's stylesheet expansion appends `px` to numbers (`4px`),
  * which reads as a length, not a scale step, on a utility.
  */
@@ -11,6 +12,7 @@
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import htmlData from "@zazz-ui/core/editor/zazz.html-data.json" with { type: "json" };
 import languageData from "@zazz-ui/core/editor/zazz.language-data.json" with { type: "json" };
 
 const PRIMITIVES_DIR = join(
@@ -50,9 +52,13 @@ export function generateEmmet(): object {
   const snippets: Record<string, string> = {};
   for (const identity of Object.keys(languageData.identities).sort()) {
     if (tags.has(`ui-${identity}`)) continue;
-    const element = elements.get(identity) ?? (identity.startsWith("text-") ? "p" : "div");
+    const element = elements.get(identity) ?? "div";
     const extra = element === "button" ? " type=button" : "";
     snippets[`ui-${identity}`] = `${element}[data-ui=${identity}${extra}]`;
+  }
+  const roles = htmlData.globalAttributes.find((attribute) => attribute.name === "data-font");
+  for (const { name } of roles?.values ?? []) {
+    snippets[`ui-font-${name}`] = `${name === "eyebrow" ? "span" : "p"}[data-font=${name}]`;
   }
   return { html: { snippets } };
 }

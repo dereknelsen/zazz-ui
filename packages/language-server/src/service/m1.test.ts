@@ -56,10 +56,10 @@ describe("diagnostics", () => {
     expect(found[0]!.fix).toMatchObject({ newText: "--template-cols: 1fr 1fr" });
   });
 
-  it("checks data-ui-persist on whole pages", () => {
-    const text = `<html><body><div data-ui-persist="cart"></div></body></html>`;
+  it("checks data-navigation-persist on whole pages", () => {
+    const text = `<html><body><div data-navigation-persist="cart"></div></body></html>`;
     expect(diagnose(parseHtml(text)).map((d) => [d.rule, slice(text, d.range)])).toEqual([
-      ["persist", `data-ui-persist="cart"`],
+      ["persist", `data-navigation-persist="cart"`],
     ]);
   });
 });

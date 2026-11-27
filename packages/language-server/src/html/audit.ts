@@ -8,6 +8,7 @@
 import {
   auditNode,
   auditPersistence,
+  type PersistMode,
   carriesIdentity,
   expandStyling,
   type AuditContext,
@@ -23,6 +24,7 @@ import { attributeOf, namedAttributes, selfAndAncestors, valueOf, type Tag } fro
 /** Identities and hooks from the generated lint data, where `<ui-debug>` reads the page's stylesheets. */
 export const AUDIT_CONTEXT: AuditContext = {
   identities: lintData.identities,
+  roles: lintData.roles,
   hooks: lintData.hooks,
   reads: expandStyling(lintData.selectors, lintData.reads),
   blocks: expandStyling(lintData.selectors, lintData.blocks),
@@ -63,36 +65,59 @@ export function rangeOf(tag: Tag, finding: Finding): [number, number] {
   return tag.range;
 }
 
-/** `data-ui-persist` and `data-ui-persist-scroll` findings for a whole page; a fragment (no `<html>`) has none. */
+/**
+ * The edit that applies a finding's `attributes`: its attribute is replaced by
+ * the new values, in the author's quotes, or removed with the space before it.
+ */
+export function attributeEdit(
+  tag: Tag,
+  finding: Finding,
+  text: string,
+): { range: [number, number]; newText: string } | undefined {
+  const anchor = finding.attribute && attributeOf(tag, finding.attribute);
+  if (!finding.attributes || !anchor) return undefined;
+  const quote = anchor.value && text[anchor.value.range[0] - 1] === "'" ? "'" : '"';
+  const written = Object.entries(finding.attributes)
+    .filter((entry): entry is [string, string] => entry[1] !== null)
+    .map(([name, value]) => `${name}=${quote}${value}${quote}`);
+  if (written.length) return { range: anchor.range, newText: written.join(" ") };
+  const start = anchor.range[0] - (/\s/.test(text[anchor.range[0] - 1] ?? "") ? 1 : 0);
+  return { range: [start, anchor.range[1]], newText: "" };
+}
+
+/** `data-navigation-persist` findings for a whole page, in both modes; a fragment (no `<html>`) has none. */
 export function persistenceFindings(
   tags: readonly Tag[],
   root: Tag | undefined,
 ): { tag: Tag; message: string; range: [number, number] }[] {
   if (!root) return [];
-  const swap = valueOf(root, "data-ui-navigation") === "swap";
-  const marked = (attribute: string) =>
-    tags.filter((tag) => attributeOf(tag, attribute)).sort((a, b) => a.range[0] - b.range[0]);
-  const persists = (tag: Tag) => valueOf(tag, "data-ui-persist") ?? "";
-  const owner = (tag: Tag, self: boolean) => {
+  const swap = valueOf(root, "data-navigation") === "swap";
+  const scrolls = (tag: Tag) => valueOf(tag, "data-navigation-persist-mode") === "scroll";
+  const carried = (tag: Tag) =>
+    Boolean(attributeOf(tag, "data-navigation-persist")) && !scrolls(tag);
+  const persists = (tag: Tag) => valueOf(tag, "data-navigation-persist") ?? "";
+  const owner = (tag: Tag) => {
     for (const node of selfAndAncestors(tag)) {
-      if (node === tag && !self) continue;
-      if (attributeOf(node, "data-ui-persist")) return { id: persists(node), self: node === tag };
+      if (node !== tag && carried(node)) return persists(node);
     }
     return null;
   };
-  const findings = (attribute: "data-ui-persist" | "data-ui-persist-scroll") =>
+  const findings = (mode: PersistMode) =>
     auditPersistence(
       swap,
-      marked(attribute),
-      (tag) => valueOf(tag, attribute) ?? "",
-      (tag) => owner(tag, attribute === "data-ui-persist-scroll"),
-      attribute,
+      tags.filter(mode === "scroll" ? scrolls : carried).sort((a, b) => a.range[0] - b.range[0]),
+      persists,
+      owner,
+      mode,
     ).warnings.map(({ el, message }) => ({
       tag: el,
       message,
-      range: attributeOf(el, attribute)!.range,
+      range: (
+        attributeOf(el, "data-navigation-persist") ??
+        attributeOf(el, "data-navigation-persist-mode")!
+      ).range,
     }));
-  return [...findings("data-ui-persist"), ...findings("data-ui-persist-scroll")];
+  return [...findings("element"), ...findings("scroll")];
 }
 
 /** The indent a style is laid out under: the attribute's line, one step in when the tag starts there. */

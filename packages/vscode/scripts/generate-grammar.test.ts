@@ -1,6 +1,6 @@
 /**
  * @fileoverview The injection grammar: committed file is fresh, and its
- * patterns scope utility names, tiers, prefixes, hooks, and identities. The
+ * patterns scope utility names, tiers, prefixes, hooks, identities, and roles. The
  * Razor grammar rebuilds the attribute scopes inside Razor code blocks.
  */
 
@@ -72,6 +72,16 @@ describe("injection grammar", () => {
     expect(scopes(`"card group"`, identities)).toEqual({ card: "support.class.zazz.identity" });
     expect(scopes(`"nope"`, identities)).toEqual({});
   });
+
+  it("scopes a known role as the value of data-font, and nowhere else", () => {
+    const roles = repository.roles!.patterns;
+    expect(scopes(`<p data-font="sm">`, roles)).toEqual({ sm: "support.constant.zazz.role" });
+    expect(scopes(`<p data-font='eyebrow'>`, roles)).toEqual({
+      eyebrow: "support.constant.zazz.role",
+    });
+    expect(scopes(`<p data-font="huge">`, roles)).toEqual({});
+    expect(scopes(`<p data-ui="sm">`, roles)).toEqual({});
+  });
 });
 
 interface AttributeRule {
@@ -109,6 +119,9 @@ describe("razor injection grammar", () => {
     });
     expect(rule("meta.attribute.data-x.data-ui.html").patterns[0]).toEqual({
       include: "zazz.injection#identities",
+    });
+    expect(rule("meta.attribute.data-x.data-font.html").patterns[0]).toEqual({
+      include: "zazz.injection#roles",
     });
   });
 });

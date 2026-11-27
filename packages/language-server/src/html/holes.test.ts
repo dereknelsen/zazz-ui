@@ -24,11 +24,11 @@ describe("maskTemplateHoles", () => {
   });
 
   it("astro: masks the frontmatter and {expressions}, strings and nesting included", () => {
-    const source = `---\nconst a = { b: 1 };\n---\n<p data-ui="text-sm" class={cond ? "a}" : \`b\${x}\`}>{items.map((i) => <b>{i}</b>)}</p>`;
+    const source = `---\nconst a = { b: 1 };\n---\n<p data-font="sm" class={cond ? "a}" : \`b\${x}\`}>{items.map((i) => <b>{i}</b>)}</p>`;
     const { text, holes } = maskTemplateHoles(source, "astro");
     expectShapePreserved(source, text);
     expect(text.startsWith("   \n")).toBe(true);
-    expect(text).toContain(`<p data-ui="text-sm" class=`);
+    expect(text).toContain(`<p data-font="sm" class=`);
     expect(text).not.toContain("cond");
     expect(text).not.toContain("items.map");
     expect(holes.length).toBeGreaterThanOrEqual(3);
@@ -54,8 +54,8 @@ describe("maskTemplateHoles", () => {
       "data-ui",
       "data-button-variant",
     ]);
-    expect(maskTemplateHoles(`<p title=<%= t %> data-ui="text-sm">x</p>`, "erb").text).toBe(
-      `<p title="      " data-ui="text-sm">x</p>`,
+    expect(maskTemplateHoles(`<p title=<%= t %> data-font="sm">x</p>`, "erb").text).toBe(
+      `<p title="      " data-font="sm">x</p>`,
     );
   });
 
@@ -66,14 +66,14 @@ describe("maskTemplateHoles", () => {
       `@* a comment *@`,
       `@{ var n = 4; }`,
       `@if (Model.Ok) {`,
-      `  <p data-ui="text-sm">@Model.Name.ToUpper() and @(n + 1) and user@example.com</p>`,
+      `  <p data-font="sm">@Model.Name.ToUpper() and @(n + 1) and user@example.com</p>`,
       `}`,
       `<a href="mailto:a@@b">@@</a>`,
     ].join("\n");
     const { text } = maskTemplateHoles(source, "razor");
     expectShapePreserved(source, text);
     expect(text).not.toMatch(/@page|@model|comment|var n|@if|Model\.Name|\(n \+ 1\)/);
-    expect(text).toContain(`<p data-ui="text-sm">`);
+    expect(text).toContain(`<p data-font="sm">`);
     expect(text).toContain(" and ");
     expect(text).toContain("user@example.com"); // an email is not an expression
     expect(text.split("\n")[6]).toBe(" "); // the block's closing brace
@@ -106,11 +106,11 @@ describe("maskTemplateHoles", () => {
   });
 
   it("elixir: only ~H sigils are markup", () => {
-    const source = `defmodule A do\n  def r(assigns) do\n    ~H"""\n    <p data-ui="text-sm">{@name}</p>\n    """\n  end\nend\n`;
+    const source = `defmodule A do\n  def r(assigns) do\n    ~H"""\n    <p data-font="sm">{@name}</p>\n    """\n  end\nend\n`;
     const { text } = maskTemplateHoles(source, "elixir");
     expectShapePreserved(source, text);
     expect(text).not.toContain("defmodule");
-    expect(text).toContain(`<p data-ui="text-sm">`);
+    expect(text).toContain(`<p data-font="sm">`);
     expect(text).not.toContain("@name");
   });
 

@@ -15,6 +15,7 @@ import {
   RULE_DESCRIPTIONS,
   STYLE_FORMAT_DESCRIPTION,
   absolute,
+  attributeEdit,
   attributeIndent,
   attributeOf,
   auditTag,
@@ -46,12 +47,15 @@ function locOf(context: Rule.RuleContext, [start, end]: [number, number]) {
 }
 
 function auditRule(id: RuleId): Rule.RuleModule {
-  const fixable = id.startsWith("whitespace-");
+  // a retired text-* token rewrites to `data-font`, so `eslint --fix` migrates a page
+  const fixable = id.startsWith("whitespace-") || id === "retired-token";
   return {
     meta: {
       type: "problem",
       docs: { description: RULE_DESCRIPTIONS[id] },
-      ...(fixable ? { fixable: "whitespace" as const } : { hasSuggestions: true }),
+      ...(fixable
+        ? { fixable: id === "retired-token" ? ("code" as const) : ("whitespace" as const) }
+        : { hasSuggestions: true }),
       schema: [],
     },
     create(context) {
@@ -62,6 +66,7 @@ function auditRule(id: RuleId): Rule.RuleModule {
             if (finding.rule !== id) continue;
             const { suggestion } = finding;
             const style = attributeOf(tag, "style")?.value;
+            const rewrite = attributeEdit(tag, finding, context.sourceCode.text);
             const fix =
               suggestion && style
                 ? (fixer: Rule.RuleFixer) =>
@@ -69,12 +74,16 @@ function auditRule(id: RuleId): Rule.RuleModule {
                       absolute(style.range[0], suggestion.span),
                       suggestion.text,
                     )
-                : undefined;
+                : rewrite
+                  ? (fixer: Rule.RuleFixer) =>
+                      fixer.replaceTextRange(rewrite.range, rewrite.newText)
+                  : undefined;
+            const desc = suggestion?.description ?? `Rewrite as \`${rewrite?.newText}\`.`;
             context.report({
               loc: locOf(context, rangeOf(tag, finding)),
               message: finding.message,
               ...(fix && fixable ? { fix } : {}),
-              ...(fix && !fixable ? { suggest: [{ desc: suggestion!.description, fix }] } : {}),
+              ...(fix && !fixable ? { suggest: [{ desc, fix }] } : {}),
             });
           }
         },
@@ -83,7 +92,7 @@ function auditRule(id: RuleId): Rule.RuleModule {
   };
 }
 
-/** `data-ui-persist` checks need the whole page; fragments without `<html>` are skipped. */
+/** `data-navigation-persist` checks need the whole page; fragments without `<html>` are skipped. */
 const persistRule: Rule.RuleModule = {
   meta: { type: "problem", docs: { description: RULE_DESCRIPTIONS.persist }, schema: [] },
   create(context) {

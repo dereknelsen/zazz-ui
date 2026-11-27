@@ -95,6 +95,14 @@ describe("style values", () => {
 });
 
 describe("attributes and tags", () => {
+  it("offers data-font on any element, with the roles as its values", () => {
+    expect(labels(`<p |></p>`)).toContain("data-font");
+    expect(labels(`<p data-font="sm" |></p>`)).not.toContain("data-font");
+    const roles = labels(`<p data-font="|"></p>`);
+    expect(roles).toEqual(expect.arrayContaining(["display", "h3", "sm", "eyebrow"]));
+    expect(roles).toHaveLength(15);
+  });
+
   it("offers identities in data-ui, skipping ones already there", () => {
     const items = labels(`<div data-ui="card |"></div>`);
     expect(items).toContain("dialog");

@@ -327,7 +327,7 @@ function attributeValues(name: string, base: number, value: string, rel: number)
   }));
 }
 
-/** `data-ui`, plus the `data-<id>-*` attributes of identities on the element (slots and states: on its ancestors' too). */
+/** `data-ui` and `data-font`, plus the `data-<id>-*` attributes of identities on the element (slots and states: on its ancestors' too). */
 function attributeNames(tag: Tag, range: [number, number]): ZazzCompletion[] {
   const own = new Set<string>();
   const above = new Set<string>();
@@ -353,6 +353,8 @@ function attributeNames(tag: Tag, range: [number, number]): ZazzCompletion[] {
     });
   };
   offer("data-ui", ATTRIBUTES.get("data-ui")?.description);
+  // a typography role goes on any element
+  offer("data-font", ATTRIBUTES.get("data-font")?.description);
   for (const [name, attribute] of ATTRIBUTES) {
     const owner = [...own, ...above].find((id) => name.startsWith(`data-${id.split("-")[0]}-`));
     if (!owner) continue;

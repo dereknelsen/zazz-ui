@@ -38,6 +38,8 @@ export interface AuditOptions {
   hooks?: Record<string, string[]>;
   /** Identity tokens the kit declares (`button`, `field-group`); default: the page's stylesheets. */
   identities?: string[];
+  /** Typography roles the kit styles (the values of `data-font`), or `null` when unknown; default: the page's stylesheets. */
+  roles?: string[] | null;
 }
 
 /** A live element as the audit core reads it. */
@@ -60,37 +62,68 @@ function auditNodeOf(el: Element): AuditNode {
 const READS = expandStyling(KIT_SELECTORS, TIER_READS);
 const BLOCKS = expandStyling(KIT_SELECTORS, TIER_BLOCKS);
 
-/** Identity tokens and state-bearing hooks, read from the page's stylesheets. */
-function fromStylesheets(): { identities: string[]; hooks: Record<string, string[]> } {
+/**
+ * Identity tokens, typography roles, and state-bearing hooks, read from the
+ * page's stylesheets, `@import`ed ones included. `complete` is false when a
+ * sheet could not be read (cross-origin without `crossorigin`): what it
+ * declares is then unknown.
+ */
+function fromStylesheets(): {
+  identities: string[];
+  roles: string[];
+  hooks: Record<string, string[]>;
+  complete: boolean;
+} {
   const identities = new Set<string>();
+  const roles = new Set<string>();
   const hooks: Record<string, string[]> = {};
+  let complete = true;
   const hookPattern =
     /--ui-([a-z]+(?:-[a-z]+)*?)-([a-z-]+?)--(hover|active|focus-visible|focus-within|checked|open|disabled)\b/g;
-  for (const sheet of document.styleSheets) {
+  const seen = new Set<CSSStyleSheet>();
+  const read = (sheet: CSSStyleSheet | null): void => {
+    if (!sheet || seen.has(sheet)) return;
+    seen.add(sheet);
     let rules: CSSRuleList;
     try {
       rules = sheet.cssRules;
     } catch {
-      continue;
+      complete = false;
+      return;
     }
     for (const rule of rules) {
+      // an @import's text is only its own line; its rules are in the sheet it loads
+      if ("styleSheet" in rule) {
+        read((rule as CSSImportRule).styleSheet);
+        continue;
+      }
       const text = rule.cssText;
       for (const m of text.matchAll(/\[data-ui~="([^"]+)"\]/g)) identities.add(m[1]!);
+      for (const m of text.matchAll(/\[data-font="([^"]+)"\]/g)) roles.add(m[1]!);
       for (const m of text.matchAll(hookPattern)) {
         const list = (hooks[m[1]!] ??= []);
         if (!list.includes(`${m[2]}--${m[3]}`)) list.push(`${m[2]}--${m[3]}`);
       }
     }
-  }
-  return { identities: [...identities], hooks };
+  };
+  for (const sheet of document.styleSheets) read(sheet);
+  return { identities: [...identities], roles: [...roles], hooks, complete };
 }
 
 /** Audits every element under `root` (inclusive) and returns the findings. */
 export function audit(root: Element, options: AuditOptions = {}): Warning[] {
-  const sheets = options.hooks && options.identities ? null : fromStylesheets();
+  const sheets =
+    options.hooks && options.identities && options.roles !== undefined ? null : fromStylesheets();
   const resolved: Required<AuditOptions> = {
     hooks: options.hooks ?? sheets!.hooks,
     identities: options.identities ?? sheets!.identities,
+    // no role found and a sheet unread: font.css may be the one that was not read
+    roles:
+      options.roles !== undefined
+        ? options.roles
+        : sheets!.roles.length || sheets!.complete
+          ? sheets!.roles
+          : null,
   };
   const context = {
     ...resolved,
@@ -113,46 +146,35 @@ export interface Note {
 }
 
 /**
- * Calls out what survives an in-page navigation: on a `data-ui-navigation="swap"`
- * page, which `data-ui-persist` elements are kept and which
- * `data-ui-persist-scroll` elements carry their scroll offset; warnings for
- * persistence that cannot work as written.
+ * Calls out what survives an in-page navigation: on a `data-navigation="swap"`
+ * page, which `data-navigation-persist` elements are kept and which
+ * (`data-navigation-persist-mode="scroll"`) carry only their scroll offset;
+ * warnings for persistence that cannot work as written.
  */
 export function navigationReport(doc: Document): { notes: Note[]; warnings: Warning[] } {
-  const swap = doc.documentElement.getAttribute("data-ui-navigation") === "swap";
-  const idOf = (attribute: string) => (el: Element) => el.getAttribute(attribute) ?? "";
-  const persists = idOf("data-ui-persist");
-  const owner = (el: Element | null | undefined) => (el ? { id: persists(el), self: false } : null);
-  const persisted = auditPersistence(
-    swap,
-    [...doc.querySelectorAll("[data-ui-persist]")],
-    persists,
-    (el) => owner(el.parentElement?.closest("[data-ui-persist]")),
-  );
-  const scrolled = auditPersistence(
-    swap,
-    [...doc.querySelectorAll("[data-ui-persist-scroll]")],
-    idOf("data-ui-persist-scroll"),
-    (el) =>
-      el.hasAttribute("data-ui-persist")
-        ? { id: persists(el), self: true }
-        : owner(el.closest("[data-ui-persist]")),
-    "data-ui-persist-scroll",
-  );
+  const swap = doc.documentElement.getAttribute("data-navigation") === "swap";
+  const SCROLL = '[data-navigation-persist-mode="scroll"]';
+  const CARRIED = `[data-navigation-persist]:not(${SCROLL})`;
+  const idOf = (el: Element) => el.getAttribute("data-navigation-persist") ?? "";
+  const owner = (el: Element) => {
+    const around = el.parentElement?.closest(CARRIED);
+    return around ? idOf(around) : null;
+  };
+  const persisted = auditPersistence(swap, [...doc.querySelectorAll(CARRIED)], idOf, owner);
+  const scrolled = auditPersistence(swap, [...doc.querySelectorAll(SCROLL)], idOf, owner, "scroll");
   const warnings = [...persisted.warnings, ...scrolled.warnings];
   if (!swap) return { notes: [], warnings };
   const kept = persisted.kept;
-  const ids = (els: Element[], attribute: string) =>
-    els.map((el) => `"${el.getAttribute(attribute)}"`).join(", ");
+  const ids = (els: Element[]) => els.map((el) => `"${idOf(el)}"`).join(", ");
   const one = scrolled.kept.length === 1;
   const scroll = scrolled.kept.length
-    ? ` ${scrolled.kept.length} element${one ? " comes" : "s come"} from the next page but keep${one ? "s its" : " their"} scroll offset (${ids(scrolled.kept, "data-ui-persist-scroll")}).`
+    ? ` ${scrolled.kept.length} element${one ? " comes" : "s come"} from the next page but keep${one ? "s its" : " their"} scroll offset (${ids(scrolled.kept)}).`
     : "";
   const notes: Note[] = [
     {
       message:
         (kept.length
-          ? `In-page navigation is on. ${kept.length} element${kept.length === 1 ? " persists" : "s persist"} across navigations (${ids(kept, "data-ui-persist")}); everything else is replaced by the next page.`
+          ? `In-page navigation is on. ${kept.length} element${kept.length === 1 ? " persists" : "s persist"} across navigations (${ids(kept)}); everything else is replaced by the next page.`
           : "In-page navigation is on, and nothing persists: every navigation replaces the whole body.") +
         scroll,
       elements: [...kept, ...scrolled.kept],

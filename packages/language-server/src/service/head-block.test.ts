@@ -1,7 +1,7 @@
 /**
  * @fileoverview Auto-imports on pages whose head block lists primitives:
  * completion edits, the missing-import diagnostic and its fix, and the pages
- * that need nothing (whole kit, base identities, already loaded).
+ * that need nothing (whole kit, already loaded).
  */
 
 import { buildHead, findHeadBlock, headMarker, type HeadOptions } from "@zazz-ui/core/head.ts";
@@ -35,7 +35,9 @@ describe("auto-imports", () => {
     expect(primitiveOf("dialog")).toBe("dialog");
     expect(primitiveOf("radio-group")).toBe("radio");
     expect(primitiveOf("ui-carousel")).toBe("carousel");
-    expect(primitiveOf("prose")).toBeNull();
+    expect(primitiveOf("prose")).toBe("prose");
+    expect(primitiveOf("link")).toBe("link");
+    expect(primitiveOf("no-such-identity")).toBeNull();
   });
 
   it("completing an identity adds its primitive to the head block", () => {
@@ -48,14 +50,10 @@ describe("auto-imports", () => {
     expect(next).toContain("primitives/dialog/dialog.css");
   });
 
-  it("does nothing for loaded primitives, base identities, or whole-kit pages", () => {
+  it("does nothing for loaded primitives or whole-kit pages", () => {
     const loaded = cursor(page(GRANULAR, `<div data-ui="ca|"></div>`));
     expect(
       complete(loaded.parsed, loaded.offset).find((i) => i.label === "card")!.additionalEdits,
-    ).toBeUndefined();
-    const base = cursor(page(GRANULAR, `<div data-ui="pro|"></div>`));
-    expect(
-      complete(base.parsed, base.offset).find((i) => i.label === "prose")!.additionalEdits,
     ).toBeUndefined();
     expect(importEdit(page({ base: "./zazz" }, ""), "dialog")).toBeUndefined();
   });
@@ -69,6 +67,20 @@ describe("auto-imports", () => {
     expect(findHeadBlock(applyEdit(text, missing[0]!.fix!))?.options.primitives).toEqual([
       "card",
       "carousel",
+    ]);
+  });
+
+  it("flags an attribute-form primitive: data-font needs font", () => {
+    // a card's examples use roles, so card brings font; a badge does not
+    const text = page(
+      { ...GRANULAR, primitives: ["badge"] },
+      `<p data-font="sm">a</p>\n<p data-theme="dark" data-dialog="x" data-table>b</p>`,
+    );
+    const missing = diagnose(parseHtml(text)).filter((d) => d.rule === "missing-import");
+    expect(missing.map((d) => text.slice(...d.range))).toEqual(["data-font"]);
+    expect(findHeadBlock(applyEdit(text, missing[0]!.fix!))?.options.primitives).toEqual([
+      "badge",
+      "font",
     ]);
   });
 

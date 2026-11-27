@@ -46,18 +46,18 @@ export function pageSnippet({ base, primitives, body, swap }: PageOptions): stri
   const main = body === undefined ? "$0" : shiftTabStops(body, 2);
   const content = swap
     ? [
-        `<header data-ui-persist="header" style="--py: 4">`,
+        `<header data-navigation-persist="header" style="--py: 4">`,
         `  <nav><a href="./">\${2:Home}</a></nav>`,
         `</header>`,
         `<main data-ui="layout">`,
         indent(main, "  "),
         `</main>`,
-        `<ui-toaster data-ui-persist="toaster"></ui-toaster>`,
+        `<ui-toaster data-navigation-persist="toaster"></ui-toaster>`,
       ].join("\n")
     : [`<main data-ui="layout">`, indent(main, "  "), `</main>`].join("\n");
   return [
     "<!doctype html>",
-    `<html lang="en"${swap ? ` data-ui-navigation="swap"` : ""}>`,
+    `<html lang="en"${swap ? ` data-navigation="swap"` : ""}>`,
     "  <head>",
     indent(head, "    "),
     "    <title>${1:Page}</title>",

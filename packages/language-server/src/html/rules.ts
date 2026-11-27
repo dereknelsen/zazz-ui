@@ -33,7 +33,8 @@ export const RULE_DESCRIPTIONS: Record<RuleId, string> = {
   "field-id-or-name":
     "An `<input>`, `<select>`, or `<textarea>` with neither `id` nor `name`, which Chrome reports as an issue.",
   "retired-token": "A `data-ui` token that is gone, with what replaces it.",
-  persist: "`data-ui-persist` that cannot work as written.",
+  "font-role": "A `data-font` value that is not exactly one typography role the kit styles.",
+  persist: "`data-navigation-persist` that cannot work as written.",
 };
 
 export const STYLE_FORMAT_DESCRIPTION =

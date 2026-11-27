@@ -1,10 +1,17 @@
 /**
  * @fileoverview The audit as diagnostics: every tag's findings plus the page's
- * `data-ui-persist` checks, on the same ranges the lint rules report.
+ * `data-navigation-persist` checks, on the same ranges the lint rules report.
  */
 
 import type { Finding, RuleId } from "@zazz-ui/core/primitives/debug/audit-core.ts";
-import { absolute, attributeOf, auditTag, persistenceFindings, rangeOf } from "../html/index.ts";
+import {
+  absolute,
+  attributeEdit,
+  attributeOf,
+  auditTag,
+  persistenceFindings,
+  rangeOf,
+} from "../html/index.ts";
 import type { ParsedHtml } from "../html/parse.ts";
 import type { Edit } from "./format.ts";
 import { missingImports } from "./head-block.ts";
@@ -49,6 +56,7 @@ export function diagnose(parsed: ParsedHtml): ZazzDiagnostic[] {
       const style = attributeOf(tag, "style")?.value;
       const { suggestion } = finding;
       const range = rangeOf(tag, finding);
+      const rewrite = attributeEdit(tag, finding, parsed.text);
       const fix =
         suggestion && style
           ? {
@@ -56,7 +64,9 @@ export function diagnose(parsed: ParsedHtml): ZazzDiagnostic[] {
               range: absolute(style.range[0], suggestion.span),
               newText: suggestion.text,
             }
-          : addBase(finding, parsed.text, range);
+          : rewrite
+            ? { title: `Rewrite as \`${rewrite.newText}\``, ...rewrite }
+            : addBase(finding, parsed.text, range);
       found.push({
         range,
         message: finding.message,

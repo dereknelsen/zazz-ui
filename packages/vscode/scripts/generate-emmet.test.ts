@@ -22,6 +22,13 @@ describe("emmet snippets", () => {
     expect(html("ui-button")).toBe('<button data-ui="button" type="button"></button>');
   });
 
+  it("expands a typography role to data-font", () => {
+    expect(html("ui-font-sm")).toBe('<p data-font="sm"></p>');
+    expect(html("ui-font-eyebrow")).toBe('<span data-font="eyebrow"></span>');
+    expect(snippets["ui-text-sm"]).toBeUndefined();
+    expect(html("ui-link")).toBe('<a href="" data-ui="link"></a>');
+  });
+
   it("composes with Emmet operators", () => {
     expect(html("ui-callout>p")).toBe('<div data-ui="callout">\n  <p></p>\n</div>');
   });

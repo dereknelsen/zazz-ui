@@ -52,9 +52,9 @@ describe("templates", () => {
     const page = render(
       pageSnippet({ base: "./zazz", primitives: templatePrimitives("swap"), swap: true }),
     );
-    expect(page).toContain('<html lang="en" data-ui-navigation="swap">');
-    expect(page).toContain('data-ui-persist="header"');
-    expect(page).toContain('<ui-toaster data-ui-persist="toaster">');
+    expect(page).toContain('<html lang="en" data-navigation="swap">');
+    expect(page).toContain('data-navigation-persist="header"');
+    expect(page).toContain('<ui-toaster data-navigation-persist="toaster">');
   });
 
   it("starts a fragment on its identity, and checks names", () => {

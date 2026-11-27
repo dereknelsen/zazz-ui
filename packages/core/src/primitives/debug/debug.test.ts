@@ -27,9 +27,13 @@ const IDENTITIES = [
   "reveal",
 ];
 
+const ROLES = ["display", "h1", "h2", "h3", "2xl", "lg", "md", "sm", "xs", "eyebrow"];
+
 function warningsFor(html: string, hooks: Record<string, string[]> = {}): string[] {
   const root = mount(`<div>${html}</div>`);
-  return audit(root, { hooks, identities: IDENTITIES }).map((warning) => warning.message);
+  return audit(root, { hooks, identities: IDENTITIES, roles: ROLES }).map(
+    (warning) => warning.message,
+  );
 }
 
 describe("exact-value keywords", () => {
@@ -39,6 +43,68 @@ describe("exact-value keywords", () => {
       expect(warningsFor(`<div style="${declaration}"></div>`).join()).toMatch(/space/);
     },
   );
+});
+
+describe("data-font roles", () => {
+  it("accepts a role the kit styles", () => {
+    expect(warningsFor(`<p data-font="sm">a</p><h3 data-font="lg">b</h3>`)).toEqual([]);
+  });
+
+  it("names the roles when the value is not one", () => {
+    expect(warningsFor(`<p data-font="huge">a</p>`)).toEqual([
+      expect.stringMatching(/`data-font="huge"` is not a typography role.*`display`.*`eyebrow`/),
+    ]);
+    expect(warningsFor(`<p data-font="">a</p>`)).toEqual([
+      expect.stringMatching(/`data-font` needs a role/),
+    ]);
+  });
+
+  it("takes one role, not a list", () => {
+    expect(warningsFor(`<p data-font="sm lg">a</p>`)).toEqual([
+      expect.stringMatching(/takes one role.*`sm lg`/),
+    ]);
+  });
+
+  it("points an old token spelling at the bare role", () => {
+    expect(warningsFor(`<p data-font="text-sm">a</p>`)).toEqual([
+      expect.stringMatching(/Write `data-font="sm"`/),
+    ]);
+    expect(warningsFor(`<a data-font="link">a</a>`)).toEqual([
+      expect.stringMatching(/A link is an identity: `data-ui="link"`/),
+    ]);
+  });
+
+  it("lists the roles in scale order, whatever order they were read in", () => {
+    const root = mount(`<div><p data-font="huge">a</p></div>`);
+    const [warning] = audit(root, {
+      hooks: {},
+      identities: [],
+      roles: ["sm", "2xl", "h1", "display"],
+    });
+    expect(warning!.message).toContain("`display`, `h1`, `2xl`, `sm`");
+  });
+
+  it("reads the roles from the page's stylesheets, and stays quiet when they are unknown", () => {
+    const root = mount(`<div><p data-font="huge">a</p><p data-font="sm">b</p></div>`);
+    const sheet = document.createElement("style");
+    sheet.textContent = `[data-font="sm"], [data-font="lg"] { font-size: 1rem }`;
+    document.head.append(sheet);
+    try {
+      expect(audit(root).map((warning) => warning.message)).toEqual([
+        expect.stringMatching(/`data-font="huge"` is not a typography role.*`lg`, `sm`/),
+      ]);
+    } finally {
+      sheet.remove();
+    }
+    expect(audit(root, { hooks: {}, identities: [], roles: null })).toEqual([]);
+  });
+
+  it("says so when the page has not loaded the font stylesheet", () => {
+    const root = mount(`<div><p data-font="sm">a</p></div>`);
+    expect(audit(root, { hooks: {}, identities: IDENTITIES, roles: [] })[0]!.message).toMatch(
+      /`data-font` does nothing here.*font\.css/,
+    );
+  });
 });
 
 describe("retired data-ui tokens", () => {
@@ -57,6 +123,10 @@ describe("retired data-ui tokens", () => {
     ["container", "--container-type: inline-size"],
     ["theme-dark", 'data-theme="dark"'],
     ["theme-light", 'data-theme="light"'],
+    ["text-sm", 'data-font="sm"'],
+    ["text-h3", 'data-font="h3"'],
+    ["text-eyebrow", 'data-font="eyebrow"'],
+    ["text-link", 'data-ui="link"'],
   ])("%s names its replacement", (token, replacement) => {
     expect(warningsFor(`<div data-ui="${token}"></div>`)).toEqual([
       expect.stringContaining(replacement),
@@ -433,7 +503,7 @@ describe("audit warnings", () => {
 describe("navigation report", () => {
   afterEach(() => {
     document.body.innerHTML = "";
-    document.documentElement.removeAttribute("data-ui-navigation");
+    document.documentElement.removeAttribute("data-navigation");
   });
 
   it("says nothing on a page that neither swaps nor persists", () => {
@@ -442,8 +512,8 @@ describe("navigation report", () => {
   });
 
   it("lists the persisted elements on a swap page", () => {
-    document.documentElement.setAttribute("data-ui-navigation", "swap");
-    document.body.innerHTML = `<header><div data-ui-persist="cart"></div></header><ui-toaster data-ui-persist="toaster"></ui-toaster>`;
+    document.documentElement.setAttribute("data-navigation", "swap");
+    document.body.innerHTML = `<header><div data-navigation-persist="cart"></div></header><ui-toaster data-navigation-persist="toaster"></ui-toaster>`;
     const { notes, warnings } = navigationReport(document);
     expect(warnings).toEqual([]);
     expect(notes).toHaveLength(1);
@@ -453,18 +523,18 @@ describe("navigation report", () => {
   });
 
   it("notes a swap page where nothing persists", () => {
-    document.documentElement.setAttribute("data-ui-navigation", "swap");
+    document.documentElement.setAttribute("data-navigation", "swap");
     document.body.innerHTML = `<main></main>`;
     expect(navigationReport(document).notes[0]!.message).toMatch(/nothing persists/);
   });
 
   it("warns on a missing id, a duplicate id, nesting, and persistence without the opt-in", () => {
-    document.body.innerHTML = `<div data-ui-persist></div>`;
+    document.body.innerHTML = `<div data-navigation-persist></div>`;
     expect(navigationReport(document).warnings.map((w) => w.message)).toEqual([
-      expect.stringMatching(/data-ui-navigation="swap"/),
+      expect.stringMatching(/data-navigation="swap"/),
     ]);
-    document.documentElement.setAttribute("data-ui-navigation", "swap");
-    document.body.innerHTML = `<div data-ui-persist></div><p data-ui-persist="a"></p><p data-ui-persist="a"></p><section data-ui-persist="outer"><span data-ui-persist="inner"></span></section>`;
+    document.documentElement.setAttribute("data-navigation", "swap");
+    document.body.innerHTML = `<div data-navigation-persist></div><p data-navigation-persist="a"></p><p data-navigation-persist="a"></p><section data-navigation-persist="outer"><span data-navigation-persist="inner"></span></section>`;
     const messages = navigationReport(document).warnings.map((w) => w.message);
     expect(messages).toEqual(
       expect.arrayContaining([
@@ -476,24 +546,23 @@ describe("navigation report", () => {
     expect(messages).toHaveLength(3);
   });
 
-  it("lists the scroll-carried elements, and warns on persist-scroll that cannot work", () => {
-    document.body.innerHTML = `<aside data-ui-persist-scroll="side"></aside>`;
+  it("lists the scroll-carried elements, and warns on scroll mode that cannot work", () => {
+    document.body.innerHTML = `<aside data-navigation-persist="side" data-navigation-persist-mode="scroll"></aside>`;
     expect(navigationReport(document).warnings.map((w) => w.message)).toEqual([
-      expect.stringMatching(/data-ui-persist-scroll.*data-ui-navigation="swap"/),
+      expect.stringMatching(/data-navigation-persist`.*data-navigation="swap"/),
     ]);
-    document.documentElement.setAttribute("data-ui-navigation", "swap");
+    document.documentElement.setAttribute("data-navigation", "swap");
     expect(navigationReport(document).notes[0]!.message).toMatch(
       /1 element comes from the next page but keeps its scroll offset \("side"\)/,
     );
-    document.body.innerHTML = `<div data-ui-persist="cart"></div>`;
+    document.body.innerHTML = `<div data-navigation-persist="cart"></div>`;
     expect(navigationReport(document).notes[0]!.message).toMatch(/1 element persists across/);
-    document.body.innerHTML = `<aside data-ui-persist-scroll></aside><nav data-ui-persist-scroll="a"></nav><nav data-ui-persist-scroll="a"></nav><header data-ui-persist="head"><nav data-ui-persist-scroll="inner"></nav></header><div data-ui-persist="self" data-ui-persist-scroll="both"></div>`;
+    document.body.innerHTML = `<aside data-navigation-persist-mode="scroll"></aside><nav data-navigation-persist="a" data-navigation-persist-mode="scroll"></nav><nav data-navigation-persist="a" data-navigation-persist-mode="scroll"></nav><header data-navigation-persist="head"><nav data-navigation-persist="inner" data-navigation-persist-mode="scroll"></nav></header>`;
     const messages = navigationReport(document).warnings.map((w) => w.message);
     expect(messages).toEqual([
-      expect.stringMatching(/data-ui-persist-scroll` has no id/),
-      expect.stringMatching(/data-ui-persist-scroll="a"` is used twice/),
-      expect.stringMatching(/"inner".*inside.*data-ui-persist="head"/),
-      expect.stringMatching(/"both".*data-ui-persist="self"/),
+      expect.stringMatching(/persist-mode="scroll"` has no `data-navigation-persist` id/),
+      expect.stringMatching(/data-navigation-persist="a"` is used twice.*scroll offset/),
+      expect.stringMatching(/"inner".*inside.*data-navigation-persist="head"/),
     ]);
   });
 
@@ -634,14 +703,14 @@ describe("navigation report", () => {
     ]);
   });
 
-  it("a tier alone needs a base on a primitive root, and works on a typography role", () => {
+  it("a tier alone needs a base on a primitive root, and works where a typography role sets nothing", () => {
     expect(warningsFor(`<button data-ui="button" style="--p--md: 2">x</button>`)).toEqual([
       expect.stringMatching(/--p--md.*no base/),
     ]);
     expect(warningsFor(`<ui-layout style="--gap--md: 4"></ui-layout>`)).toEqual([
       expect.stringMatching(/--gap--md.*no base/),
     ]);
-    expect(warningsFor(`<p data-ui="text-2xl" style="--opacity--hover: .8">x</p>`)).toEqual([]);
+    expect(warningsFor(`<p data-font="2xl" style="--opacity--hover: .8">x</p>`)).toEqual([]);
   });
 
   it("knows the starting state: no base needed where the utility has a default, no group form", () => {

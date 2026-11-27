@@ -42,7 +42,53 @@ describe("quick fixes", () => {
     expect(diagnostic!.rule).toBe("tier-without-base");
     // a card reads --p through its own chain, so the tier works alone
     expect(diagnose(parseHtml(`<div data-ui="card" style="--p--md: 4">a</div>`))).toEqual([]);
-    expect(diagnose(parseHtml(`<div data-ui="text-lg" style="--p--md: 4">a</div>`))).toEqual([]);
+    expect(diagnose(parseHtml(`<div data-font="lg" style="--p--md: 4">a</div>`))).toEqual([]);
+  });
+});
+
+describe("typography roles", () => {
+  const fixed = (text: string) => {
+    const [diagnostic] = diagnose(parseHtml(text)).filter((d) => d.rule === "retired-token");
+    const fix = diagnostic!.fix!;
+    return text.slice(0, fix.range[0]) + fix.newText + text.slice(fix.range[1]);
+  };
+
+  it("rewrites a retired text-* token to data-font", () => {
+    expect(fixed(`<p data-ui="text-sm">a</p>`)).toBe(`<p data-font="sm">a</p>`);
+    expect(fixed(`<span data-ui="badge text-xs" id="b">a</span>`)).toBe(
+      `<span data-ui="badge" data-font="xs" id="b">a</span>`,
+    );
+  });
+
+  it("turns text-link into the link identity, and keeps the author's quotes", () => {
+    expect(fixed(`<a data-ui='text-sm text-link' href="#">a</a>`)).toBe(
+      `<a data-ui='link' data-font='sm' href="#">a</a>`,
+    );
+    expect(fixed(`<a data-ui="text-link">a</a>`)).toBe(`<a data-ui="link">a</a>`);
+  });
+
+  it("offers one fix for the element, and none where a role is already set", () => {
+    const both = diagnose(parseHtml(`<a data-ui="text-sm text-link">a</a>`)).filter(
+      (d) => d.rule === "retired-token",
+    );
+    expect(both.map((d) => Boolean(d.fix))).toEqual([true, false]);
+    const [set] = diagnose(parseHtml(`<p data-ui="text-sm" data-font="lg">a</p>`)).filter(
+      (d) => d.rule === "retired-token",
+    );
+    expect(set!.fix).toBeUndefined();
+  });
+
+  it("offers no rewrite when template syntax sits among the tokens", () => {
+    const [found] = diagnose(parseHtml(`<p data-ui="text-sm {{ a }} {{ b }}">a</p>`)).filter(
+      (d) => d.rule === "retired-token",
+    );
+    expect(found?.fix).toBeUndefined();
+  });
+
+  it("flags a data-font value that is not a role", () => {
+    const rules = (text: string) => diagnose(parseHtml(text)).map((d) => d.rule);
+    expect(rules(`<p data-font="huge">a</p>`)).toEqual(["font-role"]);
+    expect(rules(`<p data-font="sm">a</p>`)).toEqual([]);
   });
 });
 

@@ -113,6 +113,28 @@ describe("@zazz-ui/eslint-plugin", () => {
     );
   });
 
+  it("fixes retired text-* tokens into data-font and the link identity", () => {
+    const fixed = linter.verifyAndFix(
+      `<p data-ui="text-sm">a</p>\n<span data-ui="badge text-xs">b</span>\n<a data-ui="text-sm text-link" href="#">c</a>`,
+      config,
+      "page.html",
+    );
+    expect(fixed.output).toBe(
+      `<p data-font="sm">a</p>\n<span data-ui="badge" data-font="xs">b</span>\n<a data-ui="link" data-font="sm" href="#">c</a>`,
+    );
+    expect(fixed.messages).toEqual([]);
+    // a retired token with no attribute rewrite is reported and left alone
+    expect(linter.verifyAndFix(`<p data-ui="sr-only">a</p>`, config, "page.html").fixed).toBe(
+      false,
+    );
+  });
+
+  it("reports a data-font value that is not a role", () => {
+    expect(findings(`<p data-font="huge">a</p><p data-font="sm">b</p>`)).toEqual([
+      ["font-role", `data-font="huge"`],
+    ]);
+  });
+
   it("fixes whitespace before the colon and suggests the template form", () => {
     const fixed = linter.verifyAndFix(`<div style="--w  : 4"></div>`, config, "page.html");
     expect(fixed.output).toBe(`<div style="--w: 4"></div>`);
@@ -180,24 +202,29 @@ describe("@zazz-ui/eslint-plugin", () => {
     });
   });
 
-  it("checks data-ui-persist-scroll on whole pages too", () => {
+  it("checks scroll-mode data-navigation-persist on whole pages too", () => {
     expect(
       findings(
-        `<html data-ui-navigation="swap"><body><nav data-ui-persist-scroll="a"></nav><nav data-ui-persist-scroll="a"></nav></body></html>`,
+        `<html data-navigation="swap"><body><nav data-navigation-persist="a" data-navigation-persist-mode="scroll"></nav><nav data-navigation-persist="a" data-navigation-persist-mode="scroll"></nav></body></html>`,
       ).map(([, source]) => source),
-    ).toEqual([`data-ui-persist-scroll="a"`]);
+    ).toEqual([`data-navigation-persist="a"`]);
+    expect(
+      findings(
+        `<html data-navigation="swap"><body><nav data-navigation-persist-mode="scroll"></nav></body></html>`,
+      ).map(([, source]) => source),
+    ).toEqual([`data-navigation-persist-mode="scroll"`]);
   });
 
-  it("checks data-ui-persist on whole pages only", () => {
-    expect(lint(`<div data-ui-persist="cart"></div>`)).toEqual([]);
-    expect(findings(`<html><body><div data-ui-persist="cart"></div></body></html>`)).toEqual([
-      ["persist", `data-ui-persist="cart"`],
-    ]);
+  it("checks data-navigation-persist on whole pages only", () => {
+    expect(lint(`<div data-navigation-persist="cart"></div>`)).toEqual([]);
+    expect(
+      findings(`<html><body><div data-navigation-persist="cart"></div></body></html>`),
+    ).toEqual([["persist", `data-navigation-persist="cart"`]]);
     expect(
       findings(
-        `<html data-ui-navigation="swap"><body><p data-ui-persist="a"></p><p data-ui-persist="a"></p><section data-ui-persist="outer"><span data-ui-persist="inner"></span></section></body></html>`,
+        `<html data-navigation="swap"><body><p data-navigation-persist="a"></p><p data-navigation-persist="a"></p><section data-navigation-persist="outer"><span data-navigation-persist="inner"></span></section></body></html>`,
       ).map(([, text]) => text),
-    ).toEqual([`data-ui-persist="a"`, `data-ui-persist="inner"`]);
+    ).toEqual([`data-navigation-persist="a"`, `data-navigation-persist="inner"`]);
   });
 
   it("recommends an error for a declaration that does nothing and a warning for the rest", () => {

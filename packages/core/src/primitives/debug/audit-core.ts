@@ -47,6 +47,7 @@ export type RuleId =
   | "whitespace-after-colon"
   | "attribute-outside-identity"
   | "retired-token"
+  | "font-role"
   | "field-id-or-name"
   | "persist";
 
@@ -69,6 +70,7 @@ export const RULE_IDS: readonly RuleId[] = [
   "whitespace-after-colon",
   "attribute-outside-identity",
   "retired-token",
+  "font-role",
   "field-id-or-name",
   "persist",
 ];
@@ -90,6 +92,11 @@ export interface Finding {
   /** The attribute the finding is about, when it is not `style`. */
   attribute?: string;
   suggestion?: Suggestion;
+  /**
+   * The attribute values that resolve the finding, when rewriting attributes
+   * does it: `null` removes one. `attribute` is among the keys.
+   */
+  attributes?: Record<string, string | null>;
 }
 
 /** The parts of an element the audit reads. */
@@ -109,6 +116,12 @@ export interface AuditContext {
   hooks: Record<string, string[]>;
   /** Identity tokens the kit declares (`button`, `field-group`). */
   identities: readonly string[];
+  /**
+   * Typography roles the kit styles, the values of `data-font` (`h3`, `sm`):
+   * empty when `font.css` is not loaded, `null` when that cannot be known (a
+   * stylesheet the page may not read), which skips the `font-role` rule.
+   */
+  roles: readonly string[] | null;
   /** For each utility, the elements the kit reads it on through its own chain, as selectors. */
   reads: Readonly<Record<string, readonly string[]>>;
   /** For each tier-only utility, the elements a kit rule above `@layer defaults` sets its property on. */
@@ -131,6 +144,62 @@ const NUMBER = /^-?(\d+\.?\d*|\.\d+)$/;
 const DIMENSION =
   /^-?(\d+\.?\d*|\.\d+)(px|r?em|%|v[wh]|v[ib]|[sld]v[wh]|ch|ex|cap|ic|lh|rlh|cq[iwhb]|cqmin|cqmax|pt|cm|mm|in)$/;
 const FUNCTION = /^(calc|clamp|min|max|var|env|round|mod|rem|abs|sign)\(/;
+
+/** A typography role from before `data-font`, as a `data-ui` token (`text-sm`, `text-link`). */
+const RETIRED_ROLE = /^text-/;
+
+/**
+ * The attributes that replace an element's retired `text-*` tokens: the role
+ * moves to `data-font`, `text-link` becomes the `link` identity, and `data-ui`
+ * goes when nothing is left in it. None when the element already has a
+ * `data-font`, carries two roles, or has template syntax among its tokens
+ * (`{{ size }}`): the author picks.
+ */
+function retiredRoleRewrite(
+  tokens: readonly string[],
+  hasFont: boolean,
+): Record<string, string | null> | undefined {
+  const retired = tokens.filter((token) => RETIRED_ROLE.test(token) && RETIRED_TOKENS[token]);
+  const roles = retired.filter((token) => token !== "text-link").map((token) => token.slice(5));
+  if (!retired.length || roles.length > 1 || (roles.length && hasFont)) return undefined;
+  if (!tokens.every((token) => /^[\w-]+$/.test(token))) return undefined;
+  const rest = tokens
+    .filter((token) => !retired.includes(token) || token === "text-link")
+    .map((token) => (token === "text-link" ? "link" : token));
+  return {
+    "data-ui": rest.length ? rest.join(" ") : null,
+    ...(roles.length ? { "data-font": roles[0]! } : {}),
+  };
+}
+
+/** The order the roles are listed in: headings, then body sizes, large to small. */
+const ROLE_ORDER = "display h1 h2 h3 h4 h5 h6 2xl xl lg md sm xs 2xs eyebrow".split(" ");
+
+/** What is wrong with a `data-font` value, or nothing when it is one role the kit styles. */
+function fontRoleMessage(value: string, known: readonly string[]): string | undefined {
+  const given = value.split(/\s+/).filter(Boolean);
+  if (!known.length) {
+    return "`data-font` does nothing here: the page has not loaded `primitives/font/font.css`.";
+  }
+  // largest first, as the scale runs; a role the order does not know goes last
+  const rank = (role: string) => ROLE_ORDER.indexOf(role) + 1 || ROLE_ORDER.length + 1;
+  const roles = [...known].sort((a, b) => rank(a) - rank(b));
+  const list = roles.map((role) => `\`${role}\``).join(", ");
+  if (!given.length) return `\`data-font\` needs a role: ${list}.`;
+  if (given.length > 1) {
+    return `\`data-font\` takes one role, and \`${given.join(" ")}\` is ${given.length}; the attribute is matched whole, so none applies.`;
+  }
+  const [role] = given as [string];
+  if (roles.includes(role)) return undefined;
+  if (role === "link" || role === "text-link") {
+    return `\`data-font="${role}"\` is not a typography role. A link is an identity: \`data-ui="link"\`.`;
+  }
+  const bare = role.replace(/^text-/, "");
+  if (bare !== role && roles.includes(bare)) {
+    return `\`data-font="${role}"\` is not a typography role. Write \`data-font="${bare}"\`.`;
+  }
+  return `\`data-font="${role}"\` is not a typography role. The roles are ${list}.`;
+}
 
 interface Declaration {
   /** The name as written; its whitespace is a finding. */
@@ -270,15 +339,25 @@ export function auditNode(node: AuditNode, context: AuditContext): Finding[] {
     if (!parsed.tier) bases.add((parsed.side ? `${parsed.side}-` : "") + parsed.name);
   }
   const tokens = (node.getAttribute("data-ui") ?? "").split(/\s+/).filter(Boolean);
+  // one rewrite moves every retired text-* token on the element; the first finding carries it
+  let roleRewrite = retiredRoleRewrite(tokens, node.getAttribute("data-font") !== null);
   for (const token of tokens) {
     const replacement = RETIRED_TOKENS[token];
     if (replacement) {
+      const attributes = RETIRED_ROLE.test(token) ? roleRewrite : undefined;
+      if (attributes) roleRewrite = undefined;
       found.push({
         rule: "retired-token",
         message: `\`data-ui="${token}"\` is gone: \`data-ui\` holds identities only. Use ${replacement}.`,
         attribute: "data-ui",
+        ...(attributes ? { attributes } : {}),
       });
     }
+  }
+  const font = node.getAttribute("data-font");
+  if (font !== null && context.roles) {
+    const message = fontRoleMessage(font, context.roles);
+    if (message) found.push({ rule: "font-role", message, attribute: "data-font" });
   }
   const sticky = parsedPairs.some(
     ([parsed, , declaration]) =>
@@ -674,35 +753,31 @@ export interface PersistFinding<T> {
   message: string;
 }
 
-/** The persisted element that already carries another one (`self`: it is that element). */
-export interface PersistOwner {
-  id: string;
-  self: boolean;
-}
+/** How a `data-navigation-persist` element crosses a swap: carried whole, or only its scroll offset. */
+export type PersistMode = "element" | "scroll";
 
 /**
- * Checks `data-ui-persist` (or `data-ui-persist-scroll`) elements, in document
- * order: each needs the swap opt-in, an id, a unique id, and no `data-ui-persist`
- * element that already carries it (`ownerOf`: an ancestor, or for
- * `data-ui-persist-scroll` the element itself). Returns the elements that work
- * and the findings.
+ * Checks the `data-navigation-persist` elements of one mode, in document
+ * order: each needs the swap opt-in, an id, a unique id, and no carried
+ * element around it (`ownerOf` returns that element's id). Returns the elements
+ * that work and the findings.
  */
 export function auditPersistence<T>(
   swap: boolean,
   persisted: T[],
   idOf: (el: T) => string,
-  ownerOf: (el: T) => PersistOwner | null,
-  attribute: "data-ui-persist" | "data-ui-persist-scroll" = "data-ui-persist",
+  ownerOf: (el: T) => string | null,
+  mode: PersistMode = "element",
 ): { kept: T[]; warnings: PersistFinding<T>[] } {
   const warnings: PersistFinding<T>[] = [];
   const warn = (el: T, message: string) => warnings.push({ el, rule: "persist", message });
-  const scroll = attribute === "data-ui-persist-scroll";
+  const scroll = mode === "scroll";
   const kept: T[] = [];
   if (!swap) {
     for (const el of persisted) {
       warn(
         el,
-        `\`${attribute}\` has no effect: this page has no \`<html data-ui-navigation="swap">\`, so every navigation is a full load.`,
+        `\`${scroll && !idOf(el) ? "data-navigation-persist-mode" : "data-navigation-persist"}\` has no effect: this page has no \`<html data-navigation="swap">\`, so every navigation is a full load.`,
       );
     }
     return { kept, warnings };
@@ -714,27 +789,24 @@ export function auditPersistence<T>(
       warn(
         el,
         scroll
-          ? "`data-ui-persist-scroll` has no id; its scroll offset is not carried across navigations."
-          : "`data-ui-persist` has no id; it is not carried across navigations.",
+          ? '`data-navigation-persist-mode="scroll"` has no `data-navigation-persist` id; its scroll offset is not carried across navigations.'
+          : "`data-navigation-persist` has no id; it is not carried across navigations.",
       );
       continue;
     }
     if (seen.has(id)) {
       warn(
         el,
-        `\`${attribute}="${id}"\` is used twice; only the first ${scroll ? "keeps its scroll offset" : "is kept"}.`,
+        `\`data-navigation-persist="${id}"\` is used twice; only the first ${scroll ? "keeps its scroll offset" : "is kept"}.`,
       );
       continue;
     }
     seen.add(id);
     const owner = ownerOf(el);
-    if (owner) {
-      const where = owner.self ? "is on" : "sits inside";
+    if (owner !== null) {
       warn(
         el,
-        scroll
-          ? `\`data-ui-persist-scroll="${id}"\` ${where} \`data-ui-persist="${owner.id}"\`, which already keeps its scroll offset; drop \`data-ui-persist-scroll\`.`
-          : `\`data-ui-persist="${id}"\` sits inside \`data-ui-persist="${owner.id}"\`, which already keeps it; drop the inner one.`,
+        `\`data-navigation-persist="${id}"\` sits inside \`data-navigation-persist="${owner}"\`, which already keeps ${scroll ? "its scroll offset" : "it"}; drop the inner one.`,
       );
       continue;
     }

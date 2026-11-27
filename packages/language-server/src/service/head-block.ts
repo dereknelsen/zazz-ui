@@ -3,13 +3,12 @@
  * `<!-- zazz:head {…"primitives":[…]} -->` block (local or CDN granular head).
  * Using an identity whose primitive the head does not load re-renders the block
  * with `buildHead`, the primitive added. Pages that load the whole kit (no
- * primitive list) and base-owned identities (typography roles, prose) need
- * nothing.
+ * primitive list) need nothing.
  */
 
 import { buildHead, findHeadBlock, headBlockEdit, type HeadOptions } from "@zazz-ui/core/head.ts";
-import { resolveClosure } from "@zazz-ui/core/manifest.ts";
-import { attributeOf, valueOf } from "../html/nodes.ts";
+import { PRIMITIVES, resolveClosure } from "@zazz-ui/core/manifest.ts";
+import { attributeOf, namedAttributes, valueOf } from "../html/nodes.ts";
 import type { ParsedHtml } from "../html/parse.ts";
 import { IDENTITIES, TAG_PRIMITIVES } from "./data.ts";
 import type { Edit } from "./format.ts";
@@ -55,22 +54,29 @@ export interface MissingImport {
   fix: Edit & { title: string };
 }
 
-/** Identities and tag forms whose primitive the page's head block does not load. */
+/** Identities, tag forms, and attribute forms (`data-font`) whose primitive the page's head block does not load. */
 export function missingImports(parsed: ParsedHtml): MissingImport[] {
   const block = findHeadBlock(parsed.text);
   if (!block || !listed(block.options)) return [];
   const found: MissingImport[] = [];
   const fixes = new Map<string, (Edit & { title: string }) | undefined>();
-  const check = (name: string, range: [number, number]) => {
-    const primitive = primitiveOf(name);
+  const need = (primitive: string | null, range: [number, number]) => {
     if (!primitive) return;
     if (!fixes.has(primitive)) fixes.set(primitive, importEdit(parsed.text, primitive));
     const fix = fixes.get(primitive);
     if (fix) found.push({ range, primitive, fix });
   };
+  const check = (name: string, range: [number, number]) => need(primitiveOf(name), range);
   for (const tag of parsed.tags) {
     const name = tag.name.toLowerCase();
     if (name.startsWith("ui-")) check(name, [tag.range[0] + 1, tag.range[0] + 1 + name.length]);
+    // a primitive with no identity of its own name is used through its attribute
+    // form (`data-font`, `data-reveal`); an author's `data-card` is not the card
+    for (const { key } of namedAttributes(tag)) {
+      const name = key.value.toLowerCase().replace(/^data-/, "");
+      if (key.value === name || IDENTITIES[name] || TAG_PRIMITIVES[`ui-${name}`]) continue;
+      if (PRIMITIVES[name]?.css.length) need(name, key.range);
+    }
     const attribute = attributeOf(tag, "data-ui");
     if (!attribute?.value || !valueOf(tag, "data-ui")) continue;
     for (const m of attribute.value.value.matchAll(/\S+/g)) {
