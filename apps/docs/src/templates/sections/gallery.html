@@ -1,0 +1,112 @@
+<!-- Gallery: a grid of images. For click-to-enlarge, wrap them in a
+     lightbox: https://zazz.sh/api/primitives/lightbox/ · Grid utilities:
+     https://zazz.sh/api/utilities/flexbox-grid/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<section aria-labelledby="gallery-title" style="--py: 24">
+  <ui-layout>
+    <h2 id="gallery-title">Gallery</h2>
+    <!-- The first image spans two columns and two rows from md up; add a
+         <figcaption> in a <figure> where an image needs one -->
+    <ul
+      style="
+        --display: grid;
+        --grid-cols: 2;
+        --grid-cols--md: 4;
+        --gap: 4;
+        --mt: 11;
+      "
+    >
+      <li
+        style="
+          --col-span: 2;
+          --row-span--md: 2;
+        "
+      >
+        <img
+          src="/placeholders/image-1x1-light.webp"
+          width="2048"
+          height="2048"
+          alt="Placeholder image"
+          loading="lazy"
+          style="
+            --size: 100%;
+            --aspect: 1;
+            --radius: 2.5;
+            --object-fit: cover;
+          "
+        />
+      </li>
+      <li>
+        <img
+          src="/placeholders/image-1x1-light.webp"
+          width="2048"
+          height="2048"
+          alt="Placeholder image"
+          loading="lazy"
+          style="
+            --w: 100%;
+            --aspect: 1;
+            --radius: 2.5;
+            --object-fit: cover;
+          "
+        />
+      </li>
+      <li>
+        <img
+          src="/placeholders/image-1x1-light.webp"
+          width="2048"
+          height="2048"
+          alt="Placeholder image"
+          loading="lazy"
+          style="
+            --w: 100%;
+            --aspect: 1;
+            --radius: 2.5;
+            --object-fit: cover;
+          "
+        />
+      </li>
+      <li>
+        <img
+          src="/placeholders/image-1x1-light.webp"
+          width="2048"
+          height="2048"
+          alt="Placeholder image"
+          loading="lazy"
+          style="
+            --w: 100%;
+            --aspect: 1;
+            --radius: 2.5;
+            --object-fit: cover;
+          "
+        />
+      </li>
+      <li>
+        <img
+          src="/placeholders/image-1x1-light.webp"
+          width="2048"
+          height="2048"
+          alt="Placeholder image"
+          loading="lazy"
+          style="
+            --w: 100%;
+            --aspect: 1;
+            --radius: 2.5;
+            --object-fit: cover;
+          "
+        />
+      </li>
+    </ul>
+  </ui-layout>
+</section>

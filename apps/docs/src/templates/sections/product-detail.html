@@ -1,0 +1,272 @@
+<!-- Product page: images beside the name, price, options, and add to cart, with
+     details in an accordion. Toggle group: https://zazz.sh/api/primitives/toggle-group/
+     · Select: https://zazz.sh/api/primitives/select/ · Accordion:
+     https://zazz.sh/api/primitives/accordion/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<main style="--py: 11">
+  <ui-layout>
+    <div
+      style="
+        --display: grid;
+        --grid-cols: 1;
+        --grid-cols--lg: 2;
+        --gap: 11;
+      "
+    >
+      <!-- Images: one large, three below -->
+      <div
+        style="
+          --display: grid;
+          --self: start;
+          --grid-cols: 3;
+          --gap: 4;
+        "
+      >
+        <img
+          src="/placeholders/image-1x1-light.webp"
+          width="2048"
+          height="2048"
+          alt="Placeholder image of the product"
+          fetchpriority="high"
+          style="
+            --col-start: 1;
+            --col-end: -1;
+            --w: 100%;
+            --aspect: 1;
+            --radius: 2.5;
+            --object-fit: cover;
+          "
+        />
+        <img
+          src="/placeholders/image-1x1-light.webp"
+          width="2048"
+          height="2048"
+          alt="Placeholder image, side view"
+          loading="lazy"
+          style="
+            --w: 100%;
+            --aspect: 1;
+            --radius: 2.5;
+            --object-fit: cover;
+          "
+        />
+        <img
+          src="/placeholders/image-1x1-light.webp"
+          width="2048"
+          height="2048"
+          alt="Placeholder image, detail"
+          loading="lazy"
+          style="
+            --w: 100%;
+            --aspect: 1;
+            --radius: 2.5;
+            --object-fit: cover;
+          "
+        />
+        <img
+          src="/placeholders/image-1x1-light.webp"
+          width="2048"
+          height="2048"
+          alt="Placeholder image, in use"
+          loading="lazy"
+          style="
+            --w: 100%;
+            --aspect: 1;
+            --radius: 2.5;
+            --object-fit: cover;
+          "
+        />
+      </div>
+
+      <div
+        style="
+          --display: grid;
+          --self: start;
+          --gap: 6;
+        "
+      >
+        <header
+          style="
+            --display: grid;
+            --gap: 2;
+          "
+        >
+          <h1 data-font="h3">Product name</h1>
+          <p data-font="xl">$120</p>
+          <p style="--text: var(--color-muted-foreground)">
+            Describe the product in two or three sentences: what it is, what it is made of, and who
+            it is for.
+          </p>
+        </header>
+
+        <form
+          action="#"
+          aria-label="Add to cart"
+          style="
+            --display: grid;
+            --gap: 6;
+          "
+        >
+          <fieldset
+            style="
+              --display: grid;
+              --gap: 2;
+            "
+          >
+            <legend
+              data-font="sm"
+              style="
+                --mb: 2;
+                --font-weight: strong;
+              "
+            >
+              Size
+            </legend>
+            <ui-toggle-group role="group" aria-label="Size">
+              <label data-ui="toggle">
+                <input type="radio" name="size" value="s" />
+                Small
+              </label>
+              <label data-ui="toggle">
+                <input type="radio" name="size" value="m" checked />
+                Medium
+              </label>
+              <label data-ui="toggle">
+                <input type="radio" name="size" value="l" />
+                Large
+              </label>
+            </ui-toggle-group>
+          </fieldset>
+
+          <div
+            style="
+              --display: grid;
+              --grid-cols: 1;
+              --grid-cols--sm: 2;
+              --gap: 4;
+            "
+          >
+            <div data-ui="field">
+              <label data-field-slot="label" for="product-color">Color</label>
+              <select data-ui="select" id="product-color" name="color">
+                <button>
+                  <selectedcontent></selectedcontent>
+                </button>
+                <option value="natural" selected>Natural</option>
+                <option value="charcoal">Charcoal</option>
+                <option value="sand">Sand</option>
+              </select>
+            </div>
+            <div data-ui="field">
+              <label data-field-slot="label" for="product-quantity">Quantity</label>
+              <input
+                data-ui="input"
+                id="product-quantity"
+                name="quantity"
+                type="number"
+                min="1"
+                value="1"
+                inputmode="numeric"
+              />
+            </div>
+          </div>
+
+          <button type="submit" data-ui="button" data-button-variant="primary" style="--w: 100%">
+            Add to cart
+          </button>
+          <p data-font="sm" style="--text: var(--color-muted-foreground)">
+            State the delivery time and the return window here.
+          </p>
+        </form>
+
+        <ui-accordion>
+          <details
+            style="
+              --py: 4;
+              --border-b: 1;
+            "
+          >
+            <summary
+              style="
+                --font-weight: strong;
+                --text: currentColor;
+                --text--hover: var(--color-muted-foreground);
+              "
+            >
+              Details
+              <svg
+                data-accordion-slot="marker"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 256 256"
+                aria-hidden="true"
+              >
+                <rect width="256" height="256" fill="none" />
+                <polyline
+                  points="208 96 128 176 48 96"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="16"
+                />
+              </svg>
+            </summary>
+            <div style="--pb: 4">
+              <p style="--text: var(--color-muted-foreground)">
+                Dimensions, weight, materials, and care instructions.
+              </p>
+            </div>
+          </details>
+          <details
+            style="
+              --py: 4;
+              --border-b: 1;
+            "
+          >
+            <summary
+              style="
+                --font-weight: strong;
+                --text: currentColor;
+                --text--hover: var(--color-muted-foreground);
+              "
+            >
+              Shipping and returns
+              <svg
+                data-accordion-slot="marker"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 256 256"
+                aria-hidden="true"
+              >
+                <rect width="256" height="256" fill="none" />
+                <polyline
+                  points="208 96 128 176 48 96"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="16"
+                />
+              </svg>
+            </summary>
+            <div style="--pb: 4">
+              <p style="--text: var(--color-muted-foreground)">
+                Where you ship, what it costs, and how a return works.
+              </p>
+            </div>
+          </details>
+        </ui-accordion>
+      </div>
+    </div>
+  </ui-layout>
+</main>

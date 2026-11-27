@@ -1,0 +1,216 @@
+<!-- Navbar: logo, links, and actions; below md the links move into a full-screen
+     menu. Mobile menu: https://zazz.sh/api/primitives/mobile-menu/ · Breakpoint
+     tiers (`--display--md`): https://zazz.sh/api/modifiers/responsive/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<header
+  style="
+    --position: sticky;
+    --top: 0;
+    --bg: var(--color-background);
+    --border-b: 1;
+    --z: 10;
+  "
+>
+  <ui-layout>
+    <div
+      style="
+        --display: flex;
+        --items: center;
+        --py: 2;
+        --gap: 6;
+      "
+    >
+      <a
+        href="#"
+        data-font="lg"
+        style="
+          --mr: auto;
+          --font-weight: strong;
+          --text-decoration: none;
+          --text: var(--color-foreground);
+        "
+        >Logo</a
+      >
+      <nav
+        aria-label="Main"
+        style="
+          --display: none;
+          --display--md: block;
+        "
+      >
+        <ul
+          style="
+            --display: flex;
+            --gap: 1;
+          "
+        >
+          <li><a href="#" data-ui="button" data-button-variant="ghost">Product</a></li>
+          <li><a href="#" data-ui="button" data-button-variant="ghost">Pricing</a></li>
+          <li><a href="#" data-ui="button" data-button-variant="ghost">Customers</a></li>
+          <li><a href="#" data-ui="button" data-button-variant="ghost">Docs</a></li>
+        </ul>
+      </nav>
+      <div
+        style="
+          --display: none;
+          --display--md: flex;
+          --gap: 2;
+        "
+      >
+        <a href="#" data-ui="button" data-button-variant="outline">Sign in</a>
+        <a href="#" data-ui="button" data-button-variant="primary">Get started</a>
+      </div>
+      <button
+        type="button"
+        data-ui="button"
+        data-button-size="icon"
+        data-button-variant="ghost"
+        command="show-modal"
+        commandfor="navbar-menu"
+        aria-label="Open menu"
+        style="
+          --display: flex;
+          --display--md: none;
+        "
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-hidden="true">
+          <rect width="256" height="256" fill="none" />
+          <line
+            x1="40"
+            y1="128"
+            x2="216"
+            y2="128"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="16"
+          />
+          <line
+            x1="40"
+            y1="64"
+            x2="216"
+            y2="64"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="16"
+          />
+          <line
+            x1="40"
+            y1="192"
+            x2="216"
+            y2="192"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="16"
+          />
+        </svg>
+      </button>
+    </div>
+  </ui-layout>
+</header>
+
+<dialog
+  id="navbar-menu"
+  data-ui="dialog mobile-menu"
+  data-dialog-size="bleed"
+  data-mobile-menu-animation="slide-right"
+  closedby="any"
+  aria-label="Menu"
+  style="--ui-dialog-border-width: 0"
+>
+  <div data-mobile-menu-slot="viewport" data-dialog-slot="content">
+    <div data-mobile-menu-slot="header" data-dialog-slot="header">
+      <span data-font="lg" style="--font-weight: strong">Logo</span>
+      <button
+        type="button"
+        data-ui="button"
+        data-button-size="icon"
+        data-button-variant="ghost"
+        commandfor="navbar-menu"
+        command="close"
+        aria-label="Close menu"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-hidden="true">
+          <rect width="256" height="256" fill="none" />
+          <line
+            x1="200"
+            y1="56"
+            x2="56"
+            y2="200"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="16"
+          />
+          <line
+            x1="200"
+            y1="200"
+            x2="56"
+            y2="56"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="16"
+          />
+        </svg>
+      </button>
+    </div>
+    <nav data-mobile-menu-slot="body" data-dialog-slot="body" aria-label="Main">
+      <a
+        href="#"
+        data-ui="button"
+        data-button-variant="ghost"
+        style="
+          --justify: start;
+          --w: 100%;
+        "
+        >Product</a
+      >
+      <a
+        href="#"
+        data-ui="button"
+        data-button-variant="ghost"
+        style="
+          --justify: start;
+          --w: 100%;
+        "
+        >Pricing</a
+      >
+      <a
+        href="#"
+        data-ui="button"
+        data-button-variant="ghost"
+        style="
+          --justify: start;
+          --w: 100%;
+        "
+        >Customers</a
+      >
+      <a
+        href="#"
+        data-ui="button"
+        data-button-variant="ghost"
+        style="
+          --justify: start;
+          --w: 100%;
+        "
+        >Docs</a
+      >
+    </nav>
+    <div data-mobile-menu-slot="footer" data-dialog-slot="footer">
+      <a href="#" data-ui="button" data-button-variant="outline" style="--flex: 1">Sign in</a>
+      <a href="#" data-ui="button" data-button-variant="primary" style="--flex: 1">Get started</a>
+    </div>
+  </div>
+</dialog>
+
+<!-- Page content goes here; the header stays pinned while it scrolls. -->
+<main style="--min-h: 150svh"></main>

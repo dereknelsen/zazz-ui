@@ -21,6 +21,8 @@ Add it once, at the end of `<body>`, in the pages you develop on. It audits the 
 
 When you upgrade, the audit also reports `data-ui` tokens the kit has retired and names each replacement. A leftover `data-ui="sr-only"` matches no rule, so without it the hidden text just appears on the page.
 
+It checks `data-font` too. The value has to be exactly one role the page's stylesheets define. The audit warns on `data-font="huge"` and lists the real roles, warns on `data-font="sm lg"` that only one role applies, and tells you to write `sm` for the old spelling `data-font="text-sm"`. It also warns when a page sets `data-font` without loading `primitives/font/font.css`. The audit finds the roles by reading the page's stylesheets, following `@import`, and it skips this check when it finds no roles and couldn't read every sheet, since `font.css` may be the one it couldn't read (a cross-origin sheet without `crossorigin`).
+
 ## Behavior
 
 {% behavior primitive="debug" /%}

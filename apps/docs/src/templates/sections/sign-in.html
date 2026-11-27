@@ -1,0 +1,182 @@
+<!-- Sign in: a centered card with email, a password field with a show/hide
+     toggle, and a remember-me checkbox. Card: https://zazz.sh/api/primitives/card/
+     · Password group: https://zazz.sh/api/primitives/password-group/ · Fields:
+     https://zazz.sh/api/primitives/fields/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<main
+  style="
+    --display: grid;
+    --place-items: center;
+    --p: 4;
+    --min-h: 100svh;
+    --bg: var(--color-muted);
+  "
+>
+  <form
+    action="#"
+    data-ui="card"
+    data-card-variant="floating"
+    aria-labelledby="sign-in-title"
+    style="
+      --w: 100%;
+      --max-w: 100;
+    "
+  >
+    <header
+      data-card-slot="header"
+      style="
+        --display: grid;
+        --gap: 1;
+      "
+    >
+      <h1 id="sign-in-title" data-font="h4">Sign in</h1>
+      <p data-font="sm" style="--text: var(--color-muted-foreground)">
+        New here? <a href="#" data-ui="link">Create an account</a>
+      </p>
+    </header>
+    <div
+      data-card-slot="body"
+      style="
+        --display: grid;
+        --gap: 6;
+      "
+    >
+      <div data-ui="field">
+        <label data-field-slot="label" for="sign-in-email">Email</label>
+        <input
+          data-ui="input"
+          id="sign-in-email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          placeholder="you@example.com"
+          required
+        />
+      </div>
+      <div data-ui="field">
+        <label data-field-slot="label" for="sign-in-password">Password</label>
+        <ui-password>
+          <label data-ui="password-group">
+            <input
+              data-ui="input"
+              id="sign-in-password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+              aria-describedby="sign-in-password-warning"
+            />
+            <span data-password-group-slot="addon" data-password-group-align="inline-end">
+              <button
+                data-ui="button"
+                data-password-group-slot="toggle"
+                type="button"
+                data-button-variant="ghost"
+                data-button-size="icon"
+                aria-pressed="false"
+                aria-label="Show password"
+                aria-describedby="sign-in-password-warning"
+              >
+                <svg
+                  data-password-group-slot="icon icon-show"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 256 256"
+                  aria-hidden="true"
+                >
+                  <rect width="256" height="256" fill="none" />
+                  <path
+                    d="M128,56C48,56,16,128,16,128s32,72,112,72,112-72,112-72S208,56,128,56Z"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                  <circle
+                    cx="128"
+                    cy="128"
+                    r="40"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                </svg>
+                <svg
+                  data-password-group-slot="icon icon-hide"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 256 256"
+                  aria-hidden="true"
+                >
+                  <rect width="256" height="256" fill="none" />
+                  <line
+                    x1="48"
+                    y1="40"
+                    x2="208"
+                    y2="216"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                  <path
+                    d="M154.9,157.6A40,40,0,0,1,101,98.4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                  <path
+                    d="M73.8,69.7C33.6,90.6,16,128,16,128s32,72,112,72a118.1,118.1,0,0,0,54.1-12.8"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                  <path
+                    d="M208.6,169.1C229.8,149.1,240,128,240,128S208,56,128,56a126,126,0,0,0-20.5,1.6"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="16"
+                  />
+                </svg>
+              </button>
+            </span>
+          </label>
+        </ui-password>
+        <div data-field-slot="description">
+          <a href="#" data-ui="link">Forgot password?</a>
+        </div>
+        <span style="--sr: only" id="sign-in-password-warning"
+          >Showing the password makes it visible to anyone near your screen.</span
+        >
+      </div>
+      <label data-ui="field" data-field-orientation="horizontal">
+        <input type="checkbox" name="remember" />
+        <span data-field-slot="label">Keep me signed in</span>
+      </label>
+    </div>
+    <footer data-card-slot="footer">
+      <button type="submit" data-ui="button" data-button-variant="primary" style="--w: 100%">
+        Sign in
+      </button>
+    </footer>
+  </form>
+</main>

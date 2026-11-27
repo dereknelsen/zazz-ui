@@ -1,0 +1,55 @@
+<!-- Call to action: a muted band with a heading, a line of text, and two actions.
+     Backgrounds: https://zazz.sh/api/utilities/backgrounds/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<section aria-labelledby="cta-title" style="--py: 24">
+  <ui-layout>
+    <div
+      style="
+        --display: flex-col;
+        --display--md: flex-row;
+        --items: start;
+        --items--md: center;
+        --justify: space-between;
+        --p: 11;
+        --gap: 6;
+        --bg: var(--color-muted);
+        --radius: 4.5;
+      "
+    >
+      <div
+        style="
+          --display: grid;
+          --gap: 2;
+          --max-w: 52ch;
+        "
+      >
+        <h2 id="cta-title" data-font="h3">Ask for the one thing you want the reader to do</h2>
+        <p style="--text: var(--color-muted-foreground)">
+          Remove a last worry here: no card needed, cancel any time, or set up in minutes.
+        </p>
+      </div>
+      <div
+        style="
+          --display: flex;
+          --flex-wrap: wrap;
+          --shrink: 0;
+          --gap: 2;
+        "
+      >
+        <a href="#" data-ui="button" data-button-variant="primary">Get started</a>
+        <a href="#" data-ui="button" data-button-variant="outline">Book a demo</a>
+      </div>
+    </div>
+  </ui-layout>
+</section>

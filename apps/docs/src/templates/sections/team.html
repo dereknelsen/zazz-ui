@@ -1,0 +1,131 @@
+<!-- Team: a grid of people, each a photo, a name, and a role. `grid-gallery`
+     picks the column count from the number of people:
+     https://zazz.sh/api/utilities/layout/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<section aria-labelledby="team-title" style="--py: 24">
+  <ui-layout>
+    <header
+      style="
+        --display: grid;
+        --gap: 4;
+        --max-w: 60ch;
+      "
+    >
+      <h2 id="team-title">The people behind it</h2>
+      <p style="--text: var(--color-muted-foreground)">
+        A line about how the team works, or what they care about.
+      </p>
+    </header>
+    <ul
+      style="
+        --display: grid-gallery;
+        --gap: 6;
+        --mt: 11;
+      "
+    >
+      <li
+        style="
+          --display: grid;
+          --gap: 1;
+        "
+      >
+        <img
+          src="/placeholders/image-1x1-light.webp"
+          width="2048"
+          height="2048"
+          alt=""
+          loading="lazy"
+          style="
+            --mb: 3;
+            --w: 100%;
+            --aspect: 1;
+            --radius: 4.5;
+            --object-fit: cover;
+          "
+        />
+        <h3 data-font="md">Full name</h3>
+        <p data-font="sm" style="--text: var(--color-muted-foreground)">Job title</p>
+      </li>
+      <li
+        style="
+          --display: grid;
+          --gap: 1;
+        "
+      >
+        <img
+          src="/placeholders/image-1x1-light.webp"
+          width="2048"
+          height="2048"
+          alt=""
+          loading="lazy"
+          style="
+            --mb: 3;
+            --w: 100%;
+            --aspect: 1;
+            --radius: 4.5;
+            --object-fit: cover;
+          "
+        />
+        <h3 data-font="md">Full name</h3>
+        <p data-font="sm" style="--text: var(--color-muted-foreground)">Job title</p>
+      </li>
+      <li
+        style="
+          --display: grid;
+          --gap: 1;
+        "
+      >
+        <img
+          src="/placeholders/image-1x1-light.webp"
+          width="2048"
+          height="2048"
+          alt=""
+          loading="lazy"
+          style="
+            --mb: 3;
+            --w: 100%;
+            --aspect: 1;
+            --radius: 4.5;
+            --object-fit: cover;
+          "
+        />
+        <h3 data-font="md">Full name</h3>
+        <p data-font="sm" style="--text: var(--color-muted-foreground)">Job title</p>
+      </li>
+      <li
+        style="
+          --display: grid;
+          --gap: 1;
+        "
+      >
+        <img
+          src="/placeholders/image-1x1-light.webp"
+          width="2048"
+          height="2048"
+          alt=""
+          loading="lazy"
+          style="
+            --mb: 3;
+            --w: 100%;
+            --aspect: 1;
+            --radius: 4.5;
+            --object-fit: cover;
+          "
+        />
+        <h3 data-font="md">Full name</h3>
+        <p data-font="sm" style="--text: var(--color-muted-foreground)">Job title</p>
+      </li>
+    </ul>
+  </ui-layout>
+</section>

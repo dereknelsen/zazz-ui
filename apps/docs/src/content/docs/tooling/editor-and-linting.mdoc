@@ -10,13 +10,13 @@ The same audit runs in four places: the browser console (`<ui-debug>`), the edit
 
 ## `<ui-debug>`
 
-Development only. Add it to the page body and it audits every element's `style` and `data-*` attributes once, then again on each mutation, logging `[ui-debug]` warnings: an unknown utility, a wrong value mode, a tier without a base, a modifier the family lacks, a utility that flattens a state a hook covers, a raw property shadowing a utility, a whitespace form the gates cannot match (`--w : 4`, or `--w:auto` where the value is matched as text), and a `data-<name>-*` attribute outside its identity. It also lists the elements persisted across navigations and flags misuse.
+Development only. Add it to the page body and it audits every element's `style` and `data-*` attributes once, then again on each mutation, logging `[ui-debug]` warnings: an unknown utility, a wrong value mode, a tier without a base, a modifier the family lacks, a utility that flattens a state a hook covers, a raw property shadowing a utility, a whitespace form the gates cannot match (`--w : 4`, or `--w:auto` where the value is matched as text), a `data-<name>-*` attribute outside its identity, a `data-font` value that isn't one of the kit's roles, and a retired `data-ui` token such as `text-sm`. It also lists the elements persisted across navigations and flags misuse.
 
 ```html
 <ui-debug data-debug-domains="localhost, staging.example.com"></ui-debug>
 ```
 
-On a hostname not in the list it removes itself and logs once, so it can ship in a template without reaching production users. It reads identities and hooks from the page's own stylesheets, so it needs no manifest and works with a partial vendored kit.
+On a hostname not in the list it removes itself and logs once, so it can ship in a template without reaching production users. It reads identities, roles, and hooks from the page's own stylesheets (following `@import`, so an unbundled `index.css` works), so it needs no manifest and works with a partial vendored kit.
 
 The [playground](/playground/) runs both inside its editor: findings appear as underlines in the editor, Shift+Alt+F applies the same formatter, pasted markup is formatted on paste, and ⌘S / Ctrl+S formats and re-renders.
 
@@ -41,7 +41,7 @@ code --install-extension packages/vscode/dist/zazz.vsix
 | Completions | utility names, then only the tiers a utility takes; `--group-` and pseudo forms; hooks for the identities in reach; values with resolved tokens; `data-ui` identities, presets, and `ui-*` tags |
 | Hover and inlay hints | what a utility sets and when its tier applies; `--p: 4` ≈ 0.9–1rem; `--px--md` ≥ 48rem; a token's resolved value; a hook's default |
 | Formatting | `source.fixAll.zazz` on save writes every `style` in cascade order, one utility per line |
-| Code actions | quick fixes from the audit; **Organize imports** sorts kit stylesheets into cascade order |
+| Code actions | quick fixes from the audit (a retired `data-ui="text-sm"` becomes `data-font="sm"`); **Organize imports** sorts kit stylesheets into cascade order |
 | Auto-imports | on a page with a `<!-- zazz:head {…} -->` block, completing an identity adds its primitive to the head |
 | Highlighting | utility families, tiers, prefixes, hooks, identities; color swatches before `var(--color-*)` |
 | Snippets and Emmet | `zazz-<example>` for every kit example; `ui-callout>p` with the repo's `emmet.extensionsPath` |
@@ -93,4 +93,4 @@ export default defineConfig([
 ]);
 ```
 
-`configs.recommended` sets a rule to `error` when the finding means the declaration does nothing at all (an unknown utility, a tier the utility does not take or that has no base, a pseudo or group form the utility lacks, and a whitespace form the gates cannot match), and the rest to `warn`. Run it with `eslint "**/*.html"`; `eslint --fix` applies the formatter. In this repo that is `vp run lint:html` and `vp run fmt:html`, and the staged-files hook formats HTML on commit. The plugin is private to the monorepo for now.
+`configs.recommended` sets a rule to `error` when the finding means the declaration does nothing at all (an unknown utility, a tier the utility does not take or that has no base, a pseudo or group form the utility lacks, and a whitespace form the gates cannot match), and the rest to `warn`. Run it with `eslint "**/*.html"`; `eslint --fix` applies the formatter and rewrites retired typography tokens (`data-ui="text-sm"` to `data-font="sm"`, `text-link` to the `link` identity) where the element has one role, no template syntax in the value, and no `data-font` yet. In this repo that is `vp run lint:html` and `vp run fmt:html`, and the staged-files hook formats HTML on commit. The plugin is private to the monorepo for now. For a whole project, `npx zazz-ui codemod data-font` makes the same rewrites and also updates selectors.

@@ -106,69 +106,62 @@ describe("randomColors", () => {
     expect(new Set(hued.map((t) => t.harmony))).toEqual(new Set(Object.keys(HARMONIES)));
   });
 
-  it("keeps a gray primary's theme monochromatic, in grays", () => {
-    const { primary, secondary, tertiary, harmony } = randomColors(() => 0.99);
-    expect(harmony).toBe("monochromatic");
-    for (const color of [primary, secondary, tertiary]) expect(grays).toContain(color);
-    expect(new Set([primary, secondary, tertiary]).size).toBe(3);
+  it("takes the secondary from the primary's palette: it is the primary inverted", () => {
+    for (const { primary, secondary } of hued) expect(turn(primary, secondary)).toBeLessThan(25);
   });
 
-  it("monochromatic: three stops of one hue", () => {
-    for (const { primary, secondary, tertiary } of byHarmony("monochromatic")) {
-      expect(turn(primary, secondary)).toBeLessThan(25);
-      expect(turn(primary, tertiary)).toBeLessThan(25);
+  it("always gives the tertiary a hue of its own, vivid enough to stand out", () => {
+    for (const { primary, tertiary } of themes) {
+      expect(grays).not.toContain(tertiary);
+      expect(toOklch(tertiary).c).toBeGreaterThan(0.1);
+      if (!grays.has(primary)) expect(turn(primary, tertiary)).toBeGreaterThan(5);
     }
+  });
+
+  it("gives a gray primary a gray secondary and a hued tertiary, with no harmony", () => {
+    const { primary, secondary, tertiary, harmony } = randomColors(() => 0.99);
+    expect(harmony).toBeNull();
+    expect(grays).toContain(primary);
+    expect(grays).toContain(secondary);
+    expect(grays).not.toContain(tertiary);
   });
 
   // Tailwind's hues are unevenly spaced, so a target hue lands on the nearest
   // palette: the windows below allow for that.
-  it("analogous: neighbors on either side", () => {
-    for (const { primary, secondary, tertiary } of byHarmony("analogous")) {
-      for (const color of [secondary, tertiary]) {
-        expect(turn(primary, color)).toBeGreaterThan(5);
-        expect(turn(primary, color)).toBeLessThan(75);
-      }
+  it("analogous: the tertiary is a neighbor", () => {
+    for (const { primary, tertiary } of byHarmony("analogous")) {
+      expect(turn(primary, tertiary)).toBeLessThan(75);
     }
   });
 
-  it("complementary: the opposite hue, and a second stop of the primary's", () => {
-    for (const { primary, secondary, tertiary } of byHarmony("complementary")) {
-      expect(turn(primary, secondary)).toBeGreaterThan(140);
-      expect(turn(primary, tertiary)).toBeLessThan(25);
+  it("complementary: the tertiary is the opposite hue", () => {
+    for (const { primary, tertiary } of byHarmony("complementary")) {
+      expect(turn(primary, tertiary)).toBeGreaterThan(140);
     }
   });
 
-  it("split-complementary: the two hues beside the opposite", () => {
-    for (const { primary, secondary, tertiary } of byHarmony("split-complementary")) {
-      for (const color of [secondary, tertiary]) {
-        expect(turn(primary, color)).toBeGreaterThan(105);
-      }
-      expect(turn(secondary, tertiary)).toBeGreaterThan(5);
+  it("split-complementary: the tertiary sits beside the opposite", () => {
+    for (const { primary, tertiary } of byHarmony("split-complementary")) {
+      expect(turn(primary, tertiary)).toBeGreaterThan(105);
     }
   });
 
-  it("triadic: three hues a third of the wheel apart", () => {
-    for (const { primary, secondary, tertiary } of byHarmony("triadic")) {
-      for (const [a, b] of [
-        [primary, secondary],
-        [primary, tertiary],
-        [secondary, tertiary],
-      ]) {
-        expect(turn(a, b)).toBeGreaterThan(75);
-      }
+  it("triadic: the tertiary is a third of the wheel away", () => {
+    for (const { primary, tertiary } of byHarmony("triadic")) {
+      expect(turn(primary, tertiary)).toBeGreaterThan(75);
     }
   });
 
   it("builds on a kept primary and returns it unchanged", () => {
     const kept = "#0f766e"; // teal
-    const harmonies = new Set<string>();
+    const harmonies = new Set<string | null>();
     for (const random of seeds) {
       const { primary, secondary, tertiary, harmony } = randomColors(random, { primary: kept });
       expect(primary).toBe(kept);
       expect(new Set([primary, secondary, tertiary]).size).toBe(3);
       harmonies.add(harmony);
-      if (harmony === "complementary") expect(turn(kept, secondary)).toBeGreaterThan(140);
-      if (harmony === "monochromatic") expect(turn(kept, secondary)).toBeLessThan(25);
+      expect(turn(kept, secondary)).toBeLessThan(25);
+      if (harmony === "complementary") expect(turn(kept, tertiary)).toBeGreaterThan(140);
     }
     expect(harmonies.size).toBeGreaterThan(1);
   });
@@ -195,9 +188,9 @@ describe("randomColors", () => {
   it("treats a kept primary with no hue as a gray", () => {
     for (const random of seeds) {
       const { secondary, tertiary, harmony } = randomColors(random, { primary: "#1a1a1a" });
-      expect(harmony).toBe("monochromatic");
+      expect(harmony).toBeNull();
       expect(grays).toContain(secondary);
-      expect(grays).toContain(tertiary);
+      expect(grays).not.toContain(tertiary);
     }
   });
 });

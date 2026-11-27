@@ -1,0 +1,189 @@
+<!-- FAQ: a header beside an accordion of questions; stacks on small screens.
+     Accordion: https://zazz.sh/api/primitives/accordion/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<section aria-labelledby="faq-title" style="--py: 24">
+  <ui-layout>
+    <div
+      style="
+        --display: grid;
+        --template-cols: 1fr;
+        --template-cols--lg: 1fr 2fr;
+        --gap: 11;
+      "
+    >
+      <header
+        style="
+          --display: grid;
+          --self: start;
+          --gap: 4;
+        "
+      >
+        <h2 id="faq-title">Frequently asked questions</h2>
+        <p style="--text: var(--color-muted-foreground)">
+          Can’t find an answer? <a href="#" data-ui="link">Write to us</a>.
+        </p>
+      </header>
+      <ui-accordion>
+        <details
+          style="
+            --py: 4;
+            --border-b: 1;
+          "
+        >
+          <summary
+            style="
+              --font-weight: strong;
+              --text: currentColor;
+              --text--hover: var(--color-muted-foreground);
+            "
+          >
+            Put the question people ask most first
+            <svg
+              data-accordion-slot="marker"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 256 256"
+              aria-hidden="true"
+            >
+              <rect width="256" height="256" fill="none" />
+              <polyline
+                points="208 96 128 176 48 96"
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="16"
+              />
+            </svg>
+          </summary>
+          <div style="--pb: 4">
+            <p style="--text: var(--color-muted-foreground)">
+              Answer in a sentence or two, then link to the full docs page if there is more to say.
+            </p>
+          </div>
+        </details>
+        <details
+          style="
+            --py: 4;
+            --border-b: 1;
+          "
+        >
+          <summary
+            style="
+              --font-weight: strong;
+              --text: currentColor;
+              --text--hover: var(--color-muted-foreground);
+            "
+          >
+            How long does it take to set up?
+            <svg
+              data-accordion-slot="marker"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 256 256"
+              aria-hidden="true"
+            >
+              <rect width="256" height="256" fill="none" />
+              <polyline
+                points="208 96 128 176 48 96"
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="16"
+              />
+            </svg>
+          </summary>
+          <div style="--pb: 4">
+            <p style="--text: var(--color-muted-foreground)">
+              Give a real time and list what the reader needs before they start.
+            </p>
+          </div>
+        </details>
+        <details
+          style="
+            --py: 4;
+            --border-b: 1;
+          "
+        >
+          <summary
+            style="
+              --font-weight: strong;
+              --text: currentColor;
+              --text--hover: var(--color-muted-foreground);
+            "
+          >
+            Can I cancel at any time?
+            <svg
+              data-accordion-slot="marker"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 256 256"
+              aria-hidden="true"
+            >
+              <rect width="256" height="256" fill="none" />
+              <polyline
+                points="208 96 128 176 48 96"
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="16"
+              />
+            </svg>
+          </summary>
+          <div style="--pb: 4">
+            <p style="--text: var(--color-muted-foreground)">
+              Say what happens to the reader’s data and to any payment when they leave.
+            </p>
+          </div>
+        </details>
+        <details
+          style="
+            --py: 4;
+            --border-b: 1;
+          "
+        >
+          <summary
+            style="
+              --font-weight: strong;
+              --text: currentColor;
+              --text--hover: var(--color-muted-foreground);
+            "
+          >
+            Do you offer discounts?
+            <svg
+              data-accordion-slot="marker"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 256 256"
+              aria-hidden="true"
+            >
+              <rect width="256" height="256" fill="none" />
+              <polyline
+                points="208 96 128 176 48 96"
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="16"
+              />
+            </svg>
+          </summary>
+          <div style="--pb: 4">
+            <p style="--text: var(--color-muted-foreground)">
+              List who qualifies, such as students or nonprofits, and how to ask.
+            </p>
+          </div>
+        </details>
+      </ui-accordion>
+    </div>
+  </ui-layout>
+</section>

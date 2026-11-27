@@ -35,6 +35,8 @@ Add one with `--skill zazz` or `--skill install-zazz-in-legacy-app`. The `zazz` 
 
 For an assistant that can read JSON, `editor/zazz.html-data.json` lists every `data-ui` token and every `data-<name>-*` attribute with its allowed values, and `editor/zazz.css-data.json` lists every utility, tier, and hook. They are generated from the kit, so they match the version they ship with: `node_modules/@zazz-ui/core/editor/`, or `https://cdn.jsdelivr.net/npm/@zazz-ui/core@<version>/editor/` (the CLI doesn't vendor them). `editor/zazz.language-data.json` adds each primitive's summary, hook defaults, and resolved tokens.
 
+For one primitive, read its data file instead: `primitives/<name>/<name>.json`, beside its stylesheet. It has the primitive's identities and tag forms, every `--ui-*` hook with its default, every `data-*` attribute with its values, its slots and states, and the primitives it needs. The typography roles are the `data-font` values in `primitives/font/font.json`. The CLI vendors these files, so a vendored project has them under `zazz/primitives/`; otherwise they're in `node_modules/@zazz-ui/core/src/primitives/` or at `https://cdn.jsdelivr.net/npm/@zazz-ui/core@<version>/src/primitives/`.
+
 ## Checking the output
 
 Whatever the assistant writes, run it through the same audit a human gets: `<ui-debug>` in the page, or `eslint "**/*.html"` with the [plugin](/docs/tooling/editor-and-linting/). A prompt that ends with "then fix every `[ui-debug]` warning" closes the loop.

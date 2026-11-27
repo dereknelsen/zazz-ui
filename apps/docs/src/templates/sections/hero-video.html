@@ -1,0 +1,154 @@
+<!-- Hero with video: centered heading and actions over a video thumbnail whose play
+     button opens a dialog. Dialogs and invoker commands:
+     https://zazz.sh/api/primitives/dialog/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<section aria-labelledby="hero-video-title" style="--py: 24">
+  <ui-layout data-layout-size="lg">
+    <div
+      style="
+        --display: flex-col;
+        --items: center;
+        --gap: 6;
+        --text-align: center;
+      "
+    >
+      <h1 id="hero-video-title" style="--max-w: 20ch">Show the product doing its job</h1>
+      <p
+        data-font="lg"
+        style="
+          --max-w: 52ch;
+          --text: var(--color-muted-foreground);
+        "
+      >
+        A short video often explains more than a paragraph. Say what the viewer will see and how
+        long it takes.
+      </p>
+      <div
+        style="
+          --display: flex;
+          --flex-wrap: wrap;
+          --justify: center;
+          --gap: 2;
+        "
+      >
+        <a href="#" data-ui="button" data-button-variant="primary">Get started</a>
+        <a href="#" data-ui="button" data-button-variant="outline">Talk to us</a>
+      </div>
+    </div>
+
+    <!-- `grid-pile` stacks the thumbnail and the play button in one cell -->
+    <button
+      type="button"
+      data-ui="group"
+      command="show-modal"
+      commandfor="hero-video-dialog"
+      aria-label="Play video"
+      style="
+        --display: grid-pile;
+        --mt: 11;
+        --radius: 4.5;
+        --overflow: hidden;
+      "
+    >
+      <img
+        src="/placeholders/video-16x9-light.webp"
+        width="2048"
+        height="1160"
+        alt=""
+        fetchpriority="high"
+        style="
+          --w: 100%;
+          --aspect: 16 / 9;
+          --object-fit: cover;
+        "
+      />
+      <div
+        style="
+          --size: 100%;
+          --bg: var(--color-shade-800);
+        "
+      ></div>
+
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 256 256"
+        aria-hidden="true"
+        style="
+          --size: 12;
+          --text: var(--color-white);
+          --group-opacity--hover: 0.5;
+          --transition: var(--default-transition);
+        "
+      >
+        <rect width="256" height="256" fill="none" />
+        <path d="M80 48v160l128-80Z" fill="currentColor" />
+      </svg>
+    </button>
+  </ui-layout>
+
+  <dialog
+    id="hero-video-dialog"
+    data-ui="dialog"
+    data-dialog-size="lg"
+    closedby="any"
+    aria-label="Product video"
+  >
+    <img
+      src="/placeholders/video-16x9-light.webp"
+      width="2048"
+      height="1160"
+      alt="Video placeholder"
+      loading="lazy"
+      style="
+        --w: 100%;
+        --aspect: 16 / 9;
+        --object-fit: cover;
+      "
+    />
+    <button
+      data-ui="button"
+      data-dialog-slot="close"
+      data-button-size="icon"
+      data-button-variant="ghost"
+      type="button"
+      commandfor="hero-video-dialog"
+      command="close"
+      aria-label="Close video"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-hidden="true">
+        <rect width="256" height="256" fill="none" />
+        <line
+          x1="200"
+          y1="56"
+          x2="56"
+          y2="200"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="16"
+        />
+        <line
+          x1="200"
+          y1="200"
+          x2="56"
+          y2="56"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="16"
+        />
+      </svg>
+    </button>
+  </dialog>
+</section>

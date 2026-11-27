@@ -1,0 +1,151 @@
+<!-- Contact: ways to reach you beside a message form. Fields:
+     https://zazz.sh/api/primitives/fields/ · Input, select, textarea:
+     https://zazz.sh/api/primitives/input/, /select/, /textarea/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<section aria-labelledby="contact-title" style="--py: 24">
+  <ui-layout>
+    <div
+      style="
+        --display: grid;
+        --grid-cols: 1;
+        --grid-cols--lg: 2;
+        --gap: 11;
+      "
+    >
+      <div
+        style="
+          --display: grid;
+          --self: start;
+          --gap: 6;
+        "
+      >
+        <header
+          style="
+            --display: grid;
+            --gap: 4;
+          "
+        >
+          <h2 id="contact-title">Get in touch</h2>
+          <p style="--text: var(--color-muted-foreground)">
+            Say how fast you reply and who will read the message.
+          </p>
+        </header>
+        <dl
+          style="
+            --display: grid;
+            --gap: 4;
+          "
+        >
+          <div>
+            <dt style="--font-weight: strong">Email</dt>
+            <dd><a href="mailto:hello@example.com" data-ui="link">hello@example.com</a></dd>
+          </div>
+          <div>
+            <dt style="--font-weight: strong">Phone</dt>
+            <dd><a href="tel:+12025550100" data-ui="link">+1 (202) 555-0100</a></dd>
+          </div>
+          <div>
+            <dt style="--font-weight: strong">Office</dt>
+            <dd style="--text: var(--color-muted-foreground)">123 Example Street, City, Country</dd>
+          </div>
+        </dl>
+      </div>
+
+      <form
+        action="#"
+        aria-labelledby="contact-title"
+        style="
+          --display: grid;
+          --grid-cols: 1;
+          --grid-cols--sm: 2;
+          --gap: 6;
+        "
+      >
+        <div data-ui="field">
+          <label data-field-slot="label" for="contact-first-name">First name</label>
+          <input
+            data-ui="input"
+            id="contact-first-name"
+            name="first-name"
+            autocomplete="given-name"
+            required
+          />
+        </div>
+        <div data-ui="field">
+          <label data-field-slot="label" for="contact-last-name">Last name</label>
+          <input
+            data-ui="input"
+            id="contact-last-name"
+            name="last-name"
+            autocomplete="family-name"
+            required
+          />
+        </div>
+        <div
+          data-ui="field"
+          style="
+            --col-start: 1;
+            --col-end: -1;
+          "
+        >
+          <label data-field-slot="label" for="contact-email">Email</label>
+          <input
+            data-ui="input"
+            id="contact-email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            required
+          />
+        </div>
+        <div
+          data-ui="field"
+          style="
+            --col-start: 1;
+            --col-end: -1;
+          "
+        >
+          <label data-field-slot="label" for="contact-topic">Topic</label>
+          <select data-ui="select" id="contact-topic" name="topic">
+            <button>
+              <selectedcontent></selectedcontent>
+            </button>
+            <option value="sales" selected>Sales</option>
+            <option value="support">Support</option>
+            <option value="press">Press</option>
+            <option value="other">Something else</option>
+          </select>
+        </div>
+        <div
+          data-ui="field"
+          style="
+            --col-start: 1;
+            --col-end: -1;
+          "
+        >
+          <label data-field-slot="label" for="contact-message">Message</label>
+          <textarea data-ui="textarea" id="contact-message" name="message" required></textarea>
+        </div>
+        <div
+          style="
+            --col-start: 1;
+            --col-end: -1;
+          "
+        >
+          <button type="submit" data-ui="button" data-button-variant="primary">Send message</button>
+        </div>
+      </form>
+    </div>
+  </ui-layout>
+</section>

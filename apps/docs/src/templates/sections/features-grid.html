@@ -1,0 +1,158 @@
+<!-- Feature grid: a section header and three features, each an icon, a title, and
+     a sentence. Grid utilities (`--grid-cols--md`):
+     https://zazz.sh/api/utilities/flexbox-grid/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<section aria-labelledby="features-title" style="--py: 24">
+  <ui-layout>
+    <header
+      style="
+        --display: grid;
+        --gap: 4;
+        --max-w: 60ch;
+      "
+    >
+      <h2 id="features-title">Name the three things it does best</h2>
+      <p style="--text: var(--color-muted-foreground)">
+        Introduce the features below in one sentence. Lead with the problem they solve together.
+      </p>
+    </header>
+    <ul
+      style="
+        --display: grid;
+        --grid-cols: 1;
+        --grid-cols--md: 3;
+        --gap: 11;
+        --mt: 11;
+      "
+    >
+      <li
+        style="
+          --display: grid;
+          --gap: 2;
+        "
+      >
+        <span
+          style="
+            --display: grid;
+            --place-items: center;
+            --mb: 2;
+            --size: 11;
+            --text: var(--color-primary-foreground);
+            --bg: var(--color-primary);
+            --radius: 2.5;
+          "
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 256 256"
+            aria-hidden="true"
+            style="--size: 6"
+          >
+            <rect width="256" height="256" fill="none" />
+            <polyline
+              points="40 128 104 192 216 72"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="20"
+            />
+          </svg>
+        </span>
+        <h3 data-font="lg">First feature</h3>
+        <p style="--text: var(--color-muted-foreground)">
+          Say what it does for the reader, not how it is built. One or two sentences is plenty.
+        </p>
+      </li>
+      <li
+        style="
+          --display: grid;
+          --gap: 2;
+        "
+      >
+        <span
+          style="
+            --display: grid;
+            --place-items: center;
+            --mb: 2;
+            --size: 11;
+            --text: var(--color-primary-foreground);
+            --bg: var(--color-primary);
+            --radius: 2.5;
+          "
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 256 256"
+            aria-hidden="true"
+            style="--size: 6"
+          >
+            <rect width="256" height="256" fill="none" />
+            <circle cx="128" cy="128" r="88" fill="none" stroke="currentColor" stroke-width="20" />
+            <polyline
+              points="128 72 128 128 168 152"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="20"
+            />
+          </svg>
+        </span>
+        <h3 data-font="lg">Second feature</h3>
+        <p style="--text: var(--color-muted-foreground)">
+          Name a result the reader can picture, like the time it saves or the step it removes.
+        </p>
+      </li>
+      <li
+        style="
+          --display: grid;
+          --gap: 2;
+        "
+      >
+        <span
+          style="
+            --display: grid;
+            --place-items: center;
+            --mb: 2;
+            --size: 11;
+            --text: var(--color-primary-foreground);
+            --bg: var(--color-primary);
+            --radius: 2.5;
+          "
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 256 256"
+            aria-hidden="true"
+            style="--size: 6"
+          >
+            <rect width="256" height="256" fill="none" />
+            <path
+              d="M128 32 48 64v56c0 56 40 88 80 104 40-16 80-48 80-104V64Z"
+              fill="none"
+              stroke="currentColor"
+              stroke-linejoin="round"
+              stroke-width="20"
+            />
+          </svg>
+        </span>
+        <h3 data-font="lg">Third feature</h3>
+        <p style="--text: var(--color-muted-foreground)">
+          Close with the feature that removes the last doubt, such as security, support, or price.
+        </p>
+      </li>
+    </ul>
+  </ui-layout>
+</section>

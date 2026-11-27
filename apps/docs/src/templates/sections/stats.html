@@ -1,0 +1,84 @@
+<!-- Stats: four figures with labels, as a description list; `flex-col-reverse`
+     shows the figure above its label. Borders: https://zazz.sh/api/utilities/borders/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<section aria-labelledby="stats-title" style="--py: 24">
+  <ui-layout>
+    <header
+      style="
+        --display: grid;
+        --gap: 4;
+        --max-w: 60ch;
+      "
+    >
+      <h2 id="stats-title">Numbers that back up the claim</h2>
+      <p style="--text: var(--color-muted-foreground)">
+        Pick figures a reader can check, and say where they come from.
+      </p>
+    </header>
+    <dl
+      style="
+        --display: grid;
+        --grid-cols: 2;
+        --grid-cols--lg: 4;
+        --gap: 11;
+        --mt: 11;
+      "
+    >
+      <div
+        style="
+          --display: flex-col-reverse;
+          --pl: 4;
+          --gap: 1;
+          --border-l: 2;
+        "
+      >
+        <dt style="--text: var(--color-muted-foreground)">Customers</dt>
+        <dd data-font="h2">12,000</dd>
+      </div>
+      <div
+        style="
+          --display: flex-col-reverse;
+          --pl: 4;
+          --gap: 1;
+          --border-l: 2;
+        "
+      >
+        <dt style="--text: var(--color-muted-foreground)">Countries</dt>
+        <dd data-font="h2">48</dd>
+      </div>
+      <div
+        style="
+          --display: flex-col-reverse;
+          --pl: 4;
+          --gap: 1;
+          --border-l: 2;
+        "
+      >
+        <dt style="--text: var(--color-muted-foreground)">Uptime last year</dt>
+        <dd data-font="h2">99.9%</dd>
+      </div>
+      <div
+        style="
+          --display: flex-col-reverse;
+          --pl: 4;
+          --gap: 1;
+          --border-l: 2;
+        "
+      >
+        <dt style="--text: var(--color-muted-foreground)">Median reply time</dt>
+        <dd data-font="h2">2 hours</dd>
+      </div>
+    </dl>
+  </ui-layout>
+</section>

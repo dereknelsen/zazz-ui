@@ -1,0 +1,166 @@
+<!-- Pricing: three plans as cards, the middle one marked with a badge.
+     Card: https://zazz.sh/api/primitives/card/ · Badge:
+     https://zazz.sh/api/primitives/badge/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<section aria-labelledby="pricing-title" style="--py: 24">
+  <ui-layout>
+    <header
+      style="
+        --display: grid;
+        --justify: center;
+        --gap: 4;
+        --text-align: center;
+      "
+    >
+      <h2 id="pricing-title">Pricing</h2>
+      <p
+        style="
+          --max-w: 52ch;
+          --text: var(--color-muted-foreground);
+        "
+      >
+        Say who each plan is for. Mention the trial or refund policy here if you have one.
+      </p>
+    </header>
+    <div
+      style="
+        --display: grid;
+        --items: start;
+        --grid-cols: 1;
+        --grid-cols--lg: 3;
+        --gap: 6;
+        --mt: 11;
+      "
+    >
+      <article data-ui="card" data-card-variant="outline" aria-labelledby="plan-starter">
+        <header
+          data-card-slot="header"
+          style="
+            --display: grid;
+            --gap: 2;
+          "
+        >
+          <h3 id="plan-starter" data-font="lg">Starter</h3>
+          <p data-font="sm" style="--text: var(--color-muted-foreground)">
+            For one person trying it out.
+          </p>
+          <p>
+            <span data-font="h3">$0</span>
+            <span style="--text: var(--color-muted-foreground)">per month</span>
+          </p>
+        </header>
+        <ul
+          data-card-slot="body"
+          data-font="sm"
+          style="
+            --display: grid;
+            --gap: 2;
+          "
+        >
+          <li>The main feature</li>
+          <li>A second feature</li>
+          <li>Community support</li>
+        </ul>
+        <footer data-card-slot="footer">
+          <a href="#" data-ui="button" data-button-variant="outline" style="--w: 100%"
+            >Start for free</a
+          >
+        </footer>
+      </article>
+
+      <article data-ui="card" data-card-variant="floating" aria-labelledby="plan-team">
+        <header
+          data-card-slot="header"
+          style="
+            --display: grid;
+            --gap: 2;
+          "
+        >
+          <div
+            style="
+              --display: flex;
+              --items: center;
+              --justify: space-between;
+              --gap: 2;
+            "
+          >
+            <h3 id="plan-team" data-font="lg">Team</h3>
+            <span data-ui="badge" data-badge-variant="primary">Most popular</span>
+          </div>
+          <p data-font="sm" style="--text: var(--color-muted-foreground)">
+            For small teams working together.
+          </p>
+          <p>
+            <span data-font="h3">$12</span>
+            <span style="--text: var(--color-muted-foreground)">per person, per month</span>
+          </p>
+        </header>
+        <ul
+          data-card-slot="body"
+          data-font="sm"
+          style="
+            --display: grid;
+            --gap: 2;
+          "
+        >
+          <li>Everything in Starter</li>
+          <li>Shared workspaces</li>
+          <li>Roles and permissions</li>
+          <li>Email support</li>
+        </ul>
+        <footer data-card-slot="footer">
+          <a href="#" data-ui="button" data-button-variant="primary" style="--w: 100%"
+            >Start a free trial</a
+          >
+        </footer>
+      </article>
+
+      <article data-ui="card" data-card-variant="outline" aria-labelledby="plan-business">
+        <header
+          data-card-slot="header"
+          style="
+            --display: grid;
+            --gap: 2;
+          "
+        >
+          <h3 id="plan-business" data-font="lg">Business</h3>
+          <p data-font="sm" style="--text: var(--color-muted-foreground)">
+            For larger organizations with extra needs.
+          </p>
+          <p>
+            <span data-font="h3">Custom</span>
+          </p>
+        </header>
+        <ul
+          data-card-slot="body"
+          data-font="sm"
+          style="
+            --display: grid;
+            --gap: 2;
+          "
+        >
+          <li>Everything in Team</li>
+          <li>Single sign-on</li>
+          <li>Audit log</li>
+          <li>A named contact</li>
+        </ul>
+        <footer data-card-slot="footer">
+          <a href="#" data-ui="button" data-button-variant="outline" style="--w: 100%"
+            >Contact sales</a
+          >
+        </footer>
+      </article>
+    </div>
+  </ui-layout>
+</section>

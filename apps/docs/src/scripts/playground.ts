@@ -1,14 +1,17 @@
 /**
  * Playground client: CodeMirror (on demand) over a textarea fallback, a sandboxed
  * iframe for the output. A docs preview's "Open in playground" link carries
- * its example in the URL hash, read once at boot.
+ * its example in the URL hash, read once at boot. The chosen template is
+ * remembered in localStorage.
  */
 import { findings, formatEdits } from "../lib/playground-format.ts";
+import { guardScript } from "../lib/playground-guard.ts";
 import { decodeHash } from "../lib/playground-hash.ts";
 
 interface Template {
   id: string;
   label: string;
+  group?: string;
   html: string;
 }
 interface Data {
@@ -23,6 +26,7 @@ const host = root?.querySelector<HTMLElement>("[data-playground-editor]");
 const fallback = root?.querySelector<HTMLTextAreaElement>("[data-playground-fallback]");
 const templateSelect = root?.querySelector<HTMLSelectElement>("[data-playground-template]");
 const resetButton = root?.querySelector<HTMLButtonElement>("[data-playground-reset]");
+const copyButton = root?.querySelector<HTMLButtonElement>("[data-playground-copy]");
 
 if (root && dataNode && output && host && fallback && templateSelect && resetButton) {
   const editorHost = host;
@@ -30,6 +34,26 @@ if (root && dataNode && output && host && fallback && templateSelect && resetBut
   const data = JSON.parse(dataNode.textContent ?? "{}") as Data;
   const initial = data.templates[0]?.html ?? "";
   const blank = data.templates.find((t) => t.id === "blank")?.html ?? initial;
+
+  // Storage can be missing or throw (private modes, blocked cookies): then
+  // nothing is remembered.
+  const STORAGE_KEY = "zazz-playground-template";
+  const savedTemplate = (): Template | undefined => {
+    try {
+      const id = localStorage.getItem(STORAGE_KEY);
+      return data.templates.find((t) => t.id === id);
+    } catch {
+      return undefined;
+    }
+  };
+  const saveTemplate = (id: string): void => {
+    try {
+      localStorage.setItem(STORAGE_KEY, id);
+    } catch {
+      // not remembered
+    }
+  };
+  const guard = guardScript();
 
   // --- the document the output renders -----------------------------------
   const theme = (): string | null => {
@@ -46,6 +70,7 @@ if (root && dataNode && output && host && fallback && templateSelect && resetBut
     const doc = `<!doctype html>
 <html lang="en"${scheme ? ` data-theme="${scheme}"` : ""}>
 <head>
+${guard}
 ${data.head}
 <title>Playground output</title>
 </head>
@@ -355,19 +380,49 @@ ${code}
     if (!template) return;
     setCode(template.html);
     changed();
+    saveTemplate(template.id);
   });
 
   resetButton.addEventListener("click", () => {
     templateSelect.value = "blank";
     setCode(blank);
     changed();
+    saveTemplate("blank");
   });
+
+  // Disabled until the code has loaded (see boot), and for good where the
+  // clipboard API is missing (an insecure context).
+  const canCopy = typeof navigator.clipboard?.writeText === "function";
+  if (copyButton && canCopy) {
+    const idle = copyButton.querySelector<HTMLElement>("[data-copy-idle]");
+    const done = copyButton.querySelector<HTMLElement>("[data-copy-done]");
+    let restore: ReturnType<typeof setTimeout> | undefined;
+    copyButton.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(getCode());
+      } catch {
+        return;
+      }
+      if (!idle || !done) return;
+      idle.hidden = true;
+      done.hidden = false;
+      clearTimeout(restore);
+      restore = setTimeout(() => {
+        idle.hidden = false;
+        done.hidden = true;
+      }, 1500);
+    });
+  }
 
   // --- boot --------------------------------------------------------------
   void (async () => {
+    // A shared snippet wins over the remembered template, without replacing it.
     const shared = await decodeHash(location.hash);
-    setCode(shared ?? initial);
+    const saved = shared ? undefined : savedTemplate();
+    setCode(shared ?? saved?.html ?? initial);
     if (shared) templateSelect.value = "blank";
+    else if (saved) templateSelect.value = saved.id;
+    if (copyButton && canCopy) copyButton.disabled = false;
     render(getCode());
     try {
       await mountEditor();

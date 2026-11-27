@@ -1,0 +1,220 @@
+<!-- Blog posts: three post cards, each with an image, a category, a date, a
+     title, and an excerpt. Card: https://zazz.sh/api/primitives/card/ ·
+     Badge: https://zazz.sh/api/primitives/badge/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<section aria-labelledby="blog-title" style="--py: 24">
+  <ui-layout>
+    <header
+      style="
+        --display: flex;
+        --flex-wrap: wrap;
+        --items: end;
+        --justify: space-between;
+        --gap: 4;
+      "
+    >
+      <div
+        style="
+          --display: grid;
+          --gap: 4;
+          --max-w: 60ch;
+        "
+      >
+        <h2 id="blog-title">From the blog</h2>
+        <p style="--text: var(--color-muted-foreground)">
+          Say what readers will find here: guides, news, or stories from customers.
+        </p>
+      </div>
+      <a href="#" data-ui="button" data-button-variant="outline">All posts</a>
+    </header>
+    <div
+      style="
+        --display: grid;
+        --grid-cols: 1;
+        --grid-cols--md: 3;
+        --gap: 6;
+        --mt: 11;
+      "
+    >
+      <article data-ui="card group">
+        <figure
+          data-card-slot="header"
+          style="
+            --aspect: 4 / 3;
+            --radius: 4.5;
+            --overflow: hidden;
+          "
+        >
+          <img
+            src="/placeholders/image-4x3-light.webp"
+            width="2048"
+            height="1536"
+            alt=""
+            loading="lazy"
+            style="
+              --size: 100%;
+              --object-fit: cover;
+            "
+          />
+        </figure>
+        <div
+          data-card-slot="body"
+          style="
+            --display: grid;
+            --gap: 2;
+          "
+        >
+          <p
+            style="
+              --display: flex;
+              --items: center;
+              --gap: 2;
+            "
+          >
+            <span data-ui="badge" data-badge-variant="muted">Guide</span>
+            <time datetime="2026-11-20" data-font="sm" style="--text: var(--color-muted-foreground)"
+              >Nov 20, 2026</time
+            >
+          </p>
+          <h3 data-font="lg">
+            <a
+              href="#"
+              style="
+                --text-decoration: none;
+                --text: currentColor;
+                --group-text--hover: var(--color-muted-foreground);
+              "
+              >A post title that promises something specific</a
+            >
+          </h3>
+          <p data-font="sm" style="--text: var(--color-muted-foreground)">
+            One or two sentences from the post that make the reader want the rest.
+          </p>
+        </div>
+      </article>
+      <article data-ui="card group">
+        <figure
+          data-card-slot="header"
+          style="
+            --aspect: 4 / 3;
+            --radius: 4.5;
+            --overflow: hidden;
+          "
+        >
+          <img
+            src="/placeholders/image-4x3-light.webp"
+            width="2048"
+            height="1536"
+            alt=""
+            loading="lazy"
+            style="
+              --size: 100%;
+              --object-fit: cover;
+            "
+          />
+        </figure>
+        <div
+          data-card-slot="body"
+          style="
+            --display: grid;
+            --gap: 2;
+          "
+        >
+          <p
+            style="
+              --display: flex;
+              --items: center;
+              --gap: 2;
+            "
+          >
+            <span data-ui="badge" data-badge-variant="muted">News</span>
+            <time datetime="2026-11-12" data-font="sm" style="--text: var(--color-muted-foreground)"
+              >Nov 12, 2026</time
+            >
+          </p>
+          <h3 data-font="lg">
+            <a
+              href="#"
+              style="
+                --text-decoration: none;
+                --text: currentColor;
+                --group-text--hover: var(--color-muted-foreground);
+              "
+              >What changed this month and why it matters</a
+            >
+          </h3>
+          <p data-font="sm" style="--text: var(--color-muted-foreground)">
+            Lead with the change the reader will notice first, then link to the details.
+          </p>
+        </div>
+      </article>
+      <article data-ui="card group">
+        <figure
+          data-card-slot="header"
+          style="
+            --aspect: 4 / 3;
+            --radius: 4.5;
+            --overflow: hidden;
+          "
+        >
+          <img
+            src="/placeholders/image-4x3-light.webp"
+            width="2048"
+            height="1536"
+            alt=""
+            loading="lazy"
+            style="
+              --size: 100%;
+              --object-fit: cover;
+            "
+          />
+        </figure>
+        <div
+          data-card-slot="body"
+          style="
+            --display: grid;
+            --gap: 2;
+          "
+        >
+          <p
+            style="
+              --display: flex;
+              --items: center;
+              --gap: 2;
+            "
+          >
+            <span data-ui="badge" data-badge-variant="muted">Customer story</span>
+            <time datetime="2026-11-03" data-font="sm" style="--text: var(--color-muted-foreground)"
+              >Nov 3, 2026</time
+            >
+          </p>
+          <h3 data-font="lg">
+            <a
+              href="#"
+              style="
+                --text-decoration: none;
+                --text: currentColor;
+                --group-text--hover: var(--color-muted-foreground);
+              "
+              >How one team cut a weekly task from hours to minutes</a
+            >
+          </h3>
+          <p data-font="sm" style="--text: var(--color-muted-foreground)">
+            Name the customer, the problem they had, and the result in plain numbers.
+          </p>
+        </div>
+      </article>
+    </div>
+  </ui-layout>
+</section>

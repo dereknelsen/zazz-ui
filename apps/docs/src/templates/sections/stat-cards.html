@@ -1,0 +1,150 @@
+<!-- Page header and stat cards: a title row with actions above four summary
+     cards. Card: https://zazz.sh/api/primitives/card/ · Badge:
+     https://zazz.sh/api/primitives/badge/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<main style="--py: 11">
+  <ui-layout>
+    <header
+      style="
+        --display: flex;
+        --flex-wrap: wrap;
+        --items: end;
+        --justify: space-between;
+        --pb: 6;
+        --gap: 4;
+        --border-b: 1;
+      "
+    >
+      <div
+        style="
+          --display: grid;
+          --gap: 1;
+        "
+      >
+        <h1 data-font="h4">Overview</h1>
+        <p style="--text: var(--color-muted-foreground)">
+          Name the time range the numbers cover, such as the last 30 days.
+        </p>
+      </div>
+      <div
+        style="
+          --display: flex;
+          --gap: 2;
+        "
+      >
+        <button type="button" data-ui="button" data-button-variant="outline">Export</button>
+        <button type="button" data-ui="button" data-button-variant="primary">New report</button>
+      </div>
+    </header>
+
+    <!-- `grid-gallery` picks 4, 2, or 1 columns from the card count and the width -->
+    <ul
+      aria-label="Summary"
+      style="
+        --display: grid-gallery;
+        --gap: 4;
+        --mt: 6;
+      "
+    >
+      <li data-ui="card" data-card-variant="outline">
+        <dl
+          data-card-slot="body"
+          style="
+            --display: flex-col-reverse;
+            --gap: 2;
+          "
+        >
+          <dt data-font="sm" style="--text: var(--color-muted-foreground)">Revenue</dt>
+          <dd
+            style="
+              --display: flex;
+              --items: baseline;
+              --justify: space-between;
+              --gap: 2;
+            "
+          >
+            <span data-font="h4">$48,200</span>
+            <span data-ui="badge" data-badge-variant="success">+12%</span>
+          </dd>
+        </dl>
+      </li>
+      <li data-ui="card" data-card-variant="outline">
+        <dl
+          data-card-slot="body"
+          style="
+            --display: flex-col-reverse;
+            --gap: 2;
+          "
+        >
+          <dt data-font="sm" style="--text: var(--color-muted-foreground)">New customers</dt>
+          <dd
+            style="
+              --display: flex;
+              --items: baseline;
+              --justify: space-between;
+              --gap: 2;
+            "
+          >
+            <span data-font="h4">312</span>
+            <span data-ui="badge" data-badge-variant="success">+4%</span>
+          </dd>
+        </dl>
+      </li>
+      <li data-ui="card" data-card-variant="outline">
+        <dl
+          data-card-slot="body"
+          style="
+            --display: flex-col-reverse;
+            --gap: 2;
+          "
+        >
+          <dt data-font="sm" style="--text: var(--color-muted-foreground)">Open tickets</dt>
+          <dd
+            style="
+              --display: flex;
+              --items: baseline;
+              --justify: space-between;
+              --gap: 2;
+            "
+          >
+            <span data-font="h4">27</span>
+            <span data-ui="badge" data-badge-variant="warning">+9</span>
+          </dd>
+        </dl>
+      </li>
+      <li data-ui="card" data-card-variant="outline">
+        <dl
+          data-card-slot="body"
+          style="
+            --display: flex-col-reverse;
+            --gap: 2;
+          "
+        >
+          <dt data-font="sm" style="--text: var(--color-muted-foreground)">Cancellations</dt>
+          <dd
+            style="
+              --display: flex;
+              --items: baseline;
+              --justify: space-between;
+              --gap: 2;
+            "
+          >
+            <span data-font="h4">8</span>
+            <span data-ui="badge" data-badge-variant="muted">No change</span>
+          </dd>
+        </dl>
+      </li>
+    </ul>
+  </ui-layout>
+</main>

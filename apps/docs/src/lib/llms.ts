@@ -262,7 +262,7 @@ export function llmsIndex(pages: PageForLlm[], siteUrl: string): string {
       kitVersion() +
       ", alpha). Markup has no classes: an identity in `data-ui`, presets in `data-<primitive>-*`, and style utilities as custom properties in `style` (`--px: 6; --w--md: fit-content`). Hooks (`--ui-<primitive>-*`) theme primitives; design tokens on `:root` theme everything.",
     "",
-    'Read `AUTHORING.md` (ships in `@zazz-ui/core`) before writing markup. Copy a primitive\'s anatomy from its API page; never reconstruct one from memory. Never use 0.4 syntax (`class="ui-button"`, `data-variant`, utility classes).',
+    "Read `AUTHORING.md` (ships in `@zazz-ui/core`) before writing markup. Copy a primitive's anatomy from its API page; never reconstruct one from memory. Never use 0.4 syntax (`class=\"ui-button\"`, `data-variant`, utility classes). Each primitive's exact hooks, attributes, slots, and states are in its data file, `primitives/<name>/<name>.json`.",
     "",
     `Full text of every docs and API page: ${siteUrl}/llms-full.txt`,
     "",

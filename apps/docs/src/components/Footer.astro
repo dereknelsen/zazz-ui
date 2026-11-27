@@ -3,11 +3,13 @@ import { links, nav, site } from "../site.config.ts";
 import Logo from "./Logo.astro";
 ---
 
-<footer style="
+<footer
+  style="
     --pt: 11;
     --bg: var(--color-background);
     --border-t: 1;
-  ">
+  "
+>
   <ui-layout>
     <div
       style="
@@ -52,19 +54,17 @@ import Logo from "./Logo.astro";
             --gap: 5;
           "
         >
-          {
-            nav.map((item) => (
-              <li>
-                <a href={item.href} data-ui="link" data-font="sm">
-                  {item.label}
-                </a>
-              </li>
-            ))
-          }
+          {nav.map((item) => (
+            <li>
+              <a href={item.href} data-ui="link" data-font="sm">
+                {item.label}
+              </a>
+            </li>
+          ))}
           <li>
-            <a href={links.github} data-ui="link" data-font="sm" rel="noopener"
-              >GitHub</a
-            >
+            <a href={links.github} data-ui="link" data-font="sm" rel="noopener">
+              GitHub
+            </a>
           </li>
         </ul>
       </nav>
@@ -94,33 +94,53 @@ import Logo from "./Logo.astro";
           "
         >
           <p>
-            Zazz is heavily inspired by <a
+            Zazz is heavily inspired by{" "}
+            <a
               data-ui="link"
               href="https://tailwindcss.com/"
               target="_blank"
-              rel="noopener">Tailwind</a
-            >, <a
+              rel="noopener"
+            >
+              Tailwind
+            </a>
+            ,{" "}
+            <a
               data-ui="link"
               href="https://ui.shadcn.com/"
               target="_blank"
-              rel="noopener">Shadcn</a
-            >, <a
+              rel="noopener"
+            >
+              Shadcn
+            </a>
+            ,{" "}
+            <a
               data-ui="link"
               href="https://base-ui.org/"
               target="_blank"
-              rel="noopener">Base UI</a
-            >, <a
+              rel="noopener"
+            >
+              Base UI
+            </a>
+            ,{" "}
+            <a
               data-ui="link"
               href="https://www.kevinpowell.co/"
               target="_blank"
-              rel="noopener">Kevin Powell</a
-            >, <a
+              rel="noopener"
+            >
+              Kevin Powell
+            </a>
+            ,{" "}
+            <a
               data-ui="link"
               href="https://www.joshwcomeau.com/"
               target="_blank"
-              rel="noopener">Josh Comeau</a
-            > and many others. Thank you all for your incredible work, support, and
-            inspiration.
+              rel="noopener"
+            >
+              Josh Comeau
+            </a>{" "}
+            and many others. Thank you all for your incredible work, support,
+            and inspiration.
           </p>
         </div>
       </section>
@@ -144,15 +164,13 @@ import Logo from "./Logo.astro";
           --border-t--sm: 0;
         "
       >
-        <p
-          style="
-            --max-w: 50ch;
-            --text-wrap: balance;
-          "
-        >
+        <p style="--text-wrap: balance">
           Built and maintained by Derek Nelsen. Licensed under the MIT License.
           Source code available on{" "}
-          <a data-ui="link" href={links.github} rel="noopener">GitHub</a>.
+          <a data-ui="link" href={links.github} rel="noopener">
+            GitHub
+          </a>
+          .
         </p>
       </section>
     </div>

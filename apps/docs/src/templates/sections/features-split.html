@@ -1,0 +1,100 @@
+<!-- Feature rows: text beside an image, alternating sides from md up with
+     `--order--md`. Grid utilities: https://zazz.sh/api/utilities/flexbox-grid/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<section aria-label="Features" style="--py: 24">
+  <ui-layout>
+    <div
+      style="
+        --display: grid;
+        --gap: 24;
+      "
+    >
+      <article
+        style="
+          --display: grid;
+          --items: center;
+          --grid-cols: 1;
+          --grid-cols--md: 2;
+          --gap: 11;
+        "
+      >
+        <div
+          style="
+            --display: flex-col;
+            --items: start;
+            --gap: 4;
+          "
+        >
+          <h2>Explain the first benefit</h2>
+          <p style="--text: var(--color-muted-foreground)">
+            Describe the problem this solves and what the reader gets once it is gone. Keep each row
+            to one idea so the page is easy to scan.
+          </p>
+          <a href="#" data-ui="button" data-button-variant="outline">Learn more</a>
+        </div>
+        <img
+          src="/placeholders/image-4x3-light.webp"
+          width="2048"
+          height="1536"
+          alt="Placeholder image"
+          loading="lazy"
+          style="
+            --w: 100%;
+            --aspect: 4 / 3;
+            --radius: 4.5;
+            --object-fit: cover;
+          "
+        />
+      </article>
+      <article
+        style="
+          --display: grid;
+          --items: center;
+          --grid-cols: 1;
+          --grid-cols--md: 2;
+          --gap: 11;
+        "
+      >
+        <div
+          style="
+            --display: flex-col;
+            --items: start;
+            --order--md: 2;
+            --gap: 4;
+          "
+        >
+          <h2>Explain the second benefit</h2>
+          <p style="--text: var(--color-muted-foreground)">
+            The image moves to the other side here, which gives a long page some rhythm. Show the
+            feature itself when you can.
+          </p>
+          <a href="#" data-ui="button" data-button-variant="outline">Learn more</a>
+        </div>
+        <img
+          src="/placeholders/image-4x3-light.webp"
+          width="2048"
+          height="1536"
+          alt="Placeholder image"
+          loading="lazy"
+          style="
+            --w: 100%;
+            --aspect: 4 / 3;
+            --radius: 4.5;
+            --object-fit: cover;
+          "
+        />
+      </article>
+    </div>
+  </ui-layout>
+</section>

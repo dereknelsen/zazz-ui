@@ -1,0 +1,105 @@
+<!-- Table: a heading row with an action above a table with status badges and a
+     row action. The wrapper scrolls sideways on narrow screens. Table:
+     https://zazz.sh/api/primitives/table/ · Badge: https://zazz.sh/api/primitives/badge/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<section aria-labelledby="table-title" style="--py: 11">
+  <ui-layout>
+    <header
+      style="
+        --display: flex;
+        --flex-wrap: wrap;
+        --items: end;
+        --justify: space-between;
+        --gap: 4;
+      "
+    >
+      <div
+        style="
+          --display: grid;
+          --gap: 1;
+        "
+      >
+        <h2 id="table-title" data-font="h5">Team members</h2>
+        <p style="--text: var(--color-muted-foreground)">
+          Say what the table lists and what the reader can do with it.
+        </p>
+      </div>
+      <button type="button" data-ui="button" data-button-variant="primary">Invite member</button>
+    </header>
+    <div
+      style="
+        --mt: 6;
+        --overflow-x: auto;
+      "
+    >
+      <table data-ui="table" aria-labelledby="table-title">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            <th scope="col">Status</th>
+            <th scope="col"><span style="--sr: only">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="--font-weight: strong">First person</td>
+            <td>first@example.com</td>
+            <td>Admin</td>
+            <td><span data-ui="badge" data-badge-variant="success">Active</span></td>
+            <td style="--text-align: end">
+              <a href="#" data-ui="button" data-button-variant="ghost"
+                >Edit<span style="--sr: only">, First person</span></a
+              >
+            </td>
+          </tr>
+          <tr>
+            <td style="--font-weight: strong">Second person</td>
+            <td>second@example.com</td>
+            <td>Editor</td>
+            <td><span data-ui="badge" data-badge-variant="success">Active</span></td>
+            <td style="--text-align: end">
+              <a href="#" data-ui="button" data-button-variant="ghost"
+                >Edit<span style="--sr: only">, Second person</span></a
+              >
+            </td>
+          </tr>
+          <tr>
+            <td style="--font-weight: strong">Third person</td>
+            <td>third@example.com</td>
+            <td>Viewer</td>
+            <td><span data-ui="badge" data-badge-variant="warning">Invited</span></td>
+            <td style="--text-align: end">
+              <a href="#" data-ui="button" data-button-variant="ghost"
+                >Edit<span style="--sr: only">, Third person</span></a
+              >
+            </td>
+          </tr>
+          <tr>
+            <td style="--font-weight: strong">Fourth person</td>
+            <td>fourth@example.com</td>
+            <td>Viewer</td>
+            <td><span data-ui="badge" data-badge-variant="muted">Suspended</span></td>
+            <td style="--text-align: end">
+              <a href="#" data-ui="button" data-button-variant="ghost"
+                >Edit<span style="--sr: only">, Fourth person</span></a
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ui-layout>
+</section>

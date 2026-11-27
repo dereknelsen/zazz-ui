@@ -1,0 +1,71 @@
+<!-- Hero: heading, lead, and two actions beside an image; stacks on small screens.
+     Layout bands: https://zazz.sh/api/primitives/layout/ · Buttons:
+     https://zazz.sh/api/primitives/button/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<section aria-labelledby="hero-title" style="--py: 24">
+  <ui-layout>
+    <div
+      style="
+        --display: grid;
+        --items: center;
+        --grid-cols: 1;
+        --grid-cols--lg: 2;
+        --gap: 11;
+      "
+    >
+      <div
+        style="
+          --display: flex-col;
+          --items: start;
+          --gap: 6;
+        "
+      >
+        <h1 id="hero-title">A headline that says what you offer</h1>
+        <p
+          data-font="lg"
+          style="
+            --max-w: 52ch;
+            --text: var(--color-muted-foreground);
+          "
+        >
+          Follow it with a sentence or two on who it is for and what changes for them. Keep it short
+          enough to read in one breath.
+        </p>
+        <div
+          style="
+            --display: flex;
+            --flex-wrap: wrap;
+            --gap: 2;
+          "
+        >
+          <a href="#" data-ui="button" data-button-variant="primary">Get started</a>
+          <a href="#" data-ui="button" data-button-variant="outline">See how it works</a>
+        </div>
+      </div>
+      <img
+        src="/placeholders/image-4x3-light.webp"
+        width="2048"
+        height="1536"
+        alt="Placeholder image"
+        fetchpriority="high"
+        style="
+          --w: 100%;
+          --aspect: 4 / 3;
+          --radius: 4.5;
+          --object-fit: cover;
+        "
+      />
+    </div>
+  </ui-layout>
+</section>

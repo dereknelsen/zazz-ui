@@ -44,6 +44,8 @@ Every primitive reads `--ui-<primitive>-<utility>` hooks that inherit, so a hook
 
 A pill radius set through a hook needs `--ui-button-corner-shape: round` next to it, or the buttons keep the theme's superellipse corners. On one element, `--radius: full` or `--radius: var(--radius-full)` switches the corner shape by itself.
 
+Circles and tracks (the slider, switch, progress, meter, and avatar) keep a theme shape only when it is `round`, `squircle`, `square`, `superellipse(1)`, `superellipse(1.3)`, `superellipse(2)`, or `superellipse(infinity)`, spelled exactly. Any other value draws them round, because a concave shape at a full radius can cut a circle down to nothing.
+
 The widest lever is the `--ui-field-*` family: inputs, selects, and textareas read it directly, and button, tabs, checkbox, radio, badge, menu, and command metrics default to it, so `--ui-field-h: 2.75rem` retunes a whole form row. Each primitive's hooks, with defaults, are on its [API page](/api/).
 
 ## 3. Utilities on one element

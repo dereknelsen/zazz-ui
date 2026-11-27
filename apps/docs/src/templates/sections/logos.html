@@ -1,0 +1,95 @@
+<!-- Logo cloud: a line of context and a wrapped row of customer marks. Swap each
+     name for an <img> or inline SVG of the logo. Flex utilities:
+     https://zazz.sh/api/utilities/flexbox-grid/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<section aria-labelledby="logos-title" style="--py: 24">
+  <ui-layout>
+    <h2
+      id="logos-title"
+      data-font="md"
+      style="
+        --text-align: center;
+        --text: var(--color-muted-foreground);
+      "
+    >
+      Used by teams at companies like these
+    </h2>
+    <ul
+      style="
+        --display: flex;
+        --flex-wrap: wrap;
+        --items: center;
+        --justify: center;
+        --gap-x: 11;
+        --gap-y: 6;
+        --mt: 11;
+      "
+    >
+      <li
+        data-font="xl"
+        style="
+          --font-weight: strong;
+          --text: var(--color-muted-foreground);
+        "
+      >
+        Northwind
+      </li>
+      <li
+        data-font="xl"
+        style="
+          --font-weight: strong;
+          --text: var(--color-muted-foreground);
+        "
+      >
+        Contoso
+      </li>
+      <li
+        data-font="xl"
+        style="
+          --font-weight: strong;
+          --text: var(--color-muted-foreground);
+        "
+      >
+        Fabrikam
+      </li>
+      <li
+        data-font="xl"
+        style="
+          --font-weight: strong;
+          --text: var(--color-muted-foreground);
+        "
+      >
+        Tailspin
+      </li>
+      <li
+        data-font="xl"
+        style="
+          --font-weight: strong;
+          --text: var(--color-muted-foreground);
+        "
+      >
+        Litware
+      </li>
+      <li
+        data-font="xl"
+        style="
+          --font-weight: strong;
+          --text: var(--color-muted-foreground);
+        "
+      >
+        Proseware
+      </li>
+    </ul>
+  </ui-layout>
+</section>

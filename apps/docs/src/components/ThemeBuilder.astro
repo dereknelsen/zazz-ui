@@ -20,7 +20,7 @@
  * after the card grid: it packs the grid during parse (scripts/fieldnotes-pack.ts), so the cards
  * paint packed instead of waiting, hidden, for those modules.
  */
-import languageData from '@zazz-ui/core/editor/zazz.language-data.json';
+import languageData from "@zazz-ui/core/editor/zazz.language-data.json";
 import {
   Check,
   Code,
@@ -32,16 +32,16 @@ import {
   SlidersHorizontal,
   Type,
   X,
-} from '@lucide/astro';
-import Icon from './Icon.astro';
-import { CORNER_SHAPE } from '../lib/corner-shape.ts';
-import sparklesSvg from 'lucide-static/icons/sparkles.svg?raw';
-import { inlineScript } from '../lib/inline-script.ts';
-import { PRESET_PARAM } from '../lib/preset.ts';
-import { declaredProperties, stageScope } from '../lib/stage-scope.ts';
-import siteLook from '../styles/site-look.css?raw';
-import packSource from '../scripts/fieldnotes-pack.ts?raw';
-import { species } from '../lib/fieldnotes.ts';
+} from "@lucide/astro";
+import Icon from "./Icon.astro";
+import { CORNER_SHAPE } from "../lib/corner-shape.ts";
+import sparklesSvg from "lucide-static/icons/sparkles.svg?raw";
+import { inlineScript } from "../lib/inline-script.ts";
+import { PRESET_PARAM } from "../lib/preset.ts";
+import { declaredProperties, stageScope } from "../lib/stage-scope.ts";
+import siteLook from "../styles/site-look.css?raw";
+import packSource from "../scripts/fieldnotes-pack.ts?raw";
+import { species } from "../lib/fieldnotes.ts";
 import {
   FONT_CATEGORIES,
   LOCAL_FONTS,
@@ -50,33 +50,33 @@ import {
   type FontCategory,
   type FontOption,
   type GoogleFontItem,
-} from '../lib/fonts.ts';
+} from "../lib/fonts.ts";
 import {
   backgroundDeclaration,
   BACKGROUNDS,
   DEFAULT_BACKGROUND,
   STOPS,
   toHex,
-} from '../lib/palette.ts';
-import AlertSettings from './fieldnotes/AlertSettings.astro';
-import Conditions from './fieldnotes/Conditions.astro';
-import FieldBadges from './fieldnotes/FieldBadges.astro';
-import Journal from './fieldnotes/Journal.astro';
-import LifeList from './fieldnotes/LifeList.astro';
-import NextTrip from './fieldnotes/NextTrip.astro';
-import PackList from './fieldnotes/PackList.astro';
-import Plates from './fieldnotes/Plates.astro';
-import ReviewStatus from './fieldnotes/ReviewStatus.astro';
-import SightingForm from './fieldnotes/SightingForm.astro';
-import SightingsTable from './fieldnotes/SightingsTable.astro';
-import SpeciesCard from './fieldnotes/SpeciesCard.astro';
-import Spotters from './fieldnotes/Spotters.astro';
-import ThemeLock from './ThemeLock.astro';
-import VerifyCode from './fieldnotes/VerifyCode.astro';
+} from "../lib/palette.ts";
+import AlertSettings from "./fieldnotes/AlertSettings.astro";
+import Conditions from "./fieldnotes/Conditions.astro";
+import FieldBadges from "./fieldnotes/FieldBadges.astro";
+import Journal from "./fieldnotes/Journal.astro";
+import LifeList from "./fieldnotes/LifeList.astro";
+import NextTrip from "./fieldnotes/NextTrip.astro";
+import PackList from "./fieldnotes/PackList.astro";
+import Plates from "./fieldnotes/Plates.astro";
+import ReviewStatus from "./fieldnotes/ReviewStatus.astro";
+import SightingForm from "./fieldnotes/SightingForm.astro";
+import SightingsTable from "./fieldnotes/SightingsTable.astro";
+import SpeciesCard from "./fieldnotes/SpeciesCard.astro";
+import Spotters from "./fieldnotes/Spotters.astro";
+import ThemeLock from "./ThemeLock.astro";
+import VerifyCode from "./fieldnotes/VerifyCode.astro";
 
-const TOASTER = 'fieldnotes-toaster';
+const TOASTER = "fieldnotes-toaster";
 
-const GENERATE_BUTTON_LABEL = 'Generate a new theme';
+const GENERATE_BUTTON_LABEL = "Generate a new theme";
 /** The Generate button's icon (Lucide), as the mask its rainbow shows through (site-look.css). */
 const generateIcon = `url("data:image/svg+xml,${encodeURIComponent(sparklesSvg.replace(/<!--[\s\S]*?-->/g, "").trim())}")`;
 
@@ -89,10 +89,11 @@ const generateIcon = `url("data:image/svg+xml,${encodeURIComponent(sparklesSvg.r
 const defaults = {
   // --color-primary is --color-primary-950 in light mode: oklch(0.145 0 0).
   primary: toHex({ l: 0.145, c: 0, h: 0 }),
-  // --color-secondary is --color-secondary-950 in light mode: oklch(13% 0.028 261.692).
-  secondary: toHex({ l: 0.13, c: 0.028, h: 261.692 }),
-  // --color-tertiary is --color-tertiary-950 in light mode: oklch(0.147 0.004 49.3).
-  tertiary: toHex({ l: 0.147, c: 0.004, h: 49.3 }),
+  // The secondary scale runs reversed: its 50 is the primary's 950, oklch(0.145 0 0),
+  // and a palette built from it is the kit's own (the role reads the 900 in light mode).
+  secondary: toHex({ l: 0.145, c: 0, h: 0 }),
+  // --color-tertiary is --color-tertiary-500 in light mode: oklch(0.593 0.193 280.79).
+  tertiary: toHex({ l: 0.593, c: 0.193, h: 280.79 }),
   // --color-neutral-500: oklch(0.629 0.012 286.12).
   neutral: toHex({ l: 0.629, c: 0.012, h: 286.12 }),
   spacing: 0.25,
@@ -101,7 +102,7 @@ const defaults = {
   // --radius-corner-shape: superellipse(1.3).
   cornerShape: 1.3,
   // --color-shadow: black.
-  shadowColor: '#000000',
+  shadowColor: "#000000",
   // --default-shadow-intensity / -blur / -distance.
   shadowKnob: 1,
   // --typeset-scale-min / --typeset-scale-max.
@@ -120,19 +121,19 @@ async function googleFonts(): Promise<FontOption[]> {
   const key = import.meta.env.GOOGLE_FONTS_API_KEY;
   if (!key) return [];
   try {
-    const url = new URL('https://www.googleapis.com/webfonts/v1/webfonts');
-    url.searchParams.set('key', key);
+    const url = new URL("https://www.googleapis.com/webfonts/v1/webfonts");
+    url.searchParams.set("key", key);
     // The key is restricted to the site's referrers, so the build introduces
     // itself as the site (there is no browser here to do it).
     const response = await fetch(url, {
-      headers: { Referer: Astro.site?.href ?? '' },
+      headers: { Referer: Astro.site?.href ?? "" },
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = (await response.json()) as { items?: GoogleFontItem[] };
     return pickGoogleFonts(data.items ?? []);
   } catch (error) {
     console.warn(
-      `ThemeBuilder: Google Fonts unavailable (${error instanceof Error ? error.message : 'error'}); offering local fonts only.`,
+      `ThemeBuilder: Google Fonts unavailable (${error instanceof Error ? error.message : "error"}); offering local fonts only.`,
     );
     return [];
   }
@@ -142,97 +143,95 @@ const google = await googleFonts();
 
 /** The combobox groups: the Google families by category, or the local stacks when there are none. */
 const CATEGORY_LABEL: Record<FontCategory, string> = {
-  'sans-serif': 'Sans serif',
-  serif: 'Serif',
-  monospace: 'Monospace',
+  "sans-serif": "Sans serif",
+  serif: "Serif",
+  monospace: "Monospace",
 };
 const fontGroups =
-  google.length > 0 ?
-    FONT_CATEGORIES.map((category) => ({
-      label: CATEGORY_LABEL[category],
-      fonts: google.filter((f) => f.category === category),
-    })).filter((group) => group.fonts.length > 0)
-  : [{ label: 'System', fonts: LOCAL_FONTS }];
+  google.length > 0
+    ? FONT_CATEGORIES.map((category) => ({
+        label: CATEGORY_LABEL[category],
+        fonts: google.filter((f) => f.category === category),
+      })).filter((group) => group.fonts.length > 0)
+    : [{ label: "System", fonts: LOCAL_FONTS }];
 
 /** The font controls: one family for headings, one for body text. */
 const fontRoles = [
-  { role: 'heading', label: 'Heading font', other: 'body font' },
-  { role: 'body', label: 'Body font', other: 'heading font' },
+  { role: "heading", label: "Heading font", other: "body font" },
+  { role: "body", label: "Body font", other: "heading font" },
 ] as const;
-const fontDefault = 'Default (system sans)';
+const fontDefault = "Default (system sans)";
 
 const scales = [
   {
-    name: 'scale-min',
-    label: 'Scale at narrow widths',
+    name: "scale-min",
+    label: "Scale at narrow widths",
     value: defaults.scaleMin,
   },
   {
-    name: 'scale-max',
-    label: 'Scale at wide widths',
+    name: "scale-max",
+    label: "Scale at wide widths",
     value: defaults.scaleMax,
   },
 ] as const;
 
 const palettes = [
   {
-    name: 'neutral',
-    label: 'Neutral',
-    hint: 'Surfaces, borders, and body text.',
+    name: "neutral",
+    label: "Neutral",
+    hint: "Surfaces, borders, and body text.",
   },
   {
-    name: 'primary',
-    label: 'Primary',
-    hint: 'Buttons, links, focus rings, and selection.',
+    name: "primary",
+    label: "Primary",
+    hint: "Buttons, links, focus rings, and selection.",
   },
   {
-    name: 'secondary',
-    label: 'Secondary',
-    hint: 'Secondary buttons, badges, and toggles.',
+    name: "secondary",
+    label: "Secondary",
+    hint: "The primary inverted: everyday buttons, badges, and toggles.",
   },
   {
-    name: 'tertiary',
-    label: 'Tertiary',
-    hint: 'Tertiary buttons, badges, and toggles.',
+    name: "tertiary",
+    label: "Tertiary",
+    hint: "The accent: the one action that has to stand out.",
   },
 ] as const;
 
 /** The background selects: one per scheme, each limited to its end of the neutral scale. */
 const backgrounds = [
-  { scheme: 'light', label: 'Light background' },
-  { scheme: 'dark', label: 'Dark background' },
+  { scheme: "light", label: "Light background" },
+  { scheme: "dark", label: "Dark background" },
 ] as const;
 const backgroundLabel = (pick: string) =>
-  pick === 'white' ? 'White'
-  : pick === 'black' ? 'Black'
-  : `Neutral ${pick}`;
+  pick === "white" ? "White" : pick === "black" ? "Black" : `Neutral ${pick}`;
 const backgroundSwatch = (pick: string) =>
-  pick === 'white' || pick === 'black' ?
-    `var(--color-${pick})`
-  : `var(--color-neutral-${pick})`;
+  pick === "white" || pick === "black"
+    ? `var(--color-${pick})`
+    : `var(--color-neutral-${pick})`;
 
 const [featured, ...rest] = species;
 
 /** The collapsed bar's buttons (narrow screens): one per form section, opening the sheet on it. */
 const sections = [
-  { id: 'palette', label: 'Palette', icon: Palette },
-  { id: 'typeset', label: 'Typeset', icon: Type },
-  { id: 'styles', label: 'Styles', icon: SlidersHorizontal },
-  { id: 'effects', label: 'Effects', icon: Layers },
+  { id: "palette", label: "Palette", icon: Palette },
+  { id: "typeset", label: "Typeset", icon: Type },
+  { id: "styles", label: "Styles", icon: SlidersHorizontal },
+  { id: "effects", label: "Effects", icon: Layers },
 ] as const;
 
 /** The shadow multipliers: one slider each, 0 to 3 times the kit's shadow. */
 const SHADOW_KNOBS = [
   {
-    key: 'intensity',
-    label: 'Shadow intensity',
-    hint: 'Darker above 1, lighter below.',
+    key: "intensity",
+    label: "Shadow intensity",
+    hint: "Darker above 1, lighter below.",
   },
-  { key: 'blur', label: 'Shadow blur', hint: 'Softer above 1, crisper below.' },
+  { key: "blur", label: "Shadow blur", hint: "Softer above 1, crisper below." },
   {
-    key: 'distance',
-    label: 'Shadow distance',
-    hint: 'How far the shadow falls from the surface.',
+    key: "distance",
+    label: "Shadow distance",
+    hint: "How far the shadow falls from the surface.",
   },
 ];
 
@@ -253,7 +252,7 @@ const SHADOW_KNOBS = [
  * theme is unlayered and still wins.
  */
 const kitDefaults = { ...languageData.tokens, ...languageData.hooks };
-const lookReset = stageScope(siteLook, kitDefaults, '.fieldnotes__preview');
+const lookReset = stageScope(siteLook, kitDefaults, ".fieldnotes__preview");
 /**
  * The panel keeps the site's look, but its palette strips and background
  * swatches show the theme being built, painted from the kit's color tokens
@@ -261,17 +260,17 @@ const lookReset = stageScope(siteLook, kitDefaults, '.fieldnotes__preview');
  * colors back, and only the colors: their corners stay the site's.
  */
 const swatchReset = stageScope(
-  declaredProperties(siteLook).filter((name) => name.startsWith('--color-')),
+  declaredProperties(siteLook).filter((name) => name.startsWith("--color-")),
   kitDefaults,
-  '[data-theme-strip], [data-theme-bg-swatch]',
+  "[data-theme-strip], [data-theme-bg-swatch]",
 );
 const derived = Object.entries({
   ...languageData.tokens,
   ...languageData.hooks,
 })
-  .filter(([, { value }]) => value.includes('var('))
+  .filter(([, { value }]) => value.includes("var("))
   .map(([name, { value }]) => `${name}: ${value};`)
-  .join(' ');
+  .join(" ");
 const previewScope = `${lookReset}
 ${swatchReset}
 @layer zazz.variables {
@@ -289,7 +288,7 @@ ${swatchReset}
  */
 const packScript = await inlineScript(
   packSource,
-  'fieldnotes-pack.ts',
+  "fieldnotes-pack.ts",
   `const script = document.currentScript;
   if (!new URLSearchParams(location.search).has(${JSON.stringify(PRESET_PARAM)})) {
     script.closest('fieldnotes-demo')?.setAttribute('data-fieldnotes-packed', '');
@@ -301,8 +300,8 @@ const packScript = await inlineScript(
 <style is:inline set:html={previewScope}></style>
 
 <fieldnotes-demo
-  class='fieldnotes'
-  style='
+  class="fieldnotes"
+  style="
     --display: grid;
     --position: relative;
     --items: start;
@@ -310,7 +309,7 @@ const packScript = await inlineScript(
     --template-cols: minmax(0, 1fr);
     --template-cols--lg: minmax(min-content, 45ch) minmax(0, 1fr);
     --w: 100%;
-  '
+  "
 >
   <!--
     Narrow screens: a bar stuck to the bottom with one button per form section
@@ -318,7 +317,7 @@ const packScript = await inlineScript(
     width changes (scripts/theme-builder.ts). Wide screens: the form inline, stuck below the header.
   -->
   <theme-builder
-    style='
+    style="
       --position: sticky;
       --order: 0;
       --order--lg: 0;
@@ -334,13 +333,13 @@ const packScript = await inlineScript(
       --border-r: 0;
       --border-r--lg: 1;
       --z: 30;
-    '
+    "
   >
     <!-- MOBILE THEME BUILDER BAR -->
     <ui-card
-      data-card-variant='outline'
+      data-card-variant="outline"
       data-theme-bar
-      style='
+      style="
         --display: grid;
         --display--lg: none;
         --p: 3;
@@ -353,260 +352,260 @@ const packScript = await inlineScript(
         --radius: 0;
         --radius--lg: 6;
         --pointer-events: auto;
-      '
+      "
     >
-    <div
-        style='
+      <div
+        style="
           --display: flex;
           --position: relative;
           --gap: 2;
           --z: 10;
-        '
+        "
       >
-         <button
-              class="theme-builder__generate-button"
-              data-ui='button'
-              type='button'
-              aria-label='Randomize the theme'
-              data-theme-randomize
-              style='
-                --flex: 1;
-                --h: auto;
-                --h--lg: calc(var(--ui-button-min-h) + var(--spacing) * 2);
-              '
-            >
-              <span class='theme-builder__generate-icon' style={`--_icon: ${generateIcon}`} aria-hidden='true'></span>
-              <span class='theme-builder__generate-label'>{GENERATE_BUTTON_LABEL}</span>
-            </button>
         <button
-          data-ui='button'
-          data-button-variant='warning'
-          data-button-size='icon'
-          type='button'
+          class="theme-builder__generate-button"
+          data-ui="button"
+          type="button"
+          aria-label="Randomize the theme"
+          data-theme-randomize
+          style="
+            --flex: 1;
+            --h: auto;
+            --h--lg: calc(var(--ui-button-min-h) + var(--spacing) * 2);
+          "
+        >
+          <span
+            class="theme-builder__generate-icon"
+            style={`--_icon: ${generateIcon}`}
+            aria-hidden="true"
+          ></span>
+          <span class="theme-builder__generate-label">
+            {GENERATE_BUTTON_LABEL}
+          </span>
+        </button>
+        <button
+          data-ui="button"
+          data-button-variant="warning"
+          data-button-size="icon"
+          type="button"
           data-theme-reset-proxy
         >
-          <RotateCcw size={16} aria-hidden='true' />
+          <RotateCcw size={16} aria-hidden="true" />
           <span style="--sr: only">Reset the theme</span>
         </button>
       </div>
       <div
-        style='
+        style="
           --display: grid;
           --position: relative;
           --grid-cols: 3;
           --gap: 2;
           --z: 10;
-        '
+        "
       >
         <button
-          data-ui='button'
-          data-button-variant='muted'
-          type='button'
+          data-ui="button"
+          data-button-variant="secondary"
+          type="button"
           data-theme-copy-proxy
           disabled
         >
           <span
             data-copy-idle
-            style='
+            style="
               --display: inline-flex;
               --items: center;
               --gap: 2;
-            '
+            "
           >
-            <Copy size={16} aria-hidden='true' /> Copy
+            <Copy size={16} aria-hidden="true" /> Copy
           </span>
           <span
             data-copy-done
             hidden
-            style='
+            style="
               --display: inline-flex;
               --items: center;
               --gap: 2;
-            '
+            "
           >
-            <Check size={16} aria-hidden='true' /> Copied
+            <Check size={16} aria-hidden="true" /> Copied
           </span>
         </button>
         <button
-          data-ui='button'
-          data-button-variant='muted'
-          type='button'
-          command='show-modal'
-          commandfor='tb-css'
+          data-ui="button"
+          data-button-variant="secondary"
+          type="button"
+          command="show-modal"
+          commandfor="tb-css"
         >
-          <Code size={16} aria-hidden='true' /> Code
+          <Code size={16} aria-hidden="true" /> Code
         </button>
         <button
-          data-ui='button'
-          data-button-variant='muted'
-          type='button'
+          data-ui="button"
+          data-button-variant="secondary"
+          type="button"
           data-theme-share
         >
           <span
             data-share-idle
-            style='
+            style="
               --display: inline-flex;
               --items: center;
               --gap: 2;
-            '
+            "
           >
-            <Share size={16} aria-hidden='true' /> Share
+            <Share size={16} aria-hidden="true" /> Share
           </span>
           <span
             data-share-done
             hidden
-            style='
+            style="
               --display: inline-flex;
               --items: center;
               --gap: 2;
-            '
+            "
           >
-            <Check size={16} aria-hidden='true' /> Copied
+            <Check size={16} aria-hidden="true" /> Copied
           </span>
         </button>
       </div>
       <div
-        style='
+        style="
           --display: grid;
           --position: relative;
           --grid-cols: 4;
           --gap: 2;
           --z: 20;
-        '
+        "
       >
-        {
-          sections.map(({ id, label, icon: SectionIcon }) => (
-            <button
-              type='button'
-              data-ui='button'
-              data-button-variant='outline'
-              command='show-modal'
-              commandfor='tb-sheet'
-              data-theme-section-open={id}
-              style='
-                --display: grid;
-                --place-items: center;
-                --px: 1;
-                --py: 2;
-                --gap: 1;
-                --h: auto;
-                --bg: var(--color-faded);
-              '
-            >
-              <SectionIcon size={16} aria-hidden='true' />
-              <span data-font='xs'>{label}</span>
-            </button>
-          ))
-        }
+        {sections.map(({ id, label, icon: SectionIcon }) => (
+          <button
+            type="button"
+            data-ui="button"
+            data-button-variant="outline"
+            command="show-modal"
+            commandfor="tb-sheet"
+            data-theme-section-open={id}
+            style="
+              --display: grid;
+              --place-items: center;
+              --px: 1;
+              --py: 2;
+              --gap: 1;
+              --h: auto;
+              --bg: var(--color-faded);
+            "
+          >
+            <SectionIcon size={16} aria-hidden="true" />
+            <span data-font="xs">{label}</span>
+          </button>
+        ))}
       </div>
-
     </ui-card>
 
     <dialog
-      id='tb-sheet'
-      data-ui='drawer'
-      closedby='any'
-      aria-labelledby='tb-sheet-title'
+      id="tb-sheet"
+      data-ui="drawer"
+      closedby="any"
+      aria-labelledby="tb-sheet-title"
     >
-      <div data-drawer-slot='handle'></div>
+      <div data-drawer-slot="handle"></div>
       <!-- The drawer shows one section at a time, titled with its name (set by
            scripts/theme-builder.ts). Its own header row: the form's header
            (title + Generate) is wide-screen only, and Generate lives in the bar. Copy and Close sit in
            the row rather than in the absolute close slot, so the form's sticky
            header can never cover them. -->
-      <div data-drawer-slot='content'>
+      <div data-drawer-slot="content">
         <header
-          data-drawer-slot='header'
-          style='
+          data-drawer-slot="header"
+          style="
             --display: grid;
             --place-items: center stretch;
             --template-cols: 1fr auto;
             --pb: 3;
             --gap: 2;
             --border-b: 1;
-          '
+          "
         >
           <h2
-            id='tb-sheet-title'
-            data-font='md'
+            id="tb-sheet-title"
+            data-font="md"
             data-theme-sheet-title
-            style='--text-align: start'
+            style="--text-align: start"
           >
             Theme builder
           </h2>
-
         </header>
-        <div data-drawer-slot='body' data-theme-sheet></div>
+        <div data-drawer-slot="body" data-theme-sheet></div>
       </div>
     </dialog>
 
     <!-- Outside the form: on narrow screens the form sits in the closed sheet,
          where a dialog inside it could not be shown. -->
     <dialog
-      id='tb-css'
-      data-ui='dialog'
-      closedby='any'
-      aria-labelledby='tb-css-title'
+      id="tb-css"
+      data-ui="dialog"
+      closedby="any"
+      aria-labelledby="tb-css-title"
     >
-      <div data-dialog-slot='content'>
-        <header data-dialog-slot='header' style='--pr: 12'>
-          <h2 id='tb-css-title' data-font='md'>Theme CSS</h2>
-          <p
-            data-font='sm'
-            style='--text: var(--color-muted-foreground)'
-          >
+      <div data-dialog-slot="content">
+        <header data-dialog-slot="header" style="--pr: 12">
+          <h2 id="tb-css-title" data-font="md">
+            Theme CSS
+          </h2>
+          <p data-font="sm" style="--text: var(--color-muted-foreground)">
             Only the variables you changed. Paste it into your stylesheet.
           </p>
         </header>
-        <div data-dialog-slot='body'>
+        <div data-dialog-slot="body">
           <pre
-            data-font='xs'
-            style='
+            data-font="xs"
+            style="
               --p: 3;
               --font-family: var(--font-family-mono);
               --bg: var(--color-muted);
               --radius: 2.5;
               --overflow: auto;
-            '><code class='theme-builder__css' data-theme-css>/* No changes yet */</code></pre>
+            "
+          ><code class='theme-builder__css' data-theme-css>/* No changes yet */</code></pre>
         </div>
-        <footer data-dialog-slot='footer'>
+        <footer data-dialog-slot="footer">
           <button
-            data-ui='button'
-            type='button'
-            commandfor='tb-css'
-            command='close'>Close</button
+            data-ui="button"
+            type="button"
+            commandfor="tb-css"
+            command="close"
           >
+            Close
+          </button>
           <button
-            data-ui='button'
-            data-button-variant='primary'
-            type='button'
+            data-ui="button"
+            data-button-variant="primary"
+            type="button"
             data-theme-copy-proxy
           >
-            <Copy size={16} aria-hidden='true' /> Copy
+            <Copy size={16} aria-hidden="true" /> Copy
           </button>
         </footer>
       </div>
       <ui-tooltip>
         <button
-          data-ui='button'
-          data-dialog-slot='close'
-          data-button-size='icon'
-          data-button-variant='ghost'
-          type='button'
-          commandfor='tb-css'
-          command='close'
-          aria-label='Close'
-          interestfor='tb-css-close-tip'
+          data-ui="button"
+          data-dialog-slot="close"
+          data-button-size="icon"
+          data-button-variant="ghost"
+          type="button"
+          commandfor="tb-css"
+          command="close"
+          aria-label="Close"
+          interestfor="tb-css-close-tip"
         >
-          <X size={16} aria-hidden='true' />
+          <X size={16} aria-hidden="true" />
         </button>
-        <div
-          data-tooltip-slot='content'
-          id='tb-css-close-tip'
-          popover='hint'
-        >
+        <div data-tooltip-slot="content" id="tb-css-close-tip" popover="hint">
           Close
-          <span data-tooltip-slot='arrow' aria-hidden='true'></span>
+          <span data-tooltip-slot="arrow" aria-hidden="true"></span>
         </div>
       </ui-tooltip>
     </dialog>
@@ -614,19 +613,19 @@ const packScript = await inlineScript(
     <!-- DESKTOP THEME BUILDER PANEL -->
     <div
       data-theme-panel
-      data-theme='dark'
+      data-theme="dark"
 
-      style='
+      style="
         --display: none;
         --display--lg: flex-col;
         --p--lg: 8;
         --h: 100%;
-      '
+      "
     >
       <form
-        class='theme-builder__form'
-        aria-labelledby='tb-title'
-        style='
+        class="theme-builder__form"
+        aria-labelledby="tb-title"
+        style="
           --display: flex-col;
           --justify: start;
           --gap: 0;
@@ -635,10 +634,10 @@ const packScript = await inlineScript(
           --bg: var(--color-card);
           --elevation--lg: 5;
           --radius: var(--ui-card-radius);
-        '
+        "
       >
         <header
-          style='
+          style="
             --display: none;
             --display--lg: flex-col;
             --px: 5;
@@ -648,131 +647,132 @@ const packScript = await inlineScript(
             --top: 0;
             --border-b: 1;
             --z: 10;
-          '
+          "
         >
           <div
-            style='
+            style="
               --display: flex;
               --items: center;
               --justify: space-between;
               --gap: 2;
-            '
+            "
           >
-            <h2 id='tb-title' data-font='lg' style="--sr: only">Theme builder</h2>
+            <h2 id="tb-title" data-font="lg" style="--sr: only">
+              Theme builder
+            </h2>
             <button
               class="theme-builder__generate-button"
-              data-ui='button'
-              type='button'
-              aria-label='Randomize the theme'
+              data-ui="button"
+              type="button"
+              aria-label="Randomize the theme"
               data-theme-randomize
-              style='
+              style="
                 --w: 100%;
                 --h: calc(var(--ui-button-min-h) + var(--spacing) * 2);
-              '
+              "
             >
-              <span class='theme-builder__generate-icon' style={`--_icon: ${generateIcon}`} aria-hidden='true'></span>
-              <span class='theme-builder__generate-label'>{GENERATE_BUTTON_LABEL}</span>
+              <span
+                class="theme-builder__generate-icon"
+                style={`--_icon: ${generateIcon}`}
+                aria-hidden="true"
+              ></span>
+              <span class="theme-builder__generate-label">
+                {GENERATE_BUTTON_LABEL}
+              </span>
             </button>
           </div>
           <!-- The theme's actions, under Generate. Reset here is the real control; the
                bar's Copy and Reset (and the CSS dialog's Copy) are proxies (scripts/theme-builder.ts). -->
           <div
-            style='
+            style="
               --display: grid;
               --position: relative;
               --template-cols: auto 1fr auto auto;
               --gap: 2;
               --z: 10;
-            '
+            "
           >
-          <ui-tooltip>
+            <ui-tooltip>
               <button
-                data-ui='button'
-                interestfor='tb-reset-tip'
-                data-button-variant='warning'
-                data-button-size='icon'
-                type='reset'
+                data-ui="button"
+                interestfor="tb-reset-tip"
+                data-button-variant="warning"
+                data-button-size="icon"
+                type="reset"
                 data-theme-reset
                 disabled
               >
-                <Icon name='arrow-rotate-left' size={16} aria-hidden='true' /> <span style='--sr: only'>Reset theme</span>
+                <Icon name="arrow-rotate-left" size={16} aria-hidden="true" />{" "}
+                <span style="--sr: only">Reset theme</span>
               </button>
-              <div
-                data-tooltip-slot='content'
-                id='tb-reset-tip'
-                popover='hint'
-              >
+              <div data-tooltip-slot="content" id="tb-reset-tip" popover="hint">
                 Reset theme
-                <span data-tooltip-slot='arrow' aria-hidden='true'></span>
+                <span data-tooltip-slot="arrow" aria-hidden="true"></span>
               </div>
             </ui-tooltip>
             <button
-                data-ui='button'
-                data-button-variant='success'
-                type='button'
-                data-theme-download
-                disabled
-              >
-                <Icon name='arrow-down-to-bracket' size={16} aria-hidden='true' />Download theme
-              </button>
+              data-ui="button"
+              data-button-variant="tertiary"
+              type="button"
+              data-theme-download
+              disabled
+            >
+              <Icon name="arrow-down-to-bracket" size={16} aria-hidden="true" />
+              Download theme
+            </button>
             <ui-tooltip>
               <button
-              data-ui='button'
-              type='button'
-              data-button-size='icon'
-              interestfor='tb-view-tip'
-              command='show-modal'
-              commandfor='tb-css'
-            >
-              <Icon name='code' size={16} aria-hidden='true' /> <span style='--sr: only'>View CSS</span>
-            </button>
-              <div
-                data-tooltip-slot='content'
-                id='tb-view-tip'
-                popover='hint'
+                data-ui="button"
+                type="button"
+                data-button-size="icon"
+                interestfor="tb-view-tip"
+                command="show-modal"
+                commandfor="tb-css"
               >
+                <Icon name="code" size={16} aria-hidden="true" />{" "}
+                <span style="--sr: only">View CSS</span>
+              </button>
+              <div data-tooltip-slot="content" id="tb-view-tip" popover="hint">
                 Preview CSS
-                <span data-tooltip-slot='arrow' aria-hidden='true'></span>
+                <span data-tooltip-slot="arrow" aria-hidden="true"></span>
               </div>
             </ui-tooltip>
             <ui-tooltip>
               <button
-                data-ui='button'
-                interestfor='tb-share-tip'
-                type='button'
-                data-button-size='icon'
+                data-ui="button"
+                interestfor="tb-share-tip"
+                type="button"
+                data-button-size="icon"
                 data-theme-share
-                style='--position: relative'
+                style="--position: relative"
               >
                 <span
                   data-share-idle
-                  style='
+                  style="
                     --display: inline-flex;
                     --items: center;
                     --gap: 2;
-                  '
+                  "
                 >
-                  <Icon name='share-nodes' size={16} aria-hidden='true' /> <span style='--sr: only'>Share</span>
+                  <Icon name="share-nodes" size={16} aria-hidden="true" />{" "}
+                  <span style="--sr: only">Share</span>
                 </span>
                 <span
                   data-share-done
                   hidden
-                  style='
+                  style="
                     --display: inline-flex;
                     --items: center;
                     --gap: 2;
-                  '
+                  "
                 >
-                  <Icon name='check' size={16} aria-hidden='true' /> <span style='--sr: only'>Copied</span>
+                  <Icon name="check" size={16} aria-hidden="true" />{" "}
+                  <span style="--sr: only">Copied</span>
                 </span>
               </button>
-              <div
-                data-tooltip-slot='content'
-                id='tb-share-tip'
-                popover='hint'
-              >
+              <div data-tooltip-slot="content" id="tb-share-tip" popover="hint">
                 Share theme link
-                <span data-tooltip-slot='arrow' aria-hidden='true'></span>
+                <span data-tooltip-slot="arrow" aria-hidden="true"></span>
               </div>
             </ui-tooltip>
           </div>
@@ -781,109 +781,116 @@ const packScript = await inlineScript(
         <!-- Each section is a disclosure; the bar's section buttons open the sheet on one (data-theme-section).
              A grid: each section's lock shares its row and sits over the summary (ThemeLock.astro). -->
         <ui-accordion
-          class='theme-builder__sections'
+          class="theme-builder__sections"
           data-ui="scroll-fade"
-          data-scroll-fade-axis='y'
-          style='
+          data-scroll-fade-axis="y"
+          style="
             --display: grid;
-            --template-cols: minmax(0, 1fr);
             --flex: 0 1 auto;
+            --template-cols: minmax(0, 1fr);
             --pb: 6;
             --gap: 0;
             --max-h: 100%;
             --overflow-y: auto;
-          '
+          "
         >
-          <ThemeLock section='palette' row={1} label='all palette fields' />
+          <ThemeLock section="palette" row={1} label="all palette fields" />
           <details
             open
-            data-theme-section='palette'
-            class='theme-builder__section'
-            style='--row-start: 1; --border-style: dashed'
+            data-theme-section="palette"
+            class="theme-builder__section"
+            style="
+              --row-start: 1;
+              --border-style: dashed;
+            "
           >
             <summary
-              data-font='eyebrow'
-              style='
+              data-font="eyebrow"
+              style="
                 --px: 5;
                 --py: 3;
                 --text: var(--color-muted-foreground);
                 --text--hover: var(--color-foreground);
-              '
+              "
             >
               Palette
-              <Icon name='angle-down' size={16} data-accordion-slot='marker' aria-hidden='true' />
+              <Icon
+                name="angle-down"
+                size={16}
+                data-accordion-slot="marker"
+                aria-hidden="true"
+              />
             </summary>
             <div
-              style='
+              style="
                 --display: grid;
                 --template-cols: minmax(0, 1fr);
                 --px: 0;
                 --px--lg: 5;
                 --py: 3;
                 --gap: 3;
-              '
+              "
             >
-              {
-                palettes.map((p) => (
-                  <div data-ui='field'>
-                    <label data-field-slot='label' for={`tb-${p.name}-hex`}>
-                      {p.label}
-                    </label>
+              {palettes.map((p) => (
+                <div data-ui="field">
+                  <label data-field-slot="label" for={`tb-${p.name}-hex`}>
+                    {p.label}
+                  </label>
+                  <div
+                    style="
+                      --display: grid;
+                      --gap: 2;
+                    "
+                  >
                     <div
-                      style='
+                      style="
                         --display: grid;
+                        --items: center;
+                        --template-cols: minmax(0, 1fr) auto;
                         --gap: 2;
-                      '
+                      "
                     >
-                      <div
-                        style='
-                          --display: grid;
-                          --items: center;
-                          --template-cols: minmax(0, 1fr) auto;
-                          --gap: 2;
-                        '
-                      >
-                        <label data-ui='input-group'>
-                          <input
-                            data-ui='input'
-                            id={`tb-${p.name}-hex`}
-                            name={`${p.name}-hex`}
-                            value={defaults[p.name]}
-                            spellcheck='false'
-                            autocomplete='off'
-                            pattern='#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})'
-                            data-theme-hex={p.name}
-                          />
-                          <span data-input-group-slot='addon'>
-                            <input
-                              type='color'
-                              name={`${p.name}-color`}
-                              value={defaults[p.name]}
-                              aria-label={`${p.label} color picker`}
-                              class='theme-builder__swatch'
-                              data-theme-color={p.name}
-                            />
-                          </span>
-                        </label>
-                        <ThemeLock
-                          field={`${p.name}-hex`}
-                          label={`${p.label.toLowerCase()} color`}
+                      <label data-ui="input-group">
+                        <input
+                          data-ui="input"
+                          id={`tb-${p.name}-hex`}
+                          name={`${p.name}-hex`}
+                          value={defaults[p.name]}
+                          spellcheck="false"
+                          autocomplete="off"
+                          pattern="#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})"
+                          data-theme-hex={p.name}
                         />
-                      </div>
-                      <div
-                        role='img'
-                        aria-label={`${p.label} palette, 50 to 950`}
-                        data-theme-strip={p.name}
-                        style='
-                          --display: grid;
-                          --grid-cols: 11;
-                          --gap: 1;
-                        '
-                      >
-                        {STOPS.map((stop) => (
-                          <span
-                            data-stop={stop}
-                            style={`
+                        <span data-input-group-slot="addon">
+                          <input
+                            type="color"
+                            name={`${p.name}-color`}
+                            value={defaults[p.name]}
+                            aria-label={`${p.label} color picker`}
+                            class="theme-builder__swatch"
+                            data-theme-color={p.name}
+                          />
+                        </span>
+                      </label>
+                      <ThemeLock
+                        field={`${p.name}-hex`}
+                        label={`${p.label.toLowerCase()} color`}
+                      />
+                    </div>
+                    <div
+                      role="img"
+                      aria-label={`${p.label} palette, 50 to 950`}
+                      data-theme-strip={p.name}
+                      style="
+                        --display: grid;
+                        --grid-cols: 11;
+                        --gap: 1;
+                      "
+                    >
+                      {STOPS.map((stop) => (
+                        <span
+                          data-stop={stop}
+                          style={`
                             --h: auto;
                             --aspect: 1;
                             --bg: var(--color-${p.name}-${stop});
@@ -894,709 +901,711 @@ const packScript = await inlineScript(
                             --ring-offset: 1;
                             --ring-offset-color: var(--color-card);
                           `}
-                          />
-                        ))}
-                      </div>
+                        />
+                      ))}
                     </div>
-                    <div data-field-slot='description'>
-                      <span data-field-slot='hint' data-theme-hint={p.name}>
-                        {p.hint}
+                  </div>
+                  <div data-field-slot="description">
+                    <span data-field-slot="hint" data-theme-hint={p.name}>
+                      {p.hint}
+                    </span>
+                  </div>
+                </div>
+              ))}
+
+              {backgrounds.map((b) => (
+                <div data-ui="field">
+                  <label data-field-slot="label" for={`tb-bg-${b.scheme}`}>
+                    {b.label}
+                  </label>
+                  <div
+                    style="
+                      --display: grid;
+                      --items: center;
+                      --template-cols: minmax(0, 1fr) auto;
+                      --gap: 2;
+                    "
+                  >
+                    <select
+                      data-ui="select"
+                      data-select-align="center"
+                      data-select-side="right"
+                      id={`tb-bg-${b.scheme}`}
+                      name={`bg-${b.scheme}`}
+                      data-default={DEFAULT_BACKGROUND[b.scheme]}
+                      data-theme-bg={b.scheme}
+                    >
+                      <button>
+                        <selectedcontent
+                          style="
+                            --display: flex;
+                            --items: center;
+                            --gap: 2;
+                          "
+                        />
+                      </button>
+                      {BACKGROUNDS[b.scheme].map((pick) => (
+                        <option
+                          value={pick}
+                          selected={pick === DEFAULT_BACKGROUND[b.scheme]}
+                        >
+                          <span
+                            aria-hidden="true"
+                            data-theme-bg-swatch={pick}
+                            style={`--size: 3; --shrink: 0; --bg: ${backgroundSwatch(pick)}; --radius: full; --ring: 1; --ring-color: var(--color-border)`}
+                          />
+                          {backgroundLabel(pick)}
+                        </option>
+                      ))}
+                    </select>
+                    <ThemeLock
+                      field={`bg-${b.scheme}`}
+                      label={b.label.toLowerCase()}
+                    />
+                  </div>
+                  {b.scheme === "dark" && (
+                    <div data-field-slot="description">
+                      <span data-field-slot="hint">
+                        The preview shows the one for the page's current mode.
+                        Text colors come from the neutral palette.
                       </span>
                     </div>
-                  </div>
-                ))
-              }
-
-              {
-                backgrounds.map((b) => (
-                  <div data-ui='field'>
-                    <label data-field-slot='label' for={`tb-bg-${b.scheme}`}>
-                      {b.label}
-                    </label>
-                    <div
-                      style='
-                        --display: grid;
-                        --items: center;
-                        --template-cols: minmax(0, 1fr) auto;
-                        --gap: 2;
-                      '
-                    >
-                      <select
-                        data-ui='select'
-                        data-select-align='center'
-                        data-select-side='right'
-                        id={`tb-bg-${b.scheme}`}
-                        name={`bg-${b.scheme}`}
-                        data-default={DEFAULT_BACKGROUND[b.scheme]}
-                        data-theme-bg={b.scheme}
-                      >
-                        <button>
-                          <selectedcontent
-                            style='
-                              --display: flex;
-                              --items: center;
-                              --gap: 2;
-                            '
-                          />
-                        </button>
-                        {BACKGROUNDS[b.scheme].map((pick) => (
-                          <option
-                            value={pick}
-                            selected={pick === DEFAULT_BACKGROUND[b.scheme]}
-                          >
-                            <span
-                              aria-hidden='true'
-                              data-theme-bg-swatch={pick}
-                              style={`--size: 3; --shrink: 0; --bg: ${backgroundSwatch(pick)}; --radius: full; --ring: 1; --ring-color: var(--color-border)`}
-                            />
-                            {backgroundLabel(pick)}
-                          </option>
-                        ))}
-                      </select>
-                      <ThemeLock
-                        field={`bg-${b.scheme}`}
-                        label={b.label.toLowerCase()}
-                      />
-                    </div>
-                    {b.scheme === 'dark' && (
-                      <div data-field-slot='description'>
-                        <span data-field-slot='hint'>
-                          The preview shows the one for the page's current mode.
-                          Text colors come from the neutral palette.
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                ))
-              }
+                  )}
+                </div>
+              ))}
             </div>
           </details>
-          <ThemeLock section='typeset' row={2} label='all typeset fields' />
+          <ThemeLock section="typeset" row={2} label="all typeset fields" />
           <details
-            data-theme-section='typeset'
-            class='theme-builder__section'
-            style='
+            data-theme-section="typeset"
+            class="theme-builder__section"
+            style="
               --row-start: 2;
               --border-style: dashed;
               --border-t: 1;
-            '
+            "
           >
             <summary
-              data-font='eyebrow'
-              style='
+              data-font="eyebrow"
+              style="
                 --px: 5;
                 --py: 3;
                 --text: var(--color-muted-foreground);
                 --text--hover: var(--color-foreground);
-              '
+              "
             >
               Typeset
-              <Icon name='angle-down' size={16} data-accordion-slot='marker' aria-hidden='true' />
+              <Icon
+                name="angle-down"
+                size={16}
+                data-accordion-slot="marker"
+                aria-hidden="true"
+              />
             </summary>
             <div
-              style='
+              style="
                 --display: grid;
                 --template-cols: minmax(0, 1fr);
                 --px: 0;
                 --px--lg: 5;
                 --py: 3;
                 --gap: 3;
-              '
+              "
             >
-              {
-                fontRoles.map((f) => (
-                  <div data-ui='field'>
-                    <label data-field-slot='label' for={`tb-font-${f.role}`}>
-                      {f.label}
-                    </label>
-                    <div
-                      style='
-                        --display: flex;
-                        --items: center;
-                        --gap: 2;
+              {fontRoles.map((f) => (
+                <div data-ui="field">
+                  <label data-field-slot="label" for={`tb-font-${f.role}`}>
+                    {f.label}
+                  </label>
+                  <div
+                    style="
+                      --display: flex;
+                      --items: center;
+                      --gap: 2;
+                      --min-w: 0;
+                    "
+                  >
+                    <ui-combobox
+                      style="
+                        --flex: 1;
                         --min-w: 0;
-                      '
+                      "
                     >
-                      <ui-combobox
-                        style='
-                          --flex: 1;
-                          --min-w: 0;
-                        '
-                      >
+                      <input
+                        type="hidden"
+                        name={`font-${f.role}`}
+                        value=""
+                        data-default=""
+                        data-combobox-slot="value"
+                        data-theme-font={f.role}
+                      />
+                      <div data-combobox-slot="control">
                         <input
-                          type='hidden'
-                          name={`font-${f.role}`}
-                          value=''
-                          data-default=''
-                          data-combobox-slot='value'
-                          data-theme-font={f.role}
+                          id={`tb-font-${f.role}`}
+                          type="text"
+                          role="combobox"
+                          aria-expanded="false"
+                          aria-autocomplete="list"
+                          autocomplete="off"
+                          spellcheck="false"
                         />
-                        <div data-combobox-slot='control'>
-                          <input
-                            id={`tb-font-${f.role}`}
-                            type='text'
-                            role='combobox'
-                            aria-expanded='false'
-                            aria-autocomplete='list'
-                            autocomplete='off'
-                            spellcheck='false'
-                          />
-                          <button
-                            type='button'
-                            data-combobox-slot='trigger'
-                            tabindex='-1'
-                            aria-label='Show fonts'
-                          />
-                        </div>
+                        <button
+                          type="button"
+                          data-combobox-slot="trigger"
+                          tabindex="-1"
+                          aria-label="Show fonts"
+                        />
+                      </div>
+                      <div
+                        data-combobox-slot="panel"
+                        data-popover-side="right"
+                        data-popover-align="start"
+                        popover="manual"
+                      >
                         <div
-                          data-combobox-slot='panel'
-                          data-popover-side='right'
-                          data-popover-align='start'
-                          popover='manual'
+                          role="listbox"
+                          data-combobox-slot="list"
+                          aria-label={`${f.label} options`}
                         >
                           <div
-                            role='listbox'
-                            data-combobox-slot='list'
-                            aria-label={`${f.label} options`}
+                            role="option"
+                            data-combobox-slot="item"
+                            data-ui="button"
+                            data-button-variant="ghost"
+                            data-combobox-value=""
+                            aria-selected="true"
+                            style="--justify: start"
                           >
-                            <div
-                              role='option'
-                              data-combobox-slot='item'
-                              data-ui='button'
-                              data-button-variant='ghost'
-                              data-combobox-value=''
-                              aria-selected='true'
-                              style='--justify: start'
-                            >
-                              {fontDefault}
-                            </div>
-                            {fontGroups.map((group, i) => (
-                              <div
-                                role='group'
-                                data-combobox-slot='group'
-                                aria-labelledby={`tb-font-${f.role}-group-${i}`}
-                              >
-                                <span
-                                  id={`tb-font-${f.role}-group-${i}`}
-                                  data-combobox-slot='group-label'
-                                  data-font='eyebrow'
-                                  style='
-                                    --pl: 3;
-                                    --mt: 2;
-                                    --text: var(--color-muted-foreground);
-                                  '
-                                >
-                                  {group.label}
-                                </span>
-                                {group.fonts.map((font) => (
-                                  <div
-                                    role='option'
-                                    data-combobox-slot='item'
-                                    data-ui='button'
-                                    data-button-variant='ghost'
-                                    data-combobox-value={font.value}
-                                    data-font-category={font.category}
-                                    data-font-stack={font.stack}
-                                    data-font-google={font.google}
-                                    data-font-weights={font.weights?.join(';')}
-                                    style='--justify: start'
-                                  >
-                                    {font.label}
-                                  </div>
-                                ))}
-                              </div>
-                            ))}
+                            {fontDefault}
                           </div>
-                          <p
-                            data-combobox-slot='empty'
-                            data-font='sm'
-                            style='--text: var(--color-muted-foreground)'
-                          >
-                            No matches.
-                          </p>
-                        </div>
-                      </ui-combobox>
-                      <ui-tooltip>
-                        <button
-                          data-ui='button'
-                          data-button-size='icon'
-                          data-button-variant='outline'
-                          type='button'
-                          aria-label={`Pick a ${f.label.toLowerCase()} that pairs with the ${f.other}`}
-                          interestfor={`tb-pair-${f.role}-tip`}
-                          data-theme-pair={f.role}
-                        >
-                          <Icon name='wand-magic-sparkles' size={16} aria-hidden='true' />
-                        </button>
-                        <div
-                          data-tooltip-slot='content'
-                          id={`tb-pair-${f.role}-tip`}
-                          popover='hint'
-                        >
-                          Pair a font
-                          <span data-tooltip-slot='arrow' aria-hidden='true' />
-                        </div>
-                      </ui-tooltip>
-                      <ThemeLock
-                        field={`font-${f.role}`}
-                        label={f.label.toLowerCase()}
-                      />
-                    </div>
-                  </div>
-                ))
-              }
-
-              {
-                scales.map((s) => (
-                  <div data-ui='field'>
-                    <label data-field-slot='label' for={`tb-${s.name}`}>
-                      {s.label}
-                    </label>
-                    <div
-                      style='
-                        --display: grid;
-                        --items: center;
-                        --template-cols: minmax(0, 1fr) auto;
-                        --gap: 2;
-                      '
-                    >
-                      <select
-                        data-ui='select'
-                        data-select-align='center'
-                        data-select-side='right'
-                        id={`tb-${s.name}`}
-                        name={s.name}
-                        data-default={s.value}
-                        data-theme-number={s.name}
-                      >
-                        <button>
-                          <selectedcontent
-                            style='
-                              --display: flex;
-                              --items: center;
-                              --gap: 0.35em;
-                            '
-                          />
-                        </button>
-                        {SCALE_STEPS.map((step) => (
-                          <option
-                            value={step.value}
-                            selected={step.value === s.value}
-                          >
-                            <span class='fieldnotes__num'>{step.value}</span>
-                            {step.name && (
-                              <span style='--text: var(--color-muted-foreground)'>
-                                {step.name}
+                          {fontGroups.map((group, i) => (
+                            <div
+                              role="group"
+                              data-combobox-slot="group"
+                              aria-labelledby={`tb-font-${f.role}-group-${i}`}
+                            >
+                              <span
+                                id={`tb-font-${f.role}-group-${i}`}
+                                data-combobox-slot="group-label"
+                                data-font="eyebrow"
+                                style="
+                                  --pl: 3;
+                                  --mt: 2;
+                                  --text: var(--color-muted-foreground);
+                                "
+                              >
+                                {group.label}
                               </span>
-                            )}
-                          </option>
-                        ))}
-                      </select>
-                      <ThemeLock field={s.name} label={s.label.toLowerCase()} />
-                    </div>
-                    {s.name === 'scale-max' && (
-                      <div data-field-slot='description'>
-                        <span data-field-slot='hint'>
-                          Each heading step multiplies by the scale, which grows
-                          from the narrow value to the wide one across the fluid
-                          range.
-                        </span>
+                              {group.fonts.map((font) => (
+                                <div
+                                  role="option"
+                                  data-combobox-slot="item"
+                                  data-ui="button"
+                                  data-button-variant="ghost"
+                                  data-combobox-value={font.value}
+                                  data-font-category={font.category}
+                                  data-font-stack={font.stack}
+                                  data-font-google={font.google}
+                                  data-font-weights={font.weights?.join(";")}
+                                  style="--justify: start"
+                                >
+                                  {font.label}
+                                </div>
+                              ))}
+                            </div>
+                          ))}
+                        </div>
+                        <p
+                          data-combobox-slot="empty"
+                          data-font="sm"
+                          style="--text: var(--color-muted-foreground)"
+                        >
+                          No matches.
+                        </p>
                       </div>
-                    )}
+                    </ui-combobox>
+                    <ui-tooltip>
+                      <button
+                        data-ui="button"
+                        data-button-size="icon"
+                        data-button-variant="outline"
+                        type="button"
+                        aria-label={`Pick a ${f.label.toLowerCase()} that pairs with the ${f.other}`}
+                        interestfor={`tb-pair-${f.role}-tip`}
+                        data-theme-pair={f.role}
+                      >
+                        <Icon
+                          name="wand-magic-sparkles"
+                          size={16}
+                          aria-hidden="true"
+                        />
+                      </button>
+                      <div
+                        data-tooltip-slot="content"
+                        id={`tb-pair-${f.role}-tip`}
+                        popover="hint"
+                      >
+                        Pair a font
+                        <span data-tooltip-slot="arrow" aria-hidden="true" />
+                      </div>
+                    </ui-tooltip>
+                    <ThemeLock
+                      field={`font-${f.role}`}
+                      label={f.label.toLowerCase()}
+                    />
                   </div>
-                ))
-              }
+                </div>
+              ))}
+
+              {scales.map((s) => (
+                <div data-ui="field">
+                  <label data-field-slot="label" for={`tb-${s.name}`}>
+                    {s.label}
+                  </label>
+                  <div
+                    style="
+                      --display: grid;
+                      --items: center;
+                      --template-cols: minmax(0, 1fr) auto;
+                      --gap: 2;
+                    "
+                  >
+                    <select
+                      data-ui="select"
+                      data-select-align="center"
+                      data-select-side="right"
+                      id={`tb-${s.name}`}
+                      name={s.name}
+                      data-default={s.value}
+                      data-theme-number={s.name}
+                    >
+                      <button>
+                        <selectedcontent
+                          style="
+                            --display: flex;
+                            --items: center;
+                            --gap: 0.35em;
+                          "
+                        />
+                      </button>
+                      {SCALE_STEPS.map((step) => (
+                        <option
+                          value={step.value}
+                          selected={step.value === s.value}
+                        >
+                          <span class="fieldnotes__num">{step.value}</span>
+                          {step.name && (
+                            <span style="--text: var(--color-muted-foreground)">
+                              {step.name}
+                            </span>
+                          )}
+                        </option>
+                      ))}
+                    </select>
+                    <ThemeLock field={s.name} label={s.label.toLowerCase()} />
+                  </div>
+                  {s.name === "scale-max" && (
+                    <div data-field-slot="description">
+                      <span data-field-slot="hint">
+                        Each heading step multiplies by the scale, which grows
+                        from the narrow value to the wide one across the fluid
+                        range.
+                      </span>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </details>
-          <ThemeLock section='styles' row={3} label='all style fields' />
+          <ThemeLock section="styles" row={3} label="all style fields" />
           <details
-            data-theme-section='styles'
-            class='theme-builder__section'
-            style='
+            data-theme-section="styles"
+            class="theme-builder__section"
+            style="
               --row-start: 3;
               --border-style: dashed;
               --border-t: 1;
-            '
+            "
           >
             <summary
-              data-font='eyebrow'
-              style='
+              data-font="eyebrow"
+              style="
                 --px: 5;
                 --py: 3;
                 --text: var(--color-muted-foreground);
                 --text--hover: var(--color-foreground);
-              '
+              "
             >
               Styles
-              <Icon name='angle-down' size={16} data-accordion-slot='marker' aria-hidden='true' />
+              <Icon
+                name="angle-down"
+                size={16}
+                data-accordion-slot="marker"
+                aria-hidden="true"
+              />
             </summary>
             <div
-              style='
+              style="
                 --display: grid;
                 --template-cols: minmax(0, 1fr);
                 --px: 0;
                 --px--lg: 5;
                 --py: 3;
                 --gap: 3;
-              '
+              "
             >
-              <div data-ui='field'>
-                <label data-field-slot='label' for='tb-spacing'>Spacing</label>
+              <div data-ui="field">
+                <label data-field-slot="label" for="tb-spacing">
+                  Spacing
+                </label>
                 <div
-                  style='
+                  style="
                     --display: grid;
                     --items: center;
                     --template-cols: minmax(0, 1fr) auto;
                     --gap: 2;
-                  '
+                  "
                 >
-                  <label data-ui='input-group'>
+                  <label data-ui="input-group">
                     <input
-                      data-ui='input'
-                      id='tb-spacing'
-                      name='spacing'
-                      type='number'
-                      min='0'
-                      max='2'
-                      step='0.01'
+                      data-ui="input"
+                      id="tb-spacing"
+                      name="spacing"
+                      type="number"
+                      min="0"
+                      max="2"
+                      step="0.01"
                       value={defaults.spacing}
                       data-default={defaults.spacing}
-                      data-theme-number='spacing'
+                      data-theme-number="spacing"
                     />
                     <span
-                      data-input-group-slot='addon'
-                      data-input-group-align='inline-end'
+                      data-input-group-slot="addon"
+                      data-input-group-align="inline-end"
                     >
-                      <span data-input-group-slot='text'>rem</span>
+                      <span data-input-group-slot="text">rem</span>
                     </span>
                   </label>
-                  <ThemeLock field='spacing' label='spacing' />
+                  <ThemeLock field="spacing" label="spacing" />
                 </div>
               </div>
 
-              <div data-ui='field'>
+              <div data-ui="field">
                 <label
-                  data-field-slot='label'
-                  for='tb-radius'
-                  style='
+                  data-field-slot="label"
+                  for="tb-radius"
+                  style="
                     --display: flex;
                     --items: center;
                     --justify: space-between;
-                  '
+                  "
                 >
                   <span>Radius</span>
                   <output
-                    class='fieldnotes__num'
-                    for='tb-radius'
-                    style='--text: var(--color-muted-foreground)'
+                    class="fieldnotes__num"
+                    for="tb-radius"
+                    style="--text: var(--color-muted-foreground)"
                   >
                     {defaults.radius}×
                   </output>
                 </label>
                 <div
-                  style='
+                  style="
                     --display: grid;
                     --items: center;
                     --template-cols: minmax(0, 1fr) auto;
                     --gap: 2;
-                  '
+                  "
                 >
                   <input
-                    id='tb-radius'
-                    name='radius'
-                    type='range'
-                    min='0'
-                    max='3'
-                    step='0.25'
+                    id="tb-radius"
+                    name="radius"
+                    type="range"
+                    min="0"
+                    max="3"
+                    step="0.25"
                     value={defaults.radius}
                     data-default={defaults.radius}
-                    data-theme-number='radius'
+                    data-theme-number="radius"
                   />
-                  <ThemeLock field='radius' label='radius' />
+                  <ThemeLock field="radius" label="radius" />
                 </div>
               </div>
 
-              <div data-ui='field' class='theme-builder__corner-shape'>
+              <div data-ui="field" class="theme-builder__corner-shape">
                 <label
-                  data-field-slot='label'
-                  for='tb-corner-shape'
-                  style='
+                  data-field-slot="label"
+                  for="tb-corner-shape"
+                  style="
                     --display: flex;
                     --items: center;
                     --justify: space-between;
-                  '
+                  "
                 >
                   <span>Corner shape</span>
                   <output
-                    class='fieldnotes__num'
-                    for='tb-corner-shape'
-                    style='--text: var(--color-muted-foreground)'
+                    class="fieldnotes__num"
+                    for="tb-corner-shape"
+                    style="--text: var(--color-muted-foreground)"
                   >
                     {defaults.cornerShape}
                   </output>
                 </label>
                 <div
-                  style='
+                  style="
                     --display: grid;
                     --items: center;
                     --template-cols: minmax(0, 1fr) auto;
                     --gap: 2;
-                  '
+                  "
                 >
                   <input
-                    id='tb-corner-shape'
-                    name='corner-shape'
-                    type='range'
+                    id="tb-corner-shape"
+                    name="corner-shape"
+                    type="range"
                     min={CORNER_SHAPE.min}
                     max={CORNER_SHAPE.max}
                     step={CORNER_SHAPE.step}
                     value={defaults.cornerShape}
                     data-default={defaults.cornerShape}
-                    data-theme-number='corner-shape'
+                    data-theme-number="corner-shape"
                   />
-                  <ThemeLock
-                    field='corner-shape'
-                    label='corner shape'
-                  />
+                  <ThemeLock field="corner-shape" label="corner shape" />
                 </div>
-                <div data-field-slot='description'>
-                  <span data-field-slot='hint'
-                    >1 is round and higher is squarer. 0 is a bevel, and below 0
+                <div data-field-slot="description">
+                  <span data-field-slot="hint">
+                    1 is round and higher is squarer. 0 is a bevel, and below 0
                     the corners scoop in. The far ends are a square corner (∞)
-                    and a notch (−∞).</span
-                  >
+                    and a notch (−∞).
+                  </span>
                 </div>
               </div>
             </div>
           </details>
-          <ThemeLock section='effects' row={4} label='all effect fields' />
+          <ThemeLock section="effects" row={4} label="all effect fields" />
           <details
-            data-theme-section='effects'
-            class='theme-builder__section'
-            style='
+            data-theme-section="effects"
+            class="theme-builder__section"
+            style="
               --row-start: 4;
               --border-style: dashed;
               --border-t: 1;
-            '
+            "
           >
             <summary
-              data-font='eyebrow'
-              style='
+              data-font="eyebrow"
+              style="
                 --px: 5;
                 --py: 3;
                 --text: var(--color-muted-foreground);
                 --text--hover: var(--color-foreground);
-              '
+              "
             >
               Effects
-              <Icon name='angle-down' size={16} data-accordion-slot='marker' aria-hidden='true' />
+              <Icon
+                name="angle-down"
+                size={16}
+                data-accordion-slot="marker"
+                aria-hidden="true"
+              />
             </summary>
             <div
-              style='
+              style="
                 --display: grid;
                 --template-cols: minmax(0, 1fr);
                 --px: 0;
                 --px--lg: 5;
                 --py: 3;
                 --gap: 3;
-              '
+              "
             >
-              <div data-ui='field'>
-                <label data-field-slot='label' for='tb-shadow-color'
-                  >Shadow color</label
-                >
+              <div data-ui="field">
+                <label data-field-slot="label" for="tb-shadow-color">
+                  Shadow color
+                </label>
                 <div
-                  style='
+                  style="
                     --display: grid;
                     --items: center;
                     --template-cols: minmax(0, 1fr) auto;
                     --gap: 2;
-                  '
+                  "
                 >
-                  <label data-ui='input-group'>
+                  <label data-ui="input-group">
                     <input
-                      data-ui='input'
-                      id='tb-shadow-color'
-                      name='shadow-color'
+                      data-ui="input"
+                      id="tb-shadow-color"
+                      name="shadow-color"
                       value={defaults.shadowColor}
                       data-default={defaults.shadowColor}
-                      spellcheck='false'
-                      autocomplete='off'
-                      pattern='#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})'
-                      data-theme-token='--color-shadow'
+                      spellcheck="false"
+                      autocomplete="off"
+                      pattern="#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})"
+                      data-theme-token="--color-shadow"
                     />
-                    <span data-input-group-slot='addon'>
+                    <span data-input-group-slot="addon">
                       <input
-                        type='color'
+                        type="color"
                         value={defaults.shadowColor}
-                        aria-label='Shadow color picker'
-                        class='theme-builder__swatch'
-                        data-theme-pick-for='tb-shadow-color'
+                        aria-label="Shadow color picker"
+                        class="theme-builder__swatch"
+                        data-theme-pick-for="tb-shadow-color"
                       />
                     </span>
                   </label>
-                  <ThemeLock field='shadow-color' label='shadow color' />
+                  <ThemeLock field="shadow-color" label="shadow color" />
                 </div>
-                <div data-field-slot='description'>
-                  <span data-field-slot='hint'
-                    >Tints every shadow. Each layer keeps its own opacity.</span
-                  >
+                <div data-field-slot="description">
+                  <span data-field-slot="hint">
+                    Tints every shadow. Each layer keeps its own opacity.
+                  </span>
                 </div>
               </div>
-              <div data-ui='field'>
+              <div data-ui="field">
                 <label
-                  data-field-slot='label'
-                  for='tb-elevation'
-                  style='
+                  data-field-slot="label"
+                  for="tb-elevation"
+                  style="
                     --display: flex;
                     --items: center;
                     --justify: space-between;
-                  '
+                  "
                 >
                   <span>Card elevation</span>
                   <output
-                    class='fieldnotes__num'
-                    for='tb-elevation'
-                    style='--text: var(--color-muted-foreground)'
+                    class="fieldnotes__num"
+                    for="tb-elevation"
+                    style="--text: var(--color-muted-foreground)"
                   >
                     1.5
                   </output>
                 </label>
                 <div
-                  style='
+                  style="
                     --display: grid;
                     --items: center;
                     --template-cols: minmax(0, 1fr) auto;
                     --gap: 2;
-                  '
+                  "
                 >
                   <input
-                    id='tb-elevation'
-                    name='card-elevation'
-                    type='range'
-                    min='0'
-                    max='8'
-                    step='0.5'
-                    value='1.5'
+                    id="tb-elevation"
+                    name="card-elevation"
+                    type="range"
+                    min="0"
+                    max="8"
+                    step="0.5"
+                    value="1.5"
                     data-fieldnotes-elevation
                   />
-                  <ThemeLock
-                    field='card-elevation'
-                    label='card elevation'
-                  />
+                  <ThemeLock field="card-elevation" label="card elevation" />
                 </div>
-                <div data-field-slot='description'>
-                  <span data-field-slot='hint'
-                    >Preview only: not part of the copied theme.</span
-                  >
+                <div data-field-slot="description">
+                  <span data-field-slot="hint">
+                    Preview only: not part of the copied theme.
+                  </span>
                 </div>
               </div>
 
-              <div data-ui='field'>
+              <div data-ui="field">
                 <label
-                  data-field-slot='label'
-                  for='tb-shadow'
-                  style='
+                  data-field-slot="label"
+                  for="tb-shadow"
+                  style="
                     --display: flex;
                     --items: center;
                     --justify: space-between;
-                  '
+                  "
                 >
                   <span>Shadow angle</span>
                   <output
-                    class='fieldnotes__num'
-                    for='tb-shadow'
-                    style='--text: var(--color-muted-foreground)'
+                    class="fieldnotes__num"
+                    for="tb-shadow"
+                    style="--text: var(--color-muted-foreground)"
                   >
                     {defaults.shadow}°
                   </output>
                 </label>
                 <div
-                  style='
+                  style="
                     --display: grid;
                     --items: center;
                     --template-cols: minmax(0, 1fr) auto;
                     --gap: 2;
-                  '
+                  "
                 >
                   <input
-                    id='tb-shadow'
-                    name='shadow-angle'
-                    type='range'
-                    min='0'
-                    max='360'
-                    step='15'
+                    id="tb-shadow"
+                    name="shadow-angle"
+                    type="range"
+                    min="0"
+                    max="360"
+                    step="15"
                     value={defaults.shadow}
                     data-default={defaults.shadow}
-                    data-theme-number='shadow'
+                    data-theme-number="shadow"
                   />
-                  <ThemeLock
-                    field='shadow-angle'
-                    label='shadow angle'
-                  />
+                  <ThemeLock field="shadow-angle" label="shadow angle" />
                 </div>
-                <div data-field-slot='description'>
-                  <span data-field-slot='hint'
-                    >0° casts down; the light turns clockwise from there.</span
-                  >
+                <div data-field-slot="description">
+                  <span data-field-slot="hint">
+                    0° casts down; the light turns clockwise from there.
+                  </span>
                 </div>
               </div>
 
-              {
-                SHADOW_KNOBS.map(({ key, label, hint }) => (
-                  <div data-ui='field'>
-                    <label
-                      data-field-slot='label'
+              {SHADOW_KNOBS.map(({ key, label, hint }) => (
+                <div data-ui="field">
+                  <label
+                    data-field-slot="label"
+                    for={`tb-shadow-${key}`}
+                    style="
+                      --display: flex;
+                      --items: center;
+                      --justify: space-between;
+                    "
+                  >
+                    <span>{label}</span>
+                    <output
+                      class="fieldnotes__num"
                       for={`tb-shadow-${key}`}
-                      style='
-                        --display: flex;
-                        --items: center;
-                        --justify: space-between;
-                      '
+                      style="--text: var(--color-muted-foreground)"
                     >
-                      <span>{label}</span>
-                      <output
-                        class='fieldnotes__num'
-                        for={`tb-shadow-${key}`}
-                        style='--text: var(--color-muted-foreground)'
-                      >
-                        {defaults.shadowKnob}×
-                      </output>
-                    </label>
-                    <div
-                      style='
-                        --display: grid;
-                        --items: center;
-                        --template-cols: minmax(0, 1fr) auto;
-                        --gap: 2;
-                      '
-                    >
-                      <input
-                        id={`tb-shadow-${key}`}
-                        name={`shadow-${key}`}
-                        type='range'
-                        min='0'
-                        max='3'
-                        step='0.1'
-                        value={defaults.shadowKnob}
-                        data-default={defaults.shadowKnob}
-                        data-theme-number={`shadow-${key}`}
-                      />
-                      <ThemeLock
-                        field={`shadow-${key}`}
-                        label={`shadow ${label.toLowerCase()}`}
-                      />
-                    </div>
-                    <div data-field-slot='description'>
-                      <span data-field-slot='hint'>{hint}</span>
-                    </div>
+                      {defaults.shadowKnob}×
+                    </output>
+                  </label>
+                  <div
+                    style="
+                      --display: grid;
+                      --items: center;
+                      --template-cols: minmax(0, 1fr) auto;
+                      --gap: 2;
+                    "
+                  >
+                    <input
+                      id={`tb-shadow-${key}`}
+                      name={`shadow-${key}`}
+                      type="range"
+                      min="0"
+                      max="3"
+                      step="0.1"
+                      value={defaults.shadowKnob}
+                      data-default={defaults.shadowKnob}
+                      data-theme-number={`shadow-${key}`}
+                    />
+                    <ThemeLock
+                      field={`shadow-${key}`}
+                      label={`shadow ${label.toLowerCase()}`}
+                    />
                   </div>
-                ))
-              }
+                  <div data-field-slot="description">
+                    <span data-field-slot="hint">{hint}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </details>
         </ui-accordion>
-
       </form>
     </div>
     <style is:inline data-theme-output></style>
@@ -1604,18 +1613,18 @@ const packScript = await inlineScript(
 
   <!-- --shadow-tint at the kit's default makes the kit re-declare its shadow tokens here, so they follow the preview's spacing and light angle. The body family and text color are applied on <html> and inherited resolved, so the wrapper reads those tokens again, and paints the theme's background. -->
   <section
-    style='
+    style="
       --display: grid;
       --place-content: stretch;
       --min-h: 100%;
       --bg: var(--color-background);
-    '
+    "
   >
     <div
-      class='fieldnotes__preview'
-      data-ui='scroll-fade'
-      data-scroll-fade-axis='x'
-      style='
+      class="fieldnotes__preview"
+      data-ui="scroll-fade"
+      data-scroll-fade-axis="x"
+      style="
         --pt: 8;
         --pl: 5;
         --pl--lg: 8;
@@ -1625,11 +1634,11 @@ const packScript = await inlineScript(
         --bg: var(--color-background);
         --shadow-tint: var(--color-shadow);
         --overflow-x: auto;
-      '
+      "
     >
       <div
         data-fieldnotes-grid
-        style='
+        style="
           --display: grid;
           --grid-flow: dense;
           --items: start;
@@ -1645,12 +1654,15 @@ const packScript = await inlineScript(
           --min-w: 92rem;
           --min-w--lg: 84rem;
           --container-type: inline-size;
-        '>
+        "
+      >
         <SightingForm toaster={TOASTER} />
         <LifeList />
         <SpeciesCard species={featured} />
         <AlertSettings />
-        {rest.slice(0, 2).map((s) => <SpeciesCard species={s} />)}
+        {rest.slice(0, 2).map((s) => (
+          <SpeciesCard species={s} />
+        ))}
         <SightingsTable />
         <Spotters />
         <NextTrip />
@@ -1661,16 +1673,18 @@ const packScript = await inlineScript(
         <PackList />
         <Plates />
         <VerifyCode />
-        {rest.slice(2).map((s) => <SpeciesCard species={s} />)}
+        {rest.slice(2).map((s) => (
+          <SpeciesCard species={s} />
+        ))}
       </div>
       <script is:inline set:html={packScript}></script>
     </div>
   </section>
 
-  <ui-toaster id={TOASTER} popover='manual'></ui-toaster>
+  <ui-toaster id={TOASTER} popover="manual"></ui-toaster>
 </fieldnotes-demo>
 
 <script>
-  import '../scripts/theme-builder.ts';
-  import '../scripts/fieldnotes.ts';
+  import "../scripts/theme-builder.ts";
+  import "../scripts/fieldnotes.ts";
 </script>

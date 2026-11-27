@@ -24,8 +24,9 @@
  * `<link>` in the head, and the copied CSS carries that tag in a comment above
  * the `:root` block. Each combobox has a wand button that picks a font pairing
  * with the other one (`pairFont`, favoring `FONT_PAIRINGS`), and the header's
- * dice button randomizes every control at once (lib/randomize.ts): the three
- * accent colors by a color harmony, the rest within tasteful ranges.
+ * dice button randomizes every control at once (lib/randomize.ts): the
+ * secondary from the primary's hue, the tertiary accent by a color harmony, the
+ * rest within tasteful ranges.
  *
  * Locks: each control has a lock button (ThemeLock.astro, `aria-pressed`), and
  * a locked control keeps its value through a randomize. What is drawn fresh
@@ -54,6 +55,7 @@ import {
   backgroundToken,
   createPalette,
   foregroundFor,
+  invertPalette,
   normalizeHex,
 } from "../lib/palette.ts";
 import { PRESET_PARAM as PARAM, decodePreset, encodePreset } from "../lib/preset.ts";
@@ -90,6 +92,20 @@ const PREVIEW = "fieldnotes__preview";
 /** The palettes the form sets, in its order. Every one but neutral is also a role color. */
 const PALETTES = ["neutral", "primary", "secondary", "tertiary"] as const;
 type PaletteName = (typeof PALETTES)[number];
+
+/**
+ * The 50–950 scale a palette input writes, fitted to the role the kit gives
+ * it. The neutral's pale stops fade toward white. The secondary is the
+ * primary inverted: its scale runs reversed (50 darkest), as the kit's does,
+ * so the kit's own role (the 900 with 50 text in light mode, the 50 with white
+ * text in dark) makes it a soft surface or a deep one. Its pale stops fade like
+ * the neutral's, so in light mode it reads as a tinted gray, where the muted
+ * button used to sit. The primary and the tertiary accent keep the input's chroma.
+ */
+const generate = (name: PaletteName, hex: string) =>
+  name === "secondary"
+    ? invertPalette(createPalette(hex, { neutral: true }))
+    : createPalette(hex, { neutral: name === "neutral" });
 
 /** Number controls: the token each writes and how its value is spelled (`format` wins over `unit`). */
 const NUMBERS: Record<string, { token: string; unit: string; format?: (n: number) => string }> = {
@@ -426,15 +442,17 @@ class ThemeBuilder extends ZazzElement {
         let stop: number | undefined;
         let swatches: Record<string, string> | undefined;
         if (changed) {
-          const palette = createPalette(hex, { neutral: name === "neutral" });
+          const palette = generate(name, hex);
           stop = palette.stop;
           swatches = palette.swatches;
           for (const [s, value] of Object.entries(palette.swatches)) {
             lines.push(`--color-${name}-${s}: ${value}`);
           }
-          // The input becomes the role color in both schemes (the kit's default
-          // flips a role to its 50 in dark mode; a picked brand color shouldn't).
-          if (name !== "neutral") {
+          // The primary and the tertiary accent take the input as their role
+          // color in both schemes (the kit's primary flips to its 50 in dark
+          // mode; a picked brand color shouldn't). The secondary keeps the
+          // kit's role, which reads its reversed scale (see `generate`).
+          if (name === "primary" || name === "tertiary") {
             lines.push(`--color-${name}: var(--color-${name}-${stop})`);
             lines.push(`--color-${name}-foreground: ${foregroundFor(palette, name)}`);
           }

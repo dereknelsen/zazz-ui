@@ -1,0 +1,174 @@
+<!-- Footer: a short blurb and newsletter form, link columns, and a legal row.
+     Links: https://zazz.sh/api/primitives/link/ · Input:
+     https://zazz.sh/api/primitives/input/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<footer
+  style="
+    --pt: 24;
+    --border-t: 1;
+  "
+>
+  <ui-layout>
+    <div
+      style="
+        --display: grid;
+        --grid-cols: 3;
+        --grid-cols--lg: 5;
+        --gap: 11;
+      "
+    >
+      <div
+        style="
+          --display: grid;
+          --self: start;
+          --col-span: 3;
+          --col-span--lg: 2;
+          --gap: 4;
+        "
+      >
+        <a
+          href="#"
+          data-font="lg"
+          style="
+            --font-weight: strong;
+            --text-decoration: none;
+            --text: var(--color-foreground);
+          "
+          >Logo</a
+        >
+        <p
+          style="
+            --max-w: 40ch;
+            --text: var(--color-muted-foreground);
+          "
+        >
+          One line on what the company does. Then ask for an email if you send updates.
+        </p>
+        <form
+          action="#"
+          aria-label="Newsletter"
+          style="
+            --display: flex;
+            --flex-wrap: wrap;
+            --gap: 2;
+          "
+        >
+          <input
+            data-ui="input"
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            aria-label="Email address"
+            autocomplete="email"
+            required
+            style="
+              --flex: 1;
+              --ui-input-min-w: 48;
+            "
+          />
+          <button type="submit" data-ui="button" data-button-variant="primary">Subscribe</button>
+        </form>
+      </div>
+
+      <nav
+        aria-labelledby="footer-product"
+        style="
+          --display: grid;
+          --self: start;
+          --gap: 4;
+        "
+      >
+        <h2 id="footer-product" data-font="sm" style="--font-weight: strong">Product</h2>
+        <ul
+          data-font="sm"
+          style="
+            --display: grid;
+            --gap: 2;
+          "
+        >
+          <li><a href="#" data-ui="link">Features</a></li>
+          <li><a href="#" data-ui="link">Pricing</a></li>
+          <li><a href="#" data-ui="link">Changelog</a></li>
+        </ul>
+      </nav>
+      <nav
+        aria-labelledby="footer-company"
+        style="
+          --display: grid;
+          --self: start;
+          --gap: 4;
+        "
+      >
+        <h2 id="footer-company" data-font="sm" style="--font-weight: strong">Company</h2>
+        <ul
+          data-font="sm"
+          style="
+            --display: grid;
+            --gap: 2;
+          "
+        >
+          <li><a href="#" data-ui="link">About</a></li>
+          <li><a href="#" data-ui="link">Careers</a></li>
+          <li><a href="#" data-ui="link">Contact</a></li>
+        </ul>
+      </nav>
+      <nav
+        aria-labelledby="footer-resources"
+        style="
+          --display: grid;
+          --self: start;
+          --gap: 4;
+        "
+      >
+        <h2 id="footer-resources" data-font="sm" style="--font-weight: strong">Resources</h2>
+        <ul
+          data-font="sm"
+          style="
+            --display: grid;
+            --gap: 2;
+          "
+        >
+          <li><a href="#" data-ui="link">Docs</a></li>
+          <li><a href="#" data-ui="link">Blog</a></li>
+          <li><a href="#" data-ui="link">Help center</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div
+      data-font="sm"
+      style="
+        --display: flex;
+        --flex-wrap: wrap;
+        --justify: space-between;
+        --py: 6;
+        --gap: 4;
+        --mt: 24;
+        --text: var(--color-muted-foreground);
+        --border-t: 1;
+      "
+    >
+      <p>© 2026 Company name. All rights reserved.</p>
+      <ul
+        style="
+          --display: flex;
+          --gap: 6;
+        "
+      >
+        <li><a href="#" data-ui="link">Privacy</a></li>
+        <li><a href="#" data-ui="link">Terms</a></li>
+      </ul>
+    </div>
+  </ui-layout>
+</footer>

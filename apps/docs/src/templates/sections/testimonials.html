@@ -1,0 +1,129 @@
+<!-- Testimonials: three quote cards, each with an avatar, a name, and a role.
+     Card: https://zazz.sh/api/primitives/card/ · For initials when there is no
+     photo, see the avatar pattern: https://zazz.sh/api/primitives/avatar/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<section aria-labelledby="testimonials-title" style="--py: 24">
+  <ui-layout>
+    <h2 id="testimonials-title" style="--text-align: center">What customers say</h2>
+    <div
+      style="
+        --display: grid;
+        --grid-cols: 1;
+        --grid-cols--md: 3;
+        --gap: 6;
+        --mt: 11;
+      "
+    >
+      <figure data-ui="card" data-card-variant="outline">
+        <blockquote data-card-slot="body">
+          <p>
+            “Quote a customer in their own words. A specific result, like a number or a task they no
+            longer do, carries more weight than praise.”
+          </p>
+        </blockquote>
+        <figcaption
+          data-card-slot="footer"
+          style="
+            --display: flex;
+            --items: center;
+            --gap: 2;
+          "
+        >
+          <img
+            src="/placeholders/image-1x1-light.webp"
+            width="2048"
+            height="2048"
+            alt=""
+            loading="lazy"
+            style="
+              --size: 11;
+              --radius: full;
+              --object-fit: cover;
+            "
+          />
+          <span style="--display: flex-col">
+            <span data-font="sm" style="--font-weight: strong">Customer name</span>
+            <span data-font="xs" style="--text: var(--color-muted-foreground)">Role, Company</span>
+          </span>
+        </figcaption>
+      </figure>
+      <figure data-ui="card" data-card-variant="outline">
+        <blockquote data-card-slot="body">
+          <p>
+            “Pick quotes that answer the doubts a new visitor has: is it hard to set up, and does it
+            work for a team like mine?”
+          </p>
+        </blockquote>
+        <figcaption
+          data-card-slot="footer"
+          style="
+            --display: flex;
+            --items: center;
+            --gap: 2;
+          "
+        >
+          <img
+            src="/placeholders/image-1x1-light.webp"
+            width="2048"
+            height="2048"
+            alt=""
+            loading="lazy"
+            style="
+              --size: 11;
+              --radius: full;
+              --object-fit: cover;
+            "
+          />
+          <span style="--display: flex-col">
+            <span data-font="sm" style="--font-weight: strong">Customer name</span>
+            <span data-font="xs" style="--text: var(--color-muted-foreground)">Role, Company</span>
+          </span>
+        </figcaption>
+      </figure>
+      <figure data-ui="card" data-card-variant="outline">
+        <blockquote data-card-slot="body">
+          <p>
+            “Keep each quote to two or three sentences. Ask the customer before you use their name
+            and photo.”
+          </p>
+        </blockquote>
+        <figcaption
+          data-card-slot="footer"
+          style="
+            --display: flex;
+            --items: center;
+            --gap: 2;
+          "
+        >
+          <img
+            src="/placeholders/image-1x1-light.webp"
+            width="2048"
+            height="2048"
+            alt=""
+            loading="lazy"
+            style="
+              --size: 11;
+              --radius: full;
+              --object-fit: cover;
+            "
+          />
+          <span style="--display: flex-col">
+            <span data-font="sm" style="--font-weight: strong">Customer name</span>
+            <span data-font="xs" style="--text: var(--color-muted-foreground)">Role, Company</span>
+          </span>
+        </figcaption>
+      </figure>
+    </div>
+  </ui-layout>
+</section>

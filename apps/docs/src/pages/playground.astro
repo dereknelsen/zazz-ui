@@ -5,117 +5,247 @@
  * stylesheet, import map, polyfill, script, theme script) around the editor's
  * body. A docs preview opens here with its example in the URL hash.
  */
-import Icon from '../components/Icon.astro';
-import PlaygroundLayout from '../layouts/PlaygroundLayout.astro';
-import { siteHead } from '../lib/head.ts';
-import { kitchenSink } from '../lib/kitchen-sink.ts';
-import acmeStorefront from '../templates/acme-storefront.html?raw';
-import blank from '../templates/blank.html?raw';
+import Icon from "../components/Icon.astro";
+import ThemeToggle from "../components/ThemeToggle.astro";
+import PlaygroundLayout from "../layouts/PlaygroundLayout.astro";
+import { siteHead } from "../lib/head.ts";
+import { kitchenSink } from "../lib/kitchen-sink.ts";
+import blank from "../templates/blank.html?raw";
 
-// Templates live in src/templates/*.html. The first is what the playground
-// opens with; "blank" is what Reset returns to.
-const templates = [
-  { id: 'acme-storefront', label: 'ACME storefront', html: acmeStorefront },
-  { id: 'blank', label: 'Blank page', html: blank },
-  { id: 'kitchen-sink', label: 'Kitchen sink', html: kitchenSink() },
+// Section templates live in src/templates/sections/<id>.html, listed here in
+// dropdown order. The first template is what the playground opens with (until
+// the visitor picks another, which is remembered);
+// "blank" is what Reset returns to.
+const sectionFiles = import.meta.glob<string>("../templates/sections/*.html", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+});
+// Keep each group's entries together: the dropdown groups by first appearance.
+const sections: { id: string; label: string; group: string }[] = [
+  { id: "hero", label: "Hero", group: "Marketing" },
+  { id: "hero-video", label: "Hero with video", group: "Marketing" },
+  { id: "navbar", label: "Navbar", group: "Marketing" },
+  { id: "logos", label: "Logo cloud", group: "Marketing" },
+  { id: "features-grid", label: "Feature grid", group: "Marketing" },
+  { id: "features-split", label: "Feature rows", group: "Marketing" },
+  { id: "stats", label: "Stats", group: "Marketing" },
+  { id: "testimonials", label: "Testimonials", group: "Marketing" },
+  { id: "pricing", label: "Pricing", group: "Marketing" },
+  { id: "faq", label: "FAQ", group: "Marketing" },
+  { id: "cta", label: "Call to action", group: "Marketing" },
+  { id: "contact", label: "Contact", group: "Marketing" },
+  { id: "team", label: "Team", group: "Marketing" },
+  { id: "blog", label: "Blog posts", group: "Marketing" },
+  { id: "gallery", label: "Gallery", group: "Marketing" },
+  { id: "footer", label: "Footer", group: "Marketing" },
+  { id: "sign-in", label: "Sign in", group: "Application" },
+  { id: "stat-cards", label: "Page header and stats", group: "Application" },
+  { id: "table", label: "Table", group: "Application" },
+  { id: "product-list", label: "Product grid", group: "Ecommerce" },
+  { id: "product-detail", label: "Product page", group: "Ecommerce" },
 ];
+
+const sectionHtml = new Map(
+  Object.entries(sectionFiles).map(([path, html]) => [
+    path.replace(/^.*\/|\.html$/g, ""),
+    html,
+  ]),
+);
+const unlisted = [...sectionHtml.keys()].filter(
+  (id) => !sections.some((s) => s.id === id),
+);
+if (unlisted.length) {
+  throw new Error(
+    `playground: src/templates/sections has files missing from the list: ${unlisted.join(", ")}`,
+  );
+}
+
+const templates = [
+  ...sections.map((s) => {
+    const html = sectionHtml.get(s.id);
+    if (html === undefined) {
+      throw new Error(`playground: no src/templates/sections/${s.id}.html`);
+    }
+    return { ...s, html };
+  }),
+  { id: "blank", label: "Blank page", group: "Starters", html: blank },
+  {
+    id: "kitchen-sink",
+    label: "Kitchen sink",
+    group: "Starters",
+    html: kitchenSink(),
+  },
+];
+const groups = [...new Set(templates.map((t) => t.group))];
 
 // `<` is escaped so the head's own <script> tags cannot close this one.
 const data = JSON.stringify({ head: siteHead(), templates }).replace(
   /</g,
-  '\\u003c',
+  "\\u003c",
 );
 
 // Production isolates user HTML in an opaque origin. Astro's dev server blocks
 // every cross-site subresource request (its Sec-Fetch guard; `Origin: null`
-// cannot be allow-listed), so in dev the frame stays same-origin instead.
-const sandbox =
-  import.meta.env.DEV ?
-    'allow-scripts allow-same-origin allow-forms allow-modals'
-  : 'allow-scripts allow-forms allow-modals';
+// cannot be allow-listed), so in dev the frame stays same-origin instead. No
+// allow-modals: alert/confirm/prompt/print would block the frame on every
+// debounced render. Links, form submissions, and scripted navigation are
+// cancelled by the guard script the playground puts first in the frame's head.
+const sandbox = import.meta.env.DEV
+  ? "allow-scripts allow-same-origin allow-forms"
+  : "allow-scripts allow-forms";
 ---
 
 <PlaygroundLayout
-  title='Playground'
-  description='Write Zazz HTML and watch it render.'
+  title="Playground"
+  description="Write Zazz HTML and watch it render."
 >
   <main
-    id='main'
+    id="main"
     data-playground
-    style='
+    style="
       --display: grid;
       --template-rows: auto minmax(0, 1fr);
       --min-h: calc(100dvh - 3.5rem);
-    '
+    "
   >
     <div
-      data-ui='layout'
-      data-layout-size='bleed'
-      style='
+      data-ui="layout"
+      data-layout-size="bleed"
+      style="
         --p: 2;
-        --border-b: 1;
         --bg: var(--color-card);
-      '
+        --border-b: 1;
+      "
     >
       <div
-        style='
+        style="
           --display: flex;
+          --flex-wrap: wrap;
           --items: center;
           --gap: 2;
-          --flex-wrap: wrap;
-        '
+        "
       >
-        <a href='/' data-ui='button' data-button-variant='outline'>
-          <Icon name='arrow-left' aria-hidden='true' />
+        <a href="/" data-ui="button" data-button-variant="outline">
+          <Icon name="arrow-left" aria-hidden="true" />
           <span>Home</span>
         </a>
         <label
-          data-ui='field'
-          data-field-orientation='horizontal'
-          style='--gap: 2; --max-w: 64; --w: 100%'
+          data-ui="field"
+          data-field-orientation="horizontal"
+          style="
+            --gap: 2;
+            --w: 100%;
+            --max-w: 64;
+          "
         >
-          <span style='--sr: only' data-field-slot='label'>Template</span>
+          <span style="--sr: only" data-field-slot="label">
+            Template
+          </span>
           <select
-            data-ui='select'
+            data-ui="select"
             data-playground-template
-            aria-label='Starter template'
-            name='template'
+            aria-label="Starter template"
+            name="template"
           >
             <button>
               <span
-                aria-hidden='true'
-                style='--text: var(--color-muted-foreground)'>Template:</span
+                aria-hidden="true"
+                style="--text: var(--color-muted-foreground)"
               >
-              <selectedcontent style='--font-weight: strong'></selectedcontent>
+                Template:
+              </span>
+              <selectedcontent style="--font-weight: strong"></selectedcontent>
             </button>
-            {templates.map((t) => <option value={t.id}>{t.label}</option>)}
+            {
+              /* Grouped as in the select fragment (primitives/select/select.html):
+                 the optgroup keeps `label` as the native-picker fallback, the
+                 <legend> is the styled heading, and a separator splits groups. */
+              groups.map((group, i) => (
+                <Fragment>
+                  {i > 0 && <hr data-ui="separator" style="--my: 2" />}
+                  <optgroup
+                    label={group}
+                    style="
+                      --display: grid;
+                      --gap: 1px;
+                    "
+                  >
+                    <legend
+                      style="
+                        --display: inline-flex;
+                        --p: 2;
+                        --font-size: var(--font-size-eyebrow);
+                        --font-weight: var(--font-weight-eyebrow);
+                        --leading: var(--leading-eyebrow);
+                        --tracking: var(--tracking-eyebrow);
+                        --text-transform: uppercase;
+                        --text: var(--color-muted-foreground);
+                      "
+                    >
+                      {group}
+                    </legend>
+                    {templates
+                      .filter((t) => t.group === group)
+                      .map((t) => (
+                        <option value={t.id}>{t.label}</option>
+                      ))}
+                  </optgroup>
+                </Fragment>
+              ))
+            }
           </select>
         </label>
-        <div style='--display: flex; --gap: 1; --ml: auto'>
-          <!-- Below lg the panes stack; collapsing the code gives the preview the screen -->
+        <div
+          style="
+            --display: flex;
+            --gap: 1;
+            --ml: auto;
+          "
+        >
           <button
-            type='button'
-            data-ui='button'
-            data-button-variant='ghost'
-            data-playground-toggle
-            aria-controls='playground-code'
-            aria-expanded='true'
-            style='
-              --display: flex;
-              --display--lg: none;
-            '
-          >
-            <Icon name='code' aria-hidden='true' />
-            <span data-playground-toggle-label>Hide code</span>
-          </button>
-          <button
-            type='button'
-            data-ui='button'
-            data-button-variant='ghost'
+            type="button"
+            data-ui="button"
+            data-button-variant="secondary"
             data-playground-reset
           >
-            <Icon name='arrow-rotate-left' aria-hidden='true' /> Reset
+            <Icon name="arrow-rotate-left" aria-hidden="true" /> Reset code
           </button>
+          <!-- Enabled by the script once the code has loaded (and only where the
+               clipboard API exists) -->
+          <button
+            type="button"
+            data-ui="button"
+            data-button-variant="tertiary"
+            data-playground-copy
+            aria-live="polite"
+            disabled
+          >
+            <span data-copy-idle style="--display: contents">
+              <Icon name="clone" aria-hidden="true" /> Copy code
+            </span>
+            <span data-copy-done hidden style="--display: contents">
+              <Icon name="check" aria-hidden="true" /> Copied
+            </span>
+          </button>
+          <!-- Below lg the panes stack; collapsing the code gives the preview the screen -->
+          <button
+            type="button"
+            data-ui="button"
+            data-button-variant="ghost"
+            data-playground-toggle
+            aria-controls="playground-code"
+            aria-expanded="true"
+            style="
+              --display: flex;
+              --display--lg: none;
+            "
+          >
+            <Icon name="code" aria-hidden="true" />
+            <span data-playground-toggle-label>Hide code</span>
+          </button>
+          <!-- The output follows the page's theme (playground.ts re-renders on a change) -->
+          <ThemeToggle />
         </div>
       </div>
     </div>
@@ -125,83 +255,88 @@ const sandbox =
          script rewrites --template-cols--lg. -->
     <div
       data-playground-split
-      style='
+      style="
         --display: grid;
-        --template-cols: minmax(0, 1fr);
-        --template-cols--lg: minmax(0, 1fr) auto minmax(0, 1fr);
         --auto-rows: minmax(50dvh, 1fr);
         --auto-rows--lg: minmax(0, 1fr);
+        --template-cols: minmax(0, 1fr);
+        --template-cols--lg: minmax(0, 1fr) auto minmax(0, 1fr);
         --min-h: 0;
-      '
+      "
     >
       <div
-        id='playground-code'
+        id="playground-code"
         data-playground-editor
-        style='
+        style="
           --display: block;
           --display--lg: block;
           --position: relative;
           --min-h: 0;
-        '
+        "
       >
         <textarea
           data-playground-fallback
-          name='html'
-          aria-label='HTML'
-          spellcheck='false'
-          style='
+          name="html"
+          aria-label="HTML"
+          spellcheck="false"
+          style="
+            --p: 4;
             --w: 100%;
             --h: 100%;
             --min-h: 50dvh;
-            --p: 4;
-            --font-family: var(--font-family-mono);
             --font-size: var(--font-size-sm);
-            --border: 0;
-            --bg: var(--color-background);
+            --font-family: var(--font-family-mono);
             --text: var(--color-foreground);
-          '
+            --bg: var(--color-background);
+            --border: 0;
+          "
         ></textarea>
       </div>
       <div
-        role='separator'
-        tabindex='0'
-        aria-orientation='vertical'
-        aria-label='Resize code and preview'
-        aria-controls='playground-code'
-        aria-valuemin='20'
-        aria-valuemax='80'
-        aria-valuenow='50'
+        role="separator"
+        tabindex="0"
+        aria-orientation="vertical"
+        aria-label="Resize code and preview"
+        aria-controls="playground-code"
+        aria-valuemin="20"
+        aria-valuemax="80"
+        aria-valuenow="50"
         data-playground-resizer
-        style='
+        style="
           --display: none;
           --display--lg: flex;
           --justify: center;
           --w: 2;
-          --cursor: col-resize;
-          --bg--hover: var(--color-muted);
           --bg--focus-visible: var(--color-muted);
-        '
+          --bg--hover: var(--color-muted);
+          --cursor: col-resize;
+        "
       >
-        <span style='--w: 1px; --bg: var(--color-border)'></span>
+        <span
+          style="
+            --w: 1px;
+            --bg: var(--color-border);
+          "
+        ></span>
       </div>
       <iframe
         data-playground-output
-        title='Output: user-supplied HTML'
+        title="Output: user-supplied HTML"
         sandbox={sandbox}
-        referrerpolicy='no-referrer'
-        style='
+        referrerpolicy="no-referrer"
+        style="
           --w: 100%;
           --h: 100%;
           --min-h: 50dvh;
-          --border: 0;
           --bg: var(--color-background);
-          --overflow-y: auto;
+          --border: 0;
           --overflow-x: clip;
-        '
+          --overflow-y: auto;
+        "
       ></iframe>
     </div>
   </main>
 
-  <script type='application/json' data-playground-data set:html={data} />
-  <script src='../scripts/playground.ts'></script>
+  <script type="application/json" data-playground-data set:html={data} />
+  <script src="../scripts/playground.ts"></script>
 </PlaygroundLayout>

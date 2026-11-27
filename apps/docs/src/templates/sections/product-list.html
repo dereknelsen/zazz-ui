@@ -1,0 +1,170 @@
+<!-- Product grid: product tiles with an image, a name, a detail line, and a price.
+     Each tile is one link; `group` lets the image react to hovering the whole
+     tile: https://zazz.sh/api/modifiers/group/ -->
+<style>
+  /* Theming: redefine tokens in the `variables` layer and every primitive
+     follows. Tokens: https://zazz.sh/api/foundations/tokens/
+     The layer order: https://zazz.sh/api/foundations/layers/
+     The theming guide: https://zazz.sh/docs/theming/customization/ */
+  @layer variables {
+    :root {
+      /* You can override theme variables and primitive variable hooks here. */
+    }
+  }
+</style>
+
+<section aria-labelledby="products-title" style="--py: 24">
+  <ui-layout>
+    <header
+      style="
+        --display: flex;
+        --flex-wrap: wrap;
+        --items: end;
+        --justify: space-between;
+        --gap: 4;
+      "
+    >
+      <h2 id="products-title">Shop the collection</h2>
+      <a href="#" data-ui="link">View all products</a>
+    </header>
+    <ul
+      style="
+        --display: grid;
+        --grid-cols: 2;
+        --grid-cols--lg: 4;
+        --gap-x: 6;
+        --gap-y: 11;
+        --mt: 11;
+      "
+    >
+      <li>
+        <a
+          href="#"
+          data-ui="group"
+          style="
+            --display: grid;
+            --gap: 1;
+            --text-decoration: none;
+            --text: var(--color-foreground);
+          "
+        >
+          <img
+            src="/placeholders/image-2x3-light.webp"
+            width="1366"
+            height="2048"
+            alt=""
+            loading="lazy"
+            style="
+              --mb: 3;
+              --w: 100%;
+              --aspect: 2 / 3;
+              --opacity: 1;
+              --group-opacity--hover: 0.85;
+              --radius: 2.5;
+              --object-fit: cover;
+            "
+          />
+          <h3 data-font="md">Product name</h3>
+          <p data-font="sm" style="--text: var(--color-muted-foreground)">Color or variant</p>
+          <p style="--font-weight: strong">$48</p>
+        </a>
+      </li>
+      <li>
+        <a
+          href="#"
+          data-ui="group"
+          style="
+            --display: grid;
+            --gap: 1;
+            --text-decoration: none;
+            --text: var(--color-foreground);
+          "
+        >
+          <img
+            src="/placeholders/image-2x3-light.webp"
+            width="1366"
+            height="2048"
+            alt=""
+            loading="lazy"
+            style="
+              --mb: 3;
+              --w: 100%;
+              --aspect: 2 / 3;
+              --opacity: 1;
+              --group-opacity--hover: 0.85;
+              --radius: 2.5;
+              --object-fit: cover;
+            "
+          />
+          <h3 data-font="md">Product name</h3>
+          <p data-font="sm" style="--text: var(--color-muted-foreground)">Color or variant</p>
+          <p style="--font-weight: strong">$64</p>
+        </a>
+      </li>
+      <li>
+        <a
+          href="#"
+          data-ui="group"
+          style="
+            --display: grid;
+            --gap: 1;
+            --text-decoration: none;
+            --text: var(--color-foreground);
+          "
+        >
+          <img
+            src="/placeholders/image-2x3-light.webp"
+            width="1366"
+            height="2048"
+            alt=""
+            loading="lazy"
+            style="
+              --mb: 3;
+              --w: 100%;
+              --aspect: 2 / 3;
+              --opacity: 1;
+              --group-opacity--hover: 0.85;
+              --radius: 2.5;
+              --object-fit: cover;
+            "
+          />
+          <h3 data-font="md">Product name</h3>
+          <p data-font="sm" style="--text: var(--color-muted-foreground)">Color or variant</p>
+          <p style="--font-weight: strong">$32</p>
+        </a>
+      </li>
+      <li>
+        <a
+          href="#"
+          data-ui="group"
+          style="
+            --display: grid;
+            --gap: 1;
+            --text-decoration: none;
+            --text: var(--color-foreground);
+          "
+        >
+          <img
+            src="/placeholders/image-2x3-light.webp"
+            width="1366"
+            height="2048"
+            alt=""
+            loading="lazy"
+            style="
+              --mb: 3;
+              --w: 100%;
+              --aspect: 2 / 3;
+              --opacity: 1;
+              --group-opacity--hover: 0.85;
+              --radius: 2.5;
+              --object-fit: cover;
+            "
+          />
+          <h3 data-font="md">Product name</h3>
+          <p data-font="sm" style="--text: var(--color-muted-foreground)">Color or variant</p>
+          <p style="--font-weight: strong">$120</p>
+        </a>
+      </li>
+    </ul>
+  </ui-layout>
+</section>
