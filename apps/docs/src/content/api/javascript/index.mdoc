@@ -6,7 +6,7 @@ sectionOrder: 6
 order: 0
 ---
 
-Scripts live next to their primitives (`src/primitives/<name>/<name>.ts`) and share a small runtime in `src/base/`. They are written in TypeScript and emitted in place as readable `.js` ES modules, so a page can load them without a bundler: `index.js` imports every primitive's script.
+Scripts live next to their primitives (`src/primitives/<name>/<name>.ts`) and share a small runtime in `src/base/` and interaction logic in `src/behaviors/`. They are written in TypeScript and emitted in place as readable `.js` ES modules, so a page can load them without a bundler: `index.js` imports every primitive's script.
 
 ```html
 <script type="module" src="./zazz/index.js"></script>
@@ -27,10 +27,11 @@ One bare specifier reaches the page through the import map `buildHead()` writes:
 | `base/zazz-element.js` | `ZazzElement`, `defineZazzElement`, `registerRefresh`, `refreshAll`, `Zazz.refresh` (also `window.Zazz`) | [Custom elements](/api/javascript/custom-elements/) |
 | `base/signals.js` | `state`, `computed`, `effect` (also `window.Signals`) | [Signals](/api/javascript/signals/) |
 | `base/utils.js` | `Utils.parseValue`, `Utils.parseDataAttributes` (also `window.Utils`) | [Utils](/api/javascript/utils/) |
-| `base/hotkeys.js` | `bindHotkey`, `parseHotkey`, `matchesHotkey`, `isEditableTarget`, `isBareKey` | [Hotkeys](/api/javascript/hotkeys/) |
+| `behaviors/hotkeys.js` | `bindHotkey`, `parseHotkey`, `matchesHotkey`, `isEditableTarget`, `isBareKey` | [Hotkeys](/api/javascript/hotkeys/) |
 | `base/dialog-lifecycle.js` | dispatches `zazz:dialog-open` / `zazz:dialog-close` | [Events](/api/javascript/events/) |
-| `base/navigation.js` | `swapBody`; side effects behind `data-ui-navigation="swap"` | [Navigation](/api/javascript/navigation/) |
-| `base/typeahead.js`, `base/command-score.js` | the filter-as-you-type engine behind autocomplete, combobox, and command | [command](/api/primitives/command/) |
+| `base/navigation.js` | `swapBody`; side effects behind `data-navigation="swap"` | [Navigation](/api/javascript/navigation/) |
+| `behaviors/typeahead.js`, `behaviors/command-score.js` | the filter-as-you-type engine behind autocomplete, combobox, and command | [command](/api/primitives/command/) |
+| `behaviors/list-navigation.js` | `listStep`, `stepIndex`, `isDisabledItem`: the arrow-key, Home, and End steps behind tabs, menu, and the typeahead engine | [tabs](/api/primitives/tabs/) |
 | `base/carousel.js` | `Carousel` (also `window.Carousel`): the scroll-snap carousel behind carousel and lightbox, with its engine in `base/carousel-scroll.js` | [carousel](/api/primitives/carousel/) |
 | `base/reveal.js` | `Reveal` (also `window.Reveal`) | [reveal](/api/primitives/reveal/) |
 

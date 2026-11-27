@@ -97,7 +97,7 @@
     --_radius-len: var(--_radius-resolved, var(--ui-tabs-track-radius));
     --_radius-num: var(--_radius-resolved, var(--ui-tabs-track-radius));
     border-radius: calc(
-      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-multiplier)
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-coefficient)
     );
     corner-shape: var(--_corner-shape-resolved, var(--ui-tabs-track-corner-shape));
     background-color: var(--ui-tabs-track-bg);
@@ -229,11 +229,12 @@
   @supports (anchor-name: --active-tab) {
     :where(ui-tabs, [data-ui~="tabs"]) [data-tabs-slot~="indicator"] {
       position-anchor: --active-tab;
-      /* physical top/left/right/bottom: anchor() only accepts physical side keywords */
-      top: calc(anchor(--active-tab top) + var(--ui-tabs-indicator-inset));
-      left: calc(anchor(--active-tab left) + var(--ui-tabs-indicator-inset));
-      right: calc(anchor(--active-tab right) + var(--ui-tabs-indicator-inset));
-      bottom: calc(anchor(--active-tab bottom) + var(--ui-tabs-indicator-inset));
+      /* start / end are anchor()'s logical side keywords: each resolves on the axis
+         of the inset property it sits in */
+      inset-block-start: calc(anchor(--active-tab start) + var(--ui-tabs-indicator-inset));
+      inset-inline-start: calc(anchor(--active-tab start) + var(--ui-tabs-indicator-inset));
+      inset-inline-end: calc(anchor(--active-tab end) + var(--ui-tabs-indicator-inset));
+      inset-block-end: calc(anchor(--active-tab end) + var(--ui-tabs-indicator-inset));
     }
 
     :where(ui-tabs, [data-ui~="tabs"])

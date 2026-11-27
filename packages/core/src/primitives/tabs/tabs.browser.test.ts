@@ -4,11 +4,13 @@
  * @fileoverview The tabs: `data-tabs-slot` parts in tag and attribute
  * form, the checked tab's label taking the active color, and
  * `data-tabs-orientation="vertical"` stacking the list, the
- * `data-tabs-variant="underline"` preset, and nested tabs.
+ * `data-tabs-variant="underline"` preset, nested tabs, and the arrow keys
+ * following the writing direction.
  */
 
 import { describe, expect, it } from "vite-plus/test";
 import { mount, style, useCss, useKit } from "../../../test/browser.ts";
+import "./tabs.ts";
 
 const TABS = (name: string) => `<div data-tabs-slot="list" role="tablist">
     <div data-tabs-slot="indicator" aria-hidden="true"></div>
@@ -85,6 +87,10 @@ describe("tabs", () => {
     expect(gaps("[data-default]")).toEqual([half, half, half, half]);
     // the underline: on the label's own edges, so the line meets the label's bottom
     expect(gaps("[data-underline]")).toEqual([0, 0, 0, 0]);
+    // the insets are logical, and the pill covers the same box right to left
+    root.dir = "rtl";
+    expect(gaps("[data-default]")).toEqual([half, half, half, half]);
+    expect(gaps("[data-underline]")).toEqual([0, 0, 0, 0]);
   });
 
   it("the underline variant moves the border to the start edge when vertical", () => {
@@ -116,5 +122,23 @@ describe("tabs", () => {
         "border-bottom-width",
       ),
     ).not.toBe("2px");
+  });
+
+  it("the horizontal arrows follow the writing direction: ArrowLeft is next in RTL", () => {
+    // three tabs, so "previous" (which wraps to the last) is not also "next"
+    const press = (dir: string, key: string): number => {
+      const root = mount(`<div dir="${dir}"><ui-tabs><div data-tabs-slot="list" role="tablist">
+        <input type="radio" name="r" checked /><input type="radio" name="r" /><input type="radio" name="r" />
+      </div></ui-tabs></div>`);
+      const tabs = Array.from(root.querySelectorAll("input"));
+      tabs[0]!.dispatchEvent(
+        new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true }),
+      );
+      return tabs.findIndex((tab) => tab.checked);
+    };
+    expect(press("ltr", "ArrowRight"), "ltr next").toBe(1);
+    expect(press("ltr", "ArrowLeft"), "ltr previous wraps").toBe(2);
+    expect(press("rtl", "ArrowLeft"), "rtl next").toBe(1);
+    expect(press("rtl", "ArrowRight"), "rtl previous wraps").toBe(2);
   });
 });

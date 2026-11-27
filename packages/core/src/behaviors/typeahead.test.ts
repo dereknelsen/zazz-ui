@@ -2,7 +2,7 @@
 "use strict";
 
 /**
- * @fileoverview Tests for the typeahead engine's pure functions (`base/typeahead.ts`).
+ * @fileoverview Tests for the typeahead engine's pure functions (`behaviors/typeahead.ts`).
  */
 
 import { describe, expect, it } from "vite-plus/test";

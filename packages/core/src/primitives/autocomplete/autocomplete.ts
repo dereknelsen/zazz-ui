@@ -3,7 +3,7 @@
 /**
  * @fileoverview `<ui-autocomplete>`: an input that suggests options as you type.
  * @description Light-DOM custom element on the shared typeahead engine
- * (`base/typeahead.ts`). The visible input is the form value (free text is
+ * (`behaviors/typeahead.ts`). The visible input is the form value (free text is
  * allowed) and the anchored `popover="manual"` panel suggests matches ranked
  * by the vendored cmdk scorer. Committing a suggestion (Enter or click) fills
  * the input; without JavaScript the markup degrades to a plain `[data-ui~="input"]`.
@@ -19,7 +19,7 @@
  * `autocomplete-empty`.
  */
 
-import { TypeaheadElement } from "../../base/typeahead.ts";
+import { TypeaheadElement } from "../../behaviors/typeahead.ts";
 import { defineZazzElement } from "../../base/zazz-element.ts";
 
 class UiAutocomplete extends TypeaheadElement {

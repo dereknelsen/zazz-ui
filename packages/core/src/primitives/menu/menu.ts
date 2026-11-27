@@ -16,6 +16,9 @@
  * - Home / End jump to the first / last item.
  * - Escape and light dismiss are native Popover API behavior (no code here).
  *
+ * The key handling is the shared list navigation behavior
+ * (`behaviors/list-navigation.ts`).
+ *
  * The menu keeps the honest disclosure posture: items are plain links and
  * buttons, and no `role="menu"` is claimed. Add the full ARIA menu contract
  * yourself only if every item is an action and you implement the rest of the
@@ -33,6 +36,7 @@
  */
 
 import { ZazzElement, defineZazzElement } from "../../base/zazz-element.ts";
+import { isDisabledItem, listStep, stepIndex } from "../../behaviors/list-navigation.ts";
 
 class UiMenu extends ZazzElement {
   protected setup(signal: AbortSignal): void {
@@ -60,10 +64,7 @@ class UiMenu extends ZazzElement {
     return Array.from(panel.querySelectorAll("a[href], button"))
       .filter((node): node is HTMLElement => node instanceof HTMLElement)
       .filter(
-        (item) =>
-          !item.hasAttribute("disabled") &&
-          item.getAttribute("aria-disabled") !== "true" &&
-          item.closest('ui-menu, [data-ui~="menu"]') === this,
+        (item) => !isDisabledItem(item) && item.closest('ui-menu, [data-ui~="menu"]') === this,
       );
   }
 
@@ -74,7 +75,8 @@ class UiMenu extends ZazzElement {
    * @param event - The keydown event.
    */
   #onKeydown(event: KeyboardEvent): void {
-    if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+    const step = listStep(event.key);
+    if (!step) return;
 
     const target = event.target;
     if (!(target instanceof HTMLElement)) return;
@@ -89,11 +91,11 @@ class UiMenu extends ZazzElement {
       (target.hasAttribute("popovertarget") || target.hasAttribute("interestfor"));
     const open = panel.matches(":popover-open");
 
-    if (isTrigger && !open && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
+    if (isTrigger && !open && (step === "next" || step === "previous")) {
       event.preventDefault();
       panel.showPopover();
       const items = this.#items(panel);
-      items[event.key === "ArrowDown" ? 0 : items.length - 1]?.focus();
+      items[stepIndex(-1, step, items.length)]?.focus();
       return;
     }
 
@@ -102,27 +104,8 @@ class UiMenu extends ZazzElement {
     const items = this.#items(panel);
     if (items.length === 0) return;
 
-    const index = items.indexOf(target);
-    let nextIndex: number;
-    switch (event.key) {
-      case "ArrowDown":
-        nextIndex = index === -1 ? 0 : (index + 1) % items.length;
-        break;
-      case "ArrowUp":
-        nextIndex = index === -1 ? items.length - 1 : (index - 1 + items.length) % items.length;
-        break;
-      case "Home":
-        nextIndex = 0;
-        break;
-      case "End":
-        nextIndex = items.length - 1;
-        break;
-      default:
-        return;
-    }
-
     event.preventDefault();
-    items[nextIndex].focus();
+    items[stepIndex(items.indexOf(target), step, items.length)].focus();
   }
 }
 

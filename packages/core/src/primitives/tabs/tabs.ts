@@ -6,14 +6,16 @@
  * tabs pattern with orientation-aware arrow-key navigation.
  *
  * Keyboard behavior on the focused tab radio:
- * - Horizontal (default): ArrowLeft / ArrowRight move between tabs.
+ * - Horizontal (default): ArrowLeft / ArrowRight move between tabs, following
+ *   the writing direction (in RTL, ArrowLeft is the next tab).
  * - Vertical (`data-tabs-orientation="vertical"`): ArrowUp / ArrowDown move between tabs.
  * - Home / End jump to the first / last enabled tab.
  * - Navigation wraps around and skips disabled tabs.
  *
  * Native radio-group arrow keys already provide a baseline without
  * JavaScript; this element makes the keys match the tabs' visual
- * orientation and adds Home/End + wrap-around.
+ * orientation and adds Home/End + wrap-around. The key handling is the shared
+ * list navigation behavior (`behaviors/list-navigation.ts`).
  *
  * @example
  * <ui-tabs>
@@ -29,6 +31,7 @@
  */
 
 import { ZazzElement, defineZazzElement } from "../../base/zazz-element.ts";
+import { isDisabledItem, listStep, stepIndex } from "../../behaviors/list-navigation.ts";
 
 class UiTabs extends ZazzElement {
   protected setup(signal: AbortSignal): void {
@@ -48,39 +51,24 @@ class UiTabs extends ZazzElement {
     // ignore radios of a nested ui-tabs
     if (!list || list.closest('ui-tabs, [data-ui~="tabs"]') !== this) return;
 
+    const vertical = this.getAttribute("data-tabs-orientation") === "vertical";
+    const step = listStep(event.key, {
+      orientation: vertical ? "vertical" : "horizontal",
+      rtl: getComputedStyle(list).direction === "rtl",
+    });
+    if (!step) return;
+
     const tabs = Array.from(list.querySelectorAll('input[type="radio"]'))
       .filter((node): node is HTMLInputElement => node instanceof HTMLInputElement)
-      .filter((tab) => !tab.disabled);
+      .filter((tab) => !isDisabledItem(tab));
     if (tabs.length < 2) return;
-
-    const vertical = this.getAttribute("data-tabs-orientation") === "vertical";
-    const prevKey = vertical ? "ArrowUp" : "ArrowLeft";
-    const nextKey = vertical ? "ArrowDown" : "ArrowRight";
 
     const index = tabs.indexOf(target);
     if (index === -1) return;
 
-    let nextIndex: number;
-    switch (event.key) {
-      case prevKey:
-        nextIndex = (index - 1 + tabs.length) % tabs.length;
-        break;
-      case nextKey:
-        nextIndex = (index + 1) % tabs.length;
-        break;
-      case "Home":
-        nextIndex = 0;
-        break;
-      case "End":
-        nextIndex = tabs.length - 1;
-        break;
-      default:
-        return;
-    }
-
     event.preventDefault();
 
-    const tab = tabs[nextIndex];
+    const tab = tabs[stepIndex(index, step, tabs.length)];
     tab.checked = true;
     tab.focus();
     tab.dispatchEvent(new Event("change", { bubbles: true }));

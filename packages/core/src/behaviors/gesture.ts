@@ -1,8 +1,9 @@
 "use strict";
 
 /**
- * @fileoverview Shared drag tracking for gesture-driven primitives (toast
- * swipe-to-dismiss, the drawer).
+ * @fileoverview Shared drag tracking for gesture-driven primitives: toast
+ * swipe-to-dismiss, the drawer, and the carousel's mouse drag
+ * (`base/carousel-scroll.ts`).
  * @description A gesture has two phases, and this module owns only the first.
  *
  * - **Track** (pointer down): `trackDrag()` reports the pointer's offset along a
@@ -20,7 +21,7 @@
  * A drag starts only once the pointer has moved past a small slop, so a press
  * on a button inside the element is still a click; the click that would follow
  * a real drag is swallowed. Form fields, editable content, and anything inside
- * `[data-ui-no-drag]` never start a drag, and neither does a press that is
+ * `[data-draggable="false"]` never start a drag, and neither does a press that is
  * selecting text: give a surface that should drag from its text
  * `user-select: none`.
  *
@@ -117,7 +118,7 @@ const CLICK_SUPPRESS_MS = 50;
 
 /** Targets that never start a drag: they need the pointer for themselves. */
 const NO_DRAG =
-  'input, select, textarea, [contenteditable]:not([contenteditable="false"]), [data-ui-no-drag]';
+  'input, select, textarea, [contenteditable]:not([contenteditable="false"]), [data-draggable="false"]';
 
 /**
  * @description Creates a rolling velocity estimate from the samples of the

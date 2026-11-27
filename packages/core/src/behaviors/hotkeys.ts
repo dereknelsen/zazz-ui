@@ -1,7 +1,8 @@
 "use strict";
 
 /**
- * @fileoverview Minimal hotkey parsing and matching for the command family.
+ * @fileoverview Minimal hotkey parsing and matching for the command family
+ * (`primitives/command/command.ts`).
  * @description Turns `"mod+k"`-style specs into structured hotkeys and matches
  * them against keyboard events. `mod` resolves to Meta on Apple platforms and
  * Control elsewhere. Bare-key hotkeys (no modifier) are suppressed while the

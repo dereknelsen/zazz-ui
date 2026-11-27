@@ -3,7 +3,7 @@
 /**
  * @fileoverview `<ui-command>`: a command menu for search and quick actions.
  * @description Light-DOM custom element on the shared typeahead engine
- * (`base/typeahead.ts`). The panel (a `popover="auto"`
+ * (`behaviors/typeahead.ts`). The panel (a `popover="auto"`
  * dropdown or a `<dialog data-ui="dialog">`) contains the search input;
  * items rank by match score and the best match auto-highlights.
  *
@@ -19,7 +19,8 @@
  * - `data-command-hotkey` (root): global toggle shortcut, e.g. `"mod+k"`.
  * - `data-command-hotkey` (item): global accelerator that activates the item, active
  *   while the element is connected (even with the panel closed).
- * - `data-command-stay-open` (item): keep the panel open after activation.
+ * - `data-command-select-behavior="persist"` (item): keep the panel open after
+ *   activation (default: close it).
  * - `data-command-sort="document"` (root): opt out of score ranking (default: score).
  * - `data-command-filter="none"` (root): opt out of filtering for a list another
  *   source already filtered (a search index); items added later are highlighted
@@ -34,8 +35,8 @@
  * for your `--command` on its target, or for `zazz:command-select` on the root.
  */
 
-import { TypeaheadElement } from "../../base/typeahead.ts";
-import { bindHotkey } from "../../base/hotkeys.ts";
+import { TypeaheadElement } from "../../behaviors/typeahead.ts";
+import { bindHotkey } from "../../behaviors/hotkeys.ts";
 import { defineZazzElement } from "../../base/zazz-element.ts";
 
 class UiCommand extends TypeaheadElement {
@@ -114,7 +115,7 @@ class UiCommand extends TypeaheadElement {
 
   /**
    * @description Runs one item's activation: optional synthetic click,
-   * `zazz:command-select`, then close (unless `data-command-stay-open`).
+   * `zazz:command-select`, then close (unless `data-command-select-behavior="persist"`).
    *
    * @param item - The item to activate.
    * @param click - Whether to run the native activation via `click()`.
@@ -135,7 +136,7 @@ class UiCommand extends TypeaheadElement {
         this.#clicking = false;
       }
     }
-    if (!item.hasAttribute("data-command-stay-open")) {
+    if (item.getAttribute("data-command-select-behavior") !== "persist") {
       this.#closePanel();
     }
   }

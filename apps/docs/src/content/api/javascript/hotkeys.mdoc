@@ -6,10 +6,10 @@ sectionOrder: 6
 order: 4
 ---
 
-`base/hotkeys.js` turns `"mod+k"`-style specs into structured hotkeys and matches them against keyboard events. It has no dependencies.
+`behaviors/hotkeys.js` turns `"mod+k"`-style specs into structured hotkeys and matches them against keyboard events. It has no dependencies.
 
 ```js
-import { bindHotkey } from "@zazz-ui/core/base/hotkeys.js";
+import { bindHotkey } from "@zazz-ui/core/behaviors/hotkeys.js";
 
 bindHotkey("mod+k", () => document.querySelector("#search")?.showModal());
 ```
@@ -36,7 +36,7 @@ A bare key (`"escape"`, `"/"`) is suppressed while focus is in an input, textare
 ## Lower-level pieces
 
 ```js
-import { parseHotkey, matchesHotkey, isEditableTarget, isBareKey } from "@zazz-ui/core/base/hotkeys.js";
+import { parseHotkey, matchesHotkey, isEditableTarget, isBareKey } from "@zazz-ui/core/behaviors/hotkeys.js";
 
 const hotkey = parseHotkey("mod+shift+p");
 menu.addEventListener("keydown", (event) => {

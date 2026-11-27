@@ -3,7 +3,7 @@
 /**
  * @fileoverview `<ui-combobox>`: an input restricted to a predefined list.
  * @description Light-DOM custom element on the shared typeahead engine
- * (`base/typeahead.ts`). A relative of select: the panel filters as you type,
+ * (`behaviors/typeahead.ts`). A relative of select: the panel filters as you type,
  * but free text can never submit. The form value lives in an authored hidden
  * input (`data-combobox-slot="value"`), synced whenever the selection changes.
  *
@@ -46,7 +46,7 @@
  * `combobox-item`, `combobox-group` / `combobox-group-label`, `combobox-empty`.
  */
 
-import { TypeaheadElement } from "../../base/typeahead.ts";
+import { TypeaheadElement } from "../../behaviors/typeahead.ts";
 import { defineZazzElement } from "../../base/zazz-element.ts";
 
 /** Default tag markup, cloned per selected value; a `tag-template` overrides it. */

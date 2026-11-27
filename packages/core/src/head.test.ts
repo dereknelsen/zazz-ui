@@ -192,7 +192,7 @@ describe("buildHead cdn mode", () => {
       `${KIT}/src/primitives/combobox/combobox.css`,
       // Behavior: side-effect tags for the engine stack and the primitive.
       `${KIT}/src/base/dialog-lifecycle.js`,
-      `${KIT}/src/base/typeahead.js`,
+      `${KIT}/src/behaviors/typeahead.js`,
       `${KIT}/src/primitives/combobox/combobox.js`,
     ];
     let cursor = -1;

@@ -5,7 +5,8 @@
  * @description The common runtime behind the filter-as-you-type family: a
  * query signal fed by the input, score-based ranking of real DOM items
  * (`commandScore`), active-item keyboard navigation with
- * `aria-activedescendant` (focus never leaves the input), and, for form
+ * `aria-activedescendant` (focus never leaves the input; the steps are the
+ * list navigation behavior's, `behaviors/list-navigation.ts`), and, for form
  * controls whose panel sits outside the input, ownership of a
  * `popover="manual"` panel with outside-pointerdown and Escape close paths.
  *
@@ -24,8 +25,9 @@
  */
 
 import { commandScore } from "./command-score.ts";
-import { ZazzElement } from "./zazz-element.ts";
-import { effect, state } from "./signals.ts";
+import { ZazzElement } from "../base/zazz-element.ts";
+import { effect, state } from "../base/signals.ts";
+import { listStep, stepIndex } from "./list-navigation.ts";
 
 // --- Pure ranking and navigation ---
 
@@ -66,6 +68,8 @@ function rankItems(query: string, items: readonly ItemFacts[]): RankedItem[] {
 /**
  * @description Reducer for active-item keyboard navigation. ArrowDown from
  * nothing highlights the first item, ArrowUp from nothing the last; both wrap.
+ * The steps are the shared list navigation behavior's
+ * (`behaviors/list-navigation.ts`); a key that is not a step keeps the index.
  *
  * @param current - The currently active index, -1 for none.
  * @param key - The `KeyboardEvent.key` pressed.
@@ -74,18 +78,8 @@ function rankItems(query: string, items: readonly ItemFacts[]): RankedItem[] {
  */
 function nextActiveIndex(current: number, key: string, count: number): number {
   if (count === 0) return -1;
-  switch (key) {
-    case "ArrowDown":
-      return current < 0 ? 0 : (current + 1) % count;
-    case "ArrowUp":
-      return current < 0 ? count - 1 : (current - 1 + count) % count;
-    case "Home":
-      return 0;
-    case "End":
-      return count - 1;
-    default:
-      return current;
-  }
+  const step = listStep(key);
+  return step ? stepIndex(current, step, count) : current;
 }
 
 // --- Element base ---
@@ -525,9 +519,10 @@ abstract class TypeaheadElement extends ZazzElement {
       return;
     }
 
-    if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+    const step = listStep(event.key);
+    if (step) {
       // Home/End belong to the text caret unless an item is already active
-      if ((event.key === "Home" || event.key === "End") && this.activeIndex.get() < 0) return;
+      if ((step === "first" || step === "last") && this.activeIndex.get() < 0) return;
       event.preventDefault();
       if (this.managesPanel && !this.open.get()) this.open.set(true);
       const count = this.#rank(this.query.get()).visible.length;

@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * @fileoverview Tests for the vendored cmdk scoring function (`base/command-score.ts`).
+ * @fileoverview Tests for the vendored cmdk scoring function (`behaviors/command-score.ts`).
  */
 
 import { describe, expect, it } from "vite-plus/test";

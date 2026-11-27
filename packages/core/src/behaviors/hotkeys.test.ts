@@ -2,7 +2,7 @@
 "use strict";
 
 /**
- * @fileoverview Tests for hotkey parsing and matching (`base/hotkeys.ts`).
+ * @fileoverview Tests for hotkey parsing and matching (`behaviors/hotkeys.ts`).
  */
 
 import { describe, expect, it } from "vite-plus/test";
