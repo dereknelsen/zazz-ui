@@ -55,7 +55,6 @@ import {
   backgroundToken,
   createPalette,
   foregroundFor,
-  invertPalette,
   normalizeHex,
 } from "../lib/palette.ts";
 import { PRESET_PARAM as PARAM, decodePreset, encodePreset } from "../lib/preset.ts";
@@ -95,17 +94,14 @@ type PaletteName = (typeof PALETTES)[number];
 
 /**
  * The 50–950 scale a palette input writes, fitted to the role the kit gives
- * it. The neutral's pale stops fade toward white. The secondary is the
- * primary inverted: its scale runs reversed (50 darkest), as the kit's does,
- * so the kit's own role (the 900 with 50 text in light mode, the 50 with white
- * text in dark) makes it a soft surface or a deep one. Its pale stops fade like
- * the neutral's, so in light mode it reads as a tinted gray, where the muted
- * button used to sit. The primary and the tertiary accent keep the input's chroma.
+ * it. The neutral's pale stops fade toward white, and so do the secondary's,
+ * so in light mode it reads as a tinted gray. The kit's own secondary role
+ * (the 100 with 950 text in light mode, the 800 with white text in dark) makes
+ * it the primary's opposite: a soft surface or a deep one. The primary and the
+ * tertiary accent keep the input's chroma.
  */
 const generate = (name: PaletteName, hex: string) =>
-  name === "secondary"
-    ? invertPalette(createPalette(hex, { neutral: true }))
-    : createPalette(hex, { neutral: name === "neutral" });
+  createPalette(hex, { neutral: name === "neutral" || name === "secondary" });
 
 /** Number controls: the token each writes and how its value is spelled (`format` wins over `unit`). */
 const NUMBERS: Record<string, { token: string; unit: string; format?: (n: number) => string }> = {
@@ -451,7 +447,7 @@ class ThemeBuilder extends ZazzElement {
           // The primary and the tertiary accent take the input as their role
           // color in both schemes (the kit's primary flips to its 50 in dark
           // mode; a picked brand color shouldn't). The secondary keeps the
-          // kit's role, which reads its reversed scale (see `generate`).
+          // kit's role, which reads a light and a dark stop of the scale (see `generate`).
           if (name === "primary" || name === "tertiary") {
             lines.push(`--color-${name}: var(--color-${name}-${stop})`);
             lines.push(`--color-${name}-foreground: ${foregroundFor(palette, name)}`);

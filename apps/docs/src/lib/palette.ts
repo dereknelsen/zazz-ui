@@ -191,24 +191,6 @@ export function createPalette(hex: string, { neutral = false } = {}): Palette {
   return { stop, colors, swatches };
 }
 
-/**
- * The palette with its stops reversed, so its 50 is the darkest: the way the
- * kit's secondary scale runs. The kit's `--color-secondary` role reads the 900
- * in light mode and the 50 in dark, so an inverted palette is the primary's
- * opposite (a soft surface in light mode, a deep one in dark) with no role of
- * its own to write.
- */
-export function invertPalette(palette: Palette): Palette {
-  const mirror = (stop: Stop): Stop => STOPS[STOPS.length - 1 - STOPS.indexOf(stop)];
-  const colors = {} as Record<Stop, Oklch>;
-  const swatches = {} as Record<Stop, string>;
-  for (const s of STOPS) {
-    colors[s] = palette.colors[mirror(s)];
-    swatches[s] = palette.swatches[mirror(s)];
-  }
-  return { stop: mirror(palette.stop), colors, swatches };
-}
-
 function luminance(color: Oklch): number {
   const [r, g, b] = oklchToLinearRgb(color).map((v) => Math.min(1, Math.max(0, v)));
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;

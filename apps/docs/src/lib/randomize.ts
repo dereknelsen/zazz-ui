@@ -105,9 +105,9 @@ const MIN_HUED_C = 0.04;
 
 /**
  * Theme colors from Tailwind's default palettes, fitted to the kit's roles.
- * The primary comes from any palette. The secondary is the primary inverted
- * (the builder writes its palette reversed), so it is another stop of the
- * primary's palette. The tertiary is the accent: always a hue, at one of its
+ * The primary comes from any palette. The secondary is another stop of the
+ * primary's palette; the kit's role turns it into the primary's opposite (a
+ * light stop in light mode, a dark one in dark). The tertiary is the accent: always a hue, at one of its
  * saturated stops, turned from the primary's by a color harmony picked at
  * random (`HARMONIES`), or any hue under a gray primary (`harmony` is then
  * null). The neutral is a gray palette's 500 (where the kit's neutral sits),

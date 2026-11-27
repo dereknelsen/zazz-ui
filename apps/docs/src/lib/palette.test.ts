@@ -7,7 +7,6 @@ import {
   createPalette,
   foregroundFor,
   inGamut,
-  invertPalette,
   nearestStop,
   normalizeHex,
   toHex,
@@ -115,26 +114,12 @@ describe("createPalette", () => {
   });
 });
 
-describe("invertPalette", () => {
-  it("reverses the stops, 50 darkest, the way the kit's secondary scale runs", () => {
-    const palette = createPalette("#2563eb");
-    const inverted = invertPalette(palette);
-    expect(inverted.swatches[50]).toBe(palette.swatches[950]);
-    expect(inverted.swatches[900]).toBe(palette.swatches[100]);
-    expect(inverted.colors[500]).toEqual(palette.colors[500]);
-    expect(inverted.colors[50].l).toBeLessThan(inverted.colors[950].l);
-  });
-
-  it("moves the input's stop with it", () => {
-    const palette = createPalette("#1d4ed8");
-    expect(palette.stop).toBe(600);
-    expect(invertPalette(palette).stop).toBe(400);
-  });
-
-  it("rebuilds the kit's secondary scale from its darkest gray", () => {
-    const inverted = invertPalette(createPalette(toHex({ l: 0.145, c: 0, h: 0 })));
-    expect(inverted.stop).toBe(50);
-    expect(inverted.colors[900].l).toBeCloseTo(0.967, 2);
+describe("the kit's secondary scale", () => {
+  it("rebuilds from its darkest gray, with the role's light stop at 100", () => {
+    const palette = createPalette(toHex({ l: 0.145, c: 0, h: 0 }), { neutral: true });
+    expect(palette.stop).toBe(950);
+    expect(palette.colors[100].l).toBeCloseTo(0.967, 2);
+    expect(palette.colors[50].l).toBeGreaterThan(palette.colors[950].l);
   });
 });
 

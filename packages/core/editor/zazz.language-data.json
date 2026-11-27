@@ -3306,7 +3306,7 @@
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-thumb-border-color": {
-      "value": "var(--color-faded)",
+      "value": "var(--ui-field-border-color)",
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-thumb-border-width": {
@@ -4458,40 +4458,40 @@
       "dark": "oklch(0.985 0 0)"
     },
     "--color-secondary": {
-      "value": "light-dark(var(--color-secondary-900), var(--color-secondary-200))",
+      "value": "light-dark(var(--color-secondary-100), var(--color-secondary-800))",
       "file": "base/_variables.css",
       "light": "oklch(0.967 0.001 0)",
       "dark": "oklch(0.269 0 0)"
     },
     "--color-secondary-100": {
-      "value": "oklch(0.205 0 0)",
+      "value": "oklch(0.967 0.001 0)",
       "file": "base/_variables.css",
-      "light": "oklch(0.205 0 0)",
-      "dark": "oklch(0.205 0 0)"
+      "light": "oklch(0.967 0.001 0)",
+      "dark": "oklch(0.967 0.001 0)"
     },
     "--color-secondary-200": {
-      "value": "oklch(0.269 0 0)",
+      "value": "oklch(0.92 0.004 0)",
       "file": "base/_variables.css",
-      "light": "oklch(0.269 0 0)",
-      "dark": "oklch(0.269 0 0)"
+      "light": "oklch(0.92 0.004 0)",
+      "dark": "oklch(0.92 0.004 0)"
     },
     "--color-secondary-300": {
-      "value": "oklch(0.371 0 0)",
+      "value": "oklch(0.87 0 0)",
       "file": "base/_variables.css",
-      "light": "oklch(0.371 0 0)",
-      "dark": "oklch(0.371 0 0)"
+      "light": "oklch(0.87 0 0)",
+      "dark": "oklch(0.87 0 0)"
     },
     "--color-secondary-400": {
-      "value": "oklch(0.439 0 0)",
+      "value": "oklch(0.708 0 0)",
       "file": "base/_variables.css",
-      "light": "oklch(0.439 0 0)",
-      "dark": "oklch(0.439 0 0)"
+      "light": "oklch(0.708 0 0)",
+      "dark": "oklch(0.708 0 0)"
     },
     "--color-secondary-50": {
-      "value": "oklch(0.145 0 0)",
+      "value": "oklch(0.985 0 0)",
       "file": "base/_variables.css",
-      "light": "oklch(0.145 0 0)",
-      "dark": "oklch(0.145 0 0)"
+      "light": "oklch(0.985 0 0)",
+      "dark": "oklch(0.985 0 0)"
     },
     "--color-secondary-500": {
       "value": "oklch(0.556 0 0)",
@@ -4500,37 +4500,37 @@
       "dark": "oklch(0.556 0 0)"
     },
     "--color-secondary-600": {
-      "value": "oklch(0.708 0 0)",
+      "value": "oklch(0.439 0 0)",
       "file": "base/_variables.css",
-      "light": "oklch(0.708 0 0)",
-      "dark": "oklch(0.708 0 0)"
+      "light": "oklch(0.439 0 0)",
+      "dark": "oklch(0.439 0 0)"
     },
     "--color-secondary-700": {
-      "value": "oklch(0.87 0 0)",
+      "value": "oklch(0.371 0 0)",
       "file": "base/_variables.css",
-      "light": "oklch(0.87 0 0)",
-      "dark": "oklch(0.87 0 0)"
+      "light": "oklch(0.371 0 0)",
+      "dark": "oklch(0.371 0 0)"
     },
     "--color-secondary-800": {
-      "value": "oklch(0.92 0.004 0)",
+      "value": "oklch(0.269 0 0)",
       "file": "base/_variables.css",
-      "light": "oklch(0.92 0.004 0)",
-      "dark": "oklch(0.92 0.004 0)"
+      "light": "oklch(0.269 0 0)",
+      "dark": "oklch(0.269 0 0)"
     },
     "--color-secondary-900": {
-      "value": "oklch(0.967 0.001 0)",
+      "value": "oklch(0.205 0 0)",
       "file": "base/_variables.css",
-      "light": "oklch(0.967 0.001 0)",
-      "dark": "oklch(0.967 0.001 0)"
+      "light": "oklch(0.205 0 0)",
+      "dark": "oklch(0.205 0 0)"
     },
     "--color-secondary-950": {
-      "value": "oklch(0.985 0 0)",
+      "value": "oklch(0.145 0 0)",
       "file": "base/_variables.css",
-      "light": "oklch(0.985 0 0)",
-      "dark": "oklch(0.985 0 0)"
+      "light": "oklch(0.145 0 0)",
+      "dark": "oklch(0.145 0 0)"
     },
     "--color-secondary-foreground": {
-      "value": "light-dark(var(--color-secondary-50), var(--color-white))",
+      "value": "light-dark(var(--color-secondary-950), var(--color-white))",
       "file": "base/_variables.css",
       "light": "oklch(0.145 0 0)",
       "dark": "oklch(1 0 0)"

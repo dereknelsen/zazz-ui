@@ -341,7 +341,8 @@
   /* The label wears its own box because text-overflow ignores a flex
      container's own text, and [data-ui~="badge"] is display: flex */
   :where(ui-combobox, [data-ui~="combobox"]) [data-combobox-slot~="tag-label"] {
-    overflow: hidden;
+    overflow-x: clip;
+    overflow-y: visible;
     text-overflow: ellipsis;
     white-space: nowrap;
   }

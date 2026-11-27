@@ -89,8 +89,8 @@ const generateIcon = `url("data:image/svg+xml,${encodeURIComponent(sparklesSvg.r
 const defaults = {
   // --color-primary is --color-primary-950 in light mode: oklch(0.145 0 0).
   primary: toHex({ l: 0.145, c: 0, h: 0 }),
-  // The secondary scale runs reversed: its 50 is the primary's 950, oklch(0.145 0 0),
-  // and a palette built from it is the kit's own (the role reads the 900 in light mode).
+  // --color-secondary-950: oklch(0.145 0 0). A palette built from it is the kit's own
+  // (the role reads its 100 in light mode and its 800 in dark).
   secondary: toHex({ l: 0.145, c: 0, h: 0 }),
   // --color-tertiary is --color-tertiary-500 in light mode: oklch(0.593 0.193 280.79).
   tertiary: toHex({ l: 0.593, c: 0.193, h: 280.79 }),
