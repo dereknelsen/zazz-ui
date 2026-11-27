@@ -23,6 +23,7 @@ const { size = 30, title = "Zazz", style } = Astro.props;
   aria-label={title}
   style={style as string}
 >
-  <path fill="currentColor" d="M30 12.4 12.4 30H0L30 0z"></path>
-  <path fill="currentColor" d="M30 21.2V30h-8.8v-8.8zM21.2 8.8H2.8V3.6h6.3V0h12.1z"></path>
+  <rect width="30" height="30" fill="none"></rect>
+  <path fill="currentColor" d="M30 12 12 30H0L21 9H2V4h5.5V0H21v9l9-9z"></path>
+  <path fill="currentColor" d="M30 30h-9v-9h9z"></path>
 </svg>
