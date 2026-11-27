@@ -268,7 +268,7 @@
     "identities": {
       "patterns": [
         {
-          "match": "(?<=[\"'\\s])(navigation-menu|password-group|drawer-indent|alert-dialog|autocomplete|button-group|toggle-group|field-group|input-group|mobile-menu|multiselect|radio-group|scroll-fade|accordion|kbd-group|separator|carousel|combobox|lightbox|progress|textarea|callout|command|toaster|tooltip|button|dialog|drawer|layout|select|toggle|badge|field|group|input|meter|prose|radio|table|card|link|menu|tabs|otp)(?=[\"'\\s])",
+          "match": "(?<=[\"'\\s])(navigation-menu|password-group|drawer-indent|alert-dialog|autocomplete|button-group|toggle-group|field-group|input-group|mobile-menu|multiselect|radio-group|scroll-fade|accordion|kbd-group|separator|carousel|combobox|lightbox|progress|textarea|callout|command|toaster|tooltip|avatar|button|dialog|drawer|layout|select|toggle|badge|field|group|input|meter|prose|radio|table|card|link|menu|tabs|otp)(?=[\"'\\s])",
           "captures": {
             "1": {
               "name": "support.class.zazz.identity"

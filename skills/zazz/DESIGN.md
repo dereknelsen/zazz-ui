@@ -429,7 +429,7 @@ that acts like a control is `data-ui="button" data-button-variant="link"`.
 
 ### Buttons
 
-Subtly rounded (`--radius-md`, ~10px). Height from `--ui-button-min-h` (= `--ui-field-h`). Variants (`data-button-variant`): **default** (no attribute — bordered, `--color-background`), **primary** (solid `--color-primary`), **secondary** / **tertiary** (solid brand roles), **muted** (`--color-muted` fill), **ghost** (transparent, hover reveals `--color-muted`), **outline** (transparent, bordered), **link** (inline text, primary on hover, no underline), and the status variants **info**, **success**, **warning**, **destructive** (the role as the surface, its `-foreground` as text). Sizes (`data-button-size`): `sm`, `icon`, `icon-sm`.
+Subtly rounded (`--radius-md`, ~10px). Height from `--ui-button-min-h` (= `--ui-field-h`). Variants (`data-button-variant`): **default** (no attribute — bordered, `--color-background`), **primary** (solid `--color-primary`), **secondary** / **tertiary** (solid brand roles), **muted** (`--color-muted` fill), **ghost** (transparent, hover reveals `--color-muted`), **outline** (transparent, bordered), **link** (inline text, primary on hover, no underline), and the status variants **info**, **success**, **warning**, **destructive** (the role as the surface, its `-foreground` as text). Sizes (`data-button-size`): `icon` only (no small size; an input group sizes the buttons inside it).
 
 ### Badges
 

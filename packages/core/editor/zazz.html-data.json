@@ -122,6 +122,9 @@
           "name": "autocomplete"
         },
         {
+          "name": "avatar"
+        },
+        {
           "name": "badge"
         },
         {
@@ -387,6 +390,18 @@
       "values": []
     },
     {
+      "name": "data-avatar-slot",
+      "description": "Slot: a part inside the primitive.",
+      "values": [
+        {
+          "name": "fallback"
+        },
+        {
+          "name": "image"
+        }
+      ]
+    },
+    {
       "name": "data-badge-size",
       "description": "Preset or config of the badge primitive.",
       "values": [
@@ -403,6 +418,9 @@
           "name": "destructive"
         },
         {
+          "name": "faded"
+        },
+        {
           "name": "ghost"
         },
         {
@@ -413,6 +431,9 @@
         },
         {
           "name": "muted"
+        },
+        {
+          "name": "neutral"
         },
         {
           "name": "outline"
@@ -449,12 +470,6 @@
       "values": [
         {
           "name": "icon"
-        },
-        {
-          "name": "icon-sm"
-        },
-        {
-          "name": "sm"
         }
       ]
     },
@@ -464,6 +479,9 @@
       "values": [
         {
           "name": "destructive"
+        },
+        {
+          "name": "faded"
         },
         {
           "name": "ghost"
@@ -476,6 +494,9 @@
         },
         {
           "name": "muted"
+        },
+        {
+          "name": "neutral"
         },
         {
           "name": "outline"
@@ -1858,12 +1879,6 @@
       "values": [
         {
           "name": "icon"
-        },
-        {
-          "name": "icon-sm"
-        },
-        {
-          "name": "sm"
         }
       ]
     },

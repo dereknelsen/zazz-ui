@@ -117,8 +117,9 @@ vendor them; on a CLI or CDN project, download both from
 In development, load the debug primitive (`npx zazz-ui add debug`, or
 `https://zazz.sh/api/primitives/debug/`) and put
 `<ui-debug data-debug-domains="localhost"></ui-debug>` at the end of `<body>`. It logs console
-warnings for unknown utilities, tiers without a base, flattened states, misplaced presets, and
-unnamed form fields, and removes itself on any other hostname.
+warnings for unknown utilities, tiers without a base, flattened states, misplaced presets,
+unnamed form fields, retired `data-ui` tokens, and `data-font` values that aren't exactly one
+kit role, and removes itself on any other hostname.
 
 ## How Zazz thinks
 
@@ -150,12 +151,14 @@ Behind the channels:
   where `ui` nests `components, plugins, utilities, sr`. Utilities sit in `ui.utilities` at zero
   specificity and beat component rules. A tier written without its base lands in `defaults`, so
   a primitive's own value beats it unless the primitive reads that utility. Typography roles
-  sit in `reset`. Put your own overrides in `@layer overrides` and don't fight the cascade with
-  selector tricks.
+  (`data-font`) sit in `ui.components` and load after every other primitive, so a role beats
+  a primitive's own font. Put your own overrides in `@layer overrides` and don't fight the
+  cascade with selector tricks.
 - **Hooks theme primitives.** Every primitive reads `--ui-<identity>-<utility>` hooks, which
-  inherit and take the same modifiers. Prefer preset, then a hook on a subtree, then a utility
-  on the one element. A utility on a primitive flattens its states (hover, active, and the
-  rest all take the one value); a hook keeps them.
+  inherit and take the same modifiers. A utility on a primitive flattens its states (hover,
+  active, and the rest all take the one value) and cuts it off from the theme; a hook keeps
+  both. So never write a utility for a property the primitive owns: see "Don't restyle a
+  primitive with utilities" below.
 - **Kit JS writes state** (`data-<identity>-state`, `data-theme` on `<html>`). Read it
   in selectors; never author it.
 - **Modern APIs do the work.** Popover, native `<dialog>`, Invoker Commands, View Transitions,
@@ -180,17 +183,14 @@ Start at the most semantic layer and get specific only when nothing semantic fit
   heading changes its size, not its level (`<h2 data-font="h5">`), and a role beats the font of
   the primitive it sits on (`data-ui="badge" data-font="sm"`). An inline link outside prose is
   `data-ui="link"`.
-- **Size** is the default. Use `data-button-size="sm"` / `"icon-sm"` and the toggle equivalents
-  sparingly and on purpose, in three places only: a table cell, inside an input group, and
-  chrome that should recede behind the content (a floating editor toolbar, a panel header).
-  Navigation links, header and footer actions, dialog and form buttons, card actions, and
-  anything a visitor reads as a primary control stay regular (`icon` for an icon-only one). If
-  the smaller size is for "fitting in", fix the layout instead.
-- **One size per row.** When one control in a toolbar, row, or group is small, every control
-  in it is: buttons and toggles take `sm` / `icon-sm`, and an input, select, or combobox takes
-  `style="--h: 6; --radius: 1.5"` (fields have no size preset). After writing markup, check
-  every row that has a small control and fix any sibling left at regular size. The table and a
-  worked toolbar are in `PATTERNS.md` under "Control sizes".
+- **Size** is the default. Buttons and toggles have two sizes, the default and `icon`
+  (icon-only, square), and fields have one. There is no small size, so never shrink a control
+  with utilities or hooks to make it fit. A button inside an input group or a password group
+  takes no size: the group sizes it to sit inside the field (an icon-only one keeps `icon`).
+  A row that mixes fields with buttons or toggles keeps them all at the default size. If the
+  user wants another size, offer to create a size variant for buttons and fields together, and
+  ask whether it belongs in the global primitives or in the theme overrides (`PATTERNS.md`,
+  "Control sizes").
 - **Reuse over new CSS.** A preset, hook, or utility almost always exists; reaching for a
   `<style>` block or a class means you skipped one, so check `references/tokens.md` first. When
   the kit truly has no word for it, write a BEM-style class (`.block__element--modifier`) in your
@@ -257,7 +257,37 @@ one more thing `zazz-ui update` has to merge.
    stylesheet (`.sidebar { --ui-button-radius: var(--radius-full) }`). The shared `--ui-field-*`
    family is the widest lever: inputs, selects, and textareas read it directly, and button,
    toggle, tabs, checkbox, radio, and badge metrics default to it.
-3. **Instance**: a preset, an inline hook (keeps states), or a utility (flattens states).
+3. **Instance**: a preset, or the hook inline on the element (`style="--ui-button-px: 2"`).
+   Never a bare utility for something the primitive owns.
+
+### Don't restyle a primitive with utilities
+
+A primitive owns a property when it declares a `--ui-<identity>-<utility>` hook for it, or
+when a preset (variant, size, orientation…) sets it. Its `<name>.json` (`hooks`,
+`attributes`) and the Hooks and Attributes tables at `https://zazz.sh/api/primitives/{name}/`
+list them. Never put the bare utility for an owned property on the primitive: no `--px`,
+`--py`, `--h`, `--radius`, `--bg`, `--text`, or `--font-size` on a `data-ui="button"`. It
+breaks the system. That one instance stops following the theme, its hover and active states
+flatten, and nobody can find the override later.
+
+Utilities the primitive doesn't hook are fine, because they place it rather than restyle it:
+margins, `--w`, `--max-w`, `--flex`, `--self`, grid placement, `--order`, and breakpoint
+`--display` to show or hide it.
+
+When an owned property has to change:
+
+1. Use a preset if one already does it.
+2. Don't change it unless the user asked. When they ask, **ask them first** whether it's for
+   this one instance or for every instance of the primitive. Don't pick for them.
+3. For one instance (or one region), set the hook inline on the element (or the region's
+   wrapper): `style="--ui-button-px: 2"`. Hooks take the same values as utilities. Size is
+   the exception: a control that needs another size gets a size variant, never a hook on one
+   control (`PATTERNS.md`, "Control sizes").
+4. For every instance, set the hook on `:root` in the theme stylesheet, or change the token
+   it defaults to.
+
+After writing markup, check every element with a `data-ui` identity: each utility in its
+`style` should either be one the primitive doesn't hook or a `--ui-*` hook.
 
 ## Building with components
 
@@ -276,8 +306,9 @@ while typing). Give every `<input>`, `<select>`, and `<textarea>` a `name`, sear
 demos included. A field that must not submit gets an `id` instead. Chrome warns about a field
 that has neither.
 Cards are `<ui-card>` (or `data-ui="card"` on an `<article>` or `<form>`), with
-`data-card-slot="header"`, `"body"`, and `"footer"` on their parts; avatars and
-breadcrumbs are utility compositions (copy the fragments). Tables are `data-ui="table"` on a semantic `<table>`. Rich text goes in
+`data-card-slot="header"`, `"body"`, and `"footer"` on their parts. An avatar is
+`data-ui="avatar"` with `data-avatar-slot="image"` over `data-avatar-slot="fallback"`;
+breadcrumbs are a utility composition (copy the fragment). Tables are `data-ui="table"` on a semantic `<table>`. Rich text goes in
 `data-ui="prose"`.
 
 ## Modern APIs and JS behaviors
@@ -305,10 +336,18 @@ the sentence-case house rule, and composition patterns live in `PATTERNS.md`.
   (the eyebrow's caps come from the `eyebrow` role).
 - **Do** use `var(--token)` in utilities. **Don't** hardcode colors, spacing, radii, or type, or
   invent tokens; every `var(--…)` must exist in the kit.
-- **Do** leave controls at their default size; use `sm` and `icon-sm` only in table cells,
-  input groups, and receding chrome. **Don't** shrink nav links, header actions, or dialog,
-  form, and card buttons, and **don't** mix sizes in one row: shrink every control in it or
-  none.
+- **Do** restyle a primitive with its preset or its `--ui-<identity>-*` hook, and ask whether
+  the change is for one instance or for all of them. **Don't** put a utility the primitive
+  hooks on it (`--px`, `--radius`, or `--bg` on a button); placement utilities such as margins
+  and `--w` are fine.
+- **Do** copy the grouping from the select, menu, combobox, or command fragment when options
+  fall into groups: a muted eyebrow label lined up with the items, and a separator between
+  groups (`PATTERNS.md`, "Grouped options in selects and menus"). **Don't** ship a bare
+  `<optgroup label>` or a bold list item as the heading, or pad individual items to fix the
+  spacing.
+- **Do** leave controls at their default size (`icon` for an icon-only one), and let an input
+  group size the buttons inside it. **Don't** write `data-button-size="sm"` or `"icon-sm"`
+  (they no longer exist) or shrink a control with utilities; offer a new size variant instead.
 - **Do** give every icon-only button, toggle, link, or badge a `<ui-tooltip>` that says in a
   few words what it does (`PATTERNS.md`, "Links and buttons"). **Don't** rely on the icon
   alone, and don't let the tooltip stand in for the `aria-label`, because it only describes
@@ -334,6 +373,7 @@ was built from. Every page has a Markdown version: append `index.md` to its path
 | The markup rules                                        | `AUTHORING.md`: `node_modules/@zazz-ui/core/AUTHORING.md` or `https://cdn.jsdelivr.net/npm/@zazz-ui/core/AUTHORING.md`                       |
 | Everything, for an LLM                                  | `https://zazz.sh/llms.txt` (index) and `https://zazz.sh/llms-full.txt` (all pages)                                                           |
 | A primitive's markup, presets, slots, hooks             | `https://zazz.sh/api/primitives/{name}/` (names in `references/components.md`)                                                               |
+| A primitive's exact hooks, attributes, slots, as JSON   | `primitives/{name}/{name}.json`: under `zazz/` in a CLI project, `node_modules/@zazz-ui/core/src/` with npm                                  |
 | Tokens, typography, layout, breakpoints, layers         | `https://zazz.sh/api/foundations/{tokens,typography,layout,breakpoints,layers,globals}/`                                                     |
 | Utilities by family                                     | `https://zazz.sh/api/utilities/` and `/api/utilities/{spacing,sizing,typography,backgrounds,…}/`                                             |
 | Modifiers (states, breakpoints, group, stuck, starting) | `https://zazz.sh/api/modifiers/{states,responsive,group,stuck,starting}/`                                                                    |

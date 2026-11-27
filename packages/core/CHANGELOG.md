@@ -2,9 +2,25 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 
 ## Unreleased
 
-### base
+### button
 
-- **BREAKING** The `*-multiplier` tokens are now `*-coefficient`: `--radius-multiplier` is `--radius-coefficient`, `--leading-heading-multiplier` is `--leading-heading-coefficient`, `--leading-body-multiplier` is `--leading-body-coefficient`, and `--paragraph-spacing-multiplier` is `--paragraph-spacing-coefficient`. The defaults and what they scale are unchanged. **Migration:** rename each token where your theme sets it. An old name still parses but does nothing.
+- **BREAKING** The small sizes are gone: `data-button-size="sm"` and `"icon-sm"` no longer exist, so a button keeps the default size or `icon`. Remove `data-button-size="sm"` and change `"icon-sm"` to `"icon"`; `npx zazz-ui codemod small-sizes` does it for a whole project, or, if you'd rather keep the small sizes, adds their rules back (`--restore`). A button inside an input group or a password group needs no size: the group sizes it (below). A button that was `sm` in a table, toolbar, or row now takes the default height, so check those layouts. Nothing at runtime flags a leftover `"sm"`: the attribute is ignored and the button renders at the default size. For another size, add a size preset (a new `data-button-size` value); the zazz skill's "Control sizes" covers where it can live.
+
+### toggle
+
+- **BREAKING** `data-toggle-size="sm"` and `"icon-sm"` are gone, as on the button. Remove `"sm"` and change `"icon-sm"` to `"icon"`. A toggle in an input-group addon is sized by the group.
+
+### button-group
+
+- Removed the unused `--_button-group-radius` private (only the button's `sm` size wrote it). The group's outer corners still follow `--ui-button-group-radius`.
+
+### input-group
+
+- A button or toggle in an addon takes its size from the shell. It sits `--ui-field-inset-p` inside the border, so it no longer makes the group taller, and it needs no size preset. An icon-only one keeps `data-button-size="icon"` (or `data-toggle-size="icon"`) and comes out square. On a touch screen it keeps its box and an invisible hit area takes the touch floor. The group sets the `--ui-button-*` and `--ui-toggle-*` metric hooks on the control itself, so an inline hook or utility on it still wins, and a popover or dialog opened from the addon (a menu's items) keeps its own sizes.
+
+### password-group
+
+- The toggle takes its size from the shell, as in the input group. Change `data-button-size="icon-sm"` on it to `"icon"`.
 
 ### font
 
@@ -21,16 +37,18 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 - **BREAKING** Prose has its own stylesheet (`primitives/prose/prose.css`), where its rules were in `base/_typography.css`. A page that loads the kit per primitive adds `prose`, and `npx zazz-ui add prose` vendors it (with `font`, which it needs).
 - A paragraph with a role takes the role's spacing (`<p data-font="h3">` is spaced as a heading). It took a paragraph's spacing before.
 - A `data-font` role on a figure caption, a blockquote's `cite`, or an `hgroup` replaces the font prose gives it. Prose kept its own font before.
-- `data-prose-size="sm"` reads its leading from `--leading-sm`, so `--leading-body-multiplier` reaches it. The default is still 1.5.
+- `data-prose-size="sm"` reads its leading from `--leading-sm`, so `--leading-body-coefficient` reaches it. The default is still 1.5.
 
 ### tabs
 
 - In a right-to-left page the horizontal arrow keys follow the writing direction: ArrowLeft moves to the next tab and ArrowRight to the previous one. They were not mirrored, so the keys moved against the visual order.
 - The keys the script handles (the arrows along the list, Home, End) skip a tab marked `aria-disabled="true"`. The browser's own radio keys and a click still reach it, so use `disabled` to take a tab out.
 - A vendored tabs script needs `behaviors/list-navigation.js`. `npx zazz-ui update` adds it.
+- The indicator covers the checked label, one track padding in from the border: `--ui-tabs-indicator-inset` defaults to `0px`, where it was half the track padding. Its corners are concentric with the track's: `--ui-tabs-indicator-radius` is the track radius less the track border, the track padding, and the inset. It used to be the track radius less the padding alone, so its corners were rounder than the track's. The label has its own hook, `--ui-tabs-label-radius` (the track radius less the border and the padding), where it used to share the indicator's. It rounds the focus ring, and the checked tab where anchor positioning is missing.
 
 ### lightbox
 
+- The thumbnail strip's previous and next buttons are `data-button-size="icon"`; they were `icon-sm`, so they are larger.
 - The counter centers with logical insets and auto margins, where it used `left: 50%` and a translate. It sits in the same place, and a long count may now use the full width of the stage before it wraps, where it was held to half.
 
 ### menu
@@ -41,6 +59,7 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 ### drawer
 
 - **BREAKING** `data-drawer-snap-sequential` is now `data-drawer-snap-behavior="sequential"`. Replace the attribute; any other value, or none, keeps the default, where a very fast flick goes all the way.
+- On a touch screen, opening a drawer no longer focuses a field. A dialog focuses its first control when it opens; when that was a text field, iOS scrolled the page up to show it while the drawer was still below the screen, so the page jumped before the drawer rose. A drawer that holds a text field, a select, or a date, time, or color input now takes focus itself, so the keyboard stays down until a field is tapped. Put `autofocus` on a field to focus it on open anyway. With a mouse, and in a drawer without fields, the first control is focused as before.
 
 ### command
 
@@ -62,17 +81,42 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 
 ### toaster
 
+- A toast's action button is the default size and its close button is `icon`; they were `sm` and `icon-sm`, so a toast is a little taller.
 - The drag opt-out (`data-draggable="false"`, formerly `data-ui-no-drag`; see base) on `<ui-toaster>` keeps its toasts from being swiped away. It did before, and is now documented and tested.
 
 ### debug
 
-- New rule, `font-role`: a `data-font` value that is not exactly one role the kit styles. It reports an unknown role (`data-font="huge"`), two roles (`data-font="sm lg"`), an old token spelling (`data-font="text-sm"`), and a page that sets `data-font` without `primitives/font/font.css` loaded. `<ui-debug>` reads the roles from the page's stylesheets, and skips the rule when it cannot read one of them (a cross-origin sheet without `crossorigin`).
+- New rule, `font-role`: a `data-font` value that is not exactly one role the kit styles. It reports an unknown role (`data-font="huge"`), two roles (`data-font="sm lg"`), an old token spelling (`data-font="text-sm"`), and a page that sets `data-font` without `primitives/font/font.css` loaded. `<ui-debug>` reads the roles from the page's stylesheets, and skips the rule when it finds no role and could not read every sheet (`font.css` may be the one it could not read, loaded cross-origin without `crossorigin`).
 - `<ui-debug>` follows `@import` when it reads the page's stylesheets, so a page that loads `index.css` unbundled gets its identities, hooks, and roles. It found none there before, which silenced `attribute-outside-identity` and `flattens-state`.
 - `auditNode` in `audit-core.js` takes the roles in its context (`roles`), and `audit()` in `debug.js` takes them as an option. `roles` is `null` when the roles are unknown. A finding can carry `attributes`, the attribute values that resolve it; the first `retired-token` finding for an element's `text-*` tokens does, when the rewrite is safe.
 - The persistence checks read the renamed navigation attributes (see base). `auditPersistence` in `audit-core.js` takes a mode, `"element"` or `"scroll"`, in place of the attribute name, and its owner callback returns the carrying element's id.
 
+### avatar
+
+- Avatar is a primitive with its own stylesheet (`primitives/avatar/avatar.css`), where it was a utility composition. Put `data-ui="avatar"` on the root, `data-avatar-slot="image"` on the `<img>`, and `data-avatar-slot="fallback"` on the initials. The image covers the fallback, so the initials show when the markup has no image. A page that loads the kit per primitive adds it; `npx zazz-ui add avatar` vendors it. The old utility composition still renders, so existing markup keeps working until you move it over.
+- Hooks: `--ui-avatar-size` (a scale number or a length), `--ui-avatar-radius`, `--ui-avatar-corner-shape`, `--ui-avatar-bg`, `--ui-avatar-border-width`, `--ui-avatar-border-style`, `--ui-avatar-border-color`, `--ui-avatar-font-size`, `--ui-avatar-font-weight`, `--ui-avatar-fallback-bg`, and `--ui-avatar-fallback-text`. The `--size`, `--radius`, `--bg`, border, and font utilities work on the root.
+
+### slider
+
+- The track and thumb follow the field shape (`--ui-field-corner-shape`, which defaults to `--radius-corner-shape`). They were round before.
+- A concave corner shape can no longer hide the thumb. `notch` or `superellipse(-2)` at a full radius cut a circle down to nothing. CSS can't read the number in `superellipse()`, so the track and thumb keep only the convex shapes they can name (`round`, `squircle`, `square`, `superellipse(1)`, `superellipse(1.3)`, `superellipse(2)`, `superellipse(infinity)`) and draw anything else round, including a convex value like `superellipse(2.5)` or a theme builder value between the listed steps. Matching is exact, so `superellipse(1.30)` draws round too. Only Chromium and Safari draw `corner-shape`, and both support the `if()` the check uses. A `--corner-shape` utility on the input now sets any shape on the track; it didn't reach the track before.
+
+### switch
+
+- The track and thumb follow the field shape: `--ui-switch-corner-shape` defaults to `--ui-field-corner-shape` instead of `round`. Set it back to `round` for the old look.
+- The track and thumb keep a convex shape from the slider's list, so a concave theme shape can't hide the thumb.
+
+### progress
+
+- The bar keeps a convex shape from the slider's list and draws any other shape round. The fill follows the bar. A `--corner-shape` utility still takes any shape.
+
+### meter
+
+- The bar keeps a convex shape from the slider's list and draws any other shape round. The fill follows the bar. A `--corner-shape` utility still takes any shape.
+
 ### base
 
+- **BREAKING** The `*-multiplier` tokens are now `*-coefficient`: `--radius-multiplier` is `--radius-coefficient`, `--leading-heading-multiplier` is `--leading-heading-coefficient`, `--leading-body-multiplier` is `--leading-body-coefficient`, and `--paragraph-spacing-multiplier` is `--paragraph-spacing-coefficient`. The defaults and what they scale are unchanged. **Migration:** rename each token where your theme sets it. An old name still parses but does nothing.
 - **BREAKING** `base/_typography.css` holds only the native `h1`–`h6` baselines. The fluid type scale (`--fluid`, `--typeset-base`, `--typeset-scale`, and every `--font-size-*`) is computed in `base/_variables.css`, so `_variables.css` no longer needs `_typography.css` loaded for `--spacing`. The values are unchanged.
 - **BREAKING** The navigation attributes drop the `data-ui-` prefix: `data-ui-navigation="swap"` and `"off"` are now `data-navigation="swap"` and `"off"`, and `data-ui-persist="<id>"` is now `data-navigation-persist="<id>"`. Rename them on every page; a page left on the old names navigates with full loads.
 - **BREAKING** `data-ui-persist-scroll="<id>"` is now `data-navigation-persist="<id>"` with `data-navigation-persist-mode="scroll"` on the same element. An element in scroll mode still comes from the new page and keeps only its scroll offset.

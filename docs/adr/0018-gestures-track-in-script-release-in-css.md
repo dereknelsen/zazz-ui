@@ -10,7 +10,7 @@ Status: accepted (2026-11-15).
 
 ## Decision
 
-- **One shared module, `base/gesture.ts`,** owns pointer tracking (`trackDrag`: axis lock, slop, pointer capture, velocity over the last 100ms, click suppression, the first-`touchmove` claim) and the release math (`shouldDismiss`, `rubberBand`, `flickDuration`). It ships with its consumers through the manifest's `base` lists, not in the core runtime.
+- **One shared module, `behaviors/gesture.ts`,** owns pointer tracking (`trackDrag`: axis lock, slop, pointer capture, velocity over the last 100ms, click suppression, the first-`touchmove` claim) and the release math (`shouldDismiss`, `rubberBand`, `flickDuration`). It ships with its consumers through the manifest's `base` lists, not in the core runtime.
 - **While the pointer is down, the consumer writes the dragged element's inline `translate`,** with transitions off through a script-written state token (`swiping`, `dragging`). `translate` composes with the element's existing `transform`, so the toast stack math and the dialog's open/close transform stay as they are.
 - **On release the script only changes state;** the element's own CSS transitions finish the motion. `translate` is in those transition lists. A flick may shorten the transition (`flickDuration`, used by the toast), never past the element's own duration, so reduced motion needs no branch in script. The drawer does not shorten: its curve is already steep at the start.
 - **A dismissal that ends in the element being removed slides out first.** The drawer transitions its `translate` off the edge while the dialog is still open, and closes at `transitionend`. WebKit drops a closed dialog at once, with no exit transition, so a close-then-animate order showed nothing on iOS.

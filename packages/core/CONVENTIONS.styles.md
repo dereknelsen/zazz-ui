@@ -425,9 +425,9 @@ rule:
     --_button-bg--hover: oklch(from var(--color-primary) l c h / 0.9);
   }
 
-  :where([data-ui~="button"][data-button-size="sm"]) {
-    --_button-min-h: calc(var(--spacing) * 6);
-    --_button-radius: var(--radius-sm);
+  :where([data-ui~="button"][data-button-variant="ghost"]) {
+    --_button-bg: transparent;
+    --_button-bg--hover: var(--color-muted);
   }
 }
 ```

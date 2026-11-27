@@ -7,7 +7,7 @@ Status: accepted (2026-11-16).
 - The kit aims to ship with no runtime dependencies beyond polyfills. The carousel was the largest exception: Embla v9 (a release candidate) and three plugins, pinned in the import map with SRI, plus about 1,000 lines of kit glue in `base/embla.ts`.
 - Embla moves the track with a transform written from script on every frame, for touch as well as mouse. The kit also flagged `:root` during a drag for a page-wide cursor, which restyled every element at each drag start and end.
 - The CSS carousel features (`::scroll-button()`, `::scroll-marker`, `:target-current`) are Chromium-only, outside the browser support policy. Their only polyfill (flackr/carousel) is an explainer prototype: unpublished, reads inline `<style>` only, skips `@layer`, and patches `Element.prototype`.
-- Scroll snap is Baseline since 2020 and `scrollend` since December 2025. `base/gesture.ts` (ADR-0018) already tracks drags.
+- Scroll snap is Baseline since 2020 and `scrollend` since December 2025. `behaviors/gesture.ts` (ADR-0018) already tracks drags.
 
 ## Decision
 

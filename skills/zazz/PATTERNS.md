@@ -348,82 +348,128 @@ Long-form copy goes in `data-ui="prose"` with a reading measure:
 
 ## Control sizes
 
-The regular size is the answer nearly every time. The small size is a deliberate choice that
-makes a control recede, and it fits in three places only:
+Buttons and toggles have two sizes: the default and `icon`, for an icon-only control (square).
+Inputs, selects, comboboxes, and textareas have one. There is no small size: `sm` and `icon-sm`
+were removed from the kit, so don't write them and don't rebuild them with utilities or hooks.
 
-- **Table cells**: a per-row action or status toggle, so the row reads as data, not buttons.
-- **Input groups**: an addon button inside the field (copy, clear, show password). The field
-  stays regular; the button is small because it sits inside it.
-- **Receding chrome**: a control set that serves the content and should stay out of its way,
-  such as a floating text-editor toolbar or a panel header's actions.
-
-Header and footer actions, navigation links, dialog footers, form submits, card actions, and
-hero calls to action stay regular; an icon-only one of those is `data-button-size="icon"`. A
-small size used to squeeze something into a row is a layout problem, so fix the layout.
-
-### One size per row
-
-Mixed sizes in one row read as a mistake. When one control in a toolbar, row, or group is
-small, all of them are. Only buttons and toggles have a size preset, so fields match by height:
-
-| Control                     | Regular                 | Small (24px)                          |
-| --------------------------- | ----------------------- | ------------------------------------- |
-| Button                      | (none) · `icon`         | `data-button-size="sm"` · `"icon-sm"` |
-| Toggle                      | (none) · `icon`         | `data-toggle-size="sm"` · `"icon-sm"` |
-| Toggle group / button group | the size on every child | `sm` / `icon-sm` on every child       |
-| Input, select, combobox     | (none, `--ui-field-h`)  | `style="--h: 6; --radius: 1.5"`       |
-
-A floating editor toolbar with every control small (font select, size input, a standalone
-toggle, a toggle group, a close button):
+- **A row of controls** (a toolbar, a filter bar, a form row, a table cell) stays at the
+  default size. Fields never shrink, so a button or toggle beside a field doesn't either. If a
+  row doesn't fit, fix the layout: wrap it, move actions into a menu, or drop a control.
+- **Inside an input group or a password group**, a button or toggle takes no size. The group
+  sizes it to sit `--ui-field-inset-p` inside the field's border, so it never makes the field
+  taller. An icon-only one keeps `"icon"` and comes out square. A menu or popover opened from
+  the addon keeps its own sizes.
 
 ```html
-<div
-  role="toolbar"
-  aria-label="Text formatting"
-  style="--display: flex; --items: center; --gap: 1; --p: 1; --bg: var(--color-popover); --border: 1; --radius: 2.5; --elevation: 4"
->
-  <select data-ui="select" name="font" aria-label="Font" style="--h: 6; --radius: 1.5; --w: auto">
-    <button><selectedcontent></selectedcontent></button>
-    <option value="sans" selected>Sans</option>
-    <option value="serif">Serif</option>
-  </select>
-  <input
-    data-ui="input"
-    type="number"
-    name="font-size"
-    aria-label="Font size"
-    value="16"
-    style="--h: 6; --radius: 1.5; --w: 14"
-  />
-  <label data-ui="toggle" data-toggle-size="icon-sm">
-    <input type="checkbox" name="bold" aria-label="Bold" />
-    <span aria-hidden="true" style="--font-weight: strong">B</span>
-  </label>
-  <ui-toggle-group role="group" aria-label="Alignment">
-    <label data-ui="toggle" data-toggle-size="icon-sm">
-      <input type="radio" name="align" value="left" aria-label="Align left" checked />
-      <span aria-hidden="true">L</span>
-    </label>
-    <label data-ui="toggle" data-toggle-size="icon-sm">
-      <input type="radio" name="align" value="center" aria-label="Align center" />
-      <span aria-hidden="true">C</span>
-    </label>
-  </ui-toggle-group>
-  <button
-    data-ui="button"
-    data-button-variant="ghost"
-    data-button-size="icon-sm"
-    type="button"
-    aria-label="Close"
-  >
-    ×
-  </button>
-</div>
+<label data-ui="input-group">
+  <input data-ui="input" type="search" name="q" aria-label="Search" />
+  <span data-input-group-slot="addon" data-input-group-align="inline-end">
+    <button
+      data-ui="button"
+      data-button-variant="ghost"
+      data-button-size="icon"
+      type="submit"
+      aria-label="Search"
+    >
+      <svg viewBox="0 0 256 256" aria-hidden="true">…</svg>
+    </button>
+  </span>
+</label>
 ```
 
-**Check before you finish.** For every toolbar, row, and group, list its controls. If any
-one has `sm`, `icon-sm`, or `--h: 6`, every sibling needs its small form from the table. If the
-row doesn't meet the three cases above, remove the small size from all of them instead.
+### When the user wants another size
+
+Don't resize one control on the spot, with a utility or a hook. A size belongs to every control
+that uses it, so offer to create a size variant: a new `data-button-size` (and
+`data-toggle-size`) value, plus a matching field size where fields sit beside those controls.
+This is the one case where you add a value to a kit attribute, and only after the user has
+named the variant and picked where it lives. Ask which they want, because it depends on the
+setup:
+
+- **Global primitives**: a preset in the kit's stylesheets (`button.css`, `toggle.css`, and
+  `fields.css` for a field size), written as `CONVENTIONS.styles.md` describes: the preset
+  sets the primitive's privates (`--_button-min-h`, `--_button-px`…). In a project that vendors
+  the kit with the CLI, that means editing the vendored files, which `zazz-ui update` then has
+  to merge. In the kit itself, run `vp run generate` afterward so the editor data lists the
+  value. A field size has to be built here: setting the `--ui-field-*` hooks doesn't bring a
+  field down to an exact height.
+- **Theme overrides**: a rule in the project's own stylesheet, in `@layer overrides`, that sets
+  the button and toggle hooks for the new value. The kit's files stay untouched, but the
+  editor and the lint rules won't list the value, and fields can't follow (see above).
+
+```css
+@layer overrides {
+  :is(
+    [data-ui~="button"][data-button-size="compact"],
+    [data-ui~="toggle"][data-toggle-size="compact"]
+  ) {
+    --ui-button-min-h: 7;
+    --ui-button-px: 2.5;
+    --ui-button-font-size: var(--font-size-xs);
+    --ui-toggle-min-h: 7;
+    --ui-toggle-px: 2.5;
+    --ui-toggle-font-size: var(--font-size-xs);
+  }
+}
+```
+
+After adding one, put a control of each kind side by side in a browser and check that the
+heights match.
+
+## Grouped options in selects and menus
+
+A list of options split into groups needs three things: a group label that recedes, the same
+rhythm between every option, and a visible break between groups. Plain `<optgroup label>` text
+or a bold `<li>` gives none of them: the label sits flush left in body type, and the options
+lose their spacing. Copy the grouping from the fragment instead of styling it by eye.
+
+- **Combobox and command** have a slot for it: `data-combobox-slot="group"` /
+  `"group-label"` and `data-command-slot="group"` / `"group-label"`. The kit styles the label;
+  add no utilities to it.
+- **Select** (`primitives/select/select.html`): each `<optgroup>` keeps its `label` (the native
+  picker's fallback), takes `--display: grid; --gap: 1px`, and opens with a `<legend>` that
+  carries the eyebrow utilities below. Put `<hr data-ui="separator" style="--my: 2" />`
+  between groups.
+- **Menu** (`primitives/menu/menu.html`): the label is an `<li>` with the same eyebrow utilities
+  (weight `strong`), and `<hr data-ui="separator" style="--my: 2" />` splits groups.
+
+The label utilities, from the fragments. `--p: 2` lines the label's text up with the options'
+text, so keep it:
+
+```html
+<select data-ui="select" name="template" aria-label="Template">
+  <button><selectedcontent></selectedcontent></button>
+  <optgroup label="Marketing" style="--display: grid; --gap: 1px">
+    <legend
+      style="
+        --display: inline-flex;
+        --p: 2;
+        --font-size: var(--font-size-eyebrow);
+        --font-weight: var(--font-weight-eyebrow);
+        --leading: var(--leading-eyebrow);
+        --tracking: var(--tracking-eyebrow);
+        --text-transform: uppercase;
+        --text: var(--color-muted-foreground);
+      "
+    >
+      Marketing
+    </legend>
+    <option value="hero" selected>Hero</option>
+    <option value="pricing">Pricing</option>
+  </optgroup>
+  <hr data-ui="separator" style="--my: 2" />
+  <optgroup label="Application" style="--display: grid; --gap: 1px">
+    <legend style="…the same utilities…">Application</legend>
+    <option value="sign-in">Sign in</option>
+  </optgroup>
+</select>
+```
+
+Leave the options and menu items alone: a menu item is a ghost button (`style="--justify:
+start"`), and an `<option>` takes the select's own padding. Never add padding, margin, or gaps
+to individual items to fix spacing. If the spacing looks wrong, the group wrapper or the label
+is missing a fragment utility. After building one, open it in a browser and check that the
+labels line up with the item text.
 
 ## Everything else
 

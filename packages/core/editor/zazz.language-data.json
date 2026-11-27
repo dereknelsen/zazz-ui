@@ -12,6 +12,10 @@
       "primitive": "autocomplete",
       "file": "primitives/autocomplete/autocomplete.css"
     },
+    "avatar": {
+      "primitive": "avatar",
+      "file": "primitives/avatar/avatar.css"
+    },
     "badge": {
       "primitive": "badge",
       "file": "primitives/badge/badge.css"
@@ -264,6 +268,25 @@
         ]
       }
     },
+    "primitives/avatar/avatar.css": {
+      "summary": "avatar.css: Avatar ([data-ui~=\"avatar\"])",
+      "tags": {
+        "layer": [
+          "variables, components"
+        ],
+        "requires": [
+          "_layers.css, _variables.css, _properties.css (--_*-resolved)"
+        ],
+        "uses": [
+          "a one-cell grid: the image and the fallback share the cell with the image on top, so the fallback shows where the markup has no image. CSS can't tell an image that failed to load, so leave the image out when there is no picture.",
+          "overflow: clip, so the image takes the avatar's corners",
+          "corner-shape — round by default, so circles stay circles. A concave shape at a full radius empties a circle, and CSS can't read the number in superellipse(), so the hook keeps a convex shape from this list (round, squircle, square, superellipse(1 | 1.3 | 2 | infinity)) and draws anything else round; the check is an if(). Only Chromium and Safari draw corner-shape, and both support if(); where if() is missing the private is invalid and its round fallback draws. The --corner-shape utility still sets any shape."
+        ],
+        "tokens": [
+          "--ui-avatar-* (@layer variables; hooks are named after the utilities they back)"
+        ]
+      }
+    },
     "primitives/badge/badge.css": {
       "summary": "badge.css: Badge ([data-ui~=\"badge\"])",
       "tags": {
@@ -320,7 +343,7 @@
           "color-mix(), oklch(from …) — variant hover/active tints",
           "text-box — vertical trim (patchy browser support)",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners",
-          "--_touch-min (touch screens) — the default and icon sizes grow to the touch floor, and each inline side gains half of what the height grew; sm and icon-sm keep their box and extend an invisible ::after hit area"
+          "--_touch-min (touch screens) — the default and icon sizes grow to the touch floor, and each inline side gains half of what the height grew. Buttons nested in an input or password group keep their box and extend an invisible ::after hit area (input-group.css, password-group.css)"
         ],
         "tokens": [
           "--ui-button-* (@layer variables; hooks are named after the utilities they back; metrics default to the --ui-field-* family)"
@@ -598,6 +621,7 @@
         "uses": [
           ":focus-within — lifts shell ring/border as one field",
           "--_touch-min (touch screens) — the shell and its addons grow to the touch floor, and the input's inline sides gain half of what the height grew",
+          "--ui-button-* / --ui-toggle-* hooks — a button or toggle in an addon takes its size from the shell (no size preset; \"icon\" stays square); on a touch screen it keeps its box and an ::after hit area takes the floor",
           ":has() — restore padding when addons absent; invalid text color",
           "data-input-group-align on the addon slot — inline-start/end, block-start/end",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
@@ -749,7 +773,7 @@
           "appearance: none: element box becomes the track; only the fill needs vendor pseudo-elements (::-webkit-meter-*-value, ::-moz-meter-bar + :-moz-meter-* state classes); never combine the two vendors in one selector list",
           "attr(<attr> type(<number>)): where typed attr() exists (Chromium 133+) the fill is painted on the element from the meter's own attributes, because Blink locks the shadow parts' geometry (backgrounds apply, heights do not); @supports gated",
           "Engines without typed attr() keep the vendor-pseudo fill; recorded degradation in Blink pre-133: themed track + thin centered fill (browser policy exception)",
-          "corner-shape — round by default, so circles stay circles; a hook takes any shape"
+          "corner-shape — round by default, so circles stay circles. A concave shape at a full radius can empty the bar, and CSS can't read the number in superellipse(), so the hook keeps a convex shape from this list (round, squircle, square, superellipse(1 | 1.3 | 2 | infinity)) and draws anything else round; the check is an if(). Only Chromium and Safari draw corner-shape, and both support if(); where if() is missing the private is invalid and its round fallback draws. The --corner-shape utility still sets any shape, and the fill inherits the track's."
         ],
         "tokens": [
           "--ui-meter-* (@layer variables); geometry aliases --ui-progress-*"
@@ -840,6 +864,7 @@
         "uses": [
           ":focus-within, :has: shell focus ring and padding (as input-group.css)",
           "--_touch-min (touch screens): the shell and its addons grow to the touch floor, and the input's inline sides gain half of what the height grew",
+          "--ui-button-* / --ui-toggle-* hooks — a button or toggle in an addon takes its size from the shell (no size preset; \"icon\" stays square); on a touch screen it keeps its box and an ::after hit area takes the floor",
           "aria-pressed on toggle — show/hide icon swap via CSS (JS sets type + aria in password-group.ts)",
           "Native reveal suppressed in _reset.css (::-ms-reveal, etc.)",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners"
@@ -888,7 +913,7 @@
         "uses": [
           "appearance: none — element box becomes the track; only the fill needs vendor pseudo-elements (::-webkit-progress-value, ::-moz-progress-bar) — never combine the two vendors in one selector list (an unknown pseudo invalidates the whole rule)",
           ":indeterminate — animated stripe on the element background",
-          "corner-shape — round by default, so circles stay circles; a hook takes any shape"
+          "corner-shape — round by default, so circles stay circles. A concave shape at a full radius can empty the bar, and CSS can't read the number in superellipse(), so the hook keeps a convex shape from this list (round, squircle, square, superellipse(1 | 1.3 | 2 | infinity)) and draws anything else round; the check is an if(). Only Chromium and Safari draw corner-shape, and both support if(); where if() is missing the private is invalid and its round fallback draws. The --corner-shape utility still sets any shape, and the fill inherits the track's."
         ],
         "tokens": [
           "--ui-progress-* (@layer variables)"
@@ -1037,7 +1062,7 @@
           "appearance: none — redraws track + thumb from theme tokens",
           "--_touch-min (touch screens): the transparent input grows to the touch floor and so does the thumb's box, through a transparent border, while the visible thumb keeps its size. A thumb can't have an ::after, so on touch screens its border and ring draw inset, it loses its drop shadow, and the visible thumb stops a border's width short of each track end.",
           "sign(): switches the ring inset once the thumb has a hit border",
-          "corner-shape — round by default, so circles stay circles; a hook takes any shape",
+          "corner-shape — the track and thumb follow the field shape. A concave shape at a full radius empties a circle, and CSS can't read the number in superellipse(), so each part keeps a convex shape from this list (round, squircle, square, superellipse(1 | 1.3 | 2 | infinity)) and draws anything else round; the check is an if(). Only Chromium and Safari draw corner-shape, and both support if(); where if() is missing the private is invalid and its round fallback draws. The --corner-shape utility on the input still sets any shape on the track.",
           "the track fill: ::-moz-range-progress in Firefox. Chromium and Safari have no progress part, so a view timeline on the thumb (view-timeline + timeline-scope) animates --_slider-progress on the track, which paints the fill as a gradient. The timeline needs the input to be a scroll container, so there it clips its overflow and pads its inline ends to keep the thumb's ring in view, so a padding utility on the input moves the fill off the thumb there. @supports-gated: an engine without view timelines shows no fill. Nor does a right-to-left slider there: Chromium measures an inline view timeline from the left in RTL and Safari from the right, and CSS can't tell which it got.",
           "@container style(--ui-slider-fill-side: end) — the fill runs from the thumb to the end; Firefox 151+ (style queries), older engines fill from the start."
         ],
@@ -1060,10 +1085,10 @@
           "--_touch-min (touch screens) — the track keeps its size; an invisible ::after on the input, centred on it, is at least the touch floor square",
           "label:has(> input[role=\"switch\"])::after — thumb drawn on label (no JS)",
           "oklch(from …) — checked/hover track tints",
-          "corner-shape — round by default, so circles stay circles; a hook takes any shape"
+          "corner-shape — the track and thumb follow the field shape. A concave shape at a full radius empties a circle, and CSS can't read the number in superellipse(), so each part keeps a convex shape from this list (round, squircle, square, superellipse(1 | 1.3 | 2 | infinity)) and draws anything else round; the check is an if(). Only Chromium and Safari draw corner-shape, and both support if(); where if() is missing the private is invalid and its round fallback draws. The --corner-shape utility still sets any shape on the track."
         ],
         "tokens": [
-          "--ui-switch-* (@layer variables; consumed in @layer reset; border and ring default to the --ui-field-* family)"
+          "--ui-switch-* (@layer variables; consumed in @layer reset; border and ring default to the --ui-field-* family; --ui-switch-w-coefficient and --ui-switch-h-coefficient stretch the track and thumb together)"
         ]
       }
     },
@@ -1181,7 +1206,7 @@
           "color-mix(), oklch(from …): variant hover/active tints, the same steps as the button's variants",
           "text-box: vertical trim (patchy browser support)",
           "corner-shape — superellipse corners; unsupported browsers keep plain rounded corners",
-          "--_touch-min (touch screens) — the default and icon sizes grow to the touch floor, and each inline side gains half of what the height grew; sm and icon-sm keep their box and extend an invisible ::after hit area"
+          "--_touch-min (touch screens) — the default and icon sizes grow to the touch floor, and each inline side gains half of what the height grew"
         ],
         "tokens": [
           "--ui-toggle-* (@layer variables; default to the --ui-button-* family)"
@@ -1287,6 +1312,50 @@
     "--ui-autocomplete-shadow": {
       "value": "var(--ui-menu-shadow)",
       "file": "primitives/autocomplete/autocomplete.css"
+    },
+    "--ui-avatar-bg": {
+      "value": "var(--color-background)",
+      "file": "primitives/avatar/avatar.css"
+    },
+    "--ui-avatar-border-color": {
+      "value": "var(--color-border)",
+      "file": "primitives/avatar/avatar.css"
+    },
+    "--ui-avatar-border-style": {
+      "value": "solid",
+      "file": "primitives/avatar/avatar.css"
+    },
+    "--ui-avatar-border-width": {
+      "value": "1px",
+      "file": "primitives/avatar/avatar.css"
+    },
+    "--ui-avatar-corner-shape": {
+      "value": "round",
+      "file": "primitives/avatar/avatar.css"
+    },
+    "--ui-avatar-fallback-bg": {
+      "value": "var(--color-muted)",
+      "file": "primitives/avatar/avatar.css"
+    },
+    "--ui-avatar-fallback-text": {
+      "value": "var(--color-muted-foreground)",
+      "file": "primitives/avatar/avatar.css"
+    },
+    "--ui-avatar-font-size": {
+      "value": "var(--font-size-sm)",
+      "file": "primitives/avatar/avatar.css"
+    },
+    "--ui-avatar-font-weight": {
+      "value": "var(--font-weight-strong)",
+      "file": "primitives/avatar/avatar.css"
+    },
+    "--ui-avatar-radius": {
+      "value": "var(--radius-full)",
+      "file": "primitives/avatar/avatar.css"
+    },
+    "--ui-avatar-size": {
+      "value": "calc(var(--spacing) * 10)",
+      "file": "primitives/avatar/avatar.css"
     },
     "--ui-badge-background-clip": {
       "value": "border-box",
@@ -2157,7 +2226,7 @@
       "file": "primitives/fields/fields.css"
     },
     "--ui-field-inset-radius": {
-      "value": "calc( var(--ui-field-radius) - var(--ui-field-inset-p) - var(--ui-field-border-width) )",
+      "value": "max( 0px, var(--ui-field-radius) - var(--ui-field-border-width) - var(--ui-field-inset-p) )",
       "file": "primitives/fields/fields.css"
     },
     "--ui-field-label-text": {
@@ -2644,12 +2713,24 @@
       "value": "var(--radius-corner-shape)",
       "file": "primitives/navigation-menu/navigation-menu.css"
     },
+    "--ui-navigation-menu-popover-child-gap": {
+      "value": "1",
+      "file": "primitives/navigation-menu/navigation-menu.css"
+    },
+    "--ui-navigation-menu-popover-child-px": {
+      "value": "var(--space-xs)",
+      "file": "primitives/navigation-menu/navigation-menu.css"
+    },
+    "--ui-navigation-menu-popover-child-py": {
+      "value": "var(--space-xs)",
+      "file": "primitives/navigation-menu/navigation-menu.css"
+    },
     "--ui-navigation-menu-popover-child-radius": {
       "value": "var(--radius-sm)",
       "file": "primitives/navigation-menu/navigation-menu.css"
     },
     "--ui-navigation-menu-popover-gap": {
-      "value": "calc(var(--spacing) * 1.5)",
+      "value": "var(--space-xs)",
       "file": "primitives/navigation-menu/navigation-menu.css"
     },
     "--ui-navigation-menu-popover-shadow": {
@@ -2661,7 +2742,7 @@
       "file": "primitives/navigation-menu/navigation-menu.css"
     },
     "--ui-navigation-menu-popover-viewport-gap": {
-      "value": "calc(var(--spacing) * 1.5)",
+      "value": "var(--space-xs)",
       "file": "primitives/navigation-menu/navigation-menu.css"
     },
     "--ui-navigation-menu-popover-viewport-items": {
@@ -3233,7 +3314,7 @@
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-thumb-corner-shape": {
-      "value": "round",
+      "value": "var(--ui-field-corner-shape)",
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-thumb-offset": {
@@ -3265,7 +3346,7 @@
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-track-corner-shape": {
-      "value": "round",
+      "value": "var(--ui-field-corner-shape)",
       "file": "primitives/slider/slider.css"
     },
     "--ui-slider-track-h": {
@@ -3277,11 +3358,15 @@
       "file": "primitives/slider/slider.css"
     },
     "--ui-switch-corner-shape": {
-      "value": "round",
+      "value": "var(--ui-field-corner-shape)",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-cursor": {
       "value": "pointer",
+      "file": "primitives/switch/switch.css"
+    },
+    "--ui-switch-h-coefficient": {
+      "value": "1",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-radius": {
@@ -3301,11 +3386,11 @@
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-thumb-border-color--checked": {
-      "value": "var(--ui-field-border-color--hover)",
+      "value": "transparent",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-thumb-border-color--checked-hover": {
-      "value": "var(--ui-field-border-color--hover)",
+      "value": "transparent",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-thumb-border-color--hover": {
@@ -3324,6 +3409,10 @@
       "value": "var(--ui-switch-corner-shape)",
       "file": "primitives/switch/switch.css"
     },
+    "--ui-switch-thumb-h": {
+      "value": "calc( var(--ui-switch-track-h) - 2 * var(--ui-switch-track-p) - 2 * var(--ui-switch-thumb-border-width) )",
+      "file": "primitives/switch/switch.css"
+    },
     "--ui-switch-thumb-radius": {
       "value": "var(--ui-switch-radius)",
       "file": "primitives/switch/switch.css"
@@ -3336,12 +3425,12 @@
       "value": "var(--shadow-xs)",
       "file": "primitives/switch/switch.css"
     },
-    "--ui-switch-thumb-size": {
-      "value": "calc( (var(--ui-switch-track-w) / 2) - var(--ui-switch-track-p) - var(--ui-switch-thumb-border-width) )",
-      "file": "primitives/switch/switch.css"
-    },
     "--ui-switch-thumb-translate": {
       "value": "var(--ui-switch-track-p), -50%",
+      "file": "primitives/switch/switch.css"
+    },
+    "--ui-switch-thumb-w": {
+      "value": "calc( (var(--ui-switch-track-w) / 2) - var(--ui-switch-track-p) - var(--ui-switch-thumb-border-width) )",
       "file": "primitives/switch/switch.css"
     },
     "--ui-switch-track-bg": {
@@ -3402,6 +3491,10 @@
     },
     "--ui-switch-track-w": {
       "value": "max(calc(var(--spacing) * 7), calc(var(--spacing-control-min) * 1.75))",
+      "file": "primitives/switch/switch.css"
+    },
+    "--ui-switch-w-coefficient": {
+      "value": "1",
       "file": "primitives/switch/switch.css"
     },
     "--ui-table-alternating-bg": {
@@ -3513,11 +3606,11 @@
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-indicator-inset": {
-      "value": "calc(var(--ui-tabs-track-p) / 2)",
+      "value": "0px",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-indicator-radius": {
-      "value": "calc(var(--ui-tabs-track-radius) - var(--ui-tabs-track-p))",
+      "value": "max( 0px, var(--ui-tabs-track-radius) - var(--ui-tabs-track-border-width) - var(--ui-tabs-track-p) - var(--ui-tabs-indicator-inset) )",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-indicator-shadow": {
@@ -3562,6 +3655,10 @@
     },
     "--ui-tabs-label-py": {
       "value": "calc(var(--ui-field-py) / 2)",
+      "file": "primitives/tabs/tabs.css"
+    },
+    "--ui-tabs-label-radius": {
+      "value": "max( 0px, var(--ui-tabs-track-radius) - var(--ui-tabs-track-border-width) - var(--ui-tabs-track-p) )",
       "file": "primitives/tabs/tabs.css"
     },
     "--ui-tabs-label-ring-color": {
@@ -4112,12 +4209,12 @@
       "value": "light-dark(var(--color-shade-50), var(--color-tint-200))",
       "file": "base/_variables.css",
       "light": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.065)",
-      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.17)"
+      "dark": "oklch(from oklch(1 0 0) l c h / 0.17)"
     },
     "--color-border-foreground": {
       "value": "light-dark(var(--color-tint-950), var(--color-shade-500))",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.945)",
+      "light": "oklch(from oklch(1 0 0) l c h / 0.945)",
       "dark": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.545)"
     },
     "--color-card": {
@@ -4147,13 +4244,13 @@
     "--color-faded": {
       "value": "light-dark(var(--color-tint-400), var(--color-shade-100))",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.36)",
+      "light": "oklch(from oklch(1 0 0) l c h / 0.36)",
       "dark": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.115)"
     },
     "--color-faded-foreground": {
       "value": "light-dark(var(--color-tint-700), var(--color-shade-700))",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.67)",
+      "light": "oklch(from oklch(1 0 0) l c h / 0.67)",
       "dark": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.74)"
     },
     "--color-foreground": {
@@ -4190,13 +4287,13 @@
       "value": "light-dark(var(--color-shade-50), var(--color-tint-100))",
       "file": "base/_variables.css",
       "light": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.065)",
-      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.085)"
+      "dark": "oklch(from oklch(1 0 0) l c h / 0.085)"
     },
     "--color-muted-foreground": {
       "value": "light-dark(var(--color-shade-600), var(--color-tint-700))",
       "file": "base/_variables.css",
       "light": "oklch(from oklch(0.198 0.008 285.68) l c h / 0.645)",
-      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.67)"
+      "dark": "oklch(from oklch(1 0 0) l c h / 0.67)"
     },
     "--color-neutral-100": {
       "value": "oklch(0.949 0.001 287.28)",
@@ -4361,82 +4458,82 @@
       "dark": "oklch(0.985 0 0)"
     },
     "--color-secondary": {
-      "value": "light-dark(var(--color-secondary-950), var(--color-secondary-50))",
+      "value": "light-dark(var(--color-secondary-900), var(--color-secondary-50))",
       "file": "base/_variables.css",
-      "light": "oklch(13% 0.028 261.692)",
-      "dark": "oklch(98.5% 0.002 247.839)"
+      "light": "oklch(0.967 0.001 0)",
+      "dark": "oklch(0.145 0 0)"
     },
     "--color-secondary-100": {
-      "value": "oklch(96.7% 0.003 264.542)",
+      "value": "oklch(0.205 0 0)",
       "file": "base/_variables.css",
-      "light": "oklch(96.7% 0.003 264.542)",
-      "dark": "oklch(96.7% 0.003 264.542)"
+      "light": "oklch(0.205 0 0)",
+      "dark": "oklch(0.205 0 0)"
     },
     "--color-secondary-200": {
-      "value": "oklch(92.8% 0.006 264.531)",
+      "value": "oklch(0.269 0 0)",
       "file": "base/_variables.css",
-      "light": "oklch(92.8% 0.006 264.531)",
-      "dark": "oklch(92.8% 0.006 264.531)"
+      "light": "oklch(0.269 0 0)",
+      "dark": "oklch(0.269 0 0)"
     },
     "--color-secondary-300": {
-      "value": "oklch(87.2% 0.01 258.338)",
+      "value": "oklch(0.371 0 0)",
       "file": "base/_variables.css",
-      "light": "oklch(87.2% 0.01 258.338)",
-      "dark": "oklch(87.2% 0.01 258.338)"
+      "light": "oklch(0.371 0 0)",
+      "dark": "oklch(0.371 0 0)"
     },
     "--color-secondary-400": {
-      "value": "oklch(70.7% 0.022 261.325)",
+      "value": "oklch(0.439 0 0)",
       "file": "base/_variables.css",
-      "light": "oklch(70.7% 0.022 261.325)",
-      "dark": "oklch(70.7% 0.022 261.325)"
+      "light": "oklch(0.439 0 0)",
+      "dark": "oklch(0.439 0 0)"
     },
     "--color-secondary-50": {
-      "value": "oklch(98.5% 0.002 247.839)",
+      "value": "oklch(0.145 0 0)",
       "file": "base/_variables.css",
-      "light": "oklch(98.5% 0.002 247.839)",
-      "dark": "oklch(98.5% 0.002 247.839)"
+      "light": "oklch(0.145 0 0)",
+      "dark": "oklch(0.145 0 0)"
     },
     "--color-secondary-500": {
-      "value": "oklch(55.1% 0.027 264.364)",
+      "value": "oklch(0.556 0 0)",
       "file": "base/_variables.css",
-      "light": "oklch(55.1% 0.027 264.364)",
-      "dark": "oklch(55.1% 0.027 264.364)"
+      "light": "oklch(0.556 0 0)",
+      "dark": "oklch(0.556 0 0)"
     },
     "--color-secondary-600": {
-      "value": "oklch(44.6% 0.03 256.802)",
+      "value": "oklch(0.708 0 0)",
       "file": "base/_variables.css",
-      "light": "oklch(44.6% 0.03 256.802)",
-      "dark": "oklch(44.6% 0.03 256.802)"
+      "light": "oklch(0.708 0 0)",
+      "dark": "oklch(0.708 0 0)"
     },
     "--color-secondary-700": {
-      "value": "oklch(37.3% 0.034 259.733)",
+      "value": "oklch(0.87 0 0)",
       "file": "base/_variables.css",
-      "light": "oklch(37.3% 0.034 259.733)",
-      "dark": "oklch(37.3% 0.034 259.733)"
+      "light": "oklch(0.87 0 0)",
+      "dark": "oklch(0.87 0 0)"
     },
     "--color-secondary-800": {
-      "value": "oklch(27.8% 0.033 256.848)",
+      "value": "oklch(0.92 0.004 0)",
       "file": "base/_variables.css",
-      "light": "oklch(27.8% 0.033 256.848)",
-      "dark": "oklch(27.8% 0.033 256.848)"
+      "light": "oklch(0.92 0.004 0)",
+      "dark": "oklch(0.92 0.004 0)"
     },
     "--color-secondary-900": {
-      "value": "oklch(21% 0.034 264.665)",
+      "value": "oklch(0.967 0.001 0)",
       "file": "base/_variables.css",
-      "light": "oklch(21% 0.034 264.665)",
-      "dark": "oklch(21% 0.034 264.665)"
+      "light": "oklch(0.967 0.001 0)",
+      "dark": "oklch(0.967 0.001 0)"
     },
     "--color-secondary-950": {
-      "value": "oklch(13% 0.028 261.692)",
+      "value": "oklch(0.985 0 0)",
       "file": "base/_variables.css",
-      "light": "oklch(13% 0.028 261.692)",
-      "dark": "oklch(13% 0.028 261.692)"
+      "light": "oklch(0.985 0 0)",
+      "dark": "oklch(0.985 0 0)"
     },
     "--color-secondary-foreground": {
-      "value": "light-dark(var(--color-white), var(--color-secondary-950))",
+      "value": "light-dark(var(--color-secondary-50), var(--color-white))",
       "file": "base/_variables.css",
-      "light": "oklch(1 0 0)",
-      "dark": "oklch(13% 0.028 261.692)"
+      "light": "oklch(0.145 0 0)",
+      "dark": "oklch(1 0 0)"
     },
     "--color-selection": {
       "value": "var(--color-primary)",
@@ -4547,160 +4644,160 @@
       "dark": "oklch(0.84 0.13 164)"
     },
     "--color-tertiary": {
-      "value": "light-dark(var(--color-tertiary-950), var(--color-tertiary-50))",
+      "value": "light-dark(var(--color-tertiary-500), var(--color-tertiary-600))",
       "file": "base/_variables.css",
-      "light": "oklch(0.147 0.004 49.3)",
-      "dark": "oklch(0.986 0.002 67.8)"
+      "light": "oklch(0.593 0.193 280.79)",
+      "dark": "oklch(0.511 0.23 276.97)"
     },
     "--color-tertiary-100": {
-      "value": "oklch(0.96 0.002 17.2)",
+      "value": "oklch(0.94 0.025 288.37)",
       "file": "base/_variables.css",
-      "light": "oklch(0.96 0.002 17.2)",
-      "dark": "oklch(0.96 0.002 17.2)"
+      "light": "oklch(0.94 0.025 288.37)",
+      "dark": "oklch(0.94 0.025 288.37)"
     },
     "--color-tertiary-200": {
-      "value": "oklch(0.922 0.005 34.3)",
+      "value": "oklch(0.85 0.068 285.81)",
       "file": "base/_variables.css",
-      "light": "oklch(0.922 0.005 34.3)",
-      "dark": "oklch(0.922 0.005 34.3)"
+      "light": "oklch(0.85 0.068 285.81)",
+      "dark": "oklch(0.85 0.068 285.81)"
     },
     "--color-tertiary-300": {
-      "value": "oklch(0.868 0.007 39.5)",
+      "value": "oklch(0.765 0.108 284.76)",
       "file": "base/_variables.css",
-      "light": "oklch(0.868 0.007 39.5)",
-      "dark": "oklch(0.868 0.007 39.5)"
+      "light": "oklch(0.765 0.108 284.76)",
+      "dark": "oklch(0.765 0.108 284.76)"
     },
     "--color-tertiary-400": {
-      "value": "oklch(0.714 0.014 41.2)",
+      "value": "oklch(0.674 0.154 283.18)",
       "file": "base/_variables.css",
-      "light": "oklch(0.714 0.014 41.2)",
-      "dark": "oklch(0.714 0.014 41.2)"
+      "light": "oklch(0.674 0.154 283.18)",
+      "dark": "oklch(0.674 0.154 283.18)"
     },
     "--color-tertiary-50": {
-      "value": "oklch(0.986 0.002 67.8)",
+      "value": "oklch(0.984 0.007 286.46)",
       "file": "base/_variables.css",
-      "light": "oklch(0.986 0.002 67.8)",
-      "dark": "oklch(0.986 0.002 67.8)"
+      "light": "oklch(0.984 0.007 286.46)",
+      "dark": "oklch(0.984 0.007 286.46)"
     },
     "--color-tertiary-500": {
-      "value": "oklch(0.547 0.021 43.1)",
+      "value": "oklch(0.593 0.193 280.79)",
       "file": "base/_variables.css",
-      "light": "oklch(0.547 0.021 43.1)",
-      "dark": "oklch(0.547 0.021 43.1)"
+      "light": "oklch(0.593 0.193 280.79)",
+      "dark": "oklch(0.593 0.193 280.79)"
     },
     "--color-tertiary-600": {
-      "value": "oklch(0.438 0.017 39.3)",
+      "value": "oklch(0.511 0.23 276.97)",
       "file": "base/_variables.css",
-      "light": "oklch(0.438 0.017 39.3)",
-      "dark": "oklch(0.438 0.017 39.3)"
+      "light": "oklch(0.511 0.23 276.97)",
+      "dark": "oklch(0.511 0.23 276.97)"
     },
     "--color-tertiary-700": {
-      "value": "oklch(0.367 0.016 35.7)",
+      "value": "oklch(0.421 0.234 273.27)",
       "file": "base/_variables.css",
-      "light": "oklch(0.367 0.016 35.7)",
-      "dark": "oklch(0.367 0.016 35.7)"
+      "light": "oklch(0.421 0.234 273.27)",
+      "dark": "oklch(0.421 0.234 273.27)"
     },
     "--color-tertiary-800": {
-      "value": "oklch(0.268 0.011 36.5)",
+      "value": "oklch(0.32 0.179 273.06)",
       "file": "base/_variables.css",
-      "light": "oklch(0.268 0.011 36.5)",
-      "dark": "oklch(0.268 0.011 36.5)"
+      "light": "oklch(0.32 0.179 273.06)",
+      "dark": "oklch(0.32 0.179 273.06)"
     },
     "--color-tertiary-900": {
-      "value": "oklch(0.214 0.009 43.1)",
+      "value": "oklch(0.229 0.127 273.39)",
       "file": "base/_variables.css",
-      "light": "oklch(0.214 0.009 43.1)",
-      "dark": "oklch(0.214 0.009 43.1)"
+      "light": "oklch(0.229 0.127 273.39)",
+      "dark": "oklch(0.229 0.127 273.39)"
     },
     "--color-tertiary-950": {
-      "value": "oklch(0.147 0.004 49.3)",
+      "value": "oklch(0.158 0.088 274.05)",
       "file": "base/_variables.css",
-      "light": "oklch(0.147 0.004 49.3)",
-      "dark": "oklch(0.147 0.004 49.3)"
+      "light": "oklch(0.158 0.088 274.05)",
+      "dark": "oklch(0.158 0.088 274.05)"
     },
     "--color-tertiary-foreground": {
-      "value": "light-dark(var(--color-white), var(--color-tertiary-950))",
+      "value": "light-dark(var(--color-white), var(--color-white))",
       "file": "base/_variables.css",
       "light": "oklch(1 0 0)",
-      "dark": "oklch(0.147 0.004 49.3)"
+      "dark": "oklch(1 0 0)"
     },
     "--color-tint-100": {
-      "value": "oklch(from var(--color-neutral-50) l c h / 0.085)",
+      "value": "oklch(from var(--color-white) l c h / 0.085)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.085)",
-      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.085)"
+      "light": "oklch(from oklch(1 0 0) l c h / 0.085)",
+      "dark": "oklch(from oklch(1 0 0) l c h / 0.085)"
     },
     "--color-tint-200": {
-      "value": "oklch(from var(--color-neutral-50) l c h / 0.17)",
+      "value": "oklch(from var(--color-white) l c h / 0.17)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.17)",
-      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.17)"
+      "light": "oklch(from oklch(1 0 0) l c h / 0.17)",
+      "dark": "oklch(from oklch(1 0 0) l c h / 0.17)"
     },
     "--color-tint-300": {
-      "value": "oklch(from var(--color-neutral-50) l c h / 0.265)",
+      "value": "oklch(from var(--color-white) l c h / 0.265)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.265)",
-      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.265)"
+      "light": "oklch(from oklch(1 0 0) l c h / 0.265)",
+      "dark": "oklch(from oklch(1 0 0) l c h / 0.265)"
     },
     "--color-tint-400": {
-      "value": "oklch(from var(--color-neutral-50) l c h / 0.36)",
+      "value": "oklch(from var(--color-white) l c h / 0.36)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.36)",
-      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.36)"
+      "light": "oklch(from oklch(1 0 0) l c h / 0.36)",
+      "dark": "oklch(from oklch(1 0 0) l c h / 0.36)"
     },
     "--color-tint-50": {
-      "value": "oklch(from var(--color-neutral-50) l c h / 0.04)",
+      "value": "oklch(from var(--color-white) l c h / 0.04)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.04)",
-      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.04)"
+      "light": "oklch(from oklch(1 0 0) l c h / 0.04)",
+      "dark": "oklch(from oklch(1 0 0) l c h / 0.04)"
     },
     "--color-tint-500": {
-      "value": "oklch(from var(--color-neutral-50) l c h / 0.46)",
+      "value": "oklch(from var(--color-white) l c h / 0.46)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.46)",
-      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.46)"
+      "light": "oklch(from oklch(1 0 0) l c h / 0.46)",
+      "dark": "oklch(from oklch(1 0 0) l c h / 0.46)"
     },
     "--color-tint-600": {
-      "value": "oklch(from var(--color-neutral-50) l c h / 0.56)",
+      "value": "oklch(from var(--color-white) l c h / 0.56)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.56)",
-      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.56)"
+      "light": "oklch(from oklch(1 0 0) l c h / 0.56)",
+      "dark": "oklch(from oklch(1 0 0) l c h / 0.56)"
     },
     "--color-tint-700": {
-      "value": "oklch(from var(--color-neutral-50) l c h / 0.67)",
+      "value": "oklch(from var(--color-white) l c h / 0.67)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.67)",
-      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.67)"
+      "light": "oklch(from oklch(1 0 0) l c h / 0.67)",
+      "dark": "oklch(from oklch(1 0 0) l c h / 0.67)"
     },
     "--color-tint-800": {
-      "value": "oklch(from var(--color-neutral-50) l c h / 0.775)",
+      "value": "oklch(from var(--color-white) l c h / 0.775)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.775)",
-      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.775)"
+      "light": "oklch(from oklch(1 0 0) l c h / 0.775)",
+      "dark": "oklch(from oklch(1 0 0) l c h / 0.775)"
     },
     "--color-tint-900": {
-      "value": "oklch(from var(--color-neutral-50) l c h / 0.885)",
+      "value": "oklch(from var(--color-white) l c h / 0.885)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.885)",
-      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.885)"
+      "light": "oklch(from oklch(1 0 0) l c h / 0.885)",
+      "dark": "oklch(from oklch(1 0 0) l c h / 0.885)"
     },
     "--color-tint-950": {
-      "value": "oklch(from var(--color-neutral-50) l c h / 0.945)",
+      "value": "oklch(from var(--color-white) l c h / 0.945)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.945)",
-      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0.945)"
+      "light": "oklch(from oklch(1 0 0) l c h / 0.945)",
+      "dark": "oklch(from oklch(1 0 0) l c h / 0.945)"
     },
     "--color-tint-full": {
-      "value": "oklch(from var(--color-neutral-50) l c h / 1)",
+      "value": "oklch(from var(--color-white) l c h / 1)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 1)",
-      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 1)"
+      "light": "oklch(from oklch(1 0 0) l c h / 1)",
+      "dark": "oklch(from oklch(1 0 0) l c h / 1)"
     },
     "--color-tint-none": {
-      "value": "oklch(from var(--color-neutral-50) l c h / 0)",
+      "value": "oklch(from var(--color-white) l c h / 0)",
       "file": "base/_variables.css",
-      "light": "oklch(from oklch(0.973 0.001 287.31) l c h / 0)",
-      "dark": "oklch(from oklch(0.973 0.001 287.31) l c h / 0)"
+      "light": "oklch(from oklch(1 0 0) l c h / 0)",
+      "dark": "oklch(from oklch(1 0 0) l c h / 0)"
     },
     "--color-warning": {
       "value": "light-dark(oklch(0.955 0.03 58), oklch(0.34 0.06 58))",

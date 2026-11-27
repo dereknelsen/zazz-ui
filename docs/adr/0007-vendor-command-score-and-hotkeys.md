@@ -1,6 +1,6 @@
 # Vendor the command scorer and hotkey helper instead of adding dependencies
 
-The typeahead family (autocomplete, combobox, command) ranks items with a vendored port of cmdk's `command-score.ts` (`base/command-score.ts`) and binds keyboard shortcuts with a hand-written ~150-line helper (`base/hotkeys.ts`). Neither is an npm dependency.
+The typeahead family (autocomplete, combobox, command) ranks items with a vendored port of cmdk's `command-score.ts` (`behaviors/command-score.ts`) and binds keyboard shortcuts with a hand-written ~150-line helper (`behaviors/hotkeys.ts`). Neither is an npm dependency.
 
 ## Context
 
@@ -13,10 +13,10 @@ Every runtime dependency is a maintenance contract: ADR-0005's CDN policy requir
 
 ## Decision
 
-Vendor both as `src/base/` modules with the standard pure-function shape (exported for unit tests only):
+Vendor both as `src/behaviors/` modules with the standard pure-function shape (exported for unit tests only). They shipped in `src/base/` and moved to `src/behaviors/` on 2026-11-27, exports unchanged:
 
-- `base/command-score.ts`: a faithful port preserving cmdk's constants and recursion verbatim so ranking matches cmdk's behavior; MIT attribution to @pacocoursey and the upstream lineage in the file header. Do not alter the algorithm: fidelity is essential.
-- `base/hotkeys.ts`: `parseHotkey` / `matchesHotkey` / `isEditableTarget` / `bindHotkey`. Like `signals.ts`, this file is a deliberate seam: if TanStack Hotkeys reaches 1.0 and the kit grows complex needs (sequences, scopes, conflict detection), swap this file's internals without touching consumers.
+- `behaviors/command-score.ts`: a faithful port preserving cmdk's constants and recursion verbatim so ranking matches cmdk's behavior; MIT attribution to @pacocoursey and the upstream lineage in the file header. Do not alter the algorithm: fidelity is essential.
+- `behaviors/hotkeys.ts`: `parseHotkey` / `matchesHotkey` / `isEditableTarget` / `bindHotkey`. Like `signals.ts`, this file is a deliberate seam: if TanStack Hotkeys reaches 1.0 and the kit grows complex needs (sequences, scopes, conflict detection), swap this file's internals without touching consumers.
 
 ## Consequences
 

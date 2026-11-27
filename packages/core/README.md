@@ -44,7 +44,7 @@ pnpm dlx zazz-ui init
 pnpm dlx zazz-ui add button card dialog
 ```
 
-Each primitive is a folder under `src/primitives/<name>/` with its stylesheet, script, and HTML examples, so copying by hand works too.
+Each primitive is a folder under `src/primitives/<name>/` with its stylesheet, script, data file (`<name>.json`: hooks, attributes, slots, and states), and HTML examples, so copying by hand works too.
 
 ## Usage
 
@@ -120,7 +120,7 @@ src/
 ├── index.js         script entry: registers every custom element / behavior
 ├── base/            tokens, reset, typography, utilities, layout + shared runtime
 ├── behaviors/       interaction logic primitives share: list navigation, gestures, typeahead, hotkeys
-└── primitives/<name>/       one folder per primitive: <name>.css, <name>.ts, examples (.html)
+└── primitives/<name>/       one folder per primitive: <name>.css, <name>.ts, <name>.json, examples (.html)
 dist/
 ├── zazz.css         flattened single-file bundle (loaded by CDN tags)
 ├── zazz.js
