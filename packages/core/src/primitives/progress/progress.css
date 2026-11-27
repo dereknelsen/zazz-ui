@@ -8,7 +8,13 @@
  *             ::-moz-progress-bar) — never combine the two vendors in one
  *             selector list (an unknown pseudo invalidates the whole rule)
  * @uses       :indeterminate — animated stripe on the element background
- * @uses       corner-shape — round by default, so circles stay circles; a hook takes any shape
+ * @uses       corner-shape — round by default, so circles stay circles. A concave shape at a
+ *             full radius can empty the bar, and CSS can't read the number in superellipse(), so
+ *             the hook keeps a convex shape from this list (round, squircle, square,
+ *             superellipse(1 | 1.3 | 2 | infinity)) and draws anything else round; the check is an
+ *             if(). Only Chromium and Safari draw corner-shape, and both support if(); where if()
+ *             is missing the private is invalid and its round fallback draws. The
+ *             --corner-shape utility still sets any shape, and the fill inherits the track's.
  * @tokens     --ui-progress-* (@layer variables)
  * @consumedby meter.css
  */
@@ -24,6 +30,13 @@
     --ui-progress-bar-bg: var(--color-primary);
     --ui-progress-indeterminate-duration: 1s;
   }
+}
+
+/* The hook's shape, floored (see the header). Read as var(…, round): WebKit drops a
+   registered "*" property read with no fallback in corner-shape. */
+@property --_progress-shape {
+  syntax: "*";
+  inherits: false;
 }
 
 @layer reset {
@@ -48,7 +61,16 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-coefficient)
     );
-    corner-shape: var(--_corner-shape-resolved, var(--ui-progress-corner-shape));
+    --_progress-shape: if(
+      style(--ui-progress-corner-shape: round) or style(--ui-progress-corner-shape: squircle) or
+        style(--ui-progress-corner-shape: square) or
+        style(--ui-progress-corner-shape: superellipse(1)) or
+        style(--ui-progress-corner-shape: superellipse(1.3)) or
+        style(--ui-progress-corner-shape: superellipse(2)) or
+        style(--ui-progress-corner-shape: superellipse(infinity)): var(--ui-progress-corner-shape);
+        else: round
+    );
+    corner-shape: var(--_corner-shape-resolved, var(--_progress-shape, round));
   }
 
   :where([data-ui~="progress"])::-webkit-progress-bar {

@@ -102,7 +102,36 @@ describe("switch", () => {
     expect(thumb(root, "background-color")).toBe("rgb(255, 0, 0)");
   });
 
-  // The thumb is content-box, so its border sits outside --ui-switch-thumb-size; the
+  it("scales the track and thumb on each axis from the coefficients", () => {
+    const root = mount(`<div style="--ui-switch-thumb-border-width: 1px">
+      <label><input type="checkbox" role="switch" data-base /></label>
+      <label style="--ui-switch-w-coefficient: 2; --ui-switch-h-coefficient: 1.5">
+        <input type="checkbox" role="switch" data-scaled checked />
+      </label>
+    </div>`);
+    const base = root.querySelector("[data-base]")!;
+    const scaled = root.querySelector<HTMLInputElement>("[data-scaled]")!;
+    const px = (el: Element, property: string) => Number.parseFloat(style(el, property));
+    expect(px(scaled, "inline-size")).toBeCloseTo(px(base, "inline-size") * 2, 1);
+    expect(px(scaled, "block-size")).toBeCloseTo(px(base, "block-size") * 1.5, 1);
+
+    // the thumb fills half the track wide and the track's height, less the gap; checked,
+    // it lands the same gap from the far end
+    const label = scaled.parentElement!;
+    const track = scaled.getBoundingClientRect();
+    const border = px(scaled, "border-top-width");
+    const after = getComputedStyle(label, "::after");
+    const thumbBorder = Number.parseFloat(after.borderTopWidth);
+    const outerW = Number.parseFloat(after.width) + 2 * thumbBorder;
+    const outerH = Number.parseFloat(after.height) + 2 * thumbBorder;
+    const gap = (track.height - 2 * border - outerH) / 2;
+    expect(gap).toBeGreaterThan(0);
+    expect(outerW).toBeCloseTo(track.width / 2 - gap, 1);
+    const left = label.getBoundingClientRect().left + new DOMMatrix(after.transform).m41;
+    expect(track.right - border - (left + outerW)).toBeCloseTo(gap, 1);
+  });
+
+  // The thumb is content-box, so its border sits outside --ui-switch-thumb-w/h; the
   // track's height takes one border width so the gap is the same on every side.
   it("leaves the same gap around the thumb on every side, off and on", () => {
     const root = mount(`<div style="--ui-switch-thumb-border-width: 1px">

@@ -5,7 +5,8 @@
   "tags": [],
   "hooks": {
     "Box Model & Sizing": {
-      "--ui-switch-thumb-size": "calc( (var(--ui-switch-track-w) / 2) - var(--ui-switch-track-p) - var(--ui-switch-thumb-border-width) )",
+      "--ui-switch-thumb-h": "calc( var(--ui-switch-track-h) - 2 * var(--ui-switch-track-p) - 2 * var(--ui-switch-thumb-border-width) )",
+      "--ui-switch-thumb-w": "calc( (var(--ui-switch-track-w) / 2) - var(--ui-switch-track-p) - var(--ui-switch-thumb-border-width) )",
       "--ui-switch-track-h": "calc( var(--ui-switch-track-w) / 2 + var(--ui-switch-track-p) + var(--ui-switch-track-border-width) )",
       "--ui-switch-track-p": "max(calc(var(--spacing) * 0.5), calc(var(--spacing-control-min) * 0.125))",
       "--ui-switch-track-w": "max(calc(var(--spacing) * 7), calc(var(--spacing-control-min) * 1.75))"
@@ -19,11 +20,11 @@
       "--ui-switch-track-bg--hover": "oklch(from var(--color-muted) l c h / calc(alpha * 1.5))"
     },
     "Borders & Outlines": {
-      "--ui-switch-corner-shape": "round",
+      "--ui-switch-corner-shape": "var(--ui-field-corner-shape)",
       "--ui-switch-radius": "var(--radius-full)",
       "--ui-switch-thumb-border-color": "var(--ui-field-border-color)",
-      "--ui-switch-thumb-border-color--checked": "var(--ui-field-border-color--hover)",
-      "--ui-switch-thumb-border-color--checked-hover": "var(--ui-field-border-color--hover)",
+      "--ui-switch-thumb-border-color--checked": "transparent",
+      "--ui-switch-thumb-border-color--checked-hover": "transparent",
       "--ui-switch-thumb-border-color--hover": "var(--ui-field-border-color--hover)",
       "--ui-switch-thumb-border-style": "var(--ui-field-border-style)",
       "--ui-switch-thumb-border-width": "var(--ui-field-border-width)",
@@ -47,6 +48,10 @@
     },
     "Interaction & UI": {
       "--ui-switch-cursor": "pointer"
+    },
+    "Misc": {
+      "--ui-switch-h-coefficient": "1",
+      "--ui-switch-w-coefficient": "1"
     }
   },
   "attributes": {},

@@ -8,13 +8,26 @@
  *             on the input, centred on it, is at least the touch floor square
  * @uses       label:has(> input[role="switch"])::after — thumb drawn on label (no JS)
  * @uses       oklch(from …) — checked/hover track tints
- * @uses       corner-shape — round by default, so circles stay circles; a hook takes any shape
+ * @uses       corner-shape — the track and thumb follow the field shape. A concave shape at a
+ *             full radius empties a circle, and CSS can't read the number in superellipse(), so
+ *             each part keeps a convex shape from this list (round, squircle, square,
+ *             superellipse(1 | 1.3 | 2 | infinity)) and draws anything else round; the check is an
+ *             if(). Only Chromium and Safari draw corner-shape, and both support if(); where if()
+ *             is missing the private is invalid and its round fallback draws. The
+ *             --corner-shape utility still sets any shape on the track.
  * @tokens     --ui-switch-* (@layer variables; consumed in @layer reset; border and
- *             ring default to the --ui-field-* family)
+ *             ring default to the --ui-field-* family; --ui-switch-w-coefficient and
+ *             --ui-switch-h-coefficient stretch the track and thumb together)
  */
 
 @layer variables {
   :root {
+    /* stretch the switch along one axis: the track scales by it and the thumb grows
+       with it, so the gap around the thumb stays the same. Read in the rules below,
+       so they work on any element, not only :root */
+    --ui-switch-w-coefficient: 1;
+    --ui-switch-h-coefficient: 1;
+
     /* floored so the track stays at least --spacing-control-min tall */
     --ui-switch-track-w: max(calc(var(--spacing) * 7), calc(var(--spacing-control-min) * 1.75));
     --ui-switch-track-p: max(calc(var(--spacing) * 0.5), calc(var(--spacing-control-min) * 0.125));
@@ -28,12 +41,17 @@
     --ui-switch-thumb-border-style: var(--ui-field-border-style);
     --ui-switch-thumb-border-color: var(--ui-field-border-color);
     --ui-switch-thumb-border-color--hover: var(--ui-field-border-color--hover);
-    --ui-switch-thumb-border-color--checked: var(--ui-field-border-color--hover);
-    --ui-switch-thumb-border-color--checked-hover: var(--ui-field-border-color--hover);
+    --ui-switch-thumb-border-color--checked: transparent;
+    --ui-switch-thumb-border-color--checked-hover: transparent;
     /* the thumb is content-box: its border sits outside this size, so take it back out
-       and the gap around the thumb is the same on every side */
-    --ui-switch-thumb-size: calc(
+       and the gap around the thumb is the same on every side. Half the track wide and
+       the track's height tall, so with the default track it's a circle */
+    --ui-switch-thumb-w: calc(
       (var(--ui-switch-track-w) / 2) - var(--ui-switch-track-p) -
+        var(--ui-switch-thumb-border-width)
+    );
+    --ui-switch-thumb-h: calc(
+      var(--ui-switch-track-h) - 2 * var(--ui-switch-track-p) - 2 *
         var(--ui-switch-thumb-border-width)
     );
     --ui-switch-thumb-shadow: var(--shadow-xs);
@@ -53,7 +71,7 @@
 
     /* dual-mode hooks: a scale number or a length */
     --ui-switch-radius: var(--radius-full);
-    --ui-switch-corner-shape: round;
+    --ui-switch-corner-shape: var(--ui-field-corner-shape);
     --ui-switch-track-radius: var(--ui-switch-radius);
     --ui-switch-track-corner-shape: var(--ui-switch-corner-shape);
     --ui-switch-thumb-radius: var(--ui-switch-radius);
@@ -61,6 +79,18 @@
 
     --ui-switch-cursor: pointer;
   }
+}
+
+/* Each part's hook shape, floored (see the header). Read as var(…, round): WebKit drops a
+   registered "*" property read with no fallback in corner-shape. */
+@property --_switch-track-shape {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_switch-thumb-shape {
+  syntax: "*";
+  inherits: false;
 }
 
 @layer reset {
@@ -77,8 +107,12 @@
       position: absolute;
       inset-block-start: 50%;
       inset-inline-start: 0;
-      inline-size: var(--ui-switch-thumb-size);
-      block-size: var(--ui-switch-thumb-size);
+      /* how much the coefficients grow the track: the thumb takes half the width
+         (it stays half the track) and all of the height, so the gap holds */
+      --_switch-grow-w: calc(var(--ui-switch-track-w) * (var(--ui-switch-w-coefficient) - 1));
+      --_switch-grow-h: calc(var(--ui-switch-track-h) * (var(--ui-switch-h-coefficient) - 1));
+      inline-size: calc(var(--ui-switch-thumb-w) + var(--_switch-grow-w) / 2);
+      block-size: calc(var(--ui-switch-thumb-h) + var(--_switch-grow-h));
       /* The thumb hangs off the label, out of reach of a --radius on the input,
          so it reads the hook alone */
       --_radius-len: var(--ui-switch-thumb-radius);
@@ -86,7 +120,19 @@
       border-radius: calc(
         var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-coefficient)
       );
-      corner-shape: var(--ui-switch-thumb-corner-shape);
+      --_switch-thumb-shape: if(
+        style(--ui-switch-thumb-corner-shape: round) or
+          style(--ui-switch-thumb-corner-shape: squircle) or
+          style(--ui-switch-thumb-corner-shape: square) or
+          style(--ui-switch-thumb-corner-shape: superellipse(1)) or
+          style(--ui-switch-thumb-corner-shape: superellipse(1.3)) or
+          style(--ui-switch-thumb-corner-shape: superellipse(2)) or
+          style(--ui-switch-thumb-corner-shape: superellipse(infinity)): var(
+            --ui-switch-thumb-corner-shape
+          );
+          else: round
+      );
+      corner-shape: var(--_switch-thumb-shape, round);
       border-width: var(--ui-switch-thumb-border-width);
       border-style: var(--ui-switch-thumb-border-style);
       border-color: var(--ui-switch-thumb-border-color);
@@ -101,8 +147,14 @@
     &:has(> input[role="switch"]:checked)::after {
       background-color: var(--ui-switch-thumb-bg--checked);
       border-color: var(--ui-switch-thumb-border-color--checked);
+      /* the far end less the gap and the thumb, so a thumb-w hook still lands there:
+         (track-w + grow) − p − (thumb-w + grow / 2) − both thumb borders */
       --ui-switch-thumb-translate:
-        calc(var(--ui-switch-track-p) + var(--ui-switch-thumb-size)), -50%;
+        calc(
+          var(--ui-switch-track-w) + var(--_switch-grow-w) / 2 - var(--ui-switch-track-p) -
+            var(--ui-switch-thumb-w) - 2 * var(--ui-switch-thumb-border-width)
+        ),
+        -50%;
     }
 
     @media (hover: hover) {
@@ -144,11 +196,14 @@
       position: absolute;
       inset: min(0px, calc((100% - var(--_touch-min)) / 2));
     }
-    --_w-len: var(--_w-resolved, var(--ui-switch-track-w));
-    --_w-num: var(--_w-resolved, var(--ui-switch-track-w));
+    /* a --w / --h utility sets the size outright; the coefficients scale only the hooks */
+    --_switch-w: calc(var(--ui-switch-track-w) * var(--ui-switch-w-coefficient));
+    --_switch-h: calc(var(--ui-switch-track-h) * var(--ui-switch-h-coefficient));
+    --_w-len: var(--_w-resolved, var(--_switch-w));
+    --_w-num: var(--_w-resolved, var(--_switch-w));
     inline-size: calc(var(--_w-len) + var(--_w-num) * var(--spacing));
-    --_h-len: var(--_h-resolved, var(--ui-switch-track-h));
-    --_h-num: var(--_h-resolved, var(--ui-switch-track-h));
+    --_h-len: var(--_h-resolved, var(--_switch-h));
+    --_h-num: var(--_h-resolved, var(--_switch-h));
     block-size: calc(var(--_h-len) + var(--_h-num) * var(--spacing));
 
     background-color: var(--_bg-resolved, var(--ui-switch-track-bg));
@@ -160,7 +215,19 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-coefficient)
     );
-    corner-shape: var(--_corner-shape-resolved, var(--ui-switch-track-corner-shape));
+    --_switch-track-shape: if(
+      style(--ui-switch-track-corner-shape: round) or
+        style(--ui-switch-track-corner-shape: squircle) or
+        style(--ui-switch-track-corner-shape: square) or
+        style(--ui-switch-track-corner-shape: superellipse(1)) or
+        style(--ui-switch-track-corner-shape: superellipse(1.3)) or
+        style(--ui-switch-track-corner-shape: superellipse(2)) or
+        style(--ui-switch-track-corner-shape: superellipse(infinity)): var(
+          --ui-switch-track-corner-shape
+        );
+        else: round
+    );
+    corner-shape: var(--_corner-shape-resolved, var(--_switch-track-shape, round));
     cursor: var(--_cursor-resolved, var(--ui-switch-cursor));
 
     /* The ring is published to --_focus-shadow so a --shadow utility keeps

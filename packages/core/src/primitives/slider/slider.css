@@ -10,7 +10,13 @@
  *             border and ring draw inset, it loses its drop shadow, and the visible thumb
  *             stops a border's width short of each track end.
  * @uses       sign(): switches the ring inset once the thumb has a hit border
- * @uses       corner-shape — round by default, so circles stay circles; a hook takes any shape
+ * @uses       corner-shape — the track and thumb follow the field shape. A concave shape at a
+ *             full radius empties a circle, and CSS can't read the number in superellipse(), so
+ *             each part keeps a convex shape from this list (round, squircle, square,
+ *             superellipse(1 | 1.3 | 2 | infinity)) and draws anything else round; the check is an
+ *             if(). Only Chromium and Safari draw corner-shape, and both support if(); where if()
+ *             is missing the private is invalid and its round fallback draws. The
+ *             --corner-shape utility on the input still sets any shape on the track.
  * @uses       the track fill: ::-moz-range-progress in Firefox. Chromium and Safari have no
  *             progress part, so a view timeline on the thumb (view-timeline + timeline-scope)
  *             animates --_slider-progress on the track, which paints the fill as a gradient.
@@ -39,7 +45,7 @@
     --ui-slider-track-border-width: var(--ui-field-border-width);
     --ui-slider-track-border-color: var(--ui-field-border-color);
     --ui-slider-track-radius: var(--radius-full);
-    --ui-slider-track-corner-shape: round;
+    --ui-slider-track-corner-shape: var(--ui-field-corner-shape);
     /* the part of the track between its start and the thumb; `end` fills from the thumb
        to the end of the track instead */
     --ui-slider-fill-bg: var(--color-primary);
@@ -54,7 +60,7 @@
     --ui-slider-thumb-border-width: 1px;
     --ui-slider-thumb-border-color: var(--ui-field-border-color);
     --ui-slider-thumb-radius: var(--radius-full);
-    --ui-slider-thumb-corner-shape: round;
+    --ui-slider-thumb-corner-shape: var(--ui-field-corner-shape);
   }
 }
 
@@ -63,30 +69,68 @@
   syntax: "*";
   inherits: true;
 }
+
 @property --_slider-thumb-in {
   syntax: "*";
   inherits: true;
 }
+
 @property --_slider-thumb-drop {
   syntax: "*";
   inherits: true;
 }
+
 @property --_slider-thumb-box {
   syntax: "*";
   inherits: true;
 }
+
+@property --_slider-thumb-corner-shape {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_slider-track-corner-shape {
+  syntax: "*";
+  inherits: false;
+}
+
+/* The shapes before and after the floor; the floored ones reach the parts by inheritance */
+@property --_slider-thumb-shape-raw {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_slider-track-shape-raw {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_slider-thumb-shape {
+  syntax: "*";
+  inherits: true;
+}
+
+@property --_slider-track-shape {
+  syntax: "*";
+  inherits: true;
+}
+
 @property --_slider-bleed {
   syntax: "*";
   inherits: true;
 }
+
 @property --_slider-fill-before {
   syntax: "*";
   inherits: true;
 }
+
 @property --_slider-fill-after {
   syntax: "*";
   inherits: true;
 }
+
 /* 0 with the thumb at the start, 1 at the end; registered so the timeline can animate it */
 @property --_slider-progress {
   syntax: "<number>";
@@ -118,6 +162,38 @@
     --_slider-bleed: calc(
       (var(--ring-offset-width) + var(--ring-width)) * (1 - var(--_slider-thumb-in))
     );
+    /* the shapes, floored: a convex shape the list names, or round (see the header).
+       Read as var(…, round): WebKit drops a registered "*" property read with no fallback
+       in corner-shape */
+    --_slider-track-shape-raw: var(
+      --_slider-track-corner-shape,
+      var(--ui-slider-track-corner-shape)
+    );
+    --_slider-thumb-shape-raw: var(
+      --_slider-thumb-corner-shape,
+      var(--ui-slider-thumb-corner-shape)
+    );
+    --_slider-track-shape: var(
+      --_corner-shape-resolved,
+      if(
+        style(--_slider-track-shape-raw: round) or style(--_slider-track-shape-raw: squircle) or
+          style(--_slider-track-shape-raw: square) or
+          style(--_slider-track-shape-raw: superellipse(1)) or
+          style(--_slider-track-shape-raw: superellipse(1.3)) or
+          style(--_slider-track-shape-raw: superellipse(2)) or
+          style(--_slider-track-shape-raw: superellipse(infinity)): var(--_slider-track-shape-raw);
+          else: round
+      )
+    );
+    --_slider-thumb-shape: if(
+      style(--_slider-thumb-shape-raw: round) or style(--_slider-thumb-shape-raw: squircle) or
+        style(--_slider-thumb-shape-raw: square) or
+        style(--_slider-thumb-shape-raw: superellipse(1)) or
+        style(--_slider-thumb-shape-raw: superellipse(1.3)) or
+        style(--_slider-thumb-shape-raw: superellipse(2)) or
+        style(--_slider-thumb-shape-raw: superellipse(infinity)): var(--_slider-thumb-shape-raw);
+        else: round
+    );
     /* the fill: from the start to the thumb, or from the thumb to the end */
     --_slider-fill-before: var(--ui-slider-fill-bg);
     --_slider-fill-after: transparent;
@@ -138,7 +214,7 @@
     background: transparent;
     cursor: grab;
     border-radius: var(--ui-slider-track-radius);
-    corner-shape: var(--ui-slider-track-corner-shape);
+    corner-shape: var(--_slider-track-shape, round);
 
     /* transparent outline keeps focus visible in forced-colors / high-contrast
        modes; the visible focus ring lives on the thumb */
@@ -224,7 +300,7 @@
       var(--ui-slider-track-bg);
     border: var(--ui-slider-track-border-width) solid var(--ui-slider-track-border-color);
     border-radius: var(--ui-slider-track-radius);
-    corner-shape: var(--ui-slider-track-corner-shape);
+    corner-shape: var(--_slider-track-shape, round);
   }
 
   /* Without a view timeline the progress never moves off 0, so the track stays plain */
@@ -240,7 +316,7 @@
     background: var(--ui-slider-track-bg);
     border: var(--ui-slider-track-border-width) solid var(--ui-slider-track-border-color);
     border-radius: var(--ui-slider-track-radius);
-    corner-shape: var(--ui-slider-track-corner-shape);
+    corner-shape: var(--_slider-track-shape, round);
   }
 
   :where(input[type="range"])::-webkit-slider-thumb {
@@ -254,7 +330,7 @@
     background-color: var(--ui-slider-thumb-bg);
     background-clip: padding-box;
     border-radius: calc(var(--ui-slider-thumb-radius) + var(--_slider-thumb-hit));
-    corner-shape: var(--ui-slider-thumb-corner-shape);
+    corner-shape: var(--_slider-thumb-shape, round);
     /* the visible border, then the ring outside the thumb (or inside it once the box has
        grown), then the drop shadow */
     box-shadow:
@@ -277,7 +353,7 @@
     block-size: var(--ui-slider-track-h);
     background: var(--ui-slider-fill-bg);
     border-radius: var(--ui-slider-track-radius);
-    corner-shape: var(--ui-slider-track-corner-shape);
+    corner-shape: var(--_slider-track-shape, round);
   }
 
   :where(input[type="range"])::-moz-range-thumb {
@@ -290,7 +366,7 @@
     background-color: var(--ui-slider-thumb-bg);
     background-clip: padding-box;
     border-radius: calc(var(--ui-slider-thumb-radius) + var(--_slider-thumb-hit));
-    corner-shape: var(--ui-slider-thumb-corner-shape);
+    corner-shape: var(--_slider-thumb-shape, round);
     /* the visible border, then the ring outside the thumb (or inside it once the box has
        grown), then the drop shadow */
     box-shadow:

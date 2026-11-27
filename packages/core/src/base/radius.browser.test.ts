@@ -9,7 +9,7 @@
 
 import { describe, expect, it } from "vite-plus/test";
 import { userEvent } from "vite-plus/test/browser/context";
-import { at, atWidth, below, mount, scale, style, useKit } from "../../test/browser.ts";
+import { at, atWidth, below, mount, scale, style, useCss, useKit } from "../../test/browser.ts";
 
 const BOX = "display: block; inline-size: 100px; block-size: 40px;";
 const radius = (el: Element) => Number.parseFloat(style(el, "border-top-left-radius"));
@@ -243,6 +243,8 @@ describe("corner shape", () => {
     ["password-group", `<div data-ui="password-group"></div>`],
     ["popover", `<div popover></div>`],
     ["select", `<select data-ui="select"></select>`],
+    ["slider", `<input type="range" />`],
+    ["switch", `<input type="checkbox" role="switch" />`],
     [
       "tabs track",
       `<div data-ui="tabs"><div data-tabs-slot="list"></div></div>`,
@@ -270,11 +272,10 @@ describe("corner shape", () => {
 
   /** Circles and pills: their hooks default to round. */
   const ROUND: readonly (readonly [string, string])[] = [
+    ["avatar", `<span data-ui="avatar"></span>`],
     ["meter", `<meter data-ui="meter"></meter>`],
     ["progress", `<progress data-ui="progress"></progress>`],
     ["radio", `<input data-ui="radio" type="radio" />`],
-    ["slider", `<input type="range" />`],
-    ["switch", `<input type="checkbox" role="switch" />`],
   ];
 
   const part = (html: string, selector?: string): Element => {
@@ -304,7 +305,7 @@ describe("corner shape", () => {
   it("an inset button follows the field shape, and a menu button its hook", () => {
     const expected = bevel();
     const root = mount(`<div>
-      <div data-ui="input-group" style="--ui-field-corner-shape: bevel"><button data-ui="button">a</button></div>
+      <div data-ui="input-group" style="--ui-field-corner-shape: bevel"><input data-ui="input" name="q" /><span data-input-group-slot="addon"><button data-ui="button">a</button></span></div>
       <div data-ui="menu" style="--ui-menu-button-corner-shape: bevel"><div data-menu-slot="popover"><button data-ui="button">a</button></div></div>
     </div>`);
     for (const button of root.querySelectorAll("button")) expect(shape(button)).toBe(expected);
@@ -315,5 +316,96 @@ describe("corner shape", () => {
     expect(
       shape(mount(`<input data-ui="radio" type="radio" style="--corner-shape: bevel" />`)),
     ).toBe(expected);
+  });
+});
+
+// CSS can't read the number in superellipse(), so circles and tracks keep only the convex
+// shapes they can name; anything else (a concave shape, which can empty a circle) draws round.
+describe("corner shape floor", () => {
+  useKit();
+
+  const shape = (el: Element, pseudo?: "::after") => style(el, "corner-shape", pseudo);
+  /** Mounts, so it replaces the fixture: read it before mounting the element under test. */
+  const computed = (value: string) => shape(mount(`<i style="corner-shape: ${value}"></i>`));
+
+  /** Drawn round: concave, flat, or convex but unnamed. */
+  const FLOORED = [
+    "notch",
+    "scoop",
+    "bevel",
+    "superellipse(-infinity)",
+    "superellipse(-1.5)",
+    "superellipse(0.5)",
+    "superellipse(2.5)",
+  ];
+  /** Kept: the convex shapes the allow-list names. */
+  const KEPT = [
+    "round",
+    "squircle",
+    "square",
+    "superellipse(1)",
+    "superellipse(1.3)",
+    "superellipse(2)",
+    "superellipse(infinity)",
+  ];
+
+  /** Each part, its fixture with `%s` for the shape set on the part's hook, and its reader. */
+  const PARTS: readonly (readonly [string, string, (root: HTMLElement) => string])[] = [
+    ["avatar", `<span data-ui="avatar" style="--ui-avatar-corner-shape: %s"></span>`, shape],
+    ["meter", `<meter data-ui="meter" style="--ui-meter-corner-shape: %s"></meter>`, shape],
+    [
+      "progress",
+      `<progress data-ui="progress" style="--ui-progress-corner-shape: %s"></progress>`,
+      shape,
+    ],
+    ["slider track", `<input type="range" style="--ui-slider-track-corner-shape: %s" />`, shape],
+    [
+      "switch track",
+      `<label style="--ui-switch-track-corner-shape: %s"><input type="checkbox" role="switch" /></label>`,
+      (root) => shape(root.querySelector("input")!),
+    ],
+    [
+      "switch thumb",
+      `<label style="--ui-switch-thumb-corner-shape: %s"><input type="checkbox" role="switch" /></label>`,
+      (root) => shape(root, "::after"),
+    ],
+  ];
+
+  it.each(PARTS)("%s draws round under a shape the allow-list doesn't name", (_n, html, read) => {
+    const expected = computed("round");
+    for (const value of FLOORED) {
+      expect(read(mount(html.replace("%s", value))), value).toBe(expected);
+    }
+  });
+
+  it.each(PARTS)("%s keeps a convex shape the allow-list names", (_n, html, read) => {
+    for (const value of KEPT) {
+      const expected = computed(value);
+      expect(read(mount(html.replace("%s", value))), value).toBe(expected);
+    }
+  });
+
+  describe("with a concave theme shape on :root", () => {
+    useCss(`:root { --radius-corner-shape: superellipse(-infinity); }`);
+
+    it("the slider and switch, which follow the field shape, draw round", () => {
+      const expected = computed("round");
+      const root = mount(
+        `<div><input type="range" /><label><input type="checkbox" role="switch" /></label></div>`,
+      );
+      for (const input of root.querySelectorAll("input")) expect(shape(input)).toBe(expected);
+      expect(shape(root.querySelector("label")!, "::after")).toBe(expected);
+    });
+  });
+
+  it.each([
+    ["avatar", `<span data-ui="avatar" style="--corner-shape: bevel"></span>`],
+    ["meter", `<meter data-ui="meter" style="--corner-shape: bevel"></meter>`],
+    ["progress", `<progress data-ui="progress" style="--corner-shape: bevel"></progress>`],
+    ["slider", `<input type="range" style="--corner-shape: bevel" />`],
+    ["switch track", `<input type="checkbox" role="switch" style="--corner-shape: bevel" />`],
+  ])("--corner-shape still sets any shape on the %s", (_n, html) => {
+    const expected = computed("bevel");
+    expect(shape(mount(html))).toBe(expected);
   });
 });

@@ -10,7 +10,7 @@
   "hooks": {
     "Layout & Positioning": {
       "--ui-tabs-gap": "var(--ui-field-option-gap)",
-      "--ui-tabs-indicator-inset": "calc(var(--ui-tabs-track-p) / 2)",
+      "--ui-tabs-indicator-inset": "0px",
       "--ui-tabs-track-gap": "var(--ui-field-gap)"
     },
     "Box Model & Sizing": {
@@ -41,7 +41,8 @@
       "--ui-tabs-indicator-border-style": "var(--ui-field-border-style)",
       "--ui-tabs-indicator-border-width": "var(--ui-field-border-width)",
       "--ui-tabs-indicator-corner-shape": "var(--ui-field-corner-shape)",
-      "--ui-tabs-indicator-radius": "calc(var(--ui-tabs-track-radius) - var(--ui-tabs-track-p))",
+      "--ui-tabs-indicator-radius": "max( 0px, var(--ui-tabs-track-radius) - var(--ui-tabs-track-border-width) - var(--ui-tabs-track-p) - var(--ui-tabs-indicator-inset) )",
+      "--ui-tabs-label-radius": "max( 0px, var(--ui-tabs-track-radius) - var(--ui-tabs-track-border-width) - var(--ui-tabs-track-p) )",
       "--ui-tabs-track-border-color": "var(--ui-field-border-color)",
       "--ui-tabs-track-border-style": "var(--ui-field-border-style)",
       "--ui-tabs-track-border-width": "var(--ui-field-border-width)",

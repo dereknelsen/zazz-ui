@@ -33,6 +33,24 @@ describe("slider", () => {
       1,
     );
   });
+
+  // Firefox draws no corner-shape and has no if(), so it has nothing to floor.
+  it.skipIf(server.browser === "firefox")(
+    "floors the thumb shape at round, on the value the thumb inherits",
+    () => {
+      // WebKit keeps the whitespace around the chosen if() branch
+      const shape = (el: Element, part = "thumb") => style(el, `--_slider-${part}-shape`).trim();
+      const root = mount(`<div>
+        <input type="range" data-notch style="--ui-slider-thumb-corner-shape: notch" />
+        <input type="range" data-squircle style="--ui-slider-thumb-corner-shape: squircle" />
+      </div>`);
+      expect(shape(root.querySelector("[data-notch]")!)).toBe("round");
+      expect(shape(root.querySelector("[data-squircle]")!)).toBe("squircle");
+      // the --corner-shape utility reaches the track, which the track pseudo-element inherits
+      const utility = mount(`<input type="range" style="--corner-shape: bevel" />`);
+      expect(shape(utility, "track")).toBe("bevel");
+    },
+  );
 });
 
 // The fill's progress comes from a view timeline on the thumb, which no script API
@@ -80,6 +98,15 @@ describe("slider fill", () => {
     const el = slider(`value="25"`, "--ui-slider-fill-side: end");
     expect(await pixel(el, 0.1)).toEqual(BLUE);
     expect(await pixel(el, 0.5)).toEqual(RED);
+  });
+
+  it("still paints the thumb under a concave shape", async () => {
+    const GREEN: [number, number, number] = [0, 255, 0];
+    const el = slider(
+      `value="50"`,
+      "--ui-slider-thumb-bg: rgb(0 255 0); --ui-slider-thumb-border-color: rgb(0 255 0); --ui-slider-thumb-corner-shape: notch",
+    );
+    expect(await pixel(el, 0.5)).toEqual(GREEN);
   });
 
   // Firefox's progress part follows the direction; Chromium and Safari disagree on which

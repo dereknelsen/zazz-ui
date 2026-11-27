@@ -43,10 +43,17 @@
     --ui-tabs-track-border-color: var(--ui-field-border-color);
 
     --ui-tabs-indicator-bg: var(--color-muted);
-    --ui-tabs-indicator-radius: calc(var(--ui-tabs-track-radius) - var(--ui-tabs-track-p));
+    /* concentric with the track: its radius less the track border, the track padding
+       (where the label sits), and the indicator's inset within the label */
+    --ui-tabs-indicator-radius: max(
+      0px,
+      var(--ui-tabs-track-radius) - var(--ui-tabs-track-border-width) - var(--ui-tabs-track-p) -
+        var(--ui-tabs-indicator-inset)
+    );
     --ui-tabs-indicator-corner-shape: var(--ui-field-corner-shape);
     --ui-tabs-indicator-shadow: none;
-    --ui-tabs-indicator-inset: calc(var(--ui-tabs-track-p) / 2);
+    /* 0: the pill covers the checked label, one track padding in from the border */
+    --ui-tabs-indicator-inset: 0px;
     --ui-tabs-indicator-border-width: var(--ui-field-border-width);
     --ui-tabs-indicator-border-style: var(--ui-field-border-style);
     --ui-tabs-indicator-border-color: transparent;
@@ -69,6 +76,12 @@
        without text-box trim the full line plus this still fits the default height */
     --ui-tabs-label-py: calc(var(--ui-field-py) / 2);
     --ui-tabs-label-min-h: calc(var(--spacing) * 7);
+    /* the label sits one track padding in, so its corners (focus ring, the checked
+       fill without anchor positioning) are concentric one level up from the pill's */
+    --ui-tabs-label-radius: max(
+      0px,
+      var(--ui-tabs-track-radius) - var(--ui-tabs-track-border-width) - var(--ui-tabs-track-p)
+    );
     --ui-tabs-label-ring-color: var(--ui-field-ring-color);
 
     /* data-tabs-variant="underline" */
@@ -159,7 +172,7 @@
     user-select: none;
     text-box: trim-both ex alphabetic;
 
-    border-radius: var(--ui-tabs-indicator-radius);
+    border-radius: var(--ui-tabs-label-radius);
     corner-shape: var(--ui-tabs-indicator-corner-shape);
 
     /* ring renders as box-shadow so it composes with the indicator shadow in
@@ -254,8 +267,6 @@
       [data-tabs-slot~="list"]
       input[type="radio"]:checked
       + [data-tabs-slot~="label"] {
-      border-radius: var(--ui-tabs-indicator-radius);
-      corner-shape: var(--ui-tabs-indicator-corner-shape);
       background-color: var(--ui-tabs-indicator-bg);
       box-shadow:
         0 0 0 calc(var(--_ring-offset-width) * (1 - var(--_focus-in)))
@@ -415,7 +426,7 @@
   :where(ui-tabs, [data-ui~="tabs"])[data-tabs-variant="underline"]
     > [data-tabs-slot~="list"]
     > [data-tabs-slot~="indicator"] {
-    /* the line sits on the label's own edge: there is no track padding to clear */
+    /* the line sits on the label's own edge, even where a theme insets the pill */
     --ui-tabs-indicator-inset: 0px;
     border: 0;
     border-block-end: var(--ui-tabs-underline-width) solid var(--ui-tabs-underline-color);

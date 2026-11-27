@@ -14,7 +14,13 @@
  * @uses       Engines without typed attr() keep the vendor-pseudo fill;
  *             recorded degradation in Blink pre-133: themed track + thin
  *             centered fill (browser policy exception)
- * @uses       corner-shape — round by default, so circles stay circles; a hook takes any shape
+ * @uses       corner-shape — round by default, so circles stay circles. A concave shape at a
+ *             full radius can empty the bar, and CSS can't read the number in superellipse(), so
+ *             the hook keeps a convex shape from this list (round, squircle, square,
+ *             superellipse(1 | 1.3 | 2 | infinity)) and draws anything else round; the check is an
+ *             if(). Only Chromium and Safari draw corner-shape, and both support if(); where if()
+ *             is missing the private is invalid and its round fallback draws. The
+ *             --corner-shape utility still sets any shape, and the fill inherits the track's.
  * @tokens     --ui-meter-* (@layer variables); geometry aliases --ui-progress-*
  */
 
@@ -34,6 +40,13 @@
     --ui-meter-bar-bg--suboptimum: var(--color-warning-foreground);
     --ui-meter-bar-bg--even-less-good: var(--color-destructive-foreground);
   }
+}
+
+/* The hook's shape, floored (see the header). Read as var(…, round): WebKit drops a
+   registered "*" property read with no fallback in corner-shape. */
+@property --_meter-shape {
+  syntax: "*";
+  inherits: false;
 }
 
 @layer reset {
@@ -59,7 +72,15 @@
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-coefficient)
     );
-    corner-shape: var(--_corner-shape-resolved, var(--ui-meter-corner-shape));
+    --_meter-shape: if(
+      style(--ui-meter-corner-shape: round) or style(--ui-meter-corner-shape: squircle) or
+        style(--ui-meter-corner-shape: square) or style(--ui-meter-corner-shape: superellipse(1)) or
+        style(--ui-meter-corner-shape: superellipse(1.3)) or
+        style(--ui-meter-corner-shape: superellipse(2)) or
+        style(--ui-meter-corner-shape: superellipse(infinity)): var(--ui-meter-corner-shape);
+        else: round
+    );
+    corner-shape: var(--_corner-shape-resolved, var(--_meter-shape, round));
   }
 
   :where([data-ui~="meter"])::-webkit-meter-bar {

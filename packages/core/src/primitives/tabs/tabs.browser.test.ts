@@ -5,7 +5,7 @@
  * form, the checked tab's label taking the active color, and
  * `data-tabs-orientation="vertical"` stacking the list, the
  * `data-tabs-variant="underline"` preset, nested tabs, and the arrow keys
- * following the writing direction.
+ * following the writing direction and skipping an `aria-disabled` tab.
  */
 
 import { describe, expect, it } from "vite-plus/test";
@@ -63,15 +63,13 @@ describe("tabs", () => {
     );
   });
 
-  it("insets the default indicator by --ui-tabs-indicator-inset; the underline sits flush", () => {
+  it("the default indicator covers the checked label; --ui-tabs-indicator-inset insets it; the underline sits flush", () => {
     const root = mount(`<div>
       <ui-tabs data-default>${TABS("i")}</ui-tabs>
-      <ui-tabs data-underline data-tabs-variant="underline">${TABS("j")}</ui-tabs>
-      <i data-half style="display: block; width: calc(var(--ui-tabs-track-p) / 2)"></i>
+      <ui-tabs data-inset style="--ui-tabs-indicator-inset: 3px">${TABS("h")}</ui-tabs>
+      <ui-tabs data-underline data-tabs-variant="underline" style="--ui-tabs-indicator-inset: 3px">${TABS("j")}</ui-tabs>
     </div>`);
-    const half =
-      Math.round(root.querySelector("[data-half]")!.getBoundingClientRect().width * 10) / 10;
-    expect(half).toBeGreaterThan(0);
+    const inset = 3;
     const gaps = (selector: string) => {
       const tabs = root.querySelector(selector)!;
       const indicator = tabs.querySelector("[data-tabs-slot='indicator']")!.getBoundingClientRect();
@@ -83,14 +81,49 @@ describe("tabs", () => {
         label.bottom - indicator.bottom,
       ].map((gap) => Math.round(gap * 10) / 10);
     };
-    // the default: half the track padding on every side
-    expect(gaps("[data-default]")).toEqual([half, half, half, half]);
-    // the underline: on the label's own edges, so the line meets the label's bottom
+    // the default: the pill is the checked label's box, at the track padding
+    expect(gaps("[data-default]")).toEqual([0, 0, 0, 0]);
+    // an inset hook shrinks it on every side
+    expect(gaps("[data-inset]")).toEqual([inset, inset, inset, inset]);
+    // the underline: on the label's own edges, whatever the inset, so the line meets the label's bottom
     expect(gaps("[data-underline]")).toEqual([0, 0, 0, 0]);
     // the insets are logical, and the pill covers the same box right to left
     root.dir = "rtl";
-    expect(gaps("[data-default]")).toEqual([half, half, half, half]);
+    expect(gaps("[data-inset]")).toEqual([inset, inset, inset, inset]);
     expect(gaps("[data-underline]")).toEqual([0, 0, 0, 0]);
+  });
+
+  it("the label and indicator corners are concentric with the track's, whatever the borders", () => {
+    const root = mount(`<div>
+      <ui-tabs data-default>${TABS("k")}</ui-tabs>
+    </div>`);
+    // a nested radius is the outer radius less the distance between the two outer edges
+    const check = (selector: string) => {
+      const tabs = root.querySelector(selector)!;
+      const list = tabs.querySelector("[data-tabs-slot='list']")!;
+      const outer = parseFloat(style(list, "border-top-left-radius"));
+      const top = list.getBoundingClientRect().top;
+      for (const part of [
+        tabs.querySelector("[data-tabs-slot='indicator']")!,
+        tabs.querySelector("[data-on]")!,
+      ]) {
+        const depth = part.getBoundingClientRect().top - top;
+        expect(parseFloat(style(part, "border-top-left-radius")), selector).toBeCloseTo(
+          Math.max(0, outer - depth),
+          0,
+        );
+      }
+    };
+    check("[data-default]");
+    // the radius hooks resolve on :root, so a retune there carries through
+    const retune = document.createElement("style");
+    retune.textContent = `:root { --ui-tabs-track-border-width: 3px; --ui-tabs-indicator-border-width: 2px; --ui-tabs-track-p: 5px; }`;
+    document.head.append(retune);
+    try {
+      check("[data-default]");
+    } finally {
+      retune.remove();
+    }
   });
 
   it("the underline variant moves the border to the start edge when vertical", () => {
@@ -140,5 +173,21 @@ describe("tabs", () => {
     expect(press("ltr", "ArrowLeft"), "ltr previous wraps").toBe(2);
     expect(press("rtl", "ArrowLeft"), "rtl next").toBe(1);
     expect(press("rtl", "ArrowRight"), "rtl previous wraps").toBe(2);
+  });
+
+  it("the arrow keys skip an aria-disabled tab", () => {
+    const root = mount(`<ui-tabs><div data-tabs-slot="list" role="tablist">
+      <input type="radio" name="d" checked /><input type="radio" name="d" aria-disabled="true" /><input type="radio" name="d" />
+    </div></ui-tabs>`);
+    const tabs = Array.from(root.querySelectorAll("input"));
+    const press = (from: number, key: string): number => {
+      tabs[from]!.checked = true;
+      tabs[from]!.dispatchEvent(
+        new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true }),
+      );
+      return tabs.findIndex((tab) => tab.checked);
+    };
+    expect(press(0, "ArrowRight"), "next skips it").toBe(2);
+    expect(press(2, "ArrowLeft"), "previous skips it").toBe(0);
   });
 });
