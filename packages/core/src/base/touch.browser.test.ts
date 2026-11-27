@@ -107,13 +107,13 @@ describe("touch targets", () => {
     },
   );
 
-  it("visible controls grow to the floor; link and sm buttons keep their box", () => {
+  it("visible controls grow to the floor; link and input-group buttons keep their box", () => {
     const floor = withTouchFloor();
     const root = mount(`<div style="--display: grid; --gap: 12; --justify-items: start">
       <button data-ui="button" data-default>Save</button>
       <button data-ui="button" data-button-size="icon" data-icon><svg></svg></button>
       <button data-ui="button" data-button-variant="link" data-link>Learn more</button>
-      <button data-ui="button" data-button-size="sm" data-sm>Small</button>
+      <label data-ui="input-group"><input data-ui="input" name="g" /><span data-input-group-slot="addon" data-input-group-align="inline-end"><button data-ui="button" data-sm>Go</button></span></label>
       <input data-ui="input" data-input />
       <select data-ui="select" data-select><option>One</option></select>
       <label data-ui="toggle" data-toggle><input type="checkbox" />Bold</label>
@@ -140,7 +140,7 @@ describe("touch targets", () => {
       <button data-ui="button" data-kbd><span>Search</span><kbd>K</kbd></button>
       <div data-ui="input-group" data-tall style="--ui-input-group-min-h: 2.25rem"><input data-ui="input" data-tall-input /></div>
       <button data-ui="button" data-button-variant="link" data-link>Learn more</button>
-      <button data-ui="button" data-button-size="sm" data-sm>Small</button>
+      <label data-ui="input-group"><input data-ui="input" name="g" /><span data-input-group-slot="addon" data-input-group-align="inline-end"><button data-ui="button" data-sm>Go</button></span></label>
       <ui-accordion>
         <details><summary data-ui="button" data-summary-button>Menu</summary><div>A</div></details>
         <details><summary data-summary>Plain</summary><div>B</div></details>
@@ -244,10 +244,10 @@ describe("touch targets", () => {
     },
   );
 
-  it("a sm button keeps its box but a tap just outside it still lands on it", () => {
+  it("an input-group button keeps its box but a tap just outside it still lands on it", () => {
     const floor = withTouchFloor(44);
     const root = mount(`<div style="--p: 16">
-      <button data-ui="button" data-button-size="sm">Small</button>
+      <label data-ui="input-group"><input data-ui="input" name="g" /><span data-input-group-slot="addon" data-input-group-align="inline-end"><button data-ui="button">Go</button></span></label>
     </div>`);
     const button = root.querySelector("button")!;
     const b = box(button);

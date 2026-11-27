@@ -126,17 +126,6 @@ describe("button variants, hooks, and states (claims 26, 27, 28)", () => {
     expect(style(el, "box-shadow")).toContain("0px 0px 0px 2px");
   });
 
-  it("icon-sm shrinks the icon through the inheriting icon-size hook", () => {
-    const root = mount(`<div>
-      <button data-ui="button" data-button-size="icon"><svg></svg></button>
-      <button data-ui="button" data-button-size="icon-sm"><svg></svg></button>
-    </div>`);
-    const [icon, iconSm] = [...root.querySelectorAll("svg")];
-    expect(Number.parseFloat(style(iconSm!, "inline-size"))).toBeLessThan(
-      Number.parseFloat(style(icon!, "inline-size")),
-    );
-  });
-
   it("a disabled primary button keeps the primary color", () => {
     const root = mount(`<div>
       <button data-ui="button" data-button-variant="primary" data-enabled>a</button>

@@ -8,8 +8,9 @@
  * @uses       corner-shape — superellipse corners; unsupported browsers keep plain
  *             rounded corners
  * @uses       --_touch-min (touch screens) — the default and icon sizes grow to the touch
- *             floor, and each inline side gains half of what the height grew; sm and
- *             icon-sm keep their box and extend an invisible ::after hit area
+ *             floor, and each inline side gains half of what the height grew. Buttons
+ *             nested in an input or password group keep their box and extend an
+ *             invisible ::after hit area (input-group.css, password-group.css)
  * @tokens     --ui-button-* (@layer variables; hooks are named after the utilities they back; metrics default to the --ui-field-* family)
  * @consumedby toggle.css, select.css, button-group.css, autocomplete.css, combobox.css,
  *             command.css, lightbox.css, menu.css, navigation-menu.css, popover.css
@@ -451,11 +452,45 @@
     --_button-shadow: 0 0 transparent;
   }
 
+  :where([data-ui~="button"][data-button-variant="neutral"]) {
+    /* the translucent neutral role: fades toward the surface beneath */
+    --_button-bg: light-dark(var(--color-white), var(--color-neutral-950));
+    --_button-bg--hover: light-dark(var(--color-neutral-50), var(--color-neutral-900));
+    --_button-bg--active: light-dark(var(--color-neutral-100), var(--color-neutral-800));
+
+    --_button-text: var(--color-foreground);
+    --_button-text--hover: var(--color-foreground);
+    --_button-text--active: var(--color-foreground);
+
+    --_button-border-color: transparent;
+    --_button-border-color--hover: transparent;
+    --_button-border-color--active: transparent;
+
+    --_button-shadow: var(--shadow-xs);
+  }
+
   :where([data-ui~="button"][data-button-variant="muted"]) {
     /* the translucent muted role: fades toward the surface beneath */
     --_button-bg: var(--color-muted);
-    --_button-bg--hover: oklch(from var(--_button-bg) l c h / calc(alpha * 0.66));
-    --_button-bg--active: oklch(from var(--_button-bg) l c h / calc(alpha * 0.33));
+    --_button-bg--hover: oklch(from var(--_button-bg) l c h / calc(alpha * 1.66));
+    --_button-bg--active: oklch(from var(--_button-bg) l c h / calc(alpha * 2));
+
+    --_button-text: var(--color-foreground);
+    --_button-text--hover: var(--color-foreground);
+    --_button-text--active: var(--color-foreground);
+
+    --_button-border-color: transparent;
+    --_button-border-color--hover: transparent;
+    --_button-border-color--active: transparent;
+
+    --_button-shadow: 0 0 transparent;
+  }
+
+  :where([data-ui~="button"][data-button-variant="faded"]) {
+    /* the translucent faded role: fades toward the surface beneath */
+    --_button-bg: var(--color-faded);
+    --_button-bg--hover: oklch(from var(--_button-bg) l c h / calc(alpha * 1.66));
+    --_button-bg--active: oklch(from var(--_button-bg) l c h / calc(alpha * 2));
 
     --_button-text: var(--color-foreground);
     --_button-text--hover: var(--color-foreground);
@@ -470,7 +505,7 @@
 
   :where([data-ui~="button"][data-button-variant="ghost"]) {
     --_button-bg: transparent;
-    /* the translucent muted role: shows the surface beneath and follows a retheme */
+    /* the transparent ghost role: shows the surface beneath and follows a retheme */
     --_button-bg--hover: var(--color-muted);
     --_button-bg--active: oklch(from var(--_button-bg--hover) l c h / calc(alpha * 1.5));
 
@@ -558,24 +593,6 @@
   BUTTON SIZES — data-button-size
   =========================================================================== */
 
-  :where([data-ui~="button"][data-button-size="sm"]) {
-    --_button-min-h: calc(var(--spacing) * 6);
-    /* a 16px icon, this, and the border fit the 24px box */
-    --_button-py: calc(var(--spacing) * 0.75);
-    --_button-px: calc(var(--spacing) * 2);
-    --_button-radius: var(--radius-sm);
-    --_button-font-size: var(--font-size-xs);
-    /* dense by choice: the box stays small and ::after takes the touch floor */
-    --_touch-floor: 0px;
-    position: relative;
-  }
-
-  :where(
-    :is(ui-button-group, [data-ui~="button-group"]):has([data-ui~="button"][data-button-size="sm"])
-  ) {
-    --_button-group-radius: var(--radius-sm);
-  }
-
   :where([data-ui~="button"][data-button-size="icon"]) {
     block-size: max(
       calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing)),
@@ -587,29 +604,6 @@
     );
     padding: 0;
     aspect-ratio: 1 / 1;
-  }
-
-  :where([data-ui~="button"][data-button-size="icon-sm"]) {
-    --_button-min-h: calc(var(--spacing) * 6);
-    --_button-px: calc(var(--spacing) * 2);
-    --_button-radius: var(--radius-sm);
-    /* the hook, not a private: it must inherit to reach the icon */
-    --ui-button-icon-size: calc(var(--spacing) * 3.5);
-    --_touch-floor: 0px;
-    position: relative;
-
-    block-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
-    inline-size: calc(var(--_min-h-len) + var(--_min-h-num) * var(--spacing));
-    padding: 0;
-    aspect-ratio: 1 / 1;
-  }
-
-  /* touch: sm and icon-sm keep their box; a transparent ::after centred on the button
-     is at least --_touch-min square (it collapses to the box on a mouse) */
-  :where([data-ui~="button"]:is([data-button-size="sm"], [data-button-size="icon-sm"]))::after {
-    content: "";
-    position: absolute;
-    inset: min(0px, calc((100% - var(--_touch-min)) / 2));
   }
 
   /* ===========================================================================
@@ -633,17 +627,5 @@
     > :where(kbd, ui-kbd-group, [data-ui~="kbd-group"]):first-child:not(:only-child)
   ) {
     padding-inline-start: calc(var(--spacing) * 1.5 + var(--_touch-px));
-  }
-
-  :where([data-ui~="button"][data-button-size="sm"]):has(
-    > :where(kbd, ui-kbd-group, [data-ui~="kbd-group"]):last-child:not(:only-child)
-  ) {
-    padding-inline-end: calc(var(--spacing) * 0.5 + var(--_touch-px));
-  }
-
-  :where([data-ui~="button"][data-button-size="sm"]):has(
-    > :where(kbd, ui-kbd-group, [data-ui~="kbd-group"]):first-child:not(:only-child)
-  ) {
-    padding-inline-start: calc(var(--spacing) * 0.5 + var(--_touch-px));
   }
 }

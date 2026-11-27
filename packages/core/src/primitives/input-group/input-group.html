@@ -43,7 +43,7 @@
       <button
         data-ui="button"
         data-button-variant="ghost"
-        data-button-size="icon-sm"
+        data-button-size="icon"
         type="submit"
         aria-label="Submit search"
       >
@@ -98,9 +98,7 @@
       <span data-input-group-slot="text">https://</span>
     </span>
     <span data-input-group-slot="addon" data-input-group-align="inline-end">
-      <button data-ui="button" data-button-variant="primary" data-button-size="sm" type="submit">
-        Apply
-      </button>
+      <button data-ui="button" data-button-variant="primary" type="submit">Apply</button>
     </span>
   </label>
   <div data-field-slot="description">
@@ -123,13 +121,12 @@
     <span data-input-group-slot="addon" data-input-group-align="block-end">
       <button
         data-ui="button"
-        data-button-size="sm"
         type="submit"
         style="
           --ml: auto;
-          --bg: var(--color-background);
-          --bg--active: var(--color-muted);
-          --bg--hover: var(--color-muted);
+          --ui-button-bg: var(--color-background);
+          --ui-button-bg--hover: var(--color-muted);
+          --ui-button-bg--active: var(--color-muted);
         "
       >
         <span>Send</span> <kbd>↵</kbd>

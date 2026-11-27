@@ -523,7 +523,6 @@ class UiToaster extends ZazzElement {
       button.type = "button";
       button.dataset.ui = "button";
       button.setAttribute("data-toaster-slot", "action");
-      button.dataset.buttonSize = "sm";
       button.textContent = action.label;
       button.addEventListener("click", (event) => {
         action.onClick?.(event);
@@ -538,7 +537,7 @@ class UiToaster extends ZazzElement {
       close.dataset.ui = "button";
       close.setAttribute("data-toaster-slot", "close");
       close.dataset.buttonVariant = "ghost";
-      close.dataset.buttonSize = "icon-sm";
+      close.dataset.buttonSize = "icon";
       close.setAttribute("aria-label", "Close notification");
       close.innerHTML = ICONS.close;
       close.addEventListener("click", () => this.dismiss(id));

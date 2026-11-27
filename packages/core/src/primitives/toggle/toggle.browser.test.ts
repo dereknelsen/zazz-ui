@@ -29,17 +29,15 @@ describe("toggle", () => {
     expect(style(at("[data-off]"), "opacity")).toBe("1");
   });
 
-  it("a --px utility and the sm size both set the padding, utility first", () => {
+  it("a --px utility sets the padding over the default", () => {
     const root = mount(`<div>
       <label data-ui="toggle" data-utility style="--px: 4"><input type="checkbox" /><span>a</span></label>
-      <label data-ui="toggle" data-sm data-toggle-size="sm"><input type="checkbox" /><span>b</span></label>
-      <label data-ui="toggle" data-both data-toggle-size="sm" style="--px: 4"><input type="checkbox" /><span>c</span></label>
+      <label data-ui="toggle" data-plain><input type="checkbox" /><span>b</span></label>
     </div>`);
     const px = (selector: string) =>
       Number.parseFloat(style(root.querySelector(selector)!, "padding-inline-start"));
     expect(px("[data-utility]")).toBeCloseTo(scale(4), 1);
-    expect(px("[data-both]")).toBeCloseTo(scale(4), 1);
-    expect(px("[data-sm]")).not.toBeCloseTo(scale(4), 1);
+    expect(px("[data-plain]")).not.toBeCloseTo(scale(4), 1);
   });
 
   it("a kbd at an end of the visible content tightens that side, as on the button", () => {

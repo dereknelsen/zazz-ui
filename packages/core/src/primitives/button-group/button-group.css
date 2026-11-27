@@ -19,11 +19,6 @@
   }
 }
 
-@property --_button-group-radius {
-  syntax: "*";
-  inherits: false;
-}
-
 @property --_button-group-bg {
   syntax: "*";
   inherits: false;
@@ -35,7 +30,7 @@
 
   Joins adjacent controls (buttons, and any child it wraps) into a single
   segmented unit. Children keep their own --ui-button-radius, so the outer corners
-  follow the buttons' size preset automatically; only the *inner* corners are
+  follow the buttons automatically; only the *inner* corners are
   squared off and the doubled border is collapsed by dropping
   each later control's leading border (no overlap).
   =========================================================================== */
@@ -45,14 +40,8 @@
     inline-size: fit-content;
     /* stretch so mixed-height children share one edge */
     align-items: stretch;
-    --_radius-len: var(
-      --_radius-resolved,
-      var(--_button-group-radius, var(--ui-button-group-radius))
-    );
-    --_radius-num: var(
-      --_radius-resolved,
-      var(--_button-group-radius, var(--ui-button-group-radius))
-    );
+    --_radius-len: var(--_radius-resolved, var(--ui-button-group-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-button-group-radius));
     border-radius: calc(
       var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-coefficient)
     );

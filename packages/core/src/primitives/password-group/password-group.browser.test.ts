@@ -22,6 +22,29 @@ describe("password group", () => {
   useKit();
   useCss(`[data-ui~="password-group"], [data-ui~="input"] { transition: none; }`);
 
+  it("sizes the toggle to the field inset, with no size preset", () => {
+    const root = mount(`<div>
+      <ui-password><label data-ui="password-group" data-shell>
+        <input data-ui="input" type="password" name="pw" />
+        <span data-password-group-slot="addon" data-password-group-align="inline-end">
+          <button data-ui="button" data-button-size="icon" data-password-group-slot="toggle" type="button" aria-label="Show password">
+            <svg data-password-group-slot="icon-show"></svg>
+          </button>
+        </span>
+      </label></ui-password>
+      <ui-password><label data-ui="password-group" data-empty><input data-ui="input" type="password" name="pw2" /><span data-password-group-slot="addon" data-password-group-align="inline-end"><svg viewBox="0 0 16 16"></svg></span></label></ui-password>
+    </div>`);
+    const toggle = root.querySelector("button")!.getBoundingClientRect();
+    const inset = lengthPx("calc(var(--ui-field-h) - 2 * var(--ui-field-inset-p))");
+    expect(toggle.height).toBeCloseTo(inset, 0);
+    expect(toggle.width).toBeCloseTo(toggle.height, 0);
+    // the toggle fits the addon, so the group is as tall as one with an icon addon
+    expect(root.querySelector("[data-shell]")!.getBoundingClientRect().height).toBeCloseTo(
+      root.querySelector("[data-empty]")!.getBoundingClientRect().height,
+      0,
+    );
+  });
+
   it("orders the trailing addon, hides the inactive icon, and takes a --gap utility", () => {
     const root = mount(
       `<div>${GROUP("data-default")}${GROUP('data-utility style="--gap: 4"')}</div>`,
