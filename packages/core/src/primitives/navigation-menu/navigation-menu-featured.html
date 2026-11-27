@@ -38,15 +38,71 @@
             data-navigation-menu-slot="viewport"
             style="
               --display: grid;
-              --grid-cols: 3;
+              --grid-cols: 2;
             "
           >
             <div
               style="
-                --display: flex-col;
-                --col-span: 2;
+                --display: grid;
+                --place-items: stretch start;
                 --py: 2;
                 --pl: 2;
+              "
+            >
+              <a
+                href="#"
+                style="
+                  --display: flex-col;
+                  --items: start;
+                  --justify: end;
+                  --p: 4;
+                  --bg: var(--color-muted);
+                  --opacity: 1;
+                  --opacity--hover: 0.75;
+                  --transition: var(--default-transition);
+                  --radius: 1.5;
+                "
+              >
+                <span
+                  style="
+                    --display: inline-flex;
+                    --mb: 2;
+                    --font-size: var(--font-size-eyebrow);
+                    --font-weight: var(--font-weight-eyebrow);
+                    --leading: var(--leading-eyebrow);
+                    --tracking: var(--tracking-eyebrow);
+                    --text-transform: uppercase;
+                    --text: var(--color-muted-foreground);
+                  "
+                  >Featured</span
+                >
+                <span
+                  style="
+                    --font-size: var(--font-size-md);
+                    --font-weight: strong;
+                    --leading: var(--leading-md);
+                    --tracking: var(--tracking-md);
+                  "
+                  >The typography issue</span
+                >
+                <span
+                  style="
+                    --font-size: var(--font-size-sm);
+                    --leading: var(--leading-sm);
+                    --tracking: var(--tracking-sm);
+                    --text-wrap: pretty;
+                    --text: var(--color-muted-foreground);
+                  "
+                >
+                  A whole issue on letters, grids, and rhythm.
+                </span>
+              </a>
+            </div>
+            <div
+              style="
+                --display: flex-col;
+                --py: 2;
+                --pr: 2;
                 --gap: 1px;
               "
             >
@@ -129,62 +185,6 @@
                   "
                   >Every issue since day one.</span
                 >
-              </a>
-            </div>
-            <div
-              style="
-                --display: grid;
-                --py: 2;
-                --pr: 2;
-              "
-            >
-              <a
-                href="#"
-                style="
-                  --display: flex-col;
-                  --items: start;
-                  --justify: end;
-                  --p: 4;
-                  --bg: var(--color-muted);
-                  --opacity: 1;
-                  --opacity--hover: 0.75;
-                  --transition: var(--default-transition);
-                  --radius: 1.5;
-                "
-              >
-                <span
-                  style="
-                    --display: inline-flex;
-                    --mb: 2;
-                    --font-size: var(--font-size-eyebrow);
-                    --font-weight: var(--font-weight-eyebrow);
-                    --leading: var(--leading-eyebrow);
-                    --tracking: var(--tracking-eyebrow);
-                    --text-transform: uppercase;
-                    --text: var(--color-muted-foreground);
-                  "
-                  >Featured</span
-                >
-                <span
-                  style="
-                    --font-size: var(--font-size-md);
-                    --font-weight: strong;
-                    --leading: var(--leading-md);
-                    --tracking: var(--tracking-md);
-                  "
-                  >The typography issue</span
-                >
-                <span
-                  style="
-                    --font-size: var(--font-size-sm);
-                    --leading: var(--leading-sm);
-                    --tracking: var(--tracking-sm);
-                    --text-wrap: pretty;
-                    --text: var(--color-muted-foreground);
-                  "
-                >
-                  A whole issue on letters, grids, and rhythm.
-                </span>
               </a>
             </div>
           </div>

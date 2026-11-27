@@ -447,11 +447,43 @@
     --_badge-shadow: 0 0 transparent;
   }
 
+  :where([data-ui~="badge"][data-badge-variant="neutral"]) {
+    --_badge-bg: light-dark(var(--color-neutral-50), var(--color-neutral-950));
+    --_badge-bg--hover: light-dark(var(--color-neutral-100), var(--color-neutral-900));
+    --_badge-bg--active: light-dark(var(--color-neutral-200), var(--color-neutral-800));
+
+    --_badge-text: var(--color-foreground);
+    --_badge-text--hover: var(--color-foreground);
+    --_badge-text--active: var(--color-foreground);
+
+    --_badge-border-color: transparent;
+    --_badge-border-color--hover: transparent;
+    --_badge-border-color--active: transparent;
+
+    --_badge-shadow: var(--shadow-xs);
+  }
+
   :where([data-ui~="badge"][data-badge-variant="muted"]) {
     /* the translucent muted role: fades toward the surface beneath */
     --_badge-bg: var(--color-muted);
-    --_badge-bg--hover: oklch(from var(--_badge-bg) l c h / calc(alpha * 0.66));
-    --_badge-bg--active: oklch(from var(--_badge-bg) l c h / calc(alpha * 0.33));
+    --_badge-bg--hover: oklch(from var(--_badge-bg) l c h / calc(alpha * 1.66));
+    --_badge-bg--active: oklch(from var(--_badge-bg) l c h / calc(alpha * 2));
+
+    --_badge-text: var(--color-foreground);
+    --_badge-text--hover: var(--color-foreground);
+    --_badge-text--active: var(--color-foreground);
+
+    --_badge-border-color: transparent;
+    --_badge-border-color--hover: transparent;
+    --_badge-border-color--active: transparent;
+
+    --_badge-shadow: 0 0 transparent;
+  }
+
+  :where([data-ui~="badge"][data-badge-variant="faded"]) {
+    --_badge-bg: var(--color-faded);
+    --_badge-bg--hover: oklch(from var(--_badge-bg) l c h / calc(alpha * 1.66));
+    --_badge-bg--active: oklch(from var(--_badge-bg) l c h / calc(alpha * 2));
 
     --_badge-text: var(--color-foreground);
     --_badge-text--hover: var(--color-foreground);
