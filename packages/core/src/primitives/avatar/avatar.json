@@ -1,14 +1,44 @@
 {
   "name": "avatar",
-  "identities": [],
+  "summary": "avatar.css: Avatar ([data-ui~=\"avatar\"])",
+  "identities": [
+    "avatar"
+  ],
   "tags": [],
-  "hooks": {},
+  "hooks": {
+    "Box Model & Sizing": {
+      "--ui-avatar-size": "calc(var(--spacing) * 10)"
+    },
+    "Typography": {
+      "--ui-avatar-font-size": "var(--font-size-sm)",
+      "--ui-avatar-font-weight": "var(--font-weight-strong)"
+    },
+    "Color & Backgrounds": {
+      "--ui-avatar-bg": "var(--color-background)",
+      "--ui-avatar-fallback-bg": "var(--color-muted)",
+      "--ui-avatar-fallback-text": "var(--color-muted-foreground)"
+    },
+    "Borders & Outlines": {
+      "--ui-avatar-border-color": "var(--color-border)",
+      "--ui-avatar-border-style": "solid",
+      "--ui-avatar-border-width": "1px",
+      "--ui-avatar-corner-shape": "round",
+      "--ui-avatar-radius": "var(--radius-full)"
+    }
+  },
   "attributes": {},
-  "slots": {},
+  "slots": {
+    "data-avatar-slot": [
+      "fallback",
+      "image"
+    ]
+  },
   "states": {},
   "requires": [],
   "files": {
-    "css": [],
+    "css": [
+      "primitives/avatar/avatar.css"
+    ],
     "js": [],
     "base": [],
     "examples": [

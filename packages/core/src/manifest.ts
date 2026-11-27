@@ -117,7 +117,7 @@ export const PRIMITIVES: Record<string, PrimitiveEntry> = {
     data: "primitives/autocomplete/autocomplete.json",
   },
   avatar: {
-    css: [],
+    css: ["primitives/avatar/avatar.css"],
     js: [],
     base: [],
     primitives: [],
@@ -832,6 +832,7 @@ export const CSS_CASCADE_ORDER: string[] = [
   "separator",
   "fields",
   "badge",
+  "avatar",
   "card",
   "callout",
   "kbd",

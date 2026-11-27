@@ -5,58 +5,22 @@
     --gap: 2;
   "
 >
-  <figure
-    role="img"
-    style="
-      --display: grid-pile;
-      --size: 11;
-      --bg: var(--color-background);
-      --border-color: var(--color-border);
-      --border-width: 1px;
-      --radius: full;
-      --overflow: clip;
-    "
-  >
+  <span data-ui="avatar" aria-hidden="true">
     <img
+      data-avatar-slot="image"
       width="64"
       height="64"
       loading="lazy"
       src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=facearea&facepad=2&w=64&h=64&q=90"
-      alt="John Doe"
-      aria-hidden="true"
-      style="
-        --order: 9999;
-        --size: 100%;
-        --bg: transparent;
-        --object-fit: cover;
-      "
+      alt=""
     />
-    <figcaption
-      style="
-        --display: flex;
-        --items: center;
-        --justify: center;
-        --order: -9999;
-        --size: 100%;
-        --font-size: var(--font-size-md);
-        --font-weight: strong;
-        --leading: var(--leading-md);
-        --tracking: var(--tracking-md);
-        --text-align: center;
-        --text: var(--color-muted-foreground);
-        --bg: var(--color-muted);
-      "
-    >
-      <span style="--sr: only">John Doe</span>
-      <span aria-hidden="true">JD</span>
-    </figcaption>
-  </figure>
+    <span data-avatar-slot="fallback">JD</span>
+  </span>
   <div style="--display: flex-col">
     <span
       style="
         --font-size: var(--font-size-sm);
         --font-weight: strong;
-        --leading: 1;
         --leading: var(--leading-sm);
         --tracking: var(--tracking-sm);
       "
@@ -81,44 +45,14 @@
     --gap: 2;
   "
 >
-  <figure
-    role="img"
-    style="
-      --display: grid-pile;
-      --size: 11;
-      --bg: var(--color-background);
-      --border-color: var(--color-border);
-      --border-width: 1px;
-      --radius: full;
-      --overflow: clip;
-    "
-  >
-    <figcaption
-      style="
-        --display: flex;
-        --items: center;
-        --justify: center;
-        --order: -9999;
-        --size: 100%;
-        --font-size: var(--font-size-md);
-        --font-weight: strong;
-        --leading: var(--leading-md);
-        --tracking: var(--tracking-md);
-        --text-align: center;
-        --text: var(--color-muted-foreground);
-        --bg: var(--color-muted);
-      "
-    >
-      <span style="--sr: only">John Doe</span>
-      <span aria-hidden="true">JD</span>
-    </figcaption>
-  </figure>
+  <span data-ui="avatar" aria-hidden="true">
+    <span data-avatar-slot="fallback">JD</span>
+  </span>
   <div style="--display: flex-col">
     <span
       style="
         --font-size: var(--font-size-sm);
         --font-weight: strong;
-        --leading: 1;
         --leading: var(--leading-sm);
         --tracking: var(--tracking-sm);
       "
@@ -135,3 +69,15 @@
     >
   </div>
 </div>
+
+<span data-ui="avatar" role="img" aria-label="John Doe">
+  <img
+    data-avatar-slot="image"
+    width="64"
+    height="64"
+    loading="lazy"
+    src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=facearea&facepad=2&w=64&h=64&q=90"
+    alt=""
+  />
+  <span data-avatar-slot="fallback" aria-hidden="true">JD</span>
+</span>

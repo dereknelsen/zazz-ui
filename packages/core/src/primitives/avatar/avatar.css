@@ -1,0 +1,108 @@
+/**
+ * avatar.css: Avatar ([data-ui~="avatar"])
+ *
+ * @layer      variables, components
+ * @requires   _layers.css, _variables.css, _properties.css (--_*-resolved)
+ * @uses       a one-cell grid: the image and the fallback share the cell with the image on
+ *             top, so the fallback shows where the markup has no image. CSS can't tell an image
+ *             that failed to load, so leave the image out when there is no picture.
+ * @uses       overflow: clip, so the image takes the avatar's corners
+ * @uses       corner-shape — round by default, so circles stay circles. A concave shape at a
+ *             full radius empties a circle, and CSS can't read the number in superellipse(), so
+ *             the hook keeps a convex shape from this list (round, squircle, square,
+ *             superellipse(1 | 1.3 | 2 | infinity)) and draws anything else round; the check is an
+ *             if(). Only Chromium and Safari draw corner-shape, and both support if(); where if()
+ *             is missing the private is invalid and its round fallback draws. The
+ *             --corner-shape utility still sets any shape.
+ * @tokens     --ui-avatar-* (@layer variables; hooks are named after the utilities they back)
+ *
+ * Every utility-backed declaration reads one chain, highest first:
+ *   var(--_<utility>-resolved, var(--ui-avatar-<utility>))
+ * The image takes alt="". Alone, the avatar names the person on the root (role="img" and
+ * aria-label) and hides the fallback's initials (aria-hidden="true"); beside a visible
+ * name, the whole avatar takes aria-hidden="true", so the name is read once.
+ */
+
+@layer variables {
+  :root {
+    /* dual-mode: a scale number or a length */
+    --ui-avatar-size: calc(var(--spacing) * 10);
+    --ui-avatar-radius: var(--radius-full);
+    --ui-avatar-corner-shape: round;
+
+    --ui-avatar-bg: var(--color-background);
+    --ui-avatar-border-width: 1px;
+    --ui-avatar-border-style: solid;
+    --ui-avatar-border-color: var(--color-border);
+
+    /* the fallback's initials inherit these */
+    --ui-avatar-font-size: var(--font-size-sm);
+    --ui-avatar-font-weight: var(--font-weight-strong);
+
+    --ui-avatar-fallback-bg: var(--color-muted);
+    --ui-avatar-fallback-text: var(--color-muted-foreground);
+  }
+}
+
+/* The hook's shape, floored (see the header). Read as var(…, round): WebKit drops a
+   registered "*" property read with no fallback in corner-shape. */
+@property --_avatar-shape {
+  syntax: "*";
+  inherits: false;
+}
+
+@layer ui.components {
+  :where([data-ui~="avatar"]) {
+    display: inline-grid;
+    flex-shrink: 0;
+    vertical-align: middle;
+    overflow: clip;
+    --_size-len: var(--_size-resolved, var(--ui-avatar-size));
+    --_size-num: var(--_size-resolved, var(--ui-avatar-size));
+    inline-size: calc(var(--_size-len) + var(--_size-num) * var(--spacing));
+    block-size: calc(var(--_size-len) + var(--_size-num) * var(--spacing));
+
+    background-color: var(--_bg-resolved, var(--ui-avatar-bg));
+    border-width: var(--_border-width-resolved, var(--ui-avatar-border-width));
+    border-style: var(--_border-style-resolved, var(--ui-avatar-border-style));
+    border-color: var(--_border-color-resolved, var(--ui-avatar-border-color));
+    --_radius-len: var(--_radius-resolved, var(--ui-avatar-radius));
+    --_radius-num: var(--_radius-resolved, var(--ui-avatar-radius));
+    border-radius: calc(
+      var(--_radius-len) + var(--_radius-num) * var(--spacing) * var(--radius-coefficient)
+    );
+    --_avatar-shape: if(
+      style(--ui-avatar-corner-shape: round) or style(--ui-avatar-corner-shape: squircle) or
+        style(--ui-avatar-corner-shape: square) or style(--ui-avatar-corner-shape: superellipse(1))
+        or style(--ui-avatar-corner-shape: superellipse(1.3)) or
+        style(--ui-avatar-corner-shape: superellipse(2)) or
+        style(--ui-avatar-corner-shape: superellipse(infinity)): var(--ui-avatar-corner-shape);
+        else: round
+    );
+    corner-shape: var(--_corner-shape-resolved, var(--_avatar-shape, round));
+
+    font-size: var(--_font-size-resolved, var(--ui-avatar-font-size));
+    font-weight: var(--_font-weight-resolved, var(--ui-avatar-font-weight));
+    line-height: 1;
+    user-select: none;
+  }
+
+  /* Both parts fill the one cell; the image paints over the fallback */
+  :where([data-ui~="avatar"]) [data-avatar-slot~="image"] {
+    grid-area: 1 / 1;
+    z-index: 1;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  :where([data-ui~="avatar"]) [data-avatar-slot~="fallback"] {
+    grid-area: 1 / 1;
+    display: grid;
+    place-items: center;
+    inline-size: 100%;
+    block-size: 100%;
+    background-color: var(--ui-avatar-fallback-bg);
+    color: var(--ui-avatar-fallback-text);
+  }
+}
