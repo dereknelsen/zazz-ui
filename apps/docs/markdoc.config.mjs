@@ -93,6 +93,10 @@ export default defineMarkdocConfig({
       render: component("./src/components/clips/HistoryClip.astro"),
       selfClosing: true,
     },
+    "shape-clip": {
+      render: component("./src/components/clips/ShapeClip.astro"),
+      selfClosing: true,
+    },
     callout: {
       render: component("./src/components/Callout.astro"),
       attributes: {

@@ -1,0 +1,663 @@
+---
+/**
+ * Feature clip for the 0.16 release post: the switch and slider follow the theme's
+ * field corner shape (`--ui-field-corner-shape`), where they were always round, and a
+ * concave shape draws them round. Four beats on a 10s loop, one shape each: round,
+ * squircle, square, notch. The tabs track and its indicator follow the same hook
+ * (tabs.css) with no floor, so at notch they keep it: their radius is the field's,
+ * not a full one, so a concave corner doesn't empty them. The indicator's radius is
+ * the track's less the border and the padding (concentric, as in 0.16).
+ *
+ * Sizes are the primitives' defaults in spacing steps: switch track 7 wide, padding
+ * 0.5; slider track 1.5 tall, thumb 4; tabs track padding 0.85 and radius-md. Labels
+ * come from switch.html and tabs.html. The convex list and the round fallback are
+ * slider.css and switch.css's if().
+ *
+ * Simplified: the tabs are two equal columns, and the controls change state between
+ * shape changes only so the loop doesn't sit still. Progress and meter are left out:
+ * their hook defaults to `round`, so they don't change with the theme shape. As in
+ * the other clips, every `animation` names its keyframes and nothing animates `display`.
+ */
+---
+
+<figure class="fc-sh">
+  <div
+    class="fc-sh-stage"
+    role="img"
+    aria-label="A settings panel with tabs, a switch, and a slider. The theme's field corner shape steps through round, squircle, and square, and the switch and slider take each shape with the tabs. At notch, a concave shape, the tabs take the notch but the switch and slider draw round."
+  >
+    <div class="fc-sh-body" aria-hidden="true">
+      <div class="fc-sh-side">
+        <span class="fc-sh-caption">--ui-field-corner-shape</span>
+        <span class="fc-sh-values">
+          <span class="fc-sh-value fc-sh-value-1">round</span>
+          <span class="fc-sh-value fc-sh-value-2">squircle</span>
+          <span class="fc-sh-value fc-sh-value-3">square</span>
+          <span class="fc-sh-value fc-sh-value-4">notch</span>
+        </span>
+        <span class="fc-sh-notes">
+          <span class="fc-sh-note fc-sh-note-convex">Convex: the controls follow it.</span>
+          <span class="fc-sh-note fc-sh-note-concave"
+            >Concave: the switch and slider draw it round.</span
+          >
+        </span>
+      </div>
+
+      <div class="fc-sh-panel">
+        <div class="fc-sh-tabs">
+          <span class="fc-sh-indicator"></span>
+          <span class="fc-sh-tab fc-sh-tab-account">Account</span>
+          <span class="fc-sh-tab fc-sh-tab-billing">Billing</span>
+        </div>
+
+        <div class="fc-sh-row">
+          <span class="fc-sh-switch">
+            <span class="fc-sh-thumb"></span>
+          </span>
+          <span class="fc-sh-text">Email notifications</span>
+        </div>
+
+        <div class="fc-sh-field">
+          <span class="fc-sh-text">Volume</span>
+          <span class="fc-sh-slider">
+            <span class="fc-sh-track"></span>
+            <span class="fc-sh-rail">
+              <span class="fc-sh-knob"></span>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</figure>
+
+<style>
+  /* Zazz tokens and the primitives' own hooks wherever a value has one. The stage
+     sizes in em (2.2cqw), so --fc-spacing is an em copy of --spacing and lengths are
+     kit multiples of it. The panel scales its contents up by --fc-zoom so the
+     corners read. */
+  .fc-sh {
+    --fc-spacing: 0.25em;
+    --fc-border: 0.0625em; /* 1px at full width: --ui-field-border-width */
+    --fc-radius-md: calc(var(--fc-spacing) * 2.5 * var(--radius-coefficient));
+    --fc-radius: calc(var(--fc-spacing) * 4.5 * var(--radius-coefficient));
+    container-type: inline-size;
+    width: 100%;
+    aspect-ratio: 740 / 415;
+    margin: 0;
+    margin-block: var(--space-lg);
+  }
+
+  .fc-sh-stage {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    font-family: var(--font-family-body);
+    font-size: 2.2cqw;
+    color: var(--color-foreground);
+    background-color: var(--color-muted);
+    border: 0.08em solid var(--color-border);
+    border-radius: var(--fc-radius);
+    corner-shape: var(--radius-corner-shape);
+  }
+
+  .fc-sh-body {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5em;
+    animation: fc-sh-loop 10s linear infinite;
+  }
+
+  /* --- Left: the theme's shape --- */
+
+  .fc-sh-side {
+    width: 14em;
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--fc-spacing) * 2);
+  }
+
+  .fc-sh-caption {
+    font-family: var(--font-family-mono);
+    font-size: 0.75em;
+    color: var(--color-muted-foreground);
+  }
+
+  .fc-sh-values {
+    display: grid;
+    font-family: var(--font-family-mono);
+    font-size: 2.2em;
+    font-weight: var(--font-weight-strong);
+    line-height: var(--leading-2xl);
+  }
+
+  .fc-sh-value {
+    grid-area: 1 / 1;
+    opacity: 0;
+  }
+
+  .fc-sh-value-1 {
+    animation: fc-sh-value-1 10s step-end infinite;
+  }
+
+  .fc-sh-value-2 {
+    animation: fc-sh-value-2 10s step-end infinite;
+  }
+
+  .fc-sh-value-3 {
+    animation: fc-sh-value-3 10s step-end infinite;
+  }
+
+  .fc-sh-value-4 {
+    opacity: 1;
+    animation: fc-sh-value-4 10s step-end infinite;
+  }
+
+  .fc-sh-notes {
+    display: grid;
+    font-size: 1em;
+    line-height: var(--leading-sm);
+    color: var(--color-muted-foreground);
+  }
+
+  .fc-sh-note {
+    grid-area: 1 / 1;
+  }
+
+  .fc-sh-note-convex {
+    opacity: 0;
+    animation: fc-sh-note-convex 10s step-end infinite;
+  }
+
+  .fc-sh-note-concave {
+    animation: fc-sh-note-concave 10s step-end infinite;
+  }
+
+  /* --- Right: the panel --- */
+
+  .fc-sh-panel {
+    --fc-zoom: 1.55;
+    width: calc(25em / var(--fc-zoom));
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--fc-spacing) * 4);
+    padding: calc(var(--fc-spacing) * 5);
+    font-size: calc(var(--fc-zoom) * 1em);
+    background-color: var(--color-card);
+    border: var(--fc-border) solid var(--color-border);
+    border-radius: var(--fc-radius);
+    corner-shape: var(--radius-corner-shape);
+    box-shadow: var(--shadow-md);
+  }
+
+  .fc-sh-text {
+    font-size: 0.875em;
+    line-height: var(--leading-sm);
+  }
+
+  /* Tabs: track radius is the field's (radius-md), padding --ui-field-inset-p, gap
+     --ui-field-gap */
+  .fc-sh-tabs {
+    --fc-track-p: calc(var(--fc-spacing) * 0.85);
+    --fc-track-gap: calc(var(--fc-spacing) * 2);
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--fc-track-gap);
+    padding: var(--fc-track-p);
+    background-color: var(--ui-tabs-track-bg);
+    border: var(--fc-border) solid var(--ui-tabs-track-border-color);
+    border-radius: var(--fc-radius-md);
+    corner-shape: notch;
+    animation: fc-sh-theme 10s step-end infinite;
+  }
+
+  /* Concentric: the track radius less its border and padding */
+  .fc-sh-indicator {
+    position: absolute;
+    top: var(--fc-track-p);
+    bottom: var(--fc-track-p);
+    left: var(--fc-track-p);
+    width: calc((100% - 2 * var(--fc-track-p) - var(--fc-track-gap)) / 2);
+    background-color: var(--ui-tabs-indicator-bg);
+    border-radius: max(0em, var(--fc-radius-md) - var(--fc-border) - var(--fc-track-p));
+    corner-shape: notch;
+    translate: calc(100% + var(--fc-track-gap)) 0;
+    animation:
+      fc-sh-theme 10s step-end infinite,
+      fc-sh-indicator 10s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  .fc-sh-tab {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: calc(var(--fc-spacing) * 7);
+    font-size: 0.875em;
+    font-weight: var(--ui-tabs-label-font-weight);
+    color: var(--ui-tabs-label-text);
+  }
+
+  .fc-sh-tab-account {
+    animation: fc-sh-tab-account 10s step-end infinite;
+  }
+
+  .fc-sh-tab-billing {
+    color: var(--ui-tabs-label-text--active);
+    animation: fc-sh-tab-billing 10s step-end infinite;
+  }
+
+  .fc-sh-row {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--fc-spacing) * 3);
+  }
+
+  /* Switch: track 7 steps wide, padding 0.5, height half the width plus padding and
+     border; the thumb is a circle half the track wide */
+  .fc-sh-switch {
+    --fc-track-w: calc(var(--fc-spacing) * 7);
+    --fc-switch-p: calc(var(--fc-spacing) * 0.5);
+    --fc-thumb: calc(var(--fc-track-w) / 2 - var(--fc-switch-p) - var(--fc-border));
+    position: relative;
+    flex: none;
+    box-sizing: border-box;
+    width: var(--fc-track-w);
+    height: calc(var(--fc-track-w) / 2 + var(--fc-switch-p) + var(--fc-border));
+    background-color: var(--ui-switch-track-bg--checked);
+    border: var(--fc-border) solid var(--ui-switch-track-border-color--checked);
+    border-radius: var(--radius-full);
+    corner-shape: round;
+    animation:
+      fc-sh-follow 10s step-end infinite,
+      fc-sh-switch 10s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  .fc-sh-thumb {
+    position: absolute;
+    top: 50%;
+    left: var(--fc-switch-p);
+    box-sizing: border-box;
+    width: var(--fc-thumb);
+    height: var(--fc-thumb);
+    background-color: var(--ui-switch-thumb-bg--checked);
+    border: var(--fc-border) solid transparent;
+    border-radius: var(--radius-full);
+    corner-shape: round;
+    box-shadow: var(--ui-switch-thumb-shadow);
+    translate: calc(var(--fc-track-w) - 2 * var(--fc-border) - 2 * var(--fc-switch-p) - var(--fc-thumb))
+      -50%;
+    animation:
+      fc-sh-follow 10s step-end infinite,
+      fc-sh-thumb 10s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  .fc-sh-field {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--fc-spacing) * 2);
+  }
+
+  /* Slider: track 1.5 steps tall, thumb 4; the fill runs to the thumb's center */
+  .fc-sh-slider {
+    --fc-knob: calc(var(--fc-spacing) * 4);
+    position: relative;
+    height: var(--fc-knob);
+  }
+
+  .fc-sh-track {
+    position: absolute;
+    inset: 0;
+    top: calc(50% - var(--fc-spacing) * 0.75);
+    height: calc(var(--fc-spacing) * 1.5);
+    background-color: var(--ui-slider-track-bg);
+    background-image: linear-gradient(var(--ui-slider-fill-bg), var(--ui-slider-fill-bg));
+    background-repeat: no-repeat;
+    background-size: calc(var(--fc-knob) / 2 + 0.5 * (100% - var(--fc-knob))) 100%;
+    border-radius: var(--radius-full);
+    corner-shape: round;
+    animation:
+      fc-sh-follow 10s step-end infinite,
+      fc-sh-fill 10s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  /* The thumb's center travels from half a thumb in to half a thumb from the end */
+  .fc-sh-rail {
+    position: absolute;
+    inset: 0 calc(var(--fc-knob) / 2);
+  }
+
+  .fc-sh-knob {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    box-sizing: border-box;
+    width: var(--fc-knob);
+    height: var(--fc-knob);
+    translate: -50% 0;
+    background-color: var(--ui-slider-thumb-bg);
+    border: var(--fc-border) solid var(--ui-slider-thumb-border-color);
+    border-radius: var(--radius-full);
+    corner-shape: round;
+    box-shadow: var(--ui-slider-thumb-shadow);
+    animation:
+      fc-sh-follow 10s step-end infinite,
+      fc-sh-knob 10s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  /* --- Timeline: a shape per beat, changing at 25%, 50%, and 75%; the controls
+     change state mid-beat (12%, 37%, 62%, 87%) --- */
+
+  @keyframes fc-sh-loop {
+    0%,
+    100% {
+      opacity: 0;
+    }
+
+    3%,
+    96% {
+      opacity: 1;
+    }
+  }
+
+  /* The theme's shape, as the tabs draw it */
+  @keyframes fc-sh-theme {
+    0% {
+      corner-shape: round;
+    }
+
+    25% {
+      corner-shape: squircle;
+    }
+
+    50% {
+      corner-shape: square;
+    }
+
+    75% {
+      corner-shape: notch;
+    }
+  }
+
+  /* The switch and slider: the same, but a concave shape draws round */
+  @keyframes fc-sh-follow {
+    0% {
+      corner-shape: round;
+    }
+
+    25% {
+      corner-shape: squircle;
+    }
+
+    50% {
+      corner-shape: square;
+    }
+
+    75% {
+      corner-shape: round;
+    }
+  }
+
+  @keyframes fc-sh-value-1 {
+    0% {
+      opacity: 1;
+    }
+
+    25% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fc-sh-value-2 {
+    0% {
+      opacity: 0;
+    }
+
+    25% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fc-sh-value-3 {
+    0% {
+      opacity: 0;
+    }
+
+    50% {
+      opacity: 1;
+    }
+
+    75% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fc-sh-value-4 {
+    0% {
+      opacity: 0;
+    }
+
+    75% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fc-sh-note-convex {
+    0% {
+      opacity: 1;
+    }
+
+    75% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fc-sh-note-concave {
+    0% {
+      opacity: 0;
+    }
+
+    75% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fc-sh-indicator {
+    0%,
+    12% {
+      translate: 0 0;
+    }
+
+    16%,
+    37% {
+      translate: calc(100% + var(--fc-track-gap)) 0;
+    }
+
+    41%,
+    62% {
+      translate: 0 0;
+    }
+
+    66%,
+    100% {
+      translate: calc(100% + var(--fc-track-gap)) 0;
+    }
+  }
+
+  @keyframes fc-sh-tab-account {
+    0% {
+      color: var(--ui-tabs-label-text--active);
+    }
+
+    14% {
+      color: var(--ui-tabs-label-text);
+    }
+
+    39% {
+      color: var(--ui-tabs-label-text--active);
+    }
+
+    64% {
+      color: var(--ui-tabs-label-text);
+    }
+  }
+
+  @keyframes fc-sh-tab-billing {
+    0% {
+      color: var(--ui-tabs-label-text);
+    }
+
+    14% {
+      color: var(--ui-tabs-label-text--active);
+    }
+
+    39% {
+      color: var(--ui-tabs-label-text);
+    }
+
+    64% {
+      color: var(--ui-tabs-label-text--active);
+    }
+  }
+
+  /* Off, on at 37%, off at 62%, on at 87% */
+  @keyframes fc-sh-switch {
+    0%,
+    37% {
+      background-color: var(--ui-switch-track-bg);
+      border-color: var(--ui-switch-track-border-color);
+    }
+
+    41%,
+    62% {
+      background-color: var(--ui-switch-track-bg--checked);
+      border-color: var(--ui-switch-track-border-color--checked);
+    }
+
+    66%,
+    87% {
+      background-color: var(--ui-switch-track-bg);
+      border-color: var(--ui-switch-track-border-color);
+    }
+
+    91%,
+    100% {
+      background-color: var(--ui-switch-track-bg--checked);
+      border-color: var(--ui-switch-track-border-color--checked);
+    }
+  }
+
+  @keyframes fc-sh-thumb {
+    0%,
+    37% {
+      translate: 0 -50%;
+      background-color: var(--ui-switch-thumb-bg);
+      border-color: var(--ui-switch-thumb-border-color);
+    }
+
+    41%,
+    62% {
+      translate: calc(
+          var(--fc-track-w) - 2 * var(--fc-border) - 2 * var(--fc-switch-p) - var(--fc-thumb)
+        )
+        -50%;
+      background-color: var(--ui-switch-thumb-bg--checked);
+      border-color: transparent;
+    }
+
+    66%,
+    87% {
+      translate: 0 -50%;
+      background-color: var(--ui-switch-thumb-bg);
+      border-color: var(--ui-switch-thumb-border-color);
+    }
+
+    91%,
+    100% {
+      translate: calc(
+          var(--fc-track-w) - 2 * var(--fc-border) - 2 * var(--fc-switch-p) - var(--fc-thumb)
+        )
+        -50%;
+      background-color: var(--ui-switch-thumb-bg--checked);
+      border-color: transparent;
+    }
+  }
+
+  /* Volume 30, 50 at 12%, 70 at 62%, back to 50 at 87% */
+  @keyframes fc-sh-fill {
+    0%,
+    12% {
+      background-size: calc(var(--fc-knob) / 2 + 0.3 * (100% - var(--fc-knob))) 100%;
+    }
+
+    16%,
+    62% {
+      background-size: calc(var(--fc-knob) / 2 + 0.5 * (100% - var(--fc-knob))) 100%;
+    }
+
+    66%,
+    87% {
+      background-size: calc(var(--fc-knob) / 2 + 0.7 * (100% - var(--fc-knob))) 100%;
+    }
+
+    91%,
+    100% {
+      background-size: calc(var(--fc-knob) / 2 + 0.5 * (100% - var(--fc-knob))) 100%;
+    }
+  }
+
+  @keyframes fc-sh-knob {
+    0%,
+    12% {
+      left: 30%;
+    }
+
+    16%,
+    62% {
+      left: 50%;
+    }
+
+    66%,
+    87% {
+      left: 70%;
+    }
+
+    91%,
+    100% {
+      left: 50%;
+    }
+  }
+
+  /* Reduced motion: hold the square beat, the shape furthest from the old round */
+  @media (prefers-reduced-motion: reduce) {
+    .fc-sh-body,
+    .fc-sh-body * {
+      animation: none !important;
+    }
+
+    .fc-sh-value-3,
+    .fc-sh-note-convex {
+      opacity: 1;
+    }
+
+    .fc-sh-value-4,
+    .fc-sh-note-concave {
+      opacity: 0;
+    }
+
+    .fc-sh-tabs,
+    .fc-sh-indicator,
+    .fc-sh-switch,
+    .fc-sh-thumb,
+    .fc-sh-track,
+    .fc-sh-knob {
+      corner-shape: square;
+    }
+  }
+</style>

@@ -1,0 +1,89 @@
+---
+title: "Zazz 0.16 alpha"
+description: "Zazz 0.16 alpha moves typography roles to data-font, drops the small control sizes, renames a dozen attributes to one pattern, and ships codemods for the two biggest changes."
+date: 2026-11-27
+draft: false
+tags: ["release"]
+---
+
+**Zazz 0.16 alpha is a cleanup release, and most of it breaks something. Typography roles leave `data-ui` for their own attribute, the small button and toggle sizes are gone, and every setting attribute now follows one naming pattern. The two changes that touch the most markup each come with a codemod in `zazz-ui` 0.3.4. The full migration list is at the end.**
+
+## Typography roles get their own attribute
+
+`data-ui` was meant to say what an element is: a button, a card, a dialog. Typography roles crept into it as `text-*` tokens, so a small badge was `data-ui="badge text-xs"`, one identity and one role sharing a list. In 0.16 the role moves to `data-font`:
+
+```html
+<!-- 0.15 -->
+<h2 data-ui="text-h3">Field notes</h2>
+<span data-ui="badge text-xs">New</span>
+
+<!-- 0.16 -->
+<h2 data-font="h3">Field notes</h2>
+<span data-ui="badge" data-font="xs">New</span>
+```
+
+An element takes one role. The roles live in a new `font` primitive with its own stylesheet, and inline links (`data-ui="link"`, formerly `text-link`) and prose have their own stylesheets too. A role now beats the font of the primitive it sits on, so `data-font="sm"` on a button or tooltip now takes effect.
+
+You don't have to rewrite markup by hand:
+
+```bash
+npx zazz-ui codemod data-font
+```
+
+It rewrites the attributes and the quoted selectors, vendors `font`, `link`, and `prose` where your markup uses them, and lists anything it couldn't move safely, such as two roles on one element or a role inside template syntax. `<ui-debug>` and the ESLint plugin flag any `text-*` token left behind and name its replacement, and a new `font-role` rule catches a `data-font` value the kit doesn't define.
+
+## Two control sizes
+
+Buttons and toggles had `sm` and `icon-sm`. They're gone. A control is the default size, or `icon` when it holds only an icon. Small controls kept turning up next to fields that never shrink, and the row came out ragged.
+
+The main reason people reached for `sm` was a button inside an input group. In 0.16 the group sizes that button itself: it sits one inset inside the field's border, so it no longer makes the group taller, and it needs no size attribute at all. An icon-only one keeps `data-button-size="icon"` and comes out square.
+
+```bash
+npx zazz-ui codemod small-sizes
+```
+
+By default it removes `"sm"` and turns `"icon-sm"` into `"icon"`. If you want the small sizes back, pass `--restore` and it adds their rules to your vendored `button.css` and `toggle.css` instead.
+
+## One pattern for setting attributes
+
+A setting attribute is now named for the setting, with the choice in the value: `data-<setting>="<value>"`. The ones that didn't fit were renamed:
+
+- `data-ui-navigation` and `data-ui-persist` became `data-navigation` and `data-navigation-persist`.
+- `data-ui-no-drag` became `data-draggable="false"`.
+- `data-drawer-snap-sequential` became `data-drawer-snap-behavior="sequential"`.
+- `data-carousel-drag-free="true"` became `data-carousel-snap="free"`.
+
+The list at the end has the rest. Most are a find and replace. An old name is ignored, so a page on `data-ui-navigation="swap"` goes back to full page loads.
+
+## Controls follow the theme's corner shape
+
+The slider and switch used to stay round whatever the theme said. Now they take the field's corner shape, so a squircle theme gets squircle switches. The progress bar and meter stay round by default. A concave shape such as `notch` would cut a circle down to nothing, so all four accept only a fixed list of convex shapes (round, squircle, square, and a few superellipses) and draw anything else round. The tabs indicator's corners are now concentric with its track.
+
+{% shape-clip /%}
+
+## Smaller things
+
+- **Avatar** is a primitive: `data-ui="avatar"` with `image` and `fallback` slots. The initials show wherever there's no image. The old utility composition still renders.
+- **Drawers on phones** stop jumping when they open. On a touch screen, a drawer with a text field no longer focuses it on open, so iOS doesn't scroll the page to make room for the keyboard while the drawer is still below the screen. Put `autofocus` on a field to focus it anyway.
+- **Buttons and badges** get `neutral` and `faded` variants, and `muted` now gets stronger on hover instead of fading.
+- **The default palette** changes. Secondary is a light gray fill in light mode, and tertiary is violet. A theme with its own palettes isn't affected.
+- **Every primitive has a data file**, `primitives/<name>/<name>.json`, listing its hooks with their defaults, its attributes and values, slots, and states. `zazz-ui add` vendors it next to the stylesheet, and the zazz agent skill reads it.
+- **Keyboard lists** skip disabled items. The menu skips a button inside a disabled fieldset, and tabs skip one marked `aria-disabled`. In right-to-left pages, the tabs' arrow keys follow the writing direction.
+
+## Migrating
+
+Update the CLI first (`zazz-ui` 0.3.4), then run `npx zazz-ui update` in a vendored project.
+
+- Run `npx zazz-ui codemod data-font`, or replace each `data-ui="text-<role>"` token with `data-font="<role>"` and `text-link` with `link` by hand. A page that loads the kit per primitive adds `font` (and `link` and `prose` if it uses them).
+- Run `npx zazz-ui codemod small-sizes`, or remove `data-button-size="sm"` and `data-toggle-size="sm"` and change `"icon-sm"` to `"icon"`. A button that was `sm` in a table or toolbar is now the default height, so check those layouts.
+- Rename the attributes: `data-ui-navigation` → `data-navigation`, `data-ui-persist` → `data-navigation-persist`, `data-ui-persist-scroll="<id>"` → `data-navigation-persist="<id>" data-navigation-persist-mode="scroll"`, `data-ui-no-drag` → `data-draggable="false"`, `data-ui-guard="off"` → `data-style-guard="off"`, `data-drawer-snap-sequential` → `data-drawer-snap-behavior="sequential"`, `data-carousel-drag-free="true"` → `data-carousel-snap="free"`, `data-carousel-thumbs-drag-free="false"` → `data-carousel-thumbs-snap="slide"`, `data-command-stay-open` → `data-command-select-behavior="persist"`, `data-otp-auto-submit` → `data-otp-submit-behavior="auto"`, and a bare `data-otp-mask` → `data-otp-mask="true"`.
+- Rename the `*-multiplier` tokens your theme sets to `*-coefficient` (`--radius-multiplier` → `--radius-coefficient`, and the same for the leading and paragraph-spacing tokens).
+- If you load `base/_typography.css` on its own for the type scale, load `base/_variables.css` instead: the `--font-size-*`, `--fluid`, and `--typeset-*` tokens moved there.
+- Replace `--ui-switch-thumb-size` with `--ui-switch-thumb-w` and `--ui-switch-thumb-h`.
+- Change any import or script tag that names `base/gesture.js`, `base/hotkeys.js`, `base/typeahead.js`, or `base/command-score.js` to `behaviors/`. `zazz-ui update` does this for vendored files.
+- A theme whose light-mode secondary is a dark color gets almost no hover step now. Set `--ui-button-bg--hover` and `--ui-button-bg--active` (and the badge's) for it.
+- The slider track has no border and a muted fill. Set `--ui-slider-track-border-color` and `--ui-slider-track-bg` back to the `--ui-field-*` values for the old look.
+- An avatar moved to the primitive is 10 spacing steps, where the old composition was 11. Add `style="--size: 11"` to keep the size.
+- If your switches or sliders should stay round, set `--ui-switch-corner-shape: round`, `--ui-slider-track-corner-shape: round`, and `--ui-slider-thumb-corner-shape: round`.
+
+The [changelog](https://github.com/dereknelsen/zazz-ui/blob/main/packages/core/CHANGELOG.md) has every entry.

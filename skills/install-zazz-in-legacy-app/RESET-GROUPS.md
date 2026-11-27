@@ -1,4 +1,4 @@
-# Reset groups (Zazz 0.14.0)
+# Reset groups (Zazz 0.16.0)
 
 One section per group of the Zazz reset. **Detect** names what to grep in the legacy CSS (`css`)
 and the server templates (`tpl`). **Close** gives the lines that go inside the baseline's
@@ -172,6 +172,9 @@ the legacy CSS leaves the property unset.
   From 0.12.2 a range input fills its track up to the thumb, and in Chromium and Safari it
   clips its overflow, pads its inline ends, and stands at least about 30px tall. From 0.12.3
   the switch track is one border width taller and its thumb has a (transparent) border.
+  From 0.16.0 the switch and the range input take the field's corner shape (a convex one; any
+  other draws round), where they were always round, and the range track has no visible border
+  and a muted fill.
   From 0.8.2, while a `<dialog>` is open as a modal, `html` gets `overflow: hidden;
   scrollbar-gutter: stable`.
 - **Symptom:** legacy checkboxes, sliders, disclosures, and dialogs take the Zazz look. Often an

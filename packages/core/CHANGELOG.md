@@ -1,6 +1,6 @@
 Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under each version. The grouping is load-bearing: the `zazz-ui` CLI's `update` and `diff` print only the slice that touches the files you've vendored. Breaking entries are flagged **BREAKING** with a one-line migration note. During 0.x, a minor bump means at least one breaking entry (ADR-0010 has the full definition of "breaking").
 
-## Unreleased
+## 0.16.0 (2026-11-27)
 
 ### button
 
@@ -96,6 +96,10 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 - A toast's action button is the default size and its close button is `icon`; they were `sm` and `icon-sm`, so a toast is a little taller.
 - The drag opt-out (`data-draggable="false"`, formerly `data-ui-no-drag`; see base) on `<ui-toaster>` keeps its toasts from being swiped away. It did before, and is now documented and tested.
 
+### combobox
+
+- A selection tag's label clips only along its length (`overflow-x: clip`), so its ellipsis still works and tall glyphs and descenders are no longer cut off at the top and bottom.
+
 ### debug
 
 - New rule, `font-role`: a `data-font` value that is not exactly one role the kit styles. It reports an unknown role (`data-font="huge"`), two roles (`data-font="sm lg"`), an old token spelling (`data-font="text-sm"`), and a page that sets `data-font` without `primitives/font/font.css` loaded. `<ui-debug>` reads the roles from the page's stylesheets, and skips the rule when it finds no role and could not read every sheet (`font.css` may be the one it could not read, loaded cross-origin without `crossorigin`).
@@ -115,7 +119,7 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 
 ### slider
 
-- The track has no visible border and a `--color-muted` fill: `--ui-slider-track-border-color` defaults to `transparent` and `--ui-slider-track-bg` to `--color-muted`, where both followed the field (`--ui-field-border-color`, `--ui-field-bg`). The border keeps its width, so the track's size doesn't change. The thumb's border is `--color-faded` (`--ui-slider-thumb-border-color`), where it was the field's border color. Set the hooks back to the `--ui-field-*` values for the old look.
+- The track has no visible border and a `--color-muted` fill: `--ui-slider-track-border-color` defaults to `transparent` and `--ui-slider-track-bg` to `--color-muted`, where both followed the field (`--ui-field-border-color`, `--ui-field-bg`). The border keeps its width, so the track's size doesn't change. Set the two hooks back to the `--ui-field-*` values for the old look.
 - The track and thumb follow the field shape (`--ui-field-corner-shape`, which defaults to `--radius-corner-shape`). They were round before.
 - A concave corner shape can no longer hide the thumb. `notch` or `superellipse(-2)` at a full radius cut a circle down to nothing. CSS can't read the number in `superellipse()`, so the track and thumb keep only the convex shapes they can name (`round`, `squircle`, `square`, `superellipse(1)`, `superellipse(1.3)`, `superellipse(2)`, `superellipse(infinity)`) and draw anything else round, including a convex value like `superellipse(2.5)` or a theme builder value between the listed steps. Matching is exact, so `superellipse(1.30)` draws round too. Only Chromium and Safari draw `corner-shape`, and both support the `if()` the check uses. A `--corner-shape` utility on the input now sets any shape on the track; it didn't reach the track before.
 
@@ -144,11 +148,11 @@ Notable changes to `@zazz-ui/core`, grouped by primitive or base scope under eac
 - **BREAKING** The navigation attributes drop the `data-ui-` prefix: `data-ui-navigation="swap"` and `"off"` are now `data-navigation="swap"` and `"off"`, and `data-ui-persist="<id>"` is now `data-navigation-persist="<id>"`. Rename them on every page; a page left on the old names navigates with full loads.
 - **BREAKING** `data-ui-persist-scroll="<id>"` is now `data-navigation-persist="<id>"` with `data-navigation-persist-mode="scroll"` on the same element. An element in scroll mode still comes from the new page and keeps only its scroll offset.
 - **BREAKING** `data-ui-no-drag` is now `data-draggable="false"`. It still keeps a press inside the element from dragging a drawer, swiping a toast, or dragging a carousel. Replace it with `data-draggable="false"`; a bare `data-draggable` does nothing.
-- Every primitive has a data file beside its stylesheet, `primitives/<name>/<name>.json`: its `data-ui` identities, tag forms, `--ui-*` hooks with their defaults (grouped by CSS property category), `data-*` attributes with their values, slots, states, the primitives it requires, and its files. The typography roles are the `data-font` values in `primitives/font/font.json`. The files are generated from the stylesheets, scripts, and examples. `npx zazz-ui add` and `update` vendor them with the `zazz-ui` release that follows 0.3.3.
+- Every primitive has a data file beside its stylesheet, `primitives/<name>/<name>.json`: its `data-ui` identities, tag forms, `--ui-*` hooks with their defaults (grouped by CSS property category), `data-*` attributes with their values, slots, states, the primitives it requires, and its files. The typography roles are the `data-font` values in `primitives/font/font.json`. The files are generated from the stylesheets, scripts, and examples. `npx zazz-ui add` and `update` vendor them from `zazz-ui` 0.3.4 on.
 - The manifest lists the data files: `data` on each `PRIMITIVES` entry, and a new `BASE_DATA` export for data files no primitive owns (empty today).
 - New `src/css-properties.json`: every standard CSS property that is not deprecated, grouped by category. The data files take their hook categories from it.
 - `editor/zazz.language-data.json` gives a hook the default from the primitive it is named for. A hook another primitive overrides (for example `--ui-dialog-shadow` in the alert dialog, nine `--ui-popover-*` hooks in the navigation menu, three `--ui-kbd-*` hooks in the button) reported the override and that primitive's stylesheet.
-- **BREAKING** Shared interaction scripts move from `base/` to a new `behaviors/` folder: `base/gesture.js`, `base/hotkeys.js`, `base/typeahead.js`, and `base/command-score.js` are now `behaviors/gesture.js`, `behaviors/hotkeys.js`, `behaviors/typeahead.js`, and `behaviors/command-score.js`. Their exports are unchanged. Change `base/` to `behaviors/` in any import of them (`import { bindHotkey } from "@zazz-ui/core/behaviors/hotkeys.js"`) and in any `<script>` tag or `modulepreload` that names one. In a vendored project, `npx zazz-ui update` vendors the new files, rewrites the entry script, and deletes the old ones. A file you edited is kept where it is (unless you pass `--theirs`) and no longer loaded, so copy your edits to its new path. Update the CLI first: a narrowed update (`update toaster`) needs the `zazz-ui` release that follows 0.3.3 to vendor the new files.
+- **BREAKING** Shared interaction scripts move from `base/` to a new `behaviors/` folder: `base/gesture.js`, `base/hotkeys.js`, `base/typeahead.js`, and `base/command-score.js` are now `behaviors/gesture.js`, `behaviors/hotkeys.js`, `behaviors/typeahead.js`, and `behaviors/command-score.js`. Their exports are unchanged. Change `base/` to `behaviors/` in any import of them (`import { bindHotkey } from "@zazz-ui/core/behaviors/hotkeys.js"`) and in any `<script>` tag or `modulepreload` that names one. In a vendored project, `npx zazz-ui update` vendors the new files, rewrites the entry script, and deletes the old ones. A file you edited is kept where it is (unless you pass `--theirs`) and no longer loaded, so copy your edits to its new path. Update the CLI first: a narrowed update (`update toaster`) needs `zazz-ui` 0.3.4 or later to vendor the new files.
 - New `behaviors/list-navigation.js`: `listStep` maps a key to a step through a list (by orientation and writing direction), `stepIndex` gives the index a step lands on, and `isDisabledItem` tests an item the keys skip. The tabs, the menu, and `behaviors/typeahead.js` use it; `nextActiveIndex` is unchanged. Vendored autocomplete, combobox, and command scripts need the file too, and `npx zazz-ui update` adds it.
 - New package export `@zazz-ui/core/behaviors/*`.
 
