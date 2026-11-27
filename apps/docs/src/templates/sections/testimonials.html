@@ -1,6 +1,6 @@
 <!-- Testimonials: three quote cards, each with an avatar, a name, and a role.
-     Card: https://zazz.sh/api/primitives/card/ · For initials when there is no
-     photo, see the avatar pattern: https://zazz.sh/api/primitives/avatar/ -->
+     Card: https://zazz.sh/api/primitives/card/ · Avatar (initials show
+     where there is no photo): https://zazz.sh/api/primitives/avatar/ -->
 <style>
   /* Theming: redefine tokens in the `variables` layer and every primitive
      follows. Tokens: https://zazz.sh/api/foundations/tokens/
@@ -40,18 +40,17 @@
             --gap: 2;
           "
         >
-          <img
-            src="/placeholders/image-1x1-light.webp"
-            width="2048"
-            height="2048"
-            alt=""
-            loading="lazy"
-            style="
-              --size: 11;
-              --radius: full;
-              --object-fit: cover;
-            "
-          />
+          <span data-ui="avatar" aria-hidden="true" style="--size: 11">
+            <img
+              data-avatar-slot="image"
+              src="/placeholders/image-1x1-light.webp"
+              width="2048"
+              height="2048"
+              alt=""
+              loading="lazy"
+            />
+            <span data-avatar-slot="fallback">CN</span>
+          </span>
           <span style="--display: flex-col">
             <span data-font="sm" style="--font-weight: strong">Customer name</span>
             <span data-font="xs" style="--text: var(--color-muted-foreground)">Role, Company</span>
@@ -73,18 +72,17 @@
             --gap: 2;
           "
         >
-          <img
-            src="/placeholders/image-1x1-light.webp"
-            width="2048"
-            height="2048"
-            alt=""
-            loading="lazy"
-            style="
-              --size: 11;
-              --radius: full;
-              --object-fit: cover;
-            "
-          />
+          <span data-ui="avatar" aria-hidden="true" style="--size: 11">
+            <img
+              data-avatar-slot="image"
+              src="/placeholders/image-1x1-light.webp"
+              width="2048"
+              height="2048"
+              alt=""
+              loading="lazy"
+            />
+            <span data-avatar-slot="fallback">CN</span>
+          </span>
           <span style="--display: flex-col">
             <span data-font="sm" style="--font-weight: strong">Customer name</span>
             <span data-font="xs" style="--text: var(--color-muted-foreground)">Role, Company</span>
@@ -106,18 +104,17 @@
             --gap: 2;
           "
         >
-          <img
-            src="/placeholders/image-1x1-light.webp"
-            width="2048"
-            height="2048"
-            alt=""
-            loading="lazy"
-            style="
-              --size: 11;
-              --radius: full;
-              --object-fit: cover;
-            "
-          />
+          <span data-ui="avatar" aria-hidden="true" style="--size: 11">
+            <img
+              data-avatar-slot="image"
+              src="/placeholders/image-1x1-light.webp"
+              width="2048"
+              height="2048"
+              alt=""
+              loading="lazy"
+            />
+            <span data-avatar-slot="fallback">CN</span>
+          </span>
           <span style="--display: flex-col">
             <span data-font="sm" style="--font-weight: strong">Customer name</span>
             <span data-font="xs" style="--text: var(--color-muted-foreground)">Role, Company</span>

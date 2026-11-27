@@ -16,6 +16,7 @@ const VARIANTS = [
   "secondary",
   "tertiary",
   "muted",
+  "faded",
   "ghost",
   "info",
   "success",
@@ -124,11 +125,11 @@ describe("button and badge states", () => {
       );
     });
 
-    it(`muted fades toward the surface beneath (${theme})`, () => {
-      const { resolve } = mountPair(theme, "muted");
+    it.each(["muted", "faded"])(`%s deepens toward the solid role (${theme})`, (variant) => {
+      const { resolve } = mountPair(theme, variant);
       const [rest, hover, active] = STATES.map((state) => alpha(resolve("button", `bg${state}`)));
-      expect(hover!).toBeLessThan(rest!);
-      expect(active!).toBeLessThan(hover!);
+      expect(hover!).toBeGreaterThan(rest!);
+      expect(active!).toBeGreaterThan(hover!);
     });
 
     it.each(["--hover", "--active"])(`link text holds 4.5:1 at %s (${theme})`, (state) => {

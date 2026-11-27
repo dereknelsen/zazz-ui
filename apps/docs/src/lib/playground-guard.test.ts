@@ -37,13 +37,21 @@ function setup() {
   const target = { scrollIntoView: vi.fn() };
   win.navigation = new EventTarget();
   win.scrollTo = vi.fn();
-  win.document = { getElementById: (id: string) => (id === "pricing" ? target : null) };
+  win.document = {
+    getElementById: (id: string) => (id === "pricing" || id === "50%" ? target : null),
+  };
   win.open = () => ({});
   guardNavigation(win as unknown as Window);
   return { win, target };
 }
 
 describe("playground navigation guard", () => {
+  it("follows an anchor whose id is not valid percent-encoding", () => {
+    const { win, target } = setup();
+    win.dispatchEvent(new TargetedEvent("click", link("#50%")));
+    expect(target.scrollIntoView).toHaveBeenCalled();
+  });
+
   it("cancels link clicks", () => {
     const { win } = setup();
     const event = new TargetedEvent("click", link("/docs"));

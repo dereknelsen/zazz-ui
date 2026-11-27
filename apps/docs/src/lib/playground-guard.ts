@@ -10,7 +10,12 @@
  */
 export function guardNavigation(win: Window): void {
   const toAnchor = (href: string): void => {
-    const id = decodeURIComponent(href.slice(1));
+    let id = href.slice(1);
+    try {
+      id = decodeURIComponent(id);
+    } catch {
+      // not valid percent-encoding (`#50%`): the id is the text as written
+    }
     if (!id || id === "top") win.scrollTo(0, 0);
     else win.document.getElementById(id)?.scrollIntoView();
   };

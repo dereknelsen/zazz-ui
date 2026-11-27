@@ -5,10 +5,10 @@ The documentation site for the [Zazz Design Framework](../../packages/core): Ast
 ## How it fits together
 
 - **Content** is `.mdoc` under `src/content/`: `docs/` (guides), `api/` (reference), `blog/`. Frontmatter `section` / `order` / `sectionOrder` drive the sidebars (`src/lib/sidebar.ts`).
-- **The API reference is generated.** `src/lib/api/*` reads the kit's own data — the utility table (`@zazz-ui/core/base/utilities.js`), the manifest, the editor JSON (`editor/*.json`), and each script's header — and the Markdoc tags `{% utilities %}`, `{% attributes %}`, `{% hooks %}`, `{% examples %}`, `{% behavior %}`, `{% tokens %}`, `{% switches %}`, `{% roles %}`, `{% globals %}` render it. Tests fail when a utility or primitive has no page or a hook lands nowhere.
+- **The API reference is generated.** `src/lib/api/*` reads the kit's own data — the utility table (`@zazz-ui/core/base/utilities.js`), the manifest, the editor JSON (`editor/*.json`), and each script's header — and the Markdoc tags `{% utilities %}`, `{% attributes %}`, `{% hooks %}`, `{% examples %}`, `{% behavior %}`, `{% tokens %}`, `{% roles %}`, `{% globals %}` render it. Tests fail when a utility or primitive has no page or a hook lands nowhere.
 - **Previews** (`{% preview src="button/button" /%}`) render a kit fragment in an isolated iframe and show the same string as code; the iframe's head is the kit's `buildHead()`.
 - **`/zazz/*`** (`src/pages/zazz/[...path].ts`) serves the installed kit's `src/` and `dist/`; the site's own `<head>` is `buildHead()` too (`src/lib/head.ts`).
-- **Playground** (`/playground/`): CodeMirror over a sandboxed iframe, code in the URL hash.
+- **Playground** (`/playground/`): CodeMirror over a sandboxed iframe, code in the URL hash. The template menu lists `blank`, `kitchen-sink`, and the page sections in `src/templates/sections/`; a new section file has to be added to the list in `src/pages/playground.astro`, or the build fails. A guard (`src/lib/playground-guard.ts`) keeps links and form submits in the preview from navigating it away.
 - **LLM endpoints**: `/llms.txt`, `/llms-full.txt`, and an `index.md` twin next to every page (`src/lib/llms.ts`).
 
 ## Development
@@ -21,7 +21,7 @@ vp run docs#build    # static site in dist/
 vp run docs#preview
 vp run docs#test     # the lib unit tests and the content coverage tests
 vp run docs#links    # broken internal links in dist/
-vp run docs#check    # tsc --noEmit (astro check does not support TypeScript 7)
+vp run docs#check    # astro check, on the TypeScript 6 pinned in this app (the rest of the repo is on 7)
 ```
 
 The theme builder on the homepage lists Google Fonts when `GOOGLE_FONTS_API_KEY` is set (see `.env.example`; the key is read at build time and never reaches the page). Without it the builder offers local font stacks only.

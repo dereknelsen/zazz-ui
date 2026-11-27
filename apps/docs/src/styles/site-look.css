@@ -56,7 +56,7 @@
 }
 
 @layer overrides {
-  :where([data-font="eyebrow"]) {
+  :where([data-font~="eyebrow"]) {
     font-family: var(--font-family-mono);
     text-transform: uppercase;
     font-feature-settings: var(--font-feature-mono);

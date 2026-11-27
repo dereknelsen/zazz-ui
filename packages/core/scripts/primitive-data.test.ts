@@ -57,6 +57,8 @@ describe("primitive data", () => {
     expect(hookCategory("--ui-layout-gutters")).toBe("Layout & Positioning");
     expect(hookCategory("--ui-layout-available")).toBe("Box Model & Sizing");
     expect(hookCategory("--ui-nope-thing")).toBe("Misc");
+    // a coefficient goes with the utility it scales
+    expect(hookCategory("--ui-switch-w-coefficient")).toBe("Box Model & Sizing");
     // every hook the kit ships has a category
     for (const primitive of Object.values(data)) expect(primitive.hooks).not.toHaveProperty("Misc");
     // the kit's own words for a property: a duration, an ease, an accent color

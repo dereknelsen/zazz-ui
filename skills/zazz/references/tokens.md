@@ -113,8 +113,10 @@ buttons/inputs/popovers, **lg** = cards/dialogs, **sm** = badges, **full** = pil
 round two corners (`--radius-t: 2.5` for a card's media) and take breakpoints only.
 
 `--radius-corner-shape` (default `superellipse(1.3)`) is the curve of every radius. Set it on `:root`
-to re-skin the kit; `round` turns it off. Primitives expose `--ui-*-corner-shape` hooks. Radio, switch,
-slider, progress, meter, `--radius: full`, and `--radius: var(--radius-full)` stay `round`. A
+to re-skin the kit; `round` turns it off. Primitives expose `--ui-*-corner-shape` hooks. The radio,
+`--radius: full`, and `--radius: var(--radius-full)` stay `round`. The slider, switch, progress,
+meter, and avatar follow the shape only when it is `round`, `squircle`, `square`, or
+`superellipse(1 | 1.3 | 2 | infinity)`, spelled exactly, and draw anything else round. A
 radius hook doesn't switch the shape, so pair it: `--ui-button-radius: var(--radius-full);
 --ui-button-corner-shape: round`. `--corner-shape` overrides one element and takes no states or breakpoints.
 

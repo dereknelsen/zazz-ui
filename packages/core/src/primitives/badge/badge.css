@@ -18,8 +18,8 @@
  *
  * States step one way and active goes further than hover. Unfilled surfaces (the
  * default, outline, ghost) gain the muted role; filled ones fade toward the page;
- * status surfaces darken. Button and badge resolve the same in every variant
- * (badge-button-parity.browser.test.ts).
+ * the translucent muted and faded roles deepen; status surfaces darken. Button
+ * and badge resolve the same in every variant (badge-button-parity.browser.test.ts).
  */
 
 @layer variables {
@@ -464,7 +464,7 @@
   }
 
   :where([data-ui~="badge"][data-badge-variant="muted"]) {
-    /* the translucent muted role: fades toward the surface beneath */
+    /* the translucent muted role: deepens (more opaque) at hover and active */
     --_badge-bg: var(--color-muted);
     --_badge-bg--hover: oklch(from var(--_badge-bg) l c h / calc(alpha * 1.66));
     --_badge-bg--active: oklch(from var(--_badge-bg) l c h / calc(alpha * 2));

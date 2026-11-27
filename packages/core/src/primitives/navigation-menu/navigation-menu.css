@@ -26,7 +26,7 @@
     --ui-navigation-menu-popover-shadow: var(--shadow-md);
     --ui-navigation-menu-popover-child-px: var(--space-xs);
     --ui-navigation-menu-popover-child-py: var(--space-xs);
-    --ui-navigation-menu-popover-child-gap: 1;
+    --ui-navigation-menu-popover-child-gap: var(--spacing);
     --ui-navigation-menu-popover-child-radius: var(--radius-sm);
     --ui-navigation-menu-popover-child-corner-shape: var(--radius-corner-shape);
     --ui-navigation-menu-popover-gap: var(--space-xs);
@@ -137,7 +137,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-sm);
     inline-size: 100%;
     padding-inline: var(--ui-navigation-menu-popover-child-px);
     padding-block: var(--ui-navigation-menu-popover-child-py);

@@ -11,7 +11,6 @@ import { buildHead } from "@zazz-ui/core/head.ts";
 import CopyButton from "../CopyButton.astro";
 import { installApi } from "../../lib/api/install.ts";
 import { PRIMITIVES } from "@zazz-ui/core/manifest.ts";
-import GithubIcon from "../GithubIcon.astro";
 import { kitVersion } from "../../lib/kit.ts";
 import { links } from "../../site.config.ts";
 
@@ -24,8 +23,11 @@ const uid = `install-${primitive}`;
 const themes = { light: "github-light", dark: "github-dark" } as const;
 
 const version = kitVersion();
-const head = buildHead({ cdn: { version, primitives: [primitive] }, fontDisplay: false });
-/** Markup-only primitives (avatar, toolbar) have no stylesheet of their own. */
+const head = buildHead({
+  cdn: { version, primitives: [primitive] },
+  fontDisplay: false,
+});
+/** Markup-only primitives (toolbar) have no stylesheet of their own. */
 const ownCss = (PRIMITIVES[primitive]?.css.length ?? 0) > 0;
 const source = `${links.github}/tree/main/packages/core/src/primitives/${primitive}`;
 const loads = ownCss
@@ -40,137 +42,188 @@ const methods = [
 ];
 ---
 
-<div data-prose-slot="end" style="
+<div
+  data-prose-slot="end"
+  style="
     --position: relative;
     --my: 6;
-  ">
-  <ui-tabs data-tabs-variant="underline" style="
+  "
+>
+  <ui-tabs
+    data-tabs-variant="underline"
+    style="
       --space-y: 4;
       --w: 100%;
-    ">
-
-    <div data-tabs-slot="list" role="tablist" aria-label="Install method">
-      <div data-tabs-slot="indicator" aria-hidden="true"></div>
-      {
-        methods.map(({ id, label }, i) => (
-          <>
-            <input type="radio" role="tab" name={`${uid}-method`} id={`${uid}-method-${id}`} checked={i === 0} />
-            <label for={`${uid}-method-${id}`} data-tabs-slot="label">
-              <span data-tabs-slot="label-text">{label}</span>
-            </label>
-          </>
-        ))
-      }
-     <a
-    href={source}
-    data-font="sm"
-    rel="noopener"
-    style="
-      --display: inline-flex;
-      --items: center;
-      --gap: 1.5;
-      --h: 7;
-      --text: var(--color-muted-foreground);
-      --text--hover: var(--color-foreground);
     "
   >
-    <GithubIcon size={14} />
-    Source
-  </a>
-  </div>
+    <div
+      data-tabs-slot="list"
+      role="tablist"
+      aria-label="Install method"
+      style="--w: 100%"
+    >
+      <div data-tabs-slot="indicator" aria-hidden="true"></div>
+      {methods.map(({ id, label }, i) => (
+        <>
+          <input
+            type="radio"
+            role="tab"
+            name={`${uid}-method`}
+            id={`${uid}-method-${id}`}
+            checked={i === 0}
+          />
+          <label for={`${uid}-method-${id}`} data-tabs-slot="label">
+            <span data-tabs-slot="label-text">{label}</span>
+          </label>
+        </>
+      ))}
+      <a
+        href={source}
+        data-font="sm"
+        rel="noopener"
+        style="
+          --display: inline-flex;
+          --items: center;
+          --gap: 1.5;
+          --ml: auto;
+          --h: 7;
+          --text: var(--color-muted-foreground);
+          --text--hover: var(--color-foreground);
+        "
+      >
+        <svg
+          style="--size: 4.55"
+          xmlns="http://www.w3.org/2000/svg"
+          width="1em"
+          height="1em"
+          viewBox="0 0 10.5 13"
+        >
+          <path d="M0 0h12v12H0z" fill="none" />
+          <path
+            fill="currentColor"
+            d="M2 12h2v-1H3v-1H2V9H1V8h1v1h1v1h1V9h1V8H3V7H2V4h1V2h1v1h3V2h1v2h1v3H8v1H6v1h1v3h2v-1h1v-1h1V3h-1V2H9V1H2v1H1v1H0v7h1v1h1Zm0 0"
+          />
+        </svg>
+      </a>
+    </div>
 
     <div data-tabs-slot="panel" role="tabpanel" style="--w: 100%">
-      <ui-tabs style="
+      <ui-tabs
+        style="
           --gap-y: 2;
           --w: 100%;
-        ">
+        "
+      >
         <div data-tabs-slot="list" role="tablist" aria-label="Package manager">
           <div data-tabs-slot="indicator" aria-hidden="true"></div>
-          {
-            commands.map(({ id }, i) => (
-              <>
-                <input
-                  type="radio"
-                  role="tab"
-                  name={uid}
-                  id={`${uid}-${id}`}
-                  value={id}
-                  data-install-manager
-                  checked={i === 0}
-                />
-                <label for={`${uid}-${id}`} data-tabs-slot="label">
-                  <span data-tabs-slot="label-text">{id}</span>
-                </label>
-              </>
-            ))
-          }
+          {commands.map(({ id }, i) => (
+            <>
+              <input
+                type="radio"
+                role="tab"
+                name={uid}
+                id={`${uid}-${id}`}
+                value={id}
+                data-install-manager
+                checked={i === 0}
+              />
+              <label for={`${uid}-${id}`} data-tabs-slot="label">
+                <span data-tabs-slot="label-text">{id}</span>
+              </label>
+            </>
+          ))}
         </div>
-        {
-          commands.map(({ command }) => (
-            <div data-tabs-slot="panel" role="tabpanel" style="--w: 100%">
-              <div style="--position: relative">
-                <Code code={command} lang="bash" themes={themes} defaultColor={false} />
-                <div style="
-                    --position: absolute;
-                    --top: 2;
-                    --right: 2;
-                  ">
-                  <CopyButton text={command} label="Copy the command" />
-                </div>
+        {commands.map(({ command }) => (
+          <div data-tabs-slot="panel" role="tabpanel" style="--w: 100%">
+            <div style="--position: relative">
+              <Code
+                code={command}
+                lang="bash"
+                themes={themes}
+                defaultColor={false}
+              />
+              <div
+                style="
+                  --position: absolute;
+                  --top: 2;
+                  --right: 2;
+                "
+              >
+                <CopyButton text={command} label="Copy the command" />
               </div>
             </div>
-          ))
-        }
+          </div>
+        ))}
       </ui-tabs>
-      <p data-font="sm" style="
+      <p
+        data-font="sm"
+        style="
           --mt: 2;
           --text: var(--color-muted-foreground);
-        ">
-        {
-          dependencies.length > 0 && (
-            <>
-              Also adds{" "}
-              {dependencies.map((dep, i) => (
-                <>
-                  <a href={`/api/primitives/${dep}/`} data-ui="link">
-                    {dep}
-                  </a>
-                  {i < dependencies.length - 1 ? ", " : ""}
-                </>
-              ))}
-              , which it depends on.{" "}
-            </>
-          )
-        }
-        Run <a href="/docs/install/installation/#cli" data-ui="link">
+        "
+      >
+        {dependencies.length > 0 && (
+          <>
+            Also adds{" "}
+            {dependencies.map((dep, i) => (
+              <>
+                <a href={`/api/primitives/${dep}/`} data-ui="link">
+                  {dep}
+                </a>
+                {i < dependencies.length - 1 ? ", " : ""}
+              </>
+            ))}
+            , which it depends on.{" "}
+          </>
+        )}
+        Run{" "}
+        <a href="/docs/install/installation/#cli" data-ui="link">
           <code>zazz-ui init</code>
-        </a> first if the project has no <code>zazz/</code> folder yet.
+        </a>{" "}
+        first if the project has no <code>zazz/</code> folder yet.
       </p>
     </div>
 
-    <div data-tabs-slot="panel" role="tabpanel" data-pagefind-ignore style="--w: 100%">
+    <div
+      data-tabs-slot="panel"
+      role="tabpanel"
+      data-pagefind-ignore
+      style="--w: 100%"
+    >
       <div data-copy-scope style="--position: relative">
-        <Code code={head} lang="html" themes={themes} defaultColor={false} wrap />
-        <div style="
+        <Code
+          code={head}
+          lang="html"
+          themes={themes}
+          defaultColor={false}
+          wrap
+        />
+        <div
+          style="
             --position: absolute;
             --top: 2;
             --right: 2;
-          ">
+          "
+        >
           <CopyButton label="Copy the head" />
         </div>
       </div>
-      <p data-font="sm" style="
+      <p
+        data-font="sm"
+        style="
           --mt: 2;
           --text: var(--color-muted-foreground);
-        ">
-        A <code>&lt;head&gt;</code> {cdnNote} To load
-        the whole kit in two requests, see <a href="/docs/install/installation/#cdn" data-ui="link">
+        "
+      >
+        A <code>&lt;head&gt;</code> {cdnNote} To load the whole kit in two
+        requests, see{" "}
+        <a href="/docs/install/installation/#cdn" data-ui="link">
           the CDN install
-        </a>.
+        </a>
+        .
       </p>
     </div>
   </ui-tabs>
-
 </div>
 
 <script>
@@ -190,7 +243,9 @@ const methods = [
       /* no storage: the choice lasts for this page */
     }
   };
-  const radios = document.querySelectorAll<HTMLInputElement>("[data-install-manager]");
+  const radios = document.querySelectorAll<HTMLInputElement>(
+    "[data-install-manager]",
+  );
   const pick = (id: string) => {
     for (const radio of radios) if (radio.value === id) radio.checked = true;
   };

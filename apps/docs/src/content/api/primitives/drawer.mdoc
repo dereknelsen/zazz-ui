@@ -52,6 +52,8 @@ The open and close motion is the dialog's transition with the drawer's own timin
 
 On a phone, the keyboard covers the bottom of the screen without making the page any shorter, so a drawer would sit partly under it. While a field in the front drawer has the keyboard up, the drawer's content ends at the keyboard's top edge, with its surface carrying on underneath, and the focused field scrolls into the part that is still visible. The page behind keeps its scroll position. There is nothing to author.
 
+On a touch screen, opening a drawer that holds a text field, a select, or a date, time, or color input focuses the drawer itself, so the keyboard stays down until someone taps a field. A field with `autofocus` is focused on open anyway. With a mouse, or in a drawer without fields, the first control takes focus, as in any dialog.
+
 ## Snap points
 
 `data-drawer-snap` gives a drawer more than one resting height. List them smallest first, separated by spaces: a number up to `1` is a share of the drawer's full height, and a `px` or `rem` length is a visible height.

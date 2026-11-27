@@ -64,47 +64,25 @@
       --border-t: 1;
     "
   >
-    <figure
-      role="img"
+    <span
+      data-ui="avatar"
+      aria-hidden="true"
       style="
-        --display: grid-pile;
         --size: 11;
-        --border-color: var(--color-border);
-        --border-width: 1px;
-        --radius: full;
-        --overflow: clip;
+        --ui-avatar-fallback-bg: var(--color-primary);
+        --ui-avatar-fallback-text: var(--color-primary-foreground);
       "
     >
       <img
+        data-avatar-slot="image"
         width="64"
         height="64"
         loading="lazy"
         src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=facearea&facepad=2&w=64&h=64&q=90"
-        alt="John Doe"
-        aria-hidden="true"
-        style="
-          --order: 9999;
-          --size: 100%;
-          --bg: transparent;
-          --object-fit: cover;
-        "
+        alt=""
       />
-      <figcaption
-        style="
-          --display: flex;
-          --items: center;
-          --justify: center;
-          --order: -9999;
-          --size: 100%;
-          --font-weight: strong;
-          --text: var(--color-primary-foreground);
-          --bg: var(--color-primary);
-        "
-      >
-        <span style="--sr: only">John Doe</span>
-        <span aria-hidden="true">JD</span>
-      </figcaption>
-    </figure>
+      <span data-avatar-slot="fallback">JD</span>
+    </span>
     <div style="--display: flex-col">
       <span data-font="sm" style="--font-weight: strong">John Doe</span>
       <span data-font="xs" style="--text: var(--color-muted-foreground)">Founder, ACME Inc.</span>

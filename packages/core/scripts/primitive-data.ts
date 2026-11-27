@@ -140,6 +140,8 @@ export function hookCategory(hook: string): string {
   const parts = hook
     .replace(/^--ui-/, "")
     .replace(/--[a-z-]+$/, "")
+    // a coefficient scales the utility it names (`--ui-switch-w-coefficient` → `w`)
+    .replace(/-coefficient$/, "")
     .split("-");
   for (let start = 1; start < parts.length; start++) {
     const ending = parts.slice(start).join("-");

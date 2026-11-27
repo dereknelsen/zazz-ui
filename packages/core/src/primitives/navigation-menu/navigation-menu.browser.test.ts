@@ -51,4 +51,19 @@ describe("navigation menu", () => {
     expect(Number.parseFloat(style(panel, "inline-size"))).toBeCloseTo(window.innerWidth, 0);
     panel.hidePopover();
   });
+
+  // the gap hook is a length, so the title and description of a link stand apart
+  it("spaces a link's lines and a submenu trigger's parts by the child gap hook", () => {
+    const root = mount(`<nav data-ui="navigation-menu">${NAV("g")}
+      <div data-navigation-menu-slot="submenu"><button data-navigation-menu-slot="submenu-trigger" type="button">S<svg></svg></button></div>
+    </nav>`);
+    const link = root.querySelector("[data-navigation-menu-slot='link']")!;
+    const trigger = root.querySelector("[data-navigation-menu-slot='submenu-trigger']")!;
+    for (const el of [link, trigger]) {
+      expect(
+        Number.parseFloat(style(el, "row-gap")),
+        el.getAttribute("data-navigation-menu-slot")!,
+      ).toBeGreaterThan(0);
+    }
+  });
 });

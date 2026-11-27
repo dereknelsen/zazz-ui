@@ -1,6 +1,6 @@
 ---
 /**
- * One initials avatar (the avatar fragment's fallback face) in its person's
+ * One initials avatar (the avatar primitive with its fallback alone) in its person's
  * accent role (`avatarRole`). Decorative: the name is always written beside
  * it, or carried by the pile's label (Avatars.astro).
  */
@@ -20,20 +20,17 @@ const role = avatarRole(initials);
 ---
 
 <span
+  data-ui='avatar'
   aria-hidden='true'
   data-font={size > 8 ? 'xs' : '2xs'}
   style={`
-    --display: grid;
-    --place-items: center;
-    --shrink: 0;
     --size: ${size};
     ${overlap ? '--ml: -2;' : ''}
-    --font-weight: strong;
-    --text: var(--color-${role}-foreground);
-    --bg: var(--color-${role});
-    --radius: full;
+    --border-width: 0;
+    --ui-avatar-fallback-text: var(--color-${role}-foreground);
+    --ui-avatar-fallback-bg: var(--color-${role});
     ${stacked ? '--ring: 2; --ring-color: var(--color-card);' : ''}
   `}
 >
-  {initials}
+  <span data-avatar-slot='fallback'>{initials}</span>
 </span>

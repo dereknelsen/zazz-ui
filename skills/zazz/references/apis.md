@@ -164,7 +164,8 @@ to initialize. `data-ui="drawer"` is a bottom sheet everywhere, with
   (`detail.index`, `detail.value` in px); `data-drawer-state` carries `expanded` at the top
   stop; `snapDrawer(dialog, index)` (an export of `drawer.js`) moves it from script.
 - A drawer opened over another scales the one behind back. The software keyboard is handled:
-  nothing to author.
+  nothing to author. On a touch screen a drawer with text fields focuses itself on open, so the
+  keyboard stays down; put `autofocus` on a field to focus it anyway.
 
 `data-draggable="false"` works for the other drags too: on `<ui-toaster>` its toasts cannot be swiped away, and inside a carousel slide a mouse press does not drag the track.
 

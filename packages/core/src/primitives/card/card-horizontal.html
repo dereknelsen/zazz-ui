@@ -41,20 +41,17 @@
     style="--ui-card-header-w: auto"
   >
     <div data-card-slot="header">
-      <figure
-        role="img"
-        aria-label="John Doe"
+      <span
+        data-ui="avatar"
+        aria-hidden="true"
         style="
-          --display: grid-pile;
           --size: 12;
-          --text: var(--color-primary-foreground);
-          --bg: var(--color-primary);
-          --radius: full;
-          --overflow: clip;
+          --ui-avatar-fallback-bg: var(--color-primary);
+          --ui-avatar-fallback-text: var(--color-primary-foreground);
         "
       >
-        <span aria-hidden="true" style="--font-weight: strong">AO</span>
-      </figure>
+        <span data-avatar-slot="fallback">JD</span>
+      </span>
     </div>
     <hgroup
       data-card-slot="body"

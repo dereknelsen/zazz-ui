@@ -93,6 +93,28 @@
   inherits: false;
 }
 
+/* The coefficient sizes: the track's (--_switch-w/-h) and how much they grow the
+   thumb (--_switch-grow-w/-h). Each is set and read on the same element. */
+@property --_switch-w {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_switch-h {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_switch-grow-w {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --_switch-grow-h {
+  syntax: "*";
+  inherits: false;
+}
+
 @layer reset {
   /* ===========================================================================
     SWITCH — native <input type="checkbox" role="switch"> internals

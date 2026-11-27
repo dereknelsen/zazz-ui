@@ -23,8 +23,8 @@
  *
  * States step one way and active goes further than hover. Unfilled surfaces (the
  * default, outline, ghost) gain the muted role; filled ones fade toward the page;
- * status surfaces darken. Button and badge resolve the same in every variant
- * (badge-button-parity.browser.test.ts).
+ * the translucent muted and faded roles deepen; status surfaces darken. Button
+ * and badge resolve the same in every variant (badge-button-parity.browser.test.ts).
  */
 
 @layer variables {
@@ -453,7 +453,7 @@
   }
 
   :where([data-ui~="button"][data-button-variant="neutral"]) {
-    /* the translucent neutral role: fades toward the surface beneath */
+    /* a solid near-page surface that steps one neutral shade at a time */
     --_button-bg: light-dark(var(--color-white), var(--color-neutral-950));
     --_button-bg--hover: light-dark(var(--color-neutral-50), var(--color-neutral-900));
     --_button-bg--active: light-dark(var(--color-neutral-100), var(--color-neutral-800));
@@ -470,7 +470,7 @@
   }
 
   :where([data-ui~="button"][data-button-variant="muted"]) {
-    /* the translucent muted role: fades toward the surface beneath */
+    /* the translucent muted role: deepens (more opaque) at hover and active */
     --_button-bg: var(--color-muted);
     --_button-bg--hover: oklch(from var(--_button-bg) l c h / calc(alpha * 1.66));
     --_button-bg--active: oklch(from var(--_button-bg) l c h / calc(alpha * 2));
@@ -487,7 +487,7 @@
   }
 
   :where([data-ui~="button"][data-button-variant="faded"]) {
-    /* the translucent faded role: fades toward the surface beneath */
+    /* the translucent faded role: deepens (more opaque) at hover and active */
     --_button-bg: var(--color-faded);
     --_button-bg--hover: oklch(from var(--_button-bg) l c h / calc(alpha * 1.66));
     --_button-bg--active: oklch(from var(--_button-bg) l c h / calc(alpha * 2));
