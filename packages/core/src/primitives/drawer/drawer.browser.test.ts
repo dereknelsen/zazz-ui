@@ -742,6 +742,158 @@ describe("drawer and the software keyboard", () => {
   });
 });
 
+describe("drawer initial focus", () => {
+  useKit();
+  useCss(`dialog, dialog::backdrop { transition: none; }`);
+
+  const FIELD_ONLY = `<dialog data-ui="drawer" closedby="any">
+    <div data-drawer-slot="content">
+      <div data-drawer-slot="body"><input name="field" /><textarea name="notes"></textarea></div>
+    </div>
+  </dialog>`;
+
+  /** Makes the page a touch screen to script: `(hover: hover)` stops matching. Returns the undo. */
+  function touchScreen(): () => void {
+    const real = window.matchMedia;
+    window.matchMedia = (query: string) =>
+      query === "(hover: hover)"
+        ? ({ matches: false } as MediaQueryList)
+        : real.call(window, query);
+    return () => {
+      window.matchMedia = real;
+    };
+  }
+
+  const PICKERS = `<dialog data-ui="drawer" closedby="any">
+    <div data-drawer-slot="content">
+      <div data-drawer-slot="body">
+        <input type="color" name="color" />
+        <select name="size"><option>One</option></select>
+        <input type="date" name="day" />
+        <input type="checkbox" name="agree" />
+      </div>
+    </div>
+  </dialog>`;
+
+  const field = (dialog: Element) => dialog.querySelector<HTMLInputElement>("input")!;
+
+  it("with a mouse, the first field takes focus as in any dialog", async () => {
+    await atWidth(1280);
+    const dialog = await open(STANDALONE);
+    expect(document.activeElement).toBe(field(dialog));
+    dialog.close();
+  });
+
+  it("on a touch screen, a drawer with a text field takes focus itself", async () => {
+    await atWidth(1280);
+    const restore = touchScreen();
+    try {
+      const dialog = mount(STANDALONE) as HTMLDialogElement;
+      dialog.showModal();
+      // already in place when showModal returns: a caller may focus a field next
+      expect(document.activeElement).toBe(dialog);
+      expect(dialog.querySelectorAll(":scope [inert]").length).toBe(0);
+      field(dialog).focus();
+      expect(document.activeElement).toBe(field(dialog));
+      dialog.close();
+    } finally {
+      restore();
+    }
+  });
+
+  it("on a touch screen, a drawer without fields focuses its first control as in any dialog", async () => {
+    await atWidth(1280);
+    const restore = touchScreen();
+    try {
+      const dialog = await open(COMBINED.replace('data-ui="dialog drawer"', 'data-ui="drawer"'));
+      expect(document.activeElement).toBe(dialog.querySelector("footer button"));
+      dialog.close();
+    } finally {
+      restore();
+    }
+  });
+
+  it("a dialog that is not in drawer mode focuses its first field", async () => {
+    await atWidth(1280);
+    const restore = touchScreen();
+    try {
+      const dialog = await open(COMBINED.replace("<p>Body</p>", '<input name="field" />'));
+      expect(style(dialog, "--_drawer-mode").trim()).toBe("");
+      expect(document.activeElement).toBe(field(dialog));
+      dialog.close();
+    } finally {
+      restore();
+    }
+  });
+
+  it("on a touch screen, a drawer with only picker fields takes focus itself too", async () => {
+    await atWidth(1280);
+    const restore = touchScreen();
+    try {
+      const dialog = await open(PICKERS);
+      expect(document.activeElement).toBe(dialog);
+      expect(dialog.querySelectorAll(":scope [inert]").length).toBe(0);
+      dialog.close();
+    } finally {
+      restore();
+    }
+  });
+
+  it("on a touch screen, a field with autofocus still takes focus", async () => {
+    await atWidth(1280);
+    const restore = touchScreen();
+    try {
+      const dialog = mount(STANDALONE) as HTMLDialogElement;
+      field(dialog).autofocus = true;
+      dialog.showModal();
+      expect(document.activeElement).toBe(field(dialog));
+      dialog.close();
+    } finally {
+      restore();
+    }
+  });
+
+  it("on a touch screen, an autofocus that cannot take focus does not count", async () => {
+    await atWidth(1280);
+    const restore = touchScreen();
+    try {
+      const dialog = mount(STANDALONE) as HTMLDialogElement;
+      const done = dialog.querySelector<HTMLButtonElement>("footer button")!;
+      done.autofocus = true;
+      done.disabled = true;
+      dialog.showModal();
+      expect(document.activeElement).toBe(dialog);
+      dialog.close();
+    } finally {
+      restore();
+    }
+  });
+
+  it("what was inert stays inert, and a canceled open leaves the drawer as it was", async () => {
+    await atWidth(1280);
+    const restore = touchScreen();
+    try {
+      const dialog = mount(FIELD_ONLY) as HTMLDialogElement;
+      const notes = dialog.querySelector("textarea")!;
+      notes.inert = true;
+      dialog.addEventListener("beforetoggle", (event) => event.preventDefault(), { once: true });
+      dialog.showModal();
+      expect(dialog.open).toBe(false);
+      await sleep(20);
+      expect(dialog.querySelectorAll(":scope [inert]").length).toBe(1);
+      expect(notes.inert).toBe(true);
+
+      dialog.showModal();
+      expect(dialog.open).toBe(true);
+      expect(dialog.querySelectorAll(":scope [inert]").length).toBe(1);
+      expect(notes.inert).toBe(true);
+      dialog.close();
+    } finally {
+      restore();
+    }
+  });
+});
+
 describe("a drawer that leaves the page while open", () => {
   useKit();
 

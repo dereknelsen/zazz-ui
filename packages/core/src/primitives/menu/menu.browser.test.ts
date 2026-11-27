@@ -3,11 +3,13 @@
 /**
  * @fileoverview The menu: the panel slot takes the menu's width and
  * shadow hooks in tag and attribute form, nested buttons take the menu's
- * radius, and a dual-mode `--min-w` utility on the panel beats the hook.
+ * radius, a dual-mode `--min-w` utility on the panel beats the hook, and the
+ * arrow keys skip disabled items.
  */
 
 import { describe, expect, it } from "vite-plus/test";
 import { lengthPx, mount, scale, style, useKit } from "../../../test/browser.ts";
+import "./menu.ts";
 
 const MENU = (
   id: string,
@@ -41,6 +43,33 @@ describe("menu", () => {
     const panel = root.querySelector("[data-menu-slot='popover']") as HTMLElement;
     panel.showPopover();
     expect(Number.parseFloat(style(panel, "min-inline-size"))).toBeCloseTo(scale(60), 1);
+    panel.hidePopover();
+  });
+
+  it("the arrow keys skip a disabled button, an aria-disabled link, and a button in a disabled fieldset", () => {
+    const root = mount(`<ui-menu><button type="button" popovertarget="k">Open</button>
+      <div id="k" data-menu-slot="popover" popover="auto"><menu>
+        <li><button type="button" data-first>One</button></li>
+        <li><button type="button" disabled>Off</button></li>
+        <li><a href="#" aria-disabled="true">Off</a></li>
+        <li><fieldset disabled><button type="button">Off</button></fieldset></li>
+        <li><button type="button" data-last>Two</button></li>
+      </menu></div></ui-menu>`);
+    const panel = root.querySelector<HTMLElement>("[data-menu-slot='popover']")!;
+    const first = root.querySelector<HTMLElement>("[data-first]")!;
+    const last = root.querySelector<HTMLElement>("[data-last]")!;
+    const press = (key: string) =>
+      document.activeElement!.dispatchEvent(
+        new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true }),
+      );
+    panel.showPopover();
+    first.focus();
+    press("ArrowDown");
+    expect(document.activeElement, "down skips to the next enabled item").toBe(last);
+    press("ArrowDown");
+    expect(document.activeElement, "down wraps").toBe(first);
+    press("ArrowUp");
+    expect(document.activeElement, "up wraps past the disabled items").toBe(last);
     panel.hidePopover();
   });
 });

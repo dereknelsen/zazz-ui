@@ -350,6 +350,8 @@
     --search-cancel-size: calc(var(--spacing) * 6);
     --search-cancel-radius: var(--radius-sm);
 
+    /* Without it the browser draws its own glyph and the mask below never shows. */
+    appearance: none;
     margin: 0;
     padding: 0;
     inline-size: var(--search-cancel-size);

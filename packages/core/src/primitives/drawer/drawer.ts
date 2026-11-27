@@ -44,6 +44,13 @@
  * edge (its surface runs on underneath), the focused field scrolls into what
  * is still visible, and the page behind stays where it was. Nothing to author.
  *
+ * On a touch screen a drawer does not raise the keyboard or a picker by
+ * opening: a dialog focuses its first control, and a text field focused while
+ * the drawer is still below the screen makes iOS push the page up to show it.
+ * A drawer that holds a text field, a select, or a date, time, or color input
+ * takes focus itself. Put `autofocus` on a field to focus it anyway; on iOS
+ * the page may then move as the drawer opens.
+ *
  * **Stacked drawers.** A drawer opened over another scales the one behind back
  * and lifts it, and that one follows as the front drawer is dragged. Nothing
  * to author: the script counts the open drawers.
@@ -512,6 +519,61 @@ function trackKeyboard(
   update();
 }
 
+/**
+ * @description Input types that open a picker when focused on a touch screen.
+ * @private
+ */
+const PICKER = /^(?:color|date|datetime-local|month|time|week)$/;
+
+/**
+ * @description Whether focus on an element brings up the software keyboard or
+ * a picker on a touch screen.
+ *
+ * @param element - The element.
+ * @returns Whether it is a text field, a select, or a picker input.
+ * @private
+ */
+function summonsInput(element: Element): boolean {
+  if (element instanceof HTMLSelectElement) return true;
+  if (element instanceof HTMLInputElement && PICKER.test(element.type)) return true;
+  return typesText(element);
+}
+
+/**
+ * @description Keeps a drawer that is about to open from focusing a field on
+ * a touch screen. `showModal()` focuses the dialog's first focusable control
+ * while the drawer is still below the screen; when that is a text field, iOS
+ * raises the keyboard and scrolls the page up to reveal it, so the page jumps
+ * before the drawer has risen. A drawer that holds a field has its children
+ * made inert while the dialog runs its focusing steps, so focus goes to the
+ * dialog, in every engine and without scrolling its content. They are
+ * released when focus lands, or on the next task if it never does. A drawer
+ * with a usable `autofocus` inside is left alone. Fields an author's own
+ * `beforetoggle` listener adds afterwards are not seen.
+ *
+ * @param dialog - The drawer about to open.
+ * @private
+ */
+function holdFocus(dialog: HTMLDialogElement): void {
+  if (window.matchMedia("(hover: hover)").matches || !inDrawerMode(dialog)) return;
+  if (dialog.autofocus || dialog.querySelector("[autofocus]:not(:disabled)")) return;
+  const fields = dialog.querySelectorAll("input, textarea, select, [contenteditable]");
+  if (![...fields].some((field) => summonsInput(field) && !field.closest("[inert]"))) return;
+  const held = [...dialog.children].filter(
+    (child): child is HTMLElement => child instanceof HTMLElement && !child.inert,
+  );
+  for (const child of held) child.inert = true;
+  const release = () => {
+    window.clearTimeout(timer);
+    dialog.removeEventListener("focus", release, true);
+    for (const child of held) child.inert = false;
+  };
+  // focus landing on the drawer ends it; the timer covers an open that was
+  // canceled, or a page without focus, where no focus event fires
+  dialog.addEventListener("focus", release, true);
+  const timer = window.setTimeout(release);
+}
+
 // --- Binding ---
 
 /** What an open drawer exposes to the rest of the module. */
@@ -819,6 +881,17 @@ const initDrawers: InitDrawersFn = function () {
   if (initDrawers._bound) return;
   initDrawers._bound = true;
 
+  // beforetoggle does not bubble: caught on its way down, before the dialog focuses anything
+  document.addEventListener(
+    "beforetoggle",
+    (event) => {
+      if ((event as ToggleEvent).newState !== "open") return;
+      if (event.target instanceof HTMLDialogElement && event.target.matches(DRAWER)) {
+        holdFocus(event.target);
+      }
+    },
+    true,
+  );
   document.addEventListener("zazz:dialog-open", (event) => {
     if (event.target instanceof HTMLDialogElement && event.target.matches(DRAWER)) {
       bindDrawer(event.target);
